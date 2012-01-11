@@ -1,0 +1,449 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		52CF43A014BDF2F9000565D6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF439F14BDF2F9000565D6 /* UIKit.framework */; };
+		52CF43A214BDF2F9000565D6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A114BDF2F9000565D6 /* Foundation.framework */; };
+		52CF43A414BDF2F9000565D6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A314BDF2F9000565D6 /* CoreGraphics.framework */; };
+		52CF43A614BDF2F9000565D6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A514BDF2F9000565D6 /* CoreData.framework */; };
+		52CF43AC14BDF2F9000565D6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52CF43AA14BDF2F9000565D6 /* InfoPlist.strings */; };
+		52CF43AE14BDF2F9000565D6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CF43AD14BDF2F9000565D6 /* main.m */; };
+		52CF43B214BDF2F9000565D6 /* nc_AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CF43B114BDF2F9000565D6 /* nc_AppDelegate.m */; };
+		52CF43B514BDF2F9000565D6 /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 52CF43B314BDF2F9000565D6 /* Network_Commuting.xcdatamodeld */; };
+		52CF43BD14BDF2F9000565D6 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43BC14BDF2F9000565D6 /* SenTestingKit.framework */; };
+		52CF43BE14BDF2F9000565D6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF439F14BDF2F9000565D6 /* UIKit.framework */; };
+		52CF43BF14BDF2F9000565D6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A114BDF2F9000565D6 /* Foundation.framework */; };
+		52CF43C014BDF2F9000565D6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A514BDF2F9000565D6 /* CoreData.framework */; };
+		52CF43C814BDF2F9000565D6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52CF43C614BDF2F9000565D6 /* InfoPlist.strings */; };
+		52CF43CB14BDF2F9000565D6 /* Network_CommutingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CF43CA14BDF2F9000565D6 /* Network_CommutingTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		52CF43C114BDF2F9000565D6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52CF439214BDF2F8000565D6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52CF439A14BDF2F9000565D6;
+			remoteInfo = "Network Commuting";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		52CF439B14BDF2F9000565D6 /* Network Commuting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Network Commuting.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		52CF439F14BDF2F9000565D6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		52CF43A114BDF2F9000565D6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		52CF43A314BDF2F9000565D6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		52CF43A514BDF2F9000565D6 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		52CF43A914BDF2F9000565D6 /* Network Commuting-Info.plist */ = {isa = PBXFileReference; path = "Network Commuting-Info.plist"; sourceTree = "<group>"; };
+		52CF43AB14BDF2F9000565D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		52CF43AD14BDF2F9000565D6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		52CF43AF14BDF2F9000565D6 /* Network Commuting-Prefix.pch */ = {isa = PBXFileReference; path = "Network Commuting-Prefix.pch"; sourceTree = "<group>"; };
+		52CF43B014BDF2F9000565D6 /* nc_AppDelegate.h */ = {isa = PBXFileReference; path = nc_AppDelegate.h; sourceTree = "<group>"; };
+		52CF43B114BDF2F9000565D6 /* nc_AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = nc_AppDelegate.m; sourceTree = "<group>"; };
+		52CF43B414BDF2F9000565D6 /* Network_Commuting.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Network_Commuting.xcdatamodel; sourceTree = "<group>"; };
+		52CF43BB14BDF2F9000565D6 /* Network CommutingTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Network CommutingTests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		52CF43BC14BDF2F9000565D6 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		52CF43C514BDF2F9000565D6 /* Network CommutingTests-Info.plist */ = {isa = PBXFileReference; path = "Network CommutingTests-Info.plist"; sourceTree = "<group>"; };
+		52CF43C714BDF2F9000565D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		52CF43C914BDF2F9000565D6 /* Network_CommutingTests.h */ = {isa = PBXFileReference; path = Network_CommutingTests.h; sourceTree = "<group>"; };
+		52CF43CA14BDF2F9000565D6 /* Network_CommutingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Network_CommutingTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		52CF439814BDF2F9000565D6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52CF43A014BDF2F9000565D6 /* UIKit.framework in Frameworks */,
+				52CF43A214BDF2F9000565D6 /* Foundation.framework in Frameworks */,
+				52CF43A414BDF2F9000565D6 /* CoreGraphics.framework in Frameworks */,
+				52CF43A614BDF2F9000565D6 /* CoreData.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		52CF43B714BDF2F9000565D6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52CF43BD14BDF2F9000565D6 /* SenTestingKit.framework in Frameworks */,
+				52CF43BE14BDF2F9000565D6 /* UIKit.framework in Frameworks */,
+				52CF43BF14BDF2F9000565D6 /* Foundation.framework in Frameworks */,
+				52CF43C014BDF2F9000565D6 /* CoreData.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		52CF439014BDF2F8000565D6 = {
+			isa = PBXGroup;
+			children = (
+				52CF43A714BDF2F9000565D6 /* Network Commuting */,
+				52CF43C314BDF2F9000565D6 /* Network CommutingTests */,
+				52CF439E14BDF2F9000565D6 /* Frameworks */,
+				52CF439C14BDF2F9000565D6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		52CF439C14BDF2F9000565D6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				52CF439B14BDF2F9000565D6 /* Network Commuting.app */,
+				52CF43BB14BDF2F9000565D6 /* Network CommutingTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		52CF439E14BDF2F9000565D6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				52CF439F14BDF2F9000565D6 /* UIKit.framework */,
+				52CF43A114BDF2F9000565D6 /* Foundation.framework */,
+				52CF43A314BDF2F9000565D6 /* CoreGraphics.framework */,
+				52CF43A514BDF2F9000565D6 /* CoreData.framework */,
+				52CF43BC14BDF2F9000565D6 /* SenTestingKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		52CF43A714BDF2F9000565D6 /* Network Commuting */ = {
+			isa = PBXGroup;
+			children = (
+				52CF43B014BDF2F9000565D6 /* nc_AppDelegate.h */,
+				52CF43B114BDF2F9000565D6 /* nc_AppDelegate.m */,
+				52CF43B314BDF2F9000565D6 /* Network_Commuting.xcdatamodeld */,
+				52CF43A814BDF2F9000565D6 /* Supporting Files */,
+			);
+			path = "Network Commuting";
+			sourceTree = "<group>";
+		};
+		52CF43A814BDF2F9000565D6 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				52CF43A914BDF2F9000565D6 /* Network Commuting-Info.plist */,
+				52CF43AA14BDF2F9000565D6 /* InfoPlist.strings */,
+				52CF43AD14BDF2F9000565D6 /* main.m */,
+				52CF43AF14BDF2F9000565D6 /* Network Commuting-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		52CF43C314BDF2F9000565D6 /* Network CommutingTests */ = {
+			isa = PBXGroup;
+			children = (
+				52CF43C914BDF2F9000565D6 /* Network_CommutingTests.h */,
+				52CF43CA14BDF2F9000565D6 /* Network_CommutingTests.m */,
+				52CF43C414BDF2F9000565D6 /* Supporting Files */,
+			);
+			path = "Network CommutingTests";
+			sourceTree = "<group>";
+		};
+		52CF43C414BDF2F9000565D6 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				52CF43C514BDF2F9000565D6 /* Network CommutingTests-Info.plist */,
+				52CF43C614BDF2F9000565D6 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		52CF439A14BDF2F9000565D6 /* Network Commuting */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 52CF43CE14BDF2F9000565D6 /* Build configuration list for PBXNativeTarget "Network Commuting" */;
+			buildPhases = (
+				52CF439714BDF2F9000565D6 /* Sources */,
+				52CF439814BDF2F9000565D6 /* Frameworks */,
+				52CF439914BDF2F9000565D6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Network Commuting";
+			productName = "Network Commuting";
+			productReference = 52CF439B14BDF2F9000565D6 /* Network Commuting.app */;
+			productType = "com.apple.product-type.application";
+		};
+		52CF43BA14BDF2F9000565D6 /* Network CommutingTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 52CF43D114BDF2F9000565D6 /* Build configuration list for PBXNativeTarget "Network CommutingTests" */;
+			buildPhases = (
+				52CF43B614BDF2F9000565D6 /* Sources */,
+				52CF43B714BDF2F9000565D6 /* Frameworks */,
+				52CF43B814BDF2F9000565D6 /* Resources */,
+				52CF43B914BDF2F9000565D6 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				52CF43C214BDF2F9000565D6 /* PBXTargetDependency */,
+			);
+			name = "Network CommutingTests";
+			productName = "Network CommutingTests";
+			productReference = 52CF43BB14BDF2F9000565D6 /* Network CommutingTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		52CF439214BDF2F8000565D6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
+			buildConfigurationList = 52CF439514BDF2F8000565D6 /* Build configuration list for PBXProject "Network Commuting" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 52CF439014BDF2F8000565D6;
+			productRefGroup = 52CF439C14BDF2F9000565D6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				52CF439A14BDF2F9000565D6 /* Network Commuting */,
+				52CF43BA14BDF2F9000565D6 /* Network CommutingTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		52CF439914BDF2F9000565D6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52CF43AC14BDF2F9000565D6 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		52CF43B814BDF2F9000565D6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52CF43C814BDF2F9000565D6 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		52CF43B914BDF2F9000565D6 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		52CF439714BDF2F9000565D6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52CF43AE14BDF2F9000565D6 /* main.m in Sources */,
+				52CF43B214BDF2F9000565D6 /* nc_AppDelegate.m in Sources */,
+				52CF43B514BDF2F9000565D6 /* Network_Commuting.xcdatamodeld in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		52CF43B614BDF2F9000565D6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52CF43CB14BDF2F9000565D6 /* Network_CommutingTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		52CF43C214BDF2F9000565D6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52CF439A14BDF2F9000565D6 /* Network Commuting */;
+			targetProxy = 52CF43C114BDF2F9000565D6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		52CF43AA14BDF2F9000565D6 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				52CF43AB14BDF2F9000565D6 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		52CF43C614BDF2F9000565D6 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				52CF43C714BDF2F9000565D6 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		52CF43CC14BDF2F9000565D6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		52CF43CD14BDF2F9000565D6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		52CF43CF14BDF2F9000565D6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Network Commuting/Network Commuting-Prefix.pch";
+				INFOPLIST_FILE = "Network Commuting/Network Commuting-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		52CF43D014BDF2F9000565D6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Network Commuting/Network Commuting-Prefix.pch";
+				INFOPLIST_FILE = "Network Commuting/Network Commuting-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		52CF43D214BDF2F9000565D6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Network Commuting.app/Network Commuting";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Network Commuting/Network Commuting-Prefix.pch";
+				INFOPLIST_FILE = "Network CommutingTests/Network CommutingTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		52CF43D314BDF2F9000565D6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Network Commuting.app/Network Commuting";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Network Commuting/Network Commuting-Prefix.pch";
+				INFOPLIST_FILE = "Network CommutingTests/Network CommutingTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		52CF439514BDF2F8000565D6 /* Build configuration list for PBXProject "Network Commuting" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				52CF43CC14BDF2F9000565D6 /* Debug */,
+				52CF43CD14BDF2F9000565D6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		52CF43CE14BDF2F9000565D6 /* Build configuration list for PBXNativeTarget "Network Commuting" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				52CF43CF14BDF2F9000565D6 /* Debug */,
+				52CF43D014BDF2F9000565D6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		52CF43D114BDF2F9000565D6 /* Build configuration list for PBXNativeTarget "Network CommutingTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				52CF43D214BDF2F9000565D6 /* Debug */,
+				52CF43D314BDF2F9000565D6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		52CF43B314BDF2F9000565D6 /* Network_Commuting.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				52CF43B414BDF2F9000565D6 /* Network_Commuting.xcdatamodel */,
+			);
+			currentVersion = 52CF43B414BDF2F9000565D6 /* Network_Commuting.xcdatamodel */;
+			path = Network_Commuting.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 52CF439214BDF2F8000565D6 /* Project object */;
+}
