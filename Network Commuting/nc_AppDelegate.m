@@ -3,10 +3,11 @@
 //  Network Commuting
 //
 //  Created by John Canfield on 1/11/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Network Commuting. All rights reserved.
 //
 
 #import "nc_AppDelegate.h"
+#import "ToFromViewController.h"
 
 @implementation nc_AppDelegate
 
@@ -17,9 +18,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    ToFromViewController *toFromViewController = [[ToFromViewController alloc] init];
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
-    self.window.backgroundColor = [UIColor whiteColor];
+
+    [[self window] setRootViewController:toFromViewController];
+    
     [self.window makeKeyAndVisible];
     return YES;
 }

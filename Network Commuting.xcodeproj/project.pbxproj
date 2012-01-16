@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		52B302C514BE2B1E00EB4852 /* ToFromViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B302C314BE2B1E00EB4852 /* ToFromViewController.m */; };
+		52B302C614BE2B1E00EB4852 /* ToFromViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52B302C414BE2B1E00EB4852 /* ToFromViewController.xib */; };
+		52B302CA14BE3F9A00EB4852 /* ToFromAutofillTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B302C914BE3F9A00EB4852 /* ToFromAutofillTableController.m */; };
+		52B3031F14BE946000EB4852 /* ToFromLocations.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B3031E14BE946000EB4852 /* ToFromLocations.m */; };
 		52CF43A014BDF2F9000565D6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF439F14BDF2F9000565D6 /* UIKit.framework */; };
 		52CF43A214BDF2F9000565D6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A114BDF2F9000565D6 /* Foundation.framework */; };
 		52CF43A414BDF2F9000565D6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A314BDF2F9000565D6 /* CoreGraphics.framework */; };
@@ -34,23 +38,30 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		52B302C214BE2B1E00EB4852 /* ToFromViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToFromViewController.h; sourceTree = "<group>"; };
+		52B302C314BE2B1E00EB4852 /* ToFromViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToFromViewController.m; sourceTree = "<group>"; };
+		52B302C414BE2B1E00EB4852 /* ToFromViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ToFromViewController.xib; sourceTree = "<group>"; };
+		52B302C814BE3F9A00EB4852 /* ToFromAutofillTableController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToFromAutofillTableController.h; sourceTree = "<group>"; };
+		52B302C914BE3F9A00EB4852 /* ToFromAutofillTableController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToFromAutofillTableController.m; sourceTree = "<group>"; };
+		52B3031D14BE946000EB4852 /* ToFromLocations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToFromLocations.h; sourceTree = "<group>"; };
+		52B3031E14BE946000EB4852 /* ToFromLocations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToFromLocations.m; sourceTree = "<group>"; };
 		52CF439B14BDF2F9000565D6 /* Network Commuting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Network Commuting.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52CF439F14BDF2F9000565D6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		52CF43A114BDF2F9000565D6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		52CF43A314BDF2F9000565D6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		52CF43A514BDF2F9000565D6 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		52CF43A914BDF2F9000565D6 /* Network Commuting-Info.plist */ = {isa = PBXFileReference; path = "Network Commuting-Info.plist"; sourceTree = "<group>"; };
+		52CF43A914BDF2F9000565D6 /* Network Commuting-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Network Commuting-Info.plist"; sourceTree = "<group>"; };
 		52CF43AB14BDF2F9000565D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		52CF43AD14BDF2F9000565D6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		52CF43AF14BDF2F9000565D6 /* Network Commuting-Prefix.pch */ = {isa = PBXFileReference; path = "Network Commuting-Prefix.pch"; sourceTree = "<group>"; };
-		52CF43B014BDF2F9000565D6 /* nc_AppDelegate.h */ = {isa = PBXFileReference; path = nc_AppDelegate.h; sourceTree = "<group>"; };
+		52CF43AF14BDF2F9000565D6 /* Network Commuting-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Network Commuting-Prefix.pch"; sourceTree = "<group>"; };
+		52CF43B014BDF2F9000565D6 /* nc_AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nc_AppDelegate.h; sourceTree = "<group>"; };
 		52CF43B114BDF2F9000565D6 /* nc_AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = nc_AppDelegate.m; sourceTree = "<group>"; };
 		52CF43B414BDF2F9000565D6 /* Network_Commuting.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Network_Commuting.xcdatamodel; sourceTree = "<group>"; };
 		52CF43BB14BDF2F9000565D6 /* Network CommutingTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Network CommutingTests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52CF43BC14BDF2F9000565D6 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		52CF43C514BDF2F9000565D6 /* Network CommutingTests-Info.plist */ = {isa = PBXFileReference; path = "Network CommutingTests-Info.plist"; sourceTree = "<group>"; };
+		52CF43C514BDF2F9000565D6 /* Network CommutingTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Network CommutingTests-Info.plist"; sourceTree = "<group>"; };
 		52CF43C714BDF2F9000565D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		52CF43C914BDF2F9000565D6 /* Network_CommutingTests.h */ = {isa = PBXFileReference; path = Network_CommutingTests.h; sourceTree = "<group>"; };
+		52CF43C914BDF2F9000565D6 /* Network_CommutingTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Network_CommutingTests.h; sourceTree = "<group>"; };
 		52CF43CA14BDF2F9000565D6 /* Network_CommutingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Network_CommutingTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -116,7 +127,14 @@
 			children = (
 				52CF43B014BDF2F9000565D6 /* nc_AppDelegate.h */,
 				52CF43B114BDF2F9000565D6 /* nc_AppDelegate.m */,
+				52B302C814BE3F9A00EB4852 /* ToFromAutofillTableController.h */,
+				52B302C914BE3F9A00EB4852 /* ToFromAutofillTableController.m */,
+				52B302C214BE2B1E00EB4852 /* ToFromViewController.h */,
+				52B302C314BE2B1E00EB4852 /* ToFromViewController.m */,
+				52B302C414BE2B1E00EB4852 /* ToFromViewController.xib */,
 				52CF43B314BDF2F9000565D6 /* Network_Commuting.xcdatamodeld */,
+				52B3031D14BE946000EB4852 /* ToFromLocations.h */,
+				52B3031E14BE946000EB4852 /* ToFromLocations.m */,
 				52CF43A814BDF2F9000565D6 /* Supporting Files */,
 			);
 			path = "Network Commuting";
@@ -198,6 +216,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = "Network Commuting";
 			};
 			buildConfigurationList = 52CF439514BDF2F8000565D6 /* Build configuration list for PBXProject "Network Commuting" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -223,6 +242,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				52CF43AC14BDF2F9000565D6 /* InfoPlist.strings in Resources */,
+				52B302C614BE2B1E00EB4852 /* ToFromViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,6 +280,9 @@
 				52CF43AE14BDF2F9000565D6 /* main.m in Sources */,
 				52CF43B214BDF2F9000565D6 /* nc_AppDelegate.m in Sources */,
 				52CF43B514BDF2F9000565D6 /* Network_Commuting.xcdatamodeld in Sources */,
+				52B302C514BE2B1E00EB4852 /* ToFromViewController.m in Sources */,
+				52B302CA14BE3F9A00EB4852 /* ToFromAutofillTableController.m in Sources */,
+				52B3031F14BE946000EB4852 /* ToFromLocations.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -352,6 +375,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Network Commuting-Prefix.pch";
 				INFOPLIST_FILE = "Network Commuting/Network Commuting-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -363,6 +387,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Network Commuting-Prefix.pch";
 				INFOPLIST_FILE = "Network Commuting/Network Commuting-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -421,6 +446,7 @@
 				52CF43D014BDF2F9000565D6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		52CF43D114BDF2F9000565D6 /* Build configuration list for PBXNativeTarget "Network CommutingTests" */ = {
 			isa = XCConfigurationList;
@@ -429,6 +455,7 @@
 				52CF43D314BDF2F9000565D6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
