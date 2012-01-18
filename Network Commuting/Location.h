@@ -1,5 +1,5 @@
 //
-//  ToFromLocations.h
+//  Locations.h
 //  Network Commuting
 //
 //  Created by John Canfield on 1/11/12.
