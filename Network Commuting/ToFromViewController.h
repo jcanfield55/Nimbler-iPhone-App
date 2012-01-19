@@ -7,14 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ToFromAutofillTableController.h"
+#import <RestKit/RestKit.h>
+#import "Location.h"
 
-@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextField *fromField;
 @property (strong, nonatomic) IBOutlet UITextField *toField;
 @property (strong, nonatomic) IBOutlet UITableView *fromAutoFill;
 @property (strong, nonatomic) IBOutlet UITableView *toAutoFill;
+@property (strong, nonatomic) RKObjectManager *rkGeoMgr;  // RestKit Object Manager for geocoding
+@property (strong, nonatomic) Location *fromLocation;
+@property (strong, nonatomic) Location *toLocation;
 
+- (IBAction)toFromTextEntry:(id)sender forEvent:(UIEvent *)event;
 
 @end

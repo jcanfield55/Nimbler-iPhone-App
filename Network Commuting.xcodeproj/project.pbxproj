@@ -30,6 +30,9 @@
 		52CF43C014BDF2F9000565D6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A514BDF2F9000565D6 /* CoreData.framework */; };
 		52CF43C814BDF2F9000565D6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52CF43C614BDF2F9000565D6 /* InfoPlist.strings */; };
 		52CF43CB14BDF2F9000565D6 /* Network_CommutingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CF43CA14BDF2F9000565D6 /* Network_CommutingTests.m */; };
+		52F67EE114C752C4007578D5 /* LatLng.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F67EE014C752C4007578D5 /* LatLng.m */; };
+		52F67EE814C75C36007578D5 /* AddressComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F67EE714C75C36007578D5 /* AddressComponent.m */; };
+		52F67EEB14C76504007578D5 /* GeoRectangle.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F67EEA14C76504007578D5 /* GeoRectangle.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,6 +110,13 @@
 		52CF43C714BDF2F9000565D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		52CF43C914BDF2F9000565D6 /* Network_CommutingTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Network_CommutingTests.h; sourceTree = "<group>"; };
 		52CF43CA14BDF2F9000565D6 /* Network_CommutingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Network_CommutingTests.m; sourceTree = "<group>"; };
+		52F67EDF14C752C4007578D5 /* LatLng.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LatLng.h; sourceTree = "<group>"; };
+		52F67EE014C752C4007578D5 /* LatLng.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LatLng.m; sourceTree = "<group>"; };
+		52F67EE614C75C36007578D5 /* AddressComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressComponent.h; sourceTree = "<group>"; };
+		52F67EE714C75C36007578D5 /* AddressComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressComponent.m; sourceTree = "<group>"; };
+		52F67EE914C76504007578D5 /* GeoRectangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoRectangle.h; sourceTree = "<group>"; };
+		52F67EEA14C76504007578D5 /* GeoRectangle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoRectangle.m; sourceTree = "<group>"; };
+		52F67EEC14C7E103007578D5 /* enums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = enums.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -198,6 +208,13 @@
 				52B302C314BE2B1E00EB4852 /* ToFromViewController.m */,
 				52B302C414BE2B1E00EB4852 /* ToFromViewController.xib */,
 				52CF43B314BDF2F9000565D6 /* Network_Commuting.xcdatamodeld */,
+				52F67EDF14C752C4007578D5 /* LatLng.h */,
+				52F67EE014C752C4007578D5 /* LatLng.m */,
+				52F67EEC14C7E103007578D5 /* enums.h */,
+				52F67EE614C75C36007578D5 /* AddressComponent.h */,
+				52F67EE714C75C36007578D5 /* AddressComponent.m */,
+				52F67EE914C76504007578D5 /* GeoRectangle.h */,
+				52F67EEA14C76504007578D5 /* GeoRectangle.m */,
 				52B3031D14BE946000EB4852 /* Location.h */,
 				52B3031E14BE946000EB4852 /* Location.m */,
 				52CF43A814BDF2F9000565D6 /* Supporting Files */,
@@ -385,6 +402,9 @@
 				52CF43B514BDF2F9000565D6 /* Network_Commuting.xcdatamodeld in Sources */,
 				52B302C514BE2B1E00EB4852 /* ToFromViewController.m in Sources */,
 				52B3031F14BE946000EB4852 /* Location.m in Sources */,
+				52F67EE114C752C4007578D5 /* LatLng.m in Sources */,
+				52F67EE814C75C36007578D5 /* AddressComponent.m in Sources */,
+				52F67EEB14C76504007578D5 /* GeoRectangle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

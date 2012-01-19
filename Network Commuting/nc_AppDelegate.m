@@ -8,6 +8,7 @@
 
 #import "nc_AppDelegate.h"
 #import "ToFromViewController.h"
+#import <RestKit/RestKit.h> 
 
 @implementation nc_AppDelegate
 
@@ -18,12 +19,15 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // Configure the RestKit RKClient object
+    RKObjectManager* rk_geo_mgr = [RKObjectManager objectManagerWithBaseURL:@"http://maps.googleapis.com/maps/api/geocode/"];
+    
+    // Create initial view controller and set as base view for window
     ToFromViewController *toFromViewController = [[ToFromViewController alloc] init];
-    
+    [toFromViewController setRkGeoMgr:rk_geo_mgr];    // Pass the geocoding RK object
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-
     [[self window] setRootViewController:toFromViewController];
-    
+
     [self.window makeKeyAndVisible];
     return YES;
 }

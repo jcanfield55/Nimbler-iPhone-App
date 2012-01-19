@@ -13,6 +13,10 @@
 @synthesize toField;
 @synthesize toAutoFill;
 @synthesize fromAutoFill;
+@synthesize rkGeoMgr;
+@synthesize fromLocation;
+@synthesize toLocation;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -21,6 +25,16 @@
         // Custom initialization
     }
     return self;
+}
+
+// One-time set-up of the RestKit Geocoder Object Manager's mapping
+
+- (void)setRkGeoMgr:(RKObjectManager *)rkGeoMgr0
+{
+    rkGeoMgr = rkGeoMgr0;  //set the property
+
+    // Add the mapper from Location class to this Object Manager
+    [[rkGeoMgr mappingProvider] setMapping:[Location objectMappingforGeocoder:GOOGLE] forKeyPath:@"results"];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView
@@ -51,6 +65,44 @@
     return cell;
 }
 
+// Delegate for when text entered into the to: or from: UITextField
+- (IBAction)toFromTextEntry:(id)sender forEvent:(UIEvent *)event 
+{
+    NSLog(@"Got into toFromTextEntry");
+    
+    NSString* rawAddress = [sender text];
+    
+    // Call the Geocoding web service to create a location object based on the rawAddress
+    if ([rawAddress length] > 0) {
+        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: @"address", rawAddress, 
+                                @"sensor", @"true", nil];
+        NSString* resource = [@"json" appendQueryParams:params];
+        NSLog(@"Parameter String = %@", resource);
+        [rkGeoMgr loadObjectsAtResourcePath:resource delegate:self];
+    }
+}
+
+// Delegate methods for when the RestKit has results from the Geocoder
+- (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects 
+{    
+    // Get the status string the hard way be parsing the response string
+    NSString* response = [[objectLoader response] bodyAsString];
+    NSRange range = [response rangeOfString:@"\"status\""];
+    NSString* responseStartingFromStatus = [response substringFromIndex:(range.location+range.length)]; 
+    NSArray* atoms = [responseStartingFromStatus componentsSeparatedByString:@"\""];
+    NSString* status = [atoms objectAtIndex:1]; // status string is second atom (first after the first quote)
+    NSLog(@"Status: %@", status);
+    
+    // Now use the object string
+    NSLog(@"Object array:");
+    Location* location = [objects objectAtIndex:0];
+    NSLog(@"%@", location);
+}
+
+- (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error {
+    NSLog(@"Error received from RKObjectManager:");
+    NSLog(@"%@", error);
+}
 
 - (void)didReceiveMemoryWarning
 {
@@ -81,5 +133,6 @@
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+
 
 @end
