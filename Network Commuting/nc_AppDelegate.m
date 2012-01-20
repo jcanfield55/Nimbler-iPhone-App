@@ -16,15 +16,28 @@
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
+@synthesize locations;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
     // Configure the RestKit RKClient object
     RKObjectManager* rk_geo_mgr = [RKObjectManager objectManagerWithBaseURL:@"http://maps.googleapis.com/maps/api/geocode/"];
     
     // Create initial view controller and set as base view for window
     ToFromViewController *toFromViewController = [[ToFromViewController alloc] init];
     [toFromViewController setRkGeoMgr:rk_geo_mgr];    // Pass the geocoding RK object
+    
+    // Create locations dictionary if it does not already exist, add Current Location, and pass it to ToFromViewController
+    if (!locations) {
+        locations = [[NSMutableDictionary alloc] initWithCapacity:50];
+        Location *currLoc = [[Location alloc] init];
+        [currLoc setFormattedAddress:@"Current Location"];
+        [currLoc setFromFrequency:100];
+        [locations setObject:currLoc forKey:[currLoc formattedAddress]];
+    }
+    [toFromViewController setLocations:locations];
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [[self window] setRootViewController:toFromViewController];
 

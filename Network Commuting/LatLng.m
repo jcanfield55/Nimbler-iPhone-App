@@ -38,4 +38,12 @@
     z = 0.0;
     return self;
 }
+
+- (NSString *)description
+{
+    NSString* desc = [NSString stringWithFormat:
+                      @"{LatLng Object:  Lat: %f; Lng: %f; Z: %f}", lat, lng, z];
+    return desc;
+}
+
 @end

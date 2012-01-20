@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="872" systemVersion="11C74" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="Location" representedClassName="ToFromLocations" elementID="ToFromLocations" syncable="YES">
-        <attribute name="fromFrequency" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="geoLat" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="geoLong" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="isGeocoded" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="nickname" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="normAddress" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="rawAddress" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="toFrequency" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-    </entity>
-    <elements>
-        <element name="Location" positionX="241" positionY="4116" width="128" height="165"/>
-    </elements>
+    <elements/>
 </model>

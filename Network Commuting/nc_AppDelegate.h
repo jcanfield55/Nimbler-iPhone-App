@@ -12,10 +12,13 @@
 @interface nc_AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
+@property (strong, nonatomic, readonly) NSMutableDictionary *locations; // dictionary of all locations used, formattedAddress is the key
 
+// Properties for Core Data
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;

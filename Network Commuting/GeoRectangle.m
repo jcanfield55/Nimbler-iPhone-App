@@ -31,4 +31,12 @@
     return mapping;
 }
 
+- (NSString *)description
+{
+    NSString* desc = [NSString stringWithFormat:
+                      @"{GeoRectangle Object: southWest: %@; northEast: %@}", southWest, northEast];
+    return desc;
+}
+
+
 @end
