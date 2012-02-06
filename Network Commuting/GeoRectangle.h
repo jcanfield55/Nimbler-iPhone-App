@@ -16,6 +16,6 @@
 @property (nonatomic, strong) LatLng * southWest;
 @property (nonatomic, strong) LatLng * northEast;
 
-+ (RKObjectMapping *)objectMappingforGeocoder:(GeocoderType)gt;
++ (RKObjectMapping *)objectMappingForApi:(APIType)gt;
 
 @end

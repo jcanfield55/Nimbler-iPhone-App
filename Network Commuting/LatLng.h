@@ -16,7 +16,7 @@
 @property (nonatomic) double lng;
 @property (nonatomic) double z;
 
-+ (RKObjectMapping *)objectMappingforGeocoder:(GeocoderType)gt;
++ (RKObjectMapping *)objectMappingForApi:(APIType)gt;
 - (id) initWithLat:(double)newlat Lng:(double)newlng;
-
+- (NSString *)latLngPairStr;
 @end

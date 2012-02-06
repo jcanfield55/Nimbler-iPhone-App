@@ -14,11 +14,11 @@
 @synthesize shortName;
 @synthesize types;
 
-+ (RKObjectMapping *)objectMappingforGeocoder:(GeocoderType)gt
++ (RKObjectMapping *)objectMappingForApi:(APIType)gt
 {
     RKObjectMapping* addrCompMapping = [RKObjectMapping mappingForClass:[AddressComponent class]];
     
-    if (gt==GOOGLE) {
+    if (gt==GOOGLE_GEOCODER) {
         [addrCompMapping mapKeyPath:@"long_name" toAttribute:@"longName"];
         [addrCompMapping mapKeyPath:@"short_name" toAttribute:@"shortName"];
         [addrCompMapping mapKeyPath:@"types" toAttribute:@"types"];

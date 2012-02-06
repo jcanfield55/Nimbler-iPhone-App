@@ -11,9 +11,8 @@
 
 // Supported Geocoder services.  For each new service, objectMapperForGeocoder method needs updating.  
 typedef enum {
-    GOOGLE
-} GeocoderType;
-
-
+    GOOGLE_GEOCODER,
+    OTP_PLANNER
+} APIType;
 
 #endif

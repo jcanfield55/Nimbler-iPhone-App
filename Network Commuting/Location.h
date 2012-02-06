@@ -18,7 +18,7 @@
     NSMutableSet * rawAddresses; // Set containing all the user inputted strings mapped to this location
 }
 
-@property (nonatomic) GeocoderType geocoderType;  // enum indicating which service performed the Geocode
+@property (nonatomic) APIType apiType;  // enum indicating which service performed the Geocode
 @property (nonatomic, strong) NSString * geoCoderStatus;  // Returned status from geocoder service (ideally "OK")
 @property (nonatomic, strong) NSArray * types;  // Array of NSStrings with type properties (street address, locality)
 @property (nonatomic, strong) NSString * formattedAddress;  // Standardized address string
@@ -30,7 +30,7 @@
 @property (nonatomic) int fromFrequency;  // Frequency requested by user as a From location
 @property (nonatomic, strong) NSString * nickName;     // Alias name for location, e.g. "eBay Whitman Campus" or "Home"
 
-+ (RKObjectMapping *)objectMappingforGeocoder:(GeocoderType)gt;
++ (RKObjectMapping *)objectMappingForApi:(APIType)gt;
 - (bool)isMatchingRawAddress:(NSString *)rawAddr;
 - (void)addRawAddress:(NSString *)rawAddr;
 - (bool)isEquivalent:(Location *)loc2;

@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="872" systemVersion="11C74" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <elements/>
+    <entity name="AddressComponent" syncable="YES">
+        <attribute name="longName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="location" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="addressComponents" inverseEntity="Location" syncable="YES"/>
+    </entity>
+    <entity name="Location" syncable="YES">
+        <attribute name="apiType" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="formattedAddress" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="fromFrequency" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="geoCoderStatus" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="locationType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="nickName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="toFrequency" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <relationship name="addressComponents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AddressComponent" inverseName="location" inverseEntity="AddressComponent" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Location" positionX="241" positionY="4116" width="128" height="165"/>
+        <element name="AddressComponent" positionX="-54" positionY="36" width="128" height="90"/>
+    </elements>
 </model>

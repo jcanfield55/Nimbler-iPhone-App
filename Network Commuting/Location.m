@@ -11,7 +11,7 @@
 
 @implementation Location
 
-@synthesize geocoderType;
+@synthesize apiType;
 @synthesize geoCoderStatus;
 @synthesize types;
 @synthesize formattedAddress;
@@ -23,18 +23,18 @@
 @synthesize fromFrequency;
 @synthesize nickName;
 
-+ (RKObjectMapping *)objectMappingforGeocoder:(GeocoderType)gt;
++ (RKObjectMapping *)objectMappingForApi:(APIType)gt;
 {
     // Create empty ObjectMapping to fill and return
     RKObjectMapping* locationMapping = [RKObjectMapping mappingForClass:[Location class]];
     
     // Call on sub-objects for their Object Mappings
-    RKObjectMapping* addrCompMapping = [AddressComponent objectMappingforGeocoder:gt];
-    RKObjectMapping* latLngMapping = [LatLng objectMappingforGeocoder:gt];
-    RKObjectMapping* geoRectMapping = [GeoRectangle objectMappingforGeocoder:gt];
+    RKObjectMapping* addrCompMapping = [AddressComponent objectMappingForApi:gt];
+    RKObjectMapping* latLngMapping = [LatLng objectMappingForApi:gt];
+    RKObjectMapping* geoRectMapping = [GeoRectangle objectMappingForApi:gt];
     
     // Make the mappings
-    if (gt==GOOGLE) {
+    if (gt==GOOGLE_GEOCODER) {
         [locationMapping mapKeyPath:@"types" toAttribute:@"types"];
         [locationMapping mapKeyPath:@"formatted_address" toAttribute:@"formattedAddress"];
         [locationMapping mapKeyPath:@"address_components" toRelationship:@"addressComponents" 
@@ -47,9 +47,17 @@
 
     }
     else {
-        // Unknown geocoder type, throw an exception
+        // TODO Unknown geocoder type, throw an exception
     }
     return locationMapping;
+}
+
+- (id)init
+{
+    self = [super init];
+    rawAddresses = [[NSMutableSet alloc] init];
+    
+    return self;
 }
 
 - (bool)isMatchingRawAddress:(NSString *)rawAddr
@@ -85,8 +93,8 @@
 - (NSString *)description
 {
     NSString* desc = [NSString stringWithFormat:
-                      @"{Location Object:  geocoderType: %d;  rawAddresses: %@;  geoCoderStatus: %@;  types: %@;  formatted address: %@;  addressComponents: %@;  latLng: %@;  locationType: %@;  viewPort: %@;  toFrequency %d;  fromFrequency %d;  nickName: %@}",
-                      geocoderType, rawAddresses, geoCoderStatus, types, formattedAddress, addressComponents, 
+                      @"{Location Object:  apiType: %d;  rawAddresses: %@;  geoCoderStatus: %@;  types: %@;  formatted address: %@;  addressComponents: %@;  latLng: %@;  locationType: %@;  viewPort: %@;  toFrequency %d;  fromFrequency %d;  nickName: %@}",
+                      apiType, rawAddresses, geoCoderStatus, types, formattedAddress, addressComponents, 
                       latLng, locationType, viewPort, toFrequency, fromFrequency, nickName];
     return desc;
 }

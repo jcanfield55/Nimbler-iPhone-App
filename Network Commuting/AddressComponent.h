@@ -16,7 +16,7 @@
 @property (nonatomic, copy) NSString * shortName;
 @property (nonatomic, copy) NSArray * types;
 
-+ (RKObjectMapping *)objectMappingforGeocoder:(GeocoderType)gt;
++ (RKObjectMapping *)objectMappingForApi:(APIType)gt;
 - (id)initWithLongName:(NSString *)lName shortName:(NSString *)sName types:(NSArray *)t;
 
 @end

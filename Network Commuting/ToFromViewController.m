@@ -14,6 +14,7 @@
 @synthesize toAutoFill;
 @synthesize fromAutoFill;
 @synthesize rkGeoMgr;
+@synthesize rkPlanMgr;
 @synthesize fromLocation;
 @synthesize toLocation;
 @synthesize locations;
@@ -23,20 +24,30 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        [[self navigationItem] setTitle:@"ToFro"];
     }
     return self;
 }
 
 // One-time set-up of the RestKit Geocoder Object Manager's mapping
-
 - (void)setRkGeoMgr:(RKObjectManager *)rkGeoMgr0
 {
     rkGeoMgr = rkGeoMgr0;  //set the property
 
     // Add the mapper from Location class to this Object Manager
-    [[rkGeoMgr mappingProvider] setMapping:[Location objectMappingforGeocoder:GOOGLE] forKeyPath:@"results"];
+    [[rkGeoMgr mappingProvider] setMapping:[Location objectMappingForApi:GOOGLE_GEOCODER] forKeyPath:@"results"];
 }
+
+// One-time set-up of the RestKit Trip Planner Object Manager's mapping
+- (void)setRkPlanMgr:(RKObjectManager *)rkPlanMgr0
+{
+    rkPlanMgr = rkPlanMgr0;
+    
+    // Add the mapper from Plan class to this Object Manager
+    // TODO  Get the right Key Path for trip planner results
+    [[rkPlanMgr mappingProvider] setMapping:[Plan objectMappingforPlanner:OTP_PLANNER] forKeyPath:@"plan"];
+}
+
 
 // Table view management methods
 
@@ -73,7 +84,7 @@
 {
     // Determine whether this is the To: or the From: field
     BOOL isFrom = false;
-    BOOL wasRouteKeyPressed = false;
+    routeRequested = false;
     if (sender == fromField) {
         isFrom = true;
     }
@@ -82,7 +93,7 @@
     // Determine whether user pressed the "Route" button on the To: field 
     if (!isFrom) {
         // TODO determine whether the route button has been pressed.  For now assume true if it is the TO: field
-        wasRouteKeyPressed = true;
+        routeRequested = true;
     }
     
     NSString* rawAddress = [sender text];
@@ -97,12 +108,17 @@
                 break;
             }
         }
-        if (matchingLocation) { //if we got a match, then use the existing location object and increase frequency
+        if (matchingLocation) { //if we got a match, then use the existing location object 
             if (isFrom) {
                 fromLocation = matchingLocation;
             }
             else {
                 toLocation = matchingLocation;
+            }
+            // If routeRequested by user and we have both latlngs, then request a route and reset to false
+            if (routeRequested && [fromLocation latLng] && [toLocation latLng]) {
+                [self getPlan];
+                routeRequested = false;  
             }
         }
         else {  // if no match, Geocode this new rawAddress
@@ -129,89 +145,146 @@
     }
 }
 
-// Delegate methods for when the RestKit has results from the Geocoder
+// Delegate methods for when the RestKit has results from the Geocoder or the Planner
 - (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects 
 {        
-    // Get the status string the hard way by parsing the response string
-    NSString* response = [[objectLoader response] bodyAsString];
-    NSRange range = [response rangeOfString:@"\"status\""];
-    if (range.location != NSNotFound) {
-        NSString* responseStartingFromStatus = [response substringFromIndex:(range.location+range.length)]; 
-        NSArray* atoms = [responseStartingFromStatus componentsSeparatedByString:@"\""];
-        NSString* status = [atoms objectAtIndex:1]; // status string is second atom (first after the first quote)
-        NSLog(@"Status: %@", status);
-
-       
-        if ([status compare:@"OK" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-            if (!objects || [objects count]<1) {
-                // TODO error handling for no object
-            }
-            else if ([objects count]>1) {
-                // TODO error handling for more than one result
-                NSLog(@"Number of returned Geocodes = %d", [objects count]);
-            }
-            
-            // Get the location object
-            Location* location = [objects objectAtIndex:0];
-            NSLog(@"%@", location);
-
-            
-            // Determine whether this is the To: or the From: field geocoding
-            bool isFrom = false;
-            if ([[objectLoader resourcePath] isEqualToString:fromURLResource]) {
-                isFrom = true;
-                [location addRawAddress:fromRawAddress];
-            }
-            else {
-                [location addRawAddress:toRawAddress];
-            }
-            
-            // Check if an equivalent Location is already in the locations dictionary
-            Location* matchingLocation = [locations objectForKey:[location formattedAddress]];
-            if (!matchingLocation) {  // if no direct match, iterate through and look for equivalent
-                for (NSString* key in locations) {
-                    Location* loc2 = [locations objectForKey:key];
-                    if ([location isEquivalent:loc2]) {
-                        matchingLocation = loc2;
-                    }
-                }
-            }
-            if (matchingLocation) { // if there is a match, add the rawAddress and use the location from the dictionary
-                [matchingLocation addRawAddress:(isFrom ? fromRawAddress : toRawAddress)];
-                location = matchingLocation;  // use the location from the dictionary
-            }
-            else {   // if no match, insert this location into the dictionary
-                [locations setObject:location forKey:[location formattedAddress]];
-            }
-            
-            // Increment frequency counter
-            if (isFrom) {
-                [location setFromFrequency:([location fromFrequency]+1)];
-            } else {
-                [location setToFrequency:([location toFrequency]+1)];
-            }
-        }
-        else if ([status compare:@"ZERO_RESULTS" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-            // TODO error handling for zero results
-            NSLog(@"Zero results geocoding address");
-        }
-        else if ([status compare:@"OVER_QUERY_LIMIT" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-            // TODO error handling for over query limit  (switch to other geocoder on my server...)
-            NSLog(@"Over query limit");
-        }
-        else {
-            // TODO error handling for denied, invalid or unknown status (switch to other geocoder on my server...)
-            NSLog(@"Request rejected, status= %@", status);
+    // See whether this is a response from Geocoding or from the planner
+    if ([[objectLoader resourcePath] isEqualToString:planURLResource]) 
+    {   // this is a planner result
+        NSString* response = [[objectLoader response] bodyAsString];
+        NSInteger statusCode = [[objectLoader response] statusCode];
+        NSLog(@"Planning HTTP status code = %d", statusCode);
+        NSLog(@"Planning response: %@", response);
+        if (objects && [objects objectAtIndex:0]) {
+            plan = [objects objectAtIndex:0];
+            NSLog(@"Planning object: %@", plan);
         }
     }
-    else {
-        // TODO Geocoder did not respond with status field
+    else if ([[objectLoader resourcePath] isEqualToString:fromURLResource] ||
+             [[objectLoader resourcePath] isEqualToString:toURLResource])
+    {   // this is a Geocoder result
+        
+        // Get the status string the hard way by parsing the response string
+        NSString* response = [[objectLoader response] bodyAsString];
+        NSRange range = [response rangeOfString:@"\"status\""];
+        if (range.location != NSNotFound) {
+            NSString* responseStartingFromStatus = [response substringFromIndex:(range.location+range.length)]; 
+            NSArray* atoms = [responseStartingFromStatus componentsSeparatedByString:@"\""];
+            NSString* status = [atoms objectAtIndex:1]; // status string is second atom (first after the first quote)
+            NSLog(@"Status: %@", status);
+            
+            
+            if ([status compare:@"OK" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+                if (!objects || [objects count]<1) {
+                    // TODO error handling for no object
+                }
+                else if ([objects count]>1) {
+                    // TODO error handling for more than one result
+                    NSLog(@"Number of returned Geocodes = %d", [objects count]);
+                }
+                
+                // Get the location object
+                Location* location = [objects objectAtIndex:0];
+                NSLog(@"%@", location);
+                
+                
+                // Determine whether this is the To: or the From: field geocoding
+                bool isFrom = false;
+                if ([[objectLoader resourcePath] isEqualToString:fromURLResource]) {
+                    isFrom = true;
+                    [location addRawAddress:fromRawAddress];
+                }
+                else {
+                    [location addRawAddress:toRawAddress];
+                }
+                
+                // Check if an equivalent Location is already in the locations dictionary
+                // TODO Convert looking for matching locations into a Core Data routine
+                Location* matchingLocation = [locations objectForKey:[location formattedAddress]];
+                if (!matchingLocation) {  // if no direct match, iterate through and look for equivalent
+                    for (NSString* key in locations) {
+                        Location* loc2 = [locations objectForKey:key];
+                        if ([location isEquivalent:loc2]) {
+                            matchingLocation = loc2;
+                        }
+                    }
+                }
+                if (matchingLocation) { // if there is a match, add the rawAddress and use the location from the dictionary
+                    [matchingLocation addRawAddress:(isFrom ? fromRawAddress : toRawAddress)];
+                    location = matchingLocation;  // use the location from the dictionary
+                }
+                else {   // if no match, insert this location into the dictionary
+                    [locations setObject:location forKey:[location formattedAddress]];
+                }
+                
+                // Increment frequency counter and set toLocation or fromLocation
+                if (isFrom) {
+                    [location setFromFrequency:([location fromFrequency]+1)];
+                    fromLocation = location;
+                } else {
+                    [location setToFrequency:([location toFrequency]+1)];
+                    toLocation = location;
+                }
+                
+                // If routeRequested by user and we have both latlngs, then request a route and reset to false
+                if (routeRequested && [fromLocation latLng] && [toLocation latLng]) {
+                    [self getPlan];
+                    routeRequested = false;  
+                }
+            }
+            else if ([status compare:@"ZERO_RESULTS" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+                // TODO error handling for zero results
+                NSLog(@"Zero results geocoding address");
+            }
+            else if ([status compare:@"OVER_QUERY_LIMIT" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+                // TODO error handling for over query limit  (switch to other geocoder on my server...)
+                NSLog(@"Over query limit");
+            }
+            else {
+                // TODO error handling for denied, invalid or unknown status (switch to other geocoder on my server...)
+                NSLog(@"Request rejected, status= %@", status);
+            }
+        }
+        else {
+            // TODO Geocoder did not respond with status field
+        }
     }
 }
 
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error {
     NSLog(@"Error received from RKObjectManager:");
     NSLog(@"%@", error);
+}
+
+
+// Routine for calling and populating a trip-plan object
+- (bool)getPlan
+{
+    // Create the date formatters we will use to output the date & time
+    NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
+    [dFormat setDateStyle:NSDateFormatterShortStyle];
+    [dFormat setTimeStyle:NSDateFormatterNoStyle];
+    NSDateFormatter* tFormat = [[NSDateFormatter alloc] init];
+    [tFormat setTimeStyle:NSDateFormatterShortStyle];
+    [tFormat setDateStyle:NSDateFormatterNoStyle];
+
+    // TODO get the date from the UI, rather than just using current date & time
+    NSDate* dateTime = [NSDate date];
+
+    // Build the parameters into a resource string
+    NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
+                            @"fromPlace", [[fromLocation latLng] latLngPairStr], 
+                            @"toPlace", [[toLocation latLng] latLngPairStr], 
+                            @"date", [dFormat stringFromDate:dateTime],
+                            @"time", [tFormat stringFromDate:dateTime], nil];
+    planURLResource = [@"plan" appendQueryParams:params];
+
+    NSLog(@"Plan resource: %@", planURLResource);
+    
+    // Call the trip planner
+    [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
+    
+    return true; 
 }
 
 - (void)didReceiveMemoryWarning

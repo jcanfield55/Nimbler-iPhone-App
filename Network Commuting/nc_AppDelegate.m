@@ -21,12 +21,15 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     
-    // Configure the RestKit RKClient object
+    // Configure the RestKit RKClient object for Geocoding and trip planning
     RKObjectManager* rk_geo_mgr = [RKObjectManager objectManagerWithBaseURL:@"http://maps.googleapis.com/maps/api/geocode/"];
+    RKObjectManager* rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://rtp.trimet.org/opentripplanner-api-webapp/ws/"];
+    // NY City demo URL is http://demo.opentripplanner.org/opentripplanner-api-webapp/ws/
     
-    // Create initial view controller and set as base view for window
+    // Create initial view controller 
     ToFromViewController *toFromViewController = [[ToFromViewController alloc] init];
     [toFromViewController setRkGeoMgr:rk_geo_mgr];    // Pass the geocoding RK object
+    [toFromViewController setRkPlanMgr:rkPlanMgr];    // Pass the planning RK object
     
     // Create locations dictionary if it does not already exist, add Current Location, and pass it to ToFromViewController
     if (!locations) {
@@ -38,8 +41,10 @@
     }
     [toFromViewController setLocations:locations];
     
+    // Create an instance of a UINavigationController and put toFromViewController as the first view
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:toFromViewController]; 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [[self window] setRootViewController:toFromViewController];
+    [[self window] setRootViewController:navController];
 
     [self.window makeKeyAndVisible];
     return YES;

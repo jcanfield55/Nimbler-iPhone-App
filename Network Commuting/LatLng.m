@@ -14,11 +14,11 @@
 @synthesize lng;
 @synthesize z;
 
-+ (RKObjectMapping *)objectMappingforGeocoder:(GeocoderType)gt
++ (RKObjectMapping *)objectMappingForApi:(APIType)gt
 {
     RKObjectMapping* mapping = [RKObjectMapping mappingForClass:[LatLng class]];
     
-    if (gt==GOOGLE) {
+    if (gt==GOOGLE_GEOCODER) {
         [mapping mapKeyPath:@"lat" toAttribute:@"lat"];
         [mapping mapKeyPath:@"lng" toAttribute:@"lng"];
     }
@@ -37,6 +37,11 @@
     lng = newlng;
     z = 0.0;
     return self;
+}
+
+- (NSString *)latLngPairStr
+{
+    return [NSString stringWithFormat:@"%f,%f",lat,lng];
 }
 
 - (NSString *)description

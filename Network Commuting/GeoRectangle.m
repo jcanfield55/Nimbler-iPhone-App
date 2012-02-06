@@ -13,12 +13,12 @@
 @synthesize southWest;
 @synthesize northEast;
 
-+ (RKObjectMapping *)objectMappingforGeocoder:(GeocoderType)gt
++ (RKObjectMapping *)objectMappingForApi:(APIType)gt
 {
     RKObjectMapping* mapping = [RKObjectMapping mappingForClass:[GeoRectangle class]];
-    RKObjectMapping* latLngMapping = [LatLng objectMappingforGeocoder:gt];
+    RKObjectMapping* latLngMapping = [LatLng objectMappingForApi:gt];
     
-    if (gt==GOOGLE) {
+    if (gt==GOOGLE_GEOCODER) {
         [mapping mapKeyPath:@"southwest" toRelationship:@"southWest" 
                         withMapping:latLngMapping];
         [mapping mapKeyPath:@"northeast" toRelationship:@"northEast" 
