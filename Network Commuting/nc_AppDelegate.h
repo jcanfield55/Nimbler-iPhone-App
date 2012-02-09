@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import <RestKit/Restkit.h>
+#import "ModelDataStore.h"
 
-@interface nc_AppDelegate : UIResponder <UIApplicationDelegate>
+@interface nc_AppDelegate : UIResponder <UIApplicationDelegate> {
+    ModelDataStore *modelDataStore;
+}
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
-@property (strong, nonatomic, readonly) NSMutableDictionary *locations; // dictionary of all locations used, formattedAddress is the key
 
 // Properties for Core Data
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;

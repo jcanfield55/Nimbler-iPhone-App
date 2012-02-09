@@ -10,6 +10,7 @@
 #import <RestKit/RestKit.h>
 #import "Location.h"
 #import "Plan.h"
+#import "ModelDataStore.h"
 
 @interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate>
 {
@@ -27,7 +28,8 @@
 @property (strong, nonatomic) IBOutlet UITableView *toAutoFill;
 @property (strong, nonatomic) RKObjectManager *rkGeoMgr;  // RestKit Object Manager for geocoding
 @property (strong, nonatomic) RKObjectManager *rkPlanMgr;  // RestKit object manager for trip planning
-@property (strong, nonatomic) NSMutableDictionary *locations;  // Dictionary of all stored Locations, formattedAddress is the key
+@property (strong, nonatomic) ModelDataStore *modelDataStore; // Object for data stored in CoreData
+// @property (strong, nonatomic) NSMutableDictionary *locations;  // Dictionary of all stored Locations, formattedAddress is the key
 @property (strong, nonatomic, readonly) Location *fromLocation;
 @property (strong, nonatomic, readonly) Location *toLocation;
 

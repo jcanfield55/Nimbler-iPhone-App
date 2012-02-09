@@ -10,7 +10,7 @@
 #import <RestKit/RestKit.h>
 #import "enums.h"
 
-@interface AddressComponent : NSObject
+@interface AddressComponent : NSManagedObject
 
 @property (nonatomic, copy) NSString * longName;
 @property (nonatomic, copy) NSString * shortName;

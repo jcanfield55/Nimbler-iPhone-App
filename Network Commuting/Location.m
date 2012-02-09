@@ -11,17 +11,17 @@
 
 @implementation Location
 
-@synthesize apiType;
-@synthesize geoCoderStatus;
-@synthesize types;
-@synthesize formattedAddress;
-@synthesize addressComponents;
+@dynamic apiType;
+@dynamic geoCoderStatus;
+@dynamic types;
+@dynamic formattedAddress;
+@dynamic addressComponents;
 @synthesize latLng;
-@synthesize locationType;
-@synthesize viewPort;
-@synthesize toFrequency;
-@synthesize fromFrequency;
-@synthesize nickName;
+@dynamic locationType;
+@dynamic viewPort;
+@dynamic toFrequency;
+@dynamic fromFrequency;
+@dynamic nickName;
 
 + (RKObjectMapping *)objectMappingForApi:(APIType)gt;
 {
@@ -52,13 +52,15 @@
     return locationMapping;
 }
 
+// TODO Delete this commented method
+/*
 - (id)init
 {
     self = [super init];
     rawAddresses = [[NSMutableSet alloc] init];
     
     return self;
-}
+} */
 
 - (bool)isMatchingRawAddress:(NSString *)rawAddr
 {
@@ -68,6 +70,40 @@
 - (void)addRawAddress:(NSString *)rawAddr
 {
     [rawAddresses addObject:rawAddr];
+}
+
+// Convenience method for flattening lat/lng properties
+- (double)lat {
+    return [latLng lat];
+}
+
+// Convenience method for flattening lat/lng properties
+- (double)lng {
+    return [latLng lng];
+}
+
+// Convenience method for flattening lat/lng properties
+- (void)setLat:(double)lat {
+    if (!latLng) {   // if latLng does not exist, create it
+        latLng = [[LatLng alloc] init];
+    }
+    [latLng setLat:lat];   // set the lat property
+}
+
+// Convenience method for flattening lat/lng properties
+- (void)setLng:(double)lng {
+    if (!latLng) {   // if latLng does not exist, create it
+        latLng = [[LatLng alloc] init];
+    }
+    [latLng setLng:lng];
+}
+
+- (void)incrementToFrequency {
+    toFrequency++;
+}
+
+- (void)incrementFromFrequency {
+    fromFrequency++;
 }
 
 // Method to see whether two locations are effectively equivalent

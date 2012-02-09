@@ -17,7 +17,7 @@
 @synthesize rkPlanMgr;
 @synthesize fromLocation;
 @synthesize toLocation;
-@synthesize locations;
+@synthesize modelDataStore;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -101,13 +101,15 @@
     
         // Check if we already have a geocoded location that has used this rawAddress before
         Location* matchingLocation = nil;
+        // TODO convert the following code to Core Data
+        /*
         for (NSString* key in locations) {
             Location* loc2 = [locations objectForKey:key];
             if ([loc2 isMatchingRawAddress:rawAddress]) {
                 matchingLocation = loc2;
                 break;
             }
-        }
+        }*/
         if (matchingLocation) { //if we got a match, then use the existing location object 
             if (isFrom) {
                 fromLocation = matchingLocation;
@@ -198,31 +200,20 @@
                     [location addRawAddress:toRawAddress];
                 }
                 
-                // Check if an equivalent Location is already in the locations dictionary
-                // TODO Convert looking for matching locations into a Core Data routine
-                Location* matchingLocation = [locations objectForKey:[location formattedAddress]];
-                if (!matchingLocation) {  // if no direct match, iterate through and look for equivalent
-                    for (NSString* key in locations) {
-                        Location* loc2 = [locations objectForKey:key];
-                        if ([location isEquivalent:loc2]) {
-                            matchingLocation = loc2;
-                        }
-                    }
-                }
+                // Check if an equivalent Location is already in the locations table
+                Location* matchingLocation = [modelDataStore findEquivalentLocationTo:location];
                 if (matchingLocation) { // if there is a match, add the rawAddress and use the location from the dictionary
                     [matchingLocation addRawAddress:(isFrom ? fromRawAddress : toRawAddress)];
                     location = matchingLocation;  // use the location from the dictionary
                 }
                 else {   // if no match, insert this location into the dictionary
-                    [locations setObject:location forKey:[location formattedAddress]];
+                    [modelDataStore addLocation:location];
                 }
                 
-                // Increment frequency counter and set toLocation or fromLocation
+                // Set toLocation or fromLocation
                 if (isFrom) {
-                    [location setFromFrequency:([location fromFrequency]+1)];
                     fromLocation = location;
                 } else {
-                    [location setToFrequency:([location toFrequency]+1)];
                     toLocation = location;
                 }
                 
@@ -260,6 +251,10 @@
 // Routine for calling and populating a trip-plan object
 - (bool)getPlan
 {
+    // Increment fromFrequency and toFrequency
+    [fromLocation incrementFromFrequency];
+    [toLocation incrementToFrequency];
+    
     // Create the date formatters we will use to output the date & time
     NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
     [dFormat setDateStyle:NSDateFormatterShortStyle];

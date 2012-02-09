@@ -9,14 +9,14 @@
 #import "nc_AppDelegate.h"
 #import "ToFromViewController.h"
 #import <RestKit/RestKit.h> 
+#import "Temp.h"
 
 @implementation nc_AppDelegate
 
-@synthesize window = _window;
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
-@synthesize locations;
+@synthesize window = _window;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -31,15 +31,21 @@
     [toFromViewController setRkGeoMgr:rk_geo_mgr];    // Pass the geocoding RK object
     [toFromViewController setRkPlanMgr:rkPlanMgr];    // Pass the planning RK object
     
-    // Create locations dictionary if it does not already exist, add Current Location, and pass it to ToFromViewController
-    if (!locations) {
-        locations = [[NSMutableDictionary alloc] initWithCapacity:50];
-        Location *currLoc = [[Location alloc] init];
-        [currLoc setFormattedAddress:@"Current Location"];
-        [currLoc setFromFrequency:100];
-        [locations setObject:currLoc forKey:[currLoc formattedAddress]];
+    // Initialize the modelDataStore and store "Current Location" into the database if not there already
+    if (!modelDataStore) {
+        modelDataStore = [ModelDataStore defaultStore];
+        
+        if (![modelDataStore locationWithFormattedAddress:@"Current Location"]) { // if current location not in db
+            Location *currLoc = [modelDataStore newEmptyLocation];
+            [currLoc setFormattedAddress:@"Current Location"];
+            [currLoc setFromFrequency:100];
+            [modelDataStore saveChanges];
+        }
     }
-    [toFromViewController setLocations:locations];
+    
+    // TODO figure out duplication between ModelStoreData object and managedObjectContext object from template
+    // TODO pass the View Controller what it needs for the locations store
+    // [toFromViewController setLocations:locations];
     
     // Create an instance of a UINavigationController and put toFromViewController as the first view
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:toFromViewController]; 
@@ -64,6 +70,7 @@
      Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
      If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
      */
+    [modelDataStore saveChanges];  // Permanently save any changes in modelDataStore
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -83,6 +90,7 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Saves changes in the application's managed object context before the application terminates.
+    [modelDataStore saveChanges];  // Permanently save any changes in modelDataStore
     [self saveContext];
 }
 

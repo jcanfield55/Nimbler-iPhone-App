@@ -20,6 +20,9 @@
 		52B302C514BE2B1E00EB4852 /* ToFromViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B302C314BE2B1E00EB4852 /* ToFromViewController.m */; };
 		52B302C614BE2B1E00EB4852 /* ToFromViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52B302C414BE2B1E00EB4852 /* ToFromViewController.xib */; };
 		52B3031F14BE946000EB4852 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B3031E14BE946000EB4852 /* Location.m */; };
+		52B7421714E1D40C00D817D1 /* ModelDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B7421614E1D40C00D817D1 /* ModelDataStore.m */; };
+		52B7421E14E1FFA200D817D1 /* UtilityFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B7421D14E1FFA200D817D1 /* UtilityFunctions.m */; };
+		52B7422114E3251800D817D1 /* Temp.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B7422014E3251800D817D1 /* Temp.m */; };
 		52CF43A014BDF2F9000565D6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF439F14BDF2F9000565D6 /* UIKit.framework */; };
 		52CF43A214BDF2F9000565D6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A114BDF2F9000565D6 /* Foundation.framework */; };
 		52CF43A414BDF2F9000565D6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A314BDF2F9000565D6 /* CoreGraphics.framework */; };
@@ -104,6 +107,12 @@
 		52B302C414BE2B1E00EB4852 /* ToFromViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ToFromViewController.xib; sourceTree = "<group>"; };
 		52B3031D14BE946000EB4852 /* Location.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; lineEnding = 0; path = Location.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		52B3031E14BE946000EB4852 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
+		52B7421514E1D40C00D817D1 /* ModelDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelDataStore.h; sourceTree = "<group>"; };
+		52B7421614E1D40C00D817D1 /* ModelDataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModelDataStore.m; sourceTree = "<group>"; };
+		52B7421C14E1FFA200D817D1 /* UtilityFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilityFunctions.h; sourceTree = "<group>"; };
+		52B7421D14E1FFA200D817D1 /* UtilityFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtilityFunctions.m; sourceTree = "<group>"; };
+		52B7421F14E3251800D817D1 /* Temp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Temp.h; sourceTree = "<group>"; };
+		52B7422014E3251800D817D1 /* Temp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Temp.m; sourceTree = "<group>"; };
 		52CF439B14BDF2F9000565D6 /* Network Commuting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Network Commuting.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52CF439F14BDF2F9000565D6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		52CF43A114BDF2F9000565D6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -222,6 +231,10 @@
 				5210516B14C9BEA80025DD39 /* RouteOptionsViewController.h */,
 				5210516C14C9BEA80025DD39 /* RouteOptionsViewController.m */,
 				52CF43B314BDF2F9000565D6 /* Network_Commuting.xcdatamodeld */,
+				52B7421F14E3251800D817D1 /* Temp.h */,
+				52B7422014E3251800D817D1 /* Temp.m */,
+				52B7421514E1D40C00D817D1 /* ModelDataStore.h */,
+				52B7421614E1D40C00D817D1 /* ModelDataStore.m */,
 				5210516E14C9C0DF0025DD39 /* Plan.h */,
 				5210516F14C9C0DF0025DD39 /* Plan.m */,
 				5210517114D60F3B0025DD39 /* PlanPlace.h */,
@@ -237,6 +250,8 @@
 				52F67EEA14C76504007578D5 /* GeoRectangle.m */,
 				52B3031D14BE946000EB4852 /* Location.h */,
 				52B3031E14BE946000EB4852 /* Location.m */,
+				52B7421C14E1FFA200D817D1 /* UtilityFunctions.h */,
+				52B7421D14E1FFA200D817D1 /* UtilityFunctions.m */,
 				52CF43A814BDF2F9000565D6 /* Supporting Files */,
 			);
 			path = "Network Commuting";
@@ -429,6 +444,9 @@
 				5210517014C9C0DF0025DD39 /* Plan.m in Sources */,
 				5210517314D60F3B0025DD39 /* PlanPlace.m in Sources */,
 				5210517614D610790025DD39 /* AgencyAndId.m in Sources */,
+				52B7421714E1D40C00D817D1 /* ModelDataStore.m in Sources */,
+				52B7421E14E1FFA200D817D1 /* UtilityFunctions.m in Sources */,
+				52B7422114E3251800D817D1 /* Temp.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
