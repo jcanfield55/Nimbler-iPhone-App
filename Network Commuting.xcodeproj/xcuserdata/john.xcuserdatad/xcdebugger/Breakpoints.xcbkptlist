@@ -120,20 +120,6 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          isPathRelative = "1"
-         filePath = "Network Commuting/ToFromViewController.m"
-         timestampString = "350423046.249988"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "206"
-         endingLineNumber = "206"
-         landmarkName = "-objectLoader:didLoadObjects:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
          filePath = "Network Commuting/Temp.m"
          timestampString = "350341694.230266"
          startingColumnNumber = "9223372036854775807"
@@ -146,27 +132,13 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          isPathRelative = "1"
-         filePath = "Network Commuting/nc_AppDelegate.m"
-         timestampString = "350430654.254438"
+         filePath = "Network Commuting/Locations.m"
+         timestampString = "350640777.971365"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "35"
-         endingLineNumber = "35"
-         landmarkName = "-application:didFinishLaunchingWithOptions:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "Network Commuting/ModelDataStore.m"
-         timestampString = "350461799.738603"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "99"
-         endingLineNumber = "99"
-         landmarkName = "-locationWithFormattedAddress:"
+         startingLineNumber = "79"
+         endingLineNumber = "79"
+         landmarkName = "-consolidateWithMatchingLocations:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

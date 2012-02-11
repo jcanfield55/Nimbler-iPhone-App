@@ -7,6 +7,7 @@
 //
 
 #import "ToFromViewController.h"
+#import "Locations.h"
 
 @implementation ToFromViewController
 @synthesize fromField;
@@ -15,6 +16,7 @@
 @synthesize fromAutoFill;
 @synthesize rkGeoMgr;
 @synthesize rkPlanMgr;
+@synthesize locations;
 @synthesize fromLocation;
 @synthesize toLocation;
 @synthesize modelDataStore;
@@ -100,16 +102,7 @@
     if ([rawAddress length] > 0) {
     
         // Check if we already have a geocoded location that has used this rawAddress before
-        Location* matchingLocation = nil;
-        // TODO convert the following code to Core Data
-        /*
-        for (NSString* key in locations) {
-            Location* loc2 = [locations objectForKey:key];
-            if ([loc2 isMatchingRawAddress:rawAddress]) {
-                matchingLocation = loc2;
-                break;
-            }
-        }*/
+        Location* matchingLocation = [locations locationWithRawAddress:rawAddress];
         if (matchingLocation) { //if we got a match, then use the existing location object 
             if (isFrom) {
                 fromLocation = matchingLocation;
@@ -188,7 +181,8 @@
                 // Get the location object
                 Location* location = [objects objectAtIndex:0];
                 NSLog(@"%@", location);
-                
+                NSLog(@"Formatted Address: %@", [location formattedAddress]);
+                NSLog(@"Types: %@", [location types]);
                 
                 // Determine whether this is the To: or the From: field geocoding
                 bool isFrom = false;
@@ -199,16 +193,10 @@
                 else {
                     [location addRawAddress:toRawAddress];
                 }
+                NSLog(@"RawAddresses: %@", [[location rawAddresses] allObjects]);
                 
                 // Check if an equivalent Location is already in the locations table
-                Location* matchingLocation = [modelDataStore findEquivalentLocationTo:location];
-                if (matchingLocation) { // if there is a match, add the rawAddress and use the location from the dictionary
-                    [matchingLocation addRawAddress:(isFrom ? fromRawAddress : toRawAddress)];
-                    location = matchingLocation;  // use the location from the dictionary
-                }
-                else {   // if no match, insert this location into the dictionary
-                    [modelDataStore addLocation:location];
-                }
+                location = [locations consolidateWithMatchingLocations:location];
                 
                 // Set toLocation or fromLocation
                 if (isFrom) {

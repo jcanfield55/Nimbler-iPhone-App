@@ -11,6 +11,7 @@
 
 @implementation Location
 
+@dynamic rawAddresses;
 @dynamic apiType;
 @dynamic geoCoderStatus;
 @dynamic types;
@@ -23,53 +24,33 @@
 @dynamic fromFrequency;
 @dynamic nickName;
 
-+ (RKObjectMapping *)objectMappingForApi:(APIType)gt;
++ (RKManagedObjectMapping *)objectMappingForApi:(APIType)gt;
 {
     // Create empty ObjectMapping to fill and return
-    RKObjectMapping* locationMapping = [RKObjectMapping mappingForClass:[Location class]];
+    RKManagedObjectMapping* locationMapping = [RKManagedObjectMapping mappingForClass:[Location class]];
     
     // Call on sub-objects for their Object Mappings
-    RKObjectMapping* addrCompMapping = [AddressComponent objectMappingForApi:gt];
-    RKObjectMapping* latLngMapping = [LatLng objectMappingForApi:gt];
-    RKObjectMapping* geoRectMapping = [GeoRectangle objectMappingForApi:gt];
+
+    RKManagedObjectMapping* addrCompMapping = [AddressComponent objectMappingForApi:gt];
+
+    // TODO figure out what to do with the following elements
+    // RKObjectMapping* latLngMapping = [LatLng objectMappingForApi:gt];
+    // RKObjectMapping* geoRectMapping = [GeoRectangle objectMappingForApi:gt];
     
     // Make the mappings
     if (gt==GOOGLE_GEOCODER) {
         [locationMapping mapKeyPath:@"types" toAttribute:@"types"];
         [locationMapping mapKeyPath:@"formatted_address" toAttribute:@"formattedAddress"];
-        [locationMapping mapKeyPath:@"address_components" toRelationship:@"addressComponents" 
-                        withMapping:addrCompMapping];
-        [locationMapping mapKeyPath:@"geometry.location" toRelationship:@"latLng" 
-                        withMapping:latLngMapping];
+        [locationMapping mapKeyPath:@"address_components" toRelationship:@"addressComponents" withMapping:addrCompMapping];
+        // [locationMapping mapKeyPath:@"geometry.location" toRelationship:@"latLng" withMapping:latLngMapping];
         [locationMapping mapKeyPath:@"geometry.location_type" toAttribute:@"locationType"];
-        [locationMapping mapKeyPath:@"geometry.viewport" toRelationship:@"viewPort" 
-                        withMapping:geoRectMapping];
-
+        // [locationMapping mapKeyPath:@"geometry.viewport" toRelationship:@"viewPort" withMapping:geoRectMapping];
+        
     }
     else {
         // TODO Unknown geocoder type, throw an exception
     }
     return locationMapping;
-}
-
-// TODO Delete this commented method
-/*
-- (id)init
-{
-    self = [super init];
-    rawAddresses = [[NSMutableSet alloc] init];
-    
-    return self;
-} */
-
-- (bool)isMatchingRawAddress:(NSString *)rawAddr
-{
-    return ([rawAddresses member:rawAddr] != nil);
-}
-
-- (void)addRawAddress:(NSString *)rawAddr
-{
-    [rawAddresses addObject:rawAddr];
 }
 
 // Convenience method for flattening lat/lng properties
@@ -98,12 +79,18 @@
     [latLng setLng:lng];
 }
 
+// Add a raw address in a way that will be maintained by Core Data
+- (void)addRawAddress:(NSString *)value {
+    NSMutableSet *rawAddr = [self mutableSetValueForKey:@"rawAddresses"];
+    [rawAddr addObject:value];
+}
+
 - (void)incrementToFrequency {
-    toFrequency++;
+    [self setToFrequency:([self toFrequency]+1)];
 }
 
 - (void)incrementFromFrequency {
-    fromFrequency++;
+    [self setFromFrequency:([self fromFrequency]+1)];
 }
 
 // Method to see whether two locations are effectively equivalent
@@ -114,7 +101,7 @@
 // Difference is ~0.0008.  Rather than compute exact distince, simply use a surrounding box calculation
 - (bool)isEquivalent:(Location *)loc2
 {
-    if ([formattedAddress isEqualToString:[loc2 formattedAddress]]) {
+    if ([[self formattedAddress] isEqualToString:[loc2 formattedAddress]]) {
         return true;
     }
     float lat2 = [[loc2 latLng] lat];
@@ -126,6 +113,8 @@
         return false;
 }
 
+// TODO Do something about description method to avoid overloading warning.  
+/*
 - (NSString *)description
 {
     NSString* desc = [NSString stringWithFormat:
@@ -134,4 +123,5 @@
                       latLng, locationType, viewPort, toFrequency, fromFrequency, nickName];
     return desc;
 }
+ */
 @end

@@ -10,13 +10,13 @@
 
 @implementation AddressComponent
 
-@synthesize longName;
-@synthesize shortName;
-@synthesize types;
+@dynamic longName;
+@dynamic shortName;
+@dynamic types;
 
-+ (RKObjectMapping *)objectMappingForApi:(APIType)gt
++ (RKManagedObjectMapping *)objectMappingForApi:(APIType)gt
 {
-    RKObjectMapping* addrCompMapping = [RKObjectMapping mappingForClass:[AddressComponent class]];
+    RKManagedObjectMapping* addrCompMapping = [RKManagedObjectMapping mappingForClass:[AddressComponent class]];
     
     if (gt==GOOGLE_GEOCODER) {
         [addrCompMapping mapKeyPath:@"long_name" toAttribute:@"longName"];
@@ -28,17 +28,6 @@
     }
     
     return addrCompMapping;
-}
-
-- (id)initWithLongName:(NSString *)lName shortName:(NSString *)sName types:(NSArray *)t
-{
-    self = [super init];
-    if (self) {
-        [self setLongName:lName];
-        [self setShortName:sName];
-        [self setTypes:t];
-    } 
-    return self;
 }
 
 - (NSString *)description

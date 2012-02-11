@@ -29,7 +29,7 @@
 @property (strong, nonatomic) RKObjectManager *rkGeoMgr;  // RestKit Object Manager for geocoding
 @property (strong, nonatomic) RKObjectManager *rkPlanMgr;  // RestKit object manager for trip planning
 @property (strong, nonatomic) ModelDataStore *modelDataStore; // Object for data stored in CoreData
-// @property (strong, nonatomic) NSMutableDictionary *locations;  // Dictionary of all stored Locations, formattedAddress is the key
+@property (strong, nonatomic) Locations *locations;  // Wrapper for collection of all Locations
 @property (strong, nonatomic, readonly) Location *fromLocation;
 @property (strong, nonatomic, readonly) Location *toLocation;
 

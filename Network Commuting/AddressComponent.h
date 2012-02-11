@@ -8,15 +8,20 @@
 
 #import <Foundation/Foundation.h>
 #import <RestKit/RestKit.h>
+#import <RestKit/CoreData.h>
+#import <CoreData/CoreData.h>
 #import "enums.h"
 
-@interface AddressComponent : NSManagedObject
+@interface AddressComponent : NSManagedObject {
+    NSString * longName;
+    NSString * shortName;
+    NSArray * types;
+}
 
-@property (nonatomic, copy) NSString * longName;
-@property (nonatomic, copy) NSString * shortName;
-@property (nonatomic, copy) NSArray * types;
+@property (nonatomic, strong) NSString * longName;
+@property (nonatomic, strong) NSString * shortName;
+@property (nonatomic, strong) NSArray * types;
 
-+ (RKObjectMapping *)objectMappingForApi:(APIType)gt;
-- (id)initWithLongName:(NSString *)lName shortName:(NSString *)sName types:(NSArray *)t;
++ (RKManagedObjectMapping *)objectMappingForApi:(APIType)gt;
 
 @end

@@ -8,8 +8,7 @@
 
 #import "nc_AppDelegate.h"
 #import "ToFromViewController.h"
-#import <RestKit/RestKit.h> 
-#import "Temp.h"
+#import "Locations.h"
 
 @implementation nc_AppDelegate
 
@@ -26,26 +25,31 @@
     RKObjectManager* rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://rtp.trimet.org/opentripplanner-api-webapp/ws/"];
     // NY City demo URL is http://demo.opentripplanner.org/opentripplanner-api-webapp/ws/
     
+    // Add the CoreData managed object store
+    [rk_geo_mgr setObjectStore:[RKManagedObjectStore objectStoreWithStoreFilename:@"store.data"]];
+    
     // Create initial view controller 
     ToFromViewController *toFromViewController = [[ToFromViewController alloc] init];
     [toFromViewController setRkGeoMgr:rk_geo_mgr];    // Pass the geocoding RK object
     [toFromViewController setRkPlanMgr:rkPlanMgr];    // Pass the planning RK object
     
-    // Initialize the modelDataStore and store "Current Location" into the database if not there already
+    // Initialize the modelDataStore and the Locations class
     if (!modelDataStore) {
         modelDataStore = [ModelDataStore defaultStore];
-        
-        if (![modelDataStore locationWithFormattedAddress:@"Current Location"]) { // if current location not in db
-            Location *currLoc = [modelDataStore newEmptyLocation];
+        Locations *locs = [[Locations alloc] initWithRKObjectManager:rk_geo_mgr modelDataStore:modelDataStore];
+        [modelDataStore setLocations:locs];
+    
+        // Store "Current Location" into the database if not there already
+        if (![locs locationWithFormattedAddress:@"Current Location"]) { // if current location not in db
+            Location *currLoc = [locs newEmptyLocation];
             [currLoc setFormattedAddress:@"Current Location"];
             [currLoc setFromFrequency:100];
             [modelDataStore saveChanges];
         }
     }
+    [toFromViewController setLocations:[modelDataStore locations]];
     
     // TODO figure out duplication between ModelStoreData object and managedObjectContext object from template
-    // TODO pass the View Controller what it needs for the locations store
-    // [toFromViewController setLocations:locations];
     
     // Create an instance of a UINavigationController and put toFromViewController as the first view
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:toFromViewController]; 

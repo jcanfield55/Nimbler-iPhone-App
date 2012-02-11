@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <RestKit/Restkit.h>
+#import <RestKit/CoreData.h>
 #import "ModelDataStore.h"
 
 @interface nc_AppDelegate : UIResponder <UIApplicationDelegate> {
