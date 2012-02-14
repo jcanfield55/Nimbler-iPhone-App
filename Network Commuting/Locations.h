@@ -13,20 +13,29 @@
 #import <RestKit/RestKit.h>
 #import <RestKit/CoreData.h>
 #import "Location.h"
-@class ModelDataStore;
 
-@interface Locations : NSObject
+@interface Locations : NSObject {
+    NSArray *sortedFromLocations;
+    NSArray *sortedToLocations;
+    int fromRowCount;
+    int toRowCount;
+    NSFetchRequest *locationsFetchRequest;
+}
 
-@property (nonatomic, unsafe_unretained) ModelDataStore *modelDataStore;
-@property (nonatomic, strong) RKObjectManager *rkObjectManager;
-@property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
+@property (nonatomic) BOOL areLocationsChanged;  // True if there have been locations added or changed
 
-- (id)initWithRKObjectManager:(RKObjectManager *)rko modelDataStore:(ModelDataStore *)mds;
+- (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc;
 - (Location *)locationWithRawAddress:(NSString *)rawAddress;
-- (Location *)locationWithFormattedAddress:(NSString *)formattedAddress;
+- (NSArray *)locationsWithFormattedAddress:(NSString *)formattedAddress; // Array of matching locations
 - (Location *)newEmptyLocation;
-- (Location *)findEquivalentLocationTo:(Location *)loc0;
+- (int)numberOfLocations:(bool)isFrom;
+- (Location *)locationAtIndex:(int)index isFrom:(BOOL)isFrom;
+
 - (Location *)consolidateWithMatchingLocations:(Location *)loc0;
+
+// Internal methods
+- (void) updateInternalCache;
 
 @end

@@ -9,3 +9,5 @@
 #import <Foundation/Foundation.h>
 
 NSString *pathInDocumentDirectory(NSString *fileName);
+
+void saveContext(NSManagedObjectContext *managedObjectContext);

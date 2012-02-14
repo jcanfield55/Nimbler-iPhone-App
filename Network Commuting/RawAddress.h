@@ -2,7 +2,7 @@
 //  RawAddress.h
 //  Network Commuting
 //
-//  Created by John Canfield on 2/9/12.
+//  Created by John Canfield on 2/13/12.
 //  Copyright (c) 2012 Network Commuting. All rights reserved.
 //
 
@@ -11,12 +11,9 @@
 
 @class Location;
 
-@interface RawAddress : NSManagedObject {
-    NSString *rawAddressString;
-    Location *location;
-}
+@interface RawAddress : NSManagedObject
 
-@property (nonatomic, strong) NSString * rawAddressString;
-@property (nonatomic, weak) Location *location;
+@property (nonatomic, retain) NSString * rawAddressString;
+@property (nonatomic, retain) Location *location;
 
 @end

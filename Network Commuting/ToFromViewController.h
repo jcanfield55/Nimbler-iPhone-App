@@ -8,9 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <RestKit/RestKit.h>
-#import "Location.h"
+#import "Locations.h"
 #import "Plan.h"
-#import "ModelDataStore.h"
 
 @interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate>
 {
@@ -21,6 +20,7 @@
     NSString *planURLResource;
     Plan *plan;
     bool routeRequested;   // True when the user has pressed the route button and a route has not yet been requested
+    NSManagedObjectContext *managedObjectContext;
 }
 @property (strong, nonatomic) IBOutlet UITextField *fromField;
 @property (strong, nonatomic) IBOutlet UITextField *toField;
@@ -28,7 +28,6 @@
 @property (strong, nonatomic) IBOutlet UITableView *toAutoFill;
 @property (strong, nonatomic) RKObjectManager *rkGeoMgr;  // RestKit Object Manager for geocoding
 @property (strong, nonatomic) RKObjectManager *rkPlanMgr;  // RestKit object manager for trip planning
-@property (strong, nonatomic) ModelDataStore *modelDataStore; // Object for data stored in CoreData
 @property (strong, nonatomic) Locations *locations;  // Wrapper for collection of all Locations
 @property (strong, nonatomic, readonly) Location *fromLocation;
 @property (strong, nonatomic, readonly) Location *toLocation;

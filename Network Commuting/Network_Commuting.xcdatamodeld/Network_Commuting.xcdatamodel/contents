@@ -13,6 +13,7 @@
     </entity>
     <entity name="Location" representedClassName="Location" syncable="YES">
         <attribute name="apiType" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="dateLastUsed" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="formattedAddress" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fromFrequency" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="geoCoderStatus" optional="YES" attributeType="String" syncable="YES"/>
@@ -41,7 +42,7 @@
         </compoundIndexes>
     </entity>
     <fetchRequest name="LocationByFormattedAddress" entity="Location" predicateString="formattedAddress ==$ADDRESS2"/>
-    <fetchRequest name="LocationByRawAddress" entity="Location"/>
+    <fetchRequest name="RawAddressByString" entity="RawAddress" predicateString="rawAddressString == $ADDRESS"/>
     <elements>
         <element name="AddressComponent" positionX="-54" positionY="36" width="128" height="90"/>
         <element name="Location" positionX="241" positionY="4116" width="128" height="165"/>

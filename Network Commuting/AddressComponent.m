@@ -30,6 +30,8 @@
     return addrCompMapping;
 }
 
+// TODO -- get a new way to do description
+/*
 - (NSString *)description
 {
     NSString* desc = [NSString stringWithFormat:
@@ -37,5 +39,6 @@
                       longName, shortName, types];
     return desc;
 }
+ */
 
 @end

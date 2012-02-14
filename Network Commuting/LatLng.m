@@ -39,6 +39,7 @@
     return self;
 }
 
+// latLng pair string is the format used by OTP geocoder for lat & lng 
 - (NSString *)latLngPairStr
 {
     return [NSString stringWithFormat:@"%f,%f",lat,lng];

@@ -11,8 +11,8 @@
 		5210517014C9C0DF0025DD39 /* Plan.m in Sources */ = {isa = PBXBuildFile; fileRef = 5210516F14C9C0DF0025DD39 /* Plan.m */; };
 		5210517314D60F3B0025DD39 /* PlanPlace.m in Sources */ = {isa = PBXBuildFile; fileRef = 5210517214D60F3B0025DD39 /* PlanPlace.m */; };
 		5210517614D610790025DD39 /* AgencyAndId.m in Sources */ = {isa = PBXBuildFile; fileRef = 5210517514D610790025DD39 /* AgencyAndId.m */; };
-		5231E43614E48B7600739DC7 /* RawAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 5231E43514E48B7600739DC7 /* RawAddress.m */; };
 		5231E43914E5DE7E00739DC7 /* Locations.m in Sources */ = {isa = PBXBuildFile; fileRef = 5231E43814E5DE7E00739DC7 /* Locations.m */; };
+		5231E43C14E9E7A400739DC7 /* RawAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 5231E43B14E9E7A400739DC7 /* RawAddress.m */; };
 		525442C214C3ECF2004B0E1F /* libRestKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442B814C3EA95004B0E1F /* libRestKit.a */; };
 		525442C414C3ED2C004B0E1F /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C314C3ED2C004B0E1F /* CFNetwork.framework */; };
 		525442C614C3ED4A004B0E1F /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C514C3ED4A004B0E1F /* MobileCoreServices.framework */; };
@@ -22,7 +22,6 @@
 		52B302C514BE2B1E00EB4852 /* ToFromViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B302C314BE2B1E00EB4852 /* ToFromViewController.m */; };
 		52B302C614BE2B1E00EB4852 /* ToFromViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52B302C414BE2B1E00EB4852 /* ToFromViewController.xib */; };
 		52B3031F14BE946000EB4852 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B3031E14BE946000EB4852 /* Location.m */; };
-		52B7421714E1D40C00D817D1 /* ModelDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B7421614E1D40C00D817D1 /* ModelDataStore.m */; };
 		52B7421E14E1FFA200D817D1 /* UtilityFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B7421D14E1FFA200D817D1 /* UtilityFunctions.m */; };
 		52CF43A014BDF2F9000565D6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF439F14BDF2F9000565D6 /* UIKit.framework */; };
 		52CF43A214BDF2F9000565D6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A114BDF2F9000565D6 /* Foundation.framework */; };
@@ -722,10 +721,10 @@
 		5231E3F014E42FE100739DC7 /* SOCKitTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SOCKitTests-Info.plist"; sourceTree = "<group>"; };
 		5231E3F114E42FE100739DC7 /* SOCKitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SOCKitTests.m; sourceTree = "<group>"; };
 		5231E3F214E42FE100739DC7 /* VERSION */ = {isa = PBXFileReference; lastKnownFileType = text; path = VERSION; sourceTree = "<group>"; };
-		5231E43414E48B7600739DC7 /* RawAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RawAddress.h; sourceTree = "<group>"; };
-		5231E43514E48B7600739DC7 /* RawAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RawAddress.m; sourceTree = "<group>"; };
 		5231E43714E5DE7E00739DC7 /* Locations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Locations.h; sourceTree = "<group>"; };
 		5231E43814E5DE7E00739DC7 /* Locations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Locations.m; sourceTree = "<group>"; };
+		5231E43A14E9E7A300739DC7 /* RawAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RawAddress.h; sourceTree = "<group>"; };
+		5231E43B14E9E7A400739DC7 /* RawAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RawAddress.m; sourceTree = "<group>"; };
 		525442AD14C3EA95004B0E1F /* RestKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RestKit.xcodeproj; path = RestKit/RestKit.xcodeproj; sourceTree = "<group>"; };
 		525442C314C3ED2C004B0E1F /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		525442C514C3ED4A004B0E1F /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -737,8 +736,6 @@
 		52B302C414BE2B1E00EB4852 /* ToFromViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ToFromViewController.xib; sourceTree = "<group>"; };
 		52B3031D14BE946000EB4852 /* Location.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; lineEnding = 0; path = Location.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		52B3031E14BE946000EB4852 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
-		52B7421514E1D40C00D817D1 /* ModelDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelDataStore.h; sourceTree = "<group>"; };
-		52B7421614E1D40C00D817D1 /* ModelDataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModelDataStore.m; sourceTree = "<group>"; };
 		52B7421C14E1FFA200D817D1 /* UtilityFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilityFunctions.h; sourceTree = "<group>"; };
 		52B7421D14E1FFA200D817D1 /* UtilityFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtilityFunctions.m; sourceTree = "<group>"; };
 		52CF439B14BDF2F9000565D6 /* Network Commuting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Network Commuting.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2169,11 +2166,9 @@
 				52B302C214BE2B1E00EB4852 /* ToFromViewController.h */,
 				52B302C314BE2B1E00EB4852 /* ToFromViewController.m */,
 				52B302C414BE2B1E00EB4852 /* ToFromViewController.xib */,
+				52CF43B314BDF2F9000565D6 /* Network_Commuting.xcdatamodeld */,
 				5210516B14C9BEA80025DD39 /* RouteOptionsViewController.h */,
 				5210516C14C9BEA80025DD39 /* RouteOptionsViewController.m */,
-				52CF43B314BDF2F9000565D6 /* Network_Commuting.xcdatamodeld */,
-				52B7421514E1D40C00D817D1 /* ModelDataStore.h */,
-				52B7421614E1D40C00D817D1 /* ModelDataStore.m */,
 				5210516E14C9C0DF0025DD39 /* Plan.h */,
 				5210516F14C9C0DF0025DD39 /* Plan.m */,
 				5210517114D60F3B0025DD39 /* PlanPlace.h */,
@@ -2191,8 +2186,8 @@
 				5231E43814E5DE7E00739DC7 /* Locations.m */,
 				52B3031D14BE946000EB4852 /* Location.h */,
 				52B3031E14BE946000EB4852 /* Location.m */,
-				5231E43414E48B7600739DC7 /* RawAddress.h */,
-				5231E43514E48B7600739DC7 /* RawAddress.m */,
+				5231E43A14E9E7A300739DC7 /* RawAddress.h */,
+				5231E43B14E9E7A400739DC7 /* RawAddress.m */,
 				52B7421C14E1FFA200D817D1 /* UtilityFunctions.h */,
 				52B7421D14E1FFA200D817D1 /* UtilityFunctions.m */,
 				52CF43A814BDF2F9000565D6 /* Supporting Files */,
@@ -2498,10 +2493,9 @@
 				5210517014C9C0DF0025DD39 /* Plan.m in Sources */,
 				5210517314D60F3B0025DD39 /* PlanPlace.m in Sources */,
 				5210517614D610790025DD39 /* AgencyAndId.m in Sources */,
-				52B7421714E1D40C00D817D1 /* ModelDataStore.m in Sources */,
 				52B7421E14E1FFA200D817D1 /* UtilityFunctions.m in Sources */,
-				5231E43614E48B7600739DC7 /* RawAddress.m in Sources */,
 				5231E43914E5DE7E00739DC7 /* Locations.m in Sources */,
+				5231E43C14E9E7A400739DC7 /* RawAddress.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

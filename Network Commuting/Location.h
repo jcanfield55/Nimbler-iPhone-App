@@ -14,10 +14,12 @@
 #import <CoreData/CoreData.h>
 #import <RestKit/Restkit.h>
 #import <RestKit/CoreData.h>
-#import "LatLng.h"
 #import "AddressComponent.h"
+#import "RawAddress.h"
 #import "GeoRectangle.h"
 #import "enums.h"
+
+@class Locations;
 
 @interface Location : NSManagedObject 
 
@@ -27,25 +29,28 @@
 @property (nonatomic, strong) NSArray * types;  // Array of NSStrings with type properties (street address, locality)
 @property (nonatomic, strong) NSString * formattedAddress;  // Standardized address string
 @property (nonatomic, strong) NSSet * addressComponents;  // Set of AddressComponent items
-@property (nonatomic, strong) LatLng * latLng;      // LatLng of the location
+@property (nonatomic) double lat;
+@property (nonatomic) double lng;
 @property (nonatomic, strong) NSString * locationType;   // Type of location (ROOFTOP, APPROXIMATE)
 @property (nonatomic, strong) GeoRectangle * viewPort;   // Rectangle defining the view for the location
 @property (nonatomic) int toFrequency;   // Frequency requested by user as a To location
 @property (nonatomic) int fromFrequency;  // Frequency requested by user as a From location
+@property (nonatomic, strong) NSDate *dateLastUsed;  // Last time a user created or selected this location
 @property (nonatomic, strong) NSString * nickName;  // Alias name for location, e.g. "eBay Whitman Campus" or "Home"
 
++ (void)setLocations:(Locations *)loc;
++ (Locations *)locations;
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)gt;
 
-// Convenience methods for flattening lat/lng properties
-- (double)lat;   
-- (double)lng;
-- (void)setLat:(double)lat;
-- (void)setLng:(double)lng;
 
-- (void)addRawAddress:(NSString *)value;
+- (void)addRawAddressString:(NSString *)value;
 - (void)incrementToFrequency;
 - (void)incrementFromFrequency;
+- (NSString *)latLngPairStr;
 - (bool)isEquivalent:(Location *)loc2;
 
 @end
 
+@interface Location (CoreDataGeneratedAccessors)
+	- (void)addRawAddressesObject:(NSManagedObject *)object;
+@end

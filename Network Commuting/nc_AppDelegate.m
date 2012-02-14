@@ -8,10 +8,11 @@
 
 #import "nc_AppDelegate.h"
 #import "ToFromViewController.h"
-#import "Locations.h"
+#import "UtilityFunctions.h"
 
 @implementation nc_AppDelegate
 
+@synthesize locations;
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
@@ -26,31 +27,26 @@
     // NY City demo URL is http://demo.opentripplanner.org/opentripplanner-api-webapp/ws/
     
     // Add the CoreData managed object store
-    [rk_geo_mgr setObjectStore:[RKManagedObjectStore objectStoreWithStoreFilename:@"store.data"]];
+    RKManagedObjectStore *rkMOS = [RKManagedObjectStore objectStoreWithStoreFilename:@"store.data"];
+    [rk_geo_mgr setObjectStore:rkMOS];
+    
+    // Get the NSManagedObjectContext from restkit
+    __managedObjectContext = [rkMOS managedObjectContext];
     
     // Create initial view controller 
     ToFromViewController *toFromViewController = [[ToFromViewController alloc] init];
     [toFromViewController setRkGeoMgr:rk_geo_mgr];    // Pass the geocoding RK object
     [toFromViewController setRkPlanMgr:rkPlanMgr];    // Pass the planning RK object
     
-    // Initialize the modelDataStore and the Locations class
-    if (!modelDataStore) {
-        modelDataStore = [ModelDataStore defaultStore];
-        Locations *locs = [[Locations alloc] initWithRKObjectManager:rk_geo_mgr modelDataStore:modelDataStore];
-        [modelDataStore setLocations:locs];
-    
-        // Store "Current Location" into the database if not there already
-        if (![locs locationWithFormattedAddress:@"Current Location"]) { // if current location not in db
-            Location *currLoc = [locs newEmptyLocation];
-            [currLoc setFormattedAddress:@"Current Location"];
-            [currLoc setFromFrequency:100];
-            [modelDataStore saveChanges];
-        }
+    // Initialize the Locations class and store "Current Location" into the database if not there already
+    locations = [[Locations alloc] initWithManagedObjectContext:[self managedObjectContext]];
+    if ([[locations locationsWithFormattedAddress:@"Current Location"] count] == 0) { // if current location not in db
+        Location *currLoc = [locations newEmptyLocation];
+        [currLoc setFormattedAddress:@"Current Location"];
+        [currLoc setFromFrequency:100];
     }
-    [toFromViewController setLocations:[modelDataStore locations]];
-    
-    // TODO figure out duplication between ModelStoreData object and managedObjectContext object from template
-    
+    [toFromViewController setLocations:locations];
+        
     // Create an instance of a UINavigationController and put toFromViewController as the first view
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:toFromViewController]; 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -74,7 +70,7 @@
      Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
      If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
      */
-    [modelDataStore saveChanges];  // Permanently save any changes in modelDataStore
+    saveContext([self managedObjectContext]);
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -94,28 +90,9 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Saves changes in the application's managed object context before the application terminates.
-    [modelDataStore saveChanges];  // Permanently save any changes in modelDataStore
-    [self saveContext];
+    saveContext([self managedObjectContext]);
 }
 
-- (void)saveContext
-{
-    NSError *error = nil;
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    if (managedObjectContext != nil)
-    {
-        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error])
-        {
-            /*
-             Replace this implementation with code to handle the error appropriately.
-             
-             abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-             */
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        } 
-    }
-}
 
 #pragma mark - Core Data stack
 

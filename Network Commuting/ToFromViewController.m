@@ -8,6 +8,7 @@
 
 #import "ToFromViewController.h"
 #import "Locations.h"
+#import "UtilityFunctions.h"
 
 @implementation ToFromViewController
 @synthesize fromField;
@@ -19,14 +20,14 @@
 @synthesize locations;
 @synthesize fromLocation;
 @synthesize toLocation;
-@synthesize modelDataStore;
+
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        [[self navigationItem] setTitle:@"ToFro"];
+        [[self navigationItem] setTitle:@"Nimbler"];
     }
     return self;
 }
@@ -38,6 +39,9 @@
 
     // Add the mapper from Location class to this Object Manager
     [[rkGeoMgr mappingProvider] setMapping:[Location objectMappingForApi:GOOGLE_GEOCODER] forKeyPath:@"results"];
+    
+    // Get the Managed Object Context associated with rkGeoMgr0
+    managedObjectContext = [[rkGeoMgr objectStore] managedObjectContext];
 }
 
 // One-time set-up of the RestKit Trip Planner Object Manager's mapping
@@ -53,10 +57,10 @@
 
 // Table view management methods
 
-- (NSInteger)tableView:(UITableView *)tableView
- numberOfRowsInSection:(NSInteger)section
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
+    BOOL isFrom = ((tableView == fromAutoFill) ? YES : NO);
+    return [locations numberOfLocations:isFrom];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -71,13 +75,8 @@
                 reuseIdentifier:@"UITableViewCell"];
     }
     
-    // If this is the from table...
-    if (tableView == fromAutoFill) {
-        [[cell textLabel] setText:@"Current Location"];
-    }
-    else { // if this is the to table...
-        [[cell textLabel] setText:@"Destination"];
-    }
+    BOOL isFrom = ((tableView == fromAutoFill) ? YES : NO);
+    [[cell textLabel] setText:[[locations locationAtIndex:[indexPath row] isFrom:isFrom] formattedAddress]];
     return cell;
 }
 
@@ -111,7 +110,7 @@
                 toLocation = matchingLocation;
             }
             // If routeRequested by user and we have both latlngs, then request a route and reset to false
-            if (routeRequested && [fromLocation latLng] && [toLocation latLng]) {
+            if (routeRequested && [fromLocation formattedAddress] && [toLocation formattedAddress]) {
                 [self getPlan];
                 routeRequested = false;  
             }
@@ -182,16 +181,22 @@
                 Location* location = [objects objectAtIndex:0];
                 NSLog(@"%@", location);
                 NSLog(@"Formatted Address: %@", [location formattedAddress]);
+                NSLog(@"Lat/Lng: %@", [location latLngPairStr]);
                 NSLog(@"Types: %@", [location types]);
+                NSLog(@"Address Components: %@", [[location addressComponents] allObjects]);
+                
+                // Initialize some of the values for location
+                [location setGeoCoderStatus:status];
+                [location setApiType:GOOGLE_GEOCODER];
                 
                 // Determine whether this is the To: or the From: field geocoding
                 bool isFrom = false;
                 if ([[objectLoader resourcePath] isEqualToString:fromURLResource]) {
                     isFrom = true;
-                    [location addRawAddress:fromRawAddress];
+                    [location addRawAddressString:fromRawAddress];
                 }
                 else {
-                    [location addRawAddress:toRawAddress];
+                    [location addRawAddressString:toRawAddress];
                 }
                 NSLog(@"RawAddresses: %@", [[location rawAddresses] allObjects]);
                 
@@ -206,10 +211,13 @@
                 }
                 
                 // If routeRequested by user and we have both latlngs, then request a route and reset to false
-                if (routeRequested && [fromLocation latLng] && [toLocation latLng]) {
+                if (routeRequested && [fromLocation formattedAddress] && [toLocation formattedAddress]) {
                     [self getPlan];
                     routeRequested = false;  
                 }
+                
+                // Save db context with the new location object
+                saveContext(managedObjectContext);
             }
             else if ([status compare:@"ZERO_RESULTS" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
                 // TODO error handling for zero results
@@ -242,6 +250,9 @@
     // Increment fromFrequency and toFrequency
     [fromLocation incrementFromFrequency];
     [toLocation incrementToFrequency];
+    // Update the dateLastUsed
+    [fromLocation setDateLastUsed:[NSDate date]];
+    [toLocation setDateLastUsed:[NSDate date]];
     
     // Create the date formatters we will use to output the date & time
     NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
@@ -256,8 +267,8 @@
 
     // Build the parameters into a resource string
     NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                            @"fromPlace", [[fromLocation latLng] latLngPairStr], 
-                            @"toPlace", [[toLocation latLng] latLngPairStr], 
+                            @"fromPlace", [fromLocation latLngPairStr], 
+                            @"toPlace", [toLocation latLngPairStr], 
                             @"date", [dFormat stringFromDate:dateTime],
                             @"time", [tFormat stringFromDate:dateTime], nil];
     planURLResource = [@"plan" appendQueryParams:params];
@@ -267,6 +278,9 @@
     // Call the trip planner
     [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
     
+    // Reload the to/from tables for next time
+    [[self fromAutoFill] reloadData];
+    [[self toAutoFill] reloadData];
     return true; 
 }
 

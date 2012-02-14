@@ -2,7 +2,7 @@
 //  RawAddress.m
 //  Network Commuting
 //
-//  Created by John Canfield on 2/9/12.
+//  Created by John Canfield on 2/13/12.
 //  Copyright (c) 2012 Network Commuting. All rights reserved.
 //
 
@@ -10,15 +10,9 @@
 #import "Location.h"
 
 
-@implementation RawAddress 
+@implementation RawAddress
 
 @dynamic rawAddressString;
 @dynamic location;
-
-- (NSString *)description
-{
-    NSString* desc = [NSString stringWithFormat:@"{%@}", rawAddressString];
-    return desc;
-}
 
 @end
