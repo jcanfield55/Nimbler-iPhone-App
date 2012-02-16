@@ -13,13 +13,15 @@
 
 @interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate>
 {
-    NSString *toRawAddress;
-    NSString *toURLResource;
-    NSString *fromRawAddress;
-    NSString *fromURLResource;
-    NSString *planURLResource;
+    NSString *toRawAddress;    // user entered To address
+    NSString *toURLResource;   // URL resource sent to geocoder for the to address
+    NSString *fromRawAddress;  // user entered From address
+    NSString *fromURLResource; // URL resource sent to geocoder for the from address
+    NSString *planURLResource; // URL resource sent to planner
+    UITableViewCell *toSelectedCell; // Cell currently selected on To view table
+    UITableViewCell *fromSelectedCell;  // Cell currently selected on the From view table
     Plan *plan;
-    bool routeRequested;   // True when the user has pressed the route button and a route has not yet been requested
+    BOOL routeRequested;   // True when the user has pressed the route button and a route has not yet been requested
     NSManagedObjectContext *managedObjectContext;
 }
 @property (strong, nonatomic) IBOutlet UITextField *fromField;
@@ -32,7 +34,8 @@
 @property (strong, nonatomic, readonly) Location *fromLocation;
 @property (strong, nonatomic, readonly) Location *toLocation;
 
-- (IBAction)toFromTextEntry:(id)sender forEvent:(UIEvent *)event;
-- (bool)getPlan;
+- (IBAction)toFromTyping:(id)sender forEvent:(UIEvent *)event;
+- (IBAction)toFromTextSubmitted:(id)sender forEvent:(UIEvent *)event;
+- (BOOL)getPlan;
 
 @end

@@ -8,16 +8,16 @@
 
 #import "Locations.h"
 
+// Internal utility functions
+
 @implementation Locations
 
+@synthesize typedFromString;
+@synthesize typedToString;
 @synthesize managedObjectContext;
 @synthesize managedObjectModel;
 @synthesize areLocationsChanged;
-
-// Called after there has been a significant update to a Location so that cache is invalidated
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    [self setAreLocationsChanged:YES];  // mark cache for refresh
-}
+@synthesize areMatchingLocationsChanged;
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc
 {
@@ -29,9 +29,14 @@
     // Set the static variable for Location class
     [Location setLocations:self];
     
-    areLocationsChanged = YES;  // Force cache stale upon start-up
+    areLocationsChanged = YES;  // Force cache stale upon start-up so it gets properly loaded
     
     return self;
+}
+
+// Called after there has been a significant update to a Location so that cache is invalidated
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    [self setAreLocationsChanged:YES];  // mark cache for refresh
 }
 
 - (Location *)newEmptyLocation 
@@ -40,19 +45,91 @@
     return l;
 }
 
+// Utility function used by setTypedFromString & setTypedToString.  On hold for now
+/* void updateFromTyping(NSString *typedXStr0, NSString **typedXString, NSArray **sortedMatchingXLocations, 
+                      int *matchingXRowCount)
+ */
+
+// Custom setter for updated typedFromString that recomputes the sortedMatchingFromLocations and row count
+- (void)setTypedFromString:(NSString *)typedFromStr0
+{
+    // updateFromTyping(typedFromStr0, &typedFromString, &sortedMatchingFromLocations, &matchingFromRowCount);
+    if (!typedFromStr0 || [typedFromStr0 length] == 0) { // if sorted string = 0
+        sortedMatchingFromLocations = sortedFromLocations;
+        typedFromString = typedFromStr0;  
+        areMatchingLocationsChanged = YES;
+    }
+    else {
+        NSArray *startArray = nil;
+        if (typedFromString && [typedFromString length]>0 && [typedFromStr0 hasPrefix:typedFromString]) { // if new string is an extension of the previous one...
+            startArray = sortedMatchingFromLocations;  // start with the last array of matches, and narrow from there
+        }
+        else {
+            startArray = sortedFromLocations;    // otherwise, start fresh with all from locations
+        }
+        typedFromString = typedFromStr0;   
+        NSMutableArray *newArray = [NSMutableArray array];   
+        for (Location *loc in startArray) {
+            if ([loc isMatchingTypedString:typedFromString]) {  // if loc matches the new string
+                [newArray addObject:loc];  //  add loc to the new array
+            }
+        }
+        NSArray *finalNewArray = [NSArray arrayWithArray:newArray];  // makes a non-mutable copy
+        if (![finalNewArray isEqualToArray:sortedMatchingFromLocations]) { // if there is a change
+            sortedMatchingFromLocations = finalNewArray;
+            areMatchingLocationsChanged = YES;   // mark for refreshing the table
+        }
+    }
+    matchingFromRowCount = [sortedMatchingFromLocations count];
+}
+
+// Custom setter for updated typedToString that recomputes the sortedMatchingToLocations and row count
+- (void)setTypedToString:(NSString *)typedToStr0
+{
+    // updateToTyping(typedToStr0, &typedToString, &sortedMatchingToLocations, &matchingToRowCount);
+    if (!typedToStr0 || [typedToStr0 length] == 0) { // if sorted string = 0
+        sortedMatchingToLocations = sortedToLocations;
+        typedToString = typedToStr0;
+        areMatchingLocationsChanged = YES;
+    }
+    else {
+        NSArray *startArray = nil;
+        if (typedToString && [typedToString length]>0 && [typedToStr0 hasPrefix:typedToString]) { // if new string is an extension of the previous one...
+            startArray = sortedMatchingToLocations;  // start with the last array of matches, and narrow from there
+        }
+        else {
+            startArray = sortedToLocations;    // otherwise, start fresh with all To locations
+        }
+        typedToString = typedToStr0;   
+        NSMutableArray *newArray = [NSMutableArray array];   
+        for (Location *loc in startArray) {
+            if ([loc isMatchingTypedString:typedToString]) {  // if loc matches the new string
+                [newArray addObject:loc];  //  add loc to the new array
+            }
+        }
+        NSArray *finalNewArray = [NSArray arrayWithArray:newArray];  // makes a non-mutable copy
+        if (![finalNewArray isEqualToArray:sortedMatchingToLocations]) { // if there is a change
+            sortedMatchingToLocations = finalNewArray;
+            areMatchingLocationsChanged = YES;   // mark for refreshing the table
+        }
+    }
+    matchingToRowCount = [sortedMatchingToLocations count];
+}
+
+
 // Returns the number of locations to show in the to or from table.  isFrom = true if it is the from table.
 // Implementation only counts locations with frequency>0.   
-- (int)numberOfLocations:(bool)isFrom {
+- (int)numberOfLocations:(BOOL)isFrom {
 
     if (areLocationsChanged) { // if cache outdated, then query & update the internal memory array
         [self updateInternalCache];
     }
     // Now that the internal variables are updated, return the row value
     if (isFrom) {
-        return fromRowCount;
+        return matchingFromRowCount;
     }
     else {
-        return toRowCount;
+        return matchingToRowCount;
     }
 }
 
@@ -64,10 +141,10 @@
     }
     // Now that the internal variables are updated, return the row value
     if (isFrom) {
-        return [sortedFromLocations objectAtIndex:index];
+        return [sortedMatchingFromLocations objectAtIndex:index];
     }
     else {
-        return [sortedToLocations objectAtIndex:index];
+        return [sortedMatchingToLocations objectAtIndex:index];
     }
 }
 
@@ -106,10 +183,10 @@
     // Calculate the count, up to the first location with frequency=0
     int i;
     for (i=0; (i < [sortedFromLocations count]) && 
-         ([[sortedFromLocations objectAtIndex:i] fromFrequency] != 0); i++);
+         ([[sortedFromLocations objectAtIndex:i] fromFrequencyInt] != 0); i++);
     fromRowCount = i;
     for (i=0; (i < [sortedToLocations count]) && 
-         ([[sortedToLocations objectAtIndex:i] toFrequency] != 0); i++);
+         ([[sortedToLocations objectAtIndex:i] toFrequencyInt] != 0); i++);
     toRowCount = i;
     
     NSLog(@"fromLocations: %@", sortedFromLocations);
@@ -117,6 +194,9 @@
     NSLog(@"fromRowCount: %d", fromRowCount);
     NSLog(@"toRowCount: %d", toRowCount);
 
+    // Force the recomputation of the sortedMatchedLocations arrays
+    [self setTypedToString:[self typedToString]];
+    [self setTypedFromString:[self typedFromString]];
     
     [self setAreLocationsChanged:NO];  // reset again
 }
@@ -177,8 +257,8 @@
                     [loc1 addRawAddressesObject:loc0RawAddr];
                 }
                 // Add from and to frequency from loc0 into loc1
-                [loc1 setToFrequency:([loc1 toFrequency] + [loc0 toFrequency])];
-                [loc1 setFromFrequency:([loc1 fromFrequency] + [loc0 fromFrequency])];
+                [loc1 setToFrequencyInt:([loc1 toFrequencyInt] + [loc0 toFrequencyInt])];
+                [loc1 setFromFrequencyInt:([loc1 fromFrequencyInt] + [loc0 fromFrequencyInt])];
                 
                 // Delete loc0 & return loc1
                 // TODO  resolve error about deleting across contexts

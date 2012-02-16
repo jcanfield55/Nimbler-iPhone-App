@@ -37,6 +37,40 @@ static Locations *locations;
     return locations;
 }
 
+// Convenience setters and accessors for scalars
+- (APIType)apiTypeEnum {
+    APIType a = (APIType) [[self apiType] intValue];
+    return a;
+}
+- (void)setApiTypeEnum:(APIType)apiType0 {
+    [self setApiType:[NSNumber numberWithInt:apiType0]];
+}
+- (double)latFloat {
+    return [[self lat] doubleValue];
+}
+- (void)setLatFloat:(double)lat0 {
+    [self setLat:[NSNumber numberWithDouble:lat0]];
+}
+- (double)lngFloat {
+    return [[self lng] doubleValue];
+}
+- (void)setLngFloat:(double)lng0 {
+    [self setLng:[NSNumber numberWithDouble:lng0]];
+}
+- (int)toFrequencyInt {
+    return [[self toFrequency] intValue];
+}
+- (void)setToFrequencyInt:(int)toFreq0 {
+    [self setToFrequency:[NSNumber numberWithInt:toFreq0]];
+}
+- (int)fromFrequencyInt {
+    return [[self fromFrequency] intValue];
+}
+- (void)setFromFrequencyInt:(int)fromFreq0 {
+    [self setFromFrequency:[NSNumber numberWithInt:fromFreq0]];
+}
+
+
 // Returns the mapping used by RestKit to map this object from the specified API
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)gt;
 {
@@ -55,8 +89,8 @@ static Locations *locations;
         [locationMapping mapKeyPath:@"types" toAttribute:@"types"];
         [locationMapping mapKeyPath:@"formatted_address" toAttribute:@"formattedAddress"];
         [locationMapping mapKeyPath:@"address_components" toRelationship:@"addressComponents" withMapping:addrCompMapping];
-        [locationMapping mapKeyPath:@"geometry.location.lat" toAttribute:@"lat"];
-        [locationMapping mapKeyPath:@"geometry.location.lng" toAttribute:@"lng"];
+        [locationMapping mapKeyPath:@"geometry.location.lat" toAttribute:@"latFloat"];
+        [locationMapping mapKeyPath:@"geometry.location.lng" toAttribute:@"lngFloat"];
         [locationMapping mapKeyPath:@"geometry.location_type" toAttribute:@"locationType"];
         // [locationMapping mapKeyPath:@"geometry.viewport" toRelationship:@"viewPort" withMapping:geoRectMapping];
         
@@ -76,6 +110,7 @@ static Locations *locations;
     // Set the date
     [self setPrimitiveValue:[NSDate date] forKey:@"dateLastUsed"];
     
+    
     // Add the locations object as an observer for changes so it can resort its cache
     [self addObserver:locations forKeyPath:@"dateLastUsed" options:NSKeyValueObservingOptionNew context:nil];
 }
@@ -91,30 +126,83 @@ static Locations *locations;
 }
 
 - (void)incrementToFrequency {
-    if ([self toFrequency] == 0) { // if this is the first use...
-        [self setFromFrequency:1];  // insure this location will be visible in the from list as well 
-        [self setToFrequency:2];   // but give more weight to this location in the to list
+    if ([self toFrequencyInt] == 0) { // if this is the first use...
+        [self setFromFrequencyInt:1];  // insure this location will be visible in the from list as well 
+        [self setToFrequencyInt:2];   // but give more weight to this location in the to list
     }
     else {
-        [self setToFrequency:([self toFrequency]+1)];
+        [self setToFrequencyInt:([self toFrequencyInt]+1)];
     }
 }
 
 - (void)incrementFromFrequency {
-    if ([self fromFrequency] == 0) { // if this is the first use...
-        [self setToFrequency:1];  // insure this location will be visible in the to list as well 
-        [self setFromFrequency:2];   // but give more weight to this location in the from list
+    if ([self fromFrequencyInt] == 0) { // if this is the first use...
+        [self setToFrequencyInt:1];  // insure this location will be visible in the to list as well 
+        [self setFromFrequencyInt:2];   // but give more weight to this location in the from list
     }
     else {
-        [self setFromFrequency:([self fromFrequency]+1)];
+        [self setFromFrequencyInt:([self fromFrequencyInt]+1)];
     }
 }
 
 // latLng pair string is the format used by OTP geocoder for lat & lng 
 - (NSString *)latLngPairStr
 {
-    return [NSString stringWithFormat:@"%f,%f",[self lat],[self lng]];
+    return [NSString stringWithFormat:@"%f,%f",[self latFloat],[self lngFloat]];
 }
+
+// Returns true if the receiver's formatted address is a substring match with str.  
+// Substring match is computed by doing a compare of all the atoms in str against number, street, city, airport, etc
+- (BOOL)isMatchingTypedString:(NSString *)str
+{
+    NSArray *strAtoms = [str componentsSeparatedByCharactersInSet:
+                        [NSCharacterSet characterSetWithCharactersInString:@" ,."]];
+    NSMutableArray *matches = [NSMutableArray arrayWithCapacity:[strAtoms count]]; // will hold booleans for matches
+    NSSet *addrComponents = [self addressComponents];
+    if (addrComponents && [addrComponents count]>0) {
+        for (int i=0; i<[strAtoms count]; i++) {  // iterate through string's atoms
+            NSString *atom = [strAtoms objectAtIndex:i];
+            [matches addObject:[NSNumber numberWithBool:NO]];
+            if (!atom || [atom length] == 0) { // if no or empty string...
+                [matches replaceObjectAtIndex:i withObject:[NSNumber numberWithBool:YES]]; // count as match
+            }
+            else { 
+                for (AddressComponent *ac in addrComponents) {  // iterate through address components
+                    for (NSString *type in [ac types]) {  // iterate through component types
+                        if ([type isEqualToString:@"street_number"]) { // for street #, do a prefix compare
+                            if ([[ac longName] hasPrefix:atom]) {
+                                [matches replaceObjectAtIndex:i withObject:[NSNumber numberWithBool:YES]];
+                                goto getNextAtom;
+                            }
+                        }
+                        if ([type isEqualToString:@"route"] ||
+                            [type isEqualToString:@"intersection"] ||
+                            [type isEqualToString:@"locality"] ||
+                            [type isEqualToString:@"airport"]) { // for these types, do a substring compare
+                            if ([[ac longName] rangeOfString:atom].location != NSNotFound) {
+                                [matches replaceObjectAtIndex:i withObject:[NSNumber numberWithBool:YES]];
+                                goto getNextAtom;
+                            }
+                        }
+                    }
+                }
+            }
+        getNextAtom:
+            [matches count];   // No op (needed for goto label)
+        }
+        // No go through matches array and see if all elements are true.  If so return true, otherwise false
+        for (NSNumber *match in matches) {
+            if ([match boolValue] == NO) {
+                return NO;
+            }
+        }
+        return YES;  // all atoms had matches, so return true
+    }
+    else {  // if there are no address components, do a simple prefix match on the formatted address
+        return [[self formattedAddress] hasPrefix:str];
+    }
+}
+
 
 // Method to see whether two locations are effectively equivalent
 // If they have the exact same formatted address, or they are within ~0.05 miles 
@@ -122,14 +210,14 @@ static Locations *locations;
 // 1350 Hull Lat: 37.510594; Lng: -122.268646;
 // 1315 Hull Lat: 37.510811; Lng: -122.267816; 
 // Difference is ~0.0008.  Rather than compute exact distince, simply use a surrounding box calculation
-- (bool)isEquivalent:(Location *)loc2
+- (BOOL)isEquivalent:(Location *)loc2
 {
     if ([[self formattedAddress] isEqualToString:[loc2 formattedAddress]]) {
         return true;
     }
-    double lat2 = [loc2 lat];
-    double lng2 = [loc2 lng];
-    if ((fabs([self lat] - lat2) < 0.0008) && (fabs([self lng] - lng2) < 0.0008)) {
+    double lat2 = [loc2 latFloat];
+    double lng2 = [loc2 lngFloat];
+    if ((fabs([self latFloat] - lat2) < 0.0008) && (fabs([self lngFloat] - lng2) < 0.0008)) {
         return true;
     }
     else

@@ -43,7 +43,7 @@
     if ([[locations locationsWithFormattedAddress:@"Current Location"] count] == 0) { // if current location not in db
         Location *currLoc = [locations newEmptyLocation];
         [currLoc setFormattedAddress:@"Current Location"];
-        [currLoc setFromFrequency:100];
+        [currLoc setFromFrequencyInt:100];
     }
     [toFromViewController setLocations:locations];
         

@@ -24,30 +24,42 @@
 @interface Location : NSManagedObject 
 
 @property (nonatomic, strong) NSSet *rawAddresses; // Set containing all the user inputted strings mapped to this location
-@property (nonatomic) APIType apiType;  // enum indicating which service performed the Geocode
-@property (nonatomic, strong) NSString * geoCoderStatus;  // Returned status from geocoder service (ideally "OK")
-@property (nonatomic, strong) NSArray * types;  // Array of NSStrings with type properties (street address, locality)
-@property (nonatomic, strong) NSString * formattedAddress;  // Standardized address string
-@property (nonatomic, strong) NSSet * addressComponents;  // Set of AddressComponent items
-@property (nonatomic) double lat;
-@property (nonatomic) double lng;
-@property (nonatomic, strong) NSString * locationType;   // Type of location (ROOFTOP, APPROXIMATE)
-@property (nonatomic, strong) GeoRectangle * viewPort;   // Rectangle defining the view for the location
-@property (nonatomic) int toFrequency;   // Frequency requested by user as a To location
-@property (nonatomic) int fromFrequency;  // Frequency requested by user as a From location
+@property (nonatomic, strong) NSNumber *apiType;  // APIType enum indicating which service performed the Geocode
+@property (nonatomic, strong) NSString *geoCoderStatus;  // Returned status from geocoder service (ideally "OK")
+@property (nonatomic, strong) NSArray *types;  // Array of NSStrings with type properties (street address, locality)
+@property (nonatomic, strong) NSString *formattedAddress;  // Standardized address string
+@property (nonatomic, strong) NSSet *addressComponents;  // Set of AddressComponent items
+@property (nonatomic, strong) NSNumber *lat;  // double floating point
+@property (nonatomic, strong) NSNumber *lng;  // double floating point
+@property (nonatomic, strong) NSString *locationType;   // Type of location (ROOFTOP, APPROXIMATE)
+@property (nonatomic, strong) GeoRectangle *viewPort;   // Rectangle defining the view for the location
+@property (nonatomic, strong) NSNumber *toFrequency;   // Int Frequency requested by user as a To location
+@property (nonatomic, strong) NSNumber *fromFrequency;  // Frequency requested by user as a From location
 @property (nonatomic, strong) NSDate *dateLastUsed;  // Last time a user created or selected this location
-@property (nonatomic, strong) NSString * nickName;  // Alias name for location, e.g. "eBay Whitman Campus" or "Home"
+@property (nonatomic, strong) NSString *nickName;  // Alias name for location, e.g. "eBay Whitman Campus" or "Home"
 
 + (void)setLocations:(Locations *)loc;
 + (Locations *)locations;
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)gt;
 
+// Convenience methods for accessing and setting scalar properties
+- (APIType)apiTypeEnum;
+- (void)setApiTypeEnum:(APIType)apiType0;
+- (double)latFloat;
+- (void)setLatFloat:(double)lat0;
+- (double)lngFloat;
+- (void)setLngFloat:(double)lng0;
+- (int)toFrequencyInt;
+- (void)setToFrequencyInt:(int)toFreq0;
+- (int)fromFrequencyInt;
+- (void)setFromFrequencyInt:(int)fromFreq0;
 
 - (void)addRawAddressString:(NSString *)value;
 - (void)incrementToFrequency;
 - (void)incrementFromFrequency;
 - (NSString *)latLngPairStr;
-- (bool)isEquivalent:(Location *)loc2;
+- (BOOL)isMatchingTypedString:(NSString *)str;
+- (BOOL)isEquivalent:(Location *)loc2;
 
 @end
 

@@ -70,26 +70,93 @@
     [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell"];
         
     if (!cell) {
-        cell = [[UITableViewCell alloc] 
-                initWithStyle:UITableViewCellStyleDefault
-                reuseIdentifier:@"UITableViewCell"];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
+                                      reuseIdentifier:@"UITableViewCell"];
     }
-    
+
+    // Set fonts for title and 
+    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
+
     BOOL isFrom = ((tableView == fromAutoFill) ? YES : NO);
-    [[cell textLabel] setText:[[locations locationAtIndex:[indexPath row] isFrom:isFrom] formattedAddress]];
+    Location *loc = [locations locationAtIndex:[indexPath row] isFrom:isFrom];
+    
+    [[cell textLabel] setText:[loc formattedAddress]];
+
     return cell;
+    
+    // In the future, we can support Nicknames by putting formatted address into subtitle, as shown below
+    /* if ([loc nickName]) {   // if there is a nickname, put that in the top row
+        [[cell textLabel] setText:[loc nickName]];
+        NSLog(@"Subtitle formatted address: %@", [loc formattedAddress]);
+        [[cell detailTextLabel] setText:[loc formattedAddress]];
+    } else {  // if no nickname, just show one row with the formatted address */
 }
 
-// Delegate for when text entered into the to: or from: UITextField
-- (IBAction)toFromTextEntry:(id)sender forEvent:(UIEvent *)event 
+
+- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    BOOL isFrom = ((tableView == fromAutoFill) ? YES : NO);
+    Location *loc = [locations locationAtIndex:[indexPath row] isFrom:isFrom];  //selected Location
+    
+    // Set the new checkmark and fill the corresponding text box with the formatted address from the selected location
+    if (isFrom) {
+        if (fromSelectedCell) { // if a previous cell is selected
+            fromSelectedCell.accessoryType = UITableViewCellAccessoryNone; // turn off its selector
+        }
+        fromSelectedCell = [fromAutoFill cellForRowAtIndexPath:indexPath];  // get the new selected cell
+        fromSelectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
+        [fromField setText:[loc formattedAddress]]; // fill the text in the from text box
+    } 
+    else {
+        if (toSelectedCell) { // if a previous cell is selected
+            toSelectedCell.accessoryType = UITableViewCellAccessoryNone; // turn off its selector
+        }
+        toSelectedCell = [toAutoFill cellForRowAtIndexPath:indexPath];  // get the new selected cell
+        toSelectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
+        [toField setText:[loc formattedAddress]];
+    }
+}
+
+// Delegate for when text is typed into the to: or from: UITextField (see below for when text submitted)
+// This method updates the autoFill table to reflect entries that match the text
+- (IBAction)toFromTyping:(id)sender forEvent:(UIEvent *)event {
+    BOOL isFrom = ((sender == fromField) ? YES : NO);
+    NSLog(@"In toFromTyping and isFrom=%d", isFrom);
+
+    if (isFrom) {
+        // Deselect any selected cell
+        if (fromSelectedCell) {
+            [fromSelectedCell setAccessoryType:UITableViewCellAccessoryNone];
+            fromSelectedCell = nil; 
+        }
+        [locations setTypedFromString:[fromField text]];
+        if ([locations areMatchingLocationsChanged]) {  //if typing has changed matrix, reload the array
+            [fromAutoFill reloadData];
+        }
+
+    }
+    else {
+        // Deselect any selected cell
+        if (toSelectedCell) {
+            [toSelectedCell setAccessoryType:UITableViewCellAccessoryNone];
+            toSelectedCell = nil; 
+        }
+        [locations setTypedToString:[toField text]];
+        if ([locations areMatchingLocationsChanged]) {
+            [toAutoFill reloadData];
+        }
+    }
+}
+
+// Delegate for when complete text entered into the to: or from: UITextField
+- (IBAction)toFromTextSubmitted:(id)sender forEvent:(UIEvent *)event 
 {
     // Determine whether this is the To: or the From: field
-    BOOL isFrom = false;
+    BOOL isFrom = ((sender == fromField) ? YES : NO);
+
     routeRequested = false;
-    if (sender == fromField) {
-        isFrom = true;
-    }
-    NSLog(@"In toFromTextEntry and isFrom=%d", isFrom);
+
+    NSLog(@"In toFromTextSubmitted and isFrom=%d", isFrom);
     
     // Determine whether user pressed the "Route" button on the To: field 
     if (!isFrom) {
@@ -102,6 +169,12 @@
     
         // Check if we already have a geocoded location that has used this rawAddress before
         Location* matchingLocation = [locations locationWithRawAddress:rawAddress];
+        if (!matchingLocation) {  // if no matching raw addresses, check for matching formatted addresses
+            NSArray *matchingLocations = [locations locationsWithFormattedAddress:rawAddress];
+            if ([matchingLocations count] > 0) {
+                matchingLocation = [matchingLocations objectAtIndex:0];  // Get the first matching location
+            }
+        }
         if (matchingLocation) { //if we got a match, then use the existing location object 
             if (isFrom) {
                 fromLocation = matchingLocation;
@@ -187,10 +260,10 @@
                 
                 // Initialize some of the values for location
                 [location setGeoCoderStatus:status];
-                [location setApiType:GOOGLE_GEOCODER];
+                [location setApiTypeEnum:GOOGLE_GEOCODER];
                 
                 // Determine whether this is the To: or the From: field geocoding
-                bool isFrom = false;
+                BOOL isFrom = false;
                 if ([[objectLoader resourcePath] isEqualToString:fromURLResource]) {
                     isFrom = true;
                     [location addRawAddressString:fromRawAddress];
@@ -214,6 +287,11 @@
                 if (routeRequested && [fromLocation formattedAddress] && [toLocation formattedAddress]) {
                     [self getPlan];
                     routeRequested = false;  
+                }
+                
+                // TODO remove this temp test code
+                if ([[fromLocation formattedAddress] hasPrefix:@"1350 Hull"]) {
+                    [fromLocation setNickName:@"Home"];
                 }
                 
                 // Save db context with the new location object
@@ -245,7 +323,7 @@
 
 
 // Routine for calling and populating a trip-plan object
-- (bool)getPlan
+- (BOOL)getPlan
 {
     // Increment fromFrequency and toFrequency
     [fromLocation incrementFromFrequency];
