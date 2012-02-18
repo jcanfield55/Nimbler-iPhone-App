@@ -22,9 +22,13 @@
     int matchingToRowCount;
     NSArray *sortedFromLocations;  // All locations sorted by from frequency
     NSArray *sortedToLocations;    // All locations sorted by to frequency
-    int fromRowCount;  // Row count excluding frequency=0 locations
-    int toRowCount;    // Row count excluding frequency=0 locations
     NSFetchRequest *locationsFetchRequest;
+    NSString *typedFromString;
+    NSString *typedToString;
+    NSManagedObjectContext *managedObjectContext;
+    NSManagedObjectModel *managedObjectModel;
+    BOOL areLocationsChanged;
+    BOOL areMatchingLocationsChanged;
 }
 
 @property (strong, nonatomic) NSString *typedFromString;  // Typed string in the from field 

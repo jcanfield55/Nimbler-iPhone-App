@@ -7,7 +7,19 @@
 //
 
 #import <SenTestingKit/SenTestingKit.h>
+#import "Locations.h"
+#import "Location.h"
+#import "AddressComponent.h"
 
 @interface Network_CommutingTests : SenTestCase
-
+{
+    NSManagedObjectContext *managedObjectContext;
+    NSManagedObjectModel *managedObjectModel;
+    
+    Location *loc1;
+    Location *loc2;
+    Location *loc3;
+    
+    Locations *locations;
+}
 @end

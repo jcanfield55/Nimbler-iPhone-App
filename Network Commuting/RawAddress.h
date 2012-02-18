@@ -13,7 +13,7 @@
 
 @interface RawAddress : NSManagedObject
 
-@property (nonatomic, retain) NSString * rawAddressString;
+@property (nonatomic, copy) NSString * rawAddressString;
 @property (nonatomic, retain) Location *location;
 
 @end

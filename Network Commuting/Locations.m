@@ -58,6 +58,12 @@
         sortedMatchingFromLocations = sortedFromLocations;
         typedFromString = typedFromStr0;  
         areMatchingLocationsChanged = YES;
+
+        // Calculate the count, up to the first location with frequency=0
+        int i;
+        for (i=0; (i < [sortedMatchingFromLocations count]) && 
+             ([[sortedMatchingFromLocations objectAtIndex:i] fromFrequencyInt] != 0); i++);
+        matchingFromRowCount = i;
     }
     else {
         NSArray *startArray = nil;
@@ -79,8 +85,8 @@
             sortedMatchingFromLocations = finalNewArray;
             areMatchingLocationsChanged = YES;   // mark for refreshing the table
         }
+        matchingFromRowCount = [sortedMatchingFromLocations count];  // cases that match typing are included even if they have frequency=0
     }
-    matchingFromRowCount = [sortedMatchingFromLocations count];
 }
 
 // Custom setter for updated typedToString that recomputes the sortedMatchingToLocations and row count
@@ -91,6 +97,12 @@
         sortedMatchingToLocations = sortedToLocations;
         typedToString = typedToStr0;
         areMatchingLocationsChanged = YES;
+
+        // Calculate the count, up to the first location with frequency=0
+        int i;
+        for (i=0; (i < [sortedMatchingToLocations count]) && 
+             ([[sortedMatchingToLocations objectAtIndex:i] toFrequencyInt] != 0); i++);
+        matchingToRowCount = i;
     }
     else {
         NSArray *startArray = nil;
@@ -112,8 +124,8 @@
             sortedMatchingToLocations = finalNewArray;
             areMatchingLocationsChanged = YES;   // mark for refreshing the table
         }
+        matchingToRowCount = [sortedMatchingToLocations count];  // cases that match typing are included even if they have frequency=0
     }
-    matchingToRowCount = [sortedMatchingToLocations count];
 }
 
 
@@ -179,20 +191,6 @@
                                                           ascending:NO];
     sortedToLocations = [sortedFromLocations sortedArrayUsingDescriptors:
                          [NSArray arrayWithObjects:sd1,sd2,nil]];
-    
-    // Calculate the count, up to the first location with frequency=0
-    int i;
-    for (i=0; (i < [sortedFromLocations count]) && 
-         ([[sortedFromLocations objectAtIndex:i] fromFrequencyInt] != 0); i++);
-    fromRowCount = i;
-    for (i=0; (i < [sortedToLocations count]) && 
-         ([[sortedToLocations objectAtIndex:i] toFrequencyInt] != 0); i++);
-    toRowCount = i;
-    
-    NSLog(@"fromLocations: %@", sortedFromLocations);
-    NSLog(@"toLocations: %@", sortedToLocations);
-    NSLog(@"fromRowCount: %d", fromRowCount);
-    NSLog(@"toRowCount: %d", toRowCount);
 
     // Force the recomputation of the sortedMatchedLocations arrays
     [self setTypedToString:[self typedToString]];
@@ -205,6 +203,9 @@
 // (could be empty if no matches)
 - (NSArray *)locationsWithFormattedAddress:(NSString *)formattedAddress
 {
+    if (!formattedAddress) {
+        return nil;
+    }
     NSFetchRequest *request = [managedObjectModel fetchRequestFromTemplateWithName:@"LocationByFormattedAddress" substitutionVariables:[NSDictionary dictionaryWithObject:formattedAddress forKey:@"ADDRESS2"]];
     
     NSError *error; 
@@ -218,6 +219,9 @@
 // Returns first location that has an exact match for a rawAddress
 - (Location *)locationWithRawAddress:(NSString *)rawAddress
 {
+    if (!rawAddress) {
+        return nil;
+    }
     // Fetch all RawAddress objects that match the string
     NSFetchRequest *request = [managedObjectModel fetchRequestFromTemplateWithName:@"RawAddressByString" substitutionVariables:[NSDictionary dictionaryWithObject:rawAddress forKey:@"ADDRESS"]];
     
@@ -246,7 +250,7 @@
 {
     NSArray *matches = [self locationsWithFormattedAddress:[loc0 formattedAddress]];
     if (!matches) {   
-        return loc0;  // returns nil
+        return loc0;  
     }
     else {  
         for (Location *loc1 in matches) {
@@ -254,7 +258,7 @@
                 // consolidate from loc0 into loc1, delete loc0, and return loc1
                 // loop thru and add each loc0 RawAddress and add to loc1
                 for (RawAddress *loc0RawAddr in [loc0 rawAddresses]) {
-                    [loc1 addRawAddressesObject:loc0RawAddr];
+                    [loc1 addRawAddressString:[loc0RawAddr rawAddressString]];
                 }
                 // Add from and to frequency from loc0 into loc1
                 [loc1 setToFrequencyInt:([loc1 toFrequencyInt] + [loc0 toFrequencyInt])];

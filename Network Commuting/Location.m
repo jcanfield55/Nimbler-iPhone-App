@@ -115,6 +115,10 @@ static Locations *locations;
     [self addObserver:locations forKeyPath:@"dateLastUsed" options:NSKeyValueObservingOptionNew context:nil];
 }
 
+- (void)prepareForDeletion {
+    [locations setAreLocationsChanged:YES];  // alert locations wrapper that it's cache is stale
+}
+
 // Add a raw address string to this Location in a way that will be maintained by Core Data
 - (void)addRawAddressString:(NSString *)value {
 
@@ -170,7 +174,8 @@ static Locations *locations;
                 for (AddressComponent *ac in addrComponents) {  // iterate through address components
                     for (NSString *type in [ac types]) {  // iterate through component types
                         if ([type isEqualToString:@"street_number"]) { // for street #, do a prefix compare
-                            if ([[ac longName] hasPrefix:atom]) {
+                            NSRange range = [[ac longName] rangeOfString:atom options:NSCaseInsensitiveSearch];
+                            if (range.location!= NSNotFound && range.location == 0) { // Make sure it is a prefix only
                                 [matches replaceObjectAtIndex:i withObject:[NSNumber numberWithBool:YES]];
                                 goto getNextAtom;
                             }
@@ -179,7 +184,7 @@ static Locations *locations;
                             [type isEqualToString:@"intersection"] ||
                             [type isEqualToString:@"locality"] ||
                             [type isEqualToString:@"airport"]) { // for these types, do a substring compare
-                            if ([[ac longName] rangeOfString:atom].location != NSNotFound) {
+                            if ([[ac longName] rangeOfString:atom options:NSCaseInsensitiveSearch].location != NSNotFound) {
                                 [matches replaceObjectAtIndex:i withObject:[NSNumber numberWithBool:YES]];
                                 goto getNextAtom;
                             }
