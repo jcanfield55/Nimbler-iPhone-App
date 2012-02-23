@@ -20,6 +20,7 @@
     NSString *planURLResource; // URL resource sent to planner
     UITableViewCell *toSelectedCell; // Cell currently selected on To view table
     UITableViewCell *fromSelectedCell;  // Cell currently selected on the From view table
+    NSMutableArray *planRequestHistory; // Array of all the past plan request parameter histories in sequential order (most recent one last)
     Plan *plan;
     BOOL routeRequested;   // True when the user has pressed the route button and a route has not yet been requested
     NSManagedObjectContext *managedObjectContext;

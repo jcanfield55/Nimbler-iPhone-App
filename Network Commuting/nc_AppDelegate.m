@@ -7,12 +7,12 @@
 //
 
 #import "nc_AppDelegate.h"
-#import "ToFromViewController.h"
 #import "UtilityFunctions.h"
 
 @implementation nc_AppDelegate
 
 @synthesize locations;
+@synthesize toFromViewController;
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
@@ -34,7 +34,7 @@
     __managedObjectContext = [rkMOS managedObjectContext];
     
     // Create initial view controller 
-    ToFromViewController *toFromViewController = [[ToFromViewController alloc] init];
+    toFromViewController = [[ToFromViewController alloc] initWithNibName:nil bundle:nil];
     [toFromViewController setRkGeoMgr:rk_geo_mgr];    // Pass the geocoding RK object
     [toFromViewController setRkPlanMgr:rkPlanMgr];    // Pass the planning RK object
     

@@ -29,6 +29,7 @@
     if (self) {
         [[self navigationItem] setTitle:@"Nimbler"];
     }
+    planRequestHistory = [NSMutableArray array]; // Initialize this array
     return self;
 }
 
@@ -50,7 +51,6 @@
     rkPlanMgr = rkPlanMgr0;
     
     // Add the mapper from Plan class to this Object Manager
-    // TODO  Get the right Key Path for trip planner results
     [[rkPlanMgr mappingProvider] setMapping:[Plan objectMappingforPlanner:OTP_PLANNER] forKeyPath:@"plan"];
 }
 
@@ -218,12 +218,13 @@
     // See whether this is a response from Geocoding or from the planner
     if ([[objectLoader resourcePath] isEqualToString:planURLResource]) 
     {   // this is a planner result
-        NSString* response = [[objectLoader response] bodyAsString];
         NSInteger statusCode = [[objectLoader response] statusCode];
         NSLog(@"Planning HTTP status code = %d", statusCode);
-        NSLog(@"Planning response: %@", response);
         if (objects && [objects objectAtIndex:0]) {
             plan = [objects objectAtIndex:0];
+            // TODO delete the comments below
+            // NSTimeInterval timeInt = (NSTimeInterval) 1327866300000.0;
+            // [plan setDate:[NSDate dateWithTimeIntervalSince1970:timeInt]];
             NSLog(@"Planning object: %@", plan);
         }
     }
@@ -314,6 +315,7 @@
             // TODO Geocoder did not respond with status field
         }
     }
+    // If returned value does not correspond to one of the most recent requests, do nothing...
 }
 
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error {
@@ -325,40 +327,66 @@
 // Routine for calling and populating a trip-plan object
 - (BOOL)getPlan
 {
-    // Increment fromFrequency and toFrequency
-    [fromLocation incrementFromFrequency];
-    [toLocation incrementToFrequency];
-    // Update the dateLastUsed
-    [fromLocation setDateLastUsed:[NSDate date]];
-    [toLocation setDateLastUsed:[NSDate date]];
+    // See if there has already been an identical plan request in the last 5 seconds.  
+    BOOL isDuplicatePlan = NO;
+    NSString *frForm = [fromLocation formattedAddress];
+    NSString *toForm = [toLocation formattedAddress];
+    NSDate *cutoffDate = [NSDate dateWithTimeIntervalSinceNow:-5.0];  // 5 seconds before now 
+    for (int i=[planRequestHistory count]-1; i>=0; i--) {  // go thru request history backwards
+        NSDictionary *d = [planRequestHistory objectAtIndex:i];
+        if ([[d objectForKey:@"date"] laterDate:cutoffDate] == cutoffDate) { // if more than 5 seconds ago, stop looking
+            break;  
+        }
+        else if ([[[d objectForKey:@"fromPlace"] formattedAddress] isEqualToString:frForm] &&
+            [[[d objectForKey:@"toPlace"] formattedAddress] isEqualToString:toForm]) {
+            isDuplicatePlan = YES;
+            break;
+        }
+    }
     
-    // Create the date formatters we will use to output the date & time
-    NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
-    [dFormat setDateStyle:NSDateFormatterShortStyle];
-    [dFormat setTimeStyle:NSDateFormatterNoStyle];
-    NSDateFormatter* tFormat = [[NSDateFormatter alloc] init];
-    [tFormat setTimeStyle:NSDateFormatterShortStyle];
-    [tFormat setDateStyle:NSDateFormatterNoStyle];
-
-    // TODO get the date from the UI, rather than just using current date & time
-    NSDate* dateTime = [NSDate date];
-
-    // Build the parameters into a resource string
-    NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                            @"fromPlace", [fromLocation latLngPairStr], 
-                            @"toPlace", [toLocation latLngPairStr], 
-                            @"date", [dFormat stringFromDate:dateTime],
-                            @"time", [tFormat stringFromDate:dateTime], nil];
-    planURLResource = [@"plan" appendQueryParams:params];
-
-    NSLog(@"Plan resource: %@", planURLResource);
-    
-    // Call the trip planner
-    [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
-    
-    // Reload the to/from tables for next time
-    [[self fromAutoFill] reloadData];
-    [[self toAutoFill] reloadData];
+    if (!isDuplicatePlan)  // if not a recent duplicate request
+    {
+        // Increment fromFrequency and toFrequency
+        [fromLocation incrementFromFrequency];
+        [toLocation incrementToFrequency];
+        // Update the dateLastUsed
+        [fromLocation setDateLastUsed:[NSDate date]];
+        [toLocation setDateLastUsed:[NSDate date]];
+        
+        // Create the date formatters we will use to output the date & time
+        NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
+        [dFormat setDateStyle:NSDateFormatterShortStyle];
+        [dFormat setTimeStyle:NSDateFormatterNoStyle];
+        NSDateFormatter* tFormat = [[NSDateFormatter alloc] init];
+        [tFormat setTimeStyle:NSDateFormatterShortStyle];
+        [tFormat setDateStyle:NSDateFormatterNoStyle];
+        
+        // TODO get the date from the UI, rather than just using current date & time
+        NSDate* dateTime = [NSDate date];
+        
+        // Build the parameters into a resource string
+        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
+                                @"fromPlace", [fromLocation latLngPairStr], 
+                                @"toPlace", [toLocation latLngPairStr], 
+                                @"date", [dFormat stringFromDate:dateTime],
+                                @"time", [tFormat stringFromDate:dateTime], nil];
+        planURLResource = [@"plan" appendQueryParams:params];
+        
+        // add latest plan request to history array
+        [planRequestHistory addObject:[NSDictionary dictionaryWithKeysAndObjects:
+                                       @"fromPlace", fromLocation, 
+                                       @"toPlace", toLocation,
+                                       @"date", [NSDate date], nil]];  
+        
+        NSLog(@"Plan resource: %@", planURLResource);
+        
+        // Call the trip planner
+        [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
+        
+        // Reload the to/from tables for next time
+        [[self fromAutoFill] reloadData];
+        [[self toAutoFill] reloadData];
+    }
     return true; 
 }
 

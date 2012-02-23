@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5205D8DE14F4740D0004CD09 /* DateFormatterMSFrom1970.m in Sources */ = {isa = PBXBuildFile; fileRef = 5205D8DD14F4740D0004CD09 /* DateFormatterMSFrom1970.m */; };
 		5210516D14C9BEA80025DD39 /* RouteOptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5210516C14C9BEA80025DD39 /* RouteOptionsViewController.m */; };
 		5210517014C9C0DF0025DD39 /* Plan.m in Sources */ = {isa = PBXBuildFile; fileRef = 5210516F14C9C0DF0025DD39 /* Plan.m */; };
 		5210517314D60F3B0025DD39 /* PlanPlace.m in Sources */ = {isa = PBXBuildFile; fileRef = 5210517214D60F3B0025DD39 /* PlanPlace.m */; };
@@ -165,6 +166,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5205D8DC14F4740D0004CD09 /* DateFormatterMSFrom1970.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateFormatterMSFrom1970.h; sourceTree = "<group>"; };
+		5205D8DD14F4740D0004CD09 /* DateFormatterMSFrom1970.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateFormatterMSFrom1970.m; sourceTree = "<group>"; };
 		5210516B14C9BEA80025DD39 /* RouteOptionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteOptionsViewController.h; sourceTree = "<group>"; };
 		5210516C14C9BEA80025DD39 /* RouteOptionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteOptionsViewController.m; sourceTree = "<group>"; };
 		5210516E14C9C0DF0025DD39 /* Plan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Plan.h; sourceTree = "<group>"; };
@@ -2188,6 +2191,8 @@
 				52B3031E14BE946000EB4852 /* Location.m */,
 				5231E43A14E9E7A300739DC7 /* RawAddress.h */,
 				5231E43B14E9E7A400739DC7 /* RawAddress.m */,
+				5205D8DC14F4740D0004CD09 /* DateFormatterMSFrom1970.h */,
+				5205D8DD14F4740D0004CD09 /* DateFormatterMSFrom1970.m */,
 				52B7421C14E1FFA200D817D1 /* UtilityFunctions.h */,
 				52B7421D14E1FFA200D817D1 /* UtilityFunctions.m */,
 				52CF43A814BDF2F9000565D6 /* Supporting Files */,
@@ -2496,6 +2501,7 @@
 				52B7421E14E1FFA200D817D1 /* UtilityFunctions.m in Sources */,
 				5231E43914E5DE7E00739DC7 /* Locations.m in Sources */,
 				5231E43C14E9E7A400739DC7 /* RawAddress.m in Sources */,
+				5205D8DE14F4740D0004CD09 /* DateFormatterMSFrom1970.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
