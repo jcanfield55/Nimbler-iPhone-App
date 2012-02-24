@@ -9,7 +9,6 @@
 #import "Location.h"
 #import "Locations.h"
 
-
 @implementation Location
 
 @dynamic rawAddresses;
@@ -70,6 +69,7 @@ static Locations *locations;
     [self setFromFrequency:[NSNumber numberWithInt:fromFreq0]];
 }
 
+// TODO create a method or sub-class to handle getting lat/lng for Current Location
 
 // Returns the mapping used by RestKit to map this object from the specified API
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)gt;

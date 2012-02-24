@@ -7,30 +7,30 @@
 //
 
 #import "Plan.h"
-#import "DateFormatterMSFrom1970.h"
 
 @implementation Plan
 
-@synthesize date;
-@synthesize from;
-@synthesize to;
+@dynamic date;
+@dynamic fromPlanPlace;
+@dynamic toPlanPlace;
+@dynamic fromLocation;
+@dynamic toLocation;
+@dynamic itineraries;
 
-+ (RKObjectMapping *)objectMappingforPlanner:(APIType)apiType
++ (RKManagedObjectMapping *)objectMappingforPlanner:(APIType)apiType
 {
     // Create empty ObjectMapping to fill and return
-    RKObjectMapping* mapping = [RKObjectMapping mappingForClass:[Plan class]];
-
-    RKObjectMapping* planPlaceMapping = [PlanPlace objectMappingForApi:apiType];
+    
+    RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[Plan class]];
+    
+    RKManagedObjectMapping* planPlaceMapping = [PlanPlace objectMappingForApi:apiType];
 
     // Make the mappings
     if (apiType==OTP_PLANNER) {
         // TODO  Do all the mapping
-        // TODO take the below comment out when I have confirmed another way to do date formatting in milliseconds
-        /* DateFormatterMSFrom1970 *dateFormatter = [DateFormatterMSFrom1970 dateFormatter]; // sets date formatter to parse milliseconds from 1970 date format
-         [mapping setPreferredDateFormatter:dateFormatter]; */
         [mapping mapKeyPath:@"date" toAttribute:@"date"];
-        [mapping mapKeyPath:@"from" toRelationship:@"from" withMapping:planPlaceMapping];
-        [mapping mapKeyPath:@"to" toRelationship:@"to" withMapping:planPlaceMapping];
+        [mapping mapKeyPath:@"from" toRelationship:@"fromPlanPlace" withMapping:planPlaceMapping];
+        [mapping mapKeyPath:@"to" toRelationship:@"toPlanPlace" withMapping:planPlaceMapping];
 
     }
     else {
@@ -60,10 +60,10 @@
     return NO;
 } */
 
-- (NSString *)description
+- (NSString *)ncDescription
 {
     NSString* desc = [NSString stringWithFormat:
-                      @"{Plan Object: date: %@;  from: %@;  to: %@}",date, from, to];
+                      @"{Plan Object: date: %@;  from: %@;  to: %@}", [self date], [[self fromPlanPlace] ncDescription], [[self toPlanPlace] ncDescription]];
     return desc;
 }
 

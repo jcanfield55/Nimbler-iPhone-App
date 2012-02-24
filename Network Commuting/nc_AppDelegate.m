@@ -29,6 +29,7 @@
     // Add the CoreData managed object store
     RKManagedObjectStore *rkMOS = [RKManagedObjectStore objectStoreWithStoreFilename:@"store.data"];
     [rk_geo_mgr setObjectStore:rkMOS];
+    [rkPlanMgr setObjectStore:rkMOS];
     
     // Get the NSManagedObjectContext from restkit
     __managedObjectContext = [rkMOS managedObjectContext];

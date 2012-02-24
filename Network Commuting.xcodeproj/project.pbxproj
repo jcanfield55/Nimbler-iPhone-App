@@ -31,13 +31,13 @@
 		52CF43AC14BDF2F9000565D6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52CF43AA14BDF2F9000565D6 /* InfoPlist.strings */; };
 		52CF43AE14BDF2F9000565D6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CF43AD14BDF2F9000565D6 /* main.m */; };
 		52CF43B214BDF2F9000565D6 /* nc_AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CF43B114BDF2F9000565D6 /* nc_AppDelegate.m */; };
-		52CF43B514BDF2F9000565D6 /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 52CF43B314BDF2F9000565D6 /* Network_Commuting.xcdatamodeld */; };
 		52CF43BD14BDF2F9000565D6 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43BC14BDF2F9000565D6 /* SenTestingKit.framework */; };
 		52CF43BE14BDF2F9000565D6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF439F14BDF2F9000565D6 /* UIKit.framework */; };
 		52CF43BF14BDF2F9000565D6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A114BDF2F9000565D6 /* Foundation.framework */; };
 		52CF43C014BDF2F9000565D6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A514BDF2F9000565D6 /* CoreData.framework */; };
 		52CF43C814BDF2F9000565D6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52CF43C614BDF2F9000565D6 /* InfoPlist.strings */; };
 		52CF43CB14BDF2F9000565D6 /* Network_CommutingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CF43CA14BDF2F9000565D6 /* Network_CommutingTests.m */; };
+		52DF9C4914F7546800DC6828 /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 52DF9C4714F7546800DC6828 /* Network_Commuting.xcdatamodeld */; };
 		52F67EE114C752C4007578D5 /* LatLng.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F67EE014C752C4007578D5 /* LatLng.m */; };
 		52F67EE814C75C36007578D5 /* AddressComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F67EE714C75C36007578D5 /* AddressComponent.m */; };
 		52F67EEB14C76504007578D5 /* GeoRectangle.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F67EEA14C76504007578D5 /* GeoRectangle.m */; };
@@ -752,13 +752,13 @@
 		52CF43AF14BDF2F9000565D6 /* Network Commuting-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Network Commuting-Prefix.pch"; sourceTree = "<group>"; };
 		52CF43B014BDF2F9000565D6 /* nc_AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nc_AppDelegate.h; sourceTree = "<group>"; };
 		52CF43B114BDF2F9000565D6 /* nc_AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = nc_AppDelegate.m; sourceTree = "<group>"; };
-		52CF43B414BDF2F9000565D6 /* Network_Commuting.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Network_Commuting.xcdatamodel; sourceTree = "<group>"; };
 		52CF43BB14BDF2F9000565D6 /* Network CommutingTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Network CommutingTests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52CF43BC14BDF2F9000565D6 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		52CF43C514BDF2F9000565D6 /* Network CommutingTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Network CommutingTests-Info.plist"; sourceTree = "<group>"; };
 		52CF43C714BDF2F9000565D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		52CF43C914BDF2F9000565D6 /* Network_CommutingTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Network_CommutingTests.h; sourceTree = "<group>"; };
 		52CF43CA14BDF2F9000565D6 /* Network_CommutingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Network_CommutingTests.m; sourceTree = "<group>"; };
+		52DF9C4814F7546800DC6828 /* Network_Commuting.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Network_Commuting.xcdatamodel; sourceTree = "<group>"; };
 		52F67EDF14C752C4007578D5 /* LatLng.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LatLng.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		52F67EE014C752C4007578D5 /* LatLng.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LatLng.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		52F67EE614C75C36007578D5 /* AddressComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AddressComponent.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -2169,9 +2169,9 @@
 				52B302C214BE2B1E00EB4852 /* ToFromViewController.h */,
 				52B302C314BE2B1E00EB4852 /* ToFromViewController.m */,
 				52B302C414BE2B1E00EB4852 /* ToFromViewController.xib */,
-				52CF43B314BDF2F9000565D6 /* Network_Commuting.xcdatamodeld */,
 				5210516B14C9BEA80025DD39 /* RouteOptionsViewController.h */,
 				5210516C14C9BEA80025DD39 /* RouteOptionsViewController.m */,
+				52DF9C4714F7546800DC6828 /* Network_Commuting.xcdatamodeld */,
 				5210516E14C9C0DF0025DD39 /* Plan.h */,
 				5210516F14C9C0DF0025DD39 /* Plan.m */,
 				5210517114D60F3B0025DD39 /* PlanPlace.h */,
@@ -2275,7 +2275,7 @@
 		52CF439214BDF2F8000565D6 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 				ORGANIZATIONNAME = "Network Commuting";
 			};
 			buildConfigurationList = 52CF439514BDF2F8000565D6 /* Build configuration list for PBXProject "Network Commuting" */;
@@ -2488,7 +2488,6 @@
 			files = (
 				52CF43AE14BDF2F9000565D6 /* main.m in Sources */,
 				52CF43B214BDF2F9000565D6 /* nc_AppDelegate.m in Sources */,
-				52CF43B514BDF2F9000565D6 /* Network_Commuting.xcdatamodeld in Sources */,
 				52B302C514BE2B1E00EB4852 /* ToFromViewController.m in Sources */,
 				52B3031F14BE946000EB4852 /* Location.m in Sources */,
 				52F67EE114C752C4007578D5 /* LatLng.m in Sources */,
@@ -2502,6 +2501,7 @@
 				5231E43914E5DE7E00739DC7 /* Locations.m in Sources */,
 				5231E43C14E9E7A400739DC7 /* RawAddress.m in Sources */,
 				5205D8DE14F4740D0004CD09 /* DateFormatterMSFrom1970.m in Sources */,
+				52DF9C4914F7546800DC6828 /* Network_Commuting.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2773,12 +2773,12 @@
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
-		52CF43B314BDF2F9000565D6 /* Network_Commuting.xcdatamodeld */ = {
+		52DF9C4714F7546800DC6828 /* Network_Commuting.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				52CF43B414BDF2F9000565D6 /* Network_Commuting.xcdatamodel */,
+				52DF9C4814F7546800DC6828 /* Network_Commuting.xcdatamodel */,
 			);
-			currentVersion = 52CF43B414BDF2F9000565D6 /* Network_Commuting.xcdatamodel */;
+			currentVersion = 52DF9C4814F7546800DC6828 /* Network_Commuting.xcdatamodel */;
 			path = Network_Commuting.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

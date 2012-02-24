@@ -10,24 +10,24 @@
 
 @implementation PlanPlace
 
-@synthesize name;
-@synthesize stopId;
-@synthesize latLng;
-@synthesize arrival;
-@synthesize departure;
+@dynamic name;
+@dynamic stopId;
+@dynamic stopAgencyId;
+@dynamic lat;
+@dynamic lng;
+@dynamic arrival;
+@dynamic departure;
 
-+ (RKObjectMapping *)objectMappingForApi:(APIType)tpt
++ (RKManagedObjectMapping *)objectMappingForApi:(APIType)tpt
 {
     // Create empty ObjectMapping to fill and return
-    RKObjectMapping* mapping = [RKObjectMapping mappingForClass:[PlanPlace class]];
-    
-    // Call on sub-objects for their Object Mappings
-    RKObjectMapping* agencyAndIdMapping = [AgencyAndId objectMappingForApi:tpt];
-    
+    RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[PlanPlace class]];
+        
     // Make the mappings
     if (tpt==OTP_PLANNER) {
         [mapping mapKeyPath:@"name" toAttribute:@"name"];
-        [mapping mapKeyPath:@"stopId" toRelationship:@"stopId" withMapping:agencyAndIdMapping];
+        [mapping mapKeyPath:@"stopId.id" toAttribute:@"stopId"];
+        [mapping mapKeyPath:@"stopId.agencyID" toAttribute:@"stopAgencyId"];
         [mapping mapKeyPath:@"lat" toAttribute:@"lat"];
         [mapping mapKeyPath:@"lon" toAttribute:@"lng"];
         [mapping mapKeyPath:@"arrival" toAttribute:@"arrival"];
@@ -39,37 +39,19 @@
     return mapping;
 }
 
-// Convenience method for flattening lat/lng properties
-- (double)lat {
-    return [latLng lat];
+// Convenience methods for getting scalar values
+- (double)latFloat {
+    return [[self lat] doubleValue];
+}
+- (double)lngFloat {
+    return [[self lng] doubleValue];
 }
 
-// Convenience method for flattening lat/lng properties
-- (double)lng {
-    return [latLng lng];
-}
-
-// Convenience method for flattening lat/lng properties
-- (void)setLat:(double)lat {
-    if (!latLng) {   // if latLng does not exist, create it
-        latLng = [[LatLng alloc] init];
-    }
-    [latLng setLat:lat];   // set the lat property
-}
-
-// Convenience method for flattening lat/lng properties
-- (void)setLng:(double)lng {
-    if (!latLng) {   // if latLng does not exist, create it
-        latLng = [[LatLng alloc] init];
-    }
-    [latLng setLng:lng];
-}
-
-- (NSString *)description
+- (NSString *)ncDescription
 {
     NSString* desc = [NSString stringWithFormat:
-                      @"{PlanPlace Object: name: %@;  stopId: %@;  latLng: %@;  arrival: %@;  departure: %@}",
-                      name, stopId, latLng, arrival, departure];
+                      @"{PlanPlace Object: name: %@;  stopId: %@;  lat: %f; lng: %f arrival: %@;  departure: %@}",
+                      [self name], [self stopId], [self latFloat], [self lngFloat], [self arrival], [self departure]];
     return desc;
 }
 

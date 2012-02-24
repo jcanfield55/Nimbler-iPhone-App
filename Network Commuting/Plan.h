@@ -9,14 +9,19 @@
 #import <Foundation/Foundation.h>
 #import <RestKit/Restkit.h>
 #import "PlanPlace.h"
+#import "Location.h"
 #import "enums.h"
 
-@interface Plan : NSObject
+@interface Plan : NSManagedObject
 
 @property(nonatomic, strong) NSDate *date;
-@property(nonatomic,strong) PlanPlace *from;
-@property(nonatomic,strong) PlanPlace *to;
+@property(nonatomic,strong) PlanPlace *fromPlanPlace;
+@property(nonatomic,strong) PlanPlace *toPlanPlace;
+@property(nonatomic,strong) NSSet *itineraries;
+@property(nonatomic,strong) Location *fromLocation;
+@property(nonatomic,strong) Location *toLocation;
 
-+ (RKObjectMapping *)objectMappingforPlanner:(APIType)tpt;
 
++ (RKManagedObjectMapping *)objectMappingforPlanner:(APIType)tpt;
+- (NSString *)ncDescription;
 @end

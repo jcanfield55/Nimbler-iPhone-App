@@ -14,20 +14,21 @@
 #import "AgencyAndId.h"
 #import "enums.h"
 
-@interface PlanPlace : NSObject
+@interface PlanPlace : NSManagedObject
 
 @property(nonatomic,strong) NSString *name;
-@property(nonatomic,strong) AgencyAndId *stopId;
-@property(nonatomic,strong) LatLng *latLng;
+@property(nonatomic,strong) NSString *stopId;
+@property(nonatomic,strong) NSString *stopAgencyId;
+@property(nonatomic,strong) NSNumber *lat;
+@property(nonatomic,strong) NSNumber *lng;
 @property(nonatomic,strong) NSDate *arrival;
 @property(nonatomic,strong) NSDate *departure;
 
-+ (RKObjectMapping *)objectMappingForApi:(APIType)tpt;
++ (RKManagedObjectMapping *)objectMappingForApi:(APIType)tpt;
 
 // Convenience methods for flattening lat/lng properties
-- (double)lat;   
-- (double)lng;
-- (void)setLat:(double)lat;
-- (void)setLng:(double)lng;
+- (double)latFloat;   
+- (double)lngFloat;
 
+- (NSString *)ncDescription;
 @end

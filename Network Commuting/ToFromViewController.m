@@ -222,10 +222,7 @@
         NSLog(@"Planning HTTP status code = %d", statusCode);
         if (objects && [objects objectAtIndex:0]) {
             plan = [objects objectAtIndex:0];
-            // TODO delete the comments below
-            // NSTimeInterval timeInt = (NSTimeInterval) 1327866300000.0;
-            // [plan setDate:[NSDate dateWithTimeIntervalSince1970:timeInt]];
-            NSLog(@"Planning object: %@", plan);
+            NSLog(@"Planning object: %@", [plan ncDescription]);
         }
     }
     else if ([[objectLoader resourcePath] isEqualToString:fromURLResource] ||
