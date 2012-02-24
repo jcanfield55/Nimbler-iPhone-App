@@ -120,7 +120,7 @@
         <attribute name="exit" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="relativeDirection" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="startLat" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="startLon" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="startLng" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="stayOn" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="streetName" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="leg" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Leg" inverseName="steps" inverseEntity="Leg" syncable="YES"/>

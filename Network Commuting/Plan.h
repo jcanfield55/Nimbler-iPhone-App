@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <RestKit/Restkit.h>
 #import "PlanPlace.h"
+#import "Itinerary.h"
 #import "Location.h"
 #import "enums.h"
 

@@ -22,15 +22,17 @@
     // Create empty ObjectMapping to fill and return
     
     RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[Plan class]];
-    
     RKManagedObjectMapping* planPlaceMapping = [PlanPlace objectMappingForApi:apiType];
+    RKManagedObjectMapping* itineraryMapping = [Itinerary objectMappingForApi:apiType];
 
+    
     // Make the mappings
     if (apiType==OTP_PLANNER) {
         // TODO  Do all the mapping
         [mapping mapKeyPath:@"date" toAttribute:@"date"];
         [mapping mapKeyPath:@"from" toRelationship:@"fromPlanPlace" withMapping:planPlaceMapping];
         [mapping mapKeyPath:@"to" toRelationship:@"toPlanPlace" withMapping:planPlaceMapping];
+        [mapping mapKeyPath:@"itineraries" toRelationship:@"itineraries" withMapping:itineraryMapping];
 
     }
     else {
@@ -62,8 +64,11 @@
 
 - (NSString *)ncDescription
 {
-    NSString* desc = [NSString stringWithFormat:
-                      @"{Plan Object: date: %@;  from: %@;  to: %@}", [self date], [[self fromPlanPlace] ncDescription], [[self toPlanPlace] ncDescription]];
+    NSMutableString* desc = [NSMutableString stringWithFormat:
+                      @"{Plan Object: date: %@;  from: %@;  to: %@; ", [self date], [[self fromPlanPlace] ncDescription], [[self toPlanPlace] ncDescription]];
+    for (Itinerary *itin in [self itineraries]) {
+        [desc appendString:[NSString stringWithFormat:@"\n %@", [itin ncDescription]]];
+    }
     return desc;
 }
 

@@ -121,7 +121,6 @@
 // This method updates the autoFill table to reflect entries that match the text
 - (IBAction)toFromTyping:(id)sender forEvent:(UIEvent *)event {
     BOOL isFrom = ((sender == fromField) ? YES : NO);
-    NSLog(@"In toFromTyping and isFrom=%d", isFrom);
 
     if (isFrom) {
         // Deselect any selected cell
@@ -250,11 +249,10 @@
                 
                 // Get the location object
                 Location* location = [objects objectAtIndex:0];
-                NSLog(@"%@", location);
                 NSLog(@"Formatted Address: %@", [location formattedAddress]);
-                NSLog(@"Lat/Lng: %@", [location latLngPairStr]);
-                NSLog(@"Types: %@", [location types]);
-                NSLog(@"Address Components: %@", [[location addressComponents] allObjects]);
+                // NSLog(@"Lat/Lng: %@", [location latLngPairStr]);
+                // NSLog(@"Types: %@", [location types]);
+                // NSLog(@"Address Components: %@", [[location addressComponents] allObjects]);
                 
                 // Initialize some of the values for location
                 [location setGeoCoderStatus:status];
