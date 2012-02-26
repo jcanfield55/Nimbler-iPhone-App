@@ -7,7 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Plan.h"
 
-@interface RouteOptionsViewController : UIViewController
+@interface RouteOptionsViewController : UITableViewController
+{
+    NSDateFormatter *timeFormatter;
+}
+@property(nonatomic, strong) Plan *plan;
 
 @end

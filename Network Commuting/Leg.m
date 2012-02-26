@@ -33,6 +33,7 @@
 @dynamic itinerary;
 @dynamic steps;
 @dynamic to;
+@synthesize sortedSteps;
 
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType
 {
@@ -70,6 +71,22 @@
     }
     return mapping;
 }
+
+- (NSArray *)sortedSteps
+{
+    if (!sortedSteps) {
+        [self sortSteps];  // create the itinerary array
+    }
+    return sortedSteps;
+}
+
+// Create the sorted array of itineraries
+- (void)sortSteps
+{
+    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:YES];
+    [self setSortedSteps:[[self steps] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
+}
+
 
 - (NSString *)ncDescription
 {

@@ -32,6 +32,7 @@
 @property (nonatomic, retain) NSNumber * walkTime;
 @property (nonatomic, retain) NSSet *legs;
 @property (nonatomic, retain) Plan *plan;
+@property (nonatomic, strong) NSArray *sortedLegs; // Array of legs sorted by startTime (not stored in Core Data)
 
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType;
 

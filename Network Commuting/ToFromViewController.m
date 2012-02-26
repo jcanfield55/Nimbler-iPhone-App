@@ -9,6 +9,7 @@
 #import "ToFromViewController.h"
 #import "Locations.h"
 #import "UtilityFunctions.h"
+#import "RouteOptionsViewController.h"
 
 @implementation ToFromViewController
 @synthesize fromField;
@@ -222,6 +223,14 @@
         if (objects && [objects objectAtIndex:0]) {
             plan = [objects objectAtIndex:0];
             NSLog(@"Planning object: %@", [plan ncDescription]);
+            [plan setToLocation:toLocation];
+            [plan setFromLocation:fromLocation];
+            
+            // Pass control to the RouteOptionsViewController to display itinerary choices
+            RouteOptionsViewController *routeOptionsVC = [[RouteOptionsViewController alloc] initWithStyle:UITableViewStylePlain];
+            [routeOptionsVC setPlan:plan];
+            [[self navigationController] pushViewController:routeOptionsVC animated:YES];
+
         }
     }
     else if ([[objectLoader resourcePath] isEqualToString:fromURLResource] ||
@@ -322,6 +331,8 @@
 // Routine for calling and populating a trip-plan object
 - (BOOL)getPlan
 {
+    // TODO See if we already have a similar plan that we can use
+    
     // See if there has already been an identical plan request in the last 5 seconds.  
     BOOL isDuplicatePlan = NO;
     NSString *frForm = [fromLocation formattedAddress];
@@ -358,6 +369,8 @@
         
         // TODO get the date from the UI, rather than just using current date & time
         NSDate* dateTime = [NSDate date];
+        
+        // TODO detect and handle case where origin and destination are exactly the same
         
         // Build the parameters into a resource string
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 

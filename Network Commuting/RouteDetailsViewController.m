@@ -1,26 +1,23 @@
 //
-//  RouteOptionsViewController.m
+//  RouteDetailsViewController.m
 //  Network Commuting
 //
-//  Created by John Canfield on 1/20/12.
+//  Created by John Canfield on 2/25/12.
 //  Copyright (c) 2012 Network Commuting. All rights reserved.
 //
 
-#import "RouteOptionsViewController.h"
-#import "Leg.h"
-#import <math.h>
+#import "RouteDetailsViewController.h"
 
-@implementation RouteOptionsViewController
+@implementation RouteDetailsViewController
 
-@synthesize plan;
-
+@synthesize itinerary;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:UITableViewStylePlain];
     
     if (self) {
-        [[self navigationItem] setTitle:@"Itineraries"];
+        [[self navigationItem] setTitle:@"Route"];
         timeFormatter = [[NSDateFormatter alloc] init];
         [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
     }
@@ -39,7 +36,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[plan itineraries] count];
+    return [[itinerary legs] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -52,14 +49,14 @@
                                       reuseIdentifier:@"UIRouteOptionsViewCell"];
     }
     // Get the requested itinerary
-    Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
-
+    // Leg *leg = [[itinerary sortedLegs] objectAtIndex:[indexPath row]];
+/*    
     // Set title
-    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
-    NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%d minutes)", 
-                          [timeFormatter stringFromDate:[itin startTime]],
-                          [timeFormatter stringFromDate:[itin endTime]],
-                          (int) round([[itin duration] floatValue] / (1000.0 * 60.0))];
+    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:12.0]];
+    NSString *titleText = [NSString stringWithFormat:@"Take %@ - %@", 
+                           [timeFormatter stringFromDate:[itin startTime]],
+                           [timeFormatter stringFromDate:[itin endTime]],
+                           (int) round([[itin duration] floatValue] / (1000.0 * 60.0))];
     [[cell textLabel] setText:titleText];
     
     // Set sub-title (show each leg's mode and route if available)
@@ -79,38 +76,8 @@
         }
     }
     [[cell detailTextLabel] setText:subTitle];
-    
+*/    
     return cell;
-}
-
-#pragma mark - View lifecycle
-
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-}
-*/
-
-/*
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-}
-*/
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 @end

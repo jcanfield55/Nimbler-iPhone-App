@@ -20,6 +20,7 @@
 		525442C814C3ED57004B0E1F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C714C3ED57004B0E1F /* Security.framework */; };
 		525442CA14C3ED66004B0E1F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C914C3ED66004B0E1F /* SystemConfiguration.framework */; };
 		525442CC14C3ED8A004B0E1F /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442CB14C3ED8A004B0E1F /* libxml2.dylib */; };
+		52B1B22614F9ABE4001AC5D1 /* RouteDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B1B22514F9ABE4001AC5D1 /* RouteDetailsViewController.m */; };
 		52B302C514BE2B1E00EB4852 /* ToFromViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B302C314BE2B1E00EB4852 /* ToFromViewController.m */; };
 		52B302C614BE2B1E00EB4852 /* ToFromViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52B302C414BE2B1E00EB4852 /* ToFromViewController.xib */; };
 		52B3031F14BE946000EB4852 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B3031E14BE946000EB4852 /* Location.m */; };
@@ -737,6 +738,8 @@
 		525442C714C3ED57004B0E1F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		525442C914C3ED66004B0E1F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		525442CB14C3ED8A004B0E1F /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		52B1B22414F9ABE4001AC5D1 /* RouteDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteDetailsViewController.h; sourceTree = "<group>"; };
+		52B1B22514F9ABE4001AC5D1 /* RouteDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteDetailsViewController.m; sourceTree = "<group>"; };
 		52B302C214BE2B1E00EB4852 /* ToFromViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToFromViewController.h; sourceTree = "<group>"; };
 		52B302C314BE2B1E00EB4852 /* ToFromViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ToFromViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		52B302C414BE2B1E00EB4852 /* ToFromViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ToFromViewController.xib; sourceTree = "<group>"; };
@@ -2180,6 +2183,8 @@
 				52B302C414BE2B1E00EB4852 /* ToFromViewController.xib */,
 				5210516B14C9BEA80025DD39 /* RouteOptionsViewController.h */,
 				5210516C14C9BEA80025DD39 /* RouteOptionsViewController.m */,
+				52B1B22414F9ABE4001AC5D1 /* RouteDetailsViewController.h */,
+				52B1B22514F9ABE4001AC5D1 /* RouteDetailsViewController.m */,
 				52DF9C4714F7546800DC6828 /* Network_Commuting.xcdatamodeld */,
 				52BA735A14F78A6C00F7B9B3 /* Leg.h */,
 				52BA735B14F78A6C00F7B9B3 /* Leg.m */,
@@ -2520,6 +2525,7 @@
 				52BA735614F789FD00F7B9B3 /* Itinerary.m in Sources */,
 				52BA735914F78A3C00F7B9B3 /* Step.m in Sources */,
 				52BA735C14F78A6C00F7B9B3 /* Leg.m in Sources */,
+				52B1B22614F9ABE4001AC5D1 /* RouteDetailsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

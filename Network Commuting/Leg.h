@@ -36,9 +36,10 @@
 @property (nonatomic, retain) Itinerary *itinerary;
 @property (nonatomic, retain) NSSet *steps;
 @property (nonatomic, retain) PlanPlace *to;
+@property (nonatomic, strong) NSArray *sortedSteps;
 
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType;
-
+- (NSArray *)sortedSteps;
 - (NSString *)ncDescription;
 
 @end

@@ -16,6 +16,7 @@
 @dynamic fromLocation;
 @dynamic toLocation;
 @dynamic itineraries;
+@synthesize sortedItineraries;
 
 + (RKManagedObjectMapping *)objectMappingforPlanner:(APIType)apiType
 {
@@ -39,6 +40,21 @@
         // TODO Unknown planner type, throw an exception
     }
     return mapping;
+}
+ 
+- (NSArray *)sortedItineraries
+{
+    if (!sortedItineraries) {
+        [self sortItineraries];  // create the itinerary array
+    }
+    return sortedItineraries;
+}
+
+// Create the sorted array of itineraries
+- (void)sortItineraries
+{
+    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:YES];
+    [self setSortedItineraries:[[self itineraries] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
 }
 
 // Detects whether date returned by REST API is >1,000 years in the future.  If so, the value is likely being returned in milliseconds from 1970, rather than seconds from 1970, in which we correct the date by dividing by the timeSince1970 value by 1,000

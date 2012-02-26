@@ -21,8 +21,9 @@
 @property(nonatomic,strong) NSSet *itineraries;
 @property(nonatomic,strong) Location *fromLocation;
 @property(nonatomic,strong) Location *toLocation;
-
+@property(nonatomic,strong) NSArray *sortedItineraries;  // Array of ordered itineraries (not stored in Core Data)
 
 + (RKManagedObjectMapping *)objectMappingforPlanner:(APIType)tpt;
 - (NSString *)ncDescription;
+- (void)sortItineraries;  // Re-sorts the itineraries array
 @end

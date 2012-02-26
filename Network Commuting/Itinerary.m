@@ -28,6 +28,7 @@
 @dynamic walkTime;
 @dynamic legs;
 @dynamic plan;
+@synthesize sortedLegs;
 
 // TODO Add an awake method to populate itineraryCreationDate
 
@@ -60,6 +61,21 @@
         // TODO Unknown planner type, throw an exception
     }
     return mapping;
+}
+
+- (NSArray *)sortedLegs
+{
+    if (!sortedLegs) {
+        [self sortLegs];  // create the itinerary array
+    }
+    return sortedLegs;
+}
+
+// Create the sorted array of itineraries
+- (void)sortLegs
+{
+    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:YES];
+    [self setSortedLegs:[[self legs] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
 }
 
 - (NSString *)ncDescription
