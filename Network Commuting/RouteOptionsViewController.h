@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Plan.h"
+#import "RouteDetailsViewController.h"
 
 @interface RouteOptionsViewController : UITableViewController
 {

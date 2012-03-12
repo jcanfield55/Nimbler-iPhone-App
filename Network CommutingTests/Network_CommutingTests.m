@@ -240,4 +240,31 @@
     
 }
 
+- (void)testUtilities
+{
+    // durationString tests
+    STAssertTrue([durationString(60.0*1000.0) isEqualToString:@"1 minute"], @"");
+    STAssertTrue([durationString(59.0*1000.0) isEqualToString:@"less than 1 minute"], @"");
+    STAssertTrue([durationString(91.0*1000.0) isEqualToString:@"2 minutes"], @"");
+    STAssertTrue([durationString(59.4*60.0*1000.0) isEqualToString:@"59 minutes"], @"");
+    STAssertTrue([durationString(59.6*60.0*1000.0) isEqualToString:@"60 minutes"], @"");
+    STAssertTrue([durationString(60.0 * 60.0*1000.0) isEqualToString:@"1 hour"], @"");
+    STAssertTrue([durationString(1.5 * 60.0 * 60.0*1000.0) isEqualToString:@"1 hour, 30 minutes"], @"");
+
+    STAssertTrue([durationString(23.0 * 60.0*60.0*1000.0) isEqualToString:@"23 hours"], @"");
+    STAssertTrue([durationString(23.0 * 60.0*60.0*1000.0 + 90*1000) isEqualToString:@"23 hours, 2 minutes"], @"");
+    STAssertTrue([durationString(24.0 * 60.0*60.0*1000.0) isEqualToString:@"1 day"], @"");
+    STAssertTrue([durationString(100.0 *24.0 * 60.0*60.0*1000.0) isEqualToString:@"100 days"], @"");
+    STAssertTrue([durationString(48.0 *24.0 * 60.0*60.0*1000.0 + 91.0 * 1000.0) isEqualToString:@"48 days, 2 minutes"], @"");
+    NSLog(@"Test = %@", durationString(32.0 *24.0 * 60.0*60.0*1000.0 + 60.0* 60.0 * 1000.0));
+    STAssertTrue([durationString(32.0 *24.0 * 60.0*60.0*1000.0 + 60.0* 60.0 * 1000.0) isEqualToString:@"32 days, 1 hour"], @"");
+    STAssertTrue([durationString(2.0 *24.0 * 60.0*60.0*1000.0 + 15*60.0*60.0*1000.0 + 60.0*1000.0) isEqualToString:@"2 days, 15 hours, 1 minute"], @"");
+    
+    // distanceStringInMilesFeet tests
+    NSLog(@"Test = %@", distanceStringInMilesFeet(3000.0));
+
+    STAssertTrue([distanceStringInMilesFeet(3000.0) isEqualToString:@"1.9 miles"], @"");
+    STAssertTrue([distanceStringInMilesFeet(100.0) isEqualToString:@"328 feet"], @"");
+    STAssertTrue([distanceStringInMilesFeet(0.0) isEqualToString:@"less than 1 foot"], @"");
+}
 @end

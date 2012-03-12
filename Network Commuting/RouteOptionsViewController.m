@@ -8,6 +8,7 @@
 
 #import "RouteOptionsViewController.h"
 #import "Leg.h"
+#import "UtilityFunctions.h"
 #import <math.h>
 
 @implementation RouteOptionsViewController
@@ -56,10 +57,10 @@
 
     // Set title
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
-    NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%d minutes)", 
+    NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)", 
                           [timeFormatter stringFromDate:[itin startTime]],
                           [timeFormatter stringFromDate:[itin endTime]],
-                          (int) round([[itin duration] floatValue] / (1000.0 * 60.0))];
+                           durationString([[itin duration] floatValue])];
     [[cell textLabel] setText:titleText];
     
     // Set sub-title (show each leg's mode and route if available)
@@ -81,6 +82,14 @@
     [[cell detailTextLabel] setText:subTitle];
     
     return cell;
+}
+
+- (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    RouteDetailsViewController *routeDetailsVC = [[RouteDetailsViewController alloc] initWithStyle:UITableViewStylePlain];
+    [routeDetailsVC setItinerary:[[plan sortedItineraries] objectAtIndex:[indexPath row]]];
+    
+    [[self navigationController] pushViewController:routeDetailsVC animated:YES];
 }
 
 #pragma mark - View lifecycle

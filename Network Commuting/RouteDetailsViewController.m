@@ -7,6 +7,8 @@
 //
 
 #import "RouteDetailsViewController.h"
+#import "Leg.h"
+#import "UtilityFunctions.h"
 
 @implementation RouteDetailsViewController
 
@@ -36,47 +38,64 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[itinerary legs] count];
+    if ([[itinerary legs] count] > 0) {
+        return [[itinerary legs] count]+2;  // # of legs plus start & end point
+    }
+    else {
+        return 0;  // TODO come up with better handling for no legs in this itinerary
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Check for a reusable cell first, use that if it exists
     UITableViewCell *cell =
-    [tableView dequeueReusableCellWithIdentifier:@"UIRouteOptionsViewCell"];
+    [tableView dequeueReusableCellWithIdentifier:@"UIRouteDetailsViewCell"];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
-                                      reuseIdentifier:@"UIRouteOptionsViewCell"];
+                                      reuseIdentifier:@"UIRouteDetailsViewCell"];
     }
-    // Get the requested itinerary
-    // Leg *leg = [[itinerary sortedLegs] objectAtIndex:[indexPath row]];
-/*    
-    // Set title
+
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:12.0]];
-    NSString *titleText = [NSString stringWithFormat:@"Take %@ - %@", 
-                           [timeFormatter stringFromDate:[itin startTime]],
-                           [timeFormatter stringFromDate:[itin endTime]],
-                           (int) round([[itin duration] floatValue] / (1000.0 * 60.0))];
-    [[cell textLabel] setText:titleText];
-    
-    // Set sub-title (show each leg's mode and route if available)
-    NSMutableString *subTitle = [NSMutableString stringWithCapacity:30];
-    NSArray *sortedLegs = [itin sortedLegs];
-    for (int i = 0; i < [sortedLegs count]; i++) {
-        Leg *leg = [sortedLegs objectAtIndex:i];
-        if ([leg mode] && [[leg mode] length] > 0) {
-            if (i > 0) {
-                [subTitle appendString:@" -> "];
-            }
-            [subTitle appendString:[[leg mode] capitalizedString]];
-            if ([leg route] && [[leg route] length] > 0) {
-                [subTitle appendString:@" "];
-                [subTitle appendString:[leg route]];
-            }
-        }
+    [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:12.0]];
+
+    NSString *titleText=@"";
+    NSString *subTitle=@"";
+    NSArray *sortedLegs = [itinerary sortedLegs];
+    if ([indexPath row] == 0) { // if first row, put in start point
+        titleText = [NSString stringWithFormat:@"Start at %@", [[[sortedLegs objectAtIndex:0] from] name]];
     }
+    else if ([indexPath row] == [[itinerary sortedLegs] count] + 1) { // if last row, put in end point
+        titleText = [NSString stringWithFormat:@"End at %@", [[[sortedLegs objectAtIndex:([sortedLegs count]-1)] to] name]];
+    }
+    else {  // otherwise, it is one of the legs
+        Leg *leg = [[itinerary sortedLegs] objectAtIndex:([indexPath row]-1)];
+        if ([[leg mode] isEqualToString:@"WALK"]) {
+            titleText = [NSString stringWithFormat:@"Walk to %@", [[leg to] name]];
+            subTitle = [NSString stringWithFormat:@"About %@, %@", 
+                        durationString([[leg duration] floatValue]), 
+                        distanceStringInMilesFeet([[leg distance] floatValue])];
+        }
+        else if ([[leg mode] isEqualToString:@"BUS"]) {
+            titleText = [NSString stringWithFormat:@"Bus %@ - %@", [leg route], [leg headSign]];
+            subTitle = [NSString stringWithFormat:@"%@    Depart %@\n%@    Arrive %@",
+                        [timeFormatter stringFromDate:[leg startTime]],
+                        [[leg from] name],
+                        [timeFormatter stringFromDate:[leg endTime]],
+                        [[leg to] name]];
+        }
+        else {
+            titleText = [NSString stringWithFormat:@"%@ %@ - %@", [leg mode], [leg route], [leg headSign]];
+            subTitle = [NSString stringWithFormat:@"%@    Depart %@\n%@    Arrive %@",
+                        [timeFormatter stringFromDate:[leg startTime]],
+                        [[leg from] name],
+                        [timeFormatter stringFromDate:[leg endTime]],
+                        [[leg to] name]];            
+        }
+
+    }
+    [[cell textLabel] setText:titleText];
     [[cell detailTextLabel] setText:subTitle];
-*/    
     return cell;
 }
 

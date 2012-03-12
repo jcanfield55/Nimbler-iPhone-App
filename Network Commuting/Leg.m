@@ -8,7 +8,6 @@
 
 #import "Leg.h"
 #import "Itinerary.h"
-#import "PlanPlace.h"
 #import "Step.h"
 
 

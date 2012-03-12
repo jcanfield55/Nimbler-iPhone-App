@@ -10,6 +10,7 @@
 #import "Locations.h"
 #import "Location.h"
 #import "AddressComponent.h"
+#import "UtilityFunctions.h"
 
 @interface Network_CommutingTests : SenTestCase
 {
