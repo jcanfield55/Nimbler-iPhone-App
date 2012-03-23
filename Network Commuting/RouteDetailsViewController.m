@@ -59,7 +59,7 @@
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:12.0]];
     [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:12.0]];
 
-    NSString *titleText=@"";
+    NSMutableString *titleText=[NSMutableString stringWithString:@""];
     NSString *subTitle=@"";
     NSArray *sortedLegs = [itinerary sortedLegs];
     if ([indexPath row] == 0) { // if first row, put in start point
@@ -77,7 +77,10 @@
                         distanceStringInMilesFeet([[leg distance] floatValue])];
         }
         else if ([[leg mode] isEqualToString:@"BUS"]) {
-            titleText = [NSString stringWithFormat:@"Bus %@ - %@", [leg route], [leg headSign]];
+            titleText = [NSMutableString stringWithFormat:@"Bus %@ - %@", [leg routeShortName], [leg routeLongName]];
+            if ([leg headSign]) {
+                [titleText appendFormat:@" to %@", [leg headSign]];
+            }
             subTitle = [NSString stringWithFormat:@"%@    Depart %@\n%@    Arrive %@",
                         [timeFormatter stringFromDate:[leg startTime]],
                         [[leg from] name],
@@ -85,7 +88,7 @@
                         [[leg to] name]];
         }
         else {
-            titleText = [NSString stringWithFormat:@"%@ %@ - %@", [leg mode], [leg route], [leg headSign]];
+            titleText = [NSString stringWithFormat:@"%@ %@ - %@", [leg mode], [leg routeShortName], [leg routeLongName]];
             subTitle = [NSString stringWithFormat:@"%@    Depart %@\n%@    Arrive %@",
                         [timeFormatter stringFromDate:[leg startTime]],
                         [[leg from] name],
@@ -95,6 +98,8 @@
 
     }
     [[cell textLabel] setText:titleText];
+    [[cell detailTextLabel] setLineBreakMode:UILineBreakModeWordWrap];
+    [[cell detailTextLabel] setNumberOfLines:0];
     [[cell detailTextLabel] setText:subTitle];
     return cell;
 }

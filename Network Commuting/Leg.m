@@ -50,7 +50,7 @@
         [mapping mapKeyPath:@"distance" toAttribute:@"distance"];
         [mapping mapKeyPath:@"duration" toAttribute:@"duration"];
         [mapping mapKeyPath:@"endTime" toAttribute:@"endTime"];
-        [mapping mapKeyPath:@"headSign" toAttribute:@"headSign"];
+        [mapping mapKeyPath:@"headsign" toAttribute:@"headSign"];
         [mapping mapKeyPath:@"interlineWithPreviousLeg" toAttribute:@"interlineWithPreviousLeg"];
         [mapping mapKeyPath:@"legGeometry.length" toAttribute:@"legGeometryLength"];
         [mapping mapKeyPath:@"legGeometry.points" toAttribute:@"legGeometryPoints"];
