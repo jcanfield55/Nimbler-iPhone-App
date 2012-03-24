@@ -14,7 +14,8 @@
 
 @class Itinerary, PlanPlace, Step;
 
-@interface Leg : NSManagedObject
+@interface Leg : NSManagedObject 
+
 
 // See this URL for documentation on the elements: http://www.opentripplanner.org/apidoc/data_ns0.html#leg
 // This URL has example data http://groups.google.com/group/opentripplanner-dev/msg/4535900a5d18e61f?
@@ -41,6 +42,8 @@
 
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType;
 - (NSArray *)sortedSteps;
+- (NSString *)directionsTitleText;
+- (NSString *)directionsDetailText;
 - (NSString *)ncDescription;
 
 @end

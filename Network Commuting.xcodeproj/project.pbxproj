@@ -20,6 +20,10 @@
 		525442C814C3ED57004B0E1F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C714C3ED57004B0E1F /* Security.framework */; };
 		525442CA14C3ED66004B0E1F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C914C3ED66004B0E1F /* SystemConfiguration.framework */; };
 		525442CC14C3ED8A004B0E1F /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442CB14C3ED8A004B0E1F /* libxml2.dylib */; };
+		525C20F9151D3AF5004F8FE0 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
+		525C20FB151D3B03004F8FE0 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20FA151D3B03004F8FE0 /* CoreLocation.framework */; };
+		525C20FF151D412A004F8FE0 /* LegMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 525C20FE151D412A004F8FE0 /* LegMapViewController.xib */; };
+		52849FCA151D0389001D4DDC /* LegMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52849FC9151D0389001D4DDC /* LegMapViewController.m */; };
 		52B1B22614F9ABE4001AC5D1 /* RouteDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B1B22514F9ABE4001AC5D1 /* RouteDetailsViewController.m */; };
 		52B302C514BE2B1E00EB4852 /* ToFromViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B302C314BE2B1E00EB4852 /* ToFromViewController.m */; };
 		52B302C614BE2B1E00EB4852 /* ToFromViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52B302C414BE2B1E00EB4852 /* ToFromViewController.xib */; };
@@ -738,6 +742,11 @@
 		525442C714C3ED57004B0E1F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		525442C914C3ED66004B0E1F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		525442CB14C3ED8A004B0E1F /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		525C20F8151D3AF5004F8FE0 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		525C20FA151D3B03004F8FE0 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		525C20FE151D412A004F8FE0 /* LegMapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LegMapViewController.xib; path = ../LegMapViewController.xib; sourceTree = "<group>"; };
+		52849FC8151D0389001D4DDC /* LegMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LegMapViewController.h; sourceTree = "<group>"; };
+		52849FC9151D0389001D4DDC /* LegMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LegMapViewController.m; sourceTree = "<group>"; };
 		52B1B22414F9ABE4001AC5D1 /* RouteDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteDetailsViewController.h; sourceTree = "<group>"; };
 		52B1B22514F9ABE4001AC5D1 /* RouteDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteDetailsViewController.m; sourceTree = "<group>"; };
 		52B302C214BE2B1E00EB4852 /* ToFromViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToFromViewController.h; sourceTree = "<group>"; };
@@ -785,6 +794,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				525C20FB151D3B03004F8FE0 /* CoreLocation.framework in Frameworks */,
+				525C20F9151D3AF5004F8FE0 /* MapKit.framework in Frameworks */,
 				525442CC14C3ED8A004B0E1F /* libxml2.dylib in Frameworks */,
 				525442CA14C3ED66004B0E1F /* SystemConfiguration.framework in Frameworks */,
 				525442C814C3ED57004B0E1F /* Security.framework in Frameworks */,
@@ -2159,7 +2170,9 @@
 		52CF439E14BDF2F9000565D6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				525C20F8151D3AF5004F8FE0 /* MapKit.framework */,
 				525442CB14C3ED8A004B0E1F /* libxml2.dylib */,
+				525C20FA151D3B03004F8FE0 /* CoreLocation.framework */,
 				525442C314C3ED2C004B0E1F /* CFNetwork.framework */,
 				525442C514C3ED4A004B0E1F /* MobileCoreServices.framework */,
 				525442C714C3ED57004B0E1F /* Security.framework */,
@@ -2185,6 +2198,9 @@
 				5210516C14C9BEA80025DD39 /* RouteOptionsViewController.m */,
 				52B1B22414F9ABE4001AC5D1 /* RouteDetailsViewController.h */,
 				52B1B22514F9ABE4001AC5D1 /* RouteDetailsViewController.m */,
+				52849FC8151D0389001D4DDC /* LegMapViewController.h */,
+				52849FC9151D0389001D4DDC /* LegMapViewController.m */,
+				525C20FE151D412A004F8FE0 /* LegMapViewController.xib */,
 				52DF9C4714F7546800DC6828 /* Network_Commuting.xcdatamodeld */,
 				52BA735A14F78A6C00F7B9B3 /* Leg.h */,
 				52BA735B14F78A6C00F7B9B3 /* Leg.m */,
@@ -2472,6 +2488,7 @@
 			files = (
 				52CF43AC14BDF2F9000565D6 /* InfoPlist.strings in Resources */,
 				52B302C614BE2B1E00EB4852 /* ToFromViewController.xib in Resources */,
+				525C20FF151D412A004F8FE0 /* LegMapViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2526,6 +2543,7 @@
 				52BA735914F78A3C00F7B9B3 /* Step.m in Sources */,
 				52BA735C14F78A6C00F7B9B3 /* Leg.m in Sources */,
 				52B1B22614F9ABE4001AC5D1 /* RouteDetailsViewController.m in Sources */,
+				52849FCA151D0389001D4DDC /* LegMapViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2714,10 +2732,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Network Commuting.app/Network Commuting";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
-				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Network Commuting-Prefix.pch";
 				INFOPLIST_FILE = "Network CommutingTests/Network CommutingTests-Info.plist";
@@ -2731,10 +2745,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Network Commuting.app/Network Commuting";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
-				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Network Commuting-Prefix.pch";
 				INFOPLIST_FILE = "Network CommutingTests/Network CommutingTests-Info.plist";

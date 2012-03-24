@@ -10,12 +10,14 @@
 #import "Locations.h"
 #import "UtilityFunctions.h"
 #import "RouteOptionsViewController.h"
+#import "Leg.h"
 
 @implementation ToFromViewController
 @synthesize fromField;
 @synthesize toField;
 @synthesize toAutoFill;
 @synthesize fromAutoFill;
+@synthesize routeButton;
 @synthesize rkGeoMgr;
 @synthesize rkPlanMgr;
 @synthesize locations;
@@ -107,6 +109,7 @@
         fromSelectedCell = [fromAutoFill cellForRowAtIndexPath:indexPath];  // get the new selected cell
         fromSelectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
         [fromField setText:[loc formattedAddress]]; // fill the text in the from text box
+        fromLocation = loc;
     } 
     else {
         if (toSelectedCell) { // if a previous cell is selected
@@ -115,6 +118,7 @@
         toSelectedCell = [toAutoFill cellForRowAtIndexPath:indexPath];  // get the new selected cell
         toSelectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
         [toField setText:[loc formattedAddress]];
+        toLocation = loc;
     }
 }
 
@@ -184,6 +188,7 @@
             }
             // If routeRequested by user and we have both latlngs, then request a route and reset to false
             if (routeRequested && [fromLocation formattedAddress] && [toLocation formattedAddress]) {
+                // TODO put up a "thinking" graphic
                 [self getPlan];
                 routeRequested = false;  
             }
@@ -212,6 +217,25 @@
     }
 }
 
+- (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event
+{
+    routeRequested = true;
+    // TODO put up a "thinking" graphic
+
+    // if all the geolocations are here, get a plan.  
+    if ([fromLocation formattedAddress] && [toLocation formattedAddress]) {
+        [self getPlan];
+        routeRequested = false;  
+    }
+    // if no formatted addresses...
+    if (!fromRawAddress || !toRawAddress) {  // if no raw addresses, then alert the user
+        // TODO put up an alert asking them to type in or select an address
+    }
+    // otherwise, just wait for the geocoding and then submit the plan
+    
+
+}
+
 // Delegate methods for when the RestKit has results from the Geocoder or the Planner
 - (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects 
 {        
@@ -225,6 +249,23 @@
             NSLog(@"Planning object: %@", [plan ncDescription]);
             [plan setToLocation:toLocation];
             [plan setFromLocation:fromLocation];
+            
+            // The following is commented out code to pre-fetch the maps using Google Maps API for each route
+            // This is not needed because using MKMapView object instead
+            /*
+            for (Itinerary *itin in [plan itineraries]) {
+                for (Leg *leg in [itin legs]) {
+                    NSString *pathParam = [NSString stringWithFormat:@"weight:3|color:orange|enc:%@",
+                                           [leg legGeometryPoints]];
+                    NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
+                                            @"size", @"512x512", @"sensor", @"true",
+                                            @"path" , pathParam, nil];
+                    NSString* resource = [@"json" appendQueryParams:params];
+                    NSLog(@"%@ leg path=%@",[leg mode], resource);
+                }
+            }
+             */
+            
             
             // Pass control to the RouteOptionsViewController to display itinerary choices
             RouteOptionsViewController *routeOptionsVC = [[RouteOptionsViewController alloc] initWithStyle:UITableViewStylePlain];

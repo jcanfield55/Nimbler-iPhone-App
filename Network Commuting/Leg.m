@@ -9,7 +9,11 @@
 #import "Leg.h"
 #import "Itinerary.h"
 #import "Step.h"
+#import "UtilityFunctions.h"
 
+@interface Leg()
++ (NSDateFormatter *)timeFormatter;
+@end
 
 @implementation Leg
 
@@ -33,6 +37,16 @@
 @dynamic steps;
 @dynamic to;
 @synthesize sortedSteps;
+
+static NSDateFormatter *timeFormattr;
++ (NSDateFormatter *)timeFormatter{
+    if (!timeFormattr) {
+        timeFormattr = [[NSDateFormatter alloc] init];
+        [timeFormattr setTimeStyle:NSDateFormatterShortStyle];
+    }
+    return timeFormattr;
+}
+
 
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType
 {
@@ -86,6 +100,49 @@
     [self setSortedSteps:[[self steps] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
 }
 
+- (NSString *)directionsTitleText
+{
+    NSMutableString *titleText=[NSMutableString stringWithString:@""];
+    if ([[self mode] isEqualToString:@"WALK"]) {
+        titleText = [NSString stringWithFormat:@"Walk to %@", [[self to] name]];
+    }
+    else if ([[self mode] isEqualToString:@"BUS"]) {
+        titleText = [NSMutableString stringWithFormat:@"Bus %@ - %@", [self routeShortName], [self routeLongName]];
+        if ([self headSign]) {
+            [titleText appendFormat:@" to %@", [self headSign]];
+        }
+    }
+    else {
+        titleText = [NSString stringWithFormat:@"%@ %@ - %@", [self mode], [self routeShortName], [self routeLongName]];          
+    }
+    return titleText;
+}
+
+- (NSString *)directionsDetailText
+{
+    NSString *subTitle;
+    NSDateFormatter* timeFormatter = [Leg timeFormatter];
+    if ([[self mode] isEqualToString:@"WALK"]) {
+        subTitle = [NSString stringWithFormat:@"About %@, %@", 
+                    durationString([[self duration] floatValue]), 
+                    distanceStringInMilesFeet([[self distance] floatValue])];
+    }
+    else if ([[self mode] isEqualToString:@"BUS"]) {
+        subTitle = [NSString stringWithFormat:@"%@   Depart %@\n%@   Arrive %@",
+                    [timeFormatter stringFromDate:[self startTime]],
+                    [[self from] name],
+                    [timeFormatter stringFromDate:[self endTime]],
+                    [[self to] name]];
+    }
+    else {
+        subTitle = [NSString stringWithFormat:@"%@   Depart %@\n%@   Arrive %@",
+                    [timeFormatter stringFromDate:[self startTime]],
+                    [[self from] name],
+                    [timeFormatter stringFromDate:[self endTime]],
+                    [[self to] name]];            
+    }
+    return subTitle;
+}
 
 - (NSString *)ncDescription
 {

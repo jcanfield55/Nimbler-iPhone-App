@@ -78,6 +78,19 @@
     [self setSortedLegs:[[self legs] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
 }
 
+// Returns the starting point PlanPlace
+- (PlanPlace *)from 
+{
+    return [[[self sortedLegs] objectAtIndex:0] from];
+}
+
+// Returns the ending point PlanPlace
+- (PlanPlace *)to
+{
+    return [[sortedLegs objectAtIndex:([sortedLegs count]-1)] to];
+}
+
+
 - (NSString *)ncDescription
 {
     NSMutableString* desc = [NSMutableString stringWithFormat:

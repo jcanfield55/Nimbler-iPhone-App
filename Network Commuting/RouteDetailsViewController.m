@@ -8,7 +8,7 @@
 
 #import "RouteDetailsViewController.h"
 #import "Leg.h"
-#import "UtilityFunctions.h"
+#import "LegMapViewController.h"
 
 @implementation RouteDetailsViewController
 
@@ -59,49 +59,36 @@
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:12.0]];
     [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:12.0]];
 
-    NSMutableString *titleText=[NSMutableString stringWithString:@""];
-    NSString *subTitle=@"";
-    NSArray *sortedLegs = [itinerary sortedLegs];
+    NSString *titleText;
+    NSString *subTitle;
     if ([indexPath row] == 0) { // if first row, put in start point
-        titleText = [NSString stringWithFormat:@"Start at %@", [[[sortedLegs objectAtIndex:0] from] name]];
+        titleText = [NSString stringWithFormat:@"Start at %@", [[itinerary from] name]];
     }
     else if ([indexPath row] == [[itinerary sortedLegs] count] + 1) { // if last row, put in end point
-        titleText = [NSString stringWithFormat:@"End at %@", [[[sortedLegs objectAtIndex:([sortedLegs count]-1)] to] name]];
+        titleText = [NSString stringWithFormat:@"End at %@", [[itinerary to] name]];
     }
     else {  // otherwise, it is one of the legs
         Leg *leg = [[itinerary sortedLegs] objectAtIndex:([indexPath row]-1)];
-        if ([[leg mode] isEqualToString:@"WALK"]) {
-            titleText = [NSString stringWithFormat:@"Walk to %@", [[leg to] name]];
-            subTitle = [NSString stringWithFormat:@"About %@, %@", 
-                        durationString([[leg duration] floatValue]), 
-                        distanceStringInMilesFeet([[leg distance] floatValue])];
-        }
-        else if ([[leg mode] isEqualToString:@"BUS"]) {
-            titleText = [NSMutableString stringWithFormat:@"Bus %@ - %@", [leg routeShortName], [leg routeLongName]];
-            if ([leg headSign]) {
-                [titleText appendFormat:@" to %@", [leg headSign]];
-            }
-            subTitle = [NSString stringWithFormat:@"%@    Depart %@\n%@    Arrive %@",
-                        [timeFormatter stringFromDate:[leg startTime]],
-                        [[leg from] name],
-                        [timeFormatter stringFromDate:[leg endTime]],
-                        [[leg to] name]];
-        }
-        else {
-            titleText = [NSString stringWithFormat:@"%@ %@ - %@", [leg mode], [leg routeShortName], [leg routeLongName]];
-            subTitle = [NSString stringWithFormat:@"%@    Depart %@\n%@    Arrive %@",
-                        [timeFormatter stringFromDate:[leg startTime]],
-                        [[leg from] name],
-                        [timeFormatter stringFromDate:[leg endTime]],
-                        [[leg to] name]];            
-        }
-
+        titleText = [leg directionsTitleText];
+        subTitle = [leg directionsDetailText];
     }
     [[cell textLabel] setText:titleText];
     [[cell detailTextLabel] setLineBreakMode:UILineBreakModeWordWrap];
     [[cell detailTextLabel] setNumberOfLines:0];
     [[cell detailTextLabel] setText:subTitle];
     return cell;
+}
+
+// If selected, show the LegMapViewController
+- (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Initialize the LegMapView Controller
+    LegMapViewController *legMapVC = [[LegMapViewController alloc] initWithNibName:nil bundle:nil];
+
+    // Initialize the leg VC with the full itinerary and the particular leg object chosen
+    [legMapVC setItinerary:itinerary itineraryNumber:[indexPath row]];
+    
+    [[self navigationController] pushViewController:legMapVC animated:YES];
 }
 
 @end

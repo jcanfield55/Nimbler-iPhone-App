@@ -29,6 +29,7 @@
 @property (strong, nonatomic) IBOutlet UITextField *toField;
 @property (strong, nonatomic) IBOutlet UITableView *fromAutoFill;
 @property (strong, nonatomic) IBOutlet UITableView *toAutoFill;
+@property (strong, nonatomic) IBOutlet UIButton *routeButton;
 @property (strong, nonatomic) RKObjectManager *rkGeoMgr;  // RestKit Object Manager for geocoding
 @property (strong, nonatomic) RKObjectManager *rkPlanMgr;  // RestKit object manager for trip planning
 @property (strong, nonatomic) Locations *locations;  // Wrapper for collection of all Locations
@@ -37,6 +38,7 @@
 
 - (IBAction)toFromTyping:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)toFromTextSubmitted:(id)sender forEvent:(UIEvent *)event;
+- (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (BOOL)getPlan;
 
 @end

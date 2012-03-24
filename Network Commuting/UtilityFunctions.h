@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <MapKit/MapKit.h> 
+#import <CoreLocation/CoreLocation.h>
 
 NSString *pathInDocumentDirectory(NSString *fileName);
 
@@ -17,3 +19,6 @@ NSString *durationString(double milliseconds);
 
 // Converts from meters to a string in either miles or feed
 NSString *distanceStringInMilesFeet(double meters);
+
+// Returns an MKPolyline corresponding to a polyline encoded string
+MKPolyline *polylineWithEncodedString(NSString *encodedString);

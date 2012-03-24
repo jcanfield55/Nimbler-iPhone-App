@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import <RestKit/Restkit.h>
+#import "PlanPlace.h"
 #import "enums.h"
 
 @class Leg, Plan;
@@ -36,6 +37,8 @@
 
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType;
 
+- (PlanPlace *)from;
+- (PlanPlace *)to;
 - (NSString *)ncDescription;
 
 @end
