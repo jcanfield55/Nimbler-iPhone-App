@@ -50,6 +50,7 @@
     [ac4 setLongName:@"San Francisco"];
     [ac5 setLongName:@"California"];
     [ac6 setLongName:@"94103"];
+    [ac6 setShortName:@"94103"];
     [ac7 setLongName:@"United States of America"];
     [ac7 setShortName:@"USA"];
     [ac1 setTypes:[NSArray arrayWithObjects:@"street_number", nil]];
@@ -241,12 +242,14 @@
     STAssertFalse([loc1 isMatchingTypedString:@"USA"],@"");
 
     // Test scalar setters and accessors
-
     STAssertEquals([loc1 apiTypeEnum], GOOGLE_GEOCODER, @"");
     STAssertEquals([loc1 fromFrequencyInt], 5, @"");
     STAssertEquals([loc1 toFrequencyInt], 7, @"");
     STAssertEquals([loc1 latFloat], 67.3, @"");
     STAssertEquals([loc1 lngFloat], -122.3, @"");
+    
+    // Test shortFormattedAddress
+    STAssertTrue([[loc1 shortFormattedAddress] isEqualToString:@"750 Hawthorne Street, San Francisco, CA "], @"");
     
     // Clean-up
     

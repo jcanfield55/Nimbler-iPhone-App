@@ -11,6 +11,7 @@
 #import "UtilityFunctions.h"
 #import "RouteOptionsViewController.h"
 #import "Leg.h"
+#import "DateTimeViewController.h"
 
 @interface ToFromViewController()
 
@@ -24,6 +25,7 @@ typedef enum {
 @end
 
 @implementation ToFromViewController
+@synthesize timeDateTable;
 @synthesize fromField;
 @synthesize toField;
 @synthesize toAutoFill;
@@ -34,14 +36,16 @@ typedef enum {
 @synthesize locations;
 @synthesize fromLocation;
 @synthesize toLocation;
+@synthesize departOrArrive;
+@synthesize tripDate;
 
 // Constants for animating up and down the To: field
-int const TO_FIELD_HIGH_Y = 52;
-int const TO_FIELD_NORMAL_Y = 173;
-int const TO_AUTOFILL_HIGH_Y = 90;
-int const TO_AUTOFILL_NORMAL_Y = 205;
+int const TO_FIELD_HIGH_Y = 87;
+int const TO_FIELD_NORMAL_Y = 197;
+int const TO_AUTOFILL_HIGH_Y = 118;
+int const TO_AUTOFILL_NORMAL_Y = 228;
 int const AUTOFILL_HEIGHT = 105;
-
+int const TIME_DATE_HEIGHT = 45;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -50,6 +54,14 @@ int const AUTOFILL_HEIGHT = 105;
         [[self navigationItem] setTitle:@"Nimbler"];
     }
     planRequestHistory = [NSMutableArray array]; // Initialize this array
+    departOrArrive = DEPART;
+    
+    // Initialize the trip date formatter for display
+    tripDateFormatter = [[NSDateFormatter alloc] init];
+    [tripDateFormatter setDoesRelativeDateFormatting:YES];
+    [tripDateFormatter setTimeStyle:NSDateFormatterShortStyle];
+    [tripDateFormatter setDateStyle:NSDateFormatterMediumStyle];
+    
     return self;
 }
 
@@ -58,13 +70,22 @@ int const AUTOFILL_HEIGHT = 105;
     [super viewWillAppear:animated];
     // NSLog(@"toAutofill height = %f, center = %f",[toAutoFill bounds].size.height, [toAutoFill center].y);
     // NSLog(@"toAutofill frame top = (%f, %f), height = %f",[toAutoFill frame].origin.x, [toAutoFill frame].origin.y, [toAutoFill frame].size.height);
+    // NSLog(@"timeDateTable frame top = (%f, %f), height = %f",[timeDateTable frame].origin.x, [timeDateTable frame].origin.y, [timeDateTable frame].size.height);
+
     // Enforce the right size for the AutoFill tables
+    CGRect rect0 = [timeDateTable frame];
+    rect0.size.height = TIME_DATE_HEIGHT;
+    [timeDateTable setFrame:rect0];
+    
     CGRect rect1 = [toAutoFill frame];
     rect1.size.height = AUTOFILL_HEIGHT;
     [toAutoFill setFrame:rect1];
+    
     CGRect rect2 = [fromAutoFill frame];
     rect2.size.height = AUTOFILL_HEIGHT;
     [fromAutoFill setFrame:rect2];
+    
+    [timeDateTable reloadData];
 }
 
 // One-time set-up of the RestKit Geocoder Object Manager's mapping
@@ -92,12 +113,39 @@ int const AUTOFILL_HEIGHT = 105;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    BOOL isFrom = ((tableView == fromAutoFill) ? YES : NO);
-    return [locations numberOfLocations:isFrom];
+    if (tableView == timeDateTable) {
+        return 1;    // we only show one cell in the timeDateTable
+    }
+    else {
+        BOOL isFrom = ((tableView == fromAutoFill) ? YES : NO);
+        return [locations numberOfLocations:isFrom];
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    // If it is the timeDateTable, handle that first
+    if (tableView == timeDateTable) {
+        UITableViewCell *cell =
+        [tableView dequeueReusableCellWithIdentifier:@"timeDateTableCell"];
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 
+                                          reuseIdentifier:@"timeDateTableCell"];
+        }
+        
+        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
+        [[cell textLabel] setText:((departOrArrive==DEPART) ? @"Depart at" : @"Arrive by")];
+        if (!tripDate) {
+            tripDate = [[NSDate alloc] init];   // if no date set, use current time
+        }
+        [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:14.0]];
+        [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+        [[cell detailTextLabel] setText:[tripDateFormatter stringFromDate:tripDate]];
+        return cell;
+    }
+    
+    // Otherwise, handle the toAutoFill and fromAutoFill table cases
+    
     // Check for a reusable cell first, use that if it exists
     UITableViewCell *cell =
     [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell"];
@@ -107,13 +155,13 @@ int const AUTOFILL_HEIGHT = 105;
                                       reuseIdentifier:@"UITableViewCell"];
     }
 
-    // Set fonts for title and 
+    // Set fonts for title 
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
 
     BOOL isFrom = ((tableView == fromAutoFill) ? YES : NO);
     Location *loc = [locations locationAtIndex:[indexPath row] isFrom:isFrom];
     
-    [[cell textLabel] setText:[loc formattedAddress]];
+    [[cell textLabel] setText:[loc shortFormattedAddress]];
 
     return cell;
     
@@ -128,6 +176,19 @@ int const AUTOFILL_HEIGHT = 105;
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    // If timeDateTable, handle that first
+    if (tableView == timeDateTable) {
+        DateTimeViewController *dateTimeVC = [[DateTimeViewController alloc] initWithNibName:nil bundle:nil];
+        [dateTimeVC setDate:tripDate];
+        [dateTimeVC setDepartOrArrive:departOrArrive];
+        [dateTimeVC setToFromViewController:self];
+        [[self navigationController] pushViewController:dateTimeVC animated:YES];
+        return;
+    }
+    
+    // Now handle selections on the AutoFill tables
+    // TODO if current location, get the current geolocation
+    
     BOOL isFrom = ((tableView == fromAutoFill) ? YES : NO);
     Location *loc = [locations locationAtIndex:[indexPath row] isFrom:isFrom];  //selected Location
     
@@ -138,7 +199,7 @@ int const AUTOFILL_HEIGHT = 105;
         }
         fromSelectedCell = [fromAutoFill cellForRowAtIndexPath:indexPath];  // get the new selected cell
         fromSelectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
-        [fromField setText:[loc formattedAddress]]; // fill the text in the from text box
+        [fromField setText:[loc shortFormattedAddress]]; // fill the text in the from text box
         fromLocation = loc;
     } 
     else {
@@ -147,7 +208,7 @@ int const AUTOFILL_HEIGHT = 105;
         }
         toSelectedCell = [toAutoFill cellForRowAtIndexPath:indexPath];  // get the new selected cell
         toSelectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
-        [toField setText:[loc formattedAddress]];
+        [toField setText:[loc shortFormattedAddress]];
         toLocation = loc;
     }
 }
@@ -465,17 +526,16 @@ int const AUTOFILL_HEIGHT = 105;
         [tFormat setTimeStyle:NSDateFormatterShortStyle];
         [tFormat setDateStyle:NSDateFormatterNoStyle];
         
-        // TODO get the date from the UI, rather than just using current date & time
-        NSDate* dateTime = [NSDate date];
-        
         // TODO detect and handle case where origin and destination are exactly the same
         
         // Build the parameters into a resource string
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                                 @"fromPlace", [fromLocation latLngPairStr], 
                                 @"toPlace", [toLocation latLngPairStr], 
-                                @"date", [dFormat stringFromDate:dateTime],
-                                @"time", [tFormat stringFromDate:dateTime], nil];
+                                @"date", [dFormat stringFromDate:tripDate],
+                                @"time", [tFormat stringFromDate:tripDate], 
+                                @"arriveBy", ((departOrArrive == ARRIVE) ? @"true" : @"false"),
+                                nil];
         planURLResource = [@"plan" appendQueryParams:params];
         
         // add latest plan request to history array

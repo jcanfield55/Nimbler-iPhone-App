@@ -242,6 +242,26 @@ static Locations *locations;
     }
 }
 
+// returns the formatted address minus everything after the postal code
+- (NSString *)shortFormattedAddress  
+{
+    NSString* addr = [NSMutableString stringWithString:[self formattedAddress]];
+    NSString* postalCode = [[[[self addressComponents] objectsPassingTest:^(id obj,BOOL *stop){
+        AddressComponent* ac = obj;
+        if ([[ac types] containsObject:@"postal_code"]) {
+            *stop = YES;
+            return YES;
+        }
+        return NO;
+    }] anyObject] shortName];  // Returns the short postal code
+    if (postalCode && [postalCode length] > 0) {
+        NSRange range = [addr rangeOfString:postalCode options:NSBackwardsSearch];
+        if (range.location != NSNotFound) {
+            return [addr substringToIndex:range.location];  // return up to but not including postal_code
+        }
+    }
+    return addr;  // postal code not found, return whole string
+}
 
 // Method to see whether two locations are effectively equivalent
 // If they have the exact same formatted address, or they are within ~0.05 miles 

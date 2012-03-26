@@ -15,4 +15,9 @@ typedef enum {
     OTP_PLANNER
 } APIType;
 
+typedef enum {
+    DEPART,
+    ARRIVE
+} DepartOrArrive;
+
 #endif

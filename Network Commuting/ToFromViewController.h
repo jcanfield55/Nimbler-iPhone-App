@@ -10,9 +10,11 @@
 #import <RestKit/RestKit.h>
 #import "Locations.h"
 #import "Plan.h"
+#import "enums.h"
 
 @interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate>
 {
+    NSDateFormatter *tripDateFormatter;  // Formatter for showing the trip date / time
     NSString *toRawAddress;    // user entered To address
     NSString *toURLResource;   // URL resource sent to geocoder for the to address
     NSString *fromRawAddress;  // user entered From address
@@ -25,6 +27,7 @@
     BOOL routeRequested;   // True when the user has pressed the route button and a route has not yet been requested
     NSManagedObjectContext *managedObjectContext;
 }
+@property (strong, nonatomic) IBOutlet UITableView* timeDateTable;
 @property (strong, nonatomic) IBOutlet UITextField *fromField;
 @property (strong, nonatomic) IBOutlet UITextField *toField;
 @property (strong, nonatomic) IBOutlet UITableView *fromAutoFill;
@@ -35,6 +38,8 @@
 @property (strong, nonatomic) Locations *locations;  // Wrapper for collection of all Locations
 @property (strong, nonatomic, readonly) Location *fromLocation;
 @property (strong, nonatomic, readonly) Location *toLocation;
+@property (nonatomic) DepartOrArrive departOrArrive;  // True if routing from departure time, false if by arrival time
+@property (strong, nonatomic) NSDate *tripDate;
 
 - (IBAction)toFromTyping:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)toFromTextSubmitted:(id)sender forEvent:(UIEvent *)event;

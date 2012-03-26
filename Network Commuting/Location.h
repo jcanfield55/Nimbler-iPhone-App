@@ -60,6 +60,7 @@
 - (NSString *)latLngPairStr;
 - (BOOL)isMatchingTypedString:(NSString *)str;
 - (BOOL)isEquivalent:(Location *)loc2;
+- (NSString *)shortFormattedAddress;  // returns the formatted address minus the postal code and country
 
 @end
 
