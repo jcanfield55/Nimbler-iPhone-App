@@ -12,6 +12,17 @@
 #import "RouteOptionsViewController.h"
 #import "Leg.h"
 
+@interface ToFromViewController()
+
+typedef enum {
+    UP,
+    DOWN
+} moveToFieldsDirection;
+
+// Utility function for moving the toFields up or down
+- (void)moveToFields:(moveToFieldsDirection)direction;
+@end
+
 @implementation ToFromViewController
 @synthesize fromField;
 @synthesize toField;
@@ -24,6 +35,12 @@
 @synthesize fromLocation;
 @synthesize toLocation;
 
+// Constants for animating up and down the To: field
+int const TO_FIELD_HIGH_Y = 52;
+int const TO_FIELD_NORMAL_Y = 173;
+int const TO_AUTOFILL_HIGH_Y = 90;
+int const TO_AUTOFILL_NORMAL_Y = 205;
+int const AUTOFILL_HEIGHT = 105;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -34,6 +51,20 @@
     }
     planRequestHistory = [NSMutableArray array]; // Initialize this array
     return self;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    // NSLog(@"toAutofill height = %f, center = %f",[toAutoFill bounds].size.height, [toAutoFill center].y);
+    // NSLog(@"toAutofill frame top = (%f, %f), height = %f",[toAutoFill frame].origin.x, [toAutoFill frame].origin.y, [toAutoFill frame].size.height);
+    // Enforce the right size for the AutoFill tables
+    CGRect rect1 = [toAutoFill frame];
+    rect1.size.height = AUTOFILL_HEIGHT;
+    [toAutoFill setFrame:rect1];
+    CGRect rect2 = [fromAutoFill frame];
+    rect2.size.height = AUTOFILL_HEIGHT;
+    [fromAutoFill setFrame:rect2];
 }
 
 // One-time set-up of the RestKit Geocoder Object Manager's mapping
@@ -56,7 +87,6 @@
     // Add the mapper from Plan class to this Object Manager
     [[rkPlanMgr mappingProvider] setMapping:[Plan objectMappingforPlanner:OTP_PLANNER] forKeyPath:@"plan"];
 }
-
 
 // Table view management methods
 
@@ -160,6 +190,9 @@
 
     routeRequested = false;
 
+    // If to field, move it back down
+    [self moveToFields:DOWN];
+    
     NSLog(@"In toFromTextSubmitted and isFrom=%d", isFrom);
     
     // Determine whether user pressed the "Route" button on the To: field 
@@ -234,6 +267,30 @@
     // otherwise, just wait for the geocoding and then submit the plan
     
 
+}
+
+// When focus comes to the To field, move it up
+- (IBAction)toFieldFocus:(id)sender forEvent:(UIEvent *)event
+{
+    [self moveToFields:UP];
+}
+
+- (void)moveToFields:(moveToFieldsDirection)direction 
+{
+    if (direction == UP) {
+        [fromAutoFill setHidden:TRUE];
+    }
+    CGRect newRect1 = [toField frame];
+    newRect1.origin.y = ((direction == UP) ? TO_FIELD_HIGH_Y : TO_FIELD_NORMAL_Y);
+    CGRect newRect2 = [toAutoFill frame];
+    newRect2.origin.y = ((direction == UP) ? TO_AUTOFILL_HIGH_Y : TO_AUTOFILL_NORMAL_Y);
+    [UIView animateWithDuration:0.5 animations:^{
+        [toField setFrame:newRect1];
+        [toAutoFill setFrame:newRect2];
+    }];
+    if (direction == DOWN) {
+        [fromAutoFill setHidden:FALSE];
+    }
 }
 
 // Delegate methods for when the RestKit has results from the Geocoder or the Planner

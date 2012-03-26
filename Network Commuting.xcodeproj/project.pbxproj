@@ -23,6 +23,7 @@
 		525C20F9151D3AF5004F8FE0 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
 		525C20FB151D3B03004F8FE0 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20FA151D3B03004F8FE0 /* CoreLocation.framework */; };
 		525C20FF151D412A004F8FE0 /* LegMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 525C20FE151D412A004F8FE0 /* LegMapViewController.xib */; };
+		527E174A151EB9CD00CDBC23 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527E1749151EB9CD00CDBC23 /* QuartzCore.framework */; };
 		52849FCA151D0389001D4DDC /* LegMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52849FC9151D0389001D4DDC /* LegMapViewController.m */; };
 		52B1B22614F9ABE4001AC5D1 /* RouteDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B1B22514F9ABE4001AC5D1 /* RouteDetailsViewController.m */; };
 		52B302C514BE2B1E00EB4852 /* ToFromViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B302C314BE2B1E00EB4852 /* ToFromViewController.m */; };
@@ -745,6 +746,7 @@
 		525C20F8151D3AF5004F8FE0 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		525C20FA151D3B03004F8FE0 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		525C20FE151D412A004F8FE0 /* LegMapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LegMapViewController.xib; path = ../LegMapViewController.xib; sourceTree = "<group>"; };
+		527E1749151EB9CD00CDBC23 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		52849FC8151D0389001D4DDC /* LegMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LegMapViewController.h; sourceTree = "<group>"; };
 		52849FC9151D0389001D4DDC /* LegMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LegMapViewController.m; sourceTree = "<group>"; };
 		52B1B22414F9ABE4001AC5D1 /* RouteDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteDetailsViewController.h; sourceTree = "<group>"; };
@@ -794,6 +796,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				527E174A151EB9CD00CDBC23 /* QuartzCore.framework in Frameworks */,
 				525C20FB151D3B03004F8FE0 /* CoreLocation.framework in Frameworks */,
 				525C20F9151D3AF5004F8FE0 /* MapKit.framework in Frameworks */,
 				525442CC14C3ED8A004B0E1F /* libxml2.dylib in Frameworks */,
@@ -2170,6 +2173,7 @@
 		52CF439E14BDF2F9000565D6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				527E1749151EB9CD00CDBC23 /* QuartzCore.framework */,
 				525C20F8151D3AF5004F8FE0 /* MapKit.framework */,
 				525442CB14C3ED8A004B0E1F /* libxml2.dylib */,
 				525C20FA151D3B03004F8FE0 /* CoreLocation.framework */,
@@ -2732,6 +2736,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Network Commuting.app/Network Commuting";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Network Commuting-Prefix.pch";
 				INFOPLIST_FILE = "Network CommutingTests/Network CommutingTests-Info.plist";
@@ -2745,6 +2753,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Network Commuting.app/Network Commuting";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Network Commuting-Prefix.pch";
 				INFOPLIST_FILE = "Network CommutingTests/Network CommutingTests-Info.plist";

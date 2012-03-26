@@ -42,19 +42,26 @@
     AddressComponent *ac3 = [NSEntityDescription insertNewObjectForEntityForName:@"AddressComponent" inManagedObjectContext:managedObjectContext];
     AddressComponent *ac4 = [NSEntityDescription insertNewObjectForEntityForName:@"AddressComponent" inManagedObjectContext:managedObjectContext];
     AddressComponent *ac5 = [NSEntityDescription insertNewObjectForEntityForName:@"AddressComponent" inManagedObjectContext:managedObjectContext];
+    AddressComponent *ac6 = [NSEntityDescription insertNewObjectForEntityForName:@"AddressComponent" inManagedObjectContext:managedObjectContext];
+    AddressComponent *ac7 = [NSEntityDescription insertNewObjectForEntityForName:@"AddressComponent" inManagedObjectContext:managedObjectContext];
     [ac1 setLongName:@"750"];
     [ac2 setLongName:@"Hawthorne Street"];
     [ac3 setLongName:@"San Francisco"];
     [ac4 setLongName:@"San Francisco"];
     [ac5 setLongName:@"California"];
+    [ac6 setLongName:@"94103"];
+    [ac7 setLongName:@"United States of America"];
+    [ac7 setShortName:@"USA"];
     [ac1 setTypes:[NSArray arrayWithObjects:@"street_number", nil]];
     [ac2 setTypes:[NSArray arrayWithObjects:@"route", nil]];
     [ac3 setTypes:[NSArray arrayWithObjects:@"locality", @"political", nil]];
     [ac4 setTypes:[NSArray arrayWithObjects:@"political", @"locality", nil]];  // try reverse order
     [ac5 setTypes:[NSArray arrayWithObjects:@"administrative_area_level_1", @"political", nil]];
-    
-    [loc1 setFormattedAddress:@"750 Hawthorne Street, San Francisco, CA"];
-    [loc1 setAddressComponents:[NSSet setWithObjects:ac1,ac2,ac3,ac4,ac5,nil]];
+    [ac6 setTypes:[NSArray arrayWithObjects:@"postal_code", nil]];
+    [ac7 setTypes:[NSArray arrayWithObjects:@"country", @"political", nil]];
+
+    [loc1 setFormattedAddress:@"750 Hawthorne Street, San Francisco, CA 94103, USA"];
+    [loc1 setAddressComponents:[NSSet setWithObjects:ac1,ac2,ac3,ac4,ac5,ac6,ac7,nil]];
     
     [loc1 addRawAddressString:@"750 Hawthorne St., SF"];
     [loc1 addRawAddressString:@"750 Hawthorn, San Fran California"];
@@ -153,6 +160,11 @@
     STAssertEquals([locations numberOfLocations:NO], 1, @"");  // This is a simple prefix match off of the formatted address.  Note this appears even tho frequency=0.  
     STAssertEquals([locations locationAtIndex:0 isFrom:NO], loc3, @"");
     
+    // Test that a full formatted address will match
+    [locations setTypedToString:@"750 Hawthorne Street, San Francisco, CA 94103, USA"];
+    STAssertEquals([locations numberOfLocations:NO], 1, @"");   
+    STAssertEquals([locations locationAtIndex:0 isFrom:NO], loc1, @"");   
+    
     // Delete object and retest that the number of Locations goes back correct
     [managedObjectContext deleteObject:loc4tl];
     [locations setTypedFromString:@""];
@@ -168,7 +180,7 @@
     
     // locationsWithFormattedAddress
     STAssertEquals([[locations locationsWithFormattedAddress:@"750 Hawthorne Street, San Francisco"] objectAtIndex:0], loc2, @"");
-    STAssertEquals([[locations locationsWithFormattedAddress:@"750 Hawthorne Street, San Francisco, CA"] objectAtIndex:0], loc1, @"");
+    STAssertEquals([[locations locationsWithFormattedAddress:@"750 Hawthorne Street, San Francisco, CA 94103, USA"] objectAtIndex:0], loc1, @"");
     STAssertTrue([[locations locationsWithFormattedAddress:@"No matching location"] count]==0, @"");
     STAssertNil([locations locationsWithFormattedAddress:nil], @"");
 
@@ -219,14 +231,14 @@
     STAssertTrue([loc1 isMatchingTypedString:@"75 treet"],@"");
     STAssertTrue([loc1 isMatchingTypedString:@"7 San"],@"");
     STAssertTrue([loc1 isMatchingTypedString:@"750  Hawthorne St., San Fran"],@"");
+    STAssertTrue([loc1 isMatchingTypedString:@"75 Hawthorne CA"],@""); 
 
     STAssertFalse([loc1 isMatchingTypedString:@"Hu"],@"");
     STAssertFalse([loc1 isMatchingTypedString:@"Hull"],@"");
     STAssertFalse([loc1 isMatchingTypedString:@"5"],@"");
     STAssertFalse([loc1 isMatchingTypedString:@"Ca"],@"");
-    STAssertFalse([loc1 isMatchingTypedString:@"USA"],@"");
     STAssertFalse([loc1 isMatchingTypedString:@"75 Huwthorne"],@"");
-    STAssertFalse([loc1 isMatchingTypedString:@"75 Hawthorne CA"],@""); // state not included in matches
+    STAssertFalse([loc1 isMatchingTypedString:@"USA"],@"");
 
     // Test scalar setters and accessors
 

@@ -50,7 +50,8 @@
 
         UIBarButtonItem* bbi = [[UIBarButtonItem alloc] initWithCustomView:container];
          */
-
+        
+        // TODO make this work with iOS 4.0, and get better formatting
         UIBarButtonItem* forwardBBI = [[UIBarButtonItem alloc] initWithTitle:@"For" style:UIBarButtonItemStylePlain target:self action:@selector(navigateForward:)];
         UIBarButtonItem* bakBBI = [[UIBarButtonItem alloc] initWithTitle:@"Bak" style:UIBarButtonItemStylePlain target:self action:@selector(navigateBack:)];
         NSArray* bbiArray = [NSArray arrayWithObjects:forwardBBI, bakBBI, nil];

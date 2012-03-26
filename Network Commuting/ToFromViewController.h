@@ -25,6 +25,7 @@
     BOOL routeRequested;   // True when the user has pressed the route button and a route has not yet been requested
     NSManagedObjectContext *managedObjectContext;
 }
+@property (strong, nonatomic) IBOutlet UITableView *
 @property (strong, nonatomic) IBOutlet UITextField *fromField;
 @property (strong, nonatomic) IBOutlet UITextField *toField;
 @property (strong, nonatomic) IBOutlet UITableView *fromAutoFill;
@@ -39,6 +40,7 @@
 - (IBAction)toFromTyping:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)toFromTextSubmitted:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
+- (IBAction)toFieldFocus:(id)sender forEvent:(UIEvent *)event;
 - (BOOL)getPlan;
 
 @end

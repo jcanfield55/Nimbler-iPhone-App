@@ -161,47 +161,81 @@ static Locations *locations;
 {
     NSArray *strAtoms = [str componentsSeparatedByCharactersInSet:
                         [NSCharacterSet characterSetWithCharactersInString:@" ,."]];
-    NSMutableArray *matches = [NSMutableArray arrayWithCapacity:[strAtoms count]]; // will hold booleans for matches
+    NSMutableArray *matches = [NSMutableArray arrayWithCapacity:[strAtoms count]]; // will hold results
     NSSet *addrComponents = [self addressComponents];
     if (addrComponents && [addrComponents count]>0) {
+        if ([[self formattedAddress] hasPrefix:str]) {  
+            return YES;   // if a straight prefix match on formatting address return true right away
+        }
         for (int i=0; i<[strAtoms count]; i++) {  // iterate through string's atoms
             NSString *atom = [strAtoms objectAtIndex:i];
-            [matches addObject:[NSNumber numberWithBool:NO]];
+            [matches addObject:@"No match"];
             if (!atom || [atom length] == 0) { // if no or empty string...
-                [matches replaceObjectAtIndex:i withObject:[NSNumber numberWithBool:YES]]; // count as match
+                [matches replaceObjectAtIndex:i withObject:@"Match"]; // count as match
             }
             else { 
                 for (AddressComponent *ac in addrComponents) {  // iterate through address components
                     for (NSString *type in [ac types]) {  // iterate through component types
-                        if ([type isEqualToString:@"street_number"]) { // for street #, do a prefix compare
-                            NSRange range = [[ac longName] rangeOfString:atom options:NSCaseInsensitiveSearch];
-                            if (range.location!= NSNotFound && range.location == 0) { // Make sure it is a prefix only
-                                [matches replaceObjectAtIndex:i withObject:[NSNumber numberWithBool:YES]];
-                                goto getNextAtom;
-                            }
-                        }
                         if ([type isEqualToString:@"route"] ||
                             [type isEqualToString:@"intersection"] ||
                             [type isEqualToString:@"locality"] ||
                             [type isEqualToString:@"airport"]) { // for these types, do a substring compare
-                            if ([[ac longName] rangeOfString:atom options:NSCaseInsensitiveSearch].location != NSNotFound) {
-                                [matches replaceObjectAtIndex:i withObject:[NSNumber numberWithBool:YES]];
+                            if ([ac longName] && [[ac longName] length]>0 && 
+                                [[ac longName] rangeOfString:atom options:NSCaseInsensitiveSearch].location != NSNotFound) {
+                                [matches replaceObjectAtIndex:i withObject:@"Match"];
+                                goto getNextAtom;
+                            }
+                            if ([ac shortName] && [[ac shortName] length]>0 && 
+                                [[ac shortName] rangeOfString:atom options:NSCaseInsensitiveSearch].location != NSNotFound) {
+                                [matches replaceObjectAtIndex:i withObject:@"Match"];
                                 goto getNextAtom;
                             }
                         }
+                        else { // for all others do a prefix compare
+                            NSRange range1 = [[ac longName] rangeOfString:atom options:NSCaseInsensitiveSearch];   // compare vs longName
+                            if (![ac longName] || [[ac longName] length] == 0) {
+                                range1.location = NSNotFound;  // disqualify match if no LongName string
+                            }
+                            NSRange range2 = [[ac shortName] rangeOfString:atom options:NSCaseInsensitiveSearch];   // compare vs shortName
+                            if (![ac shortName] || [[ac shortName] length] == 0) {
+                                range2.location = NSNotFound;  // disqualify match if no shortName string
+                            }
+                            if ((range1.location!= NSNotFound && range1.location == 0) ||
+                                (range2.location!= NSNotFound && range2.location == 0)) { // Make sure it is a prefix only
+                                if ([type isEqualToString:@"street_number"]) {
+                                    [matches replaceObjectAtIndex:i withObject:@"Match"];
+                                    goto getNextAtom;
+                                }
+                                else { 
+                                    // any other type object match is an optional match, one that does not 
+                                    // disqualify the overall match, but in itself is not enough to make a match
+                                    [matches replaceObjectAtIndex:i withObject:@"Optional match"];
+                                }
+                            }
+                        }
+
                     }
                 }
             }
         getNextAtom:
             [matches count];   // No op (needed for goto label)
         }
-        // No go through matches array and see if all elements are true.  If so return true, otherwise false
-        for (NSNumber *match in matches) {
-            if ([match boolValue] == NO) {
+        // No go through matches array and see if there is at least one "Match" and no "No match"es
+        BOOL required_match = NO;
+        for (NSString *match in matches) {
+            if ([match isEqualToString:@"No match"]) {
                 return NO;
             }
+            else if ([match isEqualToString:@"Match"]) {
+                required_match = YES;  
+            }
         }
-        return YES;  // all atoms had matches, so return true
+        if (required_match) {
+            return YES;  // there was at least one "Match" so return true
+        }
+        else {
+            return NO;  
+        }
     }
     else {  // if there are no address components, do a simple prefix match on the formatted address
         return [[self formattedAddress] hasPrefix:str];
