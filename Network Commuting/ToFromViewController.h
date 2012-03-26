@@ -25,7 +25,6 @@
     BOOL routeRequested;   // True when the user has pressed the route button and a route has not yet been requested
     NSManagedObjectContext *managedObjectContext;
 }
-@property (strong, nonatomic) IBOutlet UITableView *
 @property (strong, nonatomic) IBOutlet UITextField *fromField;
 @property (strong, nonatomic) IBOutlet UITextField *toField;
 @property (strong, nonatomic) IBOutlet UITableView *fromAutoFill;
