@@ -164,7 +164,12 @@
     // Test that a full formatted address will match
     [locations setTypedToString:@"750 Hawthorne Street, San Francisco, CA 94103, USA"];
     STAssertEquals([locations numberOfLocations:NO], 1, @"");   
-    STAssertEquals([locations locationAtIndex:0 isFrom:NO], loc1, @"");   
+    STAssertEquals([locations locationAtIndex:0 isFrom:NO], loc1, @"");  
+    
+    // Test with a full formatted address except for different case
+    [locations setTypedToString:@"1350 hull Drive, San Carlos, CA USA"];
+    STAssertEquals([locations numberOfLocations:NO], 1, @"");   
+    STAssertEquals([locations locationAtIndex:0 isFrom:NO], loc3, @"");
     
     // Delete object and retest that the number of Locations goes back correct
     [managedObjectContext deleteObject:loc4tl];
@@ -221,6 +226,8 @@
 - (void)testLocation
 {
     // Test isMatchingTypedString
+    STAssertTrue([loc1 isMatchingTypedString:@""],@"");  // everything matches empty string
+    STAssertTrue([loc1 isMatchingTypedString:nil],@"");  // everything matches nil string
     STAssertTrue([loc1 isMatchingTypedString:@"H"],@"");
     STAssertTrue([loc1 isMatchingTypedString:@"h"],@"");
     STAssertTrue([loc1 isMatchingTypedString:@"t"],@"");
@@ -233,6 +240,7 @@
     STAssertTrue([loc1 isMatchingTypedString:@"7 San"],@"");
     STAssertTrue([loc1 isMatchingTypedString:@"750  Hawthorne St., San Fran"],@"");
     STAssertTrue([loc1 isMatchingTypedString:@"75 Hawthorne CA"],@""); 
+
 
     STAssertFalse([loc1 isMatchingTypedString:@"Hu"],@"");
     STAssertFalse([loc1 isMatchingTypedString:@"Hull"],@"");

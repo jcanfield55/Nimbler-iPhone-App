@@ -159,14 +159,23 @@ static Locations *locations;
 // Substring match is computed by doing a compare of all the atoms in str against number, street, city, airport, etc
 - (BOOL)isMatchingTypedString:(NSString *)str
 {
+    // check for nil or empty string, and if so return true
+    if (!str || [str length]==0) {
+        return TRUE;   
+    }
+    
+    // check for a straight, case insensitive prefix match against the formatted address
+    if ([self formattedAddress] &&
+        [[self formattedAddress] rangeOfString:str options:NSCaseInsensitiveSearch].location == 0) {  
+        return TRUE;  // if str is a prefix of formatted address, return true 
+    }
+    
+    // Otherwise, check whether the atom matches against address components
     NSArray *strAtoms = [str componentsSeparatedByCharactersInSet:
                         [NSCharacterSet characterSetWithCharactersInString:@" ,."]];
     NSMutableArray *matches = [NSMutableArray arrayWithCapacity:[strAtoms count]]; // will hold results
     NSSet *addrComponents = [self addressComponents];
     if (addrComponents && [addrComponents count]>0) {
-        if ([[self formattedAddress] hasPrefix:str]) {  
-            return YES;   // if a straight prefix match on formatting address return true right away
-        }
         for (int i=0; i<[strAtoms count]; i++) {  // iterate through string's atoms
             NSString *atom = [strAtoms objectAtIndex:i];
             [matches addObject:@"No match"];
@@ -200,8 +209,7 @@ static Locations *locations;
                             if (![ac shortName] || [[ac shortName] length] == 0) {
                                 range2.location = NSNotFound;  // disqualify match if no shortName string
                             }
-                            if ((range1.location!= NSNotFound && range1.location == 0) ||
-                                (range2.location!= NSNotFound && range2.location == 0)) { // Make sure it is a prefix only
+                            if (range1.location == 0 || range2.location == 0) { // Make sure it is a prefix only
                                 if ([type isEqualToString:@"street_number"]) {
                                     [matches replaceObjectAtIndex:i withObject:@"Match"];
                                     goto getNextAtom;

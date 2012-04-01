@@ -11,6 +11,7 @@
 #import <RestKit/RestKit.h>
 #import "PlanPlace.h"
 #import "enums.h"
+#import "PolylineEncodedString.h"
 
 @class Itinerary, PlanPlace, Step;
 
@@ -39,6 +40,7 @@
 @property (nonatomic, retain) NSSet *steps;
 @property (nonatomic, retain) PlanPlace *to;
 @property (nonatomic, strong) NSArray *sortedSteps;
+@property (nonatomic, strong, readonly) PolylineEncodedString *polylineEncodedString;
 
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType;
 - (NSArray *)sortedSteps;

@@ -37,6 +37,7 @@
 @dynamic steps;
 @dynamic to;
 @synthesize sortedSteps;
+@synthesize polylineEncodedString;
 
 static NSDateFormatter *timeFormattr;
 + (NSDateFormatter *)timeFormatter{
@@ -98,6 +99,15 @@ static NSDateFormatter *timeFormattr;
 {
     NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:YES];
     [self setSortedSteps:[[self steps] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
+}
+
+// Getter to create (if needed) and return the polylineEncodedString object corresponding to the legGeometryPoints
+- (PolylineEncodedString *)polylineEncodedString
+{
+    if (!polylineEncodedString) {
+        polylineEncodedString = [[PolylineEncodedString alloc] initWithEncodedString:[self legGeometryPoints]];
+    }
+    return polylineEncodedString;
 }
 
 - (NSString *)directionsTitleText

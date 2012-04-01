@@ -86,6 +86,8 @@ int const TIME_DATE_HEIGHT = 45;
     [fromAutoFill setFrame:rect2];
     
     [timeDateTable reloadData];
+    [toAutoFill reloadData];
+    [fromAutoFill reloadData];
 }
 
 // One-time set-up of the RestKit Geocoder Object Manager's mapping
@@ -517,6 +519,8 @@ int const TIME_DATE_HEIGHT = 45;
         // Update the dateLastUsed
         [fromLocation setDateLastUsed:[NSDate date]];
         [toLocation setDateLastUsed:[NSDate date]];
+        // Save db context with the new location frequencies & dates
+        saveContext(managedObjectContext);
         
         // Create the date formatters we will use to output the date & time
         NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];

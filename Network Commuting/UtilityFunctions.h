@@ -20,5 +20,4 @@ NSString *durationString(double milliseconds);
 // Converts from meters to a string in either miles or feed
 NSString *distanceStringInMilesFeet(double meters);
 
-// Returns an MKPolyline corresponding to a polyline encoded string
-MKPolyline *polylineWithEncodedString(NSString *encodedString);
+

@@ -22,6 +22,7 @@
         [[self navigationItem] setTitle:@"Route"];
         timeFormatter = [[NSDateFormatter alloc] init];
         [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
+        [[self tableView] setRowHeight:54];
     }
     return self;
 }
@@ -56,8 +57,8 @@
                                       reuseIdentifier:@"UIRouteDetailsViewCell"];
     }
 
-    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:12.0]];
-    [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:12.0]];
+    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
+    [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:14.0]];
 
     NSString *titleText;
     NSString *subTitle;

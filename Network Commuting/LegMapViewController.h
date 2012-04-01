@@ -15,6 +15,7 @@
     MKPointAnnotation* startPoint;  // annotation for startPoint of the itinerary
     MKPointAnnotation* endPoint;    // annotation for the endPoint of the itinerary
     NSMutableArray* polyLineArray;       // Array of polylines for each leg
+    UIImage* dotImage;
 }
 
 @property(nonatomic, strong) IBOutlet MKMapView *mapView;
