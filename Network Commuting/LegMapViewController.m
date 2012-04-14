@@ -266,7 +266,7 @@
                 }
             }
         }
-        aView.lineWidth = 6;
+        aView.lineWidth = 8;
         return aView;
     }
     return nil;

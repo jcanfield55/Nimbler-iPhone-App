@@ -77,6 +77,9 @@
     [[cell detailTextLabel] setLineBreakMode:UILineBreakModeWordWrap];
     [[cell detailTextLabel] setNumberOfLines:0];
     [[cell detailTextLabel] setText:subTitle];
+    if (subTitle && [subTitle length] > 40) {
+        [[cell detailTextLabel] sizeToFit];
+    }
     return cell;
 }
 

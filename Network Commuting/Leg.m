@@ -138,14 +138,14 @@ static NSDateFormatter *timeFormattr;
                     distanceStringInMilesFeet([[self distance] floatValue])];
     }
     else if ([[self mode] isEqualToString:@"BUS"]) {
-        subTitle = [NSString stringWithFormat:@"%@   Depart %@\n%@   Arrive %@",
+        subTitle = [NSString stringWithFormat:@"%@  Depart %@\n%@  Arrive %@",
                     [timeFormatter stringFromDate:[self startTime]],
                     [[self from] name],
                     [timeFormatter stringFromDate:[self endTime]],
                     [[self to] name]];
     }
     else {
-        subTitle = [NSString stringWithFormat:@"%@   Depart %@\n%@   Arrive %@",
+        subTitle = [NSString stringWithFormat:@"%@  Depart %@\n%@  Arrive %@",
                     [timeFormatter stringFromDate:[self startTime]],
                     [[self from] name],
                     [timeFormatter stringFromDate:[self endTime]],
