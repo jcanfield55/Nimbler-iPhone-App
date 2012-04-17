@@ -9,15 +9,19 @@
 #import <UIKit/UIKit.h>
 #import <RestKit/Restkit.h>
 #import <RestKit/CoreData.h>
+#import <CoreLocation/CoreLocation.h>
 #import "ToFromViewController.h"
 #import "Locations.h"
 
-@interface nc_AppDelegate : UIResponder <UIApplicationDelegate> 
+@interface nc_AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate> {
+    Location* currentLocation;
+}
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 
 @property (readonly, strong, nonatomic) Locations *locations;
 @property (readonly, strong, nonatomic) ToFromViewController *toFromViewController;
+@property (readonly, strong, nonatomic) CLLocationManager* locationManager;
 
 // Properties for Core Data
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;

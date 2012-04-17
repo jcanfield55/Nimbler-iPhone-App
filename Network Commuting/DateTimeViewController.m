@@ -71,6 +71,7 @@
     
     if (!isCancelButtonPressed) {
         [toFromViewController setTripDate:date];
+        [toFromViewController setTripDateLastChangedByUser:[[NSDate alloc] init]];
         [toFromViewController setDepartOrArrive:departOrArrive];
     }
 }

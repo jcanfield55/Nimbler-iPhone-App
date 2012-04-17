@@ -56,6 +56,7 @@
         UIBarButtonItem* bakBBI = [[UIBarButtonItem alloc] initWithTitle:@"Bak" style:UIBarButtonItemStylePlain target:self action:@selector(navigateBack:)];
         NSArray* bbiArray = [NSArray arrayWithObjects:forwardBBI, bakBBI, nil];
         [[self navigationItem] setRightBarButtonItems:bbiArray];
+
     }
     return self;
 }
@@ -99,6 +100,7 @@
     
     [self setMapViewRegion];   // update the mapView region to correspond to the numItinerary item
     [self setDirectionsText];  // update the directions text accordingly
+    [mapView setShowsUserLocation:YES];  // track user location
 }
 
 - (void)setMapViewRegion {

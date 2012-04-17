@@ -117,13 +117,27 @@ static NSDateFormatter *timeFormattr;
         titleText = [NSString stringWithFormat:@"Walk to %@", [[self to] name]];
     }
     else if ([[self mode] isEqualToString:@"BUS"]) {
-        titleText = [NSMutableString stringWithFormat:@"Bus %@ - %@", [self routeShortName], [self routeLongName]];
-        if ([self headSign]) {
-            [titleText appendFormat:@" to %@", [self headSign]];
-        }
+        titleText = [NSMutableString stringWithString:@"Bus "];
+    }
+    else if ([[self mode] isEqualToString:@"TRAM"]) {
+        titleText = [NSMutableString stringWithString:@"Tram "];
     }
     else {
-        titleText = [NSString stringWithFormat:@"%@ %@ - %@", [self mode], [self routeShortName], [self routeLongName]];          
+        titleText = [NSMutableString stringWithString:@""];
+    }
+    BOOL isShortName = false;
+    if ([self routeShortName] && [[self routeShortName] length]>0) {
+        [titleText appendFormat:@"%@", [self routeShortName]];
+        isShortName = true;
+    }
+    if ([self routeLongName] && [[self routeLongName] length]>0) {
+        if (isShortName) {
+            [titleText appendFormat:@" - "];
+        }
+        [titleText appendFormat:@"%@", [self routeLongName]];
+    }
+    if ([self headSign] && [[self headSign] length]>0) {
+        [titleText appendFormat:@" to %@", [self headSign]];
     }
     return titleText;
 }

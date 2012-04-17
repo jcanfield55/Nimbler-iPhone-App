@@ -36,8 +36,10 @@ typedef enum {
 @synthesize locations;
 @synthesize fromLocation;
 @synthesize toLocation;
+@synthesize currentLocation;
 @synthesize departOrArrive;
 @synthesize tripDate;
+@synthesize tripDateLastChangedByUser;
 
 // Constants for animating up and down the To: field
 int const TO_FIELD_HIGH_Y = 87;
@@ -68,10 +70,9 @@ int const TIME_DATE_HEIGHT = 45;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    // NSLog(@"toAutofill height = %f, center = %f",[toAutoFill bounds].size.height, [toAutoFill center].y);
-    // NSLog(@"toAutofill frame top = (%f, %f), height = %f",[toAutoFill frame].origin.x, [toAutoFill frame].origin.y, [toAutoFill frame].size.height);
-    // NSLog(@"timeDateTable frame top = (%f, %f), height = %f",[timeDateTable frame].origin.x, [timeDateTable frame].origin.y, [timeDateTable frame].size.height);
 
+    [self updateTripDate];  // update tripDate if needed
+    
     // Enforce the right size for the AutoFill tables
     CGRect rect0 = [timeDateTable frame];
     rect0.size.height = TIME_DATE_HEIGHT;
@@ -89,6 +90,22 @@ int const TIME_DATE_HEIGHT = 45;
     [toAutoFill reloadData];
     [fromAutoFill reloadData];
 }
+
+// Update trip date to the current time if needed
+- (void)updateTripDate
+{
+    NSDate* currentTime = [[NSDate alloc] init];
+    if (!tripDate) {
+        tripDate = currentTime;   // if no date set, use current time
+    }
+    else { 
+        if (!tripDateLastChangedByUser || [tripDateLastChangedByUser timeIntervalSinceNow] < -3600.0) { 
+            // if tripDate not changed in the last hour, and tripDate in the past, update to currentTime
+            tripDate = [tripDate laterDate:currentTime]; 
+        }
+    }
+}
+
 
 // One-time set-up of the RestKit Geocoder Object Manager's mapping
 - (void)setRkGeoMgr:(RKObjectManager *)rkGeoMgr0
@@ -137,9 +154,6 @@ int const TIME_DATE_HEIGHT = 45;
         
         [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
         [[cell textLabel] setText:((departOrArrive==DEPART) ? @"Depart at" : @"Arrive by")];
-        if (!tripDate) {
-            tripDate = [[NSDate alloc] init];   // if no date set, use current time
-        }
         [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:14.0]];
         [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
         [[cell detailTextLabel] setText:[tripDateFormatter stringFromDate:tripDate]];

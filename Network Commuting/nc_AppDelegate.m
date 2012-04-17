@@ -12,6 +12,7 @@
 @implementation nc_AppDelegate
 
 @synthesize locations;
+@synthesize locationManager;
 @synthesize toFromViewController;
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize managedObjectModel = __managedObjectModel;
@@ -42,13 +43,13 @@
     [toFromViewController setRkGeoMgr:rk_geo_mgr];    // Pass the geocoding RK object
     [toFromViewController setRkPlanMgr:rkPlanMgr];    // Pass the planning RK object
     
+    // Turn on location manager
+    locationManager = [[CLLocationManager alloc] init];
+    [locationManager setDelegate:self];
+    [locationManager startUpdatingLocation];
+    
     // Initialize the Locations class and store "Current Location" into the database if not there already
     locations = [[Locations alloc] initWithManagedObjectContext:[self managedObjectContext]];
-    if ([[locations locationsWithFormattedAddress:@"Current Location"] count] == 0) { // if current location not in db
-        Location *currLoc = [locations newEmptyLocation];
-        [currLoc setFormattedAddress:@"Current Location"];
-        [currLoc setFromFrequencyInt:100];
-    }
     [toFromViewController setLocations:locations];
         
     // Create an instance of a UINavigationController and put toFromViewController as the first view
@@ -59,6 +60,35 @@
     [self.window makeKeyAndVisible];
     return YES;
 }
+
+// Location Manager update callback
+- (void)locationManager:(CLLocationManager *)manager
+    didUpdateToLocation:(CLLocation *)newLocation 
+           fromLocation:(CLLocation *)oldLocation
+{
+    if (!currentLocation) {
+        NSArray* matchingLocations = [locations locationsWithFormattedAddress:@"Current Location"];
+        if ([matchingLocations count] == 0) { // if current location not in db
+            currentLocation = [locations newEmptyLocation];
+            [currentLocation setFormattedAddress:@"Current Location"];
+            [currentLocation setFromFrequencyInt:100];
+            [toFromViewController setCurrentLocation:currentLocation];
+        }
+        else {
+            currentLocation = [matchingLocations objectAtIndex:0];
+        }
+    }
+
+    [currentLocation setLatFloat:[newLocation coordinate].latitude];
+    [currentLocation setLngFloat:[newLocation coordinate].longitude];
+    
+    
+    //TODO error handling if location services not available
+    //TODO error handling if current location is in the database, but not populated
+    //TODO error handling for very old cached current location data
+    //TODO adjust frequency if needed
+}
+
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
@@ -75,6 +105,7 @@
      If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
      */
     saveContext([self managedObjectContext]);
+    [locationManager stopUpdatingLocation];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -82,6 +113,8 @@
     /*
      Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
      */
+    [toFromViewController updateTripDate];
+    [locationManager startUpdatingLocation];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

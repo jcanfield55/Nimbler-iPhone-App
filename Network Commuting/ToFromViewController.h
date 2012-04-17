@@ -38,13 +38,16 @@
 @property (strong, nonatomic) Locations *locations;  // Wrapper for collection of all Locations
 @property (strong, nonatomic, readonly) Location *fromLocation;
 @property (strong, nonatomic, readonly) Location *toLocation;
+@property (strong, nonatomic) Location *currentLocation;
 @property (nonatomic) DepartOrArrive departOrArrive;  // True if routing from departure time, false if by arrival time
 @property (strong, nonatomic) NSDate *tripDate;
+@property (strong, nonatomic) NSDate *tripDateLastChangedByUser;
 
 - (IBAction)toFromTyping:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)toFromTextSubmitted:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)toFieldFocus:(id)sender forEvent:(UIEvent *)event;
 - (BOOL)getPlan;
+- (void)updateTripDate;
 
 @end
