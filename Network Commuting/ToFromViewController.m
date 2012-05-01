@@ -97,11 +97,16 @@ int const TIME_DATE_HEIGHT = 45;
     NSDate* currentTime = [[NSDate alloc] init];
     if (!tripDate) {
         tripDate = currentTime;   // if no date set, use current time
+        departOrArrive = DEPART;
     }
     else { 
-        if (!tripDateLastChangedByUser || [tripDateLastChangedByUser timeIntervalSinceNow] < -3600.0) { 
-            // if tripDate not changed in the last hour, and tripDate in the past, update to currentTime
-            tripDate = [tripDate laterDate:currentTime]; 
+        if (!tripDateLastChangedByUser || [tripDateLastChangedByUser timeIntervalSinceNow] < -7200.0) { 
+            // if tripDate not changed in the last two hours by user, we may update it...
+            NSDate* laterDate = [tripDate laterDate:currentTime]; 
+            if (laterDate == currentTime) {  // if currentTime is later than tripDate, update to current time
+                tripDate = currentTime;
+                departOrArrive = DEPART; 
+            }
         }
     }
 }

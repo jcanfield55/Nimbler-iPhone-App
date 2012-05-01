@@ -39,7 +39,7 @@
 @property (strong, nonatomic, readonly) Location *fromLocation;
 @property (strong, nonatomic, readonly) Location *toLocation;
 @property (strong, nonatomic) Location *currentLocation;
-@property (nonatomic) DepartOrArrive departOrArrive;  // True if routing from departure time, false if by arrival time
+@property (nonatomic) DepartOrArrive departOrArrive;  // whether trip is planned based on departure time or desired arrival time
 @property (strong, nonatomic) NSDate *tripDate;
 @property (strong, nonatomic) NSDate *tripDateLastChangedByUser;
 
