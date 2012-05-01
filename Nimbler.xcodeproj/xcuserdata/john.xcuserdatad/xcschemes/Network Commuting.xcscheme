@@ -97,6 +97,7 @@
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"
+      customArchiveName = "Nimbler "
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

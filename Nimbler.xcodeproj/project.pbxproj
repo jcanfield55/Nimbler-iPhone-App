@@ -32,6 +32,8 @@
 		52B302C614BE2B1E00EB4852 /* ToFromViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52B302C414BE2B1E00EB4852 /* ToFromViewController.xib */; };
 		52B3031F14BE946000EB4852 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B3031E14BE946000EB4852 /* Location.m */; };
 		52B7421E14E1FFA200D817D1 /* UtilityFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B7421D14E1FFA200D817D1 /* UtilityFunctions.m */; };
+		52BA18AB15490006009125A3 /* logo_small_iPh.png in Resources */ = {isa = PBXBuildFile; fileRef = 52BA18AA15490006009125A3 /* logo_small_iPh.png */; };
+		52BA18AD1549000D009125A3 /* logo_big_iPh.png in Resources */ = {isa = PBXBuildFile; fileRef = 52BA18AC1549000D009125A3 /* logo_big_iPh.png */; };
 		52BA735614F789FD00F7B9B3 /* Itinerary.m in Sources */ = {isa = PBXBuildFile; fileRef = 52BA735514F789FD00F7B9B3 /* Itinerary.m */; };
 		52BA735914F78A3C00F7B9B3 /* Step.m in Sources */ = {isa = PBXBuildFile; fileRef = 52BA735814F78A3C00F7B9B3 /* Step.m */; };
 		52BA735C14F78A6C00F7B9B3 /* Leg.m in Sources */ = {isa = PBXBuildFile; fileRef = 52BA735B14F78A6C00F7B9B3 /* Leg.m */; };
@@ -48,6 +50,7 @@
 		52CF43C014BDF2F9000565D6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A514BDF2F9000565D6 /* CoreData.framework */; };
 		52CF43C814BDF2F9000565D6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52CF43C614BDF2F9000565D6 /* InfoPlist.strings */; };
 		52CF43CB14BDF2F9000565D6 /* Network_CommutingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CF43CA14BDF2F9000565D6 /* Network_CommutingTests.m */; };
+		52DD70D6154F8F40001D63F6 /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = 52DD70D5154F8F40001D63F6 /* iTunesArtwork */; };
 		52DF9C4914F7546800DC6828 /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 52DF9C4714F7546800DC6828 /* Network_Commuting.xcdatamodeld */; };
 		52E66F031520374B001BF026 /* DateTimeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52E66F021520374B001BF026 /* DateTimeViewController.xib */; };
 		52E66F061520399E001BF026 /* DateTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52E66F051520399E001BF026 /* DateTimeViewController.m */; };
@@ -765,6 +768,8 @@
 		52B3031E14BE946000EB4852 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		52B7421C14E1FFA200D817D1 /* UtilityFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilityFunctions.h; sourceTree = "<group>"; };
 		52B7421D14E1FFA200D817D1 /* UtilityFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtilityFunctions.m; sourceTree = "<group>"; };
+		52BA18AA15490006009125A3 /* logo_small_iPh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_small_iPh.png; sourceTree = "<group>"; };
+		52BA18AC1549000D009125A3 /* logo_big_iPh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_big_iPh.png; sourceTree = "<group>"; };
 		52BA735414F789FD00F7B9B3 /* Itinerary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Itinerary.h; sourceTree = "<group>"; };
 		52BA735514F789FD00F7B9B3 /* Itinerary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Itinerary.m; sourceTree = "<group>"; };
 		52BA735714F78A3C00F7B9B3 /* Step.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Step.h; sourceTree = "<group>"; };
@@ -788,6 +793,7 @@
 		52CF43C714BDF2F9000565D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		52CF43C914BDF2F9000565D6 /* Network_CommutingTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Network_CommutingTests.h; sourceTree = "<group>"; };
 		52CF43CA14BDF2F9000565D6 /* Network_CommutingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Network_CommutingTests.m; sourceTree = "<group>"; };
+		52DD70D5154F8F40001D63F6 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; name = iTunesArtwork; path = ../../iTunesArtwork; sourceTree = "<group>"; };
 		52DF9C4814F7546800DC6828 /* Network_Commuting.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Network_Commuting.xcdatamodel; sourceTree = "<group>"; };
 		52E66F021520374B001BF026 /* DateTimeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DateTimeViewController.xib; sourceTree = "<group>"; };
 		52E66F041520399E001BF026 /* DateTimeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateTimeViewController.h; sourceTree = "<group>"; };
@@ -2163,6 +2169,9 @@
 		52CF439014BDF2F8000565D6 = {
 			isa = PBXGroup;
 			children = (
+				52DD70D5154F8F40001D63F6 /* iTunesArtwork */,
+				52BA18AC1549000D009125A3 /* logo_big_iPh.png */,
+				52BA18AA15490006009125A3 /* logo_small_iPh.png */,
 				5231E15F14E42FE100739DC7 /* RestKit */,
 				525442AD14C3EA95004B0E1F /* RestKit.xcodeproj */,
 				52CF43A714BDF2F9000565D6 /* Nimbler */,
@@ -2514,6 +2523,9 @@
 				525C20FF151D412A004F8FE0 /* LegMapViewController.xib in Resources */,
 				52E66F031520374B001BF026 /* DateTimeViewController.xib in Resources */,
 				52FD9D1F1527F84A002BA2B3 /* Blue_dot_7px.gif in Resources */,
+				52BA18AB15490006009125A3 /* logo_small_iPh.png in Resources */,
+				52BA18AD1549000D009125A3 /* logo_big_iPh.png in Resources */,
+				52DD70D6154F8F40001D63F6 /* iTunesArtwork in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2697,7 +2709,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2715,7 +2727,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -2742,6 +2754,7 @@
 		52CF43D014BDF2F9000565D6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (6GWZRKJ2PG)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler-Prefix.pch";
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
@@ -2752,6 +2765,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = Nimbler;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E43A6279-A7CE-46A5-BA3D-EBA3BC602504";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
