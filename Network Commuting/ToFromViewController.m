@@ -424,8 +424,7 @@ int const TIME_DATE_HEIGHT = 45;
 
         }
         @catch (NSException* ex) {
-            NSLog(@"doSomethingFancy failed: %@",ex);
-            
+            NSLog(@"doSomethingFancy failed: %@",ex);            
              NSLog(@"Error object ==============================: %@", [error msg]);
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"Trip is not possible. Your start or end point might not be safely accessible" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
             [alert show];            
@@ -443,8 +442,7 @@ int const TIME_DATE_HEIGHT = 45;
             NSString* responseStartingFromStatus = [response substringFromIndex:(range.location+range.length)]; 
             NSArray* atoms = [responseStartingFromStatus componentsSeparatedByString:@"\""];
             NSString* status = [atoms objectAtIndex:1]; // status string is second atom (first after the first quote)
-            NSLog(@"Status: %@", status);
-            
+            NSLog(@"Status: %@", status);            
             
             if ([status compare:@"OK" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
                 if (!objects || [objects count]<1) {
@@ -587,6 +585,7 @@ int const TIME_DATE_HEIGHT = 45;
                                 @"date", [dFormat stringFromDate:tripDate],
                                 @"time", [tFormat stringFromDate:tripDate], 
                                 @"arriveBy", ((departOrArrive == ARRIVE) ? @"true" : @"false"),
+                                @"DeviceId", [[UIDevice currentDevice] uniqueIdentifier],
                                 nil];
         planURLResource = [@"plan" appendQueryParams:params];
         

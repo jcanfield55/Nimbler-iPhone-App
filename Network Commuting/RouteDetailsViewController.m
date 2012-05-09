@@ -79,6 +79,7 @@ int const STR_LIMIT = 40;
         Leg *leg = [[itinerary sortedLegs] objectAtIndex:([indexPath row]-1)];
         titleText = [leg directionsTitleText];
         subTitle = [leg directionsDetailText];
+       
         
 /*
  DE4 Fix - Apprika Systems
@@ -148,11 +149,9 @@ int const STR_LIMIT = 40;
  */
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    if([indexPath row ]== 0 || [indexPath row] == [[itinerary sortedLegs] count] + 1){
-//        return START_STOP;
-//    } else {
+
         return REAL_ROOT;
-//    }
+
 }
 
 

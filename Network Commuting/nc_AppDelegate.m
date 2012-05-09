@@ -29,8 +29,9 @@
     RKObjectManager* rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-107-21-80-36.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"];
    
     //Apprika Local 
-    //RKObjectManager* rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://10.0.0.70:8080/opentripplanner-api-webapp/ws/"];
+   // RKObjectManager* rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://10.0.0.70:8080/opentripplanner-api-webapp/ws/"];
     RKObjectManager* rkErrorMgr = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-107-21-80-36.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"];
+    
     // Other URLs:
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
     // NY City demo URL is http://demo.opentripplanner.org/opentripplanner-api-webapp/ws/

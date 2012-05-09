@@ -55,6 +55,10 @@
 		52F67EE814C75C36007578D5 /* AddressComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F67EE714C75C36007578D5 /* AddressComponent.m */; };
 		52F67EEB14C76504007578D5 /* GeoRectangle.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F67EEA14C76504007578D5 /* GeoRectangle.m */; };
 		52FD9D1F1527F84A002BA2B3 /* Blue_dot_7px.gif in Resources */ = {isa = PBXBuildFile; fileRef = 52FD9D1E1527F84A002BA2B3 /* Blue_dot_7px.gif */; };
+		CC85CF061557F8620091A04D /* MyAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = CC85CF051557F8610091A04D /* MyAnnotation.m */; };
+		CC85CF0815591D0A0091A04D /* dot.png in Resources */ = {isa = PBXBuildFile; fileRef = CC85CF0715591D090091A04D /* dot.png */; };
+		CC85CF0A1559452E0091A04D /* left.png in Resources */ = {isa = PBXBuildFile; fileRef = CC85CF091559452E0091A04D /* left.png */; };
+		CC85CF0C155945370091A04D /* right.png in Resources */ = {isa = PBXBuildFile; fileRef = CC85CF0B155945370091A04D /* right.png */; };
 		CCBF91261552482300135674 /* Error.m in Sources */ = {isa = PBXBuildFile; fileRef = CCBF91251552482200135674 /* Error.m */; };
 /* End PBXBuildFile section */
 
@@ -801,6 +805,11 @@
 		52F67EEA14C76504007578D5 /* GeoRectangle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = GeoRectangle.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		52F67EEC14C7E103007578D5 /* enums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = enums.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		52FD9D1E1527F84A002BA2B3 /* Blue_dot_7px.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Blue_dot_7px.gif; sourceTree = "<group>"; };
+		CC85CF041557F8610091A04D /* MyAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAnnotation.h; sourceTree = "<group>"; };
+		CC85CF051557F8610091A04D /* MyAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAnnotation.m; sourceTree = "<group>"; };
+		CC85CF0715591D090091A04D /* dot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dot.png; sourceTree = "<group>"; };
+		CC85CF091559452E0091A04D /* left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = left.png; sourceTree = "<group>"; };
+		CC85CF0B155945370091A04D /* right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = right.png; sourceTree = "<group>"; };
 		CCBF91241552482100135674 /* Error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Error.h; sourceTree = "<group>"; };
 		CCBF91251552482200135674 /* Error.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Error.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -2207,6 +2216,9 @@
 		52CF43A714BDF2F9000565D6 /* Nimbler */ = {
 			isa = PBXGroup;
 			children = (
+				CC85CF0B155945370091A04D /* right.png */,
+				CC85CF091559452E0091A04D /* left.png */,
+				CC85CF0715591D090091A04D /* dot.png */,
 				52FD9D1E1527F84A002BA2B3 /* Blue_dot_7px.gif */,
 				52CF43B014BDF2F9000565D6 /* nc_AppDelegate.h */,
 				52CF43B114BDF2F9000565D6 /* nc_AppDelegate.m */,
@@ -2258,6 +2270,8 @@
 				52CF43A814BDF2F9000565D6 /* Supporting Files */,
 				CCBF91241552482100135674 /* Error.h */,
 				CCBF91251552482200135674 /* Error.m */,
+				CC85CF041557F8610091A04D /* MyAnnotation.h */,
+				CC85CF051557F8610091A04D /* MyAnnotation.m */,
 			);
 			name = Nimbler;
 			path = "Network Commuting";
@@ -2519,6 +2533,9 @@
 				525C20FF151D412A004F8FE0 /* LegMapViewController.xib in Resources */,
 				52E66F031520374B001BF026 /* DateTimeViewController.xib in Resources */,
 				52FD9D1F1527F84A002BA2B3 /* Blue_dot_7px.gif in Resources */,
+				CC85CF0815591D0A0091A04D /* dot.png in Resources */,
+				CC85CF0A1559452E0091A04D /* left.png in Resources */,
+				CC85CF0C155945370091A04D /* right.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2578,6 +2595,7 @@
 				52E66F061520399E001BF026 /* DateTimeViewController.m in Sources */,
 				5275A2DF1528069F0052903F /* PolylineEncodedString.m in Sources */,
 				CCBF91261552482300135674 /* Error.m in Sources */,
+				CC85CF061557F8620091A04D /* MyAnnotation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2689,7 +2707,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2704,6 +2723,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				PROVISIONING_PROFILE = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2714,7 +2735,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2723,6 +2745,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2731,6 +2755,8 @@
 		52CF43CF14BDF2F9000565D6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler-Prefix.pch";
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
@@ -2741,6 +2767,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = Nimbler;
+				PROVISIONING_PROFILE = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2748,6 +2776,8 @@
 		52CF43D014BDF2F9000565D6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler-Prefix.pch";
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
@@ -2758,6 +2788,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = Nimbler;
+				PROVISIONING_PROFILE = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
