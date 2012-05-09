@@ -23,6 +23,7 @@
 @property(nonatomic, strong) IBOutlet UIView *directionsView;
 @property(nonatomic, strong) IBOutlet UILabel *directionsTitle;
 @property(nonatomic, strong) IBOutlet UILabel *directionsDetails;
+@property (strong, nonatomic) IBOutlet UIButton *feedbackButton;
 @property(nonatomic, strong, readonly) Itinerary *itinerary;
 @property(nonatomic, readonly) int itineraryNumber;
 
@@ -34,6 +35,7 @@
 // Callback for when user presses the navigate back / forth button on the right navbar
 - (IBAction)navigateBack:(id)sender;
 - (IBAction)navigateForward:(id)sender;
+- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
 //Implemented by Sitanshu Joshi
 - (IBAction)navigateStart:(id)sender;
 -(void)walk;

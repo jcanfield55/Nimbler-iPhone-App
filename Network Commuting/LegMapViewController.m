@@ -8,6 +8,9 @@
 
 #import "LegMapViewController.h"
 #import "MyAnnotation.h"
+#import "TestFlightSDK1/TestFlight.h"
+#import "rootMap.h"
+#import "RouteDetailsViewController.h"
 
 @interface LegMapViewController()
 // Utility routine for setting the region on the MapView based on the itineraryNumber
@@ -24,6 +27,7 @@
 @synthesize directionsView;
 @synthesize directionsTitle;
 @synthesize directionsDetails;
+@synthesize feedbackButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -31,6 +35,7 @@
     if (self) {
         [[self navigationItem] setTitle:@"Nimbler"];
         
+
         // create the container to hold forward and back buttons
         /*
          UIView* container = [[UIView alloc] init];
@@ -58,21 +63,25 @@
        // UIBarButtonItem* bakBBI = [[UIBarButtonItem alloc] initWithTitle:@"Bak" style:UIBarButtonItemStylePlain target:self action:@selector(navigateBack:)];
       //  UIBarButtonItem* bakBBI = [[UIBarButtonItem alloc] initWithImage:left style:UIBarButtonItemStyleDone target:self action:@selector(navigateBack:)];        
                         
-        UIBarButtonItem* startTrip = [[UIBarButtonItem alloc] initWithTitle:@"Begin" style:UIBarButtonItemStylePlain target:self action:@selector(navigateStart:)];        
+        UIBarButtonItem* startTrip = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(navigateStart:)];        
         
-        UIButton *a1 = [UIButton buttonWithType:UIButtonTypeCustom];
-        [a1 setFrame:CGRectMake(40.0f, 20.0f, 40.0f, 40.0f)];        
-        [a1 addTarget:self action:@selector(navigateForward:) forControlEvents:UIControlEventTouchUpInside];
-        [a1 setImage:[UIImage imageNamed:@"right.png"] forState:UIControlStateNormal];
-        UIBarButtonItem *random = [[UIBarButtonItem alloc] initWithCustomView:a1];
+        UIBarButtonItem* Bak = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRewind target:self action:@selector(navigateBack:)]; 
         
-        UIButton *a2 = [UIButton buttonWithType:UIButtonTypeCustom];
-        [a2 setFrame:CGRectMake(0.0f, 20.0f, 40.0f, 40.0f)];
-        [a2 addTarget:self action:@selector(navigateBack:) forControlEvents:UIControlEventTouchUpInside];
-        [a2 setImage:[UIImage imageNamed:@"left.png"] forState:UIControlStateNormal];
-        UIBarButtonItem *random1 = [[UIBarButtonItem alloc] initWithCustomView:a2];
+        UIBarButtonItem* For = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward target:self action:@selector(navigateForward:)]; 
         
-        NSArray* bbiArray = [NSArray arrayWithObjects:startTrip,random,random1,  nil];
+//        UIButton *a1 = [UIButton buttonWithType:UIButtonTypeCustom];
+//        [a1 setFrame:CGRectMake(40.0f, 20.0f, 40.0f, 40.0f)];        
+//        [a1 addTarget:self action:@selector(navigateForward:) forControlEvents:UIControlEventTouchUpInside];
+//        [a1 setImage:[UIImage imageNamed:@"right.png"] forState:UIControlStateNormal];
+//        UIBarButtonItem *random = [[UIBarButtonItem alloc] initWithCustomView:a1];
+//        
+//        UIButton *a2 = [UIButton buttonWithType:UIButtonTypeCustom];
+//        [a2 setFrame:CGRectMake(0.0f, 20.0f, 40.0f, 40.0f)];
+//        [a2 addTarget:self action:@selector(navigateBack:) forControlEvents:UIControlEventTouchUpInside];
+//        [a2 setImage:[UIImage imageNamed:@"left.png"] forState:UIControlStateNormal];
+//        UIBarButtonItem *random1 = [[UIBarButtonItem alloc] initWithCustomView:a2];
+        
+        NSArray* bbiArray = [NSArray arrayWithObjects:startTrip,For, Bak, nil];
         [[self navigationItem] setRightBarButtonItems:bbiArray];
         
 
@@ -87,6 +96,7 @@
     
     // Add start and endpoint annotation
 }
+
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -128,7 +138,7 @@
     }
     else if (itineraryNumber == [[itinerary sortedLegs] count] + 1) {
         [mapView setRegion:MKCoordinateRegionMakeWithDistance([endPoint coordinate],200, 200)]; 
-    }
+    } 
     else { 
         // if inineraryNumber is pointing to a leg, then set the bound around the polyline
         MKMapRect mpRect = [[polyLineArray objectAtIndex:(itineraryNumber-1)] boundingMapRect];
@@ -212,20 +222,31 @@
     [self setDirectionsText];
 }
 
+- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
+{
+     NSLog(@"++++++++++++++");
+    [TestFlight openFeedbackView];
+}
+
 /* Implemented by Sitanshu Joshi
     Callback for when user presses the navigate Brgin button on the right navbar
  */
  - (IBAction)navigateStart:(id)sender {  
     // Go Begin to the trip
-     if(itineraryNumber == 0){
-         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Trip" message:@"Hi, You are already at begining of trip" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-         [alert show];
-      }
-    itineraryNumber = 0;
-    [self refreshLegOverlay:itineraryNumber-1];  // refreshes the last itinerary number
-    [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
-    [self setMapViewRegion];  // redefine the bounding box
-    [self setDirectionsText];
+
+     rootMap *l = [[rootMap alloc] initWithNibName:nil bundle:nil ];
+     
+     [l setItinerarys:itinerary itineraryNumber:2];
+     [[self navigationController] pushViewController:l animated:YES];
+     //     if(itineraryNumber == 0){
+//         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Trip" message:@"Hi, You are already at begining of trip" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//         [alert show];
+//      }
+//    itineraryNumber = 0;
+//    [self refreshLegOverlay:itineraryNumber-1];  // refreshes the last itinerary number
+//    [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
+//    [self setMapViewRegion];  // redefine the bounding box
+//    [self setDirectionsText];
 }
 // Removes and re-inserts the polyline overlay for the specified iNumber (could be itineraryNumber)
 - (void)refreshLegOverlay:(int)iNumber

@@ -22,7 +22,6 @@
 		525442CC14C3ED8A004B0E1F /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442CB14C3ED8A004B0E1F /* libxml2.dylib */; };
 		525C20F9151D3AF5004F8FE0 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
 		525C20FB151D3B03004F8FE0 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20FA151D3B03004F8FE0 /* CoreLocation.framework */; };
-		525C20FF151D412A004F8FE0 /* LegMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 525C20FE151D412A004F8FE0 /* LegMapViewController.xib */; };
 		5275A2DC152804700052903F /* Blue_dot_7px.gif in Resources */ = {isa = PBXBuildFile; fileRef = 52FD9D1E1527F84A002BA2B3 /* Blue_dot_7px.gif */; };
 		5275A2DF1528069F0052903F /* PolylineEncodedString.m in Sources */ = {isa = PBXBuildFile; fileRef = 5275A2DE1528069F0052903F /* PolylineEncodedString.m */; };
 		527E174A151EB9CD00CDBC23 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527E1749151EB9CD00CDBC23 /* QuartzCore.framework */; };
@@ -60,6 +59,13 @@
 		CC85CF0A1559452E0091A04D /* left.png in Resources */ = {isa = PBXBuildFile; fileRef = CC85CF091559452E0091A04D /* left.png */; };
 		CC85CF0C155945370091A04D /* right.png in Resources */ = {isa = PBXBuildFile; fileRef = CC85CF0B155945370091A04D /* right.png */; };
 		CCBF91261552482300135674 /* Error.m in Sources */ = {isa = PBXBuildFile; fileRef = CCBF91251552482200135674 /* Error.m */; };
+		CCD13823155A69D000A55DAB /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CCD13822155A69D000A55DAB /* libz.dylib */; };
+		CCD13829155A6AA400A55DAB /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CCD13825155A6AA300A55DAB /* libTestFlight.a */; };
+		CCD1382A155A6AA400A55DAB /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = CCD13826155A6AA300A55DAB /* README.txt */; };
+		CCD1382B155A6AA400A55DAB /* release_notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = CCD13827155A6AA300A55DAB /* release_notes.txt */; };
+		CCD13831155A765700A55DAB /* LegMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CCD13830155A765700A55DAB /* LegMapViewController.xib */; };
+		CCD13839155A8ACE00A55DAB /* rootMap.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD13838155A8ACE00A55DAB /* rootMap.m */; };
+		CCD1383D155A8BCA00A55DAB /* rootMap.xib in Resources */ = {isa = PBXBuildFile; fileRef = CCD1383C155A8BC900A55DAB /* rootMap.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -755,7 +761,6 @@
 		525442CB14C3ED8A004B0E1F /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		525C20F8151D3AF5004F8FE0 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		525C20FA151D3B03004F8FE0 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		525C20FE151D412A004F8FE0 /* LegMapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LegMapViewController.xib; path = ../LegMapViewController.xib; sourceTree = "<group>"; };
 		5275A2DD1528069F0052903F /* PolylineEncodedString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PolylineEncodedString.h; sourceTree = "<group>"; };
 		5275A2DE1528069F0052903F /* PolylineEncodedString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PolylineEncodedString.m; sourceTree = "<group>"; };
 		527E1749151EB9CD00CDBC23 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -812,6 +817,15 @@
 		CC85CF0B155945370091A04D /* right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = right.png; sourceTree = "<group>"; };
 		CCBF91241552482100135674 /* Error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Error.h; sourceTree = "<group>"; };
 		CCBF91251552482200135674 /* Error.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Error.m; sourceTree = "<group>"; };
+		CCD13822155A69D000A55DAB /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		CCD13825155A6AA300A55DAB /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
+		CCD13826155A6AA300A55DAB /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		CCD13827155A6AA300A55DAB /* release_notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.txt; sourceTree = "<group>"; };
+		CCD13828155A6AA300A55DAB /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
+		CCD13830155A765700A55DAB /* LegMapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LegMapViewController.xib; sourceTree = SOURCE_ROOT; };
+		CCD13837155A8AC600A55DAB /* rootMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rootMap.h; sourceTree = "<group>"; };
+		CCD13838155A8ACE00A55DAB /* rootMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = rootMap.m; sourceTree = "<group>"; };
+		CCD1383C155A8BC900A55DAB /* rootMap.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = rootMap.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -819,6 +833,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CCD13823155A69D000A55DAB /* libz.dylib in Frameworks */,
 				527E174A151EB9CD00CDBC23 /* QuartzCore.framework in Frameworks */,
 				525C20FB151D3B03004F8FE0 /* CoreLocation.framework in Frameworks */,
 				525C20F9151D3AF5004F8FE0 /* MapKit.framework in Frameworks */,
@@ -832,6 +847,7 @@
 				52CF43A214BDF2F9000565D6 /* Foundation.framework in Frameworks */,
 				52CF43A414BDF2F9000565D6 /* CoreGraphics.framework in Frameworks */,
 				52CF43A614BDF2F9000565D6 /* CoreData.framework in Frameworks */,
+				CCD13829155A6AA400A55DAB /* libTestFlight.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2175,6 +2191,8 @@
 		52CF439014BDF2F8000565D6 = {
 			isa = PBXGroup;
 			children = (
+				CCD13824155A6AA300A55DAB /* TestFlightSDK1 */,
+				CCD13822155A69D000A55DAB /* libz.dylib */,
 				5231E15F14E42FE100739DC7 /* RestKit */,
 				525442AD14C3EA95004B0E1F /* RestKit.xcodeproj */,
 				52CF43A714BDF2F9000565D6 /* Nimbler */,
@@ -2234,7 +2252,7 @@
 				52B1B22514F9ABE4001AC5D1 /* RouteDetailsViewController.m */,
 				52849FC8151D0389001D4DDC /* LegMapViewController.h */,
 				52849FC9151D0389001D4DDC /* LegMapViewController.m */,
-				525C20FE151D412A004F8FE0 /* LegMapViewController.xib */,
+				CCD13830155A765700A55DAB /* LegMapViewController.xib */,
 				52DF9C4714F7546800DC6828 /* Network_Commuting.xcdatamodeld */,
 				52BA735A14F78A6C00F7B9B3 /* Leg.h */,
 				52BA735B14F78A6C00F7B9B3 /* Leg.m */,
@@ -2268,6 +2286,9 @@
 				52B7421C14E1FFA200D817D1 /* UtilityFunctions.h */,
 				52B7421D14E1FFA200D817D1 /* UtilityFunctions.m */,
 				52CF43A814BDF2F9000565D6 /* Supporting Files */,
+				CCD13838155A8ACE00A55DAB /* rootMap.m */,
+				CCD1383C155A8BC900A55DAB /* rootMap.xib */,
+				CCD13837155A8AC600A55DAB /* rootMap.h */,
 				CCBF91241552482100135674 /* Error.h */,
 				CCBF91251552482200135674 /* Error.m */,
 				CC85CF041557F8610091A04D /* MyAnnotation.h */,
@@ -2306,6 +2327,18 @@
 				52CF43C614BDF2F9000565D6 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CCD13824155A6AA300A55DAB /* TestFlightSDK1 */ = {
+			isa = PBXGroup;
+			children = (
+				CCD13825155A6AA300A55DAB /* libTestFlight.a */,
+				CCD13826155A6AA300A55DAB /* README.txt */,
+				CCD13827155A6AA300A55DAB /* release_notes.txt */,
+				CCD13828155A6AA300A55DAB /* TestFlight.h */,
+			);
+			name = TestFlightSDK1;
+			path = "Network Commuting/TestFlightSDK1";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2530,12 +2563,15 @@
 			files = (
 				52CF43AC14BDF2F9000565D6 /* InfoPlist.strings in Resources */,
 				52B302C614BE2B1E00EB4852 /* ToFromViewController.xib in Resources */,
-				525C20FF151D412A004F8FE0 /* LegMapViewController.xib in Resources */,
 				52E66F031520374B001BF026 /* DateTimeViewController.xib in Resources */,
 				52FD9D1F1527F84A002BA2B3 /* Blue_dot_7px.gif in Resources */,
 				CC85CF0815591D0A0091A04D /* dot.png in Resources */,
 				CC85CF0A1559452E0091A04D /* left.png in Resources */,
 				CC85CF0C155945370091A04D /* right.png in Resources */,
+				CCD1382A155A6AA400A55DAB /* README.txt in Resources */,
+				CCD1382B155A6AA400A55DAB /* release_notes.txt in Resources */,
+				CCD13831155A765700A55DAB /* LegMapViewController.xib in Resources */,
+				CCD1383D155A8BCA00A55DAB /* rootMap.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2596,6 +2632,7 @@
 				5275A2DF1528069F0052903F /* PolylineEncodedString.m in Sources */,
 				CCBF91261552482300135674 /* Error.m in Sources */,
 				CC85CF061557F8620091A04D /* MyAnnotation.m in Sources */,
+				CCD13839155A8ACE00A55DAB /* rootMap.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2762,6 +2799,10 @@
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
 				INFOPLIST_FILE = "Network Commuting/Nimbler-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
@@ -2783,6 +2824,10 @@
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
 				INFOPLIST_FILE = "Network Commuting/Nimbler-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",

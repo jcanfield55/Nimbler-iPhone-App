@@ -238,7 +238,7 @@ int const TIME_DATE_HEIGHT = 45;
         }
         toSelectedCell = [toAutoFill cellForRowAtIndexPath:indexPath];  // get the new selected cell
        // toSelectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
-        [toField setText:[loc shortFormattedAddress]];
+      //  [toField setText:[loc shortFormattedAddress]];
         
         toLocation = loc;
     }

@@ -9,6 +9,7 @@
 #import "RouteDetailsViewController.h"
 #import "Leg.h"
 #import "LegMapViewController.h"
+#import "rootMap.h"
 
 @implementation RouteDetailsViewController
 
@@ -27,6 +28,9 @@ int const STR_LIMIT = 40;
     
     if (self) {
         [[self navigationItem] setTitle:@"Route"];
+//        UIBarButtonItem* startTrip = [[UIBarButtonItem alloc] initWithTitle:@"Whole Root" style:UIBarButtonItemStylePlain target:self action:@selector(showMap)  ]; 
+//        [[self navigationItem] setRightBarButtonItem:startTrip];
+        
         timeFormatter = [[NSDateFormatter alloc] init];
         [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
         
@@ -149,11 +153,19 @@ int const STR_LIMIT = 40;
  */
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
         return REAL_ROOT;
-
 }
 
+-(void)showMap
+{
+        
+    rootMap *l = [[rootMap alloc] initWithNibName:nil bundle:nil ];
+    // Initialize the leg VC with the full itinerary and the particular leg object chosen
+    [l setItinerarys:itinerary itineraryNumber:2];
+    
+    [[self navigationController] pushViewController:l animated:YES];
+     
 
+}
 
 @end
