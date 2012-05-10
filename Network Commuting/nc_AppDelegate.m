@@ -45,7 +45,6 @@
     }
     
     
-    
     // Get the NSManagedObjectContext from restkit
     __managedObjectContext = [rkMOS managedObjectContext];
     
@@ -88,6 +87,7 @@
         NSArray* matchingLocations = [locations locationsWithFormattedAddress:@"Current Location"];
         if ([matchingLocations count] == 0) { // if current location not in db
             currentLocation = [locations newEmptyLocation];
+                    
             [currentLocation setFormattedAddress:@"Current Location"];
             [currentLocation setFromFrequencyInt:100];
             [toFromViewController setCurrentLocation:currentLocation];

@@ -52,6 +52,7 @@
 @synthesize departOrArrive;
 @synthesize tripDate;
 @synthesize tripDateLastChangedByUser;
+@synthesize connecting;
 
 // Constants for animating up and down the To: field
 int const TO_FIELD_HIGH_Y = 87;
@@ -295,6 +296,7 @@ int const TIME_DATE_HEIGHT = 45;
     
     if (isFrom) {
         fromLocation = loc;
+        NSLog(@"fromLocation --- %@", loc);
     } else {
         toLocation = loc;
     }
@@ -321,9 +323,12 @@ int const TIME_DATE_HEIGHT = 45;
 
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
+  //Alert with Progressbar 
+    connecting = [self WaitPrompt];
+   // [alert dismissWithClickedButtonIndex:0 animated:NO];
+    
     routeRequested = true;
     // TODO put up a "thinking" graphic
-
     // if all the geolocations are here, get a plan.  
     if ([fromLocation formattedAddress] && [toLocation formattedAddress] &&
         !toGeocodeRequestOutstanding && !fromGeocodeRequestOutstanding) {
@@ -371,6 +376,7 @@ int const TIME_DATE_HEIGHT = 45;
         NSLog(@"Planning HTTP status code = %d", statusCode);
         
         @try {
+            [connecting dismissWithClickedButtonIndex:0 animated:NO];
             if (objects && [objects objectAtIndex:0]) {
                 plan = [objects objectAtIndex:0];
                 NSLog(@"Planning object: %@", [plan ncDescription]);
@@ -384,6 +390,7 @@ int const TIME_DATE_HEIGHT = 45;
             }
         }
         @catch (NSException *exception) {
+             [connecting dismissWithClickedButtonIndex:0 animated:NO];
             NSLog(@"Error object ==============================: %@", exception);
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"Trip is not possible. Your start or end point might not be safely accessible" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
             [alert show];            
@@ -434,7 +441,11 @@ int const TIME_DATE_HEIGHT = 45;
         saveContext(managedObjectContext);
         
         if(fromLocation == toLocation){
-            NSLog(@"Match----------->>>>>>>>>>>>");
+             [connecting dismissWithClickedButtonIndex:0 animated:NO];
+            NSLog(@"Match----------->>>>>>>>>>>> %@  ,%@",fromLocation, toLocation);
+            NSString *formatedAddress = [fromLocation formattedAddress];
+            
+            
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"The To: and From: address are the same location.  Please choose a different destination." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
             [alert show];
             return true;
@@ -491,9 +502,7 @@ int const TIME_DATE_HEIGHT = 45;
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    
-    
+    [super viewDidLoad];    
     
 }
 
@@ -504,6 +513,28 @@ int const TIME_DATE_HEIGHT = 45;
     // e.g. self.myOutlet = nil;
 }
 
+-(UIAlertView *) WaitPrompt  
+{  
+    UIAlertView *alert = [[UIAlertView alloc]   
+                           initWithTitle:@"Connecting to Trip Planner\nPlease Wait..."   
+                           message:nil delegate:nil cancelButtonTitle:nil  
+                           otherButtonTitles: nil];  
+    
+    [alert show];  
+    
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc]  
+                                          initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];  
+    
+    indicator.center = CGPointMake(alert.bounds.size.width / 2,   
+                                   alert.bounds.size.height - 50);  
+    [indicator startAnimating];  
+    [alert addSubview:indicator];  
+        
+    [[NSRunLoop currentRunLoop] limitDateForMode:NSDefaultRunLoopMode];  
+    
+    
+    return alert;
+}  
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations

@@ -31,7 +31,7 @@
 @property (nonatomic) DepartOrArrive departOrArrive;  // whether trip is planned based on departure time or desired arrival time
 @property (strong, nonatomic) NSDate *tripDate;
 @property (strong, nonatomic) NSDate *tripDateLastChangedByUser;
-
+@property (strong, nonatomic) UIAlertView * connecting;
 
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
@@ -46,5 +46,5 @@ typedef enum {
 
 - (void)moveToTable:(moveToTableDirection)direction; // Moves To Table up or down for keyboard entry
 - (void)updateTripDate;
-
+-(UIAlertView *) WaitPrompt;
 @end
