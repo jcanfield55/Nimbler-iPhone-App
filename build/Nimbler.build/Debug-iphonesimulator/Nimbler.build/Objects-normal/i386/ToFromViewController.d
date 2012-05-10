@@ -55,6 +55,7 @@ dependencies: \
   /github-tp/NC_iPhone/RestKit/Build/RestKit/RKManagedObjectMapping.h \
   /github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectPropertyInspector+CoreData.h \
   /github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectPropertyInspector.h \
+  /github-tp/NC_iPhone/Network\ Commuting/ToFromTableViewController.h \
   /github-tp/NC_iPhone/Network\ Commuting/Locations.h \
   /github-tp/NC_iPhone/Network\ Commuting/Location.h \
   /github-tp/NC_iPhone/Network\ Commuting/AddressComponent.h \
@@ -66,11 +67,10 @@ dependencies: \
   /github-tp/NC_iPhone/Network\ Commuting/PlanPlace.h \
   /github-tp/NC_iPhone/Network\ Commuting/AgencyAndId.h \
   /github-tp/NC_iPhone/Network\ Commuting/Itinerary.h \
-  /github-tp/NC_iPhone/Network\ Commuting/Error.h \
   /github-tp/NC_iPhone/Network\ Commuting/UtilityFunctions.h \
   /github-tp/NC_iPhone/Network\ Commuting/RouteOptionsViewController.h \
   /github-tp/NC_iPhone/Network\ Commuting/RouteDetailsViewController.h \
   /github-tp/NC_iPhone/Network\ Commuting/Leg.h \
   /github-tp/NC_iPhone/Network\ Commuting/PolylineEncodedString.h \
-  /github-tp/NC_iPhone/Network\ Commuting/Step.h \
-  /github-tp/NC_iPhone/Network\ Commuting/DateTimeViewController.h
+  /github-tp/NC_iPhone/Network\ Commuting/DateTimeViewController.h \
+  /github-tp/NC_iPhone/Network\ Commuting/TestFlightSDK1/TestFlight.h

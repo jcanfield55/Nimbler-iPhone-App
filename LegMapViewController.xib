@@ -378,7 +378,6 @@ AAgACAAIAAEAAQABAAE</bytes>
 						<string key="feedbackButtonPressed:forEvent:">id</string>
 						<string key="navigateBack:">id</string>
 						<string key="navigateForward:">id</string>
-						<string key="navigateStart:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="feedbackButtonPressed:forEvent:">
@@ -391,10 +390,6 @@ AAgACAAIAAEAAQABAAE</bytes>
 						</object>
 						<object class="IBActionInfo" key="navigateForward:">
 							<string key="name">navigateForward:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="navigateStart:">
-							<string key="name">navigateStart:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 					</dictionary>

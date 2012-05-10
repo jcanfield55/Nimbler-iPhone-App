@@ -8,6 +8,9 @@
 
 #import "nc_AppDelegate.h"
 #import "UtilityFunctions.h"
+#import "TestFlightSDK1/TestFlight.h"
+
+#define TESTING 1  // If 1, then testFlightApp will collect device UIDs, if 0, it will not
 
 @implementation nc_AppDelegate
 
@@ -25,22 +28,23 @@
     // Configure the RestKit RKClient object for Geocoding and trip planning
     RKObjectManager* rk_geo_mgr = [RKObjectManager objectManagerWithBaseURL:@"http://maps.googleapis.com/maps/api/geocode/"];
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
-    
     RKObjectManager* rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-107-21-80-36.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"];
-   
-    //Apprika Local 
-   // RKObjectManager* rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://10.0.0.70:8080/opentripplanner-api-webapp/ws/"];
-    RKObjectManager* rkErrorMgr = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-107-21-80-36.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"];
-    
     // Other URLs:
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
     // NY City demo URL is http://demo.opentripplanner.org/opentripplanner-api-webapp/ws/
     
     // Add the CoreData managed object store
-    RKManagedObjectStore *rkMOS = [RKManagedObjectStore objectStoreWithStoreFilename:@"store.data"];
-    [rk_geo_mgr setObjectStore:rkMOS];
-    [rkPlanMgr setObjectStore:rkMOS];
-    [rkErrorMgr setObjectStore:rkMOS];
+    RKManagedObjectStore *rkMOS;
+    @try {
+       rkMOS = [RKManagedObjectStore objectStoreWithStoreFilename:@"store.data"];
+        [rk_geo_mgr setObjectStore:rkMOS];
+        [rkPlanMgr setObjectStore:rkMOS];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception:");
+    }
+    
+    
     
     // Get the NSManagedObjectContext from restkit
     __managedObjectContext = [rkMOS managedObjectContext];
@@ -49,8 +53,6 @@
     toFromViewController = [[ToFromViewController alloc] initWithNibName:nil bundle:nil];
     [toFromViewController setRkGeoMgr:rk_geo_mgr];    // Pass the geocoding RK object
     [toFromViewController setRkPlanMgr:rkPlanMgr];    // Pass the planning RK object
-    [toFromViewController setRkErrorMgr:rkErrorMgr]; 
-    
     
     // Turn on location manager
     locationManager = [[CLLocationManager alloc] init];
@@ -61,6 +63,13 @@
     locations = [[Locations alloc] initWithManagedObjectContext:[self managedObjectContext]];
     [toFromViewController setLocations:locations];
         
+    // Call TestFlightApp SDK
+    [TestFlight takeOff:@"48a90a98948864a11c80bd2ecd7a7e5c_ODU5MzMyMDEyLTA1LTA3IDE5OjE3OjUwLjMxMDUyMg"];
+
+#ifdef TESTING
+    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
+#endif
+    
     // Create an instance of a UINavigationController and put toFromViewController as the first view
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:toFromViewController]; 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -86,11 +95,11 @@
         else {
             currentLocation = [matchingLocations objectAtIndex:0];
         }
-        
     }
 
     [currentLocation setLatFloat:[newLocation coordinate].latitude];
     [currentLocation setLngFloat:[newLocation coordinate].longitude];
+    
     
     //TODO error handling if location services not available
     //TODO error handling if current location is in the database, but not populated

@@ -59,6 +59,6 @@ dependencies: /github-tp/NC_iPhone/Network\ Commuting/Leg.m \
   /github-tp/NC_iPhone/Network\ Commuting/enums.h \
   /github-tp/NC_iPhone/Network\ Commuting/AgencyAndId.h \
   /github-tp/NC_iPhone/Network\ Commuting/PolylineEncodedString.h \
-  /github-tp/NC_iPhone/Network\ Commuting/Step.h \
   /github-tp/NC_iPhone/Network\ Commuting/Itinerary.h \
+  /github-tp/NC_iPhone/Network\ Commuting/Step.h \
   /github-tp/NC_iPhone/Network\ Commuting/UtilityFunctions.h

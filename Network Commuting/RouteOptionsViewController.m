@@ -24,9 +24,6 @@
         [[self navigationItem] setTitle:@"Itineraries"];
         timeFormatter = [[NSDateFormatter alloc] init];
         [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
-        
-        //Apprika code
-        [[self tableView] setRowHeight:45];
     }
     return self;
 }
@@ -95,13 +92,6 @@
     
     [[self navigationController] pushViewController:routeDetailsVC animated:YES];
 }
-
-//Apprika Code 
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    return [indexPath row] * 40;
-//}
-
 
 #pragma mark - View lifecycle
 

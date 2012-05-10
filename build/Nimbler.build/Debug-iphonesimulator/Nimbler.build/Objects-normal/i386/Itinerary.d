@@ -60,7 +60,6 @@ dependencies: /github-tp/NC_iPhone/Network\ Commuting/Itinerary.m \
   /github-tp/NC_iPhone/Network\ Commuting/AgencyAndId.h \
   /github-tp/NC_iPhone/Network\ Commuting/Leg.h \
   /github-tp/NC_iPhone/Network\ Commuting/PolylineEncodedString.h \
-  /github-tp/NC_iPhone/Network\ Commuting/Step.h \
   /github-tp/NC_iPhone/Network\ Commuting/Plan.h \
   /github-tp/NC_iPhone/Network\ Commuting/Location.h \
   /github-tp/NC_iPhone/Network\ Commuting/AddressComponent.h \

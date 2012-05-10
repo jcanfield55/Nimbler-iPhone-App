@@ -24,7 +24,7 @@
     RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[PlanPlace class]];
         
     // Make the mappings
-    if (tpt == OTP_PLANNER) {
+    if (tpt==OTP_PLANNER) {
         [mapping mapKeyPath:@"name" toAttribute:@"name"];
         [mapping mapKeyPath:@"stopId.id" toAttribute:@"stopId"];
         [mapping mapKeyPath:@"stopId.agencyID" toAttribute:@"stopAgencyId"];
@@ -35,7 +35,6 @@
     }
     else {
         // TODO Unknown planner type, throw an exception
-        
     }
     return mapping;
 }

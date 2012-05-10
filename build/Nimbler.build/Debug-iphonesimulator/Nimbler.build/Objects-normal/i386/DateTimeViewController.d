@@ -57,6 +57,7 @@ dependencies: \
   /github-tp/NC_iPhone/RestKit/Build/RestKit/RKManagedObjectMapping.h \
   /github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectPropertyInspector+CoreData.h \
   /github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectPropertyInspector.h \
+  /github-tp/NC_iPhone/Network\ Commuting/ToFromTableViewController.h \
   /github-tp/NC_iPhone/Network\ Commuting/Locations.h \
   /github-tp/NC_iPhone/Network\ Commuting/Location.h \
   /github-tp/NC_iPhone/Network\ Commuting/AddressComponent.h \
@@ -66,5 +67,4 @@ dependencies: \
   /github-tp/NC_iPhone/Network\ Commuting/Plan.h \
   /github-tp/NC_iPhone/Network\ Commuting/PlanPlace.h \
   /github-tp/NC_iPhone/Network\ Commuting/AgencyAndId.h \
-  /github-tp/NC_iPhone/Network\ Commuting/Itinerary.h \
-  /github-tp/NC_iPhone/Network\ Commuting/Error.h
+  /github-tp/NC_iPhone/Network\ Commuting/Itinerary.h

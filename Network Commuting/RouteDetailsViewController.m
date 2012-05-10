@@ -9,18 +9,10 @@
 #import "RouteDetailsViewController.h"
 #import "Leg.h"
 #import "LegMapViewController.h"
-#import "rootMap.h"
 
 @implementation RouteDetailsViewController
 
 @synthesize itinerary;
-
-/*
- DE4 Solution  
- */
-int const START_STOP = 45;
-int const REAL_ROOT = 68;
-int const STR_LIMIT = 40;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -28,12 +20,9 @@ int const STR_LIMIT = 40;
     
     if (self) {
         [[self navigationItem] setTitle:@"Route"];
-//        UIBarButtonItem* startTrip = [[UIBarButtonItem alloc] initWithTitle:@"Whole Root" style:UIBarButtonItemStylePlain target:self action:@selector(showMap)  ]; 
-//        [[self navigationItem] setRightBarButtonItem:startTrip];
-        
         timeFormatter = [[NSDateFormatter alloc] init];
         [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
-        
+        [[self tableView] setRowHeight:60];
     }
     return self;
 }
@@ -83,54 +72,48 @@ int const STR_LIMIT = 40;
         Leg *leg = [[itinerary sortedLegs] objectAtIndex:([indexPath row]-1)];
         titleText = [leg directionsTitleText];
         subTitle = [leg directionsDetailText];
-       
         
-/*
- DE4 Fix - Apprika Systems
- Edited by Sitanshu Joshi.
- */
-    
-         if ([subTitle length] > 70) {
-             NSString * add1;
-             NSString * add2;
+        /*
+         DE4 Fix - Apprika Systems
+         Edited by Sitanshu Joshi.
+         */
+        
+        if ([subTitle length] > 70) {
+            NSString * add1;
+            NSString * add2;
             
-             NSLog(@"more %@",subTitle);
-             NSArray *firstSplit = [subTitle componentsSeparatedByString:@"\n"];
-             NSLog(@"%@",firstSplit);
-             for(int i=0;i<[firstSplit count];i++){
-                 NSString *str=[firstSplit objectAtIndex:i];               
-                 if ([str length] > STR_LIMIT) {
-                     str = [str substringToIndex:STR_LIMIT];
-                     if(i==0){
-                         add1 = [str stringByAppendingString:@"...\n"];
-                         NSLog(@"Saperate %@",str);
-                     }else if(i==1){
-                         add2 = [str stringByAppendingString:@"..."];
-                         NSLog(@"Saperate %@",str);
-                     }
-                 } else {
-                     if(i==0){
-                         add1 = [str stringByAppendingString:@"\n"];
-                     } else if(i==1){
-                         add2 = [str stringByAppendingString:@" "];
-                     }
-                 }          
-                             
-             }
-             subTitle = [add1 stringByAppendingString:add2];  
+            NSLog(@"more %@",subTitle);
+            NSArray *firstSplit = [subTitle componentsSeparatedByString:@"\n"];
+            NSLog(@"%@",firstSplit);
+            for(int i=0;i<[firstSplit count];i++){
+                NSString *str=[firstSplit objectAtIndex:i];               
+                if ([str length] > 40) {
+                    str = [str substringToIndex:40];
+                    if(i==0){
+                        add1 = [str stringByAppendingString:@"...\n"];
+                        NSLog(@"Saperate %@",str);
+                    }else if(i==1){
+                        add2 = [str stringByAppendingString:@"..."];
+                        NSLog(@"Saperate %@",str);
+                    }
+                } else {
+                    if(i==0){
+                        add1 = [str stringByAppendingString:@"\n"];
+                    } else if(i==1){
+                        add2 = [str stringByAppendingString:@" "];
+                    }
+                }                          
+            }
+            subTitle = [add1 stringByAppendingString:add2];  
         }
-              
     }
-    
     [[cell textLabel] setText:titleText];
     [[cell detailTextLabel] setLineBreakMode:UILineBreakModeWordWrap];
     [[cell detailTextLabel] setNumberOfLines:0];
     [[cell detailTextLabel] setText:subTitle];
-    
     if (subTitle && [subTitle length] > 40) {
-       [[cell detailTextLabel] sizeToFit];
+        [[cell detailTextLabel] sizeToFit];
     }
-
     return cell;
 }
 
@@ -144,28 +127,6 @@ int const STR_LIMIT = 40;
     [legMapVC setItinerary:itinerary itineraryNumber:[indexPath row]];
     
     [[self navigationController] pushViewController:legMapVC animated:YES];
-}
-
-/*
- DE4 Fix - Apprika Systems
- Edited by Sitanshu Joshi.
- 
- */
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-        return REAL_ROOT;
-}
-
--(void)showMap
-{
-        
-    rootMap *l = [[rootMap alloc] initWithNibName:nil bundle:nil ];
-    // Initialize the leg VC with the full itinerary and the particular leg object chosen
-    [l setItinerarys:itinerary itineraryNumber:2];
-    
-    [[self navigationController] pushViewController:l animated:YES];
-     
-
 }
 
 @end

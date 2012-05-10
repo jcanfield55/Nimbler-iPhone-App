@@ -10,14 +10,10 @@
 #define Network_Commuting_enums_h
 
 // Supported Geocoder services.  For each new service, objectMapperForGeocoder method needs updating.  
-
-/*
- 
- */
 typedef enum {
     GOOGLE_GEOCODER,
     OTP_PLANNER,
-    ERROR_PLAN
+    ERROR_PLANNER
 } APIType;
 
 typedef enum {

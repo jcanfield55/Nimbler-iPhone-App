@@ -35,7 +35,8 @@
         [mapping mapKeyPath:@"to" toRelationship:@"toPlanPlace" withMapping:planPlaceMapping];
         [mapping mapKeyPath:@"itineraries" toRelationship:@"itineraries" withMapping:itineraryMapping];
 
-    } else {
+    }
+    else {
         // TODO Unknown planner type, throw an exception
     }
     return mapping;

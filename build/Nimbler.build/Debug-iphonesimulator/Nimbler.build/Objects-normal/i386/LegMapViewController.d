@@ -62,8 +62,7 @@ dependencies: \
   /github-tp/NC_iPhone/Network\ Commuting/AgencyAndId.h \
   /github-tp/NC_iPhone/Network\ Commuting/Leg.h \
   /github-tp/NC_iPhone/Network\ Commuting/PolylineEncodedString.h \
-  /github-tp/NC_iPhone/Network\ Commuting/Step.h \
   /github-tp/NC_iPhone/Network\ Commuting/MyAnnotation.h \
   /github-tp/NC_iPhone/Network\ Commuting/TestFlightSDK1/TestFlight.h \
-  /github-tp/NC_iPhone/Network\ Commuting/rootMap.h \
-  /github-tp/NC_iPhone/Network\ Commuting/RouteDetailsViewController.h
+  /github-tp/NC_iPhone/Network\ Commuting/Step.h \
+  /github-tp/NC_iPhone/Network\ Commuting/rootMap.h

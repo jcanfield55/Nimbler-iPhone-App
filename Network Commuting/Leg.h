@@ -12,7 +12,6 @@
 #import "PlanPlace.h"
 #import "enums.h"
 #import "PolylineEncodedString.h"
-#import "Step.h"
 
 @class Itinerary, PlanPlace, Step;
 
@@ -48,12 +47,8 @@
 - (NSString *)directionsTitleText;
 - (NSString *)directionsDetailText;
 - (NSString *)ncDescription;
-
-// Implemented by Sitanshu Joshi
-- (NSString *)ncAbsoluteDirection;
 - (BOOL)isWalk;
 - (BOOL)isBus;
-
 
 @end
 

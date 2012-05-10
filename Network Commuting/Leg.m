@@ -86,26 +86,22 @@ static NSDateFormatter *timeFormattr;
     return mapping;
 }
 
-
-
 // Create the sorted array of itineraries
 - (void)sortSteps
 {
-//    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"distance" ascending:YES];
-//    [self setSortedSteps:[[self steps] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
-   
-// Edited by Sitanshu Joshi
+    //Edited by Sitanshu Joshi
     NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"absoluteDirection" ascending:YES];
     [self setSortedSteps:[[self steps] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
 }
 
 - (NSArray *)sortedSteps
-{   
+{
     if (!sortedSteps) {
         [self sortSteps];  // create the itinerary array
     }
     return sortedSteps;
 }
+
 
 // Getter to create (if needed) and return the polylineEncodedString object corresponding to the legGeometryPoints
 - (PolylineEncodedString *)polylineEncodedString
@@ -174,37 +170,13 @@ static NSDateFormatter *timeFormattr;
     return subTitle;
 }
 
-/*
- Implemented by Sitanshu Joshi.
- */
-- (NSString *)ncAbsoluteDirection
-{
-    NSString *Dire;
-    if ([[self mode] isEqualToString:@"WALK"]) {        
-        NSArray *sp = [self sortedSteps];
-        NSUInteger c = [sp count];
-        for (int i=0; i<c; i++) {
-            Step *dis = [sp objectAtIndex:i];
-            NSNumber * lat = [dis startLat];
-             NSNumber * log = [dis startLng];
-            NSLog(@"++++++++++++++++ %@, %@", lat, log);
-            
-            
-        }
-        Step *dis = [sp objectAtIndex:0];
-        NSNumber * rel = [dis distance];
-        NSLog(@"++++++++++++++++ %@", rel);
-       NSLog(@"=============%@", sp);
-    }
-    
-    return Dire;
-}
+
+//Implemented by Sitanshu Joshi
 -(BOOL)isWalk
 {
     if ([[self mode] isEqualToString:@"WALK"]) {   
         return true;   
     }
-    
     return false;
 }
 -(BOOL)isBus
@@ -212,9 +184,9 @@ static NSDateFormatter *timeFormattr;
     if ([[self mode] isEqualToString:@"BUS"]) {   
         return true;   
     }
-    
     return false;
 }
+
 - (NSString *)ncDescription
 {
     NSMutableString* desc = [NSMutableString stringWithFormat:

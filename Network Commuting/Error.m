@@ -21,7 +21,7 @@
     // Create empty ObjectMapping to fill and return    
     RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[Error class]];
         // Make the mappings
-    if (apiType==ERROR_PLAN) {
+    if (apiType==ERROR_PLANNER) {
         // TODO  Do all the mapping       
         [mapping mapKeyPath:@"id" toAttribute:@"id"];
         [mapping mapKeyPath:@"missing" toAttribute:@"missing" ];        
