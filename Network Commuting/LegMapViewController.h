@@ -18,6 +18,9 @@
     NSMutableArray* polyLineArray;       // Array of polylines for each leg
     UIImage* dotImage;
     MyAnnotation* myAnnotation1;
+    UIBarButtonItem *For;
+    UIBarButtonItem *Bak;
+    NSArray* bbiArray;
     
 }
 

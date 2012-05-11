@@ -82,10 +82,10 @@
 
 - (void)setMapViewRegion {
     if (itineraryNumber == 0) {  // if the startpoint set region in a 200m x 200m box around it
-        [mapView setRegion:MKCoordinateRegionMakeWithDistance([startPoint coordinate],5000, 5000)]; 
+        [mapView setRegion:MKCoordinateRegionMakeWithDistance([startPoint coordinate],4000, 4000)]; 
     }
     else if (itineraryNumber == [[itinerary sortedLegs] count] + 1) {
-        [mapView setRegion:MKCoordinateRegionMakeWithDistance([endPoint coordinate],5000, 5000)]; 
+        [mapView setRegion:MKCoordinateRegionMakeWithDistance([endPoint coordinate],4000, 4000)]; 
     }
     else { 
         // if inineraryNumber is pointing to a leg, then set the bound around the polyline
@@ -97,7 +97,7 @@
         mpRegion.span.latitudeDelta = mpRegion.span.latitudeDelta * 1.1; 
         mpRegion.span.longitudeDelta = mpRegion.span.longitudeDelta * 1.0;
         // Create a 100m x 100m coord region around the center, and choose that if bigger
-        MKCoordinateRegion minRegion = MKCoordinateRegionMakeWithDistance(mpRegion.center, 5000.0, 5000.0);
+        MKCoordinateRegion minRegion = MKCoordinateRegionMakeWithDistance(mpRegion.center, 4000.0, 4000.0);
         if ((minRegion.span.latitudeDelta > mpRegion.span.latitudeDelta) &&
             (minRegion.span.longitudeDelta > mpRegion.span.longitudeDelta)) {
             mpRegion = minRegion;  // if minRegion is larger, replace mpRegion with it
