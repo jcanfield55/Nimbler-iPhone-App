@@ -73,4 +73,5 @@ dependencies: \
   /github-tp/NC_iPhone/Network\ Commuting/Leg.h \
   /github-tp/NC_iPhone/Network\ Commuting/PolylineEncodedString.h \
   /github-tp/NC_iPhone/Network\ Commuting/DateTimeViewController.h \
-  /github-tp/NC_iPhone/Network\ Commuting/TestFlightSDK1/TestFlight.h
+  /github-tp/NC_iPhone/Network\ Commuting/TestFlightSDK1/TestFlight.h \
+  /github-tp/NC_iPhone/Network\ Commuting/bayArea.h

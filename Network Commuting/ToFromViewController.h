@@ -32,6 +32,7 @@
 @property (strong, nonatomic) NSDate *tripDate;
 @property (strong, nonatomic) NSDate *tripDateLastChangedByUser;
 @property (strong, nonatomic) UIAlertView * connecting;
+@property (strong, nonatomic) RKObjectManager *rkBayArea;  // RestKit object manager for trip bay area
 
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;

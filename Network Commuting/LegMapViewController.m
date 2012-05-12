@@ -64,14 +64,14 @@
 //        [[self navigationItem] setRightBarButtonItems:bbiArray];
         
         
-        UIBarButtonItem* startTrip = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(navigateStart:)];        
+               
         
-        UIBarButtonItem* Bak = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRewind target:self action:@selector(navigateBack:)]; 
+        Bak = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRewind target:self action:@selector(navigateBack:)]; 
         
-        UIBarButtonItem* For = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward target:self action:@selector(navigateForward:)]; 
+        For = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward target:self action:@selector(navigateForward:)]; 
         
-        NSArray* bbiArray = [NSArray arrayWithObjects:startTrip,For, Bak, nil];
-        [[self navigationItem] setRightBarButtonItems:bbiArray];
+       bbiArray = [NSArray arrayWithObjects:For, Bak, nil];
+        self.navigationItem.rightBarButtonItems = bbiArray;
 
     }
     return self;
@@ -161,7 +161,8 @@
         titleText = [leg directionsTitleText];
         subTitle = [leg directionsDetailText];
         
-        [self walk];
+    // It calls when MODe of leg is WaLK.
+      //  [self walk];
     }
     
     [directionsTitle setText:titleText];
@@ -178,6 +179,12 @@
     [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
     [self setMapViewRegion];  // redefine the bounding box
     [self setDirectionsText];
+     self.navigationItem.rightBarButtonItems = bbiArray;
+    if(itineraryNumber == 0){
+        self.navigationItem.rightBarButtonItems = nil;
+        self.navigationItem.rightBarButtonItem = For;
+    }
+    
 }
 
 // Callback for when user presses the navigate forward button on the right navbar
@@ -191,20 +198,25 @@
     [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
     [self setMapViewRegion];  // redefine the bounding box
     [self setDirectionsText];
+    self.navigationItem.rightBarButtonItems = bbiArray;
+    if(itineraryNumber == [[itinerary sortedLegs] count] + 1){       
+        self.navigationItem.rightBarButtonItem = Bak;
+    }
+
 }
 
 - (IBAction)navigateStart:(id)sender {  
-//    NSArray *sortedLegs = [itinerary sortedLegs];  
-//    if (itineraryNumber <= [sortedLegs count]) {
-//        itineraryNumber++;
-//    }
-//    [self refreshLegOverlay:itineraryNumber-1];  // refreshes the last itinerary number
-//   [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
-//    [self customMap];  // redefine the bounding box    
+    NSArray *sortedLegs = [itinerary sortedLegs];  
+    if (itineraryNumber <= [sortedLegs count]) {
+        itineraryNumber++;
+    }
+    [self refreshLegOverlay:itineraryNumber-1];  // refreshes the last itinerary number
+   [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
+    [self customMap];  // redefine the bounding box    
     
-    rootMap *l = [[rootMap alloc] initWithNibName:nil bundle:nil ];
-    [l setItinerarys:itinerary itineraryNumber:2];
-    [[self navigationController] pushViewController:l animated:YES];
+//    rootMap *l = [[rootMap alloc] initWithNibName:nil bundle:nil ];
+//    [l setItinerarys:itinerary itineraryNumber:2];
+//    [[self navigationController] pushViewController:l animated:YES];
   
 }
 
@@ -232,7 +244,7 @@
             (minRegion.span.longitudeDelta > mpRegion.span.longitudeDelta)) {
             mpRegion = minRegion;  // if minRegion is larger, replace mpRegion with it
         }
-        [mapView removeAnnotation:myAnnotation1];
+       // [mapView removeAnnotation:myAnnotation1];
         
         [mapView setRegion:mpRegion];
     }
@@ -349,7 +361,6 @@
             }
         } 
         
-        
         return aView;
     }
     
@@ -368,8 +379,7 @@
         
         for (int i=0; i<c; i++) {
             Step *sps = [sp objectAtIndex:i];
-            
-            NSLog(@" %@", sps);
+ 
             NSNumber * lat = [sps startLat];
             NSNumber * log = [sps startLng];
             

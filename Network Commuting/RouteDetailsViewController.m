@@ -9,6 +9,7 @@
 #import "RouteDetailsViewController.h"
 #import "Leg.h"
 #import "LegMapViewController.h"
+#import "rootMap.h"
 
 @implementation RouteDetailsViewController
 
@@ -20,6 +21,10 @@
     
     if (self) {
         [[self navigationItem] setTitle:@"Route"];
+        
+        UIBarButtonItem* map = [[UIBarButtonItem alloc] initWithTitle:@"Map" style:UIBarButtonItemStylePlain target:self action:@selector(mapOverView)]; 
+        [[self navigationItem] setRightBarButtonItem:map];
+        
         timeFormatter = [[NSDateFormatter alloc] init];
         [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
         [[self tableView] setRowHeight:60];
@@ -129,4 +134,10 @@
     [[self navigationController] pushViewController:legMapVC animated:YES];
 }
 
+- (void)mapOverView
+{
+    rootMap *l = [[rootMap alloc] initWithNibName:nil bundle:nil];
+    [l setItinerarys:itinerary itineraryNumber:2];
+    [[self navigationController] pushViewController:l animated:YES];
+}
 @end

@@ -13,6 +13,7 @@
 #import "Leg.h"
 #import "DateTimeViewController.h"
 #import "TestFlightSDK1/TestFlight.h"
+#import "bayArea.h"
 
 @interface ToFromViewController()
 {
@@ -53,6 +54,7 @@
 @synthesize tripDate;
 @synthesize tripDateLastChangedByUser;
 @synthesize connecting;
+@synthesize rkBayArea;
 
 // Constants for animating up and down the To: field
 int const TO_FIELD_HIGH_Y = 87;
@@ -176,6 +178,15 @@ int const TIME_DATE_HEIGHT = 45;
     [[rkPlanMgr mappingProvider] setMapping:[Plan objectMappingforPlanner:OTP_PLANNER] forKeyPath:@"plan"];
 }
 
+
+- (void)setRk:(RKObjectManager *)rkBayAreaa
+{
+    rkBayArea = rkBayAreaa;
+    
+    // Add the mapper from Plan class to this Object Manager
+    [[rkBayArea mappingProvider] setMapping:[Plan objectMappingforPlanner:BAYAREA_PLANNER] forKeyPath:@"graphMetadata"];
+}
+
 - (void)setLocations:(Locations *)l
 {
     locations = l;
@@ -296,9 +307,26 @@ int const TIME_DATE_HEIGHT = 45;
     
     if (isFrom) {
         fromLocation = loc;
-        NSLog(@"fromLocation --- %@", loc);
+        
+//        double latitude = [[fromLocation lat] doubleValue];
+//        double longitude = [[fromLocation lng] doubleValue];        
+//        NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv", latitude, longitude];   
+//        NSURL *url = [NSURL URLWithString:urlString];
+//        NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
+//        NSArray *srtreets = [locationString componentsSeparatedByString:@"\""];
+//        NSLog(@"Reverse Geocode: %@", [srtreets objectAtIndex:1]);
+//        [fromLocation setFormattedAddress:[srtreets objectAtIndex:1]];
+        
     } else {
         toLocation = loc;
+//        double latitude = [[toLocation lat] doubleValue];
+//        double longitude = [[toLocation lng] doubleValue];        
+//        NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv", latitude, longitude];   
+//        NSURL *url = [NSURL URLWithString:urlString];
+//        NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
+//        NSArray *srtreets = [locationString componentsSeparatedByString:@"\""];
+//        NSLog(@"Reverse Geocode: %@", [srtreets objectAtIndex:1]);
+//        [toLocation setFormattedAddress:[srtreets objectAtIndex:1]];
     }
 }
 
@@ -402,6 +430,9 @@ int const TIME_DATE_HEIGHT = 45;
 }
 
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error {
+    [connecting dismissWithClickedButtonIndex:0 animated:NO];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to calculate a route for that To & From address" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alert show];    
     NSLog(@"Error received from RKObjectManager:");
     NSLog(@"%@", error);
 }
@@ -443,9 +474,7 @@ int const TIME_DATE_HEIGHT = 45;
         if(fromLocation == toLocation){
              [connecting dismissWithClickedButtonIndex:0 animated:NO];
             NSLog(@"Match----------->>>>>>>>>>>> %@  ,%@",fromLocation, toLocation);
-            NSString *formatedAddress = [fromLocation formattedAddress];
-            
-            
+                    
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"The To: and From: address are the same location.  Please choose a different destination." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
             [alert show];
             return true;
