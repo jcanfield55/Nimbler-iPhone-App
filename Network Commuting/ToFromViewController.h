@@ -8,46 +8,44 @@
 
 #import <UIKit/UIKit.h>
 #import <RestKit/RestKit.h>
+#import "ToFromTableViewController.h"
 #import "Locations.h"
 #import "Plan.h"
 #import "enums.h"
 
 @interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate>
-{
-    NSDateFormatter *tripDateFormatter;  // Formatter for showing the trip date / time
-    NSString *toRawAddress;    // user entered To address
-    NSString *toURLResource;   // URL resource sent to geocoder for the to address
-    NSString *fromRawAddress;  // user entered From address
-    NSString *fromURLResource; // URL resource sent to geocoder for the from address
-    NSString *planURLResource; // URL resource sent to planner
-    UITableViewCell *toSelectedCell; // Cell currently selected on To view table
-    UITableViewCell *fromSelectedCell;  // Cell currently selected on the From view table
-    NSMutableArray *planRequestHistory; // Array of all the past plan request parameter histories in sequential order (most recent one last)
-    Plan *plan;
-    BOOL routeRequested;   // True when the user has pressed the route button and a route has not yet been requested
-    NSManagedObjectContext *managedObjectContext;
-}
-@property (strong, nonatomic) IBOutlet UITableView* timeDateTable;
-@property (strong, nonatomic) IBOutlet UITextField *fromField;
-@property (strong, nonatomic) IBOutlet UITextField *toField;
-@property (strong, nonatomic) IBOutlet UITableView *fromAutoFill;
-@property (strong, nonatomic) IBOutlet UITableView *toAutoFill;
+
+@property (strong, nonatomic) IBOutlet UITableView* mainTable;  // grouped table for main page layout
+@property (strong, nonatomic) UITableView *fromTable;  // from table embedded in mainTable
+@property (strong, nonatomic) ToFromTableViewController* fromTableVC; // View controller for fromTable
+@property (strong, nonatomic) UITableView *toTable;   // to table embedded in mainTable
+@property (strong, nonatomic) ToFromTableViewController* toTableVC;  // View controller for toTable
 @property (strong, nonatomic) IBOutlet UIButton *routeButton;
+@property (strong, nonatomic) IBOutlet UIButton *feedbackButton;
 @property (strong, nonatomic) RKObjectManager *rkGeoMgr;  // RestKit Object Manager for geocoding
 @property (strong, nonatomic) RKObjectManager *rkPlanMgr;  // RestKit object manager for trip planning
 @property (strong, nonatomic) Locations *locations;  // Wrapper for collection of all Locations
-@property (strong, nonatomic, readonly) Location *fromLocation;
-@property (strong, nonatomic, readonly) Location *toLocation;
+@property (strong, nonatomic) Location *fromLocation;
+@property (strong, nonatomic) Location *toLocation;
 @property (strong, nonatomic) Location *currentLocation;
 @property (nonatomic) DepartOrArrive departOrArrive;  // whether trip is planned based on departure time or desired arrival time
 @property (strong, nonatomic) NSDate *tripDate;
 @property (strong, nonatomic) NSDate *tripDateLastChangedByUser;
+@property (strong, nonatomic) UIAlertView * connecting;
+@property (strong, nonatomic) RKObjectManager *rkBayArea;  // RestKit object manager for trip bay area
 
-- (IBAction)toFromTyping:(id)sender forEvent:(UIEvent *)event;
-- (IBAction)toFromTextSubmitted:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
-- (IBAction)toFieldFocus:(id)sender forEvent:(UIEvent *)event;
-- (BOOL)getPlan;
-- (void)updateTripDate;
+- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
 
+- (void)updateToFromLocation:(id)sender isFrom:(BOOL)isFrom location:(Location *)loc; // Callback from ToFromTableViewController to update a new user entered/selected location
+- (void)updateGeocodeStatus:(BOOL)isGeocodeOutstanding isFrom:(BOOL)isFrom; // Callback from ToFromTableViewController to update geocoding status
+
+typedef enum {
+    UP,
+    DOWN
+} moveToTableDirection;
+
+- (void)moveToTable:(moveToTableDirection)direction; // Moves To Table up or down for keyboard entry
+- (void)updateTripDate;
+-(UIAlertView *) WaitPrompt;
 @end

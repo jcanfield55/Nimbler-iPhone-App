@@ -7,6 +7,10 @@
 //
 
 #import "LegMapViewController.h"
+#import "TestFlightSDK1/TestFlight.h"
+#import "MyAnnotation.h"
+#import "Step.h"
+#import "rootMap.h"
 
 @interface LegMapViewController()
 // Utility routine for setting the region on the MapView based on the itineraryNumber
@@ -23,6 +27,8 @@
 @synthesize directionsView;
 @synthesize directionsTitle;
 @synthesize directionsDetails;
+@synthesize feedbackButton;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -52,10 +58,20 @@
          */
         
         // TODO make this work with iOS 4.0, and get better formatting
-        UIBarButtonItem* forwardBBI = [[UIBarButtonItem alloc] initWithTitle:@"For" style:UIBarButtonItemStylePlain target:self action:@selector(navigateForward:)];
-        UIBarButtonItem* bakBBI = [[UIBarButtonItem alloc] initWithTitle:@"Bak" style:UIBarButtonItemStylePlain target:self action:@selector(navigateBack:)];
-        NSArray* bbiArray = [NSArray arrayWithObjects:forwardBBI, bakBBI, nil];
-        [[self navigationItem] setRightBarButtonItems:bbiArray];
+//        UIBarButtonItem* forwardBBI = [[UIBarButtonItem alloc] initWithTitle:@"For" style:UIBarButtonItemStylePlain target:self action:@selector(navigateForward:)];
+//        UIBarButtonItem* bakBBI = [[UIBarButtonItem alloc] initWithTitle:@"Bak" style:UIBarButtonItemStylePlain target:self action:@selector(navigateBack:)];
+//        NSArray* bbiArray = [NSArray arrayWithObjects:forwardBBI, bakBBI, nil];
+//        [[self navigationItem] setRightBarButtonItems:bbiArray];
+        
+        
+               
+        
+        Bak = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRewind target:self action:@selector(navigateBack:)]; 
+        
+        For = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward target:self action:@selector(navigateForward:)]; 
+        
+       bbiArray = [NSArray arrayWithObjects:For, Bak, nil];
+        self.navigationItem.rightBarButtonItems = bbiArray;
 
     }
     return self;
@@ -115,10 +131,10 @@
         MKMapRect mpRect = [[polyLineArray objectAtIndex:(itineraryNumber-1)] boundingMapRect];
         MKCoordinateRegion mpRegion = MKCoordinateRegionForMapRect(mpRect);
         // Move the center down by 15% of span so that route is not obscured by directions text
-        mpRegion.center.latitude = mpRegion.center.latitude + mpRegion.span.latitudeDelta*0.15;
-        // zoom out the map by 10% (lat) and 20% (long)
+        mpRegion.center.latitude = mpRegion.center.latitude + mpRegion.span.latitudeDelta*0.20;
+        // zoom out the map by 15% (lat) and 20% (long)
         mpRegion.span.latitudeDelta = mpRegion.span.latitudeDelta * 1.2; 
-        mpRegion.span.longitudeDelta = mpRegion.span.longitudeDelta * 1.1;
+        mpRegion.span.longitudeDelta = mpRegion.span.longitudeDelta * 1.15;
         // Create a 100m x 100m coord region around the center, and choose that if bigger
         MKCoordinateRegion minRegion = MKCoordinateRegionMakeWithDistance(mpRegion.center, 100.0, 100.0);
         if ((minRegion.span.latitudeDelta > mpRegion.span.latitudeDelta) &&
@@ -144,7 +160,11 @@
         Leg *leg = [[itinerary sortedLegs] objectAtIndex:(itineraryNumber-1)];
         titleText = [leg directionsTitleText];
         subTitle = [leg directionsDetailText];
+        
+    // It calls when MODe of leg is WaLK.
+      //  [self walk];
     }
+    
     [directionsTitle setText:titleText];
     [directionsDetails setText:subTitle];
 }
@@ -159,11 +179,17 @@
     [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
     [self setMapViewRegion];  // redefine the bounding box
     [self setDirectionsText];
+     self.navigationItem.rightBarButtonItems = bbiArray;
+    if(itineraryNumber == 0){
+        self.navigationItem.rightBarButtonItems = nil;
+        self.navigationItem.rightBarButtonItem = For;
+    }
+    
 }
 
 // Callback for when user presses the navigate forward button on the right navbar
 - (IBAction)navigateForward:(id)sender {
-    NSArray *sortedLegs = [itinerary sortedLegs];    
+    NSArray *sortedLegs = [itinerary sortedLegs];
     // Go forward to the next step
     if (itineraryNumber <= [sortedLegs count]) {
         itineraryNumber++;
@@ -172,6 +198,56 @@
     [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
     [self setMapViewRegion];  // redefine the bounding box
     [self setDirectionsText];
+    self.navigationItem.rightBarButtonItems = bbiArray;
+    if(itineraryNumber == [[itinerary sortedLegs] count] + 1){       
+        self.navigationItem.rightBarButtonItem = Bak;
+    }
+
+}
+
+- (IBAction)navigateStart:(id)sender {  
+    NSArray *sortedLegs = [itinerary sortedLegs];  
+    if (itineraryNumber <= [sortedLegs count]) {
+        itineraryNumber++;
+    }
+    [self refreshLegOverlay:itineraryNumber-1];  // refreshes the last itinerary number
+   [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
+    [self customMap];  // redefine the bounding box    
+    
+//    rootMap *l = [[rootMap alloc] initWithNibName:nil bundle:nil ];
+//    [l setItinerarys:itinerary itineraryNumber:2];
+//    [[self navigationController] pushViewController:l animated:YES];
+  
+}
+
+//Testing for ZoomOut Map 
+-(void)customMap
+{
+    if (itineraryNumber == 0) {  // if the startpoint set region in a 200m x 200m box around it
+        [mapView setRegion:MKCoordinateRegionMakeWithDistance([startPoint coordinate],4000, 4000)]; 
+    }
+    else if (itineraryNumber == [[itinerary sortedLegs] count] + 1) {
+        [mapView setRegion:MKCoordinateRegionMakeWithDistance([endPoint coordinate],4000, 4000)]; 
+    }
+    else { 
+        // if inineraryNumber is pointing to a leg, then set the bound around the polyline
+        MKMapRect mpRect = [[polyLineArray objectAtIndex:(itineraryNumber-1)] boundingMapRect];
+        MKCoordinateRegion mpRegion = MKCoordinateRegionForMapRect(mpRect);
+        // Move the center down by 15% of span so that route is not obscured by directions text
+        mpRegion.center.latitude = mpRegion.center.latitude + mpRegion.span.latitudeDelta*0.08;
+        // zoom out the map by 10% (lat) and 20% (long)
+        mpRegion.span.latitudeDelta = mpRegion.span.latitudeDelta * 1.1; 
+        mpRegion.span.longitudeDelta = mpRegion.span.longitudeDelta * 1.0;
+        // Create a 100m x 100m coord region around the center, and choose that if bigger
+        MKCoordinateRegion minRegion = MKCoordinateRegionMakeWithDistance(mpRegion.center, 4000.0, 4000.0);
+        if ((minRegion.span.latitudeDelta > mpRegion.span.latitudeDelta) &&
+            (minRegion.span.longitudeDelta > mpRegion.span.longitudeDelta)) {
+            mpRegion = minRegion;  // if minRegion is larger, replace mpRegion with it
+        }
+       // [mapView removeAnnotation:myAnnotation1];
+        
+        [mapView setRegion:mpRegion];
+    }
 }
 
 // Removes and re-inserts the polyline overlay for the specified iNumber (could be itineraryNumber)
@@ -184,6 +260,10 @@
     }
 }
 
+- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
+{
+    [TestFlight openFeedbackView];
+}
 
 // Callback for providing any annotation views
 - (MKAnnotationView *)mapView:(MKMapView *)mv viewForAnnotation:(id <MKAnnotation>)annotation
@@ -231,7 +311,7 @@
                 dotView.canShowCallout = NO;
                 if (!dotImage) {
                     // TODO add @2X image for retina screens
-                    NSString* imageName = [[NSBundle mainBundle] pathForResource:@"Blue_dot_7px" ofType:@"gif"];
+                    NSString* imageName = [[NSBundle mainBundle] pathForResource:@"dot" ofType:@"png"];
                     dotImage = [UIImage imageWithContentsOfFile:imageName];
                 }
                 if (dotImage) {
@@ -254,8 +334,9 @@
     if ([overlay isKindOfClass:[MKPolyline class]]) {
         MKPolylineView *aView = [[MKPolylineView alloc] initWithPolyline:(MKPolyline*)overlay];
         // aView.fillColor = [[UIColor cyanColor] colorWithAlphaComponent:0.2];
-        aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:0.3];
-
+        aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:0.4];
+        aView.lineWidth = 5;
+        
         // Determine if this overlay is the one in focus.  If so, make it darker
         NSLog(@"[polyLineArray count] = %d", [polyLineArray count]);
         if ([polyLineArray count] > 0) {
@@ -264,16 +345,60 @@
         for (int i=0; i<[polyLineArray count]; i++) {
             if (([polyLineArray objectAtIndex:i] == overlay)) {
                 if (i == itineraryNumber-1) {
-                    aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:0.6];
+                    Leg *leg = [[itinerary sortedLegs] objectAtIndex:(itineraryNumber-1)];
+                    if([leg isWalk]){
+                        aView.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:0.7] ;
+                        aView.lineWidth = 5;
+                    } else if([leg isBus]){
+                        aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:0.7];
+                        aView.lineWidth = 5;
+                    } else {
+                        aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:0.8] ;
+                        aView.lineWidth = 5;
+                    }                   
+                   
                 }
             }
-        }
-        aView.lineWidth = 8;
+        } 
+        
         return aView;
     }
+    
     return nil;
 }
 
+/* Implemented by Sitanshu Joshi
+ To show Direction at  
+ */
+-(void)walk
+{    
+    Leg *leg = [[itinerary sortedLegs] objectAtIndex:(itineraryNumber-1)];
+    if([leg isWalk]){
+        NSArray *sp = [leg sortedSteps];
+        NSUInteger c = [sp count];
+        
+        for (int i=0; i<c; i++) {
+            Step *sps = [sp objectAtIndex:i];
+ 
+            NSNumber * lat = [sps startLat];
+            NSNumber * log = [sps startLng];
+            
+            CLLocationCoordinate2D theCoordinate1;
+            theCoordinate1.latitude  = [lat doubleValue]; 
+            theCoordinate1.longitude =[log doubleValue];            
+            myAnnotation1=[[MyAnnotation alloc] init];       
+            myAnnotation1.coordinate=theCoordinate1;
+            myAnnotation1.title=[sps streetName];
+            if([sps relativeDirection] == nil){
+                myAnnotation1.subtitle=@"START WALKING";
+            } else {
+                myAnnotation1.subtitle= [NSString stringWithFormat:@"TURN %@",[sps relativeDirection]];
+            }
+            [myAnnotation1 setAccessibilityElementsHidden:TRUE];          
+            [mapView addAnnotation:myAnnotation1];            
+        }
+    }
+}
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];

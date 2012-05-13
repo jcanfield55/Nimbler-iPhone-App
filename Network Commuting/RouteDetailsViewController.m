@@ -9,6 +9,7 @@
 #import "RouteDetailsViewController.h"
 #import "Leg.h"
 #import "LegMapViewController.h"
+#import "rootMap.h"
 
 @implementation RouteDetailsViewController
 
@@ -20,9 +21,13 @@
     
     if (self) {
         [[self navigationItem] setTitle:@"Route"];
+        
+        UIBarButtonItem* map = [[UIBarButtonItem alloc] initWithTitle:@"Map" style:UIBarButtonItemStylePlain target:self action:@selector(mapOverView)]; 
+        [[self navigationItem] setRightBarButtonItem:map];
+        
         timeFormatter = [[NSDateFormatter alloc] init];
         [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
-        [[self tableView] setRowHeight:54];
+        [[self tableView] setRowHeight:60];
     }
     return self;
 }
@@ -72,6 +77,40 @@
         Leg *leg = [[itinerary sortedLegs] objectAtIndex:([indexPath row]-1)];
         titleText = [leg directionsTitleText];
         subTitle = [leg directionsDetailText];
+        
+        /*
+         DE4 Fix - Apprika Systems
+         Edited by Sitanshu Joshi.
+         */
+        
+        if ([subTitle length] > 70) {
+            NSString * add1;
+            NSString * add2;
+            
+            NSLog(@"more %@",subTitle);
+            NSArray *firstSplit = [subTitle componentsSeparatedByString:@"\n"];
+            NSLog(@"%@",firstSplit);
+            for(int i=0;i<[firstSplit count];i++){
+                NSString *str=[firstSplit objectAtIndex:i];               
+                if ([str length] > 40) {
+                    str = [str substringToIndex:40];
+                    if(i==0){
+                        add1 = [str stringByAppendingString:@"...\n"];
+                        NSLog(@"Saperate %@",str);
+                    }else if(i==1){
+                        add2 = [str stringByAppendingString:@"..."];
+                        NSLog(@"Saperate %@",str);
+                    }
+                } else {
+                    if(i==0){
+                        add1 = [str stringByAppendingString:@"\n"];
+                    } else if(i==1){
+                        add2 = [str stringByAppendingString:@" "];
+                    }
+                }                          
+            }
+            subTitle = [add1 stringByAppendingString:add2];  
+        }
     }
     [[cell textLabel] setText:titleText];
     [[cell detailTextLabel] setLineBreakMode:UILineBreakModeWordWrap];
@@ -95,4 +134,10 @@
     [[self navigationController] pushViewController:legMapVC animated:YES];
 }
 
+- (void)mapOverView
+{
+    rootMap *l = [[rootMap alloc] initWithNibName:nil bundle:nil];
+    [l setItinerarys:itinerary itineraryNumber:2];
+    [[self navigationController] pushViewController:l animated:YES];
+}
 @end

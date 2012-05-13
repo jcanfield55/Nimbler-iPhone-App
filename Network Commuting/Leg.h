@@ -47,6 +47,8 @@
 - (NSString *)directionsTitleText;
 - (NSString *)directionsDetailText;
 - (NSString *)ncDescription;
+- (BOOL)isWalk;
+- (BOOL)isBus;
 
 @end
 

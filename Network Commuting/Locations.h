@@ -14,27 +14,14 @@
 #import <RestKit/CoreData.h>
 #import "Location.h"
 
-@interface Locations : NSObject {
-
-    NSArray *sortedMatchingFromLocations; // All from locations that somehow match the typedFromString
-    int matchingFromRowCount;  // Count of from locations (including frequency=0) that match the typedFromString
-    NSArray *sortedMatchingToLocations;
-    int matchingToRowCount;
-    NSArray *sortedFromLocations;  // All locations sorted by from frequency
-    NSArray *sortedToLocations;    // All locations sorted by to frequency
-    NSFetchRequest *locationsFetchRequest;
-    NSString *typedFromString;
-    NSString *typedToString;
-    NSManagedObjectContext *managedObjectContext;
-    NSManagedObjectModel *managedObjectModel;
-    BOOL areLocationsChanged;
-    BOOL areMatchingLocationsChanged;
-}
+@interface Locations : NSObject 
 
 @property (strong, nonatomic) NSString *typedFromString;  // Typed string in the from field 
 @property (strong, nonatomic) NSString *typedToString;    // Typed string in the to field
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
+@property (strong, nonatomic) Location* selectedFromLocation; // This location gets sorted to the top of the from list
+@property (strong, nonatomic) Location* selectedToLocation; // This location gets sorted to the top of the to list
 @property (nonatomic) BOOL areLocationsChanged;  // True if there have been locations added or changed
 @property (nonatomic) BOOL areMatchingLocationsChanged; // True if matching location arrays has been updated (in which case view controller should refresh arrays)
 
@@ -44,10 +31,10 @@
 - (Location *)newEmptyLocation;
 - (int)numberOfLocations:(BOOL)isFrom;
 - (Location *)locationAtIndex:(int)index isFrom:(BOOL)isFrom;
-
 - (Location *)consolidateWithMatchingLocations:(Location *)loc0;
 
-// Internal methods
-- (void) updateInternalCache;
+- (void)updateSelectedLocation:(Location *)sL isFrom:(BOOL)isFrom;
+
+
 
 @end

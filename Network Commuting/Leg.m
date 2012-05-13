@@ -86,6 +86,14 @@ static NSDateFormatter *timeFormattr;
     return mapping;
 }
 
+// Create the sorted array of itineraries
+- (void)sortSteps
+{
+    //Edited by Sitanshu Joshi
+    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"absoluteDirection" ascending:YES];
+    [self setSortedSteps:[[self steps] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
+}
+
 - (NSArray *)sortedSteps
 {
     if (!sortedSteps) {
@@ -94,12 +102,6 @@ static NSDateFormatter *timeFormattr;
     return sortedSteps;
 }
 
-// Create the sorted array of itineraries
-- (void)sortSteps
-{
-    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:YES];
-    [self setSortedSteps:[[self steps] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
-}
 
 // Getter to create (if needed) and return the polylineEncodedString object corresponding to the legGeometryPoints
 - (PolylineEncodedString *)polylineEncodedString
@@ -166,6 +168,23 @@ static NSDateFormatter *timeFormattr;
                     [[self to] name]];            
     }
     return subTitle;
+}
+
+
+//Implemented by Sitanshu Joshi
+-(BOOL)isWalk
+{
+    if ([[self mode] isEqualToString:@"WALK"]) {   
+        return true;   
+    }
+    return false;
+}
+-(BOOL)isBus
+{
+    if ([[self mode] isEqualToString:@"BUS"]) {   
+        return true;   
+    }
+    return false;
 }
 
 - (NSString *)ncDescription

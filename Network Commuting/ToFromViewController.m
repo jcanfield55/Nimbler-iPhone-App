@@ -12,25 +12,38 @@
 #import "RouteOptionsViewController.h"
 #import "Leg.h"
 #import "DateTimeViewController.h"
+#import "TestFlightSDK1/TestFlight.h"
+#import "bayArea.h"
 
 @interface ToFromViewController()
+{
+    // Variables for internal use
+    
+    NSDateFormatter *tripDateFormatter;  // Formatter for showing the trip date / time
+    NSString *planURLResource; // URL resource sent to planner
+    NSMutableArray *planRequestHistory; // Array of all the past plan request parameter histories in sequential order (most recent one last)
+    Plan *plan;
+    BOOL routeRequested;   // True when the user has pressed the route button and a route has not yet been requested
+    NSManagedObjectContext *managedObjectContext;
+    BOOL toGeocodeRequestOutstanding;  // true if there is an outstanding To geocode request
+    BOOL fromGeocodeRequestOutstanding;  // true if there is an outstanding From geocode request
+    BOOL isToTableRaised;  // true if the To Field has been raised because of the keyboard
+}
 
-typedef enum {
-    UP,
-    DOWN
-} moveToFieldsDirection;
+- (BOOL)getPlan;
 
-// Utility function for moving the toFields up or down
-- (void)moveToFields:(moveToFieldsDirection)direction;
+
 @end
 
+
 @implementation ToFromViewController
-@synthesize timeDateTable;
-@synthesize fromField;
-@synthesize toField;
-@synthesize toAutoFill;
-@synthesize fromAutoFill;
+@synthesize mainTable;
+@synthesize toTable;
+@synthesize toTableVC;
+@synthesize fromTable;
+@synthesize fromTableVC;
 @synthesize routeButton;
+@synthesize feedbackButton;
 @synthesize rkGeoMgr;
 @synthesize rkPlanMgr;
 @synthesize locations;
@@ -40,13 +53,17 @@ typedef enum {
 @synthesize departOrArrive;
 @synthesize tripDate;
 @synthesize tripDateLastChangedByUser;
+@synthesize connecting;
+@synthesize rkBayArea;
 
 // Constants for animating up and down the To: field
 int const TO_FIELD_HIGH_Y = 87;
 int const TO_FIELD_NORMAL_Y = 197;
-int const TO_AUTOFILL_HIGH_Y = 118;
-int const TO_AUTOFILL_NORMAL_Y = 228;
-int const AUTOFILL_HEIGHT = 105;
+int const TO_TABLE_HEIGHT_HIGH_Y = 118;
+int const TO_TABLE_HEIGHT_NORMAL_Y = 228;
+int const MAIN_TABLE_HEIGHT = 358;
+int const TOFROM_TABLE_HEIGHT = 105;
+int const TOFROM_TABLE_WIDTH = 300; 
 int const TIME_DATE_HEIGHT = 45;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -54,16 +71,40 @@ int const TIME_DATE_HEIGHT = 45;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         [[self navigationItem] setTitle:@"Nimbler"];
+        
+        planRequestHistory = [NSMutableArray array]; // Initialize this array
+        departOrArrive = DEPART;
+        routeRequested = FALSE;
+        toGeocodeRequestOutstanding = FALSE;
+        fromGeocodeRequestOutstanding = FALSE;
+        
+        // Initialize the trip date formatter for display
+        tripDateFormatter = [[NSDateFormatter alloc] init];
+        [tripDateFormatter setDoesRelativeDateFormatting:YES];
+        [tripDateFormatter setTimeStyle:NSDateFormatterShortStyle];
+        [tripDateFormatter setDateStyle:NSDateFormatterMediumStyle];
+        
+        // Initialize the to & from tables
+        CGRect rect1;
+        rect1.origin.x = 0;
+        rect1.origin.y = 0;
+        rect1.size.width = TOFROM_TABLE_WIDTH;
+        rect1.size.height = TOFROM_TABLE_HEIGHT;
+        toTable = [[UITableView alloc] initWithFrame:rect1 style:UITableViewStylePlain];
+        toTableVC = [[ToFromTableViewController alloc] initWithTable:toTable isFrom:FALSE toFromVC:self locations:locations];
+        [toTable setDataSource:toTableVC];
+        [toTable setDelegate:toTableVC];
+        
+        CGRect rect2;
+        rect2.origin.x = 0;
+        rect2.origin.y = 0;
+        rect2.size.width = TOFROM_TABLE_WIDTH; 
+        rect2.size.height = TOFROM_TABLE_HEIGHT;
+        fromTable = [[UITableView alloc] initWithFrame:rect2 style:UITableViewStylePlain];
+        fromTableVC = [[ToFromTableViewController alloc] initWithTable:fromTable isFrom:TRUE toFromVC:self locations: locations];
+        [fromTable setDataSource:fromTableVC];
+        [fromTable setDelegate:fromTableVC];   
     }
-    planRequestHistory = [NSMutableArray array]; // Initialize this array
-    departOrArrive = DEPART;
-    
-    // Initialize the trip date formatter for display
-    tripDateFormatter = [[NSDateFormatter alloc] init];
-    [tripDateFormatter setDoesRelativeDateFormatting:YES];
-    [tripDateFormatter setTimeStyle:NSDateFormatterShortStyle];
-    [tripDateFormatter setDateStyle:NSDateFormatterMediumStyle];
-    
     return self;
 }
 
@@ -73,24 +114,24 @@ int const TIME_DATE_HEIGHT = 45;
 
     [self updateTripDate];  // update tripDate if needed
     
-    // Enforce the right size for the AutoFill tables
-    CGRect rect0 = [timeDateTable frame];
-    rect0.size.height = TIME_DATE_HEIGHT;
-    [timeDateTable setFrame:rect0];
-    
-    CGRect rect1 = [toAutoFill frame];
-    rect1.size.height = AUTOFILL_HEIGHT;
-    [toAutoFill setFrame:rect1];
-    
-    CGRect rect2 = [fromAutoFill frame];
-    rect2.size.height = AUTOFILL_HEIGHT;
-    [fromAutoFill setFrame:rect2];
-    
-    [timeDateTable reloadData];
-    [toAutoFill reloadData];
-    [fromAutoFill reloadData];
+    // Enforce height of main table
+    CGRect rect0 = [mainTable frame];
+    rect0.size.height = MAIN_TABLE_HEIGHT;
+    [mainTable setFrame:rect0];
+
+    [toTable reloadData];
+    [fromTable reloadData];
+    [mainTable reloadData];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    // Flash scrollbars on tables
+    [toTable flashScrollIndicators];
+    [fromTable flashScrollIndicators];
+}
 // Update trip date to the current time if needed
 - (void)updateTripDate
 {
@@ -122,6 +163,10 @@ int const TIME_DATE_HEIGHT = 45;
     
     // Get the Managed Object Context associated with rkGeoMgr0
     managedObjectContext = [[rkGeoMgr objectStore] managedObjectContext];
+    
+    // Pass rkGeoMgr to the To & From Table View Controllers
+    [fromTableVC setRkGeoMgr:rkGeoMgr];
+    [toTableVC setRkGeoMgr:rkGeoMgr];
 }
 
 // One-time set-up of the RestKit Trip Planner Object Manager's mapping
@@ -133,23 +178,65 @@ int const TIME_DATE_HEIGHT = 45;
     [[rkPlanMgr mappingProvider] setMapping:[Plan objectMappingforPlanner:OTP_PLANNER] forKeyPath:@"plan"];
 }
 
+
+- (void)setRk:(RKObjectManager *)rkBayAreaa
+{
+    rkBayArea = rkBayAreaa;
+    
+    // Add the mapper from Plan class to this Object Manager
+    [[rkBayArea mappingProvider] setMapping:[Plan objectMappingforPlanner:BAYAREA_PLANNER] forKeyPath:@"graphMetadata"];
+}
+
+- (void)setLocations:(Locations *)l
+{
+    locations = l;
+    
+    // Now also update the to & from Table View Controllers with the locations object
+    [toTableVC setLocations:l];
+    [fromTableVC setLocations:l];
+}
+
+//
 // Table view management methods
+//
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    if (isToTableRaised) {
+        return 2;  // Don't include from table
+    } 
+    return 3;  // 3 grouped sections in main table
+
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (tableView == timeDateTable) {
-        return 1;    // we only show one cell in the timeDateTable
+    return 1;  // each section in the mainTable has only one cell 
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([indexPath section] == 0) {  // Time/Date section
+        return TIME_DATE_HEIGHT;
+    }  
+    else {  // To/From table sections
+        return TOFROM_TABLE_HEIGHT+1;
     }
-    else {
-        BOOL isFrom = ((tableView == fromAutoFill) ? YES : NO);
-        return [locations numberOfLocations:isFrom];
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    if (section == 0) {
+        return nil;  // no title for the time/date field section
+    } else if (section == 1 && !isToTableRaised) {
+        return @"From:";
+    } else {
+        return @"To:";
     }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // If it is the timeDateTable, handle that first
-    if (tableView == timeDateTable) {
+    if ([indexPath section] == 0) {  // the timeDate section
         UITableViewCell *cell =
         [tableView dequeueReusableCellWithIdentifier:@"timeDateTableCell"];
         if (!cell) {
@@ -164,41 +251,42 @@ int const TIME_DATE_HEIGHT = 45;
         [[cell detailTextLabel] setText:[tripDateFormatter stringFromDate:tripDate]];
         return cell;
     }
-    
-    // Otherwise, handle the toAutoFill and fromAutoFill table cases
-    
-    // Check for a reusable cell first, use that if it exists
-    UITableViewCell *cell =
-    [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell"];
-        
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
-                                      reuseIdentifier:@"UITableViewCell"];
+    else { // the to or from table sections
+        BOOL isFrom = (([indexPath section] == 1) && !isToTableRaised) ? TRUE : FALSE;
+        NSString* cellIdentifier = isFrom ? @"fromTableCell" : @"toTableCell";
+        UITableViewCell *cell =
+        [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 
+                                          reuseIdentifier:cellIdentifier];
+        }
+        UIView* cellView = [cell contentView];
+        NSArray* subviews = [cellView subviews];
+        if (isFrom) {
+            if (subviews && [subviews count]>0 && [subviews indexOfObject:fromTable] != NSNotFound) {
+                NSLog(@"fromTable already in subview");
+                // if fromTable is already in the subview (due to recycling, no need to add again
+            } else { 
+                [cellView addSubview:fromTable]; // add fromTable
+            }
+        }
+        else {   // do same for toTable case
+            if (subviews && [subviews count]>0 && [subviews indexOfObject:toTable] != NSNotFound) {
+                NSLog(@"toTable already in subview");
+                // if toTable is already in the subview (due to recycling, no need to add again
+            } else { 
+                [cellView addSubview:toTable]; // add toTable
+            }
+        }        
+        return cell;
     }
 
-    // Set fonts for title 
-    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
-
-    BOOL isFrom = ((tableView == fromAutoFill) ? YES : NO);
-    Location *loc = [locations locationAtIndex:[indexPath row] isFrom:isFrom];
-    
-    [[cell textLabel] setText:[loc shortFormattedAddress]];
-
-    return cell;
-    
-    // In the future, we can support Nicknames by putting formatted address into subtitle, as shown below
-    /* if ([loc nickName]) {   // if there is a nickname, put that in the top row
-        [[cell textLabel] setText:[loc nickName]];
-        NSLog(@"Subtitle formatted address: %@", [loc formattedAddress]);
-        [[cell detailTextLabel] setText:[loc formattedAddress]];
-    } else {  // if no nickname, just show one row with the formatted address */
 }
 
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // If timeDateTable, handle that first
-    if (tableView == timeDateTable) {
+    if ([indexPath section] == 0) {  // if dateTime section
         DateTimeViewController *dateTimeVC = [[DateTimeViewController alloc] initWithNibName:nil bundle:nil];
         [dateTimeVC setDate:tripDate];
         [dateTimeVC setDepartOrArrive:departOrArrive];
@@ -206,303 +294,145 @@ int const TIME_DATE_HEIGHT = 45;
         [[self navigationController] pushViewController:dateTimeVC animated:YES];
         return;
     }
+
+}
+
+
+// ToFromTableViewController callbacks 
+// (for when user has selected or entered a new location)
+
+
+// Callback from ToFromTableViewController to update a new user entered/selected location
+- (void)updateToFromLocation:(id)sender isFrom:(BOOL)isFrom location:(Location *)loc; {
     
-    // Now handle selections on the AutoFill tables
-    // TODO if current location, get the current geolocation
-    
-    BOOL isFrom = ((tableView == fromAutoFill) ? YES : NO);
-    Location *loc = [locations locationAtIndex:[indexPath row] isFrom:isFrom];  //selected Location
-    
-    // Set the new checkmark and fill the corresponding text box with the formatted address from the selected location
     if (isFrom) {
-        if (fromSelectedCell) { // if a previous cell is selected
-            fromSelectedCell.accessoryType = UITableViewCellAccessoryNone; // turn off its selector
-        }
-        fromSelectedCell = [fromAutoFill cellForRowAtIndexPath:indexPath];  // get the new selected cell
-        fromSelectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
-        [fromField setText:[loc shortFormattedAddress]]; // fill the text in the from text box
         fromLocation = loc;
-    } 
-    else {
-        if (toSelectedCell) { // if a previous cell is selected
-            toSelectedCell.accessoryType = UITableViewCellAccessoryNone; // turn off its selector
-        }
-        toSelectedCell = [toAutoFill cellForRowAtIndexPath:indexPath];  // get the new selected cell
-        toSelectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
-        [toField setText:[loc shortFormattedAddress]];
-        toLocation = loc;
-    }
-}
-
-// Delegate for when text is typed into the to: or from: UITextField (see below for when text submitted)
-// This method updates the autoFill table to reflect entries that match the text
-- (IBAction)toFromTyping:(id)sender forEvent:(UIEvent *)event {
-    BOOL isFrom = ((sender == fromField) ? YES : NO);
-
-    if (isFrom) {
-        // Deselect any selected cell
-        if (fromSelectedCell) {
-            [fromSelectedCell setAccessoryType:UITableViewCellAccessoryNone];
-            fromSelectedCell = nil; 
-        }
-        [locations setTypedFromString:[fromField text]];
-        if ([locations areMatchingLocationsChanged]) {  //if typing has changed matrix, reload the array
-            [fromAutoFill reloadData];
-        }
-
-    }
-    else {
-        // Deselect any selected cell
-        if (toSelectedCell) {
-            [toSelectedCell setAccessoryType:UITableViewCellAccessoryNone];
-            toSelectedCell = nil; 
-        }
-        [locations setTypedToString:[toField text]];
-        if ([locations areMatchingLocationsChanged]) {
-            [toAutoFill reloadData];
-        }
-    }
-}
-
-// Delegate for when complete text entered into the to: or from: UITextField
-- (IBAction)toFromTextSubmitted:(id)sender forEvent:(UIEvent *)event 
-{
-    // Determine whether this is the To: or the From: field
-    BOOL isFrom = ((sender == fromField) ? YES : NO);
-
-    routeRequested = false;
-
-    // If to field, move it back down
-    [self moveToFields:DOWN];
-    
-    NSLog(@"In toFromTextSubmitted and isFrom=%d", isFrom);
-    
-    // Determine whether user pressed the "Route" button on the To: field 
-    if (!isFrom) {
-        // TODO determine whether the route button has been pressed.  For now assume true if it is the TO: field
-        routeRequested = true;
-    }
-    
-    NSString* rawAddress = [sender text];
-    if ([rawAddress length] > 0) {
-    
-        // Check if we already have a geocoded location that has used this rawAddress before
-        Location* matchingLocation = [locations locationWithRawAddress:rawAddress];
-        if (!matchingLocation) {  // if no matching raw addresses, check for matching formatted addresses
-            NSArray *matchingLocations = [locations locationsWithFormattedAddress:rawAddress];
-            if ([matchingLocations count] > 0) {
-                matchingLocation = [matchingLocations objectAtIndex:0];  // Get the first matching location
-            }
-        }
-        if (matchingLocation) { //if we got a match, then use the existing location object 
-            if (isFrom) {
-                fromLocation = matchingLocation;
-            }
-            else {
-                toLocation = matchingLocation;
-            }
-            // If routeRequested by user and we have both latlngs, then request a route and reset to false
-            if (routeRequested && [fromLocation formattedAddress] && [toLocation formattedAddress]) {
-                // TODO put up a "thinking" graphic
-                [self getPlan];
-                routeRequested = false;  
-            }
-        }
-        else {  // if no match, Geocode this new rawAddress
         
-            // Build the parameters into a resource string
-            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: @"address", rawAddress, 
-                                    @"sensor", @"true", nil];
-            NSString* resource = [@"json" appendQueryParams:params];
-            
-            // Update the appropriate raw address and resource variables
-            if (isFrom) {
-                fromRawAddress = rawAddress;
-                fromURLResource = resource;
-            }
-            else {
-                toRawAddress = rawAddress;
-                toURLResource = resource;
-            }
-            NSLog(@"Parameter String = %@", resource);
-            
-            // Call the geocoder
-            [rkGeoMgr loadObjectsAtResourcePath:resource delegate:self];
-        }
+//        double latitude = [[fromLocation lat] doubleValue];
+//        double longitude = [[fromLocation lng] doubleValue];        
+//        NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv", latitude, longitude];   
+//        NSURL *url = [NSURL URLWithString:urlString];
+//        NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
+//        NSArray *srtreets = [locationString componentsSeparatedByString:@"\""];
+//        NSLog(@"Reverse Geocode: %@", [srtreets objectAtIndex:1]);
+//        [fromLocation setFormattedAddress:[srtreets objectAtIndex:1]];
+        
+    } else {
+        toLocation = loc;
+//        double latitude = [[toLocation lat] doubleValue];
+//        double longitude = [[toLocation lng] doubleValue];        
+//        NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv", latitude, longitude];   
+//        NSURL *url = [NSURL URLWithString:urlString];
+//        NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
+//        NSArray *srtreets = [locationString componentsSeparatedByString:@"\""];
+//        NSLog(@"Reverse Geocode: %@", [srtreets objectAtIndex:1]);
+//        [toLocation setFormattedAddress:[srtreets objectAtIndex:1]];
     }
 }
+
+// Callback from ToFromTableViewController to update geocoding status
+- (void)updateGeocodeStatus:(BOOL)isGeocodeOutstanding isFrom:(BOOL)isFrom
+{
+    // update the appropriate geocode status
+    if (isFrom) {
+        fromGeocodeRequestOutstanding = isGeocodeOutstanding;
+    } else {
+        toGeocodeRequestOutstanding = isGeocodeOutstanding;
+    }
+    
+    // If there is an outstanding plan request that has not been submitted, and we are now clear in terms of no outstanding geocodes, go ahead and submit the plan
+    if (routeRequested && !toGeocodeRequestOutstanding && !fromGeocodeRequestOutstanding) {
+        [self getPlan];
+        routeRequested = FALSE;
+    }
+}
+
+// Requesting a plan
 
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
+  //Alert with Progressbar 
+    connecting = [self WaitPrompt];
+   // [alert dismissWithClickedButtonIndex:0 animated:NO];
+    
     routeRequested = true;
     // TODO put up a "thinking" graphic
-
     // if all the geolocations are here, get a plan.  
-    if ([fromLocation formattedAddress] && [toLocation formattedAddress]) {
+    if ([fromLocation formattedAddress] && [toLocation formattedAddress] &&
+        !toGeocodeRequestOutstanding && !fromGeocodeRequestOutstanding) {
         [self getPlan];
         routeRequested = false;  
     }
-    // if no formatted addresses...
-    if (!fromRawAddress || !toRawAddress) {  // if no raw addresses, then alert the user
-        // TODO put up an alert asking them to type in or select an address
+    // if user has not entered/selected fromLocation, send them an alert
+    else if (![fromLocation formattedAddress] && !fromGeocodeRequestOutstanding) {
+        // TODO put up an alert asking them to type in or select a from address
     }
+    // if user has not entered has not entered/selected toLocation, send them an alert
+    else if (![toLocation formattedAddress] && !toGeocodeRequestOutstanding) {
+        // TODO put up an alert asking them to type in or select a to address
+    }
+    
     // otherwise, just wait for the geocoding and then submit the plan
     
-
 }
 
-// When focus comes to the To field, move it up
-- (IBAction)toFieldFocus:(id)sender forEvent:(UIEvent *)event
+- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
-    [self moveToFields:UP];
+    [TestFlight openFeedbackView];
 }
 
-- (void)moveToFields:(moveToFieldsDirection)direction 
+- (void)moveToTable:(moveToTableDirection)direction 
 {
-    if (direction == UP) {
-        [fromAutoFill setHidden:TRUE];
+    if (direction == UP && !isToTableRaised) {
+        isToTableRaised = TRUE;
+        [mainTable deleteSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
-    CGRect newRect1 = [toField frame];
-    newRect1.origin.y = ((direction == UP) ? TO_FIELD_HIGH_Y : TO_FIELD_NORMAL_Y);
-    CGRect newRect2 = [toAutoFill frame];
-    newRect2.origin.y = ((direction == UP) ? TO_AUTOFILL_HIGH_Y : TO_AUTOFILL_NORMAL_Y);
-    [UIView animateWithDuration:0.5 animations:^{
-        [toField setFrame:newRect1];
-        [toAutoFill setFrame:newRect2];
-    }];
-    if (direction == DOWN) {
-        [fromAutoFill setHidden:FALSE];
+    else if (direction == DOWN && isToTableRaised) {
+        isToTableRaised = FALSE;
+        [mainTable insertSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
 }
 
-// Delegate methods for when the RestKit has results from the Geocoder or the Planner
+
+// Delegate methods for when the RestKit has results from the Planner
 - (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects 
 {        
-    // See whether this is a response from Geocoding or from the planner
+    // Check to make sure this is the response to the latest planner request
     if ([[objectLoader resourcePath] isEqualToString:planURLResource]) 
-    {   // this is a planner result
+    {   
         NSInteger statusCode = [[objectLoader response] statusCode];
         NSLog(@"Planning HTTP status code = %d", statusCode);
-        if (objects && [objects objectAtIndex:0]) {
-            plan = [objects objectAtIndex:0];
-            NSLog(@"Planning object: %@", [plan ncDescription]);
-            [plan setToLocation:toLocation];
-            [plan setFromLocation:fromLocation];
-            
-            // The following is commented out code to pre-fetch the maps using Google Maps API for each route
-            // This is not needed because using MKMapView object instead
-            /*
-            for (Itinerary *itin in [plan itineraries]) {
-                for (Leg *leg in [itin legs]) {
-                    NSString *pathParam = [NSString stringWithFormat:@"weight:3|color:orange|enc:%@",
-                                           [leg legGeometryPoints]];
-                    NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
-                                            @"size", @"512x512", @"sensor", @"true",
-                                            @"path" , pathParam, nil];
-                    NSString* resource = [@"json" appendQueryParams:params];
-                    NSLog(@"%@ leg path=%@",[leg mode], resource);
-                }
-            }
-             */
-            
-            
-            // Pass control to the RouteOptionsViewController to display itinerary choices
-            RouteOptionsViewController *routeOptionsVC = [[RouteOptionsViewController alloc] initWithStyle:UITableViewStylePlain];
-            [routeOptionsVC setPlan:plan];
-            [[self navigationController] pushViewController:routeOptionsVC animated:YES];
-
-        }
-    }
-    else if ([[objectLoader resourcePath] isEqualToString:fromURLResource] ||
-             [[objectLoader resourcePath] isEqualToString:toURLResource])
-    {   // this is a Geocoder result
         
-        // Get the status string the hard way by parsing the response string
-        NSString* response = [[objectLoader response] bodyAsString];
-        NSRange range = [response rangeOfString:@"\"status\""];
-        if (range.location != NSNotFound) {
-            NSString* responseStartingFromStatus = [response substringFromIndex:(range.location+range.length)]; 
-            NSArray* atoms = [responseStartingFromStatus componentsSeparatedByString:@"\""];
-            NSString* status = [atoms objectAtIndex:1]; // status string is second atom (first after the first quote)
-            NSLog(@"Status: %@", status);
-            
-            
-            if ([status compare:@"OK" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-                if (!objects || [objects count]<1) {
-                    // TODO error handling for no object
-                }
-                else if ([objects count]>1) {
-                    // TODO error handling for more than one result
-                    NSLog(@"Number of returned Geocodes = %d", [objects count]);
-                }
+        @try {
+            [connecting dismissWithClickedButtonIndex:0 animated:NO];
+            if (objects && [objects objectAtIndex:0]) {
+                plan = [objects objectAtIndex:0];
+                NSLog(@"Planning object: %@", [plan ncDescription]);
+                [plan setToLocation:toLocation];
+                [plan setFromLocation:fromLocation];
                 
-                // Get the location object
-                Location* location = [objects objectAtIndex:0];
-                NSLog(@"Formatted Address: %@", [location formattedAddress]);
-                // NSLog(@"Lat/Lng: %@", [location latLngPairStr]);
-                // NSLog(@"Types: %@", [location types]);
-                // NSLog(@"Address Components: %@", [[location addressComponents] allObjects]);
-                
-                // Initialize some of the values for location
-                [location setGeoCoderStatus:status];
-                [location setApiTypeEnum:GOOGLE_GEOCODER];
-                
-                // Determine whether this is the To: or the From: field geocoding
-                BOOL isFrom = false;
-                if ([[objectLoader resourcePath] isEqualToString:fromURLResource]) {
-                    isFrom = true;
-                    [location addRawAddressString:fromRawAddress];
-                }
-                else {
-                    [location addRawAddressString:toRawAddress];
-                }
-                NSLog(@"RawAddresses: %@", [[location rawAddresses] allObjects]);
-                
-                // Check if an equivalent Location is already in the locations table
-                location = [locations consolidateWithMatchingLocations:location];
-                
-                // Set toLocation or fromLocation
-                if (isFrom) {
-                    fromLocation = location;
-                } else {
-                    toLocation = location;
-                }
-                
-                // If routeRequested by user and we have both latlngs, then request a route and reset to false
-                if (routeRequested && [fromLocation formattedAddress] && [toLocation formattedAddress]) {
-                    [self getPlan];
-                    routeRequested = false;  
-                }
-                
-                // TODO remove this temp test code
-                if ([[fromLocation formattedAddress] hasPrefix:@"1350 Hull"]) {
-                    [fromLocation setNickName:@"Home"];
-                }
-                
-                // Save db context with the new location object
-                saveContext(managedObjectContext);
-            }
-            else if ([status compare:@"ZERO_RESULTS" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-                // TODO error handling for zero results
-                NSLog(@"Zero results geocoding address");
-            }
-            else if ([status compare:@"OVER_QUERY_LIMIT" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-                // TODO error handling for over query limit  (switch to other geocoder on my server...)
-                NSLog(@"Over query limit");
-            }
-            else {
-                // TODO error handling for denied, invalid or unknown status (switch to other geocoder on my server...)
-                NSLog(@"Request rejected, status= %@", status);
+                // Pass control to the RouteOptionsViewController to display itinerary choices
+                RouteOptionsViewController *routeOptionsVC = [[RouteOptionsViewController alloc] initWithStyle:UITableViewStylePlain];
+                [routeOptionsVC setPlan:plan];
+                [[self navigationController] pushViewController:routeOptionsVC animated:YES];
             }
         }
-        else {
-            // TODO Geocoder did not respond with status field
+        @catch (NSException *exception) {
+             [connecting dismissWithClickedButtonIndex:0 animated:NO];
+            NSLog(@"Error object ==============================: %@", exception);
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"Trip is not possible. Your start or end point might not be safely accessible" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
+            [alert show];            
+            return ;
         }
+        
     }
     // If returned value does not correspond to one of the most recent requests, do nothing...
 }
 
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error {
+    [connecting dismissWithClickedButtonIndex:0 animated:NO];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to calculate a route for that To & From address" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alert show];    
     NSLog(@"Error received from RKObjectManager:");
     NSLog(@"%@", error);
 }
@@ -541,6 +471,16 @@ int const TIME_DATE_HEIGHT = 45;
         // Save db context with the new location frequencies & dates
         saveContext(managedObjectContext);
         
+        if(fromLocation == toLocation){
+             [connecting dismissWithClickedButtonIndex:0 animated:NO];
+            NSLog(@"Match----------->>>>>>>>>>>> %@  ,%@",fromLocation, toLocation);
+                    
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"The To: and From: address are the same location.  Please choose a different destination." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
+            [alert show];
+            return true;
+        }
+        
+        
         // Create the date formatters we will use to output the date & time
         NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
         [dFormat setDateStyle:NSDateFormatterShortStyle];
@@ -573,8 +513,8 @@ int const TIME_DATE_HEIGHT = 45;
         [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
         
         // Reload the to/from tables for next time
-        [[self fromAutoFill] reloadData];
-        [[self toAutoFill] reloadData];
+        [[self fromTable] reloadData];
+        [[self toTable] reloadData];
     }
     return true; 
 }
@@ -591,9 +531,7 @@ int const TIME_DATE_HEIGHT = 45;
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    
-    
+    [super viewDidLoad];    
     
 }
 
@@ -604,6 +542,28 @@ int const TIME_DATE_HEIGHT = 45;
     // e.g. self.myOutlet = nil;
 }
 
+-(UIAlertView *) WaitPrompt  
+{  
+    UIAlertView *alert = [[UIAlertView alloc]   
+                           initWithTitle:@"Connecting to Trip Planner\nPlease Wait..."   
+                           message:nil delegate:nil cancelButtonTitle:nil  
+                           otherButtonTitles: nil];  
+    
+    [alert show];  
+    
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc]  
+                                          initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];  
+    
+    indicator.center = CGPointMake(alert.bounds.size.width / 2,   
+                                   alert.bounds.size.height - 50);  
+    [indicator startAnimating];  
+    [alert addSubview:indicator];  
+        
+    [[NSRunLoop currentRunLoop] limitDateForMode:NSDefaultRunLoopMode];  
+    
+    
+    return alert;
+}  
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations

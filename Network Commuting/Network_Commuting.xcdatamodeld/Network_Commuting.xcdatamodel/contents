@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1170" systemVersion="11D50b" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="872" systemVersion="10K549" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AddressComponent" representedClassName="AddressComponent" syncable="YES">
         <attribute name="longName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
@@ -10,6 +10,25 @@
                 <index value="location"/>
             </compoundIndex>
         </compoundIndexes>
+    </entity>
+    <entity name="BayArea" syncable="YES">
+        <attribute name="lowerLeftLatitude" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="lowerLeftLongitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="maxLatitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="maxLongitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="minLatitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="minLongitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="transitModes" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="upperRightLatitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="upperRightLongitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <relationship name="bayArea" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="BayArea" inverseName="bayArea" inverseEntity="BayArea" syncable="YES"/>
+    </entity>
+    <entity name="Error" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="missing" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="noPath" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="relationship" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Error" inverseName="relationship" inverseEntity="Error" syncable="YES"/>
     </entity>
     <entity name="Itinerary" representedClassName="Itinerary" syncable="YES">
         <attribute name="duration" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
@@ -129,6 +148,7 @@
     <fetchRequest name="RawAddressByString" entity="RawAddress" predicateString="rawAddressString == $ADDRESS"/>
     <elements>
         <element name="AddressComponent" positionX="-54" positionY="36" width="128" height="90"/>
+        <element name="Error" positionX="160" positionY="192" width="128" height="120"/>
         <element name="Itinerary" positionX="394" positionY="192" width="128" height="270"/>
         <element name="Leg" positionX="97" positionY="432" width="128" height="330"/>
         <element name="Location" positionX="241" positionY="4116" width="128" height="270"/>
@@ -136,5 +156,6 @@
         <element name="PlanPlace" positionX="99" positionY="45" width="128" height="180"/>
         <element name="RawAddress" positionX="160" positionY="192" width="128" height="75"/>
         <element name="Step" positionX="-126" positionY="192" width="128" height="195"/>
+        <element name="BayArea" positionX="160" positionY="192" width="128" height="195"/>
     </elements>
 </model>

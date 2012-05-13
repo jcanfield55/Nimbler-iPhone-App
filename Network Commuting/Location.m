@@ -1,5 +1,5 @@
 //
-//  Locations.m
+//  Location.m
 //  Network Commuting
 //
 //  Created by John Canfield on 1/11/12.
