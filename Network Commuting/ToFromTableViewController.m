@@ -113,7 +113,8 @@ int const TOFROM_ROW_HEIGHT = 35;
         // Set the new checkmark and fill the corresponding text box with the formatted address from the selected location
         
         if (selectedCell) { // if a previous cell is selected
-            selectedCell.accessoryType = UITableViewCellAccessoryNone; // turn off its selector
+            //selectedCell.accessoryType = UITableViewCellAccessoryNone; // turn off its selector
+            selectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
         }
         selectedCell = [tableView cellForRowAtIndexPath:indexPath];  // get the new selected cell
         selectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
@@ -392,10 +393,15 @@ int const TOFROM_ROW_HEIGHT = 35;
             else if ([status compare:@"ZERO_RESULTS" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
                 // TODO error handling for zero results
                 NSLog(@"Zero results geocoding address");
+             UIAlertView  *alert = [[UIAlertView alloc] initWithTitle:@"TripLocation" message:@"No valid location found" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert show];
+                return;
+                
             }
             else if ([status compare:@"OVER_QUERY_LIMIT" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
                 // TODO error handling for over query limit  (switch to other geocoder on my server...)
                 NSLog(@"Over query limit");
+
             }
             else {
                 // TODO error handling for denied, invalid or unknown status (switch to other geocoder on my server...)

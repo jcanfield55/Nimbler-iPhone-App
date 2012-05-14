@@ -12,6 +12,7 @@
 #import "Locations.h"
 #import "Plan.h"
 #import "enums.h"
+#import "bayArea.h"
 
 @interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate>
 
@@ -33,12 +34,15 @@
 @property (strong, nonatomic) NSDate *tripDateLastChangedByUser;
 @property (strong, nonatomic) UIAlertView * connecting;
 @property (strong, nonatomic) RKObjectManager *rkBayArea;  // RestKit object manager for trip bay area
+@property (strong, nonatomic) UITableViewCell* selectedCell;
+
 
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
 
 - (void)updateToFromLocation:(id)sender isFrom:(BOOL)isFrom location:(Location *)loc; // Callback from ToFromTableViewController to update a new user entered/selected location
 - (void)updateGeocodeStatus:(BOOL)isGeocodeOutstanding isFrom:(BOOL)isFrom; // Callback from ToFromTableViewController to update geocoding status
+
 
 typedef enum {
     UP,
@@ -48,4 +52,6 @@ typedef enum {
 - (void)moveToTable:(moveToTableDirection)direction; // Moves To Table up or down for keyboard entry
 - (void)updateTripDate;
 -(UIAlertView *) WaitPrompt;
+-(void)setBayArea:(bayArea *)bay;
+-(void)bayAreaAvailibility:(Location *)loc;
 @end

@@ -13,8 +13,8 @@
 #import "Leg.h"
 #import "DateTimeViewController.h"
 #import "TestFlightSDK1/TestFlight.h"
-#import "bayArea.h"
 
+static bayArea *b_area;
 @interface ToFromViewController()
 {
     // Variables for internal use
@@ -31,7 +31,7 @@
 }
 
 - (BOOL)getPlan;
-
+ 
 
 @end
 
@@ -55,6 +55,8 @@
 @synthesize tripDateLastChangedByUser;
 @synthesize connecting;
 @synthesize rkBayArea;
+@synthesize selectedCell;
+
 
 // Constants for animating up and down the To: field
 int const TO_FIELD_HIGH_Y = 87;
@@ -66,11 +68,12 @@ int const TOFROM_TABLE_HEIGHT = 105;
 int const TOFROM_TABLE_WIDTH = 300; 
 int const TIME_DATE_HEIGHT = 45;
 
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        [[self navigationItem] setTitle:@"Nimbler"];
+        [[self navigationItem] setTitle:@"Enter Trip"];
         
         planRequestHistory = [NSMutableArray array]; // Initialize this array
         departOrArrive = DEPART;
@@ -103,7 +106,8 @@ int const TIME_DATE_HEIGHT = 45;
         fromTable = [[UITableView alloc] initWithFrame:rect2 style:UITableViewStylePlain];
         fromTableVC = [[ToFromTableViewController alloc] initWithTable:fromTable isFrom:TRUE toFromVC:self locations: locations];
         [fromTable setDataSource:fromTableVC];
-        [fromTable setDelegate:fromTableVC];   
+        [fromTable setDelegate:fromTableVC];  
+        
     }
     return self;
 }
@@ -294,7 +298,6 @@ int const TIME_DATE_HEIGHT = 45;
         [[self navigationController] pushViewController:dateTimeVC animated:YES];
         return;
     }
-
 }
 
 
@@ -307,18 +310,23 @@ int const TIME_DATE_HEIGHT = 45;
     
     if (isFrom) {
         fromLocation = loc;
+        [self bayAreaAvailibility:fromLocation];
         
-//        double latitude = [[fromLocation lat] doubleValue];
-//        double longitude = [[fromLocation lng] doubleValue];        
-//        NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv", latitude, longitude];   
-//        NSURL *url = [NSURL URLWithString:urlString];
-//        NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
-//        NSArray *srtreets = [locationString componentsSeparatedByString:@"\""];
-//        NSLog(@"Reverse Geocode: %@", [srtreets objectAtIndex:1]);
-//        [fromLocation setFormattedAddress:[srtreets objectAtIndex:1]];
+//        if ([fromLocation formattedAddress] == @"Current Location") {
+//            double latitude = [[fromLocation lat] doubleValue];
+//            double longitude = [[fromLocation lng] doubleValue];        
+//            NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv", latitude, longitude];   
+//            NSURL *url = [NSURL URLWithString:urlString];
+//            NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
+//            NSArray *srtreets = [locationString componentsSeparatedByString:@"\""];
+//            NSLog(@"Reverse Geocode: %@", [srtreets objectAtIndex:1]);
+//            [fromLocation setFormattedAddress:[srtreets objectAtIndex:1]];
+//        }
+        
         
     } else {
         toLocation = loc;
+        [self bayAreaAvailibility:toLocation];       
 //        double latitude = [[toLocation lat] doubleValue];
 //        double longitude = [[toLocation lng] doubleValue];        
 //        NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv", latitude, longitude];   
@@ -351,12 +359,25 @@ int const TIME_DATE_HEIGHT = 45;
 
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
-  //Alert with Progressbar 
-    connecting = [self WaitPrompt];
+  //Alert with Processsbar 
+    UIAlertView *alert;
+    if ([fromLocation formattedAddress ] == NULL) {
+        alert = [[UIAlertView alloc] initWithTitle:@"TripPlanner" message:@"Fill the FromTrip location" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        return;
+    } else if( [toLocation formattedAddress ] == NULL) {
+        alert = [[UIAlertView alloc] initWithTitle:@"TripPlanner" message:@"Fill the ToTrip location" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        return;
+    } else {
+        connecting = [self WaitPrompt];
+    }
+    
    // [alert dismissWithClickedButtonIndex:0 animated:NO];
     
+     // TODO put up a "thinking" graphic
     routeRequested = true;
-    // TODO put up a "thinking" graphic
+   
     // if all the geolocations are here, get a plan.  
     if ([fromLocation formattedAddress] && [toLocation formattedAddress] &&
         !toGeocodeRequestOutstanding && !fromGeocodeRequestOutstanding) {
@@ -386,6 +407,7 @@ int const TIME_DATE_HEIGHT = 45;
     if (direction == UP && !isToTableRaised) {
         isToTableRaised = TRUE;
         [mainTable deleteSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
+
     }
     else if (direction == DOWN && isToTableRaised) {
         isToTableRaised = FALSE;
@@ -473,13 +495,11 @@ int const TIME_DATE_HEIGHT = 45;
         
         if(fromLocation == toLocation){
              [connecting dismissWithClickedButtonIndex:0 animated:NO];
-            NSLog(@"Match----------->>>>>>>>>>>> %@  ,%@",fromLocation, toLocation);
-                    
+            NSLog(@"Match----------->>>>>>>>>>>> %@  ,%@",fromLocation, toLocation);                    
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"The To: and From: address are the same location.  Please choose a different destination." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
             [alert show];
             return true;
-        }
-        
+        }        
         
         // Create the date formatters we will use to output the date & time
         NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
@@ -499,6 +519,7 @@ int const TIME_DATE_HEIGHT = 45;
                                 @"time", [tFormat stringFromDate:tripDate], 
                                 @"arriveBy", ((departOrArrive == ARRIVE) ? @"true" : @"false"),
                                 nil];
+        
         planURLResource = [@"plan" appendQueryParams:params];
         
         // add latest plan request to history array
@@ -531,8 +552,9 @@ int const TIME_DATE_HEIGHT = 45;
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];    
-    
+    [super viewDidLoad];
+   
+       
 }
 
 - (void)viewDidUnload
@@ -561,7 +583,6 @@ int const TIME_DATE_HEIGHT = 45;
         
     [[NSRunLoop currentRunLoop] limitDateForMode:NSDefaultRunLoopMode];  
     
-    
     return alert;
 }  
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -569,6 +590,36 @@ int const TIME_DATE_HEIGHT = 45;
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+
+-(void)bayAreaAvailibility:(Location *)loc
+{
+    if( [loc formattedAddress] != nil){       
+        
+        if (! ( ([[loc lat] doubleValue]>=[[b_area minLatitude] doubleValue]) && ([[loc lng] doubleValue]>=[[b_area minLongitude] doubleValue]) 
+               &&
+               ([[loc lat] doubleValue]<=[[b_area maxLatitude] doubleValue]) && ([[loc lng] doubleValue]<=[[b_area maxLongitude] doubleValue])) ) 
+        {
+            
+            NSString *add = [loc formattedAddress];
+            NSString *formal = @"Did not find the address: "; 
+            NSString *formal1 = @"in the San Francisco Bay Area";
+            [NSString stringWithFormat:@"%@ %@ %@", formal, add, formal1];
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:[NSString stringWithFormat:@"%@ %@ %@", formal, add, formal1] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert show];
+            
+            return;
+        }
+    }
+}
+
+-(void)setBayArea:(bayArea *)bay
+{
+    b_area = [[bayArea alloc] init];
+    b_area = bay;
+    
+}
+
 
 
 @end
