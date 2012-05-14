@@ -9,6 +9,8 @@
 #import "nc_AppDelegate.h"
 #import "UtilityFunctions.h"
 #import "TestFlightSDK1/TestFlight.h"
+#import "ToFromViewController.h"
+#import "JSONKit.h"
 
 #define TESTING 1  // If 1, then testFlightApp will collect device UIDs, if 0, it will not
 #define DEVELOPMENT 1  // If 1, then do not include testFlightApp at all (don't need crash report)
@@ -22,6 +24,7 @@
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
 @synthesize window = _window;
+@synthesize rkbatarea;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -33,7 +36,7 @@
     //RKObjectManager* rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-107-21-80-36.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"];
      RKObjectManager* rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-204-236-191-166.us-west-1.compute.amazonaws.com:8080/opentripplanner-api-webapp/ws/"];
     
-    RKObjectManager *rkbatarea = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-107-21-80-36.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/metadata"];
+    rkbatarea = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-107-21-80-36.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/metadata"];
     
         
     // Other URLs:
@@ -70,6 +73,7 @@
     // Initialize the Locations class and store "Current Location" into the database if not there already
     locations = [[Locations alloc] initWithManagedObjectContext:[self managedObjectContext]];
     [toFromViewController setLocations:locations];
+     [toFromViewController setLocations:locations];
         
     // Call TestFlightApp SDK
 #if !DEVELOPMENT
@@ -109,8 +113,7 @@
 
     [currentLocation setLatFloat:[newLocation coordinate].latitude];
     [currentLocation setLngFloat:[newLocation coordinate].longitude];
-    
-    
+   
     //TODO error handling if location services not available
     //TODO error handling if current location is in the database, but not populated
     //TODO error handling for very old cached current location data
@@ -255,17 +258,53 @@
 
 -(void)bayArea
 {
-    NSString *urlString = [NSString stringWithFormat:@"http://ec2-107-21-80-36.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/metadata"];   
+    //http://ec2-107-21-80-36.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/metadata"
+        
+    NSString *urlString = [NSString stringWithFormat:@"http://ec2-204-236-191-166.us-west-1.compute.amazonaws.com:8080/opentripplanner-api-webapp/ws/metadata?output=xml"];   
     NSURL *url = [NSURL URLWithString:urlString];
     NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil]; 
-    NSArray *srtreets = [locationString componentsSeparatedByString:@"\""];
-    for (int i =0;i<[srtreets count]; i=i+2) {
-       NSLog(@": %@", [srtreets objectAtIndex:i]);
+    NSLog(@"Full String: %@", locationString);
+    
+    locationString = [locationString stringByReplacingOccurrencesOfString:@"{\""
+                                         withString:@""];
+    locationString = [locationString stringByReplacingOccurrencesOfString:@"\":"
+                                                               withString:@","];
+    locationString = [locationString stringByReplacingOccurrencesOfString:@"\""
+                                                               withString:@""];
+    locationString = [locationString stringByReplacingOccurrencesOfString:@"}"
+                                                               withString:@""];
+    NSLog(@"klj %@", locationString);
+       
+    NSArray *srtreets = [locationString componentsSeparatedByString:@","];
+    NSLog(@" kjgh %@", srtreets);
+    
+    
+      
+    for (int i =0;i<[srtreets count]; i++) {
+       NSLog(@"%d : %@",i, [srtreets objectAtIndex:i]);
     }
-    
-    
+     
+    bayArea *b = [bayArea alloc] ;
+    [b setLowerLeftLatitude:[srtreets objectAtIndex:1] ];
+    [b setLowerLeftLongitude:[srtreets objectAtIndex:3]];
+    [b setMaxLatitude:[srtreets objectAtIndex:5]];
+    [b setMaxLongitude:[srtreets objectAtIndex:7]];
+    [b setMinLatitude:[srtreets objectAtIndex:16]];
+    [b setMinLongitude:[srtreets objectAtIndex:18]];
+    [b setUpperRightLatitude:[srtreets objectAtIndex:20]];
+    [b setUpperRightLatitude:[srtreets objectAtIndex:22]];
+       
+    NSLog(@"real %@", b);
+    ToFromViewController *l = [[ToFromViewController alloc] initWithNibName:nil bundle:nil];
+   
+    [l setBayArea:b];
     // Tell NSXMLParser that this class is its delegate
    // [parser selfDelegate:self];
+    
+}
+
+-(void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
+{
     
 }
 @end

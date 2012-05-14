@@ -12,6 +12,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "ToFromViewController.h"
 #import "Locations.h"
+#import "bayArea.h"
 
 @interface nc_AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate> {
     Location* currentLocation;
@@ -27,7 +28,8 @@
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-
+@property (readonly, strong, nonatomic) RKObjectManager *rkbatarea;
 - (NSURL *)applicationDocumentsDirectory;
 -(void)bayArea;
+
 @end

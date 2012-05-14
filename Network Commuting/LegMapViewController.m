@@ -179,10 +179,12 @@
     [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
     [self setMapViewRegion];  // redefine the bounding box
     [self setDirectionsText];
-     self.navigationItem.rightBarButtonItems = bbiArray;
+    
+    [For setEnabled:TRUE];
+    [Bak setEnabled:TRUE];
+    // self.navigationItem.rightBarButtonItems = bbiArray;
     if(itineraryNumber == 0){
-        self.navigationItem.rightBarButtonItems = nil;
-        self.navigationItem.rightBarButtonItem = For;
+        [Bak setEnabled:FALSE];
     }
     
 }
@@ -198,10 +200,14 @@
     [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
     [self setMapViewRegion];  // redefine the bounding box
     [self setDirectionsText];
-    self.navigationItem.rightBarButtonItems = bbiArray;
+    [For setEnabled:TRUE];
+    [Bak setEnabled:TRUE];
+    //self.navigationItem.rightBarButtonItems = bbiArray;
     if(itineraryNumber == [[itinerary sortedLegs] count] + 1){       
-        self.navigationItem.rightBarButtonItem = Bak;
+        //self.navigationItem.rightBarButtonItem = Bak;
+        [For setEnabled:FALSE];
     }
+    
 
 }
 
