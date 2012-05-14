@@ -11,6 +11,7 @@
 #import "TestFlightSDK1/TestFlight.h"
 
 #define TESTING 1  // If 1, then testFlightApp will collect device UIDs, if 0, it will not
+#define DEVELOPMENT 1  // If 1, then do not include testFlightApp at all (don't need crash report)
 
 @implementation nc_AppDelegate
 
@@ -71,10 +72,12 @@
     [toFromViewController setLocations:locations];
         
     // Call TestFlightApp SDK
+#if !DEVELOPMENT
     [TestFlight takeOff:@"48a90a98948864a11c80bd2ecd7a7e5c_ODU5MzMyMDEyLTA1LTA3IDE5OjE3OjUwLjMxMDUyMg"];
 
 #ifdef TESTING
     [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
+#endif
 #endif
     
     // Create an instance of a UINavigationController and put toFromViewController as the first view

@@ -26,10 +26,8 @@
 @property (strong, nonatomic) Locations *locations;  // Wrapper for collection of all Locations
 @property (nonatomic) BOOL isFrom;   // True if this is the fromTable, false if it is the toTable
 @property (strong, nonatomic) UITableView* myTableView;  // Table View we are controlling
-
+@property (strong, nonatomic) UITextField* txtField;   // Textlabel that is separate from myTableView where text is entered
 - (id)initWithTable:(UITableView *)t isFrom:(BOOL)isF toFromVC:(ToFromViewController *)tfVC locations:(Locations *)l;
 - (IBAction)toFromTyping:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)textSubmitted:(id)sender forEvent:(UIEvent *)event;
-- (IBAction)txtFieldFocus:(id)sender forEvent:(UIEvent *)event;
-
 @end

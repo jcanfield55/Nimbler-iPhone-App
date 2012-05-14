@@ -9,7 +9,6 @@
 #import "ToFromTableViewController.h"
 #import "ToFromViewController.h"
 #import "UtilityFunctions.h"
-#import "ToFromTableTextFieldView.h"
 
 @interface ToFromTableViewController () 
 {
@@ -17,16 +16,14 @@
     
     UITableViewCell* selectedCell; // Cell currently selected 
     Location* selectedLocation;  // Location currently selected
-    ToFromTableTextFieldView* txtField;   // Cell for entering a new address
     NSString *rawAddress;    // user entered raw address
     NSString *urlResource;   // URL resource sent to geocoder for last raw address
     NSManagedObjectContext *managedObjectContext;
-    BOOL isTypingReload1;  // True if we just reloaded the tableView due to updated typing.  Cleared after textSubmitted call
-    BOOL isSelectionKillKeyboard1;  // True if we are forcing the txtField to resign first responder status because user has made a selection from existing addresses.  Cleared after textSubmitted call
-    BOOL isSelectionKillKeyboard2;  // Same as above, but cleared after toFromTyping call
     NSString* lastRawAddressGeoRequest;  // Last raw address sent to the Geocoder, used to avoid duplicate requests
     NSDate* lastGeoRequestTime;  // Time of last Geocoding request, used to avoid duplicate requests
 }
+
+- (void)markAndUpdateSelectedLocation:(Location *)loc;  // Updates the selected location to be loc (in locations object, in toFromVC, and in the table selected cell
 
 @end
 
@@ -39,8 +36,7 @@
 @synthesize toFromVC;
 @synthesize rkGeoMgr;
 @synthesize myTableView;
-
-int const TOFROM_ROW_HEIGHT = 35;
+@synthesize txtField;
 
 - (id)initWithTable:(UITableView *)t isFrom:(BOOL)isF toFromVC:(ToFromViewController *)tfVC locations:(Locations *)l;
 {
@@ -52,23 +48,12 @@ int const TOFROM_ROW_HEIGHT = 35;
         myTableView = t;
         
         isGeocodingOutstanding = FALSE;
-        isTypingReload1 = FALSE;
-        isSelectionKillKeyboard1 = FALSE;
-        isSelectionKillKeyboard2 = FALSE;
-        
-        // Configure myTableView
-        [myTableView setRowHeight:TOFROM_ROW_HEIGHT];
-
         
         // Create the textField for the first row of the tableView
-        txtField=[[ToFromTableTextFieldView alloc]initWithFrame:CGRectMake(0,0,myTableView.frame.size.width,myTableView.rowHeight)];
-        [txtField setIsTypingReload:FALSE];
-        txtField.autoresizingMask=UIViewAutoresizingFlexibleHeight;
-        txtField.autoresizesSubviews=YES;
+        txtField=[[UITextField alloc]initWithFrame:CGRectMake(0,0,myTableView.frame.size.width,[myTableView rowHeight])];
         [txtField setPlaceholder:@"Enter new address"];
         [txtField addTarget:self action:@selector(toFromTyping:forEvent:) forControlEvents:UIControlEventEditingChanged];
-        [txtField addTarget:self action:@selector(textSubmitted:forEvent:) forControlEvents:(UIControlEventEditingDidEnd | UIControlEventEditingDidEndOnExit)];
-        [txtField addTarget:self action:@selector(txtFieldFocus:forEvent:) forControlEvents:UIControlEventEditingDidBegin];
+        [txtField addTarget:self action:@selector(textSubmitted:forEvent:) forControlEvents:(UIControlEventEditingDidEndOnExit)];
     }
     return self;
 }
@@ -91,12 +76,16 @@ int const TOFROM_ROW_HEIGHT = 35;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2; // one section for new address entry, the other for matching results
+    if ([toFromVC editMode] == NO_EDIT) {
+        return 2; // one section for new address entry, the other for matching results
+    }
+    // Else if in edit mode, do not show "Enter new address" mode
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (section == 0) {
+    if ([toFromVC editMode] == NO_EDIT &&  section == 0) {
         return 1;  // this is the new address entry section
     }
     else {
@@ -107,59 +96,56 @@ int const TOFROM_ROW_HEIGHT = 35;
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([indexPath section] > 0) {   // if it is not the first row (which is the 'enter new address row'
+    NSLog(@"Select Row: isFrom=%d, section=%d, row=%d", isFrom, [indexPath section], [indexPath row]);
+    if ([toFromVC editMode] == NO_EDIT && [indexPath section] == 0) { // "Enter New Address" cell
+        if (isFrom) {
+            [toFromVC setEditMode:FROM_EDIT]; 
+        } else {
+            [toFromVC setEditMode:TO_EDIT];
+        }
+    }
+    // Else it is one of the locations which was selected
+    else {
         Location *loc = [locations locationAtIndex:([indexPath row]) isFrom:isFrom];  //selected Location 
         
-        // Set the new checkmark and fill the corresponding text box with the formatted address from the selected location
+        [self markAndUpdateSelectedLocation:loc];  // Mark the selected location and send updates to locations and toFromVC
         
-        if (selectedCell) { // if a previous cell is selected
-            selectedCell.accessoryType = UITableViewCellAccessoryNone; // turn off its selector
-        }
-        selectedCell = [tableView cellForRowAtIndexPath:indexPath];  // get the new selected cell
-        selectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
-        
-        // Update the ToFromViewController
-        [toFromVC updateGeocodeStatus:FALSE isFrom:isFrom]; // let know this table is no longer waiting for geocoding
-        [toFromVC updateToFromLocation:self isFrom:isFrom location:loc]; // update with new location
-        
-        // Update selectedLocation in locations, 
-        selectedLocation = loc;
-        [locations updateSelectedLocation:loc isFrom:isFrom]; // puts loc at the top of the sort order
-        
-        // Prepare to kill the keyboard
-        isSelectionKillKeyboard1 = TRUE;
-        isSelectionKillKeyboard2 = TRUE;
-        
-        // Clear the txtField if it is not clear already
-        [txtField setText:@""];
-        // reload the matching text tables with latest data
-        if (isFrom) {  
-            [locations setTypedFromString:@""];  
-        } else {
-            [locations setTypedToString:@""];  
-        }
-
-        if (!isFrom) {  // if it is the To Table
-            [toFromVC moveToTable:DOWN];  // Move it back down again 
-        }
-        
-        // Clear the keyboard if txtField is still first responder
-        NSLog(@"Resigning first responder status");
-
-        [myTableView endEditing:FALSE];
-
-        [myTableView reloadData];  // Reload the table data with the new sorting  
-        
-        // scroll to the top of the table
-        [myTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-        
+        // Have toFromVC end the edit mode
+        [toFromVC setEditMode:NO_EDIT];  
     }
+}
 
+// Internal utility function to pdates the selected location to be loc 
+// (in locations object, in toFromVC, and in the table selected cell
+- (void)markAndUpdateSelectedLocation:(Location *)loc
+{
+    // Update ToFromViewController with the geocode results
+    [toFromVC updateToFromLocation:self isFrom:isFrom location:loc];
+    [toFromVC updateGeocodeStatus:FALSE isFrom:isFrom];  // let it know Geocode no longer outstanding
+    
+    // Clear txtField and select the current item
+    [txtField setText:@""];
+    if (isFrom) {
+        [locations setSelectedFromLocation:loc]; // Sort location to top of list  next time
+        [locations setTypedFromString:@""];
+    } else {
+        [locations setSelectedToLocation:loc]; // Sort location to top of list next time
+        [locations setTypedToString:@""];
+    }
+    selectedLocation = loc;   
+    if (selectedCell) { // if a previous cell is selected
+        selectedCell.accessoryType = UITableViewCellAccessoryNone; // turn off its selector
+    }
+    [myTableView reloadData];  // Reload the data with the new sorting
+    NSIndexPath* indexPath = [NSIndexPath indexPathForRow:0 inSection:1]; // The top row (which now should be the selected item)
+    selectedCell = [myTableView cellForRowAtIndexPath:indexPath];  // get the new selected cell
+    [myTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];     // scroll to the top of the table
+    selectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([indexPath section] == 0) {  // If it is the 'Enter new address' row...
+    if ([toFromVC editMode]==NO_EDIT && [indexPath section] == 0) {  // If it is the 'Enter new address' row...
         UITableViewCell *cell =
         [tableView dequeueReusableCellWithIdentifier:@"ToFromEnterNewLocationCell"];
         
@@ -168,14 +154,9 @@ int const TOFROM_ROW_HEIGHT = 35;
                                           reuseIdentifier:@"ToFromEnterNewLocationCell"];
         }
         
-        UIView* cellView = [cell contentView];
-        NSArray* subviews = [cellView subviews];
-        if (subviews && [subviews count]>0 && [subviews indexOfObject:txtField] != NSNotFound) {
-            // if txtField is already in the subview (due to recycling, no need to add again
-        } else { 
-            [cellView addSubview:txtField]; // add txtField
-        }
-
+        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
+        [[cell textLabel] setTextColor:[UIColor lightGrayColor]];
+        [[cell textLabel] setText:@"Enter New Address"];
         return cell;
 
     }
@@ -202,7 +183,6 @@ int const TOFROM_ROW_HEIGHT = 35;
     } else {
         cell.accessoryType = UITableViewCellAccessoryNone; 
     }
-    
     return cell;
     
     // In the future, we can support Nicknames by putting formatted address into subtitle, as shown below
@@ -221,14 +201,8 @@ int const TOFROM_ROW_HEIGHT = 35;
 // Delegate for when text is typed into the to: or from: UITextField (see below for when text submitted)
 // This method updates the to & from table to reflect entries that match the text
 - (IBAction)toFromTyping:(id)sender forEvent:(UIEvent *)event {
-    if (isSelectionKillKeyboard2) { // if user made a location selection and txtField resigned...
-        NSLog(@"toFromTyping entered after killing keyboard");
-        isSelectionKillKeyboard2 = FALSE; // reset the variable
-        return;   // and return immediately (it is a false alarm)
-    }
+
     // Deselect any selected cell
-    NSLog(@"Entering toFromTyping: sender = %@, event type = %@, txtField text = '%@'", sender, 
-          [event type], [txtField text]);
     if (selectedCell) {
         [selectedCell setAccessoryType:UITableViewCellAccessoryNone];
         selectedCell = nil; 
@@ -245,9 +219,6 @@ int const TOFROM_ROW_HEIGHT = 35;
     }
     
     if ([locations areMatchingLocationsChanged]) {  //if typing has changed matrix, reload the array
-        isTypingReload1 = TRUE;
-        [txtField setIsTypingReload:TRUE];
-        
         [myTableView reloadData];
     }
 }
@@ -255,19 +226,12 @@ int const TOFROM_ROW_HEIGHT = 35;
 // Delegate for when complete text entered into the UITextField
 - (IBAction)textSubmitted:(id)sender forEvent:(UIEvent *)event 
 {
-    if (isTypingReload1) {  // if this is just a typing reload case...
-        NSLog(@"textSubmitted after typingReload");
-        isTypingReload1 = FALSE;  // reset the variable
-        return;  // and return immediately (it is a false alarm)
-    }
-    if (isSelectionKillKeyboard1) { // if user made a location selection and txtField resigned...
-        NSLog(@"textSubmitted entered after killing keyboard");
-        isSelectionKillKeyboard1 = FALSE; // reset the variable
-        return;   // and return immediately (it is a false alarm)
-    }
     rawAddress = [sender text];
     
     // Check to make sure this is not a duplicate request
+    NSLog(@"Raw address = %@", rawAddress);
+    NSLog(@"Last raw address = %@", lastRawAddressGeoRequest);
+    NSLog(@"time since last request = %f", [lastGeoRequestTime timeIntervalSinceNow]);
     if ([rawAddress isEqualToString:lastRawAddressGeoRequest] && [lastGeoRequestTime timeIntervalSinceNow] > -5.0) {
         NSLog(@"Skipping duplicate toFromTextSubmitted");
         return;  // if using the same rawAddress and less than 5 seconds between, treat as duplicate
@@ -275,9 +239,8 @@ int const TOFROM_ROW_HEIGHT = 35;
     
     NSLog(@"In toFromTextSubmitted and isFrom=%d", isFrom);
 
-    if (!isFrom) {  // if it is the To Table
-        [toFromVC moveToTable:DOWN];  // Move it back down again 
-    }
+    [toFromVC setEditMode:NO_EDIT];  // Move back to NO_EDIT mode on the ToFrom view controller
+
     if ([rawAddress length] > 0) {
         
         // Check if we already have a geocoded location that has used this rawAddress before
@@ -288,8 +251,8 @@ int const TOFROM_ROW_HEIGHT = 35;
                 matchingLocation = [matchingLocations objectAtIndex:0];  // Get the first matching location
             }
         }
-        if (matchingLocation) { //if we got a match, send that location back to toFromVC 
-            [toFromVC updateToFromLocation:self isFrom:isFrom location:matchingLocation];
+        if (matchingLocation) { //if we got a match, mark and send appropriate updates 
+            [self markAndUpdateSelectedLocation:matchingLocation];
         }
         else {  // if no match, Geocode this new rawAddress
             // Keep a history to avoid duplicates
@@ -310,13 +273,6 @@ int const TOFROM_ROW_HEIGHT = 35;
                 [toFromVC updateGeocodeStatus:TRUE isFrom:isFrom]; // alert toFromVC re: outstanding geocoding
             }
         }
-    }
-}
-
-- (IBAction)txtFieldFocus:(id)sender forEvent:(UIEvent *)event
-{
-    if (!isFrom) { // if this is the ToField that received focus
-        [toFromVC moveToTable:UP];  // Move to Table up so that you can see it above the keyboard
     }
 }
 
@@ -364,29 +320,11 @@ int const TOFROM_ROW_HEIGHT = 35;
                 // Check if an equivalent Location is already in the locations table
                 location = [locations consolidateWithMatchingLocations:location];
                 
-                // Update ToFromViewController with the geocode results
-                [toFromVC updateToFromLocation:self isFrom:isFrom location:location];
-                [toFromVC updateGeocodeStatus:FALSE isFrom:isFrom];  // let it know Geocode no longer outstanding
-
                 // Save db context with the new location object
                 saveContext(managedObjectContext);
                 
-                // Clear txtField and select the current item
-                [txtField setText:@""];
-                if (isFrom) {
-                    [locations setSelectedFromLocation:location]; // Sort location to top of list  next time
-                    [locations setTypedFromString:@""];
-                } else {
-                    [locations setSelectedToLocation:location]; // Sort location to top of list next time
-                    [locations setTypedToString:@""];
-                }
-                if (selectedCell) { // if a previous cell is selected
-                    selectedCell.accessoryType = UITableViewCellAccessoryNone; // turn off its selector
-                }
-                [myTableView reloadData];  // Reload the data with the new sorting
-                NSIndexPath* indexPath = [NSIndexPath indexPathForRow:0 inSection:1]; // The top row (which now should be the selected item)
-                selectedCell = [myTableView cellForRowAtIndexPath:indexPath];  // get the new selected cell
-                selectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
+                // Mark the 
+                [self markAndUpdateSelectedLocation:location];
                 
             }
             else if ([status compare:@"ZERO_RESULTS" options:NSCaseInsensitiveSearch] == NSOrderedSame) {

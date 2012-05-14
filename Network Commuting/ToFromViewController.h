@@ -15,6 +15,12 @@
 
 @interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate>
 
+typedef enum {
+    NO_EDIT,    // Neither to nor from address is being edited with the keyboard
+    FROM_EDIT,  // From address is being edited with the keyboard
+    TO_EDIT     // To address is being edited with the keyboard
+} ToFromEditMode;
+
 @property (strong, nonatomic) IBOutlet UITableView* mainTable;  // grouped table for main page layout
 @property (strong, nonatomic) UITableView *fromTable;  // from table embedded in mainTable
 @property (strong, nonatomic) ToFromTableViewController* fromTableVC; // View controller for fromTable
@@ -33,6 +39,7 @@
 @property (strong, nonatomic) NSDate *tripDateLastChangedByUser;
 @property (strong, nonatomic) UIAlertView * connecting;
 @property (strong, nonatomic) RKObjectManager *rkBayArea;  // RestKit object manager for trip bay area
+@property (nonatomic) ToFromEditMode editMode; // Specifies whether to or from address is being edited with the keyboard
 
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
@@ -40,12 +47,6 @@
 - (void)updateToFromLocation:(id)sender isFrom:(BOOL)isFrom location:(Location *)loc; // Callback from ToFromTableViewController to update a new user entered/selected location
 - (void)updateGeocodeStatus:(BOOL)isGeocodeOutstanding isFrom:(BOOL)isFrom; // Callback from ToFromTableViewController to update geocoding status
 
-typedef enum {
-    UP,
-    DOWN
-} moveToTableDirection;
-
-- (void)moveToTable:(moveToTableDirection)direction; // Moves To Table up or down for keyboard entry
 - (void)updateTripDate;
 -(UIAlertView *) WaitPrompt;
 @end

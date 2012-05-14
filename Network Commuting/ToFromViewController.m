@@ -27,7 +27,6 @@
     NSManagedObjectContext *managedObjectContext;
     BOOL toGeocodeRequestOutstanding;  // true if there is an outstanding To geocode request
     BOOL fromGeocodeRequestOutstanding;  // true if there is an outstanding From geocode request
-    BOOL isToTableRaised;  // true if the To Field has been raised because of the keyboard
 }
 
 - (BOOL)getPlan;
@@ -55,13 +54,11 @@
 @synthesize tripDateLastChangedByUser;
 @synthesize connecting;
 @synthesize rkBayArea;
+@synthesize editMode;
 
 // Constants for animating up and down the To: field
-int const TO_FIELD_HIGH_Y = 87;
-int const TO_FIELD_NORMAL_Y = 197;
-int const TO_TABLE_HEIGHT_HIGH_Y = 118;
-int const TO_TABLE_HEIGHT_NORMAL_Y = 228;
 int const MAIN_TABLE_HEIGHT = 358;
+int const TOFROM_ROW_HEIGHT = 35;
 int const TOFROM_TABLE_HEIGHT = 105;
 int const TOFROM_TABLE_WIDTH = 300; 
 int const TIME_DATE_HEIGHT = 45;
@@ -77,6 +74,7 @@ int const TIME_DATE_HEIGHT = 45;
         routeRequested = FALSE;
         toGeocodeRequestOutstanding = FALSE;
         fromGeocodeRequestOutstanding = FALSE;
+        editMode = NO_EDIT;
         
         // Initialize the trip date formatter for display
         tripDateFormatter = [[NSDateFormatter alloc] init];
@@ -91,6 +89,7 @@ int const TIME_DATE_HEIGHT = 45;
         rect1.size.width = TOFROM_TABLE_WIDTH;
         rect1.size.height = TOFROM_TABLE_HEIGHT;
         toTable = [[UITableView alloc] initWithFrame:rect1 style:UITableViewStylePlain];
+        [toTable setRowHeight:TOFROM_ROW_HEIGHT];
         toTableVC = [[ToFromTableViewController alloc] initWithTable:toTable isFrom:FALSE toFromVC:self locations:locations];
         [toTable setDataSource:toTableVC];
         [toTable setDelegate:toTableVC];
@@ -101,6 +100,7 @@ int const TIME_DATE_HEIGHT = 45;
         rect2.size.width = TOFROM_TABLE_WIDTH; 
         rect2.size.height = TOFROM_TABLE_HEIGHT;
         fromTable = [[UITableView alloc] initWithFrame:rect2 style:UITableViewStylePlain];
+        [fromTable setRowHeight:TOFROM_ROW_HEIGHT];
         fromTableVC = [[ToFromTableViewController alloc] initWithTable:fromTable isFrom:TRUE toFromVC:self locations: locations];
         [fromTable setDataSource:fromTableVC];
         [fromTable setDelegate:fromTableVC];   
@@ -201,42 +201,55 @@ int const TIME_DATE_HEIGHT = 45;
 //
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if (isToTableRaised) {
-        return 2;  // Don't include from table
+    if (editMode == NO_EDIT) {
+        return 3;  // Include all three sections
     } 
-    return 3;  // 3 grouped sections in main table
+    return 1;  // Include just the To or the From section
 
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;  // each section in the mainTable has only one cell 
+    if (editMode == NO_EDIT) {
+        return 1;  // each section in the mainTable has only one cell when not editng
+    }
+    return 2; // In edit mode, the To or From section has two cells
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([indexPath section] == 0) {  // Time/Date section
+    if (editMode == NO_EDIT && [indexPath section] == 0) {  // Time/Date section
         return TIME_DATE_HEIGHT;
     }  
-    else {  // To/From table sections
-        return TOFROM_TABLE_HEIGHT+1;
+    else if (editMode != NO_EDIT && [indexPath row] == 0) {  // txtField row in Edit mode
+        return TOFROM_ROW_HEIGHT;
     }
+    // Else To/From table sections
+    return TOFROM_TABLE_HEIGHT;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if (section == 0) {
-        return nil;  // no title for the time/date field section
-    } else if (section == 1 && !isToTableRaised) {
-        return @"From:";
-    } else {
-        return @"To:";
+    if (editMode == NO_EDIT) {
+        if (section == 0) {
+            return nil;  // no title for the time/date field section
+        } else if (section == 1) {
+            return @"From:";
+        } else {
+            return @"To:";
+        }
     }
+    // else, if in Edit mode
+    if (editMode == FROM_EDIT) {
+        return @"From:";
+    }
+    // else
+    return @"To:";
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([indexPath section] == 0) {  // the timeDate section
+    if (editMode == NO_EDIT && [indexPath section] == 0) {  // the timeDate section
         UITableViewCell *cell =
         [tableView dequeueReusableCellWithIdentifier:@"timeDateTableCell"];
         if (!cell) {
@@ -251,8 +264,9 @@ int const TIME_DATE_HEIGHT = 45;
         [[cell detailTextLabel] setText:[tripDateFormatter stringFromDate:tripDate]];
         return cell;
     }
-    else { // the to or from table sections
-        BOOL isFrom = (([indexPath section] == 1) && !isToTableRaised) ? TRUE : FALSE;
+    else if (editMode==NO_EDIT || [indexPath row] == 1) { // the to or from table sections
+        BOOL isFrom = (editMode==FROM_EDIT || (editMode==NO_EDIT && [indexPath section]==1))
+                       ? TRUE : FALSE;  
         NSString* cellIdentifier = isFrom ? @"fromTableCell" : @"toTableCell";
         UITableViewCell *cell =
         [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
@@ -264,7 +278,6 @@ int const TIME_DATE_HEIGHT = 45;
         NSArray* subviews = [cellView subviews];
         if (isFrom) {
             if (subviews && [subviews count]>0 && [subviews indexOfObject:fromTable] != NSNotFound) {
-                NSLog(@"fromTable already in subview");
                 // if fromTable is already in the subview (due to recycling, no need to add again
             } else { 
                 [cellView addSubview:fromTable]; // add fromTable
@@ -272,7 +285,6 @@ int const TIME_DATE_HEIGHT = 45;
         }
         else {   // do same for toTable case
             if (subviews && [subviews count]>0 && [subviews indexOfObject:toTable] != NSNotFound) {
-                NSLog(@"toTable already in subview");
                 // if toTable is already in the subview (due to recycling, no need to add again
             } else { 
                 [cellView addSubview:toTable]; // add toTable
@@ -280,7 +292,34 @@ int const TIME_DATE_HEIGHT = 45;
         }        
         return cell;
     }
-
+    // Else it is the To or From txtField in Edit mode
+    BOOL isFrom = (editMode == FROM_EDIT) ? TRUE : FALSE;
+    NSString* cellIdentifier = isFrom ? @"fromTxtFieldCell" : @"toTxtFieldCell";
+    UITableViewCell *cell =
+    [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 
+                                      reuseIdentifier:cellIdentifier];
+    }
+    UIView* cellView = [cell contentView];
+    NSArray* subviews = [cellView subviews];
+    if (isFrom) {
+        if (subviews && [subviews count]>0 && [subviews indexOfObject:[fromTableVC txtField]] != NSNotFound) {
+            NSLog(@"fromTable already in subview");
+            // if From txtField is already in the subview (due to recycling, no need to add again
+        } else { 
+            [cellView addSubview:[fromTableVC txtField]]; // add From txtField
+        }
+    }
+    else {   // do same for toTable case
+        if (subviews && [subviews count]>0 && [subviews indexOfObject:[toTableVC txtField]] != NSNotFound) {
+            NSLog(@"toTable already in subview");
+            // if To txtField is already in the subview (due to recycling, no need to add again
+        } else { 
+            [cellView addSubview:[toTableVC txtField]]; // add To txtfield
+        }
+    }        
+    return cell;
 }
 
 
@@ -381,16 +420,79 @@ int const TIME_DATE_HEIGHT = 45;
     [TestFlight openFeedbackView];
 }
 
-- (void)moveToTable:(moveToTableDirection)direction 
+// Method to adjust the mainTable for editing mode
+//
+- (void)setEditMode:(ToFromEditMode)newEditMode
 {
-    if (direction == UP && !isToTableRaised) {
-        isToTableRaised = TRUE;
-        [mainTable deleteSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
+    if (editMode == newEditMode) {
+        return;  // If no change in mode return immediately
     }
-    else if (direction == DOWN && isToTableRaised) {
-        isToTableRaised = FALSE;
-        [mainTable insertSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
+    NSRange range;
+    ToFromEditMode oldEditMode = editMode;
+    editMode = newEditMode;  
+    
+    if (newEditMode == TO_EDIT && oldEditMode == NO_EDIT) {
+        // Delete first & second sections (moving To Table to top)
+        range.location = 0;
+        range.length = 2;
+        [mainTable beginUpdates];
+        [mainTable deleteSections:[NSIndexSet indexSetWithIndexesInRange:range] withRowAnimation:UITableViewRowAnimationAutomatic];  // Leave only the To section
+        [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
+        [mainTable endUpdates];
+    } 
+    else if (newEditMode == NO_EDIT && oldEditMode == TO_EDIT) {
+        range.location = 0;
+        range.length = 2;
+        [mainTable beginUpdates];
+        [mainTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Delete the row for txtField
+        [mainTable insertSections:[NSIndexSet indexSetWithIndexesInRange:range] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [mainTable endUpdates];
     }
+    else if (newEditMode == FROM_EDIT && oldEditMode == NO_EDIT) {
+        // Delete first & second sections (moving To Table to top)
+        [mainTable beginUpdates];
+        [mainTable deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [mainTable deleteSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
+        [mainTable endUpdates];
+    } 
+    else if (newEditMode == NO_EDIT && oldEditMode == FROM_EDIT) {
+        [mainTable beginUpdates];
+        [mainTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Delete row for txtField
+        [mainTable insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [mainTable insertSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [mainTable endUpdates];
+    }
+    else if (newEditMode == FROM_EDIT && oldEditMode == TO_EDIT) {
+        // Note: this code is not used yet -- it is here as a placeholder
+        [mainTable beginUpdates];
+        [mainTable deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [mainTable insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
+        [mainTable endUpdates];
+    }
+    else if (newEditMode == TO_EDIT && oldEditMode == FROM_EDIT) {
+        // Note: this code is not used yet -- it is here as a placeholder
+        [mainTable beginUpdates];
+        [mainTable deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [mainTable insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
+        [mainTable endUpdates];
+    }  
+
+    // Reload all the data
+    [toTable reloadData];
+    [fromTable reloadData];
+    [mainTable reloadData];
+    
+    // If TO_EDIT or FROM_EDIT, make the txt field the first responder
+    if (newEditMode == TO_EDIT) {
+        [[toTableVC txtField] becomeFirstResponder];
+    } 
+    else if (newEditMode == FROM_EDIT) {
+        [[fromTableVC txtField] becomeFirstResponder];
+    }
+    return;
 }
 
 
