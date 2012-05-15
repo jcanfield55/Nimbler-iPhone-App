@@ -13,8 +13,8 @@
 #import "Leg.h"
 #import "DateTimeViewController.h"
 #import "TestFlightSDK1/TestFlight.h"
+#import "FeedBackViewController.h"
 
-static bayArea *b_area;
 @interface ToFromViewController()
 {
     // Variables for internal use
@@ -30,7 +30,7 @@ static bayArea *b_area;
 }
 
 - (BOOL)getPlan;
- 
+
 
 @end
 
@@ -54,13 +54,8 @@ static bayArea *b_area;
 @synthesize tripDateLastChangedByUser;
 @synthesize connecting;
 @synthesize rkBayArea;
-<<<<<<< HEAD
 @synthesize editMode;
-=======
-@synthesize selectedCell;
-
->>>>>>> apprikaTP1
-
+static SupportedRegion *regionArea;
 // Constants for animating up and down the To: field
 int const MAIN_TABLE_HEIGHT = 358;
 int const TOFROM_ROW_HEIGHT = 35;
@@ -68,13 +63,12 @@ int const TOFROM_TABLE_HEIGHT = 105;
 int const TOFROM_TABLE_WIDTH = 300; 
 int const TIME_DATE_HEIGHT = 45;
 
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        [[self navigationItem] setTitle:@"Enter Trip"];
-        
+        [[self navigationItem] setTitle:@"Nimbler"];
+
         planRequestHistory = [NSMutableArray array]; // Initialize this array
         departOrArrive = DEPART;
         routeRequested = FALSE;
@@ -109,8 +103,7 @@ int const TIME_DATE_HEIGHT = 45;
         [fromTable setRowHeight:TOFROM_ROW_HEIGHT];
         fromTableVC = [[ToFromTableViewController alloc] initWithTable:fromTable isFrom:TRUE toFromVC:self locations: locations];
         [fromTable setDataSource:fromTableVC];
-        [fromTable setDelegate:fromTableVC];  
-        
+        [fromTable setDelegate:fromTableVC];   
     }
     return self;
 }
@@ -282,12 +275,15 @@ int const TIME_DATE_HEIGHT = 45;
                                           reuseIdentifier:cellIdentifier];
         }
         UIView* cellView = [cell contentView];
+       
+
         NSArray* subviews = [cellView subviews];
         if (isFrom) {
             if (subviews && [subviews count]>0 && [subviews indexOfObject:fromTable] != NSNotFound) {
                 // if fromTable is already in the subview (due to recycling, no need to add again
             } else { 
                 [cellView addSubview:fromTable]; // add fromTable
+                
             }
         }
         else {   // do same for toTable case
@@ -309,6 +305,12 @@ int const TIME_DATE_HEIGHT = 45;
                                       reuseIdentifier:cellIdentifier];
     }
     UIView* cellView = [cell contentView];
+    //TO add Current Location
+    UIButton *addButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+    [addButton addTarget:self action:@selector(addLocationAction:) forControlEvents:UIControlEventTouchUpInside];
+    addButton.frame = CGRectMake(270, 5, 25, 25);
+    [cellView addSubview:addButton];
+    
     NSArray* subviews = [cellView subviews];
     if (isFrom) {
         if (subviews && [subviews count]>0 && [subviews indexOfObject:[fromTableVC txtField]] != NSNotFound) {
@@ -340,6 +342,7 @@ int const TIME_DATE_HEIGHT = 45;
         [[self navigationController] pushViewController:dateTimeVC animated:YES];
         return;
     }
+
 }
 
 
@@ -353,30 +356,12 @@ int const TIME_DATE_HEIGHT = 45;
     if (isFrom) {
         fromLocation = loc;
         [self bayAreaAvailibility:fromLocation];
-        
-//        if ([fromLocation formattedAddress] == @"Current Location") {
-//            double latitude = [[fromLocation lat] doubleValue];
-//            double longitude = [[fromLocation lng] doubleValue];        
-//            NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv", latitude, longitude];   
-//            NSURL *url = [NSURL URLWithString:urlString];
-//            NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
-//            NSArray *srtreets = [locationString componentsSeparatedByString:@"\""];
-//            NSLog(@"Reverse Geocode: %@", [srtreets objectAtIndex:1]);
-//            [fromLocation setFormattedAddress:[srtreets objectAtIndex:1]];
-//        }
-        
+
         
     } else {
         toLocation = loc;
-        [self bayAreaAvailibility:toLocation];       
-//        double latitude = [[toLocation lat] doubleValue];
-//        double longitude = [[toLocation lng] doubleValue];        
-//        NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv", latitude, longitude];   
-//        NSURL *url = [NSURL URLWithString:urlString];
-//        NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
-//        NSArray *srtreets = [locationString componentsSeparatedByString:@"\""];
-//        NSLog(@"Reverse Geocode: %@", [srtreets objectAtIndex:1]);
-//        [toLocation setFormattedAddress:[srtreets objectAtIndex:1]];
+        [self bayAreaAvailibility:toLocation];
+
     }
 }
 
@@ -401,7 +386,7 @@ int const TIME_DATE_HEIGHT = 45;
 
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
-  //Alert with Processsbar 
+  //Alert with Progressbar 
     UIAlertView *alert;
     if ([fromLocation formattedAddress ] == NULL) {
         alert = [[UIAlertView alloc] initWithTitle:@"TripPlanner" message:@"Fill the FromTrip location" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -414,12 +399,10 @@ int const TIME_DATE_HEIGHT = 45;
     } else {
         connecting = [self WaitPrompt];
     }
-    
    // [alert dismissWithClickedButtonIndex:0 animated:NO];
     
-     // TODO put up a "thinking" graphic
     routeRequested = true;
-   
+    // TODO put up a "thinking" graphic
     // if all the geolocations are here, get a plan.  
     if ([fromLocation formattedAddress] && [toLocation formattedAddress] &&
         !toGeocodeRequestOutstanding && !fromGeocodeRequestOutstanding) {
@@ -433,8 +416,7 @@ int const TIME_DATE_HEIGHT = 45;
     // if user has not entered has not entered/selected toLocation, send them an alert
     else if (![toLocation formattedAddress] && !toGeocodeRequestOutstanding) {
         // TODO put up an alert asking them to type in or select a to address
-    }
-    
+    }    
     // otherwise, just wait for the geocoding and then submit the plan
     
 }
@@ -442,13 +424,14 @@ int const TIME_DATE_HEIGHT = 45;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     [TestFlight openFeedbackView];
+    FeedBackViewController *legMapVC = [[FeedBackViewController alloc] initWithNibName:nil bundle:nil];   
+    [[self navigationController] pushViewController:legMapVC animated:YES];
 }
 
 // Method to adjust the mainTable for editing mode
 //
 - (void)setEditMode:(ToFromEditMode)newEditMode
 {
-<<<<<<< HEAD
     if (editMode == newEditMode) {
         return;  // If no change in mode return immediately
     }
@@ -495,12 +478,6 @@ int const TIME_DATE_HEIGHT = 45;
         [mainTable insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
         [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
         [mainTable endUpdates];
-=======
-    if (direction == UP && !isToTableRaised) {
-        isToTableRaised = TRUE;
-        [mainTable deleteSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
-
->>>>>>> apprikaTP1
     }
     else if (newEditMode == TO_EDIT && oldEditMode == FROM_EDIT) {
         // Note: this code is not used yet -- it is here as a placeholder
@@ -606,11 +583,13 @@ int const TIME_DATE_HEIGHT = 45;
         
         if(fromLocation == toLocation){
              [connecting dismissWithClickedButtonIndex:0 animated:NO];
-            NSLog(@"Match----------->>>>>>>>>>>> %@  ,%@",fromLocation, toLocation);                    
+            NSLog(@"Match----------->>>>>>>>>>>> %@  ,%@",fromLocation, toLocation);
+                    
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"The To: and From: address are the same location.  Please choose a different destination." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
             [alert show];
             return true;
-        }        
+        }
+        
         
         // Create the date formatters we will use to output the date & time
         NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
@@ -630,7 +609,6 @@ int const TIME_DATE_HEIGHT = 45;
                                 @"time", [tFormat stringFromDate:tripDate], 
                                 @"arriveBy", ((departOrArrive == ARRIVE) ? @"true" : @"false"),
                                 nil];
-        
         planURLResource = [@"plan" appendQueryParams:params];
         
         // add latest plan request to history array
@@ -663,9 +641,8 @@ int const TIME_DATE_HEIGHT = 45;
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-   
-       
+    [super viewDidLoad];    
+    
 }
 
 - (void)viewDidUnload
@@ -694,6 +671,7 @@ int const TIME_DATE_HEIGHT = 45;
         
     [[NSRunLoop currentRunLoop] limitDateForMode:NSDefaultRunLoopMode];  
     
+    
     return alert;
 }  
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -702,21 +680,31 @@ int const TIME_DATE_HEIGHT = 45;
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
--(void)bayAreaAvailibility:(Location *)loc
+-(void)bayAreaAvailibility:(Location *)location
 {
-    if( [loc formattedAddress] != nil){       
+    if( [location formattedAddress] != nil){       
         
-        if (! ( ([[loc lat] doubleValue]>=[[b_area minLatitude] doubleValue]) && ([[loc lng] doubleValue]>=[[b_area minLongitude] doubleValue]) 
-               &&
-               ([[loc lat] doubleValue]<=[[b_area maxLatitude] doubleValue]) && ([[loc lng] doubleValue]<=[[b_area maxLongitude] doubleValue])) ) 
+        if([location formattedAddress] == @"Current Location"){
+         double latitude = [[location lat] doubleValue];
+         double longitude = [[location lng] doubleValue];        
+         NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv", latitude, longitude];   
+         NSURL *url = [NSURL URLWithString:urlString];
+         NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
+         NSArray *streetName = [locationString componentsSeparatedByString:@"\""];
+         NSLog(@"Reverse Geocode: %@", [streetName objectAtIndex:1]);
+         [location setFormattedAddress:[streetName objectAtIndex:1]];
+
+        }
+        
+        if (! ( ([[location lat] doubleValue]>=[[regionArea minLatitude] doubleValue]) && ([[location lng] doubleValue]>=[[regionArea minLongitude] doubleValue]) &&
+            ([[location lat] doubleValue]<=[[regionArea maxLatitude] doubleValue]) && ([[location lng] doubleValue]<=[[regionArea maxLongitude] doubleValue])) ) 
         {
             
-            NSString *add = [loc formattedAddress];
-            NSString *formal = @"Did not find the address: "; 
-            NSString *formal1 = @"in the San Francisco Bay Area";
-            [NSString stringWithFormat:@"%@ %@ %@", formal, add, formal1];
-            
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:[NSString stringWithFormat:@"%@ %@ %@", formal, add, formal1] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            NSString *addr = [location formattedAddress];
+            NSString *msg = @"Did not find the address: "; 
+            NSString *msg1 = @"in the San Francisco Bay Area";
+                       
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:[NSString stringWithFormat:@"%@ %@ %@", msg, addr, msg1] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
             
             return;
@@ -724,13 +712,31 @@ int const TIME_DATE_HEIGHT = 45;
     }
 }
 
--(void)setBayArea:(bayArea *)bay
+-(void)setBayArea:(SupportedRegion *)bayAreaRegion
 {
-    b_area = [[bayArea alloc] init];
-    b_area = bay;
-    
+    regionArea = [[SupportedRegion alloc] init];
+    regionArea = bayAreaRegion;    
 }
 
+-(void)addLocationAction:(id) sender{
+    
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"Current Location",@"Set Location",@"Cancel",nil];
+    
+    actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
+    actionSheet.destructiveButtonIndex = 2;	// make the third button red (destructive)
+    [actionSheet showInView:self.navigationController.view]; // show from our table view (pops up in the middle of the table)
+}
 
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{	
+ 	if (buttonIndex == 0){
+        
+	} else if(buttonIndex == 1){
+       
+	} else if(buttonIndex == 2){
+		NSLog(@"cancel");
+        [actionSheet dismissWithClickedButtonIndex:buttonIndex animated:YES];
+	}
+}
 
 @end

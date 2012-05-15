@@ -64,4 +64,4 @@ dependencies: \
   /github-tp/NC_iPhone/Network\ Commuting/PolylineEncodedString.h \
   /github-tp/NC_iPhone/Network\ Commuting/LegMapViewController.h \
   /github-tp/NC_iPhone/Network\ Commuting/MyAnnotation.h \
-  /github-tp/NC_iPhone/Network\ Commuting/rootMap.h
+  /github-tp/NC_iPhone/Network\ Commuting/RootMap.h

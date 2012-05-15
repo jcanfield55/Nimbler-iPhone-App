@@ -65,4 +65,4 @@ dependencies: \
   /github-tp/NC_iPhone/Network\ Commuting/MyAnnotation.h \
   /github-tp/NC_iPhone/Network\ Commuting/TestFlightSDK1/TestFlight.h \
   /github-tp/NC_iPhone/Network\ Commuting/Step.h \
-  /github-tp/NC_iPhone/Network\ Commuting/rootMap.h
+  /github-tp/NC_iPhone/Network\ Commuting/RootMap.h

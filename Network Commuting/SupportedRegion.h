@@ -1,5 +1,5 @@
 //
-//  bayArea.h
+//  SupportedRegion.h
 //  Nimbler
 //
 //  Created by JaY Kumbhani on 5/11/12.
@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <RestKit/Restkit.h>
 #import "enums.h"
-@interface bayArea : NSObject
+@interface SupportedRegion : NSObject
 
 @property(nonatomic,strong) NSNumber *lowerLeftLatitude;
 @property(nonatomic,strong) NSNumber *lowerLeftLongitude;

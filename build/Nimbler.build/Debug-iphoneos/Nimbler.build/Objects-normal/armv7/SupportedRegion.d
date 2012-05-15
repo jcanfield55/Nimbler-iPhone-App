@@ -1,5 +1,5 @@
-dependencies: /github-tp/NC_iPhone/Network\ Commuting/bayArea.m \
-  /github-tp/NC_iPhone/Network\ Commuting/bayArea.h \
+dependencies: /github-tp/NC_iPhone/Network\ Commuting/SupportedRegion.m \
+  /github-tp/NC_iPhone/Network\ Commuting/SupportedRegion.h \
   /github-tp/NC_iPhone/RestKit/Build/RestKit/Restkit.h \
   /github-tp/NC_iPhone/RestKit/Build/RestKit/Network.h \
   /github-tp/NC_iPhone/RestKit/Build/RestKit/RKClient.h \

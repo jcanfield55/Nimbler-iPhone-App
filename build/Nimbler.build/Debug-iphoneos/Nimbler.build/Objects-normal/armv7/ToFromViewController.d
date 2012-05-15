@@ -67,10 +67,12 @@ dependencies: \
   /github-tp/NC_iPhone/Network\ Commuting/PlanPlace.h \
   /github-tp/NC_iPhone/Network\ Commuting/AgencyAndId.h \
   /github-tp/NC_iPhone/Network\ Commuting/Itinerary.h \
+  /github-tp/NC_iPhone/Network\ Commuting/SupportedRegion.h \
   /github-tp/NC_iPhone/Network\ Commuting/UtilityFunctions.h \
   /github-tp/NC_iPhone/Network\ Commuting/RouteOptionsViewController.h \
   /github-tp/NC_iPhone/Network\ Commuting/RouteDetailsViewController.h \
   /github-tp/NC_iPhone/Network\ Commuting/Leg.h \
   /github-tp/NC_iPhone/Network\ Commuting/PolylineEncodedString.h \
   /github-tp/NC_iPhone/Network\ Commuting/DateTimeViewController.h \
-  /github-tp/NC_iPhone/Network\ Commuting/TestFlightSDK1/TestFlight.h
+  /github-tp/NC_iPhone/Network\ Commuting/TestFlightSDK1/TestFlight.h \
+  /github-tp/NC_iPhone/Network\ Commuting/FeedBackViewController.h

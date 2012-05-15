@@ -9,7 +9,7 @@
 #import "RouteDetailsViewController.h"
 #import "Leg.h"
 #import "LegMapViewController.h"
-#import "rootMap.h"
+#import "RootMap.h"
 
 @implementation RouteDetailsViewController
 
@@ -136,7 +136,7 @@
 
 - (void)mapOverView
 {
-    rootMap *l = [[rootMap alloc] initWithNibName:nil bundle:nil];
+    RootMap *l = [[RootMap alloc] initWithNibName:nil bundle:nil];
     [l setItinerarys:itinerary itineraryNumber:2];
     [[self navigationController] pushViewController:l animated:YES];
 }

@@ -10,7 +10,7 @@
 #import "TestFlightSDK1/TestFlight.h"
 #import "MyAnnotation.h"
 #import "Step.h"
-#import "rootMap.h"
+#import "RootMap.h"
 
 @interface LegMapViewController()
 // Utility routine for setting the region on the MapView based on the itineraryNumber
@@ -179,12 +179,12 @@
     [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
     [self setMapViewRegion];  // redefine the bounding box
     [self setDirectionsText];
-    
+     [Bak setEnabled:TRUE];
     [For setEnabled:TRUE];
-    [Bak setEnabled:TRUE];
-    // self.navigationItem.rightBarButtonItems = bbiArray;
     if(itineraryNumber == 0){
-        [Bak setEnabled:FALSE];
+        //self.navigationItem.rightBarButtonItems = nil;
+        //self.navigationItem.rightBarButtonItem = For;
+        [Bak setEnabled:false];
     }
     
 }
@@ -200,14 +200,12 @@
     [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
     [self setMapViewRegion];  // redefine the bounding box
     [self setDirectionsText];
-    [For setEnabled:TRUE];
     [Bak setEnabled:TRUE];
-    //self.navigationItem.rightBarButtonItems = bbiArray;
+    [For setEnabled:TRUE];
     if(itineraryNumber == [[itinerary sortedLegs] count] + 1){       
         //self.navigationItem.rightBarButtonItem = Bak;
-        [For setEnabled:FALSE];
+        [For setEnabled:false];
     }
-    
 
 }
 

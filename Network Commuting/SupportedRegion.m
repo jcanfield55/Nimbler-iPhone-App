@@ -6,9 +6,9 @@
 //  Copyright (c) 2012 Network Commuting. All rights reserved.
 //
 
-#import "bayArea.h"
+#import "SupportedRegion.h"
 
-@implementation bayArea
+@implementation SupportedRegion
 
 @synthesize lowerLeftLatitude;
 @synthesize lowerLeftLongitude;
@@ -24,7 +24,7 @@
 + (RKManagedObjectMapping *)objectMappingforError:(APIType)apiType
 {
     // Create empty ObjectMapping to fill and return    
-    RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[bayArea class]];
+    RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[SupportedRegion class]];
     // Make the mappings
     if (apiType==BAYAREA_PLANNER) {
         // TODO  Do all the mapping       

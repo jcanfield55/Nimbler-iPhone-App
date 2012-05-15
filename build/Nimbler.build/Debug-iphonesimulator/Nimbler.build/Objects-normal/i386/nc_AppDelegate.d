@@ -67,7 +67,6 @@ dependencies: /github-tp/NC_iPhone/Network\ Commuting/nc_AppDelegate.m \
   /github-tp/NC_iPhone/Network\ Commuting/PlanPlace.h \
   /github-tp/NC_iPhone/Network\ Commuting/AgencyAndId.h \
   /github-tp/NC_iPhone/Network\ Commuting/Itinerary.h \
-  /github-tp/NC_iPhone/Network\ Commuting/bayArea.h \
+  /github-tp/NC_iPhone/Network\ Commuting/SupportedRegion.h \
   /github-tp/NC_iPhone/Network\ Commuting/UtilityFunctions.h \
-  /github-tp/NC_iPhone/Network\ Commuting/TestFlightSDK1/TestFlight.h \
-  /github-tp/NC_iPhone/RestKit/Build/RestKit/JSONKit.h
+  /github-tp/NC_iPhone/Network\ Commuting/TestFlightSDK1/TestFlight.h

@@ -1,5 +1,5 @@
-dependencies: /github-tp/NC_iPhone/Network\ Commuting/rootMap.m \
-  /github-tp/NC_iPhone/Network\ Commuting/rootMap.h \
+dependencies: /github-tp/NC_iPhone/Network\ Commuting/RootMap.m \
+  /github-tp/NC_iPhone/Network\ Commuting/RootMap.h \
   /github-tp/NC_iPhone/Network\ Commuting/Itinerary.h \
   /github-tp/NC_iPhone/RestKit/Build/RestKit/Restkit.h \
   /github-tp/NC_iPhone/RestKit/Build/RestKit/Network.h \

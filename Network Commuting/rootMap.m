@@ -6,18 +6,18 @@
 //  Copyright (c) 2012 Network Commuting. All rights reserved.
 //
 
-#import "rootMap.h"
+#import "RootMap.h"
 #import "MyAnnotation.h"
 #import "LegMapViewController.h"
 
-@interface rootMap()
+@interface RootMap()
 // Utility routine for setting the region on the MapView based on the itineraryNumber
 - (void)setMapViewRegion;
 - (void)setDirectionsText;
 - (void)refreshLegOverlay:(int)number;
 @end
 
-@implementation rootMap
+@implementation RootMap
 
 @synthesize itinerary;
 @synthesize itineraryNumber;
@@ -42,8 +42,7 @@
 - (void)setItinerarys:(Itinerary *)itin itineraryNumber:(int)num;
 {
     itinerary = itin;
-    itineraryNumber = num;
-    
+    itineraryNumber = num;    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -92,7 +91,7 @@
         MKMapRect mpRect = [[polyLineArray objectAtIndex:(itineraryNumber-1)] boundingMapRect];
         MKCoordinateRegion mpRegion = MKCoordinateRegionForMapRect(mpRect);
         // Move the center down by 15% of span so that route is not obscured by directions text
-        mpRegion.center.latitude = mpRegion.center.latitude + mpRegion.span.latitudeDelta*0.08;
+        mpRegion.center.latitude = mpRegion.center.latitude + mpRegion.span.latitudeDelta*0.08 ;
         // zoom out the map by 10% (lat) and 20% (long)
         mpRegion.span.latitudeDelta = mpRegion.span.latitudeDelta * 1.1; 
         mpRegion.span.longitudeDelta = mpRegion.span.longitudeDelta * 1.0;
