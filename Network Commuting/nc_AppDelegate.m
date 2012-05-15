@@ -24,7 +24,7 @@
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
 @synthesize window = _window;
-@synthesize rkbatarea;
+@synthesize rkSupportedRegion;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -33,10 +33,10 @@
     // Configure the RestKit RKClient object for Geocoding and trip planning
     RKObjectManager* rk_geo_mgr = [RKObjectManager objectManagerWithBaseURL:@"http://maps.googleapis.com/maps/api/geocode/"];
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
-    //RKObjectManager* rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-107-21-80-36.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"];
-     RKObjectManager* rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-204-236-191-166.us-west-1.compute.amazonaws.com:8080/opentripplanner-api-webapp/ws/"];
+    // RKObjectManager* rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-204-236-191-166.us-west-1.compute.amazonaws.com:8080/opentripplanner-api-webapp/ws/"];
+    RKObjectManager* rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-23-23-210-156.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"];
     
-    rkbatarea = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-107-21-80-36.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/metadata"];
+    rkSupportedRegion = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-23-23-210-156.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/metadata"];
     
         
     // Other URLs:
@@ -49,13 +49,13 @@
        rkMOS = [RKManagedObjectStore objectStoreWithStoreFilename:@"store.data"];
         [rk_geo_mgr setObjectStore:rkMOS];
         [rkPlanMgr setObjectStore:rkMOS];
-        [rkbatarea setObjectStore:rkMOS];
+        [rkSupportedRegion setObjectStore:rkMOS];
     }
     @catch (NSException *exception) {
         NSLog(@"Exception:");
     }
     
-     [self bayArea];
+     [self supportedRegion];
     // Get the NSManagedObjectContext from restkit
     __managedObjectContext = [rkMOS managedObjectContext];
     
@@ -63,7 +63,7 @@
     toFromViewController = [[ToFromViewController alloc] initWithNibName:nil bundle:nil];
     [toFromViewController setRkGeoMgr:rk_geo_mgr];    // Pass the geocoding RK object
     [toFromViewController setRkPlanMgr:rkPlanMgr];    // Pass the planning RK object
-    [toFromViewController setRkBayArea:rkbatarea];    // pass the bayArea Rk objects
+    [toFromViewController setRkSupportedRegion:rkSupportedRegion];    // pass the bayArea Rk objects
     
     // Turn on location manager
     locationManager = [[CLLocationManager alloc] init];
@@ -256,7 +256,7 @@
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
--(void)bayArea
+-(void)supportedRegion
 {
     //http://ec2-107-21-80-36.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/metadata"
         
@@ -284,7 +284,7 @@
        NSLog(@"%d : %@",i, [srtreets objectAtIndex:i]);
     }
      
-    bayArea *b = [bayArea alloc] ;
+    SupportedRegion *b = [[SupportedRegion alloc] init];
     [b setLowerLeftLatitude:[srtreets objectAtIndex:1] ];
     [b setLowerLeftLongitude:[srtreets objectAtIndex:3]];
     [b setMaxLatitude:[srtreets objectAtIndex:5]];
@@ -297,7 +297,7 @@
     NSLog(@"real %@", b);
     ToFromViewController *l = [[ToFromViewController alloc] initWithNibName:nil bundle:nil];
    
-    [l setBayArea:b];
+    [l setSupportedRegion:b];
     // Tell NSXMLParser that this class is its delegate
    // [parser selfDelegate:self];
     

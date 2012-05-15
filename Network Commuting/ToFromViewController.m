@@ -14,7 +14,7 @@
 #import "DateTimeViewController.h"
 #import "TestFlightSDK1/TestFlight.h"
 
-static bayArea *b_area;
+static SupportedRegion *b_area;
 @interface ToFromViewController()
 {
     // Variables for internal use
@@ -53,13 +53,8 @@ static bayArea *b_area;
 @synthesize tripDate;
 @synthesize tripDateLastChangedByUser;
 @synthesize connecting;
-@synthesize rkBayArea;
-<<<<<<< HEAD
+@synthesize rkSupportedRegion;
 @synthesize editMode;
-=======
-@synthesize selectedCell;
-
->>>>>>> apprikaTP1
 
 // Constants for animating up and down the To: field
 int const MAIN_TABLE_HEIGHT = 358;
@@ -186,12 +181,12 @@ int const TIME_DATE_HEIGHT = 45;
 }
 
 
-- (void)setRk:(RKObjectManager *)rkBayAreaa
+- (void)setRkSupportedRegion:(RKObjectManager *)rkSR
 {
-    rkBayArea = rkBayAreaa;
+    rkSupportedRegion = rkSR;
     
     // Add the mapper from Plan class to this Object Manager
-    [[rkBayArea mappingProvider] setMapping:[Plan objectMappingforPlanner:BAYAREA_PLANNER] forKeyPath:@"graphMetadata"];
+    [[rkSupportedRegion mappingProvider] setMapping:[Plan objectMappingforPlanner:BAYAREA_PLANNER] forKeyPath:@"graphMetadata"];
 }
 
 - (void)setLocations:(Locations *)l
@@ -352,7 +347,7 @@ int const TIME_DATE_HEIGHT = 45;
     
     if (isFrom) {
         fromLocation = loc;
-        [self bayAreaAvailibility:fromLocation];
+        [self supportedRegionAvailibility:fromLocation];
         
 //        if ([fromLocation formattedAddress] == @"Current Location") {
 //            double latitude = [[fromLocation lat] doubleValue];
@@ -368,7 +363,7 @@ int const TIME_DATE_HEIGHT = 45;
         
     } else {
         toLocation = loc;
-        [self bayAreaAvailibility:toLocation];       
+        [self supportedRegionAvailibility:toLocation];       
 //        double latitude = [[toLocation lat] doubleValue];
 //        double longitude = [[toLocation lng] doubleValue];        
 //        NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv", latitude, longitude];   
@@ -448,7 +443,6 @@ int const TIME_DATE_HEIGHT = 45;
 //
 - (void)setEditMode:(ToFromEditMode)newEditMode
 {
-<<<<<<< HEAD
     if (editMode == newEditMode) {
         return;  // If no change in mode return immediately
     }
@@ -495,12 +489,6 @@ int const TIME_DATE_HEIGHT = 45;
         [mainTable insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
         [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
         [mainTable endUpdates];
-=======
-    if (direction == UP && !isToTableRaised) {
-        isToTableRaised = TRUE;
-        [mainTable deleteSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
-
->>>>>>> apprikaTP1
     }
     else if (newEditMode == TO_EDIT && oldEditMode == FROM_EDIT) {
         // Note: this code is not used yet -- it is here as a placeholder
@@ -702,7 +690,7 @@ int const TIME_DATE_HEIGHT = 45;
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
--(void)bayAreaAvailibility:(Location *)loc
+-(void)supportedRegionAvailibility:(Location *)loc
 {
     if( [loc formattedAddress] != nil){       
         
@@ -724,9 +712,9 @@ int const TIME_DATE_HEIGHT = 45;
     }
 }
 
--(void)setBayArea:(bayArea *)bay
+-(void)setSupportedRegion:(SupportedRegion *)bay
 {
-    b_area = [[bayArea alloc] init];
+    b_area = [[SupportedRegion alloc] init];
     b_area = bay;
     
 }

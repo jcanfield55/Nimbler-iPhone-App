@@ -96,42 +96,10 @@
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-<<<<<<< HEAD
     NSLog(@"Select Row: isFrom=%d, section=%d, row=%d", isFrom, [indexPath section], [indexPath row]);
     if ([toFromVC editMode] == NO_EDIT && [indexPath section] == 0) { // "Enter New Address" cell
         if (isFrom) {
             [toFromVC setEditMode:FROM_EDIT]; 
-=======
-    if ([indexPath section] > 0) {   // if it is not the first row (which is the 'enter new address row'
-        Location *loc = [locations locationAtIndex:([indexPath row]) isFrom:isFrom];  //selected Location 
-        
-        // Set the new checkmark and fill the corresponding text box with the formatted address from the selected location
-        
-        if (selectedCell) { // if a previous cell is selected
-            //selectedCell.accessoryType = UITableViewCellAccessoryNone; // turn off its selector
-            selectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
-        }
-        selectedCell = [tableView cellForRowAtIndexPath:indexPath];  // get the new selected cell
-        selectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
-        
-        // Update the ToFromViewController
-        [toFromVC updateGeocodeStatus:FALSE isFrom:isFrom]; // let know this table is no longer waiting for geocoding
-        [toFromVC updateToFromLocation:self isFrom:isFrom location:loc]; // update with new location
-        
-        // Update selectedLocation in locations, 
-        selectedLocation = loc;
-        [locations updateSelectedLocation:loc isFrom:isFrom]; // puts loc at the top of the sort order
-        
-        // Prepare to kill the keyboard
-        isSelectionKillKeyboard1 = TRUE;
-        isSelectionKillKeyboard2 = TRUE;
-        
-        // Clear the txtField if it is not clear already
-        [txtField setText:@""];
-        // reload the matching text tables with latest data
-        if (isFrom) {  
-            [locations setTypedFromString:@""];  
->>>>>>> apprikaTP1
         } else {
             [toFromVC setEditMode:TO_EDIT];
         }

@@ -67,7 +67,7 @@
 		CC6FE2BE155BC427004BE10A /* rootMap.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6FE2BD155BC427004BE10A /* rootMap.m */; };
 		CC6FE2C0155BC42E004BE10A /* rootMap.xib in Resources */ = {isa = PBXBuildFile; fileRef = CC6FE2BF155BC42E004BE10A /* rootMap.xib */; };
 		CC6FE2C2155BD02E004BE10A /* dot.png in Resources */ = {isa = PBXBuildFile; fileRef = CC6FE2C1155BD02E004BE10A /* dot.png */; };
-		CC7E76FF155D367B002AB3F5 /* bayArea.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7E76FE155D367B002AB3F5 /* bayArea.m */; };
+		CC7E76FF155D367B002AB3F5 /* SupportedRegion.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7E76FE155D367B002AB3F5 /* SupportedRegion.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -830,8 +830,8 @@
 		CC6FE2BD155BC427004BE10A /* rootMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = rootMap.m; sourceTree = "<group>"; };
 		CC6FE2BF155BC42E004BE10A /* rootMap.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = rootMap.xib; sourceTree = "<group>"; };
 		CC6FE2C1155BD02E004BE10A /* dot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dot.png; sourceTree = "<group>"; };
-		CC7E76FD155D367B002AB3F5 /* bayArea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bayArea.h; sourceTree = "<group>"; };
-		CC7E76FE155D367B002AB3F5 /* bayArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = bayArea.m; sourceTree = "<group>"; };
+		CC7E76FD155D367B002AB3F5 /* SupportedRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SupportedRegion.h; sourceTree = "<group>"; };
+		CC7E76FE155D367B002AB3F5 /* SupportedRegion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SupportedRegion.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2313,8 +2313,8 @@
 				52B7421C14E1FFA200D817D1 /* UtilityFunctions.h */,
 				52B7421D14E1FFA200D817D1 /* UtilityFunctions.m */,
 				52CF43A814BDF2F9000565D6 /* Supporting Files */,
-				CC7E76FD155D367B002AB3F5 /* bayArea.h */,
-				CC7E76FE155D367B002AB3F5 /* bayArea.m */,
+				CC7E76FD155D367B002AB3F5 /* SupportedRegion.h */,
+				CC7E76FE155D367B002AB3F5 /* SupportedRegion.m */,
 			);
 			name = Nimbler;
 			path = "Network Commuting";
@@ -2642,7 +2642,7 @@
 				CC6FE2B8155BA40D004BE10A /* MyAnnotation.m in Sources */,
 				CC6FE2BB155BC416004BE10A /* Error.m in Sources */,
 				CC6FE2BE155BC427004BE10A /* rootMap.m in Sources */,
-				CC7E76FF155D367B002AB3F5 /* bayArea.m in Sources */,
+				CC7E76FF155D367B002AB3F5 /* SupportedRegion.m in Sources */,
 				5297F2DF1560CA200032D015 /* DateTimeViewController.m in Sources */,
 				5297F2E11560CAC20032D015 /* ToFromTableViewController.m in Sources */,
 			);
