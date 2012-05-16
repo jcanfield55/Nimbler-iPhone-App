@@ -10,15 +10,15 @@
 		</data>
 		<key>DateTimeViewController.nib</key>
 		<data>
-		RLwgV8Lz9HVtosdudrsgBKyCC0k=
+		kLew+pjWOsS3gKrEpSpSgNxaB9s=
 		</data>
 		<key>FeedbackViewController.nib</key>
 		<data>
-		QpXYAWyNwoSJ7ZmQCIODCxwAiNo=
+		7PyE/g/+2w5A5m9x7OaTOFCi6/Y=
 		</data>
 		<key>LegMapViewController.nib</key>
 		<data>
-		b28dMDvn+vGYmc5rl5cPBpFuJG4=
+		b6+PKqUEdau2SC7iOgGEqV/NVjo=
 		</data>
 		<key>Network_Commuting.momd/Network_Commuting 0.3.mom</key>
 		<data>
@@ -48,9 +48,13 @@
 		<data>
 		aIKPipHqu2RXv9MVRyZGLPZ4FWY=
 		</data>
+		<key>RootMap.nib</key>
+		<data>
+		OBM04wisyv0HzxVOj1OiSmG2p3k=
+		</data>
 		<key>ToFromViewController.nib</key>
 		<data>
-		N/9hSoXZ36M5q1acrYIc4yzsHj0=
+		3MXmqTKclX9nmpXBM5Kt/l9d5dw=
 		</data>
 		<key>dot.png</key>
 		<data>
@@ -72,13 +76,21 @@
 		<data>
 		BWDofZ29ul9r9Wzj1NCC7H7PiS0=
 		</data>
+		<key>playRec.png</key>
+		<data>
+		pe5Q8eYsgVuiuP4BM5p8reJ8H7I=
+		</data>
+		<key>rec_up.png</key>
+		<data>
+		comMWd4hu2HNqU/77YxNNMfdjwg=
+		</data>
 		<key>release_notes.txt</key>
 		<data>
 		KPxFmmEMgGlDFbMAtKPe58wmtME=
 		</data>
-		<key>rootMap.nib</key>
+		<key>stopRec.png</key>
 		<data>
-		eZOzk8UmGG1mpHWXnJKH9IEcvxo=
+		Pqyyexk9INTeeUIXS3ygazUBmn4=
 		</data>
 	</dict>
 	<key>rules</key>
