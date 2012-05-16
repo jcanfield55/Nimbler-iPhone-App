@@ -33,9 +33,9 @@
     // Configure the RestKit RKClient object for Geocoding and trip planning
     RKObjectManager* rk_geo_mgr = [RKObjectManager objectManagerWithBaseURL:@"http://maps.googleapis.com/maps/api/geocode/"];
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
-    // RKObjectManager* rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-204-236-191-166.us-west-1.compute.amazonaws.com:8080/opentripplanner-api-webapp/ws/"];
+    // RKObjectManager* rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-23-23-210-156.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"];
+    // OpenPlans SFBay demo URL is: [RKObjectManager objectManagerWithBaseURL:@"http://sfbay.deployer.opentripplanner.org/opentripplanner-api-webapp/ws/"];
     RKObjectManager* rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-23-23-210-156.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"];
-    
     rkSupportedRegion = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-23-23-210-156.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/metadata"];
     
         
@@ -260,7 +260,7 @@
 {
     //http://ec2-107-21-80-36.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/metadata"
         
-    NSString *urlString = [NSString stringWithFormat:@"http://ec2-204-236-191-166.us-west-1.compute.amazonaws.com:8080/opentripplanner-api-webapp/ws/metadata?output=xml"];   
+    NSString *urlString = [NSString stringWithFormat:@"http://ec2-23-23-210-156.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/metadata?output=xml"];   
     NSURL *url = [NSURL URLWithString:urlString];
     NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil]; 
     NSLog(@"Full String: %@", locationString);

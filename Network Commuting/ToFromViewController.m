@@ -526,6 +526,9 @@ int const TIME_DATE_HEIGHT = 45;
         
         @try {
             [connecting dismissWithClickedButtonIndex:0 animated:NO];
+            NSDate* now = [NSDate date];
+            NSLog(@"Plan returned at %@; time to return %f", now, 
+                  [[toLocation dateLastUsed] timeIntervalSinceNow]);
             if (objects && [objects objectAtIndex:0]) {
                 plan = [objects objectAtIndex:0];
                 NSLog(@"Planning object: %@", [plan ncDescription]);
@@ -587,8 +590,9 @@ int const TIME_DATE_HEIGHT = 45;
         [fromLocation incrementFromFrequency];
         [toLocation incrementToFrequency];
         // Update the dateLastUsed
-        [fromLocation setDateLastUsed:[NSDate date]];
-        [toLocation setDateLastUsed:[NSDate date]];
+        NSDate* now = [NSDate date];
+        [fromLocation setDateLastUsed:now];
+        [toLocation setDateLastUsed:now];
         // Save db context with the new location frequencies & dates
         saveContext(managedObjectContext);
         
@@ -628,6 +632,9 @@ int const TIME_DATE_HEIGHT = 45;
                                        @"date", [NSDate date], nil]];  
         
         NSLog(@"Plan resource: %@", planURLResource);
+        NSLog(@"From: %@", [fromLocation formattedAddress]);
+        NSLog(@"To: %@", [toLocation formattedAddress]);
+        NSLog(@"Plan requested at: %@", now);
         
         // Call the trip planner
         [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
