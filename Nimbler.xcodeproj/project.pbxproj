@@ -62,16 +62,16 @@
 		52F67EEB14C76504007578D5 /* GeoRectangle.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F67EEA14C76504007578D5 /* GeoRectangle.m */; };
 		52FD9D1F1527F84A002BA2B3 /* Blue_dot_7px.gif in Resources */ = {isa = PBXBuildFile; fileRef = 52FD9D1E1527F84A002BA2B3 /* Blue_dot_7px.gif */; };
 		CC35E729155965E7003995D8 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 522C0E6A15588E7A0072ADD6 /* libz.dylib */; };
+		CC5789BF1564C8EB0057D5A7 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6F22E71563AD360066DFA9 /* AVFoundation.framework */; };
+		CC578A03156520B60057D5A7 /* feedback.png in Resources */ = {isa = PBXBuildFile; fileRef = CC578A02156520B50057D5A7 /* feedback.png */; };
+		CC578A0515652D2A0057D5A7 /* pausePlay.png in Resources */ = {isa = PBXBuildFile; fileRef = CC578A0415652D2A0057D5A7 /* pausePlay.png */; };
 		CC6F22E6156391D90066DFA9 /* rec_up.png in Resources */ = {isa = PBXBuildFile; fileRef = CC6F22E5156391D90066DFA9 /* rec_up.png */; };
 		CC6F22F01563C8890066DFA9 /* stopRec.png in Resources */ = {isa = PBXBuildFile; fileRef = CC6F22EF1563C8890066DFA9 /* stopRec.png */; };
 		CC6F22F21563CEC20066DFA9 /* playRec.png in Resources */ = {isa = PBXBuildFile; fileRef = CC6F22F11563CEC20066DFA9 /* playRec.png */; };
-		CC6F22F51563D7450066DFA9 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6F22E71563AD360066DFA9 /* AVFoundation.framework */; };
-		CC6F22F61563D74D0066DFA9 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6F22F31563D2BB0066DFA9 /* CoreAudio.framework */; };
 		CC6FE2B8155BA40D004BE10A /* MyAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6FE2B7155BA40D004BE10A /* MyAnnotation.m */; };
 		CC6FE2BB155BC416004BE10A /* Error.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6FE2BA155BC416004BE10A /* Error.m */; };
 		CC6FE2C2155BD02E004BE10A /* dot.png in Resources */ = {isa = PBXBuildFile; fileRef = CC6FE2C1155BD02E004BE10A /* dot.png */; };
 		CCBE9FEE15627D6D00908A78 /* FeedBackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CCBE9FEC15627D6D00908A78 /* FeedBackViewController.m */; };
-		CCBE9FF115627E5300908A78 /* FeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CCBE9FF015627E5300908A78 /* FeedbackViewController.xib */; };
 		CCBE9FF41562867600908A78 /* SupportedRegion.m in Sources */ = {isa = PBXBuildFile; fileRef = CCBE9FF31562867600908A78 /* SupportedRegion.m */; };
 		CCBE9FF715628F5000908A78 /* RootMap.m in Sources */ = {isa = PBXBuildFile; fileRef = CCBE9FF615628F4F00908A78 /* RootMap.m */; };
 		CCBE9FF915628F5700908A78 /* RootMap.xib in Resources */ = {isa = PBXBuildFile; fileRef = CCBE9FF815628F5700908A78 /* RootMap.xib */; };
@@ -829,12 +829,12 @@
 		52F67EEA14C76504007578D5 /* GeoRectangle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = GeoRectangle.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		52F67EEC14C7E103007578D5 /* enums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = enums.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		52FD9D1E1527F84A002BA2B3 /* Blue_dot_7px.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Blue_dot_7px.gif; sourceTree = "<group>"; };
+		CC578A02156520B50057D5A7 /* feedback.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = feedback.png; sourceTree = "<group>"; };
+		CC578A0415652D2A0057D5A7 /* pausePlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pausePlay.png; sourceTree = "<group>"; };
 		CC6F22E5156391D90066DFA9 /* rec_up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rec_up.png; sourceTree = "<group>"; };
 		CC6F22E71563AD360066DFA9 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		CC6F22ED1563B2300066DFA9 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		CC6F22EF1563C8890066DFA9 /* stopRec.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stopRec.png; sourceTree = "<group>"; };
 		CC6F22F11563CEC20066DFA9 /* playRec.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playRec.png; sourceTree = "<group>"; };
-		CC6F22F31563D2BB0066DFA9 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		CC6FE2B6155BA403004BE10A /* MyAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAnnotation.h; sourceTree = "<group>"; };
 		CC6FE2B7155BA40D004BE10A /* MyAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAnnotation.m; sourceTree = "<group>"; };
 		CC6FE2B9155BC411004BE10A /* Error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Error.h; sourceTree = "<group>"; };
@@ -842,7 +842,6 @@
 		CC6FE2C1155BD02E004BE10A /* dot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dot.png; sourceTree = "<group>"; };
 		CCBE9FEB15627D6D00908A78 /* FeedBackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedBackViewController.h; sourceTree = "<group>"; };
 		CCBE9FEC15627D6D00908A78 /* FeedBackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedBackViewController.m; sourceTree = "<group>"; };
-		CCBE9FF015627E5300908A78 /* FeedbackViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedbackViewController.xib; sourceTree = "<group>"; };
 		CCBE9FF21562866F00908A78 /* SupportedRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SupportedRegion.h; sourceTree = "<group>"; };
 		CCBE9FF31562867600908A78 /* SupportedRegion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SupportedRegion.m; sourceTree = "<group>"; };
 		CCBE9FF515628F4800908A78 /* RootMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootMap.h; sourceTree = "<group>"; };
@@ -855,8 +854,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CC6F22F61563D74D0066DFA9 /* CoreAudio.framework in Frameworks */,
-				CC6F22F51563D7450066DFA9 /* AVFoundation.framework in Frameworks */,
+				CC5789BF1564C8EB0057D5A7 /* AVFoundation.framework in Frameworks */,
 				CC35E729155965E7003995D8 /* libz.dylib in Frameworks */,
 				527E174A151EB9CD00CDBC23 /* QuartzCore.framework in Frameworks */,
 				525C20FB151D3B03004F8FE0 /* CoreLocation.framework in Frameworks */,
@@ -2227,6 +2225,7 @@
 		52CF439014BDF2F8000565D6 = {
 			isa = PBXGroup;
 			children = (
+				CC6F22E71563AD360066DFA9 /* AVFoundation.framework */,
 				522C0E6A15588E7A0072ADD6 /* libz.dylib */,
 				52BA18AC1549000D009125A3 /* logo_big_iPh.png */,
 				52BA18AA15490006009125A3 /* logo_small_iPh.png */,
@@ -2252,9 +2251,6 @@
 		52CF439E14BDF2F9000565D6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				CC6F22F31563D2BB0066DFA9 /* CoreAudio.framework */,
-				CC6F22ED1563B2300066DFA9 /* AudioToolbox.framework */,
-				CC6F22E71563AD360066DFA9 /* AVFoundation.framework */,
 				527E1749151EB9CD00CDBC23 /* QuartzCore.framework */,
 				525C20F8151D3AF5004F8FE0 /* MapKit.framework */,
 				525442CB14C3ED8A004B0E1F /* libxml2.dylib */,
@@ -2275,6 +2271,8 @@
 		52CF43A714BDF2F9000565D6 /* Nimbler */ = {
 			isa = PBXGroup;
 			children = (
+				CC578A0415652D2A0057D5A7 /* pausePlay.png */,
+				CC578A02156520B50057D5A7 /* feedback.png */,
 				CC6F22F11563CEC20066DFA9 /* playRec.png */,
 				CC6F22EF1563C8890066DFA9 /* stopRec.png */,
 				CC6F22E5156391D90066DFA9 /* rec_up.png */,
@@ -2341,7 +2339,6 @@
 				52CF43A814BDF2F9000565D6 /* Supporting Files */,
 				CCBE9FEB15627D6D00908A78 /* FeedBackViewController.h */,
 				CCBE9FEC15627D6D00908A78 /* FeedBackViewController.m */,
-				CCBE9FF015627E5300908A78 /* FeedbackViewController.xib */,
 			);
 			name = Nimbler;
 			path = "Network Commuting";
@@ -2608,11 +2605,12 @@
 				522C0E6815588D830072ADD6 /* README.txt in Resources */,
 				522C0E6915588D830072ADD6 /* release_notes.txt in Resources */,
 				CC6FE2C2155BD02E004BE10A /* dot.png in Resources */,
-				CCBE9FF115627E5300908A78 /* FeedbackViewController.xib in Resources */,
 				CCBE9FF915628F5700908A78 /* RootMap.xib in Resources */,
 				CC6F22E6156391D90066DFA9 /* rec_up.png in Resources */,
 				CC6F22F01563C8890066DFA9 /* stopRec.png in Resources */,
 				CC6F22F21563CEC20066DFA9 /* playRec.png in Resources */,
+				CC578A03156520B60057D5A7 /* feedback.png in Resources */,
+				CC578A0515652D2A0057D5A7 /* pausePlay.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

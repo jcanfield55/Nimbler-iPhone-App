@@ -92,8 +92,8 @@
             NSLog(@"%@",firstSplit);
             for(int i=0;i<[firstSplit count];i++){
                 NSString *str=[firstSplit objectAtIndex:i];               
-                if ([str length] > 40) {
-                    str = [str substringToIndex:40];
+                if ([str length] > 37) {
+                    str = [str substringToIndex:37];
                     if(i==0){
                         add1 = [str stringByAppendingString:@"...\n"];
                         NSLog(@"Saperate %@",str);
