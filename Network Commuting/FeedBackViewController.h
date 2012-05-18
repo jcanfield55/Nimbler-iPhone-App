@@ -16,5 +16,8 @@
     AVAudioPlayer *audioPlayer;
 }
 @property (nonatomic,retain) UIActivityIndicatorView * actSpinner;
+@property(nonatomic,retain) UITextField *textFieldRounded;
+@property(nonatomic,retain) UILabel *label;
+
 -(void)setUpUI;
 @end

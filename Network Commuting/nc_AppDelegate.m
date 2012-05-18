@@ -35,7 +35,7 @@
     //RKObjectManager* rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-107-21-80-36.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"];
      RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/"];
     
-    RKObjectManager *rkbatarea = [RKObjectManager objectManagerWithBaseURL:@"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/metadata"];
+    RKObjectManager *rkRegionArea = [RKObjectManager objectManagerWithBaseURL:@"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/metadata"];
     
         
     // Other URLs:
@@ -48,7 +48,7 @@
        rkMOS = [RKManagedObjectStore objectStoreWithStoreFilename:@"store.data"];
         [rk_geo_mgr setObjectStore:rkMOS];
         [rkPlanMgr setObjectStore:rkMOS];
-        [rkbatarea setObjectStore:rkMOS];
+        [rkRegionArea setObjectStore:rkMOS];
     }
     @catch (NSException *exception) {
         NSLog(@"Exception:");
@@ -62,7 +62,7 @@
     toFromViewController = [[ToFromViewController alloc] initWithNibName:nil bundle:nil];
     [toFromViewController setRkGeoMgr:rk_geo_mgr];    // Pass the geocoding RK object
     [toFromViewController setRkPlanMgr:rkPlanMgr];    // Pass the planning RK object
-    [toFromViewController setRkBayArea:rkbatarea];    // pass the bayArea Rk objects
+    [toFromViewController setRkBayArea:rkRegionArea];    // pass the bayArea Rk objects
     
     // Turn on location manager
     locationManager = [[CLLocationManager alloc] init];

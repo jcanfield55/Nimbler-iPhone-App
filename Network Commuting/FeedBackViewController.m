@@ -7,11 +7,13 @@
 //
 
 #import "FeedBackViewController.h"
-
+#import <RestKit/Restkit.h>
 
 @implementation FeedBackViewController
 
 @synthesize actSpinner;
+@synthesize textFieldRounded;
+@synthesize label;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -133,8 +135,7 @@
             
             [audioPlayer play];
         }
-    }
-    
+    }    
 }
 
 
@@ -148,6 +149,8 @@
 -(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
 {
     NSLog(@"SuccessFully Playing");
+    
+    
 }
 -(void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player error:(NSError *)error
 {
@@ -168,7 +171,7 @@
 {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [button addTarget:self 
-               action:@selector(startRecord)
+               action:@selector(startRecording)
      forControlEvents:UIControlEventTouchDown];
     [button setImage:[UIImage imageNamed:@"rec_up.png"] forState:UIControlStateNormal];
     button.frame = CGRectMake(100.0, 45.0, 40.0, 40.0);
@@ -199,6 +202,14 @@
     playRec.frame = CGRectMake(250.0, 45.0, 40.0, 40.0);
     [self.view addSubview:playRec];
     
+    UIButton *submit = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [submit addTarget:self 
+                action:@selector(playRecordedFile)
+      forControlEvents:UIControlEventTouchDown];
+    
+    submit.frame = CGRectMake(220.0, 320.0, 80.0, 25.0);
+    [self.view addSubview:submit];
+    
 	AVAudioSession * audioSession = [AVAudioSession sharedInstance];
 	[audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
 	[audioSession setActive:YES error: nil];
@@ -206,6 +217,36 @@
     actSpinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     [actSpinner setCenter:CGPointMake(320/2.0, 460/2.0)]; // I do this because I'm in landscape mode
     [self.view addSubview:actSpinner];
+    
+    
+    textFieldRounded = [[UITextField alloc] initWithFrame:CGRectMake(20, 150, 280, 100)];
+    textFieldRounded.borderStyle = UITextBorderStyleRoundedRect;
+    textFieldRounded.textColor = [UIColor blackColor]; 
+    textFieldRounded.font = [UIFont systemFontOfSize:17.0]; 
+    textFieldRounded.placeholder = @"Lorem ipsum dolor sit er elite lamet, consectetatur etc....";  //place holder
+    textFieldRounded.autocorrectionType = UITextAutocorrectionTypeNo;   
+    textFieldRounded.backgroundColor = [UIColor clearColor];
+    textFieldRounded.keyboardType = UIKeyboardTypeDefault;  
+    textFieldRounded.returnKeyType = UIReturnKeyDone;
+        
+    textFieldRounded.clearButtonMode = UITextFieldViewModeWhileEditing;
+    
+    [textFieldRounded setReturnKeyType: UIReturnKeyDone];
+    [self.view addSubview:textFieldRounded];    
+    textFieldRounded.delegate = self;
+    
+    label = [[UILabel alloc] initWithFrame:CGRectMake(15, 5, 200, 20)];
+    label.backgroundColor = [UIColor clearColor];
+    label.textAlignment = UITextAlignmentLeft; // UITextAlignmentCenter, UITextAlignmentLeft    
+    label.text = @"Voice Feedback";
+   
+    [self.view addSubview:label];
+    label = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, 300, 260)];
+    label.backgroundColor = [UIColor clearColor];
+    label.textAlignment = UITextAlignmentLeft; // UITextAlignmentCenter, UITextAlignmentLeft
+    
+    label.text = @"You can also write with text feedback";
+    [self.view addSubview:label];
 }
 
 @end

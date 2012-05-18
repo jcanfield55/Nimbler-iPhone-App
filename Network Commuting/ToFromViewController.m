@@ -583,8 +583,7 @@ int const TIME_DATE_HEIGHT = 45;
         
         if(fromLocation == toLocation){
              [connecting dismissWithClickedButtonIndex:0 animated:NO];
-            NSLog(@"Match----------->>>>>>>>>>>> %@  ,%@",fromLocation, toLocation);
-                    
+            NSLog(@"Match----------->>>>>>>>>>>> %@  ,%@",fromLocation, toLocation);                    
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"The To: and From: address are the same location.  Please choose a different destination." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
             [alert show];
             return true;

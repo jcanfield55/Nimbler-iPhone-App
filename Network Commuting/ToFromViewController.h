@@ -53,4 +53,5 @@ typedef enum {
 -(void)setBayArea:(SupportedRegion *)bay;
 -(void)bayAreaAvailibility:(Location *)loc;
 -(void)addLocationAction:(id) sender;
+
 @end
