@@ -7,13 +7,18 @@
 //
 
 #import "FeedBackViewController.h"
-#import <RestKit/Restkit.h>
+
+
 
 @implementation FeedBackViewController
 
 @synthesize actSpinner;
 @synthesize textFieldRounded;
 @synthesize label;
+//@synthesize rkTPResponse;
+@synthesize tpURLResource;
+@synthesize tpResponse;
+static RKObjectManager *rkTPResponse;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -42,9 +47,6 @@
     [super viewDidLoad];
     
     [self setUpUI];
-    
-   
-    
     
     // Do any additional setup after loading the view from its nib.
 }
@@ -146,11 +148,12 @@
     }    
 }
 
+
+
 -(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
 {
     NSLog(@"SuccessFully Playing");
-    
-    
+      
 }
 -(void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player error:(NSError *)error
 {
@@ -166,6 +169,49 @@
 {
     NSLog(@"Encoder Error occurred");
 }
+
+// One-time set-up of the RestKit Trip Planner Object Manager's mapping
+- (void)setRkTPResponse:(RKObjectManager *)rkTPResponse0
+{
+    rkTPResponse = rkTPResponse0;
+    [[rkTPResponse mappingProvider] setMapping:[TPResponse objectMappingforTPResponse:OTP_PLANNER] forKeyPath:@"tpResponse"];
+}
+
+// Delegate methods for when the RestKit has results from the Planner
+- (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects 
+{        
+   
+    NSLog(@"wel i");
+    if ([[objectLoader resourcePath] isEqualToString:tpURLResource]) 
+    {   
+        NSInteger statusCode = [[objectLoader response] statusCode];
+        NSLog(@"Planning HTTP status code = %d", statusCode);
+        
+        @try {
+            
+            if (objects && [objects objectAtIndex:0]) {
+                tpResponse = [objects objectAtIndex:0];
+                NSLog(@"success");
+            }
+        }
+        @catch (NSException *exception) {            
+            NSLog(@"Error object ==============================: %@", exception);            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"Trip is not possible. Your start or end point might not be safely accessible" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
+            [alert show];            
+            return ;
+        }
+        
+    }
+}
+
+- (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error {
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to send your feedback to Trip Planner" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alert show];    
+    NSLog(@"Error received from RKObjectManager:");
+    NSLog(@"%@", error);
+}
+
 
 -(void)setUpUI
 {
@@ -204,10 +250,10 @@
     
     UIButton *submit = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [submit addTarget:self 
-                action:@selector(playRecordedFile)
+                action:@selector(feedBackSubmit)
       forControlEvents:UIControlEventTouchDown];
     
-    submit.frame = CGRectMake(220.0, 320.0, 80.0, 25.0);
+    submit.frame = CGRectMake(220.0, 20.0, 80.0, 25.0);
     [self.view addSubview:submit];
     
 	AVAudioSession * audioSession = [AVAudioSession sharedInstance];
@@ -249,4 +295,26 @@
     [self.view addSubview:label];
 }
 
+
+-(void)feedBackSubmit
+{
+    NSLog(@" lkh %@", textFieldRounded.text);
+        
+    rkTPResponse = [RKObjectManager objectManagerWithBaseURL:@"http://10.0.0.38:8080/TPServer/ws/feedback/"];
+    [self setRkTPResponse:rkTPResponse];
+    NSString *str = @"send to server data";
+    NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
+                            @"deviceid",str, 
+                            @"trip", str, 
+                            @"source",str,
+                            @"formattype",str, 
+                            @"rating", str,
+                            nil];
+    tpURLResource = [@"new" appendQueryParams:params];
+        
+    NSLog(@"TP resource: %@", tpURLResource);
+    [rkTPResponse loadObjectsAtResourcePath:@"new" delegate:self];
+    NSLog(@"asf %@" ,rkTPResponse);
+    
+}
 @end

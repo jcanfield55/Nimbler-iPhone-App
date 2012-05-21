@@ -13,6 +13,7 @@
 #import "ToFromViewController.h"
 #import "Locations.h"
 #import "SupportedRegion.h"
+#import "FeedBackViewController.h"
 
 @interface nc_AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate> {
     Location* currentLocation;
@@ -22,6 +23,7 @@
 
 @property (readonly, strong, nonatomic) Locations *locations;
 @property (readonly, strong, nonatomic) ToFromViewController *toFromViewController;
+@property (readonly, strong, nonatomic) FeedBackViewController *feedbackView;
 @property (readonly, strong, nonatomic) CLLocationManager* locationManager;
 
 // Properties for Core Data

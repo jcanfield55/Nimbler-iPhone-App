@@ -54,4 +54,6 @@ dependencies: \
   /github-tp/NC_iPhone/RestKit/Build/RestKit/RKManagedObjectSeeder.h \
   /github-tp/NC_iPhone/RestKit/Build/RestKit/RKManagedObjectMapping.h \
   /github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectPropertyInspector+CoreData.h \
-  /github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectPropertyInspector.h
+  /github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectPropertyInspector.h \
+  /github-tp/NC_iPhone/Network\ Commuting/TPResponse.h \
+  /github-tp/NC_iPhone/Network\ Commuting/enums.h

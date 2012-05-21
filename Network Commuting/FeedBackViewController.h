@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import <RestKit/Restkit.h>
+#import <RestKit/CoreData.h>
+#import "TPResponse.h"
 
-@interface FeedBackViewController : UIViewController  <AVAudioRecorderDelegate, AVAudioPlayerDelegate>{
+@interface FeedBackViewController : UIViewController  <AVAudioRecorderDelegate, AVAudioPlayerDelegate,RKObjectLoaderDelegate>{
     
    	NSURL * recordedTmpFile;
     AVAudioRecorder *audioRecorder;
@@ -18,6 +21,10 @@
 @property (nonatomic,retain) UIActivityIndicatorView * actSpinner;
 @property(nonatomic,retain) UITextField *textFieldRounded;
 @property(nonatomic,retain) UILabel *label;
+//@property (strong, nonatomic) RKObjectManager *rkTPResponse; 
+@property (strong, nonatomic) TPResponse *tpResponse; 
 
+@property(nonatomic,retain) NSString *tpURLResource;
+- (void)setRkTPResponse:(RKObjectManager *)rkTPResponse0;
 -(void)setUpUI;
 @end

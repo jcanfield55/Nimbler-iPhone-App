@@ -23,6 +23,7 @@
     NSString *planURLResource; // URL resource sent to planner
     NSMutableArray *planRequestHistory; // Array of all the past plan request parameter histories in sequential order (most recent one last)
     Plan *plan;
+    SupportedRegion *sr;
     BOOL routeRequested;   // True when the user has pressed the route button and a route has not yet been requested
     NSManagedObjectContext *managedObjectContext;
     BOOL toGeocodeRequestOutstanding;  // true if there is an outstanding To geocode request
@@ -283,7 +284,6 @@ int const TIME_DATE_HEIGHT = 45;
                 // if fromTable is already in the subview (due to recycling, no need to add again
             } else { 
                 [cellView addSubview:fromTable]; // add fromTable
-                
             }
         }
         else {   // do same for toTable case
@@ -530,6 +530,7 @@ int const TIME_DATE_HEIGHT = 45;
         @catch (NSException *exception) {
              [connecting dismissWithClickedButtonIndex:0 animated:NO];
             NSLog(@"Error object ==============================: %@", exception);
+                        
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"Trip is not possible. Your start or end point might not be safely accessible" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
             [alert show];            
             return ;
@@ -583,7 +584,8 @@ int const TIME_DATE_HEIGHT = 45;
         
         if(fromLocation == toLocation){
              [connecting dismissWithClickedButtonIndex:0 animated:NO];
-            NSLog(@"Match----------->>>>>>>>>>>> %@  ,%@",fromLocation, toLocation);                    
+            NSLog(@"Match----------->>>>>>>>>>>> %@  ,%@",fromLocation, toLocation);
+                    
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"The To: and From: address are the same location.  Please choose a different destination." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
             [alert show];
             return true;

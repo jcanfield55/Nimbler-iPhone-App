@@ -21,5 +21,6 @@
 @property(nonatomic,strong) NSNumber *upperRightLatitude;
 @property(nonatomic,strong) NSNumber *upperRightLongitude;
 
-+ (RKManagedObjectMapping *)objectMappingforError:(APIType)tpt;
++ (RKManagedObjectMapping *)objectMappingforRegion:(APIType)apiType;
+
 @end

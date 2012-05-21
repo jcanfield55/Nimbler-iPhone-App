@@ -1,6 +1,6 @@
-dependencies: /github-tp/NC_iPhone/Network\ Commuting/main.m \
-  /github-tp/NC_iPhone/Network\ Commuting/nc_AppDelegate.h \
-  /github-tp/NC_iPhone/RestKit/Build/RestKit/Restkit.h \
+dependencies: /github-tp/NC_iPhone/Network\ Commuting/TPResponse.m \
+  /github-tp/NC_iPhone/Network\ Commuting/TPResponse.h \
+  /github-tp/NC_iPhone/RestKit/Build/RestKit/RestKit.h \
   /github-tp/NC_iPhone/RestKit/Build/RestKit/Network.h \
   /github-tp/NC_iPhone/RestKit/Build/RestKit/RKClient.h \
   /github-tp/NC_iPhone/RestKit/Build/RestKit/RKRequest.h \
@@ -54,19 +54,4 @@ dependencies: /github-tp/NC_iPhone/Network\ Commuting/main.m \
   /github-tp/NC_iPhone/RestKit/Build/RestKit/RKManagedObjectMapping.h \
   /github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectPropertyInspector+CoreData.h \
   /github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectPropertyInspector.h \
-  /github-tp/NC_iPhone/Network\ Commuting/ToFromViewController.h \
-  /github-tp/NC_iPhone/Network\ Commuting/ToFromTableViewController.h \
-  /github-tp/NC_iPhone/Network\ Commuting/Locations.h \
-  /github-tp/NC_iPhone/Network\ Commuting/Location.h \
-  /github-tp/NC_iPhone/Network\ Commuting/AddressComponent.h \
-  /github-tp/NC_iPhone/Network\ Commuting/enums.h \
-  /github-tp/NC_iPhone/Network\ Commuting/RawAddress.h \
-  /github-tp/NC_iPhone/Network\ Commuting/GeoRectangle.h \
-  /github-tp/NC_iPhone/Network\ Commuting/LatLng.h \
-  /github-tp/NC_iPhone/Network\ Commuting/Plan.h \
-  /github-tp/NC_iPhone/Network\ Commuting/PlanPlace.h \
-  /github-tp/NC_iPhone/Network\ Commuting/AgencyAndId.h \
-  /github-tp/NC_iPhone/Network\ Commuting/Itinerary.h \
-  /github-tp/NC_iPhone/Network\ Commuting/SupportedRegion.h \
-  /github-tp/NC_iPhone/Network\ Commuting/FeedBackViewController.h \
-  /github-tp/NC_iPhone/Network\ Commuting/TPResponse.h
+  /github-tp/NC_iPhone/Network\ Commuting/enums.h

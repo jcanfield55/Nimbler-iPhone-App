@@ -21,7 +21,7 @@
 @synthesize upperRightLongitude;
 
 
-+ (RKManagedObjectMapping *)objectMappingforError:(APIType)apiType
++ (RKManagedObjectMapping *)objectMappingforRegion:(APIType)apiType
 {
     // Create empty ObjectMapping to fill and return    
     RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[SupportedRegion class]];

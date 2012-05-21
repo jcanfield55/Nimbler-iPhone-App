@@ -20,6 +20,7 @@
 @synthesize locations;
 @synthesize locationManager;
 @synthesize toFromViewController;
+@synthesize feedbackView;
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
@@ -36,7 +37,7 @@
      RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/"];
     
     RKObjectManager *rkRegionArea = [RKObjectManager objectManagerWithBaseURL:@"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/metadata"];
-    
+
         
     // Other URLs:
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
@@ -62,8 +63,8 @@
     toFromViewController = [[ToFromViewController alloc] initWithNibName:nil bundle:nil];
     [toFromViewController setRkGeoMgr:rk_geo_mgr];    // Pass the geocoding RK object
     [toFromViewController setRkPlanMgr:rkPlanMgr];    // Pass the planning RK object
-    [toFromViewController setRkBayArea:rkRegionArea];    // pass the bayArea Rk objects
-    
+    [toFromViewController setRkBayArea:rkRegionArea];
+       
     // Turn on location manager
     locationManager = [[CLLocationManager alloc] init];
     [locationManager setDelegate:self];
