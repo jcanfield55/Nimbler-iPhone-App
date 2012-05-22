@@ -253,6 +253,9 @@ static Locations *locations;
 // returns the formatted address minus everything after the postal code
 - (NSString *)shortFormattedAddress  
 {
+    if (![self formattedAddress]) {
+        return NULL;  
+    }
     NSString* addr = [NSMutableString stringWithString:[self formattedAddress]];
     NSString* postalCode = [[[[self addressComponents] objectsPassingTest:^(id obj,BOOL *stop){
         AddressComponent* ac = obj;
@@ -265,10 +268,13 @@ static Locations *locations;
     if (postalCode && [postalCode length] > 0) {
         NSRange range = [addr rangeOfString:postalCode options:NSBackwardsSearch];
         if (range.location != NSNotFound) {
-            return [addr substringToIndex:range.location];  // return up to but not including postal_code
+            NSString* returnString = [addr substringToIndex:range.location];
+            if ([returnString length] > 0) { // check to make sure we have something to return (DE25 fix)
+                return returnString;  // return up to but not including postal_code
+            }
         }
     }
-    return addr;  // postal code not found, return whole string
+    return addr;  // postal code not found or in the front of string, return whole string
 }
 
 // Method to see whether two locations are effectively equivalent

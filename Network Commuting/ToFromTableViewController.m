@@ -124,7 +124,9 @@
     [toFromVC updateGeocodeStatus:FALSE isFrom:isFrom];  // let it know Geocode no longer outstanding
     
     // Clear txtField and select the current item
-    [txtField setText:@""];
+    if ([[txtField text] length] > 0) {  // Fix to DE22
+        [txtField setText:@""];  // reset txtField if it has been edited
+    }
     if (isFrom) {
         [locations setSelectedFromLocation:loc]; // Sort location to top of list  next time
         [locations setTypedFromString:@""];
