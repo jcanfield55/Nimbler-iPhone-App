@@ -10,11 +10,13 @@
 #import "Leg.h"
 #import "UtilityFunctions.h"
 #import <math.h>
+#import "FeedBackViewController.h"
+
 
 @implementation RouteOptionsViewController
 
 @synthesize plan;
-
+@synthesize feedBackPlanId;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -54,7 +56,12 @@
     }
     // Get the requested itinerary
     Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
-
+    
+    /*
+     for feedback planId
+     */
+    
+    
     // Set title
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
     NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)", 
@@ -88,8 +95,9 @@
 - (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     RouteDetailsViewController *routeDetailsVC = [[RouteDetailsViewController alloc] initWithStyle:UITableViewStylePlain];
+    [routeDetailsVC setFeedBackItinerary:[[feedBackPlanId sortedItineraries] objectAtIndex:[indexPath row]] ];
     [routeDetailsVC setItinerary:[[plan sortedItineraries] objectAtIndex:[indexPath row]]];
-    
+    NSLog(@"itit --------------- %@", [[[plan sortedItineraries] objectAtIndex:[indexPath row]] itinId]);
     [[self navigationController] pushViewController:routeDetailsVC animated:YES];
 }
 
@@ -97,10 +105,39 @@
 
 /*
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-}
 */
+ - (void)loadView
+{
+    [super loadView];
+    UIButton *submit = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [submit addTarget:self 
+               action:@selector(feedBackSubmit)
+     forControlEvents:UIControlEventTouchDown];
+    [submit setTitle:@"submit" forState:UIControlStateNormal];
+    submit.frame = CGRectMake(220.0, 370.0, 70.0, 25.0);
+    [super.view addSubview:submit];
+
+}
+
+-(void)setPlanIdFeedBack:(Plan *)plans
+{
+    feedBackPlanId = [Plan alloc] ;
+    feedBackPlanId = plans;
+    NSLog(@"plan id obj %@", feedBackPlanId);
+    NSLog(@"check %@", [feedBackPlanId planId]);
+}
+
+
+-(void)feedBackSubmit
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:@"1" forKey:@"source"];
+    [prefs setObject:[plan planId] forKey:@"uniqueid"];
+            
+    FeedBackViewController *legMapVC = [[FeedBackViewController alloc] initWithNibName:nil bundle:nil];   
+    [[self navigationController] pushViewController:legMapVC animated:YES];
+ 
+}
 
 /*
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.

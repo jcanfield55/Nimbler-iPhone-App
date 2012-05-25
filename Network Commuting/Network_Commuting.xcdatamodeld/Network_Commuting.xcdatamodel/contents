@@ -37,6 +37,7 @@
         <attribute name="endTime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="fareInCents" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="itineraryCreationDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="itinId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="startTime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="tooSloped" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="transfers" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
@@ -57,6 +58,7 @@
         <attribute name="interlineWithPreviousLeg" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="legGeometryLength" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="legGeometryPoints" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="legId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="mode" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="route" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="routeLongName" optional="YES" attributeType="String" syncable="YES"/>
@@ -92,6 +94,7 @@
     </entity>
     <entity name="Plan" representedClassName="Plan" syncable="YES">
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="planId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="fromLocation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="plan" inverseEntity="Location" syncable="YES"/>
         <relationship name="fromPlanPlace" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="PlanPlace" inverseName="plan" inverseEntity="PlanPlace" syncable="YES"/>
         <relationship name="itineraries" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Itinerary" inverseName="plan" inverseEntity="Itinerary" syncable="YES"/>
@@ -154,7 +157,7 @@
         <element name="AddressComponent" positionX="-54" positionY="36" width="128" height="90"/>
         <element name="BayArea" positionX="160" positionY="192" width="128" height="195"/>
         <element name="Error" positionX="160" positionY="192" width="128" height="120"/>
-        <element name="Itinerary" positionX="394" positionY="192" width="128" height="270"/>
+        <element name="Itinerary" positionX="394" positionY="192" width="128" height="285"/>
         <element name="Leg" positionX="97" positionY="432" width="128" height="330"/>
         <element name="Location" positionX="241" positionY="4116" width="128" height="270"/>
         <element name="Plan" positionX="268" positionY="45" width="128" height="135"/>

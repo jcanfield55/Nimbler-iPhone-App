@@ -69,4 +69,5 @@ dependencies: /github-tp/NC_iPhone/Network\ Commuting/main.m \
   /github-tp/NC_iPhone/Network\ Commuting/Itinerary.h \
   /github-tp/NC_iPhone/Network\ Commuting/SupportedRegion.h \
   /github-tp/NC_iPhone/Network\ Commuting/FeedBackViewController.h \
-  /github-tp/NC_iPhone/Network\ Commuting/TPResponse.h
+  /github-tp/NC_iPhone/Network\ Commuting/TPResponse.h \
+  /github-tp/NC_iPhone/RestKit/Build/Restkit/RKJSONParserJSONKit.h

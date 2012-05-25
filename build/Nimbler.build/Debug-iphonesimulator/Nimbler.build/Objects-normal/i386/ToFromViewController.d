@@ -76,4 +76,5 @@ dependencies: \
   /github-tp/NC_iPhone/Network\ Commuting/DateTimeViewController.h \
   /github-tp/NC_iPhone/Network\ Commuting/TestFlightSDK1/TestFlight.h \
   /github-tp/NC_iPhone/Network\ Commuting/FeedBackViewController.h \
-  /github-tp/NC_iPhone/Network\ Commuting/TPResponse.h
+  /github-tp/NC_iPhone/Network\ Commuting/TPResponse.h \
+  /github-tp/NC_iPhone/RestKit/Build/RestKit/RKJSONParserJSONKit.h

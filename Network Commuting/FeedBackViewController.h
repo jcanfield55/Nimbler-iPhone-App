@@ -11,12 +11,13 @@
 #import <RestKit/Restkit.h>
 #import <RestKit/CoreData.h>
 #import "TPResponse.h"
-
-@interface FeedBackViewController : UIViewController  <AVAudioRecorderDelegate, AVAudioPlayerDelegate,RKObjectLoaderDelegate>{
+#import "Plan.h"
+@interface FeedBackViewController : UIViewController  <AVAudioRecorderDelegate, AVAudioPlayerDelegate,RKObjectLoaderDelegate, RKRequestDelegate>{
     
-   	NSURL * recordedTmpFile;
+   	NSString *soundFilePath;
     AVAudioRecorder *audioRecorder;
     AVAudioPlayer *audioPlayer;
+
 }
 @property (nonatomic,retain) UIActivityIndicatorView * actSpinner;
 @property(nonatomic,retain) UITextField *textFieldRounded;
@@ -27,4 +28,5 @@
 @property(nonatomic,retain) NSString *tpURLResource;
 - (void)setRkTPResponse:(RKObjectManager *)rkTPResponse0;
 -(void)setUpUI;
+-(void)setPlanForTPFeedBack:(Plan *)plan;
 @end

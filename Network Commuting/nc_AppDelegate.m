@@ -35,10 +35,7 @@
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
     //RKObjectManager* rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-107-21-80-36.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"];
      RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/"];
-    
-    RKObjectManager *rkRegionArea = [RKObjectManager objectManagerWithBaseURL:@"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/metadata"];
-
-        
+           
     // Other URLs:
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
     // NY City demo URL is http://demo.opentripplanner.org/opentripplanner-api-webapp/ws/
@@ -49,11 +46,7 @@
        rkMOS = [RKManagedObjectStore objectStoreWithStoreFilename:@"store.data"];
         [rk_geo_mgr setObjectStore:rkMOS];
         [rkPlanMgr setObjectStore:rkMOS];
-        [rkRegionArea setObjectStore:rkMOS];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"Exception:");
-    }
+
     
      [self bayArea];
     // Get the NSManagedObjectContext from restkit
@@ -63,7 +56,7 @@
     toFromViewController = [[ToFromViewController alloc] initWithNibName:nil bundle:nil];
     [toFromViewController setRkGeoMgr:rk_geo_mgr];    // Pass the geocoding RK object
     [toFromViewController setRkPlanMgr:rkPlanMgr];    // Pass the planning RK object
-    [toFromViewController setRkBayArea:rkRegionArea];
+
        
     // Turn on location manager
     locationManager = [[CLLocationManager alloc] init];
@@ -73,7 +66,10 @@
     // Initialize the Locations class and store "Current Location" into the database if not there already
     locations = [[Locations alloc] initWithManagedObjectContext:[self managedObjectContext]];
     [toFromViewController setLocations:locations];
-        
+   
+    }@catch (NSException *exception) {
+        NSLog(@"Exception: ----------------- %@", exception);
+    }   
     // Call TestFlightApp SDK
 #if !DEVELOPMENT
     [TestFlight takeOff:@"48a90a98948864a11c80bd2ecd7a7e5c_ODU5MzMyMDEyLTA1LTA3IDE5OjE3OjUwLjMxMDUyMg"];
@@ -257,33 +253,48 @@
 }
 
 -(void)bayArea
-{
-  NSString *urlString = [NSString stringWithFormat:@"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/metadata"];   
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil]; 
-    locationString = [locationString stringByReplacingOccurrencesOfString:@"{\""
-                                                               withString:@""];
-    locationString = [locationString stringByReplacingOccurrencesOfString:@"\":"
-                                                               withString:@","];
-    locationString = [locationString stringByReplacingOccurrencesOfString:@"\""
-                                                               withString:@""];
-    locationString = [locationString stringByReplacingOccurrencesOfString:@"}"
-                                                               withString:@""];
-    NSArray *areaLocation_array = [locationString componentsSeparatedByString:@","];
-    
-    SupportedRegion *region = [SupportedRegion alloc] ;
-    [region setLowerLeftLatitude:[areaLocation_array objectAtIndex:1]];
-    [region setLowerLeftLongitude:[areaLocation_array objectAtIndex:3]];
-    [region setMaxLatitude:[areaLocation_array objectAtIndex:5]];
-    [region setMaxLongitude:[areaLocation_array objectAtIndex:7]];
-    [region setMinLatitude:[areaLocation_array objectAtIndex:16]];
-    [region setMinLongitude:[areaLocation_array objectAtIndex:18]];
-    [region setUpperRightLatitude:[areaLocation_array objectAtIndex:20]];
-    [region setUpperRightLatitude:[areaLocation_array objectAtIndex:22]];
+{    
+    RKClient *client = [RKClient clientWithBaseURL:@"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/"];
+    [RKClient setSharedClient:client];
+    [[RKClient sharedClient]  get:@"metadata" delegate:self];
+  
+}
 
-    ToFromViewController *setRegion = [[ToFromViewController alloc] initWithNibName:nil bundle:nil];
-    [setRegion setBayArea:region];
-    
+- (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
+    if ([request isGET]) {  
+        NSLog(@"Got aresponse back from our GET! %@", [response bodyAsString]);      
+                   
+            NSError *error = nil;
+            if (error == nil)
+            {
+                RKJSONParserJSONKit* parser1 = [RKJSONParserJSONKit new];
+                NSDictionary  *p = [parser1 objectFromString:[response bodyAsString] error:nil];
+                
+                SupportedRegion *region = [SupportedRegion alloc] ;
+                for (id key in p) {
+                    if ([key isEqualToString:@"upperRightLatitude"]) {
+                        [region setUpperRightLatitude:[p objectForKey:key] ];
+                    } else if ([key isEqualToString:@"upperRightLongitude"]){
+                        [region setUpperRightLongitude:[p objectForKey:key] ];
+                    } else if ([key isEqualToString:@"minLongitude"]){
+                        [region setMinLongitude:[p objectForKey:key] ];
+                    } else if ([key isEqualToString:@"minLatitude"]){
+                        [region setMinLatitude:[p objectForKey:key] ];
+                    } else if ([key isEqualToString:@"maxLongitude"]){
+                        [region setMaxLongitude:[p objectForKey:key] ];
+                    } else if ([key isEqualToString:@"maxLatitude"]){
+                        [region setMaxLatitude:[p objectForKey:key] ];
+                    } else if ([key isEqualToString:@"lowerLeftLongitude"]){
+                        [region setLowerLeftLongitude:[p objectForKey:key] ];
+                    } else if ([key isEqualToString:@"lowerLeftLatitude"]){
+                        [region setLowerLeftLatitude:[p objectForKey:key] ];
+                    } 
+                }
+                
+                ToFromViewController *setRegion = [[ToFromViewController alloc] initWithNibName:nil bundle:nil];
+                [setRegion setBayArea:region];
+            }
+    }
 }
 
 @end

@@ -57,14 +57,7 @@
         UIBarButtonItem* bbi = [[UIBarButtonItem alloc] initWithCustomView:container];
          */
         
-        // TODO make this work with iOS 4.0, and get better formatting
-//        UIBarButtonItem* forwardBBI = [[UIBarButtonItem alloc] initWithTitle:@"For" style:UIBarButtonItemStylePlain target:self action:@selector(navigateForward:)];
-//        UIBarButtonItem* bakBBI = [[UIBarButtonItem alloc] initWithTitle:@"Bak" style:UIBarButtonItemStylePlain target:self action:@selector(navigateBack:)];
-//        NSArray* bbiArray = [NSArray arrayWithObjects:forwardBBI, bakBBI, nil];
-//        [[self navigationItem] setRightBarButtonItems:bbiArray];
-        
-        
-               
+                
         
         Bak = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRewind target:self action:@selector(navigateBack:)]; 
         
@@ -100,6 +93,7 @@
     [endPoint setCoordinate:[[[sortedLegs objectAtIndex:([sortedLegs count]-1)] polylineEncodedString] endCoord]];
     [mapView addAnnotation:endPoint];
 
+        
     // Add the overlays and dot AnnotationViews for paths to the mapView
     polyLineArray = [NSMutableArray array];
     for (int i=0; i < [sortedLegs count]; i++) {
@@ -267,6 +261,9 @@
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     [TestFlight openFeedbackView];
+    FeedBackViewController *legMapVC = [[FeedBackViewController alloc] initWithNibName:nil bundle:nil];   
+    [[self navigationController] pushViewController:legMapVC animated:YES];
+
 }
 
 // Callback for providing any annotation views
@@ -350,6 +347,12 @@
             if (([polyLineArray objectAtIndex:i] == overlay)) {
                 if (i == itineraryNumber-1) {
                     Leg *leg = [[itinerary sortedLegs] objectAtIndex:(itineraryNumber-1)];
+                    NSLog(@"leg id ========================= %@", [leg legId]);
+                    NSLog(@"Leg duration ===================  %@", [leg to]);
+                    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+                    [prefs setObject:@"3" forKey:@"source"];
+                    [prefs setObject:[leg legId] forKey:@"uniqueid"];
+                    
                     if([leg isWalk]){
                         aView.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:0.7] ;
                         aView.lineWidth = 5;

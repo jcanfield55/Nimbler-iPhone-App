@@ -36,8 +36,10 @@
 @dynamic itinerary;
 @dynamic steps;
 @dynamic to;
+@dynamic legId;
 @synthesize sortedSteps;
 @synthesize polylineEncodedString;
+
 
 static NSDateFormatter *timeFormattr;
 + (NSDateFormatter *)timeFormatter{
@@ -61,6 +63,7 @@ static NSDateFormatter *timeFormattr;
     if (apiType==OTP_PLANNER) {
         
         [mapping mapKeyPath:@"agencyId" toAttribute:@"agencyId"];
+         [mapping mapKeyPath:@"id" toAttribute:@"legId"];
         [mapping mapKeyPath:@"bogusNonTransitLeg" toAttribute:@"bogusNonTransitLeg"];
         [mapping mapKeyPath:@"distance" toAttribute:@"distance"];
         [mapping mapKeyPath:@"duration" toAttribute:@"duration"];

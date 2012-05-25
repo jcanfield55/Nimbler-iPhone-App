@@ -14,6 +14,19 @@
 @implementation RouteDetailsViewController
 
 @synthesize itinerary;
+@synthesize feedBackItinerary;
+
+-(void)loadView
+{
+    [super loadView];
+    UIButton *submit = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [submit addTarget:self 
+               action:@selector(feedBackSubmit)
+     forControlEvents:UIControlEventTouchDown];
+    [submit setTitle:@"submit" forState:UIControlStateNormal];
+    submit.frame = CGRectMake(220.0, 370.0, 70.0, 25.0);
+    [super.view addSubview:submit];
+}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -133,6 +146,19 @@
     
     [[self navigationController] pushViewController:legMapVC animated:YES];
 }
+
+
+-(void)feedBackSubmit
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:@"2" forKey:@"source"];
+    [prefs setObject:[itinerary itinId] forKey:@"uniqueid"];
+    
+    FeedBackViewController *legMapVC = [[FeedBackViewController alloc] initWithNibName:nil bundle:nil];   
+    [[self navigationController] pushViewController:legMapVC animated:YES];
+    
+}
+
 
 - (void)mapOverView
 {

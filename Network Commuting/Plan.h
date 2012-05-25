@@ -16,6 +16,7 @@
 @interface Plan : NSManagedObject
 
 @property(nonatomic, strong) NSDate *date;
+@property(nonatomic, strong) NSString *planId;
 @property(nonatomic,strong) PlanPlace *fromPlanPlace;
 @property(nonatomic,strong) PlanPlace *toPlanPlace;
 @property(nonatomic,strong) NSSet *itineraries;

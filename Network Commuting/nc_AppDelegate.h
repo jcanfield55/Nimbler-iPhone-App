@@ -14,8 +14,9 @@
 #import "Locations.h"
 #import "SupportedRegion.h"
 #import "FeedBackViewController.h"
+#import <Restkit/RKJSONParserJSONKit.h>
 
-@interface nc_AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate> {
+@interface nc_AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate,RKRequestDelegate> {
     Location* currentLocation;
 }
 

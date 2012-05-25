@@ -7,18 +7,24 @@
 //
 
 #import "FeedBackViewController.h"
+#import <RestKit/RKJSONParserJSONKit.h>
 
 
+#define FEEDBACK_TEXT           @"1"
+#define FEEDBACK_AUDIO          @"2"
+#define FEEDBACK_BOTH           @"3"
+#define FB_RESPOSE_SUCCEES      @"FeedBack Send Successfully"
+#define FB_RESPONSE_FAIL        @"Please Send Again"
 
 @implementation FeedBackViewController
 
 @synthesize actSpinner;
 @synthesize textFieldRounded;
 @synthesize label;
-//@synthesize rkTPResponse;
 @synthesize tpURLResource;
 @synthesize tpResponse;
 static RKObjectManager *rkTPResponse;
+static Plan *fbPlan;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -54,7 +60,6 @@ static RKObjectManager *rkTPResponse;
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    	
 	
 }
 
@@ -76,7 +81,7 @@ static RKObjectManager *rkTPResponse;
     
     tempDirPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     docsDir = [tempDirPath objectAtIndex:0];
-    NSString *soundFilePath = [docsDir stringByAppendingPathComponent:@"voiceFeedback.caf"];
+    soundFilePath = [docsDir stringByAppendingPathComponent:@"voiceFeedback.caf"];
     
     NSURL *soundFileURL = [NSURL fileURLWithPath:soundFilePath];
     
@@ -89,7 +94,6 @@ static RKObjectManager *rkTPResponse;
     
     audioRecorder = [[AVAudioRecorder alloc] initWithURL:soundFileURL settings:recordSettings error:&error];
     
-        
     if (error)
     {
         NSLog(@"error: %@", [error localizedDescription]);
@@ -123,7 +127,6 @@ static RKObjectManager *rkTPResponse;
     NSLog(@"play Recording");
     if (!audioRecorder.recording)
     {
-               
         NSError *error;
         
         audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:audioRecorder.url error:&error];
@@ -147,7 +150,6 @@ static RKObjectManager *rkTPResponse;
         [audioPlayer pause];
     }    
 }
-
 
 
 -(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
@@ -175,6 +177,12 @@ static RKObjectManager *rkTPResponse;
 {
     rkTPResponse = rkTPResponse0;
     [[rkTPResponse mappingProvider] setMapping:[TPResponse objectMappingforTPResponse:OTP_PLANNER] forKeyPath:@"tpResponse"];
+}
+
+
+-(void)setPlanForTPFeedBack:(Plan *)plan
+{
+    fbPlan = plan;
 }
 
 // Delegate methods for when the RestKit has results from the Planner
@@ -252,8 +260,8 @@ static RKObjectManager *rkTPResponse;
     [submit addTarget:self 
                 action:@selector(feedBackSubmit)
       forControlEvents:UIControlEventTouchDown];
-    
-    submit.frame = CGRectMake(220.0, 20.0, 80.0, 25.0);
+    [submit setTitle:@"submit" forState:UIControlStateNormal];
+    submit.frame = CGRectMake(220.0, 15.0, 80.0, 25.0);
     [self.view addSubview:submit];
     
 	AVAudioSession * audioSession = [AVAudioSession sharedInstance];
@@ -263,8 +271,7 @@ static RKObjectManager *rkTPResponse;
     actSpinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     [actSpinner setCenter:CGPointMake(320/2.0, 460/2.0)]; // I do this because I'm in landscape mode
     [self.view addSubview:actSpinner];
-    
-    
+        
     textFieldRounded = [[UITextField alloc] initWithFrame:CGRectMake(20, 150, 280, 100)];
     textFieldRounded.borderStyle = UITextBorderStyleRoundedRect;
     textFieldRounded.textColor = [UIColor blackColor]; 
@@ -295,26 +302,75 @@ static RKObjectManager *rkTPResponse;
     [self.view addSubview:label];
 }
 
+- (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
+    if ([request isGET]) {
+        // Handling GET /foo.xml
+        
+        
+        
+    } else if ([request isPOST]) {  
+            NSLog(@"Got aresponse back from TPResponse! %@", [response bodyAsString]);
+        
+        if ([response isOK]) {
+            // Success! Let's take a look at the data
+            NSLog(@"Retrieved XML: %@", [response bodyAsString]);
+            RKJSONParserJSONKit* parser1 = [RKJSONParserJSONKit new];
+            NSDictionary  *p = [parser1 objectFromString:[response bodyAsString] error:nil];
+            
+            for (id key in p) {
+                NSLog(@"key: %@, value: %@", key, [p objectForKey:key]);
+                if ([key isEqualToString:@"msg"]) {
+                    
+                    NSString *msg;
+                    if ([[p objectForKey:@"code"] isEqualToString:@"105"]) {
+                        msg = FB_RESPOSE_SUCCEES;
+                    } else {
+                        msg = FB_RESPONSE_FAIL ;
+                    }
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip FeedBack" message:msg delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+                    [alert show];
+                }
+                
+            }
+
+        }
+    } 
+}
 
 -(void)feedBackSubmit
 {
-    NSLog(@" lkh %@", textFieldRounded.text);
+   
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *source = [prefs objectForKey:@"source"];
+    NSString *uniqueId = [prefs objectForKey:@"uniqueid"];
+    NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
         
-    rkTPResponse = [RKObjectManager objectManagerWithBaseURL:@"http://10.0.0.38:8080/TPServer/ws/feedback/"];
-    [self setRkTPResponse:rkTPResponse];
-    NSString *str = @"send to server data";
-    NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                            @"deviceid",str, 
-                            @"trip", str, 
-                            @"source",str,
-                            @"formattype",str, 
-                            @"rating", str,
-                            nil];
-    tpURLResource = [@"new" appendQueryParams:params];
-        
-    NSLog(@"TP resource: %@", tpURLResource);
-    [rkTPResponse loadObjectsAtResourcePath:@"new" delegate:self];
-    NSLog(@"asf %@" ,rkTPResponse);
+    RKClient *client = [RKClient clientWithBaseURL:@"http://10.0.0.36:8080/TPServer"];
+    RKParams *rkp = [RKParams params];
+    [RKClient setSharedClient:client];
+   
+    if (soundFilePath != nil) {
+        NSString *myFile =soundFilePath;
+        RKParamsAttachment* attachment = [rkp setFile:myFile forParam:@"file"];
+        attachment.MIMEType = @"audio/caf";
+        attachment.fileName = @"FBSound.caf";
+             [rkp setValue:FEEDBACK_AUDIO forParam:@"formattype"];
+    } 
+    if (textFieldRounded.text != nil){
+        [rkp setValue:textFieldRounded.text forParam:@"txtfb"];
+        [rkp setValue:FEEDBACK_TEXT forParam:@"formattype"];
+    } 
+   
+    if(soundFilePath != nil && textFieldRounded.text != nil){
+        [rkp setValue:FEEDBACK_BOTH forParam:@"formattype"]; 
+    }
     
+    [rkp setValue:udid forParam:@"deviceid"]; 
+    [rkp setValue:source forParam:@"source"]; 
+    [rkp setValue:uniqueId forParam:@"uniqueid"]; 
+    [rkp setValue:@"3.5" forParam:@"rating"];
+       
+    [[RKClient sharedClient]  post:@"/ws/feedback/new" params:rkp delegate:self];
+
 }
 @end

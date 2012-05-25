@@ -31,6 +31,8 @@
 @property (nonatomic, retain) NSNumber * waitingTime;
 @property (nonatomic, retain) NSNumber * walkDistance;
 @property (nonatomic, retain) NSNumber * walkTime;
+@property (nonatomic, retain) NSString * itinId;
+
 @property (nonatomic, retain) NSSet *legs;
 @property (nonatomic, retain) Plan *plan;
 @property (nonatomic, strong) NSArray *sortedLegs; // Array of legs sorted by startTime (not stored in Core Data)

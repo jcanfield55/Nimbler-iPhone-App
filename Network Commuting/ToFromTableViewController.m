@@ -268,13 +268,22 @@
             urlResource = [@"json" appendQueryParams:params];
 
             NSLog(@"Geocode Parameter String = %@", urlResource);
-            
-            // Call the geocoder
-            [rkGeoMgr loadObjectsAtResourcePath:urlResource delegate:self];
-            if (!isGeocodingOutstanding) {
-                isGeocodingOutstanding = TRUE;
-                [toFromVC updateGeocodeStatus:TRUE isFrom:isFrom]; // alert toFromVC re: outstanding geocoding
+                        
+            @try {
+                // Call the geocoder
+                [rkGeoMgr loadObjectsAtResourcePath:urlResource delegate:self];
+                if (!isGeocodingOutstanding) {
+                    isGeocodingOutstanding = TRUE;
+                    [toFromVC updateGeocodeStatus:TRUE isFrom:isFrom]; // alert toFromVC re: outstanding geocoding
+                }
             }
+            @catch (NSException *exception) {
+                NSLog(@"################# %@", exception);
+            }
+            
+            
+            
+            
         }
     }
 }
@@ -284,14 +293,20 @@
 
 - (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects 
 {
+   
+    @try {
+    
+    
     // Make sure this is the response from the latest geocoder request
     if ([[objectLoader resourcePath] isEqualToString:urlResource])
     {   
         // Get the status string the hard way by parsing the response string
         NSString* response = [[objectLoader response] bodyAsString];
+        NSLog(@"Response from google: %@", response);
         NSRange range = [response rangeOfString:@"\"status\""];
         if (range.location != NSNotFound) {
-            NSString* responseStartingFromStatus = [response substringFromIndex:(range.location+range.length)]; 
+            NSString* responseStartingFromStatus = [response substringFromIndex:(range.location+range.length)];
+            
             NSArray* atoms = [responseStartingFromStatus componentsSeparatedByString:@"\""];
             NSString* status = [atoms objectAtIndex:1]; // status string is second atom (first after the first quote)
             NSLog(@"Status: %@", status);
@@ -351,6 +366,11 @@
             // TODO Geocoder did not respond with status field
         }
     }
+
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception goecoder ---------------> %@", exception);
+    }    
 }
 
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error {

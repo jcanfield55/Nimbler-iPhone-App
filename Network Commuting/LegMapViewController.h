@@ -11,6 +11,7 @@
 #import "Itinerary.h"
 #import "Leg.h"
 #import "MyAnnotation.h"
+#import "FeedBackViewController.h"
 
 @interface LegMapViewController : UIViewController {
     MKPointAnnotation* startPoint;  // annotation for startPoint of the itinerary
@@ -35,7 +36,6 @@
 // Note:  num = 0 is the startpoint.  num=1 is the first leg.  
 // num = [[itin sortedLegs] count]+1 is the endpoint
 - (void)setItinerary:(Itinerary *)itin itineraryNumber:(int)num;
-
 // Callback for when user presses the navigate back / forth button on the right navbar
 - (IBAction)navigateBack:(id)sender;
 - (IBAction)navigateForward:(id)sender;
