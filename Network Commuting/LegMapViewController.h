@@ -22,7 +22,7 @@
     UIBarButtonItem *For;
     UIBarButtonItem *Bak;
     NSArray* bbiArray;
-    
+    IBOutlet UIButton *tw_btn;
 }
 
 @property(nonatomic, strong) IBOutlet MKMapView *mapView;
@@ -39,6 +39,7 @@
 // Callback for when user presses the navigate back / forth button on the right navbar
 - (IBAction)navigateBack:(id)sender;
 - (IBAction)navigateForward:(id)sender;
+-(IBAction)twitterSearch:(id)sender;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
 -(void)walk;
 -(void)customMap;

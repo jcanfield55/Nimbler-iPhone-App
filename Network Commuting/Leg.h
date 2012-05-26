@@ -50,6 +50,7 @@
 - (NSString *)ncDescription;
 - (BOOL)isWalk;
 - (BOOL)isBus;
+- (BOOL)isTrain;
 
 @end
 

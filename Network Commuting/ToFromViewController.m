@@ -13,9 +13,10 @@
 #import "Leg.h"
 #import "DateTimeViewController.h"
 #import "TestFlightSDK1/TestFlight.h"
-#import "FeedBackViewController.h"
 #import "Itinerary.h"
 #import <RestKit/RKJSONParserJSONKit.h>
+#import "FeedBackForm.h"
+#import "twitterSearch.h"
 
 
 @interface ToFromViewController()
@@ -28,7 +29,7 @@
     Plan *plan;
     Plan *pl;
     SupportedRegion *sr;
-    FeedBackViewController *fbplan;
+    FeedBackForm *fbplan;
     BOOL routeRequested;   // True when the user has pressed the route button and a route has not yet been requested
     NSManagedObjectContext *managedObjectContext;
     BOOL toGeocodeRequestOutstanding;  // true if there is an outstanding To geocode request
@@ -137,7 +138,6 @@ int const TIME_DATE_HEIGHT = 45;
         NSLog(@"------loading---------  %@", exception);
     }
     
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -148,6 +148,7 @@ int const TIME_DATE_HEIGHT = 45;
     [toTable flashScrollIndicators];
     [fromTable flashScrollIndicators];
 }
+
 // Update trip date to the current time if needed
 - (void)updateTripDate
 {
@@ -295,7 +296,6 @@ int const TIME_DATE_HEIGHT = 45;
         }
         UIView* cellView = [cell contentView];
        
-
         NSArray* subviews = [cellView subviews];
         if (isFrom) {
             if (subviews && [subviews count]>0 && [subviews indexOfObject:fromTable] != NSNotFound) {
@@ -441,7 +441,7 @@ int const TIME_DATE_HEIGHT = 45;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     [TestFlight openFeedbackView];
-    FeedBackViewController *legMapVC = [[FeedBackViewController alloc] initWithNibName:nil bundle:nil];   
+    FeedBackForm *legMapVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
     [[self navigationController] pushViewController:legMapVC animated:YES];
 }
 
@@ -536,6 +536,14 @@ int const TIME_DATE_HEIGHT = 45;
                 
                 if (savetrip) {
                     plan = [objects objectAtIndex:0];
+                    
+                    // Pass control to the RouteOptionsViewController to display itinerary choices
+                    RouteOptionsViewController *routeOptionsVC = [[RouteOptionsViewController alloc] initWithStyle:UITableViewStylePlain];
+                    //[routeOptionsVC setPlanIdFeedBack:pl];
+                    [routeOptionsVC setFeedBackPlanId:pl];
+                    [routeOptionsVC setPlan:plan];
+                    
+                    [[self navigationController] pushViewController:routeOptionsVC animated:YES];
                 } else {
                     pl= [objects objectAtIndex:0];
                     [plan setPlanId:[pl planId]];                    
@@ -549,22 +557,7 @@ int const TIME_DATE_HEIGHT = 45;
                             [[[[[plan sortedItineraries] objectAtIndex:i] sortedLegs] objectAtIndex:j] setLegId:[lg legId]];
                         }                                                            
                     }
-                    
-                    Itinerary *itin = [[pl sortedItineraries] objectAtIndex:1];
-//                  NSLog(@"itinarie duar = %@", [itin duration]);
-//                    NSLog(@"itinarie id = %@", [itin itinId]);
-                
-//                    Leg *li = [[itin sortedLegs] objectAtIndex:1];
-//                    NSLog(@"legs id = %@", [li legId]);
-                    
-//                    NSDictionary *dic = [NSDictionary dictionaryWithObject:li forKey:@"duration"] ;
-                    
-//                    for (id key in dic) {
-//                        NSLog(@"key: %@   value:%@", key, [dic objectForKey:key]);
-//                    }
                 }
-                
-//              NSLog(@"Planning object: %@", [plan ncDescription]);
                 
                 if (savetrip) {
                     
@@ -575,18 +568,11 @@ int const TIME_DATE_HEIGHT = 45;
                     [self forFeedbackProceess];
                     [plan setToLocation:toLocation];
                     [plan setFromLocation:fromLocation];
-                    fbplan = [FeedBackViewController alloc];
-                    [fbplan setPlanForTPFeedBack:plan];
+                    fbplan = [FeedBackForm alloc];
                     NSLog(@"Planning object: %@", [[objectLoader  response] bodyAsString]);
                     
                 }
-                // Pass control to the RouteOptionsViewController to display itinerary choices
-                RouteOptionsViewController *routeOptionsVC = [[RouteOptionsViewController alloc] initWithStyle:UITableViewStylePlain];
-                //[routeOptionsVC setPlanIdFeedBack:pl];
-                [routeOptionsVC setFeedBackPlanId:pl];
-                [routeOptionsVC setPlan:plan];
-               
-                [[self navigationController] pushViewController:routeOptionsVC animated:YES];
+                
             }
         }
         @catch (NSException *exception) {
@@ -661,6 +647,14 @@ int const TIME_DATE_HEIGHT = 45;
         [tFormat setTimeStyle:NSDateFormatterShortStyle];
         [tFormat setDateStyle:NSDateFormatterNoStyle];
         
+        
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        [prefs setObject:[fromLocation rawAddresses] forKey:@"fromRawAddr"];
+        [prefs setObject:[toLocation rawAddresses] forKey:@"toRawAddr"];
+        [prefs setObject:[fromLocation formattedAddress] forKey:@"fromFormatedAddr"];
+        [prefs setObject:[toLocation formattedAddress] forKey:@"fromFormatedAddr"];
+
+        
         // TODO detect and handle case where origin and destination are exactly the same
         
         // Build the parameters into a resource string
@@ -682,6 +676,7 @@ int const TIME_DATE_HEIGHT = 45;
         NSLog(@"Plan resource: %@", planURLResource);
          // Call the trip planner
         [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
+        [NSTimer scheduledTimerWithTimeInterval: 0.59f target: self selector: @selector(stopProcess) userInfo: nil repeats: NO];
         savetrip = TRUE;
         // Reload the to/from tables for next time
         [[self fromTable] reloadData];
@@ -690,6 +685,10 @@ int const TIME_DATE_HEIGHT = 45;
     return true; 
 }
 
+-(void)stopProcess
+{
+    [connecting dismissWithClickedButtonIndex:0 animated:NO];
+}
 - (void)didReceiveMemoryWarning
 {
     // Releases the view if it doesn't have a superview.
@@ -836,6 +835,25 @@ int const TIME_DATE_HEIGHT = 45;
         }
         
     } 
+}
+
+
+-(void)LogGeoCodingEvent
+{    
+    NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    
+    [prefs setObject:[fromLocation rawAddresses] forKey:@"fromRawAddr"];
+    [prefs setObject:[toLocation rawAddresses] forKey:@"toRawAddr"];
+    [prefs setObject:[fromLocation formattedAddress] forKey:@"fromFormatedAddr"];
+    [prefs setObject:[toLocation formattedAddress] forKey:@"fromFormatedAddr"];
+    
+    RKClient *client = [RKClient clientWithBaseURL:URL_TPSERVER_GEOCODE];
+    RKParams *rkp = [RKParams params];
+    [RKClient setSharedClient:client];
+
+    [[RKClient sharedClient] post:@"new" params:rkp delegate:self];
+    
 }
 
 @end

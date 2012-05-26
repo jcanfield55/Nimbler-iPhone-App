@@ -10,6 +10,9 @@
 #import "Leg.h"
 #import "LegMapViewController.h"
 #import "RootMap.h"
+#import "twitterSearch.h"
+#import "FeedBackForm.h"
+
 
 @implementation RouteDetailsViewController
 
@@ -23,9 +26,18 @@
     [submit addTarget:self 
                action:@selector(feedBackSubmit)
      forControlEvents:UIControlEventTouchDown];
-    [submit setTitle:@"submit" forState:UIControlStateNormal];
-    submit.frame = CGRectMake(220.0, 370.0, 70.0, 25.0);
+    [submit setTitle:@"feedback" forState:UIControlStateNormal];
+    submit.frame = CGRectMake(220.0, 370.0, 70.0, 20.0);
     [super.view addSubview:submit];
+    
+    UIButton *twitter = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [twitter addTarget:self 
+                action:@selector(twitterSubmit)
+      forControlEvents:UIControlEventTouchDown];
+    [twitter setTitle:@"t" forState:UIControlStateNormal];
+    twitter.frame = CGRectMake(180.0, 370.0, 20.0, 25.0);
+    [super.view addSubview:twitter];
+    
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -88,6 +100,9 @@
     }
     else {  // otherwise, it is one of the legs
         Leg *leg = [[itinerary sortedLegs] objectAtIndex:([indexPath row]-1)];
+        if ( [leg isTrain]) {
+            NSLog(@"train....");
+        }
         titleText = [leg directionsTitleText];
         subTitle = [leg directionsDetailText];
         
@@ -140,11 +155,17 @@
 {
     // Initialize the LegMapView Controller
     LegMapViewController *legMapVC = [[LegMapViewController alloc] initWithNibName:nil bundle:nil];
-
     // Initialize the leg VC with the full itinerary and the particular leg object chosen
     [legMapVC setItinerary:itinerary itineraryNumber:[indexPath row]];
-    
     [[self navigationController] pushViewController:legMapVC animated:YES];
+}
+
+
+-(void)twitterSubmit
+{
+    twitterSearch *twitter_search = [[twitterSearch alloc] initWithNibName:@"twitterSearch" bundle:nil];
+    [[self navigationController] pushViewController:twitter_search animated:YES];
+    [twitter_search loadRequest:[NSString stringWithFormat:TWITTER_SERARCH_URL ,@"NB271"]];
 }
 
 
@@ -154,7 +175,7 @@
     [prefs setObject:@"2" forKey:@"source"];
     [prefs setObject:[itinerary itinId] forKey:@"uniqueid"];
     
-    FeedBackViewController *legMapVC = [[FeedBackViewController alloc] initWithNibName:nil bundle:nil];   
+    FeedBackForm *legMapVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
     [[self navigationController] pushViewController:legMapVC animated:YES];
     
 }

@@ -182,6 +182,14 @@ static NSDateFormatter *timeFormattr;
     }
     return false;
 }
+
+-(BOOL)isTrain
+{
+    if ([[self mode] isEqualToString:@"TRAIN"]) {   
+        return true;   
+    }
+    return false;
+}
 -(BOOL)isBus
 {
     if ([[self mode] isEqualToString:@"BUS"]) {   

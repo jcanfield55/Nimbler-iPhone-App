@@ -56,4 +56,5 @@ typedef enum {
 -(void)addLocationAction:(id) sender;
 -(void)forFeedbackProceess;
 - (void)saveRkPlanMgr:(RKObjectManager *)rkPlanMgr1;
+-(void)stopProcess;
 @end

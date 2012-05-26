@@ -280,10 +280,7 @@
             @catch (NSException *exception) {
                 NSLog(@"################# %@", exception);
             }
-            
-            
-            
-            
+ 
         }
     }
 }
@@ -294,9 +291,7 @@
 - (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects 
 {
    
-    @try {
-    
-    
+@try {
     // Make sure this is the response from the latest geocoder request
     if ([[objectLoader resourcePath] isEqualToString:urlResource])
     {   
@@ -310,7 +305,6 @@
             NSArray* atoms = [responseStartingFromStatus componentsSeparatedByString:@"\""];
             NSString* status = [atoms objectAtIndex:1]; // status string is second atom (first after the first quote)
             NSLog(@"Status: %@", status);
-            
             
             if ([status compare:@"OK" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
                 if (!objects || [objects count]<1) {

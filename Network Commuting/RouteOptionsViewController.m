@@ -10,8 +10,8 @@
 #import "Leg.h"
 #import "UtilityFunctions.h"
 #import <math.h>
-#import "FeedBackViewController.h"
-
+#import "twitterSearch.h"
+#import "FeedBackForm.h"
 
 @implementation RouteOptionsViewController
 
@@ -113,9 +113,10 @@
     [submit addTarget:self 
                action:@selector(feedBackSubmit)
      forControlEvents:UIControlEventTouchDown];
-    [submit setTitle:@"submit" forState:UIControlStateNormal];
-    submit.frame = CGRectMake(220.0, 370.0, 70.0, 25.0);
+    [submit setTitle:@"feedback" forState:UIControlStateNormal];
+    submit.frame = CGRectMake(220.0, 370.0, 70.0, 20.0);
     [super.view addSubview:submit];
+    
 
 }
 
@@ -128,24 +129,29 @@
 }
 
 
+
 -(void)feedBackSubmit
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:@"1" forKey:@"source"];
     [prefs setObject:[plan planId] forKey:@"uniqueid"];
             
-    FeedBackViewController *legMapVC = [[FeedBackViewController alloc] initWithNibName:nil bundle:nil];   
+    FeedBackForm *legMapVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
     [[self navigationController] pushViewController:legMapVC animated:YES];
  
 }
 
 /*
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad
+*/
+ - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
 }
-*/
+
+
+
 
 - (void)viewDidUnload
 {

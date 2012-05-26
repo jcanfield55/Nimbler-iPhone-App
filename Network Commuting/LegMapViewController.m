@@ -11,6 +11,7 @@
 #import "MyAnnotation.h"
 #import "Step.h"
 #import "RootMap.h"
+#import "twitterSearch.h"
 
 @interface LegMapViewController()
 // Utility routine for setting the region on the MapView based on the itineraryNumber
@@ -352,10 +353,11 @@
                     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
                     [prefs setObject:@"3" forKey:@"source"];
                     [prefs setObject:[leg legId] forKey:@"uniqueid"];
-                    
+                    tw_btn.hidden = YES;
                     if([leg isWalk]){
                         aView.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:0.7] ;
                         aView.lineWidth = 5;
+                        tw_btn.hidden = NO;
                     } else if([leg isBus]){
                         aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:0.7];
                         aView.lineWidth = 5;
@@ -411,7 +413,16 @@
     [super viewWillDisappear:animated];
 
 }
+-(IBAction)twitterSearch:(id)sender{
 
+    twitterSearch *twitter_search = [[twitterSearch alloc] initWithNibName:@"twitterSearch" bundle:nil];
+    
+    [[self navigationController] pushViewController:twitter_search animated:YES];
+    
+    
+    [twitter_search loadRequest:[NSString stringWithFormat:TWITTER_SERARCH_URL ,@"NB"]];
+    
+}
 
 - (void)didReceiveMemoryWarning
 {
