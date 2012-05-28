@@ -53,7 +53,8 @@
 -(void)loadRequest:(NSString*) URL{
 
     NSLog(@"load request %@", URL);
-    NSURL *tw_url = [NSURL URLWithString:CALTRAIN_TWITTER_URL];
+//  NSURL *tw_url = [NSURL URLWithString:CALTRAIN_TWITTER_URL];
+    NSURL *tw_url = [NSURL URLWithString:URL];
     NSURLRequest *requestObj = [NSURLRequest requestWithURL:tw_url];
     
     [twitterWebView loadRequest:requestObj];

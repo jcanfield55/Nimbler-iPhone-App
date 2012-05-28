@@ -60,8 +60,7 @@
     /*
      for feedback planId
      */
-    
-    
+        
     // Set title
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
     NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)", 
@@ -117,7 +116,6 @@
     submit.frame = CGRectMake(220.0, 370.0, 70.0, 20.0);
     [super.view addSubview:submit];
     
-
 }
 
 -(void)setPlanIdFeedBack:(Plan *)plans
@@ -149,8 +147,6 @@
     [super viewDidLoad];
     
 }
-
-
 
 
 - (void)viewDidUnload

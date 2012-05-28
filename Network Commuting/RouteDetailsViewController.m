@@ -99,12 +99,19 @@
         titleText = [NSString stringWithFormat:@"End at %@", [[itinerary to] name]];
     }
     else {  // otherwise, it is one of the legs
+       
         Leg *leg = [[itinerary sortedLegs] objectAtIndex:([indexPath row]-1)];
-        if ( [leg isTrain]) {
-            NSLog(@"train....");
-        }
         titleText = [leg directionsTitleText];
         subTitle = [leg directionsDetailText];
+        if ( [leg isTrain]) {
+            NSString *train = [[titleText componentsSeparatedByString:@"("] objectAtIndex:1];
+            NSString *train1 = [[train componentsSeparatedByString:@")"] objectAtIndex:0];
+            train1 = [train1 stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+            NSLog(@"It is a train %@",train1 );
+            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+            [prefs setObject:train1 forKey:@"train"];
+        }
+        
         
         /*
          DE4 Fix - Apprika Systems
@@ -164,8 +171,11 @@
 -(void)twitterSubmit
 {
     twitterSearch *twitter_search = [[twitterSearch alloc] initWithNibName:@"twitterSearch" bundle:nil];
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *trainRoute = [prefs objectForKey:@"train"];
     [[self navigationController] pushViewController:twitter_search animated:YES];
-    [twitter_search loadRequest:[NSString stringWithFormat:TWITTER_SERARCH_URL ,@"NB271"]];
+    trainRoute = [TWITTER_SERARCH_URL stringByReplacingOccurrencesOfString:@"TRAIN" withString:trainRoute];
+    [twitter_search loadRequest:trainRoute];
 }
 
 

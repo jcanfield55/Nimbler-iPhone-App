@@ -18,7 +18,6 @@
 #import "FeedBackForm.h"
 #import "twitterSearch.h"
 
-
 @interface ToFromViewController()
 {
     // Variables for internal use
@@ -35,6 +34,9 @@
     BOOL toGeocodeRequestOutstanding;  // true if there is an outstanding To geocode request
     BOOL fromGeocodeRequestOutstanding;  // true if there is an outstanding From geocode request
     BOOL savetrip;
+    double startButtontClickTime;
+    float durationOfResponseTime;
+    
 }
 
 - (BOOL)getPlan;
@@ -288,6 +290,7 @@ int const TIME_DATE_HEIGHT = 45;
         BOOL isFrom = (editMode==FROM_EDIT || (editMode==NO_EDIT && [indexPath section]==1))
                        ? TRUE : FALSE;  
         NSString* cellIdentifier = isFrom ? @"fromTableCell" : @"toTableCell";
+        
         UITableViewCell *cell =
         [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         if (!cell) {
@@ -329,9 +332,12 @@ int const TIME_DATE_HEIGHT = 45;
     [cellView addSubview:addButton];
     
     NSArray* subviews = [cellView subviews];
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+            
     if (isFrom) {
         if (subviews && [subviews count]>0 && [subviews indexOfObject:[fromTableVC txtField]] != NSNotFound) {
             NSLog(@"fromTable already in subview");
+            [prefs setObject:@"fromEdit" forKey:@"isEdit"];
             // if From txtField is already in the subview (due to recycling, no need to add again
         } else { 
             [cellView addSubview:[fromTableVC txtField]]; // add From txtField
@@ -340,6 +346,7 @@ int const TIME_DATE_HEIGHT = 45;
     else {   // do same for toTable case
         if (subviews && [subviews count]>0 && [subviews indexOfObject:[toTableVC txtField]] != NSNotFound) {
             NSLog(@"toTable already in subview");
+            [prefs setObject:@"toEdit" forKey:@"isEdit"];
             // if To txtField is already in the subview (due to recycling, no need to add again
         } else { 
             [cellView addSubview:[toTableVC txtField]]; // add To txtfield
@@ -419,6 +426,8 @@ int const TIME_DATE_HEIGHT = 45;
    // [alert dismissWithClickedButtonIndex:0 animated:NO];
     
     routeRequested = true;
+    startButtontClickTime = CFAbsoluteTimeGetCurrent();
+    
     // TODO put up a "thinking" graphic
     // if all the geolocations are here, get a plan.  
     if ([fromLocation formattedAddress] && [toLocation formattedAddress] &&
@@ -513,6 +522,7 @@ int const TIME_DATE_HEIGHT = 45;
     // If TO_EDIT or FROM_EDIT, make the txt field the first responder
     if (newEditMode == TO_EDIT) {
         [[toTableVC txtField] becomeFirstResponder];
+        NSLog(@"to controller ----------------");
     } 
     else if (newEditMode == FROM_EDIT) {
         [[fromTableVC txtField] becomeFirstResponder];
@@ -530,13 +540,13 @@ int const TIME_DATE_HEIGHT = 45;
         NSInteger statusCode = [[objectLoader response] statusCode];
         NSLog(@"Planning HTTP status code = %d", statusCode);
         @try {
-            [connecting dismissWithClickedButtonIndex:0 animated:NO];
+            
             if (objects && [objects objectAtIndex:0]) {
-                
                 
                 if (savetrip) {
                     plan = [objects objectAtIndex:0];
-                    
+                    durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtontClickTime;
+                    [connecting dismissWithClickedButtonIndex:0 animated:NO];
                     // Pass control to the RouteOptionsViewController to display itinerary choices
                     RouteOptionsViewController *routeOptionsVC = [[RouteOptionsViewController alloc] initWithStyle:UITableViewStylePlain];
                     //[routeOptionsVC setPlanIdFeedBack:pl];
@@ -577,9 +587,11 @@ int const TIME_DATE_HEIGHT = 45;
         }
         @catch (NSException *exception) {
              [connecting dismissWithClickedButtonIndex:0 animated:NO];
+             durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtontClickTime;
             NSLog(@"Error object ==============================: %@", exception);
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"Trip is not possible. Your start or end point might not be safely accessible" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
-            [alert show];            
+            [alert show];
+            savetrip = false;
             return ;
         }
         
@@ -676,7 +688,7 @@ int const TIME_DATE_HEIGHT = 45;
         NSLog(@"Plan resource: %@", planURLResource);
          // Call the trip planner
         [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
-        [NSTimer scheduledTimerWithTimeInterval: 0.59f target: self selector: @selector(stopProcess) userInfo: nil repeats: NO];
+        [NSTimer scheduledTimerWithTimeInterval: 56.0f target: self selector: @selector(stopProcess) userInfo: nil repeats: NO];
         savetrip = TRUE;
         // Reload the to/from tables for next time
         [[self fromTable] reloadData];
@@ -687,6 +699,7 @@ int const TIME_DATE_HEIGHT = 45;
 
 -(void)stopProcess
 {
+    NSLog(@"stop Processing");
     [connecting dismissWithClickedButtonIndex:0 animated:NO];
 }
 - (void)didReceiveMemoryWarning
@@ -802,12 +815,39 @@ int const TIME_DATE_HEIGHT = 45;
     NSString *tpPlan = [prefs objectForKey:@"tpPlanner"];
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;   
     
-    RKClient *client = [RKClient clientWithBaseURL:@"http://10.0.0.36:8080/TPServer/ws/plan/"];
+    RKClient *client = [RKClient clientWithBaseURL:@"http://23.23.210.156:8080/TPServer/ws/plan/"];
     RKParams *rkp = [RKParams params];
     [RKClient setSharedClient:client];
     
     [rkp setValue:udid forParam:@"deviceid"]; 
-    [rkp setValue:tpPlan forParam:@"planJsonString"];   
+    [rkp setValue:tpPlan forParam:@"planJsonString"]; 
+    NSString *time =  [[NSNumber numberWithFloat:durationOfResponseTime] stringValue]; 
+    [rkp setValue:time forParam:@"timeTripPlan"];
+    
+    [rkp setValue:[prefs objectForKey:@"rawTo"] forParam:@"rawAddTo"];
+    [rkp setValue:[toLocation formattedAddress]  forParam:@"frmtdAddTo"];
+    [rkp setValue:[prefs objectForKey:@"toType"] forParam:@"toType"];
+    [rkp setValue:[prefs objectForKey:@"timeTo"] forParam:@"timeTo"];
+    [rkp setValue:[prefs objectForKey:@"geoResponseTo"] forParam:@"geoResTo"];
+    
+    if([[prefs objectForKey:@"toType"] isEqualToString:REVERSE_GEO_TO])
+    {
+        [rkp setValue:[toLocation lat] forParam:@"latTo"];
+        [rkp setValue:[toLocation lng] forParam:@"lonTo"];
+    }
+    
+    [rkp setValue:[prefs objectForKey:@"rawFrom"] forParam:@"rawAddFrom"];
+    [rkp setValue:[fromLocation formattedAddress] forParam:@"frmtdAddFrom"];
+    [rkp setValue:[prefs objectForKey:@"fromType"]forParam:@"fromType"];
+    [rkp setValue:[prefs objectForKey:@"timeFrom"] forParam:@"timeFrom"];
+    [rkp setValue:[prefs objectForKey:@"geoResponseFrom"] forParam:@"geoResFrom"];
+    
+    if([[prefs objectForKey:@"fromType"] isEqualToString:REVERSE_GEO_FROM])
+    {
+        [rkp setValue:[fromLocation lat] forParam:@"latTo"];
+        [rkp setValue:[fromLocation lng] forParam:@"lonTo"];
+    }
+    
     [[RKClient sharedClient] post:@"new" params:rkp delegate:self]; 
     
 }
@@ -818,11 +858,12 @@ int const TIME_DATE_HEIGHT = 45;
         @try {            
             
             NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
+            
             NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                                     @"deviceid", udid, 
                                     nil];
             
-            rkSavePlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://10.0.0.36:8080/TPServer/ws/plan/"];
+            rkSavePlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://23.23.210.156:8080/TPServer/ws/plan/"];
             
             [[rkSavePlanMgr mappingProvider] setMapping:[Plan objectMappingforPlanner:OTP_PLANNER] forKeyPath:@"plan"];
             planURLResource = [@"get" appendQueryParams:params];
@@ -840,19 +881,19 @@ int const TIME_DATE_HEIGHT = 45;
 
 -(void)LogGeoCodingEvent
 {    
-    NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    
-    [prefs setObject:[fromLocation rawAddresses] forKey:@"fromRawAddr"];
-    [prefs setObject:[toLocation rawAddresses] forKey:@"toRawAddr"];
-    [prefs setObject:[fromLocation formattedAddress] forKey:@"fromFormatedAddr"];
-    [prefs setObject:[toLocation formattedAddress] forKey:@"fromFormatedAddr"];
-    
-    RKClient *client = [RKClient clientWithBaseURL:URL_TPSERVER_GEOCODE];
-    RKParams *rkp = [RKParams params];
-    [RKClient setSharedClient:client];
-
-    [[RKClient sharedClient] post:@"new" params:rkp delegate:self];
+//    NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
+//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+//    
+//    [prefs setObject:[fromLocation rawAddresses] forKey:@"fromRawAddr"];
+//    [prefs setObject:[toLocation rawAddresses] forKey:@"toRawAddr"];
+//    [prefs setObject:[fromLocation formattedAddress] forKey:@"fromFormatedAddr"];
+//    [prefs setObject:[toLocation formattedAddress] forKey:@"fromFormatedAddr"];
+//    
+//    RKClient *client = [RKClient clientWithBaseURL:URL_TPSERVER_GEOCODE];
+//    RKParams *rkp = [RKParams params];
+//    [RKClient setSharedClient:client];
+//
+//    [[RKClient sharedClient] post:@"new" params:rkp delegate:self];
     
 }
 

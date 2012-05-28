@@ -2285,15 +2285,13 @@
 		52CF43A714BDF2F9000565D6 /* Nimbler */ = {
 			isa = PBXGroup;
 			children = (
+				CCA43F1C157330AD00DF85AD /* mapView */,
 				CCB7E81E1570EC460036E9CD /* routeView */,
 				CCB7E81D1570EBCC0036E9CD /* dataObject */,
 				CCB7E81C1570EB670036E9CD /* images */,
 				CCB7E81B1570A3E10036E9CD /* AppDelegate */,
 				CCB7E81415709C080036E9CD /* twitterSearch */,
 				CCB7E8131570904A0036E9CD /* feedBackForm */,
-				CCBE9FF815628F5700908A78 /* RootMap.xib */,
-				CCBE9FF615628F4F00908A78 /* RootMap.m */,
-				CCBE9FF515628F4800908A78 /* RootMap.h */,
 				CCBE9FF31562867600908A78 /* SupportedRegion.m */,
 				CCBE9FF21562866F00908A78 /* SupportedRegion.h */,
 				52B302C214BE2B1E00EB4852 /* ToFromViewController.h */,
@@ -2304,9 +2302,6 @@
 				5297F2DD1560CA0F0032D015 /* DateTimeViewController.h */,
 				5297F2DE1560CA200032D015 /* DateTimeViewController.m */,
 				52E66F021520374B001BF026 /* DateTimeViewController.xib */,
-				52849FC8151D0389001D4DDC /* LegMapViewController.h */,
-				52849FC9151D0389001D4DDC /* LegMapViewController.m */,
-				525C20FE151D412A004F8FE0 /* LegMapViewController.xib */,
 				52DF9C4714F7546800DC6828 /* Network_Commuting.xcdatamodeld */,
 				52F67EEC14C7E103007578D5 /* enums.h */,
 				5275A2DD1528069F0052903F /* PolylineEncodedString.h */,
@@ -2316,8 +2311,6 @@
 				52B7421C14E1FFA200D817D1 /* UtilityFunctions.h */,
 				52B7421D14E1FFA200D817D1 /* UtilityFunctions.m */,
 				52CF43A814BDF2F9000565D6 /* Supporting Files */,
-				CCC107CD156A39C60011246D /* TPResponse.h */,
-				CCC107CE156A39C90011246D /* TPResponse.m */,
 			);
 			name = Nimbler;
 			path = "Network Commuting";
@@ -2353,6 +2346,19 @@
 				52CF43C614BDF2F9000565D6 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CCA43F1C157330AD00DF85AD /* mapView */ = {
+			isa = PBXGroup;
+			children = (
+				52849FC8151D0389001D4DDC /* LegMapViewController.h */,
+				52849FC9151D0389001D4DDC /* LegMapViewController.m */,
+				525C20FE151D412A004F8FE0 /* LegMapViewController.xib */,
+				CCBE9FF815628F5700908A78 /* RootMap.xib */,
+				CCBE9FF615628F4F00908A78 /* RootMap.m */,
+				CCBE9FF515628F4800908A78 /* RootMap.h */,
+			);
+			name = mapView;
 			sourceTree = "<group>";
 		};
 		CCB7E8131570904A0036E9CD /* feedBackForm */ = {
@@ -2403,6 +2409,8 @@
 		CCB7E81D1570EBCC0036E9CD /* dataObject */ = {
 			isa = PBXGroup;
 			children = (
+				CCC107CE156A39C90011246D /* TPResponse.m */,
+				CCC107CD156A39C60011246D /* TPResponse.h */,
 				CC6FE2B7155BA40D004BE10A /* MyAnnotation.m */,
 				CC6FE2B6155BA403004BE10A /* MyAnnotation.h */,
 				CC6FE2BA155BC416004BE10A /* Error.m */,
