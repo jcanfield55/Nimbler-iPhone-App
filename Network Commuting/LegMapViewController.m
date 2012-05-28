@@ -57,9 +57,7 @@
 
         UIBarButtonItem* bbi = [[UIBarButtonItem alloc] initWithCustomView:container];
          */
-        
-                
-        
+
         Bak = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRewind target:self action:@selector(navigateBack:)]; 
         
         For = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward target:self action:@selector(navigateForward:)]; 
@@ -262,7 +260,7 @@
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     [TestFlight openFeedbackView];
-    FeedBackViewController *legMapVC = [[FeedBackViewController alloc] initWithNibName:nil bundle:nil];   
+    FeedBackForm *legMapVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
     [[self navigationController] pushViewController:legMapVC animated:YES];
 
 }
@@ -348,8 +346,6 @@
             if (([polyLineArray objectAtIndex:i] == overlay)) {
                 if (i == itineraryNumber-1) {
                     Leg *leg = [[itinerary sortedLegs] objectAtIndex:(itineraryNumber-1)];
-                    NSLog(@"leg id ========================= %@", [leg legId]);
-                    NSLog(@"Leg duration ===================  %@", [leg to]);
                     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
                     [prefs setObject:@"3" forKey:@"source"];
                     [prefs setObject:[leg legId] forKey:@"uniqueid"];
@@ -357,14 +353,18 @@
                     if([leg isWalk]){
                         aView.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:0.7] ;
                         aView.lineWidth = 5;
-                        tw_btn.hidden = NO;
+                        
                     } else if([leg isBus]){
                         aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:0.7];
+                        aView.lineWidth = 5;
+                    } else if([leg isTrain]){
+                        tw_btn.hidden = NO;
+                        aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:0.8] ;
                         aView.lineWidth = 5;
                     } else {
                         aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:0.8] ;
                         aView.lineWidth = 5;
-                    }                   
+                    }
                    
                 }
             }
@@ -420,7 +420,7 @@
     [[self navigationController] pushViewController:twitter_search animated:YES];
     
     
-    [twitter_search loadRequest:[NSString stringWithFormat:TWITTER_SERARCH_URL ,@"NB"]];
+    [twitter_search loadRequest:CALTRAIN_TWITTER_URL];
     
 }
 

@@ -21,6 +21,10 @@
     NSManagedObjectContext *managedObjectContext;
     NSString* lastRawAddressGeoRequest;  // Last raw address sent to the Geocoder, used to avoid duplicate requests
     NSDate* lastGeoRequestTime;  // Time of last Geocoding request, used to avoid duplicate requests
+
+    double startTime;
+    float durationResponseTime;
+
 }
 
 - (void)markAndUpdateSelectedLocation:(Location *)loc;  // Updates the selected location to be loc (in locations object, in toFromVC, and in the table selected cell
@@ -69,8 +73,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    
-    
 }
 
 //
@@ -101,6 +103,7 @@
 {
     NSLog(@"Select Row: isFrom=%d, section=%d, row=%d", isFrom, [indexPath section], [indexPath row]);
     if ([toFromVC editMode] == NO_EDIT && [indexPath section] == 0) { // "Enter New Address" cell
+        
         if (isFrom) {
             [toFromVC setEditMode:FROM_EDIT]; 
         } else {
@@ -256,6 +259,7 @@
         }
         if (matchingLocation) { //if we got a match, mark and send appropriate updates 
             [self markAndUpdateSelectedLocation:matchingLocation];
+            
         }
         else {  // if no match, Geocode this new rawAddress
             // Keep a history to avoid duplicates
@@ -268,7 +272,16 @@
             urlResource = [@"json" appendQueryParams:params];
 
             NSLog(@"Geocode Parameter String = %@", urlResource);
-                        
+            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+            if ([[prefs objectForKey:@"isEdit"] isEqualToString:@"fromEdit"] ) {
+                [prefs setObject:rawAddress forKey:@"rawFrom"];
+                startTime = CFAbsoluteTimeGetCurrent();
+                NSLog(@"raw addressssss ======================= From");
+            } else {
+                [prefs setObject:rawAddress forKey:@"rawTo"];
+                startTime = CFAbsoluteTimeGetCurrent();
+                NSLog(@"raw addressssss ======================= TO");
+            }            
             @try {
                 // Call the geocoder
                 [rkGeoMgr loadObjectsAtResourcePath:urlResource delegate:self];
@@ -298,6 +311,19 @@
         // Get the status string the hard way by parsing the response string
         NSString* response = [[objectLoader response] bodyAsString];
         NSLog(@"Response from google: %@", response);
+         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        if ([[prefs objectForKey:@"isEdit"] isEqualToString:@"fromEdit"]) {
+            [prefs setObject:response forKey:@"geoResponseFrom"];
+            durationResponseTime = CFAbsoluteTimeGetCurrent() - startTime;
+             [prefs setObject:[[NSNumber numberWithFloat:durationResponseTime] stringValue] forKey:@"timeFrom"];
+            
+        } else if ([[prefs objectForKey:@"isEdit"] isEqualToString:@"toEdit"]) {
+            [prefs setObject:response forKey:@"geoResponseTo"];
+            durationResponseTime = CFAbsoluteTimeGetCurrent() - startTime;
+            [prefs setObject:[[NSNumber numberWithFloat:durationResponseTime] stringValue] forKey:@"timeTo"];
+        }
+         
+        
         NSRange range = [response rangeOfString:@"\"status\""];
         if (range.location != NSNotFound) {
             NSString* responseStartingFromStatus = [response substringFromIndex:(range.location+range.length)];

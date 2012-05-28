@@ -185,7 +185,7 @@ static NSDateFormatter *timeFormattr;
 
 -(BOOL)isTrain
 {
-    if ([[self mode] isEqualToString:@"TRAIN"]) {   
+    if ([[self mode] isEqualToString:@"RAIL"]) {   
         return true;   
     }
     return false;

@@ -63,7 +63,7 @@ dependencies: /github-tp/NC_iPhone/Network\ Commuting/RootMap.m \
   /github-tp/NC_iPhone/Network\ Commuting/PolylineEncodedString.h \
   /github-tp/NC_iPhone/Network\ Commuting/MyAnnotation.h \
   /github-tp/NC_iPhone/Network\ Commuting/LegMapViewController.h \
-  /github-tp/NC_iPhone/Network\ Commuting/FeedBackViewController.h \
+  /github-tp/NC_iPhone/Network\ Commuting/FeedBackForm.h \
   /github-tp/NC_iPhone/Network\ Commuting/TPResponse.h \
   /github-tp/NC_iPhone/Network\ Commuting/Plan.h \
   /github-tp/NC_iPhone/Network\ Commuting/Location.h \

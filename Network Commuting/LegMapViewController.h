@@ -11,7 +11,7 @@
 #import "Itinerary.h"
 #import "Leg.h"
 #import "MyAnnotation.h"
-#import "FeedBackViewController.h"
+#import "FeedBackForm.h"
 
 @interface LegMapViewController : UIViewController {
     MKPointAnnotation* startPoint;  // annotation for startPoint of the itinerary
