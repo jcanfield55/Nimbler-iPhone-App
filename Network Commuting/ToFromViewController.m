@@ -815,7 +815,7 @@ int const TIME_DATE_HEIGHT = 45;
     NSString *tpPlan = [prefs objectForKey:@"tpPlanner"];
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;   
     
-    RKClient *client = [RKClient clientWithBaseURL:@"http://23.23.210.156:8080/TPServer/ws/plan/"];
+    RKClient *client = [RKClient clientWithBaseURL:@"http://23.23.210.156:7070/TPServer/ws/plan/"];
     RKParams *rkp = [RKParams params];
     [RKClient setSharedClient:client];
     
@@ -863,7 +863,7 @@ int const TIME_DATE_HEIGHT = 45;
                                     @"deviceid", udid, 
                                     nil];
             
-            rkSavePlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://23.23.210.156:8080/TPServer/ws/plan/"];
+            rkSavePlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://23.23.210.156:7070/TPServer/ws/plan/"];
             
             [[rkSavePlanMgr mappingProvider] setMapping:[Plan objectMappingforPlanner:OTP_PLANNER] forKeyPath:@"plan"];
             planURLResource = [@"get" appendQueryParams:params];
