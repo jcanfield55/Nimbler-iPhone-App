@@ -2,7 +2,7 @@
 //  SupportedRegion.h
 //  Nimbler
 //
-//  Created by JaY Kumbhani on 5/11/12.
+//  Created by Sitanshu Joshi on 5/11/12.
 //  Copyright (c) 2012 Network Commuting. All rights reserved.
 //
 

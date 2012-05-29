@@ -1,2 +1,2 @@
-dependencies: /github-tp/NC_iPhone/Network\ Commuting/twitterSearch.m \
-  /github-tp/NC_iPhone/Network\ Commuting/twitterSearch.h
+dependencies: /github-tp/NC_iPhone/Network\ Commuting/TwitterSearch.m \
+  /github-tp/NC_iPhone/Network\ Commuting/TwitterSearch.h

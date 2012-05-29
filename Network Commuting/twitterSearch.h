@@ -1,14 +1,14 @@
 //
-//  twitterSearch.h
+//  TwitterSearch.h
 //  Nimbler
 //
-//  Created by JaY Kumbhani on 5/26/12.
+//  Created by Sitanshu Joshi on 5/26/12.
 //  Copyright (c) 2012 Network Commuting. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface twitterSearch : UIViewController <UIWebViewDelegate>{
+@interface TwitterSearch : UIViewController <UIWebViewDelegate>{
     IBOutlet UIWebView *twitterWebView;
     IBOutlet UIActivityIndicatorView *loadProcess;
 }

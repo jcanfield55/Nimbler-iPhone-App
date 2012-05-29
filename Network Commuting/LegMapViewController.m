@@ -11,7 +11,7 @@
 #import "MyAnnotation.h"
 #import "Step.h"
 #import "RootMap.h"
-#import "twitterSearch.h"
+#import "TwitterSearch.h"
 
 @interface LegMapViewController()
 // Utility routine for setting the region on the MapView based on the itineraryNumber
@@ -415,7 +415,7 @@
 }
 -(IBAction)twitterSearch:(id)sender{
 
-    twitterSearch *twitter_search = [[twitterSearch alloc] initWithNibName:@"twitterSearch" bundle:nil];
+    TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
     
     [[self navigationController] pushViewController:twitter_search animated:YES];
     

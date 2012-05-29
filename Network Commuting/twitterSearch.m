@@ -1,14 +1,14 @@
 //
-//  twitterSearch.m
+//  TwitterSearch.m
 //  Nimbler
 //
-//  Created by JaY Kumbhani on 5/26/12.
+//  Created by Sitanshu Joshi on 5/26/12.
 //  Copyright (c) 2012 Network Commuting. All rights reserved.
 //
 
-#import "twitterSearch.h"
+#import "TwitterSearch.h"
 
-@implementation twitterSearch
+@implementation TwitterSearch
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -23,7 +23,6 @@
 {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
     // Release any cached data, images, etc that aren't in use.
 }
 
@@ -34,7 +33,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
 }
-
 
 - (void)viewDidUnload
 {
@@ -48,26 +46,27 @@
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
-#pragma utility methods
+
+#pragma mark Twitter utility methods 
 
 -(void)loadRequest:(NSString*) URL{
 
-    NSLog(@"load request %@", URL);
-//  NSURL *tw_url = [NSURL URLWithString:CALTRAIN_TWITTER_URL];
     NSURL *tw_url = [NSURL URLWithString:URL];
-    NSURLRequest *requestObj = [NSURLRequest requestWithURL:tw_url];
-    
+    NSURLRequest *requestObj = [NSURLRequest requestWithURL:tw_url];    
     [twitterWebView loadRequest:requestObj];
 }
 
-#pragma webView Delegate Method
+#pragma mark WebView Delegate Method
+
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
     loadProcess.hidden = NO;
 }
+
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
     loadProcess.hidden = YES;
 }
+
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     loadProcess.hidden = YES;

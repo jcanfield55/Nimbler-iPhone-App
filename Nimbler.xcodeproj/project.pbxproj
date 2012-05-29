@@ -73,8 +73,8 @@
 		CC6FE2C2155BD02E004BE10A /* dot.png in Resources */ = {isa = PBXBuildFile; fileRef = CC6FE2C1155BD02E004BE10A /* dot.png */; };
 		CCB7E811157090380036E9CD /* FeedBackForm.m in Sources */ = {isa = PBXBuildFile; fileRef = CCB7E80F157090370036E9CD /* FeedBackForm.m */; };
 		CCB7E812157090380036E9CD /* FeedBackForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = CCB7E810157090380036E9CD /* FeedBackForm.xib */; };
-		CCB7E81815709C730036E9CD /* twitterSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = CCB7E81615709C730036E9CD /* twitterSearch.m */; };
-		CCB7E81915709C730036E9CD /* twitterSearch.xib in Resources */ = {isa = PBXBuildFile; fileRef = CCB7E81715709C730036E9CD /* twitterSearch.xib */; };
+		CCB9E6FA1574B4F70043F304 /* TwitterSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = CCB9E6F91574B4F70043F304 /* TwitterSearch.m */; };
+		CCB9E6FC1574B4FF0043F304 /* TwitterSearch.xib in Resources */ = {isa = PBXBuildFile; fileRef = CCB9E6FB1574B4FF0043F304 /* TwitterSearch.xib */; };
 		CCBE9FEE15627D6D00908A78 /* FeedBackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CCBE9FEC15627D6D00908A78 /* FeedBackViewController.m */; };
 		CCBE9FF41562867600908A78 /* SupportedRegion.m in Sources */ = {isa = PBXBuildFile; fileRef = CCBE9FF31562867600908A78 /* SupportedRegion.m */; };
 		CCBE9FF715628F5000908A78 /* RootMap.m in Sources */ = {isa = PBXBuildFile; fileRef = CCBE9FF615628F4F00908A78 /* RootMap.m */; };
@@ -848,10 +848,10 @@
 		CCB7E80E157090370036E9CD /* FeedBackForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedBackForm.h; sourceTree = "<group>"; };
 		CCB7E80F157090370036E9CD /* FeedBackForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedBackForm.m; sourceTree = "<group>"; };
 		CCB7E810157090380036E9CD /* FeedBackForm.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedBackForm.xib; sourceTree = "<group>"; };
-		CCB7E81515709C730036E9CD /* twitterSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = twitterSearch.h; sourceTree = "<group>"; };
-		CCB7E81615709C730036E9CD /* twitterSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = twitterSearch.m; sourceTree = "<group>"; };
-		CCB7E81715709C730036E9CD /* twitterSearch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = twitterSearch.xib; sourceTree = "<group>"; };
 		CCB7E81A1570A3D10036E9CD /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		CCB9E6F81574B4EF0043F304 /* TwitterSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwitterSearch.h; sourceTree = "<group>"; };
+		CCB9E6F91574B4F70043F304 /* TwitterSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwitterSearch.m; sourceTree = "<group>"; };
+		CCB9E6FB1574B4FF0043F304 /* TwitterSearch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TwitterSearch.xib; sourceTree = "<group>"; };
 		CCBE9FEB15627D6D00908A78 /* FeedBackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedBackViewController.h; sourceTree = "<group>"; };
 		CCBE9FEC15627D6D00908A78 /* FeedBackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedBackViewController.m; sourceTree = "<group>"; };
 		CCBE9FF21562866F00908A78 /* SupportedRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SupportedRegion.h; sourceTree = "<group>"; };
@@ -2285,31 +2285,15 @@
 		52CF43A714BDF2F9000565D6 /* Nimbler */ = {
 			isa = PBXGroup;
 			children = (
+				CCB9E6BA1574AC100043F304 /* util */,
 				CCA43F1C157330AD00DF85AD /* mapView */,
 				CCB7E81E1570EC460036E9CD /* routeView */,
 				CCB7E81D1570EBCC0036E9CD /* dataObject */,
 				CCB7E81C1570EB670036E9CD /* images */,
-				CCB7E81B1570A3E10036E9CD /* AppDelegate */,
+				CCB7E81B1570A3E10036E9CD /* appDelegate */,
 				CCB7E81415709C080036E9CD /* twitterSearch */,
 				CCB7E8131570904A0036E9CD /* feedBackForm */,
-				CCBE9FF31562867600908A78 /* SupportedRegion.m */,
-				CCBE9FF21562866F00908A78 /* SupportedRegion.h */,
-				52B302C214BE2B1E00EB4852 /* ToFromViewController.h */,
-				52B302C314BE2B1E00EB4852 /* ToFromViewController.m */,
-				52B302C414BE2B1E00EB4852 /* ToFromViewController.xib */,
-				5249743D15574578004A56E2 /* ToFromTableViewController.h */,
-				5297F2E01560CAC20032D015 /* ToFromTableViewController.m */,
-				5297F2DD1560CA0F0032D015 /* DateTimeViewController.h */,
-				5297F2DE1560CA200032D015 /* DateTimeViewController.m */,
-				52E66F021520374B001BF026 /* DateTimeViewController.xib */,
 				52DF9C4714F7546800DC6828 /* Network_Commuting.xcdatamodeld */,
-				52F67EEC14C7E103007578D5 /* enums.h */,
-				5275A2DD1528069F0052903F /* PolylineEncodedString.h */,
-				5275A2DE1528069F0052903F /* PolylineEncodedString.m */,
-				5205D8DC14F4740D0004CD09 /* DateFormatterMSFrom1970.h */,
-				5205D8DD14F4740D0004CD09 /* DateFormatterMSFrom1970.m */,
-				52B7421C14E1FFA200D817D1 /* UtilityFunctions.h */,
-				52B7421D14E1FFA200D817D1 /* UtilityFunctions.m */,
 				52CF43A814BDF2F9000565D6 /* Supporting Files */,
 			);
 			name = Nimbler;
@@ -2376,20 +2360,20 @@
 		CCB7E81415709C080036E9CD /* twitterSearch */ = {
 			isa = PBXGroup;
 			children = (
-				CCB7E81515709C730036E9CD /* twitterSearch.h */,
-				CCB7E81615709C730036E9CD /* twitterSearch.m */,
-				CCB7E81715709C730036E9CD /* twitterSearch.xib */,
+				CCB9E6FB1574B4FF0043F304 /* TwitterSearch.xib */,
+				CCB9E6F91574B4F70043F304 /* TwitterSearch.m */,
+				CCB9E6F81574B4EF0043F304 /* TwitterSearch.h */,
 			);
 			name = twitterSearch;
 			sourceTree = "<group>";
 		};
-		CCB7E81B1570A3E10036E9CD /* AppDelegate */ = {
+		CCB7E81B1570A3E10036E9CD /* appDelegate */ = {
 			isa = PBXGroup;
 			children = (
 				52CF43B014BDF2F9000565D6 /* nc_AppDelegate.h */,
 				52CF43B114BDF2F9000565D6 /* nc_AppDelegate.m */,
 			);
-			name = AppDelegate;
+			name = appDelegate;
 			sourceTree = "<group>";
 		};
 		CCB7E81C1570EB670036E9CD /* images */ = {
@@ -2409,6 +2393,8 @@
 		CCB7E81D1570EBCC0036E9CD /* dataObject */ = {
 			isa = PBXGroup;
 			children = (
+				CCBE9FF31562867600908A78 /* SupportedRegion.m */,
+				CCBE9FF21562866F00908A78 /* SupportedRegion.h */,
 				CCC107CE156A39C90011246D /* TPResponse.m */,
 				CCC107CD156A39C60011246D /* TPResponse.h */,
 				CC6FE2B7155BA40D004BE10A /* MyAnnotation.m */,
@@ -2446,12 +2432,34 @@
 		CCB7E81E1570EC460036E9CD /* routeView */ = {
 			isa = PBXGroup;
 			children = (
+				52B302C214BE2B1E00EB4852 /* ToFromViewController.h */,
+				52B302C314BE2B1E00EB4852 /* ToFromViewController.m */,
+				52B302C414BE2B1E00EB4852 /* ToFromViewController.xib */,
+				5249743D15574578004A56E2 /* ToFromTableViewController.h */,
+				5297F2E01560CAC20032D015 /* ToFromTableViewController.m */,
 				5210516B14C9BEA80025DD39 /* RouteOptionsViewController.h */,
 				5210516C14C9BEA80025DD39 /* RouteOptionsViewController.m */,
 				52B1B22414F9ABE4001AC5D1 /* RouteDetailsViewController.h */,
 				52B1B22514F9ABE4001AC5D1 /* RouteDetailsViewController.m */,
 			);
 			name = routeView;
+			sourceTree = "<group>";
+		};
+		CCB9E6BA1574AC100043F304 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				5297F2DD1560CA0F0032D015 /* DateTimeViewController.h */,
+				5297F2DE1560CA200032D015 /* DateTimeViewController.m */,
+				52E66F021520374B001BF026 /* DateTimeViewController.xib */,
+				52F67EEC14C7E103007578D5 /* enums.h */,
+				5275A2DD1528069F0052903F /* PolylineEncodedString.h */,
+				5275A2DE1528069F0052903F /* PolylineEncodedString.m */,
+				5205D8DC14F4740D0004CD09 /* DateFormatterMSFrom1970.h */,
+				5205D8DD14F4740D0004CD09 /* DateFormatterMSFrom1970.m */,
+				52B7421C14E1FFA200D817D1 /* UtilityFunctions.h */,
+				52B7421D14E1FFA200D817D1 /* UtilityFunctions.m */,
+			);
+			name = util;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2691,7 +2699,7 @@
 				CC578A03156520B60057D5A7 /* feedback.png in Resources */,
 				CC578A0515652D2A0057D5A7 /* pausePlay.png in Resources */,
 				CCB7E812157090380036E9CD /* FeedBackForm.xib in Resources */,
-				CCB7E81915709C730036E9CD /* twitterSearch.xib in Resources */,
+				CCB9E6FC1574B4FF0043F304 /* TwitterSearch.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2758,7 +2766,7 @@
 				CCBE9FF715628F5000908A78 /* RootMap.m in Sources */,
 				CCC107CF156A39CB0011246D /* TPResponse.m in Sources */,
 				CCB7E811157090380036E9CD /* FeedBackForm.m in Sources */,
-				CCB7E81815709C730036E9CD /* twitterSearch.m in Sources */,
+				CCB9E6FA1574B4F70043F304 /* TwitterSearch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

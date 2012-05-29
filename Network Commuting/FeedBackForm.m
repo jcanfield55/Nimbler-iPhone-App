@@ -2,25 +2,18 @@
 //  FeedBackForm.m
 //  Nimbler
 //
-//  Created by JaY Kumbhani on 5/26/12.
+//  Created by Sitanshu Joshi on 5/26/12.
 //  Copyright (c) 2012 Network Commuting. All rights reserved.
 //
 
 #import "FeedBackForm.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 
-#define FEEDBACK_TEXT           @"1"
-#define FEEDBACK_AUDIO          @"2"
-#define FEEDBACK_BOTH           @"3"
-#define FB_RESPOSE_SUCCEES      @"FeedBack Send Successfully"
-#define FB_RESPONSE_FAIL        @"Please Send Again"
-
 @implementation FeedBackForm
 
 @synthesize tpResponse,tpURLResource;
 
-static RKObjectManager *rkTPResponse;
-static Plan *fbPlan;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -34,7 +27,6 @@ static Plan *fbPlan;
 {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
     // Release any cached data, images, etc that aren't in use.
 }
 
@@ -94,8 +86,8 @@ static Plan *fbPlan;
     }
     
 }
--(IBAction)stopRecording:(id)sender{
-    
+-(IBAction)stopRecording:(id)sender
+{    
     if (audioRecorder.recording)
     {
         [audioRecorder stop];
@@ -105,15 +97,15 @@ static Plan *fbPlan;
     NSLog(@"Stop Recording");
     
 }
--(IBAction)pausRecording:(id)sender{
-    
+-(IBAction)pausRecording:(id)sender
+{
     if (audioPlayer.playing) {
         [audioPlayer pause];
     }  
     
 }
--(IBAction)playRecording:(id)sender{
-    
+-(IBAction)playRecording:(id)sender
+{
     NSLog(@"play Recording");
     if (!audioRecorder.recording)
     {
@@ -134,12 +126,13 @@ static Plan *fbPlan;
 }
 
 
-#pragma audio player delegate method
+#pragma mark audio player delegate method
+
 -(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
 {
     NSLog(@"SuccessFully Playing");
-    
 }
+
 -(void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player error:(NSError *)error
 {
     NSLog(@"Decoder Error occurred");
@@ -156,21 +149,7 @@ static Plan *fbPlan;
 }
 
 
-#pragma RestKit response handler
-- (void)setRkTPResponse:(RKObjectManager *)rkTPResponse0
-{
-    rkTPResponse = rkTPResponse0;
-    [[rkTPResponse mappingProvider] setMapping:[TPResponse objectMappingforTPResponse:OTP_PLANNER] forKeyPath:@"tpResponse"];
-}
-
-
--(void)setPlanForTPFeedBack:(Plan *)plan
-{
-    fbPlan = plan;
-}
-
-
-#pragma mark Restful request response
+#pragma mark Restful request
 
 -(IBAction)submitFeedBack:(id)sender
 {
@@ -179,7 +158,7 @@ static Plan *fbPlan;
     NSString *uniqueId = [prefs objectForKey:@"uniqueid"];
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
     
-    RKClient *client = [RKClient clientWithBaseURL:@"http://23.23.210.156:8080/TPServer"];
+    RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     RKParams *rkp = [RKParams params];
     [RKClient setSharedClient:client];
     
@@ -204,55 +183,22 @@ static Plan *fbPlan;
     [rkp setValue:uniqueId forParam:@"uniqueid"]; 
     [rkp setValue:@"3.5" forParam:@"rating"];
     
-    [[RKClient sharedClient]  post:@"/ws/feedback/new" params:rkp delegate:self];
+    [[RKClient sharedClient]  post:@"feedback/new" params:rkp delegate:self];
 }
 
+#pragma mark Restful Response
 
-- (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects 
-{        
-    
-    NSLog(@"wel i");
-    if ([[objectLoader resourcePath] isEqualToString:tpURLResource]) 
-    {   
-        NSInteger statusCode = [[objectLoader response] statusCode];
-        NSLog(@"Planning HTTP status code = %d", statusCode);
-        
-        @try {
-            
-            if (objects && [objects objectAtIndex:0]) {
-                tpResponse = [objects objectAtIndex:0];
-                NSLog(@"success");
-            }
-        }
-        @catch (NSException *exception) {            
-            NSLog(@"Error object ==============================: %@", exception);            
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"Trip is not possible. Your start or end point might not be safely accessible" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
-            [alert show];            
-            return ;
-        }
-        
-    }
-}
-
-- (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error {
-    
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to send your feedback to Trip Planner" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alert show];    
-    NSLog(@"Error received from RKObjectManager:");
-    NSLog(@"%@", error);
-}
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     if ([request isGET]) {
         // Handling GET /foo.xml
-
         
     } else if ([request isPOST]) {  
         NSLog(@"Got aresponse back from TPResponse! %@", [response bodyAsString]);
         
         if ([response isOK]) {
             // Success! Let's take a look at the data
-            NSLog(@"Retrieved XML: %@", [response bodyAsString]);
+            
             RKJSONParserJSONKit* parser1 = [RKJSONParserJSONKit new];
             NSDictionary  *p = [parser1 objectFromString:[response bodyAsString] error:nil];
             
@@ -266,7 +212,7 @@ static Plan *fbPlan;
                     } else {
                         msg = FB_RESPONSE_FAIL ;
                     }
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip FeedBack" message:msg delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:FB_TITLE_MSG message:msg delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
                     [alert show];
                 }
                 
@@ -276,7 +222,41 @@ static Plan *fbPlan;
     } 
 }
 
+- (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects 
+{        
 
+    if ([[objectLoader resourcePath] isEqualToString:tpURLResource]) 
+    {   
+        NSInteger statusCode = [[objectLoader response] statusCode];
+        NSLog(@"Planning HTTP status code = %d", statusCode);
+        
+        @try {
+            
+            if (objects && [objects objectAtIndex:0]) {
+                tpResponse = [objects objectAtIndex:0];
+                NSLog(@"success ");
+            }
+        }
+        @catch (NSException *exception) {            
+            NSLog(@"Error object load==============================: %@", exception);            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to send your feedback to Trip Planner" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert show];    
+          
+            return;
+        }
+        
+    }
+}
+
+- (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error {
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to send your feedback to Trip Planner" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alert show];    
+    NSLog(@"Error received from RKObjectManager:");
+    NSLog(@"%@", error);
+}
+
+#pragma mark Close keybord at return
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     
@@ -284,7 +264,6 @@ static Plan *fbPlan;
         [textView resignFirstResponder];
         return NO;
     }
-    
     return YES;
 }
 @end

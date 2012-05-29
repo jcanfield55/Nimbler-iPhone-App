@@ -344,7 +344,7 @@ static Plan *fbPlan;
     NSString *uniqueId = [prefs objectForKey:@"uniqueid"];
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
         
-    RKClient *client = [RKClient clientWithBaseURL:@"http://23.23.210.156:8080/TPServer"];
+    RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     RKParams *rkp = [RKParams params];
     [RKClient setSharedClient:client];
    
@@ -369,7 +369,7 @@ static Plan *fbPlan;
     [rkp setValue:uniqueId forParam:@"uniqueid"]; 
     [rkp setValue:@"3.5" forParam:@"rating"];
        
-    [[RKClient sharedClient]  post:@"/ws/feedback/new" params:rkp delegate:self];
+    [[RKClient sharedClient]  post:@"feedback/new" params:rkp delegate:self];
 
 }
 @end
