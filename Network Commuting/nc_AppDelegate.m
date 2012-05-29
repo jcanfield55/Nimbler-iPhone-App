@@ -66,7 +66,7 @@
     // Initialize the Locations class and store "Current Location" into the database if not there already
     locations = [[Locations alloc] initWithManagedObjectContext:[self managedObjectContext]];
     [toFromViewController setLocations:locations];
-   
+        
     }@catch (NSException *exception) {
         NSLog(@"Exception: ----------------- %@", exception);
     }   

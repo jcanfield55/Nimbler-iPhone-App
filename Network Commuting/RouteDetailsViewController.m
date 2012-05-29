@@ -13,7 +13,6 @@
 #import "TwitterSearch.h"
 #import "FeedBackForm.h"
 
-
 @implementation RouteDetailsViewController
 
 @synthesize itinerary;
@@ -111,7 +110,6 @@
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
             [prefs setObject:train1 forKey:@"train"];
         }
-        
         
         /*
          DE4 Fix - Apprika Systems

@@ -2287,11 +2287,11 @@
 			children = (
 				CCB9E6BA1574AC100043F304 /* util */,
 				CCA43F1C157330AD00DF85AD /* mapView */,
-				CCB7E81E1570EC460036E9CD /* routeView */,
+				CCB7E81E1570EC460036E9CD /* controllerView */,
 				CCB7E81D1570EBCC0036E9CD /* dataObject */,
 				CCB7E81C1570EB670036E9CD /* images */,
 				CCB7E81B1570A3E10036E9CD /* appDelegate */,
-				CCB7E81415709C080036E9CD /* twitterSearch */,
+				CCB7E81415709C080036E9CD /* twitter */,
 				CCB7E8131570904A0036E9CD /* feedBackForm */,
 				52DF9C4714F7546800DC6828 /* Network_Commuting.xcdatamodeld */,
 				52CF43A814BDF2F9000565D6 /* Supporting Files */,
@@ -2357,14 +2357,14 @@
 			name = feedBackForm;
 			sourceTree = "<group>";
 		};
-		CCB7E81415709C080036E9CD /* twitterSearch */ = {
+		CCB7E81415709C080036E9CD /* twitter */ = {
 			isa = PBXGroup;
 			children = (
 				CCB9E6FB1574B4FF0043F304 /* TwitterSearch.xib */,
 				CCB9E6F91574B4F70043F304 /* TwitterSearch.m */,
 				CCB9E6F81574B4EF0043F304 /* TwitterSearch.h */,
 			);
-			name = twitterSearch;
+			name = twitter;
 			sourceTree = "<group>";
 		};
 		CCB7E81B1570A3E10036E9CD /* appDelegate */ = {
@@ -2429,7 +2429,7 @@
 			name = dataObject;
 			sourceTree = "<group>";
 		};
-		CCB7E81E1570EC460036E9CD /* routeView */ = {
+		CCB7E81E1570EC460036E9CD /* controllerView */ = {
 			isa = PBXGroup;
 			children = (
 				52B302C214BE2B1E00EB4852 /* ToFromViewController.h */,
@@ -2442,7 +2442,7 @@
 				52B1B22414F9ABE4001AC5D1 /* RouteDetailsViewController.h */,
 				52B1B22514F9ABE4001AC5D1 /* RouteDetailsViewController.m */,
 			);
-			name = routeView;
+			name = controllerView;
 			sourceTree = "<group>";
 		};
 		CCB9E6BA1574AC100043F304 /* util */ = {

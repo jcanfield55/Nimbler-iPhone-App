@@ -768,18 +768,6 @@ int const TIME_DATE_HEIGHT = 45;
          [location setFormattedAddress:[streetName objectAtIndex:1]];
 
         }
-//        if (! ( ([[location lat] doubleValue]>=[[regionArea minLatitude] doubleValue]) && ([[location lng] doubleValue]>=[[regionArea minLongitude] doubleValue]) &&
-//            ([[location lat] doubleValue]<=[[regionArea maxLatitude] doubleValue]) && ([[location lng] doubleValue]<=[[regionArea maxLongitude] doubleValue])) ) 
-//        {
-//            NSString *addr = [location formattedAddress];
-//            NSString *msg = @"Did not find the address: "; 
-//            NSString *msg1 = @"in the San Francisco Bay Area";
-//                       
-//            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:[NSString stringWithFormat:@"%@ %@ %@", msg, addr, msg1] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//            [alert show];
-//            
-//            return;
-//        }
     }
 }
 
