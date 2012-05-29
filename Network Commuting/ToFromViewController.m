@@ -67,6 +67,7 @@
 @synthesize rkBayArea;
 @synthesize editMode;
 static SupportedRegion *regionArea;
+
 // Constants for animating up and down the To: field
 int const MAIN_TABLE_HEIGHT = 358;
 int const TOFROM_ROW_HEIGHT = 35;
@@ -148,7 +149,7 @@ int const TIME_DATE_HEIGHT = 45;
     
     // Flash scrollbars on tables
     [toTable flashScrollIndicators];
-    [fromTable flashScrollIndicators];
+    [fromTable flashScrollIndicators];    
 }
 
 // Update trip date to the current time if needed
@@ -341,6 +342,7 @@ int const TIME_DATE_HEIGHT = 45;
             // if From txtField is already in the subview (due to recycling, no need to add again
         } else { 
             [cellView addSubview:[fromTableVC txtField]]; // add From txtField
+            NSLog(@"start...");
         }
     }
     else {   // do same for toTable case
@@ -766,18 +768,18 @@ int const TIME_DATE_HEIGHT = 45;
          [location setFormattedAddress:[streetName objectAtIndex:1]];
 
         }
-        if (! ( ([[location lat] doubleValue]>=[[regionArea minLatitude] doubleValue]) && ([[location lng] doubleValue]>=[[regionArea minLongitude] doubleValue]) &&
-            ([[location lat] doubleValue]<=[[regionArea maxLatitude] doubleValue]) && ([[location lng] doubleValue]<=[[regionArea maxLongitude] doubleValue])) ) 
-        {
-            NSString *addr = [location formattedAddress];
-            NSString *msg = @"Did not find the address: "; 
-            NSString *msg1 = @"in the San Francisco Bay Area";
-                       
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:[NSString stringWithFormat:@"%@ %@ %@", msg, addr, msg1] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [alert show];
-            
-            return;
-        }
+//        if (! ( ([[location lat] doubleValue]>=[[regionArea minLatitude] doubleValue]) && ([[location lng] doubleValue]>=[[regionArea minLongitude] doubleValue]) &&
+//            ([[location lat] doubleValue]<=[[regionArea maxLatitude] doubleValue]) && ([[location lng] doubleValue]<=[[regionArea maxLongitude] doubleValue])) ) 
+//        {
+//            NSString *addr = [location formattedAddress];
+//            NSString *msg = @"Did not find the address: "; 
+//            NSString *msg1 = @"in the San Francisco Bay Area";
+//                       
+//            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:[NSString stringWithFormat:@"%@ %@ %@", msg, addr, msg1] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//            [alert show];
+//            
+//            return;
+//        }
     }
 }
 
@@ -785,6 +787,9 @@ int const TIME_DATE_HEIGHT = 45;
 {
     regionArea = [[SupportedRegion alloc] init];
     regionArea = bayAreaRegion;    
+    ToFromTableViewController *setRegion = [[ToFromTableViewController alloc] initWithNibName:nil bundle:nil];
+    [setRegion setBayAreas:bayAreaRegion];
+        
 }
 
 -(void)addLocationAction:(id) sender{
