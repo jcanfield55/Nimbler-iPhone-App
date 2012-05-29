@@ -10,7 +10,7 @@
 #import "Leg.h"
 #import "UtilityFunctions.h"
 #import <math.h>
-#import "twitterSearch.h"
+#import "TwitterSearch.h"
 #import "FeedBackForm.h"
 
 @implementation RouteOptionsViewController

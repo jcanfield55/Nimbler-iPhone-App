@@ -73,4 +73,4 @@ dependencies: \
   /github-tp/NC_iPhone/Network\ Commuting/TestFlightSDK1/TestFlight.h \
   /github-tp/NC_iPhone/Network\ Commuting/Step.h \
   /github-tp/NC_iPhone/Network\ Commuting/RootMap.h \
-  /github-tp/NC_iPhone/Network\ Commuting/twitterSearch.h
+  /github-tp/NC_iPhone/Network\ Commuting/TwitterSearch.h

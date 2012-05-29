@@ -16,7 +16,7 @@
 #import "Itinerary.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "FeedBackForm.h"
-#import "twitterSearch.h"
+#import "TwitterSearch.h"
 
 @interface ToFromViewController()
 {
@@ -815,7 +815,7 @@ int const TIME_DATE_HEIGHT = 45;
     NSString *tpPlan = [prefs objectForKey:@"tpPlanner"];
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;   
     
-    RKClient *client = [RKClient clientWithBaseURL:@"http://23.23.210.156:8080/TPServer/ws/plan/"];
+    RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     RKParams *rkp = [RKParams params];
     [RKClient setSharedClient:client];
     
@@ -848,7 +848,7 @@ int const TIME_DATE_HEIGHT = 45;
         [rkp setValue:[fromLocation lng] forParam:@"lonTo"];
     }
     
-    [[RKClient sharedClient] post:@"new" params:rkp delegate:self]; 
+    [[RKClient sharedClient] post:@"plan/new" params:rkp delegate:self]; 
     
 }
 
@@ -863,10 +863,10 @@ int const TIME_DATE_HEIGHT = 45;
                                     @"deviceid", udid, 
                                     nil];
             
-            rkSavePlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://23.23.210.156:8080/TPServer/ws/plan/"];
+            rkSavePlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];
             
             [[rkSavePlanMgr mappingProvider] setMapping:[Plan objectMappingforPlanner:OTP_PLANNER] forKeyPath:@"plan"];
-            planURLResource = [@"get" appendQueryParams:params];
+            planURLResource = [@"plan/get" appendQueryParams:params];
             
             [rkSavePlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
             
@@ -877,23 +877,5 @@ int const TIME_DATE_HEIGHT = 45;
     } 
 }
 
-
--(void)LogGeoCodingEvent
-{    
-//    NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
-//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-//    
-//    [prefs setObject:[fromLocation rawAddresses] forKey:@"fromRawAddr"];
-//    [prefs setObject:[toLocation rawAddresses] forKey:@"toRawAddr"];
-//    [prefs setObject:[fromLocation formattedAddress] forKey:@"fromFormatedAddr"];
-//    [prefs setObject:[toLocation formattedAddress] forKey:@"fromFormatedAddr"];
-//    
-//    RKClient *client = [RKClient clientWithBaseURL:URL_TPSERVER_GEOCODE];
-//    RKParams *rkp = [RKParams params];
-//    [RKClient setSharedClient:client];
-//
-//    [[RKClient sharedClient] post:@"new" params:rkp delegate:self];
-    
-}
 
 @end

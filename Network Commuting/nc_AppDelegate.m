@@ -31,10 +31,10 @@
     
    
     // Configure the RestKit RKClient object for Geocoding and trip planning
-    RKObjectManager* rk_geo_mgr = [RKObjectManager objectManagerWithBaseURL:@"http://maps.googleapis.com/maps/api/geocode/"];
+    RKObjectManager* rk_geo_mgr = [RKObjectManager objectManagerWithBaseURL:GEO_RESPONSE_URL];
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
-    //RKObjectManager* rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-107-21-80-36.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"];
-     RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/"];
+    
+     RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_GENERATE_URL];
            
     // Other URLs:
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/

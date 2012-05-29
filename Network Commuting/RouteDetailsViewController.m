@@ -10,7 +10,7 @@
 #import "Leg.h"
 #import "LegMapViewController.h"
 #import "RootMap.h"
-#import "twitterSearch.h"
+#import "TwitterSearch.h"
 #import "FeedBackForm.h"
 
 
@@ -170,12 +170,20 @@
 
 -(void)twitterSubmit
 {
-    twitterSearch *twitter_search = [[twitterSearch alloc] initWithNibName:@"twitterSearch" bundle:nil];
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    NSString *trainRoute = [prefs objectForKey:@"train"];
-    [[self navigationController] pushViewController:twitter_search animated:YES];
-    trainRoute = [TWITTER_SERARCH_URL stringByReplacingOccurrencesOfString:@"TRAIN" withString:trainRoute];
-    [twitter_search loadRequest:trainRoute];
+    @try {
+        NSLog(@"twiit");
+        TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        NSString *trainRoute = [prefs objectForKey:@"train"];
+        [[self navigationController] pushViewController:twitter_search animated:YES];
+        trainRoute = [TWITTER_SERARCH_URL stringByReplacingOccurrencesOfString:@"TRAIN" withString:trainRoute];
+        [twitter_search loadRequest:trainRoute];
+    }
+    @catch (NSException *exception) {
+        NSLog(@" twitter print : %@", exception);
+    }
+        
+   
 }
 
 
