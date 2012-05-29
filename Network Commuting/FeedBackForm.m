@@ -12,7 +12,7 @@
 #define FEEDBACK_TEXT           @"1"
 #define FEEDBACK_AUDIO          @"2"
 #define FEEDBACK_BOTH           @"3"
-#define FB_RESPOSE_SUCCEES      @"Feedback Send Successfully"
+#define FB_RESPOSE_SUCCEES      @"FeedBack Send Successfully"
 #define FB_RESPONSE_FAIL        @"Please Send Again"
 
 @implementation FeedBackForm
@@ -179,7 +179,7 @@ static Plan *fbPlan;
     NSString *uniqueId = [prefs objectForKey:@"uniqueid"];
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
     
-    RKClient *client = [RKClient clientWithBaseURL:@"http://23.23.210.156:7070/TPServer"];
+    RKClient *client = [RKClient clientWithBaseURL:@"http://23.23.210.156:8080/TPServer"];
     RKParams *rkp = [RKParams params];
     [RKClient setSharedClient:client];
     
@@ -266,7 +266,7 @@ static Plan *fbPlan;
                     } else {
                         msg = FB_RESPONSE_FAIL ;
                     }
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Feedback" message:msg delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip FeedBack" message:msg delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
                     [alert show];
                 }
                 

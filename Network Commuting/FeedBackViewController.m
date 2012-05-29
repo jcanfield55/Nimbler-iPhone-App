@@ -344,7 +344,7 @@ static Plan *fbPlan;
     NSString *uniqueId = [prefs objectForKey:@"uniqueid"];
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
         
-    RKClient *client = [RKClient clientWithBaseURL:@"http://23.23.210.156:7070/TPServer"];
+    RKClient *client = [RKClient clientWithBaseURL:@"http://23.23.210.156:8080/TPServer"];
     RKParams *rkp = [RKParams params];
     [RKClient setSharedClient:client];
    
