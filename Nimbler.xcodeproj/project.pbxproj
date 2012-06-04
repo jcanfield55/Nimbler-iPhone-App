@@ -2926,8 +2926,8 @@
 		52CF43CF14BDF2F9000565D6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (6GWZRKJ2PG)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (6GWZRKJ2PG)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2943,8 +2943,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = Nimbler;
-				PROVISIONING_PROFILE = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
+				PROVISIONING_PROFILE = "47041A92-97D6-439E-9384-EB00BAD1973C";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "47041A92-97D6-439E-9384-EB00BAD1973C";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2953,8 +2953,8 @@
 		52CF43D014BDF2F9000565D6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (6GWZRKJ2PG)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (6GWZRKJ2PG)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2970,8 +2970,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = Nimbler;
-				PROVISIONING_PROFILE = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
+				PROVISIONING_PROFILE = "A31E057D-CCEE-49CC-9402-D269B55AF883";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A31E057D-CCEE-49CC-9402-D269B55AF883";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};
