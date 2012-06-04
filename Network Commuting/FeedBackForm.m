@@ -40,6 +40,10 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+
+    NSString *email = [prefs objectForKey:@"eMailId"];
+    txtEmailId.text = email;
 }
 
 - (void)viewDidUnload
@@ -162,8 +166,8 @@
             NSLog(@"Error: %@", 
                   [error localizedDescription]);
         } else {
-           mesg = PLAY_MSG;
-            process = [self WaitPrompt];
+//           mesg = PLAY_MSG;
+//            process = [self WaitPrompt];
             [audioPlayer play];
         }
     }   
@@ -222,7 +226,11 @@
         [rkp setValue:txtFeedBack.text forParam:@"txtfb"];
         [rkp setValue:FEEDBACK_TEXT forParam:@"formattype"];
     } 
-    
+    if (txtEmailId.text != nil) {
+        [rkp setValue:txtEmailId.text forParam:@"emailid"];
+        [prefs setObject:txtEmailId.text forKey:@"eMailId"];
+        
+    }
     if(soundFilePath != nil && txtFeedBack.text != nil){
         [rkp setValue:FEEDBACK_BOTH forParam:@"formattype"]; 
     }
@@ -247,7 +255,7 @@
         [process dismissWithClickedButtonIndex:0 animated:NO];
         if ([response isOK]) {
             // Success! Let's take a look at the data
-            
+            txtFeedBack.text = @"";
             RKJSONParserJSONKit* parser1 = [RKJSONParserJSONKit new];
             NSDictionary  *p = [parser1 objectFromString:[response bodyAsString] error:nil];
             
@@ -316,6 +324,18 @@
     }
     return YES;
 }
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    // Any additional checks to ensure you have the correct textField here.
+    if(textField == txtEmailId) {
+        [txtEmailId resignFirstResponder];
+        return NO;
+    }
+    return YES;
+    
+}
+
 
 -(UIAlertView *) WaitPrompt  
 {  

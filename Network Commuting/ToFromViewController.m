@@ -548,8 +548,8 @@ int const TIME_DATE_HEIGHT = 45;
                     durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtontClickTime;
                     [connecting dismissWithClickedButtonIndex:0 animated:NO];
                     
-//                    [plan setToLocation:toLocation];
-//                    [plan setFromLocation:fromLocation];
+                    [plan setToLocation:toLocation];
+                    [plan setFromLocation:fromLocation];
                     
                     // Pass control to the RouteOptionsViewController to display itinerary choices
                     RouteOptionsViewController *routeOptionsVC = [[RouteOptionsViewController alloc] initWithStyle:UITableViewStylePlain];
@@ -562,7 +562,8 @@ int const TIME_DATE_HEIGHT = 45;
                     pl = [objects objectAtIndex:0];
                     [plan setPlanId:[pl planId]];                    
                     NSLog(@"obj foe plan = %@", [pl planId]);
-// Catch exception for null ids from server
+
+                    // Catch exception for null ids from server
                     @try {
                         for (int i= 0; i< [[pl itineraries] count]; i++) {
                             Itinerary *itin = [[pl sortedItineraries] objectAtIndex:i];
@@ -613,10 +614,14 @@ int const TIME_DATE_HEIGHT = 45;
 
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error {
     [connecting dismissWithClickedButtonIndex:0 animated:NO];
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to calculate a route for that To & From address" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alert show];    
-    NSLog(@"Error received from RKObjectManager:");
-    NSLog(@"%@", error);
+    
+    if (savetrip) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to calculate a route for that To & From address" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];    
+        NSLog(@"Error received from RKObjectManager:");
+        NSLog(@"%@", error);
+    }
+    
 }
 
 

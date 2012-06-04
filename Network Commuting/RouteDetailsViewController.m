@@ -16,7 +16,7 @@
 @implementation RouteDetailsViewController
 
 @synthesize itinerary;
-@synthesize feedBackItinerary;
+@synthesize feedBackItinerary, twitter;
 
 -(void)loadView
 {
@@ -29,13 +29,13 @@
     submit.frame = CGRectMake(220.0, 370.0, 70.0, 20.0);
     [super.view addSubview:submit];
     
-    UIButton *twitter = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    twitter = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [twitter addTarget:self 
                 action:@selector(twitterSubmit)
       forControlEvents:UIControlEventTouchDown];
     [twitter setTitle:@"t" forState:UIControlStateNormal];
     twitter.frame = CGRectMake(180.0, 370.0, 20.0, 25.0);
-    [super.view addSubview:twitter];
+    
     
 }
 
@@ -103,12 +103,7 @@
         titleText = [leg directionsTitleText];
         subTitle = [leg directionsDetailText];
         if ( [leg isTrain]) {
-            NSString *train = [[titleText componentsSeparatedByString:@"("] objectAtIndex:1];
-            NSString *train1 = [[train componentsSeparatedByString:@")"] objectAtIndex:0];
-            train1 = [train1 stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-            NSLog(@"It is a train %@",train1 );
-            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            [prefs setObject:train1 forKey:@"train"];
+            [self.view addSubview:twitter];            
         }
         
         /*
@@ -171,11 +166,8 @@
     @try {
         NSLog(@"twiit");
         TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        NSString *trainRoute = [prefs objectForKey:@"train"];
         [[self navigationController] pushViewController:twitter_search animated:YES];
-        trainRoute = [TWITTER_SERARCH_URL stringByReplacingOccurrencesOfString:@"TRAIN" withString:trainRoute];
-        [twitter_search loadRequest:trainRoute];
+        [twitter_search loadRequest:CALTRAIN_TWITTER_URL];
     }
     @catch (NSException *exception) {
         NSLog(@" twitter print : %@", exception);

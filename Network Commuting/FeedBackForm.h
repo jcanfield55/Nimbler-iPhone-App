@@ -23,6 +23,7 @@
     NSString *tpURLResource;
     IBOutlet UITextView *txtFeedBack;
     IBOutlet UILabel *time;
+    IBOutlet UITextField *txtEmailId;
     int secondsLeft;;
     BOOL isRepeat;
     NSTimer *timer;
