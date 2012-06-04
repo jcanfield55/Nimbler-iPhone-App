@@ -63,10 +63,13 @@ dependencies: /github-tp/NC_iPhone/Network\ Commuting/nc_AppDelegate.m \
   /github-tp/NC_iPhone/Network\ Commuting/RawAddress.h \
   /github-tp/NC_iPhone/Network\ Commuting/GeoRectangle.h \
   /github-tp/NC_iPhone/Network\ Commuting/LatLng.h \
+  /github-tp/NC_iPhone/Network\ Commuting/SupportedRegion.h \
   /github-tp/NC_iPhone/Network\ Commuting/Plan.h \
   /github-tp/NC_iPhone/Network\ Commuting/PlanPlace.h \
   /github-tp/NC_iPhone/Network\ Commuting/AgencyAndId.h \
   /github-tp/NC_iPhone/Network\ Commuting/Itinerary.h \
-  /github-tp/NC_iPhone/Network\ Commuting/SupportedRegion.h \
+  /github-tp/NC_iPhone/Network\ Commuting/FeedBackViewController.h \
+  /github-tp/NC_iPhone/Network\ Commuting/TPResponse.h \
+  /github-tp/NC_iPhone/RestKit/Build/Restkit/RKJSONParserJSONKit.h \
   /github-tp/NC_iPhone/Network\ Commuting/UtilityFunctions.h \
   /github-tp/NC_iPhone/Network\ Commuting/TestFlightSDK1/TestFlight.h

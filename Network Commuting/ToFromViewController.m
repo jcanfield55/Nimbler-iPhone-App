@@ -41,7 +41,6 @@
 
 - (BOOL)getPlan;
 
-
 @end
 
 
@@ -544,11 +543,14 @@ int const TIME_DATE_HEIGHT = 45;
         @try {
             
             if (objects && [objects objectAtIndex:0]) {
-                
                 if (savetrip) {
                     plan = [objects objectAtIndex:0];
                     durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtontClickTime;
                     [connecting dismissWithClickedButtonIndex:0 animated:NO];
+                    
+//                    [plan setToLocation:toLocation];
+//                    [plan setFromLocation:fromLocation];
+                    
                     // Pass control to the RouteOptionsViewController to display itinerary choices
                     RouteOptionsViewController *routeOptionsVC = [[RouteOptionsViewController alloc] initWithStyle:UITableViewStylePlain];
                     //[routeOptionsVC setPlanIdFeedBack:pl];
@@ -557,39 +559,47 @@ int const TIME_DATE_HEIGHT = 45;
                     
                     [[self navigationController] pushViewController:routeOptionsVC animated:YES];
                 } else {
-                    pl= [objects objectAtIndex:0];
+                    pl = [objects objectAtIndex:0];
                     [plan setPlanId:[pl planId]];                    
                     NSLog(@"obj foe plan = %@", [pl planId]);
-                    
-                    for (int i= 0; i< [[pl itineraries] count]; i++) {
-                        Itinerary *itin = [[pl sortedItineraries] objectAtIndex:i];
-                        [[[plan sortedItineraries] objectAtIndex:i] setItinId:[itin itinId]];
-                        for (int j =0; j< [[itin legs] count] ; j++) {
-                            Leg *lg = [[itin sortedLegs] objectAtIndex:j]; 
-                            [[[[[plan sortedItineraries] objectAtIndex:i] sortedLegs] objectAtIndex:j] setLegId:[lg legId]];
-                        }                                                            
+// Catch exception for null ids from server
+                    @try {
+                        for (int i= 0; i< [[pl itineraries] count]; i++) {
+                            Itinerary *itin = [[pl sortedItineraries] objectAtIndex:i];
+                            [[[plan sortedItineraries] objectAtIndex:i] setItinId:[itin itinId]];
+                            NSLog(@"===========================================");
+                            ///Users/jaykumbhani/Library/Developer/Xcode/iOS DeviceSupport/5.0.1 (9A405)/Symbols/System/Library/Frameworks/CoreLocation.framework/CoreLocation
+                            NSLog(@"itinarary.. %@",[itin itinId]);
+                            for (int j =0; j< [[itin legs] count] ; j++) {
+                                Leg *lg = [[itin sortedLegs] objectAtIndex:j];                                
+                                [[[[[plan sortedItineraries] objectAtIndex:i] sortedLegs] objectAtIndex:j] setLegId:[lg legId]];
+                                NSLog(@"------------------------------------------");
+                                NSLog(@"leg.. %@",[lg legId]);
+                            }                                                            
+                        }
                     }
+                    @catch (NSException *exception) {
+                        
+                    }
+    
                 }
                 
                 if (savetrip) {
-                    
                     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
                     [prefs setObject:[[objectLoader  response] bodyAsString] forKey:@"tpPlanner"];
                     
                     savetrip = FALSE;
                     [self forFeedbackProceess];
-                    [plan setToLocation:toLocation];
-                    [plan setFromLocation:fromLocation];
-                    fbplan = [FeedBackForm alloc];
-                    NSLog(@"Planning object: %@", [[objectLoader  response] bodyAsString]);
                     
+//                   fbplan = [FeedBackForm alloc];
                 }
                 
             }
         }
         @catch (NSException *exception) {
+            
              [connecting dismissWithClickedButtonIndex:0 animated:NO];
-             durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtontClickTime;
+             durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtontClickTime ;
             NSLog(@"Error object ==============================: %@", exception);
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"Trip is not possible. Your start or end point might not be safely accessible" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
             [alert show];
@@ -662,16 +672,17 @@ int const TIME_DATE_HEIGHT = 45;
         [tFormat setDateStyle:NSDateFormatterNoStyle];
         
         
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        [prefs setObject:[fromLocation rawAddresses] forKey:@"fromRawAddr"];
-        [prefs setObject:[toLocation rawAddresses] forKey:@"toRawAddr"];
-        [prefs setObject:[fromLocation formattedAddress] forKey:@"fromFormatedAddr"];
-        [prefs setObject:[toLocation formattedAddress] forKey:@"fromFormatedAddr"];
+//        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+//        [prefs setObject:[fromLocation rawAddresses] forKey:@"fromRawAddr"];
+//        [prefs setObject:[toLocation rawAddresses] forKey:@"toRawAddr"];
+//        [prefs setObject:[fromLocation formattedAddress] forKey:@"fromFormatedAddr"];
+//        [prefs setObject:[toLocation formattedAddress] forKey:@"fromFormatedAddr"];
 
         
         // TODO detect and handle case where origin and destination are exactly the same
         
         // Build the parameters into a resource string
+       
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                                 @"fromPlace", [fromLocation latLngPairStr], 
                                 @"toPlace", [toLocation latLngPairStr], 
@@ -679,6 +690,8 @@ int const TIME_DATE_HEIGHT = 45;
                                 @"time", [tFormat stringFromDate:tripDate], 
                                 @"arriveBy", ((departOrArrive == ARRIVE) ? @"true" : @"false"),
                                 nil];
+        
+        
         planURLResource = [@"plan" appendQueryParams:params];
         
         // add latest plan request to history array
@@ -849,6 +862,7 @@ int const TIME_DATE_HEIGHT = 45;
     if ([request isPOST]) {  
         NSLog(@"Got aresponse back from our POST! %@", [response bodyAsString]);      
         @try {            
+            
             
             NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
             

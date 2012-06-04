@@ -160,7 +160,7 @@
         <element name="Itinerary" positionX="394" positionY="192" width="128" height="285"/>
         <element name="Leg" positionX="97" positionY="432" width="128" height="330"/>
         <element name="Location" positionX="241" positionY="4116" width="128" height="270"/>
-        <element name="Plan" positionX="268" positionY="45" width="128" height="135"/>
+        <element name="Plan" positionX="268" positionY="45" width="128" height="150"/>
         <element name="PlanPlace" positionX="99" positionY="45" width="128" height="180"/>
         <element name="RawAddress" positionX="160" positionY="192" width="128" height="75"/>
         <element name="Step" positionX="-126" positionY="192" width="128" height="195"/>

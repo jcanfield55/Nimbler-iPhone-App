@@ -63,11 +63,11 @@ dependencies: \
   /github-tp/NC_iPhone/Network\ Commuting/RawAddress.h \
   /github-tp/NC_iPhone/Network\ Commuting/GeoRectangle.h \
   /github-tp/NC_iPhone/Network\ Commuting/LatLng.h \
+  /github-tp/NC_iPhone/Network\ Commuting/SupportedRegion.h \
   /github-tp/NC_iPhone/Network\ Commuting/Plan.h \
   /github-tp/NC_iPhone/Network\ Commuting/PlanPlace.h \
   /github-tp/NC_iPhone/Network\ Commuting/AgencyAndId.h \
   /github-tp/NC_iPhone/Network\ Commuting/Itinerary.h \
-  /github-tp/NC_iPhone/Network\ Commuting/SupportedRegion.h \
   /github-tp/NC_iPhone/Network\ Commuting/UtilityFunctions.h \
   /github-tp/NC_iPhone/Network\ Commuting/RouteOptionsViewController.h \
   /github-tp/NC_iPhone/Network\ Commuting/RouteDetailsViewController.h \
@@ -75,4 +75,7 @@ dependencies: \
   /github-tp/NC_iPhone/Network\ Commuting/PolylineEncodedString.h \
   /github-tp/NC_iPhone/Network\ Commuting/DateTimeViewController.h \
   /github-tp/NC_iPhone/Network\ Commuting/TestFlightSDK1/TestFlight.h \
-  /github-tp/NC_iPhone/Network\ Commuting/FeedBackViewController.h
+  /github-tp/NC_iPhone/RestKit/Build/RestKit/RKJSONParserJSONKit.h \
+  /github-tp/NC_iPhone/Network\ Commuting/FeedBackForm.h \
+  /github-tp/NC_iPhone/Network\ Commuting/TPResponse.h \
+  /github-tp/NC_iPhone/Network\ Commuting/TwitterSearch.h

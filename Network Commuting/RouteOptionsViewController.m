@@ -58,7 +58,7 @@
     Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
     
     /*
-     for feedback planId
+        for feedback planId
      */
         
     // Set title
