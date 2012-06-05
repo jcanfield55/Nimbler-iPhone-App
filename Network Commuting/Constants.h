@@ -29,3 +29,8 @@
 #define FB_RESPOSE_SUCCEES      @"FeedBack Send Successfully"
 #define FB_RESPONSE_FAIL        @"Please Send Again"
 #define FB_TITLE_MSG            @"Trip Feedback"
+
+#define MIN_LAT                 @"36.791000000000004"
+#define MIN_LONG                @"-123.4631719"
+#define MAX_LAT                 @"38.7189988"
+#define MAX_LONG                @"-121.025001"

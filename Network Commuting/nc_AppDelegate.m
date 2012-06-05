@@ -255,8 +255,8 @@
 
 -(void)bayArea
 {    
-    loading = [self WaitPrompt];
-    [NSTimer scheduledTimerWithTimeInterval: 9.0f target: self selector: @selector(stopProcess) userInfo: nil repeats: NO];
+//    loading = [self WaitPrompt];
+//    [NSTimer scheduledTimerWithTimeInterval: 9.0f target: self selector: @selector(stopProcess) userInfo: nil repeats: NO];
     RKClient *client = [RKClient clientWithBaseURL:@"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/"];
     [RKClient setSharedClient:client];
     [[RKClient sharedClient]  get:@"metadata" delegate:self];

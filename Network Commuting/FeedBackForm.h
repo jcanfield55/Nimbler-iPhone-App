@@ -20,11 +20,14 @@
     AVAudioRecorder *audioRecorder;
     AVAudioPlayer *audioPlayer;
     TPResponse *tpResponse;
+    UIProgressView *progress;
     NSString *tpURLResource;
     IBOutlet UITextView *txtFeedBack;
     IBOutlet UILabel *time;
+    IBOutlet UILabel *actRunning;
     IBOutlet UITextField *txtEmailId;
-    int secondsLeft;;
+    int secondsLeft;
+    float secondUse;
     BOOL isRepeat;
     NSTimer *timer;
 
@@ -42,5 +45,7 @@
 -(IBAction)submitFeedBack:(id)sender;
 
 -(UIAlertView *) WaitPrompt ;
+-(UIAlertView *) waitFb ;
+-(void)sendFeedbackToServer;
 @end
 

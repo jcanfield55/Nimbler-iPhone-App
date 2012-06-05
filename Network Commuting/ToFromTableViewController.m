@@ -446,7 +446,31 @@ static SupportedRegion *regionArea;
 -(BOOL)isValidRegion:(Location *)location
 {
  
-    if (! ( ([[location lat] doubleValue]>=[[regionArea minLatitude] doubleValue]) && ([[location lng] doubleValue]>=[[regionArea minLongitude] doubleValue]) &&
+    if ([regionArea minLatitude] == NULL) {
+        
+        if (! ( ([[location lat] doubleValue]>=[MIN_LAT doubleValue]) && ([[location lng] doubleValue]>=[MIN_LONG doubleValue]) &&
+               ([[location lat] doubleValue]<=[MAX_LAT doubleValue]) && ([[location lng] doubleValue]<=[MAX_LONG doubleValue])) ) 
+        {
+            NSString *addr = [location formattedAddress];
+            NSString *msg = @"Did not find the address: "; 
+            NSString *msg1 = @"in the San Francisco Bay Area";
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:[NSString stringWithFormat:@"%@ %@ %@", msg, addr, msg1] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert show];
+            [txtField setText:@""];
+            if (isFrom) {
+                [locations setTypedFromString:@""];
+            } else {
+                [locations setTypedToString:@""];
+            }
+            [myTableView reloadData]; 
+            
+            return TRUE;
+        } 
+        return FALSE;
+        
+        
+    } else if (! ( ([[location lat] doubleValue]>=[[regionArea minLatitude] doubleValue]) && ([[location lng] doubleValue]>=[[regionArea minLongitude] doubleValue]) &&
            ([[location lat] doubleValue]<=[[regionArea maxLatitude] doubleValue]) && ([[location lng] doubleValue]<=[[regionArea maxLongitude] doubleValue])) ) 
     {
         NSString *addr = [location formattedAddress];
