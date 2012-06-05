@@ -58,7 +58,7 @@
     Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
     
     /*
-     for feedback planId
+        for feedback planId
      */
         
     // Set title
@@ -96,7 +96,6 @@
     RouteDetailsViewController *routeDetailsVC = [[RouteDetailsViewController alloc] initWithStyle:UITableViewStylePlain];
     [routeDetailsVC setFeedBackItinerary:[[feedBackPlanId sortedItineraries] objectAtIndex:[indexPath row]] ];
     [routeDetailsVC setItinerary:[[plan sortedItineraries] objectAtIndex:[indexPath row]]];
-    NSLog(@"itit --------------- %@", [[[plan sortedItineraries] objectAtIndex:[indexPath row]] itinId]);
     [[self navigationController] pushViewController:routeDetailsVC animated:YES];
 }
 

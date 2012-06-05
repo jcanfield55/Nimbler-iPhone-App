@@ -24,7 +24,6 @@
 		525442CA14C3ED66004B0E1F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C914C3ED66004B0E1F /* SystemConfiguration.framework */; };
 		525442CC14C3ED8A004B0E1F /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442CB14C3ED8A004B0E1F /* libxml2.dylib */; };
 		525C20F9151D3AF5004F8FE0 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
-		525C20FB151D3B03004F8FE0 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20FA151D3B03004F8FE0 /* CoreLocation.framework */; };
 		525C20FF151D412A004F8FE0 /* LegMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 525C20FE151D412A004F8FE0 /* LegMapViewController.xib */; };
 		5275A2DC152804700052903F /* Blue_dot_7px.gif in Resources */ = {isa = PBXBuildFile; fileRef = 52FD9D1E1527F84A002BA2B3 /* Blue_dot_7px.gif */; };
 		5275A2DF1528069F0052903F /* PolylineEncodedString.m in Sources */ = {isa = PBXBuildFile; fileRef = 5275A2DE1528069F0052903F /* PolylineEncodedString.m */; };
@@ -33,7 +32,7 @@
 		5297F2DF1560CA200032D015 /* DateTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297F2DE1560CA200032D015 /* DateTimeViewController.m */; };
 		5297F2E11560CAC20032D015 /* ToFromTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297F2E01560CAC20032D015 /* ToFromTableViewController.m */; };
 		52B1B22614F9ABE4001AC5D1 /* RouteDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B1B22514F9ABE4001AC5D1 /* RouteDetailsViewController.m */; };
-		52B302C514BE2B1E00EB4852 /* ToFromViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B302C314BE2B1E00EB4852 /* ToFromViewController.m */; };
+		52B302C514BE2B1E00EB4852 /* ToFromViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B302C314BE2B1E00EB4852 /* ToFromViewController.m */; settings = {COMPILER_FLAGS = "-ObjC"; }; };
 		52B302C614BE2B1E00EB4852 /* ToFromViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52B302C414BE2B1E00EB4852 /* ToFromViewController.xib */; };
 		52B3031F14BE946000EB4852 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B3031E14BE946000EB4852 /* Location.m */; };
 		52B7421E14E1FFA200D817D1 /* UtilityFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B7421D14E1FFA200D817D1 /* UtilityFunctions.m */; };
@@ -80,6 +79,7 @@
 		CCBE9FF715628F5000908A78 /* RootMap.m in Sources */ = {isa = PBXBuildFile; fileRef = CCBE9FF615628F4F00908A78 /* RootMap.m */; };
 		CCBE9FF915628F5700908A78 /* RootMap.xib in Resources */ = {isa = PBXBuildFile; fileRef = CCBE9FF815628F5700908A78 /* RootMap.xib */; };
 		CCC107CF156A39CB0011246D /* TPResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC107CE156A39C90011246D /* TPResponse.m */; };
+		CCDCC0791576287900D4B4D3 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCDCC0781576287900D4B4D3 /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -780,7 +780,6 @@
 		525442C914C3ED66004B0E1F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		525442CB14C3ED8A004B0E1F /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		525C20F8151D3AF5004F8FE0 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		525C20FA151D3B03004F8FE0 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		525C20FE151D412A004F8FE0 /* LegMapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LegMapViewController.xib; path = ../LegMapViewController.xib; sourceTree = "<group>"; };
 		5275A2DD1528069F0052903F /* PolylineEncodedString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PolylineEncodedString.h; sourceTree = "<group>"; };
 		5275A2DE1528069F0052903F /* PolylineEncodedString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PolylineEncodedString.m; sourceTree = "<group>"; };
@@ -861,6 +860,7 @@
 		CCBE9FF815628F5700908A78 /* RootMap.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RootMap.xib; sourceTree = "<group>"; };
 		CCC107CD156A39C60011246D /* TPResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPResponse.h; sourceTree = "<group>"; };
 		CCC107CE156A39C90011246D /* TPResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPResponse.m; sourceTree = "<group>"; };
+		CCDCC0781576287900D4B4D3 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -868,10 +868,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CCDCC0791576287900D4B4D3 /* CoreLocation.framework in Frameworks */,
 				CC5789BF1564C8EB0057D5A7 /* AVFoundation.framework in Frameworks */,
 				CC35E729155965E7003995D8 /* libz.dylib in Frameworks */,
 				527E174A151EB9CD00CDBC23 /* QuartzCore.framework in Frameworks */,
-				525C20FB151D3B03004F8FE0 /* CoreLocation.framework in Frameworks */,
 				525C20F9151D3AF5004F8FE0 /* MapKit.framework in Frameworks */,
 				525442CC14C3ED8A004B0E1F /* libxml2.dylib in Frameworks */,
 				525442CA14C3ED66004B0E1F /* SystemConfiguration.framework in Frameworks */,
@@ -2265,10 +2265,10 @@
 		52CF439E14BDF2F9000565D6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CCDCC0781576287900D4B4D3 /* CoreLocation.framework */,
 				527E1749151EB9CD00CDBC23 /* QuartzCore.framework */,
 				525C20F8151D3AF5004F8FE0 /* MapKit.framework */,
 				525442CB14C3ED8A004B0E1F /* libxml2.dylib */,
-				525C20FA151D3B03004F8FE0 /* CoreLocation.framework */,
 				525442C314C3ED2C004B0E1F /* CFNetwork.framework */,
 				525442C514C3ED4A004B0E1F /* MobileCoreServices.framework */,
 				525442C714C3ED57004B0E1F /* Security.framework */,
@@ -2287,11 +2287,11 @@
 			children = (
 				CCB9E6BA1574AC100043F304 /* util */,
 				CCA43F1C157330AD00DF85AD /* mapView */,
-				CCB7E81E1570EC460036E9CD /* routeView */,
+				CCB7E81E1570EC460036E9CD /* controllerView */,
 				CCB7E81D1570EBCC0036E9CD /* dataObject */,
 				CCB7E81C1570EB670036E9CD /* images */,
 				CCB7E81B1570A3E10036E9CD /* appDelegate */,
-				CCB7E81415709C080036E9CD /* twitterSearch */,
+				CCB7E81415709C080036E9CD /* twitter */,
 				CCB7E8131570904A0036E9CD /* feedBackForm */,
 				52DF9C4714F7546800DC6828 /* Network_Commuting.xcdatamodeld */,
 				52CF43A814BDF2F9000565D6 /* Supporting Files */,
@@ -2357,14 +2357,14 @@
 			name = feedBackForm;
 			sourceTree = "<group>";
 		};
-		CCB7E81415709C080036E9CD /* twitterSearch */ = {
+		CCB7E81415709C080036E9CD /* twitter */ = {
 			isa = PBXGroup;
 			children = (
 				CCB9E6FB1574B4FF0043F304 /* TwitterSearch.xib */,
 				CCB9E6F91574B4F70043F304 /* TwitterSearch.m */,
 				CCB9E6F81574B4EF0043F304 /* TwitterSearch.h */,
 			);
-			name = twitterSearch;
+			name = twitter;
 			sourceTree = "<group>";
 		};
 		CCB7E81B1570A3E10036E9CD /* appDelegate */ = {
@@ -2429,7 +2429,7 @@
 			name = dataObject;
 			sourceTree = "<group>";
 		};
-		CCB7E81E1570EC460036E9CD /* routeView */ = {
+		CCB7E81E1570EC460036E9CD /* controllerView */ = {
 			isa = PBXGroup;
 			children = (
 				52B302C214BE2B1E00EB4852 /* ToFromViewController.h */,
@@ -2442,7 +2442,7 @@
 				52B1B22414F9ABE4001AC5D1 /* RouteDetailsViewController.h */,
 				52B1B22514F9ABE4001AC5D1 /* RouteDetailsViewController.m */,
 			);
-			name = routeView;
+			name = controllerView;
 			sourceTree = "<group>";
 		};
 		CCB9E6BA1574AC100043F304 /* util */ = {
@@ -2933,7 +2933,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
 				INFOPLIST_FILE = "Network Commuting/Nimbler-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1\"",
@@ -2960,7 +2960,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
 				INFOPLIST_FILE = "Network Commuting/Nimbler-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1\"",

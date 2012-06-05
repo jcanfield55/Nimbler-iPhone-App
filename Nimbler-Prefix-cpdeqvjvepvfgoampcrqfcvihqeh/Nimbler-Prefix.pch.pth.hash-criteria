@@ -1,10 +1,10 @@
 Contents of /github-tp/NC_iPhone/Network Commuting/Nimbler-Prefix.pch
-3.0 (tags/Apple/clang-211.10.1) (based on LLVM 3.0svn)
-i386-apple-darwin10.8.0
+3.0 (tags/Apple/clang-211.9) (based on LLVM 3.0svn)
+arm-apple-darwin10.8.0
 -x
 objective-c
 -arch
-i386
+armv7
 -fmessage-length=0
 -fdiagnostics-print-source-range-info
 -fdiagnostics-show-category=id
@@ -15,20 +15,17 @@ i386
 -O0
 -DDEBUG=1
 -isysroot
-/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk
--fexceptions
--fasm-blocks
--mmacosx-version-min=10.6
+/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.0.sdk
 -gdwarf-2
--fobjc-abi-version=2
--fobjc-legacy-dispatch
+-mthumb
 -DIBOutlet=__attribute__((iboutlet))
 -DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))
 -DIBAction=void)__attribute__((ibaction)
--D__IPHONE_OS_VERSION_MIN_REQUIRED=50000
+-miphoneos-version-min=4.3
 -iquote
 -iquote
--I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include
+-I/github-tp/NC_iPhone/build/Debug-iphoneos/include
 -I/github-tp/NC_iPhone/RestKit/Build
--F/github-tp/NC_iPhone/build/Debug-iphonesimulator
+-F/github-tp/NC_iPhone/build/Debug-iphoneos
+-ObjC
 SDK_PRODUCT_BUILD_VERSION=9A334

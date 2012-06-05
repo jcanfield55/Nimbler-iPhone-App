@@ -17,5 +17,5 @@
 }
 @property(nonatomic, strong) Itinerary *itinerary;
 @property(nonatomic, strong) Itinerary *feedBackItinerary;
-
+@property(nonatomic, strong) UIButton *twitter;
 @end

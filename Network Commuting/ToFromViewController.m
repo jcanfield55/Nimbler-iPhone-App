@@ -41,7 +41,6 @@
 
 - (BOOL)getPlan;
 
-
 @end
 
 
@@ -67,6 +66,7 @@
 @synthesize rkBayArea;
 @synthesize editMode;
 static SupportedRegion *regionArea;
+
 // Constants for animating up and down the To: field
 int const MAIN_TABLE_HEIGHT = 358;
 int const TOFROM_ROW_HEIGHT = 35;
@@ -148,7 +148,7 @@ int const TIME_DATE_HEIGHT = 45;
     
     // Flash scrollbars on tables
     [toTable flashScrollIndicators];
-    [fromTable flashScrollIndicators];
+    [fromTable flashScrollIndicators];    
 }
 
 // Update trip date to the current time if needed
@@ -341,6 +341,7 @@ int const TIME_DATE_HEIGHT = 45;
             // if From txtField is already in the subview (due to recycling, no need to add again
         } else { 
             [cellView addSubview:[fromTableVC txtField]]; // add From txtField
+            NSLog(@"start...");
         }
     }
     else {   // do same for toTable case
@@ -542,11 +543,14 @@ int const TIME_DATE_HEIGHT = 45;
         @try {
             
             if (objects && [objects objectAtIndex:0]) {
-                
                 if (savetrip) {
                     plan = [objects objectAtIndex:0];
                     durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtontClickTime;
                     [connecting dismissWithClickedButtonIndex:0 animated:NO];
+                    
+                    [plan setToLocation:toLocation];
+                    [plan setFromLocation:fromLocation];
+                    
                     // Pass control to the RouteOptionsViewController to display itinerary choices
                     RouteOptionsViewController *routeOptionsVC = [[RouteOptionsViewController alloc] initWithStyle:UITableViewStylePlain];
                     //[routeOptionsVC setPlanIdFeedBack:pl];
@@ -555,39 +559,48 @@ int const TIME_DATE_HEIGHT = 45;
                     
                     [[self navigationController] pushViewController:routeOptionsVC animated:YES];
                 } else {
-                    pl= [objects objectAtIndex:0];
+                    pl = [objects objectAtIndex:0];
                     [plan setPlanId:[pl planId]];                    
                     NSLog(@"obj foe plan = %@", [pl planId]);
-                    
-                    for (int i= 0; i< [[pl itineraries] count]; i++) {
-                        Itinerary *itin = [[pl sortedItineraries] objectAtIndex:i];
-                        [[[plan sortedItineraries] objectAtIndex:i] setItinId:[itin itinId]];
-                        for (int j =0; j< [[itin legs] count] ; j++) {
-                            Leg *lg = [[itin sortedLegs] objectAtIndex:j]; 
-                            [[[[[plan sortedItineraries] objectAtIndex:i] sortedLegs] objectAtIndex:j] setLegId:[lg legId]];
-                        }                                                            
+
+                    // Catch exception for null ids from server
+                    @try {
+                        for (int i= 0; i< [[pl itineraries] count]; i++) {
+                            Itinerary *itin = [[pl sortedItineraries] objectAtIndex:i];
+                            [[[plan sortedItineraries] objectAtIndex:i] setItinId:[itin itinId]];
+                            NSLog(@"===========================================");
+                            ///Users/jaykumbhani/Library/Developer/Xcode/iOS DeviceSupport/5.0.1 (9A405)/Symbols/System/Library/Frameworks/CoreLocation.framework/CoreLocation
+                            NSLog(@"itinarary.. %@",[itin itinId]);
+                            for (int j =0; j< [[itin legs] count] ; j++) {
+                                Leg *lg = [[itin sortedLegs] objectAtIndex:j];                                
+                                [[[[[plan sortedItineraries] objectAtIndex:i] sortedLegs] objectAtIndex:j] setLegId:[lg legId]];
+                                NSLog(@"------------------------------------------");
+                                NSLog(@"leg.. %@",[lg legId]);
+                            }                                                            
+                        }
                     }
+                    @catch (NSException *exception) {
+                        
+                    }
+    
                 }
                 
                 if (savetrip) {
-                    
                     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
                     [prefs setObject:[[objectLoader  response] bodyAsString] forKey:@"tpPlanner"];
                     
                     savetrip = FALSE;
                     [self forFeedbackProceess];
-                    [plan setToLocation:toLocation];
-                    [plan setFromLocation:fromLocation];
-                    fbplan = [FeedBackForm alloc];
-                    NSLog(@"Planning object: %@", [[objectLoader  response] bodyAsString]);
                     
+//                   fbplan = [FeedBackForm alloc];
                 }
                 
             }
         }
         @catch (NSException *exception) {
+            
              [connecting dismissWithClickedButtonIndex:0 animated:NO];
-             durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtontClickTime;
+             durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtontClickTime ;
             NSLog(@"Error object ==============================: %@", exception);
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"Trip is not possible. Your start or end point might not be safely accessible" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
             [alert show];
@@ -601,10 +614,14 @@ int const TIME_DATE_HEIGHT = 45;
 
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error {
     [connecting dismissWithClickedButtonIndex:0 animated:NO];
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to calculate a route for that To & From address" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alert show];    
-    NSLog(@"Error received from RKObjectManager:");
-    NSLog(@"%@", error);
+    
+    if (savetrip) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to calculate a route for that To & From address" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];    
+        NSLog(@"Error received from RKObjectManager:");
+        NSLog(@"%@", error);
+    }
+    
 }
 
 
@@ -660,16 +677,17 @@ int const TIME_DATE_HEIGHT = 45;
         [tFormat setDateStyle:NSDateFormatterNoStyle];
         
         
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        [prefs setObject:[fromLocation rawAddresses] forKey:@"fromRawAddr"];
-        [prefs setObject:[toLocation rawAddresses] forKey:@"toRawAddr"];
-        [prefs setObject:[fromLocation formattedAddress] forKey:@"fromFormatedAddr"];
-        [prefs setObject:[toLocation formattedAddress] forKey:@"fromFormatedAddr"];
+//        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+//        [prefs setObject:[fromLocation rawAddresses] forKey:@"fromRawAddr"];
+//        [prefs setObject:[toLocation rawAddresses] forKey:@"toRawAddr"];
+//        [prefs setObject:[fromLocation formattedAddress] forKey:@"fromFormatedAddr"];
+//        [prefs setObject:[toLocation formattedAddress] forKey:@"fromFormatedAddr"];
 
         
         // TODO detect and handle case where origin and destination are exactly the same
         
         // Build the parameters into a resource string
+       
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                                 @"fromPlace", [fromLocation latLngPairStr], 
                                 @"toPlace", [toLocation latLngPairStr], 
@@ -677,6 +695,8 @@ int const TIME_DATE_HEIGHT = 45;
                                 @"time", [tFormat stringFromDate:tripDate], 
                                 @"arriveBy", ((departOrArrive == ARRIVE) ? @"true" : @"false"),
                                 nil];
+        
+        
         planURLResource = [@"plan" appendQueryParams:params];
         
         // add latest plan request to history array
@@ -766,18 +786,6 @@ int const TIME_DATE_HEIGHT = 45;
          [location setFormattedAddress:[streetName objectAtIndex:1]];
 
         }
-        if (! ( ([[location lat] doubleValue]>=[[regionArea minLatitude] doubleValue]) && ([[location lng] doubleValue]>=[[regionArea minLongitude] doubleValue]) &&
-            ([[location lat] doubleValue]<=[[regionArea maxLatitude] doubleValue]) && ([[location lng] doubleValue]<=[[regionArea maxLongitude] doubleValue])) ) 
-        {
-            NSString *addr = [location formattedAddress];
-            NSString *msg = @"Did not find the address: "; 
-            NSString *msg1 = @"in the San Francisco Bay Area";
-                       
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:[NSString stringWithFormat:@"%@ %@ %@", msg, addr, msg1] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [alert show];
-            
-            return;
-        }
     }
 }
 
@@ -785,6 +793,9 @@ int const TIME_DATE_HEIGHT = 45;
 {
     regionArea = [[SupportedRegion alloc] init];
     regionArea = bayAreaRegion;    
+    ToFromTableViewController *setRegion = [[ToFromTableViewController alloc] initWithNibName:nil bundle:nil];
+    [setRegion setBayAreas:bayAreaRegion];
+        
 }
 
 -(void)addLocationAction:(id) sender{
@@ -856,6 +867,7 @@ int const TIME_DATE_HEIGHT = 45;
     if ([request isPOST]) {  
         NSLog(@"Got aresponse back from our POST! %@", [response bodyAsString]);      
         @try {            
+            
             
             NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
             

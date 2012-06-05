@@ -9,9 +9,13 @@
 #import "FeedBackForm.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 
+#define RECORD_MSG   @"Recording your feedback \nSpeak ..."
+#define SUBMIT_MSG   @"Sending your feedback \nPlease wait ..."
+#define PLAY_MSG   @"Playing your recorded file\nPlease wait ..."
+
 @implementation FeedBackForm
 
-@synthesize tpResponse,tpURLResource;
+@synthesize tpResponse,tpURLResource,process,mesg;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -36,6 +40,10 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+
+    NSString *email = [prefs objectForKey:@"eMailId"];
+    txtEmailId.text = email;
 }
 
 - (void)viewDidUnload
@@ -50,14 +58,50 @@
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+
+
+-(void) updateCountdown {
+    int seconds;
+    
+    secondsLeft--;
+    if(secondsLeft == 0){
+        [process dismissWithClickedButtonIndex:0 animated:NO];
+
+        NSLog(@"timer finish");
+        isRepeat = NO;
+        [time setHidden:YES];
+        [self stopRecording:self];
+    } else {
+        if(![process isVisible]){
+            NSLog(@"not");
+            isRepeat = NO;
+            [time setHidden:YES];
+            [timer invalidate];
+            timer =  nil;
+            [self stopRecording:self];
+        }
+        seconds = (secondsLeft %3600) % 60;
+        time.text = [NSString stringWithFormat:@"Time Left : %02d", seconds];
+    }
+    
+}
+
 #pragma mark-Recording functions
+
 -(IBAction)recordRecording:(id)sender{
     
     NSLog(@"start recording");
     
     NSArray *tempDirPath;
     NSString *docsDir;
-    
+    mesg = RECORD_MSG;
+    process = [self WaitPrompt];
+     
+    secondsLeft = 60;
+    isRepeat = YES;
+    [time setHidden:NO];
+    timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 target:self selector:@selector(updateCountdown) userInfo:nil repeats: isRepeat];    
+  
     tempDirPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     docsDir = [tempDirPath objectAtIndex:0];
     soundFilePath = [docsDir stringByAppendingPathComponent:@"voiceFeedback.caf"];
@@ -86,8 +130,11 @@
     }
     
 }
+
 -(IBAction)stopRecording:(id)sender
 {    
+    
+    [process dismissWithClickedButtonIndex:0 animated:NO];
     if (audioRecorder.recording)
     {
         [audioRecorder stop];
@@ -119,7 +166,8 @@
             NSLog(@"Error: %@", 
                   [error localizedDescription]);
         } else {
-            
+//           mesg = PLAY_MSG;
+//            process = [self WaitPrompt];
             [audioPlayer play];
         }
     }   
@@ -131,6 +179,8 @@
 -(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
 {
     NSLog(@"SuccessFully Playing");
+    [process dismissWithClickedButtonIndex:0 animated:NO];
+
 }
 
 -(void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player error:(NSError *)error
@@ -153,6 +203,9 @@
 
 -(IBAction)submitFeedBack:(id)sender
 {
+    mesg = SUBMIT_MSG;
+    
+    process = [self WaitPrompt];
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSString *source = [prefs objectForKey:@"source"];
     NSString *uniqueId = [prefs objectForKey:@"uniqueid"];
@@ -173,7 +226,11 @@
         [rkp setValue:txtFeedBack.text forParam:@"txtfb"];
         [rkp setValue:FEEDBACK_TEXT forParam:@"formattype"];
     } 
-    
+    if (txtEmailId.text != nil) {
+        [rkp setValue:txtEmailId.text forParam:@"emailid"];
+        [prefs setObject:txtEmailId.text forKey:@"eMailId"];
+        
+    }
     if(soundFilePath != nil && txtFeedBack.text != nil){
         [rkp setValue:FEEDBACK_BOTH forParam:@"formattype"]; 
     }
@@ -195,10 +252,10 @@
         
     } else if ([request isPOST]) {  
         NSLog(@"Got aresponse back from TPResponse! %@", [response bodyAsString]);
-        
+        [process dismissWithClickedButtonIndex:0 animated:NO];
         if ([response isOK]) {
             // Success! Let's take a look at the data
-            
+            txtFeedBack.text = @"";
             RKJSONParserJSONKit* parser1 = [RKJSONParserJSONKit new];
             NSDictionary  *p = [parser1 objectFromString:[response bodyAsString] error:nil];
             
@@ -225,6 +282,7 @@
 - (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects 
 {        
 
+    [process dismissWithClickedButtonIndex:0 animated:NO];
     if ([[objectLoader resourcePath] isEqualToString:tpURLResource]) 
     {   
         NSInteger statusCode = [[objectLoader response] statusCode];
@@ -249,7 +307,7 @@
 }
 
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error {
-    
+    [process dismissWithClickedButtonIndex:0 animated:NO];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to send your feedback to Trip Planner" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alert show];    
     NSLog(@"Error received from RKObjectManager:");
@@ -266,4 +324,45 @@
     }
     return YES;
 }
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    // Any additional checks to ensure you have the correct textField here.
+    if(textField == txtEmailId) {
+        [txtEmailId resignFirstResponder];
+        return NO;
+    }
+    return YES;
+    
+}
+
+
+-(UIAlertView *) WaitPrompt  
+{  
+    UIAlertView *alert = [[UIAlertView alloc]   
+                          initWithTitle:mesg  
+                          message:nil delegate:nil cancelButtonTitle:@"OK"  
+                          otherButtonTitles: @"Cancel", nil];  
+    
+    [alert show];  
+    
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc]  
+                                          initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];  
+    
+    indicator.center = CGPointMake(alert.bounds.size.width / 2,   
+                                   alert.bounds.size.height - 50);  
+    [indicator startAnimating];  
+    [alert addSubview:indicator];  
+    
+    [[NSRunLoop currentRunLoop] limitDateForMode:NSDefaultRunLoopMode];  
+    
+    return alert;
+}  
+
+-(void)alertView: (UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    
+    
+}
+
 @end

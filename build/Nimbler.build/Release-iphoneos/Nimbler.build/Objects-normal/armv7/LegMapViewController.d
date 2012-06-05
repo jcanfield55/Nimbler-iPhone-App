@@ -63,6 +63,14 @@ dependencies: \
   /github-tp/NC_iPhone/Network\ Commuting/Leg.h \
   /github-tp/NC_iPhone/Network\ Commuting/PolylineEncodedString.h \
   /github-tp/NC_iPhone/Network\ Commuting/MyAnnotation.h \
+  /github-tp/NC_iPhone/Network\ Commuting/FeedBackForm.h \
+  /github-tp/NC_iPhone/Network\ Commuting/TPResponse.h \
+  /github-tp/NC_iPhone/Network\ Commuting/Plan.h \
+  /github-tp/NC_iPhone/Network\ Commuting/Location.h \
+  /github-tp/NC_iPhone/Network\ Commuting/AddressComponent.h \
+  /github-tp/NC_iPhone/Network\ Commuting/RawAddress.h \
+  /github-tp/NC_iPhone/Network\ Commuting/GeoRectangle.h \
   /github-tp/NC_iPhone/Network\ Commuting/TestFlightSDK1/TestFlight.h \
   /github-tp/NC_iPhone/Network\ Commuting/Step.h \
-  /github-tp/NC_iPhone/Network\ Commuting/RootMap.h
+  /github-tp/NC_iPhone/Network\ Commuting/RootMap.h \
+  /github-tp/NC_iPhone/Network\ Commuting/TwitterSearch.h

@@ -68,4 +68,7 @@ dependencies: \
   /github-tp/NC_iPhone/Network\ Commuting/RouteDetailsViewController.h \
   /github-tp/NC_iPhone/Network\ Commuting/Leg.h \
   /github-tp/NC_iPhone/Network\ Commuting/PolylineEncodedString.h \
-  /github-tp/NC_iPhone/Network\ Commuting/UtilityFunctions.h
+  /github-tp/NC_iPhone/Network\ Commuting/UtilityFunctions.h \
+  /github-tp/NC_iPhone/Network\ Commuting/TwitterSearch.h \
+  /github-tp/NC_iPhone/Network\ Commuting/FeedBackForm.h \
+  /github-tp/NC_iPhone/Network\ Commuting/TPResponse.h

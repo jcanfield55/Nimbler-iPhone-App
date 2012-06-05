@@ -16,8 +16,8 @@
 #define GEO_RESPONSE_URL        @"http://maps.googleapis.com/maps/api/geocode/"
 #define TRIP_PROCESS_URL        @"http://10.0.0.34:8080/TPServer/ws/"
 
-#define TWITTER_SERARCH_URL     @"https://twitter.com/#!/search/realtime/TRAIN%20rom%3Acaltrain%20OR%20from%3Acaltrain_news"
-#define CALTRAIN_TWITTER_URL    @"https://twitter.com/#!/Caltrain_News"
+#define TWITTER_SERARCH_URL     @"https://twitter.com/#!/search/realtime/TRAIN%20from%3Acaltrain%20OR%20from%3Acaltrain_news"
+#define CALTRAIN_TWITTER_URL    @"https://twitter.com/#!/search/from%3Acaltrain%20OR%20from%3Acaltrain_news"
 #define GEO_FROM                @"1"
 #define GEO_TO                  @"1"
 #define REVERSE_GEO_FROM        @"2"
@@ -28,4 +28,4 @@
 #define FEEDBACK_BOTH           @"3"
 #define FB_RESPOSE_SUCCEES      @"FeedBack Send Successfully"
 #define FB_RESPONSE_FAIL        @"Please Send Again"
-#define FB_TITLE_MSG            @"Trip FeedBack"
+#define FB_TITLE_MSG            @"Trip Feedback"

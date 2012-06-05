@@ -154,6 +154,15 @@
         titleText = [leg directionsTitleText];
         subTitle = [leg directionsDetailText];
         
+        if ([leg isTrain]) {
+            NSString *train = [[titleText componentsSeparatedByString:@"("] objectAtIndex:1];
+            NSString *train1 = [[train componentsSeparatedByString:@")"] objectAtIndex:0];
+            train1 = [train1 stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+            NSLog(@"It is a train %@",train1 );
+            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+            [prefs setObject:train1 forKey:@"train"];
+        }
+        
     // It calls when MODe of leg is WaLK.
       //  [self walk];
     }
@@ -359,6 +368,7 @@
                         aView.lineWidth = 5;
                     } else if([leg isTrain]){
                         tw_btn.hidden = NO;
+                        
                         aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:0.8] ;
                         aView.lineWidth = 5;
                     } else {
@@ -415,12 +425,19 @@
 }
 -(IBAction)twitterSearch:(id)sender{
 
-    TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
-    
-    [[self navigationController] pushViewController:twitter_search animated:YES];
-    
-    
-    [twitter_search loadRequest:CALTRAIN_TWITTER_URL];
+    @try {
+        NSLog(@"twiit");
+        TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        NSString *trainRoute = [prefs objectForKey:@"train"];
+        [[self navigationController] pushViewController:twitter_search animated:YES];
+        trainRoute = [TWITTER_SERARCH_URL stringByReplacingOccurrencesOfString:@"TRAIN" withString:trainRoute];
+        [twitter_search loadRequest:trainRoute];
+    }
+    @catch (NSException *exception) {
+        NSLog(@" twitter print : %@", exception);
+    }
+ 
     
 }
 

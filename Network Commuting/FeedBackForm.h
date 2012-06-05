@@ -14,7 +14,7 @@
 #import "Plan.h"
 
 
-@interface FeedBackForm : UIViewController <AVAudioRecorderDelegate, AVAudioPlayerDelegate,RKObjectLoaderDelegate, RKRequestDelegate>{
+@interface FeedBackForm : UIViewController <AVAudioRecorderDelegate, AVAudioPlayerDelegate,RKObjectLoaderDelegate, RKRequestDelegate, UIAlertViewDelegate>{
     
    	NSString *soundFilePath;
     AVAudioRecorder *audioRecorder;
@@ -22,10 +22,18 @@
     TPResponse *tpResponse;
     NSString *tpURLResource;
     IBOutlet UITextView *txtFeedBack;
+    IBOutlet UILabel *time;
+    IBOutlet UITextField *txtEmailId;
+    int secondsLeft;;
+    BOOL isRepeat;
+    NSTimer *timer;
 
 }
+
 @property (strong, nonatomic) TPResponse *tpResponse; 
 @property(nonatomic,retain) NSString *tpURLResource;
+@property(nonatomic,retain) NSString *mesg;
+@property (strong, nonatomic) UIAlertView * process;
 
 -(IBAction)recordRecording:(id)sender;
 -(IBAction)stopRecording:(id)sender;
@@ -33,5 +41,6 @@
 -(IBAction)playRecording:(id)sender;
 -(IBAction)submitFeedBack:(id)sender;
 
+-(UIAlertView *) WaitPrompt ;
 @end
 

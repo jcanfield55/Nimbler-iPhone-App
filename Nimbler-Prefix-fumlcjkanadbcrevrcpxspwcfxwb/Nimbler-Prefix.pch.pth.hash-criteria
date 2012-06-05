@@ -25,7 +25,7 @@ i386
 -DIBOutlet=__attribute__((iboutlet))
 -DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))
 -DIBAction=void)__attribute__((ibaction)
--D__IPHONE_OS_VERSION_MIN_REQUIRED=50000
+-D__IPHONE_OS_VERSION_MIN_REQUIRED=40300
 -iquote
 -iquote
 -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include
