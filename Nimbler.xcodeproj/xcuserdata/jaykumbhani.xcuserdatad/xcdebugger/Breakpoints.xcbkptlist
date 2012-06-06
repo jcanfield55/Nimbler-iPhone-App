@@ -465,19 +465,5 @@
          landmarkName = "-loadRequest:"
          landmarkType = "5">
       </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "Network Commuting/FeedBackForm.m"
-         timestampString = "360496722.616217"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "363"
-         endingLineNumber = "363"
-         landmarkName = "-alertView:clickedButtonAtIndex:"
-         landmarkType = "5">
-      </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>
