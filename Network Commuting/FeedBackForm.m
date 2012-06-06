@@ -8,6 +8,7 @@
 
 #import "FeedBackForm.h"
 #import <RestKit/RKJSONParserJSONKit.h>
+#import "nc_AppDelegate.h"
 
 #define RECORD_MSG   @"Recording your feedback \nSpeak ..."
 #define SUBMIT_MSG   @"Sending your feedback \nPlease wait ..."
@@ -94,7 +95,7 @@
 -(void) updatePlayCountdown {
        
     secondsLeft++;
-    time.text = [NSString stringWithFormat:@"Time Left : %02d", secondsLeft];
+    time.text = [NSString stringWithFormat:@"Play Time: %02d", secondsLeft];
     
 }
 
@@ -167,6 +168,7 @@
 -(void)setActRunStatus{
     actRunning.text =@"";
 }
+
 -(IBAction)pausRecording:(id)sender
 {
     if (audioPlayer.playing) {
@@ -354,7 +356,7 @@
 -(void)sendFeedbackToServer
 {
     process = [self waitFb];
-    
+//    [al autoContentAccessingProxy];
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSString *source = [prefs objectForKey:@"source"];
     NSString *uniqueId = [prefs objectForKey:@"uniqueid"];
@@ -402,7 +404,15 @@
                           otherButtonTitles:nil];  
     
         [alerts show];  
-     
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc]  
+                                          initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];  
+    
+    indicator.center = CGPointMake(alerts.bounds.size.width / 2,   
+                                   alerts.bounds.size.height - 50);  
+    [indicator startAnimating];  
+    [alerts addSubview:indicator]; 
+    
+    
     [[NSRunLoop currentRunLoop] limitDateForMode:NSDefaultRunLoopMode];  
     
     return alerts;

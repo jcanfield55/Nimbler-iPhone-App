@@ -65,4 +65,10 @@ dependencies: /github-tp/NC_iPhone/Network\ Commuting/FeedBackForm.m \
   /github-tp/NC_iPhone/Network\ Commuting/AddressComponent.h \
   /github-tp/NC_iPhone/Network\ Commuting/RawAddress.h \
   /github-tp/NC_iPhone/Network\ Commuting/GeoRectangle.h \
-  /github-tp/NC_iPhone/RestKit/Build/RestKit/RKJSONParserJSONKit.h
+  /github-tp/NC_iPhone/RestKit/Build/RestKit/RKJSONParserJSONKit.h \
+  /github-tp/NC_iPhone/Network\ Commuting/nc_AppDelegate.h \
+  /github-tp/NC_iPhone/Network\ Commuting/ToFromViewController.h \
+  /github-tp/NC_iPhone/Network\ Commuting/ToFromTableViewController.h \
+  /github-tp/NC_iPhone/Network\ Commuting/Locations.h \
+  /github-tp/NC_iPhone/Network\ Commuting/SupportedRegion.h \
+  /github-tp/NC_iPhone/Network\ Commuting/FeedBackViewController.h
