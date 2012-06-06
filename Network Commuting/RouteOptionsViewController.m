@@ -94,7 +94,8 @@
 - (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     RouteDetailsViewController *routeDetailsVC = [[RouteDetailsViewController alloc] initWithStyle:UITableViewStylePlain];
-    [routeDetailsVC setFeedBackItinerary:[[feedBackPlanId sortedItineraries] objectAtIndex:[indexPath row]] ];
+    [routeDetailsVC setFeedBackItinerary:[[feedBackPlanId sortedItineraries] objectAtIndex:[indexPath row]]];
+    
     [routeDetailsVC setItinerary:[[plan sortedItineraries] objectAtIndex:[indexPath row]]];
     [[self navigationController] pushViewController:routeDetailsVC animated:YES];
 }
@@ -102,7 +103,7 @@
 #pragma mark - View lifecycle
 
 /*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
+ Implement loadView to create a view hierarchy programmatically, without using a nib.
 */
  - (void)loadView
 {
@@ -132,7 +133,10 @@
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:@"1" forKey:@"source"];
     [prefs setObject:[plan planId] forKey:@"uniqueid"];
-            
+           
+    
+    
+    
     FeedBackForm *legMapVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
     [[self navigationController] pushViewController:legMapVC animated:YES];
  
@@ -144,7 +148,6 @@
  - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
 }
 
 
@@ -160,5 +163,8 @@
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+
+
+#pragma Rest Request for TPServer
 
 @end

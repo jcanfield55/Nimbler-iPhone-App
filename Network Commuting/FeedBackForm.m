@@ -42,7 +42,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-
     NSString *email = [prefs objectForKey:@"eMailId"];
     txtEmailId.text = email;
     actRunning.text = @"";
@@ -63,8 +62,8 @@
 
 
 -(void) updateCountdown {
-    int seconds;
     
+    int seconds;
     secondsLeft--;
     secondUse += 0.0166;
      [progress setProgress:secondUse];
@@ -93,10 +92,8 @@
 
 
 -(void) updatePlayCountdown {
-       
     secondsLeft++;
-    time.text = [NSString stringWithFormat:@"Play Time: %02d", secondsLeft];
-    
+    time.text = [NSString stringWithFormat:@"Play Time : %02d", secondsLeft];
 }
 
 #pragma mark-Recording functions
@@ -352,7 +349,6 @@
 }
 
 
-
 -(void)sendFeedbackToServer
 {
     process = [self waitFb];
@@ -454,4 +450,54 @@
     } 
     
 }
+
+#pragma mark TextField animation at selected
+
+- (void) animateTextField: (UITextField*) textField up: (BOOL) up{
+	int txtPosition = (textField.frame.origin.y - 160);
+    const int movementDistance = (txtPosition < 0 ? 0 : txtPosition); // tweak as needed
+    const float movementDuration = 0.3f; // tweak as needed
+    
+    int movement = (up ? -movementDistance : movementDistance);
+    
+    [UIView beginAnimations: @"anim" context: nil];
+    [UIView setAnimationBeginsFromCurrentState: YES];
+    [UIView setAnimationDuration: movementDuration];
+    self.view.frame = CGRectOffset(self.view.frame, 0, movement);
+    [UIView commitAnimations];
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+    [self animateTextField: textField up: YES];
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField{
+    [self animateTextField: textField up: NO];
+}
+
+#pragma mark TextView animation at selected
+
+- (void) animateTextView: (UITextView*) textView up: (BOOL) up{
+	int txtPosition = (textView.frame.origin.y - 100);
+    const int movementDistance = (txtPosition < 0 ? 0 : txtPosition); // tweak as needed
+    const float movementDuration = 0.3f; // tweak as needed
+    
+    int movement = (up ? -movementDistance : movementDistance);
+    
+    [UIView beginAnimations: @"anim" context: nil];
+    [UIView setAnimationBeginsFromCurrentState: YES];
+    [UIView setAnimationDuration: movementDuration];
+    self.view.frame = CGRectOffset(self.view.frame, 0, movement);
+    [UIView commitAnimations];
+}
+
+- (void)textViewDidBeginEditing:(UITextView *)textView{
+    [self animateTextView: textView up: YES];
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView{
+    [self animateTextView: textView up: NO];
+}
+
+
 @end

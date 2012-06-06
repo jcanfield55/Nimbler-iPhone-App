@@ -140,11 +140,16 @@
             subTitle = [add1 stringByAppendingString:add2];  
         }
     }
+        
     [[cell textLabel] setText:titleText];
     [[cell detailTextLabel] setLineBreakMode:UILineBreakModeWordWrap];
     [[cell detailTextLabel] setNumberOfLines:0];
     [[cell detailTextLabel] setText:subTitle];
-    if (subTitle && [subTitle length] > 40) {
+    
+//    if ([indexPath row] == 2 || [indexPath row] == 5){
+//        cell.imageView.image =[UIImage imageNamed:@"rec_up"];
+//    }
+        if (subTitle && [subTitle length] > 40) {
         [[cell detailTextLabel] sizeToFit];
     }
     return cell;
@@ -171,9 +176,7 @@
     }
     @catch (NSException *exception) {
         NSLog(@" twitter print : %@", exception);
-    }
-        
-   
+    } 
 }
 
 
@@ -182,6 +185,8 @@
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:@"2" forKey:@"source"];
     [prefs setObject:[itinerary itinId] forKey:@"uniqueid"];
+    
+    
     
     FeedBackForm *legMapVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
     [[self navigationController] pushViewController:legMapVC animated:YES];
