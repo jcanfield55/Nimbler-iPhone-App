@@ -1,1835 +1,0 @@
-TNimbler
-v4
-r1
-cCheck dependencies
-cProcessInfoPlistFile /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Info.plist "Network Commuting/Nimbler-Info.plist"
-cDataModelVersionCompile /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Network_Commuting.momd "/github-tp/NC_iPhone/Network Commuting/Network_Commuting.xcdatamodeld"
-cProcessPCH /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch.pth "Network Commuting/Nimbler-Prefix.pch" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cProcessPCH /github-tp/NC_iPhone/Nimbler-Prefix-cawzttaspembblcxznxlwydemxiw/Nimbler-Prefix.pch.pth "Network Commuting/Nimbler-Prefix.pch" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/GeoRectangle.o "/github-tp/NC_iPhone/Network Commuting/GeoRectangle.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/main.o "/github-tp/NC_iPhone/Network Commuting/main.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/nc_AppDelegate.o "/github-tp/NC_iPhone/Network Commuting/nc_AppDelegate.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/ToFromViewController.o "/github-tp/NC_iPhone/Network Commuting/ToFromViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Location.o "/github-tp/NC_iPhone/Network Commuting/Location.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/LatLng.o "/github-tp/NC_iPhone/Network Commuting/LatLng.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/AddressComponent.o "/github-tp/NC_iPhone/Network Commuting/AddressComponent.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RouteOptionsViewController.o "/github-tp/NC_iPhone/Network Commuting/RouteOptionsViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Plan.o "/github-tp/NC_iPhone/Network Commuting/Plan.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/PlanPlace.o "/github-tp/NC_iPhone/Network Commuting/PlanPlace.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/AgencyAndId.o "/github-tp/NC_iPhone/Network Commuting/AgencyAndId.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/UtilityFunctions.o "/github-tp/NC_iPhone/Network Commuting/UtilityFunctions.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Locations.o "/github-tp/NC_iPhone/Network Commuting/Locations.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RawAddress.o "/github-tp/NC_iPhone/Network Commuting/RawAddress.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/DateFormatterMSFrom1970.o "/github-tp/NC_iPhone/Network Commuting/DateFormatterMSFrom1970.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Itinerary.o "/github-tp/NC_iPhone/Network Commuting/Itinerary.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Step.o "/github-tp/NC_iPhone/Network Commuting/Step.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Leg.o "/github-tp/NC_iPhone/Network Commuting/Leg.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RouteDetailsViewController.o "/github-tp/NC_iPhone/Network Commuting/RouteDetailsViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/LegMapViewController.o "/github-tp/NC_iPhone/Network Commuting/LegMapViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/PolylineEncodedString.o "/github-tp/NC_iPhone/Network Commuting/PolylineEncodedString.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/MyAnnotation.o "/github-tp/NC_iPhone/Network Commuting/MyAnnotation.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Error.o "/github-tp/NC_iPhone/Network Commuting/Error.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/DateTimeViewController.o "/github-tp/NC_iPhone/Network Commuting/DateTimeViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/ToFromTableViewController.o "/github-tp/NC_iPhone/Network Commuting/ToFromTableViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/FeedBackViewController.o "/github-tp/NC_iPhone/Network Commuting/FeedBackViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/SupportedRegion.o "/github-tp/NC_iPhone/Network Commuting/SupportedRegion.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RootMap.o "/github-tp/NC_iPhone/Network Commuting/RootMap.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/TPResponse.o "/github-tp/NC_iPhone/Network Commuting/TPResponse.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/FeedBackForm.o "/github-tp/NC_iPhone/Network Commuting/FeedBackForm.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/TwitterSearch.o "/github-tp/NC_iPhone/Network Commuting/TwitterSearch.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cLd /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Nimbler normal i386
-cGenerateDSYMFile /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app.dSYM /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Nimbler
-cCopyStringsFile /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/en.lproj/InfoPlist.strings "Network Commuting/en.lproj/InfoPlist.strings"
-cCompileXIB "/github-tp/NC_iPhone/Network Commuting/ToFromViewController.xib"
-cCompileXIB "/github-tp/NC_iPhone/Network Commuting/../LegMapViewController.xib"
-cCompileXIB "/github-tp/NC_iPhone/Network Commuting/DateTimeViewController.xib"
-cCpResource "Network Commuting/Blue_dot_7px.gif" build/Debug-iphonesimulator/Nimbler.app/Blue_dot_7px.gif
-cCpResource logo_small_iPh.png build/Debug-iphonesimulator/Nimbler.app/logo_small_iPh.png
-cCpResource logo_big_iPh.png build/Debug-iphonesimulator/Nimbler.app/logo_big_iPh.png
-cCpResource "Network Commuting/TestFlightSDK1/README.txt" build/Debug-iphonesimulator/Nimbler.app/README.txt
-cCpResource "Network Commuting/TestFlightSDK1/release_notes.txt" build/Debug-iphonesimulator/Nimbler.app/release_notes.txt
-cCpResource "Network Commuting/dot.png" build/Debug-iphonesimulator/Nimbler.app/dot.png
-cCompileXIB "/github-tp/NC_iPhone/Network Commuting/RootMap.xib"
-cCpResource "Network Commuting/rec_up.png" build/Debug-iphonesimulator/Nimbler.app/rec_up.png
-cCpResource "Network Commuting/stopRec.png" build/Debug-iphonesimulator/Nimbler.app/stopRec.png
-cCpResource "Network Commuting/playRec.png" build/Debug-iphonesimulator/Nimbler.app/playRec.png
-cCpResource "Network Commuting/feedback.png" build/Debug-iphonesimulator/Nimbler.app/feedback.png
-cCpResource "Network Commuting/pausePlay.png" build/Debug-iphonesimulator/Nimbler.app/pausePlay.png
-cCompileXIB "/github-tp/NC_iPhone/Network Commuting/FeedBackForm.xib"
-cCompileXIB "/github-tp/NC_iPhone/Network Commuting/TwitterSearch.xib"
-cTouch /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk
-c000000004F2A9A7B0000000000000110
-t1328192123
-s272
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/System/Library/Frameworks/AVFoundation.framework/AVFoundation
-c000000004E7806CF000000000018D430
-t1316488911
-s1627184
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/System/Library/Frameworks/CFNetwork.framework/CFNetwork
-c000000004E72F23F00000000002050D0
-t1316155967
-s2117840
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/System/Library/Frameworks/CoreData.framework/CoreData
-c000000004E72F2E600000000002C8C00
-t1316156134
-s2919424
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics
-c000000004E72F1CC0000000000245480
-t1316155852
-s2380928
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/System/Library/Frameworks/CoreLocation.framework/CoreLocation
-c000000004E78059F00000000000859A0
-t1316488607
-s547232
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/System/Library/Frameworks/Foundation.framework/Foundation
-c000000004E72F2960000000000353830
-t1316156054
-s3487792
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/System/Library/Frameworks/MapKit.framework/MapKit
-c000000004E7807EF00000000000D89E0
-t1316489199
-s887264
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/System/Library/Frameworks/MobileCoreServices.framework/MobileCoreServices
-c000000004E72F3C800000000000998C0
-t1316156360
-s628928
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/System/Library/Frameworks/QuartzCore.framework/QuartzCore
-c000000004E72F69C00000000001A9D20
-t1316157084
-s1744160
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/System/Library/Frameworks/Security.framework/Security
-c000000004E72F185000000000007F9C0
-t1316155781
-s522688
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/System/Library/Frameworks/SystemConfiguration.framework/SystemConfiguration
-c000000004E72F177000000000006C8A0
-t1316155767
-s444576
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/System/Library/Frameworks/UIKit.framework/UIKit
-c000000004E7806AB00000000008F7390
-t1316488875
-s9401232
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/usr/lib/libxml2.dylib
-c000000004E72F1B5000000000011FDD0
-t1316155829
-s1179088
-
-N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/usr/lib/libz.dylib
-c000000004E72EDC60000000000013460
-t1316154822
-s78944
-
-N/github-tp/NC_iPhone/Network Commuting/../LegMapViewController.xib
-c000000004FC4EDA50000000000005CE3
-t1338305957
-s23779
-
-N/github-tp/NC_iPhone/Network Commuting/AddressComponent.h
-c000000004FB117F6000000000000029B
-t1337006070
-s667
-
-N/github-tp/NC_iPhone/Network Commuting/AddressComponent.m
-c000000004FB117F60000000000000485
-t1337006070
-s1157
-
-N/github-tp/NC_iPhone/Network Commuting/AgencyAndId.h
-c000000004FB117F600000000000001BA
-t1337006070
-s442
-
-N/github-tp/NC_iPhone/Network Commuting/AgencyAndId.m
-c000000004FB117F600000000000003E9
-t1337006070
-s1001
-
-N/github-tp/NC_iPhone/Network Commuting/Blue_dot_7px.gif
-c000000004FB117F60000000000000341
-t1337006070
-s833
-
-N/github-tp/NC_iPhone/Network Commuting/Constants.h
-c000000004FCEF82E000000000000051A
-t1338964014
-s1306
-
-N/github-tp/NC_iPhone/Network Commuting/DateFormatterMSFrom1970.h
-c000000004FB117F6000000000000035C
-t1337006070
-s860
-
-N/github-tp/NC_iPhone/Network Commuting/DateFormatterMSFrom1970.m
-c000000004FB117F60000000000000379
-t1337006070
-s889
-
-N/github-tp/NC_iPhone/Network Commuting/DateTimeViewController.h
-c000000004FC474E300000000000004A5
-t1338275043
-s1189
-
-N/github-tp/NC_iPhone/Network Commuting/DateTimeViewController.m
-c000000004FB117F60000000000000C61
-t1337006070
-s3169
-
-N/github-tp/NC_iPhone/Network Commuting/DateTimeViewController.xib
-c000000004FB61FA100000000000055C1
-t1337335713
-s21953
-
-N/github-tp/NC_iPhone/Network Commuting/Error.h
-c000000004FC4EDA50000000000000229
-t1338305957
-s553
-
-N/github-tp/NC_iPhone/Network Commuting/Error.m
-c000000004FC4EDA50000000000000480
-t1338305957
-s1152
-
-N/github-tp/NC_iPhone/Network Commuting/FeedBackForm.h
-c000000004FCDEF810000000000000551
-t1338896257
-s1361
-
-N/github-tp/NC_iPhone/Network Commuting/FeedBackForm.m
-c000000004FCF3C970000000000003F3E
-t1338981527
-s16190
-
-N/github-tp/NC_iPhone/Network Commuting/FeedBackForm.xib
-c000000004FCF341200000000000072EC
-t1338979346
-s29420
-
-N/github-tp/NC_iPhone/Network Commuting/FeedBackViewController.h
-c000000004FC4EDA50000000000000407
-t1338305957
-s1031
-
-N/github-tp/NC_iPhone/Network Commuting/FeedBackViewController.m
-c000000004FCC843A00000000000031D8
-t1338803258
-s12760
-
-N/github-tp/NC_iPhone/Network Commuting/GeoRectangle.h
-c000000004FB117F600000000000001D9
-t1337006070
-s473
-
-N/github-tp/NC_iPhone/Network Commuting/GeoRectangle.m
-c000000004FB117F60000000000000444
-t1337006070
-s1092
-
-N/github-tp/NC_iPhone/Network Commuting/Itinerary.h
-c000000004FC4EDA6000000000000076F
-t1338305958
-s1903
-
-N/github-tp/NC_iPhone/Network Commuting/Itinerary.m
-c000000004FC4EDA60000000000000D11
-t1338305958
-s3345
-
-N/github-tp/NC_iPhone/Network Commuting/LatLng.h
-c000000004FB117F6000000000000020D
-t1337006070
-s525
-
-N/github-tp/NC_iPhone/Network Commuting/LatLng.m
-c000000004FB117F600000000000004A3
-t1337006070
-s1187
-
-N/github-tp/NC_iPhone/Network Commuting/Leg.h
-c000000004FC4EDA600000000000008F5
-t1338305958
-s2293
-
-N/github-tp/NC_iPhone/Network Commuting/Leg.m
-c000000004FC4EDA60000000000001B6F
-t1338305958
-s7023
-
-N/github-tp/NC_iPhone/Network Commuting/LegMapViewController.h
-c000000004FC4EDA6000000000000070F
-t1338305958
-s1807
-
-N/github-tp/NC_iPhone/Network Commuting/LegMapViewController.m
-c000000004FCCA2DC0000000000004BE1
-t1338811100
-s19425
-
-N/github-tp/NC_iPhone/Network Commuting/Location.h
-c000000004FB117F60000000000000CC8
-t1337006070
-s3272
-
-N/github-tp/NC_iPhone/Network Commuting/Location.m
-c000000004FB117F60000000000003396
-t1337006070
-s13206
-
-N/github-tp/NC_iPhone/Network Commuting/Locations.h
-c000000004FB117F6000000000000071C
-t1337006070
-s1820
-
-N/github-tp/NC_iPhone/Network Commuting/Locations.m
-c000000004FB117F6000000000000422C
-t1337006070
-s16940
-
-N/github-tp/NC_iPhone/Network Commuting/MyAnnotation.h
-c000000004FC4EDA60000000000000202
-t1338305958
-s514
-
-N/github-tp/NC_iPhone/Network Commuting/MyAnnotation.m
-c000000004FC4EDA6000000000000016C
-t1338305958
-s364
-
-N/github-tp/NC_iPhone/Network Commuting/Network_Commuting.xcdatamodeld
-c000000004FC847F400000000000000EE
-t1338525684
-s238
-
-N/github-tp/NC_iPhone/Network Commuting/Nimbler-Prefix.pch
-c000000004FC4EDA6000000000000019D
-t1338305958
-s413
-
-N/github-tp/NC_iPhone/Network Commuting/Plan.h
-c000000004FC61CC300000000000003D4
-t1338383555
-s980
-
-N/github-tp/NC_iPhone/Network Commuting/Plan.m
-c000000004FC613CC0000000000000DF4
-t1338381260
-s3572
-
-N/github-tp/NC_iPhone/Network Commuting/PlanPlace.h
-c000000004FB117F6000000000000039D
-t1337006070
-s925
-
-N/github-tp/NC_iPhone/Network Commuting/PlanPlace.m
-c000000004FB117F600000000000006B3
-t1337006070
-s1715
-
-N/github-tp/NC_iPhone/Network Commuting/PolylineEncodedString.h
-c000000004FB117F60000000000000266
-t1337006070
-s614
-
-N/github-tp/NC_iPhone/Network Commuting/PolylineEncodedString.m
-c000000004FC474690000000000000ACA
-t1338274921
-s2762
-
-N/github-tp/NC_iPhone/Network Commuting/RawAddress.h
-c000000004FB117F60000000000000199
-t1337006070
-s409
-
-N/github-tp/NC_iPhone/Network Commuting/RawAddress.m
-c000000004FB117F60000000000000129
-t1337006070
-s297
-
-N/github-tp/NC_iPhone/Network Commuting/RootMap.h
-c000000004FC4EDA60000000000000395
-t1338305958
-s917
-
-N/github-tp/NC_iPhone/Network Commuting/RootMap.m
-c000000004FC4EDA60000000000002722
-t1338305958
-s10018
-
-N/github-tp/NC_iPhone/Network Commuting/RootMap.xib
-c000000004FB117F60000000000002555
-t1337006070
-s9557
-
-N/github-tp/NC_iPhone/Network Commuting/RouteDetailsViewController.h
-c000000004FCCA1E10000000000000222
-t1338810849
-s546
-
-N/github-tp/NC_iPhone/Network Commuting/RouteDetailsViewController.m
-c000000004FCF351D0000000000001C11
-t1338979613
-s7185
-
-N/github-tp/NC_iPhone/Network Commuting/RouteOptionsViewController.h
-c000000004FC4EDA600000000000001FE
-t1338305958
-s510
-
-N/github-tp/NC_iPhone/Network Commuting/RouteOptionsViewController.m
-c000000004FCF264D000000000000149B
-t1338975821
-s5275
-
-N/github-tp/NC_iPhone/Network Commuting/Step.h
-c000000004FBF065B0000000000000496
-t1337919067
-s1174
-
-N/github-tp/NC_iPhone/Network Commuting/Step.m
-c000000004FB117F60000000000000699
-t1337006070
-s1689
-
-N/github-tp/NC_iPhone/Network Commuting/SupportedRegion.h
-c000000004FC4EDA60000000000000342
-t1338305958
-s834
-
-N/github-tp/NC_iPhone/Network Commuting/SupportedRegion.m
-c000000004FC4EDA60000000000000666
-t1338305958
-s1638
-
-N/github-tp/NC_iPhone/Network Commuting/TPResponse.h
-c000000004FC4EDA60000000000000158
-t1338305958
-s344
-
-N/github-tp/NC_iPhone/Network Commuting/TPResponse.m
-c000000004FC4EDA6000000000000029B
-t1338305958
-s667
-
-N/github-tp/NC_iPhone/Network Commuting/TestFlightSDK1/README.txt
-c000000004FB117F60000000000003C1F
-t1337006070
-s15391
-
-N/github-tp/NC_iPhone/Network Commuting/TestFlightSDK1/TestFlight.h
-c000000004FB117F60000000000000EEA
-t1337006070
-s3818
-
-N/github-tp/NC_iPhone/Network Commuting/TestFlightSDK1/libTestFlight.a
-c000000004FB117F600000000002C185C
-t1337006070
-s2889820
-
-N/github-tp/NC_iPhone/Network Commuting/TestFlightSDK1/release_notes.txt
-c000000004FB117F6000000000000198C
-t1337006070
-s6540
-
-N/github-tp/NC_iPhone/Network Commuting/ToFromTableViewController.h
-c000000004FC4EDA6000000000000070D
-t1338305958
-s1805
-
-N/github-tp/NC_iPhone/Network Commuting/ToFromTableViewController.m
-c000000004FCDFB8A0000000000004FE4
-t1338899338
-s20452
-
-N/github-tp/NC_iPhone/Network Commuting/ToFromViewController.h
-c000000004FC8674B0000000000000C67
-t1338533707
-s3175
-
-N/github-tp/NC_iPhone/Network Commuting/ToFromViewController.m
-c000000004FCC996D000000000000905C
-t1338808685
-s36956
-
-N/github-tp/NC_iPhone/Network Commuting/ToFromViewController.xib
-c000000004FC4EDA600000000000040AF
-t1338305958
-s16559
-
-N/github-tp/NC_iPhone/Network Commuting/TwitterSearch.h
-c000000004FC4EDA60000000000000173
-t1338305958
-s371
-
-N/github-tp/NC_iPhone/Network Commuting/TwitterSearch.m
-c000000004FC4EDA600000000000006CA
-t1338305958
-s1738
-
-N/github-tp/NC_iPhone/Network Commuting/TwitterSearch.xib
-c000000004FC4EDA600000000000034B3
-t1338305958
-s13491
-
-N/github-tp/NC_iPhone/Network Commuting/UtilityFunctions.h
-c000000004FB117F60000000000000288
-t1337006070
-s648
-
-N/github-tp/NC_iPhone/Network Commuting/UtilityFunctions.m
-c000000004FB117F6000000000000106E
-t1337006070
-s4206
-
-N/github-tp/NC_iPhone/Network Commuting/dot.png
-c000000004FC4EDA600000000000001E3
-t1338305958
-s483
-
-N/github-tp/NC_iPhone/Network Commuting/en.lproj/InfoPlist.strings
-c000000004FB117F6000000000000002F
-t1337006070
-s47
-
-N/github-tp/NC_iPhone/Network Commuting/enums.h
-c000000004FB117F600000000000001E9
-t1337006070
-s489
-
-N/github-tp/NC_iPhone/Network Commuting/feedback.png
-c000000004FC4EDA60000000000025BAE
-t1338305958
-s154542
-
-N/github-tp/NC_iPhone/Network Commuting/main.m
-c000000004FC4EDA60000000000000180
-t1338305958
-s384
-
-N/github-tp/NC_iPhone/Network Commuting/nc_AppDelegate.h
-c000000004FCC912C000000000000058B
-t1338806572
-s1419
-
-N/github-tp/NC_iPhone/Network Commuting/nc_AppDelegate.m
-c000000004FCDFCFB0000000000003774
-t1338899707
-s14196
-
-N/github-tp/NC_iPhone/Network Commuting/pausePlay.png
-c000000004FC4EDA6000000000000137B
-t1338305958
-s4987
-
-N/github-tp/NC_iPhone/Network Commuting/playRec.png
-c000000004FC4EDA60000000000001D8E
-t1338305958
-s7566
-
-N/github-tp/NC_iPhone/Network Commuting/rec_up.png
-c000000004FC4EDA60000000000001201
-t1338305958
-s4609
-
-N/github-tp/NC_iPhone/Network Commuting/stopRec.png
-c000000004FC4EDA6000000000000119F
-t1338305958
-s4511
-
-N/github-tp/NC_iPhone/Nimbler-Prefix-cawzttaspembblcxznxlwydemxiw/Nimbler-Prefix.pch.pth
-t1338965797
-s4147720
-
-N/github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch.pth
-t1338965797
-s4147720
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/CoreData.h
-c000000004FCDF77C00000000000003BE
-t1338898300
-s958
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/Errors.h
-c000000004FCDF77C0000000000000431
-t1338898300
-s1073
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/LCLNSLog.h
-c000000004FCDF77C000000000000105F
-t1338898300
-s4191
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/NSDictionary+RKAdditions.h
-c000000004FCDF77C0000000000000584
-t1338898300
-s1412
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/NSDictionary+RKRequestSerialization.h
-c000000004FCDF77C00000000000005C6
-t1338898300
-s1478
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/NSManagedObject+ActiveRecord.h
-c000000004FCDF77C00000000000023BD
-t1338898300
-s9149
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/NSString+RestKit.h
-c000000004FCDF77C00000000000015BC
-t1338898300
-s5564
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/Network.h
-c000000004FCDF77C0000000000000390
-t1338898300
-s912
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/ObjectMapping.h
-c000000004FCDF77C000000000000039C
-t1338898300
-s924
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKClient.h
-c000000004FCDF77C0000000000005DFB
-t1338898300
-s24059
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKDirectory.h
-c000000004FCDF77C000000000000030F
-t1338898300
-s783
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKDotNetDateFormatter.h
-c000000004FCDF77C0000000000000B9F
-t1338898300
-s2975
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKDynamicObjectMapping.h
-c000000004FCDF77C0000000000000F6F
-t1338898300
-s3951
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKJSONParserJSONKit.h
-c000000004FCDF77C0000000000000307
-t1338898300
-s775
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKLog.h
-c000000004FCDF77C0000000000001B21
-t1338898300
-s6945
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKMIMETypes.h
-c000000004FCDF77C00000000000003F7
-t1338898300
-s1015
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKManagedObjectCache.h
-c000000004FCDF77C000000000000036B
-t1338898300
-s875
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKManagedObjectMapping.h
-c000000004FCDF77C0000000000000DEC
-t1338898300
-s3564
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKManagedObjectSeeder.h
-c000000004FCDF77C0000000000000C6E
-t1338898300
-s3182
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKManagedObjectStore.h
-c000000004FCDF77C00000000000017E7
-t1338898300
-s6119
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKMappingOperationQueue.h
-c000000004FCDF77C0000000000000796
-t1338898300
-s1942
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKNotifications.h
-c000000004FCDF77C0000000000000584
-t1338898300
-s1412
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKOAuthClient.h
-c000000004FCDF77C000000000000156E
-t1338898300
-s5486
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectAttributeMapping.h
-c000000004FCDF77C000000000000071E
-t1338898300
-s1822
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectLoader.h
-c000000004FCDF77C000000000000218B
-t1338898300
-s8587
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectManager.h
-c000000004FCDF77C000000000000423B
-t1338898300
-s16955
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectMapper.h
-c000000004FCDF77C0000000000000C61
-t1338898300
-s3169
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectMapping.h
-c000000004FCDF77C0000000000005A6B
-t1338898300
-s23147
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectMappingDefinition.h
-c000000004FCDF77C0000000000000308
-t1338898300
-s776
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectMappingOperation.h
-c000000004FCDF77C000000000000103A
-t1338898300
-s4154
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectMappingProvider.h
-c000000004FCDF77C0000000000002606
-t1338898300
-s9734
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectMappingResult.h
-c000000004FCDF77C0000000000000446
-t1338898300
-s1094
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectPropertyInspector+CoreData.h
-c000000004FCDF77C0000000000000410
-t1338898300
-s1040
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectPropertyInspector.h
-c000000004FCDF77C00000000000004CD
-t1338898300
-s1229
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectRelationshipMapping.h
-c000000004FCDF77C00000000000005CF
-t1338898300
-s1487
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectRouter.h
-c000000004FCDF77C0000000000000CDC
-t1338898300
-s3292
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKObjectSerializer.h
-c000000004FCDF77C0000000000000995
-t1338898300
-s2453
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKParams.h
-c000000004FCDF77C0000000000000E80
-t1338898300
-s3712
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKParamsAttachment.h
-c000000004FCDF77C0000000000000C96
-t1338898300
-s3222
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKParser.h
-c000000004FCDF77C000000000000049A
-t1338898300
-s1178
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKParserRegistry.h
-c000000004FCDF77C00000000000007A6
-t1338898300
-s1958
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKPathMatcher.h
-c000000004FCDF77C0000000000001DA1
-t1338898300
-s7585
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKReachabilityObserver.h
-c000000004FCDF77C0000000000002155
-t1338898300
-s8533
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKRequest.h
-c000000004FCDF77C00000000000033A6
-t1338898300
-s13222
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKRequestCache.h
-c000000004FCDF77C000000000000097E
-t1338898300
-s2430
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKRequestQueue.h
-c000000004FCDF77C0000000000001844
-t1338898300
-s6212
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKRequestSerializable.h
-c000000004FCDF77C000000000000081F
-t1338898300
-s2079
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKResponse.h
-c000000004FCDF77C000000000000164B
-t1338898300
-s5707
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RKURL.h
-c000000004FCDF77C000000000000062E
-t1338898300
-s1582
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/RestKit.h
-c000000004FCDF77C000000000000041F
-t1338898300
-s1055
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/Restkit.h
-c000000004FCDF77C000000000000041F
-t1338898300
-s1055
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/Support.h
-c000000004FCDF77C0000000000000379
-t1338898300
-s889
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/lcl.h
-c000000004FCDF77C00000000000026E2
-t1338898300
-s9954
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/lcl_config_components.h
-c000000004FCDF77C00000000000009FE
-t1338898300
-s2558
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/lcl_config_extensions.h
-c000000004FCDF77C00000000000002C5
-t1338898300
-s709
-
-N/github-tp/NC_iPhone/RestKit/Build/RestKit/lcl_config_logger.h
-c000000004FCDF77C00000000000002CD
-t1338898300
-s717
-
-N/github-tp/NC_iPhone/RestKit/Build/Restkit/RKJSONParserJSONKit.h
-c000000004FCDF77C0000000000000307
-t1338898300
-s775
-
-N/github-tp/NC_iPhone/RestKit/build/Debug-iphonesimulator/libRestKit.a
-c000000004FCDF77B00000000001D1CA8
-t1338898299
-s1907880
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app
-t1338979944
-s816
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app.dSYM
-t1338979944
-s102
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Blue_dot_7px.gif
-t1338898318
-s833
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/DateTimeViewController.nib
-t1338898318
-s2730
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/FeedBackForm.nib
-t1338979353
-s4386
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Info.plist
-t1338898300
-s963
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/LegMapViewController.nib
-t1338898316
-s2815
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Network_Commuting.momd
-t1338898305
-s272
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Nimbler
-t1338979944
-s1868204
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/PkgInfo
-t1338898300
-s8
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/README.txt
-t1338898318
-s15391
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/RootMap.nib
-t1338898318
-s1103
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/ToFromViewController.nib
-t1338898315
-s2447
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/TwitterSearch.nib
-t1338898319
-s1721
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/dot.png
-t1338898318
-s483
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/en.lproj/InfoPlist.strings
-t1338898308
-s42
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/feedback.png
-t1338898318
-s154542
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/logo_big_iPh.png
-t1338898318
-s8724
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/logo_small_iPh.png
-t1338898318
-s5432
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/pausePlay.png
-t1338898318
-s4987
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/playRec.png
-t1338898318
-s7566
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/rec_up.png
-t1338898318
-s4609
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/release_notes.txt
-t1338898318
-s6540
-
-N/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/stopRec.png
-t1338898318
-s4511
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/AddressComponent.o
-t1338965798
-s12984
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/AgencyAndId.o
-t1338965798
-s9556
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/DateFormatterMSFrom1970.o
-t1338965799
-s8284
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/DateTimeViewController.o
-t1338965800
-s57112
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Error.o
-t1338965800
-s12568
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/FeedBackForm.o
-t1338979943
-s120004
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/FeedBackViewController.o
-t1338965800
-s110124
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/GeoRectangle.o
-t1338965798
-s10280
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Itinerary.o
-t1338965799
-s21188
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/LatLng.o
-t1338965798
-s11036
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Leg.o
-t1338965799
-s33236
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/LegMapViewController.o
-t1338965800
-s98908
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Location.o
-t1338965798
-s39668
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Locations.o
-t1338965799
-s47824
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/MyAnnotation.o
-t1338965800
-s9544
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Nimbler.LinkFileList
-c000000004FCDF77C0000000000000DBA
-t1338898300
-s3514
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Plan.o
-t1338965798
-s18932
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/PlanPlace.o
-t1338965798
-s14880
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/PolylineEncodedString.o
-t1338965800
-s12856
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RawAddress.o
-t1338965799
-s1444
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RootMap.o
-t1338965801
-s70468
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RouteDetailsViewController.o
-t1338979615
-s71828
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RouteOptionsViewController.o
-t1338976809
-s64716
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Step.o
-t1338965799
-s13664
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/SupportedRegion.o
-t1338965800
-s21416
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/TPResponse.o
-t1338965801
-s8204
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/ToFromTableViewController.o
-t1338965800
-s113920
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/ToFromViewController.o
-t1338965798
-s178856
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/TwitterSearch.o
-t1338965801
-s46228
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/UtilityFunctions.o
-t1338965799
-s12628
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/main.o
-t1338965798
-s2852
-
-N/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/nc_AppDelegate.o
-t1338965798
-s97500
-
-N/github-tp/NC_iPhone/logo_big_iPh.png
-c000000004FC4EDB00000000000002214
-t1338305968
-s8724
-
-N/github-tp/NC_iPhone/logo_small_iPh.png
-c000000004FC4EDB00000000000001538
-t1338305968
-s5432
-
-NNetwork Commuting/Nimbler-Info.plist
-c000000004FC4EDA6000000000000064A
-t1338305958
-s1610
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/AddressComponent.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/AgencyAndId.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/DateFormatterMSFrom1970.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/DateTimeViewController.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/Error.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/FeedBackForm.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/FeedBackViewController.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/GeoRectangle.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/Itinerary.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/LatLng.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/Leg.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/LegMapViewController.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/Location.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/Locations.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/MyAnnotation.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/Plan.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/PlanPlace.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/PolylineEncodedString.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/RawAddress.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/RootMap.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/RouteDetailsViewController.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/RouteOptionsViewController.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/Step.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/SupportedRegion.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/TPResponse.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/ToFromTableViewController.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/ToFromViewController.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/TwitterSearch.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/UtilityFunctions.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/main.m"
-r0
-
-CBuild AST from "/github-tp/NC_iPhone/Network Commuting/nc_AppDelegate.m"
-r0
-
-CCheck dependencies
-r0
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies6a879f19747fb541^4e09a019747fb541^---0#1#0#--18"Check dependencies36"8584E848-1D82-4258-982A-B8D12EB092B4-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/AddressComponent.o "/github-tp/NC_iPhone/Network Commuting/AddressComponent.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658598.444998
-e360658598.586305
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/AddressComponent.o
-x/github-tp/NC_iPhone/Network Commuting/AddressComponent.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection65"Compile /github-tp/NC_iPhone/Network Commuting/AddressComponent.m680972a6367fb541^312596a6367fb541^---0#0#0#-19%DVTDocumentLocation2@75"file://localhost/github-tp/NC_iPhone/Network%20Commuting/AddressComponent.m0000000000000000^2455"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/AddressComponent.o "Network Commuting/AddressComponent.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/AddressComponent.d -c "/github-tp/NC_iPhone/Network Commuting/AddressComponent.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/AddressComponent.o36"0744018A-15D4-4119-804A-9D49DB6483BA-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/AgencyAndId.o "/github-tp/NC_iPhone/Network Commuting/AgencyAndId.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658598.821192
-e360658598.961105
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/AgencyAndId.o
-x/github-tp/NC_iPhone/Network Commuting/AgencyAndId.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection60"Compile /github-tp/NC_iPhone/Network Commuting/AgencyAndId.mde56d2a6367fb541^d0d5f6a6367fb541^---0#0#0#-19%DVTDocumentLocation2@70"file://localhost/github-tp/NC_iPhone/Network%20Commuting/AgencyAndId.m0000000000000000^2430"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/AgencyAndId.o "Network Commuting/AgencyAndId.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/AgencyAndId.d -c "/github-tp/NC_iPhone/Network Commuting/AgencyAndId.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/AgencyAndId.o36"B7065EB2-E7D2-46CF-8833-F797C921E1FC-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/DateFormatterMSFrom1970.o "/github-tp/NC_iPhone/Network Commuting/DateFormatterMSFrom1970.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658599.205033
-e360658599.295110
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/DateFormatterMSFrom1970.o
-x/github-tp/NC_iPhone/Network Commuting/DateFormatterMSFrom1970.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection72"Compile /github-tp/NC_iPhone/Network Commuting/DateFormatterMSFrom1970.md89b34a7367fb541^878c4ba7367fb541^---0#0#0#-19%DVTDocumentLocation2@82"file://localhost/github-tp/NC_iPhone/Network%20Commuting/DateFormatterMSFrom1970.m0000000000000000^2490"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/DateFormatterMSFrom1970.o "Network Commuting/DateFormatterMSFrom1970.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/DateFormatterMSFrom1970.d -c "/github-tp/NC_iPhone/Network Commuting/DateFormatterMSFrom1970.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/DateFormatterMSFrom1970.o36"B95FE2CF-1DFA-474B-B908-A7F01EA857BF-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/DateTimeViewController.o "/github-tp/NC_iPhone/Network Commuting/DateTimeViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658600.384980
-e360658600.492476
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/DateTimeViewController.o
-x/github-tp/NC_iPhone/Network Commuting/DateTimeViewController.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection71"Compile /github-tp/NC_iPhone/Network Commuting/DateTimeViewController.m0cad62a8367fb541^971d7ea8367fb541^---0#0#0#-19%DVTDocumentLocation2@81"file://localhost/github-tp/NC_iPhone/Network%20Commuting/DateTimeViewController.m0000000000000000^2485"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/DateTimeViewController.o "Network Commuting/DateTimeViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/DateTimeViewController.d -c "/github-tp/NC_iPhone/Network Commuting/DateTimeViewController.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/DateTimeViewController.o36"C1A41C85-A222-43E2-8B5C-4BEF9154653D-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Error.o "/github-tp/NC_iPhone/Network Commuting/Error.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658600.272551
-e360658600.383736
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Error.o
-x/github-tp/NC_iPhone/Network Commuting/Error.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection54"Compile /github-tp/NC_iPhone/Network Commuting/Error.m7ae245a8367fb541^6a4e62a8367fb541^---0#0#0#-19%DVTDocumentLocation2@64"file://localhost/github-tp/NC_iPhone/Network%20Commuting/Error.m0000000000000000^2400"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Error.o "Network Commuting/Error.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Error.d -c "/github-tp/NC_iPhone/Network Commuting/Error.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Error.o36"AE09FA26-187C-43AB-8F1A-7FC739AA1D18-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/FeedBackForm.o "/github-tp/NC_iPhone/Network Commuting/FeedBackForm.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360674329.751436
-e360674330.013082
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/FeedBackForm.o
-x/github-tp/NC_iPhone/Network Commuting/FeedBackForm.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection61"Compile /github-tp/NC_iPhone/Network Commuting/FeedBackForm.m5f79c019747fb541^986d031a747fb541^---0#0#0#-19%DVTDocumentLocation2@71"file://localhost/github-tp/NC_iPhone/Network%20Commuting/FeedBackForm.m0000000000000000^2435"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/FeedBackForm.o "Network Commuting/FeedBackForm.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/FeedBackForm.d -c "/github-tp/NC_iPhone/Network Commuting/FeedBackForm.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/FeedBackForm.o36"68E9FD24-F35F-4528-99C5-33FD25C907AA-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/FeedBackViewController.o "/github-tp/NC_iPhone/Network Commuting/FeedBackViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658600.676018
-e360658600.885156
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/FeedBackViewController.o
-x/github-tp/NC_iPhone/Network Commuting/FeedBackViewController.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-o/github-tp/NC_iPhone/Network Commuting/FeedBackViewController.m:288:33:{288:33-288:37}: warning: passing 'FeedBackViewController *const __strong' to parameter of incompatible type 'id<UITextFieldDelegate>' [3]
-o     textFieldRounded.delegate = self;
-o                                 ^~~~
-o1 warning generated.
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection71"Compile /github-tp/NC_iPhone/Network Commuting/FeedBackViewController.m5a2cada8367fb541^01c3e2a8367fb541^-308"/github-tp/NC_iPhone/Network Commuting/FeedBackViewController.m:288:33:{288:33-288:37}: warning: passing 'FeedBackViewController *const __strong' to parameter of incompatible type 'id<UITextFieldDelegate>' [3]     textFieldRounded.delegate = self;                                 ^~~~1 warning generated.1(21%IDEActivityLogMessage2@108"Passing 'FeedBackViewController *const __strong' to parameter of incompatible type 'id<UITextFieldDelegate>'-360658600#0#210#-1#-23%DVTTextDocumentLocation3@81"file://localhost/github-tp/NC_iPhone/Network%20Commuting/FeedBackViewController.m0000000000000000^287#32#287#32#18446744073709551615#0#14"Semantic Issue1(3@81"file://localhost/github-tp/NC_iPhone/Network%20Commuting/FeedBackViewController.m0000000000000000^287#32#287#36#18446744073709551615#0#-0#0#0#-19%DVTDocumentLocation4@81"file://localhost/github-tp/NC_iPhone/Network%20Commuting/FeedBackViewController.m0000000000000000^2485"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/FeedBackViewController.o "Network Commuting/FeedBackViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/FeedBackViewController.d -c "/github-tp/NC_iPhone/Network Commuting/FeedBackViewController.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/FeedBackViewController.o36"4EF5640F-9067-4D8E-97C2-49248581EC80-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/GeoRectangle.o "/github-tp/NC_iPhone/Network Commuting/GeoRectangle.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658598.481454
-e360658598.601728
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/GeoRectangle.o
-x/github-tp/NC_iPhone/Network Commuting/GeoRectangle.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection61"Compile /github-tp/NC_iPhone/Network Commuting/GeoRectangle.mb75e7ba6367fb541^c6169aa6367fb541^---0#0#0#-19%DVTDocumentLocation2@71"file://localhost/github-tp/NC_iPhone/Network%20Commuting/GeoRectangle.m0000000000000000^2435"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/GeoRectangle.o "Network Commuting/GeoRectangle.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/GeoRectangle.d -c "/github-tp/NC_iPhone/Network Commuting/GeoRectangle.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/GeoRectangle.o36"A07D5EBD-FFCB-4265-AC32-C9C5F7053747-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Itinerary.o "/github-tp/NC_iPhone/Network Commuting/Itinerary.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658599.208567
-e360658599.391792
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Itinerary.o
-x/github-tp/NC_iPhone/Network Commuting/Itinerary.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection58"Compile /github-tp/NC_iPhone/Network Commuting/Itinerary.mc77f35a7367fb541^9d4c64a7367fb541^---0#0#0#-19%DVTDocumentLocation2@68"file://localhost/github-tp/NC_iPhone/Network%20Commuting/Itinerary.m0000000000000000^2420"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Itinerary.o "Network Commuting/Itinerary.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Itinerary.d -c "/github-tp/NC_iPhone/Network Commuting/Itinerary.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Itinerary.o36"8D8CFBC0-EA80-4454-8086-49419F3EA707-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/LatLng.o "/github-tp/NC_iPhone/Network Commuting/LatLng.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658598.368986
-e360658598.479686
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/LatLng.o
-x/github-tp/NC_iPhone/Network Commuting/LatLng.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection55"Compile /github-tp/NC_iPhone/Network Commuting/LatLng.m5c935ea6367fb541^b6db7aa6367fb541^---0#0#0#-19%DVTDocumentLocation2@65"file://localhost/github-tp/NC_iPhone/Network%20Commuting/LatLng.m0000000000000000^2405"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/LatLng.o "Network Commuting/LatLng.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/LatLng.d -c "/github-tp/NC_iPhone/Network Commuting/LatLng.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/LatLng.o36"D0848BDD-ADA4-4416-BF12-2A836396292B-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Leg.o "/github-tp/NC_iPhone/Network Commuting/Leg.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658599.393012
-e360658599.644667
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Leg.o
-x/github-tp/NC_iPhone/Network Commuting/Leg.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection52"Compile /github-tp/NC_iPhone/Network Commuting/Leg.m9dbc64a7367fb541^2909a5a7367fb541^---0#0#0#-19%DVTDocumentLocation2@62"file://localhost/github-tp/NC_iPhone/Network%20Commuting/Leg.m0000000000000000^2390"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Leg.o "Network Commuting/Leg.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Leg.d -c "/github-tp/NC_iPhone/Network Commuting/Leg.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Leg.o36"B5027698-BEBA-4279-B8BB-AD1D7EE3A603-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/LegMapViewController.o "/github-tp/NC_iPhone/Network Commuting/LegMapViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658599.690187
-e360658600.082322
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/LegMapViewController.o
-x/github-tp/NC_iPhone/Network Commuting/LegMapViewController.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection69"Compile /github-tp/NC_iPhone/Network Commuting/LegMapViewController.meeccb0a7367fb541^e61f15a8367fb541^---0#0#0#-19%DVTDocumentLocation2@79"file://localhost/github-tp/NC_iPhone/Network%20Commuting/LegMapViewController.m0000000000000000^2475"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/LegMapViewController.o "Network Commuting/LegMapViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/LegMapViewController.d -c "/github-tp/NC_iPhone/Network Commuting/LegMapViewController.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/LegMapViewController.o36"907DF103-6898-49A3-A5F4-7CBD021DD212-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Location.o "/github-tp/NC_iPhone/Network Commuting/Location.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658598.296193
-e360658598.443768
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Location.o
-x/github-tp/NC_iPhone/Network Commuting/Location.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection57"Compile /github-tp/NC_iPhone/Network Commuting/Location.m9cfb4ba6367fb541^4fae71a6367fb541^---0#0#0#-19%DVTDocumentLocation2@67"file://localhost/github-tp/NC_iPhone/Network%20Commuting/Location.m0000000000000000^2415"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Location.o "Network Commuting/Location.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Location.d -c "/github-tp/NC_iPhone/Network Commuting/Location.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Location.o36"C0224E0C-30E7-4971-AFE0-252F422D65B7-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Locations.o "/github-tp/NC_iPhone/Network Commuting/Locations.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658598.962345
-e360658599.207377
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Locations.o
-x/github-tp/NC_iPhone/Network Commuting/Locations.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection58"Compile /github-tp/NC_iPhone/Network Commuting/Locations.mc87af6a6367fb541^322235a7367fb541^---0#0#0#-19%DVTDocumentLocation2@68"file://localhost/github-tp/NC_iPhone/Network%20Commuting/Locations.m0000000000000000^2420"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Locations.o "Network Commuting/Locations.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Locations.d -c "/github-tp/NC_iPhone/Network Commuting/Locations.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Locations.o36"1F8230B1-F438-43F8-9743-B4BC0EFA89FA-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/MyAnnotation.o "/github-tp/NC_iPhone/Network Commuting/MyAnnotation.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658600.179314
-e360658600.271222
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/MyAnnotation.o
-x/github-tp/NC_iPhone/Network Commuting/MyAnnotation.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection61"Compile /github-tp/NC_iPhone/Network Commuting/MyAnnotation.m077931a8367fb541^f06e45a8367fb541^---0#0#0#-19%DVTDocumentLocation2@71"file://localhost/github-tp/NC_iPhone/Network%20Commuting/MyAnnotation.m0000000000000000^2435"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/MyAnnotation.o "Network Commuting/MyAnnotation.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/MyAnnotation.d -c "/github-tp/NC_iPhone/Network Commuting/MyAnnotation.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/MyAnnotation.o36"946C437A-E41A-4BFF-A6F2-62A414EA9314-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Plan.o "/github-tp/NC_iPhone/Network Commuting/Plan.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658598.602935
-e360658598.711691
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Plan.o
-x/github-tp/NC_iPhone/Network Commuting/Plan.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection53"Compile /github-tp/NC_iPhone/Network Commuting/Plan.m96769aa6367fb541^a33db6a6367fb541^---0#0#0#-19%DVTDocumentLocation2@63"file://localhost/github-tp/NC_iPhone/Network%20Commuting/Plan.m0000000000000000^2395"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Plan.o "Network Commuting/Plan.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Plan.d -c "/github-tp/NC_iPhone/Network Commuting/Plan.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Plan.o36"095185B5-14AC-4FBD-A6FE-EBEDFB5F21C3-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/PlanPlace.o "/github-tp/NC_iPhone/Network Commuting/PlanPlace.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658598.713157
-e360658598.819952
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/PlanPlace.o
-x/github-tp/NC_iPhone/Network Commuting/PlanPlace.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection58"Compile /github-tp/NC_iPhone/Network Commuting/PlanPlace.m8aafb6a6367fb541^ecf6d1a6367fb541^---0#0#0#-19%DVTDocumentLocation2@68"file://localhost/github-tp/NC_iPhone/Network%20Commuting/PlanPlace.m0000000000000000^2420"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/PlanPlace.o "Network Commuting/PlanPlace.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/PlanPlace.d -c "/github-tp/NC_iPhone/Network Commuting/PlanPlace.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/PlanPlace.o36"B2806C1A-DFB0-42CA-9BFA-0D7C835902AC-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/PolylineEncodedString.o "/github-tp/NC_iPhone/Network Commuting/PolylineEncodedString.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658600.083523
-e360658600.176152
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/PolylineEncodedString.o
-x/github-tp/NC_iPhone/Network Commuting/PolylineEncodedString.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection70"Compile /github-tp/NC_iPhone/Network Commuting/PolylineEncodedString.m0f7f15a8367fb541^c8262da8367fb541^---0#0#0#-19%DVTDocumentLocation2@80"file://localhost/github-tp/NC_iPhone/Network%20Commuting/PolylineEncodedString.m0000000000000000^2480"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/PolylineEncodedString.o "Network Commuting/PolylineEncodedString.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/PolylineEncodedString.d -c "/github-tp/NC_iPhone/Network Commuting/PolylineEncodedString.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/PolylineEncodedString.o36"EDA50E11-A413-40C5-BB09-7D1953F12772-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RawAddress.o "/github-tp/NC_iPhone/Network Commuting/RawAddress.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658599.095390
-e360658599.203786
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RawAddress.o
-x/github-tp/NC_iPhone/Network Commuting/RawAddress.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection59"Compile /github-tp/NC_iPhone/Network Commuting/RawAddress.m098918a7367fb541^a83a34a7367fb541^---0#0#0#-19%DVTDocumentLocation2@69"file://localhost/github-tp/NC_iPhone/Network%20Commuting/RawAddress.m0000000000000000^2425"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RawAddress.o "Network Commuting/RawAddress.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RawAddress.d -c "/github-tp/NC_iPhone/Network Commuting/RawAddress.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RawAddress.o36"02ED018F-BBA3-4475-A7E7-3E70D3C62D16-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RootMap.o "/github-tp/NC_iPhone/Network Commuting/RootMap.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658600.968953
-e360658601.150799
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RootMap.o
-x/github-tp/NC_iPhone/Network Commuting/RootMap.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection56"Compile /github-tp/NC_iPhone/Network Commuting/RootMap.ma836f8a8367fb541^91b926a9367fb541^---0#0#0#-19%DVTDocumentLocation2@66"file://localhost/github-tp/NC_iPhone/Network%20Commuting/RootMap.m0000000000000000^2410"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RootMap.o "Network Commuting/RootMap.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RootMap.d -c "/github-tp/NC_iPhone/Network Commuting/RootMap.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RootMap.o36"DE0D5AA0-9D01-4AC0-9EFB-BEA4ED69198E-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RouteDetailsViewController.o "/github-tp/NC_iPhone/Network Commuting/RouteDetailsViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360672414.664558
-e360672415.224736
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RouteDetailsViewController.o
-x/github-tp/NC_iPhone/Network Commuting/RouteDetailsViewController.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection75"Compile /github-tp/NC_iPhone/Network Commuting/RouteDetailsViewController.mfb3caa9e6c7fb541^3789399f6c7fb541^---0#0#0#-19%DVTDocumentLocation2@85"file://localhost/github-tp/NC_iPhone/Network%20Commuting/RouteDetailsViewController.m0000000000000000^2505"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RouteDetailsViewController.o "Network Commuting/RouteDetailsViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RouteDetailsViewController.d -c "/github-tp/NC_iPhone/Network Commuting/RouteDetailsViewController.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RouteDetailsViewController.o36"10129C9B-A4B3-45BC-86A9-495DB633BFBB-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RouteOptionsViewController.o "/github-tp/NC_iPhone/Network Commuting/RouteOptionsViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360669607.671282
-e360669609.831372
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RouteOptionsViewController.o
-x/github-tp/NC_iPhone/Network Commuting/RouteOptionsViewController.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection75"Compile /github-tp/NC_iPhone/Network Commuting/RouteOptionsViewController.m01f8aba7617fb541^edd4d4a9617fb541^---0#0#0#-19%DVTDocumentLocation2@85"file://localhost/github-tp/NC_iPhone/Network%20Commuting/RouteOptionsViewController.m0000000000000000^2505"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RouteOptionsViewController.o "Network Commuting/RouteOptionsViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RouteOptionsViewController.d -c "/github-tp/NC_iPhone/Network Commuting/RouteOptionsViewController.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/RouteOptionsViewController.o36"599119B0-D1A3-4EBC-B47E-5C2663AB3AC4-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Step.o "/github-tp/NC_iPhone/Network Commuting/Step.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658599.296308
-e360658599.469492
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Step.o
-x/github-tp/NC_iPhone/Network Commuting/Step.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection53"Compile /github-tp/NC_iPhone/Network Commuting/Step.me7fd4ba7367fb541^f03178a7367fb541^---0#0#0#-19%DVTDocumentLocation2@63"file://localhost/github-tp/NC_iPhone/Network%20Commuting/Step.m0000000000000000^2395"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Step.o "Network Commuting/Step.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Step.d -c "/github-tp/NC_iPhone/Network Commuting/Step.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Step.o36"1E71B33C-25E8-4E5B-AB06-FEED01C53C8F-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/SupportedRegion.o "/github-tp/NC_iPhone/Network Commuting/SupportedRegion.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658600.886392
-e360658600.967721
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/SupportedRegion.o
-x/github-tp/NC_iPhone/Network Commuting/SupportedRegion.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection64"Compile /github-tp/NC_iPhone/Network Commuting/SupportedRegion.m7d07e3a8367fb541^25c9f7a8367fb541^---0#0#0#-19%DVTDocumentLocation2@74"file://localhost/github-tp/NC_iPhone/Network%20Commuting/SupportedRegion.m0000000000000000^2450"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/SupportedRegion.o "Network Commuting/SupportedRegion.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/SupportedRegion.d -c "/github-tp/NC_iPhone/Network Commuting/SupportedRegion.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/SupportedRegion.o36"873D4D81-AF06-493D-96F9-743D0025A232-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/TPResponse.o "/github-tp/NC_iPhone/Network Commuting/TPResponse.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658601.155812
-e360658601.227066
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/TPResponse.o
-x/github-tp/NC_iPhone/Network Commuting/TPResponse.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection59"Compile /github-tp/NC_iPhone/Network Commuting/TPResponse.m710128a9367fb541^4b233aa9367fb541^---0#0#0#-19%DVTDocumentLocation2@69"file://localhost/github-tp/NC_iPhone/Network%20Commuting/TPResponse.m0000000000000000^2425"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/TPResponse.o "Network Commuting/TPResponse.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/TPResponse.d -c "/github-tp/NC_iPhone/Network Commuting/TPResponse.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/TPResponse.o36"5F6CEEE1-2C25-4AFC-9B2E-1C59D474E36D-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/ToFromTableViewController.o "/github-tp/NC_iPhone/Network Commuting/ToFromTableViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658600.493698
-e360658600.674781
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/ToFromTableViewController.o
-x/github-tp/NC_iPhone/Network Commuting/ToFromTableViewController.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection74"Compile /github-tp/NC_iPhone/Network Commuting/ToFromTableViewController.m49807ea8367fb541^e2cbaca8367fb541^---0#0#0#-19%DVTDocumentLocation2@84"file://localhost/github-tp/NC_iPhone/Network%20Commuting/ToFromTableViewController.m0000000000000000^2500"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/ToFromTableViewController.o "Network Commuting/ToFromTableViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/ToFromTableViewController.d -c "/github-tp/NC_iPhone/Network Commuting/ToFromTableViewController.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/ToFromTableViewController.o36"9D332538-BC0F-488F-87D9-CEAB8ED86103-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/ToFromViewController.o "/github-tp/NC_iPhone/Network Commuting/ToFromViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658597.395513
-e360658598.366960
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/ToFromViewController.o
-x/github-tp/NC_iPhone/Network Commuting/ToFromViewController.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-oclang: warning: argument unused during compilation: '-ObjC'
-o/github-tp/NC_iPhone/Network Commuting/ToFromViewController.m:803:84:{803:84-803:88}: warning: sending 'ToFromViewController *const __strong' to parameter of incompatible type 'id<UIActionSheetDelegate>' [3]
-o     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"Current Location",@"Set Location",@"Cancel",nil];
-o                                                                                    ^~~~
-o/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIActionSheet.h:115:75: note: passing argument to parameter 'delegate' here [3]
-o - (id)initWithTitle:(NSString *)title delegate:(id<UIActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle destructiveButtonTitle:(NSString *)destructiveButtonTitle otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION;
-o                                                                           ^
-o1 warning generated.
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection69"Compile /github-tp/NC_iPhone/Network Commuting/ToFromViewController.m895f65a5367fb541^895c60a6367fb541^-1149"clang: warning: argument unused during compilation: '-ObjC'/github-tp/NC_iPhone/Network Commuting/ToFromViewController.m:803:84:{803:84-803:88}: warning: sending 'ToFromViewController *const __strong' to parameter of incompatible type 'id<UIActionSheetDelegate>' [3]     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"Current Location",@"Set Location",@"Cancel",nil];                                                                                    ^~~~/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIActionSheet.h:115:75: note: passing argument to parameter 'delegate' here [3] - (id)initWithTitle:(NSString *)title delegate:(id<UIActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle destructiveButtonTitle:(NSString *)destructiveButtonTitle otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION;                                                                           ^1 warning generated.1(21%IDEActivityLogMessage2@108"Sending 'ToFromViewController *const __strong' to parameter of incompatible type 'id<UIActionSheetDelegate>'-360658598#60#208#1(2@45"Passing argument to parameter 'delegate' here-360658598#565#214#-0#-23%DVTTextDocumentLocation3@165"file://localhost/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIActionSheet.h0000000000000000^114#74#114#74#18446744073709551615#0#14"Semantic Issue--1#-3@79"file://localhost/github-tp/NC_iPhone/Network%20Commuting/ToFromViewController.m0000000000000000^802#83#802#83#18446744073709551615#0#14"Semantic Issue1(3@79"file://localhost/github-tp/NC_iPhone/Network%20Commuting/ToFromViewController.m0000000000000000^802#83#802#87#18446744073709551615#0#-0#0#0#-19%DVTDocumentLocation4@79"file://localhost/github-tp/NC_iPhone/Network%20Commuting/ToFromViewController.m0000000000000000^2481"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/ToFromViewController.o "Network Commuting/ToFromViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -ObjC -include /github-tp/NC_iPhone/Nimbler-Prefix-cawzttaspembblcxznxlwydemxiw/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/ToFromViewController.d -c "/github-tp/NC_iPhone/Network Commuting/ToFromViewController.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/ToFromViewController.o36"017CE655-62B5-4BF8-908B-34837036D2DE-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/TwitterSearch.o "/github-tp/NC_iPhone/Network Commuting/TwitterSearch.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658601.420205
-e360658601.483260
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/TwitterSearch.o
-x/github-tp/NC_iPhone/Network Commuting/TwitterSearch.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection62"Compile /github-tp/NC_iPhone/Network Commuting/TwitterSearch.mc7bb6ba9367fb541^b1c47ba9367fb541^---0#0#0#-19%DVTDocumentLocation2@72"file://localhost/github-tp/NC_iPhone/Network%20Commuting/TwitterSearch.m0000000000000000^2440"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/TwitterSearch.o "Network Commuting/TwitterSearch.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/TwitterSearch.d -c "/github-tp/NC_iPhone/Network Commuting/TwitterSearch.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/TwitterSearch.o36"229E67FF-6B34-4CA1-B3C4-76BD375303D0-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/UtilityFunctions.o "/github-tp/NC_iPhone/Network Commuting/UtilityFunctions.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658598.892042
-e360658599.094179
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/UtilityFunctions.o
-x/github-tp/NC_iPhone/Network Commuting/UtilityFunctions.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection65"Compile /github-tp/NC_iPhone/Network Commuting/UtilityFunctions.mf679e4a6367fb541^3f1c18a7367fb541^---0#0#0#-19%DVTDocumentLocation2@75"file://localhost/github-tp/NC_iPhone/Network%20Commuting/UtilityFunctions.m0000000000000000^2455"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/UtilityFunctions.o "Network Commuting/UtilityFunctions.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/UtilityFunctions.d -c "/github-tp/NC_iPhone/Network Commuting/UtilityFunctions.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/UtilityFunctions.o36"3AF375D3-24C3-49C3-9674-E789284104D8-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/main.o "/github-tp/NC_iPhone/Network Commuting/main.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658597.541143
-e360658598.035996
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/main.o
-x/github-tp/NC_iPhone/Network Commuting/main.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection53"Compile /github-tp/NC_iPhone/Network Commuting/main.m8ba78aa5367fb541^2a3709a6367fb541^---0#0#0#-19%DVTDocumentLocation2@63"file://localhost/github-tp/NC_iPhone/Network%20Commuting/main.m0000000000000000^2395"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/main.o "Network Commuting/main.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/main.d -c "/github-tp/NC_iPhone/Network Commuting/main.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/main.o36"05304EFF-3EF7-4CB7-B618-E014744A0190-
-
-CCompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/nc_AppDelegate.o "/github-tp/NC_iPhone/Network Commuting/nc_AppDelegate.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658598.037230
-e360658598.294920
-r1
-xCompileC
-xbuild/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/nc_AppDelegate.o
-x/github-tp/NC_iPhone/Network Commuting/nc_AppDelegate.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection63"Compile /github-tp/NC_iPhone/Network Commuting/nc_AppDelegate.m61a609a6367fb541^b98e4da6367fb541^---0#0#0#-19%DVTDocumentLocation2@73"file://localhost/github-tp/NC_iPhone/Network%20Commuting/nc_AppDelegate.m0000000000000000^2445"CompileC build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/nc_AppDelegate.o "Network Commuting/nc_AppDelegate.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -include /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch -MMD -MT dependencies -MF /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/nc_AppDelegate.d -c "/github-tp/NC_iPhone/Network Commuting/nc_AppDelegate.m" -o /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/nc_AppDelegate.o36"971AA56E-9895-46A4-B3FE-366AB6C6B0DF-
-
-CCompileXIB "/github-tp/NC_iPhone/Network Commuting/../LegMapViewController.xib"
-s360591108.394836
-e360591118.116744
-r1
-xCompileXIB
-x/github-tp/NC_iPhone/Network Commuting/../LegMapViewController.xib
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection76"Compiling /github-tp/NC_iPhone/Network Commuting/../LegMapViewController.xib562965042f7eb541^0ef71d0e2f7eb541^---0#0#0#-19%DVTDocumentLocation2@84"file://localhost/github-tp/NC_iPhone/Network%20Commuting/../LegMapViewController.xib0000000000000000^676"CompileXIB "Network Commuting/../LegMapViewController.xib"    cd /github-tp/NC_iPhone    setenv IBC_MINIMUM_COMPATIBILITY_VERSION 4.3    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    setenv XCODE_DEVELOPER_USR_PATH /Developer/usr/bin/..    /Developer/usr/bin/ibtool --errors --warnings --notices --output-format human-readable-text --compile /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/LegMapViewController.nib "/github-tp/NC_iPhone/Network Commuting/../LegMapViewController.xib" --sdk /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk36"AB99C91C-D168-4A73-ACB8-0BF7B47AA522-
-
-CCompileXIB "/github-tp/NC_iPhone/Network Commuting/DateTimeViewController.xib"
-s360591118.118171
-e360591118.953144
-r1
-xCompileXIB
-x/github-tp/NC_iPhone/Network Commuting/DateTimeViewController.xib
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection75"Compiling /github-tp/NC_iPhone/Network Commuting/DateTimeViewController.xib69561e0e2f7eb541^a301f40e2f7eb541^---0#0#0#-19%DVTDocumentLocation2@83"file://localhost/github-tp/NC_iPhone/Network%20Commuting/DateTimeViewController.xib0000000000000000^676"CompileXIB "Network Commuting/DateTimeViewController.xib"    cd /github-tp/NC_iPhone    setenv IBC_MINIMUM_COMPATIBILITY_VERSION 4.3    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    setenv XCODE_DEVELOPER_USR_PATH /Developer/usr/bin/..    /Developer/usr/bin/ibtool --errors --warnings --notices --output-format human-readable-text --compile /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/DateTimeViewController.nib "/github-tp/NC_iPhone/Network Commuting/DateTimeViewController.xib" --sdk /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk36"BFAB7A6F-2C86-4BE9-9F31-321FD6D5050C-
-
-CCompileXIB "/github-tp/NC_iPhone/Network Commuting/FeedBackForm.xib"
-s360672149.144518
-e360672153.254405
-r1
-xCompileXIB
-x/github-tp/NC_iPhone/Network Commuting/FeedBackForm.xib
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection65"Compiling /github-tp/NC_iPhone/Network Commuting/FeedBackForm.xib3c1425956b7fb541^ab2141996b7fb541^---0#0#0#-19%DVTDocumentLocation2@73"file://localhost/github-tp/NC_iPhone/Network%20Commuting/FeedBackForm.xib0000000000000000^646"CompileXIB "Network Commuting/FeedBackForm.xib"    cd /github-tp/NC_iPhone    setenv IBC_MINIMUM_COMPATIBILITY_VERSION 4.3    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    setenv XCODE_DEVELOPER_USR_PATH /Developer/usr/bin/..    /Developer/usr/bin/ibtool --errors --warnings --notices --output-format human-readable-text --compile /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/FeedBackForm.nib "/github-tp/NC_iPhone/Network Commuting/FeedBackForm.xib" --sdk /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk36"13E0C11E-FBB0-4E54-A5D3-388CF116ECB5-
-
-CCompileXIB "/github-tp/NC_iPhone/Network Commuting/RootMap.xib"
-s360591118.267287
-e360591118.379045
-r1
-xCompileXIB
-x/github-tp/NC_iPhone/Network Commuting/RootMap.xib
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection60"Compiling /github-tp/NC_iPhone/Network Commuting/RootMap.xibb281440e2f7eb541^f209610e2f7eb541^---0#0#0#-19%DVTDocumentLocation2@68"file://localhost/github-tp/NC_iPhone/Network%20Commuting/RootMap.xib0000000000000000^631"CompileXIB "Network Commuting/RootMap.xib"    cd /github-tp/NC_iPhone    setenv IBC_MINIMUM_COMPATIBILITY_VERSION 4.3    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    setenv XCODE_DEVELOPER_USR_PATH /Developer/usr/bin/..    /Developer/usr/bin/ibtool --errors --warnings --notices --output-format human-readable-text --compile /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/RootMap.nib "/github-tp/NC_iPhone/Network Commuting/RootMap.xib" --sdk /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk36"B8F374BA-E67A-4B8A-922D-AA8F800F5AE6-
-
-CCompileXIB "/github-tp/NC_iPhone/Network Commuting/ToFromViewController.xib"
-s360591108.356837
-e360591118.116848
-r1
-xCompileXIB
-x/github-tp/NC_iPhone/Network Commuting/ToFromViewController.xib
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection73"Compiling /github-tp/NC_iPhone/Network Commuting/ToFromViewController.xib486c5b042f7eb541^19001e0e2f7eb541^---0#0#0#-19%DVTDocumentLocation2@81"file://localhost/github-tp/NC_iPhone/Network%20Commuting/ToFromViewController.xib0000000000000000^670"CompileXIB "Network Commuting/ToFromViewController.xib"    cd /github-tp/NC_iPhone    setenv IBC_MINIMUM_COMPATIBILITY_VERSION 4.3    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    setenv XCODE_DEVELOPER_USR_PATH /Developer/usr/bin/..    /Developer/usr/bin/ibtool --errors --warnings --notices --output-format human-readable-text --compile /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/ToFromViewController.nib "/github-tp/NC_iPhone/Network Commuting/ToFromViewController.xib" --sdk /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk36"FF39238D-7E57-48F4-AD29-D3726CF397BA-
-
-CCompileXIB "/github-tp/NC_iPhone/Network Commuting/TwitterSearch.xib"
-s360591118.954350
-e360591119.783486
-r1
-xCompileXIB
-x/github-tp/NC_iPhone/Network Commuting/TwitterSearch.xib
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection66"Compiling /github-tp/NC_iPhone/Network Commuting/TwitterSearch.xib3b6ef40e2f7eb541^8693c80f2f7eb541^---0#0#0#-19%DVTDocumentLocation2@74"file://localhost/github-tp/NC_iPhone/Network%20Commuting/TwitterSearch.xib0000000000000000^649"CompileXIB "Network Commuting/TwitterSearch.xib"    cd /github-tp/NC_iPhone    setenv IBC_MINIMUM_COMPATIBILITY_VERSION 4.3    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    setenv XCODE_DEVELOPER_USR_PATH /Developer/usr/bin/..    /Developer/usr/bin/ibtool --errors --warnings --notices --output-format human-readable-text --compile /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/TwitterSearch.nib "/github-tp/NC_iPhone/Network Commuting/TwitterSearch.xib" --sdk /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk36"4C4FFE2B-2F9F-421A-A63F-8B5E25696674-
-
-CCopyStringsFile /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/en.lproj/InfoPlist.strings "Network Commuting/en.lproj/InfoPlist.strings"
-s360591108.356235
-e360591108.393613
-r1
-xCopyStringsFile
-x/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/en.lproj/InfoPlist.strings
-xNetwork Commuting/en.lproj/InfoPlist.strings
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection49"Copy Network Commuting/en.lproj/InfoPlist.stringsb3445b042f7eb541^65c564042f7eb541^---0#0#0#-19%DVTDocumentLocation2@83"file://localhost/github-tp/NC_iPhone/Network%20Commuting/en.lproj/InfoPlist.strings0000000000000000^499"CopyStringsFile build/Debug-iphonesimulator/Nimbler.app/en.lproj/InfoPlist.strings "Network Commuting/en.lproj/InfoPlist.strings"    cd /github-tp/NC_iPhone    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    builtin-copyStrings --validate --inputencoding utf-8 --outputencoding binary --outdir /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/en.lproj -- "Network Commuting/en.lproj/InfoPlist.strings"36"8879944B-5935-4444-8838-E3BD8239290C-
-
-CCpResource "Network Commuting/Blue_dot_7px.gif" build/Debug-iphonesimulator/Nimbler.app/Blue_dot_7px.gif
-s360591118.119455
-e360591118.137351
-r1
-xCpResource
-xNetwork Commuting/Blue_dot_7px.gif
-xbuild/Debug-iphonesimulator/Nimbler.app/Blue_dot_7px.gif
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection61"Copy build/Debug-iphonesimulator/Nimbler.app/Blue_dot_7px.gif05a71e0e2f7eb541^8334230e2f7eb541^---0#0#0#-19%DVTDocumentLocation2@93"file://localhost/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Blue_dot_7px.gif00f86c29dcffdf42^495"CpResource "Network Commuting/Blue_dot_7px.gif" build/Debug-iphonesimulator/Nimbler.app/Blue_dot_7px.gif    cd /github-tp/NC_iPhone    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks "/github-tp/NC_iPhone/Network Commuting/Blue_dot_7px.gif" /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app36"A8BE5E01-A109-4B72-980E-55C3121636A3-
-
-CCpResource "Network Commuting/TestFlightSDK1/README.txt" build/Debug-iphonesimulator/Nimbler.app/README.txt
-s360591118.154136
-e360591118.176616
-r1
-xCpResource
-xNetwork Commuting/TestFlightSDK1/README.txt
-xbuild/Debug-iphonesimulator/Nimbler.app/README.txt
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection55"Copy build/Debug-iphonesimulator/Nimbler.app/README.txt3388270e2f7eb541^4e422d0e2f7eb541^---0#0#0#-19%DVTDocumentLocation2@87"file://localhost/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/README.txt00f86c29dcffdf42^507"CpResource "Network Commuting/TestFlightSDK1/README.txt" build/Debug-iphonesimulator/Nimbler.app/README.txt    cd /github-tp/NC_iPhone    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks "/github-tp/NC_iPhone/Network Commuting/TestFlightSDK1/README.txt" /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app36"36988749-EEFD-4A1C-AC9F-5C1490089DD1-
-
-CCpResource "Network Commuting/TestFlightSDK1/release_notes.txt" build/Debug-iphonesimulator/Nimbler.app/release_notes.txt
-s360591118.177836
-e360591118.180910
-r1
-xCpResource
-xNetwork Commuting/TestFlightSDK1/release_notes.txt
-xbuild/Debug-iphonesimulator/Nimbler.app/release_notes.txt
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection62"Copy build/Debug-iphonesimulator/Nimbler.app/release_notes.txtb79a2d0e2f7eb541^b0592e0e2f7eb541^---0#0#0#-19%DVTDocumentLocation2@94"file://localhost/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/release_notes.txt00f86c29dcffdf42^528"CpResource "Network Commuting/TestFlightSDK1/release_notes.txt" build/Debug-iphonesimulator/Nimbler.app/release_notes.txt    cd /github-tp/NC_iPhone    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks "/github-tp/NC_iPhone/Network Commuting/TestFlightSDK1/release_notes.txt" /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app36"B29EE300-0FD2-47FA-98FF-D61C534ECCCA-
-
-CCpResource "Network Commuting/dot.png" build/Debug-iphonesimulator/Nimbler.app/dot.png
-s360591118.182118
-e360591118.266063
-r1
-xCpResource
-xNetwork Commuting/dot.png
-xbuild/Debug-iphonesimulator/Nimbler.app/dot.png
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection52"Copy build/Debug-iphonesimulator/Nimbler.app/dot.png35b32e0e2f7eb541^321f440e2f7eb541^---0#0#0#-19%DVTDocumentLocation2@84"file://localhost/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/dot.png00f86c29dcffdf42^468"CpResource "Network Commuting/dot.png" build/Debug-iphonesimulator/Nimbler.app/dot.png    cd /github-tp/NC_iPhone    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks "/github-tp/NC_iPhone/Network Commuting/dot.png" /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app36"699C769C-1E0B-4610-A38A-B13B56408671-
-
-CCpResource "Network Commuting/feedback.png" build/Debug-iphonesimulator/Nimbler.app/feedback.png
-s360591118.633375
-e360591118.925568
-r1
-xCpResource
-xNetwork Commuting/feedback.png
-xbuild/Debug-iphonesimulator/Nimbler.app/feedback.png
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection57"Copy build/Debug-iphonesimulator/Nimbler.app/feedback.png753ca20e2f7eb541^e3fdec0e2f7eb541^---0#0#0#-19%DVTDocumentLocation2@89"file://localhost/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/feedback.png00f86c29dcffdf42^483"CpResource "Network Commuting/feedback.png" build/Debug-iphonesimulator/Nimbler.app/feedback.png    cd /github-tp/NC_iPhone    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks "/github-tp/NC_iPhone/Network Commuting/feedback.png" /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app36"2A1A88C0-49F5-429D-85E4-39CDDC7A36B7-
-
-CCpResource "Network Commuting/pausePlay.png" build/Debug-iphonesimulator/Nimbler.app/pausePlay.png
-s360591118.927902
-e360591118.932015
-r1
-xCpResource
-xNetwork Commuting/pausePlay.png
-xbuild/Debug-iphonesimulator/Nimbler.app/pausePlay.png
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection58"Copy build/Debug-iphonesimulator/Nimbler.app/pausePlay.png529eed0e2f7eb541^3656f20e2f7eb541^---0#0#0#-19%DVTDocumentLocation2@90"file://localhost/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/pausePlay.png00f86c29dcffdf42^486"CpResource "Network Commuting/pausePlay.png" build/Debug-iphonesimulator/Nimbler.app/pausePlay.png    cd /github-tp/NC_iPhone    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks "/github-tp/NC_iPhone/Network Commuting/pausePlay.png" /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app36"D23B3DA5-4DEB-4944-8D59-6C3176268EA0-
-
-CCpResource "Network Commuting/playRec.png" build/Debug-iphonesimulator/Nimbler.app/playRec.png
-s360591118.496612
-e360591118.632119
-r1
-xCpResource
-xNetwork Commuting/playRec.png
-xbuild/Debug-iphonesimulator/Nimbler.app/playRec.png
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection56"Copy build/Debug-iphonesimulator/Nimbler.app/playRec.png2b357f0e2f7eb541^a6d4a10e2f7eb541^---0#0#0#-19%DVTDocumentLocation2@88"file://localhost/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/playRec.png00f86c29dcffdf42^480"CpResource "Network Commuting/playRec.png" build/Debug-iphonesimulator/Nimbler.app/playRec.png    cd /github-tp/NC_iPhone    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks "/github-tp/NC_iPhone/Network Commuting/playRec.png" /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app36"B87FFB98-101E-4148-BEBF-9DA76F332F68-
-
-CCpResource "Network Commuting/rec_up.png" build/Debug-iphonesimulator/Nimbler.app/rec_up.png
-s360591118.380284
-e360591118.443311
-r1
-xCpResource
-xNetwork Commuting/rec_up.png
-xbuild/Debug-iphonesimulator/Nimbler.app/rec_up.png
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection55"Copy build/Debug-iphonesimulator/Nimbler.app/rec_up.png7a6e610e2f7eb541^ef91710e2f7eb541^---0#0#0#-19%DVTDocumentLocation2@87"file://localhost/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/rec_up.png00f86c29dcffdf42^477"CpResource "Network Commuting/rec_up.png" build/Debug-iphonesimulator/Nimbler.app/rec_up.png    cd /github-tp/NC_iPhone    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks "/github-tp/NC_iPhone/Network Commuting/rec_up.png" /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app36"6F5F630F-CBB7-4E79-B02F-CC6694E56D81-
-
-CCpResource "Network Commuting/stopRec.png" build/Debug-iphonesimulator/Nimbler.app/stopRec.png
-s360591118.444558
-e360591118.495399
-r1
-xCpResource
-xNetwork Commuting/stopRec.png
-xbuild/Debug-iphonesimulator/Nimbler.app/stopRec.png
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection56"Copy build/Debug-iphonesimulator/Nimbler.app/stopRec.png4be9710e2f7eb541^dee57e0e2f7eb541^---0#0#0#-19%DVTDocumentLocation2@88"file://localhost/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/stopRec.png00f86c29dcffdf42^480"CpResource "Network Commuting/stopRec.png" build/Debug-iphonesimulator/Nimbler.app/stopRec.png    cd /github-tp/NC_iPhone    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks "/github-tp/NC_iPhone/Network Commuting/stopRec.png" /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app36"19F48E67-856E-4492-9D8C-68D55CBD58C5-
-
-CCpResource logo_big_iPh.png build/Debug-iphonesimulator/Nimbler.app/logo_big_iPh.png
-s360591118.149963
-e360591118.152936
-r1
-xCpResource
-xlogo_big_iPh.png
-xbuild/Debug-iphonesimulator/Nimbler.app/logo_big_iPh.png
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection61"Copy build/Debug-iphonesimulator/Nimbler.app/logo_big_iPh.pngd976260e2f7eb541^d521270e2f7eb541^---0#0#0#-19%DVTDocumentLocation2@93"file://localhost/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/logo_big_iPh.png00f86c29dcffdf42^455"CpResource logo_big_iPh.png build/Debug-iphonesimulator/Nimbler.app/logo_big_iPh.png    cd /github-tp/NC_iPhone    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /github-tp/NC_iPhone/logo_big_iPh.png /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app36"07A4BE15-8BEA-4E17-9353-504BAA954B31-
-
-CCpResource logo_small_iPh.png build/Debug-iphonesimulator/Nimbler.app/logo_small_iPh.png
-s360591118.138554
-e360591118.148724
-r1
-xCpResource
-xlogo_small_iPh.png
-xbuild/Debug-iphonesimulator/Nimbler.app/logo_small_iPh.png
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection63"Copy build/Debug-iphonesimulator/Nimbler.app/logo_small_iPh.png698b230e2f7eb541^7b14260e2f7eb541^---0#0#0#-19%DVTDocumentLocation2@95"file://localhost/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/logo_small_iPh.png00f86c29dcffdf42^461"CpResource logo_small_iPh.png build/Debug-iphonesimulator/Nimbler.app/logo_small_iPh.png    cd /github-tp/NC_iPhone    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /github-tp/NC_iPhone/logo_small_iPh.png /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app36"B09BA3CF-535D-40BE-A4CD-F2FB5C938D63-
-
-CDataModelVersionCompile /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Network_Commuting.momd "/github-tp/NC_iPhone/Network Commuting/Network_Commuting.xcdatamodeld"
-s360591100.704659
-e360591105.488507
-r1
-xDataModelVersionCompile
-x/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Network_Commuting.momd
-x/github-tp/NC_iPhone/Network Commuting/Network_Commuting.xcdatamodeld
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection137"DataModelVersionCompile build/Debug-iphonesimulator/Nimbler.app/Network_Commuting.momd "Network Commuting/Network_Commuting.xcdatamodeld"e679b4fc2e7eb541^300f7d012f7eb541^---0#0#0#-19%DVTDocumentLocation2@88"file://localhost/github-tp/NC_iPhone/Network%20Commuting/Network_Commuting.xcdatamodeld/0000000000000000^700"DataModelVersionCompile build/Debug-iphonesimulator/Nimbler.app/Network_Commuting.momd "Network Commuting/Network_Commuting.xcdatamodeld"    cd /github-tp/NC_iPhone    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/usr/bin/momc -XD_MOMC_SDKROOT=/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -XD_MOMC_IOS_TARGET_VERSION=4.3 -MOMC_PLATFORMS iphonesimulator -MOMC_PLATFORMS iphoneos -XD_MOMC_TARGET_VERSION=10.6 "/github-tp/NC_iPhone/Network Commuting/Network_Commuting.xcdatamodeld" /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Network_Commuting.momd36"A3876ABD-2F7E-4A02-B1A9-FCA4A3B249D2-
-
-CGenerateDSYMFile /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app.dSYM /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Nimbler
-s360674330.226754
-e360674330.436533
-r1
-xGenerateDSYMFile
-x/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app.dSYM
-x/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Nimbler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection76"Generating /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app.dSYM371c3a1a747fb541^bec16f1a747fb541^---0#0#0#-19%DVTDocumentLocation2@82"file://localhost/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app.dSYM/0000000000000000^439"GenerateDSYMFile build/Debug-iphonesimulator/Nimbler.app.dSYM build/Debug-iphonesimulator/Nimbler.app/Nimbler    cd /github-tp/NC_iPhone    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/usr/bin/dsymutil /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Nimbler -o /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app.dSYM36"2E9CB964-18FB-4CC4-9D96-26655620A50F-
-
-CLd /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Nimbler normal i386
-s360674330.014387
-e360674330.225462
-r1
-xLd
-x/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Nimbler
-xnormal
-xi386
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection73"Link /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Nimblercdc9031a747fb541^0fb9391a747fb541^---0#0#0#--1330"Ld build/Debug-iphonesimulator/Nimbler.app/Nimbler normal i386    cd /github-tp/NC_iPhone    setenv MACOSX_DEPLOYMENT_TARGET 10.6    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -arch i386 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -L/github-tp/NC_iPhone/build/Debug-iphonesimulator "-L/github-tp/NC_iPhone/Network Commuting/TestFlightSDK1" -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -filelist /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Objects-normal/i386/Nimbler.LinkFileList -mmacosx-version-min=10.6 -Xlinker -objc_abi_version -Xlinker 2 -ObjC -all_load -fobjc-arc -Xlinker -no_implicit_dylibs -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -framework CoreLocation -framework AVFoundation -lz -framework QuartzCore -framework MapKit -lxml2 -framework SystemConfiguration -framework Security -framework MobileCoreServices -framework CFNetwork /github-tp/NC_iPhone/RestKit/build/Debug-iphonesimulator/libRestKit.a -framework UIKit -framework Foundation -framework CoreGraphics -framework CoreData -lTestFlight -o /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Nimbler36"92F032C3-FCF5-4C83-8327-A749EAF70797-
-
-CProcessInfoPlistFile /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Info.plist "Network Commuting/Nimbler-Info.plist"
-s360591100.668472
-e360591100.701332
-r1
-xProcessInfoPlistFile
-x/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Info.plist
-xNetwork Commuting/Nimbler-Info.plist
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection44"Process Network Commuting/Nimbler-Info.plistfd33abfc2e7eb541^338cb3fc2e7eb541^---0#0#0#-19%DVTDocumentLocation2@75"file://localhost/github-tp/NC_iPhone/Network%20Commuting/Nimbler-Info.plist0000000000000000^556"ProcessInfoPlistFile build/Debug-iphonesimulator/Nimbler.app/Info.plist "Network Commuting/Nimbler-Info.plist"    cd /github-tp/NC_iPhone    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    builtin-infoPlistUtility "Network Commuting/Nimbler-Info.plist" -genpkginfo /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/PkgInfo -expandbuildsettings -format binary -platform iphonesimulator -o /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app/Info.plist36"B85D45C2-C759-42A6-B304-985FEB3D7626-
-
-CProcessPCH /Users/jaykumbhani/Library/Developer/Xcode/DerivedData/Nimbler-btobzfgscxglizebjuhseqfswpxv/Index/PrecompiledHeaders/Nimbler-Prefix-bzlqhlulxyibijeqtofvakapsdpu_ast/Nimbler-Prefix.pch.pth "Network Commuting/Nimbler-Prefix.pch" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.astbuilder
-r0
-
-CProcessPCH /Users/jaykumbhani/Library/Developer/Xcode/DerivedData/Nimbler-btobzfgscxglizebjuhseqfswpxv/Index/PrecompiledHeaders/Nimbler-Prefix-cvgfmfnwclamqofqvisxxhdqwizw_ast/Nimbler-Prefix.pch.pth "Network Commuting/Nimbler-Prefix.pch" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.astbuilder
-r0
-
-CProcessPCH /github-tp/NC_iPhone/Nimbler-Prefix-cawzttaspembblcxznxlwydemxiw/Nimbler-Prefix.pch.pth "Network Commuting/Nimbler-Prefix.pch" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658594.331128
-e360658597.393582
-r1
-xProcessPCH
-x/github-tp/NC_iPhone/Nimbler-Prefix-cawzttaspembblcxznxlwydemxiw/Nimbler-Prefix.pch.pth
-xNetwork Commuting/Nimbler-Prefix.pch
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-oclang: warning: argument unused during compilation: '-ObjC'
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection47"Precompile Network Commuting/Nimbler-Prefix.pchc2de54a2367fb541^ccd064a5367fb541^-60"clang: warning: argument unused during compilation: '-ObjC'-0#0#0#-19%DVTDocumentLocation2@75"file://localhost/github-tp/NC_iPhone/Network%20Commuting/Nimbler-Prefix.pch0000000000000000^2291"ProcessPCH Nimbler-Prefix-cawzttaspembblcxznxlwydemxiw/Nimbler-Prefix.pch.pth "Network Commuting/Nimbler-Prefix.pch" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c-header -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -ObjC -c "/github-tp/NC_iPhone/Network Commuting/Nimbler-Prefix.pch" -o /github-tp/NC_iPhone/Nimbler-Prefix-cawzttaspembblcxznxlwydemxiw/Nimbler-Prefix.pch.pth -MMD -MT dependencies -MF /github-tp/NC_iPhone/Nimbler-Prefix-cawzttaspembblcxznxlwydemxiw/Nimbler-Prefix.pch.d36"2BEBEADF-7C26-4BE1-AA9F-AF4F24F94CA3-
-
-CProcessPCH /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch.pth "Network Commuting/Nimbler-Prefix.pch" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360658594.329752
-e360658597.538315
-r1
-xProcessPCH
-x/github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch.pth
-xNetwork Commuting/Nimbler-Prefix.pch
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection47"Precompile Network Commuting/Nimbler-Prefix.pchec8754a2367fb541^46cf89a5367fb541^---0#0#0#-19%DVTDocumentLocation2@75"file://localhost/github-tp/NC_iPhone/Network%20Commuting/Nimbler-Prefix.pch0000000000000000^2285"ProcessPCH Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch.pth "Network Commuting/Nimbler-Prefix.pch" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /github-tp/NC_iPhone    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/clang -x objective-c-header -arch i386 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wno-shorten-64-to-32 -DDEBUG=1 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -mmacosx-version-min=10.6 -gdwarf-2 -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=40300 -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-generated-files.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-own-target-headers.hmap -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-all-target-headers.hmap -iquote /github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/Nimbler-project-headers.hmap -I/github-tp/NC_iPhone/build/Debug-iphonesimulator/include -I/github-tp/NC_iPhone/RestKit/Build -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources/i386 -I/github-tp/NC_iPhone/build/Nimbler.build/Debug-iphonesimulator/Nimbler.build/DerivedSources -F/github-tp/NC_iPhone/build/Debug-iphonesimulator -c "/github-tp/NC_iPhone/Network Commuting/Nimbler-Prefix.pch" -o /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch.pth -MMD -MT dependencies -MF /github-tp/NC_iPhone/Nimbler-Prefix-fumlcjkanadbcrevrcpxspwcfxwb/Nimbler-Prefix.pch.d36"BC05C1E1-0F4A-4ED7-B9A6-D62B0B132EB6-
-
-CTouch /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app
-s360674330.453428
-e360674330.460790
-r1
-xTouch
-x/github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection66"Touch /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.appff22741a747fb541^d3f8751a747fb541^---0#0#0#--288"Touch build/Debug-iphonesimulator/Nimbler.app    cd /github-tp/NC_iPhone    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /usr/bin/touch -c /github-tp/NC_iPhone/build/Debug-iphonesimulator/Nimbler.app36"9CBACA8E-FD09-4843-9CE9-B57C2576D456-
-
