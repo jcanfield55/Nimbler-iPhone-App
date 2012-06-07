@@ -10,7 +10,8 @@
 #import "TestFlightSDK1/TestFlight.h"
 #import "MyAnnotation.h"
 #import "Step.h"
-#import "rootMap.h"
+#import "RootMap.h"
+#import "TwitterSearch.h"
 
 @interface LegMapViewController()
 // Utility routine for setting the region on the MapView based on the itineraryNumber
@@ -56,16 +57,7 @@
 
         UIBarButtonItem* bbi = [[UIBarButtonItem alloc] initWithCustomView:container];
          */
-        
-        // TODO make this work with iOS 4.0, and get better formatting
-//        UIBarButtonItem* forwardBBI = [[UIBarButtonItem alloc] initWithTitle:@"For" style:UIBarButtonItemStylePlain target:self action:@selector(navigateForward:)];
-//        UIBarButtonItem* bakBBI = [[UIBarButtonItem alloc] initWithTitle:@"Bak" style:UIBarButtonItemStylePlain target:self action:@selector(navigateBack:)];
-//        NSArray* bbiArray = [NSArray arrayWithObjects:forwardBBI, bakBBI, nil];
-//        [[self navigationItem] setRightBarButtonItems:bbiArray];
-        
-        
-               
-        
+
         Bak = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRewind target:self action:@selector(navigateBack:)]; 
         
         For = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward target:self action:@selector(navigateForward:)]; 
@@ -100,6 +92,7 @@
     [endPoint setCoordinate:[[[sortedLegs objectAtIndex:([sortedLegs count]-1)] polylineEncodedString] endCoord]];
     [mapView addAnnotation:endPoint];
 
+        
     // Add the overlays and dot AnnotationViews for paths to the mapView
     polyLineArray = [NSMutableArray array];
     for (int i=0; i < [sortedLegs count]; i++) {
@@ -161,6 +154,15 @@
         titleText = [leg directionsTitleText];
         subTitle = [leg directionsDetailText];
         
+        if ([leg isTrain]) {
+            NSString *train = [[titleText componentsSeparatedByString:@"("] objectAtIndex:1];
+            NSString *train1 = [[train componentsSeparatedByString:@")"] objectAtIndex:0];
+            train1 = [train1 stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+            NSLog(@"It is a train %@",train1 );
+            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+            [prefs setObject:train1 forKey:@"train"];
+        }
+        
     // It calls when MODe of leg is WaLK.
       //  [self walk];
     }
@@ -179,12 +181,12 @@
     [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
     [self setMapViewRegion];  // redefine the bounding box
     [self setDirectionsText];
-    
+     [Bak setEnabled:TRUE];
     [For setEnabled:TRUE];
-    [Bak setEnabled:TRUE];
-    // self.navigationItem.rightBarButtonItems = bbiArray;
     if(itineraryNumber == 0){
-        [Bak setEnabled:FALSE];
+        //self.navigationItem.rightBarButtonItems = nil;
+        //self.navigationItem.rightBarButtonItem = For;
+        [Bak setEnabled:false];
     }
     
 }
@@ -200,14 +202,12 @@
     [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
     [self setMapViewRegion];  // redefine the bounding box
     [self setDirectionsText];
-    [For setEnabled:TRUE];
     [Bak setEnabled:TRUE];
-    //self.navigationItem.rightBarButtonItems = bbiArray;
+    [For setEnabled:TRUE];
     if(itineraryNumber == [[itinerary sortedLegs] count] + 1){       
         //self.navigationItem.rightBarButtonItem = Bak;
-        [For setEnabled:FALSE];
+        [For setEnabled:false];
     }
-    
 
 }
 
@@ -269,6 +269,9 @@
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     [TestFlight openFeedbackView];
+    FeedBackForm *legMapVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
+    [[self navigationController] pushViewController:legMapVC animated:YES];
+
 }
 
 // Callback for providing any annotation views
@@ -352,16 +355,26 @@
             if (([polyLineArray objectAtIndex:i] == overlay)) {
                 if (i == itineraryNumber-1) {
                     Leg *leg = [[itinerary sortedLegs] objectAtIndex:(itineraryNumber-1)];
+                    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+                    [prefs setObject:@"3" forKey:@"source"];
+                    [prefs setObject:[leg legId] forKey:@"uniqueid"];
+                    tw_btn.hidden = YES;
                     if([leg isWalk]){
                         aView.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:0.7] ;
                         aView.lineWidth = 5;
+                        
                     } else if([leg isBus]){
                         aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:0.7];
+                        aView.lineWidth = 5;
+                    } else if([leg isTrain]){
+                        tw_btn.hidden = NO;
+                        
+                        aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:0.8] ;
                         aView.lineWidth = 5;
                     } else {
                         aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:0.8] ;
                         aView.lineWidth = 5;
-                    }                   
+                    }
                    
                 }
             }
@@ -410,7 +423,23 @@
     [super viewWillDisappear:animated];
 
 }
+-(IBAction)twitterSearch:(id)sender{
 
+    @try {
+        NSLog(@"twiit");
+        TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        NSString *trainRoute = [prefs objectForKey:@"train"];
+        [[self navigationController] pushViewController:twitter_search animated:YES];
+        trainRoute = [TWITTER_SERARCH_URL stringByReplacingOccurrencesOfString:@"TRAIN" withString:trainRoute];
+        [twitter_search loadRequest:trainRoute];
+    }
+    @catch (NSException *exception) {
+        NSLog(@" twitter print : %@", exception);
+    }
+ 
+    
+}
 
 - (void)didReceiveMemoryWarning
 {

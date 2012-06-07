@@ -11,6 +11,7 @@
 @implementation Plan
 
 @dynamic date;
+@dynamic planId;
 @dynamic fromPlanPlace;
 @dynamic toPlanPlace;
 @dynamic fromLocation;
@@ -25,12 +26,15 @@
     RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[Plan class]];
     RKManagedObjectMapping* planPlaceMapping = [PlanPlace objectMappingForApi:apiType];
     RKManagedObjectMapping* itineraryMapping = [Itinerary objectMappingForApi:apiType];
-
+    mapping.setDefaultValueForMissingAttributes = TRUE;
+    planPlaceMapping.setDefaultValueForMissingAttributes = TRUE;
+    itineraryMapping.setDefaultValueForMissingAttributes = TRUE;
     
     // Make the mappings
     if (apiType==OTP_PLANNER) {
         // TODO  Do all the mapping
         [mapping mapKeyPath:@"date" toAttribute:@"date"];
+        [mapping mapKeyPath:@"id" toAttribute:@"planId"];
         [mapping mapKeyPath:@"from" toRelationship:@"fromPlanPlace" withMapping:planPlaceMapping];
         [mapping mapKeyPath:@"to" toRelationship:@"toPlanPlace" withMapping:planPlaceMapping];
         [mapping mapKeyPath:@"itineraries" toRelationship:@"itineraries" withMapping:itineraryMapping];

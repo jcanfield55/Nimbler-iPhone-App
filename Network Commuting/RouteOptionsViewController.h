@@ -15,5 +15,6 @@
     NSDateFormatter *timeFormatter;
 }
 @property(nonatomic, strong) Plan *plan;
-
+@property(nonatomic, strong) Plan *feedBackPlanId ;
+-(void)setPlanIdFeedBack:(Plan *)plans;
 @end

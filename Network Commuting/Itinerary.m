@@ -12,7 +12,6 @@
 
 
 @implementation Itinerary
-
 @dynamic duration;
 @dynamic elevationGained;
 @dynamic elevationLost;
@@ -28,6 +27,7 @@
 @dynamic walkTime;
 @dynamic legs;
 @dynamic plan;
+@dynamic itinId;
 @synthesize sortedLegs;
 
 // TODO Add an awake method to populate itineraryCreationDate
@@ -41,7 +41,8 @@
     
     // Make the mappings
     if (apiType==OTP_PLANNER) {
-        
+    
+        [mapping mapKeyPath:@"id" toAttribute:@"itinId"];
         [mapping mapKeyPath:@"duration" toAttribute:@"duration"];
         [mapping mapKeyPath:@"elevationGained" toAttribute:@"elevationGained"];
         [mapping mapKeyPath:@"elevationLost" toAttribute:@"elevationLost"];
@@ -56,6 +57,7 @@
         [mapping mapKeyPath:@"walkTime" toAttribute:@"walkTime"];
         
         [mapping mapKeyPath:@"legs" toRelationship:@"legs" withMapping:legMapping];
+        [mapping performKeyValueValidation];
     }
     else {
         // TODO Unknown planner type, throw an exception

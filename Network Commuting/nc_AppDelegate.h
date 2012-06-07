@@ -13,8 +13,10 @@
 #import "ToFromViewController.h"
 #import "Locations.h"
 #import "SupportedRegion.h"
+#import "FeedBackViewController.h"
+#import <Restkit/RKJSONParserJSONKit.h>
 
-@interface nc_AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate> {
+@interface nc_AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate,RKRequestDelegate> {
     Location* currentLocation;
 }
 
@@ -22,14 +24,16 @@
 
 @property (readonly, strong, nonatomic) Locations *locations;
 @property (readonly, strong, nonatomic) ToFromViewController *toFromViewController;
+@property (readonly, strong, nonatomic) FeedBackViewController *feedbackView;
 @property (readonly, strong, nonatomic) CLLocationManager* locationManager;
 
 // Properties for Core Data
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-@property (readonly, strong, nonatomic) RKObjectManager *rkSupportedRegion;
-- (NSURL *)applicationDocumentsDirectory;
--(void)supportedRegion;
 
+@property (strong, nonatomic) UIAlertView * loading;
+- (NSURL *)applicationDocumentsDirectory;
+-(void)bayArea;
+-(UIAlertView *) WaitPrompt ;
 @end

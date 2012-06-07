@@ -10,11 +10,13 @@
 #import "Leg.h"
 #import "UtilityFunctions.h"
 #import <math.h>
+#import "TwitterSearch.h"
+#import "FeedBackForm.h"
 
 @implementation RouteOptionsViewController
 
 @synthesize plan;
-
+@synthesize feedBackPlanId;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -54,7 +56,11 @@
     }
     // Get the requested itinerary
     Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
-
+    
+    /*
+        for feedback planId
+     */
+        
     // Set title
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
     NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)", 
@@ -88,27 +94,62 @@
 - (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     RouteDetailsViewController *routeDetailsVC = [[RouteDetailsViewController alloc] initWithStyle:UITableViewStylePlain];
-    [routeDetailsVC setItinerary:[[plan sortedItineraries] objectAtIndex:[indexPath row]]];
+    [routeDetailsVC setFeedBackItinerary:[[feedBackPlanId sortedItineraries] objectAtIndex:[indexPath row]]];
     
+    [routeDetailsVC setItinerary:[[plan sortedItineraries] objectAtIndex:[indexPath row]]];
     [[self navigationController] pushViewController:routeDetailsVC animated:YES];
 }
 
 #pragma mark - View lifecycle
 
 /*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-}
+ Implement loadView to create a view hierarchy programmatically, without using a nib.
 */
+ - (void)loadView
+{
+    [super loadView];
+    UIButton *submit = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [submit addTarget:self 
+               action:@selector(feedBackSubmit)
+     forControlEvents:UIControlEventTouchDown];
+    [submit setTitle:@"feedback" forState:UIControlStateNormal];
+    submit.frame = CGRectMake(220.0, 370.0, 70.0, 20.0);
+    [super.view addSubview:submit];
+    
+}
+
+-(void)setPlanIdFeedBack:(Plan *)plans
+{
+    feedBackPlanId = [Plan alloc] ;
+    feedBackPlanId = plans;
+    NSLog(@"plan id obj %@", feedBackPlanId);
+    NSLog(@"check %@", [feedBackPlanId planId]);
+}
+
+
+
+-(void)feedBackSubmit
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:@"1" forKey:@"source"];
+    [prefs setObject:[plan planId] forKey:@"uniqueid"];
+           
+    
+    
+    
+    FeedBackForm *legMapVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
+    [[self navigationController] pushViewController:legMapVC animated:YES];
+ 
+}
 
 /*
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad
+*/
+ - (void)viewDidLoad
 {
     [super viewDidLoad];
 }
-*/
+
 
 - (void)viewDidUnload
 {
@@ -122,5 +163,8 @@
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+
+
+#pragma Rest Request for TPServer
 
 @end

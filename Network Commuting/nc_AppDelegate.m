@@ -10,7 +10,7 @@
 #import "UtilityFunctions.h"
 #import "TestFlightSDK1/TestFlight.h"
 #import "ToFromViewController.h"
-#import "JSONKit.h"
+
 
 #define TESTING 1  // If 1, then testFlightApp will collect device UIDs, if 0, it will not
 #define DEVELOPMENT 1  // If 1, then do not include testFlightApp at all (don't need crash report)
@@ -20,25 +20,23 @@
 @synthesize locations;
 @synthesize locationManager;
 @synthesize toFromViewController;
+@synthesize feedbackView;
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
 @synthesize window = _window;
-@synthesize rkSupportedRegion;
+@synthesize loading;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     
    
     // Configure the RestKit RKClient object for Geocoding and trip planning
-    RKObjectManager* rk_geo_mgr = [RKObjectManager objectManagerWithBaseURL:@"http://maps.googleapis.com/maps/api/geocode/"];
+    RKObjectManager* rk_geo_mgr = [RKObjectManager objectManagerWithBaseURL:GEO_RESPONSE_URL];
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
-    // RKObjectManager* rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-204-236-191-166.us-west-1.compute.amazonaws.com:8080/opentripplanner-api-webapp/ws/"];
-    RKObjectManager* rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-23-23-210-156.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"];
     
-    rkSupportedRegion = [RKObjectManager objectManagerWithBaseURL:@"http://ec2-23-23-210-156.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/metadata"];
-    
-        
+     RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_GENERATE_URL];
+           
     // Other URLs:
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
     // NY City demo URL is http://demo.opentripplanner.org/opentripplanner-api-webapp/ws/
@@ -49,13 +47,9 @@
        rkMOS = [RKManagedObjectStore objectStoreWithStoreFilename:@"store.data"];
         [rk_geo_mgr setObjectStore:rkMOS];
         [rkPlanMgr setObjectStore:rkMOS];
-        [rkSupportedRegion setObjectStore:rkMOS];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"Exception:");
-    }
+
     
-     [self supportedRegion];
+     [self bayArea];
     // Get the NSManagedObjectContext from restkit
     __managedObjectContext = [rkMOS managedObjectContext];
     
@@ -63,8 +57,8 @@
     toFromViewController = [[ToFromViewController alloc] initWithNibName:nil bundle:nil];
     [toFromViewController setRkGeoMgr:rk_geo_mgr];    // Pass the geocoding RK object
     [toFromViewController setRkPlanMgr:rkPlanMgr];    // Pass the planning RK object
-    [toFromViewController setRkSupportedRegion:rkSupportedRegion];    // pass the bayArea Rk objects
-    
+
+       
     // Turn on location manager
     locationManager = [[CLLocationManager alloc] init];
     [locationManager setDelegate:self];
@@ -73,8 +67,10 @@
     // Initialize the Locations class and store "Current Location" into the database if not there already
     locations = [[Locations alloc] initWithManagedObjectContext:[self managedObjectContext]];
     [toFromViewController setLocations:locations];
-     [toFromViewController setLocations:locations];
         
+    }@catch (NSException *exception) {
+        NSLog(@"Exception: ----------------- %@", exception);
+    }   
     // Call TestFlightApp SDK
 #if !DEVELOPMENT
     [TestFlight takeOff:@"48a90a98948864a11c80bd2ecd7a7e5c_ODU5MzMyMDEyLTA1LTA3IDE5OjE3OjUwLjMxMDUyMg"];
@@ -113,7 +109,8 @@
 
     [currentLocation setLatFloat:[newLocation coordinate].latitude];
     [currentLocation setLngFloat:[newLocation coordinate].longitude];
-   
+    
+    
     //TODO error handling if location services not available
     //TODO error handling if current location is in the database, but not populated
     //TODO error handling for very old cached current location data
@@ -256,55 +253,78 @@
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
--(void)supportedRegion
-{
-    //http://ec2-107-21-80-36.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/metadata"
-        
-    NSString *urlString = [NSString stringWithFormat:@"http://ec2-204-236-191-166.us-west-1.compute.amazonaws.com:8080/opentripplanner-api-webapp/ws/metadata?output=xml"];   
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil]; 
-    NSLog(@"Full String: %@", locationString);
-    
-    locationString = [locationString stringByReplacingOccurrencesOfString:@"{\""
-                                         withString:@""];
-    locationString = [locationString stringByReplacingOccurrencesOfString:@"\":"
-                                                               withString:@","];
-    locationString = [locationString stringByReplacingOccurrencesOfString:@"\""
-                                                               withString:@""];
-    locationString = [locationString stringByReplacingOccurrencesOfString:@"}"
-                                                               withString:@""];
-    NSLog(@"klj %@", locationString);
-       
-    NSArray *srtreets = [locationString componentsSeparatedByString:@","];
-    NSLog(@" kjgh %@", srtreets);
-    
-    
-      
-    for (int i =0;i<[srtreets count]; i++) {
-       NSLog(@"%d : %@",i, [srtreets objectAtIndex:i]);
-    }
-     
-    SupportedRegion *b = [[SupportedRegion alloc] init];
-    [b setLowerLeftLatitude:[srtreets objectAtIndex:1] ];
-    [b setLowerLeftLongitude:[srtreets objectAtIndex:3]];
-    [b setMaxLatitude:[srtreets objectAtIndex:5]];
-    [b setMaxLongitude:[srtreets objectAtIndex:7]];
-    [b setMinLatitude:[srtreets objectAtIndex:16]];
-    [b setMinLongitude:[srtreets objectAtIndex:18]];
-    [b setUpperRightLatitude:[srtreets objectAtIndex:20]];
-    [b setUpperRightLatitude:[srtreets objectAtIndex:22]];
-       
-    NSLog(@"real %@", b);
-    ToFromViewController *l = [[ToFromViewController alloc] initWithNibName:nil bundle:nil];
-   
-    [l setSupportedRegion:b];
-    // Tell NSXMLParser that this class is its delegate
-   // [parser selfDelegate:self];
-    
+-(void)bayArea
+{    
+//    loading = [self WaitPrompt];
+//    [NSTimer scheduledTimerWithTimeInterval: 9.0f target: self selector: @selector(stopProcess) userInfo: nil repeats: NO];
+    RKClient *client = [RKClient clientWithBaseURL:@"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/"];
+    [RKClient setSharedClient:client];
+    [[RKClient sharedClient]  get:@"metadata" delegate:self];
+  
 }
 
--(void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
-{
-    
+- (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
+    if ([request isGET]) {  
+        NSLog(@"Got aresponse back from our GET! %@", [response bodyAsString]);      
+                   
+            NSError *error = nil;
+            if (error == nil)
+            {
+                RKJSONParserJSONKit* parser1 = [RKJSONParserJSONKit new];
+                NSDictionary  *p = [parser1 objectFromString:[response bodyAsString] error:nil];
+                
+                SupportedRegion *region = [SupportedRegion alloc] ;
+                for (id key in p) {
+                    if ([key isEqualToString:@"upperRightLatitude"]) {
+                        [region setUpperRightLatitude:[p objectForKey:key] ];
+                    } else if ([key isEqualToString:@"upperRightLongitude"]){
+                        [region setUpperRightLongitude:[p objectForKey:key] ];
+                    } else if ([key isEqualToString:@"minLongitude"]){
+                        [region setMinLongitude:[p objectForKey:key] ];
+                    } else if ([key isEqualToString:@"minLatitude"]){
+                        [region setMinLatitude:[p objectForKey:key] ];
+                    } else if ([key isEqualToString:@"maxLongitude"]){
+                        [region setMaxLongitude:[p objectForKey:key] ];
+                    } else if ([key isEqualToString:@"maxLatitude"]){
+                        [region setMaxLatitude:[p objectForKey:key] ];
+                    } else if ([key isEqualToString:@"lowerLeftLongitude"]){
+                        [region setLowerLeftLongitude:[p objectForKey:key] ];
+                    } else if ([key isEqualToString:@"lowerLeftLatitude"]){
+                        [region setLowerLeftLatitude:[p objectForKey:key] ];
+                    } 
+                }
+                
+                ToFromViewController *setRegion = [[ToFromViewController alloc] initWithNibName:nil bundle:nil];
+                [setRegion setBayArea:region];
+                [loading dismissWithClickedButtonIndex:0 animated:NO];
+            }
+    }
 }
+
+-(void)stopProcess
+{
+    [loading dismissWithClickedButtonIndex:0 animated:NO];
+}
+
+-(UIAlertView *) WaitPrompt  
+{  
+    UIAlertView *alert = [[UIAlertView alloc]   
+                          initWithTitle:@"Application setting\nLoading..."   
+                          message:nil delegate:nil cancelButtonTitle:nil  
+                          otherButtonTitles: nil];  
+    
+    [alert show];  
+    
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc]  
+                                          initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];  
+    
+    indicator.center = CGPointMake(alert.bounds.size.width / 2,   
+                                   alert.bounds.size.height - 50);  
+    [indicator startAnimating];  
+    [alert addSubview:indicator];  
+    
+    [[NSRunLoop currentRunLoop] limitDateForMode:NSDefaultRunLoopMode];  
+    
+    return alert;
+} 
 @end

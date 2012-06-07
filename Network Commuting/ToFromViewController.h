@@ -14,7 +14,7 @@
 #import "enums.h"
 #import "SupportedRegion.h"
 
-@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate>
+@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,RKRequestDelegate>
 
 typedef enum {
     NO_EDIT,    // Neither to nor from address is being edited with the keyboard
@@ -31,6 +31,7 @@ typedef enum {
 @property (strong, nonatomic) IBOutlet UIButton *feedbackButton;
 @property (strong, nonatomic) RKObjectManager *rkGeoMgr;  // RestKit Object Manager for geocoding
 @property (strong, nonatomic) RKObjectManager *rkPlanMgr;  // RestKit object manager for trip planning
+@property (strong, nonatomic) RKObjectManager *rkSavePlanMgr;  // RestKit object manager for trip planning
 @property (strong, nonatomic) Locations *locations;  // Wrapper for collection of all Locations
 @property (strong, nonatomic) Location *fromLocation;
 @property (strong, nonatomic) Location *toLocation;
@@ -39,8 +40,11 @@ typedef enum {
 @property (strong, nonatomic) NSDate *tripDate;
 @property (strong, nonatomic) NSDate *tripDateLastChangedByUser;
 @property (strong, nonatomic) UIAlertView * connecting;
-@property (strong, nonatomic) RKObjectManager *rkSupportedRegion;  // RestKit object manager for trip bay area
+@property (strong, nonatomic) RKObjectManager *rkBayArea;  // RestKit object manager for trip bay area
 @property (nonatomic) ToFromEditMode editMode; // Specifies whether to or from address is being edited with the keyboard
+
+
+
 
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
@@ -50,7 +54,10 @@ typedef enum {
 
 - (void)updateTripDate;
 -(UIAlertView *) WaitPrompt;
--(void)setSupportedRegion:(SupportedRegion *)bay;
--(void)supportedRegionAvailibility:(Location *)loc;
+-(void)setBayArea:(SupportedRegion *)bay;
+-(void)bayAreaAvailibility:(Location *)loc;
+-(void)addLocationAction:(id) sender;
+-(void)forFeedbackProceess;
+- (void)saveRkPlanMgr:(RKObjectManager *)rkPlanMgr1;
+-(void)stopProcess;
 @end
-

@@ -2,7 +2,7 @@
 //  SupportedRegion.m
 //  Nimbler
 //
-//  Created by JaY Kumbhani on 5/11/12.
+//  Created by Sitanshu Joshi on 5/11/12.
 //  Copyright (c) 2012 Network Commuting. All rights reserved.
 //
 
@@ -21,7 +21,7 @@
 @synthesize upperRightLongitude;
 
 
-+ (RKManagedObjectMapping *)objectMappingforError:(APIType)apiType
++ (RKManagedObjectMapping *)objectMappingforRegion:(APIType)apiType
 {
     // Create empty ObjectMapping to fill and return    
     RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[SupportedRegion class]];

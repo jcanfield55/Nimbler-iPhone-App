@@ -21,6 +21,7 @@
 // See this URL for documentation on the elements: http://www.opentripplanner.org/apidoc/data_ns0.html#leg
 // This URL has example data http://groups.google.com/group/opentripplanner-dev/msg/4535900a5d18e61f?
 @property (nonatomic, retain) NSString * agencyId;
+@property (nonatomic, retain) NSString * legId;
 @property (nonatomic, retain) NSNumber * bogusNonTransitLeg;
 @property (nonatomic, retain) NSNumber * distance;
 @property (nonatomic, retain) NSNumber * duration;
@@ -49,6 +50,7 @@
 - (NSString *)ncDescription;
 - (BOOL)isWalk;
 - (BOOL)isBus;
+- (BOOL)isTrain;
 
 @end
 
