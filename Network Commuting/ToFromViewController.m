@@ -653,8 +653,9 @@ int const TIME_DATE_HEIGHT = 45;
         [fromLocation incrementFromFrequency];
         [toLocation incrementToFrequency];
         // Update the dateLastUsed
-        [fromLocation setDateLastUsed:[NSDate date]];
-        [toLocation setDateLastUsed:[NSDate date]];
+        NSDate* now = [NSDate date];
+        [fromLocation setDateLastUsed:now];
+        [toLocation setDateLastUsed:now];
         // Save db context with the new location frequencies & dates
         saveContext(managedObjectContext);
         
