@@ -248,7 +248,7 @@ static SupportedRegion *regionArea;
     
     if ([locations areMatchingLocationsChanged]) {  //if typing has changed matrix, reload the array
         [myTableView reloadData];
-    }
+    } 
 }
 
 // Delegate for when complete text entered into the UITextField
@@ -391,7 +391,7 @@ static SupportedRegion *regionArea;
                 NSLog(@"Zero results geocoding address");
                 UIAlertView  *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, No valid location found for your address" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [alert show];
-           
+                
                 /*
                     Edited By Sitanshu Joshi
                     For Solving DE:27

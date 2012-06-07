@@ -124,10 +124,10 @@
     NSURL *soundFileURL = [NSURL fileURLWithPath:soundFilePath];
     
     NSDictionary *recordSettings = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    [NSNumber numberWithInt:kAudioFormatMPEG4AAC], AVFormatIDKey,
+//                                    [NSNumber numberWithInt:kAudioFormat], AVFormatIDKey,
                                     [NSNumber numberWithInt:AVAudioQualityMin], AVEncoderAudioQualityKey, 
                                     [NSNumber numberWithInt:16], AVEncoderBitRateKey,
-                                      [NSNumber numberWithInt: 8], AVLinearPCMBitDepthKey, 
+                                    [NSNumber numberWithInt: 8], AVLinearPCMBitDepthKey, 
                                     [NSNumber numberWithInt: 1], AVNumberOfChannelsKey, 
                                     [NSNumber numberWithFloat:8000.0], AVSampleRateKey, 
                                     nil];
@@ -355,7 +355,7 @@
 
 -(void)sendFeedbackToServer
 {
-    process = [self waitFb];
+  //  process = [self waitFb];
 //    [al autoContentAccessingProxy];
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSString *source = [prefs objectForKey:@"source"];
@@ -403,15 +403,14 @@
                           message:nil delegate:nil cancelButtonTitle:nil  
                           otherButtonTitles:nil];  
     
-        [alerts show];
+        [alerts show];  
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc]  
+                                          initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];  
     
-//    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc]  
-//                                          initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];  
-//    
-//    indicator.center = CGPointMake(alerts.bounds.size.width / 2,   
-//                                   alerts.bounds.size.height - 50);  
-//    [indicator startAnimating];  
-//    [alerts addSubview:indicator]; 
+    indicator.center = CGPointMake(alerts.bounds.size.width / 2,   
+                                   alerts.bounds.size.height - 50);  
+    [indicator startAnimating];  
+    [alerts addSubview:indicator]; 
     
     
     [[NSRunLoop currentRunLoop] limitDateForMode:NSDefaultRunLoopMode];  

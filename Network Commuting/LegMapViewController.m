@@ -426,13 +426,19 @@
 -(IBAction)twitterSearch:(id)sender{
 
     @try {
-        NSLog(@"twiit");
+        /*
+            DE: 42 
+         */
+//        TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
+//        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+//        NSString *trainRoute = [prefs objectForKey:@"train"];
+//        [[self navigationController] pushViewController:twitter_search animated:YES];
+//        trainRoute = [TWITTER_SERARCH_URL stringByReplacingOccurrencesOfString:@"TRAIN" withString:trainRoute];
+//        [twitter_search loadRequest:trainRoute];
+        
         TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        NSString *trainRoute = [prefs objectForKey:@"train"];
         [[self navigationController] pushViewController:twitter_search animated:YES];
-        trainRoute = [TWITTER_SERARCH_URL stringByReplacingOccurrencesOfString:@"TRAIN" withString:trainRoute];
-        [twitter_search loadRequest:trainRoute];
+        [twitter_search loadRequest:CALTRAIN_TWITTER_URL];
     }
     @catch (NSException *exception) {
         NSLog(@" twitter print : %@", exception);
