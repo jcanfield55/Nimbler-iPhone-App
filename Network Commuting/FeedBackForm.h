@@ -30,7 +30,7 @@
     float secondUse;
     BOOL isRepeat;
     NSTimer *timer;
-
+    UIActivityIndicatorView *indicator;
 }
 
 @property (strong, nonatomic) TPResponse *tpResponse; 

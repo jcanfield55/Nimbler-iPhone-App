@@ -24,6 +24,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        [[self navigationItem] setTitle:@"Feedback Form"];
     }
     return self;
 }
@@ -45,6 +46,9 @@
     NSString *email = [prefs objectForKey:@"eMailId"];
     txtEmailId.text = email;
     actRunning.text = @"";
+    txtFeedBack.layer.cornerRadius = 8;
+    txtFeedBack.layer.borderWidth = 1.0;
+    [txtFeedBack.layer setBorderColor:[[UIColor grayColor] CGColor]];
 }
 
 - (void)viewDidUnload
@@ -260,6 +264,7 @@
     } else if ([request isPOST]) {  
         NSLog(@"Got aresponse back from TPResponse! %@", [response bodyAsString]);
         [process dismissWithClickedButtonIndex:0 animated:NO];
+        
         if ([response isOK]) {
             // Success! Let's take a look at the data
             txtFeedBack.text = @"";
@@ -355,7 +360,7 @@
 
 -(void)sendFeedbackToServer
 {
-  //  process = [self waitFb];
+    process = [self waitFb];
 //    [al autoContentAccessingProxy];
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSString *source = [prefs objectForKey:@"source"];
@@ -403,15 +408,15 @@
                           message:nil delegate:nil cancelButtonTitle:nil  
                           otherButtonTitles:nil];  
     
-        [alerts show];  
-    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc]  
+        
+   indicator = [[UIActivityIndicatorView alloc]  
                                           initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];  
-    
-    indicator.center = CGPointMake(alerts.bounds.size.width / 2,   
-                                   alerts.bounds.size.height - 50);  
+     
+    indicator.frame = CGRectMake(135, 80, 20, 20);
     [indicator startAnimating];  
     [alerts addSubview:indicator]; 
     
+    [alerts show];
     
     [[NSRunLoop currentRunLoop] limitDateForMode:NSDefaultRunLoopMode];  
     
