@@ -34,13 +34,20 @@
     BOOL toGeocodeRequestOutstanding;  // true if there is an outstanding To geocode request
     BOOL fromGeocodeRequestOutstanding;  // true if there is an outstanding From geocode request
     BOOL savetrip;
-    double startButtontClickTime;
+    double startButtonClickTime;
     float durationOfResponseTime;
     UIActivityIndicatorView* activityIndicator;
+    NSTimer* activityTimer;
     
 }
 
+// Internal methods
 - (BOOL)getPlan;
+- (void)stopActivityIndicator;
+- (void)startActivityIndicator;
+- (void)bayAreaAvailability:(Location *)loc;
+- (void)addLocationAction:(id) sender;
+- (void)forFeedbackProcess;
 
 @end
 
@@ -63,7 +70,6 @@
 @synthesize departOrArrive;
 @synthesize tripDate;
 @synthesize tripDateLastChangedByUser;
-@synthesize connecting;
 @synthesize rkBayArea;
 @synthesize editMode;
 static SupportedRegion *regionArea;
@@ -197,19 +203,6 @@ int const TIME_DATE_HEIGHT = 45;
     [[rkPlanMgr mappingProvider] setMapping:[Plan objectMappingforPlanner:OTP_PLANNER] forKeyPath:@"plan"];
 }
 
-- (void)saveRkPlanMgr:(RKObjectManager *)rkPlanMgr1
-{
-    rkSavePlanMgr = rkPlanMgr1;
-    // Add the mapper from Plan class to this Object Manager
-    [[rkSavePlanMgr mappingProvider] setMapping:[Plan objectMappingforPlanner:OTP_PLANNER] forKeyPath:@"plan"];
-}
-- (void)setRk:(RKObjectManager *)rkBayAreaa
-{
-    rkBayArea = rkBayAreaa;
-    
-    // Add the mapper from Plan class to this Object Manager
-    [[rkBayArea mappingProvider] setMapping:[Plan objectMappingforPlanner:BAYAREA_PLANNER] forKeyPath:@"graphMetadata"];
-}
 
 - (void)setLocations:(Locations *)l
 {
@@ -381,12 +374,12 @@ int const TIME_DATE_HEIGHT = 45;
     
     if (isFrom) {
         fromLocation = loc;
-        [self bayAreaAvailibility:fromLocation];
+        [self bayAreaAvailability:fromLocation];
 
         
     } else {
         toLocation = loc;
-        [self bayAreaAvailibility:toLocation];
+        [self bayAreaAvailability:toLocation];
 
     }
 }
@@ -414,23 +407,12 @@ int const TIME_DATE_HEIGHT = 45;
 {
   
     NSLog(@"Route Button Pressed");
-    //Alert with Progressbar 
     UIAlertView *alert;
-    if ([fromLocation formattedAddress ] == NULL) {
-        alert = [[UIAlertView alloc] initWithTitle:@"TripPlanner" message:@"Fill FromTrip location address" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
-        return;
-    } else if( [toLocation formattedAddress ] == NULL) {
-        alert = [[UIAlertView alloc] initWithTitle:@"TripPlanner" message:@"Fill ToTrip location address" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
-        return;
-    } else {
-        connecting = [self WaitPrompt];
-    }
-   // [alert dismissWithClickedButtonIndex:0 animated:NO];
     
     routeRequested = true;
-    startButtontClickTime = CFAbsoluteTimeGetCurrent();
+    [self startActivityIndicator];
+    
+    startButtonClickTime = CFAbsoluteTimeGetCurrent();
     
     // if all the geolocations are here, get a plan.  
     if ([fromLocation formattedAddress] && [toLocation formattedAddress] &&
@@ -438,13 +420,17 @@ int const TIME_DATE_HEIGHT = 45;
         [self getPlan];
         routeRequested = false;  
     }
+    
     // if user has not entered/selected fromLocation, send them an alert
     else if (![fromLocation formattedAddress] && !fromGeocodeRequestOutstanding) {
-        // TODO put up an alert asking them to type in or select a from address
+        alert = [[UIAlertView alloc] initWithTitle:@"TripPlanner" message:@"Fill FromTrip location address" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
     }
+    
     // if user has not entered has not entered/selected toLocation, send them an alert
     else if (![toLocation formattedAddress] && !toGeocodeRequestOutstanding) {
-        // TODO put up an alert asking them to type in or select a to address
+        alert = [[UIAlertView alloc] initWithTitle:@"TripPlanner" message:@"Fill ToTrip location address" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
     }    
     // otherwise, just wait for the geocoding and then submit the plan
     
@@ -552,26 +538,19 @@ int const TIME_DATE_HEIGHT = 45;
             if (objects && [objects objectAtIndex:0]) {
                 if (savetrip) {
                     plan = [objects objectAtIndex:0];
-                    durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtontClickTime;
-                    NSLog(@"Check 1b");
-                    // [connecting dismissWithClickedButtonIndex:0 animated:NO];
-                    [activityIndicator stopAnimating];
-                    [activityIndicator removeFromSuperview];
-                    NSLog(@"Check 2");
+                    durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime;
+                    [self stopActivityIndicator];
 
                     [plan setToLocation:toLocation];
                     [plan setFromLocation:fromLocation];
                     
                     // Pass control to the RouteOptionsViewController to display itinerary choices
                     RouteOptionsViewController *routeOptionsVC = [[RouteOptionsViewController alloc] initWithStyle:UITableViewStylePlain];
-                    NSLog(@"Check 3");
 
-                    //[routeOptionsVC setPlanIdFeedBack:pl];
                     [routeOptionsVC setFeedBackPlanId:pl];
                     [routeOptionsVC setPlan:plan];
                     
                     [[self navigationController] pushViewController:routeOptionsVC animated:YES];
-                    NSLog(@"Check 4");
                 } else {
                     pl = [objects objectAtIndex:0];
                     [plan setPlanId:[pl planId]];                    
@@ -604,7 +583,7 @@ int const TIME_DATE_HEIGHT = 45;
                     [prefs setObject:[[objectLoader  response] bodyAsString] forKey:@"tpPlanner"];
                     
                     savetrip = FALSE;
-                    [self forFeedbackProceess];
+                    [self forFeedbackProcess];
                     NSLog(@"For Feedback Process called");
                     
 //                   fbplan = [FeedBackForm alloc];
@@ -614,8 +593,8 @@ int const TIME_DATE_HEIGHT = 45;
         }
         @catch (NSException *exception) {
             
-             [connecting dismissWithClickedButtonIndex:0 animated:NO];
-             durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtontClickTime ;
+            [self stopActivityIndicator];
+             durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime ;
             NSLog(@"Error object ==============================: %@", exception);
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"Trip is not possible. Your start or end point might not be safely accessible" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
             [alert show];
@@ -628,7 +607,7 @@ int const TIME_DATE_HEIGHT = 45;
 }
 
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error {
-    [connecting dismissWithClickedButtonIndex:0 animated:NO];
+    [self stopActivityIndicator];
     
     if (savetrip) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to calculate a route for that To & From address" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -676,7 +655,7 @@ int const TIME_DATE_HEIGHT = 45;
         saveContext(managedObjectContext);
         
         if(fromLocation == toLocation){
-             [connecting dismissWithClickedButtonIndex:0 animated:NO];
+            [self stopActivityIndicator];
             NSLog(@"Match----------->>>>>>>>>>>> %@  ,%@",fromLocation, toLocation);
                     
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"The To: and From: address are the same location.  Please choose a different destination." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
@@ -723,7 +702,7 @@ int const TIME_DATE_HEIGHT = 45;
         NSLog(@"Plan resource: %@", planURLResource);
          // Call the trip planner
         [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
-        [NSTimer scheduledTimerWithTimeInterval: 56.0f target: self selector: @selector(stopProcess) userInfo: nil repeats: NO];
+
         savetrip = TRUE;
         // Reload the to/from tables for next time
         [[self fromTable] reloadData];
@@ -732,11 +711,38 @@ int const TIME_DATE_HEIGHT = 45;
     return true; 
 }
 
--(void)stopProcess
+-(void)startActivityIndicator
 {
-    NSLog(@"stop Processing");
-    [connecting dismissWithClickedButtonIndex:0 animated:NO];
+    if (!activityIndicator) {
+        activityIndicator = [[UIActivityIndicatorView alloc]  
+                             initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge]; 
+    }
+    activityIndicator.center = CGPointMake(self.view.bounds.size.width / 2,   
+                                           (self.view.bounds.size.height/2)+11);
+    if (![activityIndicator isAnimating]) {
+        [activityIndicator setUserInteractionEnabled:FALSE];
+        [activityIndicator startAnimating]; // if not already animating, start
+    }
+    if (![activityIndicator superview]) {
+        [[self view] addSubview:activityIndicator]; // if not already in the view, add it
+    }
+    
+    // Set up timer to remove activity indicator after 60 seconds
+    if (activityTimer && [activityTimer isValid]) {
+        [activityTimer invalidate];  // if old activity timer still valid, invalidate it
+    }
+    [NSTimer scheduledTimerWithTimeInterval: 56.0f target: self selector: @selector(stopActivityIndicator) userInfo: nil repeats: NO];
 }
+
+-(void)stopActivityIndicator
+{
+    [activityIndicator stopAnimating];
+    [activityIndicator removeFromSuperview];
+    if (activityTimer && [activityTimer isValid]) {
+        [activityTimer invalidate];  // if activity timer still valid, invalidate it
+    }
+}
+
 - (void)didReceiveMemoryWarning
 {
     // Releases the view if it doesn't have a superview.
@@ -759,48 +765,14 @@ int const TIME_DATE_HEIGHT = 45;
     // e.g. self.myOutlet = nil;
 }
 
--(UIAlertView *) WaitPrompt  
-{  
-    UIAlertView *alert = [[UIAlertView alloc]   
-                           initWithTitle:@"Connecting to Trip Planner\nPlease Wait..."   
-                           message:nil delegate:nil cancelButtonTitle:nil  
-                           otherButtonTitles: nil];  
-    
-    // [alert show];  
-    
-    /* UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc]  
-                                          initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];  
-    
-    indicator.center = CGPointMake(alert.bounds.size.width / 2,   
-                                   alert.bounds.size.height - 50);  
-    [indicator startAnimating];  
-    [alert addSubview:indicator];  
-        
-    [[NSRunLoop currentRunLoop] limitDateForMode:NSDefaultRunLoopMode];  
-    */
-    
-    if (!activityIndicator) {
-        activityIndicator = [[UIActivityIndicatorView alloc]  
-                         initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge]; 
-    }
-    activityIndicator.center = CGPointMake(self.view.bounds.size.width / 2,   
-                                   (self.view.bounds.size.height/2)+11);
-    if (![activityIndicator isAnimating]) {
-        [activityIndicator setUserInteractionEnabled:FALSE];
-        [activityIndicator startAnimating]; // if not already animating, start
-    }
-    if (![activityIndicator superview]) {
-        [[self view] addSubview:activityIndicator]; // if not already in the view, add it
-    }
-    return alert;
-}  
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
--(void)bayAreaAvailibility:(Location *)location
+-(void)bayAreaAvailability:(Location *)location
 {
     if( [location formattedAddress] != nil){       
         
@@ -848,7 +820,7 @@ int const TIME_DATE_HEIGHT = 45;
 	}
 }
 
--(void)forFeedbackProceess
+-(void)forFeedbackProcess
 {
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];

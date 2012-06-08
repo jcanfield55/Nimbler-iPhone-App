@@ -154,15 +154,6 @@
     
 }
 
--(void)setPlanIdFeedBack:(Plan *)plans
-{
-    feedBackPlanId = [Plan alloc] ;
-    feedBackPlanId = plans;
-    NSLog(@"plan id obj %@", feedBackPlanId);
-    NSLog(@"check %@", [feedBackPlanId planId]);
-}
-
-
 
 -(void)feedBackSubmit
 {

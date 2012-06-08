@@ -39,7 +39,6 @@ typedef enum {
 @property (nonatomic) DepartOrArrive departOrArrive;  // whether trip is planned based on departure time or desired arrival time
 @property (strong, nonatomic) NSDate *tripDate;
 @property (strong, nonatomic) NSDate *tripDateLastChangedByUser;
-@property (strong, nonatomic) UIAlertView * connecting;
 @property (strong, nonatomic) RKObjectManager *rkBayArea;  // RestKit object manager for trip bay area
 @property (nonatomic) ToFromEditMode editMode; // Specifies whether to or from address is being edited with the keyboard
 
@@ -51,13 +50,6 @@ typedef enum {
 - (void)updateGeocodeStatus:(BOOL)isGeocodeOutstanding isFrom:(BOOL)isFrom; // Callback from ToFromTableViewController to update geocoding status
 
 - (void)updateTripDate;
--(UIAlertView *) WaitPrompt;
 -(void)setBayArea:(SupportedRegion *)bay;
--(void)bayAreaAvailibility:(Location *)loc;
--(void)addLocationAction:(id) sender;
--(void)forFeedbackProceess;
-- (void)saveRkPlanMgr:(RKObjectManager *)rkPlanMgr1;
--(void)stopProcess;
-- (UIActivityIndicatorView *)showActivityIndicatorOnView:(UIView*)aView;
 
 @end
