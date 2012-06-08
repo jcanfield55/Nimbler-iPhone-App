@@ -148,8 +148,14 @@
  - (void)viewDidLoad
 {
     [super viewDidLoad];
+    NSLog(@"RouteOptions loaded");
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    NSLog(@"RouteOptions did appear");
+}
 
 - (void)viewDidUnload
 {

@@ -13,7 +13,7 @@
 #import "TPResponse.h"
 #import "Plan.h"
 
-@interface FeedBackViewController : UIViewController  <AVAudioRecorderDelegate, AVAudioPlayerDelegate,RKObjectLoaderDelegate, RKRequestDelegate>{
+@interface FeedBackViewController : UIViewController  <AVAudioRecorderDelegate, AVAudioPlayerDelegate,RKObjectLoaderDelegate, RKRequestDelegate, UITextFieldDelegate>{
     
    	NSString *soundFilePath;
     AVAudioRecorder *audioRecorder;

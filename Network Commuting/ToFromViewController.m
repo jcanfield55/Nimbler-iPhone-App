@@ -36,6 +36,7 @@
     BOOL savetrip;
     double startButtontClickTime;
     float durationOfResponseTime;
+    UIActivityIndicatorView* activityIndicator;
     
 }
 
@@ -411,7 +412,9 @@ int const TIME_DATE_HEIGHT = 45;
 
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
-  //Alert with Progressbar 
+  
+    NSLog(@"Route Button Pressed");
+    //Alert with Progressbar 
     UIAlertView *alert;
     if ([fromLocation formattedAddress ] == NULL) {
         alert = [[UIAlertView alloc] initWithTitle:@"TripPlanner" message:@"Fill FromTrip location address" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -429,7 +432,6 @@ int const TIME_DATE_HEIGHT = 45;
     routeRequested = true;
     startButtontClickTime = CFAbsoluteTimeGetCurrent();
     
-    // TODO put up a "thinking" graphic
     // if all the geolocations are here, get a plan.  
     if ([fromLocation formattedAddress] && [toLocation formattedAddress] &&
         !toGeocodeRequestOutstanding && !fromGeocodeRequestOutstanding) {
@@ -546,18 +548,25 @@ int const TIME_DATE_HEIGHT = 45;
                 if (savetrip) {
                     plan = [objects objectAtIndex:0];
                     durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtontClickTime;
-                    [connecting dismissWithClickedButtonIndex:0 animated:NO];
-                    
+                    NSLog(@"Check 1b");
+                    // [connecting dismissWithClickedButtonIndex:0 animated:NO];
+                    [activityIndicator stopAnimating];
+                    [activityIndicator removeFromSuperview];
+                    NSLog(@"Check 2");
+
                     [plan setToLocation:toLocation];
                     [plan setFromLocation:fromLocation];
                     
                     // Pass control to the RouteOptionsViewController to display itinerary choices
                     RouteOptionsViewController *routeOptionsVC = [[RouteOptionsViewController alloc] initWithStyle:UITableViewStylePlain];
+                    NSLog(@"Check 3");
+
                     //[routeOptionsVC setPlanIdFeedBack:pl];
                     [routeOptionsVC setFeedBackPlanId:pl];
                     [routeOptionsVC setPlan:plan];
                     
                     [[self navigationController] pushViewController:routeOptionsVC animated:YES];
+                    NSLog(@"Check 4");
                 } else {
                     pl = [objects objectAtIndex:0];
                     [plan setPlanId:[pl planId]];                    
@@ -591,6 +600,7 @@ int const TIME_DATE_HEIGHT = 45;
                     
                     savetrip = FALSE;
                     [self forFeedbackProceess];
+                    NSLog(@"For Feedback Process called");
                     
 //                   fbplan = [FeedBackForm alloc];
                 }
@@ -631,6 +641,7 @@ int const TIME_DATE_HEIGHT = 45;
     // TODO See if we already have a similar plan that we can use
     
     // See if there has already been an identical plan request in the last 5 seconds.  
+    NSLog(@"Plan routine entered");
     BOOL isDuplicatePlan = NO;
     NSString *frForm = [fromLocation formattedAddress];
     NSString *toForm = [toLocation formattedAddress];
@@ -684,8 +695,6 @@ int const TIME_DATE_HEIGHT = 45;
 //        [prefs setObject:[fromLocation formattedAddress] forKey:@"fromFormatedAddr"];
 //        [prefs setObject:[toLocation formattedAddress] forKey:@"fromFormatedAddr"];
 
-        
-        // TODO detect and handle case where origin and destination are exactly the same
         
         // Build the parameters into a resource string
        
@@ -752,9 +761,9 @@ int const TIME_DATE_HEIGHT = 45;
                            message:nil delegate:nil cancelButtonTitle:nil  
                            otherButtonTitles: nil];  
     
-    [alert show];  
+    // [alert show];  
     
-    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc]  
+    /* UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc]  
                                           initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];  
     
     indicator.center = CGPointMake(alert.bounds.size.width / 2,   
@@ -763,7 +772,20 @@ int const TIME_DATE_HEIGHT = 45;
     [alert addSubview:indicator];  
         
     [[NSRunLoop currentRunLoop] limitDateForMode:NSDefaultRunLoopMode];  
+    */
     
+    if (!activityIndicator) {
+        activityIndicator = [[UIActivityIndicatorView alloc]  
+                         initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge]; 
+    }
+    activityIndicator.center = CGPointMake(self.view.bounds.size.width / 2,   
+                                   (self.view.bounds.size.height/2)+11);
+    if (![activityIndicator isAnimating]) {
+        [activityIndicator startAnimating]; // if not already animating, start
+    }
+    if (![activityIndicator superview]) {
+        [[self view] addSubview:activityIndicator]; // if not already in the view, add it
+    }
     return alert;
 }  
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
