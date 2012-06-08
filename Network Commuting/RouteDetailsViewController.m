@@ -107,7 +107,7 @@
 
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
     [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:14.0]];
-
+    
     NSString *titleText;
     NSString *subTitle;
     if ([indexPath row] == 0) { // if first row, put in start point
@@ -166,12 +166,10 @@
     [[cell detailTextLabel] setNumberOfLines:0];
     [[cell detailTextLabel] setText:subTitle];
     
-//    if ([indexPath row] == 2 || [indexPath row] == 5){
-//        cell.imageView.image =[UIImage imageNamed:@"rec_up"];
+    
+//        if (subTitle && [subTitle length] > 40) {
+//        [[cell detailTextLabel] sizeToFit];
 //    }
-        if (subTitle && [subTitle length] > 40) {
-        [[cell detailTextLabel] sizeToFit];
-    }
     return cell;
 }
 

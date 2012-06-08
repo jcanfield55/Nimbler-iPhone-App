@@ -112,6 +112,7 @@
     [txtFeedBack resignFirstResponder];
     actRunning.text = @"Start Recording....";
 
+    
     NSArray *tempDirPath;
     NSString *docsDir;
     mesg = RECORD_MSG;
@@ -286,13 +287,7 @@
                     }
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:FB_TITLE_MSG message:msg delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
                     [alert show];
-                    
-                    //flush the sent objects
-                    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-                    [prefs setObject:@"" forKey:@"source"];
-                    [prefs setObject:@"" forKey:@"uniqueid"];
-                    [prefs setObject:@"" forKey:@"txtfb"];
-                                        
+                                                           
                 }
                 
             }

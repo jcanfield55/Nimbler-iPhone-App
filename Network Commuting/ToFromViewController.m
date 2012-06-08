@@ -453,6 +453,11 @@ int const TIME_DATE_HEIGHT = 45;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     [TestFlight openFeedbackView];
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setValue:@"4" forKey:@"source"];
+    [prefs setValue:@"" forKey:@"uniqueid"];
+   
     FeedBackForm *legMapVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
     [[self navigationController] pushViewController:legMapVC animated:YES];
 }
