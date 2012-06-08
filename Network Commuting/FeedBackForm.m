@@ -96,7 +96,9 @@
 
 
 -(void) updatePlayCountdown {
+    
     secondsLeft++;
+   
     time.text = [NSString stringWithFormat:@"Play Time : %02d", secondsLeft];
 }
 
@@ -190,6 +192,8 @@
 {
     NSLog(@"play Recording");
     actRunning.text = @"Play Recording....";
+    secondsLeft = 0;
+    time.text = @"";
     if (!audioRecorder.recording)
     {
         NSError *error;
@@ -206,7 +210,6 @@
 //            process = [self WaitPrompt];
             
             [time setHidden:NO];
-            secondsLeft = 0;
             timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 target:self selector:@selector(updatePlayCountdown) userInfo:nil repeats: YES]; 
             [audioPlayer play];
         }

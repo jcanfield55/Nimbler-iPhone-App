@@ -781,6 +781,7 @@ int const TIME_DATE_HEIGHT = 45;
     activityIndicator.center = CGPointMake(self.view.bounds.size.width / 2,   
                                    (self.view.bounds.size.height/2)+11);
     if (![activityIndicator isAnimating]) {
+        [activityIndicator setUserInteractionEnabled:FALSE];
         [activityIndicator startAnimating]; // if not already animating, start
     }
     if (![activityIndicator superview]) {

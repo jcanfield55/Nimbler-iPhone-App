@@ -81,7 +81,7 @@
 					<object class="IBUILabel" id="396611753">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 57}, {190, 21}}</string>
+						<string key="NSFrame">{{20, 57}, {181, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="735586956"/>
@@ -111,7 +111,7 @@
 					<object class="IBUILabel" id="905143037">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 20}, {270, 29}}</string>
+						<string key="NSFrame">{{20, 20}, {174, 29}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="921645591"/>
@@ -309,7 +309,7 @@
 					<object class="IBUITextField" id="1006807383">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 314}, {270, 31}}</string>
+						<string key="NSFrame">{{20, 314}, {272, 31}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="1019002661"/>
@@ -573,15 +573,15 @@ AAgACAAIAAEAAQABAAE</bytes>
 							<reference ref="69868192"/>
 							<reference ref="507196413"/>
 							<reference ref="666129768"/>
-							<reference ref="723045727"/>
 							<reference ref="905143037"/>
 							<reference ref="396611753"/>
-							<reference ref="1050240927"/>
-							<reference ref="921773603"/>
-							<reference ref="1006807383"/>
-							<reference ref="738970696"/>
 							<reference ref="1019002661"/>
 							<reference ref="921645591"/>
+							<reference ref="738970696"/>
+							<reference ref="1050240927"/>
+							<reference ref="723045727"/>
+							<reference ref="1006807383"/>
+							<reference ref="921773603"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -693,7 +693,7 @@ AAgACAAIAAEAAQABAAE</bytes>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">45</int>
+			<int key="maxID">49</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">

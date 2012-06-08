@@ -60,4 +60,6 @@ typedef enum {
 -(void)forFeedbackProceess;
 - (void)saveRkPlanMgr:(RKObjectManager *)rkPlanMgr1;
 -(void)stopProcess;
+- (UIActivityIndicatorView *)showActivityIndicatorOnView:(UIView*)aView;
+
 @end
