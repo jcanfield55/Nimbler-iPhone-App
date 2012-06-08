@@ -106,12 +106,12 @@
 
 -(IBAction)recordRecording:(id)sender{
     
+    time.text = @"";
     NSLog(@"start recording");
     [txtEmailId resignFirstResponder];
     [txtFeedBack resignFirstResponder];
     actRunning.text = @"Start Recording....";
 
-    
     NSArray *tempDirPath;
     NSString *docsDir;
     mesg = RECORD_MSG;
