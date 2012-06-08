@@ -16,26 +16,25 @@
 @implementation RouteDetailsViewController
 
 @synthesize itinerary;
-@synthesize feedBackItinerary, twitter;
+@synthesize feedBackItinerary;
 
 -(void)loadView
 {
     [super loadView];
-    UIButton *submit = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [submit addTarget:self 
-               action:@selector(feedBackSubmit)
-     forControlEvents:UIControlEventTouchDown];
-    [submit setTitle:@"feedback" forState:UIControlStateNormal];
-    submit.frame = CGRectMake(220.0, 370.0, 70.0, 20.0);
-    [super.view addSubview:submit];
-    
-    twitter = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [twitter addTarget:self 
-                action:@selector(twitterSubmit)
-      forControlEvents:UIControlEventTouchDown];
-    [twitter setTitle:@"t" forState:UIControlStateNormal];
-    twitter.frame = CGRectMake(180.0, 370.0, 20.0, 25.0);
-    
+//    UIButton *submit = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//    [submit addTarget:self 
+//               action:@selector(feedBackSubmit)
+//     forControlEvents:UIControlEventTouchDown];
+//    [submit setTitle:@"feedback" forState:UIControlStateNormal];
+//    submit.frame = CGRectMake(220.0, 370.0, 70.0, 20.0);
+//    [super.view addSubview:submit];
+//    
+//    twitter = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//    [twitter addTarget:self 
+//                action:@selector(twitterSubmit)
+//      forControlEvents:UIControlEventTouchDown];
+//    [twitter setTitle:@"t" forState:UIControlStateNormal];
+//    twitter.frame = CGRectMake(180.0, 370.0, 20.0, 25.0);
     
 }
 
@@ -46,12 +45,32 @@
     if (self) {
         [[self navigationItem] setTitle:@"Route"];
         
-        UIBarButtonItem* map = [[UIBarButtonItem alloc] initWithTitle:@"Map" style:UIBarButtonItemStylePlain target:self action:@selector(mapOverView)]; 
-        [[self navigationItem] setRightBarButtonItem:map];
+        UIImage *mapTmg = [UIImage imageNamed:@"map.png"];
+        UIButton *mapBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        mapBtn.bounds = CGRectMake( 0, 0, mapTmg.size.width, mapTmg.size.height );
+        [mapBtn setImage:mapTmg forState:UIControlStateNormal];
+        [mapBtn addTarget:self action:@selector(mapOverView)
+             forControlEvents:UIControlEventTouchDown];
+
+        map = [[UIBarButtonItem alloc] initWithCustomView:mapBtn]; 
         
+        feedback = [[UIBarButtonItem alloc] initWithTitle:@"F" style:UIBarButtonItemStylePlain target:self action:@selector(feedBackSubmit)];
+       
+        
+        UIImage *twit = [UIImage imageNamed:@"twitter.png"];
+        UIButton *twitterBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        twitterBtn.bounds = CGRectMake( 0, 0, twit.size.width, twit.size.height );
+        [twitterBtn setImage:twit forState:UIControlStateNormal];
+        [twitterBtn addTarget:self action:@selector(twitterSubmit)
+          forControlEvents:UIControlEventTouchDown];
+        twitterCaltrain = [[UIBarButtonItem alloc] initWithCustomView:twitterBtn];
+        barArray = [NSArray arrayWithObjects: feedback,map, nil];
+        
+        self.navigationItem.rightBarButtonItems = barArray;
+               
         timeFormatter = [[NSDateFormatter alloc] init];
         [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
-        [[self tableView] setRowHeight:60];
+//        [[self tableView] setRowHeight:60];
     }
     return self;
 }
@@ -103,7 +122,8 @@
         titleText = [leg directionsTitleText];
         subTitle = [leg directionsDetailText];
         if ( [leg isTrain]) {
-            [self.view addSubview:twitter];            
+            barArray = [NSArray arrayWithObjects: feedback,twitterCaltrain,map, nil];
+             self.navigationItem.rightBarButtonItems = barArray;
         }
         
         /*
@@ -111,34 +131,34 @@
          Edited by Sitanshu Joshi.
          */
         
-        if ([subTitle length] > 70) {
-            NSString * add1;
-            NSString * add2;
-            
-            NSLog(@"more %@",subTitle);
-            NSArray *firstSplit = [subTitle componentsSeparatedByString:@"\n"];
-            NSLog(@"%@",firstSplit);
-            for(int i=0;i<[firstSplit count];i++){
-                NSString *str=[firstSplit objectAtIndex:i];               
-                if ([str length] > 37) {
-                    str = [str substringToIndex:37];
-                    if(i==0){
-                        add1 = [str stringByAppendingString:@"...\n"];
-                        NSLog(@"Saperate %@",str);
-                    }else if(i==1){
-                        add2 = [str stringByAppendingString:@"..."];
-                        NSLog(@"Saperate %@",str);
-                    }
-                } else {
-                    if(i==0){
-                        add1 = [str stringByAppendingString:@"\n"];
-                    } else if(i==1){
-                        add2 = [str stringByAppendingString:@" "];
-                    }
-                }                          
-            }
-            subTitle = [add1 stringByAppendingString:add2];  
-        }
+//        if ([subTitle length] > 70) {
+//            NSString * add1;
+//            NSString * add2;
+//            
+//            NSLog(@"more %@",subTitle);
+//            NSArray *firstSplit = [subTitle componentsSeparatedByString:@"\n"];
+//            NSLog(@"%@",firstSplit);
+//            for(int i=0;i<[firstSplit count];i++){
+//                NSString *str=[firstSplit objectAtIndex:i];               
+//                if ([str length] > 37) {
+//                    str = [str substringToIndex:37];
+//                    if(i==0){
+//                        add1 = [str stringByAppendingString:@"...\n"];
+//                        NSLog(@"Saperate %@",str);
+//                    }else if(i==1){
+//                        add2 = [str stringByAppendingString:@"..."];
+//                        NSLog(@"Saperate %@",str);
+//                    }
+//                } else {
+//                    if(i==0){
+//                        add1 = [str stringByAppendingString:@"\n"];
+//                    } else if(i==1){
+//                        add2 = [str stringByAppendingString:@" "];
+//                    }
+//                }                          
+//            }
+//            subTitle = [add1 stringByAppendingString:add2];  
+//        }
     }
         
     [[cell textLabel] setText:titleText];
@@ -154,6 +174,37 @@
     }
     return cell;
 }
+
+#pragma mark - UITableViewDelegate methods
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+   
+    NSString   *titleText;
+    CGSize size;
+    if ([indexPath row] == 0) { // if first row, put in start point
+        titleText = [NSString stringWithFormat:@"Start at %@", [[itinerary from] name]];
+        size = [titleText 
+                sizeWithFont:[UIFont systemFontOfSize:14] 
+                constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
+    }
+    else if ([indexPath row] == [[itinerary sortedLegs] count] + 1) { // if last row, put in end point
+        titleText = [NSString stringWithFormat:@"End at %@", [[itinerary to] name]];
+        size = [titleText 
+                sizeWithFont:[UIFont systemFontOfSize:14] 
+                constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
+    }
+    else {
+    
+    Leg *leg = [[itinerary sortedLegs] objectAtIndex:([indexPath row]-1)];
+    titleText= [leg directionsDetailText];
+        
+    size = [[titleText stringByAppendingString:[leg directionsTitleText]] 
+                   sizeWithFont:[UIFont systemFontOfSize:14] 
+                   constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
+    }
+    return size.height + 10;
+}
+
 
 // If selected, show the LegMapViewController
 - (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

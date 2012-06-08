@@ -26,6 +26,12 @@
         [[self navigationItem] setTitle:@"Itineraries"];
         timeFormatter = [[NSDateFormatter alloc] init];
         [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
+
+    
+       feedback = [[UIBarButtonItem alloc] initWithTitle:@"F" style:UIBarButtonItemStylePlain target:self action:@selector(feedBackSubmit)];
+
+        self.navigationItem.rightBarButtonItem = feedback;
+        
     }
     return self;
 }
@@ -90,6 +96,36 @@
     return cell;
 }
 
+
+#pragma mark - UITableViewDelegate methods
+
+//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+//    
+//   NSMutableString *subTitle = [NSMutableString stringWithCapacity:100];
+//    CGSize size;
+//    Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
+//    NSArray *sortedLegs = [itin sortedLegs];
+//    for (int i = 0; i < [sortedLegs count]; i++) {
+//        Leg *leg = [sortedLegs objectAtIndex:i];
+//        if ([leg mode] && [[leg mode] length] > 0) {
+//            if (i > 0) {
+//                [subTitle appendString:@" -> "];
+//            }
+//            [subTitle appendString:[[leg mode] capitalizedString]];
+//            if ([leg route] && [[leg route] length] > 0) {
+//                [subTitle appendString:@" "];
+//                [subTitle appendString:[leg route]];
+//            }
+//        }
+//    }
+//        
+//    size = [subTitle 
+//                sizeWithFont:[UIFont systemFontOfSize:14] 
+//                constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
+//   
+//    return size.height + 10;
+//}
+
 // If selected, show the RouteDetailsViewController
 - (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -108,13 +144,13 @@
  - (void)loadView
 {
     [super loadView];
-    UIButton *submit = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [submit addTarget:self 
-               action:@selector(feedBackSubmit)
-     forControlEvents:UIControlEventTouchDown];
-    [submit setTitle:@"feedback" forState:UIControlStateNormal];
-    submit.frame = CGRectMake(220.0, 370.0, 70.0, 20.0);
-    [super.view addSubview:submit];
+//    UIButton *submit = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//    [submit addTarget:self 
+//               action:@selector(feedBackSubmit)
+//     forControlEvents:UIControlEventTouchDown];
+//    [submit setTitle:@"feedback" forState:UIControlStateNormal];
+//    submit.frame = CGRectMake(220.0, 370.0, 70.0, 20.0);
+//    [super.view addSubview:submit];
     
 }
 

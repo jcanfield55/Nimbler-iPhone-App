@@ -14,6 +14,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        [[self navigationItem] setTitle:@"Caltrain News"];
         // Custom initialization
     }
     return self;
