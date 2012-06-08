@@ -145,9 +145,11 @@
     NSString* subTitle;
     if (itineraryNumber == 0) { // if first row, put in start point
         titleText = [NSString stringWithFormat:@"Start at %@", [[itinerary from] name]];
+        [Bak setEnabled:false];
     }
     else if (itineraryNumber == [[itinerary sortedLegs] count] + 1) { // if last row, put in end point
         titleText = [NSString stringWithFormat:@"End at %@", [[itinerary to] name]];
+        [For setEnabled:false];
     }
     else {  // otherwise, it is one of the legs
         Leg *leg = [[itinerary sortedLegs] objectAtIndex:(itineraryNumber-1)];
