@@ -28,11 +28,12 @@
 @property (nonatomic) BOOL isFrom;   // True if this is the fromTable, false if it is the toTable
 @property (strong, nonatomic) UITableView* myTableView;  // Table View we are controlling
 @property (strong, nonatomic) UITextField* txtField;  
+@property (strong, nonatomic) SupportedRegion* supportedRegion; // Geographic area supported by this app
+
 // Textlabel that is separate from myTableView where text is entered
 - (id)initWithTable:(UITableView *)t isFrom:(BOOL)isF toFromVC:(ToFromViewController *)tfVC locations:(Locations *)l;
 - (IBAction)toFromTyping:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)textSubmitted:(id)sender forEvent:(UIEvent *)event;
 
--(void)setBayAreas:(SupportedRegion *)bayAreaRegion;
--(BOOL)isValidRegion:(Location *)location;
+- (void)setPickedLocation:(Location *)ploc locationArray:(NSArray *)locationArray; // Method called by LocationPickerVC when a user picks a location
 @end

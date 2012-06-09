@@ -22,5 +22,6 @@
 @property(nonatomic,strong) NSNumber *upperRightLongitude;
 
 + (RKManagedObjectMapping *)objectMappingforRegion:(APIType)apiType;
-
+- (id)initWithDefault;  // loads default min & max supported region values from constants.h file
+- (BOOL)isInRegionLat:(double)lat Lng:(double)lng; // Returns true if the given lat/lng are in the supported region
 @end

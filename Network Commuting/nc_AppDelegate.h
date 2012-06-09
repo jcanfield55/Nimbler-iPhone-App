@@ -32,8 +32,7 @@
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
-@property (strong, nonatomic) UIAlertView * loading;
 - (NSURL *)applicationDocumentsDirectory;
 -(void)bayArea;
--(UIAlertView *) WaitPrompt ;
+
 @end

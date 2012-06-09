@@ -25,7 +25,6 @@
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
 @synthesize window = _window;
-@synthesize loading;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -256,8 +255,7 @@
 
 -(void)bayArea
 {    
-//    loading = [self WaitPrompt];
-//    [NSTimer scheduledTimerWithTimeInterval: 9.0f target: self selector: @selector(stopProcess) userInfo: nil repeats: NO];
+
     RKClient *client = [RKClient clientWithBaseURL:@"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/"];
     [RKClient setSharedClient:client];
     [[RKClient sharedClient]  get:@"metadata" delegate:self];
@@ -295,37 +293,9 @@
                     } 
                 }
                 
-                ToFromViewController *setRegion = [[ToFromViewController alloc] initWithNibName:nil bundle:nil];
-                [setRegion setBayArea:region];
-                [loading dismissWithClickedButtonIndex:0 animated:NO];
+                [toFromViewController setSupportedRegion:region];
             }
     }
 }
 
--(void)stopProcess
-{
-    [loading dismissWithClickedButtonIndex:0 animated:NO];
-}
-
--(UIAlertView *) WaitPrompt  
-{  
-    UIAlertView *alert = [[UIAlertView alloc]   
-                          initWithTitle:@"Application setting\nLoading..."   
-                          message:nil delegate:nil cancelButtonTitle:nil  
-                          otherButtonTitles: nil];  
-    
-    [alert show];  
-    
-    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc]  
-                                          initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];  
-    
-    indicator.center = CGPointMake(alert.bounds.size.width / 2,   
-                                   alert.bounds.size.height - 50);  
-    [indicator startAnimating];  
-    [alert addSubview:indicator];  
-    
-    [[NSRunLoop currentRunLoop] limitDateForMode:NSDefaultRunLoopMode];  
-    
-    return alert;
-} 
 @end

@@ -41,6 +41,7 @@ typedef enum {
 @property (strong, nonatomic) NSDate *tripDateLastChangedByUser;
 @property (strong, nonatomic) RKObjectManager *rkBayArea;  // RestKit object manager for trip bay area
 @property (nonatomic) ToFromEditMode editMode; // Specifies whether to or from address is being edited with the keyboard
+@property (strong, nonatomic) SupportedRegion* supportedRegion; // geographic area supported by this app
 
 
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
@@ -49,7 +50,8 @@ typedef enum {
 - (void)updateToFromLocation:(id)sender isFrom:(BOOL)isFrom location:(Location *)loc; // Callback from ToFromTableViewController to update a new user entered/selected location
 - (void)updateGeocodeStatus:(BOOL)isGeocodeOutstanding isFrom:(BOOL)isFrom; // Callback from ToFromTableViewController to update geocoding status
 
+- (void)callLocationPickerFor:(ToFromTableViewController *)toFromTableVC0 locationList:(NSArray *)locationList0 isFrom:(BOOL)isFrom0; //Request responder to push a LocationPickerViewController so the user can pick from the locations in locationList
+
 - (void)updateTripDate;
--(void)setBayArea:(SupportedRegion *)bay;
 
 @end

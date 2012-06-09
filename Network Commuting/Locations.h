@@ -32,9 +32,8 @@
 - (int)numberOfLocations:(BOOL)isFrom;
 - (Location *)locationAtIndex:(int)index isFrom:(BOOL)isFrom;
 - (Location *)consolidateWithMatchingLocations:(Location *)loc0;
-
+- (void)removeLocation:(Location *)loc0;  // Remove location from Core Data
 - (void)updateSelectedLocation:(Location *)sL isFrom:(BOOL)isFrom;
-
 
 
 @end

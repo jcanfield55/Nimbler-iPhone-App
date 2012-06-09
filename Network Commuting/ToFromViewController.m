@@ -17,6 +17,7 @@
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "FeedBackForm.h"
 #import "TwitterSearch.h"
+#import "LocationPickerViewController.h"
 
 @interface ToFromViewController()
 {
@@ -38,7 +39,8 @@
     float durationOfResponseTime;
     UIActivityIndicatorView* activityIndicator;
     NSTimer* activityTimer;
-    
+    RouteOptionsViewController *routeOptionsVC; 
+    LocationPickerViewController *locationPickerVC;
 }
 
 // Internal methods
@@ -72,7 +74,7 @@
 @synthesize tripDateLastChangedByUser;
 @synthesize rkBayArea;
 @synthesize editMode;
-static SupportedRegion *regionArea;
+@synthesize supportedRegion;
 
 // Constants for animating up and down the To: field
 int const MAIN_TABLE_HEIGHT = 358;
@@ -92,6 +94,7 @@ int const TIME_DATE_HEIGHT = 45;
         routeRequested = FALSE;
         toGeocodeRequestOutstanding = FALSE;
         fromGeocodeRequestOutstanding = FALSE;
+        supportedRegion = [[SupportedRegion alloc] initWithDefault];
 
         editMode = NO_EDIT;
         
@@ -438,14 +441,12 @@ int const TIME_DATE_HEIGHT = 45;
 
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
-    [TestFlight openFeedbackView];
-    
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setValue:@"4" forKey:@"source"];
     [prefs setValue:@"" forKey:@"uniqueid"];
    
-    FeedBackForm *legMapVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
-    [[self navigationController] pushViewController:legMapVC animated:YES];
+    FeedBackForm *feedbackVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
+    [[self navigationController] pushViewController:feedbackVC animated:YES];
 }
 
 // Method to adjust the mainTable for editing mode
@@ -545,8 +546,9 @@ int const TIME_DATE_HEIGHT = 45;
                     [plan setFromLocation:fromLocation];
                     
                     // Pass control to the RouteOptionsViewController to display itinerary choices
-                    RouteOptionsViewController *routeOptionsVC = [[RouteOptionsViewController alloc] initWithStyle:UITableViewStylePlain];
-
+                    if (!routeOptionsVC) {
+                        routeOptionsVC = [[RouteOptionsViewController alloc] initWithStyle:UITableViewStylePlain];
+                    }
                     [routeOptionsVC setFeedBackPlanId:pl];
                     [routeOptionsVC setPlan:plan];
                     
@@ -790,15 +792,6 @@ int const TIME_DATE_HEIGHT = 45;
     }
 }
 
--(void)setBayArea:(SupportedRegion *)bayAreaRegion
-{
-    regionArea = [[SupportedRegion alloc] init];
-    regionArea = bayAreaRegion;    
-    ToFromTableViewController *setRegion = [[ToFromTableViewController alloc] initWithNibName:nil bundle:nil];
-    [setRegion setBayAreas:bayAreaRegion];
-        
-}
-
 -(void)addLocationAction:(id) sender{
     
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"Current Location",@"Set Location",@"Cancel",nil];
@@ -890,5 +883,18 @@ int const TIME_DATE_HEIGHT = 45;
     } 
 }
 
+//Request responder to push a LocationPickerViewController so the user can pick from the locations in locationList
+- (void)callLocationPickerFor:(ToFromTableViewController *)toFromTableVC0 locationList:(NSArray *)locationList0 isFrom:(BOOL)isFrom0
+{
+    if (!locationPickerVC) {
+        locationPickerVC = [[LocationPickerViewController alloc] initWithNibName:nil bundle:nil];
+    }
+
+    [locationPickerVC setToFromTableVC:toFromTableVC0];
+    [locationPickerVC setLocationArray:locationList0];
+    [locationPickerVC setIsFrom:isFrom0];
+    
+    [[self navigationController] pushViewController:locationPickerVC animated:YES];    
+}
 
 @end

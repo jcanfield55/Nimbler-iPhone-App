@@ -7,6 +7,7 @@
 //
 
 #import "SupportedRegion.h"
+#import "Constants.h"
 
 @implementation SupportedRegion
 
@@ -42,5 +43,26 @@
         // TODO Unknown Another type, throw an exception
     }
     return mapping;
+}
+
+// loads default min & max supported region values from constants.h file
+- (id)initWithDefault
+{
+    self = [super init];
+    if (self) {
+        maxLatitude = [NSNumber numberWithDouble:[MAX_LAT doubleValue]];
+        maxLongitude = [NSNumber numberWithDouble:[MAX_LONG doubleValue]];
+        minLatitude = [NSNumber numberWithDouble:[MIN_LAT doubleValue]];
+        minLongitude = [NSNumber numberWithDouble:[MIN_LONG doubleValue]];
+    }
+    return self;
+}
+
+// Returns true if the given lat/lng are in the supported region
+- (BOOL)isInRegionLat:(double)lat Lng:(double)lng
+{
+    BOOL result = ((lat>=[minLatitude doubleValue]) && (lng>=[minLongitude doubleValue]) &&
+                   (lat<=[maxLatitude doubleValue]) && (lng<=[maxLongitude doubleValue]));
+    return result;
 }
 @end

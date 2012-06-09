@@ -16,18 +16,21 @@
     
     UITableViewCell* selectedCell; // Cell currently selected 
     Location* selectedLocation;  // Location currently selected
-    NSString *rawAddress;    // user entered raw address
+    NSString *rawAddress;    // last user entered raw address
     NSString *urlResource;   // URL resource sent to geocoder for last raw address
     NSManagedObjectContext *managedObjectContext;
     NSString* lastRawAddressGeoRequest;  // Last raw address sent to the Geocoder, used to avoid duplicate requests
     NSDate* lastGeoRequestTime;  // Time of last Geocoding request, used to avoid duplicate requests
+    NSString* supportedRegionGeocodeString; // Parameter to send to geocoder with the supported Region for viewport biasing
 
     double startTime;
     float durationResponseTime;
+    NSString* geocodeStatus;  // Status string returned by last geocoder call
 
 }
 
 - (void)markAndUpdateSelectedLocation:(Location *)loc;  // Updates the selected location to be loc (in locations object, in toFromVC, and in the table selected cell
+- (void)selectedGeocodedLocation:(Location *)loc;  // Internal method to process a new incoming geocoded location (if the only one returned by geocoder, or if this one picked by LocationPickerVC)
 
 @end
 
@@ -41,8 +44,7 @@
 @synthesize rkGeoMgr;
 @synthesize myTableView;
 @synthesize txtField;
-
-static SupportedRegion *regionArea;
+@synthesize supportedRegion;
 
 - (id)initWithTable:(UITableView *)t isFrom:(BOOL)isF toFromVC:(ToFromViewController *)tfVC locations:(Locations *)l;
 {
@@ -52,6 +54,7 @@ static SupportedRegion *regionArea;
         toFromVC = tfVC;
         locations = l;
         myTableView = t;
+        [self setSupportedRegion:[tfVC supportedRegion]]; // Get supportedRegion from parent ToFromViewController
         
         isGeocodingOutstanding = FALSE;
         
@@ -75,12 +78,6 @@ static SupportedRegion *regionArea;
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-}
-
--(void)setBayAreas:(SupportedRegion *)bayAreaRegion
-{
-    regionArea = [[SupportedRegion alloc] init];
-    regionArea = bayAreaRegion;    
 }
 
 //
@@ -131,19 +128,10 @@ static SupportedRegion *regionArea;
 
 
 
-// Internal utility function to pdates the selected location to be loc 
-// (in locations object, in toFromVC, and in the table selected cell
+// Internal utility function to update the selected location to be loc 
+// (in locations object, in toFromVC, and in the table selected cell)
 - (void)markAndUpdateSelectedLocation:(Location *)loc
 {
- 
-    /*
-        Edited by Sitanshu Joshi
-        DE:18 
-    */
-   BOOL isValid = [self isValidRegion:loc];
-    if(isValid){
-        return;
-    }
     
     // Update ToFromViewController with the geocode results
     [toFromVC updateToFromLocation:self isFrom:isFrom location:loc];
@@ -289,8 +277,9 @@ static SupportedRegion *regionArea;
             lastGeoRequestTime = [[NSDate alloc] init];
             
             // Build the parameters into a resource string
+            // US108 implementation (using "bounds" parameter)
             NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: @"address", rawAddress, 
-                                    @"sensor", @"true", nil];
+                                    @"bounds", supportedRegionGeocodeString, @"sensor", @"true", nil];
             urlResource = [@"json" appendQueryParams:params];
 
             NSLog(@"Geocode Parameter String = %@", urlResource);
@@ -324,106 +313,111 @@ static SupportedRegion *regionArea;
 
 - (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects 
 {
-   
-@try {
-    // Make sure this is the response from the latest geocoder request
-    if ([[objectLoader resourcePath] isEqualToString:urlResource])
-    {   
-        // Get the status string the hard way by parsing the response string
-        NSString* response = [[objectLoader response] bodyAsString];
-        NSLog(@"Response from google: %@", response);
-         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        if ([[prefs objectForKey:@"isEdit"] isEqualToString:@"fromEdit"]) {
-            [prefs setObject:response forKey:@"geoResponseFrom"];
-            durationResponseTime = CFAbsoluteTimeGetCurrent() - startTime;
-             [prefs setObject:[[NSNumber numberWithFloat:durationResponseTime] stringValue] forKey:@"timeFrom"];
-            
-        } else if ([[prefs objectForKey:@"isEdit"] isEqualToString:@"toEdit"]) {
-            [prefs setObject:response forKey:@"geoResponseTo"];
-            durationResponseTime = CFAbsoluteTimeGetCurrent() - startTime;
-            [prefs setObject:[[NSNumber numberWithFloat:durationResponseTime] stringValue] forKey:@"timeTo"];
-        }
-         
-        
-        NSRange range = [response rangeOfString:@"\"status\""];
-        if (range.location != NSNotFound) {
-            NSString* responseStartingFromStatus = [response substringFromIndex:(range.location+range.length)];
-            
-            NSArray* atoms = [responseStartingFromStatus componentsSeparatedByString:@"\""];
-            NSString* status = [atoms objectAtIndex:1]; // status string is second atom (first after the first quote)
-            NSLog(@"Status: %@", status);
-            
-            if ([status compare:@"OK" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-                if (!objects || [objects count]<1) {
-                    // TODO error handling for no object
-                }
-                else if ([objects count]>1) {
-                    // TODO error handling for more than one result
-                    NSLog(@"Number of returned Geocodes = %d", [objects count]);
-                }
+    @try {
+        // Make sure this is the response from the latest geocoder request
+        if ([[objectLoader resourcePath] isEqualToString:urlResource])
+        {   
+            // Get the status string the hard way by parsing the response string
+            NSString* response = [[objectLoader response] bodyAsString];
+            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+            if ([[prefs objectForKey:@"isEdit"] isEqualToString:@"fromEdit"]) {
+                [prefs setObject:response forKey:@"geoResponseFrom"];
+                durationResponseTime = CFAbsoluteTimeGetCurrent() - startTime;
+                [prefs setObject:[[NSNumber numberWithFloat:durationResponseTime] stringValue] forKey:@"timeFrom"];
                 
-                // Get the location object
-                Location* location = [objects objectAtIndex:0];
-                NSLog(@"Formatted Address: %@", [location formattedAddress]);
-                // NSLog(@"Lat/Lng: %@", [location latLngPairStr]);
-                // NSLog(@"Types: %@", [location types]);
-                // NSLog(@"Address Components: %@", [[location addressComponents] allObjects]);
-                
-                // Initialize some of the values for location
-                [location setGeoCoderStatus:status];
-                [location setApiTypeEnum:GOOGLE_GEOCODER];
-                
-                // Add the raw address to this location
-//                [location addRawAddressString:rawAddress];
-                [location addRawAddressString:rawAddress];
-
-                // Check if an equivalent Location is already in the locations table
-                location = [locations consolidateWithMatchingLocations:location];
-                
-                // Save db context with the new location object
-                saveContext(managedObjectContext);
-                
-                // Mark the 
-                [self markAndUpdateSelectedLocation:location];
-                
+            } else if ([[prefs objectForKey:@"isEdit"] isEqualToString:@"toEdit"]) {
+                [prefs setObject:response forKey:@"geoResponseTo"];
+                durationResponseTime = CFAbsoluteTimeGetCurrent() - startTime;
+                [prefs setObject:[[NSNumber numberWithFloat:durationResponseTime] stringValue] forKey:@"timeTo"];
             }
-            else if ([status compare:@"ZERO_RESULTS" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-                // TODO error handling for zero results
-                NSLog(@"Zero results geocoding address");
-                UIAlertView  *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, No valid location found for your address" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [alert show];
+            
+            
+            NSRange range = [response rangeOfString:@"\"status\""];
+            if (range.location != NSNotFound) {
+                NSString* responseStartingFromStatus = [response substringFromIndex:(range.location+range.length)];
                 
-                /*
-                    Edited By Sitanshu Joshi
-                    For Solving DE:27
-                 */
-                [txtField setText:@""];
-                if (isFrom) {
-                    [locations setTypedFromString:@""];
-                } else {
-                    [locations setTypedToString:@""];
+                NSArray* atoms = [responseStartingFromStatus componentsSeparatedByString:@"\""];
+                geocodeStatus = [atoms objectAtIndex:1]; // status string is second atom (first after the first quote)
+                NSLog(@"Status: %@", geocodeStatus);
+                
+                if ([geocodeStatus compare:@"OK" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+                    NSLog(@"Returned Objects = %d", [objects count]);
+                    
+                    // Go through the returned objects and see which are in supportedRegion
+                    // DE18 new fix
+                    NSMutableArray* validLocations = [NSMutableArray arrayWithArray:objects];
+                    for (Location* loc in objects) {
+                        if (![supportedRegion isInRegionLat:[loc latFloat] Lng:[loc lngFloat]]) {
+                            // if a location not in supported region, 
+                            [validLocations removeObject:loc]; // take off the array
+                            [locations removeLocation:loc]; // and out of Core Data
+                        }
+                    }
+                    NSLog(@"Valid Locations = %d", [validLocations count]);
+                    
+                    // if no valid locations, give user an alert
+                    if ([validLocations count] == 0) { 
+                        NSString *msg = [NSString stringWithFormat:@"Did not find the address: '%@' in the San Francisco Bay Area", rawAddress];
+                        
+                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                        [alert show];
+                        [txtField setText:@""];
+                        if (isFrom) {
+                            [locations setTypedFromString:@""];
+                        } else {
+                            [locations setTypedToString:@""];
+                        }
+                        [myTableView reloadData]; 
+                    }
+                    
+                    // else if exactly one validLocation, use that
+                    else if ([validLocations count] == 1) {
+                        Location* location = [validLocations objectAtIndex:0]; // Get the location object
+                        [self selectedGeocodedLocation:location]; // update with new location
+                    }
+                    
+                    // else if more than one validLocation, call up LocationPickerView
+                    else if ([validLocations count] > 1) { 
+                        [toFromVC callLocationPickerFor:self locationList: validLocations isFrom:isFrom];
+                    }
                 }
-                [myTableView reloadData];
-                return ;
                 
-            }
-            else if ([status compare:@"OVER_QUERY_LIMIT" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-                // TODO error handling for over query limit  (switch to other geocoder on my server...)
-                NSLog(@"Over query limit");
+                else if ([geocodeStatus compare:@"ZERO_RESULTS" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+                    // TODO error handling for zero results
+                    NSLog(@"Zero results geocoding address");
+                    UIAlertView  *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, No valid location found for your address" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alert show];
+                    
+                    /*
+                     Edited By Sitanshu Joshi
+                     For Solving DE:27
+                     */
+                    [txtField setText:@""];
+                    if (isFrom) {
+                        [locations setTypedFromString:@""];
+                    } else {
+                        [locations setTypedToString:@""];
+                    }
+                    [myTableView reloadData];
+                    return ;
+                    
+                }
+                else if ([geocodeStatus compare:@"OVER_QUERY_LIMIT" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+                    // TODO error handling for over query limit  (switch to other geocoder on my server...)
+                    NSLog(@"Over query limit");
+                }
+                else {
+                    // TODO error handling for denied, invalid or unknown status (switch to other geocoder on my server...)
+                    NSLog(@"Request rejected, status= %@", geocodeStatus);
+                }
             }
             else {
-                // TODO error handling for denied, invalid or unknown status (switch to other geocoder on my server...)
-                NSLog(@"Request rejected, status= %@", status);
+                // TODO Geocoder did not respond with status field
             }
         }
-        else {
-            // TODO Geocoder did not respond with status field
-        }
-    }
-
     }
     @catch (NSException *exception) {
-        NSLog(@"exception goecoder ---------------> %@", exception);
+        NSLog(@"exception geocoder ---------------> %@", exception);
     }    
 }
 
@@ -432,6 +426,55 @@ static SupportedRegion *regionArea;
     NSLog(@"%@", error);
 }
 
+// Internal method to process a new incoming geocoded location (if the only one returned by geocoder, or if this one picked by LocationPickerVC)
+- (void)selectedGeocodedLocation:(Location *)location
+{
+    NSLog(@"Formatted Address: %@", [location formattedAddress]);
+    
+    // Initialize some of the values for location
+    [location setGeoCoderStatus:geocodeStatus];
+    [location setApiTypeEnum:GOOGLE_GEOCODER];
+    
+    // Add the raw address to this location
+    [location addRawAddressString:rawAddress];
+    
+    // Check if an equivalent Location is already in the locations table
+    location = [locations consolidateWithMatchingLocations:location];
+    
+    // Save db context with the new location object
+    saveContext(managedObjectContext);
+    
+    // Mark and update the tableview and ToFromViewController
+    [self markAndUpdateSelectedLocation:location];
+    
+}
+// Method called by LocationPickerVC when a user picks a location
+- (void)setPickedLocation:(Location *)pickedLocation locationArray:(NSArray *)locationArray
+{
+    // Remove the locations that were not picked from Core Data
+    for (Location* loc in locationArray) {
+        if (loc != pickedLocation) {
+            [locations removeLocation:loc];
+        }
+    }
+    
+    // Use the picked location
+    [self selectedGeocodedLocation:pickedLocation];
+}
+
+
+// Update of supportedRegion and generate the geocode parameter string
+- (void)setSupportedRegion:(SupportedRegion *)sR0
+{
+    supportedRegion = sR0;
+    
+    // Calculate the supportedRegionGeocodeString
+    supportedRegionGeocodeString = [NSString stringWithFormat:@"%@,%@|%@,%@", 
+                                    [[supportedRegion minLatitude] stringValue],
+                                    [[supportedRegion minLongitude] stringValue],
+                                    [[supportedRegion maxLatitude] stringValue],
+                                    [[supportedRegion maxLongitude] stringValue]];
+}
 
 - (void)viewDidUnload
 {
@@ -444,56 +487,5 @@ static SupportedRegion *regionArea;
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark Chekc Valid Address in sanfrancisco bay area
-
--(BOOL)isValidRegion:(Location *)location
-{
- 
-    if ([regionArea minLatitude] == NULL) {
-        
-        if (! ( ([[location lat] doubleValue]>=[MIN_LAT doubleValue]) && ([[location lng] doubleValue]>=[MIN_LONG doubleValue]) &&
-               ([[location lat] doubleValue]<=[MAX_LAT doubleValue]) && ([[location lng] doubleValue]<=[MAX_LONG doubleValue])) ) 
-        {
-            NSString *addr = [location formattedAddress];
-            NSString *msg = @"Did not find the address: "; 
-            NSString *msg1 = @"in the San Francisco Bay Area";
-            
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:[NSString stringWithFormat:@"%@ %@ %@", msg, addr, msg1] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [alert show];
-            [txtField setText:@""];
-            if (isFrom) {
-                [locations setTypedFromString:@""];
-            } else {
-                [locations setTypedToString:@""];
-            }
-            [myTableView reloadData]; 
-            
-            return TRUE;
-        } 
-        return FALSE;
-        
-        
-    } else if (! ( ([[location lat] doubleValue]>=[[regionArea minLatitude] doubleValue]) && ([[location lng] doubleValue]>=[[regionArea minLongitude] doubleValue]) &&
-           ([[location lat] doubleValue]<=[[regionArea maxLatitude] doubleValue]) && ([[location lng] doubleValue]<=[[regionArea maxLongitude] doubleValue])) ) 
-    {
-        NSString *addr = [location formattedAddress];
-        NSString *msg = @"Did not find the address: "; 
-        NSString *msg1 = @"in the San Francisco Bay Area";
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:[NSString stringWithFormat:@"%@ %@ %@", msg, addr, msg1] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
-        [txtField setText:@""];
-        if (isFrom) {
-            [locations setTypedFromString:@""];
-        } else {
-            [locations setTypedToString:@""];
-        }
-        [myTableView reloadData]; 
-        
-        return TRUE;
-    } 
-    return FALSE;
-
-}
 
 @end

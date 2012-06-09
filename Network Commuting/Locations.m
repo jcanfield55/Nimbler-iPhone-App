@@ -360,4 +360,10 @@
     return loc0;  // return loc0 if no different matches were found
 }
 
+// Remove location from Core Data
+- (void)removeLocation:(Location *)loc0
+{
+    [managedObjectContext deleteObject:loc0];
+}
+
 @end

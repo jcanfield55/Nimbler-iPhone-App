@@ -29,7 +29,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        [[self navigationItem] setTitle:@"Nimbler Root"];
+        [[self navigationItem] setTitle:@"Map"];
 
         UIBarButtonItem* st = [[UIBarButtonItem alloc] initWithTitle:@"Start Trip" style:UIBarButtonItemStylePlain target:self action:@selector(startTrip)];        
        [[self navigationItem] setRightBarButtonItem:st];
