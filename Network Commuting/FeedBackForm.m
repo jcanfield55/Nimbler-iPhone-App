@@ -364,6 +364,8 @@
     NSString *source = [prefs objectForKey:@"source"];
     NSString *uniqueId = [prefs objectForKey:@"uniqueid"];
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
+    NSString *fromAddress = [prefs objectForKey:@"fromaddress"];
+    NSString *toAddress = [prefs objectForKey:@"toaddress"];
     
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     RKParams *rkp = [RKParams params];
@@ -393,6 +395,8 @@
     [rkp setValue:source forParam:@"source"]; 
     [rkp setValue:uniqueId forParam:@"uniqueid"]; 
     [rkp setValue:@"3.5" forParam:@"rating"];
+    [rkp setValue:fromAddress forParam:@"rawAddFrom"];
+    [rkp setValue:toAddress forParam:@"rawAddTo"];
     
     [[RKClient sharedClient]  post:@"feedback/new" params:rkp delegate:self];
 }
