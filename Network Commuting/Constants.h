@@ -34,3 +34,5 @@
 #define MIN_LONG                @"-123.4631719"
 #define MAX_LAT                 @"38.7189988"
 #define MAX_LONG                @"-121.025001"
+
+#define TINY_FLOAT              0.00000001

@@ -152,6 +152,14 @@ int const TIME_DATE_HEIGHT = 45;
     
 }
 
+// Reloads the tables in case something has changed in the model
+- (void)reloadTables
+{
+    [toTable reloadData];
+    [fromTable reloadData];
+    [mainTable reloadData];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];

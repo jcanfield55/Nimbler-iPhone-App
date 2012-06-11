@@ -20,12 +20,14 @@
 @property (strong, nonatomic) NSString *typedToString;    // Typed string in the to field
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
+@property(strong, nonatomic) RKObjectManager* rkGeoMgr;  
 @property (strong, nonatomic) Location* selectedFromLocation; // This location gets sorted to the top of the from list
 @property (strong, nonatomic) Location* selectedToLocation; // This location gets sorted to the top of the to list
 @property (nonatomic) BOOL areLocationsChanged;  // True if there have been locations added or changed
 @property (nonatomic) BOOL areMatchingLocationsChanged; // True if matching location arrays has been updated (in which case view controller should refresh arrays)
 
-- (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc;
+- (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkGeoMgr:(RKObjectManager *)rkG;
+- (void)preLoadIfNeededFromFile:(NSString *)filename;  // Preloads locations (like Caltrain stations) from a file
 - (Location *)locationWithRawAddress:(NSString *)rawAddress;
 - (NSArray *)locationsWithFormattedAddress:(NSString *)formattedAddress; // Array of matching locations
 - (Location *)newEmptyLocation;

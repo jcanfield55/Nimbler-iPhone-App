@@ -49,10 +49,10 @@
 - (void)setLatFloat:(double)lat0;
 - (double)lngFloat;
 - (void)setLngFloat:(double)lng0;
-- (int)toFrequencyInt;
-- (void)setToFrequencyInt:(int)toFreq0;
-- (int)fromFrequencyInt;
-- (void)setFromFrequencyInt:(int)fromFreq0;
+- (double)toFrequencyFloat;
+- (void)setToFrequencyFloat:(double)toFreq0;
+- (double)fromFrequencyFloat;
+- (void)setFromFrequencyFloat:(double)fromFreq0;
 
 - (void)addRawAddressString:(NSString *)value;
 - (void)incrementToFrequency;

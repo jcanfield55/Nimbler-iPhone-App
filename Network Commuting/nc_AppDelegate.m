@@ -31,7 +31,7 @@
     
    
     // Configure the RestKit RKClient object for Geocoding and trip planning
-    RKObjectManager* rk_geo_mgr = [RKObjectManager objectManagerWithBaseURL:GEO_RESPONSE_URL];
+    RKObjectManager* rkGeoMgr = [RKObjectManager objectManagerWithBaseURL:GEO_RESPONSE_URL];
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
     
      RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_GENERATE_URL];
@@ -43,33 +43,37 @@
     // Add the CoreData managed object store
     RKManagedObjectStore *rkMOS;
     @try {
-       rkMOS = [RKManagedObjectStore objectStoreWithStoreFilename:@"store.data"];
-        [rk_geo_mgr setObjectStore:rkMOS];
+        rkMOS = [RKManagedObjectStore objectStoreWithStoreFilename:@"store.data"];
+        [rkGeoMgr setObjectStore:rkMOS];
         [rkPlanMgr setObjectStore:rkMOS];
-
-    
-     [self bayArea];
-    // Get the NSManagedObjectContext from restkit
-    __managedObjectContext = [rkMOS managedObjectContext];
-    
-    // Create initial view controller 
-    toFromViewController = [[ToFromViewController alloc] initWithNibName:nil bundle:nil];
-    [toFromViewController setRkGeoMgr:rk_geo_mgr];    // Pass the geocoding RK object
-    [toFromViewController setRkPlanMgr:rkPlanMgr];    // Pass the planning RK object
-
-       
-    // Turn on location manager
-    locationManager = [[CLLocationManager alloc] init];
-    [locationManager setDelegate:self];
-    [locationManager startUpdatingLocation];
-    
-    // Initialize the Locations class and store "Current Location" into the database if not there already
-    locations = [[Locations alloc] initWithManagedObjectContext:[self managedObjectContext]];
-    [toFromViewController setLocations:locations];
         
-    }@catch (NSException *exception) {
+        
+        [self bayArea];
+        // Get the NSManagedObjectContext from restkit
+        __managedObjectContext = [rkMOS managedObjectContext];
+        
+        // Create initial view controller 
+        toFromViewController = [[ToFromViewController alloc] initWithNibName:nil bundle:nil];
+        [toFromViewController setRkGeoMgr:rkGeoMgr];    // Pass the geocoding RK object
+        [toFromViewController setRkPlanMgr:rkPlanMgr];    // Pass the planning RK object
+        
+        
+        // Turn on location manager
+        locationManager = [[CLLocationManager alloc] init];
+        [locationManager setDelegate:self];
+        [locationManager startUpdatingLocation];
+        
+        // Initialize the Locations class and store "Current Location" into the database if not there already
+        locations = [[Locations alloc] initWithManagedObjectContext:[self managedObjectContext] rkGeoMgr:rkGeoMgr];
+        [toFromViewController setLocations:locations];
+        
+        // Pre-load stations location files
+        [locations preLoadIfNeededFromFile:@"caltrain-station.json"];
+        
+        
+     }@catch (NSException *exception) {
         NSLog(@"Exception: ----------------- %@", exception);
-    }   
+    } 
     // Call TestFlightApp SDK
 #if !DEVELOPMENT
 #ifdef TESTING
@@ -99,8 +103,9 @@
         if ([matchingLocations count] == 0) { // if current location not in db
             currentLocation = [locations newEmptyLocation];
             [currentLocation setFormattedAddress:@"Current Location"];
-            [currentLocation setFromFrequencyInt:100];
+            [currentLocation setFromFrequencyFloat:100.0];
             [toFromViewController setCurrentLocation:currentLocation];
+            [toFromViewController reloadTables]; // DE30 fix (1 of 2)
         }
         else {
             currentLocation = [matchingLocations objectAtIndex:0];

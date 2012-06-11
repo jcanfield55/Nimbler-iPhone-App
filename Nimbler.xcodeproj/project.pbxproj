@@ -31,6 +31,7 @@
 		5275A2DF1528069F0052903F /* PolylineEncodedString.m in Sources */ = {isa = PBXBuildFile; fileRef = 5275A2DE1528069F0052903F /* PolylineEncodedString.m */; };
 		527E174A151EB9CD00CDBC23 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527E1749151EB9CD00CDBC23 /* QuartzCore.framework */; };
 		52849FCA151D0389001D4DDC /* LegMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52849FC9151D0389001D4DDC /* LegMapViewController.m */; };
+		52917827158477F6001CC74C /* caltrain-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 52917826158477F6001CC74C /* caltrain-station.json */; };
 		5297F2DF1560CA200032D015 /* DateTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297F2DE1560CA200032D015 /* DateTimeViewController.m */; };
 		5297F2E11560CAC20032D015 /* ToFromTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297F2E01560CAC20032D015 /* ToFromTableViewController.m */; };
 		52B1B22614F9ABE4001AC5D1 /* RouteDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B1B22514F9ABE4001AC5D1 /* RouteDetailsViewController.m */; };
@@ -793,6 +794,8 @@
 		527E1749151EB9CD00CDBC23 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		52849FC8151D0389001D4DDC /* LegMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LegMapViewController.h; sourceTree = "<group>"; };
 		52849FC9151D0389001D4DDC /* LegMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LegMapViewController.m; sourceTree = "<group>"; };
+		52917826158477F6001CC74C /* caltrain-station.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "caltrain-station.json"; path = "PreloadData/caltrain-station.json"; sourceTree = "<group>"; };
+		529178281585326F001CC74C /* Network_Commuting 1.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.1.xcdatamodel"; sourceTree = "<group>"; };
 		5297F2DD1560CA0F0032D015 /* DateTimeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateTimeViewController.h; sourceTree = "<group>"; };
 		5297F2DE1560CA200032D015 /* DateTimeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateTimeViewController.m; sourceTree = "<group>"; };
 		5297F2E01560CAC20032D015 /* ToFromTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = ToFromTableViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -2313,6 +2316,7 @@
 			isa = PBXGroup;
 			children = (
 				CCB7E81A1570A3D10036E9CD /* Constants.h */,
+				52917826158477F6001CC74C /* caltrain-station.json */,
 				52CF43A914BDF2F9000565D6 /* Nimbler-Info.plist */,
 				52CF43AA14BDF2F9000565D6 /* InfoPlist.strings */,
 				52CF43AD14BDF2F9000565D6 /* main.m */,
@@ -2717,6 +2721,7 @@
 				CC9E424B158219A300A4ADED /* twitter.png in Resources */,
 				CC9E424D15821B7B00A4ADED /* map.png in Resources */,
 				521DDD381582D44500DBE838 /* LocationPickerViewController.xib in Resources */,
+				52917827158477F6001CC74C /* caltrain-station.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2988,8 +2993,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = Nimbler;
-				PROVISIONING_PROFILE = "A31E057D-CCEE-49CC-9402-D269B55AF883";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A31E057D-CCEE-49CC-9402-D269B55AF883";
+				PROVISIONING_PROFILE = "F2F63C54-AFD0-44E7-9D61-095B25419BE8";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F2F63C54-AFD0-44E7-9D61-095B25419BE8";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3085,9 +3090,10 @@
 		52DF9C4714F7546800DC6828 /* Network_Commuting.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				529178281585326F001CC74C /* Network_Commuting 1.1.xcdatamodel */,
 				52DF9C4814F7546800DC6828 /* Network_Commuting.xcdatamodel */,
 			);
-			currentVersion = 52DF9C4814F7546800DC6828 /* Network_Commuting.xcdatamodel */;
+			currentVersion = 529178281585326F001CC74C /* Network_Commuting 1.1.xcdatamodel */;
 			path = Network_Commuting.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

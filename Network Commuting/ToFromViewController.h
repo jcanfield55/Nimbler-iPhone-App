@@ -53,5 +53,5 @@ typedef enum {
 - (void)callLocationPickerFor:(ToFromTableViewController *)toFromTableVC0 locationList:(NSArray *)locationList0 isFrom:(BOOL)isFrom0; //Request responder to push a LocationPickerViewController so the user can pick from the locations in locationList
 
 - (void)updateTripDate;
-
+- (void)reloadTables;  // Reloads the tables in case something has changed in the model
 @end

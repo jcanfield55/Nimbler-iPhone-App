@@ -8,6 +8,7 @@
 
 #import "Location.h"
 #import "Locations.h"
+#import "Constants.h"
 
 @implementation Location
 
@@ -56,17 +57,17 @@ static Locations *locations;
 - (void)setLngFloat:(double)lng0 {
     [self setLng:[NSNumber numberWithDouble:lng0]];
 }
-- (int)toFrequencyInt {
-    return [[self toFrequency] intValue];
+- (double)toFrequencyFloat {
+    return [[self toFrequency] doubleValue];
 }
-- (void)setToFrequencyInt:(int)toFreq0 {
-    [self setToFrequency:[NSNumber numberWithInt:toFreq0]];
+- (void)setToFrequencyFloat:(double)toFreq0 {
+    [self setToFrequency:[NSNumber numberWithDouble:toFreq0]];
 }
-- (int)fromFrequencyInt {
-    return [[self fromFrequency] intValue];
+- (double)fromFrequencyFloat {
+    return [[self fromFrequency] doubleValue];
 }
-- (void)setFromFrequencyInt:(int)fromFreq0 {
-    [self setFromFrequency:[NSNumber numberWithInt:fromFreq0]];
+- (void)setFromFrequencyFloat:(double)fromFreq0 {
+    [self setFromFrequency:[NSNumber numberWithDouble:fromFreq0]];
 }
 
 // TODO create a method or sub-class to handle getting lat/lng for Current Location
@@ -92,6 +93,8 @@ static Locations *locations;
         [locationMapping mapKeyPath:@"geometry.location.lat" toAttribute:@"latFloat"];
         [locationMapping mapKeyPath:@"geometry.location.lng" toAttribute:@"lngFloat"];
         [locationMapping mapKeyPath:@"geometry.location_type" toAttribute:@"locationType"];
+        [locationMapping mapKeyPath:@"toFrequency" toAttribute:@"toFrequencyFloat"];
+        [locationMapping mapKeyPath:@"fromFrequency" toAttribute:@"fromFrequencyFloat"];
         // [locationMapping mapKeyPath:@"geometry.viewport" toRelationship:@"viewPort" withMapping:geoRectMapping];
         
     }
@@ -130,22 +133,22 @@ static Locations *locations;
 }
 
 - (void)incrementToFrequency {
-    if ([self toFrequencyInt] == 0) { // if this is the first use...
-        [self setFromFrequencyInt:1];  // insure this location will be visible in the from list as well 
-        [self setToFrequencyInt:2];   // but give more weight to this location in the to list
+    if ([self toFrequencyFloat] < TINY_FLOAT) { // if this is the first use...
+        [self setFromFrequencyFloat:1.0];  // insure this location will be visible in the from list as well 
+        [self setToFrequencyFloat:2.0];   // but give more weight to this location in the to list
     }
     else {
-        [self setToFrequencyInt:([self toFrequencyInt]+1)];
+        [self setToFrequencyFloat:([self toFrequencyFloat]+1.0)];
     }
 }
 
 - (void)incrementFromFrequency {
-    if ([self fromFrequencyInt] == 0) { // if this is the first use...
-        [self setToFrequencyInt:1];  // insure this location will be visible in the to list as well 
-        [self setFromFrequencyInt:2];   // but give more weight to this location in the from list
+    if ([self fromFrequencyFloat] < TINY_FLOAT) { // if this is the first use...
+        [self setToFrequencyFloat:1.0];  // insure this location will be visible in the to list as well 
+        [self setFromFrequencyFloat:2.0];   // but give more weight to this location in the from list
     }
     else {
-        [self setFromFrequencyInt:([self fromFrequencyInt]+1)];
+        [self setFromFrequencyFloat:([self fromFrequencyFloat]+1.0)];
     }
 }
 

@@ -7,6 +7,7 @@
 //
 
 #import "Locations.h"
+#import "UtilityFunctions.h"
 
 // Internal variables and methods
 
@@ -35,24 +36,71 @@
 @synthesize typedToString;
 @synthesize managedObjectContext;
 @synthesize managedObjectModel;
+@synthesize rkGeoMgr;
 @synthesize selectedFromLocation;
 @synthesize selectedToLocation;
 @synthesize areLocationsChanged;
 @synthesize areMatchingLocationsChanged;
 
-- (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc
+- (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkGeoMgr:(RKObjectManager *)rkG
 {
     self = [super init];
     if (self) {
         managedObjectContext = moc;
         managedObjectModel = [[moc persistentStoreCoordinator] managedObjectModel];
+        rkGeoMgr = rkG;
+        // Set the static variable for Location class
+        [Location setLocations:self];
+        
+        areLocationsChanged = YES;  // Force cache stale upon start-up so it gets properly loaded
     }
-    // Set the static variable for Location class
-    [Location setLocations:self];
-    
-    areLocationsChanged = YES;  // Force cache stale upon start-up so it gets properly loaded
-    
+
     return self;
+}
+
+- (void)preLoadIfNeededFromFile:(NSString *)filename
+{
+    // Use hack for now to see whether stations already loaded
+    // TODO put a more robust mechanism for determining whether additional pre-load is needed
+    NSString* formattedAddr = @"San Martin Caltrain, San Martin, CA 95046, USA";
+    NSArray* matchingLocs = [self locationsWithFormattedAddress:formattedAddr];
+    
+    // If that station has not been loaded, pre-load the remaining stations
+    if ([matchingLocs count] == 0) {
+    
+        // Code adapted from http://stackoverflow.com/questions/10305535/iphone-restkit-how-to-load-a-local-json-file-and-map-it-to-a-core-data-entity and https://github.com/RestKit/RestKit/wiki/Object-mapping (bottom of page)
+        NSStringEncoding encoding;
+        NSError* error = nil;
+        NSString* preloadPath = [[NSBundle mainBundle] pathForResource:filename ofType:nil]; 
+        NSString *jsonText = [NSString stringWithContentsOfFile:preloadPath usedEncoding:&encoding error:&error];
+        if (jsonText && !error) {
+            
+            id<RKParser> parser = [[RKParserRegistry sharedRegistry] parserForMIMEType:@"application/json"];
+            id parsedData = [parser objectFromString:jsonText error:&error];
+            if (parsedData == nil && error) {
+                NSLog(@"Parser error %@", error);
+            }
+            
+            RKObjectMappingProvider* mappingProvider = rkGeoMgr.mappingProvider;
+            RKObjectMapper* mapper = [RKObjectMapper mapperWithObject:parsedData mappingProvider:mappingProvider];
+            RKObjectMappingResult* result = [mapper performMapping];
+            if (result) {
+                NSArray* resultArray = [result asCollection];
+                for (Location* loc in resultArray) {
+                    // Just in case, consolidate with any duplicates already in Core Data
+                    [self consolidateWithMatchingLocations:loc];
+                    NSLog(@"%@, fromFrequency = %f", [loc shortFormattedAddress], [loc fromFrequencyFloat]);
+                }
+                saveContext([self managedObjectContext]);
+            }
+            else {
+                NSLog(@"No results back from loading file at path %@", preloadPath);
+            }
+        }
+        else {
+            NSLog(@"Could not load file %@ at path %@", filename, preloadPath);
+        }
+    }
 }
 
 // Updates to selected location methods to update sorting
@@ -88,6 +136,7 @@
 - (Location *)newEmptyLocation 
 {
     Location *l = [NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:managedObjectContext];
+    [self setAreLocationsChanged:YES]; // DE30 fix (2 of 2)
     return l;
 }
 
@@ -107,11 +156,13 @@
         areMatchingLocationsChanged = YES;
 
         // Calculate the count, up to the first location with frequency=0 (excluding the selectedLocation)
+        NSLog(@"sortedMatchingFromLocations count = %d", [sortedMatchingFromLocations count]);
         int i;
         for (i=0; (i < [sortedMatchingFromLocations count]) && 
              ((selectedFromLocation == [sortedMatchingFromLocations objectAtIndex:i]) ||
-              [[sortedMatchingFromLocations objectAtIndex:i] fromFrequencyInt] != 0); i++);
+              [[sortedMatchingFromLocations objectAtIndex:i] fromFrequencyFloat] > TINY_FLOAT); i++);
         matchingFromRowCount = i;
+        NSLog(@"MatchingFromRowCount = %d", matchingFromRowCount);
     }
     else {
         NSArray *startArray = nil;
@@ -148,11 +199,13 @@
         areMatchingLocationsChanged = YES;
 
         // Calculate the count, up to the first location with frequency=0 (excluding the selected Location)
+        NSLog(@"sortedMatchingToLocations count = %d", [sortedMatchingToLocations count]);
         int i;
         for (i=0; (i < [sortedMatchingToLocations count]) && 
              ((selectedToLocation == [sortedMatchingToLocations objectAtIndex:i]) ||
-             [[sortedMatchingToLocations objectAtIndex:i] toFrequencyInt] != 0); i++);
+             [[sortedMatchingToLocations objectAtIndex:i] toFrequencyFloat] > TINY_FLOAT); i++);
         matchingToRowCount = i;
+        NSLog(@"matchingToRowCount = %d", matchingToRowCount);
     }
     else {
         NSArray *startArray = nil;
@@ -347,8 +400,8 @@
                     [loc1 addRawAddressString:[loc0RawAddr rawAddressString]];
                 }
                 // Add from and to frequency from loc0 into loc1
-                [loc1 setToFrequencyInt:([loc1 toFrequencyInt] + [loc0 toFrequencyInt])];
-                [loc1 setFromFrequencyInt:([loc1 fromFrequencyInt] + [loc0 fromFrequencyInt])];
+                [loc1 setToFrequencyFloat:([loc1 toFrequencyFloat] + [loc0 toFrequencyFloat])];
+                [loc1 setFromFrequencyFloat:([loc1 fromFrequencyFloat] + [loc0 fromFrequencyFloat])];
                 
                 // Delete loc0 & return loc1
                 // TODO  resolve error about deleting across contexts
