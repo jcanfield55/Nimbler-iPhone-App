@@ -346,7 +346,6 @@ int const TIME_DATE_HEIGHT = 45;
             // if From txtField is already in the subview (due to recycling, no need to add again
         } else { 
             [cellView addSubview:[fromTableVC txtField]]; // add From txtField
-            NSLog(@"start...");
         }
     }
     else {   // do same for toTable case
@@ -757,7 +756,6 @@ int const TIME_DATE_HEIGHT = 45;
 {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
     // Release any cached data, images, etc that aren't in use.
 }
 

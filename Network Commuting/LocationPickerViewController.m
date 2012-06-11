@@ -119,8 +119,6 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 377;
     // Do any additional setup after loading the view from its nib.
 }
 
-
-
 - (void)viewDidUnload
 {
     [super viewDidUnload];
