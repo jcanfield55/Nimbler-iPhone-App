@@ -343,7 +343,9 @@ static Plan *fbPlan;
     NSString *source = [prefs objectForKey:@"source"];
     NSString *uniqueId = [prefs objectForKey:@"uniqueid"];
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
-        
+    NSString *fromAddress = [prefs objectForKey:@"fromaddress"];
+    NSString *toAddress = [prefs objectForKey:@"toaddress"];
+   
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     RKParams *rkp = [RKParams params];
     [RKClient setSharedClient:client];
@@ -355,7 +357,7 @@ static Plan *fbPlan;
         attachment.fileName = @"FBSound.caf";
              [rkp setValue:FEEDBACK_AUDIO forParam:@"formattype"];
     } 
-    if (textFieldRounded.text != nil){
+    if (textFieldRounded.text != nil) {
         [rkp setValue:textFieldRounded.text forParam:@"txtfb"];
         [rkp setValue:FEEDBACK_TEXT forParam:@"formattype"];
     } 
@@ -368,7 +370,9 @@ static Plan *fbPlan;
     [rkp setValue:source forParam:@"source"]; 
     [rkp setValue:uniqueId forParam:@"uniqueid"]; 
     [rkp setValue:@"3.5" forParam:@"rating"];
-       
+    [rkp setValue:fromAddress forParam:@"rawAddFrom"];
+    [rkp setValue:toAddress forParam:@"rawAddTo"];
+    
     [[RKClient sharedClient]  post:@"feedback/new" params:rkp delegate:self];
 
 }

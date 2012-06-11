@@ -34,14 +34,12 @@
         UIButton *mapBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         mapBtn.bounds = CGRectMake( 0, 0, mapTmg.size.width, mapTmg.size.height );
         [mapBtn setImage:mapTmg forState:UIControlStateNormal];
-        [mapBtn addTarget:self action:@selector(mapOverView)
-             forControlEvents:UIControlEventTouchDown];
+        [mapBtn addTarget:self action:@selector(mapOverView) forControlEvents:UIControlEventTouchDown];
 
         map = [[UIBarButtonItem alloc] initWithCustomView:mapBtn]; 
         
         feedback = [[UIBarButtonItem alloc] initWithTitle:@"F" style:UIBarButtonItemStylePlain target:self action:@selector(feedBackSubmit)];
        
-        
         UIImage *twit = [UIImage imageNamed:@"twitter.png"];
         UIButton *twitterBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         twitterBtn.bounds = CGRectMake( 0, 0, twit.size.width, twit.size.height );

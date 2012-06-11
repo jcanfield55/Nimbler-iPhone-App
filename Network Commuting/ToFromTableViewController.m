@@ -314,6 +314,7 @@
 - (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects 
 {
     @try {
+        UIAlertView  *alert;
         // Make sure this is the response from the latest geocoder request
         if ([[objectLoader resourcePath] isEqualToString:urlResource])
         {   
@@ -359,7 +360,7 @@
                     if ([validLocations count] == 0) { 
                         NSString *msg = [NSString stringWithFormat:@"Did not find the address: '%@' in the San Francisco Bay Area", rawAddress];
                         
-                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                        alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                         [alert show];
                         [txtField setText:@""];
                         if (isFrom) {
@@ -385,7 +386,7 @@
                 else if ([geocodeStatus compare:@"ZERO_RESULTS" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
                     // TODO error handling for zero results
                     NSLog(@"Zero results geocoding address");
-                    UIAlertView  *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, No valid location found for your address" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                  alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, No valid location found for your address" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                     [alert show];
                     
                     /*
@@ -405,14 +406,22 @@
                 else if ([geocodeStatus compare:@"OVER_QUERY_LIMIT" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
                     // TODO error handling for over query limit  (switch to other geocoder on my server...)
                     NSLog(@"Over query limit");
+                    alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, Google says your address is over with parameter" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alert show];
+                    
                 }
-                else {
+                else if ([geocodeStatus compare:@"REQUEST_DENIED" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
                     // TODO error handling for denied, invalid or unknown status (switch to other geocoder on my server...)
                     NSLog(@"Request rejected, status= %@", geocodeStatus);
+                    alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, your request is not accepted by google" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alert show];
                 }
+                
             }
             else {
                 // TODO Geocoder did not respond with status field
+                alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, geocode is not respond now. Try after some time." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert show];
             }
         }
     }
