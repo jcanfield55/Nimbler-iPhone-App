@@ -208,7 +208,7 @@
                   [error localizedDescription]);
         } else {
 //           mesg = PLAY_MSG;
-//            process = [self WaitPrompt];
+            process = [self WaitPrompt];
             
             [time setHidden:NO];
             timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 target:self selector:@selector(updatePlayCountdown) userInfo:nil repeats: YES]; 
@@ -442,7 +442,7 @@
     [alert addSubview:progress];  
     
     [[NSRunLoop currentRunLoop] limitDateForMode:NSDefaultRunLoopMode];  
-    
+    timer = [NSTimer scheduledTimerWithTimeInterval: 20.0 target:self selector:@selector(stopLoadingProcess) userInfo:nil repeats: NO];
     return alert;
 }  
 
@@ -460,6 +460,11 @@
         [self sendFeedbackToServer];
     } 
     
+}
+
+-(void)stopLoadingProcess
+{
+     [process dismissWithClickedButtonIndex:0 animated:NO];
 }
 
 #pragma mark TextField animation at selected

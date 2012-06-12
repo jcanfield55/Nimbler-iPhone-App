@@ -33,7 +33,7 @@
     BOOL routeRequested;   // True when the user has pressed the route button and a route has not yet been requested
     NSManagedObjectContext *managedObjectContext;
     BOOL toGeocodeRequestOutstanding;  // true if there is an outstanding To geocode request
-    BOOL fromGeocodeRequestOutstanding;  // true if there is an outstanding From geocode request
+    BOOL fromGeocodeRequestOutstanding;  //true if there is an outstanding From geocode request
     BOOL savetrip;
     double startButtonClickTime;
     float durationOfResponseTime;
@@ -420,8 +420,6 @@ int const TIME_DATE_HEIGHT = 45;
     UIAlertView *alert;
     
     routeRequested = true;
-    [self startActivityIndicator];
-    
     startButtonClickTime = CFAbsoluteTimeGetCurrent();
     
     // if all the geolocations are here, get a plan.  
@@ -443,7 +441,11 @@ int const TIME_DATE_HEIGHT = 45;
         [alert show];
     }    
     // otherwise, just wait for the geocoding and then submit the plan
-    
+    else {
+        NSLog(@"look for state");
+        alert = [[UIAlertView alloc] initWithTitle:@"TripPlanner" message:@"Please, Select a location" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
@@ -453,7 +455,7 @@ int const TIME_DATE_HEIGHT = 45;
     [prefs setValue:@"" forKey:@"uniqueid"];
     [prefs setValue:[fromLocation formattedAddress] forKey:@"fromaddress"];
     [prefs setValue:[toLocation formattedAddress] forKey:@"toaddress"];
-   
+    
     FeedBackForm *feedbackVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
     [[self navigationController] pushViewController:feedbackVC animated:YES];
 }
@@ -550,7 +552,7 @@ int const TIME_DATE_HEIGHT = 45;
                     plan = [objects objectAtIndex:0];
                     durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime;
                     [self stopActivityIndicator];
-
+                    
                     [plan setToLocation:toLocation];
                     [plan setFromLocation:fromLocation];
                     
@@ -636,6 +638,8 @@ int const TIME_DATE_HEIGHT = 45;
     // TODO See if we already have a similar plan that we can use
     
     // See if there has already been an identical plan request in the last 5 seconds.  
+    [self startActivityIndicator];
+    
     NSLog(@"Plan routine entered");
     BOOL isDuplicatePlan = NO;
     NSString *frForm = [fromLocation formattedAddress];
@@ -682,17 +686,9 @@ int const TIME_DATE_HEIGHT = 45;
         NSDateFormatter* tFormat = [[NSDateFormatter alloc] init];
         [tFormat setTimeStyle:NSDateFormatterShortStyle];
         [tFormat setDateStyle:NSDateFormatterNoStyle];
-        
-        
-//        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-//        [prefs setObject:[fromLocation rawAddresses] forKey:@"fromRawAddr"];
-//        [prefs setObject:[toLocation rawAddresses] forKey:@"toRawAddr"];
-//        [prefs setObject:[fromLocation formattedAddress] forKey:@"fromFormatedAddr"];
-//        [prefs setObject:[toLocation formattedAddress] forKey:@"fromFormatedAddr"];
 
         
-        // Build the parameters into a resource string
-       
+        // Build the parameters into a resource string       
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                                 @"fromPlace", [fromLocation latLngPairStr], 
                                 @"toPlace", [toLocation latLngPairStr], 
@@ -724,6 +720,8 @@ int const TIME_DATE_HEIGHT = 45;
 
 -(void)startActivityIndicator
 {
+    self.view.userInteractionEnabled = NO;
+
     if (!activityIndicator) {
         activityIndicator = [[UIActivityIndicatorView alloc]  
                              initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge]; 
@@ -747,6 +745,7 @@ int const TIME_DATE_HEIGHT = 45;
 
 -(void)stopActivityIndicator
 {
+    self.view.userInteractionEnabled = YES;
     [activityIndicator stopAnimating];
     [activityIndicator removeFromSuperview];
     if (activityTimer && [activityTimer isValid]) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1171" systemVersion="11E53" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="872" systemVersion="10K549" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AddressComponent" representedClassName="AddressComponent" syncable="YES">
         <attribute name="longName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
@@ -155,15 +155,15 @@
     <fetchRequest name="RawAddressByString" entity="RawAddress" predicateString="rawAddressString == $ADDRESS"/>
     <elements>
         <element name="AddressComponent" positionX="-54" positionY="36" width="128" height="90"/>
-        <element name="BayArea" positionX="160" positionY="192" width="128" height="195"/>
-        <element name="Error" positionX="160" positionY="192" width="128" height="120"/>
-        <element name="Itinerary" positionX="394" positionY="192" width="128" height="285"/>
-        <element name="Leg" positionX="97" positionY="432" width="128" height="330"/>
-        <element name="Location" positionX="241" positionY="4116" width="128" height="270"/>
+        <element name="BayArea" positionX="-144" positionY="399" width="128" height="195"/>
+        <element name="Error" positionX="540" positionY="159" width="128" height="120"/>
+        <element name="Itinerary" positionX="315" positionY="228" width="128" height="285"/>
+        <element name="Leg" positionX="106" positionY="324" width="128" height="330"/>
+        <element name="Location" positionX="160" positionY="693" width="128" height="270"/>
         <element name="Plan" positionX="268" positionY="45" width="128" height="150"/>
-        <element name="PlanPlace" positionX="99" positionY="45" width="128" height="180"/>
-        <element name="RawAddress" positionX="160" positionY="192" width="128" height="75"/>
+        <element name="PlanPlace" positionX="90" positionY="-18" width="128" height="180"/>
+        <element name="RawAddress" positionX="414" positionY="501" width="128" height="75"/>
         <element name="Step" positionX="-126" positionY="192" width="128" height="195"/>
-        <element name="TPResponse" positionX="160" positionY="192" width="128" height="75"/>
+        <element name="TPResponse" positionX="423" positionY="33" width="128" height="75"/>
     </elements>
 </model>
