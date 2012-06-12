@@ -813,6 +813,7 @@ int const TIME_DATE_HEIGHT = 45;
 {	
  	if (buttonIndex == 0){
         
+       
 	} else if(buttonIndex == 1){
        
 	} else if(buttonIndex == 2){
