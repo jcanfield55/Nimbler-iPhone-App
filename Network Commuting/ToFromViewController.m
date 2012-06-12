@@ -405,10 +405,12 @@ int const TIME_DATE_HEIGHT = 45;
     }
     
     // If there is an outstanding plan request that has not been submitted, and we are now clear in terms of no outstanding geocodes, go ahead and submit the plan
+    
     if (routeRequested && !toGeocodeRequestOutstanding && !fromGeocodeRequestOutstanding) {
         [self getPlan];
         routeRequested = FALSE;
     }
+    
 }
 
 // Requesting a plan
@@ -696,7 +698,6 @@ int const TIME_DATE_HEIGHT = 45;
                                 @"time", [tFormat stringFromDate:tripDate], 
                                 @"arriveBy", ((departOrArrive == ARRIVE) ? @"true" : @"false"),
                                 nil];
-        
         
         planURLResource = [@"plan" appendQueryParams:params];
         
