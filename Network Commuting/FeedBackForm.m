@@ -392,6 +392,10 @@
     }
     
     if([source isEqualToString:@"4"]){
+        if ([fromAddress isEqualToString:@"Current Location"]) {
+            NSLog(@"loc %@", fromAddress);
+            fromAddress = [prefs objectForKey:@"currentLocation"];
+        }
         
         [rkp setValue:fromAddress forParam:@"rawAddFrom"];
         [rkp setValue:toAddress forParam:@"rawAddTo"];

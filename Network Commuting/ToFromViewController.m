@@ -801,8 +801,9 @@ int const TIME_DATE_HEIGHT = 45;
          NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
          NSArray *streetName = [locationString componentsSeparatedByString:@"\""];
          NSLog(@"Reverse Geocode: %@", [streetName objectAtIndex:1]);
-         [location setFormattedAddress:[streetName objectAtIndex:1]];
-
+         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];   
+         [prefs setObject:[streetName objectAtIndex:1] forKey:@"currentLocation"];   
+         
         }
     }
 }

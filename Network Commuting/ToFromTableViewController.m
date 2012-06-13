@@ -162,6 +162,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+
     if ([toFromVC editMode]==NO_EDIT && [indexPath section] == 0) {  // If it is the 'Enter new address' row...
         UITableViewCell *cell =
         [tableView dequeueReusableCellWithIdentifier:@"ToFromEnterNewLocationCell"];
