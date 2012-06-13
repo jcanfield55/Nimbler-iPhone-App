@@ -496,6 +496,38 @@ AAgACAAIAAEAAQABAAE</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">playRecording</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="666129768"/>
+					</object>
+					<int key="connectionID">53</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">stopRecording</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="69868192"/>
+					</object>
+					<int key="connectionID">54</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">recordRecording</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="194760968"/>
+					</object>
+					<int key="connectionID">55</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">pausRecording</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="507196413"/>
+					</object>
+					<int key="connectionID">56</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="921773603"/>
 						<reference key="destination" ref="372490531"/>
@@ -693,7 +725,7 @@ AAgACAAIAAEAAQABAAE</bytes>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">49</int>
+			<int key="maxID">56</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -706,6 +738,7 @@ AAgACAAIAAEAAQABAAE</bytes>
 						<string key="recordRecording:">id</string>
 						<string key="stopRecording:">id</string>
 						<string key="submitFeedBack:">id</string>
+						<string key="test:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="pausRecording:">
@@ -728,9 +761,18 @@ AAgACAAIAAEAAQABAAE</bytes>
 							<string key="name">submitFeedBack:</string>
 							<string key="candidateClassName">id</string>
 						</object>
+						<object class="IBActionInfo" key="test:">
+							<string key="name">test:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="actRunning">UILabel</string>
+						<string key="pausRecording">UIButton</string>
+						<string key="playRecording">UIButton</string>
+						<string key="recordRecording">UIButton</string>
+						<string key="stopRecording">UIButton</string>
+						<string key="test">UIButton</string>
 						<string key="time">UILabel</string>
 						<string key="txtEmailId">UITextField</string>
 						<string key="txtFeedBack">UITextView</string>
@@ -739,6 +781,26 @@ AAgACAAIAAEAAQABAAE</bytes>
 						<object class="IBToOneOutletInfo" key="actRunning">
 							<string key="name">actRunning</string>
 							<string key="candidateClassName">UILabel</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="pausRecording">
+							<string key="name">pausRecording</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="playRecording">
+							<string key="name">playRecording</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="recordRecording">
+							<string key="name">recordRecording</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="stopRecording">
+							<string key="name">stopRecording</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="test">
+							<string key="name">test</string>
+							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="time">
 							<string key="name">time</string>

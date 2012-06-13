@@ -16,7 +16,7 @@
 
 @implementation FeedBackForm
 
-@synthesize tpResponse,tpURLResource,process,mesg;
+@synthesize tpResponse,tpURLResource,process,mesg,playRecording,stopRecording,pausRecording,recordRecording;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -49,6 +49,10 @@
     txtFeedBack.layer.cornerRadius = 8;
     txtFeedBack.layer.borderWidth = 1.0;
     [txtFeedBack.layer setBorderColor:[[UIColor grayColor] CGColor]];
+    
+    [playRecording setEnabled:FALSE];
+    [pausRecording setEnabled:FALSE];
+    [stopRecording setEnabled:FALSE];
 }
 
 - (void)viewDidUnload
@@ -106,6 +110,10 @@
 
 -(IBAction)recordRecording:(id)sender{
     
+    [playRecording setEnabled:FALSE];
+    [pausRecording setEnabled:FALSE];
+    
+    
     time.text = @"";
     NSLog(@"start recording");
     [txtEmailId resignFirstResponder];
@@ -157,8 +165,14 @@
     
 }
 
+
 -(IBAction)stopRecording:(id)sender
 {    
+    [playRecording setEnabled:TRUE];
+    [pausRecording setEnabled:FALSE];
+    [stopRecording setEnabled:FALSE];
+    [recordRecording setEnabled:TRUE];
+    
     actRunning.text = @"Stop Recording....";
     
     timer = [NSTimer scheduledTimerWithTimeInterval: 2.0 target:self selector:@selector(setActRunStatus) userInfo:nil repeats: NO];  
@@ -181,8 +195,18 @@
 {
     if (audioPlayer.playing) {
         actRunning.text = @"Pause Recording....";
+        isRepeat = NO;
+        [time setHidden:YES];
+        [timer invalidate];
+        timer =  nil;
         timer = [NSTimer scheduledTimerWithTimeInterval: 2.0 target:self selector:@selector(setActRunStatus) userInfo:nil repeats: NO]; 
+        
         [audioPlayer pause];
+        
+        [playRecording setEnabled:TRUE];
+        [pausRecording setEnabled:FALSE];
+        [recordRecording setEnabled:TRUE];
+        
     }  else {
         actRunning.text = @"Recording not playing....";
         timer = [NSTimer scheduledTimerWithTimeInterval: 2.0 target:self selector:@selector(setActRunStatus) userInfo:nil repeats: NO]; 
@@ -207,8 +231,14 @@
             NSLog(@"Error: %@", 
                   [error localizedDescription]);
         } else {
-//           mesg = PLAY_MSG;
-            process = [self WaitPrompt];
+           mesg = PLAY_MSG;
+//            process = [self WaitPrompt];
+            //when recording is being played, record & stop disable, pause is enable  
+            
+            [stopRecording setEnabled:FALSE];
+            [playRecording setEnabled:FALSE];
+            [recordRecording setEnabled:FALSE];
+            [pausRecording setEnabled:TRUE];
             
             [time setHidden:NO];
             timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 target:self selector:@selector(updatePlayCountdown) userInfo:nil repeats: YES]; 
@@ -223,6 +253,11 @@
 -(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
 {
     NSLog(@"SuccessFully Playing");
+    [playRecording setEnabled:TRUE];
+    [recordRecording setEnabled:TRUE];
+    [pausRecording setEnabled:FALSE];
+    [stopRecording setEnabled:FALSE];
+    
     actRunning.text = @"Play complete....";
     isRepeat = NO;
     [time setHidden:YES];
@@ -231,6 +266,7 @@
     time.text = @"";
     timer = [NSTimer scheduledTimerWithTimeInterval: 2.0 target:self selector:@selector(setActRunStatus) userInfo:nil repeats: NO]; 
     [process dismissWithClickedButtonIndex:0 animated:NO];
+    
 }
 
 -(void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player error:(NSError *)error
@@ -285,7 +321,7 @@
                     } else {
                         msg = FB_RESPONSE_FAIL ;
                     }
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:FB_TITLE_MSG message:msg delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+//                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:FB_TITLE_MSG message:msg delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
 //                    [alert show];
                                                            
                 }

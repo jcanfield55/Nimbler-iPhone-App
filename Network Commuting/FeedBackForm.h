@@ -25,6 +25,14 @@
     IBOutlet UITextView *txtFeedBack;
     IBOutlet UILabel *time;
     IBOutlet UILabel *actRunning;
+    
+    //for testing
+   
+    IBOutlet UIButton * playRecording;
+    IBOutlet UIButton * stopRecording;
+    IBOutlet UIButton * pausRecording;
+    IBOutlet UIButton * recordRecording;
+        
     IBOutlet UITextField *txtEmailId;
     int secondsLeft;
     float secondUse;
@@ -37,6 +45,7 @@
 @property(nonatomic,retain) NSString *tpURLResource;
 @property(nonatomic,retain) NSString *mesg;
 @property (strong, nonatomic) UIAlertView * process;
+@property (strong, nonatomic) IBOutlet UIButton *test,*playRecording,*stopRecording,*pausRecording,*recordRecording;
 
 -(IBAction)recordRecording:(id)sender;
 -(IBAction)stopRecording:(id)sender;
@@ -44,6 +53,7 @@
 -(IBAction)playRecording:(id)sender;
 -(IBAction)submitFeedBack:(id)sender;
 
+-(IBAction)test:(id)sender;
 -(UIAlertView *) WaitPrompt ;
 -(UIAlertView *) waitFb ;
 -(void)sendFeedbackToServer;
