@@ -14,7 +14,8 @@
 #import "enums.h"
 #import "SupportedRegion.h"
 
-@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,RKRequestDelegate>
+@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,RKRequestDelegate,UIActionSheetDelegate>
+
 
 typedef enum {
     NO_EDIT,    // Neither to nor from address is being edited with the keyboard

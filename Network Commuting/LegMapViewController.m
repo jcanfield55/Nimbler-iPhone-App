@@ -80,7 +80,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
     NSArray *sortedLegs = [itinerary sortedLegs];
 
     // Take startpoint as the beginning of the first leg's polyline, 
@@ -145,10 +144,12 @@
     NSString* subTitle;
     if (itineraryNumber == 0) { // if first row, put in start point
         titleText = [NSString stringWithFormat:@"Start at %@", [[itinerary from] name]];
+       //Disable to see previous leg view
         [Bak setEnabled:false];
     }
     else if (itineraryNumber == [[itinerary sortedLegs] count] + 1) { // if last row, put in end point
         titleText = [NSString stringWithFormat:@"End at %@", [[itinerary to] name]];
+         //Disable to see next leg view
         [For setEnabled:false];
     }
     else {  // otherwise, it is one of the legs

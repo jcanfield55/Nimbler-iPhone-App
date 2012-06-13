@@ -33,7 +33,7 @@
     BOOL routeRequested;   // True when the user has pressed the route button and a route has not yet been requested
     NSManagedObjectContext *managedObjectContext;
     BOOL toGeocodeRequestOutstanding;  // true if there is an outstanding To geocode request
-    BOOL fromGeocodeRequestOutstanding;  // true if there is an outstanding From geocode request
+    BOOL fromGeocodeRequestOutstanding;  //true if there is an outstanding From geocode request
     BOOL savetrip;
     double startButtonClickTime;
     float durationOfResponseTime;
@@ -346,7 +346,6 @@ int const TIME_DATE_HEIGHT = 45;
             // if From txtField is already in the subview (due to recycling, no need to add again
         } else { 
             [cellView addSubview:[fromTableVC txtField]]; // add From txtField
-            NSLog(@"start...");
         }
     }
     else {   // do same for toTable case
@@ -406,10 +405,12 @@ int const TIME_DATE_HEIGHT = 45;
     }
     
     // If there is an outstanding plan request that has not been submitted, and we are now clear in terms of no outstanding geocodes, go ahead and submit the plan
+    
     if (routeRequested && !toGeocodeRequestOutstanding && !fromGeocodeRequestOutstanding) {
         [self getPlan];
         routeRequested = FALSE;
     }
+    
 }
 
 // Requesting a plan
@@ -421,8 +422,6 @@ int const TIME_DATE_HEIGHT = 45;
     UIAlertView *alert;
     
     routeRequested = true;
-    [self startActivityIndicator];
-    
     startButtonClickTime = CFAbsoluteTimeGetCurrent();
     
     // if all the geolocations are here, get a plan.  
@@ -444,7 +443,11 @@ int const TIME_DATE_HEIGHT = 45;
         [alert show];
     }    
     // otherwise, just wait for the geocoding and then submit the plan
-    
+    else {
+        NSLog(@"look for state");
+        alert = [[UIAlertView alloc] initWithTitle:@"TripPlanner" message:@"Please, Select a location" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
@@ -452,7 +455,16 @@ int const TIME_DATE_HEIGHT = 45;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setValue:@"4" forKey:@"source"];
     [prefs setValue:@"" forKey:@"uniqueid"];
-   
+    
+    NSLog(@" %@ %@ ", [fromLocation formattedAddress], [toLocation formattedAddress]);
+    [prefs setValue:[fromLocation formattedAddress] forKey:@"fromaddress"];
+    [prefs setValue:[toLocation formattedAddress] forKey:@"toaddress"];
+    
+    NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
+    [dFormat setDateStyle:NSDateFormatterLongStyle];
+    [dFormat setTimeStyle:NSDateFormatterMediumStyle];
+    [prefs setValue:[dFormat stringFromDate:tripDate] forKey:@"tripdate"];
+    
     FeedBackForm *feedbackVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
     [[self navigationController] pushViewController:feedbackVC animated:YES];
 }
@@ -549,7 +561,7 @@ int const TIME_DATE_HEIGHT = 45;
                     plan = [objects objectAtIndex:0];
                     durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime;
                     [self stopActivityIndicator];
-
+                    
                     [plan setToLocation:toLocation];
                     [plan setFromLocation:fromLocation];
                     
@@ -635,6 +647,8 @@ int const TIME_DATE_HEIGHT = 45;
     // TODO See if we already have a similar plan that we can use
     
     // See if there has already been an identical plan request in the last 5 seconds.  
+    [self startActivityIndicator];
+    
     NSLog(@"Plan routine entered");
     BOOL isDuplicatePlan = NO;
     NSString *frForm = [fromLocation formattedAddress];
@@ -681,17 +695,9 @@ int const TIME_DATE_HEIGHT = 45;
         NSDateFormatter* tFormat = [[NSDateFormatter alloc] init];
         [tFormat setTimeStyle:NSDateFormatterShortStyle];
         [tFormat setDateStyle:NSDateFormatterNoStyle];
-        
-        
-//        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-//        [prefs setObject:[fromLocation rawAddresses] forKey:@"fromRawAddr"];
-//        [prefs setObject:[toLocation rawAddresses] forKey:@"toRawAddr"];
-//        [prefs setObject:[fromLocation formattedAddress] forKey:@"fromFormatedAddr"];
-//        [prefs setObject:[toLocation formattedAddress] forKey:@"fromFormatedAddr"];
 
         
-        // Build the parameters into a resource string
-       
+        // Build the parameters into a resource string       
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                                 @"fromPlace", [fromLocation latLngPairStr], 
                                 @"toPlace", [toLocation latLngPairStr], 
@@ -699,7 +705,6 @@ int const TIME_DATE_HEIGHT = 45;
                                 @"time", [tFormat stringFromDate:tripDate], 
                                 @"arriveBy", ((departOrArrive == ARRIVE) ? @"true" : @"false"),
                                 nil];
-        
         
         planURLResource = [@"plan" appendQueryParams:params];
         
@@ -723,6 +728,8 @@ int const TIME_DATE_HEIGHT = 45;
 
 -(void)startActivityIndicator
 {
+    self.view.userInteractionEnabled = NO;
+
     if (!activityIndicator) {
         activityIndicator = [[UIActivityIndicatorView alloc]  
                              initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge]; 
@@ -746,6 +753,7 @@ int const TIME_DATE_HEIGHT = 45;
 
 -(void)stopActivityIndicator
 {
+    self.view.userInteractionEnabled = YES;
     [activityIndicator stopAnimating];
     [activityIndicator removeFromSuperview];
     if (activityTimer && [activityTimer isValid]) {
@@ -757,7 +765,6 @@ int const TIME_DATE_HEIGHT = 45;
 {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
     // Release any cached data, images, etc that aren't in use.
 }
 
@@ -794,8 +801,9 @@ int const TIME_DATE_HEIGHT = 45;
          NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
          NSArray *streetName = [locationString componentsSeparatedByString:@"\""];
          NSLog(@"Reverse Geocode: %@", [streetName objectAtIndex:1]);
-         [location setFormattedAddress:[streetName objectAtIndex:1]];
-
+         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];   
+         [prefs setObject:[streetName objectAtIndex:1] forKey:@"currentLocation"];   
+         
         }
     }
 }
@@ -812,7 +820,7 @@ int const TIME_DATE_HEIGHT = 45;
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {	
  	if (buttonIndex == 0){
-        
+               
 	} else if(buttonIndex == 1){
        
 	} else if(buttonIndex == 2){
@@ -862,14 +870,12 @@ int const TIME_DATE_HEIGHT = 45;
     }
     
     [[RKClient sharedClient] post:@"plan/new" params:rkp delegate:self]; 
-    
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     if ([request isPOST]) {  
         NSLog(@"Got aresponse back from our POST! %@", [response bodyAsString]);      
         @try {            
-            
             
             NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
             

@@ -13,7 +13,7 @@
 #import "ToFromViewController.h"
 #import "ToFromTableViewController.h"
 
-@interface LocationPickerViewController : UIViewController
+@interface LocationPickerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
 @property (strong, nonatomic) IBOutlet UITableView* mainTable;  // table showing locations to pick
 @property (strong, nonatomic) IBOutlet UIButton *feedbackButton;

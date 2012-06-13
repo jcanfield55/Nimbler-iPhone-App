@@ -139,6 +139,10 @@
     RouteDetailsViewController *routeDetailsVC = [[RouteDetailsViewController alloc] initWithStyle:UITableViewStylePlain];
     [routeDetailsVC setFeedBackItinerary:[[feedBackPlanId sortedItineraries] objectAtIndex:[indexPath row]]];
     
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:[[[plan sortedItineraries] objectAtIndex:[indexPath row]] itinId] forKey:@"itinararyid"];
+//    [self sendRequestForTimingDelay];
+    
     [routeDetailsVC setItinerary:[[plan sortedItineraries] objectAtIndex:[indexPath row]]];
     [[self navigationController] pushViewController:routeDetailsVC animated:YES];
 }
@@ -168,9 +172,7 @@
     [prefs setObject:@"1" forKey:@"source"];
     [prefs setObject:[plan planId] forKey:@"uniqueid"];
            
-    
-    
-    
+        
     FeedBackForm *legMapVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
     [[self navigationController] pushViewController:legMapVC animated:YES];
  
@@ -204,7 +206,61 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+-(void)sendRequestForTimingDelay
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *ititId =    [prefs objectForKey:@"itinararyid"];    
 
+    
+    RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+    [RKClient setSharedClient:client];
+    
+    
+    NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
+                          @"itineraryid",@"4fd6d0def2f3ae0f17fd702a" ,
+                          nil];
+    NSString *req = [@"livefeeds/itinerary" appendQueryParams:dict];
+    
+    [[RKClient sharedClient]  get:req  delegate:self];
+    
+}
+
+- (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
+    
+    NSLog(@"response %@", [response bodyAsString]);
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *ititId =    [prefs objectForKey:@"itineraryid"];
+    id res = (id)[response bodyAsJSON];
+    
+    
+    NSLog(@"got the response ");
+    if([res isKindOfClass:[NSDictionary class]]){
+       
+//        if([[(NSDictionary*)res objectForKey:@"itinaryid"] isEqualToString:ititId]){
+             NSLog(@"yes dictionary.. %@", [(NSDictionary*)res objectForKey:@"itineraryId"]);
+            NSLog(@"yes dictionary.. %@", [(NSDictionary*)res objectForKey:@"errCode"]);
+      
+            NSArray *legLiveFees = [(NSDictionary*)res objectForKey:@"legLiveFeeds"];
+            NSLog(@"led live feeds %@", legLiveFees);
+
+            [[legLiveFees objectAtIndex:0] valueForKey:@"leg"];
+            [[[legLiveFees objectAtIndex:0] valueForKey:@"leg"] valueForKey:@"id"];
+            NSLog(@" id %@", [[[legLiveFees objectAtIndex:0] valueForKey:@"leg"] valueForKey:@"id"]);
+        NSLog(@"testing .. %@", [[legLiveFees objectAtIndex:0] valueForKey:@"leg"]);
+//        }
+    } else {
+        
+    }
+}
+
+
+-(void)sendRequestForFeedback:(RKParams*)para
+{
+    RKParams *param = [RKParams alloc];
+    param = para;
+    
+    
+}
 #pragma Rest Request for TPServer
 
 @end

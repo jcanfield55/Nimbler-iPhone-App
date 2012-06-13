@@ -118,7 +118,6 @@
     // Else it is one of the locations which was selected
     else {
         Location *loc = [locations locationAtIndex:([indexPath row]) isFrom:isFrom];  //selected Location 
-        
         [self markAndUpdateSelectedLocation:loc];  // Mark the selected location and send updates to locations and toFromVC
         
         // Have toFromVC end the edit mode
@@ -134,6 +133,8 @@
 {
     
     // Update ToFromViewController with the geocode results
+    
+    
     [toFromVC updateToFromLocation:self isFrom:isFrom location:loc];
     [toFromVC updateGeocodeStatus:FALSE isFrom:isFrom];  // let it know Geocode no longer outstanding
     
@@ -161,6 +162,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+
     if ([toFromVC editMode]==NO_EDIT && [indexPath section] == 0) {  // If it is the 'Enter new address' row...
         UITableViewCell *cell =
         [tableView dequeueReusableCellWithIdentifier:@"ToFromEnterNewLocationCell"];
@@ -168,6 +170,7 @@
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
                                           reuseIdentifier:@"ToFromEnterNewLocationCell"];
+       
         }
         
         [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
@@ -188,7 +191,7 @@
     }
     
     // Prepare the cell settings
-    
+     cell.textLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
     Location *loc = [locations locationAtIndex:([indexPath row]) isFrom:isFrom];
     [[cell textLabel] setText:[loc shortFormattedAddress]];
@@ -314,6 +317,7 @@
 - (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects 
 {
     @try {
+        UIAlertView  *alert;
         // Make sure this is the response from the latest geocoder request
         if ([[objectLoader resourcePath] isEqualToString:urlResource])
         {   
@@ -359,7 +363,7 @@
                     if ([validLocations count] == 0) { 
                         NSString *msg = [NSString stringWithFormat:@"Did not find the address: '%@' in the San Francisco Bay Area", rawAddress];
                         
-                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                        alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                         [alert show];
                         [txtField setText:@""];
                         if (isFrom) {
@@ -385,7 +389,7 @@
                 else if ([geocodeStatus compare:@"ZERO_RESULTS" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
                     // TODO error handling for zero results
                     NSLog(@"Zero results geocoding address");
-                    UIAlertView  *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, No valid location found for your address" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                  alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, No valid location found for your address" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                     [alert show];
                     
                     /*
@@ -405,14 +409,22 @@
                 else if ([geocodeStatus compare:@"OVER_QUERY_LIMIT" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
                     // TODO error handling for over query limit  (switch to other geocoder on my server...)
                     NSLog(@"Over query limit");
+                    alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, Google says your address is over with parameter" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alert show];
+                    
                 }
-                else {
+                else if ([geocodeStatus compare:@"REQUEST_DENIED" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
                     // TODO error handling for denied, invalid or unknown status (switch to other geocoder on my server...)
                     NSLog(@"Request rejected, status= %@", geocodeStatus);
+                    alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, your request is not accepted by google" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alert show];
                 }
+                
             }
             else {
                 // TODO Geocoder did not respond with status field
+                alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, geocode is not respond now. Try after some time." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert show];
             }
         }
     }

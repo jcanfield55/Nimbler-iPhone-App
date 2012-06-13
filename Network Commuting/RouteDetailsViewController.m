@@ -20,22 +20,7 @@
 
 -(void)loadView
 {
-    [super loadView];
-//    UIButton *submit = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//    [submit addTarget:self 
-//               action:@selector(feedBackSubmit)
-//     forControlEvents:UIControlEventTouchDown];
-//    [submit setTitle:@"feedback" forState:UIControlStateNormal];
-//    submit.frame = CGRectMake(220.0, 370.0, 70.0, 20.0);
-//    [super.view addSubview:submit];
-//    
-//    twitter = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//    [twitter addTarget:self 
-//                action:@selector(twitterSubmit)
-//      forControlEvents:UIControlEventTouchDown];
-//    [twitter setTitle:@"t" forState:UIControlStateNormal];
-//    twitter.frame = CGRectMake(180.0, 370.0, 20.0, 25.0);
-    
+    [super loadView];   
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -49,14 +34,12 @@
         UIButton *mapBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         mapBtn.bounds = CGRectMake( 0, 0, mapTmg.size.width, mapTmg.size.height );
         [mapBtn setImage:mapTmg forState:UIControlStateNormal];
-        [mapBtn addTarget:self action:@selector(mapOverView)
-             forControlEvents:UIControlEventTouchDown];
+        [mapBtn addTarget:self action:@selector(mapOverView) forControlEvents:UIControlEventTouchDown];
 
         map = [[UIBarButtonItem alloc] initWithCustomView:mapBtn]; 
         
         feedback = [[UIBarButtonItem alloc] initWithTitle:@"F" style:UIBarButtonItemStylePlain target:self action:@selector(feedBackSubmit)];
        
-        
         UIImage *twit = [UIImage imageNamed:@"twitter.png"];
         UIButton *twitterBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         twitterBtn.bounds = CGRectMake( 0, 0, twit.size.width, twit.size.height );
@@ -177,7 +160,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
    
-    NSString   *titleText;
+    NSString   *titleText,*patchString;
     CGSize size;
     if ([indexPath row] == 0) { // if first row, put in start point
         titleText = [NSString stringWithFormat:@"Start at %@", [[itinerary from] name]];
@@ -195,12 +178,23 @@
     
     Leg *leg = [[itinerary sortedLegs] objectAtIndex:([indexPath row]-1)];
     titleText= [leg directionsDetailText];
+   
+    // DE:48  Wrapping issue while directionsTitleText & directionsDetailText lenght is small.
         
-    size = [[titleText stringByAppendingString:[leg directionsTitleText]] 
-                   sizeWithFont:[UIFont systemFontOfSize:14] 
-                   constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
+        if ([[leg directionsTitleText] length] < 20) {
+           patchString  = [[leg directionsTitleText] stringByAppendingString:@"adding Patch string for UI" ];
+            size = [[titleText stringByAppendingString:patchString] 
+                    sizeWithFont:[UIFont systemFontOfSize:14] 
+                    constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
+        } else {
+            size = [[titleText stringByAppendingString:[leg directionsTitleText]] 
+                    sizeWithFont:[UIFont systemFontOfSize:14] 
+                    constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
+        }
+        
+    
     }
-    return size.height + 10;
+    return size.height + 7;
 }
 
 
@@ -235,10 +229,8 @@
     [prefs setObject:@"2" forKey:@"source"];
     [prefs setObject:[itinerary itinId] forKey:@"uniqueid"];
     
-    
-    
-    FeedBackForm *legMapVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
-    [[self navigationController] pushViewController:legMapVC animated:YES];
+    FeedBackForm *feedbackvc = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
+    [[self navigationController] pushViewController:feedbackvc animated:YES];
     
 }
 

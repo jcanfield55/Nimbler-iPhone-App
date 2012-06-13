@@ -17,8 +17,8 @@
     
     UIBarButtonItem *twitterCaltrain;
     UIBarButtonItem *feedback;
-    UIBarButtonItem* map;
-    NSArray* barArray;
+    UIBarButtonItem *map;
+    NSArray *barArray;
 }
 @property(nonatomic, strong) Itinerary *itinerary;
 @property(nonatomic, strong) Itinerary *feedBackItinerary;

@@ -44,7 +44,8 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 377;
     CGRect rect0 = [mainTable frame];
     rect0.size.height = LOCATION_PICKER_TABLE_HEIGHT;
     [mainTable setFrame:rect0];
-
+    mainTable.delegate = self;
+    mainTable.dataSource = self;
     [mainTable reloadData];
 }
 
@@ -60,16 +61,20 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 377;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    Location *loc = [locationArray objectAtIndex:[indexPath row]];
     UITableViewCell *cell =
     [tableView dequeueReusableCellWithIdentifier:@"LocationPickerViewCell"];
     
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
                                       reuseIdentifier:@"LocationPickerViewCell"];
+        cell.textLabel.numberOfLines= 2;     
+        cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
     }
-    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
-    Location *loc = [locationArray objectAtIndex:[indexPath row]];
-    [[cell textLabel] setText:[loc shortFormattedAddress]];
+    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];        
+    [[cell textLabel] setText:[loc formattedAddress]];    
+    [cell sizeToFit];
     
     return cell;
 }
@@ -81,6 +86,21 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 377;
                        locationArray:locationArray];
     locationPicked = TRUE;
     [[self navigationController] popViewControllerAnimated:YES];
+}
+
+//DE:21 dynamic cell height 
+#pragma mark - UIDynamic cell heght methods
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    Location *loc = [locationArray objectAtIndex:[indexPath row]];
+        
+    NSString *cellText = [loc formattedAddress];
+    CGSize size = [cellText 
+                sizeWithFont:[UIFont systemFontOfSize:14] 
+                constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
+    
+    return size.height + 10;
 }
 
 - (void) viewWillDisappear:(BOOL)animated
@@ -100,8 +120,8 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 377;
             [[toFromTableVC toFromVC] setEditMode:TO_EDIT];
         }
     }
-
 }
+
 // Feedback button responder
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event 
 {
@@ -118,8 +138,6 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 377;
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
 }
-
-
 
 - (void)viewDidUnload
 {

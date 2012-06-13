@@ -122,7 +122,6 @@
     //TODO adjust frequency if needed
 }
 
-
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     /*
@@ -268,6 +267,9 @@
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
+    
+    
+        
     if ([request isGET]) {  
         NSLog(@"Got aresponse back from our GET! %@", [response bodyAsString]);      
                    
@@ -302,5 +304,8 @@
             }
     }
 }
+
+
+
 
 @end
