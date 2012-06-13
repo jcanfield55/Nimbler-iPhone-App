@@ -141,7 +141,7 @@
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:[[[plan sortedItineraries] objectAtIndex:[indexPath row]] itinId] forKey:@"itinararyid"];
-    [self sendRequestForTimingDelay];
+//    [self sendRequestForTimingDelay];
     
     [routeDetailsVC setItinerary:[[plan sortedItineraries] objectAtIndex:[indexPath row]]];
     [[self navigationController] pushViewController:routeDetailsVC animated:YES];

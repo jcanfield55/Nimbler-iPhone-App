@@ -13,39 +13,39 @@
 #import "TPResponse.h"
 #import "Plan.h"
 
-
 @interface FeedBackForm : UIViewController <AVAudioRecorderDelegate, AVAudioPlayerDelegate,RKObjectLoaderDelegate, RKRequestDelegate, UIAlertViewDelegate>{
     
    	NSString *soundFilePath;
+    NSString *tpURLResource;
     AVAudioRecorder *audioRecorder;
     AVAudioPlayer *audioPlayer;
     TPResponse *tpResponse;
-    UIProgressView *progress;
-    NSString *tpURLResource;
-    IBOutlet UITextView *txtFeedBack;
-    IBOutlet UILabel *time;
-    IBOutlet UILabel *actRunning;
+    UIProgressView *recProgressView;
     
-    //for testing
-   
-    IBOutlet UIButton * playRecording;
-    IBOutlet UIButton * stopRecording;
-    IBOutlet UIButton * pausRecording;
-    IBOutlet UIButton * recordRecording;
+    
+    IBOutlet UITextView *txtFeedBack;
+    IBOutlet UILabel *labelRecTime;
+    IBOutlet UILabel *labelCurrentActivityStatus;
+       
+    IBOutlet UIButton * btnPlayRecording;
+    IBOutlet UIButton * btnStopRecording;
+    IBOutlet UIButton * btnPauseRecording;
+    IBOutlet UIButton * btnRecordRecording;
         
     IBOutlet UITextField *txtEmailId;
     int secondsLeft;
-    float secondUse;
+    float secondUsed;
     BOOL isRepeat;
     NSTimer *timer;
+    
     UIActivityIndicatorView *indicator;
 }
 
 @property (strong, nonatomic) TPResponse *tpResponse; 
 @property(nonatomic,retain) NSString *tpURLResource;
 @property(nonatomic,retain) NSString *mesg;
-@property (strong, nonatomic) UIAlertView * process;
-@property (strong, nonatomic) IBOutlet UIButton *test,*playRecording,*stopRecording,*pausRecording,*recordRecording;
+@property (strong, nonatomic) UIAlertView * alertView;
+@property (strong, nonatomic) IBOutlet UIButton *btnPlayRecording,*btnStopRecording,*btnPauseRecording,*btnRecordRecording;
 
 -(IBAction)recordRecording:(id)sender;
 -(IBAction)stopRecording:(id)sender;
@@ -53,9 +53,10 @@
 -(IBAction)playRecording:(id)sender;
 -(IBAction)submitFeedBack:(id)sender;
 
--(IBAction)test:(id)sender;
--(UIAlertView *) WaitPrompt ;
--(UIAlertView *) waitFb ;
+
+-(UIAlertView *) childAlertViewRec ;
+-(UIAlertView *) feedbackConfirmAlert ;
+
 -(void)sendFeedbackToServer;
 @end
 
