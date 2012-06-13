@@ -268,20 +268,8 @@
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     
-    id res = (id)[response bodyAsJSON];
-     
-    if([res isKindOfClass:[NSDictionary class]]){
-        if([[(NSDictionary*)res objectForKey:@"itinaryid"] isEqualToString:@""]){
-            NSArray *legLiveFees = [(NSDictionary*)res objectForKey:@"legLiveFeeds"];
-            
-//            legLiveFees.count;
-            [[legLiveFees objectAtIndex:0] valueForKey:@"leg"];
-            [[[legLiveFees objectAtIndex:0] valueForKey:@"leg"] valueForKey:@"id"];
-        }
-    }
-     
-
     
+        
     if ([request isGET]) {  
         NSLog(@"Got aresponse back from our GET! %@", [response bodyAsString]);      
                    

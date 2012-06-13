@@ -217,7 +217,7 @@
     
     
     NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
-                          @"itineraryid",ititId ,
+                          @"itineraryid",@"4fd6d0def2f3ae0f17fd702a" ,
                           nil];
     NSString *req = [@"livefeeds/itinerary" appendQueryParams:dict];
     
@@ -227,20 +227,40 @@
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     
+    NSLog(@"response %@", [response bodyAsString]);
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *ititId =    [prefs objectForKey:@"itineraryid"];
     id res = (id)[response bodyAsJSON];
+    
     
     NSLog(@"got the response ");
     if([res isKindOfClass:[NSDictionary class]]){
-        if([[(NSDictionary*)res objectForKey:@"itinaryid"] isEqualToString:@""]){
+       
+//        if([[(NSDictionary*)res objectForKey:@"itinaryid"] isEqualToString:ititId]){
+             NSLog(@"yes dictionary.. %@", [(NSDictionary*)res objectForKey:@"itineraryId"]);
+            NSLog(@"yes dictionary.. %@", [(NSDictionary*)res objectForKey:@"errCode"]);
+      
             NSArray *legLiveFees = [(NSDictionary*)res objectForKey:@"legLiveFeeds"];
-            
-            //            legLiveFees.count;
+            NSLog(@"led live feeds %@", legLiveFees);
+
             [[legLiveFees objectAtIndex:0] valueForKey:@"leg"];
             [[[legLiveFees objectAtIndex:0] valueForKey:@"leg"] valueForKey:@"id"];
-        }
+            NSLog(@" id %@", [[[legLiveFees objectAtIndex:0] valueForKey:@"leg"] valueForKey:@"id"]);
+        NSLog(@"testing .. %@", [[legLiveFees objectAtIndex:0] valueForKey:@"leg"]);
+//        }
+    } else {
+        
     }
 }
 
+
+-(void)sendRequestForFeedback:(RKParams*)para
+{
+    RKParams *param = [RKParams alloc];
+    param = para;
+    
+    
+}
 #pragma Rest Request for TPServer
 
 @end

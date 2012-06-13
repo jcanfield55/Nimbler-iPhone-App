@@ -19,4 +19,5 @@
 @property(nonatomic, strong) Plan *feedBackPlanId ;
 
 -(void)sendRequestForTimingDelay;
+-(void)sendRequestForFeedback:(RKParams*)para;
 @end

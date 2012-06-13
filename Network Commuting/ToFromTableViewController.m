@@ -169,6 +169,7 @@
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
                                           reuseIdentifier:@"ToFromEnterNewLocationCell"];
+       
         }
         
         [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
@@ -189,7 +190,7 @@
     }
     
     // Prepare the cell settings
-    
+     cell.textLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
     Location *loc = [locations locationAtIndex:([indexPath row]) isFrom:isFrom];
     [[cell textLabel] setText:[loc shortFormattedAddress]];

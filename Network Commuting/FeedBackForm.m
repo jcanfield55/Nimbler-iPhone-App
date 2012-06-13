@@ -286,7 +286,7 @@
                         msg = FB_RESPONSE_FAIL ;
                     }
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:FB_TITLE_MSG message:msg delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-                    [alert show];
+//                    [alert show];
                                                            
                 }
                 
@@ -400,9 +400,11 @@
     [rkp setValue:udid forParam:@"deviceid"]; 
     [rkp setValue:source forParam:@"source"]; 
     [rkp setValue:uniqueId forParam:@"uniqueid"]; 
-    [rkp setValue:@"3.5" forParam:@"rating"];
-        
+    [rkp setValue:@"3.5" forParam:@"rating"];      
+    
+    timer = [NSTimer scheduledTimerWithTimeInterval: 3.0 target:self selector:@selector(popOut) userInfo:nil repeats: NO];
     [[RKClient sharedClient]  post:@"feedback/new" params:rkp delegate:self];
+    
 }
 
 #pragma mark UIAlertView utility
@@ -468,7 +470,14 @@
 
 -(void)stopLoadingProcess
 {
-     [process dismissWithClickedButtonIndex:0 animated:NO];
+     
+    
+}
+
+-(void)popOut
+{
+    [process dismissWithClickedButtonIndex:0 animated:NO];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark TextField animation at selected
@@ -518,6 +527,5 @@
 - (void)textViewDidEndEditing:(UITextView *)textView{
     [self animateTextView: textView up: NO];
 }
-
 
 @end
