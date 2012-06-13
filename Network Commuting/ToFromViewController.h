@@ -14,7 +14,7 @@
 #import "enums.h"
 #import "SupportedRegion.h"
 
-@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,RKRequestDelegate>
+@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,RKRequestDelegate,UIActionSheetDelegate>
 
 
 typedef enum {

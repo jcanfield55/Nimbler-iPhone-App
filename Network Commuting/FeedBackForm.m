@@ -366,7 +366,7 @@
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
     NSString *fromAddress = [prefs objectForKey:@"fromaddress"];
     NSString *toAddress = [prefs objectForKey:@"toaddress"];
-    
+    NSString *date = [prefs objectForKey:@"tripdate"];
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     RKParams *rkp = [RKParams params];
     [RKClient setSharedClient:client];
@@ -391,13 +391,17 @@
         [rkp setValue:FEEDBACK_BOTH forParam:@"formattype"]; 
     }
     
+    if([source isEqualToString:@"4"]){
+        
+        [rkp setValue:fromAddress forParam:@"rawAddFrom"];
+        [rkp setValue:toAddress forParam:@"rawAddTo"];
+        [rkp setValue:date forParam:@"date"];
+    }
     [rkp setValue:udid forParam:@"deviceid"]; 
     [rkp setValue:source forParam:@"source"]; 
     [rkp setValue:uniqueId forParam:@"uniqueid"]; 
     [rkp setValue:@"3.5" forParam:@"rating"];
-    [rkp setValue:fromAddress forParam:@"rawAddFrom"];
-    [rkp setValue:toAddress forParam:@"rawAddTo"];
-    
+        
     [[RKClient sharedClient]  post:@"feedback/new" params:rkp delegate:self];
 }
 

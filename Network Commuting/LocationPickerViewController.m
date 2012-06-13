@@ -73,9 +73,9 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 377;
         cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
     }
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];        
-    [[cell textLabel] setText:[loc formattedAddress]];
-    
+    [[cell textLabel] setText:[loc formattedAddress]];    
     [cell sizeToFit];
+    
     return cell;
 }
 
@@ -93,12 +93,10 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 377;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-
-    
-        Location *loc = [locationArray objectAtIndex:[indexPath row] ];
+    Location *loc = [locationArray objectAtIndex:[indexPath row]];
         
-        NSString *cellText = [loc formattedAddress];
-       CGSize size = [cellText 
+    NSString *cellText = [loc formattedAddress];
+    CGSize size = [cellText 
                 sizeWithFont:[UIFont systemFontOfSize:14] 
                 constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
     

@@ -10,7 +10,7 @@
 #import "Plan.h"
 #import "RouteDetailsViewController.h"
 
-@interface RouteOptionsViewController : UITableViewController
+@interface RouteOptionsViewController : UITableViewController<RKRequestDelegate>
 {
     NSDateFormatter *timeFormatter;
     UIBarButtonItem *feedback;
@@ -18,5 +18,5 @@
 @property(nonatomic, strong) Plan *plan;
 @property(nonatomic, strong) Plan *feedBackPlanId ;
 
-
+-(void)sendRequestForTimingDelay;
 @end

@@ -118,7 +118,6 @@
     // Else it is one of the locations which was selected
     else {
         Location *loc = [locations locationAtIndex:([indexPath row]) isFrom:isFrom];  //selected Location 
-        
         [self markAndUpdateSelectedLocation:loc];  // Mark the selected location and send updates to locations and toFromVC
         
         // Have toFromVC end the edit mode
@@ -134,6 +133,8 @@
 {
     
     // Update ToFromViewController with the geocode results
+    
+    
     [toFromVC updateToFromLocation:self isFrom:isFrom location:loc];
     [toFromVC updateGeocodeStatus:FALSE isFrom:isFrom];  // let it know Geocode no longer outstanding
     

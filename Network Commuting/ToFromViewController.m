@@ -455,8 +455,15 @@ int const TIME_DATE_HEIGHT = 45;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setValue:@"4" forKey:@"source"];
     [prefs setValue:@"" forKey:@"uniqueid"];
+    
+    NSLog(@" %@ %@ ", [fromLocation formattedAddress], [toLocation formattedAddress]);
     [prefs setValue:[fromLocation formattedAddress] forKey:@"fromaddress"];
     [prefs setValue:[toLocation formattedAddress] forKey:@"toaddress"];
+    
+    NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
+    [dFormat setDateStyle:NSDateFormatterLongStyle];
+    [dFormat setTimeStyle:NSDateFormatterMediumStyle];
+    [prefs setValue:[dFormat stringFromDate:tripDate] forKey:@"tripdate"];
     
     FeedBackForm *feedbackVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
     [[self navigationController] pushViewController:feedbackVC animated:YES];
@@ -812,8 +819,7 @@ int const TIME_DATE_HEIGHT = 45;
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {	
  	if (buttonIndex == 0){
-        
-       
+               
 	} else if(buttonIndex == 1){
        
 	} else if(buttonIndex == 2){
@@ -863,14 +869,12 @@ int const TIME_DATE_HEIGHT = 45;
     }
     
     [[RKClient sharedClient] post:@"plan/new" params:rkp delegate:self]; 
-    
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     if ([request isPOST]) {  
         NSLog(@"Got aresponse back from our POST! %@", [response bodyAsString]);      
         @try {            
-            
             
             NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
             
