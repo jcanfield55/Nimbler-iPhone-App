@@ -16,15 +16,15 @@
 
 @implementation FeedBackForm
 
-@synthesize tpResponse,tpURLResource,alertView,mesg,btnPlayRecording,btnStopRecording,btnPauseRecording,btnRecordRecording;
+@synthesize tpResponse,tpURLResource,alertView,mesg,btnPlayRecording,btnStopRecording,btnPauseRecording,btnRecordRecording,fbParams;
 
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+-(id)initWithFeedBack:(NSString *)nibNameOrNil fbParam:(FeedBackReqParam *)fbParam bundle:(NSBundle *)nibBundle
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundle];
     if (self) {
         // Custom initialization
         [[self navigationItem] setTitle:@"Feedback Form"];
+        fbParams = fbParam;
     }
     return self;
 }
@@ -43,8 +43,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    NSString *email = [prefs objectForKey:@"eMailId"];
-    txtEmailId.text = email;
+    txtEmailId.text = [prefs objectForKey:@"eMailId"];
     labelCurrentActivityStatus.text = @"";
     txtFeedBack.layer.cornerRadius = 8;
     txtFeedBack.layer.borderWidth = 1.0;
@@ -68,17 +67,13 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-
-
-
 #pragma mark-Recording functions
 
 -(IBAction)recordRecording:(id)sender{
     
     [btnPlayRecording setEnabled:FALSE];
     [btnPauseRecording setEnabled:FALSE];
-    
-    
+        
     labelRecTime.text = @"";
     NSLog(@"start recording");
     [txtEmailId resignFirstResponder];
@@ -112,23 +107,19 @@
     NSError *error = nil;    
     audioRecorder = [[AVAudioRecorder alloc] initWithURL:soundFileURL settings:recordSettings error:&error];
     
-    if (error)
-    {
+    if (error) {
         NSLog(@"error: %@", [error localizedDescription]);
     } else {
         [audioRecorder prepareToRecord];
     }
     
-    if (!audioRecorder.recording)
-    {        
+    if (!audioRecorder.recording) {        
         [audioRecorder record];
     }
     
 }
 
-
--(IBAction)stopRecording:(id)sender
-{    
+-(IBAction)stopRecording:(id)sender {    
     [btnPlayRecording setEnabled:TRUE];
     [btnPauseRecording setEnabled:FALSE];
     [btnStopRecording setEnabled:FALSE];
@@ -145,15 +136,13 @@
         [audioPlayer stop];
     }    
     NSLog(@"Stop Recording");
-    
 }
 
--(void)setActRunStatus{
+-(void)setActRunStatus {
     labelCurrentActivityStatus.text =@"";
 }
 
--(IBAction)pausRecording:(id)sender
-{
+-(IBAction)pausRecording:(id)sender {
     if (audioPlayer.playing) {
         labelCurrentActivityStatus.text = @"Pause Recording....";
         isRepeat = NO;
@@ -175,8 +164,8 @@
     }
     
 }
--(IBAction)playRecording:(id)sender
-{
+
+-(IBAction)playRecording:(id)sender {
     NSLog(@"play Recording");
     labelCurrentActivityStatus.text = @"Play Recording....";
     secondsLeft = 0;
@@ -207,11 +196,9 @@
     }   
 }
 
-
 #pragma mark Time functionds
 
--(void) updateRecCountdown {
-    
+-(void) updateRecCountdown {    
     int seconds;
     secondsLeft--;
     secondUsed += 0.0166;
@@ -236,12 +223,9 @@
         seconds = (secondsLeft %3600) % 60;
         labelRecTime.text = [NSString stringWithFormat:@"Time Left : %02d", seconds];
     }
-    
 }
 
-
--(void) updatePlayCountdown {
-    
+-(void) updatePlayCountdown {    
     secondsLeft++;   
     labelRecTime.text = [NSString stringWithFormat:@"Play Time : %02d", secondsLeft];
 }
@@ -249,7 +233,7 @@
 
 #pragma mark audio player delegate method
 
--(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
+-(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag 
 {
     NSLog(@"SuccessFully Played");
     [btnPlayRecording setEnabled:TRUE];
@@ -376,8 +360,6 @@
     return YES;
 }
 
-
-
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     // Any additional checks to ensure you have the correct textField here.
@@ -385,23 +367,14 @@
         [txtEmailId resignFirstResponder];
         return NO;
     }
-    return YES;
-    
+    return YES;    
 }
-
 
 -(void)sendFeedbackToServer
 {
     alertView = [self feedbackConfirmAlert];
-//    [al autoContentAccessingProxy];
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    NSString *source = [prefs objectForKey:@"source"];
-    NSString *uniqueId = [prefs objectForKey:@"uniqueid"];
-    NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
-    NSString *fromAddress = [prefs objectForKey:@"fromaddress"];
-    NSString *toAddress = [prefs objectForKey:@"toaddress"];
-    NSString *date = [prefs objectForKey:@"tripdate"];
     
+    NSString *udid = [UIDevice currentDevice].uniqueIdentifier;    
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     RKParams *rkp = [RKParams params];
     [RKClient setSharedClient:client];
@@ -419,30 +392,26 @@
     } 
     if (txtEmailId.text != nil) {
         [rkp setValue:txtEmailId.text forParam:@"emailid"];
+         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setObject:txtEmailId.text forKey:@"eMailId"];
-        
     }
     if(soundFilePath != nil && txtFeedBack.text != nil){
         [rkp setValue:FEEDBACK_BOTH forParam:@"formattype"]; 
     }
     
-    if([source isEqualToString:@"4"]){
-        if ([fromAddress isEqualToString:@"Current Location"]) {
-            NSLog(@"loc %@", fromAddress);
-            fromAddress = [prefs objectForKey:@"currentLocation"];
-        }
-        
-        [rkp setValue:fromAddress forParam:@"rawAddFrom"];
-        [rkp setValue:toAddress forParam:@"rawAddTo"];
-        [rkp setValue:date forParam:@"date"];
+    [rkp setValue:udid forParam:@"deviceid"]; 
+    [rkp setValue:[fbParams fbSource] forParam:@"source"]; 
+    [rkp setValue:@"3.5" forParam:@"rating"];
+    
+    if([[fbParams fbSource] isEqualToString:FB_SOURCE_GENERAL]){     
+        [rkp setValue:[fbParams fromAddress] forParam:@"rawAddFrom"];
+        [rkp setValue:[fbParams toAddress] forParam:@"rawAddTo"];
+        [rkp setValue:[fbParams date] forParam:@"date"];
+    } else {
+        [rkp setValue:[fbParams uniqueId] forParam:@"uniqueid"]; 
     }
     
-    [rkp setValue:udid forParam:@"deviceid"]; 
-    [rkp setValue:source forParam:@"source"]; 
-    [rkp setValue:uniqueId forParam:@"uniqueid"]; 
-    [rkp setValue:@"3.5" forParam:@"rating"];      
-    
-    timer = [NSTimer scheduledTimerWithTimeInterval: 3.0 target:self selector:@selector(popOut) userInfo:nil repeats: NO];
+    timer = [NSTimer scheduledTimerWithTimeInterval: 2.0 target:self selector:@selector(popOut) userInfo:nil repeats: NO];
     [[RKClient sharedClient]  post:@"feedback/new" params:rkp delegate:self];
     
 }
@@ -456,7 +425,6 @@
                           message:nil delegate:nil cancelButtonTitle:nil  
                           otherButtonTitles:nil];  
     
-        
    indicator = [[UIActivityIndicatorView alloc]  
                                           initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];  
      
@@ -492,10 +460,10 @@
     return alert;
 }  
 
--(void)alertView: (UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+-(void)alertView: (UIAlertView *)UIAlertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     
-    NSString *btnName = [alertView buttonTitleAtIndex:buttonIndex];
+    NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
     
     if ([btnName isEqualToString:@"Cancel"]) {
         soundFilePath = nil;
@@ -508,11 +476,6 @@
     
 }
 
--(void)stopLoadingProcess
-{
-     
-    
-}
 
 -(void)popOut
 {

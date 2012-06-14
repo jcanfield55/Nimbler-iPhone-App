@@ -12,6 +12,7 @@
 #import <RestKit/CoreData.h>
 #import "TPResponse.h"
 #import "Plan.h"
+#import "FeedBackReqParam.h"
 
 @interface FeedBackForm : UIViewController <AVAudioRecorderDelegate, AVAudioPlayerDelegate,RKObjectLoaderDelegate, RKRequestDelegate, UIAlertViewDelegate>{
     
@@ -39,6 +40,8 @@
     NSTimer *timer;
     
     UIActivityIndicatorView *indicator;
+    
+    FeedBackReqParam *fbParams;
 }
 
 @property (strong, nonatomic) TPResponse *tpResponse; 
@@ -53,10 +56,13 @@
 -(IBAction)playRecording:(id)sender;
 -(IBAction)submitFeedBack:(id)sender;
 
+@property (strong, nonatomic) FeedBackReqParam *fbParams;; 
 
 -(UIAlertView *) childAlertViewRec ;
 -(UIAlertView *) feedbackConfirmAlert ;
 
 -(void)sendFeedbackToServer;
+
+-(id)initWithFeedBack:(NSString *)nibNameOrNil fbParam:(FeedBackReqParam *)fbParam bundle:(NSBundle *)nibBundle;
 @end
 

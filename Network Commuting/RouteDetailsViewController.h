@@ -21,6 +21,5 @@
     NSArray *barArray;
 }
 @property(nonatomic, strong) Itinerary *itinerary;
-@property(nonatomic, strong) Itinerary *feedBackItinerary;
 
 @end

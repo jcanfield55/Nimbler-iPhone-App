@@ -35,4 +35,9 @@
 #define MAX_LAT                 @"38.7189988"
 #define MAX_LONG                @"-121.025001"
 
+#define FB_SOURCE_PLAN          @"1"
+#define FB_SOURCE_ITINERARY     @"2"
+#define FB_SOURCE_LEG           @"3"
+#define FB_SOURCE_GENERAL       @"4"
+
 #define TINY_FLOAT              0.00000001

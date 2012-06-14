@@ -12,11 +12,11 @@
 #import "RootMap.h"
 #import "TwitterSearch.h"
 #import "FeedBackForm.h"
+#import "FeedBackReqParam.h"
 
 @implementation RouteDetailsViewController
 
 @synthesize itinerary;
-@synthesize feedBackItinerary;
 
 -(void)loadView
 {
@@ -225,13 +225,12 @@
 
 -(void)feedBackSubmit
 {
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setObject:@"2" forKey:@"source"];
-    [prefs setObject:[itinerary itinId] forKey:@"uniqueid"];
     
-    FeedBackForm *feedbackvc = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
+    FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_ITINERARY uniqueId:[itinerary itinId] date:nil fromAddress:nil toAddress:nil];
+    
+//    FeedBackForm *feedbackvc = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" source:FB_SOURCE_ITINERARY uniqueId:[itinerary itinId] date:nil fromAddress:nil toAddress:nil  bundle:nil];   
+    FeedBackForm *feedbackvc = [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];
     [[self navigationController] pushViewController:feedbackvc animated:YES];
-    
 }
 
 
