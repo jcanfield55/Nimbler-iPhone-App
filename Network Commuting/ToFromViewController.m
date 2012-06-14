@@ -30,7 +30,7 @@
     Plan *tpResponsePlan;
     SupportedRegion *sr;
     FeedBackForm *fbplan;
-    BOOL routeRequested;   // True when the user has pressed the route button and a route has not yet been requested
+
     NSManagedObjectContext *managedObjectContext;
     BOOL toGeocodeRequestOutstanding;  // true if there is an outstanding To geocode request
     BOOL fromGeocodeRequestOutstanding;  //true if there is an outstanding From geocode request
@@ -93,7 +93,6 @@ NSString *currentLoc;
 
         planRequestHistory = [NSMutableArray array]; // Initialize this array
         departOrArrive = DEPART;
-        routeRequested = FALSE;
         toGeocodeRequestOutstanding = FALSE;
         fromGeocodeRequestOutstanding = FALSE;
         supportedRegion = [[SupportedRegion alloc] initWithDefault];
@@ -406,13 +405,6 @@ NSString *currentLoc;
         toGeocodeRequestOutstanding = isGeocodeOutstanding;
     }
     
-    // If there is an outstanding plan request that has not been submitted, and we are now clear in terms of no outstanding geocodes, go ahead and submit the plan
-    
-    if (routeRequested && !toGeocodeRequestOutstanding && !fromGeocodeRequestOutstanding) {
-        [self getPlan];
-        routeRequested = FALSE;
-    }
-    
 }
 
 // Requesting a plan
@@ -423,14 +415,12 @@ NSString *currentLoc;
     NSLog(@"Route Button Pressed");
     UIAlertView *alert;
     
-    routeRequested = true;
     startButtonClickTime = CFAbsoluteTimeGetCurrent();
     
     // if all the geolocations are here, get a plan.  
     if ([fromLocation formattedAddress] && [toLocation formattedAddress] &&
         !toGeocodeRequestOutstanding && !fromGeocodeRequestOutstanding) {
         [self getPlan];
-        routeRequested = false;  
     }
     
     // if user has not entered/selected fromLocation, send them an alert
