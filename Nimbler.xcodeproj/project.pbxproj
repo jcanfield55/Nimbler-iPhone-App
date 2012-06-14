@@ -85,7 +85,7 @@
 		CCBE9FF915628F5700908A78 /* RootMap.xib in Resources */ = {isa = PBXBuildFile; fileRef = CCBE9FF815628F5700908A78 /* RootMap.xib */; };
 		CCC107CF156A39CB0011246D /* TPResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC107CE156A39C90011246D /* TPResponse.m */; };
 		CCDCC0791576287900D4B4D3 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCDCC0781576287900D4B4D3 /* CoreLocation.framework */; };
-		CCEA69A11589B42000E97592 /* UtilClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CCEA69A01589B42000E97592 /* UtilClass.m */; };
+		CCEA69A4158A034D00E97592 /* FeedBackReqParam.m in Sources */ = {isa = PBXBuildFile; fileRef = CCEA69A3158A034C00E97592 /* FeedBackReqParam.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -874,8 +874,8 @@
 		CCC107CD156A39C60011246D /* TPResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPResponse.h; sourceTree = "<group>"; };
 		CCC107CE156A39C90011246D /* TPResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPResponse.m; sourceTree = "<group>"; };
 		CCDCC0781576287900D4B4D3 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		CCEA699F1589B42000E97592 /* UtilClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilClass.h; sourceTree = "<group>"; };
-		CCEA69A01589B42000E97592 /* UtilClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtilClass.m; sourceTree = "<group>"; };
+		CCEA69A2158A034C00E97592 /* FeedBackReqParam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedBackReqParam.h; sourceTree = "<group>"; };
+		CCEA69A3158A034C00E97592 /* FeedBackReqParam.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedBackReqParam.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2479,8 +2479,8 @@
 				5205D8DD14F4740D0004CD09 /* DateFormatterMSFrom1970.m */,
 				52B7421C14E1FFA200D817D1 /* UtilityFunctions.h */,
 				52B7421D14E1FFA200D817D1 /* UtilityFunctions.m */,
-				CCEA699F1589B42000E97592 /* UtilClass.h */,
-				CCEA69A01589B42000E97592 /* UtilClass.m */,
+				CCEA69A2158A034C00E97592 /* FeedBackReqParam.h */,
+				CCEA69A3158A034C00E97592 /* FeedBackReqParam.m */,
 			);
 			name = util;
 			sourceTree = "<group>";
@@ -2795,7 +2795,7 @@
 				CCB7E811157090380036E9CD /* FeedBackForm.m in Sources */,
 				CCB9E6FA1574B4F70043F304 /* TwitterSearch.m in Sources */,
 				521DDD371582D44500DBE838 /* LocationPickerViewController.m in Sources */,
-				CCEA69A11589B42000E97592 /* UtilClass.m in Sources */,
+				CCEA69A4158A034D00E97592 /* FeedBackReqParam.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

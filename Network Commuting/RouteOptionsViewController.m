@@ -106,33 +106,6 @@
 
 #pragma mark - UITableViewDelegate methods
 
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    
-//   NSMutableString *subTitle = [NSMutableString stringWithCapacity:100];
-//    CGSize size;
-//    Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
-//    NSArray *sortedLegs = [itin sortedLegs];
-//    for (int i = 0; i < [sortedLegs count]; i++) {
-//        Leg *leg = [sortedLegs objectAtIndex:i];
-//        if ([leg mode] && [[leg mode] length] > 0) {
-//            if (i > 0) {
-//                [subTitle appendString:@" -> "];
-//            }
-//            [subTitle appendString:[[leg mode] capitalizedString]];
-//            if ([leg route] && [[leg route] length] > 0) {
-//                [subTitle appendString:@" "];
-//                [subTitle appendString:[leg route]];
-//            }
-//        }
-//    }
-//        
-//    size = [subTitle 
-//                sizeWithFont:[UIFont systemFontOfSize:14] 
-//                constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
-//   
-//    return size.height + 10;
-//}
-
 // If selected, show the RouteDetailsViewController
 - (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -160,27 +133,18 @@
  - (void)loadView
 {
     [super loadView];
-//    UIButton *submit = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//    [submit addTarget:self 
-//               action:@selector(feedBackSubmit)
-//     forControlEvents:UIControlEventTouchDown];
-//    [submit setTitle:@"feedback" forState:UIControlStateNormal];
-//    submit.frame = CGRectMake(220.0, 370.0, 70.0, 20.0);
-//    [super.view addSubview:submit];
     
 }
 
 
 -(void)feedBackSubmit
 {
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setObject:@"1" forKey:@"source"];
-    [prefs setObject:[plan planId] forKey:@"uniqueid"];
-           
-        
-    FeedBackForm *legMapVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
-    [[self navigationController] pushViewController:legMapVC animated:YES];
- 
+    
+     FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_PLAN uniqueId:[plan planId] date:nil fromAddress:nil toAddress:nil];
+    
+    FeedBackForm *feedbackFormVc = [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];
+    
+    [[self navigationController] pushViewController:feedbackFormVc animated:YES]; 
 }
 
 /*
@@ -214,7 +178,7 @@
 -(void)sendRequestForTimingDelay
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    NSString *ititId =    [prefs objectForKey:@"itinararyid"];    
+//    NSString *ititId =    [prefs objectForKey:@"itinararyid"];    
 
     
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];

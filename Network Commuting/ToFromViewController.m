@@ -27,7 +27,7 @@
     NSString *planURLResource; // URL resource sent to planner
     NSMutableArray *planRequestHistory; // Array of all the past plan request parameter histories in sequential order (most recent one last)
     Plan *plan;
-    Plan *pl;
+    Plan *tpResponsePlan;
     SupportedRegion *sr;
     FeedBackForm *fbplan;
     BOOL routeRequested;   // True when the user has pressed the route button and a route has not yet been requested
@@ -82,6 +82,8 @@ int const TOFROM_ROW_HEIGHT = 35;
 int const TOFROM_TABLE_HEIGHT = 105;
 int const TOFROM_TABLE_WIDTH = 300; 
 int const TIME_DATE_HEIGHT = 45;
+
+NSString *currentLoc;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -452,20 +454,24 @@ int const TIME_DATE_HEIGHT = 45;
 
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setValue:@"4" forKey:@"source"];
-    [prefs setValue:@"" forKey:@"uniqueid"];
+    NSString *fromLocs;
     
-    NSLog(@" %@ %@ ", [fromLocation formattedAddress], [toLocation formattedAddress]);
-    [prefs setValue:[fromLocation formattedAddress] forKey:@"fromaddress"];
-    [prefs setValue:[toLocation formattedAddress] forKey:@"toaddress"];
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
     NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
-    [dFormat setDateStyle:NSDateFormatterLongStyle];
+    [dFormat setDateStyle:NSDateFormatterShortStyle];
     [dFormat setTimeStyle:NSDateFormatterMediumStyle];
     [prefs setValue:[dFormat stringFromDate:tripDate] forKey:@"tripdate"];
+   if ([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
+       fromLocs = [self getCurrentLocationOfFormattedAddress:fromLocation];
+   } else {
+       fromLocs = [fromLocation formattedAddress];
+   }
+    NSLog(@"current Location %@", fromLocs);
+    FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_GENERAL uniqueId:nil date:[dFormat stringFromDate:tripDate] fromAddress:fromLocs toAddress:[toLocation formattedAddress]];
     
-    FeedBackForm *feedbackVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
+    FeedBackForm *feedbackVC =  [[FeedBackForm alloc] initWithFeedBack:@"feedBackForm" fbParam:fbParam bundle:nil];
+
     [[self navigationController] pushViewController:feedbackVC animated:YES];
 }
 
@@ -570,18 +576,20 @@ int const TIME_DATE_HEIGHT = 45;
                         routeOptionsVC = [[RouteOptionsViewController alloc] initWithStyle:UITableViewStylePlain];
                     }
                     
-                    [routeOptionsVC setPlan:plan];
+                    [routeOptionsVC setPlan:plan];                                        
+                    [[self navigationController] pushViewController:routeOptionsVC animated:YES];              
                     
-                    [[self navigationController] pushViewController:routeOptionsVC animated:YES];
+                    savetrip = FALSE;
+                    [self savePlanInTPServer:[[objectLoader  response] bodyAsString]];
+                    NSLog(@"For Feedback Process called");
                 } else {
-                    pl = [objects objectAtIndex:0];
-                    [plan setPlanId:[pl planId]];                    
-                    NSLog(@"obj foe plan = %@", [pl planId]);
+                    tpResponsePlan = [objects objectAtIndex:0];
+                    [plan setPlanId:[tpResponsePlan planId]];                    
+                    NSLog(@"obj foe plan = %@", [tpResponsePlan planId]);
 
-                    // Catch exception for null ids from server
                     @try {
-                        for (int i= 0; i< [[pl itineraries] count]; i++) {
-                            Itinerary *itin = [[pl sortedItineraries] objectAtIndex:i];
+                        for (int i= 0; i< [[tpResponsePlan itineraries] count]; i++) {
+                            Itinerary *itin = [[tpResponsePlan sortedItineraries] objectAtIndex:i];
                             [[[plan sortedItineraries] objectAtIndex:i] setItinId:[itin itinId]];
                             NSLog(@"===========================================");
                           
@@ -595,29 +603,15 @@ int const TIME_DATE_HEIGHT = 45;
                         }
                     }
                     @catch (NSException *exception) {
-                        
-                    }
-    
-                }
-                
-                if (savetrip) {
-                    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-                    [prefs setObject:[[objectLoader  response] bodyAsString] forKey:@"tpPlanner"];
-                    
-                    savetrip = FALSE;
-                    [self forFeedbackProcess];
-                    NSLog(@"For Feedback Process called");
-                    
-//                   fbplan = [FeedBackForm alloc];
-                }
-                
+                        NSLog(@"Exception while iterating over TP response plan: %@", exception);
+                    }    
+                }                
             }
         }
-        @catch (NSException *exception) {
-            
+        @catch (NSException *exception) {            
             [self stopActivityIndicator];
              durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime ;
-            NSLog(@"Error object ==============================: %@", exception);
+            NSLog(@"Exceptione while parsing TP response plan: %@", exception);
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"Trip is not possible. Your start or end point might not be safely accessible" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
             [alert show];
             savetrip = false;
@@ -789,6 +783,8 @@ int const TIME_DATE_HEIGHT = 45;
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+
+//Delete after testing
 -(void)bayAreaAvailability:(Location *)location
 {
     if( [location formattedAddress] != nil){       
@@ -801,6 +797,7 @@ int const TIME_DATE_HEIGHT = 45;
          NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
          NSArray *streetName = [locationString componentsSeparatedByString:@"\""];
          NSLog(@"Reverse Geocode: %@", [streetName objectAtIndex:1]);
+         currentLoc = [streetName objectAtIndex:1];
          NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];   
          [prefs setObject:[streetName objectAtIndex:1] forKey:@"currentLocation"];   
          
@@ -829,11 +826,10 @@ int const TIME_DATE_HEIGHT = 45;
 	}
 }
 
--(void)forFeedbackProcess
+-(void)savePlanInTPServer:(NSString *)tripResponse
 {
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    NSString *tpPlan = [prefs objectForKey:@"tpPlanner"];
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;   
     
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
@@ -841,7 +837,7 @@ int const TIME_DATE_HEIGHT = 45;
     [RKClient setSharedClient:client];
     
     [rkp setValue:udid forParam:@"deviceid"]; 
-    [rkp setValue:tpPlan forParam:@"planJsonString"]; 
+    [rkp setValue:tripResponse forParam:@"planJsonString"]; 
     NSString *time =  [[NSNumber numberWithFloat:durationOfResponseTime] stringValue]; 
     [rkp setValue:time forParam:@"timeTripPlan"];
     
@@ -855,8 +851,7 @@ int const TIME_DATE_HEIGHT = 45;
     {
         [rkp setValue:[toLocation lat] forParam:@"latTo"];
         [rkp setValue:[toLocation lng] forParam:@"lonTo"];
-    }
-    
+    }    
     [rkp setValue:[prefs objectForKey:@"rawFrom"] forParam:@"rawAddFrom"];
     [rkp setValue:[fromLocation formattedAddress] forParam:@"frmtdAddFrom"];
     [rkp setValue:[prefs objectForKey:@"fromType"]forParam:@"fromType"];
@@ -867,33 +862,25 @@ int const TIME_DATE_HEIGHT = 45;
     {
         [rkp setValue:[fromLocation lat] forParam:@"latTo"];
         [rkp setValue:[fromLocation lng] forParam:@"lonTo"];
-    }
-    
+    }    
     [[RKClient sharedClient] post:@"plan/new" params:rkp delegate:self]; 
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     if ([request isPOST]) {  
-        NSLog(@"Got aresponse back from our POST! %@", [response bodyAsString]);      
-        @try {            
-            
-            NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
-            
+//        NSLog(@"Got aresponse back from our POST! %@", [response bodyAsString]);      
+        @try {                        
+            NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
             NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                                     @"deviceid", udid, 
-                                    nil];
-            
-            rkSavePlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];
-            
+                                    nil];            
+            rkSavePlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];            
             [[rkSavePlanMgr mappingProvider] setMapping:[Plan objectMappingforPlanner:OTP_PLANNER] forKeyPath:@"plan"];
-            planURLResource = [@"plan/get" appendQueryParams:params];
-            
-            [rkSavePlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
-            
+            planURLResource = [@"plan/get" appendQueryParams:params];            
+            [rkSavePlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];            
         } @catch (NSException *exception) {
-          NSLog( @"sfsdfsdfsdf %@", exception);
-        }
-        
+          NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
+        }        
     } 
 }
 
@@ -911,4 +898,17 @@ int const TIME_DATE_HEIGHT = 45;
     [[self navigationController] pushViewController:locationPickerVC animated:YES];    
 }
 
+
+-(NSString *)getCurrentLocationOfFormattedAddress:(Location *)location
+{
+    double latitude = [[location lat] doubleValue];
+    double longitude = [[location lng] doubleValue];        
+    NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv", latitude, longitude];   
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
+    NSArray *streetName = [locationString componentsSeparatedByString:@"\""];
+    currentLoc = [streetName objectAtIndex:1];
+    
+    return currentLoc;
+}
 @end

@@ -30,6 +30,7 @@
 @synthesize directionsDetails;
 @synthesize feedbackButton;
 
+NSString *legID;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -156,7 +157,7 @@
         Leg *leg = [[itinerary sortedLegs] objectAtIndex:(itineraryNumber-1)];
         titleText = [leg directionsTitleText];
         subTitle = [leg directionsDetailText];
-        
+        legID = [leg legId];
         if ([leg isTrain]) {
             NSString *train = [[titleText componentsSeparatedByString:@"("] objectAtIndex:1];
             NSString *train1 = [[train componentsSeparatedByString:@")"] objectAtIndex:0];
@@ -272,7 +273,8 @@
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     [TestFlight openFeedbackView];
-    FeedBackForm *legMapVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
+    FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_LEG uniqueId:legID date:nil fromAddress:nil toAddress:nil];
+    FeedBackForm *legMapVC = [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];   
     [[self navigationController] pushViewController:legMapVC animated:YES];
 
 }

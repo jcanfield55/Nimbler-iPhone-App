@@ -55,4 +55,7 @@ typedef enum {
 
 - (void)updateTripDate;
 - (void)reloadTables;  // Reloads the tables in case something has changed in the model
+
+-(void)savePlanInTPServer:(NSString *)tripResponse;
+-(NSString *)getCurrentLocationOfFormattedAddress:(Location *)location;
 @end
