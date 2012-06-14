@@ -85,6 +85,7 @@
 		CCBE9FF915628F5700908A78 /* RootMap.xib in Resources */ = {isa = PBXBuildFile; fileRef = CCBE9FF815628F5700908A78 /* RootMap.xib */; };
 		CCC107CF156A39CB0011246D /* TPResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC107CE156A39C90011246D /* TPResponse.m */; };
 		CCDCC0791576287900D4B4D3 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCDCC0781576287900D4B4D3 /* CoreLocation.framework */; };
+		CCEA69A11589B42000E97592 /* UtilClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CCEA69A01589B42000E97592 /* UtilClass.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -873,6 +874,8 @@
 		CCC107CD156A39C60011246D /* TPResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPResponse.h; sourceTree = "<group>"; };
 		CCC107CE156A39C90011246D /* TPResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPResponse.m; sourceTree = "<group>"; };
 		CCDCC0781576287900D4B4D3 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		CCEA699F1589B42000E97592 /* UtilClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilClass.h; sourceTree = "<group>"; };
+		CCEA69A01589B42000E97592 /* UtilClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtilClass.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2476,6 +2479,8 @@
 				5205D8DD14F4740D0004CD09 /* DateFormatterMSFrom1970.m */,
 				52B7421C14E1FFA200D817D1 /* UtilityFunctions.h */,
 				52B7421D14E1FFA200D817D1 /* UtilityFunctions.m */,
+				CCEA699F1589B42000E97592 /* UtilClass.h */,
+				CCEA69A01589B42000E97592 /* UtilClass.m */,
 			);
 			name = util;
 			sourceTree = "<group>";
@@ -2790,6 +2795,7 @@
 				CCB7E811157090380036E9CD /* FeedBackForm.m in Sources */,
 				CCB9E6FA1574B4F70043F304 /* TwitterSearch.m in Sources */,
 				521DDD371582D44500DBE838 /* LocationPickerViewController.m in Sources */,
+				CCEA69A11589B42000E97592 /* UtilClass.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2949,8 +2955,8 @@
 		52CF43CF14BDF2F9000565D6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (6GWZRKJ2PG)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (6GWZRKJ2PG)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2966,8 +2972,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = Nimbler;
-				PROVISIONING_PROFILE = "47041A92-97D6-439E-9384-EB00BAD1973C";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "47041A92-97D6-439E-9384-EB00BAD1973C";
+				PROVISIONING_PROFILE = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2976,8 +2982,8 @@
 		52CF43D014BDF2F9000565D6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (6GWZRKJ2PG)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (6GWZRKJ2PG)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2993,8 +2999,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = Nimbler;
-				PROVISIONING_PROFILE = "F2F63C54-AFD0-44E7-9D61-095B25419BE8";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F2F63C54-AFD0-44E7-9D61-095B25419BE8";
+				PROVISIONING_PROFILE = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};

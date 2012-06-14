@@ -16,7 +16,7 @@
 @implementation RouteOptionsViewController
 
 @synthesize plan;
-@synthesize feedBackPlanId;
+
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -136,15 +136,20 @@
 // If selected, show the RouteDetailsViewController
 - (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    RouteDetailsViewController *routeDetailsVC = [[RouteDetailsViewController alloc] initWithStyle:UITableViewStylePlain];
-    [routeDetailsVC setFeedBackItinerary:[[feedBackPlanId sortedItineraries] objectAtIndex:[indexPath row]]];
+    @try {
+        
+        RouteDetailsViewController *routeDetailsVC = [[RouteDetailsViewController alloc] initWithStyle:UITableViewStylePlain];
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        [prefs setObject:[[[plan sortedItineraries] objectAtIndex:[indexPath row]] itinId] forKey:@"itinararyid"];
+        //    [self sendRequestForTimingDelay];
+        
+        [routeDetailsVC setItinerary:[[plan sortedItineraries] objectAtIndex:[indexPath row]]];
+        [[self navigationController] pushViewController:routeDetailsVC animated:YES];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exceptions %@", exception);
+    }
     
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setObject:[[[plan sortedItineraries] objectAtIndex:[indexPath row]] itinId] forKey:@"itinararyid"];
-//    [self sendRequestForTimingDelay];
-    
-    [routeDetailsVC setItinerary:[[plan sortedItineraries] objectAtIndex:[indexPath row]]];
-    [[self navigationController] pushViewController:routeDetailsVC animated:YES];
 }
 
 #pragma mark - View lifecycle

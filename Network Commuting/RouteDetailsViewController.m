@@ -16,7 +16,6 @@
 @implementation RouteDetailsViewController
 
 @synthesize itinerary;
-@synthesize feedBackItinerary;
 
 -(void)loadView
 {
