@@ -569,7 +569,7 @@ int const TIME_DATE_HEIGHT = 45;
                     if (!routeOptionsVC) {
                         routeOptionsVC = [[RouteOptionsViewController alloc] initWithStyle:UITableViewStylePlain];
                     }
-                    [routeOptionsVC setFeedBackPlanId:pl];
+                    
                     [routeOptionsVC setPlan:plan];
                     
                     [[self navigationController] pushViewController:routeOptionsVC animated:YES];
@@ -584,7 +584,7 @@ int const TIME_DATE_HEIGHT = 45;
                             Itinerary *itin = [[pl sortedItineraries] objectAtIndex:i];
                             [[[plan sortedItineraries] objectAtIndex:i] setItinId:[itin itinId]];
                             NSLog(@"===========================================");
-                            ///Users/jaykumbhani/Library/Developer/Xcode/iOS DeviceSupport/5.0.1 (9A405)/Symbols/System/Library/Frameworks/CoreLocation.framework/CoreLocation
+                          
                             NSLog(@"itinarary.. %@",[itin itinId]);
                             for (int j =0; j< [[itin legs] count] ; j++) {
                                 Leg *lg = [[itin sortedLegs] objectAtIndex:j];                                

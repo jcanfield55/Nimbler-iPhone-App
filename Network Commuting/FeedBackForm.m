@@ -492,10 +492,10 @@
     return alert;
 }  
 
--(void)alertView: (UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+-(void)alertView: (UIAlertView *)UIAlertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     
-    NSString *btnName = [alertView buttonTitleAtIndex:buttonIndex];
+    NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
     
     if ([btnName isEqualToString:@"Cancel"]) {
         soundFilePath = nil;
