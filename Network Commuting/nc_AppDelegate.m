@@ -306,6 +306,52 @@
 }
 
 
+#pragma mark Nimbler push notification
+
+- (void)applicationDidFinishLaunching:(UIApplication *)application {    
+    
+    NSLog(@"Registering for push notifications...");    
+    [[UIApplication sharedApplication] 
+     registerForRemoteNotificationTypes:
+     (UIRemoteNotificationTypeAlert | 
+      UIRemoteNotificationTypeBadge | 
+      UIRemoteNotificationTypeSound)];
+}
+
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    
+    NSString *str = [NSString stringWithFormat:@"Device Token=%@",deviceToken];
+    NSLog(@" %@",str); 
+    
+    NSString *token = [[[[deviceToken description] stringByReplacingOccurrencesOfString: @"<" withString: @""] stringByReplacingOccurrencesOfString: @">" withString: @""] stringByReplacingOccurrencesOfString: @" " withString: @""];
+    NSLog(@"DeviceTokenStr: %@",token);
+    
+    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:token forKey:@"deviceToken"];
+}
+
+
+- (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err { 
+    NSString *str = [NSString stringWithFormat: @"Error: %@", err];
+    NSLog(@" %@",str);        
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {    
+    for (id key in userInfo) {
+        
+        NSLog(@"key: %@, value: %@", key, [userInfo objectForKey:key]);
+        NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
+        UIAlertView *dataAlert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain"
+                                                            message:message
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Show Twits"
+                                                  otherButtonTitles:@"No",nil];
+        
+        [dataAlert show];      
+    }        
+}
 
 
 @end
