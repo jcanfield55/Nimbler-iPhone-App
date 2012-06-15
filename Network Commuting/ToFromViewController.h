@@ -37,10 +37,11 @@ typedef enum {
 @property (strong, nonatomic) Location *fromLocation;
 @property (strong, nonatomic) Location *toLocation;
 @property (strong, nonatomic) Location *currentLocation;
+@property (nonatomic) BOOL isCurrentLocationMode;  // true if From: is set to Current Location and we can show a single line From row and a larger toTable
 @property (nonatomic) DepartOrArrive departOrArrive;  // whether trip is planned based on departure time or desired arrival time
 @property (strong, nonatomic) NSDate *tripDate;
 @property (strong, nonatomic) NSDate *tripDateLastChangedByUser;
-@property (strong, nonatomic) RKObjectManager *rkBayArea;  // RestKit object manager for trip bay area
+@property (nonatomic) BOOL isTripDateCurrentTime;  // True if tripDate set to the current date
 @property (nonatomic) ToFromEditMode editMode; // Specifies whether to or from address is being edited with the keyboard
 @property (strong, nonatomic) SupportedRegion* supportedRegion; // geographic area supported by this app
 

@@ -33,8 +33,6 @@
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 
--(void)showActivityIndicator:(BOOL)showhide:(UIActivityIndicatorView*)objactindicator:(UIView*)currView;
-
 - (NSURL *)applicationDocumentsDirectory;
 -(void)bayArea;
 
