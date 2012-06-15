@@ -10,6 +10,7 @@
 #import "UtilityFunctions.h"
 #import "TestFlightSDK1/TestFlight.h"
 #import "ToFromViewController.h"
+#import "TwitterSearch.h"
 
 
 #define TESTING 1  // If 1, then testFlightApp will collect device UIDs, if 0, it will not
@@ -29,7 +30,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     
-   
+   [UIApplication sharedApplication].applicationIconBadgeNumber = 2;
     // Configure the RestKit RKClient object for Geocoding and trip planning
     RKObjectManager* rkGeoMgr = [RKObjectManager objectManagerWithBaseURL:GEO_RESPONSE_URL];
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
@@ -74,14 +75,13 @@
      }@catch (NSException *exception) {
         NSLog(@"Exception: ----------------- %@", exception);
     } 
+   
     // Call TestFlightApp SDK
 #if !DEVELOPMENT
 #ifdef TESTING
     [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
 #endif
-    
     [TestFlight takeOff:@"48a90a98948864a11c80bd2ecd7a7e5c_ODU5MzMyMDEyLTA1LTA3IDE5OjE3OjUwLjMxMDUyMg"];
-
 #endif
     
     // Create an instance of a UINavigationController and put toFromViewController as the first view
@@ -268,8 +268,6 @@
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     
-    
-        
     if ([request isGET]) {  
         NSLog(@"Got aresponse back from our GET! %@", [response bodyAsString]);      
                    
@@ -330,6 +328,9 @@
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:token forKey:@"deviceToken"];
+    
+    
+    
 }
 
 
@@ -353,5 +354,24 @@
     }        
 }
 
+
+-(void)alertView: (UIAlertView *)UIAlertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
+    
+    if ([btnName isEqualToString:@"No"]) {
+        
+    } else if ([btnName isEqualToString:@"Show Twits"]) {
+        @try {
+            TwitterSearch *twitter_search = [[TwitterSearch alloc] init];
+            [[self.window.rootViewController navigationController] pushViewController:twitter_search animated:YES];
+            [twitter_search loadRequest:CALTRAIN_TWITTER_URL];
+        }
+        @catch (NSException *exception) {
+            NSLog(@" twitter page execution error: %@", exception);
+        }
+    } 
+    
+}
 
 @end

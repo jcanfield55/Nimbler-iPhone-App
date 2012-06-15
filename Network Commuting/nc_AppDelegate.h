@@ -16,7 +16,7 @@
 #import "FeedBackViewController.h"
 #import <Restkit/RKJSONParserJSONKit.h>
 
-@interface nc_AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate,RKRequestDelegate> {
+@interface nc_AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate> {
     Location* currentLocation;
 }
 
