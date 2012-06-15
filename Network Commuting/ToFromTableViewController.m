@@ -247,7 +247,15 @@
 - (IBAction)textSubmitted:(id)sender forEvent:(UIEvent *)event 
 {
     rawAddress = [sender text];
-       
+    /*
+     Set rawAddress for tripSave in TPServer
+     */
+    if(isFrom){
+        [locations setRawAddressFrom:rawAddress];
+    } else {
+        [locations setRawAddressTo:rawAddress];
+    }
+    
     NSLog(@"Raw address = %@", rawAddress);
     NSLog(@"Last raw address = %@", lastRawAddressGeoRequest);
     NSLog(@"time since last request = %f", [lastGeoRequestTime timeIntervalSinceNow]);
@@ -261,7 +269,7 @@
     [toFromVC setEditMode:NO_EDIT];  // Move back to NO_EDIT mode on the ToFrom view controller
 
     if ([rawAddress length] > 0) {
-               
+        
         // Check if we already have a geocoded location that has used this rawAddress before
         Location* matchingLocation = [locations locationWithRawAddress:rawAddress];
         if (!matchingLocation) {  // if no matching raw addresses, check for matching formatted addresses
@@ -286,15 +294,8 @@
             urlResource = [@"json" appendQueryParams:params];
 
             NSLog(@"Geocode Parameter String = %@", urlResource);
-            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            if ([[prefs objectForKey:@"isEdit"] isEqualToString:@"fromEdit"] ) {
-                [prefs setObject:rawAddress forKey:@"rawFrom"];
-                startTime = CFAbsoluteTimeGetCurrent();
-               
-            } else {
-                [prefs setObject:rawAddress forKey:@"rawTo"];
-                startTime = CFAbsoluteTimeGetCurrent();
-            }            
+            startTime = CFAbsoluteTimeGetCurrent();
+                    
             @try {
                 // Call the geocoder
                 [rkGeoMgr loadObjectsAtResourcePath:urlResource delegate:self];
@@ -323,18 +324,18 @@
         {   
             // Get the status string the hard way by parsing the response string
             NSString* response = [[objectLoader response] bodyAsString];
-            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            if ([[prefs objectForKey:@"isEdit"] isEqualToString:@"fromEdit"]) {
-                [prefs setObject:response forKey:@"geoResponseFrom"];
+           
+            if (isFrom) {
+                [locations setIsFromGeo:TRUE];
                 durationResponseTime = CFAbsoluteTimeGetCurrent() - startTime;
-                [prefs setObject:[[NSNumber numberWithFloat:durationResponseTime] stringValue] forKey:@"timeFrom"];
-                
-            } else if ([[prefs objectForKey:@"isEdit"] isEqualToString:@"toEdit"]) {
-                [prefs setObject:response forKey:@"geoResponseTo"];
+                [locations setGeoRespTimeFrom:[[NSNumber numberWithFloat:durationResponseTime] stringValue]];
+                [locations setGeoRespFrom:response];
+            } else {
+                [locations setIsToGeo:TRUE];
                 durationResponseTime = CFAbsoluteTimeGetCurrent() - startTime;
-                [prefs setObject:[[NSNumber numberWithFloat:durationResponseTime] stringValue] forKey:@"timeTo"];
+                [locations setGeoRespTimeTo:[[NSNumber numberWithFloat:durationResponseTime] stringValue]];
+                [locations setGeoRespTo:response];
             }
-            
             
             NSRange range = [response rangeOfString:@"\"status\""];
             if (range.location != NSNotFound) {

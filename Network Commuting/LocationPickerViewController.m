@@ -125,12 +125,10 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 377;
 // Feedback button responder
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event 
 {
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setValue:@"4" forKey:@"source"];
-    [prefs setValue:@"" forKey:@"uniqueid"];
-    
-    FeedBackForm *feedbackVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
+    FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_GENERAL uniqueId:nil date:nil fromAddress:nil toAddress:nil];
+    FeedBackForm *feedbackVC =  [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];
     [[self navigationController] pushViewController:feedbackVC animated:YES];
+
 }
 
 - (void)viewDidLoad

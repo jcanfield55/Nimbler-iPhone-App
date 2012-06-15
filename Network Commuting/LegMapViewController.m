@@ -360,9 +360,6 @@ NSString *legID;
             if (([polyLineArray objectAtIndex:i] == overlay)) {
                 if (i == itineraryNumber-1) {
                     Leg *leg = [[itinerary sortedLegs] objectAtIndex:(itineraryNumber-1)];
-                    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-                    [prefs setObject:@"3" forKey:@"source"];
-                    [prefs setObject:[leg legId] forKey:@"uniqueid"];
                     tw_btn.hidden = YES;
                     if([leg isWalk]){
                         aView.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:0.7] ;

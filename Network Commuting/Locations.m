@@ -42,6 +42,11 @@
 @synthesize areLocationsChanged;
 @synthesize areMatchingLocationsChanged;
 
+@synthesize rawAddressTo,rawAddressFrom;
+@synthesize geoRespTo,geoRespFrom;
+@synthesize geoRespTimeTo,geoRespTimeFrom;
+@synthesize isFromGeo,isToGeo;
+
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkGeoMgr:(RKObjectManager *)rkG
 {
     self = [super init];
@@ -417,6 +422,42 @@
 - (void)removeLocation:(Location *)loc0
 {
     [managedObjectContext deleteObject:loc0];
+}
+
+/*
+ Implement by Sitanshu Joshi.
+ Methods set values for save trip inTPServer.
+ */
+-(void)setRawAddressTo:(NSString *)rawAddr {
+    rawAddressTo = rawAddr;
+}
+
+-(void)setRawAddressFrom:(NSString *)rawAddrFrom {
+    rawAddressFrom = rawAddrFrom;
+}
+
+-(void)setGeoRespTo:(NSString *)geoResTo {
+    geoRespTo = geoResTo;
+}
+
+-(void)setGeoRespFrom:(NSString *)geoResFrom {
+    geoRespFrom = geoResFrom;
+}
+
+-(void)setGeoRespTimeTo:(NSString *)geoResTimeTo {
+    geoRespTimeTo = geoResTimeTo;
+}
+
+-(void)setGeoRespTimeFrom:(NSString *)geoResTimeFrom {
+    geoRespTimeFrom = geoResTimeFrom;
+}
+
+-(void)setIsFromGeo:(BOOL)isFromsGeo {
+    isFromGeo = isFromsGeo;
+}
+
+-(void)setIsToGeo:(BOOL)isTosGeo {
+    isToGeo = isTosGeo;
 }
 
 @end

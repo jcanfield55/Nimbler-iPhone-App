@@ -30,7 +30,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     
-   [UIApplication sharedApplication].applicationIconBadgeNumber = 2;
+   [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+    
     // Configure the RestKit RKClient object for Geocoding and trip planning
     RKObjectManager* rkGeoMgr = [RKObjectManager objectManagerWithBaseURL:GEO_RESPONSE_URL];
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
@@ -328,8 +329,6 @@
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:token forKey:@"deviceToken"];
-    
-    
     
 }
 

@@ -26,6 +26,15 @@
 @property (nonatomic) BOOL areLocationsChanged;  // True if there have been locations added or changed
 @property (nonatomic) BOOL areMatchingLocationsChanged; // True if matching location arrays has been updated (in which case view controller should refresh arrays)
 
+@property (strong, nonatomic) NSString *rawAddressTo;
+@property (strong, nonatomic) NSString *rawAddressFrom;
+@property (strong, nonatomic) NSString *geoRespTo;
+@property (strong, nonatomic) NSString *geoRespFrom;
+@property (strong, nonatomic) NSString *geoRespTimeTo;
+@property (strong, nonatomic) NSString *geoRespTimeFrom;
+@property (nonatomic) BOOL isFromGeo;
+@property (nonatomic) BOOL isToGeo;
+
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkGeoMgr:(RKObjectManager *)rkG;
 - (void)preLoadIfNeededFromFile:(NSString *)filename;  // Preloads locations (like Caltrain stations) from a file
 - (Location *)locationWithRawAddress:(NSString *)rawAddress;

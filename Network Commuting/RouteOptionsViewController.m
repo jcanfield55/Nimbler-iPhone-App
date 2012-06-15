@@ -112,10 +112,7 @@
     @try {
         
         RouteDetailsViewController *routeDetailsVC = [[RouteDetailsViewController alloc] initWithStyle:UITableViewStylePlain];
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        [prefs setObject:[[[plan sortedItineraries] objectAtIndex:[indexPath row]] itinId] forKey:@"itinararyid"];
         //    [self sendRequestForTimingDelay];
-        
         [routeDetailsVC setItinerary:[[plan sortedItineraries] objectAtIndex:[indexPath row]]];
         [[self navigationController] pushViewController:routeDetailsVC animated:YES];
     }
@@ -177,7 +174,7 @@
 
 -(void)sendRequestForTimingDelay
 {
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
 //    NSString *ititId =    [prefs objectForKey:@"itinararyid"];    
 
     
@@ -197,8 +194,6 @@
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     
     NSLog(@"response %@", [response bodyAsString]);
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    NSString *ititId =    [prefs objectForKey:@"itineraryid"];
     id res = (id)[response bodyAsJSON];
     
     
