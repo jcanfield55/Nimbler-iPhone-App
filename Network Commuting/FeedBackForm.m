@@ -456,7 +456,7 @@
     [alert addSubview:recProgressView];  
     
     [[NSRunLoop currentRunLoop] limitDateForMode:NSDefaultRunLoopMode];  
-    timer = [NSTimer scheduledTimerWithTimeInterval: 20.0 target:self selector:@selector(stopLoadingProcess) userInfo:nil repeats: NO];
+//    timer = [NSTimer scheduledTimerWithTimeInterval: 20.0 target:self selector:@selector(popOut) userInfo:nil repeats: NO];
     return alert;
 }  
 

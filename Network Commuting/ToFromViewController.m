@@ -642,8 +642,6 @@ NSString *currentLoc;
     
     // See if there has already been an identical plan request in the last 5 seconds.  
     [self startActivityIndicator];
-    
-    NSLog(@"Plan routine entered");
     BOOL isDuplicatePlan = NO;
     NSString *frForm = [fromLocation formattedAddress];
     NSString *toForm = [toLocation formattedAddress];
@@ -655,6 +653,12 @@ NSString *currentLoc;
         }
         else if ([[[d objectForKey:@"fromPlace"] formattedAddress] isEqualToString:frForm] &&
             [[[d objectForKey:@"toPlace"] formattedAddress] isEqualToString:toForm]) {
+
+            /*
+             Edited by sitanshu joshi. 
+             DE:46 Fixed.   
+             */
+            [self stopActivityIndicator];
             isDuplicatePlan = YES;
             break;
         }
@@ -680,8 +684,7 @@ NSString *currentLoc;
             [alert show];
             return true;
         }
-        
-        
+                
         // Create the date formatters we will use to output the date & time
         NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
         [dFormat setDateStyle:NSDateFormatterShortStyle];
@@ -689,7 +692,6 @@ NSString *currentLoc;
         NSDateFormatter* tFormat = [[NSDateFormatter alloc] init];
         [tFormat setTimeStyle:NSDateFormatterShortStyle];
         [tFormat setDateStyle:NSDateFormatterNoStyle];
-
         
         // Build the parameters into a resource string       
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
@@ -742,7 +744,7 @@ NSString *currentLoc;
     if (activityTimer && [activityTimer isValid]) {
         [activityTimer invalidate];  // if old activity timer still valid, invalidate it
     }
-    [NSTimer scheduledTimerWithTimeInterval: 56.0f target: self selector: @selector(stopActivityIndicator) userInfo: nil repeats: NO];
+    [NSTimer scheduledTimerWithTimeInterval: 56.0f target: self selector: @selector(stopActivityIndicator) userInfo:nil repeats: NO];
 }
 
 -(void)stopActivityIndicator

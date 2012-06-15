@@ -9,7 +9,6 @@
 #ifndef Nimbler_Constants_h
 #define Nimbler_Constants_h
 
-
 #endif
 
 #define TRIP_GENERATE_URL       @"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/"
@@ -19,6 +18,7 @@
 
 #define TWITTER_SERARCH_URL     @"https://twitter.com/#!/search/realtime/TRAIN%20from%3Acaltrain%20OR%20from%3Acaltrain_news"
 #define CALTRAIN_TWITTER_URL    @"https://twitter.com/#!/search/from%3Acaltrain%20OR%20from%3Acaltrain_news"
+
 #define GEO_FROM                @"1"
 #define GEO_TO                  @"1"
 #define REVERSE_GEO_FROM        @"2"
@@ -40,5 +40,9 @@
 #define FB_SOURCE_ITINERARY     @"2"
 #define FB_SOURCE_LEG           @"3"
 #define FB_SOURCE_GENERAL       @"4"
+
+#define ALERT_OFF               @"1"
+#define ALERT_ON                @"2"
+#define ALERT_URGENT            @"3"
 
 #define TINY_FLOAT              0.00000001
