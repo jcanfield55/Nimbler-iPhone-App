@@ -529,7 +529,7 @@ NSString *currentLoc;
     NSLog(@"current Location %@", fromLocs);
     FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_GENERAL uniqueId:nil date:[dFormat stringFromDate:tripDate] fromAddress:fromLocs toAddress:[toLocation formattedAddress]];
     
-    FeedBackForm *feedbackVC =  [[FeedBackForm alloc] initWithFeedBack:@"feedBackForm" fbParam:fbParam bundle:nil];
+    FeedBackForm *feedbackVC =  [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];  // DE56 fix
 
     [[self navigationController] pushViewController:feedbackVC animated:YES];
 }
@@ -745,7 +745,6 @@ NSString *currentLoc;
     // TODO See if we already have a similar plan that we can use
     
     // See if there has already been an identical plan request in the last 5 seconds.  
-    [self startActivityIndicator];
     
     NSLog(@"Plan routine entered");
     BOOL isDuplicatePlan = NO;
@@ -766,6 +765,8 @@ NSString *currentLoc;
     
     if (!isDuplicatePlan)  // if not a recent duplicate request
     {
+        [self startActivityIndicator];
+        
         // Increment fromFrequency and toFrequency
         [fromLocation incrementFromFrequency];
         [toLocation incrementToFrequency];
