@@ -35,6 +35,7 @@
 - (IBAction)toFromTyping:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)textSubmitted:(id)sender forEvent:(UIEvent *)event;
 
+- (void)initializeCurrentLocation:(Location *)currentLoc; // Method called when currentLocation is first created and automatically picked as the fromLocation
 
 - (void)setPickedLocation:(Location *)ploc locationArray:(NSArray *)locationArray; // Method called by LocationPickerVC when a user picks a location
 @end

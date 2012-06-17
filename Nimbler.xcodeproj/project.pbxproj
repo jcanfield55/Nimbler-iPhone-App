@@ -34,6 +34,8 @@
 		52917827158477F6001CC74C /* caltrain-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 52917826158477F6001CC74C /* caltrain-station.json */; };
 		5297F2DF1560CA200032D015 /* DateTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297F2DE1560CA200032D015 /* DateTimeViewController.m */; };
 		5297F2E11560CAC20032D015 /* ToFromTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297F2E01560CAC20032D015 /* ToFromTableViewController.m */; };
+		52A46660158D4F88003EB02B /* RouteOptionsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52A4665F158D4F88003EB02B /* RouteOptionsViewController.xib */; };
+		52A46662158D6AEF003EB02B /* RouteDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52A46661158D6AEF003EB02B /* RouteDetailsViewController.xib */; };
 		52B1B22614F9ABE4001AC5D1 /* RouteDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B1B22514F9ABE4001AC5D1 /* RouteDetailsViewController.m */; };
 		52B302C514BE2B1E00EB4852 /* ToFromViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B302C314BE2B1E00EB4852 /* ToFromViewController.m */; settings = {COMPILER_FLAGS = "-ObjC"; }; };
 		52B302C614BE2B1E00EB4852 /* ToFromViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52B302C414BE2B1E00EB4852 /* ToFromViewController.xib */; };
@@ -800,6 +802,8 @@
 		5297F2DD1560CA0F0032D015 /* DateTimeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateTimeViewController.h; sourceTree = "<group>"; };
 		5297F2DE1560CA200032D015 /* DateTimeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateTimeViewController.m; sourceTree = "<group>"; };
 		5297F2E01560CAC20032D015 /* ToFromTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = ToFromTableViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		52A4665F158D4F88003EB02B /* RouteOptionsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RouteOptionsViewController.xib; sourceTree = "<group>"; };
+		52A46661158D6AEF003EB02B /* RouteDetailsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RouteDetailsViewController.xib; sourceTree = "<group>"; };
 		52B1B22414F9ABE4001AC5D1 /* RouteDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteDetailsViewController.h; sourceTree = "<group>"; };
 		52B1B22514F9ABE4001AC5D1 /* RouteDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteDetailsViewController.m; sourceTree = "<group>"; };
 		52B302C214BE2B1E00EB4852 /* ToFromViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToFromViewController.h; sourceTree = "<group>"; };
@@ -2463,8 +2467,10 @@
 				521DDD361582D44500DBE838 /* LocationPickerViewController.xib */,
 				5210516B14C9BEA80025DD39 /* RouteOptionsViewController.h */,
 				5210516C14C9BEA80025DD39 /* RouteOptionsViewController.m */,
+				52A4665F158D4F88003EB02B /* RouteOptionsViewController.xib */,
 				52B1B22414F9ABE4001AC5D1 /* RouteDetailsViewController.h */,
 				52B1B22514F9ABE4001AC5D1 /* RouteDetailsViewController.m */,
+				52A46661158D6AEF003EB02B /* RouteDetailsViewController.xib */,
 			);
 			name = controllerView;
 			sourceTree = "<group>";
@@ -2727,6 +2733,8 @@
 				CC9E424D15821B7B00A4ADED /* map.png in Resources */,
 				521DDD381582D44500DBE838 /* LocationPickerViewController.xib in Resources */,
 				52917827158477F6001CC74C /* caltrain-station.json in Resources */,
+				52A46660158D4F88003EB02B /* RouteOptionsViewController.xib in Resources */,
+				52A46662158D6AEF003EB02B /* RouteDetailsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -39,7 +39,7 @@
 // Callback for when user presses the navigate back / forth button on the right navbar
 - (IBAction)navigateBack:(id)sender;
 - (IBAction)navigateForward:(id)sender;
--(IBAction)twitterSearch:(id)sender;
+- (IBAction)twitterSearch:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
 -(void)walk;
 -(void)customMap;

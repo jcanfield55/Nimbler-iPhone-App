@@ -363,7 +363,6 @@ NSString *legID;
                     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
                     [prefs setObject:@"3" forKey:@"source"];
                     [prefs setObject:[leg legId] forKey:@"uniqueid"];
-                    tw_btn.hidden = YES;
                     if([leg isWalk]){
                         aView.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:0.7] ;
                         aView.lineWidth = 5;
@@ -371,9 +370,7 @@ NSString *legID;
                     } else if([leg isBus]){
                         aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:0.7];
                         aView.lineWidth = 5;
-                    } else if([leg isTrain]){
-                        tw_btn.hidden = NO;
-                        
+                    } else if([leg isTrain]){                        
                         aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:0.8] ;
                         aView.lineWidth = 5;
                     } else {
@@ -428,7 +425,8 @@ NSString *legID;
     [super viewWillDisappear:animated];
 
 }
--(IBAction)twitterSearch:(id)sender{
+-(IBAction)twitterSearch:(id)sender forEvent:(UIEvent *)event
+{
 
     @try {
         /*

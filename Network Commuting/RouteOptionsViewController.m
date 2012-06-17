@@ -13,34 +13,50 @@
 #import "TwitterSearch.h"
 #import "FeedBackForm.h"
 
+@interface RouteOptionsViewController()
+{
+    // Variables for internal use
+
+    TwitterSearch* twitterSearchVC;
+    RouteDetailsViewController* routeDetailsVC;
+}
+
+@end
+
+
 @implementation RouteOptionsViewController
 
+@synthesize mainTable;
+@synthesize feedbackButton;
+@synthesize advisoryButton;
 @synthesize plan;
 
 
-- (id)initWithStyle:(UITableViewStyle)style
+int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithStyle:UITableViewStylePlain];
-    
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         [[self navigationItem] setTitle:@"Itineraries"];
         timeFormatter = [[NSDateFormatter alloc] init];
         [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
-
-    
-       feedback = [[UIBarButtonItem alloc] initWithTitle:@"F" style:UIBarButtonItemStylePlain target:self action:@selector(feedBackSubmit)];
-
-        self.navigationItem.rightBarButtonItem = feedback;
         
     }
     return self;
 }
 
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-    [[self tableView] reloadData];
+    // Enforce height of main table
+    CGRect rect0 = [mainTable frame];
+    rect0.size.height = ROUTE_OPTIONS_TABLE_HEIGHT;
+    [mainTable setFrame:rect0];
+    [mainTable reloadData];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -50,6 +66,8 @@
     
     // Release any cached data, images, etc that aren't in use.
 }
+
+#pragma mark - UITableViewDelegate methods
 
 // Table view management methods
 
@@ -104,14 +122,14 @@
 }
 
 
-#pragma mark - UITableViewDelegate methods
-
 // If selected, show the RouteDetailsViewController
 - (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     @try {
         
-        RouteDetailsViewController *routeDetailsVC = [[RouteDetailsViewController alloc] initWithStyle:UITableViewStylePlain];
+        if (!routeDetailsVC) {
+            routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
+        }
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setObject:[[[plan sortedItineraries] objectAtIndex:[indexPath row]] itinId] forKey:@"itinararyid"];
         //    [self sendRequestForTimingDelay];
@@ -125,19 +143,23 @@
     
 }
 
-#pragma mark - View lifecycle
+#pragma mark - Button Event handling
 
-/*
- Implement loadView to create a view hierarchy programmatically, without using a nib.
-*/
- - (void)loadView
+- (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
-    [super loadView];
-    
+    @try {
+        if (!twitterSearchVC) {
+            twitterSearchVC = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
+        }
+        [[self navigationController] pushViewController:twitterSearchVC animated:YES];
+        [twitterSearchVC loadRequest:CALTRAIN_TWITTER_URL];
+    }
+    @catch (NSException *exception) {
+        NSLog(@" twitter print : %@", exception);
+    } 
 }
 
-
--(void)feedBackSubmit
+-(void)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     
      FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_PLAN uniqueId:[plan planId] date:nil fromAddress:nil toAddress:nil];
@@ -146,6 +168,10 @@
     
     [[self navigationController] pushViewController:feedbackFormVc animated:YES]; 
 }
+
+
+
+#pragma mark - View lifecycle
 
 /*
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.

@@ -41,6 +41,7 @@
     NSTimer* activityTimer;
     RouteOptionsViewController *routeOptionsVC; 
     LocationPickerViewController *locationPickerVC;
+    TwitterSearch* twitterSearchVC;
 }
 
 // Internal methods
@@ -62,6 +63,7 @@
 @synthesize fromTableVC;
 @synthesize routeButton;
 @synthesize feedbackButton;
+@synthesize advisoriesButton;
 @synthesize rkGeoMgr;
 @synthesize rkPlanMgr;
 @synthesize rkSavePlanMgr;
@@ -81,7 +83,7 @@
 int const MAIN_TABLE_HEIGHT = 358;
 int const TOFROM_ROW_HEIGHT = 35;
 int const TOFROM_TABLE_HEIGHT_NO_CL_MODE = 105;
-int const TO_TABLE_HEIGHT_CL_MODE = 190;
+int const TO_TABLE_HEIGHT_CL_MODE = 178;
 int const FROM_HEIGHT_CL_MODE = 40;
 int const TOFROM_TABLE_WIDTH = 300; 
 int const TIME_DATE_HEIGHT = 40;
@@ -532,6 +534,20 @@ NSString *currentLoc;
     [[self navigationController] pushViewController:feedbackVC animated:YES];
 }
 
+- (IBAction)advisoriesButtonPressed:(id)sender forEvent:(UIEvent *)event
+{
+    @try {
+        if (!twitterSearchVC) {
+            twitterSearchVC = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
+        }
+        [[self navigationController] pushViewController:twitterSearchVC animated:YES];
+        [twitterSearchVC loadRequest:CALTRAIN_TWITTER_URL];
+    }
+    @catch (NSException *exception) {
+        NSLog(@" twitter print : %@", exception);
+    } 
+}
+
 // Method to adjust the mainTable for editing mode
 //
 - (void)setEditMode:(ToFromEditMode)newEditMode
@@ -623,6 +639,11 @@ NSString *currentLoc;
 {
     if (isCurrentLocationMode != newCLMode) { // Only do something if there is a change
         isCurrentLocationMode = newCLMode;
+        activityIndicator = nil;  // Nullify because activityIndicator changes per CLMode
+        if (newCLMode && (fromLocation != currentLocation)) {  
+            // DE55 fix: make sure that currentLocation is selected if this method called by nc_AppDelegate
+            [fromTableVC initializeCurrentLocation:currentLocation]; 
+        }
         [mainTable reloadData];
         // Adjust the toTable height
         if (newCLMode) {
@@ -656,7 +677,7 @@ NSString *currentLoc;
                     
                     // Pass control to the RouteOptionsViewController to display itinerary choices
                     if (!routeOptionsVC) {
-                        routeOptionsVC = [[RouteOptionsViewController alloc] initWithStyle:UITableViewStylePlain];
+                        routeOptionsVC = [[RouteOptionsViewController alloc] initWithNibName:nil bundle:nil];;
                     }
                     
                     [routeOptionsVC setPlan:plan];                                        
@@ -808,11 +829,23 @@ NSString *currentLoc;
     self.view.userInteractionEnabled = NO;
 
     if (!activityIndicator) {
+        UIActivityIndicatorViewStyle style;
+        BOOL setColorToBlack = NO;
+        if ([UIActivityIndicatorView instancesRespondToSelector:@selector(color)]) {
+            style = UIActivityIndicatorViewStyleWhiteLarge;
+            setColorToBlack = YES;
+        }
+        else {
+            style = UIActivityIndicatorViewStyleGray;
+        }
         activityIndicator = [[UIActivityIndicatorView alloc]  
-                             initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge]; 
+                             initWithActivityIndicatorStyle:style]; 
+        if (setColorToBlack) {
+            [activityIndicator setColor:[UIColor blackColor]];
+        }
     }
     activityIndicator.center = CGPointMake(self.view.bounds.size.width / 2,   
-                                           (self.view.bounds.size.height/2)+11);
+                                           (self.view.bounds.size.height/2));
     if (![activityIndicator isAnimating]) {
         [activityIndicator setUserInteractionEnabled:FALSE];
         [activityIndicator startAnimating]; // if not already animating, start
