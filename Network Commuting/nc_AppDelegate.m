@@ -106,22 +106,32 @@
             [currentLocation setFormattedAddress:@"Current Location"];
             [currentLocation setFromFrequencyFloat:100.0];
             [toFromViewController reloadTables]; // DE30 fix (1 of 2)
+            [locations setIsLocationServiceEnable:TRUE];
         }
         else {
             currentLocation = [matchingLocations objectAtIndex:0];
+            [locations setIsLocationServiceEnable:TRUE];
         }
         [toFromViewController setCurrentLocation:currentLocation];
         [toFromViewController setIsCurrentLocationMode:TRUE];
-    }
+    } 
 
     [currentLocation setLatFloat:[newLocation coordinate].latitude];
     [currentLocation setLngFloat:[newLocation coordinate].longitude];
-    
     
     //TODO error handling if location services not available
     //TODO error handling if current location is in the database, but not populated
     //TODO error handling for very old cached current location data
     //TODO adjust frequency if needed
+}
+
+-(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{    
+    if ([[error domain] isEqualToString: kCLErrorDomain] && [error code] == kCLErrorDenied) {
+        // The user denied your app access to location information.
+        [locations setIsLocationServiceEnable:FALSE];
+    }
+    
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

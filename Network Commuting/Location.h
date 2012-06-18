@@ -38,6 +38,7 @@
 @property (nonatomic, strong) NSDate *dateLastUsed;  // Last time a user created or selected this location
 @property (nonatomic, strong) NSString *nickName;  // Alias name for location, e.g. "eBay Whitman Campus" or "Home"
 
+
 + (void)setLocations:(Locations *)loc;
 + (Locations *)locations;
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)gt;

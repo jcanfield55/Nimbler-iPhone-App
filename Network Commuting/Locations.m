@@ -46,6 +46,7 @@
 @synthesize geoRespTo,geoRespFrom;
 @synthesize geoRespTimeTo,geoRespTimeFrom;
 @synthesize isFromGeo,isToGeo;
+@synthesize isLocationServiceEnable;
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkGeoMgr:(RKObjectManager *)rkG
 {
@@ -460,4 +461,9 @@
     isToGeo = isTosGeo;
 }
 
+
+-(void)setIsLocationServiceEnable:(BOOL)isLocationServicesEnable
+{
+    isLocationServiceEnable = isLocationServicesEnable;
+}
 @end

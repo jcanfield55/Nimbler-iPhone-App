@@ -446,17 +446,25 @@ NSString *currentLoc;
     
     if (isFrom) {
         fromLocation = loc;
-        [self bayAreaAvailability:fromLocation];
+        if ([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
+            if (![locations isLocationServiceEnable]) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Location" message:@"Your Location Service for Nimbler is off, Kindly on it" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                [alert show];
+            }
+        }
+//        [self getCurrentLocationOfFormattedAddress:fromLocation];
         if (loc == currentLocation && !isCurrentLocationMode) {
+            NSLog(@"current Location 1");
             [self setIsCurrentLocationMode:TRUE];
         }
         else if (loc != currentLocation && isCurrentLocationMode) {
             [self setIsCurrentLocationMode:FALSE];
+            NSLog(@"current Location 2");
         }
     } 
     else {
         toLocation = loc;
-        [self bayAreaAvailability:toLocation];
+//        [self getCurrentLocationOfFormattedAddress:toLocation];
 
     }
 }
