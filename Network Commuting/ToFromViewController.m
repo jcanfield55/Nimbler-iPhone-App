@@ -446,12 +446,12 @@ NSString *currentLoc;
     
     if (isFrom) {
         fromLocation = loc;
-        if ([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
-            if (![locations isLocationServiceEnable]) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Location" message:@"Your Location Service for Nimbler is off, Kindly on it" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                [alert show];
-            }
-        }
+//        if ([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
+//            if (![locations isLocationServiceEnable]) {
+//                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Location" message:@"Your Location Service for Nimbler is off, Kindly on it" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+//                [alert show];
+//            }
+//        }
 //        [self getCurrentLocationOfFormattedAddress:fromLocation];
         if (loc == currentLocation && !isCurrentLocationMode) {
             NSLog(@"current Location 1");
@@ -490,6 +490,15 @@ NSString *currentLoc;
     UIAlertView *alert;
     
     startButtonClickTime = CFAbsoluteTimeGetCurrent();
+    
+    
+    if ([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
+        if ([self alertUsetForLocationService]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Location" message:@"Location Service is disabled for Nimbler, Do you want to enable?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"Cancel", nil];
+            [alert show];
+            return ;
+        }
+    }
     
     // if all the geolocations are here, get a plan.  
     if ([fromLocation formattedAddress] && [toLocation formattedAddress] &&
@@ -1035,5 +1044,22 @@ NSString *currentLoc;
     currentLoc = [streetName objectAtIndex:1];
     
     return currentLoc;
+}
+
+-(BOOL)alertUsetForLocationService {
+    if (![locations isLocationServiceEnable]) {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+-(void)alertView: (UIAlertView *)UIAlertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    
+    NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
+    
+    if ([btnName isEqualToString:@"Yes"]) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=LocationServices"]];
+    }     
 }
 @end

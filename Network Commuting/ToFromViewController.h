@@ -14,7 +14,7 @@
 #import "enums.h"
 #import "SupportedRegion.h"
 
-@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,RKRequestDelegate,UIActionSheetDelegate>
+@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,RKRequestDelegate,UIActionSheetDelegate,UIAlertViewDelegate>
 
 
 typedef enum {
@@ -62,4 +62,5 @@ typedef enum {
 
 -(void)savePlanInTPServer:(NSString *)tripResponse;
 -(NSString *)getCurrentLocationOfFormattedAddress:(Location *)location;
+-(BOOL)alertUsetForLocationService;
 @end
