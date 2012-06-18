@@ -27,10 +27,10 @@
     NSString *planURLResource; // URL resource sent to planner
     NSMutableArray *planRequestHistory; // Array of all the past plan request parameter histories in sequential order (most recent one last)
     Plan *plan;
-    Plan *pl;
+    Plan *tpResponsePlan;
     SupportedRegion *sr;
     FeedBackForm *fbplan;
-    BOOL routeRequested;   // True when the user has pressed the route button and a route has not yet been requested
+
     NSManagedObjectContext *managedObjectContext;
     BOOL toGeocodeRequestOutstanding;  // true if there is an outstanding To geocode request
     BOOL fromGeocodeRequestOutstanding;  //true if there is an outstanding From geocode request
@@ -41,6 +41,7 @@
     NSTimer* activityTimer;
     RouteOptionsViewController *routeOptionsVC; 
     LocationPickerViewController *locationPickerVC;
+    TwitterSearch* twitterSearchVC;
 }
 
 // Internal methods
@@ -49,7 +50,7 @@
 - (void)startActivityIndicator;
 - (void)bayAreaAvailability:(Location *)loc;
 - (void)addLocationAction:(id) sender;
-- (void)forFeedbackProcess;
+- (void)setToFromHeightForTable:(UITableView *)table Height:(int)tableHeight;
 
 @end
 
@@ -62,6 +63,7 @@
 @synthesize fromTableVC;
 @synthesize routeButton;
 @synthesize feedbackButton;
+@synthesize advisoriesButton;
 @synthesize rkGeoMgr;
 @synthesize rkPlanMgr;
 @synthesize rkSavePlanMgr;
@@ -69,19 +71,27 @@
 @synthesize fromLocation;
 @synthesize toLocation;
 @synthesize currentLocation;
+@synthesize isCurrentLocationMode;
 @synthesize departOrArrive;
 @synthesize tripDate;
 @synthesize tripDateLastChangedByUser;
-@synthesize rkBayArea;
+@synthesize isTripDateCurrentTime;
 @synthesize editMode;
 @synthesize supportedRegion;
 
 // Constants for animating up and down the To: field
 int const MAIN_TABLE_HEIGHT = 358;
 int const TOFROM_ROW_HEIGHT = 35;
-int const TOFROM_TABLE_HEIGHT = 105;
+int const TOFROM_TABLE_HEIGHT_NO_CL_MODE = 105;
+int const TO_TABLE_HEIGHT_CL_MODE = 178;
+int const FROM_HEIGHT_CL_MODE = 40;
 int const TOFROM_TABLE_WIDTH = 300; 
-int const TIME_DATE_HEIGHT = 45;
+int const TIME_DATE_HEIGHT = 40;
+int const TO_SECTION = 0;
+int const FROM_SECTION = 1;
+int const TIME_DATE_SECTION = 2;
+
+NSString *currentLoc;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -91,7 +101,6 @@ int const TIME_DATE_HEIGHT = 45;
 
         planRequestHistory = [NSMutableArray array]; // Initialize this array
         departOrArrive = DEPART;
-        routeRequested = FALSE;
         toGeocodeRequestOutstanding = FALSE;
         fromGeocodeRequestOutstanding = FALSE;
         supportedRegion = [[SupportedRegion alloc] initWithDefault];
@@ -109,7 +118,7 @@ int const TIME_DATE_HEIGHT = 45;
         rect1.origin.x = 0;
         rect1.origin.y = 0;
         rect1.size.width = TOFROM_TABLE_WIDTH;
-        rect1.size.height = TOFROM_TABLE_HEIGHT;
+        rect1.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
         toTable = [[UITableView alloc] initWithFrame:rect1 style:UITableViewStylePlain];
         [toTable setRowHeight:TOFROM_ROW_HEIGHT];
         toTableVC = [[ToFromTableViewController alloc] initWithTable:toTable isFrom:FALSE toFromVC:self locations:locations];
@@ -120,7 +129,7 @@ int const TIME_DATE_HEIGHT = 45;
         rect2.origin.x = 0;
         rect2.origin.y = 0;
         rect2.size.width = TOFROM_TABLE_WIDTH; 
-        rect2.size.height = TOFROM_TABLE_HEIGHT;
+        rect2.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
         fromTable = [[UITableView alloc] initWithFrame:rect2 style:UITableViewStylePlain];
         [fromTable setRowHeight:TOFROM_ROW_HEIGHT];
         fromTableVC = [[ToFromTableViewController alloc] initWithTable:fromTable isFrom:TRUE toFromVC:self locations: locations];
@@ -128,6 +137,13 @@ int const TIME_DATE_HEIGHT = 45;
         [fromTable setDelegate:fromTableVC];   
     }
     return self;
+}
+
+- (void)setToFromHeightForTable:(UITableView *)table Height:(int)tableHeight
+{
+    CGRect rect0 = [table frame];
+    rect0.size.height = tableHeight;
+    [table setFrame:rect0];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -173,18 +189,26 @@ int const TIME_DATE_HEIGHT = 45;
 - (void)updateTripDate
 {
     NSDate* currentTime = [[NSDate alloc] init];
-    if (!tripDate) {
-        tripDate = currentTime;   // if no date set, use current time
-        departOrArrive = DEPART;
+    if (isTripDateCurrentTime) {
+        tripDate = currentTime;  // simply refresh the date 
     }
-    else { 
-        if (!tripDateLastChangedByUser || [tripDateLastChangedByUser timeIntervalSinceNow] < -7200.0) { 
-            // if tripDate not changed in the last two hours by user, we may update it...
-            NSDate* laterDate = [tripDate laterDate:currentTime]; 
-            if (laterDate == currentTime) {  // if currentTime is later than tripDate, update to current time
-                tripDate = currentTime;
-                departOrArrive = DEPART; 
-            }
+    if (!tripDate || !tripDateLastChangedByUser) {
+        tripDate = currentTime;   // if no date set, or never set by user, use current time
+        departOrArrive = DEPART;
+        isTripDateCurrentTime = YES;
+    }
+    else if ([tripDateLastChangedByUser timeIntervalSinceNow] < -(24*3600.0)) {
+        // if more than a day since last user update, use the current time
+        tripDate = currentTime;  
+        departOrArrive = DEPART;
+        isTripDateCurrentTime = YES;
+    }
+    else if ([tripDateLastChangedByUser timeIntervalSinceNow] < -7200.0) { 
+        // if tripDate not changed in the last two hours by user, update it if tripDate is in the past
+        NSDate* laterDate = [tripDate laterDate:currentTime]; 
+        if (laterDate == currentTime) {  // if currentTime is later than tripDate, update to current time
+            tripDate = currentTime;
+            departOrArrive = DEPART; 
         }
     }
 }
@@ -246,25 +270,40 @@ int const TIME_DATE_HEIGHT = 45;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (editMode == NO_EDIT && [indexPath section] == 0) {  // Time/Date section
+    if (editMode == NO_EDIT && [indexPath section] == TIME_DATE_SECTION) {  
         return TIME_DATE_HEIGHT;
     }  
     else if (editMode != NO_EDIT && [indexPath row] == 0) {  // txtField row in Edit mode
         return TOFROM_ROW_HEIGHT;
     }
-    // Else To/From table sections
-    return TOFROM_TABLE_HEIGHT;
+    else if (editMode != NO_EDIT) {  // to or from table in Edit mode
+        return TOFROM_TABLE_HEIGHT_NO_CL_MODE;
+    }
+    else if (isCurrentLocationMode) {  // NO_EDIT mode and CurrentLocationMode
+        if ([indexPath section] == TO_SECTION) {  // Larger To Table
+            return TO_TABLE_HEIGHT_CL_MODE;
+        }
+        else {
+            return FROM_HEIGHT_CL_MODE;  // Single line From showing Current Location
+        }
+    }
+    // Else NO_EDIT mode and no CurrentLocationMode
+    
+    return TOFROM_TABLE_HEIGHT_NO_CL_MODE;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     if (editMode == NO_EDIT) {
-        if (section == 0) {
+        if (section == TIME_DATE_SECTION) {
             return nil;  // no title for the time/date field section
-        } else if (section == 1) {
+        } else if (section==FROM_SECTION && isCurrentLocationMode) {
+            return nil;
+        } else if (section==FROM_SECTION && !isCurrentLocationMode) {
             return @"From:";
-        } else {
-            return @"To:";
+        }
+        else if (section == TO_SECTION) {
+            return @"Where are you going?";
         }
     }
     // else, if in Edit mode
@@ -272,12 +311,12 @@ int const TIME_DATE_HEIGHT = 45;
         return @"From:";
     }
     // else
-    return @"To:";
+    return @"Where are you going?";
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (editMode == NO_EDIT && [indexPath section] == 0) {  // the timeDate section
+    if (editMode == NO_EDIT && [indexPath section] == TIME_DATE_SECTION) {  
         UITableViewCell *cell =
         [tableView dequeueReusableCellWithIdentifier:@"timeDateTableCell"];
         if (!cell) {
@@ -285,14 +324,35 @@ int const TIME_DATE_HEIGHT = 45;
                                           reuseIdentifier:@"timeDateTableCell"];
         }        
         [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
-        [[cell textLabel] setText:((departOrArrive==DEPART) ? @"Depart at" : @"Arrive by")];
         [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:14.0]];
         [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-        [[cell detailTextLabel] setText:[tripDateFormatter stringFromDate:tripDate]];
+        if (isTripDateCurrentTime) { 
+            [[cell textLabel] setText:@"Depart"];
+            [[cell detailTextLabel] setText:@"Now"];
+        } 
+        else {
+            [[cell textLabel] setText:((departOrArrive==DEPART) ? @"Depart at" : @"Arrive by")];
+            [[cell detailTextLabel] setText:[tripDateFormatter stringFromDate:tripDate]];
+        }
         return cell;
     }
+    else if (editMode==NO_EDIT && isCurrentLocationMode==TRUE && [indexPath section] == FROM_SECTION) {
+        // Single row from cell in CurrentLocationMode
+        UITableViewCell *cell =
+        [tableView dequeueReusableCellWithIdentifier:@"singleRowFromCell"];
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 
+                                          reuseIdentifier:@"singleRowFromCell"];
+        }        
+        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
+        [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:14.0]];
+        [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+        [[cell textLabel] setText:@"From"];
+        [[cell detailTextLabel] setText:@"Current Location"];
+        return cell;        
+    }
     else if (editMode==NO_EDIT || [indexPath row] == 1) { // the to or from table sections
-        BOOL isFrom = (editMode==FROM_EDIT || (editMode==NO_EDIT && [indexPath section]==1))
+        BOOL isFrom = (editMode==FROM_EDIT || (editMode==NO_EDIT && [indexPath section]==FROM_SECTION))
                        ? TRUE : FALSE;  
         NSString* cellIdentifier = isFrom ? @"fromTableCell" : @"toTableCell";
         
@@ -363,7 +423,7 @@ int const TIME_DATE_HEIGHT = 45;
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([indexPath section] == 0) {  // if dateTime section
+    if ([indexPath section] == TIME_DATE_SECTION) {  
         DateTimeViewController *dateTimeVC = [[DateTimeViewController alloc] initWithNibName:nil bundle:nil];
         [dateTimeVC setDate:tripDate];
         [dateTimeVC setDepartOrArrive:departOrArrive];
@@ -371,7 +431,9 @@ int const TIME_DATE_HEIGHT = 45;
         [[self navigationController] pushViewController:dateTimeVC animated:YES];
         return;
     }
-
+    else if (isCurrentLocationMode && [indexPath section] == FROM_SECTION) {  // if single-row From field selected
+        [self setEditMode:FROM_EDIT];  // go into edit mode
+    }
 }
 
 
@@ -385,9 +447,14 @@ int const TIME_DATE_HEIGHT = 45;
     if (isFrom) {
         fromLocation = loc;
         [self bayAreaAvailability:fromLocation];
-
-        
-    } else {
+        if (loc == currentLocation && !isCurrentLocationMode) {
+            [self setIsCurrentLocationMode:TRUE];
+        }
+        else if (loc != currentLocation && isCurrentLocationMode) {
+            [self setIsCurrentLocationMode:FALSE];
+        }
+    } 
+    else {
         toLocation = loc;
         [self bayAreaAvailability:toLocation];
 
@@ -404,13 +471,6 @@ int const TIME_DATE_HEIGHT = 45;
         toGeocodeRequestOutstanding = isGeocodeOutstanding;
     }
     
-    // If there is an outstanding plan request that has not been submitted, and we are now clear in terms of no outstanding geocodes, go ahead and submit the plan
-    
-    if (routeRequested && !toGeocodeRequestOutstanding && !fromGeocodeRequestOutstanding) {
-        [self getPlan];
-        routeRequested = FALSE;
-    }
-    
 }
 
 // Requesting a plan
@@ -421,14 +481,15 @@ int const TIME_DATE_HEIGHT = 45;
     NSLog(@"Route Button Pressed");
     UIAlertView *alert;
     
-    routeRequested = true;
     startButtonClickTime = CFAbsoluteTimeGetCurrent();
     
     // if all the geolocations are here, get a plan.  
     if ([fromLocation formattedAddress] && [toLocation formattedAddress] &&
         !toGeocodeRequestOutstanding && !fromGeocodeRequestOutstanding) {
+        if (isTripDateCurrentTime) { // if current time, get the latest before getting plan
+            [self updateTripDate];
+        }
         [self getPlan];
-        routeRequested = false;  
     }
     
     // if user has not entered/selected fromLocation, send them an alert
@@ -452,21 +513,39 @@ int const TIME_DATE_HEIGHT = 45;
 
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setValue:@"4" forKey:@"source"];
-    [prefs setValue:@"" forKey:@"uniqueid"];
+    NSString *fromLocs;
     
-    NSLog(@" %@ %@ ", [fromLocation formattedAddress], [toLocation formattedAddress]);
-    [prefs setValue:[fromLocation formattedAddress] forKey:@"fromaddress"];
-    [prefs setValue:[toLocation formattedAddress] forKey:@"toaddress"];
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
     NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
-    [dFormat setDateStyle:NSDateFormatterLongStyle];
+    [dFormat setDateStyle:NSDateFormatterShortStyle];
     [dFormat setTimeStyle:NSDateFormatterMediumStyle];
     [prefs setValue:[dFormat stringFromDate:tripDate] forKey:@"tripdate"];
+   if ([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
+       fromLocs = [self getCurrentLocationOfFormattedAddress:fromLocation];
+   } else {
+       fromLocs = [fromLocation formattedAddress];
+   }
+    NSLog(@"current Location %@", fromLocs);
+    FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_GENERAL uniqueId:nil date:[dFormat stringFromDate:tripDate] fromAddress:fromLocs toAddress:[toLocation formattedAddress]];
     
-    FeedBackForm *feedbackVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
+    FeedBackForm *feedbackVC =  [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];  // DE56 fix
+
     [[self navigationController] pushViewController:feedbackVC animated:YES];
+}
+
+- (IBAction)advisoriesButtonPressed:(id)sender forEvent:(UIEvent *)event
+{
+    @try {
+        if (!twitterSearchVC) {
+            twitterSearchVC = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
+        }
+        [[self navigationController] pushViewController:twitterSearchVC animated:YES];
+        [twitterSearchVC loadRequest:CALTRAIN_TWITTER_URL];
+    }
+    @catch (NSException *exception) {
+        NSLog(@" twitter print : %@", exception);
+    } 
 }
 
 // Method to adjust the mainTable for editing mode
@@ -481,17 +560,25 @@ int const TIME_DATE_HEIGHT = 45;
     editMode = newEditMode;  
     
     if (newEditMode == TO_EDIT && oldEditMode == NO_EDIT) {
-        // Delete first & second sections (moving To Table to top)
-        range.location = 0;
+        // Delete second & third sections (moving To Table to top)
+        range.location = 1;
         range.length = 2;
+        if (isCurrentLocationMode) {
+            // Set toTable to normal height when in TO_EDIT mode
+            [self setToFromHeightForTable:toTable Height:TOFROM_TABLE_HEIGHT_NO_CL_MODE];
+        }
         [mainTable beginUpdates];
         [mainTable deleteSections:[NSIndexSet indexSetWithIndexesInRange:range] withRowAnimation:UITableViewRowAnimationAutomatic];  // Leave only the To section
         [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
         [mainTable endUpdates];
     } 
     else if (newEditMode == NO_EDIT && oldEditMode == TO_EDIT) {
-        range.location = 0;
+        range.location = 1;
         range.length = 2;
+        if (isCurrentLocationMode) {
+            // Set toTable back to greater height when going to NO_EDIT mode
+            [self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE];
+        }
         [mainTable beginUpdates];
         [mainTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Delete the row for txtField
         [mainTable insertSections:[NSIndexSet indexSetWithIndexesInRange:range] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -545,6 +632,29 @@ int const TIME_DATE_HEIGHT = 45;
     return;
 }
 
+// Method to change isCurrentLocationMode.
+// When isCurrentLocationMode = true, then a larger To table is shown, and only one row containing "Current Location" is showed in the from field
+// When isCurrentLocationMode = false, then equal sized To and From tables are shown (traditional display)
+- (void)setIsCurrentLocationMode:(BOOL) newCLMode
+{
+    if (isCurrentLocationMode != newCLMode) { // Only do something if there is a change
+        isCurrentLocationMode = newCLMode;
+        activityIndicator = nil;  // Nullify because activityIndicator changes per CLMode
+        if (newCLMode && (fromLocation != currentLocation)) {  
+            // DE55 fix: make sure that currentLocation is selected if this method called by nc_AppDelegate
+            [fromTableVC initializeCurrentLocation:currentLocation]; 
+        }
+        [mainTable reloadData];
+        // Adjust the toTable height
+        if (newCLMode) {
+            [self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE];
+        }
+        else {
+            [self setToFromHeightForTable:toTable Height:TOFROM_TABLE_HEIGHT_NO_CL_MODE];
+        }
+    }
+}
+
 
 // Delegate methods for when the RestKit has results from the Planner
 - (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects 
@@ -567,21 +677,23 @@ int const TIME_DATE_HEIGHT = 45;
                     
                     // Pass control to the RouteOptionsViewController to display itinerary choices
                     if (!routeOptionsVC) {
-                        routeOptionsVC = [[RouteOptionsViewController alloc] initWithStyle:UITableViewStylePlain];
+                        routeOptionsVC = [[RouteOptionsViewController alloc] initWithNibName:nil bundle:nil];;
                     }
                     
-                    [routeOptionsVC setPlan:plan];
+                    [routeOptionsVC setPlan:plan];                                        
+                    [[self navigationController] pushViewController:routeOptionsVC animated:YES];              
                     
-                    [[self navigationController] pushViewController:routeOptionsVC animated:YES];
+                    savetrip = FALSE;
+                    [self savePlanInTPServer:[[objectLoader  response] bodyAsString]];
+                    NSLog(@"For Feedback Process called");
                 } else {
-                    pl = [objects objectAtIndex:0];
-                    [plan setPlanId:[pl planId]];                    
-                    NSLog(@"obj foe plan = %@", [pl planId]);
+                    tpResponsePlan = [objects objectAtIndex:0];
+                    [plan setPlanId:[tpResponsePlan planId]];                    
+                    NSLog(@"obj foe plan = %@", [tpResponsePlan planId]);
 
-                    // Catch exception for null ids from server
                     @try {
-                        for (int i= 0; i< [[pl itineraries] count]; i++) {
-                            Itinerary *itin = [[pl sortedItineraries] objectAtIndex:i];
+                        for (int i= 0; i< [[tpResponsePlan itineraries] count]; i++) {
+                            Itinerary *itin = [[tpResponsePlan sortedItineraries] objectAtIndex:i];
                             [[[plan sortedItineraries] objectAtIndex:i] setItinId:[itin itinId]];
                             NSLog(@"===========================================");
                           
@@ -595,29 +707,15 @@ int const TIME_DATE_HEIGHT = 45;
                         }
                     }
                     @catch (NSException *exception) {
-                        
-                    }
-    
-                }
-                
-                if (savetrip) {
-                    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-                    [prefs setObject:[[objectLoader  response] bodyAsString] forKey:@"tpPlanner"];
-                    
-                    savetrip = FALSE;
-                    [self forFeedbackProcess];
-                    NSLog(@"For Feedback Process called");
-                    
-//                   fbplan = [FeedBackForm alloc];
-                }
-                
+                        NSLog(@"Exception while iterating over TP response plan: %@", exception);
+                    }    
+                }                
             }
         }
-        @catch (NSException *exception) {
-            
+        @catch (NSException *exception) {            
             [self stopActivityIndicator];
              durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime ;
-            NSLog(@"Error object ==============================: %@", exception);
+            NSLog(@"Exceptione while parsing TP response plan: %@", exception);
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"Trip is not possible. Your start or end point might not be safely accessible" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
             [alert show];
             savetrip = false;
@@ -647,7 +745,6 @@ int const TIME_DATE_HEIGHT = 45;
     // TODO See if we already have a similar plan that we can use
     
     // See if there has already been an identical plan request in the last 5 seconds.  
-    [self startActivityIndicator];
     
     NSLog(@"Plan routine entered");
     BOOL isDuplicatePlan = NO;
@@ -668,6 +765,8 @@ int const TIME_DATE_HEIGHT = 45;
     
     if (!isDuplicatePlan)  // if not a recent duplicate request
     {
+        [self startActivityIndicator];
+        
         // Increment fromFrequency and toFrequency
         [fromLocation incrementFromFrequency];
         [toLocation incrementToFrequency];
@@ -731,11 +830,23 @@ int const TIME_DATE_HEIGHT = 45;
     self.view.userInteractionEnabled = NO;
 
     if (!activityIndicator) {
+        UIActivityIndicatorViewStyle style;
+        BOOL setColorToBlack = NO;
+        if ([UIActivityIndicatorView instancesRespondToSelector:@selector(color)]) {
+            style = UIActivityIndicatorViewStyleWhiteLarge;
+            setColorToBlack = YES;
+        }
+        else {
+            style = UIActivityIndicatorViewStyleGray;
+        }
         activityIndicator = [[UIActivityIndicatorView alloc]  
-                             initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge]; 
+                             initWithActivityIndicatorStyle:style]; 
+        if (setColorToBlack) {
+            [activityIndicator setColor:[UIColor blackColor]];
+        }
     }
     activityIndicator.center = CGPointMake(self.view.bounds.size.width / 2,   
-                                           (self.view.bounds.size.height/2)+11);
+                                           (self.view.bounds.size.height/2));
     if (![activityIndicator isAnimating]) {
         [activityIndicator setUserInteractionEnabled:FALSE];
         [activityIndicator startAnimating]; // if not already animating, start
@@ -789,6 +900,8 @@ int const TIME_DATE_HEIGHT = 45;
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+
+//Delete after testing
 -(void)bayAreaAvailability:(Location *)location
 {
     if( [location formattedAddress] != nil){       
@@ -801,6 +914,7 @@ int const TIME_DATE_HEIGHT = 45;
          NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
          NSArray *streetName = [locationString componentsSeparatedByString:@"\""];
          NSLog(@"Reverse Geocode: %@", [streetName objectAtIndex:1]);
+         currentLoc = [streetName objectAtIndex:1];
          NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];   
          [prefs setObject:[streetName objectAtIndex:1] forKey:@"currentLocation"];   
          
@@ -829,11 +943,10 @@ int const TIME_DATE_HEIGHT = 45;
 	}
 }
 
--(void)forFeedbackProcess
+-(void)savePlanInTPServer:(NSString *)tripResponse
 {
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    NSString *tpPlan = [prefs objectForKey:@"tpPlanner"];
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;   
     
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
@@ -841,7 +954,7 @@ int const TIME_DATE_HEIGHT = 45;
     [RKClient setSharedClient:client];
     
     [rkp setValue:udid forParam:@"deviceid"]; 
-    [rkp setValue:tpPlan forParam:@"planJsonString"]; 
+    [rkp setValue:tripResponse forParam:@"planJsonString"]; 
     NSString *time =  [[NSNumber numberWithFloat:durationOfResponseTime] stringValue]; 
     [rkp setValue:time forParam:@"timeTripPlan"];
     
@@ -855,8 +968,7 @@ int const TIME_DATE_HEIGHT = 45;
     {
         [rkp setValue:[toLocation lat] forParam:@"latTo"];
         [rkp setValue:[toLocation lng] forParam:@"lonTo"];
-    }
-    
+    }    
     [rkp setValue:[prefs objectForKey:@"rawFrom"] forParam:@"rawAddFrom"];
     [rkp setValue:[fromLocation formattedAddress] forParam:@"frmtdAddFrom"];
     [rkp setValue:[prefs objectForKey:@"fromType"]forParam:@"fromType"];
@@ -867,33 +979,25 @@ int const TIME_DATE_HEIGHT = 45;
     {
         [rkp setValue:[fromLocation lat] forParam:@"latTo"];
         [rkp setValue:[fromLocation lng] forParam:@"lonTo"];
-    }
-    
+    }    
     [[RKClient sharedClient] post:@"plan/new" params:rkp delegate:self]; 
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     if ([request isPOST]) {  
-        NSLog(@"Got aresponse back from our POST! %@", [response bodyAsString]);      
-        @try {            
-            
-            NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
-            
+//        NSLog(@"Got aresponse back from our POST! %@", [response bodyAsString]);      
+        @try {                        
+            NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
             NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                                     @"deviceid", udid, 
-                                    nil];
-            
-            rkSavePlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];
-            
+                                    nil];            
+            rkSavePlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];            
             [[rkSavePlanMgr mappingProvider] setMapping:[Plan objectMappingforPlanner:OTP_PLANNER] forKeyPath:@"plan"];
-            planURLResource = [@"plan/get" appendQueryParams:params];
-            
-            [rkSavePlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
-            
+            planURLResource = [@"plan/get" appendQueryParams:params];            
+            [rkSavePlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];            
         } @catch (NSException *exception) {
-          NSLog( @"sfsdfsdfsdf %@", exception);
-        }
-        
+          NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
+        }        
     } 
 }
 
@@ -911,4 +1015,17 @@ int const TIME_DATE_HEIGHT = 45;
     [[self navigationController] pushViewController:locationPickerVC animated:YES];    
 }
 
+
+-(NSString *)getCurrentLocationOfFormattedAddress:(Location *)location
+{
+    double latitude = [[location lat] doubleValue];
+    double longitude = [[location lng] doubleValue];        
+    NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv", latitude, longitude];   
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
+    NSArray *streetName = [locationString componentsSeparatedByString:@"\""];
+    currentLoc = [streetName objectAtIndex:1];
+    
+    return currentLoc;
+}
 @end

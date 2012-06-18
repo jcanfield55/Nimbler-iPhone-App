@@ -6,20 +6,22 @@
 //  Copyright (c) 2012 Network Commuting. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#
+#import <UIKit/UIKit.h>
 #import "Itinerary.h"
 
-@interface RouteDetailsViewController : UITableViewController
+@interface RouteDetailsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 {
     NSDateFormatter *timeFormatter;
-    NSString *twSerachCaltrain;
     
     UIBarButtonItem *twitterCaltrain;
-    UIBarButtonItem *feedback;
     UIBarButtonItem *map;
-    NSArray *barArray;
 }
+@property(nonatomic, strong) IBOutlet UITableView* mainTable; // Table listing route options
+@property(nonatomic, strong) IBOutlet UIButton* feedbackButton; 
+@property(nonatomic, strong) IBOutlet UIButton* advisoryButton;  // Button to pull up Twitter feeds
 @property(nonatomic, strong) Itinerary *itinerary;
+
+- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
+- (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event;
 
 @end

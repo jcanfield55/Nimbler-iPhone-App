@@ -23,7 +23,7 @@
 @synthesize locationArray;
 @synthesize isFrom;
 
-int const LOCATION_PICKER_TABLE_HEIGHT = 377;
+int const LOCATION_PICKER_TABLE_HEIGHT = 370;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {

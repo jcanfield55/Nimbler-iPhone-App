@@ -30,6 +30,7 @@ typedef enum {
 @property (strong, nonatomic) ToFromTableViewController* toTableVC;  // View controller for toTable
 @property (strong, nonatomic) IBOutlet UIButton *routeButton;
 @property (strong, nonatomic) IBOutlet UIButton *feedbackButton;
+@property (strong, nonatomic) IBOutlet UIButton *advisoriesButton;
 @property (strong, nonatomic) RKObjectManager *rkGeoMgr;  // RestKit Object Manager for geocoding
 @property (strong, nonatomic) RKObjectManager *rkPlanMgr;  // RestKit object manager for trip planning
 @property (strong, nonatomic) RKObjectManager *rkSavePlanMgr;  // RestKit object manager for trip planning
@@ -37,16 +38,19 @@ typedef enum {
 @property (strong, nonatomic) Location *fromLocation;
 @property (strong, nonatomic) Location *toLocation;
 @property (strong, nonatomic) Location *currentLocation;
+@property (nonatomic) BOOL isCurrentLocationMode;  // true if From: is set to Current Location and we can show a single line From row and a larger toTable
 @property (nonatomic) DepartOrArrive departOrArrive;  // whether trip is planned based on departure time or desired arrival time
 @property (strong, nonatomic) NSDate *tripDate;
 @property (strong, nonatomic) NSDate *tripDateLastChangedByUser;
-@property (strong, nonatomic) RKObjectManager *rkBayArea;  // RestKit object manager for trip bay area
+@property (nonatomic) BOOL isTripDateCurrentTime;  // True if tripDate set to the current date
 @property (nonatomic) ToFromEditMode editMode; // Specifies whether to or from address is being edited with the keyboard
 @property (strong, nonatomic) SupportedRegion* supportedRegion; // geographic area supported by this app
 
 
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
+- (IBAction)advisoriesButtonPressed:(id)sender forEvent:(UIEvent *)event;
+
 
 - (void)updateToFromLocation:(id)sender isFrom:(BOOL)isFrom location:(Location *)loc; // Callback from ToFromTableViewController to update a new user entered/selected location
 - (void)updateGeocodeStatus:(BOOL)isGeocodeOutstanding isFrom:(BOOL)isFrom; // Callback from ToFromTableViewController to update geocoding status
@@ -55,4 +59,7 @@ typedef enum {
 
 - (void)updateTripDate;
 - (void)reloadTables;  // Reloads the tables in case something has changed in the model
+
+-(void)savePlanInTPServer:(NSString *)tripResponse;
+-(NSString *)getCurrentLocationOfFormattedAddress:(Location *)location;
 @end

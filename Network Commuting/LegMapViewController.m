@@ -30,6 +30,7 @@
 @synthesize directionsDetails;
 @synthesize feedbackButton;
 
+NSString *legID;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -156,7 +157,7 @@
         Leg *leg = [[itinerary sortedLegs] objectAtIndex:(itineraryNumber-1)];
         titleText = [leg directionsTitleText];
         subTitle = [leg directionsDetailText];
-        
+        legID = [leg legId];
         if ([leg isTrain]) {
             NSString *train = [[titleText componentsSeparatedByString:@"("] objectAtIndex:1];
             NSString *train1 = [[train componentsSeparatedByString:@")"] objectAtIndex:0];
@@ -272,7 +273,8 @@
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     [TestFlight openFeedbackView];
-    FeedBackForm *legMapVC = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];   
+    FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_LEG uniqueId:legID date:nil fromAddress:nil toAddress:nil];
+    FeedBackForm *legMapVC = [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];   
     [[self navigationController] pushViewController:legMapVC animated:YES];
 
 }
@@ -361,7 +363,6 @@
                     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
                     [prefs setObject:@"3" forKey:@"source"];
                     [prefs setObject:[leg legId] forKey:@"uniqueid"];
-                    tw_btn.hidden = YES;
                     if([leg isWalk]){
                         aView.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:0.7] ;
                         aView.lineWidth = 5;
@@ -369,9 +370,7 @@
                     } else if([leg isBus]){
                         aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:0.7];
                         aView.lineWidth = 5;
-                    } else if([leg isTrain]){
-                        tw_btn.hidden = NO;
-                        
+                    } else if([leg isTrain]){                        
                         aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:0.8] ;
                         aView.lineWidth = 5;
                     } else {
@@ -426,7 +425,8 @@
     [super viewWillDisappear:animated];
 
 }
--(IBAction)twitterSearch:(id)sender{
+-(IBAction)twitterSearch:(id)sender forEvent:(UIEvent *)event
+{
 
     @try {
         /*
