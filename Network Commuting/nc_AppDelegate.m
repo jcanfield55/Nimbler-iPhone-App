@@ -105,12 +105,13 @@
             currentLocation = [locations newEmptyLocation];
             [currentLocation setFormattedAddress:@"Current Location"];
             [currentLocation setFromFrequencyFloat:100.0];
-            [toFromViewController setCurrentLocation:currentLocation];
             [toFromViewController reloadTables]; // DE30 fix (1 of 2)
         }
         else {
             currentLocation = [matchingLocations objectAtIndex:0];
         }
+        [toFromViewController setCurrentLocation:currentLocation];
+        [toFromViewController setIsCurrentLocationMode:TRUE];
     }
 
     [currentLocation setLatFloat:[newLocation coordinate].latitude];

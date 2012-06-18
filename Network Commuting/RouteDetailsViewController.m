@@ -17,15 +17,20 @@
 @implementation RouteDetailsViewController
 
 @synthesize itinerary;
+@synthesize mainTable;
+@synthesize feedbackButton;
+@synthesize advisoryButton;
+
+int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 
 -(void)loadView
 {
     [super loadView];   
 }
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithStyle:UITableViewStylePlain];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     
     if (self) {
         [[self navigationItem] setTitle:@"Route"];
@@ -38,24 +43,30 @@
 
         map = [[UIBarButtonItem alloc] initWithCustomView:mapBtn]; 
         
-        feedback = [[UIBarButtonItem alloc] initWithTitle:@"F" style:UIBarButtonItemStylePlain target:self action:@selector(feedBackSubmit)];
-       
-        UIImage *twit = [UIImage imageNamed:@"twitter.png"];
-        UIButton *twitterBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        twitterBtn.bounds = CGRectMake( 0, 0, twit.size.width, twit.size.height );
-        [twitterBtn setImage:twit forState:UIControlStateNormal];
-        [twitterBtn addTarget:self action:@selector(twitterSubmit)
-          forControlEvents:UIControlEventTouchDown];
-        twitterCaltrain = [[UIBarButtonItem alloc] initWithCustomView:twitterBtn];
-        barArray = [NSArray arrayWithObjects: feedback,map, nil];
-        
-        self.navigationItem.rightBarButtonItems = barArray;
+        self.navigationItem.rightBarButtonItem = map;
                
         timeFormatter = [[NSDateFormatter alloc] init];
         [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
 //        [[self tableView] setRowHeight:60];
     }
     return self;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    // Enforce height of main table
+    CGRect rect0 = [mainTable frame];
+    rect0.size.height = ROUTE_DETAILS_TABLE_HEIGHT;
+    [mainTable setFrame:rect0];
+    [mainTable reloadData];
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
 }
 
 - (void)didReceiveMemoryWarning
@@ -104,10 +115,6 @@
         Leg *leg = [[itinerary sortedLegs] objectAtIndex:([indexPath row]-1)];
         titleText = [leg directionsTitleText];
         subTitle = [leg directionsDetailText];
-        if ( [leg isTrain]) {
-            barArray = [NSArray arrayWithObjects: feedback,twitterCaltrain,map, nil];
-             self.navigationItem.rightBarButtonItems = barArray;
-        }
         
         /*
          DE4 Fix - Apprika Systems
@@ -194,7 +201,11 @@
         
     
     }
-    return size.height + 7;
+    CGFloat height = size.height + 7;
+    if (height < 44.0) { // Set a minumum row height
+        height = 44.0;
+    }
+    return height;
 }
 
 
@@ -209,7 +220,7 @@
 }
 
 
--(void)twitterSubmit
+- (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     @try {
         NSLog(@"twiit");
@@ -223,7 +234,7 @@
 }
 
 
--(void)feedBackSubmit
+- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
 {
     
     FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_ITINERARY uniqueId:[itinerary itinId] date:nil fromAddress:nil toAddress:nil];

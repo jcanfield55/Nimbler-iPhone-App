@@ -80,6 +80,12 @@
 	// Do any additional setup after loading the view.
 }
 
+// Method called when currentLocation is first created and automatically picked as the fromLocation
+- (void)initializeCurrentLocation:(Location *)currentLoc
+{
+    [self markAndUpdateSelectedLocation:currentLoc];
+}
+
 //
 // Table view management methods
 //
