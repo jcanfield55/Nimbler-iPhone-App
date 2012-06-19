@@ -31,6 +31,8 @@
 @synthesize advisoryButton;
 @synthesize plan;
 
+Itinerary * itinerary;
+NSString *itinararyId;
 
 int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 
@@ -130,17 +132,15 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         if (!routeDetailsVC) {
             routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
         }
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        [prefs setObject:[[[plan sortedItineraries] objectAtIndex:[indexPath row]] itinId] forKey:@"itinararyid"];
-        //    [self sendRequestForTimingDelay];
-        
-        [routeDetailsVC setItinerary:[[plan sortedItineraries] objectAtIndex:[indexPath row]]];
+        itinararyId =[[[plan sortedItineraries] objectAtIndex:[indexPath row]] itinId];
+        [self sendRequestForTimingDelay];
+        itinerary = [plan.sortedItineraries objectAtIndex:[indexPath row]];
+        [routeDetailsVC setItinerary:itinerary];
         [[self navigationController] pushViewController:routeDetailsVC animated:YES];
     }
     @catch (NSException *exception) {
         NSLog(@"exceptions %@", exception);
     }
-    
 }
 
 #pragma mark - Button Event handling
@@ -161,11 +161,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 
 -(void)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
-    
-     FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_PLAN uniqueId:[plan planId] date:nil fromAddress:nil toAddress:nil];
-    
+    FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_PLAN uniqueId:[plan planId] date:nil fromAddress:nil toAddress:nil];
     FeedBackForm *feedbackFormVc = [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];
-    
     [[self navigationController] pushViewController:feedbackFormVc animated:YES]; 
 }
 
@@ -203,49 +200,21 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 
 -(void)sendRequestForTimingDelay
 {
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-//    NSString *ititId =    [prefs objectForKey:@"itinararyid"];    
-
-    
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-    [RKClient setSharedClient:client];
-    
-    
+    [RKClient setSharedClient:client];   
     NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
-                          @"itineraryid",@"4fd6d0def2f3ae0f17fd702a" ,
+                          @"itineraryid",itinararyId ,
                           nil];
     NSString *req = [@"livefeeds/itinerary" appendQueryParams:dict];
-    
-    [[RKClient sharedClient]  get:req  delegate:self];
-    
+    [[RKClient sharedClient]  get:req  delegate:self];    
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
-    
+   
     NSLog(@"response %@", [response bodyAsString]);
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    NSString *ititId =    [prefs objectForKey:@"itineraryid"];
-    id res = (id)[response bodyAsJSON];
-    
-    
-    NSLog(@"got the response ");
-    if([res isKindOfClass:[NSDictionary class]]){
-       
-//        if([[(NSDictionary*)res objectForKey:@"itinaryid"] isEqualToString:ititId]){
-             NSLog(@"yes dictionary.. %@", [(NSDictionary*)res objectForKey:@"itineraryId"]);
-            NSLog(@"yes dictionary.. %@", [(NSDictionary*)res objectForKey:@"errCode"]);
-      
-            NSArray *legLiveFees = [(NSDictionary*)res objectForKey:@"legLiveFeeds"];
-            NSLog(@"led live feeds %@", legLiveFees);
-
-            [[legLiveFees objectAtIndex:0] valueForKey:@"leg"];
-            [[[legLiveFees objectAtIndex:0] valueForKey:@"leg"] valueForKey:@"id"];
-            NSLog(@" id %@", [[[legLiveFees objectAtIndex:0] valueForKey:@"leg"] valueForKey:@"id"]);
-        NSLog(@"testing .. %@", [[legLiveFees objectAtIndex:0] valueForKey:@"leg"]);
-//        }
-    } else {
-        
-    }
+    id res = (id)[response bodyAsJSON];    
+    [routeDetailsVC setIsReload:false];
+    [routeDetailsVC setLiveFeed:res];
 }
 
 

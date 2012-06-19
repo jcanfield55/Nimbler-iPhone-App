@@ -21,11 +21,14 @@
 @synthesize feedbackButton;
 @synthesize advisoryButton;
 
+@synthesize liveFeed,isReload;
+
 int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
+
 
 -(void)loadView
 {
-    [super loadView];   
+    [super loadView];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -34,14 +37,15 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
     
     if (self) {
         [[self navigationItem] setTitle:@"Route"];
-        
+        isReload = false;
         UIImage *mapTmg = [UIImage imageNamed:@"map.png"];
         UIButton *mapBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         mapBtn.bounds = CGRectMake( 0, 0, mapTmg.size.width, mapTmg.size.height );
         [mapBtn setImage:mapTmg forState:UIControlStateNormal];
         [mapBtn addTarget:self action:@selector(mapOverView) forControlEvents:UIControlEventTouchDown];
-
+        NSLog(@"itit id1 : %@", [itinerary itinId]);
         map = [[UIBarButtonItem alloc] initWithCustomView:mapBtn]; 
+        
         
         self.navigationItem.rightBarButtonItem = map;
                
@@ -73,7 +77,6 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
     // Release any cached data, images, etc that aren't in use.
 }
 
@@ -106,12 +109,19 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
     NSString *subTitle;
     if ([indexPath row] == 0) { // if first row, put in start point
         titleText = [NSString stringWithFormat:@"Start at %@", [[itinerary from] name]];
+//        if (isReload) {
+//            UIImage *ss = [UIImage imageNamed:@"map.png"] ;
+//            [cell.imageView setImage:ss];
+//        }
     }
     else if ([indexPath row] == [[itinerary sortedLegs] count] + 1) { // if last row, put in end point
         titleText = [NSString stringWithFormat:@"End at %@", [[itinerary to] name]];
+//        if (isReload) {
+//            UIImage *ss = [UIImage imageNamed:@"map.png"] ;
+//            [cell.imageView setImage:ss];
+//        }
     }
     else {  // otherwise, it is one of the legs
-       
         Leg *leg = [[itinerary sortedLegs] objectAtIndex:([indexPath row]-1)];
         titleText = [leg directionsTitleText];
         subTitle = [leg directionsDetailText];
@@ -149,17 +159,35 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 //            }
 //            subTitle = [add1 stringByAppendingString:add2];  
 //        }
+   
+        if (isReload) {
+            if([leg arrivalTime] > 0) {
+                UIImage *imgForArrivalTime = [UIImage alloc];
+                cell.frame = CGRectMake(100, 2, 20, 20);
+                if([leg.arrivalFlag intValue] == [ON_TIME intValue]) {
+                    imgForArrivalTime = [UIImage imageNamed:@"img_ontime.png"] ;
+                }  else if([leg.arrivalFlag intValue] == [DELAYED intValue]) {
+                    imgForArrivalTime = [UIImage imageNamed:@"img_delay.png"] ;
+                } else if([leg.arrivalFlag intValue] == [EARLY intValue]) {
+                    imgForArrivalTime = [UIImage imageNamed:@"img_early.png"] ;
+                } else if([leg.arrivalFlag intValue] == [EARLIER intValue]) {
+                    imgForArrivalTime = [UIImage imageNamed:@"img_earlier"] ;
+                } 
+                [cell.imageView setImage:imgForArrivalTime];
+            }
+        } else {
+            [cell.imageView setImage:nil];
+        }
     }
-        
+     
     [[cell textLabel] setText:titleText];
     [[cell detailTextLabel] setLineBreakMode:UILineBreakModeWordWrap];
     [[cell detailTextLabel] setNumberOfLines:0];
     [[cell detailTextLabel] setText:subTitle];
     
-    
-//        if (subTitle && [subTitle length] > 40) {
-//        [[cell detailTextLabel] sizeToFit];
-//    }
+    if (subTitle && [subTitle length] > 40) {
+        [[cell detailTextLabel] sizeToFit];
+    }
     return cell;
 }
 
@@ -251,4 +279,53 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
     [l setItinerarys:itinerary itineraryNumber:2];
     [[self navigationController] pushViewController:l animated:YES];
 }
+
+-(void)setLiveFeed:(id)liveFeeds
+{
+    @try {
+        liveFeed = liveFeeds;
+//        NSString *itinId = [(NSDictionary*)liveFeed objectForKey:@"itineraryId"];
+        NSNumber *respCode = [(NSDictionary*)liveFeed objectForKey:@"errCode"];
+        
+        if ([respCode intValue]== 105) {
+            //It means there are live feeds in response
+            NSArray *legLiveFees = [(NSDictionary*)liveFeed objectForKey:@"legLiveFeeds"];        
+            if ([legLiveFees count] > 0) {
+                for (int i=0; i<legLiveFees.count; i++) {                
+                    NSString *arrivalTime = [[legLiveFees objectAtIndex:i] valueForKey:@"arrivalTime"];
+                    NSString *arrivalTimeFlag = [[legLiveFees objectAtIndex:i] valueForKey:@"arrivalTimeFlag"];
+                    NSString *legId = [[[legLiveFees objectAtIndex:i] valueForKey:@"leg"] valueForKey:@"id"];                 
+                    
+                    [self setLegRealtimeData:legId arrivalTime:arrivalTime arrivalFlag:arrivalTimeFlag];
+                }      
+                isReload = true;
+                [mainTable reloadData];             
+            }
+        } else {
+            //thereare no live feeds available.
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception at live itinerary respoce: %@",exception);
+    }
+}
+
+- (void) setLegRealtimeData:(NSString *)legId arrivalTime:(NSString *)arrivalTime arrivalFlag:(NSString *)arrivalFlag
+{
+    @try {
+        NSArray *legs =  [itinerary sortedLegs];
+        NSLog(@"current Leg : %@", legId);
+        for (int i=0;i<legs.count;i++) {
+            NSLog(@"arrya Leg : %@", [[legs objectAtIndex:i] legId]);
+            if ([[[legs objectAtIndex:i] legId] isEqualToString:legId]) {
+                [[legs objectAtIndex:i] setArrivalFlag:arrivalFlag];
+                [[legs objectAtIndex:i] setArrivalTime:arrivalTime];
+            }
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exceptions at set time: %@", exception);
+    }
+}
+ 
 @end

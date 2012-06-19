@@ -143,6 +143,7 @@
 }
 
 -(IBAction)pausRecording:(id)sender {
+    
     if (audioPlayer.playing) {
         labelCurrentActivityStatus.text = @"Pause Recording....";
         isRepeat = NO;
@@ -213,7 +214,6 @@
         [self stopRecording:self];
     } else {
         if(![alertView isVisible]){
-            NSLog(@"not");
             isRepeat = NO;
             [labelRecTime setHidden:YES];
             [timer invalidate];
@@ -395,7 +395,7 @@
          NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setObject:txtEmailId.text forKey:@"eMailId"];
     }
-    if(soundFilePath != nil && txtFeedBack.text != nil){
+    if(soundFilePath != nil && txtFeedBack.text != nil) {
         [rkp setValue:FEEDBACK_BOTH forParam:@"formattype"]; 
     }
     
@@ -462,7 +462,6 @@
 
 -(void)alertView: (UIAlertView *)UIAlertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    
     NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
     
     if ([btnName isEqualToString:@"Cancel"]) {
@@ -475,7 +474,6 @@
     } 
     
 }
-
 
 -(void)popOut
 {

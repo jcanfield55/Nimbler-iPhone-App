@@ -525,7 +525,7 @@
     NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
     
     if ([btnName isEqualToString:@"Yes"]) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=LocationServices"]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=LOCATION_SERVICES"]];
     }     
 }
 @end

@@ -40,6 +40,9 @@
 @synthesize sortedSteps;
 @synthesize polylineEncodedString;
 
+@synthesize arrivalTime;
+@synthesize arrivalFlag;
+
 
 static NSDateFormatter *timeFormattr;
 + (NSDateFormatter *)timeFormatter{
@@ -63,7 +66,7 @@ static NSDateFormatter *timeFormattr;
     if (apiType==OTP_PLANNER) {
         
         [mapping mapKeyPath:@"agencyId" toAttribute:@"agencyId"];
-         [mapping mapKeyPath:@"id" toAttribute:@"legId"];
+        [mapping mapKeyPath:@"id" toAttribute:@"legId"];
         [mapping mapKeyPath:@"bogusNonTransitLeg" toAttribute:@"bogusNonTransitLeg"];
         [mapping mapKeyPath:@"distance" toAttribute:@"distance"];
         [mapping mapKeyPath:@"duration" toAttribute:@"duration"];
@@ -77,8 +80,7 @@ static NSDateFormatter *timeFormattr;
         [mapping mapKeyPath:@"routeLongName" toAttribute:@"routeLongName"];
         [mapping mapKeyPath:@"routeShortName" toAttribute:@"routeShortName"];
         [mapping mapKeyPath:@"startTime" toAttribute:@"startTime"];
-        [mapping mapKeyPath:@"tripShortName" toAttribute:@"tripShortName"];
-
+                
         [mapping mapKeyPath:@"steps" toRelationship:@"steps" withMapping:stepsMapping];
         [mapping mapKeyPath:@"from" toRelationship:@"from" withMapping:planPlaceMapping];
         [mapping mapKeyPath:@"to" toRelationship:@"to" withMapping:planPlaceMapping];

@@ -167,10 +167,25 @@ NSString *legID;
             [prefs setObject:train1 forKey:@"train"];
         }
         
+        if([leg arrivalTime] > 0) {
+            UIImage *imgForArrivalTime;
+            if([leg.arrivalFlag intValue] == [ON_TIME intValue]) {
+                imgForArrivalTime = [UIImage imageNamed:@"img_ontime.png"] ;
+            }  else if([leg.arrivalFlag intValue] == [DELAYED intValue]) {
+                imgForArrivalTime = [UIImage imageNamed:@"img_delay.png"] ;
+            } else if([leg.arrivalFlag intValue] == [EARLY intValue]) {
+                imgForArrivalTime = [UIImage imageNamed:@"img_early.png"] ;
+            } else if([leg.arrivalFlag intValue] == [EARLIER intValue]) {
+                imgForArrivalTime = [UIImage imageNamed:@"img_earlier"] ;
+            } 
+            [imgForTimeInterval setImage:imgForArrivalTime];
+        } else {
+            [imgForTimeInterval setImage:nil];
+        }
+        
     // It calls when MODe of leg is WaLK.
       //  [self walk];
     }
-    
     [directionsTitle setText:titleText];
     [directionsDetails setText:subTitle];
 }
@@ -192,7 +207,6 @@ NSString *legID;
         //self.navigationItem.rightBarButtonItem = For;
         [Bak setEnabled:false];
     }
-    
 }
 
 // Callback for when user presses the navigate forward button on the right navbar
@@ -276,7 +290,6 @@ NSString *legID;
     FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_LEG uniqueId:legID date:nil fromAddress:nil toAddress:nil];
     FeedBackForm *legMapVC = [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];   
     [[self navigationController] pushViewController:legMapVC animated:YES];
-
 }
 
 // Callback for providing any annotation views
@@ -427,7 +440,6 @@ NSString *legID;
 }
 -(IBAction)twitterSearch:(id)sender forEvent:(UIEvent *)event
 {
-
     @try {
         /*
             DE: 42 
@@ -438,7 +450,6 @@ NSString *legID;
 //        [[self navigationController] pushViewController:twitter_search animated:YES];
 //        trainRoute = [TWITTER_SERARCH_URL stringByReplacingOccurrencesOfString:@"TRAIN" withString:trainRoute];
 //        [twitter_search loadRequest:trainRoute];
-        
         TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
         [[self navigationController] pushViewController:twitter_search animated:YES];
         [twitter_search loadRequest:CALTRAIN_TWITTER_URL];
@@ -446,8 +457,6 @@ NSString *legID;
     @catch (NSException *exception) {
         NSLog(@" twitter print : %@", exception);
     }
- 
-    
 }
 
 - (void)didReceiveMemoryWarning
@@ -462,7 +471,8 @@ NSString *legID;
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];    
+    [super viewDidLoad];
+        
 }
 
 - (void)viewDidUnload

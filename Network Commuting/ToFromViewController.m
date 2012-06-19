@@ -78,6 +78,7 @@
 @synthesize isTripDateCurrentTime;
 @synthesize editMode;
 @synthesize supportedRegion;
+@synthesize twiterCount;
 
 // Constants for animating up and down the To: field
 int const MAIN_TABLE_HEIGHT = 358;
@@ -92,6 +93,8 @@ int const FROM_SECTION = 1;
 int const TIME_DATE_SECTION = 2;
 
 NSString *currentLoc;
+float currentLocationResTime;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -397,12 +400,10 @@ NSString *currentLoc;
     [cellView addSubview:addButton];
     
     NSArray* subviews = [cellView subviews];
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            
+                
     if (isFrom) {
         if (subviews && [subviews count]>0 && [subviews indexOfObject:[fromTableVC txtField]] != NSNotFound) {
             NSLog(@"fromTable already in subview");
-            [prefs setObject:@"fromEdit" forKey:@"isEdit"];
             // if From txtField is already in the subview (due to recycling, no need to add again
         } else { 
             [cellView addSubview:[fromTableVC txtField]]; // add From txtField
@@ -411,7 +412,6 @@ NSString *currentLoc;
     else {   // do same for toTable case
         if (subviews && [subviews count]>0 && [subviews indexOfObject:[toTableVC txtField]] != NSNotFound) {
             NSLog(@"toTable already in subview");
-            [prefs setObject:@"toEdit" forKey:@"isEdit"];
             // if To txtField is already in the subview (due to recycling, no need to add again
         } else { 
             [cellView addSubview:[toTableVC txtField]]; // add To txtfield
@@ -446,12 +446,7 @@ NSString *currentLoc;
     
     if (isFrom) {
         fromLocation = loc;
-//        if ([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
-//            if (![locations isLocationServiceEnable]) {
-//                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Location" message:@"Your Location Service for Nimbler is off, Kindly on it" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-//                [alert show];
-//            }
-//        }
+
 //        [self getCurrentLocationOfFormattedAddress:fromLocation];
         if (loc == currentLocation && !isCurrentLocationMode) {
             NSLog(@"current Location 1");
@@ -545,9 +540,7 @@ NSString *currentLoc;
    }
     NSLog(@"current Location %@", fromLocs);
     FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_GENERAL uniqueId:nil date:[dFormat stringFromDate:tripDate] fromAddress:fromLocs toAddress:[toLocation formattedAddress]];
-    
     FeedBackForm *feedbackVC =  [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];  // DE56 fix
-
     [[self navigationController] pushViewController:feedbackVC animated:YES];
 }
 
@@ -796,14 +789,11 @@ NSString *currentLoc;
         
         if(fromLocation == toLocation){
             [self stopActivityIndicator];
-            NSLog(@"Match----------->>>>>>>>>>>> %@  ,%@",fromLocation, toLocation);
-                    
+            NSLog(@"Match----------->>>>>>>>>>>> %@  ,%@",fromLocation, toLocation);                    
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"The To: and From: address are the same location.  Please choose a different destination." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
             [alert show];
             return true;
-        }
-        
-        
+        }       
         // Create the date formatters we will use to output the date & time
         NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
         [dFormat setDateStyle:NSDateFormatterShortStyle];
@@ -963,8 +953,9 @@ NSString *currentLoc;
 -(void)savePlanInTPServer:(NSString *)tripResponse
 {
     
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+   
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;   
+    NSString *timeResponseTime =  [[NSNumber numberWithFloat:durationOfResponseTime] stringValue];
     
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     RKParams *rkp = [RKParams params];
@@ -972,31 +963,38 @@ NSString *currentLoc;
     
     [rkp setValue:udid forParam:@"deviceid"]; 
     [rkp setValue:tripResponse forParam:@"planJsonString"]; 
-    NSString *time =  [[NSNumber numberWithFloat:durationOfResponseTime] stringValue]; 
-    [rkp setValue:time forParam:@"timeTripPlan"];
-    
-    [rkp setValue:[prefs objectForKey:@"rawTo"] forParam:@"rawAddTo"];
+    [rkp setValue:timeResponseTime forParam:@"timeTripPlan"];
     [rkp setValue:[toLocation formattedAddress]  forParam:@"frmtdAddTo"];
-    [rkp setValue:[prefs objectForKey:@"toType"] forParam:@"toType"];
-    [rkp setValue:[prefs objectForKey:@"timeTo"] forParam:@"timeTo"];
-    [rkp setValue:[prefs objectForKey:@"geoResponseTo"] forParam:@"geoResTo"];
+    [rkp setValue:[fromLocation formattedAddress]  forParam:@"frmtdAddFrom"];
     
-    if([[prefs objectForKey:@"toType"] isEqualToString:REVERSE_GEO_TO])
-    {
-        [rkp setValue:[toLocation lat] forParam:@"latTo"];
-        [rkp setValue:[toLocation lng] forParam:@"lonTo"];
-    }    
-    [rkp setValue:[prefs objectForKey:@"rawFrom"] forParam:@"rawAddFrom"];
-    [rkp setValue:[fromLocation formattedAddress] forParam:@"frmtdAddFrom"];
-    [rkp setValue:[prefs objectForKey:@"fromType"]forParam:@"fromType"];
-    [rkp setValue:[prefs objectForKey:@"timeFrom"] forParam:@"timeFrom"];
-    [rkp setValue:[prefs objectForKey:@"geoResponseFrom"] forParam:@"geoResFrom"];
+    NSLog(@" raw %@  %@ , time: %@  %@  , ", [locations rawAddressFrom],[locations rawAddressTo], [locations geoRespTimeFrom], [locations geoRespTimeTo]);
     
-    if([[prefs objectForKey:@"fromType"] isEqualToString:REVERSE_GEO_FROM])
-    {
+    if([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
+        [rkp setValue:REVERSE_GEO_FROM forParam:@"fromType"];
+        [rkp setValue:currentLoc  forParam:@"frmtdAddFrom"];
+        [rkp setValue:[toLocation lat] forParam:@"latFrom"];
+        [rkp setValue:[toLocation lng] forParam:@"lonFrom"];
+        [rkp setValue:[[NSNumber numberWithFloat:currentLocationResTime] stringValue] forParam:@""];
+    } else if([[toLocation formattedAddress] isEqualToString:@"Current Location"]) {
+        [rkp setValue:REVERSE_GEO_TO forParam:@"toType"];
+        [rkp setValue:currentLoc  forParam:@"frmtdAddTo"];
         [rkp setValue:[fromLocation lat] forParam:@"latTo"];
         [rkp setValue:[fromLocation lng] forParam:@"lonTo"];
-    }    
+        [rkp setValue:[[NSNumber numberWithFloat:currentLocationResTime] stringValue] forParam:@""];
+    }
+    
+    if ([locations isFromGeo]) {
+        [rkp setValue:GEO_FROM forParam:@"fromType"];
+        [rkp setValue:[locations rawAddressFrom] forParam:@"rawAddFrom"];
+        [rkp setValue:[locations geoRespFrom] forParam:@"geoResFrom"];
+        [rkp setValue:[locations geoRespTimeFrom] forParam:@"timeFrom"];
+    } else if ([locations isToGeo]) {
+        [rkp setValue:GEO_TO forParam:@"toType"];
+        [rkp setValue:[locations rawAddressTo] forParam:@"rawAddTo"];
+        [rkp setValue:[locations geoRespTo] forParam:@"geoResTo"];
+        [rkp setValue:[locations geoRespTimeTo] forParam:@"timeTo"];
+    }
+    
     [[RKClient sharedClient] post:@"plan/new" params:rkp delegate:self]; 
 }
 
@@ -1024,7 +1022,6 @@ NSString *currentLoc;
     if (!locationPickerVC) {
         locationPickerVC = [[LocationPickerViewController alloc] initWithNibName:nil bundle:nil];
     }
-
     [locationPickerVC setToFromTableVC:toFromTableVC0];
     [locationPickerVC setLocationArray:locationList0];
     [locationPickerVC setIsFrom:isFrom0];
@@ -1032,17 +1029,17 @@ NSString *currentLoc;
     [[self navigationController] pushViewController:locationPickerVC animated:YES];    
 }
 
-
 -(NSString *)getCurrentLocationOfFormattedAddress:(Location *)location
 {
     double latitude = [[location lat] doubleValue];
-    double longitude = [[location lng] doubleValue];        
+    double longitude = [[location lng] doubleValue];  
+    float startTime = CFAbsoluteTimeGetCurrent();
     NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv", latitude, longitude];   
     NSURL *url = [NSURL URLWithString:urlString];
     NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
     NSArray *streetName = [locationString componentsSeparatedByString:@"\""];
     currentLoc = [streetName objectAtIndex:1];
-    
+    currentLocationResTime =  CFAbsoluteTimeGetCurrent() - startTime;
     return currentLoc;
 }
 
@@ -1055,11 +1052,10 @@ NSString *currentLoc;
 
 -(void)alertView: (UIAlertView *)UIAlertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    
     NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
-    
     if ([btnName isEqualToString:@"Yes"]) {
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=LocationServices"]];
     }     
 }
+
 @end
