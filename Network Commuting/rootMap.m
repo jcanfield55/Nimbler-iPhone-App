@@ -187,7 +187,7 @@
                 dotView.canShowCallout = NO;
                 if (!dotImage) {
                     // TODO add @2X image for retina screens
-                    NSString* imageName = [[NSBundle mainBundle] pathForResource:@"dot" ofType:@"png"];
+                    NSString* imageName = [[NSBundle mainBundle] pathForResource:@"mapDot" ofType:@"png"];
                     dotImage = [UIImage imageWithContentsOfFile:imageName];
                 }
                 if (dotImage) {
