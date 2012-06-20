@@ -494,19 +494,19 @@ NSString *currentLoc;
     
     // if user has not entered/selected fromLocation, send them an alert
     else if (![fromLocation formattedAddress] && !fromGeocodeRequestOutstanding) {
-        alert = [[UIAlertView alloc] initWithTitle:@"TripPlanner" message:@"Fill FromTrip location address" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        alert = [[UIAlertView alloc] initWithTitle:@"TripPlanner" message:@"Select a 'From' address" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
     }
     
     // if user has not entered has not entered/selected toLocation, send them an alert
     else if (![toLocation formattedAddress] && !toGeocodeRequestOutstanding) {
-        alert = [[UIAlertView alloc] initWithTitle:@"TripPlanner" message:@"Fill ToTrip location address" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        alert = [[UIAlertView alloc] initWithTitle:@"TripPlanner" message:@"Select a destination address" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
     }    
     // otherwise, just wait for the geocoding and then submit the plan
     else {
         NSLog(@"look for state");
-        alert = [[UIAlertView alloc] initWithTitle:@"TripPlanner" message:@"Please, Select a location" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        alert = [[UIAlertView alloc] initWithTitle:@"TripPlanner" message:@"Please select a location" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
     }
 }

@@ -26,6 +26,7 @@
 @dynamic fromFrequency;
 @dynamic dateLastUsed;
 @dynamic nickName;
+@synthesize shortFormattedAddress;
 
 // Static variables and methods to retrieve the Locations set wrapper
 static Locations *locations;
@@ -253,31 +254,66 @@ static Locations *locations;
     }
 }
 
-// returns the formatted address minus everything after the postal code
+// Returns the formatted address minus everything after the postal code
+// Also take out ", CA" if it is at the end (don't need to show California for Bay Area app)
+// For pre-loaded transit stations (like Caltrain), show only the transit station name
 - (NSString *)shortFormattedAddress  
 {
-    if (![self formattedAddress]) {
-        return NULL;  
+    if (shortFormattedAddress) {
+        return shortFormattedAddress;  // Return the property if it has already been created
     }
-    NSString* addr = [NSMutableString stringWithString:[self formattedAddress]];
-    NSString* postalCode = [[[[self addressComponents] objectsPassingTest:^(id obj,BOOL *stop){
-        AddressComponent* ac = obj;
-        if ([[ac types] containsObject:@"postal_code"]) {
-            *stop = YES;
-            return YES;
+    // Otherwise, compute the shortFormattedAddress
+    NSString* addr = [self formattedAddress];
+    if (!addr) {
+        shortFormattedAddress = nil;  
+    }
+    else {
+        // Find whether it is a train station (
+        NSString* trainStationName = [[[[self addressComponents] objectsPassingTest:^(id obj,BOOL *stop){
+            AddressComponent* ac = obj;
+            if ([[ac types] containsObject:@"train_station"]) {
+                *stop = YES;
+                return YES;
+            }
+            return NO;
+        }] anyObject] shortName];  // Returns the short train station name
+        if (trainStationName && [trainStationName length] >0) {
+            // if a train station, return just the train_station name
+            shortFormattedAddress = trainStationName;
         }
-        return NO;
-    }] anyObject] shortName];  // Returns the short postal code
-    if (postalCode && [postalCode length] > 0) {
-        NSRange range = [addr rangeOfString:postalCode options:NSBackwardsSearch];
-        if (range.location != NSNotFound) {
-            NSString* returnString = [addr substringToIndex:range.location];
-            if ([returnString length] > 0) { // check to make sure we have something to return (DE25 fix)
-                return returnString;  // return up to but not including postal_code
+        else {
+            // Find the postal code
+            NSString* postalCode = [[[[self addressComponents] objectsPassingTest:^(id obj,BOOL *stop){
+                AddressComponent* ac = obj;
+                if ([[ac types] containsObject:@"postal_code"]) {
+                    *stop = YES;
+                    return YES;
+                }
+                return NO;
+            }] anyObject] shortName];  // Returns the short postal code
+            NSString* returnString;
+            if (postalCode && [postalCode length] > 0) {
+                NSRange range = [addr rangeOfString:postalCode options:NSBackwardsSearch];
+                if (range.location != NSNotFound) {
+                    returnString = [addr substringToIndex:range.location]; // Clip from postal code on
+                }
+            }
+            if (returnString && [returnString length] > 0) { // check to make sure we have something to return (DE25 fix)
+                if ([returnString hasSuffix:@", CA "]) { // Get rid of final ", CA"
+                    returnString = [returnString substringToIndex:([returnString length]-5)];
+                }
+                shortFormattedAddress = returnString;  
+            }
+            else if ([addr hasSuffix:@", CA, USA"]) { // If not postal code, but ends with CA, USA, clip that
+                returnString = [addr substringToIndex:([addr length]-9)];
+                shortFormattedAddress = returnString;
+            }
+            else {
+                shortFormattedAddress = addr;  // postal code not found or in the front of string, return whole string
             }
         }
     }
-    return addr;  // postal code not found or in the front of string, return whole string
+    return shortFormattedAddress;
 }
 
 // Method to see whether two locations are effectively equivalent

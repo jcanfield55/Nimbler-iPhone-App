@@ -394,7 +394,6 @@
                 }
                 
                 else if ([geocodeStatus compare:@"ZERO_RESULTS" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-                    // TODO error handling for zero results
                     NSLog(@"Zero results geocoding address");
                   alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, No valid location found for your address" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                     [alert show];
@@ -416,21 +415,21 @@
                 else if ([geocodeStatus compare:@"OVER_QUERY_LIMIT" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
                     // TODO error handling for over query limit  (switch to other geocoder on my server...)
                     NSLog(@"Over query limit");
-                    alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, Google says your address is over with parameter" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to locate your address.  Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                     [alert show];
                     
                 }
                 else if ([geocodeStatus compare:@"REQUEST_DENIED" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
                     // TODO error handling for denied, invalid or unknown status (switch to other geocoder on my server...)
                     NSLog(@"Request rejected, status= %@", geocodeStatus);
-                    alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, your request is not accepted by google" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to locate your address.  Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                     [alert show];
                 }
                 
             }
             else {
                 // TODO Geocoder did not respond with status field
-                alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, geocode is not respond now. Try after some time." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to locate your address.  Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [alert show];
             }
         }

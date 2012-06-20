@@ -38,6 +38,10 @@
 @property (nonatomic, strong) NSDate *dateLastUsed;  // Last time a user created or selected this location
 @property (nonatomic, strong) NSString *nickName;  // Alias name for location, e.g. "eBay Whitman Campus" or "Home"
 
+// The formatted address minus everything after the postal code
+// For pre-loaded transit stations (like Caltrain), show only the transit station name
+@property (nonatomic, strong, readonly) NSString* shortFormattedAddress;  
+
 + (void)setLocations:(Locations *)loc;
 + (Locations *)locations;
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)gt;
@@ -60,7 +64,7 @@
 - (NSString *)latLngPairStr;
 - (BOOL)isMatchingTypedString:(NSString *)str;
 - (BOOL)isEquivalent:(Location *)loc2;
-- (NSString *)shortFormattedAddress;  // returns the formatted address minus the postal code and country
+
 
 @end
 

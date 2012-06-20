@@ -182,7 +182,7 @@
          "address_components" : [
             {
                "long_name" : "Belmont Caltrain Station",
-               "short_name" : "Belmont Caltrain Station",
+               "short_name" : "Belmont Caltrain",
                "types" : [ "train_station", "transit_station" ]
             },
             {
@@ -427,7 +427,7 @@
          "address_components" : [
             {
                "long_name" : "California Ave Caltrain Station",
-               "short_name" : "California Ave Caltrain Station",
+               "short_name" : "California Ave Caltrain",
                "types" : [ "train_station", "transit_station" ]
             },
             {
@@ -544,7 +544,7 @@
          "address_components" : [
             {
                "long_name" : "College Park Caltrain Station",
-               "short_name" : "College Park Caltrain Station",
+               "short_name" : "College Park Caltrain",
                "types" : [ "train_station", "transit_station" ]
             },
             {
@@ -957,7 +957,7 @@
          "address_components" : [
             {
                "long_name" : "Morgan Hill Caltrain Station",
-               "short_name" : "Morgan Hill Caltrain Station",
+               "short_name" : "Morgan Hill Caltrain",
                "types" : [ "train_station", "transit_station" ]
             },
             {
@@ -1563,7 +1563,7 @@
          "address_components" : [
             {
                "long_name" : "San Mateo Caltrain Station",
-               "short_name" : "San Mateo Caltrain Station",
+               "short_name" : "San Mateo Caltrain",
                "types" : [ "train_station", "transit_station" ]
             },
             {
