@@ -21,7 +21,7 @@
 @property (nonatomic, retain) NSNumber * duration;
 @property (nonatomic, retain) NSNumber * elevationGained;
 @property (nonatomic, retain) NSNumber * elevationLost;
-@property (nonatomic, retain) NSDate * endTime;
+@property (nonatomic, retain) NSDate   * endTime;
 @property (nonatomic, retain) NSNumber * fareInCents;
 @property (nonatomic, retain) NSDate * itineraryCreationDate;
 @property (nonatomic, retain) NSDate * startTime;
@@ -32,6 +32,8 @@
 @property (nonatomic, retain) NSNumber * walkDistance;
 @property (nonatomic, retain) NSNumber * walkTime;
 @property (nonatomic, retain) NSString * itinId;
+
+@property (nonatomic, retain) NSString *itinArrivalFlag;
 
 @property (nonatomic, retain) NSSet *legs;
 @property (nonatomic, retain) Plan *plan;

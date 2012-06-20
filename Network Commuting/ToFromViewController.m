@@ -79,6 +79,8 @@
 @synthesize editMode;
 @synthesize supportedRegion;
 @synthesize twiterCount;
+@synthesize isContinueGetRealTimeData;
+@synthesize continueGetTime;
 
 // Constants for animating up and down the To: field
 int const MAIN_TABLE_HEIGHT = 358;
@@ -120,8 +122,9 @@ float currentLocationResTime;
         CGRect rect1;
         rect1.origin.x = 0;
         rect1.origin.y = 0;
-        rect1.size.width = TOFROM_TABLE_WIDTH;
+        rect1.size.width = TOFROM_TABLE_WIDTH ;
         rect1.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
+    
         toTable = [[UITableView alloc] initWithFrame:rect1 style:UITableViewStylePlain];
         [toTable setRowHeight:TOFROM_ROW_HEIGHT];
         toTableVC = [[ToFromTableViewController alloc] initWithTable:toTable isFrom:FALSE toFromVC:self locations:locations];
@@ -131,10 +134,12 @@ float currentLocationResTime;
         CGRect rect2;
         rect2.origin.x = 0;
         rect2.origin.y = 0;
+
         rect2.size.width = TOFROM_TABLE_WIDTH; 
         rect2.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
         fromTable = [[UITableView alloc] initWithFrame:rect2 style:UITableViewStylePlain];
         [fromTable setRowHeight:TOFROM_ROW_HEIGHT];
+        
         fromTableVC = [[ToFromTableViewController alloc] initWithTable:fromTable isFrom:TRUE toFromVC:self locations: locations];
         [fromTable setDataSource:fromTableVC];
         [fromTable setDelegate:fromTableVC];   
@@ -151,8 +156,10 @@ float currentLocationResTime;
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [continueGetTime invalidate];
+    NSLog(@"===============================================================");
+    continueGetTime = nil;
     [super viewWillAppear:animated];
-
     [self updateTripDate];  // update tripDate if needed
     
     // Enforce height of main table
@@ -443,18 +450,14 @@ float currentLocationResTime;
 
 // Callback from ToFromTableViewController to update a new user entered/selected location
 - (void)updateToFromLocation:(id)sender isFrom:(BOOL)isFrom location:(Location *)loc; {
-    
     if (isFrom) {
         fromLocation = loc;
-
 //        [self getCurrentLocationOfFormattedAddress:fromLocation];
         if (loc == currentLocation && !isCurrentLocationMode) {
-            NSLog(@"current Location 1");
             [self setIsCurrentLocationMode:TRUE];
         }
         else if (loc != currentLocation && isCurrentLocationMode) {
             [self setIsCurrentLocationMode:FALSE];
-            NSLog(@"current Location 2");
         }
     } 
     else {
@@ -473,7 +476,6 @@ float currentLocationResTime;
     } else {
         toGeocodeRequestOutstanding = isGeocodeOutstanding;
     }
-    
 }
 
 // Requesting a plan
@@ -715,6 +717,9 @@ float currentLocationResTime;
                                 NSLog(@"leg.. %@",[lg legId]);
                             }                                                            
                         }
+                        [self getRealTimeData];
+                       
+                        continueGetTime =   [NSTimer scheduledTimerWithTimeInterval: 59.0 target:self selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
                     }
                     @catch (NSException *exception) {
                         NSLog(@"Exception while iterating over TP response plan: %@", exception);
@@ -999,8 +1004,13 @@ float currentLocationResTime;
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
-    if ([request isPOST]) {  
-//        NSLog(@"Got aresponse back from our POST! %@", [response bodyAsString]);      
+    
+    if ([request isGET]) {       
+        NSLog(@"response %@", [response bodyAsString]);
+        id res = (id)[response bodyAsJSON];    
+        [routeOptionsVC setIsReloadRealData:false];
+        [routeOptionsVC setLiveFeed:res];
+    } else if ([request isPOST]) {       
         @try {                        
             NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
             NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
@@ -1057,5 +1067,18 @@ float currentLocationResTime;
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=LocationServices"]];
     }     
 }
+
+-(void)getRealTimeData
+{
+    NSLog(@"called real time..");
+    RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+    [RKClient setSharedClient:client];   
+    NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
+                          @"planid",[plan planId] ,
+                          nil];
+    NSString *req = [@"livefeeds/plan" appendQueryParams:dict];
+    [[RKClient sharedClient]  get:req  delegate:self];    
+}
+
 
 @end

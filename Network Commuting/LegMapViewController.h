@@ -47,4 +47,6 @@
 
 -(void)walk;
 -(void)customMap;
+-(void)ReloadLegMapWithNewData;
+- (void)setDirectionsText;
 @end

@@ -167,6 +167,7 @@ NSString *legID;
             [prefs setObject:train1 forKey:@"train"];
         }
         
+        NSLog(@"start == == = = ");
         if([leg arrivalTime] > 0) {
             UIImage *imgForArrivalTime;
             if([leg.arrivalFlag intValue] == [ON_TIME intValue]) {
@@ -179,6 +180,7 @@ NSString *legID;
                 imgForArrivalTime = [UIImage imageNamed:@"img_earlier"] ;
             } 
             [imgForTimeInterval setImage:imgForArrivalTime];
+            NSLog(@"stop-------------");
         } else {
             [imgForTimeInterval setImage:nil];
         }
@@ -235,7 +237,7 @@ NSString *legID;
         itineraryNumber++;
     }
     [self refreshLegOverlay:itineraryNumber-1];  // refreshes the last itinerary number
-   [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
+    [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
     [self customMap];  // redefine the bounding box    
     
 //    rootMap *l = [[rootMap alloc] initWithNibName:nil bundle:nil ];
@@ -471,8 +473,7 @@ NSString *legID;
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-        
+    [super viewDidLoad];        
 }
 
 - (void)viewDidUnload
@@ -488,5 +489,8 @@ NSString *legID;
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-
+-(void)ReloadLegMapWithNewData
+{    
+    [self setDirectionsText];
+}
 @end
