@@ -50,6 +50,8 @@ typedef enum {
 @property (strong, nonatomic) CustomBadge *twiterCount;
 @property (nonatomic) BOOL isContinueGetRealTimeData;
 @property (strong, nonatomic) NSTimer *continueGetTime;
+
+
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)advisoriesButtonPressed:(id)sender forEvent:(UIEvent *)event;

@@ -157,7 +157,6 @@ float currentLocationResTime;
 - (void)viewWillAppear:(BOOL)animated
 {
     [continueGetTime invalidate];
-    NSLog(@"===============================================================");
     continueGetTime = nil;
     [super viewWillAppear:animated];
     [self updateTripDate];  // update tripDate if needed
@@ -717,8 +716,8 @@ float currentLocationResTime;
                                 NSLog(@"leg.. %@",[lg legId]);
                             }                                                            
                         }
+                        isContinueGetRealTimeData = TRUE;
                         [self getRealTimeData];
-                       
                         continueGetTime =   [NSTimer scheduledTimerWithTimeInterval: 59.0 target:self selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
                     }
                     @catch (NSException *exception) {
@@ -830,6 +829,7 @@ float currentLocationResTime;
         [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
 
         savetrip = TRUE;
+        isContinueGetRealTimeData = FALSE;
         // Reload the to/from tables for next time
         [[self fromTable] reloadData];
         [[self toTable] reloadData];
@@ -895,7 +895,10 @@ float currentLocationResTime;
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];    
+    [super viewDidLoad];
+    isContinueGetRealTimeData = false;
+    [continueGetTime invalidate];
+    continueGetTime = nil;
 }
 
 - (void)viewDidUnload
@@ -1004,14 +1007,17 @@ float currentLocationResTime;
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
-    
-    if ([request isGET]) {       
-        NSLog(@"response %@", [response bodyAsString]);
-        id res = (id)[response bodyAsJSON];    
-        [routeOptionsVC setIsReloadRealData:false];
-        [routeOptionsVC setLiveFeed:res];
-    } else if ([request isPOST]) {       
-        @try {                        
+    @try {
+        if (isContinueGetRealTimeData) {
+            if ([request isGET]) {       
+                NSLog(@"response %@", [response bodyAsString]);
+                RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+                id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];    
+                [routeOptionsVC setIsReloadRealData:false];
+                [routeOptionsVC setLiveFeed:res];
+            } 
+        }
+    if ([request isPOST]) {      
             NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
             NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                                     @"deviceid", udid, 
@@ -1020,9 +1026,9 @@ float currentLocationResTime;
             [[rkSavePlanMgr mappingProvider] setMapping:[Plan objectMappingforPlanner:OTP_PLANNER] forKeyPath:@"plan"];
             planURLResource = [@"plan/get" appendQueryParams:params];            
             [rkSavePlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];            
-        } @catch (NSException *exception) {
-          NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
-        }        
+        } 
+    }  @catch (NSException *exception) {
+        NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
     } 
 }
 
