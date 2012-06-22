@@ -18,6 +18,7 @@
 #import "FeedBackForm.h"
 #import "TwitterSearch.h"
 #import "LocationPickerViewController.h"
+#import "twitterViewController.h"
 
 @interface ToFromViewController()
 {
@@ -35,6 +36,7 @@
     BOOL toGeocodeRequestOutstanding;  // true if there is an outstanding To geocode request
     BOOL fromGeocodeRequestOutstanding;  //true if there is an outstanding From geocode request
     BOOL savetrip;
+    BOOL isTwitterLivaData ;
     double startButtonClickTime;
     float durationOfResponseTime;
     UIActivityIndicatorView* activityIndicator;
@@ -548,11 +550,16 @@ float currentLocationResTime;
 - (IBAction)advisoriesButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     @try {
-        if (!twitterSearchVC) {
-            twitterSearchVC = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
-        }
-        [[self navigationController] pushViewController:twitterSearchVC animated:YES];
-        [twitterSearchVC loadRequest:CALTRAIN_TWITTER_URL];
+//        if (!twitterSearchVC) {
+//            twitterSearchVC = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
+//        }
+//        [[self navigationController] pushViewController:twitterSearchVC animated:YES];
+//        [twitterSearchVC loadRequest:CALTRAIN_TWITTER_URL];
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        isTwitterLivaData = TRUE;
+        [[RKClient sharedClient]  get:@"advisories/all" delegate:self];
+                
     }
     @catch (NSException *exception) {
         NSLog(@" twitter print : %@", exception);
@@ -582,8 +589,7 @@ float currentLocationResTime;
         [mainTable deleteSections:[NSIndexSet indexSetWithIndexesInRange:range] withRowAnimation:UITableViewRowAnimationAutomatic];  // Leave only the To section
         [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
         [mainTable endUpdates];
-    } 
-    else if (newEditMode == NO_EDIT && oldEditMode == TO_EDIT) {
+    } else if (newEditMode == NO_EDIT && oldEditMode == TO_EDIT) {
         range.location = 1;
         range.length = 2;
         if (isCurrentLocationMode) {
@@ -594,8 +600,7 @@ float currentLocationResTime;
         [mainTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Delete the row for txtField
         [mainTable insertSections:[NSIndexSet indexSetWithIndexesInRange:range] withRowAnimation:UITableViewRowAnimationAutomatic];
         [mainTable endUpdates];
-    }
-    else if (newEditMode == FROM_EDIT && oldEditMode == NO_EDIT) {
+    } else if (newEditMode == FROM_EDIT && oldEditMode == NO_EDIT) {
         // Delete first & second sections (moving To Table to top)
         [mainTable beginUpdates];
         [mainTable deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -676,7 +681,6 @@ float currentLocationResTime;
         NSInteger statusCode = [[objectLoader response] statusCode];
         NSLog(@"Planning HTTP status code = %d", statusCode);
         @try {
-            
             if (objects && [objects objectAtIndex:0]) {
                 if (savetrip) {
                     plan = [objects objectAtIndex:0];
@@ -707,7 +711,6 @@ float currentLocationResTime;
                             Itinerary *itin = [[tpResponsePlan sortedItineraries] objectAtIndex:i];
                             [[[plan sortedItineraries] objectAtIndex:i] setItinId:[itin itinId]];
                             NSLog(@"===========================================");
-                          
                             NSLog(@"itinarary.. %@",[itin itinId]);
                             for (int j =0; j< [[itin legs] count] ; j++) {
                                 Leg *lg = [[itin sortedLegs] objectAtIndex:j];                                
@@ -749,7 +752,6 @@ float currentLocationResTime;
         NSLog(@"Error received from RKObjectManager:");
         NSLog(@"%@", error);
     }
-    
 }
 
 
@@ -975,8 +977,6 @@ float currentLocationResTime;
     [rkp setValue:[toLocation formattedAddress]  forParam:@"frmtdAddTo"];
     [rkp setValue:[fromLocation formattedAddress]  forParam:@"frmtdAddFrom"];
     
-    NSLog(@" raw %@  %@ , time: %@  %@  , ", [locations rawAddressFrom],[locations rawAddressTo], [locations geoRespTimeFrom], [locations geoRespTimeTo]);
-    
     if([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
         [rkp setValue:REVERSE_GEO_FROM forParam:@"fromType"];
         [rkp setValue:currentLoc  forParam:@"frmtdAddFrom"];
@@ -1008,14 +1008,25 @@ float currentLocationResTime;
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     @try {
+        RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
         if (isContinueGetRealTimeData) {
             if ([request isGET]) {       
-                NSLog(@"response %@", [response bodyAsString]);
-                RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+                NSLog(@"response %@", [response bodyAsString]);                
                 id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];    
                 [routeOptionsVC setIsReloadRealData:false];
                 [routeOptionsVC setLiveFeed:res];
             } 
+        }
+        if (isTwitterLivaData) {
+            if ([request isGET]) {       
+                NSLog(@"response %@", [response bodyAsString]);
+                RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+                id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];                
+                twitterViewController *twit = [[twitterViewController alloc] init];
+                [twit setTwitterLiveData:res];
+                [[self navigationController] pushViewController:twit animated:YES];
+                isTwitterLivaData = FALSE;
+            }
         }
     if ([request isPOST]) {      
             NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
@@ -1085,6 +1096,7 @@ float currentLocationResTime;
     NSString *req = [@"livefeeds/plan" appendQueryParams:dict];
     [[RKClient sharedClient]  get:req  delegate:self];    
 }
+
 
 
 @end

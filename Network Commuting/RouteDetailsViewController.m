@@ -13,6 +13,8 @@
 #import "TwitterSearch.h"
 #import "FeedBackForm.h"
 #import "FeedBackReqParam.h"
+#import "twitterViewController.h"
+#import <RestKit/RKJSONParserJSONKit.h>
 
 @implementation RouteDetailsViewController
 
@@ -202,8 +204,7 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
                 sizeWithFont:[UIFont systemFontOfSize:14] 
                 constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
     }
-    else {
-    
+    else {    
     Leg *leg = [[itinerary sortedLegs] objectAtIndex:([indexPath row]-1)];
     titleText= [leg directionsDetailText];
    
@@ -242,9 +243,13 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 - (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     @try {
-        TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
-        [[self navigationController] pushViewController:twitter_search animated:YES];
-        [twitter_search loadRequest:CALTRAIN_TWITTER_URL];
+//        TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
+//        [[self navigationController] pushViewController:twitter_search animated:YES];
+//        [twitter_search loadRequest:CALTRAIN_TWITTER_URL];
+        
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        [[RKClient sharedClient]  get:@"advisories/all" delegate:self];
     }
     @catch (NSException *exception) {
         NSLog(@" twitter print : %@", exception);
@@ -270,5 +275,20 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 -(void)ReloadLegWithNewData
 {
     [mainTable reloadData];    
+}
+
+- (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
+    @try {
+        if ([request isGET]) {       
+            RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+            id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];                
+            twitterViewController *twit = [[twitterViewController alloc] init];
+            [twit setTwitterLiveData:res];
+            [[self navigationController] pushViewController:twit animated:YES];     
+        } 
+        
+    }  @catch (NSException *exception) {
+        NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
+    } 
 }
 @end

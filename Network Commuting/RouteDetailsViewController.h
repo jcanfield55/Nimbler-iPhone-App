@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Itinerary.h"
 
-@interface RouteDetailsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface RouteDetailsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,RKRequestDelegate>
 {
     NSDateFormatter *timeFormatter;
     
@@ -27,4 +27,5 @@
 
 - (void) setLegRealtimeData:(NSString *)legId arrivalTime:(NSString *)arrivalTime arrivalFlag:(NSString *)arrivalFlag;
 -(void)ReloadLegWithNewData;
+
 @end

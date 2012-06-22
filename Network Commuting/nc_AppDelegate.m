@@ -16,6 +16,8 @@
 #define TESTING 1  // If 1, then testFlightApp will collect device UIDs, if 0, it will not
 #define DEVELOPMENT 1  // If 1, then do not include testFlightApp at all (don't need crash report while developing)
 
+BOOL isTwitterLivaData = FALSE; 
+
 @implementation nc_AppDelegate
 
 @synthesize locations;
@@ -26,6 +28,7 @@
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
 @synthesize window = _window;
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -286,31 +289,36 @@
             NSError *error = nil;
             if (error == nil)
             {
-                RKJSONParserJSONKit* parser1 = [RKJSONParserJSONKit new];
-                NSDictionary  *p = [parser1 objectFromString:[response bodyAsString] error:nil];
-                
-                SupportedRegion *region = [SupportedRegion alloc] ;
-                for (id key in p) {
-                    if ([key isEqualToString:@"upperRightLatitude"]) {
-                        [region setUpperRightLatitude:[p objectForKey:key] ];
-                    } else if ([key isEqualToString:@"upperRightLongitude"]){
-                        [region setUpperRightLongitude:[p objectForKey:key] ];
-                    } else if ([key isEqualToString:@"minLongitude"]){
-                        [region setMinLongitude:[p objectForKey:key] ];
-                    } else if ([key isEqualToString:@"minLatitude"]){
-                        [region setMinLatitude:[p objectForKey:key] ];
-                    } else if ([key isEqualToString:@"maxLongitude"]){
-                        [region setMaxLongitude:[p objectForKey:key] ];
-                    } else if ([key isEqualToString:@"maxLatitude"]){
-                        [region setMaxLatitude:[p objectForKey:key] ];
-                    } else if ([key isEqualToString:@"lowerLeftLongitude"]){
-                        [region setLowerLeftLongitude:[p objectForKey:key] ];
-                    } else if ([key isEqualToString:@"lowerLeftLatitude"]){
-                        [region setLowerLeftLatitude:[p objectForKey:key] ];
-                    } 
+                RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
+                if (isTwitterLivaData) {
+//                    id  res = [rkParser objectFromString:[response bodyAsString] error:nil];
+                    
+
+                } else {
+                    
+                    NSDictionary  *regionParser = [rkParser objectFromString:[response bodyAsString] error:nil];                
+                    SupportedRegion *region = [SupportedRegion alloc] ;
+                    for (id key in regionParser) {
+                        if ([key isEqualToString:@"upperRightLatitude"]) {
+                            [region setUpperRightLatitude:[regionParser objectForKey:key] ];
+                        } else if ([key isEqualToString:@"upperRightLongitude"]){
+                            [region setUpperRightLongitude:[regionParser objectForKey:key] ];
+                        } else if ([key isEqualToString:@"minLongitude"]){
+                            [region setMinLongitude:[regionParser objectForKey:key] ];
+                        } else if ([key isEqualToString:@"minLatitude"]){
+                            [region setMinLatitude:[regionParser objectForKey:key] ];
+                        } else if ([key isEqualToString:@"maxLongitude"]){
+                            [region setMaxLongitude:[regionParser objectForKey:key] ];
+                        } else if ([key isEqualToString:@"maxLatitude"]){
+                            [region setMaxLatitude:[regionParser objectForKey:key] ];
+                        } else if ([key isEqualToString:@"lowerLeftLongitude"]){
+                            [region setLowerLeftLongitude:[regionParser objectForKey:key] ];
+                        } else if ([key isEqualToString:@"lowerLeftLatitude"]){
+                            [region setLowerLeftLatitude:[regionParser objectForKey:key] ];
+                        } 
+                    }                
+                    [toFromViewController setSupportedRegion:region];
                 }
-                
-                [toFromViewController setSupportedRegion:region];
             }
     }
 }
@@ -381,6 +389,14 @@
             NSLog(@" twitter page execution error: %@", exception);
         }
     } 
+}
+
+-(void)getTwiiterLiveData
+{
+    RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+    [RKClient setSharedClient:client];
+    isTwitterLivaData = TRUE;
+    [[RKClient sharedClient]  get:@"advisories/all" delegate:self];
     
 }
 

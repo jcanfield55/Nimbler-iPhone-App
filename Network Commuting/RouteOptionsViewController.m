@@ -13,6 +13,8 @@
 #import "TwitterSearch.h"
 #import "FeedBackForm.h"
 #import "LegMapViewController.h"
+#import "twitterViewController.h"
+#import <RestKit/RKJSONParserJSONKit.h>
 
 @interface RouteOptionsViewController()
 {
@@ -168,11 +170,15 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 - (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     @try {
-        if (!twitterSearchVC) {
-            twitterSearchVC = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
-        }
-        [[self navigationController] pushViewController:twitterSearchVC animated:YES];
-        [twitterSearchVC loadRequest:CALTRAIN_TWITTER_URL];
+//        if (!twitterSearchVC) {
+//            twitterSearchVC = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
+//        }
+//        [[self navigationController] pushViewController:twitterSearchVC animated:YES];
+//        [twitterSearchVC loadRequest:CALTRAIN_TWITTER_URL];
+        
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        [[RKClient sharedClient]  get:@"advisories/all" delegate:self];
     }
     @catch (NSException *exception) {
         NSLog(@" twitter print : %@", exception);
@@ -246,7 +252,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                     NSArray *legLiveFees = [(NSDictionary*)key objectForKey:@"legLiveFeeds"]; 
                     if ([legLiveFees count] > 0) {
                         for (int i=0; i<legLiveFees.count; i++) {                
-                            NSString *arrivalTime = [[legLiveFees objectAtIndex:i] valueForKey:@"arrivalTime"];
+                            NSString *arrivalTime = [[legLiveFees objectAtIndex:i] valueForKey:@"departureTime"];
                             NSString *arrivalTimeFlag = [[legLiveFees objectAtIndex:i] valueForKey:@"arrivalTimeFlag"];
                             NSString *legId = [[[legLiveFees objectAtIndex:i] valueForKey:@"leg"] valueForKey:@"id"];                 
                         
@@ -294,5 +300,21 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     @catch (NSException *exception) {
         NSLog(@"exceptions at set time: %@", exception);
     }
+}
+
+
+- (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
+    @try {
+        if ([request isGET]) {       
+            RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+            id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];                
+            twitterViewController *twit = [[twitterViewController alloc] init];
+            [twit setTwitterLiveData:res];
+            [[self navigationController] pushViewController:twit animated:YES];     
+        } 
+        
+        }  @catch (NSException *exception) {
+        NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
+    } 
 }
 @end

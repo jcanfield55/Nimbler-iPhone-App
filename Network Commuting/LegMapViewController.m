@@ -11,7 +11,8 @@
 #import "MyAnnotation.h"
 #import "Step.h"
 #import "RootMap.h"
-#import "TwitterSearch.h"
+#import "twitterViewController.h"
+#import "RestKit/RKJSONParserJSONKit.h"
 
 @interface LegMapViewController()
 // Utility routine for setting the region on the MapView based on the itineraryNumber
@@ -452,9 +453,13 @@ NSString *legID;
 //        [[self navigationController] pushViewController:twitter_search animated:YES];
 //        trainRoute = [TWITTER_SERARCH_URL stringByReplacingOccurrencesOfString:@"TRAIN" withString:trainRoute];
 //        [twitter_search loadRequest:trainRoute];
-        TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
-        [[self navigationController] pushViewController:twitter_search animated:YES];
-        [twitter_search loadRequest:CALTRAIN_TWITTER_URL];
+//        TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
+//        [[self navigationController] pushViewController:twitter_search animated:YES];
+//        [twitter_search loadRequest:CALTRAIN_TWITTER_URL];
+
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        [[RKClient sharedClient]  get:@"advisories/all" delegate:self];
     }
     @catch (NSException *exception) {
         NSLog(@" twitter print : %@", exception);
@@ -492,5 +497,20 @@ NSString *legID;
 -(void)ReloadLegMapWithNewData
 {    
     [self setDirectionsText];
+}
+
+- (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
+    @try {
+        if ([request isGET]) {       
+            RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+            id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];                
+            twitterViewController *twit = [[twitterViewController alloc] init];
+            [twit setTwitterLiveData:res];
+            [[self navigationController] pushViewController:twit animated:YES];     
+        } 
+        
+    }  @catch (NSException *exception) {
+        NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
+    } 
 }
 @end
