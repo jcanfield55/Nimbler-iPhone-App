@@ -34,6 +34,7 @@
 @property (strong, nonatomic) NSString *geoRespTimeFrom;
 @property (nonatomic) BOOL isFromGeo;
 @property (nonatomic) BOOL isToGeo;
+@property (nonatomic) BOOL isLocationServiceEnable;
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkGeoMgr:(RKObjectManager *)rkG;
 - (void)preLoadIfNeededFromFile:(NSString *)filename;  // Preloads locations (like Caltrain stations) from a file

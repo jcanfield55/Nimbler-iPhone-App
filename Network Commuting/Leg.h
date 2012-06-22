@@ -43,6 +43,9 @@
 @property (nonatomic, strong) NSArray *sortedSteps;
 @property (nonatomic, strong, readonly) PolylineEncodedString *polylineEncodedString;
 
+@property (nonatomic, retain) NSString *arrivalTime;
+@property (nonatomic, retain) NSString *arrivalFlag;
+
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType;
 - (NSArray *)sortedSteps;
 - (NSString *)directionsTitleText;

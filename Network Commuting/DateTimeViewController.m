@@ -85,7 +85,6 @@
     }
     else {
         departOrArrive = ARRIVE;
-        
         // Move date to at least one hour from now if not already
         NSDate* nowPlus1hour = [[NSDate alloc] initWithTimeIntervalSinceNow:(60.0*60)];  // 1 hour from now
         if ([date earlierDate:nowPlus1hour] == date) { // if date is earlier than 1 hour from now

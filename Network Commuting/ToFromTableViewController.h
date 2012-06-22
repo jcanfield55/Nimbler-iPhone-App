@@ -20,7 +20,7 @@
 
 @class ToFromViewController;
 
-@interface ToFromTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate>
+@interface ToFromTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,UIAlertViewDelegate>
 
 @property (nonatomic, unsafe_unretained) ToFromViewController* toFromVC;  // Parent view controller
 @property (strong, nonatomic) RKObjectManager *rkGeoMgr;  // RestKit Object Manager for geocoding
@@ -38,4 +38,5 @@
 - (void)initializeCurrentLocation:(Location *)currentLoc; // Method called when currentLocation is first created and automatically picked as the fromLocation
 
 - (void)setPickedLocation:(Location *)ploc locationArray:(NSArray *)locationArray; // Method called by LocationPickerVC when a user picks a location
+-(BOOL)alertUsetForLocationService;
 @end

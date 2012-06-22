@@ -23,6 +23,7 @@
     UIBarButtonItem *Bak;
     NSArray* bbiArray;
     IBOutlet UIButton *tw_btn;
+    IBOutlet UIImageView *imgForTimeInterval;
 }
 
 @property(nonatomic, strong) IBOutlet MKMapView *mapView;
@@ -32,6 +33,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *feedbackButton;
 @property(nonatomic, strong, readonly) Itinerary *itinerary;
 @property(nonatomic, readonly) int itineraryNumber;
+
 // Set the LegMapView to display an itinerary leg specified in itineraryNumber
 // Note:  num = 0 is the startpoint.  num=1 is the first leg.  
 // num = [[itin sortedLegs] count]+1 is the endpoint
@@ -41,6 +43,10 @@
 - (IBAction)navigateForward:(id)sender;
 - (IBAction)twitterSearch:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
+
+
 -(void)walk;
 -(void)customMap;
+-(void)ReloadLegMapWithNewData;
+- (void)setDirectionsText;
 @end

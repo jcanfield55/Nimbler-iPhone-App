@@ -158,7 +158,7 @@
         <element name="BayArea" positionX="-144" positionY="399" width="128" height="195"/>
         <element name="Error" positionX="540" positionY="159" width="128" height="120"/>
         <element name="Itinerary" positionX="315" positionY="228" width="128" height="285"/>
-        <element name="Leg" positionX="106" positionY="324" width="128" height="330"/>
+        <element name="Leg" positionX="106" positionY="324" width="128" height="345"/>
         <element name="Location" positionX="160" positionY="693" width="128" height="270"/>
         <element name="Plan" positionX="268" positionY="45" width="128" height="150"/>
         <element name="PlanPlace" positionX="90" positionY="-18" width="128" height="180"/>

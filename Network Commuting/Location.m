@@ -71,6 +71,7 @@ static Locations *locations;
     [self setFromFrequency:[NSNumber numberWithDouble:fromFreq0]];
 }
 
+
 // TODO create a method or sub-class to handle getting lat/lng for Current Location
 
 // Returns the mapping used by RestKit to map this object from the specified API

@@ -23,31 +23,27 @@
 
 int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 
+
 -(void)loadView
 {
-    [super loadView];   
+    [super loadView];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    
     if (self) {
         [[self navigationItem] setTitle:@"Route"];
-        
         UIImage *mapTmg = [UIImage imageNamed:@"map.png"];
         UIButton *mapBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        mapBtn.bounds = CGRectMake( 0, 0, mapTmg.size.width, mapTmg.size.height );
+        mapBtn.bounds = CGRectMake(0, 0, mapTmg.size.width, mapTmg.size.height);
         [mapBtn setImage:mapTmg forState:UIControlStateNormal];
         [mapBtn addTarget:self action:@selector(mapOverView) forControlEvents:UIControlEventTouchDown];
-
+        NSLog(@"itit id1 : %@", [itinerary itinId]);
         map = [[UIBarButtonItem alloc] initWithCustomView:mapBtn]; 
-        
         self.navigationItem.rightBarButtonItem = map;
-               
         timeFormatter = [[NSDateFormatter alloc] init];
         [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
-//        [[self tableView] setRowHeight:60];
     }
     return self;
 }
@@ -55,13 +51,11 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
     // Enforce height of main table
     CGRect rect0 = [mainTable frame];
     rect0.size.height = ROUTE_DETAILS_TABLE_HEIGHT;
     [mainTable setFrame:rect0];
     [mainTable reloadData];
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -73,7 +67,6 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
     // Release any cached data, images, etc that aren't in use.
 }
 
@@ -92,6 +85,9 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Check for a reusable cell first, use that if it exists
+    
+    NSLog(@"itinerary id %@", [itinerary itinArrivalFlag]);
+    
     UITableViewCell *cell =
     [tableView dequeueReusableCellWithIdentifier:@"UIRouteDetailsViewCell"];
     if (!cell) {
@@ -106,13 +102,21 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
     NSString *subTitle;
     if ([indexPath row] == 0) { // if first row, put in start point
         titleText = [NSString stringWithFormat:@"Start at %@", [[itinerary from] name]];
+//        if (isReload) {
+//            UIImage *ss = [UIImage imageNamed:@"map.png"] ;
+//            [cell.imageView setImage:ss];
+//        }
     }
     else if ([indexPath row] == [[itinerary sortedLegs] count] + 1) { // if last row, put in end point
         titleText = [NSString stringWithFormat:@"End at %@", [[itinerary to] name]];
+//        if (isReload) {
+//            UIImage *ss = [UIImage imageNamed:@"map.png"] ;
+//            [cell.imageView setImage:ss];
+//        }
     }
     else {  // otherwise, it is one of the legs
-       
         Leg *leg = [[itinerary sortedLegs] objectAtIndex:([indexPath row]-1)];
+        
         titleText = [leg directionsTitleText];
         subTitle = [leg directionsDetailText];
         
@@ -149,17 +153,34 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 //            }
 //            subTitle = [add1 stringByAppendingString:add2];  
 //        }
+   
+        NSLog(@"leg arrival time: %@, leg time: %@", [leg arrivalFlag], [leg arrivalTime]);
+            if([leg arrivalTime] > 0) {
+                UIImage *imgForArrivalTime = [UIImage alloc];
+                if([leg.arrivalFlag intValue] == [ON_TIME intValue]) {
+                    imgForArrivalTime = [UIImage imageNamed:@"img_ontime.png"] ;
+                }  else if([leg.arrivalFlag intValue] == [DELAYED intValue]) {
+                    imgForArrivalTime = [UIImage imageNamed:@"img_delay.png"] ;
+                } else if([leg.arrivalFlag intValue] == [EARLY intValue]) {
+                    imgForArrivalTime = [UIImage imageNamed:@"img_early.png"] ;
+                } else if([leg.arrivalFlag intValue] == [EARLIER intValue]) {
+                    imgForArrivalTime = [UIImage imageNamed:@"img_earlier"] ;
+                } 
+                [cell.imageView setImage:imgForArrivalTime];
+            }
+         else {
+            [cell.imageView setImage:nil];
+        }
     }
-        
+     
     [[cell textLabel] setText:titleText];
     [[cell detailTextLabel] setLineBreakMode:UILineBreakModeWordWrap];
     [[cell detailTextLabel] setNumberOfLines:0];
     [[cell detailTextLabel] setText:subTitle];
     
-    
-//        if (subTitle && [subTitle length] > 40) {
-//        [[cell detailTextLabel] sizeToFit];
-//    }
+    if (subTitle && [subTitle length] > 40) {
+        [[cell detailTextLabel] sizeToFit];
+    }
     return cell;
 }
 
@@ -198,8 +219,6 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
                     sizeWithFont:[UIFont systemFontOfSize:14] 
                     constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
         }
-        
-    
     }
     CGFloat height = size.height + 7;
     if (height < 44.0) { // Set a minumum row height
@@ -223,7 +242,6 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 - (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     @try {
-        NSLog(@"twiit");
         TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
         [[self navigationController] pushViewController:twitter_search animated:YES];
         [twitter_search loadRequest:CALTRAIN_TWITTER_URL];
@@ -236,10 +254,7 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
 {
-    
-    FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_ITINERARY uniqueId:[itinerary itinId] date:nil fromAddress:nil toAddress:nil];
-    
-//    FeedBackForm *feedbackvc = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" source:FB_SOURCE_ITINERARY uniqueId:[itinerary itinId] date:nil fromAddress:nil toAddress:nil  bundle:nil];   
+    FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_ITINERARY uniqueId:[itinerary itinId] date:nil fromAddress:nil toAddress:nil]; 
     FeedBackForm *feedbackvc = [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];
     [[self navigationController] pushViewController:feedbackvc animated:YES];
 }
@@ -247,8 +262,13 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 
 - (void)mapOverView
 {
-    RootMap *l = [[RootMap alloc] initWithNibName:nil bundle:nil];
-    [l setItinerarys:itinerary itineraryNumber:2];
-    [[self navigationController] pushViewController:l animated:YES];
+    RootMap *rootMap = [[RootMap alloc] initWithNibName:nil bundle:nil];
+    [rootMap setItinerarys:itinerary itineraryNumber:2];
+    [[self navigationController] pushViewController:rootMap animated:YES];
+}
+ 
+-(void)ReloadLegWithNewData
+{
+    [mainTable reloadData];    
 }
 @end

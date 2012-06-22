@@ -12,6 +12,7 @@
 #import <math.h>
 #import "TwitterSearch.h"
 #import "FeedBackForm.h"
+#import "LegMapViewController.h"
 
 @interface RouteOptionsViewController()
 {
@@ -30,7 +31,11 @@
 @synthesize feedbackButton;
 @synthesize advisoryButton;
 @synthesize plan;
+@synthesize isReloadRealData;
+@synthesize liveData;
 
+Itinerary * itinerary;
+NSString *itinararyId;
 
 int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 
@@ -87,7 +92,24 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     }
     // Get the requested itinerary
     Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
-    
+    if (isReloadRealData) {
+        if([itin itinArrivalFlag] > 0) {
+            UIImage *imgForArrivalTime = [UIImage alloc];
+            cell.frame = CGRectMake(100, 2, 20, 20);
+            if([itin.itinArrivalFlag intValue] == [ON_TIME intValue]) {
+                imgForArrivalTime = [UIImage imageNamed:@"img_ontime.png"] ;
+            }  else if([itin.itinArrivalFlag intValue] == [DELAYED intValue]) {
+                imgForArrivalTime = [UIImage imageNamed:@"img_delay.png"] ;
+            } else if([itin.itinArrivalFlag intValue] == [EARLY intValue]) {
+                imgForArrivalTime = [UIImage imageNamed:@"img_early.png"] ;
+            } else if([itin.itinArrivalFlag intValue] == [EARLIER intValue]) {
+                imgForArrivalTime = [UIImage imageNamed:@"img_earlier"] ;
+            } 
+            [cell.imageView setImage:imgForArrivalTime];
+        }
+    } else {
+        [cell.imageView setImage:nil];
+    }
     /*
         for feedback planId
      */
@@ -130,17 +152,15 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         if (!routeDetailsVC) {
             routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
         }
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        [prefs setObject:[[[plan sortedItineraries] objectAtIndex:[indexPath row]] itinId] forKey:@"itinararyid"];
-        //    [self sendRequestForTimingDelay];
-        
-        [routeDetailsVC setItinerary:[[plan sortedItineraries] objectAtIndex:[indexPath row]]];
+        itinararyId =[[[plan sortedItineraries] objectAtIndex:[indexPath row]] itinId];
+//        [self sendRequestForTimingDelay];
+        itinerary = [plan.sortedItineraries objectAtIndex:[indexPath row]];
+        [routeDetailsVC setItinerary:itinerary];
         [[self navigationController] pushViewController:routeDetailsVC animated:YES];
     }
     @catch (NSException *exception) {
         NSLog(@"exceptions %@", exception);
     }
-    
 }
 
 #pragma mark - Button Event handling
@@ -161,11 +181,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 
 -(void)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
-    
-     FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_PLAN uniqueId:[plan planId] date:nil fromAddress:nil toAddress:nil];
-    
+    FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_PLAN uniqueId:[plan planId] date:nil fromAddress:nil toAddress:nil];
     FeedBackForm *feedbackFormVc = [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];
-    
     [[self navigationController] pushViewController:feedbackFormVc animated:YES]; 
 }
 
@@ -201,53 +218,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
--(void)sendRequestForTimingDelay
-{
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-//    NSString *ititId =    [prefs objectForKey:@"itinararyid"];    
-
-    
-    RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-    [RKClient setSharedClient:client];
-    
-    
-    NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
-                          @"itineraryid",@"4fd6d0def2f3ae0f17fd702a" ,
-                          nil];
-    NSString *req = [@"livefeeds/itinerary" appendQueryParams:dict];
-    
-    [[RKClient sharedClient]  get:req  delegate:self];
-    
-}
-
-- (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
-    
-    NSLog(@"response %@", [response bodyAsString]);
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    NSString *ititId =    [prefs objectForKey:@"itineraryid"];
-    id res = (id)[response bodyAsJSON];
-    
-    
-    NSLog(@"got the response ");
-    if([res isKindOfClass:[NSDictionary class]]){
-       
-//        if([[(NSDictionary*)res objectForKey:@"itinaryid"] isEqualToString:ititId]){
-             NSLog(@"yes dictionary.. %@", [(NSDictionary*)res objectForKey:@"itineraryId"]);
-            NSLog(@"yes dictionary.. %@", [(NSDictionary*)res objectForKey:@"errCode"]);
-      
-            NSArray *legLiveFees = [(NSDictionary*)res objectForKey:@"legLiveFeeds"];
-            NSLog(@"led live feeds %@", legLiveFees);
-
-            [[legLiveFees objectAtIndex:0] valueForKey:@"leg"];
-            [[[legLiveFees objectAtIndex:0] valueForKey:@"leg"] valueForKey:@"id"];
-            NSLog(@" id %@", [[[legLiveFees objectAtIndex:0] valueForKey:@"leg"] valueForKey:@"id"]);
-        NSLog(@"testing .. %@", [[legLiveFees objectAtIndex:0] valueForKey:@"leg"]);
-//        }
-    } else {
-        
-    }
-}
-
 
 -(void)sendRequestForFeedback:(RKParams*)para
 {
@@ -256,6 +226,73 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     
     
 }
-#pragma Rest Request for TPServer
+#pragma mark realTime data updates
 
+-(void)setLiveFeed:(id)liveFees
+{
+    @try {
+        liveData = liveFees;
+        //        NSString *itinId = [(NSDictionary*)liveFeed objectForKey:@"itineraryId"];
+        NSNumber *respCode = [(NSDictionary*)liveData objectForKey:@"errCode"];
+        
+        if ([respCode intValue]== 105) {
+            //It means there are live feeds in response
+            NSArray *itineraryLiveFees = [(NSDictionary*)liveData objectForKey:@"itinLiveFeeds"]; 
+            if ([itineraryLiveFees count] > 0) {
+                for (int j=0; j<itineraryLiveFees.count; j++) {                    
+                    id key = [itineraryLiveFees objectAtIndex:j];                
+                    NSString *itinTimeFalg = [(NSDictionary*)key objectForKey:@"arrivalTimeFlag"];
+                    NSString *ititId = [(NSDictionary*)key objectForKey:@"itineraryId"];
+                    NSArray *legLiveFees = [(NSDictionary*)key objectForKey:@"legLiveFeeds"]; 
+                    if ([legLiveFees count] > 0) {
+                        for (int i=0; i<legLiveFees.count; i++) {                
+                            NSString *arrivalTime = [[legLiveFees objectAtIndex:i] valueForKey:@"arrivalTime"];
+                            NSString *arrivalTimeFlag = [[legLiveFees objectAtIndex:i] valueForKey:@"arrivalTimeFlag"];
+                            NSString *legId = [[[legLiveFees objectAtIndex:i] valueForKey:@"leg"] valueForKey:@"id"];                 
+                        
+                            [self setRealtimeData:legId arrivalTime:arrivalTime arrivalFlag:arrivalTimeFlag itineraryId:ititId itineraryArrivalFlag:itinTimeFalg];
+                        }      
+                    }
+                }
+                isReloadRealData = true;
+                [mainTable reloadData]; 
+                LegMapViewController *legMap = [[LegMapViewController alloc] init];
+                [legMap ReloadLegMapWithNewData];
+                [routeDetailsVC ReloadLegWithNewData];
+                
+            }            
+        } else {
+            //thereare no live feeds available.            
+            NSLog(@"thereare no live feeds available for current route");
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception at live itinerary respoce: %@",exception);
+    }
+}
+
+- (void) setRealtimeData:(NSString *)legId arrivalTime:(NSString *)arrivalTime arrivalFlag:(NSString *)arrivalFlag itineraryId:(NSString *)ititId itineraryArrivalFlag:(NSString *)itinArrivalflag
+{
+    @try {
+        NSArray *ities = [plan sortedItineraries];
+        for (int i=0; i <ities.count ; i++) {
+            if ([[[ities objectAtIndex:i] itinId] isEqualToString:ititId]) {
+                [[ities objectAtIndex:i] setItinArrivalFlag:itinArrivalflag];
+            }
+            Itinerary *it = [ities objectAtIndex:i];
+            NSArray *legs =  [it sortedLegs];
+            for (int i=0;i<legs.count;i++) {
+                if ([[[legs objectAtIndex:i] legId] isEqualToString:legId]) {
+                    [[legs objectAtIndex:i] setArrivalFlag:arrivalFlag];
+                    [[legs objectAtIndex:i] setArrivalTime:arrivalTime];
+                }
+            }
+            
+        }
+        
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exceptions at set time: %@", exception);
+    }
+}
 @end

@@ -13,8 +13,9 @@
 #import "Plan.h"
 #import "enums.h"
 #import "SupportedRegion.h"
+#import "CustomBadge.h"
 
-@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,RKRequestDelegate,UIActionSheetDelegate>
+@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,RKRequestDelegate,UIActionSheetDelegate,UIAlertViewDelegate>
 
 
 typedef enum {
@@ -46,6 +47,10 @@ typedef enum {
 @property (nonatomic) ToFromEditMode editMode; // Specifies whether to or from address is being edited with the keyboard
 @property (strong, nonatomic) SupportedRegion* supportedRegion; // geographic area supported by this app
 
+@property (strong, nonatomic) CustomBadge *twiterCount;
+@property (nonatomic) BOOL isContinueGetRealTimeData;
+@property (strong, nonatomic) NSTimer *continueGetTime;
+
 
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
@@ -62,4 +67,7 @@ typedef enum {
 
 -(void)savePlanInTPServer:(NSString *)tripResponse;
 -(NSString *)getCurrentLocationOfFormattedAddress:(Location *)location;
+-(BOOL)alertUsetForLocationService;
+- (void)drawRect:(CGRect)rect;
+-(void)getRealTimeData;
 @end

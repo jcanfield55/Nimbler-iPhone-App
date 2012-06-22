@@ -29,6 +29,7 @@
 @dynamic plan;
 @dynamic itinId;
 @synthesize sortedLegs;
+@synthesize itinArrivalFlag;
 
 // TODO Add an awake method to populate itineraryCreationDate
 

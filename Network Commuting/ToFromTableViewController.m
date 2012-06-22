@@ -138,9 +138,17 @@
 - (void)markAndUpdateSelectedLocation:(Location *)loc
 {
     
+    if ([[loc formattedAddress] isEqualToString:@"Current Location"]) {
+        [self alertUsetForLocationService];
+        if ([self alertUsetForLocationService]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Location" message:@"Location Service is disabled for Nimbler, Do you want to enable?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"Cancel", nil];
+            [alert show];
+            return ;
+        }
+    }
+    
+    
     // Update ToFromViewController with the geocode results
-    
-    
     [toFromVC updateToFromLocation:self isFrom:isFrom location:loc];
     [toFromVC updateGeocodeStatus:FALSE isFrom:isFrom];  // let it know Geocode no longer outstanding
     
@@ -286,7 +294,6 @@
         }
         if (matchingLocation) { //if we got a match, mark and send appropriate updates 
             [self markAndUpdateSelectedLocation:matchingLocation];
-            
         }
         else {  // if no match, Geocode this new rawAddress
             // Keep a history to avoid duplicates
@@ -505,5 +512,19 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+-(BOOL)alertUsetForLocationService {
+    if (![locations isLocationServiceEnable]) {
+                return TRUE;
+    }
+    return FALSE;
+}
 
+-(void)alertView: (UIAlertView *)UIAlertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
+    
+    if ([btnName isEqualToString:@"Yes"]) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=LOCATION_SERVICES"]];
+    }     
+}
 @end

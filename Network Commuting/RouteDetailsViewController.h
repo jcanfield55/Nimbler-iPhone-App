@@ -15,6 +15,7 @@
     
     UIBarButtonItem *twitterCaltrain;
     UIBarButtonItem *map;
+    
 }
 @property(nonatomic, strong) IBOutlet UITableView* mainTable; // Table listing route options
 @property(nonatomic, strong) IBOutlet UIButton* feedbackButton; 
@@ -24,4 +25,6 @@
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event;
 
+- (void) setLegRealtimeData:(NSString *)legId arrivalTime:(NSString *)arrivalTime arrivalFlag:(NSString *)arrivalFlag;
+-(void)ReloadLegWithNewData;
 @end

@@ -78,6 +78,9 @@
 @synthesize isTripDateCurrentTime;
 @synthesize editMode;
 @synthesize supportedRegion;
+@synthesize twiterCount;
+@synthesize isContinueGetRealTimeData;
+@synthesize continueGetTime;
 
 // Constants for animating up and down the To: field
 int const MAIN_TABLE_HEIGHT = 358;
@@ -92,6 +95,8 @@ int const FROM_SECTION = 1;
 int const TIME_DATE_SECTION = 2;
 
 NSString *currentLoc;
+float currentLocationResTime;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -117,8 +122,9 @@ NSString *currentLoc;
         CGRect rect1;
         rect1.origin.x = 0;
         rect1.origin.y = 0;
-        rect1.size.width = TOFROM_TABLE_WIDTH;
+        rect1.size.width = TOFROM_TABLE_WIDTH ;
         rect1.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
+    
         toTable = [[UITableView alloc] initWithFrame:rect1 style:UITableViewStylePlain];
         [toTable setRowHeight:TOFROM_ROW_HEIGHT];
         toTableVC = [[ToFromTableViewController alloc] initWithTable:toTable isFrom:FALSE toFromVC:self locations:locations];
@@ -128,10 +134,12 @@ NSString *currentLoc;
         CGRect rect2;
         rect2.origin.x = 0;
         rect2.origin.y = 0;
+
         rect2.size.width = TOFROM_TABLE_WIDTH; 
         rect2.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
         fromTable = [[UITableView alloc] initWithFrame:rect2 style:UITableViewStylePlain];
         [fromTable setRowHeight:TOFROM_ROW_HEIGHT];
+        
         fromTableVC = [[ToFromTableViewController alloc] initWithTable:fromTable isFrom:TRUE toFromVC:self locations: locations];
         [fromTable setDataSource:fromTableVC];
         [fromTable setDelegate:fromTableVC];   
@@ -148,8 +156,9 @@ NSString *currentLoc;
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [continueGetTime invalidate];
+    continueGetTime = nil;
     [super viewWillAppear:animated];
-
     [self updateTripDate];  // update tripDate if needed
     
     // Enforce height of main table
@@ -397,12 +406,10 @@ NSString *currentLoc;
     [cellView addSubview:addButton];
     
     NSArray* subviews = [cellView subviews];
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            
+                
     if (isFrom) {
         if (subviews && [subviews count]>0 && [subviews indexOfObject:[fromTableVC txtField]] != NSNotFound) {
             NSLog(@"fromTable already in subview");
-            [prefs setObject:@"fromEdit" forKey:@"isEdit"];
             // if From txtField is already in the subview (due to recycling, no need to add again
         } else { 
             [cellView addSubview:[fromTableVC txtField]]; // add From txtField
@@ -411,7 +418,6 @@ NSString *currentLoc;
     else {   // do same for toTable case
         if (subviews && [subviews count]>0 && [subviews indexOfObject:[toTableVC txtField]] != NSNotFound) {
             NSLog(@"toTable already in subview");
-            [prefs setObject:@"toEdit" forKey:@"isEdit"];
             // if To txtField is already in the subview (due to recycling, no need to add again
         } else { 
             [cellView addSubview:[toTableVC txtField]]; // add To txtfield
@@ -443,10 +449,9 @@ NSString *currentLoc;
 
 // Callback from ToFromTableViewController to update a new user entered/selected location
 - (void)updateToFromLocation:(id)sender isFrom:(BOOL)isFrom location:(Location *)loc; {
-    
     if (isFrom) {
         fromLocation = loc;
-        [self bayAreaAvailability:fromLocation];
+//        [self getCurrentLocationOfFormattedAddress:fromLocation];
         if (loc == currentLocation && !isCurrentLocationMode) {
             [self setIsCurrentLocationMode:TRUE];
         }
@@ -456,7 +461,7 @@ NSString *currentLoc;
     } 
     else {
         toLocation = loc;
-        [self bayAreaAvailability:toLocation];
+//        [self getCurrentLocationOfFormattedAddress:toLocation];
 
     }
 }
@@ -470,7 +475,6 @@ NSString *currentLoc;
     } else {
         toGeocodeRequestOutstanding = isGeocodeOutstanding;
     }
-    
 }
 
 // Requesting a plan
@@ -482,6 +486,15 @@ NSString *currentLoc;
     UIAlertView *alert;
     
     startButtonClickTime = CFAbsoluteTimeGetCurrent();
+    
+    
+    if ([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
+        if ([self alertUsetForLocationService]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Location" message:@"Location Service is disabled for Nimbler, Do you want to enable?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"Cancel", nil];
+            [alert show];
+            return ;
+        }
+    }
     
     // if all the geolocations are here, get a plan.  
     if ([fromLocation formattedAddress] && [toLocation formattedAddress] &&
@@ -528,9 +541,7 @@ NSString *currentLoc;
    }
     NSLog(@"current Location %@", fromLocs);
     FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_GENERAL uniqueId:nil date:[dFormat stringFromDate:tripDate] fromAddress:fromLocs toAddress:[toLocation formattedAddress]];
-    
     FeedBackForm *feedbackVC =  [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];  // DE56 fix
-
     [[self navigationController] pushViewController:feedbackVC animated:YES];
 }
 
@@ -705,6 +716,9 @@ NSString *currentLoc;
                                 NSLog(@"leg.. %@",[lg legId]);
                             }                                                            
                         }
+                        isContinueGetRealTimeData = TRUE;
+                        [self getRealTimeData];
+                        continueGetTime =   [NSTimer scheduledTimerWithTimeInterval: 59.0 target:self selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
                     }
                     @catch (NSException *exception) {
                         NSLog(@"Exception while iterating over TP response plan: %@", exception);
@@ -779,14 +793,11 @@ NSString *currentLoc;
         
         if(fromLocation == toLocation){
             [self stopActivityIndicator];
-            NSLog(@"Match----------->>>>>>>>>>>> %@  ,%@",fromLocation, toLocation);
-                    
+            NSLog(@"Match----------->>>>>>>>>>>> %@  ,%@",fromLocation, toLocation);                    
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"The To: and From: address are the same location.  Please choose a different destination." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
             [alert show];
             return true;
-        }
-        
-        
+        }       
         // Create the date formatters we will use to output the date & time
         NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
         [dFormat setDateStyle:NSDateFormatterShortStyle];
@@ -818,6 +829,7 @@ NSString *currentLoc;
         [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
 
         savetrip = TRUE;
+        isContinueGetRealTimeData = FALSE;
         // Reload the to/from tables for next time
         [[self fromTable] reloadData];
         [[self toTable] reloadData];
@@ -883,7 +895,10 @@ NSString *currentLoc;
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];    
+    [super viewDidLoad];
+    isContinueGetRealTimeData = false;
+    [continueGetTime invalidate];
+    continueGetTime = nil;
 }
 
 - (void)viewDidUnload
@@ -946,8 +961,9 @@ NSString *currentLoc;
 -(void)savePlanInTPServer:(NSString *)tripResponse
 {
     
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+   
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;   
+    NSString *timeResponseTime =  [[NSNumber numberWithFloat:durationOfResponseTime] stringValue];
     
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     RKParams *rkp = [RKParams params];
@@ -955,38 +971,53 @@ NSString *currentLoc;
     
     [rkp setValue:udid forParam:@"deviceid"]; 
     [rkp setValue:tripResponse forParam:@"planJsonString"]; 
-    NSString *time =  [[NSNumber numberWithFloat:durationOfResponseTime] stringValue]; 
-    [rkp setValue:time forParam:@"timeTripPlan"];
-    
-    [rkp setValue:[prefs objectForKey:@"rawTo"] forParam:@"rawAddTo"];
+    [rkp setValue:timeResponseTime forParam:@"timeTripPlan"];
     [rkp setValue:[toLocation formattedAddress]  forParam:@"frmtdAddTo"];
-    [rkp setValue:[prefs objectForKey:@"toType"] forParam:@"toType"];
-    [rkp setValue:[prefs objectForKey:@"timeTo"] forParam:@"timeTo"];
-    [rkp setValue:[prefs objectForKey:@"geoResponseTo"] forParam:@"geoResTo"];
+    [rkp setValue:[fromLocation formattedAddress]  forParam:@"frmtdAddFrom"];
     
-    if([[prefs objectForKey:@"toType"] isEqualToString:REVERSE_GEO_TO])
-    {
-        [rkp setValue:[toLocation lat] forParam:@"latTo"];
-        [rkp setValue:[toLocation lng] forParam:@"lonTo"];
-    }    
-    [rkp setValue:[prefs objectForKey:@"rawFrom"] forParam:@"rawAddFrom"];
-    [rkp setValue:[fromLocation formattedAddress] forParam:@"frmtdAddFrom"];
-    [rkp setValue:[prefs objectForKey:@"fromType"]forParam:@"fromType"];
-    [rkp setValue:[prefs objectForKey:@"timeFrom"] forParam:@"timeFrom"];
-    [rkp setValue:[prefs objectForKey:@"geoResponseFrom"] forParam:@"geoResFrom"];
+    NSLog(@" raw %@  %@ , time: %@  %@  , ", [locations rawAddressFrom],[locations rawAddressTo], [locations geoRespTimeFrom], [locations geoRespTimeTo]);
     
-    if([[prefs objectForKey:@"fromType"] isEqualToString:REVERSE_GEO_FROM])
-    {
+    if([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
+        [rkp setValue:REVERSE_GEO_FROM forParam:@"fromType"];
+        [rkp setValue:currentLoc  forParam:@"frmtdAddFrom"];
+        [rkp setValue:[toLocation lat] forParam:@"latFrom"];
+        [rkp setValue:[toLocation lng] forParam:@"lonFrom"];
+        [rkp setValue:[[NSNumber numberWithFloat:currentLocationResTime] stringValue] forParam:@""];
+    } else if([[toLocation formattedAddress] isEqualToString:@"Current Location"]) {
+        [rkp setValue:REVERSE_GEO_TO forParam:@"toType"];
+        [rkp setValue:currentLoc  forParam:@"frmtdAddTo"];
         [rkp setValue:[fromLocation lat] forParam:@"latTo"];
         [rkp setValue:[fromLocation lng] forParam:@"lonTo"];
-    }    
+        [rkp setValue:[[NSNumber numberWithFloat:currentLocationResTime] stringValue] forParam:@""];
+    }
+    
+    if ([locations isFromGeo]) {
+        [rkp setValue:GEO_FROM forParam:@"fromType"];
+        [rkp setValue:[locations rawAddressFrom] forParam:@"rawAddFrom"];
+        [rkp setValue:[locations geoRespFrom] forParam:@"geoResFrom"];
+        [rkp setValue:[locations geoRespTimeFrom] forParam:@"timeFrom"];
+    } else if ([locations isToGeo]) {
+        [rkp setValue:GEO_TO forParam:@"toType"];
+        [rkp setValue:[locations rawAddressTo] forParam:@"rawAddTo"];
+        [rkp setValue:[locations geoRespTo] forParam:@"geoResTo"];
+        [rkp setValue:[locations geoRespTimeTo] forParam:@"timeTo"];
+    }
+    
     [[RKClient sharedClient] post:@"plan/new" params:rkp delegate:self]; 
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
-    if ([request isPOST]) {  
-//        NSLog(@"Got aresponse back from our POST! %@", [response bodyAsString]);      
-        @try {                        
+    @try {
+        if (isContinueGetRealTimeData) {
+            if ([request isGET]) {       
+                NSLog(@"response %@", [response bodyAsString]);
+                RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+                id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];    
+                [routeOptionsVC setIsReloadRealData:false];
+                [routeOptionsVC setLiveFeed:res];
+            } 
+        }
+    if ([request isPOST]) {      
             NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
             NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                                     @"deviceid", udid, 
@@ -995,9 +1026,9 @@ NSString *currentLoc;
             [[rkSavePlanMgr mappingProvider] setMapping:[Plan objectMappingforPlanner:OTP_PLANNER] forKeyPath:@"plan"];
             planURLResource = [@"plan/get" appendQueryParams:params];            
             [rkSavePlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];            
-        } @catch (NSException *exception) {
-          NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
-        }        
+        } 
+    }  @catch (NSException *exception) {
+        NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
     } 
 }
 
@@ -1007,7 +1038,6 @@ NSString *currentLoc;
     if (!locationPickerVC) {
         locationPickerVC = [[LocationPickerViewController alloc] initWithNibName:nil bundle:nil];
     }
-
     [locationPickerVC setToFromTableVC:toFromTableVC0];
     [locationPickerVC setLocationArray:locationList0];
     [locationPickerVC setIsFrom:isFrom0];
@@ -1015,17 +1045,46 @@ NSString *currentLoc;
     [[self navigationController] pushViewController:locationPickerVC animated:YES];    
 }
 
-
 -(NSString *)getCurrentLocationOfFormattedAddress:(Location *)location
 {
     double latitude = [[location lat] doubleValue];
-    double longitude = [[location lng] doubleValue];        
+    double longitude = [[location lng] doubleValue];  
+    float startTime = CFAbsoluteTimeGetCurrent();
     NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv", latitude, longitude];   
     NSURL *url = [NSURL URLWithString:urlString];
     NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
     NSArray *streetName = [locationString componentsSeparatedByString:@"\""];
     currentLoc = [streetName objectAtIndex:1];
-    
+    currentLocationResTime =  CFAbsoluteTimeGetCurrent() - startTime;
     return currentLoc;
 }
+
+-(BOOL)alertUsetForLocationService {
+    if (![locations isLocationServiceEnable]) {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+-(void)alertView: (UIAlertView *)UIAlertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
+    if ([btnName isEqualToString:@"Yes"]) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=LocationServices"]];
+    }     
+}
+
+-(void)getRealTimeData
+{
+    NSLog(@"called real time..");
+    RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+    [RKClient setSharedClient:client];   
+    NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
+                          @"planid",[plan planId] ,
+                          nil];
+    NSString *req = [@"livefeeds/plan" appendQueryParams:dict];
+    [[RKClient sharedClient]  get:req  delegate:self];    
+}
+
+
 @end
