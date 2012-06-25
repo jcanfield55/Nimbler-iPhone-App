@@ -19,6 +19,7 @@
 #import "TwitterSearch.h"
 #import "LocationPickerViewController.h"
 #import "twitterViewController.h"
+#import "SettingInfoViewController.h"
 
 @interface ToFromViewController()
 {
@@ -58,6 +59,7 @@
 
 
 @implementation ToFromViewController
+
 @synthesize mainTable;
 @synthesize toTable;
 @synthesize toTableVC;
@@ -106,6 +108,9 @@ float currentLocationResTime;
     if (self) {
         [[self navigationItem] setTitle:@"Nimbler"];
 
+       UIBarButtonItem *info = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(RedirectAtNimblerSetting)];
+        self.navigationItem.rightBarButtonItem = info;
+        
         planRequestHistory = [NSMutableArray array]; // Initialize this array
         departOrArrive = DEPART;
         toGeocodeRequestOutstanding = FALSE;
@@ -1110,6 +1115,11 @@ float currentLocationResTime;
     [[RKClient sharedClient]  get:req  delegate:self];    
 }
 
-
+-(void)RedirectAtNimblerSetting
+{
+    SettingInfoViewController *settingView = [[SettingInfoViewController alloc] init];
+    [[self navigationController] pushViewController:settingView animated:NO];
+    
+}
 
 @end

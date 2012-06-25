@@ -77,6 +77,9 @@
 		CC6FE2C2155BD02E004BE10A /* dot.png in Resources */ = {isa = PBXBuildFile; fileRef = CC6FE2C1155BD02E004BE10A /* dot.png */; };
 		CC9E424B158219A300A4ADED /* twitter.png in Resources */ = {isa = PBXBuildFile; fileRef = CC9E424A158219A300A4ADED /* twitter.png */; };
 		CC9E424D15821B7B00A4ADED /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = CC9E424C15821B7B00A4ADED /* map.png */; };
+		CCA2311E159859C90018BAA2 /* aps_development.cer in Resources */ = {isa = PBXBuildFile; fileRef = CCA2311D159859C90018BAA2 /* aps_development.cer */; };
+		CCA23122159864310018BAA2 /* SettingInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CCA23120159864300018BAA2 /* SettingInfoViewController.m */; };
+		CCA23123159864310018BAA2 /* SettingInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CCA23121159864300018BAA2 /* SettingInfoViewController.xib */; };
 		CCB7E811157090380036E9CD /* FeedBackForm.m in Sources */ = {isa = PBXBuildFile; fileRef = CCB7E80F157090370036E9CD /* FeedBackForm.m */; };
 		CCB7E812157090380036E9CD /* FeedBackForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = CCB7E810157090380036E9CD /* FeedBackForm.xib */; };
 		CCB9E6FA1574B4F70043F304 /* TwitterSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = CCB9E6F91574B4F70043F304 /* TwitterSearch.m */; };
@@ -869,6 +872,10 @@
 		CC6FE2C1155BD02E004BE10A /* dot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dot.png; sourceTree = "<group>"; };
 		CC9E424A158219A300A4ADED /* twitter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = twitter.png; sourceTree = "<group>"; };
 		CC9E424C15821B7B00A4ADED /* map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = map.png; sourceTree = "<group>"; };
+		CCA2311D159859C90018BAA2 /* aps_development.cer */ = {isa = PBXFileReference; lastKnownFileType = file; name = aps_development.cer; path = "Network Commuting/aps_development.cer"; sourceTree = "<group>"; };
+		CCA2311F159864300018BAA2 /* SettingInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingInfoViewController.h; sourceTree = "<group>"; };
+		CCA23120159864300018BAA2 /* SettingInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingInfoViewController.m; sourceTree = "<group>"; };
+		CCA23121159864300018BAA2 /* SettingInfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingInfoViewController.xib; sourceTree = "<group>"; };
 		CCB7E80E157090370036E9CD /* FeedBackForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedBackForm.h; sourceTree = "<group>"; };
 		CCB7E80F157090370036E9CD /* FeedBackForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedBackForm.m; sourceTree = "<group>"; };
 		CCB7E810157090380036E9CD /* FeedBackForm.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedBackForm.xib; sourceTree = "<group>"; };
@@ -2276,6 +2283,7 @@
 		52CF439014BDF2F8000565D6 = {
 			isa = PBXGroup;
 			children = (
+				CCA2311C1598598B0018BAA2 /* Resources */,
 				CC6F22E71563AD360066DFA9 /* AVFoundation.framework */,
 				522C0E6A15588E7A0072ADD6 /* libz.dylib */,
 				52BA18AC1549000D009125A3 /* logo_big_iPh.png */,
@@ -2368,6 +2376,14 @@
 				52CF43C614BDF2F9000565D6 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CCA2311C1598598B0018BAA2 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CCA2311D159859C90018BAA2 /* aps_development.cer */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		CCA43F1C157330AD00DF85AD /* mapView */ = {
@@ -2497,6 +2513,9 @@
 				CCDC448115937000004D428B /* twitterViewController.h */,
 				CCDC448215937001004D428B /* twitterViewController.m */,
 				CCDC448315937001004D428B /* twitterViewController.xib */,
+				CCA2311F159864300018BAA2 /* SettingInfoViewController.h */,
+				CCA23120159864300018BAA2 /* SettingInfoViewController.m */,
+				CCA23121159864300018BAA2 /* SettingInfoViewController.xib */,
 			);
 			name = controllerView;
 			sourceTree = "<group>";
@@ -2769,6 +2788,8 @@
 				CCCA4BD51590BB81009F3BF7 /* img_ontime.png in Resources */,
 				CCDC448515937002004D428B /* twitterViewController.xib in Resources */,
 				CCDC448715937640004D428B /* caltrain.jpg in Resources */,
+				CCA2311E159859C90018BAA2 /* aps_development.cer in Resources */,
+				CCA23123159864310018BAA2 /* SettingInfoViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2840,6 +2861,7 @@
 				CCEA69A4158A034D00E97592 /* FeedBackReqParam.m in Sources */,
 				CCCA4BCD15905575009F3BF7 /* CustomBadge.m in Sources */,
 				CCDC448415937002004D428B /* twitterViewController.m in Sources */,
+				CCA23122159864310018BAA2 /* SettingInfoViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

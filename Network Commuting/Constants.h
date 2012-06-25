@@ -53,5 +53,6 @@
 #define ALERT_ON                @"2"
 #define ALERT_URGENT            @"3"
 
-#define TWEETER_COUNT_POLLING_INTERVAL @"30"
+#define TWEETER_COUNT_POLLING_INTERVAL @"300"
+
 #define TINY_FLOAT              0.00000001

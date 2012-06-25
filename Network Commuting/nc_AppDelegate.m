@@ -36,6 +36,12 @@ BOOL isTwitterLivaData = FALSE;
     
    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     
+    [[UIApplication sharedApplication] 
+     registerForRemoteNotificationTypes:
+     (UIRemoteNotificationTypeAlert | 
+      UIRemoteNotificationTypeBadge | 
+      UIRemoteNotificationTypeSound)];
+    
     // Configure the RestKit RKClient object for Geocoding and trip planning
     RKObjectManager* rkGeoMgr = [RKObjectManager objectManagerWithBaseURL:GEO_RESPONSE_URL];
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
@@ -353,16 +359,17 @@ BOOL isTwitterLivaData = FALSE;
     NSLog(@"DeviceTokenStr: %@",token);
     
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
-    
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setObject:token forKey:@"deviceToken"];
-    
+    [prefs setObject:token forKey:@"deviceToken"];   
 }
 
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err { 
     NSString *str = [NSString stringWithFormat: @"Error: %@", err];
-    NSLog(@" %@",str);        
+    NSLog(@"************************ %@",str);     
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString  *token = @"erh2389753hr379675tiu34ht789346ty38iu4ght3487y";
+    [prefs setObject:token forKey:@"DeviceToken"];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {    
