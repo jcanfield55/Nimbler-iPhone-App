@@ -80,7 +80,7 @@
 @synthesize isTripDateCurrentTime;
 @synthesize editMode;
 @synthesize supportedRegion;
-@synthesize twiterCount;
+@synthesize tweeterCount;
 @synthesize isContinueGetRealTimeData;
 @synthesize continueGetTime;
 
@@ -158,6 +158,19 @@ float currentLocationResTime;
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    int tweetConut = [[prefs objectForKey:@"tweetCount"] intValue];
+    [tweeterCount removeFromSuperview];
+    tweeterCount = [[CustomBadge alloc] init];
+    tweeterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
+    [tweeterCount setFrame:CGRectMake(60, 365, tweeterCount.frame.size.width, tweeterCount.frame.size.height)];
+    if (tweetConut == 0) {
+        [tweeterCount setHidden:YES];
+    } else {
+        [self.view addSubview:tweeterCount];
+        [tweeterCount setHidden:NO];
+    }    
+    
     [continueGetTime invalidate];
     continueGetTime = nil;
     [super viewWillAppear:animated];

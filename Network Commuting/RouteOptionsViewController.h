@@ -21,6 +21,8 @@
 
 @property(strong, nonatomic) id liveData;
 @property( readwrite) BOOL isReloadRealData;
+@property (strong, nonatomic) CustomBadge *tweeterCount;
+
 
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event;

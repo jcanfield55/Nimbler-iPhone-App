@@ -35,6 +35,7 @@
 @synthesize plan;
 @synthesize isReloadRealData;
 @synthesize liveData;
+@synthesize tweeterCount;
 
 Itinerary * itinerary;
 NSString *itinararyId;
@@ -203,12 +204,27 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 {
     [super viewDidLoad];
     NSLog(@"RouteOptions loaded");
+    
+        
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
+       
     [super viewDidAppear:animated];
     NSLog(@"RouteOptions did appear");
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    int tweetConut = [[prefs objectForKey:@"tweetCount"] intValue];
+    [tweeterCount removeFromSuperview];
+    tweeterCount = [[CustomBadge alloc] init];
+    tweeterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
+    [tweeterCount setFrame:CGRectMake(60, 365, tweeterCount.frame.size.width, tweeterCount.frame.size.height)];
+    if (tweetConut == 0) {
+        [tweeterCount setHidden:YES];
+    } else {
+        [self.view addSubview:tweeterCount];
+        [tweeterCount setHidden:NO];
+    }
 }
 
 - (void)viewDidUnload
@@ -216,6 +232,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

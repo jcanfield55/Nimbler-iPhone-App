@@ -31,9 +31,10 @@
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-
+@property (strong, nonatomic) NSTimer *timerTweeterGetData;
 
 - (NSURL *)applicationDocumentsDirectory;
--(void)bayArea;
 
+-(void)bayArea;
+-(void)getTwiiterLiveData;
 @end

@@ -47,7 +47,7 @@ typedef enum {
 @property (nonatomic) ToFromEditMode editMode; // Specifies whether to or from address is being edited with the keyboard
 @property (strong, nonatomic) SupportedRegion* supportedRegion; // geographic area supported by this app
 
-@property (strong, nonatomic) CustomBadge *twiterCount;
+@property (strong, nonatomic) CustomBadge *tweeterCount;
 @property (nonatomic) BOOL isContinueGetRealTimeData;
 @property (strong, nonatomic) NSTimer *continueGetTime;
 

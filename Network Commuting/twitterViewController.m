@@ -9,6 +9,7 @@
 #import "twitterViewController.h"
 #import "UtilityFunctions.h"
 #import <RestKit/RKJSONParserJSONKit.h>
+#import "QuartzCore/QuartzCore.h"
 
 @implementation twitterViewController
 NSMutableArray *arrayTweet;
@@ -107,7 +108,9 @@ NSMutableArray *arrayTweet;
     labelTime.text = tweetAt;
     [labelTime setFont:[UIFont boldSystemFontOfSize:12.0]];
     
-    UIImage *img = [UIImage imageNamed:@"caltrain.jpg"];
+    UIImage *img = [UIImage imageNamed:@"caltrain.jpg"];    
+    cell.imageView.layer.cornerRadius = 5.0;
+    cell.imageView.layer.masksToBounds = YES;
     [cell.imageView setImage:img];
     
     return cell;

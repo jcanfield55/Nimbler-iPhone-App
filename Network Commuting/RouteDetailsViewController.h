@@ -21,6 +21,7 @@
 @property(nonatomic, strong) IBOutlet UIButton* feedbackButton; 
 @property(nonatomic, strong) IBOutlet UIButton* advisoryButton;  // Button to pull up Twitter feeds
 @property(nonatomic, strong) Itinerary *itinerary;
+@property (strong, nonatomic) CustomBadge *tweeterCount;
 
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event;

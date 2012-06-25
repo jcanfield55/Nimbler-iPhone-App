@@ -22,6 +22,7 @@
 @synthesize mainTable;
 @synthesize feedbackButton;
 @synthesize advisoryButton;
+@synthesize tweeterCount;
 
 int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 
@@ -58,6 +59,19 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
     rect0.size.height = ROUTE_DETAILS_TABLE_HEIGHT;
     [mainTable setFrame:rect0];
     [mainTable reloadData];
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    int tweetConut = [[prefs objectForKey:@"tweetCount"] intValue];
+    [tweeterCount removeFromSuperview];
+    tweeterCount = [[CustomBadge alloc] init];
+    tweeterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
+    [tweeterCount setFrame:CGRectMake(60, 365, tweeterCount.frame.size.width, tweeterCount.frame.size.height)];
+    if (tweetConut == 0) {
+        [tweeterCount setHidden:YES];
+    } else {
+        [self.view addSubview:tweeterCount];
+        [tweeterCount setHidden:NO];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated

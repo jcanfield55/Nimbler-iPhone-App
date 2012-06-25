@@ -30,6 +30,7 @@
 @synthesize directionsTitle;
 @synthesize directionsDetails;
 @synthesize feedbackButton;
+@synthesize tweeterCount;
 
 NSString *legID;
 
@@ -111,6 +112,19 @@ NSString *legID;
     [self setMapViewRegion];   // update the mapView region to correspond to the numItinerary item
     [self setDirectionsText];  // update the directions text accordingly
     [mapView setShowsUserLocation:YES];  // track user location
+    
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    int tweetConut = [[prefs objectForKey:@"tweetCount"] intValue];
+    [tweeterCount removeFromSuperview];
+    tweeterCount = [[CustomBadge alloc] init];
+    tweeterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
+    [tweeterCount setFrame:CGRectMake(60, 375, tweeterCount.frame.size.width, tweeterCount.frame.size.height)];
+    if (tweetConut == 0) {
+        [tweeterCount setHidden:YES];
+    } else {
+        [self.view addSubview:tweeterCount];
+        [tweeterCount setHidden:NO];
+    }
 }
 
 - (void)setMapViewRegion {

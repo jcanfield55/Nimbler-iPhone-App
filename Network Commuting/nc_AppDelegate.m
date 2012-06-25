@@ -28,6 +28,7 @@ BOOL isTwitterLivaData = FALSE;
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
 @synthesize window = _window;
+@synthesize timerTweeterGetData;
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -274,11 +275,9 @@ BOOL isTwitterLivaData = FALSE;
 
 -(void)bayArea
 {    
-
-    RKClient *client = [RKClient clientWithBaseURL:@"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/"];
+    RKClient *client = [RKClient clientWithBaseURL:TRIP_GENERATE_URL];
     [RKClient setSharedClient:client];
     [[RKClient sharedClient]  get:@"metadata" delegate:self];
-  
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
@@ -291,8 +290,15 @@ BOOL isTwitterLivaData = FALSE;
             {
                 RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
                 if (isTwitterLivaData) {
-//                    id  res = [rkParser objectFromString:[response bodyAsString] error:nil];
-                    
+                    NSLog(@"%@", [response bodyAsString]);
+                    NSDictionary  *tweeterCountParser = [rkParser objectFromString:[response bodyAsString] error:nil];
+                    NSNumber *respCode = [(NSDictionary*)tweeterCountParser objectForKey:@"errCode"];
+                    if ([respCode intValue]== 105) {
+                        NSLog(@"count: %@",[(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"]);
+                        NSString *tweeterCount = [(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"];
+                        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];   
+                        [prefs setObject:tweeterCount forKey:@"tweetCount"];
+                    }
 
                 } else {
                     
@@ -318,6 +324,8 @@ BOOL isTwitterLivaData = FALSE;
                         } 
                     }                
                     [toFromViewController setSupportedRegion:region];
+                    [self getTwiiterLiveData];
+                    timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:[TWEETER_COUNT_POLLING_INTERVAL floatValue] target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
                 }
             }
     }
@@ -395,9 +403,13 @@ BOOL isTwitterLivaData = FALSE;
 {
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     [RKClient setSharedClient:client];
+    NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
+    NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
+                            @"deviceid", udid, 
+                            nil];    
     isTwitterLivaData = TRUE;
-    [[RKClient sharedClient]  get:@"advisories/all" delegate:self];
-    
+    NSString *twitCountReq = [@"advisories/count" appendQueryParams:params];
+    [[RKClient sharedClient]  get:twitCountReq delegate:self];
 }
 
 @end
