@@ -15,6 +15,7 @@
     IBOutlet UIPickerView *PickerTweetCount;
     NSMutableArray *arrayTweets;
     UIAlertView *alertView;
+    IBOutlet UITextField *txtMaxWalkDistance;
 }
 
 

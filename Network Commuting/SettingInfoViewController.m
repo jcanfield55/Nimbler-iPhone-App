@@ -16,6 +16,7 @@ NSString *alertCount;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        [[self navigationItem] setTitle:@"App Settings"];
     }
     return self;
 }
@@ -36,6 +37,8 @@ NSString *alertCount;
     // Do any additional setup after loading the view from its nib.
     arrayTweets = [[NSMutableArray alloc] init];
     [arrayTweets addObject:@"Never"];
+    [arrayTweets addObject:@"1"];
+    [arrayTweets addObject:@"2"];
     [arrayTweets addObject:@"3"];
     [arrayTweets addObject:@"4"];
     [arrayTweets addObject:@"5"];
@@ -80,6 +83,7 @@ NSString *alertCount;
     } else {
         alertCount = [arrayTweets objectAtIndex:row];
     }
+    [txtMaxWalkDistance resignFirstResponder];
 }
 
 
@@ -96,7 +100,7 @@ NSString *alertCount;
                             @"deviceid", udid,
                             @"alertCount", alertCount,
                             @"deviceToken", token,
-                            @"maxDistance", @"4",
+                            @"maxDistance", txtMaxWalkDistance.text,
                             nil];    
     NSString *twitCountReq = [@"users/preferences/update" appendQueryParams:params];
     
@@ -136,6 +140,42 @@ NSString *alertCount;
     }  @catch (NSException *exception) {
         NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
     } 
+}
+
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    // Any additional checks to ensure you have the correct textField here.
+    if(textField == txtMaxWalkDistance) {
+        [txtMaxWalkDistance resignFirstResponder];
+        return NO;
+    }
+    return YES;    
+}
+
+
+#pragma mark TextField animation at selected
+
+- (void) animateTextField: (UITextField*) textField up: (BOOL) up{
+	int txtPosition = (textField.frame.origin.y - 160);
+    const int movementDistance = (txtPosition < 0 ? 0 : txtPosition); // tweak as needed
+    const float movementDuration = 0.3f; // tweak as needed
+    
+    int movement = (up ? -movementDistance : movementDistance);
+    
+    [UIView beginAnimations: @"anim" context: nil];
+    [UIView setAnimationBeginsFromCurrentState: YES];
+    [UIView setAnimationDuration: movementDuration];
+    self.view.frame = CGRectOffset(self.view.frame, 0, movement);
+    [UIView commitAnimations];
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+    [self animateTextField: textField up: YES];
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField{
+    [self animateTextField: textField up: NO];
 }
 
 @end

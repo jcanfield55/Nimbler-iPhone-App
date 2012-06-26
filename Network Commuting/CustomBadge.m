@@ -175,7 +175,7 @@
 	if ([self.badgeText length]>0) 
 	{
 		[badgeTextColor set];
-		UIFont *textFont = [UIFont boldSystemFontOfSize:13];
+		UIFont *textFont = [UIFont boldSystemFontOfSize:12];
 		CGSize textSize = [self.badgeText sizeWithFont:textFont];
 		[self.badgeText drawAtPoint:CGPointMake((rect.size.width/2-textSize.width/2), (rect.size.height/2-textSize.height/2)) withFont:textFont];
 		

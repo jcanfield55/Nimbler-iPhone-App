@@ -213,18 +213,27 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
        
     [super viewDidAppear:animated];
     NSLog(@"RouteOptions did appear");
+    
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     int tweetConut = [[prefs objectForKey:@"tweetCount"] intValue];
     [tweeterCount removeFromSuperview];
-    tweeterCount = [[CustomBadge alloc] init];
-    tweeterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
-    [tweeterCount setFrame:CGRectMake(60, 365, tweeterCount.frame.size.width, tweeterCount.frame.size.height)];
-    if (tweetConut == 0) {
-        [tweeterCount setHidden:YES];
+
+    if ([prefs objectForKey:@"isUrgent"]) {
+         CustomBadge *c = [[CustomBadge alloc] initWithString:[NSString stringWithFormat:@"%d!",tweetConut] withStringColor:[UIColor whiteColor] withInsetColor:[UIColor blueColor] withBadgeFrame:YES withBadgeFrameColor:[UIColor whiteColor]];
+        [c setFrame:CGRectMake(50, 360, c.frame.size.width, c.frame.size.height)];
+        [self.view addSubview:c];
     } else {
-        [self.view addSubview:tweeterCount];
-        [tweeterCount setHidden:NO];
+        tweeterCount = [[CustomBadge alloc] init];
+        tweeterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d!",tweetConut]];
+        [tweeterCount setFrame:CGRectMake(60, 365, tweeterCount.frame.size.width, tweeterCount.frame.size.height)];        
+        if (tweetConut == 0) {
+            [tweeterCount setHidden:YES];
+        } else {
+            [self.view addSubview:tweeterCount];
+            [tweeterCount setHidden:NO];
+        }
     }
+    
 }
 
 - (void)viewDidUnload
@@ -246,8 +255,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 {
     RKParams *param = [RKParams alloc];
     param = para;
-    
-    
 }
 #pragma mark realTime data updates
 

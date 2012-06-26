@@ -299,11 +299,13 @@ BOOL isTwitterLivaData = FALSE;
                     NSLog(@"%@", [response bodyAsString]);
                     NSDictionary  *tweeterCountParser = [rkParser objectFromString:[response bodyAsString] error:nil];
                     NSNumber *respCode = [(NSDictionary*)tweeterCountParser objectForKey:@"errCode"];
-                    if ([respCode intValue]== 105) {
+                    NSString *isUrgent = [(NSDictionary*)tweeterCountParser objectForKey:@"isUrgent"];
+                    if ([respCode intValue]== 105) {                   
                         NSLog(@"count: %@",[(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"]);
                         NSString *tweeterCount = [(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"];
                         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];   
                         [prefs setObject:tweeterCount forKey:@"tweetCount"];
+                        [prefs setObject:isUrgent forKey:@"isUrgent"];
                     }
 
                 } else {
@@ -376,14 +378,27 @@ BOOL isTwitterLivaData = FALSE;
     for (id key in userInfo) {
         
         NSLog(@"key: %@, value: %@", key, [userInfo objectForKey:key]);
-        NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
-        UIAlertView *dataAlert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain"
-                                                            message:message
-                                                           delegate:self
-                                                  cancelButtonTitle:@"Show Twits"
-                                                  otherButtonTitles:@"No",nil];
         
-        [dataAlert show];      
+        NSString *isUrgent = [userInfo valueForKey:@"isUrgent"];
+        NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
+        NSString *badge = [[userInfo valueForKey:@"aps"] valueForKey:@"badge"];
+        
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];  
+        NSString *previousCount = [prefs objectForKey:@"tweetCount"];
+        int count = [previousCount intValue] + [badge intValue];
+        
+        [prefs setObject:[NSString stringWithFormat:@"%d",count] forKey:@"tweetCount"];
+        
+        if (isUrgent) {
+//            UIAlertView *dataAlert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain"
+//                                                                message:message
+//                                                               delegate:self
+//                                                      cancelButtonTitle:@"Show Twits"
+//                                                      otherButtonTitles:@"No",nil];
+//            
+//            [dataAlert show];
+            [prefs setObject:@"true" forKey:@"isUrgent"];
+        }
     }        
 }
 
