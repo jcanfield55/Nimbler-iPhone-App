@@ -289,7 +289,7 @@ BOOL isTwitterLivaData = FALSE;
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     
     if ([request isGET]) {  
-        NSLog(@"Got aresponse back from our GET! %@", [response bodyAsString]);      
+        NSLog(@"Got a response back from our GET! %@", [response bodyAsString]);      
                    
             NSError *error = nil;
             if (error == nil)
@@ -303,8 +303,11 @@ BOOL isTwitterLivaData = FALSE;
                     if ([respCode intValue]== 105) {                   
                         NSLog(@"count: %@",[(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"]);
                         NSString *tweeterCount = [(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"];
-                        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];   
-                        [prefs setObject:tweeterCount forKey:@"tweetCount"];
+                        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];  
+                        
+                        NSString *previousCount = [prefs objectForKey:@"tweetCount"];
+                        int count = [previousCount intValue] + [tweeterCount intValue];
+                        [prefs setObject:[NSString stringWithFormat:@"%d",count] forKey:@"tweetCount"];
                         [prefs setObject:isUrgent forKey:@"isUrgent"];
                     }
 
@@ -362,7 +365,20 @@ BOOL isTwitterLivaData = FALSE;
     
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setObject:token forKey:@"deviceToken"];   
+    [prefs setObject:token forKey:@"deviceToken"];  
+    
+    
+    RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+    [RKClient setSharedClient:client];
+    NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
+    NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
+                            @"deviceid", udid,
+                            @"alertCount", @"3",
+                            @"deviceToken", @"erh2389753hr379675tiu34ht789346ty38iu4ght3487y",
+                            @"maxDistance", @"0.8",
+                            nil];    
+    NSString *twitCountReq = [@"users/preferences/update" appendQueryParams:params];
+    [[RKClient sharedClient]  get:twitCountReq delegate:self];
 }
 
 
@@ -372,6 +388,18 @@ BOOL isTwitterLivaData = FALSE;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSString  *token = @"erh2389753hr379675tiu34ht789346ty38iu4ght3487y";
     [prefs setObject:token forKey:@"DeviceToken"];
+    
+    RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+    [RKClient setSharedClient:client];
+    NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
+    NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
+                            @"deviceid", udid,
+                            @"alertCount", @"3",
+                            @"deviceToken", @"erh2389753hr379675tiu34ht789346ty38iu4ght3487y",
+                            @"maxDistance", @"0.8",
+                            nil];    
+    NSString *twitCountReq = [@"users/preferences/update" appendQueryParams:params];
+    [[RKClient sharedClient]  get:twitCountReq delegate:self];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {    
@@ -423,6 +451,7 @@ BOOL isTwitterLivaData = FALSE;
 
 -(void)getTwiiterLiveData
 {
+    NSLog(@"Request for tweeter count: ");
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     [RKClient setSharedClient:client];
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            

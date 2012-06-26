@@ -165,14 +165,15 @@ float currentLocationResTime;
 {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     int tweetConut = [[prefs objectForKey:@"tweetCount"] intValue];
+    BOOL isUrgent = [[prefs objectForKey:@"isUrgent"] boolValue];
     [tweeterCount removeFromSuperview];
-    if ([prefs objectForKey:@"isUrgent"]) {
+    if (isUrgent) {
         CustomBadge *c = [[CustomBadge alloc] initWithString:[NSString stringWithFormat:@"%d!",tweetConut] withStringColor:[UIColor whiteColor] withInsetColor:[UIColor blueColor] withBadgeFrame:YES withBadgeFrameColor:[UIColor whiteColor]];
         [c setFrame:CGRectMake(50, 360, c.frame.size.width, c.frame.size.height)];
         [self.view addSubview:c];
     } else {
         tweeterCount = [[CustomBadge alloc] init];
-        tweeterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d!",tweetConut]];
+        tweeterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
         [tweeterCount setFrame:CGRectMake(60, 365, tweeterCount.frame.size.width, tweeterCount.frame.size.height)];        
         if (tweetConut == 0) {
             [tweeterCount setHidden:YES];
@@ -579,6 +580,8 @@ float currentLocationResTime;
 //        }
 //        [[self navigationController] pushViewController:twitterSearchVC animated:YES];
 //        [twitterSearchVC loadRequest:CALTRAIN_TWITTER_URL];
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        [prefs setObject:@"0" forKey:@"tweetCount"];
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
         isTwitterLivaData = TRUE;
@@ -1124,7 +1127,7 @@ float currentLocationResTime;
 -(void)RedirectAtNimblerSetting
 {
     SettingInfoViewController *settingView = [[SettingInfoViewController alloc] init];
-    [[self navigationController] pushViewController:settingView animated:NO];
+    [[self navigationController] pushViewController:settingView animated:YES];
     
 }
 

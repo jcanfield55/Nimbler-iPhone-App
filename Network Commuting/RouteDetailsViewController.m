@@ -61,15 +61,16 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
     [mainTable reloadData];
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    BOOL isUrgent = [[prefs objectForKey:@"isUrgent"] boolValue];
     int tweetConut = [[prefs objectForKey:@"tweetCount"] intValue];
     [tweeterCount removeFromSuperview];
-    if ([prefs objectForKey:@"isUrgent"]) {
+    if (isUrgent) {
         CustomBadge *c = [[CustomBadge alloc] initWithString:[NSString stringWithFormat:@"%d!",tweetConut] withStringColor:[UIColor whiteColor] withInsetColor:[UIColor blueColor] withBadgeFrame:YES withBadgeFrameColor:[UIColor whiteColor]];
         [c setFrame:CGRectMake(50, 360, c.frame.size.width, c.frame.size.height)];
         [self.view addSubview:c];
     } else {
         tweeterCount = [[CustomBadge alloc] init];
-        tweeterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d!",tweetConut]];
+        tweeterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
         [tweeterCount setFrame:CGRectMake(60, 365, tweeterCount.frame.size.width, tweeterCount.frame.size.height)];        
         if (tweetConut == 0) {
             [tweeterCount setHidden:YES];
@@ -124,17 +125,12 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
     NSString *subTitle;
     if ([indexPath row] == 0) { // if first row, put in start point
         titleText = [NSString stringWithFormat:@"Start at %@", [[itinerary from] name]];
-//        if (isReload) {
-//            UIImage *ss = [UIImage imageNamed:@"map.png"] ;
-//            [cell.imageView setImage:ss];
-//        }
+
+        [cell.imageView setImage:nil];
     }
     else if ([indexPath row] == [[itinerary sortedLegs] count] + 1) { // if last row, put in end point
         titleText = [NSString stringWithFormat:@"End at %@", [[itinerary to] name]];
-//        if (isReload) {
-//            UIImage *ss = [UIImage imageNamed:@"map.png"] ;
-//            [cell.imageView setImage:ss];
-//        }
+        [cell.imageView setImage:nil];
     }
     else {  // otherwise, it is one of the legs
         Leg *leg = [[itinerary sortedLegs] objectAtIndex:([indexPath row]-1)];
@@ -267,6 +263,9 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 //        [[self navigationController] pushViewController:twitter_search animated:YES];
 //        [twitter_search loadRequest:CALTRAIN_TWITTER_URL];
         
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        [prefs setObject:@"0" forKey:@"tweetCount"];
+
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
         [[RKClient sharedClient]  get:@"advisories/all" delegate:self];
