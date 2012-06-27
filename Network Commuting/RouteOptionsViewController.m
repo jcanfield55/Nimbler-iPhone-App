@@ -266,7 +266,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         //        NSString *itinId = [(NSDictionary*)liveFeed objectForKey:@"itineraryId"];
         NSNumber *respCode = [(NSDictionary*)liveData objectForKey:@"errCode"];
         
-        if ([respCode intValue]== 105) {
+        if ([respCode intValue]== [RESPONSE_SUCCESSFULL intValue]) {
             //It means there are live feeds in response
             NSArray *itineraryLiveFees = [(NSDictionary*)liveData objectForKey:@"itinLiveFeeds"]; 
             if ([itineraryLiveFees count] > 0) {

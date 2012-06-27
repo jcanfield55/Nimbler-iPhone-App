@@ -300,7 +300,7 @@ BOOL isTwitterLivaData = FALSE;
                     NSDictionary  *tweeterCountParser = [rkParser objectFromString:[response bodyAsString] error:nil];
                     NSNumber *respCode = [(NSDictionary*)tweeterCountParser objectForKey:@"errCode"];
                     NSString *isUrgent = [(NSDictionary*)tweeterCountParser objectForKey:@"isUrgent"];
-                    if ([respCode intValue]== 105) {                   
+                    if ([respCode intValue]== [RESPONSE_SUCCESSFULL intValue]) {                   
                         NSLog(@"count: %@",[(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"]);
                         NSString *tweeterCount = [(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"];
                         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];  
@@ -336,7 +336,7 @@ BOOL isTwitterLivaData = FALSE;
                     }                
                     [toFromViewController setSupportedRegion:region];
                     [self getTwiiterLiveData];
-                    timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:[TWEETER_COUNT_POLLING_INTERVAL floatValue] target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
+                    timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEETER_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
                 }
             }
     }

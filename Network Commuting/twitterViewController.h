@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "RestKit.h"
+#import "RestKit/RestKit.h"
 #import "Foundation/foundation.h"
 
 @interface twitterViewController : UIViewController <UITableViewDelegate, UITableViewDataSource,RKRequestDelegate>

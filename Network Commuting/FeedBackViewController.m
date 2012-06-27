@@ -321,7 +321,7 @@ static Plan *fbPlan;
                 if ([key isEqualToString:@"msg"]) {
                     
                     NSString *msg;
-                    if ([[p objectForKey:@"code"] isEqualToString:@"105"]) {
+                    if ([[p objectForKey:@"code"] isEqualToString:RESPONSE_SUCCESSFULL]) {
                         msg = FB_RESPOSE_SUCCEES;
                     } else {
                         msg = FB_RESPONSE_FAIL ;

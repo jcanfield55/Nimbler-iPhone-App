@@ -87,7 +87,7 @@
     secondUsed = 0;
     isRepeat = YES;
     [labelRecTime setHidden:NO];
-    timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 target:self selector:@selector(updateRecCountdown) userInfo:nil repeats: isRepeat];    
+    timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(updateRecCountdown) userInfo:nil repeats: isRepeat];    
   
     NSArray *tempDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *tempDirPath = [tempDir objectAtIndex:0];
@@ -116,7 +116,6 @@
     if (!audioRecorder.recording) {        
         [audioRecorder record];
     }
-    
 }
 
 -(IBAction)stopRecording:(id)sender {    
@@ -151,9 +150,7 @@
         [timer invalidate];
         timer =  nil;
         timer = [NSTimer scheduledTimerWithTimeInterval: 2.0 target:self selector:@selector(setActRunStatus) userInfo:nil repeats: NO]; 
-        
         [audioPlayer pause];
-        
         [btnPlayRecording setEnabled:TRUE];
         [btnPauseRecording setEnabled:FALSE];
         [btnRecordRecording setEnabled:TRUE];
@@ -298,7 +295,7 @@
                 if ([key isEqualToString:@"msg"]) {
                     
                     NSString *msg;
-                    if ([[p objectForKey:@"code"] isEqualToString:@"105"]) {
+                    if ([[p objectForKey:@"code"] isEqualToString:RESPONSE_SUCCESSFULL]) {
                         msg = FB_RESPOSE_SUCCEES;
                     } else {
                         msg = FB_RESPONSE_FAIL ;
@@ -323,8 +320,7 @@
         NSInteger statusCode = [[objectLoader response] statusCode];
         NSLog(@"Planning HTTP status code = %d", statusCode);
         
-        @try {
-            
+        @try {            
             if (objects && [objects objectAtIndex:0]) {
                 tpResponse = [objects objectAtIndex:0];
                 NSLog(@"success ");
@@ -411,7 +407,7 @@
         [rkp setValue:[fbParams uniqueId] forParam:@"uniqueid"]; 
     }
     
-    timer = [NSTimer scheduledTimerWithTimeInterval: 2.0 target:self selector:@selector(popOut) userInfo:nil repeats: NO];
+    timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(popOut) userInfo:nil repeats: NO];
     [[RKClient sharedClient]  post:@"feedback/new" params:rkp delegate:self];
     
 }

@@ -191,7 +191,6 @@ NSMutableArray *arrayTweet;
     [[RKClient sharedClient]  get:req delegate:self];  
 }
 
-
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     RKJSONParserJSONKit* rkTwitDataParser = [RKJSONParserJSONKit new];
         if ([request isGET]) {
@@ -201,7 +200,7 @@ NSMutableArray *arrayTweet;
             NSNumber *respCode = [(NSDictionary*)res objectForKey:@"errCode"];
             
             @try {
-                if ([respCode intValue] == 105) {
+                if ([respCode intValue] == [RESPONSE_SUCCESSFULL intValue]) {
                     NSMutableArray *arrayLatestTweet = [(NSDictionary*)res objectForKey:@"tweet"]; 
                     NSLog(@"size of new array: %d", arrayLatestTweet.count);
                                         
@@ -227,7 +226,7 @@ NSMutableArray *arrayTweet;
     twitterData = twitData;
     NSNumber *respCode = [(NSDictionary*)twitterData objectForKey:@"errCode"];
     
-    if ([respCode intValue] == 105) {
+    if ([respCode intValue] == [RESPONSE_SUCCESSFULL intValue]) {
         arrayTweet = [(NSDictionary*)twitterData objectForKey:@"tweet"]; 
         [mainTable reloadData];
     }

@@ -53,6 +53,17 @@
 #define ALERT_ON                @"2"
 #define ALERT_URGENT            @"3"
 
-#define TWEETER_COUNT_POLLING_INTERVAL @"300"
+// Request timer Count
+#define TWEETER_COUNT_POLLING_INTERVAL 300.0
+#define TIMER_SMALL_REQUEST_DELAY      1.0
+#define TIMER_MEDIUM_REQUEST_DELAY     30.0
+#define TIMER_STANDARD_REQUEST_DELAY   59.0
+
+
+// errorCodes from TPResponce
+#define RESPONSE_SUCCESSFULL        @"105"
+#define RESPONSE_DATA_NOT_EXIST     @"107"
+#define RESPONSE_INVALID_REQUEST    @"106"
+
 
 #define TINY_FLOAT              0.00000001
