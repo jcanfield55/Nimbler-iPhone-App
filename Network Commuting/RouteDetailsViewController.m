@@ -117,7 +117,7 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
                                       reuseIdentifier:@"UIRouteDetailsViewCell"];
     }
-
+    
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
     [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:14.0]];
     
@@ -125,7 +125,7 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
     NSString *subTitle;
     if ([indexPath row] == 0) { // if first row, put in start point
         titleText = [NSString stringWithFormat:@"Start at %@", [[itinerary from] name]];
-
+        
         [cell.imageView setImage:nil];
     }
     else if ([indexPath row] == [[itinerary sortedLegs] count] + 1) { // if last row, put in end point
@@ -143,54 +143,54 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
          Edited by Sitanshu Joshi.
          */
         
-//        if ([subTitle length] > 70) {
-//            NSString * add1;
-//            NSString * add2;
-//            
-//            NSLog(@"more %@",subTitle);
-//            NSArray *firstSplit = [subTitle componentsSeparatedByString:@"\n"];
-//            NSLog(@"%@",firstSplit);
-//            for(int i=0;i<[firstSplit count];i++){
-//                NSString *str=[firstSplit objectAtIndex:i];               
-//                if ([str length] > 37) {
-//                    str = [str substringToIndex:37];
-//                    if(i==0){
-//                        add1 = [str stringByAppendingString:@"...\n"];
-//                        NSLog(@"Saperate %@",str);
-//                    }else if(i==1){
-//                        add2 = [str stringByAppendingString:@"..."];
-//                        NSLog(@"Saperate %@",str);
-//                    }
-//                } else {
-//                    if(i==0){
-//                        add1 = [str stringByAppendingString:@"\n"];
-//                    } else if(i==1){
-//                        add2 = [str stringByAppendingString:@" "];
-//                    }
-//                }                          
-//            }
-//            subTitle = [add1 stringByAppendingString:add2];  
-//        }
-   
+        //        if ([subTitle length] > 70) {
+        //            NSString * add1;
+        //            NSString * add2;
+        //            
+        //            NSLog(@"more %@",subTitle);
+        //            NSArray *firstSplit = [subTitle componentsSeparatedByString:@"\n"];
+        //            NSLog(@"%@",firstSplit);
+        //            for(int i=0;i<[firstSplit count];i++){
+        //                NSString *str=[firstSplit objectAtIndex:i];               
+        //                if ([str length] > 37) {
+        //                    str = [str substringToIndex:37];
+        //                    if(i==0){
+        //                        add1 = [str stringByAppendingString:@"...\n"];
+        //                        NSLog(@"Saperate %@",str);
+        //                    }else if(i==1){
+        //                        add2 = [str stringByAppendingString:@"..."];
+        //                        NSLog(@"Saperate %@",str);
+        //                    }
+        //                } else {
+        //                    if(i==0){
+        //                        add1 = [str stringByAppendingString:@"\n"];
+        //                    } else if(i==1){
+        //                        add2 = [str stringByAppendingString:@" "];
+        //                    }
+        //                }                          
+        //            }
+        //            subTitle = [add1 stringByAppendingString:add2];  
+        //        }
+        
         NSLog(@"leg arrival time: %@, leg time: %@", [leg arrivalFlag], [leg arrivalTime]);
-            if([leg arrivalTime] > 0) {
-                UIImage *imgForArrivalTime = [UIImage alloc];
-                if([leg.arrivalFlag intValue] == [ON_TIME intValue]) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_ontime.png"] ;
-                }  else if([leg.arrivalFlag intValue] == [DELAYED intValue]) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_delay.png"] ;
-                } else if([leg.arrivalFlag intValue] == [EARLY intValue]) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_early.png"] ;
-                } else if([leg.arrivalFlag intValue] == [EARLIER intValue]) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_earlier"] ;
-                } 
-                [cell.imageView setImage:imgForArrivalTime];
-            }
-         else {
+        if([leg arrivalTime] > 0) {
+            UIImage *imgForArrivalTime = [UIImage alloc];
+            if([leg.arrivalFlag intValue] == [ON_TIME intValue]) {
+                imgForArrivalTime = [UIImage imageNamed:@"img_ontime.png"] ;
+            }  else if([leg.arrivalFlag intValue] == [DELAYED intValue]) {
+                imgForArrivalTime = [UIImage imageNamed:@"img_delay.png"] ;
+            } else if([leg.arrivalFlag intValue] == [EARLY intValue]) {
+                imgForArrivalTime = [UIImage imageNamed:@"img_early.png"] ;
+            } else if([leg.arrivalFlag intValue] == [EARLIER intValue]) {
+                imgForArrivalTime = [UIImage imageNamed:@"img_earlier"] ;
+            } 
+            [cell.imageView setImage:imgForArrivalTime];
+        }
+        else {
             [cell.imageView setImage:nil];
         }
     }
-     
+    
     [[cell textLabel] setText:titleText];
     [[cell detailTextLabel] setLineBreakMode:UILineBreakModeWordWrap];
     [[cell detailTextLabel] setNumberOfLines:0];
@@ -205,7 +205,7 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 #pragma mark - UITableViewDelegate methods
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-   
+    
     NSString   *titleText,*patchString;
     CGSize size;
     if ([indexPath row] == 0) { // if first row, put in start point
@@ -221,13 +221,13 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
                 constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
     }
     else {    
-    Leg *leg = [[itinerary sortedLegs] objectAtIndex:([indexPath row]-1)];
-    titleText= [leg directionsDetailText];
-   
-    // DE:48  Wrapping issue while directionsTitleText & directionsDetailText lenght is small.
+        Leg *leg = [[itinerary sortedLegs] objectAtIndex:([indexPath row]-1)];
+        titleText= [leg directionsDetailText];
+        
+        // DE:48  Wrapping issue while directionsTitleText & directionsDetailText lenght is small.
         
         if ([[leg directionsTitleText] length] < 20) {
-           patchString  = [[leg directionsTitleText] stringByAppendingString:@"adding Patch string for UI" ];
+            patchString  = [[leg directionsTitleText] stringByAppendingString:@"adding Patch string for UI" ];
             size = [[titleText stringByAppendingString:patchString] 
                     sizeWithFont:[UIFont systemFontOfSize:14] 
                     constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
@@ -259,13 +259,13 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 - (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     @try {
-//        TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
-//        [[self navigationController] pushViewController:twitter_search animated:YES];
-//        [twitter_search loadRequest:CALTRAIN_TWITTER_URL];
+        //        TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
+        //        [[self navigationController] pushViewController:twitter_search animated:YES];
+        //        [twitter_search loadRequest:CALTRAIN_TWITTER_URL];
         
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setObject:@"0" forKey:@"tweetCount"];
-
+        
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
         [[RKClient sharedClient]  get:@"advisories/all" delegate:self];
@@ -290,7 +290,7 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
     [rootMap setItinerarys:itinerary itineraryNumber:2];
     [[self navigationController] pushViewController:rootMap animated:YES];
 }
- 
+
 -(void)ReloadLegWithNewData
 {
     [mainTable reloadData];    

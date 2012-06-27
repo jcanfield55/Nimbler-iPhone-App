@@ -115,8 +115,8 @@ NSString *alertCount;
                            message:nil delegate:nil cancelButtonTitle:nil  
                            otherButtonTitles:nil];  
     
-   UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc]  
-                 initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];  
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc]  
+                                          initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];  
     
     indicator.frame = CGRectMake(135, 70, 20, 20);
     [indicator startAnimating];  
@@ -157,7 +157,7 @@ NSString *alertCount;
 #pragma mark TextField animation at selected
 
 - (void) animateTextField: (UITextField*) textField up: (BOOL) up{
-	int txtPosition = (textField.frame.origin.y - 160);
+    int txtPosition = (textField.frame.origin.y - 160);
     const int movementDistance = (txtPosition < 0 ? 0 : txtPosition); // tweak as needed
     const float movementDuration = 0.3f; // tweak as needed
     

@@ -19,7 +19,7 @@
 @interface RouteOptionsViewController()
 {
     // Variables for internal use
-
+    
     TwitterSearch* twitterSearchVC;
     RouteDetailsViewController* routeDetailsVC;
 }
@@ -114,14 +114,14 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         [cell.imageView setImage:nil];
     }
     /*
-        for feedback planId
+     for feedback planId
      */
-        
+    
     // Set title
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
     NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)", 
-                          [timeFormatter stringFromDate:[itin startTime]],
-                          [timeFormatter stringFromDate:[itin endTime]],
+                           [timeFormatter stringFromDate:[itin startTime]],
+                           [timeFormatter stringFromDate:[itin endTime]],
                            durationString([[itin duration] floatValue])];
     [[cell textLabel] setText:titleText];
     
@@ -156,7 +156,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
             routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
         }
         itinararyId =[[[plan sortedItineraries] objectAtIndex:[indexPath row]] itinId];
-//        [self sendRequestForTimingDelay];
+        //        [self sendRequestForTimingDelay];
         itinerary = [plan.sortedItineraries objectAtIndex:[indexPath row]];
         [routeDetailsVC setItinerary:itinerary];
         [[self navigationController] pushViewController:routeDetailsVC animated:YES];
@@ -171,14 +171,14 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 - (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     @try {
-//        if (!twitterSearchVC) {
-//            twitterSearchVC = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
-//        }
-//        [[self navigationController] pushViewController:twitterSearchVC animated:YES];
-//        [twitterSearchVC loadRequest:CALTRAIN_TWITTER_URL];
+        //        if (!twitterSearchVC) {
+        //            twitterSearchVC = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
+        //        }
+        //        [[self navigationController] pushViewController:twitterSearchVC animated:YES];
+        //        [twitterSearchVC loadRequest:CALTRAIN_TWITTER_URL];
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setObject:@"0" forKey:@"tweetCount"];
-
+        
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
         [[RKClient sharedClient]  get:@"advisories/all" delegate:self];
@@ -200,9 +200,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 #pragma mark - View lifecycle
 
 /*
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-*/
- - (void)viewDidLoad
+ // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
+ */
+- (void)viewDidLoad
 {
     [super viewDidLoad];
     NSLog(@"RouteOptions loaded");
@@ -210,7 +210,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 
 - (void)viewDidAppear:(BOOL)animated
 {
-       
+    
     [super viewDidAppear:animated];
     NSLog(@"RouteOptions did appear");
     
@@ -218,9 +218,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     int tweetConut = [[prefs objectForKey:@"tweetCount"] intValue];
     BOOL isUrgent = [[prefs objectForKey:@"isUrgent"] boolValue];
     [tweeterCount removeFromSuperview];
-
+    
     if (isUrgent) {
-         CustomBadge *c = [[CustomBadge alloc] initWithString:[NSString stringWithFormat:@"%d!",tweetConut] withStringColor:[UIColor whiteColor] withInsetColor:[UIColor blueColor] withBadgeFrame:YES withBadgeFrameColor:[UIColor whiteColor]];
+        CustomBadge *c = [[CustomBadge alloc] initWithString:[NSString stringWithFormat:@"%d!",tweetConut] withStringColor:[UIColor whiteColor] withInsetColor:[UIColor blueColor] withBadgeFrame:YES withBadgeFrameColor:[UIColor whiteColor]];
         [c setFrame:CGRectMake(50, 360, c.frame.size.width, c.frame.size.height)];
         [self.view addSubview:c];
     } else {
@@ -266,7 +266,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         //        NSString *itinId = [(NSDictionary*)liveFeed objectForKey:@"itineraryId"];
         NSNumber *respCode = [(NSDictionary*)liveData objectForKey:@"errCode"];
         
-        if ([respCode intValue]== [RESPONSE_SUCCESSFULL intValue]) {
+        if ([respCode intValue]== 105) {
             //It means there are live feeds in response
             NSArray *itineraryLiveFees = [(NSDictionary*)liveData objectForKey:@"itinLiveFeeds"]; 
             if ([itineraryLiveFees count] > 0) {
@@ -280,7 +280,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                             NSString *arrivalTime = [[legLiveFees objectAtIndex:i] valueForKey:@"departureTime"];
                             NSString *arrivalTimeFlag = [[legLiveFees objectAtIndex:i] valueForKey:@"arrivalTimeFlag"];
                             NSString *legId = [[[legLiveFees objectAtIndex:i] valueForKey:@"leg"] valueForKey:@"id"];                 
-                        
+                            
                             [self setRealtimeData:legId arrivalTime:arrivalTime arrivalFlag:arrivalTimeFlag itineraryId:ititId itineraryArrivalFlag:itinTimeFalg];
                         }      
                     }
@@ -338,7 +338,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
             [[self navigationController] pushViewController:twit animated:YES];     
         } 
         
-        }  @catch (NSException *exception) {
+    }  @catch (NSException *exception) {
         NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
     } 
 }

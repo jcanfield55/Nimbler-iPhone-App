@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <Restkit/RestKit.h>
+#import <RestKit/RestKit.h>
 #import "Foundation/foundation.h"
 
 @interface SettingInfoViewController : UIViewController <UIPickerViewDelegate,UIPickerViewDataSource,RKRequestDelegate>{

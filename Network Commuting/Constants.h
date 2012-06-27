@@ -1,4 +1,3 @@
-//
 //  Constants.h
 //  Nimbler
 //

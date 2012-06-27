@@ -32,7 +32,7 @@
     Plan *tpResponsePlan;
     SupportedRegion *sr;
     FeedBackForm *fbplan;
-
+    
     NSManagedObjectContext *managedObjectContext;
     BOOL toGeocodeRequestOutstanding;  // true if there is an outstanding To geocode request
     BOOL fromGeocodeRequestOutstanding;  //true if there is an outstanding From geocode request
@@ -107,8 +107,8 @@ float currentLocationResTime;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         [[self navigationItem] setTitle:@"Nimbler"];
-
-       UIBarButtonItem *info = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(RedirectAtNimblerSetting)];
+        
+        UIBarButtonItem *info = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(RedirectAtNimblerSetting)];
         self.navigationItem.rightBarButtonItem = info;
         
         planRequestHistory = [NSMutableArray array]; // Initialize this array
@@ -116,7 +116,7 @@ float currentLocationResTime;
         toGeocodeRequestOutstanding = FALSE;
         fromGeocodeRequestOutstanding = FALSE;
         supportedRegion = [[SupportedRegion alloc] initWithDefault];
-
+        
         editMode = NO_EDIT;
         
         // Initialize the trip date formatter for display
@@ -131,7 +131,7 @@ float currentLocationResTime;
         rect1.origin.y = 0;
         rect1.size.width = TOFROM_TABLE_WIDTH ;
         rect1.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
-    
+        
         toTable = [[UITableView alloc] initWithFrame:rect1 style:UITableViewStylePlain];
         [toTable setRowHeight:TOFROM_ROW_HEIGHT];
         toTableVC = [[ToFromTableViewController alloc] initWithTable:toTable isFrom:FALSE toFromVC:self locations:locations];
@@ -141,7 +141,7 @@ float currentLocationResTime;
         CGRect rect2;
         rect2.origin.x = 0;
         rect2.origin.y = 0;
-
+        
         rect2.size.width = TOFROM_TABLE_WIDTH; 
         rect2.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
         fromTable = [[UITableView alloc] initWithFrame:rect2 style:UITableViewStylePlain];
@@ -192,7 +192,7 @@ float currentLocationResTime;
     CGRect rect0 = [mainTable frame];
     rect0.size.height = MAIN_TABLE_HEIGHT;
     [mainTable setFrame:rect0];
-
+    
     @try {
         [toTable reloadData];
         [fromTable reloadData];
@@ -254,7 +254,7 @@ float currentLocationResTime;
 - (void)setRkGeoMgr:(RKObjectManager *)rkGeoMgr0
 {
     rkGeoMgr = rkGeoMgr0;  //set the property
-
+    
     // Add the mapper from Location class to this Object Manager
     [[rkGeoMgr mappingProvider] setMapping:[Location objectMappingForApi:GOOGLE_GEOCODER] forKeyPath:@"results"];
     
@@ -293,7 +293,7 @@ float currentLocationResTime;
         return 3;  // Include all three sections
     } 
     return 1;  // Include just the To or the From section
-
+    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -389,7 +389,7 @@ float currentLocationResTime;
     }
     else if (editMode==NO_EDIT || [indexPath row] == 1) { // the to or from table sections
         BOOL isFrom = (editMode==FROM_EDIT || (editMode==NO_EDIT && [indexPath section]==FROM_SECTION))
-                       ? TRUE : FALSE;  
+        ? TRUE : FALSE;  
         NSString* cellIdentifier = isFrom ? @"fromTableCell" : @"toTableCell";
         
         UITableViewCell *cell =
@@ -399,7 +399,7 @@ float currentLocationResTime;
                                           reuseIdentifier:cellIdentifier];
         }
         UIView* cellView = [cell contentView];
-       
+        
         NSArray* subviews = [cellView subviews];
         if (isFrom) {
             if (subviews && [subviews count]>0 && [subviews indexOfObject:fromTable] != NSNotFound) {
@@ -422,7 +422,7 @@ float currentLocationResTime;
     UITableViewCell *cell =
     [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
                                       reuseIdentifier:cellIdentifier];
     }
     UIView* cellView = [cell contentView];
@@ -433,7 +433,7 @@ float currentLocationResTime;
     [cellView addSubview:addButton];
     
     NSArray* subviews = [cellView subviews];
-                
+    
     if (isFrom) {
         if (subviews && [subviews count]>0 && [subviews indexOfObject:[fromTableVC txtField]] != NSNotFound) {
             NSLog(@"fromTable already in subview");
@@ -478,7 +478,7 @@ float currentLocationResTime;
 - (void)updateToFromLocation:(id)sender isFrom:(BOOL)isFrom location:(Location *)loc; {
     if (isFrom) {
         fromLocation = loc;
-//        [self getCurrentLocationOfFormattedAddress:fromLocation];
+        //        [self getCurrentLocationOfFormattedAddress:fromLocation];
         if (loc == currentLocation && !isCurrentLocationMode) {
             [self setIsCurrentLocationMode:TRUE];
         }
@@ -488,8 +488,8 @@ float currentLocationResTime;
     } 
     else {
         toLocation = loc;
-//        [self getCurrentLocationOfFormattedAddress:toLocation];
-
+        //        [self getCurrentLocationOfFormattedAddress:toLocation];
+        
     }
 }
 
@@ -508,7 +508,7 @@ float currentLocationResTime;
 
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
-  
+    
     NSLog(@"Route Button Pressed");
     UIAlertView *alert;
     
@@ -561,11 +561,11 @@ float currentLocationResTime;
     [dFormat setDateStyle:NSDateFormatterShortStyle];
     [dFormat setTimeStyle:NSDateFormatterMediumStyle];
     [prefs setValue:[dFormat stringFromDate:tripDate] forKey:@"tripdate"];
-   if ([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
-       fromLocs = [self getCurrentLocationOfFormattedAddress:fromLocation];
-   } else {
-       fromLocs = [fromLocation formattedAddress];
-   }
+    if ([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
+        fromLocs = [self getCurrentLocationOfFormattedAddress:fromLocation];
+    } else {
+        fromLocs = [fromLocation formattedAddress];
+    }
     NSLog(@"current Location %@", fromLocs);
     FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_GENERAL uniqueId:nil date:[dFormat stringFromDate:tripDate] fromAddress:fromLocs toAddress:[toLocation formattedAddress]];
     FeedBackForm *feedbackVC =  [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];  // DE56 fix
@@ -575,18 +575,18 @@ float currentLocationResTime;
 - (IBAction)advisoriesButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     @try {
-//        if (!twitterSearchVC) {
-//            twitterSearchVC = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
-//        }
-//        [[self navigationController] pushViewController:twitterSearchVC animated:YES];
-//        [twitterSearchVC loadRequest:CALTRAIN_TWITTER_URL];
+        //        if (!twitterSearchVC) {
+        //            twitterSearchVC = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
+        //        }
+        //        [[self navigationController] pushViewController:twitterSearchVC animated:YES];
+        //        [twitterSearchVC loadRequest:CALTRAIN_TWITTER_URL];
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setObject:@"0" forKey:@"tweetCount"];
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
         isTwitterLivaData = TRUE;
         [[RKClient sharedClient]  get:@"advisories/all" delegate:self];
-                
+        
     }
     @catch (NSException *exception) {
         NSLog(@" twitter print : %@", exception);
@@ -658,7 +658,7 @@ float currentLocationResTime;
         [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
         [mainTable endUpdates];
     }  
-
+    
     // Reload all the data
     [toTable reloadData];
     [fromTable reloadData];
@@ -702,7 +702,7 @@ float currentLocationResTime;
 // Delegate methods for when the RestKit has results from the Planner
 - (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects 
 {        
-// Check to make sure this is the response to the latest planner request
+    // Check to make sure this is the response to the latest planner request
     if ([[objectLoader resourcePath] isEqualToString:planURLResource]) 
     {   
         NSInteger statusCode = [[objectLoader response] statusCode];
@@ -732,7 +732,7 @@ float currentLocationResTime;
                     tpResponsePlan = [objects objectAtIndex:0];
                     [plan setPlanId:[tpResponsePlan planId]];                    
                     NSLog(@"obj foe plan = %@", [tpResponsePlan planId]);
-
+                    
                     @try {
                         for (int i= 0; i< [[tpResponsePlan itineraries] count]; i++) {
                             Itinerary *itin = [[tpResponsePlan sortedItineraries] objectAtIndex:i];
@@ -758,7 +758,7 @@ float currentLocationResTime;
         }
         @catch (NSException *exception) {            
             [self stopActivityIndicator];
-             durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime ;
+            durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime ;
             NSLog(@"Exceptione while parsing TP response plan: %@", exception);
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"Trip is not possible. Your start or end point might not be safely accessible" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
             [alert show];
@@ -800,7 +800,7 @@ float currentLocationResTime;
             break;  
         }
         else if ([[[d objectForKey:@"fromPlace"] formattedAddress] isEqualToString:frForm] &&
-            [[[d objectForKey:@"toPlace"] formattedAddress] isEqualToString:toForm]) {
+                 [[[d objectForKey:@"toPlace"] formattedAddress] isEqualToString:toForm]) {
             isDuplicatePlan = YES;
             break;
         }
@@ -834,7 +834,7 @@ float currentLocationResTime;
         NSDateFormatter* tFormat = [[NSDateFormatter alloc] init];
         [tFormat setTimeStyle:NSDateFormatterShortStyle];
         [tFormat setDateStyle:NSDateFormatterNoStyle];
-
+        
         
         // Build the parameters into a resource string       
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
@@ -854,9 +854,9 @@ float currentLocationResTime;
                                        @"date", [NSDate date], nil]];  
         
         NSLog(@"Plan resource: %@", planURLResource);
-         // Call the trip planner
+        // Call the trip planner
         [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
-
+        
         savetrip = TRUE;
         isContinueGetRealTimeData = FALSE;
         // Reload the to/from tables for next time
@@ -869,7 +869,7 @@ float currentLocationResTime;
 -(void)startActivityIndicator
 {
     self.view.userInteractionEnabled = NO;
-
+    
     if (!activityIndicator) {
         UIActivityIndicatorViewStyle style;
         BOOL setColorToBlack = NO;
@@ -951,17 +951,17 @@ float currentLocationResTime;
     if( [location formattedAddress] != nil){       
         
         if([location formattedAddress] == @"Current Location"){
-         double latitude = [[location lat] doubleValue];
-         double longitude = [[location lng] doubleValue];        
-         NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv", latitude, longitude];   
-         NSURL *url = [NSURL URLWithString:urlString];
-         NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
-         NSArray *streetName = [locationString componentsSeparatedByString:@"\""];
-         NSLog(@"Reverse Geocode: %@", [streetName objectAtIndex:1]);
-         currentLoc = [streetName objectAtIndex:1];
-         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];   
-         [prefs setObject:[streetName objectAtIndex:1] forKey:@"currentLocation"];   
-         
+            double latitude = [[location lat] doubleValue];
+            double longitude = [[location lng] doubleValue];        
+            NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv", latitude, longitude];   
+            NSURL *url = [NSURL URLWithString:urlString];
+            NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
+            NSArray *streetName = [locationString componentsSeparatedByString:@"\""];
+            NSLog(@"Reverse Geocode: %@", [streetName objectAtIndex:1]);
+            currentLoc = [streetName objectAtIndex:1];
+            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];   
+            [prefs setObject:[streetName objectAtIndex:1] forKey:@"currentLocation"];   
+            
         }
     }
 }
@@ -971,26 +971,26 @@ float currentLocationResTime;
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"Current Location",@"Set Location",@"Cancel",nil];
     
     actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
-    actionSheet.destructiveButtonIndex = 2;	// make the third button red (destructive)
+    actionSheet.destructiveButtonIndex = 2;    // make the third button red (destructive)
     [actionSheet showInView:self.navigationController.view]; // show from our table view (pops up in the middle of the table)
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{	
- 	if (buttonIndex == 0){
-               
-	} else if(buttonIndex == 1){
-       
-	} else if(buttonIndex == 2){
-		NSLog(@"cancel");
+{    
+    if (buttonIndex == 0){
+        
+    } else if(buttonIndex == 1){
+        
+    } else if(buttonIndex == 2){
+        NSLog(@"cancel");
         [actionSheet dismissWithClickedButtonIndex:buttonIndex animated:YES];
-	}
+    }
 }
 
 -(void)savePlanInTPServer:(NSString *)tripResponse
 {
     
-   
+    
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;   
     NSString *timeResponseTime =  [[NSNumber numberWithFloat:durationOfResponseTime] stringValue];
     
@@ -1055,7 +1055,7 @@ float currentLocationResTime;
                 isTwitterLivaData = FALSE;
             }
         }
-    if ([request isPOST]) {      
+        if ([request isPOST]) {      
             NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
             NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                                     @"deviceid", udid, 

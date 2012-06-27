@@ -43,31 +43,31 @@ NSString *legID;
         // create the container to hold forward and back buttons
         /*
          UIView* container = [[UIView alloc] init];
-        UIButton* backBBI = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [backBBI setTitle:@"Bak" forState:UIControlStateNormal];
-        [backBBI addTarget:self action:@selector(navigateBack:) forControlEvents:UIControlEventTouchDown];
-        // [container addSubview:backBBI];
-        
-        UIButton* forwardBBI = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [forwardBBI setTitle:@"For" forState:UIControlStateNormal];
-        [forwardBBI addTarget:self action:@selector(navigateForward:) forControlEvents:UIControlEventTouchDown];
-        // [container addSubview:forwardBBI];
-        
-        UILabel* label = [[UILabel alloc] init];
-        [label setText:@"Howdy!"];
-        [container addSubview:label];
-        // Now add the container as the right BarButtonItem
-
-        UIBarButtonItem* bbi = [[UIBarButtonItem alloc] initWithCustomView:container];
+         UIButton* backBBI = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+         [backBBI setTitle:@"Bak" forState:UIControlStateNormal];
+         [backBBI addTarget:self action:@selector(navigateBack:) forControlEvents:UIControlEventTouchDown];
+         // [container addSubview:backBBI];
+         
+         UIButton* forwardBBI = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+         [forwardBBI setTitle:@"For" forState:UIControlStateNormal];
+         [forwardBBI addTarget:self action:@selector(navigateForward:) forControlEvents:UIControlEventTouchDown];
+         // [container addSubview:forwardBBI];
+         
+         UILabel* label = [[UILabel alloc] init];
+         [label setText:@"Howdy!"];
+         [container addSubview:label];
+         // Now add the container as the right BarButtonItem
+         
+         UIBarButtonItem* bbi = [[UIBarButtonItem alloc] initWithCustomView:container];
          */
-
+        
         Bak = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRewind target:self action:@selector(navigateBack:)]; 
         
         For = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward target:self action:@selector(navigateForward:)]; 
         
-       bbiArray = [NSArray arrayWithObjects:For, Bak, nil];
+        bbiArray = [NSArray arrayWithObjects:For, Bak, nil];
         self.navigationItem.rightBarButtonItems = bbiArray;
-
+        
     }
     return self;
 }
@@ -84,7 +84,7 @@ NSString *legID;
 {
     [super viewWillAppear:animated];
     NSArray *sortedLegs = [itinerary sortedLegs];
-
+    
     // Take startpoint as the beginning of the first leg's polyline, 
     // and endpoint form the last leg's polyline
     startPoint = [[MKPointAnnotation alloc] init];
@@ -93,8 +93,8 @@ NSString *legID;
     endPoint = [[MKPointAnnotation alloc] init];
     [endPoint setCoordinate:[[[sortedLegs objectAtIndex:([sortedLegs count]-1)] polylineEncodedString] endCoord]];
     [mapView addAnnotation:endPoint];
-
-        
+    
+    
     // Add the overlays and dot AnnotationViews for paths to the mapView
     polyLineArray = [NSMutableArray array];
     for (int i=0; i < [sortedLegs count]; i++) {
@@ -167,12 +167,12 @@ NSString *legID;
     NSString* subTitle;
     if (itineraryNumber == 0) { // if first row, put in start point
         titleText = [NSString stringWithFormat:@"Start at %@", [[itinerary from] name]];
-       //Disable to see previous leg view
+        //Disable to see previous leg view
         [Bak setEnabled:false];
     }
     else if (itineraryNumber == [[itinerary sortedLegs] count] + 1) { // if last row, put in end point
         titleText = [NSString stringWithFormat:@"End at %@", [[itinerary to] name]];
-         //Disable to see next leg view
+        //Disable to see next leg view
         [For setEnabled:false];
     }
     else {  // otherwise, it is one of the legs
@@ -207,8 +207,8 @@ NSString *legID;
             [imgForTimeInterval setImage:nil];
         }
         
-    // It calls when MODe of leg is WaLK.
-      //  [self walk];
+        // It calls when MODe of leg is WaLK.
+        //  [self walk];
     }
     [directionsTitle setText:titleText];
     [directionsDetails setText:subTitle];
@@ -224,7 +224,7 @@ NSString *legID;
     [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
     [self setMapViewRegion];  // redefine the bounding box
     [self setDirectionsText];
-     [Bak setEnabled:TRUE];
+    [Bak setEnabled:TRUE];
     [For setEnabled:TRUE];
     if(itineraryNumber == 0){
         //self.navigationItem.rightBarButtonItems = nil;
@@ -250,7 +250,7 @@ NSString *legID;
         //self.navigationItem.rightBarButtonItem = Bak;
         [For setEnabled:false];
     }
-
+    
 }
 
 - (IBAction)navigateStart:(id)sender {  
@@ -262,10 +262,10 @@ NSString *legID;
     [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
     [self customMap];  // redefine the bounding box    
     
-//    rootMap *l = [[rootMap alloc] initWithNibName:nil bundle:nil ];
-//    [l setItinerarys:itinerary itineraryNumber:2];
-//    [[self navigationController] pushViewController:l animated:YES];
-  
+    //    rootMap *l = [[rootMap alloc] initWithNibName:nil bundle:nil ];
+    //    [l setItinerarys:itinerary itineraryNumber:2];
+    //    [[self navigationController] pushViewController:l animated:YES];
+    
 }
 
 //Testing for ZoomOut Map 
@@ -292,7 +292,7 @@ NSString *legID;
             (minRegion.span.longitudeDelta > mpRegion.span.longitudeDelta)) {
             mpRegion = minRegion;  // if minRegion is larger, replace mpRegion with it
         }
-       // [mapView removeAnnotation:myAnnotation1];
+        // [mapView removeAnnotation:myAnnotation1];
         
         [mapView setRegion:mpRegion];
     }
@@ -358,7 +358,7 @@ NSString *legID;
             {
                 // If an existing pin view was not available, create one.
                 dotView = [[MKAnnotationView alloc] initWithAnnotation:annotation
-                                                          reuseIdentifier:@"MyDotAnnotation"];
+                                                       reuseIdentifier:@"MyDotAnnotation"];
                 dotView.canShowCallout = NO;
                 if (!dotImage) {
                     // TODO add @2X image for retina screens
@@ -414,7 +414,7 @@ NSString *legID;
                         aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:0.8] ;
                         aView.lineWidth = 5;
                     }
-                   
+                    
                 }
             }
         } 
@@ -437,7 +437,7 @@ NSString *legID;
         
         for (int i=0; i<c; i++) {
             Step *sps = [sp objectAtIndex:i];
- 
+            
             NSNumber * lat = [sps startLat];
             NSNumber * log = [sps startLng];
             
@@ -460,27 +460,27 @@ NSString *legID;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-
+    
 }
 -(IBAction)twitterSearch:(id)sender forEvent:(UIEvent *)event
 {
     @try {
         /*
-            DE: 42 
+         DE: 42 
          */
-//        TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
-//        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-//        NSString *trainRoute = [prefs objectForKey:@"train"];
-//        [[self navigationController] pushViewController:twitter_search animated:YES];
-//        trainRoute = [TWITTER_SERARCH_URL stringByReplacingOccurrencesOfString:@"TRAIN" withString:trainRoute];
-//        [twitter_search loadRequest:trainRoute];
-//        TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
-//        [[self navigationController] pushViewController:twitter_search animated:YES];
-//        [twitter_search loadRequest:CALTRAIN_TWITTER_URL];
-
+        //        TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
+        //        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        //        NSString *trainRoute = [prefs objectForKey:@"train"];
+        //        [[self navigationController] pushViewController:twitter_search animated:YES];
+        //        trainRoute = [TWITTER_SERARCH_URL stringByReplacingOccurrencesOfString:@"TRAIN" withString:trainRoute];
+        //        [twitter_search loadRequest:trainRoute];
+        //        TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
+        //        [[self navigationController] pushViewController:twitter_search animated:YES];
+        //        [twitter_search loadRequest:CALTRAIN_TWITTER_URL];
+        
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setObject:@"0" forKey:@"tweetCount"];
-
+        
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
         [[RKClient sharedClient]  get:@"advisories/all" delegate:self];

@@ -34,7 +34,7 @@ BOOL isTwitterLivaData = FALSE;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     
-   [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     
     [[UIApplication sharedApplication] 
      registerForRemoteNotificationTypes:
@@ -46,8 +46,8 @@ BOOL isTwitterLivaData = FALSE;
     RKObjectManager* rkGeoMgr = [RKObjectManager objectManagerWithBaseURL:GEO_RESPONSE_URL];
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
     
-     RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_GENERATE_URL];
-           
+    RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_GENERATE_URL];
+    
     // Other URLs:
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
     // NY City demo URL is http://demo.opentripplanner.org/opentripplanner-api-webapp/ws/
@@ -83,10 +83,10 @@ BOOL isTwitterLivaData = FALSE;
         [locations preLoadIfNeededFromFile:@"caltrain-station.json"];
         
         
-     }@catch (NSException *exception) {
+    }@catch (NSException *exception) {
         NSLog(@"Exception: ----------------- %@", exception);
     } 
-   
+    
     // Call TestFlightApp SDK
 #if !DEVELOPMENT
 #ifdef TESTING
@@ -99,7 +99,7 @@ BOOL isTwitterLivaData = FALSE;
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:toFromViewController]; 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [[self window] setRootViewController:navController];
-
+    
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -125,7 +125,7 @@ BOOL isTwitterLivaData = FALSE;
         [toFromViewController setCurrentLocation:currentLocation];
         [toFromViewController setIsCurrentLocationMode:TRUE];
     } 
-
+    
     [currentLocation setLatFloat:[newLocation coordinate].latitude];
     [currentLocation setLngFloat:[newLocation coordinate].longitude];
     
@@ -290,55 +290,55 @@ BOOL isTwitterLivaData = FALSE;
     
     if ([request isGET]) {  
         NSLog(@"Got a response back from our GET! %@", [response bodyAsString]);      
-                   
-            NSError *error = nil;
-            if (error == nil)
-            {
-                RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
-                if (isTwitterLivaData) {
-                    NSLog(@"%@", [response bodyAsString]);
-                    NSDictionary  *tweeterCountParser = [rkParser objectFromString:[response bodyAsString] error:nil];
-                    NSNumber *respCode = [(NSDictionary*)tweeterCountParser objectForKey:@"errCode"];
-                    NSString *isUrgent = [(NSDictionary*)tweeterCountParser objectForKey:@"isUrgent"];
-                    if ([respCode intValue]== [RESPONSE_SUCCESSFULL intValue]) {                   
-                        NSLog(@"count: %@",[(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"]);
-                        NSString *tweeterCount = [(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"];
-                        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];  
-                        
-                        NSString *previousCount = [prefs objectForKey:@"tweetCount"];
-                        int count = [previousCount intValue] + [tweeterCount intValue];
-                        [prefs setObject:[NSString stringWithFormat:@"%d",count] forKey:@"tweetCount"];
-                        [prefs setObject:isUrgent forKey:@"isUrgent"];
-                    }
-
-                } else {
+        
+        NSError *error = nil;
+        if (error == nil)
+        {
+            RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
+            if (isTwitterLivaData) {
+                NSLog(@"%@", [response bodyAsString]);
+                NSDictionary  *tweeterCountParser = [rkParser objectFromString:[response bodyAsString] error:nil];
+                NSNumber *respCode = [(NSDictionary*)tweeterCountParser objectForKey:@"errCode"];
+                NSString *isUrgent = [(NSDictionary*)tweeterCountParser objectForKey:@"isUrgent"];
+                if ([respCode intValue]== [RESPONSE_SUCCESSFULL intValue]) {                   
+                    NSLog(@"count: %@",[(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"]);
+                    NSString *tweeterCount = [(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"];
+                    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];  
                     
-                    NSDictionary  *regionParser = [rkParser objectFromString:[response bodyAsString] error:nil];                
-                    SupportedRegion *region = [SupportedRegion alloc] ;
-                    for (id key in regionParser) {
-                        if ([key isEqualToString:@"upperRightLatitude"]) {
-                            [region setUpperRightLatitude:[regionParser objectForKey:key] ];
-                        } else if ([key isEqualToString:@"upperRightLongitude"]){
-                            [region setUpperRightLongitude:[regionParser objectForKey:key] ];
-                        } else if ([key isEqualToString:@"minLongitude"]){
-                            [region setMinLongitude:[regionParser objectForKey:key] ];
-                        } else if ([key isEqualToString:@"minLatitude"]){
-                            [region setMinLatitude:[regionParser objectForKey:key] ];
-                        } else if ([key isEqualToString:@"maxLongitude"]){
-                            [region setMaxLongitude:[regionParser objectForKey:key] ];
-                        } else if ([key isEqualToString:@"maxLatitude"]){
-                            [region setMaxLatitude:[regionParser objectForKey:key] ];
-                        } else if ([key isEqualToString:@"lowerLeftLongitude"]){
-                            [region setLowerLeftLongitude:[regionParser objectForKey:key] ];
-                        } else if ([key isEqualToString:@"lowerLeftLatitude"]){
-                            [region setLowerLeftLatitude:[regionParser objectForKey:key] ];
-                        } 
-                    }                
-                    [toFromViewController setSupportedRegion:region];
-                    [self getTwiiterLiveData];
-                    timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEETER_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
+                    NSString *previousCount = [prefs objectForKey:@"tweetCount"];
+                    int count = [previousCount intValue] + [tweeterCount intValue];
+                    [prefs setObject:[NSString stringWithFormat:@"%d",count] forKey:@"tweetCount"];
+                    [prefs setObject:isUrgent forKey:@"isUrgent"];
                 }
+                
+            } else {
+                
+                NSDictionary  *regionParser = [rkParser objectFromString:[response bodyAsString] error:nil];                
+                SupportedRegion *region = [SupportedRegion alloc] ;
+                for (id key in regionParser) {
+                    if ([key isEqualToString:@"upperRightLatitude"]) {
+                        [region setUpperRightLatitude:[regionParser objectForKey:key] ];
+                    } else if ([key isEqualToString:@"upperRightLongitude"]){
+                        [region setUpperRightLongitude:[regionParser objectForKey:key] ];
+                    } else if ([key isEqualToString:@"minLongitude"]){
+                        [region setMinLongitude:[regionParser objectForKey:key] ];
+                    } else if ([key isEqualToString:@"minLatitude"]){
+                        [region setMinLatitude:[regionParser objectForKey:key] ];
+                    } else if ([key isEqualToString:@"maxLongitude"]){
+                        [region setMaxLongitude:[regionParser objectForKey:key] ];
+                    } else if ([key isEqualToString:@"maxLatitude"]){
+                        [region setMaxLatitude:[regionParser objectForKey:key] ];
+                    } else if ([key isEqualToString:@"lowerLeftLongitude"]){
+                        [region setLowerLeftLongitude:[regionParser objectForKey:key] ];
+                    } else if ([key isEqualToString:@"lowerLeftLatitude"]){
+                        [region setLowerLeftLatitude:[regionParser objectForKey:key] ];
+                    } 
+                }                
+                [toFromViewController setSupportedRegion:region];
+                [self getTwiiterLiveData];
+                timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEETER_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
             }
+        }
     }
 }
 
@@ -418,13 +418,13 @@ BOOL isTwitterLivaData = FALSE;
         [prefs setObject:[NSString stringWithFormat:@"%d",count] forKey:@"tweetCount"];
         
         if (isUrgent) {
-//            UIAlertView *dataAlert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain"
-//                                                                message:message
-//                                                               delegate:self
-//                                                      cancelButtonTitle:@"Show Twits"
-//                                                      otherButtonTitles:@"No",nil];
-//            
-//            [dataAlert show];
+            //            UIAlertView *dataAlert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain"
+            //                                                                message:message
+            //                                                               delegate:self
+            //                                                      cancelButtonTitle:@"Show Twits"
+            //                                                      otherButtonTitles:@"No",nil];
+            //            
+            //            [dataAlert show];
             [prefs setObject:@"true" forKey:@"isUrgent"];
         }
     }        

@@ -13,7 +13,6 @@
 #import "Plan.h"
 #import "enums.h"
 #import "SupportedRegion.h"
-#import "CustomBadge.h"
 
 @interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,RKRequestDelegate,UIActionSheetDelegate,UIAlertViewDelegate>
 
