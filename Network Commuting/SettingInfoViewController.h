@@ -10,16 +10,22 @@
 #import <RestKit/RestKit.h>
 #import "Foundation/foundation.h"
 
-@interface SettingInfoViewController : UIViewController <UIPickerViewDelegate,UIPickerViewDataSource,RKRequestDelegate>{
+@interface SettingInfoViewController : UIViewController <RKRequestDelegate>{
     
-    IBOutlet UIPickerView *PickerTweetCount;
-    NSMutableArray *arrayTweets;
     UIAlertView *alertView;
-    IBOutlet UITextField *txtMaxWalkDistance;
+    IBOutlet UIStepper *steperPushHour;
+    IBOutlet UILabel *lblPushTrigger;
+    IBOutlet UISlider *sliderMaxWalkDistance;
+    IBOutlet UISwitch *switchPushEnable;
 }
 
+@property (nonatomic, strong) IBOutlet UIStepper *steperPushHour;
+@property (nonatomic, strong) IBOutlet UISlider *sliderMaxWalkDistance;
+@property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 -(IBAction)UpdateSetting:(id)sender;
+-(IBAction)stepperValueChanged:(UIStepper *)sender;
+-(IBAction)sliderWalkDistanceValueChanged:(UISlider *)sender;
 
 -(UIAlertView *) upadetSettings;
 -(void)popOutFromSettingView;

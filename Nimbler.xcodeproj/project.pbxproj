@@ -77,8 +77,10 @@
 		CC6F22F21563CEC20066DFA9 /* playRec.png in Resources */ = {isa = PBXBuildFile; fileRef = CC6F22F11563CEC20066DFA9 /* playRec.png */; };
 		CC6FE2B8155BA40D004BE10A /* MyAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6FE2B7155BA40D004BE10A /* MyAnnotation.m */; };
 		CC6FE2BB155BC416004BE10A /* Error.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6FE2BA155BC416004BE10A /* Error.m */; };
+		CC96BE67159C8A87001F9193 /* itin_slipage.png in Resources */ = {isa = PBXBuildFile; fileRef = CC96BE66159C8A87001F9193 /* itin_slipage.png */; };
 		CC9E424B158219A300A4ADED /* twitter.png in Resources */ = {isa = PBXBuildFile; fileRef = CC9E424A158219A300A4ADED /* twitter.png */; };
 		CC9E424D15821B7B00A4ADED /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = CC9E424C15821B7B00A4ADED /* map.png */; };
+		CCB7DFA6159C59CB00B3B01A /* UserPreferance.m in Sources */ = {isa = PBXBuildFile; fileRef = CCB7DFA5159C59CB00B3B01A /* UserPreferance.m */; };
 		CCB7E811157090380036E9CD /* FeedBackForm.m in Sources */ = {isa = PBXBuildFile; fileRef = CCB7E80F157090370036E9CD /* FeedBackForm.m */; };
 		CCB7E812157090380036E9CD /* FeedBackForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = CCB7E810157090380036E9CD /* FeedBackForm.xib */; };
 		CCB9E6FA1574B4F70043F304 /* TwitterSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = CCB9E6F91574B4F70043F304 /* TwitterSearch.m */; };
@@ -871,8 +873,11 @@
 		CC6FE2B7155BA40D004BE10A /* MyAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAnnotation.m; sourceTree = "<group>"; };
 		CC6FE2B9155BC411004BE10A /* Error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Error.h; sourceTree = "<group>"; };
 		CC6FE2BA155BC416004BE10A /* Error.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Error.m; sourceTree = "<group>"; };
+		CC96BE66159C8A87001F9193 /* itin_slipage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = itin_slipage.png; sourceTree = "<group>"; };
 		CC9E424A158219A300A4ADED /* twitter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = twitter.png; sourceTree = "<group>"; };
 		CC9E424C15821B7B00A4ADED /* map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = map.png; sourceTree = "<group>"; };
+		CCB7DFA4159C59CB00B3B01A /* UserPreferance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserPreferance.h; sourceTree = "<group>"; };
+		CCB7DFA5159C59CB00B3B01A /* UserPreferance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserPreferance.m; sourceTree = "<group>"; };
 		CCB7E80E157090370036E9CD /* FeedBackForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedBackForm.h; sourceTree = "<group>"; };
 		CCB7E80F157090370036E9CD /* FeedBackForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedBackForm.m; sourceTree = "<group>"; };
 		CCB7E810157090380036E9CD /* FeedBackForm.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedBackForm.xib; sourceTree = "<group>"; };
@@ -2417,6 +2422,7 @@
 		CCB7E81C1570EB670036E9CD /* images */ = {
 			isa = PBXGroup;
 			children = (
+				CC96BE66159C8A87001F9193 /* itin_slipage.png */,
 				8D015971159B3DE10004D2FB /* caltrain.jpg */,
 				CCCA4BD41590BB81009F3BF7 /* img_ontime.png */,
 				CCCA4BD21590BB6C009F3BF7 /* img_early.png */,
@@ -2468,6 +2474,8 @@
 				52B3031E14BE946000EB4852 /* Location.m */,
 				5231E43A14E9E7A300739DC7 /* RawAddress.h */,
 				5231E43B14E9E7A400739DC7 /* RawAddress.m */,
+				CCB7DFA4159C59CB00B3B01A /* UserPreferance.h */,
+				CCB7DFA5159C59CB00B3B01A /* UserPreferance.m */,
 			);
 			name = dataObject;
 			sourceTree = "<group>";
@@ -2769,6 +2777,7 @@
 				8D0158B4159B2FBB0004D2FB /* twitterViewController.xib in Resources */,
 				8D0158B9159B35CC0004D2FB /* SettingInfoViewController.xib in Resources */,
 				8D015972159B3DE10004D2FB /* caltrain.jpg in Resources */,
+				CC96BE67159C8A87001F9193 /* itin_slipage.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2840,6 +2849,7 @@
 				CCCA4BCD15905575009F3BF7 /* CustomBadge.m in Sources */,
 				8D0158B3159B2FBB0004D2FB /* twitterViewController.m in Sources */,
 				8D0158B8159B35CC0004D2FB /* SettingInfoViewController.m in Sources */,
+				CCB7DFA6159C59CB00B3B01A /* UserPreferance.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2967,8 +2977,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
-				PROVISIONING_PROFILE = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
+				PROVISIONING_PROFILE = "FA3F953C-3454-4244-947E-F0EFF3EF5215";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FA3F953C-3454-4244-947E-F0EFF3EF5215";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2989,8 +2999,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
+				PROVISIONING_PROFILE = "FA3F953C-3454-4244-947E-F0EFF3EF5215";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FA3F953C-3454-4244-947E-F0EFF3EF5215";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -3016,8 +3026,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = Nimbler;
-				PROVISIONING_PROFILE = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
+				PROVISIONING_PROFILE = "FA3F953C-3454-4244-947E-F0EFF3EF5215";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FA3F953C-3454-4244-947E-F0EFF3EF5215";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3043,8 +3053,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = Nimbler;
-				PROVISIONING_PROFILE = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DB28D97A-7AC2-4066-94FB-ECFB2A439894";
+				PROVISIONING_PROFILE = "FA3F953C-3454-4244-947E-F0EFF3EF5215";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FA3F953C-3454-4244-947E-F0EFF3EF5215";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};

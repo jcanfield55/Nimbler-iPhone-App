@@ -408,7 +408,7 @@ BOOL isTwitterLivaData = FALSE;
         NSLog(@"key: %@, value: %@", key, [userInfo objectForKey:key]);
         
         NSString *isUrgent = [userInfo valueForKey:@"isUrgent"];
-        NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
+//        NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
         NSString *badge = [[userInfo valueForKey:@"aps"] valueForKey:@"badge"];
         
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];  

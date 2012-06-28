@@ -67,6 +67,6 @@ typedef enum {
 -(void)savePlanInTPServer:(NSString *)tripResponse;
 -(NSString *)getCurrentLocationOfFormattedAddress:(Location *)location;
 -(BOOL)alertUsetForLocationService;
-- (void)drawRect:(CGRect)rect;
 -(void)getRealTimeData;
+
 @end

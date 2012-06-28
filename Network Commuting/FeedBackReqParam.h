@@ -26,5 +26,4 @@
 - (id)initWithParam:(NSString *)name source:(NSString *)fbSources uniqueId:(NSString *)uniqueID date:(NSString *)tripDate 
         fromAddress:(NSString *)fromaddress toAddress:(NSString *)toaddress ;
 
--(id)initWithFeedBack:(NSString *)nibNameOrNil fbParam:(FeedBackReqParam *)fbParam bundle:(NSBundle *)nibBundle;
 @end

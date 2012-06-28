@@ -12,7 +12,7 @@
 #define FEEDBACK_TEXT           @"1"
 #define FEEDBACK_AUDIO          @"2"
 #define FEEDBACK_BOTH           @"3"
-#define FB_RESPOSE_SUCCEES      @"FeedBack Send Successfully"
+#define FB_RESPOSE_SUC      @"FeedBack Send Successfully"
 #define FB_RESPONSE_FAIL        @"Please Send Again"
 
 @implementation FeedBackViewController

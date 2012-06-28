@@ -7,9 +7,14 @@
 //
 
 #import "SettingInfoViewController.h"
+#import "nc_AppDelegate.h"
+#import "UserPreferance.h"
 
 @implementation SettingInfoViewController
-NSString *alertCount;
+
+@synthesize steperPushHour,sliderMaxWalkDistance,managedObjectContext;
+
+int pushHour;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -25,7 +30,6 @@ NSString *alertCount;
 {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
     // Release any cached data, images, etc that aren't in use.
 }
 
@@ -35,16 +39,6 @@ NSString *alertCount;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    arrayTweets = [[NSMutableArray alloc] init];
-    [arrayTweets addObject:@"Never"];
-    [arrayTweets addObject:@"1"];
-    [arrayTweets addObject:@"2"];
-    [arrayTweets addObject:@"3"];
-    [arrayTweets addObject:@"4"];
-    [arrayTweets addObject:@"5"];
-    [arrayTweets addObject:@"6"];
-    
-    PickerTweetCount.delegate = self;
 }
 
 - (void)viewDidUnload
@@ -53,39 +47,6 @@ NSString *alertCount;
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
--(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
-{
-    return 1;
-}
-
--(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
-{
-    return [arrayTweets count];
-}
-
--(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
-    return [arrayTweets objectAtIndex:row];   
-}
-
--(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
-{
-    NSLog(@"select hour: %@", [arrayTweets objectAtIndex:row]);
-    if ([[arrayTweets objectAtIndex:row] isEqualToString:@"Never"]) {
-        alertCount = @"-1";
-    } else {
-        alertCount = [arrayTweets objectAtIndex:row];
-    }
-    [txtMaxWalkDistance resignFirstResponder];
-}
-
 
 -(IBAction)UpdateSetting:(id)sender
 {
@@ -98,9 +59,9 @@ NSString *alertCount;
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
     NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                             @"deviceid", udid,
-                            @"alertCount", alertCount,
+                            @"alertCount", pushHour,
                             @"deviceToken", token,
-                            @"maxDistance", txtMaxWalkDistance.text,
+                            @"maxDistance", sliderMaxWalkDistance.value,
                             nil];    
     NSString *twitCountReq = [@"users/preferences/update" appendQueryParams:params];
     
@@ -108,23 +69,17 @@ NSString *alertCount;
     [[RKClient sharedClient]  get:twitCountReq delegate:self];
 }
 
--(UIAlertView *) upadetSettings
+-(IBAction)stepperValueChanged:(UIStepper *)sender
 {
-    UIAlertView *alerts = [[UIAlertView alloc]   
-                           initWithTitle:@"Updating your settings \n Please wait..."  
-                           message:nil delegate:nil cancelButtonTitle:nil  
-                           otherButtonTitles:nil];  
-    
-    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc]  
-                                          initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];  
-    
-    indicator.frame = CGRectMake(135, 70, 20, 20);
-    [indicator startAnimating];  
-    [alerts addSubview:indicator]; 
-    [alerts show];
-    [[NSRunLoop currentRunLoop] limitDateForMode:NSDefaultRunLoopMode];  
-    return alerts;
-    
+    int pushHour = steperPushHour.value;
+    NSLog(@"push hour %d", pushHour);
+    lblPushTrigger.text = [NSString stringWithFormat:@"%d",pushHour];
+}
+
+-(IBAction)sliderWalkDistanceValueChanged:(UISlider *)sender
+{
+    float walkDistance = sliderMaxWalkDistance.value;
+    NSLog(@"push hour %f", walkDistance);
 }
 
 -(void)popOutFromSettingView { 
@@ -143,39 +98,22 @@ NSString *alertCount;
 }
 
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
+-(UIAlertView *) upadetSettings
 {
-    // Any additional checks to ensure you have the correct textField here.
-    if(textField == txtMaxWalkDistance) {
-        [txtMaxWalkDistance resignFirstResponder];
-        return NO;
-    }
-    return YES;    
-}
-
-
-#pragma mark TextField animation at selected
-
-- (void) animateTextField: (UITextField*) textField up: (BOOL) up{
-    int txtPosition = (textField.frame.origin.y - 160);
-    const int movementDistance = (txtPosition < 0 ? 0 : txtPosition); // tweak as needed
-    const float movementDuration = 0.3f; // tweak as needed
     
-    int movement = (up ? -movementDistance : movementDistance);
     
-    [UIView beginAnimations: @"anim" context: nil];
-    [UIView setAnimationBeginsFromCurrentState: YES];
-    [UIView setAnimationDuration: movementDuration];
-    self.view.frame = CGRectOffset(self.view.frame, 0, movement);
-    [UIView commitAnimations];
-}
-
-- (void)textFieldDidBeginEditing:(UITextField *)textField{
-    [self animateTextField: textField up: YES];
-}
-
-- (void)textFieldDidEndEditing:(UITextField *)textField{
-    [self animateTextField: textField up: NO];
+    UIAlertView *alerts = [[UIAlertView alloc]   
+                           initWithTitle:@"Updating your settings \n Please wait..."  
+                           message:nil delegate:nil cancelButtonTitle:nil  
+                           otherButtonTitles:nil]; 
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc]  
+                                          initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];  
+    indicator.frame = CGRectMake(135, 70, 20, 20);
+    [indicator startAnimating];  
+    [alerts addSubview:indicator]; 
+    [alerts show];
+    [[NSRunLoop currentRunLoop] limitDateForMode:NSDefaultRunLoopMode];  
+    return alerts;
 }
 
 @end

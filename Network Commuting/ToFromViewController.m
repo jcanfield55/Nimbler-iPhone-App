@@ -702,15 +702,22 @@ float currentLocationResTime;
 // Delegate methods for when the RestKit has results from the Planner
 - (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects 
 {        
+   
+     NSLog(@"enter in object RKLoader......................................");
     // Check to make sure this is the response to the latest planner request
     if ([[objectLoader resourcePath] isEqualToString:planURLResource]) 
     {   
+       NSLog(@"resourcePath and planURLResource same......................................");
         NSInteger statusCode = [[objectLoader response] statusCode];
         NSLog(@"Planning HTTP status code = %d", statusCode);
         @try {
             if (objects && [objects objectAtIndex:0]) {
+                NSLog(@"object is there at 0 index......................................");
                 if (savetrip) {
+                     NSLog(@"start to save at plan obj......................................");
                     plan = [objects objectAtIndex:0];
+                    NSLog(@"bind with plan......................................");
+
                     durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime;
                     [self stopActivityIndicator];
                     
@@ -743,7 +750,7 @@ float currentLocationResTime;
                                 Leg *lg = [[itin sortedLegs] objectAtIndex:j];                                
                                 [[[[[plan sortedItineraries] objectAtIndex:i] sortedLegs] objectAtIndex:j] setLegId:[lg legId]];
                                 NSLog(@"------------------------------------------");
-                                NSLog(@"leg.. %@",[lg legId]);
+                                NSLog(@"leg... %@",[lg legId]);
                             }                                                            
                         }
                         isContinueGetRealTimeData = TRUE;
@@ -856,7 +863,7 @@ float currentLocationResTime;
         NSLog(@"Plan resource: %@", planURLResource);
         // Call the trip planner
         [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
-        
+        NSLog(@"route request sent......................................");
         savetrip = TRUE;
         isContinueGetRealTimeData = FALSE;
         // Reload the to/from tables for next time
@@ -961,7 +968,6 @@ float currentLocationResTime;
             currentLoc = [streetName objectAtIndex:1];
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];   
             [prefs setObject:[streetName objectAtIndex:1] forKey:@"currentLocation"];   
-            
         }
     }
 }
@@ -989,8 +995,7 @@ float currentLocationResTime;
 
 -(void)savePlanInTPServer:(NSString *)tripResponse
 {
-    
-    
+        
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;   
     NSString *timeResponseTime =  [[NSNumber numberWithFloat:durationOfResponseTime] stringValue];
     
@@ -1034,6 +1039,15 @@ float currentLocationResTime;
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
+     @try {
+         if (savetrip) {
+             NSLog(@"wrogly enter in simple RKClient after request......................................");
+         }
+     } @catch (NSException *ex) {
+         NSLog(@"exception at wrogly enter in simple RKClient after request.............. %@", ex);
+     }
+ 
+    
     @try {
         RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
         if (isContinueGetRealTimeData) {
@@ -1128,7 +1142,6 @@ float currentLocationResTime;
 {
     SettingInfoViewController *settingView = [[SettingInfoViewController alloc] init];
     [[self navigationController] pushViewController:settingView animated:YES];
-    
 }
 
 @end

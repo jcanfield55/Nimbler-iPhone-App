@@ -189,7 +189,6 @@ NSString *legID;
             [prefs setObject:train1 forKey:@"train"];
         }
         
-        NSLog(@"start == == = = ");
         if([leg arrivalTime] > 0) {
             UIImage *imgForArrivalTime;
             if([leg.arrivalFlag intValue] == [ON_TIME intValue]) {

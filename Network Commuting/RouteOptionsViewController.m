@@ -26,7 +26,6 @@
 
 @end
 
-
 @implementation RouteOptionsViewController
 
 @synthesize mainTable;
@@ -92,13 +91,15 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
                                       reuseIdentifier:@"UIRouteOptionsViewCell"];
+        [cell.imageView setImage:nil];
     }
     // Get the requested itinerary
     Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
     if (isReloadRealData) {
-        if([itin itinArrivalFlag] > 0) {
+//        if([itin itinArrivalFlag] > 0) {
             UIImage *imgForArrivalTime = [UIImage alloc];
             cell.frame = CGRectMake(100, 2, 20, 20);
+         
             if([itin.itinArrivalFlag intValue] == [ON_TIME intValue]) {
                 imgForArrivalTime = [UIImage imageNamed:@"img_ontime.png"] ;
             }  else if([itin.itinArrivalFlag intValue] == [DELAYED intValue]) {
@@ -107,9 +108,11 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                 imgForArrivalTime = [UIImage imageNamed:@"img_early.png"] ;
             } else if([itin.itinArrivalFlag intValue] == [EARLIER intValue]) {
                 imgForArrivalTime = [UIImage imageNamed:@"img_earlier"] ;
-            } 
+            } else if ([itin.itinArrivalFlag intValue] == [ITINERARY_TIME_SLIPPAGE intValue]) {
+                imgForArrivalTime = [UIImage imageNamed:@"itin_slipage.pmg"] ;
+            }
             [cell.imageView setImage:imgForArrivalTime];
-        }
+//        }
     } else {
         [cell.imageView setImage:nil];
     }
@@ -156,7 +159,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
             routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
         }
         itinararyId =[[[plan sortedItineraries] objectAtIndex:[indexPath row]] itinId];
-        //        [self sendRequestForTimingDelay];
         itinerary = [plan.sortedItineraries objectAtIndex:[indexPath row]];
         [routeDetailsVC setItinerary:itinerary];
         [[self navigationController] pushViewController:routeDetailsVC animated:YES];

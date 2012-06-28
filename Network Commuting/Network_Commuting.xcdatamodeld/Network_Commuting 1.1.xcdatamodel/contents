@@ -151,6 +151,11 @@
         <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="relationship" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TPResponse" inverseName="relationship" inverseEntity="TPResponse" syncable="YES"/>
     </entity>
+    <entity name="UserPreferance" syncable="YES">
+        <attribute name="pushEnable" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="triggerAtHour" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="walkDistance" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+    </entity>
     <fetchRequest name="LocationByFormattedAddress" entity="Location" predicateString="formattedAddress ==$ADDRESS2"/>
     <fetchRequest name="RawAddressByString" entity="RawAddress" predicateString="rawAddressString == $ADDRESS"/>
     <elements>
@@ -165,5 +170,6 @@
         <element name="RawAddress" positionX="414" positionY="501" width="128" height="75"/>
         <element name="Step" positionX="-126" positionY="192" width="128" height="195"/>
         <element name="TPResponse" positionX="423" positionY="33" width="128" height="75"/>
+        <element name="UserPreferance" positionX="502" positionY="342" width="128" height="90"/>
     </elements>
 </model>
