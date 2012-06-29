@@ -23,8 +23,7 @@
 
 @interface ToFromViewController()
 {
-    // Variables for internal use
-    
+    // Variables for internal use    
     NSDateFormatter *tripDateFormatter;  // Formatter for showing the trip date / time
     NSString *planURLResource; // URL resource sent to planner
     NSMutableArray *planRequestHistory; // Array of all the past plan request parameter histories in sequential order (most recent one last)
@@ -82,7 +81,7 @@
 @synthesize isTripDateCurrentTime;
 @synthesize editMode;
 @synthesize supportedRegion;
-@synthesize tweeterCount;
+@synthesize twitterCount;
 @synthesize isContinueGetRealTimeData;
 @synthesize continueGetTime;
 
@@ -166,20 +165,20 @@ float currentLocationResTime;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     int tweetConut = [[prefs objectForKey:@"tweetCount"] intValue];
     BOOL isUrgent = [[prefs objectForKey:@"isUrgent"] boolValue];
-    [tweeterCount removeFromSuperview];
+    [twitterCount removeFromSuperview];
     if (isUrgent) {
-        CustomBadge *c = [[CustomBadge alloc] initWithString:[NSString stringWithFormat:@"%d!",tweetConut] withStringColor:[UIColor whiteColor] withInsetColor:[UIColor blueColor] withBadgeFrame:YES withBadgeFrameColor:[UIColor whiteColor]];
-        [c setFrame:CGRectMake(50, 360, c.frame.size.width, c.frame.size.height)];
-        [self.view addSubview:c];
+        twitterCount = [[CustomBadge alloc] initWithString:[NSString stringWithFormat:@"%d!",tweetConut] withStringColor:[UIColor whiteColor] withInsetColor:[UIColor blueColor] withBadgeFrame:YES withBadgeFrameColor:[UIColor whiteColor]];
+        [twitterCount setFrame:CGRectMake(50, 360, twitterCount.frame.size.width, twitterCount.frame.size.height)];
+        [self.view addSubview:twitterCount];
     } else {
-        tweeterCount = [[CustomBadge alloc] init];
-        tweeterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
-        [tweeterCount setFrame:CGRectMake(60, 365, tweeterCount.frame.size.width, tweeterCount.frame.size.height)];        
+        twitterCount = [[CustomBadge alloc] init];
+        twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
+        [twitterCount setFrame:CGRectMake(60, 365, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
         if (tweetConut == 0) {
-            [tweeterCount setHidden:YES];
+            [twitterCount setHidden:YES];
         } else {
-            [self.view addSubview:tweeterCount];
-            [tweeterCount setHidden:NO];
+            [self.view addSubview:twitterCount];
+            [twitterCount setHidden:NO];
         }
     } 
     
@@ -707,17 +706,13 @@ float currentLocationResTime;
     // Check to make sure this is the response to the latest planner request
     if ([[objectLoader resourcePath] isEqualToString:planURLResource]) 
     {   
-       NSLog(@"resourcePath and planURLResource same......................................");
         NSInteger statusCode = [[objectLoader response] statusCode];
         NSLog(@"Planning HTTP status code = %d", statusCode);
         @try {
             if (objects && [objects objectAtIndex:0]) {
-                NSLog(@"object is there at 0 index......................................");
                 if (savetrip) {
-                     NSLog(@"start to save at plan obj......................................");
                     plan = [objects objectAtIndex:0];
-                    NSLog(@"bind with plan......................................");
-
+                                        
                     durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime;
                     [self stopActivityIndicator];
                     
@@ -863,7 +858,6 @@ float currentLocationResTime;
         NSLog(@"Plan resource: %@", planURLResource);
         // Call the trip planner
         [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
-        NSLog(@"route request sent......................................");
         savetrip = TRUE;
         isContinueGetRealTimeData = FALSE;
         // Reload the to/from tables for next time
@@ -907,7 +901,7 @@ float currentLocationResTime;
     if (activityTimer && [activityTimer isValid]) {
         [activityTimer invalidate];  // if old activity timer still valid, invalidate it
     }
-    [NSTimer scheduledTimerWithTimeInterval: 56.0f target: self selector: @selector(stopActivityIndicator) userInfo: nil repeats: NO];
+    [NSTimer scheduledTimerWithTimeInterval: 56.0f target:self selector: @selector(stopActivityIndicator) userInfo: nil repeats: NO];
 }
 
 -(void)stopActivityIndicator
@@ -1008,6 +1002,10 @@ float currentLocationResTime;
     [rkp setValue:timeResponseTime forParam:@"timeTripPlan"];
     [rkp setValue:[toLocation formattedAddress]  forParam:@"frmtdAddTo"];
     [rkp setValue:[fromLocation formattedAddress]  forParam:@"frmtdAddFrom"];
+    [rkp setValue:[toLocation lat] forParam:@"latFrom"];
+    [rkp setValue:[toLocation lng] forParam:@"lonFrom"];
+    [rkp setValue:[fromLocation lat] forParam:@"latTo"];
+    [rkp setValue:[fromLocation lng] forParam:@"lonTo"];
     
     if([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
         [rkp setValue:REVERSE_GEO_FROM forParam:@"fromType"];
@@ -1039,15 +1037,6 @@ float currentLocationResTime;
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
-     @try {
-         if (savetrip) {
-             NSLog(@"wrogly enter in simple RKClient after request......................................");
-         }
-     } @catch (NSException *ex) {
-         NSLog(@"exception at wrogly enter in simple RKClient after request.............. %@", ex);
-     }
- 
-    
     @try {
         RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
         if (isContinueGetRealTimeData) {

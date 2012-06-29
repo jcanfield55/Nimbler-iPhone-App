@@ -34,7 +34,7 @@
 @synthesize plan;
 @synthesize isReloadRealData;
 @synthesize liveData;
-@synthesize tweeterCount;
+@synthesize twitterCount;
 
 Itinerary * itinerary;
 NSString *itinararyId;
@@ -96,7 +96,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     // Get the requested itinerary
     Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
     if (isReloadRealData) {
-//        if([itin itinArrivalFlag] > 0) {
+        if([itin itinArrivalFlag] >= 0) {
             UIImage *imgForArrivalTime = [UIImage alloc];
             cell.frame = CGRectMake(100, 2, 20, 20);
          
@@ -107,12 +107,12 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
             } else if([itin.itinArrivalFlag intValue] == [EARLY intValue]) {
                 imgForArrivalTime = [UIImage imageNamed:@"img_early.png"] ;
             } else if([itin.itinArrivalFlag intValue] == [EARLIER intValue]) {
-                imgForArrivalTime = [UIImage imageNamed:@"img_earlier"] ;
+                imgForArrivalTime = [UIImage imageNamed:@"img_earlier.ong"] ;
             } else if ([itin.itinArrivalFlag intValue] == [ITINERARY_TIME_SLIPPAGE intValue]) {
-                imgForArrivalTime = [UIImage imageNamed:@"itin_slipage.pmg"] ;
+                imgForArrivalTime = [UIImage imageNamed:@"itin_slipage.png"] ;
             }
             [cell.imageView setImage:imgForArrivalTime];
-//        }
+        }
     } else {
         [cell.imageView setImage:nil];
     }
@@ -153,8 +153,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 // If selected, show the RouteDetailsViewController
 - (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    @try {
-        
+    @try {        
         if (!routeDetailsVC) {
             routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
         }
@@ -219,23 +218,22 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     int tweetConut = [[prefs objectForKey:@"tweetCount"] intValue];
     BOOL isUrgent = [[prefs objectForKey:@"isUrgent"] boolValue];
-    [tweeterCount removeFromSuperview];
-    
+    [twitterCount removeFromSuperview];
     if (isUrgent) {
-        CustomBadge *c = [[CustomBadge alloc] initWithString:[NSString stringWithFormat:@"%d!",tweetConut] withStringColor:[UIColor whiteColor] withInsetColor:[UIColor blueColor] withBadgeFrame:YES withBadgeFrameColor:[UIColor whiteColor]];
-        [c setFrame:CGRectMake(50, 360, c.frame.size.width, c.frame.size.height)];
-        [self.view addSubview:c];
+        twitterCount = [[CustomBadge alloc] initWithString:[NSString stringWithFormat:@"%d!",tweetConut] withStringColor:[UIColor whiteColor] withInsetColor:[UIColor blueColor] withBadgeFrame:YES withBadgeFrameColor:[UIColor whiteColor]];
+        [twitterCount setFrame:CGRectMake(50, 360, twitterCount.frame.size.width, twitterCount.frame.size.height)];
+        [self.view addSubview:twitterCount];
     } else {
-        tweeterCount = [[CustomBadge alloc] init];
-        tweeterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
-        [tweeterCount setFrame:CGRectMake(60, 365, tweeterCount.frame.size.width, tweeterCount.frame.size.height)];        
+        twitterCount = [[CustomBadge alloc] init];
+        twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
+        [twitterCount setFrame:CGRectMake(60, 365, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
         if (tweetConut == 0) {
-            [tweeterCount setHidden:YES];
+            [twitterCount setHidden:YES];
         } else {
-            [self.view addSubview:tweeterCount];
-            [tweeterCount setHidden:NO];
+            [self.view addSubview:twitterCount];
+            [twitterCount setHidden:NO];
         }
-    }
+    } 
     
 }
 
@@ -281,9 +279,10 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                         for (int i=0; i<legLiveFees.count; i++) {                
                             NSString *arrivalTime = [[legLiveFees objectAtIndex:i] valueForKey:@"departureTime"];
                             NSString *arrivalTimeFlag = [[legLiveFees objectAtIndex:i] valueForKey:@"arrivalTimeFlag"];
+                            NSString *timeDiff = [[legLiveFees objectAtIndex:i] valueForKey:@"timeDiffInMins"];
                             NSString *legId = [[[legLiveFees objectAtIndex:i] valueForKey:@"leg"] valueForKey:@"id"];                 
                             
-                            [self setRealtimeData:legId arrivalTime:arrivalTime arrivalFlag:arrivalTimeFlag itineraryId:ititId itineraryArrivalFlag:itinTimeFalg];
+                            [self setRealtimeData:legId arrivalTime:arrivalTime arrivalFlag:arrivalTimeFlag itineraryId:ititId itineraryArrivalFlag:itinTimeFalg legDiffMins:timeDiff];
                         }      
                     }
                 }
@@ -304,7 +303,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     }
 }
 
-- (void) setRealtimeData:(NSString *)legId arrivalTime:(NSString *)arrivalTime arrivalFlag:(NSString *)arrivalFlag itineraryId:(NSString *)ititId itineraryArrivalFlag:(NSString *)itinArrivalflag
+- (void) setRealtimeData:(NSString *)legId arrivalTime:(NSString *)arrivalTime arrivalFlag:(NSString *)arrivalFlag itineraryId:(NSString *)ititId itineraryArrivalFlag:(NSString *)itinArrivalflag legDiffMins:(NSString *)timeDiff
 {
     @try {
         NSArray *ities = [plan sortedItineraries];
@@ -318,6 +317,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                 if ([[[legs objectAtIndex:i] legId] isEqualToString:legId]) {
                     [[legs objectAtIndex:i] setArrivalFlag:arrivalFlag];
                     [[legs objectAtIndex:i] setArrivalTime:arrivalTime];
+                    [[legs objectAtIndex:i] setTimeDiffInMins:timeDiff];
                 }
             }
             

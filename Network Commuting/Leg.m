@@ -40,8 +40,7 @@
 @synthesize sortedSteps;
 @synthesize polylineEncodedString;
 
-@synthesize arrivalTime;
-@synthesize arrivalFlag;
+@synthesize arrivalTime,arrivalFlag,timeDiffInMins;
 
 
 static NSDateFormatter *timeFormattr;

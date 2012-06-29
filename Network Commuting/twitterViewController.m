@@ -104,6 +104,7 @@ NSMutableArray *arrayTweet;
     labelTime = [[UILabel alloc] initWithFrame:lbl3Frame];
     labelTime.tag = 3;
     labelTime.textColor = [UIColor blackColor];
+    [labelTime setTextAlignment:UITextAlignmentRight];
     [cell.contentView addSubview:labelTime];
     labelTime.text = tweetAt;
     [labelTime setFont:[UIFont boldSystemFontOfSize:12.0]];

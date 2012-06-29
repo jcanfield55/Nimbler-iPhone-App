@@ -45,6 +45,7 @@
 
 @property (nonatomic, retain) NSString *arrivalTime;
 @property (nonatomic, retain) NSString *arrivalFlag;
+@property (nonatomic, retain) NSString *timeDiffInMins;
 
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType;
 - (NSArray *)sortedSteps;

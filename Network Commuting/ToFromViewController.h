@@ -16,7 +16,6 @@
 
 @interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,RKRequestDelegate,UIActionSheetDelegate,UIAlertViewDelegate>
 
-
 typedef enum {
     NO_EDIT,    // Neither to nor from address is being edited with the keyboard
     FROM_EDIT,  // From address is being edited with the keyboard
@@ -46,7 +45,7 @@ typedef enum {
 @property (nonatomic) ToFromEditMode editMode; // Specifies whether to or from address is being edited with the keyboard
 @property (strong, nonatomic) SupportedRegion* supportedRegion; // geographic area supported by this app
 
-@property (strong, nonatomic) CustomBadge *tweeterCount;
+@property (strong, nonatomic) CustomBadge *twitterCount;
 @property (nonatomic) BOOL isContinueGetRealTimeData;
 @property (strong, nonatomic) NSTimer *continueGetTime;
 
@@ -54,7 +53,6 @@ typedef enum {
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)advisoriesButtonPressed:(id)sender forEvent:(UIEvent *)event;
-
 
 - (void)updateToFromLocation:(id)sender isFrom:(BOOL)isFrom location:(Location *)loc; // Callback from ToFromTableViewController to update a new user entered/selected location
 - (void)updateGeocodeStatus:(BOOL)isGeocodeOutstanding isFrom:(BOOL)isFrom; // Callback from ToFromTableViewController to update geocoding status

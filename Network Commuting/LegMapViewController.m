@@ -13,6 +13,7 @@
 #import "RootMap.h"
 #import "twitterViewController.h"
 #import "RestKit/RKJSONParserJSONKit.h"
+#import <CoreImage/CoreImageDefines.h>
 
 @interface LegMapViewController()
 // Utility routine for setting the region on the MapView based on the itineraryNumber
@@ -30,7 +31,7 @@
 @synthesize directionsTitle;
 @synthesize directionsDetails;
 @synthesize feedbackButton;
-@synthesize tweeterCount;
+@synthesize twitterCount;
 
 NSString *legID;
 
@@ -116,22 +117,22 @@ NSString *legID;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     int tweetConut = [[prefs objectForKey:@"tweetCount"] intValue];
     BOOL isUrgent = [[prefs objectForKey:@"isUrgent"] boolValue];
-    [tweeterCount removeFromSuperview];
+    [twitterCount removeFromSuperview];
     if (isUrgent) {
-        CustomBadge *c = [[CustomBadge alloc] initWithString:[NSString stringWithFormat:@"%d!",tweetConut] withStringColor:[UIColor whiteColor] withInsetColor:[UIColor blueColor] withBadgeFrame:YES withBadgeFrameColor:[UIColor whiteColor]];
-        [c setFrame:CGRectMake(50, 360, c.frame.size.width, c.frame.size.height)];
-        [self.view addSubview:c];
+        twitterCount = [[CustomBadge alloc] initWithString:[NSString stringWithFormat:@"%d!",tweetConut] withStringColor:[UIColor whiteColor] withInsetColor:[UIColor blueColor] withBadgeFrame:YES withBadgeFrameColor:[UIColor whiteColor]];
+        [twitterCount setFrame:CGRectMake(50, 360, twitterCount.frame.size.width, twitterCount.frame.size.height)];
+        [self.view addSubview:twitterCount];
     } else {
-        tweeterCount = [[CustomBadge alloc] init];
-        tweeterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
-        [tweeterCount setFrame:CGRectMake(60, 375, tweeterCount.frame.size.width, tweeterCount.frame.size.height)];        
+        twitterCount = [[CustomBadge alloc] init];
+        twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
+        [twitterCount setFrame:CGRectMake(60, 365, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
         if (tweetConut == 0) {
-            [tweeterCount setHidden:YES];
+            [twitterCount setHidden:YES];
         } else {
-            [self.view addSubview:tweeterCount];
-            [tweeterCount setHidden:NO];
+            [self.view addSubview:twitterCount];
+            [twitterCount setHidden:NO];
         }
-    }
+    } 
 }
 
 - (void)setMapViewRegion {
@@ -180,35 +181,44 @@ NSString *legID;
         titleText = [leg directionsTitleText];
         subTitle = [leg directionsDetailText];
         legID = [leg legId];
-        if ([leg isTrain]) {
-            NSString *train = [[titleText componentsSeparatedByString:@"("] objectAtIndex:1];
-            NSString *train1 = [[train componentsSeparatedByString:@")"] objectAtIndex:0];
-            train1 = [train1 stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-            NSLog(@"It is a train %@",train1 );
-            NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-            [prefs setObject:train1 forKey:@"train"];
-        }
         
         if([leg arrivalTime] > 0) {
             UIImage *imgForArrivalTime;
             if([leg.arrivalFlag intValue] == [ON_TIME intValue]) {
-                imgForArrivalTime = [UIImage imageNamed:@"img_ontime.png"] ;
+                imgForArrivalTime = [UIImage imageNamed:@"img_ontime.png"];
+                RealArrivalTime.text =[NSString stringWithFormat:@"onTime"];
             }  else if([leg.arrivalFlag intValue] == [DELAYED intValue]) {
                 imgForArrivalTime = [UIImage imageNamed:@"img_delay.png"] ;
+                RealArrivalTime.text =[NSString stringWithFormat:@"Delay:%@m",leg.timeDiffInMins];
             } else if([leg.arrivalFlag intValue] == [EARLY intValue]) {
                 imgForArrivalTime = [UIImage imageNamed:@"img_early.png"] ;
+                RealArrivalTime.text =[NSString stringWithFormat:@"Early:%@m",leg.timeDiffInMins];
             } else if([leg.arrivalFlag intValue] == [EARLIER intValue]) {
-                imgForArrivalTime = [UIImage imageNamed:@"img_earlier"] ;
+                imgForArrivalTime = [UIImage imageNamed:@"img_earlier.png"] ;
+                RealArrivalTime.text =[NSString stringWithFormat:@"Earlier:%@m",leg.timeDiffInMins];
             } 
             [imgForTimeInterval setImage:imgForArrivalTime];
             NSLog(@"stop-------------");
         } else {
             [imgForTimeInterval setImage:nil];
+            RealArrivalTime.text =@"";
         }
         
         // It calls when MODe of leg is WaLK.
         //  [self walk];
+        NSString *boldFontName = [[UIFont boldSystemFontOfSize:12] fontName];
+        NSRange boldedRange = NSMakeRange(0, 5);
+        NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:subTitle];
+        
+        [attrString beginEditing];
+        [attrString addAttribute:nil 
+                           value:boldFontName
+                           range:boldedRange];
+        
+        [attrString endEditing];
     }
+    
+    
     [directionsTitle setText:titleText];
     [directionsDetails setText:subTitle];
 }
@@ -464,19 +474,6 @@ NSString *legID;
 -(IBAction)twitterSearch:(id)sender forEvent:(UIEvent *)event
 {
     @try {
-        /*
-         DE: 42 
-         */
-        //        TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
-        //        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        //        NSString *trainRoute = [prefs objectForKey:@"train"];
-        //        [[self navigationController] pushViewController:twitter_search animated:YES];
-        //        trainRoute = [TWITTER_SERARCH_URL stringByReplacingOccurrencesOfString:@"TRAIN" withString:trainRoute];
-        //        [twitter_search loadRequest:trainRoute];
-        //        TwitterSearch *twitter_search = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
-        //        [[self navigationController] pushViewController:twitter_search animated:YES];
-        //        [twitter_search loadRequest:CALTRAIN_TWITTER_URL];
-        
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setObject:@"0" forKey:@"tweetCount"];
         

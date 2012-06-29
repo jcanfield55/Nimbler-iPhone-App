@@ -24,6 +24,7 @@
     NSArray* bbiArray;
     IBOutlet UIButton *tw_btn;
     IBOutlet UIImageView *imgForTimeInterval;
+    IBOutlet UILabel *RealArrivalTime;
 }
 
 @property(nonatomic, strong) IBOutlet MKMapView *mapView;
@@ -33,7 +34,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *feedbackButton;
 @property(nonatomic, strong, readonly) Itinerary *itinerary;
 @property(nonatomic, readonly) int itineraryNumber;
-@property (strong, nonatomic) CustomBadge *tweeterCount;
+@property (strong, nonatomic) CustomBadge *twitterCount;
 
 // Set the LegMapView to display an itinerary leg specified in itineraryNumber
 // Note:  num = 0 is the startpoint.  num=1 is the first leg.  

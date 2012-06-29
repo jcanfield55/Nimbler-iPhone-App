@@ -56,7 +56,12 @@ int pushHour;
     NSString *token = [prefs objectForKey:@"DeviceToken"];
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     [RKClient setSharedClient:client];
-    NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
+    NSString *udid = [UIDevice currentDevice].uniqueIdentifier; 
+    if (switchPushEnable.on) {
+        // set -1 for stop getting push notification
+        pushHour = -1;
+    }
+        
     NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                             @"deviceid", udid,
                             @"alertCount", pushHour,
@@ -73,12 +78,16 @@ int pushHour;
 {
     int pushHour = steperPushHour.value;
     NSLog(@"push hour %d", pushHour);
+    
     lblPushTrigger.text = [NSString stringWithFormat:@"%d",pushHour];
 }
 
 -(IBAction)sliderWalkDistanceValueChanged:(UISlider *)sender
 {
     float walkDistance = sliderMaxWalkDistance.value;
+    [sliderMaxWalkDistance setValue:sliderMaxWalkDistance.value];
+    [sliderMaxWalkDistance setSelected:YES];
+    
     NSLog(@"push hour %f", walkDistance);
 }
 
@@ -100,8 +109,6 @@ int pushHour;
 
 -(UIAlertView *) upadetSettings
 {
-    
-    
     UIAlertView *alerts = [[UIAlertView alloc]   
                            initWithTitle:@"Updating your settings \n Please wait..."  
                            message:nil delegate:nil cancelButtonTitle:nil  
