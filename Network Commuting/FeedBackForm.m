@@ -90,7 +90,9 @@
     timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 target:self selector:@selector(updateRecCountdown) userInfo:nil repeats: isRepeat];    
   
     NSArray *tempDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+   
     NSString *tempDirPath = [tempDir objectAtIndex:0];
+    NSLog(@"path %@, dirpath: %@", tempDir, tempDirPath );
     soundFilePath = [tempDirPath stringByAppendingPathComponent:@"voiceFeedback.caf"];
     
     NSURL *soundFileURL = [NSURL fileURLWithPath:soundFilePath];

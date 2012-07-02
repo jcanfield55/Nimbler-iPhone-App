@@ -18,6 +18,7 @@
 
 BOOL isTwitterLivaData = FALSE; 
 
+static nc_AppDelegate *appDelegate;
 @implementation nc_AppDelegate
 
 @synthesize locations;
@@ -29,7 +30,17 @@ BOOL isTwitterLivaData = FALSE;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
 @synthesize window = _window;
 @synthesize timerTweeterGetData;
+@synthesize propertyInfo;
+@synthesize prefs;
 
++(nc_AppDelegate *)sharedInstance
+{
+    if(appDelegate == nil){
+        appDelegate = (nc_AppDelegate *)[[UIApplication sharedApplication] delegate];
+        
+    }
+    return appDelegate;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -81,6 +92,27 @@ BOOL isTwitterLivaData = FALSE;
         
         // Pre-load stations location files
         [locations preLoadIfNeededFromFile:@"caltrain-station.json"];
+        
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"UserPreferance"] == nil) {
+            propertyInfo = [NSEntityDescription
+                            insertNewObjectForEntityForName:@"UserPreferance" 
+                            inManagedObjectContext:self.managedObjectContext];
+            
+            NSNumber *walkDistance = [NSNumber numberWithFloat:0.8];
+            [toFromViewController setMaxiWalkDistance:walkDistance];
+            
+            [propertyInfo setValue:[NSNumber numberWithBool:YES] forKey:@"pushEnable"];
+            [propertyInfo setValue:[NSNumber numberWithInt:5]    forKey:@"triggerAtHour"];
+            [propertyInfo setValue:[NSNumber numberWithFloat:0.9] forKey:@"walkDistance"];
+            
+            NSError *error;
+            if (![self.managedObjectContext save:&error]) {
+                NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
+            }
+            [[NSUserDefaults standardUserDefaults] setValue:@"set" forKey:@"UserPreferance"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+       
         
         
     }@catch (NSException *exception) {
@@ -303,7 +335,7 @@ BOOL isTwitterLivaData = FALSE;
                 if ([respCode intValue]== [RESPONSE_SUCCESSFULL intValue]) {                   
                     NSLog(@"count: %@",[(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"]);
                     NSString *tweeterCount = [(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"];
-                    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];  
+                    prefs = [NSUserDefaults standardUserDefaults];  
                     
                     NSString *previousCount = [prefs objectForKey:@"tweetCount"];
                     int count = [previousCount intValue] + [tweeterCount intValue];
@@ -364,9 +396,9 @@ BOOL isTwitterLivaData = FALSE;
     NSLog(@"DeviceTokenStr: %@",token);
     
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:token forKey:@"deviceToken"];  
-    
+    [prefs synchronize];
     
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     [RKClient setSharedClient:client];
@@ -385,7 +417,7 @@ BOOL isTwitterLivaData = FALSE;
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err { 
     NSString *str = [NSString stringWithFormat: @"Error: %@", err];
     NSLog(@"************************ %@",str);     
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    prefs = [NSUserDefaults standardUserDefaults];
     NSString  *token = @"erh2389753hr379675tiu34ht789346ty38iu4ght3487y";
     [prefs setObject:token forKey:@"DeviceToken"];
     
@@ -411,7 +443,7 @@ BOOL isTwitterLivaData = FALSE;
 //        NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
         NSString *badge = [[userInfo valueForKey:@"aps"] valueForKey:@"badge"];
         
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];  
+        prefs = [NSUserDefaults standardUserDefaults];  
         NSString *previousCount = [prefs objectForKey:@"tweetCount"];
         int count = [previousCount intValue] + [badge intValue];
         
@@ -426,6 +458,7 @@ BOOL isTwitterLivaData = FALSE;
             //            
             //            [dataAlert show];
             [prefs setObject:@"true" forKey:@"isUrgent"];
+        
         }
     }        
 }

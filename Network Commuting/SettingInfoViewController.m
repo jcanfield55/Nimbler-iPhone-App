@@ -15,6 +15,7 @@
 @synthesize steperPushHour,sliderMaxWalkDistance,managedObjectContext;
 
 int pushHour;
+bool isPush;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -38,7 +39,12 @@ int pushHour;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+
+    self.managedObjectContext = [[nc_AppDelegate sharedInstance] managedObjectContext]; 
+        
     // Do any additional setup after loading the view from its nib.
+    [self fetchData];
 }
 
 - (void)viewDidUnload
@@ -50,28 +56,49 @@ int pushHour;
 
 -(IBAction)UpdateSetting:(id)sender
 {
-    alertView = [self upadetSettings];    
-    [alertView show];
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    NSString *token = [prefs objectForKey:@"DeviceToken"];
-    RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-    [RKClient setSharedClient:client];
-    NSString *udid = [UIDevice currentDevice].uniqueIdentifier; 
-    if (switchPushEnable.on) {
-        // set -1 for stop getting push notification
-        pushHour = -1;
-    }
+    @try {
         
-    NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                            @"deviceid", udid,
-                            @"alertCount", pushHour,
-                            @"deviceToken", token,
-                            @"maxDistance", sliderMaxWalkDistance.value,
-                            nil];    
-    NSString *twitCountReq = [@"users/preferences/update" appendQueryParams:params];
-    
-    [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(popOutFromSettingView) userInfo:nil repeats: NO];
-    [[RKClient sharedClient]  get:twitCountReq delegate:self];
+        if (!switchPushEnable.on) {
+            // set -1 for stop getting push notification
+            pushHour = -1;
+            isPush = NO;
+        } else {
+            isPush = YES;
+        }   
+        NSFetchRequest *request1 = [[NSFetchRequest alloc] init]; 
+        NSEntityDescription *entity1 = [NSEntityDescription entityForName:@"UserPreferance"     
+                                                   inManagedObjectContext:self.managedObjectContext]; 
+        [request1 setEntity:entity1];    
+        NSArray *empArray=[self.managedObjectContext executeFetchRequest:request1 error:nil]; 
+        if ([empArray count] > 0){ 
+            UserPreferance *user = [empArray objectAtIndex:0]; 
+            user.pushEnable = [NSNumber numberWithBool:isPush];
+            NSLog(@"ispush :%d",[[NSNumber numberWithBool:isPush] intValue]);
+            user.triggerAtHour = [NSNumber numberWithInt:steperPushHour.value] ;
+            user.walkDistance = [NSNumber numberWithFloat:sliderMaxWalkDistance.value];
+            [self.managedObjectContext save:nil]; 
+        }        
+        alertView = [self upadetSettings];    
+        [alertView show];
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        NSString *token = [prefs objectForKey:@"DeviceToken"];
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        NSString *udid = [UIDevice currentDevice].uniqueIdentifier; 
+        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
+                                @"deviceid", udid,
+                                @"alertCount",[NSString stringWithFormat:@"%d",pushHour],
+                                @"deviceToken", token,
+                                @"maxDistance", [NSString stringWithFormat:@"%f",sliderMaxWalkDistance.value],
+                                nil]; 
+        NSString *twitCountReq = [@"users/preferences/update" appendQueryParams:params];
+        [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(popOutFromSettingView) userInfo:nil repeats: NO];
+        [[RKClient sharedClient]  get:twitCountReq delegate:self];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception : %@", exception);
+    }
+       
 }
 
 -(IBAction)stepperValueChanged:(UIStepper *)sender
@@ -108,7 +135,7 @@ int pushHour;
 
 
 -(UIAlertView *) upadetSettings
-{
+{    
     UIAlertView *alerts = [[UIAlertView alloc]   
                            initWithTitle:@"Updating your settings \n Please wait..."  
                            message:nil delegate:nil cancelButtonTitle:nil  
@@ -123,4 +150,33 @@ int pushHour;
     return alerts;
 }
 
+
+-(void)fetchData
+{
+    NSManagedObjectContext *moc = [self managedObjectContext];
+    NSEntityDescription *entityDescription = [NSEntityDescription
+                                              entityForName:@"UserPreferance" inManagedObjectContext:moc];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init] ;
+    [request setEntity:entityDescription];
+       
+    NSError *error = nil;
+       NSArray *arrayUserSetting  = [moc executeFetchRequest:request error:&error];
+    if (arrayUserSetting == nil)
+    {
+        // Deal with error...
+    } else {
+        // set stored value for userSettings       
+        [sliderMaxWalkDistance setValue:[[[arrayUserSetting valueForKey:@"walkDistance"] objectAtIndex:0] doubleValue]];
+        [steperPushHour setValue:[[[arrayUserSetting valueForKey:@"triggerAtHour"] objectAtIndex:0] doubleValue]];
+        lblPushTrigger.text = [NSString stringWithFormat:@"%d",[[[arrayUserSetting valueForKey:@"triggerAtHour"] objectAtIndex:0] intValue]];
+        if ([[[arrayUserSetting valueForKey:@"pushEnable"] objectAtIndex:0] intValue] == 0) {
+            [switchPushEnable setOn:NO];
+        } else {
+            [switchPushEnable setOn:YES];
+        }
+        
+    }
+      
+
+}
 @end

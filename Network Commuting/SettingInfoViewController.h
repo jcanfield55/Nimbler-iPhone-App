@@ -21,7 +21,7 @@
 
 @property (nonatomic, strong) IBOutlet UIStepper *steperPushHour;
 @property (nonatomic, strong) IBOutlet UISlider *sliderMaxWalkDistance;
-@property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 -(IBAction)UpdateSetting:(id)sender;
 -(IBAction)stepperValueChanged:(UIStepper *)sender;
@@ -29,4 +29,5 @@
 
 -(UIAlertView *) upadetSettings;
 -(void)popOutFromSettingView;
+-(void)fetchData;
 @end

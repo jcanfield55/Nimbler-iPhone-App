@@ -151,10 +151,10 @@
         <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="relationship" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TPResponse" inverseName="relationship" inverseEntity="TPResponse" syncable="YES"/>
     </entity>
-    <entity name="UserPreferance" syncable="YES">
+    <entity name="UserPreferance" representedClassName="UserPreferance" syncable="YES">
         <attribute name="pushEnable" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="triggerAtHour" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="walkDistance" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="triggerAtHour" optional="YES" attributeType="Integer 16" defaultValueString="3" syncable="YES"/>
+        <attribute name="walkDistance" optional="YES" attributeType="Float" defaultValueString="0.8" syncable="YES"/>
     </entity>
     <fetchRequest name="LocationByFormattedAddress" entity="Location" predicateString="formattedAddress ==$ADDRESS2"/>
     <fetchRequest name="RawAddressByString" entity="RawAddress" predicateString="rawAddressString == $ADDRESS"/>

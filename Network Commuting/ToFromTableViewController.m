@@ -282,8 +282,7 @@
 
     [toFromVC setEditMode:NO_EDIT];  // Move back to NO_EDIT mode on the ToFrom view controller
 
-    if ([rawAddress length] > 0) {
-        
+    if ([rawAddress length] > 0) {        
         // Check if we already have a geocoded location that has used this rawAddress before
         Location* matchingLocation = [locations locationWithRawAddress:rawAddress];
         if (!matchingLocation) {  // if no matching raw addresses, check for matching formatted addresses

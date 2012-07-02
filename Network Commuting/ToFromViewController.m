@@ -20,6 +20,7 @@
 #import "LocationPickerViewController.h"
 #import "twitterViewController.h"
 #import "SettingInfoViewController.h"
+#import "nc_AppDelegate.h"
 
 @interface ToFromViewController()
 {
@@ -44,6 +45,7 @@
     RouteOptionsViewController *routeOptionsVC; 
     LocationPickerViewController *locationPickerVC;
     TwitterSearch* twitterSearchVC;
+    
 }
 
 // Internal methods
@@ -84,18 +86,20 @@
 @synthesize twitterCount;
 @synthesize isContinueGetRealTimeData;
 @synthesize continueGetTime;
+@synthesize maxiWalkDistance;
 
 // Constants for animating up and down the To: field
 int const MAIN_TABLE_HEIGHT = 358;
 int const TOFROM_ROW_HEIGHT = 35;
-int const TOFROM_TABLE_HEIGHT_NO_CL_MODE = 105;
-int const TO_TABLE_HEIGHT_CL_MODE = 178;
+int const TOFROM_TABLE_HEIGHT_NO_CL_MODE = 102;
+int const TO_TABLE_HEIGHT_CL_MODE = 172;
 int const FROM_HEIGHT_CL_MODE = 40;
 int const TOFROM_TABLE_WIDTH = 300; 
 int const TIME_DATE_HEIGHT = 40;
 int const TO_SECTION = 0;
 int const FROM_SECTION = 1;
 int const TIME_DATE_SECTION = 2;
+
 
 NSString *currentLoc;
 float currentLocationResTime;
@@ -136,15 +140,17 @@ float currentLocationResTime;
         toTableVC = [[ToFromTableViewController alloc] initWithTable:toTable isFrom:FALSE toFromVC:self locations:locations];
         [toTable setDataSource:toTableVC];
         [toTable setDelegate:toTableVC];
-        
+        toTable.layer.cornerRadius = 10.0;
+               
         CGRect rect2;
         rect2.origin.x = 0;
         rect2.origin.y = 0;
-        
+               
         rect2.size.width = TOFROM_TABLE_WIDTH; 
         rect2.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
         fromTable = [[UITableView alloc] initWithFrame:rect2 style:UITableViewStylePlain];
         [fromTable setRowHeight:TOFROM_ROW_HEIGHT];
+        fromTable.layer.cornerRadius = 10.0;
         
         fromTableVC = [[ToFromTableViewController alloc] initWithTable:fromTable isFrom:TRUE toFromVC:self locations: locations];
         [fromTable setDataSource:fromTableVC];
@@ -448,7 +454,7 @@ float currentLocationResTime;
         } else { 
             [cellView addSubview:[toTableVC txtField]]; // add To txtfield
         }
-    }        
+    }     
     return cell;
 }
 
@@ -701,8 +707,6 @@ float currentLocationResTime;
 // Delegate methods for when the RestKit has results from the Planner
 - (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects 
 {        
-   
-     NSLog(@"enter in object RKLoader......................................");
     // Check to make sure this is the response to the latest planner request
     if ([[objectLoader resourcePath] isEqualToString:planURLResource]) 
     {   
@@ -837,7 +841,7 @@ float currentLocationResTime;
         [tFormat setTimeStyle:NSDateFormatterShortStyle];
         [tFormat setDateStyle:NSDateFormatterNoStyle];
         
-        
+        NSLog(@"maxxxxxxxxx ------------------------------------ %f",[maxiWalkDistance floatValue]);
         // Build the parameters into a resource string       
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                                 @"fromPlace", [fromLocation latLngPairStr], 
@@ -845,6 +849,7 @@ float currentLocationResTime;
                                 @"date", [dFormat stringFromDate:tripDate],
                                 @"time", [tFormat stringFromDate:tripDate], 
                                 @"arriveBy", ((departOrArrive == ARRIVE) ? @"true" : @"false"),
+//                                @"maxWalkDistance", maxiWalkDistance,
                                 nil];
         
         planURLResource = [@"plan" appendQueryParams:params];
@@ -929,6 +934,8 @@ float currentLocationResTime;
     isContinueGetRealTimeData = false;
     [continueGetTime invalidate];
     continueGetTime = nil;
+    // Do any additional setup after loading the view from its nib.
+    [self getWalkDistance];
 }
 
 - (void)viewDidUnload
@@ -1117,7 +1124,6 @@ float currentLocationResTime;
 
 -(void)getRealTimeData
 {
-    NSLog(@"called real time..");
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     [RKClient setSharedClient:client];   
     NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
@@ -1131,6 +1137,26 @@ float currentLocationResTime;
 {
     SettingInfoViewController *settingView = [[SettingInfoViewController alloc] init];
     [[self navigationController] pushViewController:settingView animated:YES];
+}
+
+-(void)getWalkDistance
+{
+    NSManagedObjectContext *moc = [[nc_AppDelegate sharedInstance] managedObjectContext];;
+    NSEntityDescription *entityDescription = [NSEntityDescription
+                                              entityForName:@"UserPreferance" inManagedObjectContext:moc];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init] ;
+    [request setEntity:entityDescription];
+    
+    NSError *error = nil;
+    NSArray *arrayUserSetting  = [moc executeFetchRequest:request error:&error];
+    if (arrayUserSetting == nil)
+    {
+        // Deal with error...
+    } else {
+        // set stored value for userSettings       
+        maxiWalkDistance = [[arrayUserSetting valueForKey:@"walkDistance"] objectAtIndex:0] ;
+        NSLog(@"walk %f", [maxiWalkDistance floatValue]);
+    }
 }
 
 @end

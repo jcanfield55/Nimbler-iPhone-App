@@ -48,7 +48,7 @@ typedef enum {
 @property (strong, nonatomic) CustomBadge *twitterCount;
 @property (nonatomic) BOOL isContinueGetRealTimeData;
 @property (strong, nonatomic) NSTimer *continueGetTime;
-
+@property (strong, nonatomic) NSNumber *maxiWalkDistance;;
 
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
@@ -66,5 +66,6 @@ typedef enum {
 -(NSString *)getCurrentLocationOfFormattedAddress:(Location *)location;
 -(BOOL)alertUsetForLocationService;
 -(void)getRealTimeData;
+-(void)getWalkDistance;
 
 @end
