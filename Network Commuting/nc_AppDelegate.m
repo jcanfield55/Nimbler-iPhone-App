@@ -70,7 +70,6 @@ static nc_AppDelegate *appDelegate;
         [rkGeoMgr setObjectStore:rkMOS];
         [rkPlanMgr setObjectStore:rkMOS];
         
-        
         [self bayArea];
         // Get the NSManagedObjectContext from restkit
         __managedObjectContext = [rkMOS managedObjectContext];
@@ -332,17 +331,20 @@ static nc_AppDelegate *appDelegate;
                 NSDictionary  *tweeterCountParser = [rkParser objectFromString:[response bodyAsString] error:nil];
                 NSNumber *respCode = [(NSDictionary*)tweeterCountParser objectForKey:@"errCode"];
                 NSString *isUrgent = [(NSDictionary*)tweeterCountParser objectForKey:@"isUrgent"];
+                NSString *allNew = [(NSDictionary*)tweeterCountParser objectForKey:@"allNew"];
                 if ([respCode intValue]== [RESPONSE_SUCCESSFULL intValue]) {                   
                     NSLog(@"count: %@",[(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"]);
                     NSString *tweeterCount = [(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"];
                     prefs = [NSUserDefaults standardUserDefaults];  
-                    
-                    NSString *previousCount = [prefs objectForKey:@"tweetCount"];
-                    int count = [previousCount intValue] + [tweeterCount intValue];
-                    [prefs setObject:[NSString stringWithFormat:@"%d",count] forKey:@"tweetCount"];
+                    if([allNew intValue] == 1){
+                        [prefs setObject:tweeterCount forKey:@"tweetCount"];
+                    } else {
+                        NSString *previousCount = [prefs objectForKey:@"tweetCount"];
+                        int count = [previousCount intValue] + [tweeterCount intValue];
+                        [prefs setObject:[NSString stringWithFormat:@"%d",count] forKey:@"tweetCount"];
+                    }
                     [prefs setObject:isUrgent forKey:@"isUrgent"];
                 }
-                
             } else {
                 
                 NSDictionary  *regionParser = [rkParser objectFromString:[response bodyAsString] error:nil];                
@@ -406,7 +408,7 @@ static nc_AppDelegate *appDelegate;
     NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                             @"deviceid", udid,
                             @"alertCount", @"3",
-                            @"deviceToken", @"erh2389753hr379675tiu34ht789346ty38iu4ght3487y",
+                            @"deviceToken", @"erh2389753",
                             @"maxDistance", @"0.8",
                             nil];    
     NSString *twitCountReq = [@"users/preferences/update" appendQueryParams:params];
@@ -440,7 +442,7 @@ static nc_AppDelegate *appDelegate;
         NSLog(@"key: %@, value: %@", key, [userInfo objectForKey:key]);
         
         NSString *isUrgent = [userInfo valueForKey:@"isUrgent"];
-//        NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
+        NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
         NSString *badge = [[userInfo valueForKey:@"aps"] valueForKey:@"badge"];
         
         prefs = [NSUserDefaults standardUserDefaults];  
@@ -450,13 +452,13 @@ static nc_AppDelegate *appDelegate;
         [prefs setObject:[NSString stringWithFormat:@"%d",count] forKey:@"tweetCount"];
         
         if (isUrgent) {
-            //            UIAlertView *dataAlert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain"
-            //                                                                message:message
-            //                                                               delegate:self
-            //                                                      cancelButtonTitle:@"Show Twits"
-            //                                                      otherButtonTitles:@"No",nil];
-            //            
-            //            [dataAlert show];
+                        UIAlertView *dataAlert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain"
+                                                                            message:message
+                                                                           delegate:self
+                                                                  cancelButtonTitle:@"Ok"
+                                                                  otherButtonTitles:nil,nil];
+                        
+                        [dataAlert show];
             [prefs setObject:@"true" forKey:@"isUrgent"];
         
         }

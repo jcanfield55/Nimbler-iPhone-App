@@ -14,9 +14,9 @@
 //#define TRIP_GENERATE_URL       @"http://ec2-23-22-169-158.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"
 
 #define GEO_RESPONSE_URL        @"http://maps.googleapis.com/maps/api/geocode/"
-#define TRIP_PROCESS_URL        @"http://23.23.210.156:8080/TPServer/ws/"
+//#define TRIP_PROCESS_URL        @"http://23.23.210.156:8080/TPServer/ws/"
 //#define TRIP_PROCESS_URL        @"http://ec2-23-22-169-158.compute-1.amazonaws.com:8080/TPServer/ws/"
-//#define TRIP_PROCESS_URL        @"http://192.168.2.196:8080/TPServer/ws/"
+#define TRIP_PROCESS_URL        @"http://192.168.2.196:8080/TPServer/ws/"
 
 #define TWITTER_SERARCH_URL     @"https://twitter.com/#!/search/realtime/TRAIN%20from%3Acaltrain%20OR%20from%3Acaltrain_news"
 #define CALTRAIN_TWITTER_URL    @"https://twitter.com/#!/search/from%3Acaltrain%20OR%20from%3Acaltrain_news"
@@ -54,7 +54,7 @@
 #define ALERT_URGENT            @"3"
 
 // Request timer Count
-#define TWEETER_COUNT_POLLING_INTERVAL 300.0
+#define TWEETER_COUNT_POLLING_INTERVAL 30.0
 #define TIMER_SMALL_REQUEST_DELAY      1.0
 #define TIMER_MEDIUM_REQUEST_DELAY     30.0
 #define TIMER_STANDARD_REQUEST_DELAY   59.0

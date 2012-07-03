@@ -67,7 +67,12 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
     if (isUrgent) {
         twitterCount = [[CustomBadge alloc] initWithString:[NSString stringWithFormat:@"%d!",tweetConut] withStringColor:[UIColor whiteColor] withInsetColor:[UIColor blueColor] withBadgeFrame:YES withBadgeFrameColor:[UIColor whiteColor]];
         [twitterCount setFrame:CGRectMake(50, 360, twitterCount.frame.size.width, twitterCount.frame.size.height)];
-        [self.view addSubview:twitterCount];
+        if (tweetConut == 0) {
+            [twitterCount setHidden:YES];
+        } else {
+            [self.view addSubview:twitterCount];
+            [twitterCount setHidden:NO];
+        }
     } else {
         twitterCount = [[CustomBadge alloc] init];
         twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];

@@ -12,10 +12,10 @@
 #import "QuartzCore/QuartzCore.h"
 
 @implementation twitterViewController
+
 NSMutableArray *arrayTweet;
 
-
-@synthesize mainTable,twitterData,dateFormattr;
+@synthesize mainTable,twitterData,dateFormattr,relod;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -25,7 +25,7 @@ NSMutableArray *arrayTweet;
         dateFormattr = [[NSDateFormatter alloc] init];
         [dateFormattr setDateStyle:NSDateFormatterFullStyle];
         
-        UIBarButtonItem *relod = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(getLatestTweets)]; 
+        relod = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(getLatestTweets)]; 
         self.navigationItem.rightBarButtonItem = relod;
     }
     return self;
@@ -71,6 +71,13 @@ NSMutableArray *arrayTweet;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if ([arrayTweet count] == 0) {
+        [relod setEnabled:false];
+        
+    } else {
+        [relod setEnabled:false];
+    }
+    
     return [arrayTweet count];
 }
 

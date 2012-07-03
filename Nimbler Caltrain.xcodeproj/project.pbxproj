@@ -94,6 +94,7 @@
 		CCCA4BD11590BB4D009F3BF7 /* img_earlier.png in Resources */ = {isa = PBXBuildFile; fileRef = CCCA4BD01590BB4D009F3BF7 /* img_earlier.png */; };
 		CCCA4BD31590BB6C009F3BF7 /* img_early.png in Resources */ = {isa = PBXBuildFile; fileRef = CCCA4BD21590BB6C009F3BF7 /* img_early.png */; };
 		CCCA4BD51590BB81009F3BF7 /* img_ontime.png in Resources */ = {isa = PBXBuildFile; fileRef = CCCA4BD41590BB81009F3BF7 /* img_ontime.png */; };
+		CCD3990E15A2FB9C0020BC85 /* aps_development.cer in Resources */ = {isa = PBXBuildFile; fileRef = CCD3990D15A2FB9C0020BC85 /* aps_development.cer */; };
 		CCD3EB9115A19E7D002CB23F /* UserPreferance.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD3EB9015A19E7C002CB23F /* UserPreferance.m */; };
 		CCDCC0791576287900D4B4D3 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCDCC0781576287900D4B4D3 /* CoreLocation.framework */; };
 		CCEA69A4158A034D00E97592 /* FeedBackReqParam.m in Sources */ = {isa = PBXBuildFile; fileRef = CCEA69A3158A034C00E97592 /* FeedBackReqParam.m */; };
@@ -898,6 +899,7 @@
 		CCCA4BD01590BB4D009F3BF7 /* img_earlier.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_earlier.png; sourceTree = "<group>"; };
 		CCCA4BD21590BB6C009F3BF7 /* img_early.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_early.png; sourceTree = "<group>"; };
 		CCCA4BD41590BB81009F3BF7 /* img_ontime.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_ontime.png; sourceTree = "<group>"; };
+		CCD3990D15A2FB9C0020BC85 /* aps_development.cer */ = {isa = PBXFileReference; lastKnownFileType = file; name = aps_development.cer; path = "Network Commuting/aps_development.cer"; sourceTree = "<group>"; };
 		CCD3EB8F15A19E7C002CB23F /* UserPreferance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserPreferance.h; sourceTree = "<group>"; };
 		CCD3EB9015A19E7C002CB23F /* UserPreferance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserPreferance.m; sourceTree = "<group>"; };
 		CCDCC0781576287900D4B4D3 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -2281,6 +2283,7 @@
 		52CF439014BDF2F8000565D6 = {
 			isa = PBXGroup;
 			children = (
+				CCD3990C15A2FAD20020BC85 /* Resources */,
 				CC6F22E71563AD360066DFA9 /* AVFoundation.framework */,
 				522C0E6A15588E7A0072ADD6 /* libz.dylib */,
 				52BA18AC1549000D009125A3 /* logo_big_iPh.png */,
@@ -2526,6 +2529,14 @@
 				CCEA69A3158A034C00E97592 /* FeedBackReqParam.m */,
 			);
 			name = util;
+			sourceTree = "<group>";
+		};
+		CCD3990C15A2FAD20020BC85 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CCD3990D15A2FB9C0020BC85 /* aps_development.cer */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2778,6 +2789,7 @@
 				8D0158B9159B35CC0004D2FB /* SettingInfoViewController.xib in Resources */,
 				8D015972159B3DE10004D2FB /* caltrain.jpg in Resources */,
 				CC96BE67159C8A87001F9193 /* itin_slipage.png in Resources */,
+				CCD3990E15A2FB9C0020BC85 /* aps_development.cer in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2961,8 +2973,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2977,8 +2989,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
-				PROVISIONING_PROFILE = "FA3F953C-3454-4244-947E-F0EFF3EF5215";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FA3F953C-3454-4244-947E-F0EFF3EF5215";
+				PROVISIONING_PROFILE = "E882A36D-145C-4B3B-9412-E5B461A0D80E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E882A36D-145C-4B3B-9412-E5B461A0D80E";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2989,8 +3001,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2999,8 +3011,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "FA3F953C-3454-4244-947E-F0EFF3EF5215";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FA3F953C-3454-4244-947E-F0EFF3EF5215";
+				PROVISIONING_PROFILE = "E882A36D-145C-4B3B-9412-E5B461A0D80E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E882A36D-145C-4B3B-9412-E5B461A0D80E";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -3009,8 +3021,8 @@
 		52CF43CF14BDF2F9000565D6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler Caltrain-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -3026,8 +3038,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "4F3F4158-8A62-4D96-B35F-41C2A6F879F8";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4F3F4158-8A62-4D96-B35F-41C2A6F879F8";
+				PROVISIONING_PROFILE = "E882A36D-145C-4B3B-9412-E5B461A0D80E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E882A36D-145C-4B3B-9412-E5B461A0D80E";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3036,8 +3048,8 @@
 		52CF43D014BDF2F9000565D6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler Caltrain-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -3053,8 +3065,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "4F3F4158-8A62-4D96-B35F-41C2A6F879F8";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4F3F4158-8A62-4D96-B35F-41C2A6F879F8";
+				PROVISIONING_PROFILE = "E882A36D-145C-4B3B-9412-E5B461A0D80E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E882A36D-145C-4B3B-9412-E5B461A0D80E";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};

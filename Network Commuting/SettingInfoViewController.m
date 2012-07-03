@@ -65,19 +65,7 @@ bool isPush;
         } else {
             isPush = YES;
         }   
-        NSFetchRequest *request1 = [[NSFetchRequest alloc] init]; 
-        NSEntityDescription *entity1 = [NSEntityDescription entityForName:@"UserPreferance"     
-                                                   inManagedObjectContext:self.managedObjectContext]; 
-        [request1 setEntity:entity1];    
-        NSArray *empArray=[self.managedObjectContext executeFetchRequest:request1 error:nil]; 
-        if ([empArray count] > 0){ 
-            UserPreferance *user = [empArray objectAtIndex:0]; 
-            user.pushEnable = [NSNumber numberWithBool:isPush];
-            NSLog(@"ispush :%d",[[NSNumber numberWithBool:isPush] intValue]);
-            user.triggerAtHour = [NSNumber numberWithInt:steperPushHour.value] ;
-            user.walkDistance = [NSNumber numberWithFloat:sliderMaxWalkDistance.value];
-            [self.managedObjectContext save:nil]; 
-        }        
+          
         alertView = [self upadetSettings];    
         [alertView show];
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -94,9 +82,25 @@ bool isPush;
         NSString *twitCountReq = [@"users/preferences/update" appendQueryParams:params];
         [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(popOutFromSettingView) userInfo:nil repeats: NO];
         [[RKClient sharedClient]  get:twitCountReq delegate:self];
+        
+        NSFetchRequest *request1 = [[NSFetchRequest alloc] init]; 
+        NSEntityDescription *entity1 = [NSEntityDescription entityForName:@"UserPreferance"     
+                                                   inManagedObjectContext:self.managedObjectContext]; 
+        [request1 setEntity:entity1];    
+        NSArray *empArray=[self.managedObjectContext executeFetchRequest:request1 error:nil]; 
+        if ([empArray count] > 0){ 
+            UserPreferance *user = [empArray objectAtIndex:0]; 
+            user.pushEnable = [NSNumber numberWithBool:isPush];
+            NSLog(@"ispush :%d",[[NSNumber numberWithBool:isPush] intValue]);
+            user.triggerAtHour = [NSNumber numberWithInt:steperPushHour.value];
+            user.walkDistance = [NSNumber numberWithFloat:sliderMaxWalkDistance.value];
+            [self.managedObjectContext save:nil]; 
+        }      
     }
     @catch (NSException *exception) {
         NSLog(@"exception : %@", exception);
+        [alertView dismissWithClickedButtonIndex:0 animated:NO];
+        [self.navigationController popViewControllerAnimated:YES]; 
     }
        
 }
@@ -177,6 +181,5 @@ bool isPush;
         
     }
       
-
 }
 @end

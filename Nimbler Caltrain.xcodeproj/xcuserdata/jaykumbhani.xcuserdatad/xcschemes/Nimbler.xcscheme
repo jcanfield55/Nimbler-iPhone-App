@@ -42,9 +42,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "52CF439A14BDF2F9000565D6"
-            BuildableName = "Nimbler.app"
-            BlueprintName = "Nimbler"
-            ReferencedContainer = "container:Nimbler.xcodeproj">
+            BuildableName = "Nimbler Caltrain.app"
+            BlueprintName = "Nimbler Caltrain"
+            ReferencedContainer = "container:Nimbler Caltrain.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -60,9 +60,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "52CF439A14BDF2F9000565D6"
-            BuildableName = "Nimbler.app"
-            BlueprintName = "Nimbler"
-            ReferencedContainer = "container:Nimbler.xcodeproj">
+            BuildableName = "Nimbler Caltrain.app"
+            BlueprintName = "Nimbler Caltrain"
+            ReferencedContainer = "container:Nimbler Caltrain.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>

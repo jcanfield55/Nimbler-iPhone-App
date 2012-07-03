@@ -175,7 +175,12 @@ float currentLocationResTime;
     if (isUrgent) {
         twitterCount = [[CustomBadge alloc] initWithString:[NSString stringWithFormat:@"%d!",tweetConut] withStringColor:[UIColor whiteColor] withInsetColor:[UIColor blueColor] withBadgeFrame:YES withBadgeFrameColor:[UIColor whiteColor]];
         [twitterCount setFrame:CGRectMake(50, 360, twitterCount.frame.size.width, twitterCount.frame.size.height)];
-        [self.view addSubview:twitterCount];
+        if (tweetConut == 0) {
+            [twitterCount setHidden:YES];
+        } else {
+            [self.view addSubview:twitterCount];
+            [twitterCount setHidden:NO];
+        }
     } else {
         twitterCount = [[CustomBadge alloc] init];
         twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
@@ -223,7 +228,8 @@ float currentLocationResTime;
     
     // Flash scrollbars on tables
     [toTable flashScrollIndicators];
-    [fromTable flashScrollIndicators];    
+    [fromTable flashScrollIndicators];   
+    [self getWalkDistance];
 }
 
 // Update trip date to the current time if needed
@@ -842,6 +848,9 @@ float currentLocationResTime;
         [tFormat setDateStyle:NSDateFormatterNoStyle];
         
         NSLog(@"maxxxxxxxxx ------------------------------------ %f",[maxiWalkDistance floatValue]);
+        int maxDistance = (int)([maxiWalkDistance floatValue]*1000);
+       
+        NSLog(@"max walk distance: %d", maxDistance);
         // Build the parameters into a resource string       
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                                 @"fromPlace", [fromLocation latLngPairStr], 
@@ -849,7 +858,7 @@ float currentLocationResTime;
                                 @"date", [dFormat stringFromDate:tripDate],
                                 @"time", [tFormat stringFromDate:tripDate], 
                                 @"arriveBy", ((departOrArrive == ARRIVE) ? @"true" : @"false"),
-//                                @"maxWalkDistance", maxiWalkDistance,
+                                @"maxWalkDistance", [NSNumber numberWithInt:maxDistance],
                                 nil];
         
         planURLResource = [@"plan" appendQueryParams:params];
@@ -935,7 +944,6 @@ float currentLocationResTime;
     [continueGetTime invalidate];
     continueGetTime = nil;
     // Do any additional setup after loading the view from its nib.
-    [self getWalkDistance];
 }
 
 - (void)viewDidUnload

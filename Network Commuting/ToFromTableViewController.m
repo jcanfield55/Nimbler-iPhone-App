@@ -61,7 +61,10 @@
         // Create the textField for the first row of the tableView
         txtField=[[UITextField alloc]initWithFrame:CGRectMake(0,0,myTableView.frame.size.width,[myTableView rowHeight])];
         [txtField setPlaceholder:@"Enter new address"];
-        [txtField addTarget:self action:@selector(toFromTyping:forEvent:) forControlEvents:UIControlEventEditingChanged];
+    /*
+     DE:59 After Comment this, KeyBoard are still there after pressing one event.
+     */
+//        [txtField addTarget:self action:@selector(toFromTyping:forEvent:) forControlEvents:UIControlEventEditingChanged];
         [txtField addTarget:self action:@selector(textSubmitted:forEvent:) forControlEvents:(UIControlEventEditingDidEndOnExit)];
             
     }
@@ -261,6 +264,15 @@
 - (IBAction)textSubmitted:(id)sender forEvent:(UIEvent *)event 
 {
     rawAddress = [sender text];
+    
+    // Serch with numeric street address
+    if (rawAddress != @"") {
+        NSCharacterSet *numeric = [NSCharacterSet alphanumericCharacterSet];
+        BOOL valid = [[rawAddress stringByTrimmingCharactersInSet:numeric] isEqualToString:@""];
+        if (valid) {
+            rawAddress = [rawAddress stringByAppendingString:@" sanfrancisco bay area"];
+        }
+    }
     /*
      Set rawAddress for tripSave in TPServer
      */
@@ -271,6 +283,7 @@
     }
     
     NSLog(@"Raw address = %@", rawAddress);
+    
     NSLog(@"Last raw address = %@", lastRawAddressGeoRequest);
     NSLog(@"time since last request = %f", [lastGeoRequestTime timeIntervalSinceNow]);
     if ([rawAddress isEqualToString:lastRawAddressGeoRequest] && [lastGeoRequestTime timeIntervalSinceNow] > -5.0) {
