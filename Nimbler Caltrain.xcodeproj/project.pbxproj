@@ -830,20 +830,20 @@
 		52BA735814F78A3C00F7B9B3 /* Step.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Step.m; sourceTree = "<group>"; };
 		52BA735A14F78A6C00F7B9B3 /* Leg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Leg.h; sourceTree = "<group>"; };
 		52BA735B14F78A6C00F7B9B3 /* Leg.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Leg.m; sourceTree = "<group>"; };
-		52CF439B14BDF2F9000565D6 /* Nimbler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nimbler.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		52CF439B14BDF2F9000565D6 /* Nimbler Caltrain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nimbler Caltrain.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52CF439F14BDF2F9000565D6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		52CF43A114BDF2F9000565D6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		52CF43A314BDF2F9000565D6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		52CF43A514BDF2F9000565D6 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		52CF43A914BDF2F9000565D6 /* Nimbler-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Nimbler-Info.plist"; sourceTree = "<group>"; };
+		52CF43A914BDF2F9000565D6 /* Nimbler Caltrain-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Nimbler Caltrain-Info.plist"; sourceTree = "<group>"; };
 		52CF43AB14BDF2F9000565D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		52CF43AD14BDF2F9000565D6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		52CF43AF14BDF2F9000565D6 /* Nimbler-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Nimbler-Prefix.pch"; sourceTree = "<group>"; };
+		52CF43AF14BDF2F9000565D6 /* Nimbler Caltrain-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Nimbler Caltrain-Prefix.pch"; sourceTree = "<group>"; };
 		52CF43B014BDF2F9000565D6 /* nc_AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nc_AppDelegate.h; sourceTree = "<group>"; };
 		52CF43B114BDF2F9000565D6 /* nc_AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = nc_AppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		52CF43BB14BDF2F9000565D6 /* NimblerTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NimblerTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		52CF43BB14BDF2F9000565D6 /* Nimbler CaltrainTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Nimbler CaltrainTests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52CF43BC14BDF2F9000565D6 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		52CF43C514BDF2F9000565D6 /* NimblerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NimblerTests-Info.plist"; sourceTree = "<group>"; };
+		52CF43C514BDF2F9000565D6 /* Nimbler CaltrainTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Nimbler CaltrainTests-Info.plist"; sourceTree = "<group>"; };
 		52CF43C714BDF2F9000565D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		52CF43C914BDF2F9000565D6 /* Network_CommutingTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Network_CommutingTests.h; sourceTree = "<group>"; };
 		52CF43CA14BDF2F9000565D6 /* Network_CommutingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Network_CommutingTests.m; sourceTree = "<group>"; };
@@ -2298,8 +2298,8 @@
 		52CF439C14BDF2F9000565D6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				52CF439B14BDF2F9000565D6 /* Nimbler.app */,
-				52CF43BB14BDF2F9000565D6 /* NimblerTests.octest */,
+				52CF439B14BDF2F9000565D6 /* Nimbler Caltrain.app */,
+				52CF43BB14BDF2F9000565D6 /* Nimbler CaltrainTests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2347,10 +2347,10 @@
 			children = (
 				CCB7E81A1570A3D10036E9CD /* Constants.h */,
 				52917826158477F6001CC74C /* caltrain-station.json */,
-				52CF43A914BDF2F9000565D6 /* Nimbler-Info.plist */,
+				52CF43A914BDF2F9000565D6 /* Nimbler Caltrain-Info.plist */,
 				52CF43AA14BDF2F9000565D6 /* InfoPlist.strings */,
 				52CF43AD14BDF2F9000565D6 /* main.m */,
-				52CF43AF14BDF2F9000565D6 /* Nimbler-Prefix.pch */,
+				52CF43AF14BDF2F9000565D6 /* Nimbler Caltrain-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -2369,7 +2369,7 @@
 		52CF43C414BDF2F9000565D6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				52CF43C514BDF2F9000565D6 /* NimblerTests-Info.plist */,
+				52CF43C514BDF2F9000565D6 /* Nimbler CaltrainTests-Info.plist */,
 				52CF43C614BDF2F9000565D6 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -2531,9 +2531,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		52CF439A14BDF2F9000565D6 /* Nimbler */ = {
+		52CF439A14BDF2F9000565D6 /* Nimbler Caltrain */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 52CF43CE14BDF2F9000565D6 /* Build configuration list for PBXNativeTarget "Nimbler" */;
+			buildConfigurationList = 52CF43CE14BDF2F9000565D6 /* Build configuration list for PBXNativeTarget "Nimbler Caltrain" */;
 			buildPhases = (
 				52CF439714BDF2F9000565D6 /* Sources */,
 				52CF439814BDF2F9000565D6 /* Frameworks */,
@@ -2543,14 +2543,14 @@
 			);
 			dependencies = (
 			);
-			name = Nimbler;
+			name = "Nimbler Caltrain";
 			productName = "Network Commuting";
-			productReference = 52CF439B14BDF2F9000565D6 /* Nimbler.app */;
+			productReference = 52CF439B14BDF2F9000565D6 /* Nimbler Caltrain.app */;
 			productType = "com.apple.product-type.application";
 		};
-		52CF43BA14BDF2F9000565D6 /* NimblerTests */ = {
+		52CF43BA14BDF2F9000565D6 /* Nimbler CaltrainTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 52CF43D114BDF2F9000565D6 /* Build configuration list for PBXNativeTarget "NimblerTests" */;
+			buildConfigurationList = 52CF43D114BDF2F9000565D6 /* Build configuration list for PBXNativeTarget "Nimbler CaltrainTests" */;
 			buildPhases = (
 				52CF43B614BDF2F9000565D6 /* Sources */,
 				52CF43B714BDF2F9000565D6 /* Frameworks */,
@@ -2562,9 +2562,9 @@
 			dependencies = (
 				52CF43C214BDF2F9000565D6 /* PBXTargetDependency */,
 			);
-			name = NimblerTests;
+			name = "Nimbler CaltrainTests";
 			productName = "Network CommutingTests";
-			productReference = 52CF43BB14BDF2F9000565D6 /* NimblerTests.octest */;
+			productReference = 52CF43BB14BDF2F9000565D6 /* Nimbler CaltrainTests.octest */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -2576,7 +2576,7 @@
 				LastUpgradeCheck = 0430;
 				ORGANIZATIONNAME = "Network Commuting";
 			};
-			buildConfigurationList = 52CF439514BDF2F8000565D6 /* Build configuration list for PBXProject "Nimbler" */;
+			buildConfigurationList = 52CF439514BDF2F8000565D6 /* Build configuration list for PBXProject "Nimbler Caltrain" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -2622,8 +2622,8 @@
 			);
 			projectRoot = "";
 			targets = (
-				52CF439A14BDF2F9000565D6 /* Nimbler */,
-				52CF43BA14BDF2F9000565D6 /* NimblerTests */,
+				52CF439A14BDF2F9000565D6 /* Nimbler Caltrain */,
+				52CF43BA14BDF2F9000565D6 /* Nimbler CaltrainTests */,
 			);
 		};
 /* End PBXProject section */
@@ -2866,7 +2866,7 @@
 /* Begin PBXTargetDependency section */
 		52CF43C214BDF2F9000565D6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 52CF439A14BDF2F9000565D6 /* Nimbler */;
+			target = 52CF439A14BDF2F9000565D6 /* Nimbler Caltrain */;
 			targetProxy = 52CF43C114BDF2F9000565D6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -3009,13 +3009,13 @@
 		52CF43CF14BDF2F9000565D6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Network Commuting/Nimbler-Prefix.pch";
+				GCC_PREFIX_HEADER = "Network Commuting/Nimbler Caltrain-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
-				INFOPLIST_FILE = "Network Commuting/Nimbler-Info.plist";
+				INFOPLIST_FILE = "Network Commuting/Nimbler Caltrain-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3025,9 +3025,9 @@
 					"-ObjC",
 					"-all_load",
 				);
-				PRODUCT_NAME = Nimbler;
-				PROVISIONING_PROFILE = "FA3F953C-3454-4244-947E-F0EFF3EF5215";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FA3F953C-3454-4244-947E-F0EFF3EF5215";
+				PRODUCT_NAME = "Nimbler Caltrain";
+				PROVISIONING_PROFILE = "4F3F4158-8A62-4D96-B35F-41C2A6F879F8";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4F3F4158-8A62-4D96-B35F-41C2A6F879F8";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3036,13 +3036,13 @@
 		52CF43D014BDF2F9000565D6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (BHM8F3NN7U)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Network Commuting/Nimbler-Prefix.pch";
+				GCC_PREFIX_HEADER = "Network Commuting/Nimbler Caltrain-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
-				INFOPLIST_FILE = "Network Commuting/Nimbler-Info.plist";
+				INFOPLIST_FILE = "Network Commuting/Nimbler Caltrain-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3052,9 +3052,9 @@
 					"-ObjC",
 					"-all_load",
 				);
-				PRODUCT_NAME = Nimbler;
-				PROVISIONING_PROFILE = "FA3F953C-3454-4244-947E-F0EFF3EF5215";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FA3F953C-3454-4244-947E-F0EFF3EF5215";
+				PRODUCT_NAME = "Nimbler Caltrain";
+				PROVISIONING_PROFILE = "4F3F4158-8A62-4D96-B35F-41C2A6F879F8";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4F3F4158-8A62-4D96-B35F-41C2A6F879F8";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3070,8 +3070,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Network Commuting-Prefix.pch";
-				INFOPLIST_FILE = "Network CommutingTests/NimblerTests-Info.plist";
-				PRODUCT_NAME = NimblerTests;
+				INFOPLIST_FILE = "Network CommutingTests/Nimbler CaltrainTests-Info.plist";
+				PRODUCT_NAME = "Nimbler CaltrainTests";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
@@ -3087,8 +3087,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Network Commuting-Prefix.pch";
-				INFOPLIST_FILE = "Network CommutingTests/NimblerTests-Info.plist";
-				PRODUCT_NAME = NimblerTests;
+				INFOPLIST_FILE = "Network CommutingTests/Nimbler CaltrainTests-Info.plist";
+				PRODUCT_NAME = "Nimbler CaltrainTests";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
@@ -3097,7 +3097,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		52CF439514BDF2F8000565D6 /* Build configuration list for PBXProject "Nimbler" */ = {
+		52CF439514BDF2F8000565D6 /* Build configuration list for PBXProject "Nimbler Caltrain" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				52CF43CC14BDF2F9000565D6 /* Debug */,
@@ -3106,7 +3106,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		52CF43CE14BDF2F9000565D6 /* Build configuration list for PBXNativeTarget "Nimbler" */ = {
+		52CF43CE14BDF2F9000565D6 /* Build configuration list for PBXNativeTarget "Nimbler Caltrain" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				52CF43CF14BDF2F9000565D6 /* Debug */,
@@ -3115,7 +3115,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		52CF43D114BDF2F9000565D6 /* Build configuration list for PBXNativeTarget "NimblerTests" */ = {
+		52CF43D114BDF2F9000565D6 /* Build configuration list for PBXNativeTarget "Nimbler CaltrainTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				52CF43D214BDF2F9000565D6 /* Debug */,
