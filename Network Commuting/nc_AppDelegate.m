@@ -14,7 +14,7 @@
 
 
 #define TESTING 1  // If 1, then testFlightApp will collect device UIDs, if 0, it will not
-#define DEVELOPMENT 0  // If 1, then do not include testFlightApp at all (don't need crash report while developing)
+#define DEVELOPMENT 1  // If 1, then do not include testFlightApp at all (don't need crash report while developing)
 
 BOOL isTwitterLivaData = FALSE; 
 
