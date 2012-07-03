@@ -9,6 +9,7 @@
 #import "ToFromTableViewController.h"
 #import "ToFromViewController.h"
 #import "UtilityFunctions.h"
+#import "UIConstants.h"
 
 @interface ToFromTableViewController () 
 {
@@ -59,12 +60,13 @@
         isGeocodingOutstanding = FALSE;
         
         // Create the textField for the first row of the tableView
-        txtField=[[UITextField alloc]initWithFrame:CGRectMake(0,0,myTableView.frame.size.width,[myTableView rowHeight])];
+        txtField=[[UITextField alloc]initWithFrame:CGRectMake(TOFROM_TEXT_FIELD_INDENT,0,myTableView.frame.size.width-TOFROM_TEXT_FIELD_INDENT,[myTableView rowHeight])];
         [txtField setPlaceholder:@"Enter new address"];
-    /*
-     DE:59 After Comment this, KeyBoard are still there after pressing one event.
-     */
-//        [txtField addTarget:self action:@selector(toFromTyping:forEvent:) forControlEvents:UIControlEventEditingChanged];
+        [txtField setClearButtonMode:UITextFieldViewModeAlways];  // Add a clear button for text field
+        [txtField setFont:[UIFont boldSystemFontOfSize:14.0]];
+        [txtField setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
+
+        [txtField addTarget:self action:@selector(toFromTyping:forEvent:) forControlEvents:UIControlEventEditingChanged];
         [txtField addTarget:self action:@selector(textSubmitted:forEvent:) forControlEvents:(UIControlEventEditingDidEndOnExit)];
             
     }

@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "52CF439A14BDF2F9000565D6"
-               BuildableName = "Nimbler.app"
+               BuildableName = "Nimbler Caltrain.app"
                BlueprintName = "Nimbler Caltrain"
                ReferencedContainer = "container:Nimbler Caltrain.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "52CF43BA14BDF2F9000565D6"
-               BuildableName = "NimblerTests.octest"
+               BuildableName = "Nimbler CaltrainTests.octest"
                BlueprintName = "Nimbler CaltrainTests"
                ReferencedContainer = "container:Nimbler Caltrain.xcodeproj">
             </BuildableReference>
@@ -43,7 +43,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "52CF439A14BDF2F9000565D6"
-            BuildableName = "Nimbler.app"
+            BuildableName = "Nimbler Caltrain.app"
             BlueprintName = "Nimbler Caltrain"
             ReferencedContainer = "container:Nimbler Caltrain.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "52CF439A14BDF2F9000565D6"
-            BuildableName = "Nimbler.app"
+            BuildableName = "Nimbler Caltrain.app"
             BlueprintName = "Nimbler Caltrain"
             ReferencedContainer = "container:Nimbler Caltrain.xcodeproj">
          </BuildableReference>
@@ -86,7 +86,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "52CF439A14BDF2F9000565D6"
-            BuildableName = "Nimbler.app"
+            BuildableName = "Nimbler Caltrain.app"
             BlueprintName = "Nimbler Caltrain"
             ReferencedContainer = "container:Nimbler Caltrain.xcodeproj">
          </BuildableReference>

@@ -21,6 +21,7 @@
 #import "twitterViewController.h"
 #import "SettingInfoViewController.h"
 #import "nc_AppDelegate.h"
+#import "UIConstants.h"
 
 @interface ToFromViewController()
 {
@@ -53,7 +54,7 @@
 - (void)stopActivityIndicator;
 - (void)startActivityIndicator;
 - (void)bayAreaAvailability:(Location *)loc;
-- (void)addLocationAction:(id) sender;
+// - (void)addLocationAction:(id) sender;
 - (void)setToFromHeightForTable:(UITableView *)table Height:(int)tableHeight;
 
 @end
@@ -89,16 +90,9 @@
 @synthesize maxiWalkDistance;
 
 // Constants for animating up and down the To: field
-int const MAIN_TABLE_HEIGHT = 358;
-int const TOFROM_ROW_HEIGHT = 35;
-int const TOFROM_TABLE_HEIGHT_NO_CL_MODE = 102;
-int const TO_TABLE_HEIGHT_CL_MODE = 172;
-int const FROM_HEIGHT_CL_MODE = 40;
-int const TOFROM_TABLE_WIDTH = 300; 
-int const TIME_DATE_HEIGHT = 40;
-int const TO_SECTION = 0;
-int const FROM_SECTION = 1;
-int const TIME_DATE_SECTION = 2;
+#define TO_SECTION 0
+#define FROM_SECTION 1
+#define TIME_DATE_SECTION 2
 
 
 NSString *currentLoc;
@@ -200,7 +194,7 @@ float currentLocationResTime;
     
     // Enforce height of main table
     CGRect rect0 = [mainTable frame];
-    rect0.size.height = MAIN_TABLE_HEIGHT;
+    rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT;
     [mainTable setFrame:rect0];
     
     @try {
@@ -318,7 +312,7 @@ float currentLocationResTime;
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editMode == NO_EDIT && [indexPath section] == TIME_DATE_SECTION) {  
-        return TIME_DATE_HEIGHT;
+        return TOFROM_TIME_DATE_HEIGHT;
     }  
     else if (editMode != NO_EDIT && [indexPath row] == 0) {  // txtField row in Edit mode
         return TOFROM_ROW_HEIGHT;
@@ -436,12 +430,16 @@ float currentLocationResTime;
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
                                       reuseIdentifier:cellIdentifier];
     }
+    
+
     UIView* cellView = [cell contentView];
+    /* Comment out code for saving address as nickname, since not working yet
     //TO add Current Location
     UIButton *addButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
     [addButton addTarget:self action:@selector(addLocationAction:) forControlEvents:UIControlEventTouchUpInside];
     addButton.frame = CGRectMake(270, 5, 25, 25);
     [cellView addSubview:addButton];
+     */
     
     NSArray* subviews = [cellView subviews];
     
@@ -698,7 +696,10 @@ float currentLocationResTime;
             // DE55 fix: make sure that currentLocation is selected if this method called by nc_AppDelegate
             [fromTableVC initializeCurrentLocation:currentLocation]; 
         }
-        [mainTable reloadData];
+        if (editMode != FROM_EDIT) {
+            // DE59 fix -- only update table if not in FROM_EDIT mode
+            [mainTable reloadData];
+        }
         // Adjust the toTable height
         if (newCLMode) {
             [self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE];
@@ -981,6 +982,8 @@ float currentLocationResTime;
     }
 }
 
+/*  Commenting this section out, since it is unused for now, John C 7/3/2012
+ 
 -(void)addLocationAction:(id) sender{
     
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"Current Location",@"Set Location",@"Cancel",nil];
@@ -1001,6 +1004,7 @@ float currentLocationResTime;
         [actionSheet dismissWithClickedButtonIndex:buttonIndex animated:YES];
     }
 }
+ */
 
 -(void)savePlanInTPServer:(NSString *)tripResponse
 {
