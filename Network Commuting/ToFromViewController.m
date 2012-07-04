@@ -138,14 +138,13 @@ float currentLocationResTime;
                
         CGRect rect2;
         rect2.origin.x = 0;
-        rect2.origin.y = 0;
-               
+        rect2.origin.y = 0;               
         rect2.size.width = TOFROM_TABLE_WIDTH; 
         rect2.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
+        
         fromTable = [[UITableView alloc] initWithFrame:rect2 style:UITableViewStylePlain];
         [fromTable setRowHeight:TOFROM_ROW_HEIGHT];
         fromTable.layer.cornerRadius = 10.0;
-        
         fromTableVC = [[ToFromTableViewController alloc] initWithTable:fromTable isFrom:TRUE toFromVC:self locations: locations];
         [fromTable setDataSource:fromTableVC];
         [fromTable setDelegate:fromTableVC];   
@@ -835,7 +834,6 @@ float currentLocationResTime;
         
         if(fromLocation == toLocation){
             [self stopActivityIndicator];
-            NSLog(@"Match----------->>>>>>>>>>>> %@  ,%@",fromLocation, toLocation);                    
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"The To: and From: address are the same location.  Please choose a different destination." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
             [alert show];
             return true;
@@ -848,8 +846,9 @@ float currentLocationResTime;
         [tFormat setTimeStyle:NSDateFormatterShortStyle];
         [tFormat setDateStyle:NSDateFormatterNoStyle];
         
-        NSLog(@"maxxxxxxxxx ------------------------------------ %f",[maxiWalkDistance floatValue]);
-        int maxDistance = (int)([maxiWalkDistance floatValue]*1000);
+        NSLog(@"maximum walk distance ------------------------------------ %f",[maxiWalkDistance floatValue]);
+        // convert miles into meters. 1 mile = 1609.344 meters
+        int maxDistance = (int)([maxiWalkDistance floatValue]*1609.544);
        
         NSLog(@"max walk distance: %d", maxDistance);
         // Build the parameters into a resource string       
@@ -916,7 +915,7 @@ float currentLocationResTime;
     if (activityTimer && [activityTimer isValid]) {
         [activityTimer invalidate];  // if old activity timer still valid, invalidate it
     }
-    [NSTimer scheduledTimerWithTimeInterval: 56.0f target:self selector: @selector(stopActivityIndicator) userInfo: nil repeats: NO];
+    [NSTimer scheduledTimerWithTimeInterval:56.0f target:self selector: @selector(stopActivityIndicator) userInfo: nil repeats: NO];
 }
 
 -(void)stopActivityIndicator
@@ -1153,7 +1152,7 @@ float currentLocationResTime;
 
 -(void)getWalkDistance
 {
-    NSManagedObjectContext *moc = [[nc_AppDelegate sharedInstance] managedObjectContext];;
+    NSManagedObjectContext *moc = [[nc_AppDelegate sharedInstance] managedObjectContext];
     NSEntityDescription *entityDescription = [NSEntityDescription
                                               entityForName:@"UserPreferance" inManagedObjectContext:moc];
     NSFetchRequest *request = [[NSFetchRequest alloc] init] ;

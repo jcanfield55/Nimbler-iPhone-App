@@ -408,7 +408,7 @@ static nc_AppDelegate *appDelegate;
     NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                             @"deviceid", udid,
                             @"alertCount", @"3",
-                            @"deviceToken", @"erh2389753",
+                            @"deviceToken", token,
                             @"maxDistance", @"0.8",
                             nil];    
     NSString *twitCountReq = [@"users/preferences/update" appendQueryParams:params];
@@ -420,7 +420,7 @@ static nc_AppDelegate *appDelegate;
     NSString *str = [NSString stringWithFormat: @"Error: %@", err];
     NSLog(@"************************ %@",str);     
     prefs = [NSUserDefaults standardUserDefaults];
-    NSString  *token = @"erh2389753hr379675tiu34ht789346ty38iu4ght3487y";
+    NSString  *token = @"26d906c5c273446d5f40d2c173ddd3f6869b2666b1c7afd5173d69b6629def70";
     [prefs setObject:token forKey:@"DeviceToken"];
     
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
@@ -429,7 +429,7 @@ static nc_AppDelegate *appDelegate;
     NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                             @"deviceid", udid,
                             @"alertCount", @"3",
-                            @"deviceToken", @"erh2389753hr379675tiu34ht789346ty38iu4ght3487y",
+                            @"deviceToken", token,
                             @"maxDistance", @"0.8",
                             nil];    
     NSString *twitCountReq = [@"users/preferences/update" appendQueryParams:params];
@@ -452,13 +452,13 @@ static nc_AppDelegate *appDelegate;
         [prefs setObject:[NSString stringWithFormat:@"%d",count] forKey:@"tweetCount"];
         
         if (isUrgent) {
-                        UIAlertView *dataAlert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain"
+            UIAlertView *dataAlert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain"
                                                                             message:message
                                                                            delegate:self
                                                                   cancelButtonTitle:@"Ok"
                                                                   otherButtonTitles:nil,nil];
                         
-                        [dataAlert show];
+            [dataAlert show];
             [prefs setObject:@"true" forKey:@"isUrgent"];
         
         }
@@ -486,7 +486,6 @@ static nc_AppDelegate *appDelegate;
 
 -(void)getTwiiterLiveData
 {
-    NSLog(@"Request for tweeter count: ");
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     [RKClient setSharedClient:client];
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
