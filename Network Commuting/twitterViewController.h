@@ -12,13 +12,15 @@
 
 @interface twitterViewController : UIViewController <UITableViewDelegate, UITableViewDataSource,RKRequestDelegate>
 
-
 @property (strong, nonatomic) IBOutlet UITableView* mainTable;
 @property (nonatomic, retain) id twitterData;
 @property (nonatomic, strong) NSDateFormatter *dateFormattr;
 @property (nonatomic, strong) UIBarButtonItem *relod;
+@property (nonatomic) BOOL isFromAppDelegate;
 
 -(void)setTwitterLiveData:(id)twitData;
 
 -(NSString *)stringForTimeIntervalSinceCreated:(NSDate *)dateTime serverTime:(NSDate *)serverDateTime;
+-(void)popOut;
+-(void)refreshTweetCount;
 @end

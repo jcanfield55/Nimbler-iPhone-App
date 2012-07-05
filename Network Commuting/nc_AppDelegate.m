@@ -11,12 +11,13 @@
 #import "TestFlightSDK1/TestFlight.h"
 #import "ToFromViewController.h"
 #import "TwitterSearch.h"
-
+#import "twitterViewController.h"
 
 #define TESTING 1  // If 1, then testFlightApp will collect device UIDs, if 0, it will not
 #define DEVELOPMENT 1  // If 1, then do not include testFlightApp at all (don't need crash report while developing)
 
 BOOL isTwitterLivaData = FALSE; 
+BOOL isTwitterAdvisory = FALSE;
 
 static nc_AppDelegate *appDelegate;
 @implementation nc_AppDelegate
@@ -33,6 +34,8 @@ static nc_AppDelegate *appDelegate;
 @synthesize propertyInfo;
 @synthesize prefs;
 
+int test = 1;
+
 +(nc_AppDelegate *)sharedInstance
 {
     if(appDelegate == nil){
@@ -44,8 +47,6 @@ static nc_AppDelegate *appDelegate;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
-    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     
     [[UIApplication sharedApplication] 
      registerForRemoteNotificationTypes:
@@ -64,6 +65,8 @@ static nc_AppDelegate *appDelegate;
     // NY City demo URL is http://demo.opentripplanner.org/opentripplanner-api-webapp/ws/
     
     // Add the CoreData managed object store
+
+    NSLog(@"yes---------------->>>>");
     RKManagedObjectStore *rkMOS;
     @try {
         rkMOS = [RKManagedObjectStore objectStoreWithStoreFilename:@"store.data"];
@@ -112,8 +115,6 @@ static nc_AppDelegate *appDelegate;
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
        
-        
-        
     }@catch (NSException *exception) {
         NSLog(@"Exception: ----------------- %@", exception);
     } 
@@ -327,24 +328,42 @@ static nc_AppDelegate *appDelegate;
         {
             RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
             if (isTwitterLivaData) {
+                isTwitterLivaData = false;
                 NSLog(@"%@", [response bodyAsString]);
                 NSDictionary  *tweeterCountParser = [rkParser objectFromString:[response bodyAsString] error:nil];
                 NSNumber *respCode = [(NSDictionary*)tweeterCountParser objectForKey:@"errCode"];
                 NSString *isUrgent = [(NSDictionary*)tweeterCountParser objectForKey:@"isUrgent"];
-                NSString *allNew = [(NSDictionary*)tweeterCountParser objectForKey:@"allNew"];
+//                NSString *allNew = [(NSDictionary*)tweeterCountParser objectForKey:@"allNew"];
                 if ([respCode intValue]== [RESPONSE_SUCCESSFULL intValue]) {                   
                     NSLog(@"count: %@",[(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"]);
                     NSString *tweeterCount = [(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"];
                     prefs = [NSUserDefaults standardUserDefaults];  
-                    if([allNew intValue] == 1){
-                        [prefs setObject:tweeterCount forKey:@"tweetCount"];
-                    } else {
-                        NSString *previousCount = [prefs objectForKey:@"tweetCount"];
-                        int count = [previousCount intValue] + [tweeterCount intValue];
-                        [prefs setObject:[NSString stringWithFormat:@"%d",count] forKey:@"tweetCount"];
-                    }
+                    
+                    test  = test + 1;
+                    [prefs setObject:tweeterCount forKey:@"tweetCount"];
+                    
+//                    if([allNew intValue] == 1){
+//                        [prefs setObject:tweeterCount forKey:@"tweetCount"];
+//                    } else {
+//                        NSString *previousCount = [prefs objectForKey:@"tweetCount"];
+//                        int count = [previousCount intValue] + [tweeterCount intValue];
+//                        [prefs setObject:[NSString stringWithFormat:@"%d",count] forKey:@"tweetCount"];
+//                    }
                     [prefs setObject:isUrgent forKey:@"isUrgent"];
+                    [toFromViewController viewWillAppear:TRUE];
+                    
                 }
+            } else if (isTwitterAdvisory) {                     
+                    NSLog(@"response by push notification request: %@", [response bodyAsString]);
+                    RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+                    id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];                
+                    twitterViewController *twit = [[twitterViewController alloc] initWithNibName:@"TwitterViewController" bundle:nil];
+                    [twit setTwitterLiveData:res];
+                    [twit setIsFromAppDelegate:TRUE];
+                    UINavigationController *con = [[UINavigationController alloc]initWithRootViewController:twit];
+                    [[self.window.rootViewController navigationController] pushViewController:con animated:YES];
+                    isTwitterAdvisory = FALSE;
+               
             } else {
                 
                 NSDictionary  *regionParser = [rkParser objectFromString:[response bodyAsString] error:nil];                
@@ -420,7 +439,7 @@ static nc_AppDelegate *appDelegate;
     NSString *str = [NSString stringWithFormat: @"Error: %@", err];
     NSLog(@"************************ %@",str);     
     prefs = [NSUserDefaults standardUserDefaults];
-    NSString  *token = @"26d906c5c273446d5f40d2c173ddd3f6869b2666b1c7afd5173d69b6629def70";
+    NSString  *token = @"sitanshu@caltrain";
     [prefs setObject:token forKey:@"DeviceToken"];
     
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
@@ -445,12 +464,17 @@ static nc_AppDelegate *appDelegate;
         NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
         NSString *badge = [[userInfo valueForKey:@"aps"] valueForKey:@"badge"];
         
+        NSLog(@"isUrgent: %@",[userInfo valueForKey:@"isUrgent"]);
         prefs = [NSUserDefaults standardUserDefaults];  
-        NSString *previousCount = [prefs objectForKey:@"tweetCount"];
-        int count = [previousCount intValue] + [badge intValue];
+//        NSString *previousCount = [prefs objectForKey:@"tweetCount"];
+//        int count = [previousCount intValue] + [badge intValue];        
+//        [prefs setObject:[NSString stringWithFormat:@"%d",count] forKey:@"tweetCount"];
         
-        [prefs setObject:[NSString stringWithFormat:@"%d",count] forKey:@"tweetCount"];
+        [prefs setObject:badge forKey:@"tweetCount"];
         
+//        [[UIApplication sharedApplication] cancelAllLocalNotifications];
+        [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+    
         if (isUrgent) {
             UIAlertView *dataAlert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain"
                                                                             message:message
@@ -459,9 +483,20 @@ static nc_AppDelegate *appDelegate;
                                                                   otherButtonTitles:nil,nil];
                         
             [dataAlert show];
-            [prefs setObject:@"true" forKey:@"isUrgent"];
-        
-        }
+        } 
+//        else {
+//            RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+//            [RKClient setSharedClient:client];
+//            isTwitterAdvisory = TRUE;
+//            NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
+//            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
+//                                    @"deviceid", udid,
+//                                    nil];    
+//            NSString *advisoriesAll = [@"advisories/all" appendQueryParams:params];
+//        
+//            [[RKClient sharedClient]  get:advisoriesAll delegate:self];
+//            [prefs setObject:@"true" forKey:@"isUrgent"];
+//        }
     }        
 }
 
@@ -469,7 +504,6 @@ static nc_AppDelegate *appDelegate;
 -(void)alertView: (UIAlertView *)UIAlertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
-    
     if ([btnName isEqualToString:@"No"]) {
         
     } else if ([btnName isEqualToString:@"Show Twits"]) {

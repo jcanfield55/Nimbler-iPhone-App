@@ -268,13 +268,13 @@
     rawAddress = [sender text];
     
     // Serch with numeric street address
-    if (rawAddress != @"") {
-        NSCharacterSet *numeric = [NSCharacterSet alphanumericCharacterSet];
-        BOOL valid = [[rawAddress stringByTrimmingCharactersInSet:numeric] isEqualToString:@""];
-        if (valid) {
-            rawAddress = [rawAddress stringByAppendingString:@" sanfrancisco bay area"];
-        }
-    }
+//    if (rawAddress != @"") {
+//        NSCharacterSet *numeric = [NSCharacterSet alphanumericCharacterSet];
+//        BOOL valid = [[rawAddress stringByTrimmingCharactersInSet:numeric] isEqualToString:@""];
+//        if (valid) {
+//            rawAddress = [rawAddress stringByAppendingString:@" sanfrancisco bay area"];
+//        }
+//    }
     /*
      Set rawAddress for tripSave in TPServer
      */

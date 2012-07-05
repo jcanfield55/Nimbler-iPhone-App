@@ -43,11 +43,11 @@
 #define FB_SOURCE_LEG           @"3"
 #define FB_SOURCE_GENERAL       @"4"
 
-#define ON_TIME                 @"0"
-#define DELAYED                 @"1"
-#define EARLY                   @"2"
-#define EARLIER                 @"3"
-#define ITINERARY_TIME_SLIPPAGE @"4"
+#define ON_TIME                 @"1"
+#define DELAYED                 @"2"
+#define EARLY                   @"3"
+#define EARLIER                 @"4"
+#define ITINERARY_TIME_SLIPPAGE @"5"
 
 #define ALERT_OFF               @"1"
 #define ALERT_ON                @"2"

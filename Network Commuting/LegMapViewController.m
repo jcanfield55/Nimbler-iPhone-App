@@ -479,9 +479,6 @@ NSString *legID;
 -(IBAction)twitterSearch:(id)sender forEvent:(UIEvent *)event
 {
     @try {
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        [prefs setObject:@"0" forKey:@"tweetCount"];
-        
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
         [[RKClient sharedClient]  get:@"advisories/all" delegate:self];

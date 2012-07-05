@@ -75,7 +75,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 }
 
 #pragma mark - UITableViewDelegate methods
-
 // Table view management methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -177,9 +176,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         //        }
         //        [[self navigationController] pushViewController:twitterSearchVC animated:YES];
         //        [twitterSearchVC loadRequest:CALTRAIN_TWITTER_URL];
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        [prefs setObject:@"0" forKey:@"tweetCount"];
-        
+                
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
         [[RKClient sharedClient]  get:@"advisories/all" delegate:self];

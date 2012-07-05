@@ -268,9 +268,6 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
         //        [[self navigationController] pushViewController:twitter_search animated:YES];
         //        [twitter_search loadRequest:CALTRAIN_TWITTER_URL];
         
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        [prefs setObject:@"0" forKey:@"tweetCount"];
-        
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
         [[RKClient sharedClient]  get:@"advisories/all" delegate:self];

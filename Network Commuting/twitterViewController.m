@@ -15,7 +15,7 @@
 
 NSMutableArray *arrayTweet;
 
-@synthesize mainTable,twitterData,dateFormattr,relod;
+@synthesize mainTable,twitterData,dateFormattr,relod,isFromAppDelegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -25,10 +25,22 @@ NSMutableArray *arrayTweet;
         dateFormattr = [[NSDateFormatter alloc] init];
         [dateFormattr setDateStyle:NSDateFormatterFullStyle];
         
+        
         relod = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(getLatestTweets)]; 
         self.navigationItem.rightBarButtonItem = relod;
+        
+        [self.navigationItem setHidesBackButton:YES animated:YES];
+        UIBarButtonItem  *back = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRewind target:self action:@selector(popOut)];
+        self.navigationItem.leftBarButtonItem = back;
+
+        [self refreshTweetCount];
     }
     return self;
+}
+
+-(void)popOut
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -72,12 +84,9 @@ NSMutableArray *arrayTweet;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if ([arrayTweet count] == 0) {
-        [relod setEnabled:false];
         
-    } else {
-        [relod setEnabled:false];
-    }
-    
+        
+    }     
     return [arrayTweet count];
 }
 
@@ -196,7 +205,8 @@ NSMutableArray *arrayTweet;
                           @"tweetTime",tweetTime,
                           nil];
     NSString *req = [@"advisories/latest" appendQueryParams:dict];
-    [[RKClient sharedClient]  get:req delegate:self];  
+    [[RKClient sharedClient]  get:req delegate:self]; 
+    [self refreshTweetCount];
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
@@ -237,7 +247,16 @@ NSMutableArray *arrayTweet;
     if ([respCode intValue] == 105) {
         arrayTweet = [(NSDictionary*)twitterData objectForKey:@"tweet"]; 
         [mainTable reloadData];
+    } else if ([respCode intValue] == 107) {
+        arrayTweet = nil; 
+        [mainTable reloadData];
     }
+}
+
+-(void)refreshTweetCount
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:@"0" forKey:@"tweetCount"];
 }
 
 @end

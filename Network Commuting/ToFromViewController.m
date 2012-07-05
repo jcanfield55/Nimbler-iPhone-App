@@ -46,7 +46,6 @@
     RouteOptionsViewController *routeOptionsVC; 
     LocationPickerViewController *locationPickerVC;
     TwitterSearch* twitterSearchVC;
-    
 }
 
 // Internal methods
@@ -97,7 +96,6 @@
 
 NSString *currentLoc;
 float currentLocationResTime;
-
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -588,12 +586,17 @@ float currentLocationResTime;
         //        }
         //        [[self navigationController] pushViewController:twitterSearchVC animated:YES];
         //        [twitterSearchVC loadRequest:CALTRAIN_TWITTER_URL];
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        [prefs setObject:@"0" forKey:@"tweetCount"];
+        
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
         isTwitterLivaData = TRUE;
-        [[RKClient sharedClient]  get:@"advisories/all" delegate:self];
+        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
+        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
+                                @"deviceid", udid,
+                                nil];    
+        NSString *advisoriesAll = [@"advisories/all" appendQueryParams:params];
+        
+        [[RKClient sharedClient]  get:advisoriesAll delegate:self];
         
     }
     @catch (NSException *exception) {
