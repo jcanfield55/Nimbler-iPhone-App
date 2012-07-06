@@ -308,30 +308,26 @@ static Plan *fbPlan;
         
         
     } else if ([request isPOST]) {  
-            NSLog(@"Got aresponse back from TPResponse! %@", [response bodyAsString]);
         
         if ([response isOK]) {
             // Success! Let's take a look at the data
             NSLog(@"Retrieved XML: %@", [response bodyAsString]);
             RKJSONParserJSONKit* parser1 = [RKJSONParserJSONKit new];
             NSDictionary  *p = [parser1 objectFromString:[response bodyAsString] error:nil];
-            
             for (id key in p) {
                 NSLog(@"key: %@, value: %@", key, [p objectForKey:key]);
                 if ([key isEqualToString:@"msg"]) {
                     
                     NSString *msg;
                     if ([[p objectForKey:@"code"] isEqualToString:@"105"]) {
-                        msg = FB_RESPOSE_SUCCEES;
+                        msg = FB_RESPONSE_SUCCEES;
                     } else {
                         msg = FB_RESPONSE_FAIL ;
                     }
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip FeedBack" message:msg delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
                     [alert show];
                 }
-                
             }
-
         }
     } 
 }

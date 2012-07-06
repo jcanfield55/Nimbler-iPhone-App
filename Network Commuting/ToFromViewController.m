@@ -956,7 +956,6 @@ float currentLocationResTime;
     // e.g. self.myOutlet = nil;
 }
 
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
@@ -1044,12 +1043,12 @@ float currentLocationResTime;
     
     if ([locations isFromGeo]) {
         [rkp setValue:GEO_FROM forParam:@"fromType"];
-        [rkp setValue:[locations rawAddressFrom] forParam:@"rawAddFrom"];
+        [rkp setValue:[fromLocation formattedAddress] forParam:@"rawAddFrom"];
         [rkp setValue:[locations geoRespFrom] forParam:@"geoResFrom"];
         [rkp setValue:[locations geoRespTimeFrom] forParam:@"timeFrom"];
     } else if ([locations isToGeo]) {
         [rkp setValue:GEO_TO forParam:@"toType"];
-        [rkp setValue:[locations rawAddressTo] forParam:@"rawAddTo"];
+        [rkp setValue:[fromLocation formattedAddress] forParam:@"rawAddTo"];
         [rkp setValue:[locations geoRespTo] forParam:@"geoResTo"];
         [rkp setValue:[locations geoRespTimeTo] forParam:@"timeTo"];
     }
@@ -1169,8 +1168,12 @@ float currentLocationResTime;
     } else {
         // set stored value for userSettings       
         maxiWalkDistance = [[arrayUserSetting valueForKey:@"walkDistance"] objectAtIndex:0] ;
-        NSLog(@"walk %f", [maxiWalkDistance floatValue]);
     }
+}
+
+-(void)redirectInTwitterAtPushnotification
+{
+    [self advisoriesButtonPressed:self forEvent:nil];
 }
 
 @end

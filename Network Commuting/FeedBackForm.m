@@ -293,15 +293,15 @@
             // Success! Let's take a look at the data
             txtFeedBack.text = @"";
             RKJSONParserJSONKit* parser1 = [RKJSONParserJSONKit new];
-            NSDictionary  *p = [parser1 objectFromString:[response bodyAsString] error:nil];
+            NSDictionary  *fbParser = [parser1 objectFromString:[response bodyAsString] error:nil];
             
-            for (id key in p) {
-                NSLog(@"key: %@, value: %@", key, [p objectForKey:key]);
+            for (id key in fbParser) {
+                NSLog(@"key: %@, value: %@", key, [fbParser objectForKey:key]);
                 if ([key isEqualToString:@"msg"]) {
                     
                     NSString *msg;
-                    if ([[p objectForKey:@"code"] isEqualToString:@"105"]) {
-                        msg = FB_RESPOSE_SUCCEES;
+                    if ([[fbParser objectForKey:@"code"]  isEqualToString:@"105"]) {
+                        msg = FB_RESPONSE_SUCCEES;
                     } else {
                         msg = FB_RESPONSE_FAIL ;
                     }

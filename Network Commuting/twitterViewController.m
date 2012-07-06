@@ -24,16 +24,16 @@ NSMutableArray *arrayTweet;
         [[self navigationItem] setTitle:@"Nimbler Caltrain"];
         dateFormattr = [[NSDateFormatter alloc] init];
         [dateFormattr setDateStyle:NSDateFormatterFullStyle];
-        
+        [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
         
         relod = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(getLatestTweets)]; 
         self.navigationItem.rightBarButtonItem = relod;
-        
-        [self.navigationItem setHidesBackButton:YES animated:YES];
-        UIBarButtonItem  *back = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRewind target:self action:@selector(popOut)];
-        self.navigationItem.leftBarButtonItem = back;
-
         [self refreshTweetCount];
+        
+//        [self.navigationItem setHidesBackButton:YES animated:YES];
+//        UIBarButtonItem  *back = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRewind target:self action:@selector(popOut)];
+//        self.navigationItem.leftBarButtonItem = back;
+
     }
     return self;
 }
@@ -84,9 +84,8 @@ NSMutableArray *arrayTweet;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if ([arrayTweet count] == 0) {
-        
-        
-    }     
+       
+    }
     return [arrayTweet count];
 }
 
@@ -197,26 +196,27 @@ NSMutableArray *arrayTweet;
 
 -(void)getLatestTweets 
 {
-    RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-    [RKClient setSharedClient:client];
-    id key = [arrayTweet objectAtIndex:0];                
-    NSString *tweetTime =  [(NSDictionary*)key objectForKey:@"time"];
-    NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
-                          @"tweetTime",tweetTime,
-                          nil];
-    NSString *req = [@"advisories/latest" appendQueryParams:dict];
-    [[RKClient sharedClient]  get:req delegate:self]; 
-    [self refreshTweetCount];
+    
+    if (arrayTweet.count != 0) {
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        id key = [arrayTweet objectAtIndex:0];                
+        NSString *tweetTime =  [(NSDictionary*)key objectForKey:@"time"];
+        NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
+                              @"tweetTime",tweetTime,
+                              nil];
+        NSString *req = [@"advisories/latest" appendQueryParams:dict];
+        [[RKClient sharedClient]  get:req delegate:self]; 
+        [self refreshTweetCount];
+    }
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     RKJSONParserJSONKit* rkTwitDataParser = [RKJSONParserJSONKit new];
     if ([request isGET]) {
         NSLog(@"latest tweets: %@", [response bodyAsString]);
-        
         id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];
         NSNumber *respCode = [(NSDictionary*)res objectForKey:@"errCode"];
-        
         @try {
             if ([respCode intValue] == 105) {
                 NSMutableArray *arrayLatestTweet = [(NSDictionary*)res objectForKey:@"tweet"]; 

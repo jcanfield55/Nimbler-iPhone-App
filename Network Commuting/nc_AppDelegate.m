@@ -17,7 +17,6 @@
 #define DEVELOPMENT 1  // If 1, then do not include testFlightApp at all (don't need crash report while developing)
 
 BOOL isTwitterLivaData = FALSE; 
-BOOL isTwitterAdvisory = FALSE;
 
 static nc_AppDelegate *appDelegate;
 @implementation nc_AppDelegate
@@ -33,8 +32,6 @@ static nc_AppDelegate *appDelegate;
 @synthesize timerTweeterGetData;
 @synthesize propertyInfo;
 @synthesize prefs;
-
-int test = 1;
 
 +(nc_AppDelegate *)sharedInstance
 {
@@ -66,7 +63,6 @@ int test = 1;
     
     // Add the CoreData managed object store
 
-    NSLog(@"yes---------------->>>>");
     RKManagedObjectStore *rkMOS;
     @try {
         rkMOS = [RKManagedObjectStore objectStoreWithStoreFilename:@"store.data"];
@@ -111,8 +107,8 @@ int test = 1;
             if (![self.managedObjectContext save:&error]) {
                 NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
             }
-            [[NSUserDefaults standardUserDefaults] setValue:@"set" forKey:@"UserPreferance"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
+//            [[NSUserDefaults standardUserDefaults] setValue:@"set" forKey:@"UserPreferance"];
+//            [[NSUserDefaults standardUserDefaults] synchronize];
         }
        
     }@catch (NSException *exception) {
@@ -128,11 +124,20 @@ int test = 1;
 #endif
     
     // Create an instance of a UINavigationController and put toFromViewController as the first view
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:toFromViewController]; 
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [[self window] setRootViewController:navController];
+   
+    @try {
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:toFromViewController]; 
+        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        [[self window] setRootViewController:navController];
+        
+        [self.window makeKeyAndVisible];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"load exception: %@", exception);
+    }
     
-    [self.window makeKeyAndVisible];
+    
+    
     return YES;
 }
 
@@ -192,6 +197,8 @@ int test = 1;
      */
     saveContext([self managedObjectContext]);
     [locationManager stopUpdatingLocation];
+    timerTweeterGetData = nil;
+    [timerTweeterGetData invalidate];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -329,7 +336,7 @@ int test = 1;
             RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
             if (isTwitterLivaData) {
                 isTwitterLivaData = false;
-                NSLog(@"%@", [response bodyAsString]);
+                NSLog(@"Responce %@", [response bodyAsString]);
                 NSDictionary  *tweeterCountParser = [rkParser objectFromString:[response bodyAsString] error:nil];
                 NSNumber *respCode = [(NSDictionary*)tweeterCountParser objectForKey:@"errCode"];
                 NSString *isUrgent = [(NSDictionary*)tweeterCountParser objectForKey:@"isUrgent"];
@@ -338,41 +345,21 @@ int test = 1;
                     NSLog(@"count: %@",[(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"]);
                     NSString *tweeterCount = [(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"];
                     prefs = [NSUserDefaults standardUserDefaults];  
-                    
-                    test  = test + 1;
                     [prefs setObject:tweeterCount forKey:@"tweetCount"];
-                    
-//                    if([allNew intValue] == 1){
-//                        [prefs setObject:tweeterCount forKey:@"tweetCount"];
-//                    } else {
-//                        NSString *previousCount = [prefs objectForKey:@"tweetCount"];
-//                        int count = [previousCount intValue] + [tweeterCount intValue];
-//                        [prefs setObject:[NSString stringWithFormat:@"%d",count] forKey:@"tweetCount"];
-//                    }
                     [prefs setObject:isUrgent forKey:@"isUrgent"];
+                    [prefs synchronize];
+                    // Upadte automatic badge with Live tweeterCount 
                     [toFromViewController viewWillAppear:TRUE];
-                    
+                                       
                 }
-            } else if (isTwitterAdvisory) {                     
-                    NSLog(@"response by push notification request: %@", [response bodyAsString]);
-                    RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
-                    id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];                
-                    twitterViewController *twit = [[twitterViewController alloc] initWithNibName:@"TwitterViewController" bundle:nil];
-                    [twit setTwitterLiveData:res];
-                    [twit setIsFromAppDelegate:TRUE];
-                    UINavigationController *con = [[UINavigationController alloc]initWithRootViewController:twit];
-                    [[self.window.rootViewController navigationController] pushViewController:con animated:YES];
-                    isTwitterAdvisory = FALSE;
-               
-            } else {
-                
+            } else {                
                 NSDictionary  *regionParser = [rkParser objectFromString:[response bodyAsString] error:nil];                
                 SupportedRegion *region = [SupportedRegion alloc] ;
                 for (id key in regionParser) {
                     if ([key isEqualToString:@"upperRightLatitude"]) {
-                        [region setUpperRightLatitude:[regionParser objectForKey:key] ];
+                        [region setUpperRightLatitude:[regionParser objectForKey:key]];
                     } else if ([key isEqualToString:@"upperRightLongitude"]){
-                        [region setUpperRightLongitude:[regionParser objectForKey:key] ];
+                        [region setUpperRightLongitude:[regionParser objectForKey:key]];
                     } else if ([key isEqualToString:@"minLongitude"]){
                         [region setMinLongitude:[regionParser objectForKey:key] ];
                     } else if ([key isEqualToString:@"minLatitude"]){
@@ -388,8 +375,8 @@ int test = 1;
                     } 
                 }                
                 [toFromViewController setSupportedRegion:region];
-                [self getTwiiterLiveData];
-                timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEETER_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
+//                [self getTwiiterLiveData];
+                timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
             }
         }
     }
@@ -399,7 +386,6 @@ int test = 1;
 #pragma mark Nimbler push notification
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {    
-    
     NSLog(@"Registering for push notifications...");    
     [[UIApplication sharedApplication] 
      registerForRemoteNotificationTypes:
@@ -409,117 +395,61 @@ int test = 1;
 }
 
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    
-    NSString *str = [NSString stringWithFormat:@"Device Token=%@",deviceToken];
-    NSLog(@" %@",str); 
-    
     NSString *token = [[[[deviceToken description] stringByReplacingOccurrencesOfString: @"<" withString: @""] stringByReplacingOccurrencesOfString: @">" withString: @""] stringByReplacingOccurrencesOfString: @" " withString: @""];
-    NSLog(@"DeviceTokenStr: %@",token);
-    
+    NSLog(@"DeviceTokenString: %@",token);
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:token forKey:@"deviceToken"];  
     [prefs synchronize];
-    
-    RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-    [RKClient setSharedClient:client];
-    NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
-    NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                            @"deviceid", udid,
-                            @"alertCount", @"3",
-                            @"deviceToken", token,
-                            @"maxDistance", @"0.8",
-                            nil];    
-    NSString *twitCountReq = [@"users/preferences/update" appendQueryParams:params];
-    [[RKClient sharedClient]  get:twitCountReq delegate:self];
+    [self upadateDefaultUserValue];
 }
 
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err { 
     NSString *str = [NSString stringWithFormat: @"Error: %@", err];
-    NSLog(@"************************ %@",str);     
+    NSLog(@"didFailToRegisterForRemoteNotificationsWithError: %@",str);     
     prefs = [NSUserDefaults standardUserDefaults];
-    NSString  *token = @"sitanshu@caltrain";
+    NSString  *token = @"sitanshu@nimbler.caltrain";
     [prefs setObject:token forKey:@"DeviceToken"];
+    [self upadateDefaultUserValue];
     
-    RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-    [RKClient setSharedClient:client];
-    NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
-    NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                            @"deviceid", udid,
-                            @"alertCount", @"3",
-                            @"deviceToken", token,
-                            @"maxDistance", @"0.8",
-                            nil];    
-    NSString *twitCountReq = [@"users/preferences/update" appendQueryParams:params];
-    [[RKClient sharedClient]  get:twitCountReq delegate:self];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {    
-    for (id key in userInfo) {
-        
-        NSLog(@"key: %@, value: %@", key, [userInfo objectForKey:key]);
-        
-        NSString *isUrgent = [userInfo valueForKey:@"isUrgent"];
-        NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
-        NSString *badge = [[userInfo valueForKey:@"aps"] valueForKey:@"badge"];
-        
-        NSLog(@"isUrgent: %@",[userInfo valueForKey:@"isUrgent"]);
-        prefs = [NSUserDefaults standardUserDefaults];  
-//        NSString *previousCount = [prefs objectForKey:@"tweetCount"];
-//        int count = [previousCount intValue] + [badge intValue];        
-//        [prefs setObject:[NSString stringWithFormat:@"%d",count] forKey:@"tweetCount"];
-        
-        [prefs setObject:badge forKey:@"tweetCount"];
-        
-//        [[UIApplication sharedApplication] cancelAllLocalNotifications];
-        [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     
-        if (isUrgent) {
-            UIAlertView *dataAlert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain"
-                                                                            message:message
-                                                                           delegate:self
-                                                                  cancelButtonTitle:@"Ok"
-                                                                  otherButtonTitles:nil,nil];
-                        
-            [dataAlert show];
-        } 
-//        else {
-//            RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-//            [RKClient setSharedClient:client];
-//            isTwitterAdvisory = TRUE;
-//            NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
-//            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-//                                    @"deviceid", udid,
-//                                    nil];    
-//            NSString *advisoriesAll = [@"advisories/all" appendQueryParams:params];
-//        
-//            [[RKClient sharedClient]  get:advisoriesAll delegate:self];
-//            [prefs setObject:@"true" forKey:@"isUrgent"];
-//        }
+    for (id key in userInfo) {
+        NSLog(@"key: %@, value: %@", key, [userInfo objectForKey:key]);
     }        
+    NSString *isUrgent = [userInfo valueForKey:@"isUrgent"];
+    NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
+    NSString *badge = [[userInfo valueForKey:@"aps"] valueForKey:@"badge"];
+    prefs = [NSUserDefaults standardUserDefaults];  
+    [prefs setObject:badge forKey:@"tweetCount"];
+    if ([isUrgent isEqualToString:@"true"]) {
+        UIAlertView *dataAlert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain"
+                                                            message:message
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Ok"
+                                                  otherButtonTitles:nil,nil];
+        
+        [dataAlert show];
+    } 
+    else {
+        [toFromViewController redirectInTwitterAtPushnotification]; 
+    }
 }
-
 
 -(void)alertView: (UIAlertView *)UIAlertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
-    if ([btnName isEqualToString:@"No"]) {
-        
-    } else if ([btnName isEqualToString:@"Show Twits"]) {
-        @try {
-            TwitterSearch *twitter_search = [[TwitterSearch alloc] init];
-            [[self.window.rootViewController navigationController] pushViewController:twitter_search animated:YES];
-            [twitter_search loadRequest:CALTRAIN_TWITTER_URL];
-        }
-        @catch (NSException *exception) {
-            NSLog(@" twitter page execution error: %@", exception);
-        }
+    if ([btnName isEqualToString:@"Ok"]) {
+        NSLog(@"receive urgent message");
     } 
 }
 
 -(void)getTwiiterLiveData
 {
+    NSLog(@"RealTimeTweets:");
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     [RKClient setSharedClient:client];
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
@@ -529,6 +459,35 @@ int test = 1;
     isTwitterLivaData = TRUE;
     NSString *twitCountReq = [@"advisories/count" appendQueryParams:params];
     [[RKClient sharedClient]  get:twitCountReq delegate:self];
+}
+
+// update userSettings from server 
+-(void)upadateDefaultUserValue
+{
+    @try {
+        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"UserPreferance"] == nil) {
+           
+            // set in TPServer
+            RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+            [RKClient setSharedClient:client];
+            NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
+            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
+                                    @"deviceid", udid,
+                                    @"alertCount", @"3",
+                                    @"deviceToken", [prefs objectForKey:@"DeviceToken"],
+                                    @"maxDistance", @"0.75",
+                                    nil];    
+            NSString *twitCountReq = [@"users/preferences/update" appendQueryParams:params];
+            [[RKClient sharedClient]  get:twitCountReq delegate:self]; 
+            
+            [[NSUserDefaults standardUserDefaults] setValue:@"set" forKey:@"UserPreferance"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception when update userSettings at appLuanch: %@",exception);
+    }
 }
 
 @end

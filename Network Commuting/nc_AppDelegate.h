@@ -15,6 +15,9 @@
 #import "SupportedRegion.h"
 #import "FeedBackViewController.h"
 #import <Restkit/RKJSONParserJSONKit.h>
+#import "RouteOptionsViewController.h"
+#import "RouteDetailsViewController.h"
+#import "LegMapViewController.h"
 
 @interface nc_AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate> {
     Location* currentLocation;
@@ -39,5 +42,6 @@
 
 -(void)bayArea;
 -(void)getTwiiterLiveData;
+-(void)upadateDefaultUserValue;
 +(nc_AppDelegate *)sharedInstance; 
 @end
