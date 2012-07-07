@@ -3023,8 +3023,8 @@
 		52CF43CF14BDF2F9000565D6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler Caltrain-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -3041,7 +3041,7 @@
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
 				PROVISIONING_PROFILE = "4F3F4158-8A62-4D96-B35F-41C2A6F879F8";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E882A36D-145C-4B3B-9412-E5B461A0D80E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4F3F4158-8A62-4D96-B35F-41C2A6F879F8";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3050,8 +3050,8 @@
 		52CF43D014BDF2F9000565D6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler Caltrain-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -3068,7 +3068,7 @@
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
 				PROVISIONING_PROFILE = "4F3F4158-8A62-4D96-B35F-41C2A6F879F8";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E882A36D-145C-4B3B-9412-E5B461A0D80E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4F3F4158-8A62-4D96-B35F-41C2A6F879F8";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};

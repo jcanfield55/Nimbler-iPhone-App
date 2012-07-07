@@ -60,11 +60,12 @@
         isGeocodingOutstanding = FALSE;
         
         // Create the textField for the first row of the tableView
-        txtField=[[UITextField alloc]initWithFrame:CGRectMake(TOFROM_TEXT_FIELD_INDENT,0,myTableView.frame.size.width-TOFROM_TEXT_FIELD_INDENT,[myTableView rowHeight])];
+        txtField=[[UITextField alloc]initWithFrame:CGRectMake(TOFROM_TEXT_FIELD_INDENT,0,myTableView.frame.size.width-TOFROM_TEXT_FIELD_INDENT,[myTableView rowHeight]-TOFROM_INSERT_INTO_CELL_MARGIN)];
         [txtField setPlaceholder:@"Enter new address"];
         [txtField setClearButtonMode:UITextFieldViewModeAlways];  // Add a clear button for text field
         [txtField setFont:[UIFont boldSystemFontOfSize:14.0]];
         [txtField setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
+        [txtField setBackgroundColor:[UIColor whiteColor]];
 
         [txtField addTarget:self action:@selector(toFromTyping:forEvent:) forControlEvents:UIControlEventEditingChanged];
         [txtField addTarget:self action:@selector(textSubmitted:forEvent:) forControlEvents:(UIControlEventEditingDidEndOnExit)];
