@@ -30,7 +30,7 @@
 #define FEEDBACK_AUDIO          @"2"
 #define FEEDBACK_BOTH           @"3"
 
-#define FB_RESPONSE_SUCCEES      @"Feedback Sent Successfully"
+#define FB_RESPONSE_SUCCEES     @"Feedback Sent Successfully"
 #define FB_RESPONSE_FAIL        @"Please Send Again"
 #define FB_TITLE_MSG            @"Trip Feedback"
 
@@ -55,7 +55,7 @@
 #define ALERT_URGENT            @"3"
 
 // Request timer Count
-#define TWEET_COUNT_POLLING_INTERVAL   300.0
+#define TWEET_COUNT_POLLING_INTERVAL   30.0
 #define TIMER_SMALL_REQUEST_DELAY      1.0
 #define TIMER_MEDIUM_REQUEST_DELAY     30.0
 #define TIMER_STANDARD_REQUEST_DELAY   59.0

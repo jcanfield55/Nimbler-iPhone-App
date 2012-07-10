@@ -42,7 +42,6 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
         mapBtn.bounds = CGRectMake(0, 0, mapTmg.size.width, mapTmg.size.height);
         [mapBtn setImage:mapTmg forState:UIControlStateNormal];
         [mapBtn addTarget:self action:@selector(mapOverView) forControlEvents:UIControlEventTouchDown];
-        NSLog(@"itit id1 : %@", [itinerary itinId]);
         map = [[UIBarButtonItem alloc] initWithCustomView:mapBtn]; 
         self.navigationItem.rightBarButtonItem = map;
         timeFormatter = [[NSDateFormatter alloc] init];
@@ -114,96 +113,66 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 {
     // Check for a reusable cell first, use that if it exists
     
-    NSLog(@"itinerary id %@", [itinerary itinArrivalFlag]);
-    
     UITableViewCell *cell =
     [tableView dequeueReusableCellWithIdentifier:@"UIRouteDetailsViewCell"];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
-                                      reuseIdentifier:@"UIRouteDetailsViewCell"];
-    }
-    
-    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
-    [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:14.0]];
-    
-    NSString *titleText;
-    NSString *subTitle;
-    if ([indexPath row] == 0) { // if first row, put in start point
-        titleText = [NSString stringWithFormat:@"Start at %@", [[itinerary from] name]];
-        
-        [cell.imageView setImage:nil];
-    }
-    else if ([indexPath row] == [[itinerary sortedLegs] count] + 1) { // if last row, put in end point
-        titleText = [NSString stringWithFormat:@"End at %@", [[itinerary to] name]];
-        [cell.imageView setImage:nil];
-    }
-    else {  // otherwise, it is one of the legs
-        Leg *leg = [[itinerary sortedLegs] objectAtIndex:([indexPath row]-1)];
-        
-        titleText = [leg directionsTitleText];
-        subTitle = [leg directionsDetailText];
-        
-        /*
-         DE4 Fix - Apprika Systems
-         Edited by Sitanshu Joshi.
-         */
-        
-        //        if ([subTitle length] > 70) {
-        //            NSString * add1;
-        //            NSString * add2;
-        //            
-        //            NSLog(@"more %@",subTitle);
-        //            NSArray *firstSplit = [subTitle componentsSeparatedByString:@"\n"];
-        //            NSLog(@"%@",firstSplit);
-        //            for(int i=0;i<[firstSplit count];i++){
-        //                NSString *str=[firstSplit objectAtIndex:i];               
-        //                if ([str length] > 37) {
-        //                    str = [str substringToIndex:37];
-        //                    if(i==0){
-        //                        add1 = [str stringByAppendingString:@"...\n"];
-        //                        NSLog(@"Saperate %@",str);
-        //                    }else if(i==1){
-        //                        add2 = [str stringByAppendingString:@"..."];
-        //                        NSLog(@"Saperate %@",str);
-        //                    }
-        //                } else {
-        //                    if(i==0){
-        //                        add1 = [str stringByAppendingString:@"\n"];
-        //                    } else if(i==1){
-        //                        add2 = [str stringByAppendingString:@" "];
-        //                    }
-        //                }                          
-        //            }
-        //            subTitle = [add1 stringByAppendingString:add2];  
-        //        }
-        
-        NSLog(@"leg arrival time: %@, leg time: %@", [leg arrivalFlag], [leg arrivalTime]);
-        if([leg arrivalTime] > 0) {
-            UIImage *imgForArrivalTime = [UIImage alloc];
-            if([leg.arrivalFlag intValue] == [ON_TIME intValue]) {
-                imgForArrivalTime = [UIImage imageNamed:@"img_ontime.png"] ;
-            }  else if([leg.arrivalFlag intValue] == [DELAYED intValue]) {
-                imgForArrivalTime = [UIImage imageNamed:@"img_delay.png"] ;
-            } else if([leg.arrivalFlag intValue] == [EARLY intValue]) {
-                imgForArrivalTime = [UIImage imageNamed:@"img_early.png"] ;
-            } else if([leg.arrivalFlag intValue] == [EARLIER intValue]) {
-                imgForArrivalTime = [UIImage imageNamed:@"img_earlier.png"] ;
-            } 
-            [cell.imageView setImage:imgForArrivalTime];
+    @try {
+        NSLog(@"itinerary id %@", [itinerary itinArrivalFlag]);        
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
+                                          reuseIdentifier:@"UIRouteDetailsViewCell"];
         }
-        else {
+        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
+        [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:14.0]];
+        
+        NSString *titleText;
+        NSString *subTitle;
+        if ([indexPath row] == 0) { // if first row, put in start point
+            titleText = [NSString stringWithFormat:@"Start at %@", [[itinerary from] name]];
             [cell.imageView setImage:nil];
         }
+        else if ([indexPath row] == [[itinerary sortedLegs] count] + 1) { // if last row, put in end point
+            titleText = [NSString stringWithFormat:@"End at %@", [[itinerary to] name]];
+            [cell.imageView setImage:nil];
+        }
+        else {  // otherwise, it is one of the legs
+            Leg *leg = [[itinerary sortedLegs] objectAtIndex:([indexPath row]-1)];
+            
+            titleText = [leg directionsTitleText];
+            subTitle = [leg directionsDetailText];
+            
+            NSLog(@"leg arrival time: %@, leg time: %@", [leg arrivalFlag], [leg arrivalTime]);
+            if([leg arrivalTime] > 0) {
+                UIImage *imgForArrivalTime = [UIImage alloc];
+                if([leg.arrivalFlag intValue] == [ON_TIME intValue]) {
+                    imgForArrivalTime = [UIImage imageNamed:@"img_ontime.png"] ;
+                }  else if([leg.arrivalFlag intValue] == [DELAYED intValue]) {
+                    imgForArrivalTime = [UIImage imageNamed:@"img_delay.png"] ;
+                } else if([leg.arrivalFlag intValue] == [EARLY intValue]) {
+                    imgForArrivalTime = [UIImage imageNamed:@"img_early.png"] ;
+                } else if([leg.arrivalFlag intValue] == [EARLIER intValue]) {
+                    imgForArrivalTime = [UIImage imageNamed:@"img_earlier.png"] ;
+                } 
+                [cell.imageView setImage:imgForArrivalTime];
+            }
+            else {
+                [cell.imageView setImage:nil];
+            }
+        }
+        
+        [[cell textLabel] setText:titleText];
+        [[cell detailTextLabel] setLineBreakMode:UILineBreakModeWordWrap];
+        [[cell detailTextLabel] setNumberOfLines:0];
+        [[cell detailTextLabel] setText:subTitle];
+        
+        if (subTitle && [subTitle length] > 40) {
+            [[cell detailTextLabel] sizeToFit];
+        }
     }
-    
-    [[cell textLabel] setText:titleText];
-    [[cell detailTextLabel] setLineBreakMode:UILineBreakModeWordWrap];
-    [[cell detailTextLabel] setNumberOfLines:0];
-    [[cell detailTextLabel] setText:subTitle];
-    
-    if (subTitle && [subTitle length] > 40) {
-        [[cell detailTextLabel] sizeToFit];
+    @catch (NSException *exception) {
+        NSLog(@"exception while reload legViewTable: %@", exception);
     }
+        
+    
     return cell;
 }
 
@@ -254,10 +223,16 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 - (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Initialize the LegMapView Controller
-    LegMapViewController *legMapVC = [[LegMapViewController alloc] initWithNibName:nil bundle:nil];
-    // Initialize the leg VC with the full itinerary and the particular leg object chosen
-    [legMapVC setItinerary:itinerary itineraryNumber:[indexPath row]];
-    [[self navigationController] pushViewController:legMapVC animated:YES];
+    @try {
+        LegMapViewController *legMapVC = [[LegMapViewController alloc] initWithNibName:nil bundle:nil];
+        // Initialize the leg VC with the full itinerary and the particular leg object chosen
+        [legMapVC setItinerary:itinerary itineraryNumber:[indexPath row]];
+        [[self navigationController] pushViewController:legMapVC animated:YES];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception at navigating into LegMapView: %@", exception);
+    }
+    
 }
 
 
@@ -309,7 +284,7 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
         } 
         
     }  @catch (NSException *exception) {
-        NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
+        NSLog( @"Exception while getting twitter Data from TP Server response: %@", exception);
     } 
 }
 @end

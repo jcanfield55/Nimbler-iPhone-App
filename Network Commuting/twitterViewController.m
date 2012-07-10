@@ -204,6 +204,7 @@ NSMutableArray *arrayTweet;
         NSString *tweetTime =  [(NSDictionary*)key objectForKey:@"time"];
         NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
                               @"tweetTime",tweetTime,
+                              @"deviceid", [UIDevice currentDevice].uniqueIdentifier,
                               nil];
         NSString *req = [@"advisories/latest" appendQueryParams:dict];
         [[RKClient sharedClient]  get:req delegate:self]; 

@@ -100,8 +100,8 @@ static nc_AppDelegate *appDelegate;
             [toFromViewController setMaxiWalkDistance:walkDistance];
             
             [propertyInfo setValue:[NSNumber numberWithBool:YES] forKey:@"pushEnable"];
-            [propertyInfo setValue:[NSNumber numberWithInt:5]    forKey:@"triggerAtHour"];
-            [propertyInfo setValue:[NSNumber numberWithFloat:0.9] forKey:@"walkDistance"];
+            [propertyInfo setValue:[NSNumber numberWithInt:3]    forKey:@"triggerAtHour"];
+            [propertyInfo setValue:[NSNumber numberWithFloat:0.75] forKey:@"walkDistance"];
             
             NSError *error;
             if (![self.managedObjectContext save:&error]) {
@@ -407,11 +407,13 @@ static nc_AppDelegate *appDelegate;
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err { 
     NSString *str = [NSString stringWithFormat: @"Error: %@", err];
-    NSLog(@"didFailToRegisterForRemoteNotificationsWithError: %@",str);     
-    prefs = [NSUserDefaults standardUserDefaults];
-    NSString  *token = @"sitanshu@nimbler.caltrain";
-    [prefs setObject:token forKey:@"DeviceToken"];
-    [self upadateDefaultUserValue];
+    NSLog(@"didFail To Register For RemoteNotifications With Error: %@",str);     
+//    prefs = [NSUserDefaults standardUserDefaults];
+//    NSString  *token = @"sitanshu@nimbler.caltrain";
+//    [prefs setObject:token forKey:@"DeviceToken"];
+//    [self upadateDefaultUserValue];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Push Alert" message:@"your device couldn't connect with apple. Please reinstall application" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+    [alert show];
     
 }
 
@@ -433,6 +435,7 @@ static nc_AppDelegate *appDelegate;
                                                   otherButtonTitles:nil,nil];
         
         [dataAlert show];
+        [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     } 
     else {
         [toFromViewController redirectInTwitterAtPushnotification]; 

@@ -763,7 +763,7 @@ float currentLocationResTime;
                         }
                         isContinueGetRealTimeData = TRUE;
                         [self getRealTimeData];
-                        continueGetTime =   [NSTimer scheduledTimerWithTimeInterval: 59.0 target:self selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
+                        continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:59.0 target:self selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
                     }
                     @catch (NSException *exception) {
                         NSLog(@"Exception while iterating over TP response plan: %@", exception);

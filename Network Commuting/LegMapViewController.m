@@ -231,6 +231,8 @@ NSString *legID;
 // Callback for when user presses the navigate back button on the right navbar
 - (IBAction)navigateBack:(id)sender {
     // Go back to the previous step
+   RealArrivalTime.text =@"";
+    [imgForTimeInterval setImage:nil];
     if (itineraryNumber > 0) {
         itineraryNumber--;
     }
@@ -245,10 +247,13 @@ NSString *legID;
         //self.navigationItem.rightBarButtonItem = For;
         [Bak setEnabled:false];
     }
+     
 }
 
 // Callback for when user presses the navigate forward button on the right navbar
 - (IBAction)navigateForward:(id)sender {
+   RealArrivalTime.text =@"";
+    [imgForTimeInterval setImage:nil];
     NSArray *sortedLegs = [itinerary sortedLegs];
     // Go forward to the next step
     if (itineraryNumber <= [sortedLegs count]) {
@@ -263,7 +268,7 @@ NSString *legID;
     if(itineraryNumber == [[itinerary sortedLegs] count] + 1){       
         //self.navigationItem.rightBarButtonItem = Bak;
         [For setEnabled:false];
-    }
+    } 
     
 }
 
@@ -387,7 +392,6 @@ NSString *legID;
                 dotView.annotation = annotation;
             
             return dotView;
-            
         }
     }
     return nil;

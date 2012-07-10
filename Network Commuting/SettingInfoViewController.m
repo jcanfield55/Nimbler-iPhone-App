@@ -69,7 +69,7 @@ bool isPush;
         alertView = [self upadetSettings];    
         [alertView show];
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        NSString *token = [prefs objectForKey:@"deviceToken"];
+        NSString *token = [prefs objectForKey:@"DeviceToken"];
         
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
