@@ -129,12 +129,12 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
     NSString *titleText;
     NSString *subTitle;
     if ([indexPath row] == 0) { // if first row, put in start point
-        titleText = [NSString stringWithFormat:@"Start at %@", [[itinerary from] name]];
+        titleText = [NSString stringWithFormat:@"Start at %@", [itinerary fromAddressString]];
         
         [cell.imageView setImage:nil];
     }
     else if ([indexPath row] == [[itinerary sortedLegs] count] + 1) { // if last row, put in end point
-        titleText = [NSString stringWithFormat:@"End at %@", [[itinerary to] name]];
+        titleText = [NSString stringWithFormat:@"End at %@", [itinerary toAddressString]];
         [cell.imageView setImage:nil];
     }
     else {  // otherwise, it is one of the legs
