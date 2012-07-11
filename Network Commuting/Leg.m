@@ -13,6 +13,7 @@
 
 @interface Leg()
 + (NSDateFormatter *)timeFormatter;
+- (NSString *)superShortTimeStringForDate:(NSDate *)date;
 @end
 
 @implementation Leg
@@ -52,6 +53,20 @@ static NSDateFormatter *timeFormattr;
     return timeFormattr;
 }
 
+- (NSString *)superShortTimeStringForDate:(NSDate *)date
+{
+    NSMutableString* timeString = [NSMutableString stringWithString:
+                                   [[Leg timeFormatter] stringFromDate:date]];
+    // Remove the space before AM/PM
+    [timeString replaceOccurrencesOfString:@" " 
+                                withString:@"" 
+                                   options:0 
+                                     range:NSMakeRange(0, [timeString length])];
+    // Convert to lowercase
+    NSString* returnString = [timeString lowercaseString];
+    return returnString;
+}
+
 
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType
 {
@@ -60,7 +75,7 @@ static NSDateFormatter *timeFormattr;
     RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[Leg class]];
     RKManagedObjectMapping* stepsMapping = [Step objectMappingForApi:apiType];
     RKManagedObjectMapping* planPlaceMapping = [PlanPlace objectMappingForApi:apiType];
-
+    
     // Make the mappings
     if (apiType==OTP_PLANNER) {
         
@@ -79,7 +94,7 @@ static NSDateFormatter *timeFormattr;
         [mapping mapKeyPath:@"routeLongName" toAttribute:@"routeLongName"];
         [mapping mapKeyPath:@"routeShortName" toAttribute:@"routeShortName"];
         [mapping mapKeyPath:@"startTime" toAttribute:@"startTime"];
-                
+        
         [mapping mapKeyPath:@"steps" toRelationship:@"steps" withMapping:stepsMapping];
         [mapping mapKeyPath:@"from" toRelationship:@"from" withMapping:planPlaceMapping];
         [mapping mapKeyPath:@"to" toRelationship:@"to" withMapping:planPlaceMapping];
@@ -120,16 +135,18 @@ static NSDateFormatter *timeFormattr;
 {
     NSMutableString *titleText=[NSMutableString stringWithString:@""];
     if ([[self mode] isEqualToString:@"WALK"]) {
-        titleText = [NSString stringWithFormat:@"Walk to %@", [[self to] name]];
+        [titleText appendFormat:@"Walk to %@", [[self to] name]];
     }
-    else if ([[self mode] isEqualToString:@"BUS"]) {
-        titleText = [NSMutableString stringWithString:@"Bus "];
-    }
-    else if ([[self mode] isEqualToString:@"TRAM"]) {
-        titleText = [NSMutableString stringWithString:@"Tram "];
-    }
-    else {
-        titleText = [NSMutableString stringWithString:@""];
+    else {  
+        // if not walking, add the departure time (US 121 implementation)
+        [titleText appendFormat:@"%@  ", [self superShortTimeStringForDate:[self startTime]]];
+        
+        if ([[self mode] isEqualToString:@"BUS"]) {
+            [titleText appendString:@"Bus "];
+        }
+        else if ([[self mode] isEqualToString:@"TRAM"]) {
+            [titleText appendString:@"Tram "];
+        }
     }
     BOOL isShortName = false;
     if ([self routeShortName] && [[self routeShortName] length]>0) {
@@ -151,24 +168,14 @@ static NSDateFormatter *timeFormattr;
 - (NSString *)directionsDetailText
 {
     NSString *subTitle;
-    NSDateFormatter* timeFormatter = [Leg timeFormatter];
     if ([[self mode] isEqualToString:@"WALK"]) {
         subTitle = [NSString stringWithFormat:@"About %@, %@", 
                     durationString([[self duration] floatValue]), 
                     distanceStringInMilesFeet([[self distance] floatValue])];
     }
-    else if ([[self mode] isEqualToString:@"BUS"]) {
-        subTitle = [NSString stringWithFormat:@"%@  Depart %@\n%@  Arrive %@",
-                    [timeFormatter stringFromDate:[self startTime]],
-                    [[self from] name],
-                    [timeFormatter stringFromDate:[self endTime]],
-                    [[self to] name]];
-    }
     else {
-        subTitle = [NSString stringWithFormat:@"%@  Depart %@\n%@  Arrive %@",
-                    [timeFormatter stringFromDate:[self startTime]],
-                    [[self from] name],
-                    [timeFormatter stringFromDate:[self endTime]],
+        subTitle = [NSString stringWithFormat:@"%@  Arrive %@",
+                    [self superShortTimeStringForDate:[self endTime]],
                     [[self to] name]];            
     }
     return subTitle;

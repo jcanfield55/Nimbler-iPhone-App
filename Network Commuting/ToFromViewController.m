@@ -134,7 +134,7 @@ float currentLocationResTime;
             toTableVC = [[ToFromTableViewController alloc] initWithTable:toTable isFrom:FALSE toFromVC:self locations:locations];
             [toTable setDataSource:toTableVC];
             [toTable setDelegate:toTableVC];
-            toTable.layer.cornerRadius = 10.0;
+            toTable.layer.cornerRadius = TOFROM_TABLE_CORNER_RADIUS;
             
             CGRect rect2;
             rect2.origin.x = 0;
@@ -144,7 +144,7 @@ float currentLocationResTime;
             
             fromTable = [[UITableView alloc] initWithFrame:rect2 style:UITableViewStylePlain];
             [fromTable setRowHeight:TOFROM_ROW_HEIGHT];
-            fromTable.layer.cornerRadius = 10.0;
+            fromTable.layer.cornerRadius = TOFROM_TABLE_CORNER_RADIUS;
             fromTableVC = [[ToFromTableViewController alloc] initWithTable:fromTable isFrom:TRUE toFromVC:self locations: locations];
             [fromTable setDataSource:fromTableVC];
             [fromTable setDelegate:fromTableVC];   
@@ -327,11 +327,11 @@ float currentLocationResTime;
         return TOFROM_ROW_HEIGHT;
     }
     else if (editMode != NO_EDIT) {  // to or from table in Edit mode
-        return TOFROM_TABLE_HEIGHT_NO_CL_MODE;
+        return TOFROM_TABLE_HEIGHT_NO_CL_MODE + TOFROM_INSERT_INTO_CELL_MARGIN;
     }
     else if (isCurrentLocationMode) {  // NO_EDIT mode and CurrentLocationMode
         if ([indexPath section] == TO_SECTION) {  // Larger To Table
-            return TO_TABLE_HEIGHT_CL_MODE;
+            return TO_TABLE_HEIGHT_CL_MODE + TOFROM_INSERT_INTO_CELL_MARGIN;
         }
         else {
             return FROM_HEIGHT_CL_MODE;  // Single line From showing Current Location
@@ -339,7 +339,7 @@ float currentLocationResTime;
     }
     // Else NO_EDIT mode and no CurrentLocationMode
     
-    return TOFROM_TABLE_HEIGHT_NO_CL_MODE;
+    return TOFROM_TABLE_HEIGHT_NO_CL_MODE + TOFROM_INSERT_INTO_CELL_MARGIN;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -372,10 +372,12 @@ float currentLocationResTime;
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 
                                           reuseIdentifier:@"timeDateTableCell"];
+            [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
+            [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:14.0]];
+            [cell setBackgroundColor:[UIColor whiteColor]];
+            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
         }        
-        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
-        [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:14.0]];
-        [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+        
         if (isTripDateCurrentTime) { 
             [[cell textLabel] setText:@"Depart"];
             [[cell detailTextLabel] setText:@"Now"];
@@ -394,6 +396,7 @@ float currentLocationResTime;
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 
                                           reuseIdentifier:@"singleRowFromCell"];
         }        
+        [cell setBackgroundColor:[UIColor whiteColor]];
         [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
         [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:14.0]];
         [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];

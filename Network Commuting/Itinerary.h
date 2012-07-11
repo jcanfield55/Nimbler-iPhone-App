@@ -45,6 +45,14 @@
 - (PlanPlace *)to;
 - (NSString *)ncDescription;
 
+// Returns a nicely formatted address string for the starting point, if available
+- (NSString *)fromAddressString;
+
+// Returns a nicely formatted address string for the end point, if available
+- (NSString *)toAddressString;
+
+
+
 @end
 
 @interface Itinerary (CoreDataGeneratedAccessors)

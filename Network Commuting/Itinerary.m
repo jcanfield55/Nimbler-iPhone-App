@@ -42,7 +42,7 @@
     
     // Make the mappings
     if (apiType==OTP_PLANNER) {
-    
+        
         [mapping mapKeyPath:@"id" toAttribute:@"itinId"];
         [mapping mapKeyPath:@"duration" toAttribute:@"duration"];
         [mapping mapKeyPath:@"elevationGained" toAttribute:@"elevationGained"];
@@ -95,6 +95,47 @@
     return [[sortedLegs objectAtIndex:([sortedLegs count]-1)] to];
 }
 
+// Returns a nicely formatted address string for the starting point, if available
+// US87 implementation
+- (NSString *)fromAddressString
+{
+    // Check and make sure that the plan from Location is close to the endpoint of the last leg
+    Location* fromLocation = [[self plan] fromLocation];
+    CLLocation *locA = [[CLLocation alloc] initWithLatitude:[fromLocation latFloat]
+                                                  longitude:[fromLocation lngFloat]];
+    CLLocation *locB = [[CLLocation alloc] initWithLatitude:[[self from] latFloat]
+                                                  longitude:[[self from] lngFloat]];
+    CLLocationDistance distance = [locA distanceFromLocation:locB];
+    NSLog(@"Distance between fromLocation and fromPlanPlace = %f meters", distance);
+    
+    // If distance in meters is small enough, use the fromLocation...
+    if (distance < 20.0) {
+        return [fromLocation shortFormattedAddress];
+    }
+    // otherwise, use the planPlace string from OTP
+    return [[self from] name];
+}
+
+// Returns a nicely formatted address string for the end point, if available
+// US87 implementation
+- (NSString *)toAddressString
+{
+    // Check and make sure that the plan to Location is close to the endpoint of the last leg
+    Location* toLocation = [[self plan] toLocation];
+    CLLocation *locA = [[CLLocation alloc] initWithLatitude:[toLocation latFloat]
+                                                  longitude:[toLocation lngFloat]];
+    CLLocation *locB = [[CLLocation alloc] initWithLatitude:[[self to] latFloat]
+                                                  longitude:[[self to] lngFloat]];
+    CLLocationDistance distance = [locA distanceFromLocation:locB];
+    NSLog(@"Distance between toLocation and toPlanPlace = %f meters", distance);
+    
+    // If distance in meters is small enough, use the toLocation...
+    if (distance < 20.0) {
+        return [toLocation shortFormattedAddress];
+    }
+    // otherwise, use the planPlace string from OTP
+    return [[self to] name];
+}
 
 - (NSString *)ncDescription
 {

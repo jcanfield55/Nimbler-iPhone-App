@@ -12,18 +12,16 @@
 
 // ToFromViewController constants
 #define TOFROM_MAIN_TABLE_HEIGHT            358
-#define TOFROM_ROW_HEIGHT                   35
-#define TOFROM_TABLE_HEIGHT_NO_CL_MODE      102
-#define TO_TABLE_HEIGHT_CL_MODE             172
-#define FROM_HEIGHT_CL_MODE                 40
+#define TOFROM_TIME_DATE_HEIGHT             37
+#define TOFROM_ROW_HEIGHT                   37
+#define FROM_HEIGHT_CL_MODE                 37
+#define TOFROM_TABLE_HEIGHT_NO_CL_MODE      110  // height when not isCurrentLocationMode
+#define TO_TABLE_HEIGHT_CL_MODE             185  // height when isCurrentLocationMode
 #define TOFROM_TABLE_WIDTH                  300
-#define TOFROM_TIME_DATE_HEIGHT             40
+#define TOFROM_INSERT_INTO_CELL_MARGIN      1  // spacer added to cell height when there is an inserted field or table 
+#define TOFROM_TABLE_CORNER_RADIUS          10.0
 
 // ToFromTableViewController constants
 #define TOFROM_TEXT_FIELD_INDENT            10
-
-// Set Corner Radius For view
-#define SMALL_CORNER_RADIUS                 5.0
-#define MIDIUM_CORNER_RADIUS                10.0
 
 #endif
