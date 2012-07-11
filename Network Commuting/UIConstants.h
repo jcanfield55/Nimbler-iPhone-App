@@ -22,8 +22,6 @@
 #define TOFROM_TABLE_CORNER_RADIUS          10.0
 
 // ToFromTableViewController constants
-#define TOFROM_TEXT_FIELD_INDENT       10
-
-
+#define TOFROM_TEXT_FIELD_INDENT            10
 
 #endif

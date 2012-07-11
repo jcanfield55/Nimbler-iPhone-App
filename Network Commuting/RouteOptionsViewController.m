@@ -48,7 +48,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         [[self navigationItem] setTitle:@"Itineraries"];
         timeFormatter = [[NSDateFormatter alloc] init];
         [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
-        
     }
     return self;
 }
@@ -63,7 +62,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     rect0.size.height = ROUTE_OPTIONS_TABLE_HEIGHT;
     [mainTable setFrame:rect0];
     [mainTable reloadData];
-    
 }
 
 - (void)didReceiveMemoryWarning
@@ -87,63 +85,68 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     // Check for a reusable cell first, use that if it exists
     UITableViewCell *cell =
     [tableView dequeueReusableCellWithIdentifier:@"UIRouteOptionsViewCell"];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
-                                      reuseIdentifier:@"UIRouteOptionsViewCell"];
-        [cell.imageView setImage:nil];
-    }
-    // Get the requested itinerary
-    Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
-    if (isReloadRealData) {
-        if([itin itinArrivalFlag] >= 0) {
-            UIImage *imgForArrivalTime = [UIImage alloc];
-            cell.frame = CGRectMake(100, 2, 20, 20);
-         
-            if([itin.itinArrivalFlag intValue] == [ON_TIME intValue]) {
-                imgForArrivalTime = [UIImage imageNamed:@"img_ontime.png"] ;
-            }  else if([itin.itinArrivalFlag intValue] == [DELAYED intValue]) {
-                imgForArrivalTime = [UIImage imageNamed:@"img_delay.png"] ;
-            } else if([itin.itinArrivalFlag intValue] == [EARLY intValue]) {
-                imgForArrivalTime = [UIImage imageNamed:@"img_early.png"] ;
-            } else if([itin.itinArrivalFlag intValue] == [EARLIER intValue]) {
-                imgForArrivalTime = [UIImage imageNamed:@"img_earlier.ong"] ;
-            } else if ([itin.itinArrivalFlag intValue] == [ITINERARY_TIME_SLIPPAGE intValue]) {
-                imgForArrivalTime = [UIImage imageNamed:@"itin_slipage.png"] ;
-            }
-            [cell.imageView setImage:imgForArrivalTime];
+    @try {
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
+                                          reuseIdentifier:@"UIRouteOptionsViewCell"];
+            [cell.imageView setImage:nil];
         }
-    } else {
-        [cell.imageView setImage:nil];
-    }
-    /*
-     for feedback planId
-     */
-    
-    // Set title
-    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
-    NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)", 
-                           [timeFormatter stringFromDate:[itin startTime]],
-                           [timeFormatter stringFromDate:[itin endTime]],
-                           durationString([[itin duration] floatValue])];
-    [[cell textLabel] setText:titleText];
-    
-    // Set sub-title (show each leg's mode and route if available)
-    NSMutableString *subTitle = [NSMutableString stringWithCapacity:30];
-    NSArray *sortedLegs = [itin sortedLegs];
-    for (int i = 0; i < [sortedLegs count]; i++) {
-        Leg *leg = [sortedLegs objectAtIndex:i];
-        if ([leg mode] && [[leg mode] length] > 0) {
-            if (i > 0) {
-                [subTitle appendString:@" -> "];
+        // Get the requested itinerary
+        Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
+        if (isReloadRealData) {
+            if([itin itinArrivalFlag] >= 0) {
+                UIImage *imgForArrivalTime = [UIImage alloc];
+                cell.frame = CGRectMake(100, 2, 20, 20);
+                
+                if([itin.itinArrivalFlag intValue] == [ON_TIME intValue]) {
+                    imgForArrivalTime = [UIImage imageNamed:@"img_ontime.png"] ;
+                }  else if([itin.itinArrivalFlag intValue] == [DELAYED intValue]) {
+                    imgForArrivalTime = [UIImage imageNamed:@"img_delay.png"] ;
+                } else if([itin.itinArrivalFlag intValue] == [EARLY intValue]) {
+                    imgForArrivalTime = [UIImage imageNamed:@"img_early.png"] ;
+                } else if([itin.itinArrivalFlag intValue] == [EARLIER intValue]) {
+                    imgForArrivalTime = [UIImage imageNamed:@"img_earlier.ong"] ;
+                } else if ([itin.itinArrivalFlag intValue] == [ITINERARY_TIME_SLIPPAGE intValue]) {
+                    imgForArrivalTime = [UIImage imageNamed:@"itin_slipage.png"] ;
+                }
+                [cell.imageView setImage:imgForArrivalTime];
             }
-            [subTitle appendString:[[leg mode] capitalizedString]];
-            if ([leg route] && [[leg route] length] > 0) {
-                [subTitle appendString:@" "];
-                [subTitle appendString:[leg route]];
+        } else {
+            [cell.imageView setImage:nil];
+        }
+        /*
+         for feedback planId
+         */
+        
+        // Set title
+        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
+        NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)", 
+                               [timeFormatter stringFromDate:[itin startTime]],
+                               [timeFormatter stringFromDate:[itin endTime]],
+                               durationString([[itin duration] floatValue])];
+        [[cell textLabel] setText:titleText];
+        
+        // Set sub-title (show each leg's mode and route if available)
+        NSMutableString *subTitle = [NSMutableString stringWithCapacity:30];
+        NSArray *sortedLegs = [itin sortedLegs];
+        for (int i = 0; i < [sortedLegs count]; i++) {
+            Leg *leg = [sortedLegs objectAtIndex:i];
+            if ([leg mode] && [[leg mode] length] > 0) {
+                if (i > 0) {
+                    [subTitle appendString:@" -> "];
+                }
+                [subTitle appendString:[[leg mode] capitalizedString]];
+                if ([leg route] && [[leg route] length] > 0) {
+                    [subTitle appendString:@" "];
+                    [subTitle appendString:[leg route]];
+                }
             }
         }
+        [[cell detailTextLabel] setText:subTitle];
     }
-    [[cell detailTextLabel] setText:subTitle];
+    @catch (NSException *exception) {
+        NSLog(@"exception at load table: %@", exception);
+    }
     
     return cell;
 }
@@ -162,7 +165,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         [[self navigationController] pushViewController:routeDetailsVC animated:YES];
     }
     @catch (NSException *exception) {
-        NSLog(@"exceptions %@", exception);
+        NSLog(@"exception at select itinerary: %@", exception);
     }
 }
 
@@ -171,26 +174,25 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 - (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     @try {
-        //        if (!twitterSearchVC) {
-        //            twitterSearchVC = [[TwitterSearch alloc] initWithNibName:@"TwitterSearch" bundle:nil];
-        //        }
-        //        [[self navigationController] pushViewController:twitterSearchVC animated:YES];
-        //        [twitterSearchVC loadRequest:CALTRAIN_TWITTER_URL];
-                
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
         [[RKClient sharedClient]  get:@"advisories/all" delegate:self];
     }
     @catch (NSException *exception) {
-        NSLog(@" twitter print : %@", exception);
+        NSLog(@" Exception at press advisory button from RouteOptionsViewController : %@", exception);
     } 
 }
 
 -(void)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
-    FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_PLAN uniqueId:[plan planId] date:nil fromAddress:nil toAddress:nil];
-    FeedBackForm *feedbackFormVc = [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];
-    [[self navigationController] pushViewController:feedbackFormVc animated:YES]; 
+    @try {
+        FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_PLAN uniqueId:[plan planId] date:nil fromAddress:nil toAddress:nil];
+        FeedBackForm *feedbackFormVc = [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];
+        [[self navigationController] pushViewController:feedbackFormVc animated:YES]; 
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception at press feedback button from RouteOptionsViewController : %@", exception);
+    }
 }
 
 
@@ -212,31 +214,35 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     [super viewDidAppear:animated];
     NSLog(@"RouteOptions did appear");
     
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    int tweetConut = [[prefs objectForKey:@"tweetCount"] intValue];
-    BOOL isUrgent = [[prefs objectForKey:@"isUrgent"] boolValue];
-    [twitterCount removeFromSuperview];
-    if (isUrgent) {
-        twitterCount = [[CustomBadge alloc] initWithString:[NSString stringWithFormat:@"%d!",tweetConut] withStringColor:[UIColor whiteColor] withInsetColor:[UIColor blueColor] withBadgeFrame:YES withBadgeFrameColor:[UIColor whiteColor]];
-        [twitterCount setFrame:CGRectMake(50, 360, twitterCount.frame.size.width, twitterCount.frame.size.height)];
-        if (tweetConut == 0) {
-            [twitterCount setHidden:YES];
+    @try {
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        int tweetConut = [[prefs objectForKey:@"tweetCount"] intValue];
+        BOOL isUrgent = [[prefs objectForKey:@"isUrgent"] boolValue];
+        [twitterCount removeFromSuperview];
+        if (isUrgent) {
+            twitterCount = [[CustomBadge alloc] initWithString:[NSString stringWithFormat:@"%d!",tweetConut] withStringColor:[UIColor whiteColor] withInsetColor:[UIColor blueColor] withBadgeFrame:YES withBadgeFrameColor:[UIColor whiteColor]];
+            [twitterCount setFrame:CGRectMake(50, 360, twitterCount.frame.size.width, twitterCount.frame.size.height)];
+            if (tweetConut == 0) {
+                [twitterCount setHidden:YES];
+            } else {
+                [self.view addSubview:twitterCount];
+                [twitterCount setHidden:NO];
+            }
         } else {
-            [self.view addSubview:twitterCount];
-            [twitterCount setHidden:NO];
-        }
-    } else {
-        twitterCount = [[CustomBadge alloc] init];
-        twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
-        [twitterCount setFrame:CGRectMake(60, 365, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
-        if (tweetConut == 0) {
-            [twitterCount setHidden:YES];
-        } else {
-            [self.view addSubview:twitterCount];
-            [twitterCount setHidden:NO];
-        }
-    } 
-    
+            twitterCount = [[CustomBadge alloc] init];
+            twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
+            [twitterCount setFrame:CGRectMake(60, 365, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
+            if (tweetConut == 0) {
+                [twitterCount setHidden:YES];
+            } else {
+                [self.view addSubview:twitterCount];
+                [twitterCount setHidden:NO];
+            }
+        } 
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception at press feedback button from RouteOptionsViewController : %@", exception);
+    }
 }
 
 - (void)viewDidUnload
@@ -254,11 +260,11 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 }
 
 
--(void)sendRequestForFeedback:(RKParams*)para
-{
-    RKParams *param = [RKParams alloc];
-    param = para;
-}
+//-(void)sendRequestForFeedback:(RKParams*)para
+//{
+//    RKParams *param = [RKParams alloc];
+//    param = para;
+//}
 #pragma mark realTime data updates
 
 -(void)setLiveFeed:(id)liveFees
@@ -268,7 +274,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         //        NSString *itinId = [(NSDictionary*)liveFeed objectForKey:@"itineraryId"];
         NSNumber *respCode = [(NSDictionary*)liveData objectForKey:@"errCode"];
         
-        if ([respCode intValue]== 105) {
+        if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
             //It means there are live feeds in response
             NSArray *itineraryLiveFees = [(NSDictionary*)liveData objectForKey:@"itinLiveFeeds"]; 
             if ([itineraryLiveFees count] > 0) {
@@ -293,7 +299,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                 LegMapViewController *legMap = [[LegMapViewController alloc] init];
                 [legMap ReloadLegMapWithNewData];
                 [routeDetailsVC ReloadLegWithNewData];
-                
             }            
         } else {
             //thereare no live feeds available.            
@@ -301,7 +306,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at live itinerary respoce: %@",exception);
+        NSLog(@"exception at live itinerary response: %@",exception);
     }
 }
 
@@ -322,9 +327,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                     [[legs objectAtIndex:i] setTimeDiffInMins:timeDiff];
                 }
             }
-            
         }
-        
     }
     @catch (NSException *exception) {
         NSLog(@"exceptions at set time: %@", exception);

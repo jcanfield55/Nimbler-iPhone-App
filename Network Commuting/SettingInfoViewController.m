@@ -108,7 +108,6 @@ bool isPush;
         [alertView dismissWithClickedButtonIndex:0 animated:NO];
         [self.navigationController popViewControllerAnimated:YES]; 
     }
-       
 }
 
 -(IBAction)stepperValueChanged:(UIStepper *)sender
@@ -122,7 +121,6 @@ bool isPush;
     float walkDistance = sliderMaxWalkDistance.value;
     [sliderMaxWalkDistance setValue:sliderMaxWalkDistance.value];
     [sliderMaxWalkDistance setSelected:YES];
-    
     NSLog(@"walk distance: %f", walkDistance);
 }
 
@@ -159,30 +157,33 @@ bool isPush;
 
 -(void)fetchData
 {
-    NSManagedObjectContext *moc = [self managedObjectContext];
-    NSEntityDescription *entityDescription = [NSEntityDescription
-                                              entityForName:@"UserPreferance" inManagedObjectContext:moc];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init] ;
-    [request setEntity:entityDescription];
-       
-    NSError *error = nil;
-       NSArray *arrayUserSetting  = [moc executeFetchRequest:request error:&error];
-    if (arrayUserSetting == nil)
-    {
-        // Deal with error...
-    } else {
-        // set stored value for userSettings       
-        [sliderMaxWalkDistance setValue:[[[arrayUserSetting valueForKey:@"walkDistance"] objectAtIndex:0] doubleValue]];
-        [steperPushHour setValue:[[[arrayUserSetting valueForKey:@"triggerAtHour"] objectAtIndex:0] intValue]];
-        lblPushTrigger.text = [NSString stringWithFormat:@"%d",[[[arrayUserSetting valueForKey:@"triggerAtHour"] objectAtIndex:0] intValue]];
-        pushHour = [[[arrayUserSetting valueForKey:@"triggerAtHour"] objectAtIndex:0] intValue];
-        if ([[[arrayUserSetting valueForKey:@"pushEnable"] objectAtIndex:0] intValue] == 0) {
-            [switchPushEnable setOn:NO];
-        } else {
-            [switchPushEnable setOn:YES];
-        }
+    @try {
+        NSManagedObjectContext *moc = [self managedObjectContext];
+        NSEntityDescription *entityDescription = [NSEntityDescription
+                                                  entityForName:@"UserPreferance" inManagedObjectContext:moc];
+        NSFetchRequest *request = [[NSFetchRequest alloc] init] ;
+        [request setEntity:entityDescription];
         
+        NSError *error = nil;
+        NSArray *arrayUserSetting  = [moc executeFetchRequest:request error:&error];
+        if (arrayUserSetting == nil)
+        {
+            // Deal with error...
+        } else {
+            // set stored value for userSettings       
+            [sliderMaxWalkDistance setValue:[[[arrayUserSetting valueForKey:@"walkDistance"] objectAtIndex:0] doubleValue]];
+            [steperPushHour setValue:[[[arrayUserSetting valueForKey:@"triggerAtHour"] objectAtIndex:0] intValue]];
+            lblPushTrigger.text = [NSString stringWithFormat:@"%d",[[[arrayUserSetting valueForKey:@"triggerAtHour"] objectAtIndex:0] intValue]];
+            pushHour = [[[arrayUserSetting valueForKey:@"triggerAtHour"] objectAtIndex:0] intValue];
+            if ([[[arrayUserSetting valueForKey:@"pushEnable"] objectAtIndex:0] intValue] == 0) {
+                [switchPushEnable setOn:NO];
+            } else {
+                [switchPushEnable setOn:YES];
+            }
+        }
     }
-      
+    @catch (NSException *exception) {
+        NSLog(@"exception at fetch data from core data and set to views: %@",exception);
+    }
 }
 @end

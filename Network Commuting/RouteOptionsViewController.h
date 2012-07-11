@@ -27,7 +27,6 @@
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event;
 
--(void)sendRequestForFeedback:(RKParams*)para;
 -(void)setLiveFeed:(id)liveFeed;
 - (void) setRealtimeData:(NSString *)legId arrivalTime:(NSString *)arrivalTime arrivalFlag:(NSString *)arrivalFlag itineraryId:(NSString *)ititId itineraryArrivalFlag:(NSString *)itinArrivalflag legDiffMins:(NSString *)timeDiff;
 

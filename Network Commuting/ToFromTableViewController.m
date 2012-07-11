@@ -65,11 +65,10 @@
         [txtField setClearButtonMode:UITextFieldViewModeAlways];  // Add a clear button for text field
         [txtField setFont:[UIFont boldSystemFontOfSize:14.0]];
         [txtField setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
-        [txtField setBackgroundColor:[UIColor whiteColor]];
 
         [txtField addTarget:self action:@selector(toFromTyping:forEvent:) forControlEvents:UIControlEventEditingChanged];
         [txtField addTarget:self action:@selector(textSubmitted:forEvent:) forControlEvents:(UIControlEventEditingDidEndOnExit)];
-            
+        [txtField setBackgroundColor:[UIColor whiteColor]];
     }
     return self;
 }

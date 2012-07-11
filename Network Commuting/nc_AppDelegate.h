@@ -40,7 +40,7 @@
 
 - (NSURL *)applicationDocumentsDirectory;
 
--(void)bayArea;
+-(void)suppertedRegion;
 -(void)getTwiiterLiveData;
 -(void)upadateDefaultUserValue;
 +(nc_AppDelegate *)sharedInstance; 

@@ -56,12 +56,12 @@ static NSDateFormatter *timeFormattr;
 - (NSString *)superShortTimeStringForDate:(NSDate *)date
 {
     NSMutableString* timeString = [NSMutableString stringWithString:
-                                     [[Leg timeFormatter] stringFromDate:date]];
+                                   [[Leg timeFormatter] stringFromDate:date]];
     // Remove the space before AM/PM
     [timeString replaceOccurrencesOfString:@" " 
-                                  withString:@"" 
-                                     options:0 
-                                       range:NSMakeRange(0, [timeString length])];
+                                withString:@"" 
+                                   options:0 
+                                     range:NSMakeRange(0, [timeString length])];
     // Convert to lowercase
     NSString* returnString = [timeString lowercaseString];
     return returnString;
@@ -75,7 +75,7 @@ static NSDateFormatter *timeFormattr;
     RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[Leg class]];
     RKManagedObjectMapping* stepsMapping = [Step objectMappingForApi:apiType];
     RKManagedObjectMapping* planPlaceMapping = [PlanPlace objectMappingForApi:apiType];
-
+    
     // Make the mappings
     if (apiType==OTP_PLANNER) {
         
@@ -94,7 +94,7 @@ static NSDateFormatter *timeFormattr;
         [mapping mapKeyPath:@"routeLongName" toAttribute:@"routeLongName"];
         [mapping mapKeyPath:@"routeShortName" toAttribute:@"routeShortName"];
         [mapping mapKeyPath:@"startTime" toAttribute:@"startTime"];
-                
+        
         [mapping mapKeyPath:@"steps" toRelationship:@"steps" withMapping:stepsMapping];
         [mapping mapKeyPath:@"from" toRelationship:@"from" withMapping:planPlaceMapping];
         [mapping mapKeyPath:@"to" toRelationship:@"to" withMapping:planPlaceMapping];
@@ -140,7 +140,7 @@ static NSDateFormatter *timeFormattr;
     else {  
         // if not walking, add the departure time (US 121 implementation)
         [titleText appendFormat:@"%@  ", [self superShortTimeStringForDate:[self startTime]]];
-
+        
         if ([[self mode] isEqualToString:@"BUS"]) {
             [titleText appendString:@"Bus "];
         }

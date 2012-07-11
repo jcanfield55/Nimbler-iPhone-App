@@ -42,7 +42,7 @@
     
     // Make the mappings
     if (apiType==OTP_PLANNER) {
-    
+        
         [mapping mapKeyPath:@"id" toAttribute:@"itinId"];
         [mapping mapKeyPath:@"duration" toAttribute:@"duration"];
         [mapping mapKeyPath:@"elevationGained" toAttribute:@"elevationGained"];
