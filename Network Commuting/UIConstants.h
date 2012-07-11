@@ -20,8 +20,10 @@
 #define TOFROM_TIME_DATE_HEIGHT             40
 
 // ToFromTableViewController constants
-#define TOFROM_TEXT_FIELD_INDENT       10
+#define TOFROM_TEXT_FIELD_INDENT            10
 
-
+// Set Corner Radius For view
+#define SMALL_CORNER_RADIUS                 5.0
+#define MIDIUM_CORNER_RADIUS                10.0
 
 #endif

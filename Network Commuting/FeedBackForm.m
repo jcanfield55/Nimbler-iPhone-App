@@ -300,7 +300,7 @@
                 if ([key isEqualToString:@"msg"]) {
                     
                     NSString *msg;
-                    if ([[fbParser objectForKey:@"code"]  isEqualToString:@"105"]) {
+                    if ([[fbParser objectForKey:@"code"] intValue] == RESPONSE_SUCCESSFULL) {
                         msg = FB_RESPONSE_SUCCEES;
                     } else {
                         msg = FB_RESPONSE_FAIL ;

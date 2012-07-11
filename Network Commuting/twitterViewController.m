@@ -141,7 +141,7 @@ NSMutableArray *arrayTweet;
     //            sizeWithFont:[UIFont systemFontOfSize:14] 
     //            constrainedToSize:CGSizeMake(320, CGFLOAT_MAX)];
     
-    return 75; // all other rows are 40px high 
+    return 75;  
 }
 
 
@@ -219,7 +219,7 @@ NSMutableArray *arrayTweet;
         id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];
         NSNumber *respCode = [(NSDictionary*)res objectForKey:@"errCode"];
         @try {
-            if ([respCode intValue] == 105) {
+            if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
                 NSMutableArray *arrayLatestTweet = [(NSDictionary*)res objectForKey:@"tweet"]; 
                 NSLog(@"size of new array: %d", arrayLatestTweet.count);
                 
@@ -245,10 +245,10 @@ NSMutableArray *arrayTweet;
     twitterData = twitData;
     NSNumber *respCode = [(NSDictionary*)twitterData objectForKey:@"errCode"];
     
-    if ([respCode intValue] == 105) {
+    if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
         arrayTweet = [(NSDictionary*)twitterData objectForKey:@"tweet"]; 
         [mainTable reloadData];
-    } else if ([respCode intValue] == 107) {
+    } else if ([respCode intValue] == RESPONSE_DATA_NOT_EXIST) {
         arrayTweet = nil; 
         [mainTable reloadData];
     }
