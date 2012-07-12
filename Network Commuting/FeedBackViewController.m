@@ -9,11 +9,7 @@
 #import "FeedBackViewController.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 
-#define FEEDBACK_TEXT           @"1"
-#define FEEDBACK_AUDIO          @"2"
-#define FEEDBACK_BOTH           @"3"
-#define FB_RESPOSE_SUC      @"FeedBack Send Successfully"
-#define FB_RESPONSE_FAIL        @"Please Send Again"
+
 
 @implementation FeedBackViewController
 
@@ -346,21 +342,21 @@ static Plan *fbPlan;
     RKParams *rkp = [RKParams params];
     [RKClient setSharedClient:client];
    
-    if (soundFilePath != nil) {
-        NSString *myFile =soundFilePath;
-        RKParamsAttachment* attachment = [rkp setFile:myFile forParam:@"file"];
-        attachment.MIMEType = @"audio/caf";
-        attachment.fileName = @"FBSound.caf";
-             [rkp setValue:FEEDBACK_AUDIO forParam:@"formattype"];
-    } 
-    if (textFieldRounded.text != nil) {
-        [rkp setValue:textFieldRounded.text forParam:@"txtfb"];
-        [rkp setValue:FEEDBACK_TEXT forParam:@"formattype"];
-    } 
-   
-    if(soundFilePath != nil && textFieldRounded.text != nil){
-        [rkp setValue:FEEDBACK_BOTH forParam:@"formattype"]; 
-    }
+//    if (soundFilePath != nil) {
+//        NSString *myFile =soundFilePath;
+//        RKParamsAttachment* attachment = [rkp setFile:myFile forParam:@"file"];
+//        attachment.MIMEType = @"audio/caf";
+//        attachment.fileName = @"FBSound.caf";
+//             [rkp setValue:FEEDBACK_AUDIO forParam:@"formattype"];
+//    } 
+//    if (textFieldRounded.text != nil) {
+//        [rkp setValue:textFieldRounded.text forParam:@"txtfb"];
+//        [rkp setValue:FEEDBACK_TEXT forParam:@"formattype"];
+//    } 
+//   
+//    if(soundFilePath != nil && textFieldRounded.text != nil){
+//        [rkp setValue:FEEDBACK_BOTH forParam:@"formattype"]; 
+//    }
     
     [rkp setValue:udid forParam:@"deviceid"]; 
     [rkp setValue:source forParam:@"source"]; 

@@ -21,7 +21,20 @@
 #define TOFROM_INSERT_INTO_CELL_MARGIN      1  // spacer added to cell height when there is an inserted field or table 
 #define TOFROM_TABLE_CORNER_RADIUS          10.0
 
+
 // ToFromTableViewController constants
 #define TOFROM_TEXT_FIELD_INDENT            10
+
+// Corner Radius
+#define CORNER_RADIUS_SMALL                 5.0
+
+// Upadate badge count to ZERO
+#define BADGE_COUNT_ZERO                    0
+
+// Font Size
+#define STANDARD_FONT_SIZE                  12.0
+#define MEDIUM_FONT_SIZE                    14.0
+#define LARGE_FONT_SIZE                     16.0
+#define LARGER_FONT_SIZE                    20.0
 
 #endif

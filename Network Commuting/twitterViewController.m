@@ -11,6 +11,16 @@
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "QuartzCore/QuartzCore.h"
 
+#define TWEETERVIEW_MANE        @"Nimbler Caltrain"
+#define TABLE_CELL              @"Cell"
+#define CALTRAIN_CELL_HEADER    @"caltrain @Caltrain"
+#define TWEET                   @"tweet"
+#define TWEET_TIME              @"time"
+#define CALTRAIN_IMG            @"caltrain.jpg"
+
+#define MAXLINE_TAG             3
+#define CELL_HEIGHT             75
+
 @implementation twitterViewController
 
 NSMutableArray *arrayTweet;
@@ -21,19 +31,14 @@ NSMutableArray *arrayTweet;
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        [[self navigationItem] setTitle:@"Nimbler Caltrain"];
+        [[self navigationItem] setTitle:TWEETERVIEW_MANE];
         dateFormattr = [[NSDateFormatter alloc] init];
         [dateFormattr setDateStyle:NSDateFormatterFullStyle];
-        [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
-        
+        [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
+
         relod = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(getLatestTweets)]; 
         self.navigationItem.rightBarButtonItem = relod;
         [self refreshTweetCount];
-        
-//        [self.navigationItem setHidesBackButton:YES animated:YES];
-//        UIBarButtonItem  *back = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRewind target:self action:@selector(popOut)];
-//        self.navigationItem.leftBarButtonItem = back;
-
     }
     return self;
 }
@@ -68,7 +73,6 @@ NSMutableArray *arrayTweet;
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    
     [super viewWillAppear:animated];
     mainTable.delegate = self;
     mainTable.dataSource = self;
@@ -83,49 +87,43 @@ NSMutableArray *arrayTweet;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if ([arrayTweet count] == 0) {
-       
-    }
     return [arrayTweet count];
 }
 
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = TABLE_CELL;
     UITableViewCell *cell =     [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
     if (cell == nil) 
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle                                       reuseIdentifier:CellIdentifier] ;
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] ;
     }
-    
     id key = [arrayTweet objectAtIndex:indexPath.row];                
-    NSString *tweetDetail = [(NSDictionary*)key objectForKey:@"tweet"];
-    NSString *tweetTime =  [(NSDictionary*)key objectForKey:@"time"];
+    NSString *tweetDetail = [(NSDictionary*)key objectForKey:TWEET];
+    NSString *tweetTime =  [(NSDictionary*)key objectForKey:TWEET_TIME];
     
     NSTimeInterval seconds = [tweetTime doubleValue]/1000;
     NSDate *epochNSDate = [[NSDate alloc] initWithTimeIntervalSince1970:seconds];
     NSDate *currentDate = [NSDate date];
     NSString *tweetAt = [self stringForTimeIntervalSinceCreated:currentDate serverTime:epochNSDate];
     
-    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]]; 
-    cell.textLabel.text = @"caltrain @Caltrain";
+    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]]; 
+    cell.textLabel.text = CALTRAIN_CELL_HEADER;
     cell.detailTextLabel.text = tweetDetail;
-    cell.detailTextLabel.numberOfLines= 3;
+    cell.detailTextLabel.numberOfLines= MAXLINE_TAG;
     
-    UILabel *labelTime = (UILabel *)[cell viewWithTag:3];
+    UILabel *labelTime = (UILabel *)[cell viewWithTag:MAXLINE_TAG];
     CGRect lbl3Frame = CGRectMake(280, 0, 30, 20);
     labelTime = [[UILabel alloc] initWithFrame:lbl3Frame];
-    labelTime.tag = 3;
+    labelTime.tag = MAXLINE_TAG;
     labelTime.textColor = [UIColor blackColor];
     [labelTime setTextAlignment:UITextAlignmentRight];
     [cell.contentView addSubview:labelTime];
     labelTime.text = tweetAt;
-    [labelTime setFont:[UIFont boldSystemFontOfSize:12.0]];
+    [labelTime setFont:[UIFont boldSystemFontOfSize:STANDARD_FONT_SIZE]];
     
-    UIImage *img = [UIImage imageNamed:@"caltrain.jpg"];    
-    cell.imageView.layer.cornerRadius = 5.0;
+    UIImage *img = [UIImage imageNamed:CALTRAIN_IMG];    
+    cell.imageView.layer.cornerRadius = CORNER_RADIUS_SMALL;
     cell.imageView.layer.masksToBounds = YES;
     [cell.imageView setImage:img];
     
@@ -133,21 +131,81 @@ NSMutableArray *arrayTweet;
 }
 
 
-- (CGFloat)tableView:(UITableView *)aTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+- (CGFloat)tableView:(UITableView *)aTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
+{    
     //    id key = [arrayTweet objectAtIndex:indexPath.row];                
     //    NSString *tweetDetail = [(NSDictionary*)key objectForKey:@"tweet"];
     //   CGSize size = [tweetDetail 
     //            sizeWithFont:[UIFont systemFontOfSize:14] 
     //            constrainedToSize:CGSizeMake(320, CGFLOAT_MAX)];
     
-    return 75;  
+    return CELL_HEIGHT;  
+}
+
+#pragma mark reloadNewTweets request Response
+-(void)getLatestTweets 
+{
+    if (arrayTweet.count != 0) {
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        id key = [arrayTweet objectAtIndex:0];                
+        NSString *tweetTime =  [(NSDictionary*)key objectForKey:TWEET_TIME];
+        NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
+                              LAST_TWEET_TIME,tweetTime,
+                              DEVICE_ID, [UIDevice currentDevice].uniqueIdentifier,
+                              nil];
+        NSString *req = [LATEST_TWEETS_REQ appendQueryParams:dict];
+        [[RKClient sharedClient]  get:req delegate:self]; 
+        [self refreshTweetCount];
+    }
+}
+
+- (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
+    RKJSONParserJSONKit* rkTwitDataParser = [RKJSONParserJSONKit new];
+    if ([request isGET]) {
+        NSLog(@"latest tweets: %@", [response bodyAsString]);
+        id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];
+        NSNumber *respCode = [(NSDictionary*)res objectForKey:ERROR_CODE];
+        @try {
+            if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
+                NSMutableArray *arrayLatestTweet = [(NSDictionary*)res objectForKey:TWEET]; 
+                NSMutableArray *tempArray = [[NSMutableArray alloc] initWithCapacity:arrayLatestTweet.count];
+                [tempArray addObjectsFromArray:arrayLatestTweet];
+                [tempArray addObjectsFromArray:arrayTweet];
+                arrayTweet = [[NSMutableArray alloc]initWithCapacity:arrayLatestTweet.count];
+                [arrayTweet addObjectsFromArray:tempArray];
+                [mainTable reloadData];
+            }
+        }
+        @catch (NSException *exception) {
+            NSLog(@"exceptions: %@", exception);
+        }
+    }
+}
+
+-(void)setTwitterLiveData:(id)twitData
+{
+    twitterData = twitData;
+    NSNumber *respCode = [(NSDictionary*)twitterData objectForKey:ERROR_CODE];
+    
+    if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
+        arrayTweet = [(NSDictionary*)twitterData objectForKey:TWEET]; 
+        [mainTable reloadData];
+    } else if ([respCode intValue] == RESPONSE_DATA_NOT_EXIST) {
+        arrayTweet = nil; 
+        [mainTable reloadData];
+    }
+}
+
+-(void)refreshTweetCount
+{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:@"0" forKey:TWEET_COUNT];
 }
 
 
 // convert into twitter calaculate time
 -(NSString *)stringForTimeIntervalSinceCreated:(NSDate *)dateTime serverTime:(NSDate *)serverDateTime{
-    
     NSInteger tweetMin;
     NSInteger tweethour;
     NSInteger tweetday;
@@ -190,74 +248,6 @@ NSMutableArray *arrayTweet;
             return [NSString stringWithFormat:@"%is", interval];
         }
     }
-}
-
-#pragma mark reloadNewTweets request Response
-
--(void)getLatestTweets 
-{
-    
-    if (arrayTweet.count != 0) {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
-        id key = [arrayTweet objectAtIndex:0];                
-        NSString *tweetTime =  [(NSDictionary*)key objectForKey:@"time"];
-        NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
-                              @"tweetTime",tweetTime,
-                              @"deviceid", [UIDevice currentDevice].uniqueIdentifier,
-                              nil];
-        NSString *req = [@"advisories/latest" appendQueryParams:dict];
-        [[RKClient sharedClient]  get:req delegate:self]; 
-        [self refreshTweetCount];
-    }
-}
-
-- (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
-    RKJSONParserJSONKit* rkTwitDataParser = [RKJSONParserJSONKit new];
-    if ([request isGET]) {
-        NSLog(@"latest tweets: %@", [response bodyAsString]);
-        id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];
-        NSNumber *respCode = [(NSDictionary*)res objectForKey:@"errCode"];
-        @try {
-            if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
-                NSMutableArray *arrayLatestTweet = [(NSDictionary*)res objectForKey:@"tweet"]; 
-                NSLog(@"size of new array: %d", arrayLatestTweet.count);
-                
-                NSMutableArray *tempArray = [[NSMutableArray alloc] initWithCapacity:arrayLatestTweet.count];
-                [tempArray addObjectsFromArray:arrayLatestTweet];
-                [tempArray addObjectsFromArray:arrayTweet];
-                
-                arrayTweet = [[NSMutableArray alloc]initWithCapacity:arrayLatestTweet.count];
-                [arrayTweet addObjectsFromArray:tempArray];
-                NSLog(@"exception %d", [tempArray count]);
-                
-                [mainTable reloadData];
-            }
-        }
-        @catch (NSException *exception) {
-            NSLog(@"exceptions: %@", exception);
-        }
-    }
-}
-
--(void)setTwitterLiveData:(id)twitData
-{
-    twitterData = twitData;
-    NSNumber *respCode = [(NSDictionary*)twitterData objectForKey:@"errCode"];
-    
-    if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
-        arrayTweet = [(NSDictionary*)twitterData objectForKey:@"tweet"]; 
-        [mainTable reloadData];
-    } else if ([respCode intValue] == RESPONSE_DATA_NOT_EXIST) {
-        arrayTweet = nil; 
-        [mainTable reloadData];
-    }
-}
-
--(void)refreshTweetCount
-{
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setObject:@"0" forKey:@"tweetCount"];
 }
 
 @end

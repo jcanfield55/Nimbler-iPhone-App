@@ -46,6 +46,8 @@
     RouteOptionsViewController *routeOptionsVC; 
     LocationPickerViewController *locationPickerVC;
     TwitterSearch* twitterSearchVC;
+    
+    NSUserDefaults *prefs;
 }
 
 // Internal methods
@@ -87,6 +89,8 @@
 @synthesize isContinueGetRealTimeData;
 @synthesize continueGetTime;
 @synthesize maxiWalkDistance;
+
+@synthesize toFormatted,fromFormatted;
 
 // Constants for animating up and down the To: field
 #define TO_SECTION 0
@@ -182,31 +186,18 @@ float currentLocationResTime;
 - (void)viewWillAppear:(BOOL)animated
 {
     @try {
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        int tweetConut = [[prefs objectForKey:@"tweetCount"] intValue];
-        BOOL isUrgent = [[prefs objectForKey:@"isUrgent"] boolValue];
+        prefs = [NSUserDefaults standardUserDefaults];
+        int tweetConut = [[prefs objectForKey:TWEET_COUNT] intValue];
         [twitterCount removeFromSuperview];
-        if (isUrgent) {
-            twitterCount = [[CustomBadge alloc] initWithString:[NSString stringWithFormat:@"%d!",tweetConut] withStringColor:[UIColor whiteColor] withInsetColor:[UIColor blueColor] withBadgeFrame:YES withBadgeFrameColor:[UIColor whiteColor]];
-            [twitterCount setFrame:CGRectMake(50, 360, twitterCount.frame.size.width, twitterCount.frame.size.height)];
-            if (tweetConut == 0) {
-                [twitterCount setHidden:YES];
-            } else {
-                [self.view addSubview:twitterCount];
-                [twitterCount setHidden:NO];
-            }
+        twitterCount = [[CustomBadge alloc] init];
+        twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
+        [twitterCount setFrame:CGRectMake(60, 372, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
+        if (tweetConut == 0) {
+            [twitterCount setHidden:YES];
         } else {
-            twitterCount = [[CustomBadge alloc] init];
-            twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
-            [twitterCount setFrame:CGRectMake(60, 365, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
-            if (tweetConut == 0) {
-                [twitterCount setHidden:YES];
-            } else {
-                [self.view addSubview:twitterCount];
-                [twitterCount setHidden:NO];
-            }
-        } 
-        [continueGetTime invalidate];
+            [self.view addSubview:twitterCount];
+            [twitterCount setHidden:NO];
+        }        [continueGetTime invalidate];
         continueGetTime = nil;
         [super viewWillAppear:animated];
         [self updateTripDate];  // update tripDate if needed
@@ -666,7 +657,7 @@ float currentLocationResTime;
             fromLocs = [fromLocation formattedAddress];
         }
         NSLog(@"current Location %@", fromLocs);
-        FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_GENERAL uniqueId:nil date:[dFormat stringFromDate:tripDate] fromAddress:fromLocs toAddress:[toLocation formattedAddress]];
+        FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:[NSNumber numberWithInt:FB_SOURCE_GENERAL] uniqueId:nil date:[dFormat stringFromDate:tripDate] fromAddress:fromLocs toAddress:[toLocation formattedAddress]];
         FeedBackForm *feedbackVC =  [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];  // DE56 fix
         [[self navigationController] pushViewController:feedbackVC animated:YES];
 
@@ -684,9 +675,9 @@ float currentLocationResTime;
         isTwitterLivaData = TRUE;
         NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                                @"deviceid", udid,
+                                DEVICE_ID, udid,
                                 nil];    
-        NSString *advisoriesAll = [@"advisories/all" appendQueryParams:params];
+        NSString *advisoriesAll = [ALL_TWEETS_REQ appendQueryParams:params];
         [[RKClient sharedClient]  get:advisoriesAll delegate:self];
     }
     @catch (NSException *exception) {
@@ -938,7 +929,12 @@ float currentLocationResTime;
                                            @"date", [NSDate date], nil]];  
             
             NSLog(@"Plan resource: %@", planURLResource);
-            // Call the trip planner
+            
+            [prefs setValue:[toLocation formattedAddress] forKey:TO_FORMATTED];
+            [prefs setValue:[fromLocation formattedAddress] forKey:FROM_FORMATTED];
+            [prefs synchronize];
+           
+             // Call the trip planner
             [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
             savetrip = TRUE;
             isContinueGetRealTimeData = FALSE;

@@ -98,15 +98,15 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                 UIImage *imgForArrivalTime = [UIImage alloc];
                 cell.frame = CGRectMake(100, 2, 20, 20);
                 
-                if([itin.itinArrivalFlag intValue] == [ON_TIME intValue]) {
+                if([itin.itinArrivalFlag intValue] == ON_TIME) {
                     imgForArrivalTime = [UIImage imageNamed:@"img_ontime.png"] ;
-                }  else if([itin.itinArrivalFlag intValue] == [DELAYED intValue]) {
+                }  else if([itin.itinArrivalFlag intValue] == DELAYED) {
                     imgForArrivalTime = [UIImage imageNamed:@"img_delay.png"] ;
-                } else if([itin.itinArrivalFlag intValue] == [EARLY intValue]) {
+                } else if([itin.itinArrivalFlag intValue] == EARLY) {
                     imgForArrivalTime = [UIImage imageNamed:@"img_early.png"] ;
-                } else if([itin.itinArrivalFlag intValue] == [EARLIER intValue]) {
+                } else if([itin.itinArrivalFlag intValue] == EARLIER) {
                     imgForArrivalTime = [UIImage imageNamed:@"img_earlier.ong"] ;
-                } else if ([itin.itinArrivalFlag intValue] == [ITINERARY_TIME_SLIPPAGE intValue]) {
+                } else if ([itin.itinArrivalFlag intValue] == ITINERARY_TIME_SLIPPAGE ) {
                     imgForArrivalTime = [UIImage imageNamed:@"itin_slipage.png"] ;
                 }
                 [cell.imageView setImage:imgForArrivalTime];
@@ -186,7 +186,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 -(void)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     @try {
-        FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_PLAN uniqueId:[plan planId] date:nil fromAddress:nil toAddress:nil];
+        FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:[NSNumber numberWithInt:FB_SOURCE_PLAN] uniqueId:[plan planId] date:nil fromAddress:nil toAddress:nil];
         FeedBackForm *feedbackFormVc = [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];
         [[self navigationController] pushViewController:feedbackFormVc animated:YES]; 
     }
@@ -216,29 +216,17 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     
     @try {
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        int tweetConut = [[prefs objectForKey:@"tweetCount"] intValue];
-        BOOL isUrgent = [[prefs objectForKey:@"isUrgent"] boolValue];
+        int tweetConut = [[prefs objectForKey:TWEET_COUNT] intValue];
         [twitterCount removeFromSuperview];
-        if (isUrgent) {
-            twitterCount = [[CustomBadge alloc] initWithString:[NSString stringWithFormat:@"%d!",tweetConut] withStringColor:[UIColor whiteColor] withInsetColor:[UIColor blueColor] withBadgeFrame:YES withBadgeFrameColor:[UIColor whiteColor]];
-            [twitterCount setFrame:CGRectMake(50, 360, twitterCount.frame.size.width, twitterCount.frame.size.height)];
-            if (tweetConut == 0) {
-                [twitterCount setHidden:YES];
-            } else {
-                [self.view addSubview:twitterCount];
-                [twitterCount setHidden:NO];
-            }
+        twitterCount = [[CustomBadge alloc] init];
+        twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
+        [twitterCount setFrame:CGRectMake(60, 372, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
+        if (tweetConut == 0) {
+            [twitterCount setHidden:YES];
         } else {
-            twitterCount = [[CustomBadge alloc] init];
-            twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
-            [twitterCount setFrame:CGRectMake(60, 365, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
-            if (tweetConut == 0) {
-                [twitterCount setHidden:YES];
-            } else {
-                [self.view addSubview:twitterCount];
-                [twitterCount setHidden:NO];
-            }
-        } 
+            [self.view addSubview:twitterCount];
+            [twitterCount setHidden:NO];
+        }
     }
     @catch (NSException *exception) {
         NSLog(@"Exception at press feedback button from RouteOptionsViewController : %@", exception);

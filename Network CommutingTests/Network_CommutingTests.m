@@ -8,7 +8,6 @@
 
 #import "Network_CommutingTests.h"
 
-
 @implementation Network_CommutingTests
 
 - (void)setUp

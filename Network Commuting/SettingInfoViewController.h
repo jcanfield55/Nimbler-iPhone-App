@@ -29,5 +29,5 @@
 
 -(UIAlertView *) upadetSettings;
 -(void)popOutFromSettingView;
--(void)fetchData;
+-(void)fetchUserSettingData;
 @end

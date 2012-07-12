@@ -32,7 +32,7 @@
 @property(nonatomic, strong) IBOutlet UILabel *directionsTitle;
 @property(nonatomic, strong) IBOutlet UILabel *directionsDetails;
 @property (strong, nonatomic) IBOutlet UIButton *feedbackButton;
-@property(nonatomic, strong, readonly) Itinerary *itinerary;
+@property(nonatomic, strong) Itinerary *itinerary;
 @property(nonatomic, readonly) int itineraryNumber;
 @property (strong, nonatomic) CustomBadge *twitterCount;
 
@@ -48,7 +48,9 @@
 
 
 -(void)walk;
--(void)customMap;
 -(void)ReloadLegMapWithNewData;
 - (void)setDirectionsText;
+
+- (void)refreshLegOverlay:(int)iNumber;
+
 @end

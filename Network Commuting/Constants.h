@@ -17,7 +17,7 @@
 
 #define TRIP_PROCESS_URL        @"http://23.23.210.156:8080/TPServer/ws/"
 //#define TRIP_PROCESS_URL        @"http://ec2-23-22-169-158.compute-1.amazonaws.com:8080/TPServer/ws/"
-//#define TRIP_PROCESS_URL        @"http://192.168.2.196:9090/TPServer/ws/"
+//#define TRIP_PROCESS_URL        @"http://192.168.2.135:8080/TPServer/ws/"
 
 #define TWITTER_SERARCH_URL     @"https://twitter.com/#!/search/realtime/TRAIN%20from%3Acaltrain%20OR%20from%3Acaltrain_news"
 #define CALTRAIN_TWITTER_URL    @"https://twitter.com/#!/search/from%3Acaltrain%20OR%20from%3Acaltrain_news"
@@ -27,29 +27,16 @@
 #define REVERSE_GEO_FROM        @"2"
 #define REVERSE_GEO_TO          @"2"
 
-#define FEEDBACK_TEXT           @"1"
-#define FEEDBACK_AUDIO          @"2"
-#define FEEDBACK_BOTH           @"3"
-
-#define FB_RESPONSE_SUCCEES     @"Feedback Sent Successfully"
-#define FB_RESPONSE_FAIL        @"Please Send Again"
-#define FB_TITLE_MSG            @"Trip Feedback"
-
 #define MIN_LAT                 @"36.791000000000004"
 #define MIN_LONG                @"-123.4631719"
 #define MAX_LAT                 @"38.7189988"
 #define MAX_LONG                @"-121.025001"
 
-#define FB_SOURCE_PLAN          @"1"
-#define FB_SOURCE_ITINERARY     @"2"
-#define FB_SOURCE_LEG           @"3"
-#define FB_SOURCE_GENERAL       @"4"
-
-#define ON_TIME                 @"1"
-#define DELAYED                 @"2"
-#define EARLY                   @"3"
-#define EARLIER                 @"4"
-#define ITINERARY_TIME_SLIPPAGE @"5"
+#define ON_TIME                 1
+#define DELAYED                 2
+#define EARLY                   3
+#define EARLIER                 4
+#define ITINERARY_TIME_SLIPPAGE 5
 
 #define ALERT_OFF               @"1"
 #define ALERT_ON                @"2"
