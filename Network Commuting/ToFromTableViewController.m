@@ -162,10 +162,7 @@
             [alert show];
             return ;
         }
-    }    
-    // Update ToFromViewController with the geocode results
-    [toFromVC updateToFromLocation:self isFrom:isFrom location:loc];
-    [toFromVC updateGeocodeStatus:FALSE isFrom:isFrom];  // let it know Geocode no longer outstanding
+    }
     
     // Clear txtField and select the current item
     if ([[txtField text] length] > 0) {  // Fix to DE22

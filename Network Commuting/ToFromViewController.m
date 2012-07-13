@@ -203,7 +203,6 @@ float currentLocationResTime;
             [twitterCount setHidden:NO];
         }        [continueGetTime invalidate];
         continueGetTime = nil;
-        [self updateTripDate];  // update tripDate if needed
 
         [self updateTripDate];  // update tripDate if needed
         
