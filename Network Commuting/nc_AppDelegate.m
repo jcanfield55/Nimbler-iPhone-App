@@ -92,7 +92,8 @@ static nc_AppDelegate *appDelegate;
         [toFromViewController setLocations:locations];
         
         // Pre-load stations location files
-        [locations preLoadIfNeededFromFile:@"caltrain-station.json"];
+        NSDecimalNumber* version = [NSDecimalNumber decimalNumberWithString:PRELOAD_VERSION_NUMBER];
+        [locations preLoadIfNeededFromFile:PRELOAD_LOCATION_FILE latestVersionNumber:version];
         
         if ([[NSUserDefaults standardUserDefaults] valueForKey:@"UserPreferance"] == nil) {
             propertyInfo = [NSEntityDescription

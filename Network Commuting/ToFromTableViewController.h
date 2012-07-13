@@ -37,6 +37,9 @@
 
 - (void)initializeCurrentLocation:(Location *)currentLoc; // Method called when currentLocation is first created and automatically picked as the fromLocation
 
-- (void)setPickedLocation:(Location *)ploc locationArray:(NSArray *)locationArray; // Method called by LocationPickerVC when a user picks a location
+// Method called by LocationPickerVC when a user picks a location
+// Picks the location and clears out any other Locations in the list with to & from frequency = 0.0
+- (void)setPickedLocation:(Location *)ploc locationArray:(NSArray *)locationArray isGeocodedResults:(BOOL)isGeocodedResult; 
+
 -(BOOL)alertUsetForLocationService;
 @end
