@@ -40,17 +40,16 @@
 // Note:  num = 0 is the startpoint.  num=1 is the first leg.  
 // num = [[itin sortedLegs] count]+1 is the endpoint
 - (void)setItinerary:(Itinerary *)itin itineraryNumber:(int)num;
-// Callback for when user presses the navigate back / forth button on the right navbar
+- (void)setMapViewRegion;
+- (void)setDirectionsText;
 - (IBAction)navigateBack:(id)sender;
 - (IBAction)navigateForward:(id)sender;
-- (IBAction)twitterSearch:(id)sender forEvent:(UIEvent *)event;
-- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
-
-
--(void)walk;
--(void)ReloadLegMapWithNewData;
-- (void)setDirectionsText;
-
 - (void)refreshLegOverlay:(int)iNumber;
+- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
+-(IBAction)twitterSearch:(id)sender forEvent:(UIEvent *)event;
+-(void)ReloadLegMapWithNewData;
+- (IBAction)navigateStart:(id)sender;
+-(void)customMap;
+-(void)walk;
 
 @end

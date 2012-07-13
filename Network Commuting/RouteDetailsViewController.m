@@ -36,6 +36,10 @@ NSUserDefaults *prefs;
     [super loadView];
 }
 
+-(void)viewDidLoad{
+    [super viewDidLoad];
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -259,7 +263,7 @@ NSUserDefaults *prefs;
 }
 
 
-- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
+- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     @try {
         FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:[NSNumber numberWithInt:FB_SOURCE_ITINERARY] uniqueId:[itinerary itinId] date:nil fromAddress:nil toAddress:nil]; 

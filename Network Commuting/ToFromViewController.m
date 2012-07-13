@@ -185,6 +185,7 @@ float currentLocationResTime;
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     @try {
         prefs = [NSUserDefaults standardUserDefaults];
         int tweetConut = [[prefs objectForKey:TWEET_COUNT] intValue];
@@ -199,7 +200,6 @@ float currentLocationResTime;
             [twitterCount setHidden:NO];
         }        [continueGetTime invalidate];
         continueGetTime = nil;
-        [super viewWillAppear:animated];
         [self updateTripDate];  // update tripDate if needed
 
         // Enforce height of main table
