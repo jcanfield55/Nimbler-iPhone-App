@@ -23,9 +23,9 @@
 @property(nonatomic, strong) Itinerary *itinerary;
 @property (strong, nonatomic) CustomBadge *twitterCount;
 
-- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event;
-
+- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
+- (void)mapOverView;
 -(void)ReloadLegWithNewData;
 
 @end

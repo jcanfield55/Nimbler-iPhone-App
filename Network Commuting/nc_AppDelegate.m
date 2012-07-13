@@ -356,14 +356,12 @@ static nc_AppDelegate *appDelegate;
                     NSLog(@"Responce %@", [response bodyAsString]);
                     NSDictionary  *tweeterCountParser = [rkParser objectFromString:[response bodyAsString] error:nil];
                     NSNumber *respCode = [(NSDictionary*)tweeterCountParser objectForKey:@"errCode"];
-                    NSString *isUrgent = [(NSDictionary*)tweeterCountParser objectForKey:@"isUrgent"];
                     //                NSString *allNew = [(NSDictionary*)tweeterCountParser objectForKey:@"allNew"];
                     if ([respCode intValue]== RESPONSE_SUCCESSFULL) {                   
-                        NSLog(@"count: %@",[(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"]);
-                        NSString *tweeterCount = [(NSDictionary*)tweeterCountParser objectForKey:@"tweetCount"];
+                        NSLog(@"count: %@",[(NSDictionary*)tweeterCountParser objectForKey:TWEET_COUNT]);
+                        NSString *tweeterCount = [(NSDictionary*)tweeterCountParser objectForKey:TWEET_COUNT];
                         prefs = [NSUserDefaults standardUserDefaults];  
-                        [prefs setObject:tweeterCount forKey:@"tweetCount"];
-                        [prefs setObject:isUrgent forKey:@"isUrgent"];
+                        [prefs setObject:tweeterCount forKey:TWEET_COUNT];
                         [prefs synchronize];
                         // Upadte automatic badge with Live tweeterCount 
                         [toFromViewController viewWillAppear:TRUE];
@@ -417,11 +415,11 @@ static nc_AppDelegate *appDelegate;
 
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     @try {
-        NSString *token = [[[[deviceToken description] stringByReplacingOccurrencesOfString: @"<" withString: @""] stringByReplacingOccurrencesOfString: @">" withString: @""] stringByReplacingOccurrencesOfString: @" " withString: @""];
+        NSString *token = [[[[deviceToken description] stringByReplacingOccurrencesOfString: @"<" withString: NULL_STRING] stringByReplacingOccurrencesOfString: @">" withString: NULL_STRING] stringByReplacingOccurrencesOfString: @" " withString: @""];
         NSLog(@"deviceTokenString: %@",token);
-        [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+        [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
         prefs = [NSUserDefaults standardUserDefaults];
-        [prefs setObject:token forKey:@"deviceToken"];  
+        [prefs setObject:token forKey:DEVICE_TOKEN];  
         [prefs synchronize];
         [self upadateDefaultUserValue];
     }
@@ -437,7 +435,7 @@ static nc_AppDelegate *appDelegate;
         NSLog(@"didFail To Register For RemoteNotifications With Error: %@",str);     
         prefs = [NSUserDefaults standardUserDefaults];
         NSString  *token = @"26d906c5c273446d5f40d2c173ddd3f6869b2666b1c7afd5173d69b6629def70";
-        [prefs setObject:token forKey:@"deviceToken"];
+        [prefs setObject:token forKey:DEVICE_TOKEN];
         [self upadateDefaultUserValue];
         //    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Push Alert" message:@"your device couldn't connect with apple. Please reinstall application" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         //    [alert show];
@@ -457,7 +455,7 @@ static nc_AppDelegate *appDelegate;
         NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
         NSString *badge = [[userInfo valueForKey:@"aps"] valueForKey:@"badge"];
         prefs = [NSUserDefaults standardUserDefaults];  
-        [prefs setObject:badge forKey:@"tweetCount"];
+        [prefs setObject:badge forKey:TWEET_COUNT];
         if ([isUrgent isEqualToString:@"true"]) {
             UIAlertView *dataAlert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain"
                                                                 message:message
@@ -466,7 +464,7 @@ static nc_AppDelegate *appDelegate;
                                                       otherButtonTitles:nil,nil];
             
             [dataAlert show];
-            [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+            [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
         } 
         else {
             [toFromViewController redirectInTwitterAtPushnotification]; 
@@ -480,13 +478,13 @@ static nc_AppDelegate *appDelegate;
 -(void)alertView: (UIAlertView *)UIAlertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
-    if ([btnName isEqualToString:@"Ok"]) {
+    if ([btnName isEqualToString:@"OK"]) {
+        [toFromViewController redirectInTwitterAtPushnotification];
         NSLog(@"receive urgent message");
     }
 }
 
 #pragma mark Twitter Live count request
-
 -(void)getTwiiterLiveData
 {
     @try {
@@ -519,7 +517,7 @@ static nc_AppDelegate *appDelegate;
             NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                                     @"deviceid", udid,
                                     @"alertCount", @"3",
-                                    @"deviceToken", [prefs objectForKey:@"deviceToken"],
+                                    DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],
                                     @"maxDistance", @"0.75",
                                     nil];    
             NSString *twitCountReq = [@"users/preferences/update" appendQueryParams:params];

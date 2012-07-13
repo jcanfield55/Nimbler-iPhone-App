@@ -23,7 +23,7 @@
 @synthesize longTo;
 
 
-- (id)initWithParam:(NSString *)name source:(NSString *)fbSources uniqueId:(NSString *)uniqueID date:(NSString *)tripDate 
+- (id)initWithParam:(NSString *)name source:(NSNumber *)fbSources uniqueId:(NSString *)uniqueID date:(NSString *)tripDate 
           fromAddress:(NSString *)fromaddress toAddress:(NSString *)toaddress  
 {
     self = [super init];
@@ -60,11 +60,11 @@
     return deviceId;
 }
 
--(NSString *) getfbSource {
+-(NSNumber *) getfbSource {
     return fbSource;
 }
 
--(void) setFbSource:(NSString *)feedbackSource {
+-(void) setFbSource:(NSNumber *)feedbackSource {
     fbSource = feedbackSource;
 }
 

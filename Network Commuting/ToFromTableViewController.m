@@ -14,7 +14,6 @@
 @interface ToFromTableViewController () 
 {
     // Internal variables
-    
     UITableViewCell* selectedCell; // Cell currently selected 
     Location* selectedLocation;  // Location currently selected
     NSString *rawAddress;    // last user entered raw address
@@ -94,7 +93,6 @@
 //
 // Table view management methods
 //
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     if ([toFromVC editMode] == NO_EDIT) {
@@ -113,7 +111,6 @@
         return[locations numberOfLocations:isFrom]; // matching rows
     }
 }
-
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -137,12 +134,10 @@
 }
 
 
-
 // Internal utility function to update the selected location to be loc 
 // (in locations object, in toFromVC, and in the table selected cell)
 - (void)markAndUpdateSelectedLocation:(Location *)loc
 {
-    
     if ([[loc formattedAddress] isEqualToString:@"Current Location"]) {
         [self alertUsetForLocationService];
         if ([self alertUsetForLocationService]) {
@@ -150,9 +145,7 @@
             [alert show];
             return ;
         }
-    }
-    
-    
+    }    
     // Update ToFromViewController with the geocode results
     [toFromVC updateToFromLocation:self isFrom:isFrom location:loc];
     [toFromVC updateGeocodeStatus:FALSE isFrom:isFrom];  // let it know Geocode no longer outstanding
@@ -181,7 +174,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
     if ([toFromVC editMode]==NO_EDIT && [indexPath section] == 0) {  // If it is the 'Enter new address' row...
         UITableViewCell *cell =
         [tableView dequeueReusableCellWithIdentifier:@"ToFromEnterNewLocationCell"];
@@ -191,14 +183,11 @@
                                           reuseIdentifier:@"ToFromEnterNewLocationCell"];
        
         }
-        
         [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
         [[cell textLabel] setTextColor:[UIColor lightGrayColor]];
         [[cell textLabel] setText:@"Enter New Address"];
         return cell;
-
     }
-    
     // If not the 'Enter new address row', show the appropriate location cell
     // Check for a reusable cell first, use that if it exists
     UITableViewCell *cell =

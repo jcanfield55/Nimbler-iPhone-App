@@ -32,7 +32,7 @@
 @property(nonatomic, strong) IBOutlet UILabel *directionsTitle;
 @property(nonatomic, strong) IBOutlet UILabel *directionsDetails;
 @property (strong, nonatomic) IBOutlet UIButton *feedbackButton;
-@property(nonatomic, strong, readonly) Itinerary *itinerary;
+@property(nonatomic, strong) Itinerary *itinerary;
 @property(nonatomic, readonly) int itineraryNumber;
 @property (strong, nonatomic) CustomBadge *twitterCount;
 
@@ -40,15 +40,16 @@
 // Note:  num = 0 is the startpoint.  num=1 is the first leg.  
 // num = [[itin sortedLegs] count]+1 is the endpoint
 - (void)setItinerary:(Itinerary *)itin itineraryNumber:(int)num;
-// Callback for when user presses the navigate back / forth button on the right navbar
+- (void)setMapViewRegion;
+- (void)setDirectionsText;
 - (IBAction)navigateBack:(id)sender;
 - (IBAction)navigateForward:(id)sender;
-- (IBAction)twitterSearch:(id)sender forEvent:(UIEvent *)event;
+- (void)refreshLegOverlay:(int)iNumber;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
-
-
--(void)walk;
--(void)customMap;
+-(IBAction)twitterSearch:(id)sender forEvent:(UIEvent *)event;
 -(void)ReloadLegMapWithNewData;
-- (void)setDirectionsText;
+- (IBAction)navigateStart:(id)sender;
+-(void)customMap;
+-(void)walk;
+
 @end

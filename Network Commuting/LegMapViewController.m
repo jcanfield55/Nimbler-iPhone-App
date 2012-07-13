@@ -49,7 +49,7 @@ NSString *legID;
     return self;
 }
 
-- (void)setItinerary:(Itinerary *)itin itineraryNumber:(int)num;
+- (void)setItinerary:(Itinerary *)itin itineraryNumber:(int)num
 {
     @try {
         itinerary = itin;
@@ -95,19 +95,8 @@ NSString *legID;
         [mapView setShowsUserLocation:YES];  // track user location
         
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        int tweetConut = [[prefs objectForKey:@"tweetCount"] intValue];
-        BOOL isUrgent = [[prefs objectForKey:@"isUrgent"] boolValue];
+        int tweetConut = [[prefs objectForKey:TWEET_COUNT] intValue];
         [twitterCount removeFromSuperview];
-        if (isUrgent) {
-            twitterCount = [[CustomBadge alloc] initWithString:[NSString stringWithFormat:@"%d!",tweetConut] withStringColor:[UIColor whiteColor] withInsetColor:[UIColor blueColor] withBadgeFrame:YES withBadgeFrameColor:[UIColor whiteColor]];
-            [twitterCount setFrame:CGRectMake(60, 372, twitterCount.frame.size.width, twitterCount.frame.size.height)];
-            if (tweetConut == 0) {
-                [twitterCount setHidden:YES];
-            } else {
-                [self.view addSubview:twitterCount];
-                [twitterCount setHidden:NO];
-            }
-        } else {
             twitterCount = [[CustomBadge alloc] init];
             twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
             [twitterCount setFrame:CGRectMake(60, 372, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
@@ -117,7 +106,6 @@ NSString *legID;
                 [self.view addSubview:twitterCount];
                 [twitterCount setHidden:NO];
             }
-        } 
     }
     @catch (NSException *exception) {
         NSLog(@"exception at viewWillAppear in LegMapViewController: %@", exception);
@@ -179,16 +167,16 @@ NSString *legID;
             
             if([leg arrivalTime] > 0) {
                 UIImage *imgForArrivalTime;
-                if([leg.arrivalFlag intValue] == [ON_TIME intValue]) {
+                if([leg.arrivalFlag intValue] == ON_TIME) {
                     imgForArrivalTime = [UIImage imageNamed:@"img_ontime.png"];
                     RealArrivalTime.text =[NSString stringWithFormat:@"onTime"];
-                }  else if([leg.arrivalFlag intValue] == [DELAYED intValue]) {
+                }  else if([leg.arrivalFlag intValue] == DELAYED) {
                     imgForArrivalTime = [UIImage imageNamed:@"img_delay.png"] ;
                     RealArrivalTime.text =[NSString stringWithFormat:@"Delay:%@m",leg.timeDiffInMins];
-                } else if([leg.arrivalFlag intValue] == [EARLY intValue]) {
+                } else if([leg.arrivalFlag intValue] == EARLY) {
                     imgForArrivalTime = [UIImage imageNamed:@"img_early.png"] ;
                     RealArrivalTime.text =[NSString stringWithFormat:@"Early:%@m",leg.timeDiffInMins];
-                } else if([leg.arrivalFlag intValue] == [EARLIER intValue]) {
+                } else if([leg.arrivalFlag intValue] == EARLIER) {
                     imgForArrivalTime = [UIImage imageNamed:@"img_earlier.png"] ;
                     RealArrivalTime.text =[NSString stringWithFormat:@"Earlier:%@m",leg.timeDiffInMins];
                 } 
@@ -196,12 +184,12 @@ NSString *legID;
                 NSLog(@"stop-------------");
             } else {
                 [imgForTimeInterval setImage:nil];
-                RealArrivalTime.text =@"";
+                RealArrivalTime.text =NULL_STRING;
             }
             
             // It calls when MODe of leg is WaLK.
             //  [self walk];
-            NSString *boldFontName = [[UIFont boldSystemFontOfSize:12] fontName];
+            NSString *boldFontName = [[UIFont boldSystemFontOfSize:STANDARD_FONT_SIZE] fontName];
             NSRange boldedRange = NSMakeRange(0, 5);
             NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:subTitle];
             
@@ -224,7 +212,7 @@ NSString *legID;
 - (IBAction)navigateBack:(id)sender {
     // Go back to the previous step
     @try {
-        RealArrivalTime.text =@"";
+        RealArrivalTime.text = NULL_STRING;
         [imgForTimeInterval setImage:nil];
         if (itineraryNumber > 0) {
             itineraryNumber--;
@@ -242,14 +230,14 @@ NSString *legID;
         }
     }
     @catch (NSException *exception) {
-        
+        NSLog(@"exception at previous leg: %@", exception);
     }
 }
 
 // Callback for when user presses the navigate forward button on the right navbar
 - (IBAction)navigateForward:(id)sender {
     @try {
-        RealArrivalTime.text =@"";
+        RealArrivalTime.text = NULL_STRING;
         [imgForTimeInterval setImage:nil];
         NSArray *sortedLegs = [itinerary sortedLegs];
         // Go forward to the next step
@@ -292,7 +280,7 @@ NSString *legID;
 {
     @try {
         [TestFlight openFeedbackView];
-        FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_LEG uniqueId:legID date:nil fromAddress:nil toAddress:nil];
+        FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:[NSNumber numberWithInt:FB_SOURCE_LEG] uniqueId:legID date:nil fromAddress:nil toAddress:nil];
         FeedBackForm *legMapVC = [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];   
         [[self navigationController] pushViewController:legMapVC animated:YES];
     }
@@ -384,13 +372,11 @@ NSString *legID;
 
 #pragma mark - View lifecycle
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad{
     [super viewDidLoad];        
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload{
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -438,7 +424,7 @@ NSString *legID;
         }
         [self refreshLegOverlay:itineraryNumber-1];  // refreshes the last itinerary number
         [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
-        [self customMap];  // redefine the bounding box    
+//        [self customMap];  // redefine the bounding box    
         
         //    rootMap *l = [[rootMap alloc] initWithNibName:nil bundle:nil ];
         //    [l setItinerarys:itinerary itineraryNumber:2];

@@ -50,6 +50,9 @@ typedef enum {
 @property (strong, nonatomic) NSTimer *continueGetTime;
 @property (strong, nonatomic) NSNumber *maxiWalkDistance;
 
+@property (strong, nonatomic) NSString *toFormatted;
+@property (strong, nonatomic) NSString *fromFormatted;
+
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)advisoriesButtonPressed:(id)sender forEvent:(UIEvent *)event;

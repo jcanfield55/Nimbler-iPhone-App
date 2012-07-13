@@ -15,6 +15,9 @@
 #import "FeedBackReqParam.h"
 #import "twitterViewController.h"
 #import <RestKit/RKJSONParserJSONKit.h>
+#import "ToFromViewController.h"
+
+#define INDEFINE_WAY_STRING     @"way "
 
 @implementation RouteDetailsViewController
 
@@ -25,11 +28,16 @@
 @synthesize twitterCount;
 
 int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
+NSUserDefaults *prefs;
 
 #pragma mark lifecycle view
 -(void)loadView
 {
     [super loadView];
+}
+
+-(void)viewDidLoad{
+    [super viewDidLoad];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -64,39 +72,27 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
         rect0.size.height = ROUTE_DETAILS_TABLE_HEIGHT;
         [mainTable setFrame:rect0];
         [mainTable reloadData];
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        BOOL isUrgent = [[prefs objectForKey:@"isUrgent"] boolValue];
-        int tweetConut = [[prefs objectForKey:@"tweetCount"] intValue];
+        prefs = [NSUserDefaults standardUserDefaults];
+        int tweetConut = [[prefs objectForKey:TWEET_COUNT] intValue];
         [twitterCount removeFromSuperview];
-        if (isUrgent) {
-            twitterCount = [[CustomBadge alloc] initWithString:[NSString stringWithFormat:@"%d!",tweetConut] withStringColor:[UIColor whiteColor] withInsetColor:[UIColor blueColor] withBadgeFrame:YES withBadgeFrameColor:[UIColor whiteColor]];
-            [twitterCount setFrame:CGRectMake(50, 360, twitterCount.frame.size.width, twitterCount.frame.size.height)];
-            if (tweetConut == 0) {
-                [twitterCount setHidden:YES];
-            } else {
-                [self.view addSubview:twitterCount];
-                [twitterCount setHidden:NO];
-            }
+        twitterCount = [[CustomBadge alloc] init];
+        twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
+        [twitterCount setFrame:CGRectMake(60, 372, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
+        if (tweetConut == 0) {
+            [twitterCount setHidden:YES];
         } else {
-            twitterCount = [[CustomBadge alloc] init];
-            twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
-            [twitterCount setFrame:CGRectMake(60, 365, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
-            if (tweetConut == 0) {
-                [twitterCount setHidden:YES];
-            } else {
-                [self.view addSubview:twitterCount];
-                [twitterCount setHidden:NO];
-            }
-        } 
+            [self.view addSubview:twitterCount];
+            [twitterCount setHidden:NO];
+        }
     }
     @catch (NSException *exception) {
         NSLog(@"exception at viewWillAppear RouteDetail: %@", exception);
     }
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
+    [super viewWillDisappear:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -141,10 +137,16 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
         NSString *subTitle;
         if ([indexPath row] == 0) { // if first row, put in start point
             titleText = [NSString stringWithFormat:@"Start at %@", [[itinerary from] name]];
+            if ([[[[itinerary from] name] substringToIndex:4] isEqualToString:INDEFINE_WAY_STRING]) {
+                titleText = [NSString stringWithFormat:@"Start at %@",[prefs objectForKey:FROM_FORMATTED]];
+            }
             [cell.imageView setImage:nil];
         }
         else if ([indexPath row] == [[itinerary sortedLegs] count] + 1) { // if last row, put in end point
             titleText = [NSString stringWithFormat:@"End at %@", [[itinerary to] name]];
+            if ([[[[itinerary to] name] substringToIndex:4] isEqualToString:INDEFINE_WAY_STRING]) {
+                titleText = [NSString stringWithFormat:@"End at %@",[prefs objectForKey:TO_FORMATTED]];
+            }
             [cell.imageView setImage:nil];
         }
         else {  // otherwise, it is one of the legs
@@ -156,13 +158,13 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
             NSLog(@"leg arrival time: %@, leg time: %@", [leg arrivalFlag], [leg arrivalTime]);
             if([leg arrivalTime] > 0) {
                 UIImage *imgForArrivalTime = [UIImage alloc];
-                if([leg.arrivalFlag intValue] == [ON_TIME intValue]) {
+                if([leg.arrivalFlag intValue] == ON_TIME) {
                     imgForArrivalTime = [UIImage imageNamed:@"img_ontime.png"] ;
-                }  else if([leg.arrivalFlag intValue] == [DELAYED intValue]) {
+                }  else if([leg.arrivalFlag intValue] == DELAYED) {
                     imgForArrivalTime = [UIImage imageNamed:@"img_delay.png"] ;
-                } else if([leg.arrivalFlag intValue] == [EARLY intValue]) {
+                } else if([leg.arrivalFlag intValue] == EARLY) {
                     imgForArrivalTime = [UIImage imageNamed:@"img_early.png"] ;
-                } else if([leg.arrivalFlag intValue] == [EARLIER intValue]) {
+                } else if([leg.arrivalFlag intValue] == EARLIER) {
                     imgForArrivalTime = [UIImage imageNamed:@"img_earlier.png"] ;
                 } 
                 [cell.imageView setImage:imgForArrivalTime];
@@ -194,13 +196,13 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
         if ([indexPath row] == 0) { // if first row, put in start point
             titleText = [NSString stringWithFormat:@"Start at %@", [[itinerary from] name]];
             size = [titleText 
-                    sizeWithFont:[UIFont systemFontOfSize:14] 
+                    sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE] 
                     constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
         }
         else if ([indexPath row] == [[itinerary sortedLegs] count] + 1) { // if last row, put in end point
             titleText = [NSString stringWithFormat:@"End at %@", [[itinerary to] name]];
             size = [titleText 
-                    sizeWithFont:[UIFont systemFontOfSize:14] 
+                    sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE] 
                     constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
         }
         else {    
@@ -212,11 +214,11 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
             if ([[leg directionsTitleText] length] < 20) {
                 patchString  = [[leg directionsTitleText] stringByAppendingString:@"adding Patch string for UI" ];
                 size = [[titleText stringByAppendingString:patchString] 
-                        sizeWithFont:[UIFont systemFontOfSize:14] 
+                        sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE] 
                         constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
             } else {
                 size = [[titleText stringByAppendingString:[leg directionsTitleText]] 
-                        sizeWithFont:[UIFont systemFontOfSize:14] 
+                        sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE] 
                         constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
             }
         }
@@ -231,13 +233,12 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
     }
 }
 
-
 // If selected, show the LegMapViewController
 - (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Initialize the LegMapView Controller
     @try {
-        LegMapViewController *legMapVC = [[LegMapViewController alloc] initWithNibName:nil bundle:nil];
+        LegMapViewController *legMapVC = [[LegMapViewController alloc] initWithNibName:@"LegMapViewController" bundle:nil];
         // Initialize the leg VC with the full itinerary and the particular leg object chosen
         [legMapVC setItinerary:itinerary itineraryNumber:[indexPath row]];
         [[self navigationController] pushViewController:legMapVC animated:YES];
@@ -249,7 +250,6 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 }
 
 #pragma mark - Button Press methods
-
 - (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     @try {        
@@ -263,10 +263,10 @@ int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 }
 
 
-- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
+- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     @try {
-        FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:FB_SOURCE_ITINERARY uniqueId:[itinerary itinId] date:nil fromAddress:nil toAddress:nil]; 
+        FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:[NSNumber numberWithInt:FB_SOURCE_ITINERARY] uniqueId:[itinerary itinId] date:nil fromAddress:nil toAddress:nil]; 
         FeedBackForm *feedbackvc = [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];
         [[self navigationController] pushViewController:feedbackvc animated:YES];
     }
