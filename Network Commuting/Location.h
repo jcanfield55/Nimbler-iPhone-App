@@ -31,16 +31,23 @@
 @property (nonatomic, strong) NSSet *addressComponents;  // Set of AddressComponent items
 @property (nonatomic, strong) NSNumber *lat;  // double floating point
 @property (nonatomic, strong) NSNumber *lng;  // double floating point
-@property (nonatomic, strong) NSString *locationType;   // Type of location (ROOFTOP, APPROXIMATE)
+
+// Type of location (ROOFTOP, APPROXIMATE).  
+// If "TOFROM_LIST" then it is placeholder for a list of locations to be chosen by LocationPickerView
+@property (nonatomic, strong) NSString *locationType;   
+
 @property (nonatomic, strong) GeoRectangle *viewPort;   // Rectangle defining the view for the location
-@property (nonatomic, strong) NSNumber *toFrequency;   // Int Frequency requested by user as a To location
+@property (nonatomic, strong) NSNumber *toFrequency;   // Frequency requested by user as a To location
 @property (nonatomic, strong) NSNumber *fromFrequency;  // Frequency requested by user as a From location
 @property (nonatomic, strong) NSDate *dateLastUsed;  // Last time a user created or selected this location
 @property (nonatomic, strong) NSString *nickName;  // Alias name for location, e.g. "eBay Whitman Campus" or "Home"
-@property (nonatomic, strong) NSString *shortFormattedAddress;
+@property (nonatomic, strong) NSString *shortFormattedAddress;  // typically equal to the formatted address minus the postal code and country.  For transit station, also removes city name.  
+@property (nonatomic, strong) NSDecimalNumber *preloadVersion; // if a pre-loaded location, shows the version number of the loading (used to determine whether a newer preload version exists). Zero or nil otherwise.  
+@property (nonatomic, strong) NSString *memberOfList;  // Name of a list (like 'CaltrainStations') that this location belongs to.  After list name, string will contain a sorting number.  Empty or nil otherwise. 
 
+// Static variables and methods to retrieve the Locations set wrapper
 + (void)setLocations:(Locations *)loc;
-+ (Locations *)locations;
+
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)gt;
 
 // Convenience methods for accessing and setting scalar properties
@@ -61,7 +68,6 @@
 - (NSString *)latLngPairStr;
 - (BOOL)isMatchingTypedString:(NSString *)str;
 - (BOOL)isEquivalent:(Location *)loc2;
-- (NSString *)shortFormattedAddress;  // returns the formatted address minus the postal code and country
 
 @end
 

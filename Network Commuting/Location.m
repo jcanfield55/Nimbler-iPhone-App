@@ -26,6 +26,8 @@
 @dynamic fromFrequency;
 @dynamic dateLastUsed;
 @dynamic nickName;
+@dynamic preloadVersion;
+@dynamic memberOfList;
 @synthesize shortFormattedAddress;
 
 // Static variables and methods to retrieve the Locations set wrapper
@@ -33,9 +35,6 @@ static Locations *locations;
 
 + (void)setLocations:(Locations *)loc {
     locations = loc;
-}
-+ (Locations *)locations {
-    return locations;
 }
 
 // Convenience setters and accessors for scalars
@@ -72,8 +71,6 @@ static Locations *locations;
 }
 
 
-// TODO create a method or sub-class to handle getting lat/lng for Current Location
-
 // Returns the mapping used by RestKit to map this object from the specified API
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)gt;
 {
@@ -97,6 +94,7 @@ static Locations *locations;
         [locationMapping mapKeyPath:@"geometry.location_type" toAttribute:@"locationType"];
         [locationMapping mapKeyPath:@"toFrequency" toAttribute:@"toFrequencyFloat"];
         [locationMapping mapKeyPath:@"fromFrequency" toAttribute:@"fromFrequencyFloat"];
+        [locationMapping mapKeyPath:@"memberOfList" toAttribute:@"memberOfList"];
         // [locationMapping mapKeyPath:@"geometry.viewport" toRelationship:@"viewPort" withMapping:geoRectMapping];
         
     }
@@ -118,6 +116,7 @@ static Locations *locations;
     
     // Add the locations object as an observer for changes so it can resort its cache
     [self addObserver:locations forKeyPath:@"dateLastUsed" options:NSKeyValueObservingOptionNew context:nil];
+    
 }
 
 - (void)prepareForDeletion {
@@ -135,9 +134,9 @@ static Locations *locations;
 }
 
 - (void)incrementToFrequency {
-    if ([self toFrequencyFloat] < TINY_FLOAT) { // if this is the first use...
-        [self setFromFrequencyFloat:1.0];  // insure this location will be visible in the from list as well 
-        [self setToFrequencyFloat:2.0];   // but give more weight to this location in the to list
+    if ([self toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF) { // if this is the first use...
+        [self setFromFrequencyFloat:([self fromFrequencyFloat]+ 1.0)];  // insure this location will be visible in the from list as well 
+        [self setToFrequencyFloat:([self toFrequencyFloat]+2.0)];   // but give more weight to this location in the to list
     }
     else {
         [self setToFrequencyFloat:([self toFrequencyFloat]+1.0)];
@@ -145,9 +144,9 @@ static Locations *locations;
 }
 
 - (void)incrementFromFrequency {
-    if ([self fromFrequencyFloat] < TINY_FLOAT) { // if this is the first use...
-        [self setToFrequencyFloat:1.0];  // insure this location will be visible in the to list as well 
-        [self setFromFrequencyFloat:2.0];   // but give more weight to this location in the from list
+    if ([self fromFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF) { // if this is the first use...
+        [self setToFrequencyFloat:([self toFrequencyFloat]+1.0)];  // insure this location will be visible in the to list as well 
+        [self setFromFrequencyFloat:([self fromFrequencyFloat]+2.0)];   // but give more weight to this location in the from list
     }
     else {
         [self setFromFrequencyFloat:([self fromFrequencyFloat]+1.0)];

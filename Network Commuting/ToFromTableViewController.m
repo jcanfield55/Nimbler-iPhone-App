@@ -126,10 +126,27 @@
     // Else it is one of the locations which was selected
     else {
         Location *loc = [locations locationAtIndex:([indexPath row]) isFrom:isFrom];  //selected Location 
-        [self markAndUpdateSelectedLocation:loc];  // Mark the selected location and send updates to locations and toFromVC
-        
-        // Have toFromVC end the edit mode
-        [toFromVC setEditMode:NO_EDIT];  
+
+        if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) { // If a list (like 'Caltrain Station List')
+            // Increment frequency of the list header
+            if (isFrom) {
+                [loc incrementFromFrequency];
+            } else {
+                [loc incrementToFrequency];
+            }
+            
+            // Call the location picker with the list
+            NSArray* list = [locations locationsMembersOfList:[loc memberOfList]];
+            [toFromVC callLocationPickerFor:self 
+                               locationList:list 
+                                     isFrom:isFrom
+                           isGeocodeResults:NO];
+        }
+        else {    // if a normal location
+            [self markAndUpdateSelectedLocation:loc];  // Mark the selected location and send updates to locations and toFromVC
+            // Have toFromVC end the edit mode
+            [toFromVC setEditMode:NO_EDIT];  
+        }
     }
 }
 
@@ -145,10 +162,7 @@
             [alert show];
             return ;
         }
-    }    
-    // Update ToFromViewController with the geocode results
-    [toFromVC updateToFromLocation:self isFrom:isFrom location:loc];
-    [toFromVC updateGeocodeStatus:FALSE isFrom:isFrom];  // let it know Geocode no longer outstanding
+    }
     
     // Clear txtField and select the current item
     if ([[txtField text] length] > 0) {  // Fix to DE22
@@ -161,6 +175,11 @@
         [locations setSelectedToLocation:loc]; // Sort location to top of list next time
         [locations setTypedToString:@""];
     }
+    // Update ToFromViewController with the geocode results 
+    // (should be done after the locations typedString cleared)
+    [toFromVC updateToFromLocation:self isFrom:isFrom location:loc];
+    [toFromVC updateGeocodeStatus:FALSE isFrom:isFrom];  // let it know Geocode no longer outstanding
+    
     selectedLocation = loc;   
     if (selectedCell) { // if a previous cell is selected
         selectedCell.accessoryType = UITableViewCellAccessoryNone; // turn off its selector
@@ -199,10 +218,19 @@
     }
     
     // Prepare the cell settings
-     cell.textLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
-    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
     Location *loc = [locations locationAtIndex:([indexPath row]) isFrom:isFrom];
     [[cell textLabel] setText:[loc shortFormattedAddress]];
+    if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) {
+        // Bold italic if a list header
+        [[cell textLabel] setFont:[UIFont fontWithName:@"Helvetica-BoldOblique" size:15.0]];
+    } else {
+        // just bold for normal cell
+        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
+    }
+    
+    cell.textLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
+
+    
 
     // Put a checkmark on the selected location, and remove checkmarks from all others
     if (loc == selectedLocation) {
@@ -399,7 +427,10 @@
                     
                     // else if more than one validLocation, call up LocationPickerView
                     else if ([validLocations count] > 1) { 
-                        [toFromVC callLocationPickerFor:self locationList: validLocations isFrom:isFrom];
+                        [toFromVC callLocationPickerFor:self 
+                                           locationList:validLocations 
+                                                 isFrom:isFrom
+                                       isGeocodeResults:YES];
                     }
                 }
                 
@@ -467,7 +498,7 @@
     [location addRawAddressString:rawAddress];
     
     // Check if an equivalent Location is already in the locations table
-    location = [locations consolidateWithMatchingLocations:location];
+    location = [locations consolidateWithMatchingLocations:location keepThisLocation:NO];
     
     // Save db context with the new location object
     saveContext(managedObjectContext);
@@ -477,17 +508,23 @@
     
 }
 // Method called by LocationPickerVC when a user picks a location
-- (void)setPickedLocation:(Location *)pickedLocation locationArray:(NSArray *)locationArray
+// Picks the location and clears out any other Locations in the list with to & from frequency = 0.0
+- (void)setPickedLocation:(Location *)pickedLocation locationArray:(NSArray *)locationArray isGeocodedResults:(BOOL)isGeocodedResults
 {
-    // Remove the locations that were not picked from Core Data
-    for (Location* loc in locationArray) {
-        if (loc != pickedLocation) {
-            [locations removeLocation:loc];
+    if (isGeocodedResults) {
+        // Remove the locations that were not picked from Core Data (if frequency = 0)
+        for (Location* loc in locationArray) {
+            if (loc != pickedLocation && [loc fromFrequencyFloat]<TINY_FLOAT && [loc toFrequencyFloat]<TINY_FLOAT) {
+                [locations removeLocation:loc];
+            }
         }
+        
+        // Use the picked location
+        [self selectedGeocodedLocation:pickedLocation];
     }
-    
-    // Use the picked location
-    [self selectedGeocodedLocation:pickedLocation];
+    else {  // for location picked from a preloaded list, just update the location
+        [self markAndUpdateSelectedLocation:pickedLocation];
+    }
 }
 
 

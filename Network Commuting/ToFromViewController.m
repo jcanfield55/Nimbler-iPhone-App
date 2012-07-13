@@ -34,6 +34,7 @@
     SupportedRegion *sr;
     FeedBackForm *fbplan;
     
+    CGFloat toTableHeight;   // Current height of the toTable (US123 implementation)
     NSManagedObjectContext *managedObjectContext;
     BOOL toGeocodeRequestOutstanding;  // true if there is an outstanding To geocode request
     BOOL fromGeocodeRequestOutstanding;  //true if there is an outstanding From geocode request
@@ -54,9 +55,10 @@
 - (BOOL)getPlan;
 - (void)stopActivityIndicator;
 - (void)startActivityIndicator;
-- (void)bayAreaAvailability:(Location *)loc;
 // - (void)addLocationAction:(id) sender;
-- (void)setToFromHeightForTable:(UITableView *)table Height:(int)tableHeight;
+- (BOOL)setToFromHeightForTable:(UITableView *)table Height:(CGFloat)tableHeight;
+- (CGFloat)toFromTableHeightByNumberOfRowsForMaxHeight:(CGFloat)maxHeight  isFrom:(BOOL)isFrom;
+- (void)newLocationVisible;  // Callback for whenever a new location is made visible to update dynamic table height
 
 @end
 
@@ -131,7 +133,8 @@ float currentLocationResTime;
             rect1.origin.x = 0;
             rect1.origin.y = 0;
             rect1.size.width = TOFROM_TABLE_WIDTH ;
-            rect1.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
+            toTableHeight = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
+            rect1.size.height = toTableHeight;
             
             toTable = [[UITableView alloc] initWithFrame:rect1 style:UITableViewStylePlain];
             [toTable setRowHeight:TOFROM_ROW_HEIGHT];
@@ -200,8 +203,9 @@ float currentLocationResTime;
             [twitterCount setHidden:NO];
         }        [continueGetTime invalidate];
         continueGetTime = nil;
-        [self updateTripDate];  // update tripDate if needed
 
+        [self updateTripDate];  // update tripDate if needed
+        
         // Enforce height of main table
         CGRect rect0 = [mainTable frame];
         rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT;
@@ -275,18 +279,67 @@ float currentLocationResTime;
     [mainTable reloadData];
 }
 
-- (void)setToFromHeightForTable:(UITableView *)table Height:(int)tableHeight
+// Callback for whenever a new location is created to update dynamic table height
+- (void)newLocationVisible
 {
-    @try {
-        CGRect rect0 = [table frame];
-        rect0.size.height = tableHeight;
-        [table setFrame:rect0];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"exception at set height for table in ToFromView: %@", exception);
+    // Check whether toTableHeight needs to be dynamically adjusted (due to additional locations)
+    if (isCurrentLocationMode && editMode == NO_EDIT) {
+        // Check if height is updated, and if it is, reload the tables
+        if ([self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE]) {
+            [self reloadTables];
+        }
     }
 }
 
+// Returns TRUE if the height actually was changed from the previous value, otherwise false
+- (BOOL)setToFromHeightForTable:(UITableView *)table Height:(CGFloat)tableHeight
+{
+    // If toTable and isCurrentLocationMode, allow for variable height (US123 implementation)
+    if ((table == toTable) && isCurrentLocationMode && editMode == NO_EDIT) {
+        toTableHeight = [self toFromTableHeightByNumberOfRowsForMaxHeight:tableHeight isFrom:FALSE];
+        tableHeight = toTableHeight;
+    }
+    
+    if (tableHeight != table.frame.size.height) {  // Only update if value is different
+        @try {
+            CGRect rect0 = [table frame];
+            rect0.size.height = tableHeight;
+            [table setFrame:rect0];
+        }
+        @catch (NSException *exception) {
+            NSLog(@"exception at set height for table in ToFromView: %@", exception);
+        }
+        return TRUE;
+    }
+    return FALSE;
+}
+
+// Internal utility that computes the full height of the to or from table based on the number of rows.  
+// Returns either that full table height or maxHeight, whichever is smaller.  
+// Will always return maxHeight if there is typed text for the table.  
+// US123 implementation
+- (CGFloat)toFromTableHeightByNumberOfRowsForMaxHeight:(CGFloat)maxHeight  isFrom:(BOOL)isFrom
+{
+    // If locations is returning a subset due to type text, do not dynamically adjust table height
+    NSString* typedText;
+    if (isFrom) {
+        typedText = [locations typedFromString];
+    } else {
+        typedText = [locations typedToString];
+    }
+    if (typedText && [typedText length] > 0) {
+        return maxHeight;
+    }
+
+    CGFloat fullTableHeight = ([locations numberOfLocations:isFrom] + 1) * TOFROM_ROW_HEIGHT; // +1 for 'Enter New Address' line
+    
+    // Return fullTableHeight or maxHeight, whichever is smaller
+    if (fullTableHeight > maxHeight) { 
+        return maxHeight;
+    } else {
+        return fullTableHeight;
+    }
+}
 
 #pragma mark UITableView delegate methods
 //
@@ -322,7 +375,7 @@ float currentLocationResTime;
     }
     else if (isCurrentLocationMode) {  // NO_EDIT mode and CurrentLocationMode
         if ([indexPath section] == TO_SECTION) {  // Larger To Table
-            return TO_TABLE_HEIGHT_CL_MODE + TOFROM_INSERT_INTO_CELL_MARGIN;
+            return toTableHeight + TOFROM_INSERT_INTO_CELL_MARGIN;
         }
         else {
             return FROM_HEIGHT_CL_MODE;  // Single line From showing Current Location
@@ -528,16 +581,16 @@ float currentLocationResTime;
             // DE55 fix: make sure that currentLocation is selected if this method called by nc_AppDelegate
             [fromTableVC initializeCurrentLocation:currentLocation]; 
         }
-        if (editMode != FROM_EDIT) {
-            // DE59 fix -- only update table if not in FROM_EDIT mode
-            [mainTable reloadData];
-        }
         // Adjust the toTable height
         if (newCLMode) {
             [self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE];
         }
         else {
             [self setToFromHeightForTable:toTable Height:TOFROM_TABLE_HEIGHT_NO_CL_MODE];
+        }
+        if (editMode != FROM_EDIT) {
+            // DE59 fix -- only update table if not in FROM_EDIT mode
+            [mainTable reloadData];
         }
     }
 }
@@ -557,6 +610,11 @@ float currentLocationResTime;
         }
     } 
     else {
+        BOOL locBecomingVisible = loc && ([loc toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF);
+        BOOL toLocationBecomingInvisible = toLocation && ([toLocation toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF);
+        if (locBecomingVisible ^ toLocationBecomingInvisible) { // if # of locations visible is changing
+            [self newLocationVisible];  // Adjust dynamic toTable if toLocation chosen for first time
+        }
         toLocation = loc;
     }
 }
@@ -881,6 +939,12 @@ float currentLocationResTime;
         {
             [self startActivityIndicator];
             
+            // Update dynamic table height if a new location is becoming visible
+            if ([fromLocation fromFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF ||
+                [toLocation toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF) {
+                [self newLocationVisible];
+            }
+            
             // Increment fromFrequency and toFrequency
             [fromLocation incrementFromFrequency];
             [toLocation incrementToFrequency];
@@ -1030,7 +1094,7 @@ float currentLocationResTime;
 
 -(void)savePlanInTPServer:(NSString *)tripResponse
 {
-        
+
     @try {
         NSString *udid = [UIDevice currentDevice].uniqueIdentifier;   
         NSString *timeResponseTime =  [[NSNumber numberWithFloat:durationOfResponseTime] stringValue];
@@ -1121,7 +1185,7 @@ float currentLocationResTime;
 }
 
 //Request responder to push a LocationPickerViewController so the user can pick from the locations in locationList
-- (void)callLocationPickerFor:(ToFromTableViewController *)toFromTableVC0 locationList:(NSArray *)locationList0 isFrom:(BOOL)isFrom0
+- (void)callLocationPickerFor:(ToFromTableViewController *)toFromTableVC0 locationList:(NSArray *)locationList0 isFrom:(BOOL)isFrom0 isGeocodeResults:(BOOL)isGeocodeResults0
 {
     @try {
         if (!locationPickerVC) {
@@ -1130,6 +1194,7 @@ float currentLocationResTime;
         [locationPickerVC setToFromTableVC:toFromTableVC0];
         [locationPickerVC setLocationArray:locationList0];
         [locationPickerVC setIsFrom:isFrom0];
+        [locationPickerVC setIsGeocodeResults:isGeocodeResults0];
         
         [[self navigationController] pushViewController:locationPickerVC animated:YES];  
     }

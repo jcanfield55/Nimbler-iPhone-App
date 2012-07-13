@@ -42,6 +42,15 @@
 #define ALERT_ON                @"2"
 #define ALERT_URGENT            @"3"
 
+// Preload file variables
+#define PRELOAD_LOCATION_FILE   @"caltrain-station.json"
+#define PRELOAD_VERSION_NUMBER  @"1.01"
+#define PRELOAD_TEST_ADDRESS    @"San Martin Caltrain, San Martin, CA 95046, USA" // station for testing version number
+#define TOFROM_LIST_TYPE        @"TOFROM_LIST" // Location type indicating a ToFromList
+
+// Locations behavior
+#define TOFROM_FREQUENCY_VISIBILITY_CUTOFF 0.99
+
 // Request timer Count
 #define TWEET_COUNT_POLLING_INTERVAL   300.0
 #define TIMER_SMALL_REQUEST_DELAY      1.0
@@ -53,4 +62,4 @@
 #define RESPONSE_DATA_NOT_EXIST         107
 #define RESPONSE_INVALID_REQUEST        106
 
-#define TINY_FLOAT              0.00000001
+#define TINY_FLOAT                      0.000001

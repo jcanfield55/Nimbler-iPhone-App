@@ -789,8 +789,8 @@
 		5231E3F014E42FE100739DC7 /* SOCKitTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SOCKitTests-Info.plist"; sourceTree = "<group>"; };
 		5231E3F114E42FE100739DC7 /* SOCKitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SOCKitTests.m; sourceTree = "<group>"; };
 		5231E3F214E42FE100739DC7 /* VERSION */ = {isa = PBXFileReference; lastKnownFileType = text; path = VERSION; sourceTree = "<group>"; };
-		5231E43714E5DE7E00739DC7 /* Locations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Locations.h; sourceTree = "<group>"; };
-		5231E43814E5DE7E00739DC7 /* Locations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Locations.m; sourceTree = "<group>"; };
+		5231E43714E5DE7E00739DC7 /* Locations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = Locations.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		5231E43814E5DE7E00739DC7 /* Locations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = Locations.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		5231E43A14E9E7A300739DC7 /* RawAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RawAddress.h; sourceTree = "<group>"; };
 		5231E43B14E9E7A400739DC7 /* RawAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RawAddress.m; sourceTree = "<group>"; };
 		5249743D15574578004A56E2 /* ToFromTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToFromTableViewController.h; sourceTree = "<group>"; };
@@ -821,7 +821,7 @@
 		52B302C314BE2B1E00EB4852 /* ToFromViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ToFromViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		52B302C414BE2B1E00EB4852 /* ToFromViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ToFromViewController.xib; sourceTree = "<group>"; };
 		52B3031D14BE946000EB4852 /* Location.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; lineEnding = 0; path = Location.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		52B3031E14BE946000EB4852 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
+		52B3031E14BE946000EB4852 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = Location.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		52B7421C14E1FFA200D817D1 /* UtilityFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilityFunctions.h; sourceTree = "<group>"; };
 		52B7421D14E1FFA200D817D1 /* UtilityFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtilityFunctions.m; sourceTree = "<group>"; };
 		52BA18AA15490006009125A3 /* logo_small_iPh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_small_iPh.png; sourceTree = "<group>"; };
@@ -848,7 +848,8 @@
 		52CF43C514BDF2F9000565D6 /* Nimbler CaltrainTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Nimbler CaltrainTests-Info.plist"; sourceTree = "<group>"; };
 		52CF43C714BDF2F9000565D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		52CF43C914BDF2F9000565D6 /* Network_CommutingTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Network_CommutingTests.h; sourceTree = "<group>"; };
-		52CF43CA14BDF2F9000565D6 /* Network_CommutingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Network_CommutingTests.m; sourceTree = "<group>"; };
+		52CF43CA14BDF2F9000565D6 /* Network_CommutingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = Network_CommutingTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		52D8E01A15AE2680001A1316 /* Network_Commuting 1.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.2.xcdatamodel"; sourceTree = "<group>"; };
 		52DF9C4814F7546800DC6828 /* Network_Commuting.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Network_Commuting.xcdatamodel; sourceTree = "<group>"; };
 		52E66F021520374B001BF026 /* DateTimeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DateTimeViewController.xib; sourceTree = "<group>"; };
 		52F67EDF14C752C4007578D5 /* LatLng.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LatLng.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -883,7 +884,7 @@
 		CCB7E80E157090370036E9CD /* FeedBackForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedBackForm.h; sourceTree = "<group>"; };
 		CCB7E80F157090370036E9CD /* FeedBackForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedBackForm.m; sourceTree = "<group>"; };
 		CCB7E810157090380036E9CD /* FeedBackForm.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedBackForm.xib; sourceTree = "<group>"; };
-		CCB7E81A1570A3D10036E9CD /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		CCB7E81A1570A3D10036E9CD /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Constants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CCB9E6F81574B4EF0043F304 /* TwitterSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwitterSearch.h; sourceTree = "<group>"; };
 		CCB9E6F91574B4F70043F304 /* TwitterSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwitterSearch.m; sourceTree = "<group>"; };
 		CCB9E6FB1574B4FF0043F304 /* TwitterSearch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TwitterSearch.xib; sourceTree = "<group>"; };
@@ -2350,6 +2351,7 @@
 		52CF43A814BDF2F9000565D6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				52F67EEC14C7E103007578D5 /* enums.h */,
 				CCB7E81A1570A3D10036E9CD /* Constants.h */,
 				525842C715A3AB10005BB92A /* UIConstants.h */,
 				CCA0E9B215AD550B00BF9EA1 /* TEXTConstant.h */,
@@ -2522,7 +2524,6 @@
 			children = (
 				CCCA4BCC15905575009F3BF7 /* CustomBadge.m */,
 				CCCA4BCB1590556C009F3BF7 /* CustomBadge.h */,
-				52F67EEC14C7E103007578D5 /* enums.h */,
 				5275A2DD1528069F0052903F /* PolylineEncodedString.h */,
 				5275A2DE1528069F0052903F /* PolylineEncodedString.m */,
 				5205D8DC14F4740D0004CD09 /* DateFormatterMSFrom1970.h */,
@@ -3025,8 +3026,8 @@
 		52CF43CF14BDF2F9000565D6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Nimbler World, Inc.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nimbler World, Inc.";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler Caltrain-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -3042,8 +3043,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "977A8FCC-01D6-4640-8A7E-B56637DC4BA7";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "977A8FCC-01D6-4640-8A7E-B56637DC4BA7";
+				PROVISIONING_PROFILE = "D02F9A41-D167-4B67-9030-7766469EFBCB";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D02F9A41-D167-4B67-9030-7766469EFBCB";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3052,8 +3053,8 @@
 		52CF43D014BDF2F9000565D6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Nimbler World, Inc.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nimbler World, Inc.";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler Caltrain-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -3069,8 +3070,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "977A8FCC-01D6-4640-8A7E-B56637DC4BA7";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "977A8FCC-01D6-4640-8A7E-B56637DC4BA7";
+				PROVISIONING_PROFILE = "D02F9A41-D167-4B67-9030-7766469EFBCB";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D02F9A41-D167-4B67-9030-7766469EFBCB";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3079,15 +3080,19 @@
 		52CF43D214BDF2F9000565D6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Network Commuting.app/Network Commuting";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Nimbler Caltrain.app/Nimbler Caltrain";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Network Commuting/Network Commuting-Prefix.pch";
+				GCC_PREFIX_HEADER = "Network Commuting/Nimbler Caltrain-Prefix.pch";
 				INFOPLIST_FILE = "Network CommutingTests/Nimbler CaltrainTests-Info.plist";
 				PRODUCT_NAME = "Nimbler CaltrainTests";
+				PROVISIONING_PROFILE = "7E85A08B-3D33-4E0C-9788-7778F7F8D97B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "7E85A08B-3D33-4E0C-9788-7778F7F8D97B";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
@@ -3096,15 +3101,19 @@
 		52CF43D314BDF2F9000565D6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Network Commuting.app/Network Commuting";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Nimbler Caltrain.app/Nimbler Caltrain";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Network Commuting/Network Commuting-Prefix.pch";
+				GCC_PREFIX_HEADER = "Network Commuting/Nimbler Caltrain-Prefix.pch";
 				INFOPLIST_FILE = "Network CommutingTests/Nimbler CaltrainTests-Info.plist";
 				PRODUCT_NAME = "Nimbler CaltrainTests";
+				PROVISIONING_PROFILE = "7E85A08B-3D33-4E0C-9788-7778F7F8D97B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "7E85A08B-3D33-4E0C-9788-7778F7F8D97B";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
@@ -3167,9 +3176,10 @@
 			isa = XCVersionGroup;
 			children = (
 				529178281585326F001CC74C /* Network_Commuting 1.1.xcdatamodel */,
+				52D8E01A15AE2680001A1316 /* Network_Commuting 1.2.xcdatamodel */,
 				52DF9C4814F7546800DC6828 /* Network_Commuting.xcdatamodel */,
 			);
-			currentVersion = 529178281585326F001CC74C /* Network_Commuting 1.1.xcdatamodel */;
+			currentVersion = 52D8E01A15AE2680001A1316 /* Network_Commuting 1.2.xcdatamodel */;
 			path = Network_Commuting.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

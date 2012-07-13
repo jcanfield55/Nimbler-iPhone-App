@@ -37,13 +37,28 @@
 @property (nonatomic) BOOL isLocationServiceEnable;
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkGeoMgr:(RKObjectManager *)rkG;
-- (void)preLoadIfNeededFromFile:(NSString *)filename;  // Preloads locations (like Caltrain stations) from a file
+- (void)preLoadIfNeededFromFile:(NSString *)filename latestVersionNumber:(NSDecimalNumber *)version;  // Preloads locations (like Caltrain stations) from a file
+
+// Returns a sorted array of all locations whose memberOfList field starts with listNamePrefix.  
+// Array is sorted in alphabetical order by the memberOfList field (i.e. by everything after the prefix)
+// If no matches, returns an empty array
+- (NSArray *)locationsMembersOfList:(NSString *)listNamePrefix;
+
 - (Location *)locationWithRawAddress:(NSString *)rawAddress;
 - (NSArray *)locationsWithFormattedAddress:(NSString *)formattedAddress; // Array of matching locations
 - (Location *)newEmptyLocation;
 - (int)numberOfLocations:(BOOL)isFrom;
 - (Location *)locationAtIndex:(int)index isFrom:(BOOL)isFrom;
-- (Location *)consolidateWithMatchingLocations:(Location *)loc0;
+
+// Takes loc0 (typically a newly geocoded location) and see if there are any equivalent locations
+// already in the Location store.  If so, then consolidate the two locations so there is only one left.
+// If keepThisLocation is true, keeps loc0 and deletes the duplicate in the database, otherwise keeps
+// the one in the database and deletes loc0.  
+// To consolidate, combines the rawAddress strings and adds the to&from frequencies.    
+// Returns a location -- either the original loc0 if there is no matching location, or 
+// the consolidated matching location if there is one.
+- (Location *)consolidateWithMatchingLocations:(Location *)loc0 keepThisLocation:(BOOL)keepThisLocation;
+
 - (void)removeLocation:(Location *)loc0;  // Remove location from Core Data
 - (void)updateSelectedLocation:(Location *)sL isFrom:(BOOL)isFrom;
 
