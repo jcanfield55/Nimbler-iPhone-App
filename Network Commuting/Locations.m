@@ -109,10 +109,10 @@
                     NSArray* matchingLocations = [self locationsWithFormattedAddress:[loc formattedAddress]];
                     BOOL areAnyMatchesNewerOrEqual = FALSE;
                     for (Location* matchingLocation in matchingLocations) {
-                        // If newVersion is indeed newer...
+                        // If newVersion is indeed newer (or if matchingLocation does not have a version)
                         if (matchingLocation != loc) {
-                            if ([[matchingLocation preloadVersion] compare:newVersion] 
-                                == NSOrderedAscending) {
+                            if (![matchingLocation preloadVersion] 
+                                || [[matchingLocation preloadVersion] compare:newVersion] == NSOrderedAscending) {
                                 // cancel out previous preload frequencies below 2.0 so they can be replaced
                                 // with the new matching frequency
                                 if ([matchingLocation toFrequencyFloat] < 2.0) {
@@ -133,9 +133,11 @@
                         NSLog(@"Preload loc: %@, toFreq=%f, fromFreq=%f", 
                               [loc shortFormattedAddress], [loc toFrequencyFloat], 
                               [loc fromFrequencyFloat]);
-
+                        [loc setPreloadVersion:newVersion]; 
                     }
-                    [loc setPreloadVersion:newVersion]; 
+                    else { // if loc is not newer version than matching, delete loc
+                        [self removeLocation:loc];
+                    }
                 }
                 saveContext([self managedObjectContext]);
             }

@@ -76,7 +76,6 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];        
     [[cell textLabel] setText:[loc shortFormattedAddress]];    
     [cell sizeToFit];
-    
     return cell;
 }
 
