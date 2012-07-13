@@ -169,6 +169,17 @@ float currentLocationResTime;
     isContinueGetRealTimeData = false;
     [continueGetTime invalidate];
     continueGetTime = nil;
+    CGRect rect0 = [mainTable frame];
+    rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT;
+    [mainTable setFrame:rect0];        
+    @try {
+        [toTable reloadData];
+        [fromTable reloadData];
+        [mainTable reloadData];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"table view ------loading---------  %@", exception);
+    }
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -1094,7 +1105,7 @@ float currentLocationResTime;
 
 -(void)savePlanInTPServer:(NSString *)tripResponse
 {
-        
+
     @try {
         NSString *udid = [UIDevice currentDevice].uniqueIdentifier;   
         NSString *timeResponseTime =  [[NSNumber numberWithFloat:durationOfResponseTime] stringValue];
