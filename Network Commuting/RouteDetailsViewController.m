@@ -17,8 +17,6 @@
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "ToFromViewController.h"
 
-#define INDEFINE_WAY_STRING     @"way "
-
 @implementation RouteDetailsViewController
 
 @synthesize itinerary;
@@ -136,17 +134,11 @@ NSUserDefaults *prefs;
         NSString *titleText;
         NSString *subTitle;
         if ([indexPath row] == 0) { // if first row, put in start point
-            titleText = [NSString stringWithFormat:@"Start at %@", [[itinerary from] name]];
-            if ([[[[itinerary from] name] substringToIndex:4] isEqualToString:INDEFINE_WAY_STRING]) {
-                titleText = [NSString stringWithFormat:@"Start at %@",[prefs objectForKey:FROM_FORMATTED]];
-            }
+            titleText = [NSString stringWithFormat:@"Start at %@", [itinerary fromAddressString]];
             [cell.imageView setImage:nil];
         }
         else if ([indexPath row] == [[itinerary sortedLegs] count] + 1) { // if last row, put in end point
-            titleText = [NSString stringWithFormat:@"End at %@", [[itinerary to] name]];
-            if ([[[[itinerary to] name] substringToIndex:4] isEqualToString:INDEFINE_WAY_STRING]) {
-                titleText = [NSString stringWithFormat:@"End at %@",[prefs objectForKey:TO_FORMATTED]];
-            }
+            titleText = [NSString stringWithFormat:@"End at %@", [itinerary toAddressString]];
             [cell.imageView setImage:nil];
         }
         else {  // otherwise, it is one of the legs

@@ -130,7 +130,7 @@
     NSLog(@"Distance between toLocation and toPlanPlace = %f meters", distance);
     
     // If distance in meters is small enough, use the toLocation...
-    if (distance < 20.0) {
+    if (distance < 40.0) {
         return [toLocation shortFormattedAddress];
     }
     // otherwise, use the planPlace string from OTP

@@ -14,8 +14,6 @@
 #define DEVICE_TOKEN                @"deviceToken"
 #define USER_EMAIL                  @"eMailId"
 #define TWEET_COUNT                 @"tweetCount"
-#define TO_FORMATTED                @"ToFormatted"
-#define FROM_FORMATTED              @"FromFormatted"
 
 // SettingInfo Parameter 
 #define ALERT_COUNT                 @"alertCount"

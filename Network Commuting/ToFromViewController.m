@@ -92,8 +92,6 @@
 @synthesize continueGetTime;
 @synthesize maxiWalkDistance;
 
-@synthesize toFormatted,fromFormatted;
-
 // Constants for animating up and down the To: field
 #define TO_SECTION 0
 #define FROM_SECTION 1
@@ -1004,10 +1002,6 @@ float currentLocationResTime;
                                            @"date", [NSDate date], nil]];  
             
             NSLog(@"Plan resource: %@", planURLResource);
-            
-            [prefs setValue:[toLocation formattedAddress] forKey:TO_FORMATTED];
-            [prefs setValue:[fromLocation formattedAddress] forKey:FROM_FORMATTED];
-            [prefs synchronize];
            
              // Call the trip planner
             [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
