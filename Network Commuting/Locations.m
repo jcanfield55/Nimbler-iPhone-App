@@ -64,16 +64,27 @@
     return self;
 }
 
-- (void)preLoadIfNeededFromFile:(NSString *)filename
+- (void)preLoadIfNeededFromFile:(NSString *)filename latestVersionNumber:(NSDecimalNumber *)newVersion
 {
-    // Use hack for now to see whether stations already loaded
-    // TODO put a more robust mechanism for determining whether additional pre-load is needed
-    NSString* formattedAddr = @"San Martin Caltrain, San Martin, CA 95046, USA";
-    NSArray* matchingLocs = [self locationsWithFormattedAddress:formattedAddr];
+    // Check there version number against the the PRELOAD_TEST_ADDRESS to see if we need to open the file
+    NSString* formattedAddr = PRELOAD_TEST_ADDRESS;
+    NSArray* preloadTestLocs = [self locationsWithFormattedAddress:formattedAddr];
     
-    // If that station has not been loaded, pre-load the remaining stations
-    if ([matchingLocs count] == 0) {
-    
+    // If there are matching locations for that station, 
+    BOOL isNewerVersion;  // true if we have a new version that needs loading
+    if ([preloadTestLocs count] > 0) {
+        NSDecimalNumber* currentVersion = [[preloadTestLocs objectAtIndex:0] preloadVersion];
+        if (currentVersion) {
+            isNewerVersion = ([currentVersion compare:newVersion] ==  NSOrderedAscending);
+        } 
+        else { // if no currentVersion set, then always update with newer version
+            isNewerVersion = YES;
+        }
+    }
+        
+    // If that station has not been loaded, or if there is a newer version, pre-load the remaining stations
+    if (([preloadTestLocs count] == 0) || isNewerVersion) {
+        
         // Code adapted from http://stackoverflow.com/questions/10305535/iphone-restkit-how-to-load-a-local-json-file-and-map-it-to-a-core-data-entity and https://github.com/RestKit/RestKit/wiki/Object-mapping (bottom of page)
         NSStringEncoding encoding;
         NSError* error = nil;
@@ -92,10 +103,39 @@
             RKObjectMappingResult* result = [mapper performMapping];
             if (result) {
                 NSArray* resultArray = [result asCollection];
-                for (Location* loc in resultArray) {
-                    // Just in case, consolidate with any duplicates already in Core Data
-                    [self consolidateWithMatchingLocations:loc];
-                    NSLog(@"%@, fromFrequency = %f", [loc shortFormattedAddress], [loc fromFrequencyFloat]);
+                for (int i=0; i < [resultArray count]; i++) {
+                    Location* loc = [resultArray objectAtIndex:i];
+                    // See if there is a matching Location already in CoreData
+                    NSArray* matchingLocations = [self locationsWithFormattedAddress:[loc formattedAddress]];
+                    BOOL areAnyMatchesNewerOrEqual = FALSE;
+                    for (Location* matchingLocation in matchingLocations) {
+                        // If newVersion is indeed newer...
+                        if (matchingLocation != loc) {
+                            if ([[matchingLocation preloadVersion] compare:newVersion] 
+                                == NSOrderedAscending) {
+                                // cancel out previous preload frequencies below 2.0 so they can be replaced
+                                // with the new matching frequency
+                                if ([matchingLocation toFrequencyFloat] < 2.0) {
+                                    [matchingLocation setToFrequencyFloat:0.0];
+                                }
+                                if ([matchingLocation fromFrequencyFloat] < 2.0) {
+                                    [matchingLocation setFromFrequencyFloat:0.0];
+                                }
+                            }
+                            else {
+                                areAnyMatchesNewerOrEqual = TRUE;
+                            }
+                        }
+                    }
+                    if (!areAnyMatchesNewerOrEqual) {
+                        // Consolidate with any duplicates already in Core Data, keeping this version
+                        loc = [self consolidateWithMatchingLocations:loc keepThisLocation:YES];
+                        NSLog(@"Preload loc: %@, toFreq=%f, fromFreq=%f", 
+                              [loc shortFormattedAddress], [loc toFrequencyFloat], 
+                              [loc fromFrequencyFloat]);
+
+                    }
+                    [loc setPreloadVersion:newVersion]; 
                 }
                 saveContext([self managedObjectContext]);
             }
@@ -161,12 +201,12 @@
         typedFromString = typedFromStr0;  
         areMatchingLocationsChanged = YES;
 
-        // Calculate the count, up to the first location with frequency=0 (excluding the selectedLocation)
+        // Calculate the count, up to the first location with frequency below threshold (excluding the selectedLocation)
         NSLog(@"sortedMatchingFromLocations count = %d", [sortedMatchingFromLocations count]);
         int i;
         for (i=0; (i < [sortedMatchingFromLocations count]) && 
              ((selectedFromLocation == [sortedMatchingFromLocations objectAtIndex:i]) ||
-              [[sortedMatchingFromLocations objectAtIndex:i] fromFrequencyFloat] > TINY_FLOAT); i++);
+              [[sortedMatchingFromLocations objectAtIndex:i] fromFrequencyFloat] > TOFROM_FREQUENCY_VISIBILITY_CUTOFF); i++);
         matchingFromRowCount = i;
         NSLog(@"MatchingFromRowCount = %d", matchingFromRowCount);
     }
@@ -204,12 +244,12 @@
         typedToString = typedToStr0;
         areMatchingLocationsChanged = YES;
 
-        // Calculate the count, up to the first location with frequency=0 (excluding the selected Location)
+        // Calculate the count, up to the first location with frequency below threshold (excluding the selected Location)
         NSLog(@"sortedMatchingToLocations count = %d", [sortedMatchingToLocations count]);
         int i;
         for (i=0; (i < [sortedMatchingToLocations count]) && 
              ((selectedToLocation == [sortedMatchingToLocations objectAtIndex:i]) ||
-             [[sortedMatchingToLocations objectAtIndex:i] toFrequencyFloat] > TINY_FLOAT); i++);
+             [[sortedMatchingToLocations objectAtIndex:i] toFrequencyFloat] > TOFROM_FREQUENCY_VISIBILITY_CUTOFF); i++);
         matchingToRowCount = i;
         NSLog(@"matchingToRowCount = %d", matchingToRowCount);
     }
@@ -385,13 +425,37 @@
     }    
 }
 
+// Returns a sorted array of all locations whose memberOfList field starts with listNamePrefix.  
+// Array is sorted in alphabetical order by the memberOfList field (i.e. by everything after the prefix)
+// If no matches, returns an empty array.  If listNamePrefix is nil, returns nil
+- (NSArray *)locationsMembersOfList:(NSString *)listNamePrefix
+{
+    if (!listNamePrefix) {
+        return nil;
+    }
+    NSFetchRequest *request = [managedObjectModel fetchRequestFromTemplateWithName:@"LocationByMemberOfList" substitutionVariables:[NSDictionary dictionaryWithObject:listNamePrefix forKey:@"LIST_PREFIX"]];
+    
+    NSSortDescriptor *sd1 = [NSSortDescriptor sortDescriptorWithKey:@"memberOfList" 
+                                                          ascending:YES];
+    [request setSortDescriptors:[NSArray arrayWithObjects:sd1,nil]];
+    NSError *error; 
+    NSArray *result = [managedObjectContext executeFetchRequest:request error:&error]; 
+    if (!result) { 
+        [NSException raise:@"Fetch failed" format:@"Reason: %@", [error localizedDescription]]; 
+    } 
+    return result;  // Return the array of matches (could be empty)
+}
+
 // Takes loc0 (typically a newly geocoded location) and see if there are any equivalent locations
-// already in the Location store.  If so, then consolidate the two locations so there is only one left
+// already in the Location store.  If so, then consolidate the two locations so there is only one left.
+// If keepThisLocation is true, keeps loc0 and deletes the duplicate in the database, otherwise keeps
+// the one in the database and deletes loc0.  
+// To consolidate, combines the rawAddress strings and adds the to&from frequencies.    
 // Returns a location -- either the original loc0 if there is no matching location, or 
-// the consolidated matching location if there was a match in the store.
+// the consolidated matching location if there is one.
 // Searches for equivalent matching locations simply looking for exact matches of Formatted Address.
 // (this could be expanded in the future)
-- (Location *)consolidateWithMatchingLocations:(Location *)loc0 
+- (Location *)consolidateWithMatchingLocations:(Location *)loc0 keepThisLocation:(BOOL)keepThisLocation
 {
     NSArray *matches = [self locationsWithFormattedAddress:[loc0 formattedAddress]];
     if (!matches) {   
@@ -400,19 +464,28 @@
     else {  
         for (Location *loc1 in matches) {
             if (loc0 != loc1) {  // if this is actually a different object
-                // consolidate from loc0 into loc1, delete loc0, and return loc1
-                // loop thru and add each loc0 RawAddress and add to loc1
-                for (RawAddress *loc0RawAddr in [loc0 rawAddresses]) {
-                    [loc1 addRawAddressString:[loc0RawAddr rawAddressString]];
+                Location* returnLoc; // the location object we will return
+                Location* deleteLoc;  // the location object we will consolidate and delete
+                if (keepThisLocation) {
+                    returnLoc = loc0;
+                    deleteLoc = loc1;
+                } else {
+                    returnLoc = loc1;  
+                    deleteLoc = loc0;
                 }
-                // Add from and to frequency from loc0 into loc1
-                [loc1 setToFrequencyFloat:([loc1 toFrequencyFloat] + [loc0 toFrequencyFloat])];
-                [loc1 setFromFrequencyFloat:([loc1 fromFrequencyFloat] + [loc0 fromFrequencyFloat])];
                 
-                // Delete loc0 & return loc1
-                // TODO  resolve error about deleting across contexts
-                [managedObjectContext deleteObject:loc0];
-                return loc1;
+                // consolidate from deleteLoc into returnLoc
+                // loop thru and add each deleteLoc RawAddress and add to returnLoc
+                for (RawAddress *deleteLocRawAddr in [deleteLoc rawAddresses]) {
+                    [returnLoc addRawAddressString:[deleteLocRawAddr rawAddressString]];
+                }
+                // Add from and to frequency from deleteLoc into returnLoc
+                [returnLoc setToFrequencyFloat:([returnLoc toFrequencyFloat] + [deleteLoc toFrequencyFloat])];
+                [returnLoc setFromFrequencyFloat:([returnLoc fromFrequencyFloat] + [deleteLoc fromFrequencyFloat])];
+                
+                // Delete deleteLoc & return returnLoc
+                [managedObjectContext deleteObject:deleteLoc];
+                return returnLoc;
             }
         }
     }

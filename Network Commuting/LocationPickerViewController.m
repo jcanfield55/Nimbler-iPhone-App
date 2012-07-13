@@ -22,6 +22,7 @@
 @synthesize toFromTableVC;
 @synthesize locationArray;
 @synthesize isFrom;
+@synthesize isGeocodeResults;
 
 int const LOCATION_PICKER_TABLE_HEIGHT = 370;
 
@@ -73,7 +74,7 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
         cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
     }
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];        
-    [[cell textLabel] setText:[loc formattedAddress]];    
+    [[cell textLabel] setText:[loc shortFormattedAddress]];    
     [cell sizeToFit];
     
     return cell;
@@ -83,7 +84,7 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
 {
     // Send back the picked location and pop the view controller back to ToFromViewController
     [toFromTableVC setPickedLocation:[locationArray objectAtIndex:[indexPath row]] 
-                       locationArray:locationArray];
+                       locationArray:locationArray isGeocodedResults:isGeocodeResults];
     locationPicked = TRUE;
     [[self navigationController] popViewControllerAnimated:YES];
 }
@@ -100,7 +101,11 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
                 sizeWithFont:[UIFont systemFontOfSize:14] 
                 constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
     
-    return size.height + 10;
+    CGFloat height = size.height + 7;
+    if (height < 44.0) { // Set a minumum row height
+        height = 44.0;
+    }
+    return height;
 }
 
 - (void) viewWillDisappear:(BOOL)animated
@@ -108,8 +113,11 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
     [super viewWillDisappear:animated];
     
     if (locationPicked == FALSE) {   // If user just returning back to main page...
-        for (Location* loc in locationArray) { // remove all the locations from Core Data
-            [[toFromTableVC locations] removeLocation:loc];
+        for (Location* loc in locationArray) { 
+            // remove all the locations from Core Data if they have frequency = 0
+            if ([loc fromFrequencyFloat]<TINY_FLOAT && [loc toFrequencyFloat]<TINY_FLOAT) {
+                [[toFromTableVC locations] removeLocation:loc];
+            }
         }
         
         // return to the appropriate edit mode so users can continue editing

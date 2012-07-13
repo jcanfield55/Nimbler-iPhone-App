@@ -57,7 +57,9 @@ typedef enum {
 - (void)updateToFromLocation:(id)sender isFrom:(BOOL)isFrom location:(Location *)loc; // Callback from ToFromTableViewController to update a new user entered/selected location
 - (void)updateGeocodeStatus:(BOOL)isGeocodeOutstanding isFrom:(BOOL)isFrom; // Callback from ToFromTableViewController to update geocoding status
 
-- (void)callLocationPickerFor:(ToFromTableViewController *)toFromTableVC0 locationList:(NSArray *)locationList0 isFrom:(BOOL)isFrom0; //Request responder to push a LocationPickerViewController so the user can pick from the locations in locationList
+//Request responder to push a LocationPickerViewController so the user can pick from the locations in locationList
+//isGeocodeResults is true if LocationPicker called to disambiguate multiple geocode results, otherwise false
+- (void)callLocationPickerFor:(ToFromTableViewController *)toFromTableVC0 locationList:(NSArray *)locationList0 isFrom:(BOOL)isFrom0 isGeocodeResults:(BOOL)isGeocodeResults; 
 
 - (void)updateTripDate;
 - (void)reloadTables;  // Reloads the tables in case something has changed in the model
