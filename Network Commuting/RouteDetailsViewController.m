@@ -43,7 +43,7 @@ NSUserDefaults *prefs;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     @try {
         if (self) {
-            [[self navigationItem] setTitle:@"Route"];
+            [[self navigationItem] setTitle:ROUTE_TITLE_MSG];
             UIImage *mapTmg = [UIImage imageNamed:@"map.png"];
             UIButton *mapBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             mapBtn.bounds = CGRectMake(0, 0, mapTmg.size.width, mapTmg.size.height);
@@ -106,8 +106,8 @@ NSUserDefaults *prefs;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     @try {
-        if ([[itinerary legs] count] > 0) {
-            return [[itinerary legs] count]+2;  // # of legs plus start & end point
+        if ([[itinerary legDescriptionTitleSortedArray] count] > 0) {
+            return [[itinerary legDescriptionTitleSortedArray] count];  
         }
         else {
             return 0;  // TODO come up with better handling for no legs in this itinerary
@@ -127,25 +127,22 @@ NSUserDefaults *prefs;
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
                                           reuseIdentifier:@"UIRouteDetailsViewCell"];
+            [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
+            [[cell textLabel] setLineBreakMode:UILineBreakModeWordWrap];
+            [[cell textLabel] setNumberOfLines:0];
+            [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
+            [[cell detailTextLabel] setLineBreakMode:UILineBreakModeWordWrap];
+            [[cell detailTextLabel] setNumberOfLines:0];
         }
-        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
-        [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:14.0]];
         
-        NSString *titleText;
-        NSString *subTitle;
-        if ([indexPath row] == 0) { // if first row, put in start point
-            titleText = [NSString stringWithFormat:@"Start at %@", [itinerary fromAddressString]];
+        [[cell textLabel] setText:[[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]]];
+        [[cell detailTextLabel] setText:[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]]];
+
+        if ([[itinerary legDescriptionToLegMapArray] objectAtIndex:[indexPath row]] == [NSNull null]) {
             [cell.imageView setImage:nil];
         }
-        else if ([indexPath row] == [[itinerary sortedLegs] count] + 1) { // if last row, put in end point
-            titleText = [NSString stringWithFormat:@"End at %@", [itinerary toAddressString]];
-            [cell.imageView setImage:nil];
-        }
-        else {  // otherwise, it is one of the legs
-            Leg *leg = [[itinerary sortedLegs] objectAtIndex:([indexPath row]-1)];
-            
-            titleText = [leg directionsTitleText];
-            subTitle = [leg directionsDetailText];
+        else {
+            Leg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:[indexPath row]];
             
             NSLog(@"leg arrival time: %@, leg time: %@", [leg arrivalFlag], [leg arrivalTime]);
             if([leg arrivalTime] > 0) {
@@ -165,14 +162,6 @@ NSUserDefaults *prefs;
                 [cell.imageView setImage:nil];
             }
         }
-        [[cell textLabel] setText:titleText];
-        [[cell detailTextLabel] setLineBreakMode:UILineBreakModeWordWrap];
-        [[cell detailTextLabel] setNumberOfLines:0];
-        [[cell detailTextLabel] setText:subTitle];
-        
-        if (subTitle && [subTitle length] > 40) {
-            [[cell detailTextLabel] sizeToFit];
-        }
     }
     @catch (NSException *exception) {
         NSLog(@"exception while reload RouteDetailView: %@", exception);
@@ -183,40 +172,30 @@ NSUserDefaults *prefs;
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {    
     @try {
-        NSString   *titleText,*patchString;
-        CGSize size;
-        if ([indexPath row] == 0) { // if first row, put in start point
-            titleText = [NSString stringWithFormat:@"Start at %@", [[itinerary from] name]];
-            size = [titleText 
+        // NSString *patchString;
+        NSString* titleText = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
+        NSString* subtitleText = [[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]];
+        CGSize titleSize = [titleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE] 
+              constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_WIDTH, CGFLOAT_MAX)];
+        CGSize subtitleSize = [subtitleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]
+                 constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_WIDTH, CGFLOAT_MAX)];
+        
+        /*
+        // DE:48  Wrapping issue while directionsTitleText & directionsDetailText lenght is small.        
+        if ([[leg directionsTitleText] length] < 20) {
+            patchString  = [[leg directionsTitleText] stringByAppendingString:@"adding Patch string for UI" ];
+            size = [[titleText stringByAppendingString:patchString] 
                     sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE] 
-                    constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
-        }
-        else if ([indexPath row] == [[itinerary sortedLegs] count] + 1) { // if last row, put in end point
-            titleText = [NSString stringWithFormat:@"End at %@", [[itinerary to] name]];
-            size = [titleText 
+                    constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_WIDTH, CGFLOAT_MAX)];
+        } else {
+            size = [[titleText stringByAppendingString:[leg directionsTitleText]] 
                     sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE] 
-                    constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
-        }
-        else {    
-            Leg *leg = [[itinerary sortedLegs] objectAtIndex:([indexPath row]-1)];
-            titleText= [leg directionsDetailText];
-            
-            // DE:48  Wrapping issue while directionsTitleText & directionsDetailText lenght is small.
-            
-            if ([[leg directionsTitleText] length] < 20) {
-                patchString  = [[leg directionsTitleText] stringByAppendingString:@"adding Patch string for UI" ];
-                size = [[titleText stringByAppendingString:patchString] 
-                        sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE] 
-                        constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
-            } else {
-                size = [[titleText stringByAppendingString:[leg directionsTitleText]] 
-                        sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE] 
-                        constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
-            }
-        }
-        CGFloat height = size.height + 7;
-        if (height < 44.0) { // Set a minumum row height
-            height = 44.0;
+                    constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_WIDTH, CGFLOAT_MAX)];
+        } */
+        
+        CGFloat height = titleSize.height + subtitleSize.height + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
+        if (height < STANDARD_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
+            height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
         }
         return height;
     }

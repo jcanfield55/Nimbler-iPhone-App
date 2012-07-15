@@ -51,9 +51,13 @@
 #define FB_RESPONCE_CODE            @"code"
 
 #define FB_RESPONSE_SUCCEES         @"Feedback Sent Successfully"
-#define FB_RESPONSE_FAIL            @"FeedBack Sent Fail"
+#define FB_RESPONSE_FAIL            @"Feedback Sent Fail"
 #define FB_TITLE_MSG                @"Nimbler Feedback"
 
+// Itinerary / Route Details strings
+#define ROUTE_STARTPOINT_PREFIX     @"Start at "
+#define ROUTE_ENDPOINT_PREFIX       @"End at "
+#define ROUTE_TITLE_MSG             @"Route"
 
 // Null String
 #define NULL_STRING                 @""

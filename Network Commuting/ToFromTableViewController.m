@@ -62,7 +62,7 @@
         txtField=[[UITextField alloc]initWithFrame:CGRectMake(TOFROM_TEXT_FIELD_INDENT,0,myTableView.frame.size.width-TOFROM_TEXT_FIELD_INDENT,[myTableView rowHeight]-TOFROM_INSERT_INTO_CELL_MARGIN)];
         [txtField setPlaceholder:@"Enter new address"];
         [txtField setClearButtonMode:UITextFieldViewModeAlways];  // Add a clear button for text field
-        [txtField setFont:[UIFont boldSystemFontOfSize:14.0]];
+        [txtField setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
         [txtField setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
 
         [txtField addTarget:self action:@selector(toFromTyping:forEvent:) forControlEvents:UIControlEventEditingChanged];
@@ -202,7 +202,7 @@
                                           reuseIdentifier:@"ToFromEnterNewLocationCell"];
        
         }
-        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
+        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
         [[cell textLabel] setTextColor:[UIColor lightGrayColor]];
         [[cell textLabel] setText:@"Enter New Address"];
         return cell;
@@ -225,7 +225,7 @@
         [[cell textLabel] setFont:[UIFont fontWithName:@"Helvetica-BoldOblique" size:15.0]];
     } else {
         // just bold for normal cell
-        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
+        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
     }
     
     cell.textLabel.lineBreakMode = UILineBreakModeMiddleTruncation;

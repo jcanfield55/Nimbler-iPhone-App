@@ -2,8 +2,8 @@
    "results" : [
                 {
                 "formatted_address" : "Caltrain Station List",
-                "toFrequency" : 5.0,
-                "fromFrequency" : 5.0,
+                "toFrequency" : 25.0,
+                "fromFrequency" : 25.0,
                 "memberOfList" : "Caltrain",
                 "geometry" : {
                 "location_type" : "TOFROM_LIST"

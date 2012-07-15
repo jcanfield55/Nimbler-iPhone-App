@@ -62,4 +62,5 @@
 #define RESPONSE_DATA_NOT_EXIST         107
 #define RESPONSE_INVALID_REQUEST        106
 
+// Float thresholds 
 #define TINY_FLOAT                      0.000001

@@ -425,8 +425,8 @@ float currentLocationResTime;
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 
                                           reuseIdentifier:@"timeDateTableCell"];
-            [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
-            [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:14.0]];
+            [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
+            [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
             [cell setBackgroundColor:[UIColor whiteColor]];
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
         }        
@@ -450,8 +450,8 @@ float currentLocationResTime;
                                           reuseIdentifier:@"singleRowFromCell"];
         }        
         [cell setBackgroundColor:[UIColor whiteColor]];
-        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
-        [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:14.0]];
+        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
+        [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
         [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
         [[cell textLabel] setText:@"From"];
         [[cell detailTextLabel] setText:@"Current Location"];

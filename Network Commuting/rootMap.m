@@ -13,7 +13,6 @@
 @interface RootMap()
 // Utility routine for setting the region on the MapView based on the itineraryNumber
 - (void)setMapViewRegion;
-- (void)setDirectionsText;
 - (void)refreshLegOverlay:(int)number;
 @end
 
@@ -74,7 +73,6 @@
     NSLog(@"ViewWillAppear, polyLineArray count = %d",[polyLineArray count]);
     
     [self setMapViewRegion];   // update the mapView region to correspond to the numItinerary item
-    [self setDirectionsText];  // update the directions text accordingly
     [mapView setShowsUserLocation:YES];  // track user location
 }
 
@@ -106,25 +104,6 @@
 }
 
 
-
-- (void)setDirectionsText 
-{
-    NSString* titleText;
-    NSString* subTitle;
-    if (itineraryNumber == 0) { // if first row, put in start point
-        titleText = [NSString stringWithFormat:@"Start at %@", [[itinerary from] name]];
-          
-    }
-    else if (itineraryNumber == [[itinerary sortedLegs] count] + 1) { // if last row, put in end point
-        titleText = [NSString stringWithFormat:@"End at %@", [[itinerary to] name]];
-    }
-    else {  // otherwise, it is one of the legs
-        
-        Leg *leg = [[itinerary sortedLegs] objectAtIndex:(itineraryNumber-1)];
-        titleText = [leg directionsTitleText];
-        subTitle = [leg directionsDetailText];
-    }
-}
 
 
 // Removes and re-inserts the polyline overlay for the specified iNumber (could be itineraryNumber)
