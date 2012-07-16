@@ -32,7 +32,7 @@
 #define BADGE_COUNT_ZERO                    0
 
 // RouteDetailsViewController
-#define ROUTE_DETAILS_TABLE_CELL_WIDTH      300
+#define ROUTE_DETAILS_TABLE_CELL_WIDTH      298 // Obtained thru trial & error for DE95 fix
 
 // Table cell height
 #define STANDARD_TABLE_CELL_MINIMUM_HEIGHT  44

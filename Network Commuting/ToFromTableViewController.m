@@ -125,6 +125,8 @@
     }
     // Else it is one of the locations which was selected
     else {
+        [toFromVC setEditMode:NO_EDIT];  // Have toFromVC end the edit mode (DE96 fix)
+        
         Location *loc = [locations locationAtIndex:([indexPath row]) isFrom:isFrom];  //selected Location 
 
         if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) { // If a list (like 'Caltrain Station List')
@@ -144,8 +146,6 @@
         }
         else {    // if a normal location
             [self markAndUpdateSelectedLocation:loc];  // Mark the selected location and send updates to locations and toFromVC
-            // Have toFromVC end the edit mode
-            [toFromVC setEditMode:NO_EDIT];  
         }
     }
 }
@@ -522,7 +522,8 @@
         // Use the picked location
         [self selectedGeocodedLocation:pickedLocation];
     }
-    else {  // for location picked from a preloaded list, just update the location
+    else {  // for location picked from a preloaded list...
+        
         [self markAndUpdateSelectedLocation:pickedLocation];
     }
 }
