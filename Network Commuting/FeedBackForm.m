@@ -41,11 +41,13 @@
 #define SAMPLERATE_KEY  8000.0
 #define TIME_INTERVAL   2.0
 #define INCREASE_PROGREEVIEW 0.0166
-#define UP_DOWN_RADIO   0.3
+#define UP_DOWN_RATIO   0.3
 
 @implementation FeedBackForm
 
 @synthesize tpResponse,tpURLResource,alertView,mesg,btnPlayRecording,btnStopRecording,btnPauseRecording,btnRecordRecording,fbParams;
+
+@synthesize tripPlannerView,advisoryView,settingView,feedbackView,tabBar;
 
 -(id)initWithFeedBack:(NSString *)nibNameOrNil fbParam:(FeedBackReqParam *)fbParam bundle:(NSBundle *)nibBundle
 {
@@ -108,7 +110,7 @@
 
     mesg = RECORD_MSG;
     alertView = [self childAlertViewRec];
-     
+    
     secondsLeft = RECORD_DURATION;
     secondUsed = REC_STOP_START;
     isRepeat = YES;
@@ -430,7 +432,7 @@
 - (void) animateTextField: (UITextField*) textField up: (BOOL) up{
 	int txtPosition = (textField.frame.origin.y - 160);
     const int movementDistance = (txtPosition < 0 ? 0 : txtPosition); // tweak as needed
-    const float movementDuration = UP_DOWN_RADIO; // tweak as needed
+    const float movementDuration = UP_DOWN_RATIO; // tweak as needed
     
     int movement = (up ? -movementDistance : movementDistance);
     
@@ -451,9 +453,9 @@
 
 #pragma mark TextView animation at selected
 - (void) animateTextView: (UITextView*) textView up: (BOOL) up{
-	int txtPosition = (textView.frame.origin.y - 100);
+	int txtPosition = (textView.frame.origin.y - 140);
     const int movementDistance = (txtPosition < 0 ? 0 : txtPosition); // tweak as needed
-    const float movementDuration = UP_DOWN_RADIO; // tweak as needed
+    const float movementDuration = UP_DOWN_RATIO; // tweak as needed
     int movement = (up ? -movementDistance : movementDistance);
     [UIView beginAnimations:ANIMATION_PARAM context: nil];
     [UIView setAnimationBeginsFromCurrentState: YES];
@@ -470,4 +472,28 @@
     [self animateTextView: textView up: NO];
 }
 
+-(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
+{    
+    if ([item.title isEqualToString:TRIP_PLANNER_VIEW]) {
+        [item setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+                                       [UIColor redColor], UITextAttributeTextColor,
+                                       nil] forState:UIBarButtonItemStyleBordered];
+
+    } else if([item.title isEqualToString:ADVISORIES_VIEW]) {
+        [item setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+                                       [UIColor redColor], UITextAttributeTextColor,
+                                       nil] forState:UIBarButtonItemStyleBordered];
+
+    } else if([item.title isEqualToString:SETTING_VIEW]) {
+        [item setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+                                       [UIColor redColor], UITextAttributeTextColor,
+                                       nil] forState:UIBarButtonItemStyleBordered];
+
+    } else if([item.title isEqualToString:FEEDBACK_VIEW]) {
+        [item setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+                                       [UIColor redColor], UITextAttributeTextColor,
+                                       nil] forState:UIBarButtonItemStyleBordered];
+    }
+    
+}
 @end
