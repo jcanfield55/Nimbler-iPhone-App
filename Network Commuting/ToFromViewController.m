@@ -92,8 +92,6 @@
 @synthesize continueGetTime;
 @synthesize maxiWalkDistance;
 
-@synthesize toFormatted,fromFormatted;
-
 // Constants for animating up and down the To: field
 #define TO_SECTION 0
 #define FROM_SECTION 1
@@ -427,8 +425,8 @@ float currentLocationResTime;
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 
                                           reuseIdentifier:@"timeDateTableCell"];
-            [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
-            [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:14.0]];
+            [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
+            [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
             [cell setBackgroundColor:[UIColor whiteColor]];
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
         }        
@@ -452,8 +450,8 @@ float currentLocationResTime;
                                           reuseIdentifier:@"singleRowFromCell"];
         }        
         [cell setBackgroundColor:[UIColor whiteColor]];
-        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
-        [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:14.0]];
+        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
+        [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
         [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
         [[cell textLabel] setText:@"From"];
         [[cell detailTextLabel] setText:@"Current Location"];
@@ -1004,10 +1002,6 @@ float currentLocationResTime;
                                            @"date", [NSDate date], nil]];  
             
             NSLog(@"Plan resource: %@", planURLResource);
-            
-            [prefs setValue:[toLocation formattedAddress] forKey:TO_FORMATTED];
-            [prefs setValue:[fromLocation formattedAddress] forKey:FROM_FORMATTED];
-            [prefs synchronize];
            
              // Call the trip planner
             [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];

@@ -20,4 +20,7 @@ NSString *durationString(double milliseconds);
 // Converts from meters to a string in either miles or feed
 NSString *distanceStringInMilesFeet(double meters);
 
+NSDateFormatter *utilitiesShortTimeFormatter(void);
+NSString *superShortTimeStringForDate(NSDate *date);
+
 

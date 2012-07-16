@@ -10,6 +10,19 @@
 #import "Leg.h"
 #import "Plan.h"
 
+@interface Itinerary()
+{
+    // Internal variables
+    NSArray* legDescTitleSortedArr;
+    NSArray* legDescSubtitleSortedArr;
+    NSArray* legDescToLegMapArray;
+}
+
+//Internal methods
+- (void)makeLegDescriptionSortedArrays;  
+
+@end
+
 
 @implementation Itinerary
 @dynamic duration;
@@ -92,7 +105,98 @@
 // Returns the ending point PlanPlace
 - (PlanPlace *)to
 {
-    return [[sortedLegs objectAtIndex:([sortedLegs count]-1)] to];
+    return [[[self sortedLegs] objectAtIndex:([sortedLegs count]-1)] to];
+}
+
+// Returns a sorted array of the title strings to show itinerary details as needed
+// for display a route details view.  Might have more elements than legs in the itinerary.  
+// Adds a start and/or end point if needed.  Modifies the first and last walking
+// leg if needed. 
+- (NSArray *)legDescriptionTitleSortedArray
+{
+    if (!legDescTitleSortedArr) {
+        [self makeLegDescriptionSortedArrays];
+    }
+    return legDescTitleSortedArr;
+}
+
+// Same as above, but returns the subtitles
+- (NSArray *)legDescriptionSubtitleSortedArray
+{
+    if (!legDescSubtitleSortedArr) {
+        [self makeLegDescriptionSortedArrays];
+    }
+    return legDescSubtitleSortedArr;
+}
+
+// This array has the same # of elements as the above title and subtitle arrays.  
+// For the same element as the title or subtitle array, this array maps back to the corresponding leg
+// if there is one.  If there was an added start or endpoint, the first or last element will return
+// NSNull
+- (NSArray *)legDescriptionToLegMapArray
+{
+    if (!legDescToLegMapArray) {
+        [self makeLegDescriptionSortedArrays];
+    }
+    return legDescToLegMapArray;
+}
+
+// Internal method for creating the makeLegDescription title, subtitle, and LegMap arrays
+- (void)makeLegDescriptionSortedArrays
+{
+    NSArray* legsArray = [self sortedLegs];
+    NSMutableArray* titleArray = [[NSMutableArray alloc] initWithCapacity:[legsArray count]+2];
+    NSMutableArray* subtitleArray = [[NSMutableArray alloc] initWithCapacity:[legsArray count]+2];
+    NSMutableArray* legMapArray = [[NSMutableArray alloc] initWithCapacity:[legsArray count]+2];
+
+    for (int i=0; i < [legsArray count]; i++) {
+        Leg* leg = [legsArray objectAtIndex:i];
+        if (i==0) { // First leg of itinerary
+            // If first leg is not a walking leg, insert a startpoint entry (US124 implementation)
+            if (![[leg mode] isEqualToString:@"WALK"]) {
+                [titleArray addObject:
+                 [NSString stringWithFormat:@"%@%@", ROUTE_STARTPOINT_PREFIX, [self fromAddressString]]];
+                [subtitleArray addObject:@""];
+                [legMapArray addObject:[NSNull null]];
+            }
+            // Now insert first leg text
+            [titleArray addObject:[leg directionsTitleText:FIRST_LEG]];
+            [subtitleArray addObject:[leg directionsDetailText:FIRST_LEG]];
+            [legMapArray addObject:leg];
+            
+            // If there is only one leg, and it is not a walking one, insert an endpoint (US124)
+            if ([legsArray count] == 1 && ![[leg mode] isEqualToString:@"WALK"]) {
+                [titleArray addObject:
+                 [NSString stringWithFormat:@"%@%@", ROUTE_ENDPOINT_PREFIX, [self toAddressString]]];  
+                [subtitleArray addObject:@""];
+                [legMapArray addObject:[NSNull null]];
+            }
+        }
+        else if (i == [legsArray count]-1) { // Last leg of itinerary
+            // Insert last leg text
+            [titleArray addObject:[leg directionsTitleText:LAST_LEG]];
+            [subtitleArray addObject:[leg directionsDetailText:LAST_LEG]];
+            [legMapArray addObject:leg];
+
+            // If last leg is not a walking leg, insert an endpoint entry (US124)
+            if (![[leg mode] isEqualToString:@"WALK"]) {
+                [titleArray addObject:
+                 [NSString stringWithFormat:@"%@%@", ROUTE_ENDPOINT_PREFIX, [self toAddressString]]];  
+                [subtitleArray addObject:@""];
+                [legMapArray addObject:[NSNull null]];
+            }
+        }
+        else { // Middle leg
+            [titleArray addObject:[leg directionsTitleText:MIDDLE_LEG]];
+            [subtitleArray addObject:[leg directionsDetailText:MIDDLE_LEG]];
+            [legMapArray addObject:leg];
+        }
+    }
+    
+    // Return non-mutable arrays
+    legDescTitleSortedArr = [NSArray arrayWithArray:titleArray];
+    legDescSubtitleSortedArr = [NSArray arrayWithArray:subtitleArray];
+    legDescToLegMapArray = [NSArray arrayWithArray:legMapArray];
 }
 
 // Returns a nicely formatted address string for the starting point, if available
@@ -130,7 +234,7 @@
     NSLog(@"Distance between toLocation and toPlanPlace = %f meters", distance);
     
     // If distance in meters is small enough, use the toLocation...
-    if (distance < 20.0) {
+    if (distance < 40.0) {
         return [toLocation shortFormattedAddress];
     }
     // otherwise, use the planPlace string from OTP

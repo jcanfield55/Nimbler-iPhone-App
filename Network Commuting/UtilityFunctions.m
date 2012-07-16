@@ -8,6 +8,10 @@
 
 #import "UtilityFunctions.h"
 
+
+static NSDateFormatter *utilitiesTimeFormatter;  // Static variable for short time formatter for use by utility
+
+
 // This function will construct the full path for a file with name *filename
 // in the Documents Directory
 NSString *pathInDocumentDirectory(NSString *fileName)
@@ -92,6 +96,30 @@ NSString *durationString(double milliseconds)
     }
     return returnString;
 }
+
+// Returns a NSDateFormatter set for short time format
+NSDateFormatter *utilitiesShortTimeFormatter(void) {
+    if (!utilitiesTimeFormatter) {
+        utilitiesTimeFormatter = [[NSDateFormatter alloc] init];
+        [utilitiesTimeFormatter setTimeStyle:NSDateFormatterShortStyle];
+    }
+    return utilitiesTimeFormatter;
+}
+
+// 
+NSString *superShortTimeStringForDate(NSDate *date) {
+    NSMutableString* timeString = [NSMutableString stringWithString:
+                                   [utilitiesShortTimeFormatter() stringFromDate:date]];
+    // Remove the space before AM/PM
+    [timeString replaceOccurrencesOfString:@" " 
+                                withString:@"" 
+                                   options:0 
+                                     range:NSMakeRange(0, [timeString length])];
+    // Convert to lowercase
+    NSString* returnString = [timeString lowercaseString];
+    return returnString;
+}
+
 
 // Converts from meters to a string in either miles or feed
 NSString *distanceStringInMilesFeet(double meters) {

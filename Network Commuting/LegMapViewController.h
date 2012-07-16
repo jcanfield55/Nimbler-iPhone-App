@@ -16,11 +16,11 @@
 @interface LegMapViewController : UIViewController <RKRequestDelegate>{
     MKPointAnnotation* startPoint;  // annotation for startPoint of the itinerary
     MKPointAnnotation* endPoint;    // annotation for the endPoint of the itinerary
-    NSMutableArray* polyLineArray;       // Array of polylines for each leg
+    NSMutableArray* polyLineArray;  // Array of polylines for each element in legDescriptionTitleSortedArray
     UIImage* dotImage;
     MyAnnotation* myAnnotation1;
-    UIBarButtonItem *For;
-    UIBarButtonItem *Bak;
+    UIBarButtonItem *forwardButton;
+    UIBarButtonItem *backButton;
     NSArray* bbiArray;
     IBOutlet UIButton *tw_btn;
     IBOutlet UIImageView *imgForTimeInterval;
@@ -48,8 +48,5 @@
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
 -(IBAction)twitterSearch:(id)sender forEvent:(UIEvent *)event;
 -(void)ReloadLegMapWithNewData;
-- (IBAction)navigateStart:(id)sender;
--(void)customMap;
--(void)walk;
 
 @end

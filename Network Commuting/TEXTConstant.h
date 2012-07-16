@@ -14,8 +14,6 @@
 #define DEVICE_TOKEN                @"deviceToken"
 #define USER_EMAIL                  @"eMailId"
 #define TWEET_COUNT                 @"tweetCount"
-#define TO_FORMATTED                @"ToFormatted"
-#define FROM_FORMATTED              @"FromFormatted"
 
 // SettingInfo Parameter 
 #define ALERT_COUNT                 @"alertCount"
@@ -53,9 +51,13 @@
 #define FB_RESPONCE_CODE            @"code"
 
 #define FB_RESPONSE_SUCCEES         @"Feedback Sent Successfully"
-#define FB_RESPONSE_FAIL            @"FeedBack Sent Fail"
+#define FB_RESPONSE_FAIL            @"Feedback Sent Fail"
 #define FB_TITLE_MSG                @"Nimbler Feedback"
 
+// Itinerary / Route Details strings
+#define ROUTE_STARTPOINT_PREFIX     @"Start at "
+#define ROUTE_ENDPOINT_PREFIX       @"End at "
+#define ROUTE_TITLE_MSG             @"Route"
 
 // Null String
 #define NULL_STRING                 @""

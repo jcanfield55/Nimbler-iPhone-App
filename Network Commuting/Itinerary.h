@@ -51,7 +51,20 @@
 // Returns a nicely formatted address string for the end point, if available
 - (NSString *)toAddressString;
 
+// Returns a sorted array of the title strings to show itinerary details as needed
+// for display a route details view.  Might have more elements than legs in the itinerary.  
+// Adds a start and/or end point if needed.  Modifies the first and last walking
+// leg if needed.  
+- (NSArray *)legDescriptionTitleSortedArray;
 
+// Same as above but containing the corresponding subtitles
+- (NSArray *)legDescriptionSubtitleSortedArray;
+
+// This array has the same # of elements as the above title and subtitle arrays.  
+// For the same element as the title or subtitle array, this array maps back to the corresponding leg
+// if there is one.  If there was an added start or endpoint, the first or last element will return
+// NSNull  
+- (NSArray *)legDescriptionToLegMapArray;
 
 @end
 

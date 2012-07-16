@@ -31,6 +31,13 @@
 // Upadate badge count to ZERO
 #define BADGE_COUNT_ZERO                    0
 
+// RouteDetailsViewController
+#define ROUTE_DETAILS_TABLE_CELL_WIDTH      300
+
+// Table cell height
+#define STANDARD_TABLE_CELL_MINIMUM_HEIGHT  44
+#define VARIABLE_TABLE_CELL_HEIGHT_BUFFER   7
+
 // Font Size
 #define STANDARD_FONT_SIZE                  12.0
 #define MEDIUM_FONT_SIZE                    14.0

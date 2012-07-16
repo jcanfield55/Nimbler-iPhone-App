@@ -119,7 +119,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
          */
         
         // Set title
-        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];
+        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
         NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)", 
                                [timeFormatter stringFromDate:[itin startTime]],
                                [timeFormatter stringFromDate:[itin endTime]],

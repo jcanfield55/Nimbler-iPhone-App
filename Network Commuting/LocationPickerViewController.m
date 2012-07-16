@@ -73,7 +73,7 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
         cell.textLabel.numberOfLines= 2;     
         cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
     }
-    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:14.0]];        
+    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];        
     [[cell textLabel] setText:[loc shortFormattedAddress]];    
     [cell sizeToFit];
     return cell;
@@ -100,9 +100,9 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
                 sizeWithFont:[UIFont systemFontOfSize:14] 
                 constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
     
-    CGFloat height = size.height + 7;
-    if (height < 44.0) { // Set a minumum row height
-        height = 44.0;
+    CGFloat height = size.height + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
+    if (height < STANDARD_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
+        height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
     }
     return height;
 }

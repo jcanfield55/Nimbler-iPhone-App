@@ -12,8 +12,7 @@
 #import "UtilityFunctions.h"
 
 @interface Leg()
-+ (NSDateFormatter *)timeFormatter;
-- (NSString *)superShortTimeStringForDate:(NSDate *)date;
+
 @end
 
 @implementation Leg
@@ -42,30 +41,6 @@
 @synthesize polylineEncodedString;
 
 @synthesize arrivalTime,arrivalFlag,timeDiffInMins;
-
-
-static NSDateFormatter *timeFormattr;
-+ (NSDateFormatter *)timeFormatter{
-    if (!timeFormattr) {
-        timeFormattr = [[NSDateFormatter alloc] init];
-        [timeFormattr setTimeStyle:NSDateFormatterShortStyle];
-    }
-    return timeFormattr;
-}
-
-- (NSString *)superShortTimeStringForDate:(NSDate *)date
-{
-    NSMutableString* timeString = [NSMutableString stringWithString:
-                                   [[Leg timeFormatter] stringFromDate:date]];
-    // Remove the space before AM/PM
-    [timeString replaceOccurrencesOfString:@" " 
-                                withString:@"" 
-                                   options:0 
-                                     range:NSMakeRange(0, [timeString length])];
-    // Convert to lowercase
-    NSString* returnString = [timeString lowercaseString];
-    return returnString;
-}
 
 
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType
@@ -131,15 +106,28 @@ static NSDateFormatter *timeFormattr;
     return polylineEncodedString;
 }
 
-- (NSString *)directionsTitleText
+// Returns title text for RouteDetailsView
+// US121 and US124 implementation
+- (NSString *)directionsTitleText:(LegPositionEnum)legPosition
 {
     NSMutableString *titleText=[NSMutableString stringWithString:@""];
     if ([[self mode] isEqualToString:@"WALK"]) {
-        [titleText appendFormat:@"Walk to %@", [[self to] name]];
+        if (legPosition == FIRST_LEG) {    // US124 implementation
+            [titleText appendFormat:@"%@ Walk to %@", 
+             superShortTimeStringForDate([[self itinerary] startTime]), 
+             [[self to] name]];
+        } else if (legPosition == LAST_LEG) {   // US124 implementation
+            [titleText appendFormat:@"%@ Arrive at %@",
+             superShortTimeStringForDate([[self itinerary] endTime]),
+             [[self itinerary] toAddressString]];
+        }
+        else {
+            [titleText appendFormat:@"Walk to %@", [[self to] name]];
+        }
     }
     else {  
         // if not walking, add the departure time (US 121 implementation)
-        [titleText appendFormat:@"%@  ", [self superShortTimeStringForDate:[self startTime]]];
+        [titleText appendFormat:@"%@  ", superShortTimeStringForDate([self startTime])];
         
         if ([[self mode] isEqualToString:@"BUS"]) {
             [titleText appendString:@"Bus "];
@@ -147,35 +135,42 @@ static NSDateFormatter *timeFormattr;
         else if ([[self mode] isEqualToString:@"TRAM"]) {
             [titleText appendString:@"Tram "];
         }
-    }
-    BOOL isShortName = false;
-    if ([self routeShortName] && [[self routeShortName] length]>0) {
-        [titleText appendFormat:@"%@", [self routeShortName]];
-        isShortName = true;
-    }
-    if ([self routeLongName] && [[self routeLongName] length]>0) {
-        if (isShortName) {
-            [titleText appendFormat:@" - "];
+        
+        BOOL isShortName = false;
+        if ([self routeShortName] && [[self routeShortName] length]>0) {
+            [titleText appendFormat:@"%@", [self routeShortName]];
+            isShortName = true;
         }
-        [titleText appendFormat:@"%@", [self routeLongName]];
-    }
-    if ([self headSign] && [[self headSign] length]>0) {
-        [titleText appendFormat:@" to %@", [self headSign]];
+        if ([self routeLongName] && [[self routeLongName] length]>0) {
+            if (isShortName) {
+                [titleText appendFormat:@" - "];
+            }
+            [titleText appendFormat:@"%@", [self routeLongName]];
+        }
+        if ([self headSign] && [[self headSign] length]>0) {
+            [titleText appendFormat:@" to %@", [self headSign]];
+        }
     }
     return titleText;
 }
 
-- (NSString *)directionsDetailText
+- (NSString *)directionsDetailText:(LegPositionEnum)legPosition
 {
     NSString *subTitle;
     if ([[self mode] isEqualToString:@"WALK"]) {
-        subTitle = [NSString stringWithFormat:@"About %@, %@", 
-                    durationString([[self duration] floatValue]), 
-                    distanceStringInMilesFeet([[self distance] floatValue])];
+        if (legPosition == FIRST_LEG) {
+            subTitle = [NSString stringWithFormat:@"From %@ (%@)",
+                        [[self itinerary] fromAddressString], 
+                        distanceStringInMilesFeet([[self distance] floatValue])];
+        } else {
+            subTitle = [NSString stringWithFormat:@"About %@, %@", 
+                        durationString([[self duration] floatValue]), 
+                        distanceStringInMilesFeet([[self distance] floatValue])];
+        }
     }
     else {
         subTitle = [NSString stringWithFormat:@"%@  Arrive %@",
-                    [self superShortTimeStringForDate:[self endTime]],
+                    superShortTimeStringForDate([self endTime]),
                     [[self to] name]];            
     }
     return subTitle;
