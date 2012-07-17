@@ -222,35 +222,6 @@ NSUserDefaults *prefs;
         [[cell textLabel] setText:[[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]]];
         [[cell detailTextLabel] setText:[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]]];
 
-        if ([[itinerary legDescriptionToLegMapArray] objectAtIndex:[indexPath row]] == [NSNull null]) {
-            [cell.imageView setImage:nil];
-        }
-        else {
-            Leg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:[indexPath row]];
-            
-            NSLog(@"leg arrival time: %@, leg time: %@", [leg arrivalFlag], [leg arrivalTime]);
-            if([leg arrivalTime] > 0) {
-                UIImage *imgForArrivalTime = [UIImage alloc];
-                if([leg.arrivalFlag intValue] == ON_TIME) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_ontime.png"] ;
-//                  RealArrivalTime.text =[NSString stringWithFormat:@"onTime"];
-
-                }  else if([leg.arrivalFlag intValue] == DELAYED) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_delay.png"] ;
-//                  RealArrivalTime.text =[NSString stringWithFormat:@"Delay:%@m",leg.timeDiffInMins];
-                } else if([leg.arrivalFlag intValue] == EARLY) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_early.png"] ;
-//                  RealArrivalTime.text =[NSString stringWithFormat:@"Early:%@m",leg.timeDiffInMins];
-                } else if([leg.arrivalFlag intValue] == EARLIER) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_earlier.png"] ;
-//                  RealArrivalTime.text =[NSString stringWithFormat:@"Earlier:%@m",leg.timeDiffInMins];                    
-                } 
-                [cell.imageView setImage:imgForArrivalTime];
-            }
-            else {
-                [cell.imageView setImage:nil];
-            }
-        }
     }
     @catch (NSException *exception) {
         NSLog(@"exception while reload RouteDetailView: %@", exception);
