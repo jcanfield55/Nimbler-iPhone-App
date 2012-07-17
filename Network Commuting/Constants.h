@@ -51,6 +51,9 @@
 // Locations behavior
 #define TOFROM_FREQUENCY_VISIBILITY_CUTOFF 0.99
 
+// LegMapView
+#define LEGMAP_DOT_IMAGE_FILE               @"mapDot"
+
 // Request timer Count
 #define TWEET_COUNT_POLLING_INTERVAL   300.0
 #define TIMER_SMALL_REQUEST_DELAY      1.0

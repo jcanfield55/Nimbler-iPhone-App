@@ -31,8 +31,13 @@
 // Upadate badge count to ZERO
 #define BADGE_COUNT_ZERO                    0
 
-// RouteDetailsViewController
-#define ROUTE_DETAILS_TABLE_CELL_WIDTH      298 // Obtained thru trial & error for DE95 fix
+// RouteDetailsViewController & LegMapViewController
+#define ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH  298 // Obtained thru trial & error for DE95 fix
+#define ROUTE_LEGMAP_X_ORIGIN               0
+#define ROUTE_LEGMAP_Y_ORIGIN               0
+#define ROUTE_LEGMAP_WIDTH                  320
+#define ROUTE_LEGMAP_MIN_HEIGHT             190
+#define ROUTE_DETAILS_TABLE_MAX_HEIGHT      180
 
 // Table cell height
 #define STANDARD_TABLE_CELL_MINIMUM_HEIGHT  44

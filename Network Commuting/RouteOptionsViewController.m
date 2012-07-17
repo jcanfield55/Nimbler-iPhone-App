@@ -284,8 +284,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                 }
                 isReloadRealData = true;
                 [mainTable reloadData]; 
-                LegMapViewController *legMap = [[LegMapViewController alloc] init];
-                [legMap ReloadLegMapWithNewData];
                 [routeDetailsVC ReloadLegWithNewData];
             }            
         } else {

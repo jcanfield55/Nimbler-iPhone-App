@@ -66,6 +66,10 @@
 // NSNull  
 - (NSArray *)legDescriptionToLegMapArray;
 
+// Returns the number of itinerary rows there are 
+// This equals the number of rows in the legDescriptionTitleSortedArray.  
+- (int)itineraryRowCount;
+
 @end
 
 @interface Itinerary (CoreDataGeneratedAccessors)

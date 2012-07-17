@@ -141,6 +141,12 @@
     return legDescToLegMapArray;
 }
 
+// Returns the number of itinerary rows there are 
+// This equals the number of rows in the legDescriptionTitleSortedArray.  
+- (int)itineraryRowCount {
+    return [[self legDescriptionToLegMapArray] count];
+}
+
 // Internal method for creating the makeLegDescription title, subtitle, and LegMap arrays
 - (void)makeLegDescriptionSortedArrays
 {
