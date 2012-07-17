@@ -26,10 +26,11 @@
 		525442CA14C3ED66004B0E1F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C914C3ED66004B0E1F /* SystemConfiguration.framework */; };
 		525442CC14C3ED8A004B0E1F /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442CB14C3ED8A004B0E1F /* libxml2.dylib */; };
 		525C20F9151D3AF5004F8FE0 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
-		525C20FF151D412A004F8FE0 /* LegMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 525C20FE151D412A004F8FE0 /* LegMapViewController.xib */; };
 		5275A2DF1528069F0052903F /* PolylineEncodedString.m in Sources */ = {isa = PBXBuildFile; fileRef = 5275A2DE1528069F0052903F /* PolylineEncodedString.m */; };
 		527E174A151EB9CD00CDBC23 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527E1749151EB9CD00CDBC23 /* QuartzCore.framework */; };
 		52849FCA151D0389001D4DDC /* LegMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52849FC9151D0389001D4DDC /* LegMapViewController.m */; };
+		528A486515B4D691009EF7F0 /* mapDot.png in Resources */ = {isa = PBXBuildFile; fileRef = 528A486415B4D690009EF7F0 /* mapDot.png */; };
+		528A486715B4D69D009EF7F0 /* mapDot@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 528A486615B4D69C009EF7F0 /* mapDot@2x.png */; };
 		52917827158477F6001CC74C /* caltrain-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 52917826158477F6001CC74C /* caltrain-station.json */; };
 		5297F2DF1560CA200032D015 /* DateTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297F2DE1560CA200032D015 /* DateTimeViewController.m */; };
 		5297F2E11560CAC20032D015 /* ToFromTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297F2E01560CAC20032D015 /* ToFromTableViewController.m */; };
@@ -87,8 +88,6 @@
 		CCB9E6FC1574B4FF0043F304 /* TwitterSearch.xib in Resources */ = {isa = PBXBuildFile; fileRef = CCB9E6FB1574B4FF0043F304 /* TwitterSearch.xib */; };
 		CCBE9FEE15627D6D00908A78 /* FeedBackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CCBE9FEC15627D6D00908A78 /* FeedBackViewController.m */; };
 		CCBE9FF41562867600908A78 /* SupportedRegion.m in Sources */ = {isa = PBXBuildFile; fileRef = CCBE9FF31562867600908A78 /* SupportedRegion.m */; };
-		CCBE9FF715628F5000908A78 /* RootMap.m in Sources */ = {isa = PBXBuildFile; fileRef = CCBE9FF615628F4F00908A78 /* RootMap.m */; };
-		CCBE9FF915628F5700908A78 /* RootMap.xib in Resources */ = {isa = PBXBuildFile; fileRef = CCBE9FF815628F5700908A78 /* RootMap.xib */; };
 		CCC107CF156A39CB0011246D /* TPResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC107CE156A39C90011246D /* TPResponse.m */; };
 		CCCA4BCD15905575009F3BF7 /* CustomBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = CCCA4BCC15905575009F3BF7 /* CustomBadge.m */; };
 		CCCA4BCF1590BB36009F3BF7 /* img_delay.png in Resources */ = {isa = PBXBuildFile; fileRef = CCCA4BCE1590BB36009F3BF7 /* img_delay.png */; };
@@ -802,12 +801,13 @@
 		525442CB14C3ED8A004B0E1F /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		525842C715A3AB10005BB92A /* UIConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UIConstants.h; sourceTree = "<group>"; };
 		525C20F8151D3AF5004F8FE0 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		525C20FE151D412A004F8FE0 /* LegMapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LegMapViewController.xib; path = ../LegMapViewController.xib; sourceTree = "<group>"; };
 		5275A2DD1528069F0052903F /* PolylineEncodedString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PolylineEncodedString.h; sourceTree = "<group>"; };
 		5275A2DE1528069F0052903F /* PolylineEncodedString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PolylineEncodedString.m; sourceTree = "<group>"; };
 		527E1749151EB9CD00CDBC23 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		52849FC8151D0389001D4DDC /* LegMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LegMapViewController.h; sourceTree = "<group>"; };
 		52849FC9151D0389001D4DDC /* LegMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LegMapViewController.m; sourceTree = "<group>"; };
+		528A486415B4D690009EF7F0 /* mapDot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mapDot.png; sourceTree = "<group>"; };
+		528A486615B4D69C009EF7F0 /* mapDot@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mapDot@2x.png"; sourceTree = "<group>"; };
 		52917826158477F6001CC74C /* caltrain-station.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "caltrain-station.json"; path = "PreloadData/caltrain-station.json"; sourceTree = "<group>"; };
 		529178281585326F001CC74C /* Network_Commuting 1.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.1.xcdatamodel"; sourceTree = "<group>"; };
 		5297F2DD1560CA0F0032D015 /* DateTimeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateTimeViewController.h; sourceTree = "<group>"; };
@@ -892,9 +892,6 @@
 		CCBE9FEC15627D6D00908A78 /* FeedBackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FeedBackViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		CCBE9FF21562866F00908A78 /* SupportedRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SupportedRegion.h; sourceTree = "<group>"; };
 		CCBE9FF31562867600908A78 /* SupportedRegion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SupportedRegion.m; sourceTree = "<group>"; };
-		CCBE9FF515628F4800908A78 /* RootMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootMap.h; sourceTree = "<group>"; };
-		CCBE9FF615628F4F00908A78 /* RootMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootMap.m; sourceTree = "<group>"; };
-		CCBE9FF815628F5700908A78 /* RootMap.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RootMap.xib; sourceTree = "<group>"; };
 		CCC107CD156A39C60011246D /* TPResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPResponse.h; sourceTree = "<group>"; };
 		CCC107CE156A39C90011246D /* TPResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPResponse.m; sourceTree = "<group>"; };
 		CCCA4BCB1590556C009F3BF7 /* CustomBadge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomBadge.h; sourceTree = "<group>"; };
@@ -2334,7 +2331,6 @@
 			isa = PBXGroup;
 			children = (
 				CCB9E6BA1574AC100043F304 /* util */,
-				CCA43F1C157330AD00DF85AD /* mapView */,
 				CCB7E81E1570EC460036E9CD /* controllerView */,
 				CCB7E81D1570EBCC0036E9CD /* dataObject */,
 				CCB7E81C1570EB670036E9CD /* images */,
@@ -2384,19 +2380,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		CCA43F1C157330AD00DF85AD /* mapView */ = {
-			isa = PBXGroup;
-			children = (
-				52849FC8151D0389001D4DDC /* LegMapViewController.h */,
-				52849FC9151D0389001D4DDC /* LegMapViewController.m */,
-				525C20FE151D412A004F8FE0 /* LegMapViewController.xib */,
-				CCBE9FF815628F5700908A78 /* RootMap.xib */,
-				CCBE9FF615628F4F00908A78 /* RootMap.m */,
-				CCBE9FF515628F4800908A78 /* RootMap.h */,
-			);
-			name = mapView;
-			sourceTree = "<group>";
-		};
 		CCB7E8131570904A0036E9CD /* feedBackForm */ = {
 			isa = PBXGroup;
 			children = (
@@ -2438,6 +2421,8 @@
 				CCCA4BD01590BB4D009F3BF7 /* img_earlier.png */,
 				CCCA4BCE1590BB36009F3BF7 /* img_delay.png */,
 				CC9E424C15821B7B00A4ADED /* map.png */,
+				528A486415B4D690009EF7F0 /* mapDot.png */,
+				528A486615B4D69C009EF7F0 /* mapDot@2x.png */,
 				CC9E424A158219A300A4ADED /* twitter.png */,
 				CC578A0415652D2A0057D5A7 /* pausePlay.png */,
 				CC578A02156520B50057D5A7 /* feedback.png */,
@@ -2509,6 +2494,8 @@
 				52B1B22414F9ABE4001AC5D1 /* RouteDetailsViewController.h */,
 				52B1B22514F9ABE4001AC5D1 /* RouteDetailsViewController.m */,
 				52A46661158D6AEF003EB02B /* RouteDetailsViewController.xib */,
+				52849FC8151D0389001D4DDC /* LegMapViewController.h */,
+				52849FC9151D0389001D4DDC /* LegMapViewController.m */,
 				8D0158B0159B2FBB0004D2FB /* twitterViewController.h */,
 				8D0158B1159B2FBB0004D2FB /* twitterViewController.m */,
 				8D0158B2159B2FBB0004D2FB /* twitterViewController.xib */,
@@ -2766,13 +2753,11 @@
 			files = (
 				52CF43AC14BDF2F9000565D6 /* InfoPlist.strings in Resources */,
 				52B302C614BE2B1E00EB4852 /* ToFromViewController.xib in Resources */,
-				525C20FF151D412A004F8FE0 /* LegMapViewController.xib in Resources */,
 				52E66F031520374B001BF026 /* DateTimeViewController.xib in Resources */,
 				52BA18AB15490006009125A3 /* logo_small_iPh.png in Resources */,
 				52BA18AD1549000D009125A3 /* logo_big_iPh.png in Resources */,
 				522C0E6815588D830072ADD6 /* README.txt in Resources */,
 				522C0E6915588D830072ADD6 /* release_notes.txt in Resources */,
-				CCBE9FF915628F5700908A78 /* RootMap.xib in Resources */,
 				CC6F22E6156391D90066DFA9 /* rec_up.png in Resources */,
 				CC6F22F01563C8890066DFA9 /* stopRec.png in Resources */,
 				CC6F22F21563CEC20066DFA9 /* playRec.png in Resources */,
@@ -2795,6 +2780,8 @@
 				8D015972159B3DE10004D2FB /* caltrain.jpg in Resources */,
 				CC96BE67159C8A87001F9193 /* itin_slipage.png in Resources */,
 				CC970CE115AC69E8005E8635 /* aps_production.cer in Resources */,
+				528A486515B4D691009EF7F0 /* mapDot.png in Resources */,
+				528A486715B4D69D009EF7F0 /* mapDot@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2857,7 +2844,6 @@
 				5297F2E11560CAC20032D015 /* ToFromTableViewController.m in Sources */,
 				CCBE9FEE15627D6D00908A78 /* FeedBackViewController.m in Sources */,
 				CCBE9FF41562867600908A78 /* SupportedRegion.m in Sources */,
-				CCBE9FF715628F5000908A78 /* RootMap.m in Sources */,
 				CCC107CF156A39CB0011246D /* TPResponse.m in Sources */,
 				CCB7E811157090380036E9CD /* FeedBackForm.m in Sources */,
 				CCB9E6FA1574B4F70043F304 /* TwitterSearch.m in Sources */,
@@ -2994,8 +2980,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
-				PROVISIONING_PROFILE = "C130A75E-6ABA-461D-9B78-7DEF5EBEC691";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C130A75E-6ABA-461D-9B78-7DEF5EBEC691";
+				PROVISIONING_PROFILE = "977A8FCC-01D6-4640-8A7E-B56637DC4BA7";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "977A8FCC-01D6-4640-8A7E-B56637DC4BA7";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -3016,8 +3002,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "C130A75E-6ABA-461D-9B78-7DEF5EBEC691";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C130A75E-6ABA-461D-9B78-7DEF5EBEC691";
+				PROVISIONING_PROFILE = "977A8FCC-01D6-4640-8A7E-B56637DC4BA7";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "977A8FCC-01D6-4640-8A7E-B56637DC4BA7";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -3026,8 +3012,8 @@
 		52CF43CF14BDF2F9000565D6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Nimbler World, Inc.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nimbler World, Inc.";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler Caltrain-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -3043,8 +3029,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "C130A75E-6ABA-461D-9B78-7DEF5EBEC691";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C130A75E-6ABA-461D-9B78-7DEF5EBEC691";
+				PROVISIONING_PROFILE = "D02F9A41-D167-4B67-9030-7766469EFBCB";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D02F9A41-D167-4B67-9030-7766469EFBCB";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3053,8 +3039,8 @@
 		52CF43D014BDF2F9000565D6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Nimbler World, Inc.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nimbler World, Inc.";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler Caltrain-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -3070,8 +3056,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "C130A75E-6ABA-461D-9B78-7DEF5EBEC691";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C130A75E-6ABA-461D-9B78-7DEF5EBEC691";
+				PROVISIONING_PROFILE = "D02F9A41-D167-4B67-9030-7766469EFBCB";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D02F9A41-D167-4B67-9030-7766469EFBCB";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};

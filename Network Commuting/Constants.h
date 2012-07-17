@@ -44,12 +44,15 @@
 
 // Preload file variables
 #define PRELOAD_LOCATION_FILE   @"caltrain-station.json"
-#define PRELOAD_VERSION_NUMBER  @"1.01"
+#define PRELOAD_VERSION_NUMBER  @"1.02"
 #define PRELOAD_TEST_ADDRESS    @"San Martin Caltrain, San Martin, CA 95046, USA" // station for testing version number
 #define TOFROM_LIST_TYPE        @"TOFROM_LIST" // Location type indicating a ToFromList
 
 // Locations behavior
 #define TOFROM_FREQUENCY_VISIBILITY_CUTOFF 0.99
+
+// LegMapView
+#define LEGMAP_DOT_IMAGE_FILE               @"mapDot"
 
 // Request timer Count
 #define TWEET_COUNT_POLLING_INTERVAL   300.0

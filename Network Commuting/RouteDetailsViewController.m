@@ -9,7 +9,6 @@
 #import "RouteDetailsViewController.h"
 #import "Leg.h"
 #import "LegMapViewController.h"
-#import "RootMap.h"
 #import "TwitterSearch.h"
 #import "FeedBackForm.h"
 #import "FeedBackReqParam.h"
@@ -17,15 +16,26 @@
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "ToFromViewController.h"
 
+@interface RouteDetailsViewController()
+{
+    UIBarButtonItem *forwardButton;
+    UIBarButtonItem *backButton;
+    NSArray* bbiArray;
+}
+@end
+
 @implementation RouteDetailsViewController
 
 @synthesize itinerary;
 @synthesize mainTable;
 @synthesize feedbackButton;
 @synthesize advisoryButton;
+@synthesize legMapVC;
+@synthesize mapView;
+@synthesize itineraryNumber;
 @synthesize twitterCount;
+@synthesize mainTableTotalHeight;
 
-int const ROUTE_DETAILS_TABLE_HEIGHT = 370;
 NSUserDefaults *prefs;
 
 #pragma mark lifecycle view
@@ -44,13 +54,23 @@ NSUserDefaults *prefs;
     @try {
         if (self) {
             [[self navigationItem] setTitle:ROUTE_TITLE_MSG];
-            UIImage *mapTmg = [UIImage imageNamed:@"map.png"];
-            UIButton *mapBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            mapBtn.bounds = CGRectMake(0, 0, mapTmg.size.width, mapTmg.size.height);
-            [mapBtn setImage:mapTmg forState:UIControlStateNormal];
-            [mapBtn addTarget:self action:@selector(mapOverView) forControlEvents:UIControlEventTouchDown];
-            map = [[UIBarButtonItem alloc] initWithCustomView:mapBtn]; 
-            self.navigationItem.rightBarButtonItem = map;
+            
+            // Set up the MKMapView and LegMapViewController
+            mapView = [[MKMapView alloc] init];
+            CGRect mapFrame = CGRectMake(ROUTE_LEGMAP_X_ORIGIN, ROUTE_LEGMAP_Y_ORIGIN,
+                                         ROUTE_LEGMAP_WIDTH,  ROUTE_LEGMAP_MIN_HEIGHT);      
+            
+            [mapView setFrame:mapFrame];
+            [[self view] addSubview:mapView];
+            legMapVC = [[LegMapViewController alloc] initWithMapView:mapView];
+            [mapView setDelegate:legMapVC];
+            
+            // Set up the forward and back button
+            backButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRewind target:self action:@selector(navigateBack:)]; 
+            forwardButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward target:self action:@selector(navigateForward:)]; 
+            bbiArray = [NSArray arrayWithObjects:forwardButton, backButton, nil];
+            self.navigationItem.rightBarButtonItems = bbiArray;
+            
             timeFormatter = [[NSDateFormatter alloc] init];
             [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
         }
@@ -61,15 +81,71 @@ NSUserDefaults *prefs;
     return self;
 }
 
+- (void)setItinerary:(Itinerary *)i0
+{
+    itinerary = i0;
+    [legMapVC setItinerary:i0];
+    [self setItineraryNumber:0];  // Initially start on the first row of itinerary
+    [backButton setEnabled:FALSE];
+    
+    // Compute the mainTableTotalHeight by calling the height of each row
+    mainTableTotalHeight = 0.0;
+    for (int i=0; i<[self tableView:mainTable numberOfRowsInSection:0]; i++) {
+        mainTableTotalHeight += [self tableView:mainTable 
+                        heightForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+    }
+}
+
+// Override method to set to a new itinerary number (whether from the navigation forward back buttons or by selecting a new row on the table)
+- (void)setItineraryNumber:(int)iNumber0
+{
+    itineraryNumber = iNumber0;
+    
+    // Scrolls the table to the new area.  If it is not
+    [mainTable selectRowAtIndexPath:[NSIndexPath indexPathForRow:itineraryNumber inSection:0] animated:YES scrollPosition:UITableViewScrollPositionMiddle]; 
+
+    // Activates or de-activates the backward and forward as needed
+    if(itineraryNumber == 0){
+        [backButton setEnabled:FALSE];
+    } else {
+        [backButton setEnabled:TRUE];
+    }
+    if(itineraryNumber == [itinerary itineraryRowCount] - 1){       
+        [forwardButton setEnabled:FALSE];
+    } else {
+        [forwardButton setEnabled:TRUE];
+    }
+    
+    // Updates legMapVC itinerary number (changing the region for the map
+    [legMapVC setItineraryNumber:itineraryNumber];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     @try {
         // Enforce height of main table
-        CGRect rect0 = [mainTable frame];
-        rect0.size.height = ROUTE_DETAILS_TABLE_HEIGHT;
-        [mainTable setFrame:rect0];
+        CGRect tableFrame = [mainTable frame];
+        CGRect mapFrame = [mapView frame];
+        
+        // If we have a small itinerary, reduce the table size so it just fits it, and increase the map size
+        CGFloat newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT, mainTableTotalHeight);
+        if (tableFrame.size.height != newMainTableHeight) { // if something is changing...
+            CGFloat combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT + ROUTE_LEGMAP_MIN_HEIGHT+1;
+            tableFrame.size.height = newMainTableHeight;
+            tableFrame.origin.y = combinedHeight - newMainTableHeight;
+            mapFrame.size.height = combinedHeight - newMainTableHeight - 1;
+            
+            [mainTable setFrame:tableFrame];
+            [mapView setFrame:mapFrame];
+        }
         [mainTable reloadData];
+        
+        // Scrolls the table to the new area and selects the row
+        if (itineraryNumber != 0) {
+            [mainTable selectRowAtIndexPath:[NSIndexPath indexPathForRow:itineraryNumber inSection:0] animated:YES scrollPosition:UITableViewScrollPositionMiddle];   
+        }
+        
         prefs = [NSUserDefaults standardUserDefaults];
         int tweetConut = [[prefs objectForKey:TWEET_COUNT] intValue];
         [twitterCount removeFromSuperview];
@@ -82,10 +158,18 @@ NSUserDefaults *prefs;
             [self.view addSubview:twitterCount];
             [twitterCount setHidden:NO];
         }
+        
     }
     @catch (NSException *exception) {
         NSLog(@"exception at viewWillAppear RouteDetail: %@", exception);
     }
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [mainTable flashScrollIndicators];   
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -106,8 +190,8 @@ NSUserDefaults *prefs;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     @try {
-        if ([[itinerary legDescriptionTitleSortedArray] count] > 0) {
-            return [[itinerary legDescriptionTitleSortedArray] count];  
+        if ([itinerary itineraryRowCount] > 0) {
+            return [itinerary itineraryRowCount];  
         }
         else {
             return 0;  // TODO come up with better handling for no legs in this itinerary
@@ -138,30 +222,6 @@ NSUserDefaults *prefs;
         [[cell textLabel] setText:[[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]]];
         [[cell detailTextLabel] setText:[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]]];
 
-        if ([[itinerary legDescriptionToLegMapArray] objectAtIndex:[indexPath row]] == [NSNull null]) {
-            [cell.imageView setImage:nil];
-        }
-        else {
-            Leg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:[indexPath row]];
-            
-            NSLog(@"leg arrival time: %@, leg time: %@", [leg arrivalFlag], [leg arrivalTime]);
-            if([leg arrivalTime] > 0) {
-                UIImage *imgForArrivalTime = [UIImage alloc];
-                if([leg.arrivalFlag intValue] == ON_TIME) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_ontime.png"] ;
-                }  else if([leg.arrivalFlag intValue] == DELAYED) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_delay.png"] ;
-                } else if([leg.arrivalFlag intValue] == EARLY) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_early.png"] ;
-                } else if([leg.arrivalFlag intValue] == EARLIER) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_earlier.png"] ;
-                } 
-                [cell.imageView setImage:imgForArrivalTime];
-            }
-            else {
-                [cell.imageView setImage:nil];
-            }
-        }
     }
     @catch (NSException *exception) {
         NSLog(@"exception while reload RouteDetailView: %@", exception);
@@ -176,23 +236,10 @@ NSUserDefaults *prefs;
         NSString* titleText = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
         NSString* subtitleText = [[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]];
         CGSize titleSize = [titleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE] 
-              constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_WIDTH, CGFLOAT_MAX)];
+              constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
         CGSize subtitleSize = [subtitleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]
-                 constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_WIDTH, CGFLOAT_MAX)];
-        
-        /*
-        // DE:48  Wrapping issue while directionsTitleText & directionsDetailText lenght is small.        
-        if ([[leg directionsTitleText] length] < 20) {
-            patchString  = [[leg directionsTitleText] stringByAppendingString:@"adding Patch string for UI" ];
-            size = [[titleText stringByAppendingString:patchString] 
-                    sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE] 
-                    constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_WIDTH, CGFLOAT_MAX)];
-        } else {
-            size = [[titleText stringByAppendingString:[leg directionsTitleText]] 
-                    sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE] 
-                    constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_WIDTH, CGFLOAT_MAX)];
-        } */
-        
+                 constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
+
         CGFloat height = titleSize.height + subtitleSize.height + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
         if (height < STANDARD_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
             height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
@@ -207,18 +254,26 @@ NSUserDefaults *prefs;
 // If selected, show the LegMapViewController
 - (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Initialize the LegMapView Controller
-    @try {
-        LegMapViewController *legMapVC = [[LegMapViewController alloc] initWithNibName:@"LegMapViewController" bundle:nil];
-        // Initialize the leg VC with the full itinerary and the particular leg object chosen
-        [legMapVC setItinerary:itinerary itineraryNumber:[indexPath row]];
-        [[self navigationController] pushViewController:legMapVC animated:YES];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"exception at navigating into LegMapView: %@", exception);
-    }
-    
+    [self setItineraryNumber:[indexPath row]];
+
 }
+
+#pragma mark - Map navigation callbacks
+
+// Callback for when user presses the navigate back button on the right navbar
+- (IBAction)navigateBack:(id)sender {
+    if ([self itineraryNumber] > 0) {
+        [self setItineraryNumber:([self itineraryNumber] - 1)];
+    }
+}
+
+// Callback for when user presses the navigate forward button on the right navbar
+- (IBAction)navigateForward:(id)sender {
+    if ([self itineraryNumber] < [itinerary itineraryRowCount] - 1) {
+        [self setItineraryNumber:([self itineraryNumber] + 1)];
+    }
+}
+
 
 #pragma mark - Button Press methods
 - (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event
@@ -243,19 +298,6 @@ NSUserDefaults *prefs;
     }
     @catch (NSException *exception) {
          NSLog(@"Exception at feedback navigation: %@", exception);
-    }
-}
-
-
-- (void)mapOverView
-{
-    @try {
-        RootMap *rootMap = [[RootMap alloc] initWithNibName:nil bundle:nil];
-        [rootMap setItinerarys:itinerary itineraryNumber:2];
-        [[self navigationController] pushViewController:rootMap animated:YES];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"Exception at mapOverview: %@", exception);
     }
 }
 

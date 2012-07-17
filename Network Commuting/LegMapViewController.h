@@ -10,43 +10,13 @@
 #import <MapKit/MapKit.h> 
 #import "Itinerary.h"
 #import "Leg.h"
-#import "MyAnnotation.h"
-#import "FeedBackForm.h"
 
-@interface LegMapViewController : UIViewController <RKRequestDelegate>{
-    MKPointAnnotation* startPoint;  // annotation for startPoint of the itinerary
-    MKPointAnnotation* endPoint;    // annotation for the endPoint of the itinerary
-    NSMutableArray* polyLineArray;  // Array of polylines for each element in legDescriptionTitleSortedArray
-    UIImage* dotImage;
-    MyAnnotation* myAnnotation1;
-    UIBarButtonItem *forwardButton;
-    UIBarButtonItem *backButton;
-    NSArray* bbiArray;
-    IBOutlet UIButton *tw_btn;
-    IBOutlet UIImageView *imgForTimeInterval;
-    IBOutlet UILabel *RealArrivalTime;
-}
+@interface LegMapViewController : UIViewController <RKRequestDelegate, MKMapViewDelegate>
 
-@property(nonatomic, strong) IBOutlet MKMapView *mapView;
-@property(nonatomic, strong) IBOutlet UIView *directionsView;
-@property(nonatomic, strong) IBOutlet UILabel *directionsTitle;
-@property(nonatomic, strong) IBOutlet UILabel *directionsDetails;
-@property (strong, nonatomic) IBOutlet UIButton *feedbackButton;
+@property(nonatomic, strong) MKMapView *mapView;
 @property(nonatomic, strong) Itinerary *itinerary;
-@property(nonatomic, readonly) int itineraryNumber;
-@property (strong, nonatomic) CustomBadge *twitterCount;
+@property(nonatomic) int itineraryNumber;
 
-// Set the LegMapView to display an itinerary leg specified in itineraryNumber
-// Note:  num = 0 is the startpoint.  num=1 is the first leg.  
-// num = [[itin sortedLegs] count]+1 is the endpoint
-- (void)setItinerary:(Itinerary *)itin itineraryNumber:(int)num;
-- (void)setMapViewRegion;
-- (void)setDirectionsText;
-- (IBAction)navigateBack:(id)sender;
-- (IBAction)navigateForward:(id)sender;
-- (void)refreshLegOverlay:(int)iNumber;
-- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
--(IBAction)twitterSearch:(id)sender forEvent:(UIEvent *)event;
--(void)ReloadLegMapWithNewData;
+- (id)initWithMapView:(MKMapView *)m0;  // Preferred initializer
 
 @end

@@ -10,15 +10,22 @@
 #import "TestFlightSDK1/TestFlight.h"
 #import "MyAnnotation.h"
 #import "Step.h"
-#import "RootMap.h"
 #import "twitterViewController.h"
 #import "RestKit/RKJSONParserJSONKit.h"
+#import "Constants.h"
 #import <CoreImage/CoreImageDefines.h>
 
-@interface LegMapViewController()
+@interface LegMapViewController() {
+    // Internal variables
+    MKPointAnnotation* startPoint;  // annotation for startPoint of the itinerary
+    MKPointAnnotation* endPoint;    // annotation for the endPoint of the itinerary
+    NSMutableArray* polyLineArray;  // Array of polylines for each element in legDescriptionTitleSortedArray
+    NSMutableArray* dotAnnotationArray;  // Array of all dot annotations
+    UIImage* dotImage;
+}
+
 // Utility routine for setting the region on the MapView based on the itineraryNumber
-- (void)setMapViewRegion;
-- (void)setDirectionsText;
+- (void)setMapViewRegion;  
 - (void)refreshLegOverlay:(int)number;
 @end
 
@@ -27,95 +34,82 @@
 @synthesize itinerary;
 @synthesize itineraryNumber;
 @synthesize mapView;
-@synthesize directionsView;
-@synthesize directionsTitle;
-@synthesize directionsDetails;
-@synthesize feedbackButton;
-@synthesize twitterCount;
 
 NSString *legID;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithMapView:(MKMapView *)m0
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:nil bundle:nil];
     if (self) {
-        [[self navigationItem] setTitle:@"Nimbler"];
-        
-        backButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRewind target:self action:@selector(navigateBack:)]; 
-        forwardButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward target:self action:@selector(navigateForward:)]; 
-        bbiArray = [NSArray arrayWithObjects:forwardButton, backButton, nil];
-        self.navigationItem.rightBarButtonItems = bbiArray;
+        mapView = m0;
+        polyLineArray = [NSMutableArray arrayWithCapacity:10];
+        dotAnnotationArray = [NSMutableArray arrayWithCapacity:10];
     }
     return self;
 }
 
-- (void)setItinerary:(Itinerary *)itin itineraryNumber:(int)num
+- (void)setItinerary:(Itinerary *)itin
 {
-    @try {
-        itinerary = itin;
-        itineraryNumber = num;
-        // Add start and endpoint annotation
-    }
-    @catch (NSNull *exception) {
-        NSLog(@"exception at set itinerary and itineraryNumber: %@", exception);
-    }
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    @try {
+    if (itin != itinerary) {  // if something actually changed...
+        itinerary = itin;  
+        
+        // Clear out any previous overlays and annotations
+        [mapView removeAnnotations:dotAnnotationArray];
+        [mapView removeOverlays:polyLineArray];
+        [dotAnnotationArray removeAllObjects];
+        [polyLineArray removeAllObjects];
+        
+        // Set up the startpoint, endpoint, overlays and annotations for the new itinerary
+        
         NSArray *sortedLegs = [itinerary sortedLegs];
         
-        // Take startpoint as the beginning of the first leg's polyline, 
-        // and endpoint form the last leg's polyline
+        // Take startpoint as the beginning of the first leg's polyline, and endpoint form the last leg's polyline
         startPoint = [[MKPointAnnotation alloc] init];
         [startPoint setCoordinate:[[[sortedLegs objectAtIndex:0] polylineEncodedString] startCoord]];
+        [dotAnnotationArray addObject:startPoint];
         [mapView addAnnotation:startPoint];
         endPoint = [[MKPointAnnotation alloc] init];
         [endPoint setCoordinate:[[[sortedLegs objectAtIndex:([sortedLegs count]-1)] polylineEncodedString] endCoord]];
+        [dotAnnotationArray addObject:endPoint];
         [mapView addAnnotation:endPoint];
         
         // Add the overlays and dot AnnotationViews for paths to the mapView
-        polyLineArray = [NSMutableArray array];
-        for (int i=0; i < [[itinerary legDescriptionToLegMapArray] count]; i++) {
+        for (int i=0; i < [itinerary itineraryRowCount]; i++) {
             if ([[itinerary legDescriptionToLegMapArray] objectAtIndex:i] == [NSNull null]) {
                 [polyLineArray addObject:[NSNull null]];
             }
             else {
-            Leg* l = [[itinerary legDescriptionToLegMapArray] objectAtIndex:i];
-            MKPolyline *polyLine = [[l polylineEncodedString] polyline];
-            [polyLineArray addObject:polyLine];
-            [mapView addOverlay:polyLine];
-            
-            MKPointAnnotation* dotPoint = [[MKPointAnnotation alloc] init];
-            [dotPoint setCoordinate:[[l polylineEncodedString] endCoord]];
-            [mapView addAnnotation:dotPoint];
+                Leg* l = [[itinerary legDescriptionToLegMapArray] objectAtIndex:i];
+                MKPolyline *polyLine = [[l polylineEncodedString] polyline];
+                [polyLineArray addObject:polyLine];
+                [mapView addOverlay:polyLine];
+                
+                if (i < [itinerary itineraryRowCount] - 1) {  // if not the last itinerary row
+                    MKPointAnnotation* dotPoint = [[MKPointAnnotation alloc] init];
+                    [dotPoint setCoordinate:[[l polylineEncodedString] endCoord]];
+                    [dotAnnotationArray addObject:dotPoint];
+                    [mapView addAnnotation:dotPoint];
+                }
             }
         }
-        NSLog(@"ViewWillAppear, polyLineArray count = %d",[polyLineArray count]);
         
         [self setMapViewRegion];   // update the mapView region to correspond to the numItinerary item
-        [self setDirectionsText];  // update the directions text accordingly
-        [mapView setShowsUserLocation:YES];  // track user location
         
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        int tweetConut = [[prefs objectForKey:TWEET_COUNT] intValue];
-        [twitterCount removeFromSuperview];
-            twitterCount = [[CustomBadge alloc] init];
-            twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
-            [twitterCount setFrame:CGRectMake(60, 372, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
-            if (tweetConut == 0) {
-                [twitterCount setHidden:YES];
-            } else {
-                [self.view addSubview:twitterCount];
-                [twitterCount setHidden:NO];
-            }
-    }
-    @catch (NSException *exception) {
-        NSLog(@"exception at viewWillAppear in LegMapViewController: %@", exception);
+        [mapView setShowsUserLocation:YES];  // track user location
     }
 }
+
+- (void)setItineraryNumber:(int)i0
+{
+    if (itineraryNumber != i0) { // if something has actually changed...
+        [self refreshLegOverlay:itineraryNumber];  // refreshes the last itinerary number
+        [self refreshLegOverlay:i0];   // refreshes the new itinerary number
+        itineraryNumber = i0;
+        [self setMapViewRegion];  // redefine the bounding box
+
+    }
+}
+
 
 - (void)setMapViewRegion {
 
@@ -133,11 +127,10 @@ NSString *legID;
             // if inineraryNumber is pointing to a leg, then set the bound around the polyline
             MKMapRect mpRect = [[polyLineArray objectAtIndex:itineraryNumber] boundingMapRect];
             MKCoordinateRegion mpRegion = MKCoordinateRegionForMapRect(mpRect);
-            // Move the center down by 15% of span so that route is not obscured by directions text
-            mpRegion.center.latitude = mpRegion.center.latitude + mpRegion.span.latitudeDelta*0.20;
-            // zoom out the map by 15% (lat) and 20% (long)
-            mpRegion.span.latitudeDelta = mpRegion.span.latitudeDelta * 1.2; 
-            mpRegion.span.longitudeDelta = mpRegion.span.longitudeDelta * 1.15;
+            mpRegion.center.latitude = mpRegion.center.latitude;
+            // zoom out the map by 10% (lat) and 10% (long)
+            mpRegion.span.latitudeDelta = mpRegion.span.latitudeDelta * 1.1; 
+            mpRegion.span.longitudeDelta = mpRegion.span.longitudeDelta * 1.1;
             // Create a 100m x 100m coord region around the center, and choose that if bigger
             MKCoordinateRegion minRegion = MKCoordinateRegionMakeWithDistance(mpRegion.center, 100.0, 100.0);
             if ((minRegion.span.latitudeDelta > mpRegion.span.latitudeDelta) &&
@@ -151,109 +144,6 @@ NSString *legID;
         NSLog(@"exception at setMapViewRegion: %@", exception);
     }
 }
-
-- (void)setDirectionsText 
-{
-    @try {
-        NSString* titleText = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:itineraryNumber];
-        NSString* subtitleText = [[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:itineraryNumber];
-        if (itineraryNumber == 0) { // if first row, 
-            [backButton setEnabled:false];
-        }
-        else if (itineraryNumber == [[itinerary legDescriptionTitleSortedArray] count]) { 
-            //Disable to see next leg view
-            [forwardButton setEnabled:false];
-        }
-        
-        // if this is a itineraryNumber with an actual leg...
-        if ([[itinerary legDescriptionToLegMapArray] objectAtIndex:itineraryNumber] != [NSNull null])
-        {
-            Leg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:itineraryNumber];
-
-            legID = [leg legId];
-            
-            if([leg arrivalTime] > 0) {
-                UIImage *imgForArrivalTime;
-                if([leg.arrivalFlag intValue] == ON_TIME) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_ontime.png"];
-                    RealArrivalTime.text =[NSString stringWithFormat:@"onTime"];
-                }  else if([leg.arrivalFlag intValue] == DELAYED) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_delay.png"] ;
-                    RealArrivalTime.text =[NSString stringWithFormat:@"Delay:%@m",leg.timeDiffInMins];
-                } else if([leg.arrivalFlag intValue] == EARLY) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_early.png"] ;
-                    RealArrivalTime.text =[NSString stringWithFormat:@"Early:%@m",leg.timeDiffInMins];
-                } else if([leg.arrivalFlag intValue] == EARLIER) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_earlier.png"] ;
-                    RealArrivalTime.text =[NSString stringWithFormat:@"Earlier:%@m",leg.timeDiffInMins];
-                } 
-                [imgForTimeInterval setImage:imgForArrivalTime];
-                NSLog(@"stop-------------");
-            } else {
-                [imgForTimeInterval setImage:nil];
-                RealArrivalTime.text =NULL_STRING;
-            }
-
-        }
-        [directionsTitle setText:titleText];
-        [directionsDetails setText:subtitleText];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"exception at setDirectionsText in LegMapView: %@", exception);
-    }
-}
-
-// Callback for when user presses the navigate back button on the right navbar
-- (IBAction)navigateBack:(id)sender {
-    // Go back to the previous step
-    @try {
-        RealArrivalTime.text = NULL_STRING;
-        [imgForTimeInterval setImage:nil];
-        if (itineraryNumber > 0) {
-            itineraryNumber--;
-        }
-        [self refreshLegOverlay:itineraryNumber+1];  // refreshes the previous itinerary number
-        [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
-        [self setMapViewRegion];  // redefine the bounding box
-        [self setDirectionsText];
-        [backButton setEnabled:TRUE];
-        [forwardButton setEnabled:TRUE];
-        if(itineraryNumber == 0){
-            //self.navigationItem.rightBarButtonItems = nil;
-            //self.navigationItem.rightBarButtonItem = For;
-            [backButton setEnabled:false];
-        }
-    }
-    @catch (NSException *exception) {
-        NSLog(@"exception at previous leg: %@", exception);
-    }
-}
-
-// Callback for when user presses the navigate forward button on the right navbar
-- (IBAction)navigateForward:(id)sender {
-    @try {
-        RealArrivalTime.text = NULL_STRING;
-        [imgForTimeInterval setImage:nil];
-        // Go forward to the next step
-        if (itineraryNumber < [[itinerary legDescriptionTitleSortedArray] count] - 1) {
-            itineraryNumber++;
-        }
-        [self refreshLegOverlay:itineraryNumber-1];  // refreshes the last itinerary number
-        [self refreshLegOverlay:itineraryNumber];   // refreshes the new itinerary number
-        [self setMapViewRegion];  // redefine the bounding box
-        [self setDirectionsText];
-        [backButton setEnabled:TRUE];
-        [forwardButton setEnabled:TRUE];
-        if(itineraryNumber == [[itinerary legDescriptionToLegMapArray] count] - 1){       
-            //self.navigationItem.rightBarButtonItem = backButton;
-            [forwardButton setEnabled:false];
-        } 
-    }
-    @catch (NSException *exception) {
-        NSLog(@"exception at next leg: %@", exception);
-    }
-}
-
 
 // Removes and re-inserts the polyline overlay for the specified iNumber (could be itineraryNumber)
 - (void)refreshLegOverlay:(int)iNumber
@@ -269,21 +159,6 @@ NSString *legID;
         NSLog(@"exception at refresh at overlay in legMapView: %@",exception);
     }
 }
-
-- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
-{
-    @try {
-        [TestFlight openFeedbackView];
-        FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:[NSNumber numberWithInt:FB_SOURCE_LEG] uniqueId:legID date:nil fromAddress:nil toAddress:nil];
-        FeedBackForm *legMapVC = [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];   
-        [[self navigationController] pushViewController:legMapVC animated:YES];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"exception at navigating in feedback from LegMapView: %@", exception);
-    }
-}
-
-
 
 // Callback for providing the overlay view
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay 
@@ -339,17 +214,6 @@ NSString *legID;
     [super viewWillDisappear:animated];
     
 }
--(IBAction)twitterSearch:(id)sender forEvent:(UIEvent *)event
-{
-    @try {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
-        [[RKClient sharedClient]  get:@"advisories/all" delegate:self];
-    }
-    @catch (NSException *exception) {
-        NSLog(@" twitter print : %@", exception);
-    }
-}
 
 - (void)didReceiveMemoryWarning
 {
@@ -375,16 +239,6 @@ NSString *legID;
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
--(void)ReloadLegMapWithNewData
-{    
-    @try {
-        [self setDirectionsText];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"exception at reload textDirection and image: %@", exception);
-    }
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
@@ -449,7 +303,7 @@ NSString *legID;
                 dotView.canShowCallout = NO;
                 if (!dotImage) {
                     // TODO add @2X image for retina screens
-                    NSString* imageName = [[NSBundle mainBundle] pathForResource:@"mapDot" ofType:@"png"];
+                    NSString* imageName = [[NSBundle mainBundle] pathForResource:LEGMAP_DOT_IMAGE_FILE ofType:@"png"];
                     dotImage = [UIImage imageWithContentsOfFile:imageName];
                 }
                 if (dotImage) {

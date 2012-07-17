@@ -126,9 +126,36 @@
         }
     }
     else {  
-        // if not walking, add the departure time (US 121 implementation)
-        [titleText appendFormat:@"%@  ", superShortTimeStringForDate([self startTime])];
+        BOOL areRealTimeUpdates = NO;
         
+        // if not walking, check for real-time updates:
+        if([self arrivalTime]) {
+            areRealTimeUpdates = YES;
+            NSLog(@"Real-time flag: %@, scheduled arrival: %@, real-time arrival: %@, diff: %@", 
+                  [self arrivalFlag], superShortTimeStringForDate([self startTime]),
+                  [self arrivalTime], [self timeDiffInMins]);
+
+            if([self.arrivalFlag intValue] == DELAYED) {
+                NSDate* realTimeArrivalTime = [[self startTime] 
+                                               dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
+                [titleText appendFormat:@"%@ ", superShortTimeStringForDate(realTimeArrivalTime)];
+                NSLog(@"Updated time: %@", titleText);
+            }
+            else if ([self.arrivalFlag intValue] == EARLY || [self.arrivalFlag intValue] == EARLIER) {
+                NSDate* realTimeArrivalTime = [[self startTime] 
+                                               dateByAddingTimeInterval:[timeDiffInMins floatValue]*(-60.0)];
+                [titleText appendFormat:@"%@ ", superShortTimeStringForDate(realTimeArrivalTime)];
+                NSLog(@"Updated time: %@", titleText);
+            }
+            else {
+                [titleText appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
+            }
+        }
+        else {
+            // add the departure time (US 121 implementation)
+            [titleText appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
+        }
+            
         if ([[self mode] isEqualToString:@"BUS"]) {
             [titleText appendString:@"Bus "];
         }
@@ -149,6 +176,17 @@
         }
         if ([self headSign] && [[self headSign] length]>0) {
             [titleText appendFormat:@" to %@", [self headSign]];
+        }
+        if (areRealTimeUpdates) {
+            if ([self.arrivalFlag intValue] == ON_TIME) {
+                [titleText appendString:@" (On-Time)"];
+            }
+            else if([self.arrivalFlag intValue] == DELAYED) {
+                [titleText appendString:@" (Delayed)"];
+            }
+            else if ([self.arrivalFlag intValue] == EARLY || [self.arrivalFlag intValue] == EARLIER) {
+                [titleText appendString:@" (Early)"];
+            }
         }
     }
     return titleText;
