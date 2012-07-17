@@ -17,6 +17,7 @@
 @property (nonatomic, strong) NSDateFormatter *dateFormattr;
 @property (nonatomic, strong) UIBarButtonItem *relod;
 @property (nonatomic) BOOL isFromAppDelegate;
+@property (nonatomic) BOOL isTwitterLivaData;
 
 -(void)setTwitterLiveData:(id)twitData;
 

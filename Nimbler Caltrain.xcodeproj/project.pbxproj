@@ -78,6 +78,7 @@
 		CC6F22F21563CEC20066DFA9 /* playRec.png in Resources */ = {isa = PBXBuildFile; fileRef = CC6F22F11563CEC20066DFA9 /* playRec.png */; };
 		CC6FE2B8155BA40D004BE10A /* MyAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6FE2B7155BA40D004BE10A /* MyAnnotation.m */; };
 		CC6FE2BB155BC416004BE10A /* Error.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6FE2BA155BC416004BE10A /* Error.m */; };
+		CC7D5A3315B58B0F0036E3FE /* walk.png in Resources */ = {isa = PBXBuildFile; fileRef = CC7D5A3215B58B0F0036E3FE /* walk.png */; };
 		CC96BE67159C8A87001F9193 /* itin_slipage.png in Resources */ = {isa = PBXBuildFile; fileRef = CC96BE66159C8A87001F9193 /* itin_slipage.png */; };
 		CC970CE115AC69E8005E8635 /* aps_production.cer in Resources */ = {isa = PBXBuildFile; fileRef = CC970CE015AC69E8005E8635 /* aps_production.cer */; };
 		CC9E424B158219A300A4ADED /* twitter.png in Resources */ = {isa = PBXBuildFile; fileRef = CC9E424A158219A300A4ADED /* twitter.png */; };
@@ -876,6 +877,7 @@
 		CC6FE2B7155BA40D004BE10A /* MyAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAnnotation.m; sourceTree = "<group>"; };
 		CC6FE2B9155BC411004BE10A /* Error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Error.h; sourceTree = "<group>"; };
 		CC6FE2BA155BC416004BE10A /* Error.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Error.m; sourceTree = "<group>"; };
+		CC7D5A3215B58B0F0036E3FE /* walk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = walk.png; sourceTree = "<group>"; };
 		CC96BE66159C8A87001F9193 /* itin_slipage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = itin_slipage.png; sourceTree = "<group>"; };
 		CC970CE015AC69E8005E8635 /* aps_production.cer */ = {isa = PBXFileReference; lastKnownFileType = file; name = aps_production.cer; path = "Network Commuting/aps_production.cer"; sourceTree = "<group>"; };
 		CC9E424A158219A300A4ADED /* twitter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = twitter.png; sourceTree = "<group>"; };
@@ -2414,6 +2416,7 @@
 		CCB7E81C1570EB670036E9CD /* images */ = {
 			isa = PBXGroup;
 			children = (
+				CC7D5A3215B58B0F0036E3FE /* walk.png */,
 				CC96BE66159C8A87001F9193 /* itin_slipage.png */,
 				8D015971159B3DE10004D2FB /* caltrain.jpg */,
 				CCCA4BD41590BB81009F3BF7 /* img_ontime.png */,
@@ -2782,6 +2785,7 @@
 				CC970CE115AC69E8005E8635 /* aps_production.cer in Resources */,
 				528A486515B4D691009EF7F0 /* mapDot.png in Resources */,
 				528A486715B4D69D009EF7F0 /* mapDot@2x.png in Resources */,
+				CC7D5A3315B58B0F0036E3FE /* walk.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

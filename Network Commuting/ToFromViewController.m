@@ -109,8 +109,12 @@ float currentLocationResTime;
     @try {
         if (self) {
             [[self navigationItem] setTitle:@"Nimbler"];
-            UIBarButtonItem *info = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(RedirectAtNimblerSetting)];
-            self.navigationItem.rightBarButtonItem = info;
+            
+            
+            UIBarButtonItem *btnRoute = [[UIBarButtonItem alloc] initWithTitle:@"Route" style:UIBarButtonItemStylePlain target:self action:@selector(redirectAtNimblerSetting)];
+            self.navigationItem.rightBarButtonItem = btnRoute;
+            self.tabBarItem.title = TRIP_PLANNER_VIEW;
+            self.tabBarItem.image = [UIImage imageNamed:@"img_ontime.png"];
             
             planRequestHistory = [NSMutableArray array]; // Initialize this array
             departOrArrive = DEPART;
@@ -164,9 +168,15 @@ float currentLocationResTime;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                     [UIColor blackColor], UITextAttributeTextColor,
+                                                                     nil]];
     isContinueGetRealTimeData = false;
     [continueGetTime invalidate];
     continueGetTime = nil;
+       
+     // Enforce height of main table
     CGRect rect0 = [mainTable frame];
     rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT;
     [mainTable setFrame:rect0];        
@@ -212,21 +222,7 @@ float currentLocationResTime;
             [twitterCount setHidden:NO];
         }        [continueGetTime invalidate];
         continueGetTime = nil;
-
         [self updateTripDate];  // update tripDate if needed
-        
-        // Enforce height of main table
-        CGRect rect0 = [mainTable frame];
-        rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT;
-        [mainTable setFrame:rect0];        
-        @try {
-            [toTable reloadData];
-            [fromTable reloadData];
-            [mainTable reloadData];
-        }
-        @catch (NSException *exception) {
-            NSLog(@"table view ------loading---------  %@", exception);
-        }
     }
     @catch (NSException *exception) {
         NSLog(@"exception at viewWillAppear: %@", exception);
@@ -736,20 +732,20 @@ float currentLocationResTime;
 
 - (IBAction)advisoriesButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
-    @try {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
-        isTwitterLivaData = TRUE;
-        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
-        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                                DEVICE_ID, udid,
-                                nil];    
-        NSString *advisoriesAll = [ALL_TWEETS_REQ appendQueryParams:params];
-        [[RKClient sharedClient]  get:advisoriesAll delegate:self];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"Exception at advisories button click from ToFromview: %@", exception);
-    } 
+//    @try {
+//        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+//        [RKClient setSharedClient:client];
+//        isTwitterLivaData = TRUE;
+//        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
+//        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
+//                                DEVICE_ID, udid,
+//                                nil];    
+//        NSString *advisoriesAll = [ALL_TWEETS_REQ appendQueryParams:params];
+//        [[RKClient sharedClient]  get:advisoriesAll delegate:self];
+//    }
+//    @catch (NSException *exception) {
+//        NSLog(@"Exception at advisories button click from ToFromview: %@", exception);
+//    } 
 }
 
 #pragma mark Edit events for ToFrom table
@@ -1240,11 +1236,11 @@ float currentLocationResTime;
 }
 
 #pragma mark Navigate in SettingInfoViewController view
--(void)RedirectAtNimblerSetting
-{
+-(void)redirectAtNimblerSetting{
     @try {
-        SettingInfoViewController *settingView = [[SettingInfoViewController alloc] init];
-        [[self navigationController] pushViewController:settingView animated:YES];
+//        SettingInfoViewController *settingView = [[SettingInfoViewController alloc] init];
+//        [[self navigationController] pushViewController:settingView animated:YES];
+        [self routeButtonPressed:self forEvent:nil];
     }
     @catch (NSException *exception) {
         NSLog(@"exception at navigate to settingInfo view: %@", exception);

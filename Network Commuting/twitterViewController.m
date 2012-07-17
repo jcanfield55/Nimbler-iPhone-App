@@ -13,25 +13,29 @@
 
 #define TWEETERVIEW_MANE        @"Nimbler Caltrain"
 #define TABLE_CELL              @"Cell"
-#define CALTRAIN_CELL_HEADER    @"caltrain @Caltrain"
+#define CALTRAIN_CELL_HEADER    @"Caltrain @Caltrain"
 #define TWEET                   @"tweet"
 #define TWEET_TIME              @"time"
 #define CALTRAIN_IMG            @"caltrain.jpg"
 
 #define MAXLINE_TAG             3
-#define CELL_HEIGHT             75
+#define CELL_HEIGHT             80
 
 @implementation twitterViewController
 
 NSMutableArray *arrayTweet;
 
-@synthesize mainTable,twitterData,dateFormattr,relod,isFromAppDelegate;
+@synthesize mainTable,twitterData,dateFormattr,relod,isFromAppDelegate,isTwitterLivaData;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         [[self navigationItem] setTitle:TWEETERVIEW_MANE];
+        self.tabBarItem.title = ADVISORIES_VIEW;
+        self.tabBarItem.image = [UIImage imageNamed:@"img_ontime.png"];
+        self.tabBarItem.badgeValue = @"3";
+        
         dateFormattr = [[NSDateFormatter alloc] init];
         [dateFormattr setDateStyle:NSDateFormatterFullStyle];
         [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
@@ -43,6 +47,11 @@ NSMutableArray *arrayTweet;
     return self;
 }
 
+-(void)hideUnUsedTableViewCell{
+    UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
+    view.backgroundColor = [UIColor clearColor];
+    [mainTable setTableFooterView:view];
+}
 -(void)popOut
 {
     [self.navigationController popViewControllerAnimated:YES];
@@ -61,6 +70,26 @@ NSMutableArray *arrayTweet;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self hideUnUsedTableViewCell];
+    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                     [UIColor blackColor], UITextAttributeTextColor,
+                                                                     nil]];
+    @try {
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        isTwitterLivaData = TRUE;
+        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
+        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
+                                DEVICE_ID, udid,
+                                nil];    
+        NSString *advisoriesAll = [ALL_TWEETS_REQ appendQueryParams:params];
+        [[RKClient sharedClient]  get:advisoriesAll delegate:self];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception at advisories button click from ToFromview: %@", exception);
+    } 
+
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -96,8 +125,11 @@ NSMutableArray *arrayTweet;
     UITableViewCell *cell =     [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) 
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] ;
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+        
     }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
     id key = [arrayTweet objectAtIndex:indexPath.row];                
     NSString *tweetDetail = [(NSDictionary*)key objectForKey:TWEET];
     NSString *tweetTime =  [(NSDictionary*)key objectForKey:TWEET_TIME];
@@ -109,18 +141,19 @@ NSMutableArray *arrayTweet;
     
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]]; 
     cell.textLabel.text = CALTRAIN_CELL_HEADER;
+    cell.textLabel.textColor = [UIColor redColor];
     cell.detailTextLabel.text = tweetDetail;
     cell.detailTextLabel.numberOfLines= MAXLINE_TAG;
     
     UILabel *labelTime = (UILabel *)[cell viewWithTag:MAXLINE_TAG];
-    CGRect lbl3Frame = CGRectMake(280, 0, 30, 20);
+    CGRect lbl3Frame = CGRectMake(280, 5, 30, 25);
     labelTime = [[UILabel alloc] initWithFrame:lbl3Frame];
     labelTime.tag = MAXLINE_TAG;
     labelTime.textColor = [UIColor blackColor];
     [labelTime setTextAlignment:UITextAlignmentRight];
     [cell.contentView addSubview:labelTime];
     labelTime.text = tweetAt;
-    [labelTime setFont:[UIFont boldSystemFontOfSize:STANDARD_FONT_SIZE]];
+    [labelTime setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
     
     UIImage *img = [UIImage imageNamed:CALTRAIN_IMG];    
     cell.imageView.layer.cornerRadius = CORNER_RADIUS_SMALL;
@@ -163,22 +196,30 @@ NSMutableArray *arrayTweet;
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     RKJSONParserJSONKit* rkTwitDataParser = [RKJSONParserJSONKit new];
     if ([request isGET]) {
-        NSLog(@"latest tweets: %@", [response bodyAsString]);
-        id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];
-        NSNumber *respCode = [(NSDictionary*)res objectForKey:ERROR_CODE];
-        @try {
-            if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
-                NSMutableArray *arrayLatestTweet = [(NSDictionary*)res objectForKey:TWEET]; 
-                NSMutableArray *tempArray = [[NSMutableArray alloc] initWithCapacity:arrayLatestTweet.count];
-                [tempArray addObjectsFromArray:arrayLatestTweet];
-                [tempArray addObjectsFromArray:arrayTweet];
-                arrayTweet = [[NSMutableArray alloc]initWithCapacity:arrayLatestTweet.count];
-                [arrayTweet addObjectsFromArray:tempArray];
-                [mainTable reloadData];
+        if (isTwitterLivaData) {
+            isTwitterLivaData = false;
+            NSLog(@"response %@", [response bodyAsString]);
+            id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];                
+            [self setTwitterLiveData:res];
+        } else {
+            NSLog(@"latest tweets: %@", [response bodyAsString]);
+            id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];
+            NSNumber *respCode = [(NSDictionary*)res objectForKey:ERROR_CODE];
+            @try {
+                if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
+                    NSMutableArray *arrayLatestTweet = [(NSDictionary*)res objectForKey:TWEET]; 
+                    NSMutableArray *tempArray = [[NSMutableArray alloc] initWithCapacity:arrayLatestTweet.count];
+                    [tempArray addObjectsFromArray:arrayLatestTweet];
+                    [tempArray addObjectsFromArray:arrayTweet];
+                    arrayTweet = [[NSMutableArray alloc]initWithCapacity:arrayLatestTweet.count];
+                    [arrayTweet addObjectsFromArray:tempArray];
+                    [mainTable reloadData];
+                }
             }
-        }
-        @catch (NSException *exception) {
-            NSLog(@"exceptions: %@", exception);
+            @catch (NSException *exception) {
+                NSLog(@"exceptions: %@", exception);
+            }
+
         }
     }
 }

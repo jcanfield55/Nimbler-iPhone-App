@@ -47,18 +47,26 @@
 
 @synthesize tpResponse,tpURLResource,alertView,mesg,btnPlayRecording,btnStopRecording,btnPauseRecording,btnRecordRecording,fbParams;
 
-@synthesize tripPlannerView,advisoryView,settingView,feedbackView,tabBar;
-
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        [[self navigationItem] setTitle:FB_TITLE];
+        self.tabBarItem.title = FB_TITLE;
+        self.tabBarItem.image = [UIImage imageNamed:@"img_ontime.png"];
+    }
+    return self;
+}
 -(id)initWithFeedBack:(NSString *)nibNameOrNil fbParam:(FeedBackReqParam *)fbParam bundle:(NSBundle *)nibBundle
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundle];
     if (self) {
         // Custom initialization
-        [[self navigationItem] setTitle:FB_TITLE];
         fbParams = fbParam;
     }
     return self;
 }
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -71,6 +79,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                     [UIColor blackColor], UITextAttributeTextColor,
+                                                                     nil]];
     // Do any additional setup after loading the view from its nib.
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     txtEmailId.text = [prefs objectForKey:USER_EMAIL];
@@ -472,28 +484,28 @@
     [self animateTextView: textView up: NO];
 }
 
--(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
-{    
-    if ([item.title isEqualToString:TRIP_PLANNER_VIEW]) {
-        [item setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
-                                       [UIColor redColor], UITextAttributeTextColor,
-                                       nil] forState:UIBarButtonItemStyleBordered];
-
-    } else if([item.title isEqualToString:ADVISORIES_VIEW]) {
-        [item setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
-                                       [UIColor redColor], UITextAttributeTextColor,
-                                       nil] forState:UIBarButtonItemStyleBordered];
-
-    } else if([item.title isEqualToString:SETTING_VIEW]) {
-        [item setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
-                                       [UIColor redColor], UITextAttributeTextColor,
-                                       nil] forState:UIBarButtonItemStyleBordered];
-
-    } else if([item.title isEqualToString:FEEDBACK_VIEW]) {
-        [item setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
-                                       [UIColor redColor], UITextAttributeTextColor,
-                                       nil] forState:UIBarButtonItemStyleBordered];
-    }
-    
-}
+//-(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
+//{    
+//    if ([item.title isEqualToString:TRIP_PLANNER_VIEW]) {
+//        [item setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+//                                       [UIColor redColor], UITextAttributeTextColor,
+//                                       nil] forState:UIBarButtonItemStyleBordered];
+//
+//    } else if([item.title isEqualToString:ADVISORIES_VIEW]) {
+//        [item setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+//                                       [UIColor redColor], UITextAttributeTextColor,
+//                                       nil] forState:UIBarButtonItemStyleBordered];
+//
+//    } else if([item.title isEqualToString:SETTING_VIEW]) {
+//        [item setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+//                                       [UIColor redColor], UITextAttributeTextColor,
+//                                       nil] forState:UIBarButtonItemStyleBordered];
+//
+//    } else if([item.title isEqualToString:FEEDBACK_VIEW]) {
+//        [item setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+//                                       [UIColor redColor], UITextAttributeTextColor,
+//                                       nil] forState:UIBarButtonItemStyleBordered];
+//    }
+//    
+//}
 @end

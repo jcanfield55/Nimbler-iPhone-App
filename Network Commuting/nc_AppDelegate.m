@@ -12,6 +12,9 @@
 #import "ToFromViewController.h"
 #import "TwitterSearch.h"
 #import "twitterViewController.h"
+#import "SettingInfoViewController.h"
+#import "FeedBackForm.h"
+#import "DateTimeViewController.h"
 
 #define TESTING 1  // If 1, then testFlightApp will collect device UIDs, if 0, it will not
 #define DEVELOPMENT 1  // If 1, then do not include testFlightApp at all (don't need crash report while developing)
@@ -33,6 +36,7 @@ static nc_AppDelegate *appDelegate;
 @synthesize timerTweeterGetData;
 @synthesize propertyInfo;
 @synthesize prefs;
+@synthesize tabBarController = _tabBarController;
 
 +(nc_AppDelegate *)sharedInstance
 {
@@ -77,7 +81,7 @@ static nc_AppDelegate *appDelegate;
         __managedObjectContext = [rkMOS managedObjectContext];
         
         // Create initial view controller 
-        toFromViewController = [[ToFromViewController alloc] initWithNibName:nil bundle:nil];
+        toFromViewController = [[ToFromViewController alloc] initWithNibName:@"ToFromViewController" bundle:nil];
         [toFromViewController setRkGeoMgr:rkGeoMgr];    // Pass the geocoding RK object
         [toFromViewController setRkPlanMgr:rkPlanMgr];    // Pass the planning RK object
         
@@ -126,11 +130,35 @@ static nc_AppDelegate *appDelegate;
     
     // Create an instance of a UINavigationController and put toFromViewController as the first view
     @try {
-        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:toFromViewController]; 
-        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        [[self window] setRootViewController:navController];
+        /*
+         // These is for navigation controller
         
+         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:toFromViewController]; 
+         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+         [[self window] setRootViewController:navController];
+         [self.window makeKeyAndVisible];
+        */
+         
+        // This is for TabBar controller
+        self.tabBarController = [[UITabBarController alloc] init];
+        twitterViewController *twitterView = [[twitterViewController alloc] initWithNibName:@"twitterviewController" bundle:nil];
+        SettingInfoViewController *settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController" bundle:nil];
+        FeedBackForm *fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
+        
+               
+        UINavigationController *toFromController = [[UINavigationController alloc] initWithRootViewController:toFromViewController];
+         UINavigationController *tweetController = [[UINavigationController alloc] initWithRootViewController:twitterView];
+         UINavigationController *settingController = [[UINavigationController alloc] initWithRootViewController:settingView];
+         UINavigationController *fbController = [[UINavigationController alloc] initWithRootViewController:fbView];
+        self.tabBarController.viewControllers = [NSArray arrayWithObjects:toFromController,tweetController,settingController,fbController, nil];
+        
+        [self.tabBarController.tabBar setSelectedImageTintColor:[UIColor redColor]];
+        [self.tabBarController.tabBar setTintColor:[UIColor whiteColor]];
+        
+        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        [[self window] setRootViewController:self.tabBarController];
         [self.window makeKeyAndVisible];
+        
     }
     @catch (NSException *exception) {
         NSLog(@"load exception: %@", exception);

@@ -217,6 +217,7 @@ NSUserDefaults *prefs;
             [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
             [[cell detailTextLabel] setLineBreakMode:UILineBreakModeWordWrap];
             [[cell detailTextLabel] setNumberOfLines:0];
+            cell.imageView.image = [UIImage imageNamed:@"walk.png"];
         }
         
         [[cell textLabel] setText:[[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]]];
@@ -233,6 +234,7 @@ NSUserDefaults *prefs;
 {    
     @try {
         // NSString *patchString;
+        /*
         NSString* titleText = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
         NSString* subtitleText = [[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]];
         CGSize titleSize = [titleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE] 
@@ -244,7 +246,8 @@ NSUserDefaults *prefs;
         if (height < STANDARD_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
             height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
         }
-        return height;
+         */
+        return 65.0;
     }
     @catch (NSException *exception) {
         NSLog(@"exception at set dynamic height for RouteDetailViewTable Cell: %@", exception);
@@ -255,7 +258,6 @@ NSUserDefaults *prefs;
 - (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self setItineraryNumber:[indexPath row]];
-
 }
 
 #pragma mark - Map navigation callbacks

@@ -21,6 +21,7 @@
 
 @interface nc_AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate> {
     Location* currentLocation;
+    UITabBarController *_tabBarController;
 }
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
@@ -37,6 +38,8 @@
 @property (strong, nonatomic) NSTimer *timerTweeterGetData;
 @property (strong, nonatomic) NSManagedObject *propertyInfo;
 @property (strong, nonatomic)  NSUserDefaults *prefs;
+
+@property (strong, nonatomic)  UITabBarController *tabBarController;
 
 - (NSURL *)applicationDocumentsDirectory;
 

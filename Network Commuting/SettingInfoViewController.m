@@ -31,6 +31,8 @@ bool isPush;
     if (self) {
         // Custom initialization
         [[self navigationItem] setTitle:SETTING_TITLE];
+        self.tabBarItem.title = @"Trip Planner";
+        self.tabBarItem.image = [UIImage imageNamed:@"img_ontime.png"];
     }
     return self;
 }
@@ -47,6 +49,10 @@ bool isPush;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                     [UIColor blackColor], UITextAttributeTextColor,
+                                                                     nil]];
     self.managedObjectContext = [[nc_AppDelegate sharedInstance] managedObjectContext]; 
     // Do any additional setup after loading the view from its nib.
     [self fetchUserSettingData];

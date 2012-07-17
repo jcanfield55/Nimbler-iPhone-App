@@ -14,7 +14,7 @@
 #import "Plan.h"
 #import "FeedBackReqParam.h"
 
-@interface FeedBackForm : UIViewController <AVAudioRecorderDelegate, AVAudioPlayerDelegate,RKRequestDelegate, UIAlertViewDelegate, UITabBarDelegate>{
+@interface FeedBackForm : UIViewController <AVAudioRecorderDelegate, AVAudioPlayerDelegate,RKRequestDelegate, UIAlertViewDelegate>{
     
    	NSString *soundFilePath;
     NSString *tpURLResource;
@@ -42,7 +42,7 @@
     
     FeedBackReqParam *fbParams;
     
-    UITabBar *tabBar;
+    
 }
 
 @property (strong, nonatomic) TPResponse *tpResponse; 
@@ -50,11 +50,7 @@
 @property(nonatomic,retain) NSString *mesg;
 @property (strong, nonatomic) UIAlertView * alertView;
 @property (strong, nonatomic) IBOutlet UIButton *btnPlayRecording,*btnStopRecording,*btnPauseRecording,*btnRecordRecording;
-@property (nonatomic, strong)  IBOutlet UITabBar *tabBar;
-@property (nonatomic, strong)  IBOutlet UITabBarItem *tripPlannerView;
-@property (nonatomic, strong)  IBOutlet UITabBarItem *advisoryView;
-@property (nonatomic, strong)  IBOutlet UITabBarItem *settingView;
-@property (nonatomic, strong)  IBOutlet UITabBarItem *feedbackView;
+
 
 -(IBAction)recordRecording:(id)sender;
 -(IBAction)stopRecording:(id)sender;
@@ -70,5 +66,7 @@
 -(void)sendFeedbackToServer;
 
 -(id)initWithFeedBack:(NSString *)nibNameOrNil fbParam:(FeedBackReqParam *)fbParam bundle:(NSBundle *)nibBundle;
+
+
 @end
 
