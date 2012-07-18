@@ -23,6 +23,10 @@
 #import "nc_AppDelegate.h"
 #import "UIConstants.h"
 
+#if FLURRY_ENABLED
+#include "Flurry.h"
+#endif
+
 @interface ToFromViewController()
 {
     // Variables for internal use    
@@ -218,7 +222,11 @@ float currentLocationResTime;
         // Enforce height of main table
         CGRect rect0 = [mainTable frame];
         rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT;
-        [mainTable setFrame:rect0];        
+        [mainTable setFrame:rect0];  
+        
+#if FLURRY_ENABLED
+        [Flurry logEvent:FLURRY_TOFROMVC_APPEAR];
+#endif
         @try {
             [toTable reloadData];
             [fromTable reloadData];
@@ -760,6 +768,19 @@ float currentLocationResTime;
     if (editMode == newEditMode) {
         return;  // If no change in mode return immediately
     }
+#if FLURRY_ENABLED
+    NSString *edit_string;
+    if (newEditMode==NO_EDIT) {
+        edit_string = @"NO_EDIT";
+    } else if (newEditMode==TO_EDIT) {
+        edit_string = @"TO_EDIT";
+    } else if (newEditMode==FROM_EDIT) {
+        edit_string = @"FROM_EDIT";
+    }
+    NSDictionary *dictionary = [NSDictionary 
+                                dictionaryWithObjectsAndKeys:FLURRY_EDIT_MODE_VALUE, edit_string, nil];
+    [Flurry logEvent:FLURRY_TOFROMTABLE_NEW_EDIT_MODE withParameters:dictionary];
+#endif
     NSRange range;
     ToFromEditMode oldEditMode = editMode;
     editMode = newEditMode;  
@@ -946,6 +967,9 @@ float currentLocationResTime;
         
         if (!isDuplicatePlan)  // if not a recent duplicate request
         {
+#if FLURRY_ENABLED
+            [Flurry logEvent:FLURRY_ROUTE_REQUESTED];
+#endif
             [self startActivityIndicator];
             
             // Update dynamic table height if a new location is becoming visible

@@ -10,6 +10,10 @@
 #import "nc_AppDelegate.h"
 #import "UserPreferance.h"
 
+#if FLURRY_ENABLED
+#include "Flurry.h"
+#endif
+
 #define SETTING_TITLE       @"App Settings"
 #define SETTING_ENTITY      @"UserPreferance"
 #define SETTING_ALERT_MSG   @"Updating your settings \n Please wait..."
@@ -33,6 +37,14 @@ bool isPush;
         [[self navigationItem] setTitle:SETTING_TITLE];
     }
     return self;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+#if FLURRY_ENABLED
+    [Flurry logEvent:FLURRY_SETTINGS_APPEAR];
+#endif
 }
 
 - (void)didReceiveMemoryWarning

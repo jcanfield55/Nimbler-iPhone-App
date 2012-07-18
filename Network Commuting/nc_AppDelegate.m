@@ -8,13 +8,17 @@
 
 #import "nc_AppDelegate.h"
 #import "UtilityFunctions.h"
-#import "TestFlightSDK1/TestFlight.h"
 #import "ToFromViewController.h"
 #import "TwitterSearch.h"
 #import "twitterViewController.h"
+#import "Constants.h"
 
-#define TESTING 1  // If 1, then testFlightApp will collect device UIDs, if 0, it will not
-#define DEVELOPMENT 1  // If 1, then do not include testFlightApp at all (don't need crash report while developing)
+#if TEST_FLIGHT_ENABLED
+#import "TestFlightSDK1/TestFlight.h"
+#endif
+#if FLURRY_ENABLED
+#import "Flurry.h"
+#endif
 
 BOOL isTwitterLivaData = FALSE; 
 
@@ -117,11 +121,14 @@ static nc_AppDelegate *appDelegate;
     } 
     
     // Call TestFlightApp SDK
-#if !DEVELOPMENT
-#ifdef TESTING
+#if TEST_FLIGHT_ENABLED
+#ifdef TEST_FLIGHT_UIDS
     [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
 #endif
     [TestFlight takeOff:@"48a90a98948864a11c80bd2ecd7a7e5c_ODU5MzMyMDEyLTA1LTA3IDE5OjE3OjUwLjMxMDUyMg"];
+#endif
+#if FLURRY_ENABLED
+    [Flurry startSession:@"WWV2WN4JMY35D4GYCPDJ"];
 #endif
     
     // Create an instance of a UINavigationController and put toFromViewController as the first view

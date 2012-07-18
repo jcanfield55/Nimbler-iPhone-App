@@ -11,6 +11,10 @@
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "QuartzCore/QuartzCore.h"
 
+#if FLURRY_ENABLED
+#include "Flurry.h"
+#endif
+
 #define TWEETERVIEW_MANE        @"Nimbler Caltrain"
 #define TABLE_CELL              @"Cell"
 #define CALTRAIN_CELL_HEADER    @"caltrain @Caltrain"
@@ -74,6 +78,9 @@ NSMutableArray *arrayTweet;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+#if FLURRY_ENABLED
+    [Flurry logEvent:FLURRY_ADVISORIES_APPEAR];
+#endif
     mainTable.delegate = self;
     mainTable.dataSource = self;
     [mainTable reloadData];
