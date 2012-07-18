@@ -849,8 +849,10 @@ float currentLocationResTime;
                     durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime;
                     [self stopActivityIndicator];
                     
-                    [plan setToLocation:toLocation];
-                    [plan setFromLocation:fromLocation];
+//                    [plan setToLocation:toLocation];
+//                    [plan setFromLocation:fromLocation];
+                    plan.toLocation = self.toLocation;
+                    plan.fromLocation = self.fromLocation;
                     
                     // Pass control to the RouteOptionsViewController to display itinerary choices
                     if (!routeOptionsVC) {
@@ -920,7 +922,6 @@ float currentLocationResTime;
 - (BOOL)getPlan
 {
     // TODO See if we already have a similar plan that we can use
-    
     // See if there has already been an identical plan request in the last 5 seconds.  
     @try {
         NSLog(@"Plan routine entered");

@@ -13,19 +13,20 @@
 @interface SettingInfoViewController : UIViewController <RKRequestDelegate>{
     
     UIAlertView *alertView;
-    IBOutlet UIStepper *steperPushHour;
-    IBOutlet UILabel *lblPushTrigger;
     IBOutlet UISlider *sliderMaxWalkDistance;
     IBOutlet UISwitch *switchPushEnable;
+    IBOutlet UIButton *btnUpdateSetting;
+    IBOutlet UISlider *sliderPushNotification;
 }
 
-@property (nonatomic, strong) IBOutlet UIStepper *steperPushHour;
 @property (nonatomic, strong) IBOutlet UISlider *sliderMaxWalkDistance;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) IBOutlet UISlider *sliderPushNotification;
+
 
 -(IBAction)UpdateSetting:(id)sender;
--(IBAction)stepperValueChanged:(UIStepper *)sender;
 -(IBAction)sliderWalkDistanceValueChanged:(UISlider *)sender;
+-(IBAction)sliderPushNotification:(UISlider *)sender;
 
 -(UIAlertView *) upadetSettings;
 -(void)popOutFromSettingView;

@@ -32,12 +32,13 @@
     IBOutlet UIButton * btnPauseRecording;
     IBOutlet UIButton * btnRecordRecording;
         
+    IBOutlet UIButton * btnSubmitFeedback;
     IBOutlet UITextField *txtEmailId;
     int secondsLeft;
     float secondUsed;
     BOOL isRepeat;
     NSTimer *timer;
-    
+    BOOL isFromPause;
     UIActivityIndicatorView *indicator;
     
     FeedBackReqParam *fbParams;

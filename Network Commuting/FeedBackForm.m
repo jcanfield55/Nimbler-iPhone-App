@@ -79,6 +79,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    btnSubmitFeedback.layer.cornerRadius = CORNER_RADIUS_SMALL;
     [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
                                                                      [UIColor blackColor], UITextAttributeTextColor,
@@ -112,6 +113,7 @@
 #pragma mark-Recording functions
 -(IBAction)recordRecording:(id)sender
 {    
+    isFromPause = NO;
     [btnPlayRecording setEnabled:FALSE];
     [btnPauseRecording setEnabled:FALSE];
         
@@ -143,7 +145,7 @@
                                     [NSNumber numberWithFloat:SAMPLERATE_KEY], AVSampleRateKey, 
                                     nil];
     
-    NSError *error = nil;    
+    NSError *error = nil;  
     audioRecorder = [[AVAudioRecorder alloc] initWithURL:soundFileURL settings:recordSettings error:&error];
     if (error) {
         NSLog(@"error: %@", [error localizedDescription]);
@@ -157,7 +159,6 @@
 }
 
 -(IBAction)stopRecording:(id)sender {    
-    [btnPlayRecording setEnabled:TRUE];
     [btnPauseRecording setEnabled:FALSE];
     [btnStopRecording setEnabled:FALSE];
     [btnRecordRecording setEnabled:TRUE];
@@ -193,16 +194,21 @@
         timer = nil;
         timer = [NSTimer scheduledTimerWithTimeInterval:TIME_INTERVAL target:self selector:@selector(setActRunStatus) userInfo:nil repeats: NO]; 
     }
+    isFromPause = YES;
 }
 
 -(IBAction)playRecording:(id)sender {
     labelCurrentActivityStatus.text = RECORDING_PLAY;
-    secondsLeft = REC_STOP_START;
+    if(!isFromPause){
+        secondsLeft = REC_STOP_START;
+    }
     labelRecTime.text = NULL_STRING;
     if (!audioRecorder.recording)
     {
-        NSError *error;        
-        audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:audioRecorder.url error:&error];        
+        NSError *error;
+        if(audioPlayer == nil){
+        audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:audioRecorder.url error:&error];
+        }
         audioPlayer.delegate = self;
         if (error) {
             NSLog(@"Error: %@", 
@@ -246,7 +252,7 @@
     }
 }
 
--(void) updatePlayCountdown {    
+-(void) updatePlayCountdown {
     secondsLeft++;   
     labelRecTime.text = [NSString stringWithFormat:PLAY_TIME, secondsLeft];
 }
@@ -261,6 +267,7 @@
     [btnStopRecording setEnabled:FALSE];
     
     labelCurrentActivityStatus.text = PLAY_COMPLETE;
+    secondsLeft = REC_STOP_START;
     isRepeat = NO;
     [labelRecTime setHidden:YES];
     [timer invalidate];
@@ -424,10 +431,18 @@
 {
     NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
     if ([btnName isEqualToString:BUTTON_CANCEL]) {
+        [self.btnPlayRecording setEnabled:FALSE];
         soundFilePath = nil;
         audioPlayer = nil;
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSArray *tempDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *tempDirPath = [tempDir objectAtIndex:0];
+       NSString *recordedAudioPath = [tempDirPath stringByAppendingPathComponent:VOICE_FB_FILE];
+        if([fileManager fileExistsAtPath:recordedAudioPath]){
+            [fileManager removeItemAtPath:recordedAudioPath error:nil];
+        }
     } else if ([btnName isEqualToString:BUTTON_DONE]) {
-        
+        [self.btnPlayRecording setEnabled:TRUE];
     } else if ([btnName isEqualToString:BUTTON_YES]) {
         [self sendFeedbackToServer];
     } 

@@ -141,7 +141,7 @@ static nc_AppDelegate *appDelegate;
          
         // This is for TabBar controller
         self.tabBarController = [[UITabBarController alloc] init];
-        twitterViewController *twitterView = [[twitterViewController alloc] initWithNibName:@"twitterviewController" bundle:nil];
+        twitterViewController *twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
         SettingInfoViewController *settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController" bundle:nil];
         FeedBackForm *fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
         

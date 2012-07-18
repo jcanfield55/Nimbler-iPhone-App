@@ -20,7 +20,8 @@
 
 @implementation SettingInfoViewController
 
-@synthesize steperPushHour,sliderMaxWalkDistance,managedObjectContext;
+@synthesize sliderMaxWalkDistance,managedObjectContext;
+@synthesize sliderPushNotification;
 
 int pushHour;
 bool isPush;
@@ -50,12 +51,10 @@ bool isPush;
 {
     [super viewDidLoad];
     [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                     [UIColor blackColor], UITextAttributeTextColor,
-                                                                     nil]];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:                                                                      [UIColor blackColor], UITextAttributeTextColor,
+        nil]];
     self.managedObjectContext = [[nc_AppDelegate sharedInstance] managedObjectContext]; 
     // Do any additional setup after loading the view from its nib.
-    [self fetchUserSettingData];
 }
 
 - (void)viewDidUnload
@@ -63,6 +62,12 @@ bool isPush;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [self fetchUserSettingData];
+    btnUpdateSetting.layer.cornerRadius = CORNER_RADIUS_SMALL;
 }
 
 -(IBAction)UpdateSetting:(id)sender
@@ -116,18 +121,21 @@ bool isPush;
     }
 }
 
--(IBAction)stepperValueChanged:(UIStepper *)sender
-{
-    pushHour = steperPushHour.value;
-    lblPushTrigger.text = [NSString stringWithFormat:@"%d",pushHour];
-}
-
 -(IBAction)sliderWalkDistanceValueChanged:(UISlider *)sender
 {
     float walkDistance = sliderMaxWalkDistance.value;
     [sliderMaxWalkDistance setValue:sliderMaxWalkDistance.value];
     [sliderMaxWalkDistance setSelected:YES];
     NSLog(@"walk distance: %f", walkDistance);
+}
+
+-(IBAction)sliderPushNotification:(UISlider *)sender
+{
+    int walkDistance = sliderPushNotification.value;
+    [sliderPushNotification setValue:sliderPushNotification.value];
+    [sliderPushNotification setSelected:YES];
+    pushHour = walkDistance;
+    NSLog(@"walk distance: %d", walkDistance);
 }
 
 -(void)popOutFromSettingView { 
@@ -178,8 +186,7 @@ bool isPush;
         } else {
             // set stored value for userSettings       
             [sliderMaxWalkDistance setValue:[[[arrayUserSetting valueForKey:WALK_DISTANCE] objectAtIndex:0] doubleValue]];
-            [steperPushHour setValue:[[[arrayUserSetting valueForKey:TRIGGER_AT_HOUR] objectAtIndex:0] intValue]];
-            lblPushTrigger.text = [NSString stringWithFormat:@"%d",[[[arrayUserSetting valueForKey:TRIGGER_AT_HOUR] objectAtIndex:0] intValue]];
+            [sliderPushNotification setValue:[[[arrayUserSetting valueForKey:TRIGGER_AT_HOUR] objectAtIndex:0] intValue]];
             pushHour = [[[arrayUserSetting valueForKey:TRIGGER_AT_HOUR] objectAtIndex:0] intValue];
             if ([[[arrayUserSetting valueForKey:PUSH_ENABLE] objectAtIndex:0] intValue] == 0) {
                 [switchPushEnable setOn:NO];

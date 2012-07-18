@@ -75,6 +75,19 @@ NSMutableArray *arrayTweet;
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
                                                                      [UIColor blackColor], UITextAttributeTextColor,
                                                                      nil]];
+    // Do any additional setup after loading the view from its nib.
+}
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     @try {
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
@@ -89,20 +102,7 @@ NSMutableArray *arrayTweet;
     @catch (NSException *exception) {
         NSLog(@"Exception at advisories button click from ToFromview: %@", exception);
     } 
-
-    // Do any additional setup after loading the view from its nib.
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
+    
     mainTable.delegate = self;
     mainTable.dataSource = self;
     [mainTable reloadData];

@@ -104,6 +104,21 @@ NSUserDefaults *prefs;
     // Scrolls the table to the new area.  If it is not
     [mainTable selectRowAtIndexPath:[NSIndexPath indexPathForRow:itineraryNumber inSection:0] animated:YES scrollPosition:UITableViewScrollPositionMiddle]; 
 
+    /*
+     Implemetation Red colour highlighted at selacted Leg.
+     */
+    NSInteger cellCount = [mainTable numberOfRowsInSection:0];
+    int i;
+    for(i = 0; i<cellCount ;i++){
+        UITableViewCell *cell = [mainTable cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+        if(itineraryNumber == i){
+            [cell.textLabel setTextColor:[UIColor redColor]];
+        }
+        else{
+            [cell.textLabel setTextColor:[UIColor blackColor]];
+        }
+    }
+    
     // Activates or de-activates the backward and forward as needed
     if(itineraryNumber == 0){
         [backButton setEnabled:FALSE];
@@ -219,7 +234,7 @@ NSUserDefaults *prefs;
             [[cell detailTextLabel] setNumberOfLines:0];
             cell.imageView.image = [UIImage imageNamed:@"walk.png"];
         }
-        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         [[cell textLabel] setText:[[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]]];
         [[cell detailTextLabel] setText:[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]]];
 
