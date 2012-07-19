@@ -32,9 +32,6 @@ NSMutableArray *arrayTweet;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         [[self navigationItem] setTitle:TWEETERVIEW_MANE];
-        self.tabBarItem.title = ADVISORIES_VIEW;
-        self.tabBarItem.image = [UIImage imageNamed:@"img_ontime.png"];
-        self.tabBarItem.badgeValue = @"3";
         
         dateFormattr = [[NSDateFormatter alloc] init];
         [dateFormattr setDateStyle:NSDateFormatterFullStyle];
@@ -71,9 +68,10 @@ NSMutableArray *arrayTweet;
 {
     [super viewDidLoad];
     [self hideUnUsedTableViewCell];
-    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+    self.tabBarController.tabBarItem.badgeValue = @"2";
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                     [UIColor blackColor], UITextAttributeTextColor,
+                                                                     [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0], UITextAttributeTextColor,
                                                                      nil]];
     // Do any additional setup after loading the view from its nib.
 }
@@ -150,6 +148,7 @@ NSMutableArray *arrayTweet;
     labelTime = [[UILabel alloc] initWithFrame:lbl3Frame];
     labelTime.tag = MAXLINE_TAG;
     labelTime.textColor = [UIColor blackColor];
+    labelTime.backgroundColor = [UIColor clearColor];
     [labelTime setTextAlignment:UITextAlignmentRight];
     [cell.contentView addSubview:labelTime];
     labelTime.text = tweetAt;

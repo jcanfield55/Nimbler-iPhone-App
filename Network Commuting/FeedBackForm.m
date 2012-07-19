@@ -52,8 +52,6 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         [[self navigationItem] setTitle:FB_TITLE];
-        self.tabBarItem.title = FB_TITLE;
-        self.tabBarItem.image = [UIImage imageNamed:@"img_ontime.png"];
     }
     return self;
 }
@@ -79,11 +77,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    btnSubmitFeedback.layer.cornerRadius = CORNER_RADIUS_SMALL;
-    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                     [UIColor blackColor], UITextAttributeTextColor,
+                                                                     [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0], UITextAttributeTextColor,
                                                                      nil]];
+    btnSubmitFeedback.layer.cornerRadius = CORNER_RADIUS_SMALL;
+    
     // Do any additional setup after loading the view from its nib.
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     txtEmailId.text = [prefs objectForKey:USER_EMAIL];
@@ -104,6 +103,10 @@
     // e.g. self.myOutlet = nil;
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+}
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations

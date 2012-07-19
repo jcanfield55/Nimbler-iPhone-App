@@ -141,6 +141,7 @@ static nc_AppDelegate *appDelegate;
          
         // This is for TabBar controller
         self.tabBarController = [[UITabBarController alloc] init];
+        self.tabBarController.delegate = self;
         twitterViewController *twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
         SettingInfoViewController *settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController" bundle:nil];
         FeedBackForm *fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
@@ -153,7 +154,9 @@ static nc_AppDelegate *appDelegate;
         self.tabBarController.viewControllers = [NSArray arrayWithObjects:toFromController,tweetController,settingController,fbController, nil];
         
         [self.tabBarController.tabBar setSelectedImageTintColor:[UIColor redColor]];
-        [self.tabBarController.tabBar setTintColor:[UIColor whiteColor]];
+        [self.tabBarController.tabBar setBackgroundImage:[UIImage imageNamed:@"img_tabbar.png"]];
+        
+        
         
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         [[self window] setRootViewController:self.tabBarController];
@@ -165,6 +168,17 @@ static nc_AppDelegate *appDelegate;
     }
     return YES;
 }
+
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
+{
+    if (tabBarController.selectedIndex == 3) {
+//        viewController.tabBarItem.image = [UIImage imageNamed:@"img_fb.png"];
+//        UIImage *ss = [UIImage imageNamed:@"img_fb.png"];
+//        UIImageView *ss1 = [[UIImageView alloc] initWithImage:ss];
+//        [tabBarController.tabBar.selectionIndicatorImage];
+    }
+}
+
 
 // Location Manager update callback
 - (void)locationManager:(CLLocationManager *)manager

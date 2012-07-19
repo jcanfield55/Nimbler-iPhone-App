@@ -31,6 +31,10 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         [[self navigationItem] setTitle:@"Pick a location"];
+        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
+        [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                         [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0], UITextAttributeTextColor,
+                                                                         nil]];
     }
     return self;
 }
@@ -74,7 +78,9 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
         cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
     }
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];        
-    [[cell textLabel] setText:[loc shortFormattedAddress]];    
+    [[cell textLabel] setText:[loc shortFormattedAddress]];  
+    cell.textLabel.textColor = [UIColor colorWithRed:252.0/256.0 green:103.0/256.0 blue:88.0/256.0 alpha:1.0];
+    tableView.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
     [cell sizeToFit];
     return cell;
 }
@@ -90,7 +96,6 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
 
 //DE:21 dynamic cell height 
 #pragma mark - UIDynamic cell heght methods
-
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     Location *loc = [locationArray objectAtIndex:[indexPath row]];

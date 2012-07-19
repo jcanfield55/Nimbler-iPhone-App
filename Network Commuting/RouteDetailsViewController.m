@@ -54,6 +54,10 @@ NSUserDefaults *prefs;
     @try {
         if (self) {
             [[self navigationItem] setTitle:ROUTE_TITLE_MSG];
+            [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
+            [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                             [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0], UITextAttributeTextColor,
+                                                                             nil]];
             
             // Set up the MKMapView and LegMapViewController
             mapView = [[MKMapView alloc] init];
@@ -232,7 +236,7 @@ NSUserDefaults *prefs;
             [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
             [[cell detailTextLabel] setLineBreakMode:UILineBreakModeWordWrap];
             [[cell detailTextLabel] setNumberOfLines:0];
-            cell.imageView.image = [UIImage imageNamed:@"walk.png"];
+            cell.imageView.image = [UIImage imageNamed:@"walkb.png"];
         }
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         [[cell textLabel] setText:[[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]]];

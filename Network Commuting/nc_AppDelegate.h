@@ -19,9 +19,10 @@
 #import "RouteDetailsViewController.h"
 #import "LegMapViewController.h"
 
-@interface nc_AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate> {
+@interface nc_AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate,UITabBarControllerDelegate> {
     Location* currentLocation;
     UITabBarController *_tabBarController;
+
 }
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;

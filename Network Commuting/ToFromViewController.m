@@ -113,8 +113,8 @@ float currentLocationResTime;
             
             UIBarButtonItem *btnRoute = [[UIBarButtonItem alloc] initWithTitle:@"Route" style:UIBarButtonItemStylePlain target:self action:@selector(redirectAtNimblerSetting)];
             self.navigationItem.rightBarButtonItem = btnRoute;
-            self.tabBarItem.title = TRIP_PLANNER_VIEW;
-            self.tabBarItem.image = [UIImage imageNamed:@"img_ontime.png"];
+//            self.tabBarItem.title = TRIP_PLANNER_VIEW;
+//            self.tabBarItem.image = [UIImage imageNamed:@"img_ontime.png"];
             
             planRequestHistory = [NSMutableArray array]; // Initialize this array
             departOrArrive = DEPART;
@@ -168,9 +168,9 @@ float currentLocationResTime;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                     [UIColor blackColor], UITextAttributeTextColor,
+                                                                     [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0], UITextAttributeTextColor,
                                                                      nil]];
     isContinueGetRealTimeData = false;
     [continueGetTime invalidate];
