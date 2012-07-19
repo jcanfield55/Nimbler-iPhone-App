@@ -160,8 +160,9 @@ float currentLocationResTime;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at init ToFromViewController");
+        NSLog(@"exception at init ToFromViewController: %@", exception);
     }
+    
     return self;
 }
 

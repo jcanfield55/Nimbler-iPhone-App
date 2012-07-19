@@ -23,4 +23,5 @@ NSString *distanceStringInMilesFeet(double meters);
 NSDateFormatter *utilitiesShortTimeFormatter(void);
 NSString *superShortTimeStringForDate(NSDate *date);
 
-
+// Uncaught exception handler for logging flurry logs
+void uncaughtExceptionHandler(NSException *exception);

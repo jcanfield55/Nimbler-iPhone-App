@@ -56,6 +56,9 @@ static nc_AppDelegate *appDelegate;
       UIRemoteNotificationTypeBadge | 
       UIRemoteNotificationTypeSound)];
     
+    // Set uncaught exception handler
+    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
+    
     // Configure the RestKit RKClient object for Geocoding and trip planning
     RKObjectManager* rkGeoMgr = [RKObjectManager objectManagerWithBaseURL:GEO_RESPONSE_URL];
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
@@ -120,6 +123,15 @@ static nc_AppDelegate *appDelegate;
         NSLog(@"Exception: ----------------- %@", exception);
     } 
     
+    // Set a CFUUID (unique identifier) for this device and this app, if doesn't exist already:
+    prefs = [NSUserDefaults standardUserDefaults];
+    NSString* cfuuidString = [prefs objectForKey:DEVICE_CFUUID];
+    if (!cfuuidString) {  // if the CFUUID not created, create it
+        CFUUIDRef cfuuidRef = CFUUIDCreate(kCFAllocatorDefault);
+        cfuuidString = (__bridge NSString *) CFUUIDCreateString(kCFAllocatorDefault, cfuuidRef);
+        [prefs setObject:cfuuidString forKey:DEVICE_CFUUID];
+    }
+    
     // Call TestFlightApp SDK
 #if TEST_FLIGHT_ENABLED
 #ifdef TEST_FLIGHT_UIDS
@@ -127,8 +139,10 @@ static nc_AppDelegate *appDelegate;
 #endif
     [TestFlight takeOff:@"48a90a98948864a11c80bd2ecd7a7e5c_ODU5MzMyMDEyLTA1LTA3IDE5OjE3OjUwLjMxMDUyMg"];
 #endif
+    // Call to Flurry SDK
 #if FLURRY_ENABLED
     [Flurry startSession:@"WWV2WN4JMY35D4GYCPDJ"];
+    [Flurry setUserID:cfuuidString];
 #endif
     
     // Create an instance of a UINavigationController and put toFromViewController as the first view
