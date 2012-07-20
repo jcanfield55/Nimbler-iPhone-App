@@ -52,13 +52,13 @@
 #define TOFROM_FREQUENCY_VISIBILITY_CUTOFF 0.99
 
 // LegMapView
-#define LEGMAP_DOT_IMAGE_FILE               @"mapDot"
+#define LEGMAP_DOT_IMAGE_FILE          @"mapDot"
 
 // Request timer Count
 #define TWEET_COUNT_POLLING_INTERVAL   60.0
 #define TIMER_SMALL_REQUEST_DELAY      1.0
 #define TIMER_MEDIUM_REQUEST_DELAY     30.0
-#define TIMER_STANDARD_REQUEST_DELAY   60.0
+#define TIMER_STANDARD_REQUEST_DELAY   59.0
 
 // errorCodes from TPResponce
 #define RESPONSE_SUCCESSFULL            105

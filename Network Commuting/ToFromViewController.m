@@ -87,7 +87,6 @@
 @synthesize isTripDateCurrentTime;
 @synthesize editMode;
 @synthesize supportedRegion;
-@synthesize twitterCount;
 @synthesize isContinueGetRealTimeData;
 @synthesize continueGetTime;
 @synthesize maxiWalkDistance;
@@ -108,14 +107,12 @@ float currentLocationResTime;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     @try {
         if (self) {
-            [[self navigationItem] setTitle:@"Nimbler"];
-            
+            UIImage *imgTitle = [UIImage imageNamed:@"img_appTitle.png"];
+            self.navigationItem.titleView = [[UIImageView alloc]  initWithImage:imgTitle];
             
             UIBarButtonItem *btnRoute = [[UIBarButtonItem alloc] initWithTitle:@"Route" style:UIBarButtonItemStylePlain target:self action:@selector(redirectAtNimblerSetting)];
             self.navigationItem.rightBarButtonItem = btnRoute;
-//            self.tabBarItem.title = TRIP_PLANNER_VIEW;
-//            self.tabBarItem.image = [UIImage imageNamed:@"img_ontime.png"];
-            
+           
             planRequestHistory = [NSMutableArray array]; // Initialize this array
             departOrArrive = DEPART;
             toGeocodeRequestOutstanding = FALSE;
@@ -209,18 +206,7 @@ float currentLocationResTime;
 {
     [super viewWillAppear:animated];
     @try {
-        prefs = [NSUserDefaults standardUserDefaults];
-        int tweetConut = [[prefs objectForKey:TWEET_COUNT] intValue];
-        [twitterCount removeFromSuperview];
-        twitterCount = [[CustomBadge alloc] init];
-        twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
-        [twitterCount setFrame:CGRectMake(60, 372, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
-        if (tweetConut == 0) {
-            [twitterCount setHidden:YES];
-        } else {
-            [self.view addSubview:twitterCount];
-            [twitterCount setHidden:NO];
-        }        [continueGetTime invalidate];
+        [continueGetTime invalidate];
         continueGetTime = nil;
         [self updateTripDate];  // update tripDate if needed
     }
@@ -841,6 +827,7 @@ float currentLocationResTime;
     {   
         NSInteger statusCode = [[objectLoader response] statusCode];
         NSLog(@"Planning HTTP status code = %d", statusCode);
+//        NSLog(@"whole plan: %@", [[objectLoader response] bodyAsString]);
         @try {
             if (objects && [objects objectAtIndex:0]) {
                 if (savetrip) {
@@ -849,11 +836,9 @@ float currentLocationResTime;
                     durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime;
                     [self stopActivityIndicator];
                     
-//                    [plan setToLocation:toLocation];
-//                    [plan setFromLocation:fromLocation];
-                    plan.toLocation = self.toLocation;
-                    plan.fromLocation = self.fromLocation;
-                    
+                    [plan setToLocation:toLocation];
+                    [plan setFromLocation:fromLocation];
+                                      
                     // Pass control to the RouteOptionsViewController to display itinerary choices
                     if (!routeOptionsVC) {
                         routeOptionsVC = [[RouteOptionsViewController alloc] initWithNibName:nil bundle:nil];;
@@ -969,8 +954,9 @@ float currentLocationResTime;
             }       
             // Create the date formatters we will use to output the date & time
             NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
-            [dFormat setDateStyle:NSDateFormatterShortStyle];
-            [dFormat setTimeStyle:NSDateFormatterNoStyle];
+            [dFormat setDateFormat:@"MM/dd/yyyy"];
+//            [dFormat setDateStyle:NSDateFormatterShortStyle];
+//            [dFormat setTimeStyle:NSDateFormatterNoStyle];
             NSDateFormatter* tFormat = [[NSDateFormatter alloc] init];
             [tFormat setTimeStyle:NSDateFormatterShortStyle];
             [tFormat setDateStyle:NSDateFormatterNoStyle];
@@ -1271,12 +1257,6 @@ float currentLocationResTime;
     @catch (NSException *exception) {
         NSLog(@"exception at get data from core data: %@", exception);
     }
-}
-
-#pragma mark call Advisories button click at tweeter push notification
--(void)redirectInTwitterAtPushnotification
-{
-    [self advisoriesButtonPressed:self forEvent:nil];
 }
 
 @end

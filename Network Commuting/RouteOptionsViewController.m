@@ -16,6 +16,8 @@
 #import "twitterViewController.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 
+#define CELL_HEIGHT             55.0
+
 @interface RouteOptionsViewController()
 {
     // Variables for internal use
@@ -34,7 +36,6 @@
 @synthesize plan;
 @synthesize isReloadRealData;
 @synthesize liveData;
-@synthesize twitterCount;
 
 Itinerary * itinerary;
 NSString *itinararyId;
@@ -46,10 +47,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         [[self navigationItem] setTitle:@"Itineraries"];
-        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-        [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                         [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0], UITextAttributeTextColor,
-                                                                         nil]];
         timeFormatter = [[NSDateFormatter alloc] init];
         [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
     }
@@ -129,7 +126,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                                [timeFormatter stringFromDate:[itin endTime]],
                                durationString([[itin duration] floatValue])];
         [[cell textLabel] setText:titleText];
-        
+        cell.textLabel.textColor = [UIColor colorWithRed:252.0/256.0 green:103.0/256.0 blue:88.0/256.0 alpha:1.0];
+        cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];
         // Set sub-title (show each leg's mode and route if available)
         NSMutableString *subTitle = [NSMutableString stringWithCapacity:30];
         NSArray *sortedLegs = [itin sortedLegs];
@@ -155,6 +153,17 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     return cell;
 }
 
+- (CGFloat)tableView:(UITableView *)aTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
+{    
+    return CELL_HEIGHT;  
+}
+
+-(void)hideUnUsedTableViewCell
+{
+    UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
+    view.backgroundColor = [UIColor clearColor];
+    [mainTable setTableFooterView:view];
+}
 
 // If selected, show the RouteDetailsViewController
 - (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -209,6 +218,11 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self hideUnUsedTableViewCell];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                     [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0], UITextAttributeTextColor,
+                                                                     nil]];
     NSLog(@"RouteOptions loaded");
 }
 
@@ -217,24 +231,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     
     [super viewDidAppear:animated];
     NSLog(@"RouteOptions did appear");
-    
-    @try {
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        int tweetConut = [[prefs objectForKey:TWEET_COUNT] intValue];
-        [twitterCount removeFromSuperview];
-        twitterCount = [[CustomBadge alloc] init];
-        twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
-        [twitterCount setFrame:CGRectMake(60, 372, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
-        if (tweetConut == 0) {
-            [twitterCount setHidden:YES];
-        } else {
-            [self.view addSubview:twitterCount];
-            [twitterCount setHidden:NO];
-        }
-    }
-    @catch (NSException *exception) {
-        NSLog(@"Exception at press feedback button from RouteOptionsViewController : %@", exception);
-    }
 }
 
 - (void)viewDidUnload
@@ -242,7 +238,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
-    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -251,14 +246,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-
-//-(void)sendRequestForFeedback:(RKParams*)para
-//{
-//    RKParams *param = [RKParams alloc];
-//    param = para;
-//}
 #pragma mark realTime data updates
-
 -(void)setLiveFeed:(id)liveFees
 {
     @try {
@@ -323,7 +311,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         NSLog(@"exceptions at set time: %@", exception);
     }
 }
-
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     @try {

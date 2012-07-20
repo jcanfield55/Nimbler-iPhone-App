@@ -33,7 +33,6 @@
 @synthesize legMapVC;
 @synthesize mapView;
 @synthesize itineraryNumber;
-@synthesize twitterCount;
 @synthesize mainTableTotalHeight;
 
 NSUserDefaults *prefs;
@@ -165,19 +164,6 @@ NSUserDefaults *prefs;
             [mainTable selectRowAtIndexPath:[NSIndexPath indexPathForRow:itineraryNumber inSection:0] animated:YES scrollPosition:UITableViewScrollPositionMiddle];   
         }
         
-        prefs = [NSUserDefaults standardUserDefaults];
-        int tweetConut = [[prefs objectForKey:TWEET_COUNT] intValue];
-        [twitterCount removeFromSuperview];
-        twitterCount = [[CustomBadge alloc] init];
-        twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
-        [twitterCount setFrame:CGRectMake(60, 372, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
-        if (tweetConut == 0) {
-            [twitterCount setHidden:YES];
-        } else {
-            [self.view addSubview:twitterCount];
-            [twitterCount setHidden:NO];
-        }
-        
     }
     @catch (NSException *exception) {
         NSLog(@"exception at viewWillAppear RouteDetail: %@", exception);
@@ -240,6 +226,7 @@ NSUserDefaults *prefs;
         }
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         [[cell textLabel] setText:[[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]]];
+        
         [[cell detailTextLabel] setText:[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]]];
 
     }
@@ -266,7 +253,7 @@ NSUserDefaults *prefs;
             height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
         }
          */
-        return 65.0;
+        return 70.0;
     }
     @catch (NSException *exception) {
         NSLog(@"exception at set dynamic height for RouteDetailViewTable Cell: %@", exception);

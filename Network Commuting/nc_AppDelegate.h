@@ -19,7 +19,7 @@
 #import "RouteDetailsViewController.h"
 #import "LegMapViewController.h"
 
-@interface nc_AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate,UITabBarControllerDelegate> {
+@interface nc_AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate> {
     Location* currentLocation;
     UITabBarController *_tabBarController;
 

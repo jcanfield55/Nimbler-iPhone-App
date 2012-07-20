@@ -140,8 +140,9 @@ static nc_AppDelegate *appDelegate;
         */
          
         // This is for TabBar controller
+        
         self.tabBarController = [[UITabBarController alloc] init];
-        self.tabBarController.delegate = self;
+//        self.tabBarController.delegate = self;
         twitterViewController *twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
         SettingInfoViewController *settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController" bundle:nil];
         FeedBackForm *fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
@@ -155,8 +156,7 @@ static nc_AppDelegate *appDelegate;
         
         [self.tabBarController.tabBar setSelectedImageTintColor:[UIColor redColor]];
         [self.tabBarController.tabBar setBackgroundImage:[UIImage imageNamed:@"img_tabbar.png"]];
-        
-        
+//        [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:@"7"];
         
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         [[self window] setRootViewController:self.tabBarController];
@@ -167,16 +167,6 @@ static nc_AppDelegate *appDelegate;
         NSLog(@"load exception: %@", exception);
     }
     return YES;
-}
-
-- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
-{
-    if (tabBarController.selectedIndex == 3) {
-//        viewController.tabBarItem.image = [UIImage imageNamed:@"img_fb.png"];
-//        UIImage *ss = [UIImage imageNamed:@"img_fb.png"];
-//        UIImageView *ss1 = [[UIImageView alloc] initWithImage:ss];
-//        [tabBarController.tabBar.selectionIndicatorImage];
-    }
 }
 
 
@@ -406,6 +396,13 @@ static nc_AppDelegate *appDelegate;
                         prefs = [NSUserDefaults standardUserDefaults];  
                         [prefs setObject:tweeterCount forKey:TWEET_COUNT];
                         [prefs synchronize];
+                        int badge = [tweeterCount  intValue];
+                        if (badge > 0) {
+                            [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:[NSString stringWithFormat:@"%d",badge]];
+                        } else {
+                            [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
+                        }
+                        
                         // Upadte automatic badge with Live tweeterCount 
                         [toFromViewController viewWillAppear:TRUE];
                         
@@ -499,6 +496,7 @@ static nc_AppDelegate *appDelegate;
         NSString *badge = [[userInfo valueForKey:@"aps"] valueForKey:@"badge"];
         prefs = [NSUserDefaults standardUserDefaults];  
         [prefs setObject:badge forKey:TWEET_COUNT];
+        
         if ([isUrgent isEqualToString:@"true"]) {
             UIAlertView *dataAlert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain"
                                                                 message:message
@@ -509,8 +507,8 @@ static nc_AppDelegate *appDelegate;
             [dataAlert show];
             [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
         } 
-        else {
-            [toFromViewController redirectInTwitterAtPushnotification]; 
+        else { 
+            [self.tabBarController setSelectedIndex:1];
         }
     }
     @catch (NSException *exception) {
@@ -522,7 +520,7 @@ static nc_AppDelegate *appDelegate;
 {
     NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
     if ([btnName isEqualToString:@"OK"]) {
-        [toFromViewController redirectInTwitterAtPushnotification];
+       [self.tabBarController setSelectedIndex:1];
         NSLog(@"receive urgent message");
     }
 }
@@ -552,7 +550,6 @@ static nc_AppDelegate *appDelegate;
 {
     @try {
         if ([[NSUserDefaults standardUserDefaults] valueForKey:@"UserPreferance"] == nil) {
-           
             // set in TPServer
             RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
             [RKClient setSharedClient:client];

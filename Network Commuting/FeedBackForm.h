@@ -35,13 +35,13 @@
     IBOutlet UIButton * btnSubmitFeedback;
     IBOutlet UITextField *txtEmailId;
     int secondsLeft;
-    float secondUsed;
+    float secondElapsed;
     BOOL isRepeat;
     NSTimer *timer;
     BOOL isFromPause;
-    UIActivityIndicatorView *indicator;
+    UIActivityIndicatorView *busyIndicator;
     
-    FeedBackReqParam *fbParams;
+    FeedBackReqParam *fbReqParams;
     
     
 }
@@ -53,13 +53,13 @@
 @property (strong, nonatomic) IBOutlet UIButton *btnPlayRecording,*btnStopRecording,*btnPauseRecording,*btnRecordRecording;
 
 
--(IBAction)recordRecording:(id)sender;
--(IBAction)stopRecording:(id)sender;
--(IBAction)pausRecording:(id)sender;
--(IBAction)playRecording:(id)sender;
+-(IBAction)startRecord:(id)sender;
+-(IBAction)stopRecord:(id)sender;
+-(IBAction)pauseRecord:(id)sender;
+-(IBAction)playRecord:(id)sender;
 -(IBAction)submitFeedBack:(id)sender;
 
-@property (strong, nonatomic) FeedBackReqParam *fbParams;; 
+@property (strong, nonatomic) FeedBackReqParam *fbReqParams;; 
 
 -(UIAlertView *) childAlertViewRec ;
 -(UIAlertView *) feedbackConfirmAlert ;

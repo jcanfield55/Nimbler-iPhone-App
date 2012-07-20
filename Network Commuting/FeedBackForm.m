@@ -16,15 +16,15 @@
 
 #define RECORDING       @"Recording...."
 #define RECORDING_STOP  @"Recording Stopped...."
-#define RECORDING_PAUSE @"Recording Pause...."
+#define RECORDING_PAUSE @"Recording Paused...."
 #define RECORDING_PLAY  @"Record Playing...."
 #define VOICE_FB_FILE   @"voiceFeedback.caf"
 #define PLAY_TIME       @"Play Time : %02d"
 #define TIME_LEFT       @"Time Left : %02d"
-#define REC_NOT_PLAY    @"Recorded file not playing...."
-#define PLAY_COMPLETE   @"Playing complete...."
+#define REC_NOT_PLAY    @"Error while playing recording...."
+#define PLAY_COMPLETE   @"Play complete...."
 #define ANIMATION_PARAM @"anim"
-#define FB_CONFIRMATION @"Are you sure to send feedback"
+#define FB_CONFIRMATION @"Are you sure you want to send feedback?"
 #define ALERT_TRIP      @"Trip Planner"
 
 #define BUTTON_YES      @"Yes"
@@ -34,7 +34,7 @@
 
 #define BORDER_WIDTH    1.0
 #define RECORD_DURATION 60
-#define REC_STOP_START  0
+#define REC_STARTTIME   0
 #define BITRATE_KEY     16
 #define BITDEPTH_KEY    8
 #define CHANNEL_KEY     1
@@ -45,7 +45,7 @@
 
 @implementation FeedBackForm
 
-@synthesize tpResponse,tpURLResource,alertView,mesg,btnPlayRecording,btnStopRecording,btnPauseRecording,btnRecordRecording,fbParams;
+@synthesize tpResponse,tpURLResource,alertView,mesg,btnPlayRecording,btnStopRecording,btnPauseRecording,btnRecordRecording,fbReqParams;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -60,7 +60,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundle];
     if (self) {
         // Custom initialization
-        fbParams = fbParam;
+        fbReqParams = fbParam;
     }
     return self;
 }
@@ -114,7 +114,7 @@
 }
 
 #pragma mark-Recording functions
--(IBAction)recordRecording:(id)sender
+-(IBAction)startRecord:(id)sender
 {    
     isFromPause = NO;
     [btnPlayRecording setEnabled:FALSE];
@@ -129,7 +129,7 @@
     alertView = [self childAlertViewRec];
     
     secondsLeft = RECORD_DURATION;
-    secondUsed = REC_STOP_START;
+    secondElapsed = REC_STARTTIME;
     isRepeat = YES;
     [labelRecTime setHidden:NO];
     timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(updateRecCountdown) userInfo:nil repeats: isRepeat];    
@@ -161,7 +161,7 @@
     }
 }
 
--(IBAction)stopRecording:(id)sender {    
+-(IBAction)stopRecord:(id)sender {    
     [btnPauseRecording setEnabled:FALSE];
     [btnStopRecording setEnabled:FALSE];
     [btnRecordRecording setEnabled:TRUE];
@@ -180,7 +180,7 @@
     labelCurrentActivityStatus.text = NULL_STRING;
 }
 
--(IBAction)pausRecording:(id)sender {
+-(IBAction)pauseRecord:(id)sender {
     if (audioPlayer.playing) {
         labelCurrentActivityStatus.text = RECORDING_PAUSE;
         isRepeat = NO;
@@ -200,10 +200,10 @@
     isFromPause = YES;
 }
 
--(IBAction)playRecording:(id)sender {
+-(IBAction)playRecord:(id)sender {
     labelCurrentActivityStatus.text = RECORDING_PLAY;
     if(!isFromPause){
-        secondsLeft = REC_STOP_START;
+        secondsLeft = REC_STARTTIME;
     }
     labelRecTime.text = NULL_STRING;
     if (!audioRecorder.recording)
@@ -234,21 +234,21 @@
 -(void) updateRecCountdown {    
     int seconds;
     secondsLeft--;
-    secondUsed += INCREASE_PROGREEVIEW;
-    [recProgressView setProgress:secondUsed];
-    if(secondsLeft == REC_STOP_START){
+    secondElapsed += INCREASE_PROGREEVIEW;
+    [recProgressView setProgress:secondElapsed];
+    if(secondsLeft == REC_STARTTIME){
         [alertView dismissWithClickedButtonIndex:0 animated:NO];
         isRepeat = NO;
         [labelRecTime setHidden:YES];
         [timer invalidate];
-        [self stopRecording:self];
+        [self stopRecord:self];
     } else {
         if(![alertView isVisible]){
             isRepeat = NO;
             [labelRecTime setHidden:YES];
             [timer invalidate];
             timer =  nil;
-            [self stopRecording:self];
+            [self stopRecord:self];
         }
         seconds = (secondsLeft %3600) % 60;
         labelRecTime.text = [NSString stringWithFormat:TIME_LEFT, seconds];
@@ -270,7 +270,7 @@
     [btnStopRecording setEnabled:FALSE];
     
     labelCurrentActivityStatus.text = PLAY_COMPLETE;
-    secondsLeft = REC_STOP_START;
+    secondsLeft = REC_STARTTIME;
     isRepeat = NO;
     [labelRecTime setHidden:YES];
     [timer invalidate];
@@ -278,7 +278,6 @@
     labelRecTime.text = NULL_STRING;
     timer = [NSTimer scheduledTimerWithTimeInterval:TIME_INTERVAL target:self selector:@selector(setActRunStatus) userInfo:nil repeats: NO]; 
     [alertView dismissWithClickedButtonIndex:0 animated:NO];
-    
 }
 
 -(void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player error:(NSError *)error
@@ -380,19 +379,19 @@
         [prefs setObject:txtEmailId.text forKey:USER_EMAIL];
     }
     if(soundFilePath != nil && txtFeedBack.text != nil) {
-        [rkp setValue:[NSNumber numberWithInt:FEEDBACK_BOTH] forParam:FILE_FORMATE_TYPE]; 
+        [rkp setValue:[NSNumber numberWithInt:FEEDBACK_TEXT_AUDIO] forParam:FILE_FORMATE_TYPE]; 
     }
     
     [rkp setValue:udid forParam:DEVICE_ID]; 
-    [rkp setValue:[fbParams fbSource] forParam:FEEDBACK_SOURCE]; 
+    [rkp setValue:[fbReqParams fbSource] forParam:FEEDBACK_SOURCE]; 
     [rkp setValue:@"3.5" forParam:FEEDBACK_RATING];
     
-    if([fbParams fbSource] == [NSNumber numberWithInt:FB_SOURCE_GENERAL]){     
-        [rkp setValue:[fbParams fromAddress] forParam:FB_FORMATTEDADDR_FROM];
-        [rkp setValue:[fbParams toAddress] forParam:FB_FORMATTEDADDR_TO];
-        [rkp setValue:[fbParams date] forParam:FB_DATE];
+    if([fbReqParams fbSource] == [NSNumber numberWithInt:FB_SOURCE_GENERAL]){     
+        [rkp setValue:[fbReqParams fromAddress] forParam:FB_FORMATTEDADDR_FROM];
+        [rkp setValue:[fbReqParams toAddress] forParam:FB_FORMATTEDADDR_TO];
+        [rkp setValue:[fbReqParams date] forParam:FB_DATE];
     } else {
-        [rkp setValue:[fbParams uniqueId] forParam:FB_UNIQUEID]; 
+        [rkp setValue:[fbReqParams uniqueId] forParam:FB_UNIQUEID]; 
     }
     
     timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(popOut) userInfo:nil repeats: NO];
@@ -406,11 +405,11 @@
                           initWithTitle:mesg  
                           message:nil delegate:nil cancelButtonTitle:nil  
                           otherButtonTitles:nil];  
-   indicator = [[UIActivityIndicatorView alloc]  
+   busyIndicator = [[UIActivityIndicatorView alloc]  
                                           initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];  
-    indicator.frame = CGRectMake(135, 80, 20, 20);
-    [indicator startAnimating];  
-    [alerts addSubview:indicator]; 
+    busyIndicator.frame = CGRectMake(135, 80, 20, 20);
+    [busyIndicator startAnimating];  
+    [alerts addSubview:busyIndicator]; 
     [alerts show];
     [[NSRunLoop currentRunLoop] limitDateForMode:NSDefaultRunLoopMode];  
     return alerts;
@@ -455,6 +454,7 @@
 {
     [alertView dismissWithClickedButtonIndex:0 animated:NO];
     [self.navigationController popViewControllerAnimated:YES];
+    [self.tabBarController setSelectedIndex:0];
 }
 
 #pragma mark TextField animation at selected
@@ -501,29 +501,4 @@
 - (void)textViewDidEndEditing:(UITextView *)textView{
     [self animateTextView: textView up: NO];
 }
-
-//-(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
-//{    
-//    if ([item.title isEqualToString:TRIP_PLANNER_VIEW]) {
-//        [item setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
-//                                       [UIColor redColor], UITextAttributeTextColor,
-//                                       nil] forState:UIBarButtonItemStyleBordered];
-//
-//    } else if([item.title isEqualToString:ADVISORIES_VIEW]) {
-//        [item setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
-//                                       [UIColor redColor], UITextAttributeTextColor,
-//                                       nil] forState:UIBarButtonItemStyleBordered];
-//
-//    } else if([item.title isEqualToString:SETTING_VIEW]) {
-//        [item setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
-//                                       [UIColor redColor], UITextAttributeTextColor,
-//                                       nil] forState:UIBarButtonItemStyleBordered];
-//
-//    } else if([item.title isEqualToString:FEEDBACK_VIEW]) {
-//        [item setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
-//                                       [UIColor redColor], UITextAttributeTextColor,
-//                                       nil] forState:UIBarButtonItemStyleBordered];
-//    }
-//    
-//}
 @end

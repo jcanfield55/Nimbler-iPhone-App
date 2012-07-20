@@ -91,7 +91,7 @@ bool isPush;
         if ([settingEntityDataArray count] > 0){ 
             UserPreferance *user = [settingEntityDataArray objectAtIndex:0]; 
             user.pushEnable = [NSNumber numberWithBool:isPush];
-            user.triggerAtHour = [NSNumber numberWithInt:pushHour];
+            user.triggerAtHour = [NSNumber numberWithFloat:sliderPushNotification.value];
             user.walkDistance = [NSNumber numberWithFloat:sliderMaxWalkDistance.value];
             [self.managedObjectContext save:nil]; 
         } 
@@ -140,7 +140,8 @@ bool isPush;
 
 -(void)popOutFromSettingView { 
     [alertView dismissWithClickedButtonIndex:0 animated:NO];
-    [self.navigationController popViewControllerAnimated:YES];    
+    [self.navigationController popViewControllerAnimated:YES]; 
+    [self.tabBarController setSelectedIndex:0];
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
@@ -186,7 +187,7 @@ bool isPush;
         } else {
             // set stored value for userSettings       
             [sliderMaxWalkDistance setValue:[[[arrayUserSetting valueForKey:WALK_DISTANCE] objectAtIndex:0] doubleValue]];
-            [sliderPushNotification setValue:[[[arrayUserSetting valueForKey:TRIGGER_AT_HOUR] objectAtIndex:0] intValue]];
+            [sliderPushNotification setValue:[[[arrayUserSetting valueForKey:TRIGGER_AT_HOUR] objectAtIndex:0] doubleValue]];
             pushHour = [[[arrayUserSetting valueForKey:TRIGGER_AT_HOUR] objectAtIndex:0] intValue];
             if ([[[arrayUserSetting valueForKey:PUSH_ENABLE] objectAtIndex:0] intValue] == 0) {
                 [switchPushEnable setOn:NO];

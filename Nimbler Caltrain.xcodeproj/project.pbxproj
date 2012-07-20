@@ -79,16 +79,19 @@
 		CC2B7F8D15B845FE001C7D90 /* img_mail.png in Resources */ = {isa = PBXBuildFile; fileRef = CC2B7F8C15B845FE001C7D90 /* img_mail.png */; };
 		CC2B7F8F15B846BB001C7D90 /* img_walk.png in Resources */ = {isa = PBXBuildFile; fileRef = CC2B7F8E15B846BB001C7D90 /* img_walk.png */; };
 		CC2B7F9115B84798001C7D90 /* walkb.png in Resources */ = {isa = PBXBuildFile; fileRef = CC2B7F9015B84798001C7D90 /* walkb.png */; };
+		CC2B7F9615B956A7001C7D90 /* img_pause.png in Resources */ = {isa = PBXBuildFile; fileRef = CC2B7F9515B956A6001C7D90 /* img_pause.png */; };
+		CC2B7F9815B956AE001C7D90 /* img_playing.png in Resources */ = {isa = PBXBuildFile; fileRef = CC2B7F9715B956AE001C7D90 /* img_playing.png */; };
+		CC2B7F9A15B956B5001C7D90 /* img_recording.png in Resources */ = {isa = PBXBuildFile; fileRef = CC2B7F9915B956B5001C7D90 /* img_recording.png */; };
+		CC2B7F9C15B956C0001C7D90 /* img_stop.png in Resources */ = {isa = PBXBuildFile; fileRef = CC2B7F9B15B956C0001C7D90 /* img_stop.png */; };
+		CC2B7F9E15B958B9001C7D90 /* img_chatBubble.png in Resources */ = {isa = PBXBuildFile; fileRef = CC2B7F9D15B958B9001C7D90 /* img_chatBubble.png */; };
+		CC2B7FA015B958C3001C7D90 /* img_voiceRecord.png in Resources */ = {isa = PBXBuildFile; fileRef = CC2B7F9F15B958C3001C7D90 /* img_voiceRecord.png */; };
 		CC35E729155965E7003995D8 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 522C0E6A15588E7A0072ADD6 /* libz.dylib */; };
 		CC5789BF1564C8EB0057D5A7 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6F22E71563AD360066DFA9 /* AVFoundation.framework */; };
 		CC578A03156520B60057D5A7 /* feedback.png in Resources */ = {isa = PBXBuildFile; fileRef = CC578A02156520B50057D5A7 /* feedback.png */; };
-		CC578A0515652D2A0057D5A7 /* pausePlay.png in Resources */ = {isa = PBXBuildFile; fileRef = CC578A0415652D2A0057D5A7 /* pausePlay.png */; };
-		CC6F22E6156391D90066DFA9 /* rec_up.png in Resources */ = {isa = PBXBuildFile; fileRef = CC6F22E5156391D90066DFA9 /* rec_up.png */; };
-		CC6F22F01563C8890066DFA9 /* stopRec.png in Resources */ = {isa = PBXBuildFile; fileRef = CC6F22EF1563C8890066DFA9 /* stopRec.png */; };
-		CC6F22F21563CEC20066DFA9 /* playRec.png in Resources */ = {isa = PBXBuildFile; fileRef = CC6F22F11563CEC20066DFA9 /* playRec.png */; };
 		CC6FE2B8155BA40D004BE10A /* MyAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6FE2B7155BA40D004BE10A /* MyAnnotation.m */; };
 		CC6FE2BB155BC416004BE10A /* Error.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6FE2BA155BC416004BE10A /* Error.m */; };
 		CC7D5AB115B6947E0036E3FE /* aps_production.cer in Resources */ = {isa = PBXBuildFile; fileRef = CC7D5AB015B6947E0036E3FE /* aps_production.cer */; };
+		CC8D5CCD15B9989C006038B1 /* img_appTitle.png in Resources */ = {isa = PBXBuildFile; fileRef = CC8D5CCC15B9989C006038B1 /* img_appTitle.png */; };
 		CC96BE67159C8A87001F9193 /* itin_slipage.png in Resources */ = {isa = PBXBuildFile; fileRef = CC96BE66159C8A87001F9193 /* itin_slipage.png */; };
 		CC9E424B158219A300A4ADED /* twitter.png in Resources */ = {isa = PBXBuildFile; fileRef = CC9E424A158219A300A4ADED /* twitter.png */; };
 		CC9E424D15821B7B00A4ADED /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = CC9E424C15821B7B00A4ADED /* map.png */; };
@@ -886,17 +889,20 @@
 		CC2B7F8C15B845FE001C7D90 /* img_mail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_mail.png; sourceTree = "<group>"; };
 		CC2B7F8E15B846BB001C7D90 /* img_walk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_walk.png; sourceTree = "<group>"; };
 		CC2B7F9015B84798001C7D90 /* walkb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = walkb.png; sourceTree = "<group>"; };
+		CC2B7F9515B956A6001C7D90 /* img_pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_pause.png; sourceTree = "<group>"; };
+		CC2B7F9715B956AE001C7D90 /* img_playing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_playing.png; sourceTree = "<group>"; };
+		CC2B7F9915B956B5001C7D90 /* img_recording.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_recording.png; sourceTree = "<group>"; };
+		CC2B7F9B15B956C0001C7D90 /* img_stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_stop.png; sourceTree = "<group>"; };
+		CC2B7F9D15B958B9001C7D90 /* img_chatBubble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_chatBubble.png; sourceTree = "<group>"; };
+		CC2B7F9F15B958C3001C7D90 /* img_voiceRecord.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_voiceRecord.png; sourceTree = "<group>"; };
 		CC578A02156520B50057D5A7 /* feedback.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = feedback.png; sourceTree = "<group>"; };
-		CC578A0415652D2A0057D5A7 /* pausePlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pausePlay.png; sourceTree = "<group>"; };
-		CC6F22E5156391D90066DFA9 /* rec_up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rec_up.png; sourceTree = "<group>"; };
 		CC6F22E71563AD360066DFA9 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		CC6F22EF1563C8890066DFA9 /* stopRec.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stopRec.png; sourceTree = "<group>"; };
-		CC6F22F11563CEC20066DFA9 /* playRec.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playRec.png; sourceTree = "<group>"; };
 		CC6FE2B6155BA403004BE10A /* MyAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAnnotation.h; sourceTree = "<group>"; };
 		CC6FE2B7155BA40D004BE10A /* MyAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAnnotation.m; sourceTree = "<group>"; };
 		CC6FE2B9155BC411004BE10A /* Error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Error.h; sourceTree = "<group>"; };
 		CC6FE2BA155BC416004BE10A /* Error.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Error.m; sourceTree = "<group>"; };
 		CC7D5AB015B6947E0036E3FE /* aps_production.cer */ = {isa = PBXFileReference; lastKnownFileType = file; name = aps_production.cer; path = "Network Commuting/aps_production.cer"; sourceTree = "<group>"; };
+		CC8D5CCC15B9989C006038B1 /* img_appTitle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_appTitle.png; sourceTree = "<group>"; };
 		CC96BE66159C8A87001F9193 /* itin_slipage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = itin_slipage.png; sourceTree = "<group>"; };
 		CC9E424A158219A300A4ADED /* twitter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = twitter.png; sourceTree = "<group>"; };
 		CC9E424C15821B7B00A4ADED /* map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = map.png; sourceTree = "<group>"; };
@@ -2434,6 +2440,13 @@
 		CCB7E81C1570EB670036E9CD /* images */ = {
 			isa = PBXGroup;
 			children = (
+				CC8D5CCC15B9989C006038B1 /* img_appTitle.png */,
+				CC2B7F9F15B958C3001C7D90 /* img_voiceRecord.png */,
+				CC2B7F9D15B958B9001C7D90 /* img_chatBubble.png */,
+				CC2B7F9B15B956C0001C7D90 /* img_stop.png */,
+				CC2B7F9915B956B5001C7D90 /* img_recording.png */,
+				CC2B7F9715B956AE001C7D90 /* img_playing.png */,
+				CC2B7F9515B956A6001C7D90 /* img_pause.png */,
 				CC2B7F9015B84798001C7D90 /* walkb.png */,
 				CC2B7F8E15B846BB001C7D90 /* img_walk.png */,
 				CC2B7F8C15B845FE001C7D90 /* img_mail.png */,
@@ -2454,11 +2467,7 @@
 				528A486415B4D690009EF7F0 /* mapDot.png */,
 				528A486615B4D69C009EF7F0 /* mapDot@2x.png */,
 				CC9E424A158219A300A4ADED /* twitter.png */,
-				CC578A0415652D2A0057D5A7 /* pausePlay.png */,
 				CC578A02156520B50057D5A7 /* feedback.png */,
-				CC6F22F11563CEC20066DFA9 /* playRec.png */,
-				CC6F22EF1563C8890066DFA9 /* stopRec.png */,
-				CC6F22E5156391D90066DFA9 /* rec_up.png */,
 			);
 			name = images;
 			sourceTree = "<group>";
@@ -2788,11 +2797,7 @@
 				52BA18AD1549000D009125A3 /* logo_big_iPh.png in Resources */,
 				522C0E6815588D830072ADD6 /* README.txt in Resources */,
 				522C0E6915588D830072ADD6 /* release_notes.txt in Resources */,
-				CC6F22E6156391D90066DFA9 /* rec_up.png in Resources */,
-				CC6F22F01563C8890066DFA9 /* stopRec.png in Resources */,
-				CC6F22F21563CEC20066DFA9 /* playRec.png in Resources */,
 				CC578A03156520B60057D5A7 /* feedback.png in Resources */,
-				CC578A0515652D2A0057D5A7 /* pausePlay.png in Resources */,
 				CCB7E812157090380036E9CD /* FeedBackForm.xib in Resources */,
 				CCB9E6FC1574B4FF0043F304 /* TwitterSearch.xib in Resources */,
 				CC9E424B158219A300A4ADED /* twitter.png in Resources */,
@@ -2822,6 +2827,13 @@
 				CC2B7F8D15B845FE001C7D90 /* img_mail.png in Resources */,
 				CC2B7F8F15B846BB001C7D90 /* img_walk.png in Resources */,
 				CC2B7F9115B84798001C7D90 /* walkb.png in Resources */,
+				CC2B7F9615B956A7001C7D90 /* img_pause.png in Resources */,
+				CC2B7F9815B956AE001C7D90 /* img_playing.png in Resources */,
+				CC2B7F9A15B956B5001C7D90 /* img_recording.png in Resources */,
+				CC2B7F9C15B956C0001C7D90 /* img_stop.png in Resources */,
+				CC2B7F9E15B958B9001C7D90 /* img_chatBubble.png in Resources */,
+				CC2B7FA015B958C3001C7D90 /* img_voiceRecord.png in Resources */,
+				CC8D5CCD15B9989C006038B1 /* img_appTitle.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3070,8 +3082,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "A6E45353-714D-453E-A9F0-8B023FD0687E";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A6E45353-714D-453E-A9F0-8B023FD0687E";
+				PROVISIONING_PROFILE = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3098,8 +3110,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "A6E45353-714D-453E-A9F0-8B023FD0687E";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A6E45353-714D-453E-A9F0-8B023FD0687E";
+				PROVISIONING_PROFILE = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};

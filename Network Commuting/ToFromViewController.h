@@ -45,7 +45,6 @@ typedef enum {
 @property (nonatomic) ToFromEditMode editMode; // Specifies whether to or from address is being edited with the keyboard
 @property (strong, nonatomic) SupportedRegion* supportedRegion; // geographic area supported by this app
 
-@property (strong, nonatomic) CustomBadge *twitterCount;
 @property (nonatomic) BOOL isContinueGetRealTimeData;
 @property (strong, nonatomic) NSTimer *continueGetTime;
 @property (strong, nonatomic) NSNumber *maxiWalkDistance;
@@ -69,6 +68,5 @@ typedef enum {
 -(BOOL)alertUsetForLocationService;
 -(void)getRealTimeData;
 -(void)getWalkDistance;
--(void)redirectInTwitterAtPushnotification;
 
 @end
