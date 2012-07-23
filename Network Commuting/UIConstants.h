@@ -27,6 +27,7 @@
 
 // Corner Radius
 #define CORNER_RADIUS_SMALL                 5.0
+#define CORNER_RADIUS_MEDIUM                10.0
 
 // Upadate badge count to ZERO
 #define BADGE_COUNT_ZERO                    0
@@ -46,7 +47,8 @@
 // Font Size
 #define STANDARD_FONT_SIZE                  12.0
 #define MEDIUM_FONT_SIZE                    14.0
-#define LARGE_FONT_SIZE                     16.0
+#define LARGER_THEN_MEDIUM_FONT_SIZE        16.0
+#define LARGE_FONT_SIZE                     18.0
 #define LARGER_FONT_SIZE                    20.0
 
 #endif

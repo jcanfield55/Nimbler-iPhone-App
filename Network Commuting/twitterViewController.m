@@ -25,7 +25,7 @@
 
 NSMutableArray *arrayTweet;
 
-@synthesize mainTable,twitterData,dateFormatter,reload,isFromAppDelegate,isTwitterLiveData;
+@synthesize mainTable,twitterData,dateFormatter,reload,isFromAppDelegate,isTwitterLiveData,noAdvisory;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -115,13 +115,21 @@ NSMutableArray *arrayTweet;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if ([arrayTweet count] == 0) {
+        [noAdvisory setHidden:NO];
+    } else {
+        [noAdvisory setHidden:YES];
+    }
+    
     return [arrayTweet count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *cellIdentifier = TABLE_CELL;
+    
     UITableViewCell *cell =     [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    cell = nil;
     if (cell == nil) 
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
@@ -145,7 +153,8 @@ NSMutableArray *arrayTweet;
     cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];
     
     UILabel *labelTime = (UILabel *)[cell viewWithTag:MAXLINE_TAG];
-    CGRect lbl3Frame = CGRectMake(280, 5, 30, 25);
+   
+    CGRect lbl3Frame = CGRectMake(280, 5, 35, 25);
     labelTime = [[UILabel alloc] initWithFrame:lbl3Frame];
     labelTime.tag = MAXLINE_TAG;
     labelTime.backgroundColor = [UIColor clearColor];
@@ -155,7 +164,7 @@ NSMutableArray *arrayTweet;
     labelTime.textColor = [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];
     
     UIImage *img = [UIImage imageNamed:CALTRAIN_IMG];    
-    cell.imageView.layer.cornerRadius = CORNER_RADIUS_SMALL;
+    cell.imageView.layer.cornerRadius = CORNER_RADIUS_MEDIUM;
     cell.imageView.layer.masksToBounds = YES;
     [cell.imageView setImage:img];
     
@@ -171,11 +180,16 @@ NSMutableArray *arrayTweet;
 #pragma mark reloadNewTweets request Response
 -(void)getLatestTweets 
 {
-    if (arrayTweet.count != 0) {
+    NSString *latestTweetTime = @"0";
+//    if (arrayTweet.count != 0) {
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
         id key = [arrayTweet objectAtIndex:0];                
         NSString *tweetTime =  [(NSDictionary*)key objectForKey:TWEET_TIME];
+    
+    if (tweetTime == NULL) {
+        tweetTime = latestTweetTime;
+    }
         NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
                               LAST_TWEET_TIME,tweetTime,
                               DEVICE_ID, [UIDevice currentDevice].uniqueIdentifier,
@@ -183,7 +197,7 @@ NSMutableArray *arrayTweet;
         NSString *req = [LATEST_TWEETS_REQ appendQueryParams:dict];
         [[RKClient sharedClient]  get:req delegate:self]; 
         [self refreshTweetCount];
-    }
+//    }
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  

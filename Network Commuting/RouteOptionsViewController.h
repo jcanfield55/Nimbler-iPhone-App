@@ -28,4 +28,5 @@
 -(void)setLiveFeed:(id)liveFeed;
 - (void) setRealtimeData:(NSString *)legId arrivalTime:(NSString *)arrivalTime arrivalFlag:(NSString *)arrivalFlag itineraryId:(NSString *)ititId itineraryArrivalFlag:(NSString *)itinArrivalflag legDiffMins:(NSString *)timeDiff;
 -(void)hideUnUsedTableViewCell;
+-(void)setFBParameterForPlan;
 @end

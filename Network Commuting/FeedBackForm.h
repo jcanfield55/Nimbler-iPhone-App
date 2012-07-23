@@ -46,6 +46,8 @@
     
 }
 
+@property (strong, nonatomic) IBOutlet UITextView *txtFeedBack;
+@property (strong, nonatomic) IBOutlet UITextField *txtEmailId;
 @property (strong, nonatomic) TPResponse *tpResponse; 
 @property(nonatomic,retain) NSString *tpURLResource;
 @property(nonatomic,retain) NSString *mesg;
@@ -67,7 +69,6 @@
 -(void)sendFeedbackToServer;
 
 -(id)initWithFeedBack:(NSString *)nibNameOrNil fbParam:(FeedBackReqParam *)fbParam bundle:(NSBundle *)nibBundle;
-
 
 @end
 

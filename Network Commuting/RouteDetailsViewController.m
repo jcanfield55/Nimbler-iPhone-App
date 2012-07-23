@@ -15,6 +15,7 @@
 #import "twitterViewController.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "ToFromViewController.h"
+#import "nc_AppDelegate.h"
 
 @interface RouteDetailsViewController()
 {
@@ -91,6 +92,9 @@ NSUserDefaults *prefs;
     [self setItineraryNumber:0];  // Initially start on the first row of itinerary
     [backButton setEnabled:FALSE];
     
+    //set FbParameterForItinerary
+    [self setFBParameterForItinerary];
+    
     // Compute the mainTableTotalHeight by calling the height of each row
     mainTableTotalHeight = 0.0;
     for (int i=0; i<[self tableView:mainTable numberOfRowsInSection:0]; i++) {
@@ -136,6 +140,7 @@ NSUserDefaults *prefs;
     
     // Updates legMapVC itinerary number (changing the region for the map
     [legMapVC setItineraryNumber:itineraryNumber];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -331,5 +336,16 @@ NSUserDefaults *prefs;
     }  @catch (NSException *exception) {
         NSLog( @"Exception while getting twitter Data from TP Server response: %@", exception);
     } 
+}
+
+-(void)setFBParameterForItinerary
+{
+    NSLog(@"Itinerary......");
+    
+    [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_ITINERARY];
+    [nc_AppDelegate sharedInstance].FBDate = nil;
+    [nc_AppDelegate sharedInstance].FBToAdd = nil;
+    [nc_AppDelegate sharedInstance].FBSFromAdd = nil;
+    [nc_AppDelegate sharedInstance].FBUniqueId = [itinerary itinId];
 }
 @end

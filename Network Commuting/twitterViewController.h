@@ -19,6 +19,8 @@
 @property (nonatomic) BOOL isFromAppDelegate;
 @property (nonatomic) BOOL isTwitterLiveData;
 
+@property (strong, nonatomic) IBOutlet UILabel *noAdvisory; 
+
 -(void)setTwitterLiveData:(id)tweetData;
 
 -(NSString *)stringForTimeIntervalSinceCreated:(NSDate *)dateTime serverTime:(NSDate *)serverDateTime;

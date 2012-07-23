@@ -209,6 +209,7 @@ float currentLocationResTime;
         [continueGetTime invalidate];
         continueGetTime = nil;
         [self updateTripDate];  // update tripDate if needed
+        [self setFBParameterForGeneral];
     }
     @catch (NSException *exception) {
         NSLog(@"exception at viewWillAppear: %@", exception);
@@ -593,6 +594,7 @@ float currentLocationResTime;
 - (void)updateToFromLocation:(id)sender isFrom:(BOOL)isFrom location:(Location *)loc; {
     if (isFrom) {
         fromLocation = loc;
+        [self setFBParameterForGeneral];
         if (loc == currentLocation && !isCurrentLocationMode) {
             [self setIsCurrentLocationMode:TRUE];
         }
@@ -601,12 +603,14 @@ float currentLocationResTime;
         }
     } 
     else {
+        
         BOOL locBecomingVisible = loc && ([loc toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF);
         BOOL toLocationBecomingInvisible = toLocation && ([toLocation toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF);
         if (locBecomingVisible ^ toLocationBecomingInvisible) { // if # of locations visible is changing
             [self newLocationVisible];  // Adjust dynamic toTable if toLocation chosen for first time
         }
         toLocation = loc;
+        [self setFBParameterForGeneral];
     }
 }
 
@@ -696,7 +700,7 @@ float currentLocationResTime;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     @try {
-        NSString *fromLocs;    
+        NSString *fromLocs = @"";    
         NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
         [dFormat setDateStyle:NSDateFormatterShortStyle];
         [dFormat setTimeStyle:NSDateFormatterMediumStyle];
@@ -709,7 +713,6 @@ float currentLocationResTime;
         FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:[NSNumber numberWithInt:FB_SOURCE_GENERAL] uniqueId:nil date:[dFormat stringFromDate:tripDate] fromAddress:fromLocs toAddress:[toLocation formattedAddress]];
         FeedBackForm *feedbackVC =  [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];  // DE56 fix
         [[self navigationController] pushViewController:feedbackVC animated:YES];
-
     }
     @catch (NSException *exception) {
         NSLog(@"exception at feedback button press from TOFromView: %@", exception);
@@ -868,6 +871,8 @@ float currentLocationResTime;
                                 NSLog(@"leg... %@",[lg legId]);
                             }                                                            
                         }
+                        
+                        [routeOptionsVC setFBParameterForPlan];
                         isContinueGetRealTimeData = TRUE;
                         [self getRealTimeData];
                         continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:59.0 target:self selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
@@ -1256,6 +1261,32 @@ float currentLocationResTime;
     }
     @catch (NSException *exception) {
         NSLog(@"exception at get data from core data: %@", exception);
+    }
+}
+
+-(void)setFBParameterForGeneral
+{
+    @try {
+        NSString *fromLocs = @"";    
+        NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
+        [dFormat setDateStyle:NSDateFormatterShortStyle];
+        [dFormat setTimeStyle:NSDateFormatterMediumStyle];
+        if ([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
+            fromLocs = [self getCurrentLocationOfFormattedAddress:fromLocation];
+        } else {
+            fromLocs = [fromLocation formattedAddress];
+        }
+        NSLog(@"from: %@   ToLoacation: %@", fromLocs, [toLocation formattedAddress]);
+        
+        [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_GENERAL];
+        [nc_AppDelegate sharedInstance].FBDate = [dFormat stringFromDate:tripDate];
+        [nc_AppDelegate sharedInstance].FBToAdd = [toLocation formattedAddress];
+        [nc_AppDelegate sharedInstance].FBSFromAdd = fromLocs;
+        [nc_AppDelegate sharedInstance].FBUniqueId = nil;
+        
+        }
+    @catch (NSException *exception) {
+        NSLog(@"exception at feedback button press from TOFromView: %@", exception);
     }
 }
 

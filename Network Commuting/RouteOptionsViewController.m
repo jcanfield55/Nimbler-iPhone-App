@@ -14,9 +14,10 @@
 #import "FeedBackForm.h"
 #import "LegMapViewController.h"
 #import "twitterViewController.h"
+#import "nc_AppDelegate.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 
-#define CELL_HEIGHT             55.0
+#define CELL_HEIGHT             60.0
 
 @interface RouteOptionsViewController()
 {
@@ -63,6 +64,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     rect0.size.height = ROUTE_OPTIONS_TABLE_HEIGHT;
     [mainTable setFrame:rect0];
     [mainTable reloadData];
+    [self setFBParameterForPlan];
 }
 
 - (void)didReceiveMemoryWarning
@@ -120,12 +122,13 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
          */
         
         // Set title
-        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
+        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:LARGER_THEN_MEDIUM_FONT_SIZE]];
         NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)", 
                                [timeFormatter stringFromDate:[itin startTime]],
                                [timeFormatter stringFromDate:[itin endTime]],
                                durationString([[itin duration] floatValue])];
         [[cell textLabel] setText:titleText];
+        cell.textLabel.numberOfLines = 2;
         cell.textLabel.textColor = [UIColor colorWithRed:252.0/256.0 green:103.0/256.0 blue:88.0/256.0 alpha:1.0];
         cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];
         // Set sub-title (show each leg's mode and route if available)
@@ -145,6 +148,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
             }
         }
         [[cell detailTextLabel] setText:subTitle];
+        UIImage *unselect = [UIImage imageNamed:@"img_unSelect.png"];
+        cell.AccessoryView = [[UIImageView alloc] initWithImage:unselect];
+
     }
     @catch (NSException *exception) {
         NSLog(@"exception at load table: %@", exception);
@@ -202,6 +208,12 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:[NSNumber numberWithInt:FB_SOURCE_PLAN] uniqueId:[plan planId] date:nil fromAddress:nil toAddress:nil];
         FeedBackForm *feedbackFormVc = [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];
         [[self navigationController] pushViewController:feedbackFormVc animated:YES]; 
+        
+        [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_PLAN];
+        [nc_AppDelegate sharedInstance].FBDate = nil;
+        [nc_AppDelegate sharedInstance].FBToAdd = nil;
+        [nc_AppDelegate sharedInstance].FBSFromAdd = nil;
+        [nc_AppDelegate sharedInstance].FBUniqueId = [plan planId];
     }
     @catch (NSException *exception) {
         NSLog(@"Exception at press feedback button from RouteOptionsViewController : %@", exception);
@@ -325,5 +337,16 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     }  @catch (NSException *exception) {
         NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
     } 
+}
+
+
+-(void)setFBParameterForPlan
+{
+    NSLog(@"plan....");
+    [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_PLAN];
+    [nc_AppDelegate sharedInstance].FBDate = nil;
+    [nc_AppDelegate sharedInstance].FBToAdd = nil;
+    [nc_AppDelegate sharedInstance].FBSFromAdd = nil;
+    [nc_AppDelegate sharedInstance].FBUniqueId = [plan planId];
 }
 @end

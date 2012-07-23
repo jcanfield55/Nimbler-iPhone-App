@@ -30,5 +30,5 @@
 - (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
 -(void)ReloadLegWithNewData;
-
+-(void)setFBParameterForItinerary;
 @end

@@ -25,12 +25,14 @@
 #define PLAY_COMPLETE   @"Play complete...."
 #define ANIMATION_PARAM @"anim"
 #define FB_CONFIRMATION @"Are you sure you want to send feedback?"
+#define FB_WHEN_NO_VOICE_OR_TEXT @"for now put the text Please give your feedback and then press Send!"
 #define ALERT_TRIP      @"Trip Planner"
 
 #define BUTTON_YES      @"Yes"
 #define BUTTON_NO       @"No"
 #define BUTTON_DONE     @"Done"
 #define BUTTON_CANCEL   @"Cancel"
+#define BUTTON_OK       @"OK"
 
 #define BORDER_WIDTH    1.0
 #define RECORD_DURATION 60
@@ -46,6 +48,7 @@
 @implementation FeedBackForm
 
 @synthesize tpResponse,tpURLResource,alertView,mesg,btnPlayRecording,btnStopRecording,btnPauseRecording,btnRecordRecording,fbReqParams;
+@synthesize txtEmailId,txtFeedBack;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -79,22 +82,13 @@
     [super viewDidLoad];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                     [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0], UITextAttributeTextColor,
+                                                                     [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 
+                                                                    blue:96.0/256.0 alpha:1.0], UITextAttributeTextColor,
                                                                      nil]];
-    btnSubmitFeedback.layer.cornerRadius = CORNER_RADIUS_SMALL;
+    
     
     // Do any additional setup after loading the view from its nib.
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    txtEmailId.text = [prefs objectForKey:USER_EMAIL];
-    labelCurrentActivityStatus.text = NULL_STRING;
-    txtFeedBack.layer.cornerRadius = CORNER_RADIUS_SMALL;
-    txtFeedBack.layer.borderWidth = BORDER_WIDTH;
-    [txtFeedBack.layer setBorderColor:[[UIColor grayColor] CGColor]];
-    
-    [btnPlayRecording setEnabled:FALSE];
-    [btnPauseRecording setEnabled:FALSE];
-    [btnStopRecording setEnabled:FALSE];
-}
+    }
 
 - (void)viewDidUnload
 {
@@ -106,6 +100,23 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    btnSubmitFeedback.layer.cornerRadius = CORNER_RADIUS_SMALL;
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    txtEmailId.text = [prefs objectForKey:USER_EMAIL];
+    labelCurrentActivityStatus.text = NULL_STRING;
+    txtFeedBack.layer.cornerRadius = CORNER_RADIUS_SMALL;
+    txtFeedBack.layer.borderWidth = BORDER_WIDTH;
+    [txtFeedBack.layer setBorderColor:[[UIColor grayColor] CGColor]];
+    
+    [btnPlayRecording setEnabled:FALSE];
+    [btnPauseRecording setEnabled:FALSE];
+    [btnStopRecording setEnabled:FALSE];
+    soundFilePath = nil;
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+     [super viewWillDisappear:animated];
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -165,6 +176,7 @@
     [btnPauseRecording setEnabled:FALSE];
     [btnStopRecording setEnabled:FALSE];
     [btnRecordRecording setEnabled:TRUE];
+    [btnPlayRecording setEnabled:TRUE];
     labelCurrentActivityStatus.text = RECORDING_STOP;
     timer = [NSTimer scheduledTimerWithTimeInterval:TIME_INTERVAL target:self selector:@selector(setActRunStatus) userInfo:nil repeats: NO];  
     [alertView dismissWithClickedButtonIndex:0 animated:NO];
@@ -299,9 +311,14 @@
 #pragma mark Restful request
 -(IBAction)submitFeedBack:(id)sender
 {
-    mesg = SUBMIT_MSG;
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:FB_TITLE_MSG message:FB_CONFIRMATION delegate:self cancelButtonTitle:BUTTON_YES otherButtonTitles:BUTTON_NO, nil];
-    [alert show];
+    if(!(soundFilePath != nil && txtFeedBack.text != nil)) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:FB_TITLE_MSG message:FB_WHEN_NO_VOICE_OR_TEXT delegate:self cancelButtonTitle:BUTTON_OK otherButtonTitles:nil, nil];
+        [alert show];
+    } else {
+        mesg = SUBMIT_MSG;
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:FB_TITLE_MSG message:FB_CONFIRMATION delegate:self cancelButtonTitle:BUTTON_YES otherButtonTitles:BUTTON_NO, nil];
+        [alert show];
+    }
 }
 
 #pragma mark Restful Response
@@ -355,6 +372,7 @@
 
 -(void)sendFeedbackToServer
 {
+    
     alertView = [self feedbackConfirmAlert];
     
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;    
@@ -383,15 +401,15 @@
     }
     
     [rkp setValue:udid forParam:DEVICE_ID]; 
-    [rkp setValue:[fbReqParams fbSource] forParam:FEEDBACK_SOURCE]; 
+    [rkp setValue:[nc_AppDelegate sharedInstance].FBSource forParam:FEEDBACK_SOURCE]; 
     [rkp setValue:@"3.5" forParam:FEEDBACK_RATING];
     
-    if([fbReqParams fbSource] == [NSNumber numberWithInt:FB_SOURCE_GENERAL]){     
-        [rkp setValue:[fbReqParams fromAddress] forParam:FB_FORMATTEDADDR_FROM];
-        [rkp setValue:[fbReqParams toAddress] forParam:FB_FORMATTEDADDR_TO];
-        [rkp setValue:[fbReqParams date] forParam:FB_DATE];
+    if([nc_AppDelegate sharedInstance].FBSource == [NSNumber numberWithInt:FB_SOURCE_GENERAL]){     
+        [rkp setValue:[nc_AppDelegate sharedInstance].FBSFromAdd forParam:FB_FORMATTEDADDR_FROM];
+        [rkp setValue:[nc_AppDelegate sharedInstance].FBToAdd forParam:FB_FORMATTEDADDR_TO];
+        [rkp setValue:[nc_AppDelegate sharedInstance].FBDate forParam:FB_DATE];
     } else {
-        [rkp setValue:[fbReqParams uniqueId] forParam:FB_UNIQUEID]; 
+        [rkp setValue:[nc_AppDelegate sharedInstance].FBUniqueId forParam:FB_UNIQUEID]; 
     }
     
     timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(popOut) userInfo:nil repeats: NO];
@@ -439,7 +457,7 @@
         NSFileManager *fileManager = [NSFileManager defaultManager];
         NSArray *tempDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *tempDirPath = [tempDir objectAtIndex:0];
-       NSString *recordedAudioPath = [tempDirPath stringByAppendingPathComponent:VOICE_FB_FILE];
+        NSString *recordedAudioPath = [tempDirPath stringByAppendingPathComponent:VOICE_FB_FILE];
         if([fileManager fileExistsAtPath:recordedAudioPath]){
             [fileManager removeItemAtPath:recordedAudioPath error:nil];
         }
@@ -458,8 +476,8 @@
 }
 
 #pragma mark TextField animation at selected
-
-- (void) animateTextField: (UITextField*) textField up: (BOOL) up{
+-(void) animateTextField: (UITextField*) textField up: (BOOL) up
+{
 	int txtPosition = (textField.frame.origin.y - 160);
     const int movementDistance = (txtPosition < 0 ? 0 : txtPosition); // tweak as needed
     const float movementDuration = UP_DOWN_RATIO; // tweak as needed

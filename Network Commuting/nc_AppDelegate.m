@@ -38,6 +38,9 @@ static nc_AppDelegate *appDelegate;
 @synthesize prefs;
 @synthesize tabBarController = _tabBarController;
 
+// Feedback parameters
+@synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId;
+
 +(nc_AppDelegate *)sharedInstance
 {
     if(appDelegate == nil){
@@ -226,8 +229,13 @@ static nc_AppDelegate *appDelegate;
      */
     saveContext([self managedObjectContext]);
     [locationManager stopUpdatingLocation];
+    // Close Keyboard
+    [UIView setAnimationsEnabled:NO];
+    [self.tabBarController.view endEditing:YES];
+    
     timerTweeterGetData = nil;
     [timerTweeterGetData invalidate];
+
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application

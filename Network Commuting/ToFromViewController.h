@@ -68,5 +68,5 @@ typedef enum {
 -(BOOL)alertUsetForLocationService;
 -(void)getRealTimeData;
 -(void)getWalkDistance;
-
+-(void)setFBParameterForGeneral;
 @end

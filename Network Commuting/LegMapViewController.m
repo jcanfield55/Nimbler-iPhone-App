@@ -14,6 +14,7 @@
 #import "RestKit/RKJSONParserJSONKit.h"
 #import "Constants.h"
 #import <CoreImage/CoreImageDefines.h>
+#import "nc_AppDelegate.h"
 
 @interface LegMapViewController() {
     // Internal variables
@@ -171,31 +172,33 @@ NSString *legID;
             aView.lineWidth = 5;
             
             // Determine if this overlay is the one in focus.  If so, make it darker
+            Leg *leg; 
             for (int i=0; i<[polyLineArray count]; i++) {
                 if (([polyLineArray objectAtIndex:i] == overlay)) {
                     if (i == itineraryNumber) {
-                        Leg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:(itineraryNumber)];
-                        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-                        [prefs setObject:@"3" forKey:@"source"];
-                        [prefs setObject:[leg legId] forKey:@"uniqueid"];
+                        leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:(itineraryNumber)];
+                        
                         if([leg isWalk]){
                             aView.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:0.7] ;
                             aView.lineWidth = 5;
+                            [self setFBParameterForLeg:[leg legId]];
                         } else if([leg isBus]){
                             aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:0.7];
                             aView.lineWidth = 5;
+                            [self setFBParameterForLeg:[leg legId]];
                         } else if([leg isTrain]){                        
                             aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:0.8] ;
                             aView.lineWidth = 5;
+                            [self setFBParameterForLeg:[leg legId]];
                         } else {
                             aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:0.8] ;
                             aView.lineWidth = 5;
+                            [self setFBParameterForLeg:[leg legId]];
                         }
                         
                     }
                 }
             } 
-            
             return aView;
         }
         return nil;
@@ -319,5 +322,13 @@ NSString *legID;
     return nil;
 }
 
-
+-(void)setFBParameterForLeg:(NSString *)legId
+{
+    NSLog(@"leg.......");
+    [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_LEG];
+    [nc_AppDelegate sharedInstance].FBDate = nil;
+    [nc_AppDelegate sharedInstance].FBToAdd = nil;
+    [nc_AppDelegate sharedInstance].FBSFromAdd = nil;
+    [nc_AppDelegate sharedInstance].FBUniqueId = legId;
+}
 @end

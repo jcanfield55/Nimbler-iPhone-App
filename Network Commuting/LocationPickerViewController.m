@@ -77,10 +77,13 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
         cell.textLabel.numberOfLines= 2;     
         cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
     }
-    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];        
+    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:LARGE_FONT_SIZE]];        
     [[cell textLabel] setText:[loc shortFormattedAddress]];  
     cell.textLabel.textColor = [UIColor colorWithRed:252.0/256.0 green:103.0/256.0 blue:88.0/256.0 alpha:1.0];
     tableView.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
+    
+    UIImage *unselect = [UIImage imageNamed:@"img_unSelect.png"];
+    cell.AccessoryView = [[UIImageView alloc] initWithImage:unselect];
     [cell sizeToFit];
     return cell;
 }
@@ -102,14 +105,15 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
         
     NSString *cellText = [loc formattedAddress];
     CGSize size = [cellText 
-                sizeWithFont:[UIFont systemFontOfSize:14] 
+                sizeWithFont:[UIFont systemFontOfSize:LARGE_FONT_SIZE] 
                 constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
     
     CGFloat height = size.height + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
     if (height < STANDARD_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
         height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
     }
-    return height;
+    // static height for better UI
+    return 55.0;
 }
 
 - (void) viewWillDisappear:(BOOL)animated

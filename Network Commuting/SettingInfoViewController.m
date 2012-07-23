@@ -87,11 +87,13 @@ bool isPush;
         NSEntityDescription *userSettingEntity = [NSEntityDescription entityForName:SETTING_ENTITY     
                                                    inManagedObjectContext:self.managedObjectContext];
         [requestFetchUserSettingEntity setEntity:userSettingEntity];    
-        NSArray *settingEntityDataArray =[self.managedObjectContext executeFetchRequest:requestFetchUserSettingEntity error:nil]; 
+        NSArray *settingEntityDataArray =[self.managedObjectContext executeFetchRequest:requestFetchUserSettingEntity error:nil];
+        NSLog(@"traiger at push..... %@", [NSNumber numberWithFloat:sliderPushNotification.value]);
+        float ss = sliderPushNotification.value;
         if ([settingEntityDataArray count] > 0){ 
             UserPreferance *user = [settingEntityDataArray objectAtIndex:0]; 
             user.pushEnable = [NSNumber numberWithBool:isPush];
-            user.triggerAtHour = [NSNumber numberWithFloat:sliderPushNotification.value];
+            user.triggerAtHour = [NSNumber numberWithFloat:ss];
             user.walkDistance = [NSNumber numberWithFloat:sliderMaxWalkDistance.value];
             [self.managedObjectContext save:nil]; 
         } 
