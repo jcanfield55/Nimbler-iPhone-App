@@ -16,8 +16,12 @@
 #import "FeedBackForm.h"
 #import "DateTimeViewController.h"
 
-#define TESTING 1  // If 1, then testFlightApp will collect device UIDs, if 0, it will not
-#define DEVELOPMENT 1  // If 1, then do not include testFlightApp at all (don't need crash report while developing)
+#if TEST_FLIGHT_ENABLED
+#import "TestFlightSDK1/TestFlight.h"
+#endif
+#if FLURRY_ENABLED
+#import "Flurry.h"
+#endif
 
 BOOL isTwitterLivaData = FALSE; 
 
@@ -123,12 +127,26 @@ static nc_AppDelegate *appDelegate;
         NSLog(@"Exception: ----------------- %@", exception);
     } 
     
+    // Set a CFUUID (unique identifier) for this device and this app, if doesn't exist already:
+    prefs = [NSUserDefaults standardUserDefaults];
+    NSString* cfuuidString = [prefs objectForKey:DEVICE_CFUUID];
+    if (!cfuuidString) {  // if the CFUUID not created, create it
+        CFUUIDRef cfuuidRef = CFUUIDCreate(kCFAllocatorDefault);
+        cfuuidString = (__bridge NSString *) CFUUIDCreateString(kCFAllocatorDefault, cfuuidRef);
+        [prefs setObject:cfuuidString forKey:DEVICE_CFUUID];
+    }
+    
     // Call TestFlightApp SDK
-#if !DEVELOPMENT
-#ifdef TESTING
+#if TEST_FLIGHT_ENABLED
+#ifdef TEST_FLIGHT_UIDS
     [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
 #endif
     [TestFlight takeOff:@"48a90a98948864a11c80bd2ecd7a7e5c_ODU5MzMyMDEyLTA1LTA3IDE5OjE3OjUwLjMxMDUyMg"];
+#endif
+    // Call to Flurry SDK
+#if FLURRY_ENABLED
+    [Flurry startSession:@"WWV2WN4JMY35D4GYCPDJ"];
+    [Flurry setUserID:cfuuidString];
 #endif
     
     // Create an instance of a UINavigationController and put toFromViewController as the first view
@@ -159,7 +177,6 @@ static nc_AppDelegate *appDelegate;
         
         [self.tabBarController.tabBar setSelectedImageTintColor:[UIColor redColor]];
         [self.tabBarController.tabBar setBackgroundImage:[UIImage imageNamed:@"img_tabbar.png"]];
-//        [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:@"7"];
         
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         [[self window] setRootViewController:self.tabBarController];
@@ -229,10 +246,15 @@ static nc_AppDelegate *appDelegate;
      */
     saveContext([self managedObjectContext]);
     [locationManager stopUpdatingLocation];
+   
     // Close Keyboard
-    [UIView setAnimationsEnabled:NO];
+    [UIView setAnimationsEnabled:YES];
     [self.tabBarController.view endEditing:YES];
     
+    //Reload ToFromViewController
+    ToFromTableViewController *toFromTableVC = [[ToFromTableViewController alloc] init];
+    [toFromTableVC textSubmitted:nil forEvent:nil];
+   
     timerTweeterGetData = nil;
     [timerTweeterGetData invalidate];
 
@@ -410,10 +432,6 @@ static nc_AppDelegate *appDelegate;
                         } else {
                             [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
                         }
-                        
-                        // Upadte automatic badge with Live tweeterCount 
-                        [toFromViewController viewWillAppear:TRUE];
-                        
                     }
                 } else {                
                     NSDictionary  *regionParser = [rkParser objectFromString:[response bodyAsString] error:nil];                

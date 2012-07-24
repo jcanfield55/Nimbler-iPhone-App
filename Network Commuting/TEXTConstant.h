@@ -66,6 +66,7 @@
 #define ERROR_CODE                  @"errCode"
 
 #define DEVICE_ID                   @"deviceid"
+#define DEVICE_CFUUID               @"deviceCFUUID"
 
 // UITabbar Item
 #define TRIP_PLANNER_VIEW           @"Trip Planner"

@@ -167,24 +167,12 @@ float currentLocationResTime;
     [super viewDidLoad];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                     [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0], UITextAttributeTextColor,
+                                                                     [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
                                                                      nil]];
     isContinueGetRealTimeData = false;
     [continueGetTime invalidate];
     continueGetTime = nil;
-       
-     // Enforce height of main table
-    CGRect rect0 = [mainTable frame];
-    rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT;
-    [mainTable setFrame:rect0];        
-    @try {
-        [toTable reloadData];
-        [fromTable reloadData];
-        [mainTable reloadData];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"table view ------loading---------  %@", exception);
-    }
+    
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -206,10 +194,19 @@ float currentLocationResTime;
 {
     [super viewWillAppear:animated];
     @try {
+        // Enforce height of main table
+        CGRect rect0 = [mainTable frame];
+        rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT;
+        [mainTable setFrame:rect0];
+        
         [continueGetTime invalidate];
         continueGetTime = nil;
         [self updateTripDate];  // update tripDate if needed
         [self setFBParameterForGeneral];
+        
+        [toTable reloadData];
+        [fromTable reloadData];
+        [mainTable reloadData];
     }
     @catch (NSException *exception) {
         NSLog(@"exception at viewWillAppear: %@", exception);

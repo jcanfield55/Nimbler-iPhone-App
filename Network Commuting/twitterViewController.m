@@ -31,14 +31,12 @@ NSMutableArray *arrayTweet;
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        [[self navigationItem] setTitle:TWEETERVIEW_MANE];
-//        self.tabBarItem.image = [UIImage imageNamed:@"img_fb.png"];
-                
+        [[self navigationItem] setTitle:TWEETERVIEW_MANE];               
         dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateStyle:NSDateFormatterFullStyle];
         reload = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(getLatestTweets)]; 
         self.navigationItem.rightBarButtonItem = reload;
-        [self refreshTweetCount];
+
     }
     return self;
 }
@@ -70,7 +68,7 @@ NSMutableArray *arrayTweet;
     
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                     [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0], UITextAttributeTextColor,
+                                                                     [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
                                                                      nil]];
     // Do any additional setup after loading the view from its nib.
 }
@@ -85,22 +83,7 @@ NSMutableArray *arrayTweet;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    @try {
-        [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
-        [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
-        isTwitterLiveData = TRUE;
-        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
-        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                                DEVICE_ID, udid,
-                                nil];    
-        NSString *allAdvisories = [ALL_TWEETS_REQ appendQueryParams:params];
-        [[RKClient sharedClient]  get:allAdvisories delegate:self];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"Exception at advisories button click from ToFromview: %@", exception);
-    } 
+    [self getAdvisoryData];
     
     mainTable.delegate = self;
     mainTable.dataSource = self;
@@ -133,7 +116,6 @@ NSMutableArray *arrayTweet;
     if (cell == nil) 
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
-
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
@@ -147,10 +129,11 @@ NSMutableArray *arrayTweet;
     NSString *tweetTimeDiff = [self stringForTimeIntervalSinceCreated:currentDate serverTime:epochNSDate];
     
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]]; 
-    cell.textLabel.text = CALTRAIN_CELL_HEADER;cell.textLabel.textColor = [UIColor colorWithRed:252.0/256.0 green:103.0/256.0 blue:88.0/256.0 alpha:1.0];
+    cell.textLabel.text = CALTRAIN_CELL_HEADER;
+    cell.textLabel.textColor = [UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0];    
     cell.detailTextLabel.text = tweetDetail;
     cell.detailTextLabel.numberOfLines= MAXLINE_TAG;
-    cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];
+    cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
     
     UILabel *labelTime = (UILabel *)[cell viewWithTag:MAXLINE_TAG];
    
@@ -161,7 +144,7 @@ NSMutableArray *arrayTweet;
     [labelTime setTextAlignment:UITextAlignmentRight];
     [cell.contentView addSubview:labelTime];
     labelTime.text = tweetTimeDiff;
-    labelTime.textColor = [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];
+    cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
     
     UIImage *img = [UIImage imageNamed:CALTRAIN_IMG];    
     cell.imageView.layer.cornerRadius = CORNER_RADIUS_MEDIUM;
@@ -196,7 +179,7 @@ NSMutableArray *arrayTweet;
                               nil];
         NSString *req = [LATEST_TWEETS_REQ appendQueryParams:dict];
         [[RKClient sharedClient]  get:req delegate:self]; 
-        [self refreshTweetCount];
+    [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
 //    }
 }
 
@@ -248,13 +231,6 @@ NSMutableArray *arrayTweet;
     }
 }
 
--(void)refreshTweetCount
-{
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setObject:@"0" forKey:TWEET_COUNT];
-}
-
-
 // convert into twitter calaculate time
 -(NSString *)stringForTimeIntervalSinceCreated:(NSDate *)dateTime serverTime:(NSDate *)serverDateTime{
     NSInteger tweetMin;
@@ -299,6 +275,26 @@ NSMutableArray *arrayTweet;
             return [NSString stringWithFormat:@"%is", interval];
         }
     }
+}
+
+-(void)getAdvisoryData
+{
+    @try {
+        [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
+        [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        isTwitterLiveData = TRUE;
+        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
+        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
+                                DEVICE_ID, udid,
+                                nil];    
+        NSString *allAdvisories = [ALL_TWEETS_REQ appendQueryParams:params];
+        [[RKClient sharedClient]  get:allAdvisories delegate:self];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception at advisories button click from ToFromview: %@", exception);
+    } 
 }
 
 @end

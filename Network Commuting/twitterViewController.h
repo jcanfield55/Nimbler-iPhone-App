@@ -25,5 +25,5 @@
 
 -(NSString *)stringForTimeIntervalSinceCreated:(NSDate *)dateTime serverTime:(NSDate *)serverDateTime;
 -(void)popOut;
--(void)refreshTweetCount;
+-(void)getAdvisoryData;
 @end

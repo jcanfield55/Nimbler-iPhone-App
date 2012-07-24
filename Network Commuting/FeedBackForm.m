@@ -16,6 +16,7 @@
 
 #define RECORDING       @"Recording...."
 #define RECORDING_STOP  @"Recording Stopped...."
+#define RECORDING_CANCEL @"Recording Canceled...."
 #define RECORDING_PAUSE @"Recording Paused...."
 #define RECORDING_PLAY  @"Record Playing...."
 #define VOICE_FB_FILE   @"voiceFeedback.caf"
@@ -47,6 +48,7 @@
 
 @implementation FeedBackForm
 
+BOOL isCancelFB = FALSE;
 @synthesize tpResponse,tpURLResource,alertView,mesg,btnPlayRecording,btnStopRecording,btnPauseRecording,btnRecordRecording,fbReqParams;
 @synthesize txtEmailId,txtFeedBack;
 
@@ -82,8 +84,8 @@
     [super viewDidLoad];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                     [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 
-                                                                    blue:96.0/256.0 alpha:1.0], UITextAttributeTextColor,
+                                                                     [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 
+                                                                    blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
                                                                      nil]];
     
     
@@ -128,6 +130,7 @@
 -(IBAction)startRecord:(id)sender
 {    
     isFromPause = NO;
+    isCancelFB = FALSE;
     [btnPlayRecording setEnabled:FALSE];
     [btnPauseRecording setEnabled:FALSE];
         
@@ -176,8 +179,14 @@
     [btnPauseRecording setEnabled:FALSE];
     [btnStopRecording setEnabled:FALSE];
     [btnRecordRecording setEnabled:TRUE];
-    [btnPlayRecording setEnabled:TRUE];
-    labelCurrentActivityStatus.text = RECORDING_STOP;
+    if (isCancelFB) {
+        [btnPlayRecording setEnabled:FALSE];
+        labelCurrentActivityStatus.text = RECORDING_CANCEL;
+    } else {
+        [btnPlayRecording setEnabled:TRUE];
+        labelCurrentActivityStatus.text = RECORDING_STOP;
+    }
+    
     timer = [NSTimer scheduledTimerWithTimeInterval:TIME_INTERVAL target:self selector:@selector(setActRunStatus) userInfo:nil repeats: NO];  
     [alertView dismissWithClickedButtonIndex:0 animated:NO];
     if (audioRecorder.recording)
@@ -311,7 +320,7 @@
 #pragma mark Restful request
 -(IBAction)submitFeedBack:(id)sender
 {
-    if(!(soundFilePath != nil && txtFeedBack.text != nil)) {
+    if((soundFilePath == nil) && ([txtFeedBack.text isEqualToString:NULL_STRING])) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:FB_TITLE_MSG message:FB_WHEN_NO_VOICE_OR_TEXT delegate:self cancelButtonTitle:BUTTON_OK otherButtonTitles:nil, nil];
         [alert show];
     } else {
@@ -451,7 +460,6 @@
 {
     NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
     if ([btnName isEqualToString:BUTTON_CANCEL]) {
-        [self.btnPlayRecording setEnabled:FALSE];
         soundFilePath = nil;
         audioPlayer = nil;
         NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -461,6 +469,7 @@
         if([fileManager fileExistsAtPath:recordedAudioPath]){
             [fileManager removeItemAtPath:recordedAudioPath error:nil];
         }
+        isCancelFB = TRUE;
     } else if ([btnName isEqualToString:BUTTON_DONE]) {
         [self.btnPlayRecording setEnabled:TRUE];
     } else if ([btnName isEqualToString:BUTTON_YES]) {

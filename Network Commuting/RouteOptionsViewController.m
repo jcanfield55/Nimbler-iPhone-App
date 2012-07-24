@@ -94,6 +94,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                                           reuseIdentifier:@"UIRouteOptionsViewCell"];
             [cell.imageView setImage:nil];
         }
+         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         // Get the requested itinerary
         Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
         if (isReloadRealData) {
@@ -129,8 +130,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                                durationString([[itin duration] floatValue])];
         [[cell textLabel] setText:titleText];
         cell.textLabel.numberOfLines = 2;
-        cell.textLabel.textColor = [UIColor colorWithRed:252.0/256.0 green:103.0/256.0 blue:88.0/256.0 alpha:1.0];
-        cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];
+        cell.textLabel.textColor = [UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0];
+        cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
         // Set sub-title (show each leg's mode and route if available)
         NSMutableString *subTitle = [NSMutableString stringWithCapacity:30];
         NSArray *sortedLegs = [itin sortedLegs];
@@ -174,7 +175,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 // If selected, show the RouteDetailsViewController
 - (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    @try {        
+    @try {
+        UITableViewCell *cell = [atableView cellForRowAtIndexPath:indexPath];
+        cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_select.png"]];
         if (!routeDetailsVC) {
             routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
         }
@@ -233,7 +236,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     [self hideUnUsedTableViewCell];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                     [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0], UITextAttributeTextColor,
+                                                                     [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
                                                                      nil]];
     NSLog(@"RouteOptions loaded");
 }
