@@ -111,7 +111,7 @@ NSUserDefaults *prefs;
 {
 #if FLURRY_ENABLED
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: FLURRY_SELECTED_ROW_NUMBER, 
-                        [NSString stringWithFormat:@"%d", [iNumber0 , nil];
+                        [NSString stringWithFormat:@"%d", iNumber0], nil];
     [Flurry logEvent:FLURRY_ROUTE_DETAILS_NEWITINERARY_NUMBER withParameters:params];
 #endif
                                                                                                 

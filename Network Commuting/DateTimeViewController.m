@@ -90,7 +90,7 @@
         [toFromViewController setDepartOrArrive:departOrArrive];
     } else {
 #if FLURRY_ENABLED
-        [Furry logEvent:FLURRY_DATE_PICKER_CANCEL];
+        [Flurry logEvent:FLURRY_DATE_PICKER_CANCEL];
 #endif
     }
 }
