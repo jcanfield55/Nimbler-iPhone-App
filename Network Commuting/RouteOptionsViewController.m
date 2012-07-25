@@ -17,6 +17,10 @@
 #import "nc_AppDelegate.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 
+#if FLURRY_ENABLED
+#include "Flurry.h"
+#endif
+
 #define CELL_HEIGHT             60.0
 
 @interface RouteOptionsViewController()
@@ -58,7 +62,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+#if FLURRY_ENABLED
+    [Flurry logEvent:FLURRY_ROUTE_OPTIONS_APPEAR];
+#endif
     // Enforce height of main table
     CGRect rect0 = [mainTable frame];
     rect0.size.height = ROUTE_OPTIONS_TABLE_HEIGHT;
@@ -183,6 +189,10 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         }
         itinararyId =[[[plan sortedItineraries] objectAtIndex:[indexPath row]] itinId];
         itinerary = [plan.sortedItineraries objectAtIndex:[indexPath row]];
+#if FLURRY_ENABLED         
+        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:                                 FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d", [indexPath row]],                                    FLURRY_SELECTED_DEPARTURE_TIME,[NSString stringWithFormat:@"%@", [itinerary startTime]], nil];                                  [Flurry logEvent:FLURRY_ROUTE_SELECTED withParameters:params];  
+#endif
+        
         [routeDetailsVC setItinerary:itinerary];
         [[self navigationController] pushViewController:routeDetailsVC animated:YES];
     }

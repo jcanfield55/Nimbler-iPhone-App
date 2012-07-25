@@ -8,7 +8,10 @@
 
 #import "FeedBackViewController.h"
 #import <RestKit/RKJSONParserJSONKit.h>
-
+#import "Constants.h"
+#if FLURRY_ENABLED
+#include "Flurry.h"
+#endif
 
 
 @implementation FeedBackViewController
@@ -38,7 +41,16 @@ static Plan *fbPlan;
     // Release any cached data, images, etc that aren't in use.
 }
 
+
 #pragma mark - View lifecycle
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+#if FLURRY_ENABLED
+    [Flurry logEvent:FLURRY_FEEDBACK_APPEAR];
+#endif
+}
 
 - (void)viewDidLoad
 {
@@ -69,6 +81,9 @@ static Plan *fbPlan;
 {
      
     NSLog(@"start recording");
+#if FLURRY_ENABLED
+    [Flurry logEvent:FLURRY_FEEDBACK_RECORD];
+#endif
     [actSpinner startAnimating];
             
     NSArray *tempDirPath;
@@ -106,6 +121,10 @@ static Plan *fbPlan;
 
 -(void)stopRecordingFeedback
 {
+#if FLURRY_ENABLED
+    [Flurry logEvent:FLURRY_FEEDBACK_STOP];
+#endif
+
     [actSpinner stopAnimating];
     
     if (audioRecorder.recording)
@@ -120,6 +139,10 @@ static Plan *fbPlan;
 -(void)playRecordedFile
 {
     NSLog(@"play Recording");
+#if FLURRY_ENABLED
+    [Flurry logEvent:FLURRY_FEEDBACK_PLAY];
+#endif
+
     if (!audioRecorder.recording)
     {
         NSError *error;
@@ -141,6 +164,10 @@ static Plan *fbPlan;
 
 -(void)pausePlaying
 {
+#if FLURRY_ENABLED
+    [Flurry logEvent:FLURRY_FEEDBACK_PAUSE];
+#endif
+
     if (audioPlayer.playing) {
         [audioPlayer pause];
     }    
@@ -330,6 +357,10 @@ static Plan *fbPlan;
 
 -(void)feedBackSubmit
 {
+#if FLURRY_ENABLED
+    [Flurry logEvent:FLURRY_FEEDBACK_SUBMIT];
+#endif
+
    
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSString *source = [prefs objectForKey:@"source"];

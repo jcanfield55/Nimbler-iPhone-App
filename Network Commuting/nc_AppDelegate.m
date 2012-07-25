@@ -8,7 +8,7 @@
 
 #import "nc_AppDelegate.h"
 #import "UtilityFunctions.h"
-#import "TestFlightSDK1/TestFlight.h"
+//#import "TestFlightSDK1/TestFlight.h"
 #import "ToFromViewController.h"
 #import "TwitterSearch.h"
 #import "twitterViewController.h"
@@ -163,7 +163,6 @@ static nc_AppDelegate *appDelegate;
         // This is for TabBar controller
         
         self.tabBarController = [[UITabBarController alloc] init];
-//        self.tabBarController.delegate = self;
         twitterViewController *twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
         SettingInfoViewController *settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController" bundle:nil];
         FeedBackForm *fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];

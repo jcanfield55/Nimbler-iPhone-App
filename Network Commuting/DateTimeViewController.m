@@ -8,6 +8,10 @@
 
 #import "DateTimeViewController.h"
 
+#if FLURRY_ENABLED
+#include "Flurry.h"
+#endif
+
 @interface DateTimeViewController ()
 
 @end
@@ -35,6 +39,9 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+#if FLURRY_ENABLED
+    [Flurry logEvent:FLURRY_DATE_PICKER_APPEAR];
+#endif
     [datePicker setDate:date];
     isCancelButtonPressed = NO;
     if (departOrArrive == DEPART) {
@@ -67,13 +74,24 @@
 // if the person presses back on the NavBar, save the new settings to toFromViewController
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewWillDisappear:animated];
+    [super viewWillDisappear:animated];    
     
     if (!isCancelButtonPressed) {
+        
+#if FLURRY_ENABLED
+        NSDictionary *params = [NSDictionary 
+                                dictionaryWithObjectsAndKeys:
+                                FLURRY_NEW_DATE, [NSString stringWithFormat:@"%@", date], nil];
+        [Flurry logEvent:FLURRY_DATE_PICKER_NEW_DATE withParameters:params];
+#endif
         [toFromViewController setTripDate:date];
         [toFromViewController setTripDateLastChangedByUser:[[NSDate alloc] init]];
         [toFromViewController setIsTripDateCurrentTime:NO];
         [toFromViewController setDepartOrArrive:departOrArrive];
+    } else {
+#if FLURRY_ENABLED
+        [Furry logEvent:FLURRY_DATE_PICKER_CANCEL];
+#endif
     }
 }
 

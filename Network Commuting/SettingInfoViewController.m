@@ -9,6 +9,9 @@
 #import "SettingInfoViewController.h"
 #import "nc_AppDelegate.h"
 #import "UserPreferance.h"
+#if FLURRY_ENABLED
+#include "Flurry.h"
+#endif
 
 #define SETTING_TITLE       @"App Settings"
 #define SETTING_ENTITY      @"UserPreferance"
@@ -67,6 +70,9 @@ bool isPush;
 - (void)viewWillAppear:(BOOL)animated
 {
     [self fetchUserSettingData];
+#if FLURRY_ENABLED
+    [Flurry logEvent: FLURRY_SETTINGS_APPEAR];
+#endif
     btnUpdateSetting.layer.cornerRadius = CORNER_RADIUS_SMALL;
 }
 
