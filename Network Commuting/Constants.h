@@ -52,6 +52,17 @@
 #define TEST_FLIGHT_ENABLED 0  // If 0, then do not include testFlightApp at all 
 #define TEST_FLIGHT_UIDS 1  // If 1, then testFlightApp will collect device UIDs, if 0, it will not
 
+// NSUserDefaults keys
+#define USER_PREFERANCE                    @"UserPreference"
+#define PREFS_IS_PUSH_ENABLE               @"PrefsIsPushEnable"
+#define PREFS_PUSH_NOTIFICATION_THRESHOLD  @"PrefsPushNotificationThreshold"
+#define PREFS_MAX_WALK_DISTANCE            @"PrefsMaxWalkDistance"
+
+// UserPreferernce defaults
+#define PREFS_DEFAULT_IS_PUSH_ENABLE                YES
+#define PREFS_DEFAULT_PUSH_NOTIFICATION_THRESHOLD   3
+#define PREFS_DEFAULT_MAX_WALK_DISTANCE             0.75
+
 // Flurry analytics and logging
 #define FLURRY_ENABLED                  0
 

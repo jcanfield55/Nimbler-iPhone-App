@@ -15,6 +15,7 @@
 #import "SettingInfoViewController.h"
 #import "FeedBackForm.h"
 #import "DateTimeViewController.h"
+#import "UserPreferance.h"
 
 #if TEST_FLIGHT_ENABLED
 #import "TestFlightSDK1/TestFlight.h"
@@ -38,7 +39,6 @@ static nc_AppDelegate *appDelegate;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
 @synthesize window = _window;
 @synthesize timerTweeterGetData;
-@synthesize propertyInfo;
 @synthesize prefs;
 @synthesize tabBarController = _tabBarController;
 
@@ -106,29 +106,11 @@ static nc_AppDelegate *appDelegate;
         NSDecimalNumber* version = [NSDecimalNumber decimalNumberWithString:PRELOAD_VERSION_NUMBER];
         [locations preLoadIfNeededFromFile:PRELOAD_LOCATION_FILE latestVersionNumber:version];
         
-        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"UserPreferance"] == nil) {
-            propertyInfo = [NSEntityDescription
-                            insertNewObjectForEntityForName:@"UserPreferance" 
-                            inManagedObjectContext:self.managedObjectContext];
-            
-            NSNumber *walkDistance = [NSNumber numberWithFloat:0.8];
-            [toFromViewController setMaxiWalkDistance:walkDistance];
-            
-            [propertyInfo setValue:[NSNumber numberWithBool:YES] forKey:@"pushEnable"];
-            [propertyInfo setValue:[NSNumber numberWithInt:3]    forKey:@"triggerAtHour"];
-            [propertyInfo setValue:[NSNumber numberWithFloat:0.75] forKey:@"walkDistance"];
-            
-            NSError *error;
-            if (![self.managedObjectContext save:&error]) {
-                NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
-            }
-        }
     }@catch (NSException *exception) {
         NSLog(@"Exception: ----------------- %@", exception);
     } 
     
     // Set a CFUUID (unique identifier) for this device and this app, if doesn't exist already:
-    prefs = [NSUserDefaults standardUserDefaults];
     NSString* cfuuidString = [prefs objectForKey:DEVICE_CFUUID];
     if (!cfuuidString) {  // if the CFUUID not created, create it
         CFUUIDRef cfuuidRef = CFUUIDCreate(kCFAllocatorDefault);
@@ -574,24 +556,21 @@ static nc_AppDelegate *appDelegate;
 -(void)upadateDefaultUserValue
 {
     @try {
-        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"UserPreferance"] == nil) {
-            // set in TPServer
-            RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-            [RKClient setSharedClient:client];
-            NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
-            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                                    @"deviceid", udid,
-                                    @"alertCount", @"3",
-                                    DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],
-                                    @"maxDistance", @"0.75",
-                                    nil];    
-            NSString *twitCountReq = [@"users/preferences/update" appendQueryParams:params];
-            [[RKClient sharedClient]  get:twitCountReq delegate:self]; 
-            
-            [[NSUserDefaults standardUserDefaults] setValue:@"set" forKey:@"UserPreferance"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
+        UserPreferance* userPrefs = [UserPreferance userPreferance]; // get singleton
+        // set in TPServer
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
+        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
+                                @"deviceid", udid,
+                                @"alertCount", [userPrefs triggerAtHour],
+                                DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],
+                                @"maxDistance", [userPrefs walkDistance],
+                                nil];    
+        NSString *twitCountReq = [@"users/preferences/update" appendQueryParams:params];
+        [[RKClient sharedClient]  get:twitCountReq delegate:self]; 
+        
 
-        }
     }
     @catch (NSException *exception) {
         NSLog(@"Exception when update userSettings at appLuanch: %@",exception);

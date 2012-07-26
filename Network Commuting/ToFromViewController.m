@@ -22,6 +22,7 @@
 #import "SettingInfoViewController.h"
 #import "nc_AppDelegate.h"
 #import "UIConstants.h"
+#import "UserPreferance.h"
 
 #if FLURRY_ENABLED
 #include "Flurry.h"
@@ -53,7 +54,6 @@
     LocationPickerViewController *locationPickerVC;
     TwitterSearch* twitterSearchVC;
     
-    NSUserDefaults *prefs;
 }
 
 // Internal methods
@@ -94,7 +94,6 @@
 @synthesize supportedRegion;
 @synthesize isContinueGetRealTimeData;
 @synthesize continueGetTime;
-@synthesize maxiWalkDistance;
 
 // Constants for animating up and down the To: field
 #define TO_SECTION 0
@@ -228,7 +227,6 @@ float currentLocationResTime;
     // Flash scrollbars on tables
     [toTable flashScrollIndicators];
     [fromTable flashScrollIndicators];   
-    [self getWalkDistance];
 }
 
 - (void)didReceiveMemoryWarning
@@ -987,6 +985,7 @@ float currentLocationResTime;
             [tFormat setTimeStyle:NSDateFormatterShortStyle];
             [tFormat setDateStyle:NSDateFormatterNoStyle];
             
+            NSNumber* maxiWalkDistance = [self getWalkDistance];
             NSLog(@"maximum walk distance ------------------------------------ %f",[maxiWalkDistance floatValue]);
             // convert miles into meters. 1 mile = 1609.344 meters
             int maxDistance = (int)([maxiWalkDistance floatValue]*1609.544);
@@ -1260,29 +1259,12 @@ float currentLocationResTime;
     }
 }
 
-#pragma mark get walk distance from core data
--(void)getWalkDistance
+#pragma mark get walk distance from User Defaults
+-(NSNumber *)getWalkDistance
 {
-    @try {
-        NSManagedObjectContext *moc = [[nc_AppDelegate sharedInstance] managedObjectContext];
-        NSEntityDescription *entityDescription = [NSEntityDescription
-                                                  entityForName:@"UserPreferance" inManagedObjectContext:moc];
-        NSFetchRequest *request = [[NSFetchRequest alloc] init] ;
-        [request setEntity:entityDescription];
-        
-        NSError *error = nil;
-        NSArray *arrayUserSetting  = [moc executeFetchRequest:request error:&error];
-        if (arrayUserSetting == nil)
-        {
-            // Deal with error...
-        } else {
-            // set stored value for userSettings       
-            maxiWalkDistance = [[arrayUserSetting valueForKey:@"walkDistance"] objectAtIndex:0] ;
-        }
-    }
-    @catch (NSException *exception) {
-        NSLog(@"exception at get data from core data: %@", exception);
-    }
+    UserPreferance* userPrefs = [UserPreferance userPreferance];
+    return [userPrefs walkDistance];
+    
 }
 
 -(void)setFBParameterForGeneral

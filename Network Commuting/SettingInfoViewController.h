@@ -20,7 +20,6 @@
 }
 
 @property (nonatomic, strong) IBOutlet UISlider *sliderMaxWalkDistance;
-@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) IBOutlet UISlider *sliderPushNotification;
 
 

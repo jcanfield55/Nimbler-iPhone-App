@@ -14,7 +14,6 @@
 #endif
 
 #define SETTING_TITLE       @"App Settings"
-#define SETTING_ENTITY      @"UserPreferance"
 #define SETTING_ALERT_MSG   @"Updating your settings \n Please wait..."
 #define WALK_DISTANCE       @"walkDistance"
 #define TRIGGER_AT_HOUR     @"triggerAtHour"
@@ -23,7 +22,7 @@
 
 @implementation SettingInfoViewController
 
-@synthesize sliderMaxWalkDistance,managedObjectContext;
+@synthesize sliderMaxWalkDistance;
 @synthesize sliderPushNotification;
 
 int pushHour;
@@ -56,7 +55,6 @@ bool isPush;
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
                                                                      [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0], UITextAttributeTextColor,
                                                                      nil]];
-    self.managedObjectContext = [[nc_AppDelegate sharedInstance] managedObjectContext]; 
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -88,22 +86,17 @@ bool isPush;
         }   
         alertView = [self upadetSettings];    
         [alertView show];
-        // Update in local DB
-        NSFetchRequest *requestFetchUserSettingEntity = [[NSFetchRequest alloc] init]; 
-        NSEntityDescription *userSettingEntity = [NSEntityDescription entityForName:SETTING_ENTITY     
-                                                   inManagedObjectContext:self.managedObjectContext];
-        [requestFetchUserSettingEntity setEntity:userSettingEntity];    
-        NSArray *settingEntityDataArray =[self.managedObjectContext executeFetchRequest:requestFetchUserSettingEntity error:nil];
-        NSLog(@"traiger at push..... %@", [NSNumber numberWithFloat:sliderPushNotification.value]);
+        
+        // Update in user defaults
         float ss = sliderPushNotification.value;
-        if ([settingEntityDataArray count] > 0){ 
-            UserPreferance *user = [settingEntityDataArray objectAtIndex:0]; 
-            user.pushEnable = [NSNumber numberWithBool:isPush];
-            user.triggerAtHour = [NSNumber numberWithFloat:ss];
-            user.walkDistance = [NSNumber numberWithFloat:sliderMaxWalkDistance.value];
-            [self.managedObjectContext save:nil]; 
-        } 
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+
+        UserPreferance *userPrefs = [UserPreferance userPreferance]; // get singleton
+        userPrefs.pushEnable = [NSNumber numberWithBool:isPush];
+        userPrefs.triggerAtHour = [NSNumber numberWithFloat:ss];
+        userPrefs.walkDistance = [NSNumber numberWithFloat:sliderMaxWalkDistance.value];
+        [userPrefs saveUpdates];
+
+        NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
         NSString *token = [prefs objectForKey:DEVICE_TOKEN];
         
         // Update in TPServer DB
@@ -181,27 +174,17 @@ bool isPush;
 -(void)fetchUserSettingData
 {
     @try {
-        NSManagedObjectContext *moc = [self managedObjectContext];
-        NSEntityDescription *entityDescription = [NSEntityDescription
-                                                  entityForName:SETTING_ENTITY inManagedObjectContext:moc];
-        NSFetchRequest *request = [[NSFetchRequest alloc] init] ;
-        [request setEntity:entityDescription];
+
+        // set stored value for userSettings 
         
-        NSError *error = nil;
-        NSArray *arrayUserSetting  = [moc executeFetchRequest:request error:&error];
-        if (arrayUserSetting == nil)
-        {
-            // Deal with error...
+        UserPreferance* userPrefs = [UserPreferance userPreferance]; // get singleton
+        [sliderMaxWalkDistance setValue:[[userPrefs walkDistance] doubleValue]];
+        [sliderPushNotification setValue:[[userPrefs triggerAtHour] doubleValue]];
+        pushHour = [[userPrefs triggerAtHour] intValue];
+        if ([[userPrefs pushEnable] intValue] == 0) {
+            [switchPushEnable setOn:NO];
         } else {
-            // set stored value for userSettings       
-            [sliderMaxWalkDistance setValue:[[[arrayUserSetting valueForKey:WALK_DISTANCE] objectAtIndex:0] doubleValue]];
-            [sliderPushNotification setValue:[[[arrayUserSetting valueForKey:TRIGGER_AT_HOUR] objectAtIndex:0] doubleValue]];
-            pushHour = [[[arrayUserSetting valueForKey:TRIGGER_AT_HOUR] objectAtIndex:0] intValue];
-            if ([[[arrayUserSetting valueForKey:PUSH_ENABLE] objectAtIndex:0] intValue] == 0) {
-                [switchPushEnable setOn:NO];
-            } else {
-                [switchPushEnable setOn:YES];
-            }
+            [switchPushEnable setOn:YES];
         }
     }
     @catch (NSException *exception) {
