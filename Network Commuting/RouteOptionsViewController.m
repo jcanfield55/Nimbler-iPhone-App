@@ -40,7 +40,7 @@
 @synthesize advisoryButton;
 @synthesize plan;
 @synthesize isReloadRealData;
-@synthesize liveData;
+@synthesize liveData,btnGoToNimbler;
 
 Itinerary * itinerary;
 NSString *itinararyId;
@@ -57,7 +57,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     }
     return self;
 }
-
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -81,6 +80,10 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     // Release any cached data, images, etc that aren't in use.
 }
 
+-(void)popOutToNimbler
+{
+    [self.navigationController popViewControllerAnimated:TRUE];
+}
 #pragma mark - UITableViewDelegate methods
 // Table view management methods
 
@@ -189,6 +192,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         }
         itinararyId =[[[plan sortedItineraries] objectAtIndex:[indexPath row]] itinId];
         itinerary = [plan.sortedItineraries objectAtIndex:[indexPath row]];
+
 #if FLURRY_ENABLED         
         NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:                                 FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d", [indexPath row]],                                    FLURRY_SELECTED_DEPARTURE_TIME,[NSString stringWithFormat:@"%@", [itinerary startTime]], nil];                                  [Flurry logEvent:FLURRY_ROUTE_SELECTED withParameters:params];  
 #endif
@@ -243,6 +247,13 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    btnGoToNimbler = [[UIButton alloc] initWithFrame:CGRectMake(0,0,82,34)];
+    [btnGoToNimbler addTarget:self action:@selector(popOutToNimbler) forControlEvents:UIControlEventTouchUpInside];
+    [btnGoToNimbler setBackgroundImage:[UIImage imageNamed:@"img_nimblerNavigationSelect.png"] forState:UIControlStateNormal];
+    
+    UIBarButtonItem *backTonimbler = [[UIBarButtonItem alloc] initWithCustomView:btnGoToNimbler];
+    self.navigationItem.leftBarButtonItem = backTonimbler;
+    
     [self hideUnUsedTableViewCell];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:

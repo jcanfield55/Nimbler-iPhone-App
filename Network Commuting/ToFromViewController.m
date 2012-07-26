@@ -111,7 +111,7 @@ float currentLocationResTime;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     @try {
         if (self) {
-            UIImage *imgTitle = [UIImage imageNamed:@"img_appTitle.png"];
+            UIImage *imgTitle = [UIImage imageNamed:@"nimblr.png"];
             self.navigationItem.titleView = [[UIImageView alloc]  initWithImage:imgTitle];
             
             UIBarButtonItem *btnRoute = [[UIBarButtonItem alloc] initWithTitle:@"Route" style:UIBarButtonItemStylePlain target:self action:@selector(redirectAtNimblerSetting)];
@@ -846,7 +846,7 @@ float currentLocationResTime;
     {   
         NSInteger statusCode = [[objectLoader response] statusCode];
         NSLog(@"Planning HTTP status code = %d", statusCode);
-//        NSLog(@"whole plan: %@", [[objectLoader response] bodyAsString]);
+        NSLog(@"whole plan: %@", [[objectLoader response] bodyAsString]);
         @try {
             if (objects && [objects objectAtIndex:0]) {
                 if (savetrip) {

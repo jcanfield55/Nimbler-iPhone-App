@@ -16,6 +16,11 @@
 #import <CoreImage/CoreImageDefines.h>
 #import "nc_AppDelegate.h"
 
+#define LINE_WIDTH  5
+#define ALPHA_LIGHT 0.7
+#define ALPHA_MEDIUM 0.8
+#define ALPHA_LIGHTER 0.4
+
 @interface LegMapViewController() {
     // Internal variables
     MKPointAnnotation* startPoint;  // annotation for startPoint of the itinerary
@@ -63,7 +68,7 @@ NSString *legID;
         // Set up the startpoint, endpoint, overlays and annotations for the new itinerary
         
         NSArray *sortedLegs = [itinerary sortedLegs];
-        
+                
         // Take startpoint as the beginning of the first leg's polyline, and endpoint form the last leg's polyline
         startPoint = [[MKPointAnnotation alloc] init];
         [startPoint setCoordinate:[[[sortedLegs objectAtIndex:0] polylineEncodedString] startCoord]];
@@ -168,32 +173,26 @@ NSString *legID;
         if ([overlay isKindOfClass:[MKPolyline class]]) {
             MKPolylineView *aView = [[MKPolylineView alloc] initWithPolyline:(MKPolyline*)overlay];
             // aView.fillColor = [[UIColor cyanColor] colorWithAlphaComponent:0.2];
-            aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:0.4];
-            aView.lineWidth = 5;
-            
+            aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:ALPHA_LIGHTER];
+            aView.lineWidth = LINE_WIDTH;
+                        
             // Determine if this overlay is the one in focus.  If so, make it darker
-            Leg *leg; 
+            Leg *leg =leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:itineraryNumber];
             for (int i=0; i<[polyLineArray count]; i++) {
                 if (([polyLineArray objectAtIndex:i] == overlay)) {
                     if (i == itineraryNumber) {
-                        leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:(itineraryNumber)];
-                        
                         if([leg isWalk]){
-                            aView.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:0.7] ;
-                            aView.lineWidth = 5;
-                            [self setFBParameterForLeg:[leg legId]];
+                            aView.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:ALPHA_LIGHT] ;
+                            aView.lineWidth = LINE_WIDTH;
                         } else if([leg isBus]){
-                            aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:0.7];
-                            aView.lineWidth = 5;
-                            [self setFBParameterForLeg:[leg legId]];
+                            aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:ALPHA_LIGHT];
+                            aView.lineWidth = LINE_WIDTH;
                         } else if([leg isTrain]){                        
-                            aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:0.8] ;
-                            aView.lineWidth = 5;
-                            [self setFBParameterForLeg:[leg legId]];
+                            aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:ALPHA_MEDIUM] ;
+                            aView.lineWidth = LINE_WIDTH;
                         } else {
-                            aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:0.8] ;
-                            aView.lineWidth = 5;
-                            [self setFBParameterForLeg:[leg legId]];
+                            aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:ALPHA_MEDIUM] ;
+                            aView.lineWidth = LINE_WIDTH;
                         }
                         
                     }
@@ -212,19 +211,7 @@ NSString *legID;
  To show Direction at  
  */
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    
-}
 
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
 
 #pragma mark - View lifecycle
 
@@ -236,6 +223,18 @@ NSString *legID;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    // Release any cached data, images, etc that aren't in use.
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -322,13 +321,4 @@ NSString *legID;
     return nil;
 }
 
--(void)setFBParameterForLeg:(NSString *)legId
-{
-    NSLog(@"leg.......");
-    [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_LEG];
-    [nc_AppDelegate sharedInstance].FBDate = nil;
-    [nc_AppDelegate sharedInstance].FBToAdd = nil;
-    [nc_AppDelegate sharedInstance].FBSFromAdd = nil;
-    [nc_AppDelegate sharedInstance].FBUniqueId = legId;
-}
 @end

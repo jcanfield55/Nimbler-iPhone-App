@@ -119,7 +119,7 @@
 #define TOFROM_FREQUENCY_VISIBILITY_CUTOFF 0.99
 
 // LegMapView
-#define LEGMAP_DOT_IMAGE_FILE          @"mapDot"
+#define LEGMAP_DOT_IMAGE_FILE          @"img_mapDot"
 
 // Request timer Count
 #define TWEET_COUNT_POLLING_INTERVAL   60.0

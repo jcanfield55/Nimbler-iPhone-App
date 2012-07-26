@@ -18,7 +18,7 @@
 @property(nonatomic, strong) IBOutlet UIButton* feedbackButton; 
 @property(nonatomic, strong) IBOutlet UIButton* advisoryButton;  // Button to pull up Twitter feeds
 @property(nonatomic, strong) Plan *plan;
-
+@property(nonatomic, strong) UIButton *btnGoToNimbler;
 @property(strong, nonatomic) id liveData;
 @property( readwrite) BOOL isReloadRealData;
 
@@ -29,4 +29,5 @@
 - (void) setRealtimeData:(NSString *)legId arrivalTime:(NSString *)arrivalTime arrivalFlag:(NSString *)arrivalFlag itineraryId:(NSString *)ititId itineraryArrivalFlag:(NSString *)itinArrivalflag legDiffMins:(NSString *)timeDiff;
 -(void)hideUnUsedTableViewCell;
 -(void)setFBParameterForPlan;
+-(void)popOutToNimbler;
 @end

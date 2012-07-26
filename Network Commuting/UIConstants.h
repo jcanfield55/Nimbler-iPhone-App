@@ -45,7 +45,7 @@
 #define VARIABLE_TABLE_CELL_HEIGHT_BUFFER   7
 
 // Font Size
-#define STANDARD_FONT_SIZE                  12.0
+#define STANDARD_FONT_SIZE                  13.0
 #define MEDIUM_FONT_SIZE                    14.0
 #define LARGER_THEN_MEDIUM_FONT_SIZE        16.0
 #define LARGE_FONT_SIZE                     18.0
