@@ -58,7 +58,7 @@
 					<object class="IBUIButton" id="315905072">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{124, 380}, {70, 32}}</string>
+						<string key="NSFrame">{{125, 330}, {70, 32}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="948102122"/>
@@ -93,8 +93,8 @@
 					<object class="IBUITableView" id="705052268">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">274</int>
-						<string key="NSFrameSize">{320, 339}</string>
-						<string key="NSBounds">{{0, 4}, {320, 339}}</string>
+						<string key="NSFrame">{{0, 3}, {320, 319}}</string>
+						<string key="NSBounds">{{0, 4}, {320, 319}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="645450926"/>
@@ -105,7 +105,6 @@
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<bool key="IBUIAlwaysBounceVertical">YES</bool>
-						<bool key="IBUIScrollEnabled">NO</bool>
 						<bool key="IBUIShowsHorizontalScrollIndicator">NO</bool>
 						<bool key="IBUIShowsVerticalScrollIndicator">NO</bool>
 						<int key="IBUIStyle">1</int>
@@ -122,7 +121,6 @@
 						<string key="NSFrame">{{255, 388}, {65, 23}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
@@ -285,10 +283,10 @@
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="705052268"/>
-							<reference ref="315905072"/>
 							<reference ref="645450926"/>
 							<reference ref="948102122"/>
 							<reference ref="627435374"/>
+							<reference ref="315905072"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -322,13 +320,13 @@
 						<reference key="parent" ref="191373211"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">38</int>
-						<reference key="object" ref="315905072"/>
+						<int key="objectID">68</int>
+						<reference key="object" ref="627435374"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">68</int>
-						<reference key="object" ref="627435374"/>
+						<int key="objectID">38</int>
+						<reference key="object" ref="315905072"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 				</object>
@@ -376,7 +374,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">68</int>
+			<int key="maxID">69</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

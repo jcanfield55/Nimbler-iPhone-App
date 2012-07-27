@@ -11,7 +11,8 @@
 #define Nimbler_Caltrain_UIConstants_h
 
 // ToFromViewController constants
-#define TOFROM_MAIN_TABLE_HEIGHT            358
+//#define TOFROM_MAIN_TABLE_HEIGHT            358
+#define TOFROM_MAIN_TABLE_HEIGHT            319
 #define TOFROM_TIME_DATE_HEIGHT             37
 #define TOFROM_ROW_HEIGHT                   37
 #define FROM_HEIGHT_CL_MODE                 37
@@ -34,11 +35,11 @@
 
 // RouteDetailsViewController & LegMapViewController
 #define ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH  298 // Obtained thru trial & error for DE95 fix
-#define ROUTE_LEGMAP_X_ORIGIN               0
-#define ROUTE_LEGMAP_Y_ORIGIN               0
-#define ROUTE_LEGMAP_WIDTH                  320
-#define ROUTE_LEGMAP_MIN_HEIGHT             190
-#define ROUTE_DETAILS_TABLE_MAX_HEIGHT      180
+#define ROUTE_LEGMAP_X_ORIGIN               5
+#define ROUTE_LEGMAP_Y_ORIGIN               5
+#define ROUTE_LEGMAP_WIDTH                  309
+#define ROUTE_LEGMAP_MIN_HEIGHT             250
+#define ROUTE_DETAILS_TABLE_MAX_HEIGHT      110
 
 // Table cell height
 #define STANDARD_TABLE_CELL_MINIMUM_HEIGHT  44

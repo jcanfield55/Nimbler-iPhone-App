@@ -14,7 +14,7 @@
 #include "Flurry.h"
 #endif
 
-#define TWEETERVIEW_MANE        @"Nimbler Caltrain"
+#define TWEETERVIEW_MANE        @"Advisories"
 #define TABLE_CELL              @"Cell"
 #define CALTRAIN_CELL_HEADER    @"Caltrain @Caltrain"
 #define TWEET                   @"tweet"
@@ -37,7 +37,12 @@ NSMutableArray *arrayTweet;
         [[self navigationItem] setTitle:TWEETERVIEW_MANE];               
         dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateStyle:NSDateFormatterFullStyle];
-        reload = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(getLatestTweets)]; 
+        
+      UIButton *btnReload = [[UIButton alloc] initWithFrame:CGRectMake(0,0,48,34)];
+        [btnReload addTarget:self action:@selector(getLatestTweets) forControlEvents:UIControlEventTouchUpInside];
+        [btnReload setBackgroundImage:[UIImage imageNamed:@"img_reload.png"] forState:UIControlStateNormal];
+        
+        reload = [[UIBarButtonItem alloc] initWithCustomView:btnReload]; 
         self.navigationItem.rightBarButtonItem = reload;
 
     }
@@ -71,7 +76,7 @@ NSMutableArray *arrayTweet;
     
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                     [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
+                                                                     [UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
                                                                      nil]];
     // Do any additional setup after loading the view from its nib.
 }

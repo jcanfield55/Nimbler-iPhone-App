@@ -103,6 +103,7 @@
 
 NSString *currentLoc;
 float currentLocationResTime;
+BOOL isCurrent = TRUE;
 
 #pragma mark view Lifecycle
 
@@ -114,8 +115,8 @@ float currentLocationResTime;
             UIImage *imgTitle = [UIImage imageNamed:@"nimblr.png"];
             self.navigationItem.titleView = [[UIImageView alloc]  initWithImage:imgTitle];
             
-            UIBarButtonItem *btnRoute = [[UIBarButtonItem alloc] initWithTitle:@"Route" style:UIBarButtonItemStylePlain target:self action:@selector(redirectAtNimblerSetting)];
-            self.navigationItem.rightBarButtonItem = btnRoute;
+//            UIBarButtonItem *btnRoute = [[UIBarButtonItem alloc] initWithTitle:@"Route" style:UIBarButtonItemStylePlain target:self action:@selector(redirectAtNimblerSetting)];
+//            self.navigationItem.rightBarButtonItem = btnRoute;
            
             planRequestHistory = [NSMutableArray array]; // Initialize this array
             departOrArrive = DEPART;
@@ -401,6 +402,28 @@ float currentLocationResTime;
     }
     // else
     return @"Where are you going?";
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if(section == 1) {
+        if (isCurrent) {
+            return 1.0;
+        } else {
+            return 24.0;
+        }
+    } else if (section == 2){
+        return 1.0;
+    } else {
+        return 24.0;
+    }
+
+    return 25.0;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 3.0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1276,8 +1299,10 @@ float currentLocationResTime;
         [dFormat setTimeStyle:NSDateFormatterMediumStyle];
         if ([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
             fromLocs = [self getCurrentLocationOfFormattedAddress:fromLocation];
+            isCurrent = TRUE;
         } else {
             fromLocs = [fromLocation formattedAddress];
+            isCurrent = FALSE;
         }
         NSLog(@"from: %@   ToLoacation: %@", fromLocs, [toLocation formattedAddress]);
         

@@ -228,6 +228,8 @@
 {
     if ([[self mode] isEqualToString:@"RAIL"]) {   
         return true;   
+    } else if([[self mode] isEqualToString:@"TRAM"]) {
+         return true; 
     }
     return false;
 }

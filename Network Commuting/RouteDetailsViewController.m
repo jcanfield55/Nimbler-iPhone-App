@@ -71,6 +71,8 @@ NSUserDefaults *prefs;
             
             // Set up the MKMapView and LegMapViewController
             mapView = [[MKMapView alloc] init];
+            mapView.layer.borderWidth = 3.0;
+            mapView.layer.borderColor = [UIColor whiteColor].CGColor;
             CGRect mapFrame = CGRectMake(ROUTE_LEGMAP_X_ORIGIN, ROUTE_LEGMAP_Y_ORIGIN,
                                          ROUTE_LEGMAP_WIDTH,  ROUTE_LEGMAP_MIN_HEIGHT);      
             
@@ -79,23 +81,27 @@ NSUserDefaults *prefs;
             legMapVC = [[LegMapViewController alloc] initWithMapView:mapView];
             [mapView setDelegate:legMapVC];
             
+             UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0,0,130,34)];
             // Set up the forward and back button
-            btnBackItem = [[UIButton alloc] initWithFrame:CGRectMake(0,0,52,34)];
+            btnBackItem = [[UIButton alloc] initWithFrame:CGRectMake(20,0,52,34)];
             [btnBackItem addTarget:self action:@selector(navigateBack:) forControlEvents:UIControlEventTouchUpInside];
             [btnBackItem setBackgroundImage:[UIImage imageNamed:@"img_backSelect.png"] forState:UIControlStateNormal];
                         
-            backButton = [[UIBarButtonItem alloc] initWithCustomView:btnBackItem];
+           
             
-            btnForwardItem = [[UIButton alloc] initWithFrame:CGRectMake(0,0,52,34)];
+            btnForwardItem = [[UIButton alloc] initWithFrame:CGRectMake(72,0,52,34)];
             [btnForwardItem addTarget:self action:@selector(navigateForward:) forControlEvents:UIControlEventTouchUpInside];
             [btnForwardItem setBackgroundImage:[UIImage imageNamed:@"img_forwardSelect.png"] forState:UIControlStateNormal];
             
-            forwardButton = [[UIBarButtonItem alloc] initWithCustomView:btnForwardItem]; 
+           
+//            forwardButton = [[UIBarButtonItem alloc] initWithCustomView:btnForwardItem]; 
             
-
+            [view addSubview:btnBackItem];
+            [view addSubview:btnForwardItem];
+             backButton = [[UIBarButtonItem alloc] initWithCustomView:view];
 //            forwardButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward target:self action:@selector(navigateForward:)]; 
-            bbiArray = [NSArray arrayWithObjects:forwardButton, backButton, nil];
-            self.navigationItem.rightBarButtonItems = bbiArray;
+//            bbiArray = [NSArray arrayWithObject:backButton];
+            self.navigationItem.rightBarButtonItem = backButton;
             
             timeFormatter = [[NSDateFormatter alloc] init];
             [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
@@ -112,7 +118,7 @@ NSUserDefaults *prefs;
     itinerary = i0;
     [legMapVC setItinerary:i0];
     [self setItineraryNumber:0];  // Initially start on the first row of itinerary
-    [backButton setEnabled:FALSE];
+    [btnBackItem setEnabled:FALSE];
         
     //set FbParameterForItinerary
     [self setFBParameterForItinerary];
@@ -179,20 +185,19 @@ NSUserDefaults *prefs;
     
     // Activates or de-activates the backward and forward as needed
     if(itineraryNumber == 0){
-        [backButton setEnabled:FALSE];
+        [btnBackItem setEnabled:FALSE];
         [btnBackItem setBackgroundImage:[UIImage imageNamed:@"img_backUnSelect.png"] forState:UIControlStateNormal];
     } else {
-        [backButton setEnabled:TRUE];
+        [btnBackItem setEnabled:TRUE];
         [btnBackItem setBackgroundImage:[UIImage imageNamed:@"img_backSelect.png"] forState:UIControlStateNormal];
     }
     if(itineraryNumber == [itinerary itineraryRowCount] - 1){       
-        [forwardButton setEnabled:FALSE];
+        [btnForwardItem setEnabled:FALSE];
         [btnForwardItem setBackgroundImage:[UIImage imageNamed:@"img_forwardUnSelect.png"] forState:UIControlStateNormal];
     } else {
-        [forwardButton setEnabled:TRUE];
+        [btnForwardItem setEnabled:TRUE];
         [btnForwardItem setBackgroundImage:[UIImage imageNamed:@"img_forwardSelect.png"] forState:UIControlStateNormal];
     }
-    
     // Updates legMapVC itinerary number (changing the region for the map
     [legMapVC setItineraryNumber:itineraryNumber];
     
@@ -208,13 +213,13 @@ NSUserDefaults *prefs;
         // Enforce height of main table
         CGRect tableFrame = [mainTable frame];
         CGRect mapFrame = [mapView frame];
-        
+        mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
         // If we have a small itinerary, reduce the table size so it just fits it, and increase the map size
         CGFloat newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT, mainTableTotalHeight);
         if (tableFrame.size.height != newMainTableHeight) { // if something is changing...
             CGFloat combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT + ROUTE_LEGMAP_MIN_HEIGHT+1;
             tableFrame.size.height = newMainTableHeight;
-            tableFrame.origin.y = combinedHeight - newMainTableHeight;
+            tableFrame.origin.y = combinedHeight - newMainTableHeight + 10;
             mapFrame.size.height = combinedHeight - newMainTableHeight - 1;
             
             [mainTable setFrame:tableFrame];
@@ -290,7 +295,7 @@ NSUserDefaults *prefs;
         [[cell textLabel] setText:[[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]]];
         
         [[cell detailTextLabel] setText:[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]]];
-            
+        cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.07];
     }
     @catch (NSException *exception) {
         NSLog(@"exception while reload RouteDetailView: %@", exception);
@@ -302,7 +307,7 @@ NSUserDefaults *prefs;
 {    
     @try {
         // NSString *patchString;
-        /*
+        
         NSString* titleText = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
         NSString* subtitleText = [[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]];
         CGSize titleSize = [titleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE] 
@@ -314,8 +319,8 @@ NSUserDefaults *prefs;
         if (height < STANDARD_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
             height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
         }
-         */
-        return 55.0;
+        
+        return height;
     }
     @catch (NSException *exception) {
         NSLog(@"exception at set dynamic height for RouteDetailViewTable Cell: %@", exception);

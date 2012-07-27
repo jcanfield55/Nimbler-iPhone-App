@@ -64,7 +64,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 #if FLURRY_ENABLED
     [Flurry logEvent:FLURRY_ROUTE_OPTIONS_APPEAR];
 #endif
+    
     // Enforce height of main table
+    mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
     CGRect rect0 = [mainTable frame];
     rect0.size.height = ROUTE_OPTIONS_TABLE_HEIGHT;
     [mainTable setFrame:rect0];
@@ -132,7 +134,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
          */
         
         // Set title
-        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:LARGER_THEN_MEDIUM_FONT_SIZE]];
+        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
         NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)", 
                                [timeFormatter stringFromDate:[itin startTime]],
                                [timeFormatter stringFromDate:[itin endTime]],
@@ -158,14 +160,12 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
             }
         }
         [[cell detailTextLabel] setText:subTitle];
-        UIImage *unselect = [UIImage imageNamed:@"img_unSelect.png"];
-        cell.AccessoryView = [[UIImageView alloc] initWithImage:unselect];
-
+        
+        cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.07];
     }
     @catch (NSException *exception) {
         NSLog(@"exception at load table: %@", exception);
     }
-    
     return cell;
 }
 
@@ -185,8 +185,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 - (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     @try {
-        UITableViewCell *cell = [atableView cellForRowAtIndexPath:indexPath];
-        cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_select.png"]];
+//        UITableViewCell *cell = [atableView cellForRowAtIndexPath:indexPath];
+//        cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_select.png"]];
         if (!routeDetailsVC) {
             routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
         }
@@ -238,7 +238,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 }
 
 
-
 #pragma mark - View lifecycle
 
 /*
@@ -257,14 +256,13 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     [self hideUnUsedTableViewCell];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                     [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
+                                                                     [UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
                                                                      nil]];
     NSLog(@"RouteOptions loaded");
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    
     [super viewDidAppear:animated];
     NSLog(@"RouteOptions did appear");
 }
