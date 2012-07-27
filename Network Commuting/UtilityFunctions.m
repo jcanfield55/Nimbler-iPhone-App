@@ -7,9 +7,6 @@
 //
 
 #import "UtilityFunctions.h"
-#if FLURRY_ENABLED
-#import "Flurry.h"
-#endif
 
 
 static NSDateFormatter *utilitiesTimeFormatter;  // Static variable for short time formatter for use by utility
@@ -146,12 +143,6 @@ NSString *distanceStringInMilesFeet(double meters) {
     return returnString;
 }
 
-// Uncaught exception handler for Flurry logging
-void uncaughtExceptionHandler(NSException *exception) {
-    NSLog(@"Uncaught exception handler, exception: %@", exception);
-#if FLURRY_ENABLED
-    [Flurry logError:@"Uncaught" message:@"Uncaught exception" exception:exception];
-#endif
-}
+
 
 

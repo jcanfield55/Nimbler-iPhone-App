@@ -17,7 +17,7 @@
 
 #define TRIP_PROCESS_URL        @"http://23.23.210.156:8080/TPServer/ws/"
 //#define TRIP_PROCESS_URL        @"http://ec2-23-22-169-158.compute-1.amazonaws.com:8080/TPServer/ws/"
-//#define TRIP_PROCESS_URL        @"http://192.168.2.135:8080/TPServer/ws/"
+//#define TRIP_PROCESS_URL        @"http://192.168.2.148:8080/TPServer/ws/"
 
 #define TWITTER_SERARCH_URL     @"https://twitter.com/#!/search/realtime/TRAIN%20from%3Acaltrain%20OR%20from%3Acaltrain_news"
 #define CALTRAIN_TWITTER_URL    @"https://twitter.com/#!/search/from%3Acaltrain%20OR%20from%3Acaltrain_news"
@@ -51,6 +51,17 @@
 // Testflight App Analytics and logging
 #define TEST_FLIGHT_ENABLED 0  // If 0, then do not include testFlightApp at all 
 #define TEST_FLIGHT_UIDS 1  // If 1, then testFlightApp will collect device UIDs, if 0, it will not
+
+// NSUserDefaults keys
+#define USER_PREFERANCE                    @"UserPreference"
+#define PREFS_IS_PUSH_ENABLE               @"PrefsIsPushEnable"
+#define PREFS_PUSH_NOTIFICATION_THRESHOLD  @"PrefsPushNotificationThreshold"
+#define PREFS_MAX_WALK_DISTANCE            @"PrefsMaxWalkDistance"
+
+// UserPreferernce defaults
+#define PREFS_DEFAULT_IS_PUSH_ENABLE                YES
+#define PREFS_DEFAULT_PUSH_NOTIFICATION_THRESHOLD   3
+#define PREFS_DEFAULT_MAX_WALK_DISTANCE             0.75
 
 // Flurry analytics and logging
 #define FLURRY_ENABLED                  0
@@ -97,20 +108,21 @@
 #define FLURRY_EDIT_MODE_VALUE              @"Edit mode value:"
 
 /*  Template code for inserting Flurry logging
-#if FLURRY_ENABLED
-NSDictionary *params = [NSDictionary 
+ #if FLURRY_ENABLED
+ NSDictionary *params = [NSDictionary 
  dictionaryWithObjectsAndKeys:@"", @"", nil];
-[Flurry logEvent: withParameters:params];
-#endif
-*/
+ [Flurry logEvent: withParameters:params];
+ #endif
+ */
+
 // Locations behavior
 #define TOFROM_FREQUENCY_VISIBILITY_CUTOFF 0.99
 
 // LegMapView
-#define LEGMAP_DOT_IMAGE_FILE               @"mapDot"
+#define LEGMAP_DOT_IMAGE_FILE          @"img_mapDot"
 
 // Request timer Count
-#define TWEET_COUNT_POLLING_INTERVAL   300.0
+#define TWEET_COUNT_POLLING_INTERVAL   60.0
 #define TIMER_SMALL_REQUEST_DELAY      1.0
 #define TIMER_MEDIUM_REQUEST_DELAY     30.0
 #define TIMER_STANDARD_REQUEST_DELAY   59.0

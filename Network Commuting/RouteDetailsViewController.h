@@ -23,13 +23,19 @@
 @property(nonatomic, strong) LegMapViewController* legMapVC; // View Controller for managing the map
 @property(nonatomic, strong) Itinerary *itinerary;
 @property(nonatomic) int itineraryNumber; // selected row on the itinerary list
-@property(strong, nonatomic) CustomBadge *twitterCount;
 @property(nonatomic, readonly) CGFloat mainTableTotalHeight;  // the total height (height needed so that no scrolling needed) of the mainTable in pixels for a given itinerary
+
+@property(nonatomic, strong) UIButton *btnBackItem;
+@property(nonatomic, strong) UIButton *btnForwardItem;
+@property(nonatomic, strong) UIButton *btnGoToItinerary;
 
 - (IBAction)navigateBack:(id)sender;
 - (IBAction)navigateForward:(id)sender;
 - (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
 -(void)ReloadLegWithNewData;
-
+-(void)setFBParameterForItinerary;
+-(void)popOutToItinerary;
+-(void)test:(int)ss;
+-(void)setFBParameterForLeg:(NSString *)legId;
 @end

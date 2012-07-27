@@ -16,47 +16,60 @@
 
 #define RECORDING       @"Recording...."
 #define RECORDING_STOP  @"Recording Stopped...."
-#define RECORDING_PAUSE @"Recording Pause...."
+#define RECORDING_CANCEL @"Recording Canceled...."
+#define RECORDING_PAUSE @"Recording Paused...."
 #define RECORDING_PLAY  @"Record Playing...."
 #define VOICE_FB_FILE   @"voiceFeedback.caf"
 #define PLAY_TIME       @"Play Time : %02d"
 #define TIME_LEFT       @"Time Left : %02d"
-#define REC_NOT_PLAY    @"Recorded file not playing...."
-#define PLAY_COMPLETE   @"Playing complete...."
+#define REC_NOT_PLAY    @"Error while playing recording...."
+#define PLAY_COMPLETE   @"Play complete...."
 #define ANIMATION_PARAM @"anim"
-#define FB_CONFIRMATION @"Are you sure to send feedback"
+#define FB_CONFIRMATION @"Are you sure you want to send feedback?"
+#define FB_WHEN_NO_VOICE_OR_TEXT @"for now put the text Please give your feedback and then press Send!"
 #define ALERT_TRIP      @"Trip Planner"
 
 #define BUTTON_YES      @"Yes"
 #define BUTTON_NO       @"No"
 #define BUTTON_DONE     @"Done"
 #define BUTTON_CANCEL   @"Cancel"
+#define BUTTON_OK       @"OK"
 
 #define BORDER_WIDTH    1.0
 #define RECORD_DURATION 60
-#define REC_STOP_START  0
+#define REC_STARTTIME   0
 #define BITRATE_KEY     16
 #define BITDEPTH_KEY    8
 #define CHANNEL_KEY     1
 #define SAMPLERATE_KEY  8000.0
 #define TIME_INTERVAL   2.0
 #define INCREASE_PROGREEVIEW 0.0166
-#define UP_DOWN_RADIO   0.3
+#define UP_DOWN_RATIO   0.3
 
 @implementation FeedBackForm
 
-@synthesize tpResponse,tpURLResource,alertView,mesg,btnPlayRecording,btnStopRecording,btnPauseRecording,btnRecordRecording,fbParams;
+BOOL isCancelFB = FALSE;
+@synthesize tpResponse,tpURLResource,alertView,mesg,btnPlayRecording,btnStopRecording,btnPauseRecording,btnRecordRecording,fbReqParams;
+@synthesize txtEmailId,txtFeedBack;
 
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        [[self navigationItem] setTitle:FB_TITLE];
+    }
+    return self;
+}
 -(id)initWithFeedBack:(NSString *)nibNameOrNil fbParam:(FeedBackReqParam *)fbParam bundle:(NSBundle *)nibBundle
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundle];
     if (self) {
         // Custom initialization
-        [[self navigationItem] setTitle:FB_TITLE];
-        fbParams = fbParam;
+        fbReqParams = fbParam;
     }
     return self;
 }
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -69,7 +82,27 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                     [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 
+                                                                    blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
+                                                                     nil]];
+    
+    
     // Do any additional setup after loading the view from its nib.
+    }
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    btnSubmitFeedback.layer.cornerRadius = CORNER_RADIUS_SMALL;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     txtEmailId.text = [prefs objectForKey:USER_EMAIL];
     labelCurrentActivityStatus.text = NULL_STRING;
@@ -80,15 +113,13 @@
     [btnPlayRecording setEnabled:FALSE];
     [btnPauseRecording setEnabled:FALSE];
     [btnStopRecording setEnabled:FALSE];
+    soundFilePath = nil;
 }
 
-- (void)viewDidUnload
+-(void)viewWillDisappear:(BOOL)animated
 {
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+     [super viewWillDisappear:animated];
 }
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
@@ -96,8 +127,10 @@
 }
 
 #pragma mark-Recording functions
--(IBAction)recordRecording:(id)sender
+-(IBAction)startRecord:(id)sender
 {    
+    isFromPause = NO;
+    isCancelFB = FALSE;
     [btnPlayRecording setEnabled:FALSE];
     [btnPauseRecording setEnabled:FALSE];
         
@@ -108,9 +141,9 @@
 
     mesg = RECORD_MSG;
     alertView = [self childAlertViewRec];
-     
+    
     secondsLeft = RECORD_DURATION;
-    secondUsed = REC_STOP_START;
+    secondElapsed = REC_STARTTIME;
     isRepeat = YES;
     [labelRecTime setHidden:NO];
     timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(updateRecCountdown) userInfo:nil repeats: isRepeat];    
@@ -129,7 +162,7 @@
                                     [NSNumber numberWithFloat:SAMPLERATE_KEY], AVSampleRateKey, 
                                     nil];
     
-    NSError *error = nil;    
+    NSError *error = nil;  
     audioRecorder = [[AVAudioRecorder alloc] initWithURL:soundFileURL settings:recordSettings error:&error];
     if (error) {
         NSLog(@"error: %@", [error localizedDescription]);
@@ -142,12 +175,18 @@
     }
 }
 
--(IBAction)stopRecording:(id)sender {    
-    [btnPlayRecording setEnabled:TRUE];
+-(IBAction)stopRecord:(id)sender {    
     [btnPauseRecording setEnabled:FALSE];
     [btnStopRecording setEnabled:FALSE];
     [btnRecordRecording setEnabled:TRUE];
-    labelCurrentActivityStatus.text = RECORDING_STOP;
+    if (isCancelFB) {
+        [btnPlayRecording setEnabled:FALSE];
+        labelCurrentActivityStatus.text = RECORDING_CANCEL;
+    } else {
+        [btnPlayRecording setEnabled:TRUE];
+        labelCurrentActivityStatus.text = RECORDING_STOP;
+    }
+    
     timer = [NSTimer scheduledTimerWithTimeInterval:TIME_INTERVAL target:self selector:@selector(setActRunStatus) userInfo:nil repeats: NO];  
     [alertView dismissWithClickedButtonIndex:0 animated:NO];
     if (audioRecorder.recording)
@@ -162,7 +201,7 @@
     labelCurrentActivityStatus.text = NULL_STRING;
 }
 
--(IBAction)pausRecording:(id)sender {
+-(IBAction)pauseRecord:(id)sender {
     if (audioPlayer.playing) {
         labelCurrentActivityStatus.text = RECORDING_PAUSE;
         isRepeat = NO;
@@ -179,16 +218,21 @@
         timer = nil;
         timer = [NSTimer scheduledTimerWithTimeInterval:TIME_INTERVAL target:self selector:@selector(setActRunStatus) userInfo:nil repeats: NO]; 
     }
+    isFromPause = YES;
 }
 
--(IBAction)playRecording:(id)sender {
+-(IBAction)playRecord:(id)sender {
     labelCurrentActivityStatus.text = RECORDING_PLAY;
-    secondsLeft = REC_STOP_START;
+    if(!isFromPause){
+        secondsLeft = REC_STARTTIME;
+    }
     labelRecTime.text = NULL_STRING;
     if (!audioRecorder.recording)
     {
-        NSError *error;        
-        audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:audioRecorder.url error:&error];        
+        NSError *error;
+        if(audioPlayer == nil){
+        audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:audioRecorder.url error:&error];
+        }
         audioPlayer.delegate = self;
         if (error) {
             NSLog(@"Error: %@", 
@@ -211,28 +255,28 @@
 -(void) updateRecCountdown {    
     int seconds;
     secondsLeft--;
-    secondUsed += INCREASE_PROGREEVIEW;
-    [recProgressView setProgress:secondUsed];
-    if(secondsLeft == REC_STOP_START){
+    secondElapsed += INCREASE_PROGREEVIEW;
+    [recProgressView setProgress:secondElapsed];
+    if(secondsLeft == REC_STARTTIME){
         [alertView dismissWithClickedButtonIndex:0 animated:NO];
         isRepeat = NO;
         [labelRecTime setHidden:YES];
         [timer invalidate];
-        [self stopRecording:self];
+        [self stopRecord:self];
     } else {
         if(![alertView isVisible]){
             isRepeat = NO;
             [labelRecTime setHidden:YES];
             [timer invalidate];
             timer =  nil;
-            [self stopRecording:self];
+            [self stopRecord:self];
         }
         seconds = (secondsLeft %3600) % 60;
         labelRecTime.text = [NSString stringWithFormat:TIME_LEFT, seconds];
     }
 }
 
--(void) updatePlayCountdown {    
+-(void) updatePlayCountdown {
     secondsLeft++;   
     labelRecTime.text = [NSString stringWithFormat:PLAY_TIME, secondsLeft];
 }
@@ -247,6 +291,7 @@
     [btnStopRecording setEnabled:FALSE];
     
     labelCurrentActivityStatus.text = PLAY_COMPLETE;
+    secondsLeft = REC_STARTTIME;
     isRepeat = NO;
     [labelRecTime setHidden:YES];
     [timer invalidate];
@@ -254,7 +299,6 @@
     labelRecTime.text = NULL_STRING;
     timer = [NSTimer scheduledTimerWithTimeInterval:TIME_INTERVAL target:self selector:@selector(setActRunStatus) userInfo:nil repeats: NO]; 
     [alertView dismissWithClickedButtonIndex:0 animated:NO];
-    
 }
 
 -(void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player error:(NSError *)error
@@ -276,9 +320,14 @@
 #pragma mark Restful request
 -(IBAction)submitFeedBack:(id)sender
 {
-    mesg = SUBMIT_MSG;
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:FB_TITLE_MSG message:FB_CONFIRMATION delegate:self cancelButtonTitle:BUTTON_YES otherButtonTitles:BUTTON_NO, nil];
-    [alert show];
+    if((soundFilePath == nil) && ([txtFeedBack.text isEqualToString:NULL_STRING])) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:FB_TITLE_MSG message:FB_WHEN_NO_VOICE_OR_TEXT delegate:self cancelButtonTitle:BUTTON_OK otherButtonTitles:nil, nil];
+        [alert show];
+    } else {
+        mesg = SUBMIT_MSG;
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:FB_TITLE_MSG message:FB_CONFIRMATION delegate:self cancelButtonTitle:BUTTON_YES otherButtonTitles:BUTTON_NO, nil];
+        [alert show];
+    }
 }
 
 #pragma mark Restful Response
@@ -332,6 +381,7 @@
 
 -(void)sendFeedbackToServer
 {
+    
     alertView = [self feedbackConfirmAlert];
     
     NSString *udid = [UIDevice currentDevice].uniqueIdentifier;    
@@ -356,19 +406,19 @@
         [prefs setObject:txtEmailId.text forKey:USER_EMAIL];
     }
     if(soundFilePath != nil && txtFeedBack.text != nil) {
-        [rkp setValue:[NSNumber numberWithInt:FEEDBACK_BOTH] forParam:FILE_FORMATE_TYPE]; 
+        [rkp setValue:[NSNumber numberWithInt:FEEDBACK_TEXT_AUDIO] forParam:FILE_FORMATE_TYPE]; 
     }
     
     [rkp setValue:udid forParam:DEVICE_ID]; 
-    [rkp setValue:[fbParams fbSource] forParam:FEEDBACK_SOURCE]; 
+    [rkp setValue:[nc_AppDelegate sharedInstance].FBSource forParam:FEEDBACK_SOURCE]; 
     [rkp setValue:@"3.5" forParam:FEEDBACK_RATING];
     
-    if([fbParams fbSource] == [NSNumber numberWithInt:FB_SOURCE_GENERAL]){     
-        [rkp setValue:[fbParams fromAddress] forParam:FB_FORMATTEDADDR_FROM];
-        [rkp setValue:[fbParams toAddress] forParam:FB_FORMATTEDADDR_TO];
-        [rkp setValue:[fbParams date] forParam:FB_DATE];
+    if([nc_AppDelegate sharedInstance].FBSource == [NSNumber numberWithInt:FB_SOURCE_GENERAL]){     
+        [rkp setValue:[nc_AppDelegate sharedInstance].FBSFromAdd forParam:FB_FORMATTEDADDR_FROM];
+        [rkp setValue:[nc_AppDelegate sharedInstance].FBToAdd forParam:FB_FORMATTEDADDR_TO];
+        [rkp setValue:[nc_AppDelegate sharedInstance].FBDate forParam:FB_DATE];
     } else {
-        [rkp setValue:[fbParams uniqueId] forParam:FB_UNIQUEID]; 
+        [rkp setValue:[nc_AppDelegate sharedInstance].FBUniqueId forParam:FB_UNIQUEID]; 
     }
     
     timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(popOut) userInfo:nil repeats: NO];
@@ -382,11 +432,11 @@
                           initWithTitle:mesg  
                           message:nil delegate:nil cancelButtonTitle:nil  
                           otherButtonTitles:nil];  
-   indicator = [[UIActivityIndicatorView alloc]  
+   busyIndicator = [[UIActivityIndicatorView alloc]  
                                           initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];  
-    indicator.frame = CGRectMake(135, 80, 20, 20);
-    [indicator startAnimating];  
-    [alerts addSubview:indicator]; 
+    busyIndicator.frame = CGRectMake(135, 80, 20, 20);
+    [busyIndicator startAnimating];  
+    [alerts addSubview:busyIndicator]; 
     [alerts show];
     [[NSRunLoop currentRunLoop] limitDateForMode:NSDefaultRunLoopMode];  
     return alerts;
@@ -412,8 +462,16 @@
     if ([btnName isEqualToString:BUTTON_CANCEL]) {
         soundFilePath = nil;
         audioPlayer = nil;
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSArray *tempDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *tempDirPath = [tempDir objectAtIndex:0];
+        NSString *recordedAudioPath = [tempDirPath stringByAppendingPathComponent:VOICE_FB_FILE];
+        if([fileManager fileExistsAtPath:recordedAudioPath]){
+            [fileManager removeItemAtPath:recordedAudioPath error:nil];
+        }
+        isCancelFB = TRUE;
     } else if ([btnName isEqualToString:BUTTON_DONE]) {
-        
+        [self.btnPlayRecording setEnabled:TRUE];
     } else if ([btnName isEqualToString:BUTTON_YES]) {
         [self sendFeedbackToServer];
     } 
@@ -423,14 +481,15 @@
 {
     [alertView dismissWithClickedButtonIndex:0 animated:NO];
     [self.navigationController popViewControllerAnimated:YES];
+    [self.tabBarController setSelectedIndex:0];
 }
 
 #pragma mark TextField animation at selected
-
-- (void) animateTextField: (UITextField*) textField up: (BOOL) up{
+-(void) animateTextField: (UITextField*) textField up: (BOOL) up
+{
 	int txtPosition = (textField.frame.origin.y - 160);
     const int movementDistance = (txtPosition < 0 ? 0 : txtPosition); // tweak as needed
-    const float movementDuration = UP_DOWN_RADIO; // tweak as needed
+    const float movementDuration = UP_DOWN_RATIO; // tweak as needed
     
     int movement = (up ? -movementDistance : movementDistance);
     
@@ -451,9 +510,9 @@
 
 #pragma mark TextView animation at selected
 - (void) animateTextView: (UITextView*) textView up: (BOOL) up{
-	int txtPosition = (textView.frame.origin.y - 100);
+	int txtPosition = (textView.frame.origin.y - 140);
     const int movementDistance = (txtPosition < 0 ? 0 : txtPosition); // tweak as needed
-    const float movementDuration = UP_DOWN_RADIO; // tweak as needed
+    const float movementDuration = UP_DOWN_RATIO; // tweak as needed
     int movement = (up ? -movementDistance : movementDistance);
     [UIView beginAnimations:ANIMATION_PARAM context: nil];
     [UIView setAnimationBeginsFromCurrentState: YES];
@@ -469,5 +528,4 @@
 - (void)textViewDidEndEditing:(UITextView *)textView{
     [self animateTextView: textView up: NO];
 }
-
 @end

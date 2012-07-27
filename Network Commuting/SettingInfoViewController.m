@@ -9,13 +9,11 @@
 #import "SettingInfoViewController.h"
 #import "nc_AppDelegate.h"
 #import "UserPreferance.h"
-
 #if FLURRY_ENABLED
 #include "Flurry.h"
 #endif
 
 #define SETTING_TITLE       @"App Settings"
-#define SETTING_ENTITY      @"UserPreferance"
 #define SETTING_ALERT_MSG   @"Updating your settings \n Please wait..."
 #define WALK_DISTANCE       @"walkDistance"
 #define TRIGGER_AT_HOUR     @"triggerAtHour"
@@ -24,7 +22,8 @@
 
 @implementation SettingInfoViewController
 
-@synthesize steperPushHour,sliderMaxWalkDistance,managedObjectContext;
+@synthesize sliderMaxWalkDistance;
+@synthesize sliderPushNotification;
 
 int pushHour;
 bool isPush;
@@ -35,16 +34,9 @@ bool isPush;
     if (self) {
         // Custom initialization
         [[self navigationItem] setTitle:SETTING_TITLE];
+        
     }
     return self;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-#if FLURRY_ENABLED
-    [Flurry logEvent:FLURRY_SETTINGS_APPEAR];
-#endif
 }
 
 - (void)didReceiveMemoryWarning
@@ -59,9 +51,11 @@ bool isPush;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.managedObjectContext = [[nc_AppDelegate sharedInstance] managedObjectContext]; 
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                     [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0], UITextAttributeTextColor,
+                                                                     nil]];
     // Do any additional setup after loading the view from its nib.
-    [self fetchUserSettingData];
 }
 
 - (void)viewDidUnload
@@ -69,6 +63,15 @@ bool isPush;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [self fetchUserSettingData];
+#if FLURRY_ENABLED
+    [Flurry logEvent: FLURRY_SETTINGS_APPEAR];
+#endif
+    btnUpdateSetting.layer.cornerRadius = CORNER_RADIUS_SMALL;
 }
 
 -(IBAction)UpdateSetting:(id)sender
@@ -83,20 +86,17 @@ bool isPush;
         }   
         alertView = [self upadetSettings];    
         [alertView show];
-        // Update in local DB
-        NSFetchRequest *requestFetchUserSettingEntity = [[NSFetchRequest alloc] init]; 
-        NSEntityDescription *userSettingEntity = [NSEntityDescription entityForName:SETTING_ENTITY     
-                                                   inManagedObjectContext:self.managedObjectContext];
-        [requestFetchUserSettingEntity setEntity:userSettingEntity];    
-        NSArray *settingEntityDataArray =[self.managedObjectContext executeFetchRequest:requestFetchUserSettingEntity error:nil]; 
-        if ([settingEntityDataArray count] > 0){ 
-            UserPreferance *user = [settingEntityDataArray objectAtIndex:0]; 
-            user.pushEnable = [NSNumber numberWithBool:isPush];
-            user.triggerAtHour = [NSNumber numberWithInt:pushHour];
-            user.walkDistance = [NSNumber numberWithFloat:sliderMaxWalkDistance.value];
-            [self.managedObjectContext save:nil]; 
-        } 
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        
+        // Update in user defaults
+        float ss = sliderPushNotification.value;
+
+        UserPreferance *userPrefs = [UserPreferance userPreferance]; // get singleton
+        userPrefs.pushEnable = [NSNumber numberWithBool:isPush];
+        userPrefs.triggerAtHour = [NSNumber numberWithFloat:ss];
+        userPrefs.walkDistance = [NSNumber numberWithFloat:sliderMaxWalkDistance.value];
+        [userPrefs saveUpdates];
+
+        NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
         NSString *token = [prefs objectForKey:DEVICE_TOKEN];
         
         // Update in TPServer DB
@@ -122,12 +122,6 @@ bool isPush;
     }
 }
 
--(IBAction)stepperValueChanged:(UIStepper *)sender
-{
-    pushHour = steperPushHour.value;
-    lblPushTrigger.text = [NSString stringWithFormat:@"%d",pushHour];
-}
-
 -(IBAction)sliderWalkDistanceValueChanged:(UISlider *)sender
 {
     float walkDistance = sliderMaxWalkDistance.value;
@@ -136,9 +130,19 @@ bool isPush;
     NSLog(@"walk distance: %f", walkDistance);
 }
 
+-(IBAction)sliderPushNotification:(UISlider *)sender
+{
+    int walkDistance = sliderPushNotification.value;
+    [sliderPushNotification setValue:sliderPushNotification.value];
+    [sliderPushNotification setSelected:YES];
+    pushHour = walkDistance;
+    NSLog(@"walk distance: %d", walkDistance);
+}
+
 -(void)popOutFromSettingView { 
     [alertView dismissWithClickedButtonIndex:0 animated:NO];
-    [self.navigationController popViewControllerAnimated:YES];    
+    [self.navigationController popViewControllerAnimated:YES]; 
+    [self.tabBarController setSelectedIndex:0];
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
@@ -170,28 +174,17 @@ bool isPush;
 -(void)fetchUserSettingData
 {
     @try {
-        NSManagedObjectContext *moc = [self managedObjectContext];
-        NSEntityDescription *entityDescription = [NSEntityDescription
-                                                  entityForName:SETTING_ENTITY inManagedObjectContext:moc];
-        NSFetchRequest *request = [[NSFetchRequest alloc] init] ;
-        [request setEntity:entityDescription];
+
+        // set stored value for userSettings 
         
-        NSError *error = nil;
-        NSArray *arrayUserSetting  = [moc executeFetchRequest:request error:&error];
-        if (arrayUserSetting == nil)
-        {
-            // Deal with error...
+        UserPreferance* userPrefs = [UserPreferance userPreferance]; // get singleton
+        [sliderMaxWalkDistance setValue:[[userPrefs walkDistance] doubleValue]];
+        [sliderPushNotification setValue:[[userPrefs triggerAtHour] doubleValue]];
+        pushHour = [[userPrefs triggerAtHour] intValue];
+        if ([[userPrefs pushEnable] intValue] == 0) {
+            [switchPushEnable setOn:NO];
         } else {
-            // set stored value for userSettings       
-            [sliderMaxWalkDistance setValue:[[[arrayUserSetting valueForKey:WALK_DISTANCE] objectAtIndex:0] doubleValue]];
-            [steperPushHour setValue:[[[arrayUserSetting valueForKey:TRIGGER_AT_HOUR] objectAtIndex:0] intValue]];
-            lblPushTrigger.text = [NSString stringWithFormat:@"%d",[[[arrayUserSetting valueForKey:TRIGGER_AT_HOUR] objectAtIndex:0] intValue]];
-            pushHour = [[[arrayUserSetting valueForKey:TRIGGER_AT_HOUR] objectAtIndex:0] intValue];
-            if ([[[arrayUserSetting valueForKey:PUSH_ENABLE] objectAtIndex:0] intValue] == 0) {
-                [switchPushEnable setOn:NO];
-            } else {
-                [switchPushEnable setOn:YES];
-            }
+            [switchPushEnable setOn:YES];
         }
     }
     @catch (NSException *exception) {

@@ -22,10 +22,12 @@
 #import "SettingInfoViewController.h"
 #import "nc_AppDelegate.h"
 #import "UIConstants.h"
+#import "UserPreferance.h"
 
 #if FLURRY_ENABLED
 #include "Flurry.h"
 #endif
+
 
 @interface ToFromViewController()
 {
@@ -52,7 +54,6 @@
     LocationPickerViewController *locationPickerVC;
     TwitterSearch* twitterSearchVC;
     
-    NSUserDefaults *prefs;
 }
 
 // Internal methods
@@ -91,10 +92,8 @@
 @synthesize isTripDateCurrentTime;
 @synthesize editMode;
 @synthesize supportedRegion;
-@synthesize twitterCount;
 @synthesize isContinueGetRealTimeData;
 @synthesize continueGetTime;
-@synthesize maxiWalkDistance;
 
 // Constants for animating up and down the To: field
 #define TO_SECTION 0
@@ -112,10 +111,12 @@ float currentLocationResTime;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     @try {
         if (self) {
-            [[self navigationItem] setTitle:@"Nimbler"];
-            UIBarButtonItem *info = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(RedirectAtNimblerSetting)];
-            self.navigationItem.rightBarButtonItem = info;
+            UIImage *imgTitle = [UIImage imageNamed:@"nimblr.png"];
+            self.navigationItem.titleView = [[UIImageView alloc]  initWithImage:imgTitle];
             
+            UIBarButtonItem *btnRoute = [[UIBarButtonItem alloc] initWithTitle:@"Route" style:UIBarButtonItemStylePlain target:self action:@selector(redirectAtNimblerSetting)];
+            self.navigationItem.rightBarButtonItem = btnRoute;
+           
             planRequestHistory = [NSMutableArray array]; // Initialize this array
             departOrArrive = DEPART;
             toGeocodeRequestOutstanding = FALSE;
@@ -160,29 +161,22 @@ float currentLocationResTime;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at init ToFromViewController: %@", exception);
+        NSLog(@"exception at init ToFromViewController");
     }
-    
     return self;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                     [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
+                                                                     nil]];
     isContinueGetRealTimeData = false;
     [continueGetTime invalidate];
     continueGetTime = nil;
-    CGRect rect0 = [mainTable frame];
-    rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT;
-    [mainTable setFrame:rect0];        
-    @try {
-        [toTable reloadData];
-        [fromTable reloadData];
-        [mainTable reloadData];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"table view ------loading---------  %@", exception);
-    }
+    
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -204,38 +198,22 @@ float currentLocationResTime;
 {
     [super viewWillAppear:animated];
     @try {
-        prefs = [NSUserDefaults standardUserDefaults];
-        int tweetConut = [[prefs objectForKey:TWEET_COUNT] intValue];
-        [twitterCount removeFromSuperview];
-        twitterCount = [[CustomBadge alloc] init];
-        twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
-        [twitterCount setFrame:CGRectMake(60, 372, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
-        if (tweetConut == 0) {
-            [twitterCount setHidden:YES];
-        } else {
-            [self.view addSubview:twitterCount];
-            [twitterCount setHidden:NO];
-        }        [continueGetTime invalidate];
-        continueGetTime = nil;
-
-        [self updateTripDate];  // update tripDate if needed
-        
         // Enforce height of main table
         CGRect rect0 = [mainTable frame];
         rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT;
-        [mainTable setFrame:rect0];  
-        
+        [mainTable setFrame:rect0];
 #if FLURRY_ENABLED
         [Flurry logEvent:FLURRY_TOFROMVC_APPEAR];
 #endif
-        @try {
-            [toTable reloadData];
-            [fromTable reloadData];
-            [mainTable reloadData];
-        }
-        @catch (NSException *exception) {
-            NSLog(@"table view ------loading---------  %@", exception);
-        }
+        
+        [continueGetTime invalidate];
+        continueGetTime = nil;
+        [self updateTripDate];  // update tripDate if needed
+        [self setFBParameterForGeneral];
+        
+        [toTable reloadData];
+        [fromTable reloadData];
+        [mainTable reloadData];
     }
     @catch (NSException *exception) {
         NSLog(@"exception at viewWillAppear: %@", exception);
@@ -249,7 +227,6 @@ float currentLocationResTime;
     // Flash scrollbars on tables
     [toTable flashScrollIndicators];
     [fromTable flashScrollIndicators];   
-    [self getWalkDistance];
 }
 
 - (void)didReceiveMemoryWarning
@@ -620,6 +597,7 @@ float currentLocationResTime;
 - (void)updateToFromLocation:(id)sender isFrom:(BOOL)isFrom location:(Location *)loc; {
     if (isFrom) {
         fromLocation = loc;
+        [self setFBParameterForGeneral];
         if (loc == currentLocation && !isCurrentLocationMode) {
             [self setIsCurrentLocationMode:TRUE];
         }
@@ -628,12 +606,14 @@ float currentLocationResTime;
         }
     } 
     else {
+        
         BOOL locBecomingVisible = loc && ([loc toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF);
         BOOL toLocationBecomingInvisible = toLocation && ([toLocation toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF);
         if (locBecomingVisible ^ toLocationBecomingInvisible) { // if # of locations visible is changing
             [self newLocationVisible];  // Adjust dynamic toTable if toLocation chosen for first time
         }
         toLocation = loc;
+        [self setFBParameterForGeneral];
     }
 }
 
@@ -723,7 +703,7 @@ float currentLocationResTime;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     @try {
-        NSString *fromLocs;    
+        NSString *fromLocs = @"";    
         NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
         [dFormat setDateStyle:NSDateFormatterShortStyle];
         [dFormat setTimeStyle:NSDateFormatterMediumStyle];
@@ -736,7 +716,6 @@ float currentLocationResTime;
         FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:[NSNumber numberWithInt:FB_SOURCE_GENERAL] uniqueId:nil date:[dFormat stringFromDate:tripDate] fromAddress:fromLocs toAddress:[toLocation formattedAddress]];
         FeedBackForm *feedbackVC =  [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];  // DE56 fix
         [[self navigationController] pushViewController:feedbackVC animated:YES];
-
     }
     @catch (NSException *exception) {
         NSLog(@"exception at feedback button press from TOFromView: %@", exception);
@@ -745,20 +724,20 @@ float currentLocationResTime;
 
 - (IBAction)advisoriesButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
-    @try {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
-        isTwitterLivaData = TRUE;
-        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
-        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                                DEVICE_ID, udid,
-                                nil];    
-        NSString *advisoriesAll = [ALL_TWEETS_REQ appendQueryParams:params];
-        [[RKClient sharedClient]  get:advisoriesAll delegate:self];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"Exception at advisories button click from ToFromview: %@", exception);
-    } 
+//    @try {
+//        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+//        [RKClient setSharedClient:client];
+//        isTwitterLivaData = TRUE;
+//        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
+//        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
+//                                DEVICE_ID, udid,
+//                                nil];    
+//        NSString *advisoriesAll = [ALL_TWEETS_REQ appendQueryParams:params];
+//        [[RKClient sharedClient]  get:advisoriesAll delegate:self];
+//    }
+//    @catch (NSException *exception) {
+//        NSLog(@"Exception at advisories button click from ToFromview: %@", exception);
+//    } 
 }
 
 #pragma mark Edit events for ToFrom table
@@ -771,17 +750,17 @@ float currentLocationResTime;
     }
 #if FLURRY_ENABLED
     NSString *edit_string;
-    if (newEditMode==NO_EDIT) {
+    if (newEditMode==NO_EDIT){
         edit_string = @"NO_EDIT";
     } else if (newEditMode==TO_EDIT) {
-        edit_string = @"TO_EDIT";
+        edit_string = @"TO_EDIT";        
     } else if (newEditMode==FROM_EDIT) {
-        edit_string = @"FROM_EDIT";
+        edit_string = @"FROM_EDIT";            
     }
-    NSDictionary *dictionary = [NSDictionary 
-                                dictionaryWithObjectsAndKeys:FLURRY_EDIT_MODE_VALUE, edit_string, nil];
+    NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:FLURRY_EDIT_MODE_VALUE, edit_string, nil];
     [Flurry logEvent:FLURRY_TOFROMTABLE_NEW_EDIT_MODE withParameters:dictionary];
 #endif
+        
     NSRange range;
     ToFromEditMode oldEditMode = editMode;
     editMode = newEditMode;  
@@ -867,6 +846,7 @@ float currentLocationResTime;
     {   
         NSInteger statusCode = [[objectLoader response] statusCode];
         NSLog(@"Planning HTTP status code = %d", statusCode);
+        NSLog(@"whole plan: %@", [[objectLoader response] bodyAsString]);
         @try {
             if (objects && [objects objectAtIndex:0]) {
                 if (savetrip) {
@@ -877,7 +857,7 @@ float currentLocationResTime;
                     
                     [plan setToLocation:toLocation];
                     [plan setFromLocation:fromLocation];
-                    
+                                      
                     // Pass control to the RouteOptionsViewController to display itinerary choices
                     if (!routeOptionsVC) {
                         routeOptionsVC = [[RouteOptionsViewController alloc] initWithNibName:nil bundle:nil];;
@@ -907,6 +887,8 @@ float currentLocationResTime;
                                 NSLog(@"leg... %@",[lg legId]);
                             }                                                            
                         }
+                        
+                        [routeOptionsVC setFBParameterForPlan];
                         isContinueGetRealTimeData = TRUE;
                         [self getRealTimeData];
                         continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:59.0 target:self selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
@@ -946,7 +928,6 @@ float currentLocationResTime;
 - (BOOL)getPlan
 {
     // TODO See if we already have a similar plan that we can use
-    
     // See if there has already been an identical plan request in the last 5 seconds.  
     @try {
         NSLog(@"Plan routine entered");
@@ -969,7 +950,7 @@ float currentLocationResTime;
         if (!isDuplicatePlan)  // if not a recent duplicate request
         {
 #if FLURRY_ENABLED
-            [Flurry logEvent:FLURRY_ROUTE_REQUESTED];
+            [Flurry logEvent: FLURRY_ROUTE_REQUESTED];
 #endif
             [self startActivityIndicator];
             
@@ -997,12 +978,14 @@ float currentLocationResTime;
             }       
             // Create the date formatters we will use to output the date & time
             NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
-            [dFormat setDateStyle:NSDateFormatterShortStyle];
-            [dFormat setTimeStyle:NSDateFormatterNoStyle];
+            [dFormat setDateFormat:@"MM/dd/yyyy"];
+//            [dFormat setDateStyle:NSDateFormatterShortStyle];
+//            [dFormat setTimeStyle:NSDateFormatterNoStyle];
             NSDateFormatter* tFormat = [[NSDateFormatter alloc] init];
             [tFormat setTimeStyle:NSDateFormatterShortStyle];
             [tFormat setDateStyle:NSDateFormatterNoStyle];
             
+            NSNumber* maxiWalkDistance = [self getWalkDistance];
             NSLog(@"maximum walk distance ------------------------------------ %f",[maxiWalkDistance floatValue]);
             // convert miles into meters. 1 mile = 1609.344 meters
             int maxDistance = (int)([maxiWalkDistance floatValue]*1609.544);
@@ -1265,46 +1248,49 @@ float currentLocationResTime;
 }
 
 #pragma mark Navigate in SettingInfoViewController view
--(void)RedirectAtNimblerSetting
-{
+-(void)redirectAtNimblerSetting{
     @try {
-        SettingInfoViewController *settingView = [[SettingInfoViewController alloc] init];
-        [[self navigationController] pushViewController:settingView animated:YES];
+//        SettingInfoViewController *settingView = [[SettingInfoViewController alloc] init];
+//        [[self navigationController] pushViewController:settingView animated:YES];
+        [self routeButtonPressed:self forEvent:nil];
     }
     @catch (NSException *exception) {
         NSLog(@"exception at navigate to settingInfo view: %@", exception);
     }
 }
 
-#pragma mark get walk distance from core data
--(void)getWalkDistance
+#pragma mark get walk distance from User Defaults
+-(NSNumber *)getWalkDistance
 {
-    @try {
-        NSManagedObjectContext *moc = [[nc_AppDelegate sharedInstance] managedObjectContext];
-        NSEntityDescription *entityDescription = [NSEntityDescription
-                                                  entityForName:@"UserPreferance" inManagedObjectContext:moc];
-        NSFetchRequest *request = [[NSFetchRequest alloc] init] ;
-        [request setEntity:entityDescription];
-        
-        NSError *error = nil;
-        NSArray *arrayUserSetting  = [moc executeFetchRequest:request error:&error];
-        if (arrayUserSetting == nil)
-        {
-            // Deal with error...
-        } else {
-            // set stored value for userSettings       
-            maxiWalkDistance = [[arrayUserSetting valueForKey:@"walkDistance"] objectAtIndex:0] ;
-        }
-    }
-    @catch (NSException *exception) {
-        NSLog(@"exception at get data from core data: %@", exception);
-    }
+    UserPreferance* userPrefs = [UserPreferance userPreferance];
+    return [userPrefs walkDistance];
+    
 }
 
-#pragma mark call Advisories button click at tweeter push notification
--(void)redirectInTwitterAtPushnotification
+-(void)setFBParameterForGeneral
 {
-    [self advisoriesButtonPressed:self forEvent:nil];
+    @try {
+        NSString *fromLocs = @"";    
+        NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
+        [dFormat setDateStyle:NSDateFormatterShortStyle];
+        [dFormat setTimeStyle:NSDateFormatterMediumStyle];
+        if ([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
+            fromLocs = [self getCurrentLocationOfFormattedAddress:fromLocation];
+        } else {
+            fromLocs = [fromLocation formattedAddress];
+        }
+        NSLog(@"from: %@   ToLoacation: %@", fromLocs, [toLocation formattedAddress]);
+        
+        [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_GENERAL];
+        [nc_AppDelegate sharedInstance].FBDate = [dFormat stringFromDate:tripDate];
+        [nc_AppDelegate sharedInstance].FBToAdd = [toLocation formattedAddress];
+        [nc_AppDelegate sharedInstance].FBSFromAdd = fromLocs;
+        [nc_AppDelegate sharedInstance].FBUniqueId = nil;
+        
+        }
+    @catch (NSException *exception) {
+        NSLog(@"exception at feedback button press from TOFromView: %@", exception);
+    }
 }
 
 @end

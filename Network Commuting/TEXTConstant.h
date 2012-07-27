@@ -32,7 +32,7 @@
 #define FILE_FORMATE_TYPE           @"formattype"
 #define FEEDBACK_TEXT               1
 #define FEEDBACK_AUDIO              2
-#define FEEDBACK_BOTH               3
+#define FEEDBACK_TEXT_AUDIO         3
 #define FB_TEXT                     @"txtfb"
 #define EMAIL_ID                    @"emailid"
 #define FEEDBACK_SOURCE             @"source"
@@ -51,7 +51,7 @@
 #define FB_RESPONCE_CODE            @"code"
 
 #define FB_RESPONSE_SUCCEES         @"Feedback Sent Successfully"
-#define FB_RESPONSE_FAIL            @"Feedback Sent Fail"
+#define FB_RESPONSE_FAIL            @"Feedback Send Fail"
 #define FB_TITLE_MSG                @"Nimbler Feedback"
 
 // Itinerary / Route Details strings
@@ -67,5 +67,11 @@
 
 #define DEVICE_ID                   @"deviceid"
 #define DEVICE_CFUUID               @"deviceCFUUID"
+
+// UITabbar Item
+#define TRIP_PLANNER_VIEW           @"Trip Planner"
+#define ADVISORIES_VIEW             @"Advisories"
+#define SETTING_VIEW                @"Settings"
+#define FEEDBACK_VIEW               @"Feedback"
 
 #endif

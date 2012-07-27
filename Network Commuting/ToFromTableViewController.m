@@ -15,6 +15,7 @@
 #include "Flurry.h"
 #endif
 
+
 @interface ToFromTableViewController () 
 {
     // Internal variables
@@ -134,14 +135,13 @@
         Location *loc = [locations locationAtIndex:([indexPath row]) isFrom:isFrom];  //selected Location 
 
         if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) { // If a list (like 'Caltrain Station List')
-#if FLURRY_ENABLED
-            NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
-            NSDictionary *params = [NSDictionary 
-                                    dictionaryWithObjectsAndKeys:
-                                    FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                    FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d",[indexPath row]], 
-                                    nil];
-            [Flurry logEvent:FLURRY_TOFROMTABLE_CALTRAIN_LIST withParameters:params];
+#if FLURRY_ENABLED          
+            NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");          
+            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    FLURRY_TOFROM_WHICH_TABLE, isFromString,          
+                                    FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d",[indexPath row]],
+                                    nil];          
+            [Flurry logEvent:FLURRY_TOFROMTABLE_CALTRAIN_LIST withParameters:params];          
 #endif
             // Increment frequency of the list header
             if (isFrom) {
@@ -158,15 +158,13 @@
                            isGeocodeResults:NO];
         }
         else {    // if a normal location
-#if FLURRY_ENABLED
-            NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
-            NSDictionary *params = [NSDictionary 
-                                    dictionaryWithObjectsAndKeys:
-                                    FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                    FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d",[indexPath row]], 
-                                    FLURRY_TOFROM_SELECTED_ADDRESS, [loc shortFormattedAddress], 
-                                    nil];
-            [Flurry logEvent:FLURRY_TOFROMTABLE_SELECT_ROW withParameters:params];
+#if FLURRY_ENABLED      
+            NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");          
+            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    FLURRY_TOFROM_WHICH_TABLE, isFromString,          
+                                    FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d",[indexPath row]],          
+                                    FLURRY_TOFROM_SELECTED_ADDRESS, [loc shortFormattedAddress], nil];          
+            [Flurry logEvent:FLURRY_TOFROMTABLE_SELECT_ROW withParameters:params];          
 #endif
             [self markAndUpdateSelectedLocation:loc];  // Mark the selected location and send updates to locations and toFromVC
         }
@@ -370,15 +368,14 @@
                     isGeocodingOutstanding = TRUE;
                     [toFromVC updateGeocodeStatus:TRUE isFrom:isFrom]; // alert toFromVC re: outstanding geocoding
                 }
-#if FLURRY_ENABLED
-                NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
-                NSDictionary *params = [NSDictionary 
-                                        dictionaryWithObjectsAndKeys:
+#if FLURRY_ENABLED          
+                NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");          
+                NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
                                         FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                        FLURRY_GEOCODE_RAWADDRESS , rawAddress, 
-                                        nil];
-                [Flurry logEvent:FLURRY_TOFROMTABLE_GEOCODE_REQUEST withParameters:params];
+                                        FLURRY_GEOCODE_RAWADDRESS , rawAddress, nil];          
+                [Flurry logEvent:FLURRY_TOFROMTABLE_GEOCODE_REQUEST withParameters:params];          
 #endif
+                
             }
             @catch (NSException *exception) {
                 NSLog(@"geoLoad Object Error %@", exception);
@@ -438,16 +435,13 @@
                     
                     // if no valid locations, give user an alert
                     if ([validLocations count] == 0) { 
-#if FLURRY_ENABLED
-                        NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
-                        NSDictionary *params = [NSDictionary 
-                                                dictionaryWithObjectsAndKeys:
-                                                FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                                FLURRY_GEOCODE_RAWADDRESS , rawAddress, 
-                                                nil];
-                        [Flurry logEvent:FLURRY_GEOCODE_RESULTS_NONE_IN_REGION withParameters:params];
+#if FLURRY_ENABLED          
+                        NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");          
+                        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                FLURRY_TOFROM_WHICH_TABLE, isFromString,          
+                                                FLURRY_GEOCODE_RAWADDRESS , rawAddress,nil];          
+                        [Flurry logEvent:FLURRY_GEOCODE_RESULTS_NONE_IN_REGION withParameters:params];          
 #endif
-                        
                         NSString *msg = [NSString stringWithFormat:@"Did not find the address: '%@' in the San Francisco Bay Area", rawAddress];
                         
                         alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -462,34 +456,31 @@
                     }
                     
                     // else if exactly one validLocation, use that
-                    else if ([validLocations count] == 1) {
+                    else if ([validLocations count] == 1) {                        
                         Location* location = [validLocations objectAtIndex:0]; // Get the location object
-#if FLURRY_ENABLED
-                        NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
-                        NSDictionary *params = [NSDictionary 
-                                                dictionaryWithObjectsAndKeys:
-                                                FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                                FLURRY_GEOCODE_RAWADDRESS, rawAddress, 
-                                                FLURRY_FORMATTED_ADDRESS, [location shortFormattedAddress],
-                                                nil];
-                        [Flurry logEvent:FLURRY_GEOCODE_RESULTS_ONE withParameters:params];
+#if FLURRY_ENABLED          
+                        NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");          
+                        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                FLURRY_TOFROM_WHICH_TABLE, isFromString,          
+                                                FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                                                FLURRY_FORMATTED_ADDRESS , [location shortFormattedAddress] ,nil];          
+                        [Flurry logEvent:FLURRY_GEOCODE_RESULTS_ONE withParameters:params];          
 #endif
                         [self selectedGeocodedLocation:location]; // update with new location
                     }
                     
                     // else if more than one validLocation, call up LocationPickerView
-                    else if ([validLocations count] > 1) { 
-#if FLURRY_ENABLED
-                        NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
-                        NSDictionary *params = [NSDictionary 
-                                                dictionaryWithObjectsAndKeys:
-                                                FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                                FLURRY_GEOCODE_RAWADDRESS, rawAddress, 
-                                                FLURRY_NUMBER_OF_GEOCODES, 
-                                                [NSString stringWithFormat:@"%d", [validLocations count]],
-                                                nil];
-                        [Flurry logEvent:FLURRY_GEOCODE_RESULTS_MULTIPLE withParameters:params];
+                    else if ([validLocations count] > 1) {
+#if FLURRY_ENABLED          
+                        NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");          
+                        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                FLURRY_TOFROM_WHICH_TABLE, isFromString,          
+                                                FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                                                FLURRY_NUMBER_OF_GEOCODES , 
+                                                [NSString stringWithFormat:@"%d", [validLocations count]],nil];          
+                        [Flurry logEvent:FLURRY_GEOCODE_RESULTS_MULTIPLE withParameters:params];          
 #endif                        
+                                              
                         [toFromVC callLocationPickerFor:self 
                                            locationList:validLocations 
                                                  isFrom:isFrom
@@ -497,18 +488,15 @@
                     }
                 }
                 
-                else if ([geocodeStatus compare:@"ZERO_RESULTS" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+                else if ([geocodeStatus compare:@"ZERO_RESULTS" options:NSCaseInsensitiveSearch] == NSOrderedSame) {                    
                     NSLog(@"Zero results geocoding address");
-#if FLURRY_ENABLED
-                    NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
-                    NSDictionary *params = [NSDictionary 
-                                            dictionaryWithObjectsAndKeys:
-                                            FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                            FLURRY_GEOCODE_RAWADDRESS, rawAddress, 
-                                            nil];
-                    [Flurry logEvent:FLURRY_GEOCODE_RESULTS_NONE withParameters:params];
-#endif                      
-                    
+#if FLURRY_ENABLED          
+                    NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");          
+                    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                            FLURRY_TOFROM_WHICH_TABLE, isFromString,          
+                                            FLURRY_GEOCODE_RAWADDRESS, rawAddress, nil ];  
+                    [Flurry logEvent:FLURRY_GEOCODE_RESULTS_NONE withParameters:params];          
+#endif
                   alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, No valid location found for your address" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                     [alert show];
                     
@@ -527,16 +515,14 @@
                     
                 }
                 else if ([geocodeStatus compare:@"OVER_QUERY_LIMIT" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-                    // TODO error handling for denied, invalid or unknown status (switch to other geocoder on my server...)
-#if FLURRY_ENABLED
-                    NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
-                    NSDictionary *params = [NSDictionary 
-                                            dictionaryWithObjectsAndKeys:
-                                            FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                            FLURRY_GEOCODE_RAWADDRESS, rawAddress, 
-                                            nil];
-                    [Flurry logEvent:FLURRY_GEOCODE_OVER_GOOGLE_QUOTA withParameters:params];
-#endif  
+                    // TODO error handling for over query limit  (switch to other geocoder on my server...)
+#if FLURRY_ENABLED          
+                    NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");          
+                    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                            FLURRY_TOFROM_WHICH_TABLE, isFromString,          
+                                            FLURRY_GEOCODE_RAWADDRESS, rawAddress, nil];          
+                    [Flurry logEvent:FLURRY_GEOCODE_OVER_GOOGLE_QUOTA withParameters:params];          
+#endif
                     NSLog(@"Over query limit");
                     alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to locate your address.  Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                     [alert show];
@@ -544,15 +530,13 @@
                 }
                 else if ([geocodeStatus compare:@"REQUEST_DENIED" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
                     // TODO error handling for denied, invalid or unknown status (switch to other geocoder on my server...)
-#if FLURRY_ENABLED
-                    NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
-                    NSDictionary *params = [NSDictionary 
-                                            dictionaryWithObjectsAndKeys:
-                                            FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                            FLURRY_GEOCODE_RAWADDRESS, rawAddress, 
-                                            nil];
-                    [Flurry logEvent:FLURRY_GEOCODE_OTHER_ERROR withParameters:params];
-#endif  
+#if FLURRY_ENABLED          
+                    NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");          
+                    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                            FLURRY_TOFROM_WHICH_TABLE, isFromString,          
+                                            FLURRY_GEOCODE_RAWADDRESS, rawAddress, nil];          
+                    [Flurry logEvent:FLURRY_GEOCODE_OTHER_ERROR withParameters:params];          
+#endif
                     NSLog(@"Request rejected, status= %@", geocodeStatus);
                     alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to locate your address.  Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                     [alert show];
@@ -561,15 +545,13 @@
             }
             else {
                 // TODO Geocoder did not respond with status field
-#if FLURRY_ENABLED
-                NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
-                NSDictionary *params = [NSDictionary 
-                                        dictionaryWithObjectsAndKeys:
-                                        FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                        FLURRY_GEOCODE_RAWADDRESS, rawAddress, 
-                                        nil];
-                [Flurry logEvent:FLURRY_GEOCODE_OTHER_ERROR withParameters:params];
-#endif  
+#if FLURRY_ENABLED          
+                NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");          
+                NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                        FLURRY_TOFROM_WHICH_TABLE, isFromString,          
+                                        FLURRY_GEOCODE_RAWADDRESS, rawAddress, nil];          
+                [Flurry logEvent:FLURRY_GEOCODE_OTHER_ERROR withParameters:params];          
+#endif
                 alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to locate your address.  Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [alert show];
             }

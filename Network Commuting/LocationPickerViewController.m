@@ -31,6 +31,10 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         [[self navigationItem] setTitle:@"Pick a location"];
+        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
+        [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                        [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
+                                                                         nil]];
     }
     return self;
 }
@@ -73,8 +77,14 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
         cell.textLabel.numberOfLines= 2;     
         cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
     }
-    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];        
-    [[cell textLabel] setText:[loc shortFormattedAddress]];    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:LARGE_FONT_SIZE]];        
+    [[cell textLabel] setText:[loc shortFormattedAddress]];  
+    cell.textLabel.textColor = [UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0];
+    tableView.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
+    
+    UIImage *unselect = [UIImage imageNamed:@"img_unSelect.png"];
+    cell.AccessoryView = [[UIImageView alloc] initWithImage:unselect];
     [cell sizeToFit];
     return cell;
 }
@@ -86,25 +96,27 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
                        locationArray:locationArray isGeocodedResults:isGeocodeResults];
     locationPicked = TRUE;
     [[self navigationController] popViewControllerAnimated:YES];
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_select.png"]];
 }
 
 //DE:21 dynamic cell height 
 #pragma mark - UIDynamic cell heght methods
-
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     Location *loc = [locationArray objectAtIndex:[indexPath row]];
         
     NSString *cellText = [loc formattedAddress];
     CGSize size = [cellText 
-                sizeWithFont:[UIFont systemFontOfSize:14] 
+                sizeWithFont:[UIFont systemFontOfSize:LARGE_FONT_SIZE] 
                 constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
     
     CGFloat height = size.height + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
     if (height < STANDARD_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
         height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
     }
-    return height;
+    // static height for better UI
+    return 55.0;
 }
 
 - (void) viewWillDisappear:(BOOL)animated

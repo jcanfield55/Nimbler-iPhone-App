@@ -22,8 +22,7 @@
     AVAudioPlayer *audioPlayer;
     TPResponse *tpResponse;
     UIProgressView *recProgressView;
-    
-    
+
     IBOutlet UITextView *txtFeedBack;
     IBOutlet UILabel *labelRecTime;
     IBOutlet UILabel *labelCurrentActivityStatus;
@@ -33,30 +32,36 @@
     IBOutlet UIButton * btnPauseRecording;
     IBOutlet UIButton * btnRecordRecording;
         
+    IBOutlet UIButton * btnSubmitFeedback;
     IBOutlet UITextField *txtEmailId;
     int secondsLeft;
-    float secondUsed;
+    float secondElapsed;
     BOOL isRepeat;
     NSTimer *timer;
+    BOOL isFromPause;
+    UIActivityIndicatorView *busyIndicator;
     
-    UIActivityIndicatorView *indicator;
+    FeedBackReqParam *fbReqParams;
     
-    FeedBackReqParam *fbParams;
+    
 }
 
+@property (strong, nonatomic) IBOutlet UITextView *txtFeedBack;
+@property (strong, nonatomic) IBOutlet UITextField *txtEmailId;
 @property (strong, nonatomic) TPResponse *tpResponse; 
 @property(nonatomic,retain) NSString *tpURLResource;
 @property(nonatomic,retain) NSString *mesg;
 @property (strong, nonatomic) UIAlertView * alertView;
 @property (strong, nonatomic) IBOutlet UIButton *btnPlayRecording,*btnStopRecording,*btnPauseRecording,*btnRecordRecording;
 
--(IBAction)recordRecording:(id)sender;
--(IBAction)stopRecording:(id)sender;
--(IBAction)pausRecording:(id)sender;
--(IBAction)playRecording:(id)sender;
+
+-(IBAction)startRecord:(id)sender;
+-(IBAction)stopRecord:(id)sender;
+-(IBAction)pauseRecord:(id)sender;
+-(IBAction)playRecord:(id)sender;
 -(IBAction)submitFeedBack:(id)sender;
 
-@property (strong, nonatomic) FeedBackReqParam *fbParams;; 
+@property (strong, nonatomic) FeedBackReqParam *fbReqParams;; 
 
 -(UIAlertView *) childAlertViewRec ;
 -(UIAlertView *) feedbackConfirmAlert ;
@@ -64,5 +69,6 @@
 -(void)sendFeedbackToServer;
 
 -(id)initWithFeedBack:(NSString *)nibNameOrNil fbParam:(FeedBackReqParam *)fbParam bundle:(NSBundle *)nibBundle;
+
 @end
 

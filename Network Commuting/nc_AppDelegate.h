@@ -21,6 +21,13 @@
 
 @interface nc_AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate> {
     Location* currentLocation;
+    UITabBarController *_tabBarController;
+    
+    NSNumber *FBSource; 
+    NSString *FBDate;
+    NSString *FBToAdd;
+    NSString *FBSFromAdd;
+    NSString *FBUniqueId;
 }
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
@@ -35,8 +42,15 @@
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (strong, nonatomic) NSTimer *timerTweeterGetData;
-@property (strong, nonatomic) NSManagedObject *propertyInfo;
 @property (strong, nonatomic)  NSUserDefaults *prefs;
+@property (strong, nonatomic)  UITabBarController *tabBarController;
+
+// property for Feedback
+@property (strong, nonatomic) NSNumber *FBSource; 
+@property (strong, nonatomic) NSString *FBDate;
+@property (strong, nonatomic) NSString *FBToAdd;
+@property (strong, nonatomic) NSString *FBSFromAdd;
+@property (strong, nonatomic) NSString *FBUniqueId;
 
 - (NSURL *)applicationDocumentsDirectory;
 

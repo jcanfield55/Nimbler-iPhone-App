@@ -18,5 +18,4 @@
 @property(nonatomic) int itineraryNumber;
 
 - (id)initWithMapView:(MKMapView *)m0;  // Preferred initializer
-
 @end

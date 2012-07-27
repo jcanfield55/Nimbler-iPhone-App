@@ -8,10 +8,14 @@
 
 #import "nc_AppDelegate.h"
 #import "UtilityFunctions.h"
+//#import "TestFlightSDK1/TestFlight.h"
 #import "ToFromViewController.h"
 #import "TwitterSearch.h"
 #import "twitterViewController.h"
-#import "Constants.h"
+#import "SettingInfoViewController.h"
+#import "FeedBackForm.h"
+#import "DateTimeViewController.h"
+#import "UserPreferance.h"
 
 #if TEST_FLIGHT_ENABLED
 #import "TestFlightSDK1/TestFlight.h"
@@ -35,8 +39,11 @@ static nc_AppDelegate *appDelegate;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
 @synthesize window = _window;
 @synthesize timerTweeterGetData;
-@synthesize propertyInfo;
 @synthesize prefs;
+@synthesize tabBarController = _tabBarController;
+
+// Feedback parameters
+@synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId;
 
 +(nc_AppDelegate *)sharedInstance
 {
@@ -55,9 +62,6 @@ static nc_AppDelegate *appDelegate;
      (UIRemoteNotificationTypeAlert | 
       UIRemoteNotificationTypeBadge | 
       UIRemoteNotificationTypeSound)];
-    
-    // Set uncaught exception handler
-    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     
     // Configure the RestKit RKClient object for Geocoding and trip planning
     RKObjectManager* rkGeoMgr = [RKObjectManager objectManagerWithBaseURL:GEO_RESPONSE_URL];
@@ -84,7 +88,7 @@ static nc_AppDelegate *appDelegate;
         __managedObjectContext = [rkMOS managedObjectContext];
         
         // Create initial view controller 
-        toFromViewController = [[ToFromViewController alloc] initWithNibName:nil bundle:nil];
+        toFromViewController = [[ToFromViewController alloc] initWithNibName:@"ToFromViewController" bundle:nil];
         [toFromViewController setRkGeoMgr:rkGeoMgr];    // Pass the geocoding RK object
         [toFromViewController setRkPlanMgr:rkPlanMgr];    // Pass the planning RK object
         
@@ -102,29 +106,11 @@ static nc_AppDelegate *appDelegate;
         NSDecimalNumber* version = [NSDecimalNumber decimalNumberWithString:PRELOAD_VERSION_NUMBER];
         [locations preLoadIfNeededFromFile:PRELOAD_LOCATION_FILE latestVersionNumber:version];
         
-        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"UserPreferance"] == nil) {
-            propertyInfo = [NSEntityDescription
-                            insertNewObjectForEntityForName:@"UserPreferance" 
-                            inManagedObjectContext:self.managedObjectContext];
-            
-            NSNumber *walkDistance = [NSNumber numberWithFloat:0.8];
-            [toFromViewController setMaxiWalkDistance:walkDistance];
-            
-            [propertyInfo setValue:[NSNumber numberWithBool:YES] forKey:@"pushEnable"];
-            [propertyInfo setValue:[NSNumber numberWithInt:3]    forKey:@"triggerAtHour"];
-            [propertyInfo setValue:[NSNumber numberWithFloat:0.75] forKey:@"walkDistance"];
-            
-            NSError *error;
-            if (![self.managedObjectContext save:&error]) {
-                NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
-            }
-        }
     }@catch (NSException *exception) {
         NSLog(@"Exception: ----------------- %@", exception);
     } 
     
     // Set a CFUUID (unique identifier) for this device and this app, if doesn't exist already:
-    prefs = [NSUserDefaults standardUserDefaults];
     NSString* cfuuidString = [prefs objectForKey:DEVICE_CFUUID];
     if (!cfuuidString) {  // if the CFUUID not created, create it
         CFUUIDRef cfuuidRef = CFUUIDCreate(kCFAllocatorDefault);
@@ -147,17 +133,43 @@ static nc_AppDelegate *appDelegate;
     
     // Create an instance of a UINavigationController and put toFromViewController as the first view
     @try {
-        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:toFromViewController]; 
-        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        [[self window] setRootViewController:navController];
+        /*
+         // These is for navigation controller
         
+         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:toFromViewController]; 
+         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+         [[self window] setRootViewController:navController];
+         [self.window makeKeyAndVisible];
+        */
+         
+        // This is for TabBar controller
+        
+        self.tabBarController = [[UITabBarController alloc] init];
+        twitterViewController *twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
+        SettingInfoViewController *settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController" bundle:nil];
+        FeedBackForm *fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
+        
+               
+        UINavigationController *toFromController = [[UINavigationController alloc] initWithRootViewController:toFromViewController];
+         UINavigationController *tweetController = [[UINavigationController alloc] initWithRootViewController:twitterView];
+         UINavigationController *settingController = [[UINavigationController alloc] initWithRootViewController:settingView];
+         UINavigationController *fbController = [[UINavigationController alloc] initWithRootViewController:fbView];
+        self.tabBarController.viewControllers = [NSArray arrayWithObjects:toFromController,tweetController,settingController,fbController, nil];
+        
+        [self.tabBarController.tabBar setSelectedImageTintColor:[UIColor redColor]];
+        [self.tabBarController.tabBar setBackgroundImage:[UIImage imageNamed:@"img_tabbar.png"]];
+        
+        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        [[self window] setRootViewController:self.tabBarController];
         [self.window makeKeyAndVisible];
+        
     }
     @catch (NSException *exception) {
         NSLog(@"load exception: %@", exception);
     }
     return YES;
 }
+
 
 // Location Manager update callback
 - (void)locationManager:(CLLocationManager *)manager
@@ -215,8 +227,18 @@ static nc_AppDelegate *appDelegate;
      */
     saveContext([self managedObjectContext]);
     [locationManager stopUpdatingLocation];
+   
+    // Close Keyboard
+    [UIView setAnimationsEnabled:YES];
+    [self.tabBarController.view endEditing:YES];
+    
+    //Reload ToFromViewController
+    ToFromTableViewController *toFromTableVC = [[ToFromTableViewController alloc] init];
+    [toFromTableVC textSubmitted:nil forEvent:nil];
+   
     timerTweeterGetData = nil;
     [timerTweeterGetData invalidate];
+
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -385,9 +407,12 @@ static nc_AppDelegate *appDelegate;
                         prefs = [NSUserDefaults standardUserDefaults];  
                         [prefs setObject:tweeterCount forKey:TWEET_COUNT];
                         [prefs synchronize];
-                        // Upadte automatic badge with Live tweeterCount 
-                        [toFromViewController viewWillAppear:TRUE];
-                        
+                        int badge = [tweeterCount  intValue];
+                        if (badge > 0) {
+                            [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:[NSString stringWithFormat:@"%d",badge]];
+                        } else {
+                            [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
+                        }
                     }
                 } else {                
                     NSDictionary  *regionParser = [rkParser objectFromString:[response bodyAsString] error:nil];                
@@ -478,6 +503,7 @@ static nc_AppDelegate *appDelegate;
         NSString *badge = [[userInfo valueForKey:@"aps"] valueForKey:@"badge"];
         prefs = [NSUserDefaults standardUserDefaults];  
         [prefs setObject:badge forKey:TWEET_COUNT];
+        
         if ([isUrgent isEqualToString:@"true"]) {
             UIAlertView *dataAlert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain"
                                                                 message:message
@@ -488,8 +514,8 @@ static nc_AppDelegate *appDelegate;
             [dataAlert show];
             [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
         } 
-        else {
-            [toFromViewController redirectInTwitterAtPushnotification]; 
+        else { 
+            [self.tabBarController setSelectedIndex:1];
         }
     }
     @catch (NSException *exception) {
@@ -501,7 +527,7 @@ static nc_AppDelegate *appDelegate;
 {
     NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
     if ([btnName isEqualToString:@"OK"]) {
-        [toFromViewController redirectInTwitterAtPushnotification];
+       [self.tabBarController setSelectedIndex:1];
         NSLog(@"receive urgent message");
     }
 }
@@ -530,25 +556,21 @@ static nc_AppDelegate *appDelegate;
 -(void)upadateDefaultUserValue
 {
     @try {
-        if ([[NSUserDefaults standardUserDefaults] valueForKey:@"UserPreferance"] == nil) {
-           
-            // set in TPServer
-            RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-            [RKClient setSharedClient:client];
-            NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
-            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                                    @"deviceid", udid,
-                                    @"alertCount", @"3",
-                                    DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],
-                                    @"maxDistance", @"0.75",
-                                    nil];    
-            NSString *twitCountReq = [@"users/preferences/update" appendQueryParams:params];
-            [[RKClient sharedClient]  get:twitCountReq delegate:self]; 
-            
-            [[NSUserDefaults standardUserDefaults] setValue:@"set" forKey:@"UserPreferance"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
+        UserPreferance* userPrefs = [UserPreferance userPreferance]; // get singleton
+        // set in TPServer
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
+        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
+                                @"deviceid", udid,
+                                @"alertCount", [userPrefs triggerAtHour],
+                                DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],
+                                @"maxDistance", [userPrefs walkDistance],
+                                nil];    
+        NSString *twitCountReq = [@"users/preferences/update" appendQueryParams:params];
+        [[RKClient sharedClient]  get:twitCountReq delegate:self]; 
+        
 
-        }
     }
     @catch (NSException *exception) {
         NSLog(@"Exception when update userSettings at appLuanch: %@",exception);

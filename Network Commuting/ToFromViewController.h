@@ -14,8 +14,6 @@
 #import "enums.h"
 #import "SupportedRegion.h"
 
-
-
 @interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,RKRequestDelegate,UIActionSheetDelegate,UIAlertViewDelegate>
 
 typedef enum {
@@ -47,10 +45,8 @@ typedef enum {
 @property (nonatomic) ToFromEditMode editMode; // Specifies whether to or from address is being edited with the keyboard
 @property (strong, nonatomic) SupportedRegion* supportedRegion; // geographic area supported by this app
 
-@property (strong, nonatomic) CustomBadge *twitterCount;
 @property (nonatomic) BOOL isContinueGetRealTimeData;
 @property (strong, nonatomic) NSTimer *continueGetTime;
-@property (strong, nonatomic) NSNumber *maxiWalkDistance;
 
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
@@ -70,7 +66,6 @@ typedef enum {
 -(NSString *)getCurrentLocationOfFormattedAddress:(Location *)location;
 -(BOOL)alertUsetForLocationService;
 -(void)getRealTimeData;
--(void)getWalkDistance;
--(void)redirectInTwitterAtPushnotification;
-
+-(NSNumber *)getWalkDistance;
+-(void)setFBParameterForGeneral;
 @end

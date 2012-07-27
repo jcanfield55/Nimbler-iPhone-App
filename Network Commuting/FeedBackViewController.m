@@ -41,6 +41,7 @@ static Plan *fbPlan;
     // Release any cached data, images, etc that aren't in use.
 }
 
+
 #pragma mark - View lifecycle
 
 - (void)viewWillAppear:(BOOL)animated
@@ -123,6 +124,7 @@ static Plan *fbPlan;
 #if FLURRY_ENABLED
     [Flurry logEvent:FLURRY_FEEDBACK_STOP];
 #endif
+
     [actSpinner stopAnimating];
     
     if (audioRecorder.recording)
@@ -140,6 +142,7 @@ static Plan *fbPlan;
 #if FLURRY_ENABLED
     [Flurry logEvent:FLURRY_FEEDBACK_PLAY];
 #endif
+
     if (!audioRecorder.recording)
     {
         NSError *error;
@@ -164,6 +167,7 @@ static Plan *fbPlan;
 #if FLURRY_ENABLED
     [Flurry logEvent:FLURRY_FEEDBACK_PAUSE];
 #endif
+
     if (audioPlayer.playing) {
         [audioPlayer pause];
     }    
@@ -356,6 +360,8 @@ static Plan *fbPlan;
 #if FLURRY_ENABLED
     [Flurry logEvent:FLURRY_FEEDBACK_SUBMIT];
 #endif
+
+   
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSString *source = [prefs objectForKey:@"source"];
     NSString *uniqueId = [prefs objectForKey:@"uniqueid"];

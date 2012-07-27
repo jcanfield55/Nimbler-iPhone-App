@@ -14,11 +14,14 @@
 #import "FeedBackForm.h"
 #import "LegMapViewController.h"
 #import "twitterViewController.h"
+#import "nc_AppDelegate.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 
 #if FLURRY_ENABLED
 #include "Flurry.h"
 #endif
+
+#define CELL_HEIGHT             60.0
 
 @interface RouteOptionsViewController()
 {
@@ -37,8 +40,7 @@
 @synthesize advisoryButton;
 @synthesize plan;
 @synthesize isReloadRealData;
-@synthesize liveData;
-@synthesize twitterCount;
+@synthesize liveData,btnGoToNimbler;
 
 Itinerary * itinerary;
 NSString *itinararyId;
@@ -56,7 +58,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     return self;
 }
 
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -68,6 +69,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     rect0.size.height = ROUTE_OPTIONS_TABLE_HEIGHT;
     [mainTable setFrame:rect0];
     [mainTable reloadData];
+    [self setFBParameterForPlan];
 }
 
 - (void)didReceiveMemoryWarning
@@ -78,6 +80,10 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     // Release any cached data, images, etc that aren't in use.
 }
 
+-(void)popOutToNimbler
+{
+    [self.navigationController popViewControllerAnimated:TRUE];
+}
 #pragma mark - UITableViewDelegate methods
 // Table view management methods
 
@@ -97,6 +103,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                                           reuseIdentifier:@"UIRouteOptionsViewCell"];
             [cell.imageView setImage:nil];
         }
+         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         // Get the requested itinerary
         Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
         if (isReloadRealData) {
@@ -125,13 +132,15 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
          */
         
         // Set title
-        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
+        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:LARGER_THEN_MEDIUM_FONT_SIZE]];
         NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)", 
                                [timeFormatter stringFromDate:[itin startTime]],
                                [timeFormatter stringFromDate:[itin endTime]],
                                durationString([[itin duration] floatValue])];
         [[cell textLabel] setText:titleText];
-        
+        cell.textLabel.numberOfLines = 2;
+        cell.textLabel.textColor = [UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0];
+        cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
         // Set sub-title (show each leg's mode and route if available)
         NSMutableString *subTitle = [NSMutableString stringWithCapacity:30];
         NSArray *sortedLegs = [itin sortedLegs];
@@ -149,6 +158,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
             }
         }
         [[cell detailTextLabel] setText:subTitle];
+        UIImage *unselect = [UIImage imageNamed:@"img_unSelect.png"];
+        cell.AccessoryView = [[UIImageView alloc] initWithImage:unselect];
+
     }
     @catch (NSException *exception) {
         NSLog(@"exception at load table: %@", exception);
@@ -157,25 +169,34 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     return cell;
 }
 
+- (CGFloat)tableView:(UITableView *)aTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
+{    
+    return CELL_HEIGHT;  
+}
+
+-(void)hideUnUsedTableViewCell
+{
+    UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
+    view.backgroundColor = [UIColor clearColor];
+    [mainTable setTableFooterView:view];
+}
 
 // If selected, show the RouteDetailsViewController
 - (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    @try {   
-
+    @try {
+        UITableViewCell *cell = [atableView cellForRowAtIndexPath:indexPath];
+        cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_select.png"]];
         if (!routeDetailsVC) {
             routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
         }
         itinararyId =[[[plan sortedItineraries] objectAtIndex:[indexPath row]] itinId];
         itinerary = [plan.sortedItineraries objectAtIndex:[indexPath row]];
-#if FLURRY_ENABLED
-        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                FLURRY_SELECTED_ROW_NUMBER,
-                                 [NSString stringWithFormat:@"%d", [indexPath row]], 
-                                 FLURRY_SELECTED_DEPARTURE_TIME, 
-                                [NSString stringWithFormat:@"%@", [itinerary startTime]], nil];
-                                 [Flurry logEvent:FLURRY_ROUTE_SELECTED withParameters:params];
+
+#if FLURRY_ENABLED         
+        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:                                 FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d", [indexPath row]],                                    FLURRY_SELECTED_DEPARTURE_TIME,[NSString stringWithFormat:@"%@", [itinerary startTime]], nil];                                  [Flurry logEvent:FLURRY_ROUTE_SELECTED withParameters:params];  
 #endif
+        
         [routeDetailsVC setItinerary:itinerary];
         [[self navigationController] pushViewController:routeDetailsVC animated:YES];
     }
@@ -204,6 +225,12 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:[NSNumber numberWithInt:FB_SOURCE_PLAN] uniqueId:[plan planId] date:nil fromAddress:nil toAddress:nil];
         FeedBackForm *feedbackFormVc = [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];
         [[self navigationController] pushViewController:feedbackFormVc animated:YES]; 
+        
+        [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_PLAN];
+        [nc_AppDelegate sharedInstance].FBDate = nil;
+        [nc_AppDelegate sharedInstance].FBToAdd = nil;
+        [nc_AppDelegate sharedInstance].FBSFromAdd = nil;
+        [nc_AppDelegate sharedInstance].FBUniqueId = [plan planId];
     }
     @catch (NSException *exception) {
         NSLog(@"Exception at press feedback button from RouteOptionsViewController : %@", exception);
@@ -220,6 +247,18 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    btnGoToNimbler = [[UIButton alloc] initWithFrame:CGRectMake(0,0,82,34)];
+    [btnGoToNimbler addTarget:self action:@selector(popOutToNimbler) forControlEvents:UIControlEventTouchUpInside];
+    [btnGoToNimbler setBackgroundImage:[UIImage imageNamed:@"img_nimblerNavigationSelect.png"] forState:UIControlStateNormal];
+    
+    UIBarButtonItem *backTonimbler = [[UIBarButtonItem alloc] initWithCustomView:btnGoToNimbler];
+    self.navigationItem.leftBarButtonItem = backTonimbler;
+    
+    [self hideUnUsedTableViewCell];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                     [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
+                                                                     nil]];
     NSLog(@"RouteOptions loaded");
 }
 
@@ -228,24 +267,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     
     [super viewDidAppear:animated];
     NSLog(@"RouteOptions did appear");
-    
-    @try {
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        int tweetConut = [[prefs objectForKey:TWEET_COUNT] intValue];
-        [twitterCount removeFromSuperview];
-        twitterCount = [[CustomBadge alloc] init];
-        twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
-        [twitterCount setFrame:CGRectMake(60, 372, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
-        if (tweetConut == 0) {
-            [twitterCount setHidden:YES];
-        } else {
-            [self.view addSubview:twitterCount];
-            [twitterCount setHidden:NO];
-        }
-    }
-    @catch (NSException *exception) {
-        NSLog(@"Exception at press feedback button from RouteOptionsViewController : %@", exception);
-    }
 }
 
 - (void)viewDidUnload
@@ -253,7 +274,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
-    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -262,14 +282,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-
-//-(void)sendRequestForFeedback:(RKParams*)para
-//{
-//    RKParams *param = [RKParams alloc];
-//    param = para;
-//}
 #pragma mark realTime data updates
-
 -(void)setLiveFeed:(id)liveFees
 {
     @try {
@@ -335,7 +348,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     }
 }
 
-
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     @try {
         if ([request isGET]) {       
@@ -349,5 +361,16 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     }  @catch (NSException *exception) {
         NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
     } 
+}
+
+
+-(void)setFBParameterForPlan
+{
+    NSLog(@"plan....");
+    [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_PLAN];
+    [nc_AppDelegate sharedInstance].FBDate = nil;
+    [nc_AppDelegate sharedInstance].FBToAdd = nil;
+    [nc_AppDelegate sharedInstance].FBSFromAdd = nil;
+    [nc_AppDelegate sharedInstance].FBUniqueId = [plan planId];
 }
 @end
