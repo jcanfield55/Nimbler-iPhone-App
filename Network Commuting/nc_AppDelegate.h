@@ -19,7 +19,7 @@
 #import "RouteDetailsViewController.h"
 #import "LegMapViewController.h"
 
-@interface nc_AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate> {
+@interface nc_AppDelegate : UIResponder <UIApplicationDelegate,CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate> {
     Location* currentLocation;
     UITabBarController *_tabBarController;
     
@@ -51,6 +51,8 @@
 @property (strong, nonatomic) NSString *FBToAdd;
 @property (strong, nonatomic) NSString *FBSFromAdd;
 @property (strong, nonatomic) NSString *FBUniqueId;
+
+@property (strong, nonatomic) Location *tempLocation;
 
 - (NSURL *)applicationDocumentsDirectory;
 

@@ -78,13 +78,11 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
         cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:LARGE_FONT_SIZE]];        
+    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:LARGER_THEN_MEDIUM_FONT_SIZE]];        
     [[cell textLabel] setText:[loc shortFormattedAddress]];  
     cell.textLabel.textColor = [UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0];
     tableView.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
     
-    UIImage *unselect = [UIImage imageNamed:@"img_unSelect.png"];
-    cell.AccessoryView = [[UIImageView alloc] initWithImage:unselect];
     [cell sizeToFit];
     return cell;
 }
@@ -96,8 +94,6 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
                        locationArray:locationArray isGeocodedResults:isGeocodeResults];
     locationPicked = TRUE;
     [[self navigationController] popViewControllerAnimated:YES];
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_select.png"]];
 }
 
 //DE:21 dynamic cell height 
@@ -108,7 +104,7 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
         
     NSString *cellText = [loc formattedAddress];
     CGSize size = [cellText 
-                sizeWithFont:[UIFont systemFontOfSize:LARGE_FONT_SIZE] 
+                sizeWithFont:[UIFont systemFontOfSize:LARGER_THEN_MEDIUM_FONT_SIZE] 
                 constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
     
     CGFloat height = size.height + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
@@ -116,7 +112,7 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
         height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
     }
     // static height for better UI
-    return 55.0;
+    return height;
 }
 
 - (void) viewWillDisappear:(BOOL)animated
@@ -154,6 +150,12 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+   UIButton *btnGoToNimbler = [[UIButton alloc] initWithFrame:CGRectMake(0,0,82,34)];
+    [btnGoToNimbler addTarget:self action:@selector(popOutToNimbler) forControlEvents:UIControlEventTouchUpInside];
+    [btnGoToNimbler setBackgroundImage:[UIImage imageNamed:@"img_nimblerNavigationSelect.png"] forState:UIControlStateNormal];
+    
+    UIBarButtonItem *backTonimbler = [[UIBarButtonItem alloc] initWithCustomView:btnGoToNimbler];
+    self.navigationItem.leftBarButtonItem = backTonimbler;
 }
 
 - (void)viewDidUnload
@@ -166,6 +168,11 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+-(void)popOutToNimbler
+{
+    [self.navigationController popViewControllerAnimated:TRUE];
 }
 
 @end

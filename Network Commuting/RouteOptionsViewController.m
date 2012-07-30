@@ -108,27 +108,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
          cell.selectionStyle = UITableViewCellSelectionStyleNone;
         // Get the requested itinerary
         Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
-        if (isReloadRealData) {
-            if([itin itinArrivalFlag] >= 0) {
-                UIImage *imgForArrivalTime = [UIImage alloc];
-                cell.frame = CGRectMake(100, 2, 20, 20);
-                
-                if([itin.itinArrivalFlag intValue] == ON_TIME) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_ontime.png"] ;
-                }  else if([itin.itinArrivalFlag intValue] == DELAYED) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_delay.png"] ;
-                } else if([itin.itinArrivalFlag intValue] == EARLY) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_early.png"] ;
-                } else if([itin.itinArrivalFlag intValue] == EARLIER) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_earlier.ong"] ;
-                } else if ([itin.itinArrivalFlag intValue] == ITINERARY_TIME_SLIPPAGE ) {
-                    imgForArrivalTime = [UIImage imageNamed:@"itin_slipage.png"] ;
-                }
-                [cell.imageView setImage:imgForArrivalTime];
-            }
-        } else {
-            [cell.imageView setImage:nil];
-        }
+        
         /*
          for feedback planId
          */
@@ -140,9 +120,25 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                                [timeFormatter stringFromDate:[itin endTime]],
                                durationString([[itin duration] floatValue])];
         [[cell textLabel] setText:titleText];
+        if (isReloadRealData) {
+            if([itin itinArrivalFlag] >= 0) {
+                if([itin.itinArrivalFlag intValue] == ON_TIME) {
+                    titleText = [NSString stringWithFormat:@"%@ (%@)",titleText,@"ON_TIME"];
+                }  else if([itin.itinArrivalFlag intValue] == DELAYED) {
+                    titleText = [NSString stringWithFormat:@"%@ (%@)",titleText,@"DELAYED"];
+                } else if([itin.itinArrivalFlag intValue] == EARLY) {
+                    titleText = [NSString stringWithFormat:@"%@ (%@)",titleText,@"EARLY"];
+                } else if([itin.itinArrivalFlag intValue] == EARLIER) {
+                   titleText = [NSString stringWithFormat:@"%@ (%@)",titleText,@"EARLIER"];
+                } else if ([itin.itinArrivalFlag intValue] == ITINERARY_TIME_SLIPPAGE ) {
+                     titleText = [NSString stringWithFormat:@"%@ (%@)",titleText,@"TIME_SLIPPAGE"];
+                }
+                 [[cell textLabel] setText:titleText];
+            }
+        }         
         cell.textLabel.numberOfLines = 2;
         cell.textLabel.textColor = [UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0];
-        cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
+        cell.detailTextLabel.textColor = [UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
         // Set sub-title (show each leg's mode and route if available)
         NSMutableString *subTitle = [NSMutableString stringWithCapacity:30];
         NSArray *sortedLegs = [itin sortedLegs];
@@ -161,7 +157,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         }
         [[cell detailTextLabel] setText:subTitle];
         
-        cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.07];
+        cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.04];
     }
     @catch (NSException *exception) {
         NSLog(@"exception at load table: %@", exception);

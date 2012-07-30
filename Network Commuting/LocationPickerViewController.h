@@ -24,4 +24,5 @@
 
 - (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
 
+-(void)popOutToNimbler;
 @end

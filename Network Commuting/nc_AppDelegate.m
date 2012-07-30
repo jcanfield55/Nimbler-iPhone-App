@@ -43,7 +43,7 @@ static nc_AppDelegate *appDelegate;
 @synthesize tabBarController = _tabBarController;
 
 // Feedback parameters
-@synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId;
+@synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId,tempLocation;
 
 +(nc_AppDelegate *)sharedInstance
 {
@@ -404,9 +404,6 @@ static nc_AppDelegate *appDelegate;
                     if ([respCode intValue]== RESPONSE_SUCCESSFULL) {                   
                         NSLog(@"count: %@",[(NSDictionary*)tweeterCountParser objectForKey:TWEET_COUNT]);
                         NSString *tweeterCount = [(NSDictionary*)tweeterCountParser objectForKey:TWEET_COUNT];
-                        prefs = [NSUserDefaults standardUserDefaults];  
-                        [prefs setObject:tweeterCount forKey:TWEET_COUNT];
-                        [prefs synchronize];
                         int badge = [tweeterCount  intValue];
                         if (badge > 0) {
                             [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:[NSString stringWithFormat:@"%d",badge]];

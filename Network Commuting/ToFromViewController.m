@@ -45,7 +45,8 @@
     BOOL toGeocodeRequestOutstanding;  // true if there is an outstanding To geocode request
     BOOL fromGeocodeRequestOutstanding;  //true if there is an outstanding From geocode request
     BOOL savetrip;
-    BOOL isTwitterLivaData ;
+    BOOL isTwitterLivaData;
+    BOOL isCurrenLocation;
     double startButtonClickTime;
     float durationOfResponseTime;
     UIActivityIndicatorView* activityIndicator;
@@ -76,8 +77,6 @@
 @synthesize fromTable;
 @synthesize fromTableVC;
 @synthesize routeButton;
-@synthesize feedbackButton;
-@synthesize advisoriesButton;
 @synthesize rkGeoMgr;
 @synthesize rkPlanMgr;
 @synthesize rkSavePlanMgr;
@@ -96,14 +95,12 @@
 @synthesize continueGetTime;
 
 // Constants for animating up and down the To: field
-#define TO_SECTION 0
-#define FROM_SECTION 1
+#define TO_SECTION 1
+#define FROM_SECTION 0
 #define TIME_DATE_SECTION 2
-
 
 NSString *currentLoc;
 float currentLocationResTime;
-BOOL isCurrent = TRUE;
 
 #pragma mark view Lifecycle
 
@@ -115,8 +112,8 @@ BOOL isCurrent = TRUE;
             UIImage *imgTitle = [UIImage imageNamed:@"nimblr.png"];
             self.navigationItem.titleView = [[UIImageView alloc]  initWithImage:imgTitle];
             
-//            UIBarButtonItem *btnRoute = [[UIBarButtonItem alloc] initWithTitle:@"Route" style:UIBarButtonItemStylePlain target:self action:@selector(redirectAtNimblerSetting)];
-//            self.navigationItem.rightBarButtonItem = btnRoute;
+            UIBarButtonItem *btnRoute = [[UIBarButtonItem alloc] initWithTitle:@"swap" style:UIBarButtonItemStylePlain target:self action:@selector(doSwapLocation)];
+            self.navigationItem.leftBarButtonItem = btnRoute;
            
             planRequestHistory = [NSMutableArray array]; // Initialize this array
             departOrArrive = DEPART;
@@ -393,7 +390,7 @@ BOOL isCurrent = TRUE;
             return @"From:";
         }
         else if (section == TO_SECTION) {
-            return @"Where are you going?";
+            return @"To:";
         }
     }
     // else, if in Edit mode
@@ -401,26 +398,41 @@ BOOL isCurrent = TRUE;
         return @"From:";
     }
     // else
-    return @"Where are you going?";
+    return @"To:";
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    if(section == 1) {
-        if (isCurrent) {
-            return 1.0;
-        } else {
-            return 24.0;
-        }
+    if (section == 0) {
+        return 20.0;
+    } else if(section == 1) {
+         return 24.0;
     } else if (section == 2){
         return 1.0;
     } else {
-        return 24.0;
+        return 20.0;
     }
-
-    return 25.0;
 }
 
+//-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+//{
+//    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 20)];
+//    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 3, tableView.bounds.size.width - 10, 18)];
+//   
+//    label.textColor = [UIColor lightGrayColor];
+//    label.backgroundColor = [UIColor clearColor];
+//        if (section == 1) {
+//         label.text = @"To:";
+//            
+//    } else if(section == 0){
+//        label.text = @"From:";
+//        
+//    }
+//    [headerView addSubview:label];
+//   
+//    
+//    return headerView;    
+//}
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     return 3.0;
@@ -442,6 +454,7 @@ BOOL isCurrent = TRUE;
         
         if (isTripDateCurrentTime) { 
             [[cell textLabel] setText:@"Depart"];
+            cell.textLabel.textColor = [UIColor lightGrayColor];
             [[cell detailTextLabel] setText:@"Now"];
         } 
         else {
@@ -463,6 +476,7 @@ BOOL isCurrent = TRUE;
         [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
         [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
         [[cell textLabel] setText:@"From"];
+        cell.textLabel.textColor = [UIColor lightGrayColor];
         [[cell detailTextLabel] setText:@"Current Location"];
         return cell;        
     }
@@ -723,46 +737,6 @@ BOOL isCurrent = TRUE;
     }
 }
 
-- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
-{
-    @try {
-        NSString *fromLocs = @"";    
-        NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
-        [dFormat setDateStyle:NSDateFormatterShortStyle];
-        [dFormat setTimeStyle:NSDateFormatterMediumStyle];
-        if ([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
-            fromLocs = [self getCurrentLocationOfFormattedAddress:fromLocation];
-        } else {
-            fromLocs = [fromLocation formattedAddress];
-        }
-        NSLog(@"current Location %@", fromLocs);
-        FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:[NSNumber numberWithInt:FB_SOURCE_GENERAL] uniqueId:nil date:[dFormat stringFromDate:tripDate] fromAddress:fromLocs toAddress:[toLocation formattedAddress]];
-        FeedBackForm *feedbackVC =  [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];  // DE56 fix
-        [[self navigationController] pushViewController:feedbackVC animated:YES];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"exception at feedback button press from TOFromView: %@", exception);
-    }
-}
-
-- (IBAction)advisoriesButtonPressed:(id)sender forEvent:(UIEvent *)event
-{
-//    @try {
-//        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-//        [RKClient setSharedClient:client];
-//        isTwitterLivaData = TRUE;
-//        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
-//        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-//                                DEVICE_ID, udid,
-//                                nil];    
-//        NSString *advisoriesAll = [ALL_TWEETS_REQ appendQueryParams:params];
-//        [[RKClient sharedClient]  get:advisoriesAll delegate:self];
-//    }
-//    @catch (NSException *exception) {
-//        NSLog(@"Exception at advisories button click from ToFromview: %@", exception);
-//    } 
-}
-
 #pragma mark Edit events for ToFrom table
 // Method to adjust the mainTable for editing mode
 //
@@ -851,7 +825,6 @@ BOOL isCurrent = TRUE;
     // If TO_EDIT or FROM_EDIT, make the txt field the first responder
     if (newEditMode == TO_EDIT) {
         [[toTableVC txtField] becomeFirstResponder];
-        NSLog(@"to controller ----------------");
     } 
     else if (newEditMode == FROM_EDIT) {
         [[fromTableVC txtField] becomeFirstResponder];
@@ -1084,7 +1057,7 @@ BOOL isCurrent = TRUE;
         if (activityTimer && [activityTimer isValid]) {
             [activityTimer invalidate];  // if old activity timer still valid, invalidate it
         }
-        [NSTimer scheduledTimerWithTimeInterval:56.0f target:self selector: @selector(stopActivityIndicator) userInfo: nil repeats: NO];
+        [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector: @selector(stopActivityIndicator) userInfo: nil repeats: NO];
     }
     @catch (NSException *exception) {
         NSLog(@"exception at start IndicatorView: %@", exception);
@@ -1293,16 +1266,17 @@ BOOL isCurrent = TRUE;
 -(void)setFBParameterForGeneral
 {
     @try {
-        NSString *fromLocs = @"";    
+        NSString *fromLocs = NULL_STRING;    
         NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
         [dFormat setDateStyle:NSDateFormatterShortStyle];
         [dFormat setTimeStyle:NSDateFormatterMediumStyle];
         if ([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
             fromLocs = [self getCurrentLocationOfFormattedAddress:fromLocation];
-            isCurrent = TRUE;
+            isCurrenLocation = TRUE;
+            [nc_AppDelegate sharedInstance].tempLocation = fromLocation;
         } else {
             fromLocs = [fromLocation formattedAddress];
-            isCurrent = FALSE;
+            isCurrenLocation = FALSE;
         }
         NSLog(@"from: %@   ToLoacation: %@", fromLocs, [toLocation formattedAddress]);
         
@@ -1311,10 +1285,44 @@ BOOL isCurrent = TRUE;
         [nc_AppDelegate sharedInstance].FBToAdd = [toLocation formattedAddress];
         [nc_AppDelegate sharedInstance].FBSFromAdd = fromLocs;
         [nc_AppDelegate sharedInstance].FBUniqueId = nil;
-        
-        }
+    }
     @catch (NSException *exception) {
         NSLog(@"exception at feedback button press from TOFromView: %@", exception);
+    }
+}
+
+-(void)doSwapLocation
+{
+    if (!isCurrenLocation) {
+        Location *fromloc = fromLocation;
+        Location *toLoc = toLocation;
+        // Swap Location
+        [toTableVC markAndUpdateSelectedLocation:fromloc];
+        [fromTableVC markAndUpdateSelectedLocation:toLoc];
+    } else {
+        Location *fromLoc = [self getReverseGeo:[nc_AppDelegate sharedInstance].tempLocation];
+        [toTableVC markAndUpdateSelectedLocation:fromLoc];
+    }
+}
+
+-(Location *)getReverseGeo:(Location *)location
+{
+    @try {
+        double latitude = [[location lat] doubleValue];
+        double longitude = [[location lng] doubleValue];  
+        float startTime = CFAbsoluteTimeGetCurrent();
+        NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv", latitude, longitude];  
+        NSLog(@" %@", urlString);
+        NSURL *url = [NSURL URLWithString:urlString];
+        NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
+        NSArray *streetName = [locationString componentsSeparatedByString:@"\""];
+        currentLoc = [streetName objectAtIndex:1];
+        currentLocationResTime =  CFAbsoluteTimeGetCurrent() - startTime;
+        [location setShortFormattedAddress:currentLoc];
+        return location;
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception at reverGeocod: %@", exception);
     }
 }
 

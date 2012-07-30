@@ -231,7 +231,7 @@ NSUserDefaults *prefs;
         if (itineraryNumber != 0) {
             [mainTable selectRowAtIndexPath:[NSIndexPath indexPathForRow:itineraryNumber inSection:0] animated:YES scrollPosition:UITableViewScrollPositionMiddle];   
         }
-        
+    
     }
     @catch (NSException *exception) {
         NSLog(@"exception at viewWillAppear RouteDetail: %@", exception);
@@ -241,7 +241,6 @@ NSUserDefaults *prefs;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
     [mainTable flashScrollIndicators];   
 }
 

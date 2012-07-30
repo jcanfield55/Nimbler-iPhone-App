@@ -34,7 +34,7 @@
 
 }
 
-- (void)markAndUpdateSelectedLocation:(Location *)loc;  // Updates the selected location to be loc (in locations object, in toFromVC, and in the table selected cell
+//- (void)markAndUpdateSelectedLocation:(Location *)loc;  // Updates the selected location to be loc (in locations object, in toFromVC, and in the table selected cell
 - (void)selectedGeocodedLocation:(Location *)loc;  // Internal method to process a new incoming geocoded location (if the only one returned by geocoder, or if this one picked by LocationPickerVC)
 
 @end
@@ -120,6 +120,7 @@
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"Select Row: isFrom=%d, section=%d, row=%d", isFrom, [indexPath section], [indexPath row]);
+        
     if ([toFromVC editMode] == NO_EDIT && [indexPath section] == 0) { // "Enter New Address" cell
         
         if (isFrom) {
@@ -210,6 +211,7 @@
     selectedCell = [myTableView cellForRowAtIndexPath:indexPath];  // get the new selected cell
     [myTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];     // scroll to the top of the table
     selectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
+    selectedCell.textLabel.textColor = [UIColor redColor];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -226,6 +228,12 @@
         [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
         [[cell textLabel] setTextColor:[UIColor lightGrayColor]];
         [[cell textLabel] setText:@"Enter New Address"];
+        // get the new selected cell 
+        if (indexPath.row == 1) {
+             cell.textLabel.textColor = [UIColor redColor];
+        }
+       
+
         return cell;
     }
     // If not the 'Enter new address row', show the appropriate location cell
