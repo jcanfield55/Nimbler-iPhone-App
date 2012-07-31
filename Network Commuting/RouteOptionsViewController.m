@@ -22,6 +22,7 @@
 #endif
 
 #define CELL_HEIGHT             60.0
+#define IDENTIFIER_CELL         @"UIRouteOptionsViewCell"
 
 @interface RouteOptionsViewController()
 {
@@ -98,20 +99,17 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 {
     // Check for a reusable cell first, use that if it exists
     UITableViewCell *cell =
-    [tableView dequeueReusableCellWithIdentifier:@"UIRouteOptionsViewCell"];
+    [tableView dequeueReusableCellWithIdentifier:IDENTIFIER_CELL];
     @try {
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
-                                          reuseIdentifier:@"UIRouteOptionsViewCell"];
+                                          reuseIdentifier:IDENTIFIER_CELL];
             [cell.imageView setImage:nil];
         }
          cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.textLabel.numberOfLines = 2;
         // Get the requested itinerary
         Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
-        
-        /*
-         for feedback planId
-         */
         
         // Set title
         [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
@@ -120,6 +118,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                                [timeFormatter stringFromDate:[itin endTime]],
                                durationString([[itin duration] floatValue])];
         [[cell textLabel] setText:titleText];
+        
+        // notify with TEXT for LEG timimg
         if (isReloadRealData) {
             if([itin itinArrivalFlag] >= 0) {
                 if([itin.itinArrivalFlag intValue] == ON_TIME) {
@@ -136,7 +136,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                  [[cell textLabel] setText:titleText];
             }
         }         
-        cell.textLabel.numberOfLines = 2;
         cell.textLabel.textColor = [UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0];
         cell.detailTextLabel.textColor = [UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
         // Set sub-title (show each leg's mode and route if available)
@@ -156,7 +155,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
             }
         }
         [[cell detailTextLabel] setText:subTitle];
-        
         cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.04];
     }
     @catch (NSException *exception) {
@@ -309,12 +307,13 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                 [routeDetailsVC ReloadLegWithNewData];
             }            
         } else {
-            //thereare no live feeds available.            
+            //thereare no live feeds available. 
+            isReloadRealData = FALSE;
             NSLog(@"thereare no live feeds available for current route");
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at live itinerary response: %@",exception);
+        NSLog(@"exception at live feed data response: %@",exception);
     }
 }
 
@@ -360,7 +359,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 
 -(void)setFBParameterForPlan
 {
-    NSLog(@"plan....");
     [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_PLAN];
     [nc_AppDelegate sharedInstance].FBDate = nil;
     [nc_AppDelegate sharedInstance].FBToAdd = nil;

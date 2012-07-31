@@ -313,6 +313,10 @@
 {
     rawAddress = [sender text];
     
+    if (rawAddress == nil) {
+        NSLog(@" - - - - - -  - -");
+        rawAddress = NULL_STRING;
+    } 
     // Serch with numeric street address
 //    if (rawAddress != @"") {
 //        NSCharacterSet *numeric = [NSCharacterSet alphanumericCharacterSet];

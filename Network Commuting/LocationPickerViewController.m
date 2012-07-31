@@ -18,7 +18,6 @@
 @implementation LocationPickerViewController
 
 @synthesize mainTable;
-@synthesize feedbackButton;
 @synthesize toFromTableVC;
 @synthesize locationArray;
 @synthesize isFrom;
@@ -135,15 +134,6 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
             [[toFromTableVC toFromVC] setEditMode:TO_EDIT];
         }
     }
-}
-
-// Feedback button responder
-- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event 
-{
-    FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:[NSNumber numberWithInt:FB_SOURCE_GENERAL] uniqueId:nil date:nil fromAddress:nil toAddress:nil];
-    FeedBackForm *feedbackVC =  [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];
-    [[self navigationController] pushViewController:feedbackVC animated:YES];
-
 }
 
 - (void)viewDidLoad

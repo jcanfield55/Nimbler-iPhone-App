@@ -25,6 +25,7 @@
 #endif
 
 BOOL isTwitterLivaData = FALSE; 
+BOOL isRegionSupport = FALSE;
 
 static nc_AppDelegate *appDelegate;
 
@@ -227,18 +228,22 @@ static nc_AppDelegate *appDelegate;
      */
     saveContext([self managedObjectContext]);
     [locationManager stopUpdatingLocation];
-   
+    // Flush tweeter timer
+     [timerTweeterGetData invalidate];
+    timerTweeterGetData = nil;
+    
+    [toFromViewController.continueGetTime invalidate];
+    toFromViewController.continueGetTime = nil;
+    
+    //Reload ToFromViewController
+    ToFromTableViewController *toFromTableVC = [[ToFromTableViewController alloc] initWithNibName:nil bundle:nil];
+    [toFromTableVC textSubmitted:nil forEvent:nil];
+    
+    
     // Close Keyboard
     [UIView setAnimationsEnabled:YES];
     [self.tabBarController.view endEditing:YES];
     
-    //Reload ToFromViewController
-    ToFromTableViewController *toFromTableVC = [[ToFromTableViewController alloc] init];
-    [toFromTableVC textSubmitted:nil forEvent:nil];
-   
-    timerTweeterGetData = nil;
-    [timerTweeterGetData invalidate];
-
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -248,6 +253,10 @@ static nc_AppDelegate *appDelegate;
      */
     [toFromViewController updateTripDate];
     [locationManager startUpdatingLocation];
+    if (timerTweeterGetData == nil) {
+       timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];     
+    } 
+    
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -376,6 +385,7 @@ static nc_AppDelegate *appDelegate;
 -(void)suppertedRegion
 {    
     @try {
+        isRegionSupport = TRUE;
         RKClient *client = [RKClient clientWithBaseURL:TRIP_GENERATE_URL];
         [RKClient setSharedClient:client];
         [[RKClient sharedClient]  get:@"metadata" delegate:self];
@@ -411,9 +421,10 @@ static nc_AppDelegate *appDelegate;
                             [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
                         }
                     }
-                } else {                
+                } else if(isRegionSupport){                
                     NSDictionary  *regionParser = [rkParser objectFromString:[response bodyAsString] error:nil];                
                     SupportedRegion *region = [SupportedRegion alloc] ;
+                    isRegionSupport = FALSE;
                     for (id key in regionParser) {
                         if ([key isEqualToString:@"upperRightLatitude"]) {
                             [region setUpperRightLatitude:[regionParser objectForKey:key]];
@@ -435,7 +446,9 @@ static nc_AppDelegate *appDelegate;
                     }                
                     [toFromViewController setSupportedRegion:region];
                     [self getTwiiterLiveData];
-                    timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
+                    if (timerTweeterGetData == nil) {
+                        timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
+                    }
                 }
             }
         }
@@ -537,9 +550,7 @@ static nc_AppDelegate *appDelegate;
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
         NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
-        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                                @"deviceid", udid, 
-                                nil];    
+        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_ID, udid, nil];    
         isTwitterLivaData = TRUE;
         NSString *twitCountReq = [@"advisories/count" appendQueryParams:params];
         [[RKClient sharedClient]  get:twitCountReq delegate:self];
@@ -559,7 +570,7 @@ static nc_AppDelegate *appDelegate;
         [RKClient setSharedClient:client];
         NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                                @"deviceid", udid,
+                                DEVICE_ID, udid,
                                 @"alertCount", [userPrefs triggerAtHour],
                                 DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],
                                 @"maxDistance", [userPrefs walkDistance],

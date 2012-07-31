@@ -87,13 +87,10 @@ NSUserDefaults *prefs;
             [btnBackItem addTarget:self action:@selector(navigateBack:) forControlEvents:UIControlEventTouchUpInside];
             [btnBackItem setBackgroundImage:[UIImage imageNamed:@"img_backSelect.png"] forState:UIControlStateNormal];
                         
-           
-            
             btnForwardItem = [[UIButton alloc] initWithFrame:CGRectMake(72,0,52,34)];
             [btnForwardItem addTarget:self action:@selector(navigateForward:) forControlEvents:UIControlEventTouchUpInside];
             [btnForwardItem setBackgroundImage:[UIImage imageNamed:@"img_forwardSelect.png"] forState:UIControlStateNormal];
             
-           
 //            forwardButton = [[UIBarButtonItem alloc] initWithCustomView:btnForwardItem]; 
             
             [view addSubview:btnBackItem];
@@ -345,6 +342,8 @@ NSUserDefaults *prefs;
             } else if([leg isTrain]){                        
                 [self setFBParameterForLeg:[leg legId]];
             } 
+        } else {
+            [self setFBParameterForItinerary];
         }
     }
     @catch (NSException *exception) {
@@ -425,6 +424,7 @@ NSUserDefaults *prefs;
 
 -(void)setFBParameterForItinerary
 {
+    NSLog(@"Itinerary.....");
     [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_ITINERARY];
     [nc_AppDelegate sharedInstance].FBDate = nil;
     [nc_AppDelegate sharedInstance].FBToAdd = nil;
@@ -434,6 +434,7 @@ NSUserDefaults *prefs;
 
 -(void)setFBParameterForLeg:(NSString *)legId
 {
+    NSLog(@"leg.....");
     [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_LEG];
     [nc_AppDelegate sharedInstance].FBDate = nil;
     [nc_AppDelegate sharedInstance].FBToAdd = nil;

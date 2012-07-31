@@ -237,8 +237,15 @@
 {
     if ([[self mode] isEqualToString:@"BUS"]) {   
         return true;   
-    }
+    } 
     return false;
+}
+-(BOOL)isSubway
+{
+    if ([[self mode] isEqualToString:@"SUBWAY"]) {   
+        return true;   
+    } 
+    return false; 
 }
 
 - (NSString *)ncDescription

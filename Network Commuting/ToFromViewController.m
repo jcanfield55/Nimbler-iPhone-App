@@ -45,7 +45,6 @@
     BOOL toGeocodeRequestOutstanding;  // true if there is an outstanding To geocode request
     BOOL fromGeocodeRequestOutstanding;  //true if there is an outstanding From geocode request
     BOOL savetrip;
-    BOOL isTwitterLivaData;
     BOOL isCurrenLocation;
     double startButtonClickTime;
     float durationOfResponseTime;
@@ -95,8 +94,8 @@
 @synthesize continueGetTime;
 
 // Constants for animating up and down the To: field
-#define TO_SECTION 1
 #define FROM_SECTION 0
+#define TO_SECTION 1
 #define TIME_DATE_SECTION 2
 
 NSString *currentLoc;
@@ -112,7 +111,11 @@ float currentLocationResTime;
             UIImage *imgTitle = [UIImage imageNamed:@"nimblr.png"];
             self.navigationItem.titleView = [[UIImageView alloc]  initWithImage:imgTitle];
             
-            UIBarButtonItem *btnRoute = [[UIBarButtonItem alloc] initWithTitle:@"swap" style:UIBarButtonItemStylePlain target:self action:@selector(doSwapLocation)];
+            UIButton *btnSwapLocation = [[UIButton alloc] initWithFrame:CGRectMake(0,0,55,35)];
+            [btnSwapLocation addTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
+            [btnSwapLocation setBackgroundImage:[UIImage imageNamed:@"img_swapLocation.png"] forState:UIControlStateNormal];
+            UIBarButtonItem *btnRoute = [[UIBarButtonItem alloc] initWithCustomView:btnSwapLocation];
+            
             self.navigationItem.leftBarButtonItem = btnRoute;
            
             planRequestHistory = [NSMutableArray array]; // Initialize this array
@@ -171,7 +174,7 @@ float currentLocationResTime;
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
                                                                      [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
                                                                      nil]];
-    isContinueGetRealTimeData = false;
+    
     [continueGetTime invalidate];
     continueGetTime = nil;
     
@@ -204,6 +207,7 @@ float currentLocationResTime;
         [Flurry logEvent:FLURRY_TOFROMVC_APPEAR];
 #endif
         
+        isContinueGetRealTimeData = false;
         [continueGetTime invalidate];
         continueGetTime = nil;
         [self updateTripDate];  // update tripDate if needed
@@ -842,7 +846,7 @@ float currentLocationResTime;
     {   
         NSInteger statusCode = [[objectLoader response] statusCode];
         NSLog(@"Planning HTTP status code = %d", statusCode);
-        NSLog(@"whole plan: %@", [[objectLoader response] bodyAsString]);
+       
         @try {
             if (objects && [objects objectAtIndex:0]) {
                 if (savetrip) {
@@ -885,9 +889,10 @@ float currentLocationResTime;
                         }
                         
                         [routeOptionsVC setFBParameterForPlan];
-                        isContinueGetRealTimeData = TRUE;
+//                        isContinueGetRealTimeData = TRUE;
+                        NSLog(@"GetRealTime - - - - - -  - - - - - >>>>>>>>>>>> ");
                         [self getRealTimeData];
-                        continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:59.0 target:self selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
+                        continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
                     }
                     @catch (NSException *exception) {
                         NSLog(@"Exception while iterating over TP response plan: %@", exception);
@@ -1112,7 +1117,7 @@ float currentLocationResTime;
         RKParams *rkp = [RKParams params];
         [RKClient setSharedClient:client];
         
-        [rkp setValue:udid forParam:@"deviceid"]; 
+        [rkp setValue:udid forParam:DEVICE_ID]; 
         [rkp setValue:tripResponse forParam:@"planJsonString"]; 
         [rkp setValue:timeResponseTime forParam:@"timeTripPlan"];
         [rkp setValue:[toLocation formattedAddress]  forParam:@"frmtdAddTo"];
@@ -1158,30 +1163,20 @@ float currentLocationResTime;
 #pragma mark RKResponse Delegate method
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     @try {
-        RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
         if (isContinueGetRealTimeData) {
             if ([request isGET]) {       
-                NSLog(@"response %@", [response bodyAsString]);                
+                NSLog(@"response %@", [response bodyAsString]);
+                isContinueGetRealTimeData = false;
+                RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
                 id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];    
                 [routeOptionsVC setIsReloadRealData:false];
                 [routeOptionsVC setLiveFeed:res];
             } 
         }
-        if (isTwitterLivaData) {
-            if ([request isGET]) {       
-                NSLog(@"response %@", [response bodyAsString]);
-                RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
-                id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];                
-                twitterViewController *twit = [[twitterViewController alloc] init];
-                [twit setTwitterLiveData:res];
-                [[self navigationController] pushViewController:twit animated:YES];
-                isTwitterLivaData = FALSE;
-            }
-        }
+        
         if ([request isPOST]) {      
             NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
-            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                                    @"deviceid", udid, 
+            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_ID, udid, 
                                     nil];            
             rkSavePlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];            
             [[rkSavePlanMgr mappingProvider] setMapping:[Plan objectMappingforPlanner:OTP_PLANNER] forKeyPath:@"plan"];
@@ -1230,6 +1225,7 @@ float currentLocationResTime;
 -(void)getRealTimeData
 {
     @try {
+        isContinueGetRealTimeData = TRUE;
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];   
         NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
@@ -1278,8 +1274,7 @@ float currentLocationResTime;
             fromLocs = [fromLocation formattedAddress];
             isCurrenLocation = FALSE;
         }
-        NSLog(@"from: %@   ToLoacation: %@", fromLocs, [toLocation formattedAddress]);
-        
+//        NSLog(@"from: %@   ToLoacation: %@", fromLocs, [toLocation formattedAddress]);        
         [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_GENERAL];
         [nc_AppDelegate sharedInstance].FBDate = [dFormat stringFromDate:tripDate];
         [nc_AppDelegate sharedInstance].FBToAdd = [toLocation formattedAddress];
@@ -1311,8 +1306,7 @@ float currentLocationResTime;
         double latitude = [[location lat] doubleValue];
         double longitude = [[location lng] doubleValue];  
         float startTime = CFAbsoluteTimeGetCurrent();
-        NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv", latitude, longitude];  
-        NSLog(@" %@", urlString);
+        NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv",latitude,longitude];  
         NSURL *url = [NSURL URLWithString:urlString];
         NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
         NSArray *streetName = [locationString componentsSeparatedByString:@"\""];
