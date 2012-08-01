@@ -160,11 +160,12 @@
         }
         else {    // if a normal location
 #if FLURRY_ENABLED      
-            NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");          
+            NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
+            NSString* selectedAddressParam = (isFrom ? FLURRY_FROM_SELECTED_ADDRESS : FLURRY_TO_SELECTED_ADDRESS);
             NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
                                     FLURRY_TOFROM_WHICH_TABLE, isFromString,          
                                     FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d",[indexPath row]],          
-                                    FLURRY_TOFROM_SELECTED_ADDRESS, [loc shortFormattedAddress], nil];          
+                                    selectedAddressParam, [loc shortFormattedAddress], nil];          
             [Flurry logEvent:FLURRY_TOFROMTABLE_SELECT_ROW withParameters:params];          
 #endif
             [self markAndUpdateSelectedLocation:loc];  // Mark the selected location and send updates to locations and toFromVC

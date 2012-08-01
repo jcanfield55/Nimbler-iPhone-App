@@ -951,7 +951,11 @@ float currentLocationResTime;
         if (!isDuplicatePlan)  // if not a recent duplicate request
         {
 #if FLURRY_ENABLED
-            [Flurry logEvent: FLURRY_ROUTE_REQUESTED];
+            NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    FLURRY_FROM_SELECTED_ADDRESS, [fromLocation shortFormattedAddress],          
+                                    FLURRY_TO_SELECTED_ADDRESS, [toLocation shortFormattedAddress],
+                                    nil];                    
+            [Flurry logEvent: FLURRY_ROUTE_REQUESTED withParameters:flurryParams];
 #endif
             [self startActivityIndicator];
             

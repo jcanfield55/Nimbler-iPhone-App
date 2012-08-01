@@ -123,15 +123,15 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         if (isReloadRealData) {
             if([itin itinArrivalFlag] >= 0) {
                 if([itin.itinArrivalFlag intValue] == ON_TIME) {
-                    titleText = [NSString stringWithFormat:@"%@ (%@)",titleText,@"ON_TIME"];
+                    titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"On Time"];
                 }  else if([itin.itinArrivalFlag intValue] == DELAYED) {
-                    titleText = [NSString stringWithFormat:@"%@ (%@)",titleText,@"DELAYED"];
+                    titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"Delayed"];
                 } else if([itin.itinArrivalFlag intValue] == EARLY) {
-                    titleText = [NSString stringWithFormat:@"%@ (%@)",titleText,@"EARLY"];
+                    titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"Early"];
                 } else if([itin.itinArrivalFlag intValue] == EARLIER) {
-                   titleText = [NSString stringWithFormat:@"%@ (%@)",titleText,@"EARLIER"];
+                   titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"Earlier"];
                 } else if ([itin.itinArrivalFlag intValue] == ITINERARY_TIME_SLIPPAGE ) {
-                     titleText = [NSString stringWithFormat:@"%@ (%@)",titleText,@"TIME_SLIPPAGE"];
+                     titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"Time Slippage"];
                 }
                  [[cell textLabel] setText:titleText];
             }

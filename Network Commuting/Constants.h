@@ -64,7 +64,7 @@
 #define PREFS_DEFAULT_MAX_WALK_DISTANCE             0.75
 
 // Flurry analytics and logging
-#define FLURRY_ENABLED                  0
+#define FLURRY_ENABLED                  1
 
 // Flurry events
 #define FLURRY_TOFROMVC_APPEAR              @"ToFromView appear"
@@ -96,7 +96,8 @@
 #define FLURRY_ADVISORIES_APPEAR            @"Advisories appear"
 
 // Flurry parameter names
-#define FLURRY_TOFROM_SELECTED_ADDRESS      @"ToFrom Selected Address:"
+#define FLURRY_TO_SELECTED_ADDRESS          @"To Selected Address:"
+#define FLURRY_FROM_SELECTED_ADDRESS        @"From Selected Address:"
 #define FLURRY_TOFROM_WHICH_TABLE           @"ToFrom which table:"
 #define FLURRY_SELECTED_ROW_NUMBER          @"Table selected row #:"
 #define FLURRY_NUMBER_OF_GEOCODES           @"Number of geocodes:"
