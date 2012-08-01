@@ -81,13 +81,15 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
     [[cell textLabel] setText:[loc shortFormattedAddress]];  
     cell.textLabel.textColor = [UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0];
     tableView.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
-    
+    cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.01];
     [cell sizeToFit];
     return cell;
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.3];
     // Send back the picked location and pop the view controller back to ToFromViewController
     [toFromTableVC setPickedLocation:[locationArray objectAtIndex:[indexPath row]] 
                        locationArray:locationArray isGeocodedResults:isGeocodeResults];

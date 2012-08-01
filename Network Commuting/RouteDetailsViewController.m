@@ -112,19 +112,24 @@ NSUserDefaults *prefs;
 
 - (void)setItinerary:(Itinerary *)i0
 {
-    itinerary = i0;
-    [legMapVC setItinerary:i0];
-    [self setItineraryNumber:0];  // Initially start on the first row of itinerary
-    [btnBackItem setEnabled:FALSE];
+    @try {
+        itinerary = i0;
+        [legMapVC setItinerary:i0];
+        [self setItineraryNumber:0];  // Initially start on the first row of itinerary
+        [btnBackItem setEnabled:FALSE];
         
-    //set FbParameterForItinerary
-    [self setFBParameterForItinerary];
-    
-    // Compute the mainTableTotalHeight by calling the height of each row
-    mainTableTotalHeight = 0.0;
-    for (int i=0; i<[self tableView:mainTable numberOfRowsInSection:0]; i++) {
-        mainTableTotalHeight += [self tableView:mainTable 
-                        heightForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+        //set FbParameterForItinerary
+        [self setFBParameterForItinerary];
+        
+        // Compute the mainTableTotalHeight by calling the height of each row
+        mainTableTotalHeight = 0.0;
+        for (int i=0; i<[self tableView:mainTable numberOfRowsInSection:0]; i++) {
+            mainTableTotalHeight += [self tableView:mainTable 
+                            heightForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception at Set Itinerary %@", exception);
     }
 }
 
@@ -274,8 +279,7 @@ NSUserDefaults *prefs;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Check for a reusable cell first, use that if it exists
-    UITableViewCell *cell =
-    [tableView dequeueReusableCellWithIdentifier:@"UIRouteDetailsViewCell"];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UIRouteDetailsViewCell"];
     @try {
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 

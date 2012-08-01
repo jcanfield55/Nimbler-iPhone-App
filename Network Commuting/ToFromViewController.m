@@ -889,8 +889,6 @@ float currentLocationResTime;
                         }
                         
                         [routeOptionsVC setFBParameterForPlan];
-//                        isContinueGetRealTimeData = TRUE;
-                        NSLog(@"GetRealTime - - - - - -  - - - - - >>>>>>>>>>>> ");
                         [self getRealTimeData];
                         continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
                     }

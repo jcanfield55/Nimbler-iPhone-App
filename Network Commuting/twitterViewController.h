@@ -18,7 +18,7 @@
 @property (nonatomic, strong) UIBarButtonItem *reload;
 @property (nonatomic) BOOL isFromAppDelegate;
 @property (nonatomic) BOOL isTwitterLiveData;
-
+@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *getTweetInProgress;
 @property (strong, nonatomic) IBOutlet UILabel *noAdvisory; 
 
 -(void)setTwitterLiveData:(id)tweetData;

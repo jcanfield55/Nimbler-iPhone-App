@@ -179,13 +179,14 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 - (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     @try {
-//        UITableViewCell *cell = [atableView cellForRowAtIndexPath:indexPath];
-//        cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_select.png"]];
+        UITableViewCell *cell = [atableView cellForRowAtIndexPath:indexPath];
+        cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.3];
         if (!routeDetailsVC) {
             routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
         }
-        itinararyId =[[[plan sortedItineraries] objectAtIndex:[indexPath row]] itinId];
+        
         itinerary = [plan.sortedItineraries objectAtIndex:[indexPath row]];
+        itinararyId =[itinerary itinId];
 
 #if FLURRY_ENABLED         
         NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:                                 FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d", [indexPath row]],                                    FLURRY_SELECTED_DEPARTURE_TIME,[NSString stringWithFormat:@"%@", [itinerary startTime]], nil];                                  [Flurry logEvent:FLURRY_ROUTE_SELECTED withParameters:params];  

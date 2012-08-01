@@ -28,7 +28,7 @@
 
 NSMutableArray *arrayTweet;
 
-@synthesize mainTable,twitterData,dateFormatter,reload,isFromAppDelegate,isTwitterLiveData,noAdvisory;
+@synthesize mainTable,twitterData,dateFormatter,reload,isFromAppDelegate,isTwitterLiveData,noAdvisory,getTweetInProgress;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -44,7 +44,7 @@ NSMutableArray *arrayTweet;
         
         reload = [[UIBarButtonItem alloc] initWithCustomView:btnReload]; 
         self.navigationItem.rightBarButtonItem = reload;
-
+        
     }
     return self;
 }
@@ -78,6 +78,7 @@ NSMutableArray *arrayTweet;
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
                                                                      [UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
                                                                      nil]];
+    
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -94,11 +95,12 @@ NSMutableArray *arrayTweet;
 #if FLURRY_ENABLED
     [Flurry logEvent:FLURRY_ADVISORIES_APPEAR];
 #endif
-    [self getAdvisoryData];
-    
+[getTweetInProgress startAnimating];    
     mainTable.delegate = self;
     mainTable.dataSource = self;
-    [mainTable reloadData];
+    
+    [noAdvisory setHidden:YES];
+    [self getAdvisoryData];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -109,12 +111,12 @@ NSMutableArray *arrayTweet;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    
     if ([arrayTweet count] == 0) {
         [noAdvisory setHidden:NO];
     } else {
         [noAdvisory setHidden:YES];
     }
-    
     return [arrayTweet count];
 }
 
@@ -174,8 +176,10 @@ NSMutableArray *arrayTweet;
 #pragma mark reloadNewTweets request Response
 -(void)getLatestTweets 
 {
+    [getTweetInProgress startAnimating];
+    [noAdvisory setHidden:YES];
+    
     NSString *latestTweetTime = @"0";
-//    if (arrayTweet.count != 0) {
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
         id key = [arrayTweet objectAtIndex:0];                
@@ -191,7 +195,6 @@ NSMutableArray *arrayTweet;
         NSString *req = [LATEST_TWEETS_REQ appendQueryParams:dict];
         [[RKClient sharedClient]  get:req delegate:self]; 
     [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
-//    }
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
@@ -201,12 +204,19 @@ NSMutableArray *arrayTweet;
             if (isTwitterLiveData) {
                 isTwitterLiveData = false;
                 NSLog(@"response %@", [response bodyAsString]);
+                
+                [getTweetInProgress stopAnimating];
+                [getTweetInProgress setHidesWhenStopped:TRUE];
+
                 id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];                
                 [self setTwitterLiveData:res];
             } else {
                 NSLog(@"latest tweets: %@", [response bodyAsString]);
                 id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];
                 NSNumber *respCode = [(NSDictionary*)res objectForKey:ERROR_CODE];
+                    [noAdvisory setHidden:NO];
+                [getTweetInProgress stopAnimating];
+                [getTweetInProgress setHidesWhenStopped:TRUE];
                 
                 if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
                     NSMutableArray *arrayLatestTweet = [(NSDictionary*)res objectForKey:TWEET]; 
