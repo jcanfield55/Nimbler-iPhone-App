@@ -64,7 +64,7 @@
 #define PREFS_DEFAULT_MAX_WALK_DISTANCE             0.75
 
 // Flurry analytics and logging
-#define FLURRY_ENABLED                  1
+#define FLURRY_ENABLED                  0
 
 // Flurry events
 #define FLURRY_TOFROMVC_APPEAR              @"ToFromView appear"
