@@ -42,8 +42,8 @@
 #define ROUTE_LEGMAP_X_ORIGIN               5
 #define ROUTE_LEGMAP_Y_ORIGIN               5
 #define ROUTE_LEGMAP_WIDTH                  309
-#define ROUTE_LEGMAP_MIN_HEIGHT             250
-#define ROUTE_DETAILS_TABLE_MAX_HEIGHT      110
+#define ROUTE_LEGMAP_MIN_HEIGHT             190
+#define ROUTE_DETAILS_TABLE_MAX_HEIGHT      170
 
 // Table cell height
 #define STANDARD_TABLE_CELL_MINIMUM_HEIGHT  40
@@ -56,6 +56,7 @@
 
 
 // Font styles
+#define MEDIUM_FONT                         fontWithName:@"Helvetica" size:14.0
 #define MEDIUM_BOLD_FONT                    fontWithName:@"Helvetica-Bold" size:14.0
 #define MEDIUM_OBLIQUE_FONT                 fontWithName:@"Helvetica-Oblique" size:14.0
 #define MEDIUM_LARGE_BOLD_FONT              fontWithName:@"Helvetica-Bold" size:15.0

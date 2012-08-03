@@ -25,6 +25,8 @@
     UIBarButtonItem *forwardButton;
     UIBarButtonItem *backButton;
     NSArray* bbiArray;
+    
+    NSMutableDictionary* imageDictionary; // Dictionary to hold pre-loaded table images
 }
 @end
 
@@ -50,9 +52,10 @@ NSUserDefaults *prefs;
 
 -(void)viewDidLoad{
     [super viewDidLoad];
-    btnGoToItinerary = [[UIButton alloc] initWithFrame:CGRectMake(0,0,92,34)];
+    UIImage* btnImage = [UIImage imageNamed:@"img_itineraryNavigation.png"];
+    btnGoToItinerary = [[UIButton alloc] initWithFrame:CGRectMake(0,0,btnImage.size.width, btnImage.size.height)];
     [btnGoToItinerary addTarget:self action:@selector(popOutToItinerary) forControlEvents:UIControlEventTouchUpInside];
-    [btnGoToItinerary setBackgroundImage:[UIImage imageNamed:@"img_itineraryNavigation.png"] forState:UIControlStateNormal];
+    [btnGoToItinerary setBackgroundImage:btnImage forState:UIControlStateNormal];
     
     UIBarButtonItem *backToItinerary = [[UIBarButtonItem alloc] initWithCustomView:btnGoToItinerary];
     self.navigationItem.leftBarButtonItem = backToItinerary;
@@ -102,6 +105,18 @@ NSUserDefaults *prefs;
             
             timeFormatter = [[NSDateFormatter alloc] init];
             [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
+            
+            // Preload the image files for table icons and put into a dictionary
+            NSArray* imageNameArray = [NSArray arrayWithObjects:
+                                       @"img_legPoint", @"img_legPointSelect",
+                                       @"img_legTrain", @"img_legTrainSelect",
+                                       @"img_legWalk", @"img_legWalkSelect", 
+                                       @"img_backSelect", @"img_backUnSelect", 
+                                       @"img_forwardSelect", @"img_forwardUnSelect", nil];
+            imageDictionary = [[NSMutableDictionary alloc] initWithCapacity:[imageNameArray count]];
+            for (NSString* filename in imageNameArray) {
+                [imageDictionary setObject:[UIImage imageNamed:filename] forKey:filename];
+            }
         }
     }
     @catch (NSException *exception) {
@@ -143,62 +158,25 @@ NSUserDefaults *prefs;
 #endif
                                                                                                 
     itineraryNumber = iNumber0;
+    [mainTable reloadData]; // reload the table to highlight the new itinerary number
     
     // Scrolls the table to the new area.  If it is not
     [mainTable selectRowAtIndexPath:[NSIndexPath indexPathForRow:itineraryNumber inSection:0] animated:YES scrollPosition:UITableViewScrollPositionMiddle]; 
-
-    /*
-     Implemetation Red colour highlighted at selacted Leg.
-     */
-    NSInteger cellCount = [mainTable numberOfRowsInSection:0];
-    int i;
-    for(i = 0; i<cellCount ;i++){
-        UITableViewCell *cell = [mainTable cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-        Leg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:i];
-        if(itineraryNumber == i){
-            [cell.textLabel setTextColor:[UIColor redColor]];
-            if (![leg isEqual:[NSNull null]]) {
-                if([leg isWalk]){
-                    cell.imageView.image = [UIImage imageNamed:@"img_legWalkSelect"];
-                } else if([leg isBus]){
-                    cell.imageView.image = [UIImage imageNamed:@"img_legPointSelect"];
-                } else if([leg isTrain]){                        
-                    cell.imageView.image = [UIImage imageNamed:@"img_legTrainSelect"];
-                } 
-            } else {
-                cell.imageView.image = [UIImage imageNamed:@"img_legPointSelect"];
-            }
-        }
-        else{
-            [cell.textLabel setTextColor:[UIColor blackColor]];
-            if (![leg isEqual:[NSNull null]]) {
-                if([leg isWalk]){
-                    cell.imageView.image = [UIImage imageNamed:@"img_legWalk"];
-                } else if([leg isBus]){
-                    cell.imageView.image = [UIImage imageNamed:@"img_legPoint"];
-                } else if([leg isTrain]){                        
-                    cell.imageView.image = [UIImage imageNamed:@"img_legTrain"];
-                } 
-            } else {
-                cell.imageView.image = [UIImage imageNamed:@"img_legPoint"];
-            }
-        }
-    }
     
     // Activates or de-activates the backward and forward as needed
     if(itineraryNumber == 0){
         [btnBackItem setEnabled:FALSE];
-        [btnBackItem setBackgroundImage:[UIImage imageNamed:@"img_backUnSelect.png"] forState:UIControlStateNormal];
+        [btnBackItem setBackgroundImage:[imageDictionary objectForKey:@"img_backUnSelect"] forState:UIControlStateNormal];
     } else {
         [btnBackItem setEnabled:TRUE];
-        [btnBackItem setBackgroundImage:[UIImage imageNamed:@"img_backSelect.png"] forState:UIControlStateNormal];
+        [btnBackItem setBackgroundImage:[imageDictionary objectForKey:@"img_backSelect"] forState:UIControlStateNormal];
     }
     if(itineraryNumber == [itinerary itineraryRowCount] - 1){       
         [btnForwardItem setEnabled:FALSE];
-        [btnForwardItem setBackgroundImage:[UIImage imageNamed:@"img_forwardUnSelect.png"] forState:UIControlStateNormal];
+        [btnForwardItem setBackgroundImage:[imageDictionary objectForKey:@"img_forwardUnSelect"] forState:UIControlStateNormal];
     } else {
         [btnForwardItem setEnabled:TRUE];
-        [btnForwardItem setBackgroundImage:[UIImage imageNamed:@"img_forwardSelect.png"] forState:UIControlStateNormal];
+        [btnForwardItem setBackgroundImage:[imageDictionary objectForKey:@"img_forwardSelect"] forState:UIControlStateNormal];
     }
     // Updates legMapVC itinerary number (changing the region for the map
     [legMapVC setItineraryNumber:itineraryNumber];
@@ -290,12 +268,41 @@ NSUserDefaults *prefs;
             [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:STANDARD_FONT_SIZE]];
             [[cell detailTextLabel] setLineBreakMode:UILineBreakModeWordWrap];
             [[cell detailTextLabel] setNumberOfLines:0];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.07];
         }
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        [[cell textLabel] setText:[[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]]];
         
+        // Find the right image filename
+        NSMutableString* imgFileName = [NSMutableString stringWithCapacity:40];
+        Leg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:[indexPath row]];
+        if ([leg isEqual:[NSNull null]]) { // Start or finish point
+            [imgFileName appendString:@"img_legPoint"];
+        } else {
+            if([leg isWalk]){
+                [imgFileName appendString:@"img_legWalk"];
+            } else if([leg isTrain]){                        
+                [imgFileName appendString:@"img_legTrain"];
+            } 
+        }
+ 
+        // if this is the selected row, make red
+        if (itineraryNumber == [indexPath row]) { 
+            [cell.textLabel setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+            [imgFileName appendString:@"Select"];
+        } else {
+            [cell.textLabel setTextColor:[UIColor darkGrayColor]];
+        }
+        
+        // Add text
+        [[cell textLabel] setText:[[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]]];
         [[cell detailTextLabel] setText:[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]]];
-        cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.07];
+
+        // Add icon if there is one
+        if ([imgFileName length] == 0) {
+            cell.imageView.image = nil;
+        } else {
+            cell.imageView.image = [imageDictionary objectForKey:imgFileName];
+        }
     }
     @catch (NSException *exception) {
         NSLog(@"exception while reload RouteDetailView: %@", exception);

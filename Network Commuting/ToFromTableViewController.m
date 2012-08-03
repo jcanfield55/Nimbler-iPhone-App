@@ -20,7 +20,6 @@
 @interface ToFromTableViewController () 
 {
     // Internal variables
-    UITableViewCell* selectedCell; // Cell currently selected 
     Location* selectedLocation;  // Location currently selected
     NSString *rawAddress;    // last user entered raw address
     NSString *urlResource;   // URL resource sent to geocoder for last raw address
@@ -69,7 +68,7 @@
         txtField=[[UITextField alloc]initWithFrame:CGRectMake(TOFROM_TEXT_FIELD_INDENT,0,myTableView.frame.size.width-TOFROM_TEXT_FIELD_INDENT,[myTableView rowHeight]-TOFROM_INSERT_INTO_CELL_MARGIN)];
         [txtField setPlaceholder:@"Enter new address"];
         [txtField setClearButtonMode:UITextFieldViewModeAlways];  // Add a clear button for text field
-        [txtField setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
+        [txtField setFont:[UIFont MEDIUM_FONT]];
         [txtField setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
 
         [txtField addTarget:self action:@selector(toFromTyping:forEvent:) forControlEvents:UIControlEventEditingChanged];
@@ -119,8 +118,7 @@
 {
     NSLog(@"Select Row: isFrom=%d, section=%d, row=%d", isFrom, [indexPath section], [indexPath row]);
         
-    if ([toFromVC editMode] == NO_EDIT && 
-        [self adjustedForEnterNewAddressFor:[indexPath row]] == -1) { // "Enter New Address" cell
+    if ([self adjustedForEnterNewAddressFor:[indexPath row]] == -1) {  // "Enter New Address" cell
         if (isFrom) {
             [toFromVC setEditMode:FROM_EDIT]; 
         } else {
@@ -133,42 +131,52 @@
         Location *loc = [locations 
                          locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]]
                          isFrom:isFrom];  //selected Location 
-        [toFromVC setEditMode:NO_EDIT];  // Have toFromVC end the edit mode (DE96 fix)
-
-        if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) { // If a list (like 'Caltrain Station List')
-#if FLURRY_ENABLED          
-            NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");          
-            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    FLURRY_TOFROM_WHICH_TABLE, isFromString,          
-                                    FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d",[indexPath row]],
-                                    nil];          
-            [Flurry logEvent:FLURRY_TOFROMTABLE_CALTRAIN_LIST withParameters:params];          
-#endif
-            // Increment frequency of the list header
+        // If user tapped the selected location, then go into Edit Mode if not there already
+        if ([toFromVC editMode] == NO_EDIT && loc == selectedLocation) {
             if (isFrom) {
-                [loc incrementFromFrequency];
+                [toFromVC setEditMode:FROM_EDIT]; 
             } else {
-                [loc incrementToFrequency];
+                [toFromVC setEditMode:TO_EDIT];
             }
-            
-            // Call the location picker with the list
-            NSArray* list = [locations locationsMembersOfList:[loc memberOfList]];
-            [toFromVC callLocationPickerFor:self 
-                               locationList:list 
-                                     isFrom:isFrom
-                           isGeocodeResults:NO];
         }
-        else {    // if a normal location
-#if FLURRY_ENABLED      
-            NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
-            NSString* selectedAddressParam = (isFrom ? FLURRY_FROM_SELECTED_ADDRESS : FLURRY_TO_SELECTED_ADDRESS);
-            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    FLURRY_TOFROM_WHICH_TABLE, isFromString,          
-                                    FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d",[indexPath row]],          
-                                    selectedAddressParam, [loc shortFormattedAddress], nil];          
-            [Flurry logEvent:FLURRY_TOFROMTABLE_SELECT_ROW withParameters:params];          
+        else {
+            [toFromVC setEditMode:NO_EDIT];  // Have toFromVC end the edit mode (DE96 fix)
+            
+            if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) { // If a list (like 'Caltrain Station List')
+#if FLURRY_ENABLED          
+                NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");          
+                NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                        FLURRY_TOFROM_WHICH_TABLE, isFromString,          
+                                        FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d",[indexPath row]],
+                                        nil];          
+                [Flurry logEvent:FLURRY_TOFROMTABLE_CALTRAIN_LIST withParameters:params];          
 #endif
-            [self markAndUpdateSelectedLocation:loc];  // Mark the selected location and send updates to locations and toFromVC
+                // Increment frequency of the list header
+                if (isFrom) {
+                    [loc incrementFromFrequency];
+                } else {
+                    [loc incrementToFrequency];
+                }
+                
+                // Call the location picker with the list
+                NSArray* list = [locations locationsMembersOfList:[loc memberOfList]];
+                [toFromVC callLocationPickerFor:self 
+                                   locationList:list 
+                                         isFrom:isFrom
+                               isGeocodeResults:NO];
+            }
+            else {    // if a normal location
+#if FLURRY_ENABLED      
+                NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
+                NSString* selectedAddressParam = (isFrom ? FLURRY_FROM_SELECTED_ADDRESS : FLURRY_TO_SELECTED_ADDRESS);
+                NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                        FLURRY_TOFROM_WHICH_TABLE, isFromString,          
+                                        FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d",[indexPath row]],          
+                                        selectedAddressParam, [loc shortFormattedAddress], nil];          
+                [Flurry logEvent:FLURRY_TOFROMTABLE_SELECT_ROW withParameters:params];          
+#endif
+                [self markAndUpdateSelectedLocation:loc];  // Mark the selected location and send updates to locations and toFromVC
+            }
         }
     }
 }
@@ -205,11 +213,9 @@
     
     selectedLocation = loc;   
     [myTableView reloadData];  // Reload the data with the new sorting
-    NSIndexPath* indexPath = [NSIndexPath indexPathForRow:0 inSection:0]; // The top row (which now should be the selected item)
-    selectedCell = [myTableView cellForRowAtIndexPath:indexPath];  // get the new selected cell
     [myTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];     // scroll to the top of the table
-    selectedCell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
 }
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -222,11 +228,12 @@
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
                                           reuseIdentifier:@"ToFromEnterNewLocationCell"];
-       
+            [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
+            cell.textLabel.textColor = [UIColor lightGrayColor];
+            [[cell textLabel] setText:@"Enter New Address"];
+            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
         }
-        [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
-        cell.textLabel.textColor = [UIColor lightGrayColor];
-        [[cell textLabel] setText:@"Enter New Address"];
+
         return cell;
     }
     // If not the 'Enter new address row', show the appropriate location cell
@@ -249,15 +256,21 @@
         // Bold italic if a list header
         [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
         cell.textLabel.textColor = [UIColor darkGrayColor];
+        [cell setAccessoryType:UITableViewCellAccessoryNone];
     } 
     else if (loc == selectedLocation) {
         [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
         cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
-        // cell.textLabel.text = [cell.textLabel.text uppercaseString];
+        if ([toFromVC editMode] == NO_EDIT) {
+            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+        } else {
+            [cell setAccessoryType:UITableViewCellAccessoryNone];
+        }
     } else {
         // just bold for normal cell
         [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
         cell.textLabel.textColor = [UIColor darkGrayColor];
+        [cell setAccessoryType:UITableViewCellAccessoryNone];
     }
     
     cell.textLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
@@ -274,7 +287,7 @@
 }
 
 // This function makes adjustments for inserting the "Enter New Address" row in the right location
-// If there is a selectedLocation, "Enter New Address" appears right under it (in row 1)
+// If there is a selectedLocation, there is no "Enter New Address" row 
 // If there is no selectedLocation, "Enter New Address" appears at the top of the list
 // Given a raw IndexRow (from iOS), this method returns -1 if this is the "Enter New Address" row
 // Otherwise it returns an index that can be passed to [locations locationAtIndex...] to get
@@ -285,14 +298,7 @@
         return rawIndexRow; // "Enter New Address" does not show up when not in NO_EDIT
     }
     else if (selectedLocation) { 
-        // if selected address there, ENTER_NEW_ADDRESS is in row 1
-        if (rawIndexRow == 0) { 
-            return rawIndexRow; // selectedLocation row
-        } else if (rawIndexRow == 1) { 
-            return -1;  // Enter New Address row
-        } else {   
-            return (rawIndexRow - 1); // normal location row
-        }
+        return rawIndexRow; // "Enter New Address" does not show up when there is a selected location
     }
     else {  // if no selected address, ENTER_NEW_ADDRESS is in row 0
         return (rawIndexRow - 1);
@@ -307,11 +313,6 @@
 // This method updates the to & from table to reflect entries that match the text
 - (IBAction)toFromTyping:(id)sender forEvent:(UIEvent *)event {
 
-    // Deselect any selected cell
-    if (selectedCell) {
-        [selectedCell setAccessoryType:UITableViewCellAccessoryNone];
-        selectedCell = nil; 
-    }
     if (selectedLocation) {
         selectedLocation = nil;
         [locations updateSelectedLocation:nil isFrom:isFrom];
