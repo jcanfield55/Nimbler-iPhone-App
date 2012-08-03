@@ -34,7 +34,6 @@
 
 }
 
-//- (void)markAndUpdateSelectedLocation:(Location *)loc;  // Updates the selected location to be loc (in locations object, in toFromVC, and in the table selected cell
 - (void)selectedGeocodedLocation:(Location *)loc;  // Internal method to process a new incoming geocoded location (if the only one returned by geocoder, or if this one picked by LocationPickerVC)
 
 @end
@@ -50,6 +49,10 @@
 @synthesize myTableView;
 @synthesize txtField;
 @synthesize supportedRegion;
+
+// Constants for location of "Enter New Address" and "Selected Location"
+#define SELECTED_LOCATION_POSITION 1
+#define ENTER_NEW_ADDRESS_POSITION 0
 
 - (id)initWithTable:(UITableView *)t isFrom:(BOOL)isF toFromVC:(ToFromViewController *)tfVC locations:(Locations *)l;
 {
@@ -113,7 +116,7 @@
         return 1;  // this is the new address entry section
     }
     else {
-        return[locations numberOfLocations:isFrom]; // matching rows
+        return [locations numberOfLocations:isFrom]; // matching rows
     }
 }
 
@@ -211,13 +214,13 @@
     NSIndexPath* indexPath = [NSIndexPath indexPathForRow:0 inSection:1]; // The top row (which now should be the selected item)
     selectedCell = [myTableView cellForRowAtIndexPath:indexPath];  // get the new selected cell
     [myTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];     // scroll to the top of the table
-    selectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
     selectedCell.textLabel.textColor = [UIColor redColor];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([toFromVC editMode]==NO_EDIT && [indexPath section] == 0) {  // If it is the 'Enter new address' row...
+    if ([toFromVC editMode]==NO_EDIT && [indexPath section] == ENTER_NEW_ADDRESS_POSITION) {  
+        // If it is the 'Enter new address' row...
         UITableViewCell *cell =
         [tableView dequeueReusableCellWithIdentifier:@"ToFromEnterNewLocationCell"];
         
@@ -229,12 +232,6 @@
         [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
         [[cell textLabel] setTextColor:[UIColor lightGrayColor]];
         [[cell textLabel] setText:@"Enter New Address"];
-        // get the new selected cell 
-        if (indexPath.row == 1) {
-             cell.textLabel.textColor = [UIColor redColor];
-        }
-       
-
         return cell;
     }
     // If not the 'Enter new address row', show the appropriate location cell
@@ -250,24 +247,24 @@
     // Prepare the cell settings
     Location *loc = [locations locationAtIndex:([indexPath row]) isFrom:isFrom];
     [[cell textLabel] setText:[loc shortFormattedAddress]];
+    
     if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) {
         // Bold italic if a list header
-        [[cell textLabel] setFont:[UIFont fontWithName:@"Helvetica-BoldOblique" size:15.0]];
+        [[cell textLabel] setFont:[UIFont fontWithName:@"Helvetica-Oblique" size:15.0]];
+        cell.textLabel.textColor = [UIColor darkGrayColor];
+    } 
+    else if (loc == selectedLocation) {
+        [[cell textLabel] setFont:[UIFont fontWithName:@"Helvetica-Bold" size:15.0]];
+        cell.textLabel.textColor = [UIColor redColor];
+        // cell.textLabel.text = [cell.textLabel.text uppercaseString];
     } else {
         // just bold for normal cell
-        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
+        [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
+        cell.textLabel.textColor = [UIColor darkGrayColor];
     }
     
     cell.textLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
 
-    
-
-    // Put a checkmark on the selected location, and remove checkmarks from all others
-    if (loc == selectedLocation) {
-        cell.accessoryType = UITableViewCellAccessoryCheckmark;
-    } else {
-        cell.accessoryType = UITableViewCellAccessoryNone; 
-    }
     return cell;
     
     // In the future, we can support Nicknames by putting formatted address into subtitle, as shown below

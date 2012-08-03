@@ -388,9 +388,7 @@ float currentLocationResTime;
     if (editMode == NO_EDIT) {
         if (section == TIME_DATE_SECTION) {
             return nil;  // no title for the time/date field section
-        } else if (section==FROM_SECTION && isCurrentLocationMode) {
-            return nil;
-        } else if (section==FROM_SECTION && !isCurrentLocationMode) {
+        } else if (section==FROM_SECTION) {
             return @"From:";
         }
         else if (section == TO_SECTION) {
@@ -474,14 +472,12 @@ float currentLocationResTime;
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 
                                           reuseIdentifier:@"singleRowFromCell"];
+            [cell setBackgroundColor:[UIColor whiteColor]];
+            [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:15.0]];
+            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+            cell.textLabel.textColor = [UIColor redColor];
+            [[cell textLabel] setText:@"Current Location"];
         }        
-        [cell setBackgroundColor:[UIColor whiteColor]];
-        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
-        [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
-        [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-        [[cell textLabel] setText:@"From"];
-        cell.textLabel.textColor = [UIColor lightGrayColor];
-        [[cell detailTextLabel] setText:@"Current Location"];
         return cell;        
     }
     else if (editMode==NO_EDIT || [indexPath row] == 1) { // the to or from table sections
