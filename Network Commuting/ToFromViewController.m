@@ -475,7 +475,7 @@ float currentLocationResTime;
             [cell setBackgroundColor:[UIColor whiteColor]];
             [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:15.0]];
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-            cell.textLabel.textColor = [UIColor redColor];
+            cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
             [[cell textLabel] setText:@"Current Location"];
         }        
         return cell;        

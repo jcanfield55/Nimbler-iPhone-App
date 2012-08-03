@@ -35,6 +35,7 @@
 }
 
 - (void)selectedGeocodedLocation:(Location *)loc;  // Internal method to process a new incoming geocoded location (if the only one returned by geocoder, or if this one picked by LocationPickerVC)
+- (NSInteger)adjustedForEnterNewAddressFor:(NSInteger)rawIndexRow;
 
 @end
 
@@ -50,9 +51,6 @@
 @synthesize txtField;
 @synthesize supportedRegion;
 
-// Constants for location of "Enter New Address" and "Selected Location"
-#define SELECTED_LOCATION_POSITION 1
-#define ENTER_NEW_ADDRESS_POSITION 0
 
 - (id)initWithTable:(UITableView *)t isFrom:(BOOL)isF toFromVC:(ToFromViewController *)tfVC locations:(Locations *)l;
 {
@@ -103,20 +101,16 @@
 //
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if ([toFromVC editMode] == NO_EDIT) {
-        return 2; // one section for new address entry, the other for matching results
-    }
-    // Else if in edit mode, do not show "Enter new address" mode
-    return 1;
+    return 1;  // one section only
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if ([toFromVC editMode] == NO_EDIT &&  section == 0) {
-        return 1;  // this is the new address entry section
+    if ([toFromVC editMode] == NO_EDIT) {
+        return ([locations numberOfLocations:isFrom] + 1); // matching rows + 1 for "Enter New Address" Row
     }
     else {
-        return [locations numberOfLocations:isFrom]; // matching rows
+        return [locations numberOfLocations:isFrom];  // matching rows only
     }
 }
 
@@ -124,8 +118,8 @@
 {
     NSLog(@"Select Row: isFrom=%d, section=%d, row=%d", isFrom, [indexPath section], [indexPath row]);
         
-    if ([toFromVC editMode] == NO_EDIT && [indexPath section] == 0) { // "Enter New Address" cell
-        
+    if ([toFromVC editMode] == NO_EDIT && 
+        [self adjustedForEnterNewAddressFor:[indexPath row]] == -1) { // "Enter New Address" cell
         if (isFrom) {
             [toFromVC setEditMode:FROM_EDIT]; 
         } else {
@@ -134,9 +128,11 @@
     }
     // Else it is one of the locations which was selected
     else {
-        [toFromVC setEditMode:NO_EDIT];  // Have toFromVC end the edit mode (DE96 fix)
         
-        Location *loc = [locations locationAtIndex:([indexPath row]) isFrom:isFrom];  //selected Location 
+        Location *loc = [locations 
+                         locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]]
+                         isFrom:isFrom];  //selected Location 
+        [toFromVC setEditMode:NO_EDIT];  // Have toFromVC end the edit mode (DE96 fix)
 
         if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) { // If a list (like 'Caltrain Station List')
 #if FLURRY_ENABLED          
@@ -207,19 +203,17 @@
     [toFromVC updateGeocodeStatus:FALSE isFrom:isFrom];  // let it know Geocode no longer outstanding
     
     selectedLocation = loc;   
-    if (selectedCell) { // if a previous cell is selected
-        selectedCell.accessoryType = UITableViewCellAccessoryNone; // turn off its selector
-    }
     [myTableView reloadData];  // Reload the data with the new sorting
-    NSIndexPath* indexPath = [NSIndexPath indexPathForRow:0 inSection:1]; // The top row (which now should be the selected item)
+    NSIndexPath* indexPath = [NSIndexPath indexPathForRow:0 inSection:0]; // The top row (which now should be the selected item)
     selectedCell = [myTableView cellForRowAtIndexPath:indexPath];  // get the new selected cell
     [myTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];     // scroll to the top of the table
-    selectedCell.textLabel.textColor = [UIColor redColor];
+    selectedCell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([toFromVC editMode]==NO_EDIT && [indexPath section] == ENTER_NEW_ADDRESS_POSITION) {  
+    if ([toFromVC editMode]==NO_EDIT && 
+        [self adjustedForEnterNewAddressFor:[indexPath row]] == -1) {  
         // If it is the 'Enter new address' row...
         UITableViewCell *cell =
         [tableView dequeueReusableCellWithIdentifier:@"ToFromEnterNewLocationCell"];
@@ -229,8 +223,8 @@
                                           reuseIdentifier:@"ToFromEnterNewLocationCell"];
        
         }
-        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
-        [[cell textLabel] setTextColor:[UIColor lightGrayColor]];
+        [[cell textLabel] setFont:[UIFont fontWithName:@"Helvetica-Oblique" size:15.0]];
+        cell.textLabel.textColor = [UIColor lightGrayColor];
         [[cell textLabel] setText:@"Enter New Address"];
         return cell;
     }
@@ -245,7 +239,9 @@
     }
     
     // Prepare the cell settings
-    Location *loc = [locations locationAtIndex:([indexPath row]) isFrom:isFrom];
+    
+    Location *loc = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]] 
+                                        isFrom:isFrom];
     [[cell textLabel] setText:[loc shortFormattedAddress]];
     
     if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) {
@@ -255,7 +251,7 @@
     } 
     else if (loc == selectedLocation) {
         [[cell textLabel] setFont:[UIFont fontWithName:@"Helvetica-Bold" size:15.0]];
-        cell.textLabel.textColor = [UIColor redColor];
+        cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
         // cell.textLabel.text = [cell.textLabel.text uppercaseString];
     } else {
         // just bold for normal cell
@@ -276,6 +272,31 @@
 
 }
 
+// This function makes adjustments for inserting the "Enter New Address" row in the right location
+// If there is a selectedLocation, "Enter New Address" appears right under it (in row 1)
+// If there is no selectedLocation, "Enter New Address" appears at the top of the list
+// Given a raw IndexRow (from iOS), this method returns -1 if this is the "Enter New Address" row
+// Otherwise it returns an index that can be passed to [locations locationAtIndex...] to get
+// the right location.  
+- (NSInteger)adjustedForEnterNewAddressFor:(NSInteger)rawIndexRow
+{
+    if ([toFromVC editMode] != NO_EDIT) {
+        return rawIndexRow; // "Enter New Address" does not show up when not in NO_EDIT
+    }
+    else if (selectedLocation) { 
+        // if selected address there, ENTER_NEW_ADDRESS is in row 1
+        if (rawIndexRow == 0) { 
+            return rawIndexRow; // selectedLocation row
+        } else if (rawIndexRow == 1) { 
+            return -1;  // Enter New Address row
+        } else {   
+            return (rawIndexRow - 1); // normal location row
+        }
+    }
+    else {  // if no selected address, ENTER_NEW_ADDRESS is in row 0
+        return (rawIndexRow - 1);
+    }
+}
 
 // 
 // txtField editing callback methods
