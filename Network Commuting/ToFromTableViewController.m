@@ -10,6 +10,7 @@
 #import "ToFromViewController.h"
 #import "UtilityFunctions.h"
 #import "UIConstants.h"
+#import "Constants.h"
 
 #if FLURRY_ENABLED
 #include "Flurry.h"
@@ -223,7 +224,7 @@
                                           reuseIdentifier:@"ToFromEnterNewLocationCell"];
        
         }
-        [[cell textLabel] setFont:[UIFont fontWithName:@"Helvetica-Oblique" size:15.0]];
+        [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
         cell.textLabel.textColor = [UIColor lightGrayColor];
         [[cell textLabel] setText:@"Enter New Address"];
         return cell;
@@ -246,11 +247,11 @@
     
     if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) {
         // Bold italic if a list header
-        [[cell textLabel] setFont:[UIFont fontWithName:@"Helvetica-Oblique" size:15.0]];
+        [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
         cell.textLabel.textColor = [UIColor darkGrayColor];
     } 
     else if (loc == selectedLocation) {
-        [[cell textLabel] setFont:[UIFont fontWithName:@"Helvetica-Bold" size:15.0]];
+        [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
         cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
         // cell.textLabel.text = [cell.textLabel.text uppercaseString];
     } else {

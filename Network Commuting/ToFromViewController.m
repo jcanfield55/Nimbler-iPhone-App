@@ -22,6 +22,8 @@
 #import "SettingInfoViewController.h"
 #import "nc_AppDelegate.h"
 #import "UIConstants.h"
+#import "Constants.h"
+#import "TEXTConstant.h"
 #import "UserPreferance.h"
 
 #if FLURRY_ENABLED
@@ -53,6 +55,7 @@
     RouteOptionsViewController *routeOptionsVC; 
     LocationPickerViewController *locationPickerVC;
     TwitterSearch* twitterSearchVC;
+    NSArray* sectionUILabelArray;  // Array of UILabels containing main table section headers 
     
 }
 
@@ -158,7 +161,31 @@ float currentLocationResTime;
             fromTable.layer.cornerRadius = TOFROM_TABLE_CORNER_RADIUS;
             fromTableVC = [[ToFromTableViewController alloc] initWithTable:fromTable isFrom:TRUE toFromVC:self locations: locations];
             [fromTable setDataSource:fromTableVC];
-            [fromTable setDelegate:fromTableVC];   
+            [fromTable setDelegate:fromTableVC];  
+            
+            // Initialize the section header label array
+            
+            NSMutableArray* sectionArray = [[NSMutableArray alloc] initWithCapacity:3];
+            for (int i=0; i<3; i++) {
+                UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, TOFROM_SECTION_LABEL_WIDTH, TOFROM_SECTION_LABEL_HEIGHT)];
+                UILabel *label = [[UILabel alloc] 
+                                  initWithFrame:CGRectMake(TOFROM_SECTION_LABEL_INDENT, 0, 
+                                                           TOFROM_SECTION_LABEL_WIDTH - TOFROM_SECTION_LABEL_INDENT, 
+                                                           TOFROM_SECTION_LABEL_HEIGHT)];
+                label.textColor = [UIColor lightGrayColor];
+                label.backgroundColor = [UIColor clearColor];
+                label.font = [UIFont MEDIUM_OBLIQUE_FONT];
+                if (i == TO_SECTION) {
+                    label.text = @"To:";
+                } else if (i == FROM_SECTION) {
+                    label.text = @"From:";
+                } else {
+                    // No label for "Depart"
+                }
+                [headerView addSubview:label];
+                [sectionArray addObject:headerView];
+            }
+            sectionUILabelArray = sectionArray;
         }
     }
     @catch (NSException *exception) {
@@ -383,61 +410,25 @@ float currentLocationResTime;
     return TOFROM_TABLE_HEIGHT_NO_CL_MODE + TOFROM_INSERT_INTO_CELL_MARGIN;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-    if (editMode == NO_EDIT) {
-        if (section == TIME_DATE_SECTION) {
-            return nil;  // no title for the time/date field section
-        } else if (section==FROM_SECTION) {
-            return @"From:";
-        }
-        else if (section == TO_SECTION) {
-            return @"To:";
-        }
-    }
-    // else, if in Edit mode
-    if (editMode == FROM_EDIT) {
-        return @"From:";
-    }
-    // else
-    return @"To:";
-}
-
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    if (section == 0) {
-        return 20.0;
-    } else if(section == 1) {
-         return 24.0;
-    } else if (section == 2){
-        return 1.0;
+    if (section == FROM_SECTION) {
+        return TOFROM_SECTION_LABEL_HEIGHT;
+    } else if(section == TO_SECTION) {
+         return TOFROM_SECTION_LABEL_HEIGHT;
     } else {
-        return 20.0;
-    }
+        return TOFROM_SECTION_NOLABEL_HEIGHT;
+    } 
 }
 
-//-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-//{
-//    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 20)];
-//    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 3, tableView.bounds.size.width - 10, 18)];
-//   
-//    label.textColor = [UIColor lightGrayColor];
-//    label.backgroundColor = [UIColor clearColor];
-//        if (section == 1) {
-//         label.text = @"To:";
-//            
-//    } else if(section == 0){
-//        label.text = @"From:";
-//        
-//    }
-//    [headerView addSubview:label];
-//   
-//    
-//    return headerView;    
-//}
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    return [sectionUILabelArray objectAtIndex:section];    
+}
+
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    return 3.0;
+    return TOFROM_SECTION_FOOTER_HEIGHT;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -448,20 +439,23 @@ float currentLocationResTime;
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 
                                           reuseIdentifier:@"timeDateTableCell"];
-            [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
-            [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
+            [[cell textLabel] setFont:[UIFont MEDIUM_BOLD_FONT]];
             [cell setBackgroundColor:[UIColor whiteColor]];
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+            cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
         }        
         
         if (isTripDateCurrentTime) { 
-            [[cell textLabel] setText:@"Depart"];
-            cell.textLabel.textColor = [UIColor lightGrayColor];
-            [[cell detailTextLabel] setText:@"Now"];
+            [[cell textLabel] setText:@"Depart now"];
         } 
         else {
-            [[cell textLabel] setText:((departOrArrive==DEPART) ? @"Depart at" : @"Arrive by")];
-            [[cell detailTextLabel] setText:[tripDateFormatter stringFromDate:tripDate]];
+            if (departOrArrive==DEPART) {
+                cell.textLabel.text=[NSString stringWithFormat:@"Depart %@", 
+                                     [[tripDateFormatter stringFromDate:tripDate] lowercaseString]];
+            } else {
+                cell.textLabel.text=[NSString stringWithFormat:@"Arrive by %@", 
+                                     [[tripDateFormatter stringFromDate:tripDate] lowercaseString]];
+            }
         }
         return cell;
     }
@@ -473,9 +467,9 @@ float currentLocationResTime;
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 
                                           reuseIdentifier:@"singleRowFromCell"];
             [cell setBackgroundColor:[UIColor whiteColor]];
-            [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:15.0]];
-            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+            cell.textLabel.font = [UIFont MEDIUM_LARGE_BOLD_FONT];
             cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
+            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
             [[cell textLabel] setText:@"Current Location"];
         }        
         return cell;        
@@ -1077,30 +1071,6 @@ float currentLocationResTime;
     }
 }
 
-
-/*  Commenting this section out, since it is unused for now, John C 7/3/2012
- 
--(void)addLocationAction:(id) sender{
-    
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"Current Location",@"Set Location",@"Cancel",nil];
-    
-    actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
-    actionSheet.destructiveButtonIndex = 2;    // make the third button red (destructive)
-    [actionSheet showInView:self.navigationController.view]; // show from our table view (pops up in the middle of the table)
-}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{    
-    if (buttonIndex == 0){
-        
-    } else if(buttonIndex == 1){
-        
-    } else if(buttonIndex == 2){
-        NSLog(@"cancel");
-        [actionSheet dismissWithClickedButtonIndex:buttonIndex animated:YES];
-    }
-}
- */
 
 #pragma mark save Plan and other logging features to TPServer
 

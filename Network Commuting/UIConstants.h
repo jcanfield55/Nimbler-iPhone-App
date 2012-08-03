@@ -11,7 +11,6 @@
 #define Nimbler_Caltrain_UIConstants_h
 
 // ToFromViewController constants
-//#define TOFROM_MAIN_TABLE_HEIGHT            358
 #define TOFROM_MAIN_TABLE_HEIGHT            319
 #define TOFROM_TIME_DATE_HEIGHT             37
 #define TOFROM_ROW_HEIGHT                   37
@@ -22,6 +21,11 @@
 #define TOFROM_INSERT_INTO_CELL_MARGIN      1  // spacer added to cell height when there is an inserted field or table 
 #define TOFROM_TABLE_CORNER_RADIUS          10.0
 
+#define TOFROM_SECTION_LABEL_HEIGHT         23.0
+#define TOFROM_SECTION_LABEL_WIDTH          60.0
+#define TOFROM_SECTION_NOLABEL_HEIGHT        5.0 // spacer when there is no label
+#define TOFROM_SECTION_LABEL_INDENT         15.0
+#define TOFROM_SECTION_FOOTER_HEIGHT         1.0
 
 // ToFromTableViewController constants
 #define TOFROM_TEXT_FIELD_INDENT            10
@@ -48,9 +52,14 @@
 // Font Size
 #define STANDARD_FONT_SIZE                  13.0
 #define MEDIUM_FONT_SIZE                    14.0
-#define LARGER_THEN_MEDIUM_FONT_SIZE        16.0
-#define LARGE_FONT_SIZE                     18.0
-#define LARGER_FONT_SIZE                    20.0
+#define MEDIUM_LARGE_FONT_SIZE              15.0
+
+
+// Font styles
+#define MEDIUM_BOLD_FONT                    fontWithName:@"Helvetica-Bold" size:14.0
+#define MEDIUM_OBLIQUE_FONT                 fontWithName:@"Helvetica-Oblique" size:14.0
+#define MEDIUM_LARGE_BOLD_FONT              fontWithName:@"Helvetica-Bold" size:15.0
+#define MEDIUM_LARGE_OBLIQUE_FONT           fontWithName:@"Helvetica-Oblique" size:15.0
 
 // Colors
 #define NIMBLER_RED_FONT_COLOR              colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0
