@@ -127,7 +127,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 					<object class="IBUIButton" id="1030031972">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{46, 323}, {87, 37}}</string>
+						<string key="NSFrame">{{45, 323}, {87, 37}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="440391289"/>
@@ -345,9 +345,9 @@ AAgACAAIAAEAAQABAAE</bytes>
 						<array class="NSMutableArray" key="children">
 							<reference ref="35114758"/>
 							<reference ref="440391289"/>
-							<reference ref="1030031972"/>
 							<reference ref="759441198"/>
 							<reference ref="845297715"/>
+							<reference ref="1030031972"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>

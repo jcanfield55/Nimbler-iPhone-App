@@ -57,7 +57,6 @@ static nc_AppDelegate *appDelegate;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
     [[UIApplication sharedApplication] 
      registerForRemoteNotificationTypes:
      (UIRemoteNotificationTypeAlert | 
@@ -228,12 +227,6 @@ static nc_AppDelegate *appDelegate;
      */
     saveContext([self managedObjectContext]);
     [locationManager stopUpdatingLocation];
-    // Flush tweeter timer
-     [timerTweeterGetData invalidate];
-    timerTweeterGetData = nil;
-    
-    [toFromViewController.continueGetTime invalidate];
-    toFromViewController.continueGetTime = nil;
     
     //Reload ToFromViewController
     ToFromTableViewController *toFromTableVC = [[ToFromTableViewController alloc] initWithNibName:nil bundle:nil];
@@ -244,6 +237,13 @@ static nc_AppDelegate *appDelegate;
     [UIView setAnimationsEnabled:YES];
     [self.tabBarController.view endEditing:YES];
     
+    
+    // Flush tweeter timer
+     [timerTweeterGetData invalidate];
+    timerTweeterGetData = nil;
+    
+    [toFromViewController.continueGetTime invalidate];
+    toFromViewController.continueGetTime = nil;
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -256,7 +256,7 @@ static nc_AppDelegate *appDelegate;
     if (timerTweeterGetData == nil) {
        timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];     
     } 
-    
+    sleep(2);
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -546,7 +546,6 @@ static nc_AppDelegate *appDelegate;
 -(void)getTwiiterLiveData
 {
     @try {
-        NSLog(@"RealTimeTweets:");
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
         NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            

@@ -74,4 +74,9 @@
 #define SETTING_VIEW                @"Settings"
 #define FEEDBACK_VIEW               @"Feedback"
 
+// ToFromViewController Date Picker
+#define DATE_PICKER_NOW             @"Now"
+#define DATE_PICKER_DONE            @"Done"
+#define DATE_PICKER_DEPART          @"Depart"
+#define DATE_PICKER_ARRIVE          @"Arrive"
 #endif

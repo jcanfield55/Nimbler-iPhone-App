@@ -26,7 +26,7 @@
     UIBarButtonItem *backButton;
     NSArray* bbiArray;
     
-    NSMutableDictionary* imageDictionary; // Dictionary to hold pre-loaded table images
+    NSMutableDictionary *imageDictionary; // Dictionary to hold pre-loaded table images
 }
 @end
 

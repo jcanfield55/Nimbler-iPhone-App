@@ -67,6 +67,9 @@
 - (BOOL)setToFromHeightForTable:(UITableView *)table Height:(CGFloat)tableHeight;
 - (CGFloat)toFromTableHeightByNumberOfRowsForMaxHeight:(CGFloat)maxHeight  isFrom:(BOOL)isFrom;
 - (void)newLocationVisible;  // Callback for whenever a new location is made visible to update dynamic table height
+-(void)segmentChange;
+- (void)selectCurrentDate;
+- (void)selectDate;
 
 @end
 
@@ -96,6 +99,7 @@
 @synthesize isContinueGetRealTimeData;
 @synthesize continueGetTime;
 
+@synthesize datePicker,toolBar,departArriveSelector,date,btnDone,btnNow;
 // Constants for animating up and down the To: field
 #define FROM_SECTION 0
 #define TO_SECTION 1
@@ -197,6 +201,8 @@ float currentLocationResTime;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    routeButton.layer.cornerRadius = CORNER_RADIUS_SMALL;
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
                                                                      [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
@@ -205,6 +211,21 @@ float currentLocationResTime;
     [continueGetTime invalidate];
     continueGetTime = nil;
     
+    datePicker = [[UIDatePicker alloc]initWithFrame:CGRectMake(0, 494, 320, 216)];
+    datePicker.datePickerMode = UIDatePickerModeDateAndTime;
+    datePicker.minuteInterval = 5;
+    
+    [self.view addSubview:datePicker];
+    
+    NSArray *array = [NSArray arrayWithObjects:DATE_PICKER_DEPART,DATE_PICKER_ARRIVE, nil];
+    departArriveSelector = [[UISegmentedControl alloc] initWithItems:array];
+    
+    departArriveSelector.segmentedControlStyle = UISegmentedControlStyleBar;
+    departArriveSelector.selectedSegmentIndex = 1;
+    [departArriveSelector addTarget:self action:@selector(segmentChange) forControlEvents:UIControlEventValueChanged];
+    
+    btnDone = [[UIBarButtonItem alloc] initWithTitle:DATE_PICKER_DONE style:UIBarButtonItemStyleBordered target:self action:@selector(selectDate)];
+    btnNow = [[UIBarButtonItem alloc] initWithTitle:DATE_PICKER_NOW style:UIBarButtonItemStyleBordered target:self action:@selector(selectCurrentDate)];
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -548,11 +569,14 @@ float currentLocationResTime;
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([indexPath section] == TIME_DATE_SECTION) {  
-        DateTimeViewController *dateTimeVC = [[DateTimeViewController alloc] initWithNibName:nil bundle:nil];
-        [dateTimeVC setDate:tripDate];
-        [dateTimeVC setDepartOrArrive:departOrArrive];
-        [dateTimeVC setToFromViewController:self];
-        [[self navigationController] pushViewController:dateTimeVC animated:YES];
+//        DateTimeViewController *dateTimeVC = [[DateTimeViewController alloc] initWithNibName:nil bundle:nil];
+//        [dateTimeVC setDate:tripDate];
+//        [dateTimeVC setDepartOrArrive:departOrArrive];
+//        [dateTimeVC setToFromViewController:self];
+//        [[self navigationController] pushViewController:dateTimeVC animated:YES];
+        [datePicker setDate:tripDate];
+        
+        [self openPickerView:self];
         return;
     }
     else if (isCurrentLocationMode && [indexPath section] == FROM_SECTION) {  // if single-row From field selected
@@ -1287,5 +1311,84 @@ float currentLocationResTime;
         NSLog(@"exception at reverGeocod: %@", exception);
     }
 }
+
+#pragma mark UIdatePicker functionality
+
+- (void)selectDate {
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
+    [toolBar setFrame:CGRectMake(0, 450, 320, 44)];
+    [datePicker setFrame:CGRectMake(0, 494, 320, 216)];
+    [UIView commitAnimations];
+    
+    date = [datePicker date];
+    [self setTripDate:date];
+    [self setTripDateLastChangedByUser:[[NSDate alloc] init]];
+    [self setIsTripDateCurrentTime:NO];
+    [self setDepartOrArrive:departOrArrive];
+    [self updateTripDate];
+    [self reloadTables];
+}
+
+//---------------------------------------------------------------------------
+
+- (void)selectCurrentDate {
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
+    [toolBar setFrame:CGRectMake(0, 450, 320, 44)];
+    [datePicker setFrame:CGRectMake(0, 494, 320, 216)];
+    [UIView commitAnimations];
+    
+    isTripDateCurrentTime = TRUE;
+
+    [self setTripDateLastChangedByUser:[[NSDate alloc] init]];
+    [self setIsTripDateCurrentTime:YES];
+    [self setDepartOrArrive:departOrArrive];
+    [self updateTripDate];
+    [self reloadTables];
+}
+
+//---------------------------------------------------------------------------
+
+- (IBAction)openPickerView:(id)sender {
+    toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 450, 320, 44)];
+    [toolBar setTintColor:[UIColor darkGrayColor]];
+    
+    if (departOrArrive == DEPART) {
+        [departArriveSelector setSelectedSegmentIndex:0];
+    } else {
+        [departArriveSelector setSelectedSegmentIndex:1];
+    }
+    UIBarButtonItem *segmentBtn = [[UIBarButtonItem alloc] initWithCustomView:departArriveSelector];
+    UIBarButtonItem *flexibaleSpaceBarButton1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    UIBarButtonItem *flexibaleSpaceBarButton2 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    [toolBar setItems:[NSArray arrayWithObjects:btnNow,flexibaleSpaceBarButton1,segmentBtn,flexibaleSpaceBarButton2,btnDone, nil]];
+
+    [self.view addSubview:toolBar];
+    [self.view bringSubviewToFront:toolBar];
+    [self.view bringSubviewToFront:datePicker];
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
+    [toolBar setFrame:CGRectMake(0, 111, 320, 44)];
+    [datePicker setFrame:CGRectMake(0, 155, 320, 216)];
+    [UIView commitAnimations];
+}
+
+// at Segment change 
+-(void)segmentChange {
+    if ([departArriveSelector selectedSegmentIndex] == 0) {
+        departOrArrive = DEPART;
+    } else {
+        departOrArrive = ARRIVE;
+        // Move date to at least one hour from now if not already
+        NSDate* nowPlus1hour = [[NSDate alloc] initWithTimeIntervalSinceNow:(60.0*60)];  // 1 hour from now
+        if ([date earlierDate:nowPlus1hour] == date) { // if date is earlier than 1 hour from now
+            date = nowPlus1hour;
+            [datePicker setDate:date animated:YES];
+        }
+    }
+}
+
+
 
 @end

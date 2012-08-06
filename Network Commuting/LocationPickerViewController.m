@@ -164,6 +164,7 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
 
 -(void)popOutToNimbler
 {
+    [toFromTableVC textSubmitted:nil forEvent:nil];
     [self.navigationController popViewControllerAnimated:TRUE];
 }
 

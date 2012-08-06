@@ -65,4 +65,7 @@
 // Colors
 #define NIMBLER_RED_FONT_COLOR              colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0
 
+// UIanimation motion
+#define ANIMATION_STANDART_MOTION_SPEED     0.3
+
 #endif

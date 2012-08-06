@@ -14,7 +14,7 @@
 #import "enums.h"
 #import "SupportedRegion.h"
 
-@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,RKRequestDelegate,UIActionSheetDelegate,UIAlertViewDelegate>
+@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,RKRequestDelegate,UIActionSheetDelegate,UIAlertViewDelegate,UIPickerViewDelegate,UIPickerViewDataSource>
 
 typedef enum {
     NO_EDIT,    // Neither to nor from address is being edited with the keyboard
@@ -45,6 +45,15 @@ typedef enum {
 
 @property (nonatomic) BOOL isContinueGetRealTimeData;
 @property (strong, nonatomic) NSTimer *continueGetTime;
+
+
+@property (strong, nonatomic) UIToolbar *toolBar;
+@property (strong, nonatomic) UIDatePicker *datePicker;
+@property (strong, nonatomic) UISegmentedControl *departArriveSelector;
+@property (strong, nonatomic) NSDate* date;   
+@property (strong, nonatomic) UIBarButtonItem *btnDone;
+@property (strong, nonatomic) UIBarButtonItem *btnNow;
+- (IBAction)openPickerView:(id)sender;
 
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
 
