@@ -60,4 +60,5 @@
 -(void)getTwiiterLiveData;
 -(void)upadateDefaultUserValue;
 +(nc_AppDelegate *)sharedInstance; 
++ (NSString *)getUUID;
 @end

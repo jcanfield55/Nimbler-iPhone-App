@@ -107,7 +107,7 @@
 
 NSString *currentLoc;
 float currentLocationResTime;
-
+NSUserDefaults *prefs;
 #pragma mark view Lifecycle
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -124,7 +124,7 @@ float currentLocationResTime;
             UIBarButtonItem *btnRoute = [[UIBarButtonItem alloc] initWithCustomView:btnSwapLocation];
             
             self.navigationItem.leftBarButtonItem = btnRoute;
-           
+            prefs  = [NSUserDefaults standardUserDefaults];
             planRequestHistory = [NSMutableArray array]; // Initialize this array
             departOrArrive = DEPART;
             toGeocodeRequestOutstanding = FALSE;
@@ -1028,6 +1028,11 @@ float currentLocationResTime;
             
             NSLog(@"Plan resource: %@", planURLResource);
            
+            // Storecurrent Location
+            if (isCurrenLocation) {                
+                [nc_AppDelegate sharedInstance].tempLocation = fromLocation;
+            }
+            
              // Call the trip planner
             [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
             savetrip = TRUE;
@@ -1102,14 +1107,14 @@ float currentLocationResTime;
 {
 
     @try {
-        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;   
+        NSString *udid = [UIDevice currentDevice].uniqueIdentifier; 
+    
         NSString *timeResponseTime =  [[NSNumber numberWithFloat:durationOfResponseTime] stringValue];
         
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         RKParams *rkp = [RKParams params];
         [RKClient setSharedClient:client];
-        
-        [rkp setValue:udid forParam:DEVICE_ID]; 
+        [rkp setValue:[prefs objectForKey:DEVICE_CFUUID] forParam:DEVICE_ID]; 
         [rkp setValue:tripResponse forParam:@"planJsonString"]; 
         [rkp setValue:timeResponseTime forParam:@"timeTripPlan"];
         [rkp setValue:[toLocation formattedAddress]  forParam:@"frmtdAddTo"];
@@ -1168,7 +1173,7 @@ float currentLocationResTime;
         
         if ([request isPOST]) {      
             NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
-            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_ID, udid, 
+            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID], 
                                     nil];            
             rkSavePlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];            
             [[rkSavePlanMgr mappingProvider] setMapping:[Plan objectMappingforPlanner:OTP_PLANNER] forKeyPath:@"plan"];
@@ -1261,12 +1266,10 @@ float currentLocationResTime;
         if ([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
             fromLocs = [self getCurrentLocationOfFormattedAddress:fromLocation];
             isCurrenLocation = TRUE;
-            [nc_AppDelegate sharedInstance].tempLocation = fromLocation;
         } else {
             fromLocs = [fromLocation formattedAddress];
             isCurrenLocation = FALSE;
         }
-//        NSLog(@"from: %@   ToLoacation: %@", fromLocs, [toLocation formattedAddress]);        
         [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_GENERAL];
         [nc_AppDelegate sharedInstance].FBDate = [dFormat stringFromDate:tripDate];
         [nc_AppDelegate sharedInstance].FBToAdd = [toLocation formattedAddress];
@@ -1388,7 +1391,5 @@ float currentLocationResTime;
         }
     }
 }
-
-
 
 @end

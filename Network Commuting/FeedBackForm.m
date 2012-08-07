@@ -52,11 +52,14 @@ BOOL isCancelFB = FALSE;
 @synthesize tpResponse,tpURLResource,alertView,mesg,btnPlayRecording,btnStopRecording,btnPauseRecording,btnRecordRecording,fbReqParams;
 @synthesize txtEmailId,txtFeedBack;
 
+NSUserDefaults *prefs;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         [[self navigationItem] setTitle:FB_TITLE];
+        prefs = [NSUserDefaults standardUserDefaults];
     }
     return self;
 }
@@ -384,7 +387,7 @@ BOOL isCancelFB = FALSE;
     
     alertView = [self feedbackConfirmAlert];
     
-    NSString *udid = [UIDevice currentDevice].uniqueIdentifier;    
+//    NSString *udid = [UIDevice currentDevice].uniqueIdentifier;    
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     RKParams *rkp = [RKParams params];
     [RKClient setSharedClient:client];
@@ -409,7 +412,7 @@ BOOL isCancelFB = FALSE;
         [rkp setValue:[NSNumber numberWithInt:FEEDBACK_TEXT_AUDIO] forParam:FILE_FORMATE_TYPE]; 
     }
     
-    [rkp setValue:udid forParam:DEVICE_ID]; 
+    [rkp setValue:[prefs objectForKey:DEVICE_CFUUID] forParam:DEVICE_ID]; 
     [rkp setValue:[nc_AppDelegate sharedInstance].FBSource forParam:FEEDBACK_SOURCE]; 
     [rkp setValue:@"3.5" forParam:FEEDBACK_RATING];
     

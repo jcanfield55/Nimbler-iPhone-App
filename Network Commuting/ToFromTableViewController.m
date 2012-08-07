@@ -264,6 +264,7 @@
         if ([toFromVC editMode] == NO_EDIT) {
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
         } else {
+             cell.textLabel.text = @"Current Location";
             [cell setAccessoryType:UITableViewCellAccessoryNone];
         }
     } else {

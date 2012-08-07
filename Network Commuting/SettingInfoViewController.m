@@ -102,10 +102,10 @@ bool isPush;
         // Update in TPServer DB
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
-        NSString *udid = [UIDevice currentDevice].uniqueIdentifier; 
+//        NSString *udid = [UIDevice currentDevice].uniqueIdentifier; 
         
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                                DEVICE_ID, udid,
+                                DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
                                 ALERT_COUNT,[NSNumber numberWithInt:pushHour],
                                 DEVICE_TOKEN, token,
                                 MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:sliderMaxWalkDistance.value],

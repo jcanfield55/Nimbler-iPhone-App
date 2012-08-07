@@ -27,6 +27,7 @@
 @implementation twitterViewController
 
 NSMutableArray *arrayTweet;
+UITableViewCell *cell;
 
 @synthesize mainTable,twitterData,dateFormatter,reload,isFromAppDelegate,isTwitterLiveData,noAdvisory,getTweetInProgress;
 
@@ -123,13 +124,11 @@ NSMutableArray *arrayTweet;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *cellIdentifier = TABLE_CELL;
-    
-    UITableViewCell *cell =     [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    UILabel *labelTime;
+    cell =     [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     cell = nil;
-    if (cell == nil) 
-    {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
-    }
+    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+    
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     id key = [arrayTweet objectAtIndex:indexPath.row];                
@@ -148,7 +147,7 @@ NSMutableArray *arrayTweet;
     cell.detailTextLabel.numberOfLines= MAXLINE_TAG;
     cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
     
-    UILabel *labelTime = (UILabel *)[cell viewWithTag:MAXLINE_TAG];
+    labelTime = (UILabel *)[cell viewWithTag:MAXLINE_TAG];
    
     CGRect lbl3Frame = CGRectMake(280, 5, 35, 25);
     labelTime = [[UILabel alloc] initWithFrame:lbl3Frame];
@@ -217,7 +216,6 @@ NSMutableArray *arrayTweet;
                     [noAdvisory setHidden:NO];
                 [getTweetInProgress stopAnimating];
                 [getTweetInProgress setHidesWhenStopped:TRUE];
-                
                 if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
                     NSMutableArray *arrayLatestTweet = [(NSDictionary*)res objectForKey:TWEET]; 
                     NSMutableArray *tempArray = [[NSMutableArray alloc] initWithCapacity:arrayLatestTweet.count];
@@ -225,8 +223,10 @@ NSMutableArray *arrayTweet;
                     [tempArray addObjectsFromArray:arrayTweet];
                     arrayTweet = [[NSMutableArray alloc]initWithCapacity:arrayLatestTweet.count];
                     [arrayTweet addObjectsFromArray:tempArray];
+                } else {
                     [mainTable reloadData];
                 }
+            
             }
             
         }

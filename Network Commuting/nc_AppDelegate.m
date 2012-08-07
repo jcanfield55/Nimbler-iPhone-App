@@ -54,6 +54,13 @@ static nc_AppDelegate *appDelegate;
     }
     return appDelegate;
 }
++(NSString *)getUUID
+{
+    CFUUIDRef UUID = CFUUIDCreate(kCFAllocatorDefault);
+    CFStringRef stringID = CFUUIDCreateString(kCFAllocatorDefault, UUID);
+    CFRelease(UUID);
+    return (__bridge_transfer NSString *)stringID;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -62,6 +69,8 @@ static nc_AppDelegate *appDelegate;
      (UIRemoteNotificationTypeAlert | 
       UIRemoteNotificationTypeBadge | 
       UIRemoteNotificationTypeSound)];
+    
+    prefs = [NSUserDefaults standardUserDefaults];
     
     // Configure the RestKit RKClient object for Geocoding and trip planning
     RKObjectManager* rkGeoMgr = [RKObjectManager objectManagerWithBaseURL:GEO_RESPONSE_URL];
@@ -111,11 +120,12 @@ static nc_AppDelegate *appDelegate;
     } 
     
     // Set a CFUUID (unique identifier) for this device and this app, if doesn't exist already:
-    NSString* cfuuidString = [prefs objectForKey:DEVICE_CFUUID];
-    if (!cfuuidString) {  // if the CFUUID not created, create it
-        CFUUIDRef cfuuidRef = CFUUIDCreate(kCFAllocatorDefault);
-        cfuuidString = (__bridge NSString *) CFUUIDCreateString(kCFAllocatorDefault, cfuuidRef);
-        [prefs setObject:cfuuidString forKey:DEVICE_CFUUID];
+    
+    if ([prefs objectForKey:DEVICE_CFUUID] == nil) {  // if the CFUUID not created, create it
+        NSString* cfuuidString = [nc_AppDelegate getUUID];
+        [prefs setValue:cfuuidString forKey:DEVICE_CFUUID];
+        [prefs synchronize];
+        NSLog(@"DEVICE_CFUUID  - - - - - - - %@", cfuuidString);
     }
     
     // Call TestFlightApp SDK
@@ -475,7 +485,6 @@ static nc_AppDelegate *appDelegate;
         NSString *token = [[[[deviceToken description] stringByReplacingOccurrencesOfString: @"<" withString: NULL_STRING] stringByReplacingOccurrencesOfString: @">" withString: NULL_STRING] stringByReplacingOccurrencesOfString: @" " withString: @""];
         NSLog(@"deviceTokenString: %@",token);
         [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
-        prefs = [NSUserDefaults standardUserDefaults];
         [prefs setObject:token forKey:DEVICE_TOKEN];  
         [prefs synchronize];
         [self upadateDefaultUserValue];
@@ -567,9 +576,9 @@ static nc_AppDelegate *appDelegate;
         // set in TPServer
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
-        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
+//        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                                DEVICE_ID, udid,
+                                DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
                                 @"alertCount", [userPrefs triggerAtHour],
                                 DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],
                                 @"maxDistance", [userPrefs walkDistance],

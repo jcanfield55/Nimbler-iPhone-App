@@ -71,7 +71,7 @@
     NSArray* preloadTestLocs = [self locationsWithFormattedAddress:formattedAddr];
     
     // If there are matching locations for that station, 
-    BOOL isNewerVersion;  // true if we have a new version that needs loading
+    BOOL isNewerVersion = NO;  // true if we have a new version that needs loading
     if ([preloadTestLocs count] > 0) {
         NSDecimalNumber* currentVersion = [[preloadTestLocs objectAtIndex:0] preloadVersion];
         if (currentVersion) {
