@@ -24,6 +24,11 @@
 #import "Flurry.h"
 #endif
 
+#define BTN_EXIT        @"Exit fromApp"
+#define BTN_OK          @"Ok"
+#define BTN_CANCEL      @"Continue"
+#define ALERT_NETWORK   @"Please check your wifi or data connection!" 
+
 BOOL isTwitterLivaData = FALSE; 
 BOOL isRegionSupport = FALSE;
 
@@ -31,6 +36,7 @@ static nc_AppDelegate *appDelegate;
 
 @implementation nc_AppDelegate
 
+@synthesize twitterCount;
 @synthesize locations;
 @synthesize locationManager;
 @synthesize toFromViewController;
@@ -43,8 +49,12 @@ static nc_AppDelegate *appDelegate;
 @synthesize prefs;
 @synthesize tabBarController = _tabBarController;
 
+
 // Feedback parameters
 @synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId,tempLocation;
+twitterViewController *twitterView;
+SettingInfoViewController *settingView;
+FeedBackForm *fbView;
 
 +(nc_AppDelegate *)sharedInstance
 {
@@ -154,10 +164,10 @@ static nc_AppDelegate *appDelegate;
          
         // This is for TabBar controller
         
-        self.tabBarController = [[UITabBarController alloc] init];
-        twitterViewController *twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
-        SettingInfoViewController *settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController" bundle:nil];
-        FeedBackForm *fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
+        self.tabBarController = [[RXCustomTabBar alloc] init];
+        twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
+        settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController" bundle:nil];
+        fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
         
                
         UINavigationController *toFromController = [[UINavigationController alloc] initWithRootViewController:toFromViewController];
@@ -166,8 +176,8 @@ static nc_AppDelegate *appDelegate;
          UINavigationController *fbController = [[UINavigationController alloc] initWithRootViewController:fbView];
         self.tabBarController.viewControllers = [NSArray arrayWithObjects:toFromController,tweetController,settingController,fbController, nil];
         
-        [self.tabBarController.tabBar setSelectedImageTintColor:[UIColor redColor]];
-        [self.tabBarController.tabBar setBackgroundImage:[UIImage imageNamed:@"img_tabbar.png"]];
+//        [self.tabBarController.tabBar setSelectedImageTintColor:[UIColor redColor]];
+//        [self.tabBarController.tabBar setBackgroundImage:[UIImage imageNamed:@"img_tabbar.png"]];
         
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         [[self window] setRootViewController:self.tabBarController];
@@ -179,7 +189,18 @@ static nc_AppDelegate *appDelegate;
     }
     return YES;
 }
-
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
+{
+//    if (viewController == toFromViewController) {
+//        
+//    } else if(viewController == twitterView){
+//        
+//    } else if(viewController == fbView){
+//        
+//    } else if(viewController == settingView){
+//        
+//    }
+}
 
 // Location Manager update callback
 - (void)locationManager:(CLLocationManager *)manager
@@ -266,7 +287,7 @@ static nc_AppDelegate *appDelegate;
     if (timerTweeterGetData == nil) {
        timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];     
     } 
-    sleep(2);
+//    sleep(2);
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -274,6 +295,11 @@ static nc_AppDelegate *appDelegate;
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
+    
+    if (![self isNetworkConnectionLive]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:ALERT_NETWORK delegate:self cancelButtonTitle:BTN_EXIT otherButtonTitles:BTN_CANCEL, nil];
+        [alert show];
+    } 
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -425,6 +451,7 @@ static nc_AppDelegate *appDelegate;
                         NSLog(@"count: %@",[(NSDictionary*)tweeterCountParser objectForKey:TWEET_COUNT]);
                         NSString *tweeterCount = [(NSDictionary*)tweeterCountParser objectForKey:TWEET_COUNT];
                         int badge = [tweeterCount  intValue];
+                         [[nc_AppDelegate sharedInstance] updateBadge:badge];
                         if (badge > 0) {
                             [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:[NSString stringWithFormat:@"%d",badge]];
                         } else {
@@ -545,9 +572,10 @@ static nc_AppDelegate *appDelegate;
 -(void)alertView: (UIAlertView *)UIAlertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
-    if ([btnName isEqualToString:@"OK"]) {
+    if ([btnName isEqualToString:BTN_OK]) {
        [self.tabBarController setSelectedIndex:1];
-        NSLog(@"receive urgent message");
+    } else if([btnName isEqualToString:BTN_EXIT]){
+        exit(0);
     }
 }
 
@@ -557,10 +585,11 @@ static nc_AppDelegate *appDelegate;
     @try {
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
-        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
-        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_ID, udid, nil];    
+//        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
+        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID], nil];    
         isTwitterLivaData = TRUE;
         NSString *twitCountReq = [@"advisories/count" appendQueryParams:params];
+        NSLog(@"twitter count req: %@", twitCountReq);
         [[RKClient sharedClient]  get:twitCountReq delegate:self];
     }
     @catch (NSException *exception) {
@@ -575,8 +604,7 @@ static nc_AppDelegate *appDelegate;
         UserPreferance* userPrefs = [UserPreferance userPreferance]; // get singleton
         // set in TPServer
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
-//        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
+        [RKClient setSharedClient:client];            
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                                 DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
                                 @"alertCount", [userPrefs triggerAtHour],
@@ -586,11 +614,46 @@ static nc_AppDelegate *appDelegate;
         NSString *twitCountReq = [@"users/preferences/update" appendQueryParams:params];
         [[RKClient sharedClient]  get:twitCountReq delegate:self]; 
         
-
     }
     @catch (NSException *exception) {
         NSLog(@"Exception when update userSettings at appLuanch: %@",exception);
     }
+}
+
+// This method idebtifies network connection. 
+- (BOOL)isNetworkConnectionLive
+{
+    static BOOL checkNetwork = YES;
+    BOOL  _isDataSourceAvailable = NO;
+    if (checkNetwork) { // Since checking the reachability of a host can be expensive, cache the result and perform the reachability check once.
+        checkNetwork = NO;        
+        Boolean success;    
+        const char *host_name = "www.google.com"; // your data source host name
+        
+        SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL, host_name);
+        SCNetworkReachabilityFlags flags;
+        success = SCNetworkReachabilityGetFlags(reachability, &flags);
+        _isDataSourceAvailable = success && (flags & kSCNetworkFlagsReachable) && !(flags & kSCNetworkFlagsConnectionRequired);
+        CFRelease(reachability);
+    }
+    return _isDataSourceAvailable;
+}
+
+// update badge
+-(void)updateBadge:(int)count
+{
+    int tweetConut =count;
+    [twitterCount removeFromSuperview];
+    twitterCount = [[CustomBadge alloc] init];
+    twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
+    [twitterCount setFrame:CGRectMake(130,430, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
+    if (tweetConut == 0) {
+        [twitterCount setHidden:YES];
+    } else {
+        [self.window addSubview:twitterCount];
+        [twitterCount setHidden:NO];
+    }
+
 }
 
 @end

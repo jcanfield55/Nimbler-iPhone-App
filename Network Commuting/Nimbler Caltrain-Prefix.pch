@@ -16,5 +16,5 @@
     #import "UIConstants.h"
     #import "TEXTConstant.h"
     #import "CustomBadge.h"
-
+#import "RXCustomTabBar.h"
 #endif

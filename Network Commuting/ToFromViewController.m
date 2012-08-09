@@ -1107,8 +1107,7 @@ NSUserDefaults *prefs;
 {
 
     @try {
-        NSString *udid = [UIDevice currentDevice].uniqueIdentifier; 
-    
+//        NSString *udid = [UIDevice currentDevice].uniqueIdentifier; 
         NSString *timeResponseTime =  [[NSNumber numberWithFloat:durationOfResponseTime] stringValue];
         
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
@@ -1172,7 +1171,7 @@ NSUserDefaults *prefs;
         }
         
         if ([request isPOST]) {      
-            NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
+//            NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
             NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID], 
                                     nil];            
             rkSavePlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];            

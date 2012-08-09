@@ -9,6 +9,7 @@
 #import "twitterViewController.h"
 #import "UtilityFunctions.h"
 #import <RestKit/RKJSONParserJSONKit.h>
+#import "nc_AppDelegate.h"
 #import "QuartzCore/QuartzCore.h"
 #if FLURRY_ENABLED
 #include "Flurry.h"
@@ -28,6 +29,7 @@
 
 NSMutableArray *arrayTweet;
 UITableViewCell *cell;
+NSUserDefaults *prefs;
 
 @synthesize mainTable,twitterData,dateFormatter,reload,isFromAppDelegate,isTwitterLiveData,noAdvisory,getTweetInProgress;
 
@@ -38,7 +40,7 @@ UITableViewCell *cell;
         [[self navigationItem] setTitle:TWEETERVIEW_MANE];               
         dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateStyle:NSDateFormatterFullStyle];
-        
+        prefs = [NSUserDefaults standardUserDefaults];
       UIButton *btnReload = [[UIButton alloc] initWithFrame:CGRectMake(0,0,48,34)];
         [btnReload addTarget:self action:@selector(getLatestTweets) forControlEvents:UIControlEventTouchUpInside];
         [btnReload setBackgroundImage:[UIImage imageNamed:@"img_reload.png"] forState:UIControlStateNormal];
@@ -74,7 +76,6 @@ UITableViewCell *cell;
 {
     [super viewDidLoad];
     [self hideUnUsedTableViewCell];
-    
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
                                                                      [UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
@@ -96,11 +97,11 @@ UITableViewCell *cell;
 #if FLURRY_ENABLED
     [Flurry logEvent:FLURRY_ADVISORIES_APPEAR];
 #endif
-[getTweetInProgress startAnimating];    
+    
+    [getTweetInProgress startAnimating];    
     mainTable.delegate = self;
     mainTable.dataSource = self;
     
-    [noAdvisory setHidden:YES];
     [self getAdvisoryData];
 }
 
@@ -114,6 +115,7 @@ UITableViewCell *cell;
 {
     
     if ([arrayTweet count] == 0) {
+        NSLog(@" - - - - - - -  - - -  - >>>");
         [noAdvisory setHidden:NO];
     } else {
         [noAdvisory setHidden:YES];
@@ -175,9 +177,7 @@ UITableViewCell *cell;
 #pragma mark reloadNewTweets request Response
 -(void)getLatestTweets 
 {
-    [getTweetInProgress startAnimating];
-    [noAdvisory setHidden:YES];
-    
+    [getTweetInProgress startAnimating];    
     NSString *latestTweetTime = @"0";
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
@@ -189,17 +189,20 @@ UITableViewCell *cell;
     }
         NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
                               LAST_TWEET_TIME,tweetTime,
-                              DEVICE_ID, [UIDevice currentDevice].uniqueIdentifier,
+                              DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
                               nil];
         NSString *req = [LATEST_TWEETS_REQ appendQueryParams:dict];
         [[RKClient sharedClient]  get:req delegate:self]; 
-    [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
+//    [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
+    [[nc_AppDelegate sharedInstance] updateBadge:0];
+
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     RKJSONParserJSONKit* rkTwitDataParser = [RKJSONParserJSONKit new];
     @try {
         if ([request isGET]) {
+            [noAdvisory setHidden:YES];
             if (isTwitterLiveData) {
                 isTwitterLiveData = false;
                 NSLog(@"response %@", [response bodyAsString]);
@@ -213,7 +216,6 @@ UITableViewCell *cell;
                 NSLog(@"latest tweets: %@", [response bodyAsString]);
                 id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];
                 NSNumber *respCode = [(NSDictionary*)res objectForKey:ERROR_CODE];
-                    [noAdvisory setHidden:NO];
                 [getTweetInProgress stopAnimating];
                 [getTweetInProgress setHidesWhenStopped:TRUE];
                 if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
@@ -240,6 +242,7 @@ UITableViewCell *cell;
 
 -(void)setTwitterLiveData:(id)tweetData
 {
+    [noAdvisory setHidden:YES];
     twitterData = tweetData;
     NSNumber *respCode = [(NSDictionary*)twitterData objectForKey:ERROR_CODE];
     
@@ -301,14 +304,15 @@ UITableViewCell *cell;
 -(void)getAdvisoryData
 {
     @try {
+        [noAdvisory setHidden:YES];
         [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
         [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
+        [[nc_AppDelegate sharedInstance] updateBadge:0];
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
-        isTwitterLiveData = TRUE;
-        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
+        isTwitterLiveData = TRUE;           
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                                DEVICE_ID, udid,
+                                DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
                                 nil];    
         NSString *allAdvisories = [ALL_TWEETS_REQ appendQueryParams:params];
         [[RKClient sharedClient]  get:allAdvisories delegate:self];

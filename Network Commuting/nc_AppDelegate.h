@@ -19,7 +19,7 @@
 #import "RouteDetailsViewController.h"
 #import "LegMapViewController.h"
 
-@interface nc_AppDelegate : UIResponder <UIApplicationDelegate,CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate> {
+@interface nc_AppDelegate : UIResponder <UIApplicationDelegate,CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate,UITabBarControllerDelegate> {
     Location* currentLocation;
     UITabBarController *_tabBarController;
     
@@ -53,6 +53,7 @@
 @property (strong, nonatomic) NSString *FBUniqueId;
 
 @property (strong, nonatomic) Location *tempLocation;
+@property (strong, nonatomic) CustomBadge *twitterCount;
 
 - (NSURL *)applicationDocumentsDirectory;
 
@@ -61,4 +62,6 @@
 -(void)upadateDefaultUserValue;
 +(nc_AppDelegate *)sharedInstance; 
 + (NSString *)getUUID;
+- (BOOL)isNetworkConnectionLive;
+-(void)updateBadge:(int)count;
 @end
