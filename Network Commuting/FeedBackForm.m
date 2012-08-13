@@ -10,6 +10,10 @@
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "nc_AppDelegate.h"
 
+#if FLURRY_ENABLED
+#include "Flurry.h"
+#endif
+
 #define RECORD_MSG      @"Recording your feedback \nSpeak ..."
 #define SUBMIT_MSG      @"Sending your feedback \nPlease wait ..."
 #define FB_TITLE        @"Feedback"
@@ -26,11 +30,9 @@
 #define PLAY_COMPLETE   @"Play complete...."
 #define ANIMATION_PARAM @"anim"
 #define FB_CONFIRMATION @"Are you sure you want to send feedback?"
-#define FB_WHEN_NO_VOICE_OR_TEXT @"for now put the text Please give your feedback and then press Send!"
+#define FB_WHEN_NO_VOICE_OR_TEXT @"Please provide your text or voice feedback, then press Send"
 #define ALERT_TRIP      @"Trip Planner"
 
-#define BUTTON_YES      @"Yes"
-#define BUTTON_NO       @"No"
 #define BUTTON_DONE     @"Done"
 #define BUTTON_CANCEL   @"Cancel"
 #define BUTTON_OK       @"OK"
@@ -105,6 +107,10 @@ NSUserDefaults *prefs;
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+#if FLURRY_ENABLED
+    [Flurry logEvent:FLURRY_FEEDBACK_APPEAR];
+#endif
     btnSubmitFeedback.layer.cornerRadius = CORNER_RADIUS_SMALL;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     txtEmailId.text = [prefs objectForKey:USER_EMAIL];
@@ -132,6 +138,9 @@ NSUserDefaults *prefs;
 #pragma mark-Recording functions
 -(IBAction)startRecord:(id)sender
 {    
+#if FLURRY_ENABLED
+    [Flurry logEvent:FLURRY_FEEDBACK_RECORD];
+#endif
     isFromPause = NO;
     isCancelFB = FALSE;
     [btnPlayRecording setEnabled:FALSE];
@@ -178,7 +187,10 @@ NSUserDefaults *prefs;
     }
 }
 
--(IBAction)stopRecord:(id)sender {    
+-(IBAction)stopRecord:(id)sender {  
+#if FLURRY_ENABLED
+    [Flurry logEvent:FLURRY_FEEDBACK_STOP];
+#endif
     [btnPauseRecording setEnabled:FALSE];
     [btnStopRecording setEnabled:FALSE];
     [btnRecordRecording setEnabled:TRUE];
@@ -205,6 +217,9 @@ NSUserDefaults *prefs;
 }
 
 -(IBAction)pauseRecord:(id)sender {
+#if FLURRY_ENABLED
+    [Flurry logEvent:FLURRY_FEEDBACK_PAUSE];
+#endif
     if (audioPlayer.playing) {
         labelCurrentActivityStatus.text = RECORDING_PAUSE;
         isRepeat = NO;
@@ -225,6 +240,9 @@ NSUserDefaults *prefs;
 }
 
 -(IBAction)playRecord:(id)sender {
+#if FLURRY_ENABLED
+    [Flurry logEvent:FLURRY_FEEDBACK_PLAY];
+#endif
     labelCurrentActivityStatus.text = RECORDING_PLAY;
     if(!isFromPause){
         secondsLeft = REC_STARTTIME;
@@ -328,8 +346,7 @@ NSUserDefaults *prefs;
         [alert show];
     } else {
         mesg = SUBMIT_MSG;
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:FB_TITLE_MSG message:FB_CONFIRMATION delegate:self cancelButtonTitle:BUTTON_YES otherButtonTitles:BUTTON_NO, nil];
-        [alert show];
+        [self sendFeedbackToServer];
     }
 }
 
@@ -386,6 +403,9 @@ NSUserDefaults *prefs;
 {
     
     alertView = [self feedbackConfirmAlert];
+#if FLURRY_ENABLED
+    NSMutableDictionary *flurryParams = [NSMutableDictionary dictionaryWithCapacity:5];
+#endif
     
 //    NSString *udid = [UIDevice currentDevice].uniqueIdentifier;    
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
@@ -402,15 +422,28 @@ NSUserDefaults *prefs;
     if (txtFeedBack.text != nil){
         [rkp setValue:txtFeedBack.text forParam:FB_TEXT];
         [rkp setValue:[NSNumber numberWithInt:FEEDBACK_TEXT] forParam:FILE_FORMATE_TYPE];
+#if FLURRY_ENABLED
+        [flurryParams setObject:txtFeedBack.text forKey:FLURRY_FEEDBACK_TEXT];
+#endif
     } 
     if (txtEmailId.text != nil) {
         [rkp setValue:txtEmailId.text forParam:EMAIL_ID];
          NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setObject:txtEmailId.text forKey:USER_EMAIL];
+#if FLURRY_ENABLED
+        [flurryParams setObject:txtEmailId.text forKey:FLURRY_USER_EMAIL];
+#endif
     }
     if(soundFilePath != nil && txtFeedBack.text != nil) {
         [rkp setValue:[NSNumber numberWithInt:FEEDBACK_TEXT_AUDIO] forParam:FILE_FORMATE_TYPE]; 
     }
+#if FLURRY_ENABLED
+    if ([flurryParams count] > 0) {
+        [Flurry logEvent:FLURRY_FEEDBACK_SUBMIT withParameters:flurryParams];
+    } else {
+        [Flurry logEvent:FLURRY_FEEDBACK_SUBMIT];
+    }
+#endif
     
     [rkp setValue:[prefs objectForKey:DEVICE_CFUUID] forParam:DEVICE_ID]; 
     [rkp setValue:[nc_AppDelegate sharedInstance].FBSource forParam:FEEDBACK_SOURCE]; 
@@ -475,8 +508,6 @@ NSUserDefaults *prefs;
         isCancelFB = TRUE;
     } else if ([btnName isEqualToString:BUTTON_DONE]) {
         [self.btnPlayRecording setEnabled:TRUE];
-    } else if ([btnName isEqualToString:BUTTON_YES]) {
-        [self sendFeedbackToServer];
     } 
 }
 

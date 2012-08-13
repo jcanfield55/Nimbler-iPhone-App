@@ -106,7 +106,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if ([toFromVC editMode] == NO_EDIT) {
+    if ([toFromVC editMode] == NO_EDIT && !selectedLocation) {  // DE122 fix
         return ([locations numberOfLocations:isFrom] + 1); // matching rows + 1 for "Enter New Address" Row
     }
     else {
@@ -206,12 +206,14 @@
         [locations setSelectedToLocation:loc]; // Sort location to top of list next time
         [locations setTypedToString:@""];
     }
+    
+    selectedLocation = loc;  // moved before updateToFromLocation as part of DE122 fix
+    
     // Update ToFromViewController with the geocode results 
     // (should be done after the locations typedString cleared)
     [toFromVC updateToFromLocation:self isFrom:isFrom location:loc];
     [toFromVC updateGeocodeStatus:FALSE isFrom:isFrom];  // let it know Geocode no longer outstanding
-    
-    selectedLocation = loc;   
+ 
     [myTableView reloadData];  // Reload the data with the new sorting
     [myTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];     // scroll to the top of the table
 }
@@ -230,7 +232,7 @@
                                           reuseIdentifier:@"ToFromEnterNewLocationCell"];
             [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
             cell.textLabel.textColor = [UIColor lightGrayColor];
-            [[cell textLabel] setText:@"Enter New Address"];
+            [[cell textLabel] setText:TOFROMTABLE_ENTER_ADDRESS_TEXT];
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
         }
 

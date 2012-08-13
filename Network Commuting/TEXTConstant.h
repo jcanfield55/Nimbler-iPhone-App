@@ -79,4 +79,8 @@
 #define DATE_PICKER_DONE            @"Done"
 #define DATE_PICKER_DEPART          @"Depart"
 #define DATE_PICKER_ARRIVE          @"Arrive"
+
+// ToFromTableViewController
+#define TOFROMTABLE_ENTER_ADDRESS_TEXT @"Enter New Address"
+
 #endif

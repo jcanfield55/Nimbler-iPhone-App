@@ -9,6 +9,10 @@
 #import "LocationPickerViewController.h"
 #import "FeedBackForm.h"
 
+#if FLURRY_ENABLED
+#import "Flurry.h"
+#endif
+
 @interface LocationPickerViewController ()
 {
     BOOL locationPicked;  // True if a location is picked before returning to ToFromViewController
@@ -41,7 +45,9 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+#if FLURRY_ENABLED
+    [Flurry logEvent:FLURRY_LOCATION_PICKER_APPEAR];
+#endif
     locationPicked = FALSE;
     
     // Enforce height of main table
@@ -144,7 +150,7 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
     // Do any additional setup after loading the view from its nib.
    UIButton *btnGoToNimbler = [[UIButton alloc] initWithFrame:CGRectMake(0,0,82,34)];
     [btnGoToNimbler addTarget:self action:@selector(popOutToNimbler) forControlEvents:UIControlEventTouchUpInside];
-    [btnGoToNimbler setBackgroundImage:[UIImage imageNamed:@"img_nimblerNavigationSelect.png"] forState:UIControlStateNormal];
+    [btnGoToNimbler setBackgroundImage:[UIImage imageNamed:@"img_nimblerNavigation.png"] forState:UIControlStateNormal];
     
     UIBarButtonItem *backTonimbler = [[UIBarButtonItem alloc] initWithCustomView:btnGoToNimbler];
     self.navigationItem.leftBarButtonItem = backTonimbler;

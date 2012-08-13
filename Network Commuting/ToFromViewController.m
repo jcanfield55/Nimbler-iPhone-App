@@ -16,7 +16,6 @@
 #import "Itinerary.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "FeedBackForm.h"
-#import "TwitterSearch.h"
 #import "LocationPickerViewController.h"
 #import "twitterViewController.h"
 #import "SettingInfoViewController.h"
@@ -54,7 +53,6 @@
     NSTimer* activityTimer;
     RouteOptionsViewController *routeOptionsVC; 
     LocationPickerViewController *locationPickerVC;
-    TwitterSearch* twitterSearchVC;
     NSArray* sectionUILabelArray;  // Array of UILabels containing main table section headers 
     
 }
@@ -376,7 +374,12 @@ NSUserDefaults *prefs;
         return maxHeight;
     }
 
-    CGFloat fullTableHeight = ([locations numberOfLocations:isFrom] + 1) * TOFROM_ROW_HEIGHT; // +1 for 'Enter New Address' line
+    CGFloat fullTableHeight;
+    if (isFrom) {
+        fullTableHeight = [fromTableVC tableView:fromTable numberOfRowsInSection:0] * TOFROM_ROW_HEIGHT; // DE122 fix
+    } else {
+        fullTableHeight = [toTableVC tableView:toTable numberOfRowsInSection:0] * TOFROM_ROW_HEIGHT; // DE122 fix
+    }
     
     // Return fullTableHeight or maxHeight, whichever is smaller
     if (fullTableHeight > maxHeight) { 

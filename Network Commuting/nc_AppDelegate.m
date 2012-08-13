@@ -10,7 +10,6 @@
 #import "UtilityFunctions.h"
 //#import "TestFlightSDK1/TestFlight.h"
 #import "ToFromViewController.h"
-#import "TwitterSearch.h"
 #import "twitterViewController.h"
 #import "SettingInfoViewController.h"
 #import "FeedBackForm.h"
@@ -130,8 +129,9 @@ FeedBackForm *fbView;
     
     // Set a CFUUID (unique identifier) for this device and this app, if doesn't exist already:
     
-    if ([prefs objectForKey:DEVICE_CFUUID] == nil) {  // if the CFUUID not created, create it
-        NSString* cfuuidString = [nc_AppDelegate getUUID];
+    NSString* cfuuidString = [prefs objectForKey:DEVICE_CFUUID];
+    if (cfuuidString == nil) {  // if the CFUUID not created, create it
+        cfuuidString = [nc_AppDelegate getUUID];
         [prefs setValue:cfuuidString forKey:DEVICE_CFUUID];
         [prefs synchronize];
         NSLog(@"DEVICE_CFUUID  - - - - - - - %@", cfuuidString);

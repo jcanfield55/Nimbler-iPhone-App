@@ -59,6 +59,7 @@ typedef enum {
 - (NSString *)ncDescription;
 - (BOOL)isWalk;
 - (BOOL)isBus;
+- (BOOL)isHeavyTrain; // Note: legs that are isHeavyTrain=true are also isTrain=true
 - (BOOL)isTrain;
 
 @end

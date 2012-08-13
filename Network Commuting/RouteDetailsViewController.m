@@ -9,7 +9,6 @@
 #import "RouteDetailsViewController.h"
 #import "Leg.h"
 #import "LegMapViewController.h"
-#import "TwitterSearch.h"
 #import "FeedBackForm.h"
 #import "FeedBackReqParam.h"
 #import "twitterViewController.h"
@@ -110,6 +109,8 @@ NSUserDefaults *prefs;
             NSArray* imageNameArray = [NSArray arrayWithObjects:
                                        @"img_legPoint", @"img_legPointSelect",
                                        @"img_legTrain", @"img_legTrainSelect",
+                                       @"img_legHeavyTrain", @"img_legHeavyTrainSelect",
+                                       @"img_legBus", @"img_legBusSelect",
                                        @"img_legWalk", @"img_legWalkSelect", 
                                        @"img_backSelect", @"img_backUnSelect", 
                                        @"img_forwardSelect", @"img_forwardUnSelect", nil];
@@ -280,6 +281,10 @@ NSUserDefaults *prefs;
         } else {
             if([leg isWalk]){
                 [imgFileName appendString:@"img_legWalk"];
+            } else if([leg isBus]){
+                [imgFileName appendString:@"img_legBus"];
+            } else if ([leg isHeavyTrain]){
+                [imgFileName appendString:@"img_legHeavyTrain"];
             } else if([leg isTrain]){                        
                 [imgFileName appendString:@"img_legTrain"];
             } 

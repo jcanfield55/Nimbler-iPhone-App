@@ -10,7 +10,6 @@
 #import "Leg.h"
 #import "UtilityFunctions.h"
 #import <math.h>
-#import "TwitterSearch.h"
 #import "FeedBackForm.h"
 #import "LegMapViewController.h"
 #import "twitterViewController.h"
@@ -28,7 +27,6 @@
 {
     // Variables for internal use
     
-    TwitterSearch* twitterSearchVC;
     RouteDetailsViewController* routeDetailsVC;
 }
 
@@ -243,7 +241,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     [super viewDidLoad];
     btnGoToNimbler = [[UIButton alloc] initWithFrame:CGRectMake(0,0,65,34)];
     [btnGoToNimbler addTarget:self action:@selector(popOutToNimbler) forControlEvents:UIControlEventTouchUpInside];
-    [btnGoToNimbler setBackgroundImage:[UIImage imageNamed:@"img_nimblerNavigationSelect.png"] forState:UIControlStateNormal];
+    [btnGoToNimbler setBackgroundImage:[UIImage imageNamed:@"img_nimblerNavigation.png"] forState:UIControlStateNormal];
     
     UIBarButtonItem *backTonimbler = [[UIBarButtonItem alloc] initWithCustomView:btnGoToNimbler];
     self.navigationItem.leftBarButtonItem = backTonimbler;

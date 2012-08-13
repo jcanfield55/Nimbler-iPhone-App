@@ -224,6 +224,15 @@
     return false;
 }
 
+-(BOOL)isHeavyTrain
+{
+    if ([[self mode] isEqualToString:@"RAIL"] && [[self agencyId] isEqualToString:@"caltrain-ca-us"]) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 -(BOOL)isTrain
 {
     if ([[self mode] isEqualToString:@"RAIL"]) {   

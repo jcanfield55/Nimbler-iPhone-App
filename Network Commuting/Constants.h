@@ -15,9 +15,9 @@
 
 #define GEO_RESPONSE_URL        @"http://maps.googleapis.com/maps/api/geocode/"
 
-//#define TRIP_PROCESS_URL        @"http://23.23.210.156:8080/TPServer/ws/"
-//#define TRIP_PROCESS_URL        @"http://ec2-23-22-169-158.compute-1.amazonaws.com:8080/TPServer/ws/"
-#define TRIP_PROCESS_URL        @"http://192.168.2.148:8080/TPServer/ws/"
+#define TRIP_PROCESS_URL        @"http://23.23.210.156:8080/TPServer/ws/"
+
+//#define TRIP_PROCESS_URL        @"http://192.168.2.148:8080/TPServer/ws/"
 
 #define TWITTER_SERARCH_URL     @"https://twitter.com/#!/search/realtime/TRAIN%20from%3Acaltrain%20OR%20from%3Acaltrain_news"
 #define CALTRAIN_TWITTER_URL    @"https://twitter.com/#!/search/from%3Acaltrain%20OR%20from%3Acaltrain_news"
@@ -81,6 +81,7 @@
 #define FLURRY_DATE_PICKER_APPEAR           @"DatePicker appear"
 #define FLURRY_DATE_PICKER_CANCEL           @"DatePicker cancel"
 #define FLURRY_DATE_PICKER_NEW_DATE         @"DatePicker new date selected"
+#define FLURRY_LOCATION_PICKER_APPEAR       @"LocationPicker appear"
 #define FLURRY_ROUTE_REQUESTED              @"Route Requested"
 #define FLURRY_ROUTE_OPTIONS_APPEAR         @"RouteOptions appear"
 #define FLURRY_ROUTE_SELECTED               @"Route selected"
@@ -96,17 +97,19 @@
 #define FLURRY_ADVISORIES_APPEAR            @"Advisories appear"
 
 // Flurry parameter names
-#define FLURRY_TO_SELECTED_ADDRESS          @"To Selected Address:"
-#define FLURRY_FROM_SELECTED_ADDRESS        @"From Selected Address:"
-#define FLURRY_TOFROM_WHICH_TABLE           @"ToFrom which table:"
-#define FLURRY_SELECTED_ROW_NUMBER          @"Table selected row #:"
-#define FLURRY_NUMBER_OF_GEOCODES           @"Number of geocodes:"
-#define FLURRY_GEOCODE_ERROR                @"Geocode error:"
-#define FLURRY_GEOCODE_RAWADDRESS           @"Geocode raw address:"
-#define FLURRY_FORMATTED_ADDRESS            @"Formatted Address"
-#define FLURRY_NEW_DATE                     @"New date:"
-#define FLURRY_SELECTED_DEPARTURE_TIME      @"Selected departure time:"
-#define FLURRY_EDIT_MODE_VALUE              @"Edit mode value:"
+#define FLURRY_TO_SELECTED_ADDRESS          @"(To Selected Address)"
+#define FLURRY_FROM_SELECTED_ADDRESS        @"(From Selected Address)"
+#define FLURRY_TOFROM_WHICH_TABLE           @"(ToFrom which table)"
+#define FLURRY_SELECTED_ROW_NUMBER          @"(Table selected row #)"
+#define FLURRY_NUMBER_OF_GEOCODES           @"(Number of geocodes)"
+#define FLURRY_GEOCODE_ERROR                @"(Geocode error)"
+#define FLURRY_GEOCODE_RAWADDRESS           @"(Geocode raw address)"
+#define FLURRY_FORMATTED_ADDRESS            @"(Formatted Address)"
+#define FLURRY_NEW_DATE                     @"(New date)"
+#define FLURRY_SELECTED_DEPARTURE_TIME      @"(Selected departure time)"
+#define FLURRY_EDIT_MODE_VALUE              @"(Edit mode value)"
+#define FLURRY_USER_EMAIL                   @"(User email)"
+#define FLURRY_FEEDBACK_TEXT                @"(Feedback text)"
 
 /*  Template code for inserting Flurry logging
  #if FLURRY_ENABLED
