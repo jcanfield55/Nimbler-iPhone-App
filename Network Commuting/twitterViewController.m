@@ -31,7 +31,7 @@ NSMutableArray *arrayTweet;
 UITableViewCell *cell;
 NSUserDefaults *prefs;
 
-@synthesize mainTable,twitterData,dateFormatter,reload,isFromAppDelegate,isTwitterLiveData,noAdvisory,getTweetInProgress;
+@synthesize mainTable,twitterData,dateFormatter,reload,isFromAppDelegate,isTwitterLiveData,noAdvisory,getTweetInProgress,timerForStopProcees;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -98,7 +98,7 @@ NSUserDefaults *prefs;
     [Flurry logEvent:FLURRY_ADVISORIES_APPEAR];
 #endif
     
-    [getTweetInProgress startAnimating];    
+   [self startProcessForGettingTweets]; 
     mainTable.delegate = self;
     mainTable.dataSource = self;
     
@@ -113,13 +113,6 @@ NSUserDefaults *prefs;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    
-    if ([arrayTweet count] == 0) {
-        NSLog(@" - - - - - - -  - - -  - >>>");
-        [noAdvisory setHidden:NO];
-    } else {
-        [noAdvisory setHidden:YES];
-    }
     return [arrayTweet count];
 }
 
@@ -127,7 +120,7 @@ NSUserDefaults *prefs;
 {
     NSString *cellIdentifier = TABLE_CELL;
     UILabel *labelTime;
-    cell =     [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     cell = nil;
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
     
@@ -177,7 +170,7 @@ NSUserDefaults *prefs;
 #pragma mark reloadNewTweets request Response
 -(void)getLatestTweets 
 {
-    [getTweetInProgress startAnimating];    
+    [self startProcessForGettingTweets];    
     NSString *latestTweetTime = @"0";
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
@@ -193,7 +186,6 @@ NSUserDefaults *prefs;
                               nil];
         NSString *req = [LATEST_TWEETS_REQ appendQueryParams:dict];
         [[RKClient sharedClient]  get:req delegate:self]; 
-//    [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
     [[nc_AppDelegate sharedInstance] updateBadge:0];
 
 }
@@ -202,22 +194,15 @@ NSUserDefaults *prefs;
     RKJSONParserJSONKit* rkTwitDataParser = [RKJSONParserJSONKit new];
     @try {
         if ([request isGET]) {
-            [noAdvisory setHidden:YES];
             if (isTwitterLiveData) {
                 isTwitterLiveData = false;
                 NSLog(@"response %@", [response bodyAsString]);
-                
-                [getTweetInProgress stopAnimating];
-                [getTweetInProgress setHidesWhenStopped:TRUE];
-
                 id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];                
                 [self setTwitterLiveData:res];
             } else {
                 NSLog(@"latest tweets: %@", [response bodyAsString]);
                 id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];
                 NSNumber *respCode = [(NSDictionary*)res objectForKey:ERROR_CODE];
-                [getTweetInProgress stopAnimating];
-                [getTweetInProgress setHidesWhenStopped:TRUE];
                 if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
                     NSMutableArray *arrayLatestTweet = [(NSDictionary*)res objectForKey:TWEET]; 
                     NSMutableArray *tempArray = [[NSMutableArray alloc] initWithCapacity:arrayLatestTweet.count];
@@ -228,7 +213,7 @@ NSUserDefaults *prefs;
                 } else {
                     [mainTable reloadData];
                 }
-            
+             [self stopProcessForGettingTweets];
             }
             
         }
@@ -242,7 +227,6 @@ NSUserDefaults *prefs;
 
 -(void)setTwitterLiveData:(id)tweetData
 {
-    [noAdvisory setHidden:YES];
     twitterData = tweetData;
     NSNumber *respCode = [(NSDictionary*)twitterData objectForKey:ERROR_CODE];
     
@@ -253,6 +237,7 @@ NSUserDefaults *prefs;
         arrayTweet = nil; 
         [mainTable reloadData];
     }
+    [self stopProcessForGettingTweets];
 }
 
 // convert into twitter calaculate time
@@ -304,7 +289,6 @@ NSUserDefaults *prefs;
 -(void)getAdvisoryData
 {
     @try {
-        [noAdvisory setHidden:YES];
         [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
         [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
         [[nc_AppDelegate sharedInstance] updateBadge:0];
@@ -321,5 +305,29 @@ NSUserDefaults *prefs;
         NSLog(@"Exception at advisories button click from ToFromview: %@", exception);
     } 
 }
+
+#pragma mark UIUpdation
+// after and before request these methods will be called 
+-(void)startProcessForGettingTweets
+{
+    [noAdvisory setHidden:YES];
+    [getTweetInProgress startAnimating]; 
+    [self timerAction];
+}
+-(void)stopProcessForGettingTweets
+{
+    if ([arrayTweet count] == 0) {
+        [noAdvisory setHidden:NO];
+    } else {
+        [noAdvisory setHidden:YES];
+    }
+    [getTweetInProgress stopAnimating];
+    [getTweetInProgress setHidesWhenStopped:TRUE];
+}
+-(void)timerAction
+{
+    timerForStopProcees = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(stopProcessForGettingTweets) userInfo:nil repeats:NO];
+}
+
 
 @end

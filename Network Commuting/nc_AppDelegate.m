@@ -16,7 +16,7 @@
 #import "FeedBackForm.h"
 #import "DateTimeViewController.h"
 #import "UserPreferance.h"
-
+#import "Reachability.h"
 #if TEST_FLIGHT_ENABLED
 #import "TestFlightSDK1/TestFlight.h"
 #endif
@@ -40,7 +40,6 @@ static nc_AppDelegate *appDelegate;
 @synthesize locations;
 @synthesize locationManager;
 @synthesize toFromViewController;
-@synthesize feedbackView;
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
@@ -296,10 +295,7 @@ FeedBackForm *fbView;
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
     
-    if (![self isNetworkConnectionLive]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:ALERT_NETWORK delegate:self cancelButtonTitle:BTN_EXIT otherButtonTitles:BTN_CANCEL, nil];
-        [alert show];
-    } 
+    [self isNetworkConnectionLive];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -620,25 +616,6 @@ FeedBackForm *fbView;
     }
 }
 
-// This method idebtifies network connection. 
-- (BOOL)isNetworkConnectionLive
-{
-    static BOOL checkNetwork = YES;
-    BOOL  _isDataSourceAvailable = NO;
-    if (checkNetwork) { // Since checking the reachability of a host can be expensive, cache the result and perform the reachability check once.
-        checkNetwork = NO;        
-        Boolean success;    
-        const char *host_name = "www.google.com"; // your data source host name
-        
-        SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL, host_name);
-        SCNetworkReachabilityFlags flags;
-        success = SCNetworkReachabilityGetFlags(reachability, &flags);
-        _isDataSourceAvailable = success && (flags & kSCNetworkFlagsReachable) && !(flags & kSCNetworkFlagsConnectionRequired);
-        CFRelease(reachability);
-    }
-    return _isDataSourceAvailable;
-}
-
 // update badge
 -(void)updateBadge:(int)count
 {
@@ -653,7 +630,21 @@ FeedBackForm *fbView;
         [self.window addSubview:twitterCount];
         [twitterCount setHidden:NO];
     }
+}
 
+-(void)isNetworkConnectionLive
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNetworkChange:) name:kReachabilityChangedNotification object:nil];
+      
+    Reachability *reachability = [Reachability reachabilityForInternetConnection];
+      [reachability startNotifier];
+
+    NetworkStatus remoteHostStatus = [reachability currentReachabilityStatus];
+    
+    if(remoteHostStatus == NotReachable) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:ALERT_NETWORK delegate:self cancelButtonTitle:BTN_EXIT otherButtonTitles:BTN_CANCEL, nil];
+        [alert show];
+    } 
 }
 
 @end

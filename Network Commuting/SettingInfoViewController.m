@@ -111,6 +111,7 @@ bool isPush;
                                 MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:sliderMaxWalkDistance.value],
                                 nil];
         NSString *twitCountReq = [UPDATE_SETTING_REQ appendQueryParams:params];
+        NSLog(@" - - -  - - - - - %@", twitCountReq);
         [[RKClient sharedClient]  get:twitCountReq delegate:self];
         
          [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(popOutFromSettingView) userInfo:nil repeats: NO];
@@ -191,4 +192,5 @@ bool isPush;
         NSLog(@"exception at fetch data from core data and set to views: %@",exception);
     }
 }
+
 @end

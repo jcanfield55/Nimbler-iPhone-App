@@ -53,7 +53,7 @@ NSUserDefaults *prefs;
 -(void)viewDidLoad{
     [super viewDidLoad];
     UIImage* btnImage = [UIImage imageNamed:@"img_itineraryNavigation.png"];
-    btnGoToItinerary = [[UIButton alloc] initWithFrame:CGRectMake(0,0,btnImage.size.width, btnImage.size.height)];
+    btnGoToItinerary = [[UIButton alloc] initWithFrame:CGRectMake(0,0,76, 34)];
     [btnGoToItinerary addTarget:self action:@selector(popOutToItinerary) forControlEvents:UIControlEventTouchUpInside];
     [btnGoToItinerary setBackgroundImage:btnImage forState:UIControlStateNormal];
     

@@ -20,10 +20,14 @@
 @property (nonatomic) BOOL isTwitterLiveData;
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *getTweetInProgress;
 @property (strong, nonatomic) IBOutlet UILabel *noAdvisory; 
+@property (strong, nonatomic) NSTimer *timerForStopProcees;
 
 -(void)setTwitterLiveData:(id)tweetData;
 
 -(NSString *)stringForTimeIntervalSinceCreated:(NSDate *)dateTime serverTime:(NSDate *)serverDateTime;
 -(void)popOut;
 -(void)getAdvisoryData;
+-(void)stopProcessForGettingTweets;
+-(void)startProcessForGettingTweets;
+-(void)timerAction;
 @end

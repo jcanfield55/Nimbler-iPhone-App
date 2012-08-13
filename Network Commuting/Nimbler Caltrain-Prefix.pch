@@ -17,4 +17,5 @@
     #import "TEXTConstant.h"
     #import "CustomBadge.h"
 #import "RXCustomTabBar.h"
+#import <QuartzCore/QuartzCore.h>
 #endif

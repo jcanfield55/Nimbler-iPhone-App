@@ -13,7 +13,6 @@
 #import "ToFromViewController.h"
 #import "Locations.h"
 #import "SupportedRegion.h"
-#import "FeedBackViewController.h"
 #import <Restkit/RKJSONParserJSONKit.h>
 #import "RouteOptionsViewController.h"
 #import "RouteDetailsViewController.h"
@@ -34,7 +33,6 @@
 
 @property (readonly, strong, nonatomic) Locations *locations;
 @property (readonly, strong, nonatomic) ToFromViewController *toFromViewController;
-@property (readonly, strong, nonatomic) FeedBackViewController *feedbackView;
 @property (readonly, strong, nonatomic) CLLocationManager* locationManager;
 
 // Properties for Core Data
@@ -62,6 +60,6 @@
 -(void)upadateDefaultUserValue;
 +(nc_AppDelegate *)sharedInstance; 
 + (NSString *)getUUID;
-- (BOOL)isNetworkConnectionLive;
 -(void)updateBadge:(int)count;
+-(void)isNetworkConnectionLive;
 @end
