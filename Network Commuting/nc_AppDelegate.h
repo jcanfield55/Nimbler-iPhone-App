@@ -50,7 +50,6 @@
 @property (strong, nonatomic) NSString *FBSFromAdd;
 @property (strong, nonatomic) NSString *FBUniqueId;
 
-@property (strong, nonatomic) Location *tempLocation;
 @property (strong, nonatomic) CustomBadge *twitterCount;
 
 - (NSURL *)applicationDocumentsDirectory;

@@ -74,5 +74,5 @@ typedef enum {
 -(NSNumber *)getWalkDistance;
 -(void)setFBParameterForGeneral;
 -(void)doSwapLocation;
--(Location *)getReverseGeo:(Location *)location;
+-(void)requestReverseGeo:(Location *)location;
 @end

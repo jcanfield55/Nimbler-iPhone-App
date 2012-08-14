@@ -49,7 +49,7 @@ static nc_AppDelegate *appDelegate;
 
 
 // Feedback parameters
-@synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId,tempLocation;
+@synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId;
 twitterViewController *twitterView;
 SettingInfoViewController *settingView;
 FeedBackForm *fbView;

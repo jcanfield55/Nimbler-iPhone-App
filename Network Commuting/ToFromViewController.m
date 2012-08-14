@@ -35,6 +35,7 @@
     // Variables for internal use    
     NSDateFormatter *tripDateFormatter;  // Formatter for showing the trip date / time
     NSString *planURLResource; // URL resource sent to planner
+    NSString *reverseGeoURLResource;  // URL resource sent for reverse geocoding
     NSMutableArray *planRequestHistory; // Array of all the past plan request parameter histories in sequential order (most recent one last)
     Plan *plan;
     Plan *tpResponsePlan;
@@ -46,7 +47,6 @@
     BOOL toGeocodeRequestOutstanding;  // true if there is an outstanding To geocode request
     BOOL fromGeocodeRequestOutstanding;  //true if there is an outstanding From geocode request
     BOOL savetrip;
-    BOOL isCurrenLocation;
     double startButtonClickTime;
     float durationOfResponseTime;
     UIActivityIndicatorView* activityIndicator;
@@ -858,8 +858,44 @@ NSUserDefaults *prefs;
 // Delegate methods for when the RestKit has results from the Planner
 - (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects 
 {        
+    if ([[objectLoader resourcePath] isEqualToString:reverseGeoURLResource]) {
+        // A reverse geocode result for currentLocation
+        // TODO refactor some of this code and that in ToFromTableViewController into a general geocode class
+        
+        // Get the status string the hard way by parsing the response string
+        NSString* response = [[objectLoader response] bodyAsString];
+        [currentLocation setReverseGeoLocation:nil];  // Clear out previous reverse Geocode
+        
+        NSRange range = [response rangeOfString:@"\"status\""];
+        if (range.location != NSNotFound) {
+            NSString* responseStartingFromStatus = [response substringFromIndex:(range.location+range.length)];
+            
+            NSArray* atoms = [responseStartingFromStatus componentsSeparatedByString:@"\""];
+            NSString* geocodeStatus = [atoms objectAtIndex:1]; // status string is second atom (first after the first quote)
+            NSLog(@"Status: %@", geocodeStatus);
+            
+            if ([geocodeStatus compare:@"OK" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+                if ([objects count] > 0) { // if we have an reverse geocode object
+                    
+                    // Grab the first reverse-geo, which will be the most specific one
+                    Location* reverseGeoLocation = [objects objectAtIndex:0];
+                    
+                    // Check if an equivalent Location is already in the locations table
+                    reverseGeoLocation = [locations consolidateWithMatchingLocations:reverseGeoLocation keepThisLocation:NO];
+                    
+                    // Save db context with the new location object
+                    saveContext(managedObjectContext);
+                    NSLog(@"Reverse Geocode: %@", [reverseGeoLocation formattedAddress]);
+                    // Update the Current Location with pointer to the Reverse Geo location
+                    [currentLocation setReverseGeoLocation:reverseGeoLocation];
+                }
+            }
+        }
+        // if no result or non-OK status, leave the reverse Geocode as nil
+    }
+    
     // Check to make sure this is the response to the latest planner request
-    if ([[objectLoader resourcePath] isEqualToString:planURLResource]) 
+    else if ([[objectLoader resourcePath] isEqualToString:planURLResource])
     {   
         NSInteger statusCode = [[objectLoader response] statusCode];
         NSLog(@"Planning HTTP status code = %d", statusCode);
@@ -1031,15 +1067,16 @@ NSUserDefaults *prefs;
             
             NSLog(@"Plan resource: %@", planURLResource);
            
-            // Storecurrent Location
-            if (isCurrenLocation) {                
-                [nc_AppDelegate sharedInstance].tempLocation = fromLocation;
-            }
-            
              // Call the trip planner
             [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
             savetrip = TRUE;
             isContinueGetRealTimeData = FALSE;
+            
+            // Do reverse geocoding if coming from current location
+            if (fromLocation == currentLocation) {
+                [self requestReverseGeo:fromLocation];
+            }
+            
             // Reload the to/from tables for next time
             [[self fromTable] reloadData];
             [[self toTable] reloadData];
@@ -1267,10 +1304,8 @@ NSUserDefaults *prefs;
         [dFormat setTimeStyle:NSDateFormatterMediumStyle];
         if ([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
             fromLocs = [self getCurrentLocationOfFormattedAddress:fromLocation];
-            isCurrenLocation = TRUE;
         } else {
             fromLocs = [fromLocation formattedAddress];
-            isCurrenLocation = FALSE;
         }
         [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_GENERAL];
         [nc_AppDelegate sharedInstance].FBDate = [dFormat stringFromDate:tripDate];
@@ -1283,34 +1318,36 @@ NSUserDefaults *prefs;
     }
 }
 
+// US132 implementation
 -(void)doSwapLocation
 {
-    if (!isCurrenLocation) {
+    if (fromLocation == currentLocation) {
+        // If from = currentLocation, change toLocation to the last reverse geocode of CurrentLocation
+        // (could be nil)
+        [toTableVC markAndUpdateSelectedLocation:[currentLocation reverseGeoLocation]];
+    }
+    else {  // do a normal swap
         Location *fromloc = fromLocation;
         Location *toLoc = toLocation;
-        // Swap Location
+        // Swap Location (could be nil)
         [toTableVC markAndUpdateSelectedLocation:fromloc];
         [fromTableVC markAndUpdateSelectedLocation:toLoc];
-    } else {
-        Location *fromLoc = [self getReverseGeo:[nc_AppDelegate sharedInstance].tempLocation];
-        [toTableVC markAndUpdateSelectedLocation:fromLoc];
-    }
+    } 
 }
 
--(Location *)getReverseGeo:(Location *)location
+- (void)requestReverseGeo:(Location *)location
 {
+
     @try {
-        double latitude = [[location lat] doubleValue];
-        double longitude = [[location lng] doubleValue];  
         float startTime = CFAbsoluteTimeGetCurrent();
-        NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv",latitude,longitude];  
-        NSURL *url = [NSURL URLWithString:urlString];
-        NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
-        NSArray *streetName = [locationString componentsSeparatedByString:@"\""];
-        currentLoc = [streetName objectAtIndex:1];
+        NSString* latLngString = [NSString stringWithFormat:@"%f,%f",[location latFloat], [location lngFloat]];
+        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
+                                @"latlng", latLngString,
+                                @"sensor", @"true", nil];
+        reverseGeoURLResource = [@"json" appendQueryParams:params];
+        [rkGeoMgr loadObjectsAtResourcePath:reverseGeoURLResource delegate:self]; // Call the reverse Geocoder
+        
         currentLocationResTime =  CFAbsoluteTimeGetCurrent() - startTime;
-        [location setShortFormattedAddress:currentLoc];
-        return location;
     }
     @catch (NSException *exception) {
         NSLog(@"exception at reverGeocod: %@", exception);

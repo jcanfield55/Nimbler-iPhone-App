@@ -187,7 +187,6 @@
 - (void)markAndUpdateSelectedLocation:(Location *)loc
 {
     if ([[loc formattedAddress] isEqualToString:@"Current Location"]) {
-        [self alertUsetForLocationService];
         if ([self alertUsetForLocationService]) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Location" message:@"Location Service is disabled for Nimbler, Do you want to enable?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"Cancel", nil];
             [alert show];
@@ -266,7 +265,7 @@
         if ([toFromVC editMode] == NO_EDIT) {
             [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
         } else {
-             cell.textLabel.text = @"Current Location";
+            // cell.textLabel.text = @"Current Location"; // This line causes DE124
             [cell setAccessoryType:UITableViewCellAccessoryNone];
         }
     } else {

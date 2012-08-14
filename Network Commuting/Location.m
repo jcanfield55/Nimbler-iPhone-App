@@ -29,6 +29,7 @@
 @dynamic preloadVersion;
 @dynamic memberOfList;
 @synthesize shortFormattedAddress;
+@synthesize reverseGeoLocation;
 
 // Static variables and methods to retrieve the Locations set wrapper
 static Locations *locations;
