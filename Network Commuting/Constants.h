@@ -67,6 +67,9 @@
 #define FLURRY_ENABLED                  0
 
 // Flurry events
+#define FLURRY_APPDELEGATE_START            @"Start of App Delegate"
+#define FLURRY_CURRENT_LOCATION_AVAILABLE   @"Current Location Available"
+#define FLURRY_PUSH_AVAILABLE               @"Push Notification Available"
 #define FLURRY_TOFROMVC_APPEAR              @"ToFromView appear"
 #define FLURRY_TOFROMTABLE_SELECT_ROW       @"ToFromTable select row"
 #define FLURRY_TOFROMTABLE_NEW_EDIT_MODE    @"ToFrom new edit mode"
@@ -97,6 +100,7 @@
 #define FLURRY_ADVISORIES_APPEAR            @"Advisories appear"
 
 // Flurry parameter names
+#define FLURRY_NOTIFICATION_TOKEN           @"(Notification Token)"
 #define FLURRY_TO_SELECTED_ADDRESS          @"(To Selected Address)"
 #define FLURRY_FROM_SELECTED_ADDRESS        @"(From Selected Address)"
 #define FLURRY_TOFROM_WHICH_TABLE           @"(ToFrom which table)"

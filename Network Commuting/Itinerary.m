@@ -79,7 +79,27 @@
     return mapping;
 }
 
+// Returns the start-time of the first leg if there is one, otherwise returns startTime property
+- (NSDate *)startTimeOfFirstLeg
+{
+    NSDate* firstLegStartTime = [[[self sortedLegs] objectAtIndex:0] startTime];
+    if (firstLegStartTime) {
+        return firstLegStartTime;
+    } else {
+        return [self startTime];
+    }
+}
 
+// Returns the end-time of the last leg if there is one, otherwise returns endTime property
+- (NSDate *)endTimeOfLastLeg
+{
+    NSDate* lastLegEndTime = [[[self sortedLegs] objectAtIndex:([[self sortedLegs] count]-1)] endTime];
+    if (lastLegEndTime) {
+        return lastLegEndTime;
+    } else {
+        return [self endTime];
+    }
+}
 
 // Create the sorted array of itineraries
 - (void)sortLegs

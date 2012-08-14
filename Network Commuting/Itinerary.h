@@ -21,10 +21,10 @@
 @property (nonatomic, retain) NSNumber * duration;
 @property (nonatomic, retain) NSNumber * elevationGained;
 @property (nonatomic, retain) NSNumber * elevationLost;
-@property (nonatomic, retain) NSDate   * endTime;
+@property (nonatomic, retain) NSDate   * endTime;  // raw end time from OTP
 @property (nonatomic, retain) NSNumber * fareInCents;
 @property (nonatomic, retain) NSDate * itineraryCreationDate;
-@property (nonatomic, retain) NSDate * startTime;
+@property (nonatomic, retain) NSDate * startTime;  // raw start time from OTP
 @property (nonatomic, retain) NSNumber * tooSloped;
 @property (nonatomic, retain) NSNumber * transfers;
 @property (nonatomic, retain) NSNumber * transitTime;
@@ -44,6 +44,12 @@
 - (PlanPlace *)from;
 - (PlanPlace *)to;
 - (NSString *)ncDescription;
+
+// Returns the start-time of the first leg if there is one, otherwise returns startTime property
+- (NSDate *)startTimeOfFirstLeg;
+
+// Returns the end-time of the last leg if there is one, otherwise returns endTime property
+- (NSDate *)endTimeOfLastLeg;
 
 // Returns a nicely formatted address string for the starting point, if available
 - (NSString *)fromAddressString;

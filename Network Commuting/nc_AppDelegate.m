@@ -148,6 +148,7 @@ FeedBackForm *fbView;
 #if FLURRY_ENABLED
     [Flurry startSession:@"WWV2WN4JMY35D4GYCPDJ"];
     [Flurry setUserID:cfuuidString];
+    [Flurry logEvent:FLURRY_APPDELEGATE_START];
 #endif
     
     // Create an instance of a UINavigationController and put toFromViewController as the first view
@@ -221,7 +222,10 @@ FeedBackForm *fbView;
         }
         [toFromViewController setCurrentLocation:currentLocation];
         [toFromViewController setIsCurrentLocationMode:TRUE];
-    } 
+#if FLURRY_ENABLED
+        [Flurry logEvent:FLURRY_CURRENT_LOCATION_AVAILABLE];
+#endif
+    }
     
     [currentLocation setLatFloat:[newLocation coordinate].latitude];
     [currentLocation setLngFloat:[newLocation coordinate].longitude];
@@ -511,6 +515,11 @@ FeedBackForm *fbView;
         [prefs setObject:token forKey:DEVICE_TOKEN];  
         [prefs synchronize];
         [self upadateDefaultUserValue];
+#if FLURRY_ENABLED
+        NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
+                                      FLURRY_NOTIFICATION_TOKEN, token, nil];
+        [Flurry logEvent: FLURRY_PUSH_AVAILABLE withParameters:flurryParams];
+#endif
     }
     @catch (NSException *exception) {
         NSLog(@"exception at registering push notification with apple: %@", exception);

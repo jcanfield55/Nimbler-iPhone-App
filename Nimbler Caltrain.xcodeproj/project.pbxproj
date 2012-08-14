@@ -2535,8 +2535,8 @@
 		CCB7E81B1570A3E10036E9CD /* appDelegate */ = {
 			isa = PBXGroup;
 			children = (
-				CCA987D215BED7BE004557B0 /* nc_AppDelegate.m */,
 				52CF43B014BDF2F9000565D6 /* nc_AppDelegate.h */,
+				CCA987D215BED7BE004557B0 /* nc_AppDelegate.m */,
 			);
 			name = appDelegate;
 			sourceTree = "<group>";

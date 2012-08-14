@@ -111,10 +111,12 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         
         // Set title
         [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
+        NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
+                                                   timeIntervalSinceDate:[itin startTimeOfFirstLeg]]);
         NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)", 
-                               [timeFormatter stringFromDate:[itin startTime]],
-                               [timeFormatter stringFromDate:[itin endTime]],
-                               durationString([[itin duration] floatValue])];
+                               [timeFormatter stringFromDate:[itin startTimeOfFirstLeg]],
+                               [timeFormatter stringFromDate:[itin endTimeOfLastLeg]],
+                               durationStr];
         [[cell textLabel] setText:titleText];
         
         // notify with TEXT for LEG timimg
@@ -186,8 +188,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         itinerary = [plan.sortedItineraries objectAtIndex:[indexPath row]];
         itinararyId =[itinerary itinId];
 
-#if FLURRY_ENABLED         
-        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:                                 FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d", [indexPath row]],                                    FLURRY_SELECTED_DEPARTURE_TIME,[NSString stringWithFormat:@"%@", [itinerary startTime]], nil];                                  [Flurry logEvent:FLURRY_ROUTE_SELECTED withParameters:params];  
+#if FLURRY_ENABLED
+        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:                                 FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d", [indexPath row]],                                    FLURRY_SELECTED_DEPARTURE_TIME,[NSString stringWithFormat:@"%@", [itinerary startTimeOfFirstLeg]], nil];
+        [Flurry logEvent:FLURRY_ROUTE_SELECTED withParameters:params];
 #endif
         
         [routeDetailsVC setItinerary:itinerary];
