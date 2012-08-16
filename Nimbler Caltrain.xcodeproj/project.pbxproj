@@ -3215,8 +3215,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -3231,8 +3231,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
-				PROVISIONING_PROFILE = "99FDA3F0-2D84-47C9-B612-419DF20F6B36";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "99FDA3F0-2D84-47C9-B612-419DF20F6B36";
+				PROVISIONING_PROFILE = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -3243,8 +3243,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -3253,8 +3253,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "99FDA3F0-2D84-47C9-B612-419DF20F6B36";
-				"PROVISIONING_PROFILE[sdk=*]" = "99FDA3F0-2D84-47C9-B612-419DF20F6B36";
+				PROVISIONING_PROFILE = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
+				"PROVISIONING_PROFILE[sdk=*]" = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -3267,8 +3267,8 @@
 					armv6,
 					"$(ARCHS_STANDARD_32_BIT)",
 				);
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler Caltrain-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
@@ -3286,8 +3286,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "99FDA3F0-2D84-47C9-B612-419DF20F6B36";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "99FDA3F0-2D84-47C9-B612-419DF20F6B36";
+				PROVISIONING_PROFILE = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3300,8 +3300,8 @@
 					armv6,
 					"$(ARCHS_STANDARD_32_BIT)",
 				);
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler Caltrain-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
@@ -3319,8 +3319,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "99FDA3F0-2D84-47C9-B612-419DF20F6B36";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "99FDA3F0-2D84-47C9-B612-419DF20F6B36";
+				PROVISIONING_PROFILE = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};
