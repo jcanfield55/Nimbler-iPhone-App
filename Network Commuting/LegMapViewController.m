@@ -185,7 +185,7 @@ NSString *legID;
             aView.lineWidth = LINE_WIDTH;
                         
             // Determine if this overlay is the one in focus.  If so, make it darker
-            Leg *leg =leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:itineraryNumber];
+            Leg *leg  = [[itinerary legDescriptionToLegMapArray] objectAtIndex:itineraryNumber];
             for (int i=0; i<[polyLineArray count]; i++) {
                 if (([polyLineArray objectAtIndex:i] == overlay)) {
                     if (i == itineraryNumber) {

@@ -46,6 +46,7 @@ static nc_AppDelegate *appDelegate;
 @synthesize timerTweeterGetData;
 @synthesize prefs;
 @synthesize tabBarController = _tabBarController;
+@synthesize isTwitterView;
 
 
 // Feedback parameters
@@ -263,9 +264,16 @@ FeedBackForm *fbView;
     [locationManager stopUpdatingLocation];
     
     //Reload ToFromViewController
-    ToFromTableViewController *toFromTableVC = [[ToFromTableViewController alloc] initWithNibName:nil bundle:nil];
-    [toFromTableVC textSubmitted:nil forEvent:nil];
-    
+    @try {
+        [toFromViewController setEditMode:NO_EDIT]; 
+         toFromViewController.toTableVC.txtField.text = NULL_STRING;
+        [toFromViewController.toTableVC toFromTyping:toFromViewController.toTableVC.txtField forEvent:nil];
+        [toFromViewController.toTableVC textSubmitted:toFromViewController.toTableVC.txtField forEvent:nil];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"%@",exception);
+    }
+
     
     // Close Keyboard
     [UIView setAnimationsEnabled:YES];
@@ -447,15 +455,20 @@ FeedBackForm *fbView;
                     NSDictionary  *tweeterCountParser = [rkParser objectFromString:[response bodyAsString] error:nil];
                     NSNumber *respCode = [(NSDictionary*)tweeterCountParser objectForKey:@"errCode"];
                     //                NSString *allNew = [(NSDictionary*)tweeterCountParser objectForKey:@"allNew"];
-                    if ([respCode intValue]== RESPONSE_SUCCESSFULL) {                   
-                        NSLog(@"count: %@",[(NSDictionary*)tweeterCountParser objectForKey:TWEET_COUNT]);
-                        NSString *tweeterCount = [(NSDictionary*)tweeterCountParser objectForKey:TWEET_COUNT];
-                        int badge = [tweeterCount  intValue];
-                         [[nc_AppDelegate sharedInstance] updateBadge:badge];
-                        if (badge > 0) {
-                            [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:[NSString stringWithFormat:@"%d",badge]];
-                        } else {
-                            [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
+                    if ([respCode intValue]== RESPONSE_SUCCESSFULL) {  
+                        if(!self.isTwitterView){
+                            NSLog(@"count: %@",[(NSDictionary*)tweeterCountParser objectForKey:TWEET_COUNT]);
+                            NSString *tweeterCount = [(NSDictionary*)tweeterCountParser objectForKey:TWEET_COUNT];
+                            int badge = [tweeterCount  intValue];
+                            [[nc_AppDelegate sharedInstance] updateBadge:badge];
+                            if (badge > 0) {
+                                [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:[NSString stringWithFormat:@"%d",badge]];
+                            } else {
+                                [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
+                            } 
+                        }
+                        else{
+                            [twitterView getAdvisoryData];
                         }
                     }
                 } else if(isRegionSupport){                

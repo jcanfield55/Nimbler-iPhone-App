@@ -117,6 +117,7 @@ NSUserDefaults *prefs;
             self.navigationItem.titleView = [[UIImageView alloc]  initWithImage:imgTitle];
             
             UIButton *btnSwapLocation = [[UIButton alloc] initWithFrame:CGRectMake(0,0,55,35)];
+            [btnSwapLocation setTag:101];
             [btnSwapLocation addTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
             [btnSwapLocation setBackgroundImage:[UIImage imageNamed:@"img_swapLocation.png"] forState:UIControlStateNormal];
             UIBarButtonItem *btnRoute = [[UIBarButtonItem alloc] initWithCustomView:btnSwapLocation];
@@ -240,10 +241,16 @@ NSUserDefaults *prefs;
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
+    if(editMode == NO_EDIT){
+        UIButton *btnSwap = (UIButton *)[self.navigationController.navigationBar viewWithTag:101];
+        [btnSwap setEnabled:YES];
+    }
+    else{
+        UIButton *btnSwap = (UIButton *)[self.navigationController.navigationBar viewWithTag:101];
+        [btnSwap setEnabled:NO]; 
+    }
     @try {
         // Enforce height of main table
         CGRect rect0 = [mainTable frame];
@@ -407,7 +414,8 @@ NSUserDefaults *prefs;
     if (editMode == NO_EDIT) {
         return 1;  // each section in the mainTable has only one cell when not editng
     }
-    return 2; // In edit mode, the To or From section has two cells
+    return 2; 
+    // In edit mode, the To or From section has two cells
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -447,7 +455,31 @@ NSUserDefaults *prefs;
 
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    return [sectionUILabelArray objectAtIndex:section];    
+    UIView *headerView;
+    if(editMode == NO_EDIT){
+       headerView = [sectionUILabelArray objectAtIndex:section]; 
+    }
+    else{
+        UIView *tempView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, TOFROM_SECTION_LABEL_WIDTH, TOFROM_SECTION_LABEL_HEIGHT)];
+        UILabel *label = [[UILabel alloc] 
+                          initWithFrame:CGRectMake(TOFROM_SECTION_LABEL_INDENT, 0, 
+                                                   TOFROM_SECTION_LABEL_WIDTH - TOFROM_SECTION_LABEL_INDENT, 
+                                                   TOFROM_SECTION_LABEL_HEIGHT)];
+        label.textColor = [UIColor lightGrayColor];
+        label.backgroundColor = [UIColor clearColor];
+        label.font = [UIFont MEDIUM_OBLIQUE_FONT];
+        if(editMode == TO_EDIT){
+            label.text = @"To:";
+            [tempView addSubview:label];
+            headerView = tempView;
+        }
+        else if(editMode == FROM_EDIT){
+            label.text = @"From:";
+            [tempView addSubview:label];
+            headerView = tempView;
+        }
+    }
+    return headerView;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
@@ -457,6 +489,14 @@ NSUserDefaults *prefs;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if(editMode == NO_EDIT){
+        UIButton *btnSwap = (UIButton *)[self.navigationController.navigationBar viewWithTag:101];
+        [btnSwap setEnabled:YES]; 
+    }
+    else{
+        UIButton *btnSwap = (UIButton *)[self.navigationController.navigationBar viewWithTag:101];
+        [btnSwap setEnabled:NO];
+    }
     if (editMode == NO_EDIT && [indexPath section] == TIME_DATE_SECTION) {  
         UITableViewCell *cell =
         [tableView dequeueReusableCellWithIdentifier:@"timeDateTableCell"];

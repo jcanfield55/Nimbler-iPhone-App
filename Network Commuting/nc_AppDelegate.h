@@ -27,6 +27,7 @@
     NSString *FBToAdd;
     NSString *FBSFromAdd;
     NSString *FBUniqueId;
+    BOOL isTwitterView;
 }
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
@@ -49,8 +50,8 @@
 @property (strong, nonatomic) NSString *FBToAdd;
 @property (strong, nonatomic) NSString *FBSFromAdd;
 @property (strong, nonatomic) NSString *FBUniqueId;
-
 @property (strong, nonatomic) CustomBadge *twitterCount;
+@property (nonatomic) BOOL isTwitterView;
 
 - (NSURL *)applicationDocumentsDirectory;
 

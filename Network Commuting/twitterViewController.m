@@ -98,6 +98,7 @@ NSUserDefaults *prefs;
     [Flurry logEvent:FLURRY_ADVISORIES_APPEAR];
 #endif
     
+    [nc_AppDelegate sharedInstance].isTwitterView = YES;
    [self startProcessForGettingTweets]; 
     mainTable.delegate = self;
     mainTable.dataSource = self;
@@ -105,6 +106,10 @@ NSUserDefaults *prefs;
     [self getAdvisoryData];
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:YES];
+    [nc_AppDelegate sharedInstance].isTwitterView = NO;
+}
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
