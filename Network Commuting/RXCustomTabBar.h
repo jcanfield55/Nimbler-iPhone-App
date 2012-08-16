@@ -25,6 +25,7 @@
 -(void) selectTab:(int)tabID;
 
 -(void) hideNewTabBar;
-//-(void) ShowNewTabBar;
+- (void)buttonClicked:(id)sender;
+- (void)showNewTabBar;
 
 @end

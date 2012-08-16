@@ -75,4 +75,6 @@ typedef enum {
 -(void)setFBParameterForGeneral;
 -(void)doSwapLocation;
 -(void)requestReverseGeo:(Location *)location;
+- (void) hideTabBar;
+- (void) showTabbar;
 @end

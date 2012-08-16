@@ -566,7 +566,10 @@ FeedBackForm *fbView;
             [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
         } 
         else { 
-            [self.tabBarController setSelectedIndex:1];
+            // Redirect to Twitter Page View
+            RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
+            [rxCustomTabBar selectTab:1];
+            [twitterView getAdvisoryData];
         }
     }
     @catch (NSException *exception) {

@@ -515,7 +515,8 @@ NSUserDefaults *prefs;
 {
     [alertView dismissWithClickedButtonIndex:0 animated:NO];
     [self.navigationController popViewControllerAnimated:YES];
-    [self.tabBarController setSelectedIndex:0];
+    RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
+    [rxCustomTabBar selectTab:0];
 }
 
 #pragma mark TextField animation at selected

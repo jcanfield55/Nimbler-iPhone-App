@@ -38,20 +38,20 @@
     self.btn4.hidden = 1;
 }
 
-//- (void)showNewTabBar 
-//{
-//    self.btn1.hidden = 0;
-//    self.btn2.hidden = 0;
-//    self.btn3.hidden = 0;
-//    self.btn4.hidden = 0;
-//}
+- (void)showNewTabBar 
+{
+    self.btn1.hidden = 0;
+    self.btn2.hidden = 0;
+    self.btn3.hidden = 0;
+    self.btn4.hidden = 0;
+}
 
 -(void)addCustomElements
 {
 	// Initialise our two images
 	UIImage *btnImage = [UIImage imageNamed:@""];
 	UIImage *btnImageSelected = [UIImage imageNamed:@"img_selTrip.png"];
-	
+    
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"img_tabbar.png"]]];
     
 	self.btn1 = [UIButton buttonWithType:UIButtonTypeCustom]; //Setup the button

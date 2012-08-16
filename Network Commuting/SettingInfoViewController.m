@@ -142,8 +142,9 @@ bool isPush;
 
 -(void)popOutFromSettingView { 
     [alertView dismissWithClickedButtonIndex:0 animated:NO];
-    [self.navigationController popViewControllerAnimated:YES]; 
-    [self.tabBarController setSelectedIndex:0];
+    // Code Added to select Trip Planner Tab
+    RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
+    [rxCustomTabBar selectTab:0];
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  

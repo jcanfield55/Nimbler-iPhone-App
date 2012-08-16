@@ -329,5 +329,4 @@ NSUserDefaults *prefs;
     timerForStopProcees = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(stopProcessForGettingTweets) userInfo:nil repeats:NO];
 }
 
-
 @end

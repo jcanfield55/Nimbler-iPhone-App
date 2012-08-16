@@ -30,4 +30,5 @@
 -(void)stopProcessForGettingTweets;
 -(void)startProcessForGettingTweets;
 -(void)timerAction;
+
 @end

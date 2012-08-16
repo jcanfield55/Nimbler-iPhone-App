@@ -568,7 +568,6 @@ NSUserDefaults *prefs;
     return cell;
 }
 
-
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([indexPath section] == TIME_DATE_SECTION) {  
@@ -578,8 +577,11 @@ NSUserDefaults *prefs;
 //        [dateTimeVC setToFromViewController:self];
 //        [[self navigationController] pushViewController:dateTimeVC animated:YES];
         [datePicker setDate:tripDate];
-        
         [self openPickerView:self];
+        
+        [self hideTabBar];
+        RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
+        [rxCustomTabBar hideNewTabBar];
         return;
     }
     else if (isCurrentLocationMode && [indexPath section] == FROM_SECTION) {  // if single-row From field selected
@@ -1357,6 +1359,7 @@ NSUserDefaults *prefs;
 #pragma mark UIdatePicker functionality
 
 - (void)selectDate {
+    [self showTabbar];
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
     [toolBar setFrame:CGRectMake(0, 450, 320, 44)];
@@ -1375,6 +1378,7 @@ NSUserDefaults *prefs;
 //---------------------------------------------------------------------------
 
 - (void)selectCurrentDate {
+    [self showTabbar];
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
     [toolBar setFrame:CGRectMake(0, 450, 320, 44)];
@@ -1411,8 +1415,8 @@ NSUserDefaults *prefs;
     [self.view bringSubviewToFront:datePicker];
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
-    [toolBar setFrame:CGRectMake(0, 111, 320, 44)];
-    [datePicker setFrame:CGRectMake(0, 155, 320, 216)];
+    [toolBar setFrame:CGRectMake(0, 160, 320, 44)];
+    [datePicker setFrame:CGRectMake(0, 204, 320, 216)];
     [UIView commitAnimations];
 }
 
@@ -1430,5 +1434,45 @@ NSUserDefaults *prefs;
         }
     }
 }
+
+#pragma mark Hide and Show Tabbar
+
+- (void) hideTabBar {
+    for(UIView *view in self.tabBarController.view.subviews)
+    {
+        CGRect _rect = view.frame;
+        if([view isKindOfClass:[UITabBar class]])
+        {
+            _rect.origin.y = 480;
+            [view setFrame:_rect];
+        } else {
+            _rect.size.height = 480;
+            [view setFrame:_rect];
+        }
+    }   
+}
+
+- (void) showTabbar {
+    for(UIView *view in self.tabBarController.view.subviews)
+    {
+        CGRect _rect = view.frame;
+        if([view isKindOfClass:[UITabBar class]]){
+            _rect.origin.y = 431;
+            [view setFrame:_rect];
+        }
+        else if([view isKindOfClass:[UIButton class]]){
+            _rect.size.height = 42;
+            [view setFrame:_rect];
+            
+        }
+        else {
+            _rect.size.height = 431;
+            [view setFrame:_rect];
+        }
+    }   
+    RXCustomTabBar *rxCustomTabbar = (RXCustomTabBar *)self.tabBarController;
+    [rxCustomTabbar showNewTabBar];
+}
+
 
 @end
