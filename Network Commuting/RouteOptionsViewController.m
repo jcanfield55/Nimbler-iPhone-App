@@ -81,9 +81,15 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     // Release any cached data, images, etc that aren't in use.
 }
 
--(void)popOutToNimbler
-{
-    [self.navigationController popViewControllerAnimated:TRUE];
+-(void)popOutToNimbler{
+    CATransition *animation = [CATransition animation];
+    [animation setDuration:0.3];
+    [animation setType:kCATransitionPush];
+    [animation setSubtype:kCATransitionFromLeft];
+    [animation setRemovedOnCompletion:YES];
+    [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+    [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+    [[self navigationController] popViewControllerAnimated:NO];
 }
 #pragma mark - UITableViewDelegate methods
 // Table view management methods

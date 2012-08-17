@@ -10,7 +10,9 @@
 #import "RestKit/RestKit.h"
 #import "Foundation/foundation.h"
 
-@interface twitterViewController : UIViewController <UITableViewDelegate, UITableViewDataSource,RKRequestDelegate>
+@interface twitterViewController : UIViewController <UITableViewDelegate, UITableViewDataSource,RKRequestDelegate>{
+    NSMutableArray *arrayTweet;
+}
 
 @property (strong, nonatomic) IBOutlet UITableView* mainTable;
 @property (nonatomic, retain) id twitterData;
@@ -21,6 +23,7 @@
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *getTweetInProgress;
 @property (strong, nonatomic) IBOutlet UILabel *noAdvisory; 
 @property (strong, nonatomic) NSTimer *timerForStopProcees;
+@property (strong, nonatomic) NSMutableArray *arrayTweet;
 
 -(void)setTwitterLiveData:(id)tweetData;
 

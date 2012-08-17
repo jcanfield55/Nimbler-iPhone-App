@@ -22,16 +22,14 @@
 #define TWEET_TIME              @"time"
 #define CALTRAIN_IMG            @"caltrain.jpg"
 
-#define MAXLINE_TAG             3
-#define CELL_HEIGHT             80
+#define MAXLINE_TAG             5
+#define CELL_HEIGHT             110
 
 @implementation twitterViewController
-
-NSMutableArray *arrayTweet;
 UITableViewCell *cell;
 NSUserDefaults *prefs;
 
-@synthesize mainTable,twitterData,dateFormatter,reload,isFromAppDelegate,isTwitterLiveData,noAdvisory,getTweetInProgress,timerForStopProcees;
+@synthesize mainTable,twitterData,dateFormatter,reload,isFromAppDelegate,isTwitterLiveData,noAdvisory,getTweetInProgress,timerForStopProcees,arrayTweet;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -75,6 +73,7 @@ NSUserDefaults *prefs;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    arrayTweet = [[NSMutableArray alloc] init];
     [self hideUnUsedTableViewCell];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
@@ -133,29 +132,39 @@ NSUserDefaults *prefs;
     
     id key = [arrayTweet objectAtIndex:indexPath.row];                
     NSString *tweetDetail = [(NSDictionary*)key objectForKey:TWEET];
-    NSString *tweetTime =  [(NSDictionary*)key objectForKey:TWEET_TIME];
+    NSArray *tempArray = [tweetDetail componentsSeparatedByString:@":"];
     
+    NSString *tweetTime =  [(NSDictionary*)key objectForKey:TWEET_TIME];
     NSTimeInterval seconds = [tweetTime doubleValue]/1000;
     NSDate *epochNSDate = [[NSDate alloc] initWithTimeIntervalSince1970:seconds];
-    NSDate *currentDate = [NSDate date];
-    NSString *tweetTimeDiff = [self stringForTimeIntervalSinceCreated:currentDate serverTime:epochNSDate];
+    NSDateFormatter *detailsTimeFormatter = [[NSDateFormatter alloc] init];
+    [detailsTimeFormatter setTimeStyle:NSDateFormatterShortStyle];
+    
+//    NSDate *currentDate = [NSDate date];
+//    NSString *tweetTimeDiff = [self stringForTimeIntervalSinceCreated:currentDate serverTime:epochNSDate];
     
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]]; 
-    cell.textLabel.text = CALTRAIN_CELL_HEADER;
+    //cell.textLabel.text = CALTRAIN_CELL_HEADER;
+    cell.textLabel.text = [tempArray objectAtIndex:0];
+    NSMutableString *strTweet = [[NSMutableString alloc] init];
+    for(int i=1;i<[tempArray count];i++){
+        [strTweet appendString:[tempArray objectAtIndex:i]];
+    }
+    cell.detailTextLabel.text = strTweet;
     cell.textLabel.textColor = [UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0];    
-    cell.detailTextLabel.text = tweetDetail;
     cell.detailTextLabel.numberOfLines= MAXLINE_TAG;
     cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
     
     labelTime = (UILabel *)[cell viewWithTag:MAXLINE_TAG];
    
-    CGRect lbl3Frame = CGRectMake(280, 5, 35, 25);
+    CGRect lbl3Frame = CGRectMake(187, 10, 120, 25);
     labelTime = [[UILabel alloc] initWithFrame:lbl3Frame];
-    labelTime.tag = MAXLINE_TAG;
+    //labelTime.tag = MAXLINE_TAG;
     labelTime.backgroundColor = [UIColor clearColor];
     [labelTime setTextAlignment:UITextAlignmentRight];
     [cell.contentView addSubview:labelTime];
-    labelTime.text = tweetTimeDiff;
+    labelTime.text = [[detailsTimeFormatter stringFromDate:epochNSDate] lowercaseString];
+    [labelTime setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]]; 
     cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
     
     UIImage *img = [UIImage imageNamed:CALTRAIN_IMG];    
@@ -169,7 +178,14 @@ NSUserDefaults *prefs;
 
 - (CGFloat)tableView:(UITableView *)aTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {    
-       return CELL_HEIGHT;  
+    id key = [arrayTweet objectAtIndex:indexPath.row]; 
+    NSString *tweetDetail = [(NSDictionary*)key objectForKey:TWEET];
+    UIFont *cellFont = [UIFont fontWithName:@"Helvetica" size:15];
+    CGSize constraintSize = CGSizeMake(320.0f, MAXFLOAT);
+    CGSize labelSize = [tweetDetail sizeWithFont:cellFont constrainedToSize:constraintSize lineBreakMode:UILineBreakModeWordWrap];
+    NSLog(@"%f",labelSize.height+50);
+    return labelSize.height + 50;  
+      // return CELL_HEIGHT;  
 }
 
 #pragma mark reloadNewTweets request Response
@@ -208,14 +224,23 @@ NSUserDefaults *prefs;
                 NSLog(@"latest tweets: %@", [response bodyAsString]);
                 id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];
                 NSNumber *respCode = [(NSDictionary*)res objectForKey:ERROR_CODE];
+                int tc = [[(NSDictionary*)res objectForKey:TWIT_COUNT] intValue];
                 if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
-                    NSMutableArray *arrayLatestTweet = [(NSDictionary*)res objectForKey:TWEET]; 
-                    NSMutableArray *tempArray = [[NSMutableArray alloc] initWithCapacity:arrayLatestTweet.count];
-                    [tempArray addObjectsFromArray:arrayLatestTweet];
-                    [tempArray addObjectsFromArray:arrayTweet];
-                    arrayTweet = [[NSMutableArray alloc]initWithCapacity:arrayLatestTweet.count];
-                    [arrayTweet addObjectsFromArray:tempArray];
-                } else {
+                    if(tc > 0){
+                        NSMutableArray *arrayLatestTweet = [(NSDictionary*)res objectForKey:TWEET]; 
+                        NSMutableArray *tempArray = [[NSMutableArray alloc] initWithCapacity:arrayLatestTweet.count];
+                        [tempArray addObjectsFromArray:arrayLatestTweet];
+                        [tempArray addObjectsFromArray:arrayTweet];
+                        arrayTweet = [[NSMutableArray alloc]initWithCapacity:arrayLatestTweet.count];
+                        [arrayTweet addObjectsFromArray:tempArray];
+                        [mainTable reloadData]; 
+                    }
+                }
+                else if([respCode intValue] == RESPONSE_DATA_NOT_EXIST){
+                    [arrayTweet removeAllObjects];
+                    [mainTable reloadData];
+                }
+                else {
                     [mainTable reloadData];
                 }
              [self stopProcessForGettingTweets];

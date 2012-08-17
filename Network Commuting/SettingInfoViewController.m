@@ -24,6 +24,7 @@
 
 @synthesize sliderMaxWalkDistance;
 @synthesize sliderPushNotification;
+@synthesize lblSliderValue;
 
 int pushHour;
 bool isPush;
@@ -128,6 +129,7 @@ bool isPush;
     float walkDistance = sliderMaxWalkDistance.value;
     [sliderMaxWalkDistance setValue:sliderMaxWalkDistance.value];
     [sliderMaxWalkDistance setSelected:YES];
+    [self.lblSliderValue setText:[NSString stringWithFormat:@"%0.2f",sender.value]];
     NSLog(@"walk distance: %f", walkDistance);
 }
 

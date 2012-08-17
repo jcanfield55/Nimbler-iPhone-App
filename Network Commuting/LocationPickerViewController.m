@@ -100,7 +100,7 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
     [toFromTableVC setPickedLocation:[locationArray objectAtIndex:[indexPath row]] 
                        locationArray:locationArray isGeocodedResults:isGeocodeResults];
     locationPicked = TRUE;
-    [[self navigationController] popViewControllerAnimated:YES];
+    [self popOutToNimbler];   
 }
 
 //DE:21 dynamic cell height 
@@ -171,7 +171,14 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
 -(void)popOutToNimbler
 {
     [toFromTableVC textSubmitted:nil forEvent:nil];
-    [self.navigationController popViewControllerAnimated:TRUE];
+    CATransition *animation = [CATransition animation];
+    [animation setDuration:0.3];
+    [animation setType:kCATransitionPush];
+    [animation setSubtype:kCATransitionFromLeft];
+    [animation setRemovedOnCompletion:YES];
+    [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+    [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+    [[self navigationController] popViewControllerAnimated:NO];
 }
 
 @end

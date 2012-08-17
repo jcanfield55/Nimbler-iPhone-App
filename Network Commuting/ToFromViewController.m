@@ -116,13 +116,18 @@ NSUserDefaults *prefs;
             UIImage *imgTitle = [UIImage imageNamed:@"nimblr.png"];
             self.navigationItem.titleView = [[UIImageView alloc]  initWithImage:imgTitle];
             
-            UIButton *btnSwapLocation = [[UIButton alloc] initWithFrame:CGRectMake(0,0,55,35)];
-            [btnSwapLocation setTag:101];
-            [btnSwapLocation addTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
-            [btnSwapLocation setBackgroundImage:[UIImage imageNamed:@"img_swapLocation.png"] forState:UIControlStateNormal];
-            UIBarButtonItem *btnRoute = [[UIBarButtonItem alloc] initWithCustomView:btnSwapLocation];
-            
-            self.navigationItem.leftBarButtonItem = btnRoute;
+            UIButton *btnSwapORBack = [[UIButton alloc] initWithFrame:CGRectMake(0,0,55,35)];
+            [btnSwapORBack setTag:101];
+            if(editMode == NO_EDIT){
+                [btnSwapORBack addTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
+                [btnSwapORBack setBackgroundImage:[UIImage imageNamed:@"img_swapLocation.png"] forState:UIControlStateNormal];
+            }
+            else{
+                [btnSwapORBack addTarget:self action:@selector(endEdit) forControlEvents:UIControlEventTouchUpInside];
+                [btnSwapORBack setBackgroundImage:[UIImage imageNamed:@"img_backSelect.png"] forState:UIControlStateNormal];
+            }
+            UIBarButtonItem *btnBarSwapORBack = [[UIBarButtonItem alloc] initWithCustomView:btnSwapORBack];
+            self.navigationItem.leftBarButtonItem = btnBarSwapORBack;
             prefs  = [NSUserDefaults standardUserDefaults];
             planRequestHistory = [NSMutableArray array]; // Initialize this array
             departOrArrive = DEPART;
@@ -243,13 +248,19 @@ NSUserDefaults *prefs;
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:YES];
+    [nc_AppDelegate sharedInstance].isToFromView = YES;
+    
+    UIButton *btnSwapORBack = (UIButton *)[self.navigationController.navigationBar viewWithTag:101];
     if(editMode == NO_EDIT){
-        UIButton *btnSwap = (UIButton *)[self.navigationController.navigationBar viewWithTag:101];
-        [btnSwap setEnabled:YES];
+        [btnSwapORBack removeTarget:self action:@selector(endEdit) forControlEvents:UIControlEventTouchUpInside];
+        [btnSwapORBack addTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
+        [btnSwapORBack setBackgroundImage:[UIImage imageNamed:@"img_swapLocation.png"] forState:UIControlStateNormal];
     }
     else{
-        UIButton *btnSwap = (UIButton *)[self.navigationController.navigationBar viewWithTag:101];
-        [btnSwap setEnabled:NO]; 
+        [btnSwapORBack removeTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
+        [btnSwapORBack addTarget:self action:@selector(endEdit) forControlEvents:UIControlEventTouchUpInside];
+        [btnSwapORBack setBackgroundImage:[UIImage imageNamed:@"img_backSelect.png"] forState:UIControlStateNormal];
     }
     @try {
         // Enforce height of main table
@@ -275,6 +286,10 @@ NSUserDefaults *prefs;
     }
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:YES];
+    [nc_AppDelegate sharedInstance].isToFromView = NO;
+}
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -489,13 +504,16 @@ NSUserDefaults *prefs;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    UIButton *btnSwapORBack = (UIButton *)[self.navigationController.navigationBar viewWithTag:101];
     if(editMode == NO_EDIT){
-        UIButton *btnSwap = (UIButton *)[self.navigationController.navigationBar viewWithTag:101];
-        [btnSwap setEnabled:YES]; 
+        [btnSwapORBack removeTarget:self action:@selector(endEdit) forControlEvents:UIControlEventTouchUpInside];
+        [btnSwapORBack addTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
+        [btnSwapORBack setBackgroundImage:[UIImage imageNamed:@"img_swapLocation.png"] forState:UIControlStateNormal];
     }
     else{
-        UIButton *btnSwap = (UIButton *)[self.navigationController.navigationBar viewWithTag:101];
-        [btnSwap setEnabled:NO];
+        [btnSwapORBack removeTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
+        [btnSwapORBack addTarget:self action:@selector(endEdit) forControlEvents:UIControlEventTouchUpInside];
+        [btnSwapORBack setBackgroundImage:[UIImage imageNamed:@"img_backSelect.png"] forState:UIControlStateNormal];
     }
     if (editMode == NO_EDIT && [indexPath section] == TIME_DATE_SECTION) {  
         UITableViewCell *cell =
@@ -1377,6 +1395,18 @@ NSUserDefaults *prefs;
     } 
 }
 
+//US 137 implementation
+- (void)endEdit{
+    [self setEditMode:NO_EDIT]; 
+    self.toTableVC.txtField.text = NULL_STRING;
+    self.fromTableVC.txtField.text = NULL_STRING;
+//    [self.toTableVC toFromTyping:self.toTableVC.txtField forEvent:nil];
+//    [self.toTableVC textSubmitted:self.toTableVC.txtField forEvent:nil];
+//    [self.fromTableVC toFromTyping:self.fromTableVC.txtField forEvent:nil];
+//    [self.fromTableVC textSubmitted:self.fromTableVC.txtField forEvent:nil];
+    [self.toTableVC markAndUpdateSelectedLocation:toLocation];
+    [self.fromTableVC markAndUpdateSelectedLocation:fromLocation];
+}
 - (void)requestReverseGeo:(Location *)location
 {
 

@@ -47,6 +47,9 @@ static nc_AppDelegate *appDelegate;
 @synthesize prefs;
 @synthesize tabBarController = _tabBarController;
 @synthesize isTwitterView;
+@synthesize isToFromView;
+@synthesize toLoc;
+@synthesize fromLoc;
 
 
 // Feedback parameters
@@ -264,16 +267,17 @@ FeedBackForm *fbView;
     [locationManager stopUpdatingLocation];
     
     //Reload ToFromViewController
-    @try {
+    if(self.isToFromView){
+        self.toLoc = toFromViewController.toLocation;
+        self.fromLoc = toFromViewController.fromLocation;
         [toFromViewController setEditMode:NO_EDIT]; 
-         toFromViewController.toTableVC.txtField.text = NULL_STRING;
+        toFromViewController.toTableVC.txtField.text = NULL_STRING;
+        toFromViewController.fromTableVC.txtField.text = NULL_STRING;
         [toFromViewController.toTableVC toFromTyping:toFromViewController.toTableVC.txtField forEvent:nil];
         [toFromViewController.toTableVC textSubmitted:toFromViewController.toTableVC.txtField forEvent:nil];
+        [toFromViewController.fromTableVC toFromTyping:toFromViewController.fromTableVC.txtField forEvent:nil];
+        [toFromViewController.fromTableVC textSubmitted:toFromViewController.fromTableVC.txtField forEvent:nil];
     }
-    @catch (NSException *exception) {
-        NSLog(@"%@",exception);
-    }
-
     
     // Close Keyboard
     [UIView setAnimationsEnabled:YES];
@@ -298,6 +302,10 @@ FeedBackForm *fbView;
     if (timerTweeterGetData == nil) {
        timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];     
     } 
+    if(self.isToFromView){
+        [toFromViewController.toTableVC markAndUpdateSelectedLocation:self.toLoc];
+        [toFromViewController.fromTableVC markAndUpdateSelectedLocation:self.fromLoc];
+    }
 //    sleep(2);
 }
 

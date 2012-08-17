@@ -17,11 +17,12 @@
     IBOutlet UISwitch *switchPushEnable;
     IBOutlet UIButton *btnUpdateSetting;
     IBOutlet UISlider *sliderPushNotification;
+             UILabel *lblSliderValue;
 }
 
 @property (nonatomic, strong) IBOutlet UISlider *sliderMaxWalkDistance;
 @property (nonatomic, strong) IBOutlet UISlider *sliderPushNotification;
-
+@property (nonatomic, strong) IBOutlet UILabel *lblSliderValue;
 
 -(IBAction)UpdateSetting:(id)sender;
 -(IBAction)sliderWalkDistanceValueChanged:(UISlider *)sender;

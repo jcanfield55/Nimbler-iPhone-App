@@ -180,7 +180,9 @@ NSUserDefaults *prefs;
         [btnForwardItem setBackgroundImage:[imageDictionary objectForKey:@"img_forwardSelect"] forState:UIControlStateNormal];
     }
     // Updates legMapVC itinerary number (changing the region for the map
+    NSLog(@"%d",itineraryNumber);
     [legMapVC setItineraryNumber:itineraryNumber];
+    //[legMapVC setItinerary:itinerary];
     
 }
 
@@ -217,6 +219,7 @@ NSUserDefaults *prefs;
     @catch (NSException *exception) {
         NSLog(@"exception at viewWillAppear RouteDetail: %@", exception);
     }
+    [self test:0];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -460,6 +463,13 @@ NSUserDefaults *prefs;
 
 -(void)popOutToItinerary
 {
-    [self.navigationController popViewControllerAnimated:TRUE];
+    CATransition *animation = [CATransition animation];
+    [animation setDuration:0.3];
+    [animation setType:kCATransitionPush];
+    [animation setSubtype:kCATransitionFromLeft];
+    [animation setRemovedOnCompletion:YES];
+    [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+    [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+    [[self navigationController] popViewControllerAnimated:NO];
 }
 @end

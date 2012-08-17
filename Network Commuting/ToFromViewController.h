@@ -77,4 +77,5 @@ typedef enum {
 -(void)requestReverseGeo:(Location *)location;
 - (void) hideTabBar;
 - (void) showTabbar;
+- (void)endEdit;
 @end
