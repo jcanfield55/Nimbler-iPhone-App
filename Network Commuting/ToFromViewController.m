@@ -1381,6 +1381,7 @@ NSUserDefaults *prefs;
 // US132 implementation
 -(void)doSwapLocation
 {
+    
     if (fromLocation == currentLocation) {
         // If from = currentLocation, change toLocation to the last reverse geocode of CurrentLocation
         // (could be nil)
@@ -1392,7 +1393,17 @@ NSUserDefaults *prefs;
         // Swap Location (could be nil)
         [toTableVC markAndUpdateSelectedLocation:fromloc];
         [fromTableVC markAndUpdateSelectedLocation:toLoc];
-    } 
+    }
+    
+#if FLURRY_ENABLED
+    NSDictionary* dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                FLURRY_TO_SELECTED_ADDRESS, [[self toLocation] shortFormattedAddress],
+                                FLURRY_FROM_SELECTED_ADDRESS, [[self fromLocation] shortFormattedAddress],
+                                nil];
+
+    [Flurry logEvent:FLURRY_TOFROM_SWAP_LOCATION withParameters:dictionary];
+#endif
+
 }
 
 //US 137 implementation

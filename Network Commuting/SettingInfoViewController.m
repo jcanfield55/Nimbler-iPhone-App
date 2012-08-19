@@ -115,6 +115,16 @@ bool isPush;
         NSLog(@" - - -  - - - - - %@", twitCountReq);
         [[RKClient sharedClient]  get:twitCountReq delegate:self];
         
+#if FLURRY_ENABLED
+        NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
+                                      FLURRY_SETTING_WALK_DISTANCE,
+                                      [NSString stringWithFormat:@"%f",sliderMaxWalkDistance.value],
+                                      FLURRY_SETTING_ALERT_COUNT,
+                                      [NSString stringWithFormat:@"%d",pushHour],
+                                      nil];
+        [Flurry logEvent: FLURRY_ROUTE_REQUESTED withParameters:flurryParams];
+#endif
+        
          [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(popOutFromSettingView) userInfo:nil repeats: NO];
     }
     @catch (NSException *exception) {

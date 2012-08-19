@@ -74,6 +74,7 @@
 #define FLURRY_TOFROMTABLE_SELECT_ROW       @"ToFromTable select row"
 #define FLURRY_TOFROMTABLE_NEW_EDIT_MODE    @"ToFrom new edit mode"
 #define FLURRY_TOFROMTABLE_CALTRAIN_LIST    @"ToFrom selected Caltrain list"
+#define FLURRY_TOFROM_SWAP_LOCATION         @"ToFrom swap location"
 #define FLURRY_TOFROMTABLE_GEOCODE_REQUEST  @"ToFrom Geocode request"
 #define FLURRY_GEOCODE_RESULTS_ONE          @"Geocode: 1 result"
 #define FLURRY_GEOCODE_RESULTS_MULTIPLE     @"Geocode: multiple results"
@@ -114,6 +115,8 @@
 #define FLURRY_EDIT_MODE_VALUE              @"(Edit mode value)"
 #define FLURRY_USER_EMAIL                   @"(User email)"
 #define FLURRY_FEEDBACK_TEXT                @"(Feedback text)"
+#define FLURRY_SETTING_WALK_DISTANCE        @"(Settings walk distance)"
+#define FLURRY_SETTING_ALERT_COUNT          @"(Settings alert count)"
 
 /*  Template code for inserting Flurry logging
  #if FLURRY_ENABLED
