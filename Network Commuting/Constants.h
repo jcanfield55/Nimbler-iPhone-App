@@ -57,6 +57,8 @@
 #define PREFS_IS_PUSH_ENABLE               @"PrefsIsPushEnable"
 #define PREFS_PUSH_NOTIFICATION_THRESHOLD  @"PrefsPushNotificationThreshold"
 #define PREFS_MAX_WALK_DISTANCE            @"PrefsMaxWalkDistance"
+#define ENABLE_STANDARDNOTIFICATION_SOUND       @"enableStdNotifSound"
+#define ENABLE_URGENTNOTIFICATION_SOUND         @"enableUrgntNotifSound"
 
 // UserPreferernce defaults
 #define PREFS_DEFAULT_IS_PUSH_ENABLE                YES

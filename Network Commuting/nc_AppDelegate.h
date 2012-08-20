@@ -32,6 +32,7 @@
     BOOL isToFromView;
     Location *toLoc;
     Location *fromLoc;
+    NSTimer *continueGetTime;
 }
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
@@ -46,6 +47,7 @@
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (strong, nonatomic) NSTimer *timerTweeterGetData;
+@property (strong, nonatomic) NSTimer *continueGetTime;
 @property (strong, nonatomic)  NSUserDefaults *prefs;
 @property (strong, nonatomic)  UITabBarController *tabBarController;
 

@@ -234,11 +234,15 @@ NSUserDefaults *prefs;
     // Do any additional setup after loading the view from its nib.
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload{
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    self.mainTable = nil;
+    self.routeButton = nil;
+}
+
+- (void)dealloc{
+    self.mainTable = nil;
+    self.routeButton = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -644,7 +648,7 @@ NSUserDefaults *prefs;
         return;
     }
     else if (isCurrentLocationMode && [indexPath section] == FROM_SECTION) {  // if single-row From field selected
-        [self setEditMode:FROM_EDIT];  // go into edit mode
+        [self setEditMode:FROM_EDIT]; // go into edit mode
     }
 }
 
@@ -1455,6 +1459,8 @@ NSUserDefaults *prefs;
 #pragma mark UIdatePicker functionality
 
 - (void)selectDate {
+    [self.mainTable setUserInteractionEnabled:YES];
+     [self.navigationController.navigationBar setUserInteractionEnabled:YES];
     [self showTabbar];
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
@@ -1473,7 +1479,10 @@ NSUserDefaults *prefs;
 
 //---------------------------------------------------------------------------
 
+
 - (void)selectCurrentDate {
+    [self.navigationController.navigationBar setUserInteractionEnabled:YES];
+    [self.mainTable setUserInteractionEnabled:YES];
     [self showTabbar];
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
@@ -1493,6 +1502,8 @@ NSUserDefaults *prefs;
 //---------------------------------------------------------------------------
 
 - (IBAction)openPickerView:(id)sender {
+    [self.mainTable setUserInteractionEnabled:NO];
+     [self.navigationController.navigationBar setUserInteractionEnabled:NO];
     toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 450, 320, 44)];
     [toolBar setTintColor:[UIColor darkGrayColor]];
     

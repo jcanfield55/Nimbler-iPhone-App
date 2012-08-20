@@ -25,6 +25,12 @@
 @synthesize sliderMaxWalkDistance;
 @synthesize sliderPushNotification;
 @synthesize lblSliderValue;
+@synthesize switchEnableUrgentSound;
+@synthesize switchEnableStandardSound;
+@synthesize enableUrgentSoundFlag;
+@synthesize enableStandardSoundFlag;
+@synthesize switchPushEnable;
+@synthesize btnUpdateSetting;
 
 int pushHour;
 bool isPush;
@@ -56,14 +62,29 @@ bool isPush;
     [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
                                                                      [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0], UITextAttributeTextColor,
                                                                      nil]];
-    // Do any additional setup after loading the view from its nib.
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload{
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+    self.sliderMaxWalkDistance = nil;
+    self.switchPushEnable = nil;
+    self.btnUpdateSetting = nil;
+    self.sliderPushNotification = nil;
+    self.switchEnableUrgentSound = nil;
+    self.switchEnableStandardSound = nil;
+    self.lblSliderValue = nil;
+}
+
+- (void)dealloc{
+    self.sliderMaxWalkDistance = nil;
+    self.switchPushEnable = nil;
+    self.btnUpdateSetting = nil;
+    self.sliderPushNotification = nil;
+    self.switchEnableUrgentSound = nil;
+    self.switchEnableStandardSound = nil;
+    self.lblSliderValue = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -85,6 +106,21 @@ bool isPush;
         } else {
             isPush = YES;
         }   
+        if(self.switchEnableUrgentSound.on){
+            enableUrgentSoundFlag = 1;
+        }
+        else{
+            enableUrgentSoundFlag = 2;
+        }
+        if(self.switchEnableStandardSound.on){
+            enableStandardSoundFlag = 1;
+        }
+        else{
+            enableStandardSoundFlag = 2;
+        }
+        [[NSUserDefaults standardUserDefaults] setInteger:enableUrgentSoundFlag forKey:ENABLE_URGENTNOTIFICATION_SOUND];
+        [[NSUserDefaults standardUserDefaults] setInteger:enableStandardSoundFlag forKey:ENABLE_STANDARDNOTIFICATION_SOUND];
+        [[NSUserDefaults standardUserDefaults] synchronize];
         alertView = [self upadetSettings];    
         [alertView show];
         
@@ -109,7 +145,7 @@ bool isPush;
                                 DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
                                 ALERT_COUNT,[NSNumber numberWithInt:pushHour],
                                 DEVICE_TOKEN, token,
-                                MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:sliderMaxWalkDistance.value],
+                                MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:sliderMaxWalkDistance.value],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt:enableUrgentSoundFlag],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt:enableStandardSoundFlag],
                                 nil];
         NSString *twitCountReq = [UPDATE_SETTING_REQ appendQueryParams:params];
         NSLog(@" - - -  - - - - - %@", twitCountReq);
@@ -199,6 +235,26 @@ bool isPush;
             [switchPushEnable setOn:NO];
         } else {
             [switchPushEnable setOn:YES];
+        }
+        
+        if([[NSUserDefaults standardUserDefaults] integerForKey:ENABLE_URGENTNOTIFICATION_SOUND] == 1){
+            [switchEnableUrgentSound setOn:YES];
+        }
+        else if([[NSUserDefaults standardUserDefaults] integerForKey:ENABLE_URGENTNOTIFICATION_SOUND] == 0){
+            [switchEnableUrgentSound setOn:YES];
+        }
+        else{
+           [switchEnableUrgentSound setOn:NO]; 
+        }
+        
+        if([[NSUserDefaults standardUserDefaults] integerForKey:ENABLE_STANDARDNOTIFICATION_SOUND] == 1){
+            [switchEnableStandardSound setOn:YES];
+        }
+        else if([[NSUserDefaults standardUserDefaults] integerForKey:ENABLE_STANDARDNOTIFICATION_SOUND] == 0){
+            [switchEnableStandardSound setOn:NO];
+        }
+        else{
+            [switchEnableStandardSound setOn:NO]; 
         }
     }
     @catch (NSException *exception) {

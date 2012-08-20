@@ -97,11 +97,23 @@ NSUserDefaults *prefs;
     // Do any additional setup after loading the view from its nib.
     }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload{
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    self.txtFeedBack = nil;
+    self.txtEmailId = nil;
+    self.btnPlayRecording = nil;
+    self.btnStopRecording = nil;
+    self.btnPauseRecording = nil;
+    self.btnRecordRecording = nil;
+}
+
+- (void)dealloc{
+    self.txtFeedBack = nil;
+    self.txtEmailId = nil;
+    self.btnPlayRecording = nil;
+    self.btnStopRecording = nil;
+    self.btnPauseRecording = nil;
+    self.btnRecordRecording = nil;
 }
 
 -(void)viewWillAppear:(BOOL)animated

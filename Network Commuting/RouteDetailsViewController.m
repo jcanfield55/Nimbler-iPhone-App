@@ -126,6 +126,19 @@ NSUserDefaults *prefs;
     return self;
 }
 
+- (void) viewDidUnload{
+    [super viewDidUnload];
+    self.mainTable = nil;
+    self.feedbackButton = nil;
+    self.advisoryButton = nil;
+}
+
+- (void) dealloc{
+    self.mainTable = nil;
+    self.feedbackButton = nil;
+    self.advisoryButton = nil;
+}
+
 - (void)setItinerary:(Itinerary *)i0
 {
     @try {

@@ -83,11 +83,17 @@ NSUserDefaults *prefs;
     // Do any additional setup after loading the view from its nib.
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload{
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    self.mainTable = nil;
+    self.getTweetInProgress = nil;
+    self.noAdvisory = nil;
+}
+
+- (void)dealloc{
+    self.mainTable = nil;
+    self.getTweetInProgress = nil;
+    self.noAdvisory = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -144,7 +150,6 @@ NSUserDefaults *prefs;
 //    NSString *tweetTimeDiff = [self stringForTimeIntervalSinceCreated:currentDate serverTime:epochNSDate];
     
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]]; 
-    //cell.textLabel.text = CALTRAIN_CELL_HEADER;
     cell.textLabel.text = [tempArray objectAtIndex:0];
     NSMutableString *strTweet = [[NSMutableString alloc] init];
     for(int i=1;i<[tempArray count];i++){
@@ -156,36 +161,30 @@ NSUserDefaults *prefs;
     cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
     
     labelTime = (UILabel *)[cell viewWithTag:MAXLINE_TAG];
-   
-    CGRect lbl3Frame = CGRectMake(187, 10, 120, 25);
+     CGRect   lbl3Frame = CGRectMake(245,3, 120, 25);
     labelTime = [[UILabel alloc] initWithFrame:lbl3Frame];
-    //labelTime.tag = MAXLINE_TAG;
+    labelTime.tag = MAXLINE_TAG;
     labelTime.backgroundColor = [UIColor clearColor];
-    [labelTime setTextAlignment:UITextAlignmentRight];
     [cell.contentView addSubview:labelTime];
     labelTime.text = [[detailsTimeFormatter stringFromDate:epochNSDate] lowercaseString];
     [labelTime setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]]; 
-    cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
     
     UIImage *img = [UIImage imageNamed:CALTRAIN_IMG];    
     cell.imageView.layer.cornerRadius = CORNER_RADIUS_MEDIUM;
     cell.imageView.layer.masksToBounds = YES;
     [cell.imageView setImage:img];
-    
     return cell;
 }
 
 
 - (CGFloat)tableView:(UITableView *)aTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
-{    
+{      
     id key = [arrayTweet objectAtIndex:indexPath.row]; 
     NSString *tweetDetail = [(NSDictionary*)key objectForKey:TWEET];
     UIFont *cellFont = [UIFont fontWithName:@"Helvetica" size:15];
     CGSize constraintSize = CGSizeMake(320.0f, MAXFLOAT);
     CGSize labelSize = [tweetDetail sizeWithFont:cellFont constrainedToSize:constraintSize lineBreakMode:UILineBreakModeWordWrap];
-    NSLog(@"%f",labelSize.height+50);
     return labelSize.height + 50;  
-      // return CELL_HEIGHT;  
 }
 
 #pragma mark reloadNewTweets request Response
@@ -195,20 +194,21 @@ NSUserDefaults *prefs;
     NSString *latestTweetTime = @"0";
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
+    if([arrayTweet count] > 0){
         id key = [arrayTweet objectAtIndex:0];                
         NSString *tweetTime =  [(NSDictionary*)key objectForKey:TWEET_TIME];
-    
-    if (tweetTime == NULL) {
-        tweetTime = latestTweetTime;
-    }
+        
+        if (tweetTime == NULL) {
+            tweetTime = latestTweetTime;
+        }
         NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
                               LAST_TWEET_TIME,tweetTime,
                               DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
                               nil];
         NSString *req = [LATEST_TWEETS_REQ appendQueryParams:dict];
         [[RKClient sharedClient]  get:req delegate:self]; 
-    [[nc_AppDelegate sharedInstance] updateBadge:0];
-
+        [[nc_AppDelegate sharedInstance] updateBadge:0];
+    }
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  

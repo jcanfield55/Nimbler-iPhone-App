@@ -51,6 +51,7 @@ static nc_AppDelegate *appDelegate;
 @synthesize isToFromView;
 @synthesize toLoc;
 @synthesize fromLoc;
+@synthesize continueGetTime;
 
 
 // Feedback parameters
@@ -303,6 +304,10 @@ FeedBackForm *fbView;
     /*
      Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
      */
+    if(self.isTwitterView){
+       [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+        [twitterView getAdvisoryData];
+    }
     [toFromViewController updateTripDate];
     [locationManager startUpdatingLocation];
     if (timerTweeterGetData == nil) {
@@ -312,6 +317,7 @@ FeedBackForm *fbView;
         [toFromViewController.toTableVC markAndUpdateSelectedLocation:self.toLoc];
         [toFromViewController.fromTableVC markAndUpdateSelectedLocation:self.fromLoc];
     }
+    continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
 //    sleep(2);
 }
 

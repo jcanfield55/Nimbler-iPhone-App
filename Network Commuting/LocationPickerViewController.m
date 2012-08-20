@@ -156,11 +156,13 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
     self.navigationItem.leftBarButtonItem = backTonimbler;
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload{
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    self.mainTable = nil;
+}
+
+- (void)dealloc{
+    self.mainTable = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

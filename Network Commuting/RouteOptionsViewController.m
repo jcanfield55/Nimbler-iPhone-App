@@ -269,11 +269,17 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     NSLog(@"RouteOptions did appear");
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload{
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    self.mainTable = nil;
+    self.feedbackButton = nil;
+    self.advisoryButton = nil;
+}
+
+- (void)dealloc{
+    self.mainTable = nil;
+    self.feedbackButton = nil;
+    self.advisoryButton = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
