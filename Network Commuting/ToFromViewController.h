@@ -10,6 +10,7 @@
 #import <RestKit/RestKit.h>
 #import "ToFromTableViewController.h"
 #import "Locations.h"
+#import "PlanStore.h"
 #import "Plan.h"
 #import "enums.h"
 #import "SupportedRegion.h"
@@ -32,6 +33,7 @@ typedef enum {
 @property (strong, nonatomic) RKObjectManager *rkPlanMgr;  // RestKit object manager for trip planning
 @property (strong, nonatomic) RKObjectManager *rkSavePlanMgr;  // RestKit object manager for trip planning
 @property (strong, nonatomic) Locations *locations;  // Wrapper for collection of all Locations
+@property (strong, nonatomic) PlanStore *planStore;  // Wrapper for collection of all plans
 @property (strong, nonatomic) Location *fromLocation;
 @property (strong, nonatomic) Location *toLocation;
 @property (strong, nonatomic) Location *currentLocation;

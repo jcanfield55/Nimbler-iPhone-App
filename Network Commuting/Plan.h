@@ -16,15 +16,31 @@
 @interface Plan : NSManagedObject
 
 @property(nonatomic, strong) NSDate *date;
+@property(nonatomic, strong) NSDate *lastUpdatedFromServer; // last time any part of the Plan was updated from the server (does not mean every aspect of the plan is current to that date)
+#define PLAN_LAST_UPDATED_FROM_SERVER_KEY   @"lastUpdatedFromServer"
 @property(nonatomic, retain) NSString *planId;
 @property(nonatomic,strong) PlanPlace *fromPlanPlace;
 @property(nonatomic,strong) PlanPlace *toPlanPlace;
 @property(nonatomic,strong) NSSet *itineraries;
+#define PLAN_ITINERARIES_KEY       @"itineraries"   // Key for accessing itineraries mutable set
 @property(nonatomic,strong) Location *fromLocation;
 @property(nonatomic,strong) Location *toLocation;
 @property(nonatomic,strong) NSArray *sortedItineraries;  // Array of ordered itineraries (not stored in Core Data)
 
 + (RKManagedObjectMapping *)objectMappingforPlanner:(APIType)tpt;
+
+// If itin0 is a new itinerary that does not exist in the referencing Plan, then add itin0 the referencing Plan
+// If itin0 is the same as an existing itinerary in the referencing Plan, then keep the more current itinerary and delete the older one
+// Returns the result of the itinerary comparison (see Itinerary.h for enum definition)
+- (ItineraryCompareResult) addItineraryIfNew:(Itinerary *)itin0;
+
+// Add itin0 to the plan (without any checking, see above to check first)
+- (void)addItinerary:(Itinerary *) itin0;
+
+// Remove itin0 from the plan and from Core Data
+- (void)removeItinerary:(Itinerary *)itin0;
+
+
 - (NSString *)ncDescription;
 - (void)sortItineraries;  // Re-sorts the itineraries array
 @end

@@ -62,6 +62,9 @@ typedef enum {
 - (BOOL)isHeavyTrain; // Note: legs that are isHeavyTrain=true are also isTrain=true
 - (BOOL)isTrain;
 
+// True if the main characteristics of referring Leg is equal to leg0
+- (BOOL)isEqualInSubstance:(Leg *)leg0;
+
 @end
 
 @interface Leg (CoreDataGeneratedAccessors)

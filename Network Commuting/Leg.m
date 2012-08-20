@@ -257,6 +257,21 @@
     return false; 
 }
 
+// True if the main characteristics of referring Leg is equal to leg0
+// Compares startTime, endTime, to name, and from name
+- (BOOL)isEqualInSubstance:(Leg *)leg0
+{
+    if ([[leg0 startTime] isEqualToDate:[self startTime]] &&
+        [[leg0 endTime] isEqualToDate:[self endTime]] &&
+        [[[leg0 from] name] isEqualToString:[[self from] name]] &&
+        [[[leg0 to] name] isEqualToString:[[self to] name]] &&
+        [[leg0 route] isEqualToString:[self route]]) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
 - (NSString *)ncDescription
 {
     NSMutableString* desc = [NSMutableString stringWithFormat:

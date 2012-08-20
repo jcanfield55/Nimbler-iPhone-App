@@ -16,6 +16,14 @@
 
 @interface Itinerary : NSManagedObject
 
+typedef enum {
+    ITINERARIES_DIFFERENT,
+    ITINERARIES_IDENTICAL,  // identical per the == operator (i.e. same object, same memory)
+    ITINERARIES_SAME,       // different objects but effectively same content
+    ITIN0_OBSOLETE,
+    ITIN_SELF_OBSOLETE
+} ItineraryCompareResult;
+
 // See this URL for documentation on the elements: http://www.opentripplanner.org/apidoc/data_ns0.html#itinerary
 // This URL has example data http://groups.google.com/group/opentripplanner-dev/msg/4535900a5d18e61f?
 @property (nonatomic, retain) NSNumber * duration;
@@ -23,7 +31,7 @@
 @property (nonatomic, retain) NSNumber * elevationLost;
 @property (nonatomic, retain) NSDate   * endTime;  // raw end time from OTP
 @property (nonatomic, retain) NSNumber * fareInCents;
-@property (nonatomic, retain) NSDate * itineraryCreationDate;
+@property (nonatomic, retain) NSDate * itineraryCreationDate; // Time this itinerary was loaded or last updated
 @property (nonatomic, retain) NSDate * startTime;  // raw start time from OTP
 @property (nonatomic, retain) NSNumber * tooSloped;
 @property (nonatomic, retain) NSNumber * transfers;
@@ -44,6 +52,9 @@
 - (PlanPlace *)from;
 - (PlanPlace *)to;
 - (NSString *)ncDescription;
+
+// Compares the itineraries to see if they are equivalent in substance
+- (ItineraryCompareResult)compareItineraries:(Itinerary *)itin0;
 
 // Returns the start-time of the first leg if there is one, otherwise returns startTime property
 - (NSDate *)startTimeOfFirstLeg;

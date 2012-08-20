@@ -37,6 +37,7 @@ static nc_AppDelegate *appDelegate;
 
 @synthesize twitterCount;
 @synthesize locations;
+@synthesize planStore;
 @synthesize locationManager;
 @synthesize toFromViewController;
 @synthesize managedObjectContext = __managedObjectContext;
@@ -122,6 +123,11 @@ FeedBackForm *fbView;
         // Initialize the Locations class and store "Current Location" into the database if not there already
         locations = [[Locations alloc] initWithManagedObjectContext:[self managedObjectContext] rkGeoMgr:rkGeoMgr];
         [toFromViewController setLocations:locations];
+        
+        // Initialize the planStore
+        planStore = [[PlanStore alloc] initWithManagedObjectContext:[self managedObjectContext]
+                                                          rkPlanMgr:rkPlanMgr];
+        [toFromViewController setPlanStore:planStore];
         
         // Pre-load stations location files
         NSDecimalNumber* version = [NSDecimalNumber decimalNumberWithString:PRELOAD_VERSION_NUMBER];

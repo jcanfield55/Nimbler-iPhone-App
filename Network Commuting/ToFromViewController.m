@@ -84,6 +84,7 @@
 @synthesize rkPlanMgr;
 @synthesize rkSavePlanMgr;
 @synthesize locations;
+@synthesize planStore;
 @synthesize fromLocation;
 @synthesize toLocation;
 @synthesize currentLocation;
@@ -1061,15 +1062,9 @@ NSUserDefaults *prefs;
         
         if (!isDuplicatePlan)  // if not a recent duplicate request
         {
-#if FLURRY_ENABLED
-            NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    FLURRY_FROM_SELECTED_ADDRESS, [fromLocation shortFormattedAddress],          
-                                    FLURRY_TO_SELECTED_ADDRESS, [toLocation shortFormattedAddress],
-                                    nil];                    
-            [Flurry logEvent: FLURRY_ROUTE_REQUESTED withParameters:flurryParams];
-#endif
+
             [self startActivityIndicator];
-            
+
             // Update dynamic table height if a new location is becoming visible
             if ([fromLocation fromFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF ||
                 [toLocation toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF) {
@@ -1091,7 +1086,27 @@ NSUserDefaults *prefs;
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"The To: and From: address are the same location.  Please choose a different destination." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
                 [alert show];
                 return true;
-            }       
+            }
+            
+            // Check if we have a stored plan that we can use
+            NSArray* matchingPlanArray = [planStore fetchPlansWithToLocation:toLocation fromLocation:fromLocation];
+            for (Plan* plan0 in matchingPlanArray) {
+                NSLog(@"Matching Plan date:%@ from: %@ to: %@", [plan0 date], [[plan0 fromLocation] formattedAddress], [[plan0 toLocation] formattedAddress]);
+            }
+            
+            if (matchingPlanArray && [matchingPlanArray count]>0) {
+                Plan* matchingPlan = [matchingPlanArray objectAtIndex:0]; // Take the first matching plan
+                // TODO:  Finish up implementation of using cached plans
+                // TODO:  Make sure that I am storing all my plans once I get them
+            }
+            
+#if FLURRY_ENABLED
+            NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
+                                          FLURRY_FROM_SELECTED_ADDRESS, [fromLocation shortFormattedAddress],
+                                          FLURRY_TO_SELECTED_ADDRESS, [toLocation shortFormattedAddress],
+                                          nil];
+            [Flurry logEvent: FLURRY_ROUTE_REQUESTED withParameters:flurryParams];
+#endif
             // Create the date formatters we will use to output the date & time
             NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
             [dFormat setDateFormat:@"MM/dd/yyyy"];

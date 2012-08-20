@@ -44,8 +44,6 @@
 @synthesize sortedLegs;
 @synthesize itinArrivalFlag;
 
-// TODO Add an awake method to populate itineraryCreationDate
-
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType
 {
     // Create empty ObjectMapping to fill and return
@@ -77,6 +75,14 @@
         // TODO Unknown planner type, throw an exception
     }
     return mapping;
+}
+
+
+- (void)awakeFromInsert {
+    [super awakeFromInsert];
+    
+    // Set the date
+    [self setItineraryCreationDate:[NSDate date]];
 }
 
 // Returns the start-time of the first leg if there is one, otherwise returns startTime property
@@ -126,6 +132,37 @@
 - (PlanPlace *)to
 {
     return [[[self sortedLegs] objectAtIndex:([sortedLegs count]-1)] to];
+}
+
+// Compares the itineraries to see if they are equivalent in substance
+- (ItineraryCompareResult)compareItineraries:(Itinerary *)itin0
+{
+    if (self == itin0) {
+        return ITINERARIES_IDENTICAL;
+    } else if ([[itin0 startTimeOfFirstLeg] isEqualToDate:[self startTimeOfFirstLeg]]) {
+        // If the start time is the same, then check if the legs are the same
+        NSArray* itin0LegsArray = [itin0 sortedLegs];
+        NSArray* selfLegsArray = [self sortedLegs];
+        if ([itin0LegsArray count] == [selfLegsArray count]) {
+            // if there is the same count of legs
+            for (int i=0; i< [itin0LegsArray count]; i++) {
+                if (![[itin0LegsArray objectAtIndex:i] isEqualInSubstance:[selfLegsArray objectAtIndex:i]]) {
+                    return ITINERARIES_DIFFERENT;
+                }
+            }
+            if ([[itin0 itineraryCreationDate] isEqualToDate:[self itineraryCreationDate]]) {
+                return ITINERARIES_SAME;
+            } else if ([[itin0 itineraryCreationDate] laterDate:[self itineraryCreationDate]] == [itin0 itineraryCreationDate]) {
+                return ITIN_SELF_OBSOLETE;
+            } else {
+                return ITIN0_OBSOLETE;
+            }
+        } else { // if leg counts not equal
+            return ITINERARIES_DIFFERENT;
+        }
+    } else { // if start-times not the same
+    return ITINERARIES_DIFFERENT;
+    }
 }
 
 // Returns a sorted array of the title strings to show itinerary details as needed

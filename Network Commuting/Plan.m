@@ -11,6 +11,7 @@
 @implementation Plan
 
 @dynamic date;
+@dynamic lastUpdatedFromServer;
 @dynamic planId;
 @dynamic fromPlanPlace;
 @dynamic toPlanPlace;
@@ -45,6 +46,13 @@
     }
     return mapping;
 }
+
+- (void)awakeFromInsert {
+    [super awakeFromInsert];
+    
+    // Set the date
+    [self setLastUpdatedFromServer:[NSDate date]];
+}
  
 - (NSArray *)sortedItineraries
 {
@@ -59,6 +67,52 @@
 {
     NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:YES];
     [self setSortedItineraries:[[self itineraries] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
+}
+
+// If itin0 is a new itinerary that does not exist in the referencing Plan, then add itin0 the referencing Plan
+// If itin0 is the same as an existing itinerary in the referencing Plan, then keep the more current itinerary and delete the older one
+// Returns the result of the itinerary comparison (see Itinerary.h for enum definition)
+- (ItineraryCompareResult) addItineraryIfNew:(Itinerary *)itin0
+{
+    for (Itinerary* itin1 in [self sortedItineraries]) {
+        ItineraryCompareResult itincompare = [itin1 compareItineraries:itin0];
+        if (itincompare == ITINERARIES_DIFFERENT) {
+            continue;
+        }
+        if (itincompare == ITINERARIES_IDENTICAL) {
+            return itincompare;  // two are identical objects, so no duplication
+        }
+        if (itincompare == ITIN_SELF_OBSOLETE){
+            [self removeItinerary:itin1];
+            [self addItinerary:itin0];
+            return itincompare;
+        } else if (itincompare == ITIN0_OBSOLETE || itincompare == ITINERARIES_SAME) {
+            // In this case, no need to change the referring Plan.  Let caller know that itin0 is old.  
+            return itincompare;
+        } else {
+            // Unknown returned value, throw an exception
+            [NSException raise:@"addItineraryIfNew exception"
+                        format:@"Unknown ItineraryCompareResult %d", itincompare];
+        }
+    }
+    // All the itineraries are different, so add itin0
+    [self addItinerary:itin0];
+    return ITINERARIES_DIFFERENT;
+}
+
+// Remove itin0 from the plan and from Core Data
+- (void)removeItinerary:(Itinerary *)itin0
+{
+    NSMutableSet* mutableItineraries = [self mutableSetValueForKey:PLAN_ITINERARIES_KEY];
+    [mutableItineraries removeObject:itin0];
+    [[self managedObjectContext] deleteObject:itin0];
+    [self sortItineraries];  // Resort itineraries
+}
+
+// Add itin0 to the plan
+- (void)addItinerary:(Itinerary *) itin0
+{
+    
 }
 
 // Detects whether date returned by REST API is >1,000 years in the future.  If so, the value is likely being returned in milliseconds from 1970, rather than seconds from 1970, in which we correct the date by dividing by the timeSince1970 value by 1,000
