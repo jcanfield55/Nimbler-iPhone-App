@@ -973,9 +973,12 @@ NSUserDefaults *prefs;
                     durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime;
                     [self stopActivityIndicator];
                     
+                    // Initialize the rest of the Plan and save context
                     [plan setToLocation:toLocation];
                     [plan setFromLocation:fromLocation];
-                                      
+                    [plan initPlanRequestCacheWithRequestDate:tripDate departOrArrive:departOrArrive];
+                    saveContext(managedObjectContext);
+
                     // Pass control to the RouteOptionsViewController to display itinerary choices
                     if (!routeOptionsVC) {
                         routeOptionsVC = [[RouteOptionsViewController alloc] initWithNibName:nil bundle:nil];;
@@ -1142,7 +1145,7 @@ NSUserDefaults *prefs;
             [planRequestHistory addObject:[NSDictionary dictionaryWithKeysAndObjects:
                                            @"fromPlace", fromLocation, 
                                            @"toPlace", toLocation,
-                                           @"date", [NSDate date], nil]];  
+                                           @"date", [NSDate date], nil]];
             
             NSLog(@"Plan resource: %@", planURLResource);
            

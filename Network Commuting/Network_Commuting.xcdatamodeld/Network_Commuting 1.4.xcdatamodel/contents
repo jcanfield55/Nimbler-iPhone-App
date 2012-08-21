@@ -98,6 +98,7 @@
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="lastUpdatedFromServer" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="planId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="planRequestCacheRaw" optional="YES" attributeType="Transformable" syncable="YES"/>
         <relationship name="fromLocation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="plan" inverseEntity="Location" syncable="YES"/>
         <relationship name="fromPlanPlace" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="PlanPlace" inverseName="plan" inverseEntity="PlanPlace" syncable="YES"/>
         <relationship name="itineraries" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Itinerary" inverseName="plan" inverseEntity="Itinerary" syncable="YES"/>

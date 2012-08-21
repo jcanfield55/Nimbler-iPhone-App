@@ -7,6 +7,7 @@
 //
 
 #import "Plan.h"
+#import "PlanRequestChunk.h"
 
 @implementation Plan
 
@@ -18,6 +19,10 @@
 @dynamic fromLocation;
 @dynamic toLocation;
 @dynamic itineraries;
+@dynamic planRequestCacheRaw;
+@synthesize planRequestCache;
+@synthesize userRequestDate;
+@synthesize userRequestDepartOrArrive;
 @synthesize sortedItineraries;
 
 + (RKManagedObjectMapping *)objectMappingforPlanner:(APIType)apiType
@@ -112,8 +117,44 @@
 // Add itin0 to the plan
 - (void)addItinerary:(Itinerary *) itin0
 {
-    
+    NSMutableSet* mutableItineraries = [self mutableSetValueForKey:PLAN_ITINERARIES_KEY];
+    [mutableItineraries addObject:itin0];
+    [self sortItineraries];  // Resort itineraries
 }
+
+// Override accessor
+- (PlanRequestCache *)planRequestCache
+{
+    if ([self planRequestCacheRaw]) {
+        return [self planRequestCacheRaw];
+    }
+    else {
+        // if there is no stored planRequestCache, make one
+        // this is primarily for use when planCaching is first rolled out
+        planRequestCache = [[PlanRequestCache alloc] initWithRawItineraries:[self sortedItineraries]];
+        [self setPlanRequestCacheRaw:planRequestCache];
+        return planRequestCache;
+    }
+}
+
+// Initialization method after a plan is freshly loaded from an OTP request
+- (void)initPlanRequestCacheWithRequestDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive
+{
+    planRequestCache = [[PlanRequestCache alloc] initWithRequestDate:requestDate
+                                                      departOrArrive:depOrArrive
+                                                   sortedItineraries:[self sortedItineraries]];
+    [self setPlanRequestCacheRaw:planRequestCache];
+}
+
+// Updates the plan's sorted itineraries to address the new userRequestedDate and departOrArrive
+// Returns true if the referring Plan has itineraries that can be displayed to the user for userRequestDate
+// Returns false if there are no itineraries in the plan displayable for the user request.
+// If false, the plan will be unchanged
+- (BOOL)updateItinerariesForUserRequestedDate:(NSDate *)userRequestDate departOrArrive:(DepartOrArrive)depOrArrive
+{
+    return FALSE;
+}
+
 
 // Detects whether date returned by REST API is >1,000 years in the future.  If so, the value is likely being returned in milliseconds from 1970, rather than seconds from 1970, in which we correct the date by dividing by the timeSince1970 value by 1,000
 // Comment out for now, since it is not being used

@@ -87,6 +87,8 @@
 		52E4C0AB15CC7E7D00B55A65 /* img_itineraryNavigation.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C0AA15CC7E7C00B55A65 /* img_itineraryNavigation.png */; };
 		52E4C0AD15CC7E8800B55A65 /* img_itineraryNavigation@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C0AC15CC7E8800B55A65 /* img_itineraryNavigation@2x.png */; };
 		52E66F031520374B001BF026 /* DateTimeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52E66F021520374B001BF026 /* DateTimeViewController.xib */; };
+		52F0BF0C15E2FA9500BC084D /* PlanRequestCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F0BF0B15E2FA9500BC084D /* PlanRequestCache.m */; };
+		52F0BF0F15E2FBC600BC084D /* PlanRequestChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F0BF0E15E2FBC600BC084D /* PlanRequestChunk.m */; };
 		52F67EE114C752C4007578D5 /* LatLng.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F67EE014C752C4007578D5 /* LatLng.m */; };
 		52F67EE814C75C36007578D5 /* AddressComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F67EE714C75C36007578D5 /* AddressComponent.m */; };
 		52F67EEB14C76504007578D5 /* GeoRectangle.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F67EEA14C76504007578D5 /* GeoRectangle.m */; };
@@ -942,6 +944,10 @@
 		52E4C0AC15CC7E8800B55A65 /* img_itineraryNavigation@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_itineraryNavigation@2x.png"; sourceTree = "<group>"; };
 		52E66F021520374B001BF026 /* DateTimeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DateTimeViewController.xib; sourceTree = "<group>"; };
 		52E6CBEF15C0A38E008E83E6 /* Network_Commuting 1.3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.3.xcdatamodel"; sourceTree = "<group>"; };
+		52F0BF0A15E2FA9500BC084D /* PlanRequestCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanRequestCache.h; sourceTree = "<group>"; };
+		52F0BF0B15E2FA9500BC084D /* PlanRequestCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlanRequestCache.m; sourceTree = "<group>"; };
+		52F0BF0D15E2FBC600BC084D /* PlanRequestChunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanRequestChunk.h; sourceTree = "<group>"; };
+		52F0BF0E15E2FBC600BC084D /* PlanRequestChunk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlanRequestChunk.m; sourceTree = "<group>"; };
 		52F67EDF14C752C4007578D5 /* LatLng.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LatLng.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		52F67EE014C752C4007578D5 /* LatLng.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LatLng.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		52F67EE614C75C36007578D5 /* AddressComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AddressComponent.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -2648,6 +2654,10 @@
 				5210516F14C9C0DF0025DD39 /* Plan.m */,
 				5265D4B815E19E8D002C9406 /* PlanStore.h */,
 				5265D4B915E19E8D002C9406 /* PlanStore.m */,
+				52F0BF0A15E2FA9500BC084D /* PlanRequestCache.h */,
+				52F0BF0B15E2FA9500BC084D /* PlanRequestCache.m */,
+				52F0BF0D15E2FBC600BC084D /* PlanRequestChunk.h */,
+				52F0BF0E15E2FBC600BC084D /* PlanRequestChunk.m */,
 				5210517114D60F3B0025DD39 /* PlanPlace.h */,
 				5210517214D60F3B0025DD39 /* PlanPlace.m */,
 				5210517414D610780025DD39 /* AgencyAndId.h */,
@@ -3111,6 +3121,8 @@
 				CCFFF4B015D3D2AE004E062F /* RXCustomTabBar.m in Sources */,
 				CCA4C7D915D8F913009BE7A1 /* Reachability.m in Sources */,
 				5265D4BA15E19E8D002C9406 /* PlanStore.m in Sources */,
+				52F0BF0C15E2FA9500BC084D /* PlanRequestCache.m in Sources */,
+				52F0BF0F15E2FBC600BC084D /* PlanRequestChunk.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3274,8 +3286,8 @@
 					armv6,
 					"$(ARCHS_STANDARD_32_BIT)",
 				);
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler Caltrain-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
@@ -3293,8 +3305,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
+				PROVISIONING_PROFILE = "6D56CED0-3064-4498-A4FC-A05D5BC475A8";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6D56CED0-3064-4498-A4FC-A05D5BC475A8";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3307,9 +3319,9 @@
 					armv6,
 					"$(ARCHS_STANDARD_32_BIT)",
 				);
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler Caltrain-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
@@ -3327,9 +3339,9 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
-				"PROVISIONING_PROFILE[sdk=*]" = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
+				PROVISIONING_PROFILE = "6D56CED0-3064-4498-A4FC-A05D5BC475A8";
+				"PROVISIONING_PROFILE[sdk=*]" = "6D56CED0-3064-4498-A4FC-A05D5BC475A8";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6D56CED0-3064-4498-A4FC-A05D5BC475A8";
 				SHARED_PRECOMPS_DIR = "";
 				WRAPPER_EXTENSION = app;
 			};
