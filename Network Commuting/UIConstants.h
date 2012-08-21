@@ -41,8 +41,8 @@
 #define ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH  298 // Obtained thru trial & error for DE95 fix
 #define ROUTE_LEGMAP_X_ORIGIN               5
 #define ROUTE_LEGMAP_Y_ORIGIN               5
-#define ROUTE_LEGMAP_WIDTH                  309
-#define ROUTE_LEGMAP_MIN_HEIGHT             190
+#define ROUTE_LEGMAP_WIDTH                  720
+#define ROUTE_LEGMAP_MIN_HEIGHT             450
 #define ROUTE_DETAILS_TABLE_MAX_HEIGHT      170
 
 // Table cell height

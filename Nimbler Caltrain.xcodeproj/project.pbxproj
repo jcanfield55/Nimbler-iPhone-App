@@ -3275,7 +3275,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
 				INFOPLIST_FILE = "Network Commuting/Nimbler Caltrain-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1\"",
@@ -3286,9 +3286,10 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "073CB707-83D3-42A5-B86C-F73B68ED48E6";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "073CB707-83D3-42A5-B86C-F73B68ED48E6";
+				PROVISIONING_PROFILE = "EDBAC287-DE0E-4289-AD52-EC4A25498B57";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "EDBAC287-DE0E-4289-AD52-EC4A25498B57";
 				SHARED_PRECOMPS_DIR = "";
+				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -3309,7 +3310,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
 				INFOPLIST_FILE = "Network Commuting/Nimbler Caltrain-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1\"",
@@ -3320,10 +3321,11 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "073CB707-83D3-42A5-B86C-F73B68ED48E6";
-				"PROVISIONING_PROFILE[sdk=*]" = "073CB707-83D3-42A5-B86C-F73B68ED48E6";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "073CB707-83D3-42A5-B86C-F73B68ED48E6";
+				PROVISIONING_PROFILE = "EDBAC287-DE0E-4289-AD52-EC4A25498B57";
+				"PROVISIONING_PROFILE[sdk=*]" = "EDBAC287-DE0E-4289-AD52-EC4A25498B57";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "EDBAC287-DE0E-4289-AD52-EC4A25498B57";
 				SHARED_PRECOMPS_DIR = "";
+				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

@@ -55,7 +55,7 @@
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"img_tabbar.png"]]];
     
 	self.btn1 = [UIButton buttonWithType:UIButtonTypeCustom]; //Setup the button
-	btn1.frame = CGRectMake(2, 436, 78, 42); // Set the frame (size and position) of the button)
+	btn1.frame = CGRectMake(2, 600, 78, 42); // Set the frame (size and position) of the button)
 	 [btn1 setBackgroundImage:btnImage forState:UIControlStateNormal]; // Set the image for the normal state of the button
 	[btn1 setBackgroundImage:btnImageSelected forState:UIControlStateSelected]; // Set the image for the selected state of the button
 	[btn1 setTag:0]; // Assign the button a "tag" so when our "click" event is called we know which button was pressed.
@@ -65,7 +65,7 @@
 	btnImage = [UIImage imageNamed:@""];
 	btnImageSelected = [UIImage imageNamed:@"img_selAdvisory.png"];
 	self.btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
-	btn2.frame = CGRectMake(80, 436, 78, 42);
+	btn2.frame = CGRectMake(80, 600, 78, 42);
 	[btn2 setBackgroundImage:btnImage forState:UIControlStateNormal];
 	[btn2 setBackgroundImage:btnImageSelected forState:UIControlStateSelected];
 	[btn2 setTag:1];
@@ -74,7 +74,7 @@
 	btnImage = [UIImage imageNamed:@""];
 	btnImageSelected = [UIImage imageNamed:@"img_selSetting.png"];
 	self.btn3 = [UIButton buttonWithType:UIButtonTypeCustom];
-	btn3.frame = CGRectMake(160, 436, 78, 42);
+	btn3.frame = CGRectMake(160, 600, 78, 42);
 	[btn3 setBackgroundImage:btnImage forState:UIControlStateNormal];
 	[btn3 setBackgroundImage:btnImageSelected forState:UIControlStateSelected];
 	[btn3 setTag:2];
@@ -82,7 +82,7 @@
 	btnImage = [UIImage imageNamed:@""];
 	btnImageSelected = [UIImage imageNamed:@"img_selFB.png"];
 	self.btn4 = [UIButton buttonWithType:UIButtonTypeCustom];
-	btn4.frame = CGRectMake(240, 436, 78, 42);
+	btn4.frame = CGRectMake(240, 600, 78, 42);
 	[btn4 setBackgroundImage:btnImage forState:UIControlStateNormal];
 	[btn4 setBackgroundImage:btnImageSelected forState:UIControlStateSelected];
 	[btn4 setTag:3];
