@@ -23,7 +23,7 @@
             PlanRequestChunk* requestChunk = [[PlanRequestChunk alloc] init];
             [requestChunk setRequestedTimeDate:[itin startTime]];  // Set request time to startTime of itinerary
             [requestChunk setDepartOrArrive:DEPART];
-            [requestChunk setItineraries:[NSMutableArray arrayWithObject:itin]];
+            [requestChunk setItineraries:[NSArray arrayWithObject:itin]];
             [requestChunkArray addObject:requestChunk];
         }
     }
@@ -41,9 +41,26 @@
         PlanRequestChunk* requestChunk = [[PlanRequestChunk alloc] init];
         [requestChunk setRequestedTimeDate:requestDate];  
         [requestChunk setDepartOrArrive:depOrArrive];
-        [requestChunk setItineraries:[NSMutableArray arrayWithArray:sortedItinArray]];
+        [requestChunk setItineraries:sortedItinArray];
     }
     
     return self;
+}
+
+- (NSArray *)relevantRequestChunksForDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive
+{
+    // Set up what we need to look at date components
+    NSCalendar* calendar = [NSCalendar currentCalendar];
+    NSUInteger calendarComponents = NSHourCalendarUnit | NSMinuteCalendarUnit | NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit | NSWeekdayCalendarUnit;
+    NSUInteger timeComponents = NSHourCalendarUnit | NSMinuteCalendarUnit;
+    
+    // Get the request time (independent of date)
+    NSDate *requestTime = [calendar dateFromComponents:[calendar components:calendarComponents fromDate:requestDate]];
+    
+    NSMutableArray* returnArray = [[NSMutableArray alloc] initWithCapacity:[[self requestChunkArray] count]];
+    
+    // TODO finish implementation of this method
+    return nil;
+    
 }
 @end

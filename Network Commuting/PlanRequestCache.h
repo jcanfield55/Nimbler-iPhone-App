@@ -22,4 +22,7 @@
 // Initializer for a new plan fresh from a OTP request
 // Creates one PlanRequestChunk with all the itineraries as part of it
 - (id)initWithRequestDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive sortedItineraries:(NSArray *)sortedItinArray;
+
+- (NSArray *)relevantRequestChunksForDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive;
+
 @end

@@ -143,6 +143,18 @@ NSString *distanceStringInMilesFeet(double meters) {
     return returnString;
 }
 
+// Returns a NSDate object containing just the time of the date parameter.
+// Uses [NSCalendar currentCalendar] and the hours and minutes components to compute
+NSDate *timeOnlyFromDate(NSDate *date) {
+    // Set up what we need to look at date components
+    NSCalendar* calendar = [NSCalendar currentCalendar];
+    NSUInteger timeComponents = NSHourCalendarUnit | NSMinuteCalendarUnit;
+    
+    // Get the key times (independent of date)
+    NSDate *returnTime = [calendar dateFromComponents:[calendar components:timeComponents
+                                                                   fromDate:date]];
+    return returnTime;
+}
 
 
 

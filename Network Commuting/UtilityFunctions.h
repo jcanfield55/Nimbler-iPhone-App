@@ -23,4 +23,6 @@ NSString *distanceStringInMilesFeet(double meters);
 NSDateFormatter *utilitiesShortTimeFormatter(void);
 NSString *superShortTimeStringForDate(NSDate *date);
 
-
+// Returns a NSDate object containing just the time of the date parameter.
+// Uses [NSCalendar currentCalendar] and the hours and minutes components to compute
+NSDate *timeOnlyFromDate(NSDate *date);

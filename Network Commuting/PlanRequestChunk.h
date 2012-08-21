@@ -22,6 +22,7 @@
 @property (nonatomic) DepartOrArrive departOrArrive;
 
 // List of itineraries that are part of this PlanRequestChunk
-@property (strong, nonatomic) NSMutableArray* itineraries;
+@property (strong, nonatomic) NSArray* itineraries;
+
 
 @end

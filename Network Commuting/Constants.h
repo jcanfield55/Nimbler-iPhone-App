@@ -134,6 +134,9 @@
 // LegMapView
 #define LEGMAP_DOT_IMAGE_FILE          @"img_mapDot"
 
+// PlanRequestCache and PlanRequestChunk
+#define MAX_GAP_BETWEEN_REQUEST_AND_FIRST_CACHED_ININERARY  (1.25*60*60)  // 1.25 hours (in seconds)
+
 // Request timer Count
 #define TWEET_COUNT_POLLING_INTERVAL   120.0
 #define TIMER_SMALL_REQUEST_DELAY      1.0
