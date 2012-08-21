@@ -33,6 +33,7 @@
     Location *toLoc;
     Location *fromLoc;
     NSTimer *continueGetTime;
+    BOOL isFromBackground;
 }
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
@@ -62,6 +63,7 @@
 @property (nonatomic) BOOL isToFromView;
 @property (strong, nonatomic) Location *toLoc;
 @property (strong, nonatomic) Location *fromLoc;
+@property (nonatomic) BOOL isFromBackground;
 
 - (NSURL *)applicationDocumentsDirectory;
 

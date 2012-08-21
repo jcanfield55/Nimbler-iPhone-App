@@ -95,6 +95,8 @@
 		8D0158B8159B35CC0004D2FB /* SettingInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0158B6159B35CC0004D2FB /* SettingInfoViewController.m */; };
 		8D0158B9159B35CC0004D2FB /* SettingInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D0158B7159B35CC0004D2FB /* SettingInfoViewController.xib */; };
 		8D015972159B3DE10004D2FB /* caltrain.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8D015971159B3DE10004D2FB /* caltrain.jpg */; };
+		8DA39BDF15E3855B0029D54B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6F22E71563AD360066DFA9 /* AVFoundation.framework */; };
+		8DA39BE115E38B5E0029D54B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */; };
 		CC2B7F8115B82C9C001C7D90 /* img_fb.png in Resources */ = {isa = PBXBuildFile; fileRef = CC2B7F8015B82C9C001C7D90 /* img_fb.png */; };
 		CC2B7F8315B838F8001C7D90 /* img_navigationbar.png in Resources */ = {isa = PBXBuildFile; fileRef = CC2B7F8215B838F8001C7D90 /* img_navigationbar.png */; };
 		CC2B7F8515B839B2001C7D90 /* img_background.png in Resources */ = {isa = PBXBuildFile; fileRef = CC2B7F8415B839B2001C7D90 /* img_background.png */; };
@@ -111,7 +113,6 @@
 		CC2B7F9E15B958B9001C7D90 /* img_chatBubble.png in Resources */ = {isa = PBXBuildFile; fileRef = CC2B7F9D15B958B9001C7D90 /* img_chatBubble.png */; };
 		CC2B7FA015B958C3001C7D90 /* img_voiceRecord.png in Resources */ = {isa = PBXBuildFile; fileRef = CC2B7F9F15B958C3001C7D90 /* img_voiceRecord.png */; };
 		CC35E729155965E7003995D8 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 522C0E6A15588E7A0072ADD6 /* libz.dylib */; };
-		CC5789BF1564C8EB0057D5A7 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6F22E71563AD360066DFA9 /* AVFoundation.framework */; };
 		CC578A03156520B60057D5A7 /* feedback.png in Resources */ = {isa = PBXBuildFile; fileRef = CC578A02156520B50057D5A7 /* feedback.png */; };
 		CC6FE2B8155BA40D004BE10A /* MyAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6FE2B7155BA40D004BE10A /* MyAnnotation.m */; };
 		CC6FE2BB155BC416004BE10A /* Error.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6FE2BA155BC416004BE10A /* Error.m */; };
@@ -956,6 +957,7 @@
 		8D0158B6159B35CC0004D2FB /* SettingInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SettingInfoViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8D0158B7159B35CC0004D2FB /* SettingInfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingInfoViewController.xib; sourceTree = "<group>"; };
 		8D015971159B3DE10004D2FB /* caltrain.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = caltrain.jpg; sourceTree = "<group>"; };
+		8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		CC2B7F8015B82C9C001C7D90 /* img_fb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_fb.png; sourceTree = "<group>"; };
 		CC2B7F8215B838F8001C7D90 /* img_navigationbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_navigationbar.png; sourceTree = "<group>"; };
 		CC2B7F8415B839B2001C7D90 /* img_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_background.png; sourceTree = "<group>"; };
@@ -1038,8 +1040,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8DA39BE115E38B5E0029D54B /* AudioToolbox.framework in Frameworks */,
+				8DA39BDF15E3855B0029D54B /* AVFoundation.framework in Frameworks */,
 				CCDCC0791576287900D4B4D3 /* CoreLocation.framework in Frameworks */,
-				CC5789BF1564C8EB0057D5A7 /* AVFoundation.framework in Frameworks */,
 				CC35E729155965E7003995D8 /* libz.dylib in Frameworks */,
 				527E174A151EB9CD00CDBC23 /* QuartzCore.framework in Frameworks */,
 				525C20F9151D3AF5004F8FE0 /* MapKit.framework in Frameworks */,
@@ -2410,6 +2413,7 @@
 		52CF439014BDF2F8000565D6 = {
 			isa = PBXGroup;
 			children = (
+				8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */,
 				CC9370D615BFB97200A09A5A /* Flurry */,
 				CCD3990C15A2FAD20020BC85 /* Resources */,
 				CC6F22E71563AD360066DFA9 /* AVFoundation.framework */,
@@ -3270,10 +3274,7 @@
 		52CF43CF14BDF2F9000565D6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3282,7 +3283,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
 				INFOPLIST_FILE = "Network Commuting/Nimbler Caltrain-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1\"",
@@ -3296,6 +3297,7 @@
 				PROVISIONING_PROFILE = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
 				SHARED_PRECOMPS_DIR = "";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -3303,10 +3305,7 @@
 		52CF43D014BDF2F9000565D6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
@@ -3316,7 +3315,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
 				INFOPLIST_FILE = "Network Commuting/Nimbler Caltrain-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1\"",
@@ -3331,6 +3330,7 @@
 				"PROVISIONING_PROFILE[sdk=*]" = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
 				SHARED_PRECOMPS_DIR = "";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

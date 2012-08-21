@@ -69,6 +69,7 @@
 -(void)sendFeedbackToServer;
 
 -(id)initWithFeedBack:(NSString *)nibNameOrNil fbParam:(FeedBackReqParam *)fbParam bundle:(NSBundle *)nibBundle;
+-(BOOL)isPhoneSilent;
 
 @end
 

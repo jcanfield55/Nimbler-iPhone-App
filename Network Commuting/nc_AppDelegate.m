@@ -52,6 +52,7 @@ static nc_AppDelegate *appDelegate;
 @synthesize toLoc;
 @synthesize fromLoc;
 @synthesize continueGetTime;
+@synthesize isFromBackground;
 
 
 // Feedback parameters
@@ -297,6 +298,7 @@ FeedBackForm *fbView;
     
     [toFromViewController.continueGetTime invalidate];
     toFromViewController.continueGetTime = nil;
+    isFromBackground = YES;
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -304,12 +306,14 @@ FeedBackForm *fbView;
     /*
      Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
      */
+    [self getTwiiterLiveData];
     if(self.isTwitterView){
        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
         [twitterView getAdvisoryData];
     }
     [toFromViewController updateTripDate];
     [locationManager startUpdatingLocation];
+
     if (timerTweeterGetData == nil) {
        timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];     
     } 
@@ -317,7 +321,9 @@ FeedBackForm *fbView;
         [toFromViewController.toTableVC markAndUpdateSelectedLocation:self.toLoc];
         [toFromViewController.fromTableVC markAndUpdateSelectedLocation:self.fromLoc];
     }
-    continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
+    if(isFromBackground){
+        toFromViewController.continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
+    }
 //    sleep(2);
 }
 
@@ -584,6 +590,8 @@ FeedBackForm *fbView;
         }        
         NSString *isUrgent = [userInfo valueForKey:@"isUrgent"];
         NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
+        NSString *sound = [[userInfo valueForKey:@"aps"] valueForKey:@"sound"];
+        NSLog(@"%@",sound);
         NSString *badge = [[userInfo valueForKey:@"aps"] valueForKey:@"badge"];
         prefs = [NSUserDefaults standardUserDefaults];  
         [prefs setObject:badge forKey:TWEET_COUNT];
@@ -600,9 +608,15 @@ FeedBackForm *fbView;
         } 
         else { 
             // Redirect to Twitter Page View
-            RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
-            [rxCustomTabBar selectTab:1];
-            [twitterView getAdvisoryData];
+            if(self.isFromBackground){
+                RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
+                [rxCustomTabBar selectTab:1];
+                [twitterView getAdvisoryData];
+                self.isFromBackground = NO;
+            }
+//            else{
+//                [self updateBadge:[badge intValue]]; 
+//            }
         }
     }
     @catch (NSException *exception) {
@@ -645,14 +659,14 @@ FeedBackForm *fbView;
         UserPreferance* userPrefs = [UserPreferance userPreferance]; // get singleton
         // set in TPServer
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];            
+        [RKClient setSharedClient:client];    
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                                 DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
                                 @"alertCount", [userPrefs triggerAtHour],
                                 DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],
-                                @"maxDistance", [userPrefs walkDistance],
-                                nil];    
-        NSString *twitCountReq = [@"users/preferences/update" appendQueryParams:params];
+                                @"maxDistance", [userPrefs walkDistance],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt:URGENT_NOTIFICATION_DEFAULT_VALUE],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt:STANDARD_NOTIFICATION_DEFAULT_VALUE],
+                                nil];
+        NSString *twitCountReq = [UPDATE_SETTING_REQ appendQueryParams:params];
         [[RKClient sharedClient]  get:twitCountReq delegate:self]; 
         
     }

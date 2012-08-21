@@ -195,6 +195,8 @@ NSUserDefaults *prefs;
     // Updates legMapVC itinerary number (changing the region for the map
     NSLog(@"%d",itineraryNumber);
     [legMapVC setItineraryNumber:itineraryNumber];
+    //Leg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:iNumber0];
+    //[legMapVC setLeg:leg];
     //[legMapVC setItinerary:itinerary];
     
 }
@@ -202,6 +204,8 @@ NSUserDefaults *prefs;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    
     @try {
 #if FLURRY_ENABLED
         [Flurry logEvent: FLURRY_ROUTE_DETAILS_APPEAR];
@@ -391,6 +395,7 @@ NSUserDefaults *prefs;
     if ([self itineraryNumber] > 0) {
         [self setItineraryNumber:([self itineraryNumber] - 1)];
          [self test:itineraryNumber];
+        
     }
     
 }
@@ -398,7 +403,10 @@ NSUserDefaults *prefs;
 // Callback for when user presses the navigate forward button on the right navbar
 - (IBAction)navigateForward:(id)sender {
     if ([self itineraryNumber] < [itinerary itineraryRowCount] - 1) {
+//        Leg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:itineraryNumber+1];
+//        [legMapVC setLeg:leg];
         [self setItineraryNumber:([self itineraryNumber] + 1)];
+       
         [self test:itineraryNumber];
     }
 }

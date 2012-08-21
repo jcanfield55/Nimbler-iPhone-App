@@ -9,7 +9,7 @@
 #import "FeedBackForm.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "nc_AppDelegate.h"
-
+#import <AudioToolbox/AudioServices.h>
 #if FLURRY_ENABLED
 #include "Flurry.h"
 #endif
@@ -261,10 +261,15 @@ NSUserDefaults *prefs;
     }
     labelRecTime.text = NULL_STRING;
     
-//    NSError *err;
-//    AVAudioSession *session = [AVAudioSession sharedInstance];
-//    [session setCategory:AVAudioSessionCategoryPlayback error:&err];
-//    [session setActive:YES error:&err];
+    NSError *err;
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    //if([self isPhoneSilent]){
+       [session setCategory:AVAudioSessionCategoryPlayAndRecord error:&err]; 
+//    }
+//    else{
+//       [session setCategory:AVAudioSessionCategoryPlayback error:&err]; 
+//    }
+    [session setActive:YES error:&err];
 
     if (!audioRecorder.recording)
     {
@@ -289,6 +294,21 @@ NSUserDefaults *prefs;
             [audioPlayer play];
         }
     }   
+}
+
+-(BOOL)isPhoneSilent {
+#if TARGET_IPHONE_SIMULATOR
+    return NO;
+#endif
+    CFStringRef state;
+    UInt32 propertySize = sizeof(CFStringRef);
+    AudioSessionInitialize(NULL, NULL, NULL, NULL);
+    AudioSessionGetProperty(kAudioSessionProperty_AudioRoute, &propertySize, &state);
+    if(CFStringGetLength(state) > 0)
+        return NO;
+    else
+        return YES;
+    
 }
 
 #pragma mark Time functionds

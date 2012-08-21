@@ -90,6 +90,7 @@ bool isPush;
 - (void)viewWillAppear:(BOOL)animated
 {
     [self fetchUserSettingData];
+    self.lblSliderValue.text = [NSString stringWithFormat:@"%0.2f",self.sliderMaxWalkDistance.value];
 #if FLURRY_ENABLED
     [Flurry logEvent: FLURRY_SETTINGS_APPEAR];
 #endif
@@ -176,7 +177,6 @@ bool isPush;
     [sliderMaxWalkDistance setValue:sliderMaxWalkDistance.value];
     [sliderMaxWalkDistance setSelected:YES];
     [self.lblSliderValue setText:[NSString stringWithFormat:@"%0.2f",sender.value]];
-    NSLog(@"walk distance: %f", walkDistance);
 }
 
 -(IBAction)sliderPushNotification:(UISlider *)sender
@@ -224,9 +224,7 @@ bool isPush;
 -(void)fetchUserSettingData
 {
     @try {
-
         // set stored value for userSettings 
-        
         UserPreferance* userPrefs = [UserPreferance userPreferance]; // get singleton
         [sliderMaxWalkDistance setValue:[[userPrefs walkDistance] doubleValue]];
         [sliderPushNotification setValue:[[userPrefs triggerAtHour] doubleValue]];
