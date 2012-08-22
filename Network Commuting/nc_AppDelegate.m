@@ -467,6 +467,7 @@ FeedBackForm *fbView;
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response 
 {  
+    isFromBackground = NO;
     @try {
         if ([request isGET]) {  
             NSLog(@"Got a response back from our GET! %@", [response bodyAsString]);      
@@ -605,6 +606,11 @@ FeedBackForm *fbView;
             
             [dataAlert show];
             [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
+            if([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive){
+                if([[NSUserDefaults standardUserDefaults] integerForKey:ENABLE_URGENTNOTIFICATION_SOUND] == 1){
+                     AudioServicesPlaySystemSound(1015);
+                }
+            }
         } 
         else { 
             // Redirect to Twitter Page View
@@ -612,11 +618,10 @@ FeedBackForm *fbView;
                 RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
                 [rxCustomTabBar selectTab:1];
                 [twitterView getAdvisoryData];
-                self.isFromBackground = NO;
             }
-//            else{
-//                [self updateBadge:[badge intValue]]; 
-//            }
+            else{
+                [self getTwiiterLiveData]; 
+            }
         }
     }
     @catch (NSException *exception) {

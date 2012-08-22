@@ -17,7 +17,7 @@
 
 #define TRIP_PROCESS_URL        @"http://23.23.210.156:8080/TPServer/ws/"
 
-//#define TRIP_PROCESS_URL        @"http://192.168.2.148:8080/TPServer/ws/"
+//#define TRIP_PROCESS_URL        @"http://192.168.2.135:8080/TPServer/ws/"
 
 #define TWITTER_SERARCH_URL     @"https://twitter.com/#!/search/realtime/TRAIN%20from%3Acaltrain%20OR%20from%3Acaltrain_news"
 #define CALTRAIN_TWITTER_URL    @"https://twitter.com/#!/search/from%3Acaltrain%20OR%20from%3Acaltrain_news"
@@ -59,10 +59,12 @@
 #define PREFS_MAX_WALK_DISTANCE            @"PrefsMaxWalkDistance"
 #define ENABLE_STANDARDNOTIFICATION_SOUND       @"enableStdNotifSound"
 #define ENABLE_URGENTNOTIFICATION_SOUND         @"enableUrgntNotifSound"
+#define URGENT_NOTIFICATION_DEFAULT_VALUE        1
+#define STANDARD_NOTIFICATION_DEFAULT_VALUE      2
 
 // UserPreferernce defaults
 #define PREFS_DEFAULT_IS_PUSH_ENABLE                YES
-#define PREFS_DEFAULT_PUSH_NOTIFICATION_THRESHOLD   3
+#define PREFS_DEFAULT_PUSH_NOTIFICATION_THRESHOLD   5
 #define PREFS_DEFAULT_MAX_WALK_DISTANCE             0.75
 
 // Flurry analytics and logging
