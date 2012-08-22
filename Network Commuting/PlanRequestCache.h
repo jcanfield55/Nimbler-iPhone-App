@@ -16,6 +16,9 @@
 
 @property (strong, nonatomic) NSMutableArray *requestChunkArray; // Sorted array of PlanRequestChunks
 
+//
+// Methods
+//
 // Initializer for an existing (legacy) Plan that does not have any planRequestCache but has a bunch of existing itineraries.  Creates a new PlanRequestChunk for every itinerary in sortedItineraryArray
 - (id)initWithRawItineraries:(NSArray *)sortedItineraryArray;
 

@@ -48,6 +48,15 @@
         <relationship name="legs" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Leg" inverseName="itinerary" inverseEntity="Leg" syncable="YES"/>
         <relationship name="plan" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Plan" inverseName="itineraries" inverseEntity="Plan" syncable="YES"/>
     </entity>
+    <entity name="KeyObjectPair" syncable="YES">
+        <attribute name="key" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="object" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <compoundIndexes>
+            <compoundIndex>
+                <index value="key"/>
+            </compoundIndex>
+        </compoundIndexes>
+    </entity>
     <entity name="Leg" representedClassName="Leg" syncable="YES">
         <attribute name="agencyId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="bogusNonTransitLeg" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -155,21 +164,23 @@
         <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="relationship" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TPResponse" inverseName="relationship" inverseEntity="TPResponse" syncable="YES"/>
     </entity>
+    <fetchRequest name="KeyObjectPairForKey" entity="KeyObjectPair" predicateString="key == $KEY"/>
     <fetchRequest name="LocationByFormattedAddress" entity="Location" predicateString="formattedAddress ==$ADDRESS2"/>
     <fetchRequest name="LocationByMemberOfList" entity="Location" predicateString="memberOfList BEGINSWITH $LIST_PREFIX AND locationType != &quot;TOFROM_LIST&quot;"/>
     <fetchRequest name="PlansByToAndFromLocations" entity="Plan" predicateString="toLocation.formattedAddress == $TO_FORMATTED_ADDRESS AND fromLocation.formattedAddress == $FROM_FORMATTED_ADDRESS"/>
     <fetchRequest name="RawAddressByString" entity="RawAddress" predicateString="rawAddressString == $ADDRESS"/>
     <elements>
-        <element name="AddressComponent" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="BayArea" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Error" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Itinerary" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Leg" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Location" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Plan" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="PlanPlace" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="RawAddress" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Step" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="TPResponse" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="AddressComponent" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="BayArea" positionX="0" positionY="0" width="128" height="195"/>
+        <element name="Error" positionX="0" positionY="0" width="128" height="120"/>
+        <element name="Itinerary" positionX="0" positionY="0" width="128" height="285"/>
+        <element name="Leg" positionX="0" positionY="0" width="128" height="345"/>
+        <element name="Location" positionX="0" positionY="0" width="128" height="300"/>
+        <element name="Plan" positionX="0" positionY="0" width="128" height="180"/>
+        <element name="PlanPlace" positionX="0" positionY="0" width="128" height="180"/>
+        <element name="RawAddress" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="Step" positionX="0" positionY="0" width="128" height="195"/>
+        <element name="TPResponse" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="KeyObjectPair" positionX="160" positionY="192" width="128" height="75"/>
     </elements>
 </model>

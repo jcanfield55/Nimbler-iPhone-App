@@ -143,8 +143,10 @@ NSString *distanceStringInMilesFeet(double meters) {
     return returnString;
 }
 
+//
 // Returns a NSDate object containing just the time of the date parameter.
 // Uses [NSCalendar currentCalendar] and the hours and minutes components to compute
+//
 NSDate *timeOnlyFromDate(NSDate *date) {
     // Set up what we need to look at date components
     NSCalendar* calendar = [NSCalendar currentCalendar];
@@ -156,5 +158,20 @@ NSDate *timeOnlyFromDate(NSDate *date) {
     return returnTime;
 }
 
+//
+// Retrieves the day of week from the date (Sunday = 1, Saturday = 7)
+//
+NSInteger dayOfWeekFromDate(NSDate *date) {
+    // Set up what we need to look at date components
+    NSCalendar* calendar = [NSCalendar currentCalendar];
+    NSUInteger timeComponents = NSWeekdayCalendarUnit;
+    
+    // Get the key times (independent of date)
+    NSInteger returnedWeekday = [[calendar components:timeComponents fromDate:date] weekday];
+    return returnedWeekday;
+}
 
-
+//
+// Returns an NSDate object containing just the date (month, day, year) of the date parameter, but not the time
+// Uses [NSCalendar currentCalendar] and the hours and minutes components to compute
+//

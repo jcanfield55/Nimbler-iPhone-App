@@ -26,3 +26,6 @@ NSString *superShortTimeStringForDate(NSDate *date);
 // Returns a NSDate object containing just the time of the date parameter.
 // Uses [NSCalendar currentCalendar] and the hours and minutes components to compute
 NSDate *timeOnlyFromDate(NSDate *date);
+
+// Retrieves the day of week from the date (Sunday = 1, Saturday = 7)
+NSInteger dayOfWeekFromDate(NSDate *date);

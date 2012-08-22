@@ -31,7 +31,7 @@
     [managedObjectContext setUndoManager:nil];
     
     // Set up Locations wrapper object pointing at the test Managed Object Context
-    locations = [[Locations alloc] initWithManagedObjectContext:managedObjectContext];
+    locations = [[Locations alloc] initWithManagedObjectContext:managedObjectContext rkGeoMgr:nil];
     
     // Set up individual Location objects
     // loc1 is used for testing most methods including isMatchingTypedString and has Address Components included
@@ -67,8 +67,8 @@
     [loc1 addRawAddressString:@"750 Hawthorn, San Fran California"];
 
     [loc1 setApiTypeEnum:GOOGLE_GEOCODER];
-    [loc1 setFromFrequencyInt:5];
-    [loc1 setToFrequencyInt:7];
+    [loc1 setFromFrequencyFloat:5.0];
+    [loc1 setToFrequencyFloat:7.0];
     [loc1 setLatFloat:67.3];
     [loc1 setLngFloat:-122.3];
     
@@ -104,7 +104,7 @@
     [loc2 setFormattedAddress:@"750 Hawthorne Street, San Francisco"];
     [loc2 addRawAddressString:@"750 Hawthorne, San Fran California"];
     [loc2 addRawAddressString:@"750 Hawthoorn, SF"];
-    [loc2 setFromFrequencyInt:7];  // greater than loc1
+    [loc2 setFromFrequencyFloat:7];  // greater than loc1
     
     loc3 = [NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:managedObjectContext];
     [loc3 setFormattedAddress:@"1350 Hull Drive, San Carlos, CA USA"];
@@ -199,20 +199,22 @@
     // consolidateWithMatchingLocations testing
     // Set up a new location object that will be consolidated
     Location *loc5tl = [locations newEmptyLocation];
-    [loc5tl setToFrequencyInt:1];
-    [loc5tl setFromFrequencyInt:1];
+    [loc5tl setToFrequencyFloat:1.0];
+    [loc5tl setFromFrequencyFloat:1.0];
     [loc5tl setFormattedAddress:@"750 Hawthorne Street, San Francisco"];  // the same as loc2
     [loc5tl addRawAddressString:@"extra addr 1"];
     [loc5tl addRawAddressString:@"extra addr 2"];
     
-    STAssertEquals([locations consolidateWithMatchingLocations:loc5tl], loc2, @""); // found a match in loc2
+    STAssertEquals([locations consolidateWithMatchingLocations:loc5tl
+                    keepThisLocation:false], loc2, @""); // found a match in loc2
     STAssertTrue([loc5tl isDeleted], @"");
-    STAssertEquals([loc2 fromFrequencyInt], 8, @"");  // Added loc5tl frequency to loc2's frequency
-    STAssertEquals([loc2 toFrequencyInt], 1, @"");  // Added loc5tl frequency to loc2's frequency
+    STAssertEquals([loc2 fromFrequencyFloat], 8.0, @"");  // Added loc5tl frequency to loc2's frequency
+    STAssertEquals([loc2 toFrequencyFloat], 1.0, @"");  // Added loc5tl frequency to loc2's frequency
     STAssertEquals([locations locationWithRawAddress:@"extra addr 1"], loc2, @"");
     STAssertEquals([locations locationWithRawAddress:@"extra addr 2"], loc2, @"");
     
-    STAssertEquals([locations consolidateWithMatchingLocations:loc1], loc1, @""); // no matches, returns loc1
+    STAssertEquals([locations consolidateWithMatchingLocations:loc1
+                    keepThisLocation:true], loc1, @""); // no matches, returns loc1
     STAssertFalse([loc1 isDeleted], @"");
 
     // Tear down extra locations
@@ -250,13 +252,13 @@
 
     // Test scalar setters and accessors
     STAssertEquals([loc1 apiTypeEnum], GOOGLE_GEOCODER, @"");
-    STAssertEquals([loc1 fromFrequencyInt], 5, @"");
-    STAssertEquals([loc1 toFrequencyInt], 7, @"");
+    STAssertEquals([loc1 fromFrequencyFloat], 5.0, @"");
+    STAssertEquals([loc1 toFrequencyFloat], 7.0, @"");
     STAssertEquals([loc1 latFloat], 67.3, @"");
     STAssertEquals([loc1 lngFloat], -122.3, @"");
     
     // Test shortFormattedAddress
-    STAssertTrue([[loc1 shortFormattedAddress] isEqualToString:@"750 Hawthorne Street, San Francisco, CA "], @"");
+    STAssertTrue([[loc1 shortFormattedAddress] isEqualToString:@"750 Hawthorne Street, San Francisco"], @"");
     
     // Clean-up
     
@@ -288,5 +290,37 @@
     STAssertTrue([distanceStringInMilesFeet(3000.0) isEqualToString:@"1.9 miles"], @"");
     STAssertTrue([distanceStringInMilesFeet(100.0) isEqualToString:@"328 feet"], @"");
     STAssertTrue([distanceStringInMilesFeet(0.0) isEqualToString:@"less than 1 foot"], @"");
+}
+
+- (void)testKeyObjectStore
+{
+    // Simple store and retrieve before saving changes to permanent store
+    NSArray* testArray1 = [NSArray arrayWithObjects:@"Item1", @"Item2", @"Item3", nil];
+    [KeyObjectStore setUpWithManagedObjectContext:managedObjectContext];
+    KeyObjectStore* store = [KeyObjectStore keyObjectStore];
+    [store setObject:testArray1 forKey:@"testKey1"];
+    NSArray* result1 = [store objectForKey:@"testKey1"];
+    STAssertTrue([[result1 objectAtIndex:1] isEqualToString:@"Item2"], @"");
+    
+    // Now save context and save an additional Dictionary
+    saveContext(managedObjectContext);
+    NSDictionary* testDictionary2 = [NSDictionary dictionaryWithKeysAndObjects:
+                           @"Key1", @"Object1",
+                           @"Key2", @"Object2", nil];
+    [store setObject:testDictionary2 forKey:@"testKey2"];
+    saveContext(managedObjectContext);
+    NSDictionary* result2 = [store objectForKey:@"testKey2"];
+    STAssertTrue([[result2 objectForKey:@"Key2"] isEqualToString:@"Object2"], @"");
+    
+    // Now replace the first object with the second
+    [store setObject:testDictionary2 forKey:@"testKey1"];
+    saveContext(managedObjectContext);
+    NSDictionary* result3 = [store objectForKey:@"testKey1"];
+    STAssertTrue([[result3 objectForKey:@"Key1"] isEqualToString:@"Object1"], @"");
+    
+    // Clean-up
+    [store removeKeyObjectForKey:@"testKey1"];
+    STAssertNil([store objectForKey:@"testKey1"], @"");
+    [store removeKeyObjectForKey:@"testKey2"];
 }
 @end

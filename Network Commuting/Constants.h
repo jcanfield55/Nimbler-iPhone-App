@@ -134,8 +134,11 @@
 // LegMapView
 #define LEGMAP_DOT_IMAGE_FILE          @"img_mapDot"
 
-// PlanRequestCache and PlanRequestChunk
-#define MAX_GAP_BETWEEN_REQUEST_AND_FIRST_CACHED_ININERARY  (1.25*60*60)  // 1.25 hours (in seconds)
+// KeyObjectStore Keys (if strings are changed, stored data will be inaccessible)
+#define TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY      @"TransitCalendarLastGTFSLoadDateByAgency"
+#define TR_CALENDAR_SERVICE_BY_WEEKDAY_ARRAY           @"TransitCalendarServiceByWeekdayArray"
+#define TR_CALENDAR_DATES_DICTIONARY                   @"TransitCalendarDatesDictionary"
+
 
 // Request timer Count
 #define TWEET_COUNT_POLLING_INTERVAL   120.0

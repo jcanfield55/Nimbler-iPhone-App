@@ -11,6 +11,8 @@
 #import "Location.h"
 #import "AddressComponent.h"
 #import "UtilityFunctions.h"
+#import "KeyObjectStore.h"
+#import "KeyObjectPair.h"
 
 @interface Network_CommutingTests : SenTestCase
 {

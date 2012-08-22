@@ -10,108 +10,88 @@
 #import "UtilityFunctions.h"
 #import "Constants.h"
 
-@interface PlanRequestChunk()
-
-// Internal properties holding just the time (not the date) computed using timeOnlyFromDate() function
-@property (strong, nonatomic,readonly) NSDate* requestedTime;
-@property (strong, nonatomic,readonly) NSDate* firstItineraryTime;
-@property (strong, nonatomic,readonly) NSDate* lastItineraryTime;
-
-@end
 
 @implementation PlanRequestChunk
 
-@synthesize requestedTimeDate;
-@synthesize departOrArrive;
+@synthesize earliestRequestedDepartTimeDate;
+@synthesize latestRequestedArriveTimeDate;
 @synthesize itineraries;
-@synthesize requestedTime;
-@synthesize firstItineraryTime;
-@synthesize lastItineraryTime;
+@synthesize sortedItineraries;
 
-//
-// Accessors for derived values
-//
-- (NSDate *)requestedTime {
-    if (!requestedTime) {
-        requestedTime = timeOnlyFromDate([self requestedTimeDate]);
+- (NSArray *)sortedItineraries
+{
+    if (!sortedItineraries) {
+        [self sortItineraries];  // create the itinerary array
     }
-    return requestedTime;
+    return sortedItineraries;
 }
 
-- (NSDate *)firstItineraryTime {
-    if (!firstItineraryTime) {
-        firstItineraryTime = timeOnlyFromDate([[[self itineraries] objectAtIndex:0] startTime]);
-    }
-    return firstItineraryTime;
+// Create the sorted array of itineraries
+- (void)sortItineraries
+{
+    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:YES];
+    [self setSortedItineraries:[[self itineraries] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
 }
 
-- (NSDate *)lastItineraryTime {
-    if (!lastItineraryTime) {
-        lastItineraryTime = timeOnlyFromDate([[[self itineraries] lastObject] startTime]);
-    }
-    return lastItineraryTime;
-}
+
+// TODO Make sure that I do not combine itineraries in chunks across days
+
 
 //
-// Setters for base values which nil out the related derived value
+// Returns true if the referring PlanRequestChunk is relevant to the given requestDate and depOrArrive
+// Relevant is based being within the time range of the PlanRequestChunk
+// This does not check whether the schedule for requestDate matches the itineraries schedule day
+// Return false if the referring PlanRequestChunk is not relevant
 //
-- (void)setRequestedTimeDate:(NSDate *)newTimeDate {
-    requestedTime = nil;  // Clear out old value so it can be recomputed
-    requestedTimeDate = newTimeDate;
-}
-
-- (void)setItineraries:(NSArray *)newItineraries {
-    firstItineraryTime = nil; // Clear out old values so it can be recomputed
-    lastItineraryTime = nil;
-    itineraries = newItineraries;
-}
-
-//
-// Computes whether referring object has relevant itineraries for a new user request with requestDate and depOrArrive 
-
-- (BOOL)compareVsRequestDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive
+- (BOOL)isRelevantToRequestDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive
 {
     // Get the key times (independent of date)
     NSDate *requestTime = timeOnlyFromDate(requestDate);
+    NSDate *lastItineraryTime = timeOnlyFromDate([[[self sortedItineraries] lastObject] startTime]);
+    NSDate *firstItineraryTime = timeOnlyFromDate([[[self sortedItineraries] objectAtIndex:0] startTime]);
     
-    NSComparisonResult requestTimeVsSelfReqTime = [requestTime compare:[self requestedTime]];
-    
-    if (depOrArrive==DEPART && [self departOrArrive]==DEPART) {
-        NSComparisonResult requestTimeVsLastItinTime = [requestTime compare:[self lastItineraryTime]];
-        if (requestTimeVsSelfReqTime==NSOrderedDescending &&
-            requestTimeVsLastItinTime==NSOrderedAscending) {
-            // If requestTime is between selfRequestedTime and selfLastItinTime
-            return true;
-        } else if (requestTimeVsSelfReqTime==NSOrderedAscending &&
-                   [requestTime timeIntervalSinceDate:[self firstItineraryTime]] <
-                   MAX_GAP_BETWEEN_REQUEST_AND_FIRST_CACHED_ININERARY) {
-            // else if requestTime is before the first itinerary but within the allowed time gap
+    if (depOrArrive==DEPART) {
+        
+        // Compute RequestChunk earliest time to compare against
+        NSDate* earliestTime;
+        if (earliestRequestedDepartTimeDate) {
+            NSDate* earliestRequestedDepartTime = timeOnlyFromDate([self earliestRequestedDepartTimeDate]);
+            earliestTime = [earliestRequestedDepartTime earlierDate:firstItineraryTime];
+        } else {
+            earliestTime = firstItineraryTime;
+        }
+        
+        if ([requestTime compare:earliestTime]==NSOrderedDescending &&
+            [requestTime compare:lastItineraryTime]==NSOrderedAscending) {
+            // If requestTime is between earliest and last time in the chunk
             return true;
         } else {
             return false;
         }
     }
-    //TODO finish up this part of the implementation
-    else if (depOrArrive==DEPART && [self departOrArrive]==ARRIVE) {
-        NSComparisonResult requestTimeVsFirstItinTime = [requestTime compare:[self firstItineraryTime]];
-
-        if (requestTimeVsSelfReqTime==NSOrderedAscending &&
-            requestTimeVsFirstItinTime==NSOrderedDescending) {
-            // If requestTime is between selfFirstItinTime and selfRequestedTime
-            return true;
-        } else if (requestTimeVsSelfReqTime==NSOrderedAscending &&
-                   [requestTime timeIntervalSinceDate:[self firstItineraryTime]] <
-                   MAX_GAP_BETWEEN_REQUEST_AND_FIRST_CACHED_ININERARY) {
-            // else if requestTime is before the first itinerary but within the allowed time gap
+    else {  // depOrArrive = ARRIVE
+        
+        // Compute RequestChunk latest time to compare against
+        NSDate* latestTime;
+        if (latestRequestedArriveTimeDate) {
+            NSDate* latestRequestedArriveTime = timeOnlyFromDate([self earliestRequestedDepartTimeDate]);
+            latestTime = [latestRequestedArriveTime laterDate:lastItineraryTime];
+        } else {
+            latestTime = lastItineraryTime;
+        }
+        
+        if ([requestTime compare:firstItineraryTime]==NSOrderedDescending &&
+            [requestTime compare:latestTime]==NSOrderedAscending) {
+            // If requestTime is between the first and the latest time in the chunk
             return true;
         } else {
             return false;
         }
     }
-    // TODO finish up this part of the implementation
     
     return false;
 }
+
 
 
 @end

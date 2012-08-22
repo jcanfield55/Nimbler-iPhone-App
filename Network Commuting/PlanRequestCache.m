@@ -18,15 +18,14 @@
     self = [super init];
 
     if (self) {
-        requestChunkArray = [[NSMutableArray alloc] initWithCapacity:[sortedItineraryArray count]];
+       requestChunkArray = [[NSMutableArray alloc] initWithCapacity:[sortedItineraryArray count]];
         for (Itinerary* itin in sortedItineraryArray) {
             PlanRequestChunk* requestChunk = [[PlanRequestChunk alloc] init];
-            [requestChunk setRequestedTimeDate:[itin startTime]];  // Set request time to startTime of itinerary
-            [requestChunk setDepartOrArrive:DEPART];
+            [requestChunk setEarliestRequestedDepartTimeDate:[itin startTime]];  // Set request time to startTime of itinerary
             [requestChunk setItineraries:[NSArray arrayWithObject:itin]];
             [requestChunkArray addObject:requestChunk];
         }
-    }
+   }
     return self;
 }
 
@@ -37,15 +36,21 @@
     self = [super init];
     
     if (self) {
+
         requestChunkArray = [[NSMutableArray alloc] initWithCapacity:[sortedItinArray count]];
         PlanRequestChunk* requestChunk = [[PlanRequestChunk alloc] init];
-        [requestChunk setRequestedTimeDate:requestDate];  
-        [requestChunk setDepartOrArrive:depOrArrive];
+        if (depOrArrive == DEPART) {
+            [requestChunk setEarliestRequestedDepartTimeDate:requestDate];
+        } else { // ARRIVE
+            [requestChunk setLatestRequestedArriveTimeDate:requestDate];
+        }
         [requestChunk setItineraries:sortedItinArray];
+        [requestChunkArray addObject:requestChunk];
     }
     
     return self;
 }
+
 
 - (NSArray *)relevantRequestChunksForDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive
 {
@@ -63,4 +68,5 @@
     return nil;
     
 }
+
 @end

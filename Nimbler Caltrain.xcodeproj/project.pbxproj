@@ -19,6 +19,9 @@
 		522C0E6915588D830072ADD6 /* release_notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 522C0E6515588D830072ADD6 /* release_notes.txt */; };
 		5231E43914E5DE7E00739DC7 /* Locations.m in Sources */ = {isa = PBXBuildFile; fileRef = 5231E43814E5DE7E00739DC7 /* Locations.m */; };
 		5231E43C14E9E7A400739DC7 /* RawAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 5231E43B14E9E7A400739DC7 /* RawAddress.m */; };
+		523C0CE015E4421D00C35BE2 /* TransitCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = 523C0CDF15E4421D00C35BE2 /* TransitCalendar.m */; };
+		523C0CE315E45A9900C35BE2 /* KeyObjectPair.m in Sources */ = {isa = PBXBuildFile; fileRef = 523C0CE215E45A9900C35BE2 /* KeyObjectPair.m */; };
+		523C0CE615E45F4000C35BE2 /* KeyObjectStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 523C0CE515E45F3F00C35BE2 /* KeyObjectStore.m */; };
 		525442C214C3ECF2004B0E1F /* libRestKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442B814C3EA95004B0E1F /* libRestKit.a */; };
 		525442C414C3ED2C004B0E1F /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C314C3ED2C004B0E1F /* CFNetwork.framework */; };
 		525442C614C3ED4A004B0E1F /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C514C3ED4A004B0E1F /* MobileCoreServices.framework */; };
@@ -855,6 +858,12 @@
 		5231E43814E5DE7E00739DC7 /* Locations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = Locations.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		5231E43A14E9E7A300739DC7 /* RawAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RawAddress.h; sourceTree = "<group>"; };
 		5231E43B14E9E7A400739DC7 /* RawAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RawAddress.m; sourceTree = "<group>"; };
+		523C0CDE15E4421D00C35BE2 /* TransitCalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitCalendar.h; sourceTree = "<group>"; };
+		523C0CDF15E4421D00C35BE2 /* TransitCalendar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitCalendar.m; sourceTree = "<group>"; };
+		523C0CE115E45A9800C35BE2 /* KeyObjectPair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyObjectPair.h; sourceTree = "<group>"; };
+		523C0CE215E45A9900C35BE2 /* KeyObjectPair.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyObjectPair.m; sourceTree = "<group>"; };
+		523C0CE415E45F3F00C35BE2 /* KeyObjectStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyObjectStore.h; sourceTree = "<group>"; };
+		523C0CE515E45F3F00C35BE2 /* KeyObjectStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyObjectStore.m; sourceTree = "<group>"; };
 		5249743D15574578004A56E2 /* ToFromTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToFromTableViewController.h; sourceTree = "<group>"; };
 		525442AD14C3EA95004B0E1F /* RestKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RestKit.xcodeproj; path = RestKit/RestKit.xcodeproj; sourceTree = "<group>"; };
 		525442C314C3ED2C004B0E1F /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -2658,6 +2667,12 @@
 				52F0BF0B15E2FA9500BC084D /* PlanRequestCache.m */,
 				52F0BF0D15E2FBC600BC084D /* PlanRequestChunk.h */,
 				52F0BF0E15E2FBC600BC084D /* PlanRequestChunk.m */,
+				523C0CDE15E4421D00C35BE2 /* TransitCalendar.h */,
+				523C0CDF15E4421D00C35BE2 /* TransitCalendar.m */,
+				523C0CE415E45F3F00C35BE2 /* KeyObjectStore.h */,
+				523C0CE515E45F3F00C35BE2 /* KeyObjectStore.m */,
+				523C0CE115E45A9800C35BE2 /* KeyObjectPair.h */,
+				523C0CE215E45A9900C35BE2 /* KeyObjectPair.m */,
 				5210517114D60F3B0025DD39 /* PlanPlace.h */,
 				5210517214D60F3B0025DD39 /* PlanPlace.m */,
 				5210517414D610780025DD39 /* AgencyAndId.h */,
@@ -3123,6 +3138,9 @@
 				5265D4BA15E19E8D002C9406 /* PlanStore.m in Sources */,
 				52F0BF0C15E2FA9500BC084D /* PlanRequestCache.m in Sources */,
 				52F0BF0F15E2FBC600BC084D /* PlanRequestChunk.m in Sources */,
+				523C0CE015E4421D00C35BE2 /* TransitCalendar.m in Sources */,
+				523C0CE315E45A9900C35BE2 /* KeyObjectPair.m in Sources */,
+				523C0CE615E45F4000C35BE2 /* KeyObjectStore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

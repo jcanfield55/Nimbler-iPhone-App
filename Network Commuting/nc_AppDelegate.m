@@ -16,6 +16,7 @@
 #import "DateTimeViewController.h"
 #import "UserPreferance.h"
 #import "Reachability.h"
+#import "KeyObjectStore.h"
 #if TEST_FLIGHT_ENABLED
 #import "TestFlightSDK1/TestFlight.h"
 #endif
@@ -125,10 +126,11 @@ FeedBackForm *fbView;
         locations = [[Locations alloc] initWithManagedObjectContext:[self managedObjectContext] rkGeoMgr:rkGeoMgr];
         [toFromViewController setLocations:locations];
         
-        // Initialize the planStore
+        // Initialize the planStore and KeyObjectStore
         planStore = [[PlanStore alloc] initWithManagedObjectContext:[self managedObjectContext]
                                                           rkPlanMgr:rkPlanMgr];
         [toFromViewController setPlanStore:planStore];
+        [KeyObjectStore setUpWithManagedObjectContext:[self managedObjectContext]];
         
         // Pre-load stations location files
         NSDecimalNumber* version = [NSDecimalNumber decimalNumberWithString:PRELOAD_VERSION_NUMBER];
