@@ -11,7 +11,7 @@
 #import "PlanPlace.h"
 #import "Itinerary.h"
 #import "Location.h"
-#import "PlanRequestCache.h"
+#import "PlanRequestChunk.h"
 #import "enums.h"
 
 @interface Plan : NSManagedObject
@@ -26,11 +26,12 @@
 #define PLAN_ITINERARIES_KEY       @"itineraries"   
 @property(nonatomic,strong) Location *fromLocation;
 @property(nonatomic,strong) Location *toLocation;
-@property(nonatomic,strong,readonly) PlanRequestCache *planRequestCache;  // Use this property instead of planRequestCacheRaw
-@property(nonatomic,strong) PlanRequestCache *planRequestCacheRaw; // Use planRequestCache instead of this property
 @property(nonatomic,strong,readonly) NSDate* userRequestDate; // Latest requested date by user (could be for cached recall)
 @property(nonatomic,readonly) DepartOrArrive userRequestDepartOrArrive; // Latest DepartOrArrive (could be for cached call)
 @property(nonatomic,strong) NSArray *sortedItineraries;  // Array of ordered itineraries (not stored in Core Data) relevant to the userRequestDate and userRequestDepartOrArrive.  Could be subset if a cached call
+
+
+@property (strong, nonatomic) NSSet *requestChunks; // Sorted array of PlanRequestChunks
 
 
 // Methods
@@ -49,9 +50,22 @@
 - (void)removeItinerary:(Itinerary *)itin0;
 
 // Initialization method after a plan is freshly loaded from an OTP request
-- (void)initPlanRequestCacheWithRequestDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive;
+- (void)createRequestChunkWithAllItinerariesAndRequestDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive;
 
 
 - (NSString *)ncDescription;
 - (void)sortItineraries;  // Re-sorts the itineraries array
+
+//
+// Plan Request Cache management
+//
+// Initializer for an existing (legacy) Plan that does not have any planRequestCache but has a bunch of existing itineraries.  Creates a new PlanRequestChunk for every itinerary in sortedItineraryArray
+- (id)initWithRawItineraries:(NSArray *)sortedItineraryArray;
+
+// Initializer for a new plan fresh from a OTP request
+// Creates one PlanRequestChunk with all the itineraries as part of it
+- (id)initWithRequestDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive sortedItineraries:(NSArray *)sortedItinArray;
+
+- (NSArray *)relevantRequestChunksForDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive;
+
 @end

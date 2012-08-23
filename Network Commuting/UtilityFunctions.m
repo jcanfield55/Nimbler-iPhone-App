@@ -159,6 +159,21 @@ NSDate *timeOnlyFromDate(NSDate *date) {
 }
 
 //
+// Returns a NSDate object containing just the date part of the date parameter (not the time)
+// Uses [NSCalendar currentCalendar] and the month, day, and year components to compute
+//
+NSDate *dateOnlyFromDate(NSDate *date) {
+    // Set up what we need to look at date components
+    NSCalendar* calendar = [NSCalendar currentCalendar];
+    NSUInteger timeComponents = NSMonthCalendarUnit | NSYearCalendarUnit | NSDayCalendarUnit;
+    
+    // Get the key times (independent of date)
+    NSDate *returnTime = [calendar dateFromComponents:[calendar components:timeComponents
+                                                                  fromDate:date]];
+    return returnTime;
+}
+
+//
 // Retrieves the day of week from the date (Sunday = 1, Saturday = 7)
 //
 NSInteger dayOfWeekFromDate(NSDate *date) {

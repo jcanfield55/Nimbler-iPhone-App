@@ -47,6 +47,7 @@
         <attribute name="walkTime" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <relationship name="legs" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Leg" inverseName="itinerary" inverseEntity="Leg" syncable="YES"/>
         <relationship name="plan" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Plan" inverseName="itineraries" inverseEntity="Plan" syncable="YES"/>
+        <relationship name="planRequestChunk" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="PlanRequestChunk" inverseName="itineraries" inverseEntity="PlanRequestChunk" syncable="YES"/>
     </entity>
     <entity name="KeyObjectPair" syncable="YES">
         <attribute name="key" optional="YES" attributeType="String" syncable="YES"/>
@@ -107,10 +108,10 @@
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="lastUpdatedFromServer" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="planId" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="planRequestCacheRaw" optional="YES" attributeType="Transformable" syncable="YES"/>
         <relationship name="fromLocation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="plan" inverseEntity="Location" syncable="YES"/>
         <relationship name="fromPlanPlace" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="PlanPlace" inverseName="plan" inverseEntity="PlanPlace" syncable="YES"/>
         <relationship name="itineraries" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Itinerary" inverseName="plan" inverseEntity="Itinerary" syncable="YES"/>
+        <relationship name="requestChunks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PlanRequestChunk" inverseName="plan" inverseEntity="PlanRequestChunk" syncable="YES"/>
         <relationship name="toLocation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="plan" inverseEntity="Location" syncable="YES"/>
         <relationship name="toPlanPlace" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="PlanPlace" inverseName="plan" inverseEntity="PlanPlace" syncable="YES"/>
         <compoundIndexes>
@@ -138,6 +139,12 @@
                 <index value="name"/>
             </compoundIndex>
         </compoundIndexes>
+    </entity>
+    <entity name="PlanRequestChunk" syncable="YES">
+        <attribute name="earliestRequestedDepartTimeDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="latestRequestedArriveTimeDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <relationship name="itineraries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Itinerary" inverseName="planRequestChunk" inverseEntity="Itinerary" syncable="YES"/>
+        <relationship name="plan" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Plan" inverseName="requestChunks" inverseEntity="Plan" syncable="YES"/>
     </entity>
     <entity name="RawAddress" representedClassName="RawAddress" syncable="YES">
         <attribute name="rawAddressString" optional="YES" attributeType="String" syncable="YES"/>
@@ -170,17 +177,18 @@
     <fetchRequest name="PlansByToAndFromLocations" entity="Plan" predicateString="toLocation.formattedAddress == $TO_FORMATTED_ADDRESS AND fromLocation.formattedAddress == $FROM_FORMATTED_ADDRESS"/>
     <fetchRequest name="RawAddressByString" entity="RawAddress" predicateString="rawAddressString == $ADDRESS"/>
     <elements>
-        <element name="AddressComponent" positionX="0" positionY="0" width="128" height="105"/>
-        <element name="BayArea" positionX="0" positionY="0" width="128" height="195"/>
-        <element name="Error" positionX="0" positionY="0" width="128" height="120"/>
-        <element name="Itinerary" positionX="0" positionY="0" width="128" height="285"/>
-        <element name="Leg" positionX="0" positionY="0" width="128" height="345"/>
-        <element name="Location" positionX="0" positionY="0" width="128" height="300"/>
-        <element name="Plan" positionX="0" positionY="0" width="128" height="180"/>
-        <element name="PlanPlace" positionX="0" positionY="0" width="128" height="180"/>
-        <element name="RawAddress" positionX="0" positionY="0" width="128" height="75"/>
-        <element name="Step" positionX="0" positionY="0" width="128" height="195"/>
-        <element name="TPResponse" positionX="0" positionY="0" width="128" height="75"/>
-        <element name="KeyObjectPair" positionX="160" positionY="192" width="128" height="75"/>
+        <element name="AddressComponent" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="BayArea" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Error" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Itinerary" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="KeyObjectPair" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Leg" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Location" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Plan" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="PlanPlace" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="RawAddress" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Step" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="TPResponse" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="PlanRequestChunk" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

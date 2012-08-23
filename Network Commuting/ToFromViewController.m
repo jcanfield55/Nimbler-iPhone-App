@@ -976,7 +976,7 @@ NSUserDefaults *prefs;
                     // Initialize the rest of the Plan and save context
                     [plan setToLocation:toLocation];
                     [plan setFromLocation:fromLocation];
-                    [plan initPlanRequestCacheWithRequestDate:tripDate departOrArrive:departOrArrive];
+                    [plan createRequestChunkWithAllItinerariesAndRequestDate:tripDate departOrArrive:departOrArrive];
                     saveContext(managedObjectContext);
 
                     // Pass control to the RouteOptionsViewController to display itinerary choices

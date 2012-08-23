@@ -58,6 +58,8 @@
 		52917827158477F6001CC74C /* caltrain-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 52917826158477F6001CC74C /* caltrain-station.json */; };
 		5297F2DF1560CA200032D015 /* DateTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297F2DE1560CA200032D015 /* DateTimeViewController.m */; };
 		5297F2E11560CAC20032D015 /* ToFromTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297F2E01560CAC20032D015 /* ToFromTableViewController.m */; };
+		529D7D2C15E5EC43000A7D2F /* PlanRequestChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 529D7D2B15E5EC43000A7D2F /* PlanRequestChunk.m */; };
+		529D7D2D15E5EC43000A7D2F /* PlanRequestChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 529D7D2B15E5EC43000A7D2F /* PlanRequestChunk.m */; };
 		52A46660158D4F88003EB02B /* RouteOptionsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52A4665F158D4F88003EB02B /* RouteOptionsViewController.xib */; };
 		52A46662158D6AEF003EB02B /* RouteDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52A46661158D6AEF003EB02B /* RouteDetailsViewController.xib */; };
 		52B1B22614F9ABE4001AC5D1 /* RouteDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B1B22514F9ABE4001AC5D1 /* RouteDetailsViewController.m */; };
@@ -90,8 +92,6 @@
 		52E4C0AB15CC7E7D00B55A65 /* img_itineraryNavigation.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C0AA15CC7E7C00B55A65 /* img_itineraryNavigation.png */; };
 		52E4C0AD15CC7E8800B55A65 /* img_itineraryNavigation@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C0AC15CC7E8800B55A65 /* img_itineraryNavigation@2x.png */; };
 		52E66F031520374B001BF026 /* DateTimeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52E66F021520374B001BF026 /* DateTimeViewController.xib */; };
-		52F0BF0C15E2FA9500BC084D /* PlanRequestCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F0BF0B15E2FA9500BC084D /* PlanRequestCache.m */; };
-		52F0BF0F15E2FBC600BC084D /* PlanRequestChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F0BF0E15E2FBC600BC084D /* PlanRequestChunk.m */; };
 		52F67EE114C752C4007578D5 /* LatLng.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F67EE014C752C4007578D5 /* LatLng.m */; };
 		52F67EE814C75C36007578D5 /* AddressComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F67EE714C75C36007578D5 /* AddressComponent.m */; };
 		52F67EEB14C76504007578D5 /* GeoRectangle.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F67EEA14C76504007578D5 /* GeoRectangle.m */; };
@@ -908,6 +908,8 @@
 		5297F2DD1560CA0F0032D015 /* DateTimeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateTimeViewController.h; sourceTree = "<group>"; };
 		5297F2DE1560CA200032D015 /* DateTimeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateTimeViewController.m; sourceTree = "<group>"; };
 		5297F2E01560CAC20032D015 /* ToFromTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = ToFromTableViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		529D7D2A15E5EC2E000A7D2F /* PlanRequestChunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanRequestChunk.h; sourceTree = "<group>"; };
+		529D7D2B15E5EC43000A7D2F /* PlanRequestChunk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlanRequestChunk.m; sourceTree = "<group>"; };
 		52A4665F158D4F88003EB02B /* RouteOptionsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RouteOptionsViewController.xib; sourceTree = "<group>"; };
 		52A46661158D6AEF003EB02B /* RouteDetailsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RouteDetailsViewController.xib; sourceTree = "<group>"; };
 		52B1B22414F9ABE4001AC5D1 /* RouteDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteDetailsViewController.h; sourceTree = "<group>"; };
@@ -953,10 +955,6 @@
 		52E4C0AC15CC7E8800B55A65 /* img_itineraryNavigation@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_itineraryNavigation@2x.png"; sourceTree = "<group>"; };
 		52E66F021520374B001BF026 /* DateTimeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DateTimeViewController.xib; sourceTree = "<group>"; };
 		52E6CBEF15C0A38E008E83E6 /* Network_Commuting 1.3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.3.xcdatamodel"; sourceTree = "<group>"; };
-		52F0BF0A15E2FA9500BC084D /* PlanRequestCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanRequestCache.h; sourceTree = "<group>"; };
-		52F0BF0B15E2FA9500BC084D /* PlanRequestCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlanRequestCache.m; sourceTree = "<group>"; };
-		52F0BF0D15E2FBC600BC084D /* PlanRequestChunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanRequestChunk.h; sourceTree = "<group>"; };
-		52F0BF0E15E2FBC600BC084D /* PlanRequestChunk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlanRequestChunk.m; sourceTree = "<group>"; };
 		52F67EDF14C752C4007578D5 /* LatLng.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LatLng.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		52F67EE014C752C4007578D5 /* LatLng.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LatLng.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		52F67EE614C75C36007578D5 /* AddressComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AddressComponent.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -2663,10 +2661,8 @@
 				5210516F14C9C0DF0025DD39 /* Plan.m */,
 				5265D4B815E19E8D002C9406 /* PlanStore.h */,
 				5265D4B915E19E8D002C9406 /* PlanStore.m */,
-				52F0BF0A15E2FA9500BC084D /* PlanRequestCache.h */,
-				52F0BF0B15E2FA9500BC084D /* PlanRequestCache.m */,
-				52F0BF0D15E2FBC600BC084D /* PlanRequestChunk.h */,
-				52F0BF0E15E2FBC600BC084D /* PlanRequestChunk.m */,
+				529D7D2A15E5EC2E000A7D2F /* PlanRequestChunk.h */,
+				529D7D2B15E5EC43000A7D2F /* PlanRequestChunk.m */,
 				523C0CDE15E4421D00C35BE2 /* TransitCalendar.h */,
 				523C0CDF15E4421D00C35BE2 /* TransitCalendar.m */,
 				523C0CE415E45F3F00C35BE2 /* KeyObjectStore.h */,
@@ -3136,11 +3132,10 @@
 				CCFFF4B015D3D2AE004E062F /* RXCustomTabBar.m in Sources */,
 				CCA4C7D915D8F913009BE7A1 /* Reachability.m in Sources */,
 				5265D4BA15E19E8D002C9406 /* PlanStore.m in Sources */,
-				52F0BF0C15E2FA9500BC084D /* PlanRequestCache.m in Sources */,
-				52F0BF0F15E2FBC600BC084D /* PlanRequestChunk.m in Sources */,
 				523C0CE015E4421D00C35BE2 /* TransitCalendar.m in Sources */,
 				523C0CE315E45A9900C35BE2 /* KeyObjectPair.m in Sources */,
 				523C0CE615E45F4000C35BE2 /* KeyObjectStore.m in Sources */,
+				529D7D2C15E5EC43000A7D2F /* PlanRequestChunk.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3149,6 +3144,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				52CF43CB14BDF2F9000565D6 /* Network_CommutingTests.m in Sources */,
+				529D7D2D15E5EC43000A7D2F /* PlanRequestChunk.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

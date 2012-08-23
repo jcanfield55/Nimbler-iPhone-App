@@ -30,6 +30,9 @@
     [managedObjectContext setPersistentStoreCoordinator:psc];
     [managedObjectContext setUndoManager:nil];
     
+    // Set up KeyObjectStore
+    [KeyObjectStore setUpWithManagedObjectContext:managedObjectContext];
+    
     // Set up Locations wrapper object pointing at the test Managed Object Context
     locations = [[Locations alloc] initWithManagedObjectContext:managedObjectContext rkGeoMgr:nil];
     
@@ -290,13 +293,41 @@
     STAssertTrue([distanceStringInMilesFeet(3000.0) isEqualToString:@"1.9 miles"], @"");
     STAssertTrue([distanceStringInMilesFeet(100.0) isEqualToString:@"328 feet"], @"");
     STAssertTrue([distanceStringInMilesFeet(0.0) isEqualToString:@"less than 1 foot"], @"");
+    
+    // Calendar functions
+    //
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle:NSDateFormatterLongStyle];
+    [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+    NSDate* dayTime1 = [dateFormatter dateFromString:@"August 22, 2012 5:00 PM"]; // Wednesday
+    NSDate* dayTime2 = [dateFormatter dateFromString:@"August 5, 2012 7:00 PM"]; // Sunday
+    NSDate* dayTime3 = [dateFormatter dateFromString:@"September 1, 2012 6:00 AM"]; // Saturday
+    NSDate* dayTime4 = [dateFormatter dateFromString:@"September 1, 2012 11:59 PM"];
+    
+    // dayOfWeekFromDate
+    STAssertEquals(dayOfWeekFromDate(dayTime1), 4, @"");
+    STAssertEquals(dayOfWeekFromDate(dayTime2), 1, @"");
+    STAssertEquals(dayOfWeekFromDate(dayTime3), 7, @"");
+    
+    // timeOnlyFromDate
+    NSLog(@"Time only of dayTime3 = %@", timeOnlyFromDate(dayTime3));
+    STAssertEquals([dayTime1 laterDate:dayTime2], dayTime1, @""); // Full date compare
+    STAssertTrue([[timeOnlyFromDate(dayTime1) laterDate:timeOnlyFromDate(dayTime2)] isEqualToDate:
+                  timeOnlyFromDate(dayTime2)],@""); // Hours compare
+    STAssertTrue([[timeOnlyFromDate(dayTime1) laterDate:timeOnlyFromDate(dayTime3)] isEqualToDate:
+                  timeOnlyFromDate(dayTime1)],@""); // Hours compare
+    
+    // dateOnlyFromDate
+    STAssertTrue([dateOnlyFromDate(dayTime3) isEqualToDate:dateOnlyFromDate(dayTime4)], @"");
+    STAssertFalse([dateOnlyFromDate(dayTime2) isEqualToDate:dateOnlyFromDate(dayTime4)], @"");
+
+    
 }
 
 - (void)testKeyObjectStore
 {
     // Simple store and retrieve before saving changes to permanent store
     NSArray* testArray1 = [NSArray arrayWithObjects:@"Item1", @"Item2", @"Item3", nil];
-    [KeyObjectStore setUpWithManagedObjectContext:managedObjectContext];
     KeyObjectStore* store = [KeyObjectStore keyObjectStore];
     [store setObject:testArray1 forKey:@"testKey1"];
     NSArray* result1 = [store objectForKey:@"testKey1"];
@@ -322,5 +353,41 @@
     [store removeKeyObjectForKey:@"testKey1"];
     STAssertNil([store objectForKey:@"testKey1"], @"");
     [store removeKeyObjectForKey:@"testKey2"];
+}
+
+- (void)testTransitCalendar
+{
+    // Set-up object
+    TransitCalendar* transitCalendar = [[TransitCalendar alloc] init];
+    
+    // Set-up dates
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle:NSDateFormatterLongStyle];
+    [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+    NSDate* dayTime1 = [dateFormatter dateFromString:@"August 22, 2012 5:00 PM"]; // Wednesday
+    NSDate* dayTime2 = [dateFormatter dateFromString:@"August 5, 2012 7:00 PM"]; // Sunday
+    NSDate* dayTime3 = [dateFormatter dateFromString:@"September 3, 2012 6:00 AM"]; // Monday Labor Day
+    NSDate* dayTime4 = [dateFormatter dateFromString:@"June 8, 2012 11:59 PM"]; // Friday before last load
+    NSDate* dayTime5 = [dateFormatter dateFromString:@"August 20, 2012 12:01 AM"]; // Monday
+    NSDate* dayTime6 = [dateFormatter dateFromString:@"August 18, 2012 2:00 AM"]; // Saturday
+    NSDate* dayTime7 = [dateFormatter dateFromString:@"August 17, 2012 8:00 AM"]; // Friday
+
+
+    // isCurrentVsGtfsFileFor:(NSDate *)date agencyId:(NSString *)agencyId
+    STAssertTrue([transitCalendar isCurrentVsGtfsFileFor:dayTime1 agencyId:@"caltrain-ca-us"], @"");
+    STAssertFalse([transitCalendar isCurrentVsGtfsFileFor:dayTime4 agencyId:@"caltrain-ca-us"], @"");
+    STAssertFalse([transitCalendar isCurrentVsGtfsFileFor:dayTime4 agencyId:@"No such agency - Blah"], @"");
+
+
+    // isEquivalentServiceDayFor
+    STAssertTrue([transitCalendar isEquivalentServiceDayFor:dayTime1 And:dayTime5 agencyId:@"BART"], @"");
+    STAssertFalse([transitCalendar isEquivalentServiceDayFor:dayTime1 And:dayTime5 agencyId:@"No such agency - Blah"], @"");
+    STAssertFalse([transitCalendar isEquivalentServiceDayFor:dayTime1 And:dayTime3 agencyId:@"BART"], @"");
+    STAssertFalse([transitCalendar isEquivalentServiceDayFor:dayTime1 And:dayTime2 agencyId:@"BART"], @"");
+    STAssertFalse([transitCalendar isEquivalentServiceDayFor:dayTime2 And:dayTime5 agencyId:@"BART"], @"");
+    STAssertTrue([transitCalendar isEquivalentServiceDayFor:dayTime3 And:dayTime2 agencyId:@"BART"], @"");
+    STAssertFalse([transitCalendar isEquivalentServiceDayFor:dayTime5 And:dayTime6 agencyId:@"BART"], @"");
+    STAssertTrue([transitCalendar isEquivalentServiceDayFor:dayTime1 And:dayTime7 agencyId:@"BART"], @"");
+    STAssertFalse([transitCalendar isEquivalentServiceDayFor:dayTime2 And:dayTime6 agencyId:@"BART"], @"");
 }
 @end

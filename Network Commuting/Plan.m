@@ -8,6 +8,8 @@
 
 #import "Plan.h"
 #import "PlanRequestChunk.h"
+#import "UtilityFunctions.h"
+#import <CoreData/CoreData.h>
 
 @implementation Plan
 
@@ -19,8 +21,7 @@
 @dynamic fromLocation;
 @dynamic toLocation;
 @dynamic itineraries;
-@dynamic planRequestCacheRaw;
-@synthesize planRequestCache;
+@dynamic requestChunks;
 @synthesize userRequestDate;
 @synthesize userRequestDepartOrArrive;
 @synthesize sortedItineraries;
@@ -122,28 +123,20 @@
     [self sortItineraries];  // Resort itineraries
 }
 
-// Override accessor
-- (PlanRequestCache *)planRequestCache
-{
-    if ([self planRequestCacheRaw]) {
-        return [self planRequestCacheRaw];
-    }
-    else {
-        // if there is no stored planRequestCache, make one
-        // this is primarily for use when planCaching is first rolled out
-        planRequestCache = [[PlanRequestCache alloc] initWithRawItineraries:[self sortedItineraries]];
-        [self setPlanRequestCacheRaw:planRequestCache];
-        return planRequestCache;
-    }
-}
 
 // Initialization method after a plan is freshly loaded from an OTP request
-- (void)initPlanRequestCacheWithRequestDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive
+- (void)createRequestChunkWithAllItinerariesAndRequestDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive
 {
-    planRequestCache = [[PlanRequestCache alloc] initWithRequestDate:requestDate
-                                                      departOrArrive:depOrArrive
-                                                   sortedItineraries:[self sortedItineraries]];
-    [self setPlanRequestCacheRaw:planRequestCache];
+    PlanRequestChunk* requestChunk = [NSEntityDescription insertNewObjectForEntityForName:@"PlanRequestChunk"
+                                                            inManagedObjectContext:[self managedObjectContext]];
+    if (depOrArrive == DEPART) {
+        [requestChunk setEarliestRequestedDepartTimeDate:requestDate];
+    } else { // ARRIVE
+        [requestChunk setLatestRequestedArriveTimeDate:requestDate];
+    }
+    for (Itinerary* itin in [self itineraries]) { // Add all the itineraries to this request chunk
+        [itin setPlanRequestChunk:requestChunk];
+    }
 }
 
 // Updates the plan's sorted itineraries to address the new userRequestedDate and departOrArrive
@@ -154,6 +147,62 @@
 {
     return FALSE;
 }
+
+/*  TODO  Rewrite and combine the next two methods to reflect PlanRequestChunk being part of CoreData
+
+// Initializer for an existing (legacy) Plan that does not have any planRequestCache but has a bunch of existing itineraries.  Creates a new PlanRequestChunk for every itinerary in sortedItineraryArray
+- (id)initWithRawItineraries:(NSArray *)sortedItineraryArray
+{
+    self = [super init];
+    
+    if (self) {
+        requestChunkArray = [[NSMutableArray alloc] initWithCapacity:[sortedItineraryArray count]];
+        for (Itinerary* itin in sortedItineraryArray) {
+            PlanRequestChunk* requestChunk = [[PlanRequestChunk alloc] init];
+            [requestChunk setEarliestRequestedDepartTimeDate:[itin startTime]];  // Set request time to startTime of itinerary
+            [requestChunk setItineraries:[NSArray arrayWithObject:itin]];
+            [requestChunkArray addObject:requestChunk];
+        }
+    }
+    return self;
+}
+
+// Initializer for a new plan fresh from a OTP request
+// Creates one PlanRequestChunk with all the itineraries as part of it
+- (id)initWithRequestDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive sortedItineraries:(NSArray *)sortedItinArray
+{
+    self = [super init];
+    
+    if (self) {
+        
+        requestChunkArray = [[NSMutableArray alloc] initWithCapacity:[sortedItinArray count]];
+        PlanRequestChunk* requestChunk = [[PlanRequestChunk alloc] init];
+        if (depOrArrive == DEPART) {
+            [requestChunk setEarliestRequestedDepartTimeDate:requestDate];
+        } else { // ARRIVE
+            [requestChunk setLatestRequestedArriveTimeDate:requestDate];
+        }
+        [requestChunk setItineraries:sortedItinArray];
+        [requestChunkArray addObject:requestChunk];
+    }
+    
+    return self;
+}
+ */
+
+
+- (PlanRequestChunk *)relevantRequestChunksForDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive
+{
+    for (PlanRequestChunk* requestChunk in [self requestChunks]) {
+        if ([requestChunk isRelevantToRequestDate:requestDate departOrArrive:depOrArrive]) {
+            return requestChunk;
+        }
+    }
+
+    return nil;
+}
+
+
 
 
 // Detects whether date returned by REST API is >1,000 years in the future.  If so, the value is likely being returned in milliseconds from 1970, rather than seconds from 1970, in which we correct the date by dividing by the timeSince1970 value by 1,000

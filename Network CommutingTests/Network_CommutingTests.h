@@ -13,6 +13,7 @@
 #import "UtilityFunctions.h"
 #import "KeyObjectStore.h"
 #import "KeyObjectPair.h"
+#import "TransitCalendar.h"
 
 @interface Network_CommutingTests : SenTestCase
 {

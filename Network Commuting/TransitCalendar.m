@@ -16,9 +16,7 @@
 @interface TransitCalendar()
 
 // Stub functions.  Should be replaced by calls to the server
-- (NSDictionary *)getLastGTFSLoadDateByAgencyStub;
-- (NSDictionary *)getCalendarDatesDictionaryStub;
-- (NSArray *)getServiceByWeekdayArrayStub;
+- (void)getAgencyCalendarDataStub;
 
 @end
 
@@ -26,8 +24,8 @@
 @implementation TransitCalendar
 
 @synthesize lastGTFSLoadDateByAgency;
-@synthesize calendarDatesDictionary;
-@synthesize serviceByWeekdayArray;
+@synthesize calendarByDateByAgency;
+@synthesize serviceByWeekdayByAgency;
 
 // Accessor override to populate this dictionary if not already there
 - (NSDictionary *)lastGTFSLoadDateByAgency
@@ -38,7 +36,7 @@
         lastGTFSLoadDateByAgency = [keyObjectStore objectForKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
         if (!lastGTFSLoadDateByAgency) {
             // use stub function to get values -- change this once have server call
-            lastGTFSLoadDateByAgency = [self getLastGTFSLoadDateByAgencyStub];
+            [self getAgencyCalendarDataStub];
             [keyObjectStore setObject:lastGTFSLoadDateByAgency forKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
         }
     }
@@ -46,34 +44,34 @@
 }
 
 
-- (NSDictionary *)calendarDatesDictionary
+- (NSDictionary *)calendarByDateByAgency
 {
-    if (!calendarDatesDictionary) {
+    if (!calendarByDateByAgency) {
         // See if it is the KeyObjectStore
         KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
-        calendarDatesDictionary = [keyObjectStore objectForKey:TR_CALENDAR_DATES_DICTIONARY];
-        if (!calendarDatesDictionary) {
+        calendarByDateByAgency = [keyObjectStore objectForKey:TR_CALENDAR_BY_DATE_BY_AGENCY ];
+        if (!calendarByDateByAgency) {
             // use stub function to get values -- change this once have server call
-            calendarDatesDictionary = [self getCalendarDatesDictionaryStub];
-            [keyObjectStore setObject:calendarDatesDictionary forKey:TR_CALENDAR_DATES_DICTIONARY];
+            [self getAgencyCalendarDataStub];
+            [keyObjectStore setObject:calendarByDateByAgency forKey:TR_CALENDAR_BY_DATE_BY_AGENCY];
         }
     }
-    return calendarDatesDictionary;
+    return calendarByDateByAgency;
 }
 
-- (NSArray *)serviceByWeekdayArray
+- (NSDictionary *)serviceByWeekdayByAgency
 {
-    if (!serviceByWeekdayArray) {
+    if (!serviceByWeekdayByAgency) {
         // See if it is the KeyObjectStore
         KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
-        serviceByWeekdayArray = [keyObjectStore objectForKey:TR_CALENDAR_SERVICE_BY_WEEKDAY_ARRAY];
-        if (!serviceByWeekdayArray) {
+        serviceByWeekdayByAgency = [keyObjectStore objectForKey:TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY];
+        if (!serviceByWeekdayByAgency) {
             // use stub function to get values -- change this once have server call
-            serviceByWeekdayArray = [self getServiceByWeekdayArrayStub];
-            [keyObjectStore setObject:serviceByWeekdayArray forKey:TR_CALENDAR_SERVICE_BY_WEEKDAY_ARRAY];
+            [self getAgencyCalendarDataStub];
+            [keyObjectStore setObject:serviceByWeekdayByAgency forKey:TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY ];
         }
     }
-    return serviceByWeekdayArray;
+    return serviceByWeekdayByAgency;
 }
 
 
@@ -82,8 +80,8 @@
 //
 - (BOOL)isCurrentVsGtfsFileFor:(NSDate *)date agencyId:(NSString *)agencyId
 {
-    NSDate* gtfsLoadDate = [lastGTFSLoadDateByAgency objectForKey:agencyId];
-    if ([date compare:gtfsLoadDate] == NSOrderedDescending) {
+    NSDate* gtfsLoadDate = [[self lastGTFSLoadDateByAgency] objectForKey:agencyId];
+    if (gtfsLoadDate && [date compare:gtfsLoadDate] == NSOrderedDescending) {
         // If dates come after the gtfsLoadDate, then return true
         return true;
     } else {
@@ -102,32 +100,71 @@
 - (BOOL)isEquivalentServiceDayFor:(NSDate *)date1 And:(NSDate *)date2 agencyId:(NSString *)agencyId
 {
 
-    NSInteger dayOfWeek1 = dayOfWeekFromDate(date1);
-    NSInteger dayOfWeek2 = dayOfWeekFromDate(date2);
+    NSInteger dayOfWeek1 = dayOfWeekFromDate(date1)-1;
+    NSInteger dayOfWeek2 = dayOfWeekFromDate(date2)-1;
     
-    NSString* date1String; // TODO get this string
-    NSString* date2String; // TODO get this string
+    NSDate* dateOnly1 = dateOnlyFromDate(date1);
+    NSDate* dateOnly2 = dateOnlyFromDate(date2); 
         
     // Compare the weekday codes
-    NSString* date1Services = [serviceByWeekdayArray objectAtIndex:dayOfWeek1];
-    NSString* date2Services = [serviceByWeekdayArray objectAtIndex:dayOfWeek2];
+    NSString* date1Services = [[[self serviceByWeekdayByAgency] objectForKey:agencyId] objectAtIndex:dayOfWeek1];
+    NSString* date2Services = [[[self serviceByWeekdayByAgency] objectForKey:agencyId] objectAtIndex:dayOfWeek2];
     
     // Look for exceptions in the calendarDates Dictionary and refine as needed
-    NSString* date1ServiceExemption = [calendarDatesDictionary objectForKey:date1String];
+    NSString* date1ServiceExemption = [[[self calendarByDateByAgency] objectForKey:agencyId] objectForKey:dateOnly1];
     if (date1ServiceExemption) {
         date1Services = date1ServiceExemption;
     }
-    NSString* date2ServiceExemption = [calendarDatesDictionary objectForKey:date2String];
+    NSString* date2ServiceExemption = [[[self calendarByDateByAgency] objectForKey:agencyId] objectForKey:dateOnly2];
     if (date2ServiceExemption) {
         date2Services = date2ServiceExemption;
     }
     
-    if ([date1Services isEqualToString:date2Services]) {
+    if (date1Services && date2Services && [date1Services isEqualToString:date2Services]) {
         return true; // if the services match, return true
     } else {
         return false;
     }
 }
+
+//
+// Stub for filling in the trip information
+// TODO -- replace this stubs with logic to load periodically from server
+//
+
+- (void)getAgencyCalendarDataStub
+{
+    NSArray* agencyIDs = [NSArray arrayWithObjects:
+                          @"VTA", @"SFMTA", @"BART", @"AirBART", @"AC Transit",
+                          @"caltrain-ca-us", nil];
+    NSMutableDictionary* lastGTFSLoadDateMutable = [[NSMutableDictionary alloc] initWithCapacity:[agencyIDs count]];
+    NSMutableDictionary* serviceByWeekdayMutable = [[NSMutableDictionary alloc] initWithCapacity:[agencyIDs count]];
+    NSMutableDictionary* calendarByDateMutable = [[NSMutableDictionary alloc] initWithCapacity:[agencyIDs count]];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle:NSDateFormatterLongStyle];
+    
+    NSDate* loadDate = [dateFormatter dateFromString:@"July 11, 2012"];  // Last Caltrain load time
+    NSDate* laborDay = [dateFormatter dateFromString:@"September 3, 2012"];
+    
+    for (NSString* agencyID in agencyIDs) {
+        [lastGTFSLoadDateMutable setObject:loadDate forKey:agencyID];
+        
+        // Indicate different services for weekdays, Saturdays and Sundays
+        NSArray* serviceByWeekday = [NSArray arrayWithObjects:@"Sunday", @"Weekday",
+                                     @"Weekday", @"Weekday", @"Weekday", @"Weekday", @"Saturday", nil];
+        [serviceByWeekdayMutable setObject:serviceByWeekday forKey:agencyID];
+        
+        NSDictionary* calendarByDate = [NSDictionary dictionaryWithObjectsAndKeys:
+                                        @"Sunday", laborDay, nil];  // Give Sunday schedule on Labor Day
+        [calendarByDateMutable setObject:calendarByDate forKey:agencyID];
+    }
+    
+    lastGTFSLoadDateByAgency = lastGTFSLoadDateMutable;
+    serviceByWeekdayByAgency = serviceByWeekdayMutable;
+    calendarByDateByAgency = calendarByDateMutable;
+}
+
 
 
 @end

@@ -13,9 +13,24 @@
 
 @interface TransitCalendar : NSObject
 
+// lastGTFSLoadDateByAgency -- dictionary
+// Dictionary where key is agencyID string and object is NSDate* of last time that agency was updated
 @property(strong, nonatomic) NSDictionary* lastGTFSLoadDateByAgency;
-@property(strong, nonatomic) NSArray* serviceByWeekdayArray;
-@property(strong, nonatomic) NSDictionary* calendarDatesDictionary;
+
+// serviceByWeekendArray -- a Dictionary of arrays
+// Dictionary key is agencyID string and object is an NSArray
+// Each array is 7 long and contains NSString describing the services available for that day
+@property(strong, nonatomic) NSDictionary* serviceByWeekdayByAgency;
+
+// calendarByDateByAgency -- a Dictionary of dictionaries
+// First dictionary key is agencyID string, object is a dictionary
+// The embedded dictionary key is an NSDate containing just the mm/dd/yy (not time) of a date
+//   The returned object is a string describing the services available for that day
+@property(strong, nonatomic) NSDictionary* calendarByDateByAgency;
+
+//
+// Methods
+//
 
 //
 // Returns true if the provided date comes after the last GTFS update for given agencyId

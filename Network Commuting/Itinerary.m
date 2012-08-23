@@ -41,6 +41,7 @@
 @dynamic legs;
 @dynamic plan;
 @dynamic itinId;
+@dynamic planRequestChunk;
 @synthesize sortedLegs;
 @synthesize itinArrivalFlag;
 

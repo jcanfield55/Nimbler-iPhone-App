@@ -14,7 +14,7 @@
 #import "Itinerary.h"
 #import "enums.h"
 
-@interface PlanRequestChunk : NSObject
+@interface PlanRequestChunk : NSManagedObject
 
 // Earliest requested departure time/date used in requesting the itineraries in this RequestChunk.
 // nil if only arrive-by requests have been used so far
@@ -25,7 +25,7 @@
 @property (strong, nonatomic) NSDate* latestRequestedArriveTimeDate;
 
 // Set of itineraries that are part of this PlanRequestChunk
-@property (strong, nonatomic) NSArray* itineraries;
+@property (strong, nonatomic) NSSet* itineraries;
 
 // Sorted array of itineraries (generated, not stored in Core Data)
 @property (strong, nonatomic) NSArray* sortedItineraries;

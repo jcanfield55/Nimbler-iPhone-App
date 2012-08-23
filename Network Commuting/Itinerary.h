@@ -12,7 +12,7 @@
 #import "PlanPlace.h"
 #import "enums.h"
 
-@class Leg, Plan;
+@class Leg, Plan, PlanRequestChunk;
 
 @interface Itinerary : NSManagedObject
 
@@ -40,6 +40,7 @@ typedef enum {
 @property (nonatomic, retain) NSNumber * walkDistance;
 @property (nonatomic, retain) NSNumber * walkTime;
 @property (nonatomic, retain) NSString * itinId;
+@property (nonatomic, retain) PlanRequestChunk* planRequestChunk; // the requestChunk this itinerary is part of 
 
 @property (nonatomic, retain) NSString *itinArrivalFlag;
 

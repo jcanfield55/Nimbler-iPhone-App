@@ -136,8 +136,8 @@
 
 // KeyObjectStore Keys (if strings are changed, stored data will be inaccessible)
 #define TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY      @"TransitCalendarLastGTFSLoadDateByAgency"
-#define TR_CALENDAR_SERVICE_BY_WEEKDAY_ARRAY           @"TransitCalendarServiceByWeekdayArray"
-#define TR_CALENDAR_DATES_DICTIONARY                   @"TransitCalendarDatesDictionary"
+#define TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY        @"TransitCalendarServiceByWeekdayByAgency"
+#define TR_CALENDAR_BY_DATE_BY_AGENCY                   @"TransitCalendarByDateByAgency"
 
 
 // Request timer Count

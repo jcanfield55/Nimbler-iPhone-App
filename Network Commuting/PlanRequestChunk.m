@@ -13,9 +13,9 @@
 
 @implementation PlanRequestChunk
 
-@synthesize earliestRequestedDepartTimeDate;
-@synthesize latestRequestedArriveTimeDate;
-@synthesize itineraries;
+@dynamic earliestRequestedDepartTimeDate;
+@dynamic latestRequestedArriveTimeDate;
+@dynamic itineraries;
 @synthesize sortedItineraries;
 
 - (NSArray *)sortedItineraries
@@ -54,7 +54,7 @@
         
         // Compute RequestChunk earliest time to compare against
         NSDate* earliestTime;
-        if (earliestRequestedDepartTimeDate) {
+        if ([self earliestRequestedDepartTimeDate]) {
             NSDate* earliestRequestedDepartTime = timeOnlyFromDate([self earliestRequestedDepartTimeDate]);
             earliestTime = [earliestRequestedDepartTime earlierDate:firstItineraryTime];
         } else {
@@ -73,7 +73,7 @@
         
         // Compute RequestChunk latest time to compare against
         NSDate* latestTime;
-        if (latestRequestedArriveTimeDate) {
+        if ([self latestRequestedArriveTimeDate]) {
             NSDate* latestRequestedArriveTime = timeOnlyFromDate([self earliestRequestedDepartTimeDate]);
             latestTime = [latestRequestedArriveTime laterDate:lastItineraryTime];
         } else {
