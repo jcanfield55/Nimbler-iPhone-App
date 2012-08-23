@@ -271,6 +271,7 @@ FeedBackForm *fbView;
      Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
      If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
      */
+        
     saveContext([self managedObjectContext]);
     [locationManager stopUpdatingLocation];
     
@@ -306,10 +307,13 @@ FeedBackForm *fbView;
     /*
      Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
      */
-    [self getTwiiterLiveData];
     if(self.isTwitterView){
        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
         [twitterView getAdvisoryData];
+    }
+    else{
+        //[self getTwiiterLiveData];
+        [self performSelector:@selector(getTwiiterLiveData) withObject:nil afterDelay:0.8];
     }
     [toFromViewController updateTripDate];
     [locationManager startUpdatingLocation];
@@ -605,7 +609,6 @@ FeedBackForm *fbView;
                                                       otherButtonTitles:nil,nil];
             
             [dataAlert show];
-            [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
             if([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive){
                 if([[NSUserDefaults standardUserDefaults] integerForKey:ENABLE_URGENTNOTIFICATION_SOUND] == 1){
                      AudioServicesPlaySystemSound(1015);

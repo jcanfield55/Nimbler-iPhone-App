@@ -319,7 +319,7 @@ NSUserDefaults *prefs;
 -(void)getAdvisoryData
 {
     @try {
-        [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
+        [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
         [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
         [[nc_AppDelegate sharedInstance] updateBadge:0];
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];

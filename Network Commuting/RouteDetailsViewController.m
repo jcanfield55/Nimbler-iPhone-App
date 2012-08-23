@@ -141,6 +141,7 @@ NSUserDefaults *prefs;
 
 - (void)setItinerary:(Itinerary *)i0
 {
+    NSLog(@"%@",i0);
     @try {
         itinerary = i0;
         [legMapVC setItinerary:i0];
@@ -198,7 +199,6 @@ NSUserDefaults *prefs;
     //Leg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:iNumber0];
     //[legMapVC setLeg:leg];
     //[legMapVC setItinerary:itinerary];
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated
