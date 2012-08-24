@@ -47,7 +47,7 @@
         <attribute name="walkTime" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <relationship name="legs" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Leg" inverseName="itinerary" inverseEntity="Leg" syncable="YES"/>
         <relationship name="plan" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Plan" inverseName="itineraries" inverseEntity="Plan" syncable="YES"/>
-        <relationship name="planRequestChunk" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="PlanRequestChunk" inverseName="itineraries" inverseEntity="PlanRequestChunk" syncable="YES"/>
+        <relationship name="planRequestChunks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PlanRequestChunk" inverseName="itineraries" inverseEntity="PlanRequestChunk" syncable="YES"/>
     </entity>
     <entity name="KeyObjectPair" syncable="YES">
         <attribute name="key" optional="YES" attributeType="String" syncable="YES"/>
@@ -143,7 +143,7 @@
     <entity name="PlanRequestChunk" syncable="YES">
         <attribute name="earliestRequestedDepartTimeDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="latestRequestedArriveTimeDate" optional="YES" attributeType="Date" syncable="YES"/>
-        <relationship name="itineraries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Itinerary" inverseName="planRequestChunk" inverseEntity="Itinerary" syncable="YES"/>
+        <relationship name="itineraries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Itinerary" inverseName="planRequestChunks" inverseEntity="Itinerary" syncable="YES"/>
         <relationship name="plan" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Plan" inverseName="requestChunks" inverseEntity="Plan" syncable="YES"/>
     </entity>
     <entity name="RawAddress" representedClassName="RawAddress" syncable="YES">

@@ -1095,6 +1095,14 @@ NSUserDefaults *prefs;
                 return true;
             }
             
+#if FLURRY_ENABLED
+            NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
+                                          FLURRY_FROM_SELECTED_ADDRESS, [fromLocation shortFormattedAddress],
+                                          FLURRY_TO_SELECTED_ADDRESS, [toLocation shortFormattedAddress],
+                                          nil];
+            [Flurry logEvent: FLURRY_ROUTE_REQUESTED withParameters:flurryParams];
+#endif
+            
             // Check if we have a stored plan that we can use
             NSArray* matchingPlanArray = [planStore fetchPlansWithToLocation:toLocation fromLocation:fromLocation];
             for (Plan* plan0 in matchingPlanArray) {
@@ -1103,17 +1111,28 @@ NSUserDefaults *prefs;
             
             if (matchingPlanArray && [matchingPlanArray count]>0) {
                 Plan* matchingPlan = [matchingPlanArray objectAtIndex:0]; // Take the first matching plan
-                // TODO:  Finish up implementation of using cached plans
-                // TODO:  Make sure that I am storing all my plans once I get them
+                
+                if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:tripDate
+                                                              departOrArrive:departOrArrive]) {
+                    NSLog(@"Matches found in plan cache -- going to RouteOptions");
+                    // If there are  matching itineraries in the cache, go directly to Route Options
+                    
+                    // Pass control to the RouteOptionsViewController to display itinerary choices
+                    if (!routeOptionsVC) {
+                        routeOptionsVC = [[RouteOptionsViewController alloc] initWithNibName:nil bundle:nil];;
+                    }
+                    
+                    [routeOptionsVC setPlan:matchingPlan];
+                    [[self navigationController] pushViewController:routeOptionsVC animated:YES];
+                    
+                    // TODO:  Even if there are matching plans, I should do some more fetches
+                    // TODO:  Make sure that I am storing all my plans once I get them
+                    
+                    return true;  // Skip calling OTP for now
+                }
             }
             
-#if FLURRY_ENABLED
-            NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
-                                          FLURRY_FROM_SELECTED_ADDRESS, [fromLocation shortFormattedAddress],
-                                          FLURRY_TO_SELECTED_ADDRESS, [toLocation shortFormattedAddress],
-                                          nil];
-            [Flurry logEvent: FLURRY_ROUTE_REQUESTED withParameters:flurryParams];
-#endif
+
             // Create the date formatters we will use to output the date & time
             NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
             [dFormat setDateFormat:@"MM/dd/yyyy"];

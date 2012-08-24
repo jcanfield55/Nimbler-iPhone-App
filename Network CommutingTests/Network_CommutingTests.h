@@ -14,6 +14,9 @@
 #import "KeyObjectStore.h"
 #import "KeyObjectPair.h"
 #import "TransitCalendar.h"
+#import "Plan.h"
+#import "Itinerary.h"
+#import "Leg.h"
 
 @interface Network_CommutingTests : SenTestCase
 {

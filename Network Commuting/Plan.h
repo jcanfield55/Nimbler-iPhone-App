@@ -12,6 +12,7 @@
 #import "Itinerary.h"
 #import "Location.h"
 #import "PlanRequestChunk.h"
+#import "TransitCalendar.h"
 #import "enums.h"
 
 @interface Plan : NSManagedObject
@@ -26,12 +27,13 @@
 #define PLAN_ITINERARIES_KEY       @"itineraries"   
 @property(nonatomic,strong) Location *fromLocation;
 @property(nonatomic,strong) Location *toLocation;
+@property (strong, nonatomic) NSSet *requestChunks; // PlanRequestChunks associated with the Plan
+
 @property(nonatomic,strong,readonly) NSDate* userRequestDate; // Latest requested date by user (could be for cached recall)
 @property(nonatomic,readonly) DepartOrArrive userRequestDepartOrArrive; // Latest DepartOrArrive (could be for cached call)
 @property(nonatomic,strong) NSArray *sortedItineraries;  // Array of ordered itineraries (not stored in Core Data) relevant to the userRequestDate and userRequestDepartOrArrive.  Could be subset if a cached call
+@property(nonatomic, strong) TransitCalendar* transitCalendar;
 
-
-@property (strong, nonatomic) NSSet *requestChunks; // Sorted array of PlanRequestChunks
 
 
 // Methods
@@ -66,6 +68,9 @@
 // Creates one PlanRequestChunk with all the itineraries as part of it
 - (id)initWithRequestDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive sortedItineraries:(NSArray *)sortedItinArray;
 
-- (NSArray *)relevantRequestChunksForDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive;
+// Looks for matching itineraries for the requestDate and departOrArrive
+// If it finds some, returns TRUE and updates the sortedItineraries property with just those itineraries
+// If it does not find any, returns false and leaves sortedItineraries unchanged
+- (BOOL)prepareSortedItinerariesWithMatchesForDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive;
 
 @end

@@ -20,12 +20,25 @@
 
 @end
 
-
 @implementation TransitCalendar
 
 @synthesize lastGTFSLoadDateByAgency;
 @synthesize calendarByDateByAgency;
 @synthesize serviceByWeekdayByAgency;
+
+static TransitCalendar * transitCalendarSingleton;
+
+
+// returns the singleton value.  
++ (TransitCalendar *)transitCalendar
+{
+    if (!transitCalendarSingleton) {
+        transitCalendarSingleton = [[TransitCalendar alloc] init];
+    }
+    return transitCalendarSingleton;
+}
+
+
 
 // Accessor override to populate this dictionary if not already there
 - (NSDictionary *)lastGTFSLoadDateByAgency
@@ -90,6 +103,22 @@
     
 }
 
+// Returns the agency-specific services string for the given date and agency
+- (NSString *)serviceStringForDate:(NSDate *)date agencyId:(NSString *)agencyId
+{
+    NSInteger dayOfWeek = dayOfWeekFromDate(date)-1;
+    NSDate* dateOnly = dateOnlyFromDate(date);
+    
+    // Get the weekday services code
+    NSString* dateServices = [[[self serviceByWeekdayByAgency] objectForKey:agencyId] objectAtIndex:dayOfWeek];
+    
+    // Look for exceptions in the calendarDates Dictionary and refine as needed
+    NSString* dateServiceExemption = [[[self calendarByDateByAgency] objectForKey:agencyId] objectForKey:dateOnly];
+    if (dateServiceExemption) {
+        dateServices = dateServiceExemption;
+    }
+    return dateServices;
+}
 
 //
 // Returns true if the two dates have equivalent service schedule based on:
@@ -99,33 +128,13 @@
 //
 - (BOOL)isEquivalentServiceDayFor:(NSDate *)date1 And:(NSDate *)date2 agencyId:(NSString *)agencyId
 {
-
-    NSInteger dayOfWeek1 = dayOfWeekFromDate(date1)-1;
-    NSInteger dayOfWeek2 = dayOfWeekFromDate(date2)-1;
+    NSString* date1Services = [self serviceStringForDate:date1 agencyId:agencyId];
+    NSString* date2Services = [self serviceStringForDate:date2 agencyId:agencyId];
     
-    NSDate* dateOnly1 = dateOnlyFromDate(date1);
-    NSDate* dateOnly2 = dateOnlyFromDate(date2); 
-        
-    // Compare the weekday codes
-    NSString* date1Services = [[[self serviceByWeekdayByAgency] objectForKey:agencyId] objectAtIndex:dayOfWeek1];
-    NSString* date2Services = [[[self serviceByWeekdayByAgency] objectForKey:agencyId] objectAtIndex:dayOfWeek2];
-    
-    // Look for exceptions in the calendarDates Dictionary and refine as needed
-    NSString* date1ServiceExemption = [[[self calendarByDateByAgency] objectForKey:agencyId] objectForKey:dateOnly1];
-    if (date1ServiceExemption) {
-        date1Services = date1ServiceExemption;
-    }
-    NSString* date2ServiceExemption = [[[self calendarByDateByAgency] objectForKey:agencyId] objectForKey:dateOnly2];
-    if (date2ServiceExemption) {
-        date2Services = date2ServiceExemption;
-    }
-    
-    if (date1Services && date2Services && [date1Services isEqualToString:date2Services]) {
-        return true; // if the services match, return true
-    } else {
-        return false;
-    }
+    return (date1Services && date2Services && [date1Services isEqualToString:date2Services]);
 }
+
+// TODO - Handle walking legs appropriately (they do not have a transit agency or schedule)
 
 //
 // Stub for filling in the trip information

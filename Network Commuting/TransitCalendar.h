@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Network Commuting. All rights reserved.
 //
 //
-// This class stores transit calendars for various agencies and does matching on whether a cached transit
+// This singleton class stores transit calendars for various agencies and does matching on whether a cached transit
 // request would have the same schedule as a new request
 
 #import <Foundation/Foundation.h>
@@ -32,10 +32,16 @@
 // Methods
 //
 
+// returns the singleton value.
++ (TransitCalendar *)transitCalendar;
+
 //
 // Returns true if the provided date comes after the last GTFS update for given agencyId
 //
 - (BOOL)isCurrentVsGtfsFileFor:(NSDate *)date agencyId:(NSString *)agencyId;
+
+// Returns the agency-specific services string for the given date and agency
+- (NSString *)serviceStringForDate:(NSDate *)date agencyId:(NSString *)agencyId;
 
 //
 // Returns true if the two dates have equivalent service schedule based on:

@@ -74,7 +74,55 @@
     [loc1 setToFrequencyFloat:7.0];
     [loc1 setLatFloat:67.3];
     [loc1 setLngFloat:-122.3];
+
+    //
+    // Set up plans, itineraries, and legs for testing plan caching
+    //
     
+    // Set-up dates
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle:NSDateFormatterLongStyle];
+    [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+    NSDate* date1 = [dateFormatter dateFromString:@"June 8, 2012 11:59 PM"]; // Friday before last load
+    NSDate* date2 = [dateFormatter dateFromString:@"August 5, 2012 7:00 PM"]; // Sunday
+    NSDate* date3 = [dateFormatter dateFromString:@"August 17, 2012 8:00 AM"]; // Friday
+    NSDate* date4 = [dateFormatter dateFromString:@"August 18, 2012 2:00 AM"]; // Saturday
+    NSDate* date5 = [dateFormatter dateFromString:@"August 20, 2012 12:01 AM"]; // Monday
+    NSDate* date6 = [dateFormatter dateFromString:@"August 22, 2012 5:00 PM"]; // Wednesday
+    NSDate* date7 = [dateFormatter dateFromString:@"September 3, 2012 6:00 AM"]; // Monday Labor Day
+
+    // Legs
+    Leg *leg1 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    Leg *leg2 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    Leg *leg3 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    Leg *leg4 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    Leg *leg5 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    Leg *leg6 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    Leg *leg7 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    Leg *leg8 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    Leg *leg9 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    
+    // Itineraries
+    Itinerary *itin1 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+    Itinerary *itin2 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+    Itinerary *itin3 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+    Itinerary *itin4 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+    Itinerary *itin5 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+
+    // Plan Request Chunks
+    PlanRequestChunk* chunk1 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanRequestChunk" inManagedObjectContext:managedObjectContext];
+    PlanRequestChunk* chunk2 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanRequestChunk" inManagedObjectContext:managedObjectContext];
+    PlanRequestChunk* chunk3 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanRequestChunk" inManagedObjectContext:managedObjectContext];
+    
+    
+    // Plan
+    Plan* plan1 = [NSEntityDescription insertNewObjectForEntityForName:@"Plan" inManagedObjectContext:managedObjectContext];
+    [chunk1 setPlan:plan1];
+    [chunk2 setPlan:plan1];
+    [chunk3 setPlan:plan1];
+    
+    // TODO make sure I have a walking leg in the mix
+
 }
 
 - (void)tearDown
@@ -389,5 +437,10 @@
     STAssertFalse([transitCalendar isEquivalentServiceDayFor:dayTime5 And:dayTime6 agencyId:@"BART"], @"");
     STAssertTrue([transitCalendar isEquivalentServiceDayFor:dayTime1 And:dayTime7 agencyId:@"BART"], @"");
     STAssertFalse([transitCalendar isEquivalentServiceDayFor:dayTime2 And:dayTime6 agencyId:@"BART"], @"");
+}
+
+- (void)testPlan
+{
+    
 }
 @end

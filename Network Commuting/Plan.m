@@ -9,6 +9,7 @@
 #import "Plan.h"
 #import "PlanRequestChunk.h"
 #import "UtilityFunctions.h"
+#import "Leg.h"
 #import <CoreData/CoreData.h>
 
 @implementation Plan
@@ -25,6 +26,7 @@
 @synthesize userRequestDate;
 @synthesize userRequestDepartOrArrive;
 @synthesize sortedItineraries;
+@synthesize transitCalendar;
 
 + (RKManagedObjectMapping *)objectMappingforPlanner:(APIType)apiType
 {
@@ -56,10 +58,16 @@
 - (void)awakeFromInsert {
     [super awakeFromInsert];
     
-    // Set the date
-    [self setLastUpdatedFromServer:[NSDate date]];
+    [self setLastUpdatedFromServer:[NSDate date]];    // Set the date
 }
- 
+
+- (TransitCalendar *)transitCalendar {
+    if (!transitCalendar) {
+        transitCalendar = [TransitCalendar transitCalendar];
+    }
+    return transitCalendar;
+}
+
 - (NSArray *)sortedItineraries
 {
     if (!sortedItineraries) {
@@ -135,18 +143,10 @@
         [requestChunk setLatestRequestedArriveTimeDate:requestDate];
     }
     for (Itinerary* itin in [self itineraries]) { // Add all the itineraries to this request chunk
-        [itin setPlanRequestChunk:requestChunk];
+        [[itin mutableSetValueForKey:PLAN_REQUEST_CHUNKS_KEY] addObject:requestChunk];
     }
 }
 
-// Updates the plan's sorted itineraries to address the new userRequestedDate and departOrArrive
-// Returns true if the referring Plan has itineraries that can be displayed to the user for userRequestDate
-// Returns false if there are no itineraries in the plan displayable for the user request.
-// If false, the plan will be unchanged
-- (BOOL)updateItinerariesForUserRequestedDate:(NSDate *)userRequestDate departOrArrive:(DepartOrArrive)depOrArrive
-{
-    return FALSE;
-}
 
 /*  TODO  Rewrite and combine the next two methods to reflect PlanRequestChunk being part of CoreData
 
@@ -190,16 +190,42 @@
 }
  */
 
+// TODO Make a way to get rid of itineraries that are from old GTFS files
 
-- (PlanRequestChunk *)relevantRequestChunksForDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive
+// prepareSortedItinerariesWithMatchesForDate  -- part of Plan Caching (US78) implementation
+// Looks for matching itineraries for the requestDate and departOrArrive
+// If it finds some, returns TRUE and updates the sortedItineraries property with just those itineraries
+// If it does not find any, returns false and leaves sortedItineraries unchanged
+- (BOOL)prepareSortedItinerariesWithMatchesForDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive
 {
-    for (PlanRequestChunk* requestChunk in [self requestChunks]) {
-        if ([requestChunk isRelevantToRequestDate:requestDate departOrArrive:depOrArrive]) {
-            return requestChunk;
+    NSMutableArray* matchingItineraries = [[NSMutableArray alloc] initWithCapacity:[[self sortedItineraries] count]];
+
+    for (Itinerary* itin in [self itineraries]) {
+        BOOL allLegsMatch = true;
+        for (Leg* leg in [itin sortedLegs]) {
+            NSString* agencyId = [leg agencyId];
+            if (![[self transitCalendar] isCurrentVsGtfsFileFor:requestDate agencyId:agencyId]) {
+                allLegsMatch = false;
+            } else if (![[self transitCalendar] isEquivalentServiceDayFor:requestDate
+                                                              And:[leg startTime]
+                                                         agencyId:agencyId]) {
+                allLegsMatch = false;  // This leg does not match
+                break;                 // Stop looking at this itinerary
+            }
+        }
+        if (allLegsMatch) {
+            [matchingItineraries addObject:itin];
         }
     }
-
-    return nil;
+    
+    if ([matchingItineraries count] > 0) {  // if we have some matches
+        // Save matching itineraries in sortedItineraries
+        NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:YES];
+        [self setSortedItineraries:[matchingItineraries sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
+        return true;
+    } else {
+        return false;
+    }
 }
 
 

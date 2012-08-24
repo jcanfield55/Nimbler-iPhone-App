@@ -40,8 +40,8 @@ typedef enum {
 @property (nonatomic, retain) NSNumber * walkDistance;
 @property (nonatomic, retain) NSNumber * walkTime;
 @property (nonatomic, retain) NSString * itinId;
-@property (nonatomic, retain) PlanRequestChunk* planRequestChunk; // the requestChunk this itinerary is part of 
-
+@property (nonatomic, retain) NSSet* planRequestChunks; // set of PlanRequestChunks this itinerary is part of
+#define PLAN_REQUEST_CHUNKS_KEY     @"planRequestChunks"
 @property (nonatomic, retain) NSString *itinArrivalFlag;
 
 @property (nonatomic, retain) NSSet *legs;

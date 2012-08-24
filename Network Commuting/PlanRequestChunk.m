@@ -9,6 +9,7 @@
 #import "PlanRequestChunk.h"
 #import "UtilityFunctions.h"
 #import "Constants.h"
+#import "Leg.h"
 
 
 @implementation PlanRequestChunk
@@ -16,7 +17,15 @@
 @dynamic earliestRequestedDepartTimeDate;
 @dynamic latestRequestedArriveTimeDate;
 @dynamic itineraries;
+@dynamic plan;
 @synthesize sortedItineraries;
+@synthesize transitCalendar;
+@synthesize serviceStringByAgency;
+
+- (void)awakeFromInsert {
+    [super awakeFromInsert];
+    [self setTransitCalendar:[TransitCalendar transitCalendar]];  // Set transitCalendar object
+}
 
 - (NSArray *)sortedItineraries
 {
@@ -26,6 +35,15 @@
     return sortedItineraries;
 }
 
+// Delete requestChunks upon saving that do not have any associated itineraries
+- (void)willSave
+{
+    if (self.isDeleted)
+        return;
+    if (self.itineraries.count == 0)
+        [self.managedObjectContext deleteObject:self];
+}
+
 // Create the sorted array of itineraries
 - (void)sortItineraries
 {
@@ -33,17 +51,89 @@
     [self setSortedItineraries:[[self itineraries] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
 }
 
+- (NSDictionary *)serviceStringByAgency
+{
+    if (!serviceStringByAgency) {
+        [self populateserviceStringByAgency];
+    }
+    return serviceStringByAgency;
+}
 
-// TODO Make sure that I do not combine itineraries in chunks across days
+// Create the serviceStringByAgency set
+- (void)populateserviceStringByAgency
+{
+    NSMutableDictionary* returnedValue = [[NSMutableDictionary alloc] initWithCapacity:10];
+    NSDate* requestDate = ([self earliestRequestedDepartTimeDate] ? [self earliestRequestedDepartTimeDate] :
+                    [self latestRequestedArriveTimeDate]);
+    for (Itinerary* itin in [self sortedItineraries]) {
+        for (Leg* leg in [itin sortedLegs]) {
+            NSString* agencyId = [leg agencyId];
+            NSString* serviceString = [transitCalendar serviceStringForDate:requestDate agencyId:agencyId];
+            [returnedValue setObject:serviceString forKey:agencyId];
+        }
+    }
+    [self setServiceStringByAgency:[NSDictionary dictionaryWithDictionary:returnedValue]];
+}
 
+// TODO Make sure that I do not combine itineraries in chunks across days 
+
+//
+// Returns true if all the service days for all the itineraries and legs in referring PlanRequestChunk match
+// those in requestChunk0.  Otherwise returns false
+//
+- (BOOL)doAllserviceStringByAgencyMatchRequestChunk:(PlanRequestChunk *)requestChunk0
+{    
+    // Enumerate thru all self's agency keys first, and see if service strings match for each agency
+    NSEnumerator* enumerator = [[self serviceStringByAgency] keyEnumerator];
+    NSString* agencyId;
+    while (agencyId = [enumerator nextObject]) {
+        NSString* selfServiceString = [[self serviceStringByAgency] objectForKey:agencyId];
+        NSString* chunk0ServiceString = [[requestChunk0 serviceStringByAgency] objectForKey:agencyId];
+        if (chunk0ServiceString && ![chunk0ServiceString isEqualToString:selfServiceString]) {
+            // if chunk0 has a service string for that agency, and it does not match...
+            return false;
+        }
+    }
+    
+    // Now enumerate thru all of requestChunk0's agency keys (in order to catch any non-duplicates)
+    enumerator = [[requestChunk0 serviceStringByAgency] keyEnumerator];
+    while (agencyId = [enumerator nextObject]) {
+        NSString* selfServiceString = [[self serviceStringByAgency] objectForKey:agencyId];
+        NSString* chunk0ServiceString = [[requestChunk0 serviceStringByAgency] objectForKey:agencyId];
+        if (selfServiceString && ![chunk0ServiceString isEqualToString:selfServiceString]) {
+            // if self has a service string for that agency, and it does not match...
+            return false;
+        }
+    }
+    return true;
+}
+
+//
+// Returns true if all the service days for all the itineraries and legs in the planRequestChunk match
+// the request date.  Otherwise returns false
+//
+- (BOOL)doAllItineraryServiceDaysMatchDate:(NSDate *)requestDate
+{
+    BOOL allMatch = true;
+    NSEnumerator* enumerator = [[self serviceStringByAgency] keyEnumerator];
+    NSString* agencyId;
+    while (agencyId = [enumerator nextObject]) {
+        NSString* requestServiceString = [[self transitCalendar] serviceStringForDate:requestDate agencyId:agencyId];
+        if (![requestServiceString isEqualToString:[[self serviceStringByAgency] objectForKey:agencyId]]) {
+            allMatch = false;  
+            break;
+        }
+    }
+    return allMatch;
+}
 
 //
 // Returns true if the referring PlanRequestChunk is relevant to the given requestDate and depOrArrive
 // Relevant is based being within the time range of the PlanRequestChunk
-// This does not check whether the schedule for requestDate matches the itineraries schedule day
+// Does not check whether the schedule for requestDate matches the schedule day for each leg & itinerary
 // Return false if the referring PlanRequestChunk is not relevant
 //
-- (BOOL)isRelevantToRequestDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive
+- (BOOL)doesCoverTheSameTimeAs:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive
 {
     // Get the key times (independent of date)
     NSDate *requestTime = timeOnlyFromDate(requestDate);
