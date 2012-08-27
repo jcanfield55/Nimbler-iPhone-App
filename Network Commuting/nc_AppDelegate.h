@@ -34,6 +34,9 @@
     Location *fromLoc;
     NSTimer *continueGetTime;
     BOOL isFromBackground;
+    BOOL isUpdateTime;
+    BOOL isServiceByWeekday;
+    BOOL isCalendarByDate;
 }
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
@@ -64,6 +67,9 @@
 @property (strong, nonatomic) Location *toLoc;
 @property (strong, nonatomic) Location *fromLoc;
 @property (nonatomic) BOOL isFromBackground;
+@property (nonatomic) BOOL isUpdateTime;
+@property (nonatomic) BOOL isServiceByWeekday;
+@property (nonatomic) BOOL isCalendarByDate;
 
 - (NSURL *)applicationDocumentsDirectory;
 
@@ -74,4 +80,7 @@
 + (NSString *)getUUID;
 -(void)updateBadge:(int)count;
 -(void)isNetworkConnectionLive;
+-(void)updateTime;
+-(void)serviceByWeekday;
+-(void)calendarByDate;
 @end

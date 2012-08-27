@@ -210,7 +210,7 @@ NSUserDefaults *prefs;
         [[nc_AppDelegate sharedInstance] updateBadge:0];
     }
 }
-
+      
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     RKJSONParserJSONKit* rkTwitDataParser = [RKJSONParserJSONKit new];
     @try {
@@ -231,7 +231,7 @@ NSUserDefaults *prefs;
                         NSMutableArray *tempArray = [[NSMutableArray alloc] initWithCapacity:arrayLatestTweet.count];
                         [tempArray addObjectsFromArray:arrayLatestTweet];
                         [tempArray addObjectsFromArray:arrayTweet];
-                        arrayTweet = [[NSMutableArray alloc]initWithCapacity:arrayLatestTweet.count];
+                        [arrayTweet removeAllObjects];
                         [arrayTweet addObjectsFromArray:tempArray];
                         [mainTable reloadData]; 
                     }

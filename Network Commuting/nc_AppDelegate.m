@@ -53,6 +53,9 @@ static nc_AppDelegate *appDelegate;
 @synthesize fromLoc;
 @synthesize continueGetTime;
 @synthesize isFromBackground;
+@synthesize isUpdateTime;
+@synthesize isServiceByWeekday;
+@synthesize isCalendarByDate;
 
 
 // Feedback parameters
@@ -312,8 +315,7 @@ FeedBackForm *fbView;
         [twitterView getAdvisoryData];
     }
     else{
-        //[self getTwiiterLiveData];
-        [self performSelector:@selector(getTwiiterLiveData) withObject:nil afterDelay:0.8];
+        [self getTwiiterLiveData];
     }
     [toFromViewController updateTripDate];
     [locationManager startUpdatingLocation];
@@ -531,6 +533,22 @@ FeedBackForm *fbView;
                         timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
                     }
                 }
+                else if(isUpdateTime){
+                     NSDictionary  *dictUpdateTime = [rkParser objectFromString:[response bodyAsString] error:nil];
+                    NSLog(@"update %@", dictUpdateTime); 
+                    isUpdateTime = NO;
+                }
+                else if(isServiceByWeekday){
+                    NSLog(@"%@",[response bodyAsString]);
+                    NSDictionary  *dictServiceByweekday = [rkParser objectFromString:[response bodyAsString] error:nil];
+                    NSLog(@"update %@", dictServiceByweekday); 
+                    isServiceByWeekday = NO;
+                }
+                else if(isCalendarByDate){
+                    NSDictionary  *dictCalendarByDate = [rkParser objectFromString:[response bodyAsString] error:nil];
+                    NSLog(@"update %@", dictCalendarByDate); 
+                    isCalendarByDate = NO;
+                }
             }
         }
     }
@@ -642,9 +660,50 @@ FeedBackForm *fbView;
     }
 }
 
+-(void)updateTime{
+    @try {
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        isUpdateTime = YES;
+        NSString *twitCountReq = [UPDATE_TIME_URL appendQueryParams:nil];
+        NSLog(@"twitter count req: %@", twitCountReq);
+        [[RKClient sharedClient]  get:twitCountReq delegate:self];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception at getTwiiterLive count: %@", exception);
+    }
+}
+
+-(void)serviceByWeekday{
+    @try {
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        isServiceByWeekday = YES;
+        NSString *twitCountReq = [SERVICE_BY_WEEKDAY_URL appendQueryParams:nil];
+        NSLog(@"twitter count req: %@", twitCountReq);
+        [[RKClient sharedClient]  get:twitCountReq delegate:self];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception at getTwiiterLive count: %@", exception);
+    }
+}
+
+-(void)calendarByDate{
+    @try {
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        isCalendarByDate = YES;
+        NSString *twitCountReq = [CALENDAR_BY_DATE_URL appendQueryParams:nil];
+        NSLog(@"twitter count req: %@", twitCountReq);
+        [[RKClient sharedClient]  get:twitCountReq delegate:self];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception at getTwiiterLive count: %@", exception);
+    }
+}
+
 #pragma mark Twitter Live count request
--(void)getTwiiterLiveData
-{
+-(void)getTwiiterLiveData{
     @try {
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
@@ -661,8 +720,7 @@ FeedBackForm *fbView;
 }
 
 #pragma mark update userSettings from server 
--(void)upadateDefaultUserValue
-{
+-(void)upadateDefaultUserValue{
     @try {
         UserPreferance* userPrefs = [UserPreferance userPreferance]; // get singleton
         // set in TPServer

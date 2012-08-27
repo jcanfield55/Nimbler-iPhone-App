@@ -149,3 +149,8 @@
 
 // Float thresholds 
 #define TINY_FLOAT                      0.000001
+
+
+#define UPDATE_TIME_URL                 @"gtfs/updateTime"
+#define SERVICE_BY_WEEKDAY_URL          @"gtfs/serviceByWeekday"
+#define CALENDAR_BY_DATE_URL            @"gtfs/calendarByDate"
