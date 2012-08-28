@@ -83,6 +83,36 @@
     [self setSortedItineraries:[[self itineraries] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
 }
 
+// consolidateIntoSelfPlan
+// If plan0 fromLocation and toLocation are the same as referring object's...
+// Consolidates plan0 itineraries and PlanRequestChunks into referring Plan
+- (void)consolidateIntoSelfPlan:(Plan *)plan0
+{
+    // Consolidate requestChunks
+    NSMutableSet* chunksConsolidated = [[NSMutableSet alloc] initWithCapacity:10];
+    for (PlanRequestChunk* reqChunk0 in [plan0 requestChunks]) {
+        for (PlanRequestChunk* selfRequestChunk in [self requestChunks]) {
+            if ([reqChunk0 doAllServiceStringByAgencyMatchRequestChunk:selfRequestChunk] &&
+                [reqChunk0 doTimesOverlapRequestChunk:selfRequestChunk]) {
+                [chunksConsolidated addObject:reqChunk0];
+                [selfRequestChunk consolidateIntoSelfRequestChunk:reqChunk0];
+            }
+        }
+    }
+    
+    // Transfer over requestChunks that were not consolidated
+    for (PlanRequestChunk* reqChunkToTransfer in [plan0 requestChunks]) {
+        if (![chunksConsolidated containsObject:reqChunkToTransfer]) {
+            // Only transfer over PlanRequestChunks that have not already been consolidated
+            [reqChunkToTransfer setPlan:self];  
+        }
+    }
+    
+    // TODO Transfer over the itineraries getting rid of ones we do not need
+    // TODO change planStore to call this routine for consolidation
+    
+}
+
 // If itin0 is a new itinerary that does not exist in the referencing Plan, then add itin0 the referencing Plan
 // If itin0 is the same as an existing itinerary in the referencing Plan, then keep the more current itinerary and delete the older one
 // Returns the result of the itinerary comparison (see Itinerary.h for enum definition)
@@ -117,9 +147,7 @@
 // Remove itin0 from the plan and from Core Data
 - (void)removeItinerary:(Itinerary *)itin0
 {
-    NSMutableSet* mutableItineraries = [self mutableSetValueForKey:PLAN_ITINERARIES_KEY];
-    [mutableItineraries removeObject:itin0];
-    [[self managedObjectContext] deleteObject:itin0];
+    [self removeItinerary:itin0];
     [self sortItineraries];  // Resort itineraries
 }
 
@@ -143,7 +171,7 @@
         [requestChunk setLatestRequestedArriveTimeDate:requestDate];
     }
     for (Itinerary* itin in [self itineraries]) { // Add all the itineraries to this request chunk
-        [[itin mutableSetValueForKey:PLAN_REQUEST_CHUNKS_KEY] addObject:requestChunk];
+        [requestChunk addItinerariesObject:itin];
     }
 }
 
@@ -199,6 +227,7 @@
 - (BOOL)prepareSortedItinerariesWithMatchesForDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive
 {
     NSMutableArray* matchingItineraries = [[NSMutableArray alloc] initWithCapacity:[[self sortedItineraries] count]];
+    NSMutableArray* newSortedItineraries = [[NSMutableArray alloc] initWithCapacity:[[self sortedItineraries] count]];
 
     for (Itinerary* itin in [self itineraries]) {
         BOOL allLegsMatch = true;
@@ -219,11 +248,32 @@
     }
     
     if ([matchingItineraries count] > 0) {  // if we have some matches
-        // Save matching itineraries in sortedItineraries
-        NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:YES];
-        [self setSortedItineraries:[matchingItineraries sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
+        
+        // Create a set of all PlanRequestChunks corresponding to the itineraries that match the requestDate services
+        NSMutableSet* matchingReqChunks = [[NSMutableSet alloc] initWithCapacity:10];
+        for (Itinerary* itin in matchingItineraries) {
+            for (PlanRequestChunk* reqChunk in [itin planRequestChunks]) {
+                if ([reqChunk doAllItineraryServiceDaysMatchDate:requestDate]) {
+                    [matchingReqChunks addObject:reqChunk];
+                }
+            }
+        }
+        
+        if ([matchingReqChunks count] == 0) {
+            // Make a plan request for requestTime
+        } else {
+            PlanRequestChunk* reqChunk = [matchingReqChunks anyObject]; // Pick one of the requestChunks
+            [newSortedItineraries addObjectsFromArray:[reqChunk sortedItineraries]]; // Add these itineraries
+            if ([newSortedItineraries count] < PLAN_MAX_ITINERARIES_TO_SHOW) {
+                NSDate* nextRequestDate = [reqChunk nextRequestDateFor:requestDate];
+
+                // Make a plan request for nextRequestDate
+            }
+        }
+        
+        [self setSortedItineraries:newSortedItineraries];
         return true;
-    } else {
+    } else {  // no matching itineraries
         return false;
     }
 }

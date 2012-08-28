@@ -47,6 +47,10 @@
 
 - (void)sortItineraries;   // Create the sorted array of itineraries
 
+// Returns true if all the service days for all the itineraries and legs in referring PlanRequestChunk match
+// those in requestChunk0.  Otherwise returns false
+- (BOOL)doAllServiceStringByAgencyMatchRequestChunk:(PlanRequestChunk *)requestChunk0;
+
 // Returns true if all the service days for all the itineraries and legs in the planRequestChunk match
 // the request date.  Otherwise returns false
 - (BOOL)doAllItineraryServiceDaysMatchDate:(NSDate *)requestDate;
@@ -56,4 +60,35 @@
 // Return false if the referring PlanRequestChunk is not relevant
 - (BOOL)doesCoverTheSameTimeAs:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive;
 
+// Returns true if self and requestChunk0 have overlapping times, and thus are candidates for consolidation
+- (BOOL)doTimesOverlapRequestChunk:(PlanRequestChunk *)requestChunk0;
+
+// Returns a date/time that can be used to make a next request to OTP for getting additional itineraries
+// The returned date will be the same day as requestDate, but will have a time equal to 1 minute past
+// the startTime of the last itinerary in the referring PlanRequestChunk
+-(NSDate *)nextRequestDateFor:(NSDate *)requestDate;
+
+// itinerary (whichever's time is earliest)
+// If earliestRequestedDepartTime is nil, returns the time-only portion of the startTime of the first itinerary
+- (NSDate *)earliestTime;
+
+// Returns the time-only portion of the latestRequestedArriveTime or the startTime of the last itinerary
+// (whichever time is latest)
+// If latestRequestedArriveTime is nil, returns the time-only portion of the startTime fo the last itinerary
+- (NSDate *)latestTime;
+
+// Consolidates requestChunk0 into self
+// Assumes that self and requestChunk0 are true for doTimesOverlapRequestChunk: and doAllServiceStringByAgencyMatchRequestChunk:
+// Takes the earliestRequestDepartTimeDate of the two and the latestRequestedArriveTimeDate of the two by comparing the time only
+// Consolidates itineraries but does not check for duplicates
+- (void)consolidateIntoSelfRequestChunk:(PlanRequestChunk *)requestChunk0;
+
+@end
+
+@interface PlanRequestChunk (CoreDataGeneratedAccessors)
+
+- (void)addItinerariesObject:(Itinerary *)value;
+- (void)removeItinerariesObject:(Itinerary *)value;
+- (void)addItineraries:(NSSet *)values;
+- (void)removeItineraries:(NSSet *)values;
 @end

@@ -47,20 +47,20 @@
 // Create the sorted array of itineraries
 - (void)sortItineraries
 {
-    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:YES];
+    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:YES];
     [self setSortedItineraries:[[self itineraries] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
 }
 
 - (NSDictionary *)serviceStringByAgency
 {
     if (!serviceStringByAgency) {
-        [self populateserviceStringByAgency];
+        [self populateServiceStringByAgency];
     }
     return serviceStringByAgency;
 }
 
 // Create the serviceStringByAgency set
-- (void)populateserviceStringByAgency
+- (void)populateServiceStringByAgency
 {
     NSMutableDictionary* returnedValue = [[NSMutableDictionary alloc] initWithCapacity:10];
     NSDate* requestDate = ([self earliestRequestedDepartTimeDate] ? [self earliestRequestedDepartTimeDate] :
@@ -81,7 +81,7 @@
 // Returns true if all the service days for all the itineraries and legs in referring PlanRequestChunk match
 // those in requestChunk0.  Otherwise returns false
 //
-- (BOOL)doAllserviceStringByAgencyMatchRequestChunk:(PlanRequestChunk *)requestChunk0
+- (BOOL)doAllServiceStringByAgencyMatchRequestChunk:(PlanRequestChunk *)requestChunk0
 {    
     // Enumerate thru all self's agency keys first, and see if service strings match for each agency
     NSEnumerator* enumerator = [[self serviceStringByAgency] keyEnumerator];
@@ -127,6 +127,33 @@
     return allMatch;
 }
 
+// Returns the time-only portion of the earliestRequestedDepartTimeDate or the startTime of the first
+// itinerary (whichever's time is earliest)
+// If earliestRequestedDepartTime is nil, returns the time-only portion of the startTime of the first itinerary
+- (NSDate *)earliestTime
+{
+    NSDate *firstItineraryTime = timeOnlyFromDate([[[self sortedItineraries] objectAtIndex:0] startTime]);
+    if ([self earliestRequestedDepartTimeDate]) {
+        NSDate* earliestRequestedDepartTime = timeOnlyFromDate([self earliestRequestedDepartTimeDate]);
+        return [earliestRequestedDepartTime earlierDate:firstItineraryTime];
+    } else
+        return firstItineraryTime;
+}
+
+// Returns the time-only portion of the latestRequestedArriveTime or the startTime of the last itinerary
+// (whichever time is latest)
+// If latestRequestedArriveTime is nil, returns the time-only portion of the startTime fo the last itinerary
+- (NSDate *)latestTime
+{
+    NSDate *lastItineraryTime = timeOnlyFromDate([[[self sortedItineraries] lastObject] startTime]);
+    if ([self latestRequestedArriveTimeDate]) {
+        NSDate* latestRequestedArriveTime = timeOnlyFromDate([self earliestRequestedDepartTimeDate]);
+        return [latestRequestedArriveTime laterDate:lastItineraryTime];
+    } else {
+        return lastItineraryTime;
+    }
+}
+
 //
 // Returns true if the referring PlanRequestChunk is relevant to the given requestDate and depOrArrive
 // Relevant is based being within the time range of the PlanRequestChunk
@@ -143,16 +170,8 @@
     if (depOrArrive==DEPART) {
         
         // Compute RequestChunk earliest time to compare against
-        NSDate* earliestTime;
-        if ([self earliestRequestedDepartTimeDate]) {
-            NSDate* earliestRequestedDepartTime = timeOnlyFromDate([self earliestRequestedDepartTimeDate]);
-            earliestTime = [earliestRequestedDepartTime earlierDate:firstItineraryTime];
-        } else {
-            earliestTime = firstItineraryTime;
-        }
-        
-        if ([requestTime compare:earliestTime]==NSOrderedDescending &&
-            [requestTime compare:lastItineraryTime]==NSOrderedAscending) {
+        if ([requestTime compare:[self earliestTime]]!=NSOrderedAscending &&
+            [requestTime compare:lastItineraryTime]!=NSOrderedDescending) {
             // If requestTime is between earliest and last time in the chunk
             return true;
         } else {
@@ -161,27 +180,86 @@
     }
     else {  // depOrArrive = ARRIVE
         
-        // Compute RequestChunk latest time to compare against
-        NSDate* latestTime;
-        if ([self latestRequestedArriveTimeDate]) {
-            NSDate* latestRequestedArriveTime = timeOnlyFromDate([self earliestRequestedDepartTimeDate]);
-            latestTime = [latestRequestedArriveTime laterDate:lastItineraryTime];
-        } else {
-            latestTime = lastItineraryTime;
-        }
-        
-        if ([requestTime compare:firstItineraryTime]==NSOrderedDescending &&
-            [requestTime compare:latestTime]==NSOrderedAscending) {
+        if ([requestTime compare:firstItineraryTime]!=NSOrderedAscending &&
+            [requestTime compare:[self latestTime]]!=NSOrderedDescending) {
             // If requestTime is between the first and the latest time in the chunk
             return true;
         } else {
             return false;
         }
     }
-    
+}
+
+// Returns true if self and requestChunk0 have overlapping times, and thus are candidates for consolidation
+- (BOOL)doTimesOverlapRequestChunk:(PlanRequestChunk *)requestChunk0
+{
+    // If self earliestTime is within the range for requestChunk0, return true
+    if ([[self earliestTime] compare:[requestChunk0 earliestTime]]!=NSOrderedAscending &&
+        [[self earliestTime] compare:[requestChunk0 latestTime]]!=NSOrderedDescending) {
+        return true;
+    }
+    // If self latestTime is within the range for requestChunk0, return true
+    if ([[self latestTime] compare:[requestChunk0 earliestTime]]!=NSOrderedAscending &&
+        [[self latestTime] compare:[requestChunk0 latestTime]]!=NSOrderedDescending) {
+        return true;
+    }
+    // If neither earliest or latest overlaps requestChunk0, return false
     return false;
 }
 
+// Returns a date/time that can be used to make a next request to OTP for getting additional itineraries
+// The returned date will be the same day as requestDate, but will have a time equal to 1 minute past
+// the startTime of the last itinerary in the referring PlanRequestChunk
+-(NSDate *)nextRequestDateFor:(NSDate *)requestDate
+{
+    NSDate* newRequestTime = [[[[self sortedItineraries] lastObject] startTime] dateByAddingTimeInterval:60.0];
+    NSDate* returnValue = addDateOnlyWithTimeOnly(requestDate, newRequestTime);
+    return returnValue;
+}
 
+// Consolidates requestChunk0 into self
+// Assumes that self and requestChunk0 are true for doTimesOverlapRequestChunk: and doAllServiceStringByAgencyMatchRequestChunk:
+// Takes the earliestRequestDepartTimeDate of the two and the latestRequestedArriveTimeDate of the two by comparing the time only
+// Consolidates itineraries but does not check for duplicates
+- (void)consolidateIntoSelfRequestChunk:(PlanRequestChunk *)requestChunk0
+{
+    // Update earliestRequestedDepartTimeDate
+    if ([requestChunk0 earliestRequestedDepartTimeDate]) {
+        NSDate* earliestRequestedDepartTimeOnly0 = timeOnlyFromDate([requestChunk0 earliestRequestedDepartTimeDate]);
+        if ([self earliestRequestedDepartTimeDate]) {
+            NSDate* selfEarliestRequestedDepartTimeOnly = timeOnlyFromDate([self earliestRequestedDepartTimeDate]);
+            if ([earliestRequestedDepartTimeOnly0 compare:selfEarliestRequestedDepartTimeOnly]==NSOrderedAscending) {
+                [self setEarliestRequestedDepartTimeDate:[requestChunk0 earliestRequestedDepartTimeDate]];
+            }
+        } else {
+            [self setEarliestRequestedDepartTimeDate:[requestChunk0 earliestRequestedDepartTimeDate]];
+        }
+    }
+    
+    // Update latestRequestedArriveTimeDate
+    if ([requestChunk0 latestRequestedArriveTimeDate]) {
+        NSDate* latestRequestedArriveTimeOnly0 = timeOnlyFromDate([requestChunk0 latestRequestedArriveTimeDate]);
+        if ([self latestRequestedArriveTimeDate]) {
+            NSDate* selfLatestRequestedArriveTimeOnly = timeOnlyFromDate([self latestRequestedArriveTimeDate]);
+            if ([latestRequestedArriveTimeOnly0 compare:selfLatestRequestedArriveTimeOnly]==NSOrderedDescending) {
+                [self setLatestRequestedArriveTimeDate:[requestChunk0 latestRequestedArriveTimeDate]];
+            }
+        } else {
+            [self setLatestRequestedArriveTimeDate:[requestChunk0 latestRequestedArriveTimeDate]];
+        }
+    }
+    
+    // Move itineraries from requestChunk0 to self
+    //
+    NSSet* itinerariesToTransfer = [NSSet setWithSet:[requestChunk0 itineraries]]; // make a copy so since I will be modifying requestChunk0 itineraries
+    for (Itinerary* itin0 in itinerariesToTransfer) {
+        [requestChunk0 removeItinerariesObject:itin0];
+        [self addItinerariesObject:itin0];
+    }
+    
+    // Update derived variables
+    [self sortItineraries];
+    [self populateServiceStringByAgency];
+}
 
 @end

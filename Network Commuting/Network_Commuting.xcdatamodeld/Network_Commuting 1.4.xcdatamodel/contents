@@ -111,7 +111,7 @@
         <relationship name="fromLocation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="plan" inverseEntity="Location" syncable="YES"/>
         <relationship name="fromPlanPlace" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="PlanPlace" inverseName="plan" inverseEntity="PlanPlace" syncable="YES"/>
         <relationship name="itineraries" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Itinerary" inverseName="plan" inverseEntity="Itinerary" syncable="YES"/>
-        <relationship name="requestChunks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PlanRequestChunk" inverseName="plan" inverseEntity="PlanRequestChunk" syncable="YES"/>
+        <relationship name="requestChunks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PlanRequestChunk" inverseName="plan" inverseEntity="PlanRequestChunk" syncable="YES"/>
         <relationship name="toLocation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="plan" inverseEntity="Location" syncable="YES"/>
         <relationship name="toPlanPlace" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="PlanPlace" inverseName="plan" inverseEntity="PlanPlace" syncable="YES"/>
         <compoundIndexes>
@@ -140,7 +140,7 @@
             </compoundIndex>
         </compoundIndexes>
     </entity>
-    <entity name="PlanRequestChunk" syncable="YES">
+    <entity name="PlanRequestChunk" representedClassName="PlanRequestChunk" syncable="YES">
         <attribute name="earliestRequestedDepartTimeDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="latestRequestedArriveTimeDate" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="itineraries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Itinerary" inverseName="planRequestChunks" inverseEntity="Itinerary" syncable="YES"/>
@@ -186,9 +186,9 @@
         <element name="Location" positionX="0" positionY="0" width="0" height="0"/>
         <element name="Plan" positionX="0" positionY="0" width="0" height="0"/>
         <element name="PlanPlace" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="PlanRequestChunk" positionX="0" positionY="0" width="0" height="0"/>
         <element name="RawAddress" positionX="0" positionY="0" width="0" height="0"/>
         <element name="Step" positionX="0" positionY="0" width="0" height="0"/>
         <element name="TPResponse" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="PlanRequestChunk" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

@@ -131,6 +131,10 @@
 // Locations behavior
 #define TOFROM_FREQUENCY_VISIBILITY_CUTOFF 0.99
 
+// Plan and Plan caching behavior
+#define PLAN_MAX_ITINERARIES_TO_SHOW   20
+
+
 // LegMapView
 #define LEGMAP_DOT_IMAGE_FILE          @"img_mapDot"
 

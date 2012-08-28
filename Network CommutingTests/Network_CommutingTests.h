@@ -14,6 +14,7 @@
 #import "KeyObjectStore.h"
 #import "KeyObjectPair.h"
 #import "TransitCalendar.h"
+#import "PlanRequestChunk.h"
 #import "Plan.h"
 #import "Itinerary.h"
 #import "Leg.h"
@@ -28,5 +29,25 @@
     Location *loc3;
     
     Locations *locations;
+    
+    Plan *plan3;
+    Plan *plan4;
+    Plan *plan5;
+    Plan *plan6;
+
+    Itinerary *itin10;
+    Itinerary *itin20;
+    Itinerary *itin30;
+    Itinerary *itin31;
+    Itinerary *itin32;
+    Itinerary *itin40;
+    Itinerary *itin41;
+    Itinerary *itin50;
+    Itinerary *itin51;
+    Itinerary *itin52;
+    Itinerary *itin60;
+    Itinerary *itin61;
+    Itinerary *itin62;
+
 }
 @end

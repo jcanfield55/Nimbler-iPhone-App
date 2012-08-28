@@ -9,6 +9,7 @@
 #import "Itinerary.h"
 #import "Leg.h"
 #import "Plan.h"
+#import "UtilityFunctions.h"
 
 @interface Itinerary()
 {
@@ -32,6 +33,7 @@
 @dynamic fareInCents;
 @dynamic itineraryCreationDate;
 @dynamic startTime;
+@synthesize startTimeOnly;
 @dynamic tooSloped;
 @dynamic transfers;
 @dynamic transitTime;
@@ -84,6 +86,14 @@
     
     // Set the date
     [self setItineraryCreationDate:[NSDate date]];
+}
+
+- (NSDate *)startTimeOnly
+{
+    if (!startTimeOnly) {
+        startTimeOnly = timeOnlyFromDate([self startTime]);
+    }
+    return startTimeOnly;
 }
 
 // Returns the start-time of the first leg if there is one, otherwise returns startTime property

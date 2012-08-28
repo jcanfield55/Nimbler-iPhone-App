@@ -187,6 +187,22 @@ NSInteger dayOfWeekFromDate(NSDate *date) {
 }
 
 //
-// Returns an NSDate object containing just the date (month, day, year) of the date parameter, but not the time
-// Uses [NSCalendar currentCalendar] and the hours and minutes components to compute
+// Returns a date where the date components are taken from dateOnly, and the time components are
+// taken from timeOnly
 //
+NSDate *addDateOnlyWithTimeOnly(NSDate *dateOnly, NSDate *timeOnly) {
+    NSCalendar* calendar = [NSCalendar currentCalendar];
+    NSUInteger dateComponentNames = NSMonthCalendarUnit | NSYearCalendarUnit | NSDayCalendarUnit;
+    NSUInteger timeComponentNames = NSHourCalendarUnit | NSMinuteCalendarUnit;
+
+    // Get the components of dateOnly and timeOnly
+    NSDateComponents* dateComponents = [calendar components:dateComponentNames fromDate:dateOnly];
+    NSDateComponents* timeComponents = [calendar components:timeComponentNames fromDate:timeOnly];
+    
+    // Transfer time components over
+    [dateComponents setHour:[timeComponents hour]];
+    [dateComponents setMinute:[timeComponents minute]];
+    
+    return [calendar dateFromComponents:dateComponents];
+}
+
