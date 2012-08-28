@@ -31,8 +31,6 @@
 }
 
 // Utility routine for setting the region on the MapView based on the itineraryNumber
-- (void)setMapViewRegion;  
-- (void)refreshLegOverlay:(int)number;
 @end
 
 @implementation LegMapViewController
@@ -113,8 +111,8 @@ NSString *legID;
 {
     @try {
         if (itineraryNumber != i0) { // if something has actually changed...
-            [self refreshLegOverlay:itineraryNumber];  // refreshes the last itinerary number
-            [self refreshLegOverlay:i0];   // refreshes the new itinerary number
+            //[self refreshLegOverlay:itineraryNumber];  // refreshes the last itinerary number
+            //[self refreshLegOverlay:i0];   // refreshes the new itinerary number
             itineraryNumber = i0;
             [self setMapViewRegion];  // redefine the bounding box
         }
@@ -183,12 +181,14 @@ NSString *legID;
             // aView.fillColor = [[UIColor cyanColor] colorWithAlphaComponent:0.2];
             aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:ALPHA_LIGHTER];
             aView.lineWidth = LINE_WIDTH;
-                        
+            NSLog(@"%@",[itinerary sortedLegs]); 
+            NSLog(@"itineraryNumber=%d",itineraryNumber);
+            
             // Determine if this overlay is the one in focus.  If so, make it darker
             for (int i=0; i<[polyLineArray count]; i++) {
                 if (([polyLineArray objectAtIndex:i] == overlay)) {
                     if (i == itineraryNumber) {
-                        Leg *leg  = [[itinerary sortedLegs] objectAtIndex:i];
+                        Leg *leg  = [[itinerary legDescriptionToLegMapArray] objectAtIndex:itineraryNumber];
                         if([leg isWalk]){
                             aView.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:ALPHA_LIGHT] ;
                             aView.lineWidth = LINE_WIDTH;

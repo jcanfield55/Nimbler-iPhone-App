@@ -219,7 +219,6 @@ NSUserDefaults *prefs;
     datePicker = [[UIDatePicker alloc]initWithFrame:CGRectMake(0, 494, 320, 216)];
     datePicker.datePickerMode = UIDatePickerModeDateAndTime;
     datePicker.minuteInterval = 5;
-    
     [self.view addSubview:datePicker];
     
     NSArray *array = [NSArray arrayWithObjects:DATE_PICKER_DEPART,DATE_PICKER_ARRIVE, nil];
@@ -1516,10 +1515,10 @@ NSUserDefaults *prefs;
     UIBarButtonItem *flexibaleSpaceBarButton1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     UIBarButtonItem *flexibaleSpaceBarButton2 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     [toolBar setItems:[NSArray arrayWithObjects:btnNow,flexibaleSpaceBarButton1,segmentBtn,flexibaleSpaceBarButton2,btnDone, nil]];
-
-    [self.view addSubview:toolBar];
     [self.view bringSubviewToFront:toolBar];
     [self.view bringSubviewToFront:datePicker];
+
+    [self.view addSubview:toolBar];
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
     [toolBar setFrame:CGRectMake(0, 160, 320, 44)];
@@ -1545,6 +1544,7 @@ NSUserDefaults *prefs;
 #pragma mark Hide and Show Tabbar
 
 - (void) hideTabBar {
+    [[nc_AppDelegate sharedInstance].twitterCount setHidden:YES];
     for(UIView *view in self.tabBarController.view.subviews)
     {
         CGRect _rect = view.frame;
@@ -1560,6 +1560,7 @@ NSUserDefaults *prefs;
 }
 
 - (void) showTabbar {
+    [[nc_AppDelegate sharedInstance].twitterCount setHidden:NO];
     for(UIView *view in self.tabBarController.view.subviews)
     {
         CGRect _rect = view.frame;

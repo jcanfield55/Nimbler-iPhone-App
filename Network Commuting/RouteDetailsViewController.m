@@ -171,7 +171,7 @@ NSUserDefaults *prefs;
                         [NSString stringWithFormat:@"%d", iNumber0], nil];
     [Flurry logEvent:FLURRY_ROUTE_DETAILS_NEWITINERARY_NUMBER withParameters:params];
 #endif
-                                                                                                
+                                                                                               
     itineraryNumber = iNumber0;
     [mainTable reloadData]; // reload the table to highlight the new itinerary number
     
@@ -193,12 +193,8 @@ NSUserDefaults *prefs;
         [btnForwardItem setEnabled:TRUE];
         [btnForwardItem setBackgroundImage:[imageDictionary objectForKey:@"img_forwardSelect"] forState:UIControlStateNormal];
     }
-    // Updates legMapVC itinerary number (changing the region for the map
-    NSLog(@"%d",itineraryNumber);
     [legMapVC setItineraryNumber:itineraryNumber];
-    //Leg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:iNumber0];
-    //[legMapVC setLeg:leg];
-    //[legMapVC setItinerary:itinerary];
+    // Updates legMapVC itinerary number (changing the region for the map
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -391,24 +387,21 @@ NSUserDefaults *prefs;
 
 // Callback for when user presses the navigate back button on the right navbar
 - (IBAction)navigateBack:(id)sender {
-        
     if ([self itineraryNumber] > 0) {
         [self setItineraryNumber:([self itineraryNumber] - 1)];
          [self test:itineraryNumber];
-        
+        [legMapVC refreshLegOverlay:itineraryNumber];
     }
-    
 }
 
 // Callback for when user presses the navigate forward button on the right navbar
 - (IBAction)navigateForward:(id)sender {
     if ([self itineraryNumber] < [itinerary itineraryRowCount] - 1) {
-//        Leg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:itineraryNumber+1];
-//        [legMapVC setLeg:leg];
         [self setItineraryNumber:([self itineraryNumber] + 1)];
-       
         [self test:itineraryNumber];
+        [legMapVC refreshLegOverlay:itineraryNumber];
     }
+    
 }
 
 

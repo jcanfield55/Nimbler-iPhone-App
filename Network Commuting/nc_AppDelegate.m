@@ -605,6 +605,7 @@ FeedBackForm *fbView;
     }
 }
 
+
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo 
 {        
     @try {
@@ -620,6 +621,11 @@ FeedBackForm *fbView;
         [prefs setObject:badge forKey:TWEET_COUNT];
         
         if ([isUrgent isEqualToString:@"true"]) {
+            if([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive){
+                if([[NSUserDefaults standardUserDefaults] integerForKey:ENABLE_URGENTNOTIFICATION_SOUND] == 1 || [[NSUserDefaults standardUserDefaults] integerForKey:ENABLE_URGENTNOTIFICATION_SOUND] == 0){
+                    AudioServicesPlaySystemSound(1015);  
+                }
+            }
             UIAlertView *dataAlert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain"
                                                                 message:message
                                                                delegate:self
@@ -627,11 +633,6 @@ FeedBackForm *fbView;
                                                       otherButtonTitles:nil,nil];
             
             [dataAlert show];
-            if([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive){
-                if([[NSUserDefaults standardUserDefaults] integerForKey:ENABLE_URGENTNOTIFICATION_SOUND] == 1){
-                     AudioServicesPlaySystemSound(1015);
-                }
-            }
         } 
         else { 
             // Redirect to Twitter Page View
