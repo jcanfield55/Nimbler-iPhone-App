@@ -145,6 +145,20 @@
     return [[[self sortedLegs] objectAtIndex:([sortedLegs count]-1)] to];
 }
 
+// Returns true if each leg's starttime is current versus the GTFS file date for that leg's agency
+// Otherwise returns false
+- (BOOL)isCurrentVsGtfsFilesIn:(TransitCalendar *)transitCalendar
+{
+    BOOL allLegsMatch = true;
+    for (Leg* leg in [self legs]) {
+        if ([leg agencyId] && [[leg agencyId] length]>0 &&    // If no agencyId, count as a match
+            ![transitCalendar isCurrentVsGtfsFileFor:[leg startTime] agencyId:[leg agencyId]]) {
+            allLegsMatch = false;
+        }
+    }
+    return allLegsMatch;
+}
+
 // Compares the itineraries to see if they are equivalent in substance
 - (ItineraryCompareResult)compareItineraries:(Itinerary *)itin0
 {

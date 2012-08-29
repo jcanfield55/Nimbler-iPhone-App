@@ -32,12 +32,16 @@
     Locations *locations;
     PlanStore *planStore;
     
+    Plan *plan1;
+    Plan *plan2;
     Plan *plan3;
     Plan *plan4;
     Plan *plan5;
     Plan *plan6;
+    Plan *plan7;
 
     Itinerary *itin10;
+    Itinerary *itin11;
     Itinerary *itin20;
     Itinerary *itin30;
     Itinerary *itin31;
@@ -50,6 +54,9 @@
     Itinerary *itin60;
     Itinerary *itin61;
     Itinerary *itin62;
+    Itinerary *itin70;
+    Itinerary *itin71;
+    Itinerary *itin72;
 
     NSDate* date60req;
 }

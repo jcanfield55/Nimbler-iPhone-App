@@ -10,6 +10,7 @@
 #import <CoreData/CoreData.h>
 #import <RestKit/Restkit.h>
 #import "PlanPlace.h"
+#import "TransitCalendar.h"
 #import "enums.h"
 
 @class Leg, Plan, PlanRequestChunk;
@@ -53,6 +54,10 @@ typedef enum {
 - (PlanPlace *)from;
 - (PlanPlace *)to;
 - (NSString *)ncDescription;
+
+// Returns true if each leg's starttime is current versus the GTFS file date for that leg's agency
+// Otherwise returns false
+- (BOOL)isCurrentVsGtfsFilesIn:(TransitCalendar *)transitCalendar;
 
 // Compares the itineraries to see if they are equivalent in substance
 - (ItineraryCompareResult)compareItineraries:(Itinerary *)itin0;

@@ -162,7 +162,13 @@ static TransitCalendar * transitCalendarSingleton;
         // Indicate different services for weekdays, Saturdays and Sundays
         NSArray* serviceByWeekday = [NSArray arrayWithObjects:@"Sunday", @"Weekday",
                                      @"Weekday", @"Weekday", @"Weekday", @"Weekday", @"Saturday", nil];
-        [serviceByWeekdayMutable setObject:serviceByWeekday forKey:agencyID];
+        NSArray* ACTransitServiceByWeekday = [NSArray arrayWithObjects:@"Sunday", @"Monday",
+                                              @"Tuesday", @"Wednesday", @"Thursday", @"Friday", @"Saturday", nil];
+        if ([agencyID isEqualToString:@"AC Transit"]) {
+            [serviceByWeekdayMutable setObject:ACTransitServiceByWeekday forKey:agencyID];
+        } else {
+            [serviceByWeekdayMutable setObject:serviceByWeekday forKey:agencyID];
+        }
         
         NSDictionary* calendarByDate = [NSDictionary dictionaryWithObjectsAndKeys:
                                         @"Sunday", laborDay, nil];  // Give Sunday schedule on Labor Day

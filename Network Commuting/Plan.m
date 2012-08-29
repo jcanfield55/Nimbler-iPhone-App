@@ -100,6 +100,14 @@
 // Then deletes plan0 from the database
 - (void)consolidateIntoSelfPlan:(Plan *)plan0
 {
+    // Make sure all itineraries in self are still valid GTFS data.  Delete otherwise
+    NSSet* selfItineraries = [NSSet setWithSet:[self itineraries]];
+    for (Itinerary* itin in selfItineraries) {
+        if (![itin isCurrentVsGtfsFilesIn:[self transitCalendar]]) {
+            [self deleteItinerary:itin];
+        }
+    }
+    
     // Consolidate requestChunks
     NSMutableSet* chunksConsolidated = [[NSMutableSet alloc] initWithCapacity:10];
     for (PlanRequestChunk* reqChunk0 in [plan0 requestChunks]) {
@@ -121,11 +129,15 @@
     }
     
     // Transfer over the itineraries getting rid of ones we do not need
-    NSArray* sortedItineraries0 = [plan0 sortedItineraries];
-    for (Itinerary* itin0 in sortedItineraries0) {
-        if ([self addItineraryIfNew:itin0] == ITIN0_OBSOLETE) { // add the itinerary no matter what
-            [plan0 deleteItinerary:itin0];   // if itin0 obsolete, also make sure we delete it
-        } 
+    NSSet* itineraries0 = [NSSet setWithSet:[plan0 itineraries]];
+    for (Itinerary* itin0 in itineraries0) {
+        if (![itin0 isCurrentVsGtfsFilesIn:[self transitCalendar]]) {
+            [plan0 deleteItinerary:itin0];  // delete itin0 if it is no longer current vs GTFS files
+        } else {
+            if ([self addItineraryIfNew:itin0] == ITIN0_OBSOLETE) { // add the itinerary no matter what
+                [plan0 deleteItinerary:itin0];   // if itin0 obsolete, also make sure we delete it
+            }
+        }
     }
     // Delete plan0
     [[self managedObjectContext] deleteObject:plan0];
@@ -138,8 +150,9 @@
 // Returns the result of the itinerary comparison (see Itinerary.h for enum definition)
 - (ItineraryCompareResult) addItineraryIfNew:(Itinerary *)itin0
 {
-    for (Itinerary* itin1 in [self sortedItineraries]) {
-        ItineraryCompareResult itincompare = [itin1 compareItineraries:itin0];
+    NSSet* selfItineraries = [NSSet setWithSet:[self itineraries]];  // Make a copy since I will be deleting some
+    for (Itinerary* itinSelf in selfItineraries) {
+        ItineraryCompareResult itincompare = [itinSelf compareItineraries:itin0];
         if (itincompare == ITINERARIES_DIFFERENT) {
             continue;
         }
@@ -147,10 +160,21 @@
             return itincompare;  // two are identical objects, so no duplication
         }
         if (itincompare == ITIN_SELF_OBSOLETE){
-            [self deleteItinerary:itin1];
+            // Make sure all of itinSelf requestChunks over to itin0
+            for (PlanRequestChunk* reqChunk in [itinSelf planRequestChunks]) {
+                [reqChunk addItinerariesObject:itin0];
+                [reqChunk setSortedItineraries:nil];  // Flag for resorting
+            }
+            // Replace itinSelf with itin0
+            [self deleteItinerary:itinSelf];
             [self addItinerary:itin0];
             return itincompare;
         } else if (itincompare == ITIN0_OBSOLETE) {
+            // Make sure all of itin0's requestChunks over to itinSelf
+            for (PlanRequestChunk* reqChunk in [itin0 planRequestChunks]) {
+                [reqChunk addItinerariesObject:itinSelf];
+                [reqChunk setSortedItineraries:nil];  // Flag for resorting
+            }
             return itincompare;
         } else if (itincompare == ITINERARIES_SAME) {
             return itincompare;
@@ -248,7 +272,7 @@
 // If it does not find any, returns false and leaves sortedItineraries unchanged
 - (BOOL)prepareSortedItinerariesWithMatchesForDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive
 {
-    NSMutableArray* newSortedItineraries = [[NSMutableArray alloc] initWithCapacity:[[self sortedItineraries] count]];
+    NSMutableSet* matchingItineraries = [[NSMutableSet alloc] initWithCapacity:[[self itineraries] count]];
     
     // Create a set of all PlanRequestChunks that match the requestDate services and time
     NSMutableSet* matchingReqChunks = [[NSMutableSet alloc] initWithCapacity:10];
@@ -266,13 +290,8 @@
     for (PlanRequestChunk* reqChunk in matchingReqChunks) {
         for (Itinerary* itin in [reqChunk itineraries]) {
             // Check that all legs are current with the GTFS file
-            BOOL allLegsMatch = true;
-            for (Leg* leg in [itin legs]) {
-                if (![[self transitCalendar] isCurrentVsGtfsFileFor:[leg startTime] agencyId:[leg agencyId]]) {
-                    allLegsMatch = false;
-                }
-            }
-            if (allLegsMatch) { // if itin is valid
+
+            if ([itin isCurrentVsGtfsFilesIn:[self transitCalendar]]) { // if itin is valid
                 // Check that the times match the requested time
                 NSDate* requestTimeOnly = timeOnlyFromDate(requestDate);
                 if (depOrArrive == DEPART) {
@@ -282,7 +301,7 @@
                     if ([requestTimeWithPreBuffer compare:itinStartTimeOnly]!=NSOrderedDescending &&
                         [requestTimeWithPostBuffer compare:itinStartTimeOnly]!=NSOrderedAscending) {
                         // If itin start time is within the two buffer ranges
-                        [newSortedItineraries addObject:itin];
+                        [matchingItineraries addObject:itin];
                     }
                 } else { // depOrArrive = ARRIVE
                     NSDate* itinEndTimeOnly = timeOnlyFromDate([itin endTime]);
@@ -291,24 +310,24 @@
                     if ([requestTimeWithPreBuffer compare:itinEndTimeOnly]!=NSOrderedAscending &&
                         [requestTimeWithPostBuffer compare:itinEndTimeOnly]!=NSOrderedDescending) {
                         // If itin start time is within the two buffer ranges
-                        [newSortedItineraries addObject:itin];
+                        [matchingItineraries addObject:itin];
                     }
                 }
             }
         }
     }
-    if ([newSortedItineraries count] == 0) {
+    if ([matchingItineraries count] == 0) {
         return false;
     }
     // else
-    if ([newSortedItineraries count] < PLAN_MAX_ITINERARIES_TO_SHOW) {
+    if ([matchingItineraries count] < PLAN_MAX_ITINERARIES_TO_SHOW) {
         // NSDate* nextRequestDate = [reqChunk nextRequestDateFor:requestDate];
         // TODO Make a plan request for nextRequestDate
     }
     
     // Sort and set sortedItineraries
     NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:YES];
-    [self setSortedItineraries:[newSortedItineraries sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
+    [self setSortedItineraries:[matchingItineraries sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
     return true;
 }
 

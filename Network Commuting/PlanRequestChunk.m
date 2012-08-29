@@ -68,8 +68,12 @@
     for (Itinerary* itin in [self sortedItineraries]) {
         for (Leg* leg in [itin sortedLegs]) {
             NSString* agencyId = [leg agencyId];
-            NSString* serviceString = [transitCalendar serviceStringForDate:requestDate agencyId:agencyId];
-            [returnedValue setObject:serviceString forKey:agencyId];
+            if (agencyId && [agencyId length]>0) { // Check if there is an agency for this leg
+                if (![returnedValue objectForKey:agencyId]) { // if we do not already have this serviceString
+                    NSString* serviceString = [transitCalendar serviceStringForDate:requestDate agencyId:agencyId];
+                    [returnedValue setObject:serviceString forKey:agencyId];
+                }
+            }
         }
     }
     [self setServiceStringByAgency:[NSDictionary dictionaryWithDictionary:returnedValue]];
@@ -89,8 +93,7 @@
     while (agencyId = [enumerator nextObject]) {
         NSString* selfServiceString = [[self serviceStringByAgency] objectForKey:agencyId];
         NSString* chunk0ServiceString = [[requestChunk0 serviceStringByAgency] objectForKey:agencyId];
-        if (chunk0ServiceString && ![chunk0ServiceString isEqualToString:selfServiceString]) {
-            // if chunk0 has a service string for that agency, and it does not match...
+        if (![chunk0ServiceString isEqualToString:selfServiceString]) {
             return false;
         }
     }
@@ -100,8 +103,7 @@
     while (agencyId = [enumerator nextObject]) {
         NSString* selfServiceString = [[self serviceStringByAgency] objectForKey:agencyId];
         NSString* chunk0ServiceString = [[requestChunk0 serviceStringByAgency] objectForKey:agencyId];
-        if (selfServiceString && ![chunk0ServiceString isEqualToString:selfServiceString]) {
-            // if self has a service string for that agency, and it does not match...
+        if (![chunk0ServiceString isEqualToString:selfServiceString]) {
             return false;
         }
     }
@@ -111,6 +113,7 @@
 //
 // Returns true if all the service days for all the itineraries and legs in the planRequestChunk match
 // the request date.  Otherwise returns false
+// If none of the legs in this requestChunk have agencyIds (for example, just walk legs), then returns true
 //
 - (BOOL)doAllItineraryServiceDaysMatchDate:(NSDate *)requestDate
 {

@@ -53,6 +53,7 @@
 
 // Returns true if all the service days for all the itineraries and legs in the planRequestChunk match
 // the request date.  Otherwise returns false
+// If none of the legs in this requestChunk have agencyIds (for example, just walk legs), then returns true
 - (BOOL)doAllItineraryServiceDaysMatchDate:(NSDate *)requestDate;
 
 // Returns true if the referring PlanRequestChunk is relevant to the given requestDate and depOrArrive
