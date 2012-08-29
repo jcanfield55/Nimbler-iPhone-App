@@ -35,17 +35,6 @@ NSUserDefaults *prefs;
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        [[self navigationItem] setTitle:TWEETERVIEW_MANE];               
-        dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateStyle:NSDateFormatterFullStyle];
-        prefs = [NSUserDefaults standardUserDefaults];
-      UIButton *btnReload = [[UIButton alloc] initWithFrame:CGRectMake(0,0,48,34)];
-        [btnReload addTarget:self action:@selector(getLatestTweets) forControlEvents:UIControlEventTouchUpInside];
-        [btnReload setBackgroundImage:[UIImage imageNamed:@"img_reload.png"] forState:UIControlStateNormal];
-        
-        reload = [[UIBarButtonItem alloc] initWithCustomView:btnReload]; 
-        self.navigationItem.rightBarButtonItem = reload;
-        
     }
     return self;
 }
@@ -76,10 +65,32 @@ NSUserDefaults *prefs;
     arrayTweet = [[NSMutableArray alloc] init];
     [self hideUnUsedTableViewCell];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                     [UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
-                                                                     nil]];
+//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+//        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
+//    }
+//    else {
+//        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_navigationbar.png"]] aboveSubview:self.navigationController.navigationBar];
+//    }
+    UILabel* tlabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 200, 40)];
+    [tlabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:20.0]];
+    tlabel.text=TWEETERVIEW_MANE;
+    tlabel.textColor= [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];
+    [tlabel setTextAlignment:UITextAlignmentCenter];
+    tlabel.backgroundColor =[UIColor clearColor];
+    tlabel.adjustsFontSizeToFitWidth=YES;
+    self.navigationItem.titleView=tlabel;
+    //[[self navigationItem] setTitle:TWEETERVIEW_MANE];               
     
+    dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle:NSDateFormatterFullStyle];
+    prefs = [NSUserDefaults standardUserDefaults];
+    UIButton *btnReload = [[UIButton alloc] initWithFrame:CGRectMake(0,0,48,34)];
+    [btnReload addTarget:self action:@selector(getLatestTweets) forControlEvents:UIControlEventTouchUpInside];
+    [btnReload setBackgroundImage:[UIImage imageNamed:@"img_reload.png"] forState:UIControlStateNormal];
+    
+    reload = [[UIBarButtonItem alloc] initWithCustomView:btnReload]; 
+    self.navigationItem.rightBarButtonItem = reload;
+
     // Do any additional setup after loading the view from its nib.
 }
 

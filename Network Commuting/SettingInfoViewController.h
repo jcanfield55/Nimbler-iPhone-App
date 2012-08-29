@@ -22,6 +22,7 @@
              UILabel *lblSliderValue;
     int      enableUrgentSoundFlag;
     int      enableStandardSoundFlag;
+   
 }
 
 @property (nonatomic, strong) IBOutlet UISwitch *switchPushEnable;
@@ -41,4 +42,5 @@
 -(UIAlertView *) upadetSettings;
 -(void)popOutFromSettingView;
 -(void)fetchUserSettingData;
+- (void) saveSetting;
 @end

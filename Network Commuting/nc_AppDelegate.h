@@ -37,6 +37,8 @@
     BOOL isUpdateTime;
     BOOL isServiceByWeekday;
     BOOL isCalendarByDate;
+    BOOL isSettingSavedSuccessfully;
+    BOOL isSettingRequest;
 }
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
@@ -70,6 +72,8 @@
 @property (nonatomic) BOOL isUpdateTime;
 @property (nonatomic) BOOL isServiceByWeekday;
 @property (nonatomic) BOOL isCalendarByDate;
+@property (nonatomic) BOOL     isSettingSavedSuccessfully;
+@property (nonatomic) BOOL isSettingRequest;
 
 - (NSURL *)applicationDocumentsDirectory;
 
@@ -83,4 +87,5 @@
 -(void)updateTime;
 -(void)serviceByWeekday;
 -(void)calendarByDate;
+- (void)saveSetting;
 @end

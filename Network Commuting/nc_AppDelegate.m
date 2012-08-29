@@ -56,6 +56,8 @@ static nc_AppDelegate *appDelegate;
 @synthesize isUpdateTime;
 @synthesize isServiceByWeekday;
 @synthesize isCalendarByDate;
+@synthesize isSettingSavedSuccessfully;
+@synthesize isSettingRequest;
 
 
 // Feedback parameters
@@ -330,6 +332,9 @@ FeedBackForm *fbView;
     if(isFromBackground){
         toFromViewController.continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
     }
+    if(!isSettingSavedSuccessfully){
+        [self saveSetting];
+    }
 //    sleep(2);
 }
 
@@ -482,7 +487,19 @@ FeedBackForm *fbView;
             if (error == nil)
             {
                 RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
-                if (isTwitterLivaData) {
+                if(isSettingRequest){
+                    NSDictionary  *dictTemp = [rkParser objectFromString:[response bodyAsString] error:nil];
+                    NSLog(@"%@",[response bodyAsString]);
+                    NSNumber *respCode = [(NSDictionary*)dictTemp objectForKey:CODE];
+                    if ([respCode intValue]== RESPONSE_SUCCESSFULL) { 
+                        self.isSettingSavedSuccessfully = YES;
+                    }
+                    else{
+                        self.isSettingSavedSuccessfully = NO;
+                    }
+                    isSettingRequest = NO;
+                }
+                else if (isTwitterLivaData) {
                     isTwitterLivaData = false;
                     NSLog(@"Responce %@", [response bodyAsString]);
                     NSDictionary  *tweeterCountParser = [rkParser objectFromString:[response bodyAsString] error:nil];
@@ -718,6 +735,33 @@ FeedBackForm *fbView;
     @catch (NSException *exception) {
         NSLog(@"exception at getTwiiterLive count: %@", exception);
     }
+}
+
+- (void)saveSetting{
+    NSUserDefaults* userDefault = [NSUserDefaults standardUserDefaults];
+    NSString *token = [userDefault objectForKey:DEVICE_TOKEN];
+    NSString *pushEnable = [prefs objectForKey:PREFS_IS_PUSH_ENABLE];
+    int pushHour;
+    if([pushEnable intValue] == 0){
+        pushHour = -1;
+    }
+    else{
+        pushHour = [userDefault integerForKey:PREFS_PUSH_NOTIFICATION_THRESHOLD];
+    }
+    RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+    [RKClient setSharedClient:client];
+    NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
+                            DEVICE_ID, [userDefault objectForKey:DEVICE_CFUUID],
+                            ALERT_COUNT,[NSNumber numberWithInt:pushHour],
+                            DEVICE_TOKEN, token,
+                            MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:[userDefault floatForKey:PREFS_MAX_WALK_DISTANCE]],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_URGENTNOTIFICATION_SOUND]],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_STANDARDNOTIFICATION_SOUND]],
+                            nil];
+    NSString *twitCountReq = [UPDATE_SETTING_REQ appendQueryParams:params];
+    NSLog(@" - - -  - - - - - %@", twitCountReq);
+    isSettingRequest = YES;
+    [nc_AppDelegate sharedInstance].isSettingSavedSuccessfully = NO;
+    [[RKClient sharedClient]  get:twitCountReq delegate:self];
+
 }
 
 #pragma mark update userSettings from server 

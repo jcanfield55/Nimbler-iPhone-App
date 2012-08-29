@@ -114,21 +114,6 @@ NSUserDefaults *prefs;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     @try {
         if (self) {
-            UIImage *imgTitle = [UIImage imageNamed:@"nimblr.png"];
-            self.navigationItem.titleView = [[UIImageView alloc]  initWithImage:imgTitle];
-            
-            UIButton *btnSwapORBack = [[UIButton alloc] initWithFrame:CGRectMake(0,0,55,35)];
-            [btnSwapORBack setTag:101];
-            if(editMode == NO_EDIT){
-                [btnSwapORBack addTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
-                [btnSwapORBack setBackgroundImage:[UIImage imageNamed:@"img_swapLocation.png"] forState:UIControlStateNormal];
-            }
-            else{
-                [btnSwapORBack addTarget:self action:@selector(endEdit) forControlEvents:UIControlEventTouchUpInside];
-                [btnSwapORBack setBackgroundImage:[UIImage imageNamed:@"img_backSelect.png"] forState:UIControlStateNormal];
-            }
-            UIBarButtonItem *btnBarSwapORBack = [[UIBarButtonItem alloc] initWithCustomView:btnSwapORBack];
-            self.navigationItem.leftBarButtonItem = btnBarSwapORBack;
             prefs  = [NSUserDefaults standardUserDefaults];
             planRequestHistory = [NSMutableArray array]; // Initialize this array
             departOrArrive = DEPART;
@@ -203,16 +188,32 @@ NSUserDefaults *prefs;
     return self;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad{
     [super viewDidLoad];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
+//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+//        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
+//    }
+//    else {
+//        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_navigationbar.png"]] aboveSubview:self.navigationController.navigationBar];
+//    }
+    UIImage *imgTitle = [UIImage imageNamed:@"nimblr.png"];
+    self.navigationItem.titleView = [[UIImageView alloc]  initWithImage:imgTitle];
+    
+    UIButton *btnSwapORBack = [[UIButton alloc] initWithFrame:CGRectMake(0,0,55,35)];
+    [btnSwapORBack setTag:101];
+    if(editMode == NO_EDIT){
+        [btnSwapORBack addTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
+        [btnSwapORBack setBackgroundImage:[UIImage imageNamed:@"img_swapLocation.png"] forState:UIControlStateNormal];
+    }
+    else{
+        [btnSwapORBack addTarget:self action:@selector(endEdit) forControlEvents:UIControlEventTouchUpInside];
+        [btnSwapORBack setBackgroundImage:[UIImage imageNamed:@"img_backSelect.png"] forState:UIControlStateNormal];
+    }
+    UIBarButtonItem *btnBarSwapORBack = [[UIBarButtonItem alloc] initWithCustomView:btnSwapORBack];
+    self.navigationItem.leftBarButtonItem = btnBarSwapORBack;
     
     routeButton.layer.cornerRadius = CORNER_RADIUS_SMALL;
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                     [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
-                                                                     nil]];
-    
     [continueGetTime invalidate];
     continueGetTime = nil;
     
@@ -1313,7 +1314,6 @@ NSUserDefaults *prefs;
         [locationPickerVC setLocationArray:locationList0];
         [locationPickerVC setIsFrom:isFrom0];
         [locationPickerVC setIsGeocodeResults:isGeocodeResults0];
-        
         [[self navigationController] pushViewController:locationPickerVC animated:YES];  
     }
     @catch (NSException *exception) {

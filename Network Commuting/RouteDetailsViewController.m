@@ -65,11 +65,23 @@ NSUserDefaults *prefs;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     @try {
         if (self) {
-            [[self navigationItem] setTitle:ROUTE_TITLE_MSG];
             [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-            [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                             [UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
-                                                                             nil]];
+//            if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+//                [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
+//            }
+//            else {
+//                [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_navigationbar.png"]] aboveSubview:self.navigationController.navigationBar];
+//            }
+            
+            UILabel* tlabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 200, 40)];
+            [tlabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:20.0]];
+            tlabel.text=ROUTE_TITLE_MSG;
+            tlabel.textColor= [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];
+            [tlabel setTextAlignment:UITextAlignmentCenter];
+            tlabel.backgroundColor =[UIColor clearColor];
+            tlabel.adjustsFontSizeToFitWidth=YES;
+            self.navigationItem.titleView=tlabel;
+            //[[self navigationItem] setTitle:ROUTE_TITLE_MSG];
             
             // Set up the MKMapView and LegMapViewController
             mapView = [[MKMapView alloc] init];

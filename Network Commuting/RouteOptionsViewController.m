@@ -50,7 +50,16 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        [[self navigationItem] setTitle:@"Itineraries"];
+        UILabel* tlabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 200, 40)];
+        [tlabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:20.0]];
+        tlabel.text=@"Itineraries";
+        tlabel.textColor= [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];
+        [tlabel setTextAlignment:UITextAlignmentCenter];
+        tlabel.backgroundColor =[UIColor clearColor];
+        tlabel.adjustsFontSizeToFitWidth=YES;
+        self.navigationItem.titleView=tlabel;
+        
+        //[[self navigationItem] setTitle:@"Itineraries"];
         timeFormatter = [[NSDateFormatter alloc] init];
         [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
     }
@@ -110,6 +119,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                                           reuseIdentifier:IDENTIFIER_CELL];
             [cell.imageView setImage:nil];
         }
+        [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
          cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.textLabel.numberOfLines = 2;
         // Get the requested itinerary
@@ -248,6 +258,13 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
+//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+//        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
+//    }
+//    else {
+//        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_navigationbar.png"]] aboveSubview:self.navigationController.navigationBar];
+//    }
     btnGoToNimbler = [[UIButton alloc] initWithFrame:CGRectMake(0,0,65,34)];
     [btnGoToNimbler addTarget:self action:@selector(popOutToNimbler) forControlEvents:UIControlEventTouchUpInside];
     [btnGoToNimbler setBackgroundImage:[UIImage imageNamed:@"img_nimblerNavigation.png"] forState:UIControlStateNormal];
@@ -256,11 +273,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     self.navigationItem.leftBarButtonItem = backTonimbler;
     
     [self hideUnUsedTableViewCell];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                     [UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
-                                                                     nil]];
-    NSLog(@"RouteOptions loaded");
 }
 
 - (void)viewDidAppear:(BOOL)animated

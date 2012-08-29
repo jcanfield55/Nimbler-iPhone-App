@@ -40,8 +40,7 @@ bool isPush;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        [[self navigationItem] setTitle:SETTING_TITLE];
-        
+        //[[self navigationItem] setTitle:SETTING_TITLE];
     }
     return self;
 }
@@ -59,9 +58,20 @@ bool isPush;
 {
     [super viewDidLoad];
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                     [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0], UITextAttributeTextColor,
-                                                                     nil]];
+//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+//        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
+//    }
+//    else {
+//        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_navigationbar.png"]] aboveSubview:self.navigationController.navigationBar];
+//    }
+    UILabel* tlabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 200, 40)];
+    [tlabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:20.0]];
+    tlabel.text=SETTING_TITLE;
+    tlabel.textColor= [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];
+    [tlabel setTextAlignment:UITextAlignmentCenter];
+    tlabel.backgroundColor =[UIColor clearColor];
+    tlabel.adjustsFontSizeToFitWidth=YES;
+    self.navigationItem.titleView=tlabel;
 }
 
 - (void)viewDidUnload{
@@ -97,8 +107,12 @@ bool isPush;
     btnUpdateSetting.layer.cornerRadius = CORNER_RADIUS_SMALL;
 }
 
--(IBAction)UpdateSetting:(id)sender
-{
+- (void) viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:YES];
+    [self saveSetting];
+}
+
+- (void) saveSetting{
     @try {
         if (!switchPushEnable.on) {
             // set -1 for stop getting push notification
@@ -122,26 +136,24 @@ bool isPush;
         [[NSUserDefaults standardUserDefaults] setInteger:enableUrgentSoundFlag forKey:ENABLE_URGENTNOTIFICATION_SOUND];
         [[NSUserDefaults standardUserDefaults] setInteger:enableStandardSoundFlag forKey:ENABLE_STANDARDNOTIFICATION_SOUND];
         [[NSUserDefaults standardUserDefaults] synchronize];
-        alertView = [self upadetSettings];    
-        [alertView show];
+       // alertView = [self upadetSettings];    
+        //[alertView show];
         
         // Update in user defaults
         float ss = sliderPushNotification.value;
-
+        
         UserPreferance *userPrefs = [UserPreferance userPreferance]; // get singleton
         userPrefs.pushEnable = [NSNumber numberWithBool:isPush];
         userPrefs.triggerAtHour = [NSNumber numberWithFloat:ss];
         userPrefs.walkDistance = [NSNumber numberWithFloat:sliderMaxWalkDistance.value];
         [userPrefs saveUpdates];
-
+        
         NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
         NSString *token = [prefs objectForKey:DEVICE_TOKEN];
-        
+       
         // Update in TPServer DB
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
-//        NSString *udid = [UIDevice currentDevice].uniqueIdentifier; 
-        
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                                 DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
                                 ALERT_COUNT,[NSNumber numberWithInt:pushHour],
@@ -150,6 +162,7 @@ bool isPush;
                                 nil];
         NSString *twitCountReq = [UPDATE_SETTING_REQ appendQueryParams:params];
         NSLog(@" - - -  - - - - - %@", twitCountReq);
+        [nc_AppDelegate sharedInstance].isSettingSavedSuccessfully = NO;
         [[RKClient sharedClient]  get:twitCountReq delegate:self];
         
 #if FLURRY_ENABLED
@@ -162,13 +175,18 @@ bool isPush;
         [Flurry logEvent: FLURRY_ROUTE_REQUESTED withParameters:flurryParams];
 #endif
         
-         [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(popOutFromSettingView) userInfo:nil repeats: NO];
+        //[NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(popOutFromSettingView) userInfo:nil repeats: NO];
     }
     @catch (NSException *exception) {
         [alertView dismissWithClickedButtonIndex:0 animated:NO];
         [self.navigationController popViewControllerAnimated:YES];
-         NSLog(@"exception at upadting Setting : %@", exception);
+        NSLog(@"exception at upadting Setting : %@", exception);
     }
+}
+
+
+-(IBAction)UpdateSetting:(id)sender
+{
 }
 
 -(IBAction)sliderWalkDistanceValueChanged:(UISlider *)sender
@@ -195,9 +213,18 @@ bool isPush;
     [rxCustomTabBar selectTab:0];
 }
 
-- (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
+- (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response { 
+    RKJSONParserJSONKit* rkTwitDataParser = [RKJSONParserJSONKit new];
     @try {
         if ([request isGET]) {
+            id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];
+            NSNumber *respCode = [(NSDictionary*)res objectForKey:CODE];
+            if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
+                [nc_AppDelegate sharedInstance].isSettingSavedSuccessfully = YES;
+            }
+            else{
+                [nc_AppDelegate sharedInstance].isSettingSavedSuccessfully = NO;
+            }
             NSLog(@"response for userUpdateSettings:  %@", [response bodyAsString]);
         }
     }  @catch (NSException *exception) {
