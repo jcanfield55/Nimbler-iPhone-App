@@ -258,11 +258,11 @@
 }
 
 // True if the main characteristics of referring Leg is equal to leg0
-// Compares startTime, endTime, to name, and from name
+// Compares timeOnly components of startTime and of endTime, to name, and from name
 - (BOOL)isEqualInSubstance:(Leg *)leg0
 {
-    if ([[leg0 startTime] isEqualToDate:[self startTime]] &&
-        [[leg0 endTime] isEqualToDate:[self endTime]] &&
+    if ([timeOnlyFromDate([leg0 startTime]) isEqualToDate:timeOnlyFromDate([self startTime])] &&
+        [timeOnlyFromDate([leg0 endTime]) isEqualToDate:timeOnlyFromDate([self endTime])] &&
         [[[leg0 from] name] isEqualToString:[[self from] name]] &&
         [[[leg0 to] name] isEqualToString:[[self to] name]] &&
         [[leg0 route] isEqualToString:[self route]]) {

@@ -143,6 +143,66 @@ NSString *distanceStringInMilesFeet(double meters) {
     return returnString;
 }
 
+//
+// Returns a NSDate object containing just the time of the date parameter.
+// Uses [NSCalendar currentCalendar] and the hours and minutes components to compute
+//
+NSDate *timeOnlyFromDate(NSDate *date) {
+    // Set up what we need to look at date components
+    NSCalendar* calendar = [NSCalendar currentCalendar];
+    NSUInteger timeComponents = NSHourCalendarUnit | NSMinuteCalendarUnit;
+    
+    // Get the key times (independent of date)
+    NSDate *returnTime = [calendar dateFromComponents:[calendar components:timeComponents
+                                                                   fromDate:date]];
+    return returnTime;
+}
 
+//
+// Returns a NSDate object containing just the date part of the date parameter (not the time)
+// Uses [NSCalendar currentCalendar] and the month, day, and year components to compute
+//
+NSDate *dateOnlyFromDate(NSDate *date) {
+    // Set up what we need to look at date components
+    NSCalendar* calendar = [NSCalendar currentCalendar];
+    NSUInteger timeComponents = NSMonthCalendarUnit | NSYearCalendarUnit | NSDayCalendarUnit;
+    
+    // Get the key times (independent of date)
+    NSDate *returnTime = [calendar dateFromComponents:[calendar components:timeComponents
+                                                                  fromDate:date]];
+    return returnTime;
+}
 
+//
+// Retrieves the day of week from the date (Sunday = 1, Saturday = 7)
+//
+NSInteger dayOfWeekFromDate(NSDate *date) {
+    // Set up what we need to look at date components
+    NSCalendar* calendar = [NSCalendar currentCalendar];
+    NSUInteger timeComponents = NSWeekdayCalendarUnit;
+    
+    // Get the key times (independent of date)
+    NSInteger returnedWeekday = [[calendar components:timeComponents fromDate:date] weekday];
+    return returnedWeekday;
+}
+
+//
+// Returns a date where the date components are taken from dateOnly, and the time components are
+// taken from timeOnly
+//
+NSDate *addDateOnlyWithTimeOnly(NSDate *dateOnly, NSDate *timeOnly) {
+    NSCalendar* calendar = [NSCalendar currentCalendar];
+    NSUInteger dateComponentNames = NSMonthCalendarUnit | NSYearCalendarUnit | NSDayCalendarUnit;
+    NSUInteger timeComponentNames = NSHourCalendarUnit | NSMinuteCalendarUnit;
+
+    // Get the components of dateOnly and timeOnly
+    NSDateComponents* dateComponents = [calendar components:dateComponentNames fromDate:dateOnly];
+    NSDateComponents* timeComponents = [calendar components:timeComponentNames fromDate:timeOnly];
+    
+    // Transfer time components over
+    [dateComponents setHour:[timeComponents hour]];
+    [dateComponents setMinute:[timeComponents minute]];
+    
+    return [calendar dateFromComponents:dateComponents];
+}
 

@@ -76,21 +76,11 @@
                     consolidatedPlan = plan1;
                     
                     // consolidate from plan0 into consolidatedPlan, delete plan0
-                    NSArray* sortedItineraries0 = [plan0 sortedItineraries];
-                    for (Itinerary* itin0 in sortedItineraries0) {
-                        ItineraryCompareResult itincompare = [consolidatedPlan addItineraryIfNew:itin0];
-                    }
-                    // Delete plan0
-                    [managedObjectContext deleteObject:plan0];
+                    [consolidatedPlan consolidateIntoSelfPlan:plan0];
                 }
                 else {
                     // if there are yet other plan1's beyond consolidatedPlan, then consolidate them into consolidatePlan
-                    NSArray* sortedItineraries1 = [plan1 sortedItineraries];
-                    for (Itinerary* itin1 in sortedItineraries1) {
-                        ItineraryCompareResult itincompare = [consolidatedPlan addItineraryIfNew:itin1];
-                    }
-                    // Delete plan1
-                    [managedObjectContext deleteObject:plan1];
+                    [consolidatedPlan consolidateIntoSelfPlan:plan1];
                 }
             }
         }

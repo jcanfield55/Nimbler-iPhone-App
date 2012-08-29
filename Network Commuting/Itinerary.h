@@ -10,9 +10,10 @@
 #import <CoreData/CoreData.h>
 #import <RestKit/Restkit.h>
 #import "PlanPlace.h"
+#import "TransitCalendar.h"
 #import "enums.h"
 
-@class Leg, Plan;
+@class Leg, Plan, PlanRequestChunk;
 
 @interface Itinerary : NSManagedObject
 
@@ -33,6 +34,7 @@ typedef enum {
 @property (nonatomic, retain) NSNumber * fareInCents;
 @property (nonatomic, retain) NSDate * itineraryCreationDate; // Time this itinerary was loaded or last updated
 @property (nonatomic, retain) NSDate * startTime;  // raw start time from OTP
+@property (nonatomic, strong, readonly) NSDate * startTimeOnly;  // Time only portion of StartTime (computed with timeOnlyfromDate function).  Not stored in CoreData
 @property (nonatomic, retain) NSNumber * tooSloped;
 @property (nonatomic, retain) NSNumber * transfers;
 @property (nonatomic, retain) NSNumber * transitTime;
@@ -40,7 +42,7 @@ typedef enum {
 @property (nonatomic, retain) NSNumber * walkDistance;
 @property (nonatomic, retain) NSNumber * walkTime;
 @property (nonatomic, retain) NSString * itinId;
-
+@property (nonatomic, retain) NSSet* planRequestChunks; // set of PlanRequestChunks this itinerary is part of
 @property (nonatomic, retain) NSString *itinArrivalFlag;
 
 @property (nonatomic, retain) NSSet *legs;
@@ -52,6 +54,10 @@ typedef enum {
 - (PlanPlace *)from;
 - (PlanPlace *)to;
 - (NSString *)ncDescription;
+
+// Returns true if each leg's starttime is current versus the GTFS file date for that leg's agency
+// Otherwise returns false
+- (BOOL)isCurrentVsGtfsFilesIn:(TransitCalendar *)transitCalendar;
 
 // Compares the itineraries to see if they are equivalent in substance
 - (ItineraryCompareResult)compareItineraries:(Itinerary *)itin0;

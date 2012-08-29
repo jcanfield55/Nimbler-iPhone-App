@@ -9,6 +9,7 @@
 #import "Itinerary.h"
 #import "Leg.h"
 #import "Plan.h"
+#import "UtilityFunctions.h"
 
 @interface Itinerary()
 {
@@ -32,6 +33,7 @@
 @dynamic fareInCents;
 @dynamic itineraryCreationDate;
 @dynamic startTime;
+@synthesize startTimeOnly;
 @dynamic tooSloped;
 @dynamic transfers;
 @dynamic transitTime;
@@ -41,6 +43,7 @@
 @dynamic legs;
 @dynamic plan;
 @dynamic itinId;
+@dynamic planRequestChunks;
 @synthesize sortedLegs;
 @synthesize itinArrivalFlag;
 
@@ -83,6 +86,14 @@
     
     // Set the date
     [self setItineraryCreationDate:[NSDate date]];
+}
+
+- (NSDate *)startTimeOnly
+{
+    if (!startTimeOnly) {
+        startTimeOnly = timeOnlyFromDate([self startTime]);
+    }
+    return startTimeOnly;
 }
 
 // Returns the start-time of the first leg if there is one, otherwise returns startTime property
@@ -134,12 +145,27 @@
     return [[[self sortedLegs] objectAtIndex:([sortedLegs count]-1)] to];
 }
 
+// Returns true if each leg's starttime is current versus the GTFS file date for that leg's agency
+// Otherwise returns false
+- (BOOL)isCurrentVsGtfsFilesIn:(TransitCalendar *)transitCalendar
+{
+    BOOL allLegsMatch = true;
+    for (Leg* leg in [self legs]) {
+        if ([leg agencyId] && [[leg agencyId] length]>0 &&    // If no agencyId, count as a match
+            ![transitCalendar isCurrentVsGtfsFileFor:[leg startTime] agencyId:[leg agencyId]]) {
+            allLegsMatch = false;
+        }
+    }
+    return allLegsMatch;
+}
+
 // Compares the itineraries to see if they are equivalent in substance
 - (ItineraryCompareResult)compareItineraries:(Itinerary *)itin0
 {
     if (self == itin0) {
         return ITINERARIES_IDENTICAL;
-    } else if ([[itin0 startTimeOfFirstLeg] isEqualToDate:[self startTimeOfFirstLeg]]) {
+    } else if ([timeOnlyFromDate([itin0 startTimeOfFirstLeg]) isEqualToDate:
+                timeOnlyFromDate([self startTimeOfFirstLeg])]) {
         // If the start time is the same, then check if the legs are the same
         NSArray* itin0LegsArray = [itin0 sortedLegs];
         NSArray* selfLegsArray = [self sortedLegs];
@@ -152,7 +178,7 @@
             }
             if ([[itin0 itineraryCreationDate] isEqualToDate:[self itineraryCreationDate]]) {
                 return ITINERARIES_SAME;
-            } else if ([[itin0 itineraryCreationDate] laterDate:[self itineraryCreationDate]] == [itin0 itineraryCreationDate]) {
+            } else if ([[itin0 itineraryCreationDate] compare:[self itineraryCreationDate]] == NSOrderedDescending) {
                 return ITIN_SELF_OBSOLETE;
             } else {
                 return ITIN0_OBSOLETE;
