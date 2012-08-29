@@ -147,7 +147,7 @@
 {
     NSDate *lastItineraryTime = timeOnlyFromDate([[[self sortedItineraries] lastObject] startTime]);
     if ([self latestRequestedArriveTimeDate]) {
-        NSDate* latestRequestedArriveTime = timeOnlyFromDate([self earliestRequestedDepartTimeDate]);
+        NSDate* latestRequestedArriveTime = timeOnlyFromDate([self latestRequestedArriveTimeDate]);
         return [latestRequestedArriveTime laterDate:lastItineraryTime];
     } else {
         return lastItineraryTime;

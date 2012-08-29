@@ -16,6 +16,7 @@
 #import "TransitCalendar.h"
 #import "PlanRequestChunk.h"
 #import "Plan.h"
+#import "PlanStore.h"
 #import "Itinerary.h"
 #import "Leg.h"
 
@@ -29,6 +30,7 @@
     Location *loc3;
     
     Locations *locations;
+    PlanStore *planStore;
     
     Plan *plan3;
     Plan *plan4;
@@ -49,5 +51,6 @@
     Itinerary *itin61;
     Itinerary *itin62;
 
+    NSDate* date60req;
 }
 @end

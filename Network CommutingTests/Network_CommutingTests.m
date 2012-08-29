@@ -33,6 +33,9 @@
     // Set up KeyObjectStore
     [KeyObjectStore setUpWithManagedObjectContext:managedObjectContext];
     
+    // Set up PlanStore
+    planStore = [[PlanStore alloc] initWithManagedObjectContext:managedObjectContext rkPlanMgr:nil];
+    
     // Set up Locations wrapper object pointing at the test Managed Object Context
     locations = [[Locations alloc] initWithManagedObjectContext:managedObjectContext rkGeoMgr:nil];
     
@@ -75,6 +78,20 @@
     [loc1 setLatFloat:67.3];
     [loc1 setLngFloat:-122.3];
 
+    // Additional set-up
+    // loc2 and loc 3 give additional testing for formatted address and raw address retrieval
+    // It has some (number, city, state) but not all the address components from loc1
+    loc2 = [NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:managedObjectContext];
+    [loc2 setFormattedAddress:@"750 Hawthorne Street, San Francisco"];
+    [loc2 addRawAddressString:@"750 Hawthorne, San Fran California"];
+    [loc2 addRawAddressString:@"750 Hawthoorn, SF"];
+    [loc2 setFromFrequencyFloat:7];  // greater than loc1
+    
+    loc3 = [NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:managedObjectContext];
+    [loc3 setFormattedAddress:@"1350 Hull Drive, San Carlos, CA USA"];
+    [loc3 addRawAddressString:@"1350 Hull, San Carlos CA"];
+    [loc3 addRawAddressString:@"1350 Hull Dr. San Carlos CA"];
+    
     //
     // Set up plans, itineraries, and legs for testing plan caching
     //
@@ -96,12 +113,13 @@
     NSDate* date50 = [dateFormatter dateFromString:@"August 20, 2012 7:00 AM"]; // Monday
     NSDate* date51 = [dateFormatter dateFromString:@"August 20, 2012 7:30 AM"]; // Monday
     NSDate* date52 = [dateFormatter dateFromString:@"August 20, 2012 8:00 AM"]; // Monday
-    NSDate* date60req = [dateFormatter dateFromString:@"August 22, 2012 11:00 AM"]; // Wednesday
+    date60req = [dateFormatter dateFromString:@"August 22, 2012 11:00 AM"]; // Wednesday
     NSDate* date60 = [dateFormatter dateFromString:@"August 22, 2012 9:00 AM"]; // Wednesday
     NSDate* date61 = [dateFormatter dateFromString:@"August 22, 2012 9:30 AM"]; // Wednesday
     NSDate* date62 = [dateFormatter dateFromString:@"August 22, 2012 10:00 AM"]; // Wednesday
     NSDate* date70 = [dateFormatter dateFromString:@"September 3, 2012 6:00 AM"]; // Monday Labor Day
 
+    
     // Legs
     Leg *leg10 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
     Leg *leg20 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
@@ -148,85 +166,153 @@
     NSString* Bart = @"BART";
     NSString* ACTransit = @"AC Transit";
     
-    // Plan3 -- 3 itineraries starting at 8:00am (7:45 request) on Friday August 17
+    // Plan3 -- 3 itineraries starting at 8:00am (7:45 request) until 9:00 on Friday August 17
     leg30.startTime = date30;
     leg30.agencyId = caltrain;
     leg30.itinerary = itin30;
     itin30.startTime = date30;
+    itin30.endTime = [itin30.startTime dateByAddingTimeInterval:(30.0*60)];
     itin30.plan = plan3;
     
     leg31.startTime = date31;
     leg31.agencyId = caltrain;
     leg31.itinerary = itin31;
     itin31.startTime = date31;
+    itin31.endTime = [itin31.startTime dateByAddingTimeInterval:(30.0*60)];
     itin31.plan = plan3;
     
     leg32.startTime = date32;
     leg32.agencyId = caltrain;
     leg32.itinerary = itin32;
     itin32.startTime = date32;
+    itin32.endTime = [itin32.startTime dateByAddingTimeInterval:(30.0*60)];
     itin32.plan = plan3;
     
     [plan3 createRequestChunkWithAllItinerariesAndRequestDate:date30req departOrArrive:DEPART];
+    [plan3 setFromLocation:loc1];
+    [plan3 setToLocation:loc2];
+    for (Itinerary* itin in [plan3 itineraries]) {
+        for (Leg* leg in [itin legs]) {
+            leg.route = @"Caltrain";
+            PlanPlace *pp1 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+            PlanPlace *pp2 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+            [pp1 setName:@"75 Hawthorne St"];
+            [pp2 setName:@"750 Hawthorne St"];
+            leg.from = pp1;
+            leg.to = pp2;
+            leg.endTime = [leg.startTime dateByAddingTimeInterval:(30.0*60)];
+        }
+    }
     
-    // Plan5 -- 3 itineraries starting at 7:00am (12:01 request) on Monday August 20
-    leg50.startTime = date50;
-    leg50.agencyId = caltrain;
-    leg50.itinerary = itin50;
-    itin50.startTime = date50;
-    itin50.plan = plan5;
-    
-    leg51.startTime = date51;
-    leg51.agencyId = caltrain;
-    leg51.itinerary = itin51;
-    itin51.startTime = date51;
-    itin51.plan = plan5;
-    
-    leg52.startTime = date52;
-    leg52.agencyId = caltrain;
-    leg52.itinerary = itin52;
-    itin52.startTime = date52;
-    itin52.plan = plan5;
-
-    [plan5 createRequestChunkWithAllItinerariesAndRequestDate:date50req departOrArrive:DEPART];
-
     // Plan4 -- itineraries starting at 8:40am request on Saturday, August 18
     leg40.startTime = date40;
     leg40.agencyId = caltrain;
     leg40.itinerary = itin40;
     itin40.startTime = date40;
+    itin40.endTime = [itin40.startTime dateByAddingTimeInterval:(30.0*60)];
     itin40.plan = plan4;
     
     leg41.startTime = date41;
     leg41.agencyId = caltrain;
     leg41.itinerary = itin41;
     itin41.startTime = date41;
+    itin41.endTime = [itin41.startTime dateByAddingTimeInterval:(30.0*60)];
     itin41.plan = plan4;
     
     [plan4 createRequestChunkWithAllItinerariesAndRequestDate:date40req departOrArrive:DEPART];
+    [plan4 setFromLocation:loc1];
+    [plan4 setToLocation:loc2];
+    for (Itinerary* itin in [plan4 itineraries]) {
+        for (Leg* leg in [itin legs]) {
+            leg.route = @"Caltrain";
+            PlanPlace *pp1 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+            PlanPlace *pp2 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+            [pp1 setName:@"75 Hawthorne St"];
+            [pp2 setName:@"750 Hawthorne St"];
+            leg.from = pp1;
+            leg.to = pp2;
+            leg.endTime = [leg.startTime dateByAddingTimeInterval:(30.0*60)];
+        }
+    }
+
+    // Plan5 -- 3 itineraries starting at 7:00am - 8:00am (12:01 request) on Monday August 20
+    leg50.startTime = date50;
+    leg50.agencyId = caltrain;
+    leg50.itinerary = itin50;
+    itin50.startTime = date50;
+    itin50.endTime = [itin50.startTime dateByAddingTimeInterval:(30.0*60)];
+    itin50.plan = plan5;
     
+    leg51.startTime = date51;
+    leg51.agencyId = caltrain;
+    leg51.itinerary = itin51;
+    itin51.startTime = date51;
+    itin51.endTime = [itin51.startTime dateByAddingTimeInterval:(30.0*60)];
+    itin51.plan = plan5;
+    
+    leg52.startTime = date52;
+    leg52.agencyId = caltrain;
+    leg52.itinerary = itin52;
+    itin52.startTime = date52;
+    itin52.endTime = [itin52.startTime dateByAddingTimeInterval:(30.0*60)];
+    itin52.plan = plan5;
+
+    [plan5 createRequestChunkWithAllItinerariesAndRequestDate:date50req departOrArrive:DEPART];
+    [plan5 setFromLocation:loc1];
+    [plan5 setToLocation:loc2];
+    for (Itinerary* itin in [plan5 itineraries]) {
+        for (Leg* leg in [itin legs]) {
+            leg.route = @"Caltrain";
+            PlanPlace *pp1 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+            PlanPlace *pp2 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+            [pp1 setName:@"75 Hawthorne St"];
+            [pp2 setName:@"750 Hawthorne St"];
+            leg.from = pp1;
+            leg.to = pp2;
+            leg.endTime = [leg.startTime dateByAddingTimeInterval:(30.0*60)];
+        }
+    }
+
     // Plan6 -- 3 itineraries starting at 9:00am for an 11:00am arrive time request on Wednesday August 22
     leg60.startTime = date60;
     leg60.agencyId = caltrain;
     leg60.itinerary = itin60;
     itin60.startTime = date60;
+    itin60.endTime = [itin60.startTime dateByAddingTimeInterval:(30.0*60)];
     itin60.plan = plan6;
     
     leg61.startTime = date61;
     leg61.agencyId = caltrain;
     leg61.itinerary = itin61;
     itin61.startTime = date61;
+    itin61.endTime = [itin61.startTime dateByAddingTimeInterval:(30.0*60)];
     itin61.plan = plan6;
     
     leg62.startTime = date62;
     leg62.agencyId = caltrain;
     leg62.itinerary = itin62;
     itin62.startTime = date62;
+    itin62.endTime = [itin62.startTime dateByAddingTimeInterval:(30.0*60)];
     itin62.plan = plan6;
     
-    [plan6 createRequestChunkWithAllItinerariesAndRequestDate:date60req departOrArrive:DEPART];
-    
+    [plan6 createRequestChunkWithAllItinerariesAndRequestDate:date60req departOrArrive:ARRIVE];
+    [plan6 setFromLocation:loc1];
+    [plan6 setToLocation:loc2];
+    for (Itinerary* itin in [plan6 itineraries]) {
+        for (Leg* leg in [itin legs]) {
+            leg.route = @"Caltrain";
+            PlanPlace *pp1 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+            PlanPlace *pp2 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+            [pp1 setName:@"75 Hawthorne St"];
+            [pp2 setName:@"750 Hawthorne St"];
+            leg.from = pp1;
+            leg.to = pp2;
+            leg.endTime = [leg.startTime dateByAddingTimeInterval:(30.0*60)];
+        }
+    }
+
     // TODO make sure I have a walking leg in the mix
+    // TODO Test against services of a different transit agency
 
 }
 
@@ -285,20 +371,6 @@
 
 - (void)testLocations
 {
-    // Additional set-up
-    // loc2 and loc 3 give additional testing for formatted address and raw address retrieval
-    // It has some (number, city, state) but not all the address components from loc1
-    loc2 = [NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:managedObjectContext];
-    [loc2 setFormattedAddress:@"750 Hawthorne Street, San Francisco"];
-    [loc2 addRawAddressString:@"750 Hawthorne, San Fran California"];
-    [loc2 addRawAddressString:@"750 Hawthoorn, SF"];
-    [loc2 setFromFrequencyFloat:7];  // greater than loc1
-    
-    loc3 = [NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:managedObjectContext];
-    [loc3 setFormattedAddress:@"1350 Hull Drive, San Carlos, CA USA"];
-    [loc3 addRawAddressString:@"1350 Hull, San Carlos CA"];
-    [loc3 addRawAddressString:@"1350 Hull Dr. San Carlos CA"];
-
 
     // Test numberOfLocations
     STAssertEquals([locations numberOfLocations:YES], 2, @"");  // 2 Locations with fromFrequency>0
@@ -490,6 +562,10 @@
     NSDate* dayTime4 = [dateFormatter dateFromString:@"September 1, 2012 11:59 PM"];
     NSDate* dayTime5 = [dateFormatter dateFromString:@"August 5, 2012 11:59 PM"];
     
+    NSDate* dayTime60ReqNew = [dateFormatter dateFromString:@"August 23, 2012 10:29 AM"]; // Thursday
+    NSDate* dayTime60ReqOrig = [dateFormatter dateFromString:@"August 22, 2012 11:00 AM"]; // Wednesday
+    NSDate* dayTime50 = [dateFormatter dateFromString:@"August 20, 2012 7:00 AM"]; // Monday
+    
     // dayOfWeekFromDate
     STAssertEquals(dayOfWeekFromDate(dayTime1), 4, @"");
     STAssertEquals(dayOfWeekFromDate(dayTime2), 1, @"");
@@ -502,6 +578,10 @@
                   timeOnlyFromDate(dayTime2)],@""); // Hours compare
     STAssertTrue([[timeOnlyFromDate(dayTime1) laterDate:timeOnlyFromDate(dayTime3)] isEqualToDate:
                   timeOnlyFromDate(dayTime1)],@""); // Hours compare
+    STAssertTrue([[timeOnlyFromDate(dayTime60ReqNew) laterDate:timeOnlyFromDate(dayTime60ReqOrig)] isEqualToDate:timeOnlyFromDate(dayTime60ReqOrig)],@"");
+    STAssertTrue([[timeOnlyFromDate(dayTime60ReqNew) laterDate:timeOnlyFromDate(dayTime50)] isEqualToDate:
+    timeOnlyFromDate(dayTime60ReqNew)],@"");
+    
     
     // dateOnlyFromDate
     STAssertTrue([dateOnlyFromDate(dayTime3) isEqualToDate:dateOnlyFromDate(dayTime4)], @"");
@@ -626,23 +706,124 @@
     STAssertEquals([[chunk3 sortedItineraries] objectAtIndex:7], itin61, @"");
     STAssertEquals([[chunk3 sortedItineraries] objectAtIndex:8], itin62, @"");
 
+    // Leg is
+    Leg* leg30 = [[itin30 sortedLegs] objectAtIndex:0];
+    Leg* leg52 = [[itin52 sortedLegs] objectAtIndex:0];  // same route as leg30
+    Leg* leg51 = [[itin51 sortedLegs] objectAtIndex:0];
+
+    STAssertTrue([leg30 isEqualInSubstance:leg52], @"");
+    STAssertFalse([leg30 isEqualInSubstance: leg51], @"");
 }
 
 
-- (void)testPlan
+- (void)testPlanStore
 {
     // Set-up dates
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle:NSDateFormatterLongStyle];
     [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
-    NSDate* dayTime1 = [dateFormatter dateFromString:@"August 22, 2012 8:00 AM"]; // Wednesday
+    NSDate* dayTime1 = [dateFormatter dateFromString:@"August 22, 2012 7:50 AM"]; // Wednesday
+    NSDate* dayTime2 = [dateFormatter dateFromString:@"August 22, 2012 6:30 AM"]; // Wednesday
+    NSDate* dayTime3 = [dateFormatter dateFromString:@"August 22, 2012 7:02 AM"]; // Wednesday
+    NSDate* dayTime4 = [dateFormatter dateFromString:@"August 23, 2012 10:29 AM"]; // Thursday
+    NSDate* dayTime5 = [dateFormatter dateFromString:@"August 25, 2012 8:50 AM"]; // Saturday
+    NSDate* dayTime6 = [dateFormatter dateFromString:@"August 28, 2012 9:10 AM"]; // Tuesday
 
-    // prepareSortedItinerariesWithMatchesForDate:
-    // Request that exactly matches PlanRequestChunk from August 17
-    [plan3 prepareSortedItinerariesWithMatchesForDate:dayTime1 departOrArrive:DEPART];
+    
+    // Find matching plans
+
+    NSArray* matches = [planStore fetchPlansWithToLocation:loc2 fromLocation:loc1];
+    STAssertEquals([matches count], 4U, @"");
+    
+    // Request that matches plan3 from August 17
+    STAssertTrue([plan3 prepareSortedItinerariesWithMatchesForDate:dayTime1 departOrArrive:DEPART], @"");
+    STAssertEquals([[plan3 sortedItineraries] count], 3U, @"");
     STAssertEquals([[plan3 sortedItineraries] objectAtIndex:0], itin30, @"");
     STAssertEquals([[plan3 sortedItineraries] objectAtIndex:1], itin31, @"");
     STAssertEquals([[plan3 sortedItineraries] objectAtIndex:2], itin32, @"");
 
+    // Request that is too early to match any of the plans, itineraries should be unchanged
+    STAssertFalse([plan3 prepareSortedItinerariesWithMatchesForDate:dayTime2 departOrArrive:DEPART], @"");
+    STAssertEquals([[plan3 sortedItineraries] count], 3U, @"");
+    STAssertEquals([[plan3 sortedItineraries] objectAtIndex:0], itin30, @"");
+    STAssertEquals([[plan3 sortedItineraries] objectAtIndex:1], itin31, @"");
+    STAssertEquals([[plan3 sortedItineraries] objectAtIndex:2], itin32, @"");
+    
+    // Request for a Saturday at 8:50 will not work because services do not match
+    STAssertFalse([plan3 prepareSortedItinerariesWithMatchesForDate:dayTime5 departOrArrive:DEPART], @"");
+    
+    // Now combine in plan4, which will give a separate requestChunk
+    [plan3 consolidateIntoSelfPlan:plan4];
+    STAssertNil([plan4 fromLocation], @"");  // proof that plan5 was deleted in context change
+    STAssertFalse([plan3 isDeleted], @"");
+    STAssertEquals([[plan3 itineraries] count], 5U, @"");
+    STAssertEquals([[plan3 sortedItineraries] count], 5U, @"");
+    STAssertEquals([[plan3 requestChunks] count], 2U, @"");
+    
+    // Request for a Saturday at 8:50 again will work because of Plan4 availability
+    STAssertTrue([plan3 prepareSortedItinerariesWithMatchesForDate:dayTime5 departOrArrive:DEPART], @"");
+    STAssertEquals([[plan3 sortedItineraries] count], 2U, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:0], itin40, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:1], itin41, @"");
+
+    
+    // Combine with plan5, there is one overlapping itinerary (itin52 duplicate with itin30)
+    [plan3 consolidateIntoSelfPlan:plan5];
+    STAssertNil([plan5 fromLocation], @"");  // proof that plan5 was deleted in context change
+    STAssertFalse([plan3 isDeleted], @"");
+    STAssertEquals([[plan3 itineraries] count], 7U, @"");
+    STAssertEquals([[plan3 requestChunks] count], 2U, @"");
+    STAssertNil([itin30 startTime], @""); // itin30 is deleted because it was created first
+
+    // Now request at 7:02 and we will get all the itineraries back
+    STAssertTrue([plan3 prepareSortedItinerariesWithMatchesForDate:dayTime3 departOrArrive:DEPART], @"");
+    STAssertEquals([[plan3 sortedItineraries] count], 5U, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:0], itin50, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:1], itin51, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:2], itin52, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:3], itin31, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:4], itin32, @"");
+
+    // Test against 7:50 departure time (should have only 3 itineraries)
+    STAssertTrue([plan3 prepareSortedItinerariesWithMatchesForDate:dayTime1 departOrArrive:DEPART], @"");
+    STAssertEquals([[plan3 sortedItineraries] count], 3U, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:0], itin52, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:1], itin31, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:2], itin32, @"");
+    
+    // Test against arrival time request of 10:29AM (should have no results)
+    STAssertFalse([plan3 prepareSortedItinerariesWithMatchesForDate:dayTime4 departOrArrive:ARRIVE], @"");
+
+    // Now lets try that arrival request at 10:29 with plan6 (falls within buffer)
+    STAssertTrue([plan6 prepareSortedItinerariesWithMatchesForDate:dayTime4 departOrArrive:ARRIVE], @"");
+    STAssertEquals([[plan6 sortedItineraries] count], 3U, @"");
+    STAssertEqualObjects([[plan6 sortedItineraries] objectAtIndex:0], itin60, @"");
+    STAssertEqualObjects([[plan6 sortedItineraries] objectAtIndex:1], itin61, @"");
+    STAssertEqualObjects([[plan6 sortedItineraries] objectAtIndex:2], itin62, @"");
+
+    // Combine with Plan6 (3 itineraries at 9, 9:30 and 10:00 with arrive time request at 11:00am)
+    [plan3 consolidateIntoSelfPlan:plan6];
+    STAssertNil([plan6 fromLocation], @"");  // proof that plan6 was deleted in context change
+    STAssertFalse([plan3 isDeleted], @"");
+    STAssertEquals([[plan3 itineraries] count], 9U, @"");
+    STAssertEquals([[plan3 requestChunks] count], 2U, @"");
+    
+    //Test 10:29 arrival again now with consolidate plan3 (will get continuous itineraries)
+    STAssertTrue([plan3 prepareSortedItinerariesWithMatchesForDate:dayTime4 departOrArrive:ARRIVE], @"");
+    STAssertEquals([[plan3 sortedItineraries] count], 7U, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:0], itin50, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:1], itin51, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:2], itin52, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:3], itin31, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:4], itin60, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:5], itin61, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:6], itin62, @"");
+    STAssertNil([itin32 startTime], @""); // Showing that itin32 was deleted
+
+    // Test 9:10 departure to pick up itineraries from plan6
+    STAssertTrue([plan3 prepareSortedItinerariesWithMatchesForDate:dayTime6 departOrArrive:DEPART], @"");
+    STAssertEquals([[plan3 sortedItineraries] count], 2U, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:0], itin61, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:1], itin62, @"");
 }
 @end

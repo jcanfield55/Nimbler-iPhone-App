@@ -40,6 +40,12 @@
 
 + (RKManagedObjectMapping *)objectMappingforPlanner:(APIType)tpt;
 
+// consolidateIntoSelfPlan
+// If plan0 fromLocation and toLocation are the same as referring object's...
+// Consolidates plan0 itineraries and PlanRequestChunks into referring Plan
+// Then deletes plan0 from the database
+- (void)consolidateIntoSelfPlan:(Plan *)plan0;
+
 // If itin0 is a new itinerary that does not exist in the referencing Plan, then add itin0 the referencing Plan
 // If itin0 is the same as an existing itinerary in the referencing Plan, then keep the more current itinerary and delete the older one
 // Returns the result of the itinerary comparison (see Itinerary.h for enum definition)
@@ -48,8 +54,8 @@
 // Add itin0 to the plan (without any checking, see above to check first)
 - (void)addItinerary:(Itinerary *) itin0;
 
-// Remove itin0 from the plan and from Core Data
-- (void)removeItinerary:(Itinerary *)itin0;
+// Delete itin0 from the plan and from Core Data
+- (void)deleteItinerary:(Itinerary *)itin0;
 
 // Initialization method after a plan is freshly loaded from an OTP request
 - (void)createRequestChunkWithAllItinerariesAndRequestDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive;
@@ -74,3 +80,4 @@
 - (BOOL)prepareSortedItinerariesWithMatchesForDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive;
 
 @end
+

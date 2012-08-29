@@ -12,6 +12,15 @@
 #import "Leg.h"
 #import <CoreData/CoreData.h>
 
+
+@interface Plan (CoreDataGeneratedAccessors)
+
+- (void)addItinerariesObject:(Itinerary *)value;
+- (void)removeItinerariesObject:(Itinerary *)value;
+- (void)addItineraries:(NSSet *)values;
+- (void)removeItineraries:(NSSet *)values;
+@end
+
 @implementation Plan
 
 @dynamic date;
@@ -83,9 +92,12 @@
     [self setSortedItineraries:[[self itineraries] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
 }
 
+// TODO add deletion of itineraries whose GTFS file has expired
+
 // consolidateIntoSelfPlan
 // If plan0 fromLocation and toLocation are the same as referring object's...
 // Consolidates plan0 itineraries and PlanRequestChunks into referring Plan
+// Then deletes plan0 from the database
 - (void)consolidateIntoSelfPlan:(Plan *)plan0
 {
     // Consolidate requestChunks
@@ -108,9 +120,17 @@
         }
     }
     
-    // TODO Transfer over the itineraries getting rid of ones we do not need
-    // TODO change planStore to call this routine for consolidation
+    // Transfer over the itineraries getting rid of ones we do not need
+    NSArray* sortedItineraries0 = [plan0 sortedItineraries];
+    for (Itinerary* itin0 in sortedItineraries0) {
+        if ([self addItineraryIfNew:itin0] == ITIN0_OBSOLETE) { // add the itinerary no matter what
+            [plan0 deleteItinerary:itin0];   // if itin0 obsolete, also make sure we delete it
+        } 
+    }
+    // Delete plan0
+    [[self managedObjectContext] deleteObject:plan0];
     
+    saveContext([self managedObjectContext]);
 }
 
 // If itin0 is a new itinerary that does not exist in the referencing Plan, then add itin0 the referencing Plan
@@ -127,11 +147,12 @@
             return itincompare;  // two are identical objects, so no duplication
         }
         if (itincompare == ITIN_SELF_OBSOLETE){
-            [self removeItinerary:itin1];
+            [self deleteItinerary:itin1];
             [self addItinerary:itin0];
             return itincompare;
-        } else if (itincompare == ITIN0_OBSOLETE || itincompare == ITINERARIES_SAME) {
-            // In this case, no need to change the referring Plan.  Let caller know that itin0 is old.  
+        } else if (itincompare == ITIN0_OBSOLETE) {
+            return itincompare;
+        } else if (itincompare == ITINERARIES_SAME) {
             return itincompare;
         } else {
             // Unknown returned value, throw an exception
@@ -145,18 +166,18 @@
 }
 
 // Remove itin0 from the plan and from Core Data
-- (void)removeItinerary:(Itinerary *)itin0
+- (void)deleteItinerary:(Itinerary *)itin0
 {
-    [self removeItinerary:itin0];
-    [self sortItineraries];  // Resort itineraries
+    [self removeItinerariesObject:itin0];
+    [[self managedObjectContext] deleteObject:itin0];
+    [self setSortedItineraries:nil];  // Resort itineraries
 }
 
 // Add itin0 to the plan
 - (void)addItinerary:(Itinerary *) itin0
 {
-    NSMutableSet* mutableItineraries = [self mutableSetValueForKey:PLAN_ITINERARIES_KEY];
-    [mutableItineraries addObject:itin0];
-    [self sortItineraries];  // Resort itineraries
+    [itin0 setPlan:self];
+    [self setSortedItineraries:nil]; // Mark sortedItineraries for re-sorting
 }
 
 
@@ -165,6 +186,7 @@
 {
     PlanRequestChunk* requestChunk = [NSEntityDescription insertNewObjectForEntityForName:@"PlanRequestChunk"
                                                             inManagedObjectContext:[self managedObjectContext]];
+    [requestChunk setPlan:self];
     if (depOrArrive == DEPART) {
         [requestChunk setEarliestRequestedDepartTimeDate:requestDate];
     } else { // ARRIVE
@@ -226,56 +248,68 @@
 // If it does not find any, returns false and leaves sortedItineraries unchanged
 - (BOOL)prepareSortedItinerariesWithMatchesForDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive
 {
-    NSMutableArray* matchingItineraries = [[NSMutableArray alloc] initWithCapacity:[[self sortedItineraries] count]];
     NSMutableArray* newSortedItineraries = [[NSMutableArray alloc] initWithCapacity:[[self sortedItineraries] count]];
-
-    for (Itinerary* itin in [self itineraries]) {
-        BOOL allLegsMatch = true;
-        for (Leg* leg in [itin sortedLegs]) {
-            NSString* agencyId = [leg agencyId];
-            if (![[self transitCalendar] isCurrentVsGtfsFileFor:requestDate agencyId:agencyId]) {
-                allLegsMatch = false;
-            } else if (![[self transitCalendar] isEquivalentServiceDayFor:requestDate
-                                                              And:[leg startTime]
-                                                         agencyId:agencyId]) {
-                allLegsMatch = false;  // This leg does not match
-                break;                 // Stop looking at this itinerary
-            }
-        }
-        if (allLegsMatch) {
-            [matchingItineraries addObject:itin];
+    
+    // Create a set of all PlanRequestChunks that match the requestDate services and time
+    NSMutableSet* matchingReqChunks = [[NSMutableSet alloc] initWithCapacity:10];
+    for (PlanRequestChunk* reqChunk in [self requestChunks]) {
+        if ([reqChunk doAllItineraryServiceDaysMatchDate:requestDate] &&
+            [reqChunk doesCoverTheSameTimeAs:requestDate departOrArrive:depOrArrive]) {
+            [matchingReqChunks addObject:reqChunk];
         }
     }
     
-    if ([matchingItineraries count] > 0) {  // if we have some matches
-        
-        // Create a set of all PlanRequestChunks corresponding to the itineraries that match the requestDate services
-        NSMutableSet* matchingReqChunks = [[NSMutableSet alloc] initWithCapacity:10];
-        for (Itinerary* itin in matchingItineraries) {
-            for (PlanRequestChunk* reqChunk in [itin planRequestChunks]) {
-                if ([reqChunk doAllItineraryServiceDaysMatchDate:requestDate]) {
-                    [matchingReqChunks addObject:reqChunk];
+    if ([matchingReqChunks count] == 0) {
+        return false;  // no matches
+    }
+    // else collect all the itineraries that have valid GTFS data and are in the right time range
+    for (PlanRequestChunk* reqChunk in matchingReqChunks) {
+        for (Itinerary* itin in [reqChunk itineraries]) {
+            // Check that all legs are current with the GTFS file
+            BOOL allLegsMatch = true;
+            for (Leg* leg in [itin legs]) {
+                if (![[self transitCalendar] isCurrentVsGtfsFileFor:[leg startTime] agencyId:[leg agencyId]]) {
+                    allLegsMatch = false;
+                }
+            }
+            if (allLegsMatch) { // if itin is valid
+                // Check that the times match the requested time
+                NSDate* requestTimeOnly = timeOnlyFromDate(requestDate);
+                if (depOrArrive == DEPART) {
+                    NSDate* requestTimeWithPreBuffer = [requestTimeOnly dateByAddingTimeInterval:(-PLAN_BUFFER_SECONDS_BEFORE_ITINERARY)];
+                    NSDate* requestTimeWithPostBuffer = [requestTimeOnly dateByAddingTimeInterval:PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW];
+                    NSDate* itinStartTimeOnly = timeOnlyFromDate([itin startTime]);
+                    if ([requestTimeWithPreBuffer compare:itinStartTimeOnly]!=NSOrderedDescending &&
+                        [requestTimeWithPostBuffer compare:itinStartTimeOnly]!=NSOrderedAscending) {
+                        // If itin start time is within the two buffer ranges
+                        [newSortedItineraries addObject:itin];
+                    }
+                } else { // depOrArrive = ARRIVE
+                    NSDate* itinEndTimeOnly = timeOnlyFromDate([itin endTime]);
+                    NSDate* requestTimeWithPreBuffer = [requestTimeOnly dateByAddingTimeInterval:(PLAN_BUFFER_SECONDS_BEFORE_ITINERARY)];
+                    NSDate* requestTimeWithPostBuffer = [requestTimeOnly dateByAddingTimeInterval:-PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW];
+                    if ([requestTimeWithPreBuffer compare:itinEndTimeOnly]!=NSOrderedAscending &&
+                        [requestTimeWithPostBuffer compare:itinEndTimeOnly]!=NSOrderedDescending) {
+                        // If itin start time is within the two buffer ranges
+                        [newSortedItineraries addObject:itin];
+                    }
                 }
             }
         }
-        
-        if ([matchingReqChunks count] == 0) {
-            // Make a plan request for requestTime
-        } else {
-            PlanRequestChunk* reqChunk = [matchingReqChunks anyObject]; // Pick one of the requestChunks
-            [newSortedItineraries addObjectsFromArray:[reqChunk sortedItineraries]]; // Add these itineraries
-            if ([newSortedItineraries count] < PLAN_MAX_ITINERARIES_TO_SHOW) {
-                NSDate* nextRequestDate = [reqChunk nextRequestDateFor:requestDate];
-
-                // Make a plan request for nextRequestDate
-            }
-        }
-        
-        [self setSortedItineraries:newSortedItineraries];
-        return true;
-    } else {  // no matching itineraries
+    }
+    if ([newSortedItineraries count] == 0) {
         return false;
     }
+    // else
+    if ([newSortedItineraries count] < PLAN_MAX_ITINERARIES_TO_SHOW) {
+        // NSDate* nextRequestDate = [reqChunk nextRequestDateFor:requestDate];
+        // TODO Make a plan request for nextRequestDate
+    }
+    
+    // Sort and set sortedItineraries
+    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:YES];
+    [self setSortedItineraries:[newSortedItineraries sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
+    return true;
 }
 
 

@@ -150,7 +150,8 @@
 {
     if (self == itin0) {
         return ITINERARIES_IDENTICAL;
-    } else if ([[itin0 startTimeOfFirstLeg] isEqualToDate:[self startTimeOfFirstLeg]]) {
+    } else if ([timeOnlyFromDate([itin0 startTimeOfFirstLeg]) isEqualToDate:
+                timeOnlyFromDate([self startTimeOfFirstLeg])]) {
         // If the start time is the same, then check if the legs are the same
         NSArray* itin0LegsArray = [itin0 sortedLegs];
         NSArray* selfLegsArray = [self sortedLegs];
@@ -163,7 +164,7 @@
             }
             if ([[itin0 itineraryCreationDate] isEqualToDate:[self itineraryCreationDate]]) {
                 return ITINERARIES_SAME;
-            } else if ([[itin0 itineraryCreationDate] laterDate:[self itineraryCreationDate]] == [itin0 itineraryCreationDate]) {
+            } else if ([[itin0 itineraryCreationDate] compare:[self itineraryCreationDate]] == NSOrderedDescending) {
                 return ITIN_SELF_OBSOLETE;
             } else {
                 return ITIN0_OBSOLETE;
