@@ -10,18 +10,25 @@
 #import <RestKit/RestKit.h>
 #import "ToFromTableViewController.h"
 #import "Locations.h"
-#import "PlanStore.h"
 #import "Plan.h"
 #import "enums.h"
 #import "SupportedRegion.h"
 
-@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,RKRequestDelegate,UIActionSheetDelegate,UIAlertViewDelegate>
+
+@class PlanStore;
 
 typedef enum {
     NO_EDIT,    // Neither to nor from address is being edited with the keyboard
     FROM_EDIT,  // From address is being edited with the keyboard
     TO_EDIT     // To address is being edited with the keyboard
 } ToFromEditMode;
+
+typedef enum {
+    STATUS_OK,
+    GENERIC_EXCEPTION  // Provide an error saying we are unable to perform route
+} PlanRequestStatus;
+
+@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,RKRequestDelegate,UIActionSheetDelegate,UIAlertViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView* mainTable;  // grouped table for main page layout
 @property (strong, nonatomic) UITableView *fromTable;  // from table embedded in mainTable
@@ -77,7 +84,7 @@ typedef enum {
 -(void)setFBParameterForGeneral;
 
 // Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
--(void)newPlanAvailable:(Plan *)newPlan;
+-(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status;
 
 -(void)doSwapLocation;
 -(void)requestReverseGeo:(Location *)location;

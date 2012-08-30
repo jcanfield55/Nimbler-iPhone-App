@@ -105,7 +105,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[plan itineraries] count];
+    return [[plan sortedItineraries] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

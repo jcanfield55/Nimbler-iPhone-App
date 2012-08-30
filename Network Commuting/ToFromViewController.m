@@ -11,6 +11,7 @@
 #import "UtilityFunctions.h"
 #import "RouteOptionsViewController.h"
 #import "Leg.h"
+#import "PlanStore.h"
 #import "DateTimeViewController.h"
 #import "TestFlightSDK1/TestFlight.h"
 #import "Itinerary.h"
@@ -678,6 +679,17 @@ NSUserDefaults *prefs;
     [[rkPlanMgr mappingProvider] setMapping:[Plan objectMappingforPlanner:OTP_PLANNER] forKeyPath:@"plan"];
 }
 
+- (void)setPlanStore:(PlanStore *)planStore0
+{
+    planStore = planStore0;
+    // Set the objects for callback with planStore
+    if (!routeOptionsVC) {
+        routeOptionsVC = [[RouteOptionsViewController alloc] initWithNibName:nil bundle:nil];
+    }
+    [planStore setToFromVC:self];
+    [planStore setRouteOptionsVC:routeOptionsVC];
+}
+
 #pragma mark Loacation methods
 - (void)setLocations:(Locations *)l
 {
@@ -963,26 +975,36 @@ NSUserDefaults *prefs;
 }
 
 // Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
--(void)newPlanAvailable:(Plan *)newPlan
+-(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status
 {
-    plan = newPlan;
-    durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime;
-    savetrip = FALSE;
     [self stopActivityIndicator];
-    
-    // Pass control to the RouteOptionsViewController to display itinerary choices
-    if (!routeOptionsVC) {
-        routeOptionsVC = [[RouteOptionsViewController alloc] initWithNibName:nil bundle:nil];;
+    durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime;
+
+    if (status == STATUS_OK) {
+        plan = newPlan;
+        savetrip = FALSE;
+        
+        // Pass control to the RouteOptionsViewController to display itinerary choices
+        if (!routeOptionsVC) {
+            routeOptionsVC = [[RouteOptionsViewController alloc] initWithNibName:nil bundle:nil];
+        }
+        
+        [routeOptionsVC setPlan:plan];
+        [[self navigationController] pushViewController:routeOptionsVC animated:YES];
     }
-    
-    [routeOptionsVC setPlan:plan];
-    [[self navigationController] pushViewController:routeOptionsVC animated:YES];
+    else { // if (status == GENERIC_EXCEPTION)
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"Sorry, we are unable to calculate a route for that To & From address" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
+        [alert show];
+        savetrip = false;
+        return ;
+    }
     
     // TODO -- move logic for saving PlanInTP Server to PlanStore class or a new class
     // [self savePlanInTPServer:[[objectLoader  response] bodyAsString]];
+    // NSLog(@"For Feedback Process called");
     
     
-    NSLog(@"For Feedback Process called");
     /* } else {   // code for saveTrip=FALSE case
      tpResponsePlan = [objects objectAtIndex:0];
      [plan setPlanId:[tpResponsePlan planId]];
@@ -1011,6 +1033,7 @@ NSUserDefaults *prefs;
      } */
 }
 
+// TODO Move geocoding and reverse-geocoding into a separate class (like Locations)
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error {
     [self stopActivityIndicator];
     if (savetrip) {
@@ -1096,13 +1119,13 @@ NSUserDefaults *prefs;
             int maxDistance = (int)([maxiWalkDistance floatValue]*1609.544);
             
             // Request the plan (callback will come in newPlanAvailable method)
-            [planStore requestPlanFromLocation:fromLocation
-                                    toLocation:toLocation
-                                      tripDate:tripDate
-                                departOrArrive:departOrArrive
-                       maxWalkDistanceInMeters:maxDistance
-                          toFromViewController:self
-                    routeOptionsViewController:routeOptionsVC];
+            PlanRequestParameters* parameters = [[PlanRequestParameters alloc] init];
+            parameters.fromLocation = fromLocation;
+            parameters.toLocation = toLocation;
+            parameters.tripDate = tripDate;
+            parameters.departOrArrive = departOrArrive;
+            parameters.maxWalkDistance = maxDistance;
+            [planStore requestPlanWithParameters:parameters];
             
             savetrip = TRUE;
             isContinueGetRealTimeData = FALSE;

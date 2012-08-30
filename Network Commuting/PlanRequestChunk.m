@@ -27,6 +27,14 @@
     [self setTransitCalendar:[TransitCalendar transitCalendar]];  // Set transitCalendar object
 }
 
+- (TransitCalendar *)transitCalendar
+{
+    if (!transitCalendar) {
+        transitCalendar = [TransitCalendar transitCalendar];
+    }
+    return transitCalendar;
+}
+
 - (NSArray *)sortedItineraries
 {
     if (!sortedItineraries) {
@@ -70,7 +78,7 @@
             NSString* agencyId = [leg agencyId];
             if (agencyId && [agencyId length]>0) { // Check if there is an agency for this leg
                 if (![returnedValue objectForKey:agencyId]) { // if we do not already have this serviceString
-                    NSString* serviceString = [transitCalendar serviceStringForDate:requestDate agencyId:agencyId];
+                    NSString* serviceString = [[self transitCalendar] serviceStringForDate:requestDate agencyId:agencyId];
                     [returnedValue setObject:serviceString forKey:agencyId];
                 }
             }

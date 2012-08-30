@@ -14,15 +14,18 @@
 #import <RestKit/RestKit.h>
 #import <RestKit/CoreData.h>
 #import "Plan.h"
-#import "ToFromViewController.h"
 #import "RouteOptionsViewController.h"
+#import "ToFromViewController.h"
 #import "PlanRequestParameters.h"
+
 
 @interface PlanStore : NSObject <RKObjectLoaderDelegate,RKRequestDelegate>
 
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (strong, nonatomic) RKObjectManager *rkPlanMgr;  // RestKit object manager for trip planning
+@property (unsafe_unretained, nonatomic) ToFromViewController *toFromVC;
+@property (unsafe_unretained, nonatomic) RouteOptionsViewController *routeOptionsVC;
 
 // Designated initializer
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkPlanMgr:(RKObjectManager *)rkP;
@@ -33,10 +36,7 @@
 // Will continue to call OTP iteratively to obtain other itineraries up to the designated max # and time
 // After returning the first itinerary, it will call the newPlanAvailable method on routeOptionsVC each
 // time it has an update
-- (void)requestPlanWithParameters:(PlanRequestParameters *)parameters
-           toFromViewController:(ToFromViewController *)toFromVC
-     routeOptionsViewController:(RouteOptionsViewController *)routeOptionsVC;
-
+- (void)requestPlanWithParameters:(PlanRequestParameters *)parameters;
 
 // Fetches array of plans going to the same to & from Location
 // Normally will return just one plan, but could return more if the plans have not been consolidated

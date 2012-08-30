@@ -30,6 +30,8 @@
 @synthesize managedObjectModel;
 @synthesize managedObjectContext;
 @synthesize rkPlanMgr;
+@synthesize toFromVC;
+@synthesize routeOptionsVC;
 
 
 // Designated initializer
@@ -53,8 +55,6 @@
 // After returning the first itinerary, it will call the newPlanAvailable method on routeOptionsVC each
 // time it has an update
 - (void)requestPlanWithParameters:(PlanRequestParameters *)parameters
-             toFromViewController:(ToFromViewController *)toFromVC
-       routeOptionsViewController:(RouteOptionsViewController *)routeOptionsVC
 {
     
     // Check if we have a stored plan that we can use
@@ -69,16 +69,14 @@
             NSLog(@"Matches found in plan cache -- going to RouteOptions");
             // If there are  matching itineraries in the cache, go directly to Route Options
             
-            [toFromVC newPlanAvailable:matchingPlan];
+            PlanRequestStatus status = STATUS_OK;
+            [toFromVC newPlanAvailable:matchingPlan status:status];
             // TODO:  Even if there are matching plans, I should do some more fetches
-            // TODO:  Make sure that I am storing all my plans once I get them
-            
+            return;
         }
     }
-    else {  // if no appropriate plan in cache, request one from OTP
-        [self requestPlanFromOtpWithParameters:parameters];
-    }
-    
+    // if no appropriate plan in cache, request one from OTP
+    [self requestPlanFromOtpWithParameters:parameters];
 }
 
 
@@ -91,9 +89,9 @@
         [dateFormatter setDateFormat:@"MM/dd/yyyy"];
     }
     if (!timeFormatter) {
-        NSDateFormatter* tFormat = [[NSDateFormatter alloc] init];
-        [tFormat setTimeStyle:NSDateFormatterShortStyle];
-        [tFormat setDateStyle:NSDateFormatterNoStyle];
+        timeFormatter = [[NSDateFormatter alloc] init];
+        [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
+        [timeFormatter setDateStyle:NSDateFormatterNoStyle];
     }
     
     // Build the parameters into a resource string
@@ -137,26 +135,27 @@
                 [plan createRequestChunkWithAllItinerariesAndRequestDate:[parameters tripDate]
                                                           departOrArrive:[parameters departOrArrive]];
                 
+                plan = [self consolidateWithMatchingPlans:plan];
                 saveContext(managedObjectContext);
                 
+                // Now format the itineraries of the consolidated plan
+                [plan prepareSortedItinerariesWithMatchesForDate:[parameters tripDate] departOrArrive:[parameters departOrArrive]];
                 
+                [toFromVC newPlanAvailable:plan status:STATUS_OK];  // Call-back to toFromVC with the new plan
             }
         }
         @catch (NSException *exception) {
-            [self stopActivityIndicator];
-            durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime ;
             NSLog(@"Exception while parsing TP response plan: %@", exception);
-            
-            // TODO put this code back in ToFromViewController
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"Trip is not possible. Your start or end point might not be safely accessible" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
-            [alert show];
-            savetrip = false;
-            return ;
+            [toFromVC newPlanAvailable:nil status:GENERIC_EXCEPTION];
         }
-        
     }
 }
 
+- (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error
+{
+    NSLog(@"Error received from RKObjectManager: %@", error);
+    [toFromVC newPlanAvailable:nil status:GENERIC_EXCEPTION];
+}
 
 // Fetches array of plans going to the same to & from Location from the cache
 // Normally will return just one plan, but could return more if the plans have not been consolidated

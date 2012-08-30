@@ -40,6 +40,20 @@
 
 + (RKManagedObjectMapping *)objectMappingforPlanner:(APIType)tpt;
 
+
+// Add itin0 to the plan (without any checking, see above to check first)
+- (void)addItinerary:(Itinerary *) itin0;
+
+// Delete itin0 from the plan and from Core Data
+- (void)deleteItinerary:(Itinerary *)itin0;
+
+- (NSString *)ncDescription;
+- (void)sortItineraries;  // Re-sorts the itineraries array
+
+//
+// Plan Request Cache management
+//
+
 // consolidateIntoSelfPlan
 // If plan0 fromLocation and toLocation are the same as referring object's...
 // Consolidates plan0 itineraries and PlanRequestChunks into referring Plan
@@ -51,28 +65,9 @@
 // Returns the result of the itinerary comparison (see Itinerary.h for enum definition)
 - (ItineraryCompareResult) addItineraryIfNew:(Itinerary *)itin0;
 
-// Add itin0 to the plan (without any checking, see above to check first)
-- (void)addItinerary:(Itinerary *) itin0;
-
-// Delete itin0 from the plan and from Core Data
-- (void)deleteItinerary:(Itinerary *)itin0;
 
 // Initialization method after a plan is freshly loaded from an OTP request
 - (void)createRequestChunkWithAllItinerariesAndRequestDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive;
-
-
-- (NSString *)ncDescription;
-- (void)sortItineraries;  // Re-sorts the itineraries array
-
-//
-// Plan Request Cache management
-//
-// Initializer for an existing (legacy) Plan that does not have any planRequestCache but has a bunch of existing itineraries.  Creates a new PlanRequestChunk for every itinerary in sortedItineraryArray
-- (id)initWithRawItineraries:(NSArray *)sortedItineraryArray;
-
-// Initializer for a new plan fresh from a OTP request
-// Creates one PlanRequestChunk with all the itineraries as part of it
-- (id)initWithRequestDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive sortedItineraries:(NSArray *)sortedItinArray;
 
 // Looks for matching itineraries for the requestDate and departOrArrive
 // If it finds some, returns TRUE and updates the sortedItineraries property with just those itineraries
