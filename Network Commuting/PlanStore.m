@@ -7,6 +7,23 @@
 //
 
 #import "PlanStore.h"
+#import "UtilityFunctions.h"
+
+
+@interface PlanStore()
+{
+    // Variables for internal use
+    NSString *planURLResource; // URL resource sent to planner
+    NSDateFormatter* dateFormatter; // date formatter for OTP requests
+    NSDateFormatter* timeFormatter; // time formatter for OTP requests
+    NSMutableDictionary* parametersByPlanURLResource; // Key is the planURLResource, object = request parameters
+}
+
+// Internal methods
+-(void)requestPlanFromOtpWithParameters:(PlanRequestParameters *)parameters;
+
+
+@end
 
 @implementation PlanStore
 
@@ -23,12 +40,125 @@
         managedObjectContext = moc;
         managedObjectModel = [[moc persistentStoreCoordinator] managedObjectModel];
         rkPlanMgr = rkP;
+        parametersByPlanURLResource = [[NSMutableDictionary alloc] initWithCapacity:10];
     }
     
     return self;
 }
 
-// Fetches array of plans going to the same to & from Location
+// Requests a plan with the given parameters
+// Will get plan from the cache if available and will call OTP if not
+// Will call back the newPlanAvailable method on toFromVC when the first plan is available
+// Will continue to call OTP iteratively to obtain other itineraries up to the designated max # and time
+// After returning the first itinerary, it will call the newPlanAvailable method on routeOptionsVC each
+// time it has an update
+- (void)requestPlanWithParameters:(PlanRequestParameters *)parameters
+             toFromViewController:(ToFromViewController *)toFromVC
+       routeOptionsViewController:(RouteOptionsViewController *)routeOptionsVC
+{
+    
+    // Check if we have a stored plan that we can use
+    NSArray* matchingPlanArray = [self fetchPlansWithToLocation:[parameters toLocation]
+                                                   fromLocation:[parameters fromLocation]];
+    
+    if (matchingPlanArray && [matchingPlanArray count]>0) {
+        Plan* matchingPlan = [matchingPlanArray objectAtIndex:0]; // Take the first matching plan
+        
+        if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:[parameters tripDate]
+                                                      departOrArrive:[parameters departOrArrive]]) {
+            NSLog(@"Matches found in plan cache -- going to RouteOptions");
+            // If there are  matching itineraries in the cache, go directly to Route Options
+            
+            [toFromVC newPlanAvailable:matchingPlan];
+            // TODO:  Even if there are matching plans, I should do some more fetches
+            // TODO:  Make sure that I am storing all my plans once I get them
+            
+        }
+    }
+    else {  // if no appropriate plan in cache, request one from OTP
+        [self requestPlanFromOtpWithParameters:parameters];
+    }
+    
+}
+
+
+// Requests for a new plan from OTP
+-(void)requestPlanFromOtpWithParameters:(PlanRequestParameters *)parameters
+{
+    // Create the date formatters we will use to output the date & time
+    if (!dateFormatter) {
+        dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"MM/dd/yyyy"];
+    }
+    if (!timeFormatter) {
+        NSDateFormatter* tFormat = [[NSDateFormatter alloc] init];
+        [tFormat setTimeStyle:NSDateFormatterShortStyle];
+        [tFormat setDateStyle:NSDateFormatterNoStyle];
+    }
+    
+    // Build the parameters into a resource string
+    NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
+                            @"fromPlace", [[parameters fromLocation] latLngPairStr],
+                            @"toPlace", [[parameters toLocation] latLngPairStr],
+                            @"date", [dateFormatter stringFromDate:[parameters tripDate]],
+                            @"time", [timeFormatter stringFromDate:[parameters tripDate]],
+                            @"arriveBy", (([parameters departOrArrive] == ARRIVE) ? @"true" : @"false"),
+                            @"maxWalkDistance", [NSNumber numberWithInt:[parameters maxWalkDistance]],
+                            nil];
+    
+    
+    // TODO handle changes to maxWalkDistance with plan caching
+    
+    planURLResource = [@"plan" appendQueryParams:params];
+    [parametersByPlanURLResource setObject:parameters forKey:planURLResource];
+    NSLog(@"Plan resource: %@", planURLResource);
+    
+    // Call the trip planner
+    [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
+}
+
+
+// Delegate methods for when the RestKit has results from the Planner
+- (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects
+{
+    {
+        NSInteger statusCode = [[objectLoader response] statusCode];
+        NSLog(@"Planning HTTP status code = %d", statusCode);
+        
+        @try {
+            if (objects && [objects objectAtIndex:0]) {
+                Plan* plan = [objects objectAtIndex:0];
+                NSString* resourcePath = [objectLoader resourcePath];
+                PlanRequestParameters* parameters = [parametersByPlanURLResource objectForKey:resourcePath];
+                
+                // Initialize the rest of the Plan and save context
+                [plan setToLocation:[parameters toLocation]];
+                [plan setFromLocation:[parameters fromLocation]];
+                [plan createRequestChunkWithAllItinerariesAndRequestDate:[parameters tripDate]
+                                                          departOrArrive:[parameters departOrArrive]];
+                
+                saveContext(managedObjectContext);
+                
+                
+            }
+        }
+        @catch (NSException *exception) {
+            [self stopActivityIndicator];
+            durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime ;
+            NSLog(@"Exception while parsing TP response plan: %@", exception);
+            
+            // TODO put this code back in ToFromViewController
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"Trip is not possible. Your start or end point might not be safely accessible" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
+            [alert show];
+            savetrip = false;
+            return ;
+        }
+        
+    }
+}
+
+
+// Fetches array of plans going to the same to & from Location from the cache
 // Normally will return just one plan, but could return more if the plans have not been consolidated
 // Plans are sorted starting with the latest (most current) plan first
 - (NSArray *)fetchPlansWithToLocation:(Location *)toLocation fromLocation:(Location *)fromLocation

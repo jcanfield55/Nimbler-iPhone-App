@@ -53,6 +53,7 @@
 		527620EB15CC894900B10734 /* img_legWalkSelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 527620E715CC894900B10734 /* img_legWalkSelect@2x.png */; };
 		527E174A151EB9CD00CDBC23 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527E1749151EB9CD00CDBC23 /* QuartzCore.framework */; };
 		52849FCA151D0389001D4DDC /* LegMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52849FC9151D0389001D4DDC /* LegMapViewController.m */; };
+		5289CF1C15EEE8BE005843EB /* PlanRequestParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 5289CF1B15EEE8BE005843EB /* PlanRequestParameters.m */; };
 		528A486515B4D691009EF7F0 /* mapDot.png in Resources */ = {isa = PBXBuildFile; fileRef = 528A486415B4D690009EF7F0 /* mapDot.png */; };
 		528A486715B4D69D009EF7F0 /* mapDot@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 528A486615B4D69C009EF7F0 /* mapDot@2x.png */; };
 		52917827158477F6001CC74C /* caltrain-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 52917826158477F6001CC74C /* caltrain-station.json */; };
@@ -927,6 +928,8 @@
 		527E1749151EB9CD00CDBC23 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		52849FC8151D0389001D4DDC /* LegMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LegMapViewController.h; sourceTree = "<group>"; };
 		52849FC9151D0389001D4DDC /* LegMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LegMapViewController.m; sourceTree = "<group>"; };
+		5289CF1A15EEE8BD005843EB /* PlanRequestParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanRequestParameters.h; sourceTree = "<group>"; };
+		5289CF1B15EEE8BE005843EB /* PlanRequestParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlanRequestParameters.m; sourceTree = "<group>"; };
 		528A486415B4D690009EF7F0 /* mapDot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mapDot.png; sourceTree = "<group>"; };
 		528A486615B4D69C009EF7F0 /* mapDot@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mapDot@2x.png"; sourceTree = "<group>"; };
 		52917826158477F6001CC74C /* caltrain-station.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "caltrain-station.json"; path = "PreloadData/caltrain-station.json"; sourceTree = "<group>"; };
@@ -2740,6 +2743,8 @@
 				5210516F14C9C0DF0025DD39 /* Plan.m */,
 				5265D4B815E19E8D002C9406 /* PlanStore.h */,
 				5265D4B915E19E8D002C9406 /* PlanStore.m */,
+				5289CF1A15EEE8BD005843EB /* PlanRequestParameters.h */,
+				5289CF1B15EEE8BE005843EB /* PlanRequestParameters.m */,
 				529D7D2A15E5EC2E000A7D2F /* PlanRequestChunk.h */,
 				529D7D2B15E5EC43000A7D2F /* PlanRequestChunk.m */,
 				523C0CDE15E4421D00C35BE2 /* TransitCalendar.h */,
@@ -3240,6 +3245,7 @@
 				523C0CE315E45A9900C35BE2 /* KeyObjectPair.m in Sources */,
 				523C0CE615E45F4000C35BE2 /* KeyObjectStore.m in Sources */,
 				529D7D2C15E5EC43000A7D2F /* PlanRequestChunk.m in Sources */,
+				5289CF1C15EEE8BE005843EB /* PlanRequestParameters.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

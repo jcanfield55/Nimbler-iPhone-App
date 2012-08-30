@@ -75,6 +75,10 @@ typedef enum {
 -(void)getRealTimeData;
 -(NSNumber *)getWalkDistance;
 -(void)setFBParameterForGeneral;
+
+// Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
+-(void)newPlanAvailable:(Plan *)newPlan;
+
 -(void)doSwapLocation;
 -(void)requestReverseGeo:(Location *)location;
 - (void) hideTabBar;

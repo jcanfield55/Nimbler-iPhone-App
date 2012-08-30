@@ -92,8 +92,6 @@
     [self setSortedItineraries:[[self itineraries] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
 }
 
-// TODO add deletion of itineraries whose GTFS file has expired
-
 // consolidateIntoSelfPlan
 // If plan0 fromLocation and toLocation are the same as referring object's...
 // Consolidates plan0 itineraries and PlanRequestChunks into referring Plan
@@ -222,49 +220,6 @@
 }
 
 
-/*  TODO  Rewrite and combine the next two methods to reflect PlanRequestChunk being part of CoreData
-
-// Initializer for an existing (legacy) Plan that does not have any planRequestCache but has a bunch of existing itineraries.  Creates a new PlanRequestChunk for every itinerary in sortedItineraryArray
-- (id)initWithRawItineraries:(NSArray *)sortedItineraryArray
-{
-    self = [super init];
-    
-    if (self) {
-        requestChunkArray = [[NSMutableArray alloc] initWithCapacity:[sortedItineraryArray count]];
-        for (Itinerary* itin in sortedItineraryArray) {
-            PlanRequestChunk* requestChunk = [[PlanRequestChunk alloc] init];
-            [requestChunk setEarliestRequestedDepartTimeDate:[itin startTime]];  // Set request time to startTime of itinerary
-            [requestChunk setItineraries:[NSArray arrayWithObject:itin]];
-            [requestChunkArray addObject:requestChunk];
-        }
-    }
-    return self;
-}
-
-// Initializer for a new plan fresh from a OTP request
-// Creates one PlanRequestChunk with all the itineraries as part of it
-- (id)initWithRequestDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive sortedItineraries:(NSArray *)sortedItinArray
-{
-    self = [super init];
-    
-    if (self) {
-        
-        requestChunkArray = [[NSMutableArray alloc] initWithCapacity:[sortedItinArray count]];
-        PlanRequestChunk* requestChunk = [[PlanRequestChunk alloc] init];
-        if (depOrArrive == DEPART) {
-            [requestChunk setEarliestRequestedDepartTimeDate:requestDate];
-        } else { // ARRIVE
-            [requestChunk setLatestRequestedArriveTimeDate:requestDate];
-        }
-        [requestChunk setItineraries:sortedItinArray];
-        [requestChunkArray addObject:requestChunk];
-    }
-    
-    return self;
-}
- */
-
-// TODO Make a way to get rid of itineraries that are from old GTFS files
 
 // prepareSortedItinerariesWithMatchesForDate  -- part of Plan Caching (US78) implementation
 // Looks for matching itineraries for the requestDate and departOrArrive

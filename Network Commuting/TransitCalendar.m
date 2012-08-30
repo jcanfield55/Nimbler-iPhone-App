@@ -134,8 +134,6 @@ static TransitCalendar * transitCalendarSingleton;
     return (date1Services && date2Services && [date1Services isEqualToString:date2Services]);
 }
 
-// TODO - Handle walking legs appropriately (they do not have a transit agency or schedule)
-
 //
 // Stub for filling in the trip information
 // TODO -- replace this stubs with logic to load periodically from server

@@ -454,10 +454,6 @@
             leg.endTime = [leg.startTime dateByAddingTimeInterval:(30.0*60)];
         }
     }
-    
-    
-    // TODO make sure I have a walking leg in the mix
-    // TODO Test against services of a different transit agency
 
 }
 
@@ -1048,6 +1044,5 @@
     STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:0], itin40, @"");
     STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:1], itin41, @"");
     
-    // TODO get a pure walking leg trip
 }
 @end

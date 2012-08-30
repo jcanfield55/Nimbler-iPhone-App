@@ -959,85 +959,63 @@ NSUserDefaults *prefs;
         // if no result or non-OK status, leave the reverse Geocode as nil
     }
     
-    // Check to make sure this is the response to the latest planner request
-    else if ([[objectLoader resourcePath] isEqualToString:planURLResource])
-    {   
-        NSInteger statusCode = [[objectLoader response] statusCode];
-        NSLog(@"Planning HTTP status code = %d", statusCode);
-       
-        @try {
-            if (objects && [objects objectAtIndex:0]) {
-                if (savetrip) {
-                    plan = [objects objectAtIndex:0];
-                                        
-                    durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime;
-                    [self stopActivityIndicator];
-                    
-                    // Initialize the rest of the Plan and save context
-                    [plan setToLocation:toLocation];
-                    [plan setFromLocation:fromLocation];
-                    [plan createRequestChunkWithAllItinerariesAndRequestDate:tripDate departOrArrive:departOrArrive];
-                    saveContext(managedObjectContext);
-
-                    // Pass control to the RouteOptionsViewController to display itinerary choices
-                    if (!routeOptionsVC) {
-                        routeOptionsVC = [[RouteOptionsViewController alloc] initWithNibName:nil bundle:nil];;
-                    }
-                    
-                    [routeOptionsVC setPlan:plan];                                        
-                    [[self navigationController] pushViewController:routeOptionsVC animated:YES];              
-                    
-                    savetrip = FALSE;
-                    [self savePlanInTPServer:[[objectLoader  response] bodyAsString]];
-                    NSLog(@"For Feedback Process called");
-                } else {
-                    tpResponsePlan = [objects objectAtIndex:0];
-                    [plan setPlanId:[tpResponsePlan planId]];                    
-                    NSLog(@"obj foe plan = %@", [tpResponsePlan planId]);
-                    
-                    @try {
-                        for (int i= 0; i< [[tpResponsePlan itineraries] count]; i++) {
-                            Itinerary *itin = [[tpResponsePlan sortedItineraries] objectAtIndex:i];
-                            [[[plan sortedItineraries] objectAtIndex:i] setItinId:[itin itinId]];
-                            NSLog(@"===========================================");
-                            NSLog(@"itinarary.. %@",[itin itinId]);
-                            for (int j =0; j< [[itin legs] count] ; j++) {
-                                Leg *lg = [[itin sortedLegs] objectAtIndex:j];                                
-                                [[[[[plan sortedItineraries] objectAtIndex:i] sortedLegs] objectAtIndex:j] setLegId:[lg legId]];
-                                NSLog(@"------------------------------------------");
-                                NSLog(@"leg... %@",[lg legId]);
-                            }                                                            
-                        }
-                        
-                        [routeOptionsVC setFBParameterForPlan];
-                        [self getRealTimeData];
-                        continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
-                    }
-                    @catch (NSException *exception) {
-                        NSLog(@"Exception while iterating over TP response plan: %@", exception);
-                    }    
-                }                
-            }
-        }
-        @catch (NSException *exception) {            
-            [self stopActivityIndicator];
-            durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime ;
-            NSLog(@"Exceptione while parsing TP response plan: %@", exception);
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"Trip is not possible. Your start or end point might not be safely accessible" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
-            [alert show];
-            savetrip = false;
-            return ;
-        }
-        
-    }
     // If returned value does not correspond to one of the most recent requests, do nothing...
+}
+
+// Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
+-(void)newPlanAvailable:(Plan *)newPlan
+{
+    plan = newPlan;
+    durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime;
+    savetrip = FALSE;
+    [self stopActivityIndicator];
+    
+    // Pass control to the RouteOptionsViewController to display itinerary choices
+    if (!routeOptionsVC) {
+        routeOptionsVC = [[RouteOptionsViewController alloc] initWithNibName:nil bundle:nil];;
+    }
+    
+    [routeOptionsVC setPlan:plan];
+    [[self navigationController] pushViewController:routeOptionsVC animated:YES];
+    
+    // TODO -- move logic for saving PlanInTP Server to PlanStore class or a new class
+    // [self savePlanInTPServer:[[objectLoader  response] bodyAsString]];
+    
+    
+    NSLog(@"For Feedback Process called");
+    /* } else {   // code for saveTrip=FALSE case
+     tpResponsePlan = [objects objectAtIndex:0];
+     [plan setPlanId:[tpResponsePlan planId]];
+     NSLog(@"obj foe plan = %@", [tpResponsePlan planId]);
+     
+     @try {
+     for (int i= 0; i< [[tpResponsePlan itineraries] count]; i++) {
+     Itinerary *itin = [[tpResponsePlan sortedItineraries] objectAtIndex:i];
+     [[[plan sortedItineraries] objectAtIndex:i] setItinId:[itin itinId]];
+     NSLog(@"===========================================");
+     NSLog(@"itinarary.. %@",[itin itinId]);
+     for (int j =0; j< [[itin legs] count] ; j++) {
+     Leg *lg = [[itin sortedLegs] objectAtIndex:j];
+     [[[[[plan sortedItineraries] objectAtIndex:i] sortedLegs] objectAtIndex:j] setLegId:[lg legId]];
+     NSLog(@"------------------------------------------");
+     NSLog(@"leg... %@",[lg legId]);
+     }
+     }
+     
+     [routeOptionsVC setFBParameterForPlan];
+     [self getRealTimeData];
+     continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
+     }
+     @catch (NSException *exception) {
+     NSLog(@"Exception while iterating over TP response plan: %@", exception);
+     } */
 }
 
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error {
     [self stopActivityIndicator];
     if (savetrip) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to calculate a route for that To & From address" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];    
+        [alert show];
         NSLog(@"Error received from RKObjectManager: %@", error);
     }
 }
@@ -1103,62 +1081,8 @@ NSUserDefaults *prefs;
             [Flurry logEvent: FLURRY_ROUTE_REQUESTED withParameters:flurryParams];
 #endif
             
-            // Check if we have a stored plan that we can use
-            NSArray* matchingPlanArray = [planStore fetchPlansWithToLocation:toLocation fromLocation:fromLocation];
-            for (Plan* plan0 in matchingPlanArray) {
-                NSLog(@"Matching Plan date:%@ from: %@ to: %@", [plan0 date], [[plan0 fromLocation] formattedAddress], [[plan0 toLocation] formattedAddress]);
-            }
-            
-            if (matchingPlanArray && [matchingPlanArray count]>0) {
-                Plan* matchingPlan = [matchingPlanArray objectAtIndex:0]; // Take the first matching plan
-                
-                if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:tripDate
-                                                              departOrArrive:departOrArrive]) {
-                    NSLog(@"Matches found in plan cache -- going to RouteOptions");
-                    // If there are  matching itineraries in the cache, go directly to Route Options
-                    
-                    // Pass control to the RouteOptionsViewController to display itinerary choices
-                    if (!routeOptionsVC) {
-                        routeOptionsVC = [[RouteOptionsViewController alloc] initWithNibName:nil bundle:nil];;
-                    }
-                    
-                    [routeOptionsVC setPlan:matchingPlan];
-                    [[self navigationController] pushViewController:routeOptionsVC animated:YES];
-                    
-                    // TODO:  Even if there are matching plans, I should do some more fetches
-                    // TODO:  Make sure that I am storing all my plans once I get them
-                    
-                    return true;  // Skip calling OTP for now
-                }
-            }
-            
 
-            // Create the date formatters we will use to output the date & time
-            NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
-            [dFormat setDateFormat:@"MM/dd/yyyy"];
-//            [dFormat setDateStyle:NSDateFormatterShortStyle];
-//            [dFormat setTimeStyle:NSDateFormatterNoStyle];
-            NSDateFormatter* tFormat = [[NSDateFormatter alloc] init];
-            [tFormat setTimeStyle:NSDateFormatterShortStyle];
-            [tFormat setDateStyle:NSDateFormatterNoStyle];
-            
-            NSNumber* maxiWalkDistance = [self getWalkDistance];
-            NSLog(@"maximum walk distance ------------------------------------ %f",[maxiWalkDistance floatValue]);
-            // convert miles into meters. 1 mile = 1609.344 meters
-            int maxDistance = (int)([maxiWalkDistance floatValue]*1609.544);
-            
-            NSLog(@"max walk distance: %d", maxDistance);
-            // Build the parameters into a resource string       
-            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                                    @"fromPlace", [fromLocation latLngPairStr], 
-                                    @"toPlace", [toLocation latLngPairStr], 
-                                    @"date", [dFormat stringFromDate:tripDate],
-                                    @"time", [tFormat stringFromDate:tripDate], 
-                                    @"arriveBy", ((departOrArrive == ARRIVE) ? @"true" : @"false"),
-                                    @"maxWalkDistance", [NSNumber numberWithInt:maxDistance],
-                                    nil];
-            
-            planURLResource = [@"plan" appendQueryParams:params];
+
             
             // add latest plan request to history array
             [planRequestHistory addObject:[NSDictionary dictionaryWithKeysAndObjects:
@@ -1166,10 +1090,20 @@ NSUserDefaults *prefs;
                                            @"toPlace", toLocation,
                                            @"date", [NSDate date], nil]];
             
-            NSLog(@"Plan resource: %@", planURLResource);
-           
-             // Call the trip planner
-            [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
+            NSNumber* maxiWalkDistance = [self getWalkDistance];
+            NSLog(@"maximum walk distance ------------------------------------ %f",[maxiWalkDistance floatValue]);
+            // convert miles into meters. 1 mile = 1609.344 meters
+            int maxDistance = (int)([maxiWalkDistance floatValue]*1609.544);
+            
+            // Request the plan (callback will come in newPlanAvailable method)
+            [planStore requestPlanFromLocation:fromLocation
+                                    toLocation:toLocation
+                                      tripDate:tripDate
+                                departOrArrive:departOrArrive
+                       maxWalkDistanceInMeters:maxDistance
+                          toFromViewController:self
+                    routeOptionsViewController:routeOptionsVC];
+            
             savetrip = TRUE;
             isContinueGetRealTimeData = FALSE;
             
