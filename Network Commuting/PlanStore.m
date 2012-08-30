@@ -21,6 +21,7 @@
 
 // Internal methods
 -(void)requestPlanFromOtpWithParameters:(PlanRequestParameters *)parameters;
+-(void)requestMoreItinerariesIfNeeded:(Plan *)matchingPlan parameters:(PlanRequestParameters *)requestParams;
 
 
 @end
@@ -68,10 +69,13 @@
                                                       departOrArrive:[parameters departOrArrive]]) {
             NSLog(@"Matches found in plan cache -- going to RouteOptions");
             // If there are  matching itineraries in the cache, go directly to Route Options
-            
+            // [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
             PlanRequestStatus status = STATUS_OK;
-            [toFromVC newPlanAvailable:matchingPlan status:status];
-            // TODO:  Even if there are matching plans, I should do some more fetches
+            if (parameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
+                [routeOptionsVC newPlanAvailable:matchingPlan status:status];
+            } else {
+                [toFromVC newPlanAvailable:matchingPlan status:status];
+            }
             return;
         }
     }
@@ -104,7 +108,7 @@
                             @"maxWalkDistance", [NSNumber numberWithInt:[parameters maxWalkDistance]],
                             nil];
     
-    
+    parameters.serverCallsSoFar = parameters.serverCallsSoFar + 1;
     // TODO handle changes to maxWalkDistance with plan caching
     
     planURLResource = [@"plan" appendQueryParams:params];
@@ -122,31 +126,39 @@
     {
         NSInteger statusCode = [[objectLoader response] statusCode];
         NSLog(@"Planning HTTP status code = %d", statusCode);
-        
+        PlanRequestParameters* parameters;
         @try {
             if (objects && [objects objectAtIndex:0]) {
                 Plan* plan = [objects objectAtIndex:0];
                 NSString* resourcePath = [objectLoader resourcePath];
-                PlanRequestParameters* parameters = [parametersByPlanURLResource objectForKey:resourcePath];
+                parameters = [parametersByPlanURLResource objectForKey:resourcePath];
                 
                 // Initialize the rest of the Plan and save context
                 [plan setToLocation:[parameters toLocation]];
                 [plan setFromLocation:[parameters fromLocation]];
                 [plan createRequestChunkWithAllItinerariesAndRequestDate:[parameters tripDate]
                                                           departOrArrive:[parameters departOrArrive]];
-                
-                plan = [self consolidateWithMatchingPlans:plan];
-                saveContext(managedObjectContext);
+                saveContext(managedObjectContext);  // Save location and request chunk changes
+                plan = [self consolidateWithMatchingPlans:plan]; // context saved again if needed in this method
                 
                 // Now format the itineraries of the consolidated plan
                 [plan prepareSortedItinerariesWithMatchesForDate:[parameters tripDate] departOrArrive:[parameters departOrArrive]];
+                // [self requestMoreItinerariesIfNeeded:plan parameters:parameters];
                 
-                [toFromVC newPlanAvailable:plan status:STATUS_OK];  // Call-back to toFromVC with the new plan
+                // Call-back the appropriate RouteOptions VC with the new plan
+                if (parameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
+                    [routeOptionsVC newPlanAvailable:plan status:STATUS_OK];  
+                } else {
+                    [toFromVC newPlanAvailable:plan status:STATUS_OK];
+                }
             }
         }
         @catch (NSException *exception) {
             NSLog(@"Exception while parsing TP response plan: %@", exception);
-            [toFromVC newPlanAvailable:nil status:GENERIC_EXCEPTION];
+            if (parameters && parameters.planDestination == PLAN_DESTINATION_TO_FROM_VC) {
+                [toFromVC newPlanAvailable:nil status:GENERIC_EXCEPTION];
+            }
+            // else if not a toFromViewController request, do not bother the user
         }
     }
 }
@@ -156,6 +168,23 @@
     NSLog(@"Error received from RKObjectManager: %@", error);
     [toFromVC newPlanAvailable:nil status:GENERIC_EXCEPTION];
 }
+
+// Checks if more itineraries are needed for this plan, and if so requests them from the server
+-(void)requestMoreItinerariesIfNeeded:(Plan *)plan parameters:(PlanRequestParameters *)requestParams
+{
+    NSDate* firstItinTimeOnly = timeOnlyFromDate([[[plan sortedItineraries] objectAtIndex:0] startTime]);
+    NSDate* lastItinTimeOnly = timeOnlyFromDate([[[plan sortedItineraries] lastObject] startTime]);
+    if (requestParams.serverCallsSoFar < PLAN_MAX_SERVER_CALLS_PER_REQUEST &&
+        [[plan sortedItineraries] count] < PLAN_MAX_ITINERARIES_TO_SHOW &&
+        [lastItinTimeOnly timeIntervalSinceDate:firstItinTimeOnly] < PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW) {
+        // If we are within our max parameters
+        requestParams.planDestination = PLAN_DESTINATION_ROUTE_OPTIONS_VC;
+        
+        // TODO add time to the request date
+        [self requestPlanFromOtpWithParameters:requestParams];
+    }
+}
+
 
 // Fetches array of plans going to the same to & from Location from the cache
 // Normally will return just one plan, but could return more if the plans have not been consolidated

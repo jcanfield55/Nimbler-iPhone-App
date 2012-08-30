@@ -106,12 +106,14 @@
         }
     }
     
+    // TODO if we delete some itineraries because they are old, we need to delete the requestChunk they are part of too (because now it is missing itineraries and may not be contiguous)
+    
     // Consolidate requestChunks
     NSMutableSet* chunksConsolidated = [[NSMutableSet alloc] initWithCapacity:10];
     for (PlanRequestChunk* reqChunk0 in [plan0 requestChunks]) {
         for (PlanRequestChunk* selfRequestChunk in [self requestChunks]) {
             if ([reqChunk0 doAllServiceStringByAgencyMatchRequestChunk:selfRequestChunk] &&
-                [reqChunk0 doTimesOverlapRequestChunk:selfRequestChunk]) {
+                [reqChunk0 doTimesOverlapRequestChunk:selfRequestChunk bufferInSeconds:REQUEST_CHUNK_OVERLAP_BUFFER_IN_SECONDS]) {
                 [chunksConsolidated addObject:reqChunk0];
                 [selfRequestChunk consolidateIntoSelfRequestChunk:reqChunk0];
             }

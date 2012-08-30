@@ -22,4 +22,9 @@ typedef enum {
     ARRIVE
 } DepartOrArrive;
 
+typedef enum {
+    STATUS_OK,
+    GENERIC_EXCEPTION  // Provide an error saying we are unable to perform route
+} PlanRequestStatus;
+
 #endif

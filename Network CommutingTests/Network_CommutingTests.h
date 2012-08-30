@@ -39,6 +39,7 @@
     Plan *plan5;
     Plan *plan6;
     Plan *plan7;
+    Plan *plan8;
 
     Itinerary *itin10;
     Itinerary *itin11;
@@ -57,6 +58,7 @@
     Itinerary *itin70;
     Itinerary *itin71;
     Itinerary *itin72;
+    Itinerary *itin80;
 
     NSDate* date60req;
 }

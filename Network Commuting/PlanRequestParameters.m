@@ -17,5 +17,7 @@
 @synthesize tripDate;
 @synthesize maxWalkDistance;
 @synthesize departOrArrive;
+@synthesize serverCallsSoFar;
+@synthesize planDestination;
 
 @end

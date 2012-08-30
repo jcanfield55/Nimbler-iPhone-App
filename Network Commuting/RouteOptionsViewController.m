@@ -82,6 +82,15 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     [self setFBParameterForPlan];
 }
 
+// Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
+-(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status
+{
+    if (status == STATUS_OK) {
+        [mainTable reloadData];
+    }
+}
+
+
 - (void)didReceiveMemoryWarning
 {
     // Releases the view if it doesn't have a superview.

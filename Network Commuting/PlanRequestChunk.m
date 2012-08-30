@@ -202,19 +202,37 @@
 }
 
 // Returns true if self and requestChunk0 have overlapping times, and thus are candidates for consolidation
-- (BOOL)doTimesOverlapRequestChunk:(PlanRequestChunk *)requestChunk0
+// bufferInSeconds is the max amount that two chunks can be non-overlapping and still return true
+- (BOOL)doTimesOverlapRequestChunk:(PlanRequestChunk *)requestChunk0 bufferInSeconds:(NSTimeInterval)bufferInSeconds;
 {
+    NSDate* earliestTime0MinusBuffer=[[requestChunk0 earliestTime] dateByAddingTimeInterval:(-bufferInSeconds)];
+    NSDate *lastItineraryTime0 = timeOnlyFromDate([[[requestChunk0 sortedItineraries] lastObject] startTime]);
+    NSDate* lastItinTime0PlusBuffer = [lastItineraryTime0 dateByAddingTimeInterval:bufferInSeconds];
     // If self earliestTime is within the range for requestChunk0, return true
-    if ([[self earliestTime] compare:[requestChunk0 earliestTime]]!=NSOrderedAscending &&
-        [[self earliestTime] compare:[requestChunk0 latestTime]]!=NSOrderedDescending) {
+    if ([[self earliestTime] compare:earliestTime0MinusBuffer]!=NSOrderedAscending &&
+        [[self earliestTime] compare:lastItinTime0PlusBuffer]!=NSOrderedDescending) {
         return true;
     }
     // If self latestTime is within the range for requestChunk0, return true
-    if ([[self latestTime] compare:[requestChunk0 earliestTime]]!=NSOrderedAscending &&
-        [[self latestTime] compare:[requestChunk0 latestTime]]!=NSOrderedDescending) {
+    if ([[self latestTime] compare:earliestTime0MinusBuffer]!=NSOrderedAscending &&
+        [[self latestTime] compare:lastItinTime0PlusBuffer]!=NSOrderedDescending) {
         return true;
     }
-    // If neither earliest or latest overlaps requestChunk0, return false
+    // Now check it in the other direction (whether requestChunk0 times are within the range of self times)
+    NSDate* earliestTimeSelfMinusBuffer=[[self earliestTime] dateByAddingTimeInterval:(-bufferInSeconds)];
+    NSDate *lastItineraryTimeSelf = timeOnlyFromDate([[[self sortedItineraries] lastObject] startTime]);
+    NSDate* lastItinTimeSelfPlusBuffer = [lastItineraryTimeSelf dateByAddingTimeInterval:bufferInSeconds];
+    if ([[requestChunk0 earliestTime] compare:earliestTimeSelfMinusBuffer]!=NSOrderedAscending &&
+        [[requestChunk0 earliestTime] compare:lastItinTimeSelfPlusBuffer]!=NSOrderedDescending) {
+        return true;
+    }
+    // If self latestTime is within the range for requestChunk0, return true
+    if ([[requestChunk0 latestTime] compare:earliestTimeSelfMinusBuffer]!=NSOrderedAscending &&
+        [[requestChunk0 latestTime] compare:lastItinTimeSelfPlusBuffer]!=NSOrderedDescending) {
+        return true;
+    }
+    
+    // If none of the above are true, return false
     return false;
 }
 
@@ -232,7 +250,7 @@
 // Assumes that self and requestChunk0 are true for doTimesOverlapRequestChunk: and doAllServiceStringByAgencyMatchRequestChunk:
 // Takes the earliestRequestDepartTimeDate of the two and the latestRequestedArriveTimeDate of the two by comparing the time only
 // Consolidates itineraries but does not check for duplicates
-- (void)consolidateIntoSelfRequestChunk:(PlanRequestChunk *)requestChunk0
+- (void)consolidateIntoSelfRequestChunk:(PlanRequestChunk *)requestChunk0 
 {
     // Update earliestRequestedDepartTimeDate
     if ([requestChunk0 earliestRequestedDepartTimeDate]) {

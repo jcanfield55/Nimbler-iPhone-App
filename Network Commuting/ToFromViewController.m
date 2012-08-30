@@ -1048,8 +1048,7 @@ NSUserDefaults *prefs;
 // Routine for calling and populating a trip-plan object
 - (BOOL)getPlan
 {
-    // TODO See if we already have a similar plan that we can use
-    // See if there has already been an identical plan request in the last 5 seconds.  
+    // See if there has already been an identical plan request in the last 5 seconds.
     @try {
         NSLog(@"Plan routine entered");
         BOOL isDuplicatePlan = NO;
@@ -1125,6 +1124,7 @@ NSUserDefaults *prefs;
             parameters.tripDate = tripDate;
             parameters.departOrArrive = departOrArrive;
             parameters.maxWalkDistance = maxDistance;
+            parameters.planDestination = PLAN_DESTINATION_TO_FROM_VC;
             [planStore requestPlanWithParameters:parameters];
             
             savetrip = TRUE;

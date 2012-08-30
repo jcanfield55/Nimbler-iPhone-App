@@ -23,10 +23,6 @@ typedef enum {
     TO_EDIT     // To address is being edited with the keyboard
 } ToFromEditMode;
 
-typedef enum {
-    STATUS_OK,
-    GENERIC_EXCEPTION  // Provide an error saying we are unable to perform route
-} PlanRequestStatus;
 
 @interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,RKRequestDelegate,UIActionSheetDelegate,UIAlertViewDelegate>
 

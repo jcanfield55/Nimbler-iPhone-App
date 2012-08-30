@@ -62,7 +62,8 @@
 - (BOOL)doesCoverTheSameTimeAs:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive;
 
 // Returns true if self and requestChunk0 have overlapping times, and thus are candidates for consolidation
-- (BOOL)doTimesOverlapRequestChunk:(PlanRequestChunk *)requestChunk0;
+// bufferInSeconds is the max amount that two chunks can be non-overlapping and still return true
+- (BOOL)doTimesOverlapRequestChunk:(PlanRequestChunk *)requestChunk0 bufferInSeconds:(NSTimeInterval)bufferInSeconds;
 
 // Returns a date/time that can be used to make a next request to OTP for getting additional itineraries
 // The returned date will be the same day as requestDate, but will have a time equal to 1 minute past
