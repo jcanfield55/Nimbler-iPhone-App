@@ -61,6 +61,7 @@
 
 - (NSDictionary *)serviceStringByAgency
 {
+    NSLog(@"%@",self.managedObjectContext);
     if (!serviceStringByAgency) {
         [self populateServiceStringByAgency];
     }

@@ -141,10 +141,11 @@ bool isPush;
         
         // Update in user defaults
         float ss = sliderPushNotification.value;
+        int alertFrequencyIntValue = ss;
         
         UserPreferance *userPrefs = [UserPreferance userPreferance]; // get singleton
         userPrefs.pushEnable = [NSNumber numberWithBool:isPush];
-        userPrefs.triggerAtHour = [NSNumber numberWithFloat:ss];
+        userPrefs.triggerAtHour = [NSNumber numberWithInt:alertFrequencyIntValue];
         userPrefs.walkDistance = [NSNumber numberWithFloat:sliderMaxWalkDistance.value];
         [userPrefs saveUpdates];
         

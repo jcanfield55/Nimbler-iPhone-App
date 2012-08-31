@@ -84,6 +84,7 @@
 // Takes the earliestRequestDepartTimeDate of the two and the latestRequestedArriveTimeDate of the two by comparing the time only
 // Consolidates itineraries but does not check for duplicates
 - (void)consolidateIntoSelfRequestChunk:(PlanRequestChunk *)requestChunk0;
+- (void)populateServiceStringByAgency;
 
 @end
 

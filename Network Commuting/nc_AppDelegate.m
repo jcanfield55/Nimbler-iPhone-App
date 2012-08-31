@@ -779,6 +779,7 @@ FeedBackForm *fbView;
                                 DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],
                                 @"maxDistance", [userPrefs walkDistance],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt:URGENT_NOTIFICATION_DEFAULT_VALUE],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt:STANDARD_NOTIFICATION_DEFAULT_VALUE],
                                 nil];
+        NSLog(@"params=%@",params);
         NSString *twitCountReq = [UPDATE_SETTING_REQ appendQueryParams:params];
         [[RKClient sharedClient]  get:twitCountReq delegate:self]; 
         

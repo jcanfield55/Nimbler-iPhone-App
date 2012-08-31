@@ -169,3 +169,8 @@
 #define UPDATE_TIME_URL                 @"gtfs/updateTime"
 #define SERVICE_BY_WEEKDAY_URL          @"gtfs/serviceByWeekday"
 #define CALENDAR_BY_DATE_URL            @"gtfs/calendarByDate"
+
+#define GTFS_UPDATE_TIME              @"gtfsUpdateTime"
+#define GTFS_SERVICE_BY_WEEKDAY       @"gtfsServiceByWeekDay"
+#define GTFS_SERVICE_EXCEPTIONS_DATES @"gtfsServiceExceptionDates"
+#define CURRENT_DATE                  @"currentDate"
