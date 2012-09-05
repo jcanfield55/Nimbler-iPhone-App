@@ -20,10 +20,14 @@ typedef enum {
 
 @property (strong, nonatomic) Location* fromLocation;
 @property (strong, nonatomic) Location* toLocation;
-@property (strong, nonatomic) NSDate* tripDate;
+@property (strong, nonatomic) NSDate* originalTripDate; // original date & time requested by user
+@property (strong, nonatomic) NSDate* thisRequestTripDate; // date & time request for iterative plan requests to the server
 @property (nonatomic) DepartOrArrive departOrArrive;
 @property (nonatomic) int maxWalkDistance;
 @property (nonatomic) int serverCallsSoFar; // number of calls to the server that have been made for this request
 @property (nonatomic) PlanDestination planDestination;
+
+// Returns a new PlanRequestParameters object containing the same parameters as parameters0
++ (id)copyOfPlanRequestParameters:(PlanRequestParameters *)parameters0;
 
 @end

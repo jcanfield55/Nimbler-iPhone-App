@@ -491,7 +491,7 @@ FeedBackForm *fbView;
                 RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
                 if(isSettingRequest){
                     NSDictionary  *dictTemp = [rkParser objectFromString:[response bodyAsString] error:nil];
-                    NSLog(@"%@",[response bodyAsString]);
+                    NSLog(@"RK Response: %@",[response bodyAsString]);
                     NSNumber *respCode = [(NSDictionary*)dictTemp objectForKey:CODE];
                     if ([respCode intValue]== RESPONSE_SUCCESSFULL) { 
                         self.isSettingSavedSuccessfully = YES;
@@ -558,7 +558,7 @@ FeedBackForm *fbView;
                     isUpdateTime = NO;
                 }
                 else if(isServiceByWeekday){
-                    NSLog(@"%@",[response bodyAsString]);
+                    NSLog(@"isServiceByWeekday response: %@",[response bodyAsString]);
                     NSDictionary  *dictServiceByweekday = [rkParser objectFromString:[response bodyAsString] error:nil];
                     NSLog(@"update %@", dictServiceByweekday); 
                     isServiceByWeekday = NO;
@@ -634,7 +634,7 @@ FeedBackForm *fbView;
         NSString *isUrgent = [userInfo valueForKey:@"isUrgent"];
         NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
         NSString *sound = [[userInfo valueForKey:@"aps"] valueForKey:@"sound"];
-        NSLog(@"%@",sound);
+        NSLog(@"Remote Notification Sound: %@",sound);
         NSString *badge = [[userInfo valueForKey:@"aps"] valueForKey:@"badge"];
         prefs = [NSUserDefaults standardUserDefaults];  
         [prefs setObject:badge forKey:TWEET_COUNT];

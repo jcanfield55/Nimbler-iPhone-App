@@ -615,7 +615,6 @@ NSUserDefaults *prefs;
     
     if (isFrom) {
         if (subviews && [subviews count]>0 && [subviews indexOfObject:[fromTableVC txtField]] != NSNotFound) {
-            NSLog(@"fromTable already in subview");
             // if From txtField is already in the subview (due to recycling, no need to add again
         } else { 
             [cellView addSubview:[fromTableVC txtField]]; // add From txtField
@@ -623,7 +622,6 @@ NSUserDefaults *prefs;
     }
     else {   // do same for toTable case
         if (subviews && [subviews count]>0 && [subviews indexOfObject:[toTableVC txtField]] != NSNotFound) {
-            NSLog(@"toTable already in subview");
             // if To txtField is already in the subview (due to recycling, no need to add again
         } else { 
             [cellView addSubview:[toTableVC txtField]]; // add To txtfield
@@ -1121,7 +1119,8 @@ NSUserDefaults *prefs;
             PlanRequestParameters* parameters = [[PlanRequestParameters alloc] init];
             parameters.fromLocation = fromLocation;
             parameters.toLocation = toLocation;
-            parameters.tripDate = tripDate;
+            parameters.originalTripDate = tripDate;
+            parameters.thisRequestTripDate = tripDate;
             parameters.departOrArrive = departOrArrive;
             parameters.maxWalkDistance = maxDistance;
             parameters.planDestination = PLAN_DESTINATION_TO_FROM_VC;

@@ -107,11 +107,9 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if ([toFromVC editMode] == NO_EDIT && !selectedLocation) {  // DE122 fix
-        NSLog(@"%d",[locations numberOfLocations:isFrom]);
         return ([locations numberOfLocations:isFrom] + 1); // matching rows + 1 for "Enter New Address" Row
     }
     else {
-        NSLog(@"%d",[locations numberOfLocations:isFrom]);
         return [locations numberOfLocations:isFrom];  // matching rows only
     }
 }
@@ -599,8 +597,7 @@
 }
 
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error {
-    NSLog(@"Error received from RKObjectManager:");
-    NSLog(@"%@", error);
+    NSLog(@"Error received from RKObjectManager: %@", error);
 }
 
 // Internal method to process a new incoming geocoded location (if the only one returned by geocoder, or if this one picked by LocationPickerVC)

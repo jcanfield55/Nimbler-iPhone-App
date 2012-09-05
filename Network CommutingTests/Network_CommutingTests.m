@@ -1037,6 +1037,62 @@
     STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:6], itin62, @"");
     STAssertNil([itin32 startTime], @""); // Showing that itin32 was deleted
 
+    // Test returnSortedItinerariesWithMatchesForDate with various parameters
+    NSArray* testArray1 = [plan3 returnSortedItinerariesWithMatchesForDate:dayTime4
+                                                            departOrArrive:ARRIVE
+                                                  planMaxItinerariesToShow:20
+                                          planBufferSecondsBeforeItinerary:(3*60+1)
+                                               planMaxTimeForResultsToShow:(2*60*60)]; // Constrain # of hours
+    STAssertEquals([testArray1 count], 5U, @"");
+    STAssertEqualObjects([testArray1 objectAtIndex:0], itin52, @"");
+    STAssertEqualObjects([testArray1 objectAtIndex:1], itin31, @"");
+    STAssertEqualObjects([testArray1 objectAtIndex:2], itin60, @"");
+    STAssertEqualObjects([testArray1 objectAtIndex:3], itin61, @"");
+    STAssertEqualObjects([testArray1 objectAtIndex:4], itin62, @"");
+    
+    testArray1 = [plan3 returnSortedItinerariesWithMatchesForDate:dayTime4
+                                                            departOrArrive:ARRIVE
+                                                  planMaxItinerariesToShow:4
+                                          planBufferSecondsBeforeItinerary:(3*60+1)
+                                               planMaxTimeForResultsToShow:(2*60*60)]; // Constrain # of itineraries
+    STAssertEquals([testArray1 count], 4U, @"");
+    STAssertEqualObjects([testArray1 objectAtIndex:0], itin31, @"");
+    STAssertEqualObjects([testArray1 objectAtIndex:1], itin60, @"");
+    STAssertEqualObjects([testArray1 objectAtIndex:2], itin61, @"");
+    STAssertEqualObjects([testArray1 objectAtIndex:3], itin62, @"");
+    
+    testArray1 = [plan3 returnSortedItinerariesWithMatchesForDate:dayTime2
+                                                   departOrArrive:DEPART
+                                         planMaxItinerariesToShow:2
+                                 planBufferSecondsBeforeItinerary:(3*60+1)
+                                      planMaxTimeForResultsToShow:(2*60*60)]; // Constrain # of itineraries
+    STAssertEquals([testArray1 count], 2U, @"");
+    STAssertEqualObjects([testArray1 objectAtIndex:0], itin50, @"");
+    STAssertEqualObjects([testArray1 objectAtIndex:1], itin51, @"");
+
+    testArray1 = [plan3 returnSortedItinerariesWithMatchesForDate:dayTime3
+                                                   departOrArrive:DEPART
+                                         planMaxItinerariesToShow:10
+                                 planBufferSecondsBeforeItinerary:(3*60+1)
+                                      planMaxTimeForResultsToShow:(2*60*60+1)]; // Constrain # of hours
+    STAssertEquals([testArray1 count], 5U, @"");
+    STAssertEqualObjects([testArray1 objectAtIndex:0], itin50, @"");
+    STAssertEqualObjects([testArray1 objectAtIndex:1], itin51, @"");
+    STAssertEqualObjects([testArray1 objectAtIndex:2], itin52, @"");
+    STAssertEqualObjects([testArray1 objectAtIndex:3], itin31, @"");
+    STAssertEqualObjects([testArray1 objectAtIndex:4], itin60, @"");
+    
+    testArray1 = [plan3 returnSortedItinerariesWithMatchesForDate:dayTime3
+                                                   departOrArrive:DEPART
+                                         planMaxItinerariesToShow:10
+                                 planBufferSecondsBeforeItinerary:(0)
+                                      planMaxTimeForResultsToShow:(2*60*60+1)]; // Without buffer, does not pick up itin50
+    STAssertEquals([testArray1 count], 4U, @"");
+    STAssertEqualObjects([testArray1 objectAtIndex:0], itin51, @"");
+    STAssertEqualObjects([testArray1 objectAtIndex:1], itin52, @"");
+    STAssertEqualObjects([testArray1 objectAtIndex:2], itin31, @"");
+    STAssertEqualObjects([testArray1 objectAtIndex:3], itin60, @"");
+    
     // Test 9:10 departure to pick up itineraries from plan6
     STAssertTrue([plan3 prepareSortedItinerariesWithMatchesForDate:dayTime6 departOrArrive:DEPART], @"");
     STAssertEquals([[plan3 sortedItineraries] count], 2U, @"");
@@ -1058,8 +1114,19 @@
     STAssertNil([itin62 startTime], @""); // Showing that itin62 was deleted
     
     // Test on a Monday at 8:00, and we should get combo of plan3 and plan7 Caltrain itinerary only
-    // The other plan7 itineraries do not appear because 8:00 am is outside their request chunk request range
+    // The other plan7 itineraries will appear due to chaining in returnSortedItinerariesWithMatchesForDate
     STAssertTrue([plan3 prepareSortedItinerariesWithMatchesForDate:dayTime8 departOrArrive:DEPART], @"");
+    STAssertEquals([[plan3 sortedItineraries] count], 7U, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:0], itin52, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:1], itin31, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:2], itin60, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:3], itin61, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:4], itin70, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:5], itin71, @"");
+    STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:6], itin72, @"");
+
+    // Now if we try on Wednesday at 7:50, we do not get itin71 & itin72 because service days do not match
+    STAssertTrue([plan3 prepareSortedItinerariesWithMatchesForDate:dayTime1 departOrArrive:DEPART], @"");
     STAssertEquals([[plan3 sortedItineraries] count], 5U, @"");
     STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:0], itin52, @"");
     STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:1], itin31, @"");

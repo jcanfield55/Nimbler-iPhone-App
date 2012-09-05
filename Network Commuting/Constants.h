@@ -133,11 +133,12 @@
 // Locations behavior
 #define TOFROM_FREQUENCY_VISIBILITY_CUTOFF 0.99
 
-// Plan and Plan caching behavior
-#define PLAN_MAX_ITINERARIES_TO_SHOW  (20)            // Show at most 20 results
-#define PLAN_BUFFER_SECONDS_BEFORE_ITINERARY (3*60+1) // Take cached itineraries up to 3 minutes before the requestDate
-#define PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW   (6*60*60) // Show at most 6 hours of results
-#define PLAN_MAX_SERVER_CALLS_PER_REQUEST         (3) // Maximum calls to the server for a single user request
+// Plan, PlanStore, and Plan caching behavior
+#define PLAN_MAX_ITINERARIES_TO_SHOW  (20)            /* Show at most 20 results */
+#define PLAN_BUFFER_SECONDS_BEFORE_ITINERARY (3*60+1) /* Take cached itineraries up to 3 minutes before the requestDate */
+#define PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW   (6*60*60) /* Show at most 6 hours of results */
+#define PLAN_MAX_SERVER_CALLS_PER_REQUEST         (3) /* Maximum calls to the server for a single user request */
+#define PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS  (60) 
 
 // RequestChunks
 #define REQUEST_CHUNK_OVERLAP_BUFFER_IN_SECONDS  (4*60 + 30) 

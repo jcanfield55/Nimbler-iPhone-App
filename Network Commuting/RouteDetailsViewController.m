@@ -153,7 +153,7 @@ NSUserDefaults *prefs;
 
 - (void)setItinerary:(Itinerary *)i0
 {
-    NSLog(@"%@",i0);
+    NSLog(@"Itinerary # %@",i0);
     @try {
         itinerary = i0;
         [legMapVC setItinerary:i0];

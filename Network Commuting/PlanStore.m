@@ -21,7 +21,7 @@
 
 // Internal methods
 -(void)requestPlanFromOtpWithParameters:(PlanRequestParameters *)parameters;
--(void)requestMoreItinerariesIfNeeded:(Plan *)matchingPlan parameters:(PlanRequestParameters *)requestParams;
+-(void)requestMoreItinerariesIfNeeded:(Plan *)matchingPlan parameters:(PlanRequestParameters *)requestParams0;
 
 
 @end
@@ -65,11 +65,10 @@
     if (matchingPlanArray && [matchingPlanArray count]>0) {
         Plan* matchingPlan = [matchingPlanArray objectAtIndex:0]; // Take the first matching plan
         
-        if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:[parameters tripDate]
+        if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate]
                                                       departOrArrive:[parameters departOrArrive]]) {
-            NSLog(@"Matches found in plan cache -- going to RouteOptions");
-            // If there are  matching itineraries in the cache, go directly to Route Options
-            // [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
+            NSLog(@"Matches found in plan cache");
+            [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
             PlanRequestStatus status = STATUS_OK;
             if (parameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
                 [routeOptionsVC newPlanAvailable:matchingPlan status:status];
@@ -102,8 +101,8 @@
     NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
                             @"fromPlace", [[parameters fromLocation] latLngPairStr],
                             @"toPlace", [[parameters toLocation] latLngPairStr],
-                            @"date", [dateFormatter stringFromDate:[parameters tripDate]],
-                            @"time", [timeFormatter stringFromDate:[parameters tripDate]],
+                            @"date", [dateFormatter stringFromDate:[parameters thisRequestTripDate]],
+                            @"time", [timeFormatter stringFromDate:[parameters thisRequestTripDate]],
                             @"arriveBy", (([parameters departOrArrive] == ARRIVE) ? @"true" : @"false"),
                             @"maxWalkDistance", [NSNumber numberWithInt:[parameters maxWalkDistance]],
                             nil];
@@ -136,14 +135,14 @@
                 // Initialize the rest of the Plan and save context
                 [plan setToLocation:[parameters toLocation]];
                 [plan setFromLocation:[parameters fromLocation]];
-                [plan createRequestChunkWithAllItinerariesAndRequestDate:[parameters tripDate]
+                [plan createRequestChunkWithAllItinerariesAndRequestDate:[parameters thisRequestTripDate]
                                                           departOrArrive:[parameters departOrArrive]];
                 saveContext(managedObjectContext);  // Save location and request chunk changes
-                plan = [self consolidateWithMatchingPlans:plan]; // context saved again if needed in this method
+                plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context
                 
                 // Now format the itineraries of the consolidated plan
-                [plan prepareSortedItinerariesWithMatchesForDate:[parameters tripDate] departOrArrive:[parameters departOrArrive]];
-                // [self requestMoreItinerariesIfNeeded:plan parameters:parameters];
+                [plan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate] departOrArrive:[parameters departOrArrive]];
+                [self requestMoreItinerariesIfNeeded:plan parameters:parameters];
                 
                 // Call-back the appropriate RouteOptions VC with the new plan
                 if (parameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
@@ -170,18 +169,40 @@
 }
 
 // Checks if more itineraries are needed for this plan, and if so requests them from the server
--(void)requestMoreItinerariesIfNeeded:(Plan *)plan parameters:(PlanRequestParameters *)requestParams
+-(void)requestMoreItinerariesIfNeeded:(Plan *)plan parameters:(PlanRequestParameters *)requestParams0
 {
-    NSDate* firstItinTimeOnly = timeOnlyFromDate([[[plan sortedItineraries] objectAtIndex:0] startTime]);
-    NSDate* lastItinTimeOnly = timeOnlyFromDate([[[plan sortedItineraries] lastObject] startTime]);
-    if (requestParams.serverCallsSoFar < PLAN_MAX_SERVER_CALLS_PER_REQUEST &&
-        [[plan sortedItineraries] count] < PLAN_MAX_ITINERARIES_TO_SHOW &&
+    if (requestParams0.serverCallsSoFar >= PLAN_MAX_SERVER_CALLS_PER_REQUEST) {
+        return; // Return if we have already made the max number of calls
+    }
+    // Request sortedItineraries array with extremely large limits
+    NSArray* testItinArray = [plan returnSortedItinerariesWithMatchesForDate:requestParams0.originalTripDate
+                                                              departOrArrive:requestParams0.departOrArrive
+                                                    planMaxItinerariesToShow:1000
+                                            planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY
+                                                 planMaxTimeForResultsToShow:(1000*60*60)];
+    if (!testItinArray) {
+        NSLog(@"No sortedItineraries in plan in requestMoreItinerariesIfNeeded");
+        return; // return if there are no matching itineraries in the original request
+    }
+    PlanRequestParameters* params = [PlanRequestParameters copyOfPlanRequestParameters:requestParams0];
+    NSDate* firstItinTimeOnly = timeOnlyFromDate([[testItinArray objectAtIndex:0] startTime]);
+    NSDate* lastItinTimeOnly = timeOnlyFromDate([[testItinArray lastObject] startTime]);
+    if ([testItinArray count] < PLAN_MAX_ITINERARIES_TO_SHOW &&
         [lastItinTimeOnly timeIntervalSinceDate:firstItinTimeOnly] < PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW) {
-        // If we are within our max parameters
-        requestParams.planDestination = PLAN_DESTINATION_ROUTE_OPTIONS_VC;
-        
-        // TODO add time to the request date
-        [self requestPlanFromOtpWithParameters:requestParams];
+        // If we are below our max parameters
+        params.planDestination = PLAN_DESTINATION_ROUTE_OPTIONS_VC;
+        if (params.departOrArrive == DEPART) {
+            params.thisRequestTripDate = addDateOnlyWithTimeOnly(dateOnlyFromDate(params.thisRequestTripDate),
+                                                      [NSDate dateWithTimeInterval:PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS
+                                                                         sinceDate:lastItinTimeOnly]);
+        } else { // departOrArrive = ARRIVE
+            NSDate* firstItinEndTimeOnly = timeOnlyFromDate([[testItinArray objectAtIndex:0] endTime]);
+            params.thisRequestTripDate = addDateOnlyWithTimeOnly(dateOnlyFromDate(params.thisRequestTripDate),
+                                                      [NSDate dateWithTimeInterval:(-PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS)
+                                                                         sinceDate:firstItinEndTimeOnly]);
+        }
+        NSLog(@"Requesting additional plan with parameters: %@", params);
+        [self requestPlanFromOtpWithParameters:params];
     }
 }
 

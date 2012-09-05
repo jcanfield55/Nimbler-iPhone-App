@@ -181,7 +181,6 @@ NSString *legID;
             // aView.fillColor = [[UIColor cyanColor] colorWithAlphaComponent:0.2];
             aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:ALPHA_LIGHTER];
             aView.lineWidth = LINE_WIDTH;
-            NSLog(@"%@",[itinerary sortedLegs]); 
             NSLog(@"itineraryNumber=%d",itineraryNumber);
             
             // Determine if this overlay is the one in focus.  If so, make it darker

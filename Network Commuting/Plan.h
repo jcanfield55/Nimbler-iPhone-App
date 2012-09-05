@@ -74,5 +74,18 @@
 // If it does not find any, returns false and leaves sortedItineraries unchanged
 - (BOOL)prepareSortedItinerariesWithMatchesForDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive;
 
+// returnSortedItinerariesWithMatchesForDate  -- part of Plan Caching (US78) implementation
+// Helper routine called by prepareSortedItinerariesWithMatchesForDate
+// Looks for matching itineraries for the requestDate and departOrArrive
+// If it finds some, returns a sorted array of the matching itineraries
+// Returned array will have no more than planMaxItinerariesToShow itineraries, spanning no more
+// than planMaxTimeForResultsToShow seconds.
+// It will include itineraries starting up to planBufferSecondsBeforeItinerary before requestDate
+// If there are no matching itineraries, returns nil
+- (NSArray *)returnSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
+                                        departOrArrive:(DepartOrArrive)depOrArrive
+                              planMaxItinerariesToShow:(int)planMaxItinerariesToShow
+                      planBufferSecondsBeforeItinerary:(int)planBufferSecondsBeforeItinerary
+                           planMaxTimeForResultsToShow:(int)planMaxTimeForResultsToShow;
 @end
 

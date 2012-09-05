@@ -495,7 +495,7 @@ NSUserDefaults *prefs;
     [rkp setValue:[nc_AppDelegate sharedInstance].FBSource forParam:FEEDBACK_SOURCE]; 
     [rkp setValue:@"3.5" forParam:FEEDBACK_RATING];
     
-    NSLog(@"%@",[nc_AppDelegate sharedInstance].FBSource);
+    NSLog(@"Shared Instance Feedback Source: %@",[nc_AppDelegate sharedInstance].FBSource);
     if([nc_AppDelegate sharedInstance].FBSource == [NSNumber numberWithInt:FB_SOURCE_GENERAL]){     
         [rkp setValue:[nc_AppDelegate sharedInstance].FBSFromAdd forParam:FB_FORMATTEDADDR_FROM];
         [rkp setValue:[nc_AppDelegate sharedInstance].FBToAdd forParam:FB_FORMATTEDADDR_TO];
