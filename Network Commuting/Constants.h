@@ -91,6 +91,8 @@
 #define FLURRY_DATE_PICKER_NEW_DATE         @"DatePicker new date selected"
 #define FLURRY_LOCATION_PICKER_APPEAR       @"LocationPicker appear"
 #define FLURRY_ROUTE_REQUESTED              @"Route Requested"
+#define FLURRY_ROUTE_FROM_CACHE             @"Route retrieved from cache"
+#define FLURRY_ROUTE_NOT_IN_CACHE           @"Route not in cache"
 #define FLURRY_ROUTE_OPTIONS_APPEAR         @"RouteOptions appear"
 #define FLURRY_ROUTE_SELECTED               @"Route selected"
 #define FLURRY_ROUTE_DETAILS_APPEAR         @"RouteDetails appear"

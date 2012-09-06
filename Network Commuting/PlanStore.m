@@ -9,6 +9,9 @@
 #import "PlanStore.h"
 #import "UtilityFunctions.h"
 
+#if FLURRY_ENABLED
+#include "Flurry.h"
+#endif
 
 @interface PlanStore()
 {
@@ -68,6 +71,13 @@
         if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate]
                                                       departOrArrive:[parameters departOrArrive]]) {
             NSLog(@"Matches found in plan cache");
+#if FLURRY_ENABLED
+            NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
+                                          FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
+                                          FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
+                                          nil];
+            [Flurry logEvent: FLURRY_ROUTE_FROM_CACHE withParameters:flurryParams];
+#endif
             [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
             PlanRequestStatus status = STATUS_OK;
             if (parameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
@@ -79,6 +89,13 @@
         }
     }
     // if no appropriate plan in cache, request one from OTP
+#if FLURRY_ENABLED
+    NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
+                                  FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
+                                  FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
+                                  nil];
+    [Flurry logEvent: FLURRY_ROUTE_NOT_IN_CACHE withParameters:flurryParams];
+#endif
     [self requestPlanFromOtpWithParameters:parameters];
 }
 
