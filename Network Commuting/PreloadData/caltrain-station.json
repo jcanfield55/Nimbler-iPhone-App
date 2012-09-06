@@ -1889,9 +1889,9 @@
                 "memberOfList" : "Caltrain26",
          "geometry" : {
             "location" : {
-               "lat" : 37.311680,
-               "lng" : -121.8820870
-            },
+                "lat" : 37.311640,
+                "lng" : -121.88390
+                },
             "location_type" : "APPROXIMATE",
             "viewport" : {
                "northeast" : {
