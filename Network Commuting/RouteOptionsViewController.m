@@ -50,7 +50,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        UILabel* tlabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 200, 40)];
+        UILabel* tlabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 120, 40)];
         [tlabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:20.0]];
         tlabel.text=@"Itineraries";
         tlabel.textColor= [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];

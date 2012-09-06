@@ -54,8 +54,9 @@
     NSTimer* activityTimer;
     RouteOptionsViewController *routeOptionsVC; 
     LocationPickerViewController *locationPickerVC;
-    NSArray* sectionUILabelArray;  // Array of UILabels containing main table section headers 
-    
+    NSArray* sectionUILabelArray;  // Array of UILabels containing main table section headers
+    UIBarButtonItem *barButtonSwap;  // Swap left bar button (for when in NO_EDIT mode)
+    UIBarButtonItem *barButtonCancel; // Cancel left bar button (for when in EDIT mode)
 }
 
 // Internal methods
@@ -181,6 +182,22 @@ NSUserDefaults *prefs;
                 [sectionArray addObject:headerView];
             }
             sectionUILabelArray = sectionArray;
+            
+            // Set up NavBar left buttons
+            
+            UIImage* btnSwapImage = [UIImage imageNamed:@"img_swapLocation.png"];
+            UIButton *btnSwap = [[UIButton alloc] initWithFrame:CGRectMake(0,0,btnSwapImage.size.width,btnSwapImage.size.height)];
+            [btnSwap setTag:101];
+            [btnSwap addTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
+            [btnSwap setBackgroundImage:btnSwapImage forState:UIControlStateNormal];
+            barButtonSwap = [[UIBarButtonItem alloc] initWithCustomView:btnSwap];
+            
+            UIImage* btnCancelImage = [UIImage imageNamed:@"img_cancel.png"];
+            UIButton *btnCancel = [[UIButton alloc] initWithFrame:CGRectMake(0,0,btnCancelImage.size.width,btnCancelImage.size.height)];
+            [btnCancel addTarget:self action:@selector(endEdit) forControlEvents:UIControlEventTouchUpInside];
+            [btnCancel setBackgroundImage:btnCancelImage forState:UIControlStateNormal];
+            barButtonCancel = [[UIBarButtonItem alloc] initWithCustomView:btnCancel];
+
         }
     }
     @catch (NSException *exception) {
@@ -200,19 +217,12 @@ NSUserDefaults *prefs;
 //    }
     UIImage *imgTitle = [UIImage imageNamed:@"nimblr.png"];
     self.navigationItem.titleView = [[UIImageView alloc]  initWithImage:imgTitle];
-    
-    UIButton *btnSwapORBack = [[UIButton alloc] initWithFrame:CGRectMake(0,0,55,35)];
-    [btnSwapORBack setTag:101];
+
     if(editMode == NO_EDIT){
-        [btnSwapORBack addTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
-        [btnSwapORBack setBackgroundImage:[UIImage imageNamed:@"img_swapLocation.png"] forState:UIControlStateNormal];
+        self.navigationItem.leftBarButtonItem = barButtonSwap;
+    } else{
+        self.navigationItem.leftBarButtonItem = barButtonCancel;
     }
-    else{
-        [btnSwapORBack addTarget:self action:@selector(endEdit) forControlEvents:UIControlEventTouchUpInside];
-        [btnSwapORBack setBackgroundImage:[UIImage imageNamed:@"img_backSelect.png"] forState:UIControlStateNormal];
-    }
-    UIBarButtonItem *btnBarSwapORBack = [[UIBarButtonItem alloc] initWithCustomView:btnSwapORBack];
-    self.navigationItem.leftBarButtonItem = btnBarSwapORBack;
     
     routeButton.layer.cornerRadius = CORNER_RADIUS_SMALL;
     [continueGetTime invalidate];
@@ -257,17 +267,6 @@ NSUserDefaults *prefs;
     [super viewWillAppear:YES];
     [nc_AppDelegate sharedInstance].isToFromView = YES;
     
-    UIButton *btnSwapORBack = (UIButton *)[self.navigationController.navigationBar viewWithTag:101];
-    if(editMode == NO_EDIT){
-        [btnSwapORBack removeTarget:self action:@selector(endEdit) forControlEvents:UIControlEventTouchUpInside];
-        [btnSwapORBack addTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
-        [btnSwapORBack setBackgroundImage:[UIImage imageNamed:@"img_swapLocation.png"] forState:UIControlStateNormal];
-    }
-    else{
-        [btnSwapORBack removeTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
-        [btnSwapORBack addTarget:self action:@selector(endEdit) forControlEvents:UIControlEventTouchUpInside];
-        [btnSwapORBack setBackgroundImage:[UIImage imageNamed:@"img_backSelect.png"] forState:UIControlStateNormal];
-    }
     @try {
         // Enforce height of main table
         CGRect rect0 = [mainTable frame];
@@ -510,17 +509,7 @@ NSUserDefaults *prefs;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UIButton *btnSwapORBack = (UIButton *)[self.navigationController.navigationBar viewWithTag:101];
-    if(editMode == NO_EDIT){
-        [btnSwapORBack removeTarget:self action:@selector(endEdit) forControlEvents:UIControlEventTouchUpInside];
-        [btnSwapORBack addTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
-        [btnSwapORBack setBackgroundImage:[UIImage imageNamed:@"img_swapLocation.png"] forState:UIControlStateNormal];
-    }
-    else{
-        [btnSwapORBack removeTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
-        [btnSwapORBack addTarget:self action:@selector(endEdit) forControlEvents:UIControlEventTouchUpInside];
-        [btnSwapORBack setBackgroundImage:[UIImage imageNamed:@"img_backSelect.png"] forState:UIControlStateNormal];
-    }
+
     if (editMode == NO_EDIT && [indexPath section] == TIME_DATE_SECTION) {  
         UITableViewCell *cell =
         [tableView dequeueReusableCellWithIdentifier:@"timeDateTableCell"];
@@ -853,10 +842,17 @@ NSUserDefaults *prefs;
     NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:FLURRY_EDIT_MODE_VALUE, edit_string, nil];
     [Flurry logEvent:FLURRY_TOFROMTABLE_NEW_EDIT_MODE withParameters:dictionary];
 #endif
-        
+    
     NSRange range;
     ToFromEditMode oldEditMode = editMode;
     editMode = newEditMode;  
+    
+    // Change NavBar buttons accordingly
+    if(editMode == NO_EDIT){
+        self.navigationItem.leftBarButtonItem = barButtonSwap;
+    } else{
+        self.navigationItem.leftBarButtonItem = barButtonCancel;
+    }
     
     if (newEditMode == TO_EDIT && oldEditMode == NO_EDIT) {
         // Delete second & third sections (moving To Table to top)
@@ -1378,9 +1374,9 @@ NSUserDefaults *prefs;
 -(void)doSwapLocation
 {
     
-    if (fromLocation == currentLocation) {
-        // If from = currentLocation, change toLocation to the last reverse geocode of CurrentLocation
-        // (could be nil)
+    if (fromLocation == currentLocation && [currentLocation reverseGeoLocation] &&
+        [currentLocation reverseGeoLocation] != toLocation) {
+        // If from = currentLocation and there is a reverse geolocation
         [toTableVC markAndUpdateSelectedLocation:[currentLocation reverseGeoLocation]];
     }
     else {  // do a normal swap

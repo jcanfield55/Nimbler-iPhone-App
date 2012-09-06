@@ -93,6 +93,8 @@
 		52E4C0AB15CC7E7D00B55A65 /* img_itineraryNavigation.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C0AA15CC7E7C00B55A65 /* img_itineraryNavigation.png */; };
 		52E4C0AD15CC7E8800B55A65 /* img_itineraryNavigation@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C0AC15CC7E8800B55A65 /* img_itineraryNavigation@2x.png */; };
 		52E66F031520374B001BF026 /* DateTimeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52E66F021520374B001BF026 /* DateTimeViewController.xib */; };
+		52F4D44115F8205600159E81 /* img_cancel.png in Resources */ = {isa = PBXBuildFile; fileRef = 52F4D43F15F8205600159E81 /* img_cancel.png */; };
+		52F4D44415F820C700159E81 /* img_cancel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52F4D44315F820C700159E81 /* img_cancel@2x.png */; };
 		52F67EE114C752C4007578D5 /* LatLng.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F67EE014C752C4007578D5 /* LatLng.m */; };
 		52F67EE814C75C36007578D5 /* AddressComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F67EE714C75C36007578D5 /* AddressComponent.m */; };
 		52F67EEB14C76504007578D5 /* GeoRectangle.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F67EEA14C76504007578D5 /* GeoRectangle.m */; };
@@ -984,6 +986,8 @@
 		52E4C0AC15CC7E8800B55A65 /* img_itineraryNavigation@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_itineraryNavigation@2x.png"; sourceTree = "<group>"; };
 		52E66F021520374B001BF026 /* DateTimeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DateTimeViewController.xib; sourceTree = "<group>"; };
 		52E6CBEF15C0A38E008E83E6 /* Network_Commuting 1.3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.3.xcdatamodel"; sourceTree = "<group>"; };
+		52F4D43F15F8205600159E81 /* img_cancel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_cancel.png; sourceTree = "<group>"; };
+		52F4D44315F820C700159E81 /* img_cancel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_cancel@2x.png"; sourceTree = "<group>"; };
 		52F67EDF14C752C4007578D5 /* LatLng.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LatLng.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		52F67EE014C752C4007578D5 /* LatLng.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LatLng.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		52F67EE614C75C36007578D5 /* AddressComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AddressComponent.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -2618,8 +2622,6 @@
 		CCB7E81C1570EB670036E9CD /* images */ = {
 			isa = PBXGroup;
 			children = (
-				8DC5158F15E62AD3003FD2DB /* img_route.png */,
-				8DC5159015E62AD4003FD2DB /* img_route@2x.png */,
 				8D015971159B3DE10004D2FB /* caltrain.jpg */,
 				CC578A02156520B50057D5A7 /* feedback.png */,
 				CCA4C7DA15D9005B009BE7A1 /* img_ recording@2x.png */,
@@ -2632,6 +2634,8 @@
 				8DC5156115E6244E003FD2DB /* img_backSelect@2x.png */,
 				CCDDE16015C11F5300116373 /* img_backUnSelect.png */,
 				8DC5156215E6244E003FD2DB /* img_backUnSelect@2x.png */,
+				52F4D43F15F8205600159E81 /* img_cancel.png */,
+				52F4D44315F820C700159E81 /* img_cancel@2x.png */,
 				CC2B7F9D15B958B9001C7D90 /* img_chatBubble.png */,
 				8DC5153515E622DE003FD2DB /* img_chatBubble@2x.png */,
 				CC2B7F8015B82C9C001C7D90 /* img_fb.png */,
@@ -2682,6 +2686,8 @@
 				CC2B7F9915B956B5001C7D90 /* img_recording.png */,
 				CCA986FA15BD6C4B004557B0 /* img_reload.png */,
 				CCFFF49E15D3BFE0004E062F /* img_reload@2x.png */,
+				8DC5158F15E62AD3003FD2DB /* img_route.png */,
+				8DC5159015E62AD4003FD2DB /* img_route@2x.png */,
 				CCFFF4A615D3D04D004E062F /* img_selAdvisory.png */,
 				CCFFF4B115D3ED5D004E062F /* img_selAdvisory@2x.png */,
 				CCA987B915BEC417004557B0 /* img_select.png */,
@@ -3169,6 +3175,8 @@
 				8DC5158E15E624F8003FD2DB /* img_nimblerNavigationUnSelect@2x.png in Resources */,
 				8DC5159115E62AD5003FD2DB /* img_route.png in Resources */,
 				8DC5159215E62AD5003FD2DB /* img_route@2x.png in Resources */,
+				52F4D44115F8205600159E81 /* img_cancel.png in Resources */,
+				52F4D44415F820C700159E81 /* img_cancel@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3407,8 +3415,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler Caltrain-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
@@ -3426,8 +3434,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "EDBAC287-DE0E-4289-AD52-EC4A25498B57";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "EDBAC287-DE0E-4289-AD52-EC4A25498B57";
+				PROVISIONING_PROFILE = "E2DD1CF9-21E2-4F4C-AB45-CBB2DFCDDC1B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E2DD1CF9-21E2-4F4C-AB45-CBB2DFCDDC1B";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -3438,9 +3446,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler Caltrain-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
@@ -3458,9 +3466,9 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "EDBAC287-DE0E-4289-AD52-EC4A25498B57";
-				"PROVISIONING_PROFILE[sdk=*]" = "EDBAC287-DE0E-4289-AD52-EC4A25498B57";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "EDBAC287-DE0E-4289-AD52-EC4A25498B57";
+				PROVISIONING_PROFILE = "E2DD1CF9-21E2-4F4C-AB45-CBB2DFCDDC1B";
+				"PROVISIONING_PROFILE[sdk=*]" = "E2DD1CF9-21E2-4F4C-AB45-CBB2DFCDDC1B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E2DD1CF9-21E2-4F4C-AB45-CBB2DFCDDC1B";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;

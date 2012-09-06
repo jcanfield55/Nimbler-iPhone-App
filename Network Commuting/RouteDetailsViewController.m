@@ -73,7 +73,7 @@ NSUserDefaults *prefs;
 //                [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_navigationbar.png"]] aboveSubview:self.navigationController.navigationBar];
 //            }
             
-            UILabel* tlabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 200, 40)];
+            UILabel* tlabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 80, 40)];
             [tlabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:20.0]];
             tlabel.text=ROUTE_TITLE_MSG;
             tlabel.textColor= [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];
@@ -95,15 +95,20 @@ NSUserDefaults *prefs;
             legMapVC = [[LegMapViewController alloc] initWithMapView:mapView];
             [mapView setDelegate:legMapVC];
             
-             UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0,0,130,34)];
+            UIImage* backImage = [UIImage imageNamed:@"img_backSelect.png"];
+            UIImage* forwardImage = [UIImage imageNamed:@"img_forwardSelect.png"];
+            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0,0,
+                                                                    (forwardImage.size.width+backImage.size.width),forwardImage.size.height)];
             // Set up the forward and back button
-            btnBackItem = [[UIButton alloc] initWithFrame:CGRectMake(20,0,52,34)];
+            btnBackItem = [[UIButton alloc] initWithFrame:CGRectMake(0,0,backImage.size.width,backImage.size.height)];
             [btnBackItem addTarget:self action:@selector(navigateBack:) forControlEvents:UIControlEventTouchUpInside];
-            [btnBackItem setBackgroundImage:[UIImage imageNamed:@"img_backSelect.png"] forState:UIControlStateNormal];
+            [btnBackItem setBackgroundImage:backImage forState:UIControlStateNormal];
                         
-            btnForwardItem = [[UIButton alloc] initWithFrame:CGRectMake(72,0,52,34)];
+            btnForwardItem = [[UIButton alloc] initWithFrame:CGRectMake(backImage.size.width,0,
+                                                                        forwardImage.size.width,
+                                                                        forwardImage.size.height)];
             [btnForwardItem addTarget:self action:@selector(navigateForward:) forControlEvents:UIControlEventTouchUpInside];
-            [btnForwardItem setBackgroundImage:[UIImage imageNamed:@"img_forwardSelect.png"] forState:UIControlStateNormal];
+            [btnForwardItem setBackgroundImage:forwardImage forState:UIControlStateNormal];
             
 //            forwardButton = [[UIBarButtonItem alloc] initWithCustomView:btnForwardItem]; 
             

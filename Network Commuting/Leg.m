@@ -235,11 +235,10 @@
 
 -(BOOL)isTrain
 {
-    if ([[self mode] isEqualToString:@"RAIL"]) {   
-        return true;   
-    } else if([[self mode] isEqualToString:@"TRAM"]) {
-         return true; 
-    }
+    if ([[self mode] isEqualToString:@"RAIL"] || [[self mode] isEqualToString:@"TRAM"] ||
+        [[self mode] isEqualToString:@"SUBWAY"]) {
+        return true;
+    } // else
     return false;
 }
 -(BOOL)isBus
