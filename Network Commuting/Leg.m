@@ -172,7 +172,11 @@
             if (isShortName) {
                 [titleText appendFormat:@" - "];
             }
-            [titleText appendFormat:@"%@", [self routeLongName]];
+            if ([[self agencyId] isEqualToString:@"BART"]) {
+                [titleText appendString:@"BART"];  // special case for BART -- just show "BART" rather than route name
+            } else {
+                [titleText appendFormat:@"%@", [self routeLongName]];
+            }
         }
         if ([self headSign] && [[self headSign] length]>0) {
             [titleText appendFormat:@" to %@", [self headSign]];
