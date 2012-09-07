@@ -500,12 +500,14 @@ NSUserDefaults *prefs;
         [rkp setValue:[nc_AppDelegate sharedInstance].FBToAdd forParam:FB_FORMATTEDADDR_TO];
         [rkp setValue:[nc_AppDelegate sharedInstance].FBDate forParam:FB_DATE];
     } else {
+        [rkp setValue:@"" forParam:FB_UNIQUEID]; // temporary fix
+        /* JC Temporarily commenting this out because we need to send "" as uniqueID no matter what
         if([nc_AppDelegate sharedInstance].FBUniqueId == nil){
             [rkp setValue:@"" forParam:FB_UNIQUEID];
         }
         else{
             [rkp setValue:[nc_AppDelegate sharedInstance].FBUniqueId forParam:FB_UNIQUEID];
-        }
+        } */
     }
     
     timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(popOut) userInfo:nil repeats: NO];
