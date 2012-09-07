@@ -1,9 +1,9 @@
 //
-//  FeedBackForm.h
-//  Nimbler
+// FeedBackForm.h
+// Nimbler
 //
-//  Created by Sitanshu Joshi on 5/26/12.
-//  Copyright (c) 2012 Network Commuting. All rights reserved.
+// Created by Sitanshu Joshi on 5/26/12.
+// Copyright (c) 2012 Network Commuting. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -16,22 +16,22 @@
 
 @interface FeedBackForm : UIViewController <AVAudioRecorderDelegate, AVAudioPlayerDelegate, RKRequestDelegate, UIAlertViewDelegate>{
     
-   	NSString *soundFilePath;
+    NSString *soundFilePath;
     NSString *tpURLResource;
     AVAudioRecorder *audioRecorder;
     AVAudioPlayer *audioPlayer;
     TPResponse *tpResponse;
     UIProgressView *recProgressView;
-
+    
     IBOutlet UITextView *txtFeedBack;
     IBOutlet UILabel *labelRecTime;
     IBOutlet UILabel *labelCurrentActivityStatus;
-       
+    
     IBOutlet UIButton * btnPlayRecording;
     IBOutlet UIButton * btnStopRecording;
     IBOutlet UIButton * btnPauseRecording;
     IBOutlet UIButton * btnRecordRecording;
-        
+    
     IBOutlet UIButton * btnSubmitFeedback;
     IBOutlet UITextField *txtEmailId;
     int secondsLeft;
@@ -48,7 +48,7 @@
 
 @property (strong, nonatomic) IBOutlet UITextView *txtFeedBack;
 @property (strong, nonatomic) IBOutlet UITextField *txtEmailId;
-@property (strong, nonatomic) TPResponse *tpResponse; 
+@property (strong, nonatomic) TPResponse *tpResponse;
 @property(nonatomic,retain) NSString *tpURLResource;
 @property(nonatomic,retain) NSString *mesg;
 @property (strong, nonatomic) UIAlertView * alertView;
@@ -61,7 +61,7 @@
 -(IBAction)playRecord:(id)sender;
 -(IBAction)submitFeedBack:(id)sender;
 
-@property (strong, nonatomic) FeedBackReqParam *fbReqParams;; 
+@property (strong, nonatomic) FeedBackReqParam *fbReqParams;;
 
 -(UIAlertView *) childAlertViewRec ;
 -(UIAlertView *) feedbackConfirmAlert ;
