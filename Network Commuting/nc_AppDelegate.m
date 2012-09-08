@@ -140,7 +140,33 @@ FeedBackForm *fbView;
         
         // Pre-load stations location files
         NSDecimalNumber* version = [NSDecimalNumber decimalNumberWithString:PRELOAD_VERSION_NUMBER];
-        [locations preLoadIfNeededFromFile:PRELOAD_LOCATION_FILE latestVersionNumber:version];
+        BOOL newVer = [locations preLoadIfNeededFromFile:PRELOAD_LOCATION_FILE latestVersionNumber:version];
+        
+        // Temporary code inserted 9/7/12 to do a one-time delete of plans that do not have
+        // itineraries with startTimeOnly and endTimeOnly set (should only happen for code apps before 9/7)
+        if (newVer) {
+            NSFetchRequest* fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Plan"];
+            NSError *error;
+            NSArray* allPlans = [[self managedObjectContext] executeFetchRequest:fetchRequest error:&error];
+            if (!allPlans) {
+                [NSException raise:@"Fetching all Plans failed" format:@"Reason: %@", [error localizedDescription]];
+            }
+            NSMutableSet* deleteSet = [[NSMutableSet alloc] initWithCapacity:[allPlans count]];
+            for (Plan* plan in allPlans) {
+                for (Itinerary* itin in [plan itineraries]) {
+                    if (![itin startTimeOnly] || ![itin endTimeOnly]) {
+                        // If these values were never set when the plan was created
+                        [deleteSet addObject:plan];  // add the plan for deletion
+                        break;
+                    }
+                }
+            }
+            // Now delete the plans
+            for (Plan* plan in deleteSet) {
+                [[self managedObjectContext] deleteObject:plan];
+            }
+            saveContext([self managedObjectContext]);
+        }
         
     }@catch (NSException *exception) {
         NSLog(@"Exception: ----------------- %@", exception);

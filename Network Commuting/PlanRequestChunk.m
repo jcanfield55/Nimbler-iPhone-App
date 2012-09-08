@@ -87,8 +87,6 @@
     [self setServiceStringByAgency:[NSDictionary dictionaryWithDictionary:returnedValue]];
 }
 
-// TODO Make sure that I do not combine itineraries in chunks across days 
-
 //
 // Returns true if all the service days for all the itineraries and legs in referring PlanRequestChunk match
 // those in requestChunk0.  Otherwise returns false
@@ -138,30 +136,39 @@
     return allMatch;
 }
 
-// Returns the time-only portion of the earliestRequestedDepartTimeDate or the startTime of the first
-// itinerary (whichever's time is earliest)
-// If earliestRequestedDepartTime is nil, returns the time-only portion of the startTime of the first itinerary
-- (NSDate *)earliestTime
+// Returns the latest timeOnly for the requestChunk based on depOrArrive
+// If DEPART, returns the earlier of earliestRequestedDepartTime or startTimeOnly of the first itinerary leg
+// If ARRIVE, returns the endTimeOnly of the first itinerary leg
+- (NSDate *)earliestTimeFor:(DepartOrArrive)depOrArrive
 {
-    NSDate *firstItineraryTime = timeOnlyFromDate([[[self sortedItineraries] objectAtIndex:0] startTime]);
-    if ([self earliestRequestedDepartTimeDate]) {
-        NSDate* earliestRequestedDepartTime = timeOnlyFromDate([self earliestRequestedDepartTimeDate]);
-        return [earliestRequestedDepartTime earlierDate:firstItineraryTime];
-    } else
-        return firstItineraryTime;
+    if (depOrArrive == DEPART) {
+        NSDate *firstStartTimeOnly = [[[self sortedItineraries] objectAtIndex:0] startTimeOnly];
+        if ([self earliestRequestedDepartTimeDate]) {
+            NSDate* earliestRequestedDepartTime = timeOnlyFromDate([self earliestRequestedDepartTimeDate]);
+            return [earliestRequestedDepartTime earlierDate:firstStartTimeOnly];
+        } else
+            return firstStartTimeOnly;
+    }
+    else { // depOrArrive == ARRIVE
+        return [[[self sortedItineraries] objectAtIndex:0] endTimeOnly];
+    }
 }
 
-// Returns the time-only portion of the latestRequestedArriveTime or the startTime of the last itinerary
-// (whichever time is latest)
-// If latestRequestedArriveTime is nil, returns the time-only portion of the startTime fo the last itinerary
-- (NSDate *)latestTime
+// Returns the latest timeOnly for the requestChunk based on depOrArrive
+// If ARRIVE, returns the later of latestRequestedArriveTime or endTimeOnly of the last itinerary leg
+// If DEPART, returns the startTimeOnly of the last itinerary leg
+- (NSDate *)latestTimeFor:(DepartOrArrive)depOrArrive
 {
-    NSDate *lastItineraryTime = timeOnlyFromDate([[[self sortedItineraries] lastObject] startTime]);
-    if ([self latestRequestedArriveTimeDate]) {
-        NSDate* latestRequestedArriveTime = timeOnlyFromDate([self latestRequestedArriveTimeDate]);
-        return [latestRequestedArriveTime laterDate:lastItineraryTime];
-    } else {
-        return lastItineraryTime;
+    if (depOrArrive == ARRIVE) {
+        NSDate *lastEndTimeOnly = [[[self sortedItineraries] lastObject] endTimeOnly];
+        if ([self latestRequestedArriveTimeDate]) {
+            NSDate* latestRequestedArriveTime = timeOnlyFromDate([self latestRequestedArriveTimeDate]);
+            return [latestRequestedArriveTime laterDate:lastEndTimeOnly];
+        } else {
+            return lastEndTimeOnly;
+        }
+    } else { // depOrArrive = DEPART
+        return [[[self sortedItineraries] lastObject] startTimeOnly];
     }
 }
 
@@ -175,29 +182,13 @@
 {
     // Get the key times (independent of date)
     NSDate *requestTime = timeOnlyFromDate(requestDate);
-    NSDate *lastItineraryTime = timeOnlyFromDate([[[self sortedItineraries] lastObject] startTime]);
-    NSDate *firstItineraryTime = timeOnlyFromDate([[[self sortedItineraries] objectAtIndex:0] startTime]);
     
-    if (depOrArrive==DEPART) {
-        
-        // Compute RequestChunk earliest time to compare against
-        if ([requestTime compare:[self earliestTime]]!=NSOrderedAscending &&
-            [requestTime compare:lastItineraryTime]!=NSOrderedDescending) {
-            // If requestTime is between earliest and last time in the chunk
-            return true;
-        } else {
-            return false;
-        }
-    }
-    else {  // depOrArrive = ARRIVE
-        
-        if ([requestTime compare:firstItineraryTime]!=NSOrderedAscending &&
-            [requestTime compare:[self latestTime]]!=NSOrderedDescending) {
-            // If requestTime is between the first and the latest time in the chunk
-            return true;
-        } else {
-            return false;
-        }
+    if ([requestTime compare:[self earliestTimeFor:depOrArrive]]!=NSOrderedAscending &&
+        [requestTime compare:[self latestTimeFor:depOrArrive]]!=NSOrderedDescending) {
+        // If requestTime is between earliest and last time in the chunk
+        return true;
+    } else {
+        return false;
     }
 }
 
@@ -205,33 +196,34 @@
 // bufferInSeconds is the max amount that two chunks can be non-overlapping and still return true
 - (BOOL)doTimesOverlapRequestChunk:(PlanRequestChunk *)requestChunk0 bufferInSeconds:(NSTimeInterval)bufferInSeconds;
 {
-    NSDate* earliestTime0MinusBuffer=[[requestChunk0 earliestTime] dateByAddingTimeInterval:(-bufferInSeconds)];
-    NSDate *lastItineraryTime0 = timeOnlyFromDate([[[requestChunk0 sortedItineraries] lastObject] startTime]);
-    NSDate* lastItinTime0PlusBuffer = [lastItineraryTime0 dateByAddingTimeInterval:bufferInSeconds];
-    // If self earliestTime is within the range for requestChunk0, return true
-    if ([[self earliestTime] compare:earliestTime0MinusBuffer]!=NSOrderedAscending &&
-        [[self earliestTime] compare:lastItinTime0PlusBuffer]!=NSOrderedDescending) {
-        return true;
+    for (int i=0; i < 2; i++) { // Go thru two times, once for DEPART and then for ARRIVE
+        DepartOrArrive depOrArrive = (i==0 ? DEPART : ARRIVE);
+        
+        NSDate* earliestTime0MinusBuffer=[[requestChunk0 earliestTimeFor:depOrArrive] dateByAddingTimeInterval:(-bufferInSeconds)];
+        NSDate* latestTime0PlusBuffer = [[requestChunk0 latestTimeFor:depOrArrive] dateByAddingTimeInterval:bufferInSeconds];
+        // If self earliestTime is within the range for requestChunk0, return true
+        if ([[self earliestTimeFor:depOrArrive] compare:earliestTime0MinusBuffer]!=NSOrderedAscending &&
+            [[self earliestTimeFor:depOrArrive] compare:latestTime0PlusBuffer]!=NSOrderedDescending) {
+            return true;
+        }
+        // If self latestTime is within the range for requestChunk0, return true
+        if ([[self latestTimeFor:depOrArrive] compare:earliestTime0MinusBuffer]!=NSOrderedAscending &&
+            [[self latestTimeFor:depOrArrive] compare:latestTime0PlusBuffer]!=NSOrderedDescending) {
+            return true;
+        }
+        // Now check it in the other direction (whether requestChunk0 times are within the range of self times)
+        NSDate* earliestTimeSelfMinusBuffer=[[self earliestTimeFor:depOrArrive] dateByAddingTimeInterval:(-bufferInSeconds)];
+        NSDate* latestTimeSelfPlusBuffer = [[self latestTimeFor:depOrArrive] dateByAddingTimeInterval:bufferInSeconds];
+        if ([[requestChunk0 earliestTimeFor:depOrArrive] compare:earliestTimeSelfMinusBuffer]!=NSOrderedAscending &&
+            [[requestChunk0 earliestTimeFor:depOrArrive] compare:latestTimeSelfPlusBuffer]!=NSOrderedDescending) {
+            return true;
+        }
+        // If self latestTime is within the range for requestChunk0, return true
+        if ([[requestChunk0 latestTimeFor:depOrArrive] compare:earliestTimeSelfMinusBuffer]!=NSOrderedAscending &&
+            [[requestChunk0 latestTimeFor:depOrArrive] compare:latestTimeSelfPlusBuffer]!=NSOrderedDescending) {
+            return true;
+        }
     }
-    // If self latestTime is within the range for requestChunk0, return true
-    if ([[self latestTime] compare:earliestTime0MinusBuffer]!=NSOrderedAscending &&
-        [[self latestTime] compare:lastItinTime0PlusBuffer]!=NSOrderedDescending) {
-        return true;
-    }
-    // Now check it in the other direction (whether requestChunk0 times are within the range of self times)
-    NSDate* earliestTimeSelfMinusBuffer=[[self earliestTime] dateByAddingTimeInterval:(-bufferInSeconds)];
-    NSDate *lastItineraryTimeSelf = timeOnlyFromDate([[[self sortedItineraries] lastObject] startTime]);
-    NSDate* lastItinTimeSelfPlusBuffer = [lastItineraryTimeSelf dateByAddingTimeInterval:bufferInSeconds];
-    if ([[requestChunk0 earliestTime] compare:earliestTimeSelfMinusBuffer]!=NSOrderedAscending &&
-        [[requestChunk0 earliestTime] compare:lastItinTimeSelfPlusBuffer]!=NSOrderedDescending) {
-        return true;
-    }
-    // If self latestTime is within the range for requestChunk0, return true
-    if ([[requestChunk0 latestTime] compare:earliestTimeSelfMinusBuffer]!=NSOrderedAscending &&
-        [[requestChunk0 latestTime] compare:lastItinTimeSelfPlusBuffer]!=NSOrderedDescending) {
-        return true;
-    }
-    
     // If none of the above are true, return false
     return false;
 }

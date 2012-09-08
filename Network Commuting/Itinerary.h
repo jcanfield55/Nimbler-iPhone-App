@@ -31,10 +31,11 @@ typedef enum {
 @property (nonatomic, retain) NSNumber * elevationGained;
 @property (nonatomic, retain) NSNumber * elevationLost;
 @property (nonatomic, retain) NSDate   * endTime;  // raw end time from OTP
+@property (nonatomic, retain) NSDate *endTimeOnly; // Time only portion of endTime (computed with timeOnlyfromDate function).  Adds/subtracts 1 day if part of overnight request
 @property (nonatomic, retain) NSNumber * fareInCents;
 @property (nonatomic, retain) NSDate * itineraryCreationDate; // Time this itinerary was loaded or last updated
 @property (nonatomic, retain) NSDate * startTime;  // raw start time from OTP
-@property (nonatomic, strong, readonly) NSDate * startTimeOnly;  // Time only portion of StartTime (computed with timeOnlyfromDate function).  Not stored in CoreData
+@property (nonatomic, retain) NSDate * startTimeOnly;  // Time only portion of StartTime (computed with timeOnlyfromDate function).  Adds / subtracts 1 day if part of overnight request
 @property (nonatomic, retain) NSNumber * tooSloped;
 @property (nonatomic, retain) NSNumber * transfers;
 @property (nonatomic, retain) NSNumber * transitTime;
@@ -67,6 +68,9 @@ typedef enum {
 
 // Returns the end-time of the last leg if there is one, otherwise returns endTime property
 - (NSDate *)endTimeOfLastLeg;
+
+// Initializes startTimeOnly and endTimeOnly variables based on reqDate
+- (void)initializeTimeOnlyVariablesWithRequestDate:(NSDate *)reqDate;
 
 // Returns a nicely formatted address string for the starting point, if available
 - (NSString *)fromAddressString;

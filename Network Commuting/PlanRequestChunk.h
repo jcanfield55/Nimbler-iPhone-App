@@ -70,14 +70,15 @@
 // the startTime of the last itinerary in the referring PlanRequestChunk
 -(NSDate *)nextRequestDateFor:(NSDate *)requestDate;
 
-// itinerary (whichever's time is earliest)
-// If earliestRequestedDepartTime is nil, returns the time-only portion of the startTime of the first itinerary
-- (NSDate *)earliestTime;
+// Returns the latest time for the requestChunk based on depOrArrive
+// If DEPART, returns the earlier of earliestRequestedDepartTime or startTimeOnly of the first itinerary leg
+// If ARRIVE, returns the endTimeOnly of the first itinerary leg
+- (NSDate *)earliestTimeFor:(DepartOrArrive)depOrArrive;
 
-// Returns the time-only portion of the latestRequestedArriveTime or the startTime of the last itinerary
-// (whichever time is latest)
-// If latestRequestedArriveTime is nil, returns the time-only portion of the startTime fo the last itinerary
-- (NSDate *)latestTime;
+// Returns the latest time for the requestChunk based on depOrArrive
+// If ARRIVE, returns the later of latestRequestedArriveTime or endTimeOnly of the last itinerary leg
+// If DEPART, returns the startTimeOnly of the last itinerary leg
+- (NSDate *)latestTimeFor:(DepartOrArrive)depOrArrive;
 
 // Consolidates requestChunk0 into self
 // Assumes that self and requestChunk0 are true for doTimesOverlapRequestChunk: and doAllServiceStringByAgencyMatchRequestChunk:

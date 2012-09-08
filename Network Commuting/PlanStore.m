@@ -202,8 +202,8 @@
         return; // return if there are no matching itineraries in the original request
     }
     PlanRequestParameters* params = [PlanRequestParameters copyOfPlanRequestParameters:requestParams0];
-    NSDate* firstItinTimeOnly = timeOnlyFromDate([[testItinArray objectAtIndex:0] startTime]);
-    NSDate* lastItinTimeOnly = timeOnlyFromDate([[testItinArray lastObject] startTime]);
+    NSDate* firstItinTimeOnly = [[testItinArray objectAtIndex:0] startTimeOnly];
+    NSDate* lastItinTimeOnly = [[testItinArray lastObject] startTimeOnly];
     if ([testItinArray count] < PLAN_MAX_ITINERARIES_TO_SHOW &&
         [lastItinTimeOnly timeIntervalSinceDate:firstItinTimeOnly] < PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW) {
         // If we are below our max parameters
@@ -213,7 +213,7 @@
                                                       [NSDate dateWithTimeInterval:PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS
                                                                          sinceDate:lastItinTimeOnly]);
         } else { // departOrArrive = ARRIVE
-            NSDate* firstItinEndTimeOnly = timeOnlyFromDate([[testItinArray objectAtIndex:0] endTime]);
+            NSDate* firstItinEndTimeOnly = [[testItinArray objectAtIndex:0] endTimeOnly];
             params.thisRequestTripDate = addDateOnlyWithTimeOnly(dateOnlyFromDate(params.thisRequestTripDate),
                                                       [NSDate dateWithTimeInterval:(-PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS)
                                                                          sinceDate:firstItinEndTimeOnly]);

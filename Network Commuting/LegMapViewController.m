@@ -311,7 +311,6 @@ NSString *legID;
                                                        reuseIdentifier:@"MyDotAnnotation"];
                 dotView.canShowCallout = NO;
                 if (!dotImage) {
-                    // TODO add @2X image for retina screens
                     NSString* imageName = [[NSBundle mainBundle] pathForResource:LEGMAP_DOT_IMAGE_FILE ofType:@"png"];
                     dotImage = [UIImage imageWithContentsOfFile:imageName];
                 }
