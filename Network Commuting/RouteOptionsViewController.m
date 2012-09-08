@@ -20,7 +20,6 @@
 #include "Flurry.h"
 #endif
 
-#define CELL_HEIGHT             60.0
 #define IDENTIFIER_CELL         @"UIRouteOptionsViewCell"
 
 @interface RouteOptionsViewController()
@@ -163,23 +162,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         }         
         cell.textLabel.textColor = [UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0];
         cell.detailTextLabel.textColor = [UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
-        // Set sub-title (show each leg's mode and route if available)
-        NSMutableString *subTitle = [NSMutableString stringWithCapacity:30];
-        NSArray *sortedLegs = [itin sortedLegs];
-        for (int i = 0; i < [sortedLegs count]; i++) {
-            Leg *leg = [sortedLegs objectAtIndex:i];
-            if ([leg mode] && [[leg mode] length] > 0) {
-                if (i > 0) {
-                    [subTitle appendString:@" -> "];
-                }
-                [subTitle appendString:[[leg mode] capitalizedString]];
-                if ([leg route] && [[leg route] length] > 0) {
-                    [subTitle appendString:@" "];
-                    [subTitle appendString:[leg route]];
-                }
-            }
-        }
-        [[cell detailTextLabel] setText:subTitle];
+
+        [[cell detailTextLabel] setText:[itin itinerarySummaryString]];
+        [[cell detailTextLabel] setNumberOfLines:0];  // Allow for multi-lines
         cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.04];
     }
     @catch (NSException *exception) {
@@ -190,7 +175,29 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 
 - (CGFloat)tableView:(UITableView *)aTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {    
-    return CELL_HEIGHT;  
+    Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
+    
+    NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
+                                                     timeIntervalSinceDate:[itin startTimeOfFirstLeg]]);
+    NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
+                           [timeFormatter stringFromDate:[itin startTimeOfFirstLeg]],
+                           [timeFormatter stringFromDate:[itin endTimeOfLastLeg]],
+                           durationStr];
+    NSString* subtitleText = [itin itinerarySummaryString];
+    
+    CGSize titleSize = [titleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]
+                             constrainedToSize:CGSizeMake(ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
+
+    CGSize subtitleSize = [subtitleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]
+                                   constrainedToSize:CGSizeMake(ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
+    
+    CGFloat height = titleSize.height + subtitleSize.height + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
+    if (height < STANDARD_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
+        height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
+    }
+    
+    return height;
+
 }
 
 -(void)hideUnUsedTableViewCell

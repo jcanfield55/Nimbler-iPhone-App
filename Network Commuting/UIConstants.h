@@ -39,6 +39,8 @@
 // Upadate badge count to ZERO
 #define BADGE_COUNT_ZERO 0
 
+#define ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH 298
+
 // RouteDetailsViewController & LegMapViewController
 #define ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH 298 // Obtained thru trial & error for DE95 fix
 #define ROUTE_LEGMAP_X_ORIGIN 5

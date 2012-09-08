@@ -191,6 +191,31 @@
     }
 }
 
+// Returns a string which can be used in RouteOptionsView to give a summary of the itinerary
+- (NSString *)itinerarySummaryString
+{
+    // Set sub-title (show each leg's mode and route if available)
+    NSMutableString *returnString = [NSMutableString stringWithCapacity:30];
+    for (int i = 0; i < [[self sortedLegs] count]; i++) {
+        Leg *leg = [[self sortedLegs] objectAtIndex:i];
+        if ([leg mode] && [[leg mode] length] > 0) {
+            LegPositionEnum legPosition;
+            if (i==0) {
+                legPosition = FIRST_LEG;
+            } else {
+                [returnString appendString:@"\n"];
+                if (i== [[self sortedLegs] count]-1) {
+                    legPosition = LAST_LEG;
+                } else {
+                    legPosition = MIDDLE_LEG;
+                }
+            }
+            [returnString appendString:[leg summaryText]];
+        }
+    }
+    return returnString;
+}
+
 // Returns a sorted array of the title strings to show itinerary details as needed
 // for display a route details view.  Might have more elements than legs in the itinerary.  
 // Adds a start and/or end point if needed.  Modifies the first and last walking

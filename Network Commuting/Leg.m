@@ -106,6 +106,15 @@
     return polylineEncodedString;
 }
 
+// Returns a single-line summary of the leg useful for RouteOptionsView details
+- (NSString *)summaryText
+{
+    NSMutableString* summary = [NSMutableString stringWithString:@""];
+    [summary appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
+    [summary appendFormat:@"%@", [self mode]];
+    return summary;
+}
+
 // Returns title text for RouteDetailsView
 // US121 and US124 implementation
 - (NSString *)directionsTitleText:(LegPositionEnum)legPosition

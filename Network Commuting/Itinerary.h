@@ -74,6 +74,9 @@ typedef enum {
 // Returns a nicely formatted address string for the end point, if available
 - (NSString *)toAddressString;
 
+// Returns a string which can be used in RouteOptionsView to give a summary of the itinerary
+- (NSString *)itinerarySummaryString;
+
 // Returns a sorted array of the title strings to show itinerary details as needed
 // for display a route details view.  Might have more elements than legs in the itinerary.  
 // Adds a start and/or end point if needed.  Modifies the first and last walking
