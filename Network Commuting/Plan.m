@@ -99,14 +99,37 @@
 - (void)consolidateIntoSelfPlan:(Plan *)plan0
 {
     // Make sure all itineraries in self are still valid GTFS data.  Delete otherwise
-    NSSet* selfItineraries = [NSSet setWithSet:[self itineraries]];
-    for (Itinerary* itin in selfItineraries) {
-        if (![itin isCurrentVsGtfsFilesIn:[self transitCalendar]]) {
+    BOOL wereAnyDeleted = false;
+    for (Itinerary* itin in [NSSet setWithSet:[self itineraries]]) {
+        if (![itin isCurrentVsGtfsFilesIn:[self transitCalendar]] ||
+            ![itin startTimeOnly] || ![itin endTimeOnly]) { 
+            // If out of date or if TimeOnly variables not set...
+            // Delete all request chunks containing that itinerary (since they may now be outdated)
+            wereAnyDeleted = true;
+            for (PlanRequestChunk* reqChunk in [itin planRequestChunks]) {
+                [[self managedObjectContext] deleteObject:reqChunk];
+            }
+            // Now delete the itinerary itself
             [self deleteItinerary:itin];
         }
     }
-    
-    // TODO if we delete some itineraries because they are old, we need to delete the requestChunk they are part of too (because now it is missing itineraries and may not be contiguous)
+    // Do the same checking for plan0 itineraries
+    for (Itinerary* itin in [NSSet setWithSet:[plan0 itineraries]]) {
+        if (![itin isCurrentVsGtfsFilesIn:[self transitCalendar]] ||
+            ![itin startTimeOnly] || ![itin endTimeOnly]) {
+            // If out of date or if TimeOnly variables not set...
+            // Delete all request chunks containing that itinerary (since they may now be outdated)
+            wereAnyDeleted = true;
+            for (PlanRequestChunk* reqChunk in [itin planRequestChunks]) {
+                [[self managedObjectContext] deleteObject:reqChunk];
+            }
+            // Now delete the itinerary itself
+            [self deleteItinerary:itin];
+        }
+    }
+    if (wereAnyDeleted) {
+        saveContext([self managedObjectContext]);
+    }
     
     // Consolidate requestChunks
     NSMutableSet* chunksConsolidated = [[NSMutableSet alloc] initWithCapacity:10];
@@ -131,12 +154,8 @@
     // Transfer over the itineraries getting rid of ones we do not need
     NSSet* itineraries0 = [NSSet setWithSet:[plan0 itineraries]];
     for (Itinerary* itin0 in itineraries0) {
-        if (![itin0 isCurrentVsGtfsFilesIn:[self transitCalendar]]) {
-            [plan0 deleteItinerary:itin0];  // delete itin0 if it is no longer current vs GTFS files
-        } else {
-            if ([self addItineraryIfNew:itin0] == ITIN0_OBSOLETE) { // add the itinerary no matter what
-                [plan0 deleteItinerary:itin0];   // if itin0 obsolete, also make sure we delete it
-            }
+        if ([self addItineraryIfNew:itin0] == ITIN0_OBSOLETE) { // add the itinerary no matter what
+            [plan0 deleteItinerary:itin0];   // if itin0 obsolete, also make sure we delete it
         }
     }
     // Delete plan0
@@ -218,6 +237,7 @@
     }
     for (Itinerary* itin in [self itineraries]) { // Add all the itineraries to this request chunk
         [requestChunk addItinerariesObject:itin];
+        [itin initializeTimeOnlyVariablesWithRequestDate:requestDate]; // Set startTimeOnly & endTimeOnly
     }
 }
 
@@ -276,7 +296,7 @@
                 // Compute newConnectingReqDate
                 NSDate* possibleNewConnReqDate;
                 if (depOrArrive == DEPART) {
-                    NSDate* lastItinTimeOnly = timeOnlyFromDate([[[reqChunk sortedItineraries] lastObject] startTime]);
+                    NSDate* lastItinTimeOnly = [[[reqChunk sortedItineraries] lastObject] startTimeOnly];
                     possibleNewConnReqDate = addDateOnlyWithTimeOnly(dateOnlyFromDate(requestDate),
                                                                      [NSDate dateWithTimeInterval:PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS
                                                                                         sinceDate:lastItinTimeOnly]);
@@ -285,7 +305,7 @@
                         newConnectingReqDate = possibleNewConnReqDate;
                     }
                 } else { // depOrArrive = ARRIVE
-                    NSDate* firstItinEndTimeOnly = timeOnlyFromDate([[[reqChunk sortedItineraries] objectAtIndex:0] endTime]);
+                    NSDate* firstItinEndTimeOnly = [[[reqChunk sortedItineraries] objectAtIndex:0] endTimeOnly];
                     possibleNewConnReqDate = addDateOnlyWithTimeOnly(dateOnlyFromDate(requestDate),
                                                                      [NSDate dateWithTimeInterval:(-PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS)
                                                                                         sinceDate:firstItinEndTimeOnly]);
@@ -317,18 +337,16 @@
                 if (depOrArrive == DEPART) {
                     NSDate* requestTimeWithPreBuffer = [requestTimeOnly dateByAddingTimeInterval:(-planBufferSecondsBeforeItinerary)];
                     NSDate* requestTimeWithPostBuffer = [requestTimeOnly dateByAddingTimeInterval:planMaxTimeForResultsToShow];
-                    NSDate* itinStartTimeOnly = timeOnlyFromDate([itin startTime]);
-                    if ([requestTimeWithPreBuffer compare:itinStartTimeOnly]!=NSOrderedDescending &&
-                        [requestTimeWithPostBuffer compare:itinStartTimeOnly]!=NSOrderedAscending) {
+                    if ([requestTimeWithPreBuffer compare:[itin startTimeOnly]]!=NSOrderedDescending &&
+                        [requestTimeWithPostBuffer compare:[itin startTimeOnly]]!=NSOrderedAscending) {
                         // If itin start time is within the two buffer ranges
                         [matchingItineraries addObject:itin];
                     }
                 } else { // depOrArrive = ARRIVE
-                    NSDate* itinEndTimeOnly = timeOnlyFromDate([itin endTime]);
                     NSDate* requestTimeWithPreBuffer = [requestTimeOnly dateByAddingTimeInterval:(planBufferSecondsBeforeItinerary)];
                     NSDate* requestTimeWithPostBuffer = [requestTimeOnly dateByAddingTimeInterval:-planMaxTimeForResultsToShow];
-                    if ([requestTimeWithPreBuffer compare:itinEndTimeOnly]!=NSOrderedAscending &&
-                        [requestTimeWithPostBuffer compare:itinEndTimeOnly]!=NSOrderedDescending) {
+                    if ([requestTimeWithPreBuffer compare:[itin endTimeOnly]]!=NSOrderedAscending &&
+                        [requestTimeWithPostBuffer compare:[itin endTimeOnly]]!=NSOrderedDescending) {
                         // If itin start time is within the two buffer ranges
                         [matchingItineraries addObject:itin];
                     }

@@ -30,10 +30,11 @@
 @dynamic elevationGained;
 @dynamic elevationLost;
 @dynamic endTime;
+@dynamic endTimeOnly;
 @dynamic fareInCents;
 @dynamic itineraryCreationDate;
 @dynamic startTime;
-@synthesize startTimeOnly;
+@dynamic startTimeOnly;
 @dynamic tooSloped;
 @dynamic transfers;
 @dynamic transitTime;
@@ -88,14 +89,6 @@
     [self setItineraryCreationDate:[NSDate date]];
 }
 
-- (NSDate *)startTimeOnly
-{
-    if (!startTimeOnly) {
-        startTimeOnly = timeOnlyFromDate([self startTime]);
-    }
-    return startTimeOnly;
-}
-
 // Returns the start-time of the first leg if there is one, otherwise returns startTime property
 - (NSDate *)startTimeOfFirstLeg
 {
@@ -117,6 +110,29 @@
         return [self endTime];
     }
 }
+
+// Initializes startTimeOnly and endTimeOnly variables based on reqDate
+// Computes TimeOnly values using timeOnlyFromDate function
+// If either startTime or endTime are on different days than reqDate, then adds/subtracts one day accordingly
+// This takes care of requests that cross midnight
+- (void)initializeTimeOnlyVariablesWithRequestDate:(NSDate *)reqDate
+{
+    // Set the startTimeOnly variable 
+    NSTimeInterval startDayDiff = [dateOnlyFromDate([self startTime]) timeIntervalSinceDate:dateOnlyFromDate(reqDate)];
+    if (startDayDiff == 0) {
+        [self setStartTimeOnly:timeOnlyFromDate([self startTime])];
+    } else {
+        [self setStartTimeOnly:[timeOnlyFromDate([self startTime]) dateByAddingTimeInterval:startDayDiff]];
+    }
+    // Set the endTimeOnly variable
+    NSTimeInterval endDayDiff = [dateOnlyFromDate([self endTime]) timeIntervalSinceDate:dateOnlyFromDate(reqDate)];
+    if (endDayDiff == 0) {
+        [self setEndTimeOnly:timeOnlyFromDate([self endTime])];
+    } else {
+        [self setEndTimeOnly:[timeOnlyFromDate([self endTime]) dateByAddingTimeInterval:endDayDiff]];
+    }
+}
+
 
 // Create the sorted array of itineraries
 - (void)sortLegs

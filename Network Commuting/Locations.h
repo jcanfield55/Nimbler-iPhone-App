@@ -37,7 +37,7 @@
 @property (nonatomic) BOOL isLocationServiceEnable;
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkGeoMgr:(RKObjectManager *)rkG;
-- (void)preLoadIfNeededFromFile:(NSString *)filename latestVersionNumber:(NSDecimalNumber *)version;  // Preloads locations (like Caltrain stations) from a file
+- (BOOL)preLoadIfNeededFromFile:(NSString *)filename latestVersionNumber:(NSDecimalNumber *)version;  // Preloads locations (like Caltrain stations) from a file
 
 // Returns a sorted array of all locations whose memberOfList field starts with listNamePrefix.  
 // Array is sorted in alphabetical order by the memberOfList field (i.e. by everything after the prefix)

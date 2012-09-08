@@ -928,6 +928,7 @@
 		527620E615CC894900B10734 /* img_legWalkSelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_legWalkSelect.png; sourceTree = "<group>"; };
 		527620E715CC894900B10734 /* img_legWalkSelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_legWalkSelect@2x.png"; sourceTree = "<group>"; };
 		527E1749151EB9CD00CDBC23 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		52810D5515FABBF0004C4A9B /* Network_Commuting 1.5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.5.xcdatamodel"; sourceTree = "<group>"; };
 		52849FC8151D0389001D4DDC /* LegMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LegMapViewController.h; sourceTree = "<group>"; };
 		52849FC9151D0389001D4DDC /* LegMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LegMapViewController.m; sourceTree = "<group>"; };
 		5289CF1A15EEE8BD005843EB /* PlanRequestParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanRequestParameters.h; sourceTree = "<group>"; };
@@ -3573,13 +3574,14 @@
 		52DF9C4714F7546800DC6828 /* Network_Commuting.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				52810D5515FABBF0004C4A9B /* Network_Commuting 1.5.xcdatamodel */,
 				5265D4BB15E1A167002C9406 /* Network_Commuting 1.4.xcdatamodel */,
 				52E6CBEF15C0A38E008E83E6 /* Network_Commuting 1.3.xcdatamodel */,
 				529178281585326F001CC74C /* Network_Commuting 1.1.xcdatamodel */,
 				52D8E01A15AE2680001A1316 /* Network_Commuting 1.2.xcdatamodel */,
 				52DF9C4814F7546800DC6828 /* Network_Commuting.xcdatamodel */,
 			);
-			currentVersion = 5265D4BB15E1A167002C9406 /* Network_Commuting 1.4.xcdatamodel */;
+			currentVersion = 52810D5515FABBF0004C4A9B /* Network_Commuting 1.5.xcdatamodel */;
 			path = Network_Commuting.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

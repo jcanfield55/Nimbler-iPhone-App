@@ -64,8 +64,11 @@
     return self;
 }
 
-- (void)preLoadIfNeededFromFile:(NSString *)filename latestVersionNumber:(NSDecimalNumber *)newVersion
+// Returns true if a preLoad from file was executed, otherwise returns false
+- (BOOL)preLoadIfNeededFromFile:(NSString *)filename latestVersionNumber:(NSDecimalNumber *)newVersion
 {
+    BOOL returnValue = false;
+    
     // Check there version number against the the PRELOAD_TEST_ADDRESS to see if we need to open the file
     NSString* formattedAddr = PRELOAD_TEST_ADDRESS;
     NSArray* preloadTestLocs = [self locationsWithFormattedAddress:formattedAddr];
@@ -84,7 +87,7 @@
         
     // If that station has not been loaded, or if there is a newer version, pre-load the remaining stations
     if (([preloadTestLocs count] == 0) || isNewerVersion) {
-        
+        returnValue = true;
         // Code adapted from http://stackoverflow.com/questions/10305535/iphone-restkit-how-to-load-a-local-json-file-and-map-it-to-a-core-data-entity and https://github.com/RestKit/RestKit/wiki/Object-mapping (bottom of page)
         NSStringEncoding encoding;
         NSError* error = nil;
@@ -149,6 +152,7 @@
             NSLog(@"Could not load file %@ at path %@", filename, preloadPath);
         }
     }
+    return returnValue;
 }
 
 // Updates to selected location methods to update sorting
