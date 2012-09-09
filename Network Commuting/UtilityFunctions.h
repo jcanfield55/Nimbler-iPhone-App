@@ -37,3 +37,9 @@ NSInteger dayOfWeekFromDate(NSDate *date);
 // Returns a date where the date components are taken from dateOnly, and the time components are
 // taken from timeOnly
 NSDate *addDateOnlyWithTimeOnly(NSDate *dateOnly, NSDate *timeOnly);
+
+//
+// Returns a string that is a truncated version of string that fits within
+// width using font
+//
+NSString *stringByTruncatingToWidth(NSString *string, CGFloat width, UIFont *font);

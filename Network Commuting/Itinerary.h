@@ -79,7 +79,9 @@ typedef enum {
 - (NSString *)toAddressString;
 
 // Returns a string which can be used in RouteOptionsView to give a summary of the itinerary
-- (NSString *)itinerarySummaryString;
+// Each line of the string will be truncated to fit within width using font
+// If width is 0 or font == nil, returns untruncated strings
+- (NSString *)itinerarySummaryStringForWidth:(CGFloat)width Font:(UIFont *)font;
 
 // Returns a sorted array of the title strings to show itinerary details as needed
 // for display a route details view.  Might have more elements than legs in the itinerary.  

@@ -10,8 +10,13 @@
 #import "Itinerary.h"
 #import "Step.h"
 #import "UtilityFunctions.h"
+#import "KeyObjectStore.h"
 
-@interface Leg()
+@interface Leg() 
+// Private instance methods
++(NSDictionary *)agencyDisplayNameByAgencyId;
+#define AGENCY_DISPLAY_NAME_BY_AGENCYID_KEY @"agencyDisplayNameByAgencyIdKey"
+#define AGENCY_DISPLAY_NAME_BY_AGENCYID_VERSION_NUMBER @"agencyDisplayNameByAgencyIdVersionNumber"
 
 @end
 
@@ -39,9 +44,9 @@
 @dynamic legId;
 @synthesize sortedSteps;
 @synthesize polylineEncodedString;
-
 @synthesize arrivalTime,arrivalFlag,timeDiffInMins;
 
+static NSDictionary* __agencyDisplayNameByAgencyId;
 
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType
 {
@@ -96,6 +101,30 @@
     return sortedSteps;
 }
 
++ (NSDictionary *)agencyDisplayNameByAgencyId
+{
+    if (!__agencyDisplayNameByAgencyId) { // if not already set, check in database
+        KeyObjectStore* store = [KeyObjectStore keyObjectStore];
+        __agencyDisplayNameByAgencyId = [store objectForKey:AGENCY_DISPLAY_NAME_BY_AGENCYID_KEY];
+        if (!__agencyDisplayNameByAgencyId) {  // if not stored in the database, create it
+            __agencyDisplayNameByAgencyId = [NSDictionary dictionaryWithKeysAndObjects:
+                                             AGENCY_DISPLAY_NAME_BY_AGENCYID_VERSION_NUMBER, PRELOAD_VERSION_NUMBER,
+                                             @"BART", @"BART",
+                                             @"AirBART", @"AirBART",
+                                             @"caltrain-ca-us", @"Caltrain",
+                                             @"8", @"Blue & Gold Fleet",
+                                             @"10", @"Harbor Bay Ferry",
+                                             @"11", @"Baylink",
+                                             @"12", @"Golden Gate Ferry",
+                                             @"MIDDAY", @"Menlo Park Midday Shuttle",
+                                             @"SFMTA", @"Muni",
+                                             @"VTA", @"VTA",
+                                             nil];
+            [store setObject:__agencyDisplayNameByAgencyId forKey:AGENCY_DISPLAY_NAME_BY_AGENCYID_KEY];
+        }
+    }
+    return __agencyDisplayNameByAgencyId;
+}
 
 // Getter to create (if needed) and return the polylineEncodedString object corresponding to the legGeometryPoints
 - (PolylineEncodedString *)polylineEncodedString
@@ -111,7 +140,18 @@
 {
     NSMutableString* summary = [NSMutableString stringWithString:@""];
     [summary appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
-    [summary appendFormat:@"%@", [self mode]];
+    NSString* shortAgencyName = [[Leg agencyDisplayNameByAgencyId] objectForKey:[self agencyId]];
+    if (!shortAgencyName) {
+        shortAgencyName = [self mode];  // Use generic mode instead if name not available
+    }
+    [summary appendFormat:@"%@", shortAgencyName];
+    if ([[self mode] isEqualToString:@"BUS"]) {
+        [summary appendString:@" Bus"];
+    }
+    else if ([[self mode] isEqualToString:@"TRAM"]) {
+        [summary appendString:@" Tram"];
+    }
+    [summary appendFormat:@" %@", [self route]];
     return summary;
 }
 

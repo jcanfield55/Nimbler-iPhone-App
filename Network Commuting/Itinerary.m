@@ -208,25 +208,22 @@
 }
 
 // Returns a string which can be used in RouteOptionsView to give a summary of the itinerary
-- (NSString *)itinerarySummaryString
+// Each line of the string will be truncated to fit within width using font
+- (NSString *)itinerarySummaryStringForWidth:(CGFloat)width Font:(UIFont *)font
 {
     // Set sub-title (show each leg's mode and route if available)
     NSMutableString *returnString = [NSMutableString stringWithCapacity:30];
-    for (int i = 0; i < [[self sortedLegs] count]; i++) {
-        Leg *leg = [[self sortedLegs] objectAtIndex:i];
+    BOOL isFirstLegToDisplay = true;
+    for (Leg* leg in [self sortedLegs]) {
         if ([leg mode] && [[leg mode] length] > 0) {
-            LegPositionEnum legPosition;
-            if (i==0) {
-                legPosition = FIRST_LEG;
-            } else {
-                [returnString appendString:@"\n"];
-                if (i== [[self sortedLegs] count]-1) {
-                    legPosition = LAST_LEG;
+            if (![[leg mode] isEqualToString:@"WALK"]) {  // skip Walk legs
+                if (!isFirstLegToDisplay) {
+                    [returnString appendString:@"\n"];
                 } else {
-                    legPosition = MIDDLE_LEG;
+                    isFirstLegToDisplay = false;
                 }
+                [returnString appendString:stringByTruncatingToWidth([leg summaryText], width, font)];
             }
-            [returnString appendString:[leg summaryText]];
         }
     }
     return returnString;

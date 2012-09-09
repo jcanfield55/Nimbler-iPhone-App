@@ -134,7 +134,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
         
         // Set title
-        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
+        [[cell textLabel] setFont:[UIFont MEDIUM_BOLD_FONT]];
         NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
                                                    timeIntervalSinceDate:[itin startTimeOfFirstLeg]]);
         NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)", 
@@ -160,12 +160,14 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                  [[cell textLabel] setText:titleText];
             }
         }         
-        cell.textLabel.textColor = [UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0];
-        cell.detailTextLabel.textColor = [UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
+        cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
+        [[cell detailTextLabel] setFont:[UIFont MEDIUM_FONT]];
+        cell.detailTextLabel.textColor = [UIColor GRAY_FONT_COLOR];
 
-        [[cell detailTextLabel] setText:[itin itinerarySummaryString]];
+        [[cell detailTextLabel] setText:[itin itinerarySummaryStringForWidth:ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
+                                                                        Font:cell.detailTextLabel.font]];
         [[cell detailTextLabel] setNumberOfLines:0];  // Allow for multi-lines
-        cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.04];
+        cell.contentView.backgroundColor = [UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW];
     }
     @catch (NSException *exception) {
         NSLog(@"exception at load table: %@", exception);
@@ -179,16 +181,19 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     
     NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
                                                      timeIntervalSinceDate:[itin startTimeOfFirstLeg]]);
+    
+    // TODO -- make sure not text wrapping on first line
     NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
                            [timeFormatter stringFromDate:[itin startTimeOfFirstLeg]],
                            [timeFormatter stringFromDate:[itin endTimeOfLastLeg]],
                            durationStr];
-    NSString* subtitleText = [itin itinerarySummaryString];
+    NSString* subtitleText = [itin itinerarySummaryStringForWidth:(CGFloat)ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
+                                                             Font:(UIFont *)[UIFont MEDIUM_FONT]];
     
-    CGSize titleSize = [titleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]
+    CGSize titleSize = [titleText sizeWithFont:[UIFont MEDIUM_BOLD_FONT]
                              constrainedToSize:CGSizeMake(ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
 
-    CGSize subtitleSize = [subtitleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]
+    CGSize subtitleSize = [subtitleText sizeWithFont:[UIFont MEDIUM_FONT]
                                    constrainedToSize:CGSizeMake(ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
     
     CGFloat height = titleSize.height + subtitleSize.height + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
