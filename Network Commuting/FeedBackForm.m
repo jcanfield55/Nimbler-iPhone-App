@@ -95,7 +95,7 @@ NSUserDefaults *prefs;
     // }
     UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
     [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
-    lblNavigationTitle.text=FB_TITLE;
+    lblNavigationTitle.text=FEED_BACK_VIEW_TITLE;
     lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
     [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
     lblNavigationTitle.backgroundColor =[UIColor clearColor];
@@ -491,7 +491,7 @@ NSUserDefaults *prefs;
 #endif
     
     [rkp setValue:[prefs objectForKey:DEVICE_CFUUID] forParam:DEVICE_ID];
-        [rkp setValue:[NSNumber numberWithInt:FB_SOURCE_GENERAL] forParam:FEEDBACK_SOURCE];
+        [rkp setValue:[nc_AppDelegate sharedInstance].FBSource forParam:FEEDBACK_SOURCE];
     [rkp setValue:@"3.5" forParam:FEEDBACK_RATING];
     
     NSLog(@"Shared Instance Feedback Source: %@",[nc_AppDelegate sharedInstance].FBSource);
@@ -500,16 +500,15 @@ NSUserDefaults *prefs;
         [rkp setValue:[nc_AppDelegate sharedInstance].FBToAdd forParam:FB_FORMATTEDADDR_TO];
         [rkp setValue:[nc_AppDelegate sharedInstance].FBDate forParam:FB_DATE];
     } else {
-        [rkp setValue:@"" forParam:FB_UNIQUEID]; // temporary fix
-        /* JC Temporarily commenting this out because we need to send "" as uniqueID no matter what
+        //[rkp setValue:@"" forParam:FB_UNIQUEID]; // temporary fix
+//         JC Temporarily commenting this out because we need to send "" as uniqueID no matter what
         if([nc_AppDelegate sharedInstance].FBUniqueId == nil){
             [rkp setValue:@"" forParam:FB_UNIQUEID];
         }
         else{
             [rkp setValue:[nc_AppDelegate sharedInstance].FBUniqueId forParam:FB_UNIQUEID];
-        } */
+        } 
     }
-    
     timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(popOut) userInfo:nil repeats: NO];
     [[RKClient sharedClient] post:FB_REQUEST params:rkp delegate:self];
 }

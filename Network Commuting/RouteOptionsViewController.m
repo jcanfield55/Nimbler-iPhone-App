@@ -49,14 +49,14 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        UILabel* tlabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 120, 40)];
-        [tlabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:20.0]];
-        tlabel.text=@"Itineraries";
-        tlabel.textColor= [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];
-        [tlabel setTextAlignment:UITextAlignmentCenter];
-        tlabel.backgroundColor =[UIColor clearColor];
-        tlabel.adjustsFontSizeToFitWidth=YES;
-        self.navigationItem.titleView=tlabel;
+        UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
+        [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
+        lblNavigationTitle.text=ROUTE_OPTIONS_VIEW_TITLE;
+        lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
+        [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
+        lblNavigationTitle.backgroundColor =[UIColor clearColor];
+        lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
+        self.navigationItem.titleView=lblNavigationTitle;
         
         //[[self navigationItem] setTitle:@"Itineraries"];
         timeFormatter = [[NSDateFormatter alloc] init];
@@ -127,7 +127,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                                           reuseIdentifier:IDENTIFIER_CELL];
             [cell.imageView setImage:nil];
         }
-        [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+        UIImage *imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
+        UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
+        [cell setAccessoryView:imgViewDetailDisclosure];
          cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.textLabel.numberOfLines = 2;
         // Get the requested itinerary
@@ -142,6 +144,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                                [timeFormatter stringFromDate:[itin endTimeOfLastLeg]],
                                durationStr];
         [[cell textLabel] setText:titleText];
+        UIView *viewCellBackground = [[UIView alloc] init];
+        [viewCellBackground setBackgroundColor:[UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW]];
+        cell.backgroundView = viewCellBackground;
         
         // notify with TEXT for LEG timimg
         if (isReloadRealData) {
@@ -167,7 +172,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         [[cell detailTextLabel] setText:[itin itinerarySummaryStringForWidth:ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
                                                                         Font:cell.detailTextLabel.font]];
         [[cell detailTextLabel] setNumberOfLines:0];  // Allow for multi-lines
-        cell.contentView.backgroundColor = [UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW];
     }
     @catch (NSException *exception) {
         NSLog(@"exception at load table: %@", exception);
@@ -217,7 +221,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 {
     @try {
         UITableViewCell *cell = [atableView cellForRowAtIndexPath:indexPath];
-        cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.3];
+        UIView *viewCellBackground = [[UIView alloc] init];
+        [viewCellBackground setBackgroundColor:[UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW]];
+        cell.backgroundView = viewCellBackground;
         if (!routeDetailsVC) {
             routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
         }

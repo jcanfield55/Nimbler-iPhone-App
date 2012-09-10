@@ -24,13 +24,13 @@
 
 @synthesize sliderMaxWalkDistance;
 @synthesize sliderPushNotification;
-@synthesize lblSliderValue;
 @synthesize switchEnableUrgentSound;
 @synthesize switchEnableStandardSound;
 @synthesize enableUrgentSoundFlag;
 @synthesize enableStandardSoundFlag;
 @synthesize switchPushEnable;
 @synthesize btnUpdateSetting;
+@synthesize lblSliderMaxWalkDistanceValue;
 
 int pushHour;
 bool isPush;
@@ -64,14 +64,20 @@ bool isPush;
 //    else {
 //        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_navigationbar.png"]] aboveSubview:self.navigationController.navigationBar];
 //    }
-    UILabel* tlabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 200, 40)];
-    [tlabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:20.0]];
-    tlabel.text=SETTING_TITLE;
-    tlabel.textColor= [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];
-    [tlabel setTextAlignment:UITextAlignmentCenter];
-    tlabel.backgroundColor =[UIColor clearColor];
-    tlabel.adjustsFontSizeToFitWidth=YES;
-    self.navigationItem.titleView=tlabel;
+    UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
+    [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
+    lblNavigationTitle.text=SETTING_VIEW_TITLE;
+    lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
+    [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
+    lblNavigationTitle.backgroundColor =[UIColor clearColor];
+    lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
+    self.navigationItem.titleView=lblNavigationTitle;
+    
+    lblSliderMaxWalkDistanceValue = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, LABEL_MAXWALK_Distance_WIDTH, LABEL_MAXWALK_Distance_HEIGHT)] ;
+    [lblSliderMaxWalkDistanceValue setTextColor:[UIColor redColor]];
+    [lblSliderMaxWalkDistanceValue setBackgroundColor:[UIColor clearColor]];
+    [lblSliderMaxWalkDistanceValue setTextAlignment:UITextAlignmentCenter];
+    [self.sliderMaxWalkDistance addSubview:lblSliderMaxWalkDistanceValue];
 }
 
 - (void)viewDidUnload{
@@ -84,7 +90,6 @@ bool isPush;
     self.sliderPushNotification = nil;
     self.switchEnableUrgentSound = nil;
     self.switchEnableStandardSound = nil;
-    self.lblSliderValue = nil;
 }
 
 - (void)dealloc{
@@ -94,13 +99,11 @@ bool isPush;
     self.sliderPushNotification = nil;
     self.switchEnableUrgentSound = nil;
     self.switchEnableStandardSound = nil;
-    self.lblSliderValue = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [self fetchUserSettingData];
-    self.lblSliderValue.text = [NSString stringWithFormat:@"%0.2f",self.sliderMaxWalkDistance.value];
 #if FLURRY_ENABLED
     [Flurry logEvent: FLURRY_SETTINGS_APPEAR];
 #endif
@@ -190,18 +193,36 @@ bool isPush;
 {
 }
 
+// Methods Added to Get The Position of Thumb
+- (float)mapValueInIntervalInPercents: (float)value min: (float)minimum max: (float)maximum{
+    return (100 / (maximum - minimum)) * value -
+    (100 * minimum)/(maximum - minimum);
+}
+
+- (float)xPositionFromSliderValue:(UISlider *)aSlider{
+    float percent = [self mapValueInIntervalInPercents: aSlider.value
+                                                   min: aSlider.minimumValue
+                                                   max: aSlider.maximumValue] / 100.0;
+    
+    return percent * aSlider.frame.size.width -
+    percent * aSlider.currentThumbImage.size.width +
+    aSlider.currentThumbImage.size.width / 2;
+}
+
+
 -(IBAction)sliderWalkDistanceValueChanged:(UISlider *)sender
 {
-    float walkDistance = sliderMaxWalkDistance.value;
     [sliderMaxWalkDistance setValue:sliderMaxWalkDistance.value];
     [sliderMaxWalkDistance setSelected:YES];
-    [self.lblSliderValue setText:[NSString stringWithFormat:@"%0.2f",sender.value]];
+    float sliderXPOS = [self xPositionFromSliderValue:sliderMaxWalkDistance];
+    lblSliderMaxWalkDistanceValue.center = CGPointMake(sliderXPOS, 30);
+    lblSliderMaxWalkDistanceValue.text = [NSString stringWithFormat:@"%0.2f", sliderMaxWalkDistance.value];
 }
 
 -(IBAction)sliderPushNotification:(UISlider *)sender
 {
-    int walkDistance = sliderPushNotification.value;
-    [sliderPushNotification setValue:sliderPushNotification.value];
+    int walkDistance = lroundf(sliderPushNotification.value);
+    [sliderPushNotification setValue:walkDistance];
     [sliderPushNotification setSelected:YES];
     pushHour = walkDistance;
     NSLog(@"walk distance: %d", walkDistance);

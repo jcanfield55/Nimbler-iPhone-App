@@ -12,6 +12,7 @@
 #import "UtilityFunctions.h"
 #import "KeyObjectStore.h"
 #import "Constants.h"
+#import "nc_AppDelegate.h"
 
 @interface TransitCalendar()
 
@@ -43,48 +44,49 @@ static TransitCalendar * transitCalendarSingleton;
 // Accessor override to populate this dictionary if not already there
 - (NSDictionary *)lastGTFSLoadDateByAgency
 {
-    if (!lastGTFSLoadDateByAgency) {
+    if (![nc_AppDelegate sharedInstance].lastGTFSLoadDateByAgency) {
         // See if it is the KeyObjectStore
         KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
-        lastGTFSLoadDateByAgency = [keyObjectStore objectForKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
-        if (!lastGTFSLoadDateByAgency) {
-            // use stub function to get values -- change this once have server call
-            [self getAgencyCalendarDataStub];
-            [keyObjectStore setObject:lastGTFSLoadDateByAgency forKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
-        }
+        [nc_AppDelegate sharedInstance].lastGTFSLoadDateByAgency = [keyObjectStore objectForKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
+        // if (!lastGTFSLoadDateByAgency) {
+        // // use stub function to get values -- change this once have server call
+        // [self updateTime];
+        // //[self getAgencyCalendarDataStub];
+        // //[keyObjectStore setObject:lastGTFSLoadDateByAgency forKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
     }
-    return lastGTFSLoadDateByAgency;
+    // }
+    return [nc_AppDelegate sharedInstance].lastGTFSLoadDateByAgency;
 }
 
 
 - (NSDictionary *)calendarByDateByAgency
 {
-    if (!calendarByDateByAgency) {
-        // See if it is the KeyObjectStore
+    if (![nc_AppDelegate sharedInstance].calendarByDateByAgency) {
+        // // See if it is the KeyObjectStore
         KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
-        calendarByDateByAgency = [keyObjectStore objectForKey:TR_CALENDAR_BY_DATE_BY_AGENCY ];
-        if (!calendarByDateByAgency) {
-            // use stub function to get values -- change this once have server call
-            [self getAgencyCalendarDataStub];
-            [keyObjectStore setObject:calendarByDateByAgency forKey:TR_CALENDAR_BY_DATE_BY_AGENCY];
-        }
+        [nc_AppDelegate sharedInstance].calendarByDateByAgency = [keyObjectStore objectForKey:TR_CALENDAR_BY_DATE_BY_AGENCY ];
+        // if (!calendarByDateByAgency) {
+        // // use stub function to get values -- change this once have server call
+        // [self performSelector:@selector(calendarByDate) withObject:nil afterDelay:0.5];
+        // //[keyObjectStore setObject:calendarByDateByAgency forKey:TR_CALENDAR_BY_DATE_BY_AGENCY];
+        // }
     }
-    return calendarByDateByAgency;
+    return [nc_AppDelegate sharedInstance].calendarByDateByAgency;
 }
 
 - (NSDictionary *)serviceByWeekdayByAgency
 {
-    if (!serviceByWeekdayByAgency) {
-        // See if it is the KeyObjectStore
+    if (![nc_AppDelegate sharedInstance].serviceByWeekdayByAgency) {
+        // // See if it is the KeyObjectStore
         KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
-        serviceByWeekdayByAgency = [keyObjectStore objectForKey:TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY];
-        if (!serviceByWeekdayByAgency) {
-            // use stub function to get values -- change this once have server call
-            [self getAgencyCalendarDataStub];
-            [keyObjectStore setObject:serviceByWeekdayByAgency forKey:TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY ];
-        }
+        [nc_AppDelegate sharedInstance].serviceByWeekdayByAgency = [keyObjectStore objectForKey:TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY];
+        // if (!serviceByWeekdayByAgency) {
+        // // use stub function to get values -- change this once have server call
+        // [self serviceByWeekday];
+        // [keyObjectStore setObject:serviceByWeekdayByAgency forKey:TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY ];
     }
-    return serviceByWeekdayByAgency;
+    // }
+    return [nc_AppDelegate sharedInstance].serviceByWeekdayByAgency;
 }
 
 
@@ -93,14 +95,17 @@ static TransitCalendar * transitCalendarSingleton;
 //
 - (BOOL)isCurrentVsGtfsFileFor:(NSDate *)date agencyId:(NSString *)agencyId
 {
-    NSDate* gtfsLoadDate = [[self lastGTFSLoadDateByAgency] objectForKey:agencyId];
-    if (gtfsLoadDate && [date compare:gtfsLoadDate] == NSOrderedDescending) {
+    //NSDate* gtfsLoadDate = [[self lastGTFSLoadDateByAgency] objectForKey:agencyId];
+    NSString *gtfsLoadDate = [[[self lastGTFSLoadDateByAgency] objectForKey:GTFS_UPDATE_TIME]objectForKey:agencyId];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"YYYMMdd"];
+    NSString* strDateOnly = [dateFormatter stringFromDate:date];
+    if (gtfsLoadDate && [strDateOnly compare:gtfsLoadDate] == NSOrderedDescending) {
         // If dates come after the gtfsLoadDate, then return true
         return true;
     } else {
         return false;
     }
-    
 }
 
 // Returns the agency-specific services string for the given date and agency
@@ -108,12 +113,19 @@ static TransitCalendar * transitCalendarSingleton;
 {
     NSInteger dayOfWeek = dayOfWeekFromDate(date)-1;
     NSDate* dateOnly = dateOnlyFromDate(date);
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"YYYMMdd"];
+    NSString* strDateOnly = [dateFormatter stringFromDate:dateOnly];
     
     // Get the weekday services code
-    NSString* dateServices = [[[self serviceByWeekdayByAgency] objectForKey:agencyId] objectAtIndex:dayOfWeek];
+    NSString* dateServices;
+    NSString* dateServiceExemption;
+    // dateServices = [[[self serviceByWeekdayByAgency] objectForKey:agencyId] objectAtIndex:dayOfWeek];
+    dateServices = [[[[self serviceByWeekdayByAgency] objectForKey:GTFS_SERVICE_BY_WEEKDAY] objectForKey:agencyId]objectAtIndex:dayOfWeek];
+    
+    dateServiceExemption = [[[[self calendarByDateByAgency] objectForKey:GTFS_SERVICE_EXCEPTIONS_DATES] objectForKey:agencyId] objectForKey:strDateOnly];
     
     // Look for exceptions in the calendarDates Dictionary and refine as needed
-    NSString* dateServiceExemption = [[[self calendarByDateByAgency] objectForKey:agencyId] objectForKey:dateOnly];
     if (dateServiceExemption) {
         dateServices = dateServiceExemption;
     }
@@ -122,8 +134,8 @@ static TransitCalendar * transitCalendarSingleton;
 
 //
 // Returns true if the two dates have equivalent service schedule based on:
-//   - day of the week and calendar.txt GTFS file for the given agencyId
-//   - any exceptions in calendar_dates.txt GTFS file for the given agencyId
+// - day of the week and calendar.txt GTFS file for the given agencyId
+// - any exceptions in calendar_dates.txt GTFS file for the given agencyId
 // Otherwise returns false
 //
 - (BOOL)isEquivalentServiceDayFor:(NSDate *)date1 And:(NSDate *)date2 agencyId:(NSString *)agencyId

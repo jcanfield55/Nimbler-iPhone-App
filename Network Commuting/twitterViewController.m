@@ -71,15 +71,14 @@ NSUserDefaults *prefs;
 //    else {
 //        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_navigationbar.png"]] aboveSubview:self.navigationController.navigationBar];
 //    }
-    UILabel* tlabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 200, 40)];
-    [tlabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:20.0]];
-    tlabel.text=TWEETERVIEW_MANE;
-    tlabel.textColor= [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];
-    [tlabel setTextAlignment:UITextAlignmentCenter];
-    tlabel.backgroundColor =[UIColor clearColor];
-    tlabel.adjustsFontSizeToFitWidth=YES;
-    self.navigationItem.titleView=tlabel;
-    //[[self navigationItem] setTitle:TWEETERVIEW_MANE];               
+    UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
+    [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
+    lblNavigationTitle.text=TWITTER_VIEW_TITLE;
+    lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
+    [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
+    lblNavigationTitle.backgroundColor =[UIColor clearColor];
+    lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
+    self.navigationItem.titleView=lblNavigationTitle;              
     
     dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle:NSDateFormatterFullStyle];

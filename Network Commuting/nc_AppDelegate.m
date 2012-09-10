@@ -59,6 +59,10 @@ static nc_AppDelegate *appDelegate;
 @synthesize isCalendarByDate;
 @synthesize isSettingSavedSuccessfully;
 @synthesize isSettingRequest;
+@synthesize lastGTFSLoadDateByAgency;
+@synthesize serviceByWeekdayByAgency;
+@synthesize calendarByDateByAgency;
+@synthesize timerType;
 
 
 // Feedback parameters
@@ -223,7 +227,7 @@ FeedBackForm *fbView;
         
 //        [self.tabBarController.tabBar setSelectedImageTintColor:[UIColor redColor]];
 //        [self.tabBarController.tabBar setBackgroundImage:[UIImage imageNamed:@"img_tabbar.png"]];
-        
+        [[nc_AppDelegate sharedInstance] updateTime];
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         [[self window] setRootViewController:self.tabBarController];
         [self.window makeKeyAndVisible];
@@ -330,8 +334,13 @@ FeedBackForm *fbView;
      [timerTweeterGetData invalidate];
     timerTweeterGetData = nil;
     
+    if(toFromViewController.continueGetTime != nil){
+        timerType =TIMER_TYPE;
+    }
     [toFromViewController.continueGetTime invalidate];
     toFromViewController.continueGetTime = nil;
+    [toFromViewController.timerGettingRealDataByItinerary invalidate];
+    toFromViewController.timerGettingRealDataByItinerary = nil;
     isFromBackground = YES;
 }
 
@@ -340,6 +349,19 @@ FeedBackForm *fbView;
     /*
      Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
      */
+    
+    // Check the date and if it is not today's date we will make request.
+    NSDate *todayDate = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
+    NSString *strTodayDate = [dateFormatter stringFromDate:todayDate];
+    NSDate *currentDate = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_DATE];
+    if(![strTodayDate isEqual:currentDate]){
+        [[nc_AppDelegate sharedInstance] updateTime];
+        [[NSUserDefaults standardUserDefaults] setObject:strTodayDate forKey:CURRENT_DATE];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
     if(self.isTwitterView){
        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
         [twitterView getAdvisoryData];
@@ -358,7 +380,12 @@ FeedBackForm *fbView;
         [toFromViewController.fromTableVC markAndUpdateSelectedLocation:self.fromLoc];
     }
     if(isFromBackground){
-        toFromViewController.continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
+        if([timerType isEqualToString:TIMER_TYPE]){
+            toFromViewController.continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
+        }
+        else{
+            toFromViewController.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
+        }
     }
     if(!isSettingSavedSuccessfully){
         [self saveSetting];
@@ -515,7 +542,27 @@ FeedBackForm *fbView;
             if (error == nil)
             {
                 RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
-                if(isSettingRequest){
+                NSDictionary *tempResponseDictionary = [rkParser objectFromString:[response bodyAsString] error:nil];
+                if([tempResponseDictionary objectForKey:GTFS_UPDATE_TIME] != nil ){
+                    if(lastGTFSLoadDateByAgency != tempResponseDictionary){
+                        lastGTFSLoadDateByAgency = tempResponseDictionary;
+                        KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
+                        [keyObjectStore setObject:lastGTFSLoadDateByAgency forKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
+                        [[nc_AppDelegate sharedInstance] performSelector:@selector(serviceByWeekday) withObject:nil afterDelay:0.5];
+                    }
+                }
+                else if([tempResponseDictionary objectForKey:GTFS_SERVICE_BY_WEEKDAY] != nil){
+                    serviceByWeekdayByAgency = tempResponseDictionary;
+                    KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
+                    [keyObjectStore setObject:serviceByWeekdayByAgency forKey:TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY ];
+                    [[nc_AppDelegate sharedInstance] performSelector:@selector(calendarByDate) withObject:nil afterDelay:0.5];
+                }
+                else if([tempResponseDictionary objectForKey:GTFS_SERVICE_EXCEPTIONS_DATES] != nil){
+                    calendarByDateByAgency = tempResponseDictionary;
+                    KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
+                    [keyObjectStore setObject:calendarByDateByAgency forKey:TR_CALENDAR_BY_DATE_BY_AGENCY];
+                }
+                else if(isSettingRequest){
                     NSDictionary  *dictTemp = [rkParser objectFromString:[response bodyAsString] error:nil];
                     NSLog(@"RK Response: %@",[response bodyAsString]);
                     NSNumber *respCode = [(NSDictionary*)dictTemp objectForKey:CODE];
