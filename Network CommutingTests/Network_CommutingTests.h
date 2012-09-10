@@ -63,9 +63,11 @@
     Itinerary *itin80;
     Itinerary *itin90dep;
     Itinerary *itin91dep;
+    Itinerary *itin92dep;
+    Itinerary *itin93dep;
     Itinerary *itin90arr;
     Itinerary *itin91arr;
-    
+
     NSDate* date60req;
 }
 @end

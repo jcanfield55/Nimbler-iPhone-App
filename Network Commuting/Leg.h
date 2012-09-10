@@ -54,7 +54,7 @@ typedef enum {
 
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType;
 - (NSArray *)sortedSteps;
-- (NSString *)summaryText;  // Returns a single-line summary of the leg useful for RouteOptionsView details
+- (NSString *)summaryTextWithTime:(BOOL)includeTime;  // Returns a single-line summary of the leg useful for RouteOptionsView details
 - (NSString *)directionsTitleText:(LegPositionEnum)legPosition;
 - (NSString *)directionsDetailText:(LegPositionEnum)legPosition;
 - (NSString *)ncDescription;

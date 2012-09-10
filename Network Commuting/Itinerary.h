@@ -102,6 +102,11 @@ typedef enum {
 // This equals the number of rows in the legDescriptionTitleSortedArray.  
 - (int)itineraryRowCount;
 
+// Returns true if itin is an itinerary that goes past 3:00am and is >=3 hours in length
+// Workaround for OTP tendency to generate itineraries that go overnight past the end of service for
+// Caltrain and other agencies.  Robust solution will be to fix OTP
+- (BOOL)isOvernightItinerary;
+
 @end
 
 @interface Itinerary (CoreDataGeneratedAccessors)

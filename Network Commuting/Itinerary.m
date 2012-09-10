@@ -217,12 +217,17 @@
     for (Leg* leg in [self sortedLegs]) {
         if ([leg mode] && [[leg mode] length] > 0) {
             if (![[leg mode] isEqualToString:@"WALK"]) {  // skip Walk legs
+                BOOL includeTime=false;
+                if (isFirstLegToDisplay && ![[leg startTime] isEqualToDate:[self startTimeOfFirstLeg]]) {
+                    includeTime = true;  // Include time if first non-walk leg has a different start-time than itinerary
+                }
                 if (!isFirstLegToDisplay) {
-                    [returnString appendString:@"\n"];
+                    [returnString appendString:@" -> "];
                 } else {
                     isFirstLegToDisplay = false;
                 }
-                [returnString appendString:stringByTruncatingToWidth([leg summaryText], width, font)];
+                [returnString appendString:stringByTruncatingToWidth([leg summaryTextWithTime:includeTime],
+                                                                     width, font)];
             }
         }
     }
@@ -366,6 +371,26 @@
     }
     // otherwise, use the planPlace string from OTP
     return [[self to] name];
+}
+
+// Returns true if self is an itinerary that goes past 3:00am and is >=3 hours in length
+// Workaround for OTP tendency to generate itineraries that go overnight past the end of service for
+// Caltrain and other agencies.  Robust solution will be to fix OTP
+- (BOOL)isOvernightItinerary
+{
+    if ([[self endTime] timeIntervalSinceDate:[self startTime]] > (3.0*60*60)) { // if time interval > 3 hours
+        NSDateComponents* components3am = [[NSDateComponents alloc] init];
+        [components3am setHour:3];
+        [components3am setMinute:0];
+        NSDate* time3am = [[NSCalendar currentCalendar] dateFromComponents:components3am];
+        NSDate* dateTime3am = addDateOnlyWithTimeOnly(dateOnlyFromDate([self endTime]),time3am);
+        if ([dateTime3am compare:[self startTime]] == NSOrderedDescending &&
+            [dateTime3am compare:[self endTime]] == NSOrderedAscending) {
+            // If self spans 3am...
+            return true;
+        }
+    }
+    return false;
 }
 
 - (NSString *)ncDescription

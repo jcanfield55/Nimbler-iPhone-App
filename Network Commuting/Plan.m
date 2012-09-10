@@ -19,6 +19,7 @@
 - (void)removeItinerariesObject:(Itinerary *)value;
 - (void)addItineraries:(NSSet *)values;
 - (void)removeItineraries:(NSSet *)values;
+
 @end
 
 @implementation Plan
@@ -102,7 +103,8 @@
     BOOL wereAnyDeleted = false;
     for (Itinerary* itin in [NSSet setWithSet:[self itineraries]]) {
         if (![itin isCurrentVsGtfsFilesIn:[self transitCalendar]] ||
-            ![itin startTimeOnly] || ![itin endTimeOnly]) { 
+            ![itin startTimeOnly] || ![itin endTimeOnly] ||
+            [itin isOvernightItinerary]) {
             // If out of date or if TimeOnly variables not set...
             // Delete all request chunks containing that itinerary (since they may now be outdated)
             wereAnyDeleted = true;
@@ -116,7 +118,8 @@
     // Do the same checking for plan0 itineraries
     for (Itinerary* itin in [NSSet setWithSet:[plan0 itineraries]]) {
         if (![itin isCurrentVsGtfsFilesIn:[self transitCalendar]] ||
-            ![itin startTimeOnly] || ![itin endTimeOnly]) {
+            ![itin startTimeOnly] || ![itin endTimeOnly] ||
+            [itin isOvernightItinerary]) {
             // If out of date or if TimeOnly variables not set...
             // Delete all request chunks containing that itinerary (since they may now be outdated)
             wereAnyDeleted = true;
@@ -235,9 +238,14 @@
     } else { // ARRIVE
         [requestChunk setLatestRequestedArriveTimeDate:requestDate];
     }
-    for (Itinerary* itin in [self itineraries]) { // Add all the itineraries to this request chunk
-        [requestChunk addItinerariesObject:itin];
-        [itin initializeTimeOnlyVariablesWithRequestDate:requestDate]; // Set startTimeOnly & endTimeOnly
+    for (Itinerary* itin in [NSSet setWithSet:[self itineraries]]) { // Add all the itineraries to this request chunk
+        if ([itin isOvernightItinerary]) {
+            [self deleteItinerary:itin];
+        } else {
+            // Only initialize variables if we did not already delete the itinerary
+            [requestChunk addItinerariesObject:itin];
+            [itin initializeTimeOnlyVariablesWithRequestDate:requestDate]; // Set startTimeOnly & endTimeOnly
+        }
     }
 }
 
@@ -377,7 +385,6 @@
     
     return returnedItineraries;
 }
-
 
 
 // Detects whether date returned by REST API is >1,000 years in the future.  If so, the value is likely being returned in milliseconds from 1970, rather than seconds from 1970, in which we correct the date by dividing by the timeSince1970 value by 1,000

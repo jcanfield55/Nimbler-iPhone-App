@@ -133,6 +133,7 @@
     NSDate* date90ArrReq = [dateFormatter dateFromString:@"August 21, 2012 1:15 AM"]; // Tuesday after midnight
     NSDate* date90 = [dateFormatter dateFromString:@"August 20, 2012 11:35 PM"]; // Monday before midnight
     NSDate* date91 = [dateFormatter dateFromString:@"August 21, 2012 12:35 AM"]; // Tuesday past midnight
+    NSDate* date92 = [dateFormatter dateFromString:@"August 21, 2012 1:00 AM"]; // Tuesday past midnight
     
     // Legs
     Leg *leg10 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
@@ -159,6 +160,8 @@
     Leg *leg80 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
     Leg *leg90dep = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
     Leg *leg91dep = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    Leg *leg92dep = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    Leg *leg93dep = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
     Leg *leg90arr = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
     Leg *leg91arr = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
 
@@ -183,8 +186,11 @@
     itin80 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
     itin90dep = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
     itin91dep = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+    itin92dep = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+    itin93dep = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
     itin90arr = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
     itin91arr = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+
     
     // Plan
     plan1 = [NSEntityDescription insertNewObjectForEntityForName:@"Plan" inManagedObjectContext:managedObjectContext];
@@ -509,6 +515,20 @@
     itin91dep.startTime = date91;
     itin91dep.endTime = [itin91dep.startTime dateByAddingTimeInterval:(30.0*60)];
     itin91dep.plan = plan9depart;
+    
+    leg92dep.startTime = date90;  // begun before midnight
+    leg92dep.agencyId = Bart;
+    leg92dep.itinerary = itin92dep;
+    itin92dep.startTime = date90;
+    itin92dep.endTime = [itin92dep.startTime dateByAddingTimeInterval:(6*60*60)];  // goes overnight
+    itin92dep.plan = plan9depart;
+    
+    leg93dep.startTime = date92;  // begun after midnight
+    leg93dep.agencyId = Bart;
+    leg93dep.itinerary = itin93dep;
+    itin93dep.startTime = date92;
+    itin93dep.endTime = [itin93dep.startTime dateByAddingTimeInterval:(6*60*60)];  // goes overnight
+    itin93dep.plan = plan9depart;
     
     [plan9depart createRequestChunkWithAllItinerariesAndRequestDate:date90req departOrArrive:DEPART];
     [plan9depart setFromLocation:loc1];

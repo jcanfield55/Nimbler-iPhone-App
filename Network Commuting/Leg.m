@@ -109,6 +109,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         if (!__agencyDisplayNameByAgencyId) {  // if not stored in the database, create it
             __agencyDisplayNameByAgencyId = [NSDictionary dictionaryWithKeysAndObjects:
                                              AGENCY_DISPLAY_NAME_BY_AGENCYID_VERSION_NUMBER, PRELOAD_VERSION_NUMBER,
+                                             @"AC Transit", @"AC Transit",
                                              @"BART", @"BART",
                                              @"AirBART", @"AirBART",
                                              @"caltrain-ca-us", @"Caltrain",
@@ -136,10 +137,13 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 }
 
 // Returns a single-line summary of the leg useful for RouteOptionsView details
-- (NSString *)summaryText
+// If includeTime == true, then include a time at the beginning of the summary text
+- (NSString *)summaryTextWithTime:(BOOL)includeTime
 {
     NSMutableString* summary = [NSMutableString stringWithString:@""];
-    [summary appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
+    if (includeTime) {
+        [summary appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
+    }
     NSString* shortAgencyName = [[Leg agencyDisplayNameByAgencyId] objectForKey:[self agencyId]];
     if (!shortAgencyName) {
         shortAgencyName = [self mode];  // Use generic mode instead if name not available
@@ -151,7 +155,9 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     else if ([[self mode] isEqualToString:@"TRAM"]) {
         [summary appendString:@" Tram"];
     }
-    [summary appendFormat:@" %@", [self route]];
+    if (![[self agencyId] isEqualToString:@"BART"]) { // don't add BART route name because too long
+        [summary appendFormat:@" %@", [self route]];
+    }
     return summary;
 }
 

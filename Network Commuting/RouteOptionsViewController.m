@@ -196,9 +196,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     CGSize subtitleSize = [subtitleText sizeWithFont:[UIFont MEDIUM_FONT]
                                    constrainedToSize:CGSizeMake(ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
     
-    CGFloat height = titleSize.height + subtitleSize.height + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
-    if (height < STANDARD_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
-        height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
+    CGFloat height = titleSize.height + subtitleSize.height + ROUTE_OPTIONS_VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
+    if (height < ROUTE_OPTIONS_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
+        height = ROUTE_OPTIONS_TABLE_CELL_MINIMUM_HEIGHT;
     }
     
     return height;
