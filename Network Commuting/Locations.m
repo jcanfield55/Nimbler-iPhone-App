@@ -320,6 +320,7 @@
 // Only include those locations with frequency >= 1 in the row count
 - (void)updateInternalCache
 {
+    NSLog(@"Entering updateInternal Cache");
     if (!locationsFetchRequest) {  // create the fetch request if we have not already done so
         locationsFetchRequest = [[NSFetchRequest alloc] init];
         NSEntityDescription *e = [[managedObjectModel entitiesByName] objectForKey:@"Location"];
@@ -338,7 +339,7 @@
     if (!sortedFromLocations) {
         [NSException raise:@"Fetch failed" format:@"Reason: %@", [error localizedDescription]];
     }
-    
+    NSLog(@"Now fetching sortedToLocations");
     // Now create a different array with the sorted To descriptors
     NSSortDescriptor *sd1 = [NSSortDescriptor sortDescriptorWithKey:@"toFrequency" 
                                                           ascending:NO];
@@ -356,6 +357,7 @@
     [self setTypedFromString:[self typedFromString]];
     
     [self setAreLocationsChanged:NO];  // reset again
+    NSLog(@"Done updating Locations cache");
 }
 
 // Updates sortedToLocations or sortedFromLocations to put the selectedLocation at the top of the list
@@ -464,20 +466,22 @@
 - (Location *)consolidateWithMatchingLocations:(Location *)loc0 keepThisLocation:(BOOL)keepThisLocation
 {
     NSArray *matches = [self locationsWithFormattedAddress:[loc0 formattedAddress]];
-    if (!matches) {   
+    if (!matches || [matches count]==0) {
         return loc0;  
     }
-    else {  
+    else {
+        Location* returnLoc; // the location object we will return
+        if (keepThisLocation) {
+            returnLoc = loc0;
+        }
         for (Location *loc1 in matches) {
             if (loc0 != loc1) {  // if this is actually a different object
-                Location* returnLoc; // the location object we will return
                 Location* deleteLoc;  // the location object we will consolidate and delete
-                if (keepThisLocation) {
-                    returnLoc = loc0;
-                    deleteLoc = loc1;
+                if (!returnLoc) {
+                    returnLoc = loc1;  // if no returnLoc has been set, make this loc1 the returnLoc
+                    deleteLoc = loc0;  // and delete loc0 (just for this one time)
                 } else {
-                    returnLoc = loc1;  
-                    deleteLoc = loc0;
+                    deleteLoc = loc1;  // else if returnLoc is already set, then this loc1 must be deleted
                 }
                 
                 // consolidate from deleteLoc into returnLoc
@@ -491,11 +495,14 @@
                 
                 // Delete deleteLoc & return returnLoc
                 [managedObjectContext deleteObject:deleteLoc];
-                return returnLoc;
             }
         }
+        if (returnLoc) {
+            return returnLoc;
+        } else {
+            return loc0;
+        }
     }
-    return loc0;  // return loc0 if no different matches were found
 }
 
 // Remove location from Core Data

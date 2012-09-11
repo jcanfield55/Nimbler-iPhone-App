@@ -25,6 +25,7 @@
 #import "Constants.h"
 #import "TEXTConstant.h"
 #import "UserPreferance.h"
+#import "Logging.h"
 
 #if FLURRY_ENABLED
 #include "Flurry.h"
@@ -264,7 +265,8 @@ NSUserDefaults *prefs;
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:YES];
+    [super viewWillAppear:animated];
+    NIMLOG_PERF1(@"Entered ToFromView viewWillAppear");
     [nc_AppDelegate sharedInstance].isToFromView = YES;
     
     @try {
@@ -280,8 +282,9 @@ NSUserDefaults *prefs;
         [continueGetTime invalidate];
         continueGetTime = nil;
         [self updateTripDate];  // update tripDate if needed
+        NIMLOG_PERF1(@"Ready to setFBParameterForGeneral");
         [self setFBParameterForGeneral];
-        
+        NIMLOG_PERF1(@"Ready to reload tables");
         [toTable reloadData];
         [fromTable reloadData];
         [mainTable reloadData];
@@ -289,16 +292,18 @@ NSUserDefaults *prefs;
     @catch (NSException *exception) {
         NSLog(@"exception at viewWillAppear: %@", exception);
     }
+    NIMLOG_PERF1(@"Finished ToFromView viewWillAppear");
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:YES];
     [nc_AppDelegate sharedInstance].isToFromView = NO;
 }
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
+    NIMLOG_PERF1(@"Entered ToFromView did appear");
     // Flash scrollbars on tables
     [toTable flashScrollIndicators];
     [fromTable flashScrollIndicators];   
@@ -750,25 +755,6 @@ NSUserDefaults *prefs;
     }
 }
 
--(NSString *)getCurrentLocationOfFormattedAddress:(Location *)location
-{
-    @try {
-        double latitude = [[location lat] doubleValue];
-        double longitude = [[location lng] doubleValue];  
-        float startTime = CFAbsoluteTimeGetCurrent();
-        NSString *urlString = [NSString stringWithFormat:@"http://maps.google.com/maps/geo?q=%f,%f&output=csv", latitude, longitude];   
-        NSURL *url = [NSURL URLWithString:urlString];
-        NSString *locationString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];   
-        NSArray *streetName = [locationString componentsSeparatedByString:@"\""];
-        currentLoc = [streetName objectAtIndex:1];
-        currentLocationResTime =  CFAbsoluteTimeGetCurrent() - startTime;
-        return currentLoc;
-    }
-    @catch (NSException *exception) {
-        NSLog(@"exception at reverGeocod: %@", exception);
-    }
-}
-
 -(BOOL)alertUsetForLocationService {
     if (![locations isLocationServiceEnable]) {
         return TRUE;
@@ -781,7 +767,7 @@ NSUserDefaults *prefs;
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     @try {
-        NSLog(@"Route Button Pressed");
+        NIMLOG_EVENT1(@"Route Button Pressed");
         UIAlertView *alert;
         startButtonClickTime = CFAbsoluteTimeGetCurrent();
         
@@ -812,7 +798,6 @@ NSUserDefaults *prefs;
         }    
         // otherwise, just wait for the geocoding and then submit the plan
         else {
-            NSLog(@"look for state");
             alert = [[UIAlertView alloc] initWithTitle:@"TripPlanner" message:@"Please select a location" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
         }
@@ -943,7 +928,7 @@ NSUserDefaults *prefs;
             
             NSArray* atoms = [responseStartingFromStatus componentsSeparatedByString:@"\""];
             NSString* geocodeStatus = [atoms objectAtIndex:1]; // status string is second atom (first after the first quote)
-            NSLog(@"Status: %@", geocodeStatus);
+            NIMLOG_EVENT1(@"Geocode Status: %@", geocodeStatus);
             
             if ([geocodeStatus compare:@"OK" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
                 if ([objects count] > 0) { // if we have an reverse geocode object
@@ -954,9 +939,13 @@ NSUserDefaults *prefs;
                     // Check if an equivalent Location is already in the locations table
                     reverseGeoLocation = [locations consolidateWithMatchingLocations:reverseGeoLocation keepThisLocation:NO];
                     
+                    // Delete all the other objects out of the CoreData (DE152 fix)
+                    for (int i=1; i<[objects count]; i++) {  // starting at the instance after i=0
+                        [[self locations] removeLocation:[objects objectAtIndex:i]];
+                    }
                     // Save db context with the new location object
                     saveContext(managedObjectContext);
-                    NSLog(@"Reverse Geocode: %@", [reverseGeoLocation formattedAddress]);
+                    NIMLOG_ADDRESSES(@"Reverse Geocode: %@", [reverseGeoLocation formattedAddress]);
                     // Update the Current Location with pointer to the Reverse Geo location
                     [currentLocation setReverseGeoLocation:reverseGeoLocation];
                 }
@@ -1033,7 +1022,7 @@ NSUserDefaults *prefs;
     if (savetrip) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to calculate a route for that To & From address" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
-        NSLog(@"Error received from RKObjectManager: %@", error);
+        NIMLOG_ERR1(@"Error received from RKObjectManager: %@", error);
     }
 }
 
@@ -1044,7 +1033,6 @@ NSUserDefaults *prefs;
 {
     // See if there has already been an identical plan request in the last 5 seconds.
     @try {
-        NSLog(@"Plan routine entered");
         BOOL isDuplicatePlan = NO;
         NSString *frForm = [fromLocation formattedAddress];
         NSString *toForm = [toLocation formattedAddress];
@@ -1107,7 +1095,7 @@ NSUserDefaults *prefs;
                                            @"date", [NSDate date], nil]];
             
             NSNumber* maxiWalkDistance = [self getWalkDistance];
-            NSLog(@"maximum walk distance ------------------------------------ %f",[maxiWalkDistance floatValue]);
+
             // convert miles into meters. 1 mile = 1609.344 meters
             int maxDistance = (int)([maxiWalkDistance floatValue]*1609.544);
             
@@ -1355,7 +1343,12 @@ NSUserDefaults *prefs;
         [dFormat setDateStyle:NSDateFormatterShortStyle];
         [dFormat setTimeStyle:NSDateFormatterMediumStyle];
         if ([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
-            fromLocs = [self getCurrentLocationOfFormattedAddress:fromLocation];
+            if ([fromLocation reverseGeoLocation]) {
+                fromLocs = [NSString stringWithFormat:@"Current Location Reverse Geocode: %@",
+                            [[fromLocation reverseGeoLocation] formattedAddress]];
+            } else {
+                fromLocs = @"Current Location";
+            }
         } else {
             fromLocs = [fromLocation formattedAddress];
         }
@@ -1425,7 +1418,7 @@ NSUserDefaults *prefs;
         currentLocationResTime =  CFAbsoluteTimeGetCurrent() - startTime;
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at reverGeocod: %@", exception);
+        NIMLOG_ERR1(@"exception at reverGeocode: %@", exception);
     }
 }
 

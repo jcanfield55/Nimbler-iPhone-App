@@ -99,6 +99,7 @@ bool isPush;
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     [self fetchUserSettingData];
     self.lblSliderValue.text = [NSString stringWithFormat:@"%0.2f",self.sliderMaxWalkDistance.value];
 #if FLURRY_ENABLED

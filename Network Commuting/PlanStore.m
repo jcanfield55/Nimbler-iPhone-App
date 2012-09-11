@@ -8,6 +8,7 @@
 
 #import "PlanStore.h"
 #import "UtilityFunctions.h"
+#import "Logging.h"
 
 #if FLURRY_ENABLED
 #include "Flurry.h"
@@ -70,7 +71,7 @@
         
         if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate]
                                                       departOrArrive:[parameters departOrArrive]]) {
-            NSLog(@"Matches found in plan cache");
+            NIMLOG_EVENT1(@"Matches found in plan cache");
 #if FLURRY_ENABLED
             NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
                                           FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
@@ -129,8 +130,7 @@
     
     planURLResource = [@"plan" appendQueryParams:params];
     [parametersByPlanURLResource setObject:parameters forKey:planURLResource];
-    NSLog(@"Plan resource: %@", planURLResource);
-    
+    NIMLOG_URLS(@"Plan resource: %@", planURLResource);
     // Call the trip planner
     [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
 }
@@ -141,7 +141,7 @@
 {
     {
         NSInteger statusCode = [[objectLoader response] statusCode];
-        NSLog(@"Planning HTTP status code = %d", statusCode);
+        NIMLOG_EVENT1(@"Planning HTTP status code = %d", statusCode);
         PlanRequestParameters* parameters;
         @try {
             if (objects && [objects objectAtIndex:0]) {
@@ -149,14 +149,15 @@
                 NSString* resourcePath = [objectLoader resourcePath];
                 parameters = [parametersByPlanURLResource objectForKey:resourcePath];
                 
-                // Initialize the rest of the Plan and save context
+                // Initialize the rest of the Plan (must be done before saving context)
                 [plan setToLocation:[parameters toLocation]];
                 [plan setFromLocation:[parameters fromLocation]];
                 [plan createRequestChunkWithAllItinerariesAndRequestDate:[parameters thisRequestTripDate]
                                                           departOrArrive:[parameters departOrArrive]];
                 saveContext(managedObjectContext);  // Save location and request chunk changes
+                NIMLOG_PERF1(@"Created requestChunks and set locations");
                 plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context
-                
+                NIMLOG_PERF1(@"Consolidated Plans");
                 // Now format the itineraries of the consolidated plan
                 [plan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate] departOrArrive:[parameters departOrArrive]];
                 [self requestMoreItinerariesIfNeeded:plan parameters:parameters];
@@ -165,12 +166,14 @@
                 if (parameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
                     [routeOptionsVC newPlanAvailable:plan status:STATUS_OK];  
                 } else {
+                    NIMLOG_PERF1(@"Call toFromVC with results");
                     [toFromVC newPlanAvailable:plan status:STATUS_OK];
                 }
+                // Todo delete plans after first item
             }
         }
         @catch (NSException *exception) {
-            NSLog(@"Exception while parsing TP response plan: %@", exception);
+            NIMLOG_ERR1(@"Exception while parsing TP response plan: %@", exception);
             if (parameters && parameters.planDestination == PLAN_DESTINATION_TO_FROM_VC) {
                 [toFromVC newPlanAvailable:nil status:GENERIC_EXCEPTION];
             }
@@ -181,8 +184,18 @@
 
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error
 {
-    NSLog(@"Error received from RKObjectManager: %@", error);
-    [toFromVC newPlanAvailable:nil status:GENERIC_EXCEPTION];
+    NSString* resourcePath = [objectLoader resourcePath];
+    PlanRequestParameters* parameters = [parametersByPlanURLResource objectForKey:resourcePath];
+    if (!parameters) {
+        NIMLOG_ERR1(@"RKObjectManager failure with no retrievable parameters.  Error: %@", error);
+    }
+    if ([parameters planDestination] == PLAN_DESTINATION_TO_FROM_VC) {
+        NIMLOG_ERR1(@"Error received from RKObjectManager on first call by ToFromViewController: %@", error);
+        [toFromVC newPlanAvailable:nil status:GENERIC_EXCEPTION];
+    }
+    else { // if target is RouteOptions, do not call routeOptions and do not alert user.  This was a backup request only
+        NIMLOG_ERR1(@"Error received from RKObjectManager on subsequent call RouteOptionsViewController: %@", error);
+    }
 }
 
 // Checks if more itineraries are needed for this plan, and if so requests them from the server
@@ -198,7 +211,7 @@
                                             planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY
                                                  planMaxTimeForResultsToShow:(1000*60*60)];
     if (!testItinArray) {
-        NSLog(@"No sortedItineraries in plan in requestMoreItinerariesIfNeeded");
+        NIMLOG_ERR1(@"No sortedItineraries in plan in requestMoreItinerariesIfNeeded");
         return; // return if there are no matching itineraries in the original request
     }
     PlanRequestParameters* params = [PlanRequestParameters copyOfPlanRequestParameters:requestParams0];
@@ -218,7 +231,7 @@
                                                       [NSDate dateWithTimeInterval:(-PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS)
                                                                          sinceDate:firstItinEndTimeOnly]);
         }
-        NSLog(@"Requesting additional plan with parameters: %@", params);
+        NIMLOG_EVENT1(@"Requesting additional plan with parameters: %@", params);
         [self requestPlanFromOtpWithParameters:params];
     }
 }

@@ -13,7 +13,7 @@
 @synthesize btn1, btn2, btn3, btn4;
 
 - (void)viewDidAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+    [super viewDidAppear:animated];
 	[self hideTabBar];
 	[self addCustomElements];
 }

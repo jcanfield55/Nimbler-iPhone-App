@@ -99,6 +99,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 }
 
 -(void)popOutToNimbler{
+    NSLog(@"Begin popOutToNimbler");
     CATransition *animation = [CATransition animation];
     [animation setDuration:0.3];
     [animation setType:kCATransitionPush];
@@ -106,6 +107,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     [animation setRemovedOnCompletion:YES];
     [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
     [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+    NSLog(@"Will popViewControllerAnimated");
     [[self navigationController] popViewControllerAnimated:NO];
 }
 #pragma mark - UITableViewDelegate methods
