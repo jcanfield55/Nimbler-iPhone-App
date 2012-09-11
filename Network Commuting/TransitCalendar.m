@@ -16,8 +16,6 @@
 
 @interface TransitCalendar()
 
-// Stub functions.  Should be replaced by calls to the server
-- (void)getAgencyCalendarDataStub;
 
 @end
 
@@ -185,9 +183,9 @@ static TransitCalendar * transitCalendarSingleton;
         [calendarByDateMutable setObject:calendarByDate forKey:agencyID];
     }
     
-    lastGTFSLoadDateByAgency = lastGTFSLoadDateMutable;
-    serviceByWeekdayByAgency = serviceByWeekdayMutable;
-    calendarByDateByAgency = calendarByDateMutable;
+    [nc_AppDelegate sharedInstance].lastGTFSLoadDateByAgency = lastGTFSLoadDateMutable;
+    [nc_AppDelegate sharedInstance].serviceByWeekdayByAgency = serviceByWeekdayMutable;
+    [nc_AppDelegate sharedInstance].calendarByDateByAgency = calendarByDateMutable;
 }
 
 

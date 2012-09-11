@@ -3426,8 +3426,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler Caltrain-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
@@ -3445,8 +3445,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "EDBAC287-DE0E-4289-AD52-EC4A25498B57";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "EDBAC287-DE0E-4289-AD52-EC4A25498B57";
+				PROVISIONING_PROFILE = "E2DD1CF9-21E2-4F4C-AB45-CBB2DFCDDC1B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E2DD1CF9-21E2-4F4C-AB45-CBB2DFCDDC1B";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -3457,9 +3457,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Network Commuting/Nimbler Caltrain-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
@@ -3477,9 +3477,9 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "EDBAC287-DE0E-4289-AD52-EC4A25498B57";
-				"PROVISIONING_PROFILE[sdk=*]" = "EDBAC287-DE0E-4289-AD52-EC4A25498B57";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "EDBAC287-DE0E-4289-AD52-EC4A25498B57";
+				PROVISIONING_PROFILE = "E2DD1CF9-21E2-4F4C-AB45-CBB2DFCDDC1B";
+				"PROVISIONING_PROFILE[sdk=*]" = "E2DD1CF9-21E2-4F4C-AB45-CBB2DFCDDC1B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E2DD1CF9-21E2-4F4C-AB45-CBB2DFCDDC1B";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;

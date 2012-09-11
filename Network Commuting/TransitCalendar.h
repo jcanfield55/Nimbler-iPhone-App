@@ -51,5 +51,6 @@
 //
 - (BOOL)isEquivalentServiceDayFor:(NSDate *)date1 And:(NSDate *)date2 agencyId:(NSString *)agencyId;
 
-
+// Stub data fill function.  For testing purposes
+- (void)getAgencyCalendarDataStub;
 @end
