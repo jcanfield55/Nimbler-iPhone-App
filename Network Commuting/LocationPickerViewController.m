@@ -9,6 +9,10 @@
 #import "LocationPickerViewController.h"
 #import "FeedBackForm.h"
 
+#if FLURRY_ENABLED
+#import "Flurry.h"
+#endif
+
 @interface LocationPickerViewController ()
 {
     BOOL locationPicked;  // True if a location is picked before returning to ToFromViewController
@@ -18,7 +22,6 @@
 @implementation LocationPickerViewController
 
 @synthesize mainTable;
-@synthesize feedbackButton;
 @synthesize toFromTableVC;
 @synthesize locationArray;
 @synthesize isFrom;
@@ -30,11 +33,7 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        [[self navigationItem] setTitle:@"Pick a location"];
-        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-        [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                        [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
-                                                                         nil]];
+        //[[self navigationItem] setTitle:@"Pick a location"];
     }
     return self;
 }
@@ -42,7 +41,9 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+#if FLURRY_ENABLED
+    [Flurry logEvent:FLURRY_LOCATION_PICKER_APPEAR];
+#endif
     locationPicked = FALSE;
     
     // Enforce height of main table
@@ -78,26 +79,24 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
         cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:LARGE_FONT_SIZE]];        
+    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_LARGE_FONT_SIZE]];        
     [[cell textLabel] setText:[loc shortFormattedAddress]];  
     cell.textLabel.textColor = [UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0];
     tableView.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
-    
-    UIImage *unselect = [UIImage imageNamed:@"img_unSelect.png"];
-    cell.AccessoryView = [[UIImageView alloc] initWithImage:unselect];
+    cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.01];
     [cell sizeToFit];
     return cell;
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.3];
     // Send back the picked location and pop the view controller back to ToFromViewController
     [toFromTableVC setPickedLocation:[locationArray objectAtIndex:[indexPath row]] 
                        locationArray:locationArray isGeocodedResults:isGeocodeResults];
     locationPicked = TRUE;
-    [[self navigationController] popViewControllerAnimated:YES];
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_select.png"]];
+    [self popOutToNimbler];   
 }
 
 //DE:21 dynamic cell height 
@@ -108,7 +107,7 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
         
     NSString *cellText = [loc formattedAddress];
     CGSize size = [cellText 
-                sizeWithFont:[UIFont systemFontOfSize:LARGE_FONT_SIZE] 
+                sizeWithFont:[UIFont systemFontOfSize:MEDIUM_LARGE_FONT_SIZE] 
                 constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
     
     CGFloat height = size.height + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
@@ -116,7 +115,7 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
         height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
     }
     // static height for better UI
-    return 55.0;
+    return height;
 }
 
 - (void) viewWillDisappear:(BOOL)animated
@@ -141,31 +140,58 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
     }
 }
 
-// Feedback button responder
-- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event 
-{
-    FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:[NSNumber numberWithInt:FB_SOURCE_GENERAL] uniqueId:nil date:nil fromAddress:nil toAddress:nil];
-    FeedBackForm *feedbackVC =  [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];
-    [[self navigationController] pushViewController:feedbackVC animated:YES];
-
-}
-
-- (void)viewDidLoad
-{
+- (void)viewDidLoad{
     [super viewDidLoad];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
+//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+//        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
+//    }
+//    else {
+//        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_navigationbar.png"]] aboveSubview:self.navigationController.navigationBar];
+//    }
     // Do any additional setup after loading the view from its nib.
+    UIButton *btnGoToNimbler = [[UIButton alloc] initWithFrame:CGRectMake(0,0,65,34)];
+    [btnGoToNimbler addTarget:self action:@selector(popOutToNimbler) forControlEvents:UIControlEventTouchUpInside];
+    [btnGoToNimbler setBackgroundImage:[UIImage imageNamed:@"img_nimblerNavigation.png"] forState:UIControlStateNormal];
+    
+    UIBarButtonItem *backTonimbler = [[UIBarButtonItem alloc] initWithCustomView:btnGoToNimbler];
+    self.navigationItem.leftBarButtonItem = backTonimbler;
+    
+    UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
+    [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
+    lblNavigationTitle.text = LOCATION_PICKER_VIEW_TITLE;
+    lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
+    [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
+    lblNavigationTitle.backgroundColor =[UIColor clearColor];
+    lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
+    self.navigationItem.titleView=lblNavigationTitle;
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload{
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    self.mainTable = nil;
+}
+
+- (void)dealloc{
+    self.mainTable = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+-(void)popOutToNimbler
+{
+    [toFromTableVC textSubmitted:nil forEvent:nil];
+    CATransition *animation = [CATransition animation];
+    [animation setDuration:0.3];
+    [animation setType:kCATransitionPush];
+    [animation setSubtype:kCATransitionFromLeft];
+    [animation setRemovedOnCompletion:YES];
+    [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+    [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+    [[self navigationController] popViewControllerAnimated:NO];
 }
 
 @end

@@ -45,6 +45,11 @@
 @property (nonatomic, strong) NSDecimalNumber *preloadVersion; // if a pre-loaded location, shows the version number of the loading (used to determine whether a newer preload version exists). Zero or nil otherwise.  
 @property (nonatomic, strong) NSString *memberOfList;  // Name of a list (like 'CaltrainStations') that this location belongs to.  After list name, string will contain a sorting number.  Empty or nil otherwise. 
 
+// Location which is the reverse geocode of the last time current location was used in a plan request.
+// nil if there was no reverse geocode was possible or if Self is not a Current Location
+@property (nonatomic, strong) Location* reverseGeoLocation;
+
+
 // Static variables and methods to retrieve the Locations set wrapper
 + (void)setLocations:(Locations *)loc;
 

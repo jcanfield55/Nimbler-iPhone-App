@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Plan.h"
+#import "enums.h"
 #import "RouteDetailsViewController.h"
 
 @interface RouteOptionsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKRequestDelegate>
@@ -30,4 +31,7 @@
 -(void)hideUnUsedTableViewCell;
 -(void)setFBParameterForPlan;
 -(void)popOutToNimbler;
+
+// Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
+-(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status;
 @end

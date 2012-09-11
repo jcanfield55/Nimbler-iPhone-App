@@ -54,12 +54,17 @@ typedef enum {
 
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType;
 - (NSArray *)sortedSteps;
+- (NSString *)summaryTextWithTime:(BOOL)includeTime;  // Returns a single-line summary of the leg useful for RouteOptionsView details
 - (NSString *)directionsTitleText:(LegPositionEnum)legPosition;
 - (NSString *)directionsDetailText:(LegPositionEnum)legPosition;
 - (NSString *)ncDescription;
 - (BOOL)isWalk;
 - (BOOL)isBus;
+- (BOOL)isHeavyTrain; // Note: legs that are isHeavyTrain=true are also isTrain=true
 - (BOOL)isTrain;
+
+// True if the main characteristics of referring Leg is equal to leg0
+- (BOOL)isEqualInSubstance:(Leg *)leg0;
 
 @end
 

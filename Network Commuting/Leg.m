@@ -10,8 +10,13 @@
 #import "Itinerary.h"
 #import "Step.h"
 #import "UtilityFunctions.h"
+#import "KeyObjectStore.h"
 
-@interface Leg()
+@interface Leg() 
+// Private instance methods
++(NSDictionary *)agencyDisplayNameByAgencyId;
+#define AGENCY_DISPLAY_NAME_BY_AGENCYID_KEY @"agencyDisplayNameByAgencyIdKey"
+#define AGENCY_DISPLAY_NAME_BY_AGENCYID_VERSION_NUMBER @"agencyDisplayNameByAgencyIdVersionNumber"
 
 @end
 
@@ -39,9 +44,9 @@
 @dynamic legId;
 @synthesize sortedSteps;
 @synthesize polylineEncodedString;
-
 @synthesize arrivalTime,arrivalFlag,timeDiffInMins;
 
+static NSDictionary* __agencyDisplayNameByAgencyId;
 
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType
 {
@@ -96,6 +101,31 @@
     return sortedSteps;
 }
 
++ (NSDictionary *)agencyDisplayNameByAgencyId
+{
+    if (!__agencyDisplayNameByAgencyId) { // if not already set, check in database
+        KeyObjectStore* store = [KeyObjectStore keyObjectStore];
+        __agencyDisplayNameByAgencyId = [store objectForKey:AGENCY_DISPLAY_NAME_BY_AGENCYID_KEY];
+        if (!__agencyDisplayNameByAgencyId) {  // if not stored in the database, create it
+            __agencyDisplayNameByAgencyId = [NSDictionary dictionaryWithKeysAndObjects:
+                                             AGENCY_DISPLAY_NAME_BY_AGENCYID_VERSION_NUMBER, PRELOAD_VERSION_NUMBER,
+                                             @"AC Transit", @"AC Transit",
+                                             @"BART", @"BART",
+                                             @"AirBART", @"AirBART",
+                                             @"caltrain-ca-us", @"Caltrain",
+                                             @"8", @"Blue & Gold Fleet",
+                                             @"10", @"Harbor Bay Ferry",
+                                             @"11", @"Baylink",
+                                             @"12", @"Golden Gate Ferry",
+                                             @"MIDDAY", @"Menlo Park Midday Shuttle",
+                                             @"SFMTA", @"Muni",
+                                             @"VTA", @"VTA",
+                                             nil];
+            [store setObject:__agencyDisplayNameByAgencyId forKey:AGENCY_DISPLAY_NAME_BY_AGENCYID_KEY];
+        }
+    }
+    return __agencyDisplayNameByAgencyId;
+}
 
 // Getter to create (if needed) and return the polylineEncodedString object corresponding to the legGeometryPoints
 - (PolylineEncodedString *)polylineEncodedString
@@ -104,6 +134,31 @@
         polylineEncodedString = [[PolylineEncodedString alloc] initWithEncodedString:[self legGeometryPoints]];
     }
     return polylineEncodedString;
+}
+
+// Returns a single-line summary of the leg useful for RouteOptionsView details
+// If includeTime == true, then include a time at the beginning of the summary text
+- (NSString *)summaryTextWithTime:(BOOL)includeTime
+{
+    NSMutableString* summary = [NSMutableString stringWithString:@""];
+    if (includeTime) {
+        [summary appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
+    }
+    NSString* shortAgencyName = [[Leg agencyDisplayNameByAgencyId] objectForKey:[self agencyId]];
+    if (!shortAgencyName) {
+        shortAgencyName = [self mode];  // Use generic mode instead if name not available
+    }
+    [summary appendFormat:@"%@", shortAgencyName];
+    if ([[self mode] isEqualToString:@"BUS"]) {
+        [summary appendString:@" Bus"];
+    }
+    else if ([[self mode] isEqualToString:@"TRAM"]) {
+        [summary appendString:@" Tram"];
+    }
+    if (![[self agencyId] isEqualToString:@"BART"]) { // don't add BART route name because too long
+        [summary appendFormat:@" %@", [self route]];
+    }
+    return summary;
 }
 
 // Returns title text for RouteDetailsView
@@ -172,7 +227,11 @@
             if (isShortName) {
                 [titleText appendFormat:@" - "];
             }
-            [titleText appendFormat:@"%@", [self routeLongName]];
+            if ([[self agencyId] isEqualToString:@"BART"]) {
+                [titleText appendString:@"BART"];  // special case for BART -- just show "BART" rather than route name
+            } else {
+                [titleText appendFormat:@"%@", [self routeLongName]];
+            }
         }
         if ([self headSign] && [[self headSign] length]>0) {
             [titleText appendFormat:@" to %@", [self headSign]];
@@ -224,19 +283,51 @@
     return false;
 }
 
+-(BOOL)isHeavyTrain
+{
+    if ([[self mode] isEqualToString:@"RAIL"] && [[self agencyId] isEqualToString:@"caltrain-ca-us"]) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 -(BOOL)isTrain
 {
-    if ([[self mode] isEqualToString:@"RAIL"]) {   
-        return true;   
-    }
+    if ([[self mode] isEqualToString:@"RAIL"] || [[self mode] isEqualToString:@"TRAM"] ||
+        [[self mode] isEqualToString:@"SUBWAY"]) {
+        return true;
+    } // else
     return false;
 }
 -(BOOL)isBus
 {
     if ([[self mode] isEqualToString:@"BUS"]) {   
         return true;   
-    }
+    } 
     return false;
+}
+-(BOOL)isSubway
+{
+    if ([[self mode] isEqualToString:@"SUBWAY"]) {   
+        return true;   
+    } 
+    return false; 
+}
+
+// True if the main characteristics of referring Leg is equal to leg0
+// Compares timeOnly components of startTime and of endTime, to name, and from name
+- (BOOL)isEqualInSubstance:(Leg *)leg0
+{
+    if ([timeOnlyFromDate([leg0 startTime]) isEqualToDate:timeOnlyFromDate([self startTime])] &&
+        [timeOnlyFromDate([leg0 endTime]) isEqualToDate:timeOnlyFromDate([self endTime])] &&
+        [[[leg0 from] name] isEqualToString:[[self from] name]] &&
+        [[[leg0 to] name] isEqualToString:[[self to] name]] &&
+        [[leg0 route] isEqualToString:[self route]]) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
 }
 
 - (NSString *)ncDescription

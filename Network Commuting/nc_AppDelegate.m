@@ -10,13 +10,13 @@
 #import "UtilityFunctions.h"
 //#import "TestFlightSDK1/TestFlight.h"
 #import "ToFromViewController.h"
-#import "TwitterSearch.h"
 #import "twitterViewController.h"
 #import "SettingInfoViewController.h"
 #import "FeedBackForm.h"
 #import "DateTimeViewController.h"
 #import "UserPreferance.h"
-
+#import "Reachability.h"
+#import "KeyObjectStore.h"
 #if TEST_FLIGHT_ENABLED
 #import "TestFlightSDK1/TestFlight.h"
 #endif
@@ -24,16 +24,23 @@
 #import "Flurry.h"
 #endif
 
+#define BTN_EXIT        @"Exit fromApp"
+#define BTN_OK          @"Ok"
+#define BTN_CANCEL      @"Continue"
+#define ALERT_NETWORK   @"Please check your wifi or data connection!" 
+
 BOOL isTwitterLivaData = FALSE; 
+BOOL isRegionSupport = FALSE;
 
 static nc_AppDelegate *appDelegate;
 
 @implementation nc_AppDelegate
 
+@synthesize twitterCount;
 @synthesize locations;
+@synthesize planStore;
 @synthesize locationManager;
 @synthesize toFromViewController;
-@synthesize feedbackView;
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
@@ -41,9 +48,28 @@ static nc_AppDelegate *appDelegate;
 @synthesize timerTweeterGetData;
 @synthesize prefs;
 @synthesize tabBarController = _tabBarController;
+@synthesize isTwitterView;
+@synthesize isToFromView;
+@synthesize toLoc;
+@synthesize fromLoc;
+@synthesize continueGetTime;
+@synthesize isFromBackground;
+@synthesize isUpdateTime;
+@synthesize isServiceByWeekday;
+@synthesize isCalendarByDate;
+@synthesize isSettingSavedSuccessfully;
+@synthesize isSettingRequest;
+@synthesize lastGTFSLoadDateByAgency;
+@synthesize serviceByWeekdayByAgency;
+@synthesize calendarByDateByAgency;
+@synthesize timerType;
+
 
 // Feedback parameters
 @synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId;
+twitterViewController *twitterView;
+SettingInfoViewController *settingView;
+FeedBackForm *fbView;
 
 +(nc_AppDelegate *)sharedInstance
 {
@@ -53,15 +79,23 @@ static nc_AppDelegate *appDelegate;
     }
     return appDelegate;
 }
++(NSString *)getUUID
+{
+    CFUUIDRef UUID = CFUUIDCreate(kCFAllocatorDefault);
+    CFStringRef stringID = CFUUIDCreateString(kCFAllocatorDefault, UUID);
+    CFRelease(UUID);
+    return (__bridge_transfer NSString *)stringID;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
     [[UIApplication sharedApplication] 
      registerForRemoteNotificationTypes:
      (UIRemoteNotificationTypeAlert | 
       UIRemoteNotificationTypeBadge | 
       UIRemoteNotificationTypeSound)];
+    
+    prefs = [NSUserDefaults standardUserDefaults];
     
     // Configure the RestKit RKClient object for Geocoding and trip planning
     RKObjectManager* rkGeoMgr = [RKObjectManager objectManagerWithBaseURL:GEO_RESPONSE_URL];
@@ -102,20 +136,73 @@ static nc_AppDelegate *appDelegate;
         locations = [[Locations alloc] initWithManagedObjectContext:[self managedObjectContext] rkGeoMgr:rkGeoMgr];
         [toFromViewController setLocations:locations];
         
+        // Initialize the planStore and KeyObjectStore
+        planStore = [[PlanStore alloc] initWithManagedObjectContext:[self managedObjectContext]
+                                                          rkPlanMgr:rkPlanMgr];
+        [toFromViewController setPlanStore:planStore];
+        [KeyObjectStore setUpWithManagedObjectContext:[self managedObjectContext]];
+        
         // Pre-load stations location files
         NSDecimalNumber* version = [NSDecimalNumber decimalNumberWithString:PRELOAD_VERSION_NUMBER];
-        [locations preLoadIfNeededFromFile:PRELOAD_LOCATION_FILE latestVersionNumber:version];
+        BOOL newVer = [locations preLoadIfNeededFromFile:PRELOAD_LOCATION_FILE latestVersionNumber:version];
+        
+        // Temporary code inserted 9/7/12 to do a one-time delete of plans that do not have
+        // itineraries with startTimeOnly and endTimeOnly set (should only happen for code apps before 9/7)
+        // Code also consolidates all locations (addressing many duplicate ones from DE152)
+        if (newVer) {
+            NSFetchRequest* fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Location"];
+            NSError *error;
+            NSArray* allLocations = [[self managedObjectContext] executeFetchRequest:fetchRequest error:&error];
+            if (!allLocations) {
+                [NSException raise:@"Fetching all Locations failed" format:@"Reason: %@", [error localizedDescription]];
+            }
+            for (Location* loc in allLocations) {
+                if (![loc isDeleted]) { // only if not already deleted
+                    if ([[loc formattedAddress] isEqualToString:@"California, USA"] || [[loc formattedAddress] isEqualToString:@"United States"] || [[loc formattedAddress] isEqualToString:@"Santa Clara, CA, USA"] || [[loc formattedAddress] isEqualToString:@"San Mateo, CA, USA"] || [[loc formattedAddress] isEqualToString:@"San Francisco, CA, USA"]) {
+                        [locations removeLocation:loc];  // remove any of these generic county, state, country locations
+                        } else {
+                            // Consolidate locations
+                            [locations consolidateWithMatchingLocations:loc keepThisLocation:true];
+                        }
+                }
+            }
+            NSArray* allPlans = [[self managedObjectContext] executeFetchRequest:fetchRequest error:&error];
+            if (!allPlans) {
+                [NSException raise:@"Fetching all Plans failed" format:@"Reason: %@", [error localizedDescription]];
+            }
+            NSMutableSet* deleteSet = [[NSMutableSet alloc] initWithCapacity:[allPlans count]];
+            for (Plan* plan in allPlans) {
+                if ([[plan itineraries] count] == 0 || ![plan fromLocation] || [[plan fromLocation] isDeleted] || ![plan toLocation] || [[plan toLocation] isDeleted]) {
+                    [deleteSet addObject:plan];  // add plan for deletion if any of its key parameters are null
+                } else {
+                    for (Itinerary* itin in [plan itineraries]) {
+                        if (![itin startTimeOnly] || ![itin endTimeOnly]) {
+                            // If these values were never set when the plan was created
+                            [deleteSet addObject:plan];  // add the plan for deletion
+                            break;
+                        }
+                    }
+                }
+            }
+            // Now delete the plans
+            for (Plan* plan in deleteSet) {
+                [[self managedObjectContext] deleteObject:plan];
+            }
+            saveContext([self managedObjectContext]);
+        }// End of temporary code
         
     }@catch (NSException *exception) {
         NSLog(@"Exception: ----------------- %@", exception);
     } 
     
     // Set a CFUUID (unique identifier) for this device and this app, if doesn't exist already:
+    
     NSString* cfuuidString = [prefs objectForKey:DEVICE_CFUUID];
-    if (!cfuuidString) {  // if the CFUUID not created, create it
-        CFUUIDRef cfuuidRef = CFUUIDCreate(kCFAllocatorDefault);
-        cfuuidString = (__bridge NSString *) CFUUIDCreateString(kCFAllocatorDefault, cfuuidRef);
-        [prefs setObject:cfuuidString forKey:DEVICE_CFUUID];
+    if (cfuuidString == nil) {  // if the CFUUID not created, create it
+        cfuuidString = [nc_AppDelegate getUUID];
+        [prefs setValue:cfuuidString forKey:DEVICE_CFUUID];
+        [prefs synchronize];
+        NSLog(@"DEVICE_CFUUID  - - - - - - - %@", cfuuidString);
     }
     
     // Call TestFlightApp SDK
@@ -129,6 +216,7 @@ static nc_AppDelegate *appDelegate;
 #if FLURRY_ENABLED
     [Flurry startSession:@"WWV2WN4JMY35D4GYCPDJ"];
     [Flurry setUserID:cfuuidString];
+    [Flurry logEvent:FLURRY_APPDELEGATE_START];
 #endif
     
     // Create an instance of a UINavigationController and put toFromViewController as the first view
@@ -144,10 +232,10 @@ static nc_AppDelegate *appDelegate;
          
         // This is for TabBar controller
         
-        self.tabBarController = [[UITabBarController alloc] init];
-        twitterViewController *twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
-        SettingInfoViewController *settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController" bundle:nil];
-        FeedBackForm *fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
+        self.tabBarController = [[RXCustomTabBar alloc] init];
+        twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
+        settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController" bundle:nil];
+        fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
         
                
         UINavigationController *toFromController = [[UINavigationController alloc] initWithRootViewController:toFromViewController];
@@ -156,9 +244,9 @@ static nc_AppDelegate *appDelegate;
          UINavigationController *fbController = [[UINavigationController alloc] initWithRootViewController:fbView];
         self.tabBarController.viewControllers = [NSArray arrayWithObjects:toFromController,tweetController,settingController,fbController, nil];
         
-        [self.tabBarController.tabBar setSelectedImageTintColor:[UIColor redColor]];
-        [self.tabBarController.tabBar setBackgroundImage:[UIImage imageNamed:@"img_tabbar.png"]];
-        
+//        [self.tabBarController.tabBar setSelectedImageTintColor:[UIColor redColor]];
+//        [self.tabBarController.tabBar setBackgroundImage:[UIImage imageNamed:@"img_tabbar.png"]];
+        [[nc_AppDelegate sharedInstance] updateTime];
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         [[self window] setRootViewController:self.tabBarController];
         [self.window makeKeyAndVisible];
@@ -169,7 +257,18 @@ static nc_AppDelegate *appDelegate;
     }
     return YES;
 }
-
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
+{
+//    if (viewController == toFromViewController) {
+//        
+//    } else if(viewController == twitterView){
+//        
+//    } else if(viewController == fbView){
+//        
+//    } else if(viewController == settingView){
+//        
+//    }
+}
 
 // Location Manager update callback
 - (void)locationManager:(CLLocationManager *)manager
@@ -191,7 +290,10 @@ static nc_AppDelegate *appDelegate;
         }
         [toFromViewController setCurrentLocation:currentLocation];
         [toFromViewController setIsCurrentLocationMode:TRUE];
-    } 
+#if FLURRY_ENABLED
+        [Flurry logEvent:FLURRY_CURRENT_LOCATION_AVAILABLE];
+#endif
+    }
     
     [currentLocation setLatFloat:[newLocation coordinate].latitude];
     [currentLocation setLngFloat:[newLocation coordinate].longitude];
@@ -225,20 +327,40 @@ static nc_AppDelegate *appDelegate;
      Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
      If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
      */
+        
     saveContext([self managedObjectContext]);
     [locationManager stopUpdatingLocation];
-   
+    
+    //Reload ToFromViewController
+    if(self.isToFromView){
+        self.toLoc = toFromViewController.toLocation;
+        self.fromLoc = toFromViewController.fromLocation;
+        [toFromViewController setEditMode:NO_EDIT]; 
+        toFromViewController.toTableVC.txtField.text = NULL_STRING;
+        toFromViewController.fromTableVC.txtField.text = NULL_STRING;
+        [toFromViewController.toTableVC toFromTyping:toFromViewController.toTableVC.txtField forEvent:nil];
+        [toFromViewController.toTableVC textSubmitted:toFromViewController.toTableVC.txtField forEvent:nil];
+        [toFromViewController.fromTableVC toFromTyping:toFromViewController.fromTableVC.txtField forEvent:nil];
+        [toFromViewController.fromTableVC textSubmitted:toFromViewController.fromTableVC.txtField forEvent:nil];
+    }
+    
     // Close Keyboard
     [UIView setAnimationsEnabled:YES];
     [self.tabBarController.view endEditing:YES];
     
-    //Reload ToFromViewController
-    ToFromTableViewController *toFromTableVC = [[ToFromTableViewController alloc] init];
-    [toFromTableVC textSubmitted:nil forEvent:nil];
-   
+    
+    // Flush tweeter timer
+     [timerTweeterGetData invalidate];
     timerTweeterGetData = nil;
-    [timerTweeterGetData invalidate];
-
+    
+    if(toFromViewController.continueGetTime != nil){
+        timerType =TIMER_TYPE;
+    }
+    [toFromViewController.continueGetTime invalidate];
+    toFromViewController.continueGetTime = nil;
+    [toFromViewController.timerGettingRealDataByItinerary invalidate];
+    toFromViewController.timerGettingRealDataByItinerary = nil;
+    isFromBackground = YES;
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -246,8 +368,48 @@ static nc_AppDelegate *appDelegate;
     /*
      Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
      */
+    
+    // Check the date and if it is not today's date we will make request.
+    NSDate *todayDate = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
+    NSString *strTodayDate = [dateFormatter stringFromDate:todayDate];
+    NSDate *currentDate = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_DATE];
+    if(![strTodayDate isEqual:currentDate]){
+        [[nc_AppDelegate sharedInstance] updateTime];
+        [[NSUserDefaults standardUserDefaults] setObject:strTodayDate forKey:CURRENT_DATE];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
+    if(self.isTwitterView){
+       [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+        [twitterView getAdvisoryData];
+    }
+    else{
+        [self getTwiiterLiveData];
+    }
     [toFromViewController updateTripDate];
     [locationManager startUpdatingLocation];
+
+    if (timerTweeterGetData == nil) {
+       timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];     
+    } 
+    if(self.isToFromView){
+        [toFromViewController.toTableVC markAndUpdateSelectedLocation:self.toLoc];
+        [toFromViewController.fromTableVC markAndUpdateSelectedLocation:self.fromLoc];
+    }
+    if(isFromBackground){
+        if([timerType isEqualToString:TIMER_TYPE]){
+            toFromViewController.continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
+        }
+        else{
+            toFromViewController.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
+        }
+    }
+    if(!isSettingSavedSuccessfully){
+        [self saveSetting];
+    }
+//    sleep(2);
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -255,6 +417,8 @@ static nc_AppDelegate *appDelegate;
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
+    
+    [self isNetworkConnectionLive];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -376,6 +540,7 @@ static nc_AppDelegate *appDelegate;
 -(void)suppertedRegion
 {    
     @try {
+        isRegionSupport = TRUE;
         RKClient *client = [RKClient clientWithBaseURL:TRIP_GENERATE_URL];
         [RKClient setSharedClient:client];
         [[RKClient sharedClient]  get:@"metadata" delegate:self];
@@ -387,6 +552,7 @@ static nc_AppDelegate *appDelegate;
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response 
 {  
+    isFromBackground = NO;
     @try {
         if ([request isGET]) {  
             NSLog(@"Got a response back from our GET! %@", [response bodyAsString]);      
@@ -395,28 +561,64 @@ static nc_AppDelegate *appDelegate;
             if (error == nil)
             {
                 RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
-                if (isTwitterLivaData) {
+                NSDictionary *tempResponseDictionary = [rkParser objectFromString:[response bodyAsString] error:nil];
+                if([tempResponseDictionary objectForKey:GTFS_UPDATE_TIME] != nil ){
+                    if(lastGTFSLoadDateByAgency != tempResponseDictionary){
+                        lastGTFSLoadDateByAgency = tempResponseDictionary;
+                        KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
+                        [keyObjectStore setObject:lastGTFSLoadDateByAgency forKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
+                        [[nc_AppDelegate sharedInstance] performSelector:@selector(serviceByWeekday) withObject:nil afterDelay:0.5];
+                    }
+                }
+                else if([tempResponseDictionary objectForKey:GTFS_SERVICE_BY_WEEKDAY] != nil){
+                    serviceByWeekdayByAgency = tempResponseDictionary;
+                    KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
+                    [keyObjectStore setObject:serviceByWeekdayByAgency forKey:TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY ];
+                    [[nc_AppDelegate sharedInstance] performSelector:@selector(calendarByDate) withObject:nil afterDelay:0.5];
+                }
+                else if([tempResponseDictionary objectForKey:GTFS_SERVICE_EXCEPTIONS_DATES] != nil){
+                    calendarByDateByAgency = tempResponseDictionary;
+                    KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
+                    [keyObjectStore setObject:calendarByDateByAgency forKey:TR_CALENDAR_BY_DATE_BY_AGENCY];
+                }
+                else if(isSettingRequest){
+                    NSDictionary  *dictTemp = [rkParser objectFromString:[response bodyAsString] error:nil];
+                    NSLog(@"RK Response: %@",[response bodyAsString]);
+                    NSNumber *respCode = [(NSDictionary*)dictTemp objectForKey:CODE];
+                    if ([respCode intValue]== RESPONSE_SUCCESSFULL) { 
+                        self.isSettingSavedSuccessfully = YES;
+                    }
+                    else{
+                        self.isSettingSavedSuccessfully = NO;
+                    }
+                    isSettingRequest = NO;
+                }
+                else if (isTwitterLivaData) {
                     isTwitterLivaData = false;
                     NSLog(@"Responce %@", [response bodyAsString]);
                     NSDictionary  *tweeterCountParser = [rkParser objectFromString:[response bodyAsString] error:nil];
                     NSNumber *respCode = [(NSDictionary*)tweeterCountParser objectForKey:@"errCode"];
                     //                NSString *allNew = [(NSDictionary*)tweeterCountParser objectForKey:@"allNew"];
-                    if ([respCode intValue]== RESPONSE_SUCCESSFULL) {                   
-                        NSLog(@"count: %@",[(NSDictionary*)tweeterCountParser objectForKey:TWEET_COUNT]);
-                        NSString *tweeterCount = [(NSDictionary*)tweeterCountParser objectForKey:TWEET_COUNT];
-                        prefs = [NSUserDefaults standardUserDefaults];  
-                        [prefs setObject:tweeterCount forKey:TWEET_COUNT];
-                        [prefs synchronize];
-                        int badge = [tweeterCount  intValue];
-                        if (badge > 0) {
-                            [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:[NSString stringWithFormat:@"%d",badge]];
-                        } else {
-                            [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
+                    if ([respCode intValue]== RESPONSE_SUCCESSFULL) {  
+                        if(!self.isTwitterView){
+                            NSLog(@"count: %@",[(NSDictionary*)tweeterCountParser objectForKey:TWEET_COUNT]);
+                            NSString *tweeterCount = [(NSDictionary*)tweeterCountParser objectForKey:TWEET_COUNT];
+                            int badge = [tweeterCount  intValue];
+                            [[nc_AppDelegate sharedInstance] updateBadge:badge];
+                            if (badge > 0) {
+                                [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:[NSString stringWithFormat:@"%d",badge]];
+                            } else {
+                                [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
+                            } 
+                        }
+                        else{
+                            [twitterView getAdvisoryData];
                         }
                     }
-                } else {                
+                } else if(isRegionSupport){                
                     NSDictionary  *regionParser = [rkParser objectFromString:[response bodyAsString] error:nil];                
                     SupportedRegion *region = [SupportedRegion alloc] ;
+                    isRegionSupport = FALSE;
                     for (id key in regionParser) {
                         if ([key isEqualToString:@"upperRightLatitude"]) {
                             [region setUpperRightLatitude:[regionParser objectForKey:key]];
@@ -438,7 +640,25 @@ static nc_AppDelegate *appDelegate;
                     }                
                     [toFromViewController setSupportedRegion:region];
                     [self getTwiiterLiveData];
-                    timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
+                    if (timerTweeterGetData == nil) {
+                        timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
+                    }
+                }
+                else if(isUpdateTime){
+                     NSDictionary  *dictUpdateTime = [rkParser objectFromString:[response bodyAsString] error:nil];
+                    NSLog(@"update %@", dictUpdateTime); 
+                    isUpdateTime = NO;
+                }
+                else if(isServiceByWeekday){
+                    NSLog(@"isServiceByWeekday response: %@",[response bodyAsString]);
+                    NSDictionary  *dictServiceByweekday = [rkParser objectFromString:[response bodyAsString] error:nil];
+                    NSLog(@"update %@", dictServiceByweekday); 
+                    isServiceByWeekday = NO;
+                }
+                else if(isCalendarByDate){
+                    NSDictionary  *dictCalendarByDate = [rkParser objectFromString:[response bodyAsString] error:nil];
+                    NSLog(@"update %@", dictCalendarByDate); 
+                    isCalendarByDate = NO;
                 }
             }
         }
@@ -465,10 +685,14 @@ static nc_AppDelegate *appDelegate;
         NSString *token = [[[[deviceToken description] stringByReplacingOccurrencesOfString: @"<" withString: NULL_STRING] stringByReplacingOccurrencesOfString: @">" withString: NULL_STRING] stringByReplacingOccurrencesOfString: @" " withString: @""];
         NSLog(@"deviceTokenString: %@",token);
         [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
-        prefs = [NSUserDefaults standardUserDefaults];
         [prefs setObject:token forKey:DEVICE_TOKEN];  
         [prefs synchronize];
         [self upadateDefaultUserValue];
+#if FLURRY_ENABLED
+        NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
+                                      FLURRY_NOTIFICATION_TOKEN, token, nil];
+        [Flurry logEvent: FLURRY_PUSH_AVAILABLE withParameters:flurryParams];
+#endif
     }
     @catch (NSException *exception) {
         NSLog(@"exception at registering push notification with apple: %@", exception);
@@ -492,6 +716,7 @@ static nc_AppDelegate *appDelegate;
     }
 }
 
+
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo 
 {        
     @try {
@@ -500,11 +725,18 @@ static nc_AppDelegate *appDelegate;
         }        
         NSString *isUrgent = [userInfo valueForKey:@"isUrgent"];
         NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
+        NSString *sound = [[userInfo valueForKey:@"aps"] valueForKey:@"sound"];
+        NSLog(@"Remote Notification Sound: %@",sound);
         NSString *badge = [[userInfo valueForKey:@"aps"] valueForKey:@"badge"];
         prefs = [NSUserDefaults standardUserDefaults];  
         [prefs setObject:badge forKey:TWEET_COUNT];
         
         if ([isUrgent isEqualToString:@"true"]) {
+            if([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive){
+                if([[NSUserDefaults standardUserDefaults] integerForKey:ENABLE_URGENTNOTIFICATION_SOUND] == 1 || [[NSUserDefaults standardUserDefaults] integerForKey:ENABLE_URGENTNOTIFICATION_SOUND] == 0){
+                    AudioServicesPlaySystemSound(1015);  
+                }
+            }
             UIAlertView *dataAlert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain"
                                                                 message:message
                                                                delegate:self
@@ -512,10 +744,17 @@ static nc_AppDelegate *appDelegate;
                                                       otherButtonTitles:nil,nil];
             
             [dataAlert show];
-            [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
         } 
         else { 
-            [self.tabBarController setSelectedIndex:1];
+            // Redirect to Twitter Page View
+            if(self.isFromBackground){
+                RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
+                [rxCustomTabBar selectTab:1];
+                [twitterView getAdvisoryData];
+            }
+            else{
+                [self getTwiiterLiveData]; 
+            }
         }
     }
     @catch (NSException *exception) {
@@ -526,25 +765,20 @@ static nc_AppDelegate *appDelegate;
 -(void)alertView: (UIAlertView *)UIAlertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
-    if ([btnName isEqualToString:@"OK"]) {
+    if ([btnName isEqualToString:BTN_OK]) {
        [self.tabBarController setSelectedIndex:1];
-        NSLog(@"receive urgent message");
+    } else if([btnName isEqualToString:BTN_EXIT]){
+        exit(0);
     }
 }
 
-#pragma mark Twitter Live count request
--(void)getTwiiterLiveData
-{
+-(void)updateTime{
     @try {
-        NSLog(@"RealTimeTweets:");
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
-        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
-        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                                @"deviceid", udid, 
-                                nil];    
-        isTwitterLivaData = TRUE;
-        NSString *twitCountReq = [@"advisories/count" appendQueryParams:params];
+        isUpdateTime = YES;
+        NSString *twitCountReq = [UPDATE_TIME_URL appendQueryParams:nil];
+        NSLog(@"twitter count req: %@", twitCountReq);
         [[RKClient sharedClient]  get:twitCountReq delegate:self];
     }
     @catch (NSException *exception) {
@@ -552,29 +786,130 @@ static nc_AppDelegate *appDelegate;
     }
 }
 
+-(void)serviceByWeekday{
+    @try {
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        isServiceByWeekday = YES;
+        NSString *twitCountReq = [SERVICE_BY_WEEKDAY_URL appendQueryParams:nil];
+        NSLog(@"twitter count req: %@", twitCountReq);
+        [[RKClient sharedClient]  get:twitCountReq delegate:self];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception at getTwiiterLive count: %@", exception);
+    }
+}
+
+-(void)calendarByDate{
+    @try {
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        isCalendarByDate = YES;
+        NSString *twitCountReq = [CALENDAR_BY_DATE_URL appendQueryParams:nil];
+        NSLog(@"twitter count req: %@", twitCountReq);
+        [[RKClient sharedClient]  get:twitCountReq delegate:self];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception at getTwiiterLive count: %@", exception);
+    }
+}
+
+#pragma mark Twitter Live count request
+-(void)getTwiiterLiveData{
+    @try {
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+//        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
+        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID], nil];    
+        isTwitterLivaData = TRUE;
+        NSString *twitCountReq = [@"advisories/count" appendQueryParams:params];
+        NSLog(@"twitter count req: %@", twitCountReq);
+        [[RKClient sharedClient]  get:twitCountReq delegate:self];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception at getTwiiterLive count: %@", exception);
+    }
+}
+
+- (void)saveSetting{
+    NSUserDefaults* userDefault = [NSUserDefaults standardUserDefaults];
+    NSString *token = [userDefault objectForKey:DEVICE_TOKEN];
+    NSString *pushEnable = [prefs objectForKey:PREFS_IS_PUSH_ENABLE];
+    int pushHour;
+    if([pushEnable intValue] == 0){
+        pushHour = -1;
+    }
+    else{
+        pushHour = [userDefault integerForKey:PREFS_PUSH_NOTIFICATION_THRESHOLD];
+    }
+    RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+    [RKClient setSharedClient:client];
+    NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
+                            DEVICE_ID, [userDefault objectForKey:DEVICE_CFUUID],
+                            ALERT_COUNT,[NSNumber numberWithInt:pushHour],
+                            DEVICE_TOKEN, token,
+                            MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:[userDefault floatForKey:PREFS_MAX_WALK_DISTANCE]],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_URGENTNOTIFICATION_SOUND]],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_STANDARDNOTIFICATION_SOUND]],
+                            nil];
+    NSString *twitCountReq = [UPDATE_SETTING_REQ appendQueryParams:params];
+    NSLog(@" - - -  - - - - - %@", twitCountReq);
+    isSettingRequest = YES;
+    [nc_AppDelegate sharedInstance].isSettingSavedSuccessfully = NO;
+    [[RKClient sharedClient]  get:twitCountReq delegate:self];
+
+}
+
 #pragma mark update userSettings from server 
--(void)upadateDefaultUserValue
-{
+-(void)upadateDefaultUserValue{
     @try {
         UserPreferance* userPrefs = [UserPreferance userPreferance]; // get singleton
         // set in TPServer
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
-        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
+        [RKClient setSharedClient:client];    
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                                @"deviceid", udid,
+                                DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
                                 @"alertCount", [userPrefs triggerAtHour],
                                 DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],
-                                @"maxDistance", [userPrefs walkDistance],
-                                nil];    
-        NSString *twitCountReq = [@"users/preferences/update" appendQueryParams:params];
+                                @"maxDistance", [userPrefs walkDistance],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt:URGENT_NOTIFICATION_DEFAULT_VALUE],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt:STANDARD_NOTIFICATION_DEFAULT_VALUE],
+                                nil];
+        NSLog(@"params=%@",params);
+        NSString *twitCountReq = [UPDATE_SETTING_REQ appendQueryParams:params];
         [[RKClient sharedClient]  get:twitCountReq delegate:self]; 
         
-
     }
     @catch (NSException *exception) {
         NSLog(@"Exception when update userSettings at appLuanch: %@",exception);
     }
+}
+
+// update badge
+-(void)updateBadge:(int)count
+{
+    int tweetConut =count;
+    [twitterCount removeFromSuperview];
+    twitterCount = [[CustomBadge alloc] init];
+    twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
+    [twitterCount setFrame:CGRectMake(130,430, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
+    if (tweetConut == 0) {
+        [twitterCount setHidden:YES];
+    } else {
+        [self.window addSubview:twitterCount];
+        [twitterCount setHidden:NO];
+    }
+}
+
+-(void)isNetworkConnectionLive
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNetworkChange:) name:kReachabilityChangedNotification object:nil];
+      
+    Reachability *reachability = [Reachability reachabilityForInternetConnection];
+      [reachability startNotifier];
+
+    NetworkStatus remoteHostStatus = [reachability currentReachabilityStatus];
+    
+    if(remoteHostStatus == NotReachable) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:ALERT_NETWORK delegate:self cancelButtonTitle:BTN_EXIT otherButtonTitles:BTN_CANCEL, nil];
+        [alert show];
+    } 
 }
 
 @end

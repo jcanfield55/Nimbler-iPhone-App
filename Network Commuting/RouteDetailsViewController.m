@@ -9,7 +9,6 @@
 #import "RouteDetailsViewController.h"
 #import "Leg.h"
 #import "LegMapViewController.h"
-#import "TwitterSearch.h"
 #import "FeedBackForm.h"
 #import "FeedBackReqParam.h"
 #import "twitterViewController.h"
@@ -25,6 +24,8 @@
     UIBarButtonItem *forwardButton;
     UIBarButtonItem *backButton;
     NSArray* bbiArray;
+    
+    NSMutableDictionary *imageDictionary; // Dictionary to hold pre-loaded table images
 }
 @end
 
@@ -50,9 +51,10 @@ NSUserDefaults *prefs;
 
 -(void)viewDidLoad{
     [super viewDidLoad];
-    btnGoToItinerary = [[UIButton alloc] initWithFrame:CGRectMake(0,0,92,34)];
+    UIImage* btnImage = [UIImage imageNamed:@"img_itineraryNavigation.png"];
+    btnGoToItinerary = [[UIButton alloc] initWithFrame:CGRectMake(0,0,76, 34)];
     [btnGoToItinerary addTarget:self action:@selector(popOutToItinerary) forControlEvents:UIControlEventTouchUpInside];
-    [btnGoToItinerary setBackgroundImage:[UIImage imageNamed:@"img_itineraryNavigation.png"] forState:UIControlStateNormal];
+    [btnGoToItinerary setBackgroundImage:btnImage forState:UIControlStateNormal];
     
     UIBarButtonItem *backToItinerary = [[UIBarButtonItem alloc] initWithCustomView:btnGoToItinerary];
     self.navigationItem.leftBarButtonItem = backToItinerary;
@@ -63,14 +65,29 @@ NSUserDefaults *prefs;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     @try {
         if (self) {
-            [[self navigationItem] setTitle:ROUTE_TITLE_MSG];
             [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-            [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                             [UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
-                                                                             nil]];
+//            if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+//                [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
+//            }
+//            else {
+//                [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_navigationbar.png"]] aboveSubview:self.navigationController.navigationBar];
+//            }
+            
+            UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
+            [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
+            lblNavigationTitle.text=ROUTE_DETAIL_VIEW_TITLE;
+            lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
+            [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
+            lblNavigationTitle.backgroundColor =[UIColor clearColor];
+            lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
+            self.navigationItem.titleView=lblNavigationTitle;
+            
+            //[[self navigationItem] setTitle:ROUTE_TITLE_MSG];
             
             // Set up the MKMapView and LegMapViewController
             mapView = [[MKMapView alloc] init];
+            mapView.layer.borderWidth = 3.0;
+            mapView.layer.borderColor = [UIColor whiteColor].CGColor;
             CGRect mapFrame = CGRectMake(ROUTE_LEGMAP_X_ORIGIN, ROUTE_LEGMAP_Y_ORIGIN,
                                          ROUTE_LEGMAP_WIDTH,  ROUTE_LEGMAP_MIN_HEIGHT);      
             
@@ -79,26 +96,46 @@ NSUserDefaults *prefs;
             legMapVC = [[LegMapViewController alloc] initWithMapView:mapView];
             [mapView setDelegate:legMapVC];
             
+            UIImage* backImage = [UIImage imageNamed:@"img_backSelect.png"];
+            UIImage* forwardImage = [UIImage imageNamed:@"img_forwardSelect.png"];
+            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0,0,
+                                                                    (forwardImage.size.width+backImage.size.width),forwardImage.size.height)];
             // Set up the forward and back button
-            btnBackItem = [[UIButton alloc] initWithFrame:CGRectMake(0,0,52,34)];
+            btnBackItem = [[UIButton alloc] initWithFrame:CGRectMake(0,0,backImage.size.width,backImage.size.height)];
             [btnBackItem addTarget:self action:@selector(navigateBack:) forControlEvents:UIControlEventTouchUpInside];
-            [btnBackItem setBackgroundImage:[UIImage imageNamed:@"img_backSelect.png"] forState:UIControlStateNormal];
+            [btnBackItem setBackgroundImage:backImage forState:UIControlStateNormal];
                         
-            backButton = [[UIBarButtonItem alloc] initWithCustomView:btnBackItem];
-            
-            btnForwardItem = [[UIButton alloc] initWithFrame:CGRectMake(0,0,52,34)];
+            btnForwardItem = [[UIButton alloc] initWithFrame:CGRectMake(backImage.size.width,0,
+                                                                        forwardImage.size.width,
+                                                                        forwardImage.size.height)];
             [btnForwardItem addTarget:self action:@selector(navigateForward:) forControlEvents:UIControlEventTouchUpInside];
-            [btnForwardItem setBackgroundImage:[UIImage imageNamed:@"img_forwardSelect.png"] forState:UIControlStateNormal];
+            [btnForwardItem setBackgroundImage:forwardImage forState:UIControlStateNormal];
             
-            forwardButton = [[UIBarButtonItem alloc] initWithCustomView:btnForwardItem]; 
+//            forwardButton = [[UIBarButtonItem alloc] initWithCustomView:btnForwardItem]; 
             
-
+            [view addSubview:btnBackItem];
+            [view addSubview:btnForwardItem];
+             backButton = [[UIBarButtonItem alloc] initWithCustomView:view];
 //            forwardButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward target:self action:@selector(navigateForward:)]; 
-            bbiArray = [NSArray arrayWithObjects:forwardButton, backButton, nil];
-            self.navigationItem.rightBarButtonItems = bbiArray;
+//            bbiArray = [NSArray arrayWithObject:backButton];
+            self.navigationItem.rightBarButtonItem = backButton;
             
             timeFormatter = [[NSDateFormatter alloc] init];
             [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
+            
+            // Preload the image files for table icons and put into a dictionary
+            NSArray* imageNameArray = [NSArray arrayWithObjects:
+                                       @"img_legPoint", @"img_legPointSelect",
+                                       @"img_legTrain", @"img_legTrainSelect",
+                                       @"img_legHeavyTrain", @"img_legHeavyTrainSelect",
+                                       @"img_legBus", @"img_legBusSelect",
+                                       @"img_legWalk", @"img_legWalkSelect", 
+                                       @"img_backSelect", @"img_backUnSelect", 
+                                       @"img_forwardSelect", @"img_forwardUnSelect", nil];
+            imageDictionary = [[NSMutableDictionary alloc] initWithCapacity:[imageNameArray count]];
+            for (NSString* filename in imageNameArray) {
+                [imageDictionary setObject:[UIImage imageNamed:filename] forKey:filename];
+            }
         }
     }
     @catch (NSException *exception) {
@@ -107,21 +144,40 @@ NSUserDefaults *prefs;
     return self;
 }
 
+- (void) viewDidUnload{
+    [super viewDidUnload];
+    self.mainTable = nil;
+    self.feedbackButton = nil;
+    self.advisoryButton = nil;
+}
+
+- (void) dealloc{
+    self.mainTable = nil;
+    self.feedbackButton = nil;
+    self.advisoryButton = nil;
+}
+
 - (void)setItinerary:(Itinerary *)i0
 {
-    itinerary = i0;
-    [legMapVC setItinerary:i0];
-    [self setItineraryNumber:0];  // Initially start on the first row of itinerary
-    [backButton setEnabled:FALSE];
+    NSLog(@"Itinerary # %@",i0);
+    @try {
+        itinerary = i0;
+        [legMapVC setItinerary:i0];
+        [self setItineraryNumber:0];  // Initially start on the first row of itinerary
+        [btnBackItem setEnabled:FALSE];
         
-    //set FbParameterForItinerary
-    [self setFBParameterForItinerary];
-    
-    // Compute the mainTableTotalHeight by calling the height of each row
-    mainTableTotalHeight = 0.0;
-    for (int i=0; i<[self tableView:mainTable numberOfRowsInSection:0]; i++) {
-        mainTableTotalHeight += [self tableView:mainTable 
-                        heightForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+        //set FbParameterForItinerary
+        [self setFBParameterForItinerary];
+        
+        // Compute the mainTableTotalHeight by calling the height of each row
+        mainTableTotalHeight = 0.0;
+        for (int i=0; i<[self tableView:mainTable numberOfRowsInSection:0]; i++) {
+            mainTableTotalHeight += [self tableView:mainTable 
+                            heightForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception at Set Itinerary %@", exception);
     }
 }
 
@@ -133,74 +189,37 @@ NSUserDefaults *prefs;
                         [NSString stringWithFormat:@"%d", iNumber0], nil];
     [Flurry logEvent:FLURRY_ROUTE_DETAILS_NEWITINERARY_NUMBER withParameters:params];
 #endif
-                                                                                                
+                                                                                               
     itineraryNumber = iNumber0;
+    [mainTable reloadData]; // reload the table to highlight the new itinerary number
     
     // Scrolls the table to the new area.  If it is not
     [mainTable selectRowAtIndexPath:[NSIndexPath indexPathForRow:itineraryNumber inSection:0] animated:YES scrollPosition:UITableViewScrollPositionMiddle]; 
-
-    /*
-     Implemetation Red colour highlighted at selacted Leg.
-     */
-    NSInteger cellCount = [mainTable numberOfRowsInSection:0];
-    int i;
-    for(i = 0; i<cellCount ;i++){
-        UITableViewCell *cell = [mainTable cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-        Leg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:i];
-        if(itineraryNumber == i){
-            [cell.textLabel setTextColor:[UIColor redColor]];
-            if (![leg isEqual:[NSNull null]]) {
-                if([leg isWalk]){
-                    cell.imageView.image = [UIImage imageNamed:@"img_legWalkSelect"];
-                } else if([leg isBus]){
-                    cell.imageView.image = [UIImage imageNamed:@"img_legPointSelect"];
-                } else if([leg isTrain]){                        
-                    cell.imageView.image = [UIImage imageNamed:@"img_legTrainSelect"];
-                } 
-            } else {
-                cell.imageView.image = [UIImage imageNamed:@"img_legPointSelect"];
-            }
-        }
-        else{
-            [cell.textLabel setTextColor:[UIColor blackColor]];
-            if (![leg isEqual:[NSNull null]]) {
-                if([leg isWalk]){
-                    cell.imageView.image = [UIImage imageNamed:@"img_legWalk"];
-                } else if([leg isBus]){
-                    cell.imageView.image = [UIImage imageNamed:@"img_legPoint"];
-                } else if([leg isTrain]){                        
-                    cell.imageView.image = [UIImage imageNamed:@"img_legTrain"];
-                } 
-            } else {
-                cell.imageView.image = [UIImage imageNamed:@"img_legPoint"];
-            }
-        }
-    }
     
     // Activates or de-activates the backward and forward as needed
     if(itineraryNumber == 0){
-        [backButton setEnabled:FALSE];
-        [btnBackItem setBackgroundImage:[UIImage imageNamed:@"img_backUnSelect.png"] forState:UIControlStateNormal];
+        [btnBackItem setEnabled:FALSE];
+        [btnBackItem setBackgroundImage:[imageDictionary objectForKey:@"img_backUnSelect"] forState:UIControlStateNormal];
     } else {
-        [backButton setEnabled:TRUE];
-        [btnBackItem setBackgroundImage:[UIImage imageNamed:@"img_backSelect.png"] forState:UIControlStateNormal];
+        [btnBackItem setEnabled:TRUE];
+        [btnBackItem setBackgroundImage:[imageDictionary objectForKey:@"img_backSelect"] forState:UIControlStateNormal];
     }
     if(itineraryNumber == [itinerary itineraryRowCount] - 1){       
-        [forwardButton setEnabled:FALSE];
-        [btnForwardItem setBackgroundImage:[UIImage imageNamed:@"img_forwardUnSelect.png"] forState:UIControlStateNormal];
+        [btnForwardItem setEnabled:FALSE];
+        [btnForwardItem setBackgroundImage:[imageDictionary objectForKey:@"img_forwardUnSelect"] forState:UIControlStateNormal];
     } else {
-        [forwardButton setEnabled:TRUE];
-        [btnForwardItem setBackgroundImage:[UIImage imageNamed:@"img_forwardSelect.png"] forState:UIControlStateNormal];
+        [btnForwardItem setEnabled:TRUE];
+        [btnForwardItem setBackgroundImage:[imageDictionary objectForKey:@"img_forwardSelect"] forState:UIControlStateNormal];
     }
-    
-    // Updates legMapVC itinerary number (changing the region for the map
     [legMapVC setItineraryNumber:itineraryNumber];
-    
+    // Updates legMapVC itinerary number (changing the region for the map
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    
     @try {
 #if FLURRY_ENABLED
         [Flurry logEvent: FLURRY_ROUTE_DETAILS_APPEAR];
@@ -208,13 +227,13 @@ NSUserDefaults *prefs;
         // Enforce height of main table
         CGRect tableFrame = [mainTable frame];
         CGRect mapFrame = [mapView frame];
-        
+        mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
         // If we have a small itinerary, reduce the table size so it just fits it, and increase the map size
         CGFloat newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT, mainTableTotalHeight);
         if (tableFrame.size.height != newMainTableHeight) { // if something is changing...
             CGFloat combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT + ROUTE_LEGMAP_MIN_HEIGHT+1;
             tableFrame.size.height = newMainTableHeight;
-            tableFrame.origin.y = combinedHeight - newMainTableHeight;
+            tableFrame.origin.y = combinedHeight - newMainTableHeight + 10;
             mapFrame.size.height = combinedHeight - newMainTableHeight - 1;
             
             [mainTable setFrame:tableFrame];
@@ -226,17 +245,17 @@ NSUserDefaults *prefs;
         if (itineraryNumber != 0) {
             [mainTable selectRowAtIndexPath:[NSIndexPath indexPathForRow:itineraryNumber inSection:0] animated:YES scrollPosition:UITableViewScrollPositionMiddle];   
         }
-        
+    
     }
     @catch (NSException *exception) {
         NSLog(@"exception at viewWillAppear RouteDetail: %@", exception);
     }
+    [self test:0];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
     [mainTable flashScrollIndicators];   
 }
 
@@ -273,8 +292,7 @@ NSUserDefaults *prefs;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Check for a reusable cell first, use that if it exists
-    UITableViewCell *cell =
-    [tableView dequeueReusableCellWithIdentifier:@"UIRouteDetailsViewCell"];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UIRouteDetailsViewCell"];
     @try {
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
@@ -285,12 +303,45 @@ NSUserDefaults *prefs;
             [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:STANDARD_FONT_SIZE]];
             [[cell detailTextLabel] setLineBreakMode:UILineBreakModeWordWrap];
             [[cell detailTextLabel] setNumberOfLines:0];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.07];
         }
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        [[cell textLabel] setText:[[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]]];
         
+        // Find the right image filename
+        NSMutableString* imgFileName = [NSMutableString stringWithCapacity:40];
+        Leg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:[indexPath row]];
+        if ([leg isEqual:[NSNull null]]) { // Start or finish point
+            [imgFileName appendString:@"img_legPoint"];
+        } else {
+            if([leg isWalk]){
+                [imgFileName appendString:@"img_legWalk"];
+            } else if([leg isBus]){
+                [imgFileName appendString:@"img_legBus"];
+            } else if ([leg isHeavyTrain]){
+                [imgFileName appendString:@"img_legHeavyTrain"];
+            } else if([leg isTrain]){                        
+                [imgFileName appendString:@"img_legTrain"];
+            } 
+        }
+ 
+        // if this is the selected row, make red
+        if (itineraryNumber == [indexPath row]) { 
+            [cell.textLabel setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+            [imgFileName appendString:@"Select"];
+        } else {
+            [cell.textLabel setTextColor:[UIColor darkGrayColor]];
+        }
+        
+        // Add text
+        [[cell textLabel] setText:[[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]]];
         [[cell detailTextLabel] setText:[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]]];
-            
+
+        // Add icon if there is one
+        if ([imgFileName length] == 0) {
+            cell.imageView.image = nil;
+        } else {
+            cell.imageView.image = [imageDictionary objectForKey:imgFileName];
+        }
     }
     @catch (NSException *exception) {
         NSLog(@"exception while reload RouteDetailView: %@", exception);
@@ -302,7 +353,7 @@ NSUserDefaults *prefs;
 {    
     @try {
         // NSString *patchString;
-        /*
+        
         NSString* titleText = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
         NSString* subtitleText = [[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]];
         CGSize titleSize = [titleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE] 
@@ -314,8 +365,8 @@ NSUserDefaults *prefs;
         if (height < STANDARD_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
             height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
         }
-         */
-        return 55.0;
+        
+        return height;
     }
     @catch (NSException *exception) {
         NSLog(@"exception at set dynamic height for RouteDetailViewTable Cell: %@", exception);
@@ -341,6 +392,8 @@ NSUserDefaults *prefs;
             } else if([leg isTrain]){                        
                 [self setFBParameterForLeg:[leg legId]];
             } 
+        } else {
+            [self setFBParameterForItinerary];
         }
     }
     @catch (NSException *exception) {
@@ -352,12 +405,11 @@ NSUserDefaults *prefs;
 
 // Callback for when user presses the navigate back button on the right navbar
 - (IBAction)navigateBack:(id)sender {
-        
     if ([self itineraryNumber] > 0) {
         [self setItineraryNumber:([self itineraryNumber] - 1)];
          [self test:itineraryNumber];
+        [legMapVC refreshLegOverlay:itineraryNumber];
     }
-    
 }
 
 // Callback for when user presses the navigate forward button on the right navbar
@@ -365,7 +417,9 @@ NSUserDefaults *prefs;
     if ([self itineraryNumber] < [itinerary itineraryRowCount] - 1) {
         [self setItineraryNumber:([self itineraryNumber] + 1)];
         [self test:itineraryNumber];
+        [legMapVC refreshLegOverlay:itineraryNumber];
     }
+    
 }
 
 
@@ -421,6 +475,7 @@ NSUserDefaults *prefs;
 
 -(void)setFBParameterForItinerary
 {
+    NSLog(@"Itinerary.....");
     [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_ITINERARY];
     [nc_AppDelegate sharedInstance].FBDate = nil;
     [nc_AppDelegate sharedInstance].FBToAdd = nil;
@@ -430,6 +485,7 @@ NSUserDefaults *prefs;
 
 -(void)setFBParameterForLeg:(NSString *)legId
 {
+    NSLog(@"leg.....");
     [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_LEG];
     [nc_AppDelegate sharedInstance].FBDate = nil;
     [nc_AppDelegate sharedInstance].FBToAdd = nil;
@@ -439,6 +495,13 @@ NSUserDefaults *prefs;
 
 -(void)popOutToItinerary
 {
-    [self.navigationController popViewControllerAnimated:TRUE];
+    CATransition *animation = [CATransition animation];
+    [animation setDuration:0.3];
+    [animation setType:kCATransitionPush];
+    [animation setSubtype:kCATransitionFromLeft];
+    [animation setRemovedOnCompletion:YES];
+    [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+    [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+    [[self navigationController] popViewControllerAnimated:NO];
 }
 @end

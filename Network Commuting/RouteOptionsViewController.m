@@ -10,7 +10,6 @@
 #import "Leg.h"
 #import "UtilityFunctions.h"
 #import <math.h>
-#import "TwitterSearch.h"
 #import "FeedBackForm.h"
 #import "LegMapViewController.h"
 #import "twitterViewController.h"
@@ -21,13 +20,12 @@
 #include "Flurry.h"
 #endif
 
-#define CELL_HEIGHT             60.0
+#define IDENTIFIER_CELL         @"UIRouteOptionsViewCell"
 
 @interface RouteOptionsViewController()
 {
     // Variables for internal use
     
-    TwitterSearch* twitterSearchVC;
     RouteDetailsViewController* routeDetailsVC;
 }
 
@@ -51,7 +49,16 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        [[self navigationItem] setTitle:@"Itineraries"];
+        UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
+        [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
+        lblNavigationTitle.text=ROUTE_OPTIONS_VIEW_TITLE;
+        lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
+        [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
+        lblNavigationTitle.backgroundColor =[UIColor clearColor];
+        lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
+        self.navigationItem.titleView=lblNavigationTitle;
+        
+        //[[self navigationItem] setTitle:@"Itineraries"];
         timeFormatter = [[NSDateFormatter alloc] init];
         [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
     }
@@ -64,13 +71,24 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 #if FLURRY_ENABLED
     [Flurry logEvent:FLURRY_ROUTE_OPTIONS_APPEAR];
 #endif
+    
     // Enforce height of main table
+    mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
     CGRect rect0 = [mainTable frame];
     rect0.size.height = ROUTE_OPTIONS_TABLE_HEIGHT;
     [mainTable setFrame:rect0];
     [mainTable reloadData];
     [self setFBParameterForPlan];
 }
+
+// Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
+-(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status
+{
+    if (status == STATUS_OK) {
+        [mainTable reloadData];
+    }
+}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -80,98 +98,115 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     // Release any cached data, images, etc that aren't in use.
 }
 
--(void)popOutToNimbler
-{
-    [self.navigationController popViewControllerAnimated:TRUE];
+-(void)popOutToNimbler{
+    CATransition *animation = [CATransition animation];
+    [animation setDuration:0.3];
+    [animation setType:kCATransitionPush];
+    [animation setSubtype:kCATransitionFromLeft];
+    [animation setRemovedOnCompletion:YES];
+    [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+    [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+    [[self navigationController] popViewControllerAnimated:NO];
 }
 #pragma mark - UITableViewDelegate methods
 // Table view management methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[plan itineraries] count];
+    return [[plan sortedItineraries] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Check for a reusable cell first, use that if it exists
     UITableViewCell *cell =
-    [tableView dequeueReusableCellWithIdentifier:@"UIRouteOptionsViewCell"];
+    [tableView dequeueReusableCellWithIdentifier:IDENTIFIER_CELL];
     @try {
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
-                                          reuseIdentifier:@"UIRouteOptionsViewCell"];
+                                          reuseIdentifier:IDENTIFIER_CELL];
             [cell.imageView setImage:nil];
         }
+        UIImage *imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
+        UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
+        [cell setAccessoryView:imgViewDetailDisclosure];
          cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.textLabel.numberOfLines = 2;
         // Get the requested itinerary
         Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
-        if (isReloadRealData) {
-            if([itin itinArrivalFlag] >= 0) {
-                UIImage *imgForArrivalTime = [UIImage alloc];
-                cell.frame = CGRectMake(100, 2, 20, 20);
-                
-                if([itin.itinArrivalFlag intValue] == ON_TIME) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_ontime.png"] ;
-                }  else if([itin.itinArrivalFlag intValue] == DELAYED) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_delay.png"] ;
-                } else if([itin.itinArrivalFlag intValue] == EARLY) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_early.png"] ;
-                } else if([itin.itinArrivalFlag intValue] == EARLIER) {
-                    imgForArrivalTime = [UIImage imageNamed:@"img_earlier.ong"] ;
-                } else if ([itin.itinArrivalFlag intValue] == ITINERARY_TIME_SLIPPAGE ) {
-                    imgForArrivalTime = [UIImage imageNamed:@"itin_slipage.png"] ;
-                }
-                [cell.imageView setImage:imgForArrivalTime];
-            }
-        } else {
-            [cell.imageView setImage:nil];
-        }
-        /*
-         for feedback planId
-         */
         
         // Set title
-        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:LARGER_THEN_MEDIUM_FONT_SIZE]];
+        [[cell textLabel] setFont:[UIFont MEDIUM_BOLD_FONT]];
+        NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
+                                                   timeIntervalSinceDate:[itin startTimeOfFirstLeg]]);
         NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)", 
-                               [timeFormatter stringFromDate:[itin startTime]],
-                               [timeFormatter stringFromDate:[itin endTime]],
-                               durationString([[itin duration] floatValue])];
+                               [timeFormatter stringFromDate:[itin startTimeOfFirstLeg]],
+                               [timeFormatter stringFromDate:[itin endTimeOfLastLeg]],
+                               durationStr];
         [[cell textLabel] setText:titleText];
-        cell.textLabel.numberOfLines = 2;
-        cell.textLabel.textColor = [UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0];
-        cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
-        // Set sub-title (show each leg's mode and route if available)
-        NSMutableString *subTitle = [NSMutableString stringWithCapacity:30];
-        NSArray *sortedLegs = [itin sortedLegs];
-        for (int i = 0; i < [sortedLegs count]; i++) {
-            Leg *leg = [sortedLegs objectAtIndex:i];
-            if ([leg mode] && [[leg mode] length] > 0) {
-                if (i > 0) {
-                    [subTitle appendString:@" -> "];
+        UIView *viewCellBackground = [[UIView alloc] init];
+        [viewCellBackground setBackgroundColor:[UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW]];
+        cell.backgroundView = viewCellBackground;
+        
+        // notify with TEXT for LEG timimg
+        if (isReloadRealData) {
+            if([itin itinArrivalFlag] >= 0) {
+                if([itin.itinArrivalFlag intValue] == ON_TIME) {
+                    titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"On Time"];
+                }  else if([itin.itinArrivalFlag intValue] == DELAYED) {
+                    titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"Delayed"];
+                } else if([itin.itinArrivalFlag intValue] == EARLY) {
+                    titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"Early"];
+                } else if([itin.itinArrivalFlag intValue] == EARLIER) {
+                   titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"Earlier"];
+                } else if ([itin.itinArrivalFlag intValue] == ITINERARY_TIME_SLIPPAGE ) {
+                     titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"Time Slippage"];
                 }
-                [subTitle appendString:[[leg mode] capitalizedString]];
-                if ([leg route] && [[leg route] length] > 0) {
-                    [subTitle appendString:@" "];
-                    [subTitle appendString:[leg route]];
-                }
+                 [[cell textLabel] setText:titleText];
             }
-        }
-        [[cell detailTextLabel] setText:subTitle];
-        UIImage *unselect = [UIImage imageNamed:@"img_unSelect.png"];
-        cell.AccessoryView = [[UIImageView alloc] initWithImage:unselect];
+        }         
+        cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
+        [[cell detailTextLabel] setFont:[UIFont MEDIUM_FONT]];
+        cell.detailTextLabel.textColor = [UIColor GRAY_FONT_COLOR];
 
+        [[cell detailTextLabel] setText:[itin itinerarySummaryStringForWidth:ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
+                                                                        Font:cell.detailTextLabel.font]];
+        [[cell detailTextLabel] setNumberOfLines:0];  // Allow for multi-lines
     }
     @catch (NSException *exception) {
         NSLog(@"exception at load table: %@", exception);
     }
-    
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)aTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {    
-    return CELL_HEIGHT;  
+    Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
+    
+    NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
+                                                     timeIntervalSinceDate:[itin startTimeOfFirstLeg]]);
+    
+    // TODO -- make sure not text wrapping on first line
+    NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
+                           [timeFormatter stringFromDate:[itin startTimeOfFirstLeg]],
+                           [timeFormatter stringFromDate:[itin endTimeOfLastLeg]],
+                           durationStr];
+    NSString* subtitleText = [itin itinerarySummaryStringForWidth:(CGFloat)ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
+                                                             Font:(UIFont *)[UIFont MEDIUM_FONT]];
+    
+    CGSize titleSize = [titleText sizeWithFont:[UIFont MEDIUM_BOLD_FONT]
+                             constrainedToSize:CGSizeMake(ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
+
+    CGSize subtitleSize = [subtitleText sizeWithFont:[UIFont MEDIUM_FONT]
+                                   constrainedToSize:CGSizeMake(ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
+    
+    CGFloat height = titleSize.height + subtitleSize.height + ROUTE_OPTIONS_VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
+    if (height < ROUTE_OPTIONS_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
+        height = ROUTE_OPTIONS_TABLE_CELL_MINIMUM_HEIGHT;
+    }
+    
+    return height;
+
 }
 
 -(void)hideUnUsedTableViewCell
@@ -186,15 +221,19 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 {
     @try {
         UITableViewCell *cell = [atableView cellForRowAtIndexPath:indexPath];
-        cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_select.png"]];
+        UIView *viewCellBackground = [[UIView alloc] init];
+        [viewCellBackground setBackgroundColor:[UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW]];
+        cell.backgroundView = viewCellBackground;
         if (!routeDetailsVC) {
             routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
         }
-        itinararyId =[[[plan sortedItineraries] objectAtIndex:[indexPath row]] itinId];
+        
         itinerary = [plan.sortedItineraries objectAtIndex:[indexPath row]];
+        itinararyId =[itinerary itinId];
 
-#if FLURRY_ENABLED         
-        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:                                 FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d", [indexPath row]],                                    FLURRY_SELECTED_DEPARTURE_TIME,[NSString stringWithFormat:@"%@", [itinerary startTime]], nil];                                  [Flurry logEvent:FLURRY_ROUTE_SELECTED withParameters:params];  
+#if FLURRY_ENABLED
+        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:                                 FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d", [indexPath row]],                                    FLURRY_SELECTED_DEPARTURE_TIME,[NSString stringWithFormat:@"%@", [itinerary startTimeOfFirstLeg]], nil];
+        [Flurry logEvent:FLURRY_ROUTE_SELECTED withParameters:params];
 #endif
         
         [routeDetailsVC setItinerary:itinerary];
@@ -238,7 +277,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 }
 
 
-
 #pragma mark - View lifecycle
 
 /*
@@ -247,33 +285,40 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    btnGoToNimbler = [[UIButton alloc] initWithFrame:CGRectMake(0,0,82,34)];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
+//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+//        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
+//    }
+//    else {
+//        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_navigationbar.png"]] aboveSubview:self.navigationController.navigationBar];
+//    }
+    btnGoToNimbler = [[UIButton alloc] initWithFrame:CGRectMake(0,0,65,34)];
     [btnGoToNimbler addTarget:self action:@selector(popOutToNimbler) forControlEvents:UIControlEventTouchUpInside];
-    [btnGoToNimbler setBackgroundImage:[UIImage imageNamed:@"img_nimblerNavigationSelect.png"] forState:UIControlStateNormal];
+    [btnGoToNimbler setBackgroundImage:[UIImage imageNamed:@"img_nimblerNavigation.png"] forState:UIControlStateNormal];
     
     UIBarButtonItem *backTonimbler = [[UIBarButtonItem alloc] initWithCustomView:btnGoToNimbler];
     self.navigationItem.leftBarButtonItem = backTonimbler;
     
     [self hideUnUsedTableViewCell];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                     [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0], UITextAttributeTextColor,
-                                                                     nil]];
-    NSLog(@"RouteOptions loaded");
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    
     [super viewDidAppear:animated];
     NSLog(@"RouteOptions did appear");
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload{
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    self.mainTable = nil;
+    self.feedbackButton = nil;
+    self.advisoryButton = nil;
+}
+
+- (void)dealloc{
+    self.mainTable = nil;
+    self.feedbackButton = nil;
+    self.advisoryButton = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -315,12 +360,13 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                 [routeDetailsVC ReloadLegWithNewData];
             }            
         } else {
-            //thereare no live feeds available.            
+            //thereare no live feeds available. 
+            isReloadRealData = FALSE;
             NSLog(@"thereare no live feeds available for current route");
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at live itinerary response: %@",exception);
+        NSLog(@"exception at live feed data response: %@",exception);
     }
 }
 
@@ -366,7 +412,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 
 -(void)setFBParameterForPlan
 {
-    NSLog(@"plan....");
     [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_PLAN];
     [nc_AppDelegate sharedInstance].FBDate = nil;
     [nc_AppDelegate sharedInstance].FBToAdd = nil;

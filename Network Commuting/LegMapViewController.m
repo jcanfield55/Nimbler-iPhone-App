@@ -31,8 +31,6 @@
 }
 
 // Utility routine for setting the region on the MapView based on the itineraryNumber
-- (void)setMapViewRegion;  
-- (void)refreshLegOverlay:(int)number;
 @end
 
 @implementation LegMapViewController
@@ -56,63 +54,71 @@ NSString *legID;
 
 - (void)setItinerary:(Itinerary *)itin
 {
-    if (itin != itinerary) {  // if something actually changed...
-        itinerary = itin;  
-        
-        // Clear out any previous overlays and annotations
-        [mapView removeAnnotations:dotAnnotationArray];
-        [mapView removeOverlays:polyLineArray];
-        [dotAnnotationArray removeAllObjects];
-        [polyLineArray removeAllObjects];
-        
-        // Set up the startpoint, endpoint, overlays and annotations for the new itinerary
-        
-        NSArray *sortedLegs = [itinerary sortedLegs];
-                
-        // Take startpoint as the beginning of the first leg's polyline, and endpoint form the last leg's polyline
-        startPoint = [[MKPointAnnotation alloc] init];
-        [startPoint setCoordinate:[[[sortedLegs objectAtIndex:0] polylineEncodedString] startCoord]];
-        [dotAnnotationArray addObject:startPoint];
-        [mapView addAnnotation:startPoint];
-        endPoint = [[MKPointAnnotation alloc] init];
-        [endPoint setCoordinate:[[[sortedLegs objectAtIndex:([sortedLegs count]-1)] polylineEncodedString] endCoord]];
-        [dotAnnotationArray addObject:endPoint];
-        [mapView addAnnotation:endPoint];
-        
-        // Add the overlays and dot AnnotationViews for paths to the mapView
-        for (int i=0; i < [itinerary itineraryRowCount]; i++) {
-            if ([[itinerary legDescriptionToLegMapArray] objectAtIndex:i] == [NSNull null]) {
-                [polyLineArray addObject:[NSNull null]];
-            }
-            else {
-                Leg* l = [[itinerary legDescriptionToLegMapArray] objectAtIndex:i];
-                MKPolyline *polyLine = [[l polylineEncodedString] polyline];
-                [polyLineArray addObject:polyLine];
-                [mapView addOverlay:polyLine];
-                
-                if (i < [itinerary itineraryRowCount] - 1) {  // if not the last itinerary row
-                    MKPointAnnotation* dotPoint = [[MKPointAnnotation alloc] init];
-                    [dotPoint setCoordinate:[[l polylineEncodedString] endCoord]];
-                    [dotAnnotationArray addObject:dotPoint];
-                    [mapView addAnnotation:dotPoint];
+    @try {
+        if (itin != itinerary) {  // if something actually changed...
+            itinerary = itin;  
+            
+            // Clear out any previous overlays and annotations
+            [mapView removeAnnotations:dotAnnotationArray];
+            [mapView removeOverlays:polyLineArray];
+            [dotAnnotationArray removeAllObjects];
+            [polyLineArray removeAllObjects];
+            
+            // Set up the startpoint, endpoint, overlays and annotations for the new itinerary
+            
+            NSArray *sortedLegs = [itinerary sortedLegs];
+            
+            // Take startpoint as the beginning of the first leg's polyline, and endpoint form the last leg's polyline
+            startPoint = [[MKPointAnnotation alloc] init];
+            [startPoint setCoordinate:[[[sortedLegs objectAtIndex:0] polylineEncodedString] startCoord]];
+            [dotAnnotationArray addObject:startPoint];
+            [mapView addAnnotation:startPoint];
+            endPoint = [[MKPointAnnotation alloc] init];
+            [endPoint setCoordinate:[[[sortedLegs objectAtIndex:([sortedLegs count]-1)] polylineEncodedString] endCoord]];
+            [dotAnnotationArray addObject:endPoint];
+            [mapView addAnnotation:endPoint];
+            
+            // Add the overlays and dot AnnotationViews for paths to the mapView
+            for (int i=0; i < [itinerary itineraryRowCount]; i++) {
+                if ([[itinerary legDescriptionToLegMapArray] objectAtIndex:i] == [NSNull null]) {
+                    [polyLineArray addObject:[NSNull null]];
+                }
+                else {
+                    Leg* l = [[itinerary legDescriptionToLegMapArray] objectAtIndex:i];
+                    MKPolyline *polyLine = [[l polylineEncodedString] polyline];
+                    [polyLineArray addObject:polyLine];
+                    [mapView addOverlay:polyLine];
+                    
+                    if (i < [itinerary itineraryRowCount] - 1) {  // if not the last itinerary row
+                        MKPointAnnotation* dotPoint = [[MKPointAnnotation alloc] init];
+                        [dotPoint setCoordinate:[[l polylineEncodedString] endCoord]];
+                        [dotAnnotationArray addObject:dotPoint];
+                        [mapView addAnnotation:dotPoint];
+                    }
                 }
             }
+            
+            [self setMapViewRegion];   // update the mapView region to correspond to the numItinerary item
+            [mapView setShowsUserLocation:YES];  // track user location
         }
-        
-        [self setMapViewRegion];   // update the mapView region to correspond to the numItinerary item
-        
-        [mapView setShowsUserLocation:YES];  // track user location
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception at set Itinerary: %@",exception);
     }
 }
 
 - (void)setItineraryNumber:(int)i0
 {
-    if (itineraryNumber != i0) { // if something has actually changed...
-        [self refreshLegOverlay:itineraryNumber];  // refreshes the last itinerary number
-        [self refreshLegOverlay:i0];   // refreshes the new itinerary number
-        itineraryNumber = i0;
-        [self setMapViewRegion];  // redefine the bounding box
-
+    @try {
+        if (itineraryNumber != i0) { // if something has actually changed...
+            //[self refreshLegOverlay:itineraryNumber];  // refreshes the last itinerary number
+            //[self refreshLegOverlay:i0];   // refreshes the new itinerary number
+            itineraryNumber = i0;
+            [self setMapViewRegion];  // redefine the bounding box
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"exception at setItinerary %@",exception);
     }
 }
 
@@ -175,12 +181,13 @@ NSString *legID;
             // aView.fillColor = [[UIColor cyanColor] colorWithAlphaComponent:0.2];
             aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:ALPHA_LIGHTER];
             aView.lineWidth = LINE_WIDTH;
-                        
+            NSLog(@"itineraryNumber=%d",itineraryNumber);
+            
             // Determine if this overlay is the one in focus.  If so, make it darker
-            Leg *leg =leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:itineraryNumber];
             for (int i=0; i<[polyLineArray count]; i++) {
                 if (([polyLineArray objectAtIndex:i] == overlay)) {
                     if (i == itineraryNumber) {
+                        Leg *leg  = [[itinerary legDescriptionToLegMapArray] objectAtIndex:itineraryNumber];
                         if([leg isWalk]){
                             aView.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:ALPHA_LIGHT] ;
                             aView.lineWidth = LINE_WIDTH;
@@ -304,7 +311,6 @@ NSString *legID;
                                                        reuseIdentifier:@"MyDotAnnotation"];
                 dotView.canShowCallout = NO;
                 if (!dotImage) {
-                    // TODO add @2X image for retina screens
                     NSString* imageName = [[NSBundle mainBundle] pathForResource:LEGMAP_DOT_IMAGE_FILE ofType:@"png"];
                     dotImage = [UIImage imageWithContentsOfFile:imageName];
                 }

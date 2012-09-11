@@ -35,7 +35,6 @@
     return self;
 }
 
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -119,10 +118,19 @@
 	// Do any additional setup after loading the view, typically from a nib.
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload{
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
+    self.datePicker = nil;
+    self.departArriveSelector = nil;
+    self.cancelButton = nil;
+    self.doneButton = nil;
+}
+
+- (void)dealloc{
+    self.datePicker = nil;
+    self.departArriveSelector = nil;
+    self.cancelButton = nil;
+    self.doneButton = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

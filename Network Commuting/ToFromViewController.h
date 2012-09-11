@@ -14,7 +14,8 @@
 #import "enums.h"
 #import "SupportedRegion.h"
 
-@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,RKRequestDelegate,UIActionSheetDelegate,UIAlertViewDelegate>
+
+@class PlanStore;
 
 typedef enum {
     NO_EDIT,    // Neither to nor from address is being edited with the keyboard
@@ -22,18 +23,20 @@ typedef enum {
     TO_EDIT     // To address is being edited with the keyboard
 } ToFromEditMode;
 
+
+@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,RKRequestDelegate,UIActionSheetDelegate,UIAlertViewDelegate>
+
 @property (strong, nonatomic) IBOutlet UITableView* mainTable;  // grouped table for main page layout
 @property (strong, nonatomic) UITableView *fromTable;  // from table embedded in mainTable
 @property (strong, nonatomic) ToFromTableViewController* fromTableVC; // View controller for fromTable
 @property (strong, nonatomic) UITableView *toTable;   // to table embedded in mainTable
 @property (strong, nonatomic) ToFromTableViewController* toTableVC;  // View controller for toTable
 @property (strong, nonatomic) IBOutlet UIButton *routeButton;
-@property (strong, nonatomic) IBOutlet UIButton *feedbackButton;
-@property (strong, nonatomic) IBOutlet UIButton *advisoriesButton;
 @property (strong, nonatomic) RKObjectManager *rkGeoMgr;  // RestKit Object Manager for geocoding
 @property (strong, nonatomic) RKObjectManager *rkPlanMgr;  // RestKit object manager for trip planning
 @property (strong, nonatomic) RKObjectManager *rkSavePlanMgr;  // RestKit object manager for trip planning
 @property (strong, nonatomic) Locations *locations;  // Wrapper for collection of all Locations
+@property (strong, nonatomic) PlanStore *planStore;  // Wrapper for collection of all plans
 @property (strong, nonatomic) Location *fromLocation;
 @property (strong, nonatomic) Location *toLocation;
 @property (strong, nonatomic) Location *currentLocation;
@@ -48,9 +51,19 @@ typedef enum {
 @property (nonatomic) BOOL isContinueGetRealTimeData;
 @property (strong, nonatomic) NSTimer *continueGetTime;
 
+
+@property (strong, nonatomic) UIToolbar *toolBar;
+@property (strong, nonatomic) UIDatePicker *datePicker;
+@property (strong, nonatomic) UISegmentedControl *departArriveSelector;
+@property (strong, nonatomic) NSDate* date;   
+@property (strong, nonatomic) UIBarButtonItem *btnDone;
+@property (strong, nonatomic) UIBarButtonItem *btnNow;
+@property (nonatomic, strong) Plan *plan;
+@property (strong, nonatomic) NSTimer *timerGettingRealDataByItinerary;
+
+- (IBAction)openPickerView:(id)sender;
+
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
-- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event;
-- (IBAction)advisoriesButtonPressed:(id)sender forEvent:(UIEvent *)event;
 
 - (void)updateToFromLocation:(id)sender isFrom:(BOOL)isFrom location:(Location *)loc; // Callback from ToFromTableViewController to update a new user entered/selected location
 - (void)updateGeocodeStatus:(BOOL)isGeocodeOutstanding isFrom:(BOOL)isFrom; // Callback from ToFromTableViewController to update geocoding status
@@ -63,9 +76,18 @@ typedef enum {
 - (void)reloadTables;  // Reloads the tables in case something has changed in the model
 
 -(void)savePlanInTPServer:(NSString *)tripResponse;
--(NSString *)getCurrentLocationOfFormattedAddress:(Location *)location;
 -(BOOL)alertUsetForLocationService;
 -(void)getRealTimeData;
+-(void)getRealTimeDataForItinerary;
 -(NSNumber *)getWalkDistance;
 -(void)setFBParameterForGeneral;
+
+// Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
+-(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status;
+
+-(void)doSwapLocation;
+-(void)requestReverseGeo:(Location *)location;
+- (void) hideTabBar;
+- (void) showTabbar;
+- (void)endEdit;
 @end
