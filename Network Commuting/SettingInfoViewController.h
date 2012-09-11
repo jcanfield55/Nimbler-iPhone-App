@@ -19,9 +19,9 @@
     IBOutlet UISlider *sliderPushNotification;
              UISwitch *switchEnableUrgentSound;
              UISwitch *switchEnableStandardSound;
-             UILabel *lblSliderValue;
     int      enableUrgentSoundFlag;
     int      enableStandardSoundFlag;
+    UILabel *lblSliderMaxWalkDistanceValue;
    
 }
 
@@ -29,11 +29,11 @@
 @property (nonatomic, strong) IBOutlet UIButton *btnUpdateSetting;
 @property (nonatomic, strong) IBOutlet UISlider *sliderMaxWalkDistance;
 @property (nonatomic, strong) IBOutlet UISlider *sliderPushNotification;
-@property (nonatomic, strong) IBOutlet UILabel *lblSliderValue;
 @property (nonatomic, strong) IBOutlet UISwitch *switchEnableUrgentSound;
 @property (nonatomic, strong) IBOutlet UISwitch *switchEnableStandardSound;
 @property (nonatomic)   int      enableUrgentSoundFlag;
 @property (nonatomic)   int      enableStandardSoundFlag;
+@property (nonatomic, strong) UILabel *lblSliderMaxWalkDistanceValue;
 
 -(IBAction)UpdateSetting:(id)sender;
 -(IBAction)sliderWalkDistanceValueChanged:(UISlider *)sender;

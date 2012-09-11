@@ -58,6 +58,9 @@ typedef enum {
 @property (strong, nonatomic) NSDate* date;   
 @property (strong, nonatomic) UIBarButtonItem *btnDone;
 @property (strong, nonatomic) UIBarButtonItem *btnNow;
+@property (nonatomic, strong) Plan *plan;
+@property (strong, nonatomic) NSTimer *timerGettingRealDataByItinerary;
+
 - (IBAction)openPickerView:(id)sender;
 
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
@@ -75,6 +78,7 @@ typedef enum {
 -(void)savePlanInTPServer:(NSString *)tripResponse;
 -(BOOL)alertUsetForLocationService;
 -(void)getRealTimeData;
+-(void)getRealTimeDataForItinerary;
 -(NSNumber *)getWalkDistance;
 -(void)setFBParameterForGeneral;
 

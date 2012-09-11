@@ -21,6 +21,7 @@
     NSDateFormatter* dateFormatter; // date formatter for OTP requests
     NSDateFormatter* timeFormatter; // time formatter for OTP requests
     NSMutableDictionary* parametersByPlanURLResource; // Key is the planURLResource, object = request parameters
+    PlanRequestParameters* planRequestParameters;
 }
 
 // Internal methods
@@ -81,6 +82,13 @@
 #endif
             [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
             PlanRequestStatus status = STATUS_OK;
+            if(toFromVC.continueGetTime != nil){
+                [toFromVC.continueGetTime invalidate];
+                toFromVC.continueGetTime = nil; 
+            }
+            [toFromVC setPlan:matchingPlan];
+            [toFromVC getRealTimeDataForItinerary];
+            toFromVC.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromVC selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
             if (parameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
                 [routeOptionsVC newPlanAvailable:matchingPlan status:status];
             } else {
@@ -128,7 +136,7 @@
     parameters.serverCallsSoFar = parameters.serverCallsSoFar + 1;
     // TODO handle changes to maxWalkDistance with plan caching
     
-    planURLResource = [@"plan" appendQueryParams:params];
+    planURLResource = [PLAN appendQueryParams:params];
     [parametersByPlanURLResource setObject:parameters forKey:planURLResource];
     NIMLOG_URLS(@"Plan resource: %@", planURLResource);
     // Call the trip planner
@@ -137,15 +145,12 @@
 
 
 // Delegate methods for when the RestKit has results from the Planner
-- (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects
-{
-    {
+- (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects{
         NSInteger statusCode = [[objectLoader response] statusCode];
         NIMLOG_EVENT1(@"Planning HTTP status code = %d", statusCode);
         PlanRequestParameters* parameters;
         @try {
             if (objects && [objects objectAtIndex:0]) {
-                Plan* plan = [objects objectAtIndex:0];
                 NSString* resourcePath = [objectLoader resourcePath];
                 parameters = [parametersByPlanURLResource objectForKey:resourcePath];
                 
@@ -179,7 +184,6 @@
             }
             // else if not a toFromViewController request, do not bother the user
         }
-    }
 }
 
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error
@@ -297,6 +301,42 @@
             return consolidatedPlan;
         } else {
             return plan0;  // return plan0 if no different matches were found
+        }
+    }
+}
+
+// This Method is Called From didLoadObjects method Of ToFromViewController.
+// This Method Perform all The Operation Required For Plan Caching on Plan With Plan id,Itinerary id and leg id.
+-(void)PlanToStoreInCache:(Plan *)plan:(Location *)toLocation:(Location *)fromLocation{
+    @try {
+        [plan setToLocation:toLocation];
+        [plan setFromLocation:fromLocation];
+        [plan createRequestChunkWithAllItinerariesAndRequestDate:[planRequestParameters thisRequestTripDate]
+                                                  departOrArrive:[planRequestParameters departOrArrive]];
+        saveContext(managedObjectContext);  // Save location and request chunk changes
+        plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context
+        
+        // Now format the itineraries of the consolidated plan
+        [plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate] departOrArrive:[planRequestParameters departOrArrive]];
+        [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
+        
+        // Call-back the appropriate RouteOptions VC with the new plan
+        if (planRequestParameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
+            [routeOptionsVC newPlanAvailable:plan status:STATUS_OK];  
+        } else {
+            [toFromVC newPlanAvailable:plan status:STATUS_OK];
+            if(toFromVC.timerGettingRealDataByItinerary != nil){
+                [toFromVC.timerGettingRealDataByItinerary invalidate];
+                toFromVC.timerGettingRealDataByItinerary = nil; 
+            }
+            [toFromVC getRealTimeData];
+            toFromVC.continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromVC selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Exception while parsing TP response plan: %@", exception);
+        if (planRequestParameters && planRequestParameters.planDestination == PLAN_DESTINATION_TO_FROM_VC) {
+            [toFromVC newPlanAvailable:nil status:GENERIC_EXCEPTION];
         }
     }
 }
