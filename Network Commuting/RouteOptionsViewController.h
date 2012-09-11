@@ -16,8 +16,6 @@
     NSDateFormatter *timeFormatter;
 }
 @property(nonatomic, strong) IBOutlet UITableView* mainTable; // Table listing route options
-@property(nonatomic, strong) IBOutlet UIButton* feedbackButton; 
-@property(nonatomic, strong) IBOutlet UIButton* advisoryButton;  // Button to pull up Twitter feeds
 @property(nonatomic, strong) Plan *plan;
 @property(nonatomic, strong) UIButton *btnGoToNimbler;
 @property(strong, nonatomic) id liveData;

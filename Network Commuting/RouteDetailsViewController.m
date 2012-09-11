@@ -33,8 +33,6 @@
 
 @synthesize itinerary;
 @synthesize mainTable;
-@synthesize feedbackButton;
-@synthesize advisoryButton;
 @synthesize legMapVC;
 @synthesize mapView;
 @synthesize itineraryNumber;
@@ -147,14 +145,10 @@ NSUserDefaults *prefs;
 - (void) viewDidUnload{
     [super viewDidUnload];
     self.mainTable = nil;
-    self.feedbackButton = nil;
-    self.advisoryButton = nil;
 }
 
 - (void) dealloc{
     self.mainTable = nil;
-    self.feedbackButton = nil;
-    self.advisoryButton = nil;
 }
 
 - (void)setItinerary:(Itinerary *)i0

@@ -34,8 +34,6 @@
 @implementation RouteOptionsViewController
 
 @synthesize mainTable;
-@synthesize feedbackButton;
-@synthesize advisoryButton;
 @synthesize plan;
 @synthesize isReloadRealData;
 @synthesize liveData,btnGoToNimbler;
@@ -313,14 +311,10 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 - (void)viewDidUnload{
     [super viewDidUnload];
     self.mainTable = nil;
-    self.feedbackButton = nil;
-    self.advisoryButton = nil;
 }
 
 - (void)dealloc{
     self.mainTable = nil;
-    self.feedbackButton = nil;
-    self.advisoryButton = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
