@@ -966,18 +966,19 @@ NSUserDefaults *prefs;
     else{
         // Add The Plan ID,Itinerary ID and leg ID to The Plan. 
         @try {
+            NIMLOG_PERF1(@"Received plan ID back from TPServer");
             tpResponsePlan = [objects objectAtIndex:0];
             [plan setPlanId:[tpResponsePlan planId]];
             for (int i= 0; i< [[tpResponsePlan itineraries] count]; i++) {
                 Itinerary *itin = [[tpResponsePlan sortedItineraries] objectAtIndex:i];
                 [[[plan sortedItineraries] objectAtIndex:i] setItinId:[itin itinId]];
-                NSLog(@"===========================================");
-                NSLog(@"itinarary.. %@",[itin itinId]);
+                NIMLOG_VERBOSE1(@"===========================================");
+                NIMLOG_VERBOSE1(@"itinarary.. %@",[itin itinId]);
                 for (int j =0; j< [[itin legs] count] ; j++) {
                     Leg *lg = [[itin sortedLegs] objectAtIndex:j];
                     [[[[[plan sortedItineraries] objectAtIndex:i] sortedLegs] objectAtIndex:j] setLegId:[lg legId]];
-                    NSLog(@"------------------------------------------");
-                    NSLog(@"leg... %@",[lg legId]);
+                    NIMLOG_VERBOSE1(@"------------------------------------------");
+                    NIMLOG_VERBOSE1(@"leg... %@",[lg legId]);
                 }
             }
             // Call The Method From PlaneStore To Perform Plancaching on The Plan With Plan ID,Itinerary ID and Leg ID.
@@ -1218,6 +1219,7 @@ NSUserDefaults *prefs;
 
 -(void)savePlanInTPServer:(NSString *)tripResponse{
     @try {
+        NIMLOG_PERF1(@"Entering ToFromVC: savePlanInTPServer");
         NSString *timeResponseTime =  [[NSNumber numberWithFloat:durationOfResponseTime] stringValue];
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         RKParams *rkp = [RKParams params];
@@ -1259,6 +1261,7 @@ NSUserDefaults *prefs;
         }
         
         [[RKClient sharedClient] post:NEW_PLAN_REQUEST params:rkp delegate:self];
+        NIMLOG_PERF1(@"Finished request to server in ToFromVC: savePlanInTPServer");
     }
     @catch (NSException *exception) {
         NSLog(@"exception at save trip plan in TPServer: %@", exception);
@@ -1270,7 +1273,7 @@ NSUserDefaults *prefs;
     @try {
         if (isContinueGetRealTimeData) {
             if ([request isGET]) {       
-                NSLog(@"response %@", [response bodyAsString]);
+                NIMLOG_VERBOSE1(@"response %@", [response bodyAsString]);
                 isContinueGetRealTimeData = false;
                 RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
                 id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];    
@@ -1345,11 +1348,9 @@ NSUserDefaults *prefs;
 -(void)getRealTimeDataForItinerary{
     @try {
         NSMutableString *strItineraries = [[NSMutableString alloc] init];
-        NSLog(@"%@",plan);
-        NSLog(@"%@",[plan sortedItineraries]);
         for (int i= 0; i< [[plan sortedItineraries] count]; i++) {
             Itinerary *itin = [[plan sortedItineraries] objectAtIndex:i];
-            [strItineraries appendFormat:[NSString stringWithFormat:@"%@,",[itin itinId]]];
+            [strItineraries appendFormat:@"%@,",[itin itinId]];
         }
         [strItineraries deleteCharactersInRange:NSMakeRange([strItineraries length]-1, 1)];
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
@@ -1360,7 +1361,7 @@ NSUserDefaults *prefs;
         isContinueGetRealTimeData = TRUE;
     }
     @catch (NSException *exception) {
-        NSLog(@"%@",exception);
+        NSLog(@"Exception at getRealTimeDataForItinerary: %@",exception);
     }
 }
 

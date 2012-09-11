@@ -12,10 +12,12 @@
 // See http://iphoneincubator.com/blog/debugging/the-evolution-of-a-replacement-for-nslog for background explanation
 
 
-#define NIMLOG_PERF1(...) // NSLog(__VA_ARGS__)  // Performance logging
+#define NIMLOG_PERF1(...) NSLog(__VA_ARGS__)  // Performance logging
 #define NIMLOG_EVENT1(...) NSLog(__VA_ARGS__) // Key events
 #define NIMLOG_URLS(...) NSLog(__VA_ARGS__)   // URL resources
 #define NIMLOG_ERR1(...) NSLog(__VA_ARGS__)   // Error / exception logging
 #define NIMLOG_ADDRESSES(...) // NSLog(__VA_ARGS__)  // Log addresses
+#define NIMLOG_VERBOSE1(...) // NSLog(__VA_ARGS__)   // Verbose output of objects
+
 
 #endif

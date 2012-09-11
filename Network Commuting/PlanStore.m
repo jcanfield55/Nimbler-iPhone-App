@@ -151,9 +151,17 @@
         PlanRequestParameters* parameters;
         @try {
             if (objects && [objects objectAtIndex:0]) {
+                // Plan* plan = [objects objectAtIndex:0];
                 NSString* resourcePath = [objectLoader resourcePath];
-                parameters = [parametersByPlanURLResource objectForKey:resourcePath];
+                planRequestParameters = [parametersByPlanURLResource objectForKey:resourcePath];
+                // parameters = [parametersByPlanURLResource objectForKey:resourcePath];
                 
+                // Save The Plan in Server and will get Response in ToFromViewController didLoadResponse method.
+                [toFromVC savePlanInTPServer:[[objectLoader response] bodyAsString]];
+                [toFromVC setPlan:[objects objectAtIndex:0]];
+                
+                /* Commented out since this code now stored in PlanToStoreInCache
+                 //
                 // Initialize the rest of the Plan (must be done before saving context)
                 [plan setToLocation:[parameters toLocation]];
                 [plan setFromLocation:[parameters fromLocation]];
@@ -175,6 +183,7 @@
                     [toFromVC newPlanAvailable:plan status:STATUS_OK];
                 }
                 // Todo delete plans after first item
+                 */
             }
         }
         @catch (NSException *exception) {

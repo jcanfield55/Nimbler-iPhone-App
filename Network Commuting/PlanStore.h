@@ -24,7 +24,7 @@
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (strong, nonatomic) RKObjectManager *rkPlanMgr;  // RestKit object manager for trip planning
-@property (strong, nonatomic) ToFromViewController *toFromVC;
+@property (unsafe_unretained, nonatomic) ToFromViewController *toFromVC;
 @property (unsafe_unretained, nonatomic) RouteOptionsViewController *routeOptionsVC;
 
 // Designated initializer
