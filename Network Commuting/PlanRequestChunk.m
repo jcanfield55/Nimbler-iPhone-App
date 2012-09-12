@@ -79,7 +79,9 @@
             if (agencyId && [agencyId length]>0) { // Check if there is an agency for this leg
                 if (![returnedValue objectForKey:agencyId]) { // if we do not already have this serviceString
                     NSString* serviceString = [[self transitCalendar] serviceStringForDate:requestDate agencyId:agencyId];
-                    [returnedValue setObject:serviceString forKey:agencyId];
+                    if (serviceString) {
+                        [returnedValue setObject:serviceString forKey:agencyId];
+                    }
                 }
             }
         }
