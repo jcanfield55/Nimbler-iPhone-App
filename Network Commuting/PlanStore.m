@@ -152,37 +152,14 @@
         @try {
             if (objects && [objects objectAtIndex:0]) {
                 NSString* resourcePath = [objectLoader resourcePath];
-                parameters = [parametersByPlanURLResource objectForKey:resourcePath];
-                
-                // Initialize the rest of the Plan (must be done before saving context)
-                [plan setToLocation:[parameters toLocation]];
-                [plan setFromLocation:[parameters fromLocation]];
-                [plan createRequestChunkWithAllItinerariesAndRequestDate:[parameters thisRequestTripDate]
-                                                          departOrArrive:[parameters departOrArrive]];
-                saveContext(managedObjectContext);  // Save location and request chunk changes
-                NIMLOG_PERF1(@"Created requestChunks and set locations");
-                plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context
-                NIMLOG_PERF1(@"Consolidated Plans");
-                // Now format the itineraries of the consolidated plan
-                [plan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate] departOrArrive:[parameters departOrArrive]];
-                [self requestMoreItinerariesIfNeeded:plan parameters:parameters];
-                
-                // Call-back the appropriate RouteOptions VC with the new plan
-                if (parameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
-                    [routeOptionsVC newPlanAvailable:plan status:STATUS_OK];  
-                } else {
-                    NIMLOG_PERF1(@"Call toFromVC with results");
-                    [toFromVC newPlanAvailable:plan status:STATUS_OK];
-                }
-                // Todo delete plans after first item
+                planRequestParameters = [parametersByPlanURLResource objectForKey:resourcePath];
+                // Save The Plan in Server and will get Response in ToFromViewController didLoadResponse method.
+                [toFromVC savePlanInTPServer:[[objectLoader response] bodyAsString]];
+                [toFromVC setPlan:[objects objectAtIndex:0]];           
             }
         }
         @catch (NSException *exception) {
-            NIMLOG_ERR1(@"Exception while parsing TP response plan: %@", exception);
-            if (parameters && parameters.planDestination == PLAN_DESTINATION_TO_FROM_VC) {
-                [toFromVC newPlanAvailable:nil status:GENERIC_EXCEPTION];
-            }
-            // else if not a toFromViewController request, do not bother the user
+            NSLog(@"Exception while parsing TP response plan: %@", exception);
         }
 }
 
