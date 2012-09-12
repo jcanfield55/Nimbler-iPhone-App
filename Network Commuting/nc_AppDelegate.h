@@ -39,6 +39,9 @@
     BOOL isCalendarByDate;
     BOOL isSettingSavedSuccessfully;
     BOOL isSettingRequest;
+    NSDictionary* lastGTFSLoadDateByAgency;
+    NSDictionary* serviceByWeekdayByAgency;
+    NSDictionary* calendarByDateByAgency;
 }
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
@@ -74,6 +77,11 @@
 @property (nonatomic) BOOL isCalendarByDate;
 @property (nonatomic) BOOL     isSettingSavedSuccessfully;
 @property (nonatomic) BOOL isSettingRequest;
+
+@property(strong, nonatomic) NSDictionary* lastGTFSLoadDateByAgency;
+@property(strong, nonatomic) NSDictionary* serviceByWeekdayByAgency;
+@property(strong, nonatomic) NSDictionary* calendarByDateByAgency;
+@property (nonatomic, strong) NSString *timerType;
 
 - (NSURL *)applicationDocumentsDirectory;
 

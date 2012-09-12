@@ -73,14 +73,15 @@ NSUserDefaults *prefs;
 //                [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_navigationbar.png"]] aboveSubview:self.navigationController.navigationBar];
 //            }
             
-            UILabel* tlabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 80, 40)];
-            [tlabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:20.0]];
-            tlabel.text=ROUTE_TITLE_MSG;
-            tlabel.textColor= [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];
-            [tlabel setTextAlignment:UITextAlignmentCenter];
-            tlabel.backgroundColor =[UIColor clearColor];
-            tlabel.adjustsFontSizeToFitWidth=YES;
-            self.navigationItem.titleView=tlabel;
+            UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
+            [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
+            lblNavigationTitle.text=ROUTE_DETAIL_VIEW_TITLE;
+            lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
+            [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
+            lblNavigationTitle.backgroundColor =[UIColor clearColor];
+            lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
+            self.navigationItem.titleView=lblNavigationTitle;
+            
             //[[self navigationItem] setTitle:ROUTE_TITLE_MSG];
             
             // Set up the MKMapView and LegMapViewController

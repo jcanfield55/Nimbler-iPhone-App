@@ -65,12 +65,12 @@
         isGeocodingOutstanding = FALSE;
         
         // Create the textField for the first row of the tableView
-        txtField=[[UITextField alloc]initWithFrame:CGRectMake(TOFROM_TEXT_FIELD_INDENT,0,myTableView.frame.size.width-TOFROM_TEXT_FIELD_INDENT,[myTableView rowHeight]-TOFROM_INSERT_INTO_CELL_MARGIN)];
+        txtField=[[UITextField alloc]initWithFrame:CGRectMake(TOFROM_TEXT_FIELD_XPOS,TOFROM_TEXT_FIELD_YPOS,myTableView.frame.size.width-TOFROM_TEXT_FIELD_INDENT,[myTableView rowHeight]-TOFROM_INSERT_INTO_CELL_MARGIN)];
         [txtField setPlaceholder:@"Enter new address"];
-        [txtField setClearButtonMode:UITextFieldViewModeAlways];  // Add a clear button for text field
+        [txtField setClearButtonMode:UITextFieldViewModeAlways]; // Add a clear button for text field
         [txtField setFont:[UIFont MEDIUM_FONT]];
         [txtField setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
-
+        
         [txtField addTarget:self action:@selector(toFromTyping:forEvent:) forControlEvents:UIControlEventEditingChanged];
         [txtField addTarget:self action:@selector(textSubmitted:forEvent:) forControlEvents:(UIControlEventEditingDidEndOnExit)];
         [txtField setBackgroundColor:[UIColor whiteColor]];
@@ -232,7 +232,9 @@
             [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
             cell.textLabel.textColor = [UIColor lightGrayColor];
             [[cell textLabel] setText:TOFROMTABLE_ENTER_ADDRESS_TEXT];
-            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+            UIImage *imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
+            UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
+            [cell setAccessoryView:imgViewDetailDisclosure];
         }
 
         return cell;
@@ -257,22 +259,24 @@
         // Bold italic if a list header
         [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
         cell.textLabel.textColor = [UIColor darkGrayColor];
-        [cell setAccessoryType:UITableViewCellAccessoryNone];
+        [cell setAccessoryView:nil];
     } 
     else if (loc == selectedLocation) {
         [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
         cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
         if ([toFromVC editMode] == NO_EDIT) {
-            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+            UIImage *imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
+            UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
+            [cell setAccessoryView:imgViewDetailDisclosure];
         } else {
             // cell.textLabel.text = @"Current Location"; // This line causes DE124
-            [cell setAccessoryType:UITableViewCellAccessoryNone];
+            [cell setAccessoryView:nil];
         }
     } else {
         // just bold for normal cell
         [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
         cell.textLabel.textColor = [UIColor darkGrayColor];
-        [cell setAccessoryType:UITableViewCellAccessoryNone];
+        [cell setAccessoryView:nil];
     }
     
     cell.textLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
