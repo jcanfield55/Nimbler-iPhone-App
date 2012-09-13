@@ -464,20 +464,22 @@
 - (Location *)consolidateWithMatchingLocations:(Location *)loc0 keepThisLocation:(BOOL)keepThisLocation
 {
     NSArray *matches = [self locationsWithFormattedAddress:[loc0 formattedAddress]];
-    if (!matches) {   
+    if (!matches || [matches count]==0) {   
         return loc0;  
     }
     else {  
+        Location* returnLoc; // the location object we will return
+        if (keepThisLocation) {
+            returnLoc = loc0;
+        }
         for (Location *loc1 in matches) {
             if (loc0 != loc1) {  // if this is actually a different object
-                Location* returnLoc; // the location object we will return
                 Location* deleteLoc;  // the location object we will consolidate and delete
-                if (keepThisLocation) {
-                    returnLoc = loc0;
-                    deleteLoc = loc1;
+                if (!returnLoc) {
+                    returnLoc = loc1;  // if no returnLoc has been set, make this loc1 the returnLoc
+                    deleteLoc = loc0;  // and delete loc0 (just for this one time)
                 } else {
-                    returnLoc = loc1;  
-                    deleteLoc = loc0;
+                    deleteLoc = loc1;  // else if returnLoc is already set, then this loc1 must be deleted
                 }
                 
                 // consolidate from deleteLoc into returnLoc
@@ -491,11 +493,14 @@
                 
                 // Delete deleteLoc & return returnLoc
                 [managedObjectContext deleteObject:deleteLoc];
-                return returnLoc;
             }
         }
+        if (returnLoc) {
+            return returnLoc;
+        } else {
+            return loc0;
+        }
     }
-    return loc0;  // return loc0 if no different matches were found
 }
 
 // Remove location from Core Data

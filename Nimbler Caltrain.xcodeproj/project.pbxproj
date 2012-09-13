@@ -2556,6 +2556,7 @@
 		52CF43A814BDF2F9000565D6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				8D1AA40815FF5F5F0062D22A /* Logging.h */,
 				52F67EEC14C7E103007578D5 /* enums.h */,
 				CCB7E81A1570A3D10036E9CD /* Constants.h */,
 				525842C715A3AB10005BB92A /* UIConstants.h */,

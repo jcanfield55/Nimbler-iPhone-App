@@ -103,6 +103,7 @@ bool isPush;
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     [self fetchUserSettingData];
 #if FLURRY_ENABLED
     [Flurry logEvent: FLURRY_SETTINGS_APPEAR];
