@@ -76,7 +76,7 @@ static KeyObjectStore* keyObjectStoreSingleton;
     } else if ([result count] == 1) {
         return [result objectAtIndex:0];
     } else {
-        NSLog(@"KeyObjectStore: unexpected multiple objects found for Key = '%@'", key);
+        NIMLOG_EVENT1(@"KeyObjectStore: unexpected multiple objects found for Key = '%@'", key);
         return [result objectAtIndex:0];   // Return just the first one
     }
 }

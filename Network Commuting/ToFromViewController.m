@@ -204,7 +204,7 @@ NSUserDefaults *prefs;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at init ToFromViewController");
+        NIMLOG_ERR1(@"exception at init ToFromViewController %@",exception);
     }
     return self;
 }
@@ -295,7 +295,7 @@ NSUserDefaults *prefs;
         [mainTable reloadData];
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at viewWillAppear: %@", exception);
+        NIMLOG_ERR1(@"exception at viewWillAppear: %@", exception);
     }
     NIMLOG_PERF1(@"Finished ToFromView viewWillAppear");
 }
@@ -386,7 +386,7 @@ NSUserDefaults *prefs;
             [table setFrame:rect0];
         }
         @catch (NSException *exception) {
-            NSLog(@"exception at set height for table in ToFromView: %@", exception);
+            NIMLOG_ERR1(@"exception at set height for table in ToFromView: %@", exception);
         }
         return TRUE;
     }
@@ -806,13 +806,13 @@ NSUserDefaults *prefs;
         }    
         // otherwise, just wait for the geocoding and then submit the plan
         else {
-            NSLog(@"look for state");
+            NIMLOG_PERF1(@"look for state");
             alert = [[UIAlertView alloc] initWithTitle:@"TripPlanner" message:@"Please select a location" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at press route button event: %@", exception);
+        NIMLOG_ERR1(@"exception at press route button event: %@", exception);
     }
 }
 
@@ -937,7 +937,7 @@ NSUserDefaults *prefs;
             
             NSArray* atoms = [responseStartingFromStatus componentsSeparatedByString:@"\""];
             NSString* geocodeStatus = [atoms objectAtIndex:1]; // status string is second atom (first after the first quote)
-            NSLog(@"Status: %@", geocodeStatus);
+            NIMLOG_EVENT1(@"Status: %@", geocodeStatus);
             
             if ([geocodeStatus compare:@"OK" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
                 if ([objects count] > 0) { // if we have an reverse geocode object
@@ -950,7 +950,7 @@ NSUserDefaults *prefs;
                     
                     // Save db context with the new location object
                     saveContext(managedObjectContext);
-                    NSLog(@"Reverse Geocode: %@", [reverseGeoLocation formattedAddress]);
+                    NIMLOG_EVENT1(@"Reverse Geocode: %@", [reverseGeoLocation formattedAddress]);
                     // Update the Current Location with pointer to the Reverse Geo location
                     [currentLocation setReverseGeoLocation:reverseGeoLocation];
                 }
@@ -960,30 +960,6 @@ NSUserDefaults *prefs;
     }
     
     // If returned value does not correspond to one of the most recent requests, do nothing...
-    else{
-        // Add The Plan ID,Itinerary ID and leg ID to The Plan. 
-        @try {
-            tpResponsePlan = [objects objectAtIndex:0];
-            [plan setPlanId:[tpResponsePlan planId]];
-            for (int i= 0; i< [[tpResponsePlan itineraries] count]; i++) {
-                Itinerary *itin = [[tpResponsePlan sortedItineraries] objectAtIndex:i];
-                [[[plan sortedItineraries] objectAtIndex:i] setItinId:[itin itinId]];
-                NSLog(@"===========================================");
-                NSLog(@"itinarary.. %@",[itin itinId]);
-                for (int j =0; j< [[itin legs] count] ; j++) {
-                    Leg *lg = [[itin sortedLegs] objectAtIndex:j];
-                    [[[[[plan sortedItineraries] objectAtIndex:i] sortedLegs] objectAtIndex:j] setLegId:[lg legId]];
-                    NSLog(@"------------------------------------------");
-                    NSLog(@"leg... %@",[lg legId]);
-                }
-            }
-            // Call The Method From PlaneStore To Perform Plancaching on The Plan With Plan ID,Itinerary ID and Leg ID.
-            [planStore PlanToStoreInCache:plan :toLocation :fromLocation];
-        }
-        @catch (NSException *exception) {
-            NSLog(@"exception while loading ID's=%@",exception);
-        }
-    }
 }
 
 // Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
@@ -1051,7 +1027,7 @@ NSUserDefaults *prefs;
     if (savetrip) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to calculate a route for that To & From address" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
-        NSLog(@"Error received from RKObjectManager: %@", error);
+        NIMLOG_ERR1(@"Error received from RKObjectManager: %@", error);
     }
 }
 
@@ -1062,7 +1038,7 @@ NSUserDefaults *prefs;
 {
     // See if there has already been an identical plan request in the last 5 seconds.
     @try {
-        NSLog(@"Plan routine entered");
+        NIMLOG_PERF1(@"Plan routine entered");
         BOOL isDuplicatePlan = NO;
         NSString *frForm = [fromLocation formattedAddress];
         NSString *toForm = [toLocation formattedAddress];
@@ -1125,7 +1101,7 @@ NSUserDefaults *prefs;
                                            @"date", [NSDate date], nil]];
             
             NSNumber* maxiWalkDistance = [self getWalkDistance];
-            NSLog(@"maximum walk distance ------------------------------------ %f",[maxiWalkDistance floatValue]);
+            NIMLOG_EVENT1(@"maximum walk distance ------------------------------------ %f",[maxiWalkDistance floatValue]);
             // convert miles into meters. 1 mile = 1609.344 meters
             int maxDistance = (int)([maxiWalkDistance floatValue]*1609.544);
             
@@ -1138,11 +1114,141 @@ NSUserDefaults *prefs;
             parameters.departOrArrive = departOrArrive;
             parameters.maxWalkDistance = maxDistance;
             parameters.planDestination = PLAN_DESTINATION_TO_FROM_VC;
-            [planStore requestPlanWithParameters:parameters];
             
+        
+            //[dictPlanRequestData setObject:[prefs objectForKey:DEVICE_CFUUID] forKey:DEVICE_ID]; 
+            if([toLocation formattedAddress] == nil){
+                parameters.formattedAddressTO = @"";
+            }
+            else{
+                parameters.formattedAddressTO = [toLocation formattedAddress];
+            }
+            if([fromLocation formattedAddress] == nil){
+                parameters.formattedAddressFROM = @"";
+            }
+            else{
+                parameters.formattedAddressFROM = [fromLocation formattedAddress];
+            }
+            if([toLocation lat] == nil){
+                 parameters.latitudeTO = @"";
+            }
+            else{
+                 parameters.latitudeTO = (NSString *)[fromLocation lat];
+            }
+            if([toLocation lng] == nil){
+                parameters.longitudeTO = @"";
+            }
+            else{
+                 parameters.longitudeTO = (NSString *)[toLocation lng];
+            }
+            if([fromLocation lat] == nil){
+                parameters.latitudeFROM = @"";
+            }
+            else{
+                parameters.latitudeFROM = (NSString *)[fromLocation lat];
+            }
+            if([fromLocation lng] == nil){
+                parameters.longitudeFROM = @"";
+            }
+            else{
+                parameters.longitudeFROM = (NSString *)[fromLocation lng];
+            }
+            if([[fromLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
+                parameters.fromType = REVERSE_GEO_FROM;
+                if(currentLoc == nil){
+                    parameters.formattedAddressFROM = @"";
+                }
+                else{
+                    parameters.formattedAddressFROM = currentLoc;
+                }
+                if([toLocation lat] == nil){
+                    parameters.latitudeTO = @"";
+                }
+                else{
+                    parameters.latitudeTO = (NSString *)[toLocation lat];
+                }
+                if([toLocation lng] == nil){
+                    parameters.longitudeTO = @"";
+                }
+                else{
+                    parameters.longitudeTO = (NSString *)[toLocation lng];
+                }
+            }else if([[toLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
+                parameters.toType = REVERSE_GEO_TO;
+                if(currentLoc == nil){
+                    parameters.formattedAddressTO = @"";
+                }
+                else{
+                    parameters.formattedAddressTO = currentLoc;
+                }
+                if([fromLocation lat] == nil){
+                    parameters.latitudeFROM = @"";
+                }
+                else{
+                    parameters.latitudeFROM = (NSString *)[fromLocation lat];
+                }
+                if([fromLocation lng] == nil){
+                    parameters.longitudeFROM = @"";
+                }
+                else{
+                    parameters.longitudeFROM = (NSString *)[fromLocation lng];
+                }
+            }
+            
+            if ([locations isFromGeo]) {
+                parameters.fromType = GEO_FROM;
+                if([fromLocation formattedAddress] == nil){
+                    parameters.rawAddressFROM = @"";
+                }
+                else{
+                    parameters.rawAddressFROM = [fromLocation formattedAddress];
+                }
+                if([locations geoRespFrom] == nil){
+                    parameters.geoResponseFROM = @"";
+                }
+                else{
+                    parameters.geoResponseFROM = [locations geoRespFrom];
+                }
+                if([locations geoRespTimeFrom] == nil){
+                    parameters.timeFROM = @"";
+                }
+                else{
+                    parameters.timeFROM = [locations geoRespTimeFrom];
+                }
+            } else if ([locations isToGeo]) {
+                parameters.toType = GEO_TO;
+                if([fromLocation formattedAddress] == nil){
+                    parameters.rawAddressFROM = @"";
+                }
+                else{
+                    parameters.rawAddressFROM = [fromLocation formattedAddress] ;
+                }
+                if([locations geoRespTo] == nil){
+                    parameters.geoResponseTO = @"";
+                }
+                else{
+                    parameters.geoResponseTO = [locations geoRespTo];
+                }
+                if([locations geoRespTimeTo] == nil){
+                    parameters.timeTO = @"";
+                }
+                else{
+                    parameters.timeTO = [locations geoRespTimeTo];
+                }
+            }
+            else{
+                parameters.fromType = PREDEFINE_TYPE;
+                parameters.toType = PREDEFINE_TYPE;
+                parameters.rawAddressFROM = @"";
+                parameters.rawAddressTO = @"";
+                parameters.geoResponseFROM = @"";
+                parameters.geoResponseTO = @"";
+                parameters.timeFROM = @"";
+                parameters.timeTO = @"";
+            }
+            [planStore requestPlanWithParameters:parameters];
             savetrip = TRUE;
             isContinueGetRealTimeData = FALSE;
-            
             // Do reverse geocoding if coming from current location
             if (fromLocation == currentLocation) {
                 [self requestReverseGeo:fromLocation];
@@ -1155,7 +1261,7 @@ NSUserDefaults *prefs;
         return true; 
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at route request: %@", exception);
+        NIMLOG_ERR1(@"exception at route request: %@", exception);
     }
 }
 
@@ -1197,7 +1303,7 @@ NSUserDefaults *prefs;
         [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector: @selector(stopActivityIndicator) userInfo: nil repeats: NO];
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at start IndicatorView: %@", exception);
+        NIMLOG_ERR1(@"exception at start IndicatorView: %@", exception);
     }
 }
 
@@ -1212,63 +1318,100 @@ NSUserDefaults *prefs;
 }
 
 
-#pragma mark save Plan and other logging features to TPServer
-
--(void)savePlanInTPServer:(NSString *)tripResponse{
-    @try {
-        NSString *timeResponseTime =  [[NSNumber numberWithFloat:durationOfResponseTime] stringValue];
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        RKParams *rkp = [RKParams params];
-        [RKClient setSharedClient:client];
-        [rkp setValue:[prefs objectForKey:DEVICE_CFUUID] forParam:DEVICE_ID]; 
-        [rkp setValue:tripResponse forParam:PLAN_JSON_STRING]; 
-        [rkp setValue:timeResponseTime forParam:TIME_TRIP_PLAN];
-        [rkp setValue:[toLocation formattedAddress]  forParam:FORMATTED_ADDRESS_TO];
-        [rkp setValue:[fromLocation formattedAddress]  forParam:FORMATTED_ADDRESS_FROM];
-        [rkp setValue:[toLocation lat] forParam:LATITUDE_FROM];
-        [rkp setValue:[toLocation lng] forParam:LONGITUDE_FROM];
-        [rkp setValue:[fromLocation lat] forParam:LATITUDE_TO];
-        [rkp setValue:[fromLocation lng] forParam:LONGITUDE_TO];
-        
-        if([[fromLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
-            [rkp setValue:REVERSE_GEO_FROM forParam:FROM_TYPE];
-            [rkp setValue:currentLoc  forParam:FORMATTED_ADDRESS_FROM];
-            [rkp setValue:[toLocation lat] forParam:LATITUDE_FROM];
-            [rkp setValue:[toLocation lng] forParam:LONGITUDE_FROM];
-            [rkp setValue:[[NSNumber numberWithFloat:currentLocationResTime] stringValue] forParam:@""];
-        } else if([[toLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
-            [rkp setValue:REVERSE_GEO_TO forParam:TO_TYPE];
-            [rkp setValue:currentLoc  forParam:FORMATTED_ADDRESS_TO];
-            [rkp setValue:[fromLocation lat] forParam:LATITUDE_TO];
-            [rkp setValue:[fromLocation lng] forParam:LONGITUDE_TO];
-            [rkp setValue:[[NSNumber numberWithFloat:currentLocationResTime] stringValue] forParam:@""];
-        }
-        
-        if ([locations isFromGeo]) {
-            [rkp setValue:GEO_FROM forParam:FROM_TYPE];
-            [rkp setValue:[fromLocation formattedAddress] forParam:RAW_ADDRESS_FROM];
-            [rkp setValue:[locations geoRespFrom] forParam:GEO_RES_FROM];
-            [rkp setValue:[locations geoRespTimeFrom] forParam:TIME_FROM];
-        } else if ([locations isToGeo]) {
-            [rkp setValue:GEO_TO forParam:TO_TYPE];
-            [rkp setValue:[fromLocation formattedAddress] forParam:RAW_ADDRESS_TO];
-            [rkp setValue:[locations geoRespTo] forParam:GEO_RES_TO];
-            [rkp setValue:[locations geoRespTimeTo] forParam:TIME_TO];
-        }
-        
-        [[RKClient sharedClient] post:NEW_PLAN_REQUEST params:rkp delegate:self];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"exception at save trip plan in TPServer: %@", exception);
-    }
-}
+//#pragma mark save Plan and other logging features to TPServer
+//
+//-(void)savePlanInTPServer:(NSString *)tripResponse{
+//    @try {
+//        NSString *timeResponseTime =  [[NSNumber numberWithFloat:durationOfResponseTime] stringValue];
+//        NSMutableDictionary *dictPlanRequestData = [[NSMutableDictionary alloc] init];
+//        [dictPlanRequestData setObject:[prefs objectForKey:DEVICE_CFUUID] forKey:DEVICE_ID]; 
+//        [dictPlanRequestData setObject:timeResponseTime forKey:TIME_TRIP_PLAN];
+//        [dictPlanRequestData setObject:[toLocation formattedAddress]  forKey:FORMATTED_ADDRESS_TO];
+//        [dictPlanRequestData setObject:[fromLocation formattedAddress]  forKey:FORMATTED_ADDRESS_FROM];
+//        [dictPlanRequestData setObject:[toLocation lat] forKey:LATITUDE_FROM];
+//        [dictPlanRequestData setObject:[toLocation lng] forKey:LONGITUDE_FROM];
+//        [dictPlanRequestData setObject:[fromLocation lat] forKey:LATITUDE_TO];
+//        [dictPlanRequestData setObject:[fromLocation lng] forKey:LONGITUDE_TO];
+//        
+//        if([[fromLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
+//            [dictPlanRequestData setObject:REVERSE_GEO_FROM forKey:FROM_TYPE];
+//            [dictPlanRequestData setObject:currentLoc  forKey:FORMATTED_ADDRESS_FROM];
+//            [dictPlanRequestData setObject:[toLocation lat] forKey:LATITUDE_FROM];
+//            [dictPlanRequestData setObject:[toLocation lng] forKey:LONGITUDE_FROM];
+//            [dictPlanRequestData setObject:[[NSNumber numberWithFloat:currentLocationResTime] stringValue] forKey:@""];
+//        }else if([[toLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
+//            [dictPlanRequestData setObject:REVERSE_GEO_TO forKey:TO_TYPE];
+//            [dictPlanRequestData setObject:currentLoc  forKey:FORMATTED_ADDRESS_TO];
+//            [dictPlanRequestData setObject:[fromLocation lat] forKey:LATITUDE_TO];
+//            [dictPlanRequestData setObject:[fromLocation lng] forKey:LONGITUDE_TO];
+//            [dictPlanRequestData setObject:[[NSNumber numberWithFloat:currentLocationResTime] stringValue] forKey:@""];
+//        }
+//        
+//        if ([locations isFromGeo]) {
+//            [dictPlanRequestData setObject:GEO_FROM forKey:FROM_TYPE];
+//            [dictPlanRequestData setObject:[fromLocation formattedAddress] forKey:RAW_ADDRESS_FROM];
+//            [dictPlanRequestData setObject:[locations geoRespFrom] forKey:GEO_RES_FROM];
+//            [dictPlanRequestData setObject:[locations geoRespTimeFrom] forKey:TIME_FROM];
+//        } else if ([locations isToGeo]) {
+//            [dictPlanRequestData setObject:GEO_TO forKey:TO_TYPE];
+//            [dictPlanRequestData setObject:[fromLocation formattedAddress] forKey:RAW_ADDRESS_TO];
+//            [dictPlanRequestData setObject:[locations geoRespTo] forKey:GEO_RES_TO];
+//            [dictPlanRequestData setObject:[locations geoRespTimeTo] forKey:TIME_TO];
+//        }
+//        
+//        
+//        
+//        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+//        RKParams *rkp = [RKParams params];
+//        [RKClient setSharedClient:client];
+//        [rkp setValue:[prefs objectForKey:DEVICE_CFUUID] forParam:DEVICE_ID]; 
+//        [rkp setValue:timeResponseTime forParam:TIME_TRIP_PLAN];
+//        [rkp setValue:[toLocation formattedAddress]  forParam:FORMATTED_ADDRESS_TO];
+//        [rkp setValue:[fromLocation formattedAddress]  forParam:FORMATTED_ADDRESS_FROM];
+//        [rkp setValue:[toLocation lat] forParam:LATITUDE_FROM];
+//        [rkp setValue:[toLocation lng] forParam:LONGITUDE_FROM];
+//        [rkp setValue:[fromLocation lat] forParam:LATITUDE_TO];
+//        [rkp setValue:[fromLocation lng] forParam:LONGITUDE_TO];
+//        
+//        if([[fromLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
+//            [rkp setValue:REVERSE_GEO_FROM forParam:FROM_TYPE];
+//            [rkp setValue:currentLoc  forParam:FORMATTED_ADDRESS_FROM];
+//            [rkp setValue:[toLocation lat] forParam:LATITUDE_FROM];
+//            [rkp setValue:[toLocation lng] forParam:LONGITUDE_FROM];
+//            [rkp setValue:[[NSNumber numberWithFloat:currentLocationResTime] stringValue] forParam:@""];
+//        } else if([[toLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
+//            [rkp setValue:REVERSE_GEO_TO forParam:TO_TYPE];
+//            [rkp setValue:currentLoc  forParam:FORMATTED_ADDRESS_TO];
+//            [rkp setValue:[fromLocation lat] forParam:LATITUDE_TO];
+//            [rkp setValue:[fromLocation lng] forParam:LONGITUDE_TO];
+//            [rkp setValue:[[NSNumber numberWithFloat:currentLocationResTime] stringValue] forParam:@""];
+//        }
+//        
+//        if ([locations isFromGeo]) {
+//            [rkp setValue:GEO_FROM forParam:FROM_TYPE];
+//            [rkp setValue:[fromLocation formattedAddress] forParam:RAW_ADDRESS_FROM];
+//            [rkp setValue:[locations geoRespFrom] forParam:GEO_RES_FROM];
+//            [rkp setValue:[locations geoRespTimeFrom] forParam:TIME_FROM];
+//        } else if ([locations isToGeo]) {
+//            [rkp setValue:GEO_TO forParam:TO_TYPE];
+//            [rkp setValue:[fromLocation formattedAddress] forParam:RAW_ADDRESS_TO];
+//            [rkp setValue:[locations geoRespTo] forParam:GEO_RES_TO];
+//            [rkp setValue:[locations geoRespTimeTo] forParam:TIME_TO];
+//        }
+//        
+//        [[RKClient sharedClient] post:NEW_PLAN_REQUEST params:rkp delegate:self];
+//    }
+//    @catch (NSException *exception) {
+//        NSLog(@"exception at save trip plan in TPServer: %@", exception);
+//    }
+//}
 
 #pragma mark RKResponse Delegate method
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     @try {
         if (isContinueGetRealTimeData) {
             if ([request isGET]) {       
-                NSLog(@"response %@", [response bodyAsString]);
+                NIMLOG_EVENT1(@"response %@", [response bodyAsString]);
                 isContinueGetRealTimeData = false;
                 RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
                 id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];    
@@ -1276,16 +1419,10 @@ NSUserDefaults *prefs;
                 [routeOptionsVC setLiveFeed:res];
             } 
         }
-        if ([request isPOST]) {           
-            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID], 
-                                    nil];            
-            rkSavePlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];            
-            [[rkSavePlanMgr mappingProvider] setMapping:[Plan objectMappingforPlanner:OTP_PLANNER] forKeyPath:PLAN];
-            planURLResource = [GET_PLAN_URL appendQueryParams:params];            
-            [rkSavePlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];            
+        if ([request isPOST]) {                      
         } 
     }  @catch (NSException *exception) {
-        NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
+        NIMLOG_ERR1( @"Exception while getting unique IDs from TP Server response: %@", exception);
     } 
 }
 
@@ -1303,7 +1440,7 @@ NSUserDefaults *prefs;
         [[self navigationController] pushViewController:locationPickerVC animated:YES];  
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at navigating to LocationPickerViewController: %@", exception);
+        NIMLOG_ERR1(@"exception at navigating to LocationPickerViewController: %@", exception);
     }
 }
 
@@ -1317,7 +1454,7 @@ NSUserDefaults *prefs;
         }    
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at navigate to iPhone LocationServices: %@", exception);
+        NIMLOG_ERR1(@"exception at navigate to iPhone LocationServices: %@", exception);
     }
 }
 
@@ -1335,7 +1472,7 @@ NSUserDefaults *prefs;
         [[RKClient sharedClient]  get:req  delegate:self];  
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at real time data request: %@", exception);
+        NIMLOG_ERR1(@"exception at real time data request: %@", exception);
     }
 }
 
@@ -1343,8 +1480,6 @@ NSUserDefaults *prefs;
 -(void)getRealTimeDataForItinerary{
     @try {
         NSMutableString *strItineraries = [[NSMutableString alloc] init];
-        NSLog(@"%@",plan);
-        NSLog(@"%@",[plan sortedItineraries]);
         for (int i= 0; i< [[plan sortedItineraries] count]; i++) {
             Itinerary *itin = [[plan sortedItineraries] objectAtIndex:i];
             [strItineraries appendFormat:[NSString stringWithFormat:@"%@,",[itin itinId]]];
@@ -1358,7 +1493,7 @@ NSUserDefaults *prefs;
         isContinueGetRealTimeData = TRUE;
     }
     @catch (NSException *exception) {
-        NSLog(@"%@",exception);
+        NIMLOG_ERR1(@"Exception while sending Real Time Request By Itineraries%@",exception);
     }
 }
 
@@ -1370,7 +1505,7 @@ NSUserDefaults *prefs;
         [self routeButtonPressed:self forEvent:nil];
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at navigate to settingInfo view: %@", exception);
+        NIMLOG_ERR1(@"exception at navigate to settingInfo view: %@", exception);
     }
 }
 
@@ -1409,46 +1544,6 @@ NSUserDefaults *prefs;
     }
 }
 
-// US132 implementation
--(void)doSwapLocation
-{
-    
-    if (fromLocation == currentLocation && [currentLocation reverseGeoLocation] &&
-        [currentLocation reverseGeoLocation] != toLocation) {
-        // If from = currentLocation and there is a reverse geolocation
-        [toTableVC markAndUpdateSelectedLocation:[currentLocation reverseGeoLocation]];
-    }
-    else {  // do a normal swap
-        Location *fromloc = fromLocation;
-        Location *toLoc = toLocation;
-        // Swap Location (could be nil)
-        [toTableVC markAndUpdateSelectedLocation:fromloc];
-        [fromTableVC markAndUpdateSelectedLocation:toLoc];
-    }
-    
-#if FLURRY_ENABLED
-    NSDictionary* dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                                FLURRY_TO_SELECTED_ADDRESS, [[self toLocation] shortFormattedAddress],
-                                FLURRY_FROM_SELECTED_ADDRESS, [[self fromLocation] shortFormattedAddress],
-                                nil];
-
-    [Flurry logEvent:FLURRY_TOFROM_SWAP_LOCATION withParameters:dictionary];
-#endif
-
-}
-
-//US 137 implementation
-- (void)endEdit{
-    [self setEditMode:NO_EDIT]; 
-    self.toTableVC.txtField.text = NULL_STRING;
-    self.fromTableVC.txtField.text = NULL_STRING;
-//    [self.toTableVC toFromTyping:self.toTableVC.txtField forEvent:nil];
-//    [self.toTableVC textSubmitted:self.toTableVC.txtField forEvent:nil];
-//    [self.fromTableVC toFromTyping:self.fromTableVC.txtField forEvent:nil];
-//    [self.fromTableVC textSubmitted:self.fromTableVC.txtField forEvent:nil];
-    [self.toTableVC markAndUpdateSelectedLocation:toLocation];
-    [self.fromTableVC markAndUpdateSelectedLocation:fromLocation];
-}
 - (void)requestReverseGeo:(Location *)location
 {
 
@@ -1464,7 +1559,7 @@ NSUserDefaults *prefs;
         currentLocationResTime =  CFAbsoluteTimeGetCurrent() - startTime;
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at reverGeocod: %@", exception);
+        NIMLOG_ERR1(@"exception at reverGeocod: %@", exception);
     }
 }
 
@@ -1507,24 +1602,6 @@ NSUserDefaults *prefs;
 //    [self.fromTableVC textSubmitted:self.fromTableVC.txtField forEvent:nil];
     [self.toTableVC markAndUpdateSelectedLocation:toLocation];
     [self.fromTableVC markAndUpdateSelectedLocation:fromLocation];
-}
-- (void)requestReverseGeo:(Location *)location
-{
-
-    @try {
-        float startTime = CFAbsoluteTimeGetCurrent();
-        NSString* latLngString = [NSString stringWithFormat:@"%f,%f",[location latFloat], [location lngFloat]];
-        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
-                                @"latlng", latLngString,
-                                @"sensor", @"true", nil];
-        reverseGeoURLResource = [@"json" appendQueryParams:params];
-        [rkGeoMgr loadObjectsAtResourcePath:reverseGeoURLResource delegate:self]; // Call the reverse Geocoder
-        
-        currentLocationResTime =  CFAbsoluteTimeGetCurrent() - startTime;
-    }
-    @catch (NSException *exception) {
-        NSLog(@"exception at reverGeocod: %@", exception);
-    }
 }
 
 #pragma mark UIdatePicker functionality
@@ -1549,7 +1626,6 @@ NSUserDefaults *prefs;
 }
 
 //---------------------------------------------------------------------------
-
 
 - (void)selectCurrentDate {
     [self.navigationController.navigationBar setUserInteractionEnabled:YES];

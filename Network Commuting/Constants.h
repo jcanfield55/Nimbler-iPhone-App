@@ -17,7 +17,7 @@
 
 #define TRIP_PROCESS_URL    @"http://23.23.210.156:8080/TPServer/ws/"
 
-//#define TRIP_PROCESS_URL      @"http://192.168.2.135:8080/TPServer/ws/"
+//#define TRIP_PROCESS_URL      @"http://192.168.2.148:8080/TPServer/ws/"
 
 #define TWITTER_SERARCH_URL    @"https://twitter.com/#!/search/realtime/TRAIN%20from%3Acaltrain%20OR%20from%3Acaltrain_news"
 #define CALTRAIN_TWITTER_URL   @"https://twitter.com/#!/search/from%3Acaltrain%20OR%20from%3Acaltrain_news"
@@ -26,6 +26,7 @@
 #define GEO_TO            @"1"
 #define REVERSE_GEO_FROM  @"2"
 #define REVERSE_GEO_TO    @"2"
+#define PREDEFINE_TYPE    @"3"
 
 #define MIN_LAT           @"36.791000000000004"
 #define MIN_LONG          @"-123.4631719"
@@ -180,7 +181,7 @@
 #define TIMER_TYPE  @"continueGetTime"
 
 #define GET_PLAN_URL  @"plan/get"
-#define PLAN  @"plan"
+#define PLAN_GENERATE_URL  @"plan/generate"
 
 // savePlanInTPServer Method Constants
 #define NEW_PLAN_REQUEST         @"plan/new"
@@ -201,6 +202,13 @@
 #define TIME_TO                  @"timeTo"
 #define RAW_ADDRESS_TO           @"rawAddTO"
 #define GEO_RES_TO               @"geoResTO"
+
+#define FROM_PLACE                      @"fromPlace"
+#define TO_PLACE                        @"toPlace"
+#define REQUEST_TRIP_DATE               @"date"
+#define REQUEST_TRIP_TIME               @"time"
+#define ARRIVE_BY                       @"arriveBy"
+#define MAX_WALK_DISTANCE               @"maxWalkDistance"
 
 // NavigationBar Titles
 

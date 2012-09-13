@@ -195,7 +195,7 @@ NSUserDefaults *prefs;
     NSError *error = nil;
     audioRecorder = [[AVAudioRecorder alloc] initWithURL:soundFileURL settings:recordSettings error:&error];
     if (error) {
-        NSLog(@"error: %@", [error localizedDescription]);
+        NIMLOG_ERR1(@"error while Audio Recording: %@", [error localizedDescription]);
     } else {
         [audioRecorder prepareToRecord];
     }
@@ -286,7 +286,7 @@ NSUserDefaults *prefs;
         
         audioPlayer.delegate = self;
         if (error) {
-            NSLog(@"Error: %@",
+            NIMLOG_ERR1(@"Error While Audio Playing: %@",
                   [error localizedDescription]);
         } else {
             // alertView = [self WaitPrompt];
@@ -369,17 +369,17 @@ NSUserDefaults *prefs;
 
 -(void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player error:(NSError *)error
 {
-    NSLog(@"Decoder Error occurred");
+    NIMLOG_ERR1(@"Decoder Error occurred =%@",error);
 }
 
 -(void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag
 {
-    NSLog(@"SuccessFully Recording");
+    NIMLOG_PERF1(@"SuccessFully Recording");
 }
 
 -(void)audioRecorderEncodeErrorDidOccur:(AVAudioRecorder *)recorder error:(NSError *)error
 {
-    NSLog(@"Encoder Error occurred");
+    NIMLOG_ERR1(@"Encoder Error occurred = %@",error);
 }
 
 
@@ -409,7 +409,7 @@ NSUserDefaults *prefs;
             NSDictionary *fbParser = [parser1 objectFromString:[response bodyAsString] error:nil];
             NSString *msg;
             for (id key in fbParser) {
-                NSLog(@"key: %@, value: %@", key, [fbParser objectForKey:key]);
+                NIMLOG_EVENT1(@"key: %@, value: %@", key, [fbParser objectForKey:key]);
                 if ([key isEqualToString:FB_RESPONSE_MSG]) {
                     if ([[fbParser objectForKey:FB_RESPONCE_CODE] intValue] == RESPONSE_SUCCESSFULL) {
                         msg = FB_RESPONSE_SUCCEES;
@@ -494,7 +494,7 @@ NSUserDefaults *prefs;
         [rkp setValue:[nc_AppDelegate sharedInstance].FBSource forParam:FEEDBACK_SOURCE];
     [rkp setValue:@"3.5" forParam:FEEDBACK_RATING];
     
-    NSLog(@"Shared Instance Feedback Source: %@",[nc_AppDelegate sharedInstance].FBSource);
+    NIMLOG_EVENT1(@"Shared Instance Feedback Source: %@",[nc_AppDelegate sharedInstance].FBSource);
     if([nc_AppDelegate sharedInstance].FBSource == [NSNumber numberWithInt:FB_SOURCE_GENERAL]){
         [rkp setValue:[nc_AppDelegate sharedInstance].FBSFromAdd forParam:FB_FORMATTEDADDR_FROM];
         [rkp setValue:[nc_AppDelegate sharedInstance].FBToAdd forParam:FB_FORMATTEDADDR_TO];

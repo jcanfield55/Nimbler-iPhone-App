@@ -24,7 +24,7 @@
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (strong, nonatomic) RKObjectManager *rkPlanMgr;  // RestKit object manager for trip planning
-@property (strong, nonatomic) ToFromViewController *toFromVC;
+@property (unsafe_unretained, nonatomic) ToFromViewController *toFromVC;
 @property (unsafe_unretained, nonatomic) RouteOptionsViewController *routeOptionsVC;
 
 // Designated initializer
@@ -47,7 +47,5 @@
 // Returns the consolidated plan
 - (Plan *)consolidateWithMatchingPlans:(Plan *)plan0;
 
-// Takes a plan With Plan ID,Itinerary ID and Leg ID and Perform PlanCaching Methods.
--(void)PlanToStoreInCache:(Plan *)plan:(Location *)toLocation:(Location *)fromLocation;
 
 @end

@@ -103,7 +103,7 @@ NSString *legID;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at set Itinerary: %@",exception);
+        NIMLOG_ERR1(@"exception at set Itinerary: %@",exception);
     }
 }
 
@@ -118,7 +118,7 @@ NSString *legID;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at setItinerary %@",exception);
+        NIMLOG_ERR1(@"exception at setItinerary %@",exception);
     }
 }
 
@@ -153,7 +153,7 @@ NSString *legID;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at setMapViewRegion: %@", exception);
+        NIMLOG_ERR1(@"exception at setMapViewRegion: %@", exception);
     }
 }
 
@@ -168,7 +168,7 @@ NSString *legID;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at refresh at overlay in legMapView: %@",exception);
+        NIMLOG_ERR1(@"exception at refresh at overlay in legMapView: %@",exception);
     }
 }
 
@@ -181,7 +181,7 @@ NSString *legID;
             // aView.fillColor = [[UIColor cyanColor] colorWithAlphaComponent:0.2];
             aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:ALPHA_LIGHTER];
             aView.lineWidth = LINE_WIDTH;
-            NSLog(@"itineraryNumber=%d",itineraryNumber);
+            NIMLOG_EVENT1(@"itineraryNumber=%d",itineraryNumber);
             
             // Determine if this overlay is the one in focus.  If so, make it darker
             for (int i=0; i<[polyLineArray count]; i++) {
@@ -210,7 +210,7 @@ NSString *legID;
         return nil;
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at map overlay in LegMapView: %@", exception);
+        NIMLOG_ERR1(@"exception at map overlay in LegMapView: %@", exception);
     }
 }
 
@@ -261,7 +261,7 @@ NSString *legID;
         } 
         
     }  @catch (NSException *exception) {
-        NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
+        NIMLOG_ERR1( @"Exception while getting unique IDs from TP Server response: %@", exception);
     } 
 }
 

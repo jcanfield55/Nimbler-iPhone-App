@@ -342,7 +342,7 @@
     CLLocation *locB = [[CLLocation alloc] initWithLatitude:[[self from] latFloat]
                                                   longitude:[[self from] lngFloat]];
     CLLocationDistance distance = [locA distanceFromLocation:locB];
-    NSLog(@"Distance between fromLocation and fromPlanPlace = %f meters", distance);
+    NIMLOG_EVENT1(@"Distance between fromLocation and fromPlanPlace = %f meters", distance);
     
     // If distance in meters is small enough, use the fromLocation...
     if (distance < 20.0) {
@@ -363,7 +363,7 @@
     CLLocation *locB = [[CLLocation alloc] initWithLatitude:[[self to] latFloat]
                                                   longitude:[[self to] lngFloat]];
     CLLocationDistance distance = [locA distanceFromLocation:locB];
-    NSLog(@"Distance between toLocation and toPlanPlace = %f meters", distance);
+    NIMLOG_EVENT1(@"Distance between toLocation and toPlanPlace = %f meters", distance);
     
     // If distance in meters is small enough, use the toLocation...
     if (distance < 40.0) {

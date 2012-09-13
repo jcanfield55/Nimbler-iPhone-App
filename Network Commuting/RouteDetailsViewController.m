@@ -139,7 +139,7 @@ NSUserDefaults *prefs;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at init RouteDetail: %@", exception);
+        NIMLOG_ERR1(@"exception at init RouteDetail: %@", exception);
     }
     return self;
 }
@@ -159,7 +159,7 @@ NSUserDefaults *prefs;
 
 - (void)setItinerary:(Itinerary *)i0
 {
-    NSLog(@"Itinerary # %@",i0);
+    NIMLOG_EVENT1(@"Itinerary # %@",i0);
     @try {
         itinerary = i0;
         [legMapVC setItinerary:i0];
@@ -177,7 +177,7 @@ NSUserDefaults *prefs;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at Set Itinerary %@", exception);
+        NIMLOG_ERR1(@"exception at Set Itinerary %@", exception);
     }
 }
 
@@ -248,7 +248,7 @@ NSUserDefaults *prefs;
     
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at viewWillAppear RouteDetail: %@", exception);
+        NIMLOG_ERR1(@"exception at viewWillAppear RouteDetail: %@", exception);
     }
     [self test:0];
 }
@@ -285,7 +285,7 @@ NSUserDefaults *prefs;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"Exception at cell count: %@",exception);
+        NIMLOG_ERR1(@"Exception at cell count: %@",exception);
     }
 }
 
@@ -344,7 +344,7 @@ NSUserDefaults *prefs;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception while reload RouteDetailView: %@", exception);
+        NIMLOG_ERR1(@"exception while reload RouteDetailView: %@", exception);
     }
     return cell;
 }
@@ -369,7 +369,7 @@ NSUserDefaults *prefs;
         return height;
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at set dynamic height for RouteDetailViewTable Cell: %@", exception);
+        NIMLOG_ERR1(@"exception at set dynamic height for RouteDetailViewTable Cell: %@", exception);
     }
 }
 
@@ -432,7 +432,7 @@ NSUserDefaults *prefs;
         [[RKClient sharedClient]  get:@"advisories/all" delegate:self];
     }
     @catch (NSException *exception) {
-        NSLog(@"Exception at requesting advisory data: %@", exception);
+        NIMLOG_ERR1(@"Exception at requesting advisory data: %@", exception);
     } 
 }
 
@@ -445,7 +445,7 @@ NSUserDefaults *prefs;
         [[self navigationController] pushViewController:feedbackvc animated:YES];
     }
     @catch (NSException *exception) {
-         NSLog(@"Exception at feedback navigation: %@", exception);
+         NIMLOG_ERR1(@"Exception at feedback navigation: %@", exception);
     }
 }
 
@@ -455,7 +455,7 @@ NSUserDefaults *prefs;
         [mainTable reloadData];
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at realoding routeDetailViewTable: %@", exception);
+        NIMLOG_ERR1(@"exception at realoding routeDetailViewTable: %@", exception);
     }
 }
 
@@ -469,13 +469,13 @@ NSUserDefaults *prefs;
             [[self navigationController] pushViewController:twit animated:YES];     
         } 
     }  @catch (NSException *exception) {
-        NSLog( @"Exception while getting twitter Data from TP Server response: %@", exception);
+        NIMLOG_ERR1( @"Exception while getting twitter Data from TP Server response: %@", exception);
     } 
 }
 
 -(void)setFBParameterForItinerary
 {
-    NSLog(@"Itinerary.....");
+    NIMLOG_PERF1(@"Itinerary.....");
     [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_ITINERARY];
     [nc_AppDelegate sharedInstance].FBDate = nil;
     [nc_AppDelegate sharedInstance].FBToAdd = nil;
@@ -485,7 +485,7 @@ NSUserDefaults *prefs;
 
 -(void)setFBParameterForLeg:(NSString *)legId
 {
-    NSLog(@"leg.....");
+    NIMLOG_PERF1(@"leg.....");
     [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_LEG];
     [nc_AppDelegate sharedInstance].FBDate = nil;
     [nc_AppDelegate sharedInstance].FBToAdd = nil;

@@ -227,11 +227,11 @@ NSUserDefaults *prefs;
         if ([request isGET]) {
             if (isTwitterLiveData) {
                 isTwitterLiveData = false;
-                NSLog(@"response %@", [response bodyAsString]);
+                NIMLOG_EVENT1(@"response %@", [response bodyAsString]);
                 id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];                
                 [self setTwitterLiveData:res];
             } else {
-                NSLog(@"latest tweets: %@", [response bodyAsString]);
+                NIMLOG_EVENT1(@"latest tweets: %@", [response bodyAsString]);
                 id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];
                 NSNumber *respCode = [(NSDictionary*)res objectForKey:ERROR_CODE];
                 int tc = [[(NSDictionary*)res objectForKey:TWIT_COUNT] intValue];
@@ -260,7 +260,7 @@ NSUserDefaults *prefs;
 
     }
     @catch (NSException *exception) {
-        NSLog(@"exceptions: %@", exception);
+        NIMLOG_ERR1(@"exceptions: %@", exception);
     }
 
 }
@@ -342,7 +342,7 @@ NSUserDefaults *prefs;
         [[RKClient sharedClient]  get:allAdvisories delegate:self];
     }
     @catch (NSException *exception) {
-        NSLog(@"Exception at advisories button click from ToFromview: %@", exception);
+        NIMLOG_ERR1(@"Exception at advisories button click from ToFromview: %@", exception);
     } 
 }
 

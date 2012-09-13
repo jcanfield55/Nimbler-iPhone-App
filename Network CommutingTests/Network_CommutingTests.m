@@ -804,12 +804,12 @@
     STAssertTrue([durationString(24.0 * 60.0*60.0*1000.0) isEqualToString:@"1 day"], @"");
     STAssertTrue([durationString(100.0 *24.0 * 60.0*60.0*1000.0) isEqualToString:@"100 days"], @"");
     STAssertTrue([durationString(48.0 *24.0 * 60.0*60.0*1000.0 + 91.0 * 1000.0) isEqualToString:@"48 days, 2 minutes"], @"");
-    NSLog(@"Test = %@", durationString(32.0 *24.0 * 60.0*60.0*1000.0 + 60.0* 60.0 * 1000.0));
+    NIMLOG_EVENT1(@"Test = %@", durationString(32.0 *24.0 * 60.0*60.0*1000.0 + 60.0* 60.0 * 1000.0));
     STAssertTrue([durationString(32.0 *24.0 * 60.0*60.0*1000.0 + 60.0* 60.0 * 1000.0) isEqualToString:@"32 days, 1 hour"], @"");
     STAssertTrue([durationString(2.0 *24.0 * 60.0*60.0*1000.0 + 15*60.0*60.0*1000.0 + 60.0*1000.0) isEqualToString:@"2 days, 15 hours, 1 minute"], @"");
     
     // distanceStringInMilesFeet tests
-    NSLog(@"Test = %@", distanceStringInMilesFeet(3000.0));
+    NIMLOG_EVENT1(@"Test = %@", distanceStringInMilesFeet(3000.0));
 
     STAssertTrue([distanceStringInMilesFeet(3000.0) isEqualToString:@"1.9 miles"], @"");
     STAssertTrue([distanceStringInMilesFeet(100.0) isEqualToString:@"328 feet"], @"");
@@ -836,7 +836,7 @@
     STAssertEquals(dayOfWeekFromDate(dayTime3), 7, @"");
     
     // timeOnlyFromDate
-    NSLog(@"Time only of dayTime3 = %@", timeOnlyFromDate(dayTime3));
+    NIMLOG_EVENT1(@"Time only of dayTime3 = %@", timeOnlyFromDate(dayTime3));
     STAssertEquals([dayTime1 laterDate:dayTime2], dayTime1, @""); // Full date compare
     STAssertTrue([[timeOnlyFromDate(dayTime1) laterDate:timeOnlyFromDate(dayTime2)] isEqualToDate:
                   timeOnlyFromDate(dayTime2)],@""); // Hours compare

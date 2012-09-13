@@ -174,7 +174,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         [[cell detailTextLabel] setNumberOfLines:0];  // Allow for multi-lines
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at load table: %@", exception);
+        NIMLOG_ERR1(@"exception at load table: %@", exception);
     }
     return cell;
 }
@@ -240,7 +240,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         [[self navigationController] pushViewController:routeDetailsVC animated:YES];
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at select itinerary: %@", exception);
+        NIMLOG_ERR1(@"exception at select itinerary: %@", exception);
     }
 }
 
@@ -254,7 +254,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         [[RKClient sharedClient]  get:@"advisories/all" delegate:self];
     }
     @catch (NSException *exception) {
-        NSLog(@" Exception at press advisory button from RouteOptionsViewController : %@", exception);
+        NIMLOG_ERR1(@" Exception at press advisory button from RouteOptionsViewController : %@", exception);
     } 
 }
 
@@ -272,7 +272,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         [nc_AppDelegate sharedInstance].FBUniqueId = [plan planId];
     }
     @catch (NSException *exception) {
-        NSLog(@"Exception at press feedback button from RouteOptionsViewController : %@", exception);
+        NIMLOG_ERR1(@"Exception at press feedback button from RouteOptionsViewController : %@", exception);
     }
 }
 
@@ -305,7 +305,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    NSLog(@"RouteOptions did appear");
+    NIMLOG_PERF1(@"RouteOptions did appear");
 }
 
 - (void)viewDidUnload{
@@ -362,11 +362,11 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         } else {
             //thereare no live feeds available. 
             isReloadRealData = FALSE;
-            NSLog(@"thereare no live feeds available for current route");
+            NIMLOG_PERF1(@"thereare no live feeds available for current route");
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at live feed data response: %@",exception);
+        NIMLOG_ERR1(@"exception at live feed data response: %@",exception);
     }
 }
 
@@ -390,7 +390,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exceptions at set time: %@", exception);
+        NIMLOG_ERR1(@"exceptions at set time: %@", exception);
     }
 }
 
@@ -405,7 +405,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         } 
         
     }  @catch (NSException *exception) {
-        NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
+        NIMLOG_ERR1( @"Exception while getting unique IDs from TP Server response: %@", exception);
     } 
 }
 

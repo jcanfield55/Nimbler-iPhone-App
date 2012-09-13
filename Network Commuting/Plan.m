@@ -327,7 +327,7 @@
         connectingReqDate = newConnectingReqDate;
         loopsExecuted++;
         if (loopsExecuted == 25) {
-            NSLog(@"returnSortedItinerariesWithMatchesForDate loopsExecuted unexpectedly reached 25");
+            NIMLOG_PERF1(@"returnSortedItinerariesWithMatchesForDate loopsExecuted unexpectedly reached 25");
         }
     } while (newConnectingReqDate && loopsExecuted < 25);
     

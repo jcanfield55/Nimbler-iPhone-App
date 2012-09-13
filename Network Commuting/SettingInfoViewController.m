@@ -166,7 +166,7 @@ bool isPush;
                                 MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:sliderMaxWalkDistance.value],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt:enableUrgentSoundFlag],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt:enableStandardSoundFlag],
                                 nil];
         NSString *twitCountReq = [UPDATE_SETTING_REQ appendQueryParams:params];
-        NSLog(@" - - -  - - - - - %@", twitCountReq);
+        NIMLOG_EVENT1(@" twitCountReq %@", twitCountReq);
         [nc_AppDelegate sharedInstance].isSettingSavedSuccessfully = NO;
         [[RKClient sharedClient]  get:twitCountReq delegate:self];
         
@@ -185,7 +185,7 @@ bool isPush;
     @catch (NSException *exception) {
         [alertView dismissWithClickedButtonIndex:0 animated:NO];
         [self.navigationController popViewControllerAnimated:YES];
-        NSLog(@"exception at upadting Setting : %@", exception);
+        NIMLOG_ERR1(@"exception at upadting Setting : %@", exception);
     }
 }
 
@@ -226,7 +226,7 @@ bool isPush;
     [sliderPushNotification setValue:walkDistance];
     [sliderPushNotification setSelected:YES];
     pushHour = walkDistance;
-    NSLog(@"walk distance: %d", walkDistance);
+    NIMLOG_EVENT1(@"walk distance: %d", walkDistance);
 }
 
 -(void)popOutFromSettingView { 
@@ -248,10 +248,10 @@ bool isPush;
             else{
                 [nc_AppDelegate sharedInstance].isSettingSavedSuccessfully = NO;
             }
-            NSLog(@"response for userUpdateSettings:  %@", [response bodyAsString]);
+            NIMLOG_EVENT1(@"response for userUpdateSettings:  %@", [response bodyAsString]);
         }
     }  @catch (NSException *exception) {
-        NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
+        NIMLOG_ERR1( @"Exception while getting unique IDs from TP Server response: %@", exception);
     } 
 }
 
@@ -306,7 +306,7 @@ bool isPush;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at fetch data from core data and set to views: %@",exception);
+        NIMLOG_ERR1(@"exception at fetch data from core data and set to views: %@",exception);
     }
 }
 
