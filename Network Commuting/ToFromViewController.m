@@ -269,7 +269,8 @@ NSUserDefaults *prefs;
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:YES];
+    [super viewWillAppear:animated];
+    NIMLOG_PERF1(@"Entered ToFromView viewWillAppear");
     [nc_AppDelegate sharedInstance].isToFromView = YES;
     
     @try {
@@ -1404,93 +1405,66 @@ NSUserDefaults *prefs;
         [nc_AppDelegate sharedInstance].FBUniqueId = nil;
     }
     @catch (NSException *exception) {
+        NIMLOG_ERR1(@"exception at reverGeocode: %@", exception);
+    }
+}
+
+// US132 implementation
+-(void)doSwapLocation
+{
+    
+    if (fromLocation == currentLocation && [currentLocation reverseGeoLocation] &&
+        [currentLocation reverseGeoLocation] != toLocation) {
+        // If from = currentLocation and there is a reverse geolocation
+        [toTableVC markAndUpdateSelectedLocation:[currentLocation reverseGeoLocation]];
+    }
+    else {  // do a normal swap
+        Location *fromloc = fromLocation;
+        Location *toLoc = toLocation;
+        // Swap Location (could be nil)
+        [toTableVC markAndUpdateSelectedLocation:fromloc];
+        [fromTableVC markAndUpdateSelectedLocation:toLoc];
+    }
+    
+#if FLURRY_ENABLED
+    NSDictionary* dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                FLURRY_TO_SELECTED_ADDRESS, [[self toLocation] shortFormattedAddress],
+                                FLURRY_FROM_SELECTED_ADDRESS, [[self fromLocation] shortFormattedAddress],
+                                nil];
+
+    [Flurry logEvent:FLURRY_TOFROM_SWAP_LOCATION withParameters:dictionary];
+#endif
+
+}
+
+//US 137 implementation
+- (void)endEdit{
+    [self setEditMode:NO_EDIT]; 
+    self.toTableVC.txtField.text = NULL_STRING;
+    self.fromTableVC.txtField.text = NULL_STRING;
+//    [self.toTableVC toFromTyping:self.toTableVC.txtField forEvent:nil];
+//    [self.toTableVC textSubmitted:self.toTableVC.txtField forEvent:nil];
+//    [self.fromTableVC toFromTyping:self.fromTableVC.txtField forEvent:nil];
+//    [self.fromTableVC textSubmitted:self.fromTableVC.txtField forEvent:nil];
+    [self.toTableVC markAndUpdateSelectedLocation:toLocation];
+    [self.fromTableVC markAndUpdateSelectedLocation:fromLocation];
+}
+- (void)requestReverseGeo:(Location *)location
+{
+
+    @try {
+        float startTime = CFAbsoluteTimeGetCurrent();
+        NSString* latLngString = [NSString stringWithFormat:@"%f,%f",[location latFloat], [location lngFloat]];
+        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
+                                @"latlng", latLngString,
+                                @"sensor", @"true", nil];
+        reverseGeoURLResource = [@"json" appendQueryParams:params];
+        [rkGeoMgr loadObjectsAtResourcePath:reverseGeoURLResource delegate:self]; // Call the reverse Geocoder
+        
+        currentLocationResTime =  CFAbsoluteTimeGetCurrent() - startTime;
+    }
+    @catch (NSException *exception) {
         NSLog(@"exception at reverGeocod: %@", exception);
-    }
-}
-
-#pragma mark UIdatePicker functionality
-
-- (void)selectDate {
-    [self.mainTable setUserInteractionEnabled:YES];
-     [self.navigationController.navigationBar setUserInteractionEnabled:YES];
-    [self showTabbar];
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
-    [toolBar setFrame:CGRectMake(0, 450, 320, 44)];
-    [datePicker setFrame:CGRectMake(0, 494, 320, 216)];
-    [UIView commitAnimations];
-    
-    date = [datePicker date];
-    [self setTripDate:date];
-    [self setTripDateLastChangedByUser:[[NSDate alloc] init]];
-    [self setIsTripDateCurrentTime:NO];
-    [self setDepartOrArrive:departOrArrive];
-    [self updateTripDate];
-    [self reloadTables];
-}
-
-//---------------------------------------------------------------------------
-
-
-- (void)selectCurrentDate {
-    [self.navigationController.navigationBar setUserInteractionEnabled:YES];
-    [self.mainTable setUserInteractionEnabled:YES];
-    [self showTabbar];
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
-    [toolBar setFrame:CGRectMake(0, 450, 320, 44)];
-    [datePicker setFrame:CGRectMake(0, 494, 320, 216)];
-    [UIView commitAnimations];
-    
-    isTripDateCurrentTime = TRUE;
-
-    [self setTripDateLastChangedByUser:[[NSDate alloc] init]];
-    [self setIsTripDateCurrentTime:YES];
-    [self setDepartOrArrive:departOrArrive];
-    [self updateTripDate];
-    [self reloadTables];
-}
-
-//---------------------------------------------------------------------------
-
-- (IBAction)openPickerView:(id)sender {
-    [self.mainTable setUserInteractionEnabled:NO];
-     [self.navigationController.navigationBar setUserInteractionEnabled:NO];
-    toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 450, 320, 44)];
-    [toolBar setTintColor:[UIColor darkGrayColor]];
-    
-    if (departOrArrive == DEPART) {
-        [departArriveSelector setSelectedSegmentIndex:0];
-    } else {
-        [departArriveSelector setSelectedSegmentIndex:1];
-    }
-    UIBarButtonItem *segmentBtn = [[UIBarButtonItem alloc] initWithCustomView:departArriveSelector];
-    UIBarButtonItem *flexibaleSpaceBarButton1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    UIBarButtonItem *flexibaleSpaceBarButton2 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    [toolBar setItems:[NSArray arrayWithObjects:btnNow,flexibaleSpaceBarButton1,segmentBtn,flexibaleSpaceBarButton2,btnDone, nil]];
-    [self.view bringSubviewToFront:toolBar];
-    [self.view bringSubviewToFront:datePicker];
-
-    [self.view addSubview:toolBar];
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
-    [toolBar setFrame:CGRectMake(0, 160, 320, 44)];
-    [datePicker setFrame:CGRectMake(0, 204, 320, 216)];
-    [UIView commitAnimations];
-}
-
-// at Segment change 
--(void)segmentChange {
-    if ([departArriveSelector selectedSegmentIndex] == 0) {
-        departOrArrive = DEPART;
-    } else {
-        departOrArrive = ARRIVE;
-        // Move date to at least one hour from now if not already
-        NSDate* nowPlus1hour = [[NSDate alloc] initWithTimeIntervalSinceNow:(60.0*60)];  // 1 hour from now
-        if ([date earlierDate:nowPlus1hour] == date) { // if date is earlier than 1 hour from now
-            date = nowPlus1hour;
-            [datePicker setDate:date animated:YES];
-        }
     }
 }
 

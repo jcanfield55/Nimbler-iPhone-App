@@ -148,20 +148,39 @@ FeedBackForm *fbView;
         
         // Temporary code inserted 9/7/12 to do a one-time delete of plans that do not have
         // itineraries with startTimeOnly and endTimeOnly set (should only happen for code apps before 9/7)
+        // Code also consolidates all locations (addressing many duplicate ones from DE152)
         if (newVer) {
-            NSFetchRequest* fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Plan"];
+            NSFetchRequest* fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Location"];
             NSError *error;
+            NSArray* allLocations = [[self managedObjectContext] executeFetchRequest:fetchRequest error:&error];
+            if (!allLocations) {
+                [NSException raise:@"Fetching all Locations failed" format:@"Reason: %@", [error localizedDescription]];
+            }
+            for (Location* loc in allLocations) {
+                if (![loc isDeleted]) { // only if not already deleted
+                    if ([[loc formattedAddress] isEqualToString:@"California, USA"] || [[loc formattedAddress] isEqualToString:@"United States"] || [[loc formattedAddress] isEqualToString:@"Santa Clara, CA, USA"] || [[loc formattedAddress] isEqualToString:@"San Mateo, CA, USA"] || [[loc formattedAddress] isEqualToString:@"San Francisco, CA, USA"]) {
+                        [locations removeLocation:loc];  // remove any of these generic county, state, country locations
+                        } else {
+                            // Consolidate locations
+                            [locations consolidateWithMatchingLocations:loc keepThisLocation:true];
+                        }
+                }
+            }
             NSArray* allPlans = [[self managedObjectContext] executeFetchRequest:fetchRequest error:&error];
             if (!allPlans) {
                 [NSException raise:@"Fetching all Plans failed" format:@"Reason: %@", [error localizedDescription]];
             }
             NSMutableSet* deleteSet = [[NSMutableSet alloc] initWithCapacity:[allPlans count]];
             for (Plan* plan in allPlans) {
-                for (Itinerary* itin in [plan itineraries]) {
-                    if (![itin startTimeOnly] || ![itin endTimeOnly]) {
-                        // If these values were never set when the plan was created
-                        [deleteSet addObject:plan];  // add the plan for deletion
-                        break;
+                if ([[plan itineraries] count] == 0 || ![plan fromLocation] || [[plan fromLocation] isDeleted] || ![plan toLocation] || [[plan toLocation] isDeleted]) {
+                    [deleteSet addObject:plan];  // add plan for deletion if any of its key parameters are null
+                } else {
+                    for (Itinerary* itin in [plan itineraries]) {
+                        if (![itin startTimeOnly] || ![itin endTimeOnly]) {
+                            // If these values were never set when the plan was created
+                            [deleteSet addObject:plan];  // add the plan for deletion
+                            break;
+                        }
                     }
                 }
             }
@@ -170,7 +189,7 @@ FeedBackForm *fbView;
                 [[self managedObjectContext] deleteObject:plan];
             }
             saveContext([self managedObjectContext]);
-        }
+        }// End of temporary code
         
     }@catch (NSException *exception) {
         NSLog(@"Exception: ----------------- %@", exception);
