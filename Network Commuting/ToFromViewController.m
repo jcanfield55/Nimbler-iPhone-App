@@ -807,6 +807,18 @@ NSUserDefaults *prefs;
     }
 }
 
+// Process an event from MapKit URL
+- (void)getRouteFromMapKitURLRequest
+{
+    NIMLOG_EVENT1(@"MapKit URL request");
+    startButtonClickTime = CFAbsoluteTimeGetCurrent();
+    
+    if (isTripDateCurrentTime) { // if current time, get the latest before getting plan
+        [self updateTripDate];
+    }
+    [self getPlan];
+}
+
 #pragma mark Edit events for ToFrom table
 // Method to adjust the mainTable for editing mode
 //
@@ -1315,17 +1327,6 @@ NSUserDefaults *prefs;
     }
 }
 
-#pragma mark Navigate in SettingInfoViewController view
--(void)redirectAtNimblerSetting{
-    @try {
-//        SettingInfoViewController *settingView = [[SettingInfoViewController alloc] init];
-//        [[self navigationController] pushViewController:settingView animated:YES];
-        [self routeButtonPressed:self forEvent:nil];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"exception at navigate to settingInfo view: %@", exception);
-    }
-}
 
 #pragma mark get walk distance from User Defaults
 -(NSNumber *)getWalkDistance

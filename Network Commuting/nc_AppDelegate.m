@@ -413,6 +413,58 @@ FeedBackForm *fbView;
 }
 
 
+#pragma mark - Directions request URL handler from iOS6
+
+// Directions request URL handler from iOS6
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation {
+    if ([MKDirectionsRequest isDirectionsRequestURL:url]) {
+        MKDirectionsRequest* directionsInfo = [[MKDirectionsRequest alloc] initWithContentsOfURL:url];
+        
+        // Create & set the source location
+        Location* sourceLoc;
+        if ([[directionsInfo source] isCurrentLocation]) {
+            sourceLoc = currentLocation;
+        } else {
+            MKPlacemark* sourcePlacemark = [[directionsInfo source] placemark];
+            sourceLoc = [locations newEmptyLocation];
+            sourceLoc.formattedAddress = [NSString stringWithFormat:@"%@, %@", 
+                                          sourcePlacemark.thoroughfare, sourcePlacemark.locality];
+            sourceLoc.latFloat = sourcePlacemark.location.coordinate.latitude;
+            sourceLoc.lngFloat = sourcePlacemark.location.coordinate.longitude;
+        }
+        [toFromViewController updateToFromLocation:self isFrom:true location:sourceLoc];
+        
+        // Create & set the destination location
+        Location* destinationLoc;
+        if ([[directionsInfo destination] isCurrentLocation]) {
+            destinationLoc = currentLocation;
+        } else {
+            MKPlacemark* destinationPlacemark = [[directionsInfo destination] placemark];
+            destinationLoc = [locations newEmptyLocation];
+            destinationLoc.formattedAddress = [NSString stringWithFormat:@"%@, %@", 
+                                               destinationPlacemark.thoroughfare, destinationPlacemark.locality];
+            destinationLoc.latFloat = destinationPlacemark.location.coordinate.latitude;
+            destinationLoc.lngFloat = destinationPlacemark.location.coordinate.longitude;
+        }
+        [toFromViewController updateToFromLocation:self isFrom:false location:destinationLoc];
+        
+        // Request route
+        [toFromViewController getRouteFromMapKitURLRequest];
+        return YES;
+    }
+    return NO;
+    
+    // TODO Do a consolidateLocations versus existing locations
+    // TODO Make robust use of Apple geocoding
+    // TODO Make sure this works even if Current Location is turned off for Nimbler
+    // TODO Adjust the GeoJSON to cover a smaller Nimbler Caltrain footprint
+}
+
+
+
 #pragma mark - Core Data stack
 
 /**
@@ -582,7 +634,7 @@ FeedBackForm *fbView;
                     }
                 } else if(isRegionSupport){                
                     NSDictionary  *regionParser = [rkParser objectFromString:[response bodyAsString] error:nil];                
-                    SupportedRegion *region = [SupportedRegion alloc] ;
+                    SupportedRegion *region = [[SupportedRegion alloc] init];
                     isRegionSupport = FALSE;
                     for (id key in regionParser) {
                         if ([key isEqualToString:@"upperRightLatitude"]) {

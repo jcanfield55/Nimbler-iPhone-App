@@ -932,6 +932,7 @@
 		52810D5515FABBF0004C4A9B /* Network_Commuting 1.5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.5.xcdatamodel"; sourceTree = "<group>"; };
 		52849FC8151D0389001D4DDC /* LegMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LegMapViewController.h; sourceTree = "<group>"; };
 		52849FC9151D0389001D4DDC /* LegMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LegMapViewController.m; sourceTree = "<group>"; };
+		5286AEBC1602B14700685C37 /* CoverageGeoJSON.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = CoverageGeoJSON.geojson; sourceTree = "<group>"; };
 		5289CF1A15EEE8BD005843EB /* PlanRequestParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanRequestParameters.h; sourceTree = "<group>"; };
 		5289CF1B15EEE8BE005843EB /* PlanRequestParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlanRequestParameters.m; sourceTree = "<group>"; };
 		528A486415B4D690009EF7F0 /* mapDot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mapDot.png; sourceTree = "<group>"; };
@@ -2563,6 +2564,7 @@
 				52CF43AA14BDF2F9000565D6 /* InfoPlist.strings */,
 				52CF43AD14BDF2F9000565D6 /* main.m */,
 				52CF43AF14BDF2F9000565D6 /* Nimbler Caltrain-Prefix.pch */,
+				5286AEBC1602B14700685C37 /* CoverageGeoJSON.geojson */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
