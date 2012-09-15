@@ -121,24 +121,85 @@
         [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
         [timeFormatter setDateStyle:NSDateFormatterNoStyle];
     }
-    
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+    if([[parameters fromLocation] latLngPairStr]){
+        [params setObject:[[parameters fromLocation] latLngPairStr] forKey:FROM_PLACE];
+    }
+    if([[parameters toLocation] latLngPairStr]){
+        [params setObject:[[parameters toLocation] latLngPairStr]   forKey:TO_PLACE];
+    }
+    if([dateFormatter stringFromDate:[parameters thisRequestTripDate]]){
+        [params setObject:[dateFormatter stringFromDate:[parameters thisRequestTripDate]] forKey:REQUEST_TRIP_DATE];
+    }
+    if([timeFormatter stringFromDate:[parameters thisRequestTripDate]]){
+        [params setObject:[timeFormatter stringFromDate:[parameters thisRequestTripDate]] forKey:REQUEST_TRIP_TIME];
+    }
+    if((([parameters departOrArrive] == ARRIVE) ? @"true" : @"false")){
+        [params setObject:(([parameters departOrArrive] == ARRIVE) ? @"true" : @"false") forKey:ARRIVE_BY];
+    }
+    if([NSNumber numberWithInt:[parameters maxWalkDistance]]){
+        [params setObject:[NSNumber numberWithInt:[parameters maxWalkDistance]] forKey:MAX_WALK_DISTANCE];
+    }
+    if([[NSUserDefaults standardUserDefaults]objectForKey:DEVICE_CFUUID]){
+        [params setObject:[[NSUserDefaults standardUserDefaults]objectForKey:DEVICE_CFUUID] forKey:DEVICE_ID];
+    }
+    if(parameters.formattedAddressTO){
+        [params setObject:parameters.formattedAddressTO forKey:FORMATTED_ADDRESS_TO];
+    }
+    if(parameters.formattedAddressFROM){
+        [params setObject:parameters.formattedAddressFROM forKey:FORMATTED_ADDRESS_FROM];
+    }
+    if(parameters.latitudeFROM){
+        [params setObject:parameters.latitudeFROM forKey:LATITUDE_FROM];
+    }
+    if(parameters.longitudeFROM){
+        [params setObject:parameters.longitudeFROM forKey:LONGITUDE_FROM];
+    }
+    if(parameters.latitudeTO){
+        [params setObject:parameters.latitudeTO forKey:LATITUDE_TO];
+    }
+    if(parameters.longitudeTO){
+        [params setObject:parameters.longitudeTO forKey:LONGITUDE_TO];
+    }
+    if(parameters.fromType){
+        [params setObject:parameters.fromType forKey:FROM_TYPE];
+    }
+    if(parameters.toType){
+        [params setObject:parameters.toType forKey:TO_TYPE];
+    }
+    if(parameters.rawAddressFROM){
+        [params setObject:parameters.rawAddressFROM forKey:RAW_ADDRESS_FROM];
+    }
+    if(parameters.geoResponseFROM){
+        [params setObject:parameters.geoResponseFROM forKey:GEO_RES_FROM];
+    }
+    if(parameters.timeFROM){
+        [params setObject:parameters.timeFROM forKey:TIME_FROM];
+    }
+    if(parameters.rawAddressTO){
+        [params setObject:parameters.rawAddressTO forKey:RAW_ADDRESS_TO];
+    }
+    if(parameters.geoResponseTO){
+        [params setObject:parameters.geoResponseTO forKey:GEO_RES_TO];
+    }
+    if(parameters.timeTO){
+        [params setObject:parameters.timeTO forKey:TIME_TO];
+    }
     // Build the parameters into a resource string
-    NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
-                           FROM_PLACE, [[parameters fromLocation] latLngPairStr],
-                            TO_PLACE, [[parameters toLocation] latLngPairStr],
-                            REQUEST_TRIP_DATE, [dateFormatter stringFromDate:[parameters thisRequestTripDate]],
-                            REQUEST_TRIP_TIME, [timeFormatter stringFromDate:[parameters thisRequestTripDate]],
-                           ARRIVE_BY, (([parameters departOrArrive] == ARRIVE) ? @"true" : @"false"),
-                            MAX_WALK_DISTANCE, [NSNumber numberWithInt:[parameters maxWalkDistance]],DEVICE_ID,[[NSUserDefaults standardUserDefaults]objectForKey:DEVICE_CFUUID],FORMATTED_ADDRESS_TO,parameters.formattedAddressTO,FORMATTED_ADDRESS_FROM,parameters.formattedAddressFROM,LATITUDE_FROM,parameters.latitudeFROM,LONGITUDE_FROM,parameters.longitudeFROM,LATITUDE_TO,parameters.latitudeTO,LONGITUDE_TO,parameters.longitudeTO,FROM_TYPE,parameters.fromType,TO_TYPE,parameters.toType,RAW_ADDRESS_FROM,parameters.rawAddressFROM,GEO_RES_FROM,parameters.geoResponseFROM,TIME_FROM,parameters.timeFROM,RAW_ADDRESS_TO,parameters.rawAddressTO,GEO_RES_TO,parameters.geoResponseTO,TIME_TO,parameters.timeTO,
-                            nil];
     parameters.serverCallsSoFar = parameters.serverCallsSoFar + 1;
     // TODO handle changes to maxWalkDistance with plan caching
     
-    planURLResource = [PLAN_GENERATE_URL appendQueryParams:params];
+    planURLResource = PLAN_GENERATE_URL;
     [parametersByPlanURLResource setObject:parameters forKey:planURLResource];
-    
+    Plan *plan;
+    RKParams *requestParameter = [RKParams paramsWithDictionary:params];
+    [rkPlanMgr postObject:plan delegate:self block:^(RKObjectLoader *loader){
+        loader.resourcePath = PLAN_GENERATE_URL;
+        loader.params = requestParameter;
+        loader.method = RKRequestMethodPOST;
+    }];
     // Call the trip planner
-    [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
+    //[rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
 }
 
 

@@ -1115,136 +1115,33 @@ NSUserDefaults *prefs;
             parameters.maxWalkDistance = maxDistance;
             parameters.planDestination = PLAN_DESTINATION_TO_FROM_VC;
             
-        
-            //[dictPlanRequestData setObject:[prefs objectForKey:DEVICE_CFUUID] forKey:DEVICE_ID]; 
-            if([toLocation formattedAddress] == nil){
-                parameters.formattedAddressTO = @"";
-            }
-            else{
-                parameters.formattedAddressTO = [toLocation formattedAddress];
-            }
-            if([fromLocation formattedAddress] == nil){
-                parameters.formattedAddressFROM = @"";
-            }
-            else{
-                parameters.formattedAddressFROM = [fromLocation formattedAddress];
-            }
-            if([toLocation lat] == nil){
-                 parameters.latitudeTO = @"";
-            }
-            else{
-                 parameters.latitudeTO = (NSString *)[fromLocation lat];
-            }
-            if([toLocation lng] == nil){
-                parameters.longitudeTO = @"";
-            }
-            else{
-                 parameters.longitudeTO = (NSString *)[toLocation lng];
-            }
-            if([fromLocation lat] == nil){
-                parameters.latitudeFROM = @"";
-            }
-            else{
-                parameters.latitudeFROM = (NSString *)[fromLocation lat];
-            }
-            if([fromLocation lng] == nil){
-                parameters.longitudeFROM = @"";
-            }
-            else{
-                parameters.longitudeFROM = (NSString *)[fromLocation lng];
-            }
+            parameters.formattedAddressTO = [toLocation formattedAddress];
+            parameters.formattedAddressFROM = [fromLocation formattedAddress];
+            parameters.latitudeTO = (NSString *)[toLocation lat];
+            parameters.longitudeTO = (NSString *)[toLocation lng];
+            parameters.latitudeFROM = (NSString *)[fromLocation lat];
+            parameters.longitudeFROM = (NSString *)[fromLocation lng];
             if([[fromLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
                 parameters.fromType = REVERSE_GEO_FROM;
-                if(currentLoc == nil){
-                    parameters.formattedAddressFROM = @"";
-                }
-                else{
-                    parameters.formattedAddressFROM = currentLoc;
-                }
-                if([toLocation lat] == nil){
-                    parameters.latitudeTO = @"";
-                }
-                else{
-                    parameters.latitudeTO = (NSString *)[toLocation lat];
-                }
-                if([toLocation lng] == nil){
-                    parameters.longitudeTO = @"";
-                }
-                else{
-                    parameters.longitudeTO = (NSString *)[toLocation lng];
-                }
+                parameters.formattedAddressFROM = currentLoc;
+                parameters.latitudeTO = (NSString *)[toLocation lat];
+                parameters.longitudeTO = (NSString *)[toLocation lng];
             }else if([[toLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
                 parameters.toType = REVERSE_GEO_TO;
-                if(currentLoc == nil){
-                    parameters.formattedAddressTO = @"";
-                }
-                else{
-                    parameters.formattedAddressTO = currentLoc;
-                }
-                if([fromLocation lat] == nil){
-                    parameters.latitudeFROM = @"";
-                }
-                else{
-                    parameters.latitudeFROM = (NSString *)[fromLocation lat];
-                }
-                if([fromLocation lng] == nil){
-                    parameters.longitudeFROM = @"";
-                }
-                else{
-                    parameters.longitudeFROM = (NSString *)[fromLocation lng];
-                }
+                parameters.formattedAddressTO = currentLoc;
+                parameters.latitudeFROM = (NSString *)[fromLocation lat];
+                parameters.longitudeFROM = (NSString *)[fromLocation lng];
             }
-            
             if ([locations isFromGeo]) {
                 parameters.fromType = GEO_FROM;
-                if([fromLocation formattedAddress] == nil){
-                    parameters.rawAddressFROM = @"";
-                }
-                else{
-                    parameters.rawAddressFROM = [fromLocation formattedAddress];
-                }
-                if([locations geoRespFrom] == nil){
-                    parameters.geoResponseFROM = @"";
-                }
-                else{
-                    parameters.geoResponseFROM = [locations geoRespFrom];
-                }
-                if([locations geoRespTimeFrom] == nil){
-                    parameters.timeFROM = @"";
-                }
-                else{
-                    parameters.timeFROM = [locations geoRespTimeFrom];
-                }
+                parameters.rawAddressFROM = [fromLocation formattedAddress];
+                parameters.geoResponseFROM = [locations geoRespFrom];
+                parameters.timeFROM = [locations geoRespTimeFrom];
             } else if ([locations isToGeo]) {
                 parameters.toType = GEO_TO;
-                if([fromLocation formattedAddress] == nil){
-                    parameters.rawAddressFROM = @"";
-                }
-                else{
-                    parameters.rawAddressFROM = [fromLocation formattedAddress] ;
-                }
-                if([locations geoRespTo] == nil){
-                    parameters.geoResponseTO = @"";
-                }
-                else{
-                    parameters.geoResponseTO = [locations geoRespTo];
-                }
-                if([locations geoRespTimeTo] == nil){
-                    parameters.timeTO = @"";
-                }
-                else{
-                    parameters.timeTO = [locations geoRespTimeTo];
-                }
-            }
-            else{
-                parameters.fromType = PREDEFINE_TYPE;
-                parameters.toType = PREDEFINE_TYPE;
-                parameters.rawAddressFROM = @"";
-                parameters.rawAddressTO = @"";
-                parameters.geoResponseFROM = @"";
-                parameters.geoResponseTO = @"";
-                parameters.timeFROM = @"";
-                parameters.timeTO = @"";
+                parameters.rawAddressFROM = [fromLocation formattedAddress] ;
+                parameters.geoResponseTO = [locations geoRespTo];
+                parameters.timeTO = [locations geoRespTimeTo];
             }
             [planStore requestPlanWithParameters:parameters];
             savetrip = TRUE;
