@@ -209,6 +209,14 @@
     NSString* Bart = @"BART";
     NSString* ACTransit = @"AC Transit";
     
+    // Set up TransitCalendar datastructures in the KeyStore based on stub functions
+    KeyObjectStore* store = [KeyObjectStore keyObjectStore];
+    TransitCalendar* transitCalendar = [[TransitCalendar alloc] init];
+    [transitCalendar getAgencyCalendarDataStub];
+    [store setObject:[transitCalendar serviceByWeekdayByAgency] forKey:TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY];
+    [store setObject:[transitCalendar lastGTFSLoadDateByAgency] forKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
+    [store setObject:[transitCalendar calendarByDateByAgency] forKey:TR_CALENDAR_BY_DATE_BY_AGENCY];
+    
     // Plan1 -- 3 itineraries starting 
     leg10.startTime = date10;
     leg10.agencyId = caltrain;
@@ -576,6 +584,9 @@
             leg.endTime = [leg.startTime dateByAddingTimeInterval:(30.0*60)];
         }
     }
+    
+    // Save context
+    saveContext(managedObjectContext);
 }
 
 

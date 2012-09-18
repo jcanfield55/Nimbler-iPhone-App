@@ -1413,7 +1413,7 @@ NSUserDefaults *prefs;
         NSMutableString *strItineraries = [[NSMutableString alloc] init];
         for (int i= 0; i< [[plan sortedItineraries] count]; i++) {
             Itinerary *itin = [[plan sortedItineraries] objectAtIndex:i];
-            [strItineraries appendFormat:[NSString stringWithFormat:@"%@,",[itin itinId]]];
+            [strItineraries appendFormat:@"%@,",[itin itinId]];
         }
         [strItineraries deleteCharactersInRange:NSMakeRange([strItineraries length]-1, 1)];
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];

@@ -221,11 +221,11 @@ bool isPush;
 
 -(IBAction)sliderPushNotification:(UISlider *)sender
 {
-    int walkDistance = lroundf(sliderPushNotification.value);
-    [sliderPushNotification setValue:walkDistance];
+    int pushNotificationThreshold = lroundf(sliderPushNotification.value);
+    [sliderPushNotification setValue:pushNotificationThreshold];
     [sliderPushNotification setSelected:YES];
-    pushHour = walkDistance;
-    NIMLOG_EVENT1(@"walk distance: %d", walkDistance);
+    pushHour = pushNotificationThreshold;
+    NIMLOG_EVENT1(@"walk distance: %d", pushNotificationThreshold);
 }
 
 -(void)popOutFromSettingView { 

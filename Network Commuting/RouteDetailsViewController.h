@@ -18,8 +18,6 @@
 }
 @property(nonatomic, strong) IBOutlet UITableView* mainTable; // Table listing route details
 @property(nonatomic, strong) MKMapView *mapView; 
-@property(nonatomic, strong) IBOutlet UIButton* feedbackButton; 
-@property(nonatomic, strong) IBOutlet UIButton* advisoryButton;  // Button to pull up Twitter feeds
 @property(nonatomic, strong) LegMapViewController* legMapVC; // View Controller for managing the map
 @property(nonatomic, strong) Itinerary *itinerary;
 @property(nonatomic) int itineraryNumber; // selected row on the itinerary list
