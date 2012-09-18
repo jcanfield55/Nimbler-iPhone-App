@@ -8,7 +8,7 @@
 
 #import "nc_AppDelegate.h"
 #import "UtilityFunctions.h"
-//#import "TestFlightSDK1/TestFlight.h"
+#import "Logging.h"
 #import "ToFromViewController.h"
 #import "twitterViewController.h"
 #import "SettingInfoViewController.h"
@@ -98,10 +98,16 @@ FeedBackForm *fbView;
     prefs = [NSUserDefaults standardUserDefaults];
     
     // Configure the RestKit RKClient object for Geocoding and trip planning
+    RKLogConfigureByName("RestKit", CUSTOM_RK_LOG_LEVELS);
+    RKLogConfigureByName("RestKit/Network/Cache", CUSTOM_RK_LOG_LEVELS);
+    RKLogConfigureByName("RestKit/Network/Reachability", CUSTOM_RK_LOG_LEVELS);
+
+    
     RKObjectManager* rkGeoMgr = [RKObjectManager objectManagerWithBaseURL:GEO_RESPONSE_URL];
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
     
     RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];
+
     
     // Other URLs:
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/

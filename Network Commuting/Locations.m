@@ -320,7 +320,7 @@
 // Only include those locations with frequency >= 1 in the row count
 - (void)updateInternalCache
 {
-    NSLog(@"Entering updateInternal Cache");
+    NIMLOG_PERF1(@"Entering updateInternal Cache");
     if (!locationsFetchRequest) {  // create the fetch request if we have not already done so
         locationsFetchRequest = [[NSFetchRequest alloc] init];
         NSEntityDescription *e = [[managedObjectModel entitiesByName] objectForKey:@"Location"];
@@ -339,7 +339,7 @@
     if (!sortedFromLocations) {
         [NSException raise:@"Fetch failed" format:@"Reason: %@", [error localizedDescription]];
     }
-    NSLog(@"Now fetching sortedToLocations");
+    NIMLOG_PERF1(@"Now fetching sortedToLocations");
     // Now create a different array with the sorted To descriptors
     NSSortDescriptor *sd1 = [NSSortDescriptor sortDescriptorWithKey:@"toFrequency" 
                                                           ascending:NO];
@@ -357,7 +357,7 @@
     [self setTypedFromString:[self typedFromString]];
     
     [self setAreLocationsChanged:NO];  // reset again
-    NSLog(@"Done updating Locations cache");
+    NIMLOG_PERF1(@"Done updating Locations cache");
 }
 
 // Updates sortedToLocations or sortedFromLocations to put the selectedLocation at the top of the list
