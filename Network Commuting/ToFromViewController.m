@@ -943,7 +943,7 @@ NSUserDefaults *prefs;
             
             NSArray* atoms = [responseStartingFromStatus componentsSeparatedByString:@"\""];
             NSString* geocodeStatus = [atoms objectAtIndex:1]; // status string is second atom (first after the first quote)
-            NIMLOG_EVENT1(@"Status: %@", geocodeStatus);
+            NIMLOG_EVENT1(@"Geocode Status: %@", geocodeStatus);
             
             if ([geocodeStatus compare:@"OK" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
                 if ([objects count] > 0) { // if we have an reverse geocode object
@@ -954,7 +954,7 @@ NSUserDefaults *prefs;
                     // Check if an equivalent Location is already in the locations table
                     reverseGeoLocation = [locations consolidateWithMatchingLocations:reverseGeoLocation keepThisLocation:NO];
                     
-                    // Delete all the other objects out of the CoreData (DE152 fix)
+                    // Delete all the other objects out of CoreData (DE152 fix)
                     for (int i=1; i<[objects count]; i++) {  // starting at the instance after i=0
                         [[self locations] removeLocation:[objects objectAtIndex:i]];
                     }
@@ -1123,7 +1123,7 @@ NSUserDefaults *prefs;
                                            @"date", [NSDate date], nil]];
             
             NSNumber* maxiWalkDistance = [self getWalkDistance];
-            NIMLOG_EVENT1(@"maximum walk distance ------------------------------------ %f",[maxiWalkDistance floatValue]);
+
             // convert miles into meters. 1 mile = 1609.344 meters
             int maxDistance = (int)([maxiWalkDistance floatValue]*1609.544);
             

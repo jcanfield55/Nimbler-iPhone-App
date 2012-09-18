@@ -71,7 +71,7 @@
         
         if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate]
                                                       departOrArrive:[parameters departOrArrive]]) {
-            NIMLOG_PERF1(@"Matches found in plan cache");
+            NIMLOG_EVENT1(@"Matches found in plan cache");
 #if FLURRY_ENABLED
             NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
                                           FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
@@ -243,8 +243,18 @@
 
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error
 {
-    NIMLOG_ERR1(@"Error received from RKObjectManager: %@", error);
-    [toFromVC newPlanAvailable:nil status:GENERIC_EXCEPTION];
+    NSString* resourcePath = [objectLoader resourcePath];
+    PlanRequestParameters* parameters = [parametersByPlanURLResource objectForKey:resourcePath];
+    if (!parameters) {
+        NIMLOG_ERR1(@"RKObjectManager failure with no retrievable parameters.  Error: %@", error);
+    }
+    if ([parameters planDestination] == PLAN_DESTINATION_TO_FROM_VC) {
+        NIMLOG_ERR1(@"Error received from RKObjectManager on first call by ToFromViewController: %@", error);
+        [toFromVC newPlanAvailable:nil status:GENERIC_EXCEPTION];
+    }
+    else { // if target is RouteOptions, do not call routeOptions and do not alert user.  This was a backup request only
+        NIMLOG_ERR1(@"Error received from RKObjectManager on subsequent call RouteOptionsViewController: %@", error);
+    }
 }
 
 // Checks if more itineraries are needed for this plan, and if so requests them from the server
@@ -260,7 +270,7 @@
                                             planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY
                                                  planMaxTimeForResultsToShow:(1000*60*60)];
     if (!testItinArray) {
-        NIMLOG_PERF1(@"No sortedItineraries in plan in requestMoreItinerariesIfNeeded");
+        NIMLOG_ERR1(@"No sortedItineraries in plan in requestMoreItinerariesIfNeeded");
         return; // return if there are no matching itineraries in the original request
     }
     PlanRequestParameters* params = [PlanRequestParameters copyOfPlanRequestParameters:requestParams0];
@@ -280,6 +290,7 @@
                                                       [NSDate dateWithTimeInterval:(-PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS)
                                                                          sinceDate:firstItinEndTimeOnly]);
         }
+        NIMLOG_EVENT1(@"Requesting additional plan with parameters: %@", params);
         [self requestPlanFromOtpWithParameters:params];
     }
 }

@@ -150,6 +150,7 @@ FeedBackForm *fbView;
         // itineraries with startTimeOnly and endTimeOnly set (should only happen for code apps before 9/7)
         // Code also consolidates all locations (addressing many duplicate ones from DE152)
         if (newVer) {
+            // Clean up the locations
             NSFetchRequest* fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Location"];
             NSError *error;
             NSArray* allLocations = [[self managedObjectContext] executeFetchRequest:fetchRequest error:&error];
@@ -158,23 +159,30 @@ FeedBackForm *fbView;
             }
             for (Location* loc in allLocations) {
                 if (![loc isDeleted]) { // only if not already deleted
-                    if ([[loc formattedAddress] isEqualToString:@"California, USA"] || [[loc formattedAddress] isEqualToString:@"United States"] || [[loc formattedAddress] isEqualToString:@"Santa Clara, CA, USA"] || [[loc formattedAddress] isEqualToString:@"San Mateo, CA, USA"] || [[loc formattedAddress] isEqualToString:@"San Francisco, CA, USA"]) {
+                    if ([[loc formattedAddress] isEqualToString:@"California, USA"] ||
+                        [[loc formattedAddress] isEqualToString:@"United States"] ||
+                        [[loc formattedAddress] isEqualToString:@"Santa Clara, CA, USA"] ||
+                        [[loc formattedAddress] isEqualToString:@"San Mateo, CA, USA"] ||
+                        [[loc formattedAddress] isEqualToString:@"San Francisco, CA, USA"]) {
                         [locations removeLocation:loc];  // remove any of these generic county, state, country locations
-                        } else {
-                            // Consolidate locations
-                            [locations consolidateWithMatchingLocations:loc keepThisLocation:true];
-                        }
+                    } else {
+                        // Consolidate locations
+                        [locations consolidateWithMatchingLocations:loc keepThisLocation:true];
+                    }
                 }
             }
-            // Added FetchRequest For Plan   
-            NSFetchRequest* fetchRequestForPlan = [NSFetchRequest fetchRequestWithEntityName:@"Plan"];
-            NSArray* allPlans = [[self managedObjectContext] executeFetchRequest:fetchRequestForPlan error:&error];
+            
+            // Clean up the plans
+            fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Plan"];
+            NSArray* allPlans = [[self managedObjectContext] executeFetchRequest:fetchRequest error:&error];
             if (!allPlans) {
                 [NSException raise:@"Fetching all Plans failed" format:@"Reason: %@", [error localizedDescription]];
             }
             NSMutableSet* deleteSet = [[NSMutableSet alloc] initWithCapacity:[allPlans count]];
             for (Plan* plan in allPlans) {
-                if ([[plan itineraries] count] == 0 || ![plan fromLocation] || [[plan fromLocation] isDeleted] || ![plan toLocation] || [[plan toLocation] isDeleted]) {
+                if ([[plan itineraries] count] == 0 ||
+                    ![plan fromLocation] || [[plan fromLocation] isDeleted] ||
+                    ![plan toLocation] || [[plan toLocation] isDeleted]) {
                     [deleteSet addObject:plan];  // add plan for deletion if any of its key parameters are null
                 } else {
                     for (Itinerary* itin in [plan itineraries]) {
@@ -193,7 +201,7 @@ FeedBackForm *fbView;
             
             // Save changes
             saveContext([self managedObjectContext]);
-        }// End of temporary code
+        }  // End of temporary code
         
     }@catch (NSException *exception) {
     NIMLOG_ERR1(@"Exception: ----------------- %@", exception);

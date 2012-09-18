@@ -466,10 +466,10 @@
 - (Location *)consolidateWithMatchingLocations:(Location *)loc0 keepThisLocation:(BOOL)keepThisLocation
 {
     NSArray *matches = [self locationsWithFormattedAddress:[loc0 formattedAddress]];
-    if (!matches || [matches count]==0) {   
+    if (!matches || [matches count]==0) {
         return loc0;  
     }
-    else {  
+    else {
         Location* returnLoc; // the location object we will return
         if (keepThisLocation) {
             returnLoc = loc0;
