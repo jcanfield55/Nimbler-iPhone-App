@@ -84,4 +84,9 @@
 // UIanimation motion
 #define ANIMATION_STANDART_MOTION_SPEED 0.3
 
+
+// Images
+
+#define NAVIGATION_BAR_IMAGE  [UIImage imageNamed:@"img_navigationbar.png"]
+
 #endif

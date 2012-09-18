@@ -166,7 +166,9 @@ FeedBackForm *fbView;
                         }
                 }
             }
-            NSArray* allPlans = [[self managedObjectContext] executeFetchRequest:fetchRequest error:&error];
+            // Added FetchRequest For Plan   
+            NSFetchRequest* fetchRequestForPlan = [NSFetchRequest fetchRequestWithEntityName:@"Plan"];
+            NSArray* allPlans = [[self managedObjectContext] executeFetchRequest:fetchRequestForPlan error:&error];
             if (!allPlans) {
                 [NSException raise:@"Fetching all Plans failed" format:@"Reason: %@", [error localizedDescription]];
             }

@@ -43,7 +43,7 @@
 Itinerary * itinerary;
 NSString *itinararyId;
 
-int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
+int const ROUTE_OPTIONS_TABLE_HEIGHT = 366;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -237,7 +237,19 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 #endif
         
         [routeDetailsVC setItinerary:itinerary];
-        [[self navigationController] pushViewController:routeDetailsVC animated:YES];
+        if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
+            CATransition *animation = [CATransition animation];
+            [animation setDuration:0.3];
+            [animation setType:kCATransitionPush];
+            [animation setSubtype:kCATransitionFromRight];
+            [animation setRemovedOnCompletion:YES];
+            [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+            [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+            [[self navigationController] pushViewController:routeDetailsVC animated:NO];
+        }
+        else{
+            [[self navigationController] pushViewController:routeDetailsVC animated:YES];
+        } 
     }
     @catch (NSException *exception) {
         NIMLOG_ERR1(@"exception at select itinerary: %@", exception);
@@ -285,13 +297,12 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
-//        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-//    }
-//    else {
-//        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_navigationbar.png"]] aboveSubview:self.navigationController.navigationBar];
-//    }
+    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+        [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+    }
+    else {
+        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+    }
     btnGoToNimbler = [[UIButton alloc] initWithFrame:CGRectMake(0,0,65,34)];
     [btnGoToNimbler addTarget:self action:@selector(popOutToNimbler) forControlEvents:UIControlEventTouchUpInside];
     [btnGoToNimbler setBackgroundImage:[UIImage imageNamed:@"img_nimblerNavigation.png"] forState:UIControlStateNormal];

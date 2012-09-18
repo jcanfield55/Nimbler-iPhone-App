@@ -211,13 +211,13 @@ NSUserDefaults *prefs;
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
-//        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-//    }
-//    else {
-//        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_navigationbar.png"]] aboveSubview:self.navigationController.navigationBar];
-//    }
+    // Added To solve the crash related to ios 4.3
+    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+        [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+    }
+    else {
+        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc]initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+    }
     UIImage *imgTitle = [UIImage imageNamed:@"nimblr.png"];
     self.navigationItem.titleView = [[UIImageView alloc]  initWithImage:imgTitle];
 
@@ -247,6 +247,11 @@ NSUserDefaults *prefs;
     
     btnDone = [[UIBarButtonItem alloc] initWithTitle:DATE_PICKER_DONE style:UIBarButtonItemStyleBordered target:self action:@selector(selectDate)];
     btnNow = [[UIBarButtonItem alloc] initWithTitle:DATE_PICKER_NOW style:UIBarButtonItemStyleBordered target:self action:@selector(selectCurrentDate)];
+    
+    // Added To Clear Color Of mainTable for ios 4.3
+    if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
+        [self.mainTable setBackgroundColor: [UIColor clearColor]];
+    }
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -282,7 +287,7 @@ NSUserDefaults *prefs;
         [Flurry logEvent:FLURRY_TOFROMVC_APPEAR];
 #endif
         
-        isContinueGetRealTimeData = false;
+        isContinueGetRealTimeData = NO;
         [continueGetTime invalidate];
         continueGetTime = nil;
         [self updateTripDate];  // update tripDate if needed
@@ -967,7 +972,7 @@ NSUserDefaults *prefs;
 {
     [self stopActivityIndicator];
     durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime;
-
+    NIMLOG_EVENT1(@"Plan =%@",newPlan);
     if (status == STATUS_OK) {
         plan = newPlan;
         savetrip = FALSE;
@@ -978,7 +983,19 @@ NSUserDefaults *prefs;
         }
         
         [routeOptionsVC setPlan:plan];
-        [[self navigationController] pushViewController:routeOptionsVC animated:YES];
+        if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
+            CATransition *animation = [CATransition animation];
+            [animation setDuration:0.3];
+            [animation setType:kCATransitionPush];
+            [animation setSubtype:kCATransitionFromRight];
+            [animation setRemovedOnCompletion:YES];
+            [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+            [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+             [[self navigationController] pushViewController:routeOptionsVC animated:NO];
+        }
+        else{
+            [[self navigationController] pushViewController:routeOptionsVC animated:YES];
+        }
     }
     else { // if (status == GENERIC_EXCEPTION)
         
@@ -1145,7 +1162,7 @@ NSUserDefaults *prefs;
             }
             [planStore requestPlanWithParameters:parameters];
             savetrip = TRUE;
-            isContinueGetRealTimeData = FALSE;
+            isContinueGetRealTimeData = NO;
             // Do reverse geocoding if coming from current location
             if (fromLocation == currentLocation) {
                 [self requestReverseGeo:fromLocation];
@@ -1309,7 +1326,7 @@ NSUserDefaults *prefs;
         if (isContinueGetRealTimeData) {
             if ([request isGET]) {       
                 NIMLOG_EVENT1(@"response %@", [response bodyAsString]);
-                isContinueGetRealTimeData = false;
+                isContinueGetRealTimeData = NO;
                 RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
                 id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];    
                 [routeOptionsVC setIsReloadRealData:false];
@@ -1334,7 +1351,19 @@ NSUserDefaults *prefs;
         [locationPickerVC setLocationArray:locationList0];
         [locationPickerVC setIsFrom:isFrom0];
         [locationPickerVC setIsGeocodeResults:isGeocodeResults0];
-        [[self navigationController] pushViewController:locationPickerVC animated:YES];  
+        if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
+            CATransition *animation = [CATransition animation];
+            [animation setDuration:0.3];
+            [animation setType:kCATransitionPush];
+            [animation setSubtype:kCATransitionFromRight];
+            [animation setRemovedOnCompletion:YES];
+            [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+            [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+            [[self navigationController] pushViewController:locationPickerVC animated:NO];
+        }
+        else{
+            [[self navigationController] pushViewController:locationPickerVC animated:YES];
+        } 
     }
     @catch (NSException *exception) {
         NIMLOG_ERR1(@"exception at navigating to LocationPickerViewController: %@", exception);
@@ -1359,7 +1388,7 @@ NSUserDefaults *prefs;
 -(void)getRealTimeData
 {
     @try {
-        isContinueGetRealTimeData = TRUE;
+        isContinueGetRealTimeData = YES;
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];   
         NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
@@ -1387,7 +1416,7 @@ NSUserDefaults *prefs;
         NSDictionary *tempDictionary =[NSDictionary dictionaryWithObjectsAndKeys:strItineraries,ITINERARY_ID,@"true",FOR_TODAY, nil ];
         NSString *req = [LIVE_FEEDS_BY_ITINERARIES_URL appendQueryParams:tempDictionary];
         [[RKClient sharedClient]  get:req  delegate:self];
-        isContinueGetRealTimeData = TRUE;
+        isContinueGetRealTimeData = YES;
     }
     @catch (NSException *exception) {
         NIMLOG_ERR1(@"Exception while sending Real Time Request By Itineraries%@",exception);
