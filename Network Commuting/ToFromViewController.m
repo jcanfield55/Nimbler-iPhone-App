@@ -1328,7 +1328,7 @@ NSUserDefaults *prefs;
 #pragma mark RKResponse Delegate method
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     @try {
-        if (isContinueGetRealTimeData) {
+       // if (isContinueGetRealTimeData) {
             if ([request isGET]) {       
                 NIMLOG_EVENT1(@"response %@", [response bodyAsString]);
                 isContinueGetRealTimeData = NO;
@@ -1337,7 +1337,7 @@ NSUserDefaults *prefs;
                 [routeOptionsVC setIsReloadRealData:false];
                 [routeOptionsVC setLiveFeed:res];
             } 
-        }
+        //}
         if ([request isPOST]) {                      
         } 
     }  @catch (NSException *exception) {
