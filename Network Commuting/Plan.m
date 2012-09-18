@@ -99,6 +99,7 @@
 // Then deletes plan0 from the database
 - (void)consolidateIntoSelfPlan:(Plan *)plan0
 {
+    NSLog(@"consolidateIntoSelfPlans: Check self itineraries valid");
     // Make sure all itineraries in self are still valid GTFS data.  Delete otherwise
     BOOL wereAnyDeleted = false;
     for (Itinerary* itin in [NSSet setWithSet:[self itineraries]]) {
@@ -115,6 +116,7 @@
             [self deleteItinerary:itin];
         }
     }
+    NSLog(@"consolidateIntoSelfPlans: Check plan0 itineraries valid");
     // Do the same checking for plan0 itineraries
     for (Itinerary* itin in [NSSet setWithSet:[plan0 itineraries]]) {
         if (![itin isCurrentVsGtfsFilesIn:[self transitCalendar]] ||
@@ -134,6 +136,7 @@
         saveContext([self managedObjectContext]);
     }
     
+    NSLog(@"consolidateIntoSelfPlans: Consolidate request chunks");
     // Consolidate requestChunks
     NSMutableSet* chunksConsolidated = [[NSMutableSet alloc] initWithCapacity:10];
     for (PlanRequestChunk* reqChunk0 in [plan0 requestChunks]) {
@@ -155,6 +158,7 @@
     }
     
     // Transfer over the itineraries getting rid of ones we do not need
+    NSLog(@"consolidateIntoSelfPlans: Transfer and get rid of itineraries we do not need");
     NSSet* itineraries0 = [NSSet setWithSet:[plan0 itineraries]];
     for (Itinerary* itin0 in itineraries0) {
         if ([self addItineraryIfNew:itin0] == ITIN0_OBSOLETE) { // add the itinerary no matter what
@@ -246,6 +250,9 @@
             [requestChunk addItinerariesObject:itin];
             [itin initializeTimeOnlyVariablesWithRequestDate:requestDate]; // Set startTimeOnly & endTimeOnly
         }
+    }
+    if ([[requestChunk itineraries] count] == 0) { // if no itineraries, get rid of request chunk
+        [[self managedObjectContext] deleteObject:requestChunk];
     }
 }
 

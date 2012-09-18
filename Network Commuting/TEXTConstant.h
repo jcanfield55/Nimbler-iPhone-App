@@ -26,10 +26,10 @@
 #define ALL_TWEETS_REQ          @"advisories/all"
 
 // Feedback Parameter
-#define FILE @"file"
-#define FILE_TYPE @"audio/caf"
-#define FILE_NAME @"FBSound.caf"
-#define FILE_FORMATE_TYPE @"formattype"
+#define FB_FILE_MARKER @"file"
+#define FB_FILE_TYPE @"audio/caf"
+#define FB_FILE_NAME @"FBSound.caf"
+#define FB_FILE_FORMAT_TYPE @"formattype"
 #define FEEDBACK_TEXT 1
 #define FEEDBACK_AUDIO 2
 #define FEEDBACK_TEXT_AUDIO 3

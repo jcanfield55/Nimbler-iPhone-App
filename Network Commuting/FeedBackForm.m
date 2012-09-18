@@ -458,14 +458,14 @@ NSUserDefaults *prefs;
     
     if (soundFilePath != nil) {
         NSString *myFile =soundFilePath;
-        RKParamsAttachment* attachment = [rkp setFile:myFile forParam:FILE];
-        attachment.MIMEType = FILE_TYPE;
-        attachment.fileName = FILE_NAME;
-        [rkp setValue:[NSNumber numberWithInt:FEEDBACK_AUDIO] forParam:FILE_FORMATE_TYPE];
+        RKParamsAttachment* attachment = [rkp setFile:myFile forParam:FB_FILE_MARKER];
+        attachment.MIMEType = FB_FILE_TYPE;
+        attachment.fileName = FB_FILE_NAME;
+        [rkp setValue:[NSNumber numberWithInt:FEEDBACK_AUDIO] forParam:FB_FILE_FORMAT_TYPE];
     }
     if (txtFeedBack.text != nil){
         [rkp setValue:txtFeedBack.text forParam:FB_TEXT];
-        [rkp setValue:[NSNumber numberWithInt:FEEDBACK_TEXT] forParam:FILE_FORMATE_TYPE];
+        [rkp setValue:[NSNumber numberWithInt:FEEDBACK_TEXT] forParam:FB_FILE_FORMAT_TYPE];
 #if FLURRY_ENABLED
         [flurryParams setObject:txtFeedBack.text forKey:FLURRY_FEEDBACK_TEXT];
 #endif
@@ -479,7 +479,7 @@ NSUserDefaults *prefs;
 #endif
     }
     if(soundFilePath != nil && txtFeedBack.text != nil) {
-        [rkp setValue:[NSNumber numberWithInt:FEEDBACK_TEXT_AUDIO] forParam:FILE_FORMATE_TYPE];
+        [rkp setValue:[NSNumber numberWithInt:FEEDBACK_TEXT_AUDIO] forParam:FB_FILE_FORMAT_TYPE];
     }
 #if FLURRY_ENABLED
     if ([flurryParams count] > 0) {

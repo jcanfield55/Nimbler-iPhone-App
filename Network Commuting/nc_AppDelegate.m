@@ -190,6 +190,8 @@ FeedBackForm *fbView;
             for (Plan* plan in deleteSet) {
                 [[self managedObjectContext] deleteObject:plan];
             }
+            
+            // Save changes
             saveContext([self managedObjectContext]);
         }// End of temporary code
         

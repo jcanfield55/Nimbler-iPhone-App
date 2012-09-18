@@ -309,10 +309,11 @@ NSUserDefaults *prefs;
     [super viewWillDisappear:YES];
     [nc_AppDelegate sharedInstance].isToFromView = NO;
 }
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
+    NIMLOG_PERF1(@"Entered ToFromView did appear");
     // Flash scrollbars on tables
     [toTable flashScrollIndicators];
     [fromTable flashScrollIndicators];   
@@ -953,6 +954,10 @@ NSUserDefaults *prefs;
                     // Check if an equivalent Location is already in the locations table
                     reverseGeoLocation = [locations consolidateWithMatchingLocations:reverseGeoLocation keepThisLocation:NO];
                     
+                    // Delete all the other objects out of the CoreData (DE152 fix)
+                    for (int i=1; i<[objects count]; i++) {  // starting at the instance after i=0
+                        [[self locations] removeLocation:[objects objectAtIndex:i]];
+                    }
                     // Save db context with the new location object
                     saveContext(managedObjectContext);
                     NIMLOG_EVENT1(@"Reverse Geocode: %@", [reverseGeoLocation formattedAddress]);

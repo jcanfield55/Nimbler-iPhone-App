@@ -739,6 +739,8 @@
     
     STAssertEquals([locations consolidateWithMatchingLocations:loc1
                     keepThisLocation:true], loc1, @""); // no matches, returns loc1
+    STAssertEquals([locations consolidateWithMatchingLocations:loc1
+                                              keepThisLocation:false], loc1, @""); // no matches, returns loc1
     STAssertFalse([loc1 isDeleted], @"");
 
     // Tear down extra locations
