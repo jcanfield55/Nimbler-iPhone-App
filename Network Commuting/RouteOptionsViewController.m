@@ -56,9 +56,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 366;
         lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
         self.navigationItem.titleView=lblNavigationTitle;
         
-        //[[self navigationItem] setTitle:@"Itineraries"];
-        timeFormatter = [[NSDateFormatter alloc] init];
-        [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
     }
     return self;
 }
@@ -139,9 +136,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 366;
         [[cell textLabel] setFont:[UIFont MEDIUM_BOLD_FONT]];
         NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
                                                    timeIntervalSinceDate:[itin startTimeOfFirstLeg]]);
-        NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)", 
-                               [timeFormatter stringFromDate:[itin startTimeOfFirstLeg]],
-                               [timeFormatter stringFromDate:[itin endTimeOfLastLeg]],
+        NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
+                               superShortTimeStringForDate([itin startTimeOfFirstLeg]),
+                               superShortTimeStringForDate([itin endTimeOfLastLeg]),
                                durationStr];
         [[cell textLabel] setText:titleText];
         UIView *viewCellBackground = [[UIView alloc] init];
@@ -188,8 +185,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 366;
     
     // TODO -- make sure not text wrapping on first line
     NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
-                           [timeFormatter stringFromDate:[itin startTimeOfFirstLeg]],
-                           [timeFormatter stringFromDate:[itin endTimeOfLastLeg]],
+                           superShortTimeStringForDate([itin startTimeOfFirstLeg]),
+                           superShortTimeStringForDate([itin endTimeOfLastLeg]),
                            durationStr];
     NSString* subtitleText = [itin itinerarySummaryStringForWidth:(CGFloat)ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
                                                              Font:(UIFont *)[UIFont MEDIUM_FONT]];

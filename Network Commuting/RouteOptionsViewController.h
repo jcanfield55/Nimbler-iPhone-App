@@ -12,9 +12,7 @@
 #import "RouteDetailsViewController.h"
 
 @interface RouteOptionsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKRequestDelegate>
-{
-    NSDateFormatter *timeFormatter;
-}
+
 @property(nonatomic, strong) IBOutlet UITableView* mainTable; // Table listing route options
 @property(nonatomic, strong) Plan *plan;
 @property(nonatomic, strong) UIButton *btnGoToNimbler;
