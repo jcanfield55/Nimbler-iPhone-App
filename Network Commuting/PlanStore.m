@@ -40,8 +40,6 @@
 @synthesize rkPlanMgr;
 @synthesize toFromVC;
 @synthesize routeOptionsVC;
-@synthesize strRequestID;
-
 
 // Designated initializer
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkPlanMgr:(RKObjectManager *)rkP
@@ -201,7 +199,7 @@
     parameters.serverCallsSoFar = parameters.serverCallsSoFar + 1;
     // TODO handle changes to maxWalkDistance with plan caching
     NSString *requestID = [self generateRandomString];
-    NIMLOG_EVENT1(@"Request ID=%@",requestID);
+    NIMLOG_EVENT1(@"Submitted Request ID=%@",requestID);
     [params setObject:requestID forKey:REQUEST_ID];
     planURLResource = requestID;
     [parametersByPlanURLResource setObject:parameters forKey:requestID];
@@ -216,19 +214,17 @@
     //[rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
 }
 
-- (void)request:(RKRequest *)request didLoadResponse:(RKResponse *)response{
-    RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
-    NSDictionary *tempResponseDictionary = [rkParser objectFromString:[response bodyAsString] error:nil];
-    strRequestID = [tempResponseDictionary objectForKey:REQUEST_ID]; 
-    NIMLOG_EVENT1(@"Request ID=%@",strRequestID);
-}
-
 // Delegate methods for when the RestKit has results from the Planner
 - (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects{
     @try {
+        
+        RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
+        NSDictionary *tempResponseDictionary = [rkParser objectFromString:[[objectLoader response] bodyAsString] error:nil];
+        NSString* strRequestID = [tempResponseDictionary objectForKey:REQUEST_ID];
+        NIMLOG_EVENT1(@"Retrieved Request ID=%@",strRequestID);
+        
         Plan *plan = [objects objectAtIndex:0];
         //NSString* resourcePath = [objectLoader resourcePath];
-         NIMLOG_EVENT1(@"Request ID=%@",strRequestID);
         planRequestParameters = [parametersByPlanURLResource objectForKey:strRequestID];
         [plan setToLocation:[planRequestParameters toLocation]];
         [plan setFromLocation:[planRequestParameters fromLocation]];
