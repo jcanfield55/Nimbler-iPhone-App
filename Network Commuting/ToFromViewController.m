@@ -112,6 +112,7 @@
 NSString *currentLoc;
 float currentLocationResTime;
 NSUserDefaults *prefs;
+UIImage *imageDetailDisclosure;
 #pragma mark view Lifecycle
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -202,6 +203,7 @@ NSUserDefaults *prefs;
             barButtonCancel = [[UIBarButtonItem alloc] initWithCustomView:btnCancel];
 
         }
+        imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
     }
     @catch (NSException *exception) {
         NIMLOG_ERR1(@"exception at init ToFromViewController %@",exception);
@@ -533,7 +535,6 @@ NSUserDefaults *prefs;
                                           reuseIdentifier:@"timeDateTableCell"];
             [[cell textLabel] setFont:[UIFont MEDIUM_BOLD_FONT]];
             [cell setBackgroundColor:[UIColor whiteColor]];
-            UIImage *imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
             UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
             [cell setAccessoryView:imgViewDetailDisclosure];
             cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
@@ -563,7 +564,6 @@ NSUserDefaults *prefs;
             [cell setBackgroundColor:[UIColor whiteColor]];
             cell.textLabel.font = [UIFont MEDIUM_LARGE_BOLD_FONT];
             cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
-            UIImage *imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
             UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
             [cell setAccessoryView:imgViewDetailDisclosure];
             [[cell textLabel] setText:@"Current Location"];

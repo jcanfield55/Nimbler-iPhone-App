@@ -26,6 +26,7 @@
 @property (strong, nonatomic) RKObjectManager *rkPlanMgr;  // RestKit object manager for trip planning
 @property (unsafe_unretained, nonatomic) ToFromViewController *toFromVC;
 @property (unsafe_unretained, nonatomic) RouteOptionsViewController *routeOptionsVC;
+@property (strong, nonatomic) NSString *strRequestID;
 
 // Designated initializer
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkPlanMgr:(RKObjectManager *)rkP;
@@ -46,6 +47,9 @@
 // Takes a new plan and consolidates it with other plans going to the same to & from locations.
 // Returns the consolidated plan
 - (Plan *)consolidateWithMatchingPlans:(Plan *)plan0;
+
+// Generate Random String of length 16
+- (NSString *)generateRandomString;
 
 
 @end

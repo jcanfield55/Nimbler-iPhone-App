@@ -9,6 +9,9 @@
 #import "PlanStore.h"
 #import "UtilityFunctions.h"
 #import "Logging.h"
+#import <RestKit/Restkit.h>
+#import <RestKit/CoreData.h>
+#import <Restkit/RKJSONParserJSONKit.h>
 
 #if FLURRY_ENABLED
 #include "Flurry.h"
@@ -37,6 +40,7 @@
 @synthesize rkPlanMgr;
 @synthesize toFromVC;
 @synthesize routeOptionsVC;
+@synthesize strRequestID;
 
 
 // Designated initializer
@@ -107,7 +111,15 @@
     [self requestPlanFromOtpWithParameters:parameters];
 }
 
-
+#pragma mark -- Generate random string of length 16
+- (NSString *)generateRandomString{
+    NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    NSMutableString *randomString = [NSMutableString stringWithCapacity: REQUEST_ID_LENGTH];
+    for (int i = 0; i< REQUEST_ID_LENGTH ; i++) {
+        [randomString appendFormat: @"%C", [letters characterAtIndex: arc4random() % [letters length]]];
+    }
+    return randomString;
+}
 // Requests for a new plan from OTP
 -(void)requestPlanFromOtpWithParameters:(PlanRequestParameters *)parameters
 {
@@ -188,9 +200,11 @@
     // Build the parameters into a resource string
     parameters.serverCallsSoFar = parameters.serverCallsSoFar + 1;
     // TODO handle changes to maxWalkDistance with plan caching
-    
-    planURLResource = PLAN_GENERATE_URL;
-    [parametersByPlanURLResource setObject:parameters forKey:planURLResource];
+    NSString *requestID = [self generateRandomString];
+    NIMLOG_EVENT1(@"Request ID=%@",requestID);
+    [params setObject:requestID forKey:REQUEST_ID];
+    planURLResource = requestID;
+    [parametersByPlanURLResource setObject:parameters forKey:requestID];
     Plan *plan;
     RKParams *requestParameter = [RKParams paramsWithDictionary:params];
     [rkPlanMgr postObject:plan delegate:self block:^(RKObjectLoader *loader){
@@ -202,13 +216,20 @@
     //[rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
 }
 
+- (void)request:(RKRequest *)request didLoadResponse:(RKResponse *)response{
+    RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
+    NSDictionary *tempResponseDictionary = [rkParser objectFromString:[response bodyAsString] error:nil];
+    strRequestID = [tempResponseDictionary objectForKey:REQUEST_ID]; 
+    NIMLOG_EVENT1(@"Request ID=%@",strRequestID);
+}
 
 // Delegate methods for when the RestKit has results from the Planner
 - (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects{
     @try {
         Plan *plan = [objects objectAtIndex:0];
-        NSString* resourcePath = [objectLoader resourcePath];
-        planRequestParameters = [parametersByPlanURLResource objectForKey:resourcePath];
+        //NSString* resourcePath = [objectLoader resourcePath];
+         NIMLOG_EVENT1(@"Request ID=%@",strRequestID);
+        planRequestParameters = [parametersByPlanURLResource objectForKey:strRequestID];
         [plan setToLocation:[planRequestParameters toLocation]];
         [plan setFromLocation:[planRequestParameters fromLocation]];
         [plan createRequestChunkWithAllItinerariesAndRequestDate:[planRequestParameters thisRequestTripDate]

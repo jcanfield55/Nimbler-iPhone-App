@@ -40,6 +40,7 @@
 
 Itinerary * itinerary;
 NSString *itinararyId;
+UIImage *imageDetailDisclosure;
 
 int const ROUTE_OPTIONS_TABLE_HEIGHT = 366;
 
@@ -55,6 +56,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 366;
         lblNavigationTitle.backgroundColor =[UIColor clearColor];
         lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
         self.navigationItem.titleView=lblNavigationTitle;
+        imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
         
     }
     return self;
@@ -124,7 +126,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 366;
                                           reuseIdentifier:IDENTIFIER_CELL];
             [cell.imageView setImage:nil];
         }
-        UIImage *imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
         UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
         [cell setAccessoryView:imgViewDetailDisclosure];
          cell.selectionStyle = UITableViewCellSelectionStyleNone;

@@ -40,7 +40,8 @@
 @end
 
 @implementation ToFromTableViewController {
-    BOOL isGeocodingOutstanding;  
+    BOOL isGeocodingOutstanding;
+    UIImage *imageDetailDisclosure;
 }
 
 @synthesize locations;
@@ -74,6 +75,7 @@
         [txtField addTarget:self action:@selector(toFromTyping:forEvent:) forControlEvents:UIControlEventEditingChanged];
         [txtField addTarget:self action:@selector(textSubmitted:forEvent:) forControlEvents:(UIControlEventEditingDidEndOnExit)];
         [txtField setBackgroundColor:[UIColor whiteColor]];
+        imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
     }
     return self;
 }
@@ -232,7 +234,6 @@
             [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
             cell.textLabel.textColor = [UIColor lightGrayColor];
             [[cell textLabel] setText:TOFROMTABLE_ENTER_ADDRESS_TEXT];
-            UIImage *imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
             UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
             [cell setAccessoryView:imgViewDetailDisclosure];
         }
@@ -265,7 +266,6 @@
         [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
         cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
         if ([toFromVC editMode] == NO_EDIT) {
-            UIImage *imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
             UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
             [cell setAccessoryView:imgViewDetailDisclosure];
         } else {
