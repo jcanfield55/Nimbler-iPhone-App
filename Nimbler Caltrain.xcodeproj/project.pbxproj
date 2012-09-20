@@ -59,7 +59,6 @@
 		528A486515B4D691009EF7F0 /* mapDot.png in Resources */ = {isa = PBXBuildFile; fileRef = 528A486415B4D690009EF7F0 /* mapDot.png */; };
 		528A486715B4D69D009EF7F0 /* mapDot@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 528A486615B4D69C009EF7F0 /* mapDot@2x.png */; };
 		52917827158477F6001CC74C /* caltrain-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 52917826158477F6001CC74C /* caltrain-station.json */; };
-		5297F2DF1560CA200032D015 /* DateTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297F2DE1560CA200032D015 /* DateTimeViewController.m */; };
 		5297F2E11560CAC20032D015 /* ToFromTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297F2E01560CAC20032D015 /* ToFromTableViewController.m */; };
 		529D7D2C15E5EC43000A7D2F /* PlanRequestChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 529D7D2B15E5EC43000A7D2F /* PlanRequestChunk.m */; };
 		529D7D2D15E5EC43000A7D2F /* PlanRequestChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 529D7D2B15E5EC43000A7D2F /* PlanRequestChunk.m */; };
@@ -94,7 +93,6 @@
 		52E4C0A315CC705D00B55A65 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C0A215CC705D00B55A65 /* Default@2x.png */; };
 		52E4C0AB15CC7E7D00B55A65 /* img_itineraryNavigation.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C0AA15CC7E7C00B55A65 /* img_itineraryNavigation.png */; };
 		52E4C0AD15CC7E8800B55A65 /* img_itineraryNavigation@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C0AC15CC7E8800B55A65 /* img_itineraryNavigation@2x.png */; };
-		52E66F031520374B001BF026 /* DateTimeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52E66F021520374B001BF026 /* DateTimeViewController.xib */; };
 		52F4D44115F8205600159E81 /* img_cancel.png in Resources */ = {isa = PBXBuildFile; fileRef = 52F4D43F15F8205600159E81 /* img_cancel.png */; };
 		52F4D44415F820C700159E81 /* img_cancel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52F4D44315F820C700159E81 /* img_cancel@2x.png */; };
 		52F67EE114C752C4007578D5 /* LatLng.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F67EE014C752C4007578D5 /* LatLng.m */; };
@@ -943,8 +941,6 @@
 		528A486615B4D69C009EF7F0 /* mapDot@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mapDot@2x.png"; sourceTree = "<group>"; };
 		52917826158477F6001CC74C /* caltrain-station.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "caltrain-station.json"; path = "PreloadData/caltrain-station.json"; sourceTree = "<group>"; };
 		529178281585326F001CC74C /* Network_Commuting 1.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.1.xcdatamodel"; sourceTree = "<group>"; };
-		5297F2DD1560CA0F0032D015 /* DateTimeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateTimeViewController.h; sourceTree = "<group>"; };
-		5297F2DE1560CA200032D015 /* DateTimeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateTimeViewController.m; sourceTree = "<group>"; };
 		5297F2E01560CAC20032D015 /* ToFromTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = ToFromTableViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		529D7D2A15E5EC2E000A7D2F /* PlanRequestChunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanRequestChunk.h; sourceTree = "<group>"; };
 		529D7D2B15E5EC43000A7D2F /* PlanRequestChunk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlanRequestChunk.m; sourceTree = "<group>"; };
@@ -991,7 +987,6 @@
 		52E4C0A215CC705D00B55A65 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		52E4C0AA15CC7E7C00B55A65 /* img_itineraryNavigation.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_itineraryNavigation.png; sourceTree = "<group>"; };
 		52E4C0AC15CC7E8800B55A65 /* img_itineraryNavigation@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_itineraryNavigation@2x.png"; sourceTree = "<group>"; };
-		52E66F021520374B001BF026 /* DateTimeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DateTimeViewController.xib; sourceTree = "<group>"; };
 		52E6CBEF15C0A38E008E83E6 /* Network_Commuting 1.3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.3.xcdatamodel"; sourceTree = "<group>"; };
 		52F4D43F15F8205600159E81 /* img_cancel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_cancel.png; sourceTree = "<group>"; };
 		52F4D44315F820C700159E81 /* img_cancel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_cancel@2x.png"; sourceTree = "<group>"; };
@@ -2798,9 +2793,6 @@
 				52B302C414BE2B1E00EB4852 /* ToFromViewController.xib */,
 				5249743D15574578004A56E2 /* ToFromTableViewController.h */,
 				5297F2E01560CAC20032D015 /* ToFromTableViewController.m */,
-				5297F2DD1560CA0F0032D015 /* DateTimeViewController.h */,
-				5297F2DE1560CA200032D015 /* DateTimeViewController.m */,
-				52E66F021520374B001BF026 /* DateTimeViewController.xib */,
 				521DDD341582D44500DBE838 /* LocationPickerViewController.h */,
 				521DDD351582D44500DBE838 /* LocationPickerViewController.m */,
 				521DDD361582D44500DBE838 /* LocationPickerViewController.xib */,
@@ -3073,7 +3065,6 @@
 			files = (
 				52CF43AC14BDF2F9000565D6 /* InfoPlist.strings in Resources */,
 				52B302C614BE2B1E00EB4852 /* ToFromViewController.xib in Resources */,
-				52E66F031520374B001BF026 /* DateTimeViewController.xib in Resources */,
 				522C0E6815588D830072ADD6 /* README.txt in Resources */,
 				522C0E6915588D830072ADD6 /* release_notes.txt in Resources */,
 				CC578A03156520B60057D5A7 /* feedback.png in Resources */,
@@ -3247,7 +3238,6 @@
 				5275A2DF1528069F0052903F /* PolylineEncodedString.m in Sources */,
 				CC6FE2B8155BA40D004BE10A /* MyAnnotation.m in Sources */,
 				CC6FE2BB155BC416004BE10A /* Error.m in Sources */,
-				5297F2DF1560CA200032D015 /* DateTimeViewController.m in Sources */,
 				5297F2E11560CAC20032D015 /* ToFromTableViewController.m in Sources */,
 				CCBE9FF41562867600908A78 /* SupportedRegion.m in Sources */,
 				CCC107CF156A39CB0011246D /* TPResponse.m in Sources */,

@@ -12,7 +12,6 @@
 #import "RouteOptionsViewController.h"
 #import "Leg.h"
 #import "PlanStore.h"
-#import "DateTimeViewController.h"
 #import "TestFlightSDK1/TestFlight.h"
 #import "Itinerary.h"
 #import <RestKit/RKJSONParserJSONKit.h>
@@ -641,11 +640,6 @@ UIImage *imageDetailDisclosure;
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([indexPath section] == TIME_DATE_SECTION) {  
-//        DateTimeViewController *dateTimeVC = [[DateTimeViewController alloc] initWithNibName:nil bundle:nil];
-//        [dateTimeVC setDate:tripDate];
-//        [dateTimeVC setDepartOrArrive:departOrArrive];
-//        [dateTimeVC setToFromViewController:self];
-//        [[self navigationController] pushViewController:dateTimeVC animated:YES];
         [datePicker setDate:tripDate];
         [self openPickerView:self];
         
