@@ -19,4 +19,5 @@
 #import "RXCustomTabBar.h"
 #import <QuartzCore/QuartzCore.h>
 #import <AudioToolbox/AudioServices.h>
+#import "Logging.h"
 #endif

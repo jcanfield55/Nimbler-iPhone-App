@@ -18,6 +18,21 @@ typedef enum {
 
 @interface PlanRequestParameters : NSObject
 
+@property (strong, nonatomic) NSString* formattedAddressTO;
+@property (strong, nonatomic) NSString* formattedAddressFROM;
+@property (strong, nonatomic) NSString* latitudeFROM;
+@property (strong, nonatomic) NSString* longitudeFROM;
+@property (strong, nonatomic) NSString* latitudeTO;
+@property (strong, nonatomic) NSString* longitudeTO;
+@property (strong, nonatomic) NSString* fromType;
+@property (strong, nonatomic) NSString* toType;
+@property (strong, nonatomic) NSString* rawAddressFROM;
+@property (strong, nonatomic) NSString* geoResponseFROM;
+@property (strong, nonatomic) NSString* geoResponseTO;
+@property (strong, nonatomic) NSString* timeFROM;
+@property (strong, nonatomic) NSString* timeTO;
+@property (strong, nonatomic) NSString* rawAddressTO;
+
 @property (strong, nonatomic) Location* fromLocation;
 @property (strong, nonatomic) Location* toLocation;
 @property (strong, nonatomic) NSDate* originalTripDate; // original date & time requested by user

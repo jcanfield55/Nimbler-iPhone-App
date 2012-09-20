@@ -98,7 +98,7 @@
             id<RKParser> parser = [[RKParserRegistry sharedRegistry] parserForMIMEType:@"application/json"];
             id parsedData = [parser objectFromString:jsonText error:&error];
             if (parsedData == nil && error) {
-                NSLog(@"Parser error %@", error);
+                NIMLOG_ERR1(@"Parser error %@", error);
             }
             
             RKObjectMappingProvider* mappingProvider = rkGeoMgr.mappingProvider;
@@ -133,7 +133,7 @@
                     if (!areAnyMatchesNewerOrEqual) {
                         // Consolidate with any duplicates already in Core Data, keeping this version
                         loc = [self consolidateWithMatchingLocations:loc keepThisLocation:YES];
-                        NSLog(@"Preload loc: %@, toFreq=%f, fromFreq=%f", 
+                        NIMLOG_EVENT1(@"Preload loc: %@, toFreq=%f, fromFreq=%f", 
                               [loc shortFormattedAddress], [loc toFrequencyFloat], 
                               [loc fromFrequencyFloat]);
                         [loc setPreloadVersion:newVersion]; 
@@ -145,11 +145,11 @@
                 saveContext([self managedObjectContext]);
             }
             else {
-                NSLog(@"No results back from loading file at path %@", preloadPath);
+                NIMLOG_EVENT1(@"No results back from loading file at path %@", preloadPath);
             }
         }
         else {
-            NSLog(@"Could not load file %@ at path %@", filename, preloadPath);
+            NIMLOG_EVENT1(@"Could not load file %@ at path %@", filename, preloadPath);
         }
     }
     return returnValue;
@@ -208,13 +208,13 @@
         areMatchingLocationsChanged = YES;
 
         // Calculate the count, up to the first location with frequency below threshold (excluding the selectedLocation)
-        NSLog(@"sortedMatchingFromLocations count = %d", [sortedMatchingFromLocations count]);
+        NIMLOG_EVENT1(@"sortedMatchingFromLocations count = %d", [sortedMatchingFromLocations count]);
         int i;
         for (i=0; (i < [sortedMatchingFromLocations count]) && 
              ((selectedFromLocation == [sortedMatchingFromLocations objectAtIndex:i]) ||
               [[sortedMatchingFromLocations objectAtIndex:i] fromFrequencyFloat] > TOFROM_FREQUENCY_VISIBILITY_CUTOFF); i++);
         matchingFromRowCount = i;
-        NSLog(@"MatchingFromRowCount = %d", matchingFromRowCount);
+        NIMLOG_EVENT1(@"MatchingFromRowCount = %d", matchingFromRowCount);
     }
     else {
         NSArray *startArray = nil;
@@ -251,13 +251,13 @@
         areMatchingLocationsChanged = YES;
 
         // Calculate the count, up to the first location with frequency below threshold (excluding the selected Location)
-        NSLog(@"sortedMatchingToLocations count = %d", [sortedMatchingToLocations count]);
+        NIMLOG_EVENT1(@"sortedMatchingToLocations count = %d", [sortedMatchingToLocations count]);
         int i;
         for (i=0; (i < [sortedMatchingToLocations count]) && 
              ((selectedToLocation == [sortedMatchingToLocations objectAtIndex:i]) ||
              [[sortedMatchingToLocations objectAtIndex:i] toFrequencyFloat] > TOFROM_FREQUENCY_VISIBILITY_CUTOFF); i++);
         matchingToRowCount = i;
-        NSLog(@"matchingToRowCount = %d", matchingToRowCount);
+        NIMLOG_EVENT1(@"matchingToRowCount = %d", matchingToRowCount);
     }
     else {
         NSArray *startArray = nil;
@@ -320,7 +320,7 @@
 // Only include those locations with frequency >= 1 in the row count
 - (void)updateInternalCache
 {
-    NSLog(@"Entering updateInternal Cache");
+    NIMLOG_PERF1(@"Entering updateInternal Cache");
     if (!locationsFetchRequest) {  // create the fetch request if we have not already done so
         locationsFetchRequest = [[NSFetchRequest alloc] init];
         NSEntityDescription *e = [[managedObjectModel entitiesByName] objectForKey:@"Location"];
@@ -339,7 +339,7 @@
     if (!sortedFromLocations) {
         [NSException raise:@"Fetch failed" format:@"Reason: %@", [error localizedDescription]];
     }
-    NSLog(@"Now fetching sortedToLocations");
+    NIMLOG_PERF1(@"Now fetching sortedToLocations");
     // Now create a different array with the sorted To descriptors
     NSSortDescriptor *sd1 = [NSSortDescriptor sortDescriptorWithKey:@"toFrequency" 
                                                           ascending:NO];
@@ -357,7 +357,7 @@
     [self setTypedFromString:[self typedFromString]];
     
     [self setAreLocationsChanged:NO];  // reset again
-    NSLog(@"Done updating Locations cache");
+    NIMLOG_PERF1(@"Done updating Locations cache");
 }
 
 // Updates sortedToLocations or sortedFromLocations to put the selectedLocation at the top of the list

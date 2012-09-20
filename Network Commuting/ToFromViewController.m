@@ -100,6 +100,8 @@
 @synthesize supportedRegion;
 @synthesize isContinueGetRealTimeData;
 @synthesize continueGetTime;
+@synthesize plan;
+@synthesize timerGettingRealDataByItinerary;
 
 @synthesize datePicker,toolBar,departArriveSelector,date,btnDone,btnNow;
 // Constants for animating up and down the To: field
@@ -110,6 +112,7 @@
 NSString *currentLoc;
 float currentLocationResTime;
 NSUserDefaults *prefs;
+UIImage *imageDetailDisclosure;
 #pragma mark view Lifecycle
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -200,22 +203,23 @@ NSUserDefaults *prefs;
             barButtonCancel = [[UIBarButtonItem alloc] initWithCustomView:btnCancel];
 
         }
+        imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at init ToFromViewController");
+        logException(@"ToFromViewController->initWithNibName", @"", exception);
     }
     return self;
 }
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
-//        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-//    }
-//    else {
-//        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_navigationbar.png"]] aboveSubview:self.navigationController.navigationBar];
-//    }
+    // Added To solve the crash related to ios 4.3
+    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+        [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+    }
+    else {
+        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc]initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+    }
     UIImage *imgTitle = [UIImage imageNamed:@"nimblr.png"];
     self.navigationItem.titleView = [[UIImageView alloc]  initWithImage:imgTitle];
 
@@ -228,6 +232,8 @@ NSUserDefaults *prefs;
     routeButton.layer.cornerRadius = CORNER_RADIUS_SMALL;
     [continueGetTime invalidate];
     continueGetTime = nil;
+    [timerGettingRealDataByItinerary invalidate];
+    timerGettingRealDataByItinerary = nil;
     
     datePicker = [[UIDatePicker alloc]initWithFrame:CGRectMake(0, 494, 320, 216)];
     datePicker.datePickerMode = UIDatePickerModeDateAndTime;
@@ -243,6 +249,11 @@ NSUserDefaults *prefs;
     
     btnDone = [[UIBarButtonItem alloc] initWithTitle:DATE_PICKER_DONE style:UIBarButtonItemStyleBordered target:self action:@selector(selectDate)];
     btnNow = [[UIBarButtonItem alloc] initWithTitle:DATE_PICKER_NOW style:UIBarButtonItemStyleBordered target:self action:@selector(selectCurrentDate)];
+    
+    // Added To Clear Color Of mainTable for ios 4.3
+    if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
+        [self.mainTable setBackgroundColor: [UIColor clearColor]];
+    }
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -278,19 +289,20 @@ NSUserDefaults *prefs;
         [Flurry logEvent:FLURRY_TOFROMVC_APPEAR];
 #endif
         
-        isContinueGetRealTimeData = false;
+        isContinueGetRealTimeData = NO;
         [continueGetTime invalidate];
         continueGetTime = nil;
         [self updateTripDate];  // update tripDate if needed
         NIMLOG_PERF1(@"Ready to setFBParameterForGeneral");
         [self setFBParameterForGeneral];
         NIMLOG_PERF1(@"Ready to reload tables");
+        
         [toTable reloadData];
         [fromTable reloadData];
         [mainTable reloadData];
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at viewWillAppear: %@", exception);
+        logException(@"ToFromViewController->viewWillAppear", @"", exception);
     }
     NIMLOG_PERF1(@"Finished ToFromView viewWillAppear");
 }
@@ -382,7 +394,7 @@ NSUserDefaults *prefs;
             [table setFrame:rect0];
         }
         @catch (NSException *exception) {
-            NSLog(@"exception at set height for table in ToFromView: %@", exception);
+            logException(@"ToFromViewController->setToFromHeightForTable", @"", exception);
         }
         return TRUE;
     }
@@ -523,7 +535,8 @@ NSUserDefaults *prefs;
                                           reuseIdentifier:@"timeDateTableCell"];
             [[cell textLabel] setFont:[UIFont MEDIUM_BOLD_FONT]];
             [cell setBackgroundColor:[UIColor whiteColor]];
-            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+            UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
+            [cell setAccessoryView:imgViewDetailDisclosure];
             cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
         }        
         
@@ -551,7 +564,8 @@ NSUserDefaults *prefs;
             [cell setBackgroundColor:[UIColor whiteColor]];
             cell.textLabel.font = [UIFont MEDIUM_LARGE_BOLD_FONT];
             cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
-            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+            UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
+            [cell setAccessoryView:imgViewDetailDisclosure];
             [[cell textLabel] setText:@"Current Location"];
         }        
         return cell;        
@@ -798,12 +812,13 @@ NSUserDefaults *prefs;
         }    
         // otherwise, just wait for the geocoding and then submit the plan
         else {
+            NIMLOG_PERF1(@"look for state");
             alert = [[UIAlertView alloc] initWithTitle:@"TripPlanner" message:@"Please select a location" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at press route button event: %@", exception);
+        logException(@"ToFromViewController->routeButtonPressed", @"", exception);
     }
 }
 
@@ -951,13 +966,13 @@ NSUserDefaults *prefs;
                     // Check if an equivalent Location is already in the locations table
                     reverseGeoLocation = [locations consolidateWithMatchingLocations:reverseGeoLocation keepThisLocation:NO];
                     
-                    // Delete all the other objects out of the CoreData (DE152 fix)
+                    // Delete all the other objects out of CoreData (DE152 fix)
                     for (int i=1; i<[objects count]; i++) {  // starting at the instance after i=0
                         [[self locations] removeLocation:[objects objectAtIndex:i]];
                     }
                     // Save db context with the new location object
                     saveContext(managedObjectContext);
-                    NIMLOG_ADDRESSES(@"Reverse Geocode: %@", [reverseGeoLocation formattedAddress]);
+                    NIMLOG_EVENT1(@"Reverse Geocode: %@", [reverseGeoLocation formattedAddress]);
                     // Update the Current Location with pointer to the Reverse Geo location
                     [currentLocation setReverseGeoLocation:reverseGeoLocation];
                 }
@@ -974,7 +989,7 @@ NSUserDefaults *prefs;
 {
     [self stopActivityIndicator];
     durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime;
-
+    NIMLOG_EVENT1(@"Plan =%@",newPlan);
     if (status == STATUS_OK) {
         plan = newPlan;
         savetrip = FALSE;
@@ -985,7 +1000,19 @@ NSUserDefaults *prefs;
         }
         
         [routeOptionsVC setPlan:plan];
-        [[self navigationController] pushViewController:routeOptionsVC animated:YES];
+        if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
+            CATransition *animation = [CATransition animation];
+            [animation setDuration:0.3];
+            [animation setType:kCATransitionPush];
+            [animation setSubtype:kCATransitionFromRight];
+            [animation setRemovedOnCompletion:YES];
+            [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+            [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+             [[self navigationController] pushViewController:routeOptionsVC animated:NO];
+        }
+        else{
+            [[self navigationController] pushViewController:routeOptionsVC animated:YES];
+        }
     }
     else { // if (status == GENERIC_EXCEPTION)
         
@@ -994,38 +1021,6 @@ NSUserDefaults *prefs;
         savetrip = false;
         return ;
     }
-    
-    // TODO -- move logic for saving PlanInTP Server to PlanStore class or a new class
-    // [self savePlanInTPServer:[[objectLoader  response] bodyAsString]];
-    // NSLog(@"For Feedback Process called");
-    
-    
-    /* } else {   // code for saveTrip=FALSE case
-     tpResponsePlan = [objects objectAtIndex:0];
-     [plan setPlanId:[tpResponsePlan planId]];
-     NSLog(@"obj foe plan = %@", [tpResponsePlan planId]);
-     
-     @try {
-     for (int i= 0; i< [[tpResponsePlan itineraries] count]; i++) {
-     Itinerary *itin = [[tpResponsePlan sortedItineraries] objectAtIndex:i];
-     [[[plan sortedItineraries] objectAtIndex:i] setItinId:[itin itinId]];
-     NSLog(@"===========================================");
-     NSLog(@"itinarary.. %@",[itin itinId]);
-     for (int j =0; j< [[itin legs] count] ; j++) {
-     Leg *lg = [[itin sortedLegs] objectAtIndex:j];
-     [[[[[plan sortedItineraries] objectAtIndex:i] sortedLegs] objectAtIndex:j] setLegId:[lg legId]];
-     NSLog(@"------------------------------------------");
-     NSLog(@"leg... %@",[lg legId]);
-     }
-     }
-     
-     [routeOptionsVC setFBParameterForPlan];
-     [self getRealTimeData];
-     continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
-     }
-     @catch (NSException *exception) {
-     NSLog(@"Exception while iterating over TP response plan: %@", exception);
-     } */
 }
 
 // TODO Move geocoding and reverse-geocoding into a separate class (like Locations)
@@ -1045,6 +1040,7 @@ NSUserDefaults *prefs;
 {
     // See if there has already been an identical plan request in the last 5 seconds.
     @try {
+        NIMLOG_PERF1(@"Plan routine entered");
         BOOL isDuplicatePlan = NO;
         NSString *frForm = [fromLocation formattedAddress];
         NSString *toForm = [toLocation formattedAddress];
@@ -1120,11 +1116,38 @@ NSUserDefaults *prefs;
             parameters.departOrArrive = departOrArrive;
             parameters.maxWalkDistance = maxDistance;
             parameters.planDestination = PLAN_DESTINATION_TO_FROM_VC;
+            
+            parameters.formattedAddressTO = [toLocation formattedAddress];
+            parameters.formattedAddressFROM = [fromLocation formattedAddress];
+            parameters.latitudeTO = (NSString *)[toLocation lat];
+            parameters.longitudeTO = (NSString *)[toLocation lng];
+            parameters.latitudeFROM = (NSString *)[fromLocation lat];
+            parameters.longitudeFROM = (NSString *)[fromLocation lng];
+            if([[fromLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
+                parameters.fromType = REVERSE_GEO_FROM;
+                parameters.formattedAddressFROM = currentLoc;
+                parameters.latitudeTO = (NSString *)[toLocation lat];
+                parameters.longitudeTO = (NSString *)[toLocation lng];
+            }else if([[toLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
+                parameters.toType = REVERSE_GEO_TO;
+                parameters.formattedAddressTO = currentLoc;
+                parameters.latitudeFROM = (NSString *)[fromLocation lat];
+                parameters.longitudeFROM = (NSString *)[fromLocation lng];
+            }
+            if ([locations isFromGeo]) {
+                parameters.fromType = GEO_FROM;
+                parameters.rawAddressFROM = [fromLocation formattedAddress];
+                parameters.geoResponseFROM = [locations geoRespFrom];
+                parameters.timeFROM = [locations geoRespTimeFrom];
+            } else if ([locations isToGeo]) {
+                parameters.toType = GEO_TO;
+                parameters.rawAddressFROM = [fromLocation formattedAddress] ;
+                parameters.geoResponseTO = [locations geoRespTo];
+                parameters.timeTO = [locations geoRespTimeTo];
+            }
             [planStore requestPlanWithParameters:parameters];
-            
             savetrip = TRUE;
-            isContinueGetRealTimeData = FALSE;
-            
+            isContinueGetRealTimeData = NO;
             // Do reverse geocoding if coming from current location
             if (fromLocation == currentLocation) {
                 [self requestReverseGeo:fromLocation];
@@ -1137,7 +1160,7 @@ NSUserDefaults *prefs;
         return true; 
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at route request: %@", exception);
+        logException(@"ToFromViewController->getPlan", @"", exception);
     }
 }
 
@@ -1179,7 +1202,7 @@ NSUserDefaults *prefs;
         [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector: @selector(stopActivityIndicator) userInfo: nil repeats: NO];
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at start IndicatorView: %@", exception);
+        logException(@"ToFromViewController->startActivityIndicator", @"", exception);
     }
 }
 
@@ -1194,87 +1217,112 @@ NSUserDefaults *prefs;
 }
 
 
-#pragma mark save Plan and other logging features to TPServer
-
--(void)savePlanInTPServer:(NSString *)tripResponse
-{
-
-    @try {
-//        NSString *udid = [UIDevice currentDevice].uniqueIdentifier; 
-        NSString *timeResponseTime =  [[NSNumber numberWithFloat:durationOfResponseTime] stringValue];
-        
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        RKParams *rkp = [RKParams params];
-        [RKClient setSharedClient:client];
-        [rkp setValue:[prefs objectForKey:DEVICE_CFUUID] forParam:DEVICE_ID]; 
-        [rkp setValue:tripResponse forParam:@"planJsonString"]; 
-        [rkp setValue:timeResponseTime forParam:@"timeTripPlan"];
-        [rkp setValue:[toLocation formattedAddress]  forParam:@"frmtdAddTo"];
-        [rkp setValue:[fromLocation formattedAddress]  forParam:@"frmtdAddFrom"];
-        [rkp setValue:[toLocation lat] forParam:@"latFrom"];
-        [rkp setValue:[toLocation lng] forParam:@"lonFrom"];
-        [rkp setValue:[fromLocation lat] forParam:@"latTo"];
-        [rkp setValue:[fromLocation lng] forParam:@"lonTo"];
-        
-        if([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
-            [rkp setValue:REVERSE_GEO_FROM forParam:@"fromType"];
-            [rkp setValue:currentLoc  forParam:@"frmtdAddFrom"];
-            [rkp setValue:[toLocation lat] forParam:@"latFrom"];
-            [rkp setValue:[toLocation lng] forParam:@"lonFrom"];
-            [rkp setValue:[[NSNumber numberWithFloat:currentLocationResTime] stringValue] forParam:@""];
-        } else if([[toLocation formattedAddress] isEqualToString:@"Current Location"]) {
-            [rkp setValue:REVERSE_GEO_TO forParam:@"toType"];
-            [rkp setValue:currentLoc  forParam:@"frmtdAddTo"];
-            [rkp setValue:[fromLocation lat] forParam:@"latTo"];
-            [rkp setValue:[fromLocation lng] forParam:@"lonTo"];
-            [rkp setValue:[[NSNumber numberWithFloat:currentLocationResTime] stringValue] forParam:@""];
-        }
-        
-        if ([locations isFromGeo]) {
-            [rkp setValue:GEO_FROM forParam:@"fromType"];
-            [rkp setValue:[fromLocation formattedAddress] forParam:@"rawAddFrom"];
-            [rkp setValue:[locations geoRespFrom] forParam:@"geoResFrom"];
-            [rkp setValue:[locations geoRespTimeFrom] forParam:@"timeFrom"];
-        } else if ([locations isToGeo]) {
-            [rkp setValue:GEO_TO forParam:@"toType"];
-            [rkp setValue:[fromLocation formattedAddress] forParam:@"rawAddTo"];
-            [rkp setValue:[locations geoRespTo] forParam:@"geoResTo"];
-            [rkp setValue:[locations geoRespTimeTo] forParam:@"timeTo"];
-        }
-        
-        [[RKClient sharedClient] post:@"plan/new" params:rkp delegate:self];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"exception at save trip plan in TPServer: %@", exception);
-    }
-}
+//#pragma mark save Plan and other logging features to TPServer
+//
+//-(void)savePlanInTPServer:(NSString *)tripResponse{
+//    @try {
+//        NSString *timeResponseTime =  [[NSNumber numberWithFloat:durationOfResponseTime] stringValue];
+//        NSMutableDictionary *dictPlanRequestData = [[NSMutableDictionary alloc] init];
+//        [dictPlanRequestData setObject:[prefs objectForKey:DEVICE_CFUUID] forKey:DEVICE_ID]; 
+//        [dictPlanRequestData setObject:timeResponseTime forKey:TIME_TRIP_PLAN];
+//        [dictPlanRequestData setObject:[toLocation formattedAddress]  forKey:FORMATTED_ADDRESS_TO];
+//        [dictPlanRequestData setObject:[fromLocation formattedAddress]  forKey:FORMATTED_ADDRESS_FROM];
+//        [dictPlanRequestData setObject:[toLocation lat] forKey:LATITUDE_FROM];
+//        [dictPlanRequestData setObject:[toLocation lng] forKey:LONGITUDE_FROM];
+//        [dictPlanRequestData setObject:[fromLocation lat] forKey:LATITUDE_TO];
+//        [dictPlanRequestData setObject:[fromLocation lng] forKey:LONGITUDE_TO];
+//        
+//        if([[fromLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
+//            [dictPlanRequestData setObject:REVERSE_GEO_FROM forKey:FROM_TYPE];
+//            [dictPlanRequestData setObject:currentLoc  forKey:FORMATTED_ADDRESS_FROM];
+//            [dictPlanRequestData setObject:[toLocation lat] forKey:LATITUDE_FROM];
+//            [dictPlanRequestData setObject:[toLocation lng] forKey:LONGITUDE_FROM];
+//            [dictPlanRequestData setObject:[[NSNumber numberWithFloat:currentLocationResTime] stringValue] forKey:@""];
+//        }else if([[toLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
+//            [dictPlanRequestData setObject:REVERSE_GEO_TO forKey:TO_TYPE];
+//            [dictPlanRequestData setObject:currentLoc  forKey:FORMATTED_ADDRESS_TO];
+//            [dictPlanRequestData setObject:[fromLocation lat] forKey:LATITUDE_TO];
+//            [dictPlanRequestData setObject:[fromLocation lng] forKey:LONGITUDE_TO];
+//            [dictPlanRequestData setObject:[[NSNumber numberWithFloat:currentLocationResTime] stringValue] forKey:@""];
+//        }
+//        
+//        if ([locations isFromGeo]) {
+//            [dictPlanRequestData setObject:GEO_FROM forKey:FROM_TYPE];
+//            [dictPlanRequestData setObject:[fromLocation formattedAddress] forKey:RAW_ADDRESS_FROM];
+//            [dictPlanRequestData setObject:[locations geoRespFrom] forKey:GEO_RES_FROM];
+//            [dictPlanRequestData setObject:[locations geoRespTimeFrom] forKey:TIME_FROM];
+//        } else if ([locations isToGeo]) {
+//            [dictPlanRequestData setObject:GEO_TO forKey:TO_TYPE];
+//            [dictPlanRequestData setObject:[fromLocation formattedAddress] forKey:RAW_ADDRESS_TO];
+//            [dictPlanRequestData setObject:[locations geoRespTo] forKey:GEO_RES_TO];
+//            [dictPlanRequestData setObject:[locations geoRespTimeTo] forKey:TIME_TO];
+//        }
+//        
+//        
+//        
+//        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+//        RKParams *rkp = [RKParams params];
+//        [RKClient setSharedClient:client];
+//        [rkp setValue:[prefs objectForKey:DEVICE_CFUUID] forParam:DEVICE_ID]; 
+//        [rkp setValue:timeResponseTime forParam:TIME_TRIP_PLAN];
+//        [rkp setValue:[toLocation formattedAddress]  forParam:FORMATTED_ADDRESS_TO];
+//        [rkp setValue:[fromLocation formattedAddress]  forParam:FORMATTED_ADDRESS_FROM];
+//        [rkp setValue:[toLocation lat] forParam:LATITUDE_FROM];
+//        [rkp setValue:[toLocation lng] forParam:LONGITUDE_FROM];
+//        [rkp setValue:[fromLocation lat] forParam:LATITUDE_TO];
+//        [rkp setValue:[fromLocation lng] forParam:LONGITUDE_TO];
+//        
+//        if([[fromLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
+//            [rkp setValue:REVERSE_GEO_FROM forParam:FROM_TYPE];
+//            [rkp setValue:currentLoc  forParam:FORMATTED_ADDRESS_FROM];
+//            [rkp setValue:[toLocation lat] forParam:LATITUDE_FROM];
+//            [rkp setValue:[toLocation lng] forParam:LONGITUDE_FROM];
+//            [rkp setValue:[[NSNumber numberWithFloat:currentLocationResTime] stringValue] forParam:@""];
+//        } else if([[toLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
+//            [rkp setValue:REVERSE_GEO_TO forParam:TO_TYPE];
+//            [rkp setValue:currentLoc  forParam:FORMATTED_ADDRESS_TO];
+//            [rkp setValue:[fromLocation lat] forParam:LATITUDE_TO];
+//            [rkp setValue:[fromLocation lng] forParam:LONGITUDE_TO];
+//            [rkp setValue:[[NSNumber numberWithFloat:currentLocationResTime] stringValue] forParam:@""];
+//        }
+//        
+//        if ([locations isFromGeo]) {
+//            [rkp setValue:GEO_FROM forParam:FROM_TYPE];
+//            [rkp setValue:[fromLocation formattedAddress] forParam:RAW_ADDRESS_FROM];
+//            [rkp setValue:[locations geoRespFrom] forParam:GEO_RES_FROM];
+//            [rkp setValue:[locations geoRespTimeFrom] forParam:TIME_FROM];
+//        } else if ([locations isToGeo]) {
+//            [rkp setValue:GEO_TO forParam:TO_TYPE];
+//            [rkp setValue:[fromLocation formattedAddress] forParam:RAW_ADDRESS_TO];
+//            [rkp setValue:[locations geoRespTo] forParam:GEO_RES_TO];
+//            [rkp setValue:[locations geoRespTimeTo] forParam:TIME_TO];
+//        }
+//        
+//        [[RKClient sharedClient] post:NEW_PLAN_REQUEST params:rkp delegate:self];
+//    }
+//    @catch (NSException *exception) {
+//        NSLog(@"exception at save trip plan in TPServer: %@", exception);
+//    }
+//}
 
 #pragma mark RKResponse Delegate method
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     @try {
-        if (isContinueGetRealTimeData) {
+       // if (isContinueGetRealTimeData) {
             if ([request isGET]) {       
-                NSLog(@"response %@", [response bodyAsString]);
-                isContinueGetRealTimeData = false;
+                NIMLOG_EVENT1(@"response %@", [response bodyAsString]);
+                isContinueGetRealTimeData = NO;
                 RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
                 id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];    
                 [routeOptionsVC setIsReloadRealData:false];
                 [routeOptionsVC setLiveFeed:res];
             } 
-        }
-        
-        if ([request isPOST]) {      
-//            NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
-            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID], 
-                                    nil];            
-            rkSavePlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];            
-            [[rkSavePlanMgr mappingProvider] setMapping:[Plan objectMappingforPlanner:OTP_PLANNER] forKeyPath:@"plan"];
-            planURLResource = [@"plan/get" appendQueryParams:params];            
-            [rkSavePlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];            
+        //}
+        if ([request isPOST]) {                      
         } 
     }  @catch (NSException *exception) {
-        NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
-    } 
+        logException(@"ToFromViewController->viewWillAppear", @"getting unique IDs from TP Server response", exception);
+    }
 }
 
 //Request responder to push a LocationPickerViewController so the user can pick from the locations in locationList
@@ -1288,10 +1336,22 @@ NSUserDefaults *prefs;
         [locationPickerVC setLocationArray:locationList0];
         [locationPickerVC setIsFrom:isFrom0];
         [locationPickerVC setIsGeocodeResults:isGeocodeResults0];
-        [[self navigationController] pushViewController:locationPickerVC animated:YES];  
+        if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
+            CATransition *animation = [CATransition animation];
+            [animation setDuration:0.3];
+            [animation setType:kCATransitionPush];
+            [animation setSubtype:kCATransitionFromRight];
+            [animation setRemovedOnCompletion:YES];
+            [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+            [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+            [[self navigationController] pushViewController:locationPickerVC animated:NO];
+        }
+        else{
+            [[self navigationController] pushViewController:locationPickerVC animated:YES];
+        } 
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at navigating to LocationPickerViewController: %@", exception);
+        logException(@"ToFromViewController->callLocationPickerFor", @"", exception);
     }
 }
 
@@ -1305,25 +1365,46 @@ NSUserDefaults *prefs;
         }    
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at navigate to iPhone LocationServices: %@", exception);
+        logException(@"ToFromViewController->clickedButtonAtIndex", @"", exception);
     }
 }
 
-#pragma mark get Real time data after plan is generated 
+// Get RealTime Data By Plan 
 -(void)getRealTimeData
 {
     @try {
-        isContinueGetRealTimeData = TRUE;
+        isContinueGetRealTimeData = YES;
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];   
         NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
-                              @"planid",[plan planId] ,
+                              PLAN_ID,[plan planId] ,
                               nil];
-        NSString *req = [@"livefeeds/plan" appendQueryParams:dict];
+        NSString *req = [LIVE_FEEDS_BY_PLAN_URL appendQueryParams:dict];
         [[RKClient sharedClient]  get:req  delegate:self];  
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at real time data request: %@", exception);
+        logException(@"ToFromViewController->getRealTimeData", @"", exception);
+    }
+}
+
+// Get RealTime Data By Itinerary
+-(void)getRealTimeDataForItinerary{
+    @try {
+        NSMutableString *strItineraries = [[NSMutableString alloc] init];
+        for (int i= 0; i< [[plan sortedItineraries] count]; i++) {
+            Itinerary *itin = [[plan sortedItineraries] objectAtIndex:i];
+            [strItineraries appendFormat:@"%@,",[itin itinId]];
+        }
+        [strItineraries deleteCharactersInRange:NSMakeRange([strItineraries length]-1, 1)];
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];  
+        NSDictionary *tempDictionary =[NSDictionary dictionaryWithObjectsAndKeys:strItineraries,ITINERARY_ID,@"true",FOR_TODAY, nil ];
+        NSString *req = [LIVE_FEEDS_BY_ITINERARIES_URL appendQueryParams:tempDictionary];
+        [[RKClient sharedClient]  get:req  delegate:self];
+        isContinueGetRealTimeData = YES;
+    }
+    @catch (NSException *exception) {
+        logException(@"ToFromViewController->getRealTimeDataForItinerary", @"", exception);
     }
 }
 
@@ -1345,11 +1426,10 @@ NSUserDefaults *prefs;
         [dFormat setTimeStyle:NSDateFormatterMediumStyle];
         if ([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
             if ([fromLocation reverseGeoLocation]) {
-                fromLocs = [NSString stringWithFormat:@"Current Location Reverse Geocode: %@",
-                            [[fromLocation reverseGeoLocation] formattedAddress]];
-            } else {
-                fromLocs = @"Current Location";
-            }
+                fromLocs = [NSString stringWithFormat:@"Current Location Reverse Geocode: %@",[[fromLocation reverseGeoLocation] formattedAddress]];
+                } else {
+                    fromLocs = @"Current Location";
+                }
         } else {
             fromLocs = [fromLocation formattedAddress];
         }
@@ -1360,7 +1440,26 @@ NSUserDefaults *prefs;
         [nc_AppDelegate sharedInstance].FBUniqueId = nil;
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at feedback button press from TOFromView: %@", exception);
+        logException(@"ToFromViewController->setFBParametersForGeneral", @"", exception);
+    }
+}
+
+- (void)requestReverseGeo:(Location *)location
+{
+
+    @try {
+        float startTime = CFAbsoluteTimeGetCurrent();
+        NSString* latLngString = [NSString stringWithFormat:@"%f,%f",[location latFloat], [location lngFloat]];
+        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
+                                @"latlng", latLngString,
+                                @"sensor", @"true", nil];
+        reverseGeoURLResource = [@"json" appendQueryParams:params];
+        [rkGeoMgr loadObjectsAtResourcePath:reverseGeoURLResource delegate:self]; // Call the reverse Geocoder
+        
+        currentLocationResTime =  CFAbsoluteTimeGetCurrent() - startTime;
+    }
+    @catch (NSException *exception) {
+        logException(@"ToFromViewController->requestReverseGeo", @"", exception);
     }
 }
 
@@ -1404,24 +1503,6 @@ NSUserDefaults *prefs;
     [self.toTableVC markAndUpdateSelectedLocation:toLocation];
     [self.fromTableVC markAndUpdateSelectedLocation:fromLocation];
 }
-- (void)requestReverseGeo:(Location *)location
-{
-
-    @try {
-        float startTime = CFAbsoluteTimeGetCurrent();
-        NSString* latLngString = [NSString stringWithFormat:@"%f,%f",[location latFloat], [location lngFloat]];
-        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
-                                @"latlng", latLngString,
-                                @"sensor", @"true", nil];
-        reverseGeoURLResource = [@"json" appendQueryParams:params];
-        [rkGeoMgr loadObjectsAtResourcePath:reverseGeoURLResource delegate:self]; // Call the reverse Geocoder
-        
-        currentLocationResTime =  CFAbsoluteTimeGetCurrent() - startTime;
-    }
-    @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at reverGeocode: %@", exception);
-    }
-}
 
 #pragma mark UIdatePicker functionality
 
@@ -1445,7 +1526,6 @@ NSUserDefaults *prefs;
 }
 
 //---------------------------------------------------------------------------
-
 
 - (void)selectCurrentDate {
     [self.navigationController.navigationBar setUserInteractionEnabled:YES];

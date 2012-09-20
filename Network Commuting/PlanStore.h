@@ -47,4 +47,8 @@
 // Returns the consolidated plan
 - (Plan *)consolidateWithMatchingPlans:(Plan *)plan0;
 
+// Generate Random String of length 16
+- (NSString *)generateRandomString;
+
+
 @end

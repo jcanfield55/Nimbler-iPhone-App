@@ -64,22 +64,20 @@ NSUserDefaults *prefs;
     [super viewDidLoad];
     arrayTweet = [[NSMutableArray alloc] init];
     [self hideUnUsedTableViewCell];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
-//        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-//    }
-//    else {
-//        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_navigationbar.png"]] aboveSubview:self.navigationController.navigationBar];
-//    }
-    UILabel* tlabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 200, 40)];
-    [tlabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:20.0]];
-    tlabel.text=TWEETERVIEW_MANE;
-    tlabel.textColor= [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];
-    [tlabel setTextAlignment:UITextAlignmentCenter];
-    tlabel.backgroundColor =[UIColor clearColor];
-    tlabel.adjustsFontSizeToFitWidth=YES;
-    self.navigationItem.titleView=tlabel;
-    //[[self navigationItem] setTitle:TWEETERVIEW_MANE];               
+    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+        [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+    }
+    else {
+        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+    }
+    UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
+    [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
+    lblNavigationTitle.text=TWITTER_VIEW_TITLE;
+    lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
+    [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
+    lblNavigationTitle.backgroundColor =[UIColor clearColor];
+    lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
+    self.navigationItem.titleView=lblNavigationTitle;              
     
     dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle:NSDateFormatterFullStyle];
@@ -228,11 +226,11 @@ NSUserDefaults *prefs;
         if ([request isGET]) {
             if (isTwitterLiveData) {
                 isTwitterLiveData = false;
-                NSLog(@"response %@", [response bodyAsString]);
+                NIMLOG_EVENT1(@"response %@", [response bodyAsString]);
                 id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];                
                 [self setTwitterLiveData:res];
             } else {
-                NSLog(@"latest tweets: %@", [response bodyAsString]);
+                NIMLOG_EVENT1(@"latest tweets: %@", [response bodyAsString]);
                 id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];
                 NSNumber *respCode = [(NSDictionary*)res objectForKey:ERROR_CODE];
                 int tc = [[(NSDictionary*)res objectForKey:TWIT_COUNT] intValue];
@@ -261,7 +259,7 @@ NSUserDefaults *prefs;
 
     }
     @catch (NSException *exception) {
-        NSLog(@"exceptions: %@", exception);
+        logException(@"twitterViewController -> didLoadResponse", @"", exception);
     }
 
 }
@@ -343,8 +341,8 @@ NSUserDefaults *prefs;
         [[RKClient sharedClient]  get:allAdvisories delegate:self];
     }
     @catch (NSException *exception) {
-        NSLog(@"Exception at advisories button click from ToFromview: %@", exception);
-    } 
+        logException(@"twitterViewController -> getAdvisoryData", @"", exception);
+    }
 }
 
 #pragma mark UIUpdation

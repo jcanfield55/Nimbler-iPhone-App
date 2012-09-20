@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4ED2C38115FDAB6600287205 /* img_DetailDesclosure.png in Resources */ = {isa = PBXBuildFile; fileRef = 4ED2C37F15FDAB6600287205 /* img_DetailDesclosure.png */; };
+		4ED2C38215FDAB6600287205 /* img_DetailDesclosure@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4ED2C38015FDAB6600287205 /* img_DetailDesclosure@2x.png */; };
 		5205D8DE14F4740D0004CD09 /* DateFormatterMSFrom1970.m in Sources */ = {isa = PBXBuildFile; fileRef = 5205D8DD14F4740D0004CD09 /* DateFormatterMSFrom1970.m */; };
 		5210516D14C9BEA80025DD39 /* RouteOptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5210516C14C9BEA80025DD39 /* RouteOptionsViewController.m */; };
 		5210517014C9C0DF0025DD39 /* Plan.m in Sources */ = {isa = PBXBuildFile; fileRef = 5210516F14C9C0DF0025DD39 /* Plan.m */; };
@@ -317,6 +319,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4ED2C37F15FDAB6600287205 /* img_DetailDesclosure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_DetailDesclosure.png; sourceTree = "<group>"; };
+		4ED2C38015FDAB6600287205 /* img_DetailDesclosure@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_DetailDesclosure@2x.png"; sourceTree = "<group>"; };
 		5205D8DC14F4740D0004CD09 /* DateFormatterMSFrom1970.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateFormatterMSFrom1970.h; sourceTree = "<group>"; };
 		5205D8DD14F4740D0004CD09 /* DateFormatterMSFrom1970.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateFormatterMSFrom1970.m; sourceTree = "<group>"; };
 		5210516B14C9BEA80025DD39 /* RouteOptionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteOptionsViewController.h; sourceTree = "<group>"; };
@@ -2627,6 +2631,8 @@
 		CCB7E81C1570EB670036E9CD /* images */ = {
 			isa = PBXGroup;
 			children = (
+				4ED2C37F15FDAB6600287205 /* img_DetailDesclosure.png */,
+				4ED2C38015FDAB6600287205 /* img_DetailDesclosure@2x.png */,
 				8D015971159B3DE10004D2FB /* caltrain.jpg */,
 				CC578A02156520B50057D5A7 /* feedback.png */,
 				CCA4C7DA15D9005B009BE7A1 /* img_ recording@2x.png */,
@@ -3182,6 +3188,8 @@
 				8DC5159215E62AD5003FD2DB /* img_route@2x.png in Resources */,
 				52F4D44115F8205600159E81 /* img_cancel.png in Resources */,
 				52F4D44415F820C700159E81 /* img_cancel@2x.png in Resources */,
+				4ED2C38115FDAB6600287205 /* img_DetailDesclosure.png in Resources */,
+				4ED2C38215FDAB6600287205 /* img_DetailDesclosure@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3428,7 +3436,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
 				INFOPLIST_FILE = "Network Commuting/Nimbler Caltrain-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1\"",
@@ -3439,8 +3447,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "E2DD1CF9-21E2-4F4C-AB45-CBB2DFCDDC1B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E2DD1CF9-21E2-4F4C-AB45-CBB2DFCDDC1B";
+				PROVISIONING_PROFILE = "0B09D368-9E32-4D0A-A2D0-D948FBA48B00";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0B09D368-9E32-4D0A-A2D0-D948FBA48B00";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -3460,7 +3468,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
 				INFOPLIST_FILE = "Network Commuting/Nimbler Caltrain-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1\"",
@@ -3471,9 +3479,9 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "E2DD1CF9-21E2-4F4C-AB45-CBB2DFCDDC1B";
-				"PROVISIONING_PROFILE[sdk=*]" = "E2DD1CF9-21E2-4F4C-AB45-CBB2DFCDDC1B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E2DD1CF9-21E2-4F4C-AB45-CBB2DFCDDC1B";
+				PROVISIONING_PROFILE = "0B09D368-9E32-4D0A-A2D0-D948FBA48B00";
+				"PROVISIONING_PROFILE[sdk=*]" = "0B09D368-9E32-4D0A-A2D0-D948FBA48B00";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0B09D368-9E32-4D0A-A2D0-D948FBA48B00";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;

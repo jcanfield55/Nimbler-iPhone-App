@@ -26,6 +26,7 @@
 #define GEO_TO            @"1"
 #define REVERSE_GEO_FROM  @"2"
 #define REVERSE_GEO_TO    @"2"
+#define PREDEFINE_TYPE    @"3"
 
 #define MIN_LAT           @"36.791000000000004"
 #define MIN_LONG          @"-123.4631719"
@@ -178,3 +179,55 @@
 #define GTFS_SERVICE_EXCEPTIONS_DATES @"gtfsServiceExceptionDates"
 #define CURRENT_DATE @"currentDate"
 #define TIMER_TYPE  @"continueGetTime"
+
+#define GET_PLAN_URL  @"plan/get"
+#define PLAN_GENERATE_URL  @"plan/generate"
+
+// savePlanInTPServer Method Constants
+#define NEW_PLAN_REQUEST         @"plan/new"
+#define PLAN_JSON_STRING         @"planJsonString"
+#define TIME_TRIP_PLAN           @"timeTripPlan"
+#define FORMATTED_ADDRESS_TO     @"frmtdAddTo"
+#define FORMATTED_ADDRESS_FROM   @"frmtdAddFrom"
+#define LATITUDE_FROM            @"latFrom"
+#define LONGITUDE_FROM           @"lonFrom"
+#define LATITUDE_TO              @"latTo"
+#define LONGITUDE_TO             @"lonTo"
+#define CURRENT_LOCATION         @"Current Location"
+#define FROM_TYPE                @"fromType"
+#define TO_TYPE                  @"toType"
+#define RAW_ADDRESS_FROM         @"rawAddFrom"
+#define GEO_RES_FROM             @"geoResFrom"
+#define TIME_FROM                @"timeFrom"
+#define TIME_TO                  @"timeTo"
+#define RAW_ADDRESS_TO           @"rawAddTO"
+#define GEO_RES_TO               @"geoResTO"
+
+#define FROM_PLACE                      @"fromPlace"
+#define TO_PLACE                        @"toPlace"
+#define REQUEST_TRIP_DATE               @"date"
+#define REQUEST_TRIP_TIME               @"time"
+#define ARRIVE_BY                       @"arriveBy"
+#define MAX_WALK_DISTANCE               @"maxWalkDistance"
+
+#define REQUEST_ID              @"reqId"
+#define REQUEST_ID_LENGTH       16
+
+// NavigationBar Titles
+
+#define LOCATION_PICKER_VIEW_TITLE @"Pick a location"
+#define ROUTE_OPTIONS_VIEW_TITLE   @"Itineraries"
+#define ROUTE_DETAIL_VIEW_TITLE    @"Route"
+#define TWITTER_VIEW_TITLE         @"Advisories"
+#define SETTING_VIEW_TITLE         @"App Settings"
+#define FEED_BACK_VIEW_TITLE       @"Feedback"
+
+#define PLAN_ID                        @"planid"
+#define LIVE_FEEDS_BY_PLAN_URL         @"livefeeds/plan"
+#define ITINERARY_ID                   @"itineraryid"
+#define LIVE_FEEDS_BY_ITINERARIES_URL  @"livefeeds/itineraries"
+#define FOR_TODAY                      @"forToday"
+
+
+
+

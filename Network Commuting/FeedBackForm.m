@@ -86,16 +86,15 @@ NSUserDefaults *prefs;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-    // if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
-    // [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-    // }
-    // else {
-    // [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_navigationbar.png"]] aboveSubview:self.navigationController.navigationBar];
-    // }
+    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+        [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+    }
+    else {
+        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+    }
     UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
     [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
-    lblNavigationTitle.text=FB_TITLE;
+    lblNavigationTitle.text=FEED_BACK_VIEW_TITLE;
     lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
     [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
     lblNavigationTitle.backgroundColor =[UIColor clearColor];
@@ -195,7 +194,7 @@ NSUserDefaults *prefs;
     NSError *error = nil;
     audioRecorder = [[AVAudioRecorder alloc] initWithURL:soundFileURL settings:recordSettings error:&error];
     if (error) {
-        NSLog(@"error: %@", [error localizedDescription]);
+        NIMLOG_ERR1(@"error while Audio Recording: %@", [error localizedDescription]);
     } else {
         [audioRecorder prepareToRecord];
     }
@@ -286,7 +285,7 @@ NSUserDefaults *prefs;
         
         audioPlayer.delegate = self;
         if (error) {
-            NSLog(@"Error: %@",
+            NIMLOG_ERR1(@"Error While Audio Playing: %@",
                   [error localizedDescription]);
         } else {
             // alertView = [self WaitPrompt];
@@ -369,17 +368,17 @@ NSUserDefaults *prefs;
 
 -(void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player error:(NSError *)error
 {
-    NSLog(@"Decoder Error occurred");
+    NIMLOG_ERR1(@"Decoder Error occurred =%@",error);
 }
 
 -(void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag
 {
-    NSLog(@"SuccessFully Recording");
+    NIMLOG_PERF1(@"SuccessFully Recording");
 }
 
 -(void)audioRecorderEncodeErrorDidOccur:(AVAudioRecorder *)recorder error:(NSError *)error
 {
-    NSLog(@"Encoder Error occurred");
+    NIMLOG_ERR1(@"Encoder Error occurred = %@",error);
 }
 
 
@@ -409,7 +408,7 @@ NSUserDefaults *prefs;
             NSDictionary *fbParser = [parser1 objectFromString:[response bodyAsString] error:nil];
             NSString *msg;
             for (id key in fbParser) {
-                NSLog(@"key: %@, value: %@", key, [fbParser objectForKey:key]);
+                NIMLOG_EVENT1(@"key: %@, value: %@", key, [fbParser objectForKey:key]);
                 if ([key isEqualToString:FB_RESPONSE_MSG]) {
                     if ([[fbParser objectForKey:FB_RESPONCE_CODE] intValue] == RESPONSE_SUCCESSFULL) {
                         msg = FB_RESPONSE_SUCCEES;
@@ -491,25 +490,24 @@ NSUserDefaults *prefs;
 #endif
     
     [rkp setValue:[prefs objectForKey:DEVICE_CFUUID] forParam:DEVICE_ID];
-        [rkp setValue:[NSNumber numberWithInt:FB_SOURCE_GENERAL] forParam:FEEDBACK_SOURCE];
+        [rkp setValue:[nc_AppDelegate sharedInstance].FBSource forParam:FEEDBACK_SOURCE];
     [rkp setValue:@"3.5" forParam:FEEDBACK_RATING];
     
-    NSLog(@"Shared Instance Feedback Source: %@",[nc_AppDelegate sharedInstance].FBSource);
+    NIMLOG_EVENT1(@"Shared Instance Feedback Source: %@",[nc_AppDelegate sharedInstance].FBSource);
     if([nc_AppDelegate sharedInstance].FBSource == [NSNumber numberWithInt:FB_SOURCE_GENERAL]){
         [rkp setValue:[nc_AppDelegate sharedInstance].FBSFromAdd forParam:FB_FORMATTEDADDR_FROM];
         [rkp setValue:[nc_AppDelegate sharedInstance].FBToAdd forParam:FB_FORMATTEDADDR_TO];
         [rkp setValue:[nc_AppDelegate sharedInstance].FBDate forParam:FB_DATE];
     } else {
-        [rkp setValue:@"" forParam:FB_UNIQUEID]; // temporary fix
-        /* JC Temporarily commenting this out because we need to send "" as uniqueID no matter what
+        //[rkp setValue:@"" forParam:FB_UNIQUEID]; // temporary fix
+//         JC Temporarily commenting this out because we need to send "" as uniqueID no matter what
         if([nc_AppDelegate sharedInstance].FBUniqueId == nil){
             [rkp setValue:@"" forParam:FB_UNIQUEID];
         }
         else{
             [rkp setValue:[nc_AppDelegate sharedInstance].FBUniqueId forParam:FB_UNIQUEID];
-        } */
+        } 
     }
-    
     timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(popOut) userInfo:nil repeats: NO];
     [[RKClient sharedClient] post:FB_REQUEST params:rkp delegate:self];
 }

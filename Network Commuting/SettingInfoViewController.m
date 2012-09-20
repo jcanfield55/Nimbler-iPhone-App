@@ -9,6 +9,7 @@
 #import "SettingInfoViewController.h"
 #import "nc_AppDelegate.h"
 #import "UserPreferance.h"
+#import "UtilityFunctions.h"
 #if FLURRY_ENABLED
 #include "Flurry.h"
 #endif
@@ -24,13 +25,13 @@
 
 @synthesize sliderMaxWalkDistance;
 @synthesize sliderPushNotification;
-@synthesize lblSliderValue;
 @synthesize switchEnableUrgentSound;
 @synthesize switchEnableStandardSound;
 @synthesize enableUrgentSoundFlag;
 @synthesize enableStandardSoundFlag;
 @synthesize switchPushEnable;
 @synthesize btnUpdateSetting;
+@synthesize lblSliderMaxWalkDistanceValue;
 
 int pushHour;
 bool isPush;
@@ -57,21 +58,26 @@ bool isPush;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
-//        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-//    }
-//    else {
-//        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_navigationbar.png"]] aboveSubview:self.navigationController.navigationBar];
-//    }
-    UILabel* tlabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 200, 40)];
-    [tlabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:20.0]];
-    tlabel.text=SETTING_TITLE;
-    tlabel.textColor= [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];
-    [tlabel setTextAlignment:UITextAlignmentCenter];
-    tlabel.backgroundColor =[UIColor clearColor];
-    tlabel.adjustsFontSizeToFitWidth=YES;
-    self.navigationItem.titleView=tlabel;
+    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+        [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+    }
+    else {
+        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+    }
+    UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
+    [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
+    lblNavigationTitle.text=SETTING_VIEW_TITLE;
+    lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
+    [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
+    lblNavigationTitle.backgroundColor =[UIColor clearColor];
+    lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
+    self.navigationItem.titleView=lblNavigationTitle;
+    
+    lblSliderMaxWalkDistanceValue = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, LABEL_MAXWALK_Distance_WIDTH, LABEL_MAXWALK_Distance_HEIGHT)] ;
+    [lblSliderMaxWalkDistanceValue setTextColor:[UIColor redColor]];
+    [lblSliderMaxWalkDistanceValue setBackgroundColor:[UIColor clearColor]];
+    [lblSliderMaxWalkDistanceValue setTextAlignment:UITextAlignmentCenter];
+    [self.sliderMaxWalkDistance addSubview:lblSliderMaxWalkDistanceValue];
 }
 
 - (void)viewDidUnload{
@@ -84,7 +90,6 @@ bool isPush;
     self.sliderPushNotification = nil;
     self.switchEnableUrgentSound = nil;
     self.switchEnableStandardSound = nil;
-    self.lblSliderValue = nil;
 }
 
 - (void)dealloc{
@@ -94,14 +99,12 @@ bool isPush;
     self.sliderPushNotification = nil;
     self.switchEnableUrgentSound = nil;
     self.switchEnableStandardSound = nil;
-    self.lblSliderValue = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self fetchUserSettingData];
-    self.lblSliderValue.text = [NSString stringWithFormat:@"%0.2f",self.sliderMaxWalkDistance.value];
 #if FLURRY_ENABLED
     [Flurry logEvent: FLURRY_SETTINGS_APPEAR];
 #endif
@@ -109,7 +112,7 @@ bool isPush;
 }
 
 - (void) viewWillDisappear:(BOOL)animated{
-    [super viewWillDisappear:YES];
+    [super viewWillDisappear:animated];
     [self saveSetting];
 }
 
@@ -163,7 +166,7 @@ bool isPush;
                                 MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:sliderMaxWalkDistance.value],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt:enableUrgentSoundFlag],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt:enableStandardSoundFlag],
                                 nil];
         NSString *twitCountReq = [UPDATE_SETTING_REQ appendQueryParams:params];
-        NSLog(@" - - -  - - - - - %@", twitCountReq);
+        NIMLOG_EVENT1(@" twitCountReq %@", twitCountReq);
         [nc_AppDelegate sharedInstance].isSettingSavedSuccessfully = NO;
         [[RKClient sharedClient]  get:twitCountReq delegate:self];
         
@@ -182,7 +185,7 @@ bool isPush;
     @catch (NSException *exception) {
         [alertView dismissWithClickedButtonIndex:0 animated:NO];
         [self.navigationController popViewControllerAnimated:YES];
-        NSLog(@"exception at upadting Setting : %@", exception);
+        logException(@"SettingInfoViewController->saveSetting", @"", exception);
     }
 }
 
@@ -191,21 +194,39 @@ bool isPush;
 {
 }
 
+// Methods Added to Get The Position of Thumb
+- (float)mapValueInIntervalInPercents: (float)value min: (float)minimum max: (float)maximum{
+    return (100 / (maximum - minimum)) * value -
+    (100 * minimum)/(maximum - minimum);
+}
+
+- (float)xPositionFromSliderValue:(UISlider *)aSlider{
+    float percent = [self mapValueInIntervalInPercents: aSlider.value
+                                                   min: aSlider.minimumValue
+                                                   max: aSlider.maximumValue] / 100.0;
+    
+    return percent * aSlider.frame.size.width -
+    percent * aSlider.currentThumbImage.size.width +
+    aSlider.currentThumbImage.size.width / 2;
+}
+
+
 -(IBAction)sliderWalkDistanceValueChanged:(UISlider *)sender
 {
-    float walkDistance = sliderMaxWalkDistance.value;
     [sliderMaxWalkDistance setValue:sliderMaxWalkDistance.value];
     [sliderMaxWalkDistance setSelected:YES];
-    [self.lblSliderValue setText:[NSString stringWithFormat:@"%0.2f",sender.value]];
+    float sliderXPOS = [self xPositionFromSliderValue:sliderMaxWalkDistance];
+    lblSliderMaxWalkDistanceValue.center = CGPointMake(sliderXPOS, 30);
+    lblSliderMaxWalkDistanceValue.text = [NSString stringWithFormat:@"%0.2f", sliderMaxWalkDistance.value];
 }
 
 -(IBAction)sliderPushNotification:(UISlider *)sender
 {
-    int walkDistance = sliderPushNotification.value;
-    [sliderPushNotification setValue:sliderPushNotification.value];
+    int pushNotificationThreshold = lroundf(sliderPushNotification.value);
+    [sliderPushNotification setValue:pushNotificationThreshold];
     [sliderPushNotification setSelected:YES];
-    pushHour = walkDistance;
-    NSLog(@"walk distance: %d", walkDistance);
+    pushHour = pushNotificationThreshold;
+    NIMLOG_EVENT1(@"walk distance: %d", pushNotificationThreshold);
 }
 
 -(void)popOutFromSettingView { 
@@ -227,10 +248,10 @@ bool isPush;
             else{
                 [nc_AppDelegate sharedInstance].isSettingSavedSuccessfully = NO;
             }
-            NSLog(@"response for userUpdateSettings:  %@", [response bodyAsString]);
+            NIMLOG_EVENT1(@"response for userUpdateSettings:  %@", [response bodyAsString]);
         }
     }  @catch (NSException *exception) {
-        NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
+        logException(@"SettingInfoViewController->didLoadResponse", @"while getting unique IDs from TP Server response", exception);
     } 
 }
 
@@ -285,7 +306,7 @@ bool isPush;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at fetch data from core data and set to views: %@",exception);
+        logException(@"SettingInfoViewController->fetchUserSettingData", @"", exception);
     }
 }
 

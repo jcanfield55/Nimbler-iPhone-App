@@ -12,6 +12,7 @@
 #import "FeedBackForm.h"
 #import "FeedBackReqParam.h"
 #import "twitterViewController.h"
+#import "UtilityFunctions.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "ToFromViewController.h"
 #import "nc_AppDelegate.h"
@@ -33,8 +34,6 @@
 
 @synthesize itinerary;
 @synthesize mainTable;
-@synthesize feedbackButton;
-@synthesize advisoryButton;
 @synthesize legMapVC;
 @synthesize mapView;
 @synthesize itineraryNumber;
@@ -65,22 +64,22 @@ NSUserDefaults *prefs;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     @try {
         if (self) {
-            [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-//            if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
-//                [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-//            }
-//            else {
-//                [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_navigationbar.png"]] aboveSubview:self.navigationController.navigationBar];
-//            }
+            if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+                [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+            }
+            else {
+                [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+            }
             
-            UILabel* tlabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 80, 40)];
-            [tlabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:20.0]];
-            tlabel.text=ROUTE_TITLE_MSG;
-            tlabel.textColor= [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];
-            [tlabel setTextAlignment:UITextAlignmentCenter];
-            tlabel.backgroundColor =[UIColor clearColor];
-            tlabel.adjustsFontSizeToFitWidth=YES;
-            self.navigationItem.titleView=tlabel;
+            UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
+            [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
+            lblNavigationTitle.text=ROUTE_DETAIL_VIEW_TITLE;
+            lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
+            [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
+            lblNavigationTitle.backgroundColor =[UIColor clearColor];
+            lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
+            self.navigationItem.titleView=lblNavigationTitle;
+            
             //[[self navigationItem] setTitle:ROUTE_TITLE_MSG];
             
             // Set up the MKMapView and LegMapViewController
@@ -138,7 +137,7 @@ NSUserDefaults *prefs;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at init RouteDetail: %@", exception);
+        logException(@"RouteDetailsViewController->initWithNibName", @"", exception);
     }
     return self;
 }
@@ -146,19 +145,15 @@ NSUserDefaults *prefs;
 - (void) viewDidUnload{
     [super viewDidUnload];
     self.mainTable = nil;
-    self.feedbackButton = nil;
-    self.advisoryButton = nil;
 }
 
 - (void) dealloc{
     self.mainTable = nil;
-    self.feedbackButton = nil;
-    self.advisoryButton = nil;
 }
 
 - (void)setItinerary:(Itinerary *)i0
 {
-    NSLog(@"Itinerary # %@",i0);
+    NIMLOG_EVENT1(@"Itinerary # %@",i0);
     @try {
         itinerary = i0;
         [legMapVC setItinerary:i0];
@@ -176,7 +171,7 @@ NSUserDefaults *prefs;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at Set Itinerary %@", exception);
+        logException(@"RouteDetailsViewController->setItinerary", @"", exception);
     }
 }
 
@@ -247,7 +242,7 @@ NSUserDefaults *prefs;
     
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at viewWillAppear RouteDetail: %@", exception);
+        logException(@"RouteDetailsViewController->viewWillAppear", @"", exception);
     }
     [self test:0];
 }
@@ -284,7 +279,7 @@ NSUserDefaults *prefs;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"Exception at cell count: %@",exception);
+        logException(@"RouteDetailsViewController->tableView: numberOfRowsInSection", @"", exception);
     }
 }
 
@@ -343,7 +338,7 @@ NSUserDefaults *prefs;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception while reload RouteDetailView: %@", exception);
+        logException(@"RouteDetailsViewController->cellForRowAtIndexPath", @"", exception);
     }
     return cell;
 }
@@ -368,7 +363,7 @@ NSUserDefaults *prefs;
         return height;
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at set dynamic height for RouteDetailViewTable Cell: %@", exception);
+        logException(@"RouteDetailsViewController->heightForRowAtIndexPath", @"", exception);
     }
 }
 
@@ -396,6 +391,7 @@ NSUserDefaults *prefs;
         }
     }
     @catch (NSException *exception) {
+        logException(@"RouteDetailsViewController->test", @"Setting FB parameters for leg/itinerary", exception);
         [self setFBParameterForItinerary];
     }
 }
@@ -422,31 +418,6 @@ NSUserDefaults *prefs;
 }
 
 
-#pragma mark - Button Press methods
-- (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event
-{
-    @try {        
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
-        [[RKClient sharedClient]  get:@"advisories/all" delegate:self];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"Exception at requesting advisory data: %@", exception);
-    } 
-}
-
-
-- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
-{
-    @try {
-        FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:[NSNumber numberWithInt:FB_SOURCE_ITINERARY] uniqueId:[itinerary itinId] date:nil fromAddress:nil toAddress:nil]; 
-        FeedBackForm *feedbackvc = [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];
-        [[self navigationController] pushViewController:feedbackvc animated:YES];
-    }
-    @catch (NSException *exception) {
-         NSLog(@"Exception at feedback navigation: %@", exception);
-    }
-}
 
 -(void)ReloadLegWithNewData
 {
@@ -454,7 +425,7 @@ NSUserDefaults *prefs;
         [mainTable reloadData];
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at realoding routeDetailViewTable: %@", exception);
+        logException(@"RouteDetailsViewController->ReloadLegWithNewData", @"", exception);
     }
 }
 
@@ -468,13 +439,14 @@ NSUserDefaults *prefs;
             [[self navigationController] pushViewController:twit animated:YES];     
         } 
     }  @catch (NSException *exception) {
-        NSLog( @"Exception while getting twitter Data from TP Server response: %@", exception);
-    } 
+        logException(@"RouteDetailsViewController->didLoadResponse", @"Loading Twitter Data", exception);
+
+    }
 }
 
 -(void)setFBParameterForItinerary
 {
-    NSLog(@"Itinerary.....");
+    NIMLOG_PERF1(@"Itinerary.....");
     [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_ITINERARY];
     [nc_AppDelegate sharedInstance].FBDate = nil;
     [nc_AppDelegate sharedInstance].FBToAdd = nil;
@@ -484,7 +456,7 @@ NSUserDefaults *prefs;
 
 -(void)setFBParameterForLeg:(NSString *)legId
 {
-    NSLog(@"leg.....");
+    NIMLOG_PERF1(@"leg.....");
     [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_LEG];
     [nc_AppDelegate sharedInstance].FBDate = nil;
     [nc_AppDelegate sharedInstance].FBToAdd = nil;

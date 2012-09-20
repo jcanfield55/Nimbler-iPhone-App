@@ -142,13 +142,12 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
-//        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-//    }
-//    else {
-//        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_navigationbar.png"]] aboveSubview:self.navigationController.navigationBar];
-//    }
+    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+        [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+    }
+    else {
+        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+    }
     // Do any additional setup after loading the view from its nib.
     UIButton *btnGoToNimbler = [[UIButton alloc] initWithFrame:CGRectMake(0,0,65,34)];
     [btnGoToNimbler addTarget:self action:@selector(popOutToNimbler) forControlEvents:UIControlEventTouchUpInside];
@@ -157,14 +156,14 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
     UIBarButtonItem *backTonimbler = [[UIBarButtonItem alloc] initWithCustomView:btnGoToNimbler];
     self.navigationItem.leftBarButtonItem = backTonimbler;
     
-    UILabel* tlabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 200, 40)];
-    [tlabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:20.0]];
-    tlabel.text=@"Pick a location";
-    tlabel.textColor= [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];
-    [tlabel setTextAlignment:UITextAlignmentCenter];
-    tlabel.backgroundColor =[UIColor clearColor];
-    tlabel.adjustsFontSizeToFitWidth=YES;
-    self.navigationItem.titleView=tlabel;
+    UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
+    [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
+    lblNavigationTitle.text = LOCATION_PICKER_VIEW_TITLE;
+    lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
+    [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
+    lblNavigationTitle.backgroundColor =[UIColor clearColor];
+    lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
+    self.navigationItem.titleView=lblNavigationTitle;
 }
 
 - (void)viewDidUnload{

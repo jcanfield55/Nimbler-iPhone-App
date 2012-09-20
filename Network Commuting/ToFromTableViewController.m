@@ -40,7 +40,8 @@
 @end
 
 @implementation ToFromTableViewController {
-    BOOL isGeocodingOutstanding;  
+    BOOL isGeocodingOutstanding;
+    UIImage *imageDetailDisclosure;
 }
 
 @synthesize locations;
@@ -65,15 +66,16 @@
         isGeocodingOutstanding = FALSE;
         
         // Create the textField for the first row of the tableView
-        txtField=[[UITextField alloc]initWithFrame:CGRectMake(TOFROM_TEXT_FIELD_INDENT,0,myTableView.frame.size.width-TOFROM_TEXT_FIELD_INDENT,[myTableView rowHeight]-TOFROM_INSERT_INTO_CELL_MARGIN)];
+        txtField=[[UITextField alloc]initWithFrame:CGRectMake(TOFROM_TEXT_FIELD_XPOS,TOFROM_TEXT_FIELD_YPOS,myTableView.frame.size.width-TOFROM_TEXT_FIELD_INDENT,[myTableView rowHeight]-TOFROM_INSERT_INTO_CELL_MARGIN)];
         [txtField setPlaceholder:@"Enter new address"];
-        [txtField setClearButtonMode:UITextFieldViewModeAlways];  // Add a clear button for text field
+        [txtField setClearButtonMode:UITextFieldViewModeAlways]; // Add a clear button for text field
         [txtField setFont:[UIFont MEDIUM_FONT]];
         [txtField setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
-
+        
         [txtField addTarget:self action:@selector(toFromTyping:forEvent:) forControlEvents:UIControlEventEditingChanged];
         [txtField addTarget:self action:@selector(textSubmitted:forEvent:) forControlEvents:(UIControlEventEditingDidEndOnExit)];
         [txtField setBackgroundColor:[UIColor whiteColor]];
+        imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
     }
     return self;
 }
@@ -116,7 +118,7 @@
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"Select Row: isFrom=%d, section=%d, row=%d", isFrom, [indexPath section], [indexPath row]);
+    NIMLOG_EVENT1(@"Select Row: isFrom=%d, section=%d, row=%d", isFrom, [indexPath section], [indexPath row]);
         
     if ([self adjustedForEnterNewAddressFor:[indexPath row]] == -1) {  // "Enter New Address" cell
         if (isFrom) {
@@ -232,7 +234,8 @@
             [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
             cell.textLabel.textColor = [UIColor lightGrayColor];
             [[cell textLabel] setText:TOFROMTABLE_ENTER_ADDRESS_TEXT];
-            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+            UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
+            [cell setAccessoryView:imgViewDetailDisclosure];
         }
 
         return cell;
@@ -257,22 +260,23 @@
         // Bold italic if a list header
         [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
         cell.textLabel.textColor = [UIColor darkGrayColor];
-        [cell setAccessoryType:UITableViewCellAccessoryNone];
+        [cell setAccessoryView:nil];
     } 
     else if (loc == selectedLocation) {
         [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
         cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
         if ([toFromVC editMode] == NO_EDIT) {
-            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+            UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
+            [cell setAccessoryView:imgViewDetailDisclosure];
         } else {
             // cell.textLabel.text = @"Current Location"; // This line causes DE124
-            [cell setAccessoryType:UITableViewCellAccessoryNone];
+            [cell setAccessoryView:nil];
         }
     } else {
         // just bold for normal cell
         [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
         cell.textLabel.textColor = [UIColor darkGrayColor];
-        [cell setAccessoryType:UITableViewCellAccessoryNone];
+        [cell setAccessoryView:nil];
     }
     
     cell.textLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
@@ -356,16 +360,16 @@
         [locations setRawAddressTo:rawAddress];
     }
     
-    NSLog(@"Raw address = %@", rawAddress);
+    NIMLOG_EVENT1(@"Raw address = %@", rawAddress);
     
-    NSLog(@"Last raw address = %@", lastRawAddressGeoRequest);
-    NSLog(@"time since last request = %f", [lastGeoRequestTime timeIntervalSinceNow]);
+    NIMLOG_EVENT1(@"Last raw address = %@", lastRawAddressGeoRequest);
+    NIMLOG_EVENT1(@"time since last request = %f", [lastGeoRequestTime timeIntervalSinceNow]);
     if ([rawAddress isEqualToString:lastRawAddressGeoRequest] && [lastGeoRequestTime timeIntervalSinceNow] > -5.0) {
-        NSLog(@"Skipping duplicate toFromTextSubmitted");
+        NIMLOG_PERF1(@"Skipping duplicate toFromTextSubmitted");
         return;  // if using the same rawAddress and less than 5 seconds between, treat as duplicate
     }
     
-    NSLog(@"In toFromTextSubmitted and isFrom=%d", isFrom);
+    NIMLOG_EVENT1(@"In toFromTextSubmitted and isFrom=%d", isFrom);
 
     [toFromVC setEditMode:NO_EDIT];  // Move back to NO_EDIT mode on the ToFrom view controller
 
@@ -392,7 +396,7 @@
                                     @"bounds", supportedRegionGeocodeString, @"sensor", @"true", nil];
             urlResource = [@"json" appendQueryParams:params];
 
-            NSLog(@"Geocode Parameter String = %@", urlResource);
+            NIMLOG_EVENT1(@"Geocode Parameter String = %@", urlResource);
             startTime = CFAbsoluteTimeGetCurrent();
                     
             @try {
@@ -412,7 +416,7 @@
                 
             }
             @catch (NSException *exception) {
-                NSLog(@"geoLoad Object Error %@", exception);
+                logException(@"ToFromTableViewController->textSubmitted", @"Loading geocode info", exception);
             }
  
         }
@@ -450,10 +454,10 @@
                 
                 NSArray* atoms = [responseStartingFromStatus componentsSeparatedByString:@"\""];
                 geocodeStatus = [atoms objectAtIndex:1]; // status string is second atom (first after the first quote)
-                NSLog(@"Status: %@", geocodeStatus);
+                NIMLOG_EVENT1(@"Status: %@", geocodeStatus);
                 
                 if ([geocodeStatus compare:@"OK" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-                    NSLog(@"Returned Objects = %d", [objects count]);
+                    NIMLOG_EVENT1(@"Returned Objects = %d", [objects count]);
                     
                     // Go through the returned objects and see which are in supportedRegion
                     // DE18 new fix
@@ -465,7 +469,7 @@
                             [locations removeLocation:loc]; // and out of Core Data
                         }
                     }
-                    NSLog(@"Valid Locations = %d", [validLocations count]);
+                    NIMLOG_EVENT1(@"Valid Locations = %d", [validLocations count]);
                     
                     // if no valid locations, give user an alert
                     if ([validLocations count] == 0) { 
@@ -523,7 +527,7 @@
                 }
                 
                 else if ([geocodeStatus compare:@"ZERO_RESULTS" options:NSCaseInsensitiveSearch] == NSOrderedSame) {                    
-                    NSLog(@"Zero results geocoding address");
+                    NIMLOG_PERF1(@"Zero results geocoding address");
 #if FLURRY_ENABLED          
                     NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");          
                     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -557,7 +561,7 @@
                                             FLURRY_GEOCODE_RAWADDRESS, rawAddress, nil];          
                     [Flurry logEvent:FLURRY_GEOCODE_OVER_GOOGLE_QUOTA withParameters:params];          
 #endif
-                    NSLog(@"Over query limit");
+                    NIMLOG_PERF1(@"Over query limit");
                     alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to locate your address.  Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                     [alert show];
                     
@@ -571,7 +575,7 @@
                                             FLURRY_GEOCODE_RAWADDRESS, rawAddress, nil];          
                     [Flurry logEvent:FLURRY_GEOCODE_OTHER_ERROR withParameters:params];          
 #endif
-                    NSLog(@"Request rejected, status= %@", geocodeStatus);
+                    NIMLOG_EVENT1(@"Request rejected, status= %@", geocodeStatus);
                     alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to locate your address.  Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                     [alert show];
                 }
@@ -592,18 +596,18 @@
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception geocoder ---------------> %@", exception);
+        logException(@"ToFromTableViewController->didLoadObjects", @"processing geocode response", exception);
     }    
 }
 
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error {
-    NSLog(@"Error received from RKObjectManager: %@", error);
+    NIMLOG_ERR1(@"Error received from RKObjectManager: %@", error);
 }
 
 // Internal method to process a new incoming geocoded location (if the only one returned by geocoder, or if this one picked by LocationPickerVC)
 - (void)selectedGeocodedLocation:(Location *)location
 {
-    NSLog(@"Formatted Address: %@", [location formattedAddress]);
+    NIMLOG_EVENT1(@"Formatted Address: %@", [location formattedAddress]);
     
     // Initialize some of the values for location
     [location setGeoCoderStatus:geocodeStatus];

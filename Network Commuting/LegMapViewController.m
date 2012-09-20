@@ -12,6 +12,7 @@
 #import "Step.h"
 #import "twitterViewController.h"
 #import "RestKit/RKJSONParserJSONKit.h"
+#import "UtilityFunctions.h"
 #import "Constants.h"
 #import <CoreImage/CoreImageDefines.h>
 #import "nc_AppDelegate.h"
@@ -103,7 +104,7 @@ NSString *legID;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at set Itinerary: %@",exception);
+        logException(@"LegMapViewController -> setItinerary", @"", exception);
     }
 }
 
@@ -118,7 +119,7 @@ NSString *legID;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at setItinerary %@",exception);
+        logException(@"LegMapViewController -> setItineraryNumber", @"", exception);
     }
 }
 
@@ -153,7 +154,7 @@ NSString *legID;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at setMapViewRegion: %@", exception);
+        logException(@"LegMapViewController -> setMapViewRegion", @"", exception);
     }
 }
 
@@ -168,7 +169,7 @@ NSString *legID;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at refresh at overlay in legMapView: %@",exception);
+        logException(@"LegMapViewController -> refreshLegOverlay", @"", exception);
     }
 }
 
@@ -181,7 +182,7 @@ NSString *legID;
             // aView.fillColor = [[UIColor cyanColor] colorWithAlphaComponent:0.2];
             aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:ALPHA_LIGHTER];
             aView.lineWidth = LINE_WIDTH;
-            NSLog(@"itineraryNumber=%d",itineraryNumber);
+            NIMLOG_EVENT1(@"itineraryNumber=%d",itineraryNumber);
             
             // Determine if this overlay is the one in focus.  If so, make it darker
             for (int i=0; i<[polyLineArray count]; i++) {
@@ -210,7 +211,7 @@ NSString *legID;
         return nil;
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at map overlay in LegMapView: %@", exception);
+        logException(@"LegMapViewController -> viewForOverlay", @"", exception);
     }
 }
 
@@ -261,7 +262,7 @@ NSString *legID;
         } 
         
     }  @catch (NSException *exception) {
-        NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
+        logException(@"LegMapViewController -> didLoadResponse", @"", exception);
     } 
 }
 

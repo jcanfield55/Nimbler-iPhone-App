@@ -8,7 +8,7 @@
 
 #import "nc_AppDelegate.h"
 #import "UtilityFunctions.h"
-//#import "TestFlightSDK1/TestFlight.h"
+#import "Logging.h"
 #import "ToFromViewController.h"
 #import "twitterViewController.h"
 #import "SettingInfoViewController.h"
@@ -59,6 +59,10 @@ static nc_AppDelegate *appDelegate;
 @synthesize isCalendarByDate;
 @synthesize isSettingSavedSuccessfully;
 @synthesize isSettingRequest;
+@synthesize lastGTFSLoadDateByAgency;
+@synthesize serviceByWeekdayByAgency;
+@synthesize calendarByDateByAgency;
+@synthesize timerType;
 
 
 // Feedback parameters
@@ -85,7 +89,9 @@ FeedBackForm *fbView;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [[UIApplication sharedApplication] 
+    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
+    
+    [[UIApplication sharedApplication]
      registerForRemoteNotificationTypes:
      (UIRemoteNotificationTypeAlert | 
       UIRemoteNotificationTypeBadge | 
@@ -94,10 +100,16 @@ FeedBackForm *fbView;
     prefs = [NSUserDefaults standardUserDefaults];
     
     // Configure the RestKit RKClient object for Geocoding and trip planning
+    RKLogConfigureByName("RestKit", CUSTOM_RK_LOG_LEVELS);
+    RKLogConfigureByName("RestKit/Network/Cache", CUSTOM_RK_LOG_LEVELS);
+    RKLogConfigureByName("RestKit/Network/Reachability", CUSTOM_RK_LOG_LEVELS);
+
+    
     RKObjectManager* rkGeoMgr = [RKObjectManager objectManagerWithBaseURL:GEO_RESPONSE_URL];
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
     
-    RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_GENERATE_URL];
+    RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];
+
     
     // Other URLs:
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
@@ -200,7 +212,7 @@ FeedBackForm *fbView;
         }  // End of temporary code
         
     }@catch (NSException *exception) {
-        NSLog(@"Exception: ----------------- %@", exception);
+        logException(@"ncAppDelegate->didFinishLaunchingWithOptions #1", @"", exception);
     } 
     
     // Set a CFUUID (unique identifier) for this device and this app, if doesn't exist already:
@@ -210,7 +222,7 @@ FeedBackForm *fbView;
         cfuuidString = [nc_AppDelegate getUUID];
         [prefs setValue:cfuuidString forKey:DEVICE_CFUUID];
         [prefs synchronize];
-        NSLog(@"DEVICE_CFUUID  - - - - - - - %@", cfuuidString);
+        NIMLOG_EVENT1(@"DEVICE_CFUUID  - - - - - - - %@", cfuuidString);
     }
     
     // Call TestFlightApp SDK
@@ -254,14 +266,14 @@ FeedBackForm *fbView;
         
 //        [self.tabBarController.tabBar setSelectedImageTintColor:[UIColor redColor]];
 //        [self.tabBarController.tabBar setBackgroundImage:[UIImage imageNamed:@"img_tabbar.png"]];
-        
+        [[nc_AppDelegate sharedInstance] updateTime];
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         [[self window] setRootViewController:self.tabBarController];
         [self.window makeKeyAndVisible];
         
     }
     @catch (NSException *exception) {
-        NSLog(@"load exception: %@", exception);
+        logException(@"ncAppDelegate->didFinishLaunchingWithOptions #2", @"", exception);
     }
     return YES;
 }
@@ -361,8 +373,13 @@ FeedBackForm *fbView;
      [timerTweeterGetData invalidate];
     timerTweeterGetData = nil;
     
+    if(toFromViewController.continueGetTime != nil){
+        timerType =TIMER_TYPE;
+    }
     [toFromViewController.continueGetTime invalidate];
     toFromViewController.continueGetTime = nil;
+    [toFromViewController.timerGettingRealDataByItinerary invalidate];
+    toFromViewController.timerGettingRealDataByItinerary = nil;
     isFromBackground = YES;
 }
 
@@ -371,6 +388,19 @@ FeedBackForm *fbView;
     /*
      Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
      */
+    
+    // Check the date and if it is not today's date we will make request.
+    NSDate *todayDate = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
+    NSString *strTodayDate = [dateFormatter stringFromDate:todayDate];
+    NSDate *currentDate = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_DATE];
+    if(![strTodayDate isEqual:currentDate]){
+        [[nc_AppDelegate sharedInstance] updateTime];
+        [[NSUserDefaults standardUserDefaults] setObject:strTodayDate forKey:CURRENT_DATE];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
     if(self.isTwitterView){
        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
         [twitterView getAdvisoryData];
@@ -389,7 +419,12 @@ FeedBackForm *fbView;
         [toFromViewController.fromTableVC markAndUpdateSelectedLocation:self.fromLoc];
     }
     if(isFromBackground){
-        toFromViewController.continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
+        if([timerType isEqualToString:TIMER_TYPE]){
+            toFromViewController.continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
+        }
+        else{
+            toFromViewController.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
+        }
     }
     if(!isSettingSavedSuccessfully){
         [self saveSetting];
@@ -488,8 +523,7 @@ FeedBackForm *fbView;
         return __managedObjectContext;
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at managedObjectContext delegate: %@", exception);
-    }
+        logException(@"ncAppDelegate->managedObjectContext", @"", exception);    }
 }
 
 /**
@@ -508,8 +542,7 @@ FeedBackForm *fbView;
         return __managedObjectModel;
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at managedObjectModel delegate: %@", exception);
-    }
+        logException(@"ncAppDelegate->managedObjectModel", @"", exception);    }
 }
 
 /**
@@ -553,14 +586,14 @@ FeedBackForm *fbView;
              Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
              
              */
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            NIMLOG_ERR1(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
         }    
         
         return __persistentStoreCoordinator;
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at persistentStoreCoordinator: %@", exception);
+        logException(@"ncAppDelegate->persistentStoreCoordinator", @"", exception);
     }
 }
 
@@ -578,13 +611,12 @@ FeedBackForm *fbView;
 {    
     @try {
         isRegionSupport = TRUE;
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_GENERATE_URL];
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
         [[RKClient sharedClient]  get:@"metadata" delegate:self];
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at requesting live supported data: %@", exception);
-    }
+        logException(@"ncAppDelegate->suppertedRegion", @"", exception);    }
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response 
@@ -592,15 +624,35 @@ FeedBackForm *fbView;
     isFromBackground = NO;
     @try {
         if ([request isGET]) {  
-            NSLog(@"Got a response back from our GET! %@", [response bodyAsString]);      
+            NIMLOG_EVENT1(@"Got a response back from our GET! %@", [response bodyAsString]);      
             
             NSError *error = nil;
             if (error == nil)
             {
                 RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
-                if(isSettingRequest){
+                NSDictionary *tempResponseDictionary = [rkParser objectFromString:[response bodyAsString] error:nil];
+                if([tempResponseDictionary objectForKey:GTFS_UPDATE_TIME] != nil ){
+                    if(lastGTFSLoadDateByAgency != tempResponseDictionary){
+                        lastGTFSLoadDateByAgency = tempResponseDictionary;
+                        KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
+                        [keyObjectStore setObject:lastGTFSLoadDateByAgency forKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
+                        [[nc_AppDelegate sharedInstance] performSelector:@selector(serviceByWeekday) withObject:nil afterDelay:0.5];
+                    }
+                }
+                else if([tempResponseDictionary objectForKey:GTFS_SERVICE_BY_WEEKDAY] != nil){
+                    serviceByWeekdayByAgency = tempResponseDictionary;
+                    KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
+                    [keyObjectStore setObject:serviceByWeekdayByAgency forKey:TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY ];
+                    [[nc_AppDelegate sharedInstance] performSelector:@selector(calendarByDate) withObject:nil afterDelay:0.5];
+                }
+                else if([tempResponseDictionary objectForKey:GTFS_SERVICE_EXCEPTIONS_DATES] != nil){
+                    calendarByDateByAgency = tempResponseDictionary;
+                    KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
+                    [keyObjectStore setObject:calendarByDateByAgency forKey:TR_CALENDAR_BY_DATE_BY_AGENCY];
+                }
+                else if(isSettingRequest){
                     NSDictionary  *dictTemp = [rkParser objectFromString:[response bodyAsString] error:nil];
-                    NSLog(@"RK Response: %@",[response bodyAsString]);
+                    NIMLOG_EVENT1(@"RK Response: %@",[response bodyAsString]);
                     NSNumber *respCode = [(NSDictionary*)dictTemp objectForKey:CODE];
                     if ([respCode intValue]== RESPONSE_SUCCESSFULL) { 
                         self.isSettingSavedSuccessfully = YES;
@@ -612,13 +664,13 @@ FeedBackForm *fbView;
                 }
                 else if (isTwitterLivaData) {
                     isTwitterLivaData = false;
-                    NSLog(@"Responce %@", [response bodyAsString]);
+                    NIMLOG_EVENT1(@"Responce %@", [response bodyAsString]);
                     NSDictionary  *tweeterCountParser = [rkParser objectFromString:[response bodyAsString] error:nil];
                     NSNumber *respCode = [(NSDictionary*)tweeterCountParser objectForKey:@"errCode"];
                     //                NSString *allNew = [(NSDictionary*)tweeterCountParser objectForKey:@"allNew"];
                     if ([respCode intValue]== RESPONSE_SUCCESSFULL) {  
                         if(!self.isTwitterView){
-                            NSLog(@"count: %@",[(NSDictionary*)tweeterCountParser objectForKey:TWEET_COUNT]);
+                            NIMLOG_EVENT1(@"count: %@",[(NSDictionary*)tweeterCountParser objectForKey:TWEET_COUNT]);
                             NSString *tweeterCount = [(NSDictionary*)tweeterCountParser objectForKey:TWEET_COUNT];
                             int badge = [tweeterCount  intValue];
                             [[nc_AppDelegate sharedInstance] updateBadge:badge];
@@ -663,25 +715,25 @@ FeedBackForm *fbView;
                 }
                 else if(isUpdateTime){
                      NSDictionary  *dictUpdateTime = [rkParser objectFromString:[response bodyAsString] error:nil];
-                    NSLog(@"update %@", dictUpdateTime); 
+                    NIMLOG_EVENT1(@"update %@", dictUpdateTime); 
                     isUpdateTime = NO;
                 }
                 else if(isServiceByWeekday){
-                    NSLog(@"isServiceByWeekday response: %@",[response bodyAsString]);
+                    NIMLOG_EVENT1(@"isServiceByWeekday response: %@",[response bodyAsString]);
                     NSDictionary  *dictServiceByweekday = [rkParser objectFromString:[response bodyAsString] error:nil];
-                    NSLog(@"update %@", dictServiceByweekday); 
+                    NIMLOG_EVENT1(@"update %@", dictServiceByweekday); 
                     isServiceByWeekday = NO;
                 }
                 else if(isCalendarByDate){
                     NSDictionary  *dictCalendarByDate = [rkParser objectFromString:[response bodyAsString] error:nil];
-                    NSLog(@"update %@", dictCalendarByDate); 
+                    NIMLOG_EVENT1(@"update %@", dictCalendarByDate); 
                     isCalendarByDate = NO;
                 }
             }
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at catching TPServer Response: %@", exception);
+        logException(@"ncAppDelegate->didLoadResponse", @"catching TPServer Response", exception);
     }
 }
 
@@ -689,7 +741,7 @@ FeedBackForm *fbView;
 #pragma mark Nimbler push notification
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {    
-    NSLog(@"Registering for push notifications...");    
+    NIMLOG_PERF1(@"Registering for push notifications...");    
     [[UIApplication sharedApplication] 
      registerForRemoteNotificationTypes:
      (UIRemoteNotificationTypeAlert | 
@@ -700,7 +752,7 @@ FeedBackForm *fbView;
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     @try {
         NSString *token = [[[[deviceToken description] stringByReplacingOccurrencesOfString: @"<" withString: NULL_STRING] stringByReplacingOccurrencesOfString: @">" withString: NULL_STRING] stringByReplacingOccurrencesOfString: @" " withString: @""];
-        NSLog(@"deviceTokenString: %@",token);
+        NIMLOG_EVENT1(@"deviceTokenString: %@",token);
         [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
         [prefs setObject:token forKey:DEVICE_TOKEN];  
         [prefs synchronize];
@@ -712,7 +764,7 @@ FeedBackForm *fbView;
 #endif
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at registering push notification with apple: %@", exception);
+        logException(@"ncAppDelegate->didRegisterForRemoteNotificationsWithDeviceToken", @"", exception);
     }
 }
 
@@ -720,7 +772,7 @@ FeedBackForm *fbView;
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err { 
     @try {
         NSString *str = [NSString stringWithFormat: @"Error: %@", err];
-        NSLog(@"didFail To Register For RemoteNotifications With Error: %@",str);     
+        NIMLOG_ERR1(@"didFail To Register For RemoteNotifications With Error: %@",str);     
         prefs = [NSUserDefaults standardUserDefaults];
         NSString  *token = @"26d906c5c273446d5f40d2c173ddd3f6869b2666b1c7afd5173d69b6629def70";
         [prefs setObject:token forKey:DEVICE_TOKEN];
@@ -729,7 +781,7 @@ FeedBackForm *fbView;
         //    [alert show];
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at fail to registration push notification: %@", exception);
+        logException(@"ncAppDelegate->didFailToRegisterForRemoteNotificationWithError", @"", exception);
     }
 }
 
@@ -738,12 +790,12 @@ FeedBackForm *fbView;
 {        
     @try {
         for (id key in userInfo) {
-            NSLog(@"key: %@, value: %@", key, [userInfo objectForKey:key]);
+            NIMLOG_EVENT1(@"key: %@, value: %@", key, [userInfo objectForKey:key]);
         }        
         NSString *isUrgent = [userInfo valueForKey:@"isUrgent"];
         NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
         NSString *sound = [[userInfo valueForKey:@"aps"] valueForKey:@"sound"];
-        NSLog(@"Remote Notification Sound: %@",sound);
+        NIMLOG_EVENT1(@"Remote Notification Sound: %@",sound);
         NSString *badge = [[userInfo valueForKey:@"aps"] valueForKey:@"badge"];
         prefs = [NSUserDefaults standardUserDefaults];  
         [prefs setObject:badge forKey:TWEET_COUNT];
@@ -775,7 +827,7 @@ FeedBackForm *fbView;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at push receive: %@", exception);
+        logException(@"ncAppDelegate->didReceiveRemoteNotification", @"", exception);
     }
 }
 
@@ -795,11 +847,11 @@ FeedBackForm *fbView;
         [RKClient setSharedClient:client];
         isUpdateTime = YES;
         NSString *twitCountReq = [UPDATE_TIME_URL appendQueryParams:nil];
-        NSLog(@"twitter count req: %@", twitCountReq);
+        NIMLOG_EVENT1(@"twitter count req: %@", twitCountReq);
         [[RKClient sharedClient]  get:twitCountReq delegate:self];
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at getTwiiterLive count: %@", exception);
+        logException(@"ncAppDelegate->updateTime", @"", exception);
     }
 }
 
@@ -809,12 +861,11 @@ FeedBackForm *fbView;
         [RKClient setSharedClient:client];
         isServiceByWeekday = YES;
         NSString *twitCountReq = [SERVICE_BY_WEEKDAY_URL appendQueryParams:nil];
-        NSLog(@"twitter count req: %@", twitCountReq);
+        NIMLOG_EVENT1(@"twitter count req: %@", twitCountReq);
         [[RKClient sharedClient]  get:twitCountReq delegate:self];
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at getTwiiterLive count: %@", exception);
-    }
+        logException(@"ncAppDelegate->serviceByWeekday", @"", exception);    }
 }
 
 -(void)calendarByDate{
@@ -823,11 +874,11 @@ FeedBackForm *fbView;
         [RKClient setSharedClient:client];
         isCalendarByDate = YES;
         NSString *twitCountReq = [CALENDAR_BY_DATE_URL appendQueryParams:nil];
-        NSLog(@"twitter count req: %@", twitCountReq);
+        NIMLOG_EVENT1(@"twitter count req: %@", twitCountReq);
         [[RKClient sharedClient]  get:twitCountReq delegate:self];
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at getTwiiterLive count: %@", exception);
+        logException(@"ncAppDelegate->calendarByDate", @"", exception);
     }
 }
 
@@ -840,12 +891,11 @@ FeedBackForm *fbView;
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID], nil];    
         isTwitterLivaData = TRUE;
         NSString *twitCountReq = [@"advisories/count" appendQueryParams:params];
-        NSLog(@"twitter count req: %@", twitCountReq);
+        NIMLOG_EVENT1(@"twitter count req: %@", twitCountReq);
         [[RKClient sharedClient]  get:twitCountReq delegate:self];
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at getTwiiterLive count: %@", exception);
-    }
+        logException(@"ncAppDelegate->getTwiiterLiveData", @"", exception);    }
 }
 
 - (void)saveSetting{
@@ -868,7 +918,7 @@ FeedBackForm *fbView;
                             MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:[userDefault floatForKey:PREFS_MAX_WALK_DISTANCE]],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_URGENTNOTIFICATION_SOUND]],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_STANDARDNOTIFICATION_SOUND]],
                             nil];
     NSString *twitCountReq = [UPDATE_SETTING_REQ appendQueryParams:params];
-    NSLog(@" - - -  - - - - - %@", twitCountReq);
+    NIMLOG_EVENT1(@"twitCountReq = %@", twitCountReq);
     isSettingRequest = YES;
     [nc_AppDelegate sharedInstance].isSettingSavedSuccessfully = NO;
     [[RKClient sharedClient]  get:twitCountReq delegate:self];
@@ -888,13 +938,13 @@ FeedBackForm *fbView;
                                 DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],
                                 @"maxDistance", [userPrefs walkDistance],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt:URGENT_NOTIFICATION_DEFAULT_VALUE],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt:STANDARD_NOTIFICATION_DEFAULT_VALUE],
                                 nil];
-        NSLog(@"params=%@",params);
+        NIMLOG_EVENT1(@"params=%@",params);
         NSString *twitCountReq = [UPDATE_SETTING_REQ appendQueryParams:params];
         [[RKClient sharedClient]  get:twitCountReq delegate:self]; 
         
     }
     @catch (NSException *exception) {
-        NSLog(@"Exception when update userSettings at appLuanch: %@",exception);
+        logException(@"ncAppDelegate->upadateDefaultUserValue", @"", exception);
     }
 }
 

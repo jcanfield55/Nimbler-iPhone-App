@@ -34,33 +34,30 @@
 @implementation RouteOptionsViewController
 
 @synthesize mainTable;
-@synthesize feedbackButton;
-@synthesize advisoryButton;
 @synthesize plan;
 @synthesize isReloadRealData;
 @synthesize liveData,btnGoToNimbler;
 
 Itinerary * itinerary;
 NSString *itinararyId;
+UIImage *imageDetailDisclosure;
 
-int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
+int const ROUTE_OPTIONS_TABLE_HEIGHT = 366;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        UILabel* tlabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 120, 40)];
-        [tlabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:20.0]];
-        tlabel.text=@"Itineraries";
-        tlabel.textColor= [UIColor colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0];
-        [tlabel setTextAlignment:UITextAlignmentCenter];
-        tlabel.backgroundColor =[UIColor clearColor];
-        tlabel.adjustsFontSizeToFitWidth=YES;
-        self.navigationItem.titleView=tlabel;
+        UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
+        [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
+        lblNavigationTitle.text=ROUTE_OPTIONS_VIEW_TITLE;
+        lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
+        [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
+        lblNavigationTitle.backgroundColor =[UIColor clearColor];
+        lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
+        self.navigationItem.titleView=lblNavigationTitle;
+        imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
         
-        //[[self navigationItem] setTitle:@"Itineraries"];
-        timeFormatter = [[NSDateFormatter alloc] init];
-        [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
     }
     return self;
 }
@@ -129,7 +126,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
                                           reuseIdentifier:IDENTIFIER_CELL];
             [cell.imageView setImage:nil];
         }
-        [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+        UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
+        [cell setAccessoryView:imgViewDetailDisclosure];
          cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.textLabel.numberOfLines = 2;
         // Get the requested itinerary
@@ -139,11 +137,14 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         [[cell textLabel] setFont:[UIFont MEDIUM_BOLD_FONT]];
         NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
                                                    timeIntervalSinceDate:[itin startTimeOfFirstLeg]]);
-        NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)", 
-                               [timeFormatter stringFromDate:[itin startTimeOfFirstLeg]],
-                               [timeFormatter stringFromDate:[itin endTimeOfLastLeg]],
+        NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
+                               superShortTimeStringForDate([itin startTimeOfFirstLeg]),
+                               superShortTimeStringForDate([itin endTimeOfLastLeg]),
                                durationStr];
         [[cell textLabel] setText:titleText];
+        UIView *viewCellBackground = [[UIView alloc] init];
+        [viewCellBackground setBackgroundColor:[UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW]];
+        cell.backgroundView = viewCellBackground;
         
         // notify with TEXT for LEG timimg
         if (isReloadRealData) {
@@ -169,10 +170,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         [[cell detailTextLabel] setText:[itin itinerarySummaryStringForWidth:ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
                                                                         Font:cell.detailTextLabel.font]];
         [[cell detailTextLabel] setNumberOfLines:0];  // Allow for multi-lines
-        cell.contentView.backgroundColor = [UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW];
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at load table: %@", exception);
+        logException(@"RouteOptionsViewController->cellForRowAtIndexPath", @"", exception);
     }
     return cell;
 }
@@ -186,8 +186,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
     
     // TODO -- make sure not text wrapping on first line
     NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
-                           [timeFormatter stringFromDate:[itin startTimeOfFirstLeg]],
-                           [timeFormatter stringFromDate:[itin endTimeOfLastLeg]],
+                           superShortTimeStringForDate([itin startTimeOfFirstLeg]),
+                           superShortTimeStringForDate([itin endTimeOfLastLeg]),
                            durationStr];
     NSString* subtitleText = [itin itinerarySummaryStringForWidth:(CGFloat)ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
                                                              Font:(UIFont *)[UIFont MEDIUM_FONT]];
@@ -219,7 +219,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 {
     @try {
         UITableViewCell *cell = [atableView cellForRowAtIndexPath:indexPath];
-        cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.3];
+        UIView *viewCellBackground = [[UIView alloc] init];
+        [viewCellBackground setBackgroundColor:[UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW]];
+        cell.backgroundView = viewCellBackground;
         if (!routeDetailsVC) {
             routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
         }
@@ -233,44 +235,25 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 #endif
         
         [routeDetailsVC setItinerary:itinerary];
-        [[self navigationController] pushViewController:routeDetailsVC animated:YES];
+        if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
+            CATransition *animation = [CATransition animation];
+            [animation setDuration:0.3];
+            [animation setType:kCATransitionPush];
+            [animation setSubtype:kCATransitionFromRight];
+            [animation setRemovedOnCompletion:YES];
+            [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+            [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+            [[self navigationController] pushViewController:routeDetailsVC animated:NO];
+        }
+        else{
+            [[self navigationController] pushViewController:routeDetailsVC animated:YES];
+        } 
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at select itinerary: %@", exception);
+        logException(@"RouteOptionsViewController->didSelectRowAtIndexPath", @"", exception);
     }
 }
 
-#pragma mark - Button Event handling
-
-- (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event
-{
-    @try {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
-        [[RKClient sharedClient]  get:@"advisories/all" delegate:self];
-    }
-    @catch (NSException *exception) {
-        NSLog(@" Exception at press advisory button from RouteOptionsViewController : %@", exception);
-    } 
-}
-
--(void)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
-{
-    @try {
-        FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:[NSNumber numberWithInt:FB_SOURCE_PLAN] uniqueId:[plan planId] date:nil fromAddress:nil toAddress:nil];
-        FeedBackForm *feedbackFormVc = [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];
-        [[self navigationController] pushViewController:feedbackFormVc animated:YES]; 
-        
-        [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_PLAN];
-        [nc_AppDelegate sharedInstance].FBDate = nil;
-        [nc_AppDelegate sharedInstance].FBToAdd = nil;
-        [nc_AppDelegate sharedInstance].FBSFromAdd = nil;
-        [nc_AppDelegate sharedInstance].FBUniqueId = [plan planId];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"Exception at press feedback button from RouteOptionsViewController : %@", exception);
-    }
-}
 
 
 #pragma mark - View lifecycle
@@ -281,13 +264,12 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
-//        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"img_navigationbar.png"] forBarMetrics:UIBarMetricsDefault];
-//    }
-//    else {
-//        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_navigationbar.png"]] aboveSubview:self.navigationController.navigationBar];
-//    }
+    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+        [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+    }
+    else {
+        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+    }
     btnGoToNimbler = [[UIButton alloc] initWithFrame:CGRectMake(0,0,65,34)];
     [btnGoToNimbler addTarget:self action:@selector(popOutToNimbler) forControlEvents:UIControlEventTouchUpInside];
     [btnGoToNimbler setBackgroundImage:[UIImage imageNamed:@"img_nimblerNavigation.png"] forState:UIControlStateNormal];
@@ -301,20 +283,16 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    NSLog(@"RouteOptions did appear");
+    NIMLOG_PERF1(@"RouteOptions did appear");
 }
 
 - (void)viewDidUnload{
     [super viewDidUnload];
     self.mainTable = nil;
-    self.feedbackButton = nil;
-    self.advisoryButton = nil;
 }
 
 - (void)dealloc{
     self.mainTable = nil;
-    self.feedbackButton = nil;
-    self.advisoryButton = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -358,11 +336,11 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         } else {
             //thereare no live feeds available. 
             isReloadRealData = FALSE;
-            NSLog(@"thereare no live feeds available for current route");
+            NIMLOG_PERF1(@"thereare no live feeds available for current route");
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exception at live feed data response: %@",exception);
+        logException(@"RouteOptionsViewController->liveFees", @"", exception);
     }
 }
 
@@ -386,7 +364,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"exceptions at set time: %@", exception);
+        logException(@"RouteOptionsViewController->setRealtimeData", @"", exception);
     }
 }
 
@@ -401,8 +379,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 352;
         } 
         
     }  @catch (NSException *exception) {
-        NSLog( @"Exception while getting unique IDs from TP Server response: %@", exception);
-    } 
+        logException(@"RouteOptionsViewController->didLoadResponse", @"Exception while getting unique IDs from TP Server response: %@", exception);
+    }
 }
 
 

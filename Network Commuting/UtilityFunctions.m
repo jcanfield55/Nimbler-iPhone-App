@@ -7,6 +7,11 @@
 //
 
 #import "UtilityFunctions.h"
+#import "Constants.h"   // contains Flurry variables
+#import "Logging.h"
+#if FLURRY_ENABLED
+#include "Flurry.h"
+#endif
 
 
 static NSDateFormatter *utilitiesTimeFormatter;  // Static variable for short time formatter for use by utility
@@ -36,7 +41,7 @@ void saveContext(NSManagedObjectContext *managedObjectContext)
              
              abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
              */
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            NIMLOG_ERR1(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
         } 
     }
@@ -62,10 +67,10 @@ NSString *durationString(double milliseconds)
         int hours = (int) floor(minutes/60);
         minutes = minutes - hours * 60;  // redo minutes to remaining minutes after hours taken out
         if (hours == 1) {
-            hoursString = @"1 hour";
+            hoursString = @"1 hr";
         }
         else if (hours < 24) {
-            hoursString = [NSString stringWithFormat:@"%d hours", hours];
+            hoursString = [NSString stringWithFormat:@"%d hrs", hours];
         }
         else { // days
             int days = (int) floor((float) hours / 24.0);
@@ -77,21 +82,27 @@ NSString *durationString(double milliseconds)
                 daysString = [NSString stringWithFormat:@"%d days", days];
             }
             if (hours > 1) {
-                hoursString = [NSString stringWithFormat:@"%@, %d hours", daysString, hours];
+                hoursString = [NSString stringWithFormat:@"%@, %d hrs", daysString, hours];
             }
             else if (hours == 1) {
-                hoursString = [NSString stringWithFormat:@"%@, %d hour", daysString, hours];
+                hoursString = [NSString stringWithFormat:@"%@, %d hr", daysString, hours];
             }
             else {
                 hoursString = daysString;
             }
         }
-        NSString *minutesString = durationString(minutes * 60.0 * 1000.0);
-        if ([minutesString isEqualToString:@"less than 1 minute"]) {
-            returnString = hoursString;  
-        }
-        else {
-            returnString = [NSString stringWithFormat:@"%@, %@", hoursString, minutesString];        
+        // Now add minutes (abbreviated) after hours, if needed
+        if (minutes < 1.0) {
+            returnString = hoursString;
+        } else { // Minutes plus hours
+            NSString* minutesString;
+            if (minutes <1.5) {
+                minutesString = @"1 min";
+            }
+            else {
+                minutesString = [NSString stringWithFormat:@"%d min", (int) round(minutes)];
+            }
+            returnString = [NSString stringWithFormat:@"%@, %@", hoursString, minutesString];
         }
     }
     return returnString;
@@ -249,3 +260,17 @@ NSString *stringByTruncatingToWidth(NSString *string, CGFloat width, UIFont *fon
     return truncatedString;
 }
 
+// Logs exception using NIMLOG_ERR1 and if Flurry activated, logs to Flurry as well 
+void logException(NSString *errorName, NSString *errorMessage, NSException *e)
+{
+    NIMLOG_ERR1(@"\n----------> Exception in: %@, \nNimbler Message: %@, \nException: %@", errorName, errorMessage, e);
+#if FLURRY_ENABLED
+    [Flurry logError:errorName message:errorMessage exception:e];
+#endif
+}
+
+// Handles and logs uncaught exceptions
+void uncaughtExceptionHandler(NSException *exception)
+{
+    logException(@"Uncaught exception handler", @"", exception);
+}

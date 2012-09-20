@@ -186,7 +186,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         // if not walking, check for real-time updates:
         if([self arrivalTime]) {
             areRealTimeUpdates = YES;
-            NSLog(@"Real-time flag: %@, scheduled arrival: %@, real-time arrival: %@, diff: %@", 
+            NIMLOG_EVENT1(@"Real-time flag: %@, scheduled arrival: %@, real-time arrival: %@, diff: %@", 
                   [self arrivalFlag], superShortTimeStringForDate([self startTime]),
                   [self arrivalTime], [self timeDiffInMins]);
 
@@ -194,13 +194,13 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
                 NSDate* realTimeArrivalTime = [[self startTime] 
                                                dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
                 [titleText appendFormat:@"%@ ", superShortTimeStringForDate(realTimeArrivalTime)];
-                NSLog(@"Updated time: %@", titleText);
+                NIMLOG_EVENT1(@"Updated time: %@", titleText);
             }
             else if ([self.arrivalFlag intValue] == EARLY || [self.arrivalFlag intValue] == EARLIER) {
                 NSDate* realTimeArrivalTime = [[self startTime] 
                                                dateByAddingTimeInterval:[timeDiffInMins floatValue]*(-60.0)];
                 [titleText appendFormat:@"%@ ", superShortTimeStringForDate(realTimeArrivalTime)];
-                NSLog(@"Updated time: %@", titleText);
+                NIMLOG_EVENT1(@"Updated time: %@", titleText);
             }
             else {
                 [titleText appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];

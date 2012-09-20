@@ -209,6 +209,14 @@
     NSString* Bart = @"BART";
     NSString* ACTransit = @"AC Transit";
     
+    // Set up TransitCalendar datastructures in the KeyStore based on stub functions
+    KeyObjectStore* store = [KeyObjectStore keyObjectStore];
+    TransitCalendar* transitCalendar = [[TransitCalendar alloc] init];
+    [transitCalendar getAgencyCalendarDataStub];
+    [store setObject:[transitCalendar serviceByWeekdayByAgency] forKey:TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY];
+    [store setObject:[transitCalendar lastGTFSLoadDateByAgency] forKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
+    [store setObject:[transitCalendar calendarByDateByAgency] forKey:TR_CALENDAR_BY_DATE_BY_AGENCY];
+    
     // Plan1 -- 3 itineraries starting 
     leg10.startTime = date10;
     leg10.agencyId = caltrain;
@@ -576,6 +584,9 @@
             leg.endTime = [leg.startTime dateByAddingTimeInterval:(30.0*60)];
         }
     }
+    
+    // Save context
+    saveContext(managedObjectContext);
 }
 
 
@@ -798,20 +809,20 @@
     STAssertTrue([durationString(91.0*1000.0) isEqualToString:@"2 minutes"], @"");
     STAssertTrue([durationString(59.4*60.0*1000.0) isEqualToString:@"59 minutes"], @"");
     STAssertTrue([durationString(59.6*60.0*1000.0) isEqualToString:@"60 minutes"], @"");
-    STAssertTrue([durationString(60.0 * 60.0*1000.0) isEqualToString:@"1 hour"], @"");
-    STAssertTrue([durationString(1.5 * 60.0 * 60.0*1000.0) isEqualToString:@"1 hour, 30 minutes"], @"");
+    STAssertTrue([durationString(60.0 * 60.0*1000.0) isEqualToString:@"1 hr"], @"");
+    STAssertTrue([durationString(1.5 * 60.0 * 60.0*1000.0) isEqualToString:@"1 hr, 30 min"], @"");
 
-    STAssertTrue([durationString(23.0 * 60.0*60.0*1000.0) isEqualToString:@"23 hours"], @"");
-    STAssertTrue([durationString(23.0 * 60.0*60.0*1000.0 + 90*1000) isEqualToString:@"23 hours, 2 minutes"], @"");
+    STAssertTrue([durationString(23.0 * 60.0*60.0*1000.0) isEqualToString:@"23 hrs"], @"");
+    STAssertTrue([durationString(23.0 * 60.0*60.0*1000.0 + 90*1000) isEqualToString:@"23 hrs, 2 min"], @"");
     STAssertTrue([durationString(24.0 * 60.0*60.0*1000.0) isEqualToString:@"1 day"], @"");
     STAssertTrue([durationString(100.0 *24.0 * 60.0*60.0*1000.0) isEqualToString:@"100 days"], @"");
-    STAssertTrue([durationString(48.0 *24.0 * 60.0*60.0*1000.0 + 91.0 * 1000.0) isEqualToString:@"48 days, 2 minutes"], @"");
-    NSLog(@"Test = %@", durationString(32.0 *24.0 * 60.0*60.0*1000.0 + 60.0* 60.0 * 1000.0));
-    STAssertTrue([durationString(32.0 *24.0 * 60.0*60.0*1000.0 + 60.0* 60.0 * 1000.0) isEqualToString:@"32 days, 1 hour"], @"");
-    STAssertTrue([durationString(2.0 *24.0 * 60.0*60.0*1000.0 + 15*60.0*60.0*1000.0 + 60.0*1000.0) isEqualToString:@"2 days, 15 hours, 1 minute"], @"");
+    STAssertTrue([durationString(48.0 *24.0 * 60.0*60.0*1000.0 + 91.0 * 1000.0) isEqualToString:@"48 days, 2 min"], @"");
+    NIMLOG_EVENT1(@"Test = %@", durationString(32.0 *24.0 * 60.0*60.0*1000.0 + 60.0* 60.0 * 1000.0));
+    STAssertTrue([durationString(32.0 *24.0 * 60.0*60.0*1000.0 + 60.0* 60.0 * 1000.0) isEqualToString:@"32 days, 1 hr"], @"");
+    STAssertTrue([durationString(2.0 *24.0 * 60.0*60.0*1000.0 + 15*60.0*60.0*1000.0 + 60.0*1000.0) isEqualToString:@"2 days, 15 hrs, 1 min"], @"");
     
     // distanceStringInMilesFeet tests
-    NSLog(@"Test = %@", distanceStringInMilesFeet(3000.0));
+    NIMLOG_EVENT1(@"Test = %@", distanceStringInMilesFeet(3000.0));
 
     STAssertTrue([distanceStringInMilesFeet(3000.0) isEqualToString:@"1.9 miles"], @"");
     STAssertTrue([distanceStringInMilesFeet(100.0) isEqualToString:@"328 feet"], @"");
@@ -838,7 +849,7 @@
     STAssertEquals(dayOfWeekFromDate(dayTime3), 7, @"");
     
     // timeOnlyFromDate
-    NSLog(@"Time only of dayTime3 = %@", timeOnlyFromDate(dayTime3));
+    NIMLOG_EVENT1(@"Time only of dayTime3 = %@", timeOnlyFromDate(dayTime3));
     STAssertEquals([dayTime1 laterDate:dayTime2], dayTime1, @""); // Full date compare
     STAssertTrue([[timeOnlyFromDate(dayTime1) laterDate:timeOnlyFromDate(dayTime2)] isEqualToDate:
                   timeOnlyFromDate(dayTime2)],@""); // Hours compare
