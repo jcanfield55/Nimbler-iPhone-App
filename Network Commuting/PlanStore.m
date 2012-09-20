@@ -254,6 +254,9 @@
         NIMLOG_ERR1(@"Exception while parsing TP response plan: %@", exception);
         if (planRequestParameters && planRequestParameters.planDestination == PLAN_DESTINATION_TO_FROM_VC) {
             [toFromVC newPlanAvailable:nil status:GENERIC_EXCEPTION];
+            logException(@"PlanStore->objectLoader", @"Original request from ToFromVC", exception);
+        } else {
+            logException(@"PlanStore->objectLoader", @"Follow-up request to RouteOptionsVC", exception);
         }
     }
 }

@@ -9,6 +9,7 @@
 #import "SettingInfoViewController.h"
 #import "nc_AppDelegate.h"
 #import "UserPreferance.h"
+#import "UtilityFunctions.h"
 #if FLURRY_ENABLED
 #include "Flurry.h"
 #endif
@@ -111,7 +112,7 @@ bool isPush;
 }
 
 - (void) viewWillDisappear:(BOOL)animated{
-    [super viewWillDisappear:YES];
+    [super viewWillDisappear:animated];
     [self saveSetting];
 }
 
@@ -184,7 +185,7 @@ bool isPush;
     @catch (NSException *exception) {
         [alertView dismissWithClickedButtonIndex:0 animated:NO];
         [self.navigationController popViewControllerAnimated:YES];
-        NIMLOG_ERR1(@"exception at upadting Setting : %@", exception);
+        logException(@"SettingInfoViewController->saveSetting", @"", exception);
     }
 }
 
@@ -250,7 +251,7 @@ bool isPush;
             NIMLOG_EVENT1(@"response for userUpdateSettings:  %@", [response bodyAsString]);
         }
     }  @catch (NSException *exception) {
-        NIMLOG_ERR1( @"Exception while getting unique IDs from TP Server response: %@", exception);
+        logException(@"SettingInfoViewController->didLoadResponse", @"while getting unique IDs from TP Server response", exception);
     } 
 }
 
@@ -305,7 +306,7 @@ bool isPush;
         }
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at fetch data from core data and set to views: %@",exception);
+        logException(@"SettingInfoViewController->fetchUserSettingData", @"", exception);
     }
 }
 

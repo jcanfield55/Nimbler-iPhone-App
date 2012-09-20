@@ -259,7 +259,7 @@ NSUserDefaults *prefs;
 
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exceptions: %@", exception);
+        logException(@"twitterViewController -> didLoadResponse", @"", exception);
     }
 
 }
@@ -341,8 +341,8 @@ NSUserDefaults *prefs;
         [[RKClient sharedClient]  get:allAdvisories delegate:self];
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"Exception at advisories button click from ToFromview: %@", exception);
-    } 
+        logException(@"twitterViewController -> getAdvisoryData", @"", exception);
+    }
 }
 
 #pragma mark UIUpdation

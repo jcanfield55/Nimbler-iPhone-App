@@ -12,6 +12,7 @@
 #import "FeedBackForm.h"
 #import "FeedBackReqParam.h"
 #import "twitterViewController.h"
+#import "UtilityFunctions.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "ToFromViewController.h"
 #import "nc_AppDelegate.h"
@@ -136,7 +137,7 @@ NSUserDefaults *prefs;
         }
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at init RouteDetail: %@", exception);
+        logException(@"RouteDetailsViewController->initWithNibName", @"", exception);
     }
     return self;
 }
@@ -170,7 +171,7 @@ NSUserDefaults *prefs;
         }
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at Set Itinerary %@", exception);
+        logException(@"RouteDetailsViewController->setItinerary", @"", exception);
     }
 }
 
@@ -241,7 +242,7 @@ NSUserDefaults *prefs;
     
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at viewWillAppear RouteDetail: %@", exception);
+        logException(@"RouteDetailsViewController->viewWillAppear", @"", exception);
     }
     [self test:0];
 }
@@ -278,7 +279,7 @@ NSUserDefaults *prefs;
         }
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"Exception at cell count: %@",exception);
+        logException(@"RouteDetailsViewController->tableView: numberOfRowsInSection", @"", exception);
     }
 }
 
@@ -337,7 +338,7 @@ NSUserDefaults *prefs;
         }
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception while reload RouteDetailView: %@", exception);
+        logException(@"RouteDetailsViewController->cellForRowAtIndexPath", @"", exception);
     }
     return cell;
 }
@@ -362,7 +363,7 @@ NSUserDefaults *prefs;
         return height;
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at set dynamic height for RouteDetailViewTable Cell: %@", exception);
+        logException(@"RouteDetailsViewController->heightForRowAtIndexPath", @"", exception);
     }
 }
 
@@ -390,6 +391,7 @@ NSUserDefaults *prefs;
         }
     }
     @catch (NSException *exception) {
+        logException(@"RouteDetailsViewController->test", @"Setting FB parameters for leg/itinerary", exception);
         [self setFBParameterForItinerary];
     }
 }
@@ -416,31 +418,6 @@ NSUserDefaults *prefs;
 }
 
 
-#pragma mark - Button Press methods
-- (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event
-{
-    @try {        
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
-        [[RKClient sharedClient]  get:@"advisories/all" delegate:self];
-    }
-    @catch (NSException *exception) {
-        NIMLOG_ERR1(@"Exception at requesting advisory data: %@", exception);
-    } 
-}
-
-
-- (IBAction)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
-{
-    @try {
-        FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:[NSNumber numberWithInt:FB_SOURCE_ITINERARY] uniqueId:[itinerary itinId] date:nil fromAddress:nil toAddress:nil]; 
-        FeedBackForm *feedbackvc = [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];
-        [[self navigationController] pushViewController:feedbackvc animated:YES];
-    }
-    @catch (NSException *exception) {
-         NIMLOG_ERR1(@"Exception at feedback navigation: %@", exception);
-    }
-}
 
 -(void)ReloadLegWithNewData
 {
@@ -448,7 +425,7 @@ NSUserDefaults *prefs;
         [mainTable reloadData];
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at realoding routeDetailViewTable: %@", exception);
+        logException(@"RouteDetailsViewController->ReloadLegWithNewData", @"", exception);
     }
 }
 
@@ -462,8 +439,9 @@ NSUserDefaults *prefs;
             [[self navigationController] pushViewController:twit animated:YES];     
         } 
     }  @catch (NSException *exception) {
-        NIMLOG_ERR1( @"Exception while getting twitter Data from TP Server response: %@", exception);
-    } 
+        logException(@"RouteDetailsViewController->didLoadResponse", @"Loading Twitter Data", exception);
+
+    }
 }
 
 -(void)setFBParameterForItinerary

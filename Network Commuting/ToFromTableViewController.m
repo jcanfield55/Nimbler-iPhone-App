@@ -416,7 +416,7 @@
                 
             }
             @catch (NSException *exception) {
-                NIMLOG_ERR1(@"geoLoad Object Error %@", exception);
+                logException(@"ToFromTableViewController->textSubmitted", @"Loading geocode info", exception);
             }
  
         }
@@ -596,7 +596,7 @@
         }
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception geocoder ---------------> %@", exception);
+        logException(@"ToFromTableViewController->didLoadObjects", @"processing geocode response", exception);
     }    
 }
 

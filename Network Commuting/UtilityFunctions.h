@@ -43,3 +43,9 @@ NSDate *addDateOnlyWithTimeOnly(NSDate *dateOnly, NSDate *timeOnly);
 // width using font
 //
 NSString *stringByTruncatingToWidth(NSString *string, CGFloat width, UIFont *font);
+
+// Logs exception using NIMLOG_ERR1 and if Flurry activated, logs to Flurry as wellkj
+void logException(NSString *errorName, NSString *errorMessage, NSException *e);
+
+// Handles and logs uncaught exceptions
+void uncaughtExceptionHandler(NSException *exception);

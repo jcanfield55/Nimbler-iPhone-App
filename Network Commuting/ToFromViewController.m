@@ -206,7 +206,7 @@ UIImage *imageDetailDisclosure;
         imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at init ToFromViewController %@",exception);
+        logException(@"ToFromViewController->initWithNibName", @"", exception);
     }
     return self;
 }
@@ -302,7 +302,7 @@ UIImage *imageDetailDisclosure;
         [mainTable reloadData];
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at viewWillAppear: %@", exception);
+        logException(@"ToFromViewController->viewWillAppear", @"", exception);
     }
     NIMLOG_PERF1(@"Finished ToFromView viewWillAppear");
 }
@@ -394,7 +394,7 @@ UIImage *imageDetailDisclosure;
             [table setFrame:rect0];
         }
         @catch (NSException *exception) {
-            NIMLOG_ERR1(@"exception at set height for table in ToFromView: %@", exception);
+            logException(@"ToFromViewController->setToFromHeightForTable", @"", exception);
         }
         return TRUE;
     }
@@ -818,7 +818,7 @@ UIImage *imageDetailDisclosure;
         }
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at press route button event: %@", exception);
+        logException(@"ToFromViewController->routeButtonPressed", @"", exception);
     }
 }
 
@@ -1009,38 +1009,6 @@ UIImage *imageDetailDisclosure;
         savetrip = false;
         return ;
     }
-    
-    // TODO -- move logic for saving PlanInTP Server to PlanStore class or a new class
-    // [self savePlanInTPServer:[[objectLoader  response] bodyAsString]];
-    // NSLog(@"For Feedback Process called");
-    
-    
-    /* } else {   // code for saveTrip=FALSE case
-     tpResponsePlan = [objects objectAtIndex:0];
-     [plan setPlanId:[tpResponsePlan planId]];
-     NSLog(@"obj foe plan = %@", [tpResponsePlan planId]);
-     
-     @try {
-     for (int i= 0; i< [[tpResponsePlan itineraries] count]; i++) {
-     Itinerary *itin = [[tpResponsePlan sortedItineraries] objectAtIndex:i];
-     [[[plan sortedItineraries] objectAtIndex:i] setItinId:[itin itinId]];
-     NSLog(@"===========================================");
-     NSLog(@"itinarary.. %@",[itin itinId]);
-     for (int j =0; j< [[itin legs] count] ; j++) {
-     Leg *lg = [[itin sortedLegs] objectAtIndex:j];
-     [[[[[plan sortedItineraries] objectAtIndex:i] sortedLegs] objectAtIndex:j] setLegId:[lg legId]];
-     NSLog(@"------------------------------------------");
-     NSLog(@"leg... %@",[lg legId]);
-     }
-     }
-     
-     [routeOptionsVC setFBParameterForPlan];
-     [self getRealTimeData];
-     continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
-     }
-     @catch (NSException *exception) {
-     NSLog(@"Exception while iterating over TP response plan: %@", exception);
-     } */
 }
 
 // TODO Move geocoding and reverse-geocoding into a separate class (like Locations)
@@ -1180,7 +1148,7 @@ UIImage *imageDetailDisclosure;
         return true; 
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at route request: %@", exception);
+        logException(@"ToFromViewController->getPlan", @"", exception);
     }
 }
 
@@ -1222,7 +1190,7 @@ UIImage *imageDetailDisclosure;
         [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector: @selector(stopActivityIndicator) userInfo: nil repeats: NO];
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at start IndicatorView: %@", exception);
+        logException(@"ToFromViewController->startActivityIndicator", @"", exception);
     }
 }
 
@@ -1341,8 +1309,8 @@ UIImage *imageDetailDisclosure;
         if ([request isPOST]) {                      
         } 
     }  @catch (NSException *exception) {
-        NIMLOG_ERR1( @"Exception while getting unique IDs from TP Server response: %@", exception);
-    } 
+        logException(@"ToFromViewController->viewWillAppear", @"getting unique IDs from TP Server response", exception);
+    }
 }
 
 //Request responder to push a LocationPickerViewController so the user can pick from the locations in locationList
@@ -1371,7 +1339,7 @@ UIImage *imageDetailDisclosure;
         } 
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at navigating to LocationPickerViewController: %@", exception);
+        logException(@"ToFromViewController->callLocationPickerFor", @"", exception);
     }
 }
 
@@ -1385,7 +1353,7 @@ UIImage *imageDetailDisclosure;
         }    
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at navigate to iPhone LocationServices: %@", exception);
+        logException(@"ToFromViewController->clickedButtonAtIndex", @"", exception);
     }
 }
 
@@ -1403,7 +1371,7 @@ UIImage *imageDetailDisclosure;
         [[RKClient sharedClient]  get:req  delegate:self];  
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at real time data request: %@", exception);
+        logException(@"ToFromViewController->getRealTimeData", @"", exception);
     }
 }
 
@@ -1424,7 +1392,7 @@ UIImage *imageDetailDisclosure;
         isContinueGetRealTimeData = YES;
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"Exception while sending Real Time Request By Itineraries%@",exception);
+        logException(@"ToFromViewController->getRealTimeDataForItinerary", @"", exception);
     }
 }
 
@@ -1436,7 +1404,7 @@ UIImage *imageDetailDisclosure;
         [self routeButtonPressed:self forEvent:nil];
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at navigate to settingInfo view: %@", exception);
+        logException(@"ToFromViewController->redirectAtNimblerSetting", @"", exception);
     }
 }
 
@@ -1471,7 +1439,7 @@ UIImage *imageDetailDisclosure;
         [nc_AppDelegate sharedInstance].FBUniqueId = nil;
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at reverGeocode: %@", exception);
+        logException(@"ToFromViewController->setFBParametersForGeneral", @"", exception);
     }
 }
 
@@ -1490,7 +1458,7 @@ UIImage *imageDetailDisclosure;
         currentLocationResTime =  CFAbsoluteTimeGetCurrent() - startTime;
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at reverGeocod: %@", exception);
+        logException(@"ToFromViewController->requestReverseGeo", @"", exception);
     }
 }
 

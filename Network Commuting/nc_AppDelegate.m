@@ -89,7 +89,9 @@ FeedBackForm *fbView;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [[UIApplication sharedApplication] 
+    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
+    
+    [[UIApplication sharedApplication]
      registerForRemoteNotificationTypes:
      (UIRemoteNotificationTypeAlert | 
       UIRemoteNotificationTypeBadge | 
@@ -210,7 +212,7 @@ FeedBackForm *fbView;
         }  // End of temporary code
         
     }@catch (NSException *exception) {
-    NIMLOG_ERR1(@"Exception: ----------------- %@", exception);
+        logException(@"ncAppDelegate->didFinishLaunchingWithOptions #1", @"", exception);
     } 
     
     // Set a CFUUID (unique identifier) for this device and this app, if doesn't exist already:
@@ -271,7 +273,7 @@ FeedBackForm *fbView;
         
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"load exception: %@", exception);
+        logException(@"ncAppDelegate->didFinishLaunchingWithOptions #2", @"", exception);
     }
     return YES;
 }
@@ -469,8 +471,7 @@ FeedBackForm *fbView;
         return __managedObjectContext;
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at managedObjectContext delegate: %@", exception);
-    }
+        logException(@"ncAppDelegate->managedObjectContext", @"", exception);    }
 }
 
 /**
@@ -489,8 +490,7 @@ FeedBackForm *fbView;
         return __managedObjectModel;
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at managedObjectModel delegate: %@", exception);
-    }
+        logException(@"ncAppDelegate->managedObjectModel", @"", exception);    }
 }
 
 /**
@@ -541,7 +541,7 @@ FeedBackForm *fbView;
         return __persistentStoreCoordinator;
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at persistentStoreCoordinator: %@", exception);
+        logException(@"ncAppDelegate->persistentStoreCoordinator", @"", exception);
     }
 }
 
@@ -564,8 +564,7 @@ FeedBackForm *fbView;
         [[RKClient sharedClient]  get:@"metadata" delegate:self];
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at requesting live supported data: %@", exception);
-    }
+        logException(@"ncAppDelegate->suppertedRegion", @"", exception);    }
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response 
@@ -682,7 +681,7 @@ FeedBackForm *fbView;
         }
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at catching TPServer Response: %@", exception);
+        logException(@"ncAppDelegate->didLoadResponse", @"catching TPServer Response", exception);
     }
 }
 
@@ -713,7 +712,7 @@ FeedBackForm *fbView;
 #endif
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at registering push notification with apple: %@", exception);
+        logException(@"ncAppDelegate->didRegisterForRemoteNotificationsWithDeviceToken", @"", exception);
     }
 }
 
@@ -730,7 +729,7 @@ FeedBackForm *fbView;
         //    [alert show];
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at fail to registration push notification: %@", exception);
+        logException(@"ncAppDelegate->didFailToRegisterForRemoteNotificationWithError", @"", exception);
     }
 }
 
@@ -776,7 +775,7 @@ FeedBackForm *fbView;
         }
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at push receive: %@", exception);
+        logException(@"ncAppDelegate->didReceiveRemoteNotification", @"", exception);
     }
 }
 
@@ -800,7 +799,7 @@ FeedBackForm *fbView;
         [[RKClient sharedClient]  get:twitCountReq delegate:self];
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at getTwiiterLive count: %@", exception);
+        logException(@"ncAppDelegate->updateTime", @"", exception);
     }
 }
 
@@ -814,8 +813,7 @@ FeedBackForm *fbView;
         [[RKClient sharedClient]  get:twitCountReq delegate:self];
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at getTwiiterLive count: %@", exception);
-    }
+        logException(@"ncAppDelegate->serviceByWeekday", @"", exception);    }
 }
 
 -(void)calendarByDate{
@@ -828,7 +826,7 @@ FeedBackForm *fbView;
         [[RKClient sharedClient]  get:twitCountReq delegate:self];
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at getTwiiterLive count: %@", exception);
+        logException(@"ncAppDelegate->calendarByDate", @"", exception);
     }
 }
 
@@ -845,8 +843,7 @@ FeedBackForm *fbView;
         [[RKClient sharedClient]  get:twitCountReq delegate:self];
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at getTwiiterLive count: %@", exception);
-    }
+        logException(@"ncAppDelegate->getTwiiterLiveData", @"", exception);    }
 }
 
 - (void)saveSetting{
@@ -895,7 +892,7 @@ FeedBackForm *fbView;
         
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"Exception when update userSettings at appLuanch: %@",exception);
+        logException(@"ncAppDelegate->upadateDefaultUserValue", @"", exception);
     }
 }
 

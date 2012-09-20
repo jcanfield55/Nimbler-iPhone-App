@@ -7,6 +7,11 @@
 //
 
 #import "UtilityFunctions.h"
+#import "Constants.h"   // contains Flurry variables
+#import "Logging.h"
+#if FLURRY_ENABLED
+#include "Flurry.h"
+#endif
 
 
 static NSDateFormatter *utilitiesTimeFormatter;  // Static variable for short time formatter for use by utility
@@ -255,3 +260,17 @@ NSString *stringByTruncatingToWidth(NSString *string, CGFloat width, UIFont *fon
     return truncatedString;
 }
 
+// Logs exception using NIMLOG_ERR1 and if Flurry activated, logs to Flurry as well 
+void logException(NSString *errorName, NSString *errorMessage, NSException *e)
+{
+    NIMLOG_ERR1(@"\n----------> Exception in: %@, \nNimbler Message: %@, \nException: %@", errorName, errorMessage, e);
+#if FLURRY_ENABLED
+    [Flurry logError:errorName message:errorMessage exception:e];
+#endif
+}
+
+// Handles and logs uncaught exceptions
+void uncaughtExceptionHandler(NSException *exception)
+{
+    logException(@"Uncaught exception handler", @"", exception);
+}

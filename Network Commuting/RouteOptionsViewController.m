@@ -172,7 +172,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 366;
         [[cell detailTextLabel] setNumberOfLines:0];  // Allow for multi-lines
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at load table: %@", exception);
+        logException(@"RouteOptionsViewController->cellForRowAtIndexPath", @"", exception);
     }
     return cell;
 }
@@ -250,41 +250,10 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 366;
         } 
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at select itinerary: %@", exception);
+        logException(@"RouteOptionsViewController->didSelectRowAtIndexPath", @"", exception);
     }
 }
 
-#pragma mark - Button Event handling
-
-- (IBAction)advisoryButtonPressed:(id)sender forEvent:(UIEvent *)event
-{
-    @try {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
-        [[RKClient sharedClient]  get:@"advisories/all" delegate:self];
-    }
-    @catch (NSException *exception) {
-        NIMLOG_ERR1(@" Exception at press advisory button from RouteOptionsViewController : %@", exception);
-    } 
-}
-
--(void)feedbackButtonPressed:(id)sender forEvent:(UIEvent *)event
-{
-    @try {
-        FeedBackReqParam *fbParam = [[FeedBackReqParam alloc] initWithParam:@"FbParameter" source:[NSNumber numberWithInt:FB_SOURCE_PLAN] uniqueId:[plan planId] date:nil fromAddress:nil toAddress:nil];
-        FeedBackForm *feedbackFormVc = [[FeedBackForm alloc] initWithFeedBack:@"FeedBackForm" fbParam:fbParam bundle:nil];
-        [[self navigationController] pushViewController:feedbackFormVc animated:YES]; 
-        
-        [nc_AppDelegate sharedInstance].FBSource = [NSNumber numberWithInt:FB_SOURCE_PLAN];
-        [nc_AppDelegate sharedInstance].FBDate = nil;
-        [nc_AppDelegate sharedInstance].FBToAdd = nil;
-        [nc_AppDelegate sharedInstance].FBSFromAdd = nil;
-        [nc_AppDelegate sharedInstance].FBUniqueId = [plan planId];
-    }
-    @catch (NSException *exception) {
-        NIMLOG_ERR1(@"Exception at press feedback button from RouteOptionsViewController : %@", exception);
-    }
-}
 
 
 #pragma mark - View lifecycle
@@ -371,7 +340,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 366;
         }
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exception at live feed data response: %@",exception);
+        logException(@"RouteOptionsViewController->liveFees", @"", exception);
     }
 }
 
@@ -395,7 +364,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 366;
         }
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"exceptions at set time: %@", exception);
+        logException(@"RouteOptionsViewController->setRealtimeData", @"", exception);
     }
 }
 
@@ -410,8 +379,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 366;
         } 
         
     }  @catch (NSException *exception) {
-        NIMLOG_ERR1( @"Exception while getting unique IDs from TP Server response: %@", exception);
-    } 
+        logException(@"RouteOptionsViewController->didLoadResponse", @"Exception while getting unique IDs from TP Server response: %@", exception);
+    }
 }
 
 
