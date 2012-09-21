@@ -4,39 +4,33 @@
 //  Created by John Canfield on 1/11/12.
 //  Copyright (c) 2012 Network Commuting. All rights reserved.
 //
-//  This is NSManagedObject populated by RestKit to contain location information for 
-//  places that the user has entered or selected.  
+//  This is NSManagedObject ABSTRACT class to contain location information for places that the user 
+//    has entered or selected.
+//  NOTE: LOCATION MUST BE IMPLEMENTED ALONG WITH ONE OF ITS CHILDREN CLASSES, LocationByGoogle OR LocationByIOS
 //  Contains the raw address strings entered by the user as well as geocoded information
 //  returned by a geocoder.  Also contains frequency that user has chosen the location as 
 //  a from or to location, so that these locations can be shown on the dropdown.  
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import <RestKit/Restkit.h>
-#import <RestKit/CoreData.h>
-#import "AddressComponent.h"
 #import "RawAddress.h"
-#import "GeoRectangle.h"
 #import "enums.h"
 
 @class Locations;
 
 @interface Location : NSManagedObject 
 
-@property (nonatomic, strong) NSSet *rawAddresses; // Set containing all the user inputted strings mapped to this location
 @property (nonatomic, strong) NSNumber *apiType;  // APIType enum indicating which service performed the Geocode
+@property (nonatomic, strong) NSSet *rawAddresses; // Set containing all the user inputted strings mapped to this location
 @property (nonatomic, strong) NSString *geoCoderStatus;  // Returned status from geocoder service (ideally "OK")
-@property (nonatomic, strong) NSArray *types;  // Array of NSStrings with type properties (street address, locality)
 @property (nonatomic, strong) NSString *formattedAddress;  // Standardized address string
-@property (nonatomic, strong) NSSet *addressComponents;  // Set of AddressComponent items
 @property (nonatomic, strong) NSNumber *lat;  // double floating point
 @property (nonatomic, strong) NSNumber *lng;  // double floating point
 
 // Type of location (ROOFTOP, APPROXIMATE).  
 // If "TOFROM_LIST" then it is placeholder for a list of locations to be chosen by LocationPickerView
-@property (nonatomic, strong) NSString *locationType;   
+@property (nonatomic, strong) NSString *locationType;
 
-@property (nonatomic, strong) GeoRectangle *viewPort;   // Rectangle defining the view for the location
 @property (nonatomic, strong) NSNumber *toFrequency;   // Frequency requested by user as a To location
 @property (nonatomic, strong) NSNumber *fromFrequency;  // Frequency requested by user as a From location
 @property (nonatomic, strong) NSDate *dateLastUsed;  // Last time a user created or selected this location
@@ -49,11 +43,11 @@
 // nil if there was no reverse geocode was possible or if Self is not a Current Location
 @property (nonatomic, strong) Location* reverseGeoLocation;
 
+@property (nonatomic, strong) NSDictionary* addressComponentDictionary; // Dictionary of address components (generated dynamically by subclasses; not stored in Core Data)
 
 // Static variables and methods to retrieve the Locations set wrapper
 + (void)setLocations:(Locations *)loc;
 
-+ (RKManagedObjectMapping *)objectMappingForApi:(APIType)gt;
 
 // Convenience methods for accessing and setting scalar properties
 - (APIType)apiTypeEnum;

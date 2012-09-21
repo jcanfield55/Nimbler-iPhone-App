@@ -610,9 +610,9 @@
     NIMLOG_EVENT1(@"Formatted Address: %@", [location formattedAddress]);
     
     // Initialize some of the values for location
-    [location setGeoCoderStatus:geocodeStatus];
     [location setApiTypeEnum:GOOGLE_GEOCODER];
-    
+    [location setGeoCoderStatus:geocodeStatus];
+
     // Add the raw address to this location
     [location addRawAddressString:rawAddress];
     

@@ -72,6 +72,9 @@
 		52BA735614F789FD00F7B9B3 /* Itinerary.m in Sources */ = {isa = PBXBuildFile; fileRef = 52BA735514F789FD00F7B9B3 /* Itinerary.m */; };
 		52BA735914F78A3C00F7B9B3 /* Step.m in Sources */ = {isa = PBXBuildFile; fileRef = 52BA735814F78A3C00F7B9B3 /* Step.m */; };
 		52BA735C14F78A6C00F7B9B3 /* Leg.m in Sources */ = {isa = PBXBuildFile; fileRef = 52BA735B14F78A6C00F7B9B3 /* Leg.m */; };
+		52C1037E160BCF9F00BC6020 /* LocationFromGoogle.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C1037D160BCF9F00BC6020 /* LocationFromGoogle.m */; };
+		52C10381160BD84500BC6020 /* LocationFromIOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C10380160BD84500BC6020 /* LocationFromIOS.m */; };
+		52C10385160BEF8000BC6020 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C10384160BEF8000BC6020 /* AddressBookUI.framework */; };
 		52CF43A014BDF2F9000565D6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF439F14BDF2F9000565D6 /* UIKit.framework */; };
 		52CF43A214BDF2F9000565D6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A114BDF2F9000565D6 /* Foundation.framework */; };
 		52CF43A414BDF2F9000565D6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A314BDF2F9000565D6 /* CoreGraphics.framework */; };
@@ -961,6 +964,12 @@
 		52BA735814F78A3C00F7B9B3 /* Step.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Step.m; sourceTree = "<group>"; };
 		52BA735A14F78A6C00F7B9B3 /* Leg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Leg.h; sourceTree = "<group>"; };
 		52BA735B14F78A6C00F7B9B3 /* Leg.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Leg.m; sourceTree = "<group>"; };
+		52C1037B160BCC3B00BC6020 /* Network_Commuting 1.6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Network_Commuting 1.6.xcdatamodel"; sourceTree = "<group>"; };
+		52C1037C160BCF9F00BC6020 /* LocationFromGoogle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationFromGoogle.h; sourceTree = "<group>"; };
+		52C1037D160BCF9F00BC6020 /* LocationFromGoogle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationFromGoogle.m; sourceTree = "<group>"; };
+		52C1037F160BD84500BC6020 /* LocationFromIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationFromIOS.h; sourceTree = "<group>"; };
+		52C10380160BD84500BC6020 /* LocationFromIOS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationFromIOS.m; sourceTree = "<group>"; };
+		52C10384160BEF8000BC6020 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		52CF439B14BDF2F9000565D6 /* Nimbler Caltrain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nimbler Caltrain.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52CF439F14BDF2F9000565D6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		52CF43A114BDF2F9000565D6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1112,6 +1121,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52C10385160BEF8000BC6020 /* AddressBookUI.framework in Frameworks */,
 				8DA39BE115E38B5E0029D54B /* AudioToolbox.framework in Frameworks */,
 				8DA39BDF15E3855B0029D54B /* AVFoundation.framework in Frameworks */,
 				CCDCC0791576287900D4B4D3 /* CoreLocation.framework in Frameworks */,
@@ -2482,9 +2492,64 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		52C10382160BD86700BC6020 /* Locations model */ = {
+			isa = PBXGroup;
+			children = (
+				52F67EDF14C752C4007578D5 /* LatLng.h */,
+				52F67EE014C752C4007578D5 /* LatLng.m */,
+				52F67EE614C75C36007578D5 /* AddressComponent.h */,
+				52F67EE714C75C36007578D5 /* AddressComponent.m */,
+				52F67EE914C76504007578D5 /* GeoRectangle.h */,
+				52F67EEA14C76504007578D5 /* GeoRectangle.m */,
+				5231E43714E5DE7E00739DC7 /* Locations.h */,
+				5231E43814E5DE7E00739DC7 /* Locations.m */,
+				52B3031D14BE946000EB4852 /* Location.h */,
+				52B3031E14BE946000EB4852 /* Location.m */,
+				52C1037C160BCF9F00BC6020 /* LocationFromGoogle.h */,
+				52C1037D160BCF9F00BC6020 /* LocationFromGoogle.m */,
+				52C1037F160BD84500BC6020 /* LocationFromIOS.h */,
+				52C10380160BD84500BC6020 /* LocationFromIOS.m */,
+				5231E43A14E9E7A300739DC7 /* RawAddress.h */,
+				5231E43B14E9E7A400739DC7 /* RawAddress.m */,
+			);
+			name = "Locations model";
+			sourceTree = "<group>";
+		};
+		52C10383160BD89200BC6020 /* PlanStore model */ = {
+			isa = PBXGroup;
+			children = (
+				52BA735A14F78A6C00F7B9B3 /* Leg.h */,
+				52BA735B14F78A6C00F7B9B3 /* Leg.m */,
+				52BA735414F789FD00F7B9B3 /* Itinerary.h */,
+				52BA735514F789FD00F7B9B3 /* Itinerary.m */,
+				52BA735714F78A3C00F7B9B3 /* Step.h */,
+				52BA735814F78A3C00F7B9B3 /* Step.m */,
+				5210516E14C9C0DF0025DD39 /* Plan.h */,
+				5210516F14C9C0DF0025DD39 /* Plan.m */,
+				5265D4B815E19E8D002C9406 /* PlanStore.h */,
+				5265D4B915E19E8D002C9406 /* PlanStore.m */,
+				5289CF1A15EEE8BD005843EB /* PlanRequestParameters.h */,
+				5289CF1B15EEE8BE005843EB /* PlanRequestParameters.m */,
+				529D7D2A15E5EC2E000A7D2F /* PlanRequestChunk.h */,
+				529D7D2B15E5EC43000A7D2F /* PlanRequestChunk.m */,
+				523C0CDE15E4421D00C35BE2 /* TransitCalendar.h */,
+				523C0CDF15E4421D00C35BE2 /* TransitCalendar.m */,
+				523C0CE415E45F3F00C35BE2 /* KeyObjectStore.h */,
+				523C0CE515E45F3F00C35BE2 /* KeyObjectStore.m */,
+				523C0CE115E45A9800C35BE2 /* KeyObjectPair.h */,
+				523C0CE215E45A9900C35BE2 /* KeyObjectPair.m */,
+				5210517114D60F3B0025DD39 /* PlanPlace.h */,
+				5210517214D60F3B0025DD39 /* PlanPlace.m */,
+				5210517414D610780025DD39 /* AgencyAndId.h */,
+				5210517514D610790025DD39 /* AgencyAndId.m */,
+			);
+			name = "PlanStore model";
+			sourceTree = "<group>";
+		};
 		52CF439014BDF2F8000565D6 = {
 			isa = PBXGroup;
 			children = (
+				52C10384160BEF8000BC6020 /* AddressBookUI.framework */,
 				8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */,
 				CC9370D615BFB97200A09A5A /* Flurry */,
 				CCD3990C15A2FAD20020BC85 /* Resources */,
@@ -2538,7 +2603,9 @@
 			children = (
 				CCB9E6BA1574AC100043F304 /* util */,
 				CCB7E81E1570EC460036E9CD /* controllerView */,
-				CCB7E81D1570EBCC0036E9CD /* dataObject */,
+				52C10383160BD89200BC6020 /* PlanStore model */,
+				52C10382160BD86700BC6020 /* Locations model */,
+				CCB7E81D1570EBCC0036E9CD /* Other data model */,
 				CCB7E81C1570EB670036E9CD /* images */,
 				CCB7E81B1570A3E10036E9CD /* appDelegate */,
 				CCB7E81415709C080036E9CD /* twitter */,
@@ -2732,7 +2799,7 @@
 			name = images;
 			sourceTree = "<group>";
 		};
-		CCB7E81D1570EBCC0036E9CD /* dataObject */ = {
+		CCB7E81D1570EBCC0036E9CD /* Other data model */ = {
 			isa = PBXGroup;
 			children = (
 				CCD3EB8F15A19E7C002CB23F /* UserPreferance.h */,
@@ -2745,44 +2812,8 @@
 				CC6FE2B6155BA403004BE10A /* MyAnnotation.h */,
 				CC6FE2BA155BC416004BE10A /* Error.m */,
 				CC6FE2B9155BC411004BE10A /* Error.h */,
-				52BA735A14F78A6C00F7B9B3 /* Leg.h */,
-				52BA735B14F78A6C00F7B9B3 /* Leg.m */,
-				52BA735414F789FD00F7B9B3 /* Itinerary.h */,
-				52BA735514F789FD00F7B9B3 /* Itinerary.m */,
-				52BA735714F78A3C00F7B9B3 /* Step.h */,
-				52BA735814F78A3C00F7B9B3 /* Step.m */,
-				5210516E14C9C0DF0025DD39 /* Plan.h */,
-				5210516F14C9C0DF0025DD39 /* Plan.m */,
-				5265D4B815E19E8D002C9406 /* PlanStore.h */,
-				5265D4B915E19E8D002C9406 /* PlanStore.m */,
-				5289CF1A15EEE8BD005843EB /* PlanRequestParameters.h */,
-				5289CF1B15EEE8BE005843EB /* PlanRequestParameters.m */,
-				529D7D2A15E5EC2E000A7D2F /* PlanRequestChunk.h */,
-				529D7D2B15E5EC43000A7D2F /* PlanRequestChunk.m */,
-				523C0CDE15E4421D00C35BE2 /* TransitCalendar.h */,
-				523C0CDF15E4421D00C35BE2 /* TransitCalendar.m */,
-				523C0CE415E45F3F00C35BE2 /* KeyObjectStore.h */,
-				523C0CE515E45F3F00C35BE2 /* KeyObjectStore.m */,
-				523C0CE115E45A9800C35BE2 /* KeyObjectPair.h */,
-				523C0CE215E45A9900C35BE2 /* KeyObjectPair.m */,
-				5210517114D60F3B0025DD39 /* PlanPlace.h */,
-				5210517214D60F3B0025DD39 /* PlanPlace.m */,
-				5210517414D610780025DD39 /* AgencyAndId.h */,
-				5210517514D610790025DD39 /* AgencyAndId.m */,
-				52F67EDF14C752C4007578D5 /* LatLng.h */,
-				52F67EE014C752C4007578D5 /* LatLng.m */,
-				52F67EE614C75C36007578D5 /* AddressComponent.h */,
-				52F67EE714C75C36007578D5 /* AddressComponent.m */,
-				52F67EE914C76504007578D5 /* GeoRectangle.h */,
-				52F67EEA14C76504007578D5 /* GeoRectangle.m */,
-				5231E43714E5DE7E00739DC7 /* Locations.h */,
-				5231E43814E5DE7E00739DC7 /* Locations.m */,
-				52B3031D14BE946000EB4852 /* Location.h */,
-				52B3031E14BE946000EB4852 /* Location.m */,
-				5231E43A14E9E7A300739DC7 /* RawAddress.h */,
-				5231E43B14E9E7A400739DC7 /* RawAddress.m */,
 			);
-			name = dataObject;
+			name = "Other data model";
 			sourceTree = "<group>";
 		};
 		CCB7E81E1570EC460036E9CD /* controllerView */ = {
@@ -3257,6 +3288,8 @@
 				523C0CE615E45F4000C35BE2 /* KeyObjectStore.m in Sources */,
 				529D7D2C15E5EC43000A7D2F /* PlanRequestChunk.m in Sources */,
 				5289CF1C15EEE8BE005843EB /* PlanRequestParameters.m in Sources */,
+				52C1037E160BCF9F00BC6020 /* LocationFromGoogle.m in Sources */,
+				52C10381160BD84500BC6020 /* LocationFromIOS.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3576,6 +3609,7 @@
 		52DF9C4714F7546800DC6828 /* Network_Commuting.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				52C1037B160BCC3B00BC6020 /* Network_Commuting 1.6.xcdatamodel */,
 				52810D5515FABBF0004C4A9B /* Network_Commuting 1.5.xcdatamodel */,
 				5265D4BB15E1A167002C9406 /* Network_Commuting 1.4.xcdatamodel */,
 				52E6CBEF15C0A38E008E83E6 /* Network_Commuting 1.3.xcdatamodel */,
@@ -3583,7 +3617,7 @@
 				52D8E01A15AE2680001A1316 /* Network_Commuting 1.2.xcdatamodel */,
 				52DF9C4814F7546800DC6828 /* Network_Commuting.xcdatamodel */,
 			);
-			currentVersion = 52810D5515FABBF0004C4A9B /* Network_Commuting 1.5.xcdatamodel */;
+			currentVersion = 52C1037B160BCC3B00BC6020 /* Network_Commuting 1.6.xcdatamodel */;
 			path = Network_Commuting.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

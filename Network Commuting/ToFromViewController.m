@@ -8,6 +8,7 @@
 
 #import "ToFromViewController.h"
 #import "Locations.h"
+#import "LocationFromGoogle.h"
 #import "UtilityFunctions.h"
 #import "RouteOptionsViewController.h"
 #import "Leg.h"
@@ -610,13 +611,6 @@ UIImage *imageDetailDisclosure;
     
 
     UIView* cellView = [cell contentView];
-    /* Comment out code for saving address as nickname, since not working yet
-    //TO add Current Location
-    UIButton *addButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
-    [addButton addTarget:self action:@selector(addLocationAction:) forControlEvents:UIControlEventTouchUpInside];
-    addButton.frame = CGRectMake(270, 5, 25, 25);
-    [cellView addSubview:addButton];
-     */
     
     NSArray* subviews = [cellView subviews];
     
@@ -661,7 +655,7 @@ UIImage *imageDetailDisclosure;
     rkGeoMgr = rkGeoMgr0;  //set the property
     
     // Add the mapper from Location class to this Object Manager
-    [[rkGeoMgr mappingProvider] setMapping:[Location objectMappingForApi:GOOGLE_GEOCODER] forKeyPath:@"results"];
+    [[rkGeoMgr mappingProvider] setMapping:[LocationFromGoogle objectMappingForApi:GOOGLE_GEOCODER] forKeyPath:@"results"];
     
     // Get the Managed Object Context associated with rkGeoMgr0
     managedObjectContext = [[rkGeoMgr objectStore] managedObjectContext];

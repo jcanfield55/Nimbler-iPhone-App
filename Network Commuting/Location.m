@@ -12,16 +12,13 @@
 
 @implementation Location
 
-@dynamic rawAddresses;
 @dynamic apiType;
+@dynamic rawAddresses;
 @dynamic geoCoderStatus;
-@dynamic types;
 @dynamic formattedAddress;
-@dynamic addressComponents;
 @dynamic lat;
 @dynamic lng;
 @dynamic locationType;
-@dynamic viewPort;
 @dynamic toFrequency;
 @dynamic fromFrequency;
 @dynamic dateLastUsed;
@@ -30,6 +27,7 @@
 @dynamic memberOfList;
 @synthesize shortFormattedAddress;
 @synthesize reverseGeoLocation;
+@synthesize addressComponentDictionary;
 
 // Static variables and methods to retrieve the Locations set wrapper
 static Locations *locations;
@@ -39,6 +37,7 @@ static Locations *locations;
 }
 
 // Convenience setters and accessors for scalars
+
 - (APIType)apiTypeEnum {
     APIType a = (APIType) [[self apiType] intValue];
     return a;
@@ -72,39 +71,6 @@ static Locations *locations;
 }
 
 
-// Returns the mapping used by RestKit to map this object from the specified API
-+ (RKManagedObjectMapping *)objectMappingForApi:(APIType)gt;
-{
-    // Create empty ObjectMapping to fill and return
-    RKManagedObjectMapping* locationMapping = [RKManagedObjectMapping mappingForClass:[Location class]];
-    
-    // Call on sub-objects for their Object Mappings
-
-    RKManagedObjectMapping* addrCompMapping = [AddressComponent objectMappingForApi:gt];
-
-    // TODO figure out how to get geoRectangle element to encode correctly
-    // RKObjectMapping* geoRectMapping = [GeoRectangle objectMappingForApi:gt];
-    
-    // Make the mappings
-    if (gt==GOOGLE_GEOCODER) {
-        [locationMapping mapKeyPath:@"types" toAttribute:@"types"];
-        [locationMapping mapKeyPath:@"formatted_address" toAttribute:@"formattedAddress"];
-        [locationMapping mapKeyPath:@"address_components" toRelationship:@"addressComponents" withMapping:addrCompMapping];
-        [locationMapping mapKeyPath:@"geometry.location.lat" toAttribute:@"latFloat"];
-        [locationMapping mapKeyPath:@"geometry.location.lng" toAttribute:@"lngFloat"];
-        [locationMapping mapKeyPath:@"geometry.location_type" toAttribute:@"locationType"];
-        [locationMapping mapKeyPath:@"toFrequency" toAttribute:@"toFrequencyFloat"];
-        [locationMapping mapKeyPath:@"fromFrequency" toAttribute:@"fromFrequencyFloat"];
-        [locationMapping mapKeyPath:@"memberOfList" toAttribute:@"memberOfList"];
-        // [locationMapping mapKeyPath:@"geometry.viewport" toRelationship:@"viewPort" withMapping:geoRectMapping];
-        
-    }
-    else {
-        // TODO Unknown geocoder type, throw an exception
-    }
-    return locationMapping;
-}
-
 - (void)awakeFromInsert {
     [super awakeFromInsert];
     
@@ -117,7 +83,6 @@ static Locations *locations;
     
     // Add the locations object as an observer for changes so it can resort its cache
     [self addObserver:locations forKeyPath:@"dateLastUsed" options:NSKeyValueObservingOptionNew context:nil];
-    
 }
 
 - (void)prepareForDeletion {
@@ -179,7 +144,7 @@ static Locations *locations;
     NSArray *strAtoms = [str componentsSeparatedByCharactersInSet:
                         [NSCharacterSet characterSetWithCharactersInString:@" ,."]];
     NSMutableArray *matches = [NSMutableArray arrayWithCapacity:[strAtoms count]]; // will hold results
-    NSSet *addrComponents = [self addressComponents];
+    NSDictionary *addrComponents = [self addressComponentDictionary];
     if (addrComponents && [addrComponents count]>0) {
         for (int i=0; i<[strAtoms count]; i++) {  // iterate through string's atoms
             NSString *atom = [strAtoms objectAtIndex:i];
@@ -187,46 +152,41 @@ static Locations *locations;
             if (!atom || [atom length] == 0) { // if no or empty string...
                 [matches replaceObjectAtIndex:i withObject:@"Match"]; // count as match
             }
-            else { 
-                for (AddressComponent *ac in addrComponents) {  // iterate through address components
-                    for (NSString *type in [ac types]) {  // iterate through component types
-                        if ([type isEqualToString:@"route"] ||
-                            [type isEqualToString:@"intersection"] ||
-                            [type isEqualToString:@"locality"] ||
-                            [type isEqualToString:@"airport"]) { // for these types, do a substring compare
-                            if ([ac longName] && [[ac longName] length]>0 && 
-                                [[ac longName] rangeOfString:atom options:NSCaseInsensitiveSearch].location != NSNotFound) {
+            else {
+                NSEnumerator* enumerator = [addrComponents keyEnumerator];
+                NSString* type;
+                while (type = [enumerator nextObject]) {  // enumerate thru all the type strings in the dictionary
+                    NSString* name = [addrComponents objectForKey:type];
+                    if ([type isEqualToString:@"route"] ||
+                        [type isEqualToString:@"intersection"] ||
+                        [type isEqualToString:@"locality"] ||
+                        [type isEqualToString:@"airport"] ||
+                        [type isEqualToString:@"route(short)"] ||
+                        [type isEqualToString:@"intersection(short)"] ||
+                        [type isEqualToString:@"locality(short)"] ||
+                        [type isEqualToString:@"airport(short)"]) { // for these types, do a substring compare
+                        if (name && [name length]>0 &&
+                            [name rangeOfString:atom options:NSCaseInsensitiveSearch].location != NSNotFound) {
+                            [matches replaceObjectAtIndex:i withObject:@"Match"];
+                            goto getNextAtom;
+                        }
+                    }
+                    else { // for all others do a prefix compare
+                        NSRange range1 = [name rangeOfString:atom options:NSCaseInsensitiveSearch];   // compare vs longName
+                        if (!name || [name length] == 0) {
+                            range1.location = NSNotFound;  // disqualify match if no LongName string
+                        }
+                        if (range1.location == 0) { // Make sure it is a prefix only
+                            if ([type isEqualToString:@"street_number"]) {
                                 [matches replaceObjectAtIndex:i withObject:@"Match"];
                                 goto getNextAtom;
                             }
-                            if ([ac shortName] && [[ac shortName] length]>0 && 
-                                [[ac shortName] rangeOfString:atom options:NSCaseInsensitiveSearch].location != NSNotFound) {
-                                [matches replaceObjectAtIndex:i withObject:@"Match"];
-                                goto getNextAtom;
+                            else {
+                                // any other type object match is an optional match, one that does not
+                                // disqualify the overall match, but in itself is not enough to make a match
+                                [matches replaceObjectAtIndex:i withObject:@"Optional match"];
                             }
                         }
-                        else { // for all others do a prefix compare
-                            NSRange range1 = [[ac longName] rangeOfString:atom options:NSCaseInsensitiveSearch];   // compare vs longName
-                            if (![ac longName] || [[ac longName] length] == 0) {
-                                range1.location = NSNotFound;  // disqualify match if no LongName string
-                            }
-                            NSRange range2 = [[ac shortName] rangeOfString:atom options:NSCaseInsensitiveSearch];   // compare vs shortName
-                            if (![ac shortName] || [[ac shortName] length] == 0) {
-                                range2.location = NSNotFound;  // disqualify match if no shortName string
-                            }
-                            if (range1.location == 0 || range2.location == 0) { // Make sure it is a prefix only
-                                if ([type isEqualToString:@"street_number"]) {
-                                    [matches replaceObjectAtIndex:i withObject:@"Match"];
-                                    goto getNextAtom;
-                                }
-                                else { 
-                                    // any other type object match is an optional match, one that does not 
-                                    // disqualify the overall match, but in itself is not enough to make a match
-                                    [matches replaceObjectAtIndex:i withObject:@"Optional match"];
-                                }
-                            }
-                        }
-
                     }
                 }
             }
@@ -270,28 +230,15 @@ static Locations *locations;
     }
     else {
         // Find whether it is a train station (
-        NSString* trainStationName = [[[[self addressComponents] objectsPassingTest:^(id obj,BOOL *stop){
-            AddressComponent* ac = obj;
-            if ([[ac types] containsObject:@"train_station"]) {
-                *stop = YES;
-                return YES;
-            }
-            return NO;
-        }] anyObject] shortName];  // Returns the short train station name
+        NSString* trainStationName = [[self addressComponentDictionary] objectForKey:@"train_station(short)"];
+
         if (trainStationName && [trainStationName length] >0) {
             // if a train station, return just the train_station name
             shortFormattedAddress = trainStationName;
         }
         else {
             // Find the postal code
-            NSString* postalCode = [[[[self addressComponents] objectsPassingTest:^(id obj,BOOL *stop){
-                AddressComponent* ac = obj;
-                if ([[ac types] containsObject:@"postal_code"]) {
-                    *stop = YES;
-                    return YES;
-                }
-                return NO;
-            }] anyObject] shortName];  // Returns the short postal code
+            NSString* postalCode = [[self addressComponentDictionary] objectForKey:@"postal_code"];
             NSString* returnString;
             if (postalCode && [postalCode length] > 0) {
                 NSRange range = [addr rangeOfString:postalCode options:NSBackwardsSearch];
@@ -337,15 +284,4 @@ static Locations *locations;
         return false;
 }
 
-// TODO Do something about description method to avoid overloading warning.  
-/*
-- (NSString *)description
-{
-    NSString* desc = [NSString stringWithFormat:
-                      @"{Location Object:  apiType: %d;  rawAddresses: %@;  geoCoderStatus: %@;  types: %@;  formatted address: %@;  addressComponents: %@;  latLng: %@;  locationType: %@;  viewPort: %@;  toFrequency %d;  fromFrequency %d;  nickName: %@}",
-                      apiType, rawAddresses, geoCoderStatus, types, formattedAddress, addressComponents, 
-                      latLng, locationType, viewPort, toFrequency, fromFrequency, nickName];
-    return desc;
-}
- */
 @end

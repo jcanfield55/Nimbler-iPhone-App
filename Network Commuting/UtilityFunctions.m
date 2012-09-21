@@ -263,7 +263,7 @@ NSString *stringByTruncatingToWidth(NSString *string, CGFloat width, UIFont *fon
 // Logs exception using NIMLOG_ERR1 and if Flurry activated, logs to Flurry as well 
 void logException(NSString *errorName, NSString *errorMessage, NSException *e)
 {
-    NIMLOG_ERR1(@"\n----------> Exception in: %@, \nNimbler Message: %@, \nException: %@", errorName, errorMessage, e);
+    NIMLOG_ERR1(@"\n----------> Exception in: %@, \n  Nimbler Message: %@, \n  Exception: %@", errorName, errorMessage, e);
 #if FLURRY_ENABLED
     [Flurry logError:errorName message:errorMessage exception:e];
 #endif

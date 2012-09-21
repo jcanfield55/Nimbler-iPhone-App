@@ -14,7 +14,8 @@ typedef enum {
     GOOGLE_GEOCODER,
     OTP_PLANNER,
     ERROR_PLANNER,
-    BAYAREA_PLANNER
+    BAYAREA_PLANNER,
+    IOS_GEOCODER
 } APIType;
 
 typedef enum {

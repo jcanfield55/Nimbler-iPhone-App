@@ -7,6 +7,8 @@
 //
 
 #import "Network_CommutingTests.h"
+#import "LocationFromGoogle.h"
+#import "LocationFromIOS.h"
 
 @implementation Network_CommutingTests
 
@@ -41,7 +43,7 @@
     
     // Set up individual Location objects
     // loc1 is used for testing most methods including isMatchingTypedString and has Address Components included
-    loc1 = [NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:managedObjectContext];
+    LocationFromGoogle* loc1G = [NSEntityDescription insertNewObjectForEntityForName:@"LocationFromGoogle" inManagedObjectContext:managedObjectContext];
     AddressComponent *ac1 = [NSEntityDescription insertNewObjectForEntityForName:@"AddressComponent" inManagedObjectContext:managedObjectContext];
     AddressComponent *ac2 = [NSEntityDescription insertNewObjectForEntityForName:@"AddressComponent" inManagedObjectContext:managedObjectContext];
     AddressComponent *ac3 = [NSEntityDescription insertNewObjectForEntityForName:@"AddressComponent" inManagedObjectContext:managedObjectContext];
@@ -66,31 +68,34 @@
     [ac6 setTypes:[NSArray arrayWithObjects:@"postal_code", nil]];
     [ac7 setTypes:[NSArray arrayWithObjects:@"country", @"political", nil]];
 
-    [loc1 setFormattedAddress:@"750 Hawthorne Street, San Francisco, CA 94103, USA"];
-    [loc1 setAddressComponents:[NSSet setWithObjects:ac1,ac2,ac3,ac4,ac5,ac6,ac7,nil]];
+    [loc1G setFormattedAddress:@"750 Hawthorne Street, San Francisco, CA 94103, USA"];
+    [loc1G setAddressComponents:[NSSet setWithObjects:ac1,ac2,ac3,ac4,ac5,ac6,ac7,nil]];
     
-    [loc1 addRawAddressString:@"750 Hawthorne St., SF"];
-    [loc1 addRawAddressString:@"750 Hawthorn, San Fran California"];
+    [loc1G addRawAddressString:@"750 Hawthorne St., SF"];
+    [loc1G addRawAddressString:@"750 Hawthorn, San Fran California"];
 
-    [loc1 setApiTypeEnum:GOOGLE_GEOCODER];
-    [loc1 setFromFrequencyFloat:5.0];
-    [loc1 setToFrequencyFloat:7.0];
-    [loc1 setLatFloat:67.3];
-    [loc1 setLngFloat:-122.3];
+    [loc1G setApiTypeEnum:GOOGLE_GEOCODER];
+    [loc1G setFromFrequencyFloat:5.0];
+    [loc1G setToFrequencyFloat:7.0];
+    [loc1G setLatFloat:67.3];
+    [loc1G setLngFloat:-122.3];
+    loc1 = loc1G;  // Now treat it as a generic Location object
 
     // Additional set-up
-    // loc2 and loc 3 give additional testing for formatted address and raw address retrieval
+    // loc2 and loc3 give additional testing for formatted address and raw address retrieval
     // It has some (number, city, state) but not all the address components from loc1
-    loc2 = [NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:managedObjectContext];
-    [loc2 setFormattedAddress:@"750 Hawthorne Street, San Francisco"];
-    [loc2 addRawAddressString:@"750 Hawthorne, San Fran California"];
-    [loc2 addRawAddressString:@"750 Hawthoorn, SF"];
-    [loc2 setFromFrequencyFloat:7];  // greater than loc1
+    LocationFromGoogle* loc2G = [NSEntityDescription insertNewObjectForEntityForName:@"LocationFromGoogle" inManagedObjectContext:managedObjectContext];
+    [loc2G setFormattedAddress:@"750 Hawthorne Street, San Francisco"];
+    [loc2G addRawAddressString:@"750 Hawthorne, San Fran California"];
+    [loc2G addRawAddressString:@"750 Hawthoorn, SF"];
+    [loc2G setFromFrequencyFloat:7];  // greater than loc1
+    loc2 = loc2G; // Treat as a generic location object
     
-    loc3 = [NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:managedObjectContext];
-    [loc3 setFormattedAddress:@"1350 Hull Drive, San Carlos, CA USA"];
-    [loc3 addRawAddressString:@"1350 Hull, San Carlos CA"];
-    [loc3 addRawAddressString:@"1350 Hull Dr. San Carlos CA"];
+    LocationFromGoogle* loc3G = [NSEntityDescription insertNewObjectForEntityForName:@"LocationFromGoogle" inManagedObjectContext:managedObjectContext];
+    [loc3G setFormattedAddress:@"1350 Hull Drive, San Carlos, CA USA"];
+    [loc3G addRawAddressString:@"1350 Hull, San Carlos CA"];
+    [loc3G addRawAddressString:@"1350 Hull Dr. San Carlos CA"];
+    loc3 = loc3G;
     
     //
     // Set up plans, itineraries, and legs for testing plan caching
