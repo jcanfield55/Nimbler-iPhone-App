@@ -12,6 +12,7 @@
 #import <RestKit/Restkit.h>
 #import <RestKit/CoreData.h>
 #import <Restkit/RKJSONParserJSONKit.h>
+#import "nc_AppDelegate.h"
 
 #if FLURRY_ENABLED
 #include "Flurry.h"
@@ -83,13 +84,13 @@
 #endif
             [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
             PlanRequestStatus status = STATUS_OK;
-            if(toFromVC.continueGetTime != nil){
-                [toFromVC.continueGetTime invalidate];
-                toFromVC.continueGetTime = nil; 
+            if(toFromVC.timerGettingRealDataByItinerary != nil){
+                [toFromVC.timerGettingRealDataByItinerary invalidate];
+                toFromVC.timerGettingRealDataByItinerary = nil; 
             }
             [toFromVC setPlan:matchingPlan];
-            [toFromVC getRealTimeDataForItinerary];
-            toFromVC.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromVC selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
+//            [toFromVC getRealTimeDataForItinerary];
+//            toFromVC.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromVC selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
             if (parameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
                 [routeOptionsVC newPlanAvailable:matchingPlan status:status];
             } else {
@@ -202,7 +203,7 @@
     NIMLOG_EVENT1(@"Submitted Request ID=%@",requestID);
     [params setObject:requestID forKey:REQUEST_ID];
     planURLResource = requestID;
-    [parametersByPlanURLResource setObject:parameters forKey:requestID];
+    [parametersByPlanURLResource setObject:parameters forKey:planURLResource];
     Plan *plan;
     RKParams *requestParameter = [RKParams paramsWithDictionary:params];
     [rkPlanMgr postObject:plan delegate:self block:^(RKObjectLoader *loader){
@@ -222,32 +223,46 @@
         NSDictionary *tempResponseDictionary = [rkParser objectFromString:[[objectLoader response] bodyAsString] error:nil];
         NSString* strRequestID = [tempResponseDictionary objectForKey:REQUEST_ID];
         NIMLOG_EVENT1(@"Retrieved Request ID=%@",strRequestID);
-        
-        Plan *plan = [objects objectAtIndex:0];
-        //NSString* resourcePath = [objectLoader resourcePath];
-        planRequestParameters = [parametersByPlanURLResource objectForKey:strRequestID];
-        [plan setToLocation:[planRequestParameters toLocation]];
-        [plan setFromLocation:[planRequestParameters fromLocation]];
-        [plan createRequestChunkWithAllItinerariesAndRequestDate:[planRequestParameters thisRequestTripDate]
-                                                  departOrArrive:[planRequestParameters departOrArrive]];
-        saveContext(managedObjectContext);  // Save location and request chunk changes
-        plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context
-        
-        // Now format the itineraries of the consolidated plan
-        [plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate] departOrArrive:[planRequestParameters departOrArrive]];
-        [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
-        
-        // Call-back the appropriate RouteOptions VC with the new plan
-        if (planRequestParameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
-            [routeOptionsVC newPlanAvailable:plan status:STATUS_OK];  
-        } else {
-            [toFromVC newPlanAvailable:plan status:STATUS_OK];
-            if(toFromVC.timerGettingRealDataByItinerary != nil){
-                [toFromVC.timerGettingRealDataByItinerary invalidate];
-                toFromVC.timerGettingRealDataByItinerary = nil; 
+        if([[tempResponseDictionary objectForKey:CODE] intValue] == RESPONSE_SUCCESSFULL){
+            if([tempResponseDictionary objectForKey:ERROR] && [nc_AppDelegate sharedInstance].isToFromView){
+                UIAlertView *alertView = [[UIAlertView alloc] init];
+                [alertView setDelegate:self];
+                [alertView setTitle:APP_TITLE];
+                [alertView setMessage:ROUTE_NOT_POSSIBLE_MSG];
+                [alertView addButtonWithTitle:OK_BUTTON_TITLE];
+                [alertView show];
+                [toFromVC.activityIndicator stopAnimating];
+                [toFromVC.view setUserInteractionEnabled:YES];
             }
-            [toFromVC getRealTimeData];
-            toFromVC.continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromVC selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
+            else{
+                Plan *plan = [objects objectAtIndex:0];
+                NIMLOG_EVENT1(@"PLAN =%@",plan);
+                //NSString* resourcePath = [objectLoader resourcePath];
+                planRequestParameters = [parametersByPlanURLResource objectForKey:strRequestID];
+                [plan setToLocation:[planRequestParameters toLocation]];
+                [plan setFromLocation:[planRequestParameters fromLocation]];
+                [plan createRequestChunkWithAllItinerariesAndRequestDate:[planRequestParameters thisRequestTripDate]
+                                                          departOrArrive:[planRequestParameters departOrArrive]];
+                saveContext(managedObjectContext);  // Save location and request chunk changes
+                plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context
+                
+                // Now format the itineraries of the consolidated plan
+                [plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate] departOrArrive:[planRequestParameters departOrArrive]];
+                [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
+                
+                // Call-back the appropriate RouteOptions VC with the new plan
+                if (planRequestParameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
+                    [routeOptionsVC newPlanAvailable:plan status:STATUS_OK];  
+                } else {
+                    [toFromVC newPlanAvailable:plan status:STATUS_OK];
+                    if(toFromVC.timerGettingRealDataByItinerary != nil){
+                        [toFromVC.timerGettingRealDataByItinerary invalidate];
+                        toFromVC.timerGettingRealDataByItinerary = nil; 
+                    }
+                }
+                [toFromVC getRealTimeDataForItinerary];
+                toFromVC.continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromVC selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
+            }
         }
     }
     @catch (NSException *exception) {

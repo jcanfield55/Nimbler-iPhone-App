@@ -158,7 +158,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 366;
                 } else if([itin.itinArrivalFlag intValue] == EARLIER) {
                    titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"Earlier"];
                 } else if ([itin.itinArrivalFlag intValue] == ITINERARY_TIME_SLIPPAGE ) {
-                     titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"Time Slippage"];
+                     titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"Updated"];
                 }
                  [[cell textLabel] setText:titleText];
             }

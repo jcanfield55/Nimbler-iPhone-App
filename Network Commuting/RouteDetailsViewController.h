@@ -32,6 +32,6 @@
 -(void)ReloadLegWithNewData;
 -(void)setFBParameterForItinerary;
 -(void)popOutToItinerary;
--(void)test:(int)ss;
+-(void)setFBParamater:(int)ss;
 -(void)setFBParameterForLeg:(NSString *)legId;
 @end

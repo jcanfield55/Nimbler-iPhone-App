@@ -419,12 +419,8 @@ FeedBackForm *fbView;
         [toFromViewController.fromTableVC markAndUpdateSelectedLocation:self.fromLoc];
     }
     if(isFromBackground){
-        if([timerType isEqualToString:TIMER_TYPE]){
-            toFromViewController.continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(getRealTimeData) userInfo:nil repeats: YES];
-        }
-        else{
             toFromViewController.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
-        }
+
     }
     if(!isSettingSavedSuccessfully){
         [self saveSetting];
@@ -926,5 +922,20 @@ FeedBackForm *fbView;
         [alert show];
     } 
 }
-
+// Partial Implementation Of Clearing PlanCache
+// Get The All PlanRequestChunk and delete them when max walk distance change.
+- (void)clearCache{ 
+    NSError *error;
+    NSManagedObjectContext * context = [self managedObjectContext];
+    NSFetchRequest * fetch = [[NSFetchRequest alloc] init];
+    [fetch setEntity:[NSEntityDescription entityForName:@"PlanRequestChunk" inManagedObjectContext:context]];
+    NSArray * result = [context executeFetchRequest:fetch error:nil];
+    for (id basket in result){
+        [context deleteObject:basket];
+    }
+    [context save:&error];
+    if(error){
+        NIMLOG_ERR1(@"Error While Clearing Cache:%@",error);
+    }
+}
 @end

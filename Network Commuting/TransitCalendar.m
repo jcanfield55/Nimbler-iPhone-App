@@ -161,9 +161,10 @@ static TransitCalendar * transitCalendarSingleton;
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle:NSDateFormatterLongStyle];
     
-    NSDate* loadDate = [dateFormatter dateFromString:@"July 11, 2012"];  // Last Caltrain load time
-    NSDate* laborDay = [dateFormatter dateFromString:@"September 3, 2012"];
-    
+    //NSDate* loadDate = [dateFormatter dateFromString:@"07112012"];  // Last Caltrain load time
+   // NSDate* laborDay = [dateFormatter dateFromString:@"September 3, 2012"];
+    NSString *loadDate = @"20120711";
+    NSString *laborDay = @"20120903";
     for (NSString* agencyID in agencyIDs) {
         [lastGTFSLoadDateMutable setObject:loadDate forKey:agencyID];
         
@@ -182,14 +183,17 @@ static TransitCalendar * transitCalendarSingleton;
                                         @"Sunday", laborDay, nil];  // Give Sunday schedule on Labor Day
         [calendarByDateMutable setObject:calendarByDate forKey:agencyID];
     }
+    NSDictionary *dictlastGTFSLoadDateMutable = [NSDictionary dictionaryWithObject:lastGTFSLoadDateMutable forKey:GTFS_UPDATE_TIME];
+    NIMLOG_EVENT1(@"dictlastGTFSLoadDateMutable=%@",dictlastGTFSLoadDateMutable);
+    NSDictionary *dictServiceByWeekdayMutable = [NSDictionary dictionaryWithObject:serviceByWeekdayMutable forKey:GTFS_SERVICE_BY_WEEKDAY];
+    NSDictionary *dictCalendarByDateMutable = [NSDictionary dictionaryWithObject:calendarByDateMutable forKey:GTFS_SERVICE_EXCEPTIONS_DATES];
+    [nc_AppDelegate sharedInstance].lastGTFSLoadDateByAgency = dictlastGTFSLoadDateMutable;
+    [nc_AppDelegate sharedInstance].serviceByWeekdayByAgency = dictServiceByWeekdayMutable;
+    [nc_AppDelegate sharedInstance].calendarByDateByAgency = dictCalendarByDateMutable;
     
-    lastGTFSLoadDateByAgency = lastGTFSLoadDateMutable;
-    serviceByWeekdayByAgency = serviceByWeekdayMutable;
-    calendarByDateByAgency = calendarByDateMutable;
-    
-    [nc_AppDelegate sharedInstance].lastGTFSLoadDateByAgency = lastGTFSLoadDateMutable;
-    [nc_AppDelegate sharedInstance].serviceByWeekdayByAgency = serviceByWeekdayMutable;
-    [nc_AppDelegate sharedInstance].calendarByDateByAgency = calendarByDateMutable;
+//    [nc_AppDelegate sharedInstance].lastGTFSLoadDateByAgency = lastGTFSLoadDateMutable;
+//    [nc_AppDelegate sharedInstance].serviceByWeekdayByAgency = serviceByWeekdayMutable;
+//    [nc_AppDelegate sharedInstance].calendarByDateByAgency = calendarByDateMutable;
 }
 
 
