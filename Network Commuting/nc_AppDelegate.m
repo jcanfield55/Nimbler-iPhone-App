@@ -18,7 +18,7 @@
 #import "Reachability.h"
 #import "KeyObjectStore.h"
 #if TEST_FLIGHT_ENABLED
-#import "TestFlightSDK1/TestFlight.h"
+#import "TestFlightSDK1-1/TestFlight.h"
 #endif
 #if FLURRY_ENABLED
 #import "Flurry.h"

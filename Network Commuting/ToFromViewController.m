@@ -13,7 +13,6 @@
 #import "Leg.h"
 #import "PlanStore.h"
 #import "DateTimeViewController.h"
-#import "TestFlightSDK1/TestFlight.h"
 #import "Itinerary.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "FeedBackForm.h"
@@ -977,7 +976,7 @@ UIImage *imageDetailDisclosure;
 {
     [self stopActivityIndicator];
     durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime;
-    NIMLOG_EVENT1(@"Plan =%@",newPlan);
+    NIMLOG_OBJECT1(@"Plan =%@",newPlan);
     if (status == STATUS_OK) {
         plan = newPlan;
         savetrip = FALSE;

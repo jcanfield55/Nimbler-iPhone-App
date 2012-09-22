@@ -236,7 +236,7 @@
             }
             else{
                 Plan *plan = [objects objectAtIndex:0];
-                NIMLOG_EVENT1(@"PLAN =%@",plan);
+                NIMLOG_OBJECT1(@"PLAN =%@",plan);
                 //NSString* resourcePath = [objectLoader resourcePath];
                 planRequestParameters = [parametersByPlanURLResource objectForKey:strRequestID];
                 [plan setToLocation:[planRequestParameters toLocation]];
