@@ -964,7 +964,7 @@
 		52BA735814F78A3C00F7B9B3 /* Step.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Step.m; sourceTree = "<group>"; };
 		52BA735A14F78A6C00F7B9B3 /* Leg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Leg.h; sourceTree = "<group>"; };
 		52BA735B14F78A6C00F7B9B3 /* Leg.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Leg.m; sourceTree = "<group>"; };
-		52C1037B160BCC3B00BC6020 /* Network_Commuting 1.6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Network_Commuting 1.6.xcdatamodel"; sourceTree = "<group>"; };
+		52C1037B160BCC3B00BC6020 /* Network_Commuting 1.6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.6.xcdatamodel"; sourceTree = "<group>"; };
 		52C1037C160BCF9F00BC6020 /* LocationFromGoogle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationFromGoogle.h; sourceTree = "<group>"; };
 		52C1037D160BCF9F00BC6020 /* LocationFromGoogle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationFromGoogle.m; sourceTree = "<group>"; };
 		52C1037F160BD84500BC6020 /* LocationFromIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationFromIOS.h; sourceTree = "<group>"; };
