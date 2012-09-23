@@ -308,6 +308,8 @@
                 [reqChunk doesCoverTheSameTimeAs:connectingReqDate departOrArrive:depOrArrive]) {
                 [matchingReqChunks addObject:reqChunk];
                 
+                // TODO Fix addDateOnlyWithTimeOnly to handle crossing-midnight timeOnly values
+                
                 // Compute newConnectingReqDate
                 NSDate* possibleNewConnReqDate;
                 if (depOrArrive == DEPART) {

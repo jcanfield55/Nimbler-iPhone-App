@@ -19,6 +19,7 @@
 #import "PlanStore.h"
 #import "Itinerary.h"
 #import "Leg.h"
+#import "nc_AppDelegate.h"
 
 @interface Network_CommutingTests : SenTestCase
 {

@@ -16,9 +16,6 @@
 		5210517614D610790025DD39 /* AgencyAndId.m in Sources */ = {isa = PBXBuildFile; fileRef = 5210517514D610790025DD39 /* AgencyAndId.m */; };
 		521DDD371582D44500DBE838 /* LocationPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 521DDD351582D44500DBE838 /* LocationPickerViewController.m */; };
 		521DDD381582D44500DBE838 /* LocationPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 521DDD361582D44500DBE838 /* LocationPickerViewController.xib */; };
-		522C0E6715588D830072ADD6 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 522C0E6315588D830072ADD6 /* libTestFlight.a */; };
-		522C0E6815588D830072ADD6 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 522C0E6415588D830072ADD6 /* README.txt */; };
-		522C0E6915588D830072ADD6 /* release_notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 522C0E6515588D830072ADD6 /* release_notes.txt */; };
 		5231E43914E5DE7E00739DC7 /* Locations.m in Sources */ = {isa = PBXBuildFile; fileRef = 5231E43814E5DE7E00739DC7 /* Locations.m */; };
 		5231E43C14E9E7A400739DC7 /* RawAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 5231E43B14E9E7A400739DC7 /* RawAddress.m */; };
 		523C0CE015E4421D00C35BE2 /* TransitCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = 523C0CDF15E4421D00C35BE2 /* TransitCalendar.m */; };
@@ -30,6 +27,8 @@
 		525442C814C3ED57004B0E1F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C714C3ED57004B0E1F /* Security.framework */; };
 		525442CA14C3ED66004B0E1F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C914C3ED66004B0E1F /* SystemConfiguration.framework */; };
 		525442CC14C3ED8A004B0E1F /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442CB14C3ED8A004B0E1F /* libxml2.dylib */; };
+		5258A898160D5DCA00871875 /* libFlurry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC9370D815BFB97200A09A5A /* libFlurry.a */; };
+		5258A89F160D617800871875 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5258A89B160D617800871875 /* libTestFlight.a */; };
 		525C20F9151D3AF5004F8FE0 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
 		5265D4BA15E19E8D002C9406 /* PlanStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 5265D4B915E19E8D002C9406 /* PlanStore.m */; };
 		5271994015D9B092007D05FA /* img_legTrain.png in Resources */ = {isa = PBXBuildFile; fileRef = 5271993415D9B092007D05FA /* img_legTrain.png */; };
@@ -153,7 +152,6 @@
 		CC6FE2B8155BA40D004BE10A /* MyAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6FE2B7155BA40D004BE10A /* MyAnnotation.m */; };
 		CC6FE2BB155BC416004BE10A /* Error.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6FE2BA155BC416004BE10A /* Error.m */; };
 		CC8D5CCD15B9989C006038B1 /* img_appTitle.png in Resources */ = {isa = PBXBuildFile; fileRef = CC8D5CCC15B9989C006038B1 /* img_appTitle.png */; };
-		CC9370D915BFB97200A09A5A /* libFlurry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC9370D815BFB97200A09A5A /* libFlurry.a */; };
 		CC969ACB15C7F53200BAA6E7 /* img_swapLocation.png in Resources */ = {isa = PBXBuildFile; fileRef = CC969ACA15C7F53200BAA6E7 /* img_swapLocation.png */; };
 		CC9E424D15821B7B00A4ADED /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = CC9E424C15821B7B00A4ADED /* map.png */; };
 		CCA4C7D215D8F2BE009BE7A1 /* img_nimblerNavigation@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CCA4C7D115D8F2BE009BE7A1 /* img_nimblerNavigation@2x.png */; };
@@ -335,10 +333,6 @@
 		521DDD341582D44500DBE838 /* LocationPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationPickerViewController.h; sourceTree = "<group>"; };
 		521DDD351582D44500DBE838 /* LocationPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationPickerViewController.m; sourceTree = "<group>"; };
 		521DDD361582D44500DBE838 /* LocationPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationPickerViewController.xib; sourceTree = "<group>"; };
-		522C0E6315588D830072ADD6 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
-		522C0E6415588D830072ADD6 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
-		522C0E6515588D830072ADD6 /* release_notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.txt; sourceTree = "<group>"; };
-		522C0E6615588D830072ADD6 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		522C0E6A15588E7A0072ADD6 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		522D32E715FECB51005D2F86 /* Logging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Logging.h; sourceTree = "<group>"; };
 		5231E16014E42FE100739DC7 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -907,6 +901,8 @@
 		525442C914C3ED66004B0E1F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		525442CB14C3ED8A004B0E1F /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		525842C715A3AB10005BB92A /* UIConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UIConstants.h; sourceTree = "<group>"; };
+		5258A89B160D617800871875 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
+		5258A89E160D617800871875 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		525C20F8151D3AF5004F8FE0 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		5265D4B815E19E8D002C9406 /* PlanStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanStore.h; sourceTree = "<group>"; };
 		5265D4B915E19E8D002C9406 /* PlanStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlanStore.m; sourceTree = "<group>"; };
@@ -1122,6 +1118,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				52C10385160BEF8000BC6020 /* AddressBookUI.framework in Frameworks */,
+				5258A898160D5DCA00871875 /* libFlurry.a in Frameworks */,
 				8DA39BE115E38B5E0029D54B /* AudioToolbox.framework in Frameworks */,
 				8DA39BDF15E3855B0029D54B /* AVFoundation.framework in Frameworks */,
 				CCDCC0791576287900D4B4D3 /* CoreLocation.framework in Frameworks */,
@@ -1138,8 +1135,7 @@
 				52CF43A214BDF2F9000565D6 /* Foundation.framework in Frameworks */,
 				52CF43A414BDF2F9000565D6 /* CoreGraphics.framework in Frameworks */,
 				52CF43A614BDF2F9000565D6 /* CoreData.framework in Frameworks */,
-				522C0E6715588D830072ADD6 /* libTestFlight.a in Frameworks */,
-				CC9370D915BFB97200A09A5A /* libFlurry.a in Frameworks */,
+				5258A89F160D617800871875 /* libTestFlight.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1157,18 +1153,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		522C0E6215588D830072ADD6 /* TestFlightSDK1 */ = {
-			isa = PBXGroup;
-			children = (
-				522C0E6315588D830072ADD6 /* libTestFlight.a */,
-				522C0E6415588D830072ADD6 /* README.txt */,
-				522C0E6515588D830072ADD6 /* release_notes.txt */,
-				522C0E6615588D830072ADD6 /* TestFlight.h */,
-			);
-			name = TestFlightSDK1;
-			path = "Network Commuting/TestFlightSDK1";
-			sourceTree = "<group>";
-		};
 		5231E15F14E42FE100739DC7 /* RestKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -2492,6 +2476,16 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		5258A89A160D617800871875 /* TestFlightSDK1-1 */ = {
+			isa = PBXGroup;
+			children = (
+				5258A89B160D617800871875 /* libTestFlight.a */,
+				5258A89E160D617800871875 /* TestFlight.h */,
+			);
+			name = "TestFlightSDK1-1";
+			path = "Network Commuting/TestFlightSDK1-1";
+			sourceTree = "<group>";
+		};
 		52C10382160BD86700BC6020 /* Locations model */ = {
 			isa = PBXGroup;
 			children = (
@@ -2559,7 +2553,7 @@
 				52E4C09E15CB7D2F00B55A65 /* App-icon@2x.png */,
 				52E4C0A015CC705000B55A65 /* Default.png */,
 				52E4C0A215CC705D00B55A65 /* Default@2x.png */,
-				522C0E6215588D830072ADD6 /* TestFlightSDK1 */,
+				5258A89A160D617800871875 /* TestFlightSDK1-1 */,
 				5231E15F14E42FE100739DC7 /* RestKit */,
 				525442AD14C3EA95004B0E1F /* RestKit.xcodeproj */,
 				52CF43A714BDF2F9000565D6 /* Nimbler */,
@@ -3096,8 +3090,6 @@
 			files = (
 				52CF43AC14BDF2F9000565D6 /* InfoPlist.strings in Resources */,
 				52B302C614BE2B1E00EB4852 /* ToFromViewController.xib in Resources */,
-				522C0E6815588D830072ADD6 /* README.txt in Resources */,
-				522C0E6915588D830072ADD6 /* release_notes.txt in Resources */,
 				CC578A03156520B60057D5A7 /* feedback.png in Resources */,
 				CCB7E812157090380036E9CD /* FeedBackForm.xib in Resources */,
 				CC9E424D15821B7B00A4ADED /* map.png in Resources */,
@@ -3462,12 +3454,13 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1\"",
+					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1-1\"",
 					"\"$(SRCROOT)/Flurry\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
+					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
 				PROVISIONING_PROFILE = "0B09D368-9E32-4D0A-A2D0-D948FBA48B00";
@@ -3494,12 +3487,13 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1\"",
+					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1-1\"",
 					"\"$(SRCROOT)/Flurry\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
+					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
 				PROVISIONING_PROFILE = "0B09D368-9E32-4D0A-A2D0-D948FBA48B00";

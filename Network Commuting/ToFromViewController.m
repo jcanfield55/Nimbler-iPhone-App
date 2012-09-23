@@ -13,7 +13,6 @@
 #import "RouteOptionsViewController.h"
 #import "Leg.h"
 #import "PlanStore.h"
-#import "TestFlightSDK1/TestFlight.h"
 #import "Itinerary.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "FeedBackForm.h"
@@ -51,7 +50,6 @@
     BOOL savetrip;
     double startButtonClickTime;
     float durationOfResponseTime;
-    UIActivityIndicatorView* activityIndicator;
     NSTimer* activityTimer;
     RouteOptionsViewController *routeOptionsVC; 
     LocationPickerViewController *locationPickerVC;
@@ -102,6 +100,7 @@
 @synthesize continueGetTime;
 @synthesize plan;
 @synthesize timerGettingRealDataByItinerary;
+@synthesize activityIndicator;
 
 @synthesize datePicker,toolBar,departArriveSelector,date,btnDone,btnNow;
 // Constants for animating up and down the To: field
@@ -977,7 +976,7 @@ UIImage *imageDetailDisclosure;
 {
     [self stopActivityIndicator];
     durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime;
-    NIMLOG_EVENT1(@"Plan =%@",newPlan);
+    NIMLOG_OBJECT1(@"Plan =%@",newPlan);
     if (status == STATUS_OK) {
         plan = newPlan;
         savetrip = FALSE;
@@ -1379,17 +1378,26 @@ UIImage *imageDetailDisclosure;
 -(void)getRealTimeDataForItinerary{
     @try {
         NSMutableString *strItineraries = [[NSMutableString alloc] init];
+        NSDate *currentDate = [NSDate date];
+        currentDate = dateOnlyFromDate(currentDate);
         for (int i= 0; i< [[plan sortedItineraries] count]; i++) {
             Itinerary *itin = [[plan sortedItineraries] objectAtIndex:i];
-            [strItineraries appendFormat:@"%@,",[itin itinId]];
+            NSDate *itineraryCreationdate = [itin startTime];
+            itineraryCreationdate = dateOnlyFromDate(itineraryCreationdate);
+            NSComparisonResult result = [currentDate compare:itineraryCreationdate];  
+            if (result != NSOrderedAscending){
+                [strItineraries appendFormat:@"%@,",[itin itinId]];
+            }
         }
-        [strItineraries deleteCharactersInRange:NSMakeRange([strItineraries length]-1, 1)];
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];  
-        NSDictionary *tempDictionary =[NSDictionary dictionaryWithObjectsAndKeys:strItineraries,ITINERARY_ID,@"true",FOR_TODAY, nil ];
-        NSString *req = [LIVE_FEEDS_BY_ITINERARIES_URL appendQueryParams:tempDictionary];
-        [[RKClient sharedClient]  get:req  delegate:self];
-        isContinueGetRealTimeData = YES;
+        if(strItineraries.length > 0){
+            [strItineraries deleteCharactersInRange:NSMakeRange([strItineraries length]-1, 1)];
+            RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+            [RKClient setSharedClient:client];  
+            NSDictionary *tempDictionary =[NSDictionary dictionaryWithObjectsAndKeys:strItineraries,ITINERARY_ID,@"true",FOR_TODAY, nil ];
+            NSString *req = [LIVE_FEEDS_BY_ITINERARIES_URL appendQueryParams:tempDictionary];
+            [[RKClient sharedClient]  get:req  delegate:self];
+            isContinueGetRealTimeData = YES;
+        }
     }
     @catch (NSException *exception) {
         logException(@"ToFromViewController->getRealTimeDataForItinerary", @"", exception);

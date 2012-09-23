@@ -244,7 +244,7 @@ NSUserDefaults *prefs;
     @catch (NSException *exception) {
         logException(@"RouteDetailsViewController->viewWillAppear", @"", exception);
     }
-    [self test:0];
+    [self setFBParamater:0];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -371,10 +371,10 @@ NSUserDefaults *prefs;
 - (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self setItineraryNumber:[indexPath row]];
-    [self test:[indexPath row]];
+    [self setFBParamater:[indexPath row]];
 }
 
--(void)test:(int)ss
+-(void)setFBParamater:(int)ss
 {
     @try {
         Leg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:ss];
@@ -402,7 +402,7 @@ NSUserDefaults *prefs;
 - (IBAction)navigateBack:(id)sender {
     if ([self itineraryNumber] > 0) {
         [self setItineraryNumber:([self itineraryNumber] - 1)];
-         [self test:itineraryNumber];
+         [self setFBParamater:itineraryNumber];
         [legMapVC refreshLegOverlay:itineraryNumber];
     }
 }
@@ -411,7 +411,7 @@ NSUserDefaults *prefs;
 - (IBAction)navigateForward:(id)sender {
     if ([self itineraryNumber] < [itinerary itineraryRowCount] - 1) {
         [self setItineraryNumber:([self itineraryNumber] + 1)];
-        [self test:itineraryNumber];
+        [self setFBParamater:itineraryNumber];
         [legMapVC refreshLegOverlay:itineraryNumber];
     }
     

@@ -7,7 +7,6 @@
 //
 
 #import "LegMapViewController.h"
-#import "TestFlightSDK1/TestFlight.h"
 #import "MyAnnotation.h"
 #import "Step.h"
 #import "twitterViewController.h"

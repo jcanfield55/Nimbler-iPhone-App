@@ -17,7 +17,7 @@
 
 #define TRIP_PROCESS_URL    @"http://23.23.210.156:8080/TPServer/ws/"
 
-//#define TRIP_PROCESS_URL      @"http://192.168.2.135:8080/TPServer/ws/"
+//#define TRIP_PROCESS_URL      @"http://192.168.2.148:8080/TPServer/ws/"
 
 #define TWITTER_SERARCH_URL    @"https://twitter.com/#!/search/realtime/TRAIN%20from%3Acaltrain%20OR%20from%3Acaltrain_news"
 #define CALTRAIN_TWITTER_URL   @"https://twitter.com/#!/search/from%3Acaltrain%20OR%20from%3Acaltrain_news"
@@ -227,6 +227,11 @@
 #define ITINERARY_ID                   @"itineraryid"
 #define LIVE_FEEDS_BY_ITINERARIES_URL  @"livefeeds/itineraries"
 #define FOR_TODAY                      @"forToday"
+
+
+#define APP_TITLE                      @"Nimbler Caltrain"
+#define ROUTE_NOT_POSSIBLE_MSG         @"Route is not possible"
+#define OK_BUTTON_TITLE                @"OK"
 
 
 
