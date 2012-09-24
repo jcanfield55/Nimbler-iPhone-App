@@ -32,6 +32,7 @@
 @synthesize switchPushEnable;
 @synthesize btnUpdateSetting;
 @synthesize lblSliderMaxWalkDistanceValue;
+@synthesize managedObjectContext;
 
 int pushHour;
 bool isPush;
@@ -58,6 +59,7 @@ bool isPush;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.managedObjectContext = [nc_AppDelegate sharedInstance].managedObjectContext;
     if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
         [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
     }
@@ -151,9 +153,10 @@ bool isPush;
         userPrefs.pushEnable = [NSNumber numberWithBool:isPush];
         userPrefs.triggerAtHour = [NSNumber numberWithInt:alertFrequencyIntValue];
         userPrefs.walkDistance = [NSNumber numberWithFloat:sliderMaxWalkDistance.value];
-      
+      // US 161 Implementation 
         if(![[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_MAX_WALK_DISTANCE] isEqual:userPrefs.walkDistance]){
-            [[nc_AppDelegate sharedInstance] clearCache];
+            PlanStore *planStrore = [[PlanStore alloc] initWithManagedObjectContext:self.managedObjectContext rkPlanMgr:nil];
+            [planStrore  clearCache];
         }
         
         [userPrefs saveUpdates];

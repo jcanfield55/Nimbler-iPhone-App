@@ -25,6 +25,10 @@
 @synthesize calendarByDateByAgency;
 @synthesize serviceByWeekdayByAgency;
 
+@synthesize testCalendarByDateByAgency;
+@synthesize testLastGTFSLoadDateByAgency;
+@synthesize testServiceByWeekdayByAgency;
+
 static TransitCalendar * transitCalendarSingleton;
 
 
@@ -187,9 +191,9 @@ static TransitCalendar * transitCalendarSingleton;
     NIMLOG_EVENT1(@"dictlastGTFSLoadDateMutable=%@",dictlastGTFSLoadDateMutable);
     NSDictionary *dictServiceByWeekdayMutable = [NSDictionary dictionaryWithObject:serviceByWeekdayMutable forKey:GTFS_SERVICE_BY_WEEKDAY];
     NSDictionary *dictCalendarByDateMutable = [NSDictionary dictionaryWithObject:calendarByDateMutable forKey:GTFS_SERVICE_EXCEPTIONS_DATES];
-    [nc_AppDelegate sharedInstance].lastGTFSLoadDateByAgency = dictlastGTFSLoadDateMutable;
-    [nc_AppDelegate sharedInstance].serviceByWeekdayByAgency = dictServiceByWeekdayMutable;
-    [nc_AppDelegate sharedInstance].calendarByDateByAgency = dictCalendarByDateMutable;
+    testLastGTFSLoadDateByAgency = dictlastGTFSLoadDateMutable;
+    testServiceByWeekdayByAgency = dictServiceByWeekdayMutable;
+    testCalendarByDateByAgency = dictCalendarByDateMutable;
     
 //    [nc_AppDelegate sharedInstance].lastGTFSLoadDateByAgency = lastGTFSLoadDateMutable;
 //    [nc_AppDelegate sharedInstance].serviceByWeekdayByAgency = serviceByWeekdayMutable;

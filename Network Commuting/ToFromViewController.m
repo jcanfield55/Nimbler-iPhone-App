@@ -1295,7 +1295,8 @@ UIImage *imageDetailDisclosure;
 #pragma mark RKResponse Delegate method
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     @try {
-       // if (isContinueGetRealTimeData) {
+        // DE 175 Fixed
+        if (isContinueGetRealTimeData) {
             if ([request isGET]) {       
                 NIMLOG_EVENT1(@"response %@", [response bodyAsString]);
                 isContinueGetRealTimeData = NO;
@@ -1304,7 +1305,7 @@ UIImage *imageDetailDisclosure;
                 [routeOptionsVC setIsReloadRealData:false];
                 [routeOptionsVC setLiveFeed:res];
             } 
-        //}
+        }
         if ([request isPOST]) {                      
         } 
     }  @catch (NSException *exception) {
@@ -1357,26 +1358,27 @@ UIImage *imageDetailDisclosure;
 }
 
 // Get RealTime Data By Plan 
--(void)getRealTimeData
-{
-    @try {
-        isContinueGetRealTimeData = YES;
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];   
-        NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
-                              PLAN_ID,[plan planId] ,
-                              nil];
-        NSString *req = [LIVE_FEEDS_BY_PLAN_URL appendQueryParams:dict];
-        [[RKClient sharedClient]  get:req  delegate:self];  
-    }
-    @catch (NSException *exception) {
-        logException(@"ToFromViewController->getRealTimeData", @"", exception);
-    }
-}
+//-(void)getRealTimeData
+//{
+//    @try {
+//        isContinueGetRealTimeData = YES;
+//        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+//        [RKClient setSharedClient:client];   
+//        NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
+//                              PLAN_ID,[plan planId] ,
+//                              nil];
+//        NSString *req = [LIVE_FEEDS_BY_PLAN_URL appendQueryParams:dict];
+//        [[RKClient sharedClient]  get:req  delegate:self];  
+//    }
+//    @catch (NSException *exception) {
+//        logException(@"ToFromViewController->getRealTimeData", @"", exception);
+//    }
+//}
 
 // Get RealTime Data By Itinerary
 -(void)getRealTimeDataForItinerary{
     @try {
+        isContinueGetRealTimeData = YES;
         NSMutableString *strItineraries = [[NSMutableString alloc] init];
         NSDate *currentDate = [NSDate date];
         currentDate = dateOnlyFromDate(currentDate);
@@ -1396,7 +1398,6 @@ UIImage *imageDetailDisclosure;
             NSDictionary *tempDictionary =[NSDictionary dictionaryWithObjectsAndKeys:strItineraries,ITINERARY_ID,@"true",FOR_TODAY, nil ];
             NSString *req = [LIVE_FEEDS_BY_ITINERARIES_URL appendQueryParams:tempDictionary];
             [[RKClient sharedClient]  get:req  delegate:self];
-            isContinueGetRealTimeData = YES;
         }
     }
     @catch (NSException *exception) {
@@ -1516,6 +1517,7 @@ UIImage *imageDetailDisclosure;
 - (void)selectDate {
     [self.mainTable setUserInteractionEnabled:YES];
      [self.navigationController.navigationBar setUserInteractionEnabled:YES];
+    [nc_AppDelegate sharedInstance].isDatePickerOpen = NO;
     [self showTabbar];
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
@@ -1536,6 +1538,7 @@ UIImage *imageDetailDisclosure;
 
 - (void)selectCurrentDate {
     [self.navigationController.navigationBar setUserInteractionEnabled:YES];
+    [nc_AppDelegate sharedInstance].isDatePickerOpen = NO;
     [self.mainTable setUserInteractionEnabled:YES];
     [self showTabbar];
     [UIView beginAnimations:nil context:nil];
@@ -1557,6 +1560,7 @@ UIImage *imageDetailDisclosure;
 
 - (IBAction)openPickerView:(id)sender {
     [self.mainTable setUserInteractionEnabled:NO];
+    [nc_AppDelegate sharedInstance].isDatePickerOpen = YES;
      [self.navigationController.navigationBar setUserInteractionEnabled:NO];
     toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 450, 320, 44)];
     [toolBar setTintColor:[UIColor darkGrayColor]];

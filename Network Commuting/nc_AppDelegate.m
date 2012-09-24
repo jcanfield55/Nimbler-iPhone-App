@@ -63,6 +63,7 @@ static nc_AppDelegate *appDelegate;
 @synthesize serviceByWeekdayByAgency;
 @synthesize calendarByDateByAgency;
 @synthesize timerType;
+@synthesize isDatePickerOpen;
 
 
 // Feedback parameters
@@ -906,6 +907,12 @@ FeedBackForm *fbView;
         [self.window addSubview:twitterCount];
         [twitterCount setHidden:NO];
     }
+    if(isDatePickerOpen){
+        [twitterCount setHidden:YES];
+    }
+    else{
+        [twitterCount setHidden:NO];
+    }
 }
 
 -(void)isNetworkConnectionLive
@@ -921,21 +928,5 @@ FeedBackForm *fbView;
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:ALERT_NETWORK delegate:self cancelButtonTitle:BTN_EXIT otherButtonTitles:BTN_CANCEL, nil];
         [alert show];
     } 
-}
-// Partial Implementation Of Clearing PlanCache
-// Get The All PlanRequestChunk and delete them when max walk distance change.
-- (void)clearCache{ 
-    NSError *error;
-    NSManagedObjectContext * context = [self managedObjectContext];
-    NSFetchRequest * fetch = [[NSFetchRequest alloc] init];
-    [fetch setEntity:[NSEntityDescription entityForName:@"PlanRequestChunk" inManagedObjectContext:context]];
-    NSArray * result = [context executeFetchRequest:fetch error:nil];
-    for (id basket in result){
-        [context deleteObject:basket];
-    }
-    [context save:&error];
-    if(error){
-        NIMLOG_ERR1(@"Error While Clearing Cache:%@",error);
-    }
 }
 @end
