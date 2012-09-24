@@ -28,6 +28,12 @@
 //   The returned object is a string describing the services available for that day
 @property(strong, nonatomic) NSDictionary* calendarByDateByAgency;
 
+
+// Added for Automation Tests
+
+@property(strong, nonatomic) NSDictionary* testLastGTFSLoadDateByAgency;
+@property(strong, nonatomic) NSDictionary* testServiceByWeekdayByAgency;
+@property(strong, nonatomic) NSDictionary* testCalendarByDateByAgency;
 //
 // Methods
 //

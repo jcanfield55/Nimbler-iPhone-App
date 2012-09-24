@@ -270,10 +270,12 @@ NSUserDefaults *prefs;
     NSNumber *respCode = [(NSDictionary*)twitterData objectForKey:ERROR_CODE];
     
     if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
-        arrayTweet = [(NSDictionary*)twitterData objectForKey:TWEET]; 
+        // DE-173 Fixed
+        [arrayTweet removeAllObjects];
+        [arrayTweet addObjectsFromArray:[(NSDictionary*)twitterData objectForKey:TWEET]]; 
         [mainTable reloadData];
     } else if ([respCode intValue] == RESPONSE_DATA_NOT_EXIST) {
-        arrayTweet = nil; 
+      [arrayTweet removeAllObjects]; 
         [mainTable reloadData];
     }
     [self stopProcessForGettingTweets];

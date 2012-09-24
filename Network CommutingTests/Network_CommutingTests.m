@@ -218,9 +218,10 @@
     KeyObjectStore* store = [KeyObjectStore keyObjectStore];
     TransitCalendar* transitCalendar = [[TransitCalendar alloc] init];
     [transitCalendar getAgencyCalendarDataStub];
-    [store setObject:[nc_AppDelegate sharedInstance].serviceByWeekdayByAgency forKey:TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY];
-    [store setObject:[nc_AppDelegate sharedInstance].lastGTFSLoadDateByAgency forKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
-    [store setObject:[nc_AppDelegate sharedInstance].calendarByDateByAgency forKey:TR_CALENDAR_BY_DATE_BY_AGENCY];
+    // Stored Dictionaries In DB With Data from getAgencyCalendarDataStub
+    [store setObject:transitCalendar.testServiceByWeekdayByAgency forKey:TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY];
+    [store setObject:transitCalendar.testLastGTFSLoadDateByAgency forKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
+    [store setObject:transitCalendar.testCalendarByDateByAgency forKey:TR_CALENDAR_BY_DATE_BY_AGENCY];
     
     // Plan1 -- 3 itineraries starting 
     leg10.startTime = date10;

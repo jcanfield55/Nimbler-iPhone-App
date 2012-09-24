@@ -49,6 +49,7 @@
 
 // Generate Random String of length 16
 - (NSString *)generateRandomString;
+- (void)clearCache;
 
 
 @end

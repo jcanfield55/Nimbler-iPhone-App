@@ -22,7 +22,6 @@
     int      enableUrgentSoundFlag;
     int      enableStandardSoundFlag;
     UILabel *lblSliderMaxWalkDistanceValue;
-   
 }
 
 @property (nonatomic, strong) IBOutlet UISwitch *switchPushEnable;
@@ -34,6 +33,7 @@
 @property (nonatomic)   int      enableUrgentSoundFlag;
 @property (nonatomic)   int      enableStandardSoundFlag;
 @property (nonatomic, strong) UILabel *lblSliderMaxWalkDistanceValue;
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 
 -(IBAction)UpdateSetting:(id)sender;
 -(IBAction)sliderWalkDistanceValueChanged:(UISlider *)sender;

@@ -151,9 +151,10 @@ bool isPush;
         userPrefs.pushEnable = [NSNumber numberWithBool:isPush];
         userPrefs.triggerAtHour = [NSNumber numberWithInt:alertFrequencyIntValue];
         userPrefs.walkDistance = [NSNumber numberWithFloat:sliderMaxWalkDistance.value];
-      
+      // US 161 Implementation 
         if(![[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_MAX_WALK_DISTANCE] isEqual:userPrefs.walkDistance]){
-            [[nc_AppDelegate sharedInstance] clearCache];
+            PlanStore *planStrore = [[nc_AppDelegate sharedInstance] planStore];
+            [planStrore  clearCache];
         }
         
         [userPrefs saveUpdates];

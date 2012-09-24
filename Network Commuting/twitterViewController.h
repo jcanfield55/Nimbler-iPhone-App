@@ -15,7 +15,7 @@
 }
 
 @property (strong, nonatomic) IBOutlet UITableView* mainTable;
-@property (nonatomic, retain) id twitterData;
+@property (nonatomic, strong) id twitterData;
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
 @property (nonatomic, strong) UIBarButtonItem *reload;
 @property (nonatomic) BOOL isFromAppDelegate;

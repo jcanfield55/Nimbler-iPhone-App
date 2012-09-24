@@ -42,6 +42,7 @@
     NSDictionary* lastGTFSLoadDateByAgency;
     NSDictionary* serviceByWeekdayByAgency;
     NSDictionary* calendarByDateByAgency;
+    BOOL isDatePickerOpen;
 }
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
@@ -82,6 +83,8 @@
 @property(strong, nonatomic) NSDictionary* serviceByWeekdayByAgency;
 @property(strong, nonatomic) NSDictionary* calendarByDateByAgency;
 @property (nonatomic, strong) NSString *timerType;
+
+@property (nonatomic) BOOL isDatePickerOpen;
 
 - (NSURL *)applicationDocumentsDirectory;
 
