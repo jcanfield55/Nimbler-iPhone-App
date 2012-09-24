@@ -24,8 +24,18 @@ typedef enum {
 } DepartOrArrive;
 
 typedef enum {
-    STATUS_OK,
-    GENERIC_EXCEPTION  // Provide an error saying we are unable to perform route
+    PLAN_STATUS_OK,
+    PLAN_GENERIC_EXCEPTION,  // Provide an error saying we are unable to perform route
+    PLAN_NO_NETWORK
 } PlanRequestStatus;
+
+typedef enum {
+    GEOCODE_STATUS_OK,
+    GEOCODE_ZERO_RESULTS,
+    GEOCODE_OVER_QUERY_LIMIT,
+    GEOCODE_REQUEST_DENIED,
+    GEOCODE_GENERIC_ERROR,
+    GEOCODE_NO_NETWORK
+} GeocodeRequestStatus;
 
 #endif

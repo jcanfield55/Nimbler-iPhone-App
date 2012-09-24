@@ -30,6 +30,7 @@
 		5258A898160D5DCA00871875 /* libFlurry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC9370D815BFB97200A09A5A /* libFlurry.a */; };
 		5258A89F160D617800871875 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5258A89B160D617800871875 /* libTestFlight.a */; };
 		525C20F9151D3AF5004F8FE0 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
+		526569DC160E997B0048CFFD /* GeocodeRequestParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 526569DB160E997B0048CFFD /* GeocodeRequestParameters.m */; };
 		5265D4BA15E19E8D002C9406 /* PlanStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 5265D4B915E19E8D002C9406 /* PlanStore.m */; };
 		5271994015D9B092007D05FA /* img_legTrain.png in Resources */ = {isa = PBXBuildFile; fileRef = 5271993415D9B092007D05FA /* img_legTrain.png */; };
 		5271994115D9B092007D05FA /* img_legTrain@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5271993515D9B092007D05FA /* img_legTrain@2x.png */; };
@@ -904,6 +905,8 @@
 		5258A89B160D617800871875 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		5258A89E160D617800871875 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		525C20F8151D3AF5004F8FE0 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		526569DA160E997B0048CFFD /* GeocodeRequestParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeocodeRequestParameters.h; sourceTree = "<group>"; };
+		526569DB160E997B0048CFFD /* GeocodeRequestParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeocodeRequestParameters.m; sourceTree = "<group>"; };
 		5265D4B815E19E8D002C9406 /* PlanStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanStore.h; sourceTree = "<group>"; };
 		5265D4B915E19E8D002C9406 /* PlanStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlanStore.m; sourceTree = "<group>"; };
 		5265D4BB15E1A167002C9406 /* Network_Commuting 1.4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.4.xcdatamodel"; sourceTree = "<group>"; };
@@ -2489,14 +2492,10 @@
 		52C10382160BD86700BC6020 /* Locations model */ = {
 			isa = PBXGroup;
 			children = (
-				52F67EDF14C752C4007578D5 /* LatLng.h */,
-				52F67EE014C752C4007578D5 /* LatLng.m */,
-				52F67EE614C75C36007578D5 /* AddressComponent.h */,
-				52F67EE714C75C36007578D5 /* AddressComponent.m */,
-				52F67EE914C76504007578D5 /* GeoRectangle.h */,
-				52F67EEA14C76504007578D5 /* GeoRectangle.m */,
 				5231E43714E5DE7E00739DC7 /* Locations.h */,
 				5231E43814E5DE7E00739DC7 /* Locations.m */,
+				526569DA160E997B0048CFFD /* GeocodeRequestParameters.h */,
+				526569DB160E997B0048CFFD /* GeocodeRequestParameters.m */,
 				52B3031D14BE946000EB4852 /* Location.h */,
 				52B3031E14BE946000EB4852 /* Location.m */,
 				52C1037C160BCF9F00BC6020 /* LocationFromGoogle.h */,
@@ -2505,6 +2504,12 @@
 				52C10380160BD84500BC6020 /* LocationFromIOS.m */,
 				5231E43A14E9E7A300739DC7 /* RawAddress.h */,
 				5231E43B14E9E7A400739DC7 /* RawAddress.m */,
+				52F67EDF14C752C4007578D5 /* LatLng.h */,
+				52F67EE014C752C4007578D5 /* LatLng.m */,
+				52F67EE614C75C36007578D5 /* AddressComponent.h */,
+				52F67EE714C75C36007578D5 /* AddressComponent.m */,
+				52F67EE914C76504007578D5 /* GeoRectangle.h */,
+				52F67EEA14C76504007578D5 /* GeoRectangle.m */,
 			);
 			name = "Locations model";
 			sourceTree = "<group>";
@@ -2512,26 +2517,22 @@
 		52C10383160BD89200BC6020 /* PlanStore model */ = {
 			isa = PBXGroup;
 			children = (
-				52BA735A14F78A6C00F7B9B3 /* Leg.h */,
-				52BA735B14F78A6C00F7B9B3 /* Leg.m */,
-				52BA735414F789FD00F7B9B3 /* Itinerary.h */,
-				52BA735514F789FD00F7B9B3 /* Itinerary.m */,
-				52BA735714F78A3C00F7B9B3 /* Step.h */,
-				52BA735814F78A3C00F7B9B3 /* Step.m */,
-				5210516E14C9C0DF0025DD39 /* Plan.h */,
-				5210516F14C9C0DF0025DD39 /* Plan.m */,
 				5265D4B815E19E8D002C9406 /* PlanStore.h */,
 				5265D4B915E19E8D002C9406 /* PlanStore.m */,
 				5289CF1A15EEE8BD005843EB /* PlanRequestParameters.h */,
 				5289CF1B15EEE8BE005843EB /* PlanRequestParameters.m */,
+				5210516E14C9C0DF0025DD39 /* Plan.h */,
+				5210516F14C9C0DF0025DD39 /* Plan.m */,
 				529D7D2A15E5EC2E000A7D2F /* PlanRequestChunk.h */,
 				529D7D2B15E5EC43000A7D2F /* PlanRequestChunk.m */,
 				523C0CDE15E4421D00C35BE2 /* TransitCalendar.h */,
 				523C0CDF15E4421D00C35BE2 /* TransitCalendar.m */,
-				523C0CE415E45F3F00C35BE2 /* KeyObjectStore.h */,
-				523C0CE515E45F3F00C35BE2 /* KeyObjectStore.m */,
-				523C0CE115E45A9800C35BE2 /* KeyObjectPair.h */,
-				523C0CE215E45A9900C35BE2 /* KeyObjectPair.m */,
+				52BA735414F789FD00F7B9B3 /* Itinerary.h */,
+				52BA735514F789FD00F7B9B3 /* Itinerary.m */,
+				52BA735A14F78A6C00F7B9B3 /* Leg.h */,
+				52BA735B14F78A6C00F7B9B3 /* Leg.m */,
+				52BA735714F78A3C00F7B9B3 /* Step.h */,
+				52BA735814F78A3C00F7B9B3 /* Step.m */,
 				5210517114D60F3B0025DD39 /* PlanPlace.h */,
 				5210517214D60F3B0025DD39 /* PlanPlace.m */,
 				5210517414D610780025DD39 /* AgencyAndId.h */,
@@ -2856,6 +2857,10 @@
 				52B7421D14E1FFA200D817D1 /* UtilityFunctions.m */,
 				CCEA69A2158A034C00E97592 /* FeedBackReqParam.h */,
 				CCEA69A3158A034C00E97592 /* FeedBackReqParam.m */,
+				523C0CE415E45F3F00C35BE2 /* KeyObjectStore.h */,
+				523C0CE515E45F3F00C35BE2 /* KeyObjectStore.m */,
+				523C0CE115E45A9800C35BE2 /* KeyObjectPair.h */,
+				523C0CE215E45A9900C35BE2 /* KeyObjectPair.m */,
 			);
 			name = util;
 			sourceTree = "<group>";
@@ -3282,6 +3287,7 @@
 				5289CF1C15EEE8BE005843EB /* PlanRequestParameters.m in Sources */,
 				52C1037E160BCF9F00BC6020 /* LocationFromGoogle.m in Sources */,
 				52C10381160BD84500BC6020 /* LocationFromIOS.m in Sources */,
+				526569DC160E997B0048CFFD /* GeocodeRequestParameters.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

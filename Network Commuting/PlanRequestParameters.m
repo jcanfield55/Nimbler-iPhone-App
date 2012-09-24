@@ -30,8 +30,6 @@
 @synthesize fromType;
 @synthesize toType;
 @synthesize rawAddressFROM;
-@synthesize geoResponseFROM;
-@synthesize geoResponseTO;
 @synthesize timeFROM;
 @synthesize timeTO;
 @synthesize rawAddressTO;
@@ -58,8 +56,6 @@
     newParameters.fromType = parameters0.fromType;
     newParameters.toType = parameters0.toType;
     newParameters.rawAddressFROM = parameters0.rawAddressFROM;
-    newParameters.geoResponseFROM = parameters0.geoResponseFROM;
-    newParameters.geoResponseTO = parameters0.geoResponseTO;
     newParameters.timeFROM = parameters0.timeFROM;
     newParameters.timeTO = parameters0.timeTO;
     newParameters.rawAddressTO = parameters0.rawAddressTO;

@@ -13,8 +13,22 @@
 #import <RestKit/RestKit.h>
 #import <RestKit/CoreData.h>
 #import "Location.h"
+#import "GeocodeRequestParameters.h"
 
-@interface Locations : NSObject 
+// Callback protocol used for objects calling geocoder methods
+@protocol LocationsGeocodeResultsDelegate
+
+@required
+
+/**
+ * Returns an array of locations from the geocoder (could be empty) and a status code.  
+ */
+-(void)newGeocodeResults:(NSArray *)locationArray withStatus:(GeocodeRequestStatus)status;
+
+@end
+
+
+@interface Locations : NSObject <RKObjectLoaderDelegate>
 
 @property (strong, nonatomic) NSString *typedFromString;  // Typed string in the from field 
 @property (strong, nonatomic) NSString *typedToString;    // Typed string in the to field
@@ -28,8 +42,6 @@
 
 @property (strong, nonatomic) NSString *rawAddressTo;
 @property (strong, nonatomic) NSString *rawAddressFrom;
-@property (strong, nonatomic) NSString *geoRespTo;
-@property (strong, nonatomic) NSString *geoRespFrom;
 @property (strong, nonatomic) NSString *geoRespTimeTo;
 @property (strong, nonatomic) NSString *geoRespTimeFrom;
 @property (nonatomic) BOOL isFromGeo;
@@ -62,5 +74,14 @@
 - (void)removeLocation:(Location *)loc0;  // Remove location from Core Data
 - (void)updateSelectedLocation:(Location *)sL isFrom:(BOOL)isFrom;
 
+// Geocoding functions
+
+// Requests a forward geocode with the supplied parameters
+// Will get plan from the cache if available and will call OTP if not
+// Will call back the newPlanAvailable method on toFromVC when the first plan is available
+// Will continue to call OTP iteratively to obtain other itineraries up to the designated max # and time
+// After returning the first itinerary, it will call the newPlanAvailable method on routeOptionsVC each
+// time it has an update
+- (void)forwardGeocodeWithParameters:(GeocodeRequestParameters *)parameters callBack:(id <LocationsGeocodeResultsDelegate>)delegate;
 
 @end

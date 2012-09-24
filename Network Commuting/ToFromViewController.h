@@ -24,7 +24,7 @@ typedef enum {
 } ToFromEditMode;
 
 
-@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,RKRequestDelegate,UIActionSheetDelegate,UIAlertViewDelegate>
+@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate, RKRequestDelegate,UIActionSheetDelegate,UIAlertViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView* mainTable;  // grouped table for main page layout
 @property (strong, nonatomic) UITableView *fromTable;  // from table embedded in mainTable

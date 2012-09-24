@@ -81,7 +81,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 366;
 // Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
 -(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status
 {
-    if (status == STATUS_OK) {
+    if (status == PLAN_STATUS_OK) {
         [mainTable reloadData];
     }
 }

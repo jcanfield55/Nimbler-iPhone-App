@@ -226,11 +226,11 @@ NSUserDefaults *prefs;
         if ([request isGET]) {
             if (isTwitterLiveData) {
                 isTwitterLiveData = false;
-                NIMLOG_EVENT1(@"response %@", [response bodyAsString]);
+                NIMLOG_TWITTER1(@"Twitter response %@", [response bodyAsString]);
                 id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];                
                 [self setTwitterLiveData:res];
             } else {
-                NIMLOG_EVENT1(@"latest tweets: %@", [response bodyAsString]);
+                NIMLOG_TWITTER1(@"latest tweets: %@", [response bodyAsString]);
                 id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];
                 NSNumber *respCode = [(NSDictionary*)res objectForKey:ERROR_CODE];
                 int tc = [[(NSDictionary*)res objectForKey:TWIT_COUNT] intValue];

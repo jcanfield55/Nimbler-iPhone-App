@@ -83,7 +83,7 @@
             [Flurry logEvent: FLURRY_ROUTE_FROM_CACHE withParameters:flurryParams];
 #endif
             [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
-            PlanRequestStatus status = STATUS_OK;
+            PlanRequestStatus status = PLAN_STATUS_OK;
             if(toFromVC.timerGettingRealDataByItinerary != nil){
                 [toFromVC.timerGettingRealDataByItinerary invalidate];
                 toFromVC.timerGettingRealDataByItinerary = nil; 
@@ -181,17 +181,11 @@
     if(parameters.rawAddressFROM){
         [params setObject:parameters.rawAddressFROM forKey:RAW_ADDRESS_FROM];
     }
-    if(parameters.geoResponseFROM){
-        [params setObject:parameters.geoResponseFROM forKey:GEO_RES_FROM];
-    }
     if(parameters.timeFROM){
         [params setObject:parameters.timeFROM forKey:TIME_FROM];
     }
     if(parameters.rawAddressTO){
         [params setObject:parameters.rawAddressTO forKey:RAW_ADDRESS_TO];
-    }
-    if(parameters.geoResponseTO){
-        [params setObject:parameters.geoResponseTO forKey:GEO_RES_TO];
     }
     if(parameters.timeTO){
         [params setObject:parameters.timeTO forKey:TIME_TO];
@@ -200,7 +194,7 @@
     parameters.serverCallsSoFar = parameters.serverCallsSoFar + 1;
     // TODO handle changes to maxWalkDistance with plan caching
     NSString *requestID = [self generateRandomString];
-    NIMLOG_EVENT1(@"Submitted Request ID=%@",requestID);
+    NIMLOG_DEBUG1(@"Submitted Request ID=%@",requestID);
     [params setObject:requestID forKey:REQUEST_ID];
     planURLResource = requestID;
     [parametersByPlanURLResource setObject:parameters forKey:planURLResource];
@@ -222,7 +216,7 @@
         RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
         NSDictionary *tempResponseDictionary = [rkParser objectFromString:[[objectLoader response] bodyAsString] error:nil];
         NSString* strRequestID = [tempResponseDictionary objectForKey:REQUEST_ID];
-        NIMLOG_EVENT1(@"Retrieved Request ID=%@",strRequestID);
+        NIMLOG_DEBUG1(@"Retrieved Request ID=%@",strRequestID);
         if([[tempResponseDictionary objectForKey:CODE] intValue] == RESPONSE_SUCCESSFULL){
             if([tempResponseDictionary objectForKey:ERROR] && [nc_AppDelegate sharedInstance].isToFromView){
                 UIAlertView *alertView = [[UIAlertView alloc] init];
@@ -252,9 +246,9 @@
                 
                 // Call-back the appropriate RouteOptions VC with the new plan
                 if (planRequestParameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
-                    [routeOptionsVC newPlanAvailable:plan status:STATUS_OK];  
+                    [routeOptionsVC newPlanAvailable:plan status:PLAN_STATUS_OK];  
                 } else {
-                    [toFromVC newPlanAvailable:plan status:STATUS_OK];
+                    [toFromVC newPlanAvailable:plan status:PLAN_STATUS_OK];
                     if(toFromVC.timerGettingRealDataByItinerary != nil){
                         [toFromVC.timerGettingRealDataByItinerary invalidate];
                         toFromVC.timerGettingRealDataByItinerary = nil; 
@@ -268,7 +262,7 @@
     @catch (NSException *exception) {
         NIMLOG_ERR1(@"Exception while parsing TP response plan: %@", exception);
         if (planRequestParameters && planRequestParameters.planDestination == PLAN_DESTINATION_TO_FROM_VC) {
-            [toFromVC newPlanAvailable:nil status:GENERIC_EXCEPTION];
+            [toFromVC newPlanAvailable:nil status:PLAN_GENERIC_EXCEPTION];
             logException(@"PlanStore->objectLoader", @"Original request from ToFromVC", exception);
         } else {
             logException(@"PlanStore->objectLoader", @"Follow-up request to RouteOptionsVC", exception);
@@ -278,17 +272,37 @@
 
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error
 {
+    NIMLOG_ERR1(@"Error received from RKObjectManager: %@", error);
+    
+    PlanRequestStatus status;
+    NIMLOG_EVENT1(@"Plan RKError objectLoader params: %@", [objectLoader params]);
+    if ([[error localizedDescription] rangeOfString:@"client is unable to contact the resource"].location != NSNotFound) {
+#if FLURRY_ENABLED
+        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                FLURRY_RK_RESPONSE_ERROR, error, nil];
+        [Flurry logEvent:FLURRY_ROUTE_NO_NETWORK withParameters:params];
+#endif
+        status = PLAN_NO_NETWORK;
+    } else {
+#if FLURRY_ENABLED
+        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                FLURRY_RK_RESPONSE_ERROR, error, nil];
+        [Flurry logEvent:FLURRY_ROUTE_OTHER_ERROR withParameters:params];
+#endif
+        status = PLAN_GENERIC_EXCEPTION;
+    }
     NSString* resourcePath = [objectLoader resourcePath];
     PlanRequestParameters* parameters = [parametersByPlanURLResource objectForKey:resourcePath];
     if (!parameters) {
         NIMLOG_ERR1(@"RKObjectManager failure with no retrievable parameters.  Error: %@", error);
-    }
-    if ([parameters planDestination] == PLAN_DESTINATION_TO_FROM_VC) {
-        NIMLOG_ERR1(@"Error received from RKObjectManager on first call by ToFromViewController: %@", error);
-        [toFromVC newPlanAvailable:nil status:GENERIC_EXCEPTION];
-    }
-    else { // if target is RouteOptions, do not call routeOptions and do not alert user.  This was a backup request only
-        NIMLOG_ERR1(@"Error received from RKObjectManager on subsequent call RouteOptionsViewController: %@", error);
+    } else {
+        if ([parameters planDestination] == PLAN_DESTINATION_TO_FROM_VC) {
+            NIMLOG_ERR1(@"Error received from RKObjectManager on first call by ToFromViewController: %@", error);
+            [toFromVC newPlanAvailable:nil status:status];
+        }
+        else { // if target is RouteOptions, do not call routeOptions and do not alert user.  This was a backup request only
+            NIMLOG_ERR1(@"Error received from RKObjectManager on subsequent call RouteOptionsViewController: %@", error);
+        }
     }
 }
 

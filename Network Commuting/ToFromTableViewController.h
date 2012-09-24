@@ -20,7 +20,7 @@
 
 @class ToFromViewController;
 
-@interface ToFromTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate,UIAlertViewDelegate>
+@interface ToFromTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,UIAlertViewDelegate,LocationsGeocodeResultsDelegate>
 
 @property (nonatomic, unsafe_unretained) ToFromViewController* toFromVC;  // Parent view controller
 @property (strong, nonatomic) RKObjectManager *rkGeoMgr;  // RestKit Object Manager for geocoding
