@@ -245,10 +245,6 @@ NSUserDefaults *prefs;
                         [mainTable reloadData]; 
                     }
                 }
-                else if([respCode intValue] == RESPONSE_DATA_NOT_EXIST){
-                    [arrayTweet removeAllObjects];
-                    [mainTable reloadData];
-                }
                 else {
                     [mainTable reloadData];
                 }

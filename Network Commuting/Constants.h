@@ -237,6 +237,8 @@
 #define ROUTE_NOT_POSSIBLE_MSG         @"Route is not possible"
 #define OK_BUTTON_TITLE                @"OK"
 
+#define ALERT_TRIP_NOT_AVAILABLE       @"Sorry, we are unable to calculate a route for that To & From address"
+
 
 
 

@@ -265,9 +265,13 @@
                         [toFromVC.timerGettingRealDataByItinerary invalidate];
                         toFromVC.timerGettingRealDataByItinerary = nil; 
                     }
+                    // Added To Get Real Time Data Only When we are in RouteOptionsView
+                    
+                    [toFromVC getRealTimeDataForItinerary];
+                     toFromVC.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromVC selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
+                } else {
+                    [toFromVC newPlanAvailable:plan status:STATUS_OK];
                 }
-                [toFromVC getRealTimeDataForItinerary];
-                toFromVC.continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromVC selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
             }
         }
     }
