@@ -397,7 +397,7 @@ FeedBackForm *fbView;
     NSString *strTodayDate = [dateFormatter stringFromDate:todayDate];
     NSDate *currentDate = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_DATE];
     if(![strTodayDate isEqual:currentDate]){
-        [[nc_AppDelegate sharedInstance] updateTime];
+        [[nc_AppDelegate sharedInstance] performSelector:@selector(updateTime) withObject:nil afterDelay:0.5];
         [[NSUserDefaults standardUserDefaults] setObject:strTodayDate forKey:CURRENT_DATE];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
@@ -556,7 +556,8 @@ FeedBackForm *fbView;
 {    
     @try {
         isRegionSupport = TRUE;
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        // DE - 181 Fixed
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_GENERATE_URL];
         [RKClient setSharedClient:client];
         [[RKClient sharedClient]  get:@"metadata" delegate:self];
     }
@@ -566,6 +567,7 @@ FeedBackForm *fbView;
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response 
 {  
+    NSString *strRequestURL = request.resourcePath;
     isFromBackground = NO;
     @try {
         if ([request isGET]) {  
@@ -581,21 +583,21 @@ FeedBackForm *fbView;
                         lastGTFSLoadDateByAgency = tempResponseDictionary;
                         KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
                         [keyObjectStore setObject:lastGTFSLoadDateByAgency forKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
-                        [[nc_AppDelegate sharedInstance] performSelector:@selector(serviceByWeekday) withObject:nil afterDelay:0.5];
+                        [self serviceByWeekday];
                     }
                 }
                 else if([tempResponseDictionary objectForKey:GTFS_SERVICE_BY_WEEKDAY] != nil){
                     serviceByWeekdayByAgency = tempResponseDictionary;
                     KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
                     [keyObjectStore setObject:serviceByWeekdayByAgency forKey:TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY ];
-                    [[nc_AppDelegate sharedInstance] performSelector:@selector(calendarByDate) withObject:nil afterDelay:0.5];
+                    [self calendarByDate];
                 }
                 else if([tempResponseDictionary objectForKey:GTFS_SERVICE_EXCEPTIONS_DATES] != nil){
                     calendarByDateByAgency = tempResponseDictionary;
                     KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
                     [keyObjectStore setObject:calendarByDateByAgency forKey:TR_CALENDAR_BY_DATE_BY_AGENCY];
                 }
-                else if(isSettingRequest){
+                else if([strRequestURL isEqualToString:UPDATE_SETTING_REQ]){
                     NSDictionary  *dictTemp = [rkParser objectFromString:[response bodyAsString] error:nil];
                     NIMLOG_EVENT1(@"RK Response: %@",[response bodyAsString]);
                     NSNumber *respCode = [(NSDictionary*)dictTemp objectForKey:CODE];
@@ -607,7 +609,8 @@ FeedBackForm *fbView;
                     }
                     isSettingRequest = NO;
                 }
-                else if (isTwitterLivaData) {
+                //Added To Solve DE-162,174,182
+                else if ([strRequestURL isEqualToString:TWEET_COUNT_URL]) {
                     isTwitterLivaData = false;
                     NIMLOG_EVENT1(@"Responce %@", [response bodyAsString]);
                     NSDictionary  *tweeterCountParser = [rkParser objectFromString:[response bodyAsString] error:nil];
@@ -657,22 +660,6 @@ FeedBackForm *fbView;
                     if (timerTweeterGetData == nil) {
                         timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
                     }
-                }
-                else if(isUpdateTime){
-                     NSDictionary  *dictUpdateTime = [rkParser objectFromString:[response bodyAsString] error:nil];
-                    NIMLOG_EVENT1(@"update %@", dictUpdateTime); 
-                    isUpdateTime = NO;
-                }
-                else if(isServiceByWeekday){
-                    NIMLOG_EVENT1(@"isServiceByWeekday response: %@",[response bodyAsString]);
-                    NSDictionary  *dictServiceByweekday = [rkParser objectFromString:[response bodyAsString] error:nil];
-                    NIMLOG_EVENT1(@"update %@", dictServiceByweekday); 
-                    isServiceByWeekday = NO;
-                }
-                else if(isCalendarByDate){
-                    NSDictionary  *dictCalendarByDate = [rkParser objectFromString:[response bodyAsString] error:nil];
-                    NIMLOG_EVENT1(@"update %@", dictCalendarByDate); 
-                    isCalendarByDate = NO;
                 }
             }
         }
@@ -835,7 +822,7 @@ FeedBackForm *fbView;
 //        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID], nil];    
         isTwitterLivaData = TRUE;
-        NSString *twitCountReq = [@"advisories/count" appendQueryParams:params];
+        NSString *twitCountReq = [TWEET_COUNT_URL appendQueryParams:params];
         NIMLOG_EVENT1(@"twitter count req: %@", twitCountReq);
         [[RKClient sharedClient]  get:twitCountReq delegate:self];
     }

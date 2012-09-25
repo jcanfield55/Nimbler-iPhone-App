@@ -24,6 +24,7 @@
 #define LATEST_TWEETS_REQ       @"advisories/latest"
 #define LAST_TWEET_TIME         @"tweetTime"
 #define ALL_TWEETS_REQ          @"advisories/all"
+#define TWEET_COUNT_URL         @"advisories/count"
 
 // Feedback Parameter
 #define FB_FILE_MARKER @"file"

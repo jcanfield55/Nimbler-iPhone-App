@@ -88,7 +88,7 @@
                 [toFromVC.timerGettingRealDataByItinerary invalidate];
                 toFromVC.timerGettingRealDataByItinerary = nil; 
             }
-            [toFromVC setPlan:matchingPlan];
+            //[toFromVC setPlan:matchingPlan];
 //            [toFromVC getRealTimeDataForItinerary];
 //            toFromVC.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromVC selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
             if (parameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
@@ -224,15 +224,17 @@
         NSString* strRequestID = [tempResponseDictionary objectForKey:REQUEST_ID];
         NIMLOG_EVENT1(@"Retrieved Request ID=%@",strRequestID);
         if([[tempResponseDictionary objectForKey:CODE] intValue] == RESPONSE_SUCCESSFULL){
-            if([tempResponseDictionary objectForKey:ERROR] && [nc_AppDelegate sharedInstance].isToFromView){
-                UIAlertView *alertView = [[UIAlertView alloc] init];
-                [alertView setDelegate:self];
-                [alertView setTitle:APP_TITLE];
-                [alertView setMessage:ROUTE_NOT_POSSIBLE_MSG];
-                [alertView addButtonWithTitle:OK_BUTTON_TITLE];
-                [alertView show];
-                [toFromVC.activityIndicator stopAnimating];
-                [toFromVC.view setUserInteractionEnabled:YES];
+            if([tempResponseDictionary objectForKey:ERROR]){
+                if ([nc_AppDelegate sharedInstance].isToFromView) {
+                    UIAlertView *alertView = [[UIAlertView alloc] init];
+                    [alertView setDelegate:self];
+                    [alertView setTitle:APP_TITLE];
+                    [alertView setMessage:ROUTE_NOT_POSSIBLE_MSG];
+                    [alertView addButtonWithTitle:OK_BUTTON_TITLE];
+                    [alertView show];
+                    [toFromVC.activityIndicator stopAnimating];
+                    [toFromVC.view setUserInteractionEnabled:YES];
+                }
             }
             else{
                 Plan *plan = [objects objectAtIndex:0];
@@ -252,16 +254,18 @@
                 
                 // Call-back the appropriate RouteOptions VC with the new plan
                 if (planRequestParameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
-                    [routeOptionsVC newPlanAvailable:plan status:STATUS_OK];  
-                } else {
-                    [toFromVC newPlanAvailable:plan status:STATUS_OK];
+                    [routeOptionsVC newPlanAvailable:plan status:STATUS_OK]; 
                     if(toFromVC.timerGettingRealDataByItinerary != nil){
                         [toFromVC.timerGettingRealDataByItinerary invalidate];
                         toFromVC.timerGettingRealDataByItinerary = nil; 
                     }
+                    // Added To Get Real Time Data Only When we are in RouteOptionsView
+                    
+                    [toFromVC getRealTimeDataForItinerary];
+                     toFromVC.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromVC selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
+                } else {
+                    [toFromVC newPlanAvailable:plan status:STATUS_OK];
                 }
-                [toFromVC getRealTimeDataForItinerary];
-                toFromVC.continueGetTime =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromVC selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
             }
         }
     }

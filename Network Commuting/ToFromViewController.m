@@ -985,27 +985,36 @@ UIImage *imageDetailDisclosure;
         if (!routeOptionsVC) {
             routeOptionsVC = [[RouteOptionsViewController alloc] initWithNibName:nil bundle:nil];
         }
-        
-        [routeOptionsVC setPlan:plan];
-        if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
-            CATransition *animation = [CATransition animation];
-            [animation setDuration:0.3];
-            [animation setType:kCATransitionPush];
-            [animation setSubtype:kCATransitionFromRight];
-            [animation setRemovedOnCompletion:YES];
-            [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
-            [[self.navigationController.view layer] addAnimation:animation forKey:nil];
-             [[self navigationController] pushViewController:routeOptionsVC animated:NO];
+        // DE - 155 Fixed
+        if([[plan sortedItineraries] count] != 0){
+            [routeOptionsVC setPlan:plan];
+            if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
+                CATransition *animation = [CATransition animation];
+                [animation setDuration:0.3];
+                [animation setType:kCATransitionPush];
+                [animation setSubtype:kCATransitionFromRight];
+                [animation setRemovedOnCompletion:YES];
+                [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+                [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+                [[self navigationController] pushViewController:routeOptionsVC animated:NO];
+            }
+            else{
+                [[self navigationController] pushViewController:routeOptionsVC animated:YES];
+            }
         }
         else{
-            [[self navigationController] pushViewController:routeOptionsVC animated:YES];
+            if([nc_AppDelegate sharedInstance].isToFromView){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:ALERT_TRIP_NOT_AVAILABLE delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil] ;
+                [alert show];  
+            }
         }
     }
     else { // if (status == GENERIC_EXCEPTION)
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"Sorry, we are unable to calculate a route for that To & From address" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
-        [alert show];
-        savetrip = false;
+        if([nc_AppDelegate sharedInstance].isToFromView){
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:ALERT_TRIP_NOT_AVAILABLE delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil] ;
+            [alert show];
+            savetrip = false;
+        }
         return ;
     }
 }
@@ -1014,8 +1023,10 @@ UIImage *imageDetailDisclosure;
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error {
     [self stopActivityIndicator];
     if (savetrip) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to calculate a route for that To & From address" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
+        if([nc_AppDelegate sharedInstance].isToFromView){
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to calculate a route for that To & From address" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert show];
+        }
         NIMLOG_ERR1(@"Error received from RKObjectManager: %@", error);
     }
 }
