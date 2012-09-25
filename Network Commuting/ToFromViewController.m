@@ -994,15 +994,18 @@ UIImage *imageDetailDisclosure;
         }
     }
     else if (status==PLAN_NO_NETWORK) {
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Unable to connect to server.  Please try again when you have network connectivity." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-        [alert show];
+        if([nc_AppDelegate sharedInstance].isToFromView){
+            UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Unable to connect to server.  Please try again when you have network connectivity." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+            [alert show];
+            savetrip = false;
+        }
     }
     else { // if (status == PLAN_GENERIC_EXCEPTION)
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to calculate a route for that To & From address" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
-        [alert show];
-        savetrip = false;
-        return ;
+        if([nc_AppDelegate sharedInstance].isToFromView){
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:ALERT_TRIP_NOT_AVAILABLE delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
+            [alert show];
+            savetrip = false;
+        }
     }
 }
 

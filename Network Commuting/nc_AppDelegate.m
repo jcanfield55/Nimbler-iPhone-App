@@ -742,22 +742,6 @@ FeedBackForm *fbView;
                         timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
                     }
                 }
-                else if(isUpdateTime){
-                     NSDictionary  *dictUpdateTime = [rkParser objectFromString:[response bodyAsString] error:nil];
-                    NIMLOG_EVENT1(@"isUpdateTime update %@", dictUpdateTime); 
-                    isUpdateTime = NO;
-                }
-                else if(isServiceByWeekday){
-                    NIMLOG_OBJECT1(@"isServiceByWeekday response: %@",[response bodyAsString]);
-                    NSDictionary  *dictServiceByweekday = [rkParser objectFromString:[response bodyAsString] error:nil];
-                    NIMLOG_EVENT1(@"isServiceByWeekday update %@", dictServiceByweekday); 
-                    isServiceByWeekday = NO;
-                }
-                else if(isCalendarByDate){
-                    NSDictionary  *dictCalendarByDate = [rkParser objectFromString:[response bodyAsString] error:nil];
-                    NIMLOG_EVENT1(@"isCalendarByDate update %@", dictCalendarByDate); 
-                    isCalendarByDate = NO;
-                }
             }
         }
     }
@@ -919,9 +903,9 @@ FeedBackForm *fbView;
 //        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID], nil];    
         isTwitterLivaData = TRUE;
-        NSString *request = [@"advisories/count" appendQueryParams:params];
-        NIMLOG_EVENT1(@"twitter count req: %@", request);
-        [[RKClient sharedClient]  get:request delegate:self];
+        NSString *twitCountReq = [TWEET_COUNT_URL appendQueryParams:params];
+        NIMLOG_EVENT1(@"twitter count req: %@", twitCountReq);
+        [[RKClient sharedClient]  get:twitCountReq delegate:self];
     }
     @catch (NSException *exception) {
         logException(@"ncAppDelegate->getTwiiterLiveData", @"", exception);    }

@@ -2547,6 +2547,7 @@
 			isa = PBXGroup;
 			children = (
 				52C10384160BEF8000BC6020 /* AddressBookUI.framework */,
+				8D2968561611C6EE00BF8232 /* Default-568h@2x.png */,
 				8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */,
 				CC9370D615BFB97200A09A5A /* Flurry */,
 				CCD3990C15A2FAD20020BC85 /* Resources */,

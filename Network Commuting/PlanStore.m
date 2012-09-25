@@ -88,7 +88,7 @@
                     [toFromVC.timerGettingRealDataByItinerary invalidate];
                     toFromVC.timerGettingRealDataByItinerary = nil;
                 }
-                [toFromVC setPlan:matchingPlan];
+                // [toFromVC setPlan:matchingPlan];
                 //            [toFromVC getRealTimeDataForItinerary];
                 //            toFromVC.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromVC selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
                 if (parameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
@@ -258,9 +258,7 @@
                 
                 // Call-back the appropriate RouteOptions VC with the new plan
                 if (planRequestParameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
-                    [routeOptionsVC newPlanAvailable:plan status:PLAN_STATUS_OK];  
-                } else {
-                    [toFromVC newPlanAvailable:plan status:PLAN_STATUS_OK];
+                    [routeOptionsVC newPlanAvailable:plan status:PLAN_STATUS_OK];
                     if(toFromVC.timerGettingRealDataByItinerary != nil){
                         [toFromVC.timerGettingRealDataByItinerary invalidate];
                         toFromVC.timerGettingRealDataByItinerary = nil; 
