@@ -99,5 +99,4 @@
 -(void)serviceByWeekday;
 -(void)calendarByDate;
 - (void)saveSetting;
-- (void)clearCache;
 @end

@@ -318,10 +318,10 @@ FeedBackForm *fbView;
            fromLocation:(CLLocation *)oldLocation
 {
     if (!currentLocation) {
-        NSArray* matchingLocations = [locations locationsWithFormattedAddress:@"Current Location"];
+        NSArray* matchingLocations = [locations locationsWithFormattedAddress:CURRENT_LOCATION];
         if ([matchingLocations count] == 0) { // if current location not in db
             currentLocation = [locations newEmptyLocation];
-            [currentLocation setFormattedAddress:@"Current Location"];
+            [currentLocation setFormattedAddress:CURRENT_LOCATION];
             [currentLocation setFromFrequencyFloat:100.0];
             [toFromViewController reloadTables]; // DE30 fix (1 of 2)
             [locations setIsLocationServiceEnable:TRUE];
@@ -674,7 +674,7 @@ FeedBackForm *fbView;
                 else if(isSettingRequest){
                     NSDictionary  *dictTemp = [rkParser objectFromString:[response bodyAsString] error:nil];
                     NIMLOG_EVENT1(@"Setting Request RKResponse: %@",[response bodyAsString]);
-                    NSNumber *respCode = [(NSDictionary*)dictTemp objectForKey:CODE];
+                    NSNumber *respCode = [(NSDictionary*)dictTemp objectForKey:RESPONSE_CODE];
                     if ([respCode intValue]== RESPONSE_SUCCESSFULL) { 
                         self.isSettingSavedSuccessfully = YES;
                     }
@@ -709,7 +709,8 @@ FeedBackForm *fbView;
                     NIMLOG_EVENT1(@"Loaded SupportedRegion response");
                     NSDictionary  *regionParser = [rkParser objectFromString:[response bodyAsString] error:nil];
                     SupportedRegion *region = [[SupportedRegion alloc] init];
-                    isRegionSupport = FALSE;
+                    isRegionSupport = false;
+                    BOOL maxLatitutedLoaded = false;
                     for (id key in regionParser) {
                         if ([key isEqualToString:@"upperRightLatitude"]) {
                             [region setUpperRightLatitude:[regionParser objectForKey:key]];
@@ -723,13 +724,16 @@ FeedBackForm *fbView;
                             [region setMaxLongitude:[regionParser objectForKey:key] ];
                         } else if ([key isEqualToString:@"maxLatitude"]){
                             [region setMaxLatitude:[regionParser objectForKey:key] ];
+                            maxLatitutedLoaded = true;
                         } else if ([key isEqualToString:@"lowerLeftLongitude"]){
                             [region setLowerLeftLongitude:[regionParser objectForKey:key] ];
                         } else if ([key isEqualToString:@"lowerLeftLatitude"]){
                             [region setLowerLeftLatitude:[regionParser objectForKey:key] ];
                         } 
-                    }                
-                    [toFromViewController setSupportedRegion:region];
+                    }
+                    if (maxLatitutedLoaded) { // 
+                        [toFromViewController setSupportedRegion:region];
+                    }
                     [self getTwiiterLiveData];
                     if (timerTweeterGetData == nil) {
                         timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];

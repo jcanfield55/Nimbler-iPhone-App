@@ -36,11 +36,9 @@
     // Variables for internal use    
     NSDateFormatter *tripDateFormatter;  // Formatter for showing the trip date / time
     NSString *planURLResource; // URL resource sent to planner
-    NSString *reverseGeoURLResource;  // URL resource sent for reverse geocoding
     NSMutableArray *planRequestHistory; // Array of all the past plan request parameter histories in sequential order (most recent one last)
     Plan *plan;
     Plan *tpResponsePlan;
-    SupportedRegion *sr;
     FeedBackForm *fbplan;
     
     CGFloat toTableHeight;   // Current height of the toTable (US123 implementation)
@@ -109,7 +107,6 @@
 #define TIME_DATE_SECTION 2
 
 NSString *currentLoc;
-float currentLocationResTime;
 NSUserDefaults *prefs;
 UIImage *imageDetailDisclosure;
 #pragma mark view Lifecycle
@@ -254,6 +251,13 @@ UIImage *imageDetailDisclosure;
         [self.mainTable setBackgroundColor: [UIColor clearColor]];
     }
     // Do any additional setup after loading the view from its nib.
+}
+
+- (void)setSupportedRegion:(SupportedRegion *)supportedReg0
+{
+    supportedRegion = supportedReg0;
+    [toTableVC setSupportedRegion:supportedReg0];
+    [fromTableVC setSupportedRegion:supportedReg0];
 }
 
 - (void)viewDidUnload{
@@ -565,7 +569,7 @@ UIImage *imageDetailDisclosure;
             cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
             UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
             [cell setAccessoryView:imgViewDetailDisclosure];
-            [[cell textLabel] setText:@"Current Location"];
+            [[cell textLabel] setText:CURRENT_LOCATION];
         }        
         return cell;        
     }
@@ -772,7 +776,7 @@ UIImage *imageDetailDisclosure;
         UIAlertView *alert;
         startButtonClickTime = CFAbsoluteTimeGetCurrent();
         
-        if ([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
+        if ([[fromLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
             if ([self alertUsetForLocationService]) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Location" message:@"Location Service is disabled for Nimbler, Do you want to enable?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"Cancel", nil];
                 [alert show];
@@ -925,50 +929,30 @@ UIImage *imageDetailDisclosure;
 
 
 #pragma mark RKObject loader with Plan responce from OTP 
-// Delegate methods for when the RestKit has results from the Planner
-- (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects 
-{        
-    if ([[objectLoader resourcePath] isEqualToString:reverseGeoURLResource]) {
-        // A reverse geocode result for currentLocation
-        // TODO refactor some of this code and that in ToFromTableViewController into a general geocode class
-        
-        // Get the status string the hard way by parsing the response string
-        NSString* response = [[objectLoader response] bodyAsString];
-        [currentLocation setReverseGeoLocation:nil];  // Clear out previous reverse Geocode
-        
-        NSRange range = [response rangeOfString:@"\"status\""];
-        if (range.location != NSNotFound) {
-            NSString* responseStartingFromStatus = [response substringFromIndex:(range.location+range.length)];
+// Delegate callback from calling Locations --> reverseGeocodeWithParameters
+-(void)newGeocodeResults:(NSArray *)locationArray withStatus:(GeocodeRequestStatus)status parameters:(GeocodeRequestParameters *)parameters
+{
+    if (status == GEOCODE_STATUS_OK) {
+        if ([locationArray count] > 0) { // if we have an reverse geocode object
             
-            NSArray* atoms = [responseStartingFromStatus componentsSeparatedByString:@"\""];
-            NSString* geocodeStatus = [atoms objectAtIndex:1]; // status string is second atom (first after the first quote)
-            NIMLOG_EVENT1(@"Geocode Status: %@", geocodeStatus);
+            // Grab the first reverse-geo, which will be the most specific one
+            Location* reverseGeoLocation = [locationArray objectAtIndex:0];
             
-            if ([geocodeStatus compare:@"OK" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-                if ([objects count] > 0) { // if we have an reverse geocode object
-                    
-                    // Grab the first reverse-geo, which will be the most specific one
-                    Location* reverseGeoLocation = [objects objectAtIndex:0];
-                    
-                    // Check if an equivalent Location is already in the locations table
-                    reverseGeoLocation = [locations consolidateWithMatchingLocations:reverseGeoLocation keepThisLocation:NO];
-                    
-                    // Delete all the other objects out of CoreData (DE152 fix)
-                    for (int i=1; i<[objects count]; i++) {  // starting at the instance after i=0
-                        [[self locations] removeLocation:[objects objectAtIndex:i]];
-                    }
-                    // Save db context with the new location object
-                    saveContext(managedObjectContext);
-                    NIMLOG_EVENT1(@"Reverse Geocode: %@", [reverseGeoLocation formattedAddress]);
-                    // Update the Current Location with pointer to the Reverse Geo location
-                    [currentLocation setReverseGeoLocation:reverseGeoLocation];
-                }
+            // Check if an equivalent Location is already in the locations table
+            reverseGeoLocation = [locations consolidateWithMatchingLocations:reverseGeoLocation keepThisLocation:NO];
+            
+            // Delete all the other objects out of CoreData (DE152 fix)
+            for (int i=1; i<[locationArray count]; i++) {  // starting at the instance after i=0
+                [[self locations] removeLocation:[locationArray objectAtIndex:i]];
             }
+            // Save db context with the new location object
+            saveContext(managedObjectContext);
+            NIMLOG_EVENT1(@"Reverse Geocode: %@", [reverseGeoLocation formattedAddress]);
+            // Update the Current Location with pointer to the Reverse Geo location
+            [currentLocation setReverseGeoLocation:reverseGeoLocation];
         }
-        // if no result or non-OK status, leave the reverse Geocode as nil
     }
-    
-    // If returned value does not correspond to one of the most recent requests, do nothing...
+    // If there is an error for reverse geocoding, do nothing
 }
 
 // Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
@@ -1011,16 +995,6 @@ UIImage *imageDetailDisclosure;
         [alert show];
         savetrip = false;
         return ;
-    }
-}
-
-// TODO Move geocoding and reverse-geocoding into a separate class (like Locations)
-- (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error {
-    [self stopActivityIndicator];
-    if (savetrip) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Sorry, we are unable to calculate a route for that To & From address" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
-        NIMLOG_ERR1(@"Error received from RKObjectManager: %@", error);
     }
 }
 
@@ -1074,6 +1048,27 @@ UIImage *imageDetailDisclosure;
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"The To: and From: address are the same location.  Please choose a different destination." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
                 [alert show];
                 return true;
+            }
+            // if using currentLocation, make sure it is in supported region
+            if (fromLocation == currentLocation || toLocation == currentLocation) {
+                if (![[self supportedRegion] isInRegionLat:[currentLocation latFloat] Lng:[currentLocation lngFloat]]) {
+                    [self stopActivityIndicator];
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:
+                                          @"Your current location does not appear to be in the Bay Area.  Please choose a different location." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
+                    [alert show];
+                    return true;
+                }
+            }
+            
+            // Do reverse geocoding if coming from current location
+            if (fromLocation == currentLocation) {
+                GeocodeRequestParameters* geoParams = [[GeocodeRequestParameters alloc] init];
+                geoParams.lat = [fromLocation latFloat];
+                geoParams.lng = [fromLocation lngFloat];
+                geoParams.apiType = GOOGLE_GEOCODER;
+                geoParams.supportedRegion = [self supportedRegion];
+                geoParams.isFrom = true;
+                [locations reverseGeocodeWithParameters:geoParams callBack:self];
             }
             
 #if FLURRY_ENABLED
@@ -1137,10 +1132,6 @@ UIImage *imageDetailDisclosure;
             [planStore requestPlanWithParameters:parameters];
             savetrip = TRUE;
             isContinueGetRealTimeData = NO;
-            // Do reverse geocoding if coming from current location
-            if (fromLocation == currentLocation) {
-                [self requestReverseGeo:fromLocation];
-            }
             
             // Reload the to/from tables for next time
             [[self fromTable] reloadData];
@@ -1271,24 +1262,6 @@ UIImage *imageDetailDisclosure;
     }
 }
 
-// Get RealTime Data By Plan 
-//-(void)getRealTimeData
-//{
-//    @try {
-//        isContinueGetRealTimeData = YES;
-//        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-//        [RKClient setSharedClient:client];   
-//        NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
-//                              PLAN_ID,[plan planId] ,
-//                              nil];
-//        NSString *req = [LIVE_FEEDS_BY_PLAN_URL appendQueryParams:dict];
-//        [[RKClient sharedClient]  get:req  delegate:self];  
-//    }
-//    @catch (NSException *exception) {
-//        logException(@"ToFromViewController->getRealTimeData", @"", exception);
-//    }
-//}
-
 // Get RealTime Data By Itinerary
 -(void)getRealTimeDataForItinerary{
     @try {
@@ -1335,11 +1308,11 @@ UIImage *imageDetailDisclosure;
         NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
         [dFormat setDateStyle:NSDateFormatterShortStyle];
         [dFormat setTimeStyle:NSDateFormatterMediumStyle];
-        if ([[fromLocation formattedAddress] isEqualToString:@"Current Location"]) {
+        if ([[fromLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
             if ([fromLocation reverseGeoLocation]) {
                 fromLocs = [NSString stringWithFormat:@"Current Location Reverse Geocode: %@",[[fromLocation reverseGeoLocation] formattedAddress]];
                 } else {
-                    fromLocs = @"Current Location";
+                    fromLocs = CURRENT_LOCATION;
                 }
         } else {
             fromLocs = [fromLocation formattedAddress];
@@ -1352,25 +1325,6 @@ UIImage *imageDetailDisclosure;
     }
     @catch (NSException *exception) {
         logException(@"ToFromViewController->setFBParametersForGeneral", @"", exception);
-    }
-}
-
-- (void)requestReverseGeo:(Location *)location
-{
-
-    @try {
-        float startTime = CFAbsoluteTimeGetCurrent();
-        NSString* latLngString = [NSString stringWithFormat:@"%f,%f",[location latFloat], [location lngFloat]];
-        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
-                                @"latlng", latLngString,
-                                @"sensor", @"true", nil];
-        reverseGeoURLResource = [@"json" appendQueryParams:params];
-        [rkGeoMgr loadObjectsAtResourcePath:reverseGeoURLResource delegate:self]; // Call the reverse Geocoder
-        
-        currentLocationResTime =  CFAbsoluteTimeGetCurrent() - startTime;
-    }
-    @catch (NSException *exception) {
-        logException(@"ToFromViewController->requestReverseGeo", @"", exception);
     }
 }
 

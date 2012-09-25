@@ -7,6 +7,7 @@
 //
 
 #import "Locations.h"
+#import "LocationFromGoogle.h"
 #import "UtilityFunctions.h"
 
 #if FLURRY_ENABLED
@@ -30,10 +31,15 @@
     NSString *geoURLResource;   // URL resource sent to geocoder for last raw address
     GeocodeRequestParameters* geoRequestParameters;  // parameters used for last geocoder request
     id <LocationsGeocodeResultsDelegate> geoCallbackDelegate;   // delegate to call when we have geocoder results
+    NSString *reverseGeoURLResource;   // URL resource sent to reverse geocoder for last raw address
+    GeocodeRequestParameters* reverseGeoRequestParameters;  // parameters used for last reverse geocoder request
+    id <LocationsGeocodeResultsDelegate> reverseGeoCallbackDelegate;   // delegate to call when we have reverse geocoder results
 
 }
 - (void)updateWithSelectedLocationIsFrom:(BOOL)isFrom selectedLocation:(Location *)selectedLocation oldSelectedLocation:(Location *)oldSelectedLocation;
 - (void)updateInternalCache;
+- (void)forwardGeocodeUsingGoogleWithParameters:(GeocodeRequestParameters *)parameters callBack:(id <LocationsGeocodeResultsDelegate>)delegate;
+- (void)reverseGeocodeUsingGoogleWithParameters:(GeocodeRequestParameters *)parameters callBack:(id <LocationsGeocodeResultsDelegate>)delegate;
 
 @end
 
@@ -118,10 +124,10 @@
                     // See if there is a matching Location already in CoreData
                     NSArray* matchingLocations = [self locationsWithFormattedAddress:[loc formattedAddress]];
                     BOOL areAnyMatchesNewerOrEqual = FALSE;
-                    for (Location* matchingLocation in matchingLocations) {
+                    for (LocationFromGoogle* matchingLocation in matchingLocations) {
                         // If newVersion is indeed newer (or if matchingLocation does not have a version)
                         if (matchingLocation != loc) {
-                            if (![matchingLocation preloadVersion] 
+                            if (![matchingLocation preloadVersion]
                                 || [[matchingLocation preloadVersion] compare:newVersion] == NSOrderedAscending) {
                                 // cancel out previous preload frequencies below 2.0 so they can be replaced
                                 // with the new matching frequency
@@ -522,172 +528,245 @@
 - (void)forwardGeocodeWithParameters:(GeocodeRequestParameters *)parameters callBack:(id <LocationsGeocodeResultsDelegate>)delegate;
 {
     if (parameters.apiType == GOOGLE_GEOCODER) {
-        
-        // Save the parameters and callBack object for when objectLoader called
-        geoRequestParameters = parameters;
-        geoCallbackDelegate = delegate;
-        
-        // Calculate the supportedRegionGeocodeString
-        NSString* supportedRegionGeocodeString = [NSString stringWithFormat:@"%@,%@|%@,%@",
-                                        [[parameters.supportedRegion minLatitude] stringValue],
-                                        [[parameters.supportedRegion minLongitude] stringValue],
-                                        [[parameters.supportedRegion maxLatitude] stringValue],
-                                        [[parameters.supportedRegion maxLongitude] stringValue]];
-        // Build the parameters into a resource string
-        // US108 implementation (using "bounds" parameter)
-        NSDictionary *googleParameters = [NSDictionary dictionaryWithKeysAndObjects: @"address", parameters.rawAddress,
-                                          @"bounds", supportedRegionGeocodeString, @"sensor", @"true", nil];
-        geoURLResource = [@"json" appendQueryParams:googleParameters];
-        
-        [rkGeoMgr loadObjectsAtResourcePath:geoURLResource delegate:self];
-        
-        NIMLOG_EVENT1(@"Geocode Parameter String = %@", geoURLResource);
+        [self forwardGeocodeUsingGoogleWithParameters:parameters callBack:delegate];
     }
     
     // TODO implement iOS geocoder
 }
 
+- (void)forwardGeocodeUsingGoogleWithParameters:(GeocodeRequestParameters *)parameters callBack:(id <LocationsGeocodeResultsDelegate>)delegate;
+{
+    // Save the parameters and callBack object for when objectLoader called
+    geoRequestParameters = parameters;
+    geoCallbackDelegate = delegate;
+    
+    // Calculate the supportedRegionGeocodeString
+    NSString* supportedRegionGeocodeString = [NSString stringWithFormat:@"%@,%@|%@,%@",
+                                              [[parameters.supportedRegion minLatitude] stringValue],
+                                              [[parameters.supportedRegion minLongitude] stringValue],
+                                              [[parameters.supportedRegion maxLatitude] stringValue],
+                                              [[parameters.supportedRegion maxLongitude] stringValue]];
+    // Build the parameters into a resource string
+    // US108 implementation (using "bounds" parameter)
+    NSDictionary *googleParameters = [NSDictionary dictionaryWithKeysAndObjects: @"address", parameters.rawAddress,
+                                      @"bounds", supportedRegionGeocodeString, @"sensor", @"true", nil];
+    geoURLResource = [@"json" appendQueryParams:googleParameters];
+    
+    [rkGeoMgr loadObjectsAtResourcePath:geoURLResource delegate:self];
+    
+    NIMLOG_EVENT1(@"Geocode Parameter String = %@", geoURLResource);
+}
+
+- (void)reverseGeocodeWithParameters:(GeocodeRequestParameters *)parameters callBack:(id <LocationsGeocodeResultsDelegate>)delegate
+{
+    if (parameters.apiType == GOOGLE_GEOCODER) {
+        [self reverseGeocodeUsingGoogleWithParameters:parameters callBack:delegate];
+    }
+    // TODO iOS Reverse Geocoding
+}
+
+- (void)reverseGeocodeUsingGoogleWithParameters:(GeocodeRequestParameters *)parameters callBack:(id <LocationsGeocodeResultsDelegate>)delegate
+{
+    @try {
+        // Save the parameters and callBack object for when objectLoader called
+        reverseGeoRequestParameters = parameters;
+        reverseGeoCallbackDelegate = delegate;
+        
+        NSString* latLngString = [NSString stringWithFormat:@"%f,%f",[parameters lat], [parameters lng]];
+        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
+                                @"latlng", latLngString,
+                                @"sensor", @"true", nil];
+        reverseGeoURLResource = [@"json" appendQueryParams:params];
+        [rkGeoMgr loadObjectsAtResourcePath:reverseGeoURLResource delegate:self]; // Call the reverse Geocoder
+    }
+    @catch (NSException *exception) {
+        logException(@"Locations->reverseGeocodeUsingGoogleWithParameters", @"", exception);
+    }
+
+}
+
 // Object Loader for Google Geocoder
 - (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects
 {
-#if FLURRY_ENABLED
-    NSString* isFromString = ([geoRequestParameters isFrom] ? @"fromTable" : @"toTable");
-    NSString* rawAddress = [geoRequestParameters rawAddress];
-#endif
+    NSString* urlResource;
+    GeocodeRequestParameters* parameters;
+    id <LocationsGeocodeResultsDelegate> callback;
+    BOOL isForwardGeocode; 
     @try {
-        // Make sure this is the response from the latest geocoder request
-        if ([[objectLoader resourcePath] isEqualToString:geoURLResource])
-        {
-            // Get the status string the hard way by parsing the response string
-            NSString* response = [[objectLoader response] bodyAsString];
-            
-            NSRange range = [response rangeOfString:@"\"status\""];
-            if (range.location != NSNotFound) {
-                NSString* responseStartingFromStatus = [response substringFromIndex:(range.location+range.length)];
-                
-                NSArray* atoms = [responseStartingFromStatus componentsSeparatedByString:@"\""];
-                NSString* geocodeStatus = [atoms objectAtIndex:1]; // status string is second atom (first after the first quote)
-                NIMLOG_EVENT1(@"Status: %@", geocodeStatus);
-                
-                if ([geocodeStatus compare:@"OK" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-                    NIMLOG_EVENT1(@"Returned Objects = %d", [objects count]);
-                    
-                    // Go through the returned objects and see which are in supportedRegion
-                    // DE18 new fix
-                    NSMutableArray* validLocations = [NSMutableArray arrayWithArray:objects];
-                    for (Location* loc in objects) {
-                        if ([[geoRequestParameters supportedRegion] isInRegionLat:[loc latFloat] Lng:[loc lngFloat]]) {
-                            [loc setGeoCoderStatus:geocodeStatus];
-                        } else {
-                            // if a location not in supported region,
-                            [validLocations removeObject:loc]; // take off the array
-                            [self removeLocation:loc]; // and out of Core Data
-                        }
-                    }
-                    NIMLOG_EVENT1(@"Geocode valid Locations = %d", [validLocations count]);
+        // Figure out which request this is from
+        if ([[objectLoader resourcePath] isEqualToString:geoURLResource]) {
+            urlResource = geoURLResource;
+            parameters = geoRequestParameters;
+            callback = geoCallbackDelegate;
+            isForwardGeocode = YES;
+            geoURLResource = nil;  // Reset this now that we have received this request
+        }
+        else if ([[objectLoader resourcePath] isEqualToString:reverseGeoURLResource]) {
+            urlResource = reverseGeoURLResource;
+            parameters = reverseGeoRequestParameters;
+            callback = reverseGeoCallbackDelegate;
+            isForwardGeocode = NO;
+            reverseGeoURLResource = nil;  // Reset this now that we have received this request
+        }
+        else {
+            // if this does not match the latest existing call, ignore it
+            return;
+        }
 #if FLURRY_ENABLED
-                    if ([validLocations count]==0) {
+        NSString* isFromString = ([parameters isFrom] ? @"fromTable" : @"toTable");
+        NSString* rawAddress = (isForwardGeocode ? [parameters rawAddress] : @"Reverse Geocode");        
+#endif
+        // Get the status string the hard way by parsing the response string
+        NSString* response = [[objectLoader response] bodyAsString];
+        
+        NSRange range = [response rangeOfString:@"\"status\""];
+        if (range.location != NSNotFound) {
+            NSString* responseStartingFromStatus = [response substringFromIndex:(range.location+range.length)];
+            
+            NSArray* atoms = [responseStartingFromStatus componentsSeparatedByString:@"\""];
+            NSString* geocodeStatus = [atoms objectAtIndex:1]; // status string is second atom (first after the first quote)
+            NIMLOG_EVENT1(@"Status: %@", geocodeStatus);
+            
+            if ([geocodeStatus compare:@"OK" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+                NIMLOG_EVENT1(@"Returned Objects = %d", [objects count]);
+                
+                // Go through the returned objects and see which are in supportedRegion
+                // DE18 new fix
+                NSMutableArray* validLocations = [NSMutableArray arrayWithArray:objects];
+                for (Location* loc in objects) {
+                    if ([[parameters supportedRegion] isInRegionLat:[loc latFloat] Lng:[loc lngFloat]]) {
+                        [loc setGeoCoderStatus:geocodeStatus];
+                    } else {
+                        // if a location not in supported region,
+                        [validLocations removeObject:loc]; // take off the array
+                        [self removeLocation:loc]; // and out of Core Data
+                    }
+                }
+                NIMLOG_EVENT1(@"Geocode valid Locations = %d", [validLocations count]);
+#if FLURRY_ENABLED
+                if ([validLocations count]==0) {
                     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
                                             FLURRY_TOFROM_WHICH_TABLE, isFromString,
                                             FLURRY_GEOCODE_RAWADDRESS , rawAddress,nil];
                     [Flurry logEvent:FLURRY_GEOCODE_RESULTS_NONE_IN_REGION withParameters:params];
-                    }
-                    else if ([validLocations count]==1) {
-                        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                                FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                                FLURRY_GEOCODE_RAWADDRESS, rawAddress,
-                                                FLURRY_FORMATTED_ADDRESS , [[validLocations objectAtIndex:0] shortFormattedAddress] ,nil];
-                        [Flurry logEvent:FLURRY_GEOCODE_RESULTS_ONE withParameters:params];
-                    } else {
-                        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                                FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                                FLURRY_GEOCODE_RAWADDRESS, rawAddress,
-                                                FLURRY_NUMBER_OF_GEOCODES ,
-                                                [NSString stringWithFormat:@"%d", [validLocations count]],nil];
-                        [Flurry logEvent:FLURRY_GEOCODE_RESULTS_MULTIPLE withParameters:params];
-                    }
-#endif
-                    
-                    [geoCallbackDelegate newGeocodeResults:validLocations withStatus:GEOCODE_STATUS_OK];  // Callback delegate with results
                 }
-                
-                else if ([geocodeStatus compare:@"ZERO_RESULTS" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-#if FLURRY_ENABLED
-                    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                            FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                            FLURRY_GEOCODE_RAWADDRESS, rawAddress, nil ];
-                    [Flurry logEvent:FLURRY_GEOCODE_RESULTS_NONE withParameters:params];
-#endif
-                    NIMLOG_EVENT1(@"Zero results geocoding address");
-                    [geoCallbackDelegate newGeocodeResults:nil withStatus:GEOCODE_ZERO_RESULTS];
-                }
-                else if ([geocodeStatus compare:@"OVER_QUERY_LIMIT" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-#if FLURRY_ENABLED
-                    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                            FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                            FLURRY_GEOCODE_RAWADDRESS, rawAddress, nil];
-                    [Flurry logEvent:FLURRY_GEOCODE_OVER_GOOGLE_QUOTA withParameters:params];
-#endif
-                    NIMLOG_ERR1(@"Geocode over query limit.  Status = %@", geocodeStatus);
-                    [geoCallbackDelegate newGeocodeResults:nil withStatus:GEOCODE_OVER_QUERY_LIMIT];
-                }
-                else if ([geocodeStatus compare:@"REQUEST_DENIED" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-#if FLURRY_ENABLED
+                else if ([validLocations count]==1) {
                     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
                                             FLURRY_TOFROM_WHICH_TABLE, isFromString,
                                             FLURRY_GEOCODE_RAWADDRESS, rawAddress,
-                                            FLURRY_GEOCODE_ERROR, geocodeStatus, nil];
-                    [Flurry logEvent:FLURRY_GEOCODE_OTHER_ERROR withParameters:params];
-#endif
-                    NIMLOG_ERR1(@"Geocode request rejected, status= %@", geocodeStatus);
-                    [geoCallbackDelegate newGeocodeResults:nil withStatus:GEOCODE_REQUEST_DENIED];
+                                            FLURRY_FORMATTED_ADDRESS , [[validLocations objectAtIndex:0] shortFormattedAddress] ,nil];
+                    [Flurry logEvent:FLURRY_GEOCODE_RESULTS_ONE withParameters:params];
+                } else {
+                    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                            FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                                            FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                                            FLURRY_NUMBER_OF_GEOCODES ,
+                                            [NSString stringWithFormat:@"%d", [validLocations count]],nil];
+                    [Flurry logEvent:FLURRY_GEOCODE_RESULTS_MULTIPLE withParameters:params];
                 }
+#endif
+                
+                [callback newGeocodeResults:validLocations
+                                            withStatus:GEOCODE_STATUS_OK
+                                            parameters:parameters];  // Callback delegate with results
             }
-            else { // geocoder did not come back with a status
+            
+            else if ([geocodeStatus compare:@"ZERO_RESULTS" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+#if FLURRY_ENABLED
+                NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                        FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                                        FLURRY_GEOCODE_RAWADDRESS, rawAddress, nil ];
+                [Flurry logEvent:FLURRY_GEOCODE_RESULTS_NONE withParameters:params];
+#endif
+                NIMLOG_EVENT1(@"Zero results geocoding address");
+                [callback newGeocodeResults:nil withStatus:GEOCODE_ZERO_RESULTS parameters:parameters];
+            }
+            else if ([geocodeStatus compare:@"OVER_QUERY_LIMIT" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+#if FLURRY_ENABLED
+                NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                        FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                                        FLURRY_GEOCODE_RAWADDRESS, rawAddress, nil];
+                [Flurry logEvent:FLURRY_GEOCODE_OVER_GOOGLE_QUOTA withParameters:params];
+#endif
+                NIMLOG_ERR1(@"Geocode over query limit.  Status = %@", geocodeStatus);
+                [callback newGeocodeResults:nil withStatus:GEOCODE_OVER_QUERY_LIMIT parameters:parameters];
+            }
+            else if ([geocodeStatus compare:@"REQUEST_DENIED" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
 #if FLURRY_ENABLED
                 NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
                                         FLURRY_TOFROM_WHICH_TABLE, isFromString,
                                         FLURRY_GEOCODE_RAWADDRESS, rawAddress,
-                                        FLURRY_GEOCODE_ERROR, [NSString stringWithFormat:@"No status found.  Start of response: %@",
-                                                               [response substringToIndex:100U]], nil];
+                                        FLURRY_GEOCODE_ERROR, geocodeStatus, nil];
                 [Flurry logEvent:FLURRY_GEOCODE_OTHER_ERROR withParameters:params];
 #endif
-                [geoCallbackDelegate newGeocodeResults:nil withStatus:GEOCODE_GENERIC_ERROR];
+                NIMLOG_ERR1(@"Geocode request rejected, status= %@", geocodeStatus);
+                [callback newGeocodeResults:nil withStatus:GEOCODE_REQUEST_DENIED parameters:parameters];
             }
+        }
+        else { // geocoder did not come back with a status
+#if FLURRY_ENABLED
+            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                                    FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                                    FLURRY_GEOCODE_ERROR, [NSString stringWithFormat:@"No status found.  Start of response: %@",
+                                                           [response substringToIndex:100U]], nil];
+            [Flurry logEvent:FLURRY_GEOCODE_OTHER_ERROR withParameters:params];
+#endif
+            [callback newGeocodeResults:nil withStatus:GEOCODE_GENERIC_ERROR parameters:parameters];
         }
     }
     @catch (NSException *exception) {
         logException(@"ToFromTableViewController->didLoadObjects", @"processing geocode response", exception);
-        [geoCallbackDelegate newGeocodeResults:nil withStatus:GEOCODE_GENERIC_ERROR];
+        [callback newGeocodeResults:nil withStatus:GEOCODE_GENERIC_ERROR parameters:parameters];
     }
 }
 
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error {
     NIMLOG_ERR1(@"Error received from RKObjectManager: %@", error);
+    NSString* urlResource;
+    GeocodeRequestParameters* parameters;
+    id <LocationsGeocodeResultsDelegate> callback;
+    BOOL isForwardGeocode;
+    
+    // Figure out which request this is from (simply by which variable is not nil
+    if (geoURLResource) {
+        urlResource = geoURLResource;
+        parameters = geoRequestParameters;
+        callback = geoCallbackDelegate;
+        isForwardGeocode = YES;
+        geoURLResource = nil;  // Reset this now that we have received this request
+    }
+    else {
+        urlResource = reverseGeoURLResource;
+        parameters = reverseGeoRequestParameters;
+        callback = reverseGeoCallbackDelegate;
+        isForwardGeocode = NO;
+        reverseGeoURLResource = nil;  // Reset this now that we have received this request
+    }
     
     if ([[error localizedDescription] rangeOfString:@"client is unable to contact the resource"].location != NSNotFound) {
 #if FLURRY_ENABLED
-        NSString* isFromString = ([geoRequestParameters isFrom] ? @"fromTable" : @"toTable");
-        NSString* rawAddress = [geoRequestParameters rawAddress];
+        NSString* isFromString = ([parameters isFrom] ? @"fromTable" : @"toTable");
+        NSString* rawAddress = [parameters rawAddress];
         NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
                                 FLURRY_TOFROM_WHICH_TABLE, isFromString,
                                 FLURRY_GEOCODE_RAWADDRESS, rawAddress,
                                 FLURRY_GEOCODE_ERROR, error, nil];
         [Flurry logEvent:FLURRY_GEOCODE_NO_NETWORK withParameters:params];
 #endif
-        [geoCallbackDelegate newGeocodeResults:nil withStatus:GEOCODE_NO_NETWORK];
+        [callback newGeocodeResults:nil withStatus:GEOCODE_NO_NETWORK parameters:parameters];
     }
     else {
 #if FLURRY_ENABLED
-        NSString* isFromString = ([geoRequestParameters isFrom] ? @"fromTable" : @"toTable");
-        NSString* rawAddress = [geoRequestParameters rawAddress];
+        NSString* isFromString = ([parameters isFrom] ? @"fromTable" : @"toTable");
+        NSString* rawAddress = [parameters rawAddress];
         NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
                                 FLURRY_TOFROM_WHICH_TABLE, isFromString,
                                 FLURRY_GEOCODE_RAWADDRESS, rawAddress,
                                 FLURRY_GEOCODE_ERROR, error, nil];
         [Flurry logEvent:FLURRY_GEOCODE_OTHER_ERROR withParameters:params];
 #endif
-        [geoCallbackDelegate newGeocodeResults:nil withStatus:GEOCODE_GENERIC_ERROR];
+        [callback newGeocodeResults:nil withStatus:GEOCODE_GENERIC_ERROR parameters:parameters];
     }
 }
 

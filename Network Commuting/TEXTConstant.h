@@ -64,9 +64,9 @@
 
 // Response codes
 #define ERROR_CODE @"errCode"
-#define CODE @"code"
+#define RESPONSE_CODE @"code"
 #define TWIT_COUNT @"tweetCount"
-#define ERROR @"error"
+#define OTP_ERROR_STATUS @"error"
 
 #define DEVICE_ID @"deviceid"
 #define DEVICE_CFUUID @"deviceCFUUID"

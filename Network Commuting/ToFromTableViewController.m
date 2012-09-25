@@ -185,7 +185,7 @@
 // (in locations object, in toFromVC, and in the table selected cell)
 - (void)markAndUpdateSelectedLocation:(Location *)loc
 {
-    if ([[loc formattedAddress] isEqualToString:@"Current Location"]) {
+    if ([[loc formattedAddress] isEqualToString:CURRENT_LOCATION]) {
         if ([self alertUsetForLocationService]) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Location" message:@"Location Service is disabled for Nimbler, Do you want to enable?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"Cancel", nil];
             [alert show];
@@ -416,7 +416,7 @@
 
 
 // Delegate methods for when the RestKit has results from the Geocoder
--(void)newGeocodeResults:(NSArray *)locationArray withStatus:(GeocodeRequestStatus)status
+-(void)newGeocodeResults:(NSArray *)locationArray withStatus:(GeocodeRequestStatus)status parameters:reqParameters
 {
     UIAlertView  *alert;
     if (isFrom) {

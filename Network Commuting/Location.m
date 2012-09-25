@@ -9,6 +9,7 @@
 #import "Location.h"
 #import "Locations.h"
 #import "Constants.h"
+#import <CoreLocation/CoreLocation.h>
 
 @implementation Location
 
@@ -262,6 +263,18 @@ static Locations *locations;
         }
     }
     return shortFormattedAddress;
+}
+
+// Returns the distance between the referring object and loc2 in meters
+- (double)metersFromLocation:(Location *)loc2
+{
+    // Check and make sure that the plan from Location is close to the endpoint of the last leg
+    CLLocation *loc2Coord = [[CLLocation alloc] initWithLatitude:[loc2 latFloat]
+                                                  longitude:[loc2 lngFloat]];
+    CLLocation *locSelfCoord = [[CLLocation alloc] initWithLatitude:[self latFloat]
+                                                  longitude:[self lngFloat]];
+    CLLocationDistance distance = [loc2Coord distanceFromLocation:locSelfCoord];
+    return distance;
 }
 
 // Method to see whether two locations are effectively equivalent

@@ -247,7 +247,7 @@ bool isPush;
     @try {
         if ([request isGET]) {
             id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];
-            NSNumber *respCode = [(NSDictionary*)res objectForKey:CODE];
+            NSNumber *respCode = [(NSDictionary*)res objectForKey:RESPONSE_CODE];
             if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
                 [nc_AppDelegate sharedInstance].isSettingSavedSuccessfully = YES;
             }

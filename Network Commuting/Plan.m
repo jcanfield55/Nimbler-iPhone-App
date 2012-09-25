@@ -293,106 +293,111 @@
                       planBufferSecondsBeforeItinerary:(int)planBufferSecondsBeforeItinerary
                            planMaxTimeForResultsToShow:(int)planMaxTimeForResultsToShow
 {
-    NSMutableSet* matchingItineraries = [[NSMutableSet alloc] initWithCapacity:[[self itineraries] count]];
-    
-    // Create a set of all PlanRequestChunks that match the requestDate services and time
-    // Iteratively connect PlanRequestChunks together if they are adjacent in time
-    NSMutableSet* matchingReqChunks = [[NSMutableSet alloc] initWithCapacity:10];
-    NSDate* connectingReqDate = requestDate; // connectingReqDate will move to connect adjoining request chunks
-    NSDate* newConnectingReqDate;
-    int loopsExecuted = 0;
-    do {
-        newConnectingReqDate = nil;
-        for (PlanRequestChunk* reqChunk in [self requestChunks]) {
-            if ([reqChunk doAllItineraryServiceDaysMatchDate:connectingReqDate] &&
-                [reqChunk doesCoverTheSameTimeAs:connectingReqDate departOrArrive:depOrArrive]) {
-                [matchingReqChunks addObject:reqChunk];
-                
-                // TODO Fix addDateOnlyWithTimeOnly to handle crossing-midnight timeOnly values
-                
-                // Compute newConnectingReqDate
-                NSDate* possibleNewConnReqDate;
-                if (depOrArrive == DEPART) {
-                    NSDate* lastItinTimeOnly = [[[reqChunk sortedItineraries] lastObject] startTimeOnly];
-                    possibleNewConnReqDate = addDateOnlyWithTimeOnly(dateOnlyFromDate(requestDate),
-                                                                     [NSDate dateWithTimeInterval:PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS
-                                                                                        sinceDate:lastItinTimeOnly]);
-                    if (!newConnectingReqDate ||
-                        [newConnectingReqDate compare:possibleNewConnReqDate] == NSOrderedAscending) {
-                        newConnectingReqDate = possibleNewConnReqDate;
+    @try {
+        NSMutableSet* matchingItineraries = [[NSMutableSet alloc] initWithCapacity:[[self itineraries] count]];
+        
+        // Create a set of all PlanRequestChunks that match the requestDate services and time
+        // Iteratively connect PlanRequestChunks together if they are adjacent in time
+        NSMutableSet* matchingReqChunks = [[NSMutableSet alloc] initWithCapacity:10];
+        NSDate* connectingReqDate = requestDate; // connectingReqDate will move to connect adjoining request chunks
+        NSDate* newConnectingReqDate;
+        int loopsExecuted = 0;
+        do {
+            newConnectingReqDate = nil;
+            for (PlanRequestChunk* reqChunk in [self requestChunks]) {
+                if ([reqChunk doAllItineraryServiceDaysMatchDate:connectingReqDate] &&
+                    [reqChunk doesCoverTheSameTimeAs:connectingReqDate departOrArrive:depOrArrive]) {
+                    [matchingReqChunks addObject:reqChunk];
+                    
+                    // TODO Fix addDateOnlyWithTimeOnly to handle crossing-midnight timeOnly values
+                    
+                    // Compute newConnectingReqDate
+                    NSDate* possibleNewConnReqDate;
+                    if (depOrArrive == DEPART) {
+                        NSDate* lastItinTimeOnly = [[[reqChunk sortedItineraries] lastObject] startTimeOnly];
+                        possibleNewConnReqDate = addDateOnlyWithTimeOnly(dateOnlyFromDate(requestDate),
+                                                                         [NSDate dateWithTimeInterval:PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS
+                                                                                            sinceDate:lastItinTimeOnly]);
+                        if (!newConnectingReqDate ||
+                            [newConnectingReqDate compare:possibleNewConnReqDate] == NSOrderedAscending) {
+                            newConnectingReqDate = possibleNewConnReqDate;
+                        }
+                    } else { // depOrArrive = ARRIVE
+                        NSDate* firstItinEndTimeOnly = [[[reqChunk sortedItineraries] objectAtIndex:0] endTimeOnly];
+                        possibleNewConnReqDate = addDateOnlyWithTimeOnly(dateOnlyFromDate(requestDate),
+                                                                         [NSDate dateWithTimeInterval:(-PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS)
+                                                                                            sinceDate:firstItinEndTimeOnly]);
+                        if (!newConnectingReqDate ||
+                            [newConnectingReqDate compare:possibleNewConnReqDate] == NSOrderedDescending) {
+                            newConnectingReqDate = possibleNewConnReqDate;
+                        }
                     }
-                } else { // depOrArrive = ARRIVE
-                    NSDate* firstItinEndTimeOnly = [[[reqChunk sortedItineraries] objectAtIndex:0] endTimeOnly];
-                    possibleNewConnReqDate = addDateOnlyWithTimeOnly(dateOnlyFromDate(requestDate),
-                                                                     [NSDate dateWithTimeInterval:(-PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS)
-                                                                                        sinceDate:firstItinEndTimeOnly]);
-                    if (!newConnectingReqDate ||
-                        [newConnectingReqDate compare:possibleNewConnReqDate] == NSOrderedDescending) {
-                        newConnectingReqDate = possibleNewConnReqDate;
+                }
+            }
+            connectingReqDate = newConnectingReqDate;
+            loopsExecuted++;
+            if (loopsExecuted == 25) {
+                NIMLOG_ERR1(@"returnSortedItinerariesWithMatchesForDate loopsExecuted unexpectedly reached 25");
+            }
+        } while (newConnectingReqDate && loopsExecuted < 25);
+        
+        if ([matchingReqChunks count] == 0) {
+            return nil;  // no matches
+        }
+        // else collect all the itineraries that have valid GTFS data and are in the right time range
+        for (PlanRequestChunk* reqChunk in matchingReqChunks) {
+            for (Itinerary* itin in [reqChunk itineraries]) {
+                // Check that all legs are current with the GTFS file
+                
+                if ([itin isCurrentVsGtfsFilesIn:[self transitCalendar]]) { // if itin is valid
+                    // Check that the times match the requested time
+                    NSDate* requestTimeOnly = timeOnlyFromDate(requestDate);
+                    if (depOrArrive == DEPART) {
+                        NSDate* requestTimeWithPreBuffer = [requestTimeOnly dateByAddingTimeInterval:(-planBufferSecondsBeforeItinerary)];
+                        NSDate* requestTimeWithPostBuffer = [requestTimeOnly dateByAddingTimeInterval:planMaxTimeForResultsToShow];
+                        if ([requestTimeWithPreBuffer compare:[itin startTimeOnly]]!=NSOrderedDescending &&
+                            [requestTimeWithPostBuffer compare:[itin startTimeOnly]]!=NSOrderedAscending) {
+                            // If itin start time is within the two buffer ranges
+                            [matchingItineraries addObject:itin];
+                        }
+                    } else { // depOrArrive = ARRIVE
+                        NSDate* requestTimeWithPreBuffer = [requestTimeOnly dateByAddingTimeInterval:(planBufferSecondsBeforeItinerary)];
+                        NSDate* requestTimeWithPostBuffer = [requestTimeOnly dateByAddingTimeInterval:-planMaxTimeForResultsToShow];
+                        if ([requestTimeWithPreBuffer compare:[itin endTimeOnly]]!=NSOrderedAscending &&
+                            [requestTimeWithPostBuffer compare:[itin endTimeOnly]]!=NSOrderedDescending) {
+                            // If itin start time is within the two buffer ranges
+                            [matchingItineraries addObject:itin];
+                        }
                     }
                 }
             }
         }
-        connectingReqDate = newConnectingReqDate;
-        loopsExecuted++;
-        if (loopsExecuted == 25) {
-            NIMLOG_ERR1(@"returnSortedItinerariesWithMatchesForDate loopsExecuted unexpectedly reached 25");
+        if ([matchingItineraries count] == 0) {
+            return nil;
         }
-    } while (newConnectingReqDate && loopsExecuted < 25);
-    
-    if ([matchingReqChunks count] == 0) {
-        return nil;  // no matches
-    }
-    // else collect all the itineraries that have valid GTFS data and are in the right time range
-    for (PlanRequestChunk* reqChunk in matchingReqChunks) {
-        for (Itinerary* itin in [reqChunk itineraries]) {
-            // Check that all legs are current with the GTFS file
-            
-            if ([itin isCurrentVsGtfsFilesIn:[self transitCalendar]]) { // if itin is valid
-                // Check that the times match the requested time
-                NSDate* requestTimeOnly = timeOnlyFromDate(requestDate);
+        
+        // Sort itineraries
+        NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:YES];
+        NSArray* returnedItineraries = [matchingItineraries sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]];
+        
+        // Remove itineraries from returnedItineraries beyond planMaxItinerariesToShow
+        if ([returnedItineraries count] > planMaxItinerariesToShow) {
+            NSMutableArray* copyOfReturnedItineraries = [NSMutableArray arrayWithArray:returnedItineraries];
+            for (int i=planMaxItinerariesToShow; i<[returnedItineraries count]; i++) {
                 if (depOrArrive == DEPART) {
-                    NSDate* requestTimeWithPreBuffer = [requestTimeOnly dateByAddingTimeInterval:(-planBufferSecondsBeforeItinerary)];
-                    NSDate* requestTimeWithPostBuffer = [requestTimeOnly dateByAddingTimeInterval:planMaxTimeForResultsToShow];
-                    if ([requestTimeWithPreBuffer compare:[itin startTimeOnly]]!=NSOrderedDescending &&
-                        [requestTimeWithPostBuffer compare:[itin startTimeOnly]]!=NSOrderedAscending) {
-                        // If itin start time is within the two buffer ranges
-                        [matchingItineraries addObject:itin];
-                    }
-                } else { // depOrArrive = ARRIVE
-                    NSDate* requestTimeWithPreBuffer = [requestTimeOnly dateByAddingTimeInterval:(planBufferSecondsBeforeItinerary)];
-                    NSDate* requestTimeWithPostBuffer = [requestTimeOnly dateByAddingTimeInterval:-planMaxTimeForResultsToShow];
-                    if ([requestTimeWithPreBuffer compare:[itin endTimeOnly]]!=NSOrderedAscending &&
-                        [requestTimeWithPostBuffer compare:[itin endTimeOnly]]!=NSOrderedDescending) {
-                        // If itin start time is within the two buffer ranges
-                        [matchingItineraries addObject:itin];
-                    }
+                    [copyOfReturnedItineraries removeLastObject]; // remove last itineraries for DEPART requests
+                } else {
+                    [copyOfReturnedItineraries removeObjectAtIndex:0]; // remove first itineraries for ARRIVE requests
                 }
             }
+            returnedItineraries = [NSArray arrayWithArray:copyOfReturnedItineraries];
         }
+        
+        return returnedItineraries;
     }
-    if ([matchingItineraries count] == 0) {
-        return nil;
+    @catch (NSException *exception) {
+        logException(@"Plan->returnSortedItinerariesWithMatchesForDate:", @"", exception);
     }
-
-    // Sort itineraries
-    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:YES];
-    NSArray* returnedItineraries = [matchingItineraries sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]];
-    
-    // Remove itineraries from returnedItineraries beyond planMaxItinerariesToShow
-    if ([returnedItineraries count] > planMaxItinerariesToShow) {
-        NSMutableArray* copyOfReturnedItineraries = [NSMutableArray arrayWithArray:returnedItineraries];
-        for (int i=planMaxItinerariesToShow; i<[returnedItineraries count]; i++) {
-            if (depOrArrive == DEPART) {
-                [copyOfReturnedItineraries removeLastObject]; // remove last itineraries for DEPART requests
-            } else {
-                [copyOfReturnedItineraries removeObjectAtIndex:0]; // remove first itineraries for ARRIVE requests
-            }
-        }
-        returnedItineraries = [NSArray arrayWithArray:copyOfReturnedItineraries];
-    }
-    
-    return returnedItineraries;
 }
 
 

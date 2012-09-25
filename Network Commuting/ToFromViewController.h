@@ -24,7 +24,7 @@ typedef enum {
 } ToFromEditMode;
 
 
-@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKObjectLoaderDelegate, RKRequestDelegate,UIActionSheetDelegate,UIAlertViewDelegate>
+@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, LocationsGeocodeResultsDelegate, RKRequestDelegate,UIActionSheetDelegate,UIAlertViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView* mainTable;  // grouped table for main page layout
 @property (strong, nonatomic) UITableView *fromTable;  // from table embedded in mainTable
@@ -78,7 +78,6 @@ typedef enum {
 - (void)reloadTables;  // Reloads the tables in case something has changed in the model
 
 -(BOOL)alertUsetForLocationService;
--(void)getRealTimeData;
 -(void)getRealTimeDataForItinerary;
 -(NSNumber *)getWalkDistance;
 -(void)setFBParameterForGeneral;
@@ -87,7 +86,6 @@ typedef enum {
 -(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status;
 
 -(void)doSwapLocation;
--(void)requestReverseGeo:(Location *)location;
 - (void) hideTabBar;
 - (void) showTabbar;
 - (void)endEdit;

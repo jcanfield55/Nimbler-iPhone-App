@@ -64,50 +64,54 @@
 // time it has an update
 - (void)requestPlanWithParameters:(PlanRequestParameters *)parameters
 {
-    
-    // Check if we have a stored plan that we can use
-    NSArray* matchingPlanArray = [self fetchPlansWithToLocation:[parameters toLocation]
-                                                   fromLocation:[parameters fromLocation]];
-    
-    if (matchingPlanArray && [matchingPlanArray count]>0) {
-        Plan* matchingPlan = [matchingPlanArray objectAtIndex:0]; // Take the first matching plan
+    @try {
+        // Check if we have a stored plan that we can use
+        NSArray* matchingPlanArray = [self fetchPlansWithToLocation:[parameters toLocation]
+                                                       fromLocation:[parameters fromLocation]];
         
-        if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate]
-                                                      departOrArrive:[parameters departOrArrive]]) {
-            NIMLOG_EVENT1(@"Matches found in plan cache");
+        if (matchingPlanArray && [matchingPlanArray count]>0) {
+            Plan* matchingPlan = [matchingPlanArray objectAtIndex:0]; // Take the first matching plan
+            
+            if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate]
+                                                          departOrArrive:[parameters departOrArrive]]) {
+                NIMLOG_EVENT1(@"Matches found in plan cache");
 #if FLURRY_ENABLED
-            NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
-                                          FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
-                                          FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
-                                          nil];
-            [Flurry logEvent: FLURRY_ROUTE_FROM_CACHE withParameters:flurryParams];
+                NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
+                                              FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
+                                              FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
+                                              nil];
+                [Flurry logEvent: FLURRY_ROUTE_FROM_CACHE withParameters:flurryParams];
 #endif
-            [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
-            PlanRequestStatus status = PLAN_STATUS_OK;
-            if(toFromVC.timerGettingRealDataByItinerary != nil){
-                [toFromVC.timerGettingRealDataByItinerary invalidate];
-                toFromVC.timerGettingRealDataByItinerary = nil; 
+                [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
+                PlanRequestStatus status = PLAN_STATUS_OK;
+                if(toFromVC.timerGettingRealDataByItinerary != nil){
+                    [toFromVC.timerGettingRealDataByItinerary invalidate];
+                    toFromVC.timerGettingRealDataByItinerary = nil;
+                }
+                [toFromVC setPlan:matchingPlan];
+                //            [toFromVC getRealTimeDataForItinerary];
+                //            toFromVC.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromVC selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
+                if (parameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
+                    [routeOptionsVC newPlanAvailable:matchingPlan status:status];
+                } else {
+                    [toFromVC newPlanAvailable:matchingPlan status:status];
+                }
+                return;
             }
-            [toFromVC setPlan:matchingPlan];
-//            [toFromVC getRealTimeDataForItinerary];
-//            toFromVC.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromVC selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
-            if (parameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
-                [routeOptionsVC newPlanAvailable:matchingPlan status:status];
-            } else {
-                [toFromVC newPlanAvailable:matchingPlan status:status];
-            }
-            return;
         }
-    }
-    // if no appropriate plan in cache, request one from OTP
+        // if no appropriate plan in cache, request one from OTP
 #if FLURRY_ENABLED
-    NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
-                                  FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
-                                  FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
-                                  nil];
-    [Flurry logEvent: FLURRY_ROUTE_NOT_IN_CACHE withParameters:flurryParams];
+        NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
+                                      FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
+                                      FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
+                                      nil];
+        [Flurry logEvent: FLURRY_ROUTE_NOT_IN_CACHE withParameters:flurryParams];
 #endif
-    [self requestPlanFromOtpWithParameters:parameters];
+        [self requestPlanFromOtpWithParameters:parameters];
+    }
+    @catch (NSException *exception) {
+        logException(@"PlanStore->requestPlanWithParameters:", @"", exception);
+    }
 }
 
 #pragma mark -- Generate random string of length 16
@@ -122,91 +126,94 @@
 // Requests for a new plan from OTP
 -(void)requestPlanFromOtpWithParameters:(PlanRequestParameters *)parameters
 {
-    // Create the date formatters we will use to output the date & time
-    if (!dateFormatter) {
-        dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"MM/dd/yyyy"];
+    @try {
+        // Create the date formatters we will use to output the date & time
+        if (!dateFormatter) {
+            dateFormatter = [[NSDateFormatter alloc] init];
+            [dateFormatter setDateFormat:@"MM/dd/yyyy"];
+        }
+        if (!timeFormatter) {
+            timeFormatter = [[NSDateFormatter alloc] init];
+            [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
+            [timeFormatter setDateStyle:NSDateFormatterNoStyle];
+        }
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+        if([[parameters fromLocation] latLngPairStr]){
+            [params setObject:[[parameters fromLocation] latLngPairStr] forKey:FROM_PLACE];
+        }
+        if([[parameters toLocation] latLngPairStr]){
+            [params setObject:[[parameters toLocation] latLngPairStr]   forKey:TO_PLACE];
+        }
+        if([dateFormatter stringFromDate:[parameters thisRequestTripDate]]){
+            [params setObject:[dateFormatter stringFromDate:[parameters thisRequestTripDate]] forKey:REQUEST_TRIP_DATE];
+        }
+        if([timeFormatter stringFromDate:[parameters thisRequestTripDate]]){
+            [params setObject:[timeFormatter stringFromDate:[parameters thisRequestTripDate]] forKey:REQUEST_TRIP_TIME];
+        }
+        if((([parameters departOrArrive] == ARRIVE) ? @"true" : @"false")){
+            [params setObject:(([parameters departOrArrive] == ARRIVE) ? @"true" : @"false") forKey:ARRIVE_BY];
+        }
+        if([NSNumber numberWithInt:[parameters maxWalkDistance]]){
+            [params setObject:[NSNumber numberWithInt:[parameters maxWalkDistance]] forKey:MAX_WALK_DISTANCE];
+        }
+        if([[NSUserDefaults standardUserDefaults]objectForKey:DEVICE_CFUUID]){
+            [params setObject:[[NSUserDefaults standardUserDefaults]objectForKey:DEVICE_CFUUID] forKey:DEVICE_ID];
+        }
+        if(parameters.formattedAddressTO){
+            [params setObject:parameters.formattedAddressTO forKey:FORMATTED_ADDRESS_TO];
+        }
+        if(parameters.formattedAddressFROM){
+            [params setObject:parameters.formattedAddressFROM forKey:FORMATTED_ADDRESS_FROM];
+        }
+        if(parameters.latitudeFROM){
+            [params setObject:parameters.latitudeFROM forKey:LATITUDE_FROM];
+        }
+        if(parameters.longitudeFROM){
+            [params setObject:parameters.longitudeFROM forKey:LONGITUDE_FROM];
+        }
+        if(parameters.latitudeTO){
+            [params setObject:parameters.latitudeTO forKey:LATITUDE_TO];
+        }
+        if(parameters.longitudeTO){
+            [params setObject:parameters.longitudeTO forKey:LONGITUDE_TO];
+        }
+        if(parameters.fromType){
+            [params setObject:parameters.fromType forKey:FROM_TYPE];
+        }
+        if(parameters.toType){
+            [params setObject:parameters.toType forKey:TO_TYPE];
+        }
+        if(parameters.rawAddressFROM){
+            [params setObject:parameters.rawAddressFROM forKey:RAW_ADDRESS_FROM];
+        }
+        if(parameters.timeFROM){
+            [params setObject:parameters.timeFROM forKey:TIME_FROM];
+        }
+        if(parameters.rawAddressTO){
+            [params setObject:parameters.rawAddressTO forKey:RAW_ADDRESS_TO];
+        }
+        if(parameters.timeTO){
+            [params setObject:parameters.timeTO forKey:TIME_TO];
+        }
+        // Build the parameters into a resource string
+        parameters.serverCallsSoFar = parameters.serverCallsSoFar + 1;
+        // TODO handle changes to maxWalkDistance with plan caching
+        NSString *requestID = [self generateRandomString];
+        NIMLOG_DEBUG1(@"Submitted Request ID=%@",requestID);
+        [params setObject:requestID forKey:REQUEST_ID];
+        planURLResource = requestID;
+        [parametersByPlanURLResource setObject:parameters forKey:planURLResource];
+        Plan *plan;
+        RKParams *requestParameter = [RKParams paramsWithDictionary:params];
+        [rkPlanMgr postObject:plan delegate:self block:^(RKObjectLoader *loader){
+            loader.resourcePath = PLAN_GENERATE_URL;
+            loader.params = requestParameter;
+            loader.method = RKRequestMethodPOST;
+        }];
     }
-    if (!timeFormatter) {
-        timeFormatter = [[NSDateFormatter alloc] init];
-        [timeFormatter setTimeStyle:NSDateFormatterShortStyle];
-        [timeFormatter setDateStyle:NSDateFormatterNoStyle];
+    @catch (NSException *exception) {
+        logException(@"PlanStore->requestPlanFromOTPWithParameters", @"", exception);
     }
-    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-    if([[parameters fromLocation] latLngPairStr]){
-        [params setObject:[[parameters fromLocation] latLngPairStr] forKey:FROM_PLACE];
-    }
-    if([[parameters toLocation] latLngPairStr]){
-        [params setObject:[[parameters toLocation] latLngPairStr]   forKey:TO_PLACE];
-    }
-    if([dateFormatter stringFromDate:[parameters thisRequestTripDate]]){
-        [params setObject:[dateFormatter stringFromDate:[parameters thisRequestTripDate]] forKey:REQUEST_TRIP_DATE];
-    }
-    if([timeFormatter stringFromDate:[parameters thisRequestTripDate]]){
-        [params setObject:[timeFormatter stringFromDate:[parameters thisRequestTripDate]] forKey:REQUEST_TRIP_TIME];
-    }
-    if((([parameters departOrArrive] == ARRIVE) ? @"true" : @"false")){
-        [params setObject:(([parameters departOrArrive] == ARRIVE) ? @"true" : @"false") forKey:ARRIVE_BY];
-    }
-    if([NSNumber numberWithInt:[parameters maxWalkDistance]]){
-        [params setObject:[NSNumber numberWithInt:[parameters maxWalkDistance]] forKey:MAX_WALK_DISTANCE];
-    }
-    if([[NSUserDefaults standardUserDefaults]objectForKey:DEVICE_CFUUID]){
-        [params setObject:[[NSUserDefaults standardUserDefaults]objectForKey:DEVICE_CFUUID] forKey:DEVICE_ID];
-    }
-    if(parameters.formattedAddressTO){
-        [params setObject:parameters.formattedAddressTO forKey:FORMATTED_ADDRESS_TO];
-    }
-    if(parameters.formattedAddressFROM){
-        [params setObject:parameters.formattedAddressFROM forKey:FORMATTED_ADDRESS_FROM];
-    }
-    if(parameters.latitudeFROM){
-        [params setObject:parameters.latitudeFROM forKey:LATITUDE_FROM];
-    }
-    if(parameters.longitudeFROM){
-        [params setObject:parameters.longitudeFROM forKey:LONGITUDE_FROM];
-    }
-    if(parameters.latitudeTO){
-        [params setObject:parameters.latitudeTO forKey:LATITUDE_TO];
-    }
-    if(parameters.longitudeTO){
-        [params setObject:parameters.longitudeTO forKey:LONGITUDE_TO];
-    }
-    if(parameters.fromType){
-        [params setObject:parameters.fromType forKey:FROM_TYPE];
-    }
-    if(parameters.toType){
-        [params setObject:parameters.toType forKey:TO_TYPE];
-    }
-    if(parameters.rawAddressFROM){
-        [params setObject:parameters.rawAddressFROM forKey:RAW_ADDRESS_FROM];
-    }
-    if(parameters.timeFROM){
-        [params setObject:parameters.timeFROM forKey:TIME_FROM];
-    }
-    if(parameters.rawAddressTO){
-        [params setObject:parameters.rawAddressTO forKey:RAW_ADDRESS_TO];
-    }
-    if(parameters.timeTO){
-        [params setObject:parameters.timeTO forKey:TIME_TO];
-    }
-    // Build the parameters into a resource string
-    parameters.serverCallsSoFar = parameters.serverCallsSoFar + 1;
-    // TODO handle changes to maxWalkDistance with plan caching
-    NSString *requestID = [self generateRandomString];
-    NIMLOG_DEBUG1(@"Submitted Request ID=%@",requestID);
-    [params setObject:requestID forKey:REQUEST_ID];
-    planURLResource = requestID;
-    [parametersByPlanURLResource setObject:parameters forKey:planURLResource];
-    Plan *plan;
-    RKParams *requestParameter = [RKParams paramsWithDictionary:params];
-    [rkPlanMgr postObject:plan delegate:self block:^(RKObjectLoader *loader){
-        loader.resourcePath = PLAN_GENERATE_URL;
-        loader.params = requestParameter;
-        loader.method = RKRequestMethodPOST;
-    }];
-    // Call the trip planner
-    //[rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
 }
 
 // Delegate methods for when the RestKit has results from the Planner
@@ -217,22 +224,27 @@
         NSDictionary *tempResponseDictionary = [rkParser objectFromString:[[objectLoader response] bodyAsString] error:nil];
         NSString* strRequestID = [tempResponseDictionary objectForKey:REQUEST_ID];
         NIMLOG_DEBUG1(@"Retrieved Request ID=%@",strRequestID);
-        if([[tempResponseDictionary objectForKey:CODE] intValue] == RESPONSE_SUCCESSFULL){
-            if([tempResponseDictionary objectForKey:ERROR] && [nc_AppDelegate sharedInstance].isToFromView){
-                UIAlertView *alertView = [[UIAlertView alloc] init];
-                [alertView setDelegate:self];
-                [alertView setTitle:APP_TITLE];
-                [alertView setMessage:ROUTE_NOT_POSSIBLE_MSG];
-                [alertView addButtonWithTitle:OK_BUTTON_TITLE];
-                [alertView show];
-                [toFromVC.activityIndicator stopAnimating];
-                [toFromVC.view setUserInteractionEnabled:YES];
+        if([[tempResponseDictionary objectForKey:RESPONSE_CODE] intValue] == RESPONSE_SUCCESSFULL){
+            if([tempResponseDictionary objectForKey:OTP_ERROR_STATUS]){
+                if ([nc_AppDelegate sharedInstance].isToFromView) {
+                    // only show error if on To & From View Controller, otherwise do nothing
+                    UIAlertView *alertView = [[UIAlertView alloc] init];
+                    [alertView setDelegate:self];
+                    [alertView setTitle:APP_TITLE];
+                    [alertView setMessage:ROUTE_NOT_POSSIBLE_MSG];
+                    [alertView addButtonWithTitle:OK_BUTTON_TITLE];
+                    [alertView show];
+                    [toFromVC.activityIndicator stopAnimating];
+                    [toFromVC.view setUserInteractionEnabled:YES];
+                }
             }
             else{
                 Plan *plan = [objects objectAtIndex:0];
                 NIMLOG_OBJECT1(@"PLAN =%@",plan);
-                //NSString* resourcePath = [objectLoader resourcePath];
-                planRequestParameters = [parametersByPlanURLResource objectForKey:strRequestID];
+                if (strRequestID && [strRequestID length]>0) {
+                    planRequestParameters = [parametersByPlanURLResource objectForKey:strRequestID];
+                    [parametersByPlanURLResource removeObjectForKey:strRequestID]; // Clear out entry from dictionary now we are done with it
+                }
                 [plan setToLocation:[planRequestParameters toLocation]];
                 [plan setFromLocation:[planRequestParameters fromLocation]];
                 [plan createRequestChunkWithAllItinerariesAndRequestDate:[planRequestParameters thisRequestTripDate]
@@ -352,6 +364,21 @@
 {
     if (!fromLocation || !toLocation) {
         return nil;
+    }
+    if ([[toLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
+        return nil;  // don't match these routes
+    }
+    if ([[fromLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
+        // If there is a reverseGeoLocation and it is basically the same location as Current Location
+        // (in other words the reverseGeolocation is current) use that to look up the plan cache
+        if ([fromLocation reverseGeoLocation] &&
+            [[fromLocation reverseGeoLocation] metersFromLocation:fromLocation] < 50.0) {
+            fromLocation = [fromLocation reverseGeoLocation];
+        }
+        else {
+            NIMLOG_EVENT1(@"Up-to-date reverse geocode not yet available for Current Location.  Can not retrieve from any plans from cache.");
+            return nil;  
+        }
     }
     NSDictionary* fetchParameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [fromLocation formattedAddress],@"FROM_FORMATTED_ADDRESS",

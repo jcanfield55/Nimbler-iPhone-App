@@ -68,6 +68,7 @@
 - (BOOL)isMatchingTypedString:(NSString *)str;
 - (BOOL)isEquivalent:(Location *)loc2;
 
+- (double)metersFromLocation:(Location *)loc2;  // Returns the distance between the referring object and loc2 in meters
 @end
 
 @interface Location (CoreDataGeneratedAccessors)

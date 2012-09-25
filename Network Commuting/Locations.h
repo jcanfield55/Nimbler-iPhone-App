@@ -19,11 +19,11 @@
 @protocol LocationsGeocodeResultsDelegate
 
 @required
-
 /**
- * Returns an array of locations from the geocoder (could be empty) and a status code.  
+ * Returns an array of locations from the geocoder (could be empty) and a status code.
+ * Also supplies the parameters used for the original request
  */
--(void)newGeocodeResults:(NSArray *)locationArray withStatus:(GeocodeRequestStatus)status;
+-(void)newGeocodeResults:(NSArray *)locationArray withStatus:(GeocodeRequestStatus)status parameters:(GeocodeRequestParameters *)parameters;
 
 @end
 
@@ -76,12 +76,12 @@
 
 // Geocoding functions
 
-// Requests a forward geocode with the supplied parameters
-// Will get plan from the cache if available and will call OTP if not
-// Will call back the newPlanAvailable method on toFromVC when the first plan is available
-// Will continue to call OTP iteratively to obtain other itineraries up to the designated max # and time
-// After returning the first itinerary, it will call the newPlanAvailable method on routeOptionsVC each
-// time it has an update
+// Requests a forward geocode with the supplied rawAddress, apiType, supportedRegion and isFrom in the parameters
+// Calls the newGeocodeResults of the delegate object with the results and status. 
 - (void)forwardGeocodeWithParameters:(GeocodeRequestParameters *)parameters callBack:(id <LocationsGeocodeResultsDelegate>)delegate;
+
+// Requests a reverse geocode using the lat, lng, and apiType specified in parameters
+// Calls the newGeocodeResults of the delegate object with the results and status.  
+- (void)reverseGeocodeWithParameters:(GeocodeRequestParameters *)parameters callBack:(id <LocationsGeocodeResultsDelegate>)delegate;
 
 @end
