@@ -240,18 +240,22 @@
 // leg if needed. 
 - (NSArray *)legDescriptionTitleSortedArray
 {
-    if (!legDescTitleSortedArr) {
+    //DE - 170 Fixed
+    //Added To load leg data on every RealTime request/response.
+    //if (!legDescTitleSortedArr) {
         [self makeLegDescriptionSortedArrays];
-    }
+    //}
     return legDescTitleSortedArr;
 }
 
 // Same as above, but returns the subtitles
 - (NSArray *)legDescriptionSubtitleSortedArray
 {
-    if (!legDescSubtitleSortedArr) {
+    //DE - 170 Fixed
+    //Added To load leg data on every RealTime request/response.
+   // if (!legDescSubtitleSortedArr) {
         [self makeLegDescriptionSortedArrays];
-    }
+    //}
     return legDescSubtitleSortedArr;
 }
 

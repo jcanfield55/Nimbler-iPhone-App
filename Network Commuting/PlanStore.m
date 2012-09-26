@@ -197,14 +197,21 @@
         parameters.serverCallsSoFar = parameters.serverCallsSoFar + 1;
         // TODO handle changes to maxWalkDistance with plan caching
         NSString *requestID = [self generateRandomString];
+        
+        // Append The requestID to the URL.
+        // Now we set that String as key of our  parametersByPlanURLResource Dictionary.
+        // Now when we receive response or we receive an error we can get our planRequestParamater by key [objectloader resourcePath].
+        
         NIMLOG_DEBUG1(@"Submitted Request ID=%@",requestID);
-        [params setObject:requestID forKey:REQUEST_ID];
-        planURLResource = requestID;
-        [parametersByPlanURLResource setObject:parameters forKey:planURLResource];
+         NSString *strPlanGenerateURL = [NSString stringWithFormat:@"%@?id=%@",PLAN_GENERATE_URL,requestID];
+        
+        //[params setObject:requestID forKey:REQUEST_ID];
+        //planURLResource = requestID;
+        [parametersByPlanURLResource setObject:parameters forKey:strPlanGenerateURL];
         Plan *plan;
         RKParams *requestParameter = [RKParams paramsWithDictionary:params];
         [rkPlanMgr postObject:plan delegate:self block:^(RKObjectLoader *loader){
-            loader.resourcePath = PLAN_GENERATE_URL;
+            loader.resourcePath = strPlanGenerateURL;
             loader.params = requestParameter;
             loader.method = RKRequestMethodPOST;
         }];
@@ -217,9 +224,9 @@
 // Delegate methods for when the RestKit has results from the Planner
 - (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects{
     @try {
-        
         RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
         NSDictionary *tempResponseDictionary = [rkParser objectFromString:[[objectLoader response] bodyAsString] error:nil];
+         NIMLOG_OBJECT1(@"PLAN =%@",tempResponseDictionary);
         NSString* strRequestID = [tempResponseDictionary objectForKey:REQUEST_ID];
         NIMLOG_DEBUG1(@"Retrieved Request ID=%@",strRequestID);
         if([[tempResponseDictionary objectForKey:RESPONSE_CODE] intValue] == RESPONSE_SUCCESSFULL){
@@ -238,10 +245,10 @@
             }
             else{
                 Plan *plan = [objects objectAtIndex:0];
-                NIMLOG_OBJECT1(@"PLAN =%@",plan);
-                if (strRequestID && [strRequestID length]>0) {
-                    planRequestParameters = [parametersByPlanURLResource objectForKey:strRequestID];
-                    [parametersByPlanURLResource removeObjectForKey:strRequestID]; // Clear out entry from dictionary now we are done with it
+                NSString *strResourcePath = [objectLoader resourcePath];
+                if (strResourcePath && [strResourcePath length]>0) {
+                    planRequestParameters = [parametersByPlanURLResource objectForKey:strResourcePath];
+                    [parametersByPlanURLResource removeObjectForKey:strResourcePath]; // Clear out entry from dictionary now we are done with it
                 }
                 
                 // Set to & from location with special handling of CurrentLocation
@@ -266,18 +273,10 @@
                 // Now format the itineraries of the consolidated plan
                 [plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate] departOrArrive:[planRequestParameters departOrArrive]];
                 [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
-                
+                 NIMLOG_OBJECT1(@"PLAN =%@",plan);
                 // Call-back the appropriate RouteOptions VC with the new plan
                 if (planRequestParameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
                     [routeOptionsVC newPlanAvailable:plan status:PLAN_STATUS_OK];
-                    if(toFromVC.timerGettingRealDataByItinerary != nil){
-                        [toFromVC.timerGettingRealDataByItinerary invalidate];
-                        toFromVC.timerGettingRealDataByItinerary = nil; 
-                    }
-                    // Added To Get Real Time Data Only When we are in RouteOptionsView
-                    
-                    [toFromVC getRealTimeDataForItinerary];
-                     toFromVC.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromVC selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
                 } else {
                     [toFromVC newPlanAvailable:plan status:PLAN_STATUS_OK];
                 }
@@ -298,7 +297,6 @@
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error
 {
     NIMLOG_ERR1(@"Error received from RKObjectManager: %@", error);
-    
     PlanRequestStatus status;
     NIMLOG_EVENT1(@"Plan RKError objectLoader params: %@", [objectLoader params]);
     if ([[error localizedDescription] rangeOfString:@"client is unable to contact the resource"].location != NSNotFound) {
@@ -317,6 +315,7 @@
         status = PLAN_GENERIC_EXCEPTION;
     }
     NSString* resourcePath = [objectLoader resourcePath];
+    
     PlanRequestParameters* parameters = [parametersByPlanURLResource objectForKey:resourcePath];
     if (!parameters) {
         NIMLOG_ERR1(@"RKObjectManager failure with no retrievable parameters.  Error: %@", error);

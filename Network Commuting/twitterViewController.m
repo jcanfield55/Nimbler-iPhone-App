@@ -124,6 +124,14 @@ NSUserDefaults *prefs;
     [super viewWillDisappear:YES];
     [nc_AppDelegate sharedInstance].isTwitterView = NO;
 }
+- (NSUInteger) supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (BOOL) shouldAutorotate {
+    return NO;
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations

@@ -60,6 +60,7 @@ typedef enum {
 @property (strong, nonatomic) UIBarButtonItem *btnNow;
 @property (strong, nonatomic) NSTimer *timerGettingRealDataByItinerary;
 @property (strong, nonatomic) UIActivityIndicatorView* activityIndicator;
+@property (strong, nonatomic) NSString *strLiveDataURL;
 
 - (IBAction)openPickerView:(id)sender;
 

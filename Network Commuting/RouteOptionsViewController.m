@@ -96,19 +96,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 366;
 }
 
 -(void)popOutToNimbler{
-    NSLog(@"Begin popOutToNimbler");
-// Partial Implementation of Defects Related to Real Time Data.    
-//    NSArray *ities = [plan sortedItineraries];
-//    for (int i=0; i <ities.count ; i++) {
-//        [[ities objectAtIndex:i] setItinArrivalFlag:nil];
-//        Itinerary *it = [ities objectAtIndex:i];
-//        NSArray *legs =  [it sortedLegs];
-//        for (int i=0;i<legs.count;i++) {
-//            [[legs objectAtIndex:i] setArrivalFlag:nil];
-//            [[legs objectAtIndex:i] setArrivalTime:nil];
-//            [[legs objectAtIndex:i] setTimeDiffInMins:nil];
-//        }
-//    }
+    NSLog(@"Begin popOutToNimbler");    
     CATransition *animation = [CATransition animation];
     [animation setDuration:0.3];
     [animation setType:kCATransitionPush];
@@ -305,6 +293,19 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 366;
 
 - (void)dealloc{
     self.mainTable = nil;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    return UIInterfaceOrientationPortrait;
+}
+
+- (NSUInteger) supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (BOOL) shouldAutorotate {
+    return NO;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

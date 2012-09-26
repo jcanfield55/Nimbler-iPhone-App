@@ -64,7 +64,8 @@ static nc_AppDelegate *appDelegate;
 @synthesize calendarByDateByAgency;
 @synthesize timerType;
 @synthesize isDatePickerOpen;
-
+@synthesize strUpdateSettingURL;
+@synthesize strTweetCountURL;
 
 // Feedback parameters
 @synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId;
@@ -186,16 +187,16 @@ FeedBackForm *fbView;
     // Create an instance of a UINavigationController and put toFromViewController as the first view
     @try {
         /*
-         // These is for navigation controller
+          These is for navigation controller
         
          UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:toFromViewController]; 
          self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
          [[self window] setRootViewController:navController];
-         [self.window makeKeyAndVisible];
+         
         */
          
         // This is for TabBar controller
-        
+        //[self.window makeKeyAndVisible];
         self.tabBarController = [[RXCustomTabBar alloc] init];
         twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
         settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController" bundle:nil];
@@ -210,7 +211,6 @@ FeedBackForm *fbView;
         
 //        [self.tabBarController.tabBar setSelectedImageTintColor:[UIColor redColor]];
 //        [self.tabBarController.tabBar setBackgroundImage:[UIImage imageNamed:@"img_tabbar.png"]];
-        [[nc_AppDelegate sharedInstance] updateTime];
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         [[self window] setRootViewController:self.tabBarController];
         [self.window makeKeyAndVisible];
@@ -548,13 +548,13 @@ FeedBackForm *fbView;
 }
 
 -(void)suppertedRegion
-{    
+{
     @try {
         isRegionSupport = TRUE;
         // DE - 181 Fixed
         RKClient *client = [RKClient clientWithBaseURL:TRIP_GENERATE_URL];
         [RKClient setSharedClient:client];
-        [[RKClient sharedClient]  get:@"metadata" delegate:self];
+        [[RKClient sharedClient]  get:METADATA_URL delegate:self];
     }
     @catch (NSException *exception) {
         logException(@"ncAppDelegate->suppertedRegion", @"", exception);    }
@@ -594,8 +594,12 @@ FeedBackForm *fbView;
                     calendarByDateByAgency = tempResponseDictionary;
                     KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
                     [keyObjectStore setObject:calendarByDateByAgency forKey:TR_CALENDAR_BY_DATE_BY_AGENCY];
+                    [self getTwiiterLiveData];
+                    if (timerTweeterGetData == nil) {
+                        timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
+                    }
                 }
-                else if([strRequestURL isEqualToString:UPDATE_SETTING_REQ]){
+                else if([strRequestURL isEqualToString:strUpdateSettingURL]){
                     NSDictionary  *dictTemp = [rkParser objectFromString:[response bodyAsString] error:nil];
                     NIMLOG_EVENT1(@"Setting Request RKResponse: %@",[response bodyAsString]);
                     NSNumber *respCode = [(NSDictionary*)dictTemp objectForKey:RESPONSE_CODE];
@@ -608,7 +612,7 @@ FeedBackForm *fbView;
                     isSettingRequest = NO;
                 }
                 //Added To Solve DE-162,174,182
-                else if ([strRequestURL isEqualToString:TWEET_COUNT_URL]) {
+                else if ([strRequestURL isEqualToString:strTweetCountURL]) {
                     isTwitterLivaData = false;
                     NIMLOG_EVENT1(@"Twitter response received");
                     NSDictionary  *tweeterCountParser = [rkParser objectFromString:[response bodyAsString] error:nil];
@@ -630,9 +634,13 @@ FeedBackForm *fbView;
                             [twitterView getAdvisoryData];
                         }
                     }
-                } else if(isRegionSupport){
+                }
+                // DE- 181 Fixed
+                // Checking resourcePath instead of checking for BOOL variable isRegionSupport.
+                else if([strRequestURL isEqualToString:METADATA_URL]){
                     NIMLOG_EVENT1(@"Loaded SupportedRegion response");
                     NSDictionary  *regionParser = [rkParser objectFromString:[response bodyAsString] error:nil];
+                    NIMLOG_OBJECT1(@"regionParser =%@",regionParser);
                     SupportedRegion *region = [[SupportedRegion alloc] init];
                     isRegionSupport = false;
                     BOOL maxLatitutedLoaded = false;
@@ -659,10 +667,7 @@ FeedBackForm *fbView;
                     if (maxLatitutedLoaded) { // 
                         [toFromViewController setSupportedRegion:region];
                     }
-                    [self getTwiiterLiveData];
-                    if (timerTweeterGetData == nil) {
-                        timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
-                    }
+                    [[nc_AppDelegate sharedInstance] updateTime];
                 }
             }
         }
@@ -826,6 +831,7 @@ FeedBackForm *fbView;
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID], nil];    
         isTwitterLivaData = TRUE;
         NSString *twitCountReq = [TWEET_COUNT_URL appendQueryParams:params];
+        strTweetCountURL = twitCountReq;
         NIMLOG_EVENT1(@"twitter count req: %@", twitCountReq);
         [[RKClient sharedClient]  get:twitCountReq delegate:self];
     }
@@ -853,6 +859,7 @@ FeedBackForm *fbView;
                             MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:[userDefault floatForKey:PREFS_MAX_WALK_DISTANCE]],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_URGENTNOTIFICATION_SOUND]],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_STANDARDNOTIFICATION_SOUND]],
                             nil];
     NSString *request = [UPDATE_SETTING_REQ appendQueryParams:params];
+    strUpdateSettingURL = request;
     NIMLOG_EVENT1(@"Save setting Req = %@", request);
     isSettingRequest = YES;
     [nc_AppDelegate sharedInstance].isSettingSavedSuccessfully = NO;
@@ -875,6 +882,7 @@ FeedBackForm *fbView;
                                 nil];
         NIMLOG_EVENT1(@"params=%@",params);
         NSString *request = [UPDATE_SETTING_REQ appendQueryParams:params];
+        strUpdateSettingURL = request;
         [[RKClient sharedClient]  get:request delegate:self]; 
         
     }

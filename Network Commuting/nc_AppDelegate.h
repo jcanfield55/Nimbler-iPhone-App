@@ -43,10 +43,11 @@
     NSDictionary* serviceByWeekdayByAgency;
     NSDictionary* calendarByDateByAgency;
     BOOL isDatePickerOpen;
+    NSString *strUpdateSettingURL;
+    NSString *strTweetCountURL;
 }
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
-
 @property (readonly, strong, nonatomic) Locations *locations;
 @property (readonly, strong, nonatomic) PlanStore *planStore;
 @property (readonly, strong, nonatomic) ToFromViewController *toFromViewController;
@@ -85,6 +86,9 @@
 @property (nonatomic, strong) NSString *timerType;
 
 @property (nonatomic) BOOL isDatePickerOpen;
+
+@property (nonatomic, strong) NSString *strUpdateSettingURL;
+@property (nonatomic, strong) NSString *strTweetCountURL;
 
 - (NSURL *)applicationDocumentsDirectory;
 

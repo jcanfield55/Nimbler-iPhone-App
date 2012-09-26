@@ -116,7 +116,7 @@
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NIMLOG_EVENT1(@"Select Row: isFrom=%d, section=%d, row=%d", isFrom, [indexPath section], [indexPath row]);
-        
+    
     if ([self adjustedForEnterNewAddressFor:[indexPath row]] == -1) {  // "Enter New Address" cell
         if (isFrom) {
             [toFromVC setEditMode:FROM_EDIT]; 
@@ -142,7 +142,7 @@
             [toFromVC setEditMode:NO_EDIT];  // Have toFromVC end the edit mode (DE96 fix)
             
             if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) { // If a list (like 'Caltrain Station List')
-#if FLURRY_ENABLED          
+#if FLURRY_ENABLED
                 NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");          
                 NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
                                         FLURRY_TOFROM_WHICH_TABLE, isFromString,          
@@ -540,6 +540,19 @@
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    return UIInterfaceOrientationPortrait;
+}
+
+- (NSUInteger) supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (BOOL) shouldAutorotate {
+    return NO;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

@@ -213,7 +213,6 @@ NSUserDefaults *prefs;
 {
     [super viewWillAppear:animated];
     
-    
     @try {
 #if FLURRY_ENABLED
         [Flurry logEvent: FLURRY_ROUTE_DETAILS_APPEAR];

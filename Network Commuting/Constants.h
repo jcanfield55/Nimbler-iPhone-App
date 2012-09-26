@@ -247,6 +247,8 @@
 
 #define ALERT_TRIP_NOT_AVAILABLE       @"Sorry, we are unable to calculate a route for that To & From address"
 
+#define METADATA_URL                   @"metadata"
+
 
 
 

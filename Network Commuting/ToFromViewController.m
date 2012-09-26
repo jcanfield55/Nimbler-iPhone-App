@@ -98,7 +98,7 @@
 @synthesize continueGetTime;
 @synthesize timerGettingRealDataByItinerary;
 @synthesize activityIndicator;
-
+@synthesize strLiveDataURL;
 @synthesize datePicker,toolBar,departArriveSelector,date,btnDone,btnNow;
 // Constants for animating up and down the To: field
 #define FROM_SECTION 0
@@ -206,8 +206,24 @@ UIImage *imageDetailDisclosure;
     return self;
 }
 
+- (void) hideGradientBackground:(UIView*)theView
+{
+    for (UIView * subview in theView.subviews)
+    {
+        if ([subview isKindOfClass:[UIImageView class]])
+            subview.hidden = YES;
+        [self hideGradientBackground:subview];
+    }
+}
+
 - (void)viewDidLoad{
     [super viewDidLoad];
+    
+    //Added To clear The Background Color of UitableView in Ios - 6
+    if([[[UIDevice currentDevice] systemVersion] intValue] >= 6){
+        [self.mainTable setBackgroundColor:[UIColor clearColor]];
+        [self hideGradientBackground:self.mainTable];
+    }
     // Added To solve the crash related to ios 4.3
     if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
         [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
@@ -269,6 +285,20 @@ UIImage *imageDetailDisclosure;
     self.mainTable = nil;
     self.routeButton = nil;
 }
+// Added To Handle Orientation issue in ios-6
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    return UIInterfaceOrientationPortrait;
+}
+
+- (NSUInteger) supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (BOOL) shouldAutorotate {
+    return NO;
+}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -279,6 +309,10 @@ UIImage *imageDetailDisclosure;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    if(self.timerGettingRealDataByItinerary != nil){
+        [self.timerGettingRealDataByItinerary invalidate];
+        self.timerGettingRealDataByItinerary = nil;
+    }
     NIMLOG_PERF1(@"Entered ToFromView viewWillAppear");
     [nc_AppDelegate sharedInstance].isToFromView = YES;
     
@@ -631,6 +665,7 @@ UIImage *imageDetailDisclosure;
             // if To txtField is already in the subview (due to recycling, no need to add again
         } else { 
             [cellView addSubview:[toTableVC txtField]]; // add To txtfield
+
         }
     }     
     return cell;
@@ -996,7 +1031,24 @@ UIImage *imageDetailDisclosure;
         }
         // DE - 155 Fixed
         if([[plan sortedItineraries] count] != 0){
+            if(self.timerGettingRealDataByItinerary != nil){
+                [self.timerGettingRealDataByItinerary invalidate];
+                self.timerGettingRealDataByItinerary = nil;
+            }
+            NSArray *ities = [plan sortedItineraries];
+            for (int i=0; i <ities.count ; i++) {
+                [[ities objectAtIndex:i] setItinArrivalFlag:nil];
+                Itinerary *it = [ities objectAtIndex:i];
+                NSArray *legs =  [it sortedLegs];
+                for (int i=0;i<legs.count;i++) {
+                    [[legs objectAtIndex:i] setArrivalFlag:nil];
+                    [[legs objectAtIndex:i] setArrivalTime:nil];
+                    [[legs objectAtIndex:i] setTimeDiffInMins:nil];
+                }
+            }
             [routeOptionsVC setPlan:plan];
+            [self getRealTimeDataForItinerary];
+            self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
             if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
                 CATransition *animation = [CATransition animation];
                 [animation setDuration:0.3];
@@ -1224,10 +1276,12 @@ UIImage *imageDetailDisclosure;
 
 #pragma mark RKResponse Delegate method
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
+    
     @try {
+        NSString *strResuorcePath = [request resourcePath];
         // DE 175 Fixed
-        if (isContinueGetRealTimeData) {
-            if ([request isGET]) {       
+        if ([strResuorcePath isEqualToString:strLiveDataURL]) {
+            if ([request isGET]) {
                 NIMLOG_OBJECT1(@"response %@", [response bodyAsString]);
                 isContinueGetRealTimeData = NO;
                 RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
@@ -1309,6 +1363,7 @@ UIImage *imageDetailDisclosure;
             [RKClient setSharedClient:client];  
             NSDictionary *tempDictionary =[NSDictionary dictionaryWithObjectsAndKeys:strItineraries,ITINERARY_ID,@"true",FOR_TODAY, nil ];
             NSString *req = [LIVE_FEEDS_BY_ITINERARIES_URL appendQueryParams:tempDictionary];
+            strLiveDataURL = req;
             [[RKClient sharedClient]  get:req  delegate:self];
         }
     }
@@ -1316,7 +1371,6 @@ UIImage *imageDetailDisclosure;
         logException(@"ToFromViewController->getRealTimeDataForItinerary", @"", exception);
     }
 }
-
 
 #pragma mark get walk distance from User Defaults
 -(NSNumber *)getWalkDistance
