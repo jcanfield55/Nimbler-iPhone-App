@@ -88,9 +88,7 @@
                     [toFromVC.timerGettingRealDataByItinerary invalidate];
                     toFromVC.timerGettingRealDataByItinerary = nil;
                 }
-                // [toFromVC setPlan:matchingPlan];
-                //            [toFromVC getRealTimeDataForItinerary];
-                //            toFromVC.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromVC selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
+
                 if (parameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
                     [routeOptionsVC newPlanAvailable:matchingPlan status:status];
                 } else {
@@ -245,8 +243,21 @@
                     planRequestParameters = [parametersByPlanURLResource objectForKey:strRequestID];
                     [parametersByPlanURLResource removeObjectForKey:strRequestID]; // Clear out entry from dictionary now we are done with it
                 }
-                [plan setToLocation:[planRequestParameters toLocation]];
-                [plan setFromLocation:[planRequestParameters fromLocation]];
+                
+                // Set to & from location with special handling of CurrentLocation
+                Location *toLoc = [planRequestParameters toLocation];
+                if ([toLoc isCurrentLocation] && [toLoc isReverseGeoValid]) {
+                    plan.toLocation = [toLoc reverseGeoLocation];
+                } else {
+                    plan.toLocation = toLoc;
+                }
+                Location* fromLoc = [planRequestParameters fromLocation];
+                if ([fromLoc isCurrentLocation] && [fromLoc isReverseGeoValid]) {
+                    plan.fromLocation = [fromLoc reverseGeoLocation];
+                } else {
+                    plan.fromLocation = fromLoc;
+                }
+
                 [plan createRequestChunkWithAllItinerariesAndRequestDate:[planRequestParameters thisRequestTripDate]
                                                           departOrArrive:[planRequestParameters departOrArrive]];
                 saveContext(managedObjectContext);  // Save location and request chunk changes
@@ -268,7 +279,7 @@
                     [toFromVC getRealTimeDataForItinerary];
                      toFromVC.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromVC selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
                 } else {
-                    [toFromVC newPlanAvailable:plan status:STATUS_OK];
+                    [toFromVC newPlanAvailable:plan status:PLAN_STATUS_OK];
                 }
             }
         }
@@ -364,40 +375,89 @@
 // Plans are sorted starting with the latest (most current) plan first
 - (NSArray *)fetchPlansWithToLocation:(Location *)toLocation fromLocation:(Location *)fromLocation
 {
-    if (!fromLocation || !toLocation) {
+    if (!fromLocation || !toLocation || fromLocation==toLocation) {
         return nil;
     }
-    if ([[toLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
-        return nil;  // don't match these routes
-    }
-    if ([[fromLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
-        // If there is a reverseGeoLocation and it is basically the same location as Current Location
-        // (in other words the reverseGeolocation is current) use that to look up the plan cache
-        if ([fromLocation reverseGeoLocation] &&
-            [[fromLocation reverseGeoLocation] metersFromLocation:fromLocation] < 50.0) {
-            fromLocation = [fromLocation reverseGeoLocation];
-        }
-        else {
-            NIMLOG_EVENT1(@"Up-to-date reverse geocode not yet available for Current Location.  Can not retrieve from any plans from cache.");
-            return nil;  
-        }
-    }
-    NSDictionary* fetchParameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [fromLocation formattedAddress],@"FROM_FORMATTED_ADDRESS",
-                                     [toLocation formattedAddress], @"TO_FORMATTED_ADDRESS", nil];
-    NSFetchRequest* request = [managedObjectModel
-                               fetchRequestFromTemplateWithName:@"PlansByToAndFromLocations"
-                               substitutionVariables:fetchParameters];
-    NSSortDescriptor *sd1 = [NSSortDescriptor sortDescriptorWithKey:PLAN_LAST_UPDATED_FROM_SERVER_KEY
-                                                          ascending:NO]; // Later plan first
-    [request setSortDescriptors:[NSArray arrayWithObject:sd1]];
+    Location* fromAddrLoc;   // a fromLocation which is an specific location (not current location)
+    Location* fromCurrentLoc;  // fromLocation which is equal to currentLocation
+    Location* toAddrLoc;
+    Location* toCurrentLoc;
     
-    NSError *error;
-    NSArray *result = [managedObjectContext executeFetchRequest:request error:&error];
-    if (!result) {
-        [NSException raise:@"Fetch failed" format:@"Reason: %@", [error localizedDescription]];
+    if ([fromLocation isCurrentLocation]) {
+        fromCurrentLoc = fromLocation;
+        if ([fromLocation isReverseGeoValid]) {
+            fromAddrLoc = [fromLocation reverseGeoLocation]; // if there is a reverseGeo, use that too
+        }
     }
-    return result;  // Return the array of matches (could be empty)
+    else {  // fromLocation is not current location
+        fromAddrLoc = fromLocation;
+    }
+    
+    if ([toLocation isCurrentLocation]) {
+        toCurrentLoc = toLocation;
+        if ([toLocation isReverseGeoValid]) {
+            fromAddrLoc = [toLocation reverseGeoLocation]; // if there is a reverseGeo, use that too
+        }
+    }
+    else {  // toLocation is not current location
+        toAddrLoc = toLocation;
+    }
+    
+    // Fetch and compare for specific addresses
+    NSArray* result1 = [NSArray array];
+    if (fromAddrLoc && toAddrLoc) {
+        NSDictionary* fetchParameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                         [fromAddrLoc formattedAddress],@"FROM_FORMATTED_ADDRESS",
+                                         [toAddrLoc formattedAddress], @"TO_FORMATTED_ADDRESS", nil];
+        NSFetchRequest* request = [managedObjectModel
+                                   fetchRequestFromTemplateWithName:@"PlansByToAndFromLocations"
+                                   substitutionVariables:fetchParameters];
+        NSSortDescriptor *sd1 = [NSSortDescriptor sortDescriptorWithKey:PLAN_LAST_UPDATED_FROM_SERVER_KEY
+                                                              ascending:NO]; // Later plan first
+        [request setSortDescriptors:[NSArray arrayWithObject:sd1]];
+        NSError *error;
+        result1 = [managedObjectContext executeFetchRequest:request error:&error];
+        if (!result1) {
+            [NSException raise:@"Matching plan fetch failed" format:@"Reason: %@", [error localizedDescription]];
+        }
+    }
+    
+    // Also fetch and compare results for Current Location if needed
+    NSMutableArray* result2 = [NSMutableArray arrayWithCapacity:1];
+    if (fromCurrentLoc || toCurrentLoc) {
+        Location* fromQueryLoc = (fromCurrentLoc ? fromCurrentLoc : fromAddrLoc);
+        Location* toQueryLoc = (toCurrentLoc ? toCurrentLoc : toAddrLoc);
+        if (fromQueryLoc && toQueryLoc) {
+            NSDictionary* fetchParameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                             [fromQueryLoc formattedAddress],@"FROM_FORMATTED_ADDRESS",
+                                             [toQueryLoc formattedAddress], @"TO_FORMATTED_ADDRESS", nil];
+            NSFetchRequest* request = [managedObjectModel
+                                       fetchRequestFromTemplateWithName:@"PlansByToAndFromLocations"
+                                       substitutionVariables:fetchParameters];
+            NSSortDescriptor *sd1 = [NSSortDescriptor sortDescriptorWithKey:PLAN_LAST_UPDATED_FROM_SERVER_KEY
+                                                                  ascending:NO]; // Later plan first
+            [request setSortDescriptors:[NSArray arrayWithObject:sd1]];
+            NSError *error;
+            NSArray* result2temp = [managedObjectContext executeFetchRequest:request error:&error];
+            if (!result2temp) {
+                [NSException raise:@"Matching plan fetch failed" format:@"Reason: %@", [error localizedDescription]];
+            }
+            // Now check if the results are within the time threshold
+            for (Plan* CLPlan in result2temp) {
+                if ([[CLPlan lastUpdatedFromServer] timeIntervalSinceNow] <
+                    -(REVERSE_GEO_PLAN_FETCH_TIME_THRESHOLD)) {
+                    // If the plan is older than the thresold, then delete it from Core data
+                    [[self managedObjectContext] deleteObject:CLPlan];
+                }
+                else { // if within the threshold, add it to the result
+                    [result2 addObject:CLPlan];
+                }
+            }
+        }
+        
+        
+    }
+    return [result1 arrayByAddingObjectsFromArray:result2];  // Return the array of matches (could be empty)
 }
 
 

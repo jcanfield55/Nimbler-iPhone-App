@@ -38,13 +38,12 @@
     NSString *planURLResource; // URL resource sent to planner
     NSMutableArray *planRequestHistory; // Array of all the past plan request parameter histories in sequential order (most recent one last)
     Plan *plan;
-    Plan *tpResponsePlan;
-    FeedBackForm *fbplan;
     
     CGFloat toTableHeight;   // Current height of the toTable (US123 implementation)
     NSManagedObjectContext *managedObjectContext;
     BOOL toGeocodeRequestOutstanding;  // true if there is an outstanding To geocode request
     BOOL fromGeocodeRequestOutstanding;  //true if there is an outstanding From geocode request
+    NSDate* lastReverseGeoReqTime; 
     BOOL savetrip;
     double startButtonClickTime;
     float durationOfResponseTime;
@@ -67,6 +66,7 @@
 -(void)segmentChange;
 - (void)selectCurrentDate;
 - (void)selectDate;
+- (void)reverseGeocodeCurrentLocationIfNeeded;
 
 @end
 
@@ -96,7 +96,6 @@
 @synthesize supportedRegion;
 @synthesize isContinueGetRealTimeData;
 @synthesize continueGetTime;
-@synthesize plan;
 @synthesize timerGettingRealDataByItinerary;
 @synthesize activityIndicator;
 
@@ -321,7 +320,10 @@ UIImage *imageDetailDisclosure;
     NIMLOG_PERF1(@"Entered ToFromView did appear");
     // Flash scrollbars on tables
     [toTable flashScrollIndicators];
-    [fromTable flashScrollIndicators];   
+    [fromTable flashScrollIndicators];
+    if (isCurrentLocationMode) {
+        [self reverseGeocodeCurrentLocationIfNeeded];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -719,6 +721,9 @@ UIImage *imageDetailDisclosure;
             // DE59 fix -- only update table if not in FROM_EDIT mode
             [mainTable reloadData];
         }
+        if (newCLMode) {
+            [self reverseGeocodeCurrentLocationIfNeeded];
+        }
     }
 }
 
@@ -738,7 +743,6 @@ UIImage *imageDetailDisclosure;
         }
     } 
     else {
-        
         BOOL locBecomingVisible = loc && ([loc toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF);
         BOOL toLocationBecomingInvisible = toLocation && ([toLocation toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF);
         if (locBecomingVisible ^ toLocationBecomingInvisible) { // if # of locations visible is changing
@@ -746,6 +750,9 @@ UIImage *imageDetailDisclosure;
         }
         toLocation = loc;
         [self setFBParameterForGeneral];
+        if (loc == currentLocation) {  // if current location chosen for toLocation
+            [self reverseGeocodeCurrentLocationIfNeeded];
+        }
     }
 }
 
@@ -776,7 +783,7 @@ UIImage *imageDetailDisclosure;
         UIAlertView *alert;
         startButtonClickTime = CFAbsoluteTimeGetCurrent();
         
-        if ([[fromLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
+        if ([fromLocation isCurrentLocation]) {
             if ([self alertUsetForLocationService]) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Location" message:@"Location Service is disabled for Nimbler, Do you want to enable?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"Cancel", nil];
                 [alert show];
@@ -927,8 +934,26 @@ UIImage *imageDetailDisclosure;
     return;
 }
 
+#pragma mark Reverse Geocoding
 
-#pragma mark RKObject loader with Plan responce from OTP 
+- (void)reverseGeocodeCurrentLocationIfNeeded
+{
+    if (!lastReverseGeoReqTime || 
+        [lastReverseGeoReqTime timeIntervalSinceNow] < -(REVERSE_GEO_TIME_THRESHOLD)) {
+        if (currentLocation && ![currentLocation isReverseGeoValid]) {
+            // If we do not have a reverseGeoLocation that is within threshold, do another reverse geo
+            lastReverseGeoReqTime = [NSDate date];
+            GeocodeRequestParameters* geoParams = [[GeocodeRequestParameters alloc] init];
+            geoParams.lat = [fromLocation latFloat];
+            geoParams.lng = [fromLocation lngFloat];
+            geoParams.apiType = GOOGLE_GEOCODER;
+            geoParams.supportedRegion = [self supportedRegion];
+            geoParams.isFrom = true;
+            [locations reverseGeocodeWithParameters:geoParams callBack:self];
+        }
+    }
+}
+
 // Delegate callback from calling Locations --> reverseGeocodeWithParameters
 -(void)newGeocodeResults:(NSArray *)locationArray withStatus:(GeocodeRequestStatus)status parameters:(GeocodeRequestParameters *)parameters
 {
@@ -1071,17 +1096,6 @@ UIImage *imageDetailDisclosure;
                 }
             }
             
-            // Do reverse geocoding if coming from current location
-            if (fromLocation == currentLocation) {
-                GeocodeRequestParameters* geoParams = [[GeocodeRequestParameters alloc] init];
-                geoParams.lat = [fromLocation latFloat];
-                geoParams.lng = [fromLocation lngFloat];
-                geoParams.apiType = GOOGLE_GEOCODER;
-                geoParams.supportedRegion = [self supportedRegion];
-                geoParams.isFrom = true;
-                [locations reverseGeocodeWithParameters:geoParams callBack:self];
-            }
-            
 #if FLURRY_ENABLED
             NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
                                           FLURRY_FROM_SELECTED_ADDRESS, [fromLocation shortFormattedAddress],
@@ -1120,12 +1134,12 @@ UIImage *imageDetailDisclosure;
             parameters.longitudeTO = (NSString *)[toLocation lng];
             parameters.latitudeFROM = (NSString *)[fromLocation lat];
             parameters.longitudeFROM = (NSString *)[fromLocation lng];
-            if([[fromLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
+            if([fromLocation isCurrentLocation]) {
                 parameters.fromType = REVERSE_GEO_FROM;
                 parameters.formattedAddressFROM = currentLoc;
                 parameters.latitudeTO = (NSString *)[toLocation lat];
                 parameters.longitudeTO = (NSString *)[toLocation lng];
-            }else if([[toLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
+            }else if([toLocation isCurrentLocation]) {
                 parameters.toType = REVERSE_GEO_TO;
                 parameters.formattedAddressTO = currentLoc;
                 parameters.latitudeFROM = (NSString *)[fromLocation lat];
@@ -1319,7 +1333,7 @@ UIImage *imageDetailDisclosure;
         NSDateFormatter* dFormat = [[NSDateFormatter alloc] init];
         [dFormat setDateStyle:NSDateFormatterShortStyle];
         [dFormat setTimeStyle:NSDateFormatterMediumStyle];
-        if ([[fromLocation formattedAddress] isEqualToString:CURRENT_LOCATION]) {
+        if ([fromLocation isCurrentLocation]) {
             if ([fromLocation reverseGeoLocation]) {
                 fromLocs = [NSString stringWithFormat:@"Current Location Reverse Geocode: %@",[[fromLocation reverseGeoLocation] formattedAddress]];
                 } else {

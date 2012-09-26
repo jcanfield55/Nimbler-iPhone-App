@@ -106,7 +106,6 @@
 		8D0158B8159B35CC0004D2FB /* SettingInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0158B6159B35CC0004D2FB /* SettingInfoViewController.m */; };
 		8D0158B9159B35CC0004D2FB /* SettingInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D0158B7159B35CC0004D2FB /* SettingInfoViewController.xib */; };
 		8D015972159B3DE10004D2FB /* caltrain.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8D015971159B3DE10004D2FB /* caltrain.jpg */; };
-		8D2968571611C6EE00BF8232 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D2968561611C6EE00BF8232 /* Default-568h@2x.png */; };
 		8DA39BDF15E3855B0029D54B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6F22E71563AD360066DFA9 /* AVFoundation.framework */; };
 		8DA39BE115E38B5E0029D54B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */; };
 		8DC5154C15E622DE003FD2DB /* img_chatBubble@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DC5153515E622DE003FD2DB /* img_chatBubble@2x.png */; };
@@ -1013,7 +1012,6 @@
 		8D0158B6159B35CC0004D2FB /* SettingInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SettingInfoViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8D0158B7159B35CC0004D2FB /* SettingInfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingInfoViewController.xib; sourceTree = "<group>"; };
 		8D015971159B3DE10004D2FB /* caltrain.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = caltrain.jpg; sourceTree = "<group>"; };
-		8D2968561611C6EE00BF8232 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../../Default-568h@2x.png"; sourceTree = "<group>"; };
 		8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		8DC5153515E622DE003FD2DB /* img_chatBubble@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_chatBubble@2x.png"; sourceTree = "<group>"; };
 		8DC5155F15E6244E003FD2DB /* img_appTitle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_appTitle@2x.png"; sourceTree = "<group>"; };
@@ -2547,7 +2545,6 @@
 			isa = PBXGroup;
 			children = (
 				52C10384160BEF8000BC6020 /* AddressBookUI.framework */,
-				8D2968561611C6EE00BF8232 /* Default-568h@2x.png */,
 				8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */,
 				CC9370D615BFB97200A09A5A /* Flurry */,
 				CCD3990C15A2FAD20020BC85 /* Resources */,
@@ -3212,7 +3209,6 @@
 				52F4D44415F820C700159E81 /* img_cancel@2x.png in Resources */,
 				4ED2C38115FDAB6600287205 /* img_DetailDesclosure.png in Resources */,
 				4ED2C38215FDAB6600287205 /* img_DetailDesclosure@2x.png in Resources */,
-				8D2968571611C6EE00BF8232 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

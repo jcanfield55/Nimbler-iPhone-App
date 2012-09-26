@@ -155,7 +155,7 @@
                         [self removeLocation:loc];
                     }
                 }
-                saveContext([self managedObjectContext]);
+                saveContext([self managedObjectContext]); 
             }
             else {
                 NIMLOG_EVENT1(@"No results back from loading file at path %@", preloadPath);

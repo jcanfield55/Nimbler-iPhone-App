@@ -277,6 +277,30 @@ static Locations *locations;
     return distance;
 }
 
+// Used for currentLocation.  True if there is a reverseGeoLocation and it is within
+// the time or distance thresholds to be considered still fresh
+- (BOOL)isReverseGeoValid
+{
+    if (![self reverseGeoLocation]) {
+        return false;
+    }
+    else if ([[[self reverseGeoLocation] dateLastUsed] timeIntervalSinceNow] > -(REVERSE_GEO_TIME_THRESHOLD) ||
+             [self metersFromLocation:[self reverseGeoLocation]]<REVERSE_GEO_DISTANCE_THRESHOLD) {
+        return true;
+    }
+    return false;
+}
+
+// true if receiver is CurrentLocation
+- (BOOL)isCurrentLocation
+{
+    if ([[self formattedAddress] isEqualToString:CURRENT_LOCATION]) {
+        return true;
+    }
+    return false;
+}
+
+
 // Method to see whether two locations are effectively equivalent
 // If they have the exact same formatted address, or they are within ~0.05 miles 
 // For example, it is 233 feet between 1350 and 1315 Hull Drive

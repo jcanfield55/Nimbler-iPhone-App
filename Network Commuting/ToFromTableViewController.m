@@ -185,7 +185,7 @@
 // (in locations object, in toFromVC, and in the table selected cell)
 - (void)markAndUpdateSelectedLocation:(Location *)loc
 {
-    if ([[loc formattedAddress] isEqualToString:CURRENT_LOCATION]) {
+    if ([loc isCurrentLocation]) {
         if ([self alertUsetForLocationService]) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Location" message:@"Location Service is disabled for Nimbler, Do you want to enable?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"Cancel", nil];
             [alert show];

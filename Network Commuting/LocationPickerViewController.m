@@ -105,7 +105,7 @@ int const LOCATION_PICKER_TABLE_HEIGHT = 370;
     
     Location *loc = [locationArray objectAtIndex:[indexPath row]];
         
-    NSString *cellText = [loc formattedAddress];
+    NSString *cellText = [loc shortFormattedAddress];
     CGSize size = [cellText 
                 sizeWithFont:[UIFont systemFontOfSize:MEDIUM_LARGE_FONT_SIZE] 
                 constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];

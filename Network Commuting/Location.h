@@ -69,6 +69,9 @@
 - (BOOL)isEquivalent:(Location *)loc2;
 
 - (double)metersFromLocation:(Location *)loc2;  // Returns the distance between the referring object and loc2 in meters
+- (BOOL)isCurrentLocation;  // true if receiver is CurrentLocation
+- (BOOL)isReverseGeoValid; // Used for currentLocation.  True if there is a reverseGeoLocation and it is within the time or distance thresholds to be considered still fresh
+
 @end
 
 @interface Location (CoreDataGeneratedAccessors)

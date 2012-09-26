@@ -58,7 +58,6 @@ typedef enum {
 @property (strong, nonatomic) NSDate* date;   
 @property (strong, nonatomic) UIBarButtonItem *btnDone;
 @property (strong, nonatomic) UIBarButtonItem *btnNow;
-@property (nonatomic, strong) Plan *plan;
 @property (strong, nonatomic) NSTimer *timerGettingRealDataByItinerary;
 @property (strong, nonatomic) UIActivityIndicatorView* activityIndicator;
 

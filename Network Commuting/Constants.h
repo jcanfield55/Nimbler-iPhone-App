@@ -43,6 +43,9 @@
 #define ALERT_ON         @"2"
 #define ALERT_URGENT     @"3"
 
+// Core Data database filename
+#define COREDATA_DB_FILENAME    @"store101.data"
+
 // Preload file variables
 #define PRELOAD_LOCATION_FILE     @"caltrain-station.json"
 #define PRELOAD_VERSION_NUMBER    @"1.046"
@@ -136,6 +139,11 @@
  [Flurry logEvent: withParameters:params];
  #endif
  */
+
+// Reverse Geocode behavior
+#define REVERSE_GEO_DISTANCE_THRESHOLD  (50.0)  // Maximum distance in meters before we redo a reverse geolocation
+#define REVERSE_GEO_TIME_THRESHOLD  (60)  // Minimum seconds between reverse geocode requests
+#define REVERSE_GEO_PLAN_FETCH_TIME_THRESHOLD (120)  // Maximum seconds that a plan without a reverse geocode can be used in plan cache
 
 // Locations behavior
 #define TOFROM_FREQUENCY_VISIBILITY_CUTOFF 0.99
