@@ -20,4 +20,5 @@
 #import <QuartzCore/QuartzCore.h>
 #import <AudioToolbox/AudioServices.h>
 #import "Logging.h"
+#import "UIDevice-Hardware.h"
 #endif

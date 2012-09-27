@@ -49,40 +49,109 @@
 -(void)addCustomElements
 {
 	// Initialise our two images
-	UIImage *btnImage = [UIImage imageNamed:@""];
-	UIImage *btnImageSelected = [UIImage imageNamed:@"img_selTrip.png"];
-    
-    [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"img_tabbar.png"]]];
-    
+	
+    if([UIDevice currentDevice].platformString == IPHONE_5_NAMESTRING){
+       [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"img_tabbar@2x.png"]]]; 
+    }
+    else{
+        if([[UIScreen mainScreen] bounds].size.height == 568){
+          [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"img_tabbar@2x.png"]]];  
+        }
+        else{
+           [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"img_tabbar.png"]]]; 
+        }
+    }
+    UIImage *btnImage;
+    UIImage *btnImageSelected;
 	self.btn1 = [UIButton buttonWithType:UIButtonTypeCustom]; //Setup the button
-	btn1.frame = CGRectMake(2, 436, 78, 42); // Set the frame (size and position) of the button)
-	 [btn1 setBackgroundImage:btnImage forState:UIControlStateNormal]; // Set the image for the normal state of the button
+    if([UIDevice currentDevice].platformString == IPHONE_5_NAMESTRING){
+        btn1.frame = CGRectMake(2, 514, 78, 42); // Set the frame (size and position) of the button)
+        btnImage = [UIImage imageNamed:@""];
+        btnImageSelected = [UIImage imageNamed:@"img_selTrip@2x.png"];
+    }
+    else{
+         if([[UIScreen mainScreen] bounds].size.height == 568){
+             btn1.frame = CGRectMake(2, 514, 78, 42); // Set the frame (size and position) of the button)
+             btnImage = [UIImage imageNamed:@""];
+             btnImageSelected = [UIImage imageNamed:@"img_selTrip@2x.png"];
+         }
+         else{
+             btn1.frame = CGRectMake(2, 436, 78, 42); // Set the frame (size and position) of the button)
+             btnImage = [UIImage imageNamed:@""];
+             btnImageSelected = [UIImage imageNamed:@"img_selTrip.png"];
+         }
+    }
+    [btn1 setBackgroundImage:btnImage forState:UIControlStateNormal]; // Set the image for the normal state of the button
 	[btn1 setBackgroundImage:btnImageSelected forState:UIControlStateSelected]; // Set the image for the selected state of the button
 	[btn1 setTag:0]; // Assign the button a "tag" so when our "click" event is called we know which button was pressed.
 	[btn1 setSelected:true]; // Set this button as selected (we will select the others to false as we only want Tab 1 to be selected initially
 	
 	// Now we repeat the process for the other buttons
-	btnImage = [UIImage imageNamed:@""];
-	btnImageSelected = [UIImage imageNamed:@"img_selAdvisory.png"];
-	self.btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
-	btn2.frame = CGRectMake(80, 436, 78, 42);
+	
+    self.btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
+    if([UIDevice currentDevice].platformString == IPHONE_5_NAMESTRING){
+       btn2.frame = CGRectMake(80, 514, 78, 42);
+        btnImage = [UIImage imageNamed:@""];
+        btnImageSelected = [UIImage imageNamed:@"img_selAdvisory@2x.png"];
+    }
+    else{
+        if([[UIScreen mainScreen] bounds].size.height == 568){
+            btn2.frame = CGRectMake(80, 514, 78, 42);
+            btnImage = [UIImage imageNamed:@""];
+            btnImageSelected = [UIImage imageNamed:@"img_selAdvisory@2x.png"];
+        }
+        else{
+            btn2.frame = CGRectMake(80, 436, 78, 42);
+            btnImage = [UIImage imageNamed:@""];
+            btnImageSelected = [UIImage imageNamed:@"img_selAdvisory.png"];
+        }
+    }
 	[btn2 setBackgroundImage:btnImage forState:UIControlStateNormal];
 	[btn2 setBackgroundImage:btnImageSelected forState:UIControlStateSelected];
 	[btn2 setTag:1];
 	
-    
-	btnImage = [UIImage imageNamed:@""];
-	btnImageSelected = [UIImage imageNamed:@"img_selSetting.png"];
+
 	self.btn3 = [UIButton buttonWithType:UIButtonTypeCustom];
-	btn3.frame = CGRectMake(160, 436, 78, 42);
+    if([UIDevice currentDevice].platformString == IPHONE_5_NAMESTRING){
+        btn3.frame = CGRectMake(160, 514, 78, 42);
+        btnImage = [UIImage imageNamed:@""];
+        btnImageSelected = [UIImage imageNamed:@"img_selSetting@2x.png"];
+    }
+    else{
+        if([[UIScreen mainScreen] bounds].size.height == 568){
+            btn3.frame = CGRectMake(160, 514, 78, 42);
+            btnImage = [UIImage imageNamed:@""];
+            btnImageSelected = [UIImage imageNamed:@"img_selSetting@2x.png"];
+        }
+        else{
+            btn3.frame = CGRectMake(160, 436, 78, 42);
+            btnImage = [UIImage imageNamed:@""];
+            btnImageSelected = [UIImage imageNamed:@"img_selSetting.png"];
+        }
+    }
 	[btn3 setBackgroundImage:btnImage forState:UIControlStateNormal];
 	[btn3 setBackgroundImage:btnImageSelected forState:UIControlStateSelected];
 	[btn3 setTag:2];
 	
-	btnImage = [UIImage imageNamed:@""];
-	btnImageSelected = [UIImage imageNamed:@"img_selFB.png"];
+    
 	self.btn4 = [UIButton buttonWithType:UIButtonTypeCustom];
-	btn4.frame = CGRectMake(240, 436, 78, 42);
+    if([UIDevice currentDevice].platformString == IPHONE_5_NAMESTRING){
+       btn4.frame = CGRectMake(240, 514, 78, 42);
+        btnImage = [UIImage imageNamed:@""];
+        btnImageSelected = [UIImage imageNamed:@"img_selFB@2x.png"];
+    }
+    else{
+        if([[UIScreen mainScreen] bounds].size.height == 568){
+            btn4.frame = CGRectMake(240, 514, 78, 42);
+            btnImage = [UIImage imageNamed:@""];
+            btnImageSelected = [UIImage imageNamed:@"img_selFB@2x.png"];
+        }
+        else{
+            btn4.frame = CGRectMake(240, 436, 78, 42);
+            btnImage = [UIImage imageNamed:@""];
+            btnImageSelected = [UIImage imageNamed:@"img_selFB.png"]; 
+        }
+    }
 	[btn4 setBackgroundImage:btnImage forState:UIControlStateNormal];
 	[btn4 setBackgroundImage:btnImageSelected forState:UIControlStateSelected];
 	[btn4 setTag:3];
