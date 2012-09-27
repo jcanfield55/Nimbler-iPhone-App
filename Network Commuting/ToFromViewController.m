@@ -221,8 +221,7 @@ UIImage *imageDetailDisclosure;
     
     //Added To clear The Background Color of UitableView in Ios - 6
     if([[[UIDevice currentDevice] systemVersion] intValue] >= 6){
-        [self.mainTable setBackgroundColor:[UIColor clearColor]];
-        [self hideGradientBackground:self.mainTable];
+       [self.mainTable setBackgroundView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_background.png"]]];
     }
     // Added To solve the crash related to ios 4.3
     if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {

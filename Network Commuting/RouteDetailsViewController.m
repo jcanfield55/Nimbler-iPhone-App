@@ -156,8 +156,9 @@ NSUserDefaults *prefs;
     NIMLOG_EVENT1(@"Itinerary # %@",i0);
     @try {
         itinerary = i0;
-        [legMapVC setItinerary:i0];
+        // DE-183 Fixed
         [self setItineraryNumber:0];  // Initially start on the first row of itinerary
+        [legMapVC setItinerary:i0];
         [btnBackItem setEnabled:FALSE];
         
         //set FbParameterForItinerary

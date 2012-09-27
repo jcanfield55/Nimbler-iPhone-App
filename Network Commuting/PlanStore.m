@@ -501,22 +501,43 @@
     }
 }
 
-// US-161 Partial Implementation
-// Partial Implementation Of Clearing PlanCache
-// Get The All PlanRequestChunk and delete them when max walk distance change.
+// US-161 Implementation
+// Implementation Of Clearing PlanCache
+// Get  All PlanRequestChunk and delete them when max walk distance change.
+// Get All  Plan and delete plan excepting current plan. 
 
-- (void)clearCache{ 
-    NSError *error;
-    NSManagedObjectContext * context = [self managedObjectContext];
-    NSFetchRequest * fetch = [[NSFetchRequest alloc] init];
-    [fetch setEntity:[NSEntityDescription entityForName:@"PlanRequestChunk" inManagedObjectContext:context]];
-    NSArray * result = [context executeFetchRequest:fetch error:nil];
-    for (id basket in result){
-        [context deleteObject:basket];
+- (void)clearCache{
+    @try {
+        Plan *plan = routeOptionsVC.plan;
+        NSString *strPlanID = [plan planId];
+        
+        NSError *error;
+        NSManagedObjectContext * context = [self managedObjectContext];
+        NSFetchRequest * fetchPlanRequestChunk = [[NSFetchRequest alloc] init];
+       NSFetchRequest * fetchPlan = [[NSFetchRequest alloc] init];
+        
+        [fetchPlanRequestChunk setEntity:[NSEntityDescription entityForName:@"PlanRequestChunk" inManagedObjectContext:context]];
+        [fetchPlan setEntity:[NSEntityDescription entityForName:@"Plan" inManagedObjectContext:context]];
+        
+        NSArray * arrayPlanRequestChunk = [context executeFetchRequest:fetchPlanRequestChunk error:nil];
+        NSArray * arrayPlan = [context executeFetchRequest:fetchPlan error:nil];
+       
+        for (id planRequestChunks in arrayPlanRequestChunk){
+            [context deleteObject:planRequestChunks];
+        }
+        
+        for (id plans in arrayPlan){
+            if(![strPlanID isEqualToString:[plans planId]]){
+                [context deleteObject:plans];
+            }
+        }
+        [context save:&error];
+        if(error){
+            NIMLOG_ERR1(@"Error While Clearing Cache:%@",error);
+        }
     }
-    [context save:&error];
-    if(error){
-        NIMLOG_ERR1(@"Error While Clearing Cache:%@",error);
+    @catch (NSException *exception) {
+        logException(@"PlanStore -> clearCache", @"", exception);
     }
 }
 @end
