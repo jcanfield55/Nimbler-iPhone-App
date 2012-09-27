@@ -162,6 +162,7 @@ static Locations *locations;
                         [type isEqualToString:@"intersection"] ||
                         [type isEqualToString:@"locality"] ||
                         [type isEqualToString:@"airport"] ||
+                        [type isEqualToString:@"Street"] ||
                         [type isEqualToString:@"route(short)"] ||
                         [type isEqualToString:@"intersection(short)"] ||
                         [type isEqualToString:@"locality(short)"] ||
@@ -252,7 +253,7 @@ static Locations *locations;
             if (returnString && [returnString length] > 0) { // check to make sure we have something to return (DE25 fix)
                 if ([returnString hasSuffix:@", CA "]) { // Get rid of final ", CA"
                     returnString = [returnString substringToIndex:([returnString length]-5)];
-                }
+                } 
                 shortFormattedAddress = returnString;
             }
             

@@ -68,6 +68,10 @@
     [self setApiTypeEnum:GOOGLE_GEOCODER];
 }
 
+/* Here is an example of a Google formatted address
+ 1350 Hull Dr, San Carlos, CA 94070, USA
+ */
+
 /* Here is an example of Google address components
 "administrative_area_level_1" = California;
 "administrative_area_level_1(short)" = CA;
