@@ -132,7 +132,7 @@ NSString *superShortTimeStringForDate(NSDate *date) {
 }
 
 
-// Converts from meters to a string in either miles or feed
+// Converts from meters to a string in either miles or feet
 NSString *distanceStringInMilesFeet(double meters) {
     NSString *returnString;
     double feet = meters * 3.2808398950131235;  // from http://www.calculateme.com/Length/Meters/ToFeet.htm
@@ -266,6 +266,15 @@ void logException(NSString *errorName, NSString *errorMessage, NSException *e)
     NIMLOG_ERR1(@"\n----------> Exception in: %@, \n  Nimbler Message: %@, \n  Exception: %@", errorName, errorMessage, e);
 #if FLURRY_ENABLED
     [Flurry logError:errorName message:errorMessage exception:e];
+#endif
+}
+
+// Logs non-exception errror using NIMLOG_ERR1 and if Flurry activated, logs to Flurry as well
+void logError(NSString *errorName, NSString *errorMessage)
+{
+    NIMLOG_ERR1(@"\n----------> Error in: %@, \n  Nimbler Message: %@", errorName, errorMessage);
+#if FLURRY_ENABLED
+    [Flurry logError:errorName message:errorMessage exception:nil];
 #endif
 }
 

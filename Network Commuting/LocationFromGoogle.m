@@ -62,6 +62,31 @@
     return locationMapping;
 }
 
+-(void)awakeFromInsert
+{
+    [super awakeFromInsert];
+    [self setApiTypeEnum:GOOGLE_GEOCODER];
+}
+
+/* Here is an example of Google address components
+"administrative_area_level_1" = California;
+"administrative_area_level_1(short)" = CA;
+"administrative_area_level_2" = "San Mateo";
+"administrative_area_level_2(short)" = "San Mateo";
+country = "United States";
+"country(short)" = US;
+locality = "San Carlos";
+"locality(short)" = "San Carlos";
+political = "San Carlos";
+"political(short)" = "San Carlos";
+"postal_code" = 94070;
+"postal_code(short)" = 94070;
+route = "Hull Dr";
+"route(short)" = "Hull Dr";
+"street_number" = 1350;
+"street_number(short)" = 1350;
+*/
+
 // Map Google address components into a standard dictionary format that can be used by Location
 // Key will be Google geocoder type key for the longName value
 // Key will be Google geocoder type key + (short) for the shortName value
@@ -75,7 +100,9 @@
                 if ([addrComp longName] && [[addrComp longName] length]>0) {
                     [addrCompDict setObject:[addrComp longName] forKey:type];
                 }
-                if ([addrComp shortName] && [[addrComp shortName] length]>0) {
+                if ([addrComp shortName] && [[addrComp shortName] length]>0 &&
+                    ![[addrComp shortName] isEqualToString:[addrComp longName]]) {
+                    // Only set shortName if it is different than longName
                     [addrCompDict setObject:[addrComp shortName] forKey:[type stringByAppendingString:@"(short)"]];
                 }
             }

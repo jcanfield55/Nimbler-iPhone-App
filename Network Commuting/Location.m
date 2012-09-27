@@ -232,7 +232,9 @@ static Locations *locations;
     else {
         // Find whether it is a train station (
         NSString* trainStationName = [[self addressComponentDictionary] objectForKey:@"train_station(short)"];
-
+        if (!trainStationName) {
+            trainStationName = [[self addressComponentDictionary] objectForKey:@"train_station"];
+        }
         if (trainStationName && [trainStationName length] >0) {
             // if a train station, return just the train_station name
             shortFormattedAddress = trainStationName;
@@ -251,8 +253,9 @@ static Locations *locations;
                 if ([returnString hasSuffix:@", CA "]) { // Get rid of final ", CA"
                     returnString = [returnString substringToIndex:([returnString length]-5)];
                 }
-                shortFormattedAddress = returnString;  
+                shortFormattedAddress = returnString;
             }
+            
             else if ([addr hasSuffix:@", CA, USA"]) { // If not postal code, but ends with CA, USA, clip that
                 returnString = [addr substringToIndex:([addr length]-9)];
                 shortFormattedAddress = returnString;

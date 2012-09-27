@@ -25,7 +25,6 @@
     NSDateFormatter* dateFormatter; // date formatter for OTP requests
     NSDateFormatter* timeFormatter; // time formatter for OTP requests
     NSMutableDictionary* parametersByPlanURLResource; // Key is the planURLResource, object = request parameters
-    PlanRequestParameters* planRequestParameters;
 }
 
 // Internal methods
@@ -223,12 +222,11 @@
 
 // Delegate methods for when the RestKit has results from the Planner
 - (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects{
+    PlanRequestParameters* planRequestParameters;
     @try {
         RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
         NSDictionary *tempResponseDictionary = [rkParser objectFromString:[[objectLoader response] bodyAsString] error:nil];
          NIMLOG_OBJECT1(@"PLAN =%@",tempResponseDictionary);
-        NSString* strRequestID = [tempResponseDictionary objectForKey:REQUEST_ID];
-        NIMLOG_DEBUG1(@"Retrieved Request ID=%@",strRequestID);
         if([[tempResponseDictionary objectForKey:RESPONSE_CODE] intValue] == RESPONSE_SUCCESSFULL){
             if([tempResponseDictionary objectForKey:OTP_ERROR_STATUS]){
                 if ([nc_AppDelegate sharedInstance].isToFromView) {
@@ -249,6 +247,8 @@
                 if (strResourcePath && [strResourcePath length]>0) {
                     planRequestParameters = [parametersByPlanURLResource objectForKey:strResourcePath];
                     [parametersByPlanURLResource removeObjectForKey:strResourcePath]; // Clear out entry from dictionary now we are done with it
+                } else {
+                    [NSException raise:@"PlanStore->didLoadObjects failed to retrieve plan parameters" format:@"strResourcePath: %@", strResourcePath];
                 }
                 
                 // Set to & from location with special handling of CurrentLocation
@@ -335,6 +335,10 @@
 {
     if (requestParams0.serverCallsSoFar >= PLAN_MAX_SERVER_CALLS_PER_REQUEST) {
         return; // Return if we have already made the max number of calls
+    }
+    if ([[[[plan sortedItineraries] lastObject] sortedLegs] count] == 1 &&
+        [[[[[plan sortedItineraries] lastObject] sortedLegs] objectAtIndex:0] isWalk]) {
+        return; // DE186 fix, do not request more itineraries if we currently are have walk-only itinerary
     }
     // Request sortedItineraries array with extremely large limits
     NSArray* testItinArray = [plan returnSortedItinerariesWithMatchesForDate:requestParams0.originalTripDate

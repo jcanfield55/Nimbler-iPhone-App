@@ -74,7 +74,6 @@
     [loc1G addRawAddressString:@"750 Hawthorne St., SF"];
     [loc1G addRawAddressString:@"750 Hawthorn, San Fran California"];
 
-    [loc1G setApiTypeEnum:GOOGLE_GEOCODER];
     [loc1G setFromFrequencyFloat:5.0];
     [loc1G setToFrequencyFloat:7.0];
     [loc1G setLatFloat:67.3];

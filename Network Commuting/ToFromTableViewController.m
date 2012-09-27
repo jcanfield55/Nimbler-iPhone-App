@@ -387,7 +387,11 @@
                 GeocodeRequestParameters* parameters = [[GeocodeRequestParameters alloc] init];
                 parameters.rawAddress = rawAddress;
                 parameters.supportedRegion = [self supportedRegion];
-                parameters.apiType = GOOGLE_GEOCODER;
+                if ([[[UIDevice currentDevice] systemVersion] floatValue] >= IOS_GEOCODE_VER_THRESHOLD) {
+                    parameters.apiType = IOS_GEOCODER;
+                } else {
+                    parameters.apiType = GOOGLE_GEOCODER;
+                }
                 parameters.isFrom = isFrom;
 
                 // Call the geocoder
@@ -398,10 +402,12 @@
                     [toFromVC updateGeocodeStatus:TRUE isFrom:isFrom]; // alert toFromVC re: outstanding geocoding
                 }
 #if FLURRY_ENABLED          
-                NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");          
+                NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
+                NSString* apiString = (([parameters apiType]==GOOGLE_GEOCODER) ? @"Google" : @"iOS");
                 NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
                                         FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                        FLURRY_GEOCODE_RAWADDRESS , rawAddress, nil];          
+                                        FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                                        FLURRY_GEOCODE_API, apiString,nil];
                 [Flurry logEvent:FLURRY_TOFROMTABLE_GEOCODE_REQUEST withParameters:params];          
 #endif
                 
@@ -498,9 +504,6 @@
 - (void)selectedGeocodedLocation:(Location *)location
 {
     NIMLOG_EVENT1(@"Formatted Address: %@", [location formattedAddress]);
-    
-    // Initialize some of the values for location
-    [location setApiTypeEnum:GOOGLE_GEOCODER];
 
     // Add the raw address to this location
     [location addRawAddressString:rawAddress];

@@ -19,6 +19,7 @@
 
 // Initializes an empty LocationIOS and its superclass Location using placemark0
 // Use this instead of setPlacemark method
-- (void)initWithPlacemark:(CLPlacemark *)placemark0;
+// Status will be "OK" if error==nil, otherwise it will be marked with the error
+- (void)initWithPlacemark:(CLPlacemark *)placemark0 error:(NSError *)error;
 
 @end

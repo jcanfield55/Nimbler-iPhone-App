@@ -54,6 +54,10 @@
         maxLongitude = [NSNumber numberWithDouble:[MAX_LONG doubleValue]];
         minLatitude = [NSNumber numberWithDouble:[MIN_LAT doubleValue]];
         minLongitude = [NSNumber numberWithDouble:[MIN_LONG doubleValue]];
+        lowerLeftLatitude = minLatitude;
+        lowerLeftLongitude = minLongitude;
+        upperRightLatitude = maxLatitude;
+        upperRightLongitude = maxLongitude;
     }
     return self;
 }
@@ -65,4 +69,18 @@
                    (lat<=[maxLatitude doubleValue]) && (lng<=[maxLongitude doubleValue]));
     return result;
 }
+
+// Returns a clRegion that just encircles the supportedRegion
+- (CLRegion *)encirclingCLRegion
+{
+    CLLocationCoordinate2D centerCoord;
+    centerCoord.latitude = (maxLatitude.doubleValue + minLatitude.doubleValue) / 2;
+    centerCoord.longitude = (maxLongitude.doubleValue + minLongitude.doubleValue)/2;
+    CLLocation* centerLoc = [[CLLocation alloc] initWithLatitude:centerCoord.latitude longitude:centerCoord.longitude];
+    CLLocation* upperRight = [[CLLocation alloc] initWithLatitude:upperRightLatitude.doubleValue longitude:upperRightLongitude.doubleValue];
+    CLLocationDistance distance = [centerLoc distanceFromLocation:upperRight];
+    CLRegion* clRegion = [[CLRegion alloc] initCircularRegionWithCenter:centerCoord radius:distance identifier:@"Supported Region"];
+    return clRegion;
+}
+
 @end

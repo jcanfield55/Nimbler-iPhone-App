@@ -123,6 +123,7 @@
 #define FLURRY_GEOCODE_ERROR @"(Geocode error)"
 #define FLURRY_RK_RESPONSE_ERROR @"(RK Response error)"
 #define FLURRY_GEOCODE_RAWADDRESS @"(Geocode raw address)"
+#define FLURRY_GEOCODE_API @"(Geocode API)"
 #define FLURRY_FORMATTED_ADDRESS @"(Formatted Address)"
 #define FLURRY_NEW_DATE @"(New date)"
 #define FLURRY_SELECTED_DEPARTURE_TIME @"(Selected departure time)"
@@ -139,6 +140,9 @@
  [Flurry logEvent: withParameters:params];
  #endif
  */
+
+// Geocode behavior
+#define IOS_GEOCODE_VER_THRESHOLD (6.0)  // Version at which we start using iOS geocoding (rather than Google)
 
 // Reverse Geocode behavior
 #define REVERSE_GEO_DISTANCE_THRESHOLD  (50.0)  // Maximum distance in meters before we redo a reverse geolocation

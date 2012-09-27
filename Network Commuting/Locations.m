@@ -34,13 +34,20 @@
     NSString *reverseGeoURLResource;   // URL resource sent to reverse geocoder for last raw address
     GeocodeRequestParameters* reverseGeoRequestParameters;  // parameters used for last reverse geocoder request
     id <LocationsGeocodeResultsDelegate> reverseGeoCallbackDelegate;   // delegate to call when we have reverse geocoder results
-
+    NSDate* lastIOSGeocodeTime;  // time last geocode request (forward or backward) was made
+    
+    CLGeocoder* clGeocoder;  // IOS Geocoder object
+    
 }
 - (void)updateWithSelectedLocationIsFrom:(BOOL)isFrom selectedLocation:(Location *)selectedLocation oldSelectedLocation:(Location *)oldSelectedLocation;
 - (void)updateInternalCache;
 - (void)forwardGeocodeUsingGoogleWithParameters:(GeocodeRequestParameters *)parameters callBack:(id <LocationsGeocodeResultsDelegate>)delegate;
 - (void)reverseGeocodeUsingGoogleWithParameters:(GeocodeRequestParameters *)parameters callBack:(id <LocationsGeocodeResultsDelegate>)delegate;
-
+- (void)forwardGeocodeUsingIosWithParameters:(GeocodeRequestParameters *)parameters callback:(id <LocationsGeocodeResultsDelegate>)delegate;
+- (void)handleIosGeocodeWithParameters:(GeocodeRequestParameters *)parameters
+                              response:(NSArray *)placemarks
+                                 error:(NSError *)error
+                              callback:(id <LocationsGeocodeResultsDelegate>)delegate;
 @end
 
 
@@ -203,6 +210,14 @@
     Location *l = [NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:managedObjectContext];
     [self setAreLocationsChanged:YES]; // DE30 fix (2 of 2)
     return l;
+}
+
+- (LocationFromIOS *)newLocationFromIOSWithPlacemark:(CLPlacemark *)placemark error:(NSError *)error;
+{
+    LocationFromIOS *loc = [NSEntityDescription insertNewObjectForEntityForName:@"LocationFromIOS" inManagedObjectContext:managedObjectContext];
+    [loc initWithPlacemark:placemark error:error];
+    [self setAreLocationsChanged:YES]; 
+    return loc;
 }
 
 // Utility function used by setTypedFromString & setTypedToString.  On hold for now
@@ -529,9 +544,13 @@
 {
     if (parameters.apiType == GOOGLE_GEOCODER) {
         [self forwardGeocodeUsingGoogleWithParameters:parameters callBack:delegate];
+    } else if (parameters.apiType == IOS_GEOCODER) {
+        [self forwardGeocodeUsingIosWithParameters:parameters callback:delegate];
+    }
+    else {
+        logError(@"Locations->forwardGeocodeWithParameters", @"Unknown apiType");
     }
     
-    // TODO implement iOS geocoder
 }
 
 - (void)forwardGeocodeUsingGoogleWithParameters:(GeocodeRequestParameters *)parameters callBack:(id <LocationsGeocodeResultsDelegate>)delegate;
@@ -767,6 +786,141 @@
         [Flurry logEvent:FLURRY_GEOCODE_OTHER_ERROR withParameters:params];
 #endif
         [callback newGeocodeResults:nil withStatus:GEOCODE_GENERIC_ERROR parameters:parameters];
+    }
+}
+
+- (void)forwardGeocodeUsingIosWithParameters:(GeocodeRequestParameters *)parameters callback:(id <LocationsGeocodeResultsDelegate>)delegate
+{
+    if (!clGeocoder) {
+        clGeocoder = [[CLGeocoder alloc] init];
+    }
+    if ([clGeocoder isGeocoding]) { // if already geocoding
+        if ([lastIOSGeocodeTime timeIntervalSinceNow] < -5) { // if more than 7 seconds since last geocode
+            [clGeocoder cancelGeocode];  // cancel previous geocode and let this one go thru
+        } else {
+            logError(@"Locations->forwardGeocodeUsingIosWithParameters",
+                     @"Geocode already in progress");
+            return;
+        }
+    }
+    lastIOSGeocodeTime = [NSDate date];
+    [clGeocoder geocodeAddressString:[parameters rawAddress]
+                            inRegion:[[parameters supportedRegion] encirclingCLRegion]
+                   completionHandler:^(NSArray *placemark, NSError *error) {
+                       [self handleIosGeocodeWithParameters:parameters
+                                                   response:placemark
+                                                      error:error
+                                                   callback:delegate];
+                   }];
+}
+
+// Callback routine for IOS Geocoding
+- (void)handleIosGeocodeWithParameters:(GeocodeRequestParameters *)parameters
+                              response:(NSArray *)placemarks
+                                 error:(NSError *)error
+                              callback:(id <LocationsGeocodeResultsDelegate>)callback
+{
+    
+#if FLURRY_ENABLED
+    NSString* isFromString = ([parameters isFrom] ? @"fromTable" : @"toTable");
+    NSString* rawAddress = [parameters rawAddress];
+#endif
+    if (error) {
+        // kCLErrorNetwork case
+        if (error.code == kCLErrorNetwork) {
+#if FLURRY_ENABLED
+            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                                    FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                                    FLURRY_GEOCODE_ERROR, [error localizedDescription], nil];
+            [Flurry logEvent:FLURRY_GEOCODE_NO_NETWORK withParameters:params];
+#endif
+            [callback newGeocodeResults:nil withStatus:GEOCODE_NO_NETWORK parameters:parameters];
+            return;
+        }
+        
+        // kCLErrorGeocodeFoundNoResult case
+        else if (error.code == kCLErrorGeocodeFoundNoResult) {
+#if FLURRY_ENABLED
+            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                                    FLURRY_GEOCODE_RAWADDRESS, rawAddress, nil ];
+            [Flurry logEvent:FLURRY_GEOCODE_RESULTS_NONE withParameters:params];
+#endif
+            NIMLOG_EVENT1(@"Zero results geocoding address, error: %@", [error localizedDescription]);
+            [callback newGeocodeResults:nil withStatus:GEOCODE_ZERO_RESULTS parameters:parameters];
+            return;
+        }
+        
+        // kCLErrorGeocodeFoundPartialResult case
+        else if (error.code==kCLErrorGeocodeFoundPartialResult) {
+            if (!placemarks) {
+                logError(@"Locations->handleIosGeocodeWithParameters",
+                         [NSString stringWithFormat:@"kCLErrorGeocodeFoundPartialResult but no results.  Error: %@", [error localizedDescription]]);
+                [callback newGeocodeResults:nil withStatus:GEOCODE_ZERO_RESULTS parameters:parameters];
+                return;
+            }
+            // else if there are placemarks, process them as you would a full result (below)
+        }
+        
+        // kCLErrorGeocodeCanceled case
+        else if (error.code == kCLErrorGeocodeCanceled) {
+            logError(@"Locations->handleIosGeocodeWithParameters",
+                     [NSString stringWithFormat:@"Geocode canceled with error: %@", [error localizedDescription]]);
+            return;  // don't callback, notify the user or do anything else
+        }
+        
+        // Unknown error case
+        else {
+            logError(@"Locations->handleIosGeocodeWithParameters",
+                     [NSString stringWithFormat:@"Geocode unknown error code, error: %@", [error localizedDescription]]);
+            [callback newGeocodeResults:nil withStatus:GEOCODE_GENERIC_ERROR parameters:parameters];
+            return;
+        }
+
+    }
+    if (placemarks) { // if we have geolocations
+        NIMLOG_EVENT1(@"Returned Objects = %d", [placemarks count]);
+        
+        // Go through the returned objects and see which are in supportedRegion
+        // DE18 new fix
+        NSMutableArray* validLocations = [NSMutableArray arrayWithCapacity:[placemarks count]];
+        for (CLPlacemark* placemark in placemarks) {
+            LocationFromIOS* loc = [self newLocationFromIOSWithPlacemark:placemark error:error];
+            if ([[parameters supportedRegion] isInRegionLat:[loc latFloat] Lng:[loc lngFloat]]) {
+                [validLocations addObject:loc];
+            } else {
+                // if a location not in supported region,
+                [self removeLocation:loc]; // and out of Core Data
+            }
+        }
+        NIMLOG_EVENT1(@"Geocode valid Locations = %d", [validLocations count]);
+#if FLURRY_ENABLED
+        if ([validLocations count]==0) {
+            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                                    FLURRY_GEOCODE_RAWADDRESS , rawAddress,nil];
+            [Flurry logEvent:FLURRY_GEOCODE_RESULTS_NONE_IN_REGION withParameters:params];
+        }
+        else if ([validLocations count]==1) {
+            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                                    FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                                    FLURRY_FORMATTED_ADDRESS , [[validLocations objectAtIndex:0] shortFormattedAddress] ,nil];
+            [Flurry logEvent:FLURRY_GEOCODE_RESULTS_ONE withParameters:params];
+        } else {
+            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                                    FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                                    FLURRY_NUMBER_OF_GEOCODES ,
+                                    [NSString stringWithFormat:@"%d", [validLocations count]],nil];
+            [Flurry logEvent:FLURRY_GEOCODE_RESULTS_MULTIPLE withParameters:params];
+        }
+#endif
+        
+        [callback newGeocodeResults:validLocations
+                         withStatus:GEOCODE_STATUS_OK
+                         parameters:parameters];  // Callback delegate with results
     }
 }
 
