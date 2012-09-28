@@ -668,15 +668,13 @@ UIImage *imageDetailDisclosure;
     BOOL isFrom = (editMode == FROM_EDIT) ? TRUE : FALSE;
     NSString* cellIdentifier = isFrom ? @"fromTxtFieldCell" : @"toTxtFieldCell";
     UITableViewCell *cell =
-    [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
+    
+    // By taking out the check for a re-usable cell, we get DE176 fix 1 of 4 (iOS6 keyboard not coming up)
+    // [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
                                       reuseIdentifier:cellIdentifier];
-    }
     
-
     UIView* cellView = [cell contentView];
-    
     NSArray* subviews = [cellView subviews];
     
     if (isFrom) {
@@ -685,15 +683,22 @@ UIImage *imageDetailDisclosure;
         } else { 
             [cellView addSubview:[fromTableVC txtField]]; // add From txtField
         }
+        if (![[fromTableVC txtField] isFirstResponder]) {
+            [[fromTableVC txtField] becomeFirstResponder]; // DE176 fix 2 of 4
+        }
     }
     else {   // do same for toTable case
         if (subviews && [subviews count]>0 && [subviews indexOfObject:[toTableVC txtField]] != NSNotFound) {
             // if To txtField is already in the subview (due to recycling, no need to add again
         } else { 
             [cellView addSubview:[toTableVC txtField]]; // add To txtfield
-
         }
-    }     
+        if (![[toTableVC txtField] isFirstResponder]) {
+            [[toTableVC txtField] becomeFirstResponder]; // DE176 fix 3 of 4
+            // NSLog(@"Cell becomeFirstReponder: %d", [cell becomeFirstResponder]);
+        }
+    }
+    
     return cell;
 }
 
@@ -1008,7 +1013,7 @@ UIImage *imageDetailDisclosure;
     
     // If TO_EDIT or FROM_EDIT, make the txt field the first responder
     if (newEditMode == TO_EDIT) {
-        [[toTableVC txtField] becomeFirstResponder];
+        BOOL success = [[toTableVC txtField] becomeFirstResponder];
     } 
     else if (newEditMode == FROM_EDIT) {
         [[fromTableVC txtField] becomeFirstResponder];
