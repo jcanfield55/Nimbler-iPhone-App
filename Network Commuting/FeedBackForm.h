@@ -14,7 +14,7 @@
 #import "Plan.h"
 #import "FeedBackReqParam.h"
 
-@interface FeedBackForm : UIViewController <AVAudioRecorderDelegate, AVAudioPlayerDelegate, RKRequestDelegate, UIAlertViewDelegate>{
+@interface FeedBackForm : UIViewController <AVAudioRecorderDelegate, AVAudioPlayerDelegate, RKRequestDelegate, UIAlertViewDelegate,UITextViewDelegate,UITextFieldDelegate>{
     
     NSString *soundFilePath;
     NSString *tpURLResource;

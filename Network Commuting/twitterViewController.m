@@ -245,11 +245,9 @@ NSUserDefaults *prefs;
                 if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
                     if(tc > 0){
                         NSMutableArray *arrayLatestTweet = [(NSDictionary*)res objectForKey:TWEET]; 
-                        NSMutableArray *tempArray = [[NSMutableArray alloc] initWithCapacity:arrayLatestTweet.count];
-                        [tempArray addObjectsFromArray:arrayLatestTweet];
-                        [tempArray addObjectsFromArray:arrayTweet];
+                        //NSMutableArray *tempArray = [[NSMutableArray alloc] initWithCapacity:arrayLatestTweet.count];
                         [arrayTweet removeAllObjects];
-                        [arrayTweet addObjectsFromArray:tempArray];
+                        [arrayTweet addObjectsFromArray:arrayLatestTweet];
                         [mainTable reloadData]; 
                     }
                 }

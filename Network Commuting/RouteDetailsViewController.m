@@ -50,6 +50,8 @@ NSUserDefaults *prefs;
 
 -(void)viewDidLoad{
     [super viewDidLoad];
+    self.mainTable.delegate = self;
+    self.mainTable.dataSource = self;
     UIImage* btnImage = [UIImage imageNamed:@"img_itineraryNavigation.png"];
     btnGoToItinerary = [[UIButton alloc] initWithFrame:CGRectMake(0,0,76, 34)];
     [btnGoToItinerary addTarget:self action:@selector(popOutToItinerary) forControlEvents:UIControlEventTouchUpInside];
@@ -87,7 +89,7 @@ NSUserDefaults *prefs;
             mapView.layer.borderWidth = 3.0;
             mapView.layer.borderColor = [UIColor whiteColor].CGColor;
             CGRect mapFrame = CGRectMake(ROUTE_LEGMAP_X_ORIGIN, ROUTE_LEGMAP_Y_ORIGIN,
-                                         ROUTE_LEGMAP_WIDTH,  ROUTE_LEGMAP_MIN_HEIGHT);      
+                                         ROUTE_LEGMAP_WIDTH,  ROUTE_LEGMAP_MIN_HEIGHT_4INCH);
             
             [mapView setFrame:mapFrame];
             [[self view] addSubview:mapView];
@@ -223,9 +225,21 @@ NSUserDefaults *prefs;
         CGRect mapFrame = [mapView frame];
         mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
         // If we have a small itinerary, reduce the table size so it just fits it, and increase the map size
-        CGFloat newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT, mainTableTotalHeight);
+        CGFloat newMainTableHeight;
+        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+            newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH, mainTableTotalHeight);
+        }
+        else{
+           newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT, mainTableTotalHeight); 
+        }
         if (tableFrame.size.height != newMainTableHeight) { // if something is changing...
-            CGFloat combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT + ROUTE_LEGMAP_MIN_HEIGHT+1;
+            CGFloat combinedHeight;
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                 combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH + ROUTE_LEGMAP_MIN_HEIGHT_4INCH+1;
+            }
+            else{
+                combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT + ROUTE_LEGMAP_MIN_HEIGHT+1;
+            }
             tableFrame.size.height = newMainTableHeight;
             tableFrame.origin.y = combinedHeight - newMainTableHeight + 10;
             mapFrame.size.height = combinedHeight - newMainTableHeight - 1;
@@ -239,6 +253,7 @@ NSUserDefaults *prefs;
         if (itineraryNumber != 0) {
             [mainTable selectRowAtIndexPath:[NSIndexPath indexPathForRow:itineraryNumber inSection:0] animated:YES scrollPosition:UITableViewScrollPositionMiddle];   
         }
+        [self.view bringSubviewToFront:self.mainTable];
     
     }
     @catch (NSException *exception) {

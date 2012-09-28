@@ -198,11 +198,16 @@ FeedBackForm *fbView;
         // This is for TabBar controller
         //[self.window makeKeyAndVisible];
         self.tabBarController = [[RXCustomTabBar alloc] init];
+        if([[UIScreen mainScreen] bounds].size.height == 568){
+            settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController_568h" bundle:nil];
+            fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm_568h" bundle:nil];
+        }
+        else{
+            settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController" bundle:nil];
+            fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
+        }
         twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
-        settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController" bundle:nil];
-        fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
         
-               
         UINavigationController *toFromController = [[UINavigationController alloc] initWithRootViewController:toFromViewController];
          UINavigationController *tweetController = [[UINavigationController alloc] initWithRootViewController:twitterView];
          UINavigationController *settingController = [[UINavigationController alloc] initWithRootViewController:settingView];
@@ -898,7 +903,12 @@ FeedBackForm *fbView;
     [twitterCount removeFromSuperview];
     twitterCount = [[CustomBadge alloc] init];
     twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
-    [twitterCount setFrame:CGRectMake(130,430, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
+    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+         [twitterCount setFrame:CGRectMake(130,511, twitterCount.frame.size.width, twitterCount.frame.size.height)];
+    }
+    else{
+         [twitterCount setFrame:CGRectMake(130,430, twitterCount.frame.size.width, twitterCount.frame.size.height)];
+    }
     if (tweetConut == 0) {
         [twitterCount setHidden:YES];
     } else {

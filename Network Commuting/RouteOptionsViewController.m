@@ -43,6 +43,7 @@ NSString *itinararyId;
 UIImage *imageDetailDisclosure;
 
 int const ROUTE_OPTIONS_TABLE_HEIGHT = 366;
+int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -72,7 +73,14 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT = 366;
     // Enforce height of main table
     mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
     CGRect rect0 = [mainTable frame];
-    rect0.size.height = ROUTE_OPTIONS_TABLE_HEIGHT;
+    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+        rect0.size.height = ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5;
+        rect0.origin.y = 0;
+    }
+    else{
+        rect0.size.height = ROUTE_OPTIONS_TABLE_HEIGHT;
+        rect0.origin.y = 0;
+    }
     [mainTable setFrame:rect0];
     [mainTable reloadData];
     [self setFBParameterForPlan];

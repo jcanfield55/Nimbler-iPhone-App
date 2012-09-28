@@ -135,7 +135,12 @@ UIImage *imageDetailDisclosure;
             rect1.origin.x = 0;
             rect1.origin.y = 0;
             rect1.size.width = TOFROM_TABLE_WIDTH ;
-            toTableHeight = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                toTableHeight = TOFROM_TABLE_HEIGHT_NO_CL_MODE_4INCH;
+            }
+            else{
+                toTableHeight = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
+            }
             rect1.size.height = toTableHeight;
             
             toTable = [[UITableView alloc] initWithFrame:rect1 style:UITableViewStylePlain];
@@ -149,7 +154,12 @@ UIImage *imageDetailDisclosure;
             rect2.origin.x = 0;
             rect2.origin.y = 0;               
             rect2.size.width = TOFROM_TABLE_WIDTH; 
-            rect2.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                rect2.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE_4INCH;
+            }
+            else{
+                rect2.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
+            }
             
             fromTable = [[UITableView alloc] initWithFrame:rect2 style:UITableViewStylePlain];
             [fromTable setRowHeight:TOFROM_ROW_HEIGHT];
@@ -205,20 +215,15 @@ UIImage *imageDetailDisclosure;
     }
     return self;
 }
-
-- (void) hideGradientBackground:(UIView*)theView
-{
-    for (UIView * subview in theView.subviews)
-    {
-        if ([subview isKindOfClass:[UIImageView class]])
-            subview.hidden = YES;
-        [self hideGradientBackground:subview];
-    }
-}
-
 - (void)viewDidLoad{
     [super viewDidLoad];
     
+    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+        [self.routeButton setFrame:CGRectMake(ROUTE_BUTTON_XPOS_4INCH, ROUTE_BUTTON_YPOS_4INCH, ROUTE_BUTTON_WIDTH_4INCH, ROUTE_BUTTON_HEIGHT_4INCH)];
+    }
+    else{
+        
+    }
     //Added To clear The Background Color of UitableView in Ios - 6
     if([[[UIDevice currentDevice] systemVersion] intValue] >= 6){
        [self.mainTable setBackgroundView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_background.png"]]];
@@ -318,7 +323,12 @@ UIImage *imageDetailDisclosure;
     @try {
         // Enforce height of main table
         CGRect rect0 = [mainTable frame];
-        rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT;
+         if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+             rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT_4INCH;
+         }
+        else{
+           rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT; 
+        }
         [mainTable setFrame:rect0];
 #if FLURRY_ENABLED
         [Flurry logEvent:FLURRY_TOFROMVC_APPEAR];
@@ -410,8 +420,15 @@ UIImage *imageDetailDisclosure;
     // Check whether toTableHeight needs to be dynamically adjusted (due to additional locations)
     if (isCurrentLocationMode && editMode == NO_EDIT) {
         // Check if height is updated, and if it is, reload the tables
-        if ([self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE]) {
-            [self reloadTables];
+        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+            if ([self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE_4INCH]) {
+                [self reloadTables];
+            }
+        }
+        else{
+            if ([self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE]) {
+                [self reloadTables];
+            }
         }
     }
 }
@@ -502,7 +519,12 @@ UIImage *imageDetailDisclosure;
         return TOFROM_ROW_HEIGHT;
     }
     else if (editMode != NO_EDIT) {  // to or from table in Edit mode
-        return TOFROM_TABLE_HEIGHT_NO_CL_MODE + TOFROM_INSERT_INTO_CELL_MARGIN;
+        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+            return TOFROM_TABLE_HEIGHT_NO_CL_MODE_4INCH + TOFROM_INSERT_INTO_CELL_MARGIN;
+        }
+        else{
+            return TOFROM_TABLE_HEIGHT_NO_CL_MODE + TOFROM_INSERT_INTO_CELL_MARGIN;
+        }
     }
     else if (isCurrentLocationMode) {  // NO_EDIT mode and CurrentLocationMode
         if ([indexPath section] == TO_SECTION) {  // Larger To Table
@@ -513,8 +535,13 @@ UIImage *imageDetailDisclosure;
         }
     }
     // Else NO_EDIT mode and no CurrentLocationMode
-    
-    return TOFROM_TABLE_HEIGHT_NO_CL_MODE + TOFROM_INSERT_INTO_CELL_MARGIN;
+    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+        return TOFROM_TABLE_HEIGHT_NO_CL_MODE_4INCH + TOFROM_INSERT_INTO_CELL_MARGIN;
+    }
+    else{
+        return TOFROM_TABLE_HEIGHT_NO_CL_MODE + TOFROM_INSERT_INTO_CELL_MARGIN;
+    }
+
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -746,10 +773,20 @@ UIImage *imageDetailDisclosure;
         }
         // Adjust the toTable height
         if (newCLMode) {
-            [self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE];
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                [self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE_4INCH];
+            }
+            else{
+                [self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE];
+            }
         }
         else {
-            [self setToFromHeightForTable:toTable Height:TOFROM_TABLE_HEIGHT_NO_CL_MODE];
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                [self setToFromHeightForTable:toTable Height:TOFROM_TABLE_HEIGHT_NO_CL_MODE_4INCH];
+            }
+            else{
+               [self setToFromHeightForTable:toTable Height:TOFROM_TABLE_HEIGHT_NO_CL_MODE];
+            }
         }
         if (editMode != FROM_EDIT) {
             // DE59 fix -- only update table if not in FROM_EDIT mode
@@ -904,7 +941,13 @@ UIImage *imageDetailDisclosure;
         range.length = 2;
         if (isCurrentLocationMode) {
             // Set toTable to normal height when in TO_EDIT mode
-            [self setToFromHeightForTable:toTable Height:TOFROM_TABLE_HEIGHT_NO_CL_MODE];
+            
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                [self setToFromHeightForTable:toTable Height:TOFROM_TABLE_HEIGHT_NO_CL_MODE_4INCH];
+            }
+            else{
+                [self setToFromHeightForTable:toTable Height:TOFROM_TABLE_HEIGHT_NO_CL_MODE];
+            }
         }
         [mainTable beginUpdates];
         [mainTable deleteSections:[NSIndexSet indexSetWithIndexesInRange:range] withRowAnimation:UITableViewRowAnimationAutomatic];  // Leave only the To section
@@ -915,7 +958,12 @@ UIImage *imageDetailDisclosure;
         range.length = 2;
         if (isCurrentLocationMode) {
             // Set toTable back to greater height when going to NO_EDIT mode
-            [self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE];
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                [self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE_4INCH];
+            }
+            else{
+                [self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE];
+            }
         }
         [mainTable beginUpdates];
         [mainTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Delete the row for txtField
@@ -1456,8 +1504,14 @@ UIImage *imageDetailDisclosure;
     [self showTabbar];
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
-    [toolBar setFrame:CGRectMake(0, 450, 320, 44)];
-    [datePicker setFrame:CGRectMake(0, 494, 320, 216)];
+    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+        [toolBar setFrame:CGRectMake(0, 500, 320, 44)];
+        [datePicker setFrame:CGRectMake(0, 544, 320, 216)];
+    }
+    else{
+        [toolBar setFrame:CGRectMake(0, 450, 320, 44)];
+        [datePicker setFrame:CGRectMake(0, 494, 320, 216)];
+    }
     [UIView commitAnimations];
     
     date = [datePicker date];
@@ -1478,8 +1532,14 @@ UIImage *imageDetailDisclosure;
     [self showTabbar];
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
-    [toolBar setFrame:CGRectMake(0, 450, 320, 44)];
-    [datePicker setFrame:CGRectMake(0, 494, 320, 216)];
+     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+         [toolBar setFrame:CGRectMake(0, 500, 320, 44)];
+         [datePicker setFrame:CGRectMake(0, 544, 320, 216)];
+     }
+     else{
+         [toolBar setFrame:CGRectMake(0, 450, 320, 44)];
+         [datePicker setFrame:CGRectMake(0, 494, 320, 216)];
+     }
     [UIView commitAnimations];
     
     isTripDateCurrentTime = TRUE;
@@ -1515,8 +1575,15 @@ UIImage *imageDetailDisclosure;
     [self.view addSubview:toolBar];
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
-    [toolBar setFrame:CGRectMake(0, 160, 320, 44)];
-    [datePicker setFrame:CGRectMake(0, 204, 320, 216)];
+    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+        [toolBar setFrame:CGRectMake(0, 246, 320, 44)];
+        [datePicker setFrame:CGRectMake(0, 290, 320, 216)];
+
+    }
+    else{
+        [toolBar setFrame:CGRectMake(0, 160, 320, 44)];
+        [datePicker setFrame:CGRectMake(0, 204, 320, 216)]; 
+    }
     [UIView commitAnimations];
 }
 
@@ -1544,10 +1611,30 @@ UIImage *imageDetailDisclosure;
         CGRect _rect = view.frame;
         if([view isKindOfClass:[UITabBar class]])
         {
-            _rect.origin.y = 480;
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                _rect.origin.y = 568;
+            }
+            else{
+                _rect.origin.y = 480;
+            }
             [view setFrame:_rect];
-        } else {
-            _rect.size.height = 480;
+        }
+        else if([view isKindOfClass:[UIImageView class]]){
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                _rect.origin.y = 568;
+            }
+            else{
+                _rect.origin.y = 480;
+            }
+            [view setFrame:_rect];
+        }
+        else {
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                _rect.size.height = 568;
+            }
+            else{
+               _rect.size.height = 480; 
+            }
             [view setFrame:_rect];
         }
     }   
@@ -1559,16 +1646,40 @@ UIImage *imageDetailDisclosure;
     {
         CGRect _rect = view.frame;
         if([view isKindOfClass:[UITabBar class]]){
-            _rect.origin.y = 431;
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                _rect.origin.y = 517;
+            }
+            else{
+               _rect.origin.y = 431; 
+            }
             [view setFrame:_rect];
         }
         else if([view isKindOfClass:[UIButton class]]){
-            _rect.size.height = 42;
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                _rect.size.height = 49;
+            }
+            else{
+               _rect.size.height = 42; 
+            }
             [view setFrame:_rect];
             
         }
+        else if([view isKindOfClass:[UIImageView class]]){
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                _rect.origin.y = 517;
+            }
+            else{
+                _rect.origin.y = 431;
+            }
+            [view setFrame:_rect];
+        }
         else {
-            _rect.size.height = 431;
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                 _rect.size.height = 517;
+            }
+            else{
+                _rect.size.height = 431; 
+            }
             [view setFrame:_rect];
         }
     }   

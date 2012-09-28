@@ -106,6 +106,8 @@
 		8D0158B8159B35CC0004D2FB /* SettingInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0158B6159B35CC0004D2FB /* SettingInfoViewController.m */; };
 		8D0158B9159B35CC0004D2FB /* SettingInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D0158B7159B35CC0004D2FB /* SettingInfoViewController.xib */; };
 		8D015972159B3DE10004D2FB /* caltrain.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8D015971159B3DE10004D2FB /* caltrain.jpg */; };
+		8D55DDF0161569FD00AF2384 /* SettingInfoViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D55DDEF161569FD00AF2384 /* SettingInfoViewController_568h.xib */; };
+		8D55DDF21615748D00AF2384 /* FeedBackForm_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D55DDF11615748D00AF2384 /* FeedBackForm_568h.xib */; };
 		8DA39BDF15E3855B0029D54B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6F22E71563AD360066DFA9 /* AVFoundation.framework */; };
 		8DA39BE115E38B5E0029D54B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */; };
 		8DBECD4F16146C34007B71F1 /* Speaker.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBECD4D16146C34007B71F1 /* Speaker.png */; };
@@ -1016,6 +1018,8 @@
 		8D0158B6159B35CC0004D2FB /* SettingInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SettingInfoViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8D0158B7159B35CC0004D2FB /* SettingInfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingInfoViewController.xib; sourceTree = "<group>"; };
 		8D015971159B3DE10004D2FB /* caltrain.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = caltrain.jpg; sourceTree = "<group>"; };
+		8D55DDEF161569FD00AF2384 /* SettingInfoViewController_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingInfoViewController_568h.xib; sourceTree = "<group>"; };
+		8D55DDF11615748D00AF2384 /* FeedBackForm_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedBackForm_568h.xib; sourceTree = "<group>"; };
 		8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		8DBECD4D16146C34007B71F1 /* Speaker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Speaker.png; sourceTree = "<group>"; };
 		8DBECD4E16146C34007B71F1 /* Speaker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Speaker@2x.png"; sourceTree = "<group>"; };
@@ -2672,6 +2676,7 @@
 		CCB7E8131570904A0036E9CD /* feedBackForm */ = {
 			isa = PBXGroup;
 			children = (
+				8D55DDF11615748D00AF2384 /* FeedBackForm_568h.xib */,
 				CCB7E80E157090370036E9CD /* FeedBackForm.h */,
 				CCB7E80F157090370036E9CD /* FeedBackForm.m */,
 				CCB7E810157090380036E9CD /* FeedBackForm.xib */,
@@ -2848,6 +2853,7 @@
 				8D0158B5159B35CC0004D2FB /* SettingInfoViewController.h */,
 				8D0158B6159B35CC0004D2FB /* SettingInfoViewController.m */,
 				8D0158B7159B35CC0004D2FB /* SettingInfoViewController.xib */,
+				8D55DDEF161569FD00AF2384 /* SettingInfoViewController_568h.xib */,
 			);
 			name = controllerView;
 			sourceTree = "<group>";
@@ -3226,6 +3232,8 @@
 				8DBECD4F16146C34007B71F1 /* Speaker.png in Resources */,
 				8DBECD5016146C34007B71F1 /* Speaker@2x.png in Resources */,
 				8DBECD5216146DBE007B71F1 /* Default-568h@2x.png in Resources */,
+				8D55DDF0161569FD00AF2384 /* SettingInfoViewController_568h.xib in Resources */,
+				8D55DDF21615748D00AF2384 /* FeedBackForm_568h.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

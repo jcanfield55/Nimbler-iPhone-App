@@ -12,11 +12,14 @@
 
 // ToFromViewController constants
 #define TOFROM_MAIN_TABLE_HEIGHT 319
+#define TOFROM_MAIN_TABLE_HEIGHT_4INCH 405
 #define TOFROM_TIME_DATE_HEIGHT 37
 #define TOFROM_ROW_HEIGHT 37
 #define FROM_HEIGHT_CL_MODE 37
 #define TOFROM_TABLE_HEIGHT_NO_CL_MODE 110 // height when not isCurrentLocationMode
+#define TOFROM_TABLE_HEIGHT_NO_CL_MODE_4INCH 140 // height when not isCurrentLocationMode
 #define TO_TABLE_HEIGHT_CL_MODE 185 // height when isCurrentLocationMode
+#define TO_TABLE_HEIGHT_CL_MODE_4INCH 270 // height when isCurrentLocationMode
 #define TOFROM_TABLE_WIDTH 300
 #define TOFROM_INSERT_INTO_CELL_MARGIN 2 // spacer added to cell height when there is an inserted field or table
 #define TOFROM_TABLE_CORNER_RADIUS 10.0
@@ -46,8 +49,11 @@
 #define ROUTE_LEGMAP_X_ORIGIN 5
 #define ROUTE_LEGMAP_Y_ORIGIN 5
 #define ROUTE_LEGMAP_WIDTH 309
-#define ROUTE_LEGMAP_MIN_HEIGHT 190
+#define ROUTE_LEGMAP_MIN_HEIGHT 210
 #define ROUTE_DETAILS_TABLE_MAX_HEIGHT 170
+#define ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH 220
+#define ROUTE_LEGMAP_MIN_HEIGHT_4INCH 220
+
 
 // Table cell height
 #define STANDARD_TABLE_CELL_MINIMUM_HEIGHT 40
@@ -88,5 +94,24 @@
 // Images
 
 #define NAVIGATION_BAR_IMAGE  [UIImage imageNamed:@"img_navigationbar.png"]
+
+#define NAVIGATION_ITEM1_XPOS 2
+#define NAVIGATION_ITEM2_XPOS 78
+#define NAVIGATION_ITEM3_XPOS 160
+#define NAVIGATION_ITEM4_XPOS 240
+
+
+#define NAVIGATION_ITEM_YPOS_4INCH      517
+#define NAVIGATION_ITEM_WIDTH_4INCH     78
+#define NAVIGATION_ITEM_HEIGHT_4INCH    49
+
+#define NAVIGATION_ITEM_YPOS      436
+#define NAVIGATION_ITEM_WIDTH     78
+#define NAVIGATION_ITEM_HEIGHT    42
+ 
+#define ROUTE_BUTTON_XPOS_4INCH       124
+#define ROUTE_BUTTON_YPOS_4INCH       410
+#define ROUTE_BUTTON_WIDTH_4INCH      72
+#define ROUTE_BUTTON_HEIGHT_4INCH     37
 
 #endif

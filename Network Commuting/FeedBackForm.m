@@ -86,6 +86,8 @@ NSUserDefaults *prefs;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.txtFeedBack.delegate = self;
+    self.txtEmailId.delegate = self;
     if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
         [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
     }
