@@ -181,7 +181,7 @@
 }
 
 
-// Internal utility function to update the selected location to be loc 
+// Utility function to update the selected location to be loc
 // (in locations object, in toFromVC, and in the table selected cell)
 - (void)markAndUpdateSelectedLocation:(Location *)loc
 {
@@ -505,8 +505,6 @@
     }
 }
 
-
-
 // Internal method to process a new incoming geocoded location (if the only one returned by geocoder, or if this one picked by LocationPickerVC)
 - (void)selectedGeocodedLocation:(Location *)location
 {
@@ -523,8 +521,23 @@
     
     // Mark and update the tableview and ToFromViewController
     [self markAndUpdateSelectedLocation:location];
-    
 }
+
+// Method to process a new incoming location from an IOS directions request
+- (void)newDirectionsRequestLocation:(Location *)location
+{
+    NIMLOG_EVENT1(@"New Directions Request Address: %@", [location formattedAddress]);
+    
+    // Check if an equivalent Location is already in the locations table
+    location = [locations consolidateWithMatchingLocations:location keepThisLocation:NO];
+    
+    // Save db context with the new location object
+    saveContext(managedObjectContext);
+    
+    // Mark and update the tableview and ToFromViewController
+    [self markAndUpdateSelectedLocation:location];
+}
+
 // Method called by LocationPickerVC when a user picks a location
 // Picks the location and clears out any other Locations in the list with to & from frequency = 0.0
 - (void)setPickedLocation:(Location *)pickedLocation locationArray:(NSArray *)locationArray isGeocodedResults:(BOOL)isGeocodedResults

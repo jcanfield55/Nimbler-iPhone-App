@@ -47,6 +47,15 @@ void saveContext(NSManagedObjectContext *managedObjectContext)
     }
 }
 
+// Handy debugging function for sending the character-by-character unicode of a string to NSLog
+void stringToUnicodeNSLog(NSString *string)
+{
+    for (int i=0; i<[string length]; i++) {
+        unichar c = [string characterAtIndex:i];
+        NSLog(@"Character = %C, %d", c, c);
+    }
+}
+
 // Converts from milliseconds to a string formatted as "X days, Y hours, Z minutes"
 NSString *durationString(double milliseconds)
 {

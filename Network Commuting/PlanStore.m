@@ -147,9 +147,9 @@
         if([timeFormatter stringFromDate:[parameters thisRequestTripDate]]){
             [params setObject:[timeFormatter stringFromDate:[parameters thisRequestTripDate]] forKey:REQUEST_TRIP_TIME];
         }
-        if((([parameters departOrArrive] == ARRIVE) ? @"true" : @"false")){
-            [params setObject:(([parameters departOrArrive] == ARRIVE) ? @"true" : @"false") forKey:ARRIVE_BY];
-        }
+        
+        [params setObject:(([parameters departOrArrive] == ARRIVE) ? @"true" : @"false") forKey:ARRIVE_BY];
+
         if([NSNumber numberWithInt:[parameters maxWalkDistance]]){
             [params setObject:[NSNumber numberWithInt:[parameters maxWalkDistance]] forKey:MAX_WALK_DISTANCE];
         }
@@ -283,14 +283,19 @@
                 plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context
                 
                 // Now format the itineraries of the consolidated plan
-                [plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate] departOrArrive:[planRequestParameters departOrArrive]];
-                [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
-                 NIMLOG_OBJECT1(@"PLAN =%@",plan);
-                // Call-back the appropriate RouteOptions VC with the new plan
-                if (planRequestParameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
-                    [routeOptionsVC newPlanAvailable:plan status:PLAN_STATUS_OK];
-                } else {
-                    [toFromVC newPlanAvailable:plan status:PLAN_STATUS_OK];
+                if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate] departOrArrive:[planRequestParameters departOrArrive]]) {
+                    [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
+                    NIMLOG_OBJECT1(@"PLAN =%@",plan);
+                    // Call-back the appropriate RouteOptions VC with the new plan
+                    if (planRequestParameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
+                        [routeOptionsVC newPlanAvailable:plan status:PLAN_STATUS_OK];
+                    } else {
+                        [toFromVC newPlanAvailable:plan status:PLAN_STATUS_OK];
+                    }
+                } else { // no matching sorted itineraries.  DE189 fix
+                    if (planRequestParameters.planDestination == PLAN_DESTINATION_TO_FROM_VC) {
+                        [toFromVC newPlanAvailable:nil status:PLAN_GENERIC_EXCEPTION];
+                    } // else if routeOptions destination, do nothing
                 }
             }
         }

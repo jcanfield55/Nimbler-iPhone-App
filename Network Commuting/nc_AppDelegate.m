@@ -396,6 +396,7 @@ FeedBackForm *fbView;
 #pragma mark - Directions request URL handler from iOS6
 
 // Directions request URL handler from iOS6
+// US156 implementation
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
@@ -409,13 +410,9 @@ FeedBackForm *fbView;
             sourceLoc = currentLocation;
         } else {
             MKPlacemark* sourcePlacemark = [[directionsInfo source] placemark];
-            sourceLoc = [locations newEmptyLocation];
-            sourceLoc.formattedAddress = [NSString stringWithFormat:@"%@, %@", 
-                                          sourcePlacemark.thoroughfare, sourcePlacemark.locality];
-            sourceLoc.latFloat = sourcePlacemark.location.coordinate.latitude;
-            sourceLoc.lngFloat = sourcePlacemark.location.coordinate.longitude;
+            sourceLoc = [locations newLocationFromIOSWithPlacemark:sourcePlacemark error:nil];
         }
-        [toFromViewController updateToFromLocation:self isFrom:true location:sourceLoc];
+        [[toFromViewController fromTableVC] newDirectionsRequestLocation:sourceLoc];
         
         // Create & set the destination location
         Location* destinationLoc;
@@ -423,13 +420,19 @@ FeedBackForm *fbView;
             destinationLoc = currentLocation;
         } else {
             MKPlacemark* destinationPlacemark = [[directionsInfo destination] placemark];
-            destinationLoc = [locations newEmptyLocation];
-            destinationLoc.formattedAddress = [NSString stringWithFormat:@"%@, %@", 
-                                               destinationPlacemark.thoroughfare, destinationPlacemark.locality];
-            destinationLoc.latFloat = destinationPlacemark.location.coordinate.latitude;
-            destinationLoc.lngFloat = destinationPlacemark.location.coordinate.longitude;
+            destinationLoc = [locations newLocationFromIOSWithPlacemark:destinationPlacemark error:nil];
         }
-        [toFromViewController updateToFromLocation:self isFrom:false location:destinationLoc];
+        [[toFromViewController toTableVC] newDirectionsRequestLocation:destinationLoc];
+        
+        // Go to TripPlanner tab if we are not there already
+        RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
+        if (rxCustomTabBar.selectedIndex != 0) {
+            [rxCustomTabBar selectTab:0];
+        }
+        // If not at ToFromViewController on the Nav Controller, pop to home
+        if ([[toFromViewController navigationController] visibleViewController] != toFromViewController) {
+            [[toFromViewController navigationController] popToRootViewControllerAnimated:NO];
+        }
         
         // Request route
         [toFromViewController getRouteFromMapKitURLRequest];

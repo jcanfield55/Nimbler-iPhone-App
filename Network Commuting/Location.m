@@ -250,6 +250,7 @@ static Locations *locations;
                     returnString = [addr substringToIndex:range.location]; // Clip from postal code on
                 }
             }
+            
             if (returnString && [returnString length] > 0) { // check to make sure we have something to return (DE25 fix)
                 if ([returnString hasSuffix:@", CA "]) { // Get rid of final ", CA"
                     returnString = [returnString substringToIndex:([returnString length]-5)];

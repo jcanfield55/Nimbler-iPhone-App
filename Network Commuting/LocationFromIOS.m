@@ -91,8 +91,65 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
         }
         return [NSString stringWithString:formattedAddr];
     }
-    else { // if cannot get formatted address lines,
-        return ABCreateStringWithAddressDictionary([[self placemark] addressDictionary], YES);
+    else { // if cannot get formatted address lines, try our best for California addresses
+        NSMutableString* formattedAddr = [NSMutableString
+                                          stringWithString:ABCreateStringWithAddressDictionary([[self placemark] addressDictionary], YES)];
+        
+        NSStringCompareOptions options1 = 0;
+        NSRange range;
+        range.length = 37;  // Enough length to get to " California 94070-0001 United States"
+        int rangeLocation = [formattedAddr length] - range.length;
+        if (rangeLocation>=0) {
+            range.location = rangeLocation;
+        } else { // if there is not enough length, go for full string
+            range.location = 0;
+            range.length = [formattedAddr length];
+        }
+        
+        if (formattedAddr) {
+            int num;
+            num = [formattedAddr replaceOccurrencesOfString:@" California"
+                                           withString:@", CA"
+                                              options:options1
+                                                range:range];
+            
+            range.length = 15;  // Enough length to get to "\nUnited States"
+            if (formattedAddr.length >= range.length) {
+                range.location = formattedAddr.length - range.length;
+                num = [formattedAddr replaceOccurrencesOfString:@"\nUnited States"
+                                               withString:@", USA"
+                                                  options:options1
+                                                    range:range];
+            }
+            range.location = 0;
+            range.length = [formattedAddr length];
+            num = [formattedAddr replaceOccurrencesOfString:@"\n"
+                                           withString:@", "
+                                              options:options1
+                                                range:range];
+            
+            // Get rid of random Unicode "left-to-right mark" I found around "California"  http://www.fileformat.info/info/unicode/char/200e/index.htm
+            range.length = [formattedAddr length];
+            num = [formattedAddr replaceOccurrencesOfString:@"\u200e"
+                                                 withString:@""
+                                                    options:options1
+                                                      range:range];
+            
+            
+            if ([formattedAddr length]>5 &&
+                [[formattedAddr substringFromIndex:([formattedAddr length]-5)] intValue] < 0) {
+                // if the end of the line looks like a negative number '-1234'
+                // then it is a zip+4 and remove it from the line
+                range.length = 5;
+                range.location = formattedAddr.length - range.length;
+                [formattedAddr replaceCharactersInRange:range withString:@""];
+            }
+            
+            
+            
+        }
+        
+        return [NSString stringWithString:formattedAddr];
     }
 }
 

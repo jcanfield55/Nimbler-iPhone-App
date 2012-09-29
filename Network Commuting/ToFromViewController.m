@@ -902,9 +902,9 @@ UIImage *imageDetailDisclosure;
     NIMLOG_EVENT1(@"MapKit URL request");
     startButtonClickTime = CFAbsoluteTimeGetCurrent();
     
-    if (isTripDateCurrentTime) { // if current time, get the latest before getting plan
-        [self updateTripDate];
-    }
+    [self setIsTripDateCurrentTime:YES];
+    [self updateTripDate];
+    
     [self getPlan];
 }
 
@@ -1070,78 +1070,83 @@ UIImage *imageDetailDisclosure;
 // Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
 -(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status
 {
-    [self stopActivityIndicator];
-    durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime;
-    NIMLOG_OBJECT1(@"Plan =%@",newPlan);
-    if (status == PLAN_STATUS_OK) {
-        plan = newPlan;
-        savetrip = FALSE;
-        
-        // Pass control to the RouteOptionsViewController to display itinerary choices
-        if (!routeOptionsVC) {
-            routeOptionsVC = [[RouteOptionsViewController alloc] initWithNibName:nil bundle:nil];
-        }
-        // DE - 155 Fixed
-        if([[plan sortedItineraries] count] != 0){
-            if(self.timerGettingRealDataByItinerary != nil){
-                [self.timerGettingRealDataByItinerary invalidate];
-                self.timerGettingRealDataByItinerary = nil;
+    @try {
+        [self stopActivityIndicator];
+        durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime;
+        NIMLOG_OBJECT1(@"Plan =%@",newPlan);
+        if (status == PLAN_STATUS_OK) {
+            plan = newPlan;
+            savetrip = FALSE;
+            
+            // Pass control to the RouteOptionsViewController to display itinerary choices
+            if (!routeOptionsVC) {
+                routeOptionsVC = [[RouteOptionsViewController alloc] initWithNibName:nil bundle:nil];
             }
-            NSArray *ities = [plan sortedItineraries];
-            for (int i=0; i <ities.count ; i++) {
-                [[ities objectAtIndex:i] setItinArrivalFlag:nil];
-                Itinerary *it = [ities objectAtIndex:i];
-                NSArray *legs =  [it sortedLegs];
-                for (int i=0;i<legs.count;i++) {
-                    [[legs objectAtIndex:i] setArrivalFlag:nil];
-                    [[legs objectAtIndex:i] setArrivalTime:nil];
-                    [[legs objectAtIndex:i] setTimeDiffInMins:nil];
+            // DE - 155 Fixed
+            if([[plan sortedItineraries] count] != 0){
+                if(self.timerGettingRealDataByItinerary != nil){
+                    [self.timerGettingRealDataByItinerary invalidate];
+                    self.timerGettingRealDataByItinerary = nil;
+                }
+                NSArray *ities = [plan sortedItineraries];
+                for (int i=0; i <ities.count ; i++) {
+                    [[ities objectAtIndex:i] setItinArrivalFlag:nil];
+                    Itinerary *it = [ities objectAtIndex:i];
+                    NSArray *legs =  [it sortedLegs];
+                    for (int i=0;i<legs.count;i++) {
+                        [[legs objectAtIndex:i] setArrivalFlag:nil];
+                        [[legs objectAtIndex:i] setArrivalTime:nil];
+                        [[legs objectAtIndex:i] setTimeDiffInMins:nil];
+                    }
+                }
+                [routeOptionsVC setPlan:plan];
+                [self getRealTimeDataForItinerary];
+                self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
+                if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
+                    CATransition *animation = [CATransition animation];
+                    [animation setDuration:0.3];
+                    [animation setType:kCATransitionPush];
+                    [animation setSubtype:kCATransitionFromRight];
+                    [animation setRemovedOnCompletion:YES];
+                    [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+                    [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+                    [[self navigationController] pushViewController:routeOptionsVC animated:NO];
+                }
+                else{
+                    [[self navigationController] pushViewController:routeOptionsVC animated:YES];
                 }
             }
-            [routeOptionsVC setPlan:plan];
-            [self getRealTimeDataForItinerary];
-            self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
-            if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
-                CATransition *animation = [CATransition animation];
-                [animation setDuration:0.3];
-                [animation setType:kCATransitionPush];
-                [animation setSubtype:kCATransitionFromRight];
-                [animation setRemovedOnCompletion:YES];
-                [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
-                [[self.navigationController.view layer] addAnimation:animation forKey:nil];
-                [[self navigationController] pushViewController:routeOptionsVC animated:NO];
-            }
             else{
-                [[self navigationController] pushViewController:routeOptionsVC animated:YES];
+                if([nc_AppDelegate sharedInstance].isToFromView){
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:ALERT_TRIP_NOT_AVAILABLE delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil] ;
+                    [alert show];
+                }
             }
         }
-        else{
+        else if (status==PLAN_NO_NETWORK) {
             if([nc_AppDelegate sharedInstance].isToFromView){
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:ALERT_TRIP_NOT_AVAILABLE delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil] ;
-                [alert show];  
+                UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Unable to connect to server.  Please try again when you have network connectivity." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+                [alert show];
+                savetrip = false;
+            }
+        }
+        else if (status==PLAN_NOT_AVAILABLE_THAT_TIME) {
+            if([nc_AppDelegate sharedInstance].isToFromView){
+                UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"No trips available for the requested time." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+                [alert show];
+                savetrip = false;
+            }
+        }
+        else { // if (status == PLAN_GENERIC_EXCEPTION)
+            if([nc_AppDelegate sharedInstance].isToFromView){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:ALERT_TRIP_NOT_AVAILABLE delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
+                [alert show];
+                savetrip = false;
             }
         }
     }
-    else if (status==PLAN_NO_NETWORK) {
-        if([nc_AppDelegate sharedInstance].isToFromView){
-            UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Unable to connect to server.  Please try again when you have network connectivity." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-            [alert show];
-            savetrip = false;
-        }
-    }
-    else if (status==PLAN_NOT_AVAILABLE_THAT_TIME) {
-        if([nc_AppDelegate sharedInstance].isToFromView){
-            UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"No trips available for the requested time." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-            [alert show];
-            savetrip = false;
-        }
-    }
-    else { // if (status == PLAN_GENERIC_EXCEPTION)
-        if([nc_AppDelegate sharedInstance].isToFromView){
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:ALERT_TRIP_NOT_AVAILABLE delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;
-            [alert show];
-            savetrip = false;
-        }
+    @catch (NSException *exception) { 
+        logException(@"ToFromViewController->newPlanAvailable", @"", exception);
     }
 }
 

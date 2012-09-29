@@ -14,6 +14,9 @@ NSString *pathInDocumentDirectory(NSString *fileName);
 
 void saveContext(NSManagedObjectContext *managedObjectContext);
 
+// Handy debugging function for sending the character-by-character unicode of a string to NSLog
+void stringToUnicodeNSLog(NSString *string);
+
 // Converts from milliseconds to a string formatted as "X days, Y hours, Z minutes"
 NSString *durationString(double milliseconds);
 

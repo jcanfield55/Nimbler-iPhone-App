@@ -39,7 +39,11 @@
 
 // Method called by LocationPickerVC when a user picks a location
 // Picks the location and clears out any other Locations in the list with to & from frequency = 0.0
-- (void)setPickedLocation:(Location *)ploc locationArray:(NSArray *)locationArray isGeocodedResults:(BOOL)isGeocodedResult; 
+- (void)setPickedLocation:(Location *)ploc locationArray:(NSArray *)locationArray isGeocodedResults:(BOOL)isGeocodedResult;
+
+// Method to process a new incoming location from an IOS directions request
+- (void)newDirectionsRequestLocation:(Location *)location;
+
 - (void)markAndUpdateSelectedLocation:(Location *)loc;
 -(BOOL)alertUsetForLocationService;
 @end

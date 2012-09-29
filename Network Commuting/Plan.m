@@ -374,8 +374,9 @@
             return nil;
         }
         
-        // Sort itineraries
-        NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:YES];
+        // Sort itineraries (in reverse order if arrive-by itinerary (DE191 fix)
+        NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:(depOrArrive == DEPART)];
+
         NSArray* returnedItineraries = [matchingItineraries sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]];
         
         // Remove itineraries from returnedItineraries beyond planMaxItinerariesToShow
