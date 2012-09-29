@@ -308,25 +308,23 @@
                 if ([reqChunk doAllItineraryServiceDaysMatchDate:connectingReqDate] &&
                     [reqChunk doesCoverTheSameTimeAs:connectingReqDate departOrArrive:depOrArrive]) {
                     [matchingReqChunks addObject:reqChunk];
-                    
-                    // TODO Fix addDateOnlyWithTimeOnly to handle crossing-midnight timeOnly values
-                    
+                                        
                     // Compute newConnectingReqDate
                     NSDate* possibleNewConnReqDate;
                     if (depOrArrive == DEPART) {
                         NSDate* lastItinTimeOnly = [[[reqChunk sortedItineraries] lastObject] startTimeOnly];
-                        possibleNewConnReqDate = addDateOnlyWithTimeOnly(dateOnlyFromDate(requestDate),
-                                                                         [NSDate dateWithTimeInterval:PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS
-                                                                                            sinceDate:lastItinTimeOnly]);
+                        possibleNewConnReqDate = addDateOnlyWithTime(dateOnlyFromDate(requestDate),
+                                                                     [NSDate dateWithTimeInterval:PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS
+                                                                                        sinceDate:lastItinTimeOnly]);
                         if (!newConnectingReqDate ||
                             [newConnectingReqDate compare:possibleNewConnReqDate] == NSOrderedAscending) {
                             newConnectingReqDate = possibleNewConnReqDate;
                         }
                     } else { // depOrArrive = ARRIVE
                         NSDate* firstItinEndTimeOnly = [[[reqChunk sortedItineraries] objectAtIndex:0] endTimeOnly];
-                        possibleNewConnReqDate = addDateOnlyWithTimeOnly(dateOnlyFromDate(requestDate),
-                                                                         [NSDate dateWithTimeInterval:(-PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS)
-                                                                                            sinceDate:firstItinEndTimeOnly]);
+                        possibleNewConnReqDate = addDateOnlyWithTime(dateOnlyFromDate(requestDate),
+                                                                     [NSDate dateWithTimeInterval:(-PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS)
+                                                                                        sinceDate:firstItinEndTimeOnly]);
                         if (!newConnectingReqDate ||
                             [newConnectingReqDate compare:possibleNewConnReqDate] == NSOrderedDescending) {
                             newConnectingReqDate = possibleNewConnReqDate;

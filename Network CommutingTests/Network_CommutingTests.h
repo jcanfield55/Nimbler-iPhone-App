@@ -26,6 +26,8 @@
     NSManagedObjectContext *managedObjectContext;
     NSManagedObjectModel *managedObjectModel;
     
+    NSDateFormatter* dateFormatter;
+    
     Location *loc1;
     Location *loc2;
     Location *loc3;

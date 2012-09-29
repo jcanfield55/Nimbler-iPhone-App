@@ -267,6 +267,18 @@
 
                 [plan createRequestChunkWithAllItinerariesAndRequestDate:[planRequestParameters thisRequestTripDate]
                                                           departOrArrive:[planRequestParameters departOrArrive]];
+                // Make sure that we still have itineraries (ie it wasn't just overnight itineraries)
+                // Part of the DE161 fix
+                if ([[plan itineraries] count] == 0) {
+                    NIMLOG_EVENT1(@"Plan with just overnight itinerary deleted");
+                    [managedObjectContext deleteObject:plan];
+                    saveContext(managedObjectContext);
+                    if (planRequestParameters.planDestination == PLAN_DESTINATION_TO_FROM_VC) {
+                        [toFromVC newPlanAvailable:nil status:PLAN_NOT_AVAILABLE_THAT_TIME];
+                    } // else if routeOptions destination, do nothing
+                    return;
+                }
+                
                 saveContext(managedObjectContext);  // Save location and request chunk changes
                 plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context
                 
@@ -347,7 +359,7 @@
                                             planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY
                                                  planMaxTimeForResultsToShow:(1000*60*60)];
     if (!testItinArray) {
-        NIMLOG_ERR1(@"No sortedItineraries in plan in requestMoreItinerariesIfNeeded");
+        logError(@"PlanStore->requestMoreItinerariesIfNeeded:",@"No sortedItineraries in plan in requestMoreItinerariesIfNeeded");
         return; // return if there are no matching itineraries in the original request
     }
     PlanRequestParameters* params = [PlanRequestParameters copyOfPlanRequestParameters:requestParams0];
@@ -358,14 +370,14 @@
         // If we are below our max parameters
         params.planDestination = PLAN_DESTINATION_ROUTE_OPTIONS_VC;
         if (params.departOrArrive == DEPART) {
-            params.thisRequestTripDate = addDateOnlyWithTimeOnly(dateOnlyFromDate(params.thisRequestTripDate),
-                                                      [NSDate dateWithTimeInterval:PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS
-                                                                         sinceDate:lastItinTimeOnly]);
+            params.thisRequestTripDate = addDateOnlyWithTime(dateOnlyFromDate(params.thisRequestTripDate),
+                                                             [NSDate dateWithTimeInterval:PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS
+                                                                                sinceDate:lastItinTimeOnly]);
         } else { // departOrArrive = ARRIVE
             NSDate* firstItinEndTimeOnly = [[testItinArray objectAtIndex:0] endTimeOnly];
-            params.thisRequestTripDate = addDateOnlyWithTimeOnly(dateOnlyFromDate(params.thisRequestTripDate),
-                                                      [NSDate dateWithTimeInterval:(-PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS)
-                                                                         sinceDate:firstItinEndTimeOnly]);
+            params.thisRequestTripDate = addDateOnlyWithTime(dateOnlyFromDate(params.thisRequestTripDate),
+                                                             [NSDate dateWithTimeInterval:(-PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS)
+                                                                                sinceDate:firstItinEndTimeOnly]);
         }
         NIMLOG_EVENT1(@"Requesting additional plan with parameters: %@", params);
         [self requestPlanFromOtpWithParameters:params];

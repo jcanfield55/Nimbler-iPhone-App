@@ -101,9 +101,8 @@
     //
     
     // Set-up dates
-    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateStyle:NSDateFormatterLongStyle];
-    [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+    dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"MMMM dd, yyyy hh:mm a"];
     NSDate* date10req = [dateFormatter dateFromString:@"June 8, 2012 5:02 PM"]; // Friday before last load
     NSDate* date10 = [dateFormatter dateFromString:@"June 8, 2012 5:00 PM"]; // Friday before last load
     NSDate* date11 = [dateFormatter dateFromString:@"June 8, 2012 5:30 PM"]; // Friday before last load
@@ -835,14 +834,18 @@
     
     // Calendar functions
     //
-    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateStyle:NSDateFormatterLongStyle];
-    [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
     NSDate* dayTime1 = [dateFormatter dateFromString:@"August 22, 2012 5:00 PM"]; // Wednesday
     NSDate* dayTime2 = [dateFormatter dateFromString:@"August 5, 2012 7:00 PM"]; // Sunday
     NSDate* dayTime3 = [dateFormatter dateFromString:@"September 1, 2012 6:00 AM"]; // Saturday
     NSDate* dayTime4 = [dateFormatter dateFromString:@"September 1, 2012 11:59 PM"];
+    NSDate* timeOnly4 = timeOnlyFromDate(dayTime4);
+    NSDate* timeOnly4Plus10 = [timeOnly4 dateByAddingTimeInterval:(10*60)]; // now past midnight, next day
     NSDate* dayTime5 = [dateFormatter dateFromString:@"August 5, 2012 11:59 PM"];
+    NSDate* dayTime6 = [dateFormatter dateFromString:@"August 5, 2012 12:09 AM"];
+    NSDate* timeOnly6Minus20 = [timeOnlyFromDate(dayTime6) dateByAddingTimeInterval:-(20*60)];
+    NSDate* dayTime7 = [dateFormatter dateFromString:@"August 6, 2012 12:09 AM"];
+    NSDate* dayTime8 = [dateFormatter dateFromString:@"August 5, 2012 11:49 PM"];
+    NSDate* dayTime9 = [dateFormatter dateFromString:@"August 4, 2012 11:49 PM"];
     
     NSDate* dayTime60ReqNew = [dateFormatter dateFromString:@"August 23, 2012 10:29 AM"]; // Thursday
     NSDate* dayTime60ReqOrig = [dateFormatter dateFromString:@"August 22, 2012 11:00 AM"]; // Wednesday
@@ -869,8 +872,15 @@
     STAssertTrue([dateOnlyFromDate(dayTime3) isEqualToDate:dateOnlyFromDate(dayTime4)], @"");
     STAssertFalse([dateOnlyFromDate(dayTime2) isEqualToDate:dateOnlyFromDate(dayTime4)], @"");
 
-    //
+    // dateOnlyWithTimeOnly
     STAssertTrue([addDateOnlyWithTimeOnly(dayTime2, dayTime4) isEqualToDate:dayTime5], @"");
+    STAssertTrue([addDateOnlyWithTimeOnly(dayTime2, timeOnly4Plus10) isEqualToDate:dayTime6], @"");
+    STAssertTrue([addDateOnlyWithTimeOnly(dayTime2, timeOnly6Minus20) isEqualToDate:dayTime8], @"");
+
+    // dateOnlyWithTime
+    STAssertTrue([addDateOnlyWithTime(dayTime2, timeOnly4) isEqualToDate:dayTime5], @"");
+    STAssertTrue([addDateOnlyWithTime(dayTime2, timeOnly4Plus10) isEqualToDate:dayTime7], @"");
+    STAssertTrue([addDateOnlyWithTime(dayTime2, timeOnly6Minus20) isEqualToDate:dayTime9], @"");
 }
 
 - (void)testKeyObjectStore
@@ -910,9 +920,6 @@
     TransitCalendar* transitCalendar = [[TransitCalendar alloc] init];
     
     // Set-up dates
-    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateStyle:NSDateFormatterLongStyle];
-    [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
     NSDate* dayTime1 = [dateFormatter dateFromString:@"August 22, 2012 5:00 PM"]; // Wednesday
     NSDate* dayTime2 = [dateFormatter dateFromString:@"August 5, 2012 7:00 PM"]; // Sunday
     NSDate* dayTime3 = [dateFormatter dateFromString:@"September 3, 2012 6:00 AM"]; // Monday Labor Day
@@ -1055,9 +1062,6 @@
 - (void)testPlanStore
 {
     // Set-up dates
-    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateStyle:NSDateFormatterLongStyle];
-    [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
     NSDate* dayTime0 = [dateFormatter dateFromString:@"August 22, 2012 5:01 PM"]; // Wednesday
     NSDate* dayTime01 = [dateFormatter dateFromString:@"August 7, 2012 11:00 PM"]; // Tuesday
     NSDate* dayTime02 = [dateFormatter dateFromString:@"August 7, 2012 11:05 PM"]; // Tuesday

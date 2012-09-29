@@ -65,11 +65,6 @@
 // bufferInSeconds is the max amount that two chunks can be non-overlapping and still return true
 - (BOOL)doTimesOverlapRequestChunk:(PlanRequestChunk *)requestChunk0 bufferInSeconds:(NSTimeInterval)bufferInSeconds;
 
-// Returns a date/time that can be used to make a next request to OTP for getting additional itineraries
-// The returned date will be the same day as requestDate, but will have a time equal to 1 minute past
-// the startTime of the last itinerary in the referring PlanRequestChunk
--(NSDate *)nextRequestDateFor:(NSDate *)requestDate;
-
 // Returns the latest time for the requestChunk based on depOrArrive
 // If DEPART, returns the earlier of earliestRequestedDepartTime or startTimeOnly of the first itinerary leg
 // If ARRIVE, returns the endTimeOnly of the first itinerary leg

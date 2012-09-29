@@ -230,16 +230,6 @@
     return false;
 }
 
-// Returns a date/time that can be used to make a next request to OTP for getting additional itineraries
-// The returned date will be the same day as requestDate, but will have a time equal to 1 minute past
-// the startTime of the last itinerary in the referring PlanRequestChunk
--(NSDate *)nextRequestDateFor:(NSDate *)requestDate
-{
-    NSDate* newRequestTime = [[[[self sortedItineraries] lastObject] startTime] dateByAddingTimeInterval:60.0];
-    NSDate* returnValue = addDateOnlyWithTimeOnly(requestDate, newRequestTime);
-    return returnValue;
-}
-
 // Consolidates requestChunk0 into self
 // Assumes that self and requestChunk0 are true for doTimesOverlapRequestChunk: and doAllServiceStringByAgencyMatchRequestChunk:
 // Takes the earliestRequestDepartTimeDate of the two and the latestRequestedArriveTimeDate of the two by comparing the time only

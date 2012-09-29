@@ -38,6 +38,11 @@ NSInteger dayOfWeekFromDate(NSDate *date);
 // taken from timeOnly
 NSDate *addDateOnlyWithTimeOnly(NSDate *dateOnly, NSDate *timeOnly);
 
+// Returns a date where the date components are taken from dateOnly, and this is added to time
+// timeOnly is assumed to have originated from a timeOnly value, but may have a value that passes midnight
+// (for example [itinerary startTimeOnly] value)
+NSDate *addDateOnlyWithTime(NSDate *date, NSDate *timeOnly);
+
 //
 // Returns a string that is a truncated version of string that fits within
 // width using font

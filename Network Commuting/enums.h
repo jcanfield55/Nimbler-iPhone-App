@@ -26,7 +26,8 @@ typedef enum {
 typedef enum {
     PLAN_STATUS_OK,
     PLAN_GENERIC_EXCEPTION,  // Provide an error saying we are unable to perform route
-    PLAN_NO_NETWORK
+    PLAN_NO_NETWORK,
+    PLAN_NOT_AVAILABLE_THAT_TIME 
 } PlanRequestStatus;
 
 typedef enum {

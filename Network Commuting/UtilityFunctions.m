@@ -198,17 +198,17 @@ NSInteger dayOfWeekFromDate(NSDate *date) {
 }
 
 //
-// Returns a date where the date components are taken from dateOnly, and the time components are
-// taken from timeOnly
+// Returns a date where the date components are taken from date, and the time components are
+// taken from time
 //
-NSDate *addDateOnlyWithTimeOnly(NSDate *dateOnly, NSDate *timeOnly) {
+NSDate *addDateOnlyWithTimeOnly(NSDate *date, NSDate *time) {
     NSCalendar* calendar = [NSCalendar currentCalendar];
     NSUInteger dateComponentNames = NSMonthCalendarUnit | NSYearCalendarUnit | NSDayCalendarUnit;
     NSUInteger timeComponentNames = NSHourCalendarUnit | NSMinuteCalendarUnit;
 
-    // Get the components of dateOnly and timeOnly
-    NSDateComponents* dateComponents = [calendar components:dateComponentNames fromDate:dateOnly];
-    NSDateComponents* timeComponents = [calendar components:timeComponentNames fromDate:timeOnly];
+    // Get the components of date and time
+    NSDateComponents* dateComponents = [calendar components:dateComponentNames fromDate:date];
+    NSDateComponents* timeComponents = [calendar components:timeComponentNames fromDate:time];
     
     // Transfer time components over
     [dateComponents setHour:[timeComponents hour]];
@@ -217,6 +217,28 @@ NSDate *addDateOnlyWithTimeOnly(NSDate *dateOnly, NSDate *timeOnly) {
     return [calendar dateFromComponents:dateComponents];
 }
 
+//
+// Returns a date where the date components are taken from dateOnly, and this is added to time
+// timeOnly is assumed to have originated from a timeOnly value, but may have a value that passes midnight
+// (for example [itinerary startTimeOnly] value)
+// This function is part of the DE161 fix
+//
+NSDate *addDateOnlyWithTime(NSDate *date, NSDate *timeOnly) {
+    NSCalendar* calendar = [NSCalendar currentCalendar];
+    NSUInteger dateComponentNames = NSMonthCalendarUnit | NSYearCalendarUnit | NSDayCalendarUnit;
+    
+    // Get the components of date 
+    NSDateComponents* dateComponents = [calendar components:dateComponentNames fromDate:date];
+    
+    // Get the zeroTime, which is the time corresponding to all zeros in the NSDateComponents
+    NSDateComponents* zeroTimeComponents = [[NSDateComponents alloc] init];
+    NSDate* zeroTime = [calendar dateFromComponents:zeroTimeComponents];
+    // Get the time interval from timeOnly from zeroTime
+    NSTimeInterval timeOnlyInterval = [timeOnly timeIntervalSinceDate:zeroTime];
+    
+    // Return dateOnly plus the timeOnlyInterval
+    return [[calendar dateFromComponents:dateComponents] dateByAddingTimeInterval:timeOnlyInterval];
+}
 
 //
 // Returns a string that is a truncated version of string that fits within

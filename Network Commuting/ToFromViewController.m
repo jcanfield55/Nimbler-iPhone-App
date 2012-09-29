@@ -1129,6 +1129,13 @@ UIImage *imageDetailDisclosure;
             savetrip = false;
         }
     }
+    else if (status==PLAN_NOT_AVAILABLE_THAT_TIME) {
+        if([nc_AppDelegate sharedInstance].isToFromView){
+            UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"No trips available for the requested time." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+            [alert show];
+            savetrip = false;
+        }
+    }
     else { // if (status == PLAN_GENERIC_EXCEPTION)
         if([nc_AppDelegate sharedInstance].isToFromView){
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:ALERT_TRIP_NOT_AVAILABLE delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] ;

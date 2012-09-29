@@ -387,7 +387,7 @@
         [components3am setHour:3];
         [components3am setMinute:0];
         NSDate* time3am = [[NSCalendar currentCalendar] dateFromComponents:components3am];
-        NSDate* dateTime3am = addDateOnlyWithTimeOnly(dateOnlyFromDate([self endTime]),time3am);
+        NSDate* dateTime3am = addDateOnlyWithTime(dateOnlyFromDate([self endTime]),time3am);
         if ([dateTime3am compare:[self startTime]] == NSOrderedDescending &&
             [dateTime3am compare:[self endTime]] == NSOrderedAscending) {
             // If self spans 3am...
