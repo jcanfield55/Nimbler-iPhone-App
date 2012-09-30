@@ -267,7 +267,9 @@ FeedBackForm *fbView;
             [locations setIsLocationServiceEnable:TRUE];
         }
         [toFromViewController setCurrentLocation:currentLocation];
-        [toFromViewController setIsCurrentLocationMode:TRUE];
+        if (![toFromViewController fromLocation]) {  // only if fromLocation is not set, set to currentLocation mode (DE197 fix)
+            [toFromViewController setIsCurrentLocationMode:TRUE];
+        }
         
         if (currentLocationNeededForDirectionsDestination || currentLocationNeededForDirectionsSource) {
             // If we have are waiting for currentLocation to execute a directions request
