@@ -7,6 +7,7 @@
 //
 
 #import "LocationFromIOS.h"
+#import "UtilityFunctions.h"
 #import <AddressBookUI/AddressBookUI.h>
 
 @interface LocationFromIOS ()
@@ -55,101 +56,108 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
 -(NSString *)standardizeFormattedAddress {
     NSMutableString* formattedAddr = [NSMutableString stringWithCapacity:25];
     NSArray* addrLines = [[[self placemark] addressDictionary] objectForKey:@"FormattedAddressLines"];
-    if (addrLines && [addrLines isKindOfClass:[NSArray class]] && [addrLines count]>0) {
-        for (int i=0; i<[addrLines count]; i++) {
-            NSString* addrLine = [addrLines objectAtIndex:i];
-            if (i==[addrLines count]-1) {  // if the last line, modify the country if needed
-                if ([addrLine isEqualToString:@"United States"]) {
-                    addrLine = @"USA";
-                }
-            }
-            if (i==[addrLines count]-2) { // if this is the 2nd to last line, the one with zipcode
-                // Remove +4 if it is a Zip+4
-                if ([addrLine length]>5 &&
-                    [[addrLine substringFromIndex:([addrLine length]-5)] intValue] < 0) {
-                    // if the end of the line looks like a negative number '-1234'
-                    // then it is a zip+4 and remove it from the line
-                    addrLine = [addrLine substringToIndex:([addrLine length]-5)];
-                }
-                // Remove any double spaces (like between the state and zipcode)
-                BOOL doAnotherLoop = true;
-                for (int j=0; (doAnotherLoop && j<5); j++) {
-                    NSRange range = [addrLine rangeOfString:@"  "];
-                    if (range.location == NSNotFound) {
-                        doAnotherLoop = false;
-                    } else {
-                        // Remove the extra space 
-                        addrLine = [[addrLine substringToIndex:range.location] stringByAppendingString:
-                                    [addrLine substringFromIndex:(range.location + 1)]];
+    @try {
+        if (addrLines && [addrLines isKindOfClass:[NSArray class]] && [addrLines count]>0) {
+            for (int i=0; i<[addrLines count]; i++) {
+                NSString* addrLine = [addrLines objectAtIndex:i];
+                if (i==[addrLines count]-1) {  // if the last line, modify the country if needed
+                    if ([addrLine isEqualToString:@"United States"]) {
+                        addrLine = @"USA";
                     }
                 }
+                if (i==[addrLines count]-2) { // if this is the 2nd to last line, the one with zipcode
+                    // Remove +4 if it is a Zip+4
+                    if ([addrLine length]>5 &&
+                        [[addrLine substringFromIndex:([addrLine length]-5)] intValue] < 0) {
+                        // if the end of the line looks like a negative number '-1234'
+                        // then it is a zip+4 and remove it from the line
+                        addrLine = [addrLine substringToIndex:([addrLine length]-5)];
+                    }
+                    // Remove any double spaces (like between the state and zipcode)
+                    BOOL doAnotherLoop = true;
+                    for (int j=0; (doAnotherLoop && j<5); j++) {
+                        NSRange range = [addrLine rangeOfString:@"  "];
+                        if (range.location == NSNotFound) {
+                            doAnotherLoop = false;
+                        } else {
+                            // Remove the extra space
+                            addrLine = [[addrLine substringToIndex:range.location] stringByAppendingString:
+                                        [addrLine substringFromIndex:(range.location + 1)]];
+                        }
+                    }
+                }
+                [formattedAddr appendString:addrLine];
+                if (i<[addrLines count]-1) {  // if not the last line
+                    [formattedAddr appendString:@", "];
+                }
             }
-            [formattedAddr appendString:addrLine];
-            if (i<[addrLines count]-1) {  // if not the last line
-                [formattedAddr appendString:@", "];
-            }
+            return [NSString stringWithString:formattedAddr];
         }
-        return [NSString stringWithString:formattedAddr];
+        else { // if cannot get formatted address lines, try our best for California addresses
+            formattedAddr = [NSMutableString
+                             stringWithString:ABCreateStringWithAddressDictionary([[self placemark] addressDictionary], YES)];
+            
+            NSStringCompareOptions options1 = 0;
+            NSRange range;
+            range.length = 37;  // Enough length to get to " California 94070-0001 United States"
+            int rangeLocation = [formattedAddr length] - range.length;
+            if (rangeLocation>=0) {
+                range.location = rangeLocation;
+            } else { // if there is not enough length, go for full string
+                range.location = 0;
+                range.length = [formattedAddr length];
+            }
+            
+            if (formattedAddr) {
+                int num;
+                num = [formattedAddr replaceOccurrencesOfString:@" California"
+                                                     withString:@", CA"
+                                                        options:options1
+                                                          range:range];
+                
+                range.length = 15;  // Enough length to get to "\nUnited States"
+                if (formattedAddr.length >= range.length) {
+                    range.location = formattedAddr.length - range.length;
+                    num = [formattedAddr replaceOccurrencesOfString:@"\nUnited States"
+                                                         withString:@", USA"
+                                                            options:options1
+                                                              range:range];
+                }
+                range.location = 0;
+                range.length = [formattedAddr length];
+                num = [formattedAddr replaceOccurrencesOfString:@"\n"
+                                                     withString:@", "
+                                                        options:options1
+                                                          range:range];
+                
+                // Get rid of random Unicode "left-to-right mark" I found around "California"  http://www.fileformat.info/info/unicode/char/200e/index.htm
+                range.length = [formattedAddr length];
+                num = [formattedAddr replaceOccurrencesOfString:@"\u200e"
+                                                     withString:@""
+                                                        options:options1
+                                                          range:range];
+                
+                
+                if ([formattedAddr length]>5 &&
+                    [[formattedAddr substringFromIndex:([formattedAddr length]-5)] intValue] < 0) {
+                    // if the end of the line looks like a negative number '-1234'
+                    // then it is a zip+4 and remove it from the line
+                    range.length = 5;
+                    range.location = formattedAddr.length - range.length;
+                    [formattedAddr replaceCharactersInRange:range withString:@""];
+                }
+                
+                
+                
+            }
+            
+            return [NSString stringWithString:formattedAddr];
+        }
     }
-    else { // if cannot get formatted address lines, try our best for California addresses
-        NSMutableString* formattedAddr = [NSMutableString
-                                          stringWithString:ABCreateStringWithAddressDictionary([[self placemark] addressDictionary], YES)];
-        
-        NSStringCompareOptions options1 = 0;
-        NSRange range;
-        range.length = 37;  // Enough length to get to " California 94070-0001 United States"
-        int rangeLocation = [formattedAddr length] - range.length;
-        if (rangeLocation>=0) {
-            range.location = rangeLocation;
-        } else { // if there is not enough length, go for full string
-            range.location = 0;
-            range.length = [formattedAddr length];
-        }
-        
-        if (formattedAddr) {
-            int num;
-            num = [formattedAddr replaceOccurrencesOfString:@" California"
-                                           withString:@", CA"
-                                              options:options1
-                                                range:range];
-            
-            range.length = 15;  // Enough length to get to "\nUnited States"
-            if (formattedAddr.length >= range.length) {
-                range.location = formattedAddr.length - range.length;
-                num = [formattedAddr replaceOccurrencesOfString:@"\nUnited States"
-                                               withString:@", USA"
-                                                  options:options1
-                                                    range:range];
-            }
-            range.location = 0;
-            range.length = [formattedAddr length];
-            num = [formattedAddr replaceOccurrencesOfString:@"\n"
-                                           withString:@", "
-                                              options:options1
-                                                range:range];
-            
-            // Get rid of random Unicode "left-to-right mark" I found around "California"  http://www.fileformat.info/info/unicode/char/200e/index.htm
-            range.length = [formattedAddr length];
-            num = [formattedAddr replaceOccurrencesOfString:@"\u200e"
-                                                 withString:@""
-                                                    options:options1
-                                                      range:range];
-            
-            
-            if ([formattedAddr length]>5 &&
-                [[formattedAddr substringFromIndex:([formattedAddr length]-5)] intValue] < 0) {
-                // if the end of the line looks like a negative number '-1234'
-                // then it is a zip+4 and remove it from the line
-                range.length = 5;
-                range.location = formattedAddr.length - range.length;
-                [formattedAddr replaceCharactersInRange:range withString:@""];
-            }
-            
-            
-            
-        }
-        
-        return [NSString stringWithString:formattedAddr];
+    @catch (NSException *exception) {
+        logException(@"LocationFromIOS->standardizeFormattedAddress",
+                     [NSString stringWithFormat:@" formattedAddr: %@\n addrLines: %@", formattedAddr, addrLines],
+                     exception);
     }
 }
 

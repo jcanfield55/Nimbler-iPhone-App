@@ -114,4 +114,6 @@
 #define ROUTE_BUTTON_WIDTH_4INCH      72
 #define ROUTE_BUTTON_HEIGHT_4INCH     37
 
+#define IPHONE5HEIGHT                  568
+
 #endif

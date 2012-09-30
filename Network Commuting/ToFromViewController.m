@@ -811,7 +811,7 @@ UIImage *imageDetailDisclosure;
     if (isFrom) {
         fromLocation = loc;
         [self setFBParameterForGeneral];
-        if (loc == currentLocation && !isCurrentLocationMode) {
+        if (currentLocation && loc == currentLocation && !isCurrentLocationMode) { // Part of DE194 fix
             [self setIsCurrentLocationMode:TRUE];
         }
         else if (loc != currentLocation && isCurrentLocationMode) {
@@ -861,7 +861,13 @@ UIImage *imageDetailDisclosure;
         
         if ([fromLocation isCurrentLocation]) {
             if ([self alertUsetForLocationService]) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Location" message:@"Location Service is disabled for Nimbler, Do you want to enable?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"Cancel", nil];
+                NSString* msg;   // DE193 fix
+                if([[[UIDevice currentDevice] systemVersion] floatValue] < 6.0) {
+                    msg = ALERT_LOCATION_SERVICES_DISABLED_MSG;
+                } else {
+                    msg = ALERT_LOCATION_SERVICES_DISABLED_MSG_V6;
+                }
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ALERT_LOCATION_SERVICES_DISABLED_TITLE message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [alert show];
                 return ;
             }
@@ -896,14 +902,21 @@ UIImage *imageDetailDisclosure;
     }
 }
 
-// Process an event from MapKit URL
-- (void)getRouteFromMapKitURLRequest
+// Process an event from MapKit URL directions request
+- (void)getRouteForMKDirectionsRequest
 {
     NIMLOG_EVENT1(@"MapKit URL request");
     startButtonClickTime = CFAbsoluteTimeGetCurrent();
     
     [self setIsTripDateCurrentTime:YES];
     [self updateTripDate];
+    
+#if FLURRY_ENABLED
+    NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                FLURRY_FROM_SELECTED_ADDRESS, [fromLocation shortFormattedAddress],
+                                FLURRY_TO_SELECTED_ADDRESS, [toLocation shortFormattedAddress], nil];
+    [Flurry logEvent:FLURRY_MAPKIT_DIRECTIONS_REQUEST withParameters:dictionary];
+#endif
     
     [self getPlan];
 }
@@ -1013,7 +1026,7 @@ UIImage *imageDetailDisclosure;
     
     // If TO_EDIT or FROM_EDIT, make the txt field the first responder
     if (newEditMode == TO_EDIT) {
-        BOOL success = [[toTableVC txtField] becomeFirstResponder];
+        [[toTableVC txtField] becomeFirstResponder];
     } 
     else if (newEditMode == FROM_EDIT) {
         [[fromTableVC txtField] becomeFirstResponder];

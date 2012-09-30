@@ -9,48 +9,7 @@
 #ifndef Nimbler_Caltrain_TEXTConstant_h
 #define Nimbler_Caltrain_TEXTConstant_h
 
-
-// User Preferance
-#define DEVICE_TOKEN      @"deviceToken"
-#define USER_EMAIL        @"eMailId"
-#define TWEET_COUNT       @"tweetCount"
-
-// SettingInfo Parameter
-#define ALERT_COUNT           @"alertCount"
-#define MAXIMUM_WALK_DISTANCE @"maxDistance"
-#define UPDATE_SETTING_REQ    @"users/preferences/update"
-
-// Tweeter Parameter
-#define LATEST_TWEETS_REQ       @"advisories/latest"
-#define LAST_TWEET_TIME         @"tweetTime"
-#define ALL_TWEETS_REQ          @"advisories/all"
-#define TWEET_COUNT_URL         @"advisories/count"
-
-// Feedback Parameter
-#define FB_FILE_MARKER @"file"
-#define FB_FILE_TYPE @"audio/caf"
-#define FB_FILE_NAME @"FBSound.caf"
-#define FB_FILE_FORMAT_TYPE @"formattype"
-#define FEEDBACK_TEXT 1
-#define FEEDBACK_AUDIO 2
-#define FEEDBACK_TEXT_AUDIO 3
-#define FB_TEXT @"txtfb"
-#define EMAIL_ID @"emailid"
-#define FEEDBACK_SOURCE @"source"
-#define FEEDBACK_RATING @"rating"
-#define FB_SOURCE_PLAN 1
-#define FB_SOURCE_ITINERARY 2
-#define FB_SOURCE_LEG 3
-#define FB_SOURCE_GENERAL 4
-#define FB_FORMATTEDADDR_FROM @"rawAddFrom"
-#define FB_FORMATTEDADDR_TO @"rawAddTo"
-#define FB_DATE @"date"
-#define FB_UNIQUEID @"uniqueid"
-#define FB_REQUEST @"feedback/new"
-
-#define FB_RESPONSE_MSG @"msg"
-#define FB_RESPONCE_CODE @"code"
-
+// Feedback responses
 #define FB_RESPONSE_SUCCEES @"Feedback Sent Successfully"
 #define FB_RESPONSE_FAIL @"Feedback Send Fail"
 #define FB_TITLE_MSG @"Nimbler Feedback"
@@ -63,20 +22,35 @@
 // Null String
 #define NULL_STRING @""
 
-// Response codes
-#define ERROR_CODE @"errCode"
-#define RESPONSE_CODE @"code"
-#define TWIT_COUNT @"tweetCount"
-#define OTP_ERROR_STATUS @"error"
 
-#define DEVICE_ID @"deviceid"
-#define DEVICE_CFUUID @"deviceCFUUID"
+#define APP_TITLE                      @"Nimbler Caltrain"
 
 // UITabbar Item
 #define TRIP_PLANNER_VIEW @"Trip Planner"
 #define ADVISORIES_VIEW @"Advisories"
 #define SETTING_VIEW @"Settings"
 #define FEEDBACK_VIEW @"Feedback"
+
+// NavigationBar Titles
+
+#define LOCATION_PICKER_VIEW_TITLE @"Pick a location"
+#define ROUTE_OPTIONS_VIEW_TITLE   @"Itineraries"
+#define ROUTE_DETAIL_VIEW_TITLE    @"Route"
+#define TWITTER_VIEW_TITLE         @"Advisories"
+#define SETTING_VIEW_TITLE         @"App Settings"
+#define FEED_BACK_VIEW_TITLE       @"Feedback"
+
+// Alert text
+#define ALERT_TRIP_NOT_AVAILABLE       @"Sorry, we are unable to calculate a route for that To & From address"
+#define ROUTE_NOT_POSSIBLE_MSG         @"Route is not possible"
+#define OK_BUTTON_TITLE                @"OK"
+
+// Current Location related messages
+#define LOCATION_SERVICES_PURPOSE @"For routing from your current location"
+#define ALERT_LOCATION_SERVICES_DISABLED_TITLE @"Current Location not available"
+#define ALERT_LOCATION_SERVICES_RESTRICTED_MSG @"Please enter an address for your route start and end point"
+#define ALERT_LOCATION_SERVICES_DISABLED_MSG @"To route from Current Location, please go to the Settings App, and activate Locations Services for Nimbler."
+#define ALERT_LOCATION_SERVICES_DISABLED_MSG_V6 @"To route from Current Location, please go to the Settings App, Privacy section, and activate Locations Services for Nimbler."
 
 // ToFromViewController Date Picker
 #define DATE_PICKER_NOW @"Now"

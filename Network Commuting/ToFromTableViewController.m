@@ -187,8 +187,15 @@
 {
     if ([loc isCurrentLocation]) {
         if ([self alertUsetForLocationService]) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Location" message:@"Location Service is disabled for Nimbler, Do you want to enable?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"Cancel", nil];
+            NSString* msg;  // DE193 fix
+            if([[[UIDevice currentDevice] systemVersion] floatValue] < 6.0) {  
+                msg = ALERT_LOCATION_SERVICES_DISABLED_MSG;
+            } else {
+                msg = ALERT_LOCATION_SERVICES_DISABLED_MSG_V6;
+            }
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ALERT_LOCATION_SERVICES_DISABLED_TITLE message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
+            [myTableView reloadData]; // Clear out selection on the table
             return ;
         }
     }
@@ -463,31 +470,31 @@
         // if no valid locations (ie non in supported region), 
         if (status==GEOCODE_STATUS_OK && [locationArray count]==0) {
             NSString *msg = [NSString stringWithFormat:@"Did not find the address: '%@' in the San Francisco Bay Area", rawAddress];
-            alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
         }
         else if (status==GEOCODE_ZERO_RESULTS)  {
             NSString *msg = [NSString stringWithFormat:@"Sorry, no valid locaton found for: '%@'", rawAddress];
-            alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
         }
         else if (status==GEOCODE_OVER_QUERY_LIMIT) {
             // TODO error handling for over query limit  (switch to other geocoder on my server...)
-            alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Error while trying to locate your address.  Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Error while trying to locate your address.  Please try again later." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
         }
         else if (status==GEOCODE_REQUEST_DENIED) {
             // TODO error handling for denied, invalid or unknown status (switch to other geocoder on my server...)
-            alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Error while trying to locate your address.  Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Error while trying to locate your address.  Please try again later." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
         }
         else if (status==GEOCODE_NO_NETWORK) {
-            alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Unable to connect to server.  Please try again when you have network connectivity." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Unable to connect to server.  Please try again when you have network connectivity." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
         }
         else  { // status==GEOCODE_GENERIC_ERROR
             // Geocoder did not respond with status field
-            alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Error while trying to locate your address.  Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Error while trying to locate your address.  Please try again later." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
         }
         /*
@@ -590,12 +597,4 @@
     return FALSE;
 }
 
--(void)alertView: (UIAlertView *)UIAlertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
-    
-    if ([btnName isEqualToString:@"Yes"]) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=LOCATION_SERVICES"]];
-    }     
-}
 @end

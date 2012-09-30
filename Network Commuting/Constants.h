@@ -96,6 +96,7 @@
 #define FLURRY_DATE_PICKER_NEW_DATE @"DatePicker new date selected"
 #define FLURRY_LOCATION_PICKER_APPEAR @"LocationPicker appear"
 #define FLURRY_ROUTE_REQUESTED @"Route Requested"
+#define FLURRY_MAPKIT_DIRECTIONS_REQUEST @"MapKit Directions Request"
 #define FLURRY_ROUTE_FROM_CACHE @"Route retrieved from cache"
 #define FLURRY_ROUTE_NOT_IN_CACHE @"Route not in cache"
 #define FLURRY_ROUTE_NO_NETWORK @"No network connection for retrieving Plan"
@@ -229,31 +230,62 @@
 #define REQUEST_ID              @"reqId"
 #define REQUEST_ID_LENGTH       16
 
-// NavigationBar Titles
-
-#define LOCATION_PICKER_VIEW_TITLE @"Pick a location"
-#define ROUTE_OPTIONS_VIEW_TITLE   @"Itineraries"
-#define ROUTE_DETAIL_VIEW_TITLE    @"Route"
-#define TWITTER_VIEW_TITLE         @"Advisories"
-#define SETTING_VIEW_TITLE         @"App Settings"
-#define FEED_BACK_VIEW_TITLE       @"Feedback"
-
 #define PLAN_ID                        @"planid"
 #define LIVE_FEEDS_BY_PLAN_URL         @"livefeeds/plan"
 #define ITINERARY_ID                   @"itineraryid"
 #define LIVE_FEEDS_BY_ITINERARIES_URL  @"livefeeds/itineraries"
 #define FOR_TODAY                      @"forToday"
 
-
-#define APP_TITLE                      @"Nimbler Caltrain"
-#define ROUTE_NOT_POSSIBLE_MSG         @"Route is not possible"
-#define OK_BUTTON_TITLE                @"OK"
-
-#define ALERT_TRIP_NOT_AVAILABLE       @"Sorry, we are unable to calculate a route for that To & From address"
-
 #define METADATA_URL                   @"metadata"
+        
 
-#define IPHONE5HEIGHT                  568          
+// User Preferance
+#define DEVICE_TOKEN      @"deviceToken"
+#define USER_EMAIL        @"eMailId"
+#define TWEET_COUNT       @"tweetCount"
+
+// SettingInfo Parameter
+#define ALERT_COUNT           @"alertCount"
+#define MAXIMUM_WALK_DISTANCE @"maxDistance"
+#define UPDATE_SETTING_REQ    @"users/preferences/update"
+
+// Tweeter Parameter
+#define LATEST_TWEETS_REQ       @"advisories/latest"
+#define LAST_TWEET_TIME         @"tweetTime"
+#define ALL_TWEETS_REQ          @"advisories/all"
+#define TWEET_COUNT_URL         @"advisories/count"
+
+// Feedback Parameter
+#define FB_FILE_MARKER @"file"
+#define FB_FILE_TYPE @"audio/caf"
+#define FB_FILE_NAME @"FBSound.caf"
+#define FB_FILE_FORMAT_TYPE @"formattype"
+#define FEEDBACK_TEXT 1
+#define FEEDBACK_AUDIO 2
+#define FEEDBACK_TEXT_AUDIO 3
+#define FB_TEXT @"txtfb"
+#define EMAIL_ID @"emailid"
+#define FEEDBACK_SOURCE @"source"
+#define FEEDBACK_RATING @"rating"
+#define FB_SOURCE_PLAN 1
+#define FB_SOURCE_ITINERARY 2
+#define FB_SOURCE_LEG 3
+#define FB_SOURCE_GENERAL 4
+#define FB_FORMATTEDADDR_FROM @"rawAddFrom"
+#define FB_FORMATTEDADDR_TO @"rawAddTo"
+#define FB_DATE @"date"
+#define FB_UNIQUEID @"uniqueid"
+#define FB_REQUEST @"feedback/new"
+
+#define FB_RESPONSE_MSG @"msg"
+#define FB_RESPONCE_CODE @"code"
 
 
+// Response codes
+#define ERROR_CODE @"errCode"
+#define RESPONSE_CODE @"code"
+#define TWIT_COUNT @"tweetCount"
+#define OTP_ERROR_STATUS @"error"
 
+#define DEVICE_ID @"deviceid"
+#define DEVICE_CFUUID @"deviceCFUUID"

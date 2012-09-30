@@ -29,8 +29,16 @@
 #define BTN_CANCEL      @"Continue"
 #define ALERT_NETWORK   @"Please check your wifi or data connection!" 
 
-BOOL isTwitterLivaData = FALSE; 
-BOOL isRegionSupport = FALSE;
+@interface nc_AppDelegate() {
+    // Internal variables
+    BOOL isTwitterLivaData;
+    BOOL isRegionSupport;
+    BOOL currentLocationNeededForDirectionsSource;
+    BOOL currentLocationNeededForDirectionsDestination;
+}
+
+@end
+
 
 static nc_AppDelegate *appDelegate;
 
@@ -140,6 +148,7 @@ FeedBackForm *fbView;
         // Turn on location manager
         locationManager = [[CLLocationManager alloc] init];
         [locationManager setDelegate:self];
+        [locationManager setPurpose:LOCATION_SERVICES_PURPOSE];
         [locationManager startUpdatingLocation];
         
         // Initialize the Locations class and store "Current Location" into the database if not there already
@@ -259,6 +268,22 @@ FeedBackForm *fbView;
         }
         [toFromViewController setCurrentLocation:currentLocation];
         [toFromViewController setIsCurrentLocationMode:TRUE];
+        
+        if (currentLocationNeededForDirectionsDestination || currentLocationNeededForDirectionsSource) {
+            // If we have are waiting for currentLocation to execute a directions request
+            // Set the appropriate currentLocations
+            if (currentLocationNeededForDirectionsSource) {
+                [[toFromViewController fromTableVC] newDirectionsRequestLocation:currentLocation];
+                currentLocationNeededForDirectionsSource = NO;
+            }
+            if (currentLocationNeededForDirectionsDestination) {
+                [[toFromViewController toTableVC] newDirectionsRequestLocation:currentLocation];
+                currentLocationNeededForDirectionsDestination = NO;
+            }
+            // Execute the request
+            [toFromViewController getRouteForMKDirectionsRequest];
+        }
+        
 #if FLURRY_ENABLED
         [Flurry logEvent:FLURRY_CURRENT_LOCATION_AVAILABLE];
 #endif
@@ -267,8 +292,6 @@ FeedBackForm *fbView;
     [currentLocation setLatFloat:[newLocation coordinate].latitude];
     [currentLocation setLngFloat:[newLocation coordinate].longitude];
     
-    //TODO error handling if location services not available
-    //TODO error handling if current location is in the database, but not populated
     //TODO error handling for very old cached current location data
     //TODO adjust frequency if needed
 }
@@ -383,7 +406,7 @@ FeedBackForm *fbView;
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
     
-    [self isNetworkConnectionLive];
+    [self isNetworkConnectionLive];  
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -395,34 +418,16 @@ FeedBackForm *fbView;
 
 #pragma mark - Directions request URL handler from iOS6
 
+//
 // Directions request URL handler from iOS6
 // US156 implementation
+//
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
     if ([MKDirectionsRequest isDirectionsRequestURL:url]) {
         MKDirectionsRequest* directionsInfo = [[MKDirectionsRequest alloc] initWithContentsOfURL:url];
-        
-        // Create & set the source location
-        Location* sourceLoc;
-        if ([[directionsInfo source] isCurrentLocation]) {
-            sourceLoc = currentLocation;
-        } else {
-            MKPlacemark* sourcePlacemark = [[directionsInfo source] placemark];
-            sourceLoc = [locations newLocationFromIOSWithPlacemark:sourcePlacemark error:nil];
-        }
-        [[toFromViewController fromTableVC] newDirectionsRequestLocation:sourceLoc];
-        
-        // Create & set the destination location
-        Location* destinationLoc;
-        if ([[directionsInfo destination] isCurrentLocation]) {
-            destinationLoc = currentLocation;
-        } else {
-            MKPlacemark* destinationPlacemark = [[directionsInfo destination] placemark];
-            destinationLoc = [locations newLocationFromIOSWithPlacemark:destinationPlacemark error:nil];
-        }
-        [[toFromViewController toTableVC] newDirectionsRequestLocation:destinationLoc];
         
         // Go to TripPlanner tab if we are not there already
         RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
@@ -434,14 +439,73 @@ FeedBackForm *fbView;
             [[toFromViewController navigationController] popToRootViewControllerAnimated:NO];
         }
         
-        // Request route
-        [toFromViewController getRouteFromMapKitURLRequest];
+        // Create & set the source location
+        Location* sourceLoc;
+        if ([[directionsInfo source] isCurrentLocation]) {
+            sourceLoc = currentLocation;
+            if (!currentLocation) {
+                currentLocationNeededForDirectionsSource = YES;
+            }
+        } else {
+            MKPlacemark* sourcePlacemark = [[directionsInfo source] placemark];
+            if (sourcePlacemark) {
+                sourceLoc = [locations newLocationFromIOSWithPlacemark:sourcePlacemark error:nil];
+            }
+        }
+        if (sourceLoc) {
+            [[toFromViewController fromTableVC] newDirectionsRequestLocation:sourceLoc];
+        }
+        
+        // Create & set the destination location
+        Location* destinationLoc;
+        if ([[directionsInfo destination] isCurrentLocation]) {
+            destinationLoc = currentLocation;
+            if (!currentLocation) {
+                currentLocationNeededForDirectionsDestination = YES;
+            }
+        } else {
+            MKPlacemark* destinationPlacemark = [[directionsInfo destination] placemark];
+            if (destinationPlacemark) {
+                destinationLoc = [locations newLocationFromIOSWithPlacemark:destinationPlacemark error:nil];
+            }
+        }
+        if (destinationLoc) {
+            [[toFromViewController toTableVC] newDirectionsRequestLocation:destinationLoc];
+        }
+        
+        // Check if we need current location but it is not available... part of DE194 fix
+        if (!currentLocation && 
+            ([[directionsInfo source] isCurrentLocation] || [[directionsInfo destination] isCurrentLocation])) {
+            CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+            
+            if (status == kCLAuthorizationStatusDenied) {
+                NSString* msg;
+                if([[[UIDevice currentDevice] systemVersion] floatValue] < 6.0) {
+                    msg = ALERT_LOCATION_SERVICES_DISABLED_MSG;
+                } else {
+                    msg = ALERT_LOCATION_SERVICES_DISABLED_MSG_V6;
+                }
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ALERT_LOCATION_SERVICES_DISABLED_TITLE message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert show];
+                return YES;
+            }
+            else if (status == kCLAuthorizationStatusRestricted) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ALERT_LOCATION_SERVICES_DISABLED_TITLE message:ALERT_LOCATION_SERVICES_RESTRICTED_MSG delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert show];
+                return YES;
+            }
+            // else if not available yet, but authorized or not yet determined, then wait
+            // and the route will be requested once Current Location is available
+        }
+        
+        // If we have everything we need, request the route
+        if (sourceLoc && destinationLoc) {
+            [toFromViewController getRouteForMKDirectionsRequest];
+        }
         return YES;
     }
     return NO;
     
-    // TODO Do a consolidateLocations versus existing locations
-    // TODO Make robust use of Apple geocoding
     // TODO Make sure this works even if Current Location is turned off for Nimbler
     // TODO Adjust the GeoJSON to cover a smaller Nimbler Caltrain footprint
 }

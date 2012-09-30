@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MapKit/MapKit.h> 
 #import <RestKit/RestKit.h>
 #import "ToFromTableViewController.h"
 #import "Locations.h"
@@ -65,7 +66,7 @@ typedef enum {
 - (IBAction)openPickerView:(id)sender;
 
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
-- (void)getRouteFromMapKitURLRequest;   // Process an event from MapKit URL
+- (void)getRouteForMKDirectionsRequest;   // Process an event from MapKit URL
 
 - (void)updateToFromLocation:(id)sender isFrom:(BOOL)isFrom location:(Location *)loc; // Callback from ToFromTableViewController to update a new user entered/selected location
 - (void)updateGeocodeStatus:(BOOL)isGeocodeOutstanding isFrom:(BOOL)isFrom; // Callback from ToFromTableViewController to update geocoding status
