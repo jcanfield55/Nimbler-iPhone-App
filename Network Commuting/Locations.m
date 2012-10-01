@@ -44,6 +44,7 @@
 - (void)forwardGeocodeUsingGoogleWithParameters:(GeocodeRequestParameters *)parameters callBack:(id <LocationsGeocodeResultsDelegate>)delegate;
 - (void)reverseGeocodeUsingGoogleWithParameters:(GeocodeRequestParameters *)parameters callBack:(id <LocationsGeocodeResultsDelegate>)delegate;
 - (void)forwardGeocodeUsingIosWithParameters:(GeocodeRequestParameters *)parameters callback:(id <LocationsGeocodeResultsDelegate>)delegate;
+- (void)reverseGeocodeUsingIosWithParameters:(GeocodeRequestParameters *)parameters callback:(id <LocationsGeocodeResultsDelegate>)delegate;
 - (void)handleIosGeocodeWithParameters:(GeocodeRequestParameters *)parameters
                               response:(NSArray *)placemarks
                                  error:(NSError *)error
@@ -581,7 +582,12 @@
     if (parameters.apiType == GOOGLE_GEOCODER) {
         [self reverseGeocodeUsingGoogleWithParameters:parameters callBack:delegate];
     }
-    // TODO iOS Reverse Geocoding
+    else if (parameters.apiType == IOS_GEOCODER) {
+        [self reverseGeocodeUsingIosWithParameters:parameters callback:delegate];
+    }
+    else {
+        logError(@"Locations->reverseGeocodeWithParameters", @"Unknown apiType");
+    }
 }
 
 - (void)reverseGeocodeUsingGoogleWithParameters:(GeocodeRequestParameters *)parameters callBack:(id <LocationsGeocodeResultsDelegate>)delegate
@@ -814,16 +820,40 @@
                    }];
 }
 
-// Callback routine for IOS Geocoding
+- (void)reverseGeocodeUsingIosWithParameters:(GeocodeRequestParameters *)parameters callback:(id <LocationsGeocodeResultsDelegate>)delegate
+{
+    if (!clGeocoder) {
+        clGeocoder = [[CLGeocoder alloc] init];
+    }
+    if ([clGeocoder isGeocoding]) { // if already geocoding
+        if ([lastIOSGeocodeTime timeIntervalSinceNow] < -5) { // if more than 5 seconds since last geocode
+            [clGeocoder cancelGeocode];  // cancel previous geocode and let this one go thru
+        } else {
+            logError(@"Locations->forwardGeocodeUsingIosWithParameters",
+                     @"Geocode already in progress");
+            return;
+        }
+    }
+    lastIOSGeocodeTime = [NSDate date];
+    CLLocation* clLocation = [[CLLocation alloc] initWithLatitude:[parameters lat] longitude:[parameters lng]];
+    [clGeocoder reverseGeocodeLocation:clLocation completionHandler:^(NSArray *placemark, NSError *error) {
+                       [self handleIosGeocodeWithParameters:parameters
+                                                   response:placemark
+                                                      error:error
+                                                   callback:delegate];
+                   }];
+}
+
+// Callback routine for IOS forward and reverse geocoding 
 - (void)handleIosGeocodeWithParameters:(GeocodeRequestParameters *)parameters
                               response:(NSArray *)placemarks
                                  error:(NSError *)error
                               callback:(id <LocationsGeocodeResultsDelegate>)callback
 {
-    
+    BOOL isForwardGeocode = (parameters.rawAddress != nil);  // Forward Geocoding if there is a rawAddress
 #if FLURRY_ENABLED
     NSString* isFromString = ([parameters isFrom] ? @"fromTable" : @"toTable");
-    NSString* rawAddress = [parameters rawAddress];
+    NSString* rawAddress = (isForwardGeocode ? [parameters rawAddress] : @"Reverse Geocode");;
 #endif
     if (error) {
         // kCLErrorNetwork case

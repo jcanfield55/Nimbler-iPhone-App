@@ -1044,17 +1044,21 @@ UIImage *imageDetailDisclosure;
             // If we do not have a reverseGeoLocation that is within threshold, do another reverse geo
             lastReverseGeoReqTime = [NSDate date];
             GeocodeRequestParameters* geoParams = [[GeocodeRequestParameters alloc] init];
-            geoParams.lat = [fromLocation latFloat];
-            geoParams.lng = [fromLocation lngFloat];
-            geoParams.apiType = GOOGLE_GEOCODER;
+            geoParams.lat = [currentLocation latFloat];
+            geoParams.lng = [currentLocation lngFloat];
             geoParams.supportedRegion = [self supportedRegion];
             geoParams.isFrom = true;
+            if ([[[UIDevice currentDevice] systemVersion] floatValue] >= IOS_GEOCODE_VER_THRESHOLD) {
+                geoParams.apiType = IOS_GEOCODER;
+            } else {
+                geoParams.apiType = GOOGLE_GEOCODER;
+            }
             [locations reverseGeocodeWithParameters:geoParams callBack:self];
         }
     }
 }
 
-// Delegate callback from calling Locations --> reverseGeocodeWithParameters
+// Delegate callback from calling Locations --> reverseGeocodeWithParameters (forward Geocodes do not come from toFromViewController)
 -(void)newGeocodeResults:(NSArray *)locationArray withStatus:(GeocodeRequestStatus)status parameters:(GeocodeRequestParameters *)parameters
 {
     if (status == GEOCODE_STATUS_OK) {

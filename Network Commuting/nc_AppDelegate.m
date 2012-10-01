@@ -253,6 +253,7 @@ FeedBackForm *fbView;
     didUpdateToLocation:(CLLocation *)newLocation 
            fromLocation:(CLLocation *)oldLocation
 {
+    @try {
     if (!currentLocation) {
         NSArray* matchingLocations = [locations locationsWithFormattedAddress:CURRENT_LOCATION];
         if ([matchingLocations count] == 0) { // if current location not in db
@@ -294,8 +295,10 @@ FeedBackForm *fbView;
     [currentLocation setLatFloat:[newLocation coordinate].latitude];
     [currentLocation setLngFloat:[newLocation coordinate].longitude];
     
-    //TODO error handling for very old cached current location data
-    //TODO adjust frequency if needed
+    }
+    @catch (NSException *exception) {
+        logException(@"ncAppDelegate->locationManager: didUpdateToLocation", @"", exception);
+    }
 }
 
 -(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
@@ -428,88 +431,94 @@ FeedBackForm *fbView;
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
-    if ([MKDirectionsRequest isDirectionsRequestURL:url]) {
-        MKDirectionsRequest* directionsInfo = [[MKDirectionsRequest alloc] initWithContentsOfURL:url];
-        
-        // Go to TripPlanner tab if we are not there already
-        RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
-        if (rxCustomTabBar.selectedIndex != 0) {
-            [rxCustomTabBar selectTab:0];
-        }
-        // If not at ToFromViewController on the Nav Controller, pop to home
-        if ([[toFromViewController navigationController] visibleViewController] != toFromViewController) {
-            [[toFromViewController navigationController] popToRootViewControllerAnimated:NO];
-        }
-        
-        // Create & set the source location
-        Location* sourceLoc;
-        if ([[directionsInfo source] isCurrentLocation]) {
-            sourceLoc = currentLocation;
-            if (!currentLocation) {
-                currentLocationNeededForDirectionsSource = YES;
-            }
-        } else {
-            MKPlacemark* sourcePlacemark = [[directionsInfo source] placemark];
-            if (sourcePlacemark) {
-                sourceLoc = [locations newLocationFromIOSWithPlacemark:sourcePlacemark error:nil];
-            }
-        }
-        if (sourceLoc) {
-            [[toFromViewController fromTableVC] newDirectionsRequestLocation:sourceLoc];
-        }
-        
-        // Create & set the destination location
-        Location* destinationLoc;
-        if ([[directionsInfo destination] isCurrentLocation]) {
-            destinationLoc = currentLocation;
-            if (!currentLocation) {
-                currentLocationNeededForDirectionsDestination = YES;
-            }
-        } else {
-            MKPlacemark* destinationPlacemark = [[directionsInfo destination] placemark];
-            if (destinationPlacemark) {
-                destinationLoc = [locations newLocationFromIOSWithPlacemark:destinationPlacemark error:nil];
-            }
-        }
-        if (destinationLoc) {
-            [[toFromViewController toTableVC] newDirectionsRequestLocation:destinationLoc];
-        }
-        
-        // Check if we need current location but it is not available... part of DE194 fix
-        if (!currentLocation && 
-            ([[directionsInfo source] isCurrentLocation] || [[directionsInfo destination] isCurrentLocation])) {
-            CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+    MKDirectionsRequest* directionsInfo;
+    @try {
+        if ([MKDirectionsRequest isDirectionsRequestURL:url]) {
+            directionsInfo = [[MKDirectionsRequest alloc] initWithContentsOfURL:url];
             
-            if (status == kCLAuthorizationStatusDenied) {
-                NSString* msg;
-                if([[[UIDevice currentDevice] systemVersion] floatValue] < 6.0) {
-                    msg = ALERT_LOCATION_SERVICES_DISABLED_MSG;
-                } else {
-                    msg = ALERT_LOCATION_SERVICES_DISABLED_MSG_V6;
+            // Go to TripPlanner tab if we are not there already
+            RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
+            if (rxCustomTabBar.selectedIndex != 0) {
+                [rxCustomTabBar selectTab:0];
+            }
+            // If not at ToFromViewController on the Nav Controller, pop to home
+            if ([[toFromViewController navigationController] visibleViewController] != toFromViewController) {
+                [[toFromViewController navigationController] popToRootViewControllerAnimated:NO];
+            }
+            
+            // Create & set the source location
+            Location* sourceLoc;
+            if ([[directionsInfo source] isCurrentLocation]) {
+                sourceLoc = currentLocation;
+                if (!currentLocation) {
+                    currentLocationNeededForDirectionsSource = YES;
                 }
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ALERT_LOCATION_SERVICES_DISABLED_TITLE message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [alert show];
-                return YES;
+            } else {
+                MKPlacemark* sourcePlacemark = [[directionsInfo source] placemark];
+                if (sourcePlacemark) {
+                    sourceLoc = [locations newLocationFromIOSWithPlacemark:sourcePlacemark error:nil];
+                }
             }
-            else if (status == kCLAuthorizationStatusRestricted) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ALERT_LOCATION_SERVICES_DISABLED_TITLE message:ALERT_LOCATION_SERVICES_RESTRICTED_MSG delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [alert show];
-                return YES;
+            if (sourceLoc) {
+                [[toFromViewController fromTableVC] newDirectionsRequestLocation:sourceLoc];
             }
-            // else if not available yet, but authorized or not yet determined, then wait
-            // and the route will be requested once Current Location is available
+            
+            // Create & set the destination location
+            Location* destinationLoc;
+            if ([[directionsInfo destination] isCurrentLocation]) {
+                destinationLoc = currentLocation;
+                if (!currentLocation) {
+                    currentLocationNeededForDirectionsDestination = YES;
+                }
+            } else {
+                MKPlacemark* destinationPlacemark = [[directionsInfo destination] placemark];
+                if (destinationPlacemark) {
+                    destinationLoc = [locations newLocationFromIOSWithPlacemark:destinationPlacemark error:nil];
+                }
+            }
+            if (destinationLoc) {
+                [[toFromViewController toTableVC] newDirectionsRequestLocation:destinationLoc];
+            }
+            
+            // Check if we need current location but it is not available... part of DE194 fix
+            if (!currentLocation &&
+                ([[directionsInfo source] isCurrentLocation] || [[directionsInfo destination] isCurrentLocation])) {
+                CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+                
+                if (status == kCLAuthorizationStatusDenied) {
+                    NSString* msg;
+                    if([[[UIDevice currentDevice] systemVersion] floatValue] < 6.0) {
+                        msg = ALERT_LOCATION_SERVICES_DISABLED_MSG;
+                    } else {
+                        msg = ALERT_LOCATION_SERVICES_DISABLED_MSG_V6;
+                    }
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ALERT_LOCATION_SERVICES_DISABLED_TITLE message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alert show];
+                    return YES;
+                }
+                else if (status == kCLAuthorizationStatusRestricted) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ALERT_LOCATION_SERVICES_DISABLED_TITLE message:ALERT_LOCATION_SERVICES_RESTRICTED_MSG delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alert show];
+                    return YES;
+                }
+                // else if not available yet, but authorized or not yet determined, then wait
+                // and the route will be requested once Current Location is available
+            }
+            
+            // If we have everything we need, request the route
+            if (sourceLoc && destinationLoc) {
+                [toFromViewController getRouteForMKDirectionsRequest];
+            }
+            return YES;
         }
+        return NO;
         
-        // If we have everything we need, request the route
-        if (sourceLoc && destinationLoc) {
-            [toFromViewController getRouteForMKDirectionsRequest];
-        }
-        return YES;
+        // TODO Make sure this works even if Current Location is turned off for Nimbler
+        // TODO Adjust the GeoJSON to cover a smaller Nimbler Caltrain footprint
     }
-    return NO;
-    
-    // TODO Make sure this works even if Current Location is turned off for Nimbler
-    // TODO Adjust the GeoJSON to cover a smaller Nimbler Caltrain footprint
+    @catch (NSException *exception) {
+        logException(@"ncAppDelegate->application: openURL", @"MKDirectionRequest handler", exception);
+    }
 }
 
 
