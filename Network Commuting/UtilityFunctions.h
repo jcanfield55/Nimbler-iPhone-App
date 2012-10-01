@@ -52,6 +52,14 @@ NSDate *addDateOnlyWithTime(NSDate *date, NSDate *timeOnly);
 //
 NSString *stringByTruncatingToWidth(NSString *string, CGFloat width, UIFont *font);
 
+//
+// Logs event to Flurry (and any other logging)
+// Can accept up to 4 parameter names and value pairs.  If  the parameter name is nil, that parameter is not included in the log
+// If the parameter value is nil, then the string @"nil" is written in the log instead
+//
+void logEvent(NSString *eventName, NSString *param1name, NSString *param1value, NSString *param2name, NSString* param2value,
+              NSString *param3name, NSString *param3value, NSString *param4name, NSString *param4value);
+
 // Logs exception using NIMLOG_ERR1 and if Flurry activated, logs to Flurry as well
 void logException(NSString *errorName, NSString *errorMessage, NSException *e);
 

@@ -7,11 +7,9 @@
 //
 
 #import "FeedBackForm.h"
+#import "UtilityFunctions.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "nc_AppDelegate.h"
-#if FLURRY_ENABLED
-#include "Flurry.h"
-#endif
 
 #define RECORD_MSG @"Recording your feedback \nSpeak ..."
 #define SUBMIT_MSG @"Sending your feedback \nPlease wait ..."
@@ -127,9 +125,8 @@ NSUserDefaults *prefs;
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-#if FLURRY_ENABLED
-    [Flurry logEvent:FLURRY_FEEDBACK_APPEAR];
-#endif
+    logEvent(FLURRY_FEEDBACK_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
+
     btnSubmitFeedback.layer.cornerRadius = CORNER_RADIUS_SMALL;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     txtEmailId.text = [prefs objectForKey:USER_EMAIL];
@@ -170,9 +167,8 @@ NSUserDefaults *prefs;
 #pragma mark-Recording functions
 -(IBAction)startRecord:(id)sender
 {
-#if FLURRY_ENABLED
-    [Flurry logEvent:FLURRY_FEEDBACK_RECORD];
-#endif
+    logEvent(FLURRY_FEEDBACK_RECORD, nil, nil, nil, nil, nil, nil, nil, nil);
+
     isFromPause = NO;
     isCancelFB = FALSE;
     [btnPlayRecording setEnabled:FALSE];
@@ -220,9 +216,8 @@ NSUserDefaults *prefs;
 }
 
 -(IBAction)stopRecord:(id)sender {
-#if FLURRY_ENABLED
-    [Flurry logEvent:FLURRY_FEEDBACK_STOP];
-#endif
+    logEvent(FLURRY_FEEDBACK_STOP, nil, nil, nil, nil, nil, nil, nil, nil);
+
     [btnPauseRecording setEnabled:FALSE];
     [btnStopRecording setEnabled:FALSE];
     [btnRecordRecording setEnabled:TRUE];
@@ -249,9 +244,8 @@ NSUserDefaults *prefs;
 }
 
 -(IBAction)pauseRecord:(id)sender {
-#if FLURRY_ENABLED
-    [Flurry logEvent:FLURRY_FEEDBACK_PAUSE];
-#endif
+    logEvent(FLURRY_FEEDBACK_PAUSE, nil, nil, nil, nil, nil, nil, nil, nil);
+
     if (audioPlayer.playing) {
         labelCurrentActivityStatus.text = RECORDING_PAUSE;
         isRepeat = NO;
@@ -272,9 +266,8 @@ NSUserDefaults *prefs;
 }
 
 -(IBAction)playRecord:(id)sender {
-#if FLURRY_ENABLED
-    [Flurry logEvent:FLURRY_FEEDBACK_PLAY];
-#endif
+    logEvent(FLURRY_FEEDBACK_PLAY, nil, nil, nil, nil, nil, nil, nil, nil);
+
     labelCurrentActivityStatus.text = RECORDING_PLAY;
     if(!isFromPause){
         secondsLeft = REC_STARTTIME;
@@ -469,9 +462,6 @@ NSUserDefaults *prefs;
 {
     
     alertView = [self feedbackConfirmAlert];
-#if FLURRY_ENABLED
-    NSMutableDictionary *flurryParams = [NSMutableDictionary dictionaryWithCapacity:5];
-#endif
     
     // NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
@@ -488,28 +478,19 @@ NSUserDefaults *prefs;
     if (txtFeedBack.text != nil){
         [rkp setValue:txtFeedBack.text forParam:FB_TEXT];
         [rkp setValue:[NSNumber numberWithInt:FEEDBACK_TEXT] forParam:FB_FILE_FORMAT_TYPE];
-#if FLURRY_ENABLED
-        [flurryParams setObject:txtFeedBack.text forKey:FLURRY_FEEDBACK_TEXT];
-#endif
     }
     if (txtEmailId.text != nil) {
         [rkp setValue:txtEmailId.text forParam:EMAIL_ID];
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setObject:txtEmailId.text forKey:USER_EMAIL];
-#if FLURRY_ENABLED
-        [flurryParams setObject:txtEmailId.text forKey:FLURRY_USER_EMAIL];
-#endif
     }
     if(soundFilePath != nil && txtFeedBack.text != nil) {
         [rkp setValue:[NSNumber numberWithInt:FEEDBACK_TEXT_AUDIO] forParam:FB_FILE_FORMAT_TYPE];
     }
-#if FLURRY_ENABLED
-    if ([flurryParams count] > 0) {
-        [Flurry logEvent:FLURRY_FEEDBACK_SUBMIT withParameters:flurryParams];
-    } else {
-        [Flurry logEvent:FLURRY_FEEDBACK_SUBMIT];
-    }
-#endif
+
+    logEvent(FLURRY_FEEDBACK_SUBMIT,
+             FLURRY_FEEDBACK_TEXT, txtFeedBack.text,
+             FLURRY_USER_EMAIL, txtEmailId.text, nil, nil, nil, nil);
     
     [rkp setValue:[prefs objectForKey:DEVICE_CFUUID] forParam:DEVICE_ID];
         [rkp setValue:[nc_AppDelegate sharedInstance].FBSource forParam:FEEDBACK_SOURCE];

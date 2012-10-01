@@ -8,10 +8,7 @@
 
 #import "LocationPickerViewController.h"
 #import "FeedBackForm.h"
-
-#if FLURRY_ENABLED
-#import "Flurry.h"
-#endif
+#import "UtilityFunctions.h"
 
 @interface LocationPickerViewController ()
 {
@@ -42,9 +39,8 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-#if FLURRY_ENABLED
-    [Flurry logEvent:FLURRY_LOCATION_PICKER_APPEAR];
-#endif
+    logEvent(FLURRY_LOCATION_PICKER_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
+
     locationPicked = FALSE;
     
     // Enforce height of main table

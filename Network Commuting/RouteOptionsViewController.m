@@ -16,10 +16,6 @@
 #import "nc_AppDelegate.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 
-#if FLURRY_ENABLED
-#include "Flurry.h"
-#endif
-
 #define IDENTIFIER_CELL         @"UIRouteOptionsViewCell"
 
 @interface RouteOptionsViewController()
@@ -66,9 +62,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-#if FLURRY_ENABLED
-    [Flurry logEvent:FLURRY_ROUTE_OPTIONS_APPEAR];
-#endif
+    logEvent(FLURRY_ROUTE_OPTIONS_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
     
     // Enforce height of main table
     mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
@@ -237,10 +231,10 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         itinerary = [plan.sortedItineraries objectAtIndex:[indexPath row]];
         itinararyId =[itinerary itinId];
 
-#if FLURRY_ENABLED
-        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:                                 FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d", [indexPath row]],                                    FLURRY_SELECTED_DEPARTURE_TIME,[NSString stringWithFormat:@"%@", [itinerary startTimeOfFirstLeg]], nil];
-        [Flurry logEvent:FLURRY_ROUTE_SELECTED withParameters:params];
-#endif
+        logEvent(FLURRY_ROUTE_SELECTED,
+                 FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d", [indexPath row]],
+                 FLURRY_SELECTED_DEPARTURE_TIME, [NSString stringWithFormat:@"%@", [itinerary startTimeOfFirstLeg]],
+                 nil, nil, nil, nil);
         
         [routeDetailsVC setItinerary:itinerary];
         if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){

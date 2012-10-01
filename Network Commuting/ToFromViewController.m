@@ -26,10 +26,6 @@
 #import "UserPreferance.h"
 #import "Logging.h"
 
-#if FLURRY_ENABLED
-#include "Flurry.h"
-#endif
-
 
 @interface ToFromViewController()
 {
@@ -330,9 +326,7 @@ UIImage *imageDetailDisclosure;
            rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT; 
         }
         [mainTable setFrame:rect0];
-#if FLURRY_ENABLED
-        [Flurry logEvent:FLURRY_TOFROMVC_APPEAR];
-#endif
+        logEvent(FLURRY_TOFROMVC_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
         
         isContinueGetRealTimeData = NO;
         [continueGetTime invalidate];
@@ -923,12 +917,10 @@ UIImage *imageDetailDisclosure;
     departOrArrive = DEPART;  // DE203 fix
     [self updateTripDate];
     
-#if FLURRY_ENABLED
-    NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                                FLURRY_FROM_SELECTED_ADDRESS, [fromLocation shortFormattedAddress],
-                                FLURRY_TO_SELECTED_ADDRESS, [toLocation shortFormattedAddress], nil];
-    [Flurry logEvent:FLURRY_MAPKIT_DIRECTIONS_REQUEST withParameters:dictionary];
-#endif
+    logEvent(FLURRY_MAPKIT_DIRECTIONS_REQUEST,
+             FLURRY_FROM_SELECTED_ADDRESS, [fromLocation shortFormattedAddress],
+             FLURRY_TO_SELECTED_ADDRESS, [toLocation shortFormattedAddress],
+             nil, nil, nil, nil);
     
     [self getPlan];
 }
@@ -941,7 +933,6 @@ UIImage *imageDetailDisclosure;
     if (editMode == newEditMode) {
         return;  // If no change in mode return immediately
     }
-#if FLURRY_ENABLED
     NSString *edit_string;
     if (newEditMode==NO_EDIT){
         edit_string = @"NO_EDIT";
@@ -950,9 +941,9 @@ UIImage *imageDetailDisclosure;
     } else if (newEditMode==FROM_EDIT) {
         edit_string = @"FROM_EDIT";            
     }
-    NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:FLURRY_EDIT_MODE_VALUE, edit_string, nil];
-    [Flurry logEvent:FLURRY_TOFROMTABLE_NEW_EDIT_MODE withParameters:dictionary];
-#endif
+    logEvent(FLURRY_TOFROMTABLE_NEW_EDIT_MODE,
+             FLURRY_EDIT_MODE_VALUE, edit_string,
+             nil, nil, nil, nil, nil, nil);
     
     NSRange range;
     ToFromEditMode oldEditMode = editMode;
@@ -1265,17 +1256,10 @@ UIImage *imageDetailDisclosure;
                     return true;
                 }
             }
-            
-#if FLURRY_ENABLED
-            NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
-                                          FLURRY_FROM_SELECTED_ADDRESS, [fromLocation shortFormattedAddress],
-                                          FLURRY_TO_SELECTED_ADDRESS, [toLocation shortFormattedAddress],
-                                          nil];
-            [Flurry logEvent: FLURRY_ROUTE_REQUESTED withParameters:flurryParams];
-#endif
-            
-
-
+            logEvent(FLURRY_ROUTE_REQUESTED,
+                     FLURRY_FROM_SELECTED_ADDRESS, [fromLocation shortFormattedAddress],
+                     FLURRY_TO_SELECTED_ADDRESS, [toLocation shortFormattedAddress],
+                     nil, nil, nil, nil);
             
             // add latest plan request to history array
             [planRequestHistory addObject:[NSDictionary dictionaryWithKeysAndObjects:
@@ -1542,15 +1526,10 @@ UIImage *imageDetailDisclosure;
         [fromTableVC markAndUpdateSelectedLocation:toLoc];
     }
     
-#if FLURRY_ENABLED
-    NSDictionary* dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                                FLURRY_TO_SELECTED_ADDRESS, [[self toLocation] shortFormattedAddress],
-                                FLURRY_FROM_SELECTED_ADDRESS, [[self fromLocation] shortFormattedAddress],
-                                nil];
-
-    [Flurry logEvent:FLURRY_TOFROM_SWAP_LOCATION withParameters:dictionary];
-#endif
-
+    logEvent(FLURRY_TOFROM_SWAP_LOCATION,
+             FLURRY_TO_SELECTED_ADDRESS, [[self toLocation] shortFormattedAddress],
+             FLURRY_FROM_SELECTED_ADDRESS, [[self fromLocation] shortFormattedAddress],
+             nil, nil, nil, nil);
 }
 
 //US 137 implementation

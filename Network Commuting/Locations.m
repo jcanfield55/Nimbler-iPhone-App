@@ -10,10 +10,6 @@
 #import "LocationFromGoogle.h"
 #import "UtilityFunctions.h"
 
-#if FLURRY_ENABLED
-#include "Flurry.h"
-#endif
-
 // Internal variables and methods
 
 @interface Locations () 
@@ -119,7 +115,8 @@
             id<RKParser> parser = [[RKParserRegistry sharedRegistry] parserForMIMEType:@"application/json"];
             id parsedData = [parser objectFromString:jsonText error:&error];
             if (parsedData == nil && error) {
-                NIMLOG_ERR1(@"Parser error %@", error);
+                logError(@"Locations->preLoadIfNeededFromFile", [NSString stringWithFormat:@"Parsing error: %@", error]);
+                return false;
             }
             
             RKObjectMappingProvider* mappingProvider = rkGeoMgr.mappingProvider;
@@ -637,10 +634,9 @@
             // if this does not match the latest existing call, ignore it
             return;
         }
-#if FLURRY_ENABLED
         NSString* isFromString = ([parameters isFrom] ? @"fromTable" : @"toTable");
-        NSString* rawAddress = (isForwardGeocode ? [parameters rawAddress] : @"Reverse Geocode");        
-#endif
+        NSString* rawAddress = (isForwardGeocode ? [parameters rawAddress] : @"Reverse Geocode");
+        
         // Get the status string the hard way by parsing the response string
         NSString* response = [[objectLoader response] bodyAsString];
         
@@ -668,28 +664,25 @@
                     }
                 }
                 NIMLOG_EVENT1(@"Geocode valid Locations = %d", [validLocations count]);
-#if FLURRY_ENABLED
                 if ([validLocations count]==0) {
-                    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                            FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                            FLURRY_GEOCODE_RAWADDRESS , rawAddress,nil];
-                    [Flurry logEvent:FLURRY_GEOCODE_RESULTS_NONE_IN_REGION withParameters:params];
+                    logEvent(FLURRY_GEOCODE_RESULTS_NONE_IN_REGION,
+                             FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                             FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                             nil, nil, nil, nil);
                 }
                 else if ([validLocations count]==1) {
-                    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                            FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                            FLURRY_GEOCODE_RAWADDRESS, rawAddress,
-                                            FLURRY_FORMATTED_ADDRESS , [[validLocations objectAtIndex:0] shortFormattedAddress] ,nil];
-                    [Flurry logEvent:FLURRY_GEOCODE_RESULTS_ONE withParameters:params];
+                    logEvent(FLURRY_GEOCODE_RESULTS_ONE,
+                             FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                             FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                             FLURRY_FORMATTED_ADDRESS, [[validLocations objectAtIndex:0] shortFormattedAddress],
+                             nil, nil);
                 } else {
-                    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                            FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                            FLURRY_GEOCODE_RAWADDRESS, rawAddress,
-                                            FLURRY_NUMBER_OF_GEOCODES ,
-                                            [NSString stringWithFormat:@"%d", [validLocations count]],nil];
-                    [Flurry logEvent:FLURRY_GEOCODE_RESULTS_MULTIPLE withParameters:params];
+                    logEvent(FLURRY_GEOCODE_RESULTS_MULTIPLE,
+                             FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                             FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                             FLURRY_NUMBER_OF_GEOCODES, [NSString stringWithFormat:@"%d", [validLocations count]],
+                             nil, nil);
                 }
-#endif
                 
                 [callback newGeocodeResults:validLocations
                                             withStatus:GEOCODE_STATUS_OK
@@ -697,46 +690,38 @@
             }
             
             else if ([geocodeStatus compare:@"ZERO_RESULTS" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-#if FLURRY_ENABLED
-                NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                        FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                        FLURRY_GEOCODE_RAWADDRESS, rawAddress, nil ];
-                [Flurry logEvent:FLURRY_GEOCODE_RESULTS_NONE withParameters:params];
-#endif
+                logEvent(FLURRY_GEOCODE_RESULTS_NONE,
+                         FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                         FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                         nil, nil, nil, nil);
                 NIMLOG_EVENT1(@"Zero results geocoding address");
                 [callback newGeocodeResults:nil withStatus:GEOCODE_ZERO_RESULTS parameters:parameters];
             }
             else if ([geocodeStatus compare:@"OVER_QUERY_LIMIT" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-#if FLURRY_ENABLED
-                NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                        FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                        FLURRY_GEOCODE_RAWADDRESS, rawAddress, nil];
-                [Flurry logEvent:FLURRY_GEOCODE_OVER_GOOGLE_QUOTA withParameters:params];
-#endif
+                logEvent(FLURRY_GEOCODE_OVER_GOOGLE_QUOTA,
+                         FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                         FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                         nil, nil, nil, nil);
                 NIMLOG_ERR1(@"Geocode over query limit.  Status = %@", geocodeStatus);
                 [callback newGeocodeResults:nil withStatus:GEOCODE_OVER_QUERY_LIMIT parameters:parameters];
             }
             else if ([geocodeStatus compare:@"REQUEST_DENIED" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-#if FLURRY_ENABLED
-                NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                        FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                        FLURRY_GEOCODE_RAWADDRESS, rawAddress,
-                                        FLURRY_GEOCODE_ERROR, geocodeStatus, nil];
-                [Flurry logEvent:FLURRY_GEOCODE_OTHER_ERROR withParameters:params];
-#endif
+                logEvent(FLURRY_GEOCODE_OTHER_ERROR,
+                         FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                         FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                         FLURRY_GEOCODE_ERROR, geocodeStatus,
+                         nil, nil);
                 NIMLOG_ERR1(@"Geocode request rejected, status= %@", geocodeStatus);
                 [callback newGeocodeResults:nil withStatus:GEOCODE_REQUEST_DENIED parameters:parameters];
             }
         }
         else { // geocoder did not come back with a status
-#if FLURRY_ENABLED
-            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                    FLURRY_GEOCODE_RAWADDRESS, rawAddress,
-                                    FLURRY_GEOCODE_ERROR, [NSString stringWithFormat:@"No status found.  Start of response: %@",
-                                                           [response substringToIndex:100U]], nil];
-            [Flurry logEvent:FLURRY_GEOCODE_OTHER_ERROR withParameters:params];
-#endif
+            logEvent(FLURRY_GEOCODE_OTHER_ERROR,
+                     FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                     FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                     FLURRY_GEOCODE_ERROR,
+                     [NSString stringWithFormat:@"No status found.  Start of response: %@",[response substringToIndex:100U]],
+                     nil, nil);
             [callback newGeocodeResults:nil withStatus:GEOCODE_GENERIC_ERROR parameters:parameters];
         }
     }
@@ -769,28 +754,24 @@
         reverseGeoURLResource = nil;  // Reset this now that we have received this request
     }
     
+    NSString* isFromString = ([parameters isFrom] ? @"fromTable" : @"toTable");
+    NSString* rawAddress = [parameters rawAddress];
+    
     if ([[error localizedDescription] rangeOfString:@"client is unable to contact the resource"].location != NSNotFound) {
-#if FLURRY_ENABLED
-        NSString* isFromString = ([parameters isFrom] ? @"fromTable" : @"toTable");
-        NSString* rawAddress = [parameters rawAddress];
-        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                FLURRY_GEOCODE_RAWADDRESS, rawAddress,
-                                FLURRY_GEOCODE_ERROR, error, nil];
-        [Flurry logEvent:FLURRY_GEOCODE_NO_NETWORK withParameters:params];
-#endif
+
+        logEvent(FLURRY_GEOCODE_NO_NETWORK,
+                 FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                 FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                 FLURRY_GEOCODE_ERROR, [error localizedDescription],
+                 nil, nil);
         [callback newGeocodeResults:nil withStatus:GEOCODE_NO_NETWORK parameters:parameters];
     }
     else {
-#if FLURRY_ENABLED
-        NSString* isFromString = ([parameters isFrom] ? @"fromTable" : @"toTable");
-        NSString* rawAddress = [parameters rawAddress];
-        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                FLURRY_GEOCODE_RAWADDRESS, rawAddress,
-                                FLURRY_GEOCODE_ERROR, error, nil];
-        [Flurry logEvent:FLURRY_GEOCODE_OTHER_ERROR withParameters:params];
-#endif
+        logEvent(FLURRY_GEOCODE_OTHER_ERROR,
+                 FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                 FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                 FLURRY_GEOCODE_ERROR, [error localizedDescription],
+                 nil, nil);
         [callback newGeocodeResults:nil withStatus:GEOCODE_GENERIC_ERROR parameters:parameters];
     }
 }
@@ -851,32 +832,28 @@
                               callback:(id <LocationsGeocodeResultsDelegate>)callback
 {
     BOOL isForwardGeocode = (parameters.rawAddress != nil);  // Forward Geocoding if there is a rawAddress
-#if FLURRY_ENABLED
+
     NSString* isFromString = ([parameters isFrom] ? @"fromTable" : @"toTable");
     NSString* rawAddress = (isForwardGeocode ? [parameters rawAddress] : @"Reverse Geocode");;
-#endif
+
     if (error) {
         // kCLErrorNetwork case
         if (error.code == kCLErrorNetwork) {
-#if FLURRY_ENABLED
-            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                    FLURRY_GEOCODE_RAWADDRESS, rawAddress,
-                                    FLURRY_GEOCODE_ERROR, [error localizedDescription], nil];
-            [Flurry logEvent:FLURRY_GEOCODE_NO_NETWORK withParameters:params];
-#endif
+            logEvent(FLURRY_GEOCODE_NO_NETWORK,
+                     FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                     FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                     FLURRY_GEOCODE_ERROR, [error localizedDescription],
+                     nil, nil);
             [callback newGeocodeResults:nil withStatus:GEOCODE_NO_NETWORK parameters:parameters];
             return;
         }
         
         // kCLErrorGeocodeFoundNoResult case
         else if (error.code == kCLErrorGeocodeFoundNoResult) {
-#if FLURRY_ENABLED
-            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                    FLURRY_GEOCODE_RAWADDRESS, rawAddress, nil ];
-            [Flurry logEvent:FLURRY_GEOCODE_RESULTS_NONE withParameters:params];
-#endif
+            logEvent(FLURRY_GEOCODE_RESULTS_NONE,
+                     FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                     FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                     nil, nil, nil, nil);
             NIMLOG_EVENT1(@"Zero results geocoding address, error: %@", [error localizedDescription]);
             [callback newGeocodeResults:nil withStatus:GEOCODE_ZERO_RESULTS parameters:parameters];
             return;
@@ -925,28 +902,26 @@
             }
         }
         NIMLOG_EVENT1(@"Geocode valid Locations = %d", [validLocations count]);
-#if FLURRY_ENABLED
+
         if ([validLocations count]==0) {
-            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                    FLURRY_GEOCODE_RAWADDRESS , rawAddress,nil];
-            [Flurry logEvent:FLURRY_GEOCODE_RESULTS_NONE_IN_REGION withParameters:params];
+            logEvent(FLURRY_GEOCODE_RESULTS_NONE_IN_REGION,
+                     FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                     FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                     nil, nil, nil, nil);
         }
         else if ([validLocations count]==1) {
-            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                    FLURRY_GEOCODE_RAWADDRESS, rawAddress,
-                                    FLURRY_FORMATTED_ADDRESS , [[validLocations objectAtIndex:0] shortFormattedAddress] ,nil];
-            [Flurry logEvent:FLURRY_GEOCODE_RESULTS_ONE withParameters:params];
+            logEvent(FLURRY_GEOCODE_RESULTS_ONE,
+                     FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                     FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                     FLURRY_FORMATTED_ADDRESS, [[validLocations objectAtIndex:0] shortFormattedAddress],
+                     nil, nil);
         } else {
-            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                    FLURRY_GEOCODE_RAWADDRESS, rawAddress,
-                                    FLURRY_NUMBER_OF_GEOCODES ,
-                                    [NSString stringWithFormat:@"%d", [validLocations count]],nil];
-            [Flurry logEvent:FLURRY_GEOCODE_RESULTS_MULTIPLE withParameters:params];
+            logEvent(FLURRY_GEOCODE_RESULTS_MULTIPLE,
+                     FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                     FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                     FLURRY_NUMBER_OF_GEOCODES, [NSString stringWithFormat:@"%d", [validLocations count]],
+                     nil, nil);
         }
-#endif
         
         [callback newGeocodeResults:validLocations
                          withStatus:GEOCODE_STATUS_OK

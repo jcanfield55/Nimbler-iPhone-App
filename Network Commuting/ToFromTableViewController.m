@@ -13,10 +13,6 @@
 #import "Constants.h"
 #import "GeocodeRequestParameters.h"
 
-#if FLURRY_ENABLED
-#include "Flurry.h"
-#endif
-
 
 @interface ToFromTableViewController () 
 {
@@ -141,15 +137,14 @@
         else {
             [toFromVC setEditMode:NO_EDIT];  // Have toFromVC end the edit mode (DE96 fix)
             
+            NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
+
             if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) { // If a list (like 'Caltrain Station List')
-#if FLURRY_ENABLED
-                NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");          
-                NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                        FLURRY_TOFROM_WHICH_TABLE, isFromString,          
-                                        FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d",[indexPath row]],
-                                        nil];          
-                [Flurry logEvent:FLURRY_TOFROMTABLE_CALTRAIN_LIST withParameters:params];          
-#endif
+                logEvent(FLURRY_TOFROMTABLE_CALTRAIN_LIST,
+                         FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                         FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d",[indexPath row]],
+                         nil, nil, nil, nil);
+
                 // Increment frequency of the list header
                 if (isFrom) {
                     [loc incrementFromFrequency];
@@ -165,15 +160,13 @@
                                isGeocodeResults:NO];
             }
             else {    // if a normal location
-#if FLURRY_ENABLED      
-                NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
                 NSString* selectedAddressParam = (isFrom ? FLURRY_FROM_SELECTED_ADDRESS : FLURRY_TO_SELECTED_ADDRESS);
-                NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                        FLURRY_TOFROM_WHICH_TABLE, isFromString,          
-                                        FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d",[indexPath row]],          
-                                        selectedAddressParam, [loc shortFormattedAddress], nil];          
-                [Flurry logEvent:FLURRY_TOFROMTABLE_SELECT_ROW withParameters:params];          
-#endif
+                logEvent(FLURRY_TOFROMTABLE_SELECT_ROW,
+                         FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                         FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d",[indexPath row]],
+                         selectedAddressParam, [loc shortFormattedAddress],
+                         nil, nil);
+
                 [self markAndUpdateSelectedLocation:loc];  // Mark the selected location and send updates to locations and toFromVC
             }
         }
@@ -415,16 +408,11 @@
                     isGeocodingOutstanding = TRUE;
                     [toFromVC updateGeocodeStatus:TRUE isFrom:isFrom]; // alert toFromVC re: outstanding geocoding
                 }
-#if FLURRY_ENABLED          
-                NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
-                NSString* apiString = (([parameters apiType]==GOOGLE_GEOCODER) ? @"Google" : @"iOS");
-                NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                        FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                                        FLURRY_GEOCODE_RAWADDRESS, rawAddress,
-                                        FLURRY_GEOCODE_API, apiString,nil];
-                [Flurry logEvent:FLURRY_TOFROMTABLE_GEOCODE_REQUEST withParameters:params];          
-#endif
-                
+                logEvent(FLURRY_TOFROMTABLE_GEOCODE_REQUEST,
+                         FLURRY_TOFROM_WHICH_TABLE, (isFrom ? @"fromTable" : @"toTable"),
+                         FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                         FLURRY_GEOCODE_API, (([parameters apiType]==GOOGLE_GEOCODER) ? @"Google" : @"iOS"),
+                         nil, nil);                
             }
             @catch (NSException *exception) {
                 logException(@"ToFromTableViewController->textSubmitted", @"Loading geocode info", exception);

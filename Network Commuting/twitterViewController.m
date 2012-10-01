@@ -11,9 +11,6 @@
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "nc_AppDelegate.h"
 #import "QuartzCore/QuartzCore.h"
-#if FLURRY_ENABLED
-#include "Flurry.h"
-#endif
 
 #define TWEETERVIEW_MANE        @"Advisories"
 #define TABLE_CELL              @"Cell"
@@ -108,9 +105,7 @@ NSUserDefaults *prefs;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-#if FLURRY_ENABLED
-    [Flurry logEvent:FLURRY_ADVISORIES_APPEAR];
-#endif
+    logEvent(FLURRY_ADVISORIES_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
     
     [nc_AppDelegate sharedInstance].isTwitterView = YES;
    [self startProcessForGettingTweets]; 

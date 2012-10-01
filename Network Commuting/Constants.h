@@ -72,7 +72,7 @@
 #define PREFS_DEFAULT_MAX_WALK_DISTANCE 0.75
 
 // Flurry analytics and logging
-#define FLURRY_ENABLED 0
+#define FLURRY_ENABLED 1
 
 // Flurry events
 #define FLURRY_APPDELEGATE_START @"Start of App Delegate"
@@ -106,6 +106,7 @@
 #define FLURRY_ROUTE_DETAILS_APPEAR @"RouteDetails appear"
 #define FLURRY_ROUTE_DETAILS_NEWITINERARY_NUMBER @"RouteDetails NewItinerary #"
 #define FLURRY_SETTINGS_APPEAR @"Settings appear"
+#define FLURRY_SETTINGS_SUBMITTED @"Settings submitted"
 #define FLURRY_FEEDBACK_APPEAR @"Feedback appear"
 #define FLURRY_FEEDBACK_RECORD @"Feedback record button"
 #define FLURRY_FEEDBACK_PLAY @"Feedback play button"
@@ -134,13 +135,6 @@
 #define FLURRY_SETTING_WALK_DISTANCE @"(Settings walk distance)"
 #define FLURRY_SETTING_ALERT_COUNT @"(Settings alert count)"
 
-/* Template code for inserting Flurry logging
- #if FLURRY_ENABLED
- NSDictionary *params = [NSDictionary
- dictionaryWithObjectsAndKeys:@"", @"", nil];
- [Flurry logEvent: withParameters:params];
- #endif
- */
 
 // Geocode behavior
 #define IOS_GEOCODE_VER_THRESHOLD (6.0)  // Version at which we start using iOS geocoding (rather than Google)

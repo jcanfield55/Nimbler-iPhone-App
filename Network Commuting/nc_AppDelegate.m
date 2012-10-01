@@ -292,9 +292,7 @@ FeedBackForm *fbView;
             [toFromViewController getRouteForMKDirectionsRequest];
         }
         
-#if FLURRY_ENABLED
-        [Flurry logEvent:FLURRY_CURRENT_LOCATION_AVAILABLE];
-#endif
+        logEvent(FLURRY_CURRENT_LOCATION_AVAILABLE, nil, nil, nil, nil, nil, nil, nil, nil);
     }
     
     [currentLocation setLatFloat:[newLocation coordinate].latitude];
@@ -616,7 +614,7 @@ FeedBackForm *fbView;
              Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
              
              */
-            NIMLOG_ERR1(@"Unresolved error %@, %@", error, [error userInfo]);
+            logError(@"nc_AppDelegate->persistentStoreCoordinator", [NSString stringWithFormat:@"Error %@", error]);
             abort();
         }    
         
@@ -787,11 +785,10 @@ FeedBackForm *fbView;
         [prefs setObject:token forKey:DEVICE_TOKEN];  
         [prefs synchronize];
         [self upadateDefaultUserValue];
-#if FLURRY_ENABLED
-        NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
-                                      FLURRY_NOTIFICATION_TOKEN, token, nil];
-        [Flurry logEvent: FLURRY_PUSH_AVAILABLE withParameters:flurryParams];
-#endif
+        logEvent(FLURRY_PUSH_AVAILABLE,
+                 FLURRY_NOTIFICATION_TOKEN, token,
+                 nil, nil, nil, nil, nil, nil);
+
     }
     @catch (NSException *exception) {
         logException(@"ncAppDelegate->didRegisterForRemoteNotificationsWithDeviceToken", @"", exception);

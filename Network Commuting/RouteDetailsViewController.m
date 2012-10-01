@@ -16,9 +16,7 @@
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "ToFromViewController.h"
 #import "nc_AppDelegate.h"
-#if FLURRY_ENABLED
-#include "Flurry.h"
-#endif
+
 
 @interface RouteDetailsViewController()
 {
@@ -181,11 +179,9 @@ NSUserDefaults *prefs;
 // Override method to set to a new itinerary number (whether from the navigation forward back buttons or by selecting a new row on the table)
 - (void)setItineraryNumber:(int)iNumber0
 {
-#if FLURRY_ENABLED
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: FLURRY_SELECTED_ROW_NUMBER, 
-                        [NSString stringWithFormat:@"%d", iNumber0], nil];
-    [Flurry logEvent:FLURRY_ROUTE_DETAILS_NEWITINERARY_NUMBER withParameters:params];
-#endif
+    logEvent(FLURRY_ROUTE_DETAILS_NEWITINERARY_NUMBER,
+             FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d", iNumber0],
+             nil, nil, nil, nil, nil, nil);
                                                                                                
     itineraryNumber = iNumber0;
     [mainTable reloadData]; // reload the table to highlight the new itinerary number
@@ -217,9 +213,8 @@ NSUserDefaults *prefs;
     [super viewWillAppear:animated];
     
     @try {
-#if FLURRY_ENABLED
-        [Flurry logEvent: FLURRY_ROUTE_DETAILS_APPEAR];
-#endif
+        logEvent(FLURRY_ROUTE_DETAILS_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
+
         // Enforce height of main table
         CGRect tableFrame = [mainTable frame];
         CGRect mapFrame = [mapView frame];

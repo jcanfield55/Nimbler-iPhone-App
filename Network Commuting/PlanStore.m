@@ -14,9 +14,6 @@
 #import <Restkit/RKJSONParserJSONKit.h>
 #import "nc_AppDelegate.h"
 
-#if FLURRY_ENABLED
-#include "Flurry.h"
-#endif
 
 @interface PlanStore()
 {
@@ -74,13 +71,11 @@
             if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate]
                                                           departOrArrive:[parameters departOrArrive]]) {
                 NIMLOG_EVENT1(@"Matches found in plan cache");
-#if FLURRY_ENABLED
-                NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
-                                              FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
-                                              FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
-                                              nil];
-                [Flurry logEvent: FLURRY_ROUTE_FROM_CACHE withParameters:flurryParams];
-#endif
+                logEvent(FLURRY_ROUTE_FROM_CACHE,
+                         FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
+                         FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
+                         nil, nil, nil, nil);
+
                 [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
                 PlanRequestStatus status = PLAN_STATUS_OK;
                 if(toFromVC.timerGettingRealDataByItinerary != nil){
@@ -97,13 +92,11 @@
             }
         }
         // if no appropriate plan in cache, request one from OTP
-#if FLURRY_ENABLED
-        NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
-                                      FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
-                                      FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
-                                      nil];
-        [Flurry logEvent: FLURRY_ROUTE_NOT_IN_CACHE withParameters:flurryParams];
-#endif
+        logEvent(FLURRY_ROUTE_NOT_IN_CACHE,
+                 FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
+                 FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
+                 nil, nil, nil, nil);
+
         [self requestPlanFromOtpWithParameters:parameters];
     }
     @catch (NSException *exception) {
@@ -301,7 +294,6 @@
         }
     }
     @catch (NSException *exception) {
-        NIMLOG_ERR1(@"Exception while parsing TP response plan: %@", exception);
         if (planRequestParameters && planRequestParameters.planDestination == PLAN_DESTINATION_TO_FROM_VC) {
             [toFromVC newPlanAvailable:nil status:PLAN_GENERIC_EXCEPTION];
             logException(@"PlanStore->objectLoader", @"Original request from ToFromVC", exception);
@@ -317,18 +309,15 @@
     PlanRequestStatus status;
     NIMLOG_EVENT1(@"Plan RKError objectLoader params: %@", [objectLoader params]);
     if ([[error localizedDescription] rangeOfString:@"client is unable to contact the resource"].location != NSNotFound) {
-#if FLURRY_ENABLED
-        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                FLURRY_RK_RESPONSE_ERROR, error, nil];
-        [Flurry logEvent:FLURRY_ROUTE_NO_NETWORK withParameters:params];
-#endif
+        logEvent(FLURRY_ROUTE_NO_NETWORK,
+                 FLURRY_RK_RESPONSE_ERROR, [error localizedDescription],
+                 nil, nil, nil, nil, nil, nil);
         status = PLAN_NO_NETWORK;
     } else {
-#if FLURRY_ENABLED
-        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                FLURRY_RK_RESPONSE_ERROR, error, nil];
-        [Flurry logEvent:FLURRY_ROUTE_OTHER_ERROR withParameters:params];
-#endif
+        logEvent(FLURRY_ROUTE_OTHER_ERROR,
+                 FLURRY_RK_RESPONSE_ERROR, [error localizedDescription],
+                 nil, nil, nil, nil, nil, nil);
+
         status = PLAN_GENERIC_EXCEPTION;
     }
     NSString* resourcePath = [objectLoader resourcePath];
@@ -550,7 +539,7 @@
         }
         [context save:&error];
         if(error){
-            NIMLOG_ERR1(@"Error While Clearing Cache:%@",error);
+            logError(@"PlanStore --> clearCache", [NSString stringWithFormat:@"Error While Clearing Cache:%@",error]);
         }
     }
     @catch (NSException *exception) {

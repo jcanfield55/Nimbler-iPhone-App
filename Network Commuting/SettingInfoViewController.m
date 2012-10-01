@@ -10,9 +10,6 @@
 #import "nc_AppDelegate.h"
 #import "UserPreferance.h"
 #import "UtilityFunctions.h"
-#if FLURRY_ENABLED
-#include "Flurry.h"
-#endif
 
 #define SETTING_TITLE       @"App Settings"
 #define SETTING_ALERT_MSG   @"Updating your settings \n Please wait..."
@@ -105,9 +102,8 @@ bool isPush;
 {
     [super viewWillAppear:animated];
     [self fetchUserSettingData];
-#if FLURRY_ENABLED
-    [Flurry logEvent: FLURRY_SETTINGS_APPEAR];
-#endif
+    logEvent(FLURRY_SETTINGS_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
+
     btnUpdateSetting.layer.cornerRadius = CORNER_RADIUS_SMALL;
 }
 
@@ -176,15 +172,10 @@ bool isPush;
         [nc_AppDelegate sharedInstance].isSettingSavedSuccessfully = NO;
         [[RKClient sharedClient]  get:twitCountReq delegate:self];
         
-#if FLURRY_ENABLED
-        NSDictionary *flurryParams = [NSDictionary dictionaryWithObjectsAndKeys:
-                                      FLURRY_SETTING_WALK_DISTANCE,
-                                      [NSString stringWithFormat:@"%f",sliderMaxWalkDistance.value],
-                                      FLURRY_SETTING_ALERT_COUNT,
-                                      [NSString stringWithFormat:@"%d",pushHour],
-                                      nil];
-        [Flurry logEvent: FLURRY_ROUTE_REQUESTED withParameters:flurryParams];
-#endif
+        logEvent(FLURRY_SETTINGS_SUBMITTED,
+                 FLURRY_SETTING_WALK_DISTANCE, [NSString stringWithFormat:@"%f",sliderMaxWalkDistance.value],
+                 FLURRY_SETTING_ALERT_COUNT, [NSString stringWithFormat:@"%d",pushHour],
+                 nil, nil, nil, nil);
         
         //[NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(popOutFromSettingView) userInfo:nil repeats: NO];
     }

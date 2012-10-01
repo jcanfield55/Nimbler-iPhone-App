@@ -291,6 +291,53 @@ NSString *stringByTruncatingToWidth(NSString *string, CGFloat width, UIFont *fon
     return truncatedString;
 }
 
+//
+// Logs event to Flurry (and any other logging)
+// Can accept up to 4 parameter names and value pairs.  If  the parameter name is nil, that parameter is not included in the log
+// If the parameter value is nil, then the string @"null" is written in the log instead
+//
+void logEvent(NSString *eventName, NSString *param1name, NSString *param1value, NSString *param2name, NSString* param2value,
+              NSString *param3name, NSString *param3value, NSString *param4name, NSString *param4value)
+{
+#if FLURRY_ENABLED
+    if (eventName && [eventName length]>0) {
+        NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithCapacity:4];
+        
+        if (param1name && [param1name length]>0) {
+            if (!param1value) {
+                param1value = @"null";
+            }
+            [dictionary setObject:param1value forKey:param1name];
+        }
+        if (param2name && [param2name length]>0) {
+            if (!param2value) {
+                param2value = @"null";
+            }
+            [dictionary setObject:param2value forKey:param2name];
+        }
+        if (param3name && [param3name length]>0) {
+            if (!param3value) {
+                param3value = @"null";
+            }
+            [dictionary setObject:param3value forKey:param3name];
+        }
+        if (param4name && [param4name length]>0) {
+            if (!param4value) {
+                param4value = @"null";
+            }
+            [dictionary setObject:param4value forKey:param4name];
+        }
+        
+        if ([dictionary count]>0) {
+            [Flurry logEvent:eventName withParameters:dictionary];
+        } else {
+            [Flurry logEvent:eventName];
+        }
+    }
+
+#endif
+}
+
 // Logs exception using NIMLOG_ERR1 and if Flurry activated, logs to Flurry as well 
 void logException(NSString *errorName, NSString *errorMessage, NSException *e)
 {

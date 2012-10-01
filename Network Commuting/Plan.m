@@ -335,7 +335,8 @@
             connectingReqDate = newConnectingReqDate;
             loopsExecuted++;
             if (loopsExecuted == 25) {
-                NIMLOG_ERR1(@"returnSortedItinerariesWithMatchesForDate loopsExecuted unexpectedly reached 25");
+                logError(@"PlanStore -> returnSortedItinerariesWithMatchesForDate",
+                         @"returnSortedItinerariesWithMatchesForDate loopsExecuted unexpectedly reached 25");
             }
         } while (newConnectingReqDate && loopsExecuted < 25);
         
