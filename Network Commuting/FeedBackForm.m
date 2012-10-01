@@ -400,12 +400,19 @@ NSUserDefaults *prefs;
 #pragma mark Restful request
 -(IBAction)submitFeedBack:(id)sender
 {
-    if((soundFilePath == nil) && ([txtFeedBack.text isEqualToString:NULL_STRING])) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:FB_TITLE_MSG message:FB_WHEN_NO_VOICE_OR_TEXT delegate:self cancelButtonTitle:BUTTON_OK otherButtonTitles:nil, nil];
+    // DE- 195 Fixed
+    if([[nc_AppDelegate sharedInstance] isNetworkConnectionLive]){
+        if((soundFilePath == nil) && ([txtFeedBack.text isEqualToString:NULL_STRING])) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:FB_TITLE_MSG message:FB_WHEN_NO_VOICE_OR_TEXT delegate:self cancelButtonTitle:BUTTON_OK otherButtonTitles:nil, nil];
+            [alert show];
+        } else {
+            mesg = SUBMIT_MSG;
+            [self sendFeedbackToServer];
+        }
+    }
+    else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain" message:NO_NETWORK_ALERT delegate:self cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil];
         [alert show];
-    } else {
-        mesg = SUBMIT_MSG;
-        [self sendFeedbackToServer];
     }
 }
 

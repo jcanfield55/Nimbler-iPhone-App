@@ -98,7 +98,7 @@
 +(nc_AppDelegate *)sharedInstance; 
 + (NSString *)getUUID;
 -(void)updateBadge:(int)count;
--(void)isNetworkConnectionLive;
+-(BOOL)isNetworkConnectionLive;
 -(void)updateTime;
 -(void)serviceByWeekday;
 -(void)calendarByDate;

@@ -207,24 +207,33 @@ NSUserDefaults *prefs;
 #pragma mark reloadNewTweets request Response
 -(void)getLatestTweets 
 {
-    [self startProcessForGettingTweets];    
-    NSString *latestTweetTime = @"0";
+    // DE-196 Fixed
+    if([[nc_AppDelegate sharedInstance] isNetworkConnectionLive]){
+        [self startProcessForGettingTweets];
+        NSString *latestTweetTime = @"0";
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
-    if([arrayTweet count] > 0){
-        id key = [arrayTweet objectAtIndex:0];                
-        NSString *tweetTime =  [(NSDictionary*)key objectForKey:TWEET_TIME];
-        
-        if (tweetTime == NULL) {
-            tweetTime = latestTweetTime;
+        if([arrayTweet count] > 0){
+            id key = [arrayTweet objectAtIndex:0];
+            NSString *tweetTime =  [(NSDictionary*)key objectForKey:TWEET_TIME];
+            
+            if (tweetTime == NULL) {
+                tweetTime = latestTweetTime;
+            }
+            NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
+                                  LAST_TWEET_TIME,tweetTime,
+                                  DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
+                                  nil];
+            NSString *req = [LATEST_TWEETS_REQ appendQueryParams:dict];
+            [[RKClient sharedClient]  get:req delegate:self];
+            [[nc_AppDelegate sharedInstance] updateBadge:0];
         }
-        NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
-                              LAST_TWEET_TIME,tweetTime,
-                              DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
-                              nil];
-        NSString *req = [LATEST_TWEETS_REQ appendQueryParams:dict];
-        [[RKClient sharedClient]  get:req delegate:self]; 
-        [[nc_AppDelegate sharedInstance] updateBadge:0];
+    }
+    else{
+        if([arrayTweet count] != 0){
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain" message:NO_NETWORK_ALERT delegate:self cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil];
+            [alert show];
+        }
     }
 }
       
@@ -331,21 +340,30 @@ NSUserDefaults *prefs;
 
 -(void)getAdvisoryData
 {
-    @try {
-        [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
-        [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
-        [[nc_AppDelegate sharedInstance] updateBadge:0];
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
-        isTwitterLiveData = TRUE;           
-        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                                DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
-                                nil];    
-        NSString *allAdvisories = [ALL_TWEETS_REQ appendQueryParams:params];
-        [[RKClient sharedClient]  get:allAdvisories delegate:self];
+    // DE-196 Fixed
+    if([[nc_AppDelegate sharedInstance] isNetworkConnectionLive]){
+        @try {
+            [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+            [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
+            [[nc_AppDelegate sharedInstance] updateBadge:0];
+            RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+            [RKClient setSharedClient:client];
+            isTwitterLiveData = TRUE;
+            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
+                                    DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
+                                    nil];
+            NSString *allAdvisories = [ALL_TWEETS_REQ appendQueryParams:params];
+            [[RKClient sharedClient]  get:allAdvisories delegate:self];
+        }
+        @catch (NSException *exception) {
+            logException(@"twitterViewController -> getAdvisoryData", @"", exception);
+        }
     }
-    @catch (NSException *exception) {
-        logException(@"twitterViewController -> getAdvisoryData", @"", exception);
+    else{
+        if([arrayTweet count] != 0){
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain" message:NO_NETWORK_ALERT delegate:self cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil];
+            [alert show];
+        }
     }
 }
 

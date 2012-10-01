@@ -489,7 +489,7 @@
             [alert show];
         }
         else if (status==GEOCODE_NO_NETWORK) {
-            alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:@"Unable to connect to server.  Please try again when you have network connectivity." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:NO_NETWORK_ALERT delegate:nil cancelButtonTitle:OK_BUTTON_TITLE otherButtonTitles:nil];
             [alert show];
         }
         else  { // status==GEOCODE_GENERIC_ERROR

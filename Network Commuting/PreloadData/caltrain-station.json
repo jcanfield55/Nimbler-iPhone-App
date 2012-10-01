@@ -1330,8 +1330,8 @@
                  "memberOfList" : "Caltrain05",
                  "geometry" : {
                  "location" : {
-                 "lat" : 37.624256,
-                 "lng" : -122.408444
+                 "lat" : 37.621572,
+                 "lng" : -122.406408
                  },
                  "location_type" : "APPROXIMATE",
                  "viewport" : {

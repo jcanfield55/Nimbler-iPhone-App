@@ -289,3 +289,7 @@
 
 #define DEVICE_ID @"deviceid"
 #define DEVICE_CFUUID @"deviceCFUUID"
+
+
+// Network Message
+#define NO_NETWORK_ALERT   @"Unable to connect to server.  Please try again when you have network connectivity."

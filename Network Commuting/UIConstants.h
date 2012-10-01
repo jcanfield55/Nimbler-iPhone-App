@@ -17,16 +17,18 @@
 #define TOFROM_ROW_HEIGHT 37
 #define FROM_HEIGHT_CL_MODE 37
 #define TOFROM_TABLE_HEIGHT_NO_CL_MODE 110 // height when not isCurrentLocationMode
-#define TOFROM_TABLE_HEIGHT_NO_CL_MODE_4INCH 140 // height when not isCurrentLocationMode
+#define TOFROM_TABLE_HEIGHT_NO_CL_MODE_4INCH 110 // height when not isCurrentLocationMode
 #define TO_TABLE_HEIGHT_CL_MODE 185 // height when isCurrentLocationMode
-#define TO_TABLE_HEIGHT_CL_MODE_4INCH 270 // height when isCurrentLocationMode
+#define TO_TABLE_HEIGHT_CL_MODE_4INCH 185 // height when isCurrentLocationMode
 #define TOFROM_TABLE_WIDTH 300
 #define TOFROM_INSERT_INTO_CELL_MARGIN 2 // spacer added to cell height when there is an inserted field or table
+#define TOFROM_INSERT_INTO_CELL_MARGIN_4INCH   50
 #define TOFROM_TABLE_CORNER_RADIUS 10.0
 
 #define TOFROM_SECTION_LABEL_HEIGHT 23.0
 #define TOFROM_SECTION_LABEL_WIDTH 60.0
 #define TOFROM_SECTION_NOLABEL_HEIGHT 5.0 // spacer when there is no label
+#define TOFROM_SECTION_NOLABEL_HEIGHT_4INCH 5.0 // spacer when there is no label
 #define TOFROM_SECTION_LABEL_INDENT 15.0
 #define TOFROM_SECTION_FOOTER_HEIGHT 1.0
 

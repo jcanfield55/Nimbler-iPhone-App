@@ -136,7 +136,7 @@ UIImage *imageDetailDisclosure;
             rect1.origin.y = 0;
             rect1.size.width = TOFROM_TABLE_WIDTH ;
             if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                toTableHeight = TOFROM_TABLE_HEIGHT_NO_CL_MODE_4INCH;
+                toTableHeight = TO_TABLE_HEIGHT_CL_MODE_4INCH;
             }
             else{
                 toTableHeight = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
@@ -506,7 +506,7 @@ UIImage *imageDetailDisclosure;
     if (editMode == NO_EDIT) {
         return 1;  // each section in the mainTable has only one cell when not editng
     }
-    return 2; 
+    return 2;
     // In edit mode, the To or From section has two cells
 }
 
@@ -520,7 +520,7 @@ UIImage *imageDetailDisclosure;
     }
     else if (editMode != NO_EDIT) {  // to or from table in Edit mode
         if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-            return TOFROM_TABLE_HEIGHT_NO_CL_MODE_4INCH + TOFROM_INSERT_INTO_CELL_MARGIN;
+               return TO_TABLE_HEIGHT_CL_MODE_4INCH + TOFROM_INSERT_INTO_CELL_MARGIN;
         }
         else{
             return TOFROM_TABLE_HEIGHT_NO_CL_MODE + TOFROM_INSERT_INTO_CELL_MARGIN;
@@ -536,11 +536,12 @@ UIImage *imageDetailDisclosure;
     }
     // Else NO_EDIT mode and no CurrentLocationMode
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        return TOFROM_TABLE_HEIGHT_NO_CL_MODE_4INCH + TOFROM_INSERT_INTO_CELL_MARGIN;
+        if(editMode == NO_EDIT && [indexPath section] == TO_SECTION){
+            return TO_TABLE_HEIGHT_CL_MODE_4INCH + TOFROM_INSERT_INTO_CELL_MARGIN;
+        }
     }
-    else{
-        return TOFROM_TABLE_HEIGHT_NO_CL_MODE + TOFROM_INSERT_INTO_CELL_MARGIN;
-    }
+    return TOFROM_TABLE_HEIGHT_NO_CL_MODE + TOFROM_INSERT_INTO_CELL_MARGIN;
+
 
 }
 
@@ -551,7 +552,12 @@ UIImage *imageDetailDisclosure;
     } else if(section == TO_SECTION) {
          return TOFROM_SECTION_LABEL_HEIGHT;
     } else {
-        return TOFROM_SECTION_NOLABEL_HEIGHT;
+        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+            return TOFROM_SECTION_NOLABEL_HEIGHT_4INCH;
+        }
+        else{
+            return TOFROM_SECTION_NOLABEL_HEIGHT;
+        }
     } 
 }
 
@@ -812,7 +818,12 @@ UIImage *imageDetailDisclosure;
         fromLocation = loc;
         [self setFBParameterForGeneral];
         if (currentLocation && loc == currentLocation && !isCurrentLocationMode) { // Part of DE194 fix
-            [self setIsCurrentLocationMode:TRUE];
+             if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                 [self setIsCurrentLocationMode:FALSE];
+             }
+             else{
+                 [self setIsCurrentLocationMode:TRUE];
+             }
         }
         else if (loc != currentLocation && isCurrentLocationMode) {
             [self setIsCurrentLocationMode:FALSE];
@@ -948,6 +959,19 @@ UIImage *imageDetailDisclosure;
     
     // Change NavBar buttons accordingly
     if(editMode == NO_EDIT){
+        // Change The fromTable Frame
+        CGRect rect2;
+        rect2.origin.x = 0;
+        rect2.origin.y = 0;
+        rect2.size.width = TOFROM_TABLE_WIDTH;
+        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+            rect2.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
+        }
+        else{
+            rect2.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
+        }
+        [fromTable setFrame:rect2];
+        
         self.navigationItem.leftBarButtonItem = barButtonSwap;
     } else{
         self.navigationItem.leftBarButtonItem = barButtonCancel;
@@ -989,6 +1013,18 @@ UIImage *imageDetailDisclosure;
         [mainTable endUpdates];
     } else if (newEditMode == FROM_EDIT && oldEditMode == NO_EDIT) {
         // Delete first & second sections (moving To Table to top)
+        // Change The fromTable Frame
+        CGRect rect2;
+        rect2.origin.x = 0;
+        rect2.origin.y = 0;
+        rect2.size.width = TOFROM_TABLE_WIDTH;
+        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+            rect2.size.height = TO_TABLE_HEIGHT_CL_MODE_4INCH;
+        }
+        else{
+            rect2.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
+        }
+        [fromTable setFrame:rect2];
         [mainTable beginUpdates];
         [mainTable deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
         [mainTable deleteSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationAutomatic];

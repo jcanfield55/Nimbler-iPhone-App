@@ -27,7 +27,7 @@
 #define BTN_EXIT        @"Exit fromApp"
 #define BTN_OK          @"Ok"
 #define BTN_CANCEL      @"Continue"
-#define ALERT_NETWORK   @"Please check your wifi or data connection!" 
+
 
 @interface nc_AppDelegate() {
     // Internal variables
@@ -269,7 +269,12 @@ FeedBackForm *fbView;
         }
         [toFromViewController setCurrentLocation:currentLocation];
         if (![toFromViewController fromLocation]) {  // only if fromLocation is not set, set to currentLocation mode (DE197 fix)
-            [toFromViewController setIsCurrentLocationMode:TRUE];
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                [toFromViewController setIsCurrentLocationMode:FALSE];
+            }
+            else{
+                [toFromViewController setIsCurrentLocationMode:TRUE];
+            }
         }
         
         if (currentLocationNeededForDirectionsDestination || currentLocationNeededForDirectionsSource) {
@@ -410,8 +415,10 @@ FeedBackForm *fbView;
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
-    
-    [self isNetworkConnectionLive];  
+    if(![self isNetworkConnectionLive]){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:NO_NETWORK_ALERT delegate:self cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil];
+        [alert show];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -1001,7 +1008,7 @@ FeedBackForm *fbView;
     }
 }
 
--(void)isNetworkConnectionLive
+-(BOOL)isNetworkConnectionLive
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNetworkChange:) name:kReachabilityChangedNotification object:nil];
       
@@ -1011,8 +1018,10 @@ FeedBackForm *fbView;
     NetworkStatus remoteHostStatus = [reachability currentReachabilityStatus];
     
     if(remoteHostStatus == NotReachable) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:ALERT_NETWORK delegate:self cancelButtonTitle:BTN_EXIT otherButtonTitles:BTN_CANCEL, nil];
-        [alert show];
-    } 
+        return NO;
+    }
+    else{
+        return YES;
+    }
 }
 @end
