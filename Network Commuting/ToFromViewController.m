@@ -920,6 +920,7 @@ UIImage *imageDetailDisclosure;
     startButtonClickTime = CFAbsoluteTimeGetCurrent();
     
     [self setIsTripDateCurrentTime:YES];
+    departOrArrive = DEPART;  // DE203 fix
     [self updateTripDate];
     
 #if FLURRY_ENABLED
@@ -1616,7 +1617,7 @@ UIImage *imageDetailDisclosure;
 
     [self setTripDateLastChangedByUser:[[NSDate alloc] init]];
     [self setIsTripDateCurrentTime:YES];
-    [self setDepartOrArrive:departOrArrive];
+    [self setDepartOrArrive:DEPART];  // DE201 fix -- always select Depart if we pick the Now button
     [self updateTripDate];
     [self reloadTables];
 }

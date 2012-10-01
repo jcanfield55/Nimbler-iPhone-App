@@ -61,4 +61,7 @@
 // ToFromTableViewController
 #define TOFROMTABLE_ENTER_ADDRESS_TEXT @"Enter New Address"
 
+// Network Message
+#define NO_NETWORK_ALERT   @"Unable to connect to server.  Please try again when you have network connectivity."
+
 #endif

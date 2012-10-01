@@ -48,7 +48,7 @@
 
 // Preload file variables
 #define PRELOAD_LOCATION_FILE     @"caltrain-station.json"
-#define PRELOAD_VERSION_NUMBER    @"1.046"
+#define PRELOAD_VERSION_NUMBER    @"1.047"
 #define PRELOAD_TEST_ADDRESS      @"San Martin Caltrain, San Martin, CA 95046, USA" // station for testing version number
 #define TOFROM_LIST_TYPE          @"TOFROM_LIST" // Location type indicating a ToFromList
 
@@ -291,5 +291,4 @@
 #define DEVICE_CFUUID @"deviceCFUUID"
 
 
-// Network Message
-#define NO_NETWORK_ALERT   @"Unable to connect to server.  Please try again when you have network connectivity."
+
