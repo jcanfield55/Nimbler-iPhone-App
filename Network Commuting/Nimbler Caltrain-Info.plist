@@ -31,12 +31,12 @@
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFiles</key>
 	<array>
+		<string>Icon.png</string>
+		<string>Icon@2x.png</string>
 		<string>Icon-small.png</string>
 		<string>Icon-small@2x.png</string>
 		<string>Default.png</string>
 		<string>Default@2x.png</string>
-		<string>Icon.png</string>
-		<string>Icon@2x.png</string>
 	</array>
 	<key>CFBundleIcons</key>
 	<dict>
@@ -64,7 +64,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>1.00</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
