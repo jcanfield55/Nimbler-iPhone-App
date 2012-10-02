@@ -148,7 +148,6 @@ FeedBackForm *fbView;
         // Turn on location manager
         locationManager = [[CLLocationManager alloc] init];
         [locationManager setDelegate:self];
-        [locationManager setPurpose:LOCATION_SERVICES_PURPOSE];
         [locationManager startUpdatingLocation];
         
         // Initialize the Locations class and store "Current Location" into the database if not there already

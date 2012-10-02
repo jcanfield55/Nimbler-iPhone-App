@@ -46,7 +46,6 @@
 #define OK_BUTTON_TITLE                @"OK"
 
 // Current Location related messages
-#define LOCATION_SERVICES_PURPOSE @"For routing from your current location"
 #define ALERT_LOCATION_SERVICES_DISABLED_TITLE @"Current Location not available"
 #define ALERT_LOCATION_SERVICES_RESTRICTED_MSG @"Please enter an address for your route start and end point"
 #define ALERT_LOCATION_SERVICES_DISABLED_MSG @"To route from Current Location, please go to the Settings App, and activate Locations Services for Nimbler."
