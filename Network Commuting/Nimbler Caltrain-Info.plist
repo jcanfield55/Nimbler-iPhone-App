@@ -44,12 +44,12 @@
 		<dict>
 			<key>CFBundleIconFiles</key>
 			<array>
-				<string>App-icon.png</string>
-				<string>App-icon@2x.png</string>
-				<string>Default.png</string>
-				<string>Default@2x.png</string>
 				<string>Icon.png</string>
 				<string>Icon@2x.png</string>
+				<string>Icon-small.png</string>
+				<string>Icon-small@2x.png</string>
+				<string>Default.png</string>
+				<string>Default@2x.png</string>
 			</array>
 			<key>UIPrerenderedIcon</key>
 			<true/>
@@ -74,7 +74,6 @@
 	<key>MKDirectionsApplicationSupportedModes</key>
 	<array>
 		<string>MKDirectionsModeBus</string>
-		<string>MKDirectionsModeStreetcar</string>
 		<string>MKDirectionsModeSubway</string>
 		<string>MKDirectionsModeTrain</string>
 	</array>
