@@ -72,7 +72,7 @@
 #define PREFS_DEFAULT_MAX_WALK_DISTANCE 0.75
 
 // Flurry analytics and logging
-#define FLURRY_ENABLED 0
+#define FLURRY_ENABLED 1
 
 // Flurry events
 #define FLURRY_APPDELEGATE_START @"Start of App Delegate"
