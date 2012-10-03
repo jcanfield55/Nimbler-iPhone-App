@@ -1054,6 +1054,7 @@
 		8DC5158D15E624F7003FD2DB /* img_nimblerNavigationUnSelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_nimblerNavigationUnSelect@2x.png"; sourceTree = "<group>"; };
 		8DC5158F15E62AD3003FD2DB /* img_route.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_route.png; sourceTree = "<group>"; };
 		8DC5159015E62AD4003FD2DB /* img_route@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_route@2x.png"; sourceTree = "<group>"; };
+		8DEB98CA161C002700F215A6 /* UIAutomationConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UIAutomationConstants.h; sourceTree = "<group>"; };
 		8DF1A26F16148410008C7955 /* UIDevice-Hardware.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice-Hardware.h"; sourceTree = "<group>"; };
 		8DF1A27016148410008C7955 /* UIDevice-Hardware.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice-Hardware.m"; sourceTree = "<group>"; };
 		CC2B7F8015B82C9C001C7D90 /* img_fb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_fb.png; sourceTree = "<group>"; };
@@ -2642,6 +2643,7 @@
 				52CF43AD14BDF2F9000565D6 /* main.m */,
 				52CF43AF14BDF2F9000565D6 /* Nimbler Caltrain-Prefix.pch */,
 				5286AEBC1602B14700685C37 /* CoverageGeoJSON.geojson */,
+				8DEB98CA161C002700F215A6 /* UIAutomationConstants.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";

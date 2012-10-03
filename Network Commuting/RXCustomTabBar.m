@@ -60,6 +60,10 @@
     UIImage *btnImage;
     UIImage *btnImageSelected;
 	self.btn1 = [UIButton buttonWithType:UIButtonTypeCustom]; //Setup the button
+    
+    // Accessibility Label For UI Automation.
+    self.btn1.accessibilityLabel = TRIP_PLANNER_BUTTON;
+    
          if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
              btn1.frame = CGRectMake(NAVIGATION_ITEM1_XPOS, NAVIGATION_ITEM_YPOS_4INCH, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT_4INCH); // Set the frame (size and position) of the button)
              btnImage = [UIImage imageNamed:@""];
@@ -76,9 +80,15 @@
 	[btn1 setSelected:true]; // Set this button as selected (we will select the others to false as we only want Tab 1 to be selected initially
 	
 	// Now we repeat the process for the other buttons
+    
 	
     self.btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
-        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+    
+    // Accessibility Label For UI Automation.
+     self.btn2.accessibilityLabel = ADVISORIES_BUTTON;
+    
+    
+    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
             btn2.frame = CGRectMake(NAVIGATION_ITEM2_XPOS, NAVIGATION_ITEM_YPOS_4INCH, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT_4INCH);
             btnImage = [UIImage imageNamed:@""];
             btnImageSelected = [UIImage imageNamed:@"img_selAdvisory.png"];
@@ -92,8 +102,11 @@
 	[btn2 setBackgroundImage:btnImageSelected forState:UIControlStateSelected];
 	[btn2 setTag:1];
 	
-
 	self.btn3 = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    // Accessibility Label For UI Automation.
+    self.btn3.accessibilityLabel = SETTINGS_BUTTON;
+    
         if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
             btn3.frame = CGRectMake(NAVIGATION_ITEM3_XPOS, NAVIGATION_ITEM_YPOS_4INCH, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT_4INCH);
             btnImage = [UIImage imageNamed:@""];
@@ -108,8 +121,11 @@
 	[btn3 setBackgroundImage:btnImageSelected forState:UIControlStateSelected];
 	[btn3 setTag:2];
 	
-    
 	self.btn4 = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    // Accessibility Label For UI Automation.
+    self.btn4.accessibilityLabel = FEEDBACK_BUTTON;
+    
         if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
             btn4.frame = CGRectMake(NAVIGATION_ITEM4_XPOS, NAVIGATION_ITEM_YPOS_4INCH, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT_4INCH);
             btnImage = [UIImage imageNamed:@""];

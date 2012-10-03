@@ -59,6 +59,10 @@ NSUserDefaults *prefs;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // Accessibility Label For UI Automation.
+    self.mainTable.accessibilityLabel = TWITTER_TABLE_VIEW;
+    
     arrayTweet = [[NSMutableArray alloc] init];
     [self hideUnUsedTableViewCell];
     if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
@@ -83,7 +87,11 @@ NSUserDefaults *prefs;
     [btnReload addTarget:self action:@selector(getLatestTweets) forControlEvents:UIControlEventTouchUpInside];
     [btnReload setBackgroundImage:[UIImage imageNamed:@"img_reload.png"] forState:UIControlStateNormal];
     
-    reload = [[UIBarButtonItem alloc] initWithCustomView:btnReload]; 
+    reload = [[UIBarButtonItem alloc] initWithCustomView:btnReload];
+    
+    // Accessibility Label For UI Automation.
+    reload.accessibilityLabel = RELOAD_BUTTON;
+    
     self.navigationItem.rightBarButtonItem = reload;
 
     // Do any additional setup after loading the view from its nib.

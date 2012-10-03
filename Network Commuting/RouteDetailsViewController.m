@@ -50,10 +50,18 @@ NSUserDefaults *prefs;
     [super viewDidLoad];
     self.mainTable.delegate = self;
     self.mainTable.dataSource = self;
+    
+    // Accessibility Label For UI Automation.
+    self.mainTable.accessibilityLabel =ROUTE_DETAILS_TABLE_VIEW;
+    
+    
     UIImage* btnImage = [UIImage imageNamed:@"img_itineraryNavigation.png"];
     btnGoToItinerary = [[UIButton alloc] initWithFrame:CGRectMake(0,0,76, 34)];
     [btnGoToItinerary addTarget:self action:@selector(popOutToItinerary) forControlEvents:UIControlEventTouchUpInside];
     [btnGoToItinerary setBackgroundImage:btnImage forState:UIControlStateNormal];
+    
+    // Accessibility Label For UI Automation.
+    btnGoToItinerary.accessibilityLabel =GO_TO_ITINERARY_BUTTON;
     
     UIBarButtonItem *backToItinerary = [[UIBarButtonItem alloc] initWithCustomView:btnGoToItinerary];
     self.navigationItem.leftBarButtonItem = backToItinerary;
@@ -102,18 +110,25 @@ NSUserDefaults *prefs;
             btnBackItem = [[UIButton alloc] initWithFrame:CGRectMake(0,0,backImage.size.width,backImage.size.height)];
             [btnBackItem addTarget:self action:@selector(navigateBack:) forControlEvents:UIControlEventTouchUpInside];
             [btnBackItem setBackgroundImage:backImage forState:UIControlStateNormal];
+            
+            // Accessibility Label For UI Automation.
+            btnBackItem.accessibilityLabel = BACKWARD_BUTTON;
                         
             btnForwardItem = [[UIButton alloc] initWithFrame:CGRectMake(backImage.size.width,0,
                                                                         forwardImage.size.width,
                                                                         forwardImage.size.height)];
             [btnForwardItem addTarget:self action:@selector(navigateForward:) forControlEvents:UIControlEventTouchUpInside];
             [btnForwardItem setBackgroundImage:forwardImage forState:UIControlStateNormal];
+            // Accessibility Label For UI Automation.
+            btnForwardItem.accessibilityLabel =FORWARD_BUTTON;
             
 //            forwardButton = [[UIBarButtonItem alloc] initWithCustomView:btnForwardItem]; 
             
             [view addSubview:btnBackItem];
             [view addSubview:btnForwardItem];
              backButton = [[UIBarButtonItem alloc] initWithCustomView:view];
+            // Accessibility Label For UI Automation.
+            backButton.accessibilityLabel = BACK_BUTTON;
 //            forwardButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward target:self action:@selector(navigateForward:)]; 
 //            bbiArray = [NSArray arrayWithObject:backButton];
             self.navigationItem.rightBarButtonItem = backButton;

@@ -68,6 +68,10 @@
         [txtField addTarget:self action:@selector(toFromTyping:forEvent:) forControlEvents:UIControlEventEditingChanged];
         [txtField addTarget:self action:@selector(textSubmitted:forEvent:) forControlEvents:(UIControlEventEditingDidEndOnExit)];
         [txtField setBackgroundColor:[UIColor whiteColor]];
+        
+        // Accessibility Label For UI Automation.
+        txtField.accessibilityLabel = TEXTFIELD_TOFROMTABLEVIEW;
+        
         imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
     }
     return self;

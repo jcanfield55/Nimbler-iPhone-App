@@ -266,6 +266,10 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // Accessibility Label For UI Automation.
+    self.mainTable.accessibilityLabel =ROUTE_OPTIONS_TABLE_VIEW;
+    
     if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
         [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
     }
@@ -275,6 +279,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     btnGoToNimbler = [[UIButton alloc] initWithFrame:CGRectMake(0,0,65,34)];
     [btnGoToNimbler addTarget:self action:@selector(popOutToNimbler) forControlEvents:UIControlEventTouchUpInside];
     [btnGoToNimbler setBackgroundImage:[UIImage imageNamed:@"img_nimblerNavigation.png"] forState:UIControlStateNormal];
+    
+    // Accessibility Label For UI Automation.
+    btnGoToNimbler.accessibilityLabel =BACK_TO_NIMBLER_BUTTON;
     
     UIBarButtonItem *backTonimbler = [[UIBarButtonItem alloc] initWithCustomView:btnGoToNimbler];
     self.navigationItem.leftBarButtonItem = backTonimbler;

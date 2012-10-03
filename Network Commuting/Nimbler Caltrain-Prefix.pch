@@ -16,9 +16,10 @@
     #import "UIConstants.h"
     #import "TEXTConstant.h"
     #import "CustomBadge.h"
-#import "RXCustomTabBar.h"
-#import <QuartzCore/QuartzCore.h>
-#import <AudioToolbox/AudioServices.h>
-#import "Logging.h"
-#import "UIDevice-Hardware.h"
+    #import "RXCustomTabBar.h"
+    #import <QuartzCore/QuartzCore.h>
+    #import <AudioToolbox/AudioServices.h>
+    #import "Logging.h"
+    #import "UIDevice-Hardware.h"
+    #import "UIAutomationConstants.h"
 #endif

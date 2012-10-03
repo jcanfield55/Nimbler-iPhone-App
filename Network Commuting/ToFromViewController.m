@@ -144,6 +144,10 @@ UIImage *imageDetailDisclosure;
             toTableVC = [[ToFromTableViewController alloc] initWithTable:toTable isFrom:FALSE toFromVC:self locations:locations];
             [toTable setDataSource:toTableVC];
             [toTable setDelegate:toTableVC];
+            
+            // Accessibility Label For UI Automation.
+            self.mainTable.accessibilityLabel = TO_TABLE_VIEW;
+            
             toTable.layer.cornerRadius = TOFROM_TABLE_CORNER_RADIUS;
             
             CGRect rect2;
@@ -161,8 +165,13 @@ UIImage *imageDetailDisclosure;
             [fromTable setRowHeight:TOFROM_ROW_HEIGHT];
             fromTable.layer.cornerRadius = TOFROM_TABLE_CORNER_RADIUS;
             fromTableVC = [[ToFromTableViewController alloc] initWithTable:fromTable isFrom:TRUE toFromVC:self locations: locations];
+            
+            // Accessibility Label For UI Automation.
+            fromTable.accessibilityLabel = FROM_TABLE_VIEW;
+            
             [fromTable setDataSource:fromTableVC];
-            [fromTable setDelegate:fromTableVC];  
+            
+            [fromTable setDelegate:fromTableVC];
             
             // Initialize the section header label array
             
@@ -197,11 +206,17 @@ UIImage *imageDetailDisclosure;
             [btnSwap setBackgroundImage:btnSwapImage forState:UIControlStateNormal];
             barButtonSwap = [[UIBarButtonItem alloc] initWithCustomView:btnSwap];
             
+            // Accessibility Label For UI Automation.
+            barButtonSwap.accessibilityLabel = SWAP_BUTTON;
+            
             UIImage* btnCancelImage = [UIImage imageNamed:@"img_cancel.png"];
             UIButton *btnCancel = [[UIButton alloc] initWithFrame:CGRectMake(0,0,btnCancelImage.size.width,btnCancelImage.size.height)];
             [btnCancel addTarget:self action:@selector(endEdit) forControlEvents:UIControlEventTouchUpInside];
             [btnCancel setBackgroundImage:btnCancelImage forState:UIControlStateNormal];
             barButtonCancel = [[UIBarButtonItem alloc] initWithCustomView:btnCancel];
+            
+            // Accessibility Label For UI Automation.
+            barButtonCancel.accessibilityLabel = CANCEL_BUTTON;
 
         }
         imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
@@ -213,6 +228,9 @@ UIImage *imageDetailDisclosure;
 }
 - (void)viewDidLoad{
     [super viewDidLoad];
+    
+    // Accessibility Label For UI Automation.
+    self.mainTable.accessibilityLabel = TO_FROM_TABLE_VIEW;
     
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
         [self.routeButton setFrame:CGRectMake(ROUTE_BUTTON_XPOS_4INCH, ROUTE_BUTTON_YPOS_4INCH, ROUTE_BUTTON_WIDTH_4INCH, ROUTE_BUTTON_HEIGHT_4INCH)];
@@ -254,12 +272,22 @@ UIImage *imageDetailDisclosure;
     NSArray *array = [NSArray arrayWithObjects:DATE_PICKER_DEPART,DATE_PICKER_ARRIVE, nil];
     departArriveSelector = [[UISegmentedControl alloc] initWithItems:array];
     
+    // Accessibility Label For UI Automation.
+    departArriveSelector.accessibilityLabel = DEPART_OR_ARRIVE_SEGMENT_BUTTON;
+    
     departArriveSelector.segmentedControlStyle = UISegmentedControlStyleBar;
     departArriveSelector.selectedSegmentIndex = 1;
     [departArriveSelector addTarget:self action:@selector(segmentChange) forControlEvents:UIControlEventValueChanged];
     
     btnDone = [[UIBarButtonItem alloc] initWithTitle:DATE_PICKER_DONE style:UIBarButtonItemStyleBordered target:self action:@selector(selectDate)];
+    
+    // Accessibility Label For UI Automation.
+    btnDone.accessibilityLabel = DONE_BUTTON;
+    
     btnNow = [[UIBarButtonItem alloc] initWithTitle:DATE_PICKER_NOW style:UIBarButtonItemStyleBordered target:self action:@selector(selectCurrentDate)];
+    
+    // Accessibility Label For UI Automation.
+    btnNow.accessibilityLabel = NOW_BUTTON;
     
     // Added To Clear Color Of mainTable for ios 4.3
     if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
