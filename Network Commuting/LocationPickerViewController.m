@@ -146,6 +146,9 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+    
+    //Accessibility Label for UIAutomation.
+    self.mainTable.accessibilityLabel = LOCATION_PICKER_TABLE_VIEW;
     if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
         [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
     }

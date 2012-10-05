@@ -43,4 +43,6 @@
 #define TWITTER_TABLE_VIEW              @"Twitter TableView"
 #define RELOAD_BUTTON                   @"Reload Button"
 
+// LocationPickerViewController UIAutomation Constants
+#define LOCATION_PICKER_TABLE_VIEW      @"Location Picker Table View"
 #endif

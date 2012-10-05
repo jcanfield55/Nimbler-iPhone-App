@@ -16,7 +16,6 @@
 #define WALK_DISTANCE       @"walkDistance"
 #define TRIGGER_AT_HOUR     @"triggerAtHour"
 #define PUSH_ENABLE         @"pushEnable"
-#define PUSH_NOTIFY_OFF     -1
 
 @implementation SettingInfoViewController
 
@@ -29,9 +28,9 @@
 @synthesize switchPushEnable;
 @synthesize btnUpdateSetting;
 @synthesize lblSliderMaxWalkDistanceValue;
+@synthesize pushHour;
+@synthesize isPush;
 
-int pushHour;
-bool isPush;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -101,6 +100,8 @@ bool isPush;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [nc_AppDelegate sharedInstance].isSettingView = YES;
+    [nc_AppDelegate sharedInstance].isSettingSavedSuccessfully = NO;
     [self fetchUserSettingData];
     logEvent(FLURRY_SETTINGS_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
 
@@ -109,6 +110,7 @@ bool isPush;
 
 - (void) viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
+    [nc_AppDelegate sharedInstance].isSettingView = NO;
     [self saveSetting];
 }
 

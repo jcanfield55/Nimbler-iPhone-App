@@ -45,6 +45,7 @@
     BOOL isDatePickerOpen;
     NSString *strUpdateSettingURL;
     NSString *strTweetCountURL;
+    BOOL isSettingView;
 }
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
@@ -89,6 +90,7 @@
 
 @property (nonatomic, strong) NSString *strUpdateSettingURL;
 @property (nonatomic, strong) NSString *strTweetCountURL;
+@property (nonatomic) BOOL isSettingView; 
 
 - (NSURL *)applicationDocumentsDirectory;
 

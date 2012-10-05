@@ -284,5 +284,5 @@
 #define DEVICE_ID @"deviceid"
 #define DEVICE_CFUUID @"deviceCFUUID"
 
-
+#define PUSH_NOTIFY_OFF     -1
 

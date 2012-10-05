@@ -22,6 +22,8 @@
     int      enableUrgentSoundFlag;
     int      enableStandardSoundFlag;
     UILabel *lblSliderMaxWalkDistanceValue;
+    int pushHour;
+    BOOL isPush;
 }
 
 @property (nonatomic, strong) IBOutlet UISwitch *switchPushEnable;
@@ -33,6 +35,9 @@
 @property (nonatomic)   int      enableUrgentSoundFlag;
 @property (nonatomic)   int      enableStandardSoundFlag;
 @property (nonatomic, strong) UILabel *lblSliderMaxWalkDistanceValue;
+
+@property (nonatomic) int pushHour;
+@property (nonatomic) BOOL isPush;
 
 -(IBAction)UpdateSetting:(id)sender;
 -(IBAction)sliderWalkDistanceValueChanged:(UISlider *)sender;

@@ -74,6 +74,7 @@ static nc_AppDelegate *appDelegate;
 @synthesize isDatePickerOpen;
 @synthesize strUpdateSettingURL;
 @synthesize strTweetCountURL;
+@synthesize isSettingView;
 
 // Feedback parameters
 @synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId;
@@ -322,8 +323,43 @@ FeedBackForm *fbView;
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
+    // Added To Fix DE-206
+    if(isSettingView){
+        isSettingSavedSuccessfully = NO;
+        if (!settingView.switchPushEnable.on) {
+            // set -1 for stop getting push notification
+            settingView.pushHour = PUSH_NOTIFY_OFF;
+            settingView.isPush = NO;
+        } else {
+            settingView.isPush = YES;
+        }
+        if(settingView.switchEnableUrgentSound.on){
+            settingView.enableUrgentSoundFlag = 1;
+        }
+        else{
+            settingView.enableUrgentSoundFlag = 2;
+        }
+        if(settingView.switchEnableStandardSound.on){
+            settingView.enableStandardSoundFlag = 1;
+        }
+        else{
+            settingView.enableStandardSoundFlag = 2;
+        }
+        
+        [[NSUserDefaults standardUserDefaults] setInteger:settingView.enableUrgentSoundFlag forKey:ENABLE_URGENTNOTIFICATION_SOUND];
+        [[NSUserDefaults standardUserDefaults] setInteger:settingView.enableStandardSoundFlag forKey:ENABLE_STANDARDNOTIFICATION_SOUND];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        float ss = settingView.sliderPushNotification.value;
+        int alertFrequencyIntValue = ss;
+        
+        UserPreferance *userPrefs = [UserPreferance userPreferance]; // get singleton
+        userPrefs.pushEnable = [NSNumber numberWithBool:settingView.isPush];
+        userPrefs.triggerAtHour = [NSNumber numberWithInt:alertFrequencyIntValue];
+        userPrefs.walkDistance = [NSNumber numberWithFloat:settingView.sliderMaxWalkDistance.value];
+        [userPrefs saveUpdates];   
+    }
     /*
-     Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+     Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
      If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
      */
         
