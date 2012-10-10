@@ -1,8 +1,8 @@
 //
 //  Locations.h
-//  Network Commuting
+//  Nimbler World, Inc.
 //  Created by John Canfield on 1/11/12.
-//  Copyright (c) 2012 Network Commuting. All rights reserved.
+//  Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
 //
 //  This is NSManagedObject ABSTRACT class to contain location information for places that the user 
 //    has entered or selected.

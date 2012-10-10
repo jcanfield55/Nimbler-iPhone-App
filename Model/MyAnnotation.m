@@ -3,7 +3,7 @@
 //  Nimbler
 //
 //  Created by Sitanshu Joshi on 5/7/12.
-//  Copyright (c) 2012 Network Commuting. All rights reserved.
+//  Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
 //
 
 #import "MyAnnotation.h"

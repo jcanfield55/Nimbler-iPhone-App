@@ -80,7 +80,7 @@
          referenceType = "1">
       </LocationScenarioReference>
       <RoutingCoverageFileReference
-         identifier = "../../Network Commuting/CoverageGeoJSON.geojson">
+         identifier = "../../SupportingFiles/CoverageGeoJSON.geojson">
       </RoutingCoverageFileReference>
    </LaunchAction>
    <ProfileAction

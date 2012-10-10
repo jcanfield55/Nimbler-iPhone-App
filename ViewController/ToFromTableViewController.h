@@ -3,7 +3,7 @@
 //  Nimbler
 //
 //  Created by John Canfield on 5/6/12.
-//  Copyright (c) 2012 Network Commuting. All rights reserved.
+//  Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
 //
 
 // ToFromTableViewController objects control either a To or a From TableView for the 

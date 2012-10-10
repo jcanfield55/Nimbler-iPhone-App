@@ -3,7 +3,7 @@
 //  Nimbler Caltrain
 //
 //  Created by John Canfield on 8/21/12.
-//  Copyright (c) 2012 Network Commuting. All rights reserved.
+//  Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
 //
 // Singleton wrapper class for managing the store of KeyObjectPairs in Core Data
 // General Purpose CoreData storage for objects that meet NSCoding protocol

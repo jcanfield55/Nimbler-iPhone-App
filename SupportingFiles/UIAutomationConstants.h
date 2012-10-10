@@ -3,7 +3,7 @@
 //  Nimbler Caltrain
 //
 //  Created by macmini on 02/10/12.
-//  Copyright (c) 2012 Network Commuting. All rights reserved.
+//  Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
 //
 
 #ifndef Nimbler_Caltrain_UIAutomationConstants_h

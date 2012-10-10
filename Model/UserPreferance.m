@@ -3,7 +3,7 @@
 //  Nimbler
 //
 //  Created by JaY Kumbhani on 7/2/12.
-//  Copyright (c) 2012 Network Commuting. All rights reserved.
+//  Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
 //
 
 #import "UserPreferance.h"

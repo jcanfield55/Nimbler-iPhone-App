@@ -1,9 +1,9 @@
 //
 //  Locations.h
-//  Network Commuting
+//  Nimbler World, Inc.
 //
 //  Created by John Canfield on 2/10/12.
-//  Copyright (c) 2012 Network Commuting. All rights reserved.
+//  Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
 //
 // This object is a wrapper for access and manipulating the set of Location managed objects
 // in the application

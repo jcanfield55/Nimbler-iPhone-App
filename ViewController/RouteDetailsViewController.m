@@ -1,9 +1,9 @@
 //
 //  RouteDetailsViewController.m
-//  Network Commuting
+//  Nimbler World, Inc.
 //
 //  Created by John Canfield on 2/25/12.
-//  Copyright (c) 2012 Network Commuting. All rights reserved.
+//  Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
 //
 
 #import "RouteDetailsViewController.h"

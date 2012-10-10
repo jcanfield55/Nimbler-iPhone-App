@@ -3,7 +3,7 @@
 //  Nimbler Caltrain
 //
 //  Created by John Canfield on 8/29/12.
-//  Copyright (c) 2012 Network Commuting. All rights reserved.
+//  Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
 //
 // Class containing the elements needed to make a plan request
 

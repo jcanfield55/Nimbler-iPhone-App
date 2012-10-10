@@ -3,7 +3,7 @@
 //  Nimbler Caltrain
 //
 //  Created by John Canfield on 9/20/12.
-//  Copyright (c) 2012 Network Commuting. All rights reserved.
+//  Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
 //
 // Subclass of Location used for geocoding and placemarks received from CLGeocoder or other IOS methods
 

@@ -3,7 +3,7 @@
 // Nimbler Caltrain
 //
 // Created by John Canfield on 7/3/12.
-// Copyright (c) 2012 Network Commuting. All rights reserved.
+// Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
 //
 // Constants for defining dimensions and characteristics of the user interface
 

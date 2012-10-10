@@ -3,7 +3,7 @@
 //  Nimbler Caltrain
 //
 //  Created by John Canfield on 8/21/12.
-//  Copyright (c) 2012 Network Commuting. All rights reserved.
+//  Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
 //
 //
 // This singleton class stores transit calendars for various agencies and does matching on whether a cached transit
