@@ -1423,6 +1423,11 @@
                                          "types" : [ "train_station", "transit_station" ]
                                          },
                                          {
+                                         "long_name" : "4th St and King St",
+                                         "short_name" : "4th & King",
+                                         "types" : ["intersection"]
+                                         },
+                                         {
                                          "long_name" : "Central East San Francisco",
                                          "short_name" : "Central East San Francisco",
                                          "types" : [ "neighborhood", "political" ]

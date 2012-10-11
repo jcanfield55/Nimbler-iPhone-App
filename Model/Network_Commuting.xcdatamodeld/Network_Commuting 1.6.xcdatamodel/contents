@@ -182,7 +182,7 @@
     <fetchRequest name="LocationByFormattedAddress" entity="Location" predicateString="formattedAddress ==$ADDRESS2"/>
     <fetchRequest name="LocationByMemberOfList" entity="Location" predicateString="memberOfList BEGINSWITH $LIST_PREFIX AND locationType != &quot;TOFROM_LIST&quot;"/>
     <fetchRequest name="PlansByToAndFromLocations" entity="Plan" predicateString="toLocation.formattedAddress == $TO_FORMATTED_ADDRESS AND fromLocation.formattedAddress == $FROM_FORMATTED_ADDRESS"/>
-    <fetchRequest name="RawAddressByString" entity="RawAddress" predicateString="rawAddressString == $ADDRESS"/>
+    <fetchRequest name="RawAddressByString" entity="RawAddress" predicateString="rawAddressString LIKE[c] $ADDRESS"/>
     <elements>
         <element name="AddressComponent" positionX="0" positionY="0" width="128" height="105"/>
         <element name="BayArea" positionX="0" positionY="0" width="128" height="195"/>
@@ -191,13 +191,13 @@
         <element name="KeyObjectPair" positionX="0" positionY="0" width="128" height="75"/>
         <element name="Leg" positionX="0" positionY="0" width="128" height="345"/>
         <element name="Location" positionX="0" positionY="0" width="128" height="255"/>
+        <element name="LocationFromGoogle" positionX="160" positionY="192" width="128" height="90"/>
+        <element name="LocationFromIOS" positionX="160" positionY="192" width="128" height="60"/>
         <element name="Plan" positionX="0" positionY="0" width="128" height="180"/>
         <element name="PlanPlace" positionX="0" positionY="0" width="128" height="180"/>
         <element name="PlanRequestChunk" positionX="0" positionY="0" width="128" height="105"/>
         <element name="RawAddress" positionX="0" positionY="0" width="128" height="75"/>
         <element name="Step" positionX="0" positionY="0" width="128" height="195"/>
         <element name="TPResponse" positionX="0" positionY="0" width="128" height="75"/>
-        <element name="LocationFromGoogle" positionX="160" positionY="192" width="128" height="90"/>
-        <element name="LocationFromIOS" positionX="160" positionY="192" width="128" height="60"/>
     </elements>
 </model>
