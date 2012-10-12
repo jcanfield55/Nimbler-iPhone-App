@@ -680,13 +680,18 @@ UIImage *imageDetailDisclosure;
         if (isFrom) {
             if (subviews && [subviews count]>0 && [subviews indexOfObject:fromTable] != NSNotFound) {
                 // if fromTable is already in the subview (due to recycling, no need to add again
-            } else { 
+            } else {
+                
+                //Accessibility Label For UIAutomation
+                fromTable.accessibilityLabel = @"From Tabel";
                 [cellView addSubview:fromTable]; // add fromTable
             }
         } else {   // do same for toTable case
             if (subviews && [subviews count]>0 && [subviews indexOfObject:toTable] != NSNotFound) {
                 // if toTable is already in the subview (due to recycling, no need to add again
-            } else { 
+            } else {
+                 //Accessibility Label For UIAutomation
+                toTable.accessibilityLabel = @"From Tabel";
                 [cellView addSubview:toTable]; // add toTable
             }
         }        
