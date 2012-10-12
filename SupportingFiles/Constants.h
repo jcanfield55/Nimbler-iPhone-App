@@ -47,7 +47,8 @@
 #define COREDATA_DB_FILENAME    @"store101.data"
 
 // Preload file variables
-#define PRELOAD_LOCATION_FILE     @"caltrain-station.json"
+#define CALTRAIN_PRELOAD_LOCATION_FILE     @"caltrain-station.json"
+#define BART_PRELOAD_LOCATION_FILE     @"bart-station.json"
 #define PRELOAD_VERSION_NUMBER    @"1.050"
 #define PRELOAD_TEST_ADDRESS      @"San Martin Caltrain, San Martin, CA 95046, USA" // station for testing version number
 #define TOFROM_LIST_TYPE          @"TOFROM_LIST" // Location type indicating a ToFromList
@@ -285,4 +286,9 @@
 #define DEVICE_CFUUID @"deviceCFUUID"
 
 #define PUSH_NOTIFY_OFF     -1
+
+//Bundle Identifier
+
+#define CALTRAIN_BUNDLE_IDENTIFIER  @"com.Nimbler.Nimbler-Caltrain"
+#define BART_BUNDLE_IDENTIFIER  @"com.Nimbler.Nimbler-Bart"
 

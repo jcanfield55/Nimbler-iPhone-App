@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Nmblr Caltrain</string>
+	<string>Nimbler Bart</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -56,7 +56,7 @@
 		</dict>
 	</dict>
 	<key>CFBundleIdentifier</key>
-	<string>com.Nimbler.Nimbler-Caltrain</string>
+	<string>com.Nimbler.Nimbler-Bart</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>

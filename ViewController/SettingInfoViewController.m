@@ -215,7 +215,7 @@
     [sliderMaxWalkDistance setValue:sliderMaxWalkDistance.value];
     [sliderMaxWalkDistance setSelected:YES];
     float sliderXPOS = [self xPositionFromSliderValue:sliderMaxWalkDistance];
-    lblSliderMaxWalkDistanceValue.center = CGPointMake(sliderXPOS, 30);
+    lblSliderMaxWalkDistanceValue.center = CGPointMake(sliderXPOS, -10);
     lblSliderMaxWalkDistanceValue.text = [NSString stringWithFormat:@"%0.2f", sliderMaxWalkDistance.value];
 }
 
