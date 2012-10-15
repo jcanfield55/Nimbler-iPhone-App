@@ -537,13 +537,182 @@
     [managedObjectContext deleteObject:loc0];
 }
 
+// Return the minimum of a, b and c - used by compareString:withString:
+-(NSInteger)smallestOf:(NSInteger)a andOf:(NSInteger)b andOf:(NSInteger)c
+{
+    NSInteger min = a;
+    if ( b < min )
+        min = b;
+    
+    if( c < min )
+        min = c;
+    
+    return min;
+}
+
+-(NSInteger)smallestOf:(NSInteger)a andOf:(NSInteger)b
+{
+    NSInteger min=a;
+    if (b < min)
+        min=b;
+    
+    return min;
+}
+
+-(float)compareString:(NSString *)originalString withString:(NSString *)comparisonString
+{
+    // Normalize strings
+    [originalString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    [comparisonString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    originalString = [originalString lowercaseString];
+    comparisonString = [comparisonString lowercaseString];
+    
+    // Step 1 (Steps follow description at http://www.merriampark.com/ld.htm)
+    NSInteger k, i, j, cost, * d, distance;
+    
+    NSInteger n = [originalString length];
+    NSInteger m = [comparisonString length];
+    
+    if( n++ != 0 && m++ != 0 ) {
+        
+        d = malloc( sizeof(NSInteger) * m * n );
+        
+        // Step 2
+        for( k = 0; k < n; k++)
+            d[k] = k;
+        
+        for( k = 0; k < m; k++)
+            d[ k * n ] = k;
+        
+        // Step 3 and 4
+        for( i = 1; i < n; i++ )
+            for( j = 1; j < m; j++ ) {
+                
+                // Step 5
+                if( [originalString characterAtIndex: i-1] ==
+                   [comparisonString characterAtIndex: j-1] )
+                    cost = 0;
+                else
+                    cost = 1;
+                
+                // Step 6
+                d[ j * n + i ] = [self smallestOf: d [ (j - 1) * n + i ] + 1
+                                            andOf: d[ j * n + i - 1 ] + 1
+                                            andOf: d[ (j - 1) * n + i - 1 ] + cost ];
+                
+                // This conditional adds Damerau transposition to Levenshtein distance
+                if( i>1 && j>1 && [originalString characterAtIndex: i-1] ==
+                   [comparisonString characterAtIndex: j-2] &&
+                   [originalString characterAtIndex: i-2] ==
+                   [comparisonString characterAtIndex: j-1] )
+                {
+                    d[ j * n + i] = [self smallestOf: d[ j * n + i ]
+                                               andOf: d[ (j - 2) * n + i - 2 ] + cost ];
+                }
+            }
+        
+        distance = d[ n * m - 1 ];
+        
+        free( d );
+        
+        return distance;
+    }
+    return 0.0;
+}
+
+- (NSArray *)preLoadIfNeededFromFile:(NSString *)filename
+{
+    NSArray* resultArray;
+        NSStringEncoding encoding;
+        NSError* error = nil;
+        NSString* preloadPath = [[NSBundle mainBundle] pathForResource:filename ofType:nil];
+        NSString *jsonText = [NSString stringWithContentsOfFile:preloadPath usedEncoding:&encoding error:&error];
+        if (jsonText && !error) {
+            
+            id<RKParser> parser = [[RKParserRegistry sharedRegistry] parserForMIMEType:@"application/json"];
+            id parsedData = [parser objectFromString:jsonText error:&error];
+            if (parsedData == nil && error) {
+                logError(@"Locations->preLoadIfNeededFromFile", [NSString stringWithFormat:@"Parsing error: %@", error]);
+                return false;
+            }
+            RKObjectMappingProvider* mappingProvider = rkGeoMgr.mappingProvider;
+            RKObjectMapper* mapper = [RKObjectMapper mapperWithObject:parsedData mappingProvider:mappingProvider];
+            RKObjectMappingResult* result = [mapper performMapping];
+            if (result) {
+                resultArray = [result asCollection];
+            }
+        else {
+            NIMLOG_EVENT1(@"Could not load file %@ at path %@", filename, preloadPath);
+        }
+     }
+    return resultArray;
+}
 
 - (void)forwardGeocodeWithParameters:(GeocodeRequestParameters *)parameters callBack:(id <LocationsGeocodeResultsDelegate>)delegate;
 {
+    // US - 166 Partial Implementation
+    NSString *strBART1 = @" bart";
+    NSString *strBART2 = @"bart ";
+    NSString *strRawAddress = parameters.rawAddress;
     if (parameters.apiType == GOOGLE_GEOCODER) {
         [self forwardGeocodeUsingGoogleWithParameters:parameters callBack:delegate];
     } else if (parameters.apiType == IOS_GEOCODER) {
-        [self forwardGeocodeUsingIosWithParameters:parameters callback:delegate];
+        if ([strRawAddress rangeOfString:strBART1 options:NSCaseInsensitiveSearch].location == NSNotFound && [strRawAddress rangeOfString:strBART2 options:NSCaseInsensitiveSearch].location == NSNotFound) {
+            [self forwardGeocodeUsingIosWithParameters:parameters callback:delegate];
+        } else {
+            NSRange range;
+            if ([strRawAddress rangeOfString:strBART1 options:NSCaseInsensitiveSearch].location != NSNotFound)
+            {
+              range = [strRawAddress rangeOfString:strBART1];
+            }
+            else{
+               range = [strRawAddress rangeOfString:strBART2];
+            }
+            NSMutableString *strMutableRawAddress =  (NSMutableString *)strRawAddress;
+           [strMutableRawAddress deleteCharactersInRange:range];
+            strRawAddress = strMutableRawAddress;
+            
+            //Parse File And gel All The Station List
+            NSMutableArray *arrStationList = [[NSMutableArray alloc] init];
+            NSMutableArray *arrDistance = [[NSMutableArray alloc] init];
+            NSArray *array = [self preLoadIfNeededFromFile:@"bart-station.json"];
+            for (int i=1;i<[array count];i++){
+                LocationFromGoogle *arrayData = [array objectAtIndex:i];
+                NSDictionary *dictAffressComponent = arrayData.addressComponentDictionary;
+                NSString *stationName = [dictAffressComponent objectForKey:@"establishment"];
+                [arrStationList addObject:stationName];
+            }
+            for(int i=0;i<[arrStationList count];i++){
+                float distance = [self compareString:[[arrStationList objectAtIndex:i] lowercaseString] withString:[strRawAddress lowercaseString]];
+                NSString *strStationName = [arrStationList objectAtIndex:i];
+                float finalDistance = distance + strRawAddress.length - strStationName.length;
+                [arrDistance addObject:[NSString stringWithFormat:@"%f",finalDistance]];
+                NIMLOG_OBJECT1(@"Station Name:%@ final Distance:%f",strStationName,finalDistance);
+            }           
+            int min, temp,min1;
+            NSString *temp1;
+            int i,j;
+            for (i = 0; i < [arrDistance count]-1; i++)
+            {
+                min = i;
+                min1 = i;
+                for (j = i+1; j < [arrDistance count]; j++)
+                {
+                    if ([[arrDistance objectAtIndex:j] intValue] < [[arrDistance objectAtIndex:min] intValue])
+                        min = j;
+                        min1 = j;
+                }  
+                temp = [[arrDistance objectAtIndex:i] intValue];
+                temp1 = [arrStationList objectAtIndex:i];
+                [arrDistance replaceObjectAtIndex:i withObject:[arrDistance objectAtIndex:min]];
+                [arrStationList replaceObjectAtIndex:i withObject:[arrStationList objectAtIndex:min]];
+                [arrDistance replaceObjectAtIndex:min withObject:[NSString stringWithFormat:@"%d",temp]];
+                [arrStationList replaceObjectAtIndex:min withObject:temp1];
+            }
+            NIMLOG_OBJECT1(@"%@",arrDistance);
+            NIMLOG_OBJECT1(@"%@",arrStationList);
+        }
     }
     else {
         logError(@"Locations->forwardGeocodeWithParameters", @"Unknown apiType");

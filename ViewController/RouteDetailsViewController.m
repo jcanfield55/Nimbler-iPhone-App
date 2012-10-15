@@ -372,7 +372,13 @@ NSUserDefaults *prefs;
 {    
     @try {
         // NSString *patchString;
-        
+        // Added To Solve DE-208.This will check if the object at row  exist or not and if not exist then return standard TableView cell height.
+        if(![[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]]){
+            return STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
+        }
+        if(![[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]]){
+          return STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
+        }
         NSString* titleText = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
         NSString* subtitleText = [[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]];
         CGSize titleSize = [titleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE] 
@@ -380,7 +386,7 @@ NSUserDefaults *prefs;
         CGSize subtitleSize = [subtitleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]
                  constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
 
-        CGFloat height = titleSize.height + subtitleSize.height + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
+       CGFloat height = titleSize.height + subtitleSize.height + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
         if (height < STANDARD_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
             height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
         }
@@ -389,6 +395,7 @@ NSUserDefaults *prefs;
     }
     @catch (NSException *exception) {
         logException(@"RouteDetailsViewController->heightForRowAtIndexPath", @"", exception);
+        NIMLOG_ERR1(@"RouteDetailsViewController->heightForRowAtIndexPath:%@",exception);
     }
 }
 

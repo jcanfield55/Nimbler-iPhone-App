@@ -31,6 +31,7 @@
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFiles</key>
 	<array>
+		<string>Icon_ipad@2x.png</string>
 		<string>Icon-small.png</string>
 		<string>Icon-small@2x.png</string>
 		<string>Default.png</string>
@@ -44,8 +45,9 @@
 		<dict>
 			<key>CFBundleIconFiles</key>
 			<array>
-				<string>App-icon.png</string>
-				<string>App-icon@2x.png</string>
+				<string>Icon_ipad@2x.png</string>
+				<string>Icon-small.png</string>
+				<string>Icon-small@2x.png</string>
 				<string>Default.png</string>
 				<string>Default@2x.png</string>
 				<string>Icon.png</string>

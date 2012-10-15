@@ -150,7 +150,6 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
                 
                 
             }
-            
             return [NSString stringWithString:formattedAddr];
         }
     }

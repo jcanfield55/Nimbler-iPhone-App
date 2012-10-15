@@ -683,7 +683,7 @@ UIImage *imageDetailDisclosure;
             } else {
                 
                 //Accessibility Label For UIAutomation
-                fromTable.accessibilityLabel = @"From Tabel";
+                fromTable.accessibilityLabel = @"From Table";
                 [cellView addSubview:fromTable]; // add fromTable
             }
         } else {   // do same for toTable case
@@ -691,7 +691,7 @@ UIImage *imageDetailDisclosure;
                 // if toTable is already in the subview (due to recycling, no need to add again
             } else {
                  //Accessibility Label For UIAutomation
-                toTable.accessibilityLabel = @"From Tabel";
+                toTable.accessibilityLabel = @"To Table";
                 [cellView addSubview:toTable]; // add toTable
             }
         }        

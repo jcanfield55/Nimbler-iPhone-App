@@ -200,11 +200,14 @@
 		52E4C09F15CB7D2F00B55A65 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C09E15CB7D2F00B55A65 /* Icon@2x.png */; };
 		52E4C0A115CC705000B55A65 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C0A015CC705000B55A65 /* Default.png */; };
 		52E4C0A315CC705D00B55A65 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C0A215CC705D00B55A65 /* Default@2x.png */; };
+		8D45BD1A162BD7EB00E5CB3D /* Nimbler Caltrain-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8D45BD18162BD7EB00E5CB3D /* Nimbler Caltrain-Info.plist */; };
+		8D45BD1E162BDE6A00E5CB3D /* Icon_ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D45BD1D162BDE6A00E5CB3D /* Icon_ipad@2x.png */; };
 		8DA39BDF15E3855B0029D54B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6F22E71563AD360066DFA9 /* AVFoundation.framework */; };
 		8DA39BE115E38B5E0029D54B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */; };
 		8DBECD5216146DBE007B71F1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */; };
 		8DC019F91627F4BE004200E5 /* nc_AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */; };
 		8DC019FA1627F4ED004200E5 /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 520FB280162604680083F143 /* Network_Commuting.xcdatamodeld */; };
+		8DD111B6162C10A4006117F4 /* bart-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 8DD111B5162C10A4006117F4 /* bart-station.json */; };
 		8DF35D631627F58500B99F4A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF35D621627F58400B99F4A /* main.m */; };
 		CC35E729155965E7003995D8 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 522C0E6A15588E7A0072ADD6 /* libz.dylib */; };
 		CCA4C7E515D92CC7009BE7A1 /* aps_development.cer in Resources */ = {isa = PBXBuildFile; fileRef = CCA4C7E415D92CC7009BE7A1 /* aps_development.cer */; };
@@ -1137,10 +1140,14 @@
 		52E4C09E15CB7D2F00B55A65 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		52E4C0A015CC705000B55A65 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		52E4C0A215CC705D00B55A65 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		8D45BD18162BD7EB00E5CB3D /* Nimbler Caltrain-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Nimbler Caltrain-Info.plist"; sourceTree = SOURCE_ROOT; };
+		8D45BD19162BD7EB00E5CB3D /* Nimbler Caltrain-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Nimbler Caltrain-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		8D45BD1D162BDE6A00E5CB3D /* Icon_ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon_ipad@2x.png"; sourceTree = "<group>"; };
 		8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		8DC019F71627F4BE004200E5 /* nc_AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nc_AppDelegate.h; sourceTree = SOURCE_ROOT; };
 		8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = nc_AppDelegate.m; sourceTree = SOURCE_ROOT; };
+		8DD111B5162C10A4006117F4 /* bart-station.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "bart-station.json"; sourceTree = "<group>"; };
 		8DF35D621627F58400B99F4A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CC6F22E71563AD360066DFA9 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		CC9370D715BFB97200A09A5A /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
@@ -1424,6 +1431,8 @@
 		520FB289162604950083F143 /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
+				8D45BD18162BD7EB00E5CB3D /* Nimbler Caltrain-Info.plist */,
+				8D45BD19162BD7EB00E5CB3D /* Nimbler Caltrain-Prefix.pch */,
 				52CF43AA14BDF2F9000565D6 /* InfoPlist.strings */,
 				520FB28A162604950083F143 /* Constants.h */,
 				520FB28B162604950083F143 /* CoverageGeoJSON.geojson */,
@@ -1440,6 +1449,7 @@
 		520FB28E162604950083F143 /* PreloadData */ = {
 			isa = PBXGroup;
 			children = (
+				8DD111B5162C10A4006117F4 /* bart-station.json */,
 				520FB28F162604950083F143 /* caltrain-station.json */,
 			);
 			path = PreloadData;
@@ -2879,6 +2889,7 @@
 		CCD3990C15A2FAD20020BC85 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8D45BD1D162BDE6A00E5CB3D /* Icon_ipad@2x.png */,
 				52E4C09615CB465A00B55A65 /* Icon.png */,
 				52E4C09E15CB7D2F00B55A65 /* Icon@2x.png */,
 				52C1CBB3161AB69600695348 /* Icon-small.png */,
@@ -3234,6 +3245,9 @@
 				520FB27B162603AF0083F143 /* Speaker@2x.png in Resources */,
 				520FB27C162603AF0083F143 /* walkb.png in Resources */,
 				520FB296162605470083F143 /* CoverageGeoJSON.geojson in Resources */,
+				8D45BD1A162BD7EB00E5CB3D /* Nimbler Caltrain-Info.plist in Resources */,
+				8D45BD1E162BDE6A00E5CB3D /* Icon_ipad@2x.png in Resources */,
+				8DD111B6162C10A4006117F4 /* bart-station.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
