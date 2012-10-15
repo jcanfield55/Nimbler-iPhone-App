@@ -299,7 +299,6 @@ NSString *stringByTruncatingToWidth(NSString *string, CGFloat width, UIFont *fon
 void logEvent(NSString *eventName, NSString *param1name, NSString *param1value, NSString *param2name, NSString* param2value,
               NSString *param3name, NSString *param3value, NSString *param4name, NSString *param4value)
 {
-#if FLURRY_ENABLED
     if (eventName && [eventName length]>0) {
         NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithCapacity:4];
         
@@ -327,15 +326,28 @@ void logEvent(NSString *eventName, NSString *param1name, NSString *param1value, 
             }
             [dictionary setObject:param4value forKey:param4name];
         }
-        
+#if FLURRY_ENABLED
         if ([dictionary count]>0) {
             [Flurry logEvent:eventName withParameters:dictionary];
         } else {
             [Flurry logEvent:eventName];
         }
+#else
+        // Log onto console if Flurry not enabled.
+        
+        NSMutableString* log = [NSMutableString stringWithFormat:@"Flurry event: %@", eventName];
+        NSEnumerator* enumerator = [dictionary keyEnumerator];
+        NSString* param;
+        int i=1;
+        while (param = [enumerator nextObject]) {  // enumerate thru all the type strings in the dictionary
+            NSString* value = [dictionary objectForKey:param];
+            [log appendFormat:@"\n  Param%d: %@, Value%d: %@",i, param, i++, value];
+        }
+        
+        NIMLOG_FLURRY(@"%@", log);
+#endif
     }
 
-#endif
 }
 
 // Logs exception using NIMLOG_ERR1 and if Flurry activated, logs to Flurry as well 

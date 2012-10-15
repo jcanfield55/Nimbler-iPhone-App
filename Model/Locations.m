@@ -163,11 +163,13 @@
                 saveContext([self managedObjectContext]); 
             }
             else {
-                NIMLOG_EVENT1(@"No results back from loading file at path %@", preloadPath);
+                logError(@"No results back from loading file at path:", preloadPath);
             }
         }
         else {
-            NIMLOG_EVENT1(@"Could not load file %@ at path %@", filename, preloadPath);
+            logError(@"Could not load pre-load file",
+                     [NSString stringWithFormat:@"file %@ at path %@, error: %@", filename, preloadPath, [error localizedDescription]]);
+                      
         }
     }
     return returnValue;
@@ -1031,8 +1033,10 @@
         // kCLErrorGeocodeFoundPartialResult case
         else if (error.code==kCLErrorGeocodeFoundPartialResult) {
             if (!placemarks) {
-                logError(@"Locations->handleIosGeocodeWithParameters",
-                         [NSString stringWithFormat:@"kCLErrorGeocodeFoundPartialResult but no results.  Error: %@", [error localizedDescription]]);
+                logEvent(FLURRY_GEOCODE_IOS_PARTIAL_RESULTS_NONE,
+                         FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                         FLURRY_GEOCODE_RAWADDRESS, rawAddress,
+                         FLURRY_GEOCODE_ERROR, [error localizedDescription], nil, nil);
                 [callback newGeocodeResults:nil withStatus:GEOCODE_ZERO_RESULTS parameters:parameters];
                 return;
             }

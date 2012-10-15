@@ -87,6 +87,7 @@
 #define FLURRY_GEOCODE_RESULTS_ONE @"Geocode: 1 result"
 #define FLURRY_GEOCODE_RESULTS_MULTIPLE @"Geocode: multiple results"
 #define FLURRY_GEOCODE_RESULTS_NONE @"Geocode: no results"
+#define FLURRY_GEOCODE_IOS_PARTIAL_RESULTS_NONE @"Geocode: IOS partial, no results"
 #define FLURRY_GEOCODE_RESULTS_NONE_IN_REGION @"Geocode: none in region"
 #define FLURRY_GEOCODE_OVER_GOOGLE_QUOTA @"Geocode error: over Google quota"
 #define FLURRY_GEOCODE_NO_NETWORK @"Geocode error: no network connection"
