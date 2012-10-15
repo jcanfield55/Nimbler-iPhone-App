@@ -267,6 +267,11 @@ FeedBackForm *fbView;
                 currentLocation = [matchingLocations objectAtIndex:0];
                 [locations setIsLocationServiceEnable:TRUE];
             }
+            
+            // Set the coordinates (DE215, DE217 fix)
+            [currentLocation setLatFloat:[newLocation coordinate].latitude];
+            [currentLocation setLngFloat:[newLocation coordinate].longitude];
+            
             [toFromViewController setCurrentLocation:currentLocation];
             if (![toFromViewController fromLocation]) {  // only if fromLocation is not set, set to currentLocation mode (DE197 fix)
                 if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
@@ -276,10 +281,6 @@ FeedBackForm *fbView;
                     [toFromViewController setIsCurrentLocationMode:TRUE];
                 }
             }
-            
-            // Set the coordinates (DE215 fix)
-            [currentLocation setLatFloat:[newLocation coordinate].latitude];
-            [currentLocation setLngFloat:[newLocation coordinate].longitude];
             
             if (currentLocationNeededForDirectionsDestination || currentLocationNeededForDirectionsSource) {
                 // If we have are waiting for currentLocation to execute a directions request
