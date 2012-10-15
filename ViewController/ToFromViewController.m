@@ -1277,6 +1277,10 @@ UIImage *imageDetailDisclosure;
                 [self stopActivityIndicator];
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"The To: and From: address are the same location.  Please choose a different destination." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
                 [alert show];
+                logEvent(FLURRY_ROUTE_TO_FROM_SAME,
+                         FLURRY_FROM_SELECTED_ADDRESS, [fromLocation shortFormattedAddress],
+                         FLURRY_TO_SELECTED_ADDRESS, [toLocation shortFormattedAddress],
+                         nil, nil, nil, nil);
                 return true;
             }
             // if using currentLocation, make sure it is in supported region
@@ -1286,6 +1290,19 @@ UIImage *imageDetailDisclosure;
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:
                                           @"Your current location does not appear to be in the Bay Area.  Please choose a different location." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
                     [alert show];
+                    NSString *supportedRegString = [NSString stringWithFormat:
+                                                    @"supportedRegion minLat = %f, minLng = %f, maxLat = %f, maxLng = %f",
+                                                    [[supportedRegion minLatitude] floatValue],
+                                                    [[supportedRegion minLongitude] floatValue],
+                                                    [[supportedRegion maxLatitude] floatValue],
+                                                    [[supportedRegion maxLongitude] floatValue]];
+                    logEvent(FLURRY_CURRENT_LOCATION_NOT_IN_SUPPORTED_REGION,
+                             FLURRY_TOFROM_WHICH_TABLE, (fromLocation == currentLocation ? @"From" : @"To"),
+                             FLURRY_LAT, [NSString stringWithFormat:@"%f", [currentLocation latFloat]],
+                             FLURRY_LNG, [NSString stringWithFormat:@"%f", [currentLocation lngFloat]],
+                             FLURRY_SUPPORTED_REGION_STRING,supportedRegString);
+                    NIMLOG_EVENT1(@"Current Location not in supported region\n   currLoc lat = %f\n   currLoc lng = %f\n   supportedRegString = %@",
+                                  [currentLocation latFloat], [currentLocation lngFloat] ,supportedRegString);
                     return true;
                 }
             }

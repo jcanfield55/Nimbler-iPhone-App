@@ -254,50 +254,54 @@ FeedBackForm *fbView;
            fromLocation:(CLLocation *)oldLocation
 {
     @try {
-    if (!currentLocation) {
-        NSArray* matchingLocations = [locations locationsWithFormattedAddress:CURRENT_LOCATION];
-        if ([matchingLocations count] == 0) { // if current location not in db
-            currentLocation = [locations newEmptyLocation];
-            [currentLocation setFormattedAddress:CURRENT_LOCATION];
-            [currentLocation setFromFrequencyFloat:100.0];
-            [toFromViewController reloadTables]; // DE30 fix (1 of 2)
-            [locations setIsLocationServiceEnable:TRUE];
+        if (!currentLocation) {
+            NSArray* matchingLocations = [locations locationsWithFormattedAddress:CURRENT_LOCATION];
+            if ([matchingLocations count] == 0) { // if current location not in db
+                currentLocation = [locations newEmptyLocation];
+                [currentLocation setFormattedAddress:CURRENT_LOCATION];
+                [currentLocation setFromFrequencyFloat:100.0];
+                [toFromViewController reloadTables]; // DE30 fix (1 of 2)
+                [locations setIsLocationServiceEnable:TRUE];
+            }
+            else {
+                currentLocation = [matchingLocations objectAtIndex:0];
+                [locations setIsLocationServiceEnable:TRUE];
+            }
+            [toFromViewController setCurrentLocation:currentLocation];
+            if (![toFromViewController fromLocation]) {  // only if fromLocation is not set, set to currentLocation mode (DE197 fix)
+                if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                    [toFromViewController setIsCurrentLocationMode:FALSE];
+                }
+                else{
+                    [toFromViewController setIsCurrentLocationMode:TRUE];
+                }
+            }
+            
+            // Set the coordinates (DE215 fix)
+            [currentLocation setLatFloat:[newLocation coordinate].latitude];
+            [currentLocation setLngFloat:[newLocation coordinate].longitude];
+            
+            if (currentLocationNeededForDirectionsDestination || currentLocationNeededForDirectionsSource) {
+                // If we have are waiting for currentLocation to execute a directions request
+                // Set the appropriate currentLocations
+                if (currentLocationNeededForDirectionsSource) {
+                    [[toFromViewController fromTableVC] newDirectionsRequestLocation:currentLocation];
+                    currentLocationNeededForDirectionsSource = NO;
+                }
+                if (currentLocationNeededForDirectionsDestination) {
+                    [[toFromViewController toTableVC] newDirectionsRequestLocation:currentLocation];
+                    currentLocationNeededForDirectionsDestination = NO;
+                }
+                // Execute the request
+                [toFromViewController getRouteForMKDirectionsRequest];
+            }
+            
+            logEvent(FLURRY_CURRENT_LOCATION_AVAILABLE, nil, nil, nil, nil, nil, nil, nil, nil);
         }
         else {
-            currentLocation = [matchingLocations objectAtIndex:0];
-            [locations setIsLocationServiceEnable:TRUE];
+            [currentLocation setLatFloat:[newLocation coordinate].latitude];
+            [currentLocation setLngFloat:[newLocation coordinate].longitude];
         }
-        [toFromViewController setCurrentLocation:currentLocation];
-        if (![toFromViewController fromLocation]) {  // only if fromLocation is not set, set to currentLocation mode (DE197 fix)
-            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                [toFromViewController setIsCurrentLocationMode:FALSE];
-            }
-            else{
-                [toFromViewController setIsCurrentLocationMode:TRUE];
-            }
-        }
-        
-        if (currentLocationNeededForDirectionsDestination || currentLocationNeededForDirectionsSource) {
-            // If we have are waiting for currentLocation to execute a directions request
-            // Set the appropriate currentLocations
-            if (currentLocationNeededForDirectionsSource) {
-                [[toFromViewController fromTableVC] newDirectionsRequestLocation:currentLocation];
-                currentLocationNeededForDirectionsSource = NO;
-            }
-            if (currentLocationNeededForDirectionsDestination) {
-                [[toFromViewController toTableVC] newDirectionsRequestLocation:currentLocation];
-                currentLocationNeededForDirectionsDestination = NO;
-            }
-            // Execute the request
-            [toFromViewController getRouteForMKDirectionsRequest];
-        }
-        
-        logEvent(FLURRY_CURRENT_LOCATION_AVAILABLE, nil, nil, nil, nil, nil, nil, nil, nil);
-    }
-    
-    [currentLocation setLatFloat:[newLocation coordinate].latitude];
-    [currentLocation setLngFloat:[newLocation coordinate].longitude];
-    
     }
     @catch (NSException *exception) {
         logException(@"ncAppDelegate->locationManager: didUpdateToLocation", @"", exception);

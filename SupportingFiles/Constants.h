@@ -100,6 +100,10 @@
 #define FLURRY_ROUTE_FROM_CACHE @"Route retrieved from cache"
 #define FLURRY_ROUTE_NOT_IN_CACHE @"Route not in cache"
 #define FLURRY_ROUTE_NO_NETWORK @"No network connection for retrieving Plan"
+#define FLURRY_CURRENT_LOCATION_NOT_IN_SUPPORTED_REGION @"Route request not in supported region"
+#define FLURRY_ROUTE_TO_FROM_SAME @"Route request to & from location identical"
+#define FLURRY_ROUTE_NOT_AVAILABLE_THAT_TIME @"Route not available that time"
+#define FLURRY_ROUTE_NO_MATCHING_ITINERARIES @"Route no matching itineraries"
 #define FLURRY_ROUTE_OTHER_ERROR @"RK Error when retrieving Plan"
 #define FLURRY_ROUTE_OPTIONS_APPEAR @"RouteOptions appear"
 #define FLURRY_ROUTE_SELECTED @"Route selected"
@@ -134,6 +138,9 @@
 #define FLURRY_FEEDBACK_TEXT @"(Feedback text)"
 #define FLURRY_SETTING_WALK_DISTANCE @"(Settings walk distance)"
 #define FLURRY_SETTING_ALERT_COUNT @"(Settings alert count)"
+#define FLURRY_LAT @"(Lat)"
+#define FLURRY_LNG @"(Lng)"
+#define FLURRY_SUPPORTED_REGION_STRING @"(Supported Region String)"
 
 
 // Geocode behavior

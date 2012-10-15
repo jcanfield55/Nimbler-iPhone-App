@@ -230,6 +230,9 @@
                     [alertView setMessage:ROUTE_NOT_POSSIBLE_MSG];
                     [alertView addButtonWithTitle:OK_BUTTON_TITLE];
                     [alertView show];
+                    logEvent(FLURRY_ROUTE_OTHER_ERROR,
+                             FLURRY_RK_RESPONSE_ERROR, [tempResponseDictionary objectForKey:OTP_ERROR_STATUS],
+                             nil, nil, nil, nil, nil, nil);
                     [toFromVC.activityIndicator stopAnimating];
                     [toFromVC.view setUserInteractionEnabled:YES];
                 }
@@ -268,6 +271,10 @@
                     saveContext(managedObjectContext);
                     if (planRequestParameters.planDestination == PLAN_DESTINATION_TO_FROM_VC) {
                         [toFromVC newPlanAvailable:nil status:PLAN_NOT_AVAILABLE_THAT_TIME];
+                        logEvent(FLURRY_ROUTE_NOT_AVAILABLE_THAT_TIME,
+                                 FLURRY_NEW_DATE, [NSString stringWithFormat:@"%@",[planRequestParameters thisRequestTripDate]],
+                                 nil, nil, nil, nil, nil, nil);
+    
                     } // else if routeOptions destination, do nothing
                     return;
                 }
@@ -288,6 +295,7 @@
                 } else { // no matching sorted itineraries.  DE189 fix
                     if (planRequestParameters.planDestination == PLAN_DESTINATION_TO_FROM_VC) {
                         [toFromVC newPlanAvailable:nil status:PLAN_GENERIC_EXCEPTION];
+                        logEvent(FLURRY_ROUTE_NO_MATCHING_ITINERARIES, nil, nil, nil, nil, nil, nil, nil, nil);
                     } // else if routeOptions destination, do nothing
                 }
             }
