@@ -212,6 +212,7 @@ NSUserDefaults *prefs;
 {
     // DE-196 Fixed
     if([[nc_AppDelegate sharedInstance] isNetworkConnectionLive]){
+        noAdvisory.text = @"There are no advisories at this time. Everything appears to be running normally.";
         [self startProcessForGettingTweets];
         NSString *latestTweetTime = @"0";
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
@@ -236,6 +237,9 @@ NSUserDefaults *prefs;
         if([arrayTweet count] != 0){
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain" message:NO_NETWORK_ALERT delegate:self cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil];
             [alert show];
+        }
+        else{
+            noAdvisory.text = @"No advisories available.  Unable to connect to server.  Please try again when you have network connectivity";
         }
     }
 }
@@ -346,6 +350,7 @@ NSUserDefaults *prefs;
     // DE-196 Fixed
     if([[nc_AppDelegate sharedInstance] isNetworkConnectionLive]){
         @try {
+            noAdvisory.text = @"There are no advisories at this time. Everything appears to be running normally.";
             [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
             [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
             [[nc_AppDelegate sharedInstance] updateBadge:0];
@@ -366,6 +371,9 @@ NSUserDefaults *prefs;
         if([arrayTweet count] != 0){
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain" message:NO_NETWORK_ALERT delegate:self cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil];
             [alert show];
+        }
+        else{
+            noAdvisory.text = @"No advisories available.  Unable to connect to server.  Please try again when you have network connectivity";
         }
     }
 }

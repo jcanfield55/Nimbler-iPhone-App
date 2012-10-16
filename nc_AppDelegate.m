@@ -100,6 +100,14 @@ FeedBackForm *fbView;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    NSDate *date = [NSDate date];
+    [[NSUserDefaults standardUserDefaults] setObject:date forKey:DATE_OF_START];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
+    if(![[NSUserDefaults standardUserDefaults]integerForKey:DAYS_TO_SHOW_FEEDBACK_ALERT]){
+        [[NSUserDefaults standardUserDefaults] setInteger:10 forKey:DAYS_TO_SHOW_FEEDBACK_ALERT];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     
     [[UIApplication sharedApplication]
@@ -328,6 +336,10 @@ FeedBackForm *fbView;
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
+    
+    if(actionsheet){
+        [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
+    }
     // Added To Fix DE-206
     if(isSettingView){
         isSettingSavedSuccessfully = NO;
@@ -383,6 +395,12 @@ FeedBackForm *fbView;
         [toFromViewController.fromTableVC toFromTyping:toFromViewController.fromTableVC.txtField forEvent:nil];
         [toFromViewController.fromTableVC textSubmitted:toFromViewController.fromTableVC.txtField forEvent:nil];
     }
+    // US 177 Implementation
+    RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
+    [[NSUserDefaults standardUserDefaults] setInteger:rxCustomTabBar.selectedIndex forKey:LAST_SELECTED_TAB_INDEX];
+    [[NSUserDefaults standardUserDefaults]setObject:self.toLoc.formattedAddress forKey:LAST_TO_LOCATION];
+    [[NSUserDefaults standardUserDefaults]setObject:self.fromLoc.formattedAddress forKey:LAST_FROM_LOCATION];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     
     // Close Keyboard
     [UIView setAnimationsEnabled:YES];
@@ -410,17 +428,36 @@ FeedBackForm *fbView;
      */
     
     // Check the date and if it is not today's date we will make request.
-    NSDate *todayDate = [NSDate date];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
-    NSString *strTodayDate = [dateFormatter stringFromDate:todayDate];
+    // Previously comparing string with date so changed the logic to compare date.
+    NSDate *todayDate = dateOnlyFromDate([NSDate date]);
+//    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+//    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
+//    NSString *strTodayDate = [dateFormatter stringFromDate:todayDate];
     NSDate *currentDate = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_DATE];
-    if(![strTodayDate isEqual:currentDate]){
+    NSDate *currentDateOnly = dateOnlyFromDate(currentDate);
+    if(![todayDate isEqual:currentDateOnly]){
         [[nc_AppDelegate sharedInstance] performSelector:@selector(updateTime) withObject:nil afterDelay:0.5];
-        [[NSUserDefaults standardUserDefaults] setObject:strTodayDate forKey:CURRENT_DATE];
+        [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:CURRENT_DATE];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
+    if(actionsheet){
+        [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
+    }
+    //US-163 Implementation
+    NSDate *appInstallDate = [[NSUserDefaults standardUserDefaults] objectForKey:DATE_OF_START];
+    double intevalInSeconds = [appInstallDate timeIntervalSinceDate:todayDate];
+    int dayInSeconds = 60 * 60 * 24;
+    int days = round(intevalInSeconds / dayInSeconds);
+    int daysToShowAlert = [[NSUserDefaults standardUserDefaults]integerForKey:DAYS_TO_SHOW_FEEDBACK_ALERT];
     
+    if(![[NSUserDefaults standardUserDefaults] boolForKey:NO_THANKS_ACTION]){
+        if(days >= daysToShowAlert){
+           actionsheet = [[UIActionSheet alloc] initWithTitle:FEED_BACK_SHEET_TITLE delegate:self cancelButtonTitle:NO_THANKS_BUTTON_TITLE destructiveButtonTitle:nil otherButtonTitles:APPSTORE_FEEDBACK_BUTTON_TITLE,NIMBLER_FEEDBACK_BUTTON_TITLE,REMIND_ME_LATER_BUTTON_TITLE, nil];
+            actionsheet.cancelButtonIndex = actionsheet.numberOfButtons - 1;
+            [actionsheet showFromTabBar:self.tabBarController.tabBar];
+        }
+    }
+
     if(self.isTwitterView){
        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
         [twitterView getAdvisoryData];
@@ -457,10 +494,38 @@ FeedBackForm *fbView;
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:NO_NETWORK_ALERT delegate:self cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil];
         [alert show];
     }
+    
+    // US 177 Implementation
+    
+    RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
+    int lastSelectedIndex = [[NSUserDefaults standardUserDefaults] integerForKey:LAST_SELECTED_TAB_INDEX];
+    if (rxCustomTabBar.selectedIndex != lastSelectedIndex) {
+        [rxCustomTabBar selectTab:lastSelectedIndex];
+    }
+    
+    NSString *strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
+    NSString *strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+    NSManagedObjectContext * context = [self managedObjectContext];
+    NSFetchRequest * fetchPlanRequestChunk = [[NSFetchRequest alloc] init];
+    
+    [fetchPlanRequestChunk setEntity:[NSEntityDescription entityForName:@"Location" inManagedObjectContext:context]];
+        
+    NSArray * arrayLocations = [context executeFetchRequest:fetchPlanRequestChunk error:nil];
+    for (id location in arrayLocations){
+        if([strToFormattedAddress isEqualToString:[location formattedAddress]]){
+            [toFromViewController.toTableVC markAndUpdateSelectedLocation:location];
+        }
+    }
+    for (id location in arrayLocations){
+        if([strFromFormattedAddress isEqualToString:[location formattedAddress]]){
+            [toFromViewController.fromTableVC markAndUpdateSelectedLocation:location];
+        }
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
+    NIMLOG_PERF1(@"Will Terminate Called");
     // Saves changes in the application's managed object context before the application terminates.
     saveContext([self managedObjectContext]);
 }
@@ -1059,6 +1124,29 @@ FeedBackForm *fbView;
     }
     else{
         return YES;
+    }
+}
+
+// ActoinSheet Delegate Methods
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if(buttonIndex == 0){
+        NSURL *url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL];
+        [[UIApplication sharedApplication] openURL:url];
+    }
+    else if(buttonIndex == 1){
+        RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
+        if (rxCustomTabBar.selectedIndex != 3) {
+            [rxCustomTabBar selectTab:3];
+        }
+    }
+    else if(buttonIndex == 2){
+        [[NSUserDefaults standardUserDefaults] setInteger:20 forKey:DAYS_TO_SHOW_FEEDBACK_ALERT];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    else if(buttonIndex == [actionSheet cancelButtonIndex]){
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:NO_THANKS_ACTION];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }
 @end

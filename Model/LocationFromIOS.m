@@ -146,9 +146,6 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
                     range.location = formattedAddr.length - range.length;
                     [formattedAddr replaceCharactersInRange:range withString:@""];
                 }
-                
-                
-                
             }
             return [NSString stringWithString:formattedAddr];
         }

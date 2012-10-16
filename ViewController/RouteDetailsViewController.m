@@ -372,13 +372,6 @@ NSUserDefaults *prefs;
 {    
     @try {
         // NSString *patchString;
-        // Added To Solve DE-208.This will check if the object at row  exist or not and if not exist then return standard TableView cell height.
-        if(![[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]]){
-            return STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
-        }
-        if(![[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]]){
-          return STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
-        }
         NSString* titleText = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
         NSString* subtitleText = [[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]];
         CGSize titleSize = [titleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE] 

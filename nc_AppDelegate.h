@@ -19,7 +19,7 @@
 #import "RouteDetailsViewController.h"
 #import "LegMapViewController.h"
 
-@interface nc_AppDelegate : UIResponder <UIApplicationDelegate,CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate,UITabBarControllerDelegate> {
+@interface nc_AppDelegate : UIResponder <UIApplicationDelegate,CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate,UITabBarControllerDelegate,UIActionSheetDelegate> {
     Location* currentLocation;
     UITabBarController *_tabBarController;
     
@@ -46,6 +46,7 @@
     NSString *strUpdateSettingURL;
     NSString *strTweetCountURL;
     BOOL isSettingView;
+    UIActionSheet *actionsheet;
 }
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;

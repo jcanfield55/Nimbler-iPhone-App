@@ -49,7 +49,6 @@
 		520FB1991626036C0083F143 /* LocationPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB16A1626036C0083F143 /* LocationPickerViewController.xib */; };
 		520FB19A1626036C0083F143 /* Locations.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB16C1626036C0083F143 /* Locations.m */; };
 		520FB19B1626036C0083F143 /* MyAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB16E1626036C0083F143 /* MyAnnotation.m */; };
-		520FB19C1626036C0083F143 /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 520FB16F1626036C0083F143 /* Network_Commuting.xcdatamodeld */; };
 		520FB19D1626036C0083F143 /* Plan.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB1781626036C0083F143 /* Plan.m */; };
 		520FB19E1626036C0083F143 /* PlanPlace.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB17A1626036C0083F143 /* PlanPlace.m */; };
 		520FB19F1626036C0083F143 /* PlanRequestChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB17C1626036C0083F143 /* PlanRequestChunk.m */; };
@@ -167,9 +166,7 @@
 		520FB27A162603AF0083F143 /* Speaker.png in Resources */ = {isa = PBXBuildFile; fileRef = 520FB210162603AF0083F143 /* Speaker.png */; };
 		520FB27B162603AF0083F143 /* Speaker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 520FB211162603AF0083F143 /* Speaker@2x.png */; };
 		520FB27C162603AF0083F143 /* walkb.png in Resources */ = {isa = PBXBuildFile; fileRef = 520FB212162603AF0083F143 /* walkb.png */; };
-		520FB288162604680083F143 /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 520FB280162604680083F143 /* Network_Commuting.xcdatamodeld */; };
 		520FB293162604950083F143 /* CoverageGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 520FB28B162604950083F143 /* CoverageGeoJSON.geojson */; };
-		520FB294162604950083F143 /* caltrain-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 520FB28F162604950083F143 /* caltrain-station.json */; };
 		520FB296162605470083F143 /* CoverageGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 520FB295162605470083F143 /* CoverageGeoJSON.geojson */; };
 		520FB297162605470083F143 /* CoverageGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 520FB295162605470083F143 /* CoverageGeoJSON.geojson */; };
 		525442C214C3ECF2004B0E1F /* libRestKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442B814C3EA95004B0E1F /* libRestKit.a */; };
@@ -202,12 +199,13 @@
 		52E4C0A315CC705D00B55A65 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C0A215CC705D00B55A65 /* Default@2x.png */; };
 		8D45BD1A162BD7EB00E5CB3D /* Nimbler Caltrain-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8D45BD18162BD7EB00E5CB3D /* Nimbler Caltrain-Info.plist */; };
 		8D45BD1E162BDE6A00E5CB3D /* Icon_ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D45BD1D162BDE6A00E5CB3D /* Icon_ipad@2x.png */; };
+		8D4FC8E6162D2E1A004144DE /* bart-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D4FC8E4162D2E1A004144DE /* bart-station.json */; };
+		8D4FC8E7162D2E1A004144DE /* caltrain-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D4FC8E5162D2E1A004144DE /* caltrain-station.json */; };
+		8D9EA263162D78FD002BB5FF /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */; };
 		8DA39BDF15E3855B0029D54B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6F22E71563AD360066DFA9 /* AVFoundation.framework */; };
 		8DA39BE115E38B5E0029D54B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */; };
 		8DBECD5216146DBE007B71F1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */; };
 		8DC019F91627F4BE004200E5 /* nc_AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */; };
-		8DC019FA1627F4ED004200E5 /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 520FB280162604680083F143 /* Network_Commuting.xcdatamodeld */; };
-		8DD111B6162C10A4006117F4 /* bart-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 8DD111B5162C10A4006117F4 /* bart-station.json */; };
 		8DF35D631627F58500B99F4A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF35D621627F58400B99F4A /* main.m */; };
 		CC35E729155965E7003995D8 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 522C0E6A15588E7A0072ADD6 /* libz.dylib */; };
 		CCA4C7E515D92CC7009BE7A1 /* aps_development.cer in Resources */ = {isa = PBXBuildFile; fileRef = CCA4C7E415D92CC7009BE7A1 /* aps_development.cer */; };
@@ -411,13 +409,6 @@
 		520FB16C1626036C0083F143 /* Locations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = Locations.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB16D1626036C0083F143 /* MyAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = MyAnnotation.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB16E1626036C0083F143 /* MyAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = MyAnnotation.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		520FB1701626036C0083F143 /* Network_Commuting 1.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.1.xcdatamodel"; sourceTree = "<group>"; };
-		520FB1711626036C0083F143 /* Network_Commuting 1.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.2.xcdatamodel"; sourceTree = "<group>"; };
-		520FB1721626036C0083F143 /* Network_Commuting 1.3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.3.xcdatamodel"; sourceTree = "<group>"; };
-		520FB1731626036C0083F143 /* Network_Commuting 1.4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.4.xcdatamodel"; sourceTree = "<group>"; };
-		520FB1741626036C0083F143 /* Network_Commuting 1.5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.5.xcdatamodel"; sourceTree = "<group>"; };
-		520FB1751626036C0083F143 /* Network_Commuting 1.6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.6.xcdatamodel"; sourceTree = "<group>"; };
-		520FB1761626036C0083F143 /* Network_Commuting.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Network_Commuting.xcdatamodel; sourceTree = "<group>"; };
 		520FB1771626036C0083F143 /* Plan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = Plan.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB1781626036C0083F143 /* Plan.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = Plan.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB1791626036C0083F143 /* PlanPlace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = PlanPlace.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -546,18 +537,10 @@
 		520FB210162603AF0083F143 /* Speaker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Speaker.png; sourceTree = "<group>"; };
 		520FB211162603AF0083F143 /* Speaker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Speaker@2x.png"; sourceTree = "<group>"; };
 		520FB212162603AF0083F143 /* walkb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = walkb.png; sourceTree = "<group>"; };
-		520FB281162604680083F143 /* Network_Commuting 1.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.1.xcdatamodel"; sourceTree = "<group>"; };
-		520FB282162604680083F143 /* Network_Commuting 1.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.2.xcdatamodel"; sourceTree = "<group>"; };
-		520FB283162604680083F143 /* Network_Commuting 1.3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.3.xcdatamodel"; sourceTree = "<group>"; };
-		520FB284162604680083F143 /* Network_Commuting 1.4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.4.xcdatamodel"; sourceTree = "<group>"; };
-		520FB285162604680083F143 /* Network_Commuting 1.5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.5.xcdatamodel"; sourceTree = "<group>"; };
-		520FB286162604680083F143 /* Network_Commuting 1.6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.6.xcdatamodel"; sourceTree = "<group>"; };
-		520FB287162604680083F143 /* Network_Commuting.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Network_Commuting.xcdatamodel; sourceTree = "<group>"; };
 		520FB28A162604950083F143 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Constants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB28B162604950083F143 /* CoverageGeoJSON.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CoverageGeoJSON.geojson; sourceTree = "<group>"; };
 		520FB28C162604950083F143 /* enums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = enums.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB28D162604950083F143 /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Logging.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		520FB28F162604950083F143 /* caltrain-station.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "caltrain-station.json"; sourceTree = "<group>"; };
 		520FB290162604950083F143 /* TEXTConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = TEXTConstant.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB291162604950083F143 /* UIAutomationConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = UIAutomationConstants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB292162604950083F143 /* UIConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = UIConstants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -1143,11 +1126,19 @@
 		8D45BD18162BD7EB00E5CB3D /* Nimbler Caltrain-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Nimbler Caltrain-Info.plist"; sourceTree = SOURCE_ROOT; };
 		8D45BD19162BD7EB00E5CB3D /* Nimbler Caltrain-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Nimbler Caltrain-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		8D45BD1D162BDE6A00E5CB3D /* Icon_ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon_ipad@2x.png"; sourceTree = "<group>"; };
+		8D4FC8E4162D2E1A004144DE /* bart-station.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "bart-station.json"; sourceTree = "<group>"; };
+		8D4FC8E5162D2E1A004144DE /* caltrain-station.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "caltrain-station.json"; sourceTree = "<group>"; };
+		8D9EA25C162D78FD002BB5FF /* Network_Commuting 1.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.1.xcdatamodel"; sourceTree = "<group>"; };
+		8D9EA25D162D78FD002BB5FF /* Network_Commuting 1.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.2.xcdatamodel"; sourceTree = "<group>"; };
+		8D9EA25E162D78FD002BB5FF /* Network_Commuting 1.3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.3.xcdatamodel"; sourceTree = "<group>"; };
+		8D9EA25F162D78FD002BB5FF /* Network_Commuting 1.4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.4.xcdatamodel"; sourceTree = "<group>"; };
+		8D9EA260162D78FD002BB5FF /* Network_Commuting 1.5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.5.xcdatamodel"; sourceTree = "<group>"; };
+		8D9EA261162D78FD002BB5FF /* Network_Commuting 1.6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.6.xcdatamodel"; sourceTree = "<group>"; };
+		8D9EA262162D78FD002BB5FF /* Network_Commuting.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Network_Commuting.xcdatamodel; sourceTree = "<group>"; };
 		8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		8DC019F71627F4BE004200E5 /* nc_AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nc_AppDelegate.h; sourceTree = SOURCE_ROOT; };
 		8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = nc_AppDelegate.m; sourceTree = SOURCE_ROOT; };
-		8DD111B5162C10A4006117F4 /* bart-station.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "bart-station.json"; sourceTree = "<group>"; };
 		8DF35D621627F58400B99F4A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CC6F22E71563AD360066DFA9 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		CC9370D715BFB97200A09A5A /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
@@ -1259,6 +1250,7 @@
 		520FB1511626036C0083F143 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */,
 				520FB1521626036C0083F143 /* AddressComponent.h */,
 				520FB1531626036C0083F143 /* AddressComponent.m */,
 				520FB1541626036C0083F143 /* AgencyAndId.h */,
@@ -1288,7 +1280,6 @@
 				520FB16C1626036C0083F143 /* Locations.m */,
 				520FB16D1626036C0083F143 /* MyAnnotation.h */,
 				520FB16E1626036C0083F143 /* MyAnnotation.m */,
-				520FB16F1626036C0083F143 /* Network_Commuting.xcdatamodeld */,
 				520FB1771626036C0083F143 /* Plan.h */,
 				520FB1781626036C0083F143 /* Plan.m */,
 				520FB1791626036C0083F143 /* PlanPlace.h */,
@@ -1438,22 +1429,12 @@
 				520FB28B162604950083F143 /* CoverageGeoJSON.geojson */,
 				520FB28C162604950083F143 /* enums.h */,
 				520FB28D162604950083F143 /* Logging.h */,
-				520FB28E162604950083F143 /* PreloadData */,
 				520FB290162604950083F143 /* TEXTConstant.h */,
 				520FB291162604950083F143 /* UIAutomationConstants.h */,
 				520FB292162604950083F143 /* UIConstants.h */,
 			);
 			path = SupportingFiles;
 			sourceTree = SOURCE_ROOT;
-		};
-		520FB28E162604950083F143 /* PreloadData */ = {
-			isa = PBXGroup;
-			children = (
-				8DD111B5162C10A4006117F4 /* bart-station.json */,
-				520FB28F162604950083F143 /* caltrain-station.json */,
-			);
-			path = PreloadData;
-			sourceTree = "<group>";
 		};
 		5231E15F14E42FE100739DC7 /* RestKit */ = {
 			isa = PBXGroup;
@@ -2791,6 +2772,7 @@
 		52CF439014BDF2F8000565D6 = {
 			isa = PBXGroup;
 			children = (
+				8D4FC8E3162D2E1A004144DE /* PreloadData */,
 				8DF35D621627F58400B99F4A /* main.m */,
 				520FB295162605470083F143 /* CoverageGeoJSON.geojson */,
 				52C10384160BEF8000BC6020 /* AddressBookUI.framework */,
@@ -2847,7 +2829,6 @@
 				8DC019F71627F4BE004200E5 /* nc_AppDelegate.h */,
 				8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */,
 				520FB289162604950083F143 /* SupportingFiles */,
-				520FB280162604680083F143 /* Network_Commuting.xcdatamodeld */,
 				520FB1A8162603AF0083F143 /* Images */,
 				520FB1511626036C0083F143 /* Model */,
 				520FB132162603430083F143 /* Utility */,
@@ -2875,6 +2856,16 @@
 				52CF43C614BDF2F9000565D6 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		8D4FC8E3162D2E1A004144DE /* PreloadData */ = {
+			isa = PBXGroup;
+			children = (
+				8D4FC8E4162D2E1A004144DE /* bart-station.json */,
+				8D4FC8E5162D2E1A004144DE /* caltrain-station.json */,
+			);
+			name = PreloadData;
+			path = SupportingFiles/PreloadData;
 			sourceTree = "<group>";
 		};
 		CC9370D615BFB97200A09A5A /* Flurry */ = {
@@ -3247,7 +3238,8 @@
 				520FB296162605470083F143 /* CoverageGeoJSON.geojson in Resources */,
 				8D45BD1A162BD7EB00E5CB3D /* Nimbler Caltrain-Info.plist in Resources */,
 				8D45BD1E162BDE6A00E5CB3D /* Icon_ipad@2x.png in Resources */,
-				8DD111B6162C10A4006117F4 /* bart-station.json in Resources */,
+				8D4FC8E6162D2E1A004144DE /* bart-station.json in Resources */,
+				8D4FC8E7162D2E1A004144DE /* caltrain-station.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3257,7 +3249,6 @@
 			files = (
 				52CF43C814BDF2F9000565D6 /* InfoPlist.strings in Resources */,
 				520FB293162604950083F143 /* CoverageGeoJSON.geojson in Resources */,
-				520FB294162604950083F143 /* caltrain-station.json in Resources */,
 				520FB297162605470083F143 /* CoverageGeoJSON.geojson in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3317,7 +3308,6 @@
 				520FB1981626036C0083F143 /* LocationPickerViewController.m in Sources */,
 				520FB19A1626036C0083F143 /* Locations.m in Sources */,
 				520FB19B1626036C0083F143 /* MyAnnotation.m in Sources */,
-				520FB19C1626036C0083F143 /* Network_Commuting.xcdatamodeld in Sources */,
 				520FB19D1626036C0083F143 /* Plan.m in Sources */,
 				520FB19E1626036C0083F143 /* PlanPlace.m in Sources */,
 				520FB19F1626036C0083F143 /* PlanRequestChunk.m in Sources */,
@@ -3330,8 +3320,8 @@
 				520FB1A61626036C0083F143 /* TransitCalendar.m in Sources */,
 				520FB1A71626036C0083F143 /* UserPreferance.m in Sources */,
 				8DC019F91627F4BE004200E5 /* nc_AppDelegate.m in Sources */,
-				8DC019FA1627F4ED004200E5 /* Network_Commuting.xcdatamodeld in Sources */,
 				8DF35D631627F58500B99F4A /* main.m in Sources */,
+				8D9EA263162D78FD002BB5FF /* Network_Commuting.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3340,7 +3330,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				52CF43CB14BDF2F9000565D6 /* Network_CommutingTests.m in Sources */,
-				520FB288162604680083F143 /* Network_Commuting.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3494,8 +3483,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Nimbler Caltrain-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
@@ -3514,10 +3503,11 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "64EEC354-B964-42B2-B820-40244027E9B6";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "64EEC354-B964-42B2-B820-40244027E9B6";
+				PROVISIONING_PROFILE = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
+				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -3526,9 +3516,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Nimbler Caltrain-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
@@ -3547,11 +3537,12 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "64EEC354-B964-42B2-B820-40244027E9B6";
-				"PROVISIONING_PROFILE[sdk=*]" = "64EEC354-B964-42B2-B820-40244027E9B6";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "64EEC354-B964-42B2-B820-40244027E9B6";
+				PROVISIONING_PROFILE = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
+				"PROVISIONING_PROFILE[sdk=*]" = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C2568A6A-0221-45AC-B419-A65EF99F16A5";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
+				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -3631,39 +3622,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		520FB16F1626036C0083F143 /* Network_Commuting.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				520FB1701626036C0083F143 /* Network_Commuting 1.1.xcdatamodel */,
-				520FB1711626036C0083F143 /* Network_Commuting 1.2.xcdatamodel */,
-				520FB1721626036C0083F143 /* Network_Commuting 1.3.xcdatamodel */,
-				520FB1731626036C0083F143 /* Network_Commuting 1.4.xcdatamodel */,
-				520FB1741626036C0083F143 /* Network_Commuting 1.5.xcdatamodel */,
-				520FB1751626036C0083F143 /* Network_Commuting 1.6.xcdatamodel */,
-				520FB1761626036C0083F143 /* Network_Commuting.xcdatamodel */,
-			);
-			currentVersion = 520FB1751626036C0083F143 /* Network_Commuting 1.6.xcdatamodel */;
-			path = Network_Commuting.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-		520FB280162604680083F143 /* Network_Commuting.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				520FB281162604680083F143 /* Network_Commuting 1.1.xcdatamodel */,
-				520FB282162604680083F143 /* Network_Commuting 1.2.xcdatamodel */,
-				520FB283162604680083F143 /* Network_Commuting 1.3.xcdatamodel */,
-				520FB284162604680083F143 /* Network_Commuting 1.4.xcdatamodel */,
-				520FB285162604680083F143 /* Network_Commuting 1.5.xcdatamodel */,
-				520FB286162604680083F143 /* Network_Commuting 1.6.xcdatamodel */,
-				520FB287162604680083F143 /* Network_Commuting.xcdatamodel */,
-			);
-			currentVersion = 520FB286162604680083F143 /* Network_Commuting 1.6.xcdatamodel */;
-			name = Network_Commuting.xcdatamodeld;
-			path = ../Model/Network_Commuting.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
 		5231E28B14E42FE100739DC7 /* RKCoreDataExample.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
@@ -3681,6 +3639,22 @@
 			);
 			currentVersion = 5231E2A114E42FE100739DC7 /* RKRelationshipMappingExample.xcdatamodel */;
 			path = RKRelationshipMappingExample.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				8D9EA25C162D78FD002BB5FF /* Network_Commuting 1.1.xcdatamodel */,
+				8D9EA25D162D78FD002BB5FF /* Network_Commuting 1.2.xcdatamodel */,
+				8D9EA25E162D78FD002BB5FF /* Network_Commuting 1.3.xcdatamodel */,
+				8D9EA25F162D78FD002BB5FF /* Network_Commuting 1.4.xcdatamodel */,
+				8D9EA260162D78FD002BB5FF /* Network_Commuting 1.5.xcdatamodel */,
+				8D9EA261162D78FD002BB5FF /* Network_Commuting 1.6.xcdatamodel */,
+				8D9EA262162D78FD002BB5FF /* Network_Commuting.xcdatamodel */,
+			);
+			currentVersion = 8D9EA261162D78FD002BB5FF /* Network_Commuting 1.6.xcdatamodel */;
+			path = Network_Commuting.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

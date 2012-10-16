@@ -710,8 +710,6 @@
                 [arrDistance replaceObjectAtIndex:min withObject:[NSString stringWithFormat:@"%d",temp]];
                 [arrStationList replaceObjectAtIndex:min withObject:temp1];
             }
-            NIMLOG_OBJECT1(@"%@",arrDistance);
-            NIMLOG_OBJECT1(@"%@",arrStationList);
         }
     }
     else {

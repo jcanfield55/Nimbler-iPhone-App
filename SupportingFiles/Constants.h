@@ -17,7 +17,7 @@
 
 #define TRIP_PROCESS_URL    @"http://23.23.210.156:8080/TPServer/ws/"
 
-//#define TRIP_PROCESS_URL      @"http://192.168.2.148:8080/TPServer/ws/"
+//#define TRIP_PROCESS_URL      @"http://192.168.2.135:8080/TPServer/ws/"
 
 #define TWITTER_SERARCH_URL    @"https://twitter.com/#!/search/realtime/TRAIN%20from%3Acaltrain%20OR%20from%3Acaltrain_news"
 #define CALTRAIN_TWITTER_URL   @"https://twitter.com/#!/search/from%3Acaltrain%20OR%20from%3Acaltrain_news"
@@ -195,7 +195,7 @@
 #define GTFS_UPDATE_TIME @"gtfsUpdateTime"
 #define GTFS_SERVICE_BY_WEEKDAY @"gtfsServiceByWeekDay"
 #define GTFS_SERVICE_EXCEPTIONS_DATES @"gtfsServiceExceptionDates"
-#define CURRENT_DATE @"currentDate"
+#define CURRENT_DATE @"current_Date"
 #define TIMER_TYPE  @"continueGetTime"
 
 #define GET_PLAN_URL  @"plan/get"

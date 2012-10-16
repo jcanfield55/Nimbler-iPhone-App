@@ -377,6 +377,9 @@ UIImage *imageDetailDisclosure;
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:YES];
     [nc_AppDelegate sharedInstance].isToFromView = NO;
+    //Part Of US-177 Implementation
+    [nc_AppDelegate sharedInstance].toLoc = self.toLocation;
+    [nc_AppDelegate sharedInstance].fromLoc = self.fromLocation;
 }
 
 - (void)viewDidAppear:(BOOL)animated
