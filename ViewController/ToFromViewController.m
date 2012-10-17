@@ -235,9 +235,6 @@ UIImage *imageDetailDisclosure;
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
         [self.routeButton setFrame:CGRectMake(ROUTE_BUTTON_XPOS_4INCH, ROUTE_BUTTON_YPOS_4INCH, ROUTE_BUTTON_WIDTH_4INCH, ROUTE_BUTTON_HEIGHT_4INCH)];
     }
-    else{
-        
-    }
     //Added To clear The Background Color of UitableView in Ios - 6
     if([[[UIDevice currentDevice] systemVersion] intValue] >= 6){
        [self.mainTable setBackgroundView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_background.png"]]];

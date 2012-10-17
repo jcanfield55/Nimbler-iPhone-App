@@ -652,65 +652,81 @@
 - (void)forwardGeocodeWithParameters:(GeocodeRequestParameters *)parameters callBack:(id <LocationsGeocodeResultsDelegate>)delegate;
 {
     // US - 166 Partial Implementation
-    NSString *strBART1 = @" bart";
-    NSString *strBART2 = @"bart ";
-    NSString *strRawAddress = parameters.rawAddress;
+    
+   // NSString *strBART1 = @" bart";
+   // NSString *strBART2 = @"bart ";
+   // NSString *strRawAddress = [parameters.rawAddress lowercaseString];
     if (parameters.apiType == GOOGLE_GEOCODER) {
         [self forwardGeocodeUsingGoogleWithParameters:parameters callBack:delegate];
     } else if (parameters.apiType == IOS_GEOCODER) {
-        if ([strRawAddress rangeOfString:strBART1 options:NSCaseInsensitiveSearch].location == NSNotFound && [strRawAddress rangeOfString:strBART2 options:NSCaseInsensitiveSearch].location == NSNotFound) {
+//        if ([strRawAddress rangeOfString:strBART1 options:NSCaseInsensitiveSearch].location == NSNotFound && [strRawAddress rangeOfString:strBART2 options:NSCaseInsensitiveSearch].location == NSNotFound) {
             [self forwardGeocodeUsingIosWithParameters:parameters callback:delegate];
-        } else {
-            NSRange range;
-            if ([strRawAddress rangeOfString:strBART1 options:NSCaseInsensitiveSearch].location != NSNotFound)
-            {
-              range = [strRawAddress rangeOfString:strBART1];
-            }
-            else{
-               range = [strRawAddress rangeOfString:strBART2];
-            }
-            NSMutableString *strMutableRawAddress =  (NSMutableString *)strRawAddress;
-           [strMutableRawAddress deleteCharactersInRange:range];
-            strRawAddress = strMutableRawAddress;
-            
-            //Parse File And gel All The Station List
-            NSMutableArray *arrStationList = [[NSMutableArray alloc] init];
-            NSMutableArray *arrDistance = [[NSMutableArray alloc] init];
-            NSArray *array = [self preLoadIfNeededFromFile:@"bart-station.json"];
-            for (int i=1;i<[array count];i++){
-                LocationFromGoogle *arrayData = [array objectAtIndex:i];
-                NSDictionary *dictAffressComponent = arrayData.addressComponentDictionary;
-                NSString *stationName = [dictAffressComponent objectForKey:@"establishment"];
-                [arrStationList addObject:stationName];
-            }
-            for(int i=0;i<[arrStationList count];i++){
-                float distance = [self compareString:[[arrStationList objectAtIndex:i] lowercaseString] withString:[strRawAddress lowercaseString]];
-                NSString *strStationName = [arrStationList objectAtIndex:i];
-                float finalDistance = distance + strRawAddress.length - strStationName.length;
-                [arrDistance addObject:[NSString stringWithFormat:@"%f",finalDistance]];
-                NIMLOG_OBJECT1(@"Station Name:%@ final Distance:%f",strStationName,finalDistance);
-            }           
-            int min, temp,min1;
-            NSString *temp1;
-            int i,j;
-            for (i = 0; i < [arrDistance count]-1; i++)
-            {
-                min = i;
-                min1 = i;
-                for (j = i+1; j < [arrDistance count]; j++)
-                {
-                    if ([[arrDistance objectAtIndex:j] intValue] < [[arrDistance objectAtIndex:min] intValue])
-                        min = j;
-                        min1 = j;
-                }  
-                temp = [[arrDistance objectAtIndex:i] intValue];
-                temp1 = [arrStationList objectAtIndex:i];
-                [arrDistance replaceObjectAtIndex:i withObject:[arrDistance objectAtIndex:min]];
-                [arrStationList replaceObjectAtIndex:i withObject:[arrStationList objectAtIndex:min]];
-                [arrDistance replaceObjectAtIndex:min withObject:[NSString stringWithFormat:@"%d",temp]];
-                [arrStationList replaceObjectAtIndex:min withObject:temp1];
-            }
-        }
+        //}
+//        else {
+//            NSRange range;
+//            if ([strRawAddress rangeOfString:strBART1 options:NSCaseInsensitiveSearch].location != NSNotFound)
+//            {
+//              range = [strRawAddress rangeOfString:strBART1];
+//            }
+//            else{
+//               range = [strRawAddress rangeOfString:strBART2];
+//            }
+//            NSMutableString *strMutableRawAddress =  (NSMutableString *)strRawAddress;
+//           [strMutableRawAddress deleteCharactersInRange:range];
+//            strRawAddress = strMutableRawAddress;
+//            
+//            //Parse File And get All The Station List
+//            NSMutableArray *arrStationList = [[NSMutableArray alloc] init];
+//            NSMutableArray *arrDistance = [[NSMutableArray alloc] init];
+//            NSArray *array = [self preLoadIfNeededFromFile:@"bart-station.json"];
+//            for (int i=1;i<[array count];i++){
+//                LocationFromGoogle *arrayData = [array objectAtIndex:i];
+//                NSDictionary *dictAddressComponent = arrayData.addressComponentDictionary;
+//                NSString *stationName = [dictAddressComponent objectForKey:@"establishment"];
+//                [arrStationList addObject:stationName];
+//            }
+//            for(int i=0;i<[arrStationList count];i++){
+//                float distance = [self compareString:[[arrStationList objectAtIndex:i] lowercaseString] withString:[strRawAddress lowercaseString]];
+//                NSString *strStationName = [arrStationList objectAtIndex:i];
+//                float finalDistance = distance + strRawAddress.length - strStationName.length;
+//                [arrDistance addObject:[NSString stringWithFormat:@"%f",finalDistance]];
+//                NIMLOG_OBJECT1(@"Station Name:%@ final Distance:%f",strStationName,finalDistance);
+//            }           
+//            int min, temp,min1;
+//            NSString *temp1;
+//            int i,j;
+//            for (i = 0; i < [arrDistance count]-1; i++)
+//            {
+//                min = i;
+//                min1 = i;
+//                for (j = i+1; j < [arrDistance count]; j++)
+//                {
+//                    if ([[arrDistance objectAtIndex:j] intValue] < [[arrDistance objectAtIndex:min] intValue])
+//                        min = j;
+//                        min1 = j;
+//                }  
+//                temp = [[arrDistance objectAtIndex:i] intValue];
+//                temp1 = [arrStationList objectAtIndex:i];
+//                [arrDistance replaceObjectAtIndex:i withObject:[arrDistance objectAtIndex:min]];
+//                [arrStationList replaceObjectAtIndex:i withObject:[arrStationList objectAtIndex:min]];
+//                [arrDistance replaceObjectAtIndex:min withObject:[NSString stringWithFormat:@"%d",temp]];
+//                [arrStationList replaceObjectAtIndex:min withObject:temp1];
+//            }
+//            NSMutableArray *arrMatchdStationList = [[NSMutableArray alloc] init];
+//            for(int i=0;i<4;i++){
+//                [arrMatchdStationList addObject:[arrStationList objectAtIndex:i]];
+//            }
+//            NSMutableArray *arrMatchdLocation = [[NSMutableArray alloc] init];
+//            for (int i=1;i<[array count];i++){
+//                LocationFromGoogle *arrayData = [array objectAtIndex:i];
+//                NSDictionary *dictAddressComponent = arrayData.addressComponentDictionary;
+//                NSString *stationName = [dictAddressComponent objectForKey:@"establishment"];
+//                if([stationName isEqualToString:[arrMatchdStationList objectAtIndex:i-1]]){
+//                    [arrMatchdLocation addObject:arrayData];
+//                }
+//            }
+//        
+//        }
     }
     else {
         logError(@"Locations->forwardGeocodeWithParameters", @"Unknown apiType");

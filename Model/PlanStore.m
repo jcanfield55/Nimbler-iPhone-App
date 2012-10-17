@@ -287,6 +287,9 @@
                     [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
                     NIMLOG_OBJECT1(@"PLAN =%@",plan);
                     // Call-back the appropriate RouteOptions VC with the new plan
+                    //UIViewController *currentVC = toFromVC.navigationController.visibleViewController;
+//                    if (planRequestParameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC || currentVC == routeOptionsVC)
+                    
                     if (planRequestParameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
                         [routeOptionsVC newPlanAvailable:plan status:PLAN_STATUS_OK];
                     } else {

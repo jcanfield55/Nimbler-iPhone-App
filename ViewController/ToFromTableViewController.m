@@ -12,6 +12,7 @@
 #import "UIConstants.h"
 #import "Constants.h"
 #import "GeocodeRequestParameters.h"
+#import "nc_AppDelegate.h"
 
 
 @interface ToFromTableViewController () 
@@ -343,8 +344,119 @@
     } 
 }
 
+// DE-207 Implementation
+
+-(NSInteger)smallestOf:(NSInteger)a andOf:(NSInteger)b andOf:(NSInteger)c
+{
+    NSInteger min = a;
+    if ( b < min )
+        min = b;
+    
+    if( c < min )
+        min = c;
+    
+    return min;
+}
+
+-(NSInteger)smallestOf:(NSInteger)a andOf:(NSInteger)b
+{
+    NSInteger min=a;
+    if (b < min)
+        min=b;
+    
+    return min;
+}
+
+-(float)compareString:(NSString *)originalString withString:(NSString *)comparisonString
+{
+    // Normalize strings
+    [originalString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    [comparisonString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    originalString = [originalString lowercaseString];
+    comparisonString = [comparisonString lowercaseString];
+    NSInteger k, i, j, cost, * d, distance;
+    
+    NSInteger n = [originalString length];
+    NSInteger m = [comparisonString length];
+    
+    if( n++ != 0 && m++ != 0 ) {
+        
+        d = malloc( sizeof(NSInteger) * m * n );
+        
+        // Step 2
+        for( k = 0; k < n; k++)
+            d[k] = k;
+        
+        for( k = 0; k < m; k++)
+            d[ k * n ] = k;
+        
+        // Step 3 and 4
+        for( i = 1; i < n; i++ )
+            for( j = 1; j < m; j++ ) {
+                
+                // Step 5
+                if( [originalString characterAtIndex: i-1] ==
+                   [comparisonString characterAtIndex: j-1] )
+                    cost = 0;
+                else
+                    cost = 1;
+                
+                // Step 6
+                d[ j * n + i ] = [self smallestOf: d [ (j - 1) * n + i ] + 1
+                                            andOf: d[ j * n + i - 1 ] + 1
+                                            andOf: d[ (j - 1) * n + i - 1 ] + cost ];
+                
+                // This conditional adds Damerau transposition to Levenshtein distance
+                if( i>1 && j>1 && [originalString characterAtIndex: i-1] ==
+                   [comparisonString characterAtIndex: j-2] &&
+                   [originalString characterAtIndex: i-2] ==
+                   [comparisonString characterAtIndex: j-1] )
+                {
+                    d[ j * n + i] = [self smallestOf: d[ j * n + i ]
+                                               andOf: d[ (j - 2) * n + i - 2 ] + cost ];
+                }
+            }
+        
+        distance = d[ n * m - 1 ];
+        
+        free( d );
+        
+        return distance;
+    }
+    return 0.0;
+}
+
+//- (NSArray *)preLoadIfNeededFromFile:(NSString *)filename
+//{
+//    NSArray* resultArray;
+//    NSStringEncoding encoding;
+//    NSError* error = nil;
+//    NSString* preloadPath = [[NSBundle mainBundle] pathForResource:filename ofType:nil];
+//    NSString *jsonText = [NSString stringWithContentsOfFile:preloadPath usedEncoding:&encoding error:&error];
+//    if (jsonText && !error) {
+//        
+//        id<RKParser> parser = [[RKParserRegistry sharedRegistry] parserForMIMEType:@"application/json"];
+//        id parsedData = [parser objectFromString:jsonText error:&error];
+//        if (parsedData == nil && error) {
+//            logError(@"Locations->preLoadIfNeededFromFile", [NSString stringWithFormat:@"Parsing error: %@", error]);
+//            return false;
+//        }
+//        RKObjectMappingProvider* mappingProvider = rkGeoMgr.mappingProvider;
+//        RKObjectMapper* mapper = [RKObjectMapper mapperWithObject:parsedData mappingProvider:mappingProvider];
+//        RKObjectMappingResult* result = [mapper performMapping];
+//        if (result) {
+//            resultArray = [result asCollection];
+//        }
+//        else {
+//            NIMLOG_EVENT1(@"Could not load file %@ at path %@", filename, preloadPath);
+//        }
+//    }
+//    return resultArray;
+//}
+
 // Delegate for when complete text entered into the UITextField
-- (IBAction)textSubmitted:(id)sender forEvent:(UIEvent *)event 
+- (IBAction)textSubmitted:(id)sender forEvent:(UIEvent *)event
 {
     rawAddress = [sender text];
     
@@ -393,8 +505,81 @@
             lastGeoRequestTime = [[NSDate alloc] init];
             
             startTime = CFAbsoluteTimeGetCurrent();
-                    
+           // DE-207 Implementation
             @try {
+                NSString *strStreet1 = @" st.";
+                NSString *strStreet2 = @"st. ";
+                rawAddress = [rawAddress lowercaseString];
+                NSRange range;
+                if ([rawAddress rangeOfString:strStreet1 options:NSCaseInsensitiveSearch].location != NSNotFound)
+                {
+                    range = [rawAddress rangeOfString:strStreet1];
+                    NSMutableString *strMutableRawAddress =  (NSMutableString *)rawAddress;
+                    [strMutableRawAddress replaceCharactersInRange:range withString:@"street"];
+                    rawAddress = strMutableRawAddress;
+                }
+                else if([rawAddress rangeOfString:strStreet2 options:NSCaseInsensitiveSearch].location != NSNotFound){
+                    range = [rawAddress rangeOfString:strStreet2];
+                    NSMutableString *strMutableRawAddress =  (NSMutableString *)rawAddress;
+                    [strMutableRawAddress replaceCharactersInRange:range withString:@"street"];
+                    rawAddress = strMutableRawAddress;
+                }
+                
+                NSMutableArray *arrMultiPleStationList = [[NSMutableArray alloc] init];
+                NSMutableArray *arrDistance = [[NSMutableArray alloc] init];
+                NSManagedObjectContext * context = [[nc_AppDelegate sharedInstance] managedObjectContext];
+                NSFetchRequest * fetchPlanRequestChunk = [[NSFetchRequest alloc] init];
+                
+                [fetchPlanRequestChunk setEntity:[NSEntityDescription entityForName:@"Location" inManagedObjectContext:context]];
+                
+                NSArray * arrayLocations = [context executeFetchRequest:fetchPlanRequestChunk error:nil];
+                for (id location in arrayLocations){
+                    NIMLOG_OBJECT1(@"rawAddress:%@ formattedAddress:%@",rawAddress,[[location shortFormattedAddress]lowercaseString]);
+                    NSString *strshortFormattedAddress = [[location shortFormattedAddress]lowercaseString];
+                    float distance = [self compareString:strshortFormattedAddress withString:rawAddress];
+                    float finalDistance = distance + rawAddress.length - strshortFormattedAddress.length;
+                    NIMLOG_EVENT1(@"finalDistance=%f",finalDistance);
+                    if([rawAddress isEqualToString:[[location shortFormattedAddress]lowercaseString]]){
+                        [self markAndUpdateSelectedLocation:location];
+                        return;
+                    }
+                    else if(finalDistance <= 2.0){
+                        [arrMultiPleStationList addObject:location];
+                        [arrDistance addObject:[NSString stringWithFormat:@"%f",finalDistance]];
+                    }
+                }
+                if([arrMultiPleStationList count] == 1){
+                    [self markAndUpdateSelectedLocation:[arrMultiPleStationList objectAtIndex:0]];
+                    return;
+                }
+                if([arrMultiPleStationList count] > 1){
+                    int min, temp,min1;
+                    NSString *temp1;
+                    int i,j;
+                    for (i = 0; i < [arrDistance count]-1; i++)
+                    {
+                        min = i;
+                        min1 = i;
+                        for (j = i+1; j < [arrDistance count]; j++)
+                        {
+                            if ([[arrDistance objectAtIndex:j] intValue] < [[arrDistance objectAtIndex:min] intValue])
+                                min = j;
+                            min1 = j;
+                        }
+                        temp = [[arrDistance objectAtIndex:i] intValue];
+                        temp1 = [arrMultiPleStationList objectAtIndex:i];
+                        [arrDistance replaceObjectAtIndex:i withObject:[arrDistance objectAtIndex:min]];
+                        [arrMultiPleStationList replaceObjectAtIndex:i withObject:[arrMultiPleStationList objectAtIndex:min]];
+                        [arrDistance replaceObjectAtIndex:min withObject:[NSString stringWithFormat:@"%d",temp]];
+                        [arrMultiPleStationList replaceObjectAtIndex:min withObject:temp1];
+                    }
+
+                    [toFromVC callLocationPickerFor:self
+                                       locationList:arrMultiPleStationList
+                                             isFrom:isFrom
+                                   isGeocodeResults:YES];
+                    return;
+                }
                 GeocodeRequestParameters* parameters = [[GeocodeRequestParameters alloc] init];
                 parameters.rawAddress = rawAddress;
                 parameters.supportedRegion = [self supportedRegion];
