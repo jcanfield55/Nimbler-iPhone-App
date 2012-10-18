@@ -423,34 +423,13 @@
         toAddrLoc = toLocation;
     }
     
-    // Fetch and compare for specific addresses
-    NSArray* result1 = [NSArray array];
-    if (fromAddrLoc && toAddrLoc) {
-        NSDictionary* fetchParameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                         [fromAddrLoc formattedAddress],@"FROM_FORMATTED_ADDRESS",
-                                         [toAddrLoc formattedAddress], @"TO_FORMATTED_ADDRESS", nil];
-        NSFetchRequest* request = [managedObjectModel
-                                   fetchRequestFromTemplateWithName:@"PlansByToAndFromLocations"
-                                   substitutionVariables:fetchParameters];
-        NSSortDescriptor *sd1 = [NSSortDescriptor sortDescriptorWithKey:PLAN_LAST_UPDATED_FROM_SERVER_KEY
-                                                              ascending:NO]; // Later plan first
-        [request setSortDescriptors:[NSArray arrayWithObject:sd1]];
-        NSError *error;
-        result1 = [managedObjectContext executeFetchRequest:request error:&error];
-        if (!result1) {
-            [NSException raise:@"Matching plan fetch failed" format:@"Reason: %@", [error localizedDescription]];
-        }
-    }
-    
-    // Also fetch and compare results for Current Location if needed
-    NSMutableArray* result2 = [NSMutableArray arrayWithCapacity:1];
-    if (fromCurrentLoc || toCurrentLoc) {
-        Location* fromQueryLoc = (fromCurrentLoc ? fromCurrentLoc : fromAddrLoc);
-        Location* toQueryLoc = (toCurrentLoc ? toCurrentLoc : toAddrLoc);
-        if (fromQueryLoc && toQueryLoc) {
+    @try {
+        // Fetch and compare for specific addresses
+        NSArray* result1 = [NSArray array];
+        if (fromAddrLoc && toAddrLoc) {
             NSDictionary* fetchParameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                             [fromQueryLoc formattedAddress],@"FROM_FORMATTED_ADDRESS",
-                                             [toQueryLoc formattedAddress], @"TO_FORMATTED_ADDRESS", nil];
+                                             [fromAddrLoc formattedAddress],@"FROM_FORMATTED_ADDRESS",
+                                             [toAddrLoc formattedAddress], @"TO_FORMATTED_ADDRESS", nil];
             NSFetchRequest* request = [managedObjectModel
                                        fetchRequestFromTemplateWithName:@"PlansByToAndFromLocations"
                                        substitutionVariables:fetchParameters];
@@ -458,26 +437,58 @@
                                                                   ascending:NO]; // Later plan first
             [request setSortDescriptors:[NSArray arrayWithObject:sd1]];
             NSError *error;
-            NSArray* result2temp = [managedObjectContext executeFetchRequest:request error:&error];
-            if (!result2temp) {
+            result1 = [managedObjectContext executeFetchRequest:request error:&error];
+            if (!result1) {
                 [NSException raise:@"Matching plan fetch failed" format:@"Reason: %@", [error localizedDescription]];
-            }
-            // Now check if the results are within the time threshold
-            for (Plan* CLPlan in result2temp) {
-                if ([[CLPlan lastUpdatedFromServer] timeIntervalSinceNow] <
-                    -(REVERSE_GEO_PLAN_FETCH_TIME_THRESHOLD)) {
-                    // If the plan is older than the thresold, then delete it from Core data
-                    [[self managedObjectContext] deleteObject:CLPlan];
-                }
-                else { // if within the threshold, add it to the result
-                    [result2 addObject:CLPlan];
-                }
             }
         }
         
-        
+        // Also fetch and compare results for Current Location if needed
+        NSMutableArray* result2 = [NSMutableArray arrayWithCapacity:1];
+        if (fromCurrentLoc || toCurrentLoc) {
+            Location* fromQueryLoc = (fromCurrentLoc ? fromCurrentLoc : fromAddrLoc);
+            Location* toQueryLoc = (toCurrentLoc ? toCurrentLoc : toAddrLoc);
+            if (fromQueryLoc && toQueryLoc) {
+                NSDictionary* fetchParameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                 [fromQueryLoc formattedAddress],@"FROM_FORMATTED_ADDRESS",
+                                                 [toQueryLoc formattedAddress], @"TO_FORMATTED_ADDRESS", nil];
+                NSFetchRequest* request = [managedObjectModel
+                                           fetchRequestFromTemplateWithName:@"PlansByToAndFromLocations"
+                                           substitutionVariables:fetchParameters];
+                NSSortDescriptor *sd1 = [NSSortDescriptor sortDescriptorWithKey:PLAN_LAST_UPDATED_FROM_SERVER_KEY
+                                                                      ascending:NO]; // Later plan first
+                [request setSortDescriptors:[NSArray arrayWithObject:sd1]];
+                NSError *error;
+                NSArray* result2temp = [managedObjectContext executeFetchRequest:request error:&error];
+                if (!result2temp) {
+                    [NSException raise:@"Matching plan fetch failed" format:@"Reason: %@", [error localizedDescription]];
+                }
+                // Now check if the results are within the time threshold
+                for (Plan* CLPlan in result2temp) {
+                    if ([[CLPlan lastUpdatedFromServer] timeIntervalSinceNow] <
+                        -(REVERSE_GEO_PLAN_FETCH_TIME_THRESHOLD)) {
+                        // If the plan is older than the thresold, then delete it from Core data
+                        [[self managedObjectContext] deleteObject:CLPlan];
+                    }
+                    else { // if within the threshold, add it to the result
+                        [result2 addObject:CLPlan];
+                    }
+                }
+            }
+            
+        }
+        return [result1 arrayByAddingObjectsFromArray:result2];  // Return the array of matches (could be empty)
     }
-    return [result1 arrayByAddingObjectsFromArray:result2];  // Return the array of matches (could be empty)
+    @catch (NSException *exception) {
+        logException(@"PlanStore -> fetchPlansWithToLocation",
+                     [NSString stringWithFormat:@"fromAddrLoc = '%@', fromCurrentLoc = '%@', toAddrLoc = '%@', toCurrentLoc = '%@'",
+                      (fromAddrLoc ? [fromAddrLoc formattedAddress] : @"null"),
+                      (fromCurrentLoc ? [fromCurrentLoc formattedAddress] : @"null"),
+                      (toAddrLoc ? [toAddrLoc formattedAddress] : @"null"),
+                      (toCurrentLoc ? [toCurrentLoc formattedAddress] : @"null")],
+                     exception);
+        return [NSArray array]; // Return empty array
+    }
 }
 
 
