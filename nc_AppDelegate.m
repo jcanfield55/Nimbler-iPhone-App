@@ -170,8 +170,10 @@ FeedBackForm *fbView;
         [KeyObjectStore setUpWithManagedObjectContext:[self managedObjectContext]];
         
         // Pre-load stations location files
-        NSDecimalNumber* version = [NSDecimalNumber decimalNumberWithString:PRELOAD_VERSION_NUMBER];
-        [locations preLoadIfNeededFromFile:PRELOAD_LOCATION_FILE latestVersionNumber:version];
+        NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:CALTRAIN_PRELOAD_VERSION_NUMBER];
+        NSDecimalNumber* bartVersion = [NSDecimalNumber decimalNumberWithString:BART_PRELOAD_VERSION_NUMBER];
+        [locations preLoadIfNeededFromFile:CALTRAIN_PRELOAD_LOCATION_FILE latestVersionNumber:caltrainVersion];
+        [locations preLoadIfNeededFromFile:BART_PRELOAD_LOCATION_FILE latestVersionNumber:bartVersion];
         
     }@catch (NSException *exception) {
         logException(@"ncAppDelegate->didFinishLaunchingWithOptions #1", @"", exception);
@@ -434,18 +436,25 @@ FeedBackForm *fbView;
 //    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
 //    NSString *strTodayDate = [dateFormatter stringFromDate:todayDate];
     NSDate *currentDate = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_DATE];
-    NSDate *currentDateOnly = dateOnlyFromDate(currentDate);
-    if(![todayDate isEqual:currentDateOnly]){
+    if(!currentDate){
         [[nc_AppDelegate sharedInstance] performSelector:@selector(updateTime) withObject:nil afterDelay:0.5];
         [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:CURRENT_DATE];
         [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    else{
+        NSDate *currentDateOnly = dateOnlyFromDate(currentDate);
+        if(![todayDate isEqual:currentDateOnly]){
+            [[nc_AppDelegate sharedInstance] performSelector:@selector(updateTime) withObject:nil afterDelay:0.5];
+            [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:CURRENT_DATE];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
     }
     if(actionsheet){
         [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
     }
     //US-163 Implementation
     NSDate *appInstallDate = [[NSUserDefaults standardUserDefaults] objectForKey:DATE_OF_START];
-    double intevalInSeconds = [appInstallDate timeIntervalSinceDate:todayDate];
+    double intevalInSeconds = [todayDate timeIntervalSinceDate:appInstallDate];
     int dayInSeconds = 60 * 60 * 24;
     int days = round(intevalInSeconds / dayInSeconds);
     int daysToShowAlert = [[NSUserDefaults standardUserDefaults]integerForKey:DAYS_TO_SHOW_FEEDBACK_ALERT];
@@ -1142,6 +1151,9 @@ FeedBackForm *fbView;
     }
     else if(buttonIndex == 2){
         [[NSUserDefaults standardUserDefaults] setInteger:20 forKey:DAYS_TO_SHOW_FEEDBACK_ALERT];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        NSDate *date = [NSDate date];
+        [[NSUserDefaults standardUserDefaults] setObject:date forKey:DATE_OF_START];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     else if(buttonIndex == [actionSheet cancelButtonIndex]){

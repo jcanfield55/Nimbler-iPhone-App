@@ -1,13 +1,5 @@
 {
-	"results" : [{
-			"formatted_address" : "Bart Station List",
-			"toFrequency" : 25.0,
-			"fromFrequency" : 25.0,
-			"memberOfList" : "Bart",
-			"geometry" : {
-				"location_type" : "TOFROM_LIST"
-			}
-		}, {
+	"results" : [ {
 			"toFrequency" : 0.7357473,
 			"address_components" : [{
 					"long_name" : "12th St Oakland City Center",

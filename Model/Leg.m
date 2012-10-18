@@ -108,7 +108,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         __agencyDisplayNameByAgencyId = [store objectForKey:AGENCY_DISPLAY_NAME_BY_AGENCYID_KEY];
         if (!__agencyDisplayNameByAgencyId) {  // if not stored in the database, create it
             __agencyDisplayNameByAgencyId = [NSDictionary dictionaryWithKeysAndObjects:
-                                             AGENCY_DISPLAY_NAME_BY_AGENCYID_VERSION_NUMBER, PRELOAD_VERSION_NUMBER,
+                                             AGENCY_DISPLAY_NAME_BY_AGENCYID_VERSION_NUMBER, CALTRAIN_PRELOAD_VERSION_NUMBER,
                                              @"AC Transit", @"AC Transit",
                                              @"BART", @"BART",
                                              @"AirBART", @"AirBART",
