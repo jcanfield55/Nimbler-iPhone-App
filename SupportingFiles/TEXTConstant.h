@@ -78,4 +78,11 @@
 #define LAST_TO_LOCATION              @"lastToLocation"
 #define LAST_FROM_LOCATION            @"lastFromLocation"
 
+//US-184 Constant
+#define LOCAL                 @"Local"
+#define LIMITED               @"Limited"
+#define BULLET                @"Bullet"
+#define CALTRAIN_AGENCY_ID    @"caltrain-ca-us"
+#define TRAIN                 @"Train"
+
 #endif

@@ -75,6 +75,7 @@ static nc_AppDelegate *appDelegate;
 @synthesize strUpdateSettingURL;
 @synthesize strTweetCountURL;
 @synthesize isSettingView;
+@synthesize isRemoteNotification;
 
 // Feedback parameters
 @synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId;
@@ -453,20 +454,19 @@ FeedBackForm *fbView;
         [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
     }
     //US-163 Implementation
-    NSDate *appInstallDate = [[NSUserDefaults standardUserDefaults] objectForKey:DATE_OF_START];
-    double intevalInSeconds = [todayDate timeIntervalSinceDate:appInstallDate];
-    int dayInSeconds = 60 * 60 * 24;
-    int days = round(intevalInSeconds / dayInSeconds);
-    int daysToShowAlert = [[NSUserDefaults standardUserDefaults]integerForKey:DAYS_TO_SHOW_FEEDBACK_ALERT];
-    
-    if(![[NSUserDefaults standardUserDefaults] boolForKey:NO_THANKS_ACTION]){
-        if(days >= daysToShowAlert){
-           actionsheet = [[UIActionSheet alloc] initWithTitle:FEED_BACK_SHEET_TITLE delegate:self cancelButtonTitle:NO_THANKS_BUTTON_TITLE destructiveButtonTitle:nil otherButtonTitles:APPSTORE_FEEDBACK_BUTTON_TITLE,NIMBLER_FEEDBACK_BUTTON_TITLE,REMIND_ME_LATER_BUTTON_TITLE, nil];
-            actionsheet.cancelButtonIndex = actionsheet.numberOfButtons - 1;
-            [actionsheet showFromTabBar:self.tabBarController.tabBar];
+        NSDate *appInstallDate = [[NSUserDefaults standardUserDefaults] objectForKey:DATE_OF_START];
+        double intevalInSeconds = [todayDate timeIntervalSinceDate:appInstallDate];
+        int dayInSeconds = 60 * 60 * 24;
+        int days = round(intevalInSeconds / dayInSeconds);
+        int daysToShowAlert = [[NSUserDefaults standardUserDefaults]integerForKey:DAYS_TO_SHOW_FEEDBACK_ALERT];
+        
+        if(![[NSUserDefaults standardUserDefaults] boolForKey:NO_THANKS_ACTION]){
+            if(days >= daysToShowAlert){
+                actionsheet = [[UIActionSheet alloc] initWithTitle:FEED_BACK_SHEET_TITLE delegate:self cancelButtonTitle:NO_THANKS_BUTTON_TITLE destructiveButtonTitle:nil otherButtonTitles:APPSTORE_FEEDBACK_BUTTON_TITLE,NIMBLER_FEEDBACK_BUTTON_TITLE,REMIND_ME_LATER_BUTTON_TITLE, nil];
+                actionsheet.cancelButtonIndex = actionsheet.numberOfButtons - 1;
+                [actionsheet showFromTabBar:self.tabBarController.tabBar];
+            }
         }
-    }
-
     if(self.isTwitterView){
        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
         [twitterView getAdvisoryData];
@@ -505,13 +505,22 @@ FeedBackForm *fbView;
     }
     
     // US 177 Implementation
-    
-    RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
-    int lastSelectedIndex = [[NSUserDefaults standardUserDefaults] integerForKey:LAST_SELECTED_TAB_INDEX];
-    if (rxCustomTabBar.selectedIndex != lastSelectedIndex) {
-        [rxCustomTabBar selectTab:lastSelectedIndex];
+    if(isRemoteNotification){
+        RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
+        if (rxCustomTabBar.selectedIndex != 1) {
+            [rxCustomTabBar selectTab:1];
+        }
+        [[NSUserDefaults standardUserDefaults] setInteger:1 forKey:LAST_SELECTED_TAB_INDEX];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        isRemoteNotification = NO;
     }
-    
+    else{
+        RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
+        int lastSelectedIndex = [[NSUserDefaults standardUserDefaults] integerForKey:LAST_SELECTED_TAB_INDEX];
+        if (rxCustomTabBar.selectedIndex != lastSelectedIndex) {
+            [rxCustomTabBar selectTab:lastSelectedIndex];
+        }
+    }
     NSString *strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
     NSString *strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
     NSManagedObjectContext * context = [self managedObjectContext];
@@ -929,6 +938,8 @@ FeedBackForm *fbView;
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo 
 {
+    isRemoteNotification = YES;
+    [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
     @try {
         for (id key in userInfo) {
             NIMLOG_EVENT1(@"didReceiveRemoteNotification key: %@, value: %@", key, [userInfo objectForKey:key]);
@@ -1142,6 +1153,8 @@ FeedBackForm *fbView;
     if(buttonIndex == 0){
         NSURL *url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL];
         [[UIApplication sharedApplication] openURL:url];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:NO_THANKS_ACTION];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
     else if(buttonIndex == 1){
         RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;

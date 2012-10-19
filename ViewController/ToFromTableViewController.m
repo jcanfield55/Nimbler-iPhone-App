@@ -509,6 +509,8 @@
             @try {
                 NSString *strBART1 = @" bart";
                 NSString *strBART2 = @"bart ";
+                NSString *strCaltrain1 = @" caltrain";
+                NSString *strCaltrain2 = @"caltrain ";
                 NSString *strAirBart1 = @" airbart";
                 NSString *strAirBart2 = @"airbart ";
                 NSString *strStreet1 = @" street";
@@ -557,6 +559,7 @@
                     }
                     
                     NSMutableArray *arrMultiPleStationList = [[NSMutableArray alloc] init];
+                    NSMutableArray *arrUnFilteredStationList = [[NSMutableArray alloc] init];
                     NSMutableArray *arrDistance = [[NSMutableArray alloc] init];
                     NSManagedObjectContext * context = [[nc_AppDelegate sharedInstance] managedObjectContext];
                     NSFetchRequest * fetchPlanRequestChunk = [[NSFetchRequest alloc] init];
@@ -572,16 +575,16 @@
                             [self markAndUpdateSelectedLocation:location];
                             return;
                         }
-                        else if(finalDistance <= 2.0){
-                            [arrMultiPleStationList addObject:location];
-                            [arrDistance addObject:[NSString stringWithFormat:@"%f",finalDistance]];
+                        else{
+                            if(![[location shortFormattedAddress] isEqualToString:@"Current Location"] && ![[location shortFormattedAddress] isEqualToString:@"Caltrain Station List"] && [[location shortFormattedAddress] rangeOfString:@"Caltrain" options:NSCaseInsensitiveSearch].location == NSNotFound){
+                                [arrUnFilteredStationList addObject:location];
+                                [arrDistance addObject:[NSString stringWithFormat:@"%f",finalDistance]];
+                            }
                         }
                     }
-                    if([arrMultiPleStationList count] == 1){
-                        [self markAndUpdateSelectedLocation:[arrMultiPleStationList objectAtIndex:0]];
-                        return;
-                    }
-                    if([arrMultiPleStationList count] > 1){
+                    if([arrUnFilteredStationList count] > 1){
+                        NSLog(@"%d",[arrDistance count]);
+                        NSLog(@"%d",[arrUnFilteredStationList count]);
                         int min, temp,min1;
                         NSString *temp1;
                         int i,j;
@@ -596,22 +599,49 @@
                                 min1 = j;
                             }
                             temp = [[arrDistance objectAtIndex:i] intValue];
-                            temp1 = [arrMultiPleStationList objectAtIndex:i];
+                            temp1 = [arrUnFilteredStationList objectAtIndex:i];
                             [arrDistance replaceObjectAtIndex:i withObject:[arrDistance objectAtIndex:min]];
-                            [arrMultiPleStationList replaceObjectAtIndex:i withObject:[arrMultiPleStationList objectAtIndex:min]];
+                            [arrUnFilteredStationList replaceObjectAtIndex:i withObject:[arrUnFilteredStationList objectAtIndex:min]];
                             [arrDistance replaceObjectAtIndex:min withObject:[NSString stringWithFormat:@"%d",temp]];
-                            [arrMultiPleStationList replaceObjectAtIndex:min withObject:temp1];
+                            [arrUnFilteredStationList replaceObjectAtIndex:min withObject:temp1];
                         }
-                        
+                    }
+                    for (int i=0;i<[arrUnFilteredStationList count];i++){
+                        int finalDistance = [[arrDistance objectAtIndex:i] intValue];
+                        Location *loc = [arrUnFilteredStationList objectAtIndex:i];
+                        if((finalDistance < 2.0 || (finalDistance <= 3 && [arrMultiPleStationList count] < 3)) && finalDistance < rawAddress.length){
+                            NIMLOG_EVENT1(@"Station Name:%@ finalDistance:%d",loc.shortFormattedAddress,finalDistance);
+                            [arrMultiPleStationList addObject:[arrUnFilteredStationList objectAtIndex:i]];
+                        }
+                    }
+                    if([arrMultiPleStationList count] == 1){
+                        [self markAndUpdateSelectedLocation:[arrMultiPleStationList objectAtIndex:0]];
+                        return;
+                    }
+                    else if([arrMultiPleStationList count] > 1){
                         [toFromVC callLocationPickerFor:self
                                            locationList:arrMultiPleStationList
                                                  isFrom:isFrom
                                        isGeocodeResults:YES];
                         return;
                     }
+                    
                 }
                 
-                
+                if ([rawAddress rangeOfString:strCaltrain1 options:NSCaseInsensitiveSearch].location != NSNotFound || [rawAddress rangeOfString:strCaltrain2 options:NSCaseInsensitiveSearch].location != NSNotFound) {
+                    if ([rawAddress rangeOfString:strCaltrain1 options:NSCaseInsensitiveSearch].location != NSNotFound)
+                    {
+                        range = [rawAddress rangeOfString:strCaltrain1];
+                        NSMutableString *strMutableRawAddress =  (NSMutableString *)rawAddress;
+                        [strMutableRawAddress deleteCharactersInRange:range];
+                        rawAddress = strMutableRawAddress;
+                    }
+                    else if([rawAddress rangeOfString:strCaltrain2 options:NSCaseInsensitiveSearch].location != NSNotFound){
+                        range = [rawAddress rangeOfString:strCaltrain2];
+                        NSMutableString *strMutableRawAddress =  (NSMutableString *)rawAddress;
+                        [strMutableRawAddress deleteCharactersInRange:range];
+                        rawAddress = strMutableRawAddress;
+                    }
                 if ([rawAddress rangeOfString:strStreet1 options:NSCaseInsensitiveSearch].location != NSNotFound)
                 {
                     range = [rawAddress rangeOfString:strStreet1];
@@ -627,6 +657,7 @@
                 }
                 
                 NSMutableArray *arrMultiPleStationList = [[NSMutableArray alloc] init];
+                    NSMutableArray *arrUnFilteredStationList = [[NSMutableArray alloc] init];
                 NSMutableArray *arrDistance = [[NSMutableArray alloc] init];
                 NSManagedObjectContext * context = [[nc_AppDelegate sharedInstance] managedObjectContext];
                 NSFetchRequest * fetchPlanRequestChunk = [[NSFetchRequest alloc] init];
@@ -638,47 +669,74 @@
                     NSString *strshortFormattedAddress = [[location shortFormattedAddress]lowercaseString];
                     float distance = [self compareString:strshortFormattedAddress withString:rawAddress];
                     float finalDistance = distance + rawAddress.length - strshortFormattedAddress.length;
-                    if([rawAddress isEqualToString:[[location shortFormattedAddress]lowercaseString]]){
+                    NSString *strShortAddress = [[location shortFormattedAddress] lowercaseString];
+                   
+//                    if ([strShortAddress rangeOfString:@"caltrain" options:NSCaseInsensitiveSearch].location != NSNotFound)
+//                    {
+//                        range = [strShortAddress rangeOfString:@"caltrain"];
+//                        if(range){
+//                            NSMutableString *strMutableRawAddress =  [[NSMutableString alloc]init];
+//                            [strMutableRawAddress deleteCharactersInRange:range];
+//                            strShortAddress = strMutableRawAddress;
+//                        }
+//                    }
+                    if([rawAddress isEqualToString:[strShortAddress lowercaseString]]){
                         [self markAndUpdateSelectedLocation:location];
                         return;
                     }
-                    else if(finalDistance <= 2.0){
-                        [arrMultiPleStationList addObject:location];
-                        [arrDistance addObject:[NSString stringWithFormat:@"%f",finalDistance]];
+                    else{
+                        if(![strShortAddress isEqualToString:@"Current Location"] && ![strShortAddress isEqualToString:@"Caltrain Station List"] && [strShortAddress rangeOfString:@"Caltrain" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                            [arrUnFilteredStationList addObject:location];
+                            [arrDistance addObject:[NSString stringWithFormat:@"%f",finalDistance]];
+                        }
                     }
                 }
-                if([arrMultiPleStationList count] == 1){
-                    [self markAndUpdateSelectedLocation:[arrMultiPleStationList objectAtIndex:0]];
-                    return;
-                }
-                if([arrMultiPleStationList count] > 1){
-                    int min, temp,min1;
-                    NSString *temp1;
-                    int i,j;
-                    for (i = 0; i < [arrDistance count]-1; i++)
-                    {
-                        min = i;
-                        min1 = i;
-                        for (j = i+1; j < [arrDistance count]; j++)
+                    if([arrUnFilteredStationList count] > 1){
+                        NSLog(@"%d",[arrDistance count]);
+                        NSLog(@"%d",[arrUnFilteredStationList count]);
+                        int min, temp,min1;
+                        NSString *temp1;
+                        int i,j;
+                        for (i = 0; i < [arrDistance count]-1; i++)
                         {
-                            if ([[arrDistance objectAtIndex:j] intValue] < [[arrDistance objectAtIndex:min] intValue])
-                                min = j;
-                            min1 = j;
+                            min = i;
+                            min1 = i;
+                            for (j = i+1; j < [arrDistance count]; j++)
+                            {
+                                if ([[arrDistance objectAtIndex:j] intValue] < [[arrDistance objectAtIndex:min] intValue])
+                                    min = j;
+                                min1 = j;
+                            }
+                            temp = [[arrDistance objectAtIndex:i] intValue];
+                            temp1 = [arrUnFilteredStationList objectAtIndex:i];
+                            [arrDistance replaceObjectAtIndex:i withObject:[arrDistance objectAtIndex:min]];
+                            [arrUnFilteredStationList replaceObjectAtIndex:i withObject:[arrUnFilteredStationList objectAtIndex:min]];
+                            [arrDistance replaceObjectAtIndex:min withObject:[NSString stringWithFormat:@"%d",temp]];
+                            [arrUnFilteredStationList replaceObjectAtIndex:min withObject:temp1];
                         }
-                        temp = [[arrDistance objectAtIndex:i] intValue];
-                        temp1 = [arrMultiPleStationList objectAtIndex:i];
-                        [arrDistance replaceObjectAtIndex:i withObject:[arrDistance objectAtIndex:min]];
-                        [arrMultiPleStationList replaceObjectAtIndex:i withObject:[arrMultiPleStationList objectAtIndex:min]];
-                        [arrDistance replaceObjectAtIndex:min withObject:[NSString stringWithFormat:@"%d",temp]];
-                        [arrMultiPleStationList replaceObjectAtIndex:min withObject:temp1];
+                    }
+                    for (int i=0;i<[arrUnFilteredStationList count];i++){
+                        int finalDistance = [[arrDistance objectAtIndex:i] intValue];
+                        Location *loc = [arrUnFilteredStationList objectAtIndex:i];
+                        if((finalDistance < 2.0 || (finalDistance <= 3 && [arrMultiPleStationList count] < 3)) && finalDistance < rawAddress.length){
+                            NIMLOG_EVENT1(@"Station Name:%@ finalDistance:%d",loc.shortFormattedAddress,finalDistance);
+                            [arrMultiPleStationList addObject:[arrUnFilteredStationList objectAtIndex:i]];
+                        }
+                    }
+                    if([arrMultiPleStationList count] == 1){
+                        [self markAndUpdateSelectedLocation:[arrMultiPleStationList objectAtIndex:0]];
+                        return;
+                    }
+                    else if([arrMultiPleStationList count] > 1){
+                        [toFromVC callLocationPickerFor:self
+                                           locationList:arrMultiPleStationList
+                                                 isFrom:isFrom
+                                       isGeocodeResults:YES];
+                        return;
                     }
 
-                    [toFromVC callLocationPickerFor:self
-                                       locationList:arrMultiPleStationList
-                                             isFrom:isFrom
-                                   isGeocodeResults:YES];
-                    return;
-                }
+            }
+            
                 GeocodeRequestParameters* parameters = [[GeocodeRequestParameters alloc] init];
                 parameters.rawAddress = rawAddress;
                 parameters.supportedRegion = [self supportedRegion];
@@ -688,7 +746,7 @@
                     parameters.apiType = GOOGLE_GEOCODER;
                 }
                 parameters.isFrom = isFrom;
-
+                
                 // Call the geocoder
                 [locations forwardGeocodeWithParameters:parameters callBack:self];
                 
@@ -700,8 +758,9 @@
                          FLURRY_TOFROM_WHICH_TABLE, (isFrom ? @"fromTable" : @"toTable"),
                          FLURRY_GEOCODE_RAWADDRESS, rawAddress,
                          FLURRY_GEOCODE_API, (([parameters apiType]==GOOGLE_GEOCODER) ? @"Google" : @"iOS"),
-                         nil, nil);                
-            }
+                         nil, nil);
+                       
+     }
             @catch (NSException *exception) {
                 logException(@"ToFromTableViewController->textSubmitted", @"Loading geocode info", exception);
             }

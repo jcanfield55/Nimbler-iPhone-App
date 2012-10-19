@@ -209,9 +209,56 @@
 
 // Returns a string which can be used in RouteOptionsView to give a summary of the itinerary
 // Each line of the string will be truncated to fit within width using font
+
+- (UIColor *)detailTextLabelColor{
+    for (Leg* leg in [self sortedLegs]) {
+        if([[leg routeLongName] isEqualToString:LOCAL]){
+            return [UIColor darkGrayColor];
+        }
+        else if([[leg routeLongName] isEqualToString:LIMITED]){
+            return [UIColor orangeColor];
+        }
+        else if([[leg routeLongName] isEqualToString:BULLET]){
+            return [UIColor redColor];
+        }
+    }
+    return [UIColor darkGrayColor];
+}
 - (NSString *)itinerarySummaryStringForWidth:(CGFloat)width Font:(UIFont *)font
 {
-    // Set sub-title (show each leg's mode and route if available)
+    //US-184 Implementation
+//    NSRange range;
+//    NSString *strTrainNumber;
+//    // Set sub-title (show each leg's mode and route if available)
+//        for (Leg* leg in [self sortedLegs]) {
+//            if([[leg agencyId] isEqualToString:CALTRAIN_AGENCY_ID]){
+//                NSString *strHeadSign = [leg headSign];
+//                NSArray *headSignComponent = [strHeadSign componentsSeparatedByString:TRAIN];
+//                if([headSignComponent count] > 1){
+//                   strTrainNumber = [headSignComponent objectAtIndex:1];
+//                    if(!strTrainNumber){
+//                        NSString *strTrainNumber = [NSString stringWithFormat:@"Caltrain %@",[leg routeLongName]];
+//                        return strTrainNumber;
+//                    }
+//                }
+//                else{
+//                    NSString *strTrainNumber = [NSString stringWithFormat:@"Caltrain %@",[leg routeLongName]];
+//                    return strTrainNumber;
+//                }
+//                if([strTrainNumber rangeOfString:@")" options:NSCaseInsensitiveSearch].location != NSNotFound){
+//                    range = [strTrainNumber rangeOfString:@")"];
+//                    strTrainNumber = [strTrainNumber substringToIndex:range.location];
+//                    NSString * strTemp = [strTrainNumber stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+//                    NSString *strFullTrainNumber = [NSString stringWithFormat:@"Caltrain #%@",strTemp];
+//                    return strFullTrainNumber;
+//                }
+//                else{
+//                    NSString * strTemp = [strTrainNumber stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+//                    NSString *strTrainNumber = [NSString stringWithFormat:@"Caltrain #%@",strTemp];
+//                    return strTrainNumber;
+//                }
+//        }
+//    }
     NSMutableString *returnString = [NSMutableString stringWithCapacity:30];
     BOOL isFirstLegToDisplay = true;
     for (Leg* leg in [self sortedLegs]) {

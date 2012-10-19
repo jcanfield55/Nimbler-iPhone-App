@@ -155,8 +155,35 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     else if ([[self mode] isEqualToString:@"TRAM"]) {
         [summary appendString:@" Tram"];
     }
-    if (![[self agencyId] isEqualToString:@"BART"]) { // don't add BART route name because too long
+    if (![[self agencyId] isEqualToString:@"BART"] && ![[self agencyId] isEqualToString:@"caltrain-ca-us"]) { // don't add BART route name because too long
         [summary appendFormat:@" %@", [self route]];
+    }
+    
+    // US-184 Implementation
+    if ([[self agencyId] isEqualToString:@"caltrain-ca-us"]) {
+        NSRange range;
+        NSString *strTrainNumber;
+        NSString *strHeadSign = [self headSign];
+        NSArray *headSignComponent = [strHeadSign componentsSeparatedByString:TRAIN];
+        if([headSignComponent count] > 1){
+            strTrainNumber = [headSignComponent objectAtIndex:1];
+            if(!strTrainNumber){
+                [summary appendFormat:@" %@", [self route]];
+            }
+            else{
+                if([strTrainNumber rangeOfString:@")" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                    range = [strTrainNumber rangeOfString:@")"];
+                    strTrainNumber = [strTrainNumber substringToIndex:range.location];
+                    NSString * strTemp = [strTrainNumber stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                    NSString *strFullTrainNumber = [NSString stringWithFormat:@"#%@",strTemp];
+                    [summary appendFormat:@" %@", strFullTrainNumber];
+                    
+                }
+            }
+        }
+        else{
+            [summary appendFormat:@" %@", [self route]];
+        }
     }
     return summary;
 }

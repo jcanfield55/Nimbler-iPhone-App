@@ -171,7 +171,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 
         [[cell detailTextLabel] setText:[itin itinerarySummaryStringForWidth:ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
                                                                         Font:cell.detailTextLabel.font]];
+            
         [[cell detailTextLabel] setNumberOfLines:0];  // Allow for multi-lines
+        [cell.detailTextLabel setTextColor:[itin detailTextLabelColor]];
     }
     @catch (NSException *exception) {
         logException(@"RouteOptionsViewController->cellForRowAtIndexPath", @"", exception);
