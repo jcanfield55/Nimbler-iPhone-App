@@ -212,13 +212,13 @@
 
 - (UIColor *)detailTextLabelColor{
     for (Leg* leg in [self sortedLegs]) {
-        if([[leg routeLongName] isEqualToString:LOCAL]){
+        if([[leg routeLongName] isEqualToString:CALTRAIN_LOCAL]){
             return [UIColor darkGrayColor];
         }
-        else if([[leg routeLongName] isEqualToString:LIMITED]){
+        else if([[leg routeLongName] isEqualToString:CALTRAIN_LIMITED]){
             return [UIColor orangeColor];
         }
-        else if([[leg routeLongName] isEqualToString:BULLET]){
+        else if([[leg routeLongName] isEqualToString:CALTRAIN_BULLET]){
             return [UIColor redColor];
         }
     }

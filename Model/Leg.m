@@ -164,7 +164,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         NSRange range;
         NSString *strTrainNumber;
         NSString *strHeadSign = [self headSign];
-        NSArray *headSignComponent = [strHeadSign componentsSeparatedByString:TRAIN];
+        NSArray *headSignComponent = [strHeadSign componentsSeparatedByString:CALTRAIN_TRAIN];
         if([headSignComponent count] > 1){
             strTrainNumber = [headSignComponent objectAtIndex:1];
             if(!strTrainNumber){

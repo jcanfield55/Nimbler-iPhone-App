@@ -296,3 +296,9 @@
 
 #define PUSH_NOTIFY_OFF     -1
 
+//US-184 Constant
+#define CALTRAIN_LOCAL                 @"Local"
+#define CALTRAIN_LIMITED               @"Limited"
+#define CALTRAIN_BULLET                @"Bullet"
+#define CALTRAIN_AGENCY_ID    @"caltrain-ca-us"
+#define CALTRAIN_TRAIN                 @"Train"
