@@ -2,9 +2,9 @@
 	"results" : [ {
 			"toFrequency" : 0.7357473,
 			"address_components" : [{
-					"long_name" : "12th St Oakland City Center",
+					"long_name" : "12th St Oakland City Center BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "12th St Oakland City Center"
+					"short_name" : "12th St Oakland City Center BART"
 				}, {
 					"long_name" : "Downtown",
 					"types" : ["neighborhood", "political"],
@@ -31,7 +31,7 @@
 					"short_name" : "94612"
 				}
 			],
-			"formatted_address" : "12th St Oakland City Center, Oakland, CA 94612, USA",
+			"formatted_address" : "12th St Oakland City Center BART, Oakland, CA 94612, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart01",
 			"fromFrequency" : "0.06",
@@ -55,9 +55,9 @@
 		}, {
 			"toFrequency" : 0.85470694,
 			"address_components" : [{
-					"long_name" : "16th St Mission",
+					"long_name" : "16th St Mission BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "16th St Mission"
+					"short_name" : "16th St Mission BART"
 				}, {
 					"long_name" : "2000",
 					"types" : ["street_number"],
@@ -92,7 +92,7 @@
 					"short_name" : "94103"
 				}
 			],
-			"formatted_address" : "16th St Mission, 2000 Mission St, San Francisco, CA 94103, USA",
+			"formatted_address" : "16th St Mission BART, 2000 Mission St, San Francisco, CA 94103, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart02",
 			"fromFrequency" : "0.88",
@@ -116,9 +116,9 @@
 		}, {
 			"toFrequency" : 0.88185287,
 			"address_components" : [{
-					"long_name" : "19th St Oakland",
+					"long_name" : "19th St Oakland BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "19th St Oakland"
+					"short_name" : "19th St Oakland BART"
 				}, {
 					"long_name" : "Downtown",
 					"types" : ["neighborhood", "political"],
@@ -145,7 +145,7 @@
 					"short_name" : "94612"
 				}
 			],
-			"formatted_address" : "19th St Oakland, Oakland, CA 94612, USA",
+			"formatted_address" : "19th St Oakland BART, Oakland, CA 94612, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart03",
 			"fromFrequency" : "0.08",
@@ -169,9 +169,9 @@
 		}, {
 			"toFrequency" : 0.5545369,
 			"address_components" : [{
-					"long_name" : "24th St Mission",
+					"long_name" : "24th St Mission BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "24th St Mission"
+					"short_name" : "24th St Mission BART"
 				}, {
 					"long_name" : "Mission District",
 					"types" : ["neighborhood", "political"],
@@ -198,7 +198,7 @@
 					"short_name" : "94110"
 				}
 			],
-			"formatted_address" : "24th St Mission, San Francisco, CA 94110, USA",
+			"formatted_address" : "24th St Mission BART, San Francisco, CA 94110, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart04",
 			"fromFrequency" : "0.97",
@@ -222,9 +222,9 @@
 		}, {
 			"toFrequency" : 0.56263673,
 			"address_components" : [{
-					"long_name" : "Ashby",
+					"long_name" : "Ashby BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Ashby"
+					"short_name" : "Ashby BART"
 				}, {
 					"long_name" : "South Berkeley",
 					"types" : ["neighborhood", "political"],
@@ -251,7 +251,7 @@
 					"short_name" : "94703"
 				}
 			],
-			"formatted_address" : "Ashby, Berkeley, CA 94703, USA",
+			"formatted_address" : "Ashby BART, Berkeley, CA 94703, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart05",
 			"fromFrequency" : "0.45",
@@ -275,9 +275,9 @@
 		}, {
 			"toFrequency" : 0.57941604,
 			"address_components" : [{
-					"long_name" : "Balboa Park",
+					"long_name" : "Balboa Park BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Balboa Park"
+					"short_name" : "Balboa Park BART"
 				}, {
 					"long_name" : "Ingleside",
 					"types" : ["neighborhood", "political"],
@@ -304,7 +304,7 @@
 					"short_name" : "94112"
 				}
 			],
-			"formatted_address" : "Balboa Park, San Francisco, CA 94112, USA",
+			"formatted_address" : "Balboa Park BART, San Francisco, CA 94112, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart06",
 			"fromFrequency" : "0.62",
@@ -328,9 +328,9 @@
 		}, {
 			"toFrequency" : 0.17407721,
 			"address_components" : [{
-					"long_name" : "Bay Fair",
+					"long_name" : "Bay Fair BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Bay Fair"
+					"short_name" : "Bay Fair BART"
 				}, {
 					"long_name" : "San Leandro",
 					"types" : ["locality", "political"],
@@ -353,7 +353,7 @@
 					"short_name" : "94580"
 				}
 			],
-			"formatted_address" : "Bay Fair, San Leandro, CA 94580, USA",
+			"formatted_address" : "Bay Fair BART, San Leandro, CA 94580, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart07",
 			"fromFrequency" : "0.79",
@@ -377,9 +377,9 @@
 		}, {
 			"toFrequency" : 0.89670616,
 			"address_components" : [{
-					"long_name" : "Castro Valley",
+					"long_name" : "Castro Valley BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Castro Valley"
+					"short_name" : "Castro Valley BART"
 				}, {
 					"long_name" : "Castro Valley",
 					"types" : ["locality", "political"],
@@ -402,7 +402,7 @@
 					"short_name" : "94546"
 				}
 			],
-			"formatted_address" : "Castro Valley, CA 94546, USA",
+			"formatted_address" : "Castro Valley BART, CA 94546, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart08",
 			"fromFrequency" : "0.42",
@@ -426,9 +426,9 @@
 		}, {
 			"toFrequency" : 0.88391024,
 			"address_components" : [{
-					"long_name" : "Civic Center\/UN Plaza",
+					"long_name" : "Civic Center\/UN Plaza BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Civic Center\/UN Plaza"
+					"short_name" : "Civic Center\/UN Plaza BART"
 				}, {
 					"long_name" : "Civic Center",
 					"types" : ["neighborhood", "political"],
@@ -455,7 +455,7 @@
 					"short_name" : "94142"
 				}
 			],
-			"formatted_address" : "Civic Center\/UN Plaza, San Francisco, CA 94142, USA",
+			"formatted_address" : "Civic Center\/UN Plaza BART, San Francisco, CA 94142, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart09",
 			"fromFrequency" : "0.87",
@@ -479,9 +479,9 @@
 		}, {
 			"toFrequency" : 0.06439835,
 			"address_components" : [{
-					"long_name" : "Colma",
+					"long_name" : "Colma BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Colma"
+					"short_name" : "Colma BART"
 				}, {
 					"long_name" : "Original Daly City",
 					"types" : ["neighborhood", "political"],
@@ -504,7 +504,7 @@
 					"short_name" : "94014"
 				}
 			],
-			"formatted_address" : "Colma, Original Daly City, CA 94014, USA",
+			"formatted_address" : "Colma BART, Original Daly City, CA 94014, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart10",
 			"fromFrequency" : "0.34",
@@ -528,9 +528,9 @@
 		}, {
 			"toFrequency" : 0.98841023,
 			"address_components" : [{
-					"long_name" : "Concord",
+					"long_name" : "Concord BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Concord"
+					"short_name" : "Concord BART"
 				}, {
 					"long_name" : "Concord",
 					"types" : ["locality", "political"],
@@ -553,7 +553,7 @@
 					"short_name" : "94520"
 				}
 			],
-			"formatted_address" : "Concord, CA 94520, USA",
+			"formatted_address" : "Concord BART, Concord CA 94520, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart11",
 			"fromFrequency" : "0.27",
@@ -577,9 +577,9 @@
 		}, {
 			"toFrequency" : 0.5340342,
 			"address_components" : [{
-					"long_name" : "Daly City",
+					"long_name" : "Daly City BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Daly City"
+					"short_name" : "Daly City BART"
 				}, {
 					"long_name" : "Original Daly City",
 					"types" : ["neighborhood", "political"],
@@ -606,7 +606,7 @@
 					"short_name" : "94014"
 				}
 			],
-			"formatted_address" : "Daly City, CA 94014, USA",
+			"formatted_address" : "Daly City BART, CA 94014, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart12",
 			"fromFrequency" : "0.61",
@@ -630,9 +630,9 @@
 		}, {
 			"toFrequency" : 0.8521892,
 			"address_components" : [{
-					"long_name" : "Downtown Berkeley",
+					"long_name" : "Downtown Berkeley BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Downtown Berkeley"
+					"short_name" : "Downtown Berkeley BART"
 				}, {
 					"long_name" : "South Berkeley",
 					"types" : ["neighborhood", "political"],
@@ -659,7 +659,7 @@
 					"short_name" : "94704"
 				}
 			],
-			"formatted_address" : "Downtown Berkeley, Berkeley, CA 94704, USA",
+			"formatted_address" : "Downtown Berkeley BART, Berkeley, CA 94704, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart13",
 			"fromFrequency" : "0.41",
@@ -683,9 +683,9 @@
 		}, {
 			"toFrequency" : 0.916671,
 			"address_components" : [{
-					"long_name" : "Dublin\/Pleasanton",
+					"long_name" : "Dublin\/Pleasanton BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Dublin\/Pleasanton"
+					"short_name" : "Dublin\/Pleasanton BART"
 				}, {
 					"long_name" : "Dublin",
 					"types" : ["locality", "political"],
@@ -708,7 +708,7 @@
 					"short_name" : "94588"
 				}
 			],
-			"formatted_address" : "Dublin\/Pleasanton, Dublin, CA 94588, USA",
+			"formatted_address" : "Dublin\/Pleasanton BART, Dublin, CA 94588, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart14",
 			"fromFrequency" : "0.81",
@@ -732,9 +732,9 @@
 		}, {
 			"toFrequency" : 0.32774198,
 			"address_components" : [{
-					"long_name" : "El Cerrito del Norte",
+					"long_name" : "El Cerrito del Norte BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "El Cerrito del Norte"
+					"short_name" : "El Cerrito del Norte BART"
 				}, {
 					"long_name" : "El Cerrito",
 					"types" : ["locality", "political"],
@@ -757,7 +757,7 @@
 					"short_name" : "94530"
 				}
 			],
-			"formatted_address" : "El Cerrito del Norte, El Cerrito, CA 94530, USA",
+			"formatted_address" : "El Cerrito del Norte BART, El Cerrito, CA 94530, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart15",
 			"fromFrequency" : "0.02",
@@ -781,9 +781,9 @@
 		}, {
 			"toFrequency" : 0.4914782,
 			"address_components" : [{
-					"long_name" : "El Cerrito Plaza",
+					"long_name" : "El Cerrito Plaza BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "El Cerrito Plaza"
+					"short_name" : "El Cerrito Plaza BART"
 				}, {
 					"long_name" : "6699",
 					"types" : ["street_number"],
@@ -814,7 +814,7 @@
 					"short_name" : "94530"
 				}
 			],
-			"formatted_address" : "El Cerrito Plaza, 6699 Fairmount Ave, El Cerrito, CA 94530, USA",
+			"formatted_address" : "El Cerrito Plaza BART, 6699 Fairmount Ave, El Cerrito, CA 94530, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart16",
 			"fromFrequency" : "0.43",
@@ -838,9 +838,9 @@
 		}, {
 			"toFrequency" : 0.25671607,
 			"address_components" : [{
-					"long_name" : "Embarcadero",
+					"long_name" : "Embarcadero BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Embarcadero"
+					"short_name" : "Embarcadero BART"
 				}, {
 					"long_name" : "Financial District",
 					"types" : ["neighborhood", "political"],
@@ -867,7 +867,7 @@
 					"short_name" : "94111"
 				}
 			],
-			"formatted_address" : "Embarcadero, San Francisco, CA 94111, USA",
+			"formatted_address" : "Embarcadero BART, San Francisco, CA 94111, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart17",
 			"fromFrequency" : "0.07",
@@ -891,9 +891,9 @@
 		}, {
 			"toFrequency" : 0.7272337,
 			"address_components" : [{
-					"long_name" : "Fremont",
+					"long_name" : "Fremont BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Fremont"
+					"short_name" : "Fremont BART"
 				}, {
 					"long_name" : "Central Downtown",
 					"types" : ["neighborhood", "political"],
@@ -920,7 +920,7 @@
 					"short_name" : "94536"
 				}
 			],
-			"formatted_address" : "Fremont, CA 94536, USA",
+			"formatted_address" : "Fremont BART, Fremont, CA 94536, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart18",
 			"fromFrequency" : "0.54",
@@ -944,9 +944,9 @@
 		}, {
 			"toFrequency" : 0.318933,
 			"address_components" : [{
-					"long_name" : "Fruitvale",
+					"long_name" : "Fruitvale BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Fruitvale"
+					"short_name" : "Fruitvale BART"
 				}, {
 					"long_name" : "Fruitvale Station",
 					"types" : ["neighborhood", "political"],
@@ -973,7 +973,7 @@
 					"short_name" : "94601"
 				}
 			],
-			"formatted_address" : "Fruitvale, Oakland, CA 94601, USA",
+			"formatted_address" : "Fruitvale BART, Oakland, CA 94601, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart19",
 			"fromFrequency" : "0.77",
@@ -997,9 +997,9 @@
 		}, {
 			"toFrequency" : 0.28305376,
 			"address_components" : [{
-					"long_name" : "Glen Park",
+					"long_name" : "Glen Park BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Glen Park"
+					"short_name" : "Glen Park BART"
 				}, {
 					"long_name" : "Glen Park",
 					"types" : ["neighborhood", "political"],
@@ -1026,7 +1026,7 @@
 					"short_name" : "94131"
 				}
 			],
-			"formatted_address" : "Glen Park, San Francisco, CA 94131, USA",
+			"formatted_address" : "Glen Park BART, San Francisco, CA 94131, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart20",
 			"fromFrequency" : "0.59",
@@ -1050,9 +1050,9 @@
 		}, {
 			"toFrequency" : 0.5057394,
 			"address_components" : [{
-					"long_name" : "Hayward",
+					"long_name" : "Hayward BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Hayward"
+					"short_name" : "Hayward BART"
 				}, {
 					"long_name" : "Hayward",
 					"types" : ["locality", "political"],
@@ -1075,7 +1075,7 @@
 					"short_name" : "94541"
 				}
 			],
-			"formatted_address" : "Hayward, CA 94541, USA",
+			"formatted_address" : "Hayward BART, Hayward, CA 94541, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart21",
 			"fromFrequency" : "0.70",
@@ -1099,9 +1099,9 @@
 		}, {
 			"toFrequency" : 0.064142585,
 			"address_components" : [{
-					"long_name" : "North Concord\/Martinez",
+					"long_name" : "North Concord\/Martinez BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "North Concord\/Martinez"
+					"short_name" : "North Concord\/Martinez BART"
 				}, {
 					"long_name" : "Concord",
 					"types" : ["locality", "political"],
@@ -1124,7 +1124,7 @@
 					"short_name" : "94519"
 				}
 			],
-			"formatted_address" : "North Concord\/Martinez, Concord, CA 94519, USA",
+			"formatted_address" : "North Concord\/Martinez BART, Concord, CA 94519, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart22",
 			"fromFrequency" : "0.97",
@@ -1148,9 +1148,9 @@
 		}, {
 			"toFrequency" : 0.19212699,
 			"address_components" : [{
-					"long_name" : "Lafayette",
+					"long_name" : "Lafayette BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Lafayette"
+					"short_name" : "Lafayette BART"
 				}, {
 					"long_name" : "3601",
 					"types" : ["street_number"],
@@ -1185,7 +1185,7 @@
 					"short_name" : "94549"
 				}
 			],
-			"formatted_address" : "Lafayette, 3601 Deer Hill Rd, Lafayette, CA 94549, USA",
+			"formatted_address" : "Lafayette BART, 3601 Deer Hill Rd, Lafayette, CA 94549, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart23",
 			"fromFrequency" : "0.06",
@@ -1209,9 +1209,9 @@
 		}, {
 			"toFrequency" : 0.7173304,
 			"address_components" : [{
-					"long_name" : "Lake Merritt",
+					"long_name" : "Lake Merritt BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Lake Merritt"
+					"short_name" : "Lake Merritt BART"
 				}, {
 					"long_name" : "Downtown Oakland",
 					"types" : ["neighborhood", "political"],
@@ -1238,7 +1238,7 @@
 					"short_name" : "94607"
 				}
 			],
-			"formatted_address" : "Lake Merritt, Oakland, CA 94607, USA",
+			"formatted_address" : "Lake Merritt BART, Oakland, CA 94607, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart24",
 			"fromFrequency" : "0.61",
@@ -1262,9 +1262,9 @@
 		}, {
 			"toFrequency" : 0.7111904,
 			"address_components" : [{
-					"long_name" : "MacArthur",
+					"long_name" : "MacArthur BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "MacArthur"
+					"short_name" : "MacArthur BART"
 				}, {
 					"long_name" : "Mosswood",
 					"types" : ["neighborhood", "political"],
@@ -1291,7 +1291,7 @@
 					"short_name" : "94609"
 				}
 			],
-			"formatted_address" : "MacArthur, Oakland, CA 94609, USA",
+			"formatted_address" : "MacArthur BART, Oakland, CA 94609, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart25",
 			"fromFrequency" : "0.80",
@@ -1315,9 +1315,9 @@
 		}, {
 			"toFrequency" : 0.07392591,
 			"address_components" : [{
-					"long_name" : "Millbrae",
+					"long_name" : "Millbrae BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Millbrae"
+					"short_name" : "Millbrae BART"
 				}, {
 					"long_name" : "Millbrae",
 					"types" : ["locality", "political"],
@@ -1340,7 +1340,7 @@
 					"short_name" : "94030"
 				}
 			],
-			"formatted_address" : "Millbrae, CA 94030, USA",
+			"formatted_address" : "Millbrae BART, Millbrae, CA 94030, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart26",
 			"fromFrequency" : "0.87",
@@ -1364,9 +1364,9 @@
 		}, {
 			"toFrequency" : 0.49194837,
 			"address_components" : [{
-					"long_name" : "Montgomery St",
+					"long_name" : "Montgomery St BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Montgomery St"
+					"short_name" : "Montgomery St BART"
 				}, {
 					"long_name" : "Financial District",
 					"types" : ["neighborhood", "political"],
@@ -1393,7 +1393,7 @@
 					"short_name" : "94120"
 				}
 			],
-			"formatted_address" : "Montgomery St, San Francisco, CA 94104, USA",
+			"formatted_address" : "Montgomery St BART, San Francisco, CA 94104, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart27",
 			"fromFrequency" : "0.23",
@@ -1417,9 +1417,9 @@
 		}, {
 			"toFrequency" : 0.6763369,
 			"address_components" : [{
-					"long_name" : "North Berkeley",
+					"long_name" : "North Berkeley BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "North Berkeley"
+					"short_name" : "North Berkeley BART"
 				}, {
 					"long_name" : "Northwest Berkeley",
 					"types" : ["neighborhood", "political"],
@@ -1446,7 +1446,7 @@
 					"short_name" : "94702"
 				}
 			],
-			"formatted_address" : "North Berkeley, Berkeley, CA 94702, USA",
+			"formatted_address" : "North Berkeley BART, Berkeley, CA 94702, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart28",
 			"fromFrequency" : "0.03",
@@ -1470,9 +1470,9 @@
 		}, {
 			"toFrequency" : 0.9075432,
 			"address_components" : [{
-					"long_name" : "Orinda",
+					"long_name" : "Orinda BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Orinda"
+					"short_name" : "Orinda BART"
 				}, {
 					"long_name" : "Knickerbocker",
 					"types" : ["neighborhood", "political"],
@@ -1499,7 +1499,7 @@
 					"short_name" : "94563"
 				}
 			],
-			"formatted_address" : "Orinda, CA 94563, USA",
+			"formatted_address" : "Orinda BART, Orinda, CA 94563, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart29",
 			"fromFrequency" : "0.41",
@@ -1523,9 +1523,9 @@
 		}, {
 			"toFrequency" : 0.68050915,
 			"address_components" : [{
-					"long_name" : "Pittsburg\/Bay Point",
+					"long_name" : "Pittsburg\/Bay Point BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Pittsburg\/Bay Point"
+					"short_name" : "Pittsburg\/Bay Point BART"
 				}, {
 					"long_name" : "Pittsburg",
 					"types" : ["locality", "political"],
@@ -1548,7 +1548,7 @@
 					"short_name" : "94565"
 				}
 			],
-			"formatted_address" : "Pittsburg\/Bay Point, Pittsburg, CA 94565, USA",
+			"formatted_address" : "Pittsburg\/Bay Point BART, Pittsburg, CA 94565, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart30",
 			"fromFrequency" : "0.96",
@@ -1572,9 +1572,9 @@
 		}, {
 			"toFrequency" : 0.64866704,
 			"address_components" : [{
-					"long_name" : "Pleasant Hill\/Contra Costa Centre",
+					"long_name" : "Pleasant Hill\/Contra Costa Centre BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Pleasant Hill\/Contra Costa Centre"
+					"short_name" : "Pleasant Hill\/Contra Costa Centre BART"
 				}, {
 					"long_name" : "Contra Costa Centre Transit Village",
 					"types" : ["sublocality", "political"],
@@ -1597,7 +1597,7 @@
 					"short_name" : "94597"
 				}
 			],
-			"formatted_address" : "Pleasant Hill\/Contra Costa Centre, Contra Costa Centre Transit Village, CA 94597, USA",
+			"formatted_address" : "Pleasant Hill\/Contra Costa Centre BART, Contra Costa Centre Transit Village, CA 94597, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart31",
 			"fromFrequency" : "0.33",
@@ -1621,9 +1621,9 @@
 		}, {
 			"toFrequency" : 0.20713818,
 			"address_components" : [{
-					"long_name" : "Powell St",
+					"long_name" : "Powell St BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Powell St"
+					"short_name" : "Powell St BART"
 				}, {
 					"long_name" : "Downtown",
 					"types" : ["neighborhood", "political"],
@@ -1650,7 +1650,7 @@
 					"short_name" : "94142"
 				}
 			],
-			"formatted_address" : "Powell St, San Francisco, CA 94102, USA",
+			"formatted_address" : "Powell St BART, San Francisco, CA 94102, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart32",
 			"fromFrequency" : "0.56",
@@ -1674,9 +1674,9 @@
 		}, {
 			"toFrequency" : 0.5431933,
 			"address_components" : [{
-					"long_name" : "Richmond",
+					"long_name" : "Richmond BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Richmond"
+					"short_name" : "Richmond BART"
 				}, {
 					"long_name" : "Belding Woods",
 					"types" : ["neighborhood", "political"],
@@ -1703,7 +1703,7 @@
 					"short_name" : "94801"
 				}
 			],
-			"formatted_address" : "Richmond, CA 94801, USA",
+			"formatted_address" : "Richmond BART, Richmond, CA 94801, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart33",
 			"fromFrequency" : "0.36",
@@ -1727,9 +1727,9 @@
 		}, {
 			"toFrequency" : 0.0475713,
 			"address_components" : [{
-					"long_name" : "Rockridge",
+					"long_name" : "Rockridge BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Rockridge"
+					"short_name" : "Rockridge BART"
 				}, {
 					"long_name" : "5660",
 					"types" : ["street_number"],
@@ -1764,7 +1764,7 @@
 					"short_name" : "94618"
 				}
 			],
-			"formatted_address" : "Rockridge, 5660 College Ave, Oakland, CA 94618, USA",
+			"formatted_address" : "Rockridge BART, 5660 College Ave, Oakland, CA 94618, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart34",
 			"fromFrequency" : "0.86",
@@ -1788,9 +1788,9 @@
 		}, {
 			"toFrequency" : 0.59698284,
 			"address_components" : [{
-					"long_name" : "San Bruno",
+					"long_name" : "San Bruno BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "San Bruno"
+					"short_name" : "San Bruno BART"
 				}, {
 					"long_name" : "San Bruno",
 					"types" : ["locality", "political"],
@@ -1813,7 +1813,7 @@
 					"short_name" : "94066"
 				}
 			],
-			"formatted_address" : "San Bruno, CA 94066, USA",
+			"formatted_address" : "San Bruno BART, San Bruno, CA 94066, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart35",
 			"fromFrequency" : "0.74",
@@ -1837,9 +1837,9 @@
 		}, {
 			"toFrequency" : 0.5202326,
 			"address_components" : [{
-					"long_name" : "San Francisco Int'l Airport",
+					"long_name" : "San Francisco Int'l Airport BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "San Francisco Int'l Airport"
+					"short_name" : "San Francisco Int'l Airport BART"
 				}, {
 					"long_name" : "San Mateo",
 					"types" : ["administrative_area_level_2", "political"],
@@ -1858,7 +1858,7 @@
 					"short_name" : "94030"
 				}
 			],
-			"formatted_address" : "San Francisco Int'l Airport, California 94030, USA",
+			"formatted_address" : "San Francisco Int'l Airport BART, San Francisco, California 94030, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart36",
 			"fromFrequency" : "0.41",
@@ -1882,9 +1882,9 @@
 		}, {
 			"toFrequency" : 0.6453875,
 			"address_components" : [{
-					"long_name" : "San Leandro",
+					"long_name" : "San Leandro BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "San Leandro"
+					"short_name" : "San Leandro BART"
 				}, {
 					"long_name" : "Old San Leandro",
 					"types" : ["neighborhood", "political"],
@@ -1911,7 +1911,7 @@
 					"short_name" : "94577"
 				}
 			],
-			"formatted_address" : "San Leandro, CA 94577, USA",
+			"formatted_address" : "San Leandro BART, San Leandro, CA 94577, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart37",
 			"fromFrequency" : "0.34",
@@ -1935,9 +1935,9 @@
 		}, {
 			"toFrequency" : 0.053266585,
 			"address_components" : [{
-					"long_name" : "South Hayward",
+					"long_name" : "South Hayward BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "South Hayward"
+					"short_name" : "South Hayward BART"
 				}, {
 					"long_name" : "Mission - Garin",
 					"types" : ["neighborhood", "political"],
@@ -1964,7 +1964,7 @@
 					"short_name" : "94544"
 				}
 			],
-			"formatted_address" : "South Hayward, Hayward, CA 94544, USA",
+			"formatted_address" : "South Hayward BART, Hayward, CA 94544, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart38",
 			"fromFrequency" : "0.17",
@@ -1988,9 +1988,9 @@
 		}, {
 			"toFrequency" : 0.34590304,
 			"address_components" : [{
-					"long_name" : "South San Francisco",
+					"long_name" : "South San Francisco BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "South San Francisco"
+					"short_name" : "South San Francisco BART"
 				}, {
 					"long_name" : "El Camino",
 					"types" : ["neighborhood", "political"],
@@ -2017,7 +2017,7 @@
 					"short_name" : "94080"
 				}
 			],
-			"formatted_address" : "South San Francisco, CA 94080, USA",
+			"formatted_address" : "South San Francisco BART, South San Francisco, CA 94080, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart39",
 			"fromFrequency" : "0.61",
@@ -2041,9 +2041,9 @@
 		}, {
 			"toFrequency" : 0.6500475,
 			"address_components" : [{
-					"long_name" : "Union City",
+					"long_name" : "Union City BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Union City"
+					"short_name" : "Union City BART"
 				}, {
 					"long_name" : "Union City",
 					"types" : ["locality", "political"],
@@ -2066,7 +2066,7 @@
 					"short_name" : "94587"
 				}
 			],
-			"formatted_address" : "Union City, CA 94587, USA",
+			"formatted_address" : "Union City BART, Union City, CA 94587, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart40",
 			"fromFrequency" : "0.86",
@@ -2090,9 +2090,9 @@
 		}, {
 			"toFrequency" : 0.4786806,
 			"address_components" : [{
-					"long_name" : "Walnut Creek",
+					"long_name" : "Walnut Creek BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "Walnut Creek"
+					"short_name" : "Walnut Creek BART"
 				}, {
 					"long_name" : "Walnut Creek",
 					"types" : ["locality", "political"],
@@ -2115,7 +2115,7 @@
 					"short_name" : "94596"
 				}
 			],
-			"formatted_address" : "Walnut Creek, CA 94596, USA",
+			"formatted_address" : "Walnut Creek BART, Walnut Creek, CA 94596, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart41",
 			"fromFrequency" : "0.46",
@@ -2139,9 +2139,9 @@
 		}, {
 			"toFrequency" : 0.01549983,
 			"address_components" : [{
-					"long_name" : "West Dublin\/Pleasanton",
+					"long_name" : "West Dublin\/Pleasanton BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "West Dublin\/Pleasanton"
+					"short_name" : "West Dublin\/Pleasanton BART"
 				}, {
 					"long_name" : "6501",
 					"types" : ["street_number"],
@@ -2172,7 +2172,7 @@
 					"short_name" : "94588"
 				}
 			],
-			"formatted_address" : "West Dublin\/Pleasanton, 6501 Golden Gate Dr, Pleasanton, CA 94588, USA",
+			"formatted_address" : "West Dublin\/Pleasanton BART, 6501 Golden Gate Dr, Pleasanton, CA 94588, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart42",
 			"fromFrequency" : "0.26",
@@ -2206,9 +2206,9 @@
 		}, {
 			"toFrequency" : 0.27525538,
 			"address_components" : [{
-					"long_name" : "West Oakland",
+					"long_name" : "West Oakland BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],
-					"short_name" : "West Oakland"
+					"short_name" : "West Oakland BART"
 				}, {
 					"long_name" : "West Oakland",
 					"types" : ["neighborhood", "political"],
@@ -2235,7 +2235,7 @@
 					"short_name" : "94607"
 				}
 			],
-			"formatted_address" : "West Oakland, Oakland, CA 94607, USA",
+			"formatted_address" : "West Oakland BART, Oakland, CA 94607, USA",
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"],
 			"memberOfList" : "Bart43",
 			"fromFrequency" : "0.59",

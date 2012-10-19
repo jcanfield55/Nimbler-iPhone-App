@@ -163,10 +163,12 @@ static Locations *locations;
                         [type isEqualToString:@"locality"] ||
                         [type isEqualToString:@"airport"] ||
                         [type isEqualToString:@"Street"] ||
+                        [type isEqualToString:@"train_station"] ||
                         [type isEqualToString:@"route(short)"] ||
                         [type isEqualToString:@"intersection(short)"] ||
                         [type isEqualToString:@"locality(short)"] ||
-                        [type isEqualToString:@"airport(short)"]) { // for these types, do a substring compare
+                        [type isEqualToString:@"airport(short)"] ||
+                        [type isEqualToString:@"train_station(short)"]) { // for these types, do a substring compare
                         if (name && [name length]>0 &&
                             [name rangeOfString:atom options:NSCaseInsensitiveSearch].location != NSNotFound) {
                             [matches replaceObjectAtIndex:i withObject:@"Match"];
