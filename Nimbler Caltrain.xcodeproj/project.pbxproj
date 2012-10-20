@@ -208,6 +208,9 @@
 		8DBECD5216146DBE007B71F1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */; };
 		8DC019F91627F4BE004200E5 /* nc_AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */; };
 		8DF35D631627F58500B99F4A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF35D621627F58400B99F4A /* main.m */; };
+		C3DACB701633474B00FE6A82 /* RouteMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3DACB6E1633474A00FE6A82 /* RouteMapViewController.m */; };
+		C3DACB711633474B00FE6A82 /* RouteMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3DACB6F1633474B00FE6A82 /* RouteMapViewController.xib */; };
+		C3DACB7D16335DE600FE6A82 /* AddressAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = C3DACB7C16335DE600FE6A82 /* AddressAnnotation.m */; };
 		CC35E729155965E7003995D8 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 522C0E6A15588E7A0072ADD6 /* libz.dylib */; };
 		CCA4C7E515D92CC7009BE7A1 /* aps_development.cer in Resources */ = {isa = PBXBuildFile; fileRef = CCA4C7E415D92CC7009BE7A1 /* aps_development.cer */; };
 		CCDCC0791576287900D4B4D3 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCDCC0781576287900D4B4D3 /* CoreLocation.framework */; };
@@ -1142,6 +1145,11 @@
 		8DC019F71627F4BE004200E5 /* nc_AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nc_AppDelegate.h; sourceTree = SOURCE_ROOT; };
 		8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = nc_AppDelegate.m; sourceTree = SOURCE_ROOT; };
 		8DF35D621627F58400B99F4A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		C3DACB6D1633474A00FE6A82 /* RouteMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteMapViewController.h; sourceTree = "<group>"; };
+		C3DACB6E1633474A00FE6A82 /* RouteMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteMapViewController.m; sourceTree = "<group>"; };
+		C3DACB6F1633474B00FE6A82 /* RouteMapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RouteMapViewController.xib; sourceTree = "<group>"; };
+		C3DACB7B16335DE600FE6A82 /* AddressAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressAnnotation.h; sourceTree = "<group>"; };
+		C3DACB7C16335DE600FE6A82 /* AddressAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressAnnotation.m; sourceTree = "<group>"; };
 		CC6F22E71563AD360066DFA9 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		CC9370D715BFB97200A09A5A /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
 		CC9370D815BFB97200A09A5A /* libFlurry.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry.a; sourceTree = "<group>"; };
@@ -1206,6 +1214,9 @@
 				520FB112162603090083F143 /* RouteOptionsViewController.h */,
 				520FB113162603090083F143 /* RouteOptionsViewController.m */,
 				520FB114162603090083F143 /* RouteOptionsViewController.xib */,
+				C3DACB6D1633474A00FE6A82 /* RouteMapViewController.h */,
+				C3DACB6E1633474A00FE6A82 /* RouteMapViewController.m */,
+				C3DACB6F1633474B00FE6A82 /* RouteMapViewController.xib */,
 				520FB115162603090083F143 /* SettingInfoViewController.h */,
 				520FB116162603090083F143 /* SettingInfoViewController.m */,
 				520FB117162603090083F143 /* SettingInfoViewController.xib */,
@@ -1218,6 +1229,8 @@
 				520FB11E162603090083F143 /* twitterViewController.h */,
 				520FB11F162603090083F143 /* twitterViewController.m */,
 				520FB120162603090083F143 /* twitterViewController.xib */,
+				C3DACB7B16335DE600FE6A82 /* AddressAnnotation.h */,
+				C3DACB7C16335DE600FE6A82 /* AddressAnnotation.m */,
 			);
 			path = ViewController;
 			sourceTree = SOURCE_ROOT;
@@ -3244,6 +3257,7 @@
 				8D4FC8E6162D2E1A004144DE /* bart-station.json in Resources */,
 				8D4FC8E7162D2E1A004144DE /* caltrain-station.json in Resources */,
 				8D93604B162FFC4500084E8E /* Icon_ipad.png in Resources */,
+				C3DACB711633474B00FE6A82 /* RouteMapViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3326,6 +3340,8 @@
 				8DC019F91627F4BE004200E5 /* nc_AppDelegate.m in Sources */,
 				8DF35D631627F58500B99F4A /* main.m in Sources */,
 				8D9EA263162D78FD002BB5FF /* Network_Commuting.xcdatamodeld in Sources */,
+				C3DACB701633474B00FE6A82 /* RouteMapViewController.m in Sources */,
+				C3DACB7D16335DE600FE6A82 /* AddressAnnotation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
