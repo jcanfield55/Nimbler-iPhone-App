@@ -9,6 +9,7 @@
 #import "Network_CommutingTests.h"
 #import "LocationFromGoogle.h"
 #import "LocationFromIOS.h"
+#import "Constants.h"
 
 @implementation Network_CommutingTests
 

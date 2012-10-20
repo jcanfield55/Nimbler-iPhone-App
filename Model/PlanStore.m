@@ -146,6 +146,8 @@
         if([NSNumber numberWithInt:[parameters maxWalkDistance]]){
             [params setObject:[NSNumber numberWithInt:[parameters maxWalkDistance]] forKey:MAX_WALK_DISTANCE];
         }
+        
+        /*
         if([[NSUserDefaults standardUserDefaults]objectForKey:DEVICE_CFUUID]){
             [params setObject:[[NSUserDefaults standardUserDefaults]objectForKey:DEVICE_CFUUID] forKey:DEVICE_ID];
         }
@@ -185,28 +187,27 @@
         if(parameters.timeTO){
             [params setObject:parameters.timeTO forKey:TIME_TO];
         }
+         */
         // Build the parameters into a resource string
         parameters.serverCallsSoFar = parameters.serverCallsSoFar + 1;
         // TODO handle changes to maxWalkDistance with plan caching
-        NSString *requestID = [self generateRandomString];
+        // NSString *requestID = [self generateRandomString];
         
         // Append The requestID to the URL.
         // Now we set that String as key of our  parametersByPlanURLResource Dictionary.
         // Now when we receive response or we receive an error we can get our planRequestParamater by key [objectloader resourcePath].
         
-        NIMLOG_DEBUG1(@"Submitted Request ID=%@",requestID);
-         NSString *strPlanGenerateURL = [NSString stringWithFormat:@"%@?id=%@",PLAN_GENERATE_URL,requestID];
+        planURLResource = [@"plan" appendQueryParams:params];
+        NIMLOG_URLS(@"plan resource: %@", planURLResource);
+
+        [parametersByPlanURLResource setObject:parameters forKey:planURLResource];
         
-        //[params setObject:requestID forKey:REQUEST_ID];
-        //planURLResource = requestID;
-        [parametersByPlanURLResource setObject:parameters forKey:strPlanGenerateURL];
-        Plan *plan;
-        RKParams *requestParameter = [RKParams paramsWithDictionary:params];
-        [rkPlanMgr postObject:plan delegate:self block:^(RKObjectLoader *loader){
+        [rkPlanMgr loadObjectsAtResourcePath:planURLResource delegate:self];
+        /* [rkPlanMgr postObject:plan delegate:self block:^(RKObjectLoader *loader){
             loader.resourcePath = strPlanGenerateURL;
             loader.params = requestParameter;
             loader.method = RKRequestMethodPOST;
-        }];
+        }]; */
     }
     @catch (NSException *exception) {
         logException(@"PlanStore->requestPlanFromOTPWithParameters", @"", exception);
@@ -214,14 +215,12 @@
 }
 
 // Delegate methods for when the RestKit has results from the Planner
-- (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects{
+- (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects
+{
     PlanRequestParameters* planRequestParameters;
     @try {
-        RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
-        NSDictionary *tempResponseDictionary = [rkParser objectFromString:[[objectLoader response] bodyAsString] error:nil];
-         NIMLOG_OBJECT1(@"PLAN =%@",tempResponseDictionary);
-        if([[tempResponseDictionary objectForKey:RESPONSE_CODE] intValue] == RESPONSE_SUCCESSFULL){
-            if([tempResponseDictionary objectForKey:OTP_ERROR_STATUS]){
+
+        if (!(objects && [objects objectAtIndex:0])) {
                 if ([nc_AppDelegate sharedInstance].isToFromView) {
                     // only show error if on To & From View Controller, otherwise do nothing
                     UIAlertView *alertView = [[UIAlertView alloc] init];
@@ -231,7 +230,8 @@
                     [alertView addButtonWithTitle:OK_BUTTON_TITLE];
                     [alertView show];
                     logEvent(FLURRY_ROUTE_OTHER_ERROR,
-                             FLURRY_RK_RESPONSE_ERROR, [tempResponseDictionary objectForKey:OTP_ERROR_STATUS],
+                             FLURRY_RK_RESPONSE_ERROR,
+                             [NSString stringWithFormat:@"Code = %d",[[objectLoader response] statusCode]],
                              nil, nil, nil, nil, nil, nil);
                     [toFromVC.activityIndicator stopAnimating];
                     [toFromVC.view setUserInteractionEnabled:YES];
@@ -300,7 +300,6 @@
                     } // else if routeOptions destination, do nothing
                 }
             }
-        }
     }
     @catch (NSException *exception) {
         if (planRequestParameters && planRequestParameters.planDestination == PLAN_DESTINATION_TO_FROM_VC) {
