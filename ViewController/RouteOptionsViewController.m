@@ -23,6 +23,7 @@
     // Variables for internal use
     
     RouteDetailsViewController* routeDetailsVC;
+    RouteMapViewController* routeMapVC;
 }
 
 @end
@@ -33,6 +34,7 @@
 @synthesize plan;
 @synthesize isReloadRealData;
 @synthesize liveData,btnGoToNimbler;
+@synthesize btnMap;
 
 Itinerary * itinerary;
 NSString *itinararyId;
@@ -54,7 +56,10 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
         self.navigationItem.titleView=lblNavigationTitle;
         imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
-        
+      
+        // nav map button [CG]
+        btnMap = [[UIBarButtonItem alloc] initWithTitle:@"Map" style:UIBarButtonItemStylePlain target:self action:@selector(tapMapButton)];
+        self.navigationItem.rightBarButtonItem = btnMap;
     }
     return self;
 }
@@ -109,6 +114,41 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     NSLog(@"Will popViewControllerAnimated");
     [[self navigationController] popViewControllerAnimated:NO];
 }
+
+// push the map view [CG]
+- (void)tapMapButton
+{
+  NSLog(@"** tapMapButton");
+  
+  if (!routeMapVC) {
+    routeMapVC = [[RouteMapViewController alloc] initWithNibName:@"RouteMapViewController" bundle:nil];
+  }
+
+  routeMapVC.plan = self.plan;
+  
+  //itinerary = [plan.sortedItineraries objectAtIndex:[indexPath row]];
+  //itinararyId =[itinerary itinId];
+  
+  //[routeDetailsVC setItinerary:itinerary];
+  if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
+    CATransition *animation = [CATransition animation];
+    [animation setDuration:0.3];
+    [animation setType:kCATransitionPush];
+    [animation setSubtype:kCATransitionFromRight];
+    [animation setRemovedOnCompletion:YES];
+    [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+    [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+    [[self navigationController] pushViewController:routeMapVC animated:NO];
+  }
+  else{
+    [[self navigationController] pushViewController:routeMapVC animated:YES];
+  }
+
+  
+}
+
+
+
 #pragma mark - UITableViewDelegate methods
 // Table view management methods
 
@@ -237,7 +277,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                  FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d", [indexPath row]],
                  FLURRY_SELECTED_DEPARTURE_TIME, [NSString stringWithFormat:@"%@", [itinerary startTimeOfFirstLeg]],
                  nil, nil, nil, nil);
-        
+      
         [routeDetailsVC setItinerary:itinerary];
         if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
             CATransition *animation = [CATransition animation];

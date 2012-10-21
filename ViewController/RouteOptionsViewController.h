@@ -10,6 +10,7 @@
 #import "Plan.h"
 #import "enums.h"
 #import "RouteDetailsViewController.h"
+#import "RouteMapViewController.h"
 
 @interface RouteOptionsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKRequestDelegate>
 
@@ -18,6 +19,7 @@
 @property(nonatomic, strong) UIButton *btnGoToNimbler;
 @property(strong, nonatomic) id liveData;
 @property( readwrite) BOOL isReloadRealData;
+@property (nonatomic, strong) IBOutlet UIBarButtonItem *btnMap;
 
 -(void)setLiveFeed:(id)liveFeed;
 - (void) setRealtimeData:(NSString *)legId arrivalTime:(NSString *)arrivalTime arrivalFlag:(NSString *)arrivalFlag itineraryId:(NSString *)ititId itineraryArrivalFlag:(NSString *)itinArrivalflag legDiffMins:(NSString *)timeDiff;
