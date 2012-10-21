@@ -7,12 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "enums.h"
 
-typedef enum {
-    MODE_TRANSIT,    
-    MODE_BIKE_ONLY,  
-    MODE_TRANSIT_AND_BIKE     
-} TransitModeChoice;
+
 
 @interface BikeSettingsViewController : UIViewController
 

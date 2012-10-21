@@ -40,6 +40,13 @@ typedef enum {
 @property (nonatomic) int serverCallsSoFar; // number of calls to the server that have been made for this request
 @property (nonatomic) PlanDestination planDestination;
 
+// Bike parameters
+@property(nonatomic) float bikeTriangleQuick;
+@property(nonatomic) float bikeTriangleFlat;
+@property(nonatomic) float bikeTriangleBikeFriendly;
+@property(nonatomic) float maxBikeDistance;
+@property(nonatomic) TransitModeChoice transitMode;
+
 // Returns a new PlanRequestParameters object containing the same parameters as parameters0
 + (id)copyOfPlanRequestParameters:(PlanRequestParameters *)parameters0;
 

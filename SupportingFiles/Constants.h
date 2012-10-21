@@ -230,6 +230,14 @@
 #define REQUEST_TRIP_TIME               @"time"
 #define ARRIVE_BY                       @"arriveBy"
 #define MAX_WALK_DISTANCE               @"maxWalkDistance"
+#define REQUEST_BIKE_TRIANGLE_QUICK @"triangleTimeFactor"
+#define REQUEST_BIKE_TRIANGLE_FLAT @"triangleSlopeFactor"
+#define REQUEST_BIKE_TRIANGLE_BIKE_FRIENDLY @"triangleSafetyFactor"
+#define REQUEST_TRANSIT_MODE            @"mode"
+#define REQUEST_TRANSIT_MODE_TRANSIT    @"TRANSIT,WALK"
+#define REQUEST_TRANSIT_MODE_BIKE_ONLY    @"BICYCLE"
+#define REQUEST_TRANSIT_MODE_TRANSIT_BIKE    @"TRANSIT,BICYCLE"
+
 
 #define REQUEST_ID              @"reqId"
 #define REQUEST_ID_LENGTH       16

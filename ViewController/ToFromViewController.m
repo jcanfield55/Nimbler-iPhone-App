@@ -1364,6 +1364,14 @@ UIImage *imageDetailDisclosure;
                 parameters.rawAddressFROM = [fromLocation formattedAddress] ;
                 parameters.timeTO = [locations geoRespTimeTo];
             }
+            
+            // Set bike parameters
+            parameters.bikeTriangleQuick = bikeSettingVC.bikeTriangleQuick;
+            parameters.bikeTriangleFlat = bikeSettingVC.bikeTriangleFlat;
+            parameters.bikeTriangleBikeFriendly = bikeSettingVC.bikeTriangleBikeFriendly;
+            parameters.transitMode = bikeSettingVC.transitMode;
+            parameters.maxBikeDistance = bikeSettingVC.maxBikeDistance;
+            
             [planStore requestPlanWithParameters:parameters];
             savetrip = TRUE;
             isContinueGetRealTimeData = NO;

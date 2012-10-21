@@ -185,6 +185,12 @@
 		52AD21A216347FF600A39282 /* RouteMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52AD21A016347FF600A39282 /* RouteMapViewController.m */; };
 		52AD21A41634806000A39282 /* RouteMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52AD21A31634806000A39282 /* RouteMapViewController.xib */; };
 		52AD21A51634806000A39282 /* RouteMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52AD21A31634806000A39282 /* RouteMapViewController.xib */; };
+		52AD21A91634C0D100A39282 /* img_redspike1.png in Resources */ = {isa = PBXBuildFile; fileRef = 52AD21A61634C0D100A39282 /* img_redspike1.png */; };
+		52AD21AA1634C0D100A39282 /* img_redspike1.png in Resources */ = {isa = PBXBuildFile; fileRef = 52AD21A61634C0D100A39282 /* img_redspike1.png */; };
+		52AD21AB1634C0D100A39282 /* img_redspike2.png in Resources */ = {isa = PBXBuildFile; fileRef = 52AD21A71634C0D100A39282 /* img_redspike2.png */; };
+		52AD21AC1634C0D100A39282 /* img_redspike2.png in Resources */ = {isa = PBXBuildFile; fileRef = 52AD21A71634C0D100A39282 /* img_redspike2.png */; };
+		52AD21AD1634C0D100A39282 /* img_redspike3.png in Resources */ = {isa = PBXBuildFile; fileRef = 52AD21A81634C0D100A39282 /* img_redspike3.png */; };
+		52AD21AE1634C0D100A39282 /* img_redspike3.png in Resources */ = {isa = PBXBuildFile; fileRef = 52AD21A81634C0D100A39282 /* img_redspike3.png */; };
 		52C10385160BEF8000BC6020 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C10384160BEF8000BC6020 /* AddressBookUI.framework */; };
 		52C1CBB4161AB69600695348 /* Icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB3161AB69600695348 /* Icon-small.png */; };
 		52C1CBB6161AB6A400695348 /* Icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB5161AB6A400695348 /* Icon-small@2x.png */; };
@@ -1118,6 +1124,9 @@
 		52AD219F16347FF600A39282 /* RouteMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteMapViewController.h; sourceTree = "<group>"; };
 		52AD21A016347FF600A39282 /* RouteMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteMapViewController.m; sourceTree = "<group>"; };
 		52AD21A31634806000A39282 /* RouteMapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RouteMapViewController.xib; sourceTree = "<group>"; };
+		52AD21A61634C0D100A39282 /* img_redspike1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = img_redspike1.png; path = ../../../../Downloads/img_redspike1.png; sourceTree = "<group>"; };
+		52AD21A71634C0D100A39282 /* img_redspike2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = img_redspike2.png; path = ../../../../Downloads/img_redspike2.png; sourceTree = "<group>"; };
+		52AD21A81634C0D100A39282 /* img_redspike3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = img_redspike3.png; path = ../../../../Downloads/img_redspike3.png; sourceTree = "<group>"; };
 		52C10384160BEF8000BC6020 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		52C1CBB3161AB69600695348 /* Icon-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-small.png"; sourceTree = "<group>"; };
 		52C1CBB5161AB6A400695348 /* Icon-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-small@2x.png"; sourceTree = "<group>"; };
@@ -1335,6 +1344,9 @@
 		520FB1A8162603AF0083F143 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				52AD21A61634C0D100A39282 /* img_redspike1.png */,
+				52AD21A71634C0D100A39282 /* img_redspike2.png */,
+				52AD21A81634C0D100A39282 /* img_redspike3.png */,
 				520FB1A9162603AF0083F143 /* caltrain.jpg */,
 				520FB1AA162603AF0083F143 /* feedback.png */,
 				520FB1AB162603AF0083F143 /* img_ recording@2x.png */,
@@ -3270,6 +3282,9 @@
 				8D93604B162FFC4500084E8E /* Icon_ipad.png in Resources */,
 				52C621C31633615C00E92C20 /* BikeSettingsViewController.xib in Resources */,
 				52AD21A41634806000A39282 /* RouteMapViewController.xib in Resources */,
+				52AD21A91634C0D100A39282 /* img_redspike1.png in Resources */,
+				52AD21AB1634C0D100A39282 /* img_redspike2.png in Resources */,
+				52AD21AD1634C0D100A39282 /* img_redspike3.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3281,6 +3296,9 @@
 				520FB293162604950083F143 /* CoverageGeoJSON.geojson in Resources */,
 				520FB297162605470083F143 /* CoverageGeoJSON.geojson in Resources */,
 				52AD21A51634806000A39282 /* RouteMapViewController.xib in Resources */,
+				52AD21AA1634C0D100A39282 /* img_redspike1.png in Resources */,
+				52AD21AC1634C0D100A39282 /* img_redspike2.png in Resources */,
+				52AD21AE1634C0D100A39282 /* img_redspike3.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

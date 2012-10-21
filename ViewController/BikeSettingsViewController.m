@@ -7,6 +7,8 @@
 //
 
 #import "BikeSettingsViewController.h"
+#import "PlanStore.h"
+#import "nc_AppDelegate.h"
 
 @interface BikeSettingsViewController ()
 {
@@ -87,6 +89,12 @@
     }
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    PlanStore *planStrore = [[nc_AppDelegate sharedInstance] planStore];
+    [planStrore  clearCache];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];

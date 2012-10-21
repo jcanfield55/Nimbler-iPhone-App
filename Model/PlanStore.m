@@ -147,6 +147,27 @@
             [params setObject:[NSNumber numberWithInt:[parameters maxWalkDistance]] forKey:MAX_WALK_DISTANCE];
         }
         
+        // Set bike settings if needed
+        if (parameters.transitMode == MODE_TRANSIT) {
+            [params setObject:REQUEST_TRANSIT_MODE_TRANSIT forKey:REQUEST_TRANSIT_MODE];
+        }
+        else {
+            /* [params setObject:[NSString stringWithFormat:@"%f", parameters.bikeTriangleQuick]
+                       forKey:REQUEST_BIKE_TRIANGLE_QUICK];
+            [params setObject:[NSString stringWithFormat:@"%f", parameters.bikeTriangleFlat]
+                       forKey:REQUEST_BIKE_TRIANGLE_FLAT];
+            [params setObject:[NSString stringWithFormat:@"%f", parameters.bikeTriangleBikeFriendly]
+                       forKey:REQUEST_BIKE_TRIANGLE_BIKE_FRIENDLY];
+            [params setObject:[NSString stringWithFormat:@"%f", parameters.maxBikeDistance] forKey:MAX_WALK_DISTANCE]; */
+            
+            if (parameters.transitMode == MODE_BIKE_ONLY) {
+                [params setObject:REQUEST_TRANSIT_MODE_BIKE_ONLY forKey:REQUEST_TRANSIT_MODE];
+            }
+            else {
+                [params setObject:REQUEST_TRANSIT_MODE_TRANSIT_BIKE forKey:REQUEST_TRANSIT_MODE];
+            }
+        }
+        
         /*
         if([[NSUserDefaults standardUserDefaults]objectForKey:DEVICE_CFUUID]){
             [params setObject:[[NSUserDefaults standardUserDefaults]objectForKey:DEVICE_CFUUID] forKey:DEVICE_ID];

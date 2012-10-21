@@ -8,10 +8,14 @@
 
 #import "RouteMapViewController.h"
 #import "Leg.h"
+#import "UtilityFunctions.h"
+#import "UIConstants.h"
 
 
 @interface RouteMapViewController ()
-
+{
+    UIImage *dotImage;
+}
 @end
 
 @implementation RouteMapViewController
@@ -77,8 +81,18 @@
           }
           AddressAnnotation *anno = [[AddressAnnotation alloc] initWithCoordinate:legCoords];
           //[mapPoints addObject:anno];
-          anno.title = @"foo";
-          anno.subtitle = @"bar";
+            
+            NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
+                                                             timeIntervalSinceDate:[itin startTimeOfFirstLeg]]);
+            NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
+                                   superShortTimeStringForDate([itin startTimeOfFirstLeg]),
+                                   superShortTimeStringForDate([itin endTimeOfLastLeg]),
+                                   durationStr];
+            
+            NSString *detailText = [itin itinerarySummaryStringForWidth:ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
+                                                                   Font:[UIFont systemFontOfSize:15]];
+          anno.title = titleText;
+          anno.subtitle = detailText;
           
           [mapView addAnnotation:anno];
 
@@ -94,6 +108,42 @@
   mapView.region = MKCoordinateRegionMake(mapCoords, mapSpan);
 
 }
+
+
+// Callback for providing any annotation views
+
+/*
+- (MKAnnotationView *)mapView:(MKMapView *)mv viewForAnnotation:(id <MKAnnotation>)annotation
+{
+    // If it's the user location, just return nil.
+    if ([annotation isKindOfClass:[MKUserLocation class]]){
+        return nil;
+    }
+    
+    
+    MKAnnotationView* dotView = (MKAnnotationView*)[mv dequeueReusableAnnotationViewWithIdentifier:@"MyDotAnnotationView"];
+    
+    if (!dotView)
+    {
+        // If an existing pin view was not available, create one.
+        dotView = [[MKAnnotationView alloc] initWithAnnotation:annotation
+                                               reuseIdentifier:@"MyDotAnnotation"];
+        dotView.canShowCallout = NO;
+        if (!dotImage) {
+            NSString* imageName = [[NSBundle mainBundle] pathForResource:@"img_redspike1" ofType:@"png"];
+            dotImage = [UIImage imageWithContentsOfFile:imageName];
+        }
+        if (dotImage) {
+            [dotView setImage:dotImage];
+        }
+    }
+    else
+        dotView.annotation = annotation;
+    
+    return dotView;
+}
+ */
+
 
 - (void)didReceiveMemoryWarning
 {

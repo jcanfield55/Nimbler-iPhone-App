@@ -198,13 +198,29 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
             [titleText appendFormat:@"%@ Walk to %@", 
              superShortTimeStringForDate([[self itinerary] startTime]), 
              [[self to] name]];
-        } else if (legPosition == LAST_LEG) {   // US124 implementation
+        }
+        else if (legPosition == LAST_LEG) {   // US124 implementation
             [titleText appendFormat:@"%@ Arrive at %@",
              superShortTimeStringForDate([[self itinerary] endTime]),
              [[self itinerary] toAddressString]];
         }
         else {
             [titleText appendFormat:@"Walk to %@", [[self to] name]];
+        }
+    }
+    else if ([[self mode] isEqualToString:@"BICYCLE"]) {
+        if (legPosition == FIRST_LEG) {    // US124 implementation
+            [titleText appendFormat:@"%@ Bike to %@",
+             superShortTimeStringForDate([[self itinerary] startTime]),
+             [[self to] name]];
+        }
+        else if (legPosition == LAST_LEG) {   // US124 implementation
+            [titleText appendFormat:@"%@ Arrive at %@",
+             superShortTimeStringForDate([[self itinerary] endTime]),
+             [[self itinerary] toAddressString]];
+        }
+        else {
+            [titleText appendFormat:@"Bike to %@", [[self to] name]];
         }
     }
     else {  

@@ -39,4 +39,10 @@ typedef enum {
     GEOCODE_NO_NETWORK
 } GeocodeRequestStatus;
 
+typedef enum {
+    MODE_TRANSIT,
+    MODE_BIKE_ONLY,
+    MODE_TRANSIT_AND_BIKE
+} TransitModeChoice;
+
 #endif
