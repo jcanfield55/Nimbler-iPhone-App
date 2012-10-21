@@ -182,6 +182,8 @@
 		52C10385160BEF8000BC6020 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C10384160BEF8000BC6020 /* AddressBookUI.framework */; };
 		52C1CBB4161AB69600695348 /* Icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB3161AB69600695348 /* Icon-small.png */; };
 		52C1CBB6161AB6A400695348 /* Icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB5161AB6A400695348 /* Icon-small@2x.png */; };
+		52C621C21633615C00E92C20 /* BikeSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C621C01633615C00E92C20 /* BikeSettingsViewController.m */; };
+		52C621C31633615C00E92C20 /* BikeSettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52C621C11633615C00E92C20 /* BikeSettingsViewController.xib */; };
 		52CF43A014BDF2F9000565D6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF439F14BDF2F9000565D6 /* UIKit.framework */; };
 		52CF43A214BDF2F9000565D6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A114BDF2F9000565D6 /* Foundation.framework */; };
 		52CF43A414BDF2F9000565D6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A314BDF2F9000565D6 /* CoreGraphics.framework */; };
@@ -1108,6 +1110,9 @@
 		52C10384160BEF8000BC6020 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		52C1CBB3161AB69600695348 /* Icon-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-small.png"; sourceTree = "<group>"; };
 		52C1CBB5161AB6A400695348 /* Icon-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-small@2x.png"; sourceTree = "<group>"; };
+		52C621BF1633615C00E92C20 /* BikeSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BikeSettingsViewController.h; sourceTree = "<group>"; };
+		52C621C01633615C00E92C20 /* BikeSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BikeSettingsViewController.m; sourceTree = "<group>"; };
+		52C621C11633615C00E92C20 /* BikeSettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BikeSettingsViewController.xib; sourceTree = "<group>"; };
 		52CF439B14BDF2F9000565D6 /* Nimbler Caltrain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nimbler Caltrain.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52CF439F14BDF2F9000565D6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		52CF43A114BDF2F9000565D6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1218,6 +1223,9 @@
 				520FB11E162603090083F143 /* twitterViewController.h */,
 				520FB11F162603090083F143 /* twitterViewController.m */,
 				520FB120162603090083F143 /* twitterViewController.xib */,
+				52C621BF1633615C00E92C20 /* BikeSettingsViewController.h */,
+				52C621C01633615C00E92C20 /* BikeSettingsViewController.m */,
+				52C621C11633615C00E92C20 /* BikeSettingsViewController.xib */,
 			);
 			path = ViewController;
 			sourceTree = SOURCE_ROOT;
@@ -3244,6 +3252,7 @@
 				8D4FC8E6162D2E1A004144DE /* bart-station.json in Resources */,
 				8D4FC8E7162D2E1A004144DE /* caltrain-station.json in Resources */,
 				8D93604B162FFC4500084E8E /* Icon_ipad.png in Resources */,
+				52C621C31633615C00E92C20 /* BikeSettingsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3326,6 +3335,7 @@
 				8DC019F91627F4BE004200E5 /* nc_AppDelegate.m in Sources */,
 				8DF35D631627F58500B99F4A /* main.m in Sources */,
 				8D9EA263162D78FD002BB5FF /* Network_Commuting.xcdatamodeld in Sources */,
+				52C621C21633615C00E92C20 /* BikeSettingsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

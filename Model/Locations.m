@@ -704,7 +704,13 @@
                          FLURRY_GEOCODE_RAWADDRESS, rawAddress,
                          nil, nil, nil, nil);
                 NIMLOG_ERR1(@"Geocode over query limit.  Status = %@", geocodeStatus);
-                [callback newGeocodeResults:nil withStatus:GEOCODE_OVER_QUERY_LIMIT parameters:parameters];
+                // If google geocoder unavailable, try iOS geocoder
+                [parameters setApiType:IOS_GEOCODER];
+                if (parameters.rawAddress) {
+                    [self forwardGeocodeWithParameters:parameters callBack:callback];
+                } else {
+                    [self reverseGeocodeWithParameters:parameters callBack:callback];
+                }
             }
             else if ([geocodeStatus compare:@"REQUEST_DENIED" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
                 logEvent(FLURRY_GEOCODE_OTHER_ERROR,
