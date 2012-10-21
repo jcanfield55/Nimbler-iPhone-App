@@ -179,6 +179,12 @@
 		5258A89F160D617800871875 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5258A89B160D617800871875 /* libTestFlight.a */; };
 		525C20F9151D3AF5004F8FE0 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
 		527E174A151EB9CD00CDBC23 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527E1749151EB9CD00CDBC23 /* QuartzCore.framework */; };
+		52AD219D16347FE100A39282 /* AddressAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 52AD219C16347FE100A39282 /* AddressAnnotation.m */; };
+		52AD219E16347FE100A39282 /* AddressAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 52AD219C16347FE100A39282 /* AddressAnnotation.m */; };
+		52AD21A116347FF600A39282 /* RouteMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52AD21A016347FF600A39282 /* RouteMapViewController.m */; };
+		52AD21A216347FF600A39282 /* RouteMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52AD21A016347FF600A39282 /* RouteMapViewController.m */; };
+		52AD21A41634806000A39282 /* RouteMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52AD21A31634806000A39282 /* RouteMapViewController.xib */; };
+		52AD21A51634806000A39282 /* RouteMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52AD21A31634806000A39282 /* RouteMapViewController.xib */; };
 		52C10385160BEF8000BC6020 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C10384160BEF8000BC6020 /* AddressBookUI.framework */; };
 		52C1CBB4161AB69600695348 /* Icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB3161AB69600695348 /* Icon-small.png */; };
 		52C1CBB6161AB6A400695348 /* Icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB5161AB6A400695348 /* Icon-small@2x.png */; };
@@ -210,9 +216,6 @@
 		8DBECD5216146DBE007B71F1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */; };
 		8DC019F91627F4BE004200E5 /* nc_AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */; };
 		8DF35D631627F58500B99F4A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF35D621627F58400B99F4A /* main.m */; };
-		C3DACB701633474B00FE6A82 /* RouteMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3DACB6E1633474A00FE6A82 /* RouteMapViewController.m */; };
-		C3DACB711633474B00FE6A82 /* RouteMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3DACB6F1633474B00FE6A82 /* RouteMapViewController.xib */; };
-		C3DACB7D16335DE600FE6A82 /* AddressAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = C3DACB7C16335DE600FE6A82 /* AddressAnnotation.m */; };
 		CC35E729155965E7003995D8 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 522C0E6A15588E7A0072ADD6 /* libz.dylib */; };
 		CCA4C7E515D92CC7009BE7A1 /* aps_development.cer in Resources */ = {isa = PBXBuildFile; fileRef = CCA4C7E415D92CC7009BE7A1 /* aps_development.cer */; };
 		CCDCC0791576287900D4B4D3 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCDCC0781576287900D4B4D3 /* CoreLocation.framework */; };
@@ -1110,6 +1113,11 @@
 		5258A89E160D617800871875 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		525C20F8151D3AF5004F8FE0 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		527E1749151EB9CD00CDBC23 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		52AD219B16347FE100A39282 /* AddressAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressAnnotation.h; sourceTree = "<group>"; };
+		52AD219C16347FE100A39282 /* AddressAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressAnnotation.m; sourceTree = "<group>"; };
+		52AD219F16347FF600A39282 /* RouteMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteMapViewController.h; sourceTree = "<group>"; };
+		52AD21A016347FF600A39282 /* RouteMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteMapViewController.m; sourceTree = "<group>"; };
+		52AD21A31634806000A39282 /* RouteMapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RouteMapViewController.xib; sourceTree = "<group>"; };
 		52C10384160BEF8000BC6020 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		52C1CBB3161AB69600695348 /* Icon-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-small.png"; sourceTree = "<group>"; };
 		52C1CBB5161AB6A400695348 /* Icon-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-small@2x.png"; sourceTree = "<group>"; };
@@ -1150,11 +1158,6 @@
 		8DC019F71627F4BE004200E5 /* nc_AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nc_AppDelegate.h; sourceTree = SOURCE_ROOT; };
 		8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = nc_AppDelegate.m; sourceTree = SOURCE_ROOT; };
 		8DF35D621627F58400B99F4A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		C3DACB6D1633474A00FE6A82 /* RouteMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteMapViewController.h; sourceTree = "<group>"; };
-		C3DACB6E1633474A00FE6A82 /* RouteMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteMapViewController.m; sourceTree = "<group>"; };
-		C3DACB6F1633474B00FE6A82 /* RouteMapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RouteMapViewController.xib; sourceTree = "<group>"; };
-		C3DACB7B16335DE600FE6A82 /* AddressAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressAnnotation.h; sourceTree = "<group>"; };
-		C3DACB7C16335DE600FE6A82 /* AddressAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressAnnotation.m; sourceTree = "<group>"; };
 		CC6F22E71563AD360066DFA9 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		CC9370D715BFB97200A09A5A /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
 		CC9370D815BFB97200A09A5A /* libFlurry.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry.a; sourceTree = "<group>"; };
@@ -1206,6 +1209,11 @@
 		520FB107162603090083F143 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				52AD21A31634806000A39282 /* RouteMapViewController.xib */,
+				52AD219F16347FF600A39282 /* RouteMapViewController.h */,
+				52AD21A016347FF600A39282 /* RouteMapViewController.m */,
+				52AD219B16347FE100A39282 /* AddressAnnotation.h */,
+				52AD219C16347FE100A39282 /* AddressAnnotation.m */,
 				520FB108162603090083F143 /* FeedBackForm.h */,
 				520FB109162603090083F143 /* FeedBackForm.m */,
 				520FB10A162603090083F143 /* FeedBackForm.xib */,
@@ -1219,9 +1227,6 @@
 				520FB112162603090083F143 /* RouteOptionsViewController.h */,
 				520FB113162603090083F143 /* RouteOptionsViewController.m */,
 				520FB114162603090083F143 /* RouteOptionsViewController.xib */,
-				C3DACB6D1633474A00FE6A82 /* RouteMapViewController.h */,
-				C3DACB6E1633474A00FE6A82 /* RouteMapViewController.m */,
-				C3DACB6F1633474B00FE6A82 /* RouteMapViewController.xib */,
 				520FB115162603090083F143 /* SettingInfoViewController.h */,
 				520FB116162603090083F143 /* SettingInfoViewController.m */,
 				520FB117162603090083F143 /* SettingInfoViewController.xib */,
@@ -3264,6 +3269,7 @@
 				8D4FC8E7162D2E1A004144DE /* caltrain-station.json in Resources */,
 				8D93604B162FFC4500084E8E /* Icon_ipad.png in Resources */,
 				52C621C31633615C00E92C20 /* BikeSettingsViewController.xib in Resources */,
+				52AD21A41634806000A39282 /* RouteMapViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3274,6 +3280,7 @@
 				52CF43C814BDF2F9000565D6 /* InfoPlist.strings in Resources */,
 				520FB293162604950083F143 /* CoverageGeoJSON.geojson in Resources */,
 				520FB297162605470083F143 /* CoverageGeoJSON.geojson in Resources */,
+				52AD21A51634806000A39282 /* RouteMapViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3347,6 +3354,8 @@
 				8DF35D631627F58500B99F4A /* main.m in Sources */,
 				8D9EA263162D78FD002BB5FF /* Network_Commuting.xcdatamodeld in Sources */,
 				52C621C21633615C00E92C20 /* BikeSettingsViewController.m in Sources */,
+				52AD219D16347FE100A39282 /* AddressAnnotation.m in Sources */,
+				52AD21A116347FF600A39282 /* RouteMapViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3355,6 +3364,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				52CF43CB14BDF2F9000565D6 /* Network_CommutingTests.m in Sources */,
+				52AD219E16347FE100A39282 /* AddressAnnotation.m in Sources */,
+				52AD21A216347FF600A39282 /* RouteMapViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
