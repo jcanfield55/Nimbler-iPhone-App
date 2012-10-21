@@ -96,6 +96,7 @@
 @synthesize activityIndicator;
 @synthesize strLiveDataURL;
 @synthesize datePicker,toolBar,departArriveSelector,date,btnDone,btnNow;
+@synthesize bikeSettingVC;
 // Constants for animating up and down the To: field
 #define FROM_SECTION 0
 #define TO_SECTION 1
@@ -217,7 +218,12 @@ UIImage *imageDetailDisclosure;
             
             // Accessibility Label For UI Automation.
             barButtonCancel.accessibilityLabel = CANCEL_BUTTON;
+            
+            // Set up bikeSettingVC and button
+            bikeSettingVC = [[BikeSettingsViewController alloc] initWithNibName:nil bundle:nil];
 
+            UIBarButtonItem *btnBike = [[UIBarButtonItem alloc] initWithTitle:@"Bike" style:UIBarButtonItemStylePlain target:self action:@selector(callBikeSettingsVC)];
+            self.navigationItem.rightBarButtonItem = btnBike;
         }
         imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
     }
@@ -1580,6 +1586,12 @@ UIImage *imageDetailDisclosure;
              FLURRY_TO_SELECTED_ADDRESS, [[self toLocation] shortFormattedAddress],
              FLURRY_FROM_SELECTED_ADDRESS, [[self fromLocation] shortFormattedAddress],
              nil, nil, nil, nil);
+}
+
+// Call Bike settings
+-(void)callBikeSettingsVC
+{
+    [[self navigationController] pushViewController:bikeSettingVC animated:YES];
 }
 
 //US 137 implementation

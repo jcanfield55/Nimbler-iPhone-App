@@ -17,6 +17,7 @@
 #define NIMLOG_URLS(...) NSLog(__VA_ARGS__)   // URL resources
 #define NIMLOG_ERR1(...) NSLog(__VA_ARGS__)   // Error / exception logging
 #define NIMLOG_FLURRY(...) NSLog(__VA_ARGS__)   // Logging of Flurry logs if flurry is not activated
+#define NIMLOG_BIKE(...) NSLog(__VA_ARGS__)  // Logging related to bike routing
 #define NIMLOG_TWITTER1(...) // NSLog(__VA_ARGS__) // Routine Twitter advisory logging
 #define NIMLOG_ADDRESSES(...) // NSLog(__VA_ARGS__)  // Log addresses
 #define NIMLOG_DEBUG1(...) // NSLog(__VA_ARGS__) // Debugging logging

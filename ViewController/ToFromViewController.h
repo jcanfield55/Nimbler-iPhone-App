@@ -14,6 +14,8 @@
 #import "Plan.h"
 #import "enums.h"
 #import "SupportedRegion.h"
+#import "BikeSettingsViewController.h"
+
 
 
 @class PlanStore;
@@ -62,6 +64,7 @@ typedef enum {
 @property (strong, nonatomic) NSTimer *timerGettingRealDataByItinerary;
 @property (strong, nonatomic) UIActivityIndicatorView* activityIndicator;
 @property (strong, nonatomic) NSString *strLiveDataURL;
+@property (strong, nonatomic) BikeSettingsViewController *bikeSettingVC;
 
 - (IBAction)openPickerView:(id)sender;
 
@@ -87,6 +90,7 @@ typedef enum {
 -(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status;
 
 -(void)doSwapLocation;
+-(void)callBikeSettingsVC;
 - (void) hideTabBar;
 - (void) showTabbar;
 - (void)endEdit;

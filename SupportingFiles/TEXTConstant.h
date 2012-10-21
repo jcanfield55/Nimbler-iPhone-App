@@ -39,6 +39,7 @@
 #define TWITTER_VIEW_TITLE         @"Advisories"
 #define SETTING_VIEW_TITLE         @"App Settings"
 #define FEED_BACK_VIEW_TITLE       @"Feedback"
+#define BIKE_SETTINGS_VIEW_TITLE   @"Bike Settings"
 
 // Alert text
 #define ALERT_TRIP_NOT_AVAILABLE       @"Sorry, we are unable to calculate a route for that To & From address"
