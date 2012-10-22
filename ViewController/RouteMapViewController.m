@@ -112,7 +112,6 @@
 
 // Callback for providing any annotation views
 
-/*
 - (MKAnnotationView *)mapView:(MKMapView *)mv viewForAnnotation:(id <MKAnnotation>)annotation
 {
     // If it's the user location, just return nil.
@@ -142,7 +141,6 @@
     
     return dotView;
 }
- */
 
 
 - (void)didReceiveMemoryWarning

@@ -34,6 +34,13 @@
 @synthesize timeTO;
 @synthesize rawAddressTO;
 
+@synthesize bikeTriangleBikeFriendly;
+@synthesize bikeTriangleFlat;
+@synthesize bikeTriangleQuick;
+@synthesize maxBikeDistance;
+@synthesize transitMode;
+
+
 // Returns a new PlanRequestParameters object containing the same parameters as parameters0
 + (id)copyOfPlanRequestParameters:(PlanRequestParameters *)parameters0
 {
@@ -59,6 +66,12 @@
     newParameters.timeFROM = parameters0.timeFROM;
     newParameters.timeTO = parameters0.timeTO;
     newParameters.rawAddressTO = parameters0.rawAddressTO;
+    
+    newParameters.bikeTriangleFlat = parameters0.bikeTriangleFlat;
+    newParameters.bikeTriangleBikeFriendly = parameters0.bikeTriangleBikeFriendly;
+    newParameters.bikeTriangleQuick = parameters0.bikeTriangleQuick;
+    newParameters.maxBikeDistance = parameters0.maxBikeDistance;
+    newParameters.transitMode = parameters0.transitMode;
     
     return newParameters;
 }
