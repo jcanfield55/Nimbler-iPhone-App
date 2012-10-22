@@ -367,7 +367,8 @@
     return min;
 }
 
--(float)compareString:(NSString *)originalString withString:(NSString *)comparisonString
+// Levenshtein Algorithm To calculate The Distance between Two String
+-(float)calculateLevenshteinDistance:(NSString *)originalString withString:(NSString *)comparisonString
 {
     // Normalize strings
     [originalString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -406,8 +407,6 @@
                 d[ j * n + i ] = [self smallestOf: d [ (j - 1) * n + i ] + 1
                                             andOf: d[ j * n + i - 1 ] + 1
                                             andOf: d[ (j - 1) * n + i - 1 ] + cost ];
-                
-                // This conditional adds Damerau transposition to Levenshtein distance
                 if( i>1 && j>1 && [originalString characterAtIndex: i-1] ==
                    [comparisonString characterAtIndex: j-2] &&
                    [originalString characterAtIndex: i-2] ==
@@ -426,34 +425,6 @@
     }
     return 0.0;
 }
-
-//- (NSArray *)preLoadIfNeededFromFile:(NSString *)filename
-//{
-//    NSArray* resultArray;
-//    NSStringEncoding encoding;
-//    NSError* error = nil;
-//    NSString* preloadPath = [[NSBundle mainBundle] pathForResource:filename ofType:nil];
-//    NSString *jsonText = [NSString stringWithContentsOfFile:preloadPath usedEncoding:&encoding error:&error];
-//    if (jsonText && !error) {
-//        
-//        id<RKParser> parser = [[RKParserRegistry sharedRegistry] parserForMIMEType:@"application/json"];
-//        id parsedData = [parser objectFromString:jsonText error:&error];
-//        if (parsedData == nil && error) {
-//            logError(@"Locations->preLoadIfNeededFromFile", [NSString stringWithFormat:@"Parsing error: %@", error]);
-//            return false;
-//        }
-//        RKObjectMappingProvider* mappingProvider = rkGeoMgr.mappingProvider;
-//        RKObjectMapper* mapper = [RKObjectMapper mapperWithObject:parsedData mappingProvider:mappingProvider];
-//        RKObjectMappingResult* result = [mapper performMapping];
-//        if (result) {
-//            resultArray = [result asCollection];
-//        }
-//        else {
-//            NIMLOG_EVENT1(@"Could not load file %@ at path %@", filename, preloadPath);
-//        }
-//    }
-//    return resultArray;
-//}
 
 // Delegate for when complete text entered into the UITextField
 - (IBAction)textSubmitted:(id)sender forEvent:(UIEvent *)event
@@ -479,8 +450,6 @@
     } else {
         [locations setRawAddressTo:rawAddress];
     }
-    
-    NIMLOG_EVENT1(@"Raw address = %@", rawAddress);
     if ([rawAddress isEqualToString:lastRawAddressGeoRequest] && [lastGeoRequestTime timeIntervalSinceNow] > -5.0) {
         NIMLOG_EVENT1(@"Skipping duplicate toFromTextSubmitted");
         return;  // if using the same rawAddress and less than 5 seconds between, treat as duplicate
@@ -518,8 +487,7 @@
                 rawAddress = [rawAddress lowercaseString];
                 NSRange range;
                 if ([rawAddress rangeOfString:strBART1 options:NSCaseInsensitiveSearch].location != NSNotFound || [rawAddress rangeOfString:strBART2 options:NSCaseInsensitiveSearch].location != NSNotFound ||  [rawAddress rangeOfString:strAirBart1 options:NSCaseInsensitiveSearch].location != NSNotFound || [rawAddress rangeOfString:strAirBart2 options:NSCaseInsensitiveSearch].location != NSNotFound) {
-                    if ([rawAddress rangeOfString:strStreet1 options:NSCaseInsensitiveSearch].location != NSNotFound)
-                    {
+                    if ([rawAddress rangeOfString:strStreet1 options:NSCaseInsensitiveSearch].location != NSNotFound){
                         range = [rawAddress rangeOfString:strStreet1];
                         NSMutableString *strMutableRawAddress =  (NSMutableString *)rawAddress;
                         [strMutableRawAddress replaceCharactersInRange:range withString:@" st"];
@@ -532,8 +500,7 @@
                         rawAddress = strMutableRawAddress;
                     }
                     
-                    if ([rawAddress rangeOfString:strBART1 options:NSCaseInsensitiveSearch].location != NSNotFound)
-                    {
+                    if ([rawAddress rangeOfString:strBART1 options:NSCaseInsensitiveSearch].location != NSNotFound){
                         range = [rawAddress rangeOfString:strBART1];
                         NSMutableString *strMutableRawAddress =  (NSMutableString *)rawAddress;
                         [strMutableRawAddress deleteCharactersInRange:range];
@@ -569,48 +536,58 @@
                     NSArray * arrayLocations = [context executeFetchRequest:fetchPlanRequestChunk error:nil];
                     for (id location in arrayLocations){
                         NSString *strshortFormattedAddress = [[location shortFormattedAddress]lowercaseString];
-                        float distance = [self compareString:strshortFormattedAddress withString:rawAddress];
-                        float finalDistance = distance + rawAddress.length - strshortFormattedAddress.length;
-                        if([rawAddress isEqualToString:[[location shortFormattedAddress]lowercaseString]]){
-                            [self markAndUpdateSelectedLocation:location];
-                            return;
-                        }
-                        else{
-                            if(![[location shortFormattedAddress] isEqualToString:@"Current Location"] && ![[location shortFormattedAddress] isEqualToString:@"Caltrain Station List"] && [[location shortFormattedAddress] rangeOfString:@"Caltrain" options:NSCaseInsensitiveSearch].location == NSNotFound){
-                                [arrUnFilteredStationList addObject:location];
-                                [arrDistance addObject:[NSString stringWithFormat:@"%f",finalDistance]];
-                            }
-                        }
-                    }
-                    if([arrUnFilteredStationList count] > 1){
-                        NSLog(@"%d",[arrDistance count]);
-                        NSLog(@"%d",[arrUnFilteredStationList count]);
-                        int min, temp,min1;
-                        NSString *temp1;
-                        int i,j;
-                        for (i = 0; i < [arrDistance count]-1; i++)
-                        {
-                            min = i;
-                            min1 = i;
-                            for (j = i+1; j < [arrDistance count]; j++)
-                            {
-                                if ([[arrDistance objectAtIndex:j] intValue] < [[arrDistance objectAtIndex:min] intValue])
-                                    min = j;
-                                min1 = j;
-                            }
-                            temp = [[arrDistance objectAtIndex:i] intValue];
-                            temp1 = [arrUnFilteredStationList objectAtIndex:i];
-                            [arrDistance replaceObjectAtIndex:i withObject:[arrDistance objectAtIndex:min]];
-                            [arrUnFilteredStationList replaceObjectAtIndex:i withObject:[arrUnFilteredStationList objectAtIndex:min]];
-                            [arrDistance replaceObjectAtIndex:min withObject:[NSString stringWithFormat:@"%d",temp]];
-                            [arrUnFilteredStationList replaceObjectAtIndex:min withObject:temp1];
+                        if(![strshortFormattedAddress isEqualToString:@"current location"] && ![strshortFormattedAddress isEqualToString:@"caltrain station list"] && [strshortFormattedAddress rangeOfString:@"caltrain" options:NSCaseInsensitiveSearch].location == NSNotFound){
+                            [arrUnFilteredStationList addObject:location];
                         }
                     }
                     for (int i=0;i<[arrUnFilteredStationList count];i++){
+                        Location *location = [arrUnFilteredStationList objectAtIndex:i];
+                        NSString *strshortFormattedAddress = [[location shortFormattedAddress]lowercaseString];
+                        if ([strshortFormattedAddress rangeOfString:strBART1 options:NSCaseInsensitiveSearch].location != NSNotFound){
+                            range = [strshortFormattedAddress rangeOfString:strBART1];
+                            NSMutableString *strMutableRawAddress =  (NSMutableString *)strshortFormattedAddress;
+                            [strMutableRawAddress deleteCharactersInRange:range];
+                            strshortFormattedAddress = strMutableRawAddress;
+                        }
+                        else if([strshortFormattedAddress rangeOfString:strBART2 options:NSCaseInsensitiveSearch].location != NSNotFound){
+                            range = [strshortFormattedAddress rangeOfString:strBART2];
+                            NSMutableString *strMutableRawAddress =  (NSMutableString *)strshortFormattedAddress;
+                            [strMutableRawAddress deleteCharactersInRange:range];
+                            strshortFormattedAddress = strMutableRawAddress;
+                        }
+                        float distance = [self calculateLevenshteinDistance:strshortFormattedAddress withString:rawAddress];
+                        float finalDistance = distance + rawAddress.length - strshortFormattedAddress.length;
+                        [arrUnFilteredStationList replaceObjectAtIndex:i withObject:[arrUnFilteredStationList objectAtIndex:i]];
+                        [arrDistance addObject:[NSString stringWithFormat:@"%f",finalDistance]];
+                    }
+                    if([arrUnFilteredStationList count] > 1){
+                        int minDistance, nTempDistance,min1;
+                        NSString *tempStationName;
+                        int i,j;
+                        for (i = 0; i < [arrDistance count]-1; i++){
+                            minDistance = i;
+                            min1 = i;
+                            for (j = i+1; j < [arrDistance count]; j++){
+                                if ([[arrDistance objectAtIndex:j] intValue] < [[arrDistance objectAtIndex:minDistance] intValue])
+                                    minDistance = j;
+                                min1 = j;
+                            }
+                            nTempDistance = [[arrDistance objectAtIndex:i] intValue];
+                            tempStationName = [arrUnFilteredStationList objectAtIndex:i];
+                            [arrDistance replaceObjectAtIndex:i withObject:[arrDistance objectAtIndex:minDistance]];
+                            [arrUnFilteredStationList replaceObjectAtIndex:i withObject:[arrUnFilteredStationList objectAtIndex:minDistance]];
+                            [arrDistance replaceObjectAtIndex:minDistance withObject:[NSString stringWithFormat:@"%d",nTempDistance]];
+                            [arrUnFilteredStationList replaceObjectAtIndex:minDistance withObject:tempStationName];
+                        }
+                    }
+                    int nVariation = rawAddress.length/3;
+                    if(nVariation == 0){
+                        nVariation = 1;
+                    }
+                    for (int i=0;i<[arrUnFilteredStationList count];i++){
                         int finalDistance = [[arrDistance objectAtIndex:i] intValue];
-                        Location *loc = [arrUnFilteredStationList objectAtIndex:i];
-                        if((finalDistance < 2.0 || (finalDistance <= 3 && [arrMultiPleStationList count] < 3)) && finalDistance < rawAddress.length){
-                            NIMLOG_EVENT1(@"Station Name:%@ finalDistance:%d",loc.shortFormattedAddress,finalDistance);
+                        Location *location = [arrUnFilteredStationList objectAtIndex:i];
+                        if((finalDistance < 2.0 || (finalDistance <= nVariation && [arrMultiPleStationList count] < 3)) && finalDistance < rawAddress.length){
                             [arrMultiPleStationList addObject:[arrUnFilteredStationList objectAtIndex:i]];
                         }
                     }
@@ -625,12 +602,10 @@
                                        isGeocodeResults:YES];
                         return;
                     }
-                    
                 }
                 
                 if ([rawAddress rangeOfString:strCaltrain1 options:NSCaseInsensitiveSearch].location != NSNotFound || [rawAddress rangeOfString:strCaltrain2 options:NSCaseInsensitiveSearch].location != NSNotFound) {
-                    if ([rawAddress rangeOfString:strCaltrain1 options:NSCaseInsensitiveSearch].location != NSNotFound)
-                    {
+                    if ([rawAddress rangeOfString:strCaltrain1 options:NSCaseInsensitiveSearch].location != NSNotFound){
                         range = [rawAddress rangeOfString:strCaltrain1];
                         NSMutableString *strMutableRawAddress =  (NSMutableString *)rawAddress;
                         [strMutableRawAddress deleteCharactersInRange:range];
@@ -642,84 +617,81 @@
                         [strMutableRawAddress deleteCharactersInRange:range];
                         rawAddress = strMutableRawAddress;
                     }
-                if ([rawAddress rangeOfString:strStreet1 options:NSCaseInsensitiveSearch].location != NSNotFound)
-                {
-                    range = [rawAddress rangeOfString:strStreet1];
-                    NSMutableString *strMutableRawAddress =  (NSMutableString *)rawAddress;
-                    [strMutableRawAddress replaceCharactersInRange:range withString:@"street"];
-                    rawAddress = strMutableRawAddress;
-                }
-                else if([rawAddress rangeOfString:strStreet2 options:NSCaseInsensitiveSearch].location != NSNotFound){
-                    range = [rawAddress rangeOfString:strStreet2];
-                    NSMutableString *strMutableRawAddress =  (NSMutableString *)rawAddress;
-                    [strMutableRawAddress replaceCharactersInRange:range withString:@"street"];
-                    rawAddress = strMutableRawAddress;
-                }
-                
-                NSMutableArray *arrMultiPleStationList = [[NSMutableArray alloc] init];
+                    if ([rawAddress rangeOfString:strStreet1 options:NSCaseInsensitiveSearch].location != NSNotFound){
+                        range = [rawAddress rangeOfString:strStreet1];
+                        NSMutableString *strMutableRawAddress =  (NSMutableString *)rawAddress;
+                        [strMutableRawAddress replaceCharactersInRange:range withString:@"street"];
+                        rawAddress = strMutableRawAddress;
+                    }
+                    else if([rawAddress rangeOfString:strStreet2 options:NSCaseInsensitiveSearch].location != NSNotFound){
+                        range = [rawAddress rangeOfString:strStreet2];
+                        NSMutableString *strMutableRawAddress =  (NSMutableString *)rawAddress;
+                        [strMutableRawAddress replaceCharactersInRange:range withString:@"street"];
+                        rawAddress = strMutableRawAddress;
+                    }
+                    
+                    NSMutableArray *arrMultiPleStationList = [[NSMutableArray alloc] init];
                     NSMutableArray *arrUnFilteredStationList = [[NSMutableArray alloc] init];
-                NSMutableArray *arrDistance = [[NSMutableArray alloc] init];
-                NSManagedObjectContext * context = [[nc_AppDelegate sharedInstance] managedObjectContext];
-                NSFetchRequest * fetchPlanRequestChunk = [[NSFetchRequest alloc] init];
-                
-                [fetchPlanRequestChunk setEntity:[NSEntityDescription entityForName:@"Location" inManagedObjectContext:context]];
-                
-                NSArray * arrayLocations = [context executeFetchRequest:fetchPlanRequestChunk error:nil];
-                for (id location in arrayLocations){
-                    NSString *strshortFormattedAddress = [[location shortFormattedAddress]lowercaseString];
-                    float distance = [self compareString:strshortFormattedAddress withString:rawAddress];
-                    float finalDistance = distance + rawAddress.length - strshortFormattedAddress.length;
-                    NSString *strShortAddress = [[location shortFormattedAddress] lowercaseString];
-                   
-//                    if ([strShortAddress rangeOfString:@"caltrain" options:NSCaseInsensitiveSearch].location != NSNotFound)
-//                    {
-//                        range = [strShortAddress rangeOfString:@"caltrain"];
-//                        if(range){
-//                            NSMutableString *strMutableRawAddress =  [[NSMutableString alloc]init];
-//                            [strMutableRawAddress deleteCharactersInRange:range];
-//                            strShortAddress = strMutableRawAddress;
-//                        }
-//                    }
-                    if([rawAddress isEqualToString:[strShortAddress lowercaseString]]){
-                        [self markAndUpdateSelectedLocation:location];
-                        return;
-                    }
-                    else{
-                        if(![strShortAddress isEqualToString:@"Current Location"] && ![strShortAddress isEqualToString:@"Caltrain Station List"] && [strShortAddress rangeOfString:@"Caltrain" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                    NSMutableArray *arrDistance = [[NSMutableArray alloc] init];
+                    NSManagedObjectContext * context = [[nc_AppDelegate sharedInstance] managedObjectContext];
+                    NSFetchRequest * fetchPlanRequestChunk = [[NSFetchRequest alloc] init];
+                    
+                    [fetchPlanRequestChunk setEntity:[NSEntityDescription entityForName:@"Location" inManagedObjectContext:context]];
+                    NSArray * arrayLocations = [context executeFetchRequest:fetchPlanRequestChunk error:nil];
+                    for (id location in arrayLocations){
+                        NSString *strshortFormattedAddress = [[location shortFormattedAddress]lowercaseString];
+                        if(![strshortFormattedAddress isEqualToString:@"current location"] && ![strshortFormattedAddress isEqualToString:@"caltrain station list"] && [strshortFormattedAddress rangeOfString:@"caltrain" options:NSCaseInsensitiveSearch].location != NSNotFound){
                             [arrUnFilteredStationList addObject:location];
-                            [arrDistance addObject:[NSString stringWithFormat:@"%f",finalDistance]];
-                        }
-                    }
-                }
-                    if([arrUnFilteredStationList count] > 1){
-                        NSLog(@"%d",[arrDistance count]);
-                        NSLog(@"%d",[arrUnFilteredStationList count]);
-                        int min, temp,min1;
-                        NSString *temp1;
-                        int i,j;
-                        for (i = 0; i < [arrDistance count]-1; i++)
-                        {
-                            min = i;
-                            min1 = i;
-                            for (j = i+1; j < [arrDistance count]; j++)
-                            {
-                                if ([[arrDistance objectAtIndex:j] intValue] < [[arrDistance objectAtIndex:min] intValue])
-                                    min = j;
-                                min1 = j;
-                            }
-                            temp = [[arrDistance objectAtIndex:i] intValue];
-                            temp1 = [arrUnFilteredStationList objectAtIndex:i];
-                            [arrDistance replaceObjectAtIndex:i withObject:[arrDistance objectAtIndex:min]];
-                            [arrUnFilteredStationList replaceObjectAtIndex:i withObject:[arrUnFilteredStationList objectAtIndex:min]];
-                            [arrDistance replaceObjectAtIndex:min withObject:[NSString stringWithFormat:@"%d",temp]];
-                            [arrUnFilteredStationList replaceObjectAtIndex:min withObject:temp1];
                         }
                     }
                     for (int i=0;i<[arrUnFilteredStationList count];i++){
+                        Location *location = [arrUnFilteredStationList objectAtIndex:i];
+                        NSString *strshortFormattedAddress = [[location shortFormattedAddress]lowercaseString];
+                        if ([strshortFormattedAddress rangeOfString:strCaltrain1 options:NSCaseInsensitiveSearch].location != NSNotFound){
+                            range = [strshortFormattedAddress rangeOfString:strCaltrain1];
+                            NSMutableString *strMutableRawAddress =  (NSMutableString *)strshortFormattedAddress;
+                            [strMutableRawAddress deleteCharactersInRange:range];
+                            strshortFormattedAddress = strMutableRawAddress;
+                        }
+                        if([strshortFormattedAddress rangeOfString:strCaltrain2 options:NSCaseInsensitiveSearch].location != NSNotFound){
+                            range = [strshortFormattedAddress rangeOfString:strCaltrain2];
+                            NSMutableString *strMutableRawAddress =  (NSMutableString *)strshortFormattedAddress;
+                            [strMutableRawAddress deleteCharactersInRange:range];
+                            strshortFormattedAddress = strMutableRawAddress;
+                        }
+                        float distance = [self calculateLevenshteinDistance:strshortFormattedAddress withString:rawAddress];
+                        float finalDistance = distance + rawAddress.length - strshortFormattedAddress.length;
+                        [arrUnFilteredStationList replaceObjectAtIndex:i withObject:[arrUnFilteredStationList objectAtIndex:i]];
+                        [arrDistance addObject:[NSString stringWithFormat:@"%f",finalDistance]];
+                    }
+                    if([arrUnFilteredStationList count] > 1){
+                        int minDistance, tempDistance,min1;
+                        NSString *tempStation;
+                        int i,j;
+                        for (i = 0; i < [arrDistance count]-1; i++){
+                            minDistance = i;
+                            min1 = i;
+                            for (j = i+1; j < [arrDistance count]; j++){
+                                if ([[arrDistance objectAtIndex:j] intValue] < [[arrDistance objectAtIndex:minDistance] intValue])
+                                    minDistance = j;
+                                min1 = j;
+                            }
+                            tempDistance = [[arrDistance objectAtIndex:i] intValue];
+                            tempStation = [arrUnFilteredStationList objectAtIndex:i];
+                            [arrDistance replaceObjectAtIndex:i withObject:[arrDistance objectAtIndex:minDistance]];
+                            [arrUnFilteredStationList replaceObjectAtIndex:i withObject:[arrUnFilteredStationList objectAtIndex:minDistance]];
+                            [arrDistance replaceObjectAtIndex:minDistance withObject:[NSString stringWithFormat:@"%d",tempDistance]];
+                            [arrUnFilteredStationList replaceObjectAtIndex:minDistance withObject:tempStation];
+                        }
+                    }
+                    int nVariation = rawAddress.length/3;
+                    if(nVariation == 0){
+                        nVariation = 1;
+                    }
+                    for (int i=0;i<[arrUnFilteredStationList count];i++){
                         int finalDistance = [[arrDistance objectAtIndex:i] intValue];
-                        Location *loc = [arrUnFilteredStationList objectAtIndex:i];
-                        if((finalDistance < 2.0 || (finalDistance <= 3 && [arrMultiPleStationList count] < 3)) && finalDistance < rawAddress.length){
-                            NIMLOG_EVENT1(@"Station Name:%@ finalDistance:%d",loc.shortFormattedAddress,finalDistance);
+                        Location *location = [arrUnFilteredStationList objectAtIndex:i];
+                        if((finalDistance < 2.0 || (finalDistance <= nVariation && [arrMultiPleStationList count] < 3)) && finalDistance < rawAddress.length){
                             [arrMultiPleStationList addObject:[arrUnFilteredStationList objectAtIndex:i]];
                         }
                     }
@@ -734,9 +706,7 @@
                                        isGeocodeResults:YES];
                         return;
                     }
-
-            }
-            
+                }
                 GeocodeRequestParameters* parameters = [[GeocodeRequestParameters alloc] init];
                 parameters.rawAddress = rawAddress;
                 parameters.supportedRegion = [self supportedRegion];
@@ -759,8 +729,7 @@
                          FLURRY_GEOCODE_RAWADDRESS, rawAddress,
                          FLURRY_GEOCODE_API, (([parameters apiType]==GOOGLE_GEOCODER) ? @"Google" : @"iOS"),
                          nil, nil);
-                       
-     }
+            }
             @catch (NSException *exception) {
                 logException(@"ToFromTableViewController->textSubmitted", @"Loading geocode info", exception);
             }

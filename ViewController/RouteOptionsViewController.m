@@ -117,6 +117,41 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     return [[plan sortedItineraries] count];
 }
 
+- (NSMutableAttributedString *)detailTextLabelColor:(NSString *)strDetailtextLabel:(Itinerary *)itinerary{
+    NSString *strFullTrainNumber;
+    NSMutableAttributedString *strMutableDetailTextLabel = [[NSMutableAttributedString alloc] initWithString:strDetailtextLabel];
+    for(int i=0;i<[[itinerary sortedLegs] count];i++){
+        Leg *leg = [[itinerary sortedLegs] objectAtIndex:i];
+        if([[leg agencyId] isEqualToString:@"caltrain-ca-us"]){
+            NSString *strTrainNumber;
+            NSRange range;
+            NSString *strHeadSign = [leg headSign];
+            NSArray *headSignComponent = [strHeadSign componentsSeparatedByString:@"Train"];
+            strTrainNumber = [headSignComponent objectAtIndex:1];
+            if([strTrainNumber rangeOfString:@")" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                range = [strTrainNumber rangeOfString:@")"];
+                strTrainNumber = [strTrainNumber substringToIndex:range.location];
+                NSString * strTempTrainNumber = [strTrainNumber stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                strFullTrainNumber = [NSString stringWithFormat:@"#%@",strTempTrainNumber];
+            }
+            if([strDetailtextLabel rangeOfString:strFullTrainNumber options:NSCaseInsensitiveSearch].location != NSNotFound){
+                range = [strDetailtextLabel rangeOfString:strFullTrainNumber];
+                if([[leg routeLongName] isEqualToString:@"Local"]){
+                    [strMutableDetailTextLabel addAttribute:NSForegroundColorAttributeName value:[UIColor darkGrayColor] range:range];
+                }
+                if([[leg routeLongName] isEqualToString:@"Limited"]){
+                    [strMutableDetailTextLabel addAttribute:NSForegroundColorAttributeName value:[UIColor orangeColor] range:range];
+                }
+                if([[leg routeLongName] isEqualToString:@"Bullet"]){
+                    [strMutableDetailTextLabel addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:range];
+                }
+            }
+        }
+    }
+    return strMutableDetailTextLabel;
+}
+
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Check for a reusable cell first, use that if it exists
@@ -168,12 +203,12 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
         [[cell detailTextLabel] setFont:[UIFont MEDIUM_FONT]];
         cell.detailTextLabel.textColor = [UIColor GRAY_FONT_COLOR];
-
-        [[cell detailTextLabel] setText:[itin itinerarySummaryStringForWidth:ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
-                                                                        Font:cell.detailTextLabel.font]];
-            
+        
+        NSString *strDetailtextLabel = [itin itinerarySummaryStringForWidth:ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
+                                                                       Font:cell.detailTextLabel.font];
+        NSMutableAttributedString *strMutableDetailTextLabel = [self detailTextLabelColor:strDetailtextLabel :itin];
+        [cell detailTextLabel].attributedText = strMutableDetailTextLabel;
         [[cell detailTextLabel] setNumberOfLines:0];  // Allow for multi-lines
-        [cell.detailTextLabel setTextColor:[itin detailTextLabelColor]];
     }
     @catch (NSException *exception) {
         logException(@"RouteOptionsViewController->cellForRowAtIndexPath", @"", exception);

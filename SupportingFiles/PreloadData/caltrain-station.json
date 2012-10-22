@@ -1485,8 +1485,8 @@
                  {
                  "address_components" : [
                                          {
-                                         "long_name" : "San Jose Diridon Station",
-                                         "short_name" : "San Jose Diridon Station",
+                                         "long_name" : "San Jose Diridon Station Caltrain",
+                                         "short_name" : "San Jose Diridon Station Caltrain",
                                          "types" : [ "train_station", "transit_station" ]
                                          },
                                          {
@@ -1520,7 +1520,7 @@
                                          "types" : [ "postal_code" ]
                                          }
                                          ],
-                 "formatted_address" : "San Jose Diridon Station, San Jose, CA 95110, USA",
+                 "formatted_address" : "San Jose Diridon Station Caltrain, San Jose, CA 95110, USA",
                  "toFrequency" : 0.16,
                  "fromFrequency" : 0.16,
                  "memberOfList" : "Caltrain25",

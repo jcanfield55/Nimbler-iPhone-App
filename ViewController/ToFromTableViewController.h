@@ -46,4 +46,5 @@
 
 - (void)markAndUpdateSelectedLocation:(Location *)loc;
 -(BOOL)alertUsetForLocationService;
+-(float)calculateLevenshteinDistance:(NSString *)originalString withString:(NSString *)comparisonString;
 @end
