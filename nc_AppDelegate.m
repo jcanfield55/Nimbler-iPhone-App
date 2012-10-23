@@ -401,8 +401,13 @@ FeedBackForm *fbView;
     // US 177 Implementation
     RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
     [[NSUserDefaults standardUserDefaults] setInteger:rxCustomTabBar.selectedIndex forKey:LAST_SELECTED_TAB_INDEX];
-    [[NSUserDefaults standardUserDefaults]setObject:self.toLoc.formattedAddress forKey:LAST_TO_LOCATION];
-    [[NSUserDefaults standardUserDefaults]setObject:self.fromLoc.formattedAddress forKey:LAST_FROM_LOCATION];
+    // Fixed DE-231 
+    if(self.toLoc.formattedAddress){
+      [[NSUserDefaults standardUserDefaults]setObject:self.toLoc.formattedAddress forKey:LAST_TO_LOCATION];  
+    }
+    if(self.fromLoc.formattedAddress){
+      [[NSUserDefaults standardUserDefaults]setObject:self.fromLoc.formattedAddress forKey:LAST_FROM_LOCATION];  
+    }
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     // Close Keyboard

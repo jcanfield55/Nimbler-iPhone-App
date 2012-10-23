@@ -59,7 +59,8 @@
 
 // Table cell height
 #define STANDARD_TABLE_CELL_MINIMUM_HEIGHT 40
-#define VARIABLE_TABLE_CELL_HEIGHT_BUFFER 7
+// Fixed DE-230 Changed Value from 7 to 15
+#define VARIABLE_TABLE_CELL_HEIGHT_BUFFER 15
 #define ROUTE_OPTIONS_TABLE_CELL_MINIMUM_HEIGHT 60
 #define ROUTE_OPTIONS_VARIABLE_TABLE_CELL_HEIGHT_BUFFER 25
 
@@ -84,6 +85,7 @@
 
 // Colors
 #define NIMBLER_RED_FONT_COLOR colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0
+#define NIMBLER_YELLOW_FONT_COLOR colorWithRed:255.0/255.0 green:161.0/255.0 blue:77.0/255.0 alpha:1.0
 #define NAVIGATION_TITLE_COLOR colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0
 #define GRAY_FONT_COLOR colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0
 

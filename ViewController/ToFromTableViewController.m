@@ -484,6 +484,7 @@
                 NSString *strAirBart2 = @"airbart ";
                 NSString *strStreet1 = @" street";
                 NSString *strStreet2 = @"street ";
+                // DE-225 Fixed.Converted The raw Address into  lowerCase string.
                 rawAddress = [rawAddress lowercaseString];
                 NSRange range;
                 if ([rawAddress rangeOfString:strBART1 options:NSCaseInsensitiveSearch].location != NSNotFound || [rawAddress rangeOfString:strBART2 options:NSCaseInsensitiveSearch].location != NSNotFound ||  [rawAddress rangeOfString:strAirBart1 options:NSCaseInsensitiveSearch].location != NSNotFound || [rawAddress rangeOfString:strAirBart2 options:NSCaseInsensitiveSearch].location != NSNotFound) {
@@ -555,6 +556,10 @@
                             [strMutableRawAddress deleteCharactersInRange:range];
                             strshortFormattedAddress = strMutableRawAddress;
                         }
+                        if([rawAddress isEqualToString:strshortFormattedAddress]){
+                            [self markAndUpdateSelectedLocation:location];
+                            return;
+                        }
                         float distance = [self calculateLevenshteinDistance:strshortFormattedAddress withString:rawAddress];
                         float finalDistance = distance + rawAddress.length - strshortFormattedAddress.length;
                         [arrUnFilteredStationList replaceObjectAtIndex:i withObject:[arrUnFilteredStationList objectAtIndex:i]];
@@ -586,16 +591,15 @@
                     }
                     for (int i=0;i<[arrUnFilteredStationList count];i++){
                         int finalDistance = [[arrDistance objectAtIndex:i] intValue];
-                        Location *location = [arrUnFilteredStationList objectAtIndex:i];
                         if((finalDistance < 2.0 || (finalDistance <= nVariation && [arrMultiPleStationList count] < 3)) && finalDistance < rawAddress.length){
                             [arrMultiPleStationList addObject:[arrUnFilteredStationList objectAtIndex:i]];
                         }
                     }
-                    if([arrMultiPleStationList count] == 1){
-                        [self markAndUpdateSelectedLocation:[arrMultiPleStationList objectAtIndex:0]];
-                        return;
-                    }
-                    else if([arrMultiPleStationList count] > 1){
+//                    if([arrMultiPleStationList count] == 1){
+//                        [self markAndUpdateSelectedLocation:[arrMultiPleStationList objectAtIndex:0]];
+//                        return;
+//                    }
+                    if([arrMultiPleStationList count] > 0){
                         [toFromVC callLocationPickerFor:self
                                            locationList:arrMultiPleStationList
                                                  isFrom:isFrom
@@ -659,6 +663,10 @@
                             [strMutableRawAddress deleteCharactersInRange:range];
                             strshortFormattedAddress = strMutableRawAddress;
                         }
+                        if([rawAddress isEqualToString:strshortFormattedAddress]){
+                            [self markAndUpdateSelectedLocation:location];
+                            return;
+                        }
                         float distance = [self calculateLevenshteinDistance:strshortFormattedAddress withString:rawAddress];
                         float finalDistance = distance + rawAddress.length - strshortFormattedAddress.length;
                         [arrUnFilteredStationList replaceObjectAtIndex:i withObject:[arrUnFilteredStationList objectAtIndex:i]];
@@ -690,16 +698,15 @@
                     }
                     for (int i=0;i<[arrUnFilteredStationList count];i++){
                         int finalDistance = [[arrDistance objectAtIndex:i] intValue];
-                        Location *location = [arrUnFilteredStationList objectAtIndex:i];
                         if((finalDistance < 2.0 || (finalDistance <= nVariation && [arrMultiPleStationList count] < 3)) && finalDistance < rawAddress.length){
                             [arrMultiPleStationList addObject:[arrUnFilteredStationList objectAtIndex:i]];
                         }
                     }
-                    if([arrMultiPleStationList count] == 1){
-                        [self markAndUpdateSelectedLocation:[arrMultiPleStationList objectAtIndex:0]];
-                        return;
-                    }
-                    else if([arrMultiPleStationList count] > 1){
+//                    if([arrMultiPleStationList count] == 1){
+//                        [self markAndUpdateSelectedLocation:[arrMultiPleStationList objectAtIndex:0]];
+//                        return;
+//                    }
+                     if([arrMultiPleStationList count] > 0){
                         [toFromVC callLocationPickerFor:self
                                            locationList:arrMultiPleStationList
                                                  isFrom:isFrom

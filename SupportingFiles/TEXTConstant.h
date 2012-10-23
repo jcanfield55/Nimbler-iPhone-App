@@ -67,7 +67,7 @@
 #define DAYS_TO_SHOW_FEEDBACK_ALERT   @"daysToShowFeedBackAlert"
 #define DATE_OF_START                 @"dateOfStart"
 #define FEED_BACK_SHEET_TITLE               @"Now that you have used the app a bit, would you share your thoughts with others"
-#define NO_THANKS_BUTTON_TITLE               @"No ThankS"
+#define NO_THANKS_BUTTON_TITLE               @"No Thanks"
 #define APPSTORE_FEEDBACK_BUTTON_TITLE       @"AppStore feedback"
 #define NIMBLER_FEEDBACK_BUTTON_TITLE        @"Nimbler feedback"
 #define REMIND_ME_LATER_BUTTON_TITLE         @"Remind Me Later"

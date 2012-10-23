@@ -139,11 +139,13 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                 if([[leg routeLongName] isEqualToString:@"Local"]){
                     [strMutableDetailTextLabel addAttribute:NSForegroundColorAttributeName value:[UIColor darkGrayColor] range:range];
                 }
+                // DE-227 Fixed
+                // Changed the red Color to Nimbler Red and also Changed the RGB For Yellow Color.
                 if([[leg routeLongName] isEqualToString:@"Limited"]){
-                    [strMutableDetailTextLabel addAttribute:NSForegroundColorAttributeName value:[UIColor orangeColor] range:range];
+                    [strMutableDetailTextLabel addAttribute:NSForegroundColorAttributeName value:[UIColor NIMBLER_YELLOW_FONT_COLOR] range:range];
                 }
                 if([[leg routeLongName] isEqualToString:@"Bullet"]){
-                    [strMutableDetailTextLabel addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:range];
+                    [strMutableDetailTextLabel addAttribute:NSForegroundColorAttributeName value:[UIColor NIMBLER_RED_FONT_COLOR] range:range];
                 }
             }
         }
@@ -204,10 +206,18 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         [[cell detailTextLabel] setFont:[UIFont MEDIUM_FONT]];
         cell.detailTextLabel.textColor = [UIColor GRAY_FONT_COLOR];
         
-        NSString *strDetailtextLabel = [itin itinerarySummaryStringForWidth:ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
-                                                                       Font:cell.detailTextLabel.font];
-        NSMutableAttributedString *strMutableDetailTextLabel = [self detailTextLabelColor:strDetailtextLabel :itin];
-        [cell detailTextLabel].attributedText = strMutableDetailTextLabel;
+        // DE-228 Fixed
+        // Applied The color only if the ios version is 5.0 or greater.
+        if([[[UIDevice currentDevice] systemVersion] intValue] > 4){
+            NSString *strDetailtextLabel = [itin itinerarySummaryStringForWidth:ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
+                                                                           Font:cell.detailTextLabel.font];
+            NSMutableAttributedString *strMutableDetailTextLabel = [self detailTextLabelColor:strDetailtextLabel :itin];
+            [cell detailTextLabel].attributedText = strMutableDetailTextLabel;
+        }
+        else{
+            cell.detailTextLabel.text = [itin itinerarySummaryStringForWidth:ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
+                                                                        Font:cell.detailTextLabel.font];
+        }
         [[cell detailTextLabel] setNumberOfLines:0];  // Allow for multi-lines
     }
     @catch (NSException *exception) {
