@@ -28,6 +28,7 @@
 @dynamic memberOfList;
 @synthesize shortFormattedAddress;
 @synthesize reverseGeoLocation;
+@synthesize lastRequestReverseGeoLocation;
 @synthesize addressComponentDictionary;
 
 // Static variables and methods to retrieve the Locations set wrapper

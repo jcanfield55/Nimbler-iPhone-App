@@ -1180,6 +1180,16 @@ UIImage *imageDetailDisclosure;
                 [routeOptionsVC setPlan:plan];
                 [self getRealTimeDataForItinerary];
                 self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
+                
+                if (fromLocation == currentLocation) {
+                    // Update lastRequestReverseGeoLocation if the current one is valid, DE232 fix
+                    if ([currentLocation isReverseGeoValid]) {
+                        currentLocation.lastRequestReverseGeoLocation = currentLocation.reverseGeoLocation;
+                    } else {
+                        currentLocation.lastRequestReverseGeoLocation = nil;
+                    }
+                }
+                // Push the Route Options View Controller
                 if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
                     CATransition *animation = [CATransition animation];
                     [animation setDuration:0.3];
@@ -1563,10 +1573,10 @@ UIImage *imageDetailDisclosure;
 -(void)doSwapLocation
 {
     
-    if (fromLocation == currentLocation && [currentLocation reverseGeoLocation] &&
-        [currentLocation reverseGeoLocation] != toLocation) {
+    if (fromLocation == currentLocation && [currentLocation lastRequestReverseGeoLocation] &&
+        [currentLocation lastRequestReverseGeoLocation] != toLocation) {
         // If from = currentLocation and there is a reverse geolocation
-        [toTableVC markAndUpdateSelectedLocation:[currentLocation reverseGeoLocation]];
+        [toTableVC markAndUpdateSelectedLocation:[currentLocation lastRequestReverseGeoLocation]];
     }
     else {  // do a normal swap
         Location *fromloc = fromLocation;
