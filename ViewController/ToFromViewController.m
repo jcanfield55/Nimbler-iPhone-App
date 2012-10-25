@@ -1283,7 +1283,8 @@ UIImage *imageDetailDisclosure;
             // Save db context with the new location frequencies & dates
             saveContext(managedObjectContext);
             
-            if(fromLocation == toLocation){
+            if(fromLocation == toLocation ||
+               ([fromLocation isCurrentLocation] && [fromLocation isReverseGeoValid] && [fromLocation reverseGeoLocation] == toLocation)) {
                 [self stopActivityIndicator];
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"The To: and From: address are the same location.  Please choose a different destination." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
                 [alert show];
