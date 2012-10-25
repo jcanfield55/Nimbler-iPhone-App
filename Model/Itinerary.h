@@ -106,7 +106,6 @@ typedef enum {
 // Workaround for OTP tendency to generate itineraries that go overnight past the end of service for
 // Caltrain and other agencies.  Robust solution will be to fix OTP
 - (BOOL)isOvernightItinerary;
-- (UIColor *)detailTextLabelColor;
 
 @end
 

@@ -140,6 +140,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 // If includeTime == true, then include a time at the beginning of the summary text
 - (NSString *)summaryTextWithTime:(BOOL)includeTime
 {
+    @try {
     NSMutableString* summary = [NSMutableString stringWithString:@""];
     if (includeTime) {
         [summary appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
@@ -186,12 +187,18 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         }
     }
     return summary;
+    }
+    @catch (NSException *exception) {
+        logException(@"Leg->summaryTextWithTime:", @"", exception);
+        return @"";
+    }
 }
 
 // Returns title text for RouteDetailsView
 // US121 and US124 implementation
 - (NSString *)directionsTitleText:(LegPositionEnum)legPosition
 {
+    @try {
     NSMutableString *titleText=[NSMutableString stringWithString:@""];
     if ([[self mode] isEqualToString:@"WALK"]) {
         if (legPosition == FIRST_LEG) {    // US124 implementation
@@ -276,10 +283,16 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         }
     }
     return titleText;
+    }
+    @catch (NSException *exception) {
+        logException(@"Leg->directionsTitleText:", @"", exception);
+        return @"";
+    }
 }
 
 - (NSString *)directionsDetailText:(LegPositionEnum)legPosition
 {
+    @try {
     NSString *subTitle;
     if ([[self mode] isEqualToString:@"WALK"]) {
         if (legPosition == FIRST_LEG) {
@@ -298,6 +311,11 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
                     [[self to] name]];            
     }
     return subTitle;
+    }
+@catch (NSException *exception) {
+    logException(@"Leg->directionsDetailText", @"", exception);
+    return @"";
+}
 }
 
 

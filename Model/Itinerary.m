@@ -207,23 +207,6 @@
     }
 }
 
-// Returns a string which can be used in RouteOptionsView to give a summary of the itinerary
-// Each line of the string will be truncated to fit within width using font
-
-- (UIColor *)detailTextLabelColor{
-    for (Leg* leg in [self sortedLegs]) {
-        if([[leg routeLongName] isEqualToString:CALTRAIN_LOCAL]){
-            return [UIColor darkGrayColor];
-        }
-        else if([[leg routeLongName] isEqualToString:CALTRAIN_LIMITED]){
-            return [UIColor orangeColor];
-        }
-        else if([[leg routeLongName] isEqualToString:CALTRAIN_BULLET]){
-            return [UIColor redColor];
-        }
-    }
-    return [UIColor darkGrayColor];
-}
 - (NSString *)itinerarySummaryStringForWidth:(CGFloat)width Font:(UIFont *)font
 {
     NSMutableString *returnString = [NSMutableString stringWithCapacity:30];
@@ -301,6 +284,7 @@
 
     for (int i=0; i < [legsArray count]; i++) {
         Leg* leg = [legsArray objectAtIndex:i];
+        @try {
         if (i==0) { // First leg of itinerary
             // If first leg is not a walking leg, insert a startpoint entry (US124 implementation)
             if (![[leg mode] isEqualToString:@"WALK"]) {
@@ -340,6 +324,13 @@
             [titleArray addObject:[leg directionsTitleText:MIDDLE_LEG]];
             [subtitleArray addObject:[leg directionsDetailText:MIDDLE_LEG]];
             [legMapArray addObject:leg];
+        }
+        }
+        @catch (NSException *exception) {
+            logException(@"Itinerary->makeLegDescriptionSortedArrays",
+                         [NSString stringWithFormat:@"i= %d, [legsArray count] = %d, [leg mode] = %@, [leg startTime] = %@",
+                         i, [legsArray count], [leg mode], [leg startTime]],
+                         exception);
         }
     }
     

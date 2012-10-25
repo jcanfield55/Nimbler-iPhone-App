@@ -142,9 +142,10 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                 // DE-227 Fixed
                 // Changed the red Color to Nimbler Red and also Changed the RGB For Yellow Color.
                 if([[leg routeLongName] isEqualToString:@"Limited"]){
-                    [strMutableDetailTextLabel addAttribute:NSForegroundColorAttributeName value:[UIColor NIMBLER_YELLOW_FONT_COLOR] range:range];
+                    [strMutableDetailTextLabel addAttribute:NSFontAttributeName value:[UIFont MEDIUM_OBLIQUE_FONT] range:range];
                 }
                 if([[leg routeLongName] isEqualToString:@"Bullet"]){
+                    [strMutableDetailTextLabel addAttribute:NSFontAttributeName value:[UIFont MEDIUM_OBLIQUE_FONT] range:range];
                     [strMutableDetailTextLabel addAttribute:NSForegroundColorAttributeName value:[UIColor NIMBLER_RED_FONT_COLOR] range:range];
                 }
             }
@@ -227,7 +228,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 }
 
 - (CGFloat)tableView:(UITableView *)aTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
-{    
+{
+    @try {
     Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
     
     NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
@@ -253,7 +255,11 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     }
     
     return height;
-
+    }
+   @catch (NSException *exception) {
+       logException(@"RouteOptionsViewController->heightForRowAtIndexPath", @"", exception);
+       return ROUTE_OPTIONS_TABLE_CELL_MINIMUM_HEIGHT;
+   }
 }
 
 -(void)hideUnUsedTableViewCell

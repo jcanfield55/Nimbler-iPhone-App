@@ -128,8 +128,14 @@ NSDateFormatter *utilitiesShortTimeFormatter(void) {
 
 // 
 NSString *superShortTimeStringForDate(NSDate *date) {
-    NSMutableString* timeString = [NSMutableString stringWithString:
-                                   [utilitiesShortTimeFormatter() stringFromDate:date]];
+    NSString* origFormattedString = [utilitiesShortTimeFormatter() stringFromDate:date];
+    if (!origFormattedString) {   // DE-208 attempted fix
+        logError(@"Utilities --> superShortTimeStringForDate",
+                 [NSString stringWithFormat:@"date = %@, utilitiesShortTimeFormatter = %@, origFormattedString = %@",
+                  date, utilitiesShortTimeFormatter(), origFormattedString]);
+        return @"";
+    }
+    NSMutableString* timeString = [NSMutableString stringWithString:origFormattedString];
     // Remove the space before AM/PM
     [timeString replaceOccurrencesOfString:@" " 
                                 withString:@"" 
@@ -261,6 +267,9 @@ NSString *stringByTruncatingToWidth(NSString *string, CGFloat width, UIFont *fon
 {
     if (width == 0.0 || font==nil) {
         return string;
+    }
+    if (!string) {
+        return @"";
     }
     // Create copy that will be the returned result
     NSMutableString *truncatedString = [NSMutableString stringWithString:string];
