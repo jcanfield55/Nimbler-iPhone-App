@@ -93,6 +93,7 @@
 @property (nonatomic, strong) NSString *strTweetCountURL;
 @property (nonatomic) BOOL isSettingView;
 @property (nonatomic) BOOL isRemoteNotification;
+@property (nonatomic) BOOL isNeedToLoadRealData;
 
 - (NSURL *)applicationDocumentsDirectory;
 

@@ -76,6 +76,7 @@ static nc_AppDelegate *appDelegate;
 @synthesize strTweetCountURL;
 @synthesize isSettingView;
 @synthesize isRemoteNotification;
+@synthesize isNeedToLoadRealData;
 
 // Feedback parameters
 @synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId;
@@ -537,11 +538,15 @@ FeedBackForm *fbView;
     NSArray * arrayLocations = [context executeFetchRequest:fetchPlanRequestChunk error:nil];
     for (id location in arrayLocations){
         if([strToFormattedAddress isEqualToString:[location formattedAddress]]){
+            //DE-233 Attempted Fix.
+            [locations setIsLocationServiceEnable:TRUE];
             [toFromViewController.toTableVC markAndUpdateSelectedLocation:location];
         }
     }
     for (id location in arrayLocations){
         if([strFromFormattedAddress isEqualToString:[location formattedAddress]]){
+            //DE-233 Attempted Fix.
+            [locations setIsLocationServiceEnable:TRUE];
             [toFromViewController.fromTableVC markAndUpdateSelectedLocation:location];
         }
     }

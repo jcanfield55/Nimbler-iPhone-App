@@ -10,6 +10,7 @@
 #import "Leg.h"
 #import "Plan.h"
 #import "UtilityFunctions.h"
+#import "nc_AppDelegate.h"
 
 @interface Itinerary()
 {
@@ -238,10 +239,11 @@
 - (NSArray *)legDescriptionTitleSortedArray
 {
     //DE - 170 Fixed
-    //Added To load leg data on every RealTime request/response.
-    //if (!legDescTitleSortedArr) {
-        [self makeLegDescriptionSortedArrays];
-    //}
+    //Added To load leg data only when we have data to load.
+    if([nc_AppDelegate sharedInstance].isNeedToLoadRealData){
+       [self makeLegDescriptionSortedArrays];
+       [nc_AppDelegate sharedInstance].isNeedToLoadRealData = NO;
+    }
     return legDescTitleSortedArr;
 }
 
@@ -249,10 +251,11 @@
 - (NSArray *)legDescriptionSubtitleSortedArray
 {
     //DE - 170 Fixed
-    //Added To load leg data on every RealTime request/response.
-   // if (!legDescSubtitleSortedArr) {
+    //Added To load leg data only when we have data to load.
+    if([nc_AppDelegate sharedInstance].isNeedToLoadRealData){
         [self makeLegDescriptionSortedArrays];
-    //}
+        [nc_AppDelegate sharedInstance].isNeedToLoadRealData = NO;
+    }
     return legDescSubtitleSortedArr;
 }
 

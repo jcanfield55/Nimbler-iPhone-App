@@ -1445,6 +1445,7 @@ UIImage *imageDetailDisclosure;
         // DE 175 Fixed
         if ([strResuorcePath isEqualToString:strLiveDataURL]) {
             if ([request isGET]) {
+                [nc_AppDelegate sharedInstance].isNeedToLoadRealData = YES;
                 NIMLOG_OBJECT1(@"response %@", [response bodyAsString]);
                 isContinueGetRealTimeData = NO;
                 RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
