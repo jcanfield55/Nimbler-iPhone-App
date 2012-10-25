@@ -505,6 +505,7 @@ FeedBackForm *fbView;
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
     if(![self isNetworkConnectionLive]){
+        logEvent(FLURRY_ALERT_NO_NETWORK, FLURRY_ALERT_LOCATION, @"applicationDidBecomeActive", nil, nil, nil, nil, nil, nil);
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:NO_NETWORK_ALERT delegate:self cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil];
         [alert show];
     }

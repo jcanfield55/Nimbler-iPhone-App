@@ -121,6 +121,7 @@
 #define FLURRY_FEEDBACK_STOP @"Feedback stop button"
 #define FLURRY_FEEDBACK_SUBMIT @"Feedback submit"
 #define FLURRY_ADVISORIES_APPEAR @"Advisories appear"
+#define FLURRY_ALERT_NO_NETWORK @"User alert: no network"
 
 // Flurry parameter names
 #define FLURRY_NOTIFICATION_TOKEN @"(Notification Token)"
@@ -144,6 +145,7 @@
 #define FLURRY_LAT @"(Lat)"
 #define FLURRY_LNG @"(Lng)"
 #define FLURRY_SUPPORTED_REGION_STRING @"(Supported Region String)"
+#define FLURRY_ALERT_LOCATION @"(Alert Location)"
 
 
 // Geocode behavior
