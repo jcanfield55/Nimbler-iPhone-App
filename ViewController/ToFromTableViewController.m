@@ -595,10 +595,6 @@
                             [arrMultiPleStationList addObject:[arrUnFilteredStationList objectAtIndex:i]];
                         }
                     }
-//                    if([arrMultiPleStationList count] == 1){
-//                        [self markAndUpdateSelectedLocation:[arrMultiPleStationList objectAtIndex:0]];
-//                        return;
-//                    }
                     if([arrMultiPleStationList count] > 0){
                         [toFromVC callLocationPickerFor:self
                                            locationList:arrMultiPleStationList
@@ -621,18 +617,6 @@
                         [strMutableRawAddress deleteCharactersInRange:range];
                         rawAddress = strMutableRawAddress;
                     }
-                    if ([rawAddress rangeOfString:strStreet1 options:NSCaseInsensitiveSearch].location != NSNotFound){
-                        range = [rawAddress rangeOfString:strStreet1];
-                        NSMutableString *strMutableRawAddress =  (NSMutableString *)rawAddress;
-                        [strMutableRawAddress replaceCharactersInRange:range withString:@"street"];
-                        rawAddress = strMutableRawAddress;
-                    }
-                    else if([rawAddress rangeOfString:strStreet2 options:NSCaseInsensitiveSearch].location != NSNotFound){
-                        range = [rawAddress rangeOfString:strStreet2];
-                        NSMutableString *strMutableRawAddress =  (NSMutableString *)rawAddress;
-                        [strMutableRawAddress replaceCharactersInRange:range withString:@"street"];
-                        rawAddress = strMutableRawAddress;
-                    }
                     
                     NSMutableArray *arrMultiPleStationList = [[NSMutableArray alloc] init];
                     NSMutableArray *arrUnFilteredStationList = [[NSMutableArray alloc] init];
@@ -644,6 +628,13 @@
                     NSArray * arrayLocations = [context executeFetchRequest:fetchPlanRequestChunk error:nil];
                     for (id location in arrayLocations){
                         NSString *strshortFormattedAddress = [[location shortFormattedAddress]lowercaseString];
+                        NSMutableString *strMutableShortFormattedAddress = [[NSMutableString alloc] init];
+                        // Added To Handle Station Without Caltrain
+                        if([strshortFormattedAddress isEqualToString:@"san jose diridon station"]){
+                            [strMutableShortFormattedAddress appendString:strshortFormattedAddress];
+                            [strMutableShortFormattedAddress appendString:@"caltrain"];
+                            strshortFormattedAddress = strMutableShortFormattedAddress;
+                        }
                         if(![strshortFormattedAddress isEqualToString:@"current location"] && ![strshortFormattedAddress isEqualToString:@"caltrain station list"] && [strshortFormattedAddress rangeOfString:@"caltrain" options:NSCaseInsensitiveSearch].location != NSNotFound){
                             [arrUnFilteredStationList addObject:location];
                         }
@@ -663,6 +654,7 @@
                             [strMutableRawAddress deleteCharactersInRange:range];
                             strshortFormattedAddress = strMutableRawAddress;
                         }
+                        NSLog(@"rawAddress=%@ shortFormattedAddress=%@",rawAddress,strshortFormattedAddress);
                         if([rawAddress isEqualToString:strshortFormattedAddress]){
                             [self markAndUpdateSelectedLocation:location];
                             return;

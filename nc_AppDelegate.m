@@ -104,9 +104,13 @@ FeedBackForm *fbView;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     NSDate *date = [NSDate date];
-    [[NSUserDefaults standardUserDefaults] setObject:date forKey:DATE_OF_START];
+    [[NSUserDefaults standardUserDefaults] setObject:date forKey:DATE_OF_USE];
+    [[NSUserDefaults standardUserDefaults] setInteger:1 forKey:DAYS_COUNT];
     [[NSUserDefaults standardUserDefaults] synchronize];
 
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:FEEDBACK_REMINDER_PENDING];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
     if(![[NSUserDefaults standardUserDefaults]integerForKey:DAYS_TO_SHOW_FEEDBACK_ALERT]){
         [[NSUserDefaults standardUserDefaults] setInteger:DAYS_TO_SHOW_FEEDBACK_ALERT_NUMBER forKey:DAYS_TO_SHOW_FEEDBACK_ALERT];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -431,8 +435,32 @@ FeedBackForm *fbView;
     isFromBackground = YES;
 }
 
+// DE-238 Fixed
+- (void)showFeedBackAlertIfNeeded{
+    //US-163 Implementation
+    NSDate *appLastUseDate = [[NSUserDefaults standardUserDefaults] objectForKey:DATE_OF_USE];
+    int ndaysCount = [[NSUserDefaults standardUserDefaults] integerForKey:DAYS_COUNT];
+    int daysToShowAlert = [[NSUserDefaults standardUserDefaults]integerForKey:DAYS_TO_SHOW_FEEDBACK_ALERT];
+    NSLog(@"%d",ndaysCount);
+    appLastUseDate = dateOnlyFromDate(appLastUseDate);
+    NSDate *todayDate = dateOnlyFromDate([NSDate date]);
+    if(![appLastUseDate isEqual:todayDate]){
+        [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:DATE_OF_USE];
+        [[NSUserDefaults standardUserDefaults] setInteger:ndaysCount + 1  forKey:DAYS_COUNT];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
+    if([[NSUserDefaults standardUserDefaults] boolForKey:FEEDBACK_REMINDER_PENDING]){
+        if(ndaysCount >= daysToShowAlert){
+            actionsheet = [[UIActionSheet alloc] initWithTitle:FEED_BACK_SHEET_TITLE delegate:self cancelButtonTitle:NO_THANKS_BUTTON_TITLE destructiveButtonTitle:nil otherButtonTitles:APPSTORE_FEEDBACK_BUTTON_TITLE,NIMBLER_FEEDBACK_BUTTON_TITLE,REMIND_ME_LATER_BUTTON_TITLE, nil];
+            actionsheet.cancelButtonIndex = actionsheet.numberOfButtons - 1;
+            [actionsheet showFromTabBar:self.tabBarController.tabBar];
+        }
+    }
+}
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+    NSLog(@"Enter in Foreground");
     /*
      Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
      */
@@ -460,22 +488,6 @@ FeedBackForm *fbView;
     if(actionsheet){
         [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
     }
-    //US-163 Implementation
-        NSDate *appInstallDate = [[NSUserDefaults standardUserDefaults] objectForKey:DATE_OF_START];
-        double intevalInSeconds = [todayDate timeIntervalSinceDate:appInstallDate];
-        int dayInSeconds = 60 * 60 * 24;
-        int days = round(intevalInSeconds / dayInSeconds);
-        int daysToShowAlert = [[NSUserDefaults standardUserDefaults]integerForKey:DAYS_TO_SHOW_FEEDBACK_ALERT];
-        
-        if(![[NSUserDefaults standardUserDefaults] boolForKey:NO_THANKS_ACTION]){
-            if(days >= daysToShowAlert){
-                logEvent(FLURRY_APPSTORE_FEEDBACK_REMINDER_SHOWN, FLURRY_APPSTORE_FB_REMINDER_DAYS_SINCE_START,
-                         [NSString stringWithFormat:@"%d", days], nil, nil, nil, nil, nil, nil);
-                actionsheet = [[UIActionSheet alloc] initWithTitle:FEED_BACK_SHEET_TITLE delegate:self cancelButtonTitle:NO_THANKS_BUTTON_TITLE destructiveButtonTitle:nil otherButtonTitles:APPSTORE_FEEDBACK_BUTTON_TITLE,NIMBLER_FEEDBACK_BUTTON_TITLE,REMIND_ME_LATER_BUTTON_TITLE, nil];
-                actionsheet.cancelButtonIndex = actionsheet.numberOfButtons - 1;
-                [actionsheet showFromTabBar:self.tabBarController.tabBar];
-            }
-        }
     if(self.isTwitterView){
        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
         [twitterView getAdvisoryData];
@@ -505,9 +517,12 @@ FeedBackForm *fbView;
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+    //US-163 Implementation
+    [self showFeedBackAlertIfNeeded];
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
+//    [self showFeedBackAlertIfNeeded];
     if(![self isNetworkConnectionLive]){
         logEvent(FLURRY_ALERT_NO_NETWORK, FLURRY_ALERT_LOCATION, @"applicationDidBecomeActive", nil, nil, nil, nil, nil, nil);
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:NO_NETWORK_ALERT delegate:self cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil];
@@ -1177,7 +1192,7 @@ FeedBackForm *fbView;
         buttonResponse = @"App Store feedback";
         NSURL *url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL];
         [[UIApplication sharedApplication] openURL:url];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:NO_THANKS_ACTION];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     else if(buttonIndex == 1){
@@ -1186,18 +1201,20 @@ FeedBackForm *fbView;
         if (rxCustomTabBar.selectedIndex != 3) {
             [rxCustomTabBar selectTab:3];
         }
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
     else if(buttonIndex == 2){
         buttonResponse = @"Remind me later";
         [[NSUserDefaults standardUserDefaults] setInteger:20 forKey:DAYS_TO_SHOW_FEEDBACK_ALERT];
         [[NSUserDefaults standardUserDefaults] synchronize];
         NSDate *date = [NSDate date];
-        [[NSUserDefaults standardUserDefaults] setObject:date forKey:DATE_OF_START];
+        [[NSUserDefaults standardUserDefaults] setObject:date forKey:DATE_OF_USE];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     else if(buttonIndex == [actionSheet cancelButtonIndex]){
         buttonResponse = @"No thanks";
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:NO_THANKS_ACTION];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     logEvent(FLURRY_APPSTORE_FEEDBACK_REMINDER_ACTION, FLURRY_APPSTORE_FB_REMINDER_USER_SELECTION, buttonResponse, nil, nil, nil, nil, nil, nil);
