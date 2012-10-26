@@ -108,7 +108,7 @@ FeedBackForm *fbView;
     [[NSUserDefaults standardUserDefaults] synchronize];
 
     if(![[NSUserDefaults standardUserDefaults]integerForKey:DAYS_TO_SHOW_FEEDBACK_ALERT]){
-        [[NSUserDefaults standardUserDefaults] setInteger:10 forKey:DAYS_TO_SHOW_FEEDBACK_ALERT];
+        [[NSUserDefaults standardUserDefaults] setInteger:DAYS_TO_SHOW_FEEDBACK_ALERT_NUMBER forKey:DAYS_TO_SHOW_FEEDBACK_ALERT];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
@@ -469,6 +469,8 @@ FeedBackForm *fbView;
         
         if(![[NSUserDefaults standardUserDefaults] boolForKey:NO_THANKS_ACTION]){
             if(days >= daysToShowAlert){
+                logEvent(FLURRY_APPSTORE_FEEDBACK_REMINDER_SHOWN, FLURRY_APPSTORE_FB_REMINDER_DAYS_SINCE_START,
+                         [NSString stringWithFormat:@"%d", days], nil, nil, nil, nil, nil, nil);
                 actionsheet = [[UIActionSheet alloc] initWithTitle:FEED_BACK_SHEET_TITLE delegate:self cancelButtonTitle:NO_THANKS_BUTTON_TITLE destructiveButtonTitle:nil otherButtonTitles:APPSTORE_FEEDBACK_BUTTON_TITLE,NIMBLER_FEEDBACK_BUTTON_TITLE,REMIND_ME_LATER_BUTTON_TITLE, nil];
                 actionsheet.cancelButtonIndex = actionsheet.numberOfButtons - 1;
                 [actionsheet showFromTabBar:self.tabBarController.tabBar];
@@ -1170,19 +1172,23 @@ FeedBackForm *fbView;
 // ActoinSheet Delegate Methods
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+    NSString* buttonResponse; 
     if(buttonIndex == 0){
+        buttonResponse = @"App Store feedback";
         NSURL *url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL];
         [[UIApplication sharedApplication] openURL:url];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:NO_THANKS_ACTION];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     else if(buttonIndex == 1){
+        buttonResponse = @"Nimbler feedback";
         RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
         if (rxCustomTabBar.selectedIndex != 3) {
             [rxCustomTabBar selectTab:3];
         }
     }
     else if(buttonIndex == 2){
+        buttonResponse = @"Remind me later";
         [[NSUserDefaults standardUserDefaults] setInteger:20 forKey:DAYS_TO_SHOW_FEEDBACK_ALERT];
         [[NSUserDefaults standardUserDefaults] synchronize];
         NSDate *date = [NSDate date];
@@ -1190,8 +1196,10 @@ FeedBackForm *fbView;
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     else if(buttonIndex == [actionSheet cancelButtonIndex]){
+        buttonResponse = @"No thanks";
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:NO_THANKS_ACTION];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
+    logEvent(FLURRY_APPSTORE_FEEDBACK_REMINDER_ACTION, FLURRY_APPSTORE_FB_REMINDER_USER_SELECTION, buttonResponse, nil, nil, nil, nil, nil, nil);
 }
 @end

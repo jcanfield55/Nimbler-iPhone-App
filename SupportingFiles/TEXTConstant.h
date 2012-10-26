@@ -64,8 +64,6 @@
 #define NO_NETWORK_ALERT   @"Unable to connect to server.  Please try again when you have network connectivity."
 
 // US-163 constants
-#define DAYS_TO_SHOW_FEEDBACK_ALERT   @"daysToShowFeedBackAlert"
-#define DATE_OF_START                 @"dateOfStart"
 #define FEED_BACK_SHEET_TITLE               @"Now that you have used the app a bit, would you share your thoughts with others"
 #define NO_THANKS_BUTTON_TITLE               @"No Thanks"
 #define APPSTORE_FEEDBACK_BUTTON_TITLE       @"AppStore feedback"

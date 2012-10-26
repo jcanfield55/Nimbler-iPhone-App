@@ -127,6 +127,8 @@
 #define FLURRY_FEEDBACK_SUBMIT @"Feedback submit"
 #define FLURRY_ADVISORIES_APPEAR @"Advisories appear"
 #define FLURRY_ALERT_NO_NETWORK @"User alert: no network"
+#define FLURRY_APPSTORE_FEEDBACK_REMINDER_SHOWN  @"Appstore Feedback Reminder Shown"
+#define FLURRY_APPSTORE_FEEDBACK_REMINDER_ACTION @"Appstore Feedback Reminder Action"
 
 // Flurry parameter names
 #define FLURRY_NOTIFICATION_TOKEN @"(Notification Token)"
@@ -152,6 +154,9 @@
 #define FLURRY_LNG @"(Lng)"
 #define FLURRY_SUPPORTED_REGION_STRING @"(Supported Region String)"
 #define FLURRY_ALERT_LOCATION @"(Alert Location)"
+#define FLURRY_APPSTORE_FB_REMINDER_USER_SELECTION @"(User Selection)"
+#define FLURRY_APPSTORE_FB_REMINDER_DAYS_SINCE_START @"(Days since app first use)"
+
 
 
 // Geocode behavior
@@ -249,7 +254,12 @@
 #define FOR_TODAY                      @"forToday"
 
 #define METADATA_URL                   @"metadata"
-        
+
+
+// US-163 Appstore Feedback reminder constants
+#define DAYS_TO_SHOW_FEEDBACK_ALERT   @"daysToShowFeedBackAlert"
+#define DATE_OF_START                 @"dateOfStart"
+#define DAYS_TO_SHOW_FEEDBACK_ALERT_NUMBER  10
 
 // User Preferance
 #define DEVICE_TOKEN      @"deviceToken"
