@@ -35,6 +35,7 @@
     BOOL isRegionSupport;
     BOOL currentLocationNeededForDirectionsSource;
     BOOL currentLocationNeededForDirectionsDestination;
+    BOOL mkDirectionsRequestInProgress;
 }
 
 @end
@@ -311,6 +312,7 @@ FeedBackForm *fbView;
             logEvent(FLURRY_CURRENT_LOCATION_AVAILABLE, nil, nil, nil, nil, nil, nil, nil, nil);
         }
         else {
+            [locations setIsLocationServiceEnable:TRUE];
             [currentLocation setLatFloat:[newLocation coordinate].latitude];
             [currentLocation setLngFloat:[newLocation coordinate].longitude];
         }
@@ -510,45 +512,50 @@ FeedBackForm *fbView;
         [alert show];
     }
     
-    // US 177 Implementation
-    if(isRemoteNotification){
-        RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
-        if (rxCustomTabBar.selectedIndex != 1) {
-            [rxCustomTabBar selectTab:1];
-        }
-        [[NSUserDefaults standardUserDefaults] setInteger:1 forKey:LAST_SELECTED_TAB_INDEX];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        isRemoteNotification = NO;
+    if (mkDirectionsRequestInProgress) {
+        mkDirectionsRequestInProgress = FALSE; // mark this false for next time, but do not set to remembered settings this time 
     }
-    else{
-        RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
-        int lastSelectedIndex = [[NSUserDefaults standardUserDefaults] integerForKey:LAST_SELECTED_TAB_INDEX];
-        if (rxCustomTabBar.selectedIndex != lastSelectedIndex) {
-            [rxCustomTabBar selectTab:lastSelectedIndex];
+    else {  // only restore remembered settings if not a mkDirectionsRequestInProgress (DE235 fix)
+        // US 177 Implementation
+        if(isRemoteNotification){
+            RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
+            if (rxCustomTabBar.selectedIndex != 1) {
+                [rxCustomTabBar selectTab:1];
+            }
+            [[NSUserDefaults standardUserDefaults] setInteger:1 forKey:LAST_SELECTED_TAB_INDEX];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            isRemoteNotification = NO;
         }
-    }
-    NSString *strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
-    NSString *strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
-
-    if (strToFormattedAddress) {
-        NSArray* toLocations = [locations locationsWithFormattedAddress:strToFormattedAddress];
-        if (toLocations && [toLocations count]>0) {
-            if ([[toLocations objectAtIndex:0] isCurrentLocation] && !toFromViewController.currentLocation) {
-                // If toLocation == currentLocation, but currentLocation not yet set,
-                // keep toLocation == nil and set it when currentLocaiton service available (updated DE-233 Attempted Fix)
-            } else {
-                [toFromViewController.toTableVC markAndUpdateSelectedLocation:[toLocations objectAtIndex:0]];
+        else{
+            RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
+            int lastSelectedIndex = [[NSUserDefaults standardUserDefaults] integerForKey:LAST_SELECTED_TAB_INDEX];
+            if (rxCustomTabBar.selectedIndex != lastSelectedIndex) {
+                [rxCustomTabBar selectTab:lastSelectedIndex];
             }
         }
-    }
-    if (strFromFormattedAddress) {
-        NSArray* fromLocations = [locations locationsWithFormattedAddress:strFromFormattedAddress];
-        if (fromLocations && [fromLocations count]>0) {
-            if ([[fromLocations objectAtIndex:0] isCurrentLocation] && !toFromViewController.currentLocation) {
-                // If fromLocation == currentLocation, but currentLocation not yet set,
-                // keep toLocation == nil and set it when currentLocaiton service available (updated DE-233 Attempted Fix)
-            } else {
-                [toFromViewController.fromTableVC markAndUpdateSelectedLocation:[fromLocations objectAtIndex:0]];
+        NSString *strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
+        NSString *strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+        
+        if (strToFormattedAddress) {
+            NSArray* toLocations = [locations locationsWithFormattedAddress:strToFormattedAddress];
+            if (toLocations && [toLocations count]>0) {
+                if ([[toLocations objectAtIndex:0] isCurrentLocation] && !toFromViewController.currentLocation) {
+                    // If toLocation == currentLocation, but currentLocation not yet set,
+                    // keep toLocation == nil and set it when currentLocaiton service available (updated DE-233 Attempted Fix)
+                } else {
+                    [toFromViewController.toTableVC markAndUpdateSelectedLocation:[toLocations objectAtIndex:0]];
+                }
+            }
+        }
+        if (strFromFormattedAddress) {
+            NSArray* fromLocations = [locations locationsWithFormattedAddress:strFromFormattedAddress];
+            if (fromLocations && [fromLocations count]>0) {
+                if ([[fromLocations objectAtIndex:0] isCurrentLocation] && !toFromViewController.currentLocation) {
+                    // If fromLocation == currentLocation, but currentLocation not yet set,
+                    // keep toLocation == nil and set it when currentLocaiton service available (updated DE-233 Attempted Fix)
+                } else {
+                    [toFromViewController.fromTableVC markAndUpdateSelectedLocation:[fromLocations objectAtIndex:0]];
+                }
             }
         }
     }
@@ -586,6 +593,8 @@ FeedBackForm *fbView;
             if ([[toFromViewController navigationController] visibleViewController] != toFromViewController) {
                 [[toFromViewController navigationController] popToRootViewControllerAnimated:NO];
             }
+            
+            mkDirectionsRequestInProgress = YES;
             
             // Create & set the source location
             Location* sourceLoc;
@@ -654,8 +663,6 @@ FeedBackForm *fbView;
         }
         return NO;
         
-        // TODO Make sure this works even if Current Location is turned off for Nimbler
-        // TODO Adjust the GeoJSON to cover a smaller Nimbler Caltrain footprint
     }
     @catch (NSException *exception) {
         logException(@"ncAppDelegate->application: openURL", @"MKDirectionRequest handler", exception);
