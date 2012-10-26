@@ -174,8 +174,12 @@ FeedBackForm *fbView;
         // Pre-load stations location files
         NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:CALTRAIN_PRELOAD_VERSION_NUMBER];
         NSDecimalNumber* bartVersion = [NSDecimalNumber decimalNumberWithString:BART_PRELOAD_VERSION_NUMBER];
-        [locations preLoadIfNeededFromFile:CALTRAIN_PRELOAD_LOCATION_FILE latestVersionNumber:caltrainVersion];
-        [locations preLoadIfNeededFromFile:BART_PRELOAD_LOCATION_FILE latestVersionNumber:bartVersion];
+        [locations preLoadIfNeededFromFile:CALTRAIN_PRELOAD_LOCATION_FILE
+                       latestVersionNumber:caltrainVersion
+                               testAddress:CALTRAIN_PRELOAD_TEST_ADDRESS];
+        [locations preLoadIfNeededFromFile:BART_PRELOAD_LOCATION_FILE
+                       latestVersionNumber:bartVersion
+                               testAddress:BART_PRELOAD_TEST_ADDRESS];
         
     }@catch (NSException *exception) {
         logException(@"ncAppDelegate->didFinishLaunchingWithOptions #1", @"", exception);
@@ -271,7 +275,7 @@ FeedBackForm *fbView;
             if ([matchingLocations count] == 0) { // if current location not in db
                 currentLocation = [locations newEmptyLocation];
                 [currentLocation setFormattedAddress:CURRENT_LOCATION];
-                [currentLocation setFromFrequencyFloat:100.0];
+                [currentLocation setFromFrequencyFloat:CURRENT_LOCATION_STARTING_FROM_FREQUENCY];
                 [toFromViewController reloadTables]; // DE30 fix (1 of 2)
                 [locations setIsLocationServiceEnable:TRUE];
             }
@@ -286,12 +290,7 @@ FeedBackForm *fbView;
             
             [toFromViewController setCurrentLocation:currentLocation];
             if (![toFromViewController fromLocation]) {  // only if fromLocation is not set, set to currentLocation mode (DE197 fix)
-                if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                    [toFromViewController setIsCurrentLocationMode:FALSE];
-                }
-                else{
-                    [toFromViewController setIsCurrentLocationMode:TRUE];
-                }
+                [toFromViewController setIsCurrentLocationMode:TRUE];
             }
             
             if (currentLocationNeededForDirectionsDestination || currentLocationNeededForDirectionsSource) {
@@ -530,24 +529,27 @@ FeedBackForm *fbView;
     }
     NSString *strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
     NSString *strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
-    NSManagedObjectContext * context = [self managedObjectContext];
-    NSFetchRequest * fetchPlanRequestChunk = [[NSFetchRequest alloc] init];
-    
-    [fetchPlanRequestChunk setEntity:[NSEntityDescription entityForName:@"Location" inManagedObjectContext:context]];
-        
-    NSArray * arrayLocations = [context executeFetchRequest:fetchPlanRequestChunk error:nil];
-    for (id location in arrayLocations){
-        if([strToFormattedAddress isEqualToString:[location formattedAddress]]){
-            //DE-233 Attempted Fix.
-            [locations setIsLocationServiceEnable:TRUE];
-            [toFromViewController.toTableVC markAndUpdateSelectedLocation:location];
+
+    if (strToFormattedAddress) {
+        NSArray* toLocations = [locations locationsWithFormattedAddress:strToFormattedAddress];
+        if (toLocations && [toLocations count]>0) {
+            if ([[toLocations objectAtIndex:0] isCurrentLocation] && !toFromViewController.currentLocation) {
+                // If toLocation == currentLocation, but currentLocation not yet set,
+                // keep toLocation == nil and set it when currentLocaiton service available (updated DE-233 Attempted Fix)
+            } else {
+                [toFromViewController.toTableVC markAndUpdateSelectedLocation:[toLocations objectAtIndex:0]];
+            }
         }
     }
-    for (id location in arrayLocations){
-        if([strFromFormattedAddress isEqualToString:[location formattedAddress]]){
-            //DE-233 Attempted Fix.
-            [locations setIsLocationServiceEnable:TRUE];
-            [toFromViewController.fromTableVC markAndUpdateSelectedLocation:location];
+    if (strFromFormattedAddress) {
+        NSArray* fromLocations = [locations locationsWithFormattedAddress:strFromFormattedAddress];
+        if (fromLocations && [fromLocations count]>0) {
+            if ([[fromLocations objectAtIndex:0] isCurrentLocation] && !toFromViewController.currentLocation) {
+                // If fromLocation == currentLocation, but currentLocation not yet set,
+                // keep toLocation == nil and set it when currentLocaiton service available (updated DE-233 Attempted Fix)
+            } else {
+                [toFromViewController.fromTableVC markAndUpdateSelectedLocation:[fromLocations objectAtIndex:0]];
+            }
         }
     }
 }

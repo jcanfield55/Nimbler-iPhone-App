@@ -36,6 +36,7 @@
     Plan *plan;
     
     CGFloat toTableHeight;   // Current height of the toTable (US123 implementation)
+    CGFloat fromTableHeight;  // Current height of the fromTable
     NSManagedObjectContext *managedObjectContext;
     BOOL toGeocodeRequestOutstanding;  // true if there is an outstanding To geocode request
     BOOL fromGeocodeRequestOutstanding;  //true if there is an outstanding From geocode request
@@ -55,7 +56,7 @@
 - (BOOL)getPlan;
 - (void)stopActivityIndicator;
 - (void)startActivityIndicator;
-// - (void)addLocationAction:(id) sender;
+- (CGFloat)tableHeightFor:(UITableView *)table;  // Returns the height constant suitable for the particular table
 - (BOOL)setToFromHeightForTable:(UITableView *)table Height:(CGFloat)tableHeight;
 - (CGFloat)toFromTableHeightByNumberOfRowsForMaxHeight:(CGFloat)maxHeight  isFrom:(BOOL)isFrom;
 - (void)newLocationVisible;  // Callback for whenever a new location is made visible to update dynamic table height
@@ -132,10 +133,10 @@ UIImage *imageDetailDisclosure;
             rect1.origin.y = 0;
             rect1.size.width = TOFROM_TABLE_WIDTH ;
             if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                toTableHeight = TO_TABLE_HEIGHT_CL_MODE_4INCH;
+                toTableHeight = TO_TABLE_HEIGHT_NO_CL_MODE_4INCH;
             }
             else{
-                toTableHeight = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
+                toTableHeight = TO_TABLE_HEIGHT_NO_CL_MODE;
             }
             rect1.size.height = toTableHeight;
             
@@ -155,11 +156,12 @@ UIImage *imageDetailDisclosure;
             rect2.origin.y = 0;               
             rect2.size.width = TOFROM_TABLE_WIDTH; 
             if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                rect2.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE_4INCH;
+                fromTableHeight = FROM_TABLE_HEIGHT_NO_CL_MODE_4INCH;
             }
             else{
-                rect2.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
+                fromTableHeight = FROM_TABLE_HEIGHT_NO_CL_MODE;
             }
+            rect2.size.height = fromTableHeight;
             
             fromTable = [[UITableView alloc] initWithFrame:rect2 style:UITableViewStylePlain];
             [fromTable setRowHeight:TOFROM_ROW_HEIGHT];
@@ -455,6 +457,34 @@ UIImage *imageDetailDisclosure;
     }
 }
 
+// Returns the height constant suitable for the particular to or from table with editMode and isCurrentLocationMode
+- (CGFloat)tableHeightFor:(UITableView *)table
+{
+    BOOL is4Inch = ([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT);
+    if (table == toTable) {
+        if (editMode == NO_EDIT) {
+            if (isCurrentLocationMode) {
+                return (is4Inch ? TO_TABLE_HEIGHT_CL_MODE_4INCH : TO_TABLE_HEIGHT_CL_MODE);
+            } else {
+                return (is4Inch ? TO_TABLE_HEIGHT_NO_CL_MODE_4INCH : TO_TABLE_HEIGHT_NO_CL_MODE);
+            }
+        } else { // EDIT mode
+            return (is4Inch ? TO_TABLE_HEIGHT_EDIT_MODE_4INCH : TO_TABLE_HEIGHT_EDIT_MODE);
+        }
+    }
+    else {  // fromTable
+        if (editMode == NO_EDIT) {
+            if (isCurrentLocationMode) {
+                return (is4Inch ? FROM_TABLE_HEIGHT_CL_MODE_4INCH : FROM_TABLE_HEIGHT_CL_MODE);
+            } else {
+                return (is4Inch ? FROM_TABLE_HEIGHT_NO_CL_MODE_4INCH : FROM_TABLE_HEIGHT_NO_CL_MODE);
+            }
+        } else { // EDIT mode
+            return (is4Inch ? FROM_TABLE_HEIGHT_EDIT_MODE_4INCH : FROM_TABLE_HEIGHT_EDIT_MODE);
+        }
+    }
+}
+
 // Returns TRUE if the height actually was changed from the previous value, otherwise false
 - (BOOL)setToFromHeightForTable:(UITableView *)table Height:(CGFloat)tableHeight
 {
@@ -540,31 +570,14 @@ UIImage *imageDetailDisclosure;
     else if (editMode != NO_EDIT && [indexPath row] == 0) {  // txtField row in Edit mode
         return TOFROM_ROW_HEIGHT;
     }
-    else if (editMode != NO_EDIT) {  // to or from table in Edit mode
-        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-               return TO_TABLE_HEIGHT_CL_MODE_4INCH + TOFROM_INSERT_INTO_CELL_MARGIN;
-        }
-        else{
-            return TOFROM_TABLE_HEIGHT_NO_CL_MODE + TOFROM_INSERT_INTO_CELL_MARGIN;
-        }
+    else if ([indexPath section] == TO_SECTION && isCurrentLocationMode && editMode == NO_EDIT) {
+        // Special case -- use dynamic toTableHeight for toTable in NO_EDIT and currentLocationMode
+        return toTableHeight + TOFROM_INSERT_INTO_CELL_MARGIN;
     }
-    else if (isCurrentLocationMode) {  // NO_EDIT mode and CurrentLocationMode
-        if ([indexPath section] == TO_SECTION) {  // Larger To Table
-            return toTableHeight + TOFROM_INSERT_INTO_CELL_MARGIN;
-        }
-        else {
-            return FROM_HEIGHT_CL_MODE;  // Single line From showing Current Location
-        }
+    else {
+        UITableView *toOrFromTable = (([indexPath section] == TO_SECTION) ? toTable : fromTable);
+        return TOFROM_INSERT_INTO_CELL_MARGIN + [self tableHeightFor:toOrFromTable]; // Get the right table height constant
     }
-    // Else NO_EDIT mode and no CurrentLocationMode
-    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        if(editMode == NO_EDIT && [indexPath section] == TO_SECTION){
-            return TO_TABLE_HEIGHT_CL_MODE_4INCH + TOFROM_INSERT_INTO_CELL_MARGIN;
-        }
-    }
-    return TOFROM_TABLE_HEIGHT_NO_CL_MODE + TOFROM_INSERT_INTO_CELL_MARGIN;
-
-
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -646,22 +659,6 @@ UIImage *imageDetailDisclosure;
             }
         }
         return cell;
-    }
-    else if (editMode==NO_EDIT && isCurrentLocationMode==TRUE && [indexPath section] == FROM_SECTION) {
-        // Single row from cell in CurrentLocationMode
-        UITableViewCell *cell =
-        [tableView dequeueReusableCellWithIdentifier:@"singleRowFromCell"];
-        if (!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 
-                                          reuseIdentifier:@"singleRowFromCell"];
-            [cell setBackgroundColor:[UIColor whiteColor]];
-            cell.textLabel.font = [UIFont MEDIUM_LARGE_BOLD_FONT];
-            cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
-            UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
-            [cell setAccessoryView:imgViewDetailDisclosure];
-            [[cell textLabel] setText:CURRENT_LOCATION];
-        }        
-        return cell;        
     }
     else if (editMode==NO_EDIT || [indexPath row] == 1) { // the to or from table sections
         BOOL isFrom = (editMode==FROM_EDIT || (editMode==NO_EDIT && [indexPath section]==FROM_SECTION))
@@ -809,23 +806,10 @@ UIImage *imageDetailDisclosure;
             // DE55 fix: make sure that currentLocation is selected if this method called by nc_AppDelegate
             [fromTableVC initializeCurrentLocation:currentLocation]; 
         }
-        // Adjust the toTable height
-        if (newCLMode) {
-            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                [self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE_4INCH];
-            }
-            else{
-                [self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE];
-            }
-        }
-        else {
-            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                [self setToFromHeightForTable:toTable Height:TOFROM_TABLE_HEIGHT_NO_CL_MODE_4INCH];
-            }
-            else{
-               [self setToFromHeightForTable:toTable Height:TOFROM_TABLE_HEIGHT_NO_CL_MODE];
-            }
-        }
+        // Adjust the toTable & fromTable heights
+        [self setToFromHeightForTable:toTable Height:[self tableHeightFor:toTable]];
+        [self setToFromHeightForTable:fromTable Height:[self tableHeightFor:fromTable]];
+
         if (editMode != FROM_EDIT) {
             // DE59 fix -- only update table if not in FROM_EDIT mode
             [mainTable reloadData];
@@ -845,12 +829,7 @@ UIImage *imageDetailDisclosure;
         fromLocation = loc;
         [self setFBParameterForGeneral];
         if (currentLocation && loc == currentLocation && !isCurrentLocationMode) { // Part of DE194 fix
-             if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                 [self setIsCurrentLocationMode:FALSE];
-             }
-             else{
-                 [self setIsCurrentLocationMode:TRUE];
-             }
+            [self setIsCurrentLocationMode:TRUE];
         }
         else if (loc != currentLocation && isCurrentLocationMode) {
             [self setIsCurrentLocationMode:FALSE];
@@ -982,21 +961,12 @@ UIImage *imageDetailDisclosure;
     ToFromEditMode oldEditMode = editMode;
     editMode = newEditMode;  
     
+    // Adjust the heights of the to & from tables, as needed
+    [self setToFromHeightForTable:toTable Height:[self tableHeightFor:toTable]];
+    [self setToFromHeightForTable:fromTable Height:[self tableHeightFor:fromTable]];
+    
     // Change NavBar buttons accordingly
     if(editMode == NO_EDIT){
-        // Change The fromTable Frame
-        CGRect rect2;
-        rect2.origin.x = 0;
-        rect2.origin.y = 0;
-        rect2.size.width = TOFROM_TABLE_WIDTH;
-        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-            rect2.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
-        }
-        else{
-            rect2.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
-        }
-        [fromTable setFrame:rect2];
-        
         self.navigationItem.leftBarButtonItem = barButtonSwap;
     } else{
         self.navigationItem.leftBarButtonItem = barButtonCancel;
@@ -1006,16 +976,6 @@ UIImage *imageDetailDisclosure;
         // Delete second & third sections (moving To Table to top)
         range.location = 1;
         range.length = 2;
-        if (isCurrentLocationMode) {
-            // Set toTable to normal height when in TO_EDIT mode
-            
-            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                [self setToFromHeightForTable:toTable Height:TOFROM_TABLE_HEIGHT_NO_CL_MODE_4INCH];
-            }
-            else{
-                [self setToFromHeightForTable:toTable Height:TOFROM_TABLE_HEIGHT_NO_CL_MODE];
-            }
-        }
         [mainTable beginUpdates];
         [mainTable deleteSections:[NSIndexSet indexSetWithIndexesInRange:range] withRowAnimation:UITableViewRowAnimationAutomatic];  // Leave only the To section
         [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
@@ -1023,33 +983,11 @@ UIImage *imageDetailDisclosure;
     } else if (newEditMode == NO_EDIT && oldEditMode == TO_EDIT) {
         range.location = 1;
         range.length = 2;
-        if (isCurrentLocationMode) {
-            // Set toTable back to greater height when going to NO_EDIT mode
-            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                [self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE_4INCH];
-            }
-            else{
-                [self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE];
-            }
-        }
         [mainTable beginUpdates];
         [mainTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Delete the row for txtField
         [mainTable insertSections:[NSIndexSet indexSetWithIndexesInRange:range] withRowAnimation:UITableViewRowAnimationAutomatic];
         [mainTable endUpdates];
     } else if (newEditMode == FROM_EDIT && oldEditMode == NO_EDIT) {
-        // Delete first & second sections (moving To Table to top)
-        // Change The fromTable Frame
-        CGRect rect2;
-        rect2.origin.x = 0;
-        rect2.origin.y = 0;
-        rect2.size.width = TOFROM_TABLE_WIDTH;
-        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-            rect2.size.height = TO_TABLE_HEIGHT_CL_MODE_4INCH;
-        }
-        else{
-            rect2.size.height = TOFROM_TABLE_HEIGHT_NO_CL_MODE;
-        }
-        [fromTable setFrame:rect2];
         [mainTable beginUpdates];
         [mainTable deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
         [mainTable deleteSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationAutomatic];

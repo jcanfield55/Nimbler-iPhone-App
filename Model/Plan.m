@@ -384,11 +384,7 @@
         if ([returnedItineraries count] > planMaxItinerariesToShow) {
             NSMutableArray* copyOfReturnedItineraries = [NSMutableArray arrayWithArray:returnedItineraries];
             for (int i=planMaxItinerariesToShow; i<[returnedItineraries count]; i++) {
-                if (depOrArrive == DEPART) {
-                    [copyOfReturnedItineraries removeLastObject]; // remove last itineraries for DEPART requests
-                } else {
-                    [copyOfReturnedItineraries removeObjectAtIndex:0]; // remove first itineraries for ARRIVE requests
-                }
+                [copyOfReturnedItineraries removeLastObject]; // remove last itineraries for DEPART or ARRIVE (DE191 fix)
             }
             returnedItineraries = [NSArray arrayWithArray:copyOfReturnedItineraries];
         }

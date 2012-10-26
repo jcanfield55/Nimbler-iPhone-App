@@ -49,10 +49,14 @@
 // Preload file variables
 #define CALTRAIN_PRELOAD_LOCATION_FILE     @"caltrain-station.json"
 #define BART_PRELOAD_LOCATION_FILE         @"bart-station.json"
-#define CALTRAIN_PRELOAD_VERSION_NUMBER    @"1.050"
-#define BART_PRELOAD_VERSION_NUMBER    @"1.052"
-#define PRELOAD_TEST_ADDRESS      @"San Martin Caltrain, San Martin, CA 95046, USA" // station for testing version number
+#define CALTRAIN_PRELOAD_VERSION_NUMBER    @"1.100"
+#define CALTRAIN_PRELOAD_TEST_ADDRESS    @"San Martin Caltrain, San Martin, CA 95046, USA"
+#define BART_PRELOAD_VERSION_NUMBER      @"1.052"
+#define BART_PRELOAD_TEST_ADDRESS        @"24th St Mission BART, San Francisco, CA 94110, USA"
 #define TOFROM_LIST_TYPE          @"TOFROM_LIST" // Location type indicating a ToFromList
+
+// Current Location
+#define CURRENT_LOCATION_STARTING_FROM_FREQUENCY 7.0
 
 // Testflight App Analytics and logging
 #define TEST_FLIGHT_ENABLED 0 // If 0, then do not include testFlightApp at all
@@ -79,6 +83,7 @@
 // Flurry events
 #define FLURRY_APPDELEGATE_START @"Start of App Delegate"
 #define FLURRY_CURRENT_LOCATION_AVAILABLE @"Current Location Available"
+#define FLURRY_PRELOADED_FILE @"Preloaded file"
 #define FLURRY_PUSH_AVAILABLE @"Push Notification Available"
 #define FLURRY_TOFROMVC_APPEAR @"ToFromView appear"
 #define FLURRY_TOFROMTABLE_SELECT_ROW @"ToFromTable select row"
@@ -125,6 +130,7 @@
 
 // Flurry parameter names
 #define FLURRY_NOTIFICATION_TOKEN @"(Notification Token)"
+#define FLURRY_PRELOADED_FILE_NAME @"(Preloaded file name)"
 #define FLURRY_TO_SELECTED_ADDRESS @"(To Selected Address)"
 #define FLURRY_FROM_SELECTED_ADDRESS @"(From Selected Address)"
 #define FLURRY_TOFROM_WHICH_TABLE @"(ToFrom which table)"

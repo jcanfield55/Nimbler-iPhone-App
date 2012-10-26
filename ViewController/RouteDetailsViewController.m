@@ -168,7 +168,6 @@ NSUserDefaults *prefs;
 
 - (void)setItinerary:(Itinerary *)i0
 {
-    NIMLOG_EVENT1(@"Itinerary # %@",i0);
     @try {
         itinerary = i0;
         // DE-183 Fixed

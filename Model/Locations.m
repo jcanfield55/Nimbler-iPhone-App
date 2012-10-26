@@ -82,13 +82,12 @@
 }
 
 // Returns true if a preLoad from file was executed, otherwise returns false
-- (BOOL)preLoadIfNeededFromFile:(NSString *)filename latestVersionNumber:(NSDecimalNumber *)newVersion
+- (BOOL)preLoadIfNeededFromFile:(NSString *)filename latestVersionNumber:(NSDecimalNumber *)newVersion testAddress:(NSString *)testAddress
 {
     BOOL returnValue = false;
     
     // Check there version number against the the PRELOAD_TEST_ADDRESS to see if we need to open the file
-    NSString* formattedAddr = PRELOAD_TEST_ADDRESS;
-    NSArray* preloadTestLocs = [self locationsWithFormattedAddress:formattedAddr];
+    NSArray* preloadTestLocs = [self locationsWithFormattedAddress:testAddress];
     
     // If there are matching locations for that station, 
     BOOL isNewerVersion = NO;  // true if we have a new version that needs loading
@@ -171,6 +170,9 @@
                      [NSString stringWithFormat:@"file %@ at path %@, error: %@", filename, preloadPath, [error localizedDescription]]);
                       
         }
+    }
+    if (returnValue) {
+        logEvent(FLURRY_PRELOADED_FILE, FLURRY_PRELOADED_FILE_NAME, filename, nil, nil, nil, nil, nil, nil);
     }
     return returnValue;
 }

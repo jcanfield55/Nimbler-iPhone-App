@@ -13,16 +13,28 @@
 // ToFromViewController constants
 #define TOFROM_MAIN_TABLE_HEIGHT 319
 #define TOFROM_MAIN_TABLE_HEIGHT_4INCH 405
-#define TOFROM_TIME_DATE_HEIGHT 37
-#define TOFROM_ROW_HEIGHT 37
-#define FROM_HEIGHT_CL_MODE 37
-#define TOFROM_TABLE_HEIGHT_NO_CL_MODE 110 // height when not isCurrentLocationMode
-#define TOFROM_TABLE_HEIGHT_NO_CL_MODE_4INCH 110 // height when not isCurrentLocationMode
-#define TO_TABLE_HEIGHT_CL_MODE 185 // height when isCurrentLocationMode
-#define TO_TABLE_HEIGHT_CL_MODE_4INCH 185 // height when isCurrentLocationMode
+#define TOFROM_TIME_DATE_HEIGHT 36
+#define TOFROM_ROW_HEIGHT 36
+
+// To & From table heights for regular (3.5") iPhone screen 
+#define FROM_TABLE_HEIGHT_NO_CL_MODE 107 // height when not isCurrentLocationMode
+#define TO_TABLE_HEIGHT_NO_CL_MODE 113
+#define FROM_TABLE_HEIGHT_CL_MODE 71 // height when isCurrentLocationMode
+#define TO_TABLE_HEIGHT_CL_MODE 152 
+#define FROM_TABLE_HEIGHT_EDIT_MODE 148 // height when in Edit mode
+#define TO_TABLE_HEIGHT_EDIT_MODE 148
+
+// To & From table heights for iPhone5 and other 4" screens
+#define FROM_TABLE_HEIGHT_NO_CL_MODE_4INCH 148 // height when not isCurrentLocationMode
+#define TO_TABLE_HEIGHT_NO_CL_MODE_4INCH 148 
+#define FROM_TABLE_HEIGHT_CL_MODE_4INCH 148 // height when isCurrentLocationMode
+#define TO_TABLE_HEIGHT_CL_MODE_4INCH 148 
+#define FROM_TABLE_HEIGHT_EDIT_MODE_4INCH 222 // height when in FROM_EDIT mode
+#define TO_TABLE_HEIGHT_EDIT_MODE_4INCH 222 // height when in TO_EDIT mode
+
+
 #define TOFROM_TABLE_WIDTH 300
 #define TOFROM_INSERT_INTO_CELL_MARGIN 2 // spacer added to cell height when there is an inserted field or table
-#define TOFROM_INSERT_INTO_CELL_MARGIN_4INCH   50
 #define TOFROM_TABLE_CORNER_RADIUS 10.0
 
 #define TOFROM_SECTION_LABEL_HEIGHT 23.0
@@ -47,7 +59,7 @@
 #define ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH 280
 
 // RouteDetailsViewController & LegMapViewController
-#define ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH 275 // Obtained thru trial & error, DE-230 fix 
+#define ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH 279 // Obtained thru trial & error, DE-230 fix 
 #define ROUTE_LEGMAP_X_ORIGIN 5
 #define ROUTE_LEGMAP_Y_ORIGIN 5
 #define ROUTE_LEGMAP_WIDTH 309

@@ -50,7 +50,9 @@
 @property (nonatomic) BOOL isLocationServiceEnable;
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkGeoMgr:(RKObjectManager *)rkG;
-- (BOOL)preLoadIfNeededFromFile:(NSString *)filename latestVersionNumber:(NSDecimalNumber *)version;  // Preloads locations (like Caltrain stations) from a file
+
+// Preloads locations (like Caltrain stations) from a file.  testAddress is a formatted address of a station name that it can test whether the stored version is up-to-date
+- (BOOL)preLoadIfNeededFromFile:(NSString *)filename latestVersionNumber:(NSDecimalNumber *)newVersion testAddress:(NSString *)testAddress;
 
 // Returns a sorted array of all locations whose memberOfList field starts with listNamePrefix.  
 // Array is sorted in alphabetical order by the memberOfList field (i.e. by everything after the prefix)
