@@ -25,6 +25,9 @@
     RouteDetailsViewController* routeDetailsVC;
 }
 
+// Attributed strings are only supported on iOS6 or later, so do not call this method on < iOS6
+- (NSMutableAttributedString *)detailTextLabelColor:(NSString *)strDetailtextLabel itinerary:(Itinerary *)itinerary;
+
 @end
 
 @implementation RouteOptionsViewController
@@ -117,7 +120,14 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     return [[plan sortedItineraries] count];
 }
 
-- (NSMutableAttributedString *)detailTextLabelColor:(NSString *)strDetailtextLabel:(Itinerary *)itinerary{
+// Only usable for >= iOS6.  Returns NSMutableAttributedString with Caltrain train #s emphasized.  
+- (NSMutableAttributedString *)detailTextLabelColor:(NSString *)strDetailtextLabel itinerary:(Itinerary *)itinerary{
+    if([[[UIDevice currentDevice] systemVersion] floatValue] < 6.0){
+        logError(@"RouteOptionsViewController -> detailTextLabelColor",
+                 [NSString stringWithFormat:@"Attempt to use NSMutableAttributedString with iOS version: %f",
+                  [[[UIDevice currentDevice] systemVersion] floatValue]]);
+        return nil;
+    }
     NSString *strFullTrainNumber;
     NSMutableAttributedString *strMutableDetailTextLabel = [[NSMutableAttributedString alloc] initWithString:strDetailtextLabel];
     for(int i=0;i<[[itinerary sortedLegs] count];i++){
@@ -140,7 +150,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                     [strMutableDetailTextLabel addAttribute:NSForegroundColorAttributeName value:[UIColor darkGrayColor] range:range];
                 }
                 // DE-227 Fixed
-                // Changed the red Color to Nimbler Red and also Changed the RGB For Yellow Color.
+                // Changed the red Color to Nimbler Red and changed limited train to italic
                 if([[leg routeLongName] isEqualToString:@"Limited"]){
                     [strMutableDetailTextLabel addAttribute:NSFontAttributeName value:[UIFont MEDIUM_OBLIQUE_FONT] range:range];
                 }
@@ -208,11 +218,11 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         cell.detailTextLabel.textColor = [UIColor GRAY_FONT_COLOR];
         
         // DE-228 Fixed
-        // Applied The color only if the ios version is 5.0 or greater.
-        if([[[UIDevice currentDevice] systemVersion] intValue] > 4){
+        // Applied The color only if the ios version is 6.0 or greater.
+        if([[[UIDevice currentDevice] systemVersion] intValue] >= 6){
             NSString *strDetailtextLabel = [itin itinerarySummaryStringForWidth:ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
                                                                            Font:cell.detailTextLabel.font];
-            NSMutableAttributedString *strMutableDetailTextLabel = [self detailTextLabelColor:strDetailtextLabel :itin];
+            NSMutableAttributedString *strMutableDetailTextLabel = [self detailTextLabelColor:strDetailtextLabel itinerary:itin];
             [cell detailTextLabel].attributedText = strMutableDetailTextLabel;
         }
         else{

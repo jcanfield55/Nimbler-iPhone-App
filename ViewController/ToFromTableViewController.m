@@ -456,7 +456,7 @@
     }
     [toFromVC setEditMode:NO_EDIT];  // Move back to NO_EDIT mode on the ToFrom view controller
 
-    if ([rawAddress length] > 0) {        
+    if ([rawAddress length] > 0) {
         // Check if we already have a geocoded location that has used this rawAddress before
         Location* matchingLocation = [locations locationWithRawAddress:rawAddress];
         if (!matchingLocation) {  // if no matching raw addresses, check for matching formatted addresses
@@ -535,7 +535,7 @@
                     [fetchPlanRequestChunk setEntity:[NSEntityDescription entityForName:@"Location" inManagedObjectContext:context]];
                     
                     NSArray * arrayLocations = [context executeFetchRequest:fetchPlanRequestChunk error:nil];
-                    for (id location in arrayLocations){
+                    for (Location* location in arrayLocations){
                         NSString *strshortFormattedAddress = [[location shortFormattedAddress]lowercaseString];
                         if(![strshortFormattedAddress isEqualToString:@"current location"] && ![strshortFormattedAddress isEqualToString:@"caltrain station list"] && [strshortFormattedAddress rangeOfString:@"caltrain" options:NSCaseInsensitiveSearch].location == NSNotFound){
                             [arrUnFilteredStationList addObject:location];

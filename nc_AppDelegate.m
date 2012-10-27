@@ -103,18 +103,7 @@ FeedBackForm *fbView;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSDate *date = [NSDate date];
-    [[NSUserDefaults standardUserDefaults] setObject:date forKey:DATE_OF_USE];
-    [[NSUserDefaults standardUserDefaults] setInteger:1 forKey:DAYS_COUNT];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:FEEDBACK_REMINDER_PENDING];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    if(![[NSUserDefaults standardUserDefaults]integerForKey:DAYS_TO_SHOW_FEEDBACK_ALERT]){
-        [[NSUserDefaults standardUserDefaults] setInteger:DAYS_TO_SHOW_FEEDBACK_ALERT_NUMBER forKey:DAYS_TO_SHOW_FEEDBACK_ALERT];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     
     [[UIApplication sharedApplication]
@@ -124,6 +113,17 @@ FeedBackForm *fbView;
       UIRemoteNotificationTypeSound)];
     
     prefs = [NSUserDefaults standardUserDefaults];
+    
+    // US-163 set-up for feedback reminders (also DE-238 fix)
+    NSDate *date = [NSDate date];
+    if (![prefs objectForKey:DATE_OF_FIRST_USE]) { // if this is the first time using the app
+        [prefs setObject:date forKey:DATE_OF_FIRST_USE];
+        [prefs setObject:date forKey:DATE_OF_USE];
+        [prefs setInteger:1 forKey:DAYS_COUNT];
+        [prefs setBool:YES forKey:FEEDBACK_REMINDER_PENDING];
+        [prefs setInteger:DAYS_TO_SHOW_FEEDBACK_ALERT_NUMBER forKey:DAYS_TO_SHOW_FEEDBACK_ALERT];
+        [prefs synchronize];
+    }
     
     // Configure the RestKit RKClient object for Geocoding and trip planning
     RKLogConfigureByName("RestKit", CUSTOM_RK_LOG_LEVELS);
@@ -1207,9 +1207,7 @@ FeedBackForm *fbView;
     else if(buttonIndex == 2){
         buttonResponse = @"Remind me later";
         [[NSUserDefaults standardUserDefaults] setInteger:20 forKey:DAYS_TO_SHOW_FEEDBACK_ALERT];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        NSDate *date = [NSDate date];
-        [[NSUserDefaults standardUserDefaults] setObject:date forKey:DATE_OF_USE];
+        [[NSUserDefaults standardUserDefaults] setInteger:1 forKey:DAYS_COUNT];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     else if(buttonIndex == [actionSheet cancelButtonIndex]){

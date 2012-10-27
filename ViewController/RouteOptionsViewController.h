@@ -27,5 +27,4 @@
 
 // Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
 -(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status;
-- (NSMutableAttributedString *)detailTextLabelColor:(NSString *)strDetailtextLabel:(Itinerary *)itinerary;
 @end

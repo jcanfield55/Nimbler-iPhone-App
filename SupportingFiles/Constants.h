@@ -257,8 +257,11 @@
 
 
 // US-163 Appstore Feedback reminder constants
+#define DATE_OF_FIRST_USE       @"dateOfFirstUse"
 #define DAYS_TO_SHOW_FEEDBACK_ALERT   @"daysToShowFeedBackAlert"
 #define DATE_OF_USE                 @"dateOfUse"
+#define DAYS_COUNT                 @"daysCount"
+#define FEEDBACK_REMINDER_PENDING  @"feedbackReminderPending"
 #define DAYS_TO_SHOW_FEEDBACK_ALERT_NUMBER  10
 
 // User Preferance

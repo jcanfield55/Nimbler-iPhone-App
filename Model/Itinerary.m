@@ -240,7 +240,7 @@
 {
     //DE - 170 Fixed
     //Added To load leg data only when we have data to load.
-    if([nc_AppDelegate sharedInstance].isNeedToLoadRealData){
+    if(!legDescTitleSortedArr || [nc_AppDelegate sharedInstance].isNeedToLoadRealData){
        [self makeLegDescriptionSortedArrays];
        [nc_AppDelegate sharedInstance].isNeedToLoadRealData = NO;
     }
@@ -252,7 +252,7 @@
 {
     //DE - 170 Fixed
     //Added To load leg data only when we have data to load.
-    if([nc_AppDelegate sharedInstance].isNeedToLoadRealData){
+    if(!legDescSubtitleSortedArr || [nc_AppDelegate sharedInstance].isNeedToLoadRealData){
         [self makeLegDescriptionSortedArrays];
         [nc_AppDelegate sharedInstance].isNeedToLoadRealData = NO;
     }

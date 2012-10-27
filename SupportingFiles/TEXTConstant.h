@@ -63,17 +63,13 @@
 // Network Message
 #define NO_NETWORK_ALERT   @"Unable to connect to server.  Please try again when you have network connectivity."
 
-// US-163 constants
-#define DAYS_TO_SHOW_FEEDBACK_ALERT   @"daysToShowFeedBackAlert"
-#define DATE_OF_USE                 @"dateOfUse"
-#define DAYS_COUNT                 @"daysCount"
-#define FEED_BACK_SHEET_TITLE               @"Now that you have used the app a bit, would you share your thoughts with others"
+// US-163 user facing text
+#define FEED_BACK_SHEET_TITLE               @"Now that you have used the app a bit, would you share your feedback?"
 #define NO_THANKS_BUTTON_TITLE               @"No Thanks"
 #define APPSTORE_FEEDBACK_BUTTON_TITLE       @"AppStore feedback"
-#define NIMBLER_FEEDBACK_BUTTON_TITLE        @"Nimbler feedback"
+#define NIMBLER_FEEDBACK_BUTTON_TITLE        @"Feedback for Nimbler"
 #define REMIND_ME_LATER_BUTTON_TITLE         @"Remind Me Later"
 #define NIMBLER_REVIEW_URL                   @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=567382474"
-#define FEEDBACK_REMINDER_PENDING             @"feedbackRemainderPending"
 
 #define LAST_SELECTED_TAB_INDEX       @"lastSelectedTabIndex"
 #define LAST_TO_LOCATION              @"lastToLocation"
