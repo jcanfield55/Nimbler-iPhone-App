@@ -179,13 +179,13 @@ FeedBackForm *fbView;
         // Pre-load stations location files
         NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:CALTRAIN_PRELOAD_VERSION_NUMBER];
         NSDecimalNumber* bartVersion = [NSDecimalNumber decimalNumberWithString:BART_PRELOAD_VERSION_NUMBER];
+
         [locations preLoadIfNeededFromFile:CALTRAIN_PRELOAD_LOCATION_FILE
                        latestVersionNumber:caltrainVersion
                                testAddress:CALTRAIN_PRELOAD_TEST_ADDRESS];
         [locations preLoadIfNeededFromFile:BART_PRELOAD_LOCATION_FILE
                        latestVersionNumber:bartVersion
                                testAddress:BART_PRELOAD_TEST_ADDRESS];
-        
     }@catch (NSException *exception) {
         logException(@"ncAppDelegate->didFinishLaunchingWithOptions #1", @"", exception);
     } 

@@ -86,6 +86,7 @@
 {
     BOOL returnValue = false;
     
+    @try {
     // Check there version number against the the PRELOAD_TEST_ADDRESS to see if we need to open the file
     NSArray* preloadTestLocs = [self locationsWithFormattedAddress:testAddress];
     
@@ -192,6 +193,12 @@
         logEvent(FLURRY_PRELOADED_FILE, FLURRY_PRELOADED_FILE_NAME, filename, nil, nil, nil, nil, nil, nil);
     }
     return returnValue;
+    }
+    @catch (NSException *exception) {
+        logException(@"Locations->preLoadIfNeededFromFile",
+                     [NSString stringWithFormat:@"filename = %@, newVersionNumber = %@, testAddress = %@",
+                      filename, newVersion, testAddress], exception);
+    }
 }
 
 // Updates to selected location methods to update sorting
@@ -384,7 +391,7 @@
     sortedFromLocations = [managedObjectContext executeFetchRequest:locationsFetchRequest
                                                               error:&error];
     if (!sortedFromLocations) {
-        [NSException raise:@"Fetch failed" format:@"Reason: %@", [error localizedDescription]];
+        [NSException raise:@"Locations -> updateInternalCache Fetch failed" format:@"Reason: %@", error];
     }
     NIMLOG_PERF1(@"Now fetching sortedToLocations");
     // Now create a different array with the sorted To descriptors
@@ -451,7 +458,9 @@
     NSError *error; 
     NSArray *result = [managedObjectContext executeFetchRequest:request error:&error]; 
     if (!result) { 
-        [NSException raise:@"Fetch failed" format:@"Reason: %@", [error localizedDescription]]; 
+        [NSException raise:[NSString stringWithFormat:@"Locations -> locationsWithFormattedAddress: Fetch failed for address %@",
+                            formattedAddress]
+                    format:@"Error message: %@", error];
     } 
     return result;  // Return the array of matches (could be empty)
 }
@@ -468,7 +477,9 @@
     NSError *error; 
     NSArray *result = [managedObjectContext executeFetchRequest:request error:&error]; 
     if (!result) { 
-        [NSException raise:@"Fetch failed" format:@"Reason: %@", [error localizedDescription]]; 
+        [NSException raise:[NSString stringWithFormat:@"Locations -> locationWithRawAddress: Fetch failed for address %@",
+                            rawAddress]
+                    format:@"Error message: %@", error];
     }
     if ([result count]>=1) {            // if there is a match
         // Return the Location that corresponds to that RawAddress
@@ -496,7 +507,9 @@
     NSError *error; 
     NSArray *result = [managedObjectContext executeFetchRequest:request error:&error]; 
     if (!result) { 
-        [NSException raise:@"Fetch failed" format:@"Reason: %@", [error localizedDescription]]; 
+        [NSException raise:[NSString stringWithFormat:@"Locations -> locationsMembersOfList: Fetch failed for list prefix %@",
+                            listNamePrefix]
+                    format:@"Error message: %@", error];
     } 
     return result;  // Return the array of matches (could be empty)
 }

@@ -69,7 +69,7 @@ static KeyObjectStore* keyObjectStoreSingleton;
     NSError *error;
     NSArray *result = [managedObjectContext executeFetchRequest:request error:&error];
     if (!result) {
-        [NSException raise:@"Fetch failed" format:@"Reason: %@", [error localizedDescription]];
+        [NSException raise:@"KeyObjectStore --> keyObjectPairForKey Fetch failed" format:@"Reason: %@", error];
     }
     if ([result count] == 0) {
         return nil;   // No matches
