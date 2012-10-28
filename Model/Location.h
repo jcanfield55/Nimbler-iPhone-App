@@ -22,6 +22,7 @@
 
 @property (nonatomic, strong) NSNumber *apiType;  // APIType enum indicating which service performed the Geocode
 @property (nonatomic, strong) NSSet *rawAddresses; // Set containing all the user inputted strings mapped to this location
+@property (nonatomic, unsafe_unretained) NSSet *plan; // Set containing all the plans that refer to this Location item (inverse relationship)
 @property (nonatomic, strong) NSString *geoCoderStatus;  // Returned status from geocoder service (ideally "OK")
 @property (nonatomic, strong) NSString *formattedAddress;  // Standardized address string
 @property (nonatomic, strong) NSNumber *lat;  // double floating point

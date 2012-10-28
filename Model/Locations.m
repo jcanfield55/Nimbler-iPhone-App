@@ -9,6 +9,7 @@
 #import "Locations.h"
 #import "LocationFromGoogle.h"
 #import "UtilityFunctions.h"
+#import "Plan.h"
 
 // Internal variables and methods
 
@@ -120,14 +121,6 @@
             }
         }
         // end of temporary code
-        
-        if ([preloadTestLocs count] > 0 && [[[UIDevice currentDevice] systemVersion] floatValue] < 5.0) {
-        // if one set of locations are already loaded, do not update with new version for iOS4.3 or lower
-        // DE241 work-around fix
-        // just save context
-            saveContext(managedObjectContext);
-            return true;
-        }
         
         // Code adapted from http://stackoverflow.com/questions/10305535/iphone-restkit-how-to-load-a-local-json-file-and-map-it-to-a-core-data-entity and https://github.com/RestKit/RestKit/wiki/Object-mapping (bottom of page)
         NSStringEncoding encoding;
@@ -532,6 +525,7 @@
 // (this could be expanded in the future)
 - (Location *)consolidateWithMatchingLocations:(Location *)loc0 keepThisLocation:(BOOL)keepThisLocation
 {
+    @try {
     NSArray *matches = [self locationsWithFormattedAddress:[loc0 formattedAddress]];
     if (!matches || [matches count]==0) {
         return loc0;  
@@ -560,7 +554,14 @@
                 [returnLoc setToFrequencyFloat:([returnLoc toFrequencyFloat] + [deleteLoc toFrequencyFloat])];
                 [returnLoc setFromFrequencyFloat:([returnLoc fromFrequencyFloat] + [deleteLoc fromFrequencyFloat])];
                 
-                // Delete deleteLoc & return returnLoc
+                // Before deleting deleteLoc, delete any plans from the cache that are associated with it
+                // This is to make sure we don't have cached plans going to a different location (also DE241 fix)
+                NSSet* deletePlanSet = [deleteLoc plan];
+                for (Plan* deletePlan in deletePlanSet) {
+                    [managedObjectContext deleteObject:deletePlan];
+                }
+                
+                // Delete deleteLoc
                 [managedObjectContext deleteObject:deleteLoc];
             }
         }
@@ -569,6 +570,13 @@
         } else {
             return loc0;
         }
+    }
+    }
+    @catch (NSException *exception) {
+        logException(@"Locations->consolidateWithMatchingLocations",
+                     [NSString stringWithFormat:@"loc0 formattedAddr = %@, keepThisLocation = %d, loc0 = %@",
+                      [loc0 formattedAddress], keepThisLocation, loc0],
+                     exception);
     }
 }
 

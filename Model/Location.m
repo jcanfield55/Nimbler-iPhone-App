@@ -15,6 +15,7 @@
 
 @dynamic apiType;
 @dynamic rawAddresses;
+@dynamic plan;
 @dynamic geoCoderStatus;
 @dynamic formattedAddress;
 @dynamic lat;
