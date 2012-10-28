@@ -121,6 +121,13 @@
         }
         // end of temporary code
         
+        if ([preloadTestLocs count] > 0 && [[[UIDevice currentDevice] systemVersion] floatValue] < 5.0) {
+        // if one set of locations are already loaded, do not update with new version for iOS4.3 or lower
+        // DE241 work-around fix
+        // just save context
+            saveContext(managedObjectContext);
+            return true;
+        }
         
         // Code adapted from http://stackoverflow.com/questions/10305535/iphone-restkit-how-to-load-a-local-json-file-and-map-it-to-a-core-data-entity and https://github.com/RestKit/RestKit/wiki/Object-mapping (bottom of page)
         NSStringEncoding encoding;
