@@ -1314,4 +1314,418 @@
     STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:1], itin41, @"");
     
 }
+
+// US-186 partial Implementation
+
+- (void)testGeneratePlans{
+    NSMutableArray *arrayTripIds = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayArrivalTime = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayDepartureTime = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayStopIds = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayStopSequences = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayPickUpTypes = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayDropOfTypes = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayShapeDistTravelled = [[NSMutableArray alloc] init];
+    
+    NSString *strStopTimesFilePath = [[NSBundle mainBundle] pathForResource:@"stop_times" ofType:@"txt"];
+    NSString *strStopTimesFileContent = [NSString stringWithContentsOfFile:strStopTimesFilePath encoding:NSUTF8StringEncoding error:nil];
+    NSArray *tempStopTimesDataArray = [strStopTimesFileContent componentsSeparatedByString:@"\n"];
+    for(int i=1;i<[tempStopTimesDataArray count];i++){
+        NSString *tempString = [tempStopTimesDataArray objectAtIndex:i];
+        NSArray *tempArray = [tempString componentsSeparatedByString:@","];
+      if([tempArray count] >= 8){
+            [arrayTripIds addObject:[tempArray objectAtIndex:0]];
+            [arrayArrivalTime addObject:[tempArray objectAtIndex:1]];
+            [arrayDepartureTime addObject:[tempArray objectAtIndex:2]];
+            [arrayStopIds addObject:[tempArray objectAtIndex:3]];
+            [arrayStopSequences addObject:[tempArray objectAtIndex:4]];
+            [arrayPickUpTypes addObject:[tempArray objectAtIndex:5]];
+            [arrayDropOfTypes addObject:[tempArray objectAtIndex:6]];
+            [arrayShapeDistTravelled addObject:[tempArray objectAtIndex:7]];
+        }
+    }
+    for (int i=0;i<[arrayTripIds count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayTripIds objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayTripIds replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arrayArrivalTime count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayArrivalTime objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayArrivalTime replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arrayDepartureTime count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayDepartureTime objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayDepartureTime replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arrayStopIds count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayStopIds objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayStopIds replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arrayStopSequences count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayStopSequences objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayStopSequences replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arrayPickUpTypes count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayPickUpTypes objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayPickUpTypes replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arrayDropOfTypes count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayDropOfTypes objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayDropOfTypes replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arrayShapeDistTravelled count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayShapeDistTravelled objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayShapeDistTravelled replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+     NIMLOG_OBJECT1(@"arrayTripIds=%@",arrayTripIds);
+     NIMLOG_OBJECT1(@"arrayArrivalTime=%@",arrayArrivalTime);
+     NIMLOG_OBJECT1(@"arrayDepartureTime=%@",arrayDepartureTime);
+     NIMLOG_OBJECT1(@"arrayStopIds=%@",arrayStopIds);
+     NIMLOG_OBJECT1(@"arrayStopSequences=%@",arrayStopSequences);
+     NIMLOG_OBJECT1(@"arrayPickUpTypes=%@",arrayPickUpTypes);
+     NIMLOG_OBJECT1(@"arrayDropOfTypes=%@",arrayDropOfTypes);
+     NIMLOG_OBJECT1(@"arrayShapeDistTravelled=%@",arrayShapeDistTravelled);
+    
+    NSMutableArray *arrayServiceIds = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayMonday = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayTuesday = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayWednesday = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayThursday = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayFriday = [[NSMutableArray alloc] init];
+    NSMutableArray *arraySaturday = [[NSMutableArray alloc] init];
+    NSMutableArray *arraySunday = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayStartDate = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayEndDate = [[NSMutableArray alloc] init];
+
+    
+    NSString *strCalendarFilePath = [[NSBundle mainBundle] pathForResource:@"calendar" ofType:@"txt"];
+    NSString *strCalendarFileContent = [NSString stringWithContentsOfFile:strCalendarFilePath encoding:NSUTF8StringEncoding error:nil];
+    NSArray *tempCalendarDataArray = [strCalendarFileContent componentsSeparatedByString:@"\n"];
+    for(int i=1;i<[tempCalendarDataArray count];i++){
+        NSString *tempString = [tempCalendarDataArray objectAtIndex:i];
+        NSArray *tempArray = [tempString componentsSeparatedByString:@","];
+        if([tempArray count] >= 10){
+            [arrayServiceIds addObject:[tempArray objectAtIndex:0]];
+            [arrayMonday addObject:[tempArray objectAtIndex:1]];
+            [arrayTuesday addObject:[tempArray objectAtIndex:2]];
+            [arrayWednesday addObject:[tempArray objectAtIndex:3]];
+            [arrayThursday addObject:[tempArray objectAtIndex:4]];
+            [arrayFriday addObject:[tempArray objectAtIndex:5]];
+            [arraySaturday addObject:[tempArray objectAtIndex:6]];
+            [arraySunday addObject:[tempArray objectAtIndex:7]];
+            [arrayStartDate addObject:[tempArray objectAtIndex:8]];
+            [arrayEndDate addObject:[tempArray objectAtIndex:9]];
+        }
+    }
+    for (int i=0;i<[arrayServiceIds count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayServiceIds objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayServiceIds replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arrayMonday count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayMonday objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayMonday replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arrayTuesday count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayTuesday objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayTuesday replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arrayWednesday count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayWednesday objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayWednesday replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arrayThursday count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayThursday objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayThursday replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arrayFriday count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayFriday objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayFriday replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arraySaturday count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arraySaturday objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arraySaturday replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arraySunday count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arraySunday objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arraySunday replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arrayStartDate count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayStartDate objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayStartDate replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arrayEndDate count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayEndDate objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayEndDate replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    
+    NIMLOG_OBJECT1(@"arrayServiceIds=%@",arrayServiceIds);
+    NIMLOG_OBJECT1(@"arrayMonday=%@",arrayMonday);
+    NIMLOG_OBJECT1(@"arrayTuesday=%@",arrayTuesday);
+    NIMLOG_OBJECT1(@"arrayWednesday=%@",arrayWednesday);
+    NIMLOG_OBJECT1(@"arrayThursday=%@",arrayThursday);
+    NIMLOG_OBJECT1(@"arrayFriday=%@",arrayFriday);
+    NIMLOG_OBJECT1(@"arraySaturday=%@",arraySaturday);
+    NIMLOG_OBJECT1(@"arraySunday=%@",arraySunday);
+    NIMLOG_OBJECT1(@"arrayStartDate=%@",arrayStartDate);
+    NIMLOG_OBJECT1(@"arrayEndDate=%@",arrayEndDate);
+    
+    NSMutableArray *arrayStopId = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayStopName = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayStopLat = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayStopLong = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayZoneId = [[NSMutableArray alloc] init];
+    
+    NSString *strStopsFilePath = [[NSBundle mainBundle] pathForResource:@"stops" ofType:@"txt"];
+    NSString *strStopsFileContent = [NSString stringWithContentsOfFile:strStopsFilePath encoding:NSUTF8StringEncoding error:nil];
+    NSArray *tempStopsDataArray = [strStopsFileContent componentsSeparatedByString:@"\n"];
+    for(int i=1;i<[tempStopsDataArray count];i++){
+        NSString *tempString = [tempStopsDataArray objectAtIndex:i];
+        NSArray *tempArray = [tempString componentsSeparatedByString:@","];
+        if([tempArray count] >= 6){
+            [arrayStopId addObject:[tempArray objectAtIndex:0]];
+            [arrayStopName addObject:[tempArray objectAtIndex:1]];
+            [arrayStopLat addObject:[tempArray objectAtIndex:4]];
+            [arrayStopLong addObject:[tempArray objectAtIndex:5]];
+            [arrayZoneId addObject:[tempArray objectAtIndex:6]];
+        }
+    }
+    for (int i=0;i<[arrayStopId count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayStopId objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayStopId replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arrayStopName count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayStopName objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayStopName replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arrayStopLat count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayStopLat objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayStopLat replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arrayStopLong count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayStopLong objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayStopLong replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arrayZoneId count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayZoneId objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayZoneId replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    NIMLOG_OBJECT1(@"arrayStopId=%@",arrayStopId);
+    NIMLOG_OBJECT1(@"arrayStopName=%@",arrayStopName);
+    NIMLOG_OBJECT1(@"arrayStopLat=%@",arrayStopLat);
+    NIMLOG_OBJECT1(@"arrayStopLong=%@",arrayStopLong);
+    NIMLOG_OBJECT1(@"arrayZoneId=%@",arrayZoneId);
+    
+    NSMutableArray *arrayTripID = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayRouteID = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayServiceID = [[NSMutableArray alloc] init];
+    
+    NSString *strTripsFilePath = [[NSBundle mainBundle] pathForResource:@"trips" ofType:@"txt"];
+    NSString *strTripsFileContent = [NSString stringWithContentsOfFile:strTripsFilePath encoding:NSUTF8StringEncoding error:nil];
+    NSArray *tempTripsDataArray = [strTripsFileContent componentsSeparatedByString:@"\n"];
+    for(int i=1;i<[tempTripsDataArray count];i++){
+        NSString *tempString = [tempTripsDataArray objectAtIndex:i];
+        NSArray *tempArray = [tempString componentsSeparatedByString:@","];
+        if([tempArray count] >= 3){
+            [arrayTripID addObject:[tempArray objectAtIndex:0]];
+            [arrayRouteID addObject:[tempArray objectAtIndex:1]];
+            [arrayServiceID addObject:[tempArray objectAtIndex:2]];
+        }
+    }
+    for (int i=0;i<[arrayTripID count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayTripID objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayTripID replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arrayRouteID count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayRouteID objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayRouteID replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    for (int i=0;i<[arrayServiceID count];i++){
+        for(int j=0;j<2;j++){
+            NSString *strTemp = [arrayServiceID objectAtIndex:i];
+            if ([strTemp rangeOfString:@"\"" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                NSRange range = [strTemp rangeOfString:@"\""];
+                NSMutableString *strMutableRawAddress =  [[NSMutableString alloc] initWithString:strTemp];
+                [strMutableRawAddress deleteCharactersInRange:range];
+                [arrayServiceID replaceObjectAtIndex:i withObject:strMutableRawAddress];
+            }
+        }
+    }
+    NIMLOG_OBJECT1(@"arrayTripID=%@",arrayTripID);
+    NIMLOG_OBJECT1(@"arrayRouteID=%@",arrayRouteID);
+    NIMLOG_OBJECT1(@"arrayServiceID=%@",arrayServiceID);
+}
 @end
