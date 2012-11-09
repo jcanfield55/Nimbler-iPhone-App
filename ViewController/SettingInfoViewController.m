@@ -159,7 +159,16 @@
         
         NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
         NSString *token = [prefs objectForKey:DEVICE_TOKEN];
-       
+        NSString * appType;
+        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+            appType = @"1";
+        }
+        else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:BART_BUNDLE_IDENTIFIER]){
+            appType = @"2";
+        }
+        if([prefs objectForKey:APPLICATION_TYPE]){
+            appType = [prefs objectForKey:APPLICATION_TYPE];
+        }
         // Update in TPServer DB
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
@@ -167,7 +176,7 @@
                                 DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
                                 ALERT_COUNT,[NSNumber numberWithInt:pushHour],
                                 DEVICE_TOKEN, token,
-                                MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:sliderMaxWalkDistance.value],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt:enableUrgentSoundFlag],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt:enableStandardSoundFlag],
+                                MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:sliderMaxWalkDistance.value],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt:enableUrgentSoundFlag],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt:enableStandardSoundFlag],APPLICATION_TYPE,appType,
                                 nil];
         NSString *twitCountReq = [UPDATE_SETTING_REQ appendQueryParams:params];
         NIMLOG_EVENT1(@" twitCountReq %@", twitCountReq);

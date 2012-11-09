@@ -30,7 +30,6 @@ typedef enum {
 @property (strong, nonatomic) NSString* timeFROM;
 @property (strong, nonatomic) NSString* timeTO;
 @property (strong, nonatomic) NSString* rawAddressTO;
-
 @property (strong, nonatomic) Location* fromLocation;
 @property (strong, nonatomic) Location* toLocation;
 @property (strong, nonatomic) NSDate* originalTripDate; // original date & time requested by user

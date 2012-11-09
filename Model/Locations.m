@@ -1030,4 +1030,89 @@
 {
     isLocationServiceEnable = isLocationServicesEnable;
 }
+
+// Station Search From Json Files.
+- (NSString *)rawAddressWithOutAgencyName:(NSArray *)searchStringsArray:(NSArray *)replaceStringsArray:(NSString *)address{
+    for(int i=0;i<[searchStringsArray count];i++){
+        NSRange range;
+        if ([address rangeOfString:[searchStringsArray objectAtIndex:i] options:NSCaseInsensitiveSearch].location != NSNotFound){
+            range = [address rangeOfString:[searchStringsArray objectAtIndex:i]];
+            NSMutableString *strMutableRawAddress =  (NSMutableString *)address;
+            [strMutableRawAddress replaceCharactersInRange:range withString:[replaceStringsArray objectAtIndex:i]];
+            address = strMutableRawAddress;
+        }
+    }
+    return address;
+}
+
+- (NSArray *)searchedStationsFromRawAddress:(NSString *)address:(NSArray *)searchStringsArray:(NSArray *)replaceStringsArray:(NSString *)agencyNameNotToInclude{
+    
+    NSMutableArray *arrMultiPleStationList = [[NSMutableArray alloc] init];
+    NSMutableArray *arrUnFilteredStationList = [[NSMutableArray alloc] init];
+    NSMutableArray *arrDistance = [[NSMutableArray alloc] init];
+    NSManagedObjectContext * context = [self managedObjectContext];
+    NSFetchRequest * fetchPlanRequestChunk = [[NSFetchRequest alloc] init];
+    [fetchPlanRequestChunk setEntity:[NSEntityDescription entityForName:@"Location" inManagedObjectContext:context]];
+    NSArray * arrayLocations = [context executeFetchRequest:fetchPlanRequestChunk error:nil];
+    for (id location in arrayLocations){
+        NSString *strshortFormattedAddress = [[location shortFormattedAddress]lowercaseString];
+        NSMutableString *strMutableShortFormattedAddress = [[NSMutableString alloc] init];
+        // Added To Handle Station Without Caltrain
+        if([strshortFormattedAddress isEqualToString:@"san jose diridon station"]){
+            [strMutableShortFormattedAddress appendString:strshortFormattedAddress];
+            [strMutableShortFormattedAddress appendString:@"caltrain"];
+            strshortFormattedAddress = strMutableShortFormattedAddress;
+        }
+        if([strshortFormattedAddress rangeOfString:agencyNameNotToInclude options:NSCaseInsensitiveSearch].location == NSNotFound && ![address isEqualToString:@"current location"] && ![address isEqualToString:@"caltrain station list"] && ![address isEqualToString:@"bart station list"]){
+            [arrUnFilteredStationList addObject:location];
+        }
+    }
+    for (int i=0;i<[arrUnFilteredStationList count];i++){
+        Location *location = [arrUnFilteredStationList objectAtIndex:i];
+        NSString *strshortFormattedAddress = [[location shortFormattedAddress]lowercaseString];
+        strshortFormattedAddress = [self rawAddressWithOutAgencyName:searchStringsArray:replaceStringsArray:strshortFormattedAddress];
+        if([address isEqualToString:strshortFormattedAddress]){
+            //[self markAndUpdateSelectedLocation:location];
+            return [NSArray arrayWithObject:location];
+        }
+        float distance = calculateLevenshteinDistance(strshortFormattedAddress, address);
+        float finalDistance = distance + address.length - strshortFormattedAddress.length;
+        [arrUnFilteredStationList replaceObjectAtIndex:i withObject:[arrUnFilteredStationList objectAtIndex:i]];
+        [arrDistance addObject:[NSString stringWithFormat:@"%f",finalDistance]];
+    }
+    if([arrUnFilteredStationList count] > 1){
+        int minDistance, nTempDistance,min1;
+        NSString *tempStationName;
+        int i,j;
+        for (i = 0; i < [arrDistance count]-1; i++){
+            minDistance = i;
+            min1 = i;
+            for (j = i+1; j < [arrDistance count]; j++){
+                if ([[arrDistance objectAtIndex:j] intValue] < [[arrDistance objectAtIndex:minDistance] intValue])
+                    minDistance = j;
+                min1 = j;
+            }
+            nTempDistance = [[arrDistance objectAtIndex:i] intValue];
+            tempStationName = [arrUnFilteredStationList objectAtIndex:i];
+            [arrDistance replaceObjectAtIndex:i withObject:[arrDistance objectAtIndex:minDistance]];
+            [arrUnFilteredStationList replaceObjectAtIndex:i withObject:[arrUnFilteredStationList objectAtIndex:minDistance]];
+            [arrDistance replaceObjectAtIndex:minDistance withObject:[NSString stringWithFormat:@"%d",nTempDistance]];
+            [arrUnFilteredStationList replaceObjectAtIndex:minDistance withObject:tempStationName];
+        }
+    }
+    int nVariation = address.length/3;
+    if(nVariation == 0){
+        nVariation = 1;
+    }
+    for (int i=0;i<[arrUnFilteredStationList count];i++){
+        int finalDistance = [[arrDistance objectAtIndex:i] intValue];
+        if((finalDistance < 2.0 || (finalDistance <= nVariation && [arrMultiPleStationList count] < 3)) && finalDistance < address.length){
+            [arrMultiPleStationList addObject:[arrUnFilteredStationList objectAtIndex:i]];
+        }
+    }
+    if([arrMultiPleStationList count] > 1){
+        return arrMultiPleStationList;
+    }
+    return nil;
+}
 @end

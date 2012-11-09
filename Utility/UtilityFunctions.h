@@ -68,3 +68,6 @@ void logError(NSString *errorName, NSString *errorMessage);
 
 // Handles and logs uncaught exceptions
 void uncaughtExceptionHandler(NSException *exception);
+float calculateLevenshteinDistance(NSString *originalString,NSString *comparisonString);
+NSInteger smallestOf3(NSInteger a,NSInteger b,NSInteger c);
+NSInteger smallestOf2(NSInteger a,NSInteger b);

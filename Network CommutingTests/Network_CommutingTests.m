@@ -11,6 +11,9 @@
 #import "LocationFromIOS.h"
 #import "Constants.h"
 #import "Logging.h"
+#import "PlanRequestParameters.h"
+#import "PlanStore.h"
+#import "nc_AppDelegate.h"
 
 @implementation Network_CommutingTests
 
@@ -27,10 +30,8 @@
     NSError *error = nil;
     [psc addPersistentStoreWithType:NSInMemoryStoreType configuration:nil URL:nil options:nil error:&error];
     STAssertNotNil(psc, @"Data store open failed for reason: %@", [error localizedDescription]);
-    
+    //RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];
     managedObjectContext = [[NSManagedObjectContext alloc] init];
-    STAssertNotNil(managedObjectContext, @"Cannot create managedObjectContexrt instance");
-
     [managedObjectContext setPersistentStoreCoordinator:psc];
     [managedObjectContext setUndoManager:nil];
     
@@ -1316,8 +1317,37 @@
 }
 
 // US-186 partial Implementation
+- (void)testApp{
+    [[nc_AppDelegate sharedInstance] getAppTypeFromBundleId];
+}
+- (void)planTestWithComparingTime{
+    NSMutableArray *testPlanArray = [nc_AppDelegate sharedInstance].testArrayPlans;
+    NSMutableArray *testRequestTime = [nc_AppDelegate sharedInstance].testRequestTime;
+    for(int i=0;i<[testPlanArray count];i++){
+        Plan *plan = [testPlanArray objectAtIndex:i];
+        for(int j=0;j<[[plan sortedItineraries] count];j++){
+            Itinerary *iti = [[plan sortedItineraries] objectAtIndex:j];
+            for(int k=0;k<[[iti sortedLegs] count];k++){
+                Leg *leg = [[iti sortedLegs]objectAtIndex:k];
+                NSDate *date = [leg startTime];
+                NSCalendar *calendar = [NSCalendar currentCalendar];
+                NSDateComponents *components = [calendar components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:date];
+                int hour = [components hour];
+                int minute = [components minute];
+                NSString *strLegTime = [NSString stringWithFormat:@"%d:%d",hour,minute];
+                NSString *strTime = [testRequestTime objectAtIndex:i];
+                NSArray *timeComponentArray = [strTime componentsSeparatedByString:@":"];
+                int startHour = [[timeComponentArray objectAtIndex:0] intValue];
+                int startMinute = [[timeComponentArray objectAtIndex:1] intValue];
+                NSString *strStartTime = [NSString stringWithFormat:@"%d:%d",startHour,startMinute];
+                 STAssertEquals(strLegTime,strStartTime, @"");
+            }
+        }
+    }
+}
 
-- (void)testGeneratePlans{
+- (void)stestGeneratePlans{
+    [nc_AppDelegate sharedInstance].isTestPlan = YES;
     NSMutableArray *arrayTripIds = [[NSMutableArray alloc] init];
     NSMutableArray *arrayArrivalTime = [[NSMutableArray alloc] init];
     NSMutableArray *arrayDepartureTime = [[NSMutableArray alloc] init];
@@ -1727,5 +1757,58 @@
     NIMLOG_OBJECT1(@"arrayTripID=%@",arrayTripID);
     NIMLOG_OBJECT1(@"arrayRouteID=%@",arrayRouteID);
     NIMLOG_OBJECT1(@"arrayServiceID=%@",arrayServiceID);
+    PlanStore *store = [nc_AppDelegate sharedInstance].planStore;
+    NSDate *tripDate = [NSDate date];
+    int maxDistance = (int)(1.5*1609.544);
+    for(int st1 = 0 ; st1 < [arrayStopIds count];st1++){
+        PlanRequestParameters* parameters = [[PlanRequestParameters alloc] init];
+        //parameters.fromLocation = fromLocation;
+        //parameters.toLocation = toLocation;
+        parameters.originalTripDate = tripDate;
+        parameters.thisRequestTripDate = tripDate;
+        parameters.departOrArrive = DEPART;
+        parameters.maxWalkDistance = maxDistance;
+        parameters.planDestination = PLAN_DESTINATION_TO_FROM_VC;
+        NSString *strLatitudeTo;
+        NSString *strLatitudeFrom;
+        NSString *strLongitudeTo;
+        NSString *strLongitudeFrom;
+        for (int nlatlng = 0; nlatlng < [arrayStopId count]; nlatlng++) {
+            if ([[arrayStopId objectAtIndex:nlatlng] isEqualToString:[arrayStopIds objectAtIndex:nlatlng]]) {
+                strLatitudeTo = [arrayStopLat objectAtIndex:nlatlng];
+                strLongitudeTo = [arrayStopLat objectAtIndex:nlatlng];
+                if([arrayStopId count]>nlatlng+1){
+                    strLatitudeFrom = [arrayStopLat objectAtIndex:nlatlng+1];
+                    strLongitudeFrom = [arrayStopLat objectAtIndex:nlatlng+1];
+                }
+            }
+        }
+        //Location *toLocation = [[Location alloc] init];
+        //toLocation.formattedAddress = [arrayStopIds objectAtIndex:st1];
+        //toLocation.lat = [NSNumber numberWithDouble:[strLatitudeTo doubleValue]];
+        //toLocation.lng = [NSNumber numberWithDouble:[strLongitudeTo doubleValue]];
+        
+        //Location *fromLocation = [[Location alloc] init];
+        //if([arrayStopIds count] > st1+1){
+            //fromLocation.formattedAddress = [arrayStopIds objectAtIndex:st1+1];
+           // fromLocation.lat = [NSNumber numberWithDouble:[strLatitudeFrom doubleValue]];
+           // fromLocation.lng = [NSNumber numberWithDouble:[strLongitudeFrom doubleValue]];
+ 
+        //}
+       // parameters.fromLocation = fromLocation;
+       // parameters.toLocation = toLocation;
+        parameters.latitudeTO = strLatitudeTo;
+        parameters.longitudeTO = strLongitudeTo;
+        parameters.latitudeFROM = strLatitudeFrom;
+        parameters.longitudeFROM = strLongitudeFrom;
+        parameters.timeTO = [arrayDepartureTime objectAtIndex:st1];
+        [[nc_AppDelegate sharedInstance].testRequestTime addObject:[arrayDepartureTime objectAtIndex:st1]];
+        if([arrayDepartureTime count ]> st1+1){
+            parameters.timeFROM = [arrayDepartureTime objectAtIndex:st1+1];
+        }
+        [store requestPlanFromOtpWithParameters:parameters];
+    }
+             [self planTestWithComparingTime];
 }
+
 @end

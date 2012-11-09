@@ -1,16 +1,5 @@
 {
-	"results" : [
-                 {
-                 "formatted_address" : "Bart Station List",
-                 "toFrequency" : 25.0,
-                 "fromFrequency" : 25.0,
-                 "memberOfList" : "Bart",
-                 "geometry" : {
-                 "location_type" : "TOFROM_LIST"
-                 }
-                 },
-                 {
-			"toFrequency" : 0.7357473,
+	"results" : [ {
 			"address_components" : [{
 					"long_name" : "12th St Oakland City Center BART",
 					"types" : ["subway_station", "train_station", "transit_station", "establishment"],

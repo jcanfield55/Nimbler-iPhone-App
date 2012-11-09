@@ -78,6 +78,9 @@ static nc_AppDelegate *appDelegate;
 @synthesize isSettingView;
 @synthesize isRemoteNotification;
 @synthesize isNeedToLoadRealData;
+@synthesize testArrayPlans;
+@synthesize testRequestTime;
+@synthesize isTestPlan;
 
 // Feedback parameters
 @synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId;
@@ -104,6 +107,10 @@ FeedBackForm *fbView;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 
+    // Request To Get Application Type From BundleId
+    [self getAppTypeFromBundleId];
+    testArrayPlans = [[NSMutableArray alloc] init];
+    testRequestTime = [[NSMutableArray alloc] init];
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     
     [[UIApplication sharedApplication]
@@ -177,15 +184,18 @@ FeedBackForm *fbView;
         [KeyObjectStore setUpWithManagedObjectContext:[self managedObjectContext]];
         
         // Pre-load stations location files
-        NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:CALTRAIN_PRELOAD_VERSION_NUMBER];
-        NSDecimalNumber* bartVersion = [NSDecimalNumber decimalNumberWithString:BART_PRELOAD_VERSION_NUMBER];
-
-        [locations preLoadIfNeededFromFile:CALTRAIN_PRELOAD_LOCATION_FILE
-                       latestVersionNumber:caltrainVersion
-                               testAddress:CALTRAIN_PRELOAD_TEST_ADDRESS];
-        [locations preLoadIfNeededFromFile:BART_PRELOAD_LOCATION_FILE
-                       latestVersionNumber:bartVersion
-                               testAddress:BART_PRELOAD_TEST_ADDRESS];
+        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+            NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:CALTRAIN_PRELOAD_VERSION_NUMBER];
+            NSDecimalNumber* bartVersion = [NSDecimalNumber decimalNumberWithString:BART_PRELOAD_VERSION_NUMBER];
+            [locations preLoadIfNeededFromFile:CALTRAIN_PRELOAD_LOCATION_FILE latestVersionNumber:caltrainVersion testAddress:CALTRAIN_PRELOAD_TEST_ADDRESS];
+            [locations preLoadIfNeededFromFile:BART_BACKGROUND_PRELOAD_LOCATION_FILE latestVersionNumber:bartVersion testAddress:BART_PRELOAD_TEST_ADDRESS];
+        }
+        else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:BART_BUNDLE_IDENTIFIER]){
+            NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:CALTRAIN_PRELOAD_VERSION_NUMBER];
+            NSDecimalNumber* bartVersion = [NSDecimalNumber decimalNumberWithString:BART_PRELOAD_VERSION_NUMBER];
+            [locations preLoadIfNeededFromFile:CALTRAIN_BACKGROUND_PRELOAD_LOCATION_FILE latestVersionNumber:caltrainVersion testAddress:CALTRAIN_PRELOAD_TEST_ADDRESS];
+            [locations preLoadIfNeededFromFile:BART_PRELOAD_LOCATION_FILE latestVersionNumber:bartVersion testAddress:BART_PRELOAD_TEST_ADDRESS];
+        }
     }@catch (NSException *exception) {
         logException(@"ncAppDelegate->didFinishLaunchingWithOptions #1", @"", exception);
     } 
@@ -460,6 +470,10 @@ FeedBackForm *fbView;
 }
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+    NSString *strAppType = [[NSUserDefaults standardUserDefaults] objectForKey:APPLICATION_TYPE];
+    if(!strAppType){
+        [self getAppTypeFromBundleId];
+    }
     NSLog(@"Enter in Foreground");
     /*
      Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
@@ -552,7 +566,6 @@ FeedBackForm *fbView;
         }
         NSString *strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
         NSString *strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
-        
         if (strToFormattedAddress) {
             NSArray* toLocations = [locations locationsWithFormattedAddress:strToFormattedAddress];
             if (toLocations && [toLocations count]>0) {
@@ -859,6 +872,12 @@ FeedBackForm *fbView;
                     }
                     isSettingRequest = NO;
                 }
+                else if([tempResponseDictionary objectForKey:APPLICATION_TYPE] != nil){
+                    [[NSUserDefaults standardUserDefaults] setObject:[tempResponseDictionary objectForKey:APPLICATION_TYPE] forKey:APPLICATION_TYPE];
+                    [[NSUserDefaults standardUserDefaults] synchronize];
+                    // Call suppertedRegion for getting boundry of bay area region
+                    [self suppertedRegion];
+                }
                 //Added To Solve DE-162,174,182
                 else if ([strRequestURL isEqualToString:strTweetCountURL]) {
                     isTwitterLivaData = false;
@@ -944,7 +963,7 @@ FeedBackForm *fbView;
         [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
         [prefs setObject:token forKey:DEVICE_TOKEN];  
         [prefs synchronize];
-        [self upadateDefaultUserValue];
+        [self performSelector:@selector(upadateDefaultUserValue) withObject:nil afterDelay:2.0];
         logEvent(FLURRY_PUSH_AVAILABLE,
                  FLURRY_NOTIFICATION_TOKEN, token,
                  nil, nil, nil, nil, nil, nil);
@@ -963,7 +982,7 @@ FeedBackForm *fbView;
         prefs = [NSUserDefaults standardUserDefaults];
         NSString  *token = @"26d906c5c273446d5f40d2c173ddd3f6869b2666b1c7afd5173d69b6629def70";
         [prefs setObject:token forKey:DEVICE_TOKEN];
-        [self upadateDefaultUserValue];
+        [self performSelector:@selector(upadateDefaultUserValue) withObject:nil afterDelay:2.0];
         //    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Push Alert" message:@"your device couldn't connect with apple. Please reinstall application" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         //    [alert show];
     }
@@ -1076,8 +1095,18 @@ FeedBackForm *fbView;
     @try {
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
-//        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;            
-        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID], nil];    
+//        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
+        NSString * appType;
+        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+            appType = @"1";
+        }
+        else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:BART_BUNDLE_IDENTIFIER]){
+            appType = @"2";
+        }
+        if([prefs objectForKey:APPLICATION_TYPE]){
+            appType = [prefs objectForKey:APPLICATION_TYPE];
+        }
+        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],APPLICATION_TYPE,appType, nil];
         isTwitterLivaData = TRUE;
         NSString *twitCountReq = [TWEET_COUNT_URL appendQueryParams:params];
         strTweetCountURL = twitCountReq;
@@ -1101,11 +1130,21 @@ FeedBackForm *fbView;
     }
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     [RKClient setSharedClient:client];
-    NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
+    NSString * appType;
+    if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+        appType = @"1";
+    }
+    else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:BART_BUNDLE_IDENTIFIER]){
+        appType = @"2";
+    }
+    if([prefs objectForKey:APPLICATION_TYPE]){
+        appType = [prefs objectForKey:APPLICATION_TYPE];
+    }
+    NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
                             DEVICE_ID, [userDefault objectForKey:DEVICE_CFUUID],
                             ALERT_COUNT,[NSNumber numberWithInt:pushHour],
                             DEVICE_TOKEN, token,
-                            MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:[userDefault floatForKey:PREFS_MAX_WALK_DISTANCE]],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_URGENTNOTIFICATION_SOUND]],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_STANDARDNOTIFICATION_SOUND]],
+                            MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:[userDefault floatForKey:PREFS_MAX_WALK_DISTANCE]],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_URGENTNOTIFICATION_SOUND]],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_STANDARDNOTIFICATION_SOUND]],APPLICATION_TYPE,appType,
                             nil];
     NSString *request = [UPDATE_SETTING_REQ appendQueryParams:params];
     strUpdateSettingURL = request;
@@ -1122,12 +1161,22 @@ FeedBackForm *fbView;
         UserPreferance* userPrefs = [UserPreferance userPreferance]; // get singleton
         // set in TPServer
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];    
+        [RKClient setSharedClient:client];
+        NSString * appType;
+        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+            appType = @"1";
+        }
+        else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:BART_BUNDLE_IDENTIFIER]){
+            appType = @"2";
+        }
+        if([prefs objectForKey:APPLICATION_TYPE]){
+            appType = [prefs objectForKey:APPLICATION_TYPE];
+        }
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
                                 DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
                                 @"alertCount", [userPrefs triggerAtHour],
                                 DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],
-                                @"maxDistance", [userPrefs walkDistance],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt:URGENT_NOTIFICATION_DEFAULT_VALUE],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt:STANDARD_NOTIFICATION_DEFAULT_VALUE],
+                                @"maxDistance", [userPrefs walkDistance],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt:URGENT_NOTIFICATION_DEFAULT_VALUE],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt:STANDARD_NOTIFICATION_DEFAULT_VALUE],APPLICATION_TYPE,appType,
                                 nil];
         NIMLOG_EVENT1(@"params=%@",params);
         NSString *request = [UPDATE_SETTING_REQ appendQueryParams:params];
@@ -1216,5 +1265,19 @@ FeedBackForm *fbView;
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     logEvent(FLURRY_APPSTORE_FEEDBACK_REMINDER_ACTION, FLURRY_APPSTORE_FB_REMINDER_USER_SELECTION, buttonResponse, nil, nil, nil, nil, nil, nil);
+}
+
+// Get Application Type from Bundle Identifier
+- (void)getAppTypeFromBundleId{
+    @try {
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:APPLICATION_BUNDLE_IDENTIFIER,[[NSBundle mainBundle] bundleIdentifier], nil];
+        NSString *request = [GET_APP_TYPE appendQueryParams:params];
+        [[RKClient sharedClient]  get:request delegate:self];
+    }
+    @catch (NSException *exception) {
+        logException(@"ncAppDelegate->getAppTypeFromBundleId", @"", exception);
+    }
 }
 @end

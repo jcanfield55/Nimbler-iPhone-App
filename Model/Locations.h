@@ -88,4 +88,8 @@
 // Calls the newGeocodeResults of the delegate object with the results and status.  
 - (void)reverseGeocodeWithParameters:(GeocodeRequestParameters *)parameters callBack:(id <LocationsGeocodeResultsDelegate>)delegate;
 
+// Station Search From Json Files.
+- (NSString *)rawAddressWithOutAgencyName:(NSArray *)searchStringsArray:(NSArray *)replaceStringsArray:(NSString *)address;
+- (NSArray *)searchedStationsFromRawAddress:(NSString *)address:(NSArray *)searchStringsArray:(NSArray *)replaceStringsArray:(NSString *)agencyNameNotToInclude;
+
 @end

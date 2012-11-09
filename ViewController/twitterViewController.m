@@ -224,9 +224,19 @@ NSUserDefaults *prefs;
             if (tweetTime == NULL) {
                 tweetTime = latestTweetTime;
             }
+            NSString * appType;
+            if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+                appType = @"1";
+            }
+            else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:BART_BUNDLE_IDENTIFIER]){
+                appType = @"2";
+            }
+            if([prefs objectForKey:APPLICATION_TYPE]){
+                appType = [prefs objectForKey:APPLICATION_TYPE];
+            }
             NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
                                   LAST_TWEET_TIME,tweetTime,
-                                  DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
+                                  DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],APPLICATION_TYPE,appType,
                                   nil];
             NSString *req = [LATEST_TWEETS_REQ appendQueryParams:dict];
             [[RKClient sharedClient]  get:req delegate:self];
@@ -358,8 +368,18 @@ NSUserDefaults *prefs;
             RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
             [RKClient setSharedClient:client];
             isTwitterLiveData = TRUE;
+            NSString * appType;
+            if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+                appType = @"1";
+            }
+            else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:BART_BUNDLE_IDENTIFIER]){
+                appType = @"2";
+            }
+            if([prefs objectForKey:APPLICATION_TYPE]){
+                appType = [prefs objectForKey:APPLICATION_TYPE];
+            }
             NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
-                                    DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
+                                    DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],APPLICATION_TYPE,appType,
                                     nil];
             NSString *allAdvisories = [ALL_TWEETS_REQ appendQueryParams:params];
             [[RKClient sharedClient]  get:allAdvisories delegate:self];

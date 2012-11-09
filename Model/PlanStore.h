@@ -50,6 +50,7 @@
 // Generate Random String of length 16
 - (NSString *)generateRandomString;
 - (void)clearCache;
+-(void)requestPlanFromOtpWithParameters:(PlanRequestParameters *)parameters;
 
 
 @end

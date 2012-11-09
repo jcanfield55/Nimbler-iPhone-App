@@ -200,6 +200,8 @@
 		8D45BD1E162BDE6A00E5CB3D /* Icon_ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D45BD1D162BDE6A00E5CB3D /* Icon_ipad@2x.png */; };
 		8D4FC8E6162D2E1A004144DE /* bart-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D4FC8E4162D2E1A004144DE /* bart-station.json */; };
 		8D4FC8E7162D2E1A004144DE /* caltrain-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D4FC8E5162D2E1A004144DE /* caltrain-station.json */; };
+		8D8DF4AD1647BCFB00BC2A34 /* bart-station-background.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D8DF4AB1647BCFB00BC2A34 /* bart-station-background.json */; };
+		8D8DF4AE1647BCFB00BC2A34 /* caltrain-station-background.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D8DF4AC1647BCFB00BC2A34 /* caltrain-station-background.json */; };
 		8D93604B162FFC4500084E8E /* Icon_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D93604A162FFC4500084E8E /* Icon_ipad.png */; };
 		8D9EA263162D78FD002BB5FF /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */; };
 		8DA39BDF15E3855B0029D54B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6F22E71563AD360066DFA9 /* AVFoundation.framework */; };
@@ -1132,6 +1134,8 @@
 		8D45BD1D162BDE6A00E5CB3D /* Icon_ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon_ipad@2x.png"; sourceTree = "<group>"; };
 		8D4FC8E4162D2E1A004144DE /* bart-station.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "bart-station.json"; sourceTree = "<group>"; };
 		8D4FC8E5162D2E1A004144DE /* caltrain-station.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "caltrain-station.json"; sourceTree = "<group>"; };
+		8D8DF4AB1647BCFB00BC2A34 /* bart-station-background.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "bart-station-background.json"; sourceTree = "<group>"; };
+		8D8DF4AC1647BCFB00BC2A34 /* caltrain-station-background.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "caltrain-station-background.json"; sourceTree = "<group>"; };
 		8D93604A162FFC4500084E8E /* Icon_ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon_ipad.png; sourceTree = "<group>"; };
 		8D9EA25C162D78FD002BB5FF /* Network_Commuting 1.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.1.xcdatamodel"; sourceTree = "<group>"; };
 		8D9EA25D162D78FD002BB5FF /* Network_Commuting 1.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.2.xcdatamodel"; sourceTree = "<group>"; };
@@ -2873,6 +2877,8 @@
 		8D4FC8E3162D2E1A004144DE /* PreloadData */ = {
 			isa = PBXGroup;
 			children = (
+				8D8DF4AB1647BCFB00BC2A34 /* bart-station-background.json */,
+				8D8DF4AC1647BCFB00BC2A34 /* caltrain-station-background.json */,
 				8D4FC8E4162D2E1A004144DE /* bart-station.json */,
 				8D4FC8E5162D2E1A004144DE /* caltrain-station.json */,
 			);
@@ -3256,6 +3262,8 @@
 				8DF1754B1642880600DD471F /* calendar.txt in Resources */,
 				8DF1754D164291A500DD471F /* stops.txt in Resources */,
 				8DF1754F1642932C00DD471F /* trips.txt in Resources */,
+				8D8DF4AD1647BCFB00BC2A34 /* bart-station-background.json in Resources */,
+				8D8DF4AE1647BCFB00BC2A34 /* caltrain-station-background.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

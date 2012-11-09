@@ -75,5 +75,14 @@
 #define LAST_TO_LOCATION              @"lastToLocation"
 #define LAST_FROM_LOCATION            @"lastFromLocation"
 
+#define APPLICATION_BUNDLE_IDENTIFIER  @"appBundleId"
+#define APPLICATION_TYPE               @"appType"
+
+// NOTE :- Sequence matter.
+#define BART_SEARCH_STRINGS_ARRAY [NSArray arrayWithObjects:@"bart station list",@"caltrain station list",@"current location",@" bart",@"bart ",@" airbart",@"airbart ",@" street",@"street ", nil]
+#define BART_REPLACE_STRINGS_ARRAY [NSArray arrayWithObjects:@"",@"",@"",@"",@"",@"",@"",@" st",@"st ", nil]
+
+#define CALTRAIN_SEARCH_STRINGS_ARRAY [NSArray arrayWithObjects:@"bart station list",@"caltrain station list",@"current location",@" caltrain",@"caltrain ", nil]
+#define CALTRAIN_REPLACE_STRINGS_ARRAY [NSArray arrayWithObjects:@"",@"",@"",@"",@"", nil]
 
 #endif

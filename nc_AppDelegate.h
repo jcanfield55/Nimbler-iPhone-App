@@ -47,6 +47,9 @@
     NSString *strTweetCountURL;
     BOOL isSettingView;
     UIActionSheet *actionsheet;
+    NSMutableArray *testArrayPlans;
+    NSMutableArray *testRequestTime;
+    BOOL isTestPlan;
 }
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
@@ -88,12 +91,14 @@
 @property (nonatomic, strong) NSString *timerType;
 
 @property (nonatomic) BOOL isDatePickerOpen;
-
 @property (nonatomic, strong) NSString *strUpdateSettingURL;
 @property (nonatomic, strong) NSString *strTweetCountURL;
 @property (nonatomic) BOOL isSettingView;
 @property (nonatomic) BOOL isRemoteNotification;
 @property (nonatomic) BOOL isNeedToLoadRealData;
+@property (nonatomic, strong)  NSMutableArray *testArrayPlans;
+@property (nonatomic) BOOL isTestPlan;
+@property (nonatomic,strong) NSMutableArray *testRequestTime;
 
 - (NSURL *)applicationDocumentsDirectory;
 
@@ -108,4 +113,5 @@
 -(void)serviceByWeekday;
 -(void)calendarByDate;
 - (void)saveSetting;
+- (void)getAppTypeFromBundleId;
 @end
