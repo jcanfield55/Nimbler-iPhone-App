@@ -116,6 +116,8 @@
 // Requests for a new plan from OTP
 -(void)requestPlanFromOtpWithParameters:(PlanRequestParameters *)parameters
 {
+    [nc_AppDelegate sharedInstance].receivedReply = NO;
+    [nc_AppDelegate sharedInstance].receivedError = NO;
     @try {
         // Create the date formatters we will use to output the date & time
         if (!dateFormatter) {
@@ -201,9 +203,8 @@
         //planURLResource = requestID;
         [parametersByPlanURLResource setObject:parameters forKey:strPlanGenerateURL];
         Plan *plan;
+        
         RKParams *requestParameter = [RKParams paramsWithDictionary:params];
-        NIMLOG_OBJECT1(@"%@",rkPlanMgr);
-        NIMLOG_OBJECT1(@"%@",strPlanGenerateURL);
         [rkPlanMgr postObject:plan delegate:self block:^(RKObjectLoader *loader){
             loader.resourcePath = strPlanGenerateURL;
             loader.params = requestParameter;
@@ -217,6 +218,7 @@
 
 // Delegate methods for when the RestKit has results from the Planner
 - (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects{
+    [nc_AppDelegate sharedInstance].receivedReply = YES;
     PlanRequestParameters* planRequestParameters;
     @try {
         RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
@@ -242,7 +244,7 @@
             else{
                 Plan *plan = [objects objectAtIndex:0];
                 if([nc_AppDelegate sharedInstance].isTestPlan){
-                    [[nc_AppDelegate sharedInstance].testArrayPlans addObject:plan];
+                    [nc_AppDelegate sharedInstance].testPlan = plan;
                 }
                 NSString *strResourcePath = [objectLoader resourcePath];
                 if (strResourcePath && [strResourcePath length]>0) {
@@ -319,6 +321,7 @@
 
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error
 {
+    [nc_AppDelegate sharedInstance].receivedError = YES;
     NIMLOG_ERR1(@"Error received from RKObjectManager: %@", error);
     PlanRequestStatus status;
     NIMLOG_EVENT1(@"Plan RKError objectLoader params: %@", [objectLoader params]);

@@ -30,7 +30,7 @@
     NSError *error = nil;
     [psc addPersistentStoreWithType:NSInMemoryStoreType configuration:nil URL:nil options:nil error:&error];
     STAssertNotNil(psc, @"Data store open failed for reason: %@", [error localizedDescription]);
-    //RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];
+   // RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];
     managedObjectContext = [[NSManagedObjectContext alloc] init];
     [managedObjectContext setPersistentStoreCoordinator:psc];
     [managedObjectContext setUndoManager:nil];
@@ -1317,36 +1317,46 @@
 }
 
 // US-186 partial Implementation
-- (void)testApp{
-    [[nc_AppDelegate sharedInstance] getAppTypeFromBundleId];
+
+// Methods wait until Error or Reply arrives from TP.
+-(void)someMethodToWaitForResult
+{
+    while (!([nc_AppDelegate sharedInstance].receivedReply^[nc_AppDelegate sharedInstance].receivedError))
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
 }
+
+// Compare The Leg Start Time With Departure time.
 - (void)planTestWithComparingTime{
-    NSMutableArray *testPlanArray = [nc_AppDelegate sharedInstance].testArrayPlans;
-    NSMutableArray *testRequestTime = [nc_AppDelegate sharedInstance].testRequestTime;
-    for(int i=0;i<[testPlanArray count];i++){
-        Plan *plan = [testPlanArray objectAtIndex:i];
+    BOOL isAnyTimeMatch;
+        Plan *plan = [nc_AppDelegate sharedInstance].testPlan;
         for(int j=0;j<[[plan sortedItineraries] count];j++){
             Itinerary *iti = [[plan sortedItineraries] objectAtIndex:j];
             for(int k=0;k<[[iti sortedLegs] count];k++){
                 Leg *leg = [[iti sortedLegs]objectAtIndex:k];
-                NSDate *date = [leg startTime];
-                NSCalendar *calendar = [NSCalendar currentCalendar];
-                NSDateComponents *components = [calendar components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:date];
-                int hour = [components hour];
-                int minute = [components minute];
-                NSString *strLegTime = [NSString stringWithFormat:@"%d:%d",hour,minute];
-                NSString *strTime = [testRequestTime objectAtIndex:i];
-                NSArray *timeComponentArray = [strTime componentsSeparatedByString:@":"];
-                int startHour = [[timeComponentArray objectAtIndex:0] intValue];
-                int startMinute = [[timeComponentArray objectAtIndex:1] intValue];
-                NSString *strStartTime = [NSString stringWithFormat:@"%d:%d",startHour,startMinute];
-                 STAssertEquals(strLegTime,strStartTime, @"");
+                if([leg isTrain]){
+                    NSDate *date = [leg startTime];
+                    NSCalendar *calendar = [NSCalendar currentCalendar];
+                    NSDateComponents *components = [calendar components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:date];
+                    int hour = [components hour];
+                    int minute = [components minute];
+                    NSString *strLegTime = [NSString stringWithFormat:@"%d:%d",hour,minute];
+                    NSString *strTime = [nc_AppDelegate sharedInstance].testRequestTime;
+                    NSArray *timeComponentArray = [strTime componentsSeparatedByString:@":"];
+                    int startHour = [[timeComponentArray objectAtIndex:0] intValue];
+                    int startMinute = [[timeComponentArray objectAtIndex:1] intValue];
+                    NSString *strStartTime = [NSString stringWithFormat:@"%d:%d",startHour,startMinute];
+                    if([strLegTime isEqualToString:strStartTime]){
+                        isAnyTimeMatch = YES;
+                    }
+                }
             }
         }
+    if(isAnyTimeMatch){
+        // Match The legStart Time With Departure Time
     }
 }
 
-- (void)stestGeneratePlans{
+- (void)testGeneratePlans{
     [nc_AppDelegate sharedInstance].isTestPlan = YES;
     NSMutableArray *arrayTripIds = [[NSMutableArray alloc] init];
     NSMutableArray *arrayArrivalTime = [[NSMutableArray alloc] init];
@@ -1357,6 +1367,7 @@
     NSMutableArray *arrayDropOfTypes = [[NSMutableArray alloc] init];
     NSMutableArray *arrayShapeDistTravelled = [[NSMutableArray alloc] init];
     
+    // Parsing Data From stop_times.txt File
     NSString *strStopTimesFilePath = [[NSBundle mainBundle] pathForResource:@"stop_times" ofType:@"txt"];
     NSString *strStopTimesFileContent = [NSString stringWithContentsOfFile:strStopTimesFilePath encoding:NSUTF8StringEncoding error:nil];
     NSArray *tempStopTimesDataArray = [strStopTimesFileContent componentsSeparatedByString:@"\n"];
@@ -1462,14 +1473,14 @@
             }
         }
     }
-     NIMLOG_OBJECT1(@"arrayTripIds=%@",arrayTripIds);
-     NIMLOG_OBJECT1(@"arrayArrivalTime=%@",arrayArrivalTime);
-     NIMLOG_OBJECT1(@"arrayDepartureTime=%@",arrayDepartureTime);
-     NIMLOG_OBJECT1(@"arrayStopIds=%@",arrayStopIds);
-     NIMLOG_OBJECT1(@"arrayStopSequences=%@",arrayStopSequences);
-     NIMLOG_OBJECT1(@"arrayPickUpTypes=%@",arrayPickUpTypes);
-     NIMLOG_OBJECT1(@"arrayDropOfTypes=%@",arrayDropOfTypes);
-     NIMLOG_OBJECT1(@"arrayShapeDistTravelled=%@",arrayShapeDistTravelled);
+//     NIMLOG_OBJECT1(@"arrayTripIds=%@",arrayTripIds);
+//     NIMLOG_OBJECT1(@"arrayArrivalTime=%@",arrayArrivalTime);
+//     NIMLOG_OBJECT1(@"arrayDepartureTime=%@",arrayDepartureTime);
+//     NIMLOG_OBJECT1(@"arrayStopIds=%@",arrayStopIds);
+//     NIMLOG_OBJECT1(@"arrayStopSequences=%@",arrayStopSequences);
+//     NIMLOG_OBJECT1(@"arrayPickUpTypes=%@",arrayPickUpTypes);
+//     NIMLOG_OBJECT1(@"arrayDropOfTypes=%@",arrayDropOfTypes);
+//     NIMLOG_OBJECT1(@"arrayShapeDistTravelled=%@",arrayShapeDistTravelled);
     
     NSMutableArray *arrayServiceIds = [[NSMutableArray alloc] init];
     NSMutableArray *arrayMonday = [[NSMutableArray alloc] init];
@@ -1482,7 +1493,7 @@
     NSMutableArray *arrayStartDate = [[NSMutableArray alloc] init];
     NSMutableArray *arrayEndDate = [[NSMutableArray alloc] init];
 
-    
+    // Parsing Data From calendar.txt File
     NSString *strCalendarFilePath = [[NSBundle mainBundle] pathForResource:@"calendar" ofType:@"txt"];
     NSString *strCalendarFileContent = [NSString stringWithContentsOfFile:strCalendarFilePath encoding:NSUTF8StringEncoding error:nil];
     NSArray *tempCalendarDataArray = [strCalendarFileContent componentsSeparatedByString:@"\n"];
@@ -1613,16 +1624,16 @@
         }
     }
     
-    NIMLOG_OBJECT1(@"arrayServiceIds=%@",arrayServiceIds);
-    NIMLOG_OBJECT1(@"arrayMonday=%@",arrayMonday);
-    NIMLOG_OBJECT1(@"arrayTuesday=%@",arrayTuesday);
-    NIMLOG_OBJECT1(@"arrayWednesday=%@",arrayWednesday);
-    NIMLOG_OBJECT1(@"arrayThursday=%@",arrayThursday);
-    NIMLOG_OBJECT1(@"arrayFriday=%@",arrayFriday);
-    NIMLOG_OBJECT1(@"arraySaturday=%@",arraySaturday);
-    NIMLOG_OBJECT1(@"arraySunday=%@",arraySunday);
-    NIMLOG_OBJECT1(@"arrayStartDate=%@",arrayStartDate);
-    NIMLOG_OBJECT1(@"arrayEndDate=%@",arrayEndDate);
+//    NIMLOG_OBJECT1(@"arrayServiceIds=%@",arrayServiceIds);
+//    NIMLOG_OBJECT1(@"arrayMonday=%@",arrayMonday);
+//    NIMLOG_OBJECT1(@"arrayTuesday=%@",arrayTuesday);
+//    NIMLOG_OBJECT1(@"arrayWednesday=%@",arrayWednesday);
+//    NIMLOG_OBJECT1(@"arrayThursday=%@",arrayThursday);
+//    NIMLOG_OBJECT1(@"arrayFriday=%@",arrayFriday);
+//    NIMLOG_OBJECT1(@"arraySaturday=%@",arraySaturday);
+//    NIMLOG_OBJECT1(@"arraySunday=%@",arraySunday);
+//    NIMLOG_OBJECT1(@"arrayStartDate=%@",arrayStartDate);
+//    NIMLOG_OBJECT1(@"arrayEndDate=%@",arrayEndDate);
     
     NSMutableArray *arrayStopId = [[NSMutableArray alloc] init];
     NSMutableArray *arrayStopName = [[NSMutableArray alloc] init];
@@ -1630,6 +1641,7 @@
     NSMutableArray *arrayStopLong = [[NSMutableArray alloc] init];
     NSMutableArray *arrayZoneId = [[NSMutableArray alloc] init];
     
+    // Parsing Data From stops.txt File
     NSString *strStopsFilePath = [[NSBundle mainBundle] pathForResource:@"stops" ofType:@"txt"];
     NSString *strStopsFileContent = [NSString stringWithContentsOfFile:strStopsFilePath encoding:NSUTF8StringEncoding error:nil];
     NSArray *tempStopsDataArray = [strStopsFileContent componentsSeparatedByString:@"\n"];
@@ -1699,16 +1711,17 @@
             }
         }
     }
-    NIMLOG_OBJECT1(@"arrayStopId=%@",arrayStopId);
-    NIMLOG_OBJECT1(@"arrayStopName=%@",arrayStopName);
-    NIMLOG_OBJECT1(@"arrayStopLat=%@",arrayStopLat);
-    NIMLOG_OBJECT1(@"arrayStopLong=%@",arrayStopLong);
-    NIMLOG_OBJECT1(@"arrayZoneId=%@",arrayZoneId);
+//    NIMLOG_OBJECT1(@"arrayStopId=%@",arrayStopId);
+//    NIMLOG_OBJECT1(@"arrayStopName=%@",arrayStopName);
+//    NIMLOG_OBJECT1(@"arrayStopLat=%@",arrayStopLat);
+//    NIMLOG_OBJECT1(@"arrayStopLong=%@",arrayStopLong);
+//    NIMLOG_OBJECT1(@"arrayZoneId=%@",arrayZoneId);
     
     NSMutableArray *arrayTripID = [[NSMutableArray alloc] init];
     NSMutableArray *arrayRouteID = [[NSMutableArray alloc] init];
     NSMutableArray *arrayServiceID = [[NSMutableArray alloc] init];
     
+    // Parsing Data From trips.txt File
     NSString *strTripsFilePath = [[NSBundle mainBundle] pathForResource:@"trips" ofType:@"txt"];
     NSString *strTripsFileContent = [NSString stringWithContentsOfFile:strTripsFilePath encoding:NSUTF8StringEncoding error:nil];
     NSArray *tempTripsDataArray = [strTripsFileContent componentsSeparatedByString:@"\n"];
@@ -1754,18 +1767,23 @@
             }
         }
     }
-    NIMLOG_OBJECT1(@"arrayTripID=%@",arrayTripID);
-    NIMLOG_OBJECT1(@"arrayRouteID=%@",arrayRouteID);
-    NIMLOG_OBJECT1(@"arrayServiceID=%@",arrayServiceID);
+//    NIMLOG_OBJECT1(@"arrayTripID=%@",arrayTripID);
+//    NIMLOG_OBJECT1(@"arrayRouteID=%@",arrayRouteID);
+//    NIMLOG_OBJECT1(@"arrayServiceID=%@",arrayServiceID);
     PlanStore *store = [nc_AppDelegate sharedInstance].planStore;
     NSDate *tripDate = [NSDate date];
     int maxDistance = (int)(1.5*1609.544);
     for(int st1 = 0 ; st1 < [arrayStopIds count];st1++){
         PlanRequestParameters* parameters = [[PlanRequestParameters alloc] init];
-        //parameters.fromLocation = fromLocation;
-        //parameters.toLocation = toLocation;
-        parameters.originalTripDate = tripDate;
-        parameters.thisRequestTripDate = tripDate;
+        NSString *strDepartureTime = [arrayDepartureTime objectAtIndex:st1];
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        formatter.dateFormat = @"HH:mm:ss";
+        NSDate *dates = [formatter dateFromString:strDepartureTime];
+        NSDate *timesOnly = timeOnlyFromDate(dates);
+        NSDate *datesOnly = dateOnlyFromDate(tripDate);
+        NSDate *finalDate = addDateOnlyWithTimeOnly(datesOnly, timesOnly);
+        parameters.originalTripDate = [finalDate dateByAddingTimeInterval:-300];
+        parameters.thisRequestTripDate = [finalDate dateByAddingTimeInterval:-300];
         parameters.departOrArrive = DEPART;
         parameters.maxWalkDistance = maxDistance;
         parameters.planDestination = PLAN_DESTINATION_TO_FROM_VC;
@@ -1776,39 +1794,69 @@
         for (int nlatlng = 0; nlatlng < [arrayStopId count]; nlatlng++) {
             if ([[arrayStopId objectAtIndex:nlatlng] isEqualToString:[arrayStopIds objectAtIndex:nlatlng]]) {
                 strLatitudeTo = [arrayStopLat objectAtIndex:nlatlng];
-                strLongitudeTo = [arrayStopLat objectAtIndex:nlatlng];
+                strLongitudeTo = [arrayStopLong objectAtIndex:nlatlng];
                 if([arrayStopId count]>nlatlng+1){
                     strLatitudeFrom = [arrayStopLat objectAtIndex:nlatlng+1];
-                    strLongitudeFrom = [arrayStopLat objectAtIndex:nlatlng+1];
+                    strLongitudeFrom = [arrayStopLong objectAtIndex:nlatlng+1];
                 }
             }
         }
-        //Location *toLocation = [[Location alloc] init];
-        //toLocation.formattedAddress = [arrayStopIds objectAtIndex:st1];
-        //toLocation.lat = [NSNumber numberWithDouble:[strLatitudeTo doubleValue]];
-        //toLocation.lng = [NSNumber numberWithDouble:[strLongitudeTo doubleValue]];
-        
-        //Location *fromLocation = [[Location alloc] init];
-        //if([arrayStopIds count] > st1+1){
-            //fromLocation.formattedAddress = [arrayStopIds objectAtIndex:st1+1];
-           // fromLocation.lat = [NSNumber numberWithDouble:[strLatitudeFrom doubleValue]];
-           // fromLocation.lng = [NSNumber numberWithDouble:[strLongitudeFrom doubleValue]];
- 
-        //}
-       // parameters.fromLocation = fromLocation;
-       // parameters.toLocation = toLocation;
-        parameters.latitudeTO = strLatitudeTo;
-        parameters.longitudeTO = strLongitudeTo;
-        parameters.latitudeFROM = strLatitudeFrom;
-        parameters.longitudeFROM = strLongitudeFrom;
-        parameters.timeTO = [arrayDepartureTime objectAtIndex:st1];
-        [[nc_AppDelegate sharedInstance].testRequestTime addObject:[arrayDepartureTime objectAtIndex:st1]];
-        if([arrayDepartureTime count ]> st1+1){
-            parameters.timeFROM = [arrayDepartureTime objectAtIndex:st1+1];
+        // Get Service Id From Trip ID
+        NSString *strTripID = [arrayTripIds objectAtIndex:st1];
+        NSString *strSerViceID;
+        for(int sid =0;sid<[arrayServiceID count];sid++){
+            if([strTripID isEqualToString:[arrayTripID objectAtIndex:sid]]){
+                strSerViceID = [arrayServiceID objectAtIndex:sid];
+                break;
+            }
         }
-        [store requestPlanFromOtpWithParameters:parameters];
+        // Get The Service End Date And Array of day indicating 0 or 1.
+        NSString *strEndDate;
+        NSArray *dayArray;
+        for(int sid1 = 0;sid1 < [arrayServiceIds count];sid1++){
+            if([strSerViceID isEqualToString:[arrayServiceIds objectAtIndex:sid1]]){
+                strEndDate = [arrayEndDate objectAtIndex:sid1];
+                dayArray = [NSArray arrayWithObjects:[arraySunday objectAtIndex:sid1],[arrayMonday objectAtIndex:sid1],[arrayTuesday objectAtIndex:sid1],[arrayWednesday objectAtIndex:sid1],[arrayThursday objectAtIndex:sid1],[arrayFriday objectAtIndex:sid1],[arraySaturday objectAtIndex:sid1], nil];
+                break;
+            }
+        }
+        NSDate *date = [NSDate date];
+        NSInteger dayOfWeek = dayOfWeekFromDate(date)-1;
+        NSLog(@"%d",dayOfWeek);
+        NSDate* dateOnly = dateOnlyFromDate(date);
+        NSDateFormatter *dateFormatters = [[NSDateFormatter alloc] init];
+        [dateFormatters setDateFormat:@"YYYMMdd"];
+        // If service is not expire and service is enabled on that day then we will request TP For Plan.
+        NSString* strDateOnly = [dateFormatters stringFromDate:dateOnly];
+        if (strEndDate && [strEndDate compare:strDateOnly] == NSOrderedDescending) {
+            if([[dayArray objectAtIndex:dayOfWeek] isEqualToString:@"1"]){
+                Location *toLocation = [locations newEmptyLocation];
+                toLocation.formattedAddress = [arrayStopIds objectAtIndex:st1];
+                toLocation.lat = [NSNumber numberWithDouble:[strLatitudeTo doubleValue]];
+                toLocation.lng = [NSNumber numberWithDouble:[strLongitudeTo doubleValue]];
+                
+                Location *fromLocation = [locations newEmptyLocation];
+                if([arrayStopIds count] > st1+1){
+                    fromLocation.formattedAddress = [arrayStopIds objectAtIndex:st1+1];
+                    fromLocation.lat = [NSNumber numberWithDouble:[strLatitudeFrom doubleValue]];
+                    fromLocation.lng = [NSNumber numberWithDouble:[strLongitudeFrom doubleValue]];
+                    
+                }
+                parameters.fromLocation = fromLocation;
+                parameters.toLocation = toLocation;
+                parameters.latitudeTO = strLatitudeTo;
+                parameters.longitudeTO = strLongitudeTo;
+                parameters.latitudeFROM = strLatitudeFrom;
+                parameters.longitudeFROM = strLongitudeFrom;
+
+                [nc_AppDelegate sharedInstance].testRequestTime = [arrayDepartureTime objectAtIndex:st1];
+                
+                [store requestPlanFromOtpWithParameters:parameters];
+                [self someMethodToWaitForResult];
+                [self planTestWithComparingTime];
+            }
+        }
     }
-             [self planTestWithComparingTime];
 }
 
 @end

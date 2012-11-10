@@ -22,7 +22,8 @@
 @interface nc_AppDelegate : UIResponder <UIApplicationDelegate,CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate,UITabBarControllerDelegate,UIActionSheetDelegate> {
     Location* currentLocation;
     UITabBarController *_tabBarController;
-    
+    BOOL receivedReply;
+    BOOL receivedError;
     NSNumber *FBSource; 
     NSString *FBDate;
     NSString *FBToAdd;
@@ -47,8 +48,8 @@
     NSString *strTweetCountURL;
     BOOL isSettingView;
     UIActionSheet *actionsheet;
-    NSMutableArray *testArrayPlans;
-    NSMutableArray *testRequestTime;
+    Plan *testPlan;
+    NSString *testRequestTime;
     BOOL isTestPlan;
 }
 
@@ -96,9 +97,11 @@
 @property (nonatomic) BOOL isSettingView;
 @property (nonatomic) BOOL isRemoteNotification;
 @property (nonatomic) BOOL isNeedToLoadRealData;
-@property (nonatomic, strong)  NSMutableArray *testArrayPlans;
+@property (nonatomic, strong) Plan *testPlan;
 @property (nonatomic) BOOL isTestPlan;
-@property (nonatomic,strong) NSMutableArray *testRequestTime;
+@property (nonatomic,strong)  NSString *testRequestTime;
+@property (nonatomic) BOOL receivedReply;
+@property (nonatomic) BOOL receivedError;
 
 - (NSURL *)applicationDocumentsDirectory;
 

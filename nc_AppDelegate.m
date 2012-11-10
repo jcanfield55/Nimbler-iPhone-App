@@ -78,9 +78,11 @@ static nc_AppDelegate *appDelegate;
 @synthesize isSettingView;
 @synthesize isRemoteNotification;
 @synthesize isNeedToLoadRealData;
-@synthesize testArrayPlans;
+@synthesize testPlan;
 @synthesize testRequestTime;
 @synthesize isTestPlan;
+@synthesize receivedReply;
+@synthesize receivedError;
 
 // Feedback parameters
 @synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId;
@@ -109,8 +111,7 @@ FeedBackForm *fbView;
 
     // Request To Get Application Type From BundleId
     [self getAppTypeFromBundleId];
-    testArrayPlans = [[NSMutableArray alloc] init];
-    testRequestTime = [[NSMutableArray alloc] init];
+
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     
     [[UIApplication sharedApplication]

@@ -21,13 +21,13 @@
 #import "Leg.h"
 #import "nc_AppDelegate.h"
 
-@interface Network_CommutingTests : SenTestCase
+@interface Network_CommutingTests : SenTestCase<RKRequestDelegate>
 {
     NSManagedObjectContext *managedObjectContext;
     NSManagedObjectModel *managedObjectModel;
     
     NSDateFormatter* dateFormatter;
-    
+    NSDateFormatter* timeFormatter;
     Location *loc1;
     Location *loc2;
     Location *loc3;
