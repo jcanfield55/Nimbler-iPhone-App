@@ -79,7 +79,7 @@ static nc_AppDelegate *appDelegate;
 @synthesize isRemoteNotification;
 @synthesize isNeedToLoadRealData;
 @synthesize testPlan;
-@synthesize testRequestTime;
+@synthesize expectedRequestDate;
 @synthesize isTestPlan;
 @synthesize receivedReply;
 @synthesize receivedError;

@@ -74,6 +74,7 @@
 #define LAST_SELECTED_TAB_INDEX       @"lastSelectedTabIndex"
 #define LAST_TO_LOCATION              @"lastToLocation"
 #define LAST_FROM_LOCATION            @"lastFromLocation"
+#define LAST_REQUEST_REVERSE_GEO      @"lastRequestReverseGeoLocation"
 
 #define APPLICATION_BUNDLE_IDENTIFIER  @"appBundleId"
 #define APPLICATION_TYPE               @"appType"

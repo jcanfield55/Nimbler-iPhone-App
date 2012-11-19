@@ -49,7 +49,8 @@
     BOOL isSettingView;
     UIActionSheet *actionsheet;
     Plan *testPlan;
-    NSString *testRequestTime;
+    // Used For Automated test.
+    NSString *expectedRequestDate;
     BOOL isTestPlan;
 }
 
@@ -99,7 +100,7 @@
 @property (nonatomic) BOOL isNeedToLoadRealData;
 @property (nonatomic, strong) Plan *testPlan;
 @property (nonatomic) BOOL isTestPlan;
-@property (nonatomic,strong)  NSString *testRequestTime;
+@property (nonatomic,strong)  NSString *expectedRequestDate;
 @property (nonatomic) BOOL receivedReply;
 @property (nonatomic) BOOL receivedError;
 

@@ -1335,25 +1335,25 @@
                 Leg *leg = [[iti sortedLegs]objectAtIndex:k];
                 if([leg isTrain]){
                     NSDate *date = [leg startTime];
-                    NSCalendar *calendar = [NSCalendar currentCalendar];
-                    NSDateComponents *components = [calendar components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:date];
-                    int hour = [components hour];
-                    int minute = [components minute];
-                    NSString *strLegTime = [NSString stringWithFormat:@"%d:%d",hour,minute];
-                    NSString *strTime = [nc_AppDelegate sharedInstance].testRequestTime;
-                    NSArray *timeComponentArray = [strTime componentsSeparatedByString:@":"];
-                    int startHour = [[timeComponentArray objectAtIndex:0] intValue];
-                    int startMinute = [[timeComponentArray objectAtIndex:1] intValue];
-                    NSString *strStartTime = [NSString stringWithFormat:@"%d:%d",startHour,startMinute];
-                    if([strLegTime isEqualToString:strStartTime]){
-                        isAnyTimeMatch = YES;
+                    if(date){
+                        NSCalendar *calendar = [NSCalendar currentCalendar];
+                        NSDateComponents *components = [calendar components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:date];
+                        int hour = [components hour];
+                        int minute = [components minute];
+                        NSString *strLegTime = [NSString stringWithFormat:@"%d:%d",hour,minute];
+                        NSString *strTime = [nc_AppDelegate sharedInstance].expectedRequestDate;
+                        NSArray *timeComponentArray = [strTime componentsSeparatedByString:@":"];
+                        int startHour = [[timeComponentArray objectAtIndex:0] intValue];
+                        int startMinute = [[timeComponentArray objectAtIndex:1] intValue];
+                        NSString *strStartTime = [NSString stringWithFormat:@"%d:%d",startHour,startMinute];
+                        if([strLegTime isEqualToString:strStartTime]){
+                            isAnyTimeMatch = YES;
+                        }
                     }
                 }
             }
         }
-    if(isAnyTimeMatch){
-        // Match The legStart Time With Departure Time
-    }
+    STAssertTrue(isAnyTimeMatch, @"");
 }
 
 - (void)testGeneratePlans{
@@ -1473,15 +1473,7 @@
             }
         }
     }
-//     NIMLOG_OBJECT1(@"arrayTripIds=%@",arrayTripIds);
-//     NIMLOG_OBJECT1(@"arrayArrivalTime=%@",arrayArrivalTime);
-//     NIMLOG_OBJECT1(@"arrayDepartureTime=%@",arrayDepartureTime);
-//     NIMLOG_OBJECT1(@"arrayStopIds=%@",arrayStopIds);
-//     NIMLOG_OBJECT1(@"arrayStopSequences=%@",arrayStopSequences);
-//     NIMLOG_OBJECT1(@"arrayPickUpTypes=%@",arrayPickUpTypes);
-//     NIMLOG_OBJECT1(@"arrayDropOfTypes=%@",arrayDropOfTypes);
-//     NIMLOG_OBJECT1(@"arrayShapeDistTravelled=%@",arrayShapeDistTravelled);
-    
+
     NSMutableArray *arrayServiceIds = [[NSMutableArray alloc] init];
     NSMutableArray *arrayMonday = [[NSMutableArray alloc] init];
     NSMutableArray *arrayTuesday = [[NSMutableArray alloc] init];
@@ -1624,17 +1616,6 @@
         }
     }
     
-//    NIMLOG_OBJECT1(@"arrayServiceIds=%@",arrayServiceIds);
-//    NIMLOG_OBJECT1(@"arrayMonday=%@",arrayMonday);
-//    NIMLOG_OBJECT1(@"arrayTuesday=%@",arrayTuesday);
-//    NIMLOG_OBJECT1(@"arrayWednesday=%@",arrayWednesday);
-//    NIMLOG_OBJECT1(@"arrayThursday=%@",arrayThursday);
-//    NIMLOG_OBJECT1(@"arrayFriday=%@",arrayFriday);
-//    NIMLOG_OBJECT1(@"arraySaturday=%@",arraySaturday);
-//    NIMLOG_OBJECT1(@"arraySunday=%@",arraySunday);
-//    NIMLOG_OBJECT1(@"arrayStartDate=%@",arrayStartDate);
-//    NIMLOG_OBJECT1(@"arrayEndDate=%@",arrayEndDate);
-    
     NSMutableArray *arrayStopId = [[NSMutableArray alloc] init];
     NSMutableArray *arrayStopName = [[NSMutableArray alloc] init];
     NSMutableArray *arrayStopLat = [[NSMutableArray alloc] init];
@@ -1711,12 +1692,7 @@
             }
         }
     }
-//    NIMLOG_OBJECT1(@"arrayStopId=%@",arrayStopId);
-//    NIMLOG_OBJECT1(@"arrayStopName=%@",arrayStopName);
-//    NIMLOG_OBJECT1(@"arrayStopLat=%@",arrayStopLat);
-//    NIMLOG_OBJECT1(@"arrayStopLong=%@",arrayStopLong);
-//    NIMLOG_OBJECT1(@"arrayZoneId=%@",arrayZoneId);
-    
+
     NSMutableArray *arrayTripID = [[NSMutableArray alloc] init];
     NSMutableArray *arrayRouteID = [[NSMutableArray alloc] init];
     NSMutableArray *arrayServiceID = [[NSMutableArray alloc] init];
@@ -1767,18 +1743,28 @@
             }
         }
     }
-//    NIMLOG_OBJECT1(@"arrayTripID=%@",arrayTripID);
-//    NIMLOG_OBJECT1(@"arrayRouteID=%@",arrayRouteID);
-//    NIMLOG_OBJECT1(@"arrayServiceID=%@",arrayServiceID);
     PlanStore *store = [nc_AppDelegate sharedInstance].planStore;
+    // Change tripDate if required to test other date.
     NSDate *tripDate = [NSDate date];
     int maxDistance = (int)(1.5*1609.544);
     for(int st1 = 0 ; st1 < [arrayStopIds count];st1++){
         PlanRequestParameters* parameters = [[PlanRequestParameters alloc] init];
         NSString *strDepartureTime = [arrayDepartureTime objectAtIndex:st1];
+        NSArray *arrayDepartureTimeComponents = [strDepartureTime componentsSeparatedByString:@":"];
+        if([arrayDepartureTimeComponents count] > 0){
+            int hours = [[arrayDepartureTimeComponents objectAtIndex:0] intValue];
+            int minutes = [[arrayDepartureTimeComponents objectAtIndex:1] intValue];
+            int seconds = [[arrayDepartureTimeComponents objectAtIndex:2] intValue];
+            if(hours > 23){
+                hours = hours - 24;
+            }
+            strDepartureTime = [NSString stringWithFormat:@"%d:%d:%d",hours,minutes,seconds];
+        }
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         formatter.dateFormat = @"HH:mm:ss";
         NSDate *dates = [formatter dateFromString:strDepartureTime];
+         NIMLOG_OBJECT1(@"strDepartureTime=%@",strDepartureTime);
+        NIMLOG_OBJECT1(@"dates=%@",dates);
         NSDate *timesOnly = timeOnlyFromDate(dates);
         NSDate *datesOnly = dateOnlyFromDate(tripDate);
         NSDate *finalDate = addDateOnlyWithTimeOnly(datesOnly, timesOnly);
@@ -1792,7 +1778,7 @@
         NSString *strLongitudeTo;
         NSString *strLongitudeFrom;
         for (int nlatlng = 0; nlatlng < [arrayStopId count]; nlatlng++) {
-            if ([[arrayStopId objectAtIndex:nlatlng] isEqualToString:[arrayStopIds objectAtIndex:nlatlng]]) {
+            if ([[arrayStopId objectAtIndex:nlatlng] isEqualToString:[arrayStopIds objectAtIndex:st1]]) {
                 strLatitudeTo = [arrayStopLat objectAtIndex:nlatlng];
                 strLongitudeTo = [arrayStopLong objectAtIndex:nlatlng];
                 if([arrayStopId count]>nlatlng+1){
@@ -1801,59 +1787,61 @@
                 }
             }
         }
+        for (int nlatlngFrom = 0; nlatlngFrom < [arrayStopId count]; nlatlngFrom++) {
+            if ([arrayStopIds count]>st1+1 && [[arrayStopId objectAtIndex:nlatlngFrom] isEqualToString:[arrayStopIds objectAtIndex:st1+1]]) {
+                    strLatitudeFrom = [arrayStopLat objectAtIndex:nlatlngFrom];
+                    strLongitudeFrom = [arrayStopLong objectAtIndex:nlatlngFrom];
+            }
+        }
         // Get Service Id From Trip ID
         NSString *strTripID = [arrayTripIds objectAtIndex:st1];
-        NSString *strSerViceID;
-        for(int sid =0;sid<[arrayServiceID count];sid++){
-            if([strTripID isEqualToString:[arrayTripID objectAtIndex:sid]]){
-                strSerViceID = [arrayServiceID objectAtIndex:sid];
-                break;
-            }
-        }
-        // Get The Service End Date And Array of day indicating 0 or 1.
-        NSString *strEndDate;
-        NSArray *dayArray;
-        for(int sid1 = 0;sid1 < [arrayServiceIds count];sid1++){
-            if([strSerViceID isEqualToString:[arrayServiceIds objectAtIndex:sid1]]){
-                strEndDate = [arrayEndDate objectAtIndex:sid1];
-                dayArray = [NSArray arrayWithObjects:[arraySunday objectAtIndex:sid1],[arrayMonday objectAtIndex:sid1],[arrayTuesday objectAtIndex:sid1],[arrayWednesday objectAtIndex:sid1],[arrayThursday objectAtIndex:sid1],[arrayFriday objectAtIndex:sid1],[arraySaturday objectAtIndex:sid1], nil];
-                break;
-            }
-        }
-        NSDate *date = [NSDate date];
-        NSInteger dayOfWeek = dayOfWeekFromDate(date)-1;
-        NSLog(@"%d",dayOfWeek);
-        NSDate* dateOnly = dateOnlyFromDate(date);
-        NSDateFormatter *dateFormatters = [[NSDateFormatter alloc] init];
-        [dateFormatters setDateFormat:@"YYYMMdd"];
-        // If service is not expire and service is enabled on that day then we will request TP For Plan.
-        NSString* strDateOnly = [dateFormatters stringFromDate:dateOnly];
-        if (strEndDate && [strEndDate compare:strDateOnly] == NSOrderedDescending) {
-            if([[dayArray objectAtIndex:dayOfWeek] isEqualToString:@"1"]){
-                Location *toLocation = [locations newEmptyLocation];
-                toLocation.formattedAddress = [arrayStopIds objectAtIndex:st1];
-                toLocation.lat = [NSNumber numberWithDouble:[strLatitudeTo doubleValue]];
-                toLocation.lng = [NSNumber numberWithDouble:[strLongitudeTo doubleValue]];
-                
-                Location *fromLocation = [locations newEmptyLocation];
-                if([arrayStopIds count] > st1+1){
-                    fromLocation.formattedAddress = [arrayStopIds objectAtIndex:st1+1];
-                    fromLocation.lat = [NSNumber numberWithDouble:[strLatitudeFrom doubleValue]];
-                    fromLocation.lng = [NSNumber numberWithDouble:[strLongitudeFrom doubleValue]];
-                    
+        if([arrayTripIds count] > st1+1 && [[arrayTripIds objectAtIndex:st1]isEqualToString:[arrayTripIds objectAtIndex:st1+1]]){
+            NSString *strSerViceID;
+            for(int sid =0;sid<[arrayServiceID count];sid++){
+                if([strTripID isEqualToString:[arrayTripID objectAtIndex:sid]]){
+                    strSerViceID = [arrayServiceID objectAtIndex:sid];
+                    break;
                 }
-                parameters.fromLocation = fromLocation;
-                parameters.toLocation = toLocation;
-                parameters.latitudeTO = strLatitudeTo;
-                parameters.longitudeTO = strLongitudeTo;
-                parameters.latitudeFROM = strLatitudeFrom;
-                parameters.longitudeFROM = strLongitudeFrom;
-
-                [nc_AppDelegate sharedInstance].testRequestTime = [arrayDepartureTime objectAtIndex:st1];
-                
-                [store requestPlanFromOtpWithParameters:parameters];
-                [self someMethodToWaitForResult];
-                [self planTestWithComparingTime];
+            }
+            // Get The Service End Date And Array of day indicating 0 or 1.
+            NSString *strEndDate;
+            NSArray *dayArray;
+            for(int sid1 = 0;sid1 < [arrayServiceIds count];sid1++){
+                if([strSerViceID isEqualToString:[arrayServiceIds objectAtIndex:sid1]]){
+                    strEndDate = [arrayEndDate objectAtIndex:sid1];
+                    dayArray = [NSArray arrayWithObjects:[arraySunday objectAtIndex:sid1],[arrayMonday objectAtIndex:sid1],[arrayTuesday objectAtIndex:sid1],[arrayWednesday objectAtIndex:sid1],[arrayThursday objectAtIndex:sid1],[arrayFriday objectAtIndex:sid1],[arraySaturday objectAtIndex:sid1], nil];
+                    break;
+                }
+            }
+            NSDate *date = [NSDate date];
+            NSInteger dayOfWeek = dayOfWeekFromDate(date)-1;
+            NSDate* dateOnly = dateOnlyFromDate(date);
+            NSDateFormatter *dateFormatters = [[NSDateFormatter alloc] init];
+            [dateFormatters setDateFormat:@"YYYMMdd"];
+            // If service is not expire and service is enabled on that day then we will request TP For Plan.
+            NSString* strDateOnly = [dateFormatters stringFromDate:dateOnly];
+            if (strEndDate && [strEndDate compare:strDateOnly] == NSOrderedDescending) {
+                if([[dayArray objectAtIndex:dayOfWeek] isEqualToString:@"1"]){
+                    Location *fromLocation = [locations newEmptyLocation];
+                    fromLocation.formattedAddress = [arrayStopIds objectAtIndex:st1];
+                    fromLocation.lat = [NSNumber numberWithDouble:[strLatitudeTo doubleValue]];
+                    fromLocation.lng = [NSNumber numberWithDouble:[strLongitudeTo doubleValue]];
+                    
+                    Location *toLocation = [locations newEmptyLocation];
+                    if([arrayStopIds count] > st1+1){
+                        toLocation.formattedAddress = [arrayStopIds objectAtIndex:st1+1];
+                        toLocation.lat = [NSNumber numberWithDouble:[strLatitudeFrom doubleValue]];
+                        toLocation.lng = [NSNumber numberWithDouble:[strLongitudeFrom doubleValue]];
+                        
+                    }
+                    parameters.fromLocation = fromLocation;
+                    parameters.toLocation = toLocation;
+                    [nc_AppDelegate sharedInstance].expectedRequestDate = [arrayDepartureTime objectAtIndex:st1];
+                    
+                    [store requestPlanFromOtpWithParameters:parameters];
+                    [self someMethodToWaitForResult];
+                    [self planTestWithComparingTime];
+                }
             }
         }
     }

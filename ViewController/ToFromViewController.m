@@ -1126,6 +1126,10 @@ UIImage *imageDetailDisclosure;
                     } else {
                         currentLocation.lastRequestReverseGeoLocation = nil;
                     }
+                    // Part Of DE-236 Fxed
+                    [[NSUserDefaults standardUserDefaults] setObject:currentLocation.lastRequestReverseGeoLocation.formattedAddress forKey:LAST_REQUEST_REVERSE_GEO];
+                    [[NSUserDefaults standardUserDefaults] synchronize];
+
                 }
                 // Push the Route Options View Controller
                 if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
@@ -1512,6 +1516,13 @@ UIImage *imageDetailDisclosure;
 // US132 implementation
 -(void)doSwapLocation
 {
+     // Part Of DE-236 Fxed
+    if([[NSUserDefaults standardUserDefaults] objectForKey:LAST_REQUEST_REVERSE_GEO]){
+        NSArray* toLocations = [locations locationsWithFormattedAddress:[[NSUserDefaults standardUserDefaults] objectForKey:LAST_REQUEST_REVERSE_GEO]];
+        if([toLocations count] > 0){
+            currentLocation.lastRequestReverseGeoLocation = [toLocations objectAtIndex:0];
+        }
+    }
     
     if (fromLocation == currentLocation && [currentLocation lastRequestReverseGeoLocation] &&
         [currentLocation lastRequestReverseGeoLocation] != toLocation) {
