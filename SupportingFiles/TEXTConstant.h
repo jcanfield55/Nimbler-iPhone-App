@@ -86,4 +86,42 @@
 #define CALTRAIN_SEARCH_STRINGS_ARRAY [NSArray arrayWithObjects:@"bart station list",@"caltrain station list",@"current location",@" caltrain",@"caltrain ", nil]
 #define CALTRAIN_REPLACE_STRINGS_ARRAY [NSArray arrayWithObjects:@"",@"",@"",@"",@"", nil]
 
+// New AppSetting Constants
+#define ADVISORY_CHOICES  @"Advisory Choices"
+#define PUSH_NOTIFICATION @"Push Notification"
+#define TRANSIT_MODE      @"Transit mode"
+#define BIKE_PREFERENCES  @"Bike preferences"
+
+#define SFMUNI_ADVISORIES    @"SF Muni advisories"
+#define BART_ADVISORIES      @"BART advisories"
+#define ACTRANSIT_ADVISORIES @"A/C transit advisories"
+#define CALTRAIN_ADVISORIES  @"Caltrain advisories"
+
+
+#define FREQUENCY_OF_PUSH       @"Frequency of push notification"
+#define NOTIFICATION_SOUND      @"Notification sound"
+#define URGENT_NOTIFICATIONS    @"Urgent notifications"
+#define STANDARD_NOTIFICATIONS  @"Standard notifications"
+#define NOTIFICATION_TIMING     @"Notification timing"
+#define WEEKDAY_MORNING         @"Weekday Morning (5 - 10:00 am)"
+#define WEEKDAY_MIDDAY          @"Weekday Midday (10 - 3:00pm)"
+#define WEEKDAY_EVENING_PEAK    @"Weekday Evening peak (3 - 7:30pm)"
+#define WEEKDAY_NIGHT           @"Weekday Night (7:30 - 12:00)"
+#define WEEKENDS                @"Weekends"
+
+
+#define TRANSIT_ONLY     @"Transit only"
+#define BIKE_ONLY        @"Bike only"
+#define BIKE_AND_TRANSIT @"Bike + Transit"
+
+#define MAXIMUM_WALK_DISTANCE_LABEL @"Maximum Walk Distance"
+
+
+#define MAXIMUM_BIKE_DISTANCE   @"Maximum bike distance"
+#define PREFERENCE_FAST_VS_SAFE @"Preference fast vs safe"
+#define PREFERENCE_FAST_VS_FLAT @"Preference fast vs flat"
+
+
+
+
 #endif

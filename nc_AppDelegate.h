@@ -52,6 +52,7 @@
     // Used For Automated test.
     NSString *expectedRequestDate;
     BOOL isTestPlan;
+    NSMutableString *testLogMutableString;
 }
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
@@ -103,6 +104,7 @@
 @property (nonatomic,strong)  NSString *expectedRequestDate;
 @property (nonatomic) BOOL receivedReply;
 @property (nonatomic) BOOL receivedError;
+@property (nonatomic,strong) NSMutableString *testLogMutableString;
 
 - (NSURL *)applicationDocumentsDirectory;
 

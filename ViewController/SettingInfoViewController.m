@@ -10,6 +10,7 @@
 #import "nc_AppDelegate.h"
 #import "UserPreferance.h"
 #import "UtilityFunctions.h"
+#import "SettingViewCustomCell.h"
 
 #define SETTING_TITLE       @"App Settings"
 #define SETTING_ALERT_MSG   @"Updating your settings \n Please wait..."
@@ -30,6 +31,7 @@
 @synthesize lblSliderMaxWalkDistanceValue;
 @synthesize pushHour;
 @synthesize isPush;
+@synthesize tblSetting;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -54,6 +56,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.tblSetting.delegate = self;
+    self.tblSetting.dataSource = self;
     if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
         [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
     }
@@ -318,6 +322,225 @@
     @catch (NSException *exception) {
         logException(@"SettingInfoViewController->fetchUserSettingData", @"", exception);
     }
+}
+
+//------------------------------------------------------------------------
+
+#pragma mark
+#pragma mark UITableView delegate and datasource methods
+
+//-------------------------------------------------------------------------
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 5;
+}
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+    NSString *strHeaderTitle;
+    if(section == 0){
+        strHeaderTitle = ADVISORY_CHOICES;
+    }
+    else if(section == 1){
+        strHeaderTitle = PUSH_NOTIFICATION;
+    }
+    else if(section == 2){
+         strHeaderTitle = TRANSIT_MODE;
+    }
+    else if(section == 3){
+        strHeaderTitle = @"";
+    }
+    else if(section == 4){
+        strHeaderTitle = BIKE_PREFERENCES;
+    }
+    return strHeaderTitle;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    int rowCount;
+    if(section == 0){
+        rowCount = 4;
+    }
+    else if(section == 1){
+        rowCount = 4;
+    }
+    else if(section == 2){
+        rowCount = 3;
+    }
+    else if(section == 3){
+        rowCount = 1;
+    }
+    else if(section == 4){
+        rowCount = 3;
+    }
+    return rowCount;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 60;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    NSString *cellIdentifier = [NSString stringWithFormat:@"%d",indexPath.row];
+    SettingViewCustomCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if(!cell){
+        cell = [[SettingViewCustomCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+    }
+    if(indexPath.section == 0){
+        [cell.lblPushNotification setHidden:YES];
+        [cell.switchPushNotification setHidden:YES];
+        [cell.lblPushNotificationFrequency setHidden:YES];
+        [cell.sliderPushNotificationFrequency setHidden:YES];
+        [cell.lblNotificationSound setHidden:YES];
+        [cell.lblNotificationTiming setHidden:YES];
+        
+        [cell.lblMaximumWalkDistance setHidden:YES];
+        [cell.sliderMaximumWalkDistance setHidden:YES];
+        
+        [cell.lblMaximumBikeDistance setHidden:YES];
+        [cell.sliderMaximumBikeDistance setHidden:YES];
+        [cell.lblPreferenceFastVsSafe setHidden:YES];
+        [cell.switchPreferenceFastVsSafe setHidden:YES];
+        [cell.lblPreferenceFastVsFlat setHidden:YES];
+        [cell.switchPreferenceFastVsFlat setHidden:YES];
+        if(indexPath.row == 0){
+            [cell.lblSFMuniAdvisories setHidden:NO];
+            [cell.switchSFMuniAdvisories setHidden:NO];
+        }
+        else if(indexPath.row == 1){
+            [cell.lblBartAdvisories setHidden:NO];
+            [cell.switchBartAdvisories setHidden:NO];
+        }
+        else if(indexPath.row == 2){
+            [cell.lblACTransitAdvisories setHidden:NO];
+            [cell.switchACTransitAdvisories setHidden:NO];
+        }
+        else if(indexPath.row == 3){
+            [cell.lblCaltrainAdvisories setHidden:NO];
+            [cell.switchCaltrainAdvisories setHidden:NO];
+        }
+    }
+    else if(indexPath.section == 1){
+        [cell.lblSFMuniAdvisories setHidden:YES];
+        [cell.switchSFMuniAdvisories setHidden:YES];
+        [cell.lblBartAdvisories setHidden:YES];
+        [cell.switchBartAdvisories setHidden:YES];
+        [cell.lblACTransitAdvisories setHidden:YES];
+        [cell.switchACTransitAdvisories setHidden:YES];
+        [cell.lblCaltrainAdvisories setHidden:YES];
+        [cell.switchCaltrainAdvisories setHidden:YES];
+        
+        [cell.lblMaximumWalkDistance setHidden:YES];
+        [cell.sliderMaximumWalkDistance setHidden:YES];
+        
+        [cell.lblMaximumBikeDistance setHidden:YES];
+        [cell.sliderMaximumBikeDistance setHidden:YES];
+        [cell.lblPreferenceFastVsSafe setHidden:YES];
+        [cell.switchPreferenceFastVsSafe setHidden:YES];
+        [cell.lblPreferenceFastVsFlat setHidden:YES];
+        [cell.switchPreferenceFastVsFlat setHidden:YES];
+        
+        if(indexPath.row == 0){
+            [cell.lblPushNotification setHidden:NO];
+            [cell.switchPushNotification setHidden:NO];
+        }
+        else if(indexPath.row == 1){
+            [cell.lblPushNotificationFrequency setHidden:NO];
+            [cell.sliderPushNotificationFrequency setHidden:NO];
+        }
+        else if(indexPath.row == 2){
+           [cell.lblNotificationSound setHidden:NO];  
+        }
+        else if(indexPath.row == 3){
+            [cell.lblNotificationTiming setHidden:NO];
+        }
+    }
+    else if(indexPath.section == 2){
+        [cell.lblSFMuniAdvisories setHidden:YES];
+        [cell.switchSFMuniAdvisories setHidden:YES];
+        [cell.lblBartAdvisories setHidden:YES];
+        [cell.switchBartAdvisories setHidden:YES];
+        [cell.lblACTransitAdvisories setHidden:YES];
+        [cell.switchACTransitAdvisories setHidden:YES];
+        [cell.lblCaltrainAdvisories setHidden:YES];
+        [cell.switchCaltrainAdvisories setHidden:YES];
+        
+        [cell.lblPushNotification setHidden:YES];
+        [cell.switchPushNotification setHidden:YES];
+        [cell.lblPushNotificationFrequency setHidden:YES];
+        [cell.sliderPushNotificationFrequency setHidden:YES];
+        [cell.lblNotificationSound setHidden:YES];
+        [cell.lblNotificationTiming setHidden:YES];
+        
+        [cell.lblMaximumBikeDistance setHidden:YES];
+        [cell.sliderMaximumBikeDistance setHidden:YES];
+        [cell.lblPreferenceFastVsSafe setHidden:YES];
+        [cell.switchPreferenceFastVsSafe setHidden:YES];
+        [cell.lblPreferenceFastVsFlat setHidden:YES];
+        [cell.switchPreferenceFastVsFlat setHidden:YES];
+        
+        [cell.lblMaximumWalkDistance setHidden:YES];
+        [cell.sliderMaximumWalkDistance setHidden:YES];
+    }
+    else if(indexPath.section == 3){
+        [cell.lblSFMuniAdvisories setHidden:YES];
+        [cell.switchSFMuniAdvisories setHidden:YES];
+        [cell.lblBartAdvisories setHidden:YES];
+        [cell.switchBartAdvisories setHidden:YES];
+        [cell.lblACTransitAdvisories setHidden:YES];
+        [cell.switchACTransitAdvisories setHidden:YES];
+        [cell.lblCaltrainAdvisories setHidden:YES];
+        [cell.switchCaltrainAdvisories setHidden:YES];
+        
+        [cell.lblPushNotification setHidden:YES];
+        [cell.switchPushNotification setHidden:YES];
+        [cell.lblPushNotificationFrequency setHidden:YES];
+        [cell.sliderPushNotificationFrequency setHidden:YES];
+        [cell.lblNotificationSound setHidden:YES];
+        [cell.lblNotificationTiming setHidden:YES];
+        
+        [cell.lblMaximumBikeDistance setHidden:YES];
+        [cell.sliderMaximumBikeDistance setHidden:YES];
+        [cell.lblPreferenceFastVsSafe setHidden:YES];
+        [cell.switchPreferenceFastVsSafe setHidden:YES];
+        [cell.lblPreferenceFastVsFlat setHidden:YES];
+        [cell.switchPreferenceFastVsFlat setHidden:YES];
+        
+        [cell.lblMaximumWalkDistance setHidden:NO];
+        [cell.sliderMaximumWalkDistance setHidden:NO];
+    }
+    else if(indexPath.section == 4){
+        [cell.lblSFMuniAdvisories setHidden:YES];
+        [cell.switchSFMuniAdvisories setHidden:YES];
+        [cell.lblBartAdvisories setHidden:YES];
+        [cell.switchBartAdvisories setHidden:YES];
+        [cell.lblACTransitAdvisories setHidden:YES];
+        [cell.switchACTransitAdvisories setHidden:YES];
+        [cell.lblCaltrainAdvisories setHidden:YES];
+        [cell.switchCaltrainAdvisories setHidden:YES];
+        
+        [cell.lblPushNotification setHidden:YES];
+        [cell.switchPushNotification setHidden:YES];
+        [cell.lblPushNotificationFrequency setHidden:YES];
+        [cell.sliderPushNotificationFrequency setHidden:YES];
+        [cell.lblNotificationSound setHidden:YES];
+        [cell.lblNotificationTiming setHidden:YES];
+        
+        [cell.lblMaximumWalkDistance setHidden:YES];
+        [cell.sliderMaximumWalkDistance setHidden:YES];
+        
+        if(indexPath.row == 0){
+            [cell.lblMaximumBikeDistance setHidden:NO];
+            [cell.sliderMaximumBikeDistance setHidden:NO];
+        }
+        else if(indexPath.row == 1){
+            [cell.lblPreferenceFastVsSafe setHidden:NO];
+            [cell.switchPreferenceFastVsSafe setHidden:NO];
+        }
+        else if(indexPath.row == 2){
+            [cell.lblPreferenceFastVsFlat setHidden:NO];
+            [cell.switchPreferenceFastVsFlat setHidden:NO]; 
+        }
+    }
+    return cell;
 }
 
 @end

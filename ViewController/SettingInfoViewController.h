@@ -10,7 +10,7 @@
 #import <RestKit/RestKit.h>
 #import "Foundation/foundation.h"
 
-@interface SettingInfoViewController : UIViewController <RKRequestDelegate>{
+@interface SettingInfoViewController : UIViewController <RKRequestDelegate,UITableViewDataSource,UITableViewDelegate>{
     
     UIAlertView *alertView;
     IBOutlet UISlider *sliderMaxWalkDistance;
@@ -24,6 +24,7 @@
     UILabel *lblSliderMaxWalkDistanceValue;
     int pushHour;
     BOOL isPush;
+    IBOutlet UITableView *tblSetting;
 }
 
 @property (nonatomic, strong) IBOutlet UISwitch *switchPushEnable;
@@ -32,6 +33,7 @@
 @property (nonatomic, strong) IBOutlet UISlider *sliderPushNotification;
 @property (nonatomic, strong) IBOutlet UISwitch *switchEnableUrgentSound;
 @property (nonatomic, strong) IBOutlet UISwitch *switchEnableStandardSound;
+@property (nonatomic, strong) IBOutlet UITableView *tblSetting;
 @property (nonatomic)   int      enableUrgentSoundFlag;
 @property (nonatomic)   int      enableStandardSoundFlag;
 @property (nonatomic, strong) UILabel *lblSliderMaxWalkDistanceValue;

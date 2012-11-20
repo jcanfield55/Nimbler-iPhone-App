@@ -83,6 +83,7 @@ static nc_AppDelegate *appDelegate;
 @synthesize isTestPlan;
 @synthesize receivedReply;
 @synthesize receivedError;
+@synthesize testLogMutableString;
 
 // Feedback parameters
 @synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId;

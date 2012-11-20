@@ -1353,10 +1353,30 @@
                 }
             }
         }
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *logFile = [documentsDirectory stringByAppendingPathComponent:@"testlog.csv"];
+    if(isAnyTimeMatch){
+        [[nc_AppDelegate sharedInstance].testLogMutableString appendFormat:@"true\n"];
+    }
+    else{
+        [[nc_AppDelegate sharedInstance].testLogMutableString appendFormat:@"false\n"];
+    }
+    NSData *logData = [[nc_AppDelegate sharedInstance].testLogMutableString dataUsingEncoding:NSUTF8StringEncoding];
+    [logData writeToFile:logFile atomically:YES];
     STAssertTrue(isAnyTimeMatch, @"");
 }
 
 - (void)testGeneratePlans{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *logFile = [documentsDirectory stringByAppendingPathComponent:@"testlog.csv"];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if([fileManager fileExistsAtPath:logFile]){
+        [fileManager removeItemAtPath:logFile error:nil];
+    }
+    [nc_AppDelegate sharedInstance].testLogMutableString = [[NSMutableString alloc]init];
+    [[nc_AppDelegate sharedInstance].testLogMutableString appendFormat:@"FromLocation,ToLocation,Departure Time,Trip ID,Test Result\n"];
     [nc_AppDelegate sharedInstance].isTestPlan = YES;
     NSMutableArray *arrayTripIds = [[NSMutableArray alloc] init];
     NSMutableArray *arrayArrivalTime = [[NSMutableArray alloc] init];
@@ -1763,13 +1783,12 @@
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         formatter.dateFormat = @"HH:mm:ss";
         NSDate *dates = [formatter dateFromString:strDepartureTime];
-         NIMLOG_OBJECT1(@"strDepartureTime=%@",strDepartureTime);
-        NIMLOG_OBJECT1(@"dates=%@",dates);
-        NSDate *timesOnly = timeOnlyFromDate(dates);
+        NSDate *dateBeforeFiveSeconds = [dates dateByAddingTimeInterval:-300];
+        NSDate *timesOnly = timeOnlyFromDate(dateBeforeFiveSeconds);
         NSDate *datesOnly = dateOnlyFromDate(tripDate);
         NSDate *finalDate = addDateOnlyWithTimeOnly(datesOnly, timesOnly);
-        parameters.originalTripDate = [finalDate dateByAddingTimeInterval:-300];
-        parameters.thisRequestTripDate = [finalDate dateByAddingTimeInterval:-300];
+        parameters.originalTripDate = finalDate;
+        parameters.thisRequestTripDate = finalDate;
         parameters.departOrArrive = DEPART;
         parameters.maxWalkDistance = maxDistance;
         parameters.planDestination = PLAN_DESTINATION_TO_FROM_VC;
@@ -1832,12 +1851,13 @@
                         toLocation.formattedAddress = [arrayStopIds objectAtIndex:st1+1];
                         toLocation.lat = [NSNumber numberWithDouble:[strLatitudeFrom doubleValue]];
                         toLocation.lng = [NSNumber numberWithDouble:[strLongitudeFrom doubleValue]];
-                        
                     }
                     parameters.fromLocation = fromLocation;
                     parameters.toLocation = toLocation;
+                    NSString *strFinalDate = [dateFormatter stringFromDate:finalDate];
+                   strFinalDate = [strFinalDate stringByReplacingOccurrencesOfString:@"," withString:@""];
                     [nc_AppDelegate sharedInstance].expectedRequestDate = [arrayDepartureTime objectAtIndex:st1];
-                    
+                    [[nc_AppDelegate sharedInstance].testLogMutableString appendFormat:@"%@,%@,%@,%@,",fromLocation.formattedAddress,toLocation.formattedAddress,strFinalDate,strTripID];
                     [store requestPlanFromOtpWithParameters:parameters];
                     [self someMethodToWaitForResult];
                     [self planTestWithComparingTime];
