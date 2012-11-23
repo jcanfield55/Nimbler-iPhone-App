@@ -446,7 +446,7 @@ NSString *strStreet2 = @"street ";
                         }
                     }
                 }
-                if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:BART_BUNDLE_IDENTIFIER]){
+                else{
                     rawAddress = [rawAddress lowercaseString];
                     if ([rawAddress rangeOfString:strBART1 options:NSCaseInsensitiveSearch].location != NSNotFound || [rawAddress rangeOfString:strBART2 options:NSCaseInsensitiveSearch].location != NSNotFound ||  [rawAddress rangeOfString:strAirBart1 options:NSCaseInsensitiveSearch].location != NSNotFound || [rawAddress rangeOfString:strAirBart2 options:NSCaseInsensitiveSearch].location != NSNotFound) {
                         rawAddress = [locations rawAddressWithOutAgencyName:BART_SEARCH_STRINGS_ARRAY:BART_REPLACE_STRINGS_ARRAY :rawAddress];

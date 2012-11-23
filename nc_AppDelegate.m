@@ -109,16 +109,16 @@ FeedBackForm *fbView;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-
+    
     // Request To Get Application Type From BundleId
     [self getAppTypeFromBundleId];
-
+    
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     
     [[UIApplication sharedApplication]
      registerForRemoteNotificationTypes:
-     (UIRemoteNotificationTypeAlert | 
-      UIRemoteNotificationTypeBadge | 
+     (UIRemoteNotificationTypeAlert |
+      UIRemoteNotificationTypeBadge |
       UIRemoteNotificationTypeSound)];
     
     prefs = [NSUserDefaults standardUserDefaults];
@@ -138,20 +138,20 @@ FeedBackForm *fbView;
     RKLogConfigureByName("RestKit", CUSTOM_RK_LOG_LEVELS);
     RKLogConfigureByName("RestKit/Network/Cache", CUSTOM_RK_LOG_LEVELS);
     RKLogConfigureByName("RestKit/Network/Reachability", CUSTOM_RK_LOG_LEVELS);
-
+    
     
     RKObjectManager* rkGeoMgr = [RKObjectManager objectManagerWithBaseURL:GEO_RESPONSE_URL];
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
     
     RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];
-
+    
     
     // Other URLs:
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
     // NY City demo URL is http://demo.opentripplanner.org/opentripplanner-api-webapp/ws/
     
     // Add the CoreData managed object store
-
+    
     RKManagedObjectStore *rkMOS;
     @try {
         rkMOS = [RKManagedObjectStore objectStoreWithStoreFilename:COREDATA_DB_FILENAME];
@@ -164,7 +164,7 @@ FeedBackForm *fbView;
         // Get the NSManagedObjectContext from restkit
         __managedObjectContext = [rkMOS managedObjectContext];
         
-        // Create initial view controller 
+        // Create initial view controller
         toFromViewController = [[ToFromViewController alloc] initWithNibName:@"ToFromViewController" bundle:nil];
         [toFromViewController setRkGeoMgr:rkGeoMgr];    // Pass the geocoding RK object
         [toFromViewController setRkPlanMgr:rkPlanMgr];    // Pass the planning RK object
@@ -192,7 +192,7 @@ FeedBackForm *fbView;
             [locations preLoadIfNeededFromFile:CALTRAIN_PRELOAD_LOCATION_FILE latestVersionNumber:caltrainVersion testAddress:CALTRAIN_PRELOAD_TEST_ADDRESS];
             [locations preLoadIfNeededFromFile:BART_BACKGROUND_PRELOAD_LOCATION_FILE latestVersionNumber:bartVersion testAddress:BART_PRELOAD_TEST_ADDRESS];
         }
-        else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:BART_BUNDLE_IDENTIFIER]){
+        else {
             NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:CALTRAIN_PRELOAD_VERSION_NUMBER];
             NSDecimalNumber* bartVersion = [NSDecimalNumber decimalNumberWithString:BART_PRELOAD_VERSION_NUMBER];
             [locations preLoadIfNeededFromFile:CALTRAIN_BACKGROUND_PRELOAD_LOCATION_FILE latestVersionNumber:caltrainVersion testAddress:CALTRAIN_PRELOAD_TEST_ADDRESS];
@@ -200,7 +200,7 @@ FeedBackForm *fbView;
         }
     }@catch (NSException *exception) {
         logException(@"ncAppDelegate->didFinishLaunchingWithOptions #1", @"", exception);
-    } 
+    }
     
     // Set a CFUUID (unique identifier) for this device and this app, if doesn't exist already:
     
@@ -229,39 +229,110 @@ FeedBackForm *fbView;
     // Create an instance of a UINavigationController and put toFromViewController as the first view
     @try {
         /*
-          These is for navigation controller
-        
-         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:toFromViewController]; 
+         These is for navigation controller
+         
+         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:toFromViewController];
          self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
          [[self window] setRootViewController:navController];
          
-        */
-         
+         */
+        
         // This is for TabBar controller
         //[self.window makeKeyAndVisible];
         self.tabBarController = [[RXCustomTabBar alloc] init];
         if([[UIScreen mainScreen] bounds].size.height == 568){
-            settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController_568h" bundle:nil];
+            if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+                settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController_568h" bundle:nil];
+            }
+            else{
+                settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController_568h" bundle:nil];
+            }
             fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm_568h" bundle:nil];
         }
         else{
-            settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController" bundle:nil];
+            if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+                settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController" bundle:nil];
+            }
+            else{
+                settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF" bundle:nil];
+            }
             fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
         }
         twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
         
         UINavigationController *toFromController = [[UINavigationController alloc] initWithRootViewController:toFromViewController];
-         UINavigationController *tweetController = [[UINavigationController alloc] initWithRootViewController:twitterView];
-         UINavigationController *settingController = [[UINavigationController alloc] initWithRootViewController:settingView];
-         UINavigationController *fbController = [[UINavigationController alloc] initWithRootViewController:fbView];
+        UINavigationController *tweetController = [[UINavigationController alloc] initWithRootViewController:twitterView];
+        UINavigationController *settingController = [[UINavigationController alloc] initWithRootViewController:settingView];
+        UINavigationController *fbController = [[UINavigationController alloc] initWithRootViewController:fbView];
         self.tabBarController.viewControllers = [NSArray arrayWithObjects:toFromController,tweetController,settingController,fbController, nil];
         
-//        [self.tabBarController.tabBar setSelectedImageTintColor:[UIColor redColor]];
-//        [self.tabBarController.tabBar setBackgroundImage:[UIImage imageNamed:@"img_tabbar.png"]];
+        //        [self.tabBarController.tabBar setSelectedImageTintColor:[UIColor redColor]];
+        //        [self.tabBarController.tabBar setBackgroundImage:[UIImage imageNamed:@"img_tabbar.png"]];
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         [[self window] setRootViewController:self.tabBarController];
         [self.window makeKeyAndVisible];
         
+        if(![[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+            if(![[NSUserDefaults standardUserDefaults] objectForKey:MAX_WALK_DISTANCE]){
+                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%d",MAX_WALK_DISTANCE_DEFAULT_VALUE] forKey:MAX_WALK_DISTANCE];
+            }
+            if(![[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV]){
+                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:ENABLE_SFMUNI_ADV];
+            }
+            if(![[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV]){
+                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:ENABLE_BART_ADV];
+            }
+            if(![[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV]){
+                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:ENABLE_ACTRANSIT_ADV];
+            }
+            if(![[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV]){
+                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:ENABLE_CALTRAIN_ADV];
+            }
+            if(![[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_URGENTNOTIFICATION_SOUND]){
+                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:ENABLE_URGENTNOTIFICATION_SOUND];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+            if(![[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_STANDARDNOTIFICATION_SOUND]){
+                [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:ENABLE_STANDARDNOTIFICATION_SOUND];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+            if(![[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MORNING]){
+                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:NOTIF_TIMING_MORNING];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+            if(![[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MIDDAY]){
+                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:NOTIF_TIMING_MIDDAY];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+            if(![[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_EVENING]){
+                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:NOTIF_TIMING_EVENING];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+            if(![[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_NIGHT]){
+                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:NOTIF_TIMING_NIGHT];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+            if(![[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_WEEKEND]){
+                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:NOTIF_TIMING_WEEKEND];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+            if(![[NSUserDefaults standardUserDefaults] objectForKey:TRANSIT_MODE_SELECTED]){
+                [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:TRANSIT_MODE_SELECTED];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+            if(![[NSUserDefaults standardUserDefaults] objectForKey:MAX_BIKE_DISTANCE]){
+                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%d",MAX_BIKE_DISTANCE_DEFAULT_VALUE] forKey:MAX_BIKE_DISTANCE];
+            }
+            if(![[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_QUICK] && ![[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_BIKE_FRIENDLY] && ![[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_FLAT]){
+                float denominator = 0.5*BIKE_PREFERENCE_DEFAULT_VALUE + 0.5* BIKE_PREFERENCE_DEFAULT_VALUE + 1;
+                float bikeTriangleFlat = BIKE_PREFERENCE_DEFAULT_VALUE / denominator;
+                float bikeTriangleBikeFriendly = BIKE_PREFERENCE_DEFAULT_VALUE / denominator;
+                float bikeTriangleQuick = (2 - BIKE_PREFERENCE_DEFAULT_VALUE- BIKE_PREFERENCE_DEFAULT_VALUE)/(2 * denominator);
+                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%f",bikeTriangleQuick] forKey:BIKE_TRIANGLE_QUICK];
+                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%f",bikeTriangleBikeFriendly] forKey:BIKE_TRIANGLE_BIKE_FRIENDLY];
+                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%f",bikeTriangleFlat] forKey:BIKE_TRIANGLE_FLAT];
+            }
+        }
     }
     @catch (NSException *exception) {
         logException(@"ncAppDelegate->didFinishLaunchingWithOptions #2", @"", exception);
@@ -270,20 +341,20 @@ FeedBackForm *fbView;
 }
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
 {
-//    if (viewController == toFromViewController) {
-//        
-//    } else if(viewController == twitterView){
-//        
-//    } else if(viewController == fbView){
-//        
-//    } else if(viewController == settingView){
-//        
-//    }
+    //    if (viewController == toFromViewController) {
+    //
+    //    } else if(viewController == twitterView){
+    //
+    //    } else if(viewController == fbView){
+    //
+    //    } else if(viewController == settingView){
+    //
+    //    }
 }
 
 // Location Manager update callback
 - (void)locationManager:(CLLocationManager *)manager
-    didUpdateToLocation:(CLLocation *)newLocation 
+    didUpdateToLocation:(CLLocation *)newLocation
            fromLocation:(CLLocation *)oldLocation
 {
     @try {
@@ -339,7 +410,7 @@ FeedBackForm *fbView;
 }
 
 -(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
-{    
+{
     if ([[error domain] isEqualToString: kCLErrorDomain] && [error code] == kCLErrorDenied) {
         // The user denied your app access to location information.
         [locations setIsLocationServiceEnable:FALSE];
@@ -364,43 +435,78 @@ FeedBackForm *fbView;
     // Added To Fix DE-206
     if(isSettingView){
         isSettingSavedSuccessfully = NO;
-        if (!settingView.switchPushEnable.on) {
-            // set -1 for stop getting push notification
-            settingView.pushHour = PUSH_NOTIFY_OFF;
-            settingView.isPush = NO;
-        } else {
-            settingView.isPush = YES;
-        }
-        if(settingView.switchEnableUrgentSound.on){
-            settingView.enableUrgentSoundFlag = 1;
+        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+            if (!settingView.switchPushEnable.on) {
+                // set -1 for stop getting push notification
+                settingView.pushHour = PUSH_NOTIFY_OFF;
+                settingView.isPush = NO;
+            } else {
+                settingView.isPush = YES;
+            }
+            if(settingView.switchEnableUrgentSound.on){
+                settingView.enableUrgentSoundFlag = 1;
+            }
+            else{
+                settingView.enableUrgentSoundFlag = 2;
+            }
+            if(settingView.switchEnableStandardSound.on){
+                settingView.enableStandardSoundFlag = 1;
+            }
+            else{
+                settingView.enableStandardSoundFlag = 2;
+            }
+            
+            [[NSUserDefaults standardUserDefaults] setInteger:settingView.enableUrgentSoundFlag forKey:ENABLE_URGENTNOTIFICATION_SOUND];
+            [[NSUserDefaults standardUserDefaults] setInteger:settingView.enableStandardSoundFlag forKey:ENABLE_STANDARDNOTIFICATION_SOUND];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            float ss = settingView.sliderPushNotification.value;
+            int alertFrequencyIntValue = ss;
+            
+            UserPreferance *userPrefs = [UserPreferance userPreferance]; // get singleton
+            userPrefs.pushEnable = [NSNumber numberWithBool:settingView.isPush];
+            userPrefs.triggerAtHour = [NSNumber numberWithInt:alertFrequencyIntValue];
+            userPrefs.walkDistance = [NSNumber numberWithFloat:settingView.sliderMaxWalkDistance.value];
+            [userPrefs saveUpdates];
         }
         else{
-            settingView.enableUrgentSoundFlag = 2;
+            if (!settingView.switchPushNotification.on) {
+                // set -1 for stop getting push notification
+                settingView.pushHour = PUSH_NOTIFY_OFF;
+                settingView.isPush = NO;
+            } else {
+                settingView.isPush = YES;
+            }
+            if(settingView.settingDetailViewController.switchUrgentNotification.on){
+                settingView.enableUrgentSoundFlag = 1;
+            }
+            else{
+                settingView.enableUrgentSoundFlag = 2;
+            }
+            if(settingView.settingDetailViewController.switchStandardNotification.on){
+                settingView.enableStandardSoundFlag = 1;
+            }
+            else{
+                settingView.enableStandardSoundFlag = 2;
+            }
+            
+            [[NSUserDefaults standardUserDefaults] setInteger:settingView.enableUrgentSoundFlag forKey:ENABLE_URGENTNOTIFICATION_SOUND];
+            [[NSUserDefaults standardUserDefaults] setInteger:settingView.enableStandardSoundFlag forKey:ENABLE_STANDARDNOTIFICATION_SOUND];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            float ss = settingView.sliderPushNotificationFrequency.value;
+            int alertFrequencyIntValue = ss;
+            
+            UserPreferance *userPrefs = [UserPreferance userPreferance]; // get singleton
+            userPrefs.pushEnable = [NSNumber numberWithBool:settingView.isPush];
+            userPrefs.triggerAtHour = [NSNumber numberWithInt:alertFrequencyIntValue];
+            userPrefs.walkDistance = [NSNumber numberWithFloat:settingView.sliderMaximumWalkDistance.value];
+            [userPrefs saveUpdates];
         }
-        if(settingView.switchEnableStandardSound.on){
-            settingView.enableStandardSoundFlag = 1;
-        }
-        else{
-            settingView.enableStandardSoundFlag = 2;
-        }
-        
-        [[NSUserDefaults standardUserDefaults] setInteger:settingView.enableUrgentSoundFlag forKey:ENABLE_URGENTNOTIFICATION_SOUND];
-        [[NSUserDefaults standardUserDefaults] setInteger:settingView.enableStandardSoundFlag forKey:ENABLE_STANDARDNOTIFICATION_SOUND];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        float ss = settingView.sliderPushNotification.value;
-        int alertFrequencyIntValue = ss;
-        
-        UserPreferance *userPrefs = [UserPreferance userPreferance]; // get singleton
-        userPrefs.pushEnable = [NSNumber numberWithBool:settingView.isPush];
-        userPrefs.triggerAtHour = [NSNumber numberWithInt:alertFrequencyIntValue];
-        userPrefs.walkDistance = [NSNumber numberWithFloat:settingView.sliderMaxWalkDistance.value];
-        [userPrefs saveUpdates];   
     }
     /*
      Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
      If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
      */
-        
+    
     saveContext([self managedObjectContext]);
     [locationManager stopUpdatingLocation];
     
@@ -408,7 +514,7 @@ FeedBackForm *fbView;
     if(self.isToFromView){
         self.toLoc = toFromViewController.toLocation;
         self.fromLoc = toFromViewController.fromLocation;
-        [toFromViewController setEditMode:NO_EDIT]; 
+        [toFromViewController setEditMode:NO_EDIT];
         toFromViewController.toTableVC.txtField.text = NULL_STRING;
         toFromViewController.fromTableVC.txtField.text = NULL_STRING;
         [toFromViewController.toTableVC toFromTyping:toFromViewController.toTableVC.txtField forEvent:nil];
@@ -419,12 +525,12 @@ FeedBackForm *fbView;
     // US 177 Implementation
     RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
     [[NSUserDefaults standardUserDefaults] setInteger:rxCustomTabBar.selectedIndex forKey:LAST_SELECTED_TAB_INDEX];
-    // Fixed DE-231 
+    // Fixed DE-231
     if(self.toLoc.formattedAddress){
-      [[NSUserDefaults standardUserDefaults]setObject:self.toLoc.formattedAddress forKey:LAST_TO_LOCATION];  
+        [[NSUserDefaults standardUserDefaults]setObject:self.toLoc.formattedAddress forKey:LAST_TO_LOCATION];
     }
     if(self.fromLoc.formattedAddress){
-      [[NSUserDefaults standardUserDefaults]setObject:self.fromLoc.formattedAddress forKey:LAST_FROM_LOCATION];  
+        [[NSUserDefaults standardUserDefaults]setObject:self.fromLoc.formattedAddress forKey:LAST_FROM_LOCATION];
     }
     [[NSUserDefaults standardUserDefaults] synchronize];
     
@@ -434,7 +540,7 @@ FeedBackForm *fbView;
     
     
     // Flush tweeter timer
-     [timerTweeterGetData invalidate];
+    [timerTweeterGetData invalidate];
     timerTweeterGetData = nil;
     
     if(toFromViewController.continueGetTime != nil){
@@ -484,9 +590,9 @@ FeedBackForm *fbView;
     // Check the date and if it is not today's date we will make request.
     // Previously comparing string with date so changed the logic to compare date.
     NSDate *todayDate = dateOnlyFromDate([NSDate date]);
-//    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-//    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
-//    NSString *strTodayDate = [dateFormatter stringFromDate:todayDate];
+    //    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    //    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
+    //    NSString *strTodayDate = [dateFormatter stringFromDate:todayDate];
     NSDate *currentDate = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_DATE];
     if(!currentDate){
         [[nc_AppDelegate sharedInstance] performSelector:@selector(updateTime) withObject:nil afterDelay:0.5];
@@ -505,7 +611,7 @@ FeedBackForm *fbView;
         [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
     }
     if(self.isTwitterView){
-       [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
         [twitterView getAdvisoryData];
     }
     else{
@@ -513,22 +619,22 @@ FeedBackForm *fbView;
     }
     [toFromViewController updateTripDate];
     [locationManager startUpdatingLocation];
-
+    
     if (timerTweeterGetData == nil) {
-       timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];     
-    } 
+        timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
+    }
     if(self.isToFromView){
         [toFromViewController.toTableVC markAndUpdateSelectedLocation:self.toLoc];
         [toFromViewController.fromTableVC markAndUpdateSelectedLocation:self.fromLoc];
     }
     if(isFromBackground){
-            toFromViewController.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
-
+        toFromViewController.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
+        
     }
     if(!isSettingSavedSuccessfully){
         [self saveSetting];
     }
-//    sleep(2);
+    //    sleep(2);
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -538,7 +644,7 @@ FeedBackForm *fbView;
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
-//    [self showFeedBackAlertIfNeeded];
+    //    [self showFeedBackAlertIfNeeded];
     if(![self isNetworkConnectionLive]){
         logEvent(FLURRY_ALERT_NO_NETWORK, FLURRY_ALERT_LOCATION, @"applicationDidBecomeActive", nil, nil, nil, nil, nil, nil);
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:NO_NETWORK_ALERT delegate:self cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil];
@@ -546,7 +652,7 @@ FeedBackForm *fbView;
     }
     
     if (mkDirectionsRequestInProgress) {
-        mkDirectionsRequestInProgress = FALSE; // mark this false for next time, but do not set to remembered settings this time 
+        mkDirectionsRequestInProgress = FALSE; // mark this false for next time, but do not set to remembered settings this time
     }
     else {  // only restore remembered settings if not a mkDirectionsRequestInProgress (DE235 fix)
         // US 177 Implementation
@@ -769,7 +875,7 @@ FeedBackForm *fbView;
             /*
              Replace this implementation with code to handle the error appropriately.
              
-             abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+             abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
              
              Typical reasons for an error here include:
              * The persistent store is not accessible;
@@ -783,7 +889,7 @@ FeedBackForm *fbView;
              * Simply deleting the existing store:
              [[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil]
              
-             * Performing automatic lightweight migration by passing the following dictionary as the options parameter: 
+             * Performing automatic lightweight migration by passing the following dictionary as the options parameter:
              [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
              
              Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
@@ -791,7 +897,7 @@ FeedBackForm *fbView;
              */
             logError(@"nc_AppDelegate->persistentStoreCoordinator", [NSString stringWithFormat:@"Error %@", error]);
             abort();
-        }    
+        }
         
         return __persistentStoreCoordinator;
     }
@@ -823,8 +929,8 @@ FeedBackForm *fbView;
         logException(@"ncAppDelegate->suppertedRegion", @"", exception);    }
 }
 
-- (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response 
-{  
+- (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response
+{
     NSString *strRequestURL = request.resourcePath;
     isFromBackground = NO;
     @try {
@@ -866,7 +972,7 @@ FeedBackForm *fbView;
                     NSDictionary  *dictTemp = [rkParser objectFromString:[response bodyAsString] error:nil];
                     NIMLOG_EVENT1(@"Setting Request RKResponse: %@",[response bodyAsString]);
                     NSNumber *respCode = [(NSDictionary*)dictTemp objectForKey:RESPONSE_CODE];
-                    if ([respCode intValue]== RESPONSE_SUCCESSFULL) { 
+                    if ([respCode intValue]== RESPONSE_SUCCESSFULL) {
                         self.isSettingSavedSuccessfully = YES;
                     }
                     else{
@@ -887,7 +993,7 @@ FeedBackForm *fbView;
                     NSDictionary  *tweeterCountParser = [rkParser objectFromString:[response bodyAsString] error:nil];
                     NSNumber *respCode = [(NSDictionary*)tweeterCountParser objectForKey:@"errCode"];
                     //                NSString *allNew = [(NSDictionary*)tweeterCountParser objectForKey:@"allNew"];
-                    if ([respCode intValue]== RESPONSE_SUCCESSFULL) {  
+                    if ([respCode intValue]== RESPONSE_SUCCESSFULL) {
                         if(!self.isTwitterView){
                             NIMLOG_TWITTER1(@"Twitter count: %@",[(NSDictionary*)tweeterCountParser objectForKey:TWEET_COUNT]);
                             NSString *tweeterCount = [(NSDictionary*)tweeterCountParser objectForKey:TWEET_COUNT];
@@ -897,7 +1003,7 @@ FeedBackForm *fbView;
                                 [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:[NSString stringWithFormat:@"%d",badge]];
                             } else {
                                 [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
-                            } 
+                            }
                         }
                         else{
                             [twitterView getAdvisoryData];
@@ -931,9 +1037,9 @@ FeedBackForm *fbView;
                             [region setLowerLeftLongitude:[regionParser objectForKey:key] ];
                         } else if ([key isEqualToString:@"lowerLeftLatitude"]){
                             [region setLowerLeftLatitude:[regionParser objectForKey:key] ];
-                        } 
+                        }
                     }
-                    if (maxLatitutedLoaded) { // 
+                    if (maxLatitutedLoaded) { //
                         [toFromViewController setSupportedRegion:region];
                     }
                     [[nc_AppDelegate sharedInstance] updateTime];
@@ -949,12 +1055,12 @@ FeedBackForm *fbView;
 
 #pragma mark Nimbler push notification
 
-- (void)applicationDidFinishLaunching:(UIApplication *)application {    
-    NIMLOG_PERF1(@"Registering for push notifications...");    
-    [[UIApplication sharedApplication] 
+- (void)applicationDidFinishLaunching:(UIApplication *)application {
+    NIMLOG_PERF1(@"Registering for push notifications...");
+    [[UIApplication sharedApplication]
      registerForRemoteNotificationTypes:
-     (UIRemoteNotificationTypeAlert | 
-      UIRemoteNotificationTypeBadge | 
+     (UIRemoteNotificationTypeAlert |
+      UIRemoteNotificationTypeBadge |
       UIRemoteNotificationTypeSound)];
 }
 
@@ -963,13 +1069,13 @@ FeedBackForm *fbView;
         NSString *token = [[[[deviceToken description] stringByReplacingOccurrencesOfString: @"<" withString: NULL_STRING] stringByReplacingOccurrencesOfString: @">" withString: NULL_STRING] stringByReplacingOccurrencesOfString: @" " withString: @""];
         NIMLOG_OBJECT1(@"deviceTokenString: %@",token);
         [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
-        [prefs setObject:token forKey:DEVICE_TOKEN];  
+        [prefs setObject:token forKey:DEVICE_TOKEN];
         [prefs synchronize];
         [self performSelector:@selector(upadateDefaultUserValue) withObject:nil afterDelay:2.0];
         logEvent(FLURRY_PUSH_AVAILABLE,
                  FLURRY_NOTIFICATION_TOKEN, token,
                  nil, nil, nil, nil, nil, nil);
-
+        
     }
     @catch (NSException *exception) {
         logException(@"ncAppDelegate->didRegisterForRemoteNotificationsWithDeviceToken", @"", exception);
@@ -977,10 +1083,10 @@ FeedBackForm *fbView;
 }
 
 
-- (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err { 
+- (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
     @try {
         NSString *str = [NSString stringWithFormat: @"Error: %@", err];
-        NIMLOG_ERR1(@"didFail To Register For RemoteNotifications With Error: %@",str);     
+        NIMLOG_ERR1(@"didFail To Register For RemoteNotifications With Error: %@",str);
         prefs = [NSUserDefaults standardUserDefaults];
         NSString  *token = @"26d906c5c273446d5f40d2c173ddd3f6869b2666b1c7afd5173d69b6629def70";
         [prefs setObject:token forKey:DEVICE_TOKEN];
@@ -994,26 +1100,26 @@ FeedBackForm *fbView;
 }
 
 
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo 
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
     isRemoteNotification = YES;
     [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
     @try {
         for (id key in userInfo) {
             NIMLOG_EVENT1(@"didReceiveRemoteNotification key: %@, value: %@", key, [userInfo objectForKey:key]);
-        }        
+        }
         NSString *isUrgent = [userInfo valueForKey:@"isUrgent"];
         NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
         NSString *sound = [[userInfo valueForKey:@"aps"] valueForKey:@"sound"];
         NIMLOG_EVENT1(@"Remote Notification Sound: %@",sound);
         NSString *badge = [[userInfo valueForKey:@"aps"] valueForKey:@"badge"];
-        prefs = [NSUserDefaults standardUserDefaults];  
+        prefs = [NSUserDefaults standardUserDefaults];
         [prefs setObject:badge forKey:TWEET_COUNT];
         
         if ([isUrgent isEqualToString:@"true"]) {
             if([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive){
                 if([[NSUserDefaults standardUserDefaults] integerForKey:ENABLE_URGENTNOTIFICATION_SOUND] == 1 || [[NSUserDefaults standardUserDefaults] integerForKey:ENABLE_URGENTNOTIFICATION_SOUND] == 0){
-                    AudioServicesPlaySystemSound(1015);  
+                    AudioServicesPlaySystemSound(1015);
                 }
             }
             UIAlertView *dataAlert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain"
@@ -1023,8 +1129,8 @@ FeedBackForm *fbView;
                                                       otherButtonTitles:nil,nil];
             
             [dataAlert show];
-        } 
-        else { 
+        }
+        else {
             // Redirect to Twitter Page View
             if(self.isFromBackground){
                 RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
@@ -1032,7 +1138,7 @@ FeedBackForm *fbView;
                 [twitterView getAdvisoryData];
             }
             else{
-                [self getTwiiterLiveData]; 
+                [self getTwiiterLiveData];
             }
         }
     }
@@ -1045,7 +1151,7 @@ FeedBackForm *fbView;
 {
     NSString *btnName = [UIAlertView buttonTitleAtIndex:buttonIndex];
     if ([btnName isEqualToString:BTN_OK]) {
-       [self.tabBarController setSelectedIndex:1];
+        [self.tabBarController setSelectedIndex:1];
     } else if([btnName isEqualToString:BTN_EXIT]){
         exit(0);
     }
@@ -1097,12 +1203,12 @@ FeedBackForm *fbView;
     @try {
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
-//        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
+        //        NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
         NSString * appType;
         if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
             appType = @"1";
         }
-        else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:BART_BUNDLE_IDENTIFIER]){
+        else{
             appType = @"2";
         }
         if([prefs objectForKey:APPLICATION_TYPE]){
@@ -1133,31 +1239,40 @@ FeedBackForm *fbView;
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     [RKClient setSharedClient:client];
     NSString * appType;
+    NSDictionary *params;
     if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
         appType = @"1";
+        if([prefs objectForKey:APPLICATION_TYPE]){
+            appType = [prefs objectForKey:APPLICATION_TYPE];
+        }
+        params = [NSDictionary dictionaryWithKeysAndObjects:
+                  DEVICE_ID, [userDefault objectForKey:DEVICE_CFUUID],
+                  ALERT_COUNT,[NSNumber numberWithInt:pushHour],
+                  DEVICE_TOKEN, token,
+                  MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:[userDefault floatForKey:PREFS_MAX_WALK_DISTANCE]],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_URGENTNOTIFICATION_SOUND]],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_STANDARDNOTIFICATION_SOUND]],APPLICATION_TYPE,appType,
+                  nil];
     }
-    else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:BART_BUNDLE_IDENTIFIER]){
+    else{
         appType = @"2";
+        if([prefs objectForKey:APPLICATION_TYPE]){
+            appType = [prefs objectForKey:APPLICATION_TYPE];
+        }
+        params = [NSDictionary dictionaryWithKeysAndObjects:
+                  DEVICE_ID, [userDefault objectForKey:DEVICE_CFUUID],
+                  ALERT_COUNT,[NSNumber numberWithInt:pushHour],
+                  DEVICE_TOKEN, token,
+                  MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:[userDefault floatForKey:PREFS_MAX_WALK_DISTANCE]],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_URGENTNOTIFICATION_SOUND]],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_STANDARDNOTIFICATION_SOUND]],ENABLE_SFMUNI_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV],ENABLE_BART_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV],ENABLE_ACTRANSIT_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV],ENABLE_CALTRAIN_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV],NOTIF_TIMING_MORNING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MORNING],NOTIF_TIMING_MIDDAY,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MIDDAY],NOTIF_TIMING_EVENING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_EVENING],NOTIF_TIMING_NIGHT,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_NIGHT],NOTIF_TIMING_WEEKEND,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_WEEKEND],TRANSIT_MODE_SELECTED,[[NSUserDefaults standardUserDefaults] objectForKey:TRANSIT_MODE_SELECTED],MAX_BIKE_DISTANCE,[[NSUserDefaults standardUserDefaults] objectForKey:MAX_BIKE_DISTANCE],BIKE_TRIANGLE_FLAT,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_FLAT],BIKE_TRIANGLE_BIKE_FRIENDLY,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_BIKE_FRIENDLY],BIKE_TRIANGLE_QUICK,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_QUICK],APPLICATION_TYPE,appType,
+                  nil];
     }
-    if([prefs objectForKey:APPLICATION_TYPE]){
-        appType = [prefs objectForKey:APPLICATION_TYPE];
-    }
-    NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
-                            DEVICE_ID, [userDefault objectForKey:DEVICE_CFUUID],
-                            ALERT_COUNT,[NSNumber numberWithInt:pushHour],
-                            DEVICE_TOKEN, token,
-                            MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:[userDefault floatForKey:PREFS_MAX_WALK_DISTANCE]],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_URGENTNOTIFICATION_SOUND]],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_STANDARDNOTIFICATION_SOUND]],APPLICATION_TYPE,appType,
-                            nil];
     NSString *request = [UPDATE_SETTING_REQ appendQueryParams:params];
     strUpdateSettingURL = request;
     NIMLOG_EVENT1(@"Save setting Req = %@", request);
     isSettingRequest = YES;
     [nc_AppDelegate sharedInstance].isSettingSavedSuccessfully = NO;
     [[RKClient sharedClient]  get:request delegate:self];
-
 }
 
-#pragma mark update userSettings from server 
+#pragma mark update userSettings from server
 -(void)upadateDefaultUserValue{
     @try {
         UserPreferance* userPrefs = [UserPreferance userPreferance]; // get singleton
@@ -1165,25 +1280,35 @@ FeedBackForm *fbView;
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
         NSString * appType;
+        NSDictionary *params;
         if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
             appType = @"1";
+            if([prefs objectForKey:APPLICATION_TYPE]){
+                appType = [prefs objectForKey:APPLICATION_TYPE];
+            }
+            params = [NSDictionary dictionaryWithKeysAndObjects:
+                      DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
+                      @"alertCount", [userPrefs triggerAtHour],
+                      DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],
+                      @"maxDistance", [userPrefs walkDistance],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt:URGENT_NOTIFICATION_DEFAULT_VALUE],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt:STANDARD_NOTIFICATION_DEFAULT_VALUE],APPLICATION_TYPE,appType,
+                      nil];
         }
-        else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:BART_BUNDLE_IDENTIFIER]){
+        else{
             appType = @"2";
+            if([prefs objectForKey:APPLICATION_TYPE]){
+                appType = [prefs objectForKey:APPLICATION_TYPE];
+            }
+            params = [NSDictionary dictionaryWithKeysAndObjects:
+                      DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
+                      @"alertCount", [userPrefs triggerAtHour],
+                      DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],
+                      @"maxDistance", [userPrefs walkDistance],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt:URGENT_NOTIFICATION_DEFAULT_VALUE],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt:STANDARD_NOTIFICATION_DEFAULT_VALUE],ENABLE_SFMUNI_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV],ENABLE_BART_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV],ENABLE_ACTRANSIT_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV],ENABLE_CALTRAIN_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV],NOTIF_TIMING_MORNING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MORNING],NOTIF_TIMING_MIDDAY,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MIDDAY],NOTIF_TIMING_EVENING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_EVENING],NOTIF_TIMING_NIGHT,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_NIGHT],NOTIF_TIMING_WEEKEND,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_WEEKEND],TRANSIT_MODE_SELECTED,[[NSUserDefaults standardUserDefaults] objectForKey:TRANSIT_MODE_SELECTED],MAX_BIKE_DISTANCE,[[NSUserDefaults standardUserDefaults] objectForKey:MAX_BIKE_DISTANCE],BIKE_TRIANGLE_FLAT,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_FLAT],BIKE_TRIANGLE_BIKE_FRIENDLY,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_BIKE_FRIENDLY],BIKE_TRIANGLE_QUICK,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_QUICK],APPLICATION_TYPE,appType,
+                      nil];
         }
-        if([prefs objectForKey:APPLICATION_TYPE]){
-            appType = [prefs objectForKey:APPLICATION_TYPE];
-        }
-        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects: 
-                                DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
-                                @"alertCount", [userPrefs triggerAtHour],
-                                DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],
-                                @"maxDistance", [userPrefs walkDistance],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt:URGENT_NOTIFICATION_DEFAULT_VALUE],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt:STANDARD_NOTIFICATION_DEFAULT_VALUE],APPLICATION_TYPE,appType,
-                                nil];
         NIMLOG_EVENT1(@"params=%@",params);
         NSString *request = [UPDATE_SETTING_REQ appendQueryParams:params];
         strUpdateSettingURL = request;
-        [[RKClient sharedClient]  get:request delegate:self]; 
+        [[RKClient sharedClient]  get:request delegate:self];
         
     }
     @catch (NSException *exception) {
@@ -1199,10 +1324,10 @@ FeedBackForm *fbView;
     twitterCount = [[CustomBadge alloc] init];
     twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-         [twitterCount setFrame:CGRectMake(130,511, twitterCount.frame.size.width, twitterCount.frame.size.height)];
+        [twitterCount setFrame:CGRectMake(130,511, twitterCount.frame.size.width, twitterCount.frame.size.height)];
     }
     else{
-         [twitterCount setFrame:CGRectMake(130,430, twitterCount.frame.size.width, twitterCount.frame.size.height)];
+        [twitterCount setFrame:CGRectMake(130,430, twitterCount.frame.size.width, twitterCount.frame.size.height)];
     }
     if (tweetConut == 0) {
         [twitterCount setHidden:YES];
@@ -1221,10 +1346,10 @@ FeedBackForm *fbView;
 -(BOOL)isNetworkConnectionLive
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNetworkChange:) name:kReachabilityChangedNotification object:nil];
-      
+    
     Reachability *reachability = [Reachability reachabilityForInternetConnection];
-      [reachability startNotifier];
-
+    [reachability startNotifier];
+    
     NetworkStatus remoteHostStatus = [reachability currentReachabilityStatus];
     
     if(remoteHostStatus == NotReachable) {
@@ -1238,7 +1363,7 @@ FeedBackForm *fbView;
 // ActoinSheet Delegate Methods
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
-    NSString* buttonResponse; 
+    NSString* buttonResponse;
     if(buttonIndex == 0){
         buttonResponse = @"App Store feedback";
         NSURL *url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL];

@@ -228,7 +228,7 @@ NSUserDefaults *prefs;
             if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
                 appType = @"1";
             }
-            else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:BART_BUNDLE_IDENTIFIER]){
+            else{
                 appType = @"2";
             }
             if([prefs objectForKey:APPLICATION_TYPE]){
@@ -372,7 +372,7 @@ NSUserDefaults *prefs;
             if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
                 appType = @"1";
             }
-            else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:BART_BUNDLE_IDENTIFIER]){
+            else{
                 appType = @"2";
             }
             if([prefs objectForKey:APPLICATION_TYPE]){

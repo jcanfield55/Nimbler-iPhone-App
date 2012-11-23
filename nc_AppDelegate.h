@@ -24,7 +24,7 @@
     UITabBarController *_tabBarController;
     BOOL receivedReply;
     BOOL receivedError;
-    NSNumber *FBSource; 
+    NSNumber *FBSource;
     NSString *FBDate;
     NSString *FBToAdd;
     NSString *FBSFromAdd;
@@ -71,7 +71,7 @@
 @property (strong, nonatomic)  UITabBarController *tabBarController;
 
 // property for Feedback
-@property (strong, nonatomic) NSNumber *FBSource; 
+@property (strong, nonatomic) NSNumber *FBSource;
 @property (strong, nonatomic) NSString *FBDate;
 @property (strong, nonatomic) NSString *FBToAdd;
 @property (strong, nonatomic) NSString *FBSFromAdd;
@@ -111,7 +111,7 @@
 -(void)suppertedRegion;
 -(void)getTwiiterLiveData;
 -(void)upadateDefaultUserValue;
-+(nc_AppDelegate *)sharedInstance; 
++(nc_AppDelegate *)sharedInstance;
 + (NSString *)getUUID;
 -(void)updateBadge:(int)count;
 -(BOOL)isNetworkConnectionLive;

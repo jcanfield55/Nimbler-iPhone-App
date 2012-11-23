@@ -187,6 +187,9 @@
         if(parameters.timeTO){
             [params setObject:parameters.timeTO forKey:TIME_TO];
         }
+        if([nc_AppDelegate sharedInstance].isTestPlan){
+            [params setObject:@"false" forKey:SAVE_PLAN];
+        }
         // Build the parameters into a resource string
         parameters.serverCallsSoFar = parameters.serverCallsSoFar + 1;
         // TODO handle changes to maxWalkDistance with plan caching

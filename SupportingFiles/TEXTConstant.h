@@ -100,9 +100,9 @@
 
 #define FREQUENCY_OF_PUSH       @"Frequency of push notification"
 #define NOTIFICATION_SOUND      @"Notification sound"
-#define URGENT_NOTIFICATIONS    @"Urgent notifications"
-#define STANDARD_NOTIFICATIONS  @"Standard notifications"
-#define NOTIFICATION_TIMING     @"Notification timing"
+#define URGENT_NOTIFICATIONS    @"Urgent Notifications"
+#define STANDARD_NOTIFICATIONS  @"Standard Notifications"
+#define NOTIFICATION_TIMING     @"Notification Timing"
 #define WEEKDAY_MORNING         @"Weekday Morning (5 - 10:00 am)"
 #define WEEKDAY_MIDDAY          @"Weekday Midday (10 - 3:00pm)"
 #define WEEKDAY_EVENING_PEAK    @"Weekday Evening peak (3 - 7:30pm)"
@@ -114,14 +114,99 @@
 #define BIKE_ONLY        @"Bike only"
 #define BIKE_AND_TRANSIT @"Bike + Transit"
 
-#define MAXIMUM_WALK_DISTANCE_LABEL @"Maximum Walk Distance"
+#define MAXIMUM_WALK_DISTANCE_LABEL @"Maximum Walk Distance(miles)"
 
 
-#define MAXIMUM_BIKE_DISTANCE   @"Maximum bike distance"
+#define MAXIMUM_BIKE_DISTANCE   @"Maximum bike distance(miles)"
 #define PREFERENCE_FAST_VS_SAFE @"Preference fast vs safe"
 #define PREFERENCE_FAST_VS_FLAT @"Preference fast vs flat"
 
+#define ENABLE_SFMUNI_ADV   @"enableSfMuniAdv"
+#define ENABLE_BART_ADV     @"enableBartAdv"
+#define ENABLE_ACTRANSIT_ADV @"enableAcTransitAdv"
+#define ENABLE_CALTRAIN_ADV @"enableCaltrainAdv"
 
+#define NOTIF_TIMING_MORNING @"notifTimingMorning"
+#define NOTIF_TIMING_MIDDAY  @"notifTimingMidday"
+#define NOTIF_TIMING_EVENING @"notifTimingEvening"
+#define NOTIF_TIMING_NIGHT   @"notifTimingNight"
+#define NOTIF_TIMING_WEEKEND @"notifTimingWeekend"
 
+#define TRANSIT_MODE_SELECTED        @"transitMode"
+
+#define BIKE_TRIANGLE_FLAT          @"bikeTriangleFlat"
+#define BIKE_TRIANGLE_BIKE_FRIENDLY @"bikeTriangleBikeFriendly"
+#define BIKE_TRIANGLE_QUICK         @"bikeTriangleQuick"
+#define MAX_BIKE_DISTANCE           @"maxBikeDist"
+
+#define QUICK_WITH_HILLS      @"Quick with hills"
+#define GO_AROUNG_HILLS       @"Go around hills"
+#define QUICK_WITH_ANY_STREET @"Quick, any street"
+#define BIKE_FRIENDLY_STREET  @"Bike friendly street"
+
+#define LABEL_FREQUENTLY      @"Frequently"
+#define LABEL_RARELY          @"Rarely"
+
+#define PUSH_FREQUENCY_DEFAULT_VALUE          5
+#define PUSH_FREQUENCY_MIN_VALUE              1
+#define PUSH_FREQUENCY_MAX_VALUE              10
+#define MAX_WALK_DISTANCE_DEFAULT_VALUE       1
+#define MAX_WALK_DISTANCE_MIN_VALUE           0.25
+#define MAX_WALK_DISTANCE_MAX_VALUE           2.5
+#define BIKE_PREFERENCE_MIN_VALUE             0
+#define BIKE_PREFERENCE_MAX_VALUE             1
+#define BIKE_PREFERENCE_DEFAULT_VALUE         0.5
+#define MAX_BIKE_DISTANCE_DEFAULT_VALUE       5
+#define MAX_BIKE_DISTANCE_MIN_VALUE           1
+#define MAX_BIKE_DISTANCE_MAX_VALUE           20
+
+#define DETAIL_SETTING_MAIN_LABEL_XPOS        10
+#define DETAIL_SETTING_MAIN_LABEL_YPOS        5
+#define DETAIL_SETTING_MAIN_LABEL_WIDTH       250
+#define DETAIL_SETTING_MAIN_LABEL_HEIGHT      20
+
+#define SLIDERS_XOPS                          60
+#define SLIDERS_YPOS                          42
+#define SLIDERS_YPOS1                         50
+#define SLIDERS_WIDTH                         197
+#define SLIDERS_HEIGHT                        20
+
+#define BIKE_DISTANCE_LABEL_XPOS              50
+#define BIKE_DISTANCE_LABEL_XPOS1             260
+#define BIKE_DISTANCE_LABEL_YPOS              41
+#define BIKE_DISTANCE_LABEL_WIDTH             50
+#define BIKE_DISTANCE_LABEL_HEIGHT            20
+
+#define BIKE_PREFERENCE_LABEL_XPOS                  10
+#define BIKE_PREFERENCE_LABEL_XPOS1                 180
+#define BIKE_PREFERENCE_LABEL_YPOS                  29
+#define BIKE_PREFERENCE_LABEL_WIDTH                 150
+#define BIKE_PREFERENCE_LABEL_HEIGHT                20
+
+#define LABEL_FREQUENTLY_XPOS   3
+#define LABEL_FREQUENTLY_YPOS   38
+#define LABEL_FREQUENTLY_WIDTH  70
+#define LABEL_FREQUENTLY_HEIGHT 20
+
+#define LABEL_RARELY_XPOS       260
+#define LABEL_RARELY_YPOS       39
+#define LABEL_RARELY_WIDTH      50
+#define LABEL_RARELY_HEIGHT     20
+
+#define SLIDER_PUSH_FREQUENCY_XPOS    68
+#define SLIDER_PUSH_FREQUENCY_YPOS    42
+#define SLIDER_PUSH_FREQUENCY_WIDTH   190
+#define SLIDER_PUSH_FREQUENCY_HEIGHT  20
+
+#define SETTING_MAIN_LABEL_XPOS       10
+#define SETTING_MAIN_LABEL_YPOS       5
+#define SETTING_MAIN_LABEL_WIDTH      250
+#define SETTING_MAIN_LABEL_HEIGHT     20
+
+#define SETTING_SUB_LABEL_XPOS        33
+#define SETTING_SUB_LABEL_XPOS1       260
+#define SETTING_SUB_LABEL_YPOS        41
+#define SETTING_SUB_LABEL_WIDTH       50
+#define SETTING_SUB_LABEL_HEIGHT      20
 
 #endif

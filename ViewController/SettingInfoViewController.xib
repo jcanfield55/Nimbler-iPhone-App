@@ -606,16 +606,13 @@
 						<int key="objectID">1</int>
 						<reference key="object" ref="191373211"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="951371930"/>
 							<reference ref="513983336"/>
 							<reference ref="961530759"/>
 							<reference ref="662682107"/>
 							<reference ref="603112736"/>
 							<reference ref="760655495"/>
-							<reference ref="158847297"/>
 							<reference ref="72220494"/>
 							<reference ref="341371084"/>
-							<reference ref="117763848"/>
 							<reference ref="579873817"/>
 							<reference ref="447957617"/>
 							<reference ref="252769797"/>
@@ -629,6 +626,9 @@
 							<reference ref="252189717"/>
 							<reference ref="955096752"/>
 							<reference ref="353454585"/>
+							<reference ref="951371930"/>
+							<reference ref="117763848"/>
+							<reference ref="158847297"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>

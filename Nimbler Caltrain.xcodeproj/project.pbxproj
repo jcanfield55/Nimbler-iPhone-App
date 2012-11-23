@@ -197,7 +197,6 @@
 		52E4C0A115CC705000B55A65 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C0A015CC705000B55A65 /* Default.png */; };
 		52E4C0A315CC705D00B55A65 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C0A215CC705D00B55A65 /* Default@2x.png */; };
 		8D1A64EA165B82C100176FF7 /* SettingViewController_SF.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D1A64E9165B82C100176FF7 /* SettingViewController_SF.xib */; };
-		8D1A64ED165B892300176FF7 /* SettingViewCustomCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D1A64EC165B892300176FF7 /* SettingViewCustomCell.m */; };
 		8D45BD1E162BDE6A00E5CB3D /* Icon_ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D45BD1D162BDE6A00E5CB3D /* Icon_ipad@2x.png */; };
 		8D4FC8E6162D2E1A004144DE /* bart-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D4FC8E4162D2E1A004144DE /* bart-station.json */; };
 		8D4FC8E7162D2E1A004144DE /* caltrain-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D4FC8E5162D2E1A004144DE /* caltrain-station.json */; };
@@ -214,6 +213,10 @@
 		8DBECD5216146DBE007B71F1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */; };
 		8DC019F91627F4BE004200E5 /* nc_AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */; };
 		8DF35D631627F58500B99F4A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF35D621627F58400B99F4A /* main.m */; };
+		8DFFB36C165DFBBB00A39BC4 /* SettingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */; };
+		8DFFB36D165DFBBB00A39BC4 /* SettingDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */; };
+		8DFFB3B2165E593400A39BC4 /* img_Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB3B0165E593300A39BC4 /* img_Settings.png */; };
+		8DFFB3B3165E593500A39BC4 /* img_Settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB3B1165E593400A39BC4 /* img_Settings@2x.png */; };
 		CC35E729155965E7003995D8 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 522C0E6A15588E7A0072ADD6 /* libz.dylib */; };
 		CCA4C7E515D92CC7009BE7A1 /* aps_development.cer in Resources */ = {isa = PBXBuildFile; fileRef = CCA4C7E415D92CC7009BE7A1 /* aps_development.cer */; };
 		CCDCC0791576287900D4B4D3 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCDCC0781576287900D4B4D3 /* CoreLocation.framework */; };
@@ -1131,8 +1134,6 @@
 		52E4C0A015CC705000B55A65 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		52E4C0A215CC705D00B55A65 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		8D1A64E9165B82C100176FF7 /* SettingViewController_SF.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController_SF.xib; sourceTree = "<group>"; };
-		8D1A64EB165B892300176FF7 /* SettingViewCustomCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingViewCustomCell.h; sourceTree = "<group>"; };
-		8D1A64EC165B892300176FF7 /* SettingViewCustomCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingViewCustomCell.m; sourceTree = "<group>"; };
 		8D42C2F8163AC05C00880B33 /* Nimbler Caltrain-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Nimbler Caltrain-Info.plist"; sourceTree = SOURCE_ROOT; };
 		8D42C2F9163AC05C00880B33 /* Nimbler Caltrain-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Nimbler Caltrain-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		8D45BD1D162BDE6A00E5CB3D /* Icon_ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon_ipad@2x.png"; sourceTree = "<group>"; };
@@ -1157,6 +1158,11 @@
 		8DC019F71627F4BE004200E5 /* nc_AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nc_AppDelegate.h; sourceTree = SOURCE_ROOT; };
 		8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = nc_AppDelegate.m; sourceTree = SOURCE_ROOT; };
 		8DF35D621627F58400B99F4A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		8DFFB369165DFBBB00A39BC4 /* SettingDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingDetailViewController.h; sourceTree = "<group>"; };
+		8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingDetailViewController.m; sourceTree = "<group>"; };
+		8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingDetailViewController.xib; sourceTree = "<group>"; };
+		8DFFB3B0165E593300A39BC4 /* img_Settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_Settings.png; sourceTree = "<group>"; };
+		8DFFB3B1165E593400A39BC4 /* img_Settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_Settings@2x.png"; sourceTree = "<group>"; };
 		CC6F22E71563AD360066DFA9 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		CC9370D715BFB97200A09A5A /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
 		CC9370D815BFB97200A09A5A /* libFlurry.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry.a; sourceTree = "<group>"; };
@@ -1234,6 +1240,9 @@
 				520FB11E162603090083F143 /* twitterViewController.h */,
 				520FB11F162603090083F143 /* twitterViewController.m */,
 				520FB120162603090083F143 /* twitterViewController.xib */,
+				8DFFB369165DFBBB00A39BC4 /* SettingDetailViewController.h */,
+				8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */,
+				8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */,
 			);
 			path = ViewController;
 			sourceTree = SOURCE_ROOT;
@@ -1261,8 +1270,6 @@
 				520FB144162603430083F143 /* UIDevice-Hardware.m */,
 				520FB145162603430083F143 /* UtilityFunctions.h */,
 				520FB146162603430083F143 /* UtilityFunctions.m */,
-				8D1A64EB165B892300176FF7 /* SettingViewCustomCell.h */,
-				8D1A64EC165B892300176FF7 /* SettingViewCustomCell.m */,
 			);
 			path = Utility;
 			sourceTree = SOURCE_ROOT;
@@ -1329,6 +1336,8 @@
 		520FB1A8162603AF0083F143 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8DFFB3B0165E593300A39BC4 /* img_Settings.png */,
+				8DFFB3B1165E593400A39BC4 /* img_Settings@2x.png */,
 				520FB1A9162603AF0083F143 /* caltrain.jpg */,
 				520FB1AA162603AF0083F143 /* feedback.png */,
 				520FB1AB162603AF0083F143 /* img_ recording@2x.png */,
@@ -3273,6 +3282,9 @@
 				8D99B636164E2DF200C0A5AC /* stops.txt in Resources */,
 				8D99B637164E2DF200C0A5AC /* trips.txt in Resources */,
 				8D1A64EA165B82C100176FF7 /* SettingViewController_SF.xib in Resources */,
+				8DFFB36D165DFBBB00A39BC4 /* SettingDetailViewController.xib in Resources */,
+				8DFFB3B2165E593400A39BC4 /* img_Settings.png in Resources */,
+				8DFFB3B3165E593500A39BC4 /* img_Settings@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3355,7 +3367,7 @@
 				8DC019F91627F4BE004200E5 /* nc_AppDelegate.m in Sources */,
 				8DF35D631627F58500B99F4A /* main.m in Sources */,
 				8D9EA263162D78FD002BB5FF /* Network_Commuting.xcdatamodeld in Sources */,
-				8D1A64ED165B892300176FF7 /* SettingViewCustomCell.m in Sources */,
+				8DFFB36C165DFBBB00A39BC4 /* SettingDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
