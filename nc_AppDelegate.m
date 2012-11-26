@@ -245,7 +245,7 @@ FeedBackForm *fbView;
                 settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController_568h" bundle:nil];
             }
             else{
-                settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController_568h" bundle:nil];
+                settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF_568h" bundle:nil];
             }
             fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm_568h" bundle:nil];
         }
@@ -1309,6 +1309,10 @@ FeedBackForm *fbView;
         NSString *request = [UPDATE_SETTING_REQ appendQueryParams:params];
         strUpdateSettingURL = request;
         [[RKClient sharedClient]  get:request delegate:self];
+        
+        if(![[NSUserDefaults standardUserDefaults] objectForKey:PREFS_IS_PUSH_ENABLE]){
+            [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:PREFS_IS_PUSH_ENABLE];
+        }
         
     }
     @catch (NSException *exception) {

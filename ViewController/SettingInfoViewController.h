@@ -11,7 +11,7 @@
 #import "Foundation/foundation.h"
 #import "SettingDetailViewController.h"
 
-@interface SettingInfoViewController : UIViewController <RKRequestDelegate,UITableViewDataSource,UITableViewDelegate>{
+@interface SettingInfoViewController : UIViewController <RKRequestDelegate,UITableViewDataSource,UITableViewDelegate,SettingDetailViewControllerDelegate>{
     
     UIAlertView *alertView;
     IBOutlet UISlider *sliderMaxWalkDistance;

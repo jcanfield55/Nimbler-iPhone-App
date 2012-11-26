@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol SettingDetailViewControllerDelegate <NSObject>
+- (void) updateSetting;
+@end
 @interface SettingDetailViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>{
     UITableView *tblDetailSetting;
     int nSettingRow;
@@ -29,6 +32,7 @@
     UILabel *lblQuickWithAnyStreet;
     UILabel *lblBikeFriendlyStreet;
     BOOL isSettingDetail;
+    id<SettingDetailViewControllerDelegate> settingDetailDelegate;
 }
 @property (nonatomic, strong) IBOutlet UITableView *tblDetailSetting;
 @property (nonatomic) int nSettingRow;
@@ -48,6 +52,7 @@
 @property (nonatomic, strong) UILabel *lblQuickWithAnyStreet;
 @property (nonatomic, strong) UILabel *lblBikeFriendlyStreet;
 @property (nonatomic) BOOL isSettingDetail;
+@property (nonatomic, strong) id<SettingDetailViewControllerDelegate> settingDetailDelegate;
 
 - (void)popOutToSettings;
 -(IBAction)maxBikeDistanceValueChanged:(UISlider *)sender;

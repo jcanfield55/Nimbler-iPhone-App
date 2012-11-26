@@ -212,6 +212,8 @@
 		8DA39BE115E38B5E0029D54B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */; };
 		8DBECD5216146DBE007B71F1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */; };
 		8DC019F91627F4BE004200E5 /* nc_AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */; };
+		8DEE785D166338F100E4863C /* SettingViewController_SF_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */; };
+		8DEE785F166339D600E4863C /* SettingDetailViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */; };
 		8DF35D631627F58500B99F4A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF35D621627F58400B99F4A /* main.m */; };
 		8DFFB36C165DFBBB00A39BC4 /* SettingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */; };
 		8DFFB36D165DFBBB00A39BC4 /* SettingDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */; };
@@ -1157,6 +1159,8 @@
 		8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		8DC019F71627F4BE004200E5 /* nc_AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nc_AppDelegate.h; sourceTree = SOURCE_ROOT; };
 		8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = nc_AppDelegate.m; sourceTree = SOURCE_ROOT; };
+		8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController_SF_568h.xib; sourceTree = "<group>"; };
+		8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingDetailViewController_568h.xib; sourceTree = "<group>"; };
 		8DF35D621627F58400B99F4A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		8DFFB369165DFBBB00A39BC4 /* SettingDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingDetailViewController.h; sourceTree = "<group>"; };
 		8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingDetailViewController.m; sourceTree = "<group>"; };
@@ -1243,6 +1247,8 @@
 				8DFFB369165DFBBB00A39BC4 /* SettingDetailViewController.h */,
 				8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */,
 				8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */,
+				8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */,
+				8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */,
 			);
 			path = ViewController;
 			sourceTree = SOURCE_ROOT;
@@ -3285,6 +3291,8 @@
 				8DFFB36D165DFBBB00A39BC4 /* SettingDetailViewController.xib in Resources */,
 				8DFFB3B2165E593400A39BC4 /* img_Settings.png in Resources */,
 				8DFFB3B3165E593500A39BC4 /* img_Settings@2x.png in Resources */,
+				8DEE785D166338F100E4863C /* SettingViewController_SF_568h.xib in Resources */,
+				8DEE785F166339D600E4863C /* SettingDetailViewController_568h.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

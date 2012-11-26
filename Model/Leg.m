@@ -202,13 +202,51 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     NSMutableString *titleText=[NSMutableString stringWithString:@""];
     if ([[self mode] isEqualToString:@"WALK"]) {
         if (legPosition == FIRST_LEG) {    // US124 implementation
-            [titleText appendFormat:@"%@ Walk to %@", 
-             superShortTimeStringForDate([[self itinerary] startTime]), 
-             [[self to] name]];
+            // Part Of DE-229 & US-169 Implementation
+            if([self.arrivalFlag intValue] == DELAYED) {
+                NSDate* realTimeArrivalTime = [[self startTime]
+                                               dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
+                [titleText appendFormat:@"%@ Walk to %@",
+                 superShortTimeStringForDate(realTimeArrivalTime),
+                 [[self to] name]];
+                NIMLOG_EVENT1(@"Updated time: %@", titleText);
+            }
+            else if ([self.arrivalFlag intValue] == EARLY || [self.arrivalFlag intValue] == EARLIER) {
+                NSDate* realTimeArrivalTime = [[self startTime]
+                                               dateByAddingTimeInterval:[timeDiffInMins floatValue]*(-60.0)];
+                [titleText appendFormat:@"%@ Walk to %@",
+                 superShortTimeStringForDate(realTimeArrivalTime),
+                 [[self to] name]];
+                NIMLOG_EVENT1(@"Updated time: %@", titleText);
+            }
+            else {
+                [titleText appendFormat:@"%@ Walk to %@",
+                 superShortTimeStringForDate([[self itinerary] startTime]),
+                 [[self to] name]];
+            }
+            
         } else if (legPosition == LAST_LEG) {   // US124 implementation
-            [titleText appendFormat:@"%@ Arrive at %@",
-             superShortTimeStringForDate([[self itinerary] endTime]),
-             [[self itinerary] toAddressString]];
+            if([self.arrivalFlag intValue] == DELAYED) {
+                NSDate* realTimeArrivalTime = [[self endTime]
+                                               dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
+                [titleText appendFormat:@"%@ Arrive at %@",
+                 superShortTimeStringForDate(realTimeArrivalTime),
+                 [[self itinerary] toAddressString]];
+                NIMLOG_EVENT1(@"Updated time: %@", titleText);
+            }
+            else if ([self.arrivalFlag intValue] == EARLY || [self.arrivalFlag intValue] == EARLIER) {
+                NSDate* realTimeArrivalTime = [[self endTime]
+                                               dateByAddingTimeInterval:[timeDiffInMins floatValue]*(-60.0)];
+                [titleText appendFormat:@"%@ Arrive at %@",
+                 superShortTimeStringForDate(realTimeArrivalTime),
+                 [[self itinerary] toAddressString]];
+                NIMLOG_EVENT1(@"Updated time: %@", titleText);
+            }
+            else {
+                [titleText appendFormat:@"%@ Arrive at %@",
+                 superShortTimeStringForDate([[self itinerary] endTime]),
+                 [[self itinerary] toAddressString]];
+            }
         }
         else {
             [titleText appendFormat:@"Walk to %@", [[self to] name]];
@@ -306,9 +344,32 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         }
     }
     else {
-        subTitle = [NSString stringWithFormat:@"%@  Arrive %@",
-                    superShortTimeStringForDate([self endTime]),
-                    [[self to] name]];            
+        // Part Of DE-229 & US-169 Implementation
+        if([self.arrivalFlag intValue] == DELAYED) {
+            NSDate* realTimeArrivalTime = [[self endTime]
+                                           dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
+            NSLog(@"originalTime=%@",superShortTimeStringForDate([self endTime]));
+            NSLog(@"timeDiffInMins=%f",[timeDiffInMins floatValue]);
+            subTitle = [NSString stringWithFormat:@"%@  Arrive %@",
+                        superShortTimeStringForDate(realTimeArrivalTime),
+                        [[self to] name]];
+            NIMLOG_EVENT1(@"Updated time: %@", subTitle);
+        }
+        else if ([self.arrivalFlag intValue] == EARLY || [self.arrivalFlag intValue] == EARLIER) {
+            NSDate* realTimeArrivalTime = [[self endTime]
+                                           dateByAddingTimeInterval:[timeDiffInMins floatValue]*(-60.0)];
+            NSLog(@"timeDiffInMins=%f",[timeDiffInMins floatValue]);
+            subTitle = [NSString stringWithFormat:@"%@  Arrive %@",
+                        superShortTimeStringForDate(realTimeArrivalTime),
+                        [[self to] name]];
+            NIMLOG_EVENT1(@"Updated time: %@", subTitle);
+        }
+        else {
+            subTitle = [NSString stringWithFormat:@"%@  Arrive %@",
+                        superShortTimeStringForDate([self endTime]),
+                        [[self to] name]];
+        }
+                    
     }
     return subTitle;
     }

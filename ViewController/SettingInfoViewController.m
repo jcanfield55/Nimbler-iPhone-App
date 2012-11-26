@@ -53,7 +53,10 @@ UIImage *imageDetailDisclosure;
         imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
         
         switchPushNotification = [[UISwitch alloc] init];
-        [switchPushNotification setOnTintColor:[UIColor lightGrayColor]];
+        if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
+            [switchPushNotification setOnTintColor:[UIColor lightGrayColor]];
+        }
+        
         lblFrequently=[[UILabel alloc] initWithFrame:CGRectMake(LABEL_FREQUENTLY_XPOS,LABEL_FREQUENTLY_YPOS, LABEL_FREQUENTLY_WIDTH, LABEL_FREQUENTLY_HEIGHT)];
         [lblFrequently setTextColor:[UIColor GRAY_FONT_COLOR]];
         lblFrequently.backgroundColor =[UIColor clearColor];
@@ -69,8 +72,10 @@ UIImage *imageDetailDisclosure;
         [lblRarely setFont:[UIFont MEDIUM_OBLIQUE_FONT]];
         
         sliderPushNotificationFrequency = [[UISlider alloc] initWithFrame:CGRectMake(SLIDER_PUSH_FREQUENCY_XPOS,SLIDER_PUSH_FREQUENCY_YPOS,SLIDER_PUSH_FREQUENCY_WIDTH,SLIDER_PUSH_FREQUENCY_HEIGHT)];
-        [sliderPushNotificationFrequency
-         setMinimumTrackTintColor:[UIColor lightGrayColor]];
+        if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
+            [sliderPushNotificationFrequency
+             setMinimumTrackTintColor:[UIColor lightGrayColor]];
+        }
         [sliderPushNotificationFrequency setMinimumValue:PUSH_FREQUENCY_MIN_VALUE];
         [sliderPushNotificationFrequency setMaximumValue:PUSH_FREQUENCY_MAX_VALUE];
         if([[NSUserDefaults standardUserDefaults] objectForKey:PREFS_PUSH_NOTIFICATION_THRESHOLD]){
@@ -112,8 +117,10 @@ UIImage *imageDetailDisclosure;
         [lblMaxWalkDistance setFont:[UIFont MEDIUM_OBLIQUE_FONT]];
         
         sliderMaximumWalkDistance = [[UISlider alloc] initWithFrame:CGRectMake(SLIDERS_XOPS,SLIDERS_YPOS, SLIDERS_WIDTH,SLIDERS_HEIGHT)];
-        [sliderMaximumWalkDistance
-         setMinimumTrackTintColor:[UIColor lightGrayColor]];
+        if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
+            [sliderMaximumWalkDistance
+             setMinimumTrackTintColor:[UIColor lightGrayColor]];
+        }
         [sliderMaximumWalkDistance setMinimumValue:MAX_WALK_DISTANCE_MIN_VALUE];
         [sliderMaximumWalkDistance setMaximumValue:MAX_WALK_DISTANCE_MAX_VALUE];
         if([[NSUserDefaults standardUserDefaults] objectForKey:PREFS_MAX_WALK_DISTANCE]){
@@ -606,10 +613,33 @@ UIImage *imageDetailDisclosure;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     if(indexPath.section != 1 && indexPath.section != 2 && indexPath.section != 6){
-        settingDetailViewController = [[SettingDetailViewController alloc] initWithNibName:@"SettingDetailViewController" bundle:nil];
+        if([[UIScreen mainScreen] bounds].size.height == 568){
+            settingDetailViewController = [[SettingDetailViewController alloc] initWithNibName:@"SettingDetailViewController_568h" bundle:nil];
+        }
+        else{
+            settingDetailViewController = [[SettingDetailViewController alloc] initWithNibName:@"SettingDetailViewController" bundle:nil];
+        }
         settingDetailViewController.nSettingRow = indexPath.section;
         settingDetailViewController.isSettingDetail = YES;
-        [self.navigationController pushViewController:settingDetailViewController animated:YES];
+        settingDetailViewController.settingDetailDelegate = self;
+        if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
+            [self.navigationController pushViewController:settingDetailViewController animated:YES];
+        }
+        else{
+            CATransition *animation = [CATransition animation];
+            [animation setDuration:0.3];
+            [animation setType:kCATransitionPush];
+            [animation setSubtype:kCATransitionFromRight];
+            [animation setRemovedOnCompletion:YES];
+            [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+            [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+            [[self navigationController] pushViewController:settingDetailViewController animated:NO];
+        }
+        
     }
+}
+
+- (void) updateSetting{
+    [self saveSetting];
 }
 @end

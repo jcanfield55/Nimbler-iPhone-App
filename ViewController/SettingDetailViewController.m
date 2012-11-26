@@ -29,22 +29,25 @@
 @synthesize lblQuickWithAnyStreet;
 @synthesize lblBikeFriendlyStreet;
 @synthesize isSettingDetail;
+@synthesize settingDetailDelegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         switchUrgentNotification = [[UISwitch alloc] init];
-        [switchUrgentNotification setOnTintColor:[UIColor lightGrayColor]];
+        if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
+            [switchUrgentNotification setOnTintColor:[UIColor lightGrayColor]];
+        }
         if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_URGENTNOTIFICATION_SOUND] intValue] == 1){
             [switchUrgentNotification setOn:YES];
         }
         else{
             [switchUrgentNotification setOn:NO];
         }
-        
-        
         switchStandardNotification = [[UISwitch alloc] init];
-        [switchStandardNotification setOnTintColor:[UIColor lightGrayColor]];
+        if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
+            [switchStandardNotification setOnTintColor:[UIColor lightGrayColor]];
+        }
         if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_STANDARDNOTIFICATION_SOUND] intValue] == 1){
             [switchStandardNotification setOn:YES];
         }
@@ -61,8 +64,10 @@
         [lblMaximumBikeDistance setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
         
         sliderMaximumBikeDistance = [[UISlider alloc] initWithFrame:CGRectMake(SLIDERS_XOPS,SLIDERS_YPOS,SLIDERS_WIDTH,SLIDERS_HEIGHT)];
-        [sliderMaximumBikeDistance
-         setMinimumTrackTintColor:[UIColor lightGrayColor]];
+        if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
+            [sliderMaximumBikeDistance
+             setMinimumTrackTintColor:[UIColor lightGrayColor]];
+        }
         [sliderMaximumBikeDistance setMinimumValue:MAX_BIKE_DISTANCE_MIN_VALUE];
         [sliderMaximumBikeDistance setMaximumValue:MAX_BIKE_DISTANCE_MAX_VALUE];
         if([[NSUserDefaults standardUserDefaults] objectForKey:MAX_BIKE_DISTANCE]){
@@ -82,8 +87,10 @@
         [lblPreferenceFastVsSafe setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
         
         sliderPreferenceFastVsSafe = [[UISlider alloc] initWithFrame:CGRectMake(SLIDERS_XOPS, SLIDERS_YPOS1, SLIDERS_WIDTH,SLIDERS_HEIGHT)];
-        [sliderPreferenceFastVsSafe
-         setMinimumTrackTintColor:[UIColor lightGrayColor]];
+        if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
+            [sliderPreferenceFastVsSafe
+             setMinimumTrackTintColor:[UIColor lightGrayColor]];
+        }
         [sliderPreferenceFastVsSafe setMinimumValue:BIKE_PREFERENCE_MIN_VALUE];
         [sliderPreferenceFastVsSafe setMaximumValue:BIKE_PREFERENCE_MAX_VALUE];
         if([[NSUserDefaults standardUserDefaults] objectForKey:PREFERENCE_FAST_VS_SAFE]){
@@ -101,8 +108,10 @@
         [lblPreferenceFastVsFlat setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
         
         sliderPreferenceFastVsFlat = [[UISlider alloc] initWithFrame:CGRectMake(SLIDERS_XOPS, SLIDERS_YPOS1, SLIDERS_WIDTH,SLIDERS_HEIGHT)];
-        [sliderPreferenceFastVsFlat
-         setMinimumTrackTintColor:[UIColor lightGrayColor]];
+        if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
+            [sliderPreferenceFastVsFlat
+             setMinimumTrackTintColor:[UIColor lightGrayColor]];
+        }
         [sliderPreferenceFastVsFlat setMinimumValue:BIKE_PREFERENCE_MIN_VALUE];
         [sliderPreferenceFastVsFlat setMaximumValue:BIKE_PREFERENCE_MAX_VALUE];
         if([[NSUserDefaults standardUserDefaults] objectForKey:PREFERENCE_FAST_VS_FLAT]){
@@ -202,9 +211,6 @@
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     isSettingDetail = NO;
-}
-- (void)popOutToSettings{
-    [self.navigationController popViewControllerAnimated:YES];
     if(nSettingRow == 3){
         if(switchUrgentNotification.isOn){
             [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:ENABLE_URGENTNOTIFICATION_SOUND];
@@ -238,6 +244,10 @@
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%f",bikeTriangleFlat] forKey:BIKE_TRIANGLE_FLAT];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
+    [settingDetailDelegate updateSetting];
+}
+- (void)popOutToSettings{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 // Methods Added to Get The Position of Thumb
 - (float)mapValueInIntervalInPercents: (float)value min: (float)minimum max: (float)maximum{
@@ -566,67 +576,77 @@
         [self.tblDetailSetting reloadData];
     }
     if(nSettingRow == 4){
-        if([[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MORNING] intValue] == 1){
-            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            cell.accessoryType = UITableViewCellAccessoryNone;
-            [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:NOTIF_TIMING_MORNING];
-            [[NSUserDefaults standardUserDefaults] synchronize];
+        if(indexPath.row == 0){
+            if([[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MORNING] intValue] == 1){
+                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                cell.accessoryType = UITableViewCellAccessoryNone;
+                [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:NOTIF_TIMING_MORNING];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+            else{
+                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:NOTIF_TIMING_MORNING];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
         }
-        else{
-            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            cell.accessoryType = UITableViewCellAccessoryCheckmark;
-            [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:NOTIF_TIMING_MORNING];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-        if([[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MIDDAY] intValue] == 1){
-            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            cell.accessoryType = UITableViewCellAccessoryNone;
-            [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:NOTIF_TIMING_MIDDAY];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-        else{
-            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            cell.accessoryType = UITableViewCellAccessoryCheckmark;
-            [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:NOTIF_TIMING_MIDDAY];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-        if([[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_EVENING] intValue] == 1){
-            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            cell.accessoryType = UITableViewCellAccessoryNone;
-            [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:NOTIF_TIMING_EVENING];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-        else{
-            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            cell.accessoryType = UITableViewCellAccessoryCheckmark;
-            [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:NOTIF_TIMING_EVENING];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-        if([[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_NIGHT] intValue] == 1){
-            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            cell.accessoryType = UITableViewCellAccessoryNone;
-            [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:NOTIF_TIMING_NIGHT];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-        else{
-            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            cell.accessoryType = UITableViewCellAccessoryCheckmark;
-            [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:NOTIF_TIMING_NIGHT];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-        if([[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_WEEKEND] intValue] == 1){
-            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            cell.accessoryType = UITableViewCellAccessoryNone;
-            [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:NOTIF_TIMING_WEEKEND];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-        else{
-            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            cell.accessoryType = UITableViewCellAccessoryCheckmark;
-            [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:NOTIF_TIMING_WEEKEND];
-            [[NSUserDefaults standardUserDefaults] synchronize];
+        else if(indexPath.row == 1){
+            if([[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MIDDAY] intValue] == 1){
+                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                cell.accessoryType = UITableViewCellAccessoryNone;
+                [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:NOTIF_TIMING_MIDDAY];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+            else{
+                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:NOTIF_TIMING_MIDDAY];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
         }
         
+        else if(indexPath.row == 2){
+            if([[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_EVENING] intValue] == 1){
+                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                cell.accessoryType = UITableViewCellAccessoryNone;
+                [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:NOTIF_TIMING_EVENING];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+            else{
+                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:NOTIF_TIMING_EVENING];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+        }
+        else if(indexPath.row == 3){
+            if([[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_NIGHT] intValue] == 1){
+                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                cell.accessoryType = UITableViewCellAccessoryNone;
+                [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:NOTIF_TIMING_NIGHT];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+            else{
+                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:NOTIF_TIMING_NIGHT];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+        }
+        else if(indexPath.row == 4){
+            if([[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_WEEKEND] intValue] == 1){
+                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                cell.accessoryType = UITableViewCellAccessoryNone;
+                [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:NOTIF_TIMING_WEEKEND];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+            else{
+                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:NOTIF_TIMING_WEEKEND];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+        }
     }
     if(nSettingRow == 5){
         if(indexPath.row == 0){
