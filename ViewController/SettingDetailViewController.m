@@ -57,7 +57,7 @@
         
         
         lblMaximumBikeDistance=[[UILabel alloc] initWithFrame:CGRectMake(DETAIL_SETTING_MAIN_LABEL_XPOS,DETAIL_SETTING_MAIN_LABEL_YPOS, DETAIL_SETTING_MAIN_LABEL_WIDTH, DETAIL_SETTING_MAIN_LABEL_HEIGHT)];
-        [lblMaximumBikeDistance setTextColor:[UIColor GRAY_FONT_COLOR]];
+        [lblMaximumBikeDistance setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
         lblMaximumBikeDistance.backgroundColor =[UIColor clearColor];
         lblMaximumBikeDistance.adjustsFontSizeToFitWidth=YES;
         lblMaximumBikeDistance.text=MAXIMUM_BIKE_DISTANCE;
@@ -80,7 +80,7 @@
         
         
         lblPreferenceFastVsSafe=[[UILabel alloc] initWithFrame:CGRectMake(DETAIL_SETTING_MAIN_LABEL_XPOS,DETAIL_SETTING_MAIN_LABEL_YPOS, DETAIL_SETTING_MAIN_LABEL_WIDTH, DETAIL_SETTING_MAIN_LABEL_HEIGHT)];
-        [lblPreferenceFastVsSafe setTextColor:[UIColor GRAY_FONT_COLOR]];
+        [lblPreferenceFastVsSafe setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
         lblPreferenceFastVsSafe.backgroundColor =[UIColor clearColor];
         lblPreferenceFastVsSafe.adjustsFontSizeToFitWidth=YES;
         lblPreferenceFastVsSafe.text=PREFERENCE_FAST_VS_SAFE;
@@ -101,7 +101,7 @@
         }
         
         lblPreferenceFastVsFlat=[[UILabel alloc] initWithFrame:CGRectMake(DETAIL_SETTING_MAIN_LABEL_XPOS,DETAIL_SETTING_MAIN_LABEL_YPOS, DETAIL_SETTING_MAIN_LABEL_WIDTH, DETAIL_SETTING_MAIN_LABEL_HEIGHT)];
-        [lblPreferenceFastVsFlat setTextColor:[UIColor GRAY_FONT_COLOR]];
+        [lblPreferenceFastVsFlat setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
         lblPreferenceFastVsFlat.backgroundColor =[UIColor clearColor];
         lblPreferenceFastVsFlat.adjustsFontSizeToFitWidth=YES;
         lblPreferenceFastVsFlat.text=PREFERENCE_FAST_VS_FLAT;
@@ -131,42 +131,42 @@
         lblMinBikeDistance.backgroundColor =[UIColor clearColor];
         lblMinBikeDistance.adjustsFontSizeToFitWidth=YES;
         lblMinBikeDistance.text=[NSString stringWithFormat:@"%d",MAX_BIKE_DISTANCE_MIN_VALUE];
-        [lblMinBikeDistance setFont:[UIFont MEDIUM_OBLIQUE_FONT]];
+        [lblMinBikeDistance setFont:[UIFont SMALL_OBLIQUE_FONT]];
         
         lblMaxBikeDistance=[[UILabel alloc] initWithFrame:CGRectMake(BIKE_DISTANCE_LABEL_XPOS1,BIKE_DISTANCE_LABEL_YPOS, BIKE_DISTANCE_LABEL_WIDTH, BIKE_DISTANCE_LABEL_HEIGHT)];
         [lblMaxBikeDistance setTextColor:[UIColor GRAY_FONT_COLOR]];
         lblMaxBikeDistance.backgroundColor =[UIColor clearColor];
         lblMaxBikeDistance.adjustsFontSizeToFitWidth=YES;
         lblMaxBikeDistance.text=[NSString stringWithFormat:@"%d",MAX_BIKE_DISTANCE_MAX_VALUE];;
-        [lblMaxBikeDistance setFont:[UIFont MEDIUM_OBLIQUE_FONT]];
+        [lblMaxBikeDistance setFont:[UIFont SMALL_OBLIQUE_FONT]];
         
         lblQuickWithHills=[[UILabel alloc] initWithFrame:CGRectMake(BIKE_PREFERENCE_LABEL_XPOS,BIKE_PREFERENCE_LABEL_YPOS,BIKE_PREFERENCE_LABEL_WIDTH,BIKE_PREFERENCE_LABEL_HEIGHT)];
         [lblQuickWithHills setTextColor:[UIColor GRAY_FONT_COLOR]];
         lblQuickWithHills.backgroundColor =[UIColor clearColor];
         lblQuickWithHills.adjustsFontSizeToFitWidth=YES;
         lblQuickWithHills.text= QUICK_WITH_HILLS;
-        [lblQuickWithHills setFont:[UIFont MEDIUM_OBLIQUE_FONT]];
+        [lblQuickWithHills setFont:[UIFont SMALL_OBLIQUE_FONT]];
         
         lblGoAroundHills=[[UILabel alloc] initWithFrame:CGRectMake(BIKE_PREFERENCE_LABEL_XPOS1,BIKE_PREFERENCE_LABEL_YPOS,BIKE_PREFERENCE_LABEL_WIDTH,BIKE_PREFERENCE_LABEL_HEIGHT)];
         [lblGoAroundHills setTextColor:[UIColor GRAY_FONT_COLOR]];
         lblGoAroundHills.backgroundColor =[UIColor clearColor];
         lblGoAroundHills.adjustsFontSizeToFitWidth=YES;
         lblGoAroundHills.text= GO_AROUNG_HILLS;
-        [lblGoAroundHills setFont:[UIFont MEDIUM_OBLIQUE_FONT]];
+        [lblGoAroundHills setFont:[UIFont SMALL_OBLIQUE_FONT]];
         
         lblQuickWithAnyStreet=[[UILabel alloc] initWithFrame:CGRectMake(BIKE_PREFERENCE_LABEL_XPOS,BIKE_PREFERENCE_LABEL_YPOS,BIKE_PREFERENCE_LABEL_WIDTH,BIKE_PREFERENCE_LABEL_HEIGHT)];
         [lblQuickWithAnyStreet setTextColor:[UIColor GRAY_FONT_COLOR]];
         lblQuickWithAnyStreet.backgroundColor =[UIColor clearColor];
         lblQuickWithAnyStreet.adjustsFontSizeToFitWidth=YES;
         lblQuickWithAnyStreet.text= QUICK_WITH_ANY_STREET;
-        [lblQuickWithAnyStreet setFont:[UIFont MEDIUM_OBLIQUE_FONT]];
+        [lblQuickWithAnyStreet setFont:[UIFont SMALL_OBLIQUE_FONT]];
         
         lblBikeFriendlyStreet=[[UILabel alloc] initWithFrame:CGRectMake(BIKE_PREFERENCE_LABEL_XPOS1,BIKE_PREFERENCE_LABEL_YPOS,BIKE_PREFERENCE_LABEL_WIDTH,BIKE_PREFERENCE_LABEL_HEIGHT)];
         [lblBikeFriendlyStreet setTextColor:[UIColor GRAY_FONT_COLOR]];
         lblBikeFriendlyStreet.backgroundColor =[UIColor clearColor];
         lblBikeFriendlyStreet.adjustsFontSizeToFitWidth=YES;
         lblBikeFriendlyStreet.text= BIKE_FRIENDLY_STREET;
-        [lblBikeFriendlyStreet setFont:[UIFont MEDIUM_OBLIQUE_FONT]];
+        [lblBikeFriendlyStreet setFont:[UIFont SMALL_OBLIQUE_FONT]];
     }
     return self;
 }
@@ -323,7 +323,7 @@
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell.textLabel setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
-    [cell.textLabel setTextColor:[UIColor GRAY_FONT_COLOR]];
+    [cell.textLabel setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
     if(nSettingRow == 0){
         if(indexPath.row == 0){
             cell.textLabel.text = SFMUNI_ADVISORIES;

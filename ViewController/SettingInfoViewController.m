@@ -62,14 +62,14 @@ UIImage *imageDetailDisclosure;
         lblFrequently.backgroundColor =[UIColor clearColor];
         lblFrequently.adjustsFontSizeToFitWidth=YES;
         lblFrequently.text= LABEL_FREQUENTLY;
-        [lblFrequently setFont:[UIFont MEDIUM_OBLIQUE_FONT]];
+        [lblFrequently setFont:[UIFont SMALL_OBLIQUE_FONT]];
         
         lblRarely=[[UILabel alloc] initWithFrame:CGRectMake(LABEL_RARELY_XPOS,LABEL_RARELY_YPOS,LABEL_RARELY_WIDTH,LABEL_RARELY_HEIGHT)];
         [lblRarely setTextColor:[UIColor GRAY_FONT_COLOR]];
         lblRarely.backgroundColor =[UIColor clearColor];
         lblRarely.adjustsFontSizeToFitWidth=YES;
         lblRarely.text= LABEL_RARELY;
-        [lblRarely setFont:[UIFont MEDIUM_OBLIQUE_FONT]];
+        [lblRarely setFont:[UIFont SMALL_OBLIQUE_FONT]];
         
         sliderPushNotificationFrequency = [[UISlider alloc] initWithFrame:CGRectMake(SLIDER_PUSH_FREQUENCY_XPOS,SLIDER_PUSH_FREQUENCY_YPOS,SLIDER_PUSH_FREQUENCY_WIDTH,SLIDER_PUSH_FREQUENCY_HEIGHT)];
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
@@ -89,14 +89,14 @@ UIImage *imageDetailDisclosure;
         
         
         lblFrequencyOfPush=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_MAIN_LABEL_XPOS,SETTING_MAIN_LABEL_YPOS,SETTING_MAIN_LABEL_WIDTH,SETTING_MAIN_LABEL_HEIGHT)];
-        [lblFrequencyOfPush setTextColor:[UIColor GRAY_FONT_COLOR]];
+        [lblFrequencyOfPush setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
         lblFrequencyOfPush.backgroundColor =[UIColor clearColor];
         lblFrequencyOfPush.adjustsFontSizeToFitWidth=YES;
         lblFrequencyOfPush.text=FREQUENCY_OF_PUSH;
         [lblFrequencyOfPush setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
         
         lblMaximumWalkDistance=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_MAIN_LABEL_XPOS,SETTING_MAIN_LABEL_YPOS,SETTING_MAIN_LABEL_WIDTH,SETTING_MAIN_LABEL_HEIGHT)];
-        [lblMaximumWalkDistance setTextColor:[UIColor GRAY_FONT_COLOR]];
+        [lblMaximumWalkDistance setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
         lblMaximumWalkDistance.backgroundColor =[UIColor clearColor];
         lblMaximumWalkDistance.adjustsFontSizeToFitWidth=YES;
         lblMaximumWalkDistance.text=MAXIMUM_WALK_DISTANCE_LABEL;
@@ -107,14 +107,14 @@ UIImage *imageDetailDisclosure;
         lblMinWalkDistance.backgroundColor =[UIColor clearColor];
         lblMinWalkDistance.adjustsFontSizeToFitWidth=YES;
         lblMinWalkDistance.text= [NSString stringWithFormat:@"%0.2f",MAX_WALK_DISTANCE_MIN_VALUE];
-        [lblMinWalkDistance setFont:[UIFont MEDIUM_OBLIQUE_FONT]];
+        [lblMinWalkDistance setFont:[UIFont SMALL_OBLIQUE_FONT]];
         
         lblMaxWalkDistance=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_SUB_LABEL_XPOS1,SETTING_SUB_LABEL_YPOS,SETTING_SUB_LABEL_WIDTH,SETTING_SUB_LABEL_HEIGHT)];
         [lblMaxWalkDistance setTextColor:[UIColor GRAY_FONT_COLOR]];
         lblMaxWalkDistance.backgroundColor =[UIColor clearColor];
         lblMaxWalkDistance.adjustsFontSizeToFitWidth=YES;
         lblMaxWalkDistance.text= [NSString stringWithFormat:@"%0.2f",MAX_WALK_DISTANCE_MAX_VALUE];
-        [lblMaxWalkDistance setFont:[UIFont MEDIUM_OBLIQUE_FONT]];
+        [lblMaxWalkDistance setFont:[UIFont SMALL_OBLIQUE_FONT]];
         
         sliderMaximumWalkDistance = [[UISlider alloc] initWithFrame:CGRectMake(SLIDERS_XOPS,SLIDERS_YPOS, SLIDERS_WIDTH,SLIDERS_HEIGHT)];
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
@@ -504,15 +504,35 @@ UIImage *imageDetailDisclosure;
 //-------------------------------------------------------------------------
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 8;
+    return 3;
 }
 
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+    if(section == 0){
+      return ADVISORY_CHOICES;
+    }
+    else if(section == 1){
+        return PUSH_NOTIFICATION;
+    }
+    else{
+        return WALK_BIKE_SETTINGS;
+    }
+    
+}
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 1;
+    if(section == 0){
+        return 1;
+    }
+    else if(section == 1){
+        return 4;
+    }
+    else{
+        return 3;
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(indexPath.section == 2 || indexPath.section == 6){
+    if((indexPath.section == 1 && indexPath.row == 1) || (indexPath.section == 2 && indexPath.row == 1)){
         return 80;
     }
     return 40;
@@ -522,104 +542,151 @@ UIImage *imageDetailDisclosure;
     NSString *cellIdentifier = [NSString stringWithFormat:@"%d",indexPath.row];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     cell = nil;
-    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    if(indexPath.section != 1 && indexPath.section != 2 && indexPath.section != 6){
+    if(indexPath.section == 0 || (indexPath.section == 1 && (indexPath.row == 2 || indexPath.row == 3)) || (indexPath.section == 2 && (indexPath.row == 0 || indexPath.row == 2))){
         UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
         [cell setAccessoryView:imgViewDetailDisclosure];
     }
     [cell.textLabel setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
-    [cell.textLabel setTextColor:[UIColor GRAY_FONT_COLOR]];
+    [cell.textLabel setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+    [cell.detailTextLabel setTextColor:[UIColor GRAY_FONT_COLOR]];
+    [cell.detailTextLabel setFont:[UIFont SMALL_OBLIQUE_FONT]];
     if(indexPath.section == 0){
         cell.textLabel.text = ADVISORY_CHOICES;
     }
     else if(indexPath.section == 1){
-        cell.textLabel.text = PUSH_NOTIFICATION;
-        UIView* cellView = [cell accessoryView];
-        NSArray* subviews = [cellView subviews];
-        if (subviews && [subviews count]>0 && [subviews indexOfObject:switchPushNotification] != NSNotFound) {
+        if(indexPath.row == 0){
+            cell.textLabel.text = PUSH_NOTIFICATION;
+            UIView* cellView = [cell accessoryView];
+            NSArray* subviews = [cellView subviews];
+            if (subviews && [subviews count]>0 && [subviews indexOfObject:switchPushNotification] != NSNotFound) {
+            }
+            else{
+                [cell setAccessoryView:switchPushNotification];
+            }
         }
-        else{
-            [cell setAccessoryView:switchPushNotification];
+        else if(indexPath.row == 1){
+            cell.textLabel.text = nil;
+            [cell setAccessoryView:nil];
+            UIView* cellView = [cell contentView];
+            NSArray* subviews = [cellView subviews];
+            if (subviews && [subviews count]>0 && [subviews indexOfObject:sliderPushNotificationFrequency] != NSNotFound) {
+            }
+            else{
+                [cell.contentView addSubview:sliderPushNotificationFrequency];
+            }
+            if (subviews && [subviews count]>0 && [subviews indexOfObject:lblFrequencyOfPush] != NSNotFound) {
+            }
+            else{
+                [cell.contentView addSubview:lblFrequencyOfPush];
+            }
+            if (subviews && [subviews count]>0 && [subviews indexOfObject:lblFrequently] != NSNotFound) {
+            }
+            else{
+                [cell.contentView addSubview:lblFrequently];
+            }
+            if (subviews && [subviews count]>0 && [subviews indexOfObject:lblRarely] != NSNotFound) {
+            }
+            else{
+                [cell.contentView addSubview:lblRarely];
+            }
+        }
+        else if(indexPath.row == 2){
+           int nUrgentNotification = [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_URGENTNOTIFICATION_SOUND] intValue];
+           int nStandardNotification = [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_STANDARDNOTIFICATION_SOUND] intValue];
+            if(nUrgentNotification == 1 && nStandardNotification == 1){
+                cell.detailTextLabel.text = URGENT_AND_STANDARD;
+            }
+            else if(nUrgentNotification == 1 && nStandardNotification == 2){
+               cell.detailTextLabel.text = URGENT;
+            }
+            else if(nUrgentNotification == 2 && nStandardNotification == 1){
+               cell.detailTextLabel.text = STANDARD;
+            }
+           cell.textLabel.text = NOTIFICATION_SOUND; 
+        }
+        else if(indexPath.row == 3){
+           cell.textLabel.text = NOTIFICATION_TIMING; 
         }
     }
     else if(indexPath.section == 2){
-        cell.textLabel.text = nil;
-        [cell setAccessoryView:nil];
-        UIView* cellView = [cell contentView];
-        NSArray* subviews = [cellView subviews];
-        if (subviews && [subviews count]>0 && [subviews indexOfObject:sliderPushNotificationFrequency] != NSNotFound) {
+        if(indexPath.row == 0){
+            NSString *strTransitMode = [[NSUserDefaults standardUserDefaults] objectForKey:TRANSIT_MODE_SELECTED];
+           cell.textLabel.text = TRANSIT_MODE;
+            if([strTransitMode intValue] == 2){
+                cell.detailTextLabel.text = TRANSIT_ONLY;
+            }
+            else if([strTransitMode intValue] == 4){
+                cell.detailTextLabel.text = BIKE_ONLY;
+            }
+            else if([strTransitMode intValue] == 5){
+               cell.detailTextLabel.text = BIKE_AND_TRANSIT;
+            }
         }
-        else{
-            [cell.contentView addSubview:sliderPushNotificationFrequency];
+        else if(indexPath.row == 1){
+            cell.textLabel.text = nil;
+            [cell setAccessoryView:nil];
+            UIView* cellView = [cell contentView];
+            NSArray* subviews = [cellView subviews];
+            if (subviews && [subviews count]>0 && [subviews indexOfObject:sliderMaximumWalkDistance] != NSNotFound) {
+            }
+            else{
+                [cell.contentView addSubview:sliderMaximumWalkDistance];
+                [sliderMaximumWalkDistance addSubview:lblCurrentMaxWalkDistance];
+            }
+            if (subviews && [subviews count]>0 && [subviews indexOfObject:lblMaximumWalkDistance] != NSNotFound) {
+            }
+            else{
+                [cell.contentView addSubview:lblMaximumWalkDistance];
+            }
+            if (subviews && [subviews count]>0 && [subviews indexOfObject:lblMinWalkDistance] != NSNotFound) {
+            }
+            else{
+                [cell.contentView addSubview:lblMinWalkDistance];
+            }
+            if (subviews && [subviews count]>0 && [subviews indexOfObject:lblMaxWalkDistance] != NSNotFound) {
+            }
+            else{
+                [cell.contentView addSubview:lblMaxWalkDistance];
+            }
         }
-        if (subviews && [subviews count]>0 && [subviews indexOfObject:lblFrequencyOfPush] != NSNotFound) {
+        else if(indexPath.row == 2){
+           cell.textLabel.text = BIKE_PREFERENCES; 
         }
-        else{
-            [cell.contentView addSubview:lblFrequencyOfPush];
-        }
-        if (subviews && [subviews count]>0 && [subviews indexOfObject:lblFrequently] != NSNotFound) {
-        }
-        else{
-            [cell.contentView addSubview:lblFrequently];
-        }
-        if (subviews && [subviews count]>0 && [subviews indexOfObject:lblRarely] != NSNotFound) {
-        }
-        else{
-            [cell.contentView addSubview:lblRarely];
-        }
-    }
-    else if(indexPath.section == 3){
-        cell.textLabel.text = NOTIFICATION_SOUND;
-    }
-    else if(indexPath.section == 4){
-        cell.textLabel.text = NOTIFICATION_TIMING;
-    }
-    else if(indexPath.section == 5){
-        cell.textLabel.text = TRANSIT_MODE;
-    }
-    else if(indexPath.section == 6){
-        cell.textLabel.text = nil;
-        [cell setAccessoryView:nil];
-        UIView* cellView = [cell contentView];
-        NSArray* subviews = [cellView subviews];
-        if (subviews && [subviews count]>0 && [subviews indexOfObject:sliderMaximumWalkDistance] != NSNotFound) {
-        }
-        else{
-            [cell.contentView addSubview:sliderMaximumWalkDistance];
-            [sliderMaximumWalkDistance addSubview:lblCurrentMaxWalkDistance];
-        }
-        if (subviews && [subviews count]>0 && [subviews indexOfObject:lblMaximumWalkDistance] != NSNotFound) {
-        }
-        else{
-            [cell.contentView addSubview:lblMaximumWalkDistance];
-        }
-        if (subviews && [subviews count]>0 && [subviews indexOfObject:lblMinWalkDistance] != NSNotFound) {
-        }
-        else{
-            [cell.contentView addSubview:lblMinWalkDistance];
-        }
-        if (subviews && [subviews count]>0 && [subviews indexOfObject:lblMaxWalkDistance] != NSNotFound) {
-        }
-        else{
-            [cell.contentView addSubview:lblMaxWalkDistance];
-        }
-    }
-    else if(indexPath.section == 7){
-        cell.textLabel.text = BIKE_PREFERENCES;
     }
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(indexPath.section != 1 && indexPath.section != 2 && indexPath.section != 6){
+    if(indexPath.section == 0 || (indexPath.section == 1 && (indexPath.row == 2 || indexPath.row == 3)) || (indexPath.section == 2 && (indexPath.row == 0 || indexPath.row == 2))){
         if([[UIScreen mainScreen] bounds].size.height == 568){
             settingDetailViewController = [[SettingDetailViewController alloc] initWithNibName:@"SettingDetailViewController_568h" bundle:nil];
         }
         else{
             settingDetailViewController = [[SettingDetailViewController alloc] initWithNibName:@"SettingDetailViewController" bundle:nil];
         }
-        settingDetailViewController.nSettingRow = indexPath.section;
+        int nSettingRow;
+        if(indexPath.section == 0){
+            nSettingRow = 0;
+        }
+        else if(indexPath.section == 1){
+            if(indexPath.row == 2){
+                nSettingRow = 3;
+            }
+            else if(indexPath.row == 3){
+                nSettingRow = 4;
+            }
+        }
+        else{
+            if(indexPath.row == 0){
+                nSettingRow = 5;
+            }
+            else if(indexPath.row == 2){
+                nSettingRow = 7;
+            }
+        }
+        settingDetailViewController.nSettingRow = nSettingRow;
         settingDetailViewController.isSettingDetail = YES;
         settingDetailViewController.settingDetailDelegate = self;
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
@@ -641,5 +708,6 @@ UIImage *imageDetailDisclosure;
 
 - (void) updateSetting{
     [self saveSetting];
+    [self.tblSetting reloadData];
 }
 @end
