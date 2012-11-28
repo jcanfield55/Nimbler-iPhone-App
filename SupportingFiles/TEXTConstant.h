@@ -111,7 +111,7 @@
 #define WEEKENDS                @"Weekends"
 
 
-#define TRANSIT_ONLY     @"Transit only"
+#define TRANSIT_ONLY     @"Walk + Transit"
 #define BIKE_ONLY        @"Bike only"
 #define BIKE_AND_TRANSIT @"Bike + Transit"
 
@@ -149,8 +149,25 @@
 #define LABEL_RARELY          @"Rarely"
 
 #define URGENT_AND_STANDARD     @"Urgent + Standard"
-#define URGENT                  @"Urgent"
-#define STANDARD                @"Standard"
+#define URGENT                  @"Urgent Only"
+#define STANDARD                @"Standard Only"
+
+#define LABEL_ALL               @"All"
+#define LABEL_NONE              @"None"
+#define LABEL_SFMUNI            @"SFMuni"
+#define LABEL_BART              @"Bart"
+#define LABEL_ACTRANSIT         @"Ac Transit"
+#define LABEL_CALTRAIN          @"Caltrain"
+
+#define LABEL_NO_NOTIFICATIONS  @"No Notifications"
+#define LABEL_WKDAY_ALL         @"Wkday all"
+#define LABEL_WEEKENDS          @"Weekends"
+#define LABEL_WKKDAY            @"Wkday"
+#define LABEL_WKENDS            @"Wkends"
+#define LABEL_MORNING           @"morning"
+#define LABEL_MIDDAY            @"midday"
+#define LABEL_EVENING           @"evening"
+#define LABEL_NIGHT             @"night"
 
 #define PUSH_FREQUENCY_DEFAULT_VALUE          5
 #define PUSH_FREQUENCY_MIN_VALUE              1
@@ -213,5 +230,8 @@
 #define SETTING_SUB_LABEL_YPOS        41
 #define SETTING_SUB_LABEL_WIDTH       50
 #define SETTING_SUB_LABEL_HEIGHT      20
+
+#define CURRENT_DATE_INC_DEC_INTERVAL 12*60*60
+#define ITINERARY_START_DATE_INC_DEC_INTERVAL 4*60*60
 
 #endif

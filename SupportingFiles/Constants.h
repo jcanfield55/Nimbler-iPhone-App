@@ -15,9 +15,9 @@
 
 #define GEO_RESPONSE_URL      @"http://maps.googleapis.com/maps/api/geocode/"
 
-#define TRIP_PROCESS_URL    @"http://23.23.210.156:8080/TPServer/ws/"
+//#define TRIP_PROCESS_URL    @"http://23.23.210.156:8080/TPServer/ws/"
 
-//#define TRIP_PROCESS_URL      @"http://192.168.1.58:8080/TPServer/ws/"
+#define TRIP_PROCESS_URL      @"http://192.168.1.57:8080/TPServer/ws/"
 
 #define TWITTER_SERARCH_URL    @"https://twitter.com/#!/search/realtime/TRAIN%20from%3Acaltrain%20OR%20from%3Acaltrain_news"
 #define CALTRAIN_TWITTER_URL   @"https://twitter.com/#!/search/from%3Acaltrain%20OR%20from%3Acaltrain_news"
@@ -208,6 +208,12 @@
 // Float thresholds
 #define TINY_FLOAT 0.000001
 
+#define AGENCY_IDS   @"agencyIds"
+#define CALTRAIN_AGENCY_IDS  @"1"
+#define BART_AGENCY_ID      @"2"
+#define SFMUNI_AGENCY_ID    @"3"
+#define ACTRANSIT_AGENCY_ID @"4"
+
 
 #define UPDATE_TIME_URL @"gtfs/updateTime"
 #define SERVICE_BY_WEEKDAY_URL @"gtfs/serviceByWeekday"
@@ -226,7 +232,6 @@
 // savePlanInTPServer Method Constants
 #define NEW_PLAN_REQUEST         @"plan/new"
 #define PLAN_JSON_STRING         @"planJsonString"
-#define TIME_TRIP_PLAN           @"timeTripPlan"
 #define FORMATTED_ADDRESS_TO     @"frmtdAddTo"
 #define FORMATTED_ADDRESS_FROM   @"frmtdAddFrom"
 #define LATITUDE_FROM            @"latFrom"

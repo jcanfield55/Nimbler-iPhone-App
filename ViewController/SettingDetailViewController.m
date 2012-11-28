@@ -94,7 +94,7 @@
         [sliderPreferenceFastVsSafe setMinimumValue:BIKE_PREFERENCE_MIN_VALUE];
         [sliderPreferenceFastVsSafe setMaximumValue:BIKE_PREFERENCE_MAX_VALUE];
         if([[NSUserDefaults standardUserDefaults] objectForKey:PREFERENCE_FAST_VS_SAFE]){
-            [sliderPreferenceFastVsSafe setValue:[[[NSUserDefaults standardUserDefaults] objectForKey:PREFERENCE_FAST_VS_SAFE] intValue]];
+            [sliderPreferenceFastVsSafe setValue:[[[NSUserDefaults standardUserDefaults] objectForKey:PREFERENCE_FAST_VS_SAFE] floatValue]];
         }
         else{
             [sliderPreferenceFastVsSafe setValue:BIKE_PREFERENCE_DEFAULT_VALUE];
@@ -115,7 +115,7 @@
         [sliderPreferenceFastVsFlat setMinimumValue:BIKE_PREFERENCE_MIN_VALUE];
         [sliderPreferenceFastVsFlat setMaximumValue:BIKE_PREFERENCE_MAX_VALUE];
         if([[NSUserDefaults standardUserDefaults] objectForKey:PREFERENCE_FAST_VS_FLAT]){
-            [sliderPreferenceFastVsFlat setValue:[[[NSUserDefaults standardUserDefaults] objectForKey:PREFERENCE_FAST_VS_FLAT] intValue]];
+            [sliderPreferenceFastVsFlat setValue:[[[NSUserDefaults standardUserDefaults] objectForKey:PREFERENCE_FAST_VS_FLAT] floatValue]];
         }
         else{
             [sliderPreferenceFastVsFlat setValue:BIKE_PREFERENCE_DEFAULT_VALUE];
@@ -237,8 +237,8 @@
         float bikeTriangleBikeFriendly = sliderPreferenceFastVsFlat.value / denominator;
         float bikeTriangleQuick = (2 - sliderPreferenceFastVsSafe.value - sliderPreferenceFastVsFlat.value)/(2 * denominator);
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%d",nBikeDistance] forKey:MAX_BIKE_DISTANCE];
-        [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%d",(int)sliderPreferenceFastVsSafe.value] forKey:PREFERENCE_FAST_VS_SAFE];
-        [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%d",(int)sliderPreferenceFastVsFlat.value] forKey:PREFERENCE_FAST_VS_FLAT];
+        [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%f",sliderPreferenceFastVsSafe.value] forKey:PREFERENCE_FAST_VS_SAFE];
+        [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%f",sliderPreferenceFastVsFlat.value] forKey:PREFERENCE_FAST_VS_FLAT];
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%f",bikeTriangleQuick] forKey:BIKE_TRIANGLE_QUICK];
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%f",bikeTriangleBikeFriendly] forKey:BIKE_TRIANGLE_BIKE_FRIENDLY];
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%f",bikeTriangleFlat] forKey:BIKE_TRIANGLE_FLAT];
@@ -422,12 +422,30 @@
     else if(nSettingRow == 5){
         if(indexPath.row == 0){
             cell.textLabel.text = TRANSIT_ONLY;
+            if([[[NSUserDefaults standardUserDefaults] objectForKey:TRANSIT_MODE_SELECTED] intValue] == 2){
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            }
+            else{
+                cell.accessoryType = UITableViewCellAccessoryNone;
+            }
         }
         else if(indexPath.row == 1){
             cell.textLabel.text = BIKE_ONLY;
+            if([[[NSUserDefaults standardUserDefaults] objectForKey:TRANSIT_MODE_SELECTED] intValue] == 4){
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            }
+            else{
+                cell.accessoryType = UITableViewCellAccessoryNone;
+            }
         }
         else if(indexPath.row == 2){
             cell.textLabel.text = BIKE_AND_TRANSIT;
+            if([[[NSUserDefaults standardUserDefaults] objectForKey:TRANSIT_MODE_SELECTED] intValue] == 5){
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            }
+            else{
+                cell.accessoryType = UITableViewCellAccessoryNone;
+            }
         }
     }
     
@@ -661,7 +679,7 @@
             [[NSUserDefaults standardUserDefaults] setObject:@"5" forKey:TRANSIT_MODE_SELECTED];
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
-        [self.navigationController popViewControllerAnimated:YES];
+         [self.tblDetailSetting reloadData];
     }
 }
 

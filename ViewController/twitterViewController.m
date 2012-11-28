@@ -236,7 +236,7 @@ NSUserDefaults *prefs;
             }
             NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
                                   LAST_TWEET_TIME,tweetTime,
-                                  DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],APPLICATION_TYPE,appType,
+                                  DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],APPLICATION_TYPE,appType,AGENCY_IDS,[[nc_AppDelegate sharedInstance] getAgencyIdsString],
                                   nil];
             NSString *req = [LATEST_TWEETS_REQ appendQueryParams:dict];
             [[RKClient sharedClient]  get:req delegate:self];
@@ -379,7 +379,7 @@ NSUserDefaults *prefs;
                 appType = [prefs objectForKey:APPLICATION_TYPE];
             }
             NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
-                                    DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],APPLICATION_TYPE,appType,
+                                    DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],APPLICATION_TYPE,appType,AGENCY_IDS,[[nc_AppDelegate sharedInstance] getAgencyIdsString],
                                     nil];
             NSString *allAdvisories = [ALL_TWEETS_REQ appendQueryParams:params];
             [[RKClient sharedClient]  get:allAdvisories delegate:self];

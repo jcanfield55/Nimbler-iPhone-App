@@ -56,7 +56,7 @@ UIImage *imageDetailDisclosure;
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
             [switchPushNotification setOnTintColor:[UIColor lightGrayColor]];
         }
-        
+         [switchPushNotification addTarget:self action:@selector(switchValueChanged) forControlEvents:UIControlEventValueChanged];
         lblFrequently=[[UILabel alloc] initWithFrame:CGRectMake(LABEL_FREQUENTLY_XPOS,LABEL_FREQUENTLY_YPOS, LABEL_FREQUENTLY_WIDTH, LABEL_FREQUENTLY_HEIGHT)];
         [lblFrequently setTextColor:[UIColor GRAY_FONT_COLOR]];
         lblFrequently.backgroundColor =[UIColor clearColor];
@@ -496,6 +496,95 @@ UIImage *imageDetailDisclosure;
     }
 }
 
+- (NSString *)detailtextLabelString:(NSIndexPath *)indexPath{
+    NSString *strDetailTextLabel = @"";
+    if(indexPath.section == 0){
+        if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] == 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] == 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] == 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] == 1){
+            strDetailTextLabel = LABEL_ALL;
+        }
+        else if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] == 2 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] == 2 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] == 2 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] == 2){
+            strDetailTextLabel = LABEL_NONE;
+        }
+        else if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] == 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] == 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] == 1){
+            strDetailTextLabel = [NSString stringWithFormat:@"%@ + %@ + %@",LABEL_SFMUNI,LABEL_BART,LABEL_ACTRANSIT];
+        }
+        else if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] == 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] == 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] == 1){
+            strDetailTextLabel = [NSString stringWithFormat:@"%@ + %@ + %@",LABEL_SFMUNI,LABEL_BART,LABEL_CALTRAIN];
+        }
+        else if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] == 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] == 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] == 1){
+            strDetailTextLabel = [NSString stringWithFormat:@"%@ + %@ + %@",LABEL_SFMUNI,LABEL_ACTRANSIT,LABEL_CALTRAIN];
+        }
+        else if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] == 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] == 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] == 1){
+            strDetailTextLabel = [NSString stringWithFormat:@"%@ + %@ + %@",LABEL_BART,LABEL_ACTRANSIT,LABEL_CALTRAIN];
+        }
+        else if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] == 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] == 1){
+            strDetailTextLabel = [NSString stringWithFormat:@"%@ + %@",LABEL_SFMUNI,LABEL_BART];
+        }
+        else if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] == 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] == 1){
+            strDetailTextLabel = [NSString stringWithFormat:@"%@ + %@",LABEL_SFMUNI,LABEL_ACTRANSIT];
+        }
+        else if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] == 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] == 1){
+            strDetailTextLabel = [NSString stringWithFormat:@"%@ + %@",LABEL_SFMUNI,LABEL_CALTRAIN];
+        }
+        else if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] == 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] == 1){
+            strDetailTextLabel = [NSString stringWithFormat:@"%@ + %@",LABEL_BART,LABEL_ACTRANSIT];
+        }
+        else if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] == 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] == 1){
+            strDetailTextLabel = [NSString stringWithFormat:@"%@ + %@",LABEL_BART,LABEL_CALTRAIN];
+        }
+        else if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] == 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] == 1){
+            strDetailTextLabel = [NSString stringWithFormat:@"%@ + %@",LABEL_ACTRANSIT,LABEL_CALTRAIN];
+        }
+        else if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] == 1){
+            strDetailTextLabel = [NSString stringWithFormat:@"%@ Only",LABEL_SFMUNI];
+        }
+        else if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] == 1){
+            strDetailTextLabel = [NSString stringWithFormat:@"%@ Only",LABEL_BART];
+        }
+        else if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] == 1){
+            strDetailTextLabel = [NSString stringWithFormat:@"%@ Only",LABEL_ACTRANSIT];
+        }
+        else if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] == 1){
+            strDetailTextLabel = [NSString stringWithFormat:@"%@ Only",LABEL_CALTRAIN];
+        }
+    }
+    else if(indexPath.section == 1){
+        if(indexPath.row == 3){
+            NSString *strTimeMorning = [[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MORNING];
+            NSString *strTimeMidday = [[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MIDDAY];
+            NSString *strTimeEvening = [[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_EVENING];
+            NSString *strTimeNight = [[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_NIGHT];
+            NSString *strTimeWeekdends = [[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_WEEKEND];
+            if([ strTimeMorning intValue] == 1 && [strTimeMidday intValue] == 1 && [strTimeEvening intValue] == 1 && [strTimeNight intValue] == 1 && [strTimeWeekdends intValue] == 1){
+                strDetailTextLabel = LABEL_ALL;
+            }
+            else if([ strTimeMorning intValue] == 2 && [strTimeMidday intValue] == 2 && [strTimeEvening intValue] == 2 && [strTimeNight intValue] == 2 && [strTimeWeekdends intValue] == 2){
+                strDetailTextLabel = LABEL_NO_NOTIFICATIONS;
+            }
+            else if([strTimeMorning intValue] == 1 && [strTimeMidday intValue] == 1 && [strTimeEvening intValue] == 1 && [strTimeNight intValue] == 1){
+                strDetailTextLabel = LABEL_WKDAY_ALL;
+            }
+            else if([strTimeMorning intValue] != 1 && [strTimeMidday intValue] != 1 && [strTimeEvening intValue] != 1 && [strTimeNight intValue] != 1 && [strTimeWeekdends intValue] == 1){
+                strDetailTextLabel = LABEL_WEEKENDS;
+            }
+            else{
+                NSArray *arrayFlags = [NSArray arrayWithObjects:strTimeMorning,strTimeMidday,strTimeEvening,strTimeNight,strTimeWeekdends, nil];
+                NSArray *arrayStringToAppend = [NSArray arrayWithObjects:LABEL_MORNING,LABEL_MIDDAY,LABEL_EVENING,LABEL_NIGHT,LABEL_WKENDS, nil];
+                NSMutableString *strMutableTextLabel = [[NSMutableString alloc] init];
+                [strMutableTextLabel appendString:LABEL_WKKDAY];
+                for(int i = 0;i < [arrayFlags count]; i++){
+                    if([[arrayFlags objectAtIndex:i] intValue] == 1){
+                        [strMutableTextLabel appendFormat:@" %@,",[arrayStringToAppend objectAtIndex:i]];
+                    }
+                }
+                int nLength = [strMutableTextLabel length];
+                strDetailTextLabel = [strMutableTextLabel substringToIndex:nLength-1];
+            }
+        }
+    }
+    return strDetailTextLabel;
+}
+
 //------------------------------------------------------------------------
 
 #pragma mark
@@ -507,24 +596,29 @@ UIImage *imageDetailDisclosure;
     return 3;
 }
 
--(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
-    if(section == 0){
-        return ADVISORY_CHOICES;
-    }
-    else if(section == 1){
-        return PUSH_NOTIFICATION;
-    }
-    else{
-        return WALK_BIKE_SETTINGS;
-    }
-    
-}
+//-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+//    if(section == 0){
+//        return ADVISORY_CHOICES;
+//    }
+//    else if(section == 1){
+//        return PUSH_NOTIFICATION;
+//    }
+//    else{
+//        return WALK_BIKE_SETTINGS;
+//    }
+//    
+//}
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if(section == 0){
         return 1;
     }
     else if(section == 1){
-        return 4;
+        if(!switchPushNotification.isOn){
+            return 1;
+        }
+        else{
+            return 4;
+        }
     }
     else{
         return 3;
@@ -554,6 +648,7 @@ UIImage *imageDetailDisclosure;
     [cell.detailTextLabel setFont:[UIFont SMALL_OBLIQUE_FONT]];
     if(indexPath.section == 0){
         cell.textLabel.text = ADVISORY_CHOICES;
+         cell.detailTextLabel.text = [self detailtextLabelString:indexPath];
     }
     else if(indexPath.section == 1){
         if(indexPath.row == 0){
@@ -598,6 +693,9 @@ UIImage *imageDetailDisclosure;
             if(nUrgentNotification == 1 && nStandardNotification == 1){
                 cell.detailTextLabel.text = URGENT_AND_STANDARD;
             }
+            else if(nUrgentNotification == 2 && nStandardNotification == 2){
+                cell.detailTextLabel.text = LABEL_NONE;
+            }
             else if(nUrgentNotification == 1 && nStandardNotification == 2){
                 cell.detailTextLabel.text = URGENT;
             }
@@ -608,6 +706,7 @@ UIImage *imageDetailDisclosure;
         }
         else if(indexPath.row == 3){
             cell.textLabel.text = NOTIFICATION_TIMING;
+            cell.detailTextLabel.text = [self detailtextLabelString:indexPath];
         }
     }
     else if(indexPath.section == 2){

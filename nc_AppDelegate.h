@@ -120,4 +120,5 @@
 -(void)calendarByDate;
 - (void)saveSetting;
 - (void)getAppTypeFromBundleId;
+- (NSString *)getAgencyIdsString;
 @end

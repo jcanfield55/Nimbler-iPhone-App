@@ -1448,29 +1448,54 @@ UIImage *imageDetailDisclosure;
 }
 
 // Get RealTime Data By Itinerary
+// DE-252 Fixed.
 -(void)getRealTimeDataForItinerary{
     @try {
         isContinueGetRealTimeData = YES;
         NSMutableString *strItineraries = [[NSMutableString alloc] init];
         NSDate *currentDate = [NSDate date];
-        currentDate = dateOnlyFromDate(currentDate);
-        for (int i= 0; i< [[plan sortedItineraries] count]; i++) {
-            Itinerary *itin = [[plan sortedItineraries] objectAtIndex:i];
-            NSDate *itineraryCreationdate = [itin startTime];
-            itineraryCreationdate = dateOnlyFromDate(itineraryCreationdate);
-            NSComparisonResult result = [currentDate compare:itineraryCreationdate];  
-            if (result != NSOrderedAscending){
-                [strItineraries appendFormat:@"%@,",[itin itinId]];
+        NSDate *tripTimeFromDate = timeOnlyFromDate(tripDate);
+        NSDate *tripDateFromDate = dateOnlyFromDate(tripDate);
+        NSDate *finalTripDate = addDateOnlyWithTimeOnly(tripDateFromDate,tripTimeFromDate);
+        NSDate *incCurrentDate = [currentDate dateByAddingTimeInterval:CURRENT_DATE_INC_DEC_INTERVAL];
+        NSDate *decCurrentDate = [currentDate dateByAddingTimeInterval:(-CURRENT_DATE_INC_DEC_INTERVAL)];
+        NSDate *dateForItineraryComparision = [currentDate dateByAddingTimeInterval:ITINERARY_START_DATE_INC_DEC_INTERVAL];
+        
+        NSCalendar *calendarCurrentDate = [NSCalendar currentCalendar];
+        NSDateComponents *componentsCurrentDate = [calendarCurrentDate components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:[NSDate date]];
+        int hourCurrentDate = [componentsCurrentDate hour];
+        int minuteCurrentDate = [componentsCurrentDate minute];
+        int intervalCurrentDate = hourCurrentDate*60*60 + minuteCurrentDate*60;
+        
+        NSCalendar *calendarUpdatedCurrentDate = [NSCalendar currentCalendar];
+        NSDateComponents *componentsUpdatedCurrentDate = [calendarUpdatedCurrentDate components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:dateForItineraryComparision];
+        int hourUpdatedCurrentDate = [componentsUpdatedCurrentDate hour];
+        int minuteUpdatedCurrentDate = [componentsUpdatedCurrentDate minute];
+        int intervalUpdatedCurrentDate = hourUpdatedCurrentDate*60*60 + minuteUpdatedCurrentDate*60;
+        
+        if(finalTripDate && [finalTripDate compare:decCurrentDate] == NSOrderedDescending && [finalTripDate compare:incCurrentDate] == NSOrderedAscending){
+            for (int i= 0; i< [[plan sortedItineraries] count]; i++) {
+                Itinerary *itin = [[plan sortedItineraries] objectAtIndex:i];
+                NSDate *itineraryCreationdate = [itin startTime];
+                NSCalendar *calendarItineraryStartTime = [NSCalendar currentCalendar];
+                NSDateComponents *componentsItineraryStartTime = [calendarItineraryStartTime components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:[itin startTime]];
+                int hourItineraryStartTime = [componentsItineraryStartTime hour];
+                int minuteItineraryStartTime = [componentsItineraryStartTime minute];
+                int intervalItineraryStartTime = hourItineraryStartTime*60*60 + minuteItineraryStartTime*60;
+                
+                if(itineraryCreationdate && (([itineraryCreationdate compare:currentDate] == NSOrderedDescending && [itineraryCreationdate compare:dateForItineraryComparision] == NSOrderedAscending) || (intervalItineraryStartTime > intervalCurrentDate && intervalItineraryStartTime < intervalUpdatedCurrentDate))){
+                    [strItineraries appendFormat:@"%@,",[itin itinId]];
+                }
             }
-        }
-        if(strItineraries.length > 0){
-            [strItineraries deleteCharactersInRange:NSMakeRange([strItineraries length]-1, 1)];
-            RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-            [RKClient setSharedClient:client];  
-            NSDictionary *tempDictionary =[NSDictionary dictionaryWithObjectsAndKeys:strItineraries,ITINERARY_ID,@"true",FOR_TODAY, nil ];
-            NSString *req = [LIVE_FEEDS_BY_ITINERARIES_URL appendQueryParams:tempDictionary];
-            strLiveDataURL = req;
-            [[RKClient sharedClient]  get:req  delegate:self];
+            if(strItineraries.length > 0){
+                [strItineraries deleteCharactersInRange:NSMakeRange([strItineraries length]-1, 1)];
+                RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+                [RKClient setSharedClient:client];
+                NSDictionary *tempDictionary =[NSDictionary dictionaryWithObjectsAndKeys:strItineraries,ITINERARY_ID,@"true",FOR_TODAY, nil ];
+                NSString *req = [LIVE_FEEDS_BY_ITINERARIES_URL appendQueryParams:tempDictionary];
+                strLiveDataURL = req;
+                [[RKClient sharedClient]  get:req  delegate:self];
+            }
         }
     }
     @catch (NSException *exception) {
@@ -1523,20 +1548,23 @@ UIImage *imageDetailDisclosure;
             currentLocation.lastRequestReverseGeoLocation = [toLocations objectAtIndex:0];
         }
     }
-    
-    if (fromLocation == currentLocation && [currentLocation lastRequestReverseGeoLocation] &&
-        [currentLocation lastRequestReverseGeoLocation] != toLocation) {
-        // If from = currentLocation and there is a reverse geolocation
-        [toTableVC markAndUpdateSelectedLocation:[currentLocation lastRequestReverseGeoLocation]];
+    if(fromLocation != currentLocation && [currentLocation lastRequestReverseGeoLocation] != toLocation ){
+        NSLog(@"%@",fromLocation);
+        NSLog(@"%@",toLocation);
+        if (fromLocation == currentLocation && [currentLocation lastRequestReverseGeoLocation] &&
+            [currentLocation lastRequestReverseGeoLocation] != toLocation) {
+            // If from = currentLocation and there is a reverse geolocation
+            [toTableVC markAndUpdateSelectedLocation:[currentLocation lastRequestReverseGeoLocation]];
+        }
+        
+        else {  // do a normal swap
+            Location *fromloc = fromLocation;
+            Location *toLoc = toLocation;
+            // Swap Location (could be nil)
+            [toTableVC markAndUpdateSelectedLocation:fromloc];
+            [fromTableVC markAndUpdateSelectedLocation:toLoc];
+        }
     }
-    else {  // do a normal swap
-        Location *fromloc = fromLocation;
-        Location *toLoc = toLocation;
-        // Swap Location (could be nil)
-        [toTableVC markAndUpdateSelectedLocation:fromloc];
-        [fromTableVC markAndUpdateSelectedLocation:toLoc];
-    }
-    
     logEvent(FLURRY_TOFROM_SWAP_LOCATION,
              FLURRY_TO_SELECTED_ADDRESS, [[self toLocation] shortFormattedAddress],
              FLURRY_FROM_SELECTED_ADDRESS, [[self fromLocation] shortFormattedAddress],
