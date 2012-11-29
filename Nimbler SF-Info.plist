@@ -78,9 +78,9 @@
 	<key>MKDirectionsApplicationSupportedModes</key>
 	<array>
 		<string>MKDirectionsModeBus</string>
-		<string>MKDirectionsModeStreetcar</string>
 		<string>MKDirectionsModeSubway</string>
 		<string>MKDirectionsModeTrain</string>
+		<string>MKDirectionsModeStreetCar</string>
 	</array>
 	<key>UIPrerenderedIcon</key>
 	<true/>
