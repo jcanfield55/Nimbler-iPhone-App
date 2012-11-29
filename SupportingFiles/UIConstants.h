@@ -92,7 +92,7 @@
 #define MEDIUM_BOLD_FONT fontWithName:@"Helvetica-Bold" size:14.0
 #define MEDIUM_OBLIQUE_FONT fontWithName:@"Helvetica-Oblique" size:14.0
 #define MEDIUM_LARGE_BOLD_FONT fontWithName:@"Helvetica-Bold" size:15.0
-#define SMALL_OBLIQUE_FONT    fontWithName:@"Helvetica-Oblique" size:13
+#define SMALL_OBLIQUE_FONT    fontWithName:@"Helvetica-Oblique" size:12
 #define MEDIUM_LARGE_OBLIQUE_FONT fontWithName:@"Helvetica-Oblique" size:15.0
 #define LARGE_BOLD_FONT fontWithName:@"Helvetica-Bold" size:20.0
 

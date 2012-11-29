@@ -77,4 +77,5 @@
 -(void)popOutFromSettingView;
 -(void)fetchUserSettingData;
 - (void) saveSetting;
+- (void) switchValueChanged;
 @end
