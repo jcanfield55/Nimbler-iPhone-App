@@ -1476,6 +1476,11 @@ UIImage *imageDetailDisclosure;
         if(finalTripDate && [finalTripDate compare:decCurrentDate] == NSOrderedDescending && [finalTripDate compare:incCurrentDate] == NSOrderedAscending){
             for (int i= 0; i< [[plan sortedItineraries] count]; i++) {
                 Itinerary *itin = [[plan sortedItineraries] objectAtIndex:i];
+                NIMLOG_OBJECT1(@"startTime=%@",[itin startTime]);
+                NIMLOG_OBJECT1(@"endTime=%@",[itin endTime]);
+                NIMLOG_OBJECT1(@"fromAddressString=%@",[itin fromAddressString]);
+                NIMLOG_OBJECT1(@"toAddressString=%@",[itin toAddressString]);
+                
                 NSDate *itineraryCreationdate = [itin startTime];
                 NSCalendar *calendarItineraryStartTime = [NSCalendar currentCalendar];
                 NSDateComponents *componentsItineraryStartTime = [calendarItineraryStartTime components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:[itin startTime]];
@@ -1548,15 +1553,16 @@ UIImage *imageDetailDisclosure;
             currentLocation.lastRequestReverseGeoLocation = [toLocations objectAtIndex:0];
         }
     }
-    if(fromLocation != currentLocation && [currentLocation lastRequestReverseGeoLocation] != toLocation ){
-        NSLog(@"%@",fromLocation);
-        NSLog(@"%@",toLocation);
+    //DE-237 Fixed
+    if(fromLocation == toLocation ||
+       ([fromLocation isCurrentLocation] && [fromLocation isReverseGeoValid] && [fromLocation reverseGeoLocation] == toLocation)) {
+    }
+    else{
         if (fromLocation == currentLocation && [currentLocation lastRequestReverseGeoLocation] &&
             [currentLocation lastRequestReverseGeoLocation] != toLocation) {
             // If from = currentLocation and there is a reverse geolocation
             [toTableVC markAndUpdateSelectedLocation:[currentLocation lastRequestReverseGeoLocation]];
         }
-        
         else {  // do a normal swap
             Location *fromloc = fromLocation;
             Location *toLoc = toLocation;

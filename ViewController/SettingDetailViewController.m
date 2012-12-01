@@ -7,7 +7,7 @@
 //
 
 #import "SettingDetailViewController.h"
-
+#import "nc_AppDelegate.h"
 
 @implementation SettingDetailViewController
 
@@ -245,6 +245,9 @@
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     [settingDetailDelegate updateSetting];
+    if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] != 1){
+        [[nc_AppDelegate sharedInstance] updateBadge:0];
+    }
 }
 - (void)popOutToSettings{
     [self.navigationController popViewControllerAnimated:YES];

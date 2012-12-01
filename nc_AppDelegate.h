@@ -119,6 +119,6 @@
 -(void)serviceByWeekday;
 -(void)calendarByDate;
 - (void)saveSetting;
-- (void)getAppTypeFromBundleId;
+- (NSString *)getAppTypeFromBundleId;
 - (NSString *)getAgencyIdsString;
 @end

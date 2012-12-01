@@ -275,11 +275,6 @@ UIImage *imageDetailDisclosure;
             
             NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
             NSString *token = [prefs objectForKey:DEVICE_TOKEN];
-            NSString * appType;
-            appType = @"1";
-            if([prefs objectForKey:APPLICATION_TYPE]){
-                appType = [prefs objectForKey:APPLICATION_TYPE];
-            }
             // Update in TPServer DB
             RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
             [RKClient setSharedClient:client];
@@ -287,7 +282,7 @@ UIImage *imageDetailDisclosure;
                                     DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
                                     ALERT_COUNT,[NSNumber numberWithInt:pushHour],
                                     DEVICE_TOKEN, token,
-                                    MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:sliderMaxWalkDistance.value],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt:enableUrgentSoundFlag],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt:enableStandardSoundFlag],APPLICATION_TYPE,appType,
+                                    MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:sliderMaxWalkDistance.value],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt:enableUrgentSoundFlag],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt:enableStandardSoundFlag],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],
                                     nil];
             NSString *twitCountReq = [UPDATE_SETTING_REQ appendQueryParams:params];
             NIMLOG_EVENT1(@" twitCountReq %@", twitCountReq);
@@ -322,11 +317,6 @@ UIImage *imageDetailDisclosure;
             [userPrefs saveUpdates];
             NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
             NSString *token = [prefs objectForKey:DEVICE_TOKEN];
-            NSString * appType;
-            appType = @"2";
-            if([prefs objectForKey:APPLICATION_TYPE]){
-                appType = [prefs objectForKey:APPLICATION_TYPE];
-            }
             // Update in TPServer DB
             RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
             [RKClient setSharedClient:client];
@@ -334,7 +324,7 @@ UIImage *imageDetailDisclosure;
                                     DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
                                     ALERT_COUNT,[NSNumber numberWithInt:pushHour],
                                     DEVICE_TOKEN, token,
-                                    MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:sliderMaximumWalkDistance.value],ENABLE_URGENTNOTIFICATION_SOUND,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_URGENTNOTIFICATION_SOUND],ENABLE_STANDARDNOTIFICATION_SOUND,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_STANDARDNOTIFICATION_SOUND],ENABLE_SFMUNI_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV],ENABLE_BART_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV],ENABLE_ACTRANSIT_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV],ENABLE_CALTRAIN_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV],NOTIF_TIMING_MORNING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MORNING],NOTIF_TIMING_MIDDAY,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MIDDAY],NOTIF_TIMING_EVENING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_EVENING],NOTIF_TIMING_NIGHT,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_NIGHT],NOTIF_TIMING_WEEKEND,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_WEEKEND],TRANSIT_MODE_SELECTED,[[NSUserDefaults standardUserDefaults] objectForKey:TRANSIT_MODE_SELECTED],MAX_BIKE_DISTANCE,[[NSUserDefaults standardUserDefaults] objectForKey:MAX_BIKE_DISTANCE],BIKE_TRIANGLE_FLAT,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_FLAT],BIKE_TRIANGLE_BIKE_FRIENDLY,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_BIKE_FRIENDLY],BIKE_TRIANGLE_QUICK,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_QUICK],APPLICATION_TYPE,appType,
+                                    MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:sliderMaximumWalkDistance.value],ENABLE_URGENTNOTIFICATION_SOUND,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_URGENTNOTIFICATION_SOUND],ENABLE_STANDARDNOTIFICATION_SOUND,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_STANDARDNOTIFICATION_SOUND],ENABLE_SFMUNI_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV],ENABLE_BART_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV],ENABLE_ACTRANSIT_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV],ENABLE_CALTRAIN_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV],NOTIF_TIMING_MORNING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MORNING],NOTIF_TIMING_MIDDAY,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MIDDAY],NOTIF_TIMING_EVENING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_EVENING],NOTIF_TIMING_NIGHT,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_NIGHT],NOTIF_TIMING_WEEKEND,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_WEEKEND],TRANSIT_MODE_SELECTED,[[NSUserDefaults standardUserDefaults] objectForKey:TRANSIT_MODE_SELECTED],MAX_BIKE_DISTANCE,[[NSUserDefaults standardUserDefaults] objectForKey:MAX_BIKE_DISTANCE],BIKE_TRIANGLE_FLAT,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_FLAT],BIKE_TRIANGLE_BIKE_FRIENDLY,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_BIKE_FRIENDLY],BIKE_TRIANGLE_QUICK,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_QUICK],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],
                                     nil];
             NSString *twitCountReq = [UPDATE_SETTING_REQ appendQueryParams:params];
             NIMLOG_EVENT1(@" twitCountReq %@", twitCountReq);

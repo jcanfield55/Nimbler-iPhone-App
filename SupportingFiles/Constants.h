@@ -214,6 +214,9 @@
 #define SFMUNI_AGENCY_ID    @"3"
 #define ACTRANSIT_AGENCY_ID @"4"
 
+#define CALTRAIN_APP_TYPE   @"1"
+#define SFMUNI_APP_TYPE     @"4"
+
 
 #define UPDATE_TIME_URL @"gtfs/updateTime"
 #define SERVICE_BY_WEEKDAY_URL @"gtfs/serviceByWeekday"
