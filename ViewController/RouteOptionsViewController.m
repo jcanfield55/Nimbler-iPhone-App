@@ -185,25 +185,66 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         
         // Set title
         [[cell textLabel] setFont:[UIFont MEDIUM_BOLD_FONT]];
-        NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
-                                                   timeIntervalSinceDate:[itin startTimeOfFirstLeg]]);
-        NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
-                               superShortTimeStringForDate([itin startTimeOfFirstLeg]),
-                               superShortTimeStringForDate([itin endTimeOfLastLeg]),
-                               durationStr];
-        [[cell textLabel] setText:titleText];
+        //Part Of DE-229 Implementation
+        NSString *timeDiffFirstLeg;
+        NSString *timeDiffLastLeg;
+        NSString *titleText;
+        if([itin.sortedLegs count] > 0){
+            Leg *leg = [itin.sortedLegs objectAtIndex:0];
+            timeDiffFirstLeg = leg.timeDiffInMins;
+        }
+        Leg *leg = [itin.sortedLegs objectAtIndex:[itin.sortedLegs count]-1];
+        timeDiffLastLeg = leg.timeDiffInMins;
         UIView *viewCellBackground = [[UIView alloc] init];
         [viewCellBackground setBackgroundColor:[UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW]];
         cell.backgroundView = viewCellBackground;
-        
+        NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
+                                                         timeIntervalSinceDate:[itin startTimeOfFirstLeg]]);
+        titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
+                     superShortTimeStringForDate([itin startTimeOfFirstLeg]),
+                     superShortTimeStringForDate([itin endTimeOfLastLeg]),
+                     durationStr];
+        cell.textLabel.text = titleText;
         // notify with TEXT for LEG timimg
         if (isReloadRealData) {
             if([itin itinArrivalFlag] >= 0) {
                 if([itin.itinArrivalFlag intValue] == ON_TIME) {
                     titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"On Time"];
                 }  else if([itin.itinArrivalFlag intValue] == DELAYED) {
+                    NSDate* realTimeArrivalTime;
+                    if(timeDiffLastLeg){
+                       realTimeArrivalTime = [[itin endTimeOfLastLeg]
+                                                       dateByAddingTimeInterval:[timeDiffLastLeg floatValue]*60.0];
+                    }
+                    else{
+                        realTimeArrivalTime = [itin endTimeOfLastLeg]
+                                               ;
+                    }
+                    NSString* durationStr = durationString(1000.0 * [realTimeArrivalTime
+                                                                     timeIntervalSinceDate:[itin startTimeOfFirstLeg]]);
+                    titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
+                                           superShortTimeStringForDate([itin startTimeOfFirstLeg]),
+                                           superShortTimeStringForDate(realTimeArrivalTime),
+                                           durationStr];
+                    cell.textLabel.text = titleText;
                     titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"Delayed"];
                 } else if([itin.itinArrivalFlag intValue] == EARLY) {
+                     NSDate* realTimeArrivalTime;
+                    if(timeDiffLastLeg){
+                        realTimeArrivalTime = [[itin startTimeOfFirstLeg]
+                                               dateByAddingTimeInterval:[timeDiffFirstLeg floatValue]*60.0];
+                    }
+                    else{
+                        realTimeArrivalTime = [itin startTimeOfFirstLeg]
+                        ;
+                    }
+                    NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
+                                                                     timeIntervalSinceDate:realTimeArrivalTime]);
+                     NSLog(@"%@",superShortTimeStringForDate(realTimeArrivalTime));
+                    titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
+                                           superShortTimeStringForDate(realTimeArrivalTime),
+                                           superShortTimeStringForDate([itin endTimeOfLastLeg]),
+                                           durationStr];
                     titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"Early"];
                 } else if([itin.itinArrivalFlag intValue] == EARLIER) {
                    titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"Earlier"];

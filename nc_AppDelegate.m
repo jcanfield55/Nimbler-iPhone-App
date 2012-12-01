@@ -274,7 +274,7 @@ FeedBackForm *fbView;
         
         if(![[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
             if(![[NSUserDefaults standardUserDefaults] objectForKey:MAX_WALK_DISTANCE]){
-                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%d",MAX_WALK_DISTANCE_DEFAULT_VALUE] forKey:MAX_WALK_DISTANCE];
+                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%f",MAX_WALK_DISTANCE_DEFAULT_VALUE] forKey:MAX_WALK_DISTANCE];
             }
             if(![[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV]){
                 [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:ENABLE_SFMUNI_ADV];
@@ -283,10 +283,10 @@ FeedBackForm *fbView;
                 [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:ENABLE_BART_ADV];
             }
             if(![[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV]){
-                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:ENABLE_ACTRANSIT_ADV];
+                [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:ENABLE_ACTRANSIT_ADV];
             }
             if(![[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV]){
-                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:ENABLE_CALTRAIN_ADV];
+                [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:ENABLE_CALTRAIN_ADV];
             }
             if(![[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_URGENTNOTIFICATION_SOUND]){
                 [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:ENABLE_URGENTNOTIFICATION_SOUND];
@@ -301,7 +301,7 @@ FeedBackForm *fbView;
                 [[NSUserDefaults standardUserDefaults] synchronize];
             }
             if(![[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MIDDAY]){
-                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:NOTIF_TIMING_MIDDAY];
+                [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:NOTIF_TIMING_MIDDAY];
                 [[NSUserDefaults standardUserDefaults] synchronize];
             }
             if(![[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_EVENING]){
@@ -309,11 +309,11 @@ FeedBackForm *fbView;
                 [[NSUserDefaults standardUserDefaults] synchronize];
             }
             if(![[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_NIGHT]){
-                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:NOTIF_TIMING_NIGHT];
+                [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:NOTIF_TIMING_NIGHT];
                 [[NSUserDefaults standardUserDefaults] synchronize];
             }
             if(![[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_WEEKEND]){
-                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:NOTIF_TIMING_WEEKEND];
+                [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:NOTIF_TIMING_WEEKEND];
                 [[NSUserDefaults standardUserDefaults] synchronize];
             }
             if(![[NSUserDefaults standardUserDefaults] objectForKey:TRANSIT_MODE_SELECTED]){

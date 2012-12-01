@@ -87,10 +87,11 @@
 #define CALTRAIN_REPLACE_STRINGS_ARRAY [NSArray arrayWithObjects:@"",@"",@"",@"",@"", nil]
 
 // New AppSetting Constants
-#define ADVISORY_CHOICES  @"Advisory Choices"
-#define PUSH_NOTIFICATION @"Push Notification"
-#define TRANSIT_MODE      @"Transit mode"
-#define BIKE_PREFERENCES  @"Bike preferences"
+#define ADVISORY_CHOICES   @"Advisory Choices"
+#define PUSH_NOTIFICATION  @"Push Notification"
+#define TRANSIT_MODE       @"Transit mode"
+#define BIKE_PREFERENCES   @"Bike preferences"
+#define WALK_BIKE_SETTINGS @"Walk / Bike Settings"
 
 #define SFMUNI_ADVISORIES    @"SF Muni advisories"
 #define BART_ADVISORIES      @"BART advisories"
@@ -146,6 +147,10 @@
 
 #define LABEL_FREQUENTLY      @"Frequently"
 #define LABEL_RARELY          @"Rarely"
+
+#define URGENT_AND_STANDARD     @"Urgent + Standard"
+#define URGENT                  @"Urgent"
+#define STANDARD                @"Standard"
 
 #define PUSH_FREQUENCY_DEFAULT_VALUE          5
 #define PUSH_FREQUENCY_MIN_VALUE              1

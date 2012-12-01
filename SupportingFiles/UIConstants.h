@@ -16,19 +16,19 @@
 #define TOFROM_TIME_DATE_HEIGHT 36
 #define TOFROM_ROW_HEIGHT 36
 
-// To & From table heights for regular (3.5") iPhone screen 
+// To & From table heights for regular (3.5") iPhone screen
 #define FROM_TABLE_HEIGHT_NO_CL_MODE 107 // height when not isCurrentLocationMode
 #define TO_TABLE_HEIGHT_NO_CL_MODE 113
 #define FROM_TABLE_HEIGHT_CL_MODE 71 // height when isCurrentLocationMode
-#define TO_TABLE_HEIGHT_CL_MODE 152 
+#define TO_TABLE_HEIGHT_CL_MODE 152
 #define FROM_TABLE_HEIGHT_EDIT_MODE 148 // height when in Edit mode
 #define TO_TABLE_HEIGHT_EDIT_MODE 148
 
 // To & From table heights for iPhone5 and other 4" screens
 #define FROM_TABLE_HEIGHT_NO_CL_MODE_4INCH 148 // height when not isCurrentLocationMode
-#define TO_TABLE_HEIGHT_NO_CL_MODE_4INCH 148 
+#define TO_TABLE_HEIGHT_NO_CL_MODE_4INCH 148
 #define FROM_TABLE_HEIGHT_CL_MODE_4INCH 148 // height when isCurrentLocationMode
-#define TO_TABLE_HEIGHT_CL_MODE_4INCH 148 
+#define TO_TABLE_HEIGHT_CL_MODE_4INCH 148
 #define FROM_TABLE_HEIGHT_EDIT_MODE_4INCH 222 // height when in FROM_EDIT mode
 #define TO_TABLE_HEIGHT_EDIT_MODE_4INCH 222 // height when in TO_EDIT mode
 
@@ -59,7 +59,7 @@
 #define ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH 280
 
 // RouteDetailsViewController & LegMapViewController
-#define ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH 279 // Obtained thru trial & error, DE-230 fix 
+#define ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH 279 // Obtained thru trial & error, DE-230 fix
 #define ROUTE_LEGMAP_X_ORIGIN 5
 #define ROUTE_LEGMAP_Y_ORIGIN 5
 #define ROUTE_LEGMAP_WIDTH 309
@@ -92,7 +92,7 @@
 #define MEDIUM_BOLD_FONT fontWithName:@"Helvetica-Bold" size:14.0
 #define MEDIUM_OBLIQUE_FONT fontWithName:@"Helvetica-Oblique" size:14.0
 #define MEDIUM_LARGE_BOLD_FONT fontWithName:@"Helvetica-Bold" size:15.0
-#define MEDIUM_OBLIQUE_FONT    fontWithName:@"Helvetica-Oblique" size:13
+#define SMALL_OBLIQUE_FONT    fontWithName:@"Helvetica-Oblique" size:13
 #define MEDIUM_LARGE_OBLIQUE_FONT fontWithName:@"Helvetica-Oblique" size:15.0
 #define LARGE_BOLD_FONT fontWithName:@"Helvetica-Bold" size:20.0
 
@@ -124,7 +124,7 @@
 #define NAVIGATION_ITEM_YPOS      436
 #define NAVIGATION_ITEM_WIDTH     78
 #define NAVIGATION_ITEM_HEIGHT    42
- 
+
 #define ROUTE_BUTTON_XPOS_4INCH       124
 #define ROUTE_BUTTON_YPOS_4INCH       410
 #define ROUTE_BUTTON_WIDTH_4INCH      72

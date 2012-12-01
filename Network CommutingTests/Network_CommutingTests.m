@@ -1327,7 +1327,7 @@
 
 // Compare The Leg Start Time With Departure time.
 - (void)planTestWithComparingTime{
-    BOOL isAnyTimeMatch;
+    BOOL isAnyTimeMatch = NO;
         Plan *plan = [nc_AppDelegate sharedInstance].testPlan;
         for(int j=0;j<[[plan sortedItineraries] count];j++){
             Itinerary *iti = [[plan sortedItineraries] objectAtIndex:j];
@@ -1344,10 +1344,13 @@
                         NSString *strTime = [nc_AppDelegate sharedInstance].expectedRequestDate;
                         NSArray *timeComponentArray = [strTime componentsSeparatedByString:@":"];
                         int startHour = [[timeComponentArray objectAtIndex:0] intValue];
+                        if(startHour > 23){
+                            startHour = startHour -24;
+                        }
                         int startMinute = [[timeComponentArray objectAtIndex:1] intValue];
                         NSString *strStartTime = [NSString stringWithFormat:@"%d:%d",startHour,startMinute];
                         if([strLegTime isEqualToString:strStartTime]){
-                            isAnyTimeMatch = YES;
+                isAnyTimeMatch = YES;
                         }
                     }
                 }
@@ -1771,11 +1774,18 @@
         PlanRequestParameters* parameters = [[PlanRequestParameters alloc] init];
         NSString *strDepartureTime = [arrayDepartureTime objectAtIndex:st1];
         NSArray *arrayDepartureTimeComponents = [strDepartureTime componentsSeparatedByString:@":"];
+        NSDate *finalTripDate = nil;
         if([arrayDepartureTimeComponents count] > 0){
             int hours = [[arrayDepartureTimeComponents objectAtIndex:0] intValue];
             int minutes = [[arrayDepartureTimeComponents objectAtIndex:1] intValue];
             int seconds = [[arrayDepartureTimeComponents objectAtIndex:2] intValue];
             if(hours > 23){
+                if(hours > 0){
+                  finalTripDate = [tripDate dateByAddingTimeInterval:24*60*60];   
+                }
+                else if(minutes > 5){
+                   finalTripDate = [tripDate dateByAddingTimeInterval:24*60*60]; 
+                }
                 hours = hours - 24;
             }
             strDepartureTime = [NSString stringWithFormat:@"%d:%d:%d",hours,minutes,seconds];
@@ -1785,7 +1795,13 @@
         NSDate *dates = [formatter dateFromString:strDepartureTime];
         NSDate *dateBeforeFiveSeconds = [dates dateByAddingTimeInterval:-300];
         NSDate *timesOnly = timeOnlyFromDate(dateBeforeFiveSeconds);
-        NSDate *datesOnly = dateOnlyFromDate(tripDate);
+        NSDate *datesOnly;
+        if(finalTripDate){
+           datesOnly = dateOnlyFromDate(finalTripDate); 
+        }
+        else{
+          datesOnly = dateOnlyFromDate(tripDate);  
+        }
         NSDate *finalDate = addDateOnlyWithTimeOnly(datesOnly, timesOnly);
         parameters.originalTripDate = finalDate;
         parameters.thisRequestTripDate = finalDate;

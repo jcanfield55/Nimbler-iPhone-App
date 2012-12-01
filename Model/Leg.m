@@ -143,7 +143,24 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     @try {
     NSMutableString* summary = [NSMutableString stringWithString:@""];
     if (includeTime) {
-        [summary appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
+        //Part Of DE-229 Implementation
+        if([self.arrivalFlag intValue] == DELAYED) {
+            NSLog(@"%@",timeDiffInMins);
+            NSLog(@"%@",superShortTimeStringForDate([self startTime]));
+            NSDate* realTimeArrivalTime = [[self startTime]
+                                           dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
+            [summary appendFormat:@"%@ ", superShortTimeStringForDate(realTimeArrivalTime)];
+        }
+        else if([self.arrivalFlag intValue] == EARLY){
+             NSLog(@"%@",timeDiffInMins);
+            NSDate* realTimeArrivalTime = [[self startTime]
+                                           dateByAddingTimeInterval:[timeDiffInMins floatValue]*(-60.0)];
+            [summary appendFormat:@"%@ ", superShortTimeStringForDate(realTimeArrivalTime)];
+        }
+        else{
+            [summary appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
+        }
+        
     }
     NSString* shortAgencyName = [[Leg agencyDisplayNameByAgencyId] objectForKey:[self agencyId]];
     if (!shortAgencyName) {

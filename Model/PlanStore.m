@@ -325,6 +325,9 @@
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error
 {
     [nc_AppDelegate sharedInstance].receivedError = YES;
+    if([nc_AppDelegate sharedInstance].isTestPlan){
+        [nc_AppDelegate sharedInstance].testPlan = nil;
+    }
     NIMLOG_ERR1(@"Error received from RKObjectManager: %@", error);
     PlanRequestStatus status;
     NIMLOG_EVENT1(@"Plan RKError objectLoader params: %@", [objectLoader params]);
