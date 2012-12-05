@@ -1468,19 +1468,21 @@ UIImage *imageDetailDisclosure;
         int intervalCurrentDate = hourCurrentDate*60*60 + minuteCurrentDate*60;
         
         NSCalendar *calendarUpdatedCurrentDate = [NSCalendar currentCalendar];
-        NSDateComponents *componentsUpdatedCurrentDate = [calendarUpdatedCurrentDate components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:dateForItineraryComparision];
+        NSDateComponents *componentsUpdatedCurrentDate = [calendarUpdatedCurrentDate components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:[NSDate date]];
         int hourUpdatedCurrentDate = [componentsUpdatedCurrentDate hour];
         int minuteUpdatedCurrentDate = [componentsUpdatedCurrentDate minute];
-        int intervalUpdatedCurrentDate = hourUpdatedCurrentDate*60*60 + minuteUpdatedCurrentDate*60;
+        int intervalUpdatedCurrentDate = (hourUpdatedCurrentDate+4)*60*60 + minuteUpdatedCurrentDate*60;
+        
+        NSCalendar *calendarScheduleDate = [NSCalendar currentCalendar];
+        NSDateComponents *componentsScheduleDate = [calendarScheduleDate components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:finalTripDate];
+        int hourScheduleDate = [componentsScheduleDate hour];
+        int minuteScheduleDate = [componentsScheduleDate minute];
+        int intervalScheduleDate = (hourScheduleDate+3)*60*60 + minuteScheduleDate*60;
         
         if(finalTripDate && [finalTripDate compare:decCurrentDate] == NSOrderedDescending && [finalTripDate compare:incCurrentDate] == NSOrderedAscending){
             for (int i= 0; i< [[plan sortedItineraries] count]; i++) {
                 Itinerary *itin = [[plan sortedItineraries] objectAtIndex:i];
-                NIMLOG_OBJECT1(@"startTime=%@",[itin startTime]);
-                NIMLOG_OBJECT1(@"endTime=%@",[itin endTime]);
-                NIMLOG_OBJECT1(@"fromAddressString=%@",[itin fromAddressString]);
-                NIMLOG_OBJECT1(@"toAddressString=%@",[itin toAddressString]);
-                
+                                
                 NSDate *itineraryCreationdate = [itin startTime];
                 NSCalendar *calendarItineraryStartTime = [NSCalendar currentCalendar];
                 NSDateComponents *componentsItineraryStartTime = [calendarItineraryStartTime components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:[itin startTime]];
@@ -1489,7 +1491,10 @@ UIImage *imageDetailDisclosure;
                 int intervalItineraryStartTime = hourItineraryStartTime*60*60 + minuteItineraryStartTime*60;
                 
                 if(itineraryCreationdate && (([itineraryCreationdate compare:currentDate] == NSOrderedDescending && [itineraryCreationdate compare:dateForItineraryComparision] == NSOrderedAscending) || (intervalItineraryStartTime > intervalCurrentDate && intervalItineraryStartTime < intervalUpdatedCurrentDate))){
-                    [strItineraries appendFormat:@"%@,",[itin itinId]];
+                    // Ask for The Real Time Only If itinerary start time is less than schedule Time + 3 hours
+                    if(intervalItineraryStartTime < intervalScheduleDate){
+                       [strItineraries appendFormat:@"%@,",[itin itinId]]; 
+                    }
                 }
             }
             if(strItineraries.length > 0){

@@ -190,6 +190,7 @@
         if([nc_AppDelegate sharedInstance].isTestPlan){
             [params setObject:@"false" forKey:SAVE_PLAN];
         }
+        [params setObject:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] forKey:APPLICATION_TYPE];
         // Build the parameters into a resource string
         parameters.serverCallsSoFar = parameters.serverCallsSoFar + 1;
         // TODO handle changes to maxWalkDistance with plan caching

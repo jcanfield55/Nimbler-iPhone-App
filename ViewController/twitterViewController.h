@@ -12,6 +12,7 @@
 
 @interface twitterViewController : UIViewController <UITableViewDelegate, UITableViewDataSource,RKRequestDelegate>{
     NSMutableArray *arrayTweet;
+    NSString *strAllAdvisories;
 }
 
 @property (strong, nonatomic) IBOutlet UITableView* mainTable;
@@ -24,6 +25,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *noAdvisory; 
 @property (strong, nonatomic) NSTimer *timerForStopProcees;
 @property (strong, nonatomic) NSMutableArray *arrayTweet;
+@property (strong, nonatomic) NSString *strAllAdvisories;
 
 -(void)setTwitterLiveData:(id)tweetData;
 

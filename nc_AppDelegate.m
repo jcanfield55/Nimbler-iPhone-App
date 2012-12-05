@@ -1196,7 +1196,7 @@ FeedBackForm *fbView;
         [RKClient setSharedClient:client];
         NSString *strAgencyIDs = [self getAgencyIdsString];
         if(strAgencyIDs.length > 0){
-            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],APPLICATION_TYPE,[self getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs, nil];
+            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],APPLICATION_TYPE,[self getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs, nil];
             isTwitterLivaData = TRUE;
             NSString *twitCountReq = [TWEET_COUNT_URL appendQueryParams:params];
             strTweetCountURL = twitCountReq;
@@ -1288,8 +1288,10 @@ FeedBackForm *fbView;
 // update badge
 -(void)updateBadge:(int)count
 {
-    if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] != 1){
-        count = 0;
+    if(![[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+        if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] != 1){
+            count = 0;
+        }
     }
     int tweetConut =count;
     [twitterCount removeFromSuperview];
@@ -1382,27 +1384,37 @@ FeedBackForm *fbView;
 // Return The Enabled Agency Ids
 - (NSString *)getAgencyIdsString{
     NSMutableString *strMutableAgencyIds = [[NSMutableString alloc] init];
-    if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] == 1){
-        [strMutableAgencyIds appendFormat:@"%@,",SFMUNI_AGENCY_ID];
-    }
-    if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] == 1){
-        [strMutableAgencyIds appendFormat:@"%@,",BART_AGENCY_ID];
-    }
-    if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] == 1){
-        [strMutableAgencyIds appendFormat:@"%@,",ACTRANSIT_AGENCY_ID];
-    }
-    if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] == 1){
-        [strMutableAgencyIds appendFormat:@"%@,",CALTRAIN_AGENCY_IDS];
-    }
-    int nLength = [strMutableAgencyIds length];
     NSString *strAgencyIds;
-    if(nLength > 0){
-       strAgencyIds = [strMutableAgencyIds substringToIndex:nLength-1]; 
+    if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+        [strMutableAgencyIds appendFormat:@"%@,",CALTRAIN_AGENCY_IDS];
+        int nLength = [strMutableAgencyIds length];
+        if(nLength > 0){
+            strAgencyIds = [strMutableAgencyIds substringToIndex:nLength-1];
+        }
+        else{
+            strAgencyIds = strMutableAgencyIds;
+        }
     }
     else{
-        strAgencyIds = strMutableAgencyIds;
+        if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] == 1){
+            [strMutableAgencyIds appendFormat:@"%@,",SFMUNI_AGENCY_ID];
+        }
+        if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] == 1){
+            [strMutableAgencyIds appendFormat:@"%@,",BART_AGENCY_ID];
+        }
+        if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] == 1){
+            [strMutableAgencyIds appendFormat:@"%@,",ACTRANSIT_AGENCY_ID];
+        }
+        if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] == 1){
+            [strMutableAgencyIds appendFormat:@"%@,",CALTRAIN_AGENCY_IDS];
+        }
+        int nLength = [strMutableAgencyIds length];
+        if(nLength > 0){
+            strAgencyIds = [strMutableAgencyIds substringToIndex:nLength-1];
+        }
+        else{
+            strAgencyIds = strMutableAgencyIds;
+        }
     }
-    
     return strAgencyIds;
-}
-@end
+}@end

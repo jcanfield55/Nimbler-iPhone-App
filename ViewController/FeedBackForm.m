@@ -512,6 +512,7 @@ NSUserDefaults *prefs;
             [rkp setValue:[nc_AppDelegate sharedInstance].FBUniqueId forParam:FB_UNIQUEID];
         } 
     }
+    [rkp setValue:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] forParam:APPLICATION_TYPE];
     timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(popOut) userInfo:nil repeats: NO];
     [[RKClient sharedClient] post:FB_REQUEST params:rkp delegate:self];
 }

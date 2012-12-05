@@ -245,9 +245,11 @@
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     [settingDetailDelegate updateSetting];
-    if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] != 1){
-        [[nc_AppDelegate sharedInstance] updateBadge:0];
-    }
+     if(![[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+         if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] != 1){
+             [[nc_AppDelegate sharedInstance] updateBadge:0];
+         }
+     }
 }
 - (void)popOutToSettings{
     [self.navigationController popViewControllerAnimated:YES];

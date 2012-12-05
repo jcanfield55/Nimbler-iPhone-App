@@ -26,7 +26,7 @@
 UITableViewCell *cell;
 NSUserDefaults *prefs;
 
-@synthesize mainTable,twitterData,dateFormatter,reload,isFromAppDelegate,isTwitterLiveData,noAdvisory,getTweetInProgress,timerForStopProcees,arrayTweet;
+@synthesize mainTable,twitterData,dateFormatter,reload,isFromAppDelegate,isTwitterLiveData,noAdvisory,getTweetInProgress,timerForStopProcees,arrayTweet,strAllAdvisories;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -235,7 +235,7 @@ NSUserDefaults *prefs;
             if(strAgencyIDs.length > 0){
                 NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
                                       LAST_TWEET_TIME,tweetTime,
-                                      DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs,
+                                      DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs,
                                       nil];
                 NSString *req = [LATEST_TWEETS_REQ appendQueryParams:dict];
                 [[RKClient sharedClient]  get:req delegate:self];
@@ -261,15 +261,15 @@ NSUserDefaults *prefs;
     }
 }
       
-- (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
+- (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {
+    NSString *strResourcePath = request.resourcePath;
     RKJSONParserJSONKit* rkTwitDataParser = [RKJSONParserJSONKit new];
     @try {
         if ([request isGET]) {
-            if (isTwitterLiveData) {
+            if ([strResourcePath isEqualToString:strAllAdvisories]) {
                 isTwitterLiveData = false;
                 NIMLOG_TWITTER1(@"Twitter response %@", [response bodyAsString]);
                 id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];
-                [arrayTweet removeAllObjects];
                 [self setTwitterLiveData:res];
             } else {
                 NIMLOG_TWITTER1(@"latest tweets: %@", [response bodyAsString]);
@@ -379,9 +379,10 @@ NSUserDefaults *prefs;
             NSString *strAgencyIDs = [[nc_AppDelegate sharedInstance] getAgencyIdsString];
             if(strAgencyIDs.length > 0){
                 NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
-                                        DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs,
+                                        DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs,
                                         nil];
                 NSString *allAdvisories = [ALL_TWEETS_REQ appendQueryParams:params];
+                strAllAdvisories = allAdvisories;
                 [[RKClient sharedClient]  get:allAdvisories delegate:self];
             }
             else{
