@@ -338,3 +338,7 @@
 #define CALTRAIN_BULLET                @"Bullet"
 #define CALTRAIN_AGENCY_ID    @"caltrain-ca-us"
 #define CALTRAIN_TRAIN                 @"Train"
+
+// Gtfs Requests Constant
+
+#define GTFS_AGENCIES        @"gtfs/agencies"

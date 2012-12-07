@@ -1,22 +1,24 @@
 //
 //  GtfsStop.m
-//  Nimbler Caltrain
+//  RestKit
 //
-//  Created by macmini on 06/12/12.
-//  Copyright (c) 2012 Network Commuting. All rights reserved.
+//  Created by macmini on 07/12/12.
+//  Copyright (c) 2012 RestKit. All rights reserved.
 //
 
 #import "GtfsStop.h"
+#import "GtfsStopTimes.h"
 
 
 @implementation GtfsStop
 
-@dynamic stopID;
-@dynamic stopName;
 @dynamic stopDesc;
+@dynamic stopID;
 @dynamic stopLat;
 @dynamic stopLon;
-@dynamic zoneID;
+@dynamic stopName;
 @dynamic stopURL;
+@dynamic zoneID;
+@dynamic stopTimes;
 
 @end

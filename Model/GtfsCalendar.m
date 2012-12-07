@@ -1,25 +1,29 @@
 //
 //  GtfsCalendar.m
-//  Nimbler Caltrain
+//  RestKit
 //
-//  Created by macmini on 06/12/12.
-//  Copyright (c) 2012 Network Commuting. All rights reserved.
+//  Created by macmini on 07/12/12.
+//  Copyright (c) 2012 RestKit. All rights reserved.
 //
 
 #import "GtfsCalendar.h"
+#import "GtfsCalendarDates.h"
+#import "GtfsTrips.h"
 
 
 @implementation GtfsCalendar
 
-@dynamic serviceID;
+@dynamic endDate;
+@dynamic friday;
 @dynamic monday;
+@dynamic saturday;
+@dynamic serviceID;
+@dynamic startDate;
 @dynamic sunday;
+@dynamic thursday;
 @dynamic tuesday;
 @dynamic wednesday;
-@dynamic thursday;
-@dynamic friday;
-@dynamic saturday;
-@dynamic startDate;
-@dynamic endDate;
+@dynamic calendarDates;
+@dynamic trips;
 
 @end

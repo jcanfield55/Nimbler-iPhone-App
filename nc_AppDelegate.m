@@ -17,6 +17,8 @@
 #import "UserPreferance.h"
 #import "Reachability.h"
 #import "KeyObjectStore.h"
+#import "Model/GtfsCalendarDates.h"
+#import "Model/GtfsCalendar.h"
 #if TEST_FLIGHT_ENABLED
 #import "TestFlightSDK1-1/TestFlight.h"
 #endif
@@ -84,6 +86,8 @@ static nc_AppDelegate *appDelegate;
 @synthesize receivedReply;
 @synthesize receivedError;
 @synthesize testLogMutableString;
+@synthesize gtfsParser;
+@synthesize strAgenciesURL;
 
 // Feedback parameters
 @synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId;
@@ -180,6 +184,10 @@ FeedBackForm *fbView;
                                                           rkPlanMgr:rkPlanMgr];
         [toFromViewController setPlanStore:planStore];
         [KeyObjectStore setUpWithManagedObjectContext:[self managedObjectContext]];
+        
+        // Initialize The GtfsParser
+        
+        gtfsParser = [[GtfsParser alloc] initWithManagedObjectContext:self.managedObjectContext];
         
         // Pre-load stations location files
         if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
@@ -926,6 +934,7 @@ FeedBackForm *fbView;
     NSString *strRequestURL = request.resourcePath;
     isFromBackground = NO;
     @try {
+        NSString *strResuorcePath = [request resourcePath];
         if ([request isGET]) {
             NIMLOG_OBJECT1(@"nc_AppDelegate response from Get: %@", [response bodyAsString]);
             
@@ -1000,6 +1009,7 @@ FeedBackForm *fbView;
                             [twitterView getAdvisoryData];
                         }
                     }
+                    [self getAgencies];
                 }
                 // DE- 181 Fixed
                 // Checking resourcePath instead of checking for BOOL variable isRegionSupport.
@@ -1035,6 +1045,11 @@ FeedBackForm *fbView;
                     }
                     [[nc_AppDelegate sharedInstance] updateTime];
                 }
+            }
+        }
+        else{
+            if ([strResuorcePath isEqualToString:strAgenciesURL]) {
+                [self.gtfsParser parseAgencyDataAndStroreToDataBase:[response bodyAsString]];
             }
         }
     }
@@ -1147,6 +1162,23 @@ FeedBackForm *fbView;
         exit(0);
     }
 }
+
+#pragma mark  GTFS Requests
+
+-(void)getAgencies{
+    @try {
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        NSString *request = [GTFS_AGENCIES appendQueryParams:nil];
+        strAgenciesURL = request;
+        NIMLOG_OBJECT1(@"Get Agencies: %@", request);
+        [[RKClient sharedClient]  post:request params:nil delegate:self];
+    }
+    @catch (NSException *exception) {
+        logException(@"ToFromViewController->getAgencies", @"", exception);
+    }
+}
+
 
 -(void)updateTime{
     @try {

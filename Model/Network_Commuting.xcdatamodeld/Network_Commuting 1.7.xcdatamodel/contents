@@ -32,11 +32,9 @@
     </entity>
     <entity name="GtfsAgency" representedClassName="GtfsAgency" syncable="YES">
         <attribute name="agencyID" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="agencyLang" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="agencyName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="agencyPhone" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="agencyTimeZone" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="agencyURL" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="routes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GtfsRoutes" inverseName="agency" inverseEntity="GtfsRoutes" syncable="YES"/>
     </entity>
     <entity name="GtfsCalendar" representedClassName="GtfsCalendar" syncable="YES">
         <attribute name="endDate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -49,12 +47,14 @@
         <attribute name="thursday" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="tuesday" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="wednesday" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <relationship name="calendarDates" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GtfsCalendarDates" inverseName="calendar" inverseEntity="GtfsCalendarDates" syncable="YES"/>
+        <relationship name="trips" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GtfsTrips" inverseName="calendar" inverseEntity="GtfsTrips" syncable="YES"/>
     </entity>
     <entity name="GtfsCalendarDates" representedClassName="GtfsCalendarDates" syncable="YES">
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="exceptionType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="serviceID" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="calendar" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsCalendar" syncable="YES"/>
+        <relationship name="calendar" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsCalendar" inverseName="calendarDates" inverseEntity="GtfsCalendar" syncable="YES"/>
     </entity>
     <entity name="GtfsRoutes" representedClassName="GtfsRoutes" syncable="YES">
         <attribute name="routeColor" optional="YES" attributeType="String" syncable="YES"/>
@@ -65,7 +65,8 @@
         <attribute name="routeTextColor" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="routeType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="routeURL" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="agency" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsAgency" syncable="YES"/>
+        <relationship name="agency" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsAgency" inverseName="routes" inverseEntity="GtfsAgency" syncable="YES"/>
+        <relationship name="trips" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GtfsTrips" inverseName="route" inverseEntity="GtfsTrips" syncable="YES"/>
     </entity>
     <entity name="GtfsStop" representedClassName="GtfsStop" syncable="YES">
         <attribute name="stopDesc" optional="YES" attributeType="String" syncable="YES"/>
@@ -75,6 +76,7 @@
         <attribute name="stopName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="stopURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="zoneID" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="stopTimes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GtfsStopTimes" inverseName="stop" inverseEntity="GtfsStopTimes" syncable="YES"/>
     </entity>
     <entity name="GtfsStopTimes" representedClassName="GtfsStopTimes" syncable="YES">
         <attribute name="arrivalTime" optional="YES" attributeType="String" syncable="YES"/>
@@ -85,8 +87,8 @@
         <attribute name="stopID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="stopSequence" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="tripID" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="stop" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsStop" syncable="YES"/>
-        <relationship name="trips" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsTrips" syncable="YES"/>
+        <relationship name="stop" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsStop" inverseName="stopTimes" inverseEntity="GtfsStop" syncable="YES"/>
+        <relationship name="trips" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsTrips" inverseName="stopTimes" inverseEntity="GtfsTrips" syncable="YES"/>
     </entity>
     <entity name="GtfsTrips" representedClassName="GtfsTrips" syncable="YES">
         <attribute name="blockID" optional="YES" attributeType="String" syncable="YES"/>
@@ -96,8 +98,9 @@
         <attribute name="shapeID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="tripHeadSign" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="tripID" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="calendar" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GtfsCalendar" syncable="YES"/>
-        <relationship name="route" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsRoutes" syncable="YES"/>
+        <relationship name="calendar" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsCalendar" inverseName="trips" inverseEntity="GtfsCalendar" syncable="YES"/>
+        <relationship name="route" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsRoutes" inverseName="trips" inverseEntity="GtfsRoutes" syncable="YES"/>
+        <relationship name="stopTimes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GtfsStopTimes" inverseName="trips" inverseEntity="GtfsStopTimes" syncable="YES"/>
     </entity>
     <entity name="Itinerary" representedClassName="Itinerary" syncable="YES">
         <attribute name="duration" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
@@ -256,6 +259,13 @@
         <element name="AddressComponent" positionX="0" positionY="0" width="128" height="105"/>
         <element name="BayArea" positionX="0" positionY="0" width="128" height="195"/>
         <element name="Error" positionX="0" positionY="0" width="128" height="120"/>
+        <element name="GtfsAgency" positionX="160" positionY="192" width="128" height="105"/>
+        <element name="GtfsCalendar" positionX="160" positionY="192" width="128" height="225"/>
+        <element name="GtfsCalendarDates" positionX="160" positionY="192" width="128" height="105"/>
+        <element name="GtfsRoutes" positionX="160" positionY="192" width="128" height="195"/>
+        <element name="GtfsStop" positionX="160" positionY="192" width="128" height="165"/>
+        <element name="GtfsStopTimes" positionX="160" positionY="192" width="128" height="195"/>
+        <element name="GtfsTrips" positionX="160" positionY="192" width="128" height="195"/>
         <element name="Itinerary" positionX="0" positionY="0" width="128" height="330"/>
         <element name="KeyObjectPair" positionX="0" positionY="0" width="128" height="75"/>
         <element name="Leg" positionX="0" positionY="0" width="128" height="345"/>
@@ -268,12 +278,5 @@
         <element name="RawAddress" positionX="0" positionY="0" width="128" height="75"/>
         <element name="Step" positionX="0" positionY="0" width="128" height="195"/>
         <element name="TPResponse" positionX="0" positionY="0" width="128" height="75"/>
-        <element name="GtfsAgency" positionX="160" positionY="192" width="128" height="135"/>
-        <element name="GtfsCalendarDates" positionX="160" positionY="192" width="128" height="105"/>
-        <element name="GtfsCalendar" positionX="160" positionY="192" width="128" height="195"/>
-        <element name="GtfsRoutes" positionX="160" positionY="192" width="128" height="180"/>
-        <element name="GtfsStopTimes" positionX="160" positionY="192" width="128" height="195"/>
-        <element name="GtfsStop" positionX="160" positionY="192" width="128" height="150"/>
-        <element name="GtfsTrips" positionX="160" positionY="192" width="128" height="180"/>
     </elements>
 </model>

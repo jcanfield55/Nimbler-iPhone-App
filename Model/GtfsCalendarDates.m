@@ -1,9 +1,9 @@
 //
 //  GtfsCalendarDates.m
-//  Nimbler Caltrain
+//  RestKit
 //
-//  Created by macmini on 06/12/12.
-//  Copyright (c) 2012 Network Commuting. All rights reserved.
+//  Created by macmini on 07/12/12.
+//  Copyright (c) 2012 RestKit. All rights reserved.
 //
 
 #import "GtfsCalendarDates.h"
@@ -12,9 +12,9 @@
 
 @implementation GtfsCalendarDates
 
-@dynamic serviceID;
 @dynamic date;
 @dynamic exceptionType;
+@dynamic serviceID;
 @dynamic calendar;
 
 @end

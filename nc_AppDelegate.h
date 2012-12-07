@@ -18,6 +18,7 @@
 #import "RouteOptionsViewController.h"
 #import "RouteDetailsViewController.h"
 #import "LegMapViewController.h"
+#import "Model/GtfsParser.h"
 
 @interface nc_AppDelegate : UIResponder <UIApplicationDelegate,CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate,UITabBarControllerDelegate,UIActionSheetDelegate> {
     Location* currentLocation;
@@ -105,6 +106,8 @@
 @property (nonatomic) BOOL receivedReply;
 @property (nonatomic) BOOL receivedError;
 @property (nonatomic,strong) NSMutableString *testLogMutableString;
+@property (strong, nonatomic) GtfsParser *gtfsParser;
+@property (strong, nonatomic) NSString *strAgenciesURL;
 
 - (NSURL *)applicationDocumentsDirectory;
 
@@ -115,6 +118,7 @@
 + (NSString *)getUUID;
 -(void)updateBadge:(int)count;
 -(BOOL)isNetworkConnectionLive;
+-(void)getAgencies;
 -(void)updateTime;
 -(void)serviceByWeekday;
 -(void)calendarByDate;

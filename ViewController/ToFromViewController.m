@@ -1386,7 +1386,6 @@ UIImage *imageDetailDisclosure;
         NSString *strResuorcePath = [request resourcePath];
         // DE 175 Fixed
         if ([strResuorcePath isEqualToString:strLiveDataURL]) {
-            if ([request isGET]) {
                 [nc_AppDelegate sharedInstance].isNeedToLoadRealData = YES;
                 NIMLOG_OBJECT1(@"response %@", [response bodyAsString]);
                 isContinueGetRealTimeData = NO;
@@ -1394,10 +1393,7 @@ UIImage *imageDetailDisclosure;
                 id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];    
                 [routeOptionsVC setIsReloadRealData:false];
                 [routeOptionsVC setLiveFeed:res];
-            } 
         }
-        if ([request isPOST]) {                      
-        } 
     }  @catch (NSException *exception) {
         logException(@"ToFromViewController->viewWillAppear", @"getting unique IDs from TP Server response", exception);
     }
@@ -1786,6 +1782,4 @@ UIImage *imageDetailDisclosure;
     RXCustomTabBar *rxCustomTabbar = (RXCustomTabBar *)self.tabBarController;
     [rxCustomTabbar showNewTabBar];
 }
-
-
 @end

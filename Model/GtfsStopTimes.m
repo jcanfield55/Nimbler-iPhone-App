@@ -1,9 +1,9 @@
 //
 //  GtfsStopTimes.m
-//  Nimbler Caltrain
+//  RestKit
 //
-//  Created by macmini on 06/12/12.
-//  Copyright (c) 2012 Network Commuting. All rights reserved.
+//  Created by macmini on 07/12/12.
+//  Copyright (c) 2012 RestKit. All rights reserved.
 //
 
 #import "GtfsStopTimes.h"
@@ -13,15 +13,15 @@
 
 @implementation GtfsStopTimes
 
-@dynamic tripID;
 @dynamic arrivalTime;
 @dynamic departureTime;
+@dynamic dropOfTime;
+@dynamic pickUpTime;
+@dynamic shapeDistTravelled;
 @dynamic stopID;
 @dynamic stopSequence;
-@dynamic pickUpTime;
-@dynamic dropOfTime;
-@dynamic shapeDistTravelled;
-@dynamic trips;
+@dynamic tripID;
 @dynamic stop;
+@dynamic trips;
 
 @end
