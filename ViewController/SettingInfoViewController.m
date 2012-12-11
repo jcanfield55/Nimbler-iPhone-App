@@ -231,70 +231,70 @@ UIImage *imageDetailDisclosure;
 
 - (void) saveSetting{
     @try {
-        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-            if (!switchPushEnable.on) {
-                // set -1 for stop getting push notification
-                pushHour = PUSH_NOTIFY_OFF;
-                isPush = NO;
-            } else {
-                isPush = YES;
-            }
-            if(self.switchEnableUrgentSound.on){
-                enableUrgentSoundFlag = 1;
-            }
-            else{
-                enableUrgentSoundFlag = 2;
-            }
-            if(self.switchEnableStandardSound.on){
-                enableStandardSoundFlag = 1;
-            }
-            else{
-                enableStandardSoundFlag = 2;
-            }
-            [[NSUserDefaults standardUserDefaults] setInteger:enableUrgentSoundFlag forKey:ENABLE_URGENTNOTIFICATION_SOUND];
-            [[NSUserDefaults standardUserDefaults] setInteger:enableStandardSoundFlag forKey:ENABLE_STANDARDNOTIFICATION_SOUND];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-            // alertView = [self upadetSettings];
-            //[alertView show];
-            
-            // Update in user defaults
-            float ss = sliderPushNotification.value;
-            int alertFrequencyIntValue = ss;
-            
-            UserPreferance *userPrefs = [UserPreferance userPreferance]; // get singleton
-            userPrefs.pushEnable = [NSNumber numberWithBool:isPush];
-            userPrefs.triggerAtHour = [NSNumber numberWithInt:alertFrequencyIntValue];
-            userPrefs.walkDistance = [NSNumber numberWithFloat:sliderMaxWalkDistance.value];
-            // US 161 Implementation
-            if(![[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_MAX_WALK_DISTANCE] isEqual:userPrefs.walkDistance]){
-                PlanStore *planStrore = [[nc_AppDelegate sharedInstance] planStore];
-                [planStrore  clearCache];
-            }
-            
-            [userPrefs saveUpdates];
-            
-            NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
-            NSString *token = [prefs objectForKey:DEVICE_TOKEN];
-            // Update in TPServer DB
-            RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-            [RKClient setSharedClient:client];
-            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
-                                    DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
-                                    ALERT_COUNT,[NSNumber numberWithInt:pushHour],
-                                    DEVICE_TOKEN, token,
-                                    MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:sliderMaxWalkDistance.value],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt:enableUrgentSoundFlag],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt:enableStandardSoundFlag],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],
-                                    nil];
-            NSString *twitCountReq = [UPDATE_SETTING_REQ appendQueryParams:params];
-            NIMLOG_EVENT1(@" twitCountReq %@", twitCountReq);
-            [nc_AppDelegate sharedInstance].isSettingSavedSuccessfully = NO;
-            [[RKClient sharedClient]  get:twitCountReq delegate:self];
-            
-            logEvent(FLURRY_SETTINGS_SUBMITTED,
-                     FLURRY_SETTING_WALK_DISTANCE, [NSString stringWithFormat:@"%f",sliderMaxWalkDistance.value],
-                     FLURRY_SETTING_ALERT_COUNT, [NSString stringWithFormat:@"%d",pushHour],
-                     nil, nil, nil, nil);
-        }
-        else{
+//        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+//            if (!switchPushEnable.on) {
+//                // set -1 for stop getting push notification
+//                pushHour = PUSH_NOTIFY_OFF;
+//                isPush = NO;
+//            } else {
+//                isPush = YES;
+//            }
+//            if(self.switchEnableUrgentSound.on){
+//                enableUrgentSoundFlag = 1;
+//            }
+//            else{
+//                enableUrgentSoundFlag = 2;
+//            }
+//            if(self.switchEnableStandardSound.on){
+//                enableStandardSoundFlag = 1;
+//            }
+//            else{
+//                enableStandardSoundFlag = 2;
+//            }
+//            [[NSUserDefaults standardUserDefaults] setInteger:enableUrgentSoundFlag forKey:ENABLE_URGENTNOTIFICATION_SOUND];
+//            [[NSUserDefaults standardUserDefaults] setInteger:enableStandardSoundFlag forKey:ENABLE_STANDARDNOTIFICATION_SOUND];
+//            [[NSUserDefaults standardUserDefaults] synchronize];
+//            // alertView = [self upadetSettings];
+//            //[alertView show];
+//            
+//            // Update in user defaults
+//            float ss = sliderPushNotification.value;
+//            int alertFrequencyIntValue = ss;
+//            
+//            UserPreferance *userPrefs = [UserPreferance userPreferance]; // get singleton
+//            userPrefs.pushEnable = [NSNumber numberWithBool:isPush];
+//            userPrefs.triggerAtHour = [NSNumber numberWithInt:alertFrequencyIntValue];
+//            userPrefs.walkDistance = [NSNumber numberWithFloat:sliderMaxWalkDistance.value];
+//            // US 161 Implementation
+//            if(![[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_MAX_WALK_DISTANCE] isEqual:userPrefs.walkDistance]){
+//                PlanStore *planStrore = [[nc_AppDelegate sharedInstance] planStore];
+//                [planStrore  clearCache];
+//            }
+//            
+//            [userPrefs saveUpdates];
+//            
+//            NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
+//            NSString *token = [prefs objectForKey:DEVICE_TOKEN];
+//            // Update in TPServer DB
+//            RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+//            [RKClient setSharedClient:client];
+//            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
+//                                    DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
+//                                    ALERT_COUNT,[NSNumber numberWithInt:pushHour],
+//                                    DEVICE_TOKEN, token,
+//                                    MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:sliderMaxWalkDistance.value],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt:enableUrgentSoundFlag],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt:enableStandardSoundFlag],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],
+//                                    nil];
+//            NSString *twitCountReq = [UPDATE_SETTING_REQ appendQueryParams:params];
+//            NIMLOG_EVENT1(@" twitCountReq %@", twitCountReq);
+//            [nc_AppDelegate sharedInstance].isSettingSavedSuccessfully = NO;
+//            [[RKClient sharedClient]  get:twitCountReq delegate:self];
+//            
+//            logEvent(FLURRY_SETTINGS_SUBMITTED,
+//                     FLURRY_SETTING_WALK_DISTANCE, [NSString stringWithFormat:@"%f",sliderMaxWalkDistance.value],
+//                     FLURRY_SETTING_ALERT_COUNT, [NSString stringWithFormat:@"%d",pushHour],
+//                     nil, nil, nil, nil);
+//        }
+//        else{
             if (!switchPushNotification.on) {
                 // set -1 for stop getting push notification
                 pushHour = PUSH_NOTIFY_OFF;
@@ -320,12 +320,19 @@ UIImage *imageDetailDisclosure;
             // Update in TPServer DB
             RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
             [RKClient setSharedClient:client];
-            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
-                                    DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
-                                    ALERT_COUNT,[NSNumber numberWithInt:pushHour],
-                                    DEVICE_TOKEN, token,
-                                    MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:sliderMaximumWalkDistance.value],ENABLE_URGENTNOTIFICATION_SOUND,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_URGENTNOTIFICATION_SOUND],ENABLE_STANDARDNOTIFICATION_SOUND,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_STANDARDNOTIFICATION_SOUND],ENABLE_SFMUNI_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV],ENABLE_BART_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV],ENABLE_ACTRANSIT_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV],ENABLE_CALTRAIN_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV],NOTIF_TIMING_MORNING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MORNING],NOTIF_TIMING_MIDDAY,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MIDDAY],NOTIF_TIMING_EVENING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_EVENING],NOTIF_TIMING_NIGHT,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_NIGHT],NOTIF_TIMING_WEEKEND,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_WEEKEND],TRANSIT_MODE_SELECTED,[[NSUserDefaults standardUserDefaults] objectForKey:TRANSIT_MODE_SELECTED],MAX_BIKE_DISTANCE,[[NSUserDefaults standardUserDefaults] objectForKey:MAX_BIKE_DISTANCE],BIKE_TRIANGLE_FLAT,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_FLAT],BIKE_TRIANGLE_BIKE_FRIENDLY,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_BIKE_FRIENDLY],BIKE_TRIANGLE_QUICK,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_QUICK],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],
-                                    nil];
+//            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
+//                                    DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
+//                                    ALERT_COUNT,[NSNumber numberWithInt:pushHour],
+//                                    DEVICE_TOKEN, token,
+//                                    MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:sliderMaximumWalkDistance.value],ENABLE_URGENTNOTIFICATION_SOUND,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_URGENTNOTIFICATION_SOUND],ENABLE_STANDARDNOTIFICATION_SOUND,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_STANDARDNOTIFICATION_SOUND],ENABLE_SFMUNI_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV],ENABLE_BART_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV],ENABLE_ACTRANSIT_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV],ENABLE_CALTRAIN_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV],NOTIF_TIMING_MORNING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MORNING],NOTIF_TIMING_MIDDAY,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MIDDAY],NOTIF_TIMING_EVENING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_EVENING],NOTIF_TIMING_NIGHT,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_NIGHT],NOTIF_TIMING_WEEKEND,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_WEEKEND],TRANSIT_MODE_SELECTED,[[NSUserDefaults standardUserDefaults] objectForKey:TRANSIT_MODE_SELECTED],MAX_BIKE_DISTANCE,[[NSUserDefaults standardUserDefaults] objectForKey:MAX_BIKE_DISTANCE],BIKE_TRIANGLE_FLAT,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_FLAT],BIKE_TRIANGLE_BIKE_FRIENDLY,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_BIKE_FRIENDLY],BIKE_TRIANGLE_QUICK,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_QUICK],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],
+//                                    nil];
+        NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
+                                DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
+                                ALERT_COUNT,[NSNumber numberWithInt:pushHour],
+                                DEVICE_TOKEN, token,
+                                MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:sliderMaximumWalkDistance.value],ENABLE_URGENTNOTIFICATION_SOUND,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_URGENTNOTIFICATION_SOUND],ENABLE_STANDARDNOTIFICATION_SOUND,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_STANDARDNOTIFICATION_SOUND],ENABLE_SFMUNI_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV],ENABLE_BART_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV],ENABLE_ACTRANSIT_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV],ENABLE_CALTRAIN_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV],NOTIF_TIMING_MORNING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MORNING],NOTIF_TIMING_MIDDAY,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MIDDAY],NOTIF_TIMING_EVENING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_EVENING],NOTIF_TIMING_NIGHT,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_NIGHT],NOTIF_TIMING_WEEKEND,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_WEEKEND],TRANSIT_MODE_SELECTED,[[NSUserDefaults standardUserDefaults] objectForKey:TRANSIT_MODE_SELECTED],
+                                APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],
+                                nil];
             NSString *twitCountReq = [UPDATE_SETTING_REQ appendQueryParams:params];
             NIMLOG_EVENT1(@" twitCountReq %@", twitCountReq);
             [nc_AppDelegate sharedInstance].isSettingSavedSuccessfully = NO;
@@ -336,7 +343,7 @@ UIImage *imageDetailDisclosure;
                      FLURRY_SETTING_ALERT_COUNT, [NSString stringWithFormat:@"%d",pushHour],
                      nil, nil, nil, nil);
             
-        }
+        //}
     }
     @catch (NSException *exception) {
         [alertView dismissWithClickedButtonIndex:0 animated:NO];
@@ -611,7 +618,7 @@ UIImage *imageDetailDisclosure;
         }
     }
     else{
-        return 3;
+        return 2;
     }
 }
 
@@ -797,6 +804,10 @@ UIImage *imageDetailDisclosure;
 
 - (void) updateSetting{
     [self saveSetting];
+    [self.tblSetting reloadData];
+}
+
+- (void)switchValueChanged{
     [self.tblSetting reloadData];
 }
 @end

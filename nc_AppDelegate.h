@@ -108,6 +108,11 @@
 @property (nonatomic,strong) NSMutableString *testLogMutableString;
 @property (strong, nonatomic) GtfsParser *gtfsParser;
 @property (strong, nonatomic) NSString *strAgenciesURL;
+@property (strong, nonatomic) NSString *strCalendarDatesURL;
+@property (strong, nonatomic) NSString *strCalendarURL;
+@property (strong, nonatomic) NSString *strRoutesURL;
+@property (strong, nonatomic) NSString *strStopsURL;
+@property (strong, nonatomic) NSString *strTripsURL;
 
 - (NSURL *)applicationDocumentsDirectory;
 
@@ -118,7 +123,12 @@
 + (NSString *)getUUID;
 -(void)updateBadge:(int)count;
 -(BOOL)isNetworkConnectionLive;
--(void)getAgencies;
+-(void)getAgencyDatas;
+-(void)getCalendarDates;
+-(void)getCalendarData;
+-(void)getRoutesData;
+-(void)getStopsData;
+-(void)getTripsData;
 -(void)updateTime;
 -(void)serviceByWeekday;
 -(void)calendarByDate;
