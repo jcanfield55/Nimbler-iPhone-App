@@ -17,8 +17,6 @@
 #import "UserPreferance.h"
 #import "Reachability.h"
 #import "KeyObjectStore.h"
-#import "Model/GtfsCalendarDates.h"
-#import "Model/GtfsCalendar.h"
 #if TEST_FLIGHT_ENABLED
 #import "TestFlightSDK1-1/TestFlight.h"
 #endif
@@ -86,8 +84,6 @@ static nc_AppDelegate *appDelegate;
 @synthesize receivedReply;
 @synthesize receivedError;
 @synthesize testLogMutableString;
-@synthesize gtfsParser;
-@synthesize strAgenciesURL,strCalendarDatesURL,strCalendarURL,strRoutesURL,strStopsURL,strTripsURL;
 
 // Feedback parameters
 @synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId;
@@ -184,10 +180,6 @@ FeedBackForm *fbView;
                                                           rkPlanMgr:rkPlanMgr];
         [toFromViewController setPlanStore:planStore];
         [KeyObjectStore setUpWithManagedObjectContext:[self managedObjectContext]];
-        
-        // Initialize The GtfsParser
-        
-        gtfsParser = [[GtfsParser alloc] initWithManagedObjectContext:self.managedObjectContext];
         
         // Pre-load stations location files
         if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
@@ -932,7 +924,6 @@ FeedBackForm *fbView;
     NSString *strRequestURL = request.resourcePath;
     isFromBackground = NO;
     @try {
-        NSString *strResuorcePath = [request resourcePath];
         if ([request isGET]) {
             NIMLOG_OBJECT1(@"nc_AppDelegate response from Get: %@", [response bodyAsString]);
             
@@ -1007,7 +998,6 @@ FeedBackForm *fbView;
                             [twitterView getAdvisoryData];
                         }
                     }
-                    [self getAgencyDatas];
                 }
                 // DE- 181 Fixed
                 // Checking resourcePath instead of checking for BOOL variable isRegionSupport.
@@ -1042,41 +1032,6 @@ FeedBackForm *fbView;
                         [toFromViewController setSupportedRegion:region];
                     }
                     [[nc_AppDelegate sharedInstance] updateTime];
-                }
-                else if ([strResuorcePath isEqualToString:strAgenciesURL]) {
-                    RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
-                    NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
-                    [self.gtfsParser parseAgencyDataAndStroreToDataBase:res];
-                    [self getCalendarDates];
-                }
-                else if ([strResuorcePath isEqualToString:strCalendarDatesURL]) {
-                    RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
-                    NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
-                    [self.gtfsParser parseCalendarDatesDataAndStroreToDataBase:res];
-                    [self getCalendarData];
-                }
-                else if ([strResuorcePath isEqualToString:strCalendarURL]) {
-                    RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
-                    NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
-                    [self.gtfsParser parseCalendarDataAndStroreToDataBase:res];
-                    [self getRoutesData];
-                }
-                else if ([strResuorcePath isEqualToString:strRoutesURL]) {
-                    RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
-                    NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
-                    [self.gtfsParser parseRoutesDataAndStroreToDataBase:res];
-                    [self getStopsData];
-                }
-                else if ([strResuorcePath isEqualToString:strStopsURL]) {
-                    RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
-                    NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
-                    [self.gtfsParser parseStopsDataAndStroreToDataBase:res];
-                    [self getTripsData];
-                }
-                else if ([strResuorcePath isEqualToString:strTripsURL]) {
-                    RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
-                    NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
-                    [self.gtfsParser parseTripsDataAndStroreToDataBase:res];
                 }
             }
             
@@ -1193,98 +1148,6 @@ FeedBackForm *fbView;
 }
 
 #pragma mark  GTFS Requests
-
--(void)getAgencyDatas{
-    @try {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"agency",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
-        NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
-        strAgenciesURL = request;
-        NIMLOG_OBJECT1(@"Get Agencies: %@", request);
-        [[RKClient sharedClient]  get:request delegate:self];
-    }
-    @catch (NSException *exception) {
-        logException(@"ToFromViewController->getAgencies", @"", exception);
-    }
-}
-
--(void)getCalendarDates{
-    @try {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"calendar_dates",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
-        NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
-        strCalendarDatesURL = request;
-        NIMLOG_OBJECT1(@"Get Calendar Dates: %@", request);
-        [[RKClient sharedClient]  get:request delegate:self];
-    }
-    @catch (NSException *exception) {
-        logException(@"ToFromViewController->getCalendarDates", @"", exception);
-    }
-}
-
--(void)getCalendarData{
-    @try {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"calendar",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
-        NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
-        strCalendarURL = request;
-        NIMLOG_OBJECT1(@"Get Calendar: %@", request);
-        [[RKClient sharedClient]  get:request delegate:self];
-    }
-    @catch (NSException *exception) {
-        logException(@"ToFromViewController->getCalendarData", @"", exception);
-    }
-}
-
--(void)getRoutesData{
-    @try {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"routes",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
-        NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
-        strRoutesURL = request;
-        NIMLOG_OBJECT1(@"Get Routes: %@", request);
-        [[RKClient sharedClient]  get:request delegate:self];
-    }
-    @catch (NSException *exception) {
-        logException(@"ToFromViewController->getRoutesData", @"", exception);
-    }
-}
-
--(void)getStopsData{
-    @try {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"stops",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
-        NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
-        strStopsURL = request;
-        NIMLOG_OBJECT1(@"Get Stops: %@", request);
-        [[RKClient sharedClient]  get:request delegate:self];
-    }
-    @catch (NSException *exception) {
-        logException(@"ToFromViewController->getStopsData", @"", exception);
-    }
-}
-
--(void)getTripsData{
-    @try {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"trips",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
-        NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
-        strTripsURL = request;
-        NIMLOG_OBJECT1(@"Get Trips: %@", request);
-        [[RKClient sharedClient]  get:request delegate:self];
-    }
-    @catch (NSException *exception) {
-        logException(@"ToFromViewController->getTripsData", @"", exception);
-    }
-}
-
-
 -(void)updateTime{
     @try {
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];

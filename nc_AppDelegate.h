@@ -18,7 +18,6 @@
 #import "RouteOptionsViewController.h"
 #import "RouteDetailsViewController.h"
 #import "LegMapViewController.h"
-#import "Model/GtfsParser.h"
 
 @interface nc_AppDelegate : UIResponder <UIApplicationDelegate,CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate,UITabBarControllerDelegate,UIActionSheetDelegate> {
     Location* currentLocation;
@@ -106,13 +105,6 @@
 @property (nonatomic) BOOL receivedReply;
 @property (nonatomic) BOOL receivedError;
 @property (nonatomic,strong) NSMutableString *testLogMutableString;
-@property (strong, nonatomic) GtfsParser *gtfsParser;
-@property (strong, nonatomic) NSString *strAgenciesURL;
-@property (strong, nonatomic) NSString *strCalendarDatesURL;
-@property (strong, nonatomic) NSString *strCalendarURL;
-@property (strong, nonatomic) NSString *strRoutesURL;
-@property (strong, nonatomic) NSString *strStopsURL;
-@property (strong, nonatomic) NSString *strTripsURL;
 
 - (NSURL *)applicationDocumentsDirectory;
 
@@ -123,12 +115,6 @@
 + (NSString *)getUUID;
 -(void)updateBadge:(int)count;
 -(BOOL)isNetworkConnectionLive;
--(void)getAgencyDatas;
--(void)getCalendarDates;
--(void)getCalendarData;
--(void)getRoutesData;
--(void)getStopsData;
--(void)getTripsData;
 -(void)updateTime;
 -(void)serviceByWeekday;
 -(void)calendarByDate;
