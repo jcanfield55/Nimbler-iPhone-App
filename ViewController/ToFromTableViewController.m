@@ -264,7 +264,6 @@ NSString *strStreet2 = @"street ";
     if (([toFromVC editMode]==FROM_EDIT && [self isFrom] && ![[self txtField] isFirstResponder]) ||
         ([toFromVC editMode]==TO_EDIT && ![self isFrom] && ![[self txtField] isFirstResponder])) {
         BOOL status = [[self txtField] becomeFirstResponder];
-        NSLog(@"becomeFirstResponder: %d, isFrom: %d", status, [self isFrom]);
     }
     
     // Prepare the cell settings

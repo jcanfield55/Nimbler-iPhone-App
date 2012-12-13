@@ -30,6 +30,13 @@
 }
 
 - (void) parseAgencyDataAndStroreToDataBase:(NSDictionary *)dictFileData{
+    NSFetchRequest * fetchAgencies = [[NSFetchRequest alloc] init];
+    [fetchAgencies setEntity:[NSEntityDescription entityForName:@"GtfsAgency" inManagedObjectContext:self.managedObjectContext]];
+    NSArray * arrayAgencies = [self.managedObjectContext executeFetchRequest:fetchAgencies error:nil];
+    for (id planRequestChunks in arrayAgencies){
+        [self.managedObjectContext deleteObject:planRequestChunks];
+    }
+    
     NSMutableArray *arrayAgencyID = [[NSMutableArray alloc] init];
     NSMutableArray *arrayAgencyName = [[NSMutableArray alloc] init];
     NSMutableArray *arrayAgencyURL = [[NSMutableArray alloc] init];
@@ -61,15 +68,22 @@
         }
     }
     for(int i=0;i<[arrayAgencyID count];i++){
-        GtfsAgency* agency = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsAgency" inManagedObjectContext:self.managedObjectContext];
-        agency.agencyID = [arrayAgencyID objectAtIndex:i];
-        agency.agencyName = [arrayAgencyName objectAtIndex:i];
-        agency.agencyURL = [arrayAgencyURL objectAtIndex:i];
+            GtfsAgency* agency = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsAgency" inManagedObjectContext:self.managedObjectContext];
+            agency.agencyID = [arrayAgencyID objectAtIndex:i];
+            agency.agencyName = [arrayAgencyName objectAtIndex:i];
+            agency.agencyURL = [arrayAgencyURL objectAtIndex:i];
     }
     saveContext(self.managedObjectContext);
 }
 
 - (void) parseCalendarDatesDataAndStroreToDataBase:(NSDictionary *)dictFileData{
+    NSFetchRequest * fetchCalendarDates = [[NSFetchRequest alloc] init];
+    [fetchCalendarDates setEntity:[NSEntityDescription entityForName:@"GtfsCalendarDates" inManagedObjectContext:self.managedObjectContext]];
+    NSArray * arrayPlanCalendarDates = [self.managedObjectContext executeFetchRequest:fetchCalendarDates error:nil];
+    for (id calendarDates in arrayPlanCalendarDates){
+        [self.managedObjectContext deleteObject:calendarDates];
+    }
+    
     NSMutableArray *arrayServiceID = [[NSMutableArray alloc] init];
     NSMutableArray *arrayDate = [[NSMutableArray alloc] init];
     NSMutableArray *arrayExceptionType = [[NSMutableArray alloc] init];
@@ -101,7 +115,7 @@
         }
     }
     NSDateFormatter *formtter = [[NSDateFormatter alloc] init];
-    [formtter setDateFormat:@"YYYMMdd"];
+    [formtter setDateFormat:@"yyyyMMdd"];
     for(int i=0;i<[arrayServiceID count];i++){
         GtfsCalendarDates* calendarDates = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsCalendarDates" inManagedObjectContext:self.managedObjectContext];
         calendarDates.serviceID = [arrayServiceID objectAtIndex:i];
@@ -113,6 +127,13 @@
 }
 
 - (void) parseCalendarDataAndStroreToDataBase:(NSDictionary *)dictFileData{
+    NSFetchRequest * fetchCalendar = [[NSFetchRequest alloc] init];
+    [fetchCalendar setEntity:[NSEntityDescription entityForName:@"GtfsCalendar" inManagedObjectContext:self.managedObjectContext]];
+    NSArray * arrayCalendar = [self.managedObjectContext executeFetchRequest:fetchCalendar error:nil];
+    for (id calendar in arrayCalendar){
+        [self.managedObjectContext deleteObject:calendar];
+    }
+    
     NSMutableArray *arrayServiceID = [[NSMutableArray alloc] init];
     NSMutableArray *arrayMonday = [[NSMutableArray alloc] init];
     NSMutableArray *arrayTuesday = [[NSMutableArray alloc] init];
@@ -193,7 +214,7 @@
         }
     }
     NSDateFormatter *formtter = [[NSDateFormatter alloc] init];
-    [formtter setDateFormat:@"YYYMMdd"];
+    [formtter setDateFormat:@"yyyyMMdd"];
     for(int i=0;i<[arrayServiceID count];i++){
         GtfsCalendar* calendar = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsCalendar" inManagedObjectContext:self.managedObjectContext];
         calendar.serviceID = [arrayServiceID objectAtIndex:i];
@@ -221,6 +242,13 @@
 }
 
 - (void) parseRoutesDataAndStroreToDataBase:(NSDictionary *)dictFileData{
+    NSFetchRequest * fetchRoutes = [[NSFetchRequest alloc] init];
+    [fetchRoutes setEntity:[NSEntityDescription entityForName:@"GtfsRoutes" inManagedObjectContext:self.managedObjectContext]];
+    NSArray * arrayRoutes = [self.managedObjectContext executeFetchRequest:fetchRoutes error:nil];
+    for (id routes in arrayRoutes){
+        [self.managedObjectContext deleteObject:routes];
+    }
+    
     NSMutableArray *arrayRouteID = [[NSMutableArray alloc] init];
     NSMutableArray *arrayRouteShortName = [[NSMutableArray alloc] init];
     NSMutableArray *arrayRouteLongName = [[NSMutableArray alloc] init];
@@ -301,6 +329,13 @@
 }
 
 - (void) parseStopsDataAndStroreToDataBase:(NSDictionary *)dictFileData{
+    NSFetchRequest * fetchStops = [[NSFetchRequest alloc] init];
+    [fetchStops setEntity:[NSEntityDescription entityForName:@"GtfsStop" inManagedObjectContext:self.managedObjectContext]];
+    NSArray * arrayStops = [self.managedObjectContext executeFetchRequest:fetchStops error:nil];
+    for (id stops in arrayStops){
+        [self.managedObjectContext deleteObject:stops];
+    }
+    
     NSMutableArray *arrayStopID = [[NSMutableArray alloc] init];
     NSMutableArray *arrayStopName = [[NSMutableArray alloc] init];
     NSMutableArray *arrayStopDesc = [[NSMutableArray alloc] init];
@@ -375,6 +410,13 @@
 }
 
 - (void) parseTripsDataAndStroreToDataBase:(NSDictionary *)dictFileData{
+    NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
+    [fetchTrips setEntity:[NSEntityDescription entityForName:@"GtfsTrips" inManagedObjectContext:self.managedObjectContext]];
+    NSArray * arrayTrips = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
+    for (id trips in arrayTrips){
+        [self.managedObjectContext deleteObject:trips];
+    }
+    
     NSMutableArray *arrayTripID = [[NSMutableArray alloc] init];
     NSMutableArray *arrayRouteID = [[NSMutableArray alloc] init];
     NSMutableArray *arrayServiceID = [[NSMutableArray alloc] init];

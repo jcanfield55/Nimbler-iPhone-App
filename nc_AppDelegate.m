@@ -963,6 +963,7 @@ FeedBackForm *fbView;
                     KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
                     [keyObjectStore setObject:calendarByDateByAgency forKey:TR_CALENDAR_BY_DATE_BY_AGENCY];
                     [self getTwiiterLiveData];
+                    [self performSelector:@selector(getAgencyDatas) withObject:nil afterDelay:1.0];
                     if (timerTweeterGetData == nil) {
                         timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
                     }
@@ -1007,7 +1008,6 @@ FeedBackForm *fbView;
                             [twitterView getAdvisoryData];
                         }
                     }
-                    [self getAgencyDatas];
                 }
                 // DE- 181 Fixed
                 // Checking resourcePath instead of checking for BOOL variable isRegionSupport.
@@ -1047,31 +1047,31 @@ FeedBackForm *fbView;
                     RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
                     NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
                     [self.gtfsParser parseAgencyDataAndStroreToDataBase:res];
-                    [self getCalendarDates];
+                    [self performSelector:@selector(getCalendarDates) withObject:nil afterDelay:1.0];
                 }
                 else if ([strResuorcePath isEqualToString:strCalendarDatesURL]) {
                     RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
                     NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
                     [self.gtfsParser parseCalendarDatesDataAndStroreToDataBase:res];
-                    [self getCalendarData];
+                    [self performSelector:@selector(getCalendarData) withObject:nil afterDelay:1.0];
                 }
                 else if ([strResuorcePath isEqualToString:strCalendarURL]) {
                     RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
                     NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
                     [self.gtfsParser parseCalendarDataAndStroreToDataBase:res];
-                    [self getRoutesData];
+                    [self performSelector:@selector(getRoutesData) withObject:nil afterDelay:1.0];
                 }
                 else if ([strResuorcePath isEqualToString:strRoutesURL]) {
                     RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
                     NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
                     [self.gtfsParser parseRoutesDataAndStroreToDataBase:res];
-                    [self getStopsData];
+                    //[self performSelector:@selector(getStopsData) withObject:nil afterDelay:5.0];
                 }
                 else if ([strResuorcePath isEqualToString:strStopsURL]) {
                     RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
                     NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
                     [self.gtfsParser parseStopsDataAndStroreToDataBase:res];
-                    [self getTripsData];
+                    //[self performSelector:@selector(getStopsData) withObject:nil afterDelay:5.0];
                 }
                 else if ([strResuorcePath isEqualToString:strTripsURL]) {
                     RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];

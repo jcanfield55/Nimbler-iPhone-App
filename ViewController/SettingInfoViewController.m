@@ -124,7 +124,6 @@ UIImage *imageDetailDisclosure;
         [sliderMaximumWalkDistance setMinimumValue:MAX_WALK_DISTANCE_MIN_VALUE];
         [sliderMaximumWalkDistance setMaximumValue:MAX_WALK_DISTANCE_MAX_VALUE];
         if([[NSUserDefaults standardUserDefaults] objectForKey:PREFS_MAX_WALK_DISTANCE]){
-            NSLog(@"%f",[[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_MAX_WALK_DISTANCE] floatValue]);
             [sliderMaximumWalkDistance setValue:[[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_MAX_WALK_DISTANCE] floatValue]];
         }
         else{
@@ -176,8 +175,6 @@ UIImage *imageDetailDisclosure;
     [lblSliderMaxWalkDistanceValue setBackgroundColor:[UIColor clearColor]];
     [lblSliderMaxWalkDistanceValue setTextAlignment:UITextAlignmentCenter];
     [self.sliderMaxWalkDistance addSubview:lblSliderMaxWalkDistanceValue];
-    
-    NSLog(@"%d",[[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_IS_PUSH_ENABLE] intValue]);
     if([[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_IS_PUSH_ENABLE] intValue] == 1){
         [switchPushNotification setOn:YES];
     }

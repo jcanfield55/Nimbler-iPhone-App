@@ -101,7 +101,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 }
 
 -(void)popOutToNimbler{
-    NSLog(@"Begin popOutToNimbler");    
     CATransition *animation = [CATransition animation];
     [animation setDuration:0.3];
     [animation setType:kCATransitionPush];
@@ -109,7 +108,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     [animation setRemovedOnCompletion:YES];
     [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
     [[self.navigationController.view layer] addAnimation:animation forKey:nil];
-    NSLog(@"Will popViewControllerAnimated");
     [[self navigationController] popViewControllerAnimated:NO];
 }
 #pragma mark - UITableViewDelegate methods
@@ -240,7 +238,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                     }
                     NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
                                                                      timeIntervalSinceDate:realTimeArrivalTime]);
-                     NSLog(@"%@",superShortTimeStringForDate(realTimeArrivalTime));
                     titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
                                            superShortTimeStringForDate(realTimeArrivalTime),
                                            superShortTimeStringForDate([itin endTimeOfLastLeg]),

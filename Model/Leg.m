@@ -267,7 +267,6 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
             
         } else if (legPosition == LAST_LEG) {   // US124 implementation
             if([self.arrivalFlag intValue] == DELAYED) {
-                NSLog(@"endTime=%@",[self endTime]);
                 NSDate* realTimeArrivalTime = [[self endTime]
                                                dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
                 if(realTimeArrivalTime){
