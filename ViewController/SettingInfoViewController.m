@@ -330,7 +330,7 @@ UIImage *imageDetailDisclosure;
                                 DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
                                 ALERT_COUNT,[NSNumber numberWithInt:pushHour],
                                 DEVICE_TOKEN, token,
-                                MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:sliderMaximumWalkDistance.value],ENABLE_URGENTNOTIFICATION_SOUND,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_URGENTNOTIFICATION_SOUND],ENABLE_STANDARDNOTIFICATION_SOUND,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_STANDARDNOTIFICATION_SOUND],ENABLE_SFMUNI_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV],ENABLE_BART_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV],ENABLE_ACTRANSIT_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV],ENABLE_CALTRAIN_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV],NOTIF_TIMING_MORNING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MORNING],NOTIF_TIMING_MIDDAY,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MIDDAY],NOTIF_TIMING_EVENING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_EVENING],NOTIF_TIMING_NIGHT,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_NIGHT],NOTIF_TIMING_WEEKEND,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_WEEKEND],TRANSIT_MODE_SELECTED,[[NSUserDefaults standardUserDefaults] objectForKey:TRANSIT_MODE_SELECTED],
+                                MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:sliderMaximumWalkDistance.value],ENABLE_URGENTNOTIFICATION_SOUND,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_URGENTNOTIFICATION_SOUND],ENABLE_STANDARDNOTIFICATION_SOUND,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_STANDARDNOTIFICATION_SOUND],ENABLE_SFMUNI_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV],ENABLE_BART_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV],ENABLE_ACTRANSIT_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV],ENABLE_CALTRAIN_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV],NOTIF_TIMING_MORNING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MORNING],NOTIF_TIMING_MIDDAY,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MIDDAY],NOTIF_TIMING_EVENING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_EVENING],NOTIF_TIMING_NIGHT,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_NIGHT],NOTIF_TIMING_WEEKEND,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_WEEKEND],
                                 APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],
                                 nil];
             NSString *twitCountReq = [UPDATE_SETTING_REQ appendQueryParams:params];
@@ -618,12 +618,12 @@ UIImage *imageDetailDisclosure;
         }
     }
     else{
-        return 2;
+        return 1;
     }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if((indexPath.section == 1 && indexPath.row == 1) || (indexPath.section == 2 && indexPath.row == 1)){
+    if((indexPath.section == 1 && indexPath.row == 1) || (indexPath.section == 2 && indexPath.row == 0)){
         return 80;
     }
     return 40;
@@ -707,20 +707,20 @@ UIImage *imageDetailDisclosure;
         }
     }
     else if(indexPath.section == 2){
+//        if(indexPath.row == 0){
+//            NSString *strTransitMode = [[NSUserDefaults standardUserDefaults] objectForKey:TRANSIT_MODE_SELECTED];
+//            cell.textLabel.text = TRANSIT_MODE;
+//            if([strTransitMode intValue] == 2){
+//                cell.detailTextLabel.text = TRANSIT_ONLY;
+//            }
+//            else if([strTransitMode intValue] == 4){
+//                cell.detailTextLabel.text = BIKE_ONLY;
+//            }
+//            else if([strTransitMode intValue] == 5){
+//                cell.detailTextLabel.text = BIKE_AND_TRANSIT;
+//            }
+//        }
         if(indexPath.row == 0){
-            NSString *strTransitMode = [[NSUserDefaults standardUserDefaults] objectForKey:TRANSIT_MODE_SELECTED];
-            cell.textLabel.text = TRANSIT_MODE;
-            if([strTransitMode intValue] == 2){
-                cell.detailTextLabel.text = TRANSIT_ONLY;
-            }
-            else if([strTransitMode intValue] == 4){
-                cell.detailTextLabel.text = BIKE_ONLY;
-            }
-            else if([strTransitMode intValue] == 5){
-                cell.detailTextLabel.text = BIKE_AND_TRANSIT;
-            }
-        }
-        else if(indexPath.row == 1){
             cell.textLabel.text = nil;
             [cell setAccessoryView:nil];
             UIView* cellView = [cell contentView];
@@ -755,7 +755,7 @@ UIImage *imageDetailDisclosure;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(indexPath.section == 0 || (indexPath.section == 1 && (indexPath.row == 2 || indexPath.row == 3)) || (indexPath.section == 2 && (indexPath.row == 0 || indexPath.row == 2))){
+    if(indexPath.section == 0 || (indexPath.section == 1 && (indexPath.row == 2 || indexPath.row == 3))){
         if([[UIScreen mainScreen] bounds].size.height == 568){
             settingDetailViewController = [[SettingDetailViewController alloc] initWithNibName:@"SettingDetailViewController_568h" bundle:nil];
         }

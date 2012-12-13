@@ -191,7 +191,6 @@
             [params setObject:@"false" forKey:SAVE_PLAN];
         }
         [params setObject:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] forKey:APPLICATION_TYPE];
-        [params setObject:[[NSUserDefaults standardUserDefaults] objectForKey:TRANSIT_MODE_SELECTED] forKey:TRANSIT_MODE_SELECTED];
         // Build the parameters into a resource string
         parameters.serverCallsSoFar = parameters.serverCallsSoFar + 1;
         // TODO handle changes to maxWalkDistance with plan caching
