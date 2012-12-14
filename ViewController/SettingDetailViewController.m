@@ -207,9 +207,13 @@
     self.tblDetailSetting.dataSource = self;
     [self.tblDetailSetting setBackgroundView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_background.png"]]];
 }
-
+- (void) viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [nc_AppDelegate sharedInstance].isSettingDetailView = YES;
+}
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
+    [nc_AppDelegate sharedInstance].isSettingDetailView = NO;
     isSettingDetail = NO;
     if(nSettingRow == 3){
         if(switchUrgentNotification.isOn){

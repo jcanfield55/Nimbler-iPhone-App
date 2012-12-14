@@ -76,6 +76,7 @@ static nc_AppDelegate *appDelegate;
 @synthesize strUpdateSettingURL;
 @synthesize strTweetCountURL;
 @synthesize isSettingView;
+@synthesize isSettingDetailView;
 @synthesize isRemoteNotification;
 @synthesize isNeedToLoadRealData;
 @synthesize testPlan;
@@ -429,7 +430,7 @@ FeedBackForm *fbView;
         [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
     }
     // Added To Fix DE-206
-    if(isSettingView){
+    if(isSettingView || isSettingDetailView){
         isSettingSavedSuccessfully = NO;
 //        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
 //            if (!settingView.switchPushEnable.on) {
