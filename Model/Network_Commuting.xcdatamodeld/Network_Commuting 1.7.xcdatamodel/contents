@@ -134,6 +134,7 @@
     </entity>
     <entity name="Leg" representedClassName="Leg" syncable="YES">
         <attribute name="agencyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="agencyName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="bogusNonTransitLeg" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="distance" optional="YES" attributeType="Double" syncable="YES"/>
         <attribute name="duration" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
@@ -148,6 +149,7 @@
         <attribute name="routeLongName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="routeShortName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="startTime" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="tripId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="tripShortName" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="from" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="PlanPlace" inverseName="leg" inverseEntity="PlanPlace" syncable="YES"/>
         <relationship name="itinerary" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Itinerary" inverseName="legs" inverseEntity="Itinerary" syncable="YES"/>
@@ -268,7 +270,7 @@
         <element name="GtfsTrips" positionX="160" positionY="192" width="128" height="195"/>
         <element name="Itinerary" positionX="0" positionY="0" width="128" height="330"/>
         <element name="KeyObjectPair" positionX="0" positionY="0" width="128" height="75"/>
-        <element name="Leg" positionX="0" positionY="0" width="128" height="345"/>
+        <element name="Leg" positionX="0" positionY="0" width="128" height="375"/>
         <element name="Location" positionX="0" positionY="0" width="128" height="255"/>
         <element name="LocationFromGoogle" positionX="160" positionY="192" width="128" height="90"/>
         <element name="LocationFromIOS" positionX="160" positionY="192" width="128" height="60"/>

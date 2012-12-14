@@ -17,7 +17,7 @@
 
 #define TRIP_PROCESS_URL    @"http://23.23.210.156:8080/TPServer/ws/"
 
-//#define TRIP_PROCESS_URL      @"http://192.168.2.148:8080/TPServer/ws/"
+//#define TRIP_PROCESS_URL      @"http://192.168.2.106:8080/TPServer/ws/"
 
 #define TWITTER_SERARCH_URL    @"https://twitter.com/#!/search/realtime/TRAIN%20from%3Acaltrain%20OR%20from%3Acaltrain_news"
 #define CALTRAIN_TWITTER_URL   @"https://twitter.com/#!/search/from%3Acaltrain%20OR%20from%3Acaltrain_news"
@@ -209,10 +209,18 @@
 #define TINY_FLOAT 0.000001
 
 #define AGENCY_IDS   @"agencyIds"
-#define CALTRAIN_AGENCY_IDS  @"1"
+#define CALTRAIN_AGENCY_IDS @"1"
 #define BART_AGENCY_ID      @"2"
 #define SFMUNI_AGENCY_ID    @"3"
 #define ACTRANSIT_AGENCY_ID @"4"
+
+#define CALTRAIN_AGENCY_NAME    @"Caltrain"
+#define BART_AGENCY_NAME        @"Bay Area Rapid Transit"
+#define ACTRANSIT_AGENCY_NAME   @"AC Transit"
+#define SFMUNI_AGENCY_NAME      @"San Francisco Municipal Transportation Agency"
+#define AIRBART_AGENCY_NAME     @"AirBART"
+
+
 
 #define CALTRAIN_APP_TYPE   @"1"
 #define SFMUNI_APP_TYPE     @"4"
@@ -343,4 +351,5 @@
 #define GTFS_RAWDATA @"gtfs/rawdata"
 #define ENTITY  @"entity"
 #define AGENCY_IDS @"agencyIds"
+#define GTFS_STOP_TIMES  @"gtfs/stoptimes"
 

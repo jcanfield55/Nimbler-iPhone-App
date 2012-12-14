@@ -48,6 +48,7 @@
     NSString *strUpdateSettingURL;
     NSString *strTweetCountURL;
     BOOL isSettingView;
+    BOOL isSettingDetailView;
     UIActionSheet *actionsheet;
     Plan *testPlan;
     // Used For Automated test.
@@ -113,6 +114,8 @@
 @property (strong, nonatomic) NSString *strRoutesURL;
 @property (strong, nonatomic) NSString *strStopsURL;
 @property (strong, nonatomic) NSString *strTripsURL;
+@property (strong, nonatomic) NSString *strStopTimesURL;
+@property (nonatomic) BOOL isSettingDetailView;
 
 - (NSURL *)applicationDocumentsDirectory;
 
@@ -129,6 +132,7 @@
 -(void)getRoutesData;
 -(void)getStopsData;
 -(void)getTripsData;
+- (void) getGtfsStopTimes:(NSArray *)arrayAgencyIds:(NSArray *)arrayTripIds;
 -(void)updateTime;
 -(void)serviceByWeekday;
 -(void)calendarByDate;

@@ -42,6 +42,8 @@
 @dynamic steps;
 @dynamic to;
 @dynamic legId;
+@dynamic tripId;
+@dynamic agencyName;
 @synthesize sortedSteps;
 @synthesize polylineEncodedString;
 @synthesize arrivalTime,arrivalFlag,timeDiffInMins;
@@ -74,6 +76,8 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         [mapping mapKeyPath:@"routeLongName" toAttribute:@"routeLongName"];
         [mapping mapKeyPath:@"routeShortName" toAttribute:@"routeShortName"];
         [mapping mapKeyPath:@"startTime" toAttribute:@"startTime"];
+        [mapping mapKeyPath:@"tripId" toAttribute:@"tripId"];
+        [mapping mapKeyPath:@"agencyName" toAttribute:@"agencyName"];
         
         [mapping mapKeyPath:@"steps" toRelationship:@"steps" withMapping:stepsMapping];
         [mapping mapKeyPath:@"from" toRelationship:@"from" withMapping:planPlaceMapping];

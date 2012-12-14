@@ -14,6 +14,7 @@
 #import "GtfsRoutes.h"
 #import "GtfsStop.h"
 #import "GtfsTrips.h"
+#import "GtfsStopTimes.h"
 
 @implementation GtfsParser
 
@@ -484,6 +485,105 @@
         routes.directionID = [arrayDirectionID objectAtIndex:i];
         routes.blockID = [arrayBlockID objectAtIndex:i];
         routes.shapeID = [arrayShapeID objectAtIndex:i];
+    }
+    saveContext(self.managedObjectContext);
+}
+
+- (void) parseStopTimesAndStroreToDataBase:(NSDictionary *)dictFileData:(NSString *)strResourcePath{
+    NSArray *arrayComponents = [strResourcePath componentsSeparatedByString:@"?"];
+    NSString *tempString = [arrayComponents objectAtIndex:1];
+    NSArray *arraySubComponents = [tempString componentsSeparatedByString:@"="];
+    NSString *tempStringSubComponents = [arraySubComponents objectAtIndex:1];
+    NSArray *arrayAgencyIds = [tempStringSubComponents componentsSeparatedByString:@"%2C"];
+    NSMutableArray *arrayTripID = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayArrivalTime = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayDepartureTime = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayStopID = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayStopSequence = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayPickUpType = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayDropOffType = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayShapeDistTraveled = [[NSMutableArray alloc] init];
+    
+    NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
+    for(int k=0;k<[arrayAgencyIds count];k++){
+        NSArray *arrayComponentsAgency = [dictComponents objectForKey:[arrayAgencyIds objectAtIndex:k]];
+        for(int i=1;i<[arrayComponentsAgency count];i++){
+            NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
+            NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
+            if([arraySubComponents count] > 0){
+                [arrayTripID addObject:[arraySubComponents objectAtIndex:0]];
+            }
+            else{
+                [arrayTripID addObject:@""];
+            }
+            if([arraySubComponents count] > 1){
+                [arrayArrivalTime addObject:[arraySubComponents objectAtIndex:1]];
+            }
+            else{
+                [arrayArrivalTime addObject:@""];
+            }
+            if([arraySubComponents count] > 2){
+                [arrayDepartureTime addObject:[arraySubComponents objectAtIndex:2]];
+            }
+            else{
+                [arrayDepartureTime addObject:@""];
+            }
+            if([arraySubComponents count] > 3){
+                [arrayStopID addObject:[arraySubComponents objectAtIndex:3]];
+            }
+            else{
+                [arrayStopID addObject:@""];
+            }
+            if([arraySubComponents count] > 4){
+                [arrayStopSequence addObject:[arraySubComponents objectAtIndex:4]];
+            }
+            else{
+                [arrayStopSequence addObject:@""];
+            }
+            if([arraySubComponents count] > 5){
+                [arrayPickUpType addObject:[arraySubComponents objectAtIndex:5]];
+            }
+            else{
+                [arrayPickUpType addObject:@""];
+            }
+            if([arraySubComponents count] > 6){
+                [arrayDropOffType addObject:[arraySubComponents objectAtIndex:6]];
+            }
+            else{
+                [arrayDropOffType addObject:@""];
+            }
+            if([arraySubComponents count] > 7){
+                [arrayShapeDistTraveled addObject:[arraySubComponents objectAtIndex:7]];
+            }
+            else{
+                [arrayShapeDistTraveled addObject:@""];
+            }
+        }
+    }
+    
+    for(int l=0;l<[arrayTripID count];l++){
+        NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
+        [fetchTrips setEntity:[NSEntityDescription entityForName:@"GtfsStopTimes" inManagedObjectContext:self.managedObjectContext]];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"tripID = %@ && stopSequence = %@",[arrayTripID objectAtIndex:l],[arrayStopSequence objectAtIndex:l]];
+        [fetchTrips setPredicate:predicate];
+        NSArray * arrayTrips = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
+        for (id trips in arrayTrips){
+            [self.managedObjectContext deleteObject:trips];
+             NSLog(@"Done");
+        }
+    }
+                                  
+                                  
+    for(int j=0;j<[arrayTripID count];j++){
+        GtfsStopTimes* stopTimes = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsStopTimes" inManagedObjectContext:self.managedObjectContext];
+        stopTimes.tripID = [arrayTripID objectAtIndex:j];
+        stopTimes.arrivalTime = [arrayArrivalTime objectAtIndex:j];
+        stopTimes.departureTime = [arrayDepartureTime objectAtIndex:j];
+        stopTimes.stopID = [arrayStopID objectAtIndex:j];
+        stopTimes.stopSequence = [arrayStopSequence objectAtIndex:j];
+        stopTimes.pickUpTime = [arrayPickUpType objectAtIndex:j];
+        stopTimes.dropOfTime = [arrayDropOffType objectAtIndex:j];
+        stopTimes.shapeDistTravelled = [arrayShapeDistTraveled objectAtIndex:j];
     }
     saveContext(self.managedObjectContext);
 }

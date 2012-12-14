@@ -44,6 +44,8 @@ typedef enum {
 @property (nonatomic, retain) PlanPlace *from;
 @property (nonatomic, retain) Itinerary *itinerary;
 @property (nonatomic, retain) NSSet *steps;
+@property (nonatomic, retain) NSString * tripId;
+@property (nonatomic, retain) NSString * agencyName;
 @property (nonatomic, retain) PlanPlace *to;
 @property (nonatomic, strong) NSArray *sortedSteps;
 @property (nonatomic, strong, readonly) PolylineEncodedString *polylineEncodedString;

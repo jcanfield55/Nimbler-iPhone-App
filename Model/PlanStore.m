@@ -227,7 +227,7 @@
     @try {
         RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
         NSDictionary *tempResponseDictionary = [rkParser objectFromString:[[objectLoader response] bodyAsString] error:nil];
-         NIMLOG_OBJECT1(@"PLAN =%@",tempResponseDictionary);
+         NSLog(@"PLAN =%@",tempResponseDictionary);
         if([[tempResponseDictionary objectForKey:RESPONSE_CODE] intValue] == RESPONSE_SUCCESSFULL){
             if([tempResponseDictionary objectForKey:OTP_ERROR_STATUS]){
                 if ([nc_AppDelegate sharedInstance].isToFromView) {
@@ -257,6 +257,30 @@
                 } else {
                     [NSException raise:@"PlanStore->didLoadObjects failed to retrieve plan parameters" format:@"strResourcePath: %@", strResourcePath];
                 }
+                NSMutableArray *arrayAgencyIDs = [[NSMutableArray alloc] init];
+                NSMutableArray *arrayTripIds = [[NSMutableArray alloc] init];
+                NSArray *itiArray = [plan sortedItineraries];
+                for(int i=0;i<[itiArray count];i++){
+                    Itinerary *iti = [itiArray objectAtIndex:i];
+                    NSArray *legArray = [iti sortedLegs];
+                    for(int j=0;j<[legArray count];j++){
+                        Leg *leg = [legArray objectAtIndex:j];
+                        if([leg.agencyName isEqualToString:CALTRAIN_AGENCY_NAME] && ![arrayAgencyIDs containsObject:CALTRAIN_AGENCY_IDS]){
+                            [arrayAgencyIDs addObject:CALTRAIN_AGENCY_IDS];
+                        }
+                        else if(([leg.agencyName isEqualToString:BART_AGENCY_NAME] ||[leg.agencyName isEqualToString:AIRBART_AGENCY_NAME]) && ![arrayAgencyIDs containsObject:BART_AGENCY_ID]){
+                           [arrayAgencyIDs addObject:BART_AGENCY_ID];
+                        }
+                        else if([leg.agencyName isEqualToString:SFMUNI_AGENCY_NAME] && ![arrayAgencyIDs containsObject:SFMUNI_AGENCY_ID]){
+                            [arrayAgencyIDs addObject:SFMUNI_AGENCY_ID];
+                        }
+                        else if ([leg.agencyName isEqualToString:ACTRANSIT_AGENCY_NAME] && ![arrayAgencyIDs containsObject:ACTRANSIT_AGENCY_ID]){
+                           [arrayAgencyIDs addObject:ACTRANSIT_AGENCY_ID];
+                        }
+                        [arrayTripIds addObject:leg.tripId];
+                    }
+                }
+                [[nc_AppDelegate sharedInstance] getGtfsStopTimes:arrayAgencyIDs :arrayTripIds];
                 
                 // Set to & from location with special handling of CurrentLocation
                 Location *toLoc = [planRequestParameters toLocation];

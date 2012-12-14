@@ -20,4 +20,5 @@
 - (void) parseRoutesDataAndStroreToDataBase:(NSDictionary *)dictFileData;
 - (void) parseStopsDataAndStroreToDataBase:(NSDictionary *)dictFileData;
 - (void) parseTripsDataAndStroreToDataBase:(NSDictionary *)dictFileData;
+- (void) parseStopTimesAndStroreToDataBase:(NSDictionary *)dictFileData:(NSString *)strResourcePath;
 @end
