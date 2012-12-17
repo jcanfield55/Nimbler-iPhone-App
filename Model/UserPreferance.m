@@ -25,9 +25,16 @@ BOOL tpStrToBool(NSString* stringValue)
     return false;
 }
 
-@interface UserPreferance()
--(void)recomputeBikeTriangle;
+@interface UserPreferance() {
+    NSDate* dateOfLastSaveToServerAttempt;
+}
+// The following two dates determine whether settings need to be saved to the server.
+// If dateOfLastUserPrefChange is more recent than dateOfLastSuccessfulSaveToServer, then another save needs to be done
+@property(nonatomic, strong) NSDate* dateOfLastUserPrefChange;
+@property(nonatomic, strong) NSDate* dateOfLastSuccessfulSaveToServer;
 
+-(void)recomputeBikeTriangle;
+-(void)markChanges;  // Marks that changes have been made (by updating dateOfLastUserPrefChange)
 @end
 
 
@@ -54,8 +61,9 @@ BOOL tpStrToBool(NSString* stringValue)
 @synthesize bikeTriangleFlat;
 @synthesize bikeTriangleQuick;
 @synthesize bikeTriangleBikeFriendly;
+@synthesize dateOfLastUserPrefChange;
+@synthesize dateOfLastSuccessfulSaveToServer;
 
-@synthesize isSettingSavedSuccessfully;
 
 static UserPreferance* userPrefs;
 
@@ -68,14 +76,6 @@ static UserPreferance* userPrefs;
         userPrefs = [[UserPreferance alloc] init];
         NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
         bool saveNeeded = false;
-        
-        NSNumber* isSettingSavedSuccTemp = [prefs objectForKey:PREFS_IS_SETTING_SAVED_SUCCESSFULLY];
-        if (isSettingSavedSuccTemp) {
-            userPrefs.isSettingSavedSuccessfully = isSettingSavedSuccTemp.boolValue;
-        } else {
-            userPrefs.isSettingSavedSuccessfully = false;
-            saveNeeded = true;
-        }
         
         NSNumber* pushEnableTemp = [prefs objectForKey:PREFS_IS_PUSH_ENABLE];
         if (pushEnableTemp) {
@@ -220,9 +220,11 @@ static UserPreferance* userPrefs;
             userPrefs.fastVsFlat = BIKE_PREFERENCE_DEFAULT_VALUE;
             saveNeeded = true;
         }
-        
         [userPrefs recomputeBikeTriangle]; // Compute bike triangle variables from fastVsFlat and fastVsSafe
         
+        userPrefs.dateOfLastSuccessfulSaveToServer = [prefs objectForKey:PREFS_DATE_LAST_SUCCESSFUL_SAVE];
+        userPrefs.dateOfLastUserPrefChange = [prefs objectForKey:PREFS_DATE_LAST_CHANGE];
+
         if (saveNeeded) {
             [userPrefs saveUpdates];
             [userPrefs saveToServer];
@@ -242,8 +244,10 @@ static UserPreferance* userPrefs;
 // Saves changes to permanent storage on device
 -(void)saveUpdates
 {
+    /* Commenting this out for now, since the changes are currently being made in the setter methods
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setObject:[NSNumber numberWithBool:isSettingSavedSuccessfully] forKey:PREFS_IS_SETTING_SAVED_SUCCESSFULLY];
+    [prefs setObject:dateOfLastUserPrefChange forKey:PREFS_DATE_LAST_CHANGE];
+    [prefs setObject:dateOfLastSuccessfulSaveToServer forKey:PREFS_DATE_LAST_SUCCESSFUL_SAVE];
     [prefs setObject:[NSNumber numberWithBool:pushEnable] forKey:PREFS_IS_PUSH_ENABLE];
     [prefs setObject:[NSNumber numberWithInt:pushNotificationThreshold] forKey:PREFS_PUSH_NOTIFICATION_THRESHOLD];
     [prefs setObject:[NSNumber numberWithFloat:walkDistance] forKey:PREFS_MAX_WALK_DISTANCE];
@@ -263,7 +267,28 @@ static UserPreferance* userPrefs;
     [prefs setObject:[NSNumber numberWithDouble:fastVsFlat] forKey:PREFS_BIKE_FAST_VS_FLAT];
     [prefs setObject:[NSNumber numberWithDouble:fastVsSafe] forKey:PREFS_BIKE_FAST_VS_SAFE];
     [prefs synchronize];
+     */
 }
+
+
+// Returns true if there are changes that still need to be save to server
+-(BOOL)isSaveToServerNeeded
+{
+    if (!dateOfLastSuccessfulSaveToServer) {
+        return TRUE;
+    }
+    else if (!dateOfLastUserPrefChange) {
+        return FALSE;
+    } 
+    return ([[self dateOfLastSuccessfulSaveToServer] compare:self.dateOfLastUserPrefChange] == NSOrderedAscending);
+}
+
+// Marks that changes have been made (by updating dateOfLastUserPrefChange)
+-(void)markChanges
+{
+    dateOfLastUserPrefChange = [NSDate date];
+}
+
 
 //
 // Save changes to server using Restkit
@@ -276,6 +301,7 @@ static UserPreferance* userPrefs;
         [RKClient setSharedClient:client];
         
         int alertCount = (pushEnable ? pushNotificationThreshold : PUSH_NOTIFY_OFF); // -1 if push notification is off
+        dateOfLastSaveToServerAttempt = [NSDate date];
         NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
                                 DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
                                 ALERT_COUNT,[NSNumber numberWithInt:alertCount],
@@ -315,10 +341,7 @@ static UserPreferance* userPrefs;
             id  res = [rkDataParser objectFromString:[response bodyAsString] error:nil];
             NSNumber *respCode = [(NSDictionary*)res objectForKey:RESPONSE_CODE];
             if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
-                self.isSettingSavedSuccessfully = YES;
-            }
-            else{
-                self.isSettingSavedSuccessfully = NO;
+                self.dateOfLastSuccessfulSaveToServer = dateOfLastSaveToServerAttempt;
             }
             NIMLOG_EVENT1(@"response for userUpdateSettings:  %@", [response bodyAsString]);
         }
@@ -331,15 +354,22 @@ static UserPreferance* userPrefs;
 // Setters for each user preference property.  Saves in memory and to [NSUserDefaults standardUserDefaults]
 //
 
--(void) setIsSettingSavedSuccessfully:(BOOL)isSettingSavedSucc
+
+-(void) setDateOfLastUserPrefChange:(NSDate *)dateOfLastUserPrefChng
 {
-    isSettingSavedSuccessfully = isSettingSavedSucc;
+    dateOfLastUserPrefChange = dateOfLastUserPrefChng;
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setObject:[NSNumber numberWithBool:isSettingSavedSuccessfully] forKey:PREFS_IS_SETTING_SAVED_SUCCESSFULLY];
+    [prefs setObject:dateOfLastUserPrefChange forKey:PREFS_DATE_LAST_CHANGE];
     [prefs synchronize];
 }
 
-
+-(void) setDateOfLastSuccessfulSaveToServer:(NSDate *)dateOfLastSuccessfulSaveToSrv
+{
+    dateOfLastSuccessfulSaveToServer = dateOfLastSuccessfulSaveToSrv;
+    NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:dateOfLastSuccessfulSaveToServer forKey:PREFS_DATE_LAST_SUCCESSFUL_SAVE];
+    [prefs synchronize];
+}
 
 -(void) setPushEnable:(BOOL)pushEn
 {
@@ -347,6 +377,7 @@ static UserPreferance* userPrefs;
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:[NSNumber numberWithBool:pushEnable] forKey:PREFS_IS_PUSH_ENABLE];
     [prefs synchronize];
+    [self markChanges];
 }
 
 
@@ -356,6 +387,7 @@ static UserPreferance* userPrefs;
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:[NSNumber numberWithInt:pushNotificationThreshold] forKey:PREFS_PUSH_NOTIFICATION_THRESHOLD];
     [prefs synchronize];
+    [self markChanges];
 }
 
 -(void) setWalkDistance:(double)walkDist
@@ -364,6 +396,7 @@ static UserPreferance* userPrefs;
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:[NSNumber numberWithFloat:walkDistance] forKey:PREFS_MAX_WALK_DISTANCE];
     [prefs synchronize];
+    [self markChanges];
 }
 
 -(void) setSfMuniAdvisories:(BOOL)sfMuniAdv
@@ -372,6 +405,7 @@ static UserPreferance* userPrefs;
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:tpBoolToStr(sfMuniAdvisories) forKey:ENABLE_SFMUNI_ADV];
     [prefs synchronize];
+    [self markChanges];
 }
 
 
@@ -381,6 +415,7 @@ static UserPreferance* userPrefs;
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:tpBoolToStr(bartAdvisories) forKey:ENABLE_BART_ADV];
     [prefs synchronize];
+    [self markChanges];
 }
 
 -(void) setAcTransitAdvisories:(BOOL)acTransitAdv
@@ -389,6 +424,7 @@ static UserPreferance* userPrefs;
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:tpBoolToStr(acTransitAdvisories) forKey:ENABLE_ACTRANSIT_ADV];
     [prefs synchronize];
+    [self markChanges];
 }
 
 -(void) setCaltrainAdvisories:(BOOL)caltrainAdv
@@ -397,6 +433,7 @@ static UserPreferance* userPrefs;
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:tpBoolToStr(caltrainAdvisories) forKey:ENABLE_CALTRAIN_ADV];
     [prefs synchronize];
+    [self markChanges];
 }
 
 -(void) setUrgentNotificationSound:(BOOL)urgentNotificationSnd
@@ -405,6 +442,7 @@ static UserPreferance* userPrefs;
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:tpBoolToStr(urgentNotificationSound) forKey:ENABLE_URGENTNOTIFICATION_SOUND];
     [prefs synchronize];
+    [self markChanges];
 }
 
 
@@ -414,6 +452,7 @@ static UserPreferance* userPrefs;
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:tpBoolToStr(standardNotificationSound) forKey:ENABLE_STANDARDNOTIFICATION_SOUND];
     [prefs synchronize];
+    [self markChanges];
 }
 
 -(void) setNotificationMorning:(BOOL)notifyMrn
@@ -422,6 +461,7 @@ static UserPreferance* userPrefs;
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:tpBoolToStr(notificationMorning) forKey:NOTIF_TIMING_MORNING];
     [prefs synchronize];
+    [self markChanges];
 }
 
 -(void) setNotificationMidday:(BOOL)notifyMidday
@@ -430,6 +470,7 @@ static UserPreferance* userPrefs;
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:tpBoolToStr(notificationMidday) forKey:NOTIF_TIMING_MIDDAY];
     [prefs synchronize];
+    [self markChanges];
 }
 
 -(void) setNotificationEvening:(BOOL)notifyEvening
@@ -438,6 +479,7 @@ static UserPreferance* userPrefs;
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:tpBoolToStr(notificationEvening) forKey:NOTIF_TIMING_EVENING];
     [prefs synchronize];
+    [self markChanges];
 }
 
 -(void) setNotificationNight:(BOOL)notifyNight
@@ -446,6 +488,7 @@ static UserPreferance* userPrefs;
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:tpBoolToStr(notificationNight) forKey:NOTIF_TIMING_NIGHT];
     [prefs synchronize];
+    [self markChanges];
 }
 
 -(void) setNotificationWeekend:(BOOL)notifyWeekend
@@ -454,6 +497,7 @@ static UserPreferance* userPrefs;
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:tpBoolToStr(notificationWeekend) forKey:NOTIF_TIMING_WEEKEND];
     [prefs synchronize];
+    [self markChanges];
 }
 
 -(void) setTransitMode:(int)transitModeTemp
@@ -462,6 +506,7 @@ static UserPreferance* userPrefs;
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:[NSNumber numberWithInt:transitMode] forKey:TRANSIT_MODE_SELECTED];
     [prefs synchronize];
+    [self markChanges];
 }
 
 -(void) setBikeDistance:(double)bikeDistanceTemp
@@ -470,6 +515,7 @@ static UserPreferance* userPrefs;
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:[NSNumber numberWithDouble:bikeDistance] forKey:PREFS_MAX_BIKE_DISTANCE];
     [prefs synchronize];
+    [self markChanges];
 }
 
 -(void) setFastVsFlat:(double)fastVsFlatTemp
@@ -479,6 +525,7 @@ static UserPreferance* userPrefs;
     [prefs setObject:[NSNumber numberWithDouble:fastVsFlat] forKey:PREFS_BIKE_FAST_VS_FLAT];
     [prefs synchronize];
     [self recomputeBikeTriangle];
+    [self markChanges];
 }
 
 -(void) setFastVsSafe:(double)fastVsSafeTemp
@@ -488,5 +535,7 @@ static UserPreferance* userPrefs;
     [prefs setObject:[NSNumber numberWithDouble:fastVsSafe] forKey:PREFS_BIKE_FAST_VS_SAFE];
     [prefs synchronize];
     [self recomputeBikeTriangle];
+    [self markChanges];
 }
+
 @end

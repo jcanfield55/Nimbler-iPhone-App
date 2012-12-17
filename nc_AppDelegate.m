@@ -369,75 +369,6 @@ FeedBackForm *fbView;
     if(actionsheet){
         [actionsheet dismissWithClickedButtonIndex:-1 animated:NO];
     }
-    // Added To Fix DE-206
-    if(isSettingView || isSettingDetailView){
-        UserPreferance *userPrefs = [UserPreferance userPreferance]; // get singleton
-        userPrefs.isSettingSavedSuccessfully = NO;
-//        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-//            if (!settingView.switchPushEnable.on) {
-//                // set -1 for stop getting push notification
-//                settingView.pushHour = PUSH_NOTIFY_OFF;
-//                settingView.isPush = NO;
-//            } else {
-//                settingView.isPush = YES;
-//            }
-//            if(settingView.switchEnableUrgentSound.on){
-//                settingView.enableUrgentSoundFlag = 1;
-//            }
-//            else{
-//                settingView.enableUrgentSoundFlag = 2;
-//            }
-//            if(settingView.switchEnableStandardSound.on){
-//                settingView.enableStandardSoundFlag = 1;
-//            }
-//            else{
-//                settingView.enableStandardSoundFlag = 2;
-//            }
-//            
-//            [[NSUserDefaults standardUserDefaults] setInteger:settingView.enableUrgentSoundFlag forKey:ENABLE_URGENTNOTIFICATION_SOUND];
-//            [[NSUserDefaults standardUserDefaults] setInteger:settingView.enableStandardSoundFlag forKey:ENABLE_STANDARDNOTIFICATION_SOUND];
-//            [[NSUserDefaults standardUserDefaults] synchronize];
-//            float ss = settingView.sliderPushNotification.value;
-//            int alertFrequencyIntValue = ss;
-//            
-//            UserPreferance *userPrefs = [UserPreferance userPreferance]; // get singleton
-//            userPrefs.pushEnable = [NSNumber numberWithBool:settingView.isPush];
-//            userPrefs.pushNotificationThreshold = [NSNumber numberWithInt:alertFrequencyIntValue];
-//            userPrefs.walkDistance = [NSNumber numberWithFloat:settingView.sliderMaxWalkDistance.value];
-//            [userPrefs saveUpdates];
-//        }
-//        else{
-            if (!settingView.switchPushNotification.on) {
-                // set -1 for stop getting push notification
-                settingView.isPush = NO;
-            } else {
-                settingView.isPush = YES;
-            }
-            if(settingView.settingDetailViewController.switchUrgentNotification.on){
-                settingView.enableUrgentSoundFlag = 1;
-            }
-            else{
-                settingView.enableUrgentSoundFlag = 2;
-            }
-            if(settingView.settingDetailViewController.switchStandardNotification.on){
-                settingView.enableStandardSoundFlag = 1;
-            }
-            else{
-                settingView.enableStandardSoundFlag = 2;
-            }
-            
-            [[NSUserDefaults standardUserDefaults] setInteger:settingView.enableUrgentSoundFlag forKey:ENABLE_URGENTNOTIFICATION_SOUND];
-            [[NSUserDefaults standardUserDefaults] setInteger:settingView.enableStandardSoundFlag forKey:ENABLE_STANDARDNOTIFICATION_SOUND];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-            float ss = settingView.sliderPushNotificationFrequency.value;
-            int alertFrequencyIntValue = ss;
-            
-            userPrefs.pushEnable = settingView.isPush;
-            userPrefs.pushNotificationThreshold = alertFrequencyIntValue;
-            userPrefs.walkDistance = settingView.sliderMaximumWalkDistance.value;
-            [userPrefs saveUpdates];
-        }
-   // }
     /*
      Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
      If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
@@ -561,8 +492,9 @@ FeedBackForm *fbView;
         toFromViewController.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
         
     }
-    if(![UserPreferance userPreferance].isSettingSavedSuccessfully){
-        [[UserPreferance userPreferance] saveToServer];  // Save settings to server if they have not been already
+    UserPreferance* userPrefs = [UserPreferance userPreferance];
+    if([userPrefs isSaveToServerNeeded]){
+        [userPrefs saveToServer];  // Save settings to server if they have not been already
     }
     //    sleep(2);
 }

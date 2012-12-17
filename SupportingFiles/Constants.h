@@ -69,7 +69,8 @@
 
 // NSUserDefaults keys
 #define USER_PREFERANCE                   @"UserPreference"
-#define PREFS_IS_SETTING_SAVED_SUCCESSFULLY @"PrefsIsSettingSavedSuccessfully"
+#define PREFS_DATE_LAST_SUCCESSFUL_SAVE  @"PrefsDateLastSuccessfulSave"
+#define PREFS_DATE_LAST_CHANGE            @"PrefsDateLastChange"
 #define PREFS_IS_PUSH_ENABLE              @"PrefsIsPushEnable"
 #define PREFS_PUSH_NOTIFICATION_THRESHOLD @"PrefsPushNotificationThreshold"
 #define PREFS_MAX_WALK_DISTANCE           @"PrefsMaxWalkDistance"

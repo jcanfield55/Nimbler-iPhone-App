@@ -56,4 +56,7 @@
 
 - (void)popOutToSettings;
 -(IBAction)maxBikeDistanceValueChanged:(UISlider *)sender;
+
+-(void)switchUrgentNotificationChanged;
+-(void)switchStandardNotificationChanged;
 @end

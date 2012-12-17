@@ -38,8 +38,7 @@ BOOL tpStrToBool(NSString* stringValue);  // Function to translate from settings
 @property(nonatomic,readonly) double bikeTriangleQuick; // Derived from fastVsFlat an fastVsSafe
 @property(nonatomic,readonly) double bikeTriangleBikeFriendly; // Derived from fastVsSafe
 
-@property(nonatomic) BOOL isSettingSavedSuccessfully;  // Yes if settings have been saved successfully to the server since last change
-
+-(BOOL)isSaveToServerNeeded;  // Returns true if there are changes that still need to be save to server
 +(UserPreferance *)userPreferance;  // Return the singleton object.  Sets to default values if no value already saved
 -(void)saveUpdates;   // Saves changes to permanent storage on device
 -(void)saveToServer;  // Save changes to server

@@ -41,12 +41,14 @@
             [switchUrgentNotification setOnTintColor:[UIColor lightGrayColor]];
         }
         [switchUrgentNotification setOn:[userPrefs urgentNotificationSound]];
+        [switchUrgentNotification addTarget:self action:@selector(switchUrgentNotificationChanged) forControlEvents:UIControlEventValueChanged];
 
         switchStandardNotification = [[UISwitch alloc] init];
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
             [switchStandardNotification setOnTintColor:[UIColor lightGrayColor]];
         }
         [switchStandardNotification setOn:[userPrefs standardNotificationSound]];
+        [switchStandardNotification addTarget:self action:@selector(switchStandardNotificationChanged) forControlEvents:UIControlEventValueChanged];
         
         lblMaximumBikeDistance=[[UILabel alloc] initWithFrame:CGRectMake(DETAIL_SETTING_MAIN_LABEL_XPOS,DETAIL_SETTING_MAIN_LABEL_YPOS, DETAIL_SETTING_MAIN_LABEL_WIDTH, DETAIL_SETTING_MAIN_LABEL_HEIGHT)];
         [lblMaximumBikeDistance setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
@@ -195,10 +197,6 @@
     [nc_AppDelegate sharedInstance].isSettingDetailView = NO;
     isSettingDetail = NO;
     UserPreferance* userPrefs = [UserPreferance userPreferance];
-    if(nSettingRow == 3){
-        userPrefs.urgentNotificationSound = switchUrgentNotification.isOn;
-        userPrefs.standardNotificationSound = switchStandardNotification.isOn;
-    }
     if(nSettingRow == 7){
         userPrefs.bikeDistance = sliderMaximumBikeDistance.value;
         userPrefs.fastVsSafe = sliderPreferenceFastVsSafe.value;
@@ -582,6 +580,16 @@
         }
          [self.tblDetailSetting reloadData];
     }
+}
+
+
+-(void)switchUrgentNotificationChanged {
+    [UserPreferance userPreferance].urgentNotificationSound = switchUrgentNotification.isOn;
+
+}
+
+-(void)switchStandardNotificationChanged {
+    [UserPreferance userPreferance].standardNotificationSound = switchStandardNotification.isOn;
 }
 
 @end

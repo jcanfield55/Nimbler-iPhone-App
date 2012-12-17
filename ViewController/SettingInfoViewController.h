@@ -71,5 +71,9 @@
 -(void)popOutFromSettingView;
 -(void)fetchUserSettingData;
 - (void) saveSetting;
-- (void) switchValueChanged;
+
+// Callbacks for when User changes values for settings controls
+-(void)switchPushNotificationChanged;
+
+
 @end

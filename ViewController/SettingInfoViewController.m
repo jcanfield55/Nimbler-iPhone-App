@@ -16,6 +16,12 @@
 #define WALK_DISTANCE       @"walkDistance"
 #define PUSH_ENABLE         @"pushEnable"
 
+@interface SettingInfoViewController() {
+    BOOL planCacheNeedsClearing; // True if maxWalkDistance has been updated requiring plan cache to be cleared
+}
+
+@end
+
 @implementation SettingInfoViewController
 
 @synthesize sliderMaxWalkDistance;
@@ -53,7 +59,7 @@ UIImage *imageDetailDisclosure;
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
             [switchPushNotification setOnTintColor:[UIColor lightGrayColor]];
         }
-         [switchPushNotification addTarget:self action:@selector(switchValueChanged) forControlEvents:UIControlEventValueChanged];
+        [switchPushNotification addTarget:self action:@selector(switchPushNotificationChanged) forControlEvents:UIControlEventValueChanged];
         lblFrequently=[[UILabel alloc] initWithFrame:CGRectMake(LABEL_FREQUENTLY_XPOS,LABEL_FREQUENTLY_YPOS, LABEL_FREQUENTLY_WIDTH, LABEL_FREQUENTLY_HEIGHT)];
         [lblFrequently setTextColor:[UIColor GRAY_FONT_COLOR]];
         lblFrequently.backgroundColor =[UIColor clearColor];
@@ -165,7 +171,7 @@ UIImage *imageDetailDisclosure;
     [lblSliderMaxWalkDistanceValue setTextAlignment:UITextAlignmentCenter];
     [self.sliderMaxWalkDistance addSubview:lblSliderMaxWalkDistanceValue];
     
-    [switchPushEnable setOn:userPrefs.pushEnable];
+    [switchPushNotification setOn:userPrefs.pushEnable];
 }
 
 - (void)viewDidUnload{
@@ -191,7 +197,6 @@ UIImage *imageDetailDisclosure;
     //[scrollView setFrame:CGRectMake(0,0,320,480)];
     [scrollView setContentSize:CGSizeMake(320,1075)];
     [nc_AppDelegate sharedInstance].isSettingView = YES;
-    [UserPreferance userPreferance].isSettingSavedSuccessfully = NO;
     [self fetchUserSettingData];
     logEvent(FLURRY_SETTINGS_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
     
@@ -209,24 +214,19 @@ UIImage *imageDetailDisclosure;
 
 - (void) saveSetting{
     @try {
-
-        float ss = sliderPushNotificationFrequency.value;
-        int alertFrequencyIntValue = ss;
         UserPreferance *userPrefs = [UserPreferance userPreferance]; // get singleton
         
         // US 161 Implementation -- clear cache if max walk distance has been modified
-        if(sliderMaximumWalkDistance.value != userPrefs.walkDistance) {
+        if(planCacheNeedsClearing) {
             PlanStore *planStore = [[nc_AppDelegate sharedInstance] planStore];
             [planStore  clearCache];
+            planCacheNeedsClearing = NO;
         }
         
-        // Update preferences 
-        userPrefs.pushEnable = switchPushNotification.on;
-        userPrefs.pushNotificationThreshold = alertFrequencyIntValue;
-        userPrefs.walkDistance = sliderMaximumWalkDistance.value;
-        
-        // Store changes to server
-        [userPrefs saveToServer];
+        // Store changes to server if needed
+        if ([userPrefs isSaveToServerNeeded]) {
+            [userPrefs saveToServer];
+        }
         
         logEvent(FLURRY_SETTINGS_SUBMITTED,
                  FLURRY_SETTING_WALK_DISTANCE, [NSString stringWithFormat:@"%f",sliderMaxWalkDistance.value],
@@ -262,21 +262,27 @@ UIImage *imageDetailDisclosure;
     aSlider.currentThumbImage.size.width / 2;
 }
 
-
+// Slider callback method for original settings page
 -(IBAction)sliderWalkDistanceValueChanged:(UISlider *)sender
 {
     [sliderMaxWalkDistance setValue:sliderMaxWalkDistance.value];
     [sliderMaxWalkDistance setSelected:YES];
+    [UserPreferance userPreferance].walkDistance = sliderMaxWalkDistance.value;
     float sliderXPOS = [self xPositionFromSliderValue:sliderMaxWalkDistance];
+    planCacheNeedsClearing = YES;
     // Fixed DE-209
     lblSliderMaxWalkDistanceValue.center = CGPointMake(sliderXPOS, -10);
     lblSliderMaxWalkDistanceValue.text = [NSString stringWithFormat:@"%0.2f", sliderMaxWalkDistance.value];
+    [UserPreferance userPreferance].walkDistance = 0;
 }
 
+// Slider callback method for new settings page
 -(IBAction)sliderWalkDistance:(UISlider *)sender
 {
     [sliderMaximumWalkDistance setValue:sliderMaximumWalkDistance.value];
     [sliderMaximumWalkDistance setSelected:YES];
+    [UserPreferance userPreferance].walkDistance = sliderMaximumWalkDistance.value;
+    planCacheNeedsClearing = YES;
     float sliderXPOS = [self xPositionFromSliderValue:sliderMaximumWalkDistance];
     // Fixed DE-209
     lblCurrentMaxWalkDistance.center = CGPointMake(sliderXPOS, -10);
@@ -287,14 +293,17 @@ UIImage *imageDetailDisclosure;
 {
     int pushNotificationThreshold = lroundf(sliderPushNotification.value);
     [sliderPushNotification setValue:pushNotificationThreshold];
+    [UserPreferance userPreferance].pushNotificationThreshold = pushNotificationThreshold;
     [sliderPushNotification setSelected:YES];
     NIMLOG_EVENT1(@"walk distance: %d", pushNotificationThreshold);
 }
 
+// Callback for pushNotificationFrequency slider (in new Settings page)
 -(IBAction)pushNotificationValueChanged:(UISlider *)sender
 {
     int pushNotificationThreshold = lroundf(sliderPushNotificationFrequency.value);
     [sliderPushNotificationFrequency setValue:pushNotificationThreshold];
+    [UserPreferance userPreferance].pushNotificationThreshold = pushNotificationThreshold;
     [sliderPushNotificationFrequency setSelected:YES];
     NIMLOG_EVENT1(@"walk distance: %d", pushNotificationThreshold);
 }
@@ -353,7 +362,7 @@ UIImage *imageDetailDisclosure;
                  !userPrefs.caltrainAdvisories) {
             [strDetailTextLabel appendString:LABEL_NONE];
         } else { // Some combination of agencies
-            int agencyCount;
+            int agencyCount=0;
             if (userPrefs.sfMuniAdvisories) {
                 [strDetailTextLabel appendString:LABEL_SFMUNI];
                 agencyCount++;
@@ -422,7 +431,7 @@ UIImage *imageDetailDisclosure;
                                        [NSNumber numberWithBool:userPrefs.notificationWeekend], nil];
                 NSArray *arrayStringToAppend = [NSArray arrayWithObjects:LABEL_MORNING,LABEL_MIDDAY,LABEL_EVENING,LABEL_NIGHT,LABEL_WKENDS, nil];
                 NSMutableString *strMutableTextLabel = [NSMutableString stringWithCapacity:25];
-                [strMutableTextLabel appendString:LABEL_WKKDAY];
+                [strMutableTextLabel appendFormat:@"%@ ",LABEL_WKKDAY];
                 bool firstOne = true;
                 for(int i = 0;i < [arrayFlags count]; i++){
                     if([[arrayFlags objectAtIndex:i] boolValue]) {
@@ -668,7 +677,8 @@ UIImage *imageDetailDisclosure;
     [self.tblSetting reloadData];
 }
 
-- (void)switchValueChanged{
+- (void)switchPushNotificationChanged{
+    [UserPreferance userPreferance].pushEnable = switchPushNotification.on; // Save setting
     [self.tblSetting reloadData];
 }
 @end
