@@ -526,7 +526,7 @@
 		8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		8DC019F71627F4BE004200E5 /* nc_AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nc_AppDelegate.h; sourceTree = SOURCE_ROOT; };
-		8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = nc_AppDelegate.m; sourceTree = SOURCE_ROOT; };
+		8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = nc_AppDelegate.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController_SF_568h.xib; sourceTree = "<group>"; };
 		8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingDetailViewController_568h.xib; sourceTree = "<group>"; };
 		8DF35D621627F58400B99F4A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -605,6 +605,11 @@
 				520FB117162603090083F143 /* SettingInfoViewController.xib */,
 				520FB118162603090083F143 /* SettingInfoViewController_568h.xib */,
 				8D1A64E9165B82C100176FF7 /* SettingViewController_SF.xib */,
+				8DFFB369165DFBBB00A39BC4 /* SettingDetailViewController.h */,
+				8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */,
+				8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */,
+				8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */,
+				8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */,
 				520FB119162603090083F143 /* ToFromTableViewController.h */,
 				520FB11A162603090083F143 /* ToFromTableViewController.m */,
 				520FB11B162603090083F143 /* ToFromViewController.h */,
@@ -613,11 +618,6 @@
 				520FB11E162603090083F143 /* twitterViewController.h */,
 				520FB11F162603090083F143 /* twitterViewController.m */,
 				520FB120162603090083F143 /* twitterViewController.xib */,
-				8DFFB369165DFBBB00A39BC4 /* SettingDetailViewController.h */,
-				8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */,
-				8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */,
-				8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */,
-				8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */,
 			);
 			path = ViewController;
 			sourceTree = SOURCE_ROOT;

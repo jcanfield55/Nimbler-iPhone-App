@@ -1269,11 +1269,9 @@ UIImage *imageDetailDisclosure;
                                            @"fromPlace", fromLocation, 
                                            @"toPlace", toLocation,
                                            @"date", [NSDate date], nil]];
-            
-            NSNumber* maxiWalkDistance = [self getWalkDistance];
 
             // convert miles into meters. 1 mile = 1609.344 meters
-            int maxDistance = (int)([maxiWalkDistance floatValue]*1609.544);
+            int maxDistance = (int)([[UserPreferance userPreferance] walkDistance]*1609.544);
             
             // Request the plan (callback will come in newPlanAvailable method)
             PlanRequestParameters* parameters = [[PlanRequestParameters alloc] init];
@@ -1510,12 +1508,6 @@ UIImage *imageDetailDisclosure;
 }
 
 #pragma mark get walk distance from User Defaults
--(NSNumber *)getWalkDistance
-{
-    UserPreferance* userPrefs = [UserPreferance userPreferance];
-    return [userPrefs walkDistance];
-    
-}
 
 -(void)setFBParameterForGeneral
 {

@@ -66,14 +66,12 @@ static nc_AppDelegate *appDelegate;
 @synthesize isUpdateTime;
 @synthesize isServiceByWeekday;
 @synthesize isCalendarByDate;
-@synthesize isSettingSavedSuccessfully;
 @synthesize isSettingRequest;
 @synthesize lastGTFSLoadDateByAgency;
 @synthesize serviceByWeekdayByAgency;
 @synthesize calendarByDateByAgency;
 @synthesize timerType;
 @synthesize isDatePickerOpen;
-@synthesize strUpdateSettingURL;
 @synthesize strTweetCountURL;
 @synthesize isSettingView;
 @synthesize isSettingDetailView;
@@ -263,72 +261,14 @@ FeedBackForm *fbView;
         UINavigationController *fbController = [[UINavigationController alloc] initWithRootViewController:fbView];
         self.tabBarController.viewControllers = [NSArray arrayWithObjects:toFromController,tweetController,settingController,fbController, nil];
         
+        [UserPreferance userPreferance];  // Saves default user preferences to server if needed
+        
         //        [self.tabBarController.tabBar setSelectedImageTintColor:[UIColor redColor]];
         //        [self.tabBarController.tabBar setBackgroundImage:[UIImage imageNamed:@"img_tabbar.png"]];
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         [[self window] setRootViewController:self.tabBarController];
         [self.window makeKeyAndVisible];
         
-//        if(![[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-            if(![[NSUserDefaults standardUserDefaults] objectForKey:MAX_WALK_DISTANCE]){
-                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%f",MAX_WALK_DISTANCE_DEFAULT_VALUE] forKey:MAX_WALK_DISTANCE];
-            }
-            if(![[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV]){
-                [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:ENABLE_SFMUNI_ADV];
-            }
-            if(![[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV]){
-                [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:ENABLE_BART_ADV];
-            }
-            if(![[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV]){
-                [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:ENABLE_ACTRANSIT_ADV];
-            }
-            if(![[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV]){
-                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:ENABLE_CALTRAIN_ADV];
-            }
-            if(![[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_URGENTNOTIFICATION_SOUND]){
-                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:ENABLE_URGENTNOTIFICATION_SOUND];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-            }
-            if(![[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_STANDARDNOTIFICATION_SOUND]){
-                [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:ENABLE_STANDARDNOTIFICATION_SOUND];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-            }
-            if(![[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MORNING]){
-                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:NOTIF_TIMING_MORNING];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-            }
-            if(![[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MIDDAY]){
-                [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:NOTIF_TIMING_MIDDAY];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-            }
-            if(![[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_EVENING]){
-                [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:NOTIF_TIMING_EVENING];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-            }
-            if(![[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_NIGHT]){
-                [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:NOTIF_TIMING_NIGHT];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-            }
-            if(![[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_WEEKEND]){
-                [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:NOTIF_TIMING_WEEKEND];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-            }
-//            if(![[NSUserDefaults standardUserDefaults] objectForKey:TRANSIT_MODE_SELECTED]){
-//                [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:TRANSIT_MODE_SELECTED];
-//                [[NSUserDefaults standardUserDefaults] synchronize];
-//            }
-//            if(![[NSUserDefaults standardUserDefaults] objectForKey:MAX_BIKE_DISTANCE]){
-//                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%d",MAX_BIKE_DISTANCE_DEFAULT_VALUE] forKey:MAX_BIKE_DISTANCE];
-//            }
-//            if(![[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_QUICK] && ![[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_BIKE_FRIENDLY] && ![[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_FLAT]){
-//                float denominator = 0.5*BIKE_PREFERENCE_DEFAULT_VALUE + 0.5* BIKE_PREFERENCE_DEFAULT_VALUE + 1;
-//                float bikeTriangleFlat = BIKE_PREFERENCE_DEFAULT_VALUE / denominator;
-//                float bikeTriangleBikeFriendly = BIKE_PREFERENCE_DEFAULT_VALUE / denominator;
-//                float bikeTriangleQuick = (2 - BIKE_PREFERENCE_DEFAULT_VALUE- BIKE_PREFERENCE_DEFAULT_VALUE)/(2 * denominator);
-//                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%f",bikeTriangleQuick] forKey:BIKE_TRIANGLE_QUICK];
-//                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%f",bikeTriangleBikeFriendly] forKey:BIKE_TRIANGLE_BIKE_FRIENDLY];
-//                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%f",bikeTriangleFlat] forKey:BIKE_TRIANGLE_FLAT];
-//            }
         }
    // }
     @catch (NSException *exception) {
@@ -431,7 +371,8 @@ FeedBackForm *fbView;
     }
     // Added To Fix DE-206
     if(isSettingView || isSettingDetailView){
-        isSettingSavedSuccessfully = NO;
+        UserPreferance *userPrefs = [UserPreferance userPreferance]; // get singleton
+        userPrefs.isSettingSavedSuccessfully = NO;
 //        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
 //            if (!settingView.switchPushEnable.on) {
 //                // set -1 for stop getting push notification
@@ -461,14 +402,13 @@ FeedBackForm *fbView;
 //            
 //            UserPreferance *userPrefs = [UserPreferance userPreferance]; // get singleton
 //            userPrefs.pushEnable = [NSNumber numberWithBool:settingView.isPush];
-//            userPrefs.triggerAtHour = [NSNumber numberWithInt:alertFrequencyIntValue];
+//            userPrefs.pushNotificationThreshold = [NSNumber numberWithInt:alertFrequencyIntValue];
 //            userPrefs.walkDistance = [NSNumber numberWithFloat:settingView.sliderMaxWalkDistance.value];
 //            [userPrefs saveUpdates];
 //        }
 //        else{
             if (!settingView.switchPushNotification.on) {
                 // set -1 for stop getting push notification
-                settingView.pushHour = PUSH_NOTIFY_OFF;
                 settingView.isPush = NO;
             } else {
                 settingView.isPush = YES;
@@ -492,10 +432,9 @@ FeedBackForm *fbView;
             float ss = settingView.sliderPushNotificationFrequency.value;
             int alertFrequencyIntValue = ss;
             
-            UserPreferance *userPrefs = [UserPreferance userPreferance]; // get singleton
-            userPrefs.pushEnable = [NSNumber numberWithBool:settingView.isPush];
-            userPrefs.triggerAtHour = [NSNumber numberWithInt:alertFrequencyIntValue];
-            userPrefs.walkDistance = [NSNumber numberWithFloat:settingView.sliderMaximumWalkDistance.value];
+            userPrefs.pushEnable = settingView.isPush;
+            userPrefs.pushNotificationThreshold = alertFrequencyIntValue;
+            userPrefs.walkDistance = settingView.sliderMaximumWalkDistance.value;
             [userPrefs saveUpdates];
         }
    // }
@@ -622,8 +561,8 @@ FeedBackForm *fbView;
         toFromViewController.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
         
     }
-    if(!isSettingSavedSuccessfully){
-        [self saveSetting];
+    if(![UserPreferance userPreferance].isSettingSavedSuccessfully){
+        [[UserPreferance userPreferance] saveToServer];  // Save settings to server if they have not been already
     }
     //    sleep(2);
 }
@@ -959,18 +898,6 @@ FeedBackForm *fbView;
                         timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
                     }
                 }
-                else if([strRequestURL isEqualToString:strUpdateSettingURL]){
-                    NSDictionary  *dictTemp = [rkParser objectFromString:[response bodyAsString] error:nil];
-                    NIMLOG_EVENT1(@"Setting Request RKResponse: %@",[response bodyAsString]);
-                    NSNumber *respCode = [(NSDictionary*)dictTemp objectForKey:RESPONSE_CODE];
-                    if ([respCode intValue]== RESPONSE_SUCCESSFULL) {
-                        self.isSettingSavedSuccessfully = YES;
-                    }
-                    else{
-                        self.isSettingSavedSuccessfully = NO;
-                    }
-                    isSettingRequest = NO;
-                }
                 else if([tempResponseDictionary objectForKey:APPLICATION_TYPE] != nil){
                     [[NSUserDefaults standardUserDefaults] setObject:[tempResponseDictionary objectForKey:APPLICATION_TYPE] forKey:APPLICATION_TYPE];
                     [[NSUserDefaults standardUserDefaults] synchronize];
@@ -1062,7 +989,7 @@ FeedBackForm *fbView;
         [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
         [prefs setObject:token forKey:DEVICE_TOKEN];
         [prefs synchronize];
-        [self performSelector:@selector(upadateDefaultUserValue) withObject:nil afterDelay:2.0];
+        [[UserPreferance userPreferance] performSelector:@selector(saveToServer) withObject:nil afterDelay:2.0];
         logEvent(FLURRY_PUSH_AVAILABLE,
                  FLURRY_NOTIFICATION_TOKEN, token,
                  nil, nil, nil, nil, nil, nil);
@@ -1081,7 +1008,7 @@ FeedBackForm *fbView;
         prefs = [NSUserDefaults standardUserDefaults];
         NSString  *token = @"26d906c5c273446d5f40d2c173ddd3f6869b2666b1c7afd5173d69b6629def70";
         [prefs setObject:token forKey:DEVICE_TOKEN];
-        [self performSelector:@selector(upadateDefaultUserValue) withObject:nil afterDelay:2.0];
+        [[UserPreferance userPreferance] performSelector:@selector(saveToServer) withObject:nil afterDelay:2.0];
         //    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Push Alert" message:@"your device couldn't connect with apple. Please reinstall application" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         //    [alert show];
     }
@@ -1109,7 +1036,7 @@ FeedBackForm *fbView;
         
         if ([isUrgent isEqualToString:@"true"]) {
             if([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive){
-                if([[NSUserDefaults standardUserDefaults] integerForKey:ENABLE_URGENTNOTIFICATION_SOUND] == 1 || [[NSUserDefaults standardUserDefaults] integerForKey:ENABLE_URGENTNOTIFICATION_SOUND] == 0){
+                if([UserPreferance userPreferance].urgentNotificationSound){
                     AudioServicesPlaySystemSound(1015);
                 }
             }
@@ -1209,94 +1136,6 @@ FeedBackForm *fbView;
         logException(@"ncAppDelegate->getTwiiterLiveData", @"", exception);    }
 }
 
-- (void)saveSetting{
-    NSUserDefaults* userDefault = [NSUserDefaults standardUserDefaults];
-    NSString *token = [userDefault objectForKey:DEVICE_TOKEN];
-    NSString *pushEnable = [prefs objectForKey:PREFS_IS_PUSH_ENABLE];
-    int pushHour;
-    if([pushEnable intValue] == 0){
-        pushHour = -1;
-    }
-    else{
-        pushHour = [userDefault integerForKey:PREFS_PUSH_NOTIFICATION_THRESHOLD];
-    }
-    RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-    [RKClient setSharedClient:client];
-    NSDictionary *params;
-//    if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-//        params = [NSDictionary dictionaryWithKeysAndObjects:
-//                  DEVICE_ID, [userDefault objectForKey:DEVICE_CFUUID],
-//                  ALERT_COUNT,[NSNumber numberWithInt:pushHour],
-//                  DEVICE_TOKEN, token,
-//                  MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:[userDefault floatForKey:PREFS_MAX_WALK_DISTANCE]],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_URGENTNOTIFICATION_SOUND]],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_STANDARDNOTIFICATION_SOUND]],APPLICATION_TYPE,[self getAppTypeFromBundleId],
-//                  nil];
-//    }
-//    else{
-//        params = [NSDictionary dictionaryWithKeysAndObjects:
-//                  DEVICE_ID, [userDefault objectForKey:DEVICE_CFUUID],
-//                  ALERT_COUNT,[NSNumber numberWithInt:pushHour],
-//                  DEVICE_TOKEN, token,
-//                  MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:[userDefault floatForKey:PREFS_MAX_WALK_DISTANCE]],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_URGENTNOTIFICATION_SOUND]],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_STANDARDNOTIFICATION_SOUND]],ENABLE_SFMUNI_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV],ENABLE_BART_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV],ENABLE_ACTRANSIT_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV],ENABLE_CALTRAIN_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV],NOTIF_TIMING_MORNING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MORNING],NOTIF_TIMING_MIDDAY,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MIDDAY],NOTIF_TIMING_EVENING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_EVENING],NOTIF_TIMING_NIGHT,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_NIGHT],NOTIF_TIMING_WEEKEND,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_WEEKEND],TRANSIT_MODE_SELECTED,[[NSUserDefaults standardUserDefaults] objectForKey:TRANSIT_MODE_SELECTED],MAX_BIKE_DISTANCE,[[NSUserDefaults standardUserDefaults] objectForKey:MAX_BIKE_DISTANCE],BIKE_TRIANGLE_FLAT,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_FLAT],BIKE_TRIANGLE_BIKE_FRIENDLY,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_BIKE_FRIENDLY],BIKE_TRIANGLE_QUICK,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_QUICK],APPLICATION_TYPE,[self getAppTypeFromBundleId],
-//                  nil];
-    params = [NSDictionary dictionaryWithKeysAndObjects:
-              DEVICE_ID, [userDefault objectForKey:DEVICE_CFUUID],
-              ALERT_COUNT,[NSNumber numberWithInt:pushHour],
-              DEVICE_TOKEN, token,
-              MAXIMUM_WALK_DISTANCE,[NSNumber numberWithFloat:[userDefault floatForKey:PREFS_MAX_WALK_DISTANCE]],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_URGENTNOTIFICATION_SOUND]],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt: [userDefault integerForKey:ENABLE_STANDARDNOTIFICATION_SOUND]],ENABLE_SFMUNI_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV],ENABLE_BART_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV],ENABLE_ACTRANSIT_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV],ENABLE_CALTRAIN_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV],NOTIF_TIMING_MORNING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MORNING],NOTIF_TIMING_MIDDAY,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MIDDAY],NOTIF_TIMING_EVENING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_EVENING],NOTIF_TIMING_NIGHT,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_NIGHT],NOTIF_TIMING_WEEKEND,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_WEEKEND],APPLICATION_TYPE,[self getAppTypeFromBundleId],
-              nil];
-    //}
-    NSString *request = [UPDATE_SETTING_REQ appendQueryParams:params];
-    strUpdateSettingURL = request;
-    NIMLOG_EVENT1(@"Save setting Req = %@", request);
-    isSettingRequest = YES;
-    [nc_AppDelegate sharedInstance].isSettingSavedSuccessfully = NO;
-    [[RKClient sharedClient]  get:request delegate:self];
-}
-
-#pragma mark update userSettings from server
--(void)upadateDefaultUserValue{
-    @try {
-        UserPreferance* userPrefs = [UserPreferance userPreferance]; // get singleton
-        // set in TPServer
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
-        NSDictionary *params;
-//        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-//            params = [NSDictionary dictionaryWithKeysAndObjects:
-//                      DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
-//                      @"alertCount", [userPrefs triggerAtHour],
-//                      DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],
-//                      @"maxDistance", [userPrefs walkDistance],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt:URGENT_NOTIFICATION_DEFAULT_VALUE],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt:STANDARD_NOTIFICATION_DEFAULT_VALUE],APPLICATION_TYPE,[self getAppTypeFromBundleId],
-//                      nil];
-//        }
-//        else{
-//            params = [NSDictionary dictionaryWithKeysAndObjects:
-//                      DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
-//                      @"alertCount", [userPrefs triggerAtHour],
-//                      DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],
-//                      @"maxDistance", [userPrefs walkDistance],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt:URGENT_NOTIFICATION_DEFAULT_VALUE],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt:STANDARD_NOTIFICATION_DEFAULT_VALUE],ENABLE_SFMUNI_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV],ENABLE_BART_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV],ENABLE_ACTRANSIT_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV],ENABLE_CALTRAIN_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV],NOTIF_TIMING_MORNING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MORNING],NOTIF_TIMING_MIDDAY,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MIDDAY],NOTIF_TIMING_EVENING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_EVENING],NOTIF_TIMING_NIGHT,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_NIGHT],NOTIF_TIMING_WEEKEND,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_WEEKEND],TRANSIT_MODE_SELECTED,[[NSUserDefaults standardUserDefaults] objectForKey:TRANSIT_MODE_SELECTED],MAX_BIKE_DISTANCE,[[NSUserDefaults standardUserDefaults] objectForKey:MAX_BIKE_DISTANCE],BIKE_TRIANGLE_FLAT,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_FLAT],BIKE_TRIANGLE_BIKE_FRIENDLY,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_BIKE_FRIENDLY],BIKE_TRIANGLE_QUICK,[[NSUserDefaults standardUserDefaults] objectForKey:BIKE_TRIANGLE_QUICK],APPLICATION_TYPE,[self getAppTypeFromBundleId],
-//                      nil];
-        params = [NSDictionary dictionaryWithKeysAndObjects:
-                  DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
-                  @"alertCount", [userPrefs triggerAtHour],
-                  DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],
-                  @"maxDistance", [userPrefs walkDistance],ENABLE_URGENTNOTIFICATION_SOUND,[NSNumber numberWithInt:URGENT_NOTIFICATION_DEFAULT_VALUE],ENABLE_STANDARDNOTIFICATION_SOUND,[NSNumber numberWithInt:STANDARD_NOTIFICATION_DEFAULT_VALUE],ENABLE_SFMUNI_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV],ENABLE_BART_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV],ENABLE_ACTRANSIT_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV],ENABLE_CALTRAIN_ADV,[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV],NOTIF_TIMING_MORNING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MORNING],NOTIF_TIMING_MIDDAY,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_MIDDAY],NOTIF_TIMING_EVENING,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_EVENING],NOTIF_TIMING_NIGHT,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_NIGHT],NOTIF_TIMING_WEEKEND,[[NSUserDefaults standardUserDefaults] objectForKey:NOTIF_TIMING_WEEKEND],APPLICATION_TYPE,[self getAppTypeFromBundleId],
-                  nil];
-        //}
-        NIMLOG_EVENT1(@"params=%@",params);
-        NSString *request = [UPDATE_SETTING_REQ appendQueryParams:params];
-        strUpdateSettingURL = request;
-        [[RKClient sharedClient]  get:request delegate:self];
-        
-        if(![[NSUserDefaults standardUserDefaults] objectForKey:PREFS_IS_PUSH_ENABLE]){
-            [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:PREFS_IS_PUSH_ENABLE];
-        }
-        
-    }
-    @catch (NSException *exception) {
-        logException(@"ncAppDelegate->upadateDefaultUserValue", @"", exception);
-    }
-}
 
 // update badge
 -(void)updateBadge:(int)count

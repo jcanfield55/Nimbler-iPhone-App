@@ -122,24 +122,6 @@
 #define PREFERENCE_FAST_VS_SAFE @"Preference fast vs safe"
 #define PREFERENCE_FAST_VS_FLAT @"Preference fast vs flat"
 
-#define ENABLE_SFMUNI_ADV   @"enableSfMuniAdv"
-#define ENABLE_BART_ADV     @"enableBartAdv"
-#define ENABLE_ACTRANSIT_ADV @"enableAcTransitAdv"
-#define ENABLE_CALTRAIN_ADV @"enableCaltrainAdv"
-
-#define NOTIF_TIMING_MORNING @"notifTimingMorning"
-#define NOTIF_TIMING_MIDDAY  @"notifTimingMidday"
-#define NOTIF_TIMING_EVENING @"notifTimingEvening"
-#define NOTIF_TIMING_NIGHT   @"notifTimingNight"
-#define NOTIF_TIMING_WEEKEND @"notifTimingWeekend"
-
-#define TRANSIT_MODE_SELECTED        @"transitMode"
-
-#define BIKE_TRIANGLE_FLAT          @"bikeTriangleFlat"
-#define BIKE_TRIANGLE_BIKE_FRIENDLY @"bikeTriangleBikeFriendly"
-#define BIKE_TRIANGLE_QUICK         @"bikeTriangleQuick"
-#define MAX_BIKE_DISTANCE           @"maxBikeDist"
-
 #define QUICK_WITH_HILLS      @"Quick with hills"
 #define GO_AROUNG_HILLS       @"Go around hills"
 #define QUICK_WITH_ANY_STREET @"Quick, any street"
@@ -168,19 +150,6 @@
 #define LABEL_MIDDAY            @"midday"
 #define LABEL_EVENING           @"evening"
 #define LABEL_NIGHT             @"night"
-
-#define PUSH_FREQUENCY_DEFAULT_VALUE          5
-#define PUSH_FREQUENCY_MIN_VALUE              1
-#define PUSH_FREQUENCY_MAX_VALUE              10
-#define MAX_WALK_DISTANCE_DEFAULT_VALUE       0.75
-#define MAX_WALK_DISTANCE_MIN_VALUE           0.25
-#define MAX_WALK_DISTANCE_MAX_VALUE           2.5
-#define BIKE_PREFERENCE_MIN_VALUE             0
-#define BIKE_PREFERENCE_MAX_VALUE             1
-#define BIKE_PREFERENCE_DEFAULT_VALUE         0.5
-#define MAX_BIKE_DISTANCE_DEFAULT_VALUE       5
-#define MAX_BIKE_DISTANCE_MIN_VALUE           1
-#define MAX_BIKE_DISTANCE_MAX_VALUE           20
 
 #define DETAIL_SETTING_MAIN_LABEL_XPOS        10
 #define DETAIL_SETTING_MAIN_LABEL_YPOS        5

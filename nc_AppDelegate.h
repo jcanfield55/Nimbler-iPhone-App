@@ -38,13 +38,11 @@
     BOOL isUpdateTime;
     BOOL isServiceByWeekday;
     BOOL isCalendarByDate;
-    BOOL isSettingSavedSuccessfully;
     BOOL isSettingRequest;
     NSDictionary* lastGTFSLoadDateByAgency;
     NSDictionary* serviceByWeekdayByAgency;
     NSDictionary* calendarByDateByAgency;
     BOOL isDatePickerOpen;
-    NSString *strUpdateSettingURL;
     NSString *strTweetCountURL;
     BOOL isSettingView;
     UIActionSheet *actionsheet;
@@ -85,7 +83,6 @@
 @property (nonatomic) BOOL isUpdateTime;
 @property (nonatomic) BOOL isServiceByWeekday;
 @property (nonatomic) BOOL isCalendarByDate;
-@property (nonatomic) BOOL     isSettingSavedSuccessfully;
 @property (nonatomic) BOOL isSettingRequest;
 
 @property(strong, nonatomic) NSDictionary* lastGTFSLoadDateByAgency;
@@ -94,7 +91,6 @@
 @property (nonatomic, strong) NSString *timerType;
 
 @property (nonatomic) BOOL isDatePickerOpen;
-@property (nonatomic, strong) NSString *strUpdateSettingURL;
 @property (nonatomic, strong) NSString *strTweetCountURL;
 @property (nonatomic) BOOL isSettingView;
 @property (nonatomic) BOOL isSettingDetailView;
@@ -111,7 +107,6 @@
 
 -(void)suppertedRegion;
 -(void)getTwiiterLiveData;
--(void)upadateDefaultUserValue;
 +(nc_AppDelegate *)sharedInstance;
 + (NSString *)getUUID;
 -(void)updateBadge:(int)count;
@@ -119,7 +114,6 @@
 -(void)updateTime;
 -(void)serviceByWeekday;
 -(void)calendarByDate;
-- (void)saveSetting;
 - (NSString *)getAppTypeFromBundleId;
 - (NSString *)getAgencyIdsString;
 @end
