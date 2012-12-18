@@ -80,7 +80,6 @@ typedef enum {
 
 -(BOOL)alertUsetForLocationService;
 -(void)getRealTimeDataForItinerary;
--(NSNumber *)getWalkDistance;
 -(void)setFBParameterForGeneral;
 
 // Call-back from PlanStore requestPlanFromLocation:... method when it has a plan

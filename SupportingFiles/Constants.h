@@ -67,20 +67,82 @@
 #define TEST_FLIGHT_ENABLED 0 // If 0, then do not include testFlightApp at all
 #define TEST_FLIGHT_UIDS 1 // If 1, then testFlightApp will collect device UIDs, if 0, it will not
 
+#define LAST_SELECTED_TAB_INDEX       @"lastSelectedTabIndex"
+#define LAST_TO_LOCATION              @"lastToLocation"
+#define LAST_FROM_LOCATION            @"lastFromLocation"
+#define LAST_REQUEST_REVERSE_GEO      @"lastRequestReverseGeoLocation"
+#define APPLICATION_BUNDLE_IDENTIFIER  @"appBundleId"
+#define APPLICATION_TYPE               @"appType"
+
 // NSUserDefaults keys
 #define USER_PREFERANCE                   @"UserPreference"
+#define PREFS_DATE_LAST_SUCCESSFUL_SAVE  @"PrefsDateLastSuccessfulSave"
+#define PREFS_DATE_LAST_CHANGE            @"PrefsDateLastChange"
 #define PREFS_IS_PUSH_ENABLE              @"PrefsIsPushEnable"
 #define PREFS_PUSH_NOTIFICATION_THRESHOLD @"PrefsPushNotificationThreshold"
 #define PREFS_MAX_WALK_DISTANCE           @"PrefsMaxWalkDistance"
 #define ENABLE_STANDARDNOTIFICATION_SOUND @"enableStdNotifSound"
 #define ENABLE_URGENTNOTIFICATION_SOUND   @"enableUrgntNotifSound"
-#define URGENT_NOTIFICATION_DEFAULT_VALUE   1
-#define STANDARD_NOTIFICATION_DEFAULT_VALUE 2
+#define ENABLE_SFMUNI_ADV   @"enableSfMuniAdv"
+#define ENABLE_BART_ADV     @"enableBartAdv"
+#define ENABLE_ACTRANSIT_ADV @"enableAcTransitAdv"
+#define ENABLE_CALTRAIN_ADV @"enableCaltrainAdv"
+#define NOTIF_TIMING_MORNING @"notifTimingMorning"
+#define NOTIF_TIMING_MIDDAY  @"notifTimingMidday"
+#define NOTIF_TIMING_EVENING @"notifTimingEvening"
+#define NOTIF_TIMING_NIGHT   @"notifTimingNight"
+#define NOTIF_TIMING_WEEKEND @"notifTimingWeekend"
+#define TRANSIT_MODE_SELECTED    @"transitMode"
+#define PREFS_MAX_BIKE_DISTANCE  @"maxBikeDistance"
+#define PREFS_BIKE_FAST_VS_SAFE  @"prefsBikeFastVsSafe"
+#define PREFS_BIKE_FAST_VS_FLAT  @"prefsBikeFastVsFlat"
+#define BIKE_TRIANGLE_FLAT          @"bikeTriangleFlat"
+#define BIKE_TRIANGLE_BIKE_FRIENDLY @"bikeTriangleBikeFriendly"
+#define BIKE_TRIANGLE_QUICK         @"bikeTriangleQuick"
+#define MAX_BIKE_DISTANCE           @"maxBikeDist"
 
-// UserPreferernce defaults
+// SettingInfo Parameter for server (where different than for saving in NSUserDefaults)
+#define ALERT_COUNT           @"alertCount"
+#define MAXIMUM_WALK_DISTANCE @"maxDistance"
+#define UPDATE_SETTING_REQ    @"users/preferences/update"
+
+// UserPreferernce (user settings) defaults, max, and min
 #define PREFS_DEFAULT_IS_PUSH_ENABLE YES
 #define PREFS_DEFAULT_PUSH_NOTIFICATION_THRESHOLD 5
 #define PREFS_DEFAULT_MAX_WALK_DISTANCE 0.75
+
+#define URGENT_NOTIFICATION_DEFAULT_VALUE   1
+#define STANDARD_NOTIFICATION_DEFAULT_VALUE 2
+
+#define TRANSIT_MODE_TRANSIT_ONLY 2
+#define TRANSIT_MODE_BIKE_ONLY 4
+#define TRANSIT_MODE_BIKE_AND_TRANSIT 5
+#define TRANSIT_MODE_DEFAULT 2
+
+#define ENABLE_STANDARDNOTIF_SOUND_DEFAULT FALSE
+#define ENABLE_URGENTNOTIF_SOUND_DEFAULT   TRUE
+#define ENABLE_SFMUNI_ADV_DEFAULT FALSE
+#define ENABLE_BART_ADV_DEFAULT FALSE
+#define ENABLE_ACTRANSIT_ADV_DEFAULT FALSE
+#define ENABLE_CALTRAIN_ADV_DEFAULT TRUE
+#define NOTIF_TIMING_MORNING_DEFAULT TRUE
+#define NOTIF_TIMING_MIDDAY_DEFAULT FALSE
+#define NOTIF_TIMING_EVENING_DEFAULT TRUE
+#define NOTIF_TIMING_NIGHT_DEFAULT FALSE
+#define NOTIF_TIMING_WEEKEND_DEFAULT FALSE
+
+#define PUSH_FREQUENCY_DEFAULT_VALUE          5
+#define PUSH_FREQUENCY_MIN_VALUE              1
+#define PUSH_FREQUENCY_MAX_VALUE              10
+#define MAX_WALK_DISTANCE_DEFAULT_VALUE       0.75
+#define MAX_WALK_DISTANCE_MIN_VALUE           0.25
+#define MAX_WALK_DISTANCE_MAX_VALUE           2.5
+#define BIKE_PREFERENCE_MIN_VALUE             0
+#define BIKE_PREFERENCE_MAX_VALUE             1
+#define BIKE_PREFERENCE_DEFAULT_VALUE         0.5
+#define MAX_BIKE_DISTANCE_DEFAULT_VALUE       5
+#define MAX_BIKE_DISTANCE_MIN_VALUE           1
+#define MAX_BIKE_DISTANCE_MAX_VALUE           20
 
 // Flurry analytics and logging
 #define FLURRY_ENABLED 0
@@ -123,7 +185,8 @@
 #define FLURRY_ROUTE_DETAILS_APPEAR @"RouteDetails appear"
 #define FLURRY_ROUTE_DETAILS_NEWITINERARY_NUMBER @"RouteDetails NewItinerary #"
 #define FLURRY_SETTINGS_APPEAR @"Settings appear"
-#define FLURRY_SETTINGS_SUBMITTED @"Settings submitted"
+#define FLURRY_SETTINGS_SUBMITTED1 @"Settings submitted"
+#define FLURRY_SETTINGS_SUBMITTED2 @"Settings submitted 2"
 #define FLURRY_FEEDBACK_APPEAR @"Feedback appear"
 #define FLURRY_FEEDBACK_RECORD @"Feedback record button"
 #define FLURRY_FEEDBACK_PLAY @"Feedback play button"
@@ -155,6 +218,9 @@
 #define FLURRY_FEEDBACK_TEXT @"(Feedback text)"
 #define FLURRY_SETTING_WALK_DISTANCE @"(Settings walk distance)"
 #define FLURRY_SETTING_ALERT_COUNT @"(Settings alert count)"
+#define FLURRY_SETTING_ALERT_SOUNDS @"(Alert sounds)"
+#define FLURRY_SETTING_ALERT_HOURS @"(Alert hours)"
+#define FLURRY_SETTING_ADVISORY_STREAMS @"(Advisory streams)"
 #define FLURRY_LAT @"(Lat)"
 #define FLURRY_LNG @"(Lng)"
 #define FLURRY_SUPPORTED_REGION_STRING @"(Supported Region String)"
@@ -209,8 +275,8 @@
 #define TINY_FLOAT 0.000001
 
 #define AGENCY_IDS   @"agencyIds"
-#define CALTRAIN_AGENCY_IDS @"1"
-#define BART_AGENCY_ID      @"2"
+#define CALTRAIN_AGENCY_IDS  @"1"
+#define BART_AGENCY_ID       @"2"
 #define SFMUNI_AGENCY_ID    @"3"
 #define ACTRANSIT_AGENCY_ID @"4"
 
@@ -219,8 +285,6 @@
 #define ACTRANSIT_AGENCY_NAME   @"AC Transit"
 #define SFMUNI_AGENCY_NAME      @"San Francisco Municipal Transportation Agency"
 #define AIRBART_AGENCY_NAME     @"AirBART"
-
-
 
 #define CALTRAIN_APP_TYPE   @"1"
 #define SFMUNI_APP_TYPE     @"4"
@@ -291,11 +355,6 @@
 #define DEVICE_TOKEN      @"deviceToken"
 #define USER_EMAIL        @"eMailId"
 #define TWEET_COUNT       @"tweetCount"
-
-// SettingInfo Parameter
-#define ALERT_COUNT           @"alertCount"
-#define MAXIMUM_WALK_DISTANCE @"maxDistance"
-#define UPDATE_SETTING_REQ    @"users/preferences/update"
 
 // Tweeter Parameter
 #define LATEST_TWEETS_REQ       @"advisories/latest"

@@ -18,7 +18,7 @@
 #import "RouteOptionsViewController.h"
 #import "RouteDetailsViewController.h"
 #import "LegMapViewController.h"
-#import "Model/GtfsParser.h"
+#import "GtfsParser.h"
 
 @interface nc_AppDelegate : UIResponder <UIApplicationDelegate,CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate,UITabBarControllerDelegate,UIActionSheetDelegate> {
     Location* currentLocation;
@@ -39,16 +39,13 @@
     BOOL isUpdateTime;
     BOOL isServiceByWeekday;
     BOOL isCalendarByDate;
-    BOOL isSettingSavedSuccessfully;
     BOOL isSettingRequest;
     NSDictionary* lastGTFSLoadDateByAgency;
     NSDictionary* serviceByWeekdayByAgency;
     NSDictionary* calendarByDateByAgency;
     BOOL isDatePickerOpen;
-    NSString *strUpdateSettingURL;
     NSString *strTweetCountURL;
     BOOL isSettingView;
-    BOOL isSettingDetailView;
     UIActionSheet *actionsheet;
     Plan *testPlan;
     // Used For Automated test.
@@ -87,7 +84,6 @@
 @property (nonatomic) BOOL isUpdateTime;
 @property (nonatomic) BOOL isServiceByWeekday;
 @property (nonatomic) BOOL isCalendarByDate;
-@property (nonatomic) BOOL     isSettingSavedSuccessfully;
 @property (nonatomic) BOOL isSettingRequest;
 
 @property(strong, nonatomic) NSDictionary* lastGTFSLoadDateByAgency;
@@ -96,9 +92,9 @@
 @property (nonatomic, strong) NSString *timerType;
 
 @property (nonatomic) BOOL isDatePickerOpen;
-@property (nonatomic, strong) NSString *strUpdateSettingURL;
 @property (nonatomic, strong) NSString *strTweetCountURL;
 @property (nonatomic) BOOL isSettingView;
+@property (nonatomic) BOOL isSettingDetailView;
 @property (nonatomic) BOOL isRemoteNotification;
 @property (nonatomic) BOOL isNeedToLoadRealData;
 @property (nonatomic, strong) Plan *testPlan;
@@ -115,17 +111,18 @@
 @property (strong, nonatomic) NSString *strStopsURL;
 @property (strong, nonatomic) NSString *strTripsURL;
 @property (strong, nonatomic) NSString *strStopTimesURL;
-@property (nonatomic) BOOL isSettingDetailView;
 
 - (NSURL *)applicationDocumentsDirectory;
 
 -(void)suppertedRegion;
 -(void)getTwiiterLiveData;
--(void)upadateDefaultUserValue;
 +(nc_AppDelegate *)sharedInstance;
 + (NSString *)getUUID;
 -(void)updateBadge:(int)count;
 -(BOOL)isNetworkConnectionLive;
+-(void)updateTime;
+-(void)serviceByWeekday;
+-(void)calendarByDate;
 -(void)getAgencyDatas;
 -(void)getCalendarDates;
 -(void)getCalendarData;
@@ -133,10 +130,6 @@
 -(void)getStopsData;
 -(void)getTripsData;
 - (void) getGtfsStopTimes:(NSArray *)arrayAgencyIds:(NSArray *)arrayTripIds;
--(void)updateTime;
--(void)serviceByWeekday;
--(void)calendarByDate;
-- (void)saveSetting;
 - (NSString *)getAppTypeFromBundleId;
 - (NSString *)getAgencyIdsString;
 @end

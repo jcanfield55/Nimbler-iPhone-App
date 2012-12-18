@@ -71,14 +71,6 @@
 #define REMIND_ME_LATER_BUTTON_TITLE         @"Remind Me Later"
 #define NIMBLER_REVIEW_URL                   @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=567382474"
 
-#define LAST_SELECTED_TAB_INDEX       @"lastSelectedTabIndex"
-#define LAST_TO_LOCATION              @"lastToLocation"
-#define LAST_FROM_LOCATION            @"lastFromLocation"
-#define LAST_REQUEST_REVERSE_GEO      @"lastRequestReverseGeoLocation"
-
-#define APPLICATION_BUNDLE_IDENTIFIER  @"appBundleId"
-#define APPLICATION_TYPE               @"appType"
-
 // NOTE :- Sequence matter.
 #define BART_SEARCH_STRINGS_ARRAY [NSArray arrayWithObjects:@"bart station list",@"caltrain station list",@"current location",@" bart",@"bart ",@" airbart",@"airbart ",@" street",@"street ", nil]
 #define BART_REPLACE_STRINGS_ARRAY [NSArray arrayWithObjects:@"",@"",@"",@"",@"",@"",@"",@" st",@"st ", nil]
@@ -115,30 +107,12 @@
 #define BIKE_ONLY        @"Bike only"
 #define BIKE_AND_TRANSIT @"Bike + Transit"
 
-#define MAXIMUM_WALK_DISTANCE_LABEL @"Maximum Walk Distance(miles)"
+#define MAXIMUM_WALK_DISTANCE_LABEL @"Maximum Walk Distance (miles)"
 
 
 #define MAXIMUM_BIKE_DISTANCE   @"Maximum bike distance(miles)"
 #define PREFERENCE_FAST_VS_SAFE @"Preference fast vs safe"
 #define PREFERENCE_FAST_VS_FLAT @"Preference fast vs flat"
-
-#define ENABLE_SFMUNI_ADV   @"enableSfMuniAdv"
-#define ENABLE_BART_ADV     @"enableBartAdv"
-#define ENABLE_ACTRANSIT_ADV @"enableAcTransitAdv"
-#define ENABLE_CALTRAIN_ADV @"enableCaltrainAdv"
-
-#define NOTIF_TIMING_MORNING @"notifTimingMorning"
-#define NOTIF_TIMING_MIDDAY  @"notifTimingMidday"
-#define NOTIF_TIMING_EVENING @"notifTimingEvening"
-#define NOTIF_TIMING_NIGHT   @"notifTimingNight"
-#define NOTIF_TIMING_WEEKEND @"notifTimingWeekend"
-
-#define TRANSIT_MODE_SELECTED        @"transitMode"
-
-#define BIKE_TRIANGLE_FLAT          @"bikeTriangleFlat"
-#define BIKE_TRIANGLE_BIKE_FRIENDLY @"bikeTriangleBikeFriendly"
-#define BIKE_TRIANGLE_QUICK         @"bikeTriangleQuick"
-#define MAX_BIKE_DISTANCE           @"maxBikeDist"
 
 #define QUICK_WITH_HILLS      @"Quick with hills"
 #define GO_AROUNG_HILLS       @"Go around hills"
@@ -168,19 +142,6 @@
 #define LABEL_MIDDAY            @"midday"
 #define LABEL_EVENING           @"evening"
 #define LABEL_NIGHT             @"night"
-
-#define PUSH_FREQUENCY_DEFAULT_VALUE          5
-#define PUSH_FREQUENCY_MIN_VALUE              1
-#define PUSH_FREQUENCY_MAX_VALUE              10
-#define MAX_WALK_DISTANCE_DEFAULT_VALUE       0.75
-#define MAX_WALK_DISTANCE_MIN_VALUE           0.25
-#define MAX_WALK_DISTANCE_MAX_VALUE           2.5
-#define BIKE_PREFERENCE_MIN_VALUE             0
-#define BIKE_PREFERENCE_MAX_VALUE             1
-#define BIKE_PREFERENCE_DEFAULT_VALUE         0.5
-#define MAX_BIKE_DISTANCE_DEFAULT_VALUE       5
-#define MAX_BIKE_DISTANCE_MIN_VALUE           1
-#define MAX_BIKE_DISTANCE_MAX_VALUE           20
 
 #define DETAIL_SETTING_MAIN_LABEL_XPOS        10
 #define DETAIL_SETTING_MAIN_LABEL_YPOS        5
