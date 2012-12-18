@@ -67,6 +67,15 @@
 #define TEST_FLIGHT_ENABLED 0 // If 0, then do not include testFlightApp at all
 #define TEST_FLIGHT_UIDS 1 // If 1, then testFlightApp will collect device UIDs, if 0, it will not
 
+
+#define LAST_SELECTED_TAB_INDEX       @"lastSelectedTabIndex"
+#define LAST_TO_LOCATION              @"lastToLocation"
+#define LAST_FROM_LOCATION            @"lastFromLocation"
+#define LAST_REQUEST_REVERSE_GEO      @"lastRequestReverseGeoLocation"
+
+#define APPLICATION_BUNDLE_IDENTIFIER  @"appBundleId"
+#define APPLICATION_TYPE               @"appType"
+
 // NSUserDefaults keys
 #define USER_PREFERANCE                   @"UserPreference"
 #define PREFS_DATE_LAST_SUCCESSFUL_SAVE  @"PrefsDateLastSuccessfulSave"

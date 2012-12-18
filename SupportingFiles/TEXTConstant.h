@@ -71,14 +71,6 @@
 #define REMIND_ME_LATER_BUTTON_TITLE         @"Remind Me Later"
 #define NIMBLER_REVIEW_URL                   @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=567382474"
 
-#define LAST_SELECTED_TAB_INDEX       @"lastSelectedTabIndex"
-#define LAST_TO_LOCATION              @"lastToLocation"
-#define LAST_FROM_LOCATION            @"lastFromLocation"
-#define LAST_REQUEST_REVERSE_GEO      @"lastRequestReverseGeoLocation"
-
-#define APPLICATION_BUNDLE_IDENTIFIER  @"appBundleId"
-#define APPLICATION_TYPE               @"appType"
-
 // NOTE :- Sequence matter.
 #define BART_SEARCH_STRINGS_ARRAY [NSArray arrayWithObjects:@"bart station list",@"caltrain station list",@"current location",@" bart",@"bart ",@" airbart",@"airbart ",@" street",@"street ", nil]
 #define BART_REPLACE_STRINGS_ARRAY [NSArray arrayWithObjects:@"",@"",@"",@"",@"",@"",@"",@" st",@"st ", nil]

@@ -9,6 +9,7 @@
 #import "UserPreferance.h"
 #import "nc_AppDelegate.h"
 #import "UtilityFunctions.h"
+#import "Constants.h"
 
 // Function to translate from settings bool values to strings used to send to server
 NSString* tpBoolToStr(BOOL boolValue)
@@ -309,7 +310,7 @@ static UserPreferance* userPrefs;
         
         // We will Request Server Only if We have Device Token.
         // The previous problem was calling this method from initWithNibName before We have Device Token.
-        if([prefs objectForKey:DEVICE_TOKEN ]){
+        if([prefs objectForKey:DEVICE_TOKEN] && [prefs objectForKey:DEVICE_CFUUID]){
             RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
             [RKClient setSharedClient:client];
             
