@@ -17,12 +17,19 @@ NSString* tpBoolToStr(BOOL boolValue)
 }
 
 // Function to translate from settings string values from server to boolean
-BOOL tpStrToBool(NSString* stringValue)
+// DE265 fix:  accepts either NSString or NSNumber and behaves OK.  
+BOOL tpStrToBool(NSObject* value)
 {
-    if ([stringValue isEqualToString:@"1"]) {
-        return true;
+    if ([value respondsToSelector:@selector(isEqualToString:)]) { // if an NSString
+        return [(NSString *)value isEqualToString:@"1"];
     }
-    return false;
+    else if ([value respondsToSelector:@selector(intValue)]) {  // if an NSNumber
+        return ([(NSNumber *)value intValue] == 1);
+    }
+    // if neither a NSString nor a NSNumber, log an error and return false
+    logError(@"UserPreferance-->tpStrToBool: Unknown class for value:",
+             [NSString stringWithFormat:@"%@", value]);
+    return false;  
 }
 
 @interface UserPreferance() {
@@ -133,7 +140,9 @@ static UserPreferance* userPrefs;
             saveNeeded = true;
         }
         
-        NSString* urgentNotifyTemp = [prefs objectForKey:ENABLE_URGENTNOTIFICATION_SOUND];
+        // DE265 fix:  The following two variables could be stored as either NSString or NSNumber in userDefaults
+        // Updated tpStrToBool to handle either case.  
+        NSObject* urgentNotifyTemp = [prefs objectForKey:ENABLE_URGENTNOTIFICATION_SOUND];
         if (urgentNotifyTemp) {
             userPrefs.urgentNotificationSound = tpStrToBool(urgentNotifyTemp);
         } else {
@@ -141,7 +150,7 @@ static UserPreferance* userPrefs;
             saveNeeded = true;
         }
         
-        NSString* standardNotifyTemp = [prefs objectForKey:ENABLE_STANDARDNOTIFICATION_SOUND];
+        NSObject* standardNotifyTemp = [prefs objectForKey:ENABLE_STANDARDNOTIFICATION_SOUND];
         if (standardNotifyTemp) {
             userPrefs.standardNotificationSound = tpStrToBool(standardNotifyTemp);
         } else {
@@ -274,10 +283,10 @@ static UserPreferance* userPrefs;
 // Returns true if there are changes that still need to be save to server
 -(BOOL)isSaveToServerNeeded
 {
-    if (!dateOfLastSuccessfulSaveToServer) {
+    if (!self.dateOfLastSuccessfulSaveToServer) {
         return TRUE;
     }
-    else if (!dateOfLastUserPrefChange) {
+    else if (!self.dateOfLastUserPrefChange) {
         return FALSE;
     } 
     return ([[self dateOfLastSuccessfulSaveToServer] compare:self.dateOfLastUserPrefChange] == NSOrderedAscending);
@@ -286,7 +295,7 @@ static UserPreferance* userPrefs;
 // Marks that changes have been made (by updating dateOfLastUserPrefChange)
 -(void)markChanges
 {
-    dateOfLastUserPrefChange = [NSDate date];
+    self.dateOfLastUserPrefChange = [NSDate date];
 }
 
 
@@ -323,6 +332,50 @@ static UserPreferance* userPrefs;
                                 // TODO -- add bicycle settings saving as needed
                                 
                                 nil];
+        
+        if (self.isSaveToServerNeeded) {
+            // Save Flurry logs for settings
+            NSMutableString* alertSounds = [NSMutableString stringWithCapacity:20];
+            [alertSounds appendString:@"Urgent,Std: "];
+            [alertSounds appendString:(self.urgentNotificationSound ? @"1" : @"0")];
+            [alertSounds appendFormat:@", %@", (self.standardNotificationSound ? @"1" : @"0")];
+            
+            NSMutableString* alertHours = [NSMutableString stringWithCapacity:30];
+            [alertHours appendString:@"AM,Midday,Eve,Night,Wkend: "];
+            NSArray* hourKeys = [NSArray arrayWithObjects:NOTIF_TIMING_MORNING,NOTIF_TIMING_MIDDAY,
+                                 NOTIF_TIMING_EVENING, NOTIF_TIMING_NIGHT, NOTIF_TIMING_WEEKEND, nil];
+            for (int i=0; i<[hourKeys count]; i++) {
+                NSString* value = (tpStrToBool([prefs objectForKey:[hourKeys objectAtIndex:i]]) ? @"1" : @"0");
+                if (i==0) {
+                    [alertHours appendString:value];
+                } else {
+                    [alertHours appendFormat:@", %@", value];
+                }
+            }
+            
+            NSMutableString* advisoryStr = [NSMutableString stringWithCapacity:30];
+            [advisoryStr appendString:@"Muni,BART,AC/T,Caltrain: "];
+            NSArray* hourKeys2 = [NSArray arrayWithObjects:ENABLE_SFMUNI_ADV, ENABLE_BART_ADV,
+                                 ENABLE_ACTRANSIT_ADV, ENABLE_CALTRAIN_ADV, nil];
+            for (int i=0; i<[hourKeys2 count]; i++) {
+                NSString* value = (tpStrToBool([prefs objectForKey:[hourKeys2 objectAtIndex:i]]) ? @"1" : @"0");
+                if (i==0) {
+                    [advisoryStr appendString:value];
+                } else {
+                    [advisoryStr appendFormat:@", %@", value];
+                }
+            }
+            
+            logEvent(FLURRY_SETTINGS_SUBMITTED1,
+                     FLURRY_SETTING_WALK_DISTANCE, [NSString stringWithFormat:@"%f",self.walkDistance],
+                     FLURRY_SETTING_ALERT_COUNT, [NSString stringWithFormat:@"%d",alertCount],
+                     FLURRY_SETTING_ALERT_SOUNDS, alertSounds,
+                     FLURRY_SETTING_ALERT_HOURS, alertHours);
+            logEvent(FLURRY_SETTINGS_SUBMITTED2,
+                     FLURRY_SETTING_ADVISORY_STREAMS, advisoryStr,
+                     nil, nil, nil, nil, nil, nil);
+        }
+        
         NSString *updateURL = [UPDATE_SETTING_REQ appendQueryParams:params];
         NIMLOG_EVENT1(@" updateSettingsServerURL: %@", updateURL);
         [[RKClient sharedClient] get:updateURL delegate:self];

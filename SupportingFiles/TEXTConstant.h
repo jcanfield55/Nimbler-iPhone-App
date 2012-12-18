@@ -115,7 +115,7 @@
 #define BIKE_ONLY        @"Bike only"
 #define BIKE_AND_TRANSIT @"Bike + Transit"
 
-#define MAXIMUM_WALK_DISTANCE_LABEL @"Maximum Walk Distance(miles)"
+#define MAXIMUM_WALK_DISTANCE_LABEL @"Maximum Walk Distance (miles)"
 
 
 #define MAXIMUM_BIKE_DISTANCE   @"Maximum bike distance(miles)"

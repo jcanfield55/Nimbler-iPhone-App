@@ -228,11 +228,6 @@ UIImage *imageDetailDisclosure;
             [userPrefs saveToServer];
         }
         
-        logEvent(FLURRY_SETTINGS_SUBMITTED,
-                 FLURRY_SETTING_WALK_DISTANCE, [NSString stringWithFormat:@"%f",sliderMaxWalkDistance.value],
-                 FLURRY_SETTING_ALERT_COUNT, [NSString stringWithFormat:@"%d",pushHour],
-                 nil, nil, nil, nil);
-        
     }
     @catch (NSException *exception) {
         [alertView dismissWithClickedButtonIndex:0 animated:NO];

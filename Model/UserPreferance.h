@@ -12,7 +12,7 @@
 #import <RestKit/RestKit.h>
 
 NSString* tpBoolToStr(BOOL boolValue);  // Function to translate from settings bool values to strings used to send to server
-BOOL tpStrToBool(NSString* stringValue);  // Function to translate from settings string values from server to boolean
+BOOL tpStrToBool(NSObject* stringValue);  // Function to translate from settings NSString/NSNumber values from server to boolean
 
 @interface UserPreferance : NSObject <RKRequestDelegate>
 
