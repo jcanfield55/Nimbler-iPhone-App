@@ -1417,8 +1417,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Nimbler World, Inc.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nimbler World, Inc.";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -1445,8 +1445,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "ED360502-E753-41EA-9844-BC67D651769F";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "ED360502-E753-41EA-9844-BC67D651769F";
+				PROVISIONING_PROFILE = "472F570B-1668-4D89-A2B2-1F66DEF88097";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "472F570B-1668-4D89-A2B2-1F66DEF88097";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -1458,9 +1458,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Nimbler World, Inc.";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: Nimbler World, Inc.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nimbler World, Inc.";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -1487,9 +1487,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "ED360502-E753-41EA-9844-BC67D651769F";
-				"PROVISIONING_PROFILE[sdk=*]" = "ED360502-E753-41EA-9844-BC67D651769F";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "ED360502-E753-41EA-9844-BC67D651769F";
+				PROVISIONING_PROFILE = "472F570B-1668-4D89-A2B2-1F66DEF88097";
+				"PROVISIONING_PROFILE[sdk=*]" = "472F570B-1668-4D89-A2B2-1F66DEF88097";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "472F570B-1668-4D89-A2B2-1F66DEF88097";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;

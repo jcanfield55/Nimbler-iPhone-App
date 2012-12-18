@@ -249,7 +249,7 @@
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    int nRowCount;
+    int nRowCount = 4;
     if(nSettingRow == 0){
         nRowCount = 4;
     }

@@ -627,7 +627,7 @@ UIImage *imageDetailDisclosure;
         else{
             settingDetailViewController = [[SettingDetailViewController alloc] initWithNibName:@"SettingDetailViewController" bundle:nil];
         }
-        int nSettingRow;
+        int nSettingRow = 0;
         if(indexPath.section == 0){
             nSettingRow = 0;
         }
