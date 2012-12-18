@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocation.h>
 
 @interface GtfsParser : NSObject{
     NSManagedObjectContext *managedObjectContext;
@@ -21,4 +22,5 @@
 - (void) parseStopsDataAndStroreToDataBase:(NSDictionary *)dictFileData;
 - (void) parseTripsDataAndStroreToDataBase:(NSDictionary *)dictFileData;
 - (void) parseStopTimesAndStroreToDataBase:(NSDictionary *)dictFileData:(NSString *)strResourcePath;
+- (NSArray *)findNearestStation:(CLLocation *)toLocation;
 @end

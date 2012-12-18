@@ -456,3 +456,9 @@ NSInteger smallestOf2(NSInteger a,NSInteger b)
     
     return min;
 }
+
+//Calculate Distance Between Two Location
+CLLocationDistance distanceBetweenTwoLocation(CLLocation *toLocation,CLLocation *fromLocation){
+    CLLocationDistance distance = [toLocation distanceFromLocation:fromLocation];
+    return distance;
+}

@@ -481,12 +481,12 @@ UIImage *imageDetailDisclosure;
         }
     }
     else{
-        return 1;
+        return 3;
     }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if((indexPath.section == 1 && indexPath.row == 1) || (indexPath.section == 2 && indexPath.row == 0)){
+    if((indexPath.section == 1 && indexPath.row == 1) || (indexPath.section == 2 && indexPath.row == 1)){
         return 80;
     }
     return 40;
@@ -573,19 +573,19 @@ UIImage *imageDetailDisclosure;
         }
     }
     else if(indexPath.section == 2){
-//        if(indexPath.row == 0){
-//            cell.textLabel.text = TRANSIT_MODE;
-//            if (userPrefs.transitMode == TRANSIT_MODE_TRANSIT_ONLY){
-//                cell.detailTextLabel.text = TRANSIT_ONLY;
-//            }
-//            if (userPrefs.transitMode == TRANSIT_MODE_BIKE_ONLY) {
-//                cell.detailTextLabel.text = BIKE_ONLY;
-//            }
-//            if (userPrefs.transitMode == TRANSIT_MODE_BIKE_AND_TRANSIT) {
-//                cell.detailTextLabel.text = BIKE_AND_TRANSIT;
-//            }
-//        }
         if(indexPath.row == 0){
+            cell.textLabel.text = TRANSIT_MODE;
+            if (userPrefs.transitMode == TRANSIT_MODE_TRANSIT_ONLY){
+                cell.detailTextLabel.text = TRANSIT_ONLY;
+            }
+            if (userPrefs.transitMode == TRANSIT_MODE_BIKE_ONLY) {
+                cell.detailTextLabel.text = BIKE_ONLY;
+            }
+            if (userPrefs.transitMode == TRANSIT_MODE_BIKE_AND_TRANSIT) {
+                cell.detailTextLabel.text = BIKE_AND_TRANSIT;
+            }
+        }
+        if(indexPath.row == 1){
             cell.textLabel.text = nil;
             [cell setAccessoryView:nil];
             UIView* cellView = [cell contentView];
@@ -620,7 +620,7 @@ UIImage *imageDetailDisclosure;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(indexPath.section == 0 || (indexPath.section == 1 && (indexPath.row == 2 || indexPath.row == 3))){
+    if(indexPath.section == 0 || (indexPath.section == 1 && (indexPath.row == 2 || indexPath.row == 3)) || (indexPath.section == 2 && (indexPath.row == 0 || indexPath.row == 2))){
         if([[UIScreen mainScreen] bounds].size.height == 568){
             settingDetailViewController = [[SettingDetailViewController alloc] initWithNibName:@"SettingDetailViewController_568h" bundle:nil];
         }

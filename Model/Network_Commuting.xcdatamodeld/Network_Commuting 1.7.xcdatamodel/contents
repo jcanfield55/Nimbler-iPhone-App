@@ -266,7 +266,7 @@
         <element name="GtfsCalendarDates" positionX="160" positionY="192" width="128" height="105"/>
         <element name="GtfsRoutes" positionX="160" positionY="192" width="128" height="195"/>
         <element name="GtfsStop" positionX="160" positionY="192" width="128" height="165"/>
-        <element name="GtfsStopTimes" positionX="160" positionY="192" width="128" height="195"/>
+        <element name="GtfsStopTimes" positionX="160" positionY="192" width="128" height="210"/>
         <element name="GtfsTrips" positionX="160" positionY="192" width="128" height="195"/>
         <element name="Itinerary" positionX="0" positionY="0" width="128" height="330"/>
         <element name="KeyObjectPair" positionX="0" positionY="0" width="128" height="75"/>

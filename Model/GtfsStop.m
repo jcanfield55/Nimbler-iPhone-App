@@ -1,9 +1,9 @@
 //
 //  GtfsStop.m
-//  RestKit
+//  Nimbler Caltrain
 //
-//  Created by macmini on 07/12/12.
-//  Copyright (c) 2012 RestKit. All rights reserved.
+//  Created by macmini on 18/12/12.
+//  Copyright (c) 2012 Network Commuting. All rights reserved.
 //
 
 #import "GtfsStop.h"

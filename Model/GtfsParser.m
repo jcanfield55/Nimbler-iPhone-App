@@ -15,6 +15,7 @@
 #import "GtfsStop.h"
 #import "GtfsTrips.h"
 #import "GtfsStopTimes.h"
+#import "UtilityFunctions.h"
 
 @implementation GtfsParser
 
@@ -588,4 +589,23 @@
     saveContext(self.managedObjectContext);
 }
 
+// Find The nearest Stations
+- (NSArray *)findNearestStation:(CLLocation *)toLocation{
+    NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
+    [fetchTrips setEntity:[NSEntityDescription entityForName:@"GtfsStop" inManagedObjectContext:self.managedObjectContext]];
+    NSArray * arrayTrips = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
+    NSMutableArray *arrayStops = [[NSMutableArray alloc] init];
+    for (int i=0;i<[arrayTrips count];i++){
+        GtfsStop *stop = [arrayTrips objectAtIndex:i];
+        double lat = [stop.stopLat doubleValue];
+        double lng = [stop.stopLon doubleValue];
+        CLLocation *fromLocation = [[CLLocation alloc] initWithLatitude:lat longitude:lng];
+        CLLocationDistance distance = distanceBetweenTwoLocation(toLocation, fromLocation);
+        int nDistance = distance/1000;
+        if(nDistance <= 3){
+            [arrayStops addObject:stop];
+        }
+    }
+    return arrayStops;
+}
 @end

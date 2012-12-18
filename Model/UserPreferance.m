@@ -229,7 +229,7 @@ static UserPreferance* userPrefs;
             userPrefs.fastVsFlat = BIKE_PREFERENCE_DEFAULT_VALUE;
             saveNeeded = true;
         }
-        [userPrefs recomputeBikeTriangle]; // Compute bike triangle variables from fastVsFlat and fastVsSafe
+        //[userPrefs recomputeBikeTriangle]; // Compute bike triangle variables from fastVsFlat and fastVsSafe
         
         userPrefs.dateOfLastSuccessfulSaveToServer = [prefs objectForKey:PREFS_DATE_LAST_SUCCESSFUL_SAVE];
         userPrefs.dateOfLastUserPrefChange = [prefs objectForKey:PREFS_DATE_LAST_CHANGE];
@@ -244,10 +244,18 @@ static UserPreferance* userPrefs;
 
 -(void)recomputeBikeTriangle
 {
-    double denominator = 0.5*self.fastVsSafe * 0.5*self.fastVsFlat + 1;
+    //Relace * with +
+    double denominator = 0.5*self.fastVsSafe + 0.5*self.fastVsFlat + 1;
     bikeTriangleFlat = fastVsFlat / denominator;
     bikeTriangleBikeFriendly = fastVsSafe / denominator;
     bikeTriangleQuick = (2 - fastVsFlat - fastVsSafe)/(2 * denominator);
+    
+    NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:[NSNumber numberWithDouble:bikeTriangleFlat] forKey:BIKE_TRIANGLE_FLAT];
+    [prefs setObject:[NSNumber numberWithDouble:bikeTriangleBikeFriendly] forKey:BIKE_TRIANGLE_BIKE_FRIENDLY];
+    [prefs setObject:[NSNumber numberWithDouble:bikeTriangleQuick] forKey:BIKE_TRIANGLE_QUICK];
+    [prefs synchronize];
+    
 }
 
 // Saves changes to permanent storage on device
@@ -331,10 +339,9 @@ static UserPreferance* userPrefs;
                                     NOTIF_TIMING_EVENING,[prefs objectForKey:NOTIF_TIMING_EVENING],
                                     NOTIF_TIMING_NIGHT,[prefs objectForKey:NOTIF_TIMING_NIGHT],
                                     NOTIF_TIMING_WEEKEND,[prefs objectForKey:NOTIF_TIMING_WEEKEND],
-                                    APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],
+                                    APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],TRANSIT_MODE_SELECTED,[prefs objectForKey:TRANSIT_MODE_SELECTED],BIKE_TRIANGLE_FLAT,[prefs objectForKey:BIKE_TRIANGLE_FLAT],BIKE_TRIANGLE_BIKE_FRIENDLY,[prefs objectForKey:BIKE_TRIANGLE_BIKE_FRIENDLY],BIKE_TRIANGLE_QUICK,[prefs objectForKey:BIKE_TRIANGLE_QUICK],
                                     
                                     // TODO -- add bicycle settings saving as needed
-                                    
                                     nil];
             
             if (self.isSaveToServerNeeded) {

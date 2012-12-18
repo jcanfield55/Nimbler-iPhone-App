@@ -116,6 +116,13 @@
 // Requests for a new plan from OTP
 -(void)requestPlanFromOtpWithParameters:(PlanRequestParameters *)parameters
 {
+    // Nearest Station For ToLocation And FromLocation.
+//    CLLocation *toLocation = [[CLLocation alloc] initWithLatitude:[parameters.toLocation.lat doubleValue] longitude:[parameters.toLocation.lng doubleValue]];
+//     CLLocation *fromLocation = [[CLLocation alloc] initWithLatitude:[parameters.fromLocation.lat doubleValue] longitude:[parameters.fromLocation.lng doubleValue]];
+//    NSArray *arrNearestToLocation = [[nc_AppDelegate sharedInstance].gtfsParser findNearestStation:toLocation];
+//     NSArray *arrNearestFromLocation = [[nc_AppDelegate sharedInstance].gtfsParser findNearestStation:fromLocation];
+    
+    
     [nc_AppDelegate sharedInstance].receivedReply = NO;
     [nc_AppDelegate sharedInstance].receivedError = NO;
     @try {
@@ -605,4 +612,5 @@
         logException(@"PlanStore -> clearCache", @"", exception);
     }
 }
+
 @end
