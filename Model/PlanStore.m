@@ -13,6 +13,7 @@
 #import <RestKit/CoreData.h>
 #import <Restkit/RKJSONParserJSONKit.h>
 #import "nc_AppDelegate.h"
+#import "Schedule.h"
 
 
 @interface PlanStore()
@@ -234,7 +235,6 @@
     @try {
         RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
         NSDictionary *tempResponseDictionary = [rkParser objectFromString:[[objectLoader response] bodyAsString] error:nil];
-         NSLog(@"PLAN =%@",tempResponseDictionary);
         if([[tempResponseDictionary objectForKey:RESPONSE_CODE] intValue] == RESPONSE_SUCCESSFULL){
             if([tempResponseDictionary objectForKey:OTP_ERROR_STATUS]){
                 if ([nc_AppDelegate sharedInstance].isToFromView) {
@@ -264,31 +264,10 @@
                 } else {
                     [NSException raise:@"PlanStore->didLoadObjects failed to retrieve plan parameters" format:@"strResourcePath: %@", strResourcePath];
                 }
-                NSMutableArray *arrayAgencyIDs = [[NSMutableArray alloc] init];
-                NSMutableArray *arrayTripIds = [[NSMutableArray alloc] init];
-                NSArray *itiArray = [plan sortedItineraries];
-                for(int i=0;i<[itiArray count];i++){
-                    Itinerary *iti = [itiArray objectAtIndex:i];
-                    NSArray *legArray = [iti sortedLegs];
-                    for(int j=0;j<[legArray count];j++){
-                        Leg *leg = [legArray objectAtIndex:j];
-                        if([leg.agencyName isEqualToString:CALTRAIN_AGENCY_NAME] && ![arrayAgencyIDs containsObject:CALTRAIN_AGENCY_IDS]){
-                            [arrayAgencyIDs addObject:CALTRAIN_AGENCY_IDS];
-                        }
-                        else if(([leg.agencyName isEqualToString:BART_AGENCY_NAME] ||[leg.agencyName isEqualToString:AIRBART_AGENCY_NAME]) && ![arrayAgencyIDs containsObject:BART_AGENCY_ID]){
-                           [arrayAgencyIDs addObject:BART_AGENCY_ID];
-                        }
-                        else if([leg.agencyName isEqualToString:SFMUNI_AGENCY_NAME] && ![arrayAgencyIDs containsObject:SFMUNI_AGENCY_ID]){
-                            [arrayAgencyIDs addObject:SFMUNI_AGENCY_ID];
-                        }
-                        else if ([leg.agencyName isEqualToString:ACTRANSIT_AGENCY_NAME] && ![arrayAgencyIDs containsObject:ACTRANSIT_AGENCY_ID]){
-                           [arrayAgencyIDs addObject:ACTRANSIT_AGENCY_ID];
-                        }
-                        [arrayTripIds addObject:leg.tripId];
-                    }
+                [self saveStopTimes:plan];
+                if(planRequestParameters.serverCallsSoFar <= 1){
+                  [self saveSchedule:plan:planRequestParameters.fromLocation:planRequestParameters.toLocation];
                 }
-                [[nc_AppDelegate sharedInstance] getGtfsStopTimes:arrayAgencyIDs :arrayTripIds];
-                
                 // Set to & from location with special handling of CurrentLocation
                 Location *toLoc = [planRequestParameters toLocation];
                 if ([toLoc isCurrentLocation] && [toLoc isReverseGeoValid]) {
@@ -613,4 +592,136 @@
     }
 }
 
+// Save Schedule
+- (void)saveSchedule:(Plan *)plan:(Location *)fromLocation:(Location *)toLocation{
+    NSMutableArray *arrayLegs = [[NSMutableArray alloc] init];
+     NSMutableArray *arrFinalLegs = [[NSMutableArray alloc] init];
+    NSArray *itiArray = [plan sortedItineraries];
+    for(int i=0;i<[itiArray count];i++){
+        Itinerary *iti = [itiArray objectAtIndex:i];
+        NSArray *legArray = [iti sortedLegs];
+        if([arrayLegs count] == 0){
+            [arrayLegs addObject:legArray];
+        }
+        else{
+            NSArray *tempLegs = [NSArray arrayWithArray:arrayLegs];
+            for(int i=0;i<[tempLegs count];i++){
+                NSArray *subArray = [tempLegs objectAtIndex:i];
+                if([subArray count] != [legArray count]){
+                    [arrayLegs addObject:legArray];
+                }
+                else{
+                    BOOL isLegsEqual = YES;
+                    for(int i=0;i<[legArray count];i++){
+                        Leg *leg1 = [legArray objectAtIndex:i];
+                        Leg *leg2 = [subArray objectAtIndex:i];
+                         if(![leg1.agencyName isEqualToString:leg2.agencyName] || ![leg1.to.lat isEqual:leg2.to.lat] || ![leg1.from.lat isEqual:leg2.from.lat]|| ![leg1.to.lng isEqual:leg2.to.lng] || ![leg1.from.lng isEqual:leg2.from.lng]){
+                             isLegsEqual = NO;
+                        }
+                    }
+                    if(!isLegsEqual){
+                        [arrayLegs addObject:legArray];
+                    }
+                }
+            }
+        }
+    }
+    for(int i=0;i<[arrayLegs count];i++){
+        NSArray *arrayTemp1 = [arrayLegs objectAtIndex:i];
+        if([arrayLegs count] > i+1){
+            NSArray *arrayTemp2 = [arrayLegs objectAtIndex:i+1];
+            for(int j=0;j<[arrayTemp1 count];j++){
+                for(int k=0;k<[arrayTemp2 count];k++){
+                    Leg *leg1 = [arrayTemp1 objectAtIndex:j];
+                    Leg *leg2 = [arrayTemp2 objectAtIndex:k];
+                    if([leg1.agencyName isEqualToString:leg2.agencyName] && [leg1.to.lat isEqual:leg2.to.lat] && [leg1.from.lat isEqual:leg2.from.lat]&& [leg1.to.lng isEqual:leg2.to.lng] && [leg1.from.lng isEqual:leg2.from.lng]){
+                        [arrayLegs removeObjectAtIndex:i+1];
+                    }
+                }
+            }
+ 
+        }
+    }
+    for(int i=0;i<[arrayLegs count];i++){
+         NSMutableArray *arrUnfilteredLegs = [[NSMutableArray alloc] init];
+        NSArray *arrayLeg = [arrayLegs objectAtIndex:i];
+        for(int j=0;j<[arrayLeg count];j++){
+            Leg *leg = [arrayLeg objectAtIndex:j];
+            NSMutableDictionary *dictLeg = [[NSMutableDictionary alloc] init];
+            if(leg.agencyId){
+                [dictLeg setObject:leg.agencyId forKey:@"agencyID"];
+            }
+            if(leg.agencyName){
+                [dictLeg setObject:leg.agencyName forKey:@"agencyName"];
+            }
+            if(leg.route){
+                [dictLeg setObject:leg.route forKey:@"route"];
+            }
+            if(leg.routeShortName){
+                [dictLeg setObject:leg.routeShortName forKey:@"routeShortName"];
+            }
+            if(leg.routeLongName){
+                [dictLeg setObject:leg.routeLongName forKey:@"routeLongName"];
+            }
+            if(leg.mode){
+                [dictLeg setObject:leg.mode forKey:@"mode"];
+            }
+            [arrUnfilteredLegs addObject:dictLeg];
+        }
+        [arrFinalLegs addObject:arrUnfilteredLegs];
+    }
+    NSDictionary *dictToLocation = [NSDictionary dictionaryWithObjectsAndKeys:toLocation.formattedAddress,@"frmtAddress",toLocation.lat,@"lat",toLocation.lng,@"lng", nil];
+    NSDictionary *dictFromLocation = [NSDictionary dictionaryWithObjectsAndKeys:fromLocation.formattedAddress,@"frmtAddress",fromLocation.lat,@"lat",fromLocation.lng,@"lng", nil];
+    Schedule* schedule = [NSEntityDescription insertNewObjectForEntityForName:@"Schedule" inManagedObjectContext:self.managedObjectContext];
+    schedule.toLocation = dictToLocation;
+    schedule.fromLocation = dictFromLocation;
+    schedule.legs = arrFinalLegs;
+    saveContext(self.managedObjectContext);
+    
+    //[self getSchedule];
+}
+// Its Only For Testing Purpose
+//- (void)getSchedule{
+//    NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
+//    [fetchTrips setEntity:[NSEntityDescription entityForName:@"Schedule" inManagedObjectContext:self.managedObjectContext]];
+//    NSArray * arraySchedule = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
+//    for(int i=0;i<[arraySchedule count];i++){
+//        Schedule *schedule = [arraySchedule objectAtIndex:i];
+//        NSLog(@"%@",schedule.toLocation);
+//        NSLog(@"%@",schedule.fromLocation);
+//        NSArray *array = schedule.legs;
+//        for(int j=0;j<[array count];j++){
+//            NSLog(@"%@",[array objectAtIndex:j]);
+//        }
+//    }
+//}
+// Save StopTimes To DataBase
+- (void)saveStopTimes:(Plan *)plan{
+    NSMutableArray *arrayAgencyIDs = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayTripIds = [[NSMutableArray alloc] init];
+    NSArray *itiArray = [plan sortedItineraries];
+    for(int i=0;i<[itiArray count];i++){
+        Itinerary *iti = [itiArray objectAtIndex:i];
+        NSArray *legArray = [iti sortedLegs];
+        for(int j=0;j<[legArray count];j++){
+            Leg *leg = [legArray objectAtIndex:j];
+            if(![[leg mode] isEqualToString:@"WALK"]){
+                if([leg.agencyName isEqualToString:CALTRAIN_AGENCY_NAME] && ![arrayAgencyIDs containsObject:CALTRAIN_AGENCY_IDS]){
+                    [arrayAgencyIDs addObject:CALTRAIN_AGENCY_IDS];
+                }
+                else if(([leg.agencyName isEqualToString:BART_AGENCY_NAME] ||[leg.agencyName isEqualToString:AIRBART_AGENCY_NAME]) && ![arrayAgencyIDs containsObject:BART_AGENCY_ID]){
+                    [arrayAgencyIDs addObject:BART_AGENCY_ID];
+                }
+                else if([leg.agencyName isEqualToString:SFMUNI_AGENCY_NAME] && ![arrayAgencyIDs containsObject:SFMUNI_AGENCY_ID]){
+                    [arrayAgencyIDs addObject:SFMUNI_AGENCY_ID];
+                }
+                else if ([leg.agencyName isEqualToString:ACTRANSIT_AGENCY_NAME] && ![arrayAgencyIDs containsObject:ACTRANSIT_AGENCY_ID]){
+                    [arrayAgencyIDs addObject:ACTRANSIT_AGENCY_ID];
+                }
+                [arrayTripIds addObject:leg.tripId];
+            }
+        }
+    }
+    [[nc_AppDelegate sharedInstance] getGtfsStopTimes:arrayAgencyIDs :arrayTripIds];
+}
 @end

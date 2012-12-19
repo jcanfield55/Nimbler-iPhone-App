@@ -229,7 +229,7 @@ static UserPreferance* userPrefs;
             userPrefs.fastVsFlat = BIKE_PREFERENCE_DEFAULT_VALUE;
             saveNeeded = true;
         }
-        //[userPrefs recomputeBikeTriangle]; // Compute bike triangle variables from fastVsFlat and fastVsSafe
+        [userPrefs recomputeBikeTriangle]; // Compute bike triangle variables from fastVsFlat and fastVsSafe
         
         userPrefs.dateOfLastSuccessfulSaveToServer = [prefs objectForKey:PREFS_DATE_LAST_SUCCESSFUL_SAVE];
         userPrefs.dateOfLastUserPrefChange = [prefs objectForKey:PREFS_DATE_LAST_CHANGE];
@@ -339,7 +339,7 @@ static UserPreferance* userPrefs;
                                     NOTIF_TIMING_EVENING,[prefs objectForKey:NOTIF_TIMING_EVENING],
                                     NOTIF_TIMING_NIGHT,[prefs objectForKey:NOTIF_TIMING_NIGHT],
                                     NOTIF_TIMING_WEEKEND,[prefs objectForKey:NOTIF_TIMING_WEEKEND],
-                                    APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],TRANSIT_MODE_SELECTED,[prefs objectForKey:TRANSIT_MODE_SELECTED],BIKE_TRIANGLE_FLAT,[prefs objectForKey:BIKE_TRIANGLE_FLAT],BIKE_TRIANGLE_BIKE_FRIENDLY,[prefs objectForKey:BIKE_TRIANGLE_BIKE_FRIENDLY],BIKE_TRIANGLE_QUICK,[prefs objectForKey:BIKE_TRIANGLE_QUICK],
+                                    APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],TRANSIT_MODE_SELECTED,[prefs objectForKey:TRANSIT_MODE_SELECTED],BIKE_TRIANGLE_FLAT,[prefs objectForKey:BIKE_TRIANGLE_FLAT],BIKE_TRIANGLE_BIKE_FRIENDLY,[prefs objectForKey:BIKE_TRIANGLE_BIKE_FRIENDLY],BIKE_TRIANGLE_QUICK,[prefs objectForKey:BIKE_TRIANGLE_QUICK],MAX_BIKE_DISTANCE,[prefs objectForKey:PREFS_MAX_BIKE_DISTANCE],
                                     
                                     // TODO -- add bicycle settings saving as needed
                                     nil];

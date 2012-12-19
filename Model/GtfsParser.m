@@ -570,7 +570,6 @@
         NSArray * arrayTrips = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
         for (id trips in arrayTrips){
             [self.managedObjectContext deleteObject:trips];
-             NSLog(@"Done");
         }
     }
                                   

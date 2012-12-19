@@ -88,7 +88,6 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     }
     return mapping;
 }
-
 // Create the sorted array of itineraries
 - (void)sortSteps
 {
