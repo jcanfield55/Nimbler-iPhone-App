@@ -61,6 +61,19 @@
 // time it has an update
 - (void)requestPlanWithParameters:(PlanRequestParameters *)parameters
 {
+    // Code To Get Stored Patterns
+    NSArray *arraySchedules = [self getSchedule:parameters];
+    for(int i=0;i<[arraySchedules count];i++){
+        Schedule *schedule = [arraySchedules objectAtIndex:i];
+            NSArray *arrayTempSchedule = schedule.legs;
+            for(int k=0;k<[arrayTempSchedule count];k++){
+                NSArray *legs = [arrayTempSchedule objectAtIndex:i];
+                for(int l=0;l<[legs count];l++){
+                    NSDictionary *dict = [legs objectAtIndex:l];
+                    PolylineEncodedString *pes = [[PolylineEncodedString alloc] initWithEncodedString:[dict objectForKey:@"polyLineEncodedString"]];
+                }
+            }
+        }
     @try {
         // Check if we have a stored plan that we can use
         NSArray* matchingPlanArray = [self fetchPlansWithToLocation:[parameters toLocation]
@@ -76,7 +89,6 @@
                          FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
                          FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
                          nil, nil, nil, nil);
-
                 [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
                 PlanRequestStatus status = PLAN_STATUS_OK;
                 if(toFromVC.timerGettingRealDataByItinerary != nil){
@@ -117,13 +129,6 @@
 // Requests for a new plan from OTP
 -(void)requestPlanFromOtpWithParameters:(PlanRequestParameters *)parameters
 {
-    // Nearest Station For ToLocation And FromLocation.
-//    CLLocation *toLocation = [[CLLocation alloc] initWithLatitude:[parameters.toLocation.lat doubleValue] longitude:[parameters.toLocation.lng doubleValue]];
-//     CLLocation *fromLocation = [[CLLocation alloc] initWithLatitude:[parameters.fromLocation.lat doubleValue] longitude:[parameters.fromLocation.lng doubleValue]];
-//    NSArray *arrNearestToLocation = [[nc_AppDelegate sharedInstance].gtfsParser findNearestStation:toLocation];
-//     NSArray *arrNearestFromLocation = [[nc_AppDelegate sharedInstance].gtfsParser findNearestStation:fromLocation];
-    
-    
     [nc_AppDelegate sharedInstance].receivedReply = NO;
     [nc_AppDelegate sharedInstance].receivedError = NO;
     @try {
@@ -264,9 +269,9 @@
                 } else {
                     [NSException raise:@"PlanStore->didLoadObjects failed to retrieve plan parameters" format:@"strResourcePath: %@", strResourcePath];
                 }
-                [self saveStopTimes:plan];
+                  [self saveStopTimes:plan];
                 if(planRequestParameters.serverCallsSoFar <= 1){
-                  [self saveSchedule:plan:planRequestParameters.fromLocation:planRequestParameters.toLocation];
+                    [self saveSchedule:plan:planRequestParameters.fromLocation:planRequestParameters.toLocation];
                 }
                 // Set to & from location with special handling of CurrentLocation
                 Location *toLoc = [planRequestParameters toLocation];
@@ -666,6 +671,15 @@
             if(leg.mode){
                 [dictLeg setObject:leg.mode forKey:@"mode"];
             }
+            if(leg.startTime){
+                [dictLeg setObject:leg.startTime forKey:@"startTime"];
+            }
+            if(leg.endTime){
+                [dictLeg setObject:leg.endTime forKey:@"endTime"];
+            }
+            if(leg.polylineEncodedString){
+               [dictLeg setObject:leg.polylineEncodedString.encodedString forKey:@"polyLineEncodedString"];
+            }
             [arrUnfilteredLegs addObject:dictLeg];
         }
         [arrFinalLegs addObject:arrUnfilteredLegs];
@@ -677,24 +691,19 @@
     schedule.fromLocation = dictFromLocation;
     schedule.legs = arrFinalLegs;
     saveContext(self.managedObjectContext);
-    
-    //[self getSchedule];
 }
-// Its Only For Testing Purpose
-//- (void)getSchedule{
-//    NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
-//    [fetchTrips setEntity:[NSEntityDescription entityForName:@"Schedule" inManagedObjectContext:self.managedObjectContext]];
-//    NSArray * arraySchedule = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
-//    for(int i=0;i<[arraySchedule count];i++){
-//        Schedule *schedule = [arraySchedule objectAtIndex:i];
-//        NSLog(@"%@",schedule.toLocation);
-//        NSLog(@"%@",schedule.fromLocation);
-//        NSArray *array = schedule.legs;
-//        for(int j=0;j<[array count];j++){
-//            NSLog(@"%@",[array objectAtIndex:j]);
-//        }
-//    }
-//}
+- (NSArray *)getSchedule:(PlanRequestParameters *)planRequestParameters{
+    Location *toLocation = planRequestParameters.toLocation;
+    Location *fromLocatin = planRequestParameters.fromLocation;
+    NSDictionary *dictToLocation = [NSDictionary dictionaryWithObjectsAndKeys:toLocation.formattedAddress,@"frmtAddress",toLocation.lat,@"lat",toLocation.lng,@"lng", nil];
+    NSDictionary *dictFromLocation = [NSDictionary dictionaryWithObjectsAndKeys:fromLocatin.formattedAddress,@"frmtAddress",fromLocatin.lat,@"lat",fromLocatin.lng,@"lng", nil];
+    NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
+    [fetchTrips setEntity:[NSEntityDescription entityForName:@"Schedule" inManagedObjectContext:self.managedObjectContext]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"fromLocation=%@ && toLocation=%@",dictFromLocation,dictToLocation];
+    [fetchTrips setPredicate:predicate];
+    NSArray * arraySchedule = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
+    return arraySchedule;
+}
 // Save StopTimes To DataBase
 - (void)saveStopTimes:(Plan *)plan{
     NSMutableArray *arrayAgencyIDs = [[NSMutableArray alloc] init];
@@ -722,6 +731,6 @@
             }
         }
     }
-    [[nc_AppDelegate sharedInstance] getGtfsStopTimes:arrayAgencyIDs :arrayTripIds];
+    [[nc_AppDelegate sharedInstance].gtfsParser getGtfsStopTimes:arrayAgencyIDs :arrayTripIds];
 }
 @end

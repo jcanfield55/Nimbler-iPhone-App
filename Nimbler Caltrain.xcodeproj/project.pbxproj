@@ -204,7 +204,6 @@
 		8D106E031671F16C004E0DE5 /* GtfsStopTimes.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DFC1671F16B004E0DE5 /* GtfsStopTimes.m */; };
 		8D106E041671F16C004E0DE5 /* GtfsTrips.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DFE1671F16B004E0DE5 /* GtfsTrips.m */; };
 		8D1A64EA165B82C100176FF7 /* SettingViewController_SF.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D1A64E9165B82C100176FF7 /* SettingViewController_SF.xib */; };
-		8D1A800516819664005F64FF /* Schedule.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D1A800416819663005F64FF /* Schedule.m */; };
 		8D45BD1E162BDE6A00E5CB3D /* Icon_ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D45BD1D162BDE6A00E5CB3D /* Icon_ipad@2x.png */; };
 		8D4FC8E6162D2E1A004144DE /* bart-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D4FC8E4162D2E1A004144DE /* bart-station.json */; };
 		8D4FC8E7162D2E1A004144DE /* caltrain-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D4FC8E5162D2E1A004144DE /* caltrain-station.json */; };
@@ -221,6 +220,7 @@
 		8DA39BE115E38B5E0029D54B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */; };
 		8DBECD5216146DBE007B71F1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */; };
 		8DC019F91627F4BE004200E5 /* nc_AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */; };
+		8DD2A5E31683428400C034CB /* Schedule.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DD2A5E21683428400C034CB /* Schedule.m */; };
 		8DEE785D166338F100E4863C /* SettingViewController_SF_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */; };
 		8DEE785F166339D600E4863C /* SettingDetailViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */; };
 		8DF35D631627F58500B99F4A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF35D621627F58400B99F4A /* main.m */; };
@@ -527,8 +527,6 @@
 		8D106DFD1671F16B004E0DE5 /* GtfsTrips.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GtfsTrips.h; sourceTree = "<group>"; };
 		8D106DFE1671F16B004E0DE5 /* GtfsTrips.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GtfsTrips.m; sourceTree = "<group>"; };
 		8D1A64E9165B82C100176FF7 /* SettingViewController_SF.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController_SF.xib; sourceTree = "<group>"; };
-		8D1A800316819663005F64FF /* Schedule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Schedule.h; sourceTree = "<group>"; };
-		8D1A800416819663005F64FF /* Schedule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Schedule.m; sourceTree = "<group>"; };
 		8D42C2F8163AC05C00880B33 /* Nimbler Caltrain-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Nimbler Caltrain-Info.plist"; sourceTree = SOURCE_ROOT; };
 		8D42C2F9163AC05C00880B33 /* Nimbler Caltrain-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Nimbler Caltrain-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		8D45BD1D162BDE6A00E5CB3D /* Icon_ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon_ipad@2x.png"; sourceTree = "<group>"; };
@@ -554,6 +552,8 @@
 		8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		8DC019F71627F4BE004200E5 /* nc_AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nc_AppDelegate.h; sourceTree = SOURCE_ROOT; };
 		8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = nc_AppDelegate.m; sourceTree = SOURCE_ROOT; };
+		8DD2A5E11683428400C034CB /* Schedule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Schedule.h; sourceTree = "<group>"; };
+		8DD2A5E21683428400C034CB /* Schedule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Schedule.m; sourceTree = "<group>"; };
 		8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController_SF_568h.xib; sourceTree = "<group>"; };
 		8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingDetailViewController_568h.xib; sourceTree = "<group>"; };
 		8DF35D621627F58400B99F4A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -679,9 +679,9 @@
 		520FB1511626036C0083F143 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				8DD2A5E11683428400C034CB /* Schedule.h */,
+				8DD2A5E21683428400C034CB /* Schedule.m */,
 				8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */,
-				8D1A800316819663005F64FF /* Schedule.h */,
-				8D1A800416819663005F64FF /* Schedule.m */,
 				8D6FB9661680870500952B0C /* GtfsStop.h */,
 				8D6FB9671680870500952B0C /* GtfsStop.m */,
 				8D106DD71671F0ED004E0DE5 /* GtfsAgency.h */,
@@ -1373,7 +1373,7 @@
 				8D106E031671F16C004E0DE5 /* GtfsStopTimes.m in Sources */,
 				8D106E041671F16C004E0DE5 /* GtfsTrips.m in Sources */,
 				8D6FB9681680870500952B0C /* GtfsStop.m in Sources */,
-				8D1A800516819664005F64FF /* Schedule.m in Sources */,
+				8DD2A5E31683428400C034CB /* Schedule.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

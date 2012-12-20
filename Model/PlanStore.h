@@ -57,5 +57,5 @@
 
 // Save Schedule To DataBase
 - (void)saveSchedule:(Plan *)plan:(Location *)fromLocation:(Location *)toLocation;
-- (void)getSchedule;
+- (NSArray *)getSchedule:(PlanRequestParameters *)planRequestParameters;
 @end

@@ -104,13 +104,6 @@
 @property (nonatomic) BOOL receivedError;
 @property (nonatomic,strong) NSMutableString *testLogMutableString;
 @property (strong, nonatomic) GtfsParser *gtfsParser;
-@property (strong, nonatomic) NSString *strAgenciesURL;
-@property (strong, nonatomic) NSString *strCalendarDatesURL;
-@property (strong, nonatomic) NSString *strCalendarURL;
-@property (strong, nonatomic) NSString *strRoutesURL;
-@property (strong, nonatomic) NSString *strStopsURL;
-@property (strong, nonatomic) NSString *strTripsURL;
-@property (strong, nonatomic) NSString *strStopTimesURL;
 
 - (NSURL *)applicationDocumentsDirectory;
 
@@ -123,13 +116,6 @@
 -(void)updateTime;
 -(void)serviceByWeekday;
 -(void)calendarByDate;
--(void)getAgencyDatas;
--(void)getCalendarDates;
--(void)getCalendarData;
--(void)getRoutesData;
--(void)getStopsData;
--(void)getTripsData;
-- (void) getGtfsStopTimes:(NSArray *)arrayAgencyIds:(NSArray *)arrayTripIds;
 - (NSString *)getAppTypeFromBundleId;
 - (NSString *)getAgencyIdsString;
 @end

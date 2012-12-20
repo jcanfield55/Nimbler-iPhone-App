@@ -20,6 +20,14 @@
 @implementation GtfsParser
 
 @synthesize managedObjectContext;
+@synthesize strAgenciesURL;
+@synthesize strCalendarDatesURL;
+@synthesize strCalendarURL;
+@synthesize strRoutesURL;
+@synthesize strStopsURL;
+@synthesize strTripsURL;
+@synthesize strStopTimesURL;
+
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc
 {
@@ -572,8 +580,6 @@
             [self.managedObjectContext deleteObject:trips];
         }
     }
-                                  
-                                  
     for(int j=0;j<[arrayTripID count];j++){
         GtfsStopTimes* stopTimes = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsStopTimes" inManagedObjectContext:self.managedObjectContext];
         stopTimes.tripID = [arrayTripID objectAtIndex:j];
@@ -606,5 +612,221 @@
         }
     }
     return arrayStops;
+}
+
+#pragma mark  GTFS Requests
+
+-(void)getAgencyDatas{
+    @try {
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"agency",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
+        NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
+        strAgenciesURL = request;
+        NIMLOG_OBJECT1(@"Get Agencies: %@", request);
+        [[RKClient sharedClient]  get:request delegate:self];
+    }
+    @catch (NSException *exception) {
+        logException(@"GtfsParser->getAgencies", @"", exception);
+    }
+}
+
+-(void)getCalendarDates{
+    @try {
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"calendar_dates",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
+        NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
+        strCalendarDatesURL = request;
+        NIMLOG_OBJECT1(@"Get Calendar Dates: %@", request);
+        [[RKClient sharedClient]  get:request delegate:self];
+    }
+    @catch (NSException *exception) {
+        logException(@"GtfsParser->getCalendarDates", @"", exception);
+    }
+}
+
+-(void)getCalendarData{
+    @try {
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"calendar",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
+        NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
+        strCalendarURL = request;
+        NIMLOG_OBJECT1(@"Get Calendar: %@", request);
+        [[RKClient sharedClient]  get:request delegate:self];
+    }
+    @catch (NSException *exception) {
+        logException(@"GtfsParser->getCalendarData", @"", exception);
+    }
+}
+
+-(void)getRoutesData{
+    @try {
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"routes",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
+        NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
+        strRoutesURL = request;
+        NIMLOG_OBJECT1(@"Get Routes: %@", request);
+        [[RKClient sharedClient]  get:request delegate:self];
+    }
+    @catch (NSException *exception) {
+        logException(@"GtfsParser->getRoutesData", @"", exception);
+    }
+}
+
+-(void)getStopsData{
+    @try {
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"stops",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
+        NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
+        strStopsURL = request;
+        NIMLOG_OBJECT1(@"Get Stops: %@", request);
+        [[RKClient sharedClient]  get:request delegate:self];
+    }
+    @catch (NSException *exception) {
+        logException(@"GtfsParser->getStopsData", @"", exception);
+    }
+}
+
+-(void)getTripsData{
+    @try {
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"trips",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
+        NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
+        strTripsURL = request;
+        NIMLOG_OBJECT1(@"Get Trips: %@", request);
+        [[RKClient sharedClient]  get:request delegate:self];
+    }
+    @catch (NSException *exception) {
+        logException(@"GtfsParser->getTripsData", @"", exception);
+    }
+}
+
+
+- (void) getGtfsStopTimes:(NSArray *)arrayAgencyIds:(NSArray *)arrayTripIds{
+    NSMutableString *strRequestString = [[NSMutableString alloc] init];
+    for(int i=0;i<[arrayAgencyIds count];i++){
+        for(int j=0;j<[arrayTripIds count];j++){
+            [strRequestString appendFormat:@"%@_%@,",[arrayAgencyIds objectAtIndex:i],[arrayTripIds objectAtIndex:j]];
+        }
+    }
+    int nLength = [strRequestString length];
+    if(nLength > 0){
+        [strRequestString deleteCharactersInRange:NSMakeRange(nLength-1, 1)];
+    }
+    @try {
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        [RKClient setSharedClient:client];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:strRequestString,AGENCY_IDS, nil];
+        NSString *request = [GTFS_STOP_TIMES appendQueryParams:dictParameters];
+        strStopTimesURL = request;
+        NIMLOG_OBJECT1(@"get Gtfs Stop Times: %@", request);
+        [[RKClient sharedClient]  get:request delegate:self];
+    }
+    @catch (NSException *exception) {
+        logException(@"GtfsParser->getAgencies", @"", exception);
+    }
+}
+
+- (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response
+{
+    NSString *strRequestURL = request.resourcePath;
+    @try {
+        if ([request isGET]) {
+            NSError *error = nil;
+            if (error == nil)
+            {
+               if ([strRequestURL isEqualToString:strAgenciesURL]) {
+                    RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+                    NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
+                    NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
+                    if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
+                        [self performSelector:@selector(parseAgencyDataAndStroreToDataBase:) withObject:res];
+                        [self performSelector:@selector(getCalendarDates) withObject:nil];
+                    }
+                    else{
+                        [self performSelector:@selector(getAgencyDatas) withObject:nil];
+                    }
+                }
+                else if ([strRequestURL isEqualToString:strCalendarDatesURL]) {
+                    RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+                    NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
+                    NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
+                    if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
+                        [self performSelector:@selector(parseCalendarDatesDataAndStroreToDataBase:) withObject:res];
+                        [self performSelector:@selector(getCalendarData) withObject:nil];
+                    }
+                    else{
+                        [self performSelector:@selector(getCalendarDates) withObject:nil];
+                    }
+                }
+                else if ([strRequestURL isEqualToString:strCalendarURL]) {
+                    RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+                    NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
+                    NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
+                    if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
+                        [self performSelector:@selector(parseCalendarDataAndStroreToDataBase:) withObject:res];
+                        [self performSelector:@selector(getRoutesData) withObject:nil];
+                    }
+                    else{
+                        [self performSelector:@selector(getCalendarData) withObject:nil];
+                    }
+                }
+                else if ([strRequestURL isEqualToString:strRoutesURL]) {
+                    RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+                    NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
+                    NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
+                    if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
+                        [self performSelector:@selector(parseRoutesDataAndStroreToDataBase:) withObject:res];
+                        [self performSelector:@selector(getStopsData) withObject:nil];
+                    }
+                    else{
+                        [self performSelector:@selector(getRoutesData) withObject:nil];
+                    }
+                }
+                else if ([strRequestURL isEqualToString:strStopsURL]) {
+                    RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+                    NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
+                    NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
+                    if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
+                        [self performSelector:@selector(parseStopsDataAndStroreToDataBase:) withObject:res];
+                        [self performSelector:@selector(getTripsData) withObject:nil];
+                    }
+                    else{
+                        [self performSelector:@selector(getStopsData) withObject:nil];
+                    }
+                }
+                else if ([strRequestURL isEqualToString:strTripsURL]) {
+                    RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+                    NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
+                    NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
+                    if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
+                        [self performSelector:@selector(parseTripsDataAndStroreToDataBase:) withObject:res];
+                    }
+                    else{
+                        [self performSelector:@selector(getTripsData) withObject:nil];
+                    }
+                }
+                else if ([strRequestURL isEqualToString:strStopTimesURL]) {
+                    RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+                    NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
+                    NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
+                    if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
+                        [self parseStopTimesAndStroreToDataBase:res :strRequestURL];
+                    }
+                    else{
+                        [self performSelector:@selector(getGtfsStopTimes:) withObject:nil];
+                    }
+                }
+            }
+        }
+    }
+    @catch (NSException *exception) {
+        logException(@"GtfsParser->didLoadResponse", @"catching TPServer Response", exception);
+    }
 }
 @end

@@ -283,8 +283,8 @@
         <element name="PlanPlace" positionX="0" positionY="0" width="128" height="180"/>
         <element name="PlanRequestChunk" positionX="0" positionY="0" width="128" height="105"/>
         <element name="RawAddress" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="Schedule" positionX="160" positionY="192" width="128" height="90"/>
         <element name="Step" positionX="0" positionY="0" width="128" height="195"/>
         <element name="TPResponse" positionX="0" positionY="0" width="128" height="75"/>
-        <element name="Schedule" positionX="160" positionY="192" width="128" height="90"/>
     </elements>
 </model>
