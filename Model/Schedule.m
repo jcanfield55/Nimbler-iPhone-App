@@ -1,13 +1,12 @@
 //
 //  Schedule.m
-//  RestKit
+//  Nimbler Caltrain
 //
 //  Created by macmini on 20/12/12.
-//  Copyright (c) 2012 RestKit. All rights reserved.
+//  Copyright (c) 2012 Network Commuting. All rights reserved.
 //
 
 #import "Schedule.h"
-#import "Leg.h"
 
 
 @implementation Schedule

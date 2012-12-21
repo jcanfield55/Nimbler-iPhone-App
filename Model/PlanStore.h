@@ -58,4 +58,6 @@
 // Save Schedule To DataBase
 - (void)saveSchedule:(Plan *)plan:(Location *)fromLocation:(Location *)toLocation;
 - (NSArray *)getSchedule:(PlanRequestParameters *)planRequestParameters;
+- (NSString *) getTheStopIDAccrodingToStation:(NSString *)lat:(NSString *)lng;
+- (void)getStoredPatterns:(PlanRequestParameters *)parameters;
 @end

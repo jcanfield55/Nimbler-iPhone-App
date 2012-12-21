@@ -14,6 +14,7 @@
 #import <Restkit/RKJSONParserJSONKit.h>
 #import "nc_AppDelegate.h"
 #import "Schedule.h"
+#import "GtfsStopTimes.h"
 
 
 @interface PlanStore()
@@ -61,19 +62,7 @@
 // time it has an update
 - (void)requestPlanWithParameters:(PlanRequestParameters *)parameters
 {
-    // Code To Get Stored Patterns
-    NSArray *arraySchedules = [self getSchedule:parameters];
-    for(int i=0;i<[arraySchedules count];i++){
-        Schedule *schedule = [arraySchedules objectAtIndex:i];
-            NSArray *arrayTempSchedule = schedule.legs;
-            for(int k=0;k<[arrayTempSchedule count];k++){
-                NSArray *legs = [arrayTempSchedule objectAtIndex:i];
-                for(int l=0;l<[legs count];l++){
-                    NSDictionary *dict = [legs objectAtIndex:l];
-                    PolylineEncodedString *pes = [[PolylineEncodedString alloc] initWithEncodedString:[dict objectForKey:@"polyLineEncodedString"]];
-                }
-            }
-        }
+    [self getStoredPatterns:parameters];
     @try {
         // Check if we have a stored plan that we can use
         NSArray* matchingPlanArray = [self fetchPlansWithToLocation:[parameters toLocation]
@@ -680,6 +669,26 @@
             if(leg.polylineEncodedString){
                [dictLeg setObject:leg.polylineEncodedString.encodedString forKey:@"polyLineEncodedString"];
             }
+            if(leg.distance){
+                [dictLeg setObject:leg.distance forKey:@"distance"];
+            }
+            if(leg.duration){
+                [dictLeg setObject:leg.duration forKey:@"duration"];
+            }
+            if(![[leg mode] isEqualToString:@"WALK"]){
+                if(leg.to.lat){
+                   [dictLeg setObject:leg.to.lat forKey:@"toLat"];
+                }
+                if(leg.to.lng){
+                    [dictLeg setObject:leg.to.lng forKey:@"toLng"];
+                }
+                if(leg.from.lat){
+                    [dictLeg setObject:leg.from.lat forKey:@"fromLat"];
+                }
+                if(leg.from.lng){
+                    [dictLeg setObject:leg.from.lng forKey:@"fromLng"];
+                }
+            }
             [arrUnfilteredLegs addObject:dictLeg];
         }
         [arrFinalLegs addObject:arrUnfilteredLegs];
@@ -732,5 +741,71 @@
         }
     }
     [[nc_AppDelegate sharedInstance].gtfsParser getGtfsStopTimes:arrayAgencyIDs :arrayTripIds];
+}
+
+- (NSString *) getTheStopIDAccrodingToStation:(NSString *)lat:(NSString *)lng{
+    NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
+    [fetchTrips setEntity:[NSEntityDescription entityForName:@"GtfsStop" inManagedObjectContext:self.managedObjectContext]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"stopLat=%@ && stopLon=%@",lat,lng];
+    [fetchTrips setPredicate:predicate];
+    NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
+    NSString *strStopID;
+    if([arrayStopTimes count] > 0){
+       strStopID = [arrayStopTimes objectAtIndex:0];
+    }
+    else{
+        strStopID = nil;
+    }
+   
+    return strStopID;
+}
+- (void)getLegsTimes:(NSString *)strToStopID:(NSString *)strFromStopID{
+    NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
+    [fetchTrips setEntity:[NSEntityDescription entityForName:@"GtfsStopTimes" inManagedObjectContext:self.managedObjectContext]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"stopID=%@ || stopID=%@",strToStopID,strFromStopID];
+    [fetchTrips setPredicate:predicate];
+    NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
+    NSMutableArray *arrMutableStopTimes = [[NSMutableArray alloc] init];
+    for(int i=0;i<[arrayStopTimes count];i++){
+        for(int j= i+1;j<[arrayStopTimes count];j++){
+            GtfsStopTimes *stopTimes1 = [arrayStopTimes objectAtIndex:i];
+            GtfsStopTimes *stopTimes2 = [arrayStopTimes objectAtIndex:j];
+            if(stopTimes1 && stopTimes2){
+                if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] > [stopTimes1.stopSequence intValue]){
+                    NSArray *arrayTemp = [NSArray arrayWithObjects:stopTimes1,stopTimes2, nil];
+                    [arrMutableStopTimes addObject:arrayTemp];
+                }
+                else if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] < [stopTimes1.stopSequence intValue]){
+                    NSArray *arrayTemp = [NSArray arrayWithObjects:stopTimes1,stopTimes2, nil];
+                    [arrMutableStopTimes addObject:arrayTemp];
+                }
+            }
+        }
+    }
+    NSLog(@"%@",arrMutableStopTimes);
+    
+}
+- (void)getStoredPatterns:(PlanRequestParameters *)parameters{
+    // Code To Get Stored Patterns
+    NSArray *arraySchedules = [self getSchedule:parameters];
+    for(int i=0;i<[arraySchedules count];i++){
+        Schedule *schedule = [arraySchedules objectAtIndex:i];
+        NSArray *arrayTempSchedule = schedule.legs;
+        for(int k=0;k<[arrayTempSchedule count];k++){
+            NSArray *legs = [arrayTempSchedule objectAtIndex:i];
+            for(int l=0;l<[legs count];l++){
+                NSDictionary *dictLeg = [legs objectAtIndex:l];
+                if(![[dictLeg objectForKey:@"mode"] isEqualToString:@"WALK"]){
+                    NSString *strTOLat = [dictLeg objectForKey:@"toLat"];
+                    NSString *strTOLng = [dictLeg objectForKey:@"toLng"];
+                    NSString *strFromLat = [dictLeg objectForKey:@"fromLat"];
+                    NSString *strFromLng = [dictLeg objectForKey:@"fromLng"];
+                    NSString *strTOStopID = [self getTheStopIDAccrodingToStation:strTOLat:strTOLng];
+                    NSString *strFromStopID = [self getTheStopIDAccrodingToStation:strFromLat:strFromLng];
+                    [self getLegsTimes:strTOStopID :strFromStopID];
+                }
+            }
+        }
+    }
 }
 @end
