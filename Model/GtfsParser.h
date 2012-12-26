@@ -11,6 +11,10 @@
 #import <RestKit/Restkit.h>
 #import <RestKit/CoreData.h>
 #import <Restkit/RKJSONParserJSONKit.h>
+#import "Plan.h"
+#import "Leg.h"
+#import "Schedule.h"
+#import "PlanRequestParameters.h"
 
 @interface GtfsParser : NSObject<RKRequestDelegate>{
     NSManagedObjectContext *managedObjectContext;
@@ -39,5 +43,22 @@
 -(void)getRoutesData;
 -(void)getStopsData;
 -(void)getTripsData;
-- (void) getGtfsStopTimes:(NSArray *)arrayAgencyIds:(NSArray *)arrayTripIds;
+- (void) getGtfsStopTimes:(NSMutableString *)strRequestString;
+
+// Generate The StopTimes Request Comma Separated string like agencyID_tripID
+- (void)generateStopTimesRequestString:(Plan *)plan;
+
+// Save Patterns To Schedule Table with To&From Location.
+- (void)saveSchedule:(Plan *)plan:(Location *)fromLocation:(Location *)toLocation;
+
+// Get Schedule According to To&From Location.
+- (NSArray *)getSchedule:(PlanRequestParameters *)planRequestParameters;
+
+// Get The stopID form GtfsStop Table from To&From Location.
+- (NSString *) getTheStopIDAccrodingToStation:(NSString *)lat:(NSString *)lng;
+
+// To Get Stored Patterns
+// Then Get The stopID From To&From Location.
+// Then We get The StopTimes According To TO&From stopID.
+- (void)getStoredPatterns:(PlanRequestParameters *)parameters;
 @end

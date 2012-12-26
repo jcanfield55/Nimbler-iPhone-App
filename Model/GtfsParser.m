@@ -512,11 +512,20 @@
     NSMutableArray *arrayPickUpType = [[NSMutableArray alloc] init];
     NSMutableArray *arrayDropOffType = [[NSMutableArray alloc] init];
     NSMutableArray *arrayShapeDistTraveled = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayAgencyID = [[NSMutableArray alloc] init];
     
     NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
     for(int k=0;k<[arrayAgencyIds count];k++){
         NSArray *arrayComponentsAgency = [dictComponents objectForKey:[arrayAgencyIds objectAtIndex:k]];
         for(int i=1;i<[arrayComponentsAgency count];i++){
+            NSString *strAgencyIds = [arrayAgencyIds objectAtIndex:k];
+            NSArray *arrayAgencyIdsComponents = [strAgencyIds componentsSeparatedByString:@"_"];
+            if([arrayAgencyIdsComponents count] > 1){
+                [arrayAgencyID addObject:[arrayAgencyIdsComponents objectAtIndex:0]];
+            }
+            else{
+               [arrayAgencyID addObject:@""];
+            }
             NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
             NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
             if([arraySubComponents count] > 0){
@@ -590,6 +599,7 @@
         stopTimes.pickUpTime = [arrayPickUpType objectAtIndex:j];
         stopTimes.dropOfTime = [arrayDropOffType objectAtIndex:j];
         stopTimes.shapeDistTravelled = [arrayShapeDistTraveled objectAtIndex:j];
+        stopTimes.agencyID = [arrayAgencyID objectAtIndex:j];
     }
     saveContext(self.managedObjectContext);
 }
@@ -616,6 +626,7 @@
 
 #pragma mark  GTFS Requests
 
+// Request The Server For Agency Data.
 -(void)getAgencyDatas{
     @try {
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
@@ -631,6 +642,7 @@
     }
 }
 
+// Request The Server For Calendar Dates.
 -(void)getCalendarDates{
     @try {
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
@@ -646,6 +658,7 @@
     }
 }
 
+// Request The Server For Calendar Data.
 -(void)getCalendarData{
     @try {
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
@@ -661,6 +674,7 @@
     }
 }
 
+// Request The Server For Routes Data.
 -(void)getRoutesData{
     @try {
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
@@ -676,6 +690,7 @@
     }
 }
 
+// Request The Server For Stops Data.
 -(void)getStopsData{
     @try {
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
@@ -691,6 +706,7 @@
     }
 }
 
+// Request The Server For Trips Data.
 -(void)getTripsData{
     @try {
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
@@ -706,14 +722,8 @@
     }
 }
 
-
-- (void) getGtfsStopTimes:(NSArray *)arrayAgencyIds:(NSArray *)arrayTripIds{
-    NSMutableString *strRequestString = [[NSMutableString alloc] init];
-    for(int i=0;i<[arrayAgencyIds count];i++){
-        for(int j=0;j<[arrayTripIds count];j++){
-            [strRequestString appendFormat:@"%@_%@,",[arrayAgencyIds objectAtIndex:i],[arrayTripIds objectAtIndex:j]];
-        }
-    }
+// Request The Server For StopTimes Data.
+- (void) getGtfsStopTimes:(NSMutableString *)strRequestString{
     int nLength = [strRequestString length];
     if(nLength > 0){
         [strRequestString deleteCharactersInRange:NSMakeRange(nLength-1, 1)];
@@ -818,9 +828,6 @@
                     if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
                         [self parseStopTimesAndStroreToDataBase:res :strRequestURL];
                     }
-                    else{
-                        [self performSelector:@selector(getGtfsStopTimes:) withObject:nil];
-                    }
                 }
             }
         }
@@ -829,4 +836,324 @@
         logException(@"GtfsParser->didLoadResponse", @"catching TPServer Response", exception);
     }
 }
+
+// Partial Implementation ( Working On this Function)
+// Check Schedule Table with ToLocation,FromLocation and arrayLegs.
+// If all match in Schedule Then we will not save pattern again otherwise we will save pattern.
+- (void)checkIfPatternAlreadyExists:(NSArray *)arrayLegs:(Location *)toLocation:(Location *)fromLocation{
+    NSMutableArray *arrayFinalLegs = [[NSMutableArray alloc] initWithArray:arrayLegs];
+    NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
+    [fetchTrips setEntity:[NSEntityDescription entityForName:@"Schedule" inManagedObjectContext:self.managedObjectContext]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"fromLat=%@ && fromLng=%@ && toLat=%@ && toLng = %@",fromLocation.lat,fromLocation.lng,toLocation.lat,toLocation.lng];
+    [fetchTrips setPredicate:predicate];
+    NSArray * arraySchedule = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
+    for(int i=0;i<[arraySchedule count];i++){
+            Schedule *schedule1 = [arraySchedule objectAtIndex:i];
+            NSArray *arrLegs1 = schedule1.legs;
+        for(int j=0;j<[arrLegs1 count];j++){
+            for(int l=0;l<[arrayLegs count];l++){
+                NSArray *tempArray1 = [arrLegs1 objectAtIndex:j];
+                NSArray *tempArray2 = [arrayLegs objectAtIndex:l];
+                if(![tempArray1 isEqualToArray:tempArray2]){
+                    [arrayFinalLegs addObject:tempArray2];
+                }
+            }
+        }
+        schedule1.toLat = toLocation.lat;
+        schedule1.toLng = toLocation.lng;
+        schedule1.fromLat = fromLocation.lat;
+        schedule1.fromLng = fromLocation.lng;
+        schedule1.toFormattedAddress = toLocation.formattedAddress;
+        schedule1.fromFormattedAddress = fromLocation.formattedAddress;
+        schedule1.legs = arrayFinalLegs;
+    }
+    saveContext(self.managedObjectContext);
+}
+
+// Save Patterns To Schedule Table.
+- (void)saveSchedule:(Plan *)plan:(Location *)fromLocation:(Location *)toLocation{
+    NSMutableArray *arrayLegs = [[NSMutableArray alloc] init];
+    NSMutableArray *arrFinalLegs = [[NSMutableArray alloc] init];
+    NSArray *itiArray = [plan sortedItineraries];
+    for(int i=0;i<[itiArray count];i++){
+        Itinerary *iti = [itiArray objectAtIndex:i];
+        NSArray *legArray = [iti sortedLegs];
+        if([arrayLegs count] == 0){
+            [arrayLegs addObject:legArray];
+        }
+        else{
+            NSArray *tempLegs = [NSArray arrayWithArray:arrayLegs];
+            for(int i=0;i<[tempLegs count];i++){
+                NSArray *subArray = [tempLegs objectAtIndex:i];
+                if([subArray count] != [legArray count]){
+                    [arrayLegs addObject:legArray];
+                }
+                else{
+                    BOOL isLegsEqual = YES;
+                    for(int i=0;i<[legArray count];i++){
+                        Leg *leg1 = [legArray objectAtIndex:i];
+                        Leg *leg2 = [subArray objectAtIndex:i];
+                        if(![leg1.agencyName isEqualToString:leg2.agencyName] || ![leg1.to.lat isEqual:leg2.to.lat] || ![leg1.from.lat isEqual:leg2.from.lat]|| ![leg1.to.lng isEqual:leg2.to.lng] || ![leg1.from.lng isEqual:leg2.from.lng]){
+                            isLegsEqual = NO;
+                        }
+                    }
+                    if(!isLegsEqual){
+                        [arrayLegs addObject:legArray];
+                    }
+                }
+            }
+        }
+    }
+    for(int i=0;i<[arrayLegs count];i++){
+        for (int l=i+1;l<[arrayLegs count];l++){
+            NSArray *arrayTemp1 = [arrayLegs objectAtIndex:i];
+            NSArray *arrayTemp2 = [arrayLegs objectAtIndex:l];
+            for(int j=0;j<[arrayTemp1 count];j++){
+                for(int k=0;k<[arrayTemp2 count];k++){
+                    Leg *leg1 = [arrayTemp1 objectAtIndex:j];
+                    Leg *leg2 = [arrayTemp2 objectAtIndex:k];
+                    if([leg1.agencyName isEqualToString:leg2.agencyName] && [leg1.to.lat isEqual:leg2.to.lat] && [leg1.from.lat isEqual:leg2.from.lat]&& [leg1.to.lng isEqual:leg2.to.lng] && [leg1.from.lng isEqual:leg2.from.lng]){
+                        [arrayLegs removeObjectAtIndex:l];
+                    }
+                }
+            }
+        }
+    }
+    for(int i=0;i<[arrayLegs count];i++){
+        NSMutableArray *arrUnfilteredLegs = [[NSMutableArray alloc] init];
+        NSArray *arrayLeg = [arrayLegs objectAtIndex:i];
+        for(int j=0;j<[arrayLeg count];j++){
+            Leg *leg = [arrayLeg objectAtIndex:j];
+            NSMutableDictionary *dictLeg = [[NSMutableDictionary alloc] init];
+            if(leg.agencyId){
+                [dictLeg setObject:leg.agencyId forKey:@"agencyID"];
+            }
+            if(leg.agencyName){
+                [dictLeg setObject:leg.agencyName forKey:@"agencyName"];
+            }
+            if(leg.route){
+                [dictLeg setObject:leg.route forKey:@"route"];
+            }
+            if(leg.routeShortName){
+                [dictLeg setObject:leg.routeShortName forKey:@"routeShortName"];
+            }
+            if(leg.routeLongName){
+                [dictLeg setObject:leg.routeLongName forKey:@"routeLongName"];
+            }
+            if(leg.mode){
+                [dictLeg setObject:leg.mode forKey:@"mode"];
+            }
+            if(leg.startTime){
+                [dictLeg setObject:leg.startTime forKey:@"startTime"];
+            }
+            if(leg.endTime){
+                [dictLeg setObject:leg.endTime forKey:@"endTime"];
+            }
+            if(leg.polylineEncodedString){
+                [dictLeg setObject:leg.polylineEncodedString.encodedString forKey:@"polyLineEncodedString"];
+            }
+            if(leg.distance){
+                [dictLeg setObject:leg.distance forKey:@"distance"];
+            }
+            if(leg.duration){
+                [dictLeg setObject:leg.duration forKey:@"duration"];
+            }
+            if(![[leg mode] isEqualToString:@"WALK"]){
+                if(leg.to.lat){
+                    [dictLeg setObject:leg.to.lat forKey:@"toLat"];
+                }
+                if(leg.to.lng){
+                    [dictLeg setObject:leg.to.lng forKey:@"toLng"];
+                }
+                if(leg.from.lat){
+                    [dictLeg setObject:leg.from.lat forKey:@"fromLat"];
+                }
+                if(leg.from.lng){
+                    [dictLeg setObject:leg.from.lng forKey:@"fromLng"];
+                }
+            }
+            [arrUnfilteredLegs addObject:dictLeg];
+        }
+        [arrFinalLegs addObject:arrUnfilteredLegs];
+    }
+    [self checkIfPatternAlreadyExists:arrFinalLegs :toLocation :fromLocation];
+}
+
+// Get Schedule From Schedule Table According To TO&From Location.
+- (NSArray *)getSchedule:(PlanRequestParameters *)planRequestParameters{
+    Location *toLocation = planRequestParameters.toLocation;
+    Location *fromLocatin = planRequestParameters.fromLocation;
+    NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
+    [fetchTrips setEntity:[NSEntityDescription entityForName:@"Schedule" inManagedObjectContext:self.managedObjectContext]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"fromLat=%@ && fromLng=%@ && toLat=%@ && toLng = %@",fromLocatin.lat,fromLocatin.lng,toLocation.lat,toLocation.lng];
+    [fetchTrips setPredicate:predicate];
+    NSArray * arraySchedule = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
+    return arraySchedule;
+}
+
+// Check StopTimes Table for particular tripID&agencyID data is exists or not.
+// If Data For tripID&agencyID  Already Exists then we will not ask StopTimes Data for that tripID from Server otherwise we will ask for StopTimes Data.
+- (BOOL) checkIfTripIDAndAgencyIDAlreadyExists:(NSString *)strTripID:(NSString *)agencyID{
+    NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
+    [fetchTrips setEntity:[NSEntityDescription entityForName:@"GtfsStopTimes" inManagedObjectContext:self.managedObjectContext]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"tripID=%@ && agencyID=%@",strTripID,agencyID];
+    [fetchTrips setPredicate:predicate];
+    NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
+    if([arrayStopTimes count] > 0){
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
+
+// Generate The StopTimes Request Comma Separated string like agencyID_tripID
+- (void)generateStopTimesRequestString:(Plan *)plan{
+    NSMutableString *strRequestString = [[NSMutableString alloc] init];
+    NSArray *itiArray = [plan sortedItineraries];
+    for(int i=0;i<[itiArray count];i++){
+        Itinerary *iti = [itiArray objectAtIndex:i];
+        NSArray *legArray = [iti sortedLegs];
+        for(int j=0;j<[legArray count];j++){
+            Leg *leg = [legArray objectAtIndex:j];
+            if(![[leg mode] isEqualToString:@"WALK"]){
+                    if([leg.agencyName isEqualToString:CALTRAIN_AGENCY_NAME]){
+                        if(![self checkIfTripIDAndAgencyIDAlreadyExists:leg.tripId:CALTRAIN_AGENCY_IDS]){
+                            [strRequestString appendFormat:@"%@_%@,",CALTRAIN_AGENCY_IDS,leg.tripId];
+                        }
+                    }
+                    else if(([leg.agencyName isEqualToString:BART_AGENCY_NAME] ||[leg.agencyName isEqualToString:AIRBART_AGENCY_NAME])){
+                        if(![self checkIfTripIDAndAgencyIDAlreadyExists:leg.tripId:BART_AGENCY_ID]){
+                            [strRequestString appendFormat:@"%@_%@,",BART_AGENCY_ID,leg.tripId];
+                        }
+                    }
+                    else if([leg.agencyName isEqualToString:SFMUNI_AGENCY_NAME]){
+                        if(![self checkIfTripIDAndAgencyIDAlreadyExists:leg.tripId:SFMUNI_AGENCY_ID]){
+                            [strRequestString appendFormat:@"%@_%@,",SFMUNI_AGENCY_ID,leg.tripId];
+                        }
+                    }
+                    else if ([leg.agencyName isEqualToString:ACTRANSIT_AGENCY_NAME]){
+                        if(![self checkIfTripIDAndAgencyIDAlreadyExists:leg.tripId:ACTRANSIT_AGENCY_ID]){
+                            [strRequestString appendFormat:@"%@_%@,",ACTRANSIT_AGENCY_ID,leg.tripId];
+                        }
+                    }
+                }
+            }
+        }
+    if([strRequestString length] > 0){
+       [self getGtfsStopTimes:strRequestString]; 
+    }
+}
+
+// Get The stopID For To&From Location.
+- (NSString *) getTheStopIDAccrodingToStation:(NSString *)lat:(NSString *)lng{
+    NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
+    [fetchTrips setEntity:[NSEntityDescription entityForName:@"GtfsStop" inManagedObjectContext:self.managedObjectContext]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"stopLat=%@ && stopLon=%@",lat,lng];
+    [fetchTrips setPredicate:predicate];
+    NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
+    NSString *strStopID;
+    if([arrayStopTimes count] > 0){
+        GtfsStop *stop = [arrayStopTimes objectAtIndex:0];
+        strStopID = stop.stopID;
+    }
+    else{
+        strStopID = nil;
+    }
+    return strStopID;
+}
+
+// Get The Stop Times Data From StopTimes Table According To To&From stopID.
+- (NSArray *)getLegsTimes:(NSString *)strToStopID:(NSString *)strFromStopID:(PlanRequestParameters *)parameters{
+    NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
+    [fetchTrips setEntity:[NSEntityDescription entityForName:@"GtfsStopTimes" inManagedObjectContext:self.managedObjectContext]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"stopID=%@ || stopID=%@",strToStopID,strFromStopID];
+    [fetchTrips setPredicate:predicate];
+    NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
+    NSMutableArray *arrMutableStopTimes = [[NSMutableArray alloc] init];
+    for(int i=0;i<[arrayStopTimes count];i++){
+        for(int j= i+1;j<[arrayStopTimes count];j++){
+            int hour = 0;
+            GtfsStopTimes *stopTimes1 = [arrayStopTimes objectAtIndex:i];
+            GtfsStopTimes *stopTimes2 = [arrayStopTimes objectAtIndex:j];
+            NSString *strDepartureTime;
+            NSArray *arrayDepartureTimeComponents = [stopTimes1.departureTime componentsSeparatedByString:@":"];
+            if([arrayDepartureTimeComponents count] > 0){
+                int hours = [[arrayDepartureTimeComponents objectAtIndex:0] intValue];
+                int minutes = [[arrayDepartureTimeComponents objectAtIndex:1] intValue];
+                int seconds = [[arrayDepartureTimeComponents objectAtIndex:2] intValue];
+                if(hours > 23){
+                    hour = hours;
+                    hours = hours - 24;
+                }
+                strDepartureTime = [NSString stringWithFormat:@"%d:%d:%d",hours,minutes,seconds];
+            }
+            
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            formatter.dateFormat = @"HH:mm:ss";
+            NSDate *departureDate = [formatter dateFromString:strDepartureTime];
+            NSDate *departureTime = timeOnlyFromDate(departureDate);
+            NSDate *tripTime = timeOnlyFromDate(parameters.thisRequestTripDate);
+            
+            NSCalendar *calendarDepartureTime = [NSCalendar currentCalendar];
+            NSDateComponents *componentsDepartureTime = [calendarDepartureTime components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:departureTime];
+            int hourDepartureTime = [componentsDepartureTime hour];
+            int minuteDepartureTime = [componentsDepartureTime minute];
+            int intervalDepartureTime = (hour+hourDepartureTime)*60*60 + minuteDepartureTime*60;
+            
+            NSCalendar *calendarTripTime = [NSCalendar currentCalendar];
+            NSDateComponents *componentsTripTime = [calendarTripTime components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:tripTime];
+            int hourTripTime = [componentsTripTime hour];
+            int minuteTripTime = [componentsTripTime minute];
+            int intervalTripTime = hourTripTime*60*60 + minuteTripTime*60;
+            if(stopTimes1 && stopTimes2){
+                if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] > [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime){
+                    NSArray *arrayTemp = [NSArray arrayWithObjects:stopTimes1,stopTimes2, nil];
+                    [arrMutableStopTimes addObject:arrayTemp];
+                }
+                else if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] < [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime){
+                    NSArray *arrayTemp = [NSArray arrayWithObjects:stopTimes2,stopTimes1, nil];
+                    [arrMutableStopTimes addObject:arrayTemp];
+                }
+            }
+        }
+    }
+    return arrMutableStopTimes;
+}
+
+// Code To Get Stored Patterns
+// Then Get The stopID From To And From Location.
+// Then We get The StopTimes According To TO&From stopID.
+- (void)getStoredPatterns:(PlanRequestParameters *)parameters{
+    NSMutableArray *arrMutableStopTimes = [[NSMutableArray alloc] init];
+    NSArray *arraySchedules = [self getSchedule:parameters];
+    for(int i=0;i<[arraySchedules count];i++){
+        Schedule *schedule = [arraySchedules objectAtIndex:i];
+        NSArray *arrayTempSchedule = schedule.legs;
+        for(int k=0;k<[arrayTempSchedule count];k++){
+            NSArray *legs = [arrayTempSchedule objectAtIndex:k];
+            for(int l=0;l<[legs count];l++){
+                NSDictionary *dictLeg = [legs objectAtIndex:l];
+                if(![[dictLeg objectForKey:@"mode"] isEqualToString:@"WALK"]){
+                    NSString *strTOLat = [dictLeg objectForKey:@"toLat"];
+                    NSString *strTOLng = [dictLeg objectForKey:@"toLng"];
+                    NSString *strFromLat = [dictLeg objectForKey:@"fromLat"];
+                    NSString *strFromLng = [dictLeg objectForKey:@"fromLng"];
+                    NSString *strTOStopID = [self getTheStopIDAccrodingToStation:strTOLat:strTOLng];
+                    NSString *strFromStopID = [self getTheStopIDAccrodingToStation:strFromLat:strFromLng];
+                    NSArray *arrStopTimes = [self getLegsTimes:strTOStopID :strFromStopID:parameters];
+                    [arrMutableStopTimes addObjectsFromArray:arrStopTimes];
+                }
+            }
+        }
+    }
+    for(int j = 0; j < [arrMutableStopTimes count]; j++){
+        for(int k = j+1;k < [arrMutableStopTimes count];k++){
+            if([[arrMutableStopTimes objectAtIndex:j] isEqual:[arrMutableStopTimes objectAtIndex:k]]){
+                [arrMutableStopTimes removeObjectAtIndex:k];
+            }
+        }
+    }
+}
+
 @end

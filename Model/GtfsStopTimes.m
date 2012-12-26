@@ -23,5 +23,6 @@
 @dynamic tripID;
 @dynamic stop;
 @dynamic trips;
+@dynamic agencyID;
 
 @end

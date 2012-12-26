@@ -51,13 +51,4 @@
 - (NSString *)generateRandomString;
 - (void)clearCache;
 -(void)requestPlanFromOtpWithParameters:(PlanRequestParameters *)parameters;
-
-// Save StopTimes To DataBase
-- (void)saveStopTimes:(Plan *)plan;
-
-// Save Schedule To DataBase
-- (void)saveSchedule:(Plan *)plan:(Location *)fromLocation:(Location *)toLocation;
-- (NSArray *)getSchedule:(PlanRequestParameters *)planRequestParameters;
-- (NSString *) getTheStopIDAccrodingToStation:(NSString *)lat:(NSString *)lng;
-- (void)getStoredPatterns:(PlanRequestParameters *)parameters;
 @end

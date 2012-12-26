@@ -79,6 +79,7 @@
         <relationship name="stopTimes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GtfsStopTimes" inverseName="stop" inverseEntity="GtfsStopTimes" syncable="YES"/>
     </entity>
     <entity name="GtfsStopTimes" representedClassName="GtfsStopTimes" syncable="YES">
+        <attribute name="agencyID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="arrivalTime" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="departureTime" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dropOfTime" optional="YES" attributeType="String" syncable="YES"/>
@@ -237,9 +238,13 @@
         </compoundIndexes>
     </entity>
     <entity name="Schedule" representedClassName="Schedule" syncable="YES">
-        <attribute name="fromLocation" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="fromFormattedAddress" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="fromLat" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="fromLng" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="legs" optional="YES" attributeType="Transformable" syncable="YES"/>
-        <attribute name="toLocation" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="toFormattedAddress" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="toLat" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="toLng" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
     </entity>
     <entity name="Step" representedClassName="Step" syncable="YES">
         <attribute name="absoluteDirection" optional="YES" attributeType="String" syncable="YES"/>
@@ -283,7 +288,7 @@
         <element name="PlanPlace" positionX="0" positionY="0" width="128" height="180"/>
         <element name="PlanRequestChunk" positionX="0" positionY="0" width="128" height="105"/>
         <element name="RawAddress" positionX="0" positionY="0" width="128" height="75"/>
-        <element name="Schedule" positionX="160" positionY="192" width="128" height="90"/>
+        <element name="Schedule" positionX="160" positionY="192" width="128" height="150"/>
         <element name="Step" positionX="0" positionY="0" width="128" height="195"/>
         <element name="TPResponse" positionX="0" positionY="0" width="128" height="75"/>
     </elements>

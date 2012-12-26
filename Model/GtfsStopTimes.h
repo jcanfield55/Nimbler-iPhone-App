@@ -21,6 +21,7 @@
 @property (nonatomic, retain) NSString * stopID;
 @property (nonatomic, retain) NSString * stopSequence;
 @property (nonatomic, retain) NSString * tripID;
+@property (nonatomic, retain) NSString * agencyID;
 @property (nonatomic, retain) GtfsStop *stop;
 @property (nonatomic, retain) GtfsTrips *trips;
 
