@@ -259,6 +259,8 @@
                 } else {
                     [NSException raise:@"PlanStore->didLoadObjects failed to retrieve plan parameters" format:@"strResourcePath: %@", strResourcePath];
                 }
+                [[nc_AppDelegate sharedInstance].gtfsParser generateStopTimesRequestString:plan];
+                [[nc_AppDelegate sharedInstance].gtfsParser generatePatternsFromPlan:plan:planRequestParameters.fromLocation:planRequestParameters.toLocation];
                 // Set to & from location with special handling of CurrentLocation
                 Location *toLoc = [planRequestParameters toLocation];
                 if ([toLoc isCurrentLocation] && [toLoc isReverseGeoValid]) {
@@ -305,8 +307,6 @@
                     } else {
                         [toFromVC newPlanAvailable:plan status:PLAN_STATUS_OK];
                     }
-                    [[nc_AppDelegate sharedInstance].gtfsParser generateStopTimesRequestString:plan];
-                    [[nc_AppDelegate sharedInstance].gtfsParser saveSchedule:plan:planRequestParameters.fromLocation:planRequestParameters.toLocation];
                 } else { // no matching sorted itineraries.  DE189 fix
                     if (planRequestParameters.planDestination == PLAN_DESTINATION_TO_FROM_VC) {
                         [toFromVC newPlanAvailable:nil status:PLAN_GENERIC_EXCEPTION];

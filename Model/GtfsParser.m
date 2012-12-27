@@ -580,10 +580,7 @@
     }
     
     for(int l=0;l<[arrayTripID count];l++){
-        NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
-        [fetchTrips setEntity:[NSEntityDescription entityForName:@"GtfsStopTimes" inManagedObjectContext:self.managedObjectContext]];
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"tripID = %@ && stopSequence = %@",[arrayTripID objectAtIndex:l],[arrayStopSequence objectAtIndex:l]];
-        [fetchTrips setPredicate:predicate];
+        NSFetchRequest *fetchTrips = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesBySequence" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:[arrayTripID objectAtIndex:l],@"TRIPID",[arrayStopSequence objectAtIndex:l],@"STOPSEQUENCE", nil]];
         NSArray * arrayTrips = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
         for (id trips in arrayTrips){
             [self.managedObjectContext deleteObject:trips];
@@ -837,91 +834,81 @@
     }
 }
 
-// Partial Implementation ( Working On this Function)
-// Check Schedule Table with ToLocation,FromLocation and arrayLegs.
-// If all match in Schedule Then we will not save pattern again otherwise we will save pattern.
-- (void)checkIfPatternAlreadyExists:(NSArray *)arrayLegs:(Location *)toLocation:(Location *)fromLocation{
+// First merge the Patterns from OTP&DB.
+// Then We Find Duplicate Patterns and remove it From Array.
+- (NSArray *)consolidatePatternsWithNewPatterns:(NSArray *)arrayLegs:(NSArray *)arrayStoredLegs{
     NSMutableArray *arrayFinalLegs = [[NSMutableArray alloc] initWithArray:arrayLegs];
-    NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
-    [fetchTrips setEntity:[NSEntityDescription entityForName:@"Schedule" inManagedObjectContext:self.managedObjectContext]];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"fromLat=%@ && fromLng=%@ && toLat=%@ && toLng = %@",fromLocation.lat,fromLocation.lng,toLocation.lat,toLocation.lng];
-    [fetchTrips setPredicate:predicate];
-    NSArray * arraySchedule = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
-    for(int i=0;i<[arraySchedule count];i++){
-            Schedule *schedule1 = [arraySchedule objectAtIndex:i];
-            NSArray *arrLegs1 = schedule1.legs;
-        for(int j=0;j<[arrLegs1 count];j++){
-            for(int l=0;l<[arrayLegs count];l++){
-                NSArray *tempArray1 = [arrLegs1 objectAtIndex:j];
-                NSArray *tempArray2 = [arrayLegs objectAtIndex:l];
-                if(![tempArray1 isEqualToArray:tempArray2]){
-                    [arrayFinalLegs addObject:tempArray2];
-                }
-            }
-        }
-        schedule1.toLat = toLocation.lat;
-        schedule1.toLng = toLocation.lng;
-        schedule1.fromLat = fromLocation.lat;
-        schedule1.fromLng = fromLocation.lng;
-        schedule1.toFormattedAddress = toLocation.formattedAddress;
-        schedule1.fromFormattedAddress = fromLocation.formattedAddress;
-        schedule1.legs = arrayFinalLegs;
+    for(int i=0;i<[arrayStoredLegs count];i++){
+        NSArray *tempSortedArray = [arrayStoredLegs objectAtIndex:i];
+        [arrayFinalLegs addObjectsFromArray:tempSortedArray];
     }
-    saveContext(self.managedObjectContext);
-}
-
-// Save Patterns To Schedule Table.
-- (void)saveSchedule:(Plan *)plan:(Location *)fromLocation:(Location *)toLocation{
-    NSMutableArray *arrayLegs = [[NSMutableArray alloc] init];
-    NSMutableArray *arrFinalLegs = [[NSMutableArray alloc] init];
-    NSArray *itiArray = [plan sortedItineraries];
-    for(int i=0;i<[itiArray count];i++){
-        Itinerary *iti = [itiArray objectAtIndex:i];
-        NSArray *legArray = [iti sortedLegs];
-        if([arrayLegs count] == 0){
-            [arrayLegs addObject:legArray];
-        }
-        else{
-            NSArray *tempLegs = [NSArray arrayWithArray:arrayLegs];
-            for(int i=0;i<[tempLegs count];i++){
-                NSArray *subArray = [tempLegs objectAtIndex:i];
-                if([subArray count] != [legArray count]){
-                    [arrayLegs addObject:legArray];
-                }
-                else{
-                    BOOL isLegsEqual = YES;
-                    for(int i=0;i<[legArray count];i++){
-                        Leg *leg1 = [legArray objectAtIndex:i];
-                        Leg *leg2 = [subArray objectAtIndex:i];
-                        if(![leg1.agencyName isEqualToString:leg2.agencyName] || ![leg1.to.lat isEqual:leg2.to.lat] || ![leg1.from.lat isEqual:leg2.from.lat]|| ![leg1.to.lng isEqual:leg2.to.lng] || ![leg1.from.lng isEqual:leg2.from.lng]){
-                            isLegsEqual = NO;
+    for(int i=0;i<[arrayFinalLegs count];i++){
+        for(int j=i+1;j<[arrayFinalLegs count];j++){
+           NSArray *patternArray1 = [arrayFinalLegs objectAtIndex:i];
+           NSArray *patternArray2 = [arrayFinalLegs objectAtIndex:j];
+            if([patternArray1 count] == [patternArray2 count]){
+                BOOL isPatternMatch = YES;
+                for(int k=0;k<[patternArray1 count];k++){
+                    NSDictionary *dictLeg1 = [patternArray1 objectAtIndex:k];
+                    NSDictionary *dictLeg2 = [patternArray2 objectAtIndex:k];
+                    NSString *modeLeg1 = [dictLeg1 objectForKey:@"mode"];
+                    NSString *modeLeg2 = [dictLeg2 objectForKey:@"mode"];
+                    NSString *toLatLeg1 = [dictLeg1 objectForKey:@"toLat"];
+                    NSString *toLatLeg2 = [dictLeg2 objectForKey:@"toLat"];
+                    NSString *toLngLeg1 = [dictLeg1 objectForKey:@"toLng"];
+                    NSString *toLngLeg2 = [dictLeg2 objectForKey:@"toLng"];
+                    NSString *fromLatLeg1 = [dictLeg1 objectForKey:@"fromLat"];
+                    NSString *fromLatLeg2 = [dictLeg2 objectForKey:@"fromLat"];
+                    NSString *fromLngLeg1 = [dictLeg1 objectForKey:@"fromLng"];
+                    NSString *fromLngLeg2 = [dictLeg2 objectForKey:@"fromLng"];
+                    if([modeLeg1 isEqualToString:@"WALK"] && [modeLeg2 isEqualToString:@"WALK"]){
+                        NSString *distanceLeg1 = [dictLeg1 objectForKey:@"distance"];
+                        NSString *distanceLeg2 = [dictLeg2 objectForKey:@"distance"];
+                        if(![toLatLeg1 isEqualToString:toLatLeg2] || ![toLngLeg1 isEqualToString:toLngLeg2] || ![fromLatLeg1 isEqualToString:fromLatLeg2] || ![fromLngLeg1 isEqualToString:fromLngLeg2] || ![distanceLeg1 isEqualToString:distanceLeg2]){
+                            isPatternMatch = NO;
+                            break;
+                        }
+                        
+                    }
+                    else if([modeLeg1 isEqualToString:modeLeg2]){
+                        NSString *strShortname1 = [dictLeg1 objectForKey:@"routeShortName"];
+                        NSString *strShortname2 = [dictLeg2 objectForKey:@"routeShortName"];
+                        NSString *strLongname1 = [dictLeg1 objectForKey:@"routeLongName"];
+                        NSString *strLongname2 = [dictLeg2 objectForKey:@"routeLongName"];
+                        NSString *strAgencyName1 = [dictLeg1 objectForKey:@"agencyName"];
+                        NSString *strAgencyName2 = [dictLeg2 objectForKey:@"agencyName"];
+                        if(!strShortname1 || !strShortname2){
+                            if(![strLongname1 isEqualToString:strLongname2] || ![strAgencyName1 isEqualToString:strAgencyName2] || ! [toLatLeg1 isEqualToString:toLatLeg2] || ! [toLngLeg1 isEqualToString:toLngLeg2] || ! [fromLatLeg1 isEqualToString:fromLatLeg2] || ![fromLngLeg1 isEqualToString:fromLngLeg2]){
+                                isPatternMatch = NO;
+                                break;
+                            }
+                        }
+                        else if(![strShortname1 isEqualToString:strShortname2] || ![strAgencyName1 isEqualToString:strAgencyName2] || ! [toLatLeg1 isEqualToString:toLatLeg2] || ! [toLngLeg1 isEqualToString:toLngLeg2] || ! [fromLatLeg1 isEqualToString:fromLatLeg2] || ![fromLngLeg1 isEqualToString:fromLngLeg2]){
+                            isPatternMatch = NO;
+                            break;
                         }
                     }
-                    if(!isLegsEqual){
-                        [arrayLegs addObject:legArray];
+                    else{
+                        isPatternMatch = NO;
+                        break;
                     }
+                }
+                if(isPatternMatch){
+                    [arrayFinalLegs removeObjectAtIndex:j];
                 }
             }
         }
     }
-    for(int i=0;i<[arrayLegs count];i++){
-        for (int l=i+1;l<[arrayLegs count];l++){
-            NSArray *arrayTemp1 = [arrayLegs objectAtIndex:i];
-            NSArray *arrayTemp2 = [arrayLegs objectAtIndex:l];
-            for(int j=0;j<[arrayTemp1 count];j++){
-                for(int k=0;k<[arrayTemp2 count];k++){
-                    Leg *leg1 = [arrayTemp1 objectAtIndex:j];
-                    Leg *leg2 = [arrayTemp2 objectAtIndex:k];
-                    if([leg1.agencyName isEqualToString:leg2.agencyName] && [leg1.to.lat isEqual:leg2.to.lat] && [leg1.from.lat isEqual:leg2.from.lat]&& [leg1.to.lng isEqual:leg2.to.lng] && [leg1.from.lng isEqual:leg2.from.lng]){
-                        [arrayLegs removeObjectAtIndex:l];
-                    }
-                }
-            }
-        }
-    }
-    for(int i=0;i<[arrayLegs count];i++){
+    return arrayFinalLegs;
+}
+
+// This Method Takes array of legs and then Generate Patterns From That Array.
+- (NSArray *)generatePatternsFromLegArray:(NSArray *)arrayleg{
+    NSMutableArray *mutablePatternArray = [[NSMutableArray alloc] initWithArray:arrayleg];
+    NSMutableArray *arrayFinalPatterns = [[NSMutableArray alloc] init];
+    for(int i=0;i<[mutablePatternArray count];i++){
         NSMutableArray *arrUnfilteredLegs = [[NSMutableArray alloc] init];
-        NSArray *arrayLeg = [arrayLegs objectAtIndex:i];
+        NSArray *arrayLeg = [mutablePatternArray objectAtIndex:i];
         for(int j=0;j<[arrayLeg count];j++){
             Leg *leg = [arrayLeg objectAtIndex:j];
             NSMutableDictionary *dictLeg = [[NSMutableDictionary alloc] init];
@@ -953,52 +940,81 @@
                 [dictLeg setObject:leg.polylineEncodedString.encodedString forKey:@"polyLineEncodedString"];
             }
             if(leg.distance){
-                [dictLeg setObject:leg.distance forKey:@"distance"];
+                [dictLeg setObject:[NSString stringWithFormat:@"%d",[leg.distance intValue]] forKey:@"distance"];
             }
             if(leg.duration){
                 [dictLeg setObject:leg.duration forKey:@"duration"];
             }
-            if(![[leg mode] isEqualToString:@"WALK"]){
-                if(leg.to.lat){
-                    [dictLeg setObject:leg.to.lat forKey:@"toLat"];
-                }
-                if(leg.to.lng){
-                    [dictLeg setObject:leg.to.lng forKey:@"toLng"];
-                }
-                if(leg.from.lat){
-                    [dictLeg setObject:leg.from.lat forKey:@"fromLat"];
-                }
-                if(leg.from.lng){
-                    [dictLeg setObject:leg.from.lng forKey:@"fromLng"];
-                }
+            if(leg.to.lat){
+                [dictLeg setObject:[NSString stringWithFormat:@"%@",leg.to.lat] forKey:@"toLat"];
+            }
+            if(leg.to.lng){
+                [dictLeg setObject:[NSString stringWithFormat:@"%@",leg.to.lng]  forKey:@"toLng"];
+            }
+            if(leg.from.lat){
+                [dictLeg setObject:[NSString stringWithFormat:@"%@",leg.from.lat] forKey:@"fromLat"];
+            }
+            if(leg.from.lng){
+                [dictLeg setObject:[NSString stringWithFormat:@"%@",leg.from.lng] forKey:@"fromLng"];
             }
             [arrUnfilteredLegs addObject:dictLeg];
         }
-        [arrFinalLegs addObject:arrUnfilteredLegs];
+        [arrayFinalPatterns addObject:arrUnfilteredLegs];
     }
-    [self checkIfPatternAlreadyExists:arrFinalLegs :toLocation :fromLocation];
+    return arrayFinalPatterns;
 }
 
-// Get Schedule From Schedule Table According To TO&From Location.
-- (NSArray *)getSchedule:(PlanRequestParameters *)planRequestParameters{
-    Location *toLocation = planRequestParameters.toLocation;
-    Location *fromLocatin = planRequestParameters.fromLocation;
-    NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
-    [fetchTrips setEntity:[NSEntityDescription entityForName:@"Schedule" inManagedObjectContext:self.managedObjectContext]];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"fromLat=%@ && fromLng=%@ && toLat=%@ && toLng = %@",fromLocatin.lat,fromLocatin.lng,toLocation.lat,toLocation.lng];
-    [fetchTrips setPredicate:predicate];
-    NSArray * arraySchedule = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
+// This Method Removes the patterns from Schedule Table According to To&From Location.
+- (void) removePatternsFromScheduleTable:(Location *)toLocation:(Location *)fromLocation{
+    NSFetchRequest *fetchSchedule = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"Schedule" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:fromLocation.lat,@"FROMLAT",fromLocation.lng,@"FROMLNG",toLocation.lat,@"TOLAT",toLocation.lng,@"TOLNG", nil]];
+    NSArray * arraySchedule = [self.managedObjectContext executeFetchRequest:fetchSchedule error:nil];
+    for (id schedule in arraySchedule){
+        [self.managedObjectContext deleteObject:schedule];
+    }
+    saveContext(self.managedObjectContext);
+}
+
+// This Method Takes Plan From Planstore Class.
+// Then it generate Patterns from itinerary and Legs and store The created patterns to Schedule Table. 
+- (void)generatePatternsFromPlan:(Plan *)plan:(Location *)fromLocation:(Location *)toLocation{
+    NSMutableArray *arrayLegs = [[NSMutableArray alloc] init];
+    NSArray *itiArray = [plan sortedItineraries];
+    for(int i=0;i<[itiArray count];i++){
+        Itinerary *iti = [itiArray objectAtIndex:i];
+        [arrayLegs addObject:[iti sortedLegs]];
+    }
+    NSArray *arrPatterns = [self generatePatternsFromLegArray:arrayLegs];
+    NSArray *arrayScheduleArray = [self getSchedule:toLocation :fromLocation];
+    NSMutableArray *arrayStoredLegs = [[NSMutableArray alloc] init];
+    for(int i=0;i<[arrayScheduleArray count];i++){
+        Schedule *schedule = [arrayScheduleArray objectAtIndex:i];
+        [arrayStoredLegs addObject:schedule.legs];
+    }
+    NSArray *finalPatterns = [self consolidatePatternsWithNewPatterns:arrPatterns:arrayStoredLegs];
+    [self removePatternsFromScheduleTable:toLocation :fromLocation];
+    Schedule* schedule = [NSEntityDescription insertNewObjectForEntityForName:@"Schedule" inManagedObjectContext:self.managedObjectContext];
+    schedule.toLat = toLocation.lat;
+    schedule.toLng = toLocation.lng;
+    schedule.fromLat = fromLocation.lat;
+    schedule.fromLng = fromLocation.lng;
+    schedule.toFormattedAddress = toLocation.formattedAddress;
+    schedule.fromFormattedAddress = fromLocation.formattedAddress;
+    schedule.legs = finalPatterns;
+    saveContext(self.managedObjectContext);
+}
+
+// Get Patterns From Schedule Table According To TO&From Location.
+- (NSArray *)getSchedule:(Location *)toLocation:(Location *)fromLocation{
+    NSFetchRequest *fetchSchedule = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"Schedule" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:fromLocation.lat,@"FROMLAT",fromLocation.lng,@"FROMLNG",toLocation.lat,@"TOLAT",toLocation.lng,@"TOLNG", nil]];
+    NSArray * arraySchedule = [self.managedObjectContext executeFetchRequest:fetchSchedule error:nil];
     return arraySchedule;
 }
 
 // Check StopTimes Table for particular tripID&agencyID data is exists or not.
 // If Data For tripID&agencyID  Already Exists then we will not ask StopTimes Data for that tripID from Server otherwise we will ask for StopTimes Data.
 - (BOOL) checkIfTripIDAndAgencyIDAlreadyExists:(NSString *)strTripID:(NSString *)agencyID{
-    NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
-    [fetchTrips setEntity:[NSEntityDescription entityForName:@"GtfsStopTimes" inManagedObjectContext:self.managedObjectContext]];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"tripID=%@ && agencyID=%@",strTripID,agencyID];
-    [fetchTrips setPredicate:predicate];
-    NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
+   NSFetchRequest *fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesByAgencyID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strTripID,@"TRIPID",agencyID,@"AGENCYID", nil]];
+    NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
     if([arrayStopTimes count] > 0){
         return YES;
     }
@@ -1047,11 +1063,8 @@
 
 // Get The stopID For To&From Location.
 - (NSString *) getTheStopIDAccrodingToStation:(NSString *)lat:(NSString *)lng{
-    NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
-    [fetchTrips setEntity:[NSEntityDescription entityForName:@"GtfsStop" inManagedObjectContext:self.managedObjectContext]];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"stopLat=%@ && stopLon=%@",lat,lng];
-    [fetchTrips setPredicate:predicate];
-    NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
+   NSFetchRequest *fetchStop = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopByLatLng" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:lat,@"STOPLAT",lng,@"STOPLON", nil]];
+    NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchStop error:nil];
     NSString *strStopID;
     if([arrayStopTimes count] > 0){
         GtfsStop *stop = [arrayStopTimes objectAtIndex:0];
@@ -1065,11 +1078,8 @@
 
 // Get The Stop Times Data From StopTimes Table According To To&From stopID.
 - (NSArray *)getLegsTimes:(NSString *)strToStopID:(NSString *)strFromStopID:(PlanRequestParameters *)parameters{
-    NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
-    [fetchTrips setEntity:[NSEntityDescription entityForName:@"GtfsStopTimes" inManagedObjectContext:self.managedObjectContext]];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"stopID=%@ || stopID=%@",strToStopID,strFromStopID];
-    [fetchTrips setPredicate:predicate];
-    NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
+     NSFetchRequest *fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesByStopID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strToStopID,@"STOPID1",strFromStopID,@"STOPID2", nil]];
+    NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
     NSMutableArray *arrMutableStopTimes = [[NSMutableArray alloc] init];
     for(int i=0;i<[arrayStopTimes count];i++){
         for(int j= i+1;j<[arrayStopTimes count];j++){
@@ -1126,7 +1136,7 @@
 // Then We get The StopTimes According To TO&From stopID.
 - (void)getStoredPatterns:(PlanRequestParameters *)parameters{
     NSMutableArray *arrMutableStopTimes = [[NSMutableArray alloc] init];
-    NSArray *arraySchedules = [self getSchedule:parameters];
+    NSArray *arraySchedules = [self getSchedule:parameters.toLocation:parameters.fromLocation];
     for(int i=0;i<[arraySchedules count];i++){
         Schedule *schedule = [arraySchedules objectAtIndex:i];
         NSArray *arrayTempSchedule = schedule.legs;

@@ -48,11 +48,11 @@
 // Generate The StopTimes Request Comma Separated string like agencyID_tripID
 - (void)generateStopTimesRequestString:(Plan *)plan;
 
-// Save Patterns To Schedule Table with To&From Location.
-- (void)saveSchedule:(Plan *)plan:(Location *)fromLocation:(Location *)toLocation;
+// Generate Patterns From Plan.
+- (void)generatePatternsFromPlan:(Plan *)plan:(Location *)fromLocation:(Location *)toLocation;
 
-// Get Schedule According to To&From Location.
-- (NSArray *)getSchedule:(PlanRequestParameters *)planRequestParameters;
+// Get Patterns According to To&From Location.
+- (NSArray *)getSchedule:(Location *)toLocation:(Location *)fromLocation;
 
 // Get The stopID form GtfsStop Table from To&From Location.
 - (NSString *) getTheStopIDAccrodingToStation:(NSString *)lat:(NSString *)lng;
