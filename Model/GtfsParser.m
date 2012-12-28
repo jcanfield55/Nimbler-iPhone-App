@@ -16,6 +16,7 @@
 #import "GtfsTrips.h"
 #import "GtfsStopTimes.h"
 #import "UtilityFunctions.h"
+#import "Pattern.h"
 
 @implementation GtfsParser
 
@@ -847,54 +848,18 @@
            NSArray *patternArray1 = [arrayFinalLegs objectAtIndex:i];
            NSArray *patternArray2 = [arrayFinalLegs objectAtIndex:j];
             if([patternArray1 count] == [patternArray2 count]){
-                BOOL isPatternMatch = YES;
                 for(int k=0;k<[patternArray1 count];k++){
-                    NSDictionary *dictLeg1 = [patternArray1 objectAtIndex:k];
-                    NSDictionary *dictLeg2 = [patternArray2 objectAtIndex:k];
-                    NSString *modeLeg1 = [dictLeg1 objectForKey:@"mode"];
-                    NSString *modeLeg2 = [dictLeg2 objectForKey:@"mode"];
-                    NSString *toLatLeg1 = [dictLeg1 objectForKey:@"toLat"];
-                    NSString *toLatLeg2 = [dictLeg2 objectForKey:@"toLat"];
-                    NSString *toLngLeg1 = [dictLeg1 objectForKey:@"toLng"];
-                    NSString *toLngLeg2 = [dictLeg2 objectForKey:@"toLng"];
-                    NSString *fromLatLeg1 = [dictLeg1 objectForKey:@"fromLat"];
-                    NSString *fromLatLeg2 = [dictLeg2 objectForKey:@"fromLat"];
-                    NSString *fromLngLeg1 = [dictLeg1 objectForKey:@"fromLng"];
-                    NSString *fromLngLeg2 = [dictLeg2 objectForKey:@"fromLng"];
-                    if([modeLeg1 isEqualToString:@"WALK"] && [modeLeg2 isEqualToString:@"WALK"]){
-                        NSString *distanceLeg1 = [dictLeg1 objectForKey:@"distance"];
-                        NSString *distanceLeg2 = [dictLeg2 objectForKey:@"distance"];
-                        if(![toLatLeg1 isEqualToString:toLatLeg2] || ![toLngLeg1 isEqualToString:toLngLeg2] || ![fromLatLeg1 isEqualToString:fromLatLeg2] || ![fromLngLeg1 isEqualToString:fromLngLeg2] || ![distanceLeg1 isEqualToString:distanceLeg2]){
-                            isPatternMatch = NO;
-                            break;
-                        }
-                        
-                    }
-                    else if([modeLeg1 isEqualToString:modeLeg2]){
-                        NSString *strShortname1 = [dictLeg1 objectForKey:@"routeShortName"];
-                        NSString *strShortname2 = [dictLeg2 objectForKey:@"routeShortName"];
-                        NSString *strLongname1 = [dictLeg1 objectForKey:@"routeLongName"];
-                        NSString *strLongname2 = [dictLeg2 objectForKey:@"routeLongName"];
-                        NSString *strAgencyName1 = [dictLeg1 objectForKey:@"agencyName"];
-                        NSString *strAgencyName2 = [dictLeg2 objectForKey:@"agencyName"];
-                        if(!strShortname1 || !strShortname2){
-                            if(![strLongname1 isEqualToString:strLongname2] || ![strAgencyName1 isEqualToString:strAgencyName2] || ! [toLatLeg1 isEqualToString:toLatLeg2] || ! [toLngLeg1 isEqualToString:toLngLeg2] || ! [fromLatLeg1 isEqualToString:fromLatLeg2] || ![fromLngLeg1 isEqualToString:fromLngLeg2]){
-                                isPatternMatch = NO;
-                                break;
-                            }
-                        }
-                        else if(![strShortname1 isEqualToString:strShortname2] || ![strAgencyName1 isEqualToString:strAgencyName2] || ! [toLatLeg1 isEqualToString:toLatLeg2] || ! [toLngLeg1 isEqualToString:toLngLeg2] || ! [fromLatLeg1 isEqualToString:fromLatLeg2] || ![fromLngLeg1 isEqualToString:fromLngLeg2]){
-                            isPatternMatch = NO;
-                            break;
-                        }
-                    }
-                    else{
-                        isPatternMatch = NO;
+                    NSKeyedUnarchiver *unarch1 = [[NSKeyedUnarchiver alloc] initForReadingWithData:[patternArray1 objectAtIndex:k]];
+                    NSKeyedUnarchiver *unarch2 = [[NSKeyedUnarchiver alloc] initForReadingWithData:[patternArray2 objectAtIndex:k]];
+                    Pattern *pattern1 = [unarch1 decodeObject];
+                    [unarch1 finishDecoding];
+                    Pattern *pattern2 = [unarch2 decodeObject];
+                    [unarch2 finishDecoding];
+                    BOOL isPatternMatch = [pattern1 isEquivalentPatternAs:pattern2];
+                    if(isPatternMatch){
+                        [arrayFinalLegs removeObjectAtIndex:j];
                         break;
                     }
-                }
-                if(isPatternMatch){
-                    [arrayFinalLegs removeObjectAtIndex:j];
                 }
             }
         }
@@ -911,53 +876,12 @@
         NSArray *arrayLeg = [mutablePatternArray objectAtIndex:i];
         for(int j=0;j<[arrayLeg count];j++){
             Leg *leg = [arrayLeg objectAtIndex:j];
-            NSMutableDictionary *dictLeg = [[NSMutableDictionary alloc] init];
-            if(leg.agencyId){
-                [dictLeg setObject:leg.agencyId forKey:@"agencyID"];
-            }
-            if(leg.agencyName){
-                [dictLeg setObject:leg.agencyName forKey:@"agencyName"];
-            }
-            if(leg.route){
-                [dictLeg setObject:leg.route forKey:@"route"];
-            }
-            if(leg.routeShortName){
-                [dictLeg setObject:leg.routeShortName forKey:@"routeShortName"];
-            }
-            if(leg.routeLongName){
-                [dictLeg setObject:leg.routeLongName forKey:@"routeLongName"];
-            }
-            if(leg.mode){
-                [dictLeg setObject:leg.mode forKey:@"mode"];
-            }
-            if(leg.startTime){
-                [dictLeg setObject:leg.startTime forKey:@"startTime"];
-            }
-            if(leg.endTime){
-                [dictLeg setObject:leg.endTime forKey:@"endTime"];
-            }
-            if(leg.polylineEncodedString){
-                [dictLeg setObject:leg.polylineEncodedString.encodedString forKey:@"polyLineEncodedString"];
-            }
-            if(leg.distance){
-                [dictLeg setObject:[NSString stringWithFormat:@"%d",[leg.distance intValue]] forKey:@"distance"];
-            }
-            if(leg.duration){
-                [dictLeg setObject:leg.duration forKey:@"duration"];
-            }
-            if(leg.to.lat){
-                [dictLeg setObject:[NSString stringWithFormat:@"%@",leg.to.lat] forKey:@"toLat"];
-            }
-            if(leg.to.lng){
-                [dictLeg setObject:[NSString stringWithFormat:@"%@",leg.to.lng]  forKey:@"toLng"];
-            }
-            if(leg.from.lat){
-                [dictLeg setObject:[NSString stringWithFormat:@"%@",leg.from.lat] forKey:@"fromLat"];
-            }
-            if(leg.from.lng){
-                [dictLeg setObject:[NSString stringWithFormat:@"%@",leg.from.lng] forKey:@"fromLng"];
-            }
-            [arrUnfilteredLegs addObject:dictLeg];
+            Pattern *pattern = [Pattern copyOfLegParameters:leg];
+            NSMutableData *data = [[NSMutableData alloc] init];
+            NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+            [archiver encodeObject:pattern];
+            [archiver finishEncoding];
+            [arrUnfilteredLegs addObject:data];
         }
         [arrayFinalPatterns addObject:arrUnfilteredLegs];
     }
@@ -1062,7 +986,7 @@
 }
 
 // Get The stopID For To&From Location.
-- (NSString *) getTheStopIDAccrodingToStation:(NSString *)lat:(NSString *)lng{
+- (NSString *) getTheStopIDAccrodingToStation:(NSNumber *)lat:(NSNumber *)lng{
    NSFetchRequest *fetchStop = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopByLatLng" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:lat,@"STOPLAT",lng,@"STOPLON", nil]];
     NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchStop error:nil];
     NSString *strStopID;
@@ -1077,7 +1001,7 @@
 }
 
 // Get The Stop Times Data From StopTimes Table According To To&From stopID.
-- (NSArray *)getLegsTimes:(NSString *)strToStopID:(NSString *)strFromStopID:(PlanRequestParameters *)parameters{
+- (NSArray *)getStopTimes:(NSString *)strToStopID:(NSString *)strFromStopID:(PlanRequestParameters *)parameters{
      NSFetchRequest *fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesByStopID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strToStopID,@"STOPID1",strFromStopID,@"STOPID2", nil]];
     NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
     NSMutableArray *arrMutableStopTimes = [[NSMutableArray alloc] init];
@@ -1131,10 +1055,10 @@
     return arrMutableStopTimes;
 }
 
-// Code To Get Stored Patterns
-// Then Get The stopID From To And From Location.
-// Then We get The StopTimes According To TO&From stopID.
-- (void)getStoredPatterns:(PlanRequestParameters *)parameters{
+// Get Stored Patterns fron Database
+// Get The StopId From From Stop Table and then get stoptimes according to stopID from StopTimes Table.
+// Remove The duplicate The Duplicate legs If Any.
+- (void)generateLegsFromPatterns:(PlanRequestParameters *)parameters{
     NSMutableArray *arrMutableStopTimes = [[NSMutableArray alloc] init];
     NSArray *arraySchedules = [self getSchedule:parameters.toLocation:parameters.fromLocation];
     for(int i=0;i<[arraySchedules count];i++){
@@ -1143,27 +1067,19 @@
         for(int k=0;k<[arrayTempSchedule count];k++){
             NSArray *legs = [arrayTempSchedule objectAtIndex:k];
             for(int l=0;l<[legs count];l++){
-                NSDictionary *dictLeg = [legs objectAtIndex:l];
-                if(![[dictLeg objectForKey:@"mode"] isEqualToString:@"WALK"]){
-                    NSString *strTOLat = [dictLeg objectForKey:@"toLat"];
-                    NSString *strTOLng = [dictLeg objectForKey:@"toLng"];
-                    NSString *strFromLat = [dictLeg objectForKey:@"fromLat"];
-                    NSString *strFromLng = [dictLeg objectForKey:@"fromLng"];
-                    NSString *strTOStopID = [self getTheStopIDAccrodingToStation:strTOLat:strTOLng];
-                    NSString *strFromStopID = [self getTheStopIDAccrodingToStation:strFromLat:strFromLng];
-                    NSArray *arrStopTimes = [self getLegsTimes:strTOStopID :strFromStopID:parameters];
+                NSKeyedUnarchiver *unarch = [[NSKeyedUnarchiver alloc] initForReadingWithData:[legs objectAtIndex:l]];
+                Pattern *pattern = [unarch decodeObject];
+                if(![pattern.mode isEqualToString:@"WALK"]){
+                    NSString *strTOStopID = [self getTheStopIDAccrodingToStation:pattern.toLat:pattern.toLng];
+                    NSString *strFromStopID = [self getTheStopIDAccrodingToStation:pattern.fromLat:pattern.fromLng];
+                    NSArray *arrStopTimes = [self getStopTimes:strTOStopID :strFromStopID:parameters];
                     [arrMutableStopTimes addObjectsFromArray:arrStopTimes];
                 }
             }
         }
     }
-    for(int j = 0; j < [arrMutableStopTimes count]; j++){
-        for(int k = j+1;k < [arrMutableStopTimes count];k++){
-            if([[arrMutableStopTimes objectAtIndex:j] isEqual:[arrMutableStopTimes objectAtIndex:k]]){
-                [arrMutableStopTimes removeObjectAtIndex:k];
-            }
-        }
-    }
+    NSSet *set = [NSSet setWithArray:arrMutableStopTimes];
+    NSArray *arrStopTimes = [set allObjects];
 }
 
 @end

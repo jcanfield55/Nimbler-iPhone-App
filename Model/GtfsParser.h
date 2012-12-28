@@ -55,10 +55,10 @@
 - (NSArray *)getSchedule:(Location *)toLocation:(Location *)fromLocation;
 
 // Get The stopID form GtfsStop Table from To&From Location.
-- (NSString *) getTheStopIDAccrodingToStation:(NSString *)lat:(NSString *)lng;
+- (NSString *) getTheStopIDAccrodingToStation:(NSNumber *)lat:(NSNumber *)lng;
 
-// To Get Stored Patterns
-// Then Get The stopID From To&From Location.
-// Then We get The StopTimes According To TO&From stopID.
-- (void)getStoredPatterns:(PlanRequestParameters *)parameters;
+// Get Stored Patterns fron Database
+// Get The StopId From From Stop Table and then get stoptimes according to stopID from StopTimes Table.
+// Remove The duplicate The Duplicate legs If Any.
+- (void)generateLegsFromPatterns:(PlanRequestParameters *)parameters;
 @end

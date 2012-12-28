@@ -63,7 +63,7 @@
 // time it has an update
 - (void)requestPlanWithParameters:(PlanRequestParameters *)parameters
 {
-   [[nc_AppDelegate sharedInstance].gtfsParser getStoredPatterns:parameters];
+   [[nc_AppDelegate sharedInstance].gtfsParser generateLegsFromPatterns:parameters];
     @try {
         // Check if we have a stored plan that we can use
         NSArray* matchingPlanArray = [self fetchPlansWithToLocation:[parameters toLocation]
