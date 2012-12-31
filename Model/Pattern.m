@@ -7,7 +7,7 @@
 //
 
 #import "Pattern.h"
-
+#import "OTPLeg.h"
 @implementation Pattern
 @synthesize agencyID;
 @synthesize agencyName;
@@ -64,7 +64,7 @@
 }
 
 // Copy the required Paremeter From leg to Pattern.
-+ (id)copyOfLegParameters:(Leg *)leg0;
++ (id)copyOfLegParameters:(OTPLeg *)leg0;
 {
     Pattern* pattern = [[Pattern alloc] init];
     pattern.agencyID = leg0.agencyId;
@@ -84,29 +84,9 @@
     return pattern;
 }
 
-// Check if both patterns have mode walk if it is then check for Lat/Lng and distance if match return yes other wise return no.
+// Check if both patterns have mode walk if it is then check for Lat/Lng and distance if match return yes otherwise return no.
 // If The mode is not walk and both Patterns match the check if both patterns have routeShortName if not the check for routeLongName,agencyName, and Lat/Lng if not match then return no if patterns have routeShortName then check for routeShortname,agencyName And Lat/Lng if not match then return no else return yes.
 // if all conditions not match then return no.
 - (BOOL)isEquivalentPatternAs:(Pattern *)pattern{
-    if([self.mode isEqualToString:@"WALK"] && [pattern.mode isEqualToString:@"WALK"]){
-        if(self.toLat != pattern.toLat || self.toLng != pattern.toLng || self.fromLat !=pattern.fromLat || self.fromLng != pattern.fromLng || self.distance != pattern.distance){
-            return NO;
-        }
-        return YES;
-    }
-    else if([self.mode isEqualToString:pattern.mode]){
-        if(!self.routeShortName || !pattern.routeShortName){
-            if(![self.routeLongName isEqualToString:pattern.routeLongName] || ![self.agencyName isEqualToString:pattern.agencyName] || self.toLat != pattern.toLat ||  self.toLng != pattern.toLng || self.fromLat != pattern.fromLat || self.fromLng != pattern.fromLng){
-                return NO;
-            }
-        }
-        else if(![self.routeShortName isEqualToString:pattern.routeShortName] || ![self.agencyName isEqualToString:pattern.agencyName] || self.toLat != pattern.toLat ||  self.toLng != pattern.toLng || self.fromLat != pattern.fromLat || self.fromLng != pattern.fromLng){
-            return NO;
-        }
-        return YES;
-    }
-    else{
-        return NO;
-    }
 }
 @end

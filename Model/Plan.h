@@ -87,5 +87,8 @@
                               planMaxItinerariesToShow:(int)planMaxItinerariesToShow
                       planBufferSecondsBeforeItinerary:(int)planBufferSecondsBeforeItinerary
                            planMaxTimeForResultsToShow:(int)planMaxTimeForResultsToShow;
+
+// Create unique Itineraries array from plan.
+- (NSArray *)uniqueItineraries:(NSArray *)iti;
 @end
 

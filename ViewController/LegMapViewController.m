@@ -15,6 +15,8 @@
 #import "Constants.h"
 #import <CoreImage/CoreImageDefines.h>
 #import "nc_AppDelegate.h"
+#import "OTPLeg.h"
+#import "OTPItinerary.h"
 
 #define LINE_WIDTH  5
 #define ALPHA_LIGHT 0.7
@@ -52,7 +54,7 @@ NSString *legID;
     return self;
 }
 
-- (void)setItinerary:(Itinerary *)itin
+- (void)setItinerary:(OTPItinerary *)itin
 {
     @try {
         if (itin != itinerary) {  // if something actually changed...
@@ -187,7 +189,7 @@ NSString *legID;
             for (int i=0; i<[polyLineArray count]; i++) {
                 if (([polyLineArray objectAtIndex:i] == overlay)) {
                     if (i == itineraryNumber) {
-                        Leg *leg  = [[itinerary legDescriptionToLegMapArray] objectAtIndex:itineraryNumber];
+                        OTPLeg *leg  = [[itinerary legDescriptionToLegMapArray] objectAtIndex:itineraryNumber];
                         if([leg isWalk]){
                             aView.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:ALPHA_LIGHT] ;
                             aView.lineWidth = LINE_WIDTH;

@@ -736,7 +736,7 @@
         [[RKClient sharedClient]  get:request delegate:self];
     }
     @catch (NSException *exception) {
-        logException(@"GtfsParser->getAgencies", @"", exception);
+        logException(@"GtfsParser->getGtfsStopTimes", @"", exception);
     }
 }
 
@@ -1056,8 +1056,8 @@
 }
 
 // Get Stored Patterns fron Database
-// Get The StopId From From Stop Table and then get stoptimes according to stopID from StopTimes Table.
-// Remove The duplicate The Duplicate legs If Any.
+// Get The StopId From Stop Table and then get stoptimes according to stopID from StopTimes Table.
+// Remove The Duplicate legs If Any.
 - (void)generateLegsFromPatterns:(PlanRequestParameters *)parameters{
     NSMutableArray *arrMutableStopTimes = [[NSMutableArray alloc] init];
     NSArray *arraySchedules = [self getSchedule:parameters.toLocation:parameters.fromLocation];

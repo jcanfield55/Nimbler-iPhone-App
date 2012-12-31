@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h> 
-#import "Itinerary.h"
+#import "OTPItinerary.h"
 #import "LegMapViewController.h"
 
 @interface RouteDetailsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,RKRequestDelegate>
@@ -19,7 +19,7 @@
 @property(nonatomic, strong) IBOutlet UITableView* mainTable; // Table listing route details
 @property(nonatomic, strong) MKMapView *mapView; 
 @property(nonatomic, strong) LegMapViewController* legMapVC; // View Controller for managing the map
-@property(nonatomic, strong) Itinerary *itinerary;
+@property(nonatomic, strong) OTPItinerary *itinerary;
 @property(nonatomic) int itineraryNumber; // selected row on the itinerary list
 @property(nonatomic, readonly) CGFloat mainTableTotalHeight;  // the total height (height needed so that no scrolling needed) of the mainTable in pixels for a given itinerary
 

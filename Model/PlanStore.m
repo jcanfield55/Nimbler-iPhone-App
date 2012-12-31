@@ -16,6 +16,7 @@
 #import "Schedule.h"
 #import "GtfsStopTimes.h"
 #import "GtfsStop.h"
+#import "OTPLeg.h"
 
 
 @interface PlanStore()
@@ -63,7 +64,7 @@
 // time it has an update
 - (void)requestPlanWithParameters:(PlanRequestParameters *)parameters
 {
-   [[nc_AppDelegate sharedInstance].gtfsParser generateLegsFromPatterns:parameters];
+   //[[nc_AppDelegate sharedInstance].gtfsParser generateLegsFromPatterns:parameters];
     @try {
         // Check if we have a stored plan that we can use
         NSArray* matchingPlanArray = [self fetchPlansWithToLocation:[parameters toLocation]
@@ -260,7 +261,10 @@
                     [NSException raise:@"PlanStore->didLoadObjects failed to retrieve plan parameters" format:@"strResourcePath: %@", strResourcePath];
                 }
                 [[nc_AppDelegate sharedInstance].gtfsParser generateStopTimesRequestString:plan];
-                [[nc_AppDelegate sharedInstance].gtfsParser generatePatternsFromPlan:plan:planRequestParameters.fromLocation:planRequestParameters.toLocation];
+                
+                // get Unique Itinerary from Plan.
+                NSArray *arrUniqueItinerary = [plan uniqueItineraries:nil];
+
                 // Set to & from location with special handling of CurrentLocation
                 Location *toLoc = [planRequestParameters toLocation];
                 if ([toLoc isCurrentLocation] && [toLoc isReverseGeoValid]) {
@@ -295,7 +299,6 @@
                 
                 saveContext(managedObjectContext);  // Save location and request chunk changes
                 plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context
-                
                 // Now format the itineraries of the consolidated plan
                 if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate] departOrArrive:[planRequestParameters departOrArrive]]) {
                     [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
