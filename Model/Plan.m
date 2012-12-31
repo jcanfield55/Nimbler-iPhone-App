@@ -34,6 +34,7 @@
 @dynamic fromLocation;
 @dynamic toLocation;
 @dynamic itineraries;
+@dynamic uniqueItineraryPatterns;
 @dynamic requestChunks;
 @synthesize userRequestDate;
 @synthesize userRequestDepartOrArrive;

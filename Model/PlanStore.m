@@ -16,8 +16,6 @@
 #import "Schedule.h"
 #import "GtfsStopTimes.h"
 #import "GtfsStop.h"
-#import "OTPLeg.h"
-
 
 @interface PlanStore()
 {

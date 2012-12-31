@@ -7,7 +7,7 @@
 //
 
 #import "Pattern.h"
-#import "OTPLeg.h"
+#import "LegFromOTP.h"
 @implementation Pattern
 @synthesize agencyID;
 @synthesize agencyName;
@@ -64,7 +64,7 @@
 }
 
 // Copy the required Paremeter From leg to Pattern.
-+ (id)copyOfLegParameters:(OTPLeg *)leg0;
++ (id)copyOfLegParameters:(LegFromOTP *)leg0;
 {
     Pattern* pattern = [[Pattern alloc] init];
     pattern.agencyID = leg0.agencyId;

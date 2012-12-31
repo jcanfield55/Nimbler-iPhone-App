@@ -15,7 +15,7 @@
 #import "Constants.h"
 #import <CoreImage/CoreImageDefines.h>
 #import "nc_AppDelegate.h"
-#import "OTPLeg.h"
+#import "Leg.h"
 #import "OTPItinerary.h"
 
 #define LINE_WIDTH  5
@@ -189,7 +189,7 @@ NSString *legID;
             for (int i=0; i<[polyLineArray count]; i++) {
                 if (([polyLineArray objectAtIndex:i] == overlay)) {
                     if (i == itineraryNumber) {
-                        OTPLeg *leg  = [[itinerary legDescriptionToLegMapArray] objectAtIndex:itineraryNumber];
+                        Leg *leg  = [[itinerary legDescriptionToLegMapArray] objectAtIndex:itineraryNumber];
                         if([leg isWalk]){
                             aView.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:ALPHA_LIGHT] ;
                             aView.lineWidth = LINE_WIDTH;

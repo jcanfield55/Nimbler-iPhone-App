@@ -11,7 +11,7 @@
 #import "Plan.h"
 #import "UtilityFunctions.h"
 #import "nc_AppDelegate.h"
-#import "OTPLeg.h"
+#import "LegFromOTP.h"
 
 @interface OTPItinerary()
 {
@@ -43,7 +43,7 @@
     // Create empty ObjectMapping to fill and return
     
     RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[OTPItinerary class]];
-    RKManagedObjectMapping* legMapping = [OTPLeg objectMappingForApi:apiType];
+    RKManagedObjectMapping* legMapping = [LegFromOTP objectMappingForApi:apiType];
     
     // Make the mappings
     if (apiType==OTP_PLANNER) {
@@ -156,7 +156,7 @@
 - (BOOL)isCurrentVsGtfsFilesIn:(TransitCalendar *)transitCalendar
 {
     BOOL allLegsMatch = true;
-    for (OTPLeg* leg in [self legs]) {
+    for (Leg* leg in [self legs]) {
         if ([leg agencyId] && [[leg agencyId] length]>0 &&    // If no agencyId, count as a match
             ![transitCalendar isCurrentVsGtfsFileFor:[leg startTime] agencyId:[leg agencyId]]) {
             allLegsMatch = false;
@@ -201,7 +201,7 @@
 {
     NSMutableString *returnString = [NSMutableString stringWithCapacity:30];
     BOOL isFirstLegToDisplay = true;
-    for (OTPLeg* leg in [self sortedLegs]) {
+    for (Leg* leg in [self sortedLegs]) {
         if ([leg mode] && [[leg mode] length] > 0) {
             if (![[leg mode] isEqualToString:@"WALK"]) {  // skip Walk legs
                 BOOL includeTime=false;
@@ -275,7 +275,7 @@
     NSMutableArray* legMapArray = [[NSMutableArray alloc] initWithCapacity:[legsArray count]+2];
     
     for (int i=0; i < [legsArray count]; i++) {
-        OTPLeg* leg = [legsArray objectAtIndex:i];
+        Leg* leg = [legsArray objectAtIndex:i];
         @try {
             if (i==0) { // First leg of itinerary
                 // If first leg is not a walking leg, insert a startpoint entry (US124 implementation)

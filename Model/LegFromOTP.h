@@ -1,5 +1,5 @@
 //
-//  SynthesisLeg.h
+//  LegFromOTP.h
 //  Nimbler Caltrain
 //
 //  Created by macmini on 30/12/12.
@@ -10,6 +10,8 @@
 #import <CoreData/CoreData.h>
 #import "Leg.h"
 
+@interface LegFromOTP : Leg
 
-@interface SynthesisLeg : Leg
++ (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType;
+
 @end

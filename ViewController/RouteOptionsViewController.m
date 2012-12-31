@@ -15,7 +15,6 @@
 #import "twitterViewController.h"
 #import "nc_AppDelegate.h"
 #import <RestKit/RKJSONParserJSONKit.h>
-#import "OTPLeg.h"
 #import "OTPItinerary.h"
 
 #define IDENTIFIER_CELL         @"UIRouteOptionsViewCell"
@@ -190,10 +189,10 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         NSString *timeDiffLastLeg;
         NSString *titleText;
         if([itin.sortedLegs count] > 0){
-            OTPLeg *leg = [itin.sortedLegs objectAtIndex:0];
+            Leg *leg = [itin.sortedLegs objectAtIndex:0];
             timeDiffFirstLeg = leg.timeDiffInMins;
         }
-        OTPLeg *leg = [itin.sortedLegs objectAtIndex:[itin.sortedLegs count]-1];
+        Leg *leg = [itin.sortedLegs objectAtIndex:[itin.sortedLegs count]-1];
         timeDiffLastLeg = leg.timeDiffInMins;
         UIView *viewCellBackground = [[UIView alloc] init];
         [viewCellBackground setBackgroundColor:[UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW]];

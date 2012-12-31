@@ -24,7 +24,8 @@
 @property(nonatomic,strong) PlanPlace *fromPlanPlace;
 @property(nonatomic,strong) PlanPlace *toPlanPlace;
 @property(nonatomic,strong) NSSet *itineraries;
-#define PLAN_ITINERARIES_KEY       @"itineraries"   
+#define PLAN_ITINERARIES_KEY       @"itineraries"  
+@property(nonatomic,strong) NSSet *uniqueItineraryPatterns;  // Subset of itineraries that are a unique routing pattern
 @property(nonatomic,strong) Location *fromLocation;
 @property(nonatomic,strong) Location *toLocation;
 @property (strong, nonatomic) NSSet *requestChunks; // PlanRequestChunks associated with the Plan

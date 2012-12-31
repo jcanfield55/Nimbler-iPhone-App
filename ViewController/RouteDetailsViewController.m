@@ -16,8 +16,6 @@
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "ToFromViewController.h"
 #import "nc_AppDelegate.h"
-#import "OTPLeg.h"
-
 
 @interface RouteDetailsViewController()
 {
@@ -328,7 +326,7 @@ NSUserDefaults *prefs;
         
         // Find the right image filename
         NSMutableString* imgFileName = [NSMutableString stringWithCapacity:40];
-        OTPLeg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:[indexPath row]];
+        Leg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:[indexPath row]];
         if ([leg isEqual:[NSNull null]]) { // Start or finish point
             [imgFileName appendString:@"img_legPoint"];
         } else {
@@ -402,7 +400,7 @@ NSUserDefaults *prefs;
 -(void)setFBParamater:(int)ss
 {
     @try {
-        OTPLeg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:ss];
+        Leg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:ss];
         if (![leg isEqual:[NSNull null]]) {
             if([leg isWalk]){
                 [self setFBParameterForLeg:[leg legId]];

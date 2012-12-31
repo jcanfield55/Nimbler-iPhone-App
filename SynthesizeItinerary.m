@@ -7,7 +7,7 @@
 //
 
 #import "SynthesizeItinerary.h"
-#import "SynthesisLeg.h"
+#import "LegFromGtfs.h"
 
 
 @implementation SynthesizeItinerary

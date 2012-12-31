@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="11G56" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1811" systemVersion="12C60" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AddressComponent" representedClassName="AddressComponent" syncable="YES">
         <attribute name="longName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
@@ -127,20 +127,32 @@
     <entity name="Leg" representedClassName="Leg" syncable="YES">
         <attribute name="agencyId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="agencyName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="bogusNonTransitLeg" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="distance" optional="YES" attributeType="Double" syncable="YES"/>
         <attribute name="duration" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="endTime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="headSign" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="interLineWithPreviousLeg" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="legGeometryLength" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="legGeometryPoints" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="legId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="mode" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="route" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="routeLongName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="routeShortName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="startTime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="tripId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tripShortName" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="from" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="PlanPlace" inverseName="leg" inverseEntity="PlanPlace" syncable="YES"/>
         <relationship name="itinerary" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Itinerary" inverseName="legs" inverseEntity="Itinerary" syncable="YES"/>
         <relationship name="steps" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Step" inverseName="leg" inverseEntity="Step" syncable="YES"/>
         <relationship name="to" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="PlanPlace" inverseName="leg" inverseEntity="PlanPlace" syncable="YES"/>
     </entity>
+    <entity name="LegFromGtfs" representedClassName="LegfromGtfs" parentEntity="Leg" syncable="YES">
+        <relationship name="fromStopTime" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsStopTimes" syncable="YES"/>
+        <relationship name="toStopTime" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsStopTimes" syncable="YES"/>
+    </entity>
+    <entity name="LegFromOTP" representedClassName="LegFromOTP" parentEntity="Leg" syncable="YES"/>
     <entity name="Location" representedClassName="Location" syncable="YES">
         <attribute name="apiType" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="dateLastUsed" optional="YES" attributeType="Date" syncable="YES"/>
@@ -181,15 +193,6 @@
         <attribute name="walkDistance" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="walkTime" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
     </entity>
-    <entity name="OTPLeg" representedClassName="OTPLeg" parentEntity="Leg" syncable="YES">
-        <attribute name="bogusNonTransitLeg" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="endTime" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="interLineWithPreviousLeg" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="legGeometryLength" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="legGeometryPoints" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="startTime" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="tripShortName" optional="YES" attributeType="String" syncable="YES"/>
-    </entity>
     <entity name="Plan" representedClassName="Plan" syncable="YES">
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="lastUpdatedFromServer" optional="YES" attributeType="Date" syncable="YES"/>
@@ -200,6 +203,7 @@
         <relationship name="requestChunks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PlanRequestChunk" inverseName="plan" inverseEntity="PlanRequestChunk" syncable="YES"/>
         <relationship name="toLocation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="plan" inverseEntity="Location" syncable="YES"/>
         <relationship name="toPlanPlace" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="PlanPlace" inverseName="plan" inverseEntity="PlanPlace" syncable="YES"/>
+        <relationship name="uniqueItineraryPatterns" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Itinerary" inverseName="plan" inverseEntity="Itinerary" syncable="YES"/>
         <compoundIndexes>
             <compoundIndex>
                 <index value="date"/>
@@ -263,7 +267,6 @@
         <relationship name="leg" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Leg" inverseName="steps" inverseEntity="Leg" syncable="YES"/>
     </entity>
     <entity name="SynthesizeItinerary" representedClassName="SynthesizeItinerary" parentEntity="Itinerary" syncable="YES"/>
-    <entity name="SynthesizeLeg" representedClassName="SynthesisLeg" parentEntity="Leg" syncable="YES"/>
     <entity name="TPResponse" syncable="YES">
         <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="relationship" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TPResponse" inverseName="relationship" inverseEntity="TPResponse" syncable="YES"/>
@@ -291,20 +294,20 @@
         <element name="GtfsTrips" positionX="160" positionY="192" width="128" height="195"/>
         <element name="Itinerary" positionX="0" positionY="0" width="128" height="195"/>
         <element name="KeyObjectPair" positionX="0" positionY="0" width="128" height="90"/>
-        <element name="Leg" positionX="-45" positionY="0" width="128" height="270"/>
+        <element name="Leg" positionX="-45" positionY="0" width="128" height="375"/>
         <element name="Location" positionX="0" positionY="0" width="128" height="255"/>
         <element name="LocationFromGoogle" positionX="160" positionY="192" width="128" height="90"/>
         <element name="LocationFromIOS" positionX="160" positionY="192" width="128" height="60"/>
-        <element name="Plan" positionX="0" positionY="0" width="128" height="180"/>
+        <element name="OTPItinerary" positionX="160" positionY="192" width="128" height="180"/>
+        <element name="LegFromOTP" positionX="90" positionY="216" width="128" height="45"/>
+        <element name="Plan" positionX="0" positionY="0" width="128" height="195"/>
         <element name="PlanPlace" positionX="0" positionY="0" width="128" height="180"/>
         <element name="PlanRequestChunk" positionX="0" positionY="0" width="128" height="105"/>
         <element name="RawAddress" positionX="0" positionY="0" width="128" height="75"/>
         <element name="Schedule" positionX="160" positionY="192" width="128" height="150"/>
         <element name="Step" positionX="0" positionY="0" width="128" height="195"/>
-        <element name="TPResponse" positionX="0" positionY="0" width="128" height="75"/>
-        <element name="SynthesizeLeg" positionX="81" positionY="207" width="128" height="45"/>
-        <element name="OTPLeg" positionX="90" positionY="216" width="128" height="150"/>
-        <element name="OTPItinerary" positionX="160" positionY="192" width="128" height="180"/>
         <element name="SynthesizeItinerary" positionX="160" positionY="192" width="128" height="45"/>
+        <element name="LegFromGtfs" positionX="81" positionY="207" width="128" height="75"/>
+        <element name="TPResponse" positionX="0" positionY="0" width="128" height="75"/>
     </elements>
 </model>
