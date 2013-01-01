@@ -11,8 +11,8 @@
 #import "UtilityFunctions.h"
 #import "Leg.h"
 #import <CoreData/CoreData.h>
-#import "OTPItinerary.h"
-#import "SynthesizeItinerary.h"
+#import "Itinerary.h"
+#import "ItineraryFromOTP.h"
 
 
 @interface Plan (CoreDataGeneratedAccessors)
@@ -47,7 +47,7 @@
     
     RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[Plan class]];
     RKManagedObjectMapping* planPlaceMapping = [PlanPlace objectMappingForApi:apiType];
-    RKManagedObjectMapping* itineraryMapping = [OTPItinerary objectMappingForApi:apiType];
+    RKManagedObjectMapping* itineraryMapping = [ItineraryFromOTP  objectMappingForApi:apiType];
     mapping.setDefaultValueForMissingAttributes = TRUE;
     planPlaceMapping.setDefaultValueForMissingAttributes = TRUE;
     itineraryMapping.setDefaultValueForMissingAttributes = TRUE;
@@ -105,7 +105,7 @@
     NIMLOG_PERF1(@"consolidateIntoSelfPlans: Check self itineraries valid");
     // Make sure all itineraries in self are still valid GTFS data.  Delete otherwise
     BOOL wereAnyDeleted = false;
-    for (OTPItinerary* itin in [NSSet setWithSet:[self itineraries]]) {
+    for (Itinerary* itin in [NSSet setWithSet:[self itineraries]]) {
         if (![itin isCurrentVsGtfsFilesIn:[self transitCalendar]] ||
             ![itin startTimeOnly] || ![itin endTimeOnly] ||
             [itin isOvernightItinerary]) {
@@ -121,7 +121,7 @@
     }
     NIMLOG_PERF1(@"consolidateIntoSelfPlans: Check plan0 itineraries valid");
     // Do the same checking for plan0 itineraries
-    for (OTPItinerary* itin in [NSSet setWithSet:[plan0 itineraries]]) {
+    for (Itinerary* itin in [NSSet setWithSet:[plan0 itineraries]]) {
         if (![itin isCurrentVsGtfsFilesIn:[self transitCalendar]] ||
             ![itin startTimeOnly] || ![itin endTimeOnly] ||
             [itin isOvernightItinerary]) {
@@ -163,7 +163,7 @@
     // Transfer over the itineraries getting rid of ones we do not need
     NIMLOG_PERF1(@"consolidateIntoSelfPlans: Transfer and get rid of itineraries we do not need");
     NSSet* itineraries0 = [NSSet setWithSet:[plan0 itineraries]];
-    for (OTPItinerary* itin0 in itineraries0) {
+    for (Itinerary* itin0 in itineraries0) {
         if ([self addItineraryIfNew:itin0] == ITIN0_OBSOLETE) { // add the itinerary no matter what
             [plan0 deleteItinerary:itin0];   // if itin0 obsolete, also make sure we delete it
         }
@@ -180,7 +180,7 @@
 - (ItineraryCompareResult) addItineraryIfNew:(Itinerary *)itin0
 {
     NSSet* selfItineraries = [NSSet setWithSet:[self itineraries]];  // Make a copy since I will be deleting some
-    for (OTPItinerary* itinSelf in selfItineraries) {
+    for (Itinerary* itinSelf in selfItineraries) {
         ItineraryCompareResult itincompare = [itinSelf compareItineraries:itin0];
         if (itincompare == ITINERARIES_DIFFERENT) {
             continue;
@@ -245,7 +245,7 @@
     } else { // ARRIVE
         [requestChunk setLatestRequestedArriveTimeDate:requestDate];
     }
-    for (OTPItinerary* itin in [NSSet setWithSet:[self itineraries]]) { // Add all the itineraries to this request chunk
+    for (Itinerary* itin in [NSSet setWithSet:[self itineraries]]) { // Add all the itineraries to this request chunk
         if ([itin isOvernightItinerary]) {
             [self deleteItinerary:itin];
         } else {
@@ -348,7 +348,7 @@
         }
         // else collect all the itineraries that have valid GTFS data and are in the right time range
         for (PlanRequestChunk* reqChunk in matchingReqChunks) {
-            for (OTPItinerary* itin in [reqChunk itineraries]) {
+            for (Itinerary* itin in [reqChunk itineraries]) {
                 // Check that all legs are current with the GTFS file
                 
                 if ([itin isCurrentVsGtfsFilesIn:[self transitCalendar]]) { // if itin is valid
@@ -425,25 +425,29 @@
 {
     NSMutableString* desc = [NSMutableString stringWithFormat:
                       @"{Plan Object: date: %@;  from: %@;  to: %@; ", [self date], [[self fromPlanPlace] ncDescription], [[self toPlanPlace] ncDescription]];
-    for (OTPItinerary *itin in [self itineraries]) {
+    for (Itinerary *itin in [self itineraries]) {
         [desc appendString:[NSString stringWithFormat:@"\n %@", [itin ncDescription]]];
     }
     return desc;
 }
 
 // Create unique Itineraries array from plan.
-- (NSArray *)uniqueItineraries:(NSArray *)iti{
+- (NSArray *)uniqueItineraries{
     NSMutableArray *arrsortedItineraries = [[NSMutableArray alloc] initWithArray:[self sortedItineraries]];
-    if(iti && [iti count] > 0){
-        [arrsortedItineraries addObjectsFromArray:iti];
+    NSArray *arrUniqueitineraries = [self.uniqueItineraryPatterns allObjects];
+    if(arrUniqueitineraries && [arrUniqueitineraries count] > 0){
+        [arrsortedItineraries addObjectsFromArray:arrUniqueitineraries];
     }
-    for(int i=0; i < [arrsortedItineraries count];i++){
-        Itinerary *itinerary1 = (Itinerary*)[arrsortedItineraries objectAtIndex:i];
-        if([arrsortedItineraries count] > i+1){
-           Itinerary *itinerary2 = (Itinerary*)[arrsortedItineraries objectAtIndex:i+1];
-           BOOL isEquivalentitinerary = [itinerary1 isEquivalentItinerariAs:itinerary2];
+    int i;
+    for(i=0; i < [arrsortedItineraries count];i++){
+        for(int j=i+1;j<[arrsortedItineraries count];j++){
+            Itinerary *itinerary1 = (Itinerary*)[arrsortedItineraries objectAtIndex:i];
+            Itinerary *itinerary2 = (Itinerary*)[arrsortedItineraries objectAtIndex:j];
+            BOOL isEquivalentitinerary = [itinerary1 isEquivalentItinerariAs:itinerary2];
             if(isEquivalentitinerary){
-                [arrsortedItineraries removeObjectAtIndex:i];
+                [arrsortedItineraries removeObjectAtIndex:j];
+                i = i-1;
+                break;
             }
         }
     }

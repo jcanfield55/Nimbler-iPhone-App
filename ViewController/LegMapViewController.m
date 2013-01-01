@@ -16,7 +16,7 @@
 #import <CoreImage/CoreImageDefines.h>
 #import "nc_AppDelegate.h"
 #import "Leg.h"
-#import "OTPItinerary.h"
+#import "Itinerary.h"
 
 #define LINE_WIDTH  5
 #define ALPHA_LIGHT 0.7
@@ -54,7 +54,7 @@ NSString *legID;
     return self;
 }
 
-- (void)setItinerary:(OTPItinerary *)itin
+- (void)setItinerary:(Itinerary *)itin
 {
     @try {
         if (itin != itinerary) {  // if something actually changed...

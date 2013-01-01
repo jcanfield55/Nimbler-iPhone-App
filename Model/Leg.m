@@ -111,7 +111,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         //Part Of DE-229 Implementation
         if([self.arrivalFlag intValue] == DELAYED) {
             NSDate* realTimeArrivalTime = [[self startTime]
-                                           dateByAddingTimeInterval:[self.timeDiffInMins floatValue]*60.0];
+                                           dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
             if(realTimeArrivalTime){
               [summary appendFormat:@"%@ ", superShortTimeStringForDate(realTimeArrivalTime)];  
             }
@@ -121,7 +121,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         }
         else if([self.arrivalFlag intValue] == EARLY){
             NSDate* realTimeArrivalTime = [[self startTime]
-                                           dateByAddingTimeInterval:[self.timeDiffInMins floatValue]*(-60.0)];
+                                           dateByAddingTimeInterval:[timeDiffInMins floatValue]*(-60.0)];
             if(realTimeArrivalTime){
                 [summary appendFormat:@"%@ ", superShortTimeStringForDate(realTimeArrivalTime)];
             }
@@ -194,7 +194,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
             // Part Of DE-229 & US-169 Implementation
             if([self.arrivalFlag intValue] == DELAYED) {
                 NSDate* realTimeArrivalTime = [[self startTime]
-                                               dateByAddingTimeInterval:[self.timeDiffInMins floatValue]*60.0];
+                                               dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
                 if(realTimeArrivalTime){
                     [titleText appendFormat:@"%@ Walk to %@",
                      superShortTimeStringForDate(realTimeArrivalTime),
@@ -210,7 +210,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
             }
             else if ([self.arrivalFlag intValue] == EARLY || [self.arrivalFlag intValue] == EARLIER) {
                 NSDate* realTimeArrivalTime = [[self startTime]
-                                               dateByAddingTimeInterval:[self.timeDiffInMins floatValue]*(-60.0)];
+                                               dateByAddingTimeInterval:[timeDiffInMins floatValue]*(-60.0)];
                 if(realTimeArrivalTime){
                     [titleText appendFormat:@"%@ Walk to %@",
                      superShortTimeStringForDate(realTimeArrivalTime),
@@ -233,7 +233,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         } else if (legPosition == LAST_LEG) {   // US124 implementation
             if([self.arrivalFlag intValue] == DELAYED) {
                 NSDate* realTimeArrivalTime = [[self endTime]
-                                               dateByAddingTimeInterval:[self.timeDiffInMins floatValue]*60.0];
+                                               dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
                 if(realTimeArrivalTime){
                     [titleText appendFormat:@"%@ Arrive at %@",
                      superShortTimeStringForDate(realTimeArrivalTime),
@@ -280,7 +280,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
             areRealTimeUpdates = YES;
             NIMLOG_EVENT1(@"Real-time flag: %@, scheduled arrival: %@, real-time arrival: %@, diff: %@", 
                   [self arrivalFlag], superShortTimeStringForDate([self startTime]),
-                  [self arrivalTime], [self timeDiffInMins]);
+                  [self arrivalTime],  timeDiffInMins);
 
             if([self.arrivalFlag intValue] == DELAYED) {
                 NSDate* realTimeArrivalTime = [[self startTime] 

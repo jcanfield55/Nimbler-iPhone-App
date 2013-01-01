@@ -10,12 +10,11 @@
 #import <MapKit/MapKit.h> 
 #import "Itinerary.h"
 #import "Leg.h"
-#import "OTPItinerary.h"
 
 @interface LegMapViewController : UIViewController <RKRequestDelegate, MKMapViewDelegate>
 
 @property(nonatomic, strong) MKMapView *mapView;
-@property(nonatomic, strong) OTPItinerary *itinerary;
+@property(nonatomic, strong) Itinerary *itinerary;
 @property(nonatomic) int itineraryNumber;
 
 - (id)initWithMapView:(MKMapView *)m0;  // Preferred initializer

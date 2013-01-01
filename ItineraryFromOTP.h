@@ -1,15 +1,15 @@
 //
-//  LegFromOTP.h
+//  OTPItinerary.h
 //  Nimbler Caltrain
 //
-//  Created by macmini on 30/12/12.
+//  Created by macmini on 31/12/12.
 //  Copyright (c) 2012 Network Commuting. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import "Leg.h"
+#import "Itinerary.h"
 
-@interface LegFromOTP : Leg
+@interface ItineraryFromOTP : Itinerary
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType;
 @end

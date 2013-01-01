@@ -11,23 +11,15 @@
 #import "PlanPlace.h"
 #import "KeyObjectStore.h"
 #import "UtilityFunctions.h"
-#import "OTPItinerary.h"
+#import "Itinerary.h"
 
 @implementation LegFromOTP
-@dynamic bogusNonTransitLeg;
-@dynamic endTime;
-@dynamic interlineWithPreviousLeg;
-@dynamic legGeometryLength;
-@dynamic legGeometryPoints;
-@dynamic startTime;
-@dynamic tripShortName;
-@synthesize arrivalTime,arrivalFlag,timeDiffInMins;
 
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType
 {
     // Create empty ObjectMapping to fill and return
     
-    RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[LegFromOTP class]];
+    RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[Leg class]];
     RKManagedObjectMapping* stepsMapping = [Step objectMappingForApi:apiType];
     RKManagedObjectMapping* planPlaceMapping = [PlanPlace objectMappingForApi:apiType];
     
@@ -61,4 +53,5 @@
     }
     return mapping;
 }
+
 @end

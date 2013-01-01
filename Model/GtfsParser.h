@@ -15,6 +15,7 @@
 #import "Leg.h"
 #import "Schedule.h"
 #import "PlanRequestParameters.h"
+#import "GtfsCalendar.h"
 
 @interface GtfsParser : NSObject<RKRequestDelegate>{
     NSManagedObjectContext *managedObjectContext;
@@ -48,17 +49,29 @@
 // Generate The StopTimes Request Comma Separated string like agencyID_tripID
 - (void)generateStopTimesRequestString:(Plan *)plan;
 
-// Generate Patterns From Plan.
-- (void)generatePatternsFromPlan:(Plan *)plan:(Location *)fromLocation:(Location *)toLocation;
-
-// Get Patterns According to To&From Location.
-- (NSArray *)getSchedule:(Location *)toLocation:(Location *)fromLocation;
-
 // Get The stopID form GtfsStop Table from To&From Location.
 - (NSString *) getTheStopIDAccrodingToStation:(NSNumber *)lat:(NSNumber *)lng;
 
+// get serviceID based on tripId.
+- (NSString *) getServiceIdFromTripID:(NSString *)strTripID;
+
+// Get Calendar Data from GtfsCalendar based on serviceID
+- (GtfsCalendar *)getCalendarDataFromDatabase:(NSString *)strServiceID;
+
+// This method get the serviceId based on tripId.
+// Then get the calendar data for particular serviceID.
+// the check for the request date comes after service start date and comes befor enddate.
+// then check service is enabled on request day if yes then return yes otherwise return no.
+- (BOOL) isServiceEnableForDay:(NSString *)strTripID:(NSDate *)requestDate;
+
+// first get stoptimes from StopTimes Table based on stopId
+// Then make a pair of StopTimes if both stoptimes have same tripId then check for the stopSequence and the departure time is greater than request trip time and also check if service is enabled for that stopTimes if yes the add both stopTimes as To/From StopTimes pair.
+- (NSArray *)getStopTimes:(NSString *)strToStopID:(NSString *)strFromStopID:(PlanRequestParameters *)parameters;
+
+
+// TODO:- Need to sort the stopTimes array according to departureTime. Then take first stopTimes from leg and call initWithToStopTime method to set from&toStopTime and save leg.
+
 // Get Stored Patterns fron Database
-// Get The StopId From From Stop Table and then get stoptimes according to stopID from StopTimes Table.
-// Remove The duplicate The Duplicate legs If Any.
-- (void)generateLegsFromPatterns:(PlanRequestParameters *)parameters;
+// Get The StopId From Stop Table and then get stoptimes according to stopID from StopTimes Table.
+- (void)generateLegsFromPatterns:(Plan *)plan:(PlanRequestParameters *)parameters;
 @end

@@ -15,7 +15,7 @@
 #import "twitterViewController.h"
 #import "nc_AppDelegate.h"
 #import <RestKit/RKJSONParserJSONKit.h>
-#import "OTPItinerary.h"
+#import "Itinerary.h"
 
 #define IDENTIFIER_CELL         @"UIRouteOptionsViewCell"
 
@@ -38,7 +38,7 @@
 @synthesize isReloadRealData;
 @synthesize liveData,btnGoToNimbler;
 
-OTPItinerary * itinerary;
+Itinerary * itinerary;
 NSString *itinararyId;
 UIImage *imageDetailDisclosure;
 
@@ -180,7 +180,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
          cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.textLabel.numberOfLines = 2;
         // Get the requested itinerary
-        OTPItinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
+        Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
         
         // Set title
         [[cell textLabel] setFont:[UIFont MEDIUM_BOLD_FONT]];
@@ -279,7 +279,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 - (CGFloat)tableView:(UITableView *)aTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
     @try {
-    OTPItinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
+    Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
     
     NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
                                                      timeIntervalSinceDate:[itin startTimeOfFirstLeg]]);

@@ -6,10 +6,10 @@
 //  Copyright (c) 2012 Network Commuting. All rights reserved.
 //
 
-#import "SynthesizeItinerary.h"
+#import "ItineraryFromGtfs.h"
 #import "LegFromGtfs.h"
 
 
-@implementation SynthesizeItinerary
+@implementation ItineraryFromGtfs
 
 @end

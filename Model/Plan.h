@@ -90,6 +90,6 @@
                            planMaxTimeForResultsToShow:(int)planMaxTimeForResultsToShow;
 
 // Create unique Itineraries array from plan.
-- (NSArray *)uniqueItineraries:(NSArray *)iti;
+- (NSArray *)uniqueItineraries;
 @end
 

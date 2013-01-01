@@ -62,7 +62,6 @@
 // time it has an update
 - (void)requestPlanWithParameters:(PlanRequestParameters *)parameters
 {
-   //[[nc_AppDelegate sharedInstance].gtfsParser generateLegsFromPatterns:parameters];
     @try {
         // Check if we have a stored plan that we can use
         NSArray* matchingPlanArray = [self fetchPlansWithToLocation:[parameters toLocation]
@@ -259,10 +258,6 @@
                     [NSException raise:@"PlanStore->didLoadObjects failed to retrieve plan parameters" format:@"strResourcePath: %@", strResourcePath];
                 }
                 [[nc_AppDelegate sharedInstance].gtfsParser generateStopTimesRequestString:plan];
-                
-                // get Unique Itinerary from Plan.
-                NSArray *arrUniqueItinerary = [plan uniqueItineraries:nil];
-
                 // Set to & from location with special handling of CurrentLocation
                 Location *toLoc = [planRequestParameters toLocation];
                 if ([toLoc isCurrentLocation] && [toLoc isReverseGeoValid]) {
@@ -300,7 +295,16 @@
                 // Now format the itineraries of the consolidated plan
                 if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate] departOrArrive:[planRequestParameters departOrArrive]]) {
                     [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
-                    NIMLOG_OBJECT1(@"PLAN =%@",plan);
+
+                    // get Unique Itinerary from Plan.
+                    NSArray *arrUniqueItinerary = [plan uniqueItineraries];
+                    NSSet *setUniqueitineraries = [NSSet setWithArray:arrUniqueItinerary];
+                    plan.uniqueItineraryPatterns = setUniqueitineraries;
+                    saveContext(self.managedObjectContext);
+                    [[nc_AppDelegate sharedInstance].gtfsParser generateLegsFromPatterns:plan:planRequestParameters];
+                    
+                   
+                    
                     // Call-back the appropriate RouteOptions VC with the new plan
                     UIViewController *currentVC = toFromVC.navigationController.visibleViewController;
                     if (planRequestParameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC || currentVC == routeOptionsVC) {

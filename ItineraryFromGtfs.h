@@ -11,6 +11,6 @@
 #import "Itinerary.h"
 
 
-@interface SynthesizeItinerary : Itinerary
+@interface ItineraryFromGtfs : Itinerary
 
 @end

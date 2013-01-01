@@ -10,13 +10,13 @@
 #import "GtfsAgency.h"
 #import "UtilityFunctions.h"
 #import "GtfsCalendarDates.h"
-#import "GtfsCalendar.h"
 #import "GtfsRoutes.h"
 #import "GtfsStop.h"
 #import "GtfsTrips.h"
 #import "GtfsStopTimes.h"
 #import "UtilityFunctions.h"
 #import "Pattern.h"
+#import "LegFromGtfs.h"
 
 @implementation GtfsParser
 
@@ -247,7 +247,7 @@
         NSDate *startDate = [formtter dateFromString:[arrayStartDate objectAtIndex:i]];
         NSDate *endDate = [formtter dateFromString:[arrayEndDate objectAtIndex:i]];
         calendar.startDate = startDate;
-        calendar.startDate = endDate;
+        calendar.endDate = endDate;
     }
     saveContext(self.managedObjectContext);
 }
@@ -835,105 +835,6 @@
     }
 }
 
-// First merge the Patterns from OTP&DB.
-// Then We Find Duplicate Patterns and remove it From Array.
-- (NSArray *)consolidatePatternsWithNewPatterns:(NSArray *)arrayLegs:(NSArray *)arrayStoredLegs{
-    NSMutableArray *arrayFinalLegs = [[NSMutableArray alloc] initWithArray:arrayLegs];
-    for(int i=0;i<[arrayStoredLegs count];i++){
-        NSArray *tempSortedArray = [arrayStoredLegs objectAtIndex:i];
-        [arrayFinalLegs addObjectsFromArray:tempSortedArray];
-    }
-    for(int i=0;i<[arrayFinalLegs count];i++){
-        for(int j=i+1;j<[arrayFinalLegs count];j++){
-           NSArray *patternArray1 = [arrayFinalLegs objectAtIndex:i];
-           NSArray *patternArray2 = [arrayFinalLegs objectAtIndex:j];
-            if([patternArray1 count] == [patternArray2 count]){
-                for(int k=0;k<[patternArray1 count];k++){
-                    NSKeyedUnarchiver *unarch1 = [[NSKeyedUnarchiver alloc] initForReadingWithData:[patternArray1 objectAtIndex:k]];
-                    NSKeyedUnarchiver *unarch2 = [[NSKeyedUnarchiver alloc] initForReadingWithData:[patternArray2 objectAtIndex:k]];
-                    Pattern *pattern1 = [unarch1 decodeObject];
-                    [unarch1 finishDecoding];
-                    Pattern *pattern2 = [unarch2 decodeObject];
-                    [unarch2 finishDecoding];
-                    BOOL isPatternMatch = [pattern1 isEquivalentPatternAs:pattern2];
-                    if(isPatternMatch){
-                        [arrayFinalLegs removeObjectAtIndex:j];
-                        break;
-                    }
-                }
-            }
-        }
-    }
-    return arrayFinalLegs;
-}
-
-// This Method Takes array of legs and then Generate Patterns From That Array.
-- (NSArray *)generatePatternsFromLegArray:(NSArray *)arrayleg{
-    NSMutableArray *mutablePatternArray = [[NSMutableArray alloc] initWithArray:arrayleg];
-    NSMutableArray *arrayFinalPatterns = [[NSMutableArray alloc] init];
-    for(int i=0;i<[mutablePatternArray count];i++){
-        NSMutableArray *arrUnfilteredLegs = [[NSMutableArray alloc] init];
-        NSArray *arrayLeg = [mutablePatternArray objectAtIndex:i];
-        for(int j=0;j<[arrayLeg count];j++){
-            Leg *leg = [arrayLeg objectAtIndex:j];
-            Pattern *pattern = [Pattern copyOfLegParameters:leg];
-            NSMutableData *data = [[NSMutableData alloc] init];
-            NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
-            [archiver encodeObject:pattern];
-            [archiver finishEncoding];
-            [arrUnfilteredLegs addObject:data];
-        }
-        [arrayFinalPatterns addObject:arrUnfilteredLegs];
-    }
-    return arrayFinalPatterns;
-}
-
-// This Method Removes the patterns from Schedule Table According to To&From Location.
-- (void) removePatternsFromScheduleTable:(Location *)toLocation:(Location *)fromLocation{
-    NSFetchRequest *fetchSchedule = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"Schedule" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:fromLocation.lat,@"FROMLAT",fromLocation.lng,@"FROMLNG",toLocation.lat,@"TOLAT",toLocation.lng,@"TOLNG", nil]];
-    NSArray * arraySchedule = [self.managedObjectContext executeFetchRequest:fetchSchedule error:nil];
-    for (id schedule in arraySchedule){
-        [self.managedObjectContext deleteObject:schedule];
-    }
-    saveContext(self.managedObjectContext);
-}
-
-// This Method Takes Plan From Planstore Class.
-// Then it generate Patterns from itinerary and Legs and store The created patterns to Schedule Table. 
-- (void)generatePatternsFromPlan:(Plan *)plan:(Location *)fromLocation:(Location *)toLocation{
-    NSMutableArray *arrayLegs = [[NSMutableArray alloc] init];
-    NSArray *itiArray = [plan sortedItineraries];
-    for(int i=0;i<[itiArray count];i++){
-        Itinerary *iti = [itiArray objectAtIndex:i];
-        [arrayLegs addObject:[iti sortedLegs]];
-    }
-    NSArray *arrPatterns = [self generatePatternsFromLegArray:arrayLegs];
-    NSArray *arrayScheduleArray = [self getSchedule:toLocation :fromLocation];
-    NSMutableArray *arrayStoredLegs = [[NSMutableArray alloc] init];
-    for(int i=0;i<[arrayScheduleArray count];i++){
-        Schedule *schedule = [arrayScheduleArray objectAtIndex:i];
-        [arrayStoredLegs addObject:schedule.legs];
-    }
-    NSArray *finalPatterns = [self consolidatePatternsWithNewPatterns:arrPatterns:arrayStoredLegs];
-    [self removePatternsFromScheduleTable:toLocation :fromLocation];
-    Schedule* schedule = [NSEntityDescription insertNewObjectForEntityForName:@"Schedule" inManagedObjectContext:self.managedObjectContext];
-    schedule.toLat = toLocation.lat;
-    schedule.toLng = toLocation.lng;
-    schedule.fromLat = fromLocation.lat;
-    schedule.fromLng = fromLocation.lng;
-    schedule.toFormattedAddress = toLocation.formattedAddress;
-    schedule.fromFormattedAddress = fromLocation.formattedAddress;
-    schedule.legs = finalPatterns;
-    saveContext(self.managedObjectContext);
-}
-
-// Get Patterns From Schedule Table According To TO&From Location.
-- (NSArray *)getSchedule:(Location *)toLocation:(Location *)fromLocation{
-    NSFetchRequest *fetchSchedule = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"Schedule" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:fromLocation.lat,@"FROMLAT",fromLocation.lng,@"FROMLNG",toLocation.lat,@"TOLAT",toLocation.lng,@"TOLNG", nil]];
-    NSArray * arraySchedule = [self.managedObjectContext executeFetchRequest:fetchSchedule error:nil];
-    return arraySchedule;
-}
-
 // Check StopTimes Table for particular tripID&agencyID data is exists or not.
 // If Data For tripID&agencyID  Already Exists then we will not ask StopTimes Data for that tripID from Server otherwise we will ask for StopTimes Data.
 - (BOOL) checkIfTripIDAndAgencyIDAlreadyExists:(NSString *)strTripID:(NSString *)agencyID{
@@ -1000,7 +901,50 @@
     return strStopID;
 }
 
-// Get The Stop Times Data From StopTimes Table According To To&From stopID.
+// get serviceID based on tripId.
+- (NSString *) getServiceIdFromTripID:(NSString *)strTripID{
+    NSFetchRequest *fetchServiceID = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"ServiceIdByTripId" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strTripID,@"TRIPID",nil]];
+    NSArray * arrServiceID = [self.managedObjectContext executeFetchRequest:fetchServiceID error:nil];
+        GtfsTrips *trips = [arrServiceID objectAtIndex:0];
+    return trips.serviceID;
+}
+
+// Get Calendar Data from GtfsCalendar based on serviceID
+- (GtfsCalendar *)getCalendarDataFromDatabase:(NSString *)strServiceID{
+    NSFetchRequest *fetchCalendar = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsCalendar" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strServiceID,@"SERVICEID",nil]];
+    NSArray * arrServiceID = [self.managedObjectContext executeFetchRequest:fetchCalendar error:nil];
+    GtfsCalendar *calendar = [arrServiceID objectAtIndex:0];
+    return calendar;
+ 
+}
+// This method get the serviceId based on tripId.
+// Then get the calendar data for particular serviceID.
+// the check for the request date comes after service start date and comes befor enddate.
+// then check service is enabled on request day if yes then return yes otherwise return no.
+- (BOOL) isServiceEnableForDay:(NSString *)strTripID:(NSDate *)requestDate{
+    NSString *serviceID = [self getServiceIdFromTripID:strTripID];
+    GtfsCalendar *calendar = [self getCalendarDataFromDatabase:serviceID];
+    NSArray *arrServiceDays = [NSArray arrayWithObjects:calendar.sunday,calendar.monday,calendar.tuesday,calendar.wednesday,calendar.thursday,calendar.friday,calendar.saturday,nil];
+    NSInteger dayOfWeek = dayOfWeekFromDate(requestDate)-1;
+    NSDate* dateOnly = dateOnlyFromDate(requestDate);
+    NSDateFormatter *dateFormatters = [[NSDateFormatter alloc] init];
+    [dateFormatters setDateFormat:@"yyyyMMdd"];
+    NSString *strStartDate = [dateFormatters stringFromDate:dateOnlyFromDate(calendar.startDate)];
+    NSString *strEndDate =[dateFormatters stringFromDate:dateOnlyFromDate(calendar.endDate)] ;
+    NSString* strDateOnly = [dateFormatters stringFromDate:dateOnly];
+    
+    if (strStartDate && strEndDate && [strDateOnly compare:strStartDate] == NSOrderedDescending && [strDateOnly compare:strEndDate] == NSOrderedAscending) {
+        if([[arrServiceDays objectAtIndex:dayOfWeek] intValue] == 1){
+            return YES;
+        }
+        return NO;
+    }
+    return NO;
+}
+
+// first get stoptimes from StopTimes Table based on stopId
+// Then make a pair of StopTimes if both stoptimes have same tripId then check for the stopSequence and the departure time is greater than request trip time and also check if service is enabled for that stopTimes if yes the add both stopTimes as To/From StopTimes pair.
+
 - (NSArray *)getStopTimes:(NSString *)strToStopID:(NSString *)strFromStopID:(PlanRequestParameters *)parameters{
      NSFetchRequest *fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesByStopID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strToStopID,@"STOPID1",strFromStopID,@"STOPID2", nil]];
     NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
@@ -1041,11 +985,11 @@
             int minuteTripTime = [componentsTripTime minute];
             int intervalTripTime = hourTripTime*60*60 + minuteTripTime*60;
             if(stopTimes1 && stopTimes2){
-                if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] > [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime){
+                if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] > [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime&& [self isServiceEnableForDay:stopTimes1.tripID :parameters.thisRequestTripDate]){
                     NSArray *arrayTemp = [NSArray arrayWithObjects:stopTimes1,stopTimes2, nil];
                     [arrMutableStopTimes addObject:arrayTemp];
                 }
-                else if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] < [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime){
+                else if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] < [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime&& [self isServiceEnableForDay:stopTimes1.tripID :parameters.thisRequestTripDate]){
                     NSArray *arrayTemp = [NSArray arrayWithObjects:stopTimes2,stopTimes1, nil];
                     [arrMutableStopTimes addObject:arrayTemp];
                 }
@@ -1055,31 +999,24 @@
     return arrMutableStopTimes;
 }
 
+
+// TODO: Need to sort the stopTimes array according to departureTime. Then take first stopTimes from leg and call initWithToStopTime method to set from&toStopTime and save leg.
+
 // Get Stored Patterns fron Database
 // Get The StopId From Stop Table and then get stoptimes according to stopID from StopTimes Table.
-// Remove The Duplicate legs If Any.
-- (void)generateLegsFromPatterns:(PlanRequestParameters *)parameters{
-    NSMutableArray *arrMutableStopTimes = [[NSMutableArray alloc] init];
-    NSArray *arraySchedules = [self getSchedule:parameters.toLocation:parameters.fromLocation];
-    for(int i=0;i<[arraySchedules count];i++){
-        Schedule *schedule = [arraySchedules objectAtIndex:i];
-        NSArray *arrayTempSchedule = schedule.legs;
-        for(int k=0;k<[arrayTempSchedule count];k++){
-            NSArray *legs = [arrayTempSchedule objectAtIndex:k];
-            for(int l=0;l<[legs count];l++){
-                NSKeyedUnarchiver *unarch = [[NSKeyedUnarchiver alloc] initForReadingWithData:[legs objectAtIndex:l]];
-                Pattern *pattern = [unarch decodeObject];
-                if(![pattern.mode isEqualToString:@"WALK"]){
-                    NSString *strTOStopID = [self getTheStopIDAccrodingToStation:pattern.toLat:pattern.toLng];
-                    NSString *strFromStopID = [self getTheStopIDAccrodingToStation:pattern.fromLat:pattern.fromLng];
-                    NSArray *arrStopTimes = [self getStopTimes:strTOStopID :strFromStopID:parameters];
-                    [arrMutableStopTimes addObjectsFromArray:arrStopTimes];
-                }
+- (void)generateLegsFromPatterns:(Plan *)plan:(PlanRequestParameters *)parameters{
+    NSArray *arrUniquePatterns = [[plan uniqueItineraryPatterns] allObjects];
+    for(int i=0;i<[arrUniquePatterns count];i++){
+        Itinerary *iti = [arrUniquePatterns objectAtIndex:i];
+        for(int j=0;j<[[iti sortedLegs] count];j++){
+            LegFromGtfs *leg = (LegFromGtfs *)[[iti sortedLegs] objectAtIndex:j];
+            if(![leg.mode isEqualToString:@"WALK"]){
+                NSString *strTOStopID = [self getTheStopIDAccrodingToStation:leg.to.lat:leg.to.lng];
+                NSString *strFromStopID = [self getTheStopIDAccrodingToStation:leg.from.lat:leg.from.lng];
+                NSArray *arrStopTimes = [self getStopTimes:strTOStopID :strFromStopID:parameters];
             }
         }
     }
-    NSSet *set = [NSSet setWithArray:arrMutableStopTimes];
-    NSArray *arrStopTimes = [set allObjects];
 }
 
 @end
