@@ -197,10 +197,8 @@
 		52E4C0A115CC705000B55A65 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C0A015CC705000B55A65 /* Default.png */; };
 		52E4C0A315CC705D00B55A65 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C0A215CC705D00B55A65 /* Default@2x.png */; };
 		8D0FA9A1169165C10038FDB2 /* LegFromOTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */; };
-		8D0FA9A7169167550038FDB2 /* LegFromGtfs.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0FA9A6169167540038FDB2 /* LegFromGtfs.m */; };
 		8D0FA9B0169198500038FDB2 /* ItineraryFromOTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0FA9AF1691984F0038FDB2 /* ItineraryFromOTP.m */; };
 		8D0FA9B31691985B0038FDB2 /* ItineraryFromGtfs.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0FA9B21691985A0038FDB2 /* ItineraryFromGtfs.m */; };
-		8D106DD61671EB41004E0DE5 /* GtfsParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DD51671EB41004E0DE5 /* GtfsParser.m */; };
 		8D106DD91671F0ED004E0DE5 /* GtfsAgency.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DD81671F0ED004E0DE5 /* GtfsAgency.m */; };
 		8D106DFF1671F16C004E0DE5 /* GtfsCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DF41671F16B004E0DE5 /* GtfsCalendar.m */; };
 		8D106E001671F16C004E0DE5 /* GtfsCalendarDates.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DF61671F16B004E0DE5 /* GtfsCalendarDates.m */; };
@@ -219,11 +217,13 @@
 		8D99B635164E2DF200C0A5AC /* stop_times.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8D99B631164E2DF200C0A5AC /* stop_times.txt */; };
 		8D99B636164E2DF200C0A5AC /* stops.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8D99B632164E2DF200C0A5AC /* stops.txt */; };
 		8D99B637164E2DF200C0A5AC /* trips.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8D99B633164E2DF200C0A5AC /* trips.txt */; };
+		8D9A9FBF16945A3F00D3EB55 /* LegFromGtfs.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D9A9FBE16945A3F00D3EB55 /* LegFromGtfs.m */; };
 		8D9EA263162D78FD002BB5FF /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */; };
 		8DA39BDF15E3855B0029D54B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6F22E71563AD360066DFA9 /* AVFoundation.framework */; };
 		8DA39BE115E38B5E0029D54B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */; };
 		8DBECD5216146DBE007B71F1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */; };
 		8DC019F91627F4BE004200E5 /* nc_AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */; };
+		8DC448EA169409ED00608DF6 /* GtfsParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DD51671EB41004E0DE5 /* GtfsParser.m */; };
 		8DEE785D166338F100E4863C /* SettingViewController_SF_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */; };
 		8DEE785F166339D600E4863C /* SettingDetailViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */; };
 		8DF35D631627F58500B99F4A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF35D621627F58400B99F4A /* main.m */; };
@@ -517,8 +517,6 @@
 		52E4C0A215CC705D00B55A65 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		8D0FA99F169165C00038FDB2 /* LegFromOTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LegFromOTP.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LegFromOTP.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		8D0FA9A5169167540038FDB2 /* LegFromGtfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LegFromGtfs.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		8D0FA9A6169167540038FDB2 /* LegFromGtfs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LegFromGtfs.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8D0FA9AE1691984F0038FDB2 /* ItineraryFromOTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ItineraryFromOTP.h; path = ../ItineraryFromOTP.h; sourceTree = "<group>"; };
 		8D0FA9AF1691984F0038FDB2 /* ItineraryFromOTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = ItineraryFromOTP.m; path = ../ItineraryFromOTP.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8D0FA9B11691985A0038FDB2 /* ItineraryFromGtfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ItineraryFromGtfs.h; path = ../ItineraryFromGtfs.h; sourceTree = "<group>"; };
@@ -552,6 +550,8 @@
 		8D99B631164E2DF200C0A5AC /* stop_times.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = stop_times.txt; sourceTree = "<group>"; };
 		8D99B632164E2DF200C0A5AC /* stops.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = stops.txt; sourceTree = "<group>"; };
 		8D99B633164E2DF200C0A5AC /* trips.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trips.txt; sourceTree = "<group>"; };
+		8D9A9FBD16945A3F00D3EB55 /* LegFromGtfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LegFromGtfs.h; sourceTree = "<group>"; };
+		8D9A9FBE16945A3F00D3EB55 /* LegFromGtfs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LegFromGtfs.m; sourceTree = "<group>"; };
 		8D9EA25C162D78FD002BB5FF /* Network_Commuting 1.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.1.xcdatamodel"; sourceTree = "<group>"; };
 		8D9EA25D162D78FD002BB5FF /* Network_Commuting 1.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.2.xcdatamodel"; sourceTree = "<group>"; };
 		8D9EA25E162D78FD002BB5FF /* Network_Commuting 1.3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.3.xcdatamodel"; sourceTree = "<group>"; };
@@ -724,8 +724,8 @@
 				520FB15F1626036C0083F143 /* LatLng.m */,
 				520FB1601626036C0083F143 /* Leg.h */,
 				520FB1611626036C0083F143 /* Leg.m */,
-				8D0FA9A5169167540038FDB2 /* LegFromGtfs.h */,
-				8D0FA9A6169167540038FDB2 /* LegFromGtfs.m */,
+				8D9A9FBD16945A3F00D3EB55 /* LegFromGtfs.h */,
+				8D9A9FBE16945A3F00D3EB55 /* LegFromGtfs.m */,
 				8D0FA99F169165C00038FDB2 /* LegFromOTP.h */,
 				8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */,
 				520FB1621626036C0083F143 /* Location.h */,
@@ -1380,7 +1380,6 @@
 				8DF35D631627F58500B99F4A /* main.m in Sources */,
 				8D9EA263162D78FD002BB5FF /* Network_Commuting.xcdatamodeld in Sources */,
 				8DFFB36C165DFBBB00A39BC4 /* SettingDetailViewController.m in Sources */,
-				8D106DD61671EB41004E0DE5 /* GtfsParser.m in Sources */,
 				8D106DD91671F0ED004E0DE5 /* GtfsAgency.m in Sources */,
 				8D106DFF1671F16C004E0DE5 /* GtfsCalendar.m in Sources */,
 				8D106E001671F16C004E0DE5 /* GtfsCalendarDates.m in Sources */,
@@ -1389,9 +1388,10 @@
 				8D106E041671F16C004E0DE5 /* GtfsTrips.m in Sources */,
 				8D6FB9681680870500952B0C /* GtfsStop.m in Sources */,
 				8D0FA9A1169165C10038FDB2 /* LegFromOTP.m in Sources */,
-				8D0FA9A7169167550038FDB2 /* LegFromGtfs.m in Sources */,
 				8D0FA9B0169198500038FDB2 /* ItineraryFromOTP.m in Sources */,
 				8D0FA9B31691985B0038FDB2 /* ItineraryFromGtfs.m in Sources */,
+				8DC448EA169409ED00608DF6 /* GtfsParser.m in Sources */,
+				8D9A9FBF16945A3F00D3EB55 /* LegFromGtfs.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

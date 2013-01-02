@@ -124,8 +124,8 @@
         <relationship name="plan" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Plan" inverseName="itineraries" inverseEntity="Plan" syncable="YES"/>
         <relationship name="planRequestChunks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PlanRequestChunk" inverseName="itineraries" inverseEntity="PlanRequestChunk" syncable="YES"/>
     </entity>
-    <entity name="ItineraryFromGtfs" parentEntity="Itinerary" syncable="YES"/>
-    <entity name="ItineraryFromOTP" parentEntity="Itinerary" syncable="YES"/>
+    <entity name="ItineraryFromGtfs" representedClassName="ItineraryFromGtfs" parentEntity="Itinerary" syncable="YES"/>
+    <entity name="ItineraryFromOTP" representedClassName="ItineraryFromOTP" parentEntity="Itinerary" syncable="YES"/>
     <entity name="KeyObjectPair" syncable="YES">
         <attribute name="key" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="object" optional="YES" attributeType="Transformable" syncable="YES"/>
@@ -159,7 +159,7 @@
         <relationship name="steps" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Step" inverseName="leg" inverseEntity="Step" syncable="YES"/>
         <relationship name="to" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="PlanPlace" inverseName="leg" inverseEntity="PlanPlace" syncable="YES"/>
     </entity>
-    <entity name="LegFromGtfs" representedClassName="LegfromGtfs" parentEntity="Leg" syncable="YES">
+    <entity name="LegFromGtfs" representedClassName="LegFromGtfs" parentEntity="Leg" syncable="YES">
         <relationship name="fromStopTime" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsStopTimes" syncable="YES"/>
         <relationship name="toStopTime" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsStopTimes" syncable="YES"/>
     </entity>
@@ -262,10 +262,13 @@
         <relationship name="relationship" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="TPResponse" inverseName="relationship" inverseEntity="TPResponse" syncable="YES"/>
     </entity>
     <fetchRequest name="GtfsCalendar" entity="GtfsCalendar" predicateString="serviceID == $SERVICEID"/>
+    <fetchRequest name="GtfsRouteByRouteID" entity="GtfsRoutes" predicateString="routeID == $ROUTEID"/>
+    <fetchRequest name="GtfsStop" entity="GtfsStop" predicateString="stopID == $STOPID"/>
     <fetchRequest name="GtfsStopByLatLng" entity="GtfsStop" predicateString="stopLat == $STOPLAT AND stopLon == $STOPLON"/>
     <fetchRequest name="GtfsStopTimesByAgencyID" entity="GtfsStopTimes" predicateString="tripID == $TRIPID AND agencyID == $AGENCYID"/>
     <fetchRequest name="GtfsStopTimesBySequence" entity="GtfsStopTimes" predicateString="tripID == $TRIPID AND stopSequence == $STOPSEQUENCE"/>
     <fetchRequest name="GtfsStopTimesByStopID" entity="GtfsStopTimes" predicateString="stopID == $STOPID1 OR stopID == $STOPID2"/>
+    <fetchRequest name="GtfsTrips" entity="GtfsTrips" predicateString="tripID == $TRIPID"/>
     <fetchRequest name="KeyObjectPairForKey" entity="KeyObjectPair" predicateString="key == $KEY"/>
     <fetchRequest name="LocationByFormattedAddress" entity="Location" predicateString="formattedAddress ==$ADDRESS2"/>
     <fetchRequest name="LocationByMemberOfList" entity="Location" predicateString="memberOfList BEGINSWITH $LIST_PREFIX AND locationType != &quot;TOFROM_LIST&quot;"/>
@@ -286,9 +289,8 @@
         <element name="Itinerary" positionX="0" positionY="0" width="128" height="330"/>
         <element name="ItineraryFromGtfs" positionX="160" positionY="192" width="128" height="45"/>
         <element name="ItineraryFromOTP" positionX="160" positionY="192" width="128" height="45"/>
-        <element name="KeyObjectPair" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="KeyObjectPair" positionX="0" positionY="0" width="128" height="75"/>
         <element name="Leg" positionX="-45" positionY="0" width="128" height="375"/>
-        <element name="LegFromGtfs" positionX="81" positionY="207" width="128" height="75"/>
         <element name="LegFromOTP" positionX="90" positionY="216" width="128" height="45"/>
         <element name="Location" positionX="0" positionY="0" width="128" height="255"/>
         <element name="LocationFromGoogle" positionX="160" positionY="192" width="128" height="90"/>
@@ -299,5 +301,6 @@
         <element name="RawAddress" positionX="0" positionY="0" width="128" height="75"/>
         <element name="Step" positionX="0" positionY="0" width="128" height="195"/>
         <element name="TPResponse" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="LegFromGtfs" positionX="160" positionY="192" width="128" height="75"/>
     </elements>
 </model>

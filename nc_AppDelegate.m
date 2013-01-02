@@ -40,7 +40,6 @@
 
 @end
 
-
 static nc_AppDelegate *appDelegate;
 
 @implementation nc_AppDelegate
@@ -273,7 +272,6 @@ FeedBackForm *fbView;
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         [[self window] setRootViewController:self.tabBarController];
         [self.window makeKeyAndVisible];
-        
         }
    // }
     @catch (NSException *exception) {
@@ -281,6 +279,7 @@ FeedBackForm *fbView;
     }
     return YES;
 }
+
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
 {
     //    if (viewController == toFromViewController) {
@@ -1203,4 +1202,5 @@ FeedBackForm *fbView;
         }
     //}
     return strAgencyIds;
-}@end
+}
+@end

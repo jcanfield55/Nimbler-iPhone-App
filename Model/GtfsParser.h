@@ -13,9 +13,11 @@
 #import <Restkit/RKJSONParserJSONKit.h>
 #import "Plan.h"
 #import "Leg.h"
-#import "Schedule.h"
 #import "PlanRequestParameters.h"
 #import "GtfsCalendar.h"
+#import "GtfsRoutes.h"
+#import "GtfsTrips.h"
+#import "GtfsStop.h"
 
 @interface GtfsParser : NSObject<RKRequestDelegate>{
     NSManagedObjectContext *managedObjectContext;
@@ -55,6 +57,15 @@
 // get serviceID based on tripId.
 - (NSString *) getServiceIdFromTripID:(NSString *)strTripID;
 
+// Get trips Data from GtfsTrips based on tripID
+- (GtfsTrips *)getTripsDataFromDatabase:(NSString *)strTripID;
+
+// Get stops Data from GtfsStop based on stopID
+- (GtfsStop *)getStopsDataFromDatabase:(NSString *)strStopID;
+
+// Get routes Data from GtfsRoutes based on routeID
+- (GtfsRoutes *)getRoutesDataFromDatabase:(NSString *)strRouteID;
+
 // Get Calendar Data from GtfsCalendar based on serviceID
 - (GtfsCalendar *)getCalendarDataFromDatabase:(NSString *)strServiceID;
 
@@ -75,3 +86,4 @@
 // Get The StopId From Stop Table and then get stoptimes according to stopID from StopTimes Table.
 - (void)generateLegsFromPatterns:(Plan *)plan:(PlanRequestParameters *)parameters;
 @end
+

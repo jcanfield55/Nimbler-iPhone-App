@@ -13,7 +13,6 @@
 #import <RestKit/CoreData.h>
 #import <Restkit/RKJSONParserJSONKit.h>
 #import "nc_AppDelegate.h"
-#import "Schedule.h"
 #import "GtfsStopTimes.h"
 #import "GtfsStop.h"
 
