@@ -412,3 +412,5 @@
 #define AGENCY_IDS @"agencyIds"
 #define GTFS_STOP_TIMES  @"gtfs/stoptimes"
 
+#define TRIP_TIME_PLUS_INTERVAL  4*60*60
+

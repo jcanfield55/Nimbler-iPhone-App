@@ -14,6 +14,7 @@
 #import "UtilityFunctions.h"
 #import "LegFromGtfs.h"
 #import "nc_AppDelegate.h"
+#import "GtfsRoutes.h"
 
 @implementation GtfsParser
 
@@ -489,11 +490,11 @@
         GtfsTrips* trips = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsTrips" inManagedObjectContext:self.managedObjectContext];
         trips.tripID = [arrayTripID objectAtIndex:i];
         trips.routeID = [arrayRouteID objectAtIndex:i];
-        GtfsRoutes *routes = [self getRoutesDataFromDatabase:trips.routeID];
-        trips.route = routes;
+       // GtfsRoutes *routes = [self getRoutesDataFromDatabase:trips.routeID];
+       // trips.route = routes;
         trips.serviceID = [arrayServiceID objectAtIndex:i];
-        GtfsCalendar *calendar = [self getCalendarDataFromDatabase:trips.serviceID];
-        trips.calendar = calendar;
+      //  GtfsCalendar *calendar = [self getCalendarDataFromDatabase:trips.serviceID];
+      //  trips.calendar = calendar;
         trips.tripHeadSign = [arrayTripHeadSign objectAtIndex:i];
         trips.directionID = [arrayDirectionID objectAtIndex:i];
         trips.blockID = [arrayBlockID objectAtIndex:i];
@@ -978,7 +979,7 @@
 // first get stoptimes from StopTimes Table based on stopId
 // Then make a pair of StopTimes if both stoptimes have same tripId then check for the stopSequence and the departure time is greater than request trip time and also check if service is enabled for that stopTimes if yes the add both stopTimes as To/From StopTimes pair.
 
-- (NSArray *)getStopTimes:(NSString *)strToStopID:(NSString *)strFromStopID:(PlanRequestParameters *)parameters{
+- (NSArray *)getStopTimes:(NSString *)strToStopID strFromStopID:(NSString *)strFromStopID parameters:(PlanRequestParameters *)parameters{
     NSFetchRequest *fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesByStopID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strToStopID,@"STOPID1",strFromStopID,@"STOPID2", nil]];
     NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
     NSMutableArray *arrMutableStopTimes = [[NSMutableArray alloc] init];
@@ -1018,11 +1019,13 @@
             int minuteTripTime = [componentsTripTime minute];
             int intervalTripTime = hourTripTime*60*60 + minuteTripTime*60;
             if(stopTimes1 && stopTimes2){
-                if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] > [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime&& [self isServiceEnableForDay:stopTimes1.tripID :parameters.thisRequestTripDate]){
+                if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] > [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime && [self isServiceEnableForDay:stopTimes1.tripID :parameters.thisRequestTripDate]){
+                    NIMLOG_UOS202(@"stoptimes1=%@",stopTimes1);
+                    NIMLOG_UOS202(@"stoptimes2=%@",stopTimes2);
                     NSArray *arrayTemp = [NSArray arrayWithObjects:stopTimes1,stopTimes2, nil];
                     [arrMutableStopTimes addObject:arrayTemp];
                 }
-                else if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] < [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime&& [self isServiceEnableForDay:stopTimes1.tripID :parameters.thisRequestTripDate]){
+                else if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] < [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime && [self isServiceEnableForDay:stopTimes1.tripID :parameters.thisRequestTripDate]){
                     NSArray *arrayTemp = [NSArray arrayWithObjects:stopTimes2,stopTimes1, nil];
                     [arrMutableStopTimes addObject:arrayTemp];
                 }
@@ -1032,24 +1035,265 @@
     return arrMutableStopTimes;
 }
 
+// Return date with time from time string like (10:45:00)
+- (NSDate *)timeAndDateFromString:(NSString *)strTime{
+    NSString *strDepartureTime;
+    NSArray *arrayDepartureTimeComponents = [strTime componentsSeparatedByString:@":"];
+    if([arrayDepartureTimeComponents count] > 0){
+        int hours = [[arrayDepartureTimeComponents objectAtIndex:0] intValue];
+        int minutes = [[arrayDepartureTimeComponents objectAtIndex:1] intValue];
+        int seconds = [[arrayDepartureTimeComponents objectAtIndex:2] intValue];
+        if(hours > 23){
+            hours = hours - 24;
+        }
+        strDepartureTime = [NSString stringWithFormat:@"%d:%d:%d",hours,minutes,seconds];
+    }
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"HH:mm:ss";
+    NSDate *departureDate = [formatter dateFromString:strDepartureTime];
+    NSDate *departureTime = timeOnlyFromDate(departureDate);
+    NSDate *todayDate = dateOnlyFromDate([NSDate date]);
+    NSDate *finalDate = addDateOnlyWithTimeOnly(todayDate, departureTime);
+    return finalDate;
+}
 
-// TODO: Need to sort the stopTimes array according to departureTime. Then take first stopTimes from leg and call initWithToStopTime method to set from&toStopTime and save leg.
+// return time interval in seconds from time string like (10:45:00)
+- (int)getTimeInterValInSeconds:(NSString *)strTime{
+    NSString *strDepartureTime;
+    NSArray *arrayDepartureTimeComponents = [strTime componentsSeparatedByString:@":"];
+    if([arrayDepartureTimeComponents count] > 0){
+        int hours = [[arrayDepartureTimeComponents objectAtIndex:0] intValue];
+        int minutes = [[arrayDepartureTimeComponents objectAtIndex:1] intValue];
+        int seconds = [[arrayDepartureTimeComponents objectAtIndex:2] intValue];
+        if(hours > 23){
+            hours = hours - 24;
+        }
+        strDepartureTime = [NSString stringWithFormat:@"%d:%d:%d",hours,minutes,seconds];
+    }
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"HH:mm:ss";
+    NSDate *departureDate = [formatter dateFromString:strDepartureTime];
+    NSDate *departureTime = timeOnlyFromDate(departureDate);
+    
+    NSCalendar *calendarDepartureTime = [NSCalendar currentCalendar];
+    NSDateComponents *componentsDepartureTime = [calendarDepartureTime components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:departureTime];
+    int hourDepartureTime = [componentsDepartureTime hour];
+    int minuteDepartureTime = [componentsDepartureTime minute];
+    int intervalDepartureTime = (hourDepartureTime)*60*60 + minuteDepartureTime*60;
+    return intervalDepartureTime;
+}
+
+// TODO:- Need to calculate new leg attributes and itinerary attributes.
+
+// This method generate leg & itinerary from StopTimes data and Pattern and save it to database table.
+// First find the minimum stopTimes count from arrCaltrainStopTimes,arrBartStopTimes,arrMuniStopTimes,arrAcTransitStopTimes
+// Then start with iterating using this minimum number.
+// Then we will get leg from itinerary if and check for mode if it walk the we will directly assign old leg and edit dome attributes like startTime,endTime etc.
+// If mode is not walk the we will check agencyName  if the leg is first non walk leg then we will create new leg with some attributes from GtfsStopTimes.
+// If Leg is Not First non walk leg the we will check departure time with previous non walk leg departure if current leg departure time is greater then we will create leg with some attributes.and add departure time to previous leg Departure time.
+
+- (void) generateItineraryFromPatternAndStopTimes:(Itinerary *)itinerary arrCaltrainStopTimes:(NSArray *)arrCaltrainStopTimes arrBartStopTimes:(NSArray *)arrBartStopTimes arrMuniStopTimes:(NSArray *)arrMuniStopTimes arrAcTransitStopTimes:(NSArray *)arrAcTransitStopTimes plan:(Plan *)plan{
+    
+    int nPreviouslegDepartureTime;
+    NSMutableArray *mutableArrayCal = [[NSMutableArray alloc] initWithArray:arrCaltrainStopTimes];
+    NSMutableArray *mutableArrayBart = [[NSMutableArray alloc] initWithArray:arrBartStopTimes];
+    NSMutableArray *mutableArrayMuni = [[NSMutableArray alloc] initWithArray:arrMuniStopTimes];
+    NSMutableArray *mutableArrayAcTransit = [[NSMutableArray alloc] initWithArray:arrAcTransitStopTimes];
+    
+    int nCalStopTimesCount = [arrCaltrainStopTimes count];
+    int nBartStopTimesCount = [arrBartStopTimes count];
+    int nMuniStopTimesCount = [arrMuniStopTimes count];
+    int nAcTransitStopTimesCount = [arrAcTransitStopTimes count];
+    
+    NSArray *arrayStopTimesCount = [NSArray arrayWithObjects:[NSNumber numberWithInt:nCalStopTimesCount],[NSNumber numberWithInt:nBartStopTimesCount],[NSNumber numberWithInt:nMuniStopTimesCount],[NSNumber numberWithInt:nAcTransitStopTimesCount], nil];
+    int minStopTimesCount = 0;
+    for(int i=0;i<[arrayStopTimesCount count];i++){
+        if([[arrayStopTimesCount objectAtIndex:i] intValue] != 0){
+            minStopTimesCount = [[arrayStopTimesCount objectAtIndex:i] intValue];
+            break;
+        }
+    }
+    for(int i=0; i<[arrayStopTimesCount count];i++){
+            if([[arrayStopTimesCount objectAtIndex:i] intValue] != 0){
+                if([[arrayStopTimesCount objectAtIndex:i] intValue] < minStopTimesCount){
+                    minStopTimesCount = [[arrayStopTimesCount objectAtIndex:i] intValue];
+                }
+            }
+    }
+    for(int i=0;i<minStopTimesCount;i++){
+        Itinerary *newItinerary = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+        [newItinerary setPlan:plan];
+        NSArray *arrSortedLegs = [itinerary sortedLegs];
+        for(int j=0;j<[arrSortedLegs count];j++){
+            Leg *leg = [arrSortedLegs objectAtIndex:j];
+            if([leg.mode isEqualToString:@"WALK"]){
+                Leg *newLeg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+                newLeg = leg;
+                break;
+            }
+            else {
+                if([leg.agencyName isEqualToString:CALTRAIN_AGENCY_NAME]){
+                   Leg *newLeg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+                    if(nPreviouslegDepartureTime){
+                        for(int k=0;k<[mutableArrayCal count];k++){
+                            NSArray *caltrainStopTimes = [mutableArrayCal objectAtIndex:k];
+                            if([caltrainStopTimes count] > 1){
+                                GtfsStopTimes *fromStopTimes = [caltrainStopTimes objectAtIndex:0];
+                                GtfsStopTimes *toStopTimes = [caltrainStopTimes objectAtIndex:1];
+                                int departureTime = [self getTimeInterValInSeconds:fromStopTimes.departureTime];
+                                if(departureTime > nPreviouslegDepartureTime){
+                                    nPreviouslegDepartureTime = departureTime;
+                                    newLeg = leg;
+                                    [mutableArrayCal removeObjectAtIndex:k];
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else if([mutableArrayCal count] > 0){
+                        NSArray *caltrainStopTimes = [mutableArrayCal objectAtIndex:0];
+                        if([caltrainStopTimes count] > 1){
+                            GtfsStopTimes *fromStopTimes = [caltrainStopTimes objectAtIndex:0];
+                            GtfsStopTimes *toStopTimes = [caltrainStopTimes objectAtIndex:1];
+                            newLeg = leg;
+                        }
+                        [mutableArrayCal removeObjectAtIndex:0];
+                    }
+                    break;
+                }
+                else if([leg.agencyName isEqualToString:BART_AGENCY_NAME] || [leg.agencyName isEqualToString:AIRBART_AGENCY_NAME]){
+                    Leg *newLeg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+                    if(nPreviouslegDepartureTime){
+                        for(int k=0;k<[mutableArrayBart count];k++){
+                            NSArray *bartStopTimes = [mutableArrayBart objectAtIndex:k];
+                            if([bartStopTimes count] > 1){
+                                GtfsStopTimes *fromStopTimes = [bartStopTimes objectAtIndex:0];
+                                GtfsStopTimes *toStopTimes = [bartStopTimes objectAtIndex:1];
+                                int departureTime = [self getTimeInterValInSeconds:fromStopTimes.departureTime];
+                                if(departureTime > nPreviouslegDepartureTime){
+                                    nPreviouslegDepartureTime = departureTime;
+                                    newLeg = leg;
+                                    [mutableArrayCal removeObjectAtIndex:k];
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else if([mutableArrayBart count] > 0){
+                        NSArray *bartStopTimes = [mutableArrayBart objectAtIndex:0];
+                        if([bartStopTimes count] > 1){
+                            GtfsStopTimes *fromStopTimes = [bartStopTimes objectAtIndex:0];
+                            GtfsStopTimes *toStopTimes = [bartStopTimes objectAtIndex:1];
+                            newLeg = leg;
+                        }
+                        [mutableArrayBart removeObjectAtIndex:0];
+                    }
+                    break;
+                }
+                else if([leg.agencyName isEqualToString:SFMUNI_AGENCY_NAME]){
+                    Leg *newLeg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+                    if(nPreviouslegDepartureTime){
+                        for(int k=0;k<[mutableArrayMuni count];k++){
+                            NSArray *muniStopTimes = [mutableArrayMuni objectAtIndex:k];
+                            if([muniStopTimes count] > 1){
+                                GtfsStopTimes *fromStopTimes = [muniStopTimes objectAtIndex:0];
+                                GtfsStopTimes *toStopTimes = [muniStopTimes objectAtIndex:1];
+                                int departureTime = [self getTimeInterValInSeconds:fromStopTimes.departureTime];
+                                if(departureTime > nPreviouslegDepartureTime){
+                                    nPreviouslegDepartureTime = departureTime;
+                                    newLeg = leg;
+                                    [mutableArrayCal removeObjectAtIndex:k];
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else if([mutableArrayMuni count] > 0){
+                        NSArray *muniStopTimes = [mutableArrayMuni objectAtIndex:0];
+                        if([muniStopTimes count] > 1){
+                            GtfsStopTimes *fromStopTimes = [muniStopTimes objectAtIndex:0];
+                            GtfsStopTimes *toStopTimes = [muniStopTimes objectAtIndex:1];
+                            newLeg = leg;
+                        }
+                        [mutableArrayMuni removeObjectAtIndex:0];
+                    }
+                    break;
+                }
+                else if([leg.agencyName isEqualToString:ACTRANSIT_AGENCY_NAME]){
+                    Leg *newLeg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+                    if(nPreviouslegDepartureTime){
+                        for(int k=0;k<[mutableArrayAcTransit count];k++){
+                            NSArray *actransitStopTimes = [mutableArrayAcTransit objectAtIndex:k];
+                            if([actransitStopTimes count] > 1){
+                                GtfsStopTimes *fromStopTimes = [actransitStopTimes objectAtIndex:0];
+                                GtfsStopTimes *toStopTimes = [actransitStopTimes objectAtIndex:1];
+                                int departureTime = [self getTimeInterValInSeconds:fromStopTimes.departureTime];
+                                if(departureTime > nPreviouslegDepartureTime){
+                                    nPreviouslegDepartureTime = departureTime;
+                                    newLeg = leg;
+                                    [mutableArrayCal removeObjectAtIndex:k];
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else if([mutableArrayAcTransit count] > 0){
+                        NSArray *actransitStopTimes = [mutableArrayAcTransit objectAtIndex:0];
+                        if([actransitStopTimes count] > 1){
+                            GtfsStopTimes *fromStopTimes = [actransitStopTimes objectAtIndex:0];
+                            GtfsStopTimes *toStopTimes = [actransitStopTimes objectAtIndex:1];
+                            newLeg = leg;
+                        }
+                        [mutableArrayAcTransit removeObjectAtIndex:0];
+                    }
+                     break;
+                }
+            }
+        }
+    }
+}
 
 // Get Stored Patterns fron Database
 // Get The StopId From Stop Table and then get stoptimes according to stopID from StopTimes Table.
-- (void)generateLegsFromPatterns:(Plan *)plan:(PlanRequestParameters *)parameters{
+- (void)generateLegsFromPatterns:(Plan *)plan parameters:(PlanRequestParameters *)parameters{
+    NSMutableArray *arrCaltrainStopTimes = [[NSMutableArray alloc] init];
+    NSMutableArray *arrBartStopTimes = [[NSMutableArray alloc] init];
+    NSMutableArray *arrMuniStopTimes = [[NSMutableArray alloc] init];
+    NSMutableArray *arrAcTransitStopTimes = [[NSMutableArray alloc] init];
     NSArray *arrUniquePatterns = [[plan uniqueItineraryPatterns] allObjects];
     for(int i=0;i<[arrUniquePatterns count];i++){
         Itinerary *iti = [arrUniquePatterns objectAtIndex:i];
         for(int j=0;j<[[iti sortedLegs] count];j++){
             Leg *leg = [[iti sortedLegs] objectAtIndex:j];
             if(![leg.mode isEqualToString:@"WALK"]){
+                NIMLOG_UOS202(@"toLat=%@",leg);
+                NIMLOG_UOS202(@"toLat=%@",leg.to.lat);
+                NIMLOG_UOS202(@"toLng=%@",leg.to.lng);
+                NIMLOG_UOS202(@"fromLat=%@",leg.from.lat);
+                NIMLOG_UOS202(@"fromLng=%@",leg.from.lng);
                 NSString *strTOStopID = [self getTheStopIDAccrodingToStation:leg.to.lat:leg.to.lng];
+                NIMLOG_UOS202(@"strTOStopID=%@",strTOStopID);
                 NSString *strFromStopID = [self getTheStopIDAccrodingToStation:leg.from.lat:leg.from.lng];
-                NSArray *arrStopTimes = [self getStopTimes:strTOStopID :strFromStopID:parameters];
+                NIMLOG_UOS202(@"strFromStopID=%@",strFromStopID);
+                NSArray *arrStopTimes = [self getStopTimes:strTOStopID strFromStopID:strFromStopID parameters:parameters];
+                if([leg.agencyName isEqualToString:CALTRAIN_AGENCY_NAME]){
+                    [arrCaltrainStopTimes addObjectsFromArray:arrStopTimes];
+                }
+                else if([leg.agencyName isEqualToString:BART_AGENCY_NAME] || [leg.agencyName isEqualToString:AIRBART_AGENCY_NAME]){
+                    [arrBartStopTimes addObjectsFromArray:arrStopTimes];
+                }
+                else if([leg.agencyName isEqualToString:SFMUNI_AGENCY_NAME]){
+                    [arrMuniStopTimes addObjectsFromArray:arrStopTimes];
+                }
+                else if([leg.agencyName isEqualToString:ACTRANSIT_AGENCY_NAME]){
+                    [arrAcTransitStopTimes addObjectsFromArray:arrStopTimes];
+                }
             }
         }
+        [self generateItineraryFromPatternAndStopTimes:iti arrCaltrainStopTimes:arrCaltrainStopTimes arrBartStopTimes:arrBartStopTimes arrMuniStopTimes:arrMuniStopTimes arrAcTransitStopTimes:arrAcTransitStopTimes plan:plan];
     }
+    saveContext(self.managedObjectContext);
 }
 
 @end

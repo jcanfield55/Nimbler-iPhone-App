@@ -300,7 +300,7 @@
                     NSSet *setUniqueitineraries = [NSSet setWithArray:arrUniqueItinerary];
                     plan.uniqueItineraryPatterns = setUniqueitineraries;
                     saveContext(self.managedObjectContext);
-                    [[nc_AppDelegate sharedInstance].gtfsParser generateLegsFromPatterns:plan:planRequestParameters];
+                    [[nc_AppDelegate sharedInstance].gtfsParser generateLegsFromPatterns:plan parameters:planRequestParameters];
                     
                    
                     

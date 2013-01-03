@@ -14,6 +14,7 @@
 #import "PlanRequestParameters.h"
 #import "PlanStore.h"
 #import "nc_AppDelegate.h"
+#import "GtfsStopTimes.h"
 
 @implementation Network_CommutingTests
 

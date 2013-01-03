@@ -20,4 +20,5 @@
 #define NIMLOG_TWITTER1(...) // NSLog(__VA_ARGS__) // Routine Twitter advisory logging
 #define NIMLOG_ADDRESSES(...) // NSLog(__VA_ARGS__)  // Log addresses
 #define NIMLOG_DEBUG1(...) // NSLog(__VA_ARGS__) // Debugging logging
+#define NIMLOG_UOS202(...) // NSLog(__VA_ARGS__) // Debugging logging
 #endif
