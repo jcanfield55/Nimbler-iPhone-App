@@ -102,25 +102,28 @@
         NSArray *arrayComponentsAgency = [dictComponents objectForKey:[NSString stringWithFormat:@"%d_calendar_dates",k]];
         for(int i=1;i<[arrayComponentsAgency count];i++){
             NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
-            NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
-            if([arraySubComponents count] > 0){
-                [arrayServiceID addObject:[arraySubComponents objectAtIndex:0]];
+            if(strSubComponents && strSubComponents.length > 0){
+                NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
+                if([arraySubComponents count] > 0){
+                    [arrayServiceID addObject:[arraySubComponents objectAtIndex:0]];
+                }
+                else{
+                    [arrayServiceID addObject:@""];
+                }
+                if([arraySubComponents count] > 1){
+                    [arrayDate addObject:[arraySubComponents objectAtIndex:1]];
+                }
+                else{
+                    [arrayDate addObject:@""];
+                }
+                if([arraySubComponents count] > 2){
+                    [arrayExceptionType addObject:[arraySubComponents objectAtIndex:2]];
+                }
+                else{
+                    [arrayExceptionType addObject:@""];
+                }
             }
-            else{
-                [arrayServiceID addObject:@""];
-            }
-            if([arraySubComponents count] > 1){
-                [arrayDate addObject:[arraySubComponents objectAtIndex:1]];
-            }
-            else{
-                [arrayDate addObject:@""];
-            }
-            if([arraySubComponents count] > 2){
-                [arrayExceptionType addObject:[arraySubComponents objectAtIndex:2]];
-            }
-            else{
-                [arrayExceptionType addObject:@""];
-            }
+ 
         }
     }
     NSDateFormatter *formtter = [[NSDateFormatter alloc] init];
@@ -130,8 +133,12 @@
         calendarDates.serviceID = [arrayServiceID objectAtIndex:i];
         GtfsCalendar *calendar = [self getCalendarDataFromDatabase:calendarDates.serviceID];
         calendarDates.calendar = calendar;
-        NSDate *dates = [formtter dateFromString:[arrayDate objectAtIndex:i]];
-        calendarDates.date = dates;
+        NSString *strDate = [arrayDate objectAtIndex:i];
+        NSDate *dates;
+        if(strDate.length > 0){
+            dates = [formtter dateFromString:[arrayDate objectAtIndex:i]];
+            calendarDates.date = dates;
+        }
         calendarDates.exceptionType = [arrayExceptionType objectAtIndex:i];
     }
     saveContext(self.managedObjectContext);
@@ -161,66 +168,68 @@
         NSArray *arrayComponentsAgency = [dictComponents objectForKey:[NSString stringWithFormat:@"%d_calendar",k]];
         for(int i=1;i<[arrayComponentsAgency count];i++){
             NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
-            NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
-            if([arraySubComponents count] > 0){
-                [arrayServiceID addObject:[arraySubComponents objectAtIndex:0]];
-            }
-            else{
-                [arrayServiceID addObject:@""];
-            }
-            if([arraySubComponents count] > 1){
-                [arrayMonday addObject:[arraySubComponents objectAtIndex:1]];
-            }
-            else{
-                [arrayMonday addObject:@""];
-            }
-            if([arraySubComponents count] > 2){
-                [arrayTuesday addObject:[arraySubComponents objectAtIndex:2]];
-            }
-            else{
-                [arrayTuesday addObject:@""];
-            }
-            if([arraySubComponents count] > 3){
-                [arrayWednesday addObject:[arraySubComponents objectAtIndex:3]];
-            }
-            else{
-                [arrayWednesday addObject:@""];
-            }
-            if([arraySubComponents count] > 4){
-                [arrayThursday addObject:[arraySubComponents objectAtIndex:4]];
-            }
-            else{
-                [arrayThursday addObject:@""];
-            }
-            if([arraySubComponents count] > 5){
-                [arrayFriday addObject:[arraySubComponents objectAtIndex:5]];
-            }
-            else{
-                [arrayFriday addObject:@""];
-            }
-            if([arraySubComponents count] > 6){
-                [arraySaturday addObject:[arraySubComponents objectAtIndex:6]];
-            }
-            else{
-                [arraySaturday addObject:@""];
-            }
-            if([arraySubComponents count] > 7){
-                [arraySunday addObject:[arraySubComponents objectAtIndex:7]];
-            }
-            else{
-                [arraySunday addObject:@""];
-            }
-            if([arraySubComponents count] > 8){
-                [arrayStartDate addObject:[arraySubComponents objectAtIndex:8]];
-            }
-            else{
-                [arrayStartDate addObject:@""];
-            }
-            if([arraySubComponents count] > 9){
-                [arrayEndDate addObject:[arraySubComponents objectAtIndex:9]];
-            }
-            else{
-                [arrayEndDate addObject:@""];
+            if(strSubComponents && strSubComponents.length > 0){
+                NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
+                if([arraySubComponents count] > 0){
+                    [arrayServiceID addObject:[arraySubComponents objectAtIndex:0]];
+                }
+                else{
+                    [arrayServiceID addObject:@""];
+                }
+                if([arraySubComponents count] > 1){
+                    [arrayMonday addObject:[arraySubComponents objectAtIndex:1]];
+                }
+                else{
+                    [arrayMonday addObject:@""];
+                }
+                if([arraySubComponents count] > 2){
+                    [arrayTuesday addObject:[arraySubComponents objectAtIndex:2]];
+                }
+                else{
+                    [arrayTuesday addObject:@""];
+                }
+                if([arraySubComponents count] > 3){
+                    [arrayWednesday addObject:[arraySubComponents objectAtIndex:3]];
+                }
+                else{
+                    [arrayWednesday addObject:@""];
+                }
+                if([arraySubComponents count] > 4){
+                    [arrayThursday addObject:[arraySubComponents objectAtIndex:4]];
+                }
+                else{
+                    [arrayThursday addObject:@""];
+                }
+                if([arraySubComponents count] > 5){
+                    [arrayFriday addObject:[arraySubComponents objectAtIndex:5]];
+                }
+                else{
+                    [arrayFriday addObject:@""];
+                }
+                if([arraySubComponents count] > 6){
+                    [arraySaturday addObject:[arraySubComponents objectAtIndex:6]];
+                }
+                else{
+                    [arraySaturday addObject:@""];
+                }
+                if([arraySubComponents count] > 7){
+                    [arraySunday addObject:[arraySubComponents objectAtIndex:7]];
+                }
+                else{
+                    [arraySunday addObject:@""];
+                }
+                if([arraySubComponents count] > 8){
+                    [arrayStartDate addObject:[arraySubComponents objectAtIndex:8]];
+                }
+                else{
+                    [arrayStartDate addObject:@""];
+                }
+                if([arraySubComponents count] > 9){
+                    [arrayEndDate addObject:[arraySubComponents objectAtIndex:9]];
+                }
+                else{
+                    [arrayEndDate addObject:@""];
+                }
             }
         }
     }
@@ -243,11 +252,16 @@
         calendar.friday = [NSNumber numberWithInt:dFriday];
         calendar.saturday = [NSNumber numberWithInt:dSaturday];
         calendar.sunday = [NSNumber numberWithInt:dSunday];
-        
-        NSDate *startDate = [formtter dateFromString:[arrayStartDate objectAtIndex:i]];
-        NSDate *endDate = [formtter dateFromString:[arrayEndDate objectAtIndex:i]];
-        calendar.startDate = startDate;
-        calendar.endDate = endDate;
+        NSString *strStartDate = [arrayStartDate objectAtIndex:i];
+        NSString *strEndDate = [arrayEndDate objectAtIndex:i];
+        if(strStartDate.length > 0){
+           NSDate *startDate = [formtter dateFromString:strStartDate];
+            calendar.startDate = startDate;
+        }
+        if(strEndDate.length > 0){
+            NSDate *endDate = [formtter dateFromString:strEndDate];
+            calendar.endDate = endDate;
+        }
     }
     saveContext(self.managedObjectContext);
 }
@@ -274,55 +288,58 @@
         NSArray *arrayComponentsAgency = [dictComponents objectForKey:[NSString stringWithFormat:@"%d_routes",k]];
         for(int i=1;i<[arrayComponentsAgency count];i++){
             NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
-            NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
-            if([arraySubComponents count] > 0){
-                [arrayRouteID addObject:[arraySubComponents objectAtIndex:0]];
+            if(strSubComponents && strSubComponents.length > 0){
+                NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
+                if([arraySubComponents count] > 0){
+                    [arrayRouteID addObject:[arraySubComponents objectAtIndex:0]];
+                }
+                else{
+                    [arrayRouteID addObject:@""];
+                }
+                if([arraySubComponents count] > 1){
+                    [arrayRouteShortName addObject:[arraySubComponents objectAtIndex:1]];
+                }
+                else{
+                    [arrayRouteShortName addObject:@""];
+                }
+                if([arraySubComponents count] > 2){
+                    [arrayRouteLongName addObject:[arraySubComponents objectAtIndex:2]];
+                }
+                else{
+                    [arrayRouteLongName addObject:@""];
+                }
+                if([arraySubComponents count] > 3){
+                    [arrayRouteDesc addObject:[arraySubComponents objectAtIndex:3]];
+                }
+                else{
+                    [arrayRouteDesc addObject:@""];
+                }
+                if([arraySubComponents count] > 4){
+                    [arrayRouteType addObject:[arraySubComponents objectAtIndex:4]];
+                }
+                else{
+                    [arrayRouteType addObject:@""];
+                }
+                if([arraySubComponents count] > 5){
+                    [arrayRouteURL addObject:[arraySubComponents objectAtIndex:5]];
+                }
+                else{
+                    [arrayRouteURL addObject:@""];
+                }
+                if([arraySubComponents count] > 6){
+                    [arrayRouteColor addObject:[arraySubComponents objectAtIndex:6]];
+                }
+                else{
+                    [arrayRouteColor addObject:@""];
+                }
+                if([arraySubComponents count] > 7){
+                    [arrayRouteTextColor addObject:[arraySubComponents objectAtIndex:7]];
+                }
+                else{
+                    [arrayRouteTextColor addObject:@""];
+                }
             }
-            else{
-                [arrayRouteID addObject:@""];
-            }
-            if([arraySubComponents count] > 1){
-                [arrayRouteShortName addObject:[arraySubComponents objectAtIndex:1]];
-            }
-            else{
-                [arrayRouteShortName addObject:@""];
-            }
-            if([arraySubComponents count] > 2){
-                [arrayRouteLongName addObject:[arraySubComponents objectAtIndex:2]];
-            }
-            else{
-                [arrayRouteLongName addObject:@""];
-            }
-            if([arraySubComponents count] > 3){
-                [arrayRouteDesc addObject:[arraySubComponents objectAtIndex:3]];
-            }
-            else{
-                [arrayRouteDesc addObject:@""];
-            }
-            if([arraySubComponents count] > 4){
-                [arrayRouteType addObject:[arraySubComponents objectAtIndex:4]];
-            }
-            else{
-                [arrayRouteType addObject:@""];
-            }
-            if([arraySubComponents count] > 5){
-                [arrayRouteURL addObject:[arraySubComponents objectAtIndex:5]];
-            }
-            else{
-                [arrayRouteURL addObject:@""];
-            }
-            if([arraySubComponents count] > 6){
-                [arrayRouteColor addObject:[arraySubComponents objectAtIndex:6]];
-            }
-            else{
-                [arrayRouteColor addObject:@""];
-            }
-            if([arraySubComponents count] > 7){
-                [arrayRouteTextColor addObject:[arraySubComponents objectAtIndex:7]];
-            }
-            else{
-                [arrayRouteTextColor addObject:@""];
-            }
+ 
         }
     }
     for(int i=0;i<[arrayRouteID count];i++){
@@ -360,48 +377,50 @@
         NSArray *arrayComponentsAgency = [dictComponents objectForKey:[NSString stringWithFormat:@"%d_stops",k]];
         for(int i=1;i<[arrayComponentsAgency count];i++){
             NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
-            NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
-            if([arraySubComponents count] > 0){
-                [arrayStopID addObject:[arraySubComponents objectAtIndex:0]];
-            }
-            else{
-                [arrayStopID addObject:@""];
-            }
-            if([arraySubComponents count] > 1){
-                [arrayStopName addObject:[arraySubComponents objectAtIndex:1]];
-            }
-            else{
-                [arrayStopName addObject:@""];
-            }
-            if([arraySubComponents count] > 2){
-                [arrayStopDesc addObject:[arraySubComponents objectAtIndex:2]];
-            }
-            else{
-                [arrayStopDesc addObject:@""];
-            }
-            if([arraySubComponents count] > 3){
-                [arrayStopLat addObject:[arraySubComponents objectAtIndex:3]];
-            }
-            else{
-                [arrayStopLat addObject:@""];
-            }
-            if([arraySubComponents count] > 4){
-                [arrayStopLong addObject:[arraySubComponents objectAtIndex:4]];
-            }
-            else{
-                [arrayStopLong addObject:@""];
-            }
-            if([arraySubComponents count] > 5){
-                [arrayZoneID addObject:[arraySubComponents objectAtIndex:5]];
-            }
-            else{
-                [arrayZoneID addObject:@""];
-            }
-            if([arraySubComponents count] > 6){
-                [arrayStopURL addObject:[arraySubComponents objectAtIndex:6]];
-            }
-            else{
-                [arrayStopURL addObject:@""];
+            if(strSubComponents && strSubComponents.length > 0){
+                NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
+                if([arraySubComponents count] > 0){
+                    [arrayStopID addObject:[arraySubComponents objectAtIndex:0]];
+                }
+                else{
+                    [arrayStopID addObject:@""];
+                }
+                if([arraySubComponents count] > 1){
+                    [arrayStopName addObject:[arraySubComponents objectAtIndex:1]];
+                }
+                else{
+                    [arrayStopName addObject:@""];
+                }
+                if([arraySubComponents count] > 2){
+                    [arrayStopDesc addObject:[arraySubComponents objectAtIndex:2]];
+                }
+                else{
+                    [arrayStopDesc addObject:@""];
+                }
+                if([arraySubComponents count] > 3){
+                    [arrayStopLat addObject:[arraySubComponents objectAtIndex:3]];
+                }
+                else{
+                    [arrayStopLat addObject:@""];
+                }
+                if([arraySubComponents count] > 4){
+                    [arrayStopLong addObject:[arraySubComponents objectAtIndex:4]];
+                }
+                else{
+                    [arrayStopLong addObject:@""];
+                }
+                if([arraySubComponents count] > 5){
+                    [arrayZoneID addObject:[arraySubComponents objectAtIndex:5]];
+                }
+                else{
+                    [arrayZoneID addObject:@""];
+                }
+                if([arraySubComponents count] > 6){
+                    [arrayStopURL addObject:[arraySubComponents objectAtIndex:6]];
+                }
+                else{
+                    [arrayStopURL addObject:@""];
+                } 
             }
         }
     }
@@ -441,48 +460,50 @@
         NSArray *arrayComponentsAgency = [dictComponents objectForKey:[NSString stringWithFormat:@"%d_trips",k]];
         for(int i=1;i<[arrayComponentsAgency count];i++){
             NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
-            NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
-            if([arraySubComponents count] > 0){
-                [arrayTripID addObject:[arraySubComponents objectAtIndex:0]];
-            }
-            else{
-                [arrayTripID addObject:@""];
-            }
-            if([arraySubComponents count] > 1){
-                [arrayRouteID addObject:[arraySubComponents objectAtIndex:1]];
-            }
-            else{
-                [arrayRouteID addObject:@""];
-            }
-            if([arraySubComponents count] > 2){
-                [arrayServiceID addObject:[arraySubComponents objectAtIndex:2]];
-            }
-            else{
-                [arrayServiceID addObject:@""];
-            }
-            if([arraySubComponents count] > 3){
-                [arrayTripHeadSign addObject:[arraySubComponents objectAtIndex:3]];
-            }
-            else{
-                [arrayTripHeadSign addObject:@""];
-            }
-            if([arraySubComponents count] > 4){
-                [arrayDirectionID addObject:[arraySubComponents objectAtIndex:4]];
-            }
-            else{
-                [arrayDirectionID addObject:@""];
-            }
-            if([arraySubComponents count] > 5){
-                [arrayBlockID addObject:[arraySubComponents objectAtIndex:5]];
-            }
-            else{
-                [arrayBlockID addObject:@""];
-            }
-            if([arraySubComponents count] > 6){
-                [arrayShapeID addObject:[arraySubComponents objectAtIndex:6]];
-            }
-            else{
-                [arrayShapeID addObject:@""];
+            if(strSubComponents && strSubComponents.length > 0){
+                NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
+                if([arraySubComponents count] > 0){
+                    [arrayTripID addObject:[arraySubComponents objectAtIndex:0]];
+                }
+                else{
+                    [arrayTripID addObject:@""];
+                }
+                if([arraySubComponents count] > 1){
+                    [arrayRouteID addObject:[arraySubComponents objectAtIndex:1]];
+                }
+                else{
+                    [arrayRouteID addObject:@""];
+                }
+                if([arraySubComponents count] > 2){
+                    [arrayServiceID addObject:[arraySubComponents objectAtIndex:2]];
+                }
+                else{
+                    [arrayServiceID addObject:@""];
+                }
+                if([arraySubComponents count] > 3){
+                    [arrayTripHeadSign addObject:[arraySubComponents objectAtIndex:3]];
+                }
+                else{
+                    [arrayTripHeadSign addObject:@""];
+                }
+                if([arraySubComponents count] > 4){
+                    [arrayDirectionID addObject:[arraySubComponents objectAtIndex:4]];
+                }
+                else{
+                    [arrayDirectionID addObject:@""];
+                }
+                if([arraySubComponents count] > 5){
+                    [arrayBlockID addObject:[arraySubComponents objectAtIndex:5]];
+                }
+                else{
+                    [arrayBlockID addObject:@""];
+                }
+                if([arraySubComponents count] > 6){
+                    [arrayShapeID addObject:[arraySubComponents objectAtIndex:6]];
+                }
+                else{
+                    [arrayShapeID addObject:@""];
+                }
             }
         }
     }
@@ -532,54 +553,56 @@
                 [arrayAgencyID addObject:@""];
             }
             NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
-            NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
-            if([arraySubComponents count] > 0){
-                [arrayTripID addObject:[arraySubComponents objectAtIndex:0]];
-            }
-            else{
-                [arrayTripID addObject:@""];
-            }
-            if([arraySubComponents count] > 1){
-                [arrayArrivalTime addObject:[arraySubComponents objectAtIndex:1]];
-            }
-            else{
-                [arrayArrivalTime addObject:@""];
-            }
-            if([arraySubComponents count] > 2){
-                [arrayDepartureTime addObject:[arraySubComponents objectAtIndex:2]];
-            }
-            else{
-                [arrayDepartureTime addObject:@""];
-            }
-            if([arraySubComponents count] > 3){
-                [arrayStopID addObject:[arraySubComponents objectAtIndex:3]];
-            }
-            else{
-                [arrayStopID addObject:@""];
-            }
-            if([arraySubComponents count] > 4){
-                [arrayStopSequence addObject:[arraySubComponents objectAtIndex:4]];
-            }
-            else{
-                [arrayStopSequence addObject:@""];
-            }
-            if([arraySubComponents count] > 5){
-                [arrayPickUpType addObject:[arraySubComponents objectAtIndex:5]];
-            }
-            else{
-                [arrayPickUpType addObject:@""];
-            }
-            if([arraySubComponents count] > 6){
-                [arrayDropOffType addObject:[arraySubComponents objectAtIndex:6]];
-            }
-            else{
-                [arrayDropOffType addObject:@""];
-            }
-            if([arraySubComponents count] > 7){
-                [arrayShapeDistTraveled addObject:[arraySubComponents objectAtIndex:7]];
-            }
-            else{
-                [arrayShapeDistTraveled addObject:@""];
+            if(strSubComponents && strSubComponents.length > 0){
+                NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
+                if([arraySubComponents count] > 0){
+                    [arrayTripID addObject:[arraySubComponents objectAtIndex:0]];
+                }
+                else{
+                    [arrayTripID addObject:@""];
+                }
+                if([arraySubComponents count] > 1){
+                    [arrayArrivalTime addObject:[arraySubComponents objectAtIndex:1]];
+                }
+                else{
+                    [arrayArrivalTime addObject:@""];
+                }
+                if([arraySubComponents count] > 2){
+                    [arrayDepartureTime addObject:[arraySubComponents objectAtIndex:2]];
+                }
+                else{
+                    [arrayDepartureTime addObject:@""];
+                }
+                if([arraySubComponents count] > 3){
+                    [arrayStopID addObject:[arraySubComponents objectAtIndex:3]];
+                }
+                else{
+                    [arrayStopID addObject:@""];
+                }
+                if([arraySubComponents count] > 4){
+                    [arrayStopSequence addObject:[arraySubComponents objectAtIndex:4]];
+                }
+                else{
+                    [arrayStopSequence addObject:@""];
+                }
+                if([arraySubComponents count] > 5){
+                    [arrayPickUpType addObject:[arraySubComponents objectAtIndex:5]];
+                }
+                else{
+                    [arrayPickUpType addObject:@""];
+                }
+                if([arraySubComponents count] > 6){
+                    [arrayDropOffType addObject:[arraySubComponents objectAtIndex:6]];
+                }
+                else{
+                    [arrayDropOffType addObject:@""];
+                }
+                if([arraySubComponents count] > 7){
+                    [arrayShapeDistTraveled addObject:[arraySubComponents objectAtIndex:7]];
+                }
+                else{
+                    [arrayShapeDistTraveled addObject:@""];
+                } 
             }
         }
     }
@@ -913,7 +936,10 @@
 - (NSString *) getServiceIdFromTripID:(NSString *)strTripID{
     NSFetchRequest *fetchServiceID = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"ServiceIdByTripId" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strTripID,@"TRIPID",nil]];
     NSArray * arrServiceID = [self.managedObjectContext executeFetchRequest:fetchServiceID error:nil];
-    GtfsTrips *trips = [arrServiceID objectAtIndex:0];
+    GtfsTrips *trips = nil;
+    if([arrServiceID count] > 0){
+       trips = [arrServiceID objectAtIndex:0]; 
+    }
     return trips.serviceID;
 }
 
@@ -921,7 +947,10 @@
 - (GtfsTrips *)getTripsDataFromDatabase:(NSString *)strTripID{
     NSFetchRequest *fetchTrips = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsTrips" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strTripID,@"TRIPID",nil]];
     NSArray * arrServiceID = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
-    GtfsTrips *trips = [arrServiceID objectAtIndex:0];
+    GtfsTrips *trips = nil;
+    if([arrServiceID count] > 0){
+        trips = [arrServiceID objectAtIndex:0];
+    }
     return trips;
 }
 
@@ -930,7 +959,10 @@
 - (GtfsStop *)getStopsDataFromDatabase:(NSString *)strStopID{
     NSFetchRequest *fetchStops = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStop" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strStopID,@"STOPID",nil]];
     NSArray * arrServiceID = [self.managedObjectContext executeFetchRequest:fetchStops error:nil];
-    GtfsStop *stops = [arrServiceID objectAtIndex:0];
+    GtfsStop *stops = nil;
+    if([arrServiceID count] > 0){
+        stops = [arrServiceID objectAtIndex:0];
+    }
     return stops;
 }
 
@@ -938,7 +970,10 @@
 - (GtfsRoutes *)getRoutesDataFromDatabase:(NSString *)strRouteID{
     NSFetchRequest *fetchRoutes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsRouteByRouteID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strRouteID,@"ROUTEID",nil]];
     NSArray * arrServiceID = [self.managedObjectContext executeFetchRequest:fetchRoutes error:nil];
-    GtfsRoutes *routes = [arrServiceID objectAtIndex:0];
+    GtfsRoutes *routes = nil;
+    if([arrServiceID count] > 0){
+        routes = [arrServiceID objectAtIndex:0];
+    }
     return routes;
     
 }
@@ -947,7 +982,10 @@
 - (GtfsCalendar *)getCalendarDataFromDatabase:(NSString *)strServiceID{
     NSFetchRequest *fetchCalendar = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsCalendar" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strServiceID,@"SERVICEID",nil]];
     NSArray * arrServiceID = [managedObjectContext executeFetchRequest:fetchCalendar error:nil];
-    GtfsCalendar *calendar = [arrServiceID objectAtIndex:0];
+    GtfsCalendar *calendar = nil;
+    if([arrServiceID count] > 0){
+      calendar = [arrServiceID objectAtIndex:0];   
+    }
     return calendar;
     
 }
@@ -979,7 +1017,7 @@
 // first get stoptimes from StopTimes Table based on stopId
 // Then make a pair of StopTimes if both stoptimes have same tripId then check for the stopSequence and the departure time is greater than request trip time and also check if service is enabled for that stopTimes if yes the add both stopTimes as To/From StopTimes pair.
 
-- (NSArray *)getStopTimes:(NSString *)strToStopID strFromStopID:(NSString *)strFromStopID parameters:(PlanRequestParameters *)parameters{
+- (NSMutableArray *)getStopTimes:(NSString *)strToStopID strFromStopID:(NSString *)strFromStopID parameters:(PlanRequestParameters *)parameters{
     NSFetchRequest *fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesByStopID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strToStopID,@"STOPID1",strFromStopID,@"STOPID2", nil]];
     NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
     NSMutableArray *arrMutableStopTimes = [[NSMutableArray alloc] init];
@@ -1019,13 +1057,13 @@
             int minuteTripTime = [componentsTripTime minute];
             int intervalTripTime = hourTripTime*60*60 + minuteTripTime*60;
             if(stopTimes1 && stopTimes2){
-                if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] > [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime && [self isServiceEnableForDay:stopTimes1.tripID :parameters.thisRequestTripDate]){
+                if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] > [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime && intervalDepartureTime < intervalTripTime + TRIP_TIME_PLUS_INTERVAL  && [self isServiceEnableForDay:stopTimes1.tripID :parameters.thisRequestTripDate]){
                     NIMLOG_UOS202(@"stoptimes1=%@",stopTimes1);
                     NIMLOG_UOS202(@"stoptimes2=%@",stopTimes2);
                     NSArray *arrayTemp = [NSArray arrayWithObjects:stopTimes1,stopTimes2, nil];
                     [arrMutableStopTimes addObject:arrayTemp];
                 }
-                else if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] < [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime && [self isServiceEnableForDay:stopTimes1.tripID :parameters.thisRequestTripDate]){
+                else if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] < [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime && intervalDepartureTime < intervalTripTime + TRIP_TIME_PLUS_INTERVAL && [self isServiceEnableForDay:stopTimes1.tripID :parameters.thisRequestTripDate]){
                     NSArray *arrayTemp = [NSArray arrayWithObjects:stopTimes2,stopTimes1, nil];
                     [arrMutableStopTimes addObject:arrayTemp];
                 }
@@ -1084,214 +1122,118 @@
     return intervalDepartureTime;
 }
 
-// TODO:- Need to calculate new leg attributes and itinerary attributes.
-
-// This method generate leg & itinerary from StopTimes data and Pattern and save it to database table.
-// First find the minimum stopTimes count from arrCaltrainStopTimes,arrBartStopTimes,arrMuniStopTimes,arrAcTransitStopTimes
-// Then start with iterating using this minimum number.
-// Then we will get leg from itinerary if and check for mode if it walk the we will directly assign old leg and edit dome attributes like startTime,endTime etc.
-// If mode is not walk the we will check agencyName  if the leg is first non walk leg then we will create new leg with some attributes from GtfsStopTimes.
-// If Leg is Not First non walk leg the we will check departure time with previous non walk leg departure if current leg departure time is greater then we will create leg with some attributes.and add departure time to previous leg Departure time.
-
-- (void) generateItineraryFromPatternAndStopTimes:(Itinerary *)itinerary arrCaltrainStopTimes:(NSArray *)arrCaltrainStopTimes arrBartStopTimes:(NSArray *)arrBartStopTimes arrMuniStopTimes:(NSArray *)arrMuniStopTimes arrAcTransitStopTimes:(NSArray *)arrAcTransitStopTimes plan:(Plan *)plan{
-    
-    int nPreviouslegDepartureTime;
-    NSMutableArray *mutableArrayCal = [[NSMutableArray alloc] initWithArray:arrCaltrainStopTimes];
-    NSMutableArray *mutableArrayBart = [[NSMutableArray alloc] initWithArray:arrBartStopTimes];
-    NSMutableArray *mutableArrayMuni = [[NSMutableArray alloc] initWithArray:arrMuniStopTimes];
-    NSMutableArray *mutableArrayAcTransit = [[NSMutableArray alloc] initWithArray:arrAcTransitStopTimes];
-    
-    int nCalStopTimesCount = [arrCaltrainStopTimes count];
-    int nBartStopTimesCount = [arrBartStopTimes count];
-    int nMuniStopTimesCount = [arrMuniStopTimes count];
-    int nAcTransitStopTimesCount = [arrAcTransitStopTimes count];
-    
-    NSArray *arrayStopTimesCount = [NSArray arrayWithObjects:[NSNumber numberWithInt:nCalStopTimesCount],[NSNumber numberWithInt:nBartStopTimesCount],[NSNumber numberWithInt:nMuniStopTimesCount],[NSNumber numberWithInt:nAcTransitStopTimesCount], nil];
-    int minStopTimesCount = 0;
-    for(int i=0;i<[arrayStopTimesCount count];i++){
-        if([[arrayStopTimesCount objectAtIndex:i] intValue] != 0){
-            minStopTimesCount = [[arrayStopTimesCount objectAtIndex:i] intValue];
-            break;
+// first check find stoptimes with the departure time greater than start time or end time.
+// find stoptimes with minimum departure time from stoptimes array.
+- (NSArray *)returnStopTimesWithNearestStartTimeOrEndTime:(NSDate *)time ArrStopTimes:(NSArray *)arrStopTimes{
+    NSMutableArray *arrStopTime = [[NSMutableArray alloc] init];
+    NSCalendar *calendarDepartureTime = [NSCalendar currentCalendar];
+    NSDateComponents *componentsDepartureTime = [calendarDepartureTime components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:time];
+    int hour = [componentsDepartureTime hour];
+    int minute = [componentsDepartureTime minute];
+    int interval = hour*60*60 + minute*60;
+    for (int i=0;i< [arrStopTimes count];i++) {
+        NSArray *stopTimePair = [arrStopTimes objectAtIndex:i];
+        GtfsStopTimes *fromStopTime = [stopTimePair objectAtIndex:0];
+        int intervalDepartureTime = [self getTimeInterValInSeconds:fromStopTime.departureTime];
+        if(intervalDepartureTime > interval){
+            [arrStopTime addObject:stopTimePair];
         }
     }
-    for(int i=0; i<[arrayStopTimesCount count];i++){
-            if([[arrayStopTimesCount objectAtIndex:i] intValue] != 0){
-                if([[arrayStopTimesCount objectAtIndex:i] intValue] < minStopTimesCount){
-                    minStopTimesCount = [[arrayStopTimesCount objectAtIndex:i] intValue];
-                }
-            }
+    NSArray * arrSelectedStopTime = [arrStopTime objectAtIndex:0];
+    for(int i=0;i<[arrStopTime count];i++){
+        NSArray *stopTimePair = [arrStopTime objectAtIndex:i];
+        GtfsStopTimes *fromStopTime = [stopTimePair objectAtIndex:0];
+        GtfsStopTimes *selectedFromStopTime = [stopTimePair objectAtIndex:0];
+        int intervalDepartureTime = [self getTimeInterValInSeconds:fromStopTime.departureTime];
+        int intervalSelectedDepartureTime = [self getTimeInterValInSeconds:selectedFromStopTime.departureTime];
+        if(intervalSelectedDepartureTime > intervalDepartureTime){
+            arrSelectedStopTime = [arrStopTime objectAtIndex:i];
+        }
     }
-    for(int i=0;i<minStopTimesCount;i++){
-        Itinerary *newItinerary = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-        [newItinerary setPlan:plan];
-        NSArray *arrSortedLegs = [itinerary sortedLegs];
-        for(int j=0;j<[arrSortedLegs count];j++){
-            Leg *leg = [arrSortedLegs objectAtIndex:j];
+    return arrSelectedStopTime;
+}
+
+// return nearest stoptimes form stoptimes array based on itinerary start time or itinerary end time.
+- (NSArray *) findNearestStopTimeFromStopTimeArray:(NSArray *)arrStopTimes Itinerary:(Itinerary *)itinerary{
+    if(itinerary.endTime){
+       return  [self returnStopTimesWithNearestStartTimeOrEndTime:itinerary.endTime ArrStopTimes:arrStopTimes];
+    }
+       return  [self returnStopTimesWithNearestStartTimeOrEndTime:itinerary.startTime ArrStopTimes:arrStopTimes];
+}
+
+// This method create walk leg.
+- (void) addWalkLegToItinerary:(Itinerary *)itinerary WalkLeg:(Leg *)leg{
+    Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:self.managedObjectContext];
+    //newleg = leg;
+    if([[itinerary sortedLegs] count] == 0)
+        newleg.startTime = itinerary.startTime;
+    else
+        newleg.startTime = itinerary.endTime;
+    
+    newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([newleg.duration floatValue]/1000)];
+    itinerary.endTime = newleg.endTime;
+    newleg.itinerary = itinerary;
+}
+
+// This method create transit leg from gtfs data.
+// First find the nearest stoptimes then create transit leg from stoptimes data.
+- (void) addTransitLegToItinerary:(Itinerary *)itinerary TransitLeg:(Leg *)leg StopTime:(NSMutableArray *)arrStopTimes{
+    NSArray *arrayStopTime = [self findNearestStopTimeFromStopTimeArray:arrStopTimes Itinerary:itinerary];
+    GtfsStopTimes *fromStopTime = [arrayStopTime objectAtIndex:0];
+    Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:self.managedObjectContext];
+    //newleg = leg;
+    newleg.startTime = [self timeAndDateFromString:fromStopTime.departureTime];
+    newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([newleg.duration floatValue]/1000)];
+    itinerary.endTime = newleg.endTime;
+    newleg.itinerary = itinerary;
+    [arrStopTimes removeObject:arrayStopTime];
+}
+
+// This method continues to create itinerary until we have stoptimes data.
+// First loop through every leg of itinerary pattern if it is walk leg then we create new leg from old leg by updating some attributes.
+// if leg is transit leg then we get the stoptimes data for that leg.
+// Next find the nearest stoptimes by comparing departureTime with new itinerary start time or end time.
+// Then create the new leg and itinerary from stoptimes data. 
+- (void) generateItineraryFromItinerayPatern:(Itinerary *)itinerary Parameters:(PlanRequestParameters *)parameters Plan:(Plan *)plan{
+    NSMutableDictionary *dictStopTimes = [[NSMutableDictionary alloc] init];
+    while (true) {
+            Itinerary* newItinerary = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:self.managedObjectContext];
+             newItinerary.startTime = parameters.originalTripDate;
+             newItinerary.startTimeOnly = timeOnlyFromDate(parameters.originalTripDate);
+             newItinerary.plan = plan;
+        for(int j=0;j<[[itinerary sortedLegs] count];j++){
+            Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
             if([leg.mode isEqualToString:@"WALK"]){
-                Leg *newLeg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
-                newLeg = leg;
-                break;
+                [self addWalkLegToItinerary:newItinerary WalkLeg:leg];
             }
-            else {
-                if([leg.agencyName isEqualToString:CALTRAIN_AGENCY_NAME]){
-                   Leg *newLeg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
-                    if(nPreviouslegDepartureTime){
-                        for(int k=0;k<[mutableArrayCal count];k++){
-                            NSArray *caltrainStopTimes = [mutableArrayCal objectAtIndex:k];
-                            if([caltrainStopTimes count] > 1){
-                                GtfsStopTimes *fromStopTimes = [caltrainStopTimes objectAtIndex:0];
-                                GtfsStopTimes *toStopTimes = [caltrainStopTimes objectAtIndex:1];
-                                int departureTime = [self getTimeInterValInSeconds:fromStopTimes.departureTime];
-                                if(departureTime > nPreviouslegDepartureTime){
-                                    nPreviouslegDepartureTime = departureTime;
-                                    newLeg = leg;
-                                    [mutableArrayCal removeObjectAtIndex:k];
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    else if([mutableArrayCal count] > 0){
-                        NSArray *caltrainStopTimes = [mutableArrayCal objectAtIndex:0];
-                        if([caltrainStopTimes count] > 1){
-                            GtfsStopTimes *fromStopTimes = [caltrainStopTimes objectAtIndex:0];
-                            GtfsStopTimes *toStopTimes = [caltrainStopTimes objectAtIndex:1];
-                            newLeg = leg;
-                        }
-                        [mutableArrayCal removeObjectAtIndex:0];
-                    }
-                    break;
+            else{
+                NSMutableArray *arrStopTime = [dictStopTimes objectForKey:leg.agencyName];
+                if(!arrStopTime){
+                    NSString *strTOStopID = [self getTheStopIDAccrodingToStation:leg.to.lat:leg.to.lng];
+                    NSString *strFromStopID = [self getTheStopIDAccrodingToStation:leg.from.lat:leg.from.lng];
+                    arrStopTime = [self getStopTimes:strTOStopID strFromStopID:strFromStopID parameters:parameters];
+                    [dictStopTimes setObject:arrStopTime forKey:leg.agencyName];
                 }
-                else if([leg.agencyName isEqualToString:BART_AGENCY_NAME] || [leg.agencyName isEqualToString:AIRBART_AGENCY_NAME]){
-                    Leg *newLeg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
-                    if(nPreviouslegDepartureTime){
-                        for(int k=0;k<[mutableArrayBart count];k++){
-                            NSArray *bartStopTimes = [mutableArrayBart objectAtIndex:k];
-                            if([bartStopTimes count] > 1){
-                                GtfsStopTimes *fromStopTimes = [bartStopTimes objectAtIndex:0];
-                                GtfsStopTimes *toStopTimes = [bartStopTimes objectAtIndex:1];
-                                int departureTime = [self getTimeInterValInSeconds:fromStopTimes.departureTime];
-                                if(departureTime > nPreviouslegDepartureTime){
-                                    nPreviouslegDepartureTime = departureTime;
-                                    newLeg = leg;
-                                    [mutableArrayCal removeObjectAtIndex:k];
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    else if([mutableArrayBart count] > 0){
-                        NSArray *bartStopTimes = [mutableArrayBart objectAtIndex:0];
-                        if([bartStopTimes count] > 1){
-                            GtfsStopTimes *fromStopTimes = [bartStopTimes objectAtIndex:0];
-                            GtfsStopTimes *toStopTimes = [bartStopTimes objectAtIndex:1];
-                            newLeg = leg;
-                        }
-                        [mutableArrayBart removeObjectAtIndex:0];
-                    }
-                    break;
+                if([arrStopTime count] == 0){
+                    return;
                 }
-                else if([leg.agencyName isEqualToString:SFMUNI_AGENCY_NAME]){
-                    Leg *newLeg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
-                    if(nPreviouslegDepartureTime){
-                        for(int k=0;k<[mutableArrayMuni count];k++){
-                            NSArray *muniStopTimes = [mutableArrayMuni objectAtIndex:k];
-                            if([muniStopTimes count] > 1){
-                                GtfsStopTimes *fromStopTimes = [muniStopTimes objectAtIndex:0];
-                                GtfsStopTimes *toStopTimes = [muniStopTimes objectAtIndex:1];
-                                int departureTime = [self getTimeInterValInSeconds:fromStopTimes.departureTime];
-                                if(departureTime > nPreviouslegDepartureTime){
-                                    nPreviouslegDepartureTime = departureTime;
-                                    newLeg = leg;
-                                    [mutableArrayCal removeObjectAtIndex:k];
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    else if([mutableArrayMuni count] > 0){
-                        NSArray *muniStopTimes = [mutableArrayMuni objectAtIndex:0];
-                        if([muniStopTimes count] > 1){
-                            GtfsStopTimes *fromStopTimes = [muniStopTimes objectAtIndex:0];
-                            GtfsStopTimes *toStopTimes = [muniStopTimes objectAtIndex:1];
-                            newLeg = leg;
-                        }
-                        [mutableArrayMuni removeObjectAtIndex:0];
-                    }
-                    break;
-                }
-                else if([leg.agencyName isEqualToString:ACTRANSIT_AGENCY_NAME]){
-                    Leg *newLeg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
-                    if(nPreviouslegDepartureTime){
-                        for(int k=0;k<[mutableArrayAcTransit count];k++){
-                            NSArray *actransitStopTimes = [mutableArrayAcTransit objectAtIndex:k];
-                            if([actransitStopTimes count] > 1){
-                                GtfsStopTimes *fromStopTimes = [actransitStopTimes objectAtIndex:0];
-                                GtfsStopTimes *toStopTimes = [actransitStopTimes objectAtIndex:1];
-                                int departureTime = [self getTimeInterValInSeconds:fromStopTimes.departureTime];
-                                if(departureTime > nPreviouslegDepartureTime){
-                                    nPreviouslegDepartureTime = departureTime;
-                                    newLeg = leg;
-                                    [mutableArrayCal removeObjectAtIndex:k];
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    else if([mutableArrayAcTransit count] > 0){
-                        NSArray *actransitStopTimes = [mutableArrayAcTransit objectAtIndex:0];
-                        if([actransitStopTimes count] > 1){
-                            GtfsStopTimes *fromStopTimes = [actransitStopTimes objectAtIndex:0];
-                            GtfsStopTimes *toStopTimes = [actransitStopTimes objectAtIndex:1];
-                            newLeg = leg;
-                        }
-                        [mutableArrayAcTransit removeObjectAtIndex:0];
-                    }
-                     break;
-                }
+                [self addTransitLegToItinerary:newItinerary TransitLeg:leg StopTime:arrStopTime];
+                [dictStopTimes setObject:arrStopTime forKey:leg.agencyName];
             }
         }
     }
 }
 
-// Get Stored Patterns fron Database
-// Get The StopId From Stop Table and then get stoptimes according to stopID from StopTimes Table.
-- (void)generateLegsFromPatterns:(Plan *)plan parameters:(PlanRequestParameters *)parameters{
-    NSMutableArray *arrCaltrainStopTimes = [[NSMutableArray alloc] init];
-    NSMutableArray *arrBartStopTimes = [[NSMutableArray alloc] init];
-    NSMutableArray *arrMuniStopTimes = [[NSMutableArray alloc] init];
-    NSMutableArray *arrAcTransitStopTimes = [[NSMutableArray alloc] init];
+// First get The unique itinerary pattern from plan.the loop through every itinerary pattern.
+// For each legs of itinerary pattern check first if it is walk leg if yes the create new leg with some additional attributes.
+// if leg is transit leg then first get the stoptimes from that leg and choose nearest stoptimes and remove it from mutable array.
+// this lopp continue until we have stoptimes data.
+
+- (void)generateLegsAndItineraryFromPatternsOfPlan:(Plan *)plan parameters:(PlanRequestParameters *)parameters{
     NSArray *arrUniquePatterns = [[plan uniqueItineraryPatterns] allObjects];
     for(int i=0;i<[arrUniquePatterns count];i++){
         Itinerary *iti = [arrUniquePatterns objectAtIndex:i];
-        for(int j=0;j<[[iti sortedLegs] count];j++){
-            Leg *leg = [[iti sortedLegs] objectAtIndex:j];
-            if(![leg.mode isEqualToString:@"WALK"]){
-                NIMLOG_UOS202(@"toLat=%@",leg);
-                NIMLOG_UOS202(@"toLat=%@",leg.to.lat);
-                NIMLOG_UOS202(@"toLng=%@",leg.to.lng);
-                NIMLOG_UOS202(@"fromLat=%@",leg.from.lat);
-                NIMLOG_UOS202(@"fromLng=%@",leg.from.lng);
-                NSString *strTOStopID = [self getTheStopIDAccrodingToStation:leg.to.lat:leg.to.lng];
-                NIMLOG_UOS202(@"strTOStopID=%@",strTOStopID);
-                NSString *strFromStopID = [self getTheStopIDAccrodingToStation:leg.from.lat:leg.from.lng];
-                NIMLOG_UOS202(@"strFromStopID=%@",strFromStopID);
-                NSArray *arrStopTimes = [self getStopTimes:strTOStopID strFromStopID:strFromStopID parameters:parameters];
-                if([leg.agencyName isEqualToString:CALTRAIN_AGENCY_NAME]){
-                    [arrCaltrainStopTimes addObjectsFromArray:arrStopTimes];
-                }
-                else if([leg.agencyName isEqualToString:BART_AGENCY_NAME] || [leg.agencyName isEqualToString:AIRBART_AGENCY_NAME]){
-                    [arrBartStopTimes addObjectsFromArray:arrStopTimes];
-                }
-                else if([leg.agencyName isEqualToString:SFMUNI_AGENCY_NAME]){
-                    [arrMuniStopTimes addObjectsFromArray:arrStopTimes];
-                }
-                else if([leg.agencyName isEqualToString:ACTRANSIT_AGENCY_NAME]){
-                    [arrAcTransitStopTimes addObjectsFromArray:arrStopTimes];
-                }
-            }
-        }
-        [self generateItineraryFromPatternAndStopTimes:iti arrCaltrainStopTimes:arrCaltrainStopTimes arrBartStopTimes:arrBartStopTimes arrMuniStopTimes:arrMuniStopTimes arrAcTransitStopTimes:arrAcTransitStopTimes plan:plan];
+        [self generateItineraryFromItinerayPatern:iti Parameters:parameters Plan:plan];
     }
     saveContext(self.managedObjectContext);
 }

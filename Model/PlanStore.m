@@ -300,9 +300,8 @@
                     NSSet *setUniqueitineraries = [NSSet setWithArray:arrUniqueItinerary];
                     plan.uniqueItineraryPatterns = setUniqueitineraries;
                     saveContext(self.managedObjectContext);
-                    [[nc_AppDelegate sharedInstance].gtfsParser generateLegsFromPatterns:plan parameters:planRequestParameters];
                     
-                   
+                    [[nc_AppDelegate sharedInstance].gtfsParser generateLegsAndItineraryFromPatternsOfPlan:plan parameters:planRequestParameters];
                     
                     // Call-back the appropriate RouteOptions VC with the new plan
                     UIViewController *currentVC = toFromVC.navigationController.visibleViewController;
