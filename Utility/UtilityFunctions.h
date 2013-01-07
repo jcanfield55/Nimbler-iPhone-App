@@ -74,3 +74,13 @@ NSInteger smallestOf2(NSInteger a,NSInteger b);
 
 //Calculate Distance Between Two Location
 CLLocationDistance distanceBetweenTwoLocation(CLLocation *toLocation,CLLocation *fromLocation);
+
+
+// Get AgencyId from Agencyname
+NSString *agencyIdFromAgencyName(NSString *agencyName);
+
+// Get AgencyName from AgencyId
+NSString *agencyNameFromAgencyId(NSString *agencyId);
+
+// return the string at specific index from array if exists else return empty string.
+NSString *getItemAtIndexFromArray(int index,NSArray *arrayComponents);

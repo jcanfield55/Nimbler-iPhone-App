@@ -462,3 +462,34 @@ CLLocationDistance distanceBetweenTwoLocation(CLLocation *toLocation,CLLocation 
     CLLocationDistance distance = [toLocation distanceFromLocation:fromLocation];
     return distance;
 }
+
+// Get AgencyId from Agencyname
+NSString *agencyIdFromAgencyName(NSString *agencyName){
+    if([agencyName isEqualToString:CALTRAIN_AGENCY_NAME])
+        return CALTRAIN_AGENCY_IDS;
+    else if([agencyName isEqualToString:BART_AGENCY_NAME] || [agencyName isEqualToString:AIRBART_AGENCY_NAME])
+        return BART_AGENCY_ID;
+    else if([agencyName isEqualToString:SFMUNI_AGENCY_NAME])
+        return SFMUNI_AGENCY_ID;
+    else 
+        return ACTRANSIT_AGENCY_ID;
+}
+
+// Get AgencyName from AgencyId
+NSString *agencyNameFromAgencyId(NSString *agencyId){
+    if([agencyId isEqualToString:CALTRAIN_AGENCY_IDS])
+        return CALTRAIN_AGENCY_NAME;
+    else if([agencyId isEqualToString:BART_AGENCY_ID])
+        return BART_AGENCY_NAME;
+    else if([agencyId isEqualToString:SFMUNI_AGENCY_ID])
+        return SFMUNI_AGENCY_NAME;
+    else
+        return ACTRANSIT_AGENCY_NAME;
+}
+
+NSString *getItemAtIndexFromArray(int index,NSArray *arrayComponents){
+    if([arrayComponents count] > index){
+        return  [arrayComponents objectAtIndex:index];
+    }
+    return @"";
+}

@@ -36,6 +36,7 @@ typedef enum {
 @property (nonatomic, retain) NSNumber * legGeometryLength;
 @property (nonatomic, retain) NSString * legGeometryPoints;
 @property (nonatomic, retain) NSString * mode;
+@property (nonatomic, retain) NSString * routeId;
 @property (nonatomic, retain) NSString * route;
 @property (nonatomic, retain) NSString * routeLongName;
 @property (nonatomic, retain) NSString * routeShortName;
@@ -63,6 +64,9 @@ typedef enum {
 - (BOOL)isBus;
 - (BOOL)isHeavyTrain; // Note: legs that are isHeavyTrain=true are also isTrain=true
 - (BOOL)isTrain;
+
+// return false if leg is walk or bicycle otherwise return true.
+-(BOOL)isScheduled;
 
 // True if the main characteristics of referring Leg is equal to leg0
 - (BOOL)isEqualInSubstance:(Leg *)leg0;

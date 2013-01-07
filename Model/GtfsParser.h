@@ -32,24 +32,41 @@
 @property (strong, nonatomic) NSString *strStopTimesURL;
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc;
-- (void) parseAgencyDataAndStroreToDataBase:(NSDictionary *)dictFileData;
-- (void) parseCalendarDatesDataAndStroreToDataBase:(NSDictionary *)dictFileData;
-- (void) parseCalendarDataAndStroreToDataBase:(NSDictionary *)dictFileData;
-- (void) parseRoutesDataAndStroreToDataBase:(NSDictionary *)dictFileData;
-- (void) parseStopsDataAndStroreToDataBase:(NSDictionary *)dictFileData;
-- (void) parseTripsDataAndStroreToDataBase:(NSDictionary *)dictFileData;
-- (void) parseStopTimesAndStroreToDataBase:(NSDictionary *)dictFileData:(NSString *)strResourcePath;
-- (NSArray *)findNearestStation:(CLLocation *)toLocation;
--(void)getAgencyDatas;
--(void)getCalendarDates;
--(void)getCalendarData;
--(void)getRoutesData;
--(void)getStopsData;
--(void)getTripsData;
-- (void) getGtfsStopTimes:(NSMutableString *)strRequestString;
+
+// Parse the Gtfs Agency Data and store to database.
+- (void) parseAndStroreGtfsAgencyData:(NSDictionary *)dictFileData;
+
+// Parse the Gtfs CalendarDates Data and store to database.
+- (void) parseAndStoreGtfsCalendarDatesData:(NSDictionary *)dictFileData;
+
+// Parse the Gtfs Calendar Data and store to database.
+- (void) parseAndStoreGtfsCalendarData:(NSDictionary *)dictFileData;
+
+// Parse the Gtfs Routes Data and store to database.
+- (void) parseAndStoreGtfsRoutesData:(NSDictionary *)dictFileData;
+
+// Parse the Gtfs Stops Data and store to database.
+- (void) parseAndStoreGtfsStopsData:(NSDictionary *)dictFileData;
+
+// Parse the Gtfs Trips Data and store to database.
+- (void) parseAndStroreGtfsTripsData:(NSDictionary *)dictFileData;
+
+// Parse the Gtfs StopTimes Data and store to database.
+- (void) parseAndStoreGtfsStopTimesData:(NSDictionary *)dictFileData RequestUrl:(NSString *) strResourcePath;
+
+-(void)requestAgencyDataFromServer;
+-(void)requestCalendarDatesDataFromServer;
+-(void)requestCalendarDatafromServer;
+-(void)requestRoutesDatafromServer;
+-(void)requestStopsDataFromServer;
+-(void)requestTripsDatafromServer:(NSMutableString *)strRequestString;
+- (void)requestStopTimesDataFromServer:(NSMutableString *)strRequestString;
 
 // Generate The StopTimes Request Comma Separated string like agencyID_tripID
 - (void)generateStopTimesRequestString:(Plan *)plan;
+
+// Generate The Trips Request Comma Separated string like agencyID_ROUTEID
+- (void)generateGtfsTripsRequestStringUsingPlan:(Plan *) plan;
 
 // Get The stopID form GtfsStop Table from To&From Location.
 - (NSString *) getTheStopIDAccrodingToStation:(NSNumber *)lat:(NSNumber *)lng;
@@ -73,7 +90,7 @@
 // Then get the calendar data for particular serviceID.
 // the check for the request date comes after service start date and comes befor enddate.
 // then check service is enabled on request day if yes then return yes otherwise return no.
-- (BOOL) isServiceEnableForDay:(NSString *)strTripID:(NSDate *)requestDate;
+- (BOOL) isServiceEnableForTripID:(NSString *)strTripID RequestDate:(NSDate *)requestDate;
 
 // first get stoptimes from StopTimes Table based on stopId
 // Then make a pair of StopTimes if both stoptimes have same tripId then check for the stopSequence and the departure time is greater than request trip time and also check if service is enabled for that stopTimes if yes the add both stopTimes as To/From StopTimes pair.
@@ -85,6 +102,9 @@
 // this lopp continue until we have stoptimes data.
 
 - (void)generateLegsAndItineraryFromPatternsOfPlan:(Plan *)plan parameters:(PlanRequestParameters *)parameters;
+
+- (NSDate *)timeAndDateFromString:(NSString *)strTime;
+- (NSArray *) findNearestStopTimeFromStopTimeArray:(NSArray *)arrStopTimes Itinerary:(Itinerary *)itinerary;
 
 @end
 

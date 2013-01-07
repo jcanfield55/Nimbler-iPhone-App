@@ -37,6 +37,7 @@
         [mapping mapKeyPath:@"legGeometry.length" toAttribute:@"legGeometryLength"];
         [mapping mapKeyPath:@"legGeometry.points" toAttribute:@"legGeometryPoints"];
         [mapping mapKeyPath:@"mode" toAttribute:@"mode"];
+        [mapping mapKeyPath:@"routeId" toAttribute:@"routeId"];
         [mapping mapKeyPath:@"route" toAttribute:@"route"];
         [mapping mapKeyPath:@"routeLongName" toAttribute:@"routeLongName"];
         [mapping mapKeyPath:@"routeShortName" toAttribute:@"routeShortName"];

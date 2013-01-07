@@ -828,7 +828,7 @@ FeedBackForm *fbView;
                     KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
                     [keyObjectStore setObject:calendarByDateByAgency forKey:TR_CALENDAR_BY_DATE_BY_AGENCY];
                     [self getTwiiterLiveData];
-                    [self.gtfsParser performSelector:@selector(getAgencyDatas) withObject:nil];
+                    [self.gtfsParser performSelector:@selector(requestAgencyDataFromServer) withObject:nil];
                     if (timerTweeterGetData == nil) {
                         timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
                     }

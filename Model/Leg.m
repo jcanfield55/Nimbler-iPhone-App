@@ -32,6 +32,7 @@
 @dynamic legGeometryLength;
 @dynamic legGeometryPoints;
 @dynamic mode;
+@dynamic routeId;
 @dynamic route;
 @dynamic routeLongName;
 @dynamic routeShortName;
@@ -463,6 +464,12 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     return false; 
 }
 
+// return false if leg is walk or bicycle otherwise return true.
+-(BOOL)isScheduled{
+    if ([[self mode] isEqualToString:@"WALK"] || [[self mode] isEqualToString:@"BICYCLE"]) 
+        return false;
+    return true;
+}
 // True if the main characteristics of referring Leg is equal to leg0
 // Compares timeOnly components of startTime and of endTime, to name, and from name
 - (BOOL)isEqualInSubstance:(Leg *)leg0

@@ -411,6 +411,9 @@
 #define ENTITY  @"entity"
 #define AGENCY_IDS @"agencyIds"
 #define GTFS_STOP_TIMES  @"gtfs/stoptimes"
+#define GTFS_TRIPS @"gtfs/trips"
+#define AGENCY_ID_AND_ROUTE_ID @"agencyAndRouteIds"
 
 #define TRIP_TIME_PLUS_INTERVAL  4*60*60
+#define ITINERARY_GANERATION_TIMEOUT 5
 

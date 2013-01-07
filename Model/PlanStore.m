@@ -256,7 +256,8 @@
                 } else {
                     [NSException raise:@"PlanStore->didLoadObjects failed to retrieve plan parameters" format:@"strResourcePath: %@", strResourcePath];
                 }
-                [[nc_AppDelegate sharedInstance].gtfsParser generateStopTimesRequestString:plan];
+                [[nc_AppDelegate sharedInstance].gtfsParser performSelector:@selector(generateGtfsTripsRequestStringUsingPlan:) withObject:plan afterDelay:1.0];
+                [[nc_AppDelegate sharedInstance].gtfsParser performSelector:@selector(generateStopTimesRequestString:) withObject:plan afterDelay:2.0];
                 // Set to & from location with special handling of CurrentLocation
                 Location *toLoc = [planRequestParameters toLocation];
                 if ([toLoc isCurrentLocation] && [toLoc isReverseGeoValid]) {
