@@ -58,7 +58,7 @@
             NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
             [arrayAgencyID addObject:getItemAtIndexFromArray(0, arraySubComponents)];
             [arrayAgencyName addObject:getItemAtIndexFromArray(1,arraySubComponents)];
-            [arrayAgencyName addObject:getItemAtIndexFromArray(2,arraySubComponents)];
+            [arrayAgencyURL addObject:getItemAtIndexFromArray(2,arraySubComponents)];
         }
     }
     for(int i=0;i<[arrayAgencyID count];i++){
@@ -360,14 +360,14 @@
             NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
             if(strSubComponents && strSubComponents.length > 0){
                 NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
-                [arrayTripID addObject:getItemAtIndexFromArray(0,arrayAgencyIdsComponents)];
-                [arrayArrivalTime addObject:getItemAtIndexFromArray(1,arrayAgencyIdsComponents)];
-                [arrayDepartureTime addObject:getItemAtIndexFromArray(2,arrayAgencyIdsComponents)];
-                [arrayStopID addObject:getItemAtIndexFromArray(3,arrayAgencyIdsComponents)];
-                [arrayStopSequence addObject:getItemAtIndexFromArray(4,arrayAgencyIdsComponents)];
-                [arrayPickUpType addObject:getItemAtIndexFromArray(5,arrayAgencyIdsComponents)];
-                [arrayDropOffType addObject:getItemAtIndexFromArray(6,arrayAgencyIdsComponents)];
-                [arrayShapeDistTraveled addObject:getItemAtIndexFromArray(7,arrayAgencyIdsComponents)];
+                [arrayTripID addObject:getItemAtIndexFromArray(0,arraySubComponents)];
+                [arrayArrivalTime addObject:getItemAtIndexFromArray(1,arraySubComponents)];
+                [arrayDepartureTime addObject:getItemAtIndexFromArray(2,arraySubComponents)];
+                [arrayStopID addObject:getItemAtIndexFromArray(3,arraySubComponents)];
+                [arrayStopSequence addObject:getItemAtIndexFromArray(4,arraySubComponents)];
+                [arrayPickUpType addObject:getItemAtIndexFromArray(5,arraySubComponents)];
+                [arrayDropOffType addObject:getItemAtIndexFromArray(6,arraySubComponents)];
+                [arrayShapeDistTraveled addObject:getItemAtIndexFromArray(7,arraySubComponents)];
             }
         }
     }
@@ -578,6 +578,7 @@
                     }
                 }
                 else if ([strRequestURL isEqualToString:strStopsURL]) {
+                    [nc_AppDelegate sharedInstance].receivedReply = true;
                     RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
                     NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
                     NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
@@ -589,6 +590,7 @@
                     }
                 }
                 else if ([strRequestURL isEqualToString:strTripsURL]) {
+                    [nc_AppDelegate sharedInstance].receivedReply = true;
                     RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
                     NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
                     NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
@@ -597,6 +599,7 @@
                     }
                 }
                 else if ([strRequestURL isEqualToString:strStopTimesURL]) {
+                    [nc_AppDelegate sharedInstance].receivedReply = true;
                     RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
                     NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
                     NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
@@ -635,6 +638,7 @@
 }
 
 - (void)generateGtfsTripsRequestStringUsingPlan:(Plan *) plan{
+    [nc_AppDelegate sharedInstance].receivedReply = false;
     NSMutableString *strRequestString = [[NSMutableString alloc] init];
     NSArray *itiArray = [plan sortedItineraries];
     for(int i=0;i<[itiArray count];i++){
@@ -643,7 +647,7 @@
         for(int j=0;j<[legArray count];j++){
             Leg *leg = [legArray objectAtIndex:j];
             if([leg isScheduled] && ![self isTripsAlreadyExistsForTripId:leg.tripId RouteId:leg.routeId] && [strRequestString rangeOfString:[NSString stringWithFormat:@"%@_%@",agencyIdFromAgencyName(leg.agencyName),leg.routeId]].location == NSNotFound){
-                [strRequestString appendFormat:@"%@_%@",agencyIdFromAgencyName(leg.agencyName),leg.routeId];
+                [strRequestString appendFormat:@"%@_%@,",agencyIdFromAgencyName(leg.agencyName),leg.routeId];
             }
         }
     }
@@ -653,6 +657,7 @@
 }
 // Generate The StopTimes Request Comma Separated string like agencyID_tripID
 - (void)generateStopTimesRequestString:(Plan *)plan{
+    [nc_AppDelegate sharedInstance].receivedReply = false;
     NSMutableString *strRequestString = [[NSMutableString alloc] init];
     NSArray *itiArray = [plan sortedItineraries];
     for(int i=0;i<[itiArray count];i++){
@@ -914,8 +919,8 @@
 }
 
 // This method create unscheduled leg.
-- (void) addUnScheduledLegToItinerary:(Itinerary *)itinerary WalkLeg:(Leg *)leg{
-    Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:self.managedObjectContext];
+- (void) addUnScheduledLegToItinerary:(Itinerary *)itinerary WalkLeg:(Leg *)leg Context:(NSManagedObjectContext *)context{
+    Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
     //newleg = leg;
     if([[itinerary sortedLegs] count] == 0)
         newleg.startTime = itinerary.startTime;
@@ -929,10 +934,10 @@
 
 // This method create scheduled leg from gtfs data.
 // First find the nearest stoptimes then create transit leg from stoptimes data.
-- (void) addScheduledLegToItinerary:(Itinerary *)itinerary TransitLeg:(Leg *)leg StopTime:(NSMutableArray *)arrStopTimes{
+- (void) addScheduledLegToItinerary:(Itinerary *)itinerary TransitLeg:(Leg *)leg StopTime:(NSMutableArray *)arrStopTimes Context:(NSManagedObjectContext *)context{
     NSArray *arrayStopTime = [self findNearestStopTimeFromStopTimeArray:arrStopTimes Itinerary:itinerary];
     GtfsStopTimes *fromStopTime = [arrayStopTime objectAtIndex:0];
-    Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:self.managedObjectContext];
+    Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
     //newleg = leg;
     newleg.startTime = [self timeAndDateFromString:fromStopTime.departureTime];
     newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([newleg.duration floatValue]/1000)];
@@ -945,7 +950,7 @@
 // if leg is transit leg then we get the stoptimes data for that leg.
 // Next find the nearest stoptimes by comparing departureTime with new itinerary start time or end time.
 // Then create the new leg and itinerary from stoptimes data. 
-- (void) generateItineraryFromItinerayPatern:(Itinerary *)itinerary Parameters:(PlanRequestParameters *)parameters Plan:(Plan *)plan{
+- (void) generateItineraryFromItinerayPatern:(Itinerary *)itinerary Parameters:(PlanRequestParameters *)parameters Plan:(Plan *)plan Context:(NSManagedObjectContext *)context{
     NSMutableDictionary *dictStopTimes = [[NSMutableDictionary alloc] init];
     NSDate *startDate = [NSDate date];
     while (true) {
@@ -953,14 +958,14 @@
             NIMLOG_UOS202(@"Generation Of itinerary from pattern Timeout");
             break;
         }
-        Itinerary* newItinerary = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:self.managedObjectContext];
+        Itinerary* newItinerary = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:context];
         newItinerary.startTime = parameters.originalTripDate;
         newItinerary.startTimeOnly = timeOnlyFromDate(parameters.originalTripDate);
         newItinerary.plan = plan;
         for(int j=0;j<[[itinerary sortedLegs] count];j++){
             Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
             if(![leg isScheduled]){
-                [self addUnScheduledLegToItinerary:newItinerary WalkLeg:leg];
+                [self addUnScheduledLegToItinerary:newItinerary WalkLeg:leg Context:context];
             }
             else{
                 NSMutableArray *arrStopTime = [dictStopTimes objectForKey:leg.agencyName];
@@ -968,12 +973,14 @@
                     NSString *strTOStopID = leg.to.stopId;
                     NSString *strFromStopID = leg.from.stopId;
                     arrStopTime = [self getStopTimes:strTOStopID strFromStopID:strFromStopID parameters:parameters];
-                    [dictStopTimes setObject:arrStopTime forKey:leg.agencyName];
+                    if(arrStopTime && [arrStopTime count] > 0){
+                        [dictStopTimes setObject:arrStopTime forKey:leg.agencyName];
+                    }
                 }
                 if([arrStopTime count] == 0){
                     return;
                 }
-                [self addScheduledLegToItinerary:newItinerary TransitLeg:leg StopTime:arrStopTime];
+                [self addScheduledLegToItinerary:newItinerary TransitLeg:leg StopTime:arrStopTime Context:context];
                 [dictStopTimes setObject:arrStopTime forKey:leg.agencyName];
             }
         }
@@ -985,13 +992,16 @@
 // if leg is transit leg then first get the stoptimes from that leg and choose nearest stoptimes and remove it from mutable array.
 // this lopp continue until we have stoptimes data.
 
-- (void)generateLegsAndItineraryFromPatternsOfPlan:(Plan *)plan parameters:(PlanRequestParameters *)parameters{
+- (Plan *)generateLegsAndItineraryFromPatternsOfPlan:(Plan *)plan parameters:(PlanRequestParameters *)parameters Context:(NSManagedObjectContext *)context{
+    if(!context){
+        context = self.managedObjectContext;
+    }
     NSArray *arrUniquePatterns = [[plan uniqueItineraryPatterns] allObjects];
     for(int i=0;i<[arrUniquePatterns count];i++){
         Itinerary *iti = [arrUniquePatterns objectAtIndex:i];
-        [self generateItineraryFromItinerayPatern:iti Parameters:parameters Plan:plan];
+        [self generateItineraryFromItinerayPatern:iti Parameters:parameters Plan:plan Context:context];
     }
-    saveContext(self.managedObjectContext);
+    return plan;
 }
 
 @end

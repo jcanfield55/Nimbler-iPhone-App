@@ -593,6 +593,244 @@
         }
     }
     
+    //
+    // Set up plans, itineraries, and legs for testing Itinerary and leg generation from Patterns
+    //
+    
+    plan10 = [NSEntityDescription insertNewObjectForEntityForName:@"Plan" inManagedObjectContext:managedObjectContext];
+    
+    itin101 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+    itin102 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+    itin103 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+    
+    leg1011 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    leg1012 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    leg1013 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    leg1021 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    leg1031 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+   
+    leg1011.startTime = date10;
+    leg1011.duration = [NSNumber numberWithInt:519000];
+    leg1011.mode = @"WALK";
+    leg1011.itinerary = itin101;
+    itin101.startTime = date10;
+    itin101.endTime = [itin101.startTime dateByAddingTimeInterval:(30.0*60)];
+    itin101.plan = plan10;
+    PlanPlace *pp101 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    PlanPlace *pp102 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    [pp101 setLat:[NSNumber numberWithDouble:37.75768017385226]];
+    [pp101 setLng:[NSNumber numberWithDouble:-122.3926363695829]];
+    [pp102 setLat:[NSNumber numberWithDouble:37.755414]];
+    [pp102 setLng:[NSNumber numberWithDouble:-122.388001]];
+    [pp102 setStopId:@"7354"];
+    [pp101 setName:@"22nd Street"];
+    [pp102 setName:@"Third Street & 23rd St"];
+    leg1011.from = pp101;
+    leg1011.to = pp102;
+    leg1011.endTime = [leg1011.startTime dateByAddingTimeInterval:(30.0*60)];
+    
+    leg1012.startTime = date11;
+    leg1012.duration = [NSNumber numberWithInt:500000];
+    leg1012.agencyId = @"SFMTA";
+    leg1012.mode = @"TRAM";
+    leg1012.route = @"KT";
+    leg1012.routeShortName = @"KT";
+    leg1012.routeLongName = @"OCEAN VIEW";
+    leg1012.routeId = @"1196";
+    leg1012.tripId = @"5249630";
+    leg1012.itinerary = itin101;
+    itin101.startTime = date11;
+    itin101.endTime = [itin101.startTime dateByAddingTimeInterval:(30.0*60)];
+    itin101.plan = plan10;
+    
+    PlanPlace *pp103 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    PlanPlace *pp104 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    [pp103 setLat:[NSNumber numberWithDouble:37.755414]];
+    [pp103 setLng:[NSNumber numberWithDouble:-122.388001]];
+    [pp104 setLat:[NSNumber numberWithDouble:37.776278]];
+    [pp104 setLng:[NSNumber numberWithDouble:-122.393864]];
+    [pp103 setStopId:@"7354"];
+    [pp104 setStopId:@"7166"];
+    [pp103 setName:@"Third Street & 23rd St"];
+    [pp104 setName:@"4th St & King St"];
+    leg1012.from = pp103;
+    leg1012.to = pp104;
+    leg1012.endTime = [leg1013.startTime dateByAddingTimeInterval:(30.0*60)];
+    
+    leg1013.startTime = date10;
+    leg1013.duration = [NSNumber numberWithInt:519000];
+    leg1013.mode = @"WALK";
+    leg1013.itinerary = itin101;
+    itin101.startTime = date10;
+    itin101.endTime = [itin101.startTime dateByAddingTimeInterval:(30.0*60)];
+    itin101.plan = plan10;
+    PlanPlace *pp105 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    PlanPlace *pp106 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    [pp105 setLat:[NSNumber numberWithDouble:37.776281735478]];
+    [pp105 setLng:[NSNumber numberWithDouble:-122.3938669227692]];
+    [pp106 setLat:[NSNumber numberWithDouble:37.77651903369463]];
+    [pp106 setLng:[NSNumber numberWithDouble:-122.3942596619232]];
+    [pp106 setStopId:@"7354"];
+    [pp105 setName:@"King Street"];
+    [pp106 setName:@"4th Street"];
+    leg1013.from = pp105;
+    leg1013.to = pp106;
+    leg1013.endTime = [leg1013.startTime dateByAddingTimeInterval:(30.0*60)];
+    
+    
+    leg1021.startTime = date11;
+    leg1021.duration = [NSNumber numberWithInt:540000];
+    leg1021.agencyId = @"caltrain-ca-us";
+    leg1021.agencyName = @"Caltrain";
+    leg1021.mode = @"RAIL";
+    leg1021.route = @"Local";
+    leg1021.routeLongName = @"Local";
+    leg1021.routeId = @"ct_local_20121001";
+    leg1021.tripId = @"195_20121001";
+    leg1021.itinerary = itin102;
+    itin102.startTime = date11;
+    itin102.endTime = [itin102.startTime dateByAddingTimeInterval:(30.0*60)];
+    itin102.plan = plan10;
+    
+    PlanPlace *pp107 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    PlanPlace *pp108 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    [pp107 setLat:[NSNumber numberWithDouble:37.757674]];
+    [pp107 setLng:[NSNumber numberWithDouble:-122.392636]];
+    [pp108 setLat:[NSNumber numberWithDouble:37.7764393371]];
+    [pp108 setLng:[NSNumber numberWithDouble:-122.394322993]];
+    [pp107 setStopId:@"22nd Street Caltrain"];
+    [pp108 setStopId:@"San Francisco Caltrain"];
+    [pp107 setName:@"22nd Street Caltrain Station"];
+    [pp108 setName:@"San Francisco Caltrain Station"];
+    leg1021.from = pp107;
+    leg1021.to = pp108;
+    leg1021.endTime = [leg1021.startTime dateByAddingTimeInterval:(30.0*60)];
+    
+    
+    leg1031.startTime = date11;
+    leg1031.duration = [NSNumber numberWithInt:540000];
+    leg1031.agencyId = @"caltrain-ca-us";
+    leg1031.agencyName = @"Caltrain";
+    leg1031.mode = @"RAIL";
+    leg1031.route = @"Local";
+    leg1031.routeLongName = @"Local";
+    leg1031.routeId = @"ct_local_20121001";
+    leg1031.tripId = @"197_20121001";
+    leg1031.itinerary = itin103;
+    itin103.startTime = date11;
+    itin103.endTime = [itin103.startTime dateByAddingTimeInterval:(30.0*60)];
+    itin103.plan = plan10;
+    
+    PlanPlace *pp109 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    PlanPlace *pp1010 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    [pp109 setLat:[NSNumber numberWithDouble:37.757674]];
+    [pp109 setLng:[NSNumber numberWithDouble:-122.392636]];
+    [pp1010 setLat:[NSNumber numberWithDouble:37.7764393371]];
+    [pp1010 setLng:[NSNumber numberWithDouble:-122.394322993]];
+    [pp109 setStopId:@"22nd Street Caltrain"];
+    [pp1010 setStopId:@"San Francisco Caltrain"];
+    [pp109 setName:@"22nd Street Caltrain Station"];
+    [pp1010 setName:@"San Francisco Caltrain Station"];
+    leg1031.from = pp109;
+    leg1031.to = pp1010;
+    leg1031.endTime = [leg1031.startTime dateByAddingTimeInterval:(30.0*60)];
+    
+    
+    plan11 = [NSEntityDescription insertNewObjectForEntityForName:@"Plan" inManagedObjectContext:managedObjectContext];
+    itin111 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+    itin112 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+    itin113 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+    leg1111 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    leg1112 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    leg1113 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    leg1121 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    leg1131 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    
+    leg1111.startTime = date11;
+    leg1111.duration = [NSNumber numberWithInt:540000];
+    leg1111.agencyId = @"caltrain-ca-us";
+    leg1111.agencyName = @"Caltrain";
+    leg1111.mode = @"RAIL";
+    leg1111.route = @"Local";
+    leg1111.routeLongName = @"Local";
+    leg1111.routeId = @"ct_local_20121001";
+    leg1111.tripId = @"197_20121001";
+    leg1111.itinerary = itin111;
+    itin111.startTime = date11;
+    itin111.endTime = [itin111.startTime dateByAddingTimeInterval:(30.0*60)];
+    itin111.plan = plan11;
+    
+    PlanPlace *pp110 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    PlanPlace *pp111 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    [pp110 setLat:[NSNumber numberWithDouble:37.757674]];
+    [pp110 setLng:[NSNumber numberWithDouble:-122.392636]];
+    [pp111 setLat:[NSNumber numberWithDouble:37.7764393371]];
+    [pp111 setLng:[NSNumber numberWithDouble:-122.394322993]];
+    [pp110 setStopId:@"22nd Street Caltrain"];
+    [pp111 setStopId:@"San Francisco Caltrain"];
+    [pp110 setName:@"22nd Street Caltrain Station"];
+    [pp111 setName:@"San Francisco Caltrain Station"];
+    leg1111.from = pp110;
+    leg1111.to = pp111;
+    leg1111.endTime = [leg1111.startTime dateByAddingTimeInterval:(30.0*60)];
+    
+    
+    leg1121.startTime = date11;
+    leg1121.duration = [NSNumber numberWithInt:540000];
+    leg1121.agencyId = @"caltrain-ca-us";
+    leg1121.agencyName = @"Caltrain";
+    leg1121.mode = @"RAIL";
+    leg1121.route = @"Local";
+    leg1121.routeLongName = @"Limited";
+    leg1121.routeId = @"ct_limited_20121001";
+    leg1121.tripId = @"195_20121001";
+    leg1121.itinerary = itin112;
+    itin112.startTime = date11;
+    itin112.endTime = [itin112.startTime dateByAddingTimeInterval:(30.0*60)];
+    itin112.plan = plan11;
+    
+    PlanPlace *pp117 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    PlanPlace *pp118 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    [pp117 setLat:[NSNumber numberWithDouble:37.757674]];
+    [pp117 setLng:[NSNumber numberWithDouble:-122.392636]];
+    [pp118 setLat:[NSNumber numberWithDouble:37.7764393371]];
+    [pp118 setLng:[NSNumber numberWithDouble:-122.394322993]];
+    [pp117 setStopId:@"22nd Street Caltrain"];
+    [pp118 setStopId:@"San Francisco Caltrain"];
+    [pp117 setName:@"22nd Street Caltrain Station"];
+    [pp118 setName:@"San Francisco Caltrain Station"];
+    leg1121.from = pp117;
+    leg1121.to = pp118;
+    leg1121.endTime = [leg1121.startTime dateByAddingTimeInterval:(30.0*60)];
+
+    
+    leg1131.startTime = date11;
+    leg1131.duration = [NSNumber numberWithInt:540000];
+    leg1131.agencyId = @"caltrain-ca-us";
+    leg1131.agencyName = @"Caltrain";
+    leg1131.mode = @"RAIL";
+    leg1131.route = @"Local";
+    leg1131.routeLongName = @"Bullet";
+    leg1131.routeId = @"ct_bullet_20121001";
+    leg1131.tripId = @"197_20121001";
+    leg1131.itinerary = itin113;
+    itin113.startTime = date11;
+    itin113.endTime = [itin113.startTime dateByAddingTimeInterval:(30.0*60)];
+    itin113.plan = plan11;
+    
+    PlanPlace *pp119 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    PlanPlace *pp1110 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    [pp119 setLat:[NSNumber numberWithDouble:37.757674]];
+    [pp119 setLng:[NSNumber numberWithDouble:-122.392636]];
+    [pp1110 setLat:[NSNumber numberWithDouble:37.7764393371]];
+    [pp1110 setLng:[NSNumber numberWithDouble:-122.394322993]];
+    [pp119 setStopId:@"22nd Street Caltrain"];
+    [pp1110 setStopId:@"San Francisco Caltrain"];
+    [pp119 setName:@"22nd Street Caltrain Station"];
+    [pp1110 setName:@"San Francisco Caltrain Station"];
+    leg1131.from = pp119;
+    leg1131.to = pp1110;
+    leg1131.endTime = [leg1131.startTime dateByAddingTimeInterval:(30.0*60)];
     // Save context
     saveContext(managedObjectContext);
 }
@@ -652,7 +890,7 @@
     [super tearDown];
 }
 
-- (void)stestLocations
+- (void)testLocations
 {
 
     // Test numberOfLocations
@@ -769,7 +1007,7 @@
 
 }
 
-- (void)stestLocation
+- (void)testLocation
 {
     // Test isMatchingTypedString
     STAssertTrue([loc1 isMatchingTypedString:@""],@"");  // everything matches empty string
@@ -809,7 +1047,7 @@
     
 }
 
-- (void)stestUtilities
+- (void)testUtilities
 {
     // durationString tests
     STAssertTrue([durationString(60.0*1000.0) isEqualToString:@"1 minute"], @"");
@@ -887,7 +1125,7 @@
     STAssertTrue([addDateOnlyWithTime(dayTime2, timeOnly6Minus20) isEqualToDate:dayTime9], @"");
 }
 
-- (void)stestKeyObjectStore
+- (void)testKeyObjectStore
 {
     // Simple store and retrieve before saving changes to permanent store
     NSArray* testArray1 = [NSArray arrayWithObjects:@"Item1", @"Item2", @"Item3", nil];
@@ -918,7 +1156,7 @@
     [store removeKeyObjectForKey:@"testKey2"];
 }
 
-- (void)stestTransitCalendar
+- (void)testTransitCalendar
 {
     // Set-up object
     TransitCalendar* transitCalendar = [[TransitCalendar alloc] init];
@@ -951,7 +1189,7 @@
     STAssertFalse([transitCalendar isEquivalentServiceDayFor:dayTime2 And:dayTime6 agencyId:@"BART"], @"");
 }
 
-- (void)stestPlanRequestChunk
+- (void)testPlanRequestChunk
 {
     // Make sure I have the right PlanRequestChunks
     STAssertTrue(([[itin30 planRequestChunks] count]==1), @"");
@@ -1063,7 +1301,7 @@
 }
 
 
-- (void)stestPlanStore
+- (void)testPlanStore
 {
     // Set-up dates
     NSDate* dayTime0 = [dateFormatter dateFromString:@"August 22, 2012 5:01 PM"]; // Wednesday
@@ -1371,7 +1609,7 @@
     STAssertTrue(isAnyTimeMatch, @"");
 }
 
-- (void)stestGeneratePlans{
+- (void)testGeneratePlans{
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *logFile = [documentsDirectory stringByAppendingPathComponent:@"testlog.csv"];
@@ -1900,7 +2138,7 @@
     NSArray *arractransitAgencyData = [NSArray arrayWithObjects:strTitle,strAcTransit, nil];
     NSDictionary *dictData = [NSDictionary dictionaryWithObjectsAndKeys:arrCaltrainAgencyData,@"1_agency",arrBartnAgencyData,@"2_agency",arrSfmtaAgencyData,@"3_agency",arractransitAgencyData,@"4_agency", nil];
     NSDictionary *agencyDict = [NSDictionary dictionaryWithObjectsAndKeys:@"105",@"code",@"msg",@"Operation Completed Sucessfully",dictData,@"data", nil];
-    [[nc_AppDelegate sharedInstance].gtfsParser parseAgencyDataAndStroreToDataBase:agencyDict];
+    [[nc_AppDelegate sharedInstance].gtfsParser parseAndStroreGtfsAgencyData:agencyDict];
 }
 
 // Test The GtfsCalendar Data Parsing and DB Insertion with some test data.
@@ -1917,7 +2155,7 @@
     NSArray *arrAcTransitData = [NSArray arrayWithObjects:strTitle,strCalRow3,strCalRow4, nil];
     NSDictionary *dictData = [NSDictionary dictionaryWithObjectsAndKeys:arrCaltrainData,@"1_calendar",arrBartData,@"2_calendar",arrMuniData,@"3_calendar",arrAcTransitData,@"4_calendar", nil];
     NSDictionary *agencyDict = [NSDictionary dictionaryWithObjectsAndKeys:@"105",@"code",@"msg",@"Operation Completed Sucessfully",dictData,@"data", nil];
-    [[nc_AppDelegate sharedInstance].gtfsParser parseCalendarDataAndStroreToDataBase:agencyDict];
+    [[nc_AppDelegate sharedInstance].gtfsParser parseAndStoreGtfsCalendarData:agencyDict];
 }
 
 // Test The GtfsCalendarDates Data Parsing and DB Insertion with some test data.
@@ -1935,7 +2173,7 @@
     NSArray *arrAcTransitData = [NSArray arrayWithObjects:strTitle,strCalDatesRow3,strCalDatesRow4,strCalDatesRow5, nil];
     NSDictionary *dictData = [NSDictionary dictionaryWithObjectsAndKeys:arrCaltrainData,@"1_calendar_dates",arrBartData,@"2_calendar_dates",arrMuniData,@"3_calendar_dates",arrAcTransitData,@"4_calendar_dates", nil];
     NSDictionary *agencyDict = [NSDictionary dictionaryWithObjectsAndKeys:@"105",@"code",@"msg",@"Operation Completed Sucessfully",dictData,@"data", nil];
-    [[nc_AppDelegate sharedInstance].gtfsParser parseCalendarDatesDataAndStroreToDataBase:agencyDict];
+    [[nc_AppDelegate sharedInstance].gtfsParser parseAndStoreGtfsCalendarDatesData:agencyDict];
 }
 
 // Test The GtfsRoutes Data Parsing and DB Insertion with some test data.
@@ -1953,7 +2191,7 @@
     NSArray *arrAcTransitData = [NSArray arrayWithObjects:strTitle,strRoutesRow3,strRoutesRow4,strRoutesRow5, nil];
     NSDictionary *dictData = [NSDictionary dictionaryWithObjectsAndKeys:arrCaltrainData,@"1_routes",arrBartData,@"2_routes",arrMuniData,@"3_routes",arrAcTransitData,@"4_routes", nil];
     NSDictionary *agencyDict = [NSDictionary dictionaryWithObjectsAndKeys:@"105",@"code",@"msg",@"Operation Completed Sucessfully",dictData,@"data", nil];
-    [[nc_AppDelegate sharedInstance].gtfsParser parseRoutesDataAndStroreToDataBase:agencyDict];
+    [[nc_AppDelegate sharedInstance].gtfsParser parseAndStoreGtfsRoutesData:agencyDict];
 }
 
 // Test The GtfsStops Data Parsing and DB Insertion with some test data.
@@ -1971,6 +2209,35 @@
     NSArray *arrAcTransitData = [NSArray arrayWithObjects:strTitle,strStopsRow4,strStopsRow5,strStopsRow3, nil];
     NSDictionary *dictData = [NSDictionary dictionaryWithObjectsAndKeys:arrCaltrainData,@"1_stops",arrBartData,@"2_stops",arrMuniData,@"3_stops",arrAcTransitData,@"4_stops", nil];
     NSDictionary *agencyDict = [NSDictionary dictionaryWithObjectsAndKeys:@"105",@"code",@"msg",@"Operation Completed Sucessfully",dictData,@"data", nil];
-    [[nc_AppDelegate sharedInstance].gtfsParser parseStopsDataAndStroreToDataBase:agencyDict];
+    [[nc_AppDelegate sharedInstance].gtfsParser parseAndStoreGtfsStopsData:agencyDict];
+}
+
+// First we get all gtfs Data from server and save to database.
+// Get unique itinerary patterns from database and add to plan.
+// Get Gtfs trips and stoptimes data from server and save to database.
+// generate  new itinerary from patterns and stoptimes data and add it to plan.
+
+- (void) testItineraryCreationFromPattern{
+    [[nc_AppDelegate sharedInstance].gtfsParser requestAgencyDataFromServer];
+    [self someMethodToWaitForResult];
+    NSArray *uniqueitineraryFromPlan10 = [plan10 uniqueItineraries];
+    STAssertTrue([uniqueitineraryFromPlan10 count] == 2, @"");
+    NSArray *uniqueitineraryFromPlan11 = [plan11 uniqueItineraries];
+    STAssertTrue([uniqueitineraryFromPlan11 count] == 3, @"");
+    [[nc_AppDelegate sharedInstance].gtfsParser generateGtfsTripsRequestStringUsingPlan:plan10];
+    [self someMethodToWaitForResult];
+    [[nc_AppDelegate sharedInstance].gtfsParser generateStopTimesRequestString:plan10];
+    [self someMethodToWaitForResult];
+    
+    [plan10 setUniqueItineraryPatterns:[NSSet setWithArray:uniqueitineraryFromPlan10]];
+    PlanRequestParameters *parameters = [[PlanRequestParameters alloc] init];
+    NSDate* date10req = [dateFormatter dateFromString:@"June 8, 2012 9:40 AM"]; // Friday before last load
+    parameters.originalTripDate = date10req;
+    
+    NSArray *arrItineraries = [[plan10 itineraries] allObjects];
+    plan10 = [[nc_AppDelegate sharedInstance].gtfsParser generateLegsAndItineraryFromPatternsOfPlan:plan10 parameters:parameters Context:managedObjectContext];
+    saveContext(managedObjectContext);
+    NSArray *arrnewItineraries = [[plan10 itineraries] allObjects];
+    STAssertTrue([arrItineraries count] <= [arrnewItineraries count],@"");
 }
 @end

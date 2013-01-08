@@ -101,7 +101,7 @@
 // if leg is transit leg then first get the stoptimes from that leg and choose nearest stoptimes and remove it from mutable array.
 // this lopp continue until we have stoptimes data.
 
-- (void)generateLegsAndItineraryFromPatternsOfPlan:(Plan *)plan parameters:(PlanRequestParameters *)parameters;
+- (Plan *)generateLegsAndItineraryFromPatternsOfPlan:(Plan *)plan parameters:(PlanRequestParameters *)parameters Context:(NSManagedObjectContext *)context;
 
 - (NSDate *)timeAndDateFromString:(NSString *)strTime;
 - (NSArray *) findNearestStopTimeFromStopTimeArray:(NSArray *)arrStopTimes Itinerary:(Itinerary *)itinerary;

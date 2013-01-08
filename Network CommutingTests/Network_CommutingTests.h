@@ -72,5 +72,31 @@
     Itinerary *itin91arr;
 
     NSDate* date60req;
+    
+    Plan *plan10;
+    Plan *plan11;
+    
+    Itinerary *itin101;
+    Itinerary *itin102;
+    Itinerary *itin103;
+    
+    Itinerary *itin111;
+    Itinerary *itin112;
+    Itinerary *itin113;
+    
+    Leg *leg1011;
+    Leg *leg1012;
+    Leg *leg1013;
+    Leg *leg1021;
+    Leg *leg1031;
+    Leg *leg1032;
+    
+    Leg *leg1111;
+    Leg *leg1112;
+    Leg *leg1113;
+    Leg *leg1121;
+    Leg *leg1131;
+    Leg *leg1132;
+    
 }
 @end

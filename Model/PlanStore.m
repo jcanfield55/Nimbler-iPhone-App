@@ -256,8 +256,8 @@
                 } else {
                     [NSException raise:@"PlanStore->didLoadObjects failed to retrieve plan parameters" format:@"strResourcePath: %@", strResourcePath];
                 }
-                [[nc_AppDelegate sharedInstance].gtfsParser performSelector:@selector(generateGtfsTripsRequestStringUsingPlan:) withObject:plan afterDelay:1.0];
-                [[nc_AppDelegate sharedInstance].gtfsParser performSelector:@selector(generateStopTimesRequestString:) withObject:plan afterDelay:2.0];
+                [[nc_AppDelegate sharedInstance].gtfsParser performSelector:@selector(generateGtfsTripsRequestStringUsingPlan:) withObject:plan afterDelay:0.0];
+                [[nc_AppDelegate sharedInstance].gtfsParser performSelector:@selector(generateStopTimesRequestString:) withObject:plan afterDelay:1.0];
                 // Set to & from location with special handling of CurrentLocation
                 Location *toLoc = [planRequestParameters toLocation];
                 if ([toLoc isCurrentLocation] && [toLoc isReverseGeoValid]) {
@@ -289,20 +289,19 @@
                     } // else if routeOptions destination, do nothing
                     return;
                 }
-                
-                saveContext(managedObjectContext);  // Save location and request chunk changes
+                 saveContext(managedObjectContext);  // Save location and request chunk changes
                 plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context
                 // Now format the itineraries of the consolidated plan
                 if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate] departOrArrive:[planRequestParameters departOrArrive]]) {
+                    
                     [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
-
+                    
                     // get Unique Itinerary from Plan.
                     NSArray *arrUniqueItinerary = [plan uniqueItineraries];
                     NSSet *setUniqueitineraries = [NSSet setWithArray:arrUniqueItinerary];
                     plan.uniqueItineraryPatterns = setUniqueitineraries;
-                    saveContext(self.managedObjectContext);
-                    
-                    [[nc_AppDelegate sharedInstance].gtfsParser generateLegsAndItineraryFromPatternsOfPlan:plan parameters:planRequestParameters];
+                    plan = [[nc_AppDelegate sharedInstance].gtfsParser generateLegsAndItineraryFromPatternsOfPlan:plan parameters:planRequestParameters Context:nil];
+                    saveContext(managedObjectContext);  // Save location and request chunk changes
                     
                     // Call-back the appropriate RouteOptions VC with the new plan
                     UIViewController *currentVC = toFromVC.navigationController.visibleViewController;
