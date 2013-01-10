@@ -404,12 +404,8 @@ NSString *strStreet2 = @"street ";
            // DE-207 & US-166 Implementation
             rawAddress = [rawAddress lowercaseString];
             @try {
-                if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-                    // DE-225 Fixed.Converted The raw Address into  lowerCase string.
-                    if ([rawAddress rangeOfString:strBART1 options:NSCaseInsensitiveSearch].location != NSNotFound || [rawAddress rangeOfString:strBART2 options:NSCaseInsensitiveSearch].location != NSNotFound ||  [rawAddress rangeOfString:strAirBart1 options:NSCaseInsensitiveSearch].location != NSNotFound || [rawAddress rangeOfString:strAirBart2 options:NSCaseInsensitiveSearch].location != NSNotFound) {
-                        rawAddress = [locations rawAddressWithOutAgencyName:BART_SEARCH_STRINGS_ARRAY:BART_REPLACE_STRINGS_ARRAY :rawAddress];
                         if(rawAddress.length > 0){
-                            NSArray *arrayFilteredStation = [locations searchedStationsFromRawAddress:rawAddress :BART_SEARCH_STRINGS_ARRAY:BART_REPLACE_STRINGS_ARRAY:@"caltrain"];
+                            NSArray *arrayFilteredStation = [locations searchedStationsFromRawAddress:rawAddress :WMATA_SEARCH_STRINGS_ARRAY:WMATA_REPLACE_STRINGS_ARRAY:nil];
                             if(arrayFilteredStation){
                                 if([arrayFilteredStation count] == 1){
                                     [self markAndUpdateSelectedLocation:[arrayFilteredStation objectAtIndex:0]];
@@ -424,70 +420,6 @@ NSString *strStreet2 = @"street ";
                                 }
                             }
                         }
-                    }
-                    
-                    if ([rawAddress rangeOfString:strCaltrain1 options:NSCaseInsensitiveSearch].location != NSNotFound || [rawAddress rangeOfString:strCaltrain2 options:NSCaseInsensitiveSearch].location != NSNotFound) {
-                        rawAddress = [locations rawAddressWithOutAgencyName:CALTRAIN_SEARCH_STRINGS_ARRAY:CALTRAIN_REPLACE_STRINGS_ARRAY:rawAddress];
-                        if(rawAddress.length > 0){
-                            NSArray *arrayFilteredStation = [locations searchedStationsFromRawAddress:rawAddress :CALTRAIN_SEARCH_STRINGS_ARRAY:CALTRAIN_REPLACE_STRINGS_ARRAY:@"bart"];
-                            if(arrayFilteredStation){
-                                if([arrayFilteredStation count] == 1){
-                                    [self markAndUpdateSelectedLocation:[arrayFilteredStation objectAtIndex:0]];
-                                    return;
-                                }
-                                else{
-                                    [toFromVC callLocationPickerFor:self
-                                                       locationList:arrayFilteredStation
-                                                             isFrom:isFrom
-                                                   isGeocodeResults:YES];
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
-                else{
-                    rawAddress = [rawAddress lowercaseString];
-                    if ([rawAddress rangeOfString:strBART1 options:NSCaseInsensitiveSearch].location != NSNotFound || [rawAddress rangeOfString:strBART2 options:NSCaseInsensitiveSearch].location != NSNotFound ||  [rawAddress rangeOfString:strAirBart1 options:NSCaseInsensitiveSearch].location != NSNotFound || [rawAddress rangeOfString:strAirBart2 options:NSCaseInsensitiveSearch].location != NSNotFound) {
-                        rawAddress = [locations rawAddressWithOutAgencyName:BART_SEARCH_STRINGS_ARRAY:BART_REPLACE_STRINGS_ARRAY :rawAddress];
-                        if(rawAddress.length > 0){
-                            NSArray *arrayFilteredStation = [locations searchedStationsFromRawAddress:rawAddress :BART_SEARCH_STRINGS_ARRAY:BART_REPLACE_STRINGS_ARRAY:@"caltrain"];
-                            if(arrayFilteredStation){
-                                if([arrayFilteredStation count] == 1){
-                                    [self markAndUpdateSelectedLocation:[arrayFilteredStation objectAtIndex:0]];
-                                    return;
-                                }
-                                else{
-                                    [toFromVC callLocationPickerFor:self
-                                                       locationList:arrayFilteredStation
-                                                             isFrom:isFrom
-                                                   isGeocodeResults:YES];
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                    
-                    if ([rawAddress rangeOfString:strCaltrain1 options:NSCaseInsensitiveSearch].location != NSNotFound || [rawAddress rangeOfString:strCaltrain2 options:NSCaseInsensitiveSearch].location != NSNotFound) {
-                        rawAddress = [locations rawAddressWithOutAgencyName:CALTRAIN_SEARCH_STRINGS_ARRAY:CALTRAIN_REPLACE_STRINGS_ARRAY:rawAddress];
-                        if(rawAddress.length > 0){
-                            NSArray *arrayFilteredStation = [locations searchedStationsFromRawAddress:rawAddress :CALTRAIN_SEARCH_STRINGS_ARRAY:CALTRAIN_REPLACE_STRINGS_ARRAY:@"bart"];
-                            if(arrayFilteredStation){
-                                if([arrayFilteredStation count] == 1){
-                                    [self markAndUpdateSelectedLocation:[arrayFilteredStation objectAtIndex:0]];
-                                    return;
-                                }
-                                else{
-                                    [toFromVC callLocationPickerFor:self
-                                                       locationList:arrayFilteredStation
-                                                             isFrom:isFrom
-                                                   isGeocodeResults:YES];
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
                 GeocodeRequestParameters* parameters = [[GeocodeRequestParameters alloc] init];
                 parameters.rawAddress = rawAddress;
                 parameters.supportedRegion = [self supportedRegion];

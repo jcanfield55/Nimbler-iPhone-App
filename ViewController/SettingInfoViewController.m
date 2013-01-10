@@ -172,6 +172,7 @@ UIImage *imageDetailDisclosure;
     [self.sliderMaxWalkDistance addSubview:lblSliderMaxWalkDistanceValue];
     
     [switchPushNotification setOn:userPrefs.pushEnable];
+    [switchPushNotification setUserInteractionEnabled:NO];
 }
 
 - (void)viewDidUnload{
@@ -345,47 +346,11 @@ UIImage *imageDetailDisclosure;
     NSMutableString *strDetailTextLabel = [NSMutableString stringWithCapacity:20];
     UserPreferance* userPrefs = [UserPreferance userPreferance];
     if(indexPath.section == 0){
-        if(userPrefs.sfMuniAdvisories &&
-           userPrefs.bartAdvisories &&
-           userPrefs.acTransitAdvisories &&
-           userPrefs.caltrainAdvisories) {
-            [strDetailTextLabel appendString:LABEL_ALL];
+        if(userPrefs.wMataAdvisories) {
+            [strDetailTextLabel appendString:LABEL_WMATA];
         }
-        else if (!userPrefs.sfMuniAdvisories &&
-                 !userPrefs.bartAdvisories &&
-                 !userPrefs.acTransitAdvisories &&
-                 !userPrefs.caltrainAdvisories) {
+        else if (!userPrefs.wMataAdvisories) {
             [strDetailTextLabel appendString:LABEL_NONE];
-        } else { // Some combination of agencies
-            int agencyCount=0;
-            if (userPrefs.sfMuniAdvisories) {
-                [strDetailTextLabel appendString:LABEL_SFMUNI];
-                agencyCount++;
-            }
-            if (userPrefs.bartAdvisories) {
-                if (agencyCount > 0) {
-                    [strDetailTextLabel appendFormat:@" + %@",LABEL_BART];
-                } else {
-                    [strDetailTextLabel appendFormat:LABEL_BART];
-                }
-                agencyCount++;
-            }
-            if (userPrefs.acTransitAdvisories) {
-                if (agencyCount > 0) {
-                    [strDetailTextLabel appendFormat:@" + %@",LABEL_ACTRANSIT];
-                } else {
-                    [strDetailTextLabel appendFormat:LABEL_ACTRANSIT];
-                }
-                agencyCount++;
-            }
-            if (userPrefs.caltrainAdvisories) {
-                if (agencyCount > 0) {
-                    [strDetailTextLabel appendFormat:@" + %@",LABEL_CALTRAIN];
-                } else {
-                    [strDetailTextLabel appendFormat:LABEL_CALTRAIN];
-                }
-                agencyCount++;
-            }
         }
     }
     else if(indexPath.section == 1){

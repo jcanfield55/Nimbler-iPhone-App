@@ -15,9 +15,9 @@
 
 #define GEO_RESPONSE_URL      @"http://maps.googleapis.com/maps/api/geocode/"
 
-#define TRIP_PROCESS_URL    @"http://23.23.210.156:8080/TPServer/ws/"
+#define TRIP_PROCESS_URL    @"http://23.23.210.156:6060/TPServer/ws/"
 
-//#define TRIP_PROCESS_URL      @"http://192.168.2.106:8080/TPServer/ws/"
+//#define TRIP_PROCESS_URL      @"http://192.168.2.196:6060/TPServer/ws/"
 
 #define TWITTER_SERARCH_URL    @"https://twitter.com/#!/search/realtime/TRAIN%20from%3Acaltrain%20OR%20from%3Acaltrain_news"
 #define CALTRAIN_TWITTER_URL   @"https://twitter.com/#!/search/from%3Acaltrain%20OR%20from%3Acaltrain_news"
@@ -28,10 +28,10 @@
 #define REVERSE_GEO_TO    @"2"
 #define PREDEFINE_TYPE    @"3"
 
-#define MIN_LAT           @"36.791000000000004"
-#define MIN_LONG          @"-123.4631719"
-#define MAX_LAT           @"38.7189988"
-#define MAX_LONG          @"-121.025001"
+#define MIN_LAT           @"38.539005"
+#define MIN_LONG          @"-77.5989708"
+#define MAX_LAT           @"39.6309928"
+#define MAX_LONG          @"-76.05803300000001"
 
 #define ON_TIME           1
 #define DELAYED           2
@@ -47,17 +47,11 @@
 #define COREDATA_DB_FILENAME    @"store101.data"
 
 // Preload file variables
-#define CALTRAIN_PRELOAD_LOCATION_FILE     @"caltrain-station.json"
-#define CALTRAIN_BACKGROUND_PRELOAD_LOCATION_FILE @"caltrain-station-background.json"
-#define BART_PRELOAD_LOCATION_FILE         @"bart-station.json"
-#define BART_BACKGROUND_PRELOAD_LOCATION_FILE         @"bart-station-background.json"
+#define WMATA_PRELOAD_LOCATION_FILE     @"wmata-station.json"
 #define CALTRAIN_BUNDLE_IDENTIFIER         @"com.Nimbler.Nimbler-Caltrain"
 #define BART_BUNDLE_IDENTIFIER         @"com.Nimbler.Nimbler-BART"
-#define CALTRAIN_PRELOAD_VERSION_NUMBER    @"1.100"
-#define CALTRAIN_PRELOAD_TEST_ADDRESS    @"San Martin Caltrain, San Martin, CA 95046, USA"
-#define BART_PRELOAD_VERSION_NUMBER      @"1.052"
-
-#define BART_PRELOAD_TEST_ADDRESS        @"24th St Mission BART, San Francisco, CA 94110, USA"
+#define WMATA_PRELOAD_VERSION_NUMBER    @"1.100"
+#define WMATA_PRELOAD_TEST_ADDRESS    @"30th Street Northwest, Washington, DC 20007, USA"
 #define TOFROM_LIST_TYPE          @"TOFROM_LIST" // Location type indicating a ToFromList
 
 // Current Location
@@ -85,6 +79,7 @@
 #define PREFS_MAX_WALK_DISTANCE           @"PrefsMaxWalkDistance"
 #define ENABLE_STANDARDNOTIFICATION_SOUND @"enableStdNotifSound"
 #define ENABLE_URGENTNOTIFICATION_SOUND   @"enableUrgntNotifSound"
+#define ENABLE_WMATA_ADV     @"enableWmataAdv"
 #define ENABLE_SFMUNI_ADV   @"enableSfMuniAdv"
 #define ENABLE_BART_ADV     @"enableBartAdv"
 #define ENABLE_ACTRANSIT_ADV @"enableAcTransitAdv"
@@ -109,7 +104,7 @@
 #define UPDATE_SETTING_REQ    @"users/preferences/update"
 
 // UserPreferernce (user settings) defaults, max, and min
-#define PREFS_DEFAULT_IS_PUSH_ENABLE YES
+#define PREFS_DEFAULT_IS_PUSH_ENABLE NO
 #define PREFS_DEFAULT_PUSH_NOTIFICATION_THRESHOLD 5
 #define PREFS_DEFAULT_MAX_WALK_DISTANCE 0.75
 
@@ -124,6 +119,7 @@
 #define ENABLE_STANDARDNOTIF_SOUND_DEFAULT FALSE
 #define ENABLE_URGENTNOTIF_SOUND_DEFAULT   TRUE
 #define ENABLE_SFMUNI_ADV_DEFAULT FALSE
+#define ENABLE_WMATA_ADV_DEFAULT TRUE
 #define ENABLE_BART_ADV_DEFAULT FALSE
 #define ENABLE_ACTRANSIT_ADV_DEFAULT FALSE
 #define ENABLE_CALTRAIN_ADV_DEFAULT TRUE
@@ -281,9 +277,11 @@
 #define BART_AGENCY_ID      @"2"
 #define SFMUNI_AGENCY_ID    @"3"
 #define ACTRANSIT_AGENCY_ID @"4"
+#define WMATA_AGENCY_ID @"8"
 
 #define CALTRAIN_APP_TYPE   @"1"
 #define SFMUNI_APP_TYPE     @"4"
+#define WMATA_APP_TYPE      @"5"
 
 
 #define UPDATE_TIME_URL @"gtfs/updateTime"
@@ -406,4 +404,7 @@
 #define GTFS_RAWDATA @"gtfs/rawdata"
 #define ENTITY  @"entity"
 #define AGENCY_IDS @"agencyIds"
+
+#define ROUTER_ID_STRING @"file:/server-ebs/nimbler/server/graph/wdc/Graph.obj"
+#define ROUTER_ID @"routerId"
 

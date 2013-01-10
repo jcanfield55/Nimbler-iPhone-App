@@ -83,6 +83,7 @@ static nc_AppDelegate *appDelegate;
 @synthesize receivedReply;
 @synthesize receivedError;
 @synthesize testLogMutableString;
+@synthesize strSupportedRegionURL;
 
 // Feedback parameters
 @synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId;
@@ -180,19 +181,9 @@ FeedBackForm *fbView;
         [toFromViewController setPlanStore:planStore];
         [KeyObjectStore setUpWithManagedObjectContext:[self managedObjectContext]];
         
-        // Pre-load stations location files
-        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-            NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:CALTRAIN_PRELOAD_VERSION_NUMBER];
-            NSDecimalNumber* bartVersion = [NSDecimalNumber decimalNumberWithString:BART_PRELOAD_VERSION_NUMBER];
-            [locations preLoadIfNeededFromFile:CALTRAIN_PRELOAD_LOCATION_FILE latestVersionNumber:caltrainVersion testAddress:CALTRAIN_PRELOAD_TEST_ADDRESS];
-            [locations preLoadIfNeededFromFile:BART_BACKGROUND_PRELOAD_LOCATION_FILE latestVersionNumber:bartVersion testAddress:BART_PRELOAD_TEST_ADDRESS];
-        }
-        else {
-            NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:CALTRAIN_PRELOAD_VERSION_NUMBER];
-            NSDecimalNumber* bartVersion = [NSDecimalNumber decimalNumberWithString:BART_PRELOAD_VERSION_NUMBER];
-            [locations preLoadIfNeededFromFile:CALTRAIN_BACKGROUND_PRELOAD_LOCATION_FILE latestVersionNumber:caltrainVersion testAddress:CALTRAIN_PRELOAD_TEST_ADDRESS];
-            [locations preLoadIfNeededFromFile:BART_PRELOAD_LOCATION_FILE latestVersionNumber:bartVersion testAddress:BART_PRELOAD_TEST_ADDRESS];
-        }
+        // Pre-load WMATA stations location files
+            NSDecimalNumber* wMataVersion = [NSDecimalNumber decimalNumberWithString:WMATA_PRELOAD_VERSION_NUMBER];
+            [locations preLoadIfNeededFromFile:WMATA_PRELOAD_LOCATION_FILE latestVersionNumber:wMataVersion testAddress:WMATA_PRELOAD_TEST_ADDRESS];
     }@catch (NSException *exception) {
         logException(@"ncAppDelegate->didFinishLaunchingWithOptions #1", @"", exception);
     }
@@ -785,7 +776,10 @@ FeedBackForm *fbView;
         // DE - 181 Fixed
         RKClient *client = [RKClient clientWithBaseURL:TRIP_GENERATE_URL];
         [RKClient setSharedClient:client];
-        [[RKClient sharedClient]  get:METADATA_URL delegate:self];
+        NSDictionary *dictParams = [NSDictionary dictionaryWithObjectsAndKeys:ROUTER_ID_STRING,ROUTER_ID, nil];
+        NSString *supportedRegionrequest = [METADATA_URL appendQueryParams:dictParams];
+        strSupportedRegionURL = supportedRegionrequest;
+        [[RKClient sharedClient]  get:supportedRegionrequest delegate:self];
     }
     @catch (NSException *exception) {
         logException(@"ncAppDelegate->suppertedRegion", @"", exception);    }
@@ -861,7 +855,7 @@ FeedBackForm *fbView;
                 }
                 // DE- 181 Fixed
                 // Checking resourcePath instead of checking for BOOL variable isRegionSupport.
-                else if([strRequestURL isEqualToString:METADATA_URL]){
+                else if([strRequestURL isEqualToString:strSupportedRegionURL]){
                     NIMLOG_EVENT1(@"Loaded SupportedRegion response");
                     NSDictionary  *regionParser = [rkParser objectFromString:[response bodyAsString] error:nil];
                     NIMLOG_OBJECT1(@"regionParser =%@",regionParser);
@@ -1155,12 +1149,7 @@ FeedBackForm *fbView;
 // Get Application Type from Bundle Identifier
 - (NSString *)getAppTypeFromBundleId{
     NSString *strAppType;
-    if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-        strAppType = CALTRAIN_APP_TYPE;
-    }
-    else{
-        strAppType = SFMUNI_APP_TYPE;
-    }
+        strAppType = WMATA_APP_TYPE;
     return strAppType;
 }
 
@@ -1169,36 +1158,9 @@ FeedBackForm *fbView;
 - (NSString *)getAgencyIdsString{
     NSMutableString *strMutableAgencyIds = [[NSMutableString alloc] init];
     NSString *strAgencyIds;
-//    if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-//        [strMutableAgencyIds appendFormat:@"%@,",CALTRAIN_AGENCY_IDS];
-//        int nLength = [strMutableAgencyIds length];
-//        if(nLength > 0){
-//            strAgencyIds = [strMutableAgencyIds substringToIndex:nLength-1];
-//        }
-//        else{
-//            strAgencyIds = strMutableAgencyIds;
-//        }
-//    }
-//    else{
-        if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] == 1){
-            [strMutableAgencyIds appendFormat:@"%@,",SFMUNI_AGENCY_ID];
+        if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_WMATA_ADV] intValue] == 1){
+            [strMutableAgencyIds appendFormat:@"%@,",WMATA_AGENCY_ID];
         }
-        if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] == 1){
-            [strMutableAgencyIds appendFormat:@"%@,",BART_AGENCY_ID];
-        }
-        if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] == 1){
-            [strMutableAgencyIds appendFormat:@"%@,",ACTRANSIT_AGENCY_ID];
-        }
-        if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] == 1){
-            [strMutableAgencyIds appendFormat:@"%@,",CALTRAIN_AGENCY_IDS];
-        }
-        int nLength = [strMutableAgencyIds length];
-        if(nLength > 0){
-            strAgencyIds = [strMutableAgencyIds substringToIndex:nLength-1];
-        }
-        else{
-            strAgencyIds = strMutableAgencyIds;
-        }
-    //}
     return strAgencyIds;
-}@end
+}
+@end

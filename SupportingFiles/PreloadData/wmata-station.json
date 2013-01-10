@@ -1,10 +1,10 @@
 {
     "results" : [
                  {
-                 "formatted_address" : "Caltrain Station List",
+                 "formatted_address" : "WMata Station List",
                  "toFrequency" : 25.0,
                  "fromFrequency" : 25.0,
-                 "memberOfList" : "Caltrain",
+                 "memberOfList" : "Wmata",
                  "geometry" : {
                  "location_type" : "TOFROM_LIST"
                  }

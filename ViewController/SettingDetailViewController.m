@@ -251,7 +251,7 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     int nRowCount = 4;
     if(nSettingRow == 0){
-        nRowCount = 4;
+        nRowCount = 1;
     }
     else if(nSettingRow == 3){
         nRowCount = 2;
@@ -290,21 +290,21 @@
     UserPreferance* userPrefs = [UserPreferance userPreferance];
     if(nSettingRow == 0){
         if(indexPath.row == 0){
-            cell.textLabel.text = SFMUNI_ADVISORIES;
-            cell.accessoryType = (userPrefs.sfMuniAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+            cell.textLabel.text = WMATA_ADVISORIES;
+            cell.accessoryType = (userPrefs.wMataAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
         }
-        else if(indexPath.row == 1){
-            cell.textLabel.text = BART_ADVISORIES;
-            cell.accessoryType = (userPrefs.bartAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
-        }
-        else if(indexPath.row == 2){
-            cell.textLabel.text = ACTRANSIT_ADVISORIES;
-            cell.accessoryType = (userPrefs.acTransitAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
-        }
-        else if(indexPath.row == 3){
-            cell.textLabel.text = CALTRAIN_ADVISORIES;
-            cell.accessoryType = (userPrefs.caltrainAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
-        }
+//        else if(indexPath.row == 1){
+//            cell.textLabel.text = BART_ADVISORIES;
+//            cell.accessoryType = (userPrefs.bartAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+//        }
+//        else if(indexPath.row == 2){
+//            cell.textLabel.text = ACTRANSIT_ADVISORIES;
+//            cell.accessoryType = (userPrefs.acTransitAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+//        }
+//        else if(indexPath.row == 3){
+//            cell.textLabel.text = CALTRAIN_ADVISORIES;
+//            cell.accessoryType = (userPrefs.caltrainAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+//        }
     }
     else if(nSettingRow == 3){
         if(indexPath.row == 0){
@@ -456,53 +456,53 @@
     UserPreferance* userPrefs = [UserPreferance userPreferance];
     if(nSettingRow == 0){
         if(indexPath.row == 0){
-            if(userPrefs.sfMuniAdvisories){
+            if(userPrefs.wMataAdvisories){
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                 cell.accessoryType = UITableViewCellAccessoryNone;
-                userPrefs.sfMuniAdvisories = false;
+                userPrefs.wMataAdvisories = false;
             }
             else{
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                 cell.accessoryType = UITableViewCellAccessoryCheckmark;
-                userPrefs.sfMuniAdvisories = true;
+                userPrefs.wMataAdvisories = true;
             }
         }
-        if(indexPath.row == 1){
-            if(userPrefs.bartAdvisories){
-                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryNone;
-                userPrefs.bartAdvisories = false;
-            }
-            else{
-                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryCheckmark;
-                userPrefs.bartAdvisories = true;
-            }
-        }
-        if(indexPath.row == 2){
-            if(userPrefs.acTransitAdvisories){
-                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryNone;
-                userPrefs.acTransitAdvisories = false;
-            }
-            else{
-                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryCheckmark;
-                userPrefs.acTransitAdvisories = true;
-            }
-        }
-        if(indexPath.row == 3){
-            if(userPrefs.caltrainAdvisories){
-                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryNone;
-                userPrefs.caltrainAdvisories = false;
-            }
-            else{
-                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryCheckmark;
-                userPrefs.caltrainAdvisories = true;
-            }
-        }
+//        if(indexPath.row == 1){
+//            if(userPrefs.bartAdvisories){
+//                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+//                cell.accessoryType = UITableViewCellAccessoryNone;
+//                userPrefs.bartAdvisories = false;
+//            }
+//            else{
+//                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+//                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+//                userPrefs.bartAdvisories = true;
+//            }
+//        }
+//        if(indexPath.row == 2){
+//            if(userPrefs.acTransitAdvisories){
+//                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+//                cell.accessoryType = UITableViewCellAccessoryNone;
+//                userPrefs.acTransitAdvisories = false;
+//            }
+//            else{
+//                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+//                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+//                userPrefs.acTransitAdvisories = true;
+//            }
+//        }
+//        if(indexPath.row == 3){
+//            if(userPrefs.caltrainAdvisories){
+//                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+//                cell.accessoryType = UITableViewCellAccessoryNone;
+//                userPrefs.caltrainAdvisories = false;
+//            }
+//            else{
+//                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+//                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+//                userPrefs.caltrainAdvisories = true;
+//            }
+//        }
         [self.tblDetailSetting reloadData];
     }
     if(nSettingRow == 4){

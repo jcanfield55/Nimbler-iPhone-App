@@ -78,6 +78,9 @@
 #define CALTRAIN_SEARCH_STRINGS_ARRAY [NSArray arrayWithObjects:@"bart station list",@"caltrain station list",@"current location",@" caltrain",@"caltrain ", nil]
 #define CALTRAIN_REPLACE_STRINGS_ARRAY [NSArray arrayWithObjects:@"",@"",@"",@"",@"", nil]
 
+#define WMATA_SEARCH_STRINGS_ARRAY [NSArray arrayWithObjects:@"wmata station list",@"current location", nil]
+#define WMATA_REPLACE_STRINGS_ARRAY [NSArray arrayWithObjects:@"",@"",nil]
+
 // New AppSetting Constants
 #define ADVISORY_CHOICES   @"Advisory Choices"
 #define PUSH_NOTIFICATION  @"Push Notification"
@@ -89,6 +92,7 @@
 #define BART_ADVISORIES      @"BART advisories"
 #define ACTRANSIT_ADVISORIES @"A/C transit advisories"
 #define CALTRAIN_ADVISORIES  @"Caltrain advisories"
+#define WMATA_ADVISORIES     @"WMATA advisories"
 
 
 #define FREQUENCY_OF_PUSH       @"Frequency of push notification"
@@ -132,6 +136,7 @@
 #define LABEL_BART              @"Bart"
 #define LABEL_ACTRANSIT         @"Ac Transit"
 #define LABEL_CALTRAIN          @"Caltrain"
+#define LABEL_WMATA             @"Wmata"
 
 #define LABEL_NO_NOTIFICATIONS  @"No Notifications"
 #define LABEL_WKDAY_ALL         @"Wkday all"

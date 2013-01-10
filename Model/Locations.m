@@ -110,7 +110,7 @@
         // Temporary, one-time code to reduce the frequency of current location by 100 - 7.0 (the new default)
         // Only do the one and only time we load Caltrain pre-load file version 1.100
         // This code can be removed by 12/2012
-        if ([testAddress isEqualToString:CALTRAIN_PRELOAD_TEST_ADDRESS] &&
+        if ([testAddress isEqualToString:WMATA_PRELOAD_TEST_ADDRESS] &&
             [newVersion isEqualToNumber:[NSDecimalNumber decimalNumberWithString:@"1.100"]]) {
             NSArray* dbCurrentLocationArray = [self locationsWithFormattedAddress:CURRENT_LOCATION];
             if (dbCurrentLocationArray && [dbCurrentLocationArray count]>0) {
@@ -1063,7 +1063,7 @@
             [strMutableShortFormattedAddress appendString:@"caltrain"];
             strshortFormattedAddress = strMutableShortFormattedAddress;
         }
-        if([strshortFormattedAddress rangeOfString:agencyNameNotToInclude options:NSCaseInsensitiveSearch].location == NSNotFound && ![address isEqualToString:@"current location"] && ![address isEqualToString:@"caltrain station list"] && ![address isEqualToString:@"bart station list"]){
+        if(![address isEqualToString:@"current location"] && ![address isEqualToString:@"wmata station list"]){
             [arrUnFilteredStationList addObject:location];
         }
     }

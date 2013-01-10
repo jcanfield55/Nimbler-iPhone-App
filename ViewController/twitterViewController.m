@@ -248,6 +248,9 @@ NSUserDefaults *prefs;
             }
            
         }
+        else{
+            [getTweetInProgress stopAnimating];
+        }
     }
     else{
         if([arrayTweet count] != 0){
@@ -386,6 +389,7 @@ NSUserDefaults *prefs;
                 [[RKClient sharedClient]  get:allAdvisories delegate:self];
             }
             else{
+                [getTweetInProgress stopAnimating];
                 [arrayTweet removeAllObjects];
                 [mainTable reloadData];
                 //[[nc_AppDelegate sharedInstance] updateBadge:0];

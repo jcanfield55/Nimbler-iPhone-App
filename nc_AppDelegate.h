@@ -51,6 +51,7 @@
     NSString *expectedRequestDate;
     BOOL isTestPlan;
     NSMutableString *testLogMutableString;
+    NSString *strSupportedRegionURL;
 }
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
@@ -58,6 +59,7 @@
 @property (readonly, strong, nonatomic) PlanStore *planStore;
 @property (readonly, strong, nonatomic) ToFromViewController *toFromViewController;
 @property (readonly, strong, nonatomic) CLLocationManager* locationManager;
+@property (nonatomic, strong)  NSString *strSupportedRegionURL;
 
 // Properties for Core Data
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;

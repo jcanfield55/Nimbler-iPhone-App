@@ -5,7 +5,7 @@
                  "toFrequency" : 25.0,
                  "fromFrequency" : 25.0,
                  "memberOfList" : "Bart",
-                 "geometry" : {
+    "geometry" : {
                  "location_type" : "TOFROM_LIST"
                  }
                  },

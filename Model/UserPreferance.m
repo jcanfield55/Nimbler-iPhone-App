@@ -51,6 +51,7 @@ BOOL tpStrToBool(NSObject* value)
 @synthesize pushEnable;
 @synthesize pushNotificationThreshold;
 @synthesize walkDistance;
+@synthesize wMataAdvisories;
 @synthesize sfMuniAdvisories;
 @synthesize bartAdvisories;
 @synthesize acTransitAdvisories;
@@ -109,37 +110,37 @@ static UserPreferance* userPrefs;
             saveNeeded = true;
         }
         
-        NSString* sfMuniTemp = [prefs objectForKey:ENABLE_SFMUNI_ADV];
-        if (sfMuniTemp) {
-            userPrefs.sfMuniAdvisories = tpStrToBool(sfMuniTemp);
+        NSString* wMataTemp = [prefs objectForKey:ENABLE_WMATA_ADV];
+        if (wMataTemp) {
+            userPrefs.wMataAdvisories = tpStrToBool(wMataTemp);
         } else {
-            userPrefs.sfMuniAdvisories = ENABLE_SFMUNI_ADV_DEFAULT;
+            userPrefs.wMataAdvisories = ENABLE_WMATA_ADV_DEFAULT;
             saveNeeded = true;
         }
         
-        NSString* bartTemp = [prefs objectForKey:ENABLE_BART_ADV];
-        if (bartTemp) {
-            userPrefs.bartAdvisories = tpStrToBool(bartTemp);
-        } else {
-            userPrefs.bartAdvisories = ENABLE_BART_ADV_DEFAULT;
-            saveNeeded = true;
-        }
-        
-        NSString* acTransitTemp = [prefs objectForKey:ENABLE_ACTRANSIT_ADV];
-        if (acTransitTemp) {
-            userPrefs.acTransitAdvisories = tpStrToBool(acTransitTemp);
-        } else {
-            userPrefs.acTransitAdvisories = ENABLE_ACTRANSIT_ADV_DEFAULT;
-            saveNeeded = true;
-        }
-        
-        NSString* caltrainTemp = [prefs objectForKey:ENABLE_CALTRAIN_ADV];
-        if (caltrainTemp) {
-            userPrefs.caltrainAdvisories = tpStrToBool(caltrainTemp);
-        } else {
-            userPrefs.caltrainAdvisories = ENABLE_CALTRAIN_ADV_DEFAULT;
-            saveNeeded = true;
-        }
+//        NSString* bartTemp = [prefs objectForKey:ENABLE_BART_ADV];
+//        if (bartTemp) {
+//            userPrefs.bartAdvisories = tpStrToBool(bartTemp);
+//        } else {
+//            userPrefs.bartAdvisories = ENABLE_BART_ADV_DEFAULT;
+//            saveNeeded = true;
+//        }
+//        
+//        NSString* acTransitTemp = [prefs objectForKey:ENABLE_ACTRANSIT_ADV];
+//        if (acTransitTemp) {
+//            userPrefs.acTransitAdvisories = tpStrToBool(acTransitTemp);
+//        } else {
+//            userPrefs.acTransitAdvisories = ENABLE_ACTRANSIT_ADV_DEFAULT;
+//            saveNeeded = true;
+//        }
+//        
+//        NSString* caltrainTemp = [prefs objectForKey:ENABLE_CALTRAIN_ADV];
+//        if (caltrainTemp) {
+//            userPrefs.caltrainAdvisories = tpStrToBool(caltrainTemp);
+//        } else {
+//            userPrefs.caltrainAdvisories = ENABLE_CALTRAIN_ADV_DEFAULT;
+//            saveNeeded = true;
+//        }
         
         // DE265 fix:  The following two variables could be stored as either NSString or NSNumber in userDefaults
         // Updated tpStrToBool to handle either case.  
@@ -318,21 +319,10 @@ static UserPreferance* userPrefs;
             dateOfLastSaveToServerAttempt = [NSDate date];
             NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
                                     DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
-                                    ALERT_COUNT,[NSNumber numberWithInt:alertCount],
                                     DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],
                                     MAXIMUM_WALK_DISTANCE,[prefs objectForKey:PREFS_MAX_WALK_DISTANCE],
-                                    ENABLE_URGENTNOTIFICATION_SOUND,[prefs objectForKey:ENABLE_URGENTNOTIFICATION_SOUND],
-                                    ENABLE_STANDARDNOTIFICATION_SOUND,[prefs objectForKey:ENABLE_STANDARDNOTIFICATION_SOUND],
-                                    ENABLE_SFMUNI_ADV,[prefs objectForKey:ENABLE_SFMUNI_ADV],
-                                    ENABLE_BART_ADV,[prefs objectForKey:ENABLE_BART_ADV],
-                                    ENABLE_ACTRANSIT_ADV,[prefs objectForKey:ENABLE_ACTRANSIT_ADV],
-                                    ENABLE_CALTRAIN_ADV,[prefs objectForKey:ENABLE_CALTRAIN_ADV],
-                                    NOTIF_TIMING_MORNING,[prefs objectForKey:NOTIF_TIMING_MORNING],
-                                    NOTIF_TIMING_MIDDAY,[prefs objectForKey:NOTIF_TIMING_MIDDAY],
-                                    NOTIF_TIMING_EVENING,[prefs objectForKey:NOTIF_TIMING_EVENING],
-                                    NOTIF_TIMING_NIGHT,[prefs objectForKey:NOTIF_TIMING_NIGHT],
-                                    NOTIF_TIMING_WEEKEND,[prefs objectForKey:NOTIF_TIMING_WEEKEND],
-                                    APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],
+                                    ENABLE_WMATA_ADV,[prefs objectForKey:ENABLE_WMATA_ADV],
+                                    APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],ALERT_COUNT,[NSNumber numberWithInt:alertCount],
                                     
                                     // TODO -- add bicycle settings saving as needed
                                     
@@ -340,28 +330,27 @@ static UserPreferance* userPrefs;
             
             if (self.isSaveToServerNeeded) {
                 // Save Flurry logs for settings
-                NSMutableString* alertSounds = [NSMutableString stringWithCapacity:20];
-                [alertSounds appendString:@"Urgent,Std: "];
-                [alertSounds appendString:(self.urgentNotificationSound ? @"1" : @"0")];
-                [alertSounds appendFormat:@", %@", (self.standardNotificationSound ? @"1" : @"0")];
+//                NSMutableString* alertSounds = [NSMutableString stringWithCapacity:20];
+//                [alertSounds appendString:@"Urgent,Std: "];
+//                [alertSounds appendString:(self.urgentNotificationSound ? @"1" : @"0")];
+//                [alertSounds appendFormat:@", %@", (self.standardNotificationSound ? @"1" : @"0")];
                 
-                NSMutableString* alertHours = [NSMutableString stringWithCapacity:30];
-                [alertHours appendString:@"AM,Midday,Eve,Night,Wkend: "];
-                NSArray* hourKeys = [NSArray arrayWithObjects:NOTIF_TIMING_MORNING,NOTIF_TIMING_MIDDAY,
-                                     NOTIF_TIMING_EVENING, NOTIF_TIMING_NIGHT, NOTIF_TIMING_WEEKEND, nil];
-                for (int i=0; i<[hourKeys count]; i++) {
-                    NSString* value = (tpStrToBool([prefs objectForKey:[hourKeys objectAtIndex:i]]) ? @"1" : @"0");
-                    if (i==0) {
-                        [alertHours appendString:value];
-                    } else {
-                        [alertHours appendFormat:@", %@", value];
-                    }
-                }
+//                NSMutableString* alertHours = [NSMutableString stringWithCapacity:30];
+//                [alertHours appendString:@"AM,Midday,Eve,Night,Wkend: "];
+//                NSArray* hourKeys = [NSArray arrayWithObjects:NOTIF_TIMING_MORNING,NOTIF_TIMING_MIDDAY,
+//                                     NOTIF_TIMING_EVENING, NOTIF_TIMING_NIGHT, NOTIF_TIMING_WEEKEND, nil];
+//                for (int i=0; i<[hourKeys count]; i++) {
+//                    NSString* value = (tpStrToBool([prefs objectForKey:[hourKeys objectAtIndex:i]]) ? @"1" : @"0");
+//                    if (i==0) {
+//                        [alertHours appendString:value];
+//                    } else {
+//                        [alertHours appendFormat:@", %@", value];
+//                    }
+//                }
                 
                 NSMutableString* advisoryStr = [NSMutableString stringWithCapacity:30];
-                [advisoryStr appendString:@"Muni,BART,AC/T,Caltrain: "];
-                NSArray* hourKeys2 = [NSArray arrayWithObjects:ENABLE_SFMUNI_ADV, ENABLE_BART_ADV,
-                                      ENABLE_ACTRANSIT_ADV, ENABLE_CALTRAIN_ADV, nil];
+                [advisoryStr appendString:@"Wmata: "];
+                NSArray* hourKeys2 = [NSArray arrayWithObjects:ENABLE_WMATA_ADV, nil];
                 for (int i=0; i<[hourKeys2 count]; i++) {
                     NSString* value = (tpStrToBool([prefs objectForKey:[hourKeys2 objectAtIndex:i]]) ? @"1" : @"0");
                     if (i==0) {
@@ -371,11 +360,8 @@ static UserPreferance* userPrefs;
                     }
                 }
                 
-                logEvent(FLURRY_SETTINGS_SUBMITTED1,
-                         FLURRY_SETTING_WALK_DISTANCE, [NSString stringWithFormat:@"%f",self.walkDistance],
-                         FLURRY_SETTING_ALERT_COUNT, [NSString stringWithFormat:@"%d",alertCount],
-                         FLURRY_SETTING_ALERT_SOUNDS, alertSounds,
-                         FLURRY_SETTING_ALERT_HOURS, alertHours);
+//                logEvent(FLURRY_SETTINGS_SUBMITTED1,
+//                         FLURRY_SETTING_WALK_DISTANCE, [NSString stringWithFormat:@"%f",self.walkDistance]);
                 logEvent(FLURRY_SETTINGS_SUBMITTED2,
                          FLURRY_SETTING_ADVISORY_STREAMS, advisoryStr,
                          nil, nil, nil, nil, nil, nil);
@@ -457,11 +443,11 @@ static UserPreferance* userPrefs;
     [self markChanges];
 }
 
--(void) setSfMuniAdvisories:(BOOL)sfMuniAdv
+-(void) setWMataAdvisories:(BOOL)wMataAdv
 {
-    sfMuniAdvisories = sfMuniAdv;
+    wMataAdvisories = wMataAdv;
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setObject:tpBoolToStr(sfMuniAdvisories) forKey:ENABLE_SFMUNI_ADV];
+    [prefs setObject:tpBoolToStr(wMataAdvisories) forKey:ENABLE_WMATA_ADV];
     [prefs synchronize];
     [self markChanges];
 }
