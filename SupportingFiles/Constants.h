@@ -143,7 +143,7 @@
 #define MAX_BIKE_DISTANCE_MAX_VALUE           20
 
 // Flurry analytics and logging
-#define FLURRY_ENABLED 1
+#define FLURRY_ENABLED 0
 
 // Flurry events
 #define FLURRY_APPDELEGATE_START @"Start of App Delegate"

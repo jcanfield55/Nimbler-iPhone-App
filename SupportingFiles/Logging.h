@@ -12,7 +12,7 @@
 #define CUSTOM_RK_LOG_LEVELS RKLogLevelWarning  // Level of RestKit custom logging
 
 #define NIMLOG_PERF1(...)  // NSLog(__VA_ARGS__)  // Performance logging
-#define NIMLOG_EVENT1(...) // NSLog(__VA_ARGS__) // Key events
+#define NIMLOG_EVENT1(...)  NSLog(__VA_ARGS__) // Key events
 #define NIMLOG_OBJECT1(...)  // NSLog(__VA_ARGS__) // Extensive log printout of various objects
 #define NIMLOG_URLS(...) // NSLog(__VA_ARGS__)   // URL resources
 #define NIMLOG_ERR1(...) NSLog(__VA_ARGS__)   // Error / exception logging

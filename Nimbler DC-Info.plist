@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Nmblr Caltrain</string>
+	<string>Nimbler DC</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -72,7 +72,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>2.16</string>
+	<string>2.17</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MKDirectionsApplicationSupportedModes</key>
