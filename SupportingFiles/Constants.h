@@ -50,8 +50,8 @@
 #define WMATA_PRELOAD_LOCATION_FILE     @"wmata-station.json"
 #define CALTRAIN_BUNDLE_IDENTIFIER         @"com.Nimbler.Nimbler-Caltrain"
 #define BART_BUNDLE_IDENTIFIER         @"com.Nimbler.Nimbler-BART"
-#define WMATA_PRELOAD_VERSION_NUMBER    @"1.100"
-#define WMATA_PRELOAD_TEST_ADDRESS    @"30th Street Northwest, Washington, DC 20007, USA"
+#define WMATA_PRELOAD_VERSION_NUMBER    @"1.120"
+#define WMATA_PRELOAD_TEST_ADDRESS    @"Anacostia Metro Station, Washington, DC 20020, USA"
 #define TOFROM_LIST_TYPE          @"TOFROM_LIST" // Location type indicating a ToFromList
 
 // Current Location
@@ -143,7 +143,7 @@
 #define MAX_BIKE_DISTANCE_MAX_VALUE           20
 
 // Flurry analytics and logging
-#define FLURRY_ENABLED 0
+#define FLURRY_ENABLED 1
 
 // Flurry events
 #define FLURRY_APPDELEGATE_START @"Start of App Delegate"

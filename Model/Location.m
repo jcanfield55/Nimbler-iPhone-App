@@ -256,13 +256,21 @@ static Locations *locations;
             }
             
             if (returnString && [returnString length] > 0) { // check to make sure we have something to return (DE25 fix)
-                if ([returnString hasSuffix:@", CA "]) { // Get rid of final ", CA"
+                if ([returnString hasSuffix:@", VA "] ||  // Get rid of final ", CA"
+                    [returnString hasSuffix:@", MD "] ||  // or MD
+                    [returnString hasSuffix:@", VA "]) {  // or VA
                     returnString = [returnString substringToIndex:([returnString length]-5)];
-                } 
+                }
+                if ([returnString hasSuffix:@"Washington, DC "]) {
+                    returnString = [returnString substringToIndex:([returnString length]-15)];
+                    returnString = [returnString stringByAppendingString:@"DC"];  // Replace "Washington, DC " with just "DC"
+                }
                 shortFormattedAddress = returnString;
             }
             
-            else if ([addr hasSuffix:@", CA, USA"]) { // If not postal code, but ends with CA, USA, clip that
+            else if ([addr hasSuffix:@", CA, USA"] ||
+                     [addr hasSuffix:@", MD, USA"] ||
+                     [addr hasSuffix:@", VA, USA"]) { // If not postal code, but ends with CA, USA, clip that (or MD or VA)
                 returnString = [addr substringToIndex:([addr length]-9)];
                 shortFormattedAddress = returnString;
             }

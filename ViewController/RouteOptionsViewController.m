@@ -240,7 +240,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                     }
                     NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
                                                                      timeIntervalSinceDate:realTimeArrivalTime]);
-                     NSLog(@"%@",superShortTimeStringForDate(realTimeArrivalTime));
+                    NIMLOG_DEBUG1(@"superShortTime of realTimeArrivalTime%@",superShortTimeStringForDate(realTimeArrivalTime));
                     titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
                                            superShortTimeStringForDate(realTimeArrivalTime),
                                            superShortTimeStringForDate([itin endTimeOfLastLeg]),

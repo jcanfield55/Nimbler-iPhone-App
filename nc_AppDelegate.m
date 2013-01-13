@@ -17,6 +17,9 @@
 #import "UserPreferance.h"
 #import "Reachability.h"
 #import "KeyObjectStore.h"
+#import "Constants.h"
+#import "TEXTConstant.h"
+#import "RXCustomTabBar.h"
 #if TEST_FLIGHT_ENABLED
 #import "TestFlightSDK1-1/TestFlight.h"
 #endif
@@ -207,7 +210,7 @@ FeedBackForm *fbView;
 #endif
     // Call to Flurry SDK
 #if FLURRY_ENABLED
-    [Flurry startSession:@"WWV2WN4JMY35D4GYCPDJ"];
+    [Flurry startSession:@"DSTDN6ST2YDWF4V9RWFZ"];
     [Flurry setUserID:cfuuidString];
     [Flurry logEvent:FLURRY_APPDELEGATE_START];
 #endif
@@ -1157,10 +1160,9 @@ FeedBackForm *fbView;
 // Return The Enabled Agency Ids
 - (NSString *)getAgencyIdsString{
     NSMutableString *strMutableAgencyIds = [[NSMutableString alloc] init];
-    NSString *strAgencyIds;
         if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_WMATA_ADV] intValue] == 1){
             [strMutableAgencyIds appendFormat:@"%@,",WMATA_AGENCY_ID];
         }
-    return strAgencyIds;
+    return strMutableAgencyIds;
 }
 @end
