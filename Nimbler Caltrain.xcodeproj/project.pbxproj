@@ -182,6 +182,7 @@
 		52C10385160BEF8000BC6020 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C10384160BEF8000BC6020 /* AddressBookUI.framework */; };
 		52C1CBB4161AB69600695348 /* Icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB3161AB69600695348 /* Icon-small.png */; };
 		52C1CBB6161AB6A400695348 /* Icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB5161AB6A400695348 /* Icon-small@2x.png */; };
+		52C32ABC16A3A90B0094EE14 /* TestGeneratePlan.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C32ABA16A3A37B0094EE14 /* TestGeneratePlan.m */; };
 		52CF43A014BDF2F9000565D6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF439F14BDF2F9000565D6 /* UIKit.framework */; };
 		52CF43A214BDF2F9000565D6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A114BDF2F9000565D6 /* Foundation.framework */; };
 		52CF43A414BDF2F9000565D6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A314BDF2F9000565D6 /* CoreGraphics.framework */; };
@@ -499,6 +500,8 @@
 		52C10384160BEF8000BC6020 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		52C1CBB3161AB69600695348 /* Icon-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-small.png"; sourceTree = "<group>"; };
 		52C1CBB5161AB6A400695348 /* Icon-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-small@2x.png"; sourceTree = "<group>"; };
+		52C32AB916A3A37B0094EE14 /* TestGeneratePlan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestGeneratePlan.h; sourceTree = "<group>"; };
+		52C32ABA16A3A37B0094EE14 /* TestGeneratePlan.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestGeneratePlan.m; sourceTree = "<group>"; };
 		52CF439B14BDF2F9000565D6 /* Nimbler Caltrain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nimbler Caltrain.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52CF439F14BDF2F9000565D6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		52CF43A114BDF2F9000565D6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -998,6 +1001,8 @@
 				8D99B633164E2DF200C0A5AC /* trips.txt */,
 				52CF43C914BDF2F9000565D6 /* Network_CommutingTests.h */,
 				52CF43CA14BDF2F9000565D6 /* Network_CommutingTests.m */,
+				52C32AB916A3A37B0094EE14 /* TestGeneratePlan.h */,
+				52C32ABA16A3A37B0094EE14 /* TestGeneratePlan.m */,
 				52CF43C414BDF2F9000565D6 /* Supporting Files */,
 			);
 			name = "Nimbler Tests";
@@ -1400,6 +1405,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				52CF43CB14BDF2F9000565D6 /* Network_CommutingTests.m in Sources */,
+				52C32ABC16A3A90B0094EE14 /* TestGeneratePlan.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

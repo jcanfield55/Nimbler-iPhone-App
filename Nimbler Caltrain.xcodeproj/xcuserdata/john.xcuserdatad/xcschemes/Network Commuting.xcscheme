@@ -37,6 +37,11 @@
                BlueprintName = "Nimbler CaltrainTests"
                ReferencedContainer = "container:Nimbler Caltrain.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "TestGeneratePlan">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
       <MacroExpansion>
