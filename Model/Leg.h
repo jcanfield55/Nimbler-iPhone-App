@@ -49,7 +49,7 @@ typedef enum {
 @property (nonatomic, retain) NSString * agencyName;
 @property (nonatomic, retain) PlanPlace *to;
 @property (nonatomic, strong) NSArray *sortedSteps;
-@property (nonatomic, strong, readonly) PolylineEncodedString *polylineEncodedString;
+@property (nonatomic, strong) PolylineEncodedString *polylineEncodedString;
 
 @property (nonatomic, retain) NSString *arrivalTime;
 @property (nonatomic, retain) NSString *arrivalFlag;
@@ -76,6 +76,9 @@ typedef enum {
 // If leg is not walk then compare routeShortname if not nill else compare routeLongName then compate TO&From Location Lat/Lng and agencyname.
 // If legs are equal then return yes otherwise return no
 - (BOOL) isEquivalentLegAs:(Leg *)leg;
+
+// Set the newly generated leg attributes from old leg.
+- (void) setNewlegAttributes:(Leg *)leg;
 
 @end
 

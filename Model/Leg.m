@@ -522,4 +522,32 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     return desc;
 }
 
+// Set the newly generated leg attributes from old leg
+- (void) setNewlegAttributes:(Leg *)leg{
+    self.agencyId = leg.agencyId;
+    self.agencyName = leg.agencyName;
+    self.distance = leg.distance;
+    self.duration = leg.duration;
+    self.headSign = leg.headSign;
+    self.legGeometryLength = leg.legGeometryLength;
+    self.legGeometryPoints = leg.legGeometryPoints;
+    self.mode = leg.mode;
+    self.routeId = leg.routeId;
+    self.route = leg.route;
+    self.routeLongName = leg.routeLongName;
+    self.routeShortName = leg.routeShortName;
+    self.tripShortName = leg.tripShortName;
+    self.from.lat = leg.from.lat;
+    self.from.lng = leg.from.lng;
+    self.from.name = leg.from.name;
+    self.from.stopId = leg.from.stopId;
+    self.to.lat = leg.to.lat;
+    self.to.lng = leg.to.lng;
+    self.to.name = leg.to.name;
+    self.to.stopId = leg.to.stopId;
+    self.steps = leg.steps;
+    self.tripId = leg.tripId;
+    self.sortedSteps = leg.sortedSteps;
+    self.polylineEncodedString = leg.polylineEncodedString;
+}
 @end

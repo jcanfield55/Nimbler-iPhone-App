@@ -256,8 +256,8 @@
                 } else {
                     [NSException raise:@"PlanStore->didLoadObjects failed to retrieve plan parameters" format:@"strResourcePath: %@", strResourcePath];
                 }
-                [[nc_AppDelegate sharedInstance].gtfsParser performSelector:@selector(generateGtfsTripsRequestStringUsingPlan:) withObject:plan afterDelay:0.0];
-                [[nc_AppDelegate sharedInstance].gtfsParser performSelector:@selector(generateStopTimesRequestString:) withObject:plan afterDelay:1.0];
+                [[nc_AppDelegate sharedInstance].gtfsParser performSelector:@selector(generateGtfsTripsRequestStringUsingPlan:) withObject:plan afterDelay:1.0];
+                [[nc_AppDelegate sharedInstance].gtfsParser performSelector:@selector(generateStopTimesRequestString:) withObject:plan afterDelay:2.0];
                 // Set to & from location with special handling of CurrentLocation
                 Location *toLoc = [planRequestParameters toLocation];
                 if ([toLoc isCurrentLocation] && [toLoc isReverseGeoValid]) {
@@ -296,13 +296,6 @@
                     
                     [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
                     
-                    // get Unique Itinerary from Plan.
-                    NSArray *arrUniqueItinerary = [plan uniqueItineraries];
-                    NSSet *setUniqueitineraries = [NSSet setWithArray:arrUniqueItinerary];
-                    plan.uniqueItineraryPatterns = setUniqueitineraries;
-                    plan = [[nc_AppDelegate sharedInstance].gtfsParser generateLegsAndItineraryFromPatternsOfPlan:plan parameters:planRequestParameters Context:nil];
-                    saveContext(managedObjectContext);  // Save location and request chunk changes
-                    
                     // Call-back the appropriate RouteOptions VC with the new plan
                     UIViewController *currentVC = toFromVC.navigationController.visibleViewController;
                     if (planRequestParameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC || currentVC == routeOptionsVC) {
@@ -310,6 +303,12 @@
                     } else {
                         [toFromVC newPlanAvailable:plan status:PLAN_STATUS_OK];
                     }
+                    // get Unique Itinerary from Plan.
+                    NSArray *arrUniqueItinerary = [plan uniqueItineraries];
+                    NSSet *setUniqueitineraries = [NSSet setWithArray:arrUniqueItinerary];
+                    plan.uniqueItineraryPatterns = setUniqueitineraries;
+                    plan = [[nc_AppDelegate sharedInstance].gtfsParser generateLegsAndItineraryFromPatternsOfPlan:plan parameters:planRequestParameters Context:nil];
+                    [plan removeDuplicateItineraries];
                 } else { // no matching sorted itineraries.  DE189 fix
                     if (planRequestParameters.planDestination == PLAN_DESTINATION_TO_FROM_VC) {
                         [toFromVC newPlanAvailable:nil status:PLAN_GENERIC_EXCEPTION];
