@@ -338,7 +338,9 @@
 #define LIVE_FEEDS_BY_PLAN_URL         @"livefeeds/plan"
 #define ITINERARY_ID                   @"itineraryid"
 #define LIVE_FEEDS_BY_ITINERARIES_URL  @"livefeeds/itineraries"
+#define LIVE_FEEDS_BY_LEGS             @"livefeeds/bylegs"
 #define FOR_TODAY                      @"forToday"
+#define LEGS                           @"legs"
 
 #define METADATA_URL                   @"metadata"
 

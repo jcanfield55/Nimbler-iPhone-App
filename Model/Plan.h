@@ -91,7 +91,5 @@
 
 // Create unique Itineraries array from plan.
 - (NSArray *)uniqueItineraries;
-// Remove duplicate itinerary from plan
-- (void)removeDuplicateItineraries;
 @end
 

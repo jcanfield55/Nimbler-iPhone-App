@@ -964,6 +964,7 @@
         [newleg setNewlegAttributes:leg];
         newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([newleg.duration floatValue]/1000)];
         itinerary.endTime = newleg.endTime;
+        itinerary.endTimeOnly = timeOnlyFromDate(itinerary.endTime);
         newleg.itinerary = itinerary;
     }
     @catch (NSException *exception) {
@@ -982,6 +983,7 @@
         newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([newleg.duration floatValue]/1000)];
         [newleg setNewlegAttributes:leg];
         itinerary.endTime = newleg.endTime;
+        itinerary.endTimeOnly = timeOnlyFromDate(itinerary.endTime);
         newleg.itinerary = itinerary;
         [arrStopTimes removeObject:arrayStopTime];
     }

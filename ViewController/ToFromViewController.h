@@ -79,7 +79,7 @@ typedef enum {
 - (void)reloadTables;  // Reloads the tables in case something has changed in the model
 
 -(BOOL)alertUsetForLocationService;
--(void)getRealTimeDataForItinerary;
+-(void)getRealTimeByLegsFromPlan;
 -(void)setFBParameterForGeneral;
 
 // Call-back from PlanStore requestPlanFromLocation:... method when it has a plan

@@ -454,23 +454,4 @@
     }
     return arrsortedItineraries;
 }
-
-// Remove duplicate itinerary from plan
-- (void)removeDuplicateItineraries{
-    NSMutableArray *arrsortedItineraries = [[NSMutableArray alloc] initWithArray:[[self itineraries] allObjects]];
-    int i;
-    for(i=0; i < [arrsortedItineraries count];i++){
-        for(int j=i+1;j<[arrsortedItineraries count];j++){
-            Itinerary *itinerary1 = (Itinerary*)[arrsortedItineraries objectAtIndex:i];
-            Itinerary *itinerary2 = (Itinerary*)[arrsortedItineraries objectAtIndex:j];
-            if([[itinerary1 sortedLegs] count] == [[itinerary2 sortedLegs] count] && itinerary1.startTime == itinerary2.startTime && itinerary1.endTime == itinerary2.endTime){
-                [arrsortedItineraries removeObjectAtIndex:j];
-                i = i-1;
-                break;
-            }
-        }
-    }
-    // TODO:- Need to handle exception rise by this line.
-    //self.sortedItineraries = arrsortedItineraries;
-}
 @end

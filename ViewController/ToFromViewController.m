@@ -25,6 +25,7 @@
 #import "TEXTConstant.h"
 #import "UserPreferance.h"
 #import "Logging.h"
+#import <RestKit/JsonKit.h>
 
 
 @interface ToFromViewController()
@@ -1116,8 +1117,8 @@ UIImage *imageDetailDisclosure;
                     }
                 }
                 [routeOptionsVC setPlan:plan];
-                [self getRealTimeDataForItinerary];
-                self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(getRealTimeDataForItinerary) userInfo:nil repeats: YES];
+                [self getRealTimeByLegsFromPlan];
+                self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(getRealTimeByLegsFromPlan) userInfo:nil repeats: YES];
                 
                 if (fromLocation == currentLocation) {
                     // Update lastRequestReverseGeoLocation if the current one is valid, DE232 fix
@@ -1381,17 +1382,13 @@ UIImage *imageDetailDisclosure;
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
     
     @try {
-        NSString *strResuorcePath = [request resourcePath];
         // DE 175 Fixed
-        if ([strResuorcePath isEqualToString:strLiveDataURL]) {
                 [nc_AppDelegate sharedInstance].isNeedToLoadRealData = YES;
-                NIMLOG_OBJECT1(@"response %@", [response bodyAsString]);
                 isContinueGetRealTimeData = NO;
                 RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
-                id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];    
+                id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
                 [routeOptionsVC setIsReloadRealData:false];
                 [routeOptionsVC setLiveFeed:res];
-        }
     }  @catch (NSException *exception) {
         logException(@"ToFromViewController->viewWillAppear", @"getting unique IDs from TP Server response", exception);
     }
@@ -1444,69 +1441,106 @@ UIImage *imageDetailDisclosure;
 // Get RealTime Data By Itinerary
 // DE-252 Fixed.
 -(void)getRealTimeDataForItinerary{
-    @try {
-        isContinueGetRealTimeData = YES;
-        NSMutableString *strItineraries = [[NSMutableString alloc] init];
-        NSDate *currentDate = [NSDate date];
-        NSDate *tripTimeFromDate = timeOnlyFromDate(tripDate);
-        NSDate *tripDateFromDate = dateOnlyFromDate(tripDate);
-        NSDate *finalTripDate = addDateOnlyWithTimeOnly(tripDateFromDate,tripTimeFromDate);
-        NSDate *incCurrentDate = [currentDate dateByAddingTimeInterval:CURRENT_DATE_INC_DEC_INTERVAL];
-        NSDate *decCurrentDate = [currentDate dateByAddingTimeInterval:(-CURRENT_DATE_INC_DEC_INTERVAL)];
-        NSDate *dateForItineraryComparision = [currentDate dateByAddingTimeInterval:ITINERARY_START_DATE_INC_DEC_INTERVAL];
-        
-        NSCalendar *calendarCurrentDate = [NSCalendar currentCalendar];
-        NSDateComponents *componentsCurrentDate = [calendarCurrentDate components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:[NSDate date]];
-        int hourCurrentDate = [componentsCurrentDate hour];
-        int minuteCurrentDate = [componentsCurrentDate minute];
-        int intervalCurrentDate = hourCurrentDate*60*60 + minuteCurrentDate*60;
-        
-        NSCalendar *calendarUpdatedCurrentDate = [NSCalendar currentCalendar];
-        NSDateComponents *componentsUpdatedCurrentDate = [calendarUpdatedCurrentDate components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:[NSDate date]];
-        int hourUpdatedCurrentDate = [componentsUpdatedCurrentDate hour];
-        int minuteUpdatedCurrentDate = [componentsUpdatedCurrentDate minute];
-        int intervalUpdatedCurrentDate = (hourUpdatedCurrentDate+4)*60*60 + minuteUpdatedCurrentDate*60;
-        
-        NSCalendar *calendarScheduleDate = [NSCalendar currentCalendar];
-        NSDateComponents *componentsScheduleDate = [calendarScheduleDate components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:finalTripDate];
-        int hourScheduleDate = [componentsScheduleDate hour];
-        int minuteScheduleDate = [componentsScheduleDate minute];
-        int intervalScheduleDate = (hourScheduleDate+3)*60*60 + minuteScheduleDate*60;
-        
-        if(finalTripDate && [finalTripDate compare:decCurrentDate] == NSOrderedDescending && [finalTripDate compare:incCurrentDate] == NSOrderedAscending){
-            for (int i= 0; i< [[plan sortedItineraries] count]; i++) {
-                Itinerary *itin = [[plan sortedItineraries] objectAtIndex:i];
-                                
-                NSDate *itineraryCreationdate = [itin startTime];
-                NSCalendar *calendarItineraryStartTime = [NSCalendar currentCalendar];
-                NSDateComponents *componentsItineraryStartTime = [calendarItineraryStartTime components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:[itin startTime]];
-                int hourItineraryStartTime = [componentsItineraryStartTime hour];
-                int minuteItineraryStartTime = [componentsItineraryStartTime minute];
-                int intervalItineraryStartTime = hourItineraryStartTime*60*60 + minuteItineraryStartTime*60;
-                
-                if(itineraryCreationdate && (([itineraryCreationdate compare:currentDate] == NSOrderedDescending && [itineraryCreationdate compare:dateForItineraryComparision] == NSOrderedAscending) || (intervalItineraryStartTime > intervalCurrentDate && intervalItineraryStartTime < intervalUpdatedCurrentDate))){
-                    // Ask for The Real Time Only If itinerary start time is less than schedule Time + 3 hours
-                    if(intervalItineraryStartTime < intervalScheduleDate){
-                       [strItineraries appendFormat:@"%@,",[itin itinId]]; 
-                    }
+//    @try {
+//        isContinueGetRealTimeData = YES;
+//        NSMutableString *strItineraries = [[NSMutableString alloc] init];
+//        NSDate *currentDate = [NSDate date];
+//        NSDate *tripTimeFromDate = timeOnlyFromDate(tripDate);
+//        NSDate *tripDateFromDate = dateOnlyFromDate(tripDate);
+//        NSDate *finalTripDate = addDateOnlyWithTimeOnly(tripDateFromDate,tripTimeFromDate);
+//        NSDate *incCurrentDate = [currentDate dateByAddingTimeInterval:CURRENT_DATE_INC_DEC_INTERVAL];
+//        NSDate *decCurrentDate = [currentDate dateByAddingTimeInterval:(-CURRENT_DATE_INC_DEC_INTERVAL)];
+//        NSDate *dateForItineraryComparision = [currentDate dateByAddingTimeInterval:ITINERARY_START_DATE_INC_DEC_INTERVAL];
+//        
+//        NSCalendar *calendarCurrentDate = [NSCalendar currentCalendar];
+//        NSDateComponents *componentsCurrentDate = [calendarCurrentDate components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:[NSDate date]];
+//        int hourCurrentDate = [componentsCurrentDate hour];
+//        int minuteCurrentDate = [componentsCurrentDate minute];
+//        int intervalCurrentDate = hourCurrentDate*60*60 + minuteCurrentDate*60;
+//        
+//        NSCalendar *calendarUpdatedCurrentDate = [NSCalendar currentCalendar];
+//        NSDateComponents *componentsUpdatedCurrentDate = [calendarUpdatedCurrentDate components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:[NSDate date]];
+//        int hourUpdatedCurrentDate = [componentsUpdatedCurrentDate hour];
+//        int minuteUpdatedCurrentDate = [componentsUpdatedCurrentDate minute];
+//        int intervalUpdatedCurrentDate = (hourUpdatedCurrentDate+4)*60*60 + minuteUpdatedCurrentDate*60;
+//        
+//        NSCalendar *calendarScheduleDate = [NSCalendar currentCalendar];
+//        NSDateComponents *componentsScheduleDate = [calendarScheduleDate components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:finalTripDate];
+//        int hourScheduleDate = [componentsScheduleDate hour];
+//        int minuteScheduleDate = [componentsScheduleDate minute];
+//        int intervalScheduleDate = (hourScheduleDate+3)*60*60 + minuteScheduleDate*60;
+//        
+//        if(finalTripDate && [finalTripDate compare:decCurrentDate] == NSOrderedDescending && [finalTripDate compare:incCurrentDate] == NSOrderedAscending){
+//            for (int i= 0; i< [[plan sortedItineraries] count]; i++) {
+//                Itinerary *itin = [[plan sortedItineraries] objectAtIndex:i];
+//                                
+//                NSDate *itineraryCreationdate = [itin startTime];
+//                NSCalendar *calendarItineraryStartTime = [NSCalendar currentCalendar];
+//                NSDateComponents *componentsItineraryStartTime = [calendarItineraryStartTime components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:[itin startTime]];
+//                int hourItineraryStartTime = [componentsItineraryStartTime hour];
+//                int minuteItineraryStartTime = [componentsItineraryStartTime minute];
+//                int intervalItineraryStartTime = hourItineraryStartTime*60*60 + minuteItineraryStartTime*60;
+//                
+//                if(itineraryCreationdate && (([itineraryCreationdate compare:currentDate] == NSOrderedDescending && [itineraryCreationdate compare:dateForItineraryComparision] == NSOrderedAscending) || (intervalItineraryStartTime > intervalCurrentDate && intervalItineraryStartTime < intervalUpdatedCurrentDate))){
+//                    // Ask for The Real Time Only If itinerary start time is less than schedule Time + 3 hours
+//                    if(intervalItineraryStartTime < intervalScheduleDate){
+//                       [strItineraries appendFormat:@"%@,",[itin itinId]]; 
+//                    }
+//                }
+//            }
+//            if(strItineraries.length > 0){
+//                [strItineraries deleteCharactersInRange:NSMakeRange([strItineraries length]-1, 1)];
+//                RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+//                [RKClient setSharedClient:client];
+//                NSDictionary *tempDictionary =[NSDictionary dictionaryWithObjectsAndKeys:strItineraries,ITINERARY_ID,@"true",FOR_TODAY, nil ];
+//                NSString *req = [LIVE_FEEDS_BY_ITINERARIES_URL appendQueryParams:tempDictionary];
+//                strLiveDataURL = req;
+//                [[RKClient sharedClient]  get:req  delegate:self];
+//            }
+//        }
+//    }
+//    @catch (NSException *exception) {
+//        logException(@"ToFromViewController->getRealTimeDataForItinerary", @"", exception);
+//    }
+}
+
+- (void) getRealTimeByLegsFromPlan{
+    NSMutableArray *arrLegs = [[NSMutableArray alloc] init];
+    for(int i=0;i<[[plan sortedItineraries] count];i++){
+        Itinerary *itinerary = [[plan sortedItineraries] objectAtIndex:i];
+        for(int j=0;j<[[itinerary sortedLegs] count];j++){
+            Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
+            if([leg isScheduled]){
+                NSDictionary *dicToStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.to.stopId,@"id", nil];
+                NSDictionary *dicTo = [NSDictionary dictionaryWithObjectsAndKeys:dicToStopId,@"stopId", nil];
+                NSDictionary *dicFromStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.from.stopId,@"id", nil];
+                NSDictionary *dicFrom = [NSDictionary dictionaryWithObjectsAndKeys:dicFromStopId,@"stopId", nil];
+                NSString *strRouteShortName = leg.routeShortName;
+                 double startDate = 0;
+                 double endDate = 0;
+                if(!strRouteShortName){
+                    strRouteShortName = @"";
                 }
-            }
-            if(strItineraries.length > 0){
-                [strItineraries deleteCharactersInRange:NSMakeRange([strItineraries length]-1, 1)];
-                RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-                [RKClient setSharedClient:client];
-                NSDictionary *tempDictionary =[NSDictionary dictionaryWithObjectsAndKeys:strItineraries,ITINERARY_ID,@"true",FOR_TODAY, nil ];
-                NSString *req = [LIVE_FEEDS_BY_ITINERARIES_URL appendQueryParams:tempDictionary];
-                strLiveDataURL = req;
-                [[RKClient sharedClient]  get:req  delegate:self];
+                if(leg.startTime){
+                    double startTimeInterval = [leg.startTime timeIntervalSince1970];
+                    startDate = startTimeInterval*1000;
+                }
+                if(leg.endTime){
+                    double endTimeInterval = [leg.endTime timeIntervalSince1970];
+                    endDate = endTimeInterval*1000;
+                }
+                  NSDictionary *dicLegData = [NSDictionary dictionaryWithObjectsAndKeys:leg.tripId,@"tripId",leg.routeLongName,@"routeLongName",strRouteShortName,@"routeShortName",[NSNumber numberWithDouble:startDate],@"startTime",[NSNumber numberWithDouble:endDate],@"endTime",leg.routeId,@"routeId",dicTo,@"to",dicFrom,@"from",leg.mode,@"mode",leg.agencyId,@"agencyId",leg.agencyName,@"agencyName",leg.route,@"route",leg.headSign,@"headsign", nil];
+                [arrLegs addObject:dicLegData];
             }
         }
     }
-    @catch (NSException *exception) {
-        logException(@"ToFromViewController->getRealTimeDataForItinerary", @"", exception);
-    }
+    NSString *str = [arrLegs JSONString];
+    RKParams *requestParameter = [RKParams params];
+    [requestParameter setValue:str forParam:LEGS];
+    RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+    [RKClient setSharedClient:client];
+    [[RKClient sharedClient] post:LIVE_FEEDS_BY_LEGS params:requestParameter delegate:self];
 }
-
 #pragma mark get walk distance from User Defaults
 
 -(void)setFBParameterForGeneral

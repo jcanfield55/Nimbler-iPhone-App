@@ -447,9 +447,15 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                             NSString *arrivalTime = [[legLiveFees objectAtIndex:i] valueForKey:@"departureTime"];
                             NSString *arrivalTimeFlag = [[legLiveFees objectAtIndex:i] valueForKey:@"arrivalTimeFlag"];
                             NSString *timeDiff = [[legLiveFees objectAtIndex:i] valueForKey:@"timeDiffInMins"];
-                            NSString *legId = [[[legLiveFees objectAtIndex:i] valueForKey:@"leg"] valueForKey:@"id"];                 
-                            
-                            [self setRealtimeData:legId arrivalTime:arrivalTime arrivalFlag:arrivalTimeFlag itineraryId:ititId itineraryArrivalFlag:itinTimeFalg legDiffMins:timeDiff];
+                            NSString *routeId = [[[legLiveFees objectAtIndex:i] valueForKey:@"leg"] valueForKey:@"routeId"];
+                             NSString *route = [[[legLiveFees objectAtIndex:i] valueForKey:@"leg"] valueForKey:@"route"];
+                             NSString *startDateEpoch = [[[legLiveFees objectAtIndex:i] valueForKey:@"leg"] valueForKey:@"startTime"];
+                             NSTimeInterval startDateSeconds = ([startDateEpoch doubleValue])/1000;
+                            NSDate* startDate = [NSDate dateWithTimeIntervalSince1970:startDateSeconds];
+                             NSString *endDateEpoch = [[[legLiveFees objectAtIndex:i] valueForKey:@"leg"] valueForKey:@"endTime"];
+                             NSTimeInterval endDateSeconds = ([endDateEpoch doubleValue])/1000;
+                            NSDate* endDate = [NSDate dateWithTimeIntervalSince1970:endDateSeconds];
+                            [self setRealtimeData:routeId arrivalTime:arrivalTime arrivalFlag:arrivalTimeFlag itineraryId:ititId itineraryArrivalFlag:itinTimeFalg legDiffMins:timeDiff:startDate:endDate:route];
                         }      
                     }
                 }
@@ -468,23 +474,22 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     }
 }
 
-- (void) setRealtimeData:(NSString *)legId arrivalTime:(NSString *)arrivalTime arrivalFlag:(NSString *)arrivalFlag itineraryId:(NSString *)ititId itineraryArrivalFlag:(NSString *)itinArrivalflag legDiffMins:(NSString *)timeDiff
-{
+- (void) setRealtimeData:(NSString *)routeId arrivalTime:(NSString *)arrivalTime arrivalFlag:(NSString *)arrivalFlag itineraryId:(NSString *)ititId itineraryArrivalFlag:(NSString *)itinArrivalflag legDiffMins:(NSString *)timeDiff:(NSDate *)startDate:(NSDate *)endDate:(NSString *)route{
     @try {
         NSArray *ities = [plan sortedItineraries];
         for (int i=0; i <ities.count ; i++) {
-            if ([[[ities objectAtIndex:i] itinId] isEqualToString:ititId]) {
-                [[ities objectAtIndex:i] setItinArrivalFlag:itinArrivalflag];
-            }
             Itinerary *it = [ities objectAtIndex:i];
             NSArray *legs =  [it sortedLegs];
             for (int i=0;i<legs.count;i++) {
-                if ([[[legs objectAtIndex:i] legId] isEqualToString:legId]) {
+                int legStartTime = timeIntervalFromDate([[legs objectAtIndex:i] startTime]);
+                int startTime = timeIntervalFromDate(startDate);
+                if ([[[legs objectAtIndex:i] routeId] isEqualToString:routeId] && [[[legs objectAtIndex:i] route] isEqualToString:route] && legStartTime == startTime) {
                     [[legs objectAtIndex:i] setArrivalFlag:arrivalFlag];
                     [[legs objectAtIndex:i] setArrivalTime:arrivalTime];
                     [[legs objectAtIndex:i] setTimeDiffInMins:timeDiff];
                 }
             }
+            [it setArrivalFlagFromLegsRealTime];
         }
     }
     @catch (NSException *exception) {

@@ -493,3 +493,12 @@ NSString *getItemAtIndexFromArray(int index,NSArray *arrayComponents){
     }
     return @"";
 }
+int timeIntervalFromDate(NSDate * date){
+    NSDate *time = timeOnlyFromDate(date);
+    NSCalendar *calendarDepartureTime = [NSCalendar currentCalendar];
+    NSDateComponents *componentsDepartureTime = [calendarDepartureTime components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:time];
+    int hourDepartureTime = [componentsDepartureTime hour];
+    int minuteDepartureTime = [componentsDepartureTime minute];
+    int intervalDepartureTime = (hourDepartureTime)*60*60 + minuteDepartureTime*60;
+    return intervalDepartureTime;
+}

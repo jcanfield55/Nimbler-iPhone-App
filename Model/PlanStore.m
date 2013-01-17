@@ -292,6 +292,12 @@
                  saveContext(managedObjectContext);  // Save location and request chunk changes
                 plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context
                 // Now format the itineraries of the consolidated plan
+                // get Unique Itinerary from Plan.
+                NSArray *arrUniqueItinerary = [plan uniqueItineraries];
+                NSSet *setUniqueitineraries = [NSSet setWithArray:arrUniqueItinerary];
+                plan.uniqueItineraryPatterns = setUniqueitineraries;
+                plan = [[nc_AppDelegate sharedInstance].gtfsParser generateLegsAndItineraryFromPatternsOfPlan:plan parameters:planRequestParameters Context:nil];
+                
                 if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate] departOrArrive:[planRequestParameters departOrArrive]]) {
                     
                     [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
@@ -303,12 +309,6 @@
                     } else {
                         [toFromVC newPlanAvailable:plan status:PLAN_STATUS_OK];
                     }
-                    // get Unique Itinerary from Plan.
-                    NSArray *arrUniqueItinerary = [plan uniqueItineraries];
-                    NSSet *setUniqueitineraries = [NSSet setWithArray:arrUniqueItinerary];
-                    plan.uniqueItineraryPatterns = setUniqueitineraries;
-                    plan = [[nc_AppDelegate sharedInstance].gtfsParser generateLegsAndItineraryFromPatternsOfPlan:plan parameters:planRequestParameters Context:nil];
-                    [plan removeDuplicateItineraries];
                 } else { // no matching sorted itineraries.  DE189 fix
                     if (planRequestParameters.planDestination == PLAN_DESTINATION_TO_FROM_VC) {
                         [toFromVC newPlanAvailable:nil status:PLAN_GENERIC_EXCEPTION];
