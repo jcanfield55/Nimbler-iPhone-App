@@ -91,5 +91,7 @@
 
 // Create unique Itineraries array from plan.
 - (NSArray *)uniqueItineraries;
+// Generate 16 character random string and set it as legId for scheduled leg.
+- (void) setLegsId;
 @end
 

@@ -17,6 +17,7 @@
 #define CALTRAIN_CELL_HEADER    @"Caltrain @Caltrain"
 #define TWEET                   @"tweet"
 #define TWEET_TIME              @"time"
+#define TWEET_SOURCE            @"source"
 #define CALTRAIN_IMG            @"caltrain.jpg"
 
 #define MAXLINE_TAG             5
@@ -189,10 +190,14 @@ NSUserDefaults *prefs;
         labelTime.text = [[detailsTimeFormatter stringFromDate:epochNSDate] lowercaseString];
         [labelTime setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
         
-        UIImage *img = [UIImage imageNamed:CALTRAIN_IMG];
+        // DE-270 Fixed
+        UIImage *image = getAgencyIcon([key objectForKey:TWEET_SOURCE]);
+        if(image)
+            cell.imageView.image =image;
+        else
+            cell.imageView.image = [UIImage imageNamed:CALTRAIN_IMG];
         cell.imageView.layer.cornerRadius = CORNER_RADIUS_MEDIUM;
         cell.imageView.layer.masksToBounds = YES;
-        [cell.imageView setImage:img];
         return cell;
     }
     @catch (NSException *exception) {

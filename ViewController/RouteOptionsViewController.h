@@ -20,7 +20,7 @@
 @property( readwrite) BOOL isReloadRealData;
 
 -(void)setLiveFeed:(id)liveFeed;
-- (void) setRealtimeData:(NSString *)routeId arrivalTime:(NSString *)arrivalTime arrivalFlag:(NSString *)arrivalFlag itineraryId:(NSString *)ititId itineraryArrivalFlag:(NSString *)itinArrivalflag legDiffMins:(NSString *)timeDiff:(NSDate *)startDate:(NSDate *)endDate:(NSString *)route;
+- (void) setRealtimeData:(NSString *)routeId arrivalTime:(NSString *)arrivalTime arrivalFlag:(NSString *)arrivalFlag itineraryId:(NSString *)ititId itineraryArrivalFlag:(NSString *)itinArrivalflag legDiffMins:(NSString *)timeDiff:(NSDate *)startDate:(NSDate *)endDate:(NSString *)legId;
 -(void)hideUnUsedTableViewCell;
 -(void)setFBParameterForPlan;
 -(void)popOutToNimbler;

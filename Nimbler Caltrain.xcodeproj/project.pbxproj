@@ -22,7 +22,6 @@
 		520FB12D162603090083F143 /* ToFromTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB11A162603090083F143 /* ToFromTableViewController.m */; };
 		520FB12E162603090083F143 /* ToFromViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB11C162603090083F143 /* ToFromViewController.m */; };
 		520FB12F162603090083F143 /* ToFromViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB11D162603090083F143 /* ToFromViewController.xib */; };
-		520FB130162603090083F143 /* twitterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB11F162603090083F143 /* twitterViewController.m */; };
 		520FB131162603090083F143 /* twitterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB120162603090083F143 /* twitterViewController.xib */; };
 		520FB147162603430083F143 /* CustomBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB134162603430083F143 /* CustomBadge.m */; };
 		520FB148162603430083F143 /* DateFormatterMSFrom1970.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB136162603430083F143 /* DateFormatterMSFrom1970.m */; };
@@ -225,6 +224,7 @@
 		8DBECD5216146DBE007B71F1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */; };
 		8DC019F91627F4BE004200E5 /* nc_AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */; };
 		8DC448EA169409ED00608DF6 /* GtfsParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DD51671EB41004E0DE5 /* GtfsParser.m */; };
+		8DE0CC4F16A9632100AE2E9D /* twitterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB11F162603090083F143 /* twitterViewController.m */; };
 		8DEE785D166338F100E4863C /* SettingViewController_SF_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */; };
 		8DEE785F166339D600E4863C /* SettingDetailViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */; };
 		8DF35D631627F58500B99F4A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF35D621627F58400B99F4A /* main.m */; };
@@ -1345,7 +1345,6 @@
 				520FB12A162603090083F143 /* SettingInfoViewController.m in Sources */,
 				520FB12D162603090083F143 /* ToFromTableViewController.m in Sources */,
 				520FB12E162603090083F143 /* ToFromViewController.m in Sources */,
-				520FB130162603090083F143 /* twitterViewController.m in Sources */,
 				520FB147162603430083F143 /* CustomBadge.m in Sources */,
 				520FB148162603430083F143 /* DateFormatterMSFrom1970.m in Sources */,
 				520FB149162603430083F143 /* FeedBackReqParam.m in Sources */,
@@ -1397,6 +1396,7 @@
 				8D0FA9B31691985B0038FDB2 /* ItineraryFromGtfs.m in Sources */,
 				8DC448EA169409ED00608DF6 /* GtfsParser.m in Sources */,
 				8D9A9FBF16945A3F00D3EB55 /* LegFromGtfs.m in Sources */,
+				8DE0CC4F16A9632100AE2E9D /* twitterViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

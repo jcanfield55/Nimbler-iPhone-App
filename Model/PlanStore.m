@@ -104,15 +104,6 @@
     }
 }
 
-#pragma mark -- Generate random string of length 16
-- (NSString *)generateRandomString{
-    NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    NSMutableString *randomString = [NSMutableString stringWithCapacity: REQUEST_ID_LENGTH];
-    for (int i = 0; i< REQUEST_ID_LENGTH ; i++) {
-        [randomString appendFormat: @"%C", [letters characterAtIndex: arc4random() % [letters length]]];
-    }
-    return randomString;
-}
 // Requests for a new plan from OTP
 -(void)requestPlanFromOtpWithParameters:(PlanRequestParameters *)parameters
 {
@@ -194,7 +185,7 @@
         // Build the parameters into a resource string
         parameters.serverCallsSoFar = parameters.serverCallsSoFar + 1;
         // TODO handle changes to maxWalkDistance with plan caching
-        NSString *requestID = [self generateRandomString];
+        NSString *requestID = generateRandomString();
         
         // Append The requestID to the URL.
         // Now we set that String as key of our  parametersByPlanURLResource Dictionary.
@@ -256,8 +247,7 @@
                 } else {
                     [NSException raise:@"PlanStore->didLoadObjects failed to retrieve plan parameters" format:@"strResourcePath: %@", strResourcePath];
                 }
-                [[nc_AppDelegate sharedInstance].gtfsParser performSelector:@selector(generateGtfsTripsRequestStringUsingPlan:) withObject:plan afterDelay:1.0];
-                [[nc_AppDelegate sharedInstance].gtfsParser performSelector:@selector(generateStopTimesRequestString:) withObject:plan afterDelay:2.0];
+                [[nc_AppDelegate sharedInstance].gtfsParser generateGtfsTripsRequestStringUsingPlan:plan];
                 // Set to & from location with special handling of CurrentLocation
                 Location *toLoc = [planRequestParameters toLocation];
                 if ([toLoc isCurrentLocation] && [toLoc isReverseGeoValid]) {
@@ -289,19 +279,19 @@
                     } // else if routeOptions destination, do nothing
                     return;
                 }
+                [plan setLegsId];
                  saveContext(managedObjectContext);  // Save location and request chunk changes
                 plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context
                 // Now format the itineraries of the consolidated plan
                 // get Unique Itinerary from Plan.
-                NSArray *arrUniqueItinerary = [plan uniqueItineraries];
-                NSSet *setUniqueitineraries = [NSSet setWithArray:arrUniqueItinerary];
-                plan.uniqueItineraryPatterns = setUniqueitineraries;
-                plan = [[nc_AppDelegate sharedInstance].gtfsParser generateLegsAndItineraryFromPatternsOfPlan:plan parameters:planRequestParameters Context:nil];
-                
                 if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate] departOrArrive:[planRequestParameters departOrArrive]]) {
                     
                     [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
                     
+                     //NSArray *arrUniqueItinerary = [plan uniqueItineraries];
+                     //NSSet *setUniqueitineraries = [NSSet setWithArray:arrUniqueItinerary];
+                   //  plan.uniqueItineraryPatterns = setUniqueitineraries;
+                     //plan = [[nc_AppDelegate sharedInstance].gtfsParser generateLegsAndItineraryFromPatternsOfPlan:plan parameters:planRequestParameters Context:nil];
                     // Call-back the appropriate RouteOptions VC with the new plan
                     UIViewController *currentVC = toFromVC.navigationController.visibleViewController;
                     if (planRequestParameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC || currentVC == routeOptionsVC) {

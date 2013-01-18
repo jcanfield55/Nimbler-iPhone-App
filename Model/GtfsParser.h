@@ -30,6 +30,7 @@
 @property (strong, nonatomic) NSString *strStopsURL;
 @property (strong, nonatomic) NSString *strTripsURL;
 @property (strong, nonatomic) NSString *strStopTimesURL;
+@property (strong, nonatomic) Plan *tempPlan;
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc;
 

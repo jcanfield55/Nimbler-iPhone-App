@@ -192,8 +192,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
             Leg *leg = [itin.sortedLegs objectAtIndex:0];
             timeDiffFirstLeg = leg.timeDiffInMins;
         }
-        Leg *leg = [itin.sortedLegs objectAtIndex:[itin.sortedLegs count]-1];
-        timeDiffLastLeg = leg.timeDiffInMins;
+//        Leg *leg = [itin.sortedLegs objectAtIndex:[itin.sortedLegs count]-1];
+        //timeDiffLastLeg = leg.timeDiffInMins;
+        timeDiffLastLeg = [[[itin sortedLegs] lastObject] timeDiffInMins];
         UIView *viewCellBackground = [[UIView alloc] init];
         [viewCellBackground setBackgroundColor:[UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW]];
         cell.backgroundView = viewCellBackground;
@@ -448,14 +449,14 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                             NSString *arrivalTimeFlag = [[legLiveFees objectAtIndex:i] valueForKey:@"arrivalTimeFlag"];
                             NSString *timeDiff = [[legLiveFees objectAtIndex:i] valueForKey:@"timeDiffInMins"];
                             NSString *routeId = [[[legLiveFees objectAtIndex:i] valueForKey:@"leg"] valueForKey:@"routeId"];
-                             NSString *route = [[[legLiveFees objectAtIndex:i] valueForKey:@"leg"] valueForKey:@"route"];
+                             NSString *legId = [[[legLiveFees objectAtIndex:i] valueForKey:@"leg"] valueForKey:@"id"];
                              NSString *startDateEpoch = [[[legLiveFees objectAtIndex:i] valueForKey:@"leg"] valueForKey:@"startTime"];
                              NSTimeInterval startDateSeconds = ([startDateEpoch doubleValue])/1000;
                             NSDate* startDate = [NSDate dateWithTimeIntervalSince1970:startDateSeconds];
                              NSString *endDateEpoch = [[[legLiveFees objectAtIndex:i] valueForKey:@"leg"] valueForKey:@"endTime"];
                              NSTimeInterval endDateSeconds = ([endDateEpoch doubleValue])/1000;
                             NSDate* endDate = [NSDate dateWithTimeIntervalSince1970:endDateSeconds];
-                            [self setRealtimeData:routeId arrivalTime:arrivalTime arrivalFlag:arrivalTimeFlag itineraryId:ititId itineraryArrivalFlag:itinTimeFalg legDiffMins:timeDiff:startDate:endDate:route];
+                            [self setRealtimeData:routeId arrivalTime:arrivalTime arrivalFlag:arrivalTimeFlag itineraryId:ititId itineraryArrivalFlag:itinTimeFalg legDiffMins:timeDiff:startDate:endDate:legId];
                         }      
                     }
                 }
@@ -474,16 +475,14 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     }
 }
 
-- (void) setRealtimeData:(NSString *)routeId arrivalTime:(NSString *)arrivalTime arrivalFlag:(NSString *)arrivalFlag itineraryId:(NSString *)ititId itineraryArrivalFlag:(NSString *)itinArrivalflag legDiffMins:(NSString *)timeDiff:(NSDate *)startDate:(NSDate *)endDate:(NSString *)route{
+- (void) setRealtimeData:(NSString *)routeId arrivalTime:(NSString *)arrivalTime arrivalFlag:(NSString *)arrivalFlag itineraryId:(NSString *)ititId itineraryArrivalFlag:(NSString *)itinArrivalflag legDiffMins:(NSString *)timeDiff:(NSDate *)startDate:(NSDate *)endDate:(NSString *)legId{
     @try {
         NSArray *ities = [plan sortedItineraries];
         for (int i=0; i <ities.count ; i++) {
             Itinerary *it = [ities objectAtIndex:i];
             NSArray *legs =  [it sortedLegs];
             for (int i=0;i<legs.count;i++) {
-                int legStartTime = timeIntervalFromDate([[legs objectAtIndex:i] startTime]);
-                int startTime = timeIntervalFromDate(startDate);
-                if ([[[legs objectAtIndex:i] routeId] isEqualToString:routeId] && [[[legs objectAtIndex:i] route] isEqualToString:route] && legStartTime == startTime) {
+                if ([[[legs objectAtIndex:i] legId] isEqualToString:legId]) {
                     [[legs objectAtIndex:i] setArrivalFlag:arrivalFlag];
                     [[legs objectAtIndex:i] setArrivalTime:arrivalTime];
                     [[legs objectAtIndex:i] setTimeDiffInMins:timeDiff];

@@ -1383,7 +1383,7 @@ UIImage *imageDetailDisclosure;
     
     @try {
         // DE 175 Fixed
-                [nc_AppDelegate sharedInstance].isNeedToLoadRealData = YES;
+       [nc_AppDelegate sharedInstance].isNeedToLoadRealData = YES;
                 isContinueGetRealTimeData = NO;
                 RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
                 id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
@@ -1529,7 +1529,7 @@ UIImage *imageDetailDisclosure;
                     double endTimeInterval = [leg.endTime timeIntervalSince1970];
                     endDate = endTimeInterval*1000;
                 }
-                  NSDictionary *dicLegData = [NSDictionary dictionaryWithObjectsAndKeys:leg.tripId,@"tripId",leg.routeLongName,@"routeLongName",strRouteShortName,@"routeShortName",[NSNumber numberWithDouble:startDate],@"startTime",[NSNumber numberWithDouble:endDate],@"endTime",leg.routeId,@"routeId",dicTo,@"to",dicFrom,@"from",leg.mode,@"mode",leg.agencyId,@"agencyId",leg.agencyName,@"agencyName",leg.route,@"route",leg.headSign,@"headsign", nil];
+                  NSDictionary *dicLegData = [NSDictionary dictionaryWithObjectsAndKeys:leg.tripId,@"tripId",leg.routeLongName,@"routeLongName",strRouteShortName,@"routeShortName",[NSNumber numberWithDouble:startDate],@"startTime",[NSNumber numberWithDouble:endDate],@"endTime",leg.routeId,@"routeId",dicTo,@"to",dicFrom,@"from",leg.mode,@"mode",leg.agencyId,@"agencyId",leg.agencyName,@"agencyName",leg.route,@"route",leg.headSign,@"headsign",leg.legId,@"id", nil];
                 [arrLegs addObject:dicLegData];
             }
         }

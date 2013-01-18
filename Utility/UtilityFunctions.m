@@ -502,3 +502,42 @@ int timeIntervalFromDate(NSDate * date){
     int intervalDepartureTime = (hourDepartureTime)*60*60 + minuteDepartureTime*60;
     return intervalDepartureTime;
 }
+
+NSString *generateRandomString(){
+    NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    NSMutableString *randomString = [NSMutableString stringWithCapacity: REQUEST_ID_LENGTH];
+    for (int i = 0; i< REQUEST_ID_LENGTH ; i++) {
+        [randomString appendFormat: @"%C", [letters characterAtIndex: arc4random() % [letters length]]];
+    }
+    return randomString;
+}
+
+// return the image from document directory or from server
+// First check if image exist at document directory folder if yes then take image from document directory otherwise request server for image and save image to document directory and next time use image from document directory.
+UIImage *getAgencyIcon(NSString * imageName){
+    UIImage *agencyImage;
+    NSString *documentFolderPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *strImagePath = [NSString stringWithFormat:@"%@/%@",documentFolderPath,imageName];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if([fileManager fileExistsAtPath: strImagePath]){
+        agencyImage = [UIImage imageWithData:[NSData dataWithContentsOfFile:strImagePath]];
+    }
+    else{
+        agencyImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@/%@",TRIP_PROCESS_URL,LIVE_FEEDS_IMAGE_DOWNLOAD_URL,imageName]]]];
+        NSData *imageData = UIImagePNGRepresentation(agencyImage);
+        [imageData writeToFile:strImagePath atomically:YES];
+    }
+    return agencyImage;
+}
+
+// return the leg at offset from current leg and sorted legs
+Leg *getLegAtOffset(NSArray *sortedLegs,Leg *currentLeg,int offset){
+    Leg *newLeg = nil;
+    for(int i=0;i<[sortedLegs count];i++){
+        if([[sortedLegs objectAtIndex:i] isEqual:currentLeg]){
+            if( i+offset > 0 && i+offset < [sortedLegs count])
+                newLeg = [sortedLegs objectAtIndex:i+offset];
+        }
+    }
+    return newLeg;
+}

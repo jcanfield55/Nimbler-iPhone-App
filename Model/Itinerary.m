@@ -403,18 +403,21 @@
 - (void) setArrivalFlagFromLegsRealTime{
     BOOL delayed = false;
     BOOL early = false;
+    BOOL ontime = false;
     for(int i=0;i<[[self sortedLegs] count];i++){
         Leg *leg = [[self sortedLegs] objectAtIndex:i];
         if([leg isScheduled]){
-            if([[leg arrivalFlag]intValue ] == DELAYED)
+            if([[leg arrivalFlag]intValue] == DELAYED)
                 delayed = true;
             if([[leg arrivalFlag] intValue] == EARLY)
                 early = true;
             if([[leg arrivalFlag] intValue] == ON_TIME)
-                [self setItinArrivalFlag:[NSString stringWithFormat:@"%d",ON_TIME]];
+                ontime = true;
         }
     }
-    if(delayed && early)
+    if(ontime)
+       [self setItinArrivalFlag:[NSString stringWithFormat:@"%d",ON_TIME]]; 
+    else if(delayed && early)
         [self setItinArrivalFlag:[NSString stringWithFormat:@"%d",ITINERARY_TIME_SLIPPAGE]];
     else if(delayed)
         [self setItinArrivalFlag:[NSString stringWithFormat:@"%d",DELAYED]];

@@ -26,6 +26,7 @@
 @synthesize strStopsURL;
 @synthesize strTripsURL;
 @synthesize strStopTimesURL;
+@synthesize tempPlan;
 
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc
@@ -596,6 +597,10 @@
                     NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
                     if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
                         [self parseAndStroreGtfsTripsData:res RequestUrl:strRequestURL];
+                        [self generateStopTimesRequestString:tempPlan];
+                    }
+                    else{
+                        [self generateGtfsTripsRequestStringUsingPlan:tempPlan];
                     }
                 }
                 else if ([strRequestURL isEqualToString:strStopTimesURL]) {
@@ -605,6 +610,10 @@
                     NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
                     if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
                         [self parseAndStoreGtfsStopTimesData:res RequestUrl:strRequestURL];
+                        tempPlan = nil;
+                    }
+                    else{
+                        [self generateStopTimesRequestString:tempPlan];
                     }
                 }
             }
@@ -638,6 +647,7 @@
 }
 
 - (void)generateGtfsTripsRequestStringUsingPlan:(Plan *) plan{
+    tempPlan = plan;
     [nc_AppDelegate sharedInstance].receivedReply = false;
     NSMutableString *strRequestString = [[NSMutableString alloc] init];
     NSArray *itiArray = [plan sortedItineraries];
@@ -901,7 +911,7 @@
         return intervalDepartureTime;
     }
     @catch (NSException *exception) {
-         logException(@"GtfsParser->timeAndDateFromString", @"", exception);
+         logException(@"GtfsParser->getTimeInterValInSeconds", @"", exception);
     }
 }
 
@@ -964,7 +974,6 @@
         [newleg setNewlegAttributes:leg];
         newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([newleg.duration floatValue]/1000)];
         itinerary.endTime = newleg.endTime;
-        itinerary.endTimeOnly = timeOnlyFromDate(itinerary.endTime);
         newleg.itinerary = itinerary;
     }
     @catch (NSException *exception) {
@@ -979,11 +988,12 @@
         NSArray *arrayStopTime = [self findNearestStopTimeFromStopTimeArray:arrStopTimes Itinerary:itinerary];
         GtfsStopTimes *fromStopTime = [arrayStopTime objectAtIndex:0];
         Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
-        newleg.startTime = [self timeAndDateFromString:fromStopTime.departureTime];
-        newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([newleg.duration floatValue]/1000)];
+        if(fromStopTime.departureTime){
+            newleg.startTime = [self timeAndDateFromString:fromStopTime.departureTime];
+            newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([newleg.duration floatValue]/1000)];
+        }
         [newleg setNewlegAttributes:leg];
         itinerary.endTime = newleg.endTime;
-        itinerary.endTimeOnly = timeOnlyFromDate(itinerary.endTime);
         newleg.itinerary = itinerary;
         [arrStopTimes removeObject:arrayStopTime];
     }

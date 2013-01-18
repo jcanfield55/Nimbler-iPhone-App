@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h> 
 #import <CoreLocation/CoreLocation.h>
+#import "Leg.h"
 
 NSString *pathInDocumentDirectory(NSString *fileName);
 
@@ -86,3 +87,13 @@ NSString *agencyNameFromAgencyId(NSString *agencyId);
 NSString *getItemAtIndexFromArray(int index,NSArray *arrayComponents);
 
 int timeIntervalFromDate(NSDate * date);
+
+// generate 16 character random string
+NSString *generateRandomString();
+
+// return the image from document directory or from server
+// First check if image exist at document directory folder if yes then take image from document directory otherwise request server for image and save image to document directory and next time use image from document directory.
+UIImage *getAgencyIcon(NSString * imageName);
+
+// return the leg at offset from current leg and sorted legs
+Leg *getLegAtOffset(NSArray *sortedLegs,Leg *currentLeg,int offset);
