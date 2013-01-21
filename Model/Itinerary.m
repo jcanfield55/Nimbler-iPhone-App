@@ -400,6 +400,9 @@
     }
 }
 
+// Set Itinerary RealTime from Legs RealTime
+// If itinerary has one scheduled leg then itinerary realtime is same as scheduled leg realtime.
+// If itinerary have more than one scheduled leg then check if one leg is early and other is delayed then realtime for itinerary is time slipage else if all flag have same realtime then itinerary realtime is same as scheduled legs realtime else leg is not delayed or early then itinerary real time is ontime.
 - (void) setArrivalFlagFromLegsRealTime{
     BOOL delayed = false;
     BOOL early = false;
@@ -423,5 +426,40 @@
         [self setItinArrivalFlag:[NSString stringWithFormat:@"%d",DELAYED]];
     else if(early)
         [self setItinArrivalFlag:[NSString stringWithFormat:@"%d",EARLY]];
+}
+
+// return the conflict leg from sorted legs of itinerary
+- (Leg *) conflictLegFromItinerary{
+    for(int i=1;i<[[self sortedLegs] count];i++){
+        Leg *currentLeg = [[self sortedLegs] objectAtIndex:i];
+        Leg *previousLeg = [[self sortedLegs] objectAtIndex:i-1];
+        if ([[currentLeg getApplicableEndTime] compare:[previousLeg getApplicableStartTime]] == NSOrderedDescending)
+            return currentLeg;
+    }
+    return nil;
+}
+
+// Adjust the legs in itinerary if possible otherwise return conflictleg.
+// First Find the conflict leg from itinerary the check if next leg and it is scheduled then return conflict leg.
+// Find next to next leg if it is then check if new computed end date comes after start date then return leg.
+// then compute realtime data for next leg from conflict leg realtime.
+- (Leg *) adjustLegsIfRequired{
+    Leg *leg = [self conflictLegFromItinerary];
+    Leg *nextLeg = [leg getLegAtOffsetFromListOfLegs:self.sortedLegs offset:1];
+    if(!nextLeg || [nextLeg isScheduled])
+        return leg;
+    Leg *nextToNextLeg = [leg getLegAtOffsetFromListOfLegs:self.sortedLegs offset:2];
+    if(nextToNextLeg){
+        NSDate *endDate = nextLeg.endTime;
+        NSDate *startDate = timeOnlyFromDate(nextToNextLeg.startTime);
+        NSDate *newEndDate = timeOnlyFromDate([endDate dateByAddingTimeInterval:[leg.timeDiffInMins intValue]*60]);
+        if ([newEndDate compare:startDate] == NSOrderedDescending)
+            return leg;
+        }
+        int diffInMin = [leg.timeDiffInMins intValue];
+        nextLeg.timeDiffInMins = leg.timeDiffInMins;
+        nextLeg.arrivalFlag = leg.arrivalFlag;
+        nextLeg.arrivalTime = [nextLeg.endTime dateByAddingTimeInterval:diffInMin * 60];
+    return nil;
 }
 @end

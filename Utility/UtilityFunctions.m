@@ -529,15 +529,3 @@ UIImage *getAgencyIcon(NSString * imageName){
     }
     return agencyImage;
 }
-
-// return the leg at offset from current leg and sorted legs
-Leg *getLegAtOffset(NSArray *sortedLegs,Leg *currentLeg,int offset){
-    Leg *newLeg = nil;
-    for(int i=0;i<[sortedLegs count];i++){
-        if([[sortedLegs objectAtIndex:i] isEqual:currentLeg]){
-            if( i+offset > 0 && i+offset < [sortedLegs count])
-                newLeg = [sortedLegs objectAtIndex:i+offset];
-        }
-    }
-    return newLeg;
-}

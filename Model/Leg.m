@@ -45,6 +45,8 @@
 @dynamic legId;
 @dynamic tripId;
 @dynamic agencyName;
+@synthesize realStartTime;
+@synthesize realEndTime;
 @synthesize sortedSteps;
 @synthesize polylineEncodedString;
 @synthesize arrivalTime,arrivalFlag,timeDiffInMins;
@@ -231,7 +233,8 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
                  [[self to] name]];
             }
             
-        } else if (legPosition == LAST_LEG) {   // US124 implementation
+        }
+        else if (legPosition == LAST_LEG) {   // US124 implementation
             if([self.arrivalFlag intValue] == DELAYED) {
                 NSDate* realTimeArrivalTime = [[self endTime]
                                                dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
@@ -549,5 +552,33 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     self.tripId = leg.tripId;
     self.sortedSteps = leg.sortedSteps;
     self.polylineEncodedString = leg.polylineEncodedString;
+}
+
+// return startTime only from real time if exists otherwise return leg starttime only. 
+- (NSDate *) getApplicableStartTime{
+    if(self.realStartTime)
+        return timeOnlyFromDate(self.realStartTime);
+    else
+        return timeOnlyFromDate(self.startTime);
+}
+
+// return endTime only from real time if exists otherwise return leg endtime only.
+- (NSDate *) getApplicableEndTime{
+    if(self.realEndTime)
+        return timeOnlyFromDate(self.realEndTime);
+    else
+        return timeOnlyFromDate(self.endTime);
+}
+
+// return the leg at offset from current leg and sorted legs
+-(Leg *) getLegAtOffsetFromListOfLegs:(NSArray *)sortedLegs offset:(int) offset{
+    Leg *newLeg = nil;
+    for(int i=0;i<[sortedLegs count];i++){
+        if([[sortedLegs objectAtIndex:i] isEqual:self]){
+            if( i+offset >= 0 && i+offset < [sortedLegs count])
+                newLeg = [sortedLegs objectAtIndex:i+offset];
+        }
+    }
+    return newLeg;
 }
 @end

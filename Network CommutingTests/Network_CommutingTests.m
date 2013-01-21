@@ -1681,4 +1681,116 @@
     NSArray *arrnewItineraries = [[plan10 itineraries] allObjects];
     STAssertTrue([arrItineraries count] <= [arrnewItineraries count],@"");
 }
+
+// TODO: Need to load proper Gtfs StopTimes Data and then test result of generateNewItineraryByRemovingConflictLegs method.
+
+- (void)testgenerateNewItineraryByRemovingConflictLegs{
+     NSDate* date1 = [dateFormatter dateFromString:@"June 8, 2012 5:00 PM"]; 
+     NSDate* date2 = [dateFormatter dateFromString:@"June 8, 2012 5:05 PM"];
+     NSDate* date3 = [dateFormatter dateFromString:@"June 8, 2012 5:05 PM"];
+     NSDate* date4 = [dateFormatter dateFromString:@"June 8, 2012 5:20 PM"];
+     NSDate* date5 = [dateFormatter dateFromString:@"June 8, 2012 5:20 PM"];
+     NSDate* date6 = [dateFormatter dateFromString:@"June 8, 2012 5:25 PM"];
+    NSDate* dater3 = [dateFormatter dateFromString:@"June 8, 2012 5:08 PM"];
+    NSDate* dater4 = [dateFormatter dateFromString:@"June 8, 2012 5:23 PM"];
+    NSDate* dater5 = [dateFormatter dateFromString:@"June 8, 2012 5:24 PM"];
+    NSDate* dater6 = [dateFormatter dateFromString:@"June 8, 2012 5:29 PM"];
+
+    plan12 = [NSEntityDescription insertNewObjectForEntityForName:@"Plan" inManagedObjectContext:managedObjectContext];;
+    itin120 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+    
+    leg1201= [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    leg1201.mode = @"WALK";
+    PlanPlace *pp101 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    PlanPlace *pp102 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    [pp101 setLat:[NSNumber numberWithDouble:37.75768017385226]];
+    [pp101 setLng:[NSNumber numberWithDouble:-122.3926363695829]];
+    [pp102 setLat:[NSNumber numberWithDouble:37.755414]];
+    [pp102 setLng:[NSNumber numberWithDouble:-122.388001]];
+    [pp102 setStopId:@"7354"];
+    [pp101 setName:@"22nd Street"];
+    [pp102 setName:@"Third Street & 23rd St"];
+    leg1201.from = pp101;
+    leg1201.to = pp102;
+    leg1201.startTime = date1;
+    leg1201.endTime = date2;
+    leg1201.duration = [NSNumber numberWithInt:300000];
+    leg1201.itinerary = itin120;
+    
+    
+    leg1202 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    leg1202.agencyId = @"SFMTA";
+    leg1202.agencyName = @"San Francisco Municipal Transportation Agency";
+    leg1202.mode = @"TRAM";
+    leg1202.route = @"KT";
+    leg1202.routeShortName = @"KT";
+    leg1202.routeLongName = @"OCEAN VIEW";
+    leg1202.routeId = @"1196";
+    leg1202.tripId = @"5249630";
+    PlanPlace *pp103 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    PlanPlace *pp104 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    [pp103 setLat:[NSNumber numberWithDouble:37.755414]];
+    [pp103 setLng:[NSNumber numberWithDouble:-122.388001]];
+    [pp104 setLat:[NSNumber numberWithDouble:37.776278]];
+    [pp104 setLng:[NSNumber numberWithDouble:-122.393864]];
+    [pp103 setStopId:@"7354"];
+    [pp104 setStopId:@"7166"];
+    [pp103 setName:@"Third Street & 23rd St"];
+    [pp104 setName:@"4th St & King St"];
+    leg1202.from = pp103;
+    leg1202.to = pp104;
+    leg1202.startTime = date3;
+    leg1202.endTime = date4;
+    leg1202.realStartTime = dater3;
+    leg1202.realEndTime = dater4;
+    leg1202.timeDiffInMins = @"3";
+    leg1202.duration = [NSNumber numberWithInt:900000];
+    leg1202.itinerary = itin120;
+    
+    
+    
+    leg1203 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    leg1203.agencyId = @"caltrain-ca-us";
+    leg1203.agencyName = @"Caltrain";
+    leg1203.mode = @"RAIL";
+    leg1203.route = @"Local";
+    leg1203.routeLongName = @"Bullet";
+    leg1203.routeId = @"ct_bullet_20121001";
+    leg1203.tripId = @"197_20121001";
+    PlanPlace *pp119 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    PlanPlace *pp1110 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    [pp119 setLat:[NSNumber numberWithDouble:37.757674]];
+    [pp119 setLng:[NSNumber numberWithDouble:-122.392636]];
+    [pp1110 setLat:[NSNumber numberWithDouble:37.7764393371]];
+    [pp1110 setLng:[NSNumber numberWithDouble:-122.394322993]];
+    [pp119 setStopId:@"22nd Street Caltrain"];
+    [pp1110 setStopId:@"San Francisco Caltrain"];
+    [pp119 setName:@"22nd Street Caltrain Station"];
+    [pp1110 setName:@"San Francisco Caltrain Station"];
+    leg1203.from = pp119;
+    leg1203.to = pp1110;
+    leg1203.startTime = date5;
+    leg1203.endTime = date6;
+    leg1202.realStartTime = dater5;
+    leg1202.realEndTime = dater6;
+    leg1202.timeDiffInMins = @"2";
+    leg1203.mode = @"Caltrain";
+    leg1203.duration = [NSNumber numberWithInt:300000];
+    leg1203.itinerary = itin120;
+    itin120.plan = plan12;
+    saveContext(managedObjectContext);
+    
+    [[nc_AppDelegate sharedInstance].gtfsParser requestAgencyDataFromServer];
+    [self someMethodToWaitForResult];
+    [[nc_AppDelegate sharedInstance].gtfsParser generateGtfsTripsRequestStringUsingPlan:plan12];
+    [self someMethodToWaitForResult];
+    
+    for(int i=0;i<[[plan12 sortedItineraries] count];i++){
+        Itinerary *iti = [[plan12 sortedItineraries] objectAtIndex:i];
+        Leg * legs = [iti adjustLegsIfRequired];
+        if(legs){
+            [[nc_AppDelegate sharedInstance].gtfsParser generateNewItineraryByRemovingConflictLegs:iti :legs:managedObjectContext];
+        }
+    }
+}
 @end

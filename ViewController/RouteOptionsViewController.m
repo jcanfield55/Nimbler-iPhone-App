@@ -486,6 +486,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                     [[legs objectAtIndex:i] setArrivalFlag:arrivalFlag];
                     [[legs objectAtIndex:i] setArrivalTime:arrivalTime];
                     [[legs objectAtIndex:i] setTimeDiffInMins:timeDiff];
+                    [[legs objectAtIndex:i] setRealStartTime:startDate];
+                    [[legs objectAtIndex:i] setRealEndTime:endDate];
                 }
             }
             [it setArrivalFlagFromLegsRealTime];

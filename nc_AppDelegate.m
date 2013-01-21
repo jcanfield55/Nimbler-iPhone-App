@@ -183,7 +183,6 @@ FeedBackForm *fbView;
         // Initialize The GtfsParser
         
         gtfsParser = [[GtfsParser alloc] initWithManagedObjectContext:self.managedObjectContext];
-        
         // Pre-load stations location files
         if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
             NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:CALTRAIN_PRELOAD_VERSION_NUMBER];

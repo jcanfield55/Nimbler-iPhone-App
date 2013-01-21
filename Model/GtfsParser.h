@@ -64,7 +64,7 @@
 - (void)requestStopTimesDataFromServer:(NSMutableString *)strRequestString;
 
 // Generate The StopTimes Request Comma Separated string like agencyID_tripID
-- (void)generateStopTimesRequestString:(Plan *)plan;
+- (void)generateStopTimesRequestStringUsingTripIds:(NSArray *)tripIds agencyIds:(NSArray *)agencyIds;
 
 // Generate The Trips Request Comma Separated string like agencyID_ROUTEID
 - (void)generateGtfsTripsRequestStringUsingPlan:(Plan *) plan;
@@ -95,7 +95,7 @@
 
 // first get stoptimes from StopTimes Table based on stopId
 // Then make a pair of StopTimes if both stoptimes have same tripId then check for the stopSequence and the departure time is greater than request trip time and also check if service is enabled for that stopTimes if yes the add both stopTimes as To/From StopTimes pair.
-- (NSMutableArray *)getStopTimes:(NSString *)strToStopID strFromStopID:(NSString *)strFromStopID parameters:(PlanRequestParameters *)parameters;
+- (NSMutableArray *)getStopTimes:(NSString *)strToStopID strFromStopID:(NSString *)strFromStopID startDate:(NSDate *)startDate;
 
 // First get The unique itinerary pattern from plan.the loop through every itinerary pattern.
 // For each legs of itinerary pattern check first if it is walk leg if yes the create new leg with some additional attributes.
@@ -106,6 +106,10 @@
 
 - (NSDate *)timeAndDateFromString:(NSString *)strTime;
 - (NSArray *) findNearestStopTimeFromStopTimeArray:(NSArray *)arrStopTimes Itinerary:(Itinerary *)itinerary;
+
+// Remove The legs from where conflict found in itinerary.
+// Then generate new legs from Gtfs StopTimes and old legs data.
+- (void) generateNewItineraryByRemovingConflictLegs:(Itinerary *)itinerary:(Leg *)conflictLeg:(NSManagedObjectContext *)context;
 
 @end
 

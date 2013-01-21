@@ -115,6 +115,15 @@ typedef enum {
 // If itinerary has one scheduled leg then itinerary realtime is same as scheduled leg realtime.
 // If itinerary have more than one scheduled leg then check if one leg is early and other is delayed then realtime for itinerary is time slipage else if all flag have same realtime then itinerary realtime is same as scheduled legs realtime else leg is not delayed or early then itinerary real time is ontime.
 - (void) setArrivalFlagFromLegsRealTime;
+
+// return the conflict leg from sorted legs of itinerary
+- (Leg *) conflictLegFromItinerary;
+
+// Adjust the legs in itinerary if possible otherwise return conflictleg.
+// First Find the conflict leg from itinerary the check if next leg and it is scheduled then return conflict leg.
+// Find next to next leg if it is then check if new computed end date comes after start date then return leg.
+// then compute realtime data for next leg from conflict leg realtime.
+- (Leg *) adjustLegsIfRequired;
 @end
 
 @interface Itinerary (CoreDataGeneratedAccessors)

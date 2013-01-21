@@ -292,7 +292,7 @@
         <element name="ItineraryFromGtfs" positionX="160" positionY="192" width="128" height="45"/>
         <element name="ItineraryFromOTP" positionX="160" positionY="192" width="128" height="45"/>
         <element name="KeyObjectPair" positionX="0" positionY="0" width="128" height="75"/>
-        <element name="Leg" positionX="-45" positionY="0" width="128" height="390"/>
+        <element name="Leg" positionX="-45" positionY="0" width="128" height="405"/>
         <element name="LegFromGtfs" positionX="160" positionY="192" width="128" height="75"/>
         <element name="LegFromOTP" positionX="90" positionY="216" width="128" height="45"/>
         <element name="Location" positionX="0" positionY="0" width="128" height="255"/>

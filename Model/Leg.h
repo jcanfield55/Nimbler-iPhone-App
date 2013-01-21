@@ -54,6 +54,8 @@ typedef enum {
 @property (nonatomic, retain) NSString *arrivalTime;
 @property (nonatomic, retain) NSString *arrivalFlag;
 @property (nonatomic, retain) NSString *timeDiffInMins;
+@property (nonatomic, retain) NSDate *realStartTime;
+@property (nonatomic, retain) NSDate *realEndTime;
 
 - (NSArray *)sortedSteps;
 - (NSString *)summaryTextWithTime:(BOOL)includeTime;  // Returns a single-line summary of the leg useful for RouteOptionsView details
@@ -79,6 +81,15 @@ typedef enum {
 
 // Set the newly generated leg attributes from old leg.
 - (void) setNewlegAttributes:(Leg *)leg;
+
+// return startTime only from real time if exists otherwise return leg starttime only.
+- (NSDate *) getApplicableStartTime;
+
+// return endTime only from real time if exists otherwise return leg endtime only.
+- (NSDate *) getApplicableEndTime;
+
+// return the leg at offset from current leg and sorted legs
+-(Leg *) getLegAtOffsetFromListOfLegs:(NSArray *)sortedLegs offset:(int) offset;
 
 @end
 
