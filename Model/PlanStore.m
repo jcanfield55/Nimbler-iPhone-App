@@ -288,10 +288,10 @@
                     
                     [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
                     
-                     //NSArray *arrUniqueItinerary = [plan uniqueItineraries];
-                     //NSSet *setUniqueitineraries = [NSSet setWithArray:arrUniqueItinerary];
-                   //  plan.uniqueItineraryPatterns = setUniqueitineraries;
-                     //plan = [[nc_AppDelegate sharedInstance].gtfsParser generateLegsAndItineraryFromPatternsOfPlan:plan parameters:planRequestParameters Context:nil];
+                    // NSArray *arrUniqueItinerary = [plan uniqueItineraries];
+                    // NSSet *setUniqueitineraries = [NSSet setWithArray:arrUniqueItinerary];
+                    // plan.uniqueItineraryPatterns = setUniqueitineraries;
+                    // plan = [[nc_AppDelegate sharedInstance].gtfsParser generateLegsAndItineraryFromPatternsOfPlan:plan parameters:planRequestParameters Context:nil];
                     // Call-back the appropriate RouteOptions VC with the new plan
                     UIViewController *currentVC = toFromVC.navigationController.visibleViewController;
                     if (planRequestParameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC || currentVC == routeOptionsVC) {

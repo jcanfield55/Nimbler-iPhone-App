@@ -91,6 +91,15 @@ typedef enum {
 // return the leg at offset from current leg and sorted legs
 -(Leg *) getLegAtOffsetFromListOfLegs:(NSArray *)sortedLegs offset:(int) offset;
 
+// Calculate time difference in minutes for leg.
+- (int) calculatetimeDiffInMins:(double)epochTime;
+
+// return arrival time flag for leg.
+- (int) calculateArrivalTimeFlag;
+
+// set timediffInMins,realStartTime,realEndTime and arrivalFlag for leg from realTime data.
+- (void) calculateRealTimeParametersUsingEpochTime:(double)epochTime;
+
 @end
 
 @interface Leg (CoreDataGeneratedAccessors)

@@ -436,35 +436,21 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         
         if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
             //It means there are live feeds in response
-            NSArray *itineraryLiveFees = [(NSDictionary*)liveData objectForKey:@"itinLiveFeeds"]; 
-            if ([itineraryLiveFees count] > 0) {
-                for (int j=0; j<itineraryLiveFees.count; j++) {                    
-                    id key = [itineraryLiveFees objectAtIndex:j];                
-                    NSString *itinTimeFalg = [(NSDictionary*)key objectForKey:@"arrivalTimeFlag"];
-                    NSString *ititId = [(NSDictionary*)key objectForKey:@"itineraryId"];
-                    NSArray *legLiveFees = [(NSDictionary*)key objectForKey:@"legLiveFeeds"]; 
-                    if ([legLiveFees count] > 0) {
-                        for (int i=0; i<legLiveFees.count; i++) {                
-                            NSString *arrivalTime = [[legLiveFees objectAtIndex:i] valueForKey:@"departureTime"];
-                            NSString *arrivalTimeFlag = [[legLiveFees objectAtIndex:i] valueForKey:@"arrivalTimeFlag"];
-                            NSString *timeDiff = [[legLiveFees objectAtIndex:i] valueForKey:@"timeDiffInMins"];
-                            NSString *routeId = [[[legLiveFees objectAtIndex:i] valueForKey:@"leg"] valueForKey:@"routeId"];
-                             NSString *legId = [[[legLiveFees objectAtIndex:i] valueForKey:@"leg"] valueForKey:@"id"];
-                             NSString *startDateEpoch = [[[legLiveFees objectAtIndex:i] valueForKey:@"leg"] valueForKey:@"startTime"];
-                             NSTimeInterval startDateSeconds = ([startDateEpoch doubleValue])/1000;
-                            NSDate* startDate = [NSDate dateWithTimeIntervalSince1970:startDateSeconds];
-                             NSString *endDateEpoch = [[[legLiveFees objectAtIndex:i] valueForKey:@"leg"] valueForKey:@"endTime"];
-                             NSTimeInterval endDateSeconds = ([endDateEpoch doubleValue])/1000;
-                            NSDate* endDate = [NSDate dateWithTimeIntervalSince1970:endDateSeconds];
-                            [self setRealtimeData:routeId arrivalTime:arrivalTime arrivalFlag:arrivalTimeFlag itineraryId:ititId itineraryArrivalFlag:itinTimeFalg legDiffMins:timeDiff:startDate:endDate:legId];
-                        }      
+            NSArray *legLiveFees = [[(NSDictionary*)liveData objectForKey:@"itinLiveFeeds"] objectForKey:@"legLiveFeeds"];
+            if ([legLiveFees count] > 0) {
+                for (int j=0; j<legLiveFees.count; j++) {
+                    id key = [legLiveFees objectAtIndex:j];
+                    NSString *legId = [[key objectForKey:@"leg"] objectForKey:@"id"];
+                    NSString *tripId = [[key objectForKey:@"lstPredictions"] objectForKey:@"tripId"];
+                    double epochTime = [[[key objectForKey:@"lstPredictions"] objectForKey:@"epochTime"] doubleValue];
+                    [self setRealTimeDataUsingLegId:legId tripId:tripId epochTime:epochTime liveFeeds:legLiveFees];
                     }
                 }
                 isReloadRealData = true;
                 [mainTable reloadData]; 
                 [routeDetailsVC ReloadLegWithNewData];
             }            
-        } else {
+        else {
             //thereare no live feeds available. 
             isReloadRealData = FALSE;
             NIMLOG_PERF1(@"thereare no live feeds available for current route");
@@ -475,22 +461,28 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     }
 }
 
-- (void) setRealtimeData:(NSString *)routeId arrivalTime:(NSString *)arrivalTime arrivalFlag:(NSString *)arrivalFlag itineraryId:(NSString *)ititId itineraryArrivalFlag:(NSString *)itinArrivalflag legDiffMins:(NSString *)timeDiff:(NSDate *)startDate:(NSDate *)endDate:(NSString *)legId{
+- (void) setRealTimeDataUsingLegId:(NSString *)legId tripId:(NSString *)tripId epochTime:(double)epochTime liveFeeds:(NSArray *)legLiveFeeds{
     @try {
-        NSArray *ities = [plan sortedItineraries];
-        for (int i=0; i <ities.count ; i++) {
-            Itinerary *it = [ities objectAtIndex:i];
-            NSArray *legs =  [it sortedLegs];
-            for (int i=0;i<legs.count;i++) {
-                if ([[[legs objectAtIndex:i] legId] isEqualToString:legId]) {
-                    [[legs objectAtIndex:i] setArrivalFlag:arrivalFlag];
-                    [[legs objectAtIndex:i] setArrivalTime:arrivalTime];
-                    [[legs objectAtIndex:i] setTimeDiffInMins:timeDiff];
-                    [[legs objectAtIndex:i] setRealStartTime:startDate];
-                    [[legs objectAtIndex:i] setRealEndTime:endDate];
+        for(int i=0;i<[plan.sortedItineraries count];i++){
+            Itinerary *itinerary = [plan.sortedItineraries objectAtIndex:i];
+            for(int j=0;j<[itinerary.sortedLegs count];j++){
+                Leg *leg = [itinerary.sortedLegs objectAtIndex:j];
+                if([legId isEqualToString:leg.legId]){
+                    if(tripId && [tripId isEqualToString:leg.tripId]){
+                        [leg calculateRealTimeParametersUsingEpochTime:epochTime];
+                        Leg * returnedLeg = [itinerary adjustLegsIfRequired];
+                        if(returnedLeg){
+                            // TODO:- Create New Leg According to Realtime
+                        }
+                    }
+                    else if(tripId && ![tripId isEqualToString:leg.tripId]){
+                        // TODO:- Generate new leg and remove old leg.
+                    }
+                    else{
+                        // TODO:- Find Nearest realtime from realtime array and set realtime attributes for leg.
+                    }
                 }
             }
-            [it setArrivalFlagFromLegsRealTime];
         }
     }
     @catch (NSException *exception) {

@@ -581,4 +581,36 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     }
     return newLeg;
 }
+
+// Calculate time difference in minutes for leg.
+
+- (int) calculatetimeDiffInMins:(double)epochTime{
+    NSDate *realTimeDate = [NSDate dateWithTimeIntervalSince1970:(epochTime/1000.0)];
+    double millisecondsSchedule = ([timeOnlyFromDate(self.startTime) timeIntervalSince1970])*1000.0;
+    double millisecondsRealTime = ([timeOnlyFromDate(realTimeDate) timeIntervalSince1970])*1000.0;
+    
+    double timeDiffInMilliSeconds = millisecondsRealTime - millisecondsSchedule;
+    int timeDiffInMinutes = timeDiffInMilliSeconds/60*1000;
+    return timeDiffInMinutes;
+}
+
+// return arrival time flag for leg.
+- (int) calculateArrivalTimeFlag{
+    int timeDiff = [self.timeDiffInMins intValue];
+    if(timeDiff >= 0 && timeDiff <= 2)
+        return ON_TIME;
+    else if(timeDiff < 0)
+        return EARLY;
+    else
+        return DELAYED;
+}
+
+// set timediffInMins,realStartTime,realEndTime and arrivalFlag for leg from realTime data.
+- (void) setRealTimeParametersUsingEpochTime:(double)epochTime{
+    self.timeDiffInMins = [NSString stringWithFormat:@"%d",[self calculatetimeDiffInMins:epochTime]];
+    self.realStartTime = [NSDate dateWithTimeIntervalSince1970:(epochTime/1000.0)];
+    self.realEndTime = [[self endTime] dateByAddingTimeInterval:([self.timeDiffInMins intValue]*60*1000)];
+    self.arrivalFlag = [NSString stringWithFormat:@"%d",[self calculateArrivalTimeFlag]];
+}
+
 @end

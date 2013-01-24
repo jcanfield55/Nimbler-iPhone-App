@@ -385,23 +385,23 @@
             [self.managedObjectContext deleteObject:stopTimes];
         }
     }
-//    for(int j=0;j<[arrayTripID count];j++){
-//            GtfsStopTimes* stopTimes = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsStopTimes" inManagedObjectContext:self.managedObjectContext];
-//            stopTimes.tripID = [arrayTripID objectAtIndex:j];
-//            GtfsTrips *trips = [self getTripsDataFromDatabase:stopTimes.tripID];
-//            stopTimes.trips = trips;
-//            stopTimes.arrivalTime = [arrayArrivalTime objectAtIndex:j];
-//            stopTimes.departureTime = [arrayDepartureTime objectAtIndex:j];
-//            stopTimes.stopID = [arrayStopID objectAtIndex:j];
-//            GtfsStop *stops = [self getStopsDataFromDatabase:stopTimes.stopID];
-//            stopTimes.stop = stops;
-//            stopTimes.stopSequence = [arrayStopSequence objectAtIndex:j];
-//            stopTimes.pickUpTime = [arrayPickUpType objectAtIndex:j];
-//            stopTimes.dropOfTime = [arrayDropOffType objectAtIndex:j];
-//            stopTimes.shapeDistTravelled = [arrayShapeDistTraveled objectAtIndex:j];
-//            stopTimes.agencyID = [arrayAgencyID objectAtIndex:j];
-//    }
-//    saveContext(self.managedObjectContext);
+    for(int j=0;j<[arrayTripID count];j++){
+            GtfsStopTimes* stopTimes = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsStopTimes" inManagedObjectContext:self.managedObjectContext];
+            stopTimes.tripID = [arrayTripID objectAtIndex:j];
+            GtfsTrips *trips = [self getTripsDataFromDatabase:stopTimes.tripID];
+            stopTimes.trips = trips;
+            stopTimes.arrivalTime = [arrayArrivalTime objectAtIndex:j];
+            stopTimes.departureTime = [arrayDepartureTime objectAtIndex:j];
+            stopTimes.stopID = [arrayStopID objectAtIndex:j];
+            GtfsStop *stops = [self getStopsDataFromDatabase:stopTimes.stopID];
+            stopTimes.stop = stops;
+            stopTimes.stopSequence = [arrayStopSequence objectAtIndex:j];
+            stopTimes.pickUpTime = [arrayPickUpType objectAtIndex:j];
+            stopTimes.dropOfTime = [arrayDropOffType objectAtIndex:j];
+            stopTimes.shapeDistTravelled = [arrayShapeDistTraveled objectAtIndex:j];
+            stopTimes.agencyID = [arrayAgencyID objectAtIndex:j];
+    }
+    saveContext(self.managedObjectContext);
 }
 
 #pragma mark  GTFS Requests

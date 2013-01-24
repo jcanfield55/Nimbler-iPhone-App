@@ -1658,7 +1658,7 @@
 // Get Gtfs trips and stoptimes data from server and save to database.
 // generate  new itinerary from patterns and stoptimes data and add it to plan.
 
-- (void) testItineraryCreationFromPattern{
+- (void)testItineraryCreationFromPattern{
     [[nc_AppDelegate sharedInstance].gtfsParser requestAgencyDataFromServer];
     [self someMethodToWaitForResult];
     NSArray *uniqueitineraryFromPlan10 = [plan10 uniqueItineraries];
@@ -1667,7 +1667,7 @@
     STAssertTrue([uniqueitineraryFromPlan11 count] == 3, @"");
     [[nc_AppDelegate sharedInstance].gtfsParser generateGtfsTripsRequestStringUsingPlan:plan10];
     [self someMethodToWaitForResult];
-    [[nc_AppDelegate sharedInstance].gtfsParser generateStopTimesRequestString:plan10];
+    //[[nc_AppDelegate sharedInstance].gtfsParser generateStopTimesRequestString:plan10];
     [self someMethodToWaitForResult];
     
     [plan10 setUniqueItineraryPatterns:[NSSet setWithArray:uniqueitineraryFromPlan10]];
@@ -1691,6 +1691,7 @@
      NSDate* date4 = [dateFormatter dateFromString:@"June 8, 2012 5:20 PM"];
      NSDate* date5 = [dateFormatter dateFromString:@"June 8, 2012 5:20 PM"];
      NSDate* date6 = [dateFormatter dateFromString:@"June 8, 2012 5:25 PM"];
+   
     NSDate* dater3 = [dateFormatter dateFromString:@"June 8, 2012 5:08 PM"];
     NSDate* dater4 = [dateFormatter dateFromString:@"June 8, 2012 5:23 PM"];
     NSDate* dater5 = [dateFormatter dateFromString:@"June 8, 2012 5:24 PM"];
@@ -1747,6 +1748,8 @@
     leg1202.duration = [NSNumber numberWithInt:900000];
     leg1202.itinerary = itin120;
     
+    itin120.plan = plan12;
+    
     
     
     leg1203 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
@@ -1778,19 +1781,37 @@
     leg1203.duration = [NSNumber numberWithInt:300000];
     leg1203.itinerary = itin120;
     itin120.plan = plan12;
+    
+//    leg1203= [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+//    leg1203.mode = @"WALK";
+//    PlanPlace *pp119 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+//    PlanPlace *pp120 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+//    [pp101 setLat:[NSNumber numberWithDouble:37.75768017385226]];
+//    [pp101 setLng:[NSNumber numberWithDouble:-122.3926363695829]];
+//    [pp102 setLat:[NSNumber numberWithDouble:37.755414]];
+//    [pp102 setLng:[NSNumber numberWithDouble:-122.388001]];
+//    [pp102 setStopId:@"7354"];
+//    [pp101 setName:@"22nd Street"];
+//    [pp102 setName:@"Third Street & 23rd St"];
+//    leg1203.from = pp119;
+//    leg1203.to = pp120;
+//    leg1203.startTime = date5;
+//    leg1203.endTime = date6;
+//    leg1203.duration = [NSNumber numberWithInt:300000];
+//    leg1203.itinerary = itin120;
+    
     saveContext(managedObjectContext);
     
-    [[nc_AppDelegate sharedInstance].gtfsParser requestAgencyDataFromServer];
-    [self someMethodToWaitForResult];
-    [[nc_AppDelegate sharedInstance].gtfsParser generateGtfsTripsRequestStringUsingPlan:plan12];
-    [self someMethodToWaitForResult];
+   // [[nc_AppDelegate sharedInstance].gtfsParser requestAgencyDataFromServer];
+    //[self someMethodToWaitForResult];
+    //[[nc_AppDelegate sharedInstance].gtfsParser generateGtfsTripsRequestStringUsingPlan:plan12];
+    //[self someMethodToWaitForResult];
     
     for(int i=0;i<[[plan12 sortedItineraries] count];i++){
         Itinerary *iti = [[plan12 sortedItineraries] objectAtIndex:i];
         Leg * legs = [iti adjustLegsIfRequired];
-        if(legs){
-            [[nc_AppDelegate sharedInstance].gtfsParser generateNewItineraryByRemovingConflictLegs:iti :legs:managedObjectContext];
-        }
+        // Leg adjustment is not possible and we need to create new leg from this leg and realtime.
+        STAssertNotNil(legs,@"");
     }
 }
 @end
