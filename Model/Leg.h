@@ -19,6 +19,11 @@ typedef enum {
     LAST_LEG
 } LegPositionEnum;
 
+typedef enum {
+    REALTIME_LEG,
+    SCHEDULED_LEG,
+} LegType;
+
 @class Itinerary, PlanPlace, Step;
 
 @interface Leg : NSManagedObject 
@@ -56,6 +61,7 @@ typedef enum {
 @property (nonatomic, retain) NSString *timeDiffInMins;
 @property (nonatomic, retain) NSDate *realStartTime;
 @property (nonatomic, retain) NSDate *realEndTime;
+@property (nonatomic, retain) NSArray *predictions;
 
 - (NSArray *)sortedSteps;
 - (NSString *)summaryTextWithTime:(BOOL)includeTime;  // Returns a single-line summary of the leg useful for RouteOptionsView details
@@ -98,7 +104,7 @@ typedef enum {
 - (int) calculateArrivalTimeFlag;
 
 // set timediffInMins,realStartTime,realEndTime and arrivalFlag for leg from realTime data.
-- (void) calculateRealTimeParametersUsingEpochTime:(double)epochTime;
+- (void) setRealTimeParametersUsingEpochTime:(double)epochTime;
 
 @end
 

@@ -62,6 +62,7 @@ typedef enum {
 @property (strong, nonatomic) NSTimer *timerGettingRealDataByItinerary;
 @property (strong, nonatomic) UIActivityIndicatorView* activityIndicator;
 @property (strong, nonatomic) NSString *strLiveDataURL;
+@property (strong, nonatomic) Plan *plan;
 
 - (IBAction)openPickerView:(id)sender;
 
@@ -79,7 +80,6 @@ typedef enum {
 - (void)reloadTables;  // Reloads the tables in case something has changed in the model
 
 -(BOOL)alertUsetForLocationService;
--(void)getRealTimeByLegsFromPlan;
 -(void)setFBParameterForGeneral;
 
 // Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
@@ -89,4 +89,7 @@ typedef enum {
 - (void) hideTabBar;
 - (void) showTabbar;
 - (void)endEdit;
+
+// call the requestRealTimeDataFromServer from RealtimeManager class with plan.
+- (void) requestServerForRealTime;
 @end

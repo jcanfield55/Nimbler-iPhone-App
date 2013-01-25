@@ -50,6 +50,7 @@
 @synthesize sortedSteps;
 @synthesize polylineEncodedString;
 @synthesize arrivalTime,arrivalFlag,timeDiffInMins;
+@synthesize predictions;
 
 static NSDictionary* __agencyDisplayNameByAgencyId;
 

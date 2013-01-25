@@ -16,11 +16,8 @@
 @property(nonatomic, strong) IBOutlet UITableView* mainTable; // Table listing route options
 @property(nonatomic, strong) Plan *plan;
 @property(nonatomic, strong) UIButton *btnGoToNimbler;
-@property(strong, nonatomic) id liveData;
 @property( readwrite) BOOL isReloadRealData;
 
--(void)setLiveFeed:(id)liveFeed;
-- (void) setRealTimeDataUsingLegId:(NSString *)legId tripId:(NSString *)tripId epochTime:(double)epochTime liveFeeds:(NSArray *)legLiveFeeds;
 -(void)hideUnUsedTableViewCell;
 -(void)setFBParameterForPlan;
 -(void)popOutToNimbler;

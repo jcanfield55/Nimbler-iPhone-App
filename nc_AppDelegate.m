@@ -17,6 +17,7 @@
 #import "UserPreferance.h"
 #import "Reachability.h"
 #import "KeyObjectStore.h"
+#import "RealTimeManager.h"
 #if TEST_FLIGHT_ENABLED
 #import "TestFlightSDK1-1/TestFlight.h"
 #endif
@@ -492,7 +493,7 @@ FeedBackForm *fbView;
         [toFromViewController.fromTableVC markAndUpdateSelectedLocation:self.fromLoc];
     }
     if(isFromBackground){
-        toFromViewController.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(getRealTimeByLegsFromPlan) userInfo:nil repeats: YES];
+        toFromViewController.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
         
     }
     UserPreferance* userPrefs = [UserPreferance userPreferance];

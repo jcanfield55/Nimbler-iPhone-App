@@ -36,7 +36,7 @@
 @synthesize mainTable;
 @synthesize plan;
 @synthesize isReloadRealData;
-@synthesize liveData,btnGoToNimbler;
+@synthesize btnGoToNimbler;
 
 Itinerary * itinerary;
 NSString *itinararyId;
@@ -424,70 +424,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
-#pragma mark realTime data updates
--(void)setLiveFeed:(id)liveFees
-{
-    @try {
-        liveData = liveFees;
-        //        NSString *itinId = [(NSDictionary*)liveFeed objectForKey:@"itineraryId"];
-        NSNumber *respCode = [(NSDictionary*)liveData objectForKey:@"errCode"];
-        
-        if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
-            //It means there are live feeds in response
-            NSArray *legLiveFees = [[(NSDictionary*)liveData objectForKey:@"itinLiveFeeds"] objectForKey:@"legLiveFeeds"];
-            if ([legLiveFees count] > 0) {
-                for (int j=0; j<legLiveFees.count; j++) {
-                    id key = [legLiveFees objectAtIndex:j];
-                    NSString *legId = [[key objectForKey:@"leg"] objectForKey:@"id"];
-                    NSString *tripId = [[key objectForKey:@"lstPredictions"] objectForKey:@"tripId"];
-                    double epochTime = [[[key objectForKey:@"lstPredictions"] objectForKey:@"epochTime"] doubleValue];
-                    [self setRealTimeDataUsingLegId:legId tripId:tripId epochTime:epochTime liveFeeds:legLiveFees];
-                    }
-                }
-                isReloadRealData = true;
-                [mainTable reloadData]; 
-                [routeDetailsVC ReloadLegWithNewData];
-            }            
-        else {
-            //thereare no live feeds available. 
-            isReloadRealData = FALSE;
-            NIMLOG_PERF1(@"thereare no live feeds available for current route");
-        }
-    }
-    @catch (NSException *exception) {
-        logException(@"RouteOptionsViewController->liveFees", @"", exception);
-    }
-}
-
-- (void) setRealTimeDataUsingLegId:(NSString *)legId tripId:(NSString *)tripId epochTime:(double)epochTime liveFeeds:(NSArray *)legLiveFeeds{
-    @try {
-        for(int i=0;i<[plan.sortedItineraries count];i++){
-            Itinerary *itinerary = [plan.sortedItineraries objectAtIndex:i];
-            for(int j=0;j<[itinerary.sortedLegs count];j++){
-                Leg *leg = [itinerary.sortedLegs objectAtIndex:j];
-                if([legId isEqualToString:leg.legId]){
-                    if(tripId && [tripId isEqualToString:leg.tripId]){
-                        [leg calculateRealTimeParametersUsingEpochTime:epochTime];
-                        Leg * returnedLeg = [itinerary adjustLegsIfRequired];
-                        if(returnedLeg){
-                            // TODO:- Create New Leg According to Realtime
-                        }
-                    }
-                    else if(tripId && ![tripId isEqualToString:leg.tripId]){
-                        // TODO:- Generate new leg and remove old leg.
-                    }
-                    else{
-                        // TODO:- Find Nearest realtime from realtime array and set realtime attributes for leg.
-                    }
-                }
-            }
-        }
-    }
-    @catch (NSException *exception) {
-        logException(@"RouteOptionsViewController->setRealtimeData", @"", exception);
-    }
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  

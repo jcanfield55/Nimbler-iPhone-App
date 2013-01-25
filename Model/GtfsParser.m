@@ -1075,7 +1075,17 @@
     NSArray *arrUniquePatterns = [[plan uniqueItineraryPatterns] allObjects];
     for(int i=0;i<[arrUniquePatterns count];i++){
         Itinerary *iti = [arrUniquePatterns objectAtIndex:i];
-        [self generateItineraryFromItinerayPatern:iti Parameters:parameters Plan:plan Context:context];
+        for(int j=0;j<[[iti sortedLegs] count];j++){
+            Leg *leg = [[iti sortedLegs] objectAtIndex:j];
+            if(leg.predictions){
+                // TODO:- Create method that create leg from realtime if available oherwise create leg from stoptimes
+                break;
+            }
+            else{
+               [self generateItineraryFromItinerayPatern:iti Parameters:parameters Plan:plan Context:context]; 
+            }
+        }
+        
     }
     return plan;
 }
