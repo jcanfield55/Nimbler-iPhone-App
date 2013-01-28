@@ -462,4 +462,14 @@
         nextLeg.arrivalTime = [nextLeg.endTime dateByAddingTimeInterval:diffInMin * 60];
     return nil;
 }
+
+// return true if itinerary have only unscheduled leg.
+- (BOOL) haveOnlyUnScheduledLeg{
+    for(int i=0;i<[self.sortedLegs count];i++){
+        Leg *leg = [self.sortedLegs objectAtIndex:i];
+        if([leg isScheduled])
+            return false;
+    }
+    return true;
+}
 @end

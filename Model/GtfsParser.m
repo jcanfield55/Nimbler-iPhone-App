@@ -98,11 +98,18 @@
     }
     NSDateFormatter *formtter = [[NSDateFormatter alloc] init];
     [formtter setDateFormat:@"yyyyMMdd"];
+    NSFetchRequest * fetchCalendar = [[NSFetchRequest alloc] init];
+    [fetchCalendar setEntity:[NSEntityDescription entityForName:@"GtfsCalendar" inManagedObjectContext:self.managedObjectContext]];
+    NSArray * arrayCalendar = [self.managedObjectContext executeFetchRequest:fetchCalendar error:nil];
+    NSMutableDictionary *dictCalendar = [[NSMutableDictionary alloc] init];
+    for(int i=0;i<[arrayCalendar count];i++){
+        GtfsCalendar *calendar = [arrayCalendar objectAtIndex:i];
+        [dictCalendar setObject:calendar forKey:calendar.serviceID];
+    }
     for(int i=0;i<[arrayServiceID count];i++){
         GtfsCalendarDates* calendarDates = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsCalendarDates" inManagedObjectContext:self.managedObjectContext];
         calendarDates.serviceID = [arrayServiceID objectAtIndex:i];
-        GtfsCalendar *calendar = [self getCalendarDataFromDatabase:calendarDates.serviceID];
-        calendarDates.calendar = calendar;
+        calendarDates.calendar = [dictCalendar objectForKey:calendarDates.serviceID];
         NSString *strDate = [arrayDate objectAtIndex:i];
         NSDate *dates;
         if(strDate.length > 0){
@@ -320,31 +327,41 @@
             }
         }
     }
-    [self generateStopTimesRequestStringUsingTripIds:arrayTripID agencyIds:arrayAgencyID];
+    NSFetchRequest * fetchRoutes = [[NSFetchRequest alloc] init];
+    [fetchRoutes setEntity:[NSEntityDescription entityForName:@"GtfsRoutes" inManagedObjectContext:self.managedObjectContext]];
+    NSArray * arrayRoutes = [self.managedObjectContext executeFetchRequest:fetchRoutes error:nil];
+    NSMutableDictionary *dictRoutes = [[NSMutableDictionary alloc] init];
+    for(int i=0;i<[arrayRoutes count];i++){
+        GtfsRoutes *routes = [arrayRoutes objectAtIndex:i];
+        [dictRoutes setObject:routes forKey:routes.routeID];
+    }
+    
+    NSFetchRequest * fetchCalendar = [[NSFetchRequest alloc] init];
+    [fetchCalendar setEntity:[NSEntityDescription entityForName:@"GtfsCalendar" inManagedObjectContext:self.managedObjectContext]];
+    NSArray * arrayCalendar = [self.managedObjectContext executeFetchRequest:fetchCalendar error:nil];
+    NSMutableDictionary *dictCalendar = [[NSMutableDictionary alloc] init];
+    for(int i=0;i<[arrayCalendar count];i++){
+        GtfsCalendar *calendar = [arrayCalendar objectAtIndex:i];
+        [dictCalendar setObject:calendar forKey:calendar.serviceID];
+    }
+    
     for(int i=0;i<[arrayTripID count];i++){
         GtfsTrips* trips = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsTrips" inManagedObjectContext:self.managedObjectContext];
         trips.tripID = [arrayTripID objectAtIndex:i];
         trips.routeID = [arrayRouteID objectAtIndex:i];
-        GtfsRoutes *routes = [self getRoutesDataFromDatabase:trips.routeID];
-        trips.route = routes;
+        trips.route = [dictRoutes objectForKey:trips.routeID];
         trips.serviceID = [arrayServiceID objectAtIndex:i];
-        GtfsCalendar *calendar = [self getCalendarDataFromDatabase:trips.serviceID];
-        trips.calendar = calendar;
+        trips.calendar = [dictCalendar objectForKey:trips.serviceID];
         trips.tripHeadSign = [arrayTripHeadSign objectAtIndex:i];
         trips.directionID = [arrayDirectionID objectAtIndex:i];
         trips.blockID = [arrayBlockID objectAtIndex:i];
         trips.shapeID = [arrayShapeID objectAtIndex:i];
     }
     saveContext(self.managedObjectContext);
+    [self generateStopTimesRequestStringUsingTripIds:arrayTripID agencyIds:arrayAgencyID];
 }
 
 - (void) parseAndStoreGtfsStopTimesData:(NSDictionary *)dictFileData RequestUrl:(NSString *)strResourcePath{
-    NSArray *arrayComponents = [strResourcePath componentsSeparatedByString:@"?"];
-    NSString *tempString = [arrayComponents objectAtIndex:1];
-    NSArray *arraySubComponents = [tempString componentsSeparatedByString:@"="];
-    NSString *tempStringSubComponents = [arraySubComponents objectAtIndex:1];
-    NSArray *arrayAgencyIds = [tempStringSubComponents componentsSeparatedByString:@"%2C"];
-    
     
     NSMutableArray *arrayTripID = [[NSMutableArray alloc] init];
     NSMutableArray *arrayArrivalTime = [[NSMutableArray alloc] init];
@@ -357,6 +374,7 @@
     NSMutableArray *arrayAgencyID = [[NSMutableArray alloc] init];
     
     NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
+     NSArray *arrayAgencyIds = [dictComponents allKeys];
     for(int k=0;k<[arrayAgencyIds count];k++){
         NSArray *arrayComponentsAgency = [dictComponents objectForKey:[arrayAgencyIds objectAtIndex:k]];
         for(int i=0;i<[arrayComponentsAgency count];i++){
@@ -378,23 +396,32 @@
         }
     }
     
-    for(int l=0;l<[arrayTripID count];l++){
-        NSFetchRequest *fetchTrips = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesBySequence" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:[arrayTripID objectAtIndex:l],@"TRIPID",[arrayStopSequence objectAtIndex:l],@"STOPSEQUENCE", nil]];
-        NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
-        for (id stopTimes in arrayStopTimes){
-            [self.managedObjectContext deleteObject:stopTimes];
-        }
+    NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
+    [fetchTrips setEntity:[NSEntityDescription entityForName:@"GtfsTrips" inManagedObjectContext:self.managedObjectContext]];
+    NSArray * arrayTrips = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
+    NSMutableDictionary *dictTrips = [[NSMutableDictionary alloc] init];
+    for(int i=0;i<[arrayTrips count];i++){
+        GtfsTrips *trips = [arrayTrips objectAtIndex:i];
+        [dictTrips setObject:trips forKey:trips.tripID];
     }
+    
+    NSFetchRequest * fetchStops = [[NSFetchRequest alloc] init];
+    [fetchStops setEntity:[NSEntityDescription entityForName:@"GtfsStop" inManagedObjectContext:self.managedObjectContext]];
+    NSArray * arrayStops = [self.managedObjectContext executeFetchRequest:fetchStops error:nil];
+    NSMutableDictionary *dictStops = [[NSMutableDictionary alloc] init];
+    for(int i=0;i<[arrayStops count];i++){
+        GtfsStop *stop = [arrayStops objectAtIndex:i];
+        [dictStops setObject:stop forKey:stop.stopID];
+    }
+    
     for(int j=0;j<[arrayTripID count];j++){
             GtfsStopTimes* stopTimes = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsStopTimes" inManagedObjectContext:self.managedObjectContext];
             stopTimes.tripID = [arrayTripID objectAtIndex:j];
-            GtfsTrips *trips = [self getTripsDataFromDatabase:stopTimes.tripID];
-            stopTimes.trips = trips;
+            stopTimes.trips = [dictTrips objectForKey:stopTimes.tripID];
             stopTimes.arrivalTime = [arrayArrivalTime objectAtIndex:j];
             stopTimes.departureTime = [arrayDepartureTime objectAtIndex:j];
             stopTimes.stopID = [arrayStopID objectAtIndex:j];
-            GtfsStop *stops = [self getStopsDataFromDatabase:stopTimes.stopID];
-            stopTimes.stop = stops;
+            stopTimes.stop = [dictStops objectForKey:stopTimes.stopID];
             stopTimes.stopSequence = [arrayStopSequence objectAtIndex:j];
             stopTimes.pickUpTime = [arrayPickUpType objectAtIndex:j];
             stopTimes.dropOfTime = [arrayDropOffType objectAtIndex:j];
@@ -514,13 +541,18 @@
         [strRequestString deleteCharactersInRange:NSMakeRange(nLength-1, 1)];
     }
     @try {
+//        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+//        [RKClient setSharedClient:client];
+//        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:strRequestString,AGENCY_IDS, nil];
+//        NSString *request = [GTFS_STOP_TIMES appendQueryParams:dictParameters];
+//        strStopTimesURL = request;
+//        NIMLOG_OBJECT1(@"get Gtfs Stop Times: %@", request);
+//        [[RKClient sharedClient]  get:request delegate:self];
+        RKParams *requestParameter = [RKParams params];
+        [requestParameter setValue:strRequestString forParam:AGENCY_IDS];
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
         [RKClient setSharedClient:client];
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:strRequestString,AGENCY_IDS, nil];
-        NSString *request = [GTFS_STOP_TIMES appendQueryParams:dictParameters];
-        strStopTimesURL = request;
-        NIMLOG_OBJECT1(@"get Gtfs Stop Times: %@", request);
-        [[RKClient sharedClient]  get:request delegate:self];
+        [[RKClient sharedClient] post:GTFS_STOP_TIMES params:requestParameter delegate:self];
         
     }
     @catch (NSException *exception) {
@@ -608,15 +640,17 @@
                     }
                 }
                 else if ([strRequestURL isEqualToString:strStopTimesURL]) {
-                    [nc_AppDelegate sharedInstance].receivedReply = true;
-                    RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
-                    NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
-                    NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
-                    if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
-                        [self parseAndStoreGtfsStopTimesData:res RequestUrl:strRequestURL];
-                        tempPlan = nil;
-                    }
                 }
+            }
+        }
+        else{
+            [nc_AppDelegate sharedInstance].receivedReply = true;
+            RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+            NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
+            NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
+            if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
+                [self parseAndStoreGtfsStopTimesData:res RequestUrl:strRequestURL];
+                tempPlan = nil;
             }
         }
     }
@@ -669,125 +703,47 @@
 -(void)someMethodToWaitForResult
 {
     while (!([nc_AppDelegate sharedInstance].receivedReply^[nc_AppDelegate sharedInstance].receivedError))
-        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.00001]];
 }
 
 
 // Generate The StopTimes Request Comma Separated string like agencyID_tripID
 - (void)generateStopTimesRequestStringUsingTripIds:(NSArray *)tripIds agencyIds:(NSArray *)agencyIds{
-    NSArray *arrTripId;
-    NSArray *arrAgencyId;
-    int n1 = [tripIds count]/50;
-    int n2 = [tripIds count]%50;
-    int loopCount = 0;
-    for(int i=0;i<[tripIds count];i=i+50){
-        [nc_AppDelegate sharedInstance].receivedReply = false;
-        NSRange range;
-        if(loopCount < n1)
-            range = NSMakeRange (i, 50);
-        else
-            range = NSMakeRange(i,n2);
-        loopCount++;
-        arrTripId = [tripIds subarrayWithRange:range];
-        arrAgencyId = [agencyIds subarrayWithRange:range];
+//    NSArray *arrTripId;
+//    NSArray *arrAgencyId;
+//    int n1 = [tripIds count]/50;
+//    int n2 = [tripIds count]%50;
+//    int loopCount = 0;
+//    for(int i=0;i<[tripIds count];i=i+50){
+//        [nc_AppDelegate sharedInstance].receivedReply = false;
+//        NSRange range;
+//        if(loopCount < n1)
+//            range = NSMakeRange (i, 50);
+//        else
+//            range = NSMakeRange(i,n2);
+//        loopCount++;
+//        arrTripId = [tripIds subarrayWithRange:range];
+//        arrAgencyId = [agencyIds subarrayWithRange:range];
         NSMutableString *strRequestString = [[NSMutableString alloc] init];
-        for(int i=0;i<[arrTripId count];i++){
-            NSString *strTripId = [arrTripId objectAtIndex:i];
-            NSString *strAgencyId = [arrAgencyId objectAtIndex:i];
+        for(int i=0;i<[tripIds count];i++){
+            NSString *strTripId = [tripIds objectAtIndex:i];
+            NSString *strAgencyId = [agencyIds objectAtIndex:i];
             if(![self checkIfTripIDAndAgencyIDAlreadyExists:strTripId:strAgencyId] && [strRequestString rangeOfString:[NSString stringWithFormat:@"%@_%@,",strAgencyId,strTripId]].location == NSNotFound)
                 [strRequestString appendFormat:@"%@_%@,",strAgencyId,strTripId];
         }
         if([strRequestString length] > 0){
                 [self requestStopTimesDataFromServer:strRequestString];
-                [self someMethodToWaitForResult];
         }
-    }
 }
 
-// Get The stopID For To&From Location.
-- (NSString *) getTheStopIDAccrodingToStation:(NSNumber *)lat:(NSNumber *)lng{
-    NSFetchRequest *fetchStop = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopByLatLng" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:lat,@"STOPLAT",lng,@"STOPLON", nil]];
-    NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchStop error:nil];
-    NSString *strStopID;
-    if([arrayStopTimes count] > 0){
-        GtfsStop *stop = [arrayStopTimes objectAtIndex:0];
-        strStopID = stop.stopID;
-    }
-    else{
-        strStopID = nil;
-    }
-    return strStopID;
-}
-
-// get serviceID based on tripId.
-- (NSString *) getServiceIdFromTripID:(NSString *)strTripID{
-    NSFetchRequest *fetchServiceID = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"ServiceIdByTripId" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strTripID,@"TRIPID",nil]];
-    NSArray * arrServiceID = [self.managedObjectContext executeFetchRequest:fetchServiceID error:nil];
-    GtfsTrips *trips = nil;
-    if([arrServiceID count] > 0){
-       trips = [arrServiceID objectAtIndex:0]; 
-    }
-    return trips.serviceID;
-}
-
-// Get trips Data from GtfsTrips based on tripID
-- (GtfsTrips *)getTripsDataFromDatabase:(NSString *)strTripID{
-    NSFetchRequest *fetchTrips = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsTrips" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strTripID,@"TRIPID",nil]];
-    NSArray * arrServiceID = [self.managedObjectContext executeFetchRequest:fetchTrips error:nil];
-    GtfsTrips *trips = nil;
-    if([arrServiceID count] > 0){
-        trips = [arrServiceID objectAtIndex:0];
-    }
-    return trips;
-}
-
-
-// Get stops Data from GtfsStop based on stopID
-- (GtfsStop *)getStopsDataFromDatabase:(NSString *)strStopID{
-    NSFetchRequest *fetchStops = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStop" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strStopID,@"STOPID",nil]];
-    NSArray * arrServiceID = [self.managedObjectContext executeFetchRequest:fetchStops error:nil];
-    GtfsStop *stops = nil;
-    if([arrServiceID count] > 0){
-        stops = [arrServiceID objectAtIndex:0];
-    }
-    return stops;
-}
-
-// Get routes Data from GtfsRoutes based on routeID
-- (GtfsRoutes *)getRoutesDataFromDatabase:(NSString *)strRouteID{
-    NSFetchRequest *fetchRoutes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsRouteByRouteID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strRouteID,@"ROUTEID",nil]];
-    NSArray * arrServiceID = [self.managedObjectContext executeFetchRequest:fetchRoutes error:nil];
-    GtfsRoutes *routes = nil;
-    if([arrServiceID count] > 0){
-        routes = [arrServiceID objectAtIndex:0];
-    }
-    return routes;
-    
-}
-
-// Get Calendar Data from GtfsCalendar based on serviceID
-- (GtfsCalendar *)getCalendarDataFromDatabase:(NSString *)strServiceID{
-    @try {
-        NSFetchRequest *fetchCalendar = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsCalendar" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strServiceID,@"SERVICEID",nil]];
-        NSArray * arrServiceID = [managedObjectContext executeFetchRequest:fetchCalendar error:nil];
-        GtfsCalendar *calendar = nil;
-        if([arrServiceID count] > 0){
-            calendar = [arrServiceID objectAtIndex:0];
-        }
-        return calendar;
-    }
-    @catch (NSException *exception) {
-        logException(@"GtfsParser->getCalendarDataFromDatabase", @"", exception);
-    }
-}
 // This method get the serviceId based on tripId.
 // Then get the calendar data for particular serviceID.
 // the check for the request date comes after service start date and comes befor enddate.
 // then check service is enabled on request day if yes then return yes otherwise return no.
-- (BOOL) isServiceEnableForTripID:(NSString *)strTripID RequestDate:(NSDate *)requestDate{
+- (BOOL) isServiceEnableForStopTimes:(GtfsStopTimes *)stopTimes RequestDate:(NSDate *)requestDate{
     @try {
-        NSString *serviceID = [self getServiceIdFromTripID:strTripID];
-        GtfsCalendar *calendar = [self getCalendarDataFromDatabase:serviceID];
+        GtfsTrips *trips = stopTimes.trips;
+        GtfsCalendar *calendar = trips.calendar;
         NSArray *arrServiceDays = [NSArray arrayWithObjects:calendar.sunday,calendar.monday,calendar.tuesday,calendar.wednesday,calendar.thursday,calendar.friday,calendar.saturday,nil];
         NSInteger dayOfWeek = dayOfWeekFromDate(requestDate)-1;
         NSDate* dateOnly = dateOnlyFromDate(requestDate);
@@ -854,18 +810,19 @@
                 int minuteTripTime = [componentsTripTime minute];
                 int intervalTripTime = hourTripTime*60*60 + minuteTripTime*60;
                 if(stopTimes1 && stopTimes2){
-                    if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] > [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime && intervalDepartureTime < intervalTripTime + TRIP_TIME_PLUS_INTERVAL  && [self isServiceEnableForTripID:stopTimes1.tripID RequestDate:startDate]){
+                    if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] > [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime && intervalDepartureTime < intervalTripTime + TRIP_TIME_PLUS_INTERVAL && [self isServiceEnableForStopTimes:stopTimes1 RequestDate:startDate]){
                         NIMLOG_UOS202(@"stoptimes1=%@",stopTimes1);
                         NIMLOG_UOS202(@"stoptimes2=%@",stopTimes2);
                         NSArray *arrayTemp = [NSArray arrayWithObjects:stopTimes1,stopTimes2, nil];
                         [arrMutableStopTimes addObject:arrayTemp];
                     }
-                    else if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] < [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime && intervalDepartureTime < intervalTripTime + TRIP_TIME_PLUS_INTERVAL && [self isServiceEnableForTripID:stopTimes1.tripID RequestDate:startDate]){
+                    else if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] < [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime && intervalDepartureTime < intervalTripTime + TRIP_TIME_PLUS_INTERVAL && [self isServiceEnableForStopTimes:stopTimes1 RequestDate:startDate]){
                         NIMLOG_UOS202(@"stoptimes1=%@",stopTimes1);
                         NIMLOG_UOS202(@"stoptimes2=%@",stopTimes2);
                         NSArray *arrayTemp = [NSArray arrayWithObjects:stopTimes2,stopTimes1, nil];
                         [arrMutableStopTimes addObject:arrayTemp];
                     }
+                    break;
                 }
             }
         }
@@ -1030,7 +987,7 @@
     NSMutableDictionary *dictStopTimes = [[NSMutableDictionary alloc] init];
     NSDate *startDate = [NSDate date];
     while (true) {
-        if([startDate timeIntervalSinceNow] > ITINERARY_GANERATION_TIMEOUT ){
+        if([startDate timeIntervalSinceNow] > ITINERARY_GANERATION_TIMEOUT  || [itinerary haveOnlyUnScheduledLeg]){
             NIMLOG_UOS202(@"Generation Of itinerary from pattern Timeout");
             break;
         }
@@ -1054,6 +1011,7 @@
                     }
                 }
                 if([arrStopTime count] == 0){
+                    [plan deleteItinerary:newItinerary];
                     return;
                 }
                 [self addScheduledLegToItinerary:newItinerary TransitLeg:leg StopTime:arrStopTime Context:context];
@@ -1068,24 +1026,131 @@
 // if leg is transit leg then first get the stoptimes from that leg and choose nearest stoptimes and remove it from mutable array.
 // this lopp continue until we have stoptimes data.
 
+//- (Plan *)generateLegsAndItineraryFromPatternsOfPlan:(Plan *)plan parameters:(PlanRequestParameters *)parameters Context:(NSManagedObjectContext *)context{
+//    if(!context){
+//        context = self.managedObjectContext;
+//    }
+//    NSArray *arrUniquePatterns = [[plan uniqueItineraryPatterns] allObjects];
+//    for(int i=0;i<[arrUniquePatterns count];i++){
+//        Itinerary *iti = [arrUniquePatterns objectAtIndex:i];
+//        for(int j=0;j<[[iti sortedLegs] count];j++){
+//            Leg *leg = [[iti sortedLegs] objectAtIndex:j];
+//            if(leg.predictions){
+//                // TODO:- Create method that create leg from realtime if available oherwise create leg from stoptimes
+//                break;
+//            }
+//            else{
+//               [self generateItineraryFromItinerayPatern:iti Parameters:parameters Plan:plan Context:context]; 
+//            }
+//        }
+//        
+//    }
+//    return plan;
+//}
+
+// Find the maximum prediction count from patterns.
+- (int) findMaximumPredictionCount:(NSMutableDictionary *)predictions{
+    NSArray*keys=[predictions allKeys];
+    if([keys count] == 0)
+        return 0;
+    int maxCount = [[predictions objectForKey:[keys objectAtIndex:0]] count];
+    for(int i=0;i<keys.count;i++){
+        if(maxCount < [[predictions objectForKey:[keys objectAtIndex:i]] count])
+            maxCount = [[predictions objectForKey:[keys objectAtIndex:i]] count];
+    }
+    return maxCount;
+}
+
+// Find the nearest realtime from multiple realtimes.
+- (NSDictionary *) findNearestRealTimeFromPredictions:(NSMutableArray *)predictions Time:(NSDate *)time{
+    for (int i=0;i<[predictions count];i++) {
+        NSDate *requestTime = timeOnlyFromDate(time);
+        NSDictionary *dictPrediction = [predictions objectAtIndex:i];
+        NSDate *predtctionTime = timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[dictPrediction objectForKey:@"epochTime"] doubleValue]/1000.0)]);
+        if ([requestTime compare:predtctionTime] == NSOrderedDescending) {
+            [predictions removeObject:dictPrediction];
+            i = i - 1;
+        }
+    }
+    if([predictions count] == 0){
+        return nil;
+    }
+    NSDictionary *nearestRealTime = [predictions objectAtIndex:0];
+    for(int i=0;i<[predictions count];i++){
+        NSDictionary *dictPrediction = [predictions objectAtIndex:i];
+        NSDate *predtctionTime = timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[dictPrediction objectForKey:@"epochTime"] doubleValue]/1000.0)]);
+        NSDate *nearestPredictionTime = timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[nearestRealTime objectForKey:@"epochTime"] doubleValue]/1000.0)]);
+        if ([nearestPredictionTime compare:predtctionTime] == NSOrderedDescending) {
+            nearestRealTime = dictPrediction;
+        }
+    }
+    return nearestRealTime;
+}
+
+// TODO:- Need to add flag that determine flag is generated from realtime data or scheduled data.
+// generate new leg from prediction data.
+- (void) generateLegFromPrediction:(NSDictionary *)prediction newItinerary:(Itinerary *)newItinerary Leg:(Leg *)leg Context:(NSManagedObjectContext *)context{
+    NSDate *predtctionTime = [NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"epochTime"] doubleValue]/1000.0)];
+    Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
+    newleg.startTime = predtctionTime;
+    newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([newleg.duration floatValue]/1000)];
+    [newleg setNewlegAttributes:leg];
+    newItinerary.endTime = newleg.endTime;
+    newleg.itinerary = newItinerary;
+}
+
+// Generate legs and itinerary from realtime data if available otherwise generate legs and itinerary from schedule data.
 - (Plan *)generateLegsAndItineraryFromPatternsOfPlan:(Plan *)plan parameters:(PlanRequestParameters *)parameters Context:(NSManagedObjectContext *)context{
     if(!context){
         context = self.managedObjectContext;
     }
-    NSArray *arrUniquePatterns = [[plan uniqueItineraryPatterns] allObjects];
+    NSArray *arrUniquePatterns = [plan uniqueItineraries];
     for(int i=0;i<[arrUniquePatterns count];i++){
         Itinerary *iti = [arrUniquePatterns objectAtIndex:i];
+        NSMutableDictionary *predictions = [[NSMutableDictionary alloc] init];
         for(int j=0;j<[[iti sortedLegs] count];j++){
             Leg *leg = [[iti sortedLegs] objectAtIndex:j];
-            if(leg.predictions){
-                // TODO:- Create method that create leg from realtime if available oherwise create leg from stoptimes
-                break;
-            }
-            else{
-               [self generateItineraryFromItinerayPatern:iti Parameters:parameters Plan:plan Context:context]; 
+            if([leg isScheduled] && leg.predictions){
+                NSMutableArray *arrPre = [[NSMutableArray alloc] initWithArray:leg.predictions];
+                [predictions setObject:arrPre forKey:leg.legId];
             }
         }
-        
+        int maxPredictionCount = [self findMaximumPredictionCount:predictions];
+        if(maxPredictionCount == 0 ){
+           [self generateItineraryFromItinerayPatern:iti Parameters:parameters Plan:plan Context:context]; 
+        }
+        for(int k=0;k<maxPredictionCount;k++){
+            Itinerary* newItinerary = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:context];
+            newItinerary.startTime = parameters.originalTripDate;
+            newItinerary.startTimeOnly = timeOnlyFromDate(parameters.originalTripDate);
+            newItinerary.plan = plan;
+            for(int l=0;l<[iti.sortedLegs count];l++){
+                Leg *leg = [iti.sortedLegs objectAtIndex:l];
+                if(leg.predictions && [[predictions objectForKey:leg.legId] count] > 0){
+                    NSMutableArray *arrPre = [predictions objectForKey:leg.legId];
+                    NSDictionary *dictPrediction = [self findNearestRealTimeFromPredictions:arrPre Time:newItinerary.startTime];
+                    if(!dictPrediction){
+                        NSString *strTOStopID = leg.to.stopId;
+                        NSString *strFromStopID = leg.from.stopId;
+                        NSMutableArray *arrStopTime = [self getStopTimes:strTOStopID strFromStopID:strFromStopID startDate:parameters.originalTripDate];
+                        [self addScheduledLegToItinerary:newItinerary TransitLeg:leg StopTime:arrStopTime Context:context];
+                    }
+                    else{
+                       [self generateLegFromPrediction:dictPrediction newItinerary:newItinerary Leg:leg Context:context];
+                        [arrPre removeObject:dictPrediction];
+                    }
+                }
+                else if([leg isScheduled]){
+                    NSString *strTOStopID = leg.to.stopId;
+                    NSString *strFromStopID = leg.from.stopId;
+                    NSMutableArray *arrStopTime = [self getStopTimes:strTOStopID strFromStopID:strFromStopID startDate:parameters.originalTripDate];
+                    [self addScheduledLegToItinerary:newItinerary TransitLeg:leg StopTime:arrStopTime Context:context];
+                }
+                else{
+                    [self addUnScheduledLegToItinerary:newItinerary WalkLeg:leg Context:context];
+                }
+            }
+        }
     }
     return plan;
 }

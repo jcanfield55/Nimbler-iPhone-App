@@ -129,6 +129,9 @@ typedef enum {
 // Find next to next leg if it is then check if new computed end date comes after start date then return leg.
 // then compute realtime data for next leg from conflict leg realtime.
 - (Leg *) adjustLegsIfRequired;
+
+// return true if itinerary have only unscheduled leg.
+- (BOOL) haveOnlyUnScheduledLeg;
 @end
 
 @interface Itinerary (CoreDataGeneratedAccessors)

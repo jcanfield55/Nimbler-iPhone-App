@@ -69,39 +69,17 @@
 // Generate The Trips Request Comma Separated string like agencyID_ROUTEID
 - (void)generateGtfsTripsRequestStringUsingPlan:(Plan *) plan;
 
-// Get The stopID form GtfsStop Table from To&From Location.
-- (NSString *) getTheStopIDAccrodingToStation:(NSNumber *)lat:(NSNumber *)lng;
-
-// get serviceID based on tripId.
-- (NSString *) getServiceIdFromTripID:(NSString *)strTripID;
-
-// Get trips Data from GtfsTrips based on tripID
-- (GtfsTrips *)getTripsDataFromDatabase:(NSString *)strTripID;
-
-// Get stops Data from GtfsStop based on stopID
-- (GtfsStop *)getStopsDataFromDatabase:(NSString *)strStopID;
-
-// Get routes Data from GtfsRoutes based on routeID
-- (GtfsRoutes *)getRoutesDataFromDatabase:(NSString *)strRouteID;
-
-// Get Calendar Data from GtfsCalendar based on serviceID
-- (GtfsCalendar *)getCalendarDataFromDatabase:(NSString *)strServiceID;
-
 // This method get the serviceId based on tripId.
 // Then get the calendar data for particular serviceID.
 // the check for the request date comes after service start date and comes befor enddate.
 // then check service is enabled on request day if yes then return yes otherwise return no.
-- (BOOL) isServiceEnableForTripID:(NSString *)strTripID RequestDate:(NSDate *)requestDate;
+- (BOOL) isServiceEnableForStopTimes:(GtfsStopTimes *)stopTimes RequestDate:(NSDate *)requestDate;
 
 // first get stoptimes from StopTimes Table based on stopId
 // Then make a pair of StopTimes if both stoptimes have same tripId then check for the stopSequence and the departure time is greater than request trip time and also check if service is enabled for that stopTimes if yes the add both stopTimes as To/From StopTimes pair.
 - (NSMutableArray *)getStopTimes:(NSString *)strToStopID strFromStopID:(NSString *)strFromStopID startDate:(NSDate *)startDate;
 
-// First get The unique itinerary pattern from plan.the loop through every itinerary pattern.
-// For each legs of itinerary pattern check first if it is walk leg if yes the create new leg with some additional attributes.
-// if leg is transit leg then first get the stoptimes from that leg and choose nearest stoptimes and remove it from mutable array.
-// this lopp continue until we have stoptimes data.
-
+// Generate legs and itinerary from realtime data if available otherwise generate legs and itinerary from schedule data.
 - (Plan *)generateLegsAndItineraryFromPatternsOfPlan:(Plan *)plan parameters:(PlanRequestParameters *)parameters Context:(NSManagedObjectContext *)context;
 
 - (NSDate *)timeAndDateFromString:(NSString *)strTime;
@@ -110,6 +88,16 @@
 // Remove The legs from where conflict found in itinerary.
 // Then generate new legs from Gtfs StopTimes and old legs data.
 - (void) generateNewItineraryByRemovingConflictLegs:(Itinerary *)itinerary:(Leg *)conflictLeg:(NSManagedObjectContext *)context;
+
+// Find the maximum prediction count from patterns.
+- (int) findMaximumPredictionCount:(NSMutableDictionary *)predictions;
+
+// Find the nearest realtime from multiple realtimes. 
+- (NSDictionary *) findNearestRealTimeFromPredictions:(NSMutableArray *)predictions Time:(NSDate *)time;
+
+// TODO:- Need to add flag that determine flag is generated from realtime data or scheduled data.
+// generate new leg from prediction data.
+- (void) generateLegFromPrediction:(NSDictionary *)prediction newItinerary:(Itinerary *)newItinerary Leg:(Leg *)leg Context:(NSManagedObjectContext *)context;
 
 @end
 
