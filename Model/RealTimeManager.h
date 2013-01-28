@@ -22,6 +22,7 @@
 @interface RealTimeManager : NSObject<RKRequestDelegate>{
     Plan *plan;
 }
+@property (nonatomic, strong) RKClient* rkTpClient; // rkClient for calling server (must be set before using)
 @property (nonatomic, strong) Plan *plan;
 @property (unsafe_unretained, nonatomic) RouteOptionsViewController *routeOptionsVC;
 @property (unsafe_unretained, nonatomic) RouteDetailsViewController *routeDetailVC;

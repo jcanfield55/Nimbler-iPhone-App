@@ -16,6 +16,7 @@
 #define GEO_RESPONSE_URL      @"http://maps.googleapis.com/maps/api/geocode/"
 
 #define TRIP_PROCESS_URL    @"http://23.23.210.156:8080/TPServer/ws/"
+#define TEST_TRIP_PROCESS_URL @"http://localhost:4567/TPServer/ws/"  // Sinatra server for automated tests
 
 //#define TRIP_PROCESS_URL      @"http://192.168.2.196:8080/TPServer/ws/"
 
@@ -45,6 +46,7 @@
 
 // Core Data database filename
 #define COREDATA_DB_FILENAME    @"store101.data"
+#define TEST_COREDATA_DB_FILENAME  @"testDataStore.data" // For automated tests
 
 // Preload file variables
 #define CALTRAIN_PRELOAD_LOCATION_FILE     @"caltrain-station.json"

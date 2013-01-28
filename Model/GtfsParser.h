@@ -23,6 +23,7 @@
     NSManagedObjectContext *managedObjectContext;
 }
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) RKClient *rkTpClient;
 @property (strong, nonatomic) NSString *strAgenciesURL;
 @property (strong, nonatomic) NSString *strCalendarDatesURL;
 @property (strong, nonatomic) NSString *strCalendarURL;
@@ -32,7 +33,7 @@
 @property (strong, nonatomic) NSString *strStopTimesURL;
 @property (strong, nonatomic) Plan *tempPlan;
 
-- (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc;
+- (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkTpClient:(RKClient *)rkClient;
 
 // Parse the Gtfs Agency Data and store to database.
 - (void) parseAndStroreGtfsAgencyData:(NSDictionary *)dictFileData;
@@ -50,7 +51,7 @@
 - (void) parseAndStoreGtfsStopsData:(NSDictionary *)dictFileData;
 
 // Parse the Gtfs Trips Data and store to database.
-- (void) parseAndStroreGtfsTripsData:(NSDictionary *)dictFileData;
+- (void) parseAndStroreGtfsTripsData:(NSDictionary *)dictFileData RequestUrl:(NSString *)strRequestUrl;
 
 // Parse the Gtfs StopTimes Data and store to database.
 - (void) parseAndStoreGtfsStopTimesData:(NSDictionary *)dictFileData RequestUrl:(NSString *) strResourcePath;
