@@ -531,13 +531,11 @@
         [strRequestString deleteCharactersInRange:NSMakeRange(nLength-1, 1)];
     }
     @try {
-//        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-//        [RKClient setSharedClient:client];
 //        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:strRequestString,AGENCY_IDS, nil];
 //        NSString *request = [GTFS_STOP_TIMES appendQueryParams:dictParameters];
 //        strStopTimesURL = request;
 //        NIMLOG_OBJECT1(@"get Gtfs Stop Times: %@", request);
-//        [[RKClient sharedClient]  get:request delegate:self];
+//        [self.rkTpClient  get:request delegate:self];
         RKParams *requestParameter = [RKParams params];
         [requestParameter setValue:strRequestString forParam:AGENCY_IDS];
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
