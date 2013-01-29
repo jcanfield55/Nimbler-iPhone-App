@@ -11,6 +11,7 @@
 #import "UtilityFunctions.h"
 
 @implementation RealTimeManager
+@synthesize rkTpClient;
 @synthesize plan;
 @synthesize routeOptionsVC;
 @synthesize routeDetailVC;
@@ -60,9 +61,7 @@ static RealTimeManager* realTimeManager;
     NSString *str = [arrLegs JSONString];
     RKParams *requestParameter = [RKParams params];
     [requestParameter setValue:str forParam:LEGS];
-    RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-    [RKClient setSharedClient:client];
-    [[RKClient sharedClient] post:LIVE_FEEDS_BY_LEGS params:requestParameter delegate:self];
+    [self.rkTpClient post:LIVE_FEEDS_BY_LEGS params:requestParameter delegate:self];
 }
 
 #pragma mark RKResponse Delegate method

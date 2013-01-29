@@ -19,6 +19,7 @@
 @implementation GtfsParser
 
 @synthesize managedObjectContext;
+@synthesize rkTpClient;
 @synthesize strAgenciesURL;
 @synthesize strCalendarDatesURL;
 @synthesize strCalendarURL;
@@ -29,11 +30,12 @@
 @synthesize tempPlan;
 
 
-- (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc
+- (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkTpClient:(RKClient *)rkClient
 {
     self = [super init];
     if (self) {
         self.managedObjectContext = moc;
+        self.rkTpClient = rkClient;
     }
     
     return self;
@@ -436,13 +438,11 @@
 // Request The Server For Agency Data.
 -(void)requestAgencyDataFromServer{
     @try {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
         NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"agency",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
         NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
         strAgenciesURL = request;
         NIMLOG_OBJECT1(@"Get Agencies: %@", request);
-        [[RKClient sharedClient]  get:request delegate:self];
+        [self.rkTpClient get:request delegate:self];
     }
     @catch (NSException *exception) {
         logException(@"GtfsParser->getAgencies", @"", exception);
@@ -452,13 +452,11 @@
 // Request The Server For Calendar Dates.
 -(void)requestCalendarDatesDataFromServer{
     @try {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
         NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"calendar_dates",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
         NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
         strCalendarDatesURL = request;
         NIMLOG_OBJECT1(@"Get Calendar Dates: %@", request);
-        [[RKClient sharedClient]  get:request delegate:self];
+        [self.rkTpClient  get:request delegate:self];
     }
     @catch (NSException *exception) {
         logException(@"GtfsParser->getCalendarDates", @"", exception);
@@ -468,13 +466,11 @@
 // Request The Server For Calendar Data.
 -(void)requestCalendarDatafromServer{
     @try {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
         NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"calendar",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
         NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
         strCalendarURL = request;
         NIMLOG_OBJECT1(@"Get Calendar: %@", request);
-        [[RKClient sharedClient]  get:request delegate:self];
+        [self.rkTpClient  get:request delegate:self];
     }
     @catch (NSException *exception) {
         logException(@"GtfsParser->getCalendarData", @"", exception);
@@ -484,13 +480,11 @@
 // Request The Server For Routes Data.
 -(void)requestRoutesDatafromServer{
     @try {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
         NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"routes",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
         NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
         strRoutesURL = request;
         NIMLOG_OBJECT1(@"Get Routes: %@", request);
-        [[RKClient sharedClient]  get:request delegate:self];
+        [self.rkTpClient get:request delegate:self];
     }
     @catch (NSException *exception) {
         logException(@"GtfsParser->getRoutesData", @"", exception);
@@ -500,13 +494,11 @@
 // Request The Server For Stops Data.
 -(void)requestStopsDataFromServer{
     @try {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
         NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"stops",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
         NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
         strStopsURL = request;
         NIMLOG_OBJECT1(@"Get Stops: %@", request);
-        [[RKClient sharedClient]  get:request delegate:self];
+        [self.rkTpClient  get:request delegate:self];
     }
     @catch (NSException *exception) {
         logException(@"GtfsParser->getStopsData", @"", exception);
@@ -520,13 +512,11 @@
         [strRequestString deleteCharactersInRange:NSMakeRange(nLength-1, 1)];
     }
     @try {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
         NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:strRequestString,AGENCY_ID_AND_ROUTE_ID, nil];
         NSString *request = [GTFS_TRIPS appendQueryParams:dictParameters];
         strTripsURL = request;
         NIMLOG_OBJECT1(@"get Trips Data: %@", request);
-        [[RKClient sharedClient]  get:request delegate:self];
+        [self.rkTpClient  get:request delegate:self];
     }
     @catch (NSException *exception) {
         logException(@"GtfsParser->getTripsData", @"", exception);

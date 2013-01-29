@@ -37,6 +37,8 @@
     BOOL currentLocationNeededForDirectionsSource;
     BOOL currentLocationNeededForDirectionsDestination;
     BOOL mkDirectionsRequestInProgress;
+    
+    RKClient* rkTpClient;  // RKClient for calling TP Server
 }
 
 @end
@@ -140,6 +142,7 @@ FeedBackForm *fbView;
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
     
     RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];
+    rkTpClient = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     
     
     // Other URLs:
@@ -183,7 +186,12 @@ FeedBackForm *fbView;
         
         // Initialize The GtfsParser
         
-        gtfsParser = [[GtfsParser alloc] initWithManagedObjectContext:self.managedObjectContext];
+        gtfsParser = [[GtfsParser alloc] initWithManagedObjectContext:self.managedObjectContext
+                                                           rkTpClient:rkTpClient];
+        
+        // Initialize the RealTimeManager
+        [[RealTimeManager realTimeManager] setRkTpClient:rkTpClient];
+        
         // Pre-load stations location files
         if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
             NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:CALTRAIN_PRELOAD_VERSION_NUMBER];
@@ -787,9 +795,7 @@ FeedBackForm *fbView;
     @try {
         isRegionSupport = TRUE;
         // DE - 181 Fixed
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_GENERATE_URL];
-        [RKClient setSharedClient:client];
-        [[RKClient sharedClient]  get:METADATA_URL delegate:self];
+        [rkTpClient get:METADATA_URL delegate:self];
     }
     @catch (NSException *exception) {
         logException(@"ncAppDelegate->suppertedRegion", @"", exception);    }
@@ -1011,12 +1017,10 @@ FeedBackForm *fbView;
 
 -(void)updateTime{
     @try {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
         isUpdateTime = YES;
         NSString *request = [UPDATE_TIME_URL appendQueryParams:nil];
         NIMLOG_TWITTER1(@"updateTime req: %@", request);
-        [[RKClient sharedClient]  get:request delegate:self];
+        [rkTpClient  get:request delegate:self];
     }
     @catch (NSException *exception) {
         logException(@"ncAppDelegate->updateTime", @"", exception);
@@ -1025,12 +1029,10 @@ FeedBackForm *fbView;
 
 -(void)serviceByWeekday{
     @try {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
         isServiceByWeekday = YES;
         NSString *serviceByWeekdayReq = [SERVICE_BY_WEEKDAY_URL appendQueryParams:nil];
         NIMLOG_EVENT1(@"Service By Weekday req: %@", serviceByWeekdayReq);
-        [[RKClient sharedClient]  get:serviceByWeekdayReq delegate:self];
+        [rkTpClient get:serviceByWeekdayReq delegate:self];
     }
     @catch (NSException *exception) {
         logException(@"ncAppDelegate->serviceByWeekday", @"", exception);    }
@@ -1038,12 +1040,10 @@ FeedBackForm *fbView;
 
 -(void)calendarByDate{
     @try {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
         isCalendarByDate = YES;
         NSString *request = [CALENDAR_BY_DATE_URL appendQueryParams:nil];
         NIMLOG_EVENT1(@"Calendar By Date req: %@", request);
-        [[RKClient sharedClient]  get:request delegate:self];
+        [rkTpClient  get:request delegate:self];
     }
     @catch (NSException *exception) {
         logException(@"ncAppDelegate->calendarByDate", @"", exception);
@@ -1053,8 +1053,6 @@ FeedBackForm *fbView;
 #pragma mark Twitter Live count request
 -(void)getTwiiterLiveData{
     @try {
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
         NSString *strAgencyIDs = [self getAgencyIdsString];
         if(strAgencyIDs.length > 0){
             NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],APPLICATION_TYPE,[self getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs, nil];
@@ -1062,7 +1060,7 @@ FeedBackForm *fbView;
             NSString *twitCountReq = [TWEET_COUNT_URL appendQueryParams:params];
             strTweetCountURL = twitCountReq;
             NIMLOG_EVENT1(@"twitter count req: %@", twitCountReq);
-            [[RKClient sharedClient]  get:twitCountReq delegate:self];
+            [rkTpClient  get:twitCountReq delegate:self];
         }
     }
     @catch (NSException *exception) {

@@ -178,6 +178,10 @@
 		5258A89F160D617800871875 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5258A89B160D617800871875 /* libTestFlight.a */; };
 		525C20F9151D3AF5004F8FE0 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
 		527E174A151EB9CD00CDBC23 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527E1749151EB9CD00CDBC23 /* QuartzCore.framework */; };
+		52A9BE9516B4B41500564D0D /* RealTimeServerStubTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */; };
+		52A9BE9A16B6677500564D0D /* gtfs_rawdata_calendar.json in Resources */ = {isa = PBXBuildFile; fileRef = 52A9BE9716B6677500564D0D /* gtfs_rawdata_calendar.json */; };
+		52A9BE9B16B6677500564D0D /* livefeeds_bylegs1.json in Resources */ = {isa = PBXBuildFile; fileRef = 52A9BE9816B6677500564D0D /* livefeeds_bylegs1.json */; };
+		52A9BE9C16B6677500564D0D /* server1.rb in Resources */ = {isa = PBXBuildFile; fileRef = 52A9BE9916B6677500564D0D /* server1.rb */; };
 		52C10385160BEF8000BC6020 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C10384160BEF8000BC6020 /* AddressBookUI.framework */; };
 		52C1CBB4161AB69600695348 /* Icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB3161AB69600695348 /* Icon-small.png */; };
 		52C1CBB6161AB6A400695348 /* Icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB5161AB6A400695348 /* Icon-small@2x.png */; };
@@ -498,6 +502,11 @@
 		5258A89E160D617800871875 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		525C20F8151D3AF5004F8FE0 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		527E1749151EB9CD00CDBC23 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		52A9BE9316B4B41500564D0D /* RealTimeServerStubTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RealTimeServerStubTest.h; sourceTree = "<group>"; };
+		52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RealTimeServerStubTest.m; sourceTree = "<group>"; };
+		52A9BE9716B6677500564D0D /* gtfs_rawdata_calendar.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = gtfs_rawdata_calendar.json; path = Sinatra/gtfs_rawdata_calendar.json; sourceTree = "<group>"; };
+		52A9BE9816B6677500564D0D /* livefeeds_bylegs1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = livefeeds_bylegs1.json; path = Sinatra/livefeeds_bylegs1.json; sourceTree = "<group>"; };
+		52A9BE9916B6677500564D0D /* server1.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = server1.rb; path = Sinatra/server1.rb; sourceTree = "<group>"; };
 		52C10384160BEF8000BC6020 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		52C1CBB3161AB69600695348 /* Icon-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-small.png"; sourceTree = "<group>"; };
 		52C1CBB5161AB6A400695348 /* Icon-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-small@2x.png"; sourceTree = "<group>"; };
@@ -722,10 +731,10 @@
 				8D106DFE1671F16B004E0DE5 /* GtfsTrips.m */,
 				520FB15C1626036C0083F143 /* Itinerary.h */,
 				520FB15D1626036C0083F143 /* Itinerary.m */,
-				8D0FA9AE1691984F0038FDB2 /* ItineraryFromOTP.h */,
-				8D0FA9AF1691984F0038FDB2 /* ItineraryFromOTP.m */,
 				8D0FA9B11691985A0038FDB2 /* ItineraryFromGtfs.h */,
 				8D0FA9B21691985A0038FDB2 /* ItineraryFromGtfs.m */,
+				8D0FA9AE1691984F0038FDB2 /* ItineraryFromOTP.h */,
+				8D0FA9AF1691984F0038FDB2 /* ItineraryFromOTP.m */,
 				520FB15E1626036C0083F143 /* LatLng.h */,
 				520FB15F1626036C0083F143 /* LatLng.m */,
 				520FB1601626036C0083F143 /* Leg.h */,
@@ -760,6 +769,8 @@
 				520FB1801626036C0083F143 /* PlanStore.m */,
 				520FB1811626036C0083F143 /* RawAddress.h */,
 				520FB1821626036C0083F143 /* RawAddress.m */,
+				8D3EF6AF16B24D3B00ED366B /* RealTimeManager.h */,
+				8D3EF6B016B24D3B00ED366B /* RealTimeManager.m */,
 				520FB1831626036C0083F143 /* Step.h */,
 				520FB1841626036C0083F143 /* Step.m */,
 				520FB1851626036C0083F143 /* SupportedRegion.h */,
@@ -770,8 +781,6 @@
 				520FB18A1626036C0083F143 /* TransitCalendar.m */,
 				520FB18B1626036C0083F143 /* UserPreferance.h */,
 				520FB18C1626036C0083F143 /* UserPreferance.m */,
-				8D3EF6AF16B24D3B00ED366B /* RealTimeManager.h */,
-				8D3EF6B016B24D3B00ED366B /* RealTimeManager.m */,
 			);
 			path = Model;
 			sourceTree = SOURCE_ROOT;
@@ -929,6 +938,16 @@
 			path = "Network Commuting/TestFlightSDK1-1";
 			sourceTree = "<group>";
 		};
+		52A9BE9616B6673C00564D0D /* Sinatra */ = {
+			isa = PBXGroup;
+			children = (
+				52A9BE9716B6677500564D0D /* gtfs_rawdata_calendar.json */,
+				52A9BE9816B6677500564D0D /* livefeeds_bylegs1.json */,
+				52A9BE9916B6677500564D0D /* server1.rb */,
+			);
+			name = Sinatra;
+			sourceTree = "<group>";
+		};
 		52CF439014BDF2F8000565D6 = {
 			isa = PBXGroup;
 			children = (
@@ -1000,12 +1019,15 @@
 		52CF43C314BDF2F9000565D6 /* Nimbler Tests */ = {
 			isa = PBXGroup;
 			children = (
+				52A9BE9616B6673C00564D0D /* Sinatra */,
 				8D99B630164E2DF200C0A5AC /* calendar.txt */,
 				8D99B631164E2DF200C0A5AC /* stop_times.txt */,
 				8D99B632164E2DF200C0A5AC /* stops.txt */,
 				8D99B633164E2DF200C0A5AC /* trips.txt */,
 				52CF43C914BDF2F9000565D6 /* Network_CommutingTests.h */,
 				52CF43CA14BDF2F9000565D6 /* Network_CommutingTests.m */,
+				52A9BE9316B4B41500564D0D /* RealTimeServerStubTest.h */,
+				52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */,
 				52C32AB916A3A37B0094EE14 /* TestGeneratePlan.h */,
 				52C32ABA16A3A37B0094EE14 /* TestGeneratePlan.m */,
 				52CF43C414BDF2F9000565D6 /* Supporting Files */,
@@ -1317,6 +1339,9 @@
 				52CF43C814BDF2F9000565D6 /* InfoPlist.strings in Resources */,
 				520FB293162604950083F143 /* CoverageGeoJSON.geojson in Resources */,
 				520FB297162605470083F143 /* CoverageGeoJSON.geojson in Resources */,
+				52A9BE9A16B6677500564D0D /* gtfs_rawdata_calendar.json in Resources */,
+				52A9BE9B16B6677500564D0D /* livefeeds_bylegs1.json in Resources */,
+				52A9BE9C16B6677500564D0D /* server1.rb in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1412,6 +1437,7 @@
 			files = (
 				52CF43CB14BDF2F9000565D6 /* Network_CommutingTests.m in Sources */,
 				52C32ABC16A3A90B0094EE14 /* TestGeneratePlan.m in Sources */,
+				52A9BE9516B4B41500564D0D /* RealTimeServerStubTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
