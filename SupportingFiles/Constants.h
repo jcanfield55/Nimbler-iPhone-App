@@ -10,6 +10,8 @@
 
 #endif
 
+#define AUTOMATED_TESTING_SKIP_NCAPPDELEGATE 0  // if 1, skips nc_AppDelegate didFinishLaunchingWithOptions so we get a clean tests run
+
 #define TRIP_GENERATE_URL     @"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/"
 //#define TRIP_GENERATE_URL @"http://ec2-23-22-169-158.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"
 
@@ -17,6 +19,10 @@
 
 #define TRIP_PROCESS_URL    @"http://23.23.210.156:8080/TPServer/ws/"
 #define TEST_TRIP_PROCESS_URL @"http://localhost:4567/TPServer/ws/"  // Sinatra server for automated tests
+
+// Core Data database filename
+#define COREDATA_DB_FILENAME    @"store101.data"
+#define TEST_COREDATA_DB_FILENAME  @"testDataStore.data" // For automated tests
 
 //#define TRIP_PROCESS_URL      @"http://192.168.2.196:8080/TPServer/ws/"
 
@@ -43,10 +49,6 @@
 #define ALERT_OFF        @"1"
 #define ALERT_ON         @"2"
 #define ALERT_URGENT     @"3"
-
-// Core Data database filename
-#define COREDATA_DB_FILENAME    @"store101.data"
-#define TEST_COREDATA_DB_FILENAME  @"testDataStore.data" // For automated tests
 
 // Preload file variables
 #define CALTRAIN_PRELOAD_LOCATION_FILE     @"caltrain-station.json"
