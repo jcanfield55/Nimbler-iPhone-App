@@ -48,6 +48,7 @@
 @dynamic walkTime;
 @synthesize sortedLegs;
 @synthesize itinArrivalFlag;
+@synthesize isRealTimeItinerary;
 
 - (void)awakeFromInsert {
     [super awakeFromInsert];

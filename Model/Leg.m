@@ -51,6 +51,7 @@
 @synthesize polylineEncodedString;
 @synthesize arrivalTime,arrivalFlag,timeDiffInMins;
 @synthesize predictions;
+@synthesize isRealTimeLeg;
 
 static NSDictionary* __agencyDisplayNameByAgencyId;
 
@@ -541,14 +542,21 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     self.routeLongName = leg.routeLongName;
     self.routeShortName = leg.routeShortName;
     self.tripShortName = leg.tripShortName;
-    self.from.lat = leg.from.lat;
-    self.from.lng = leg.from.lng;
-    self.from.name = leg.from.name;
-    self.from.stopId = leg.from.stopId;
-    self.to.lat = leg.to.lat;
-    self.to.lng = leg.to.lng;
-    self.to.name = leg.to.name;
-    self.to.stopId = leg.to.stopId;
+    
+    PlanPlace* from = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:self.managedObjectContext];
+    from.lat = leg.from.lat;
+    from.lng = leg.from.lng;
+    from.name = leg.from.name;
+    from.stopId = leg.from.stopId;
+    self.from = from;
+    
+    PlanPlace * toPlace = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:self.managedObjectContext];
+    toPlace.lat = leg.to.lat;
+    toPlace.lng = leg.to.lng;
+    toPlace.name = leg.to.name;
+    toPlace.stopId = leg.to.stopId;
+    self.to = toPlace;
+    
     self.steps = leg.steps;
     self.tripId = leg.tripId;
     self.sortedSteps = leg.sortedSteps;

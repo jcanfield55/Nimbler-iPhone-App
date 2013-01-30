@@ -92,6 +92,11 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     }
 }
 
+- (void) reloadData:(Plan *)newPlan{
+     plan = newPlan;
+    self.isReloadRealData = true;
+    [mainTable reloadData];
+}
 
 - (void)didReceiveMemoryWarning
 {
@@ -102,6 +107,13 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 }
 
 -(void)popOutToNimbler{
+    for(int i=0;i<[[plan sortedItineraries] count];i++){
+        Itinerary *iti = [[plan sortedItineraries]  objectAtIndex:i];
+        if(iti.isRealTimeItinerary){
+            [plan deleteItinerary:iti];
+        }
+    }
+    
     CATransition *animation = [CATransition animation];
     [animation setDuration:0.3];
     [animation setType:kCATransitionPush];

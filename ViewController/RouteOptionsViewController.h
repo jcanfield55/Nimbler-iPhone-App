@@ -11,7 +11,9 @@
 #import "enums.h"
 #import "RouteDetailsViewController.h"
 
-@interface RouteOptionsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKRequestDelegate>
+@interface RouteOptionsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKRequestDelegate>{
+    Plan *plan;
+}
 
 @property(nonatomic, strong) IBOutlet UITableView* mainTable; // Table listing route options
 @property(nonatomic, strong) Plan *plan;
@@ -24,4 +26,6 @@
 
 // Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
 -(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status;
+
+- (void) reloadData:(Plan *)newPlan;
 @end

@@ -762,54 +762,76 @@
         NSFetchRequest *fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesByStopID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strToStopID,@"STOPID1",strFromStopID,@"STOPID2", nil]];
         NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
         NSMutableArray *arrMutableStopTimes = [[NSMutableArray alloc] init];
+        NSMutableDictionary *dictStopTimes = [[NSMutableDictionary alloc] init];
         for(int i=0;i<[arrayStopTimes count];i++){
-            for(int j= i+1;j<[arrayStopTimes count];j++){
-                int hour = 0;
-                GtfsStopTimes *stopTimes1 = [arrayStopTimes objectAtIndex:i];
-                GtfsStopTimes *stopTimes2 = [arrayStopTimes objectAtIndex:j];
-                NSString *strDepartureTime;
-                NSArray *arrayDepartureTimeComponents = [stopTimes1.departureTime componentsSeparatedByString:@":"];
-                if([arrayDepartureTimeComponents count] > 0){
-                    int hours = [[arrayDepartureTimeComponents objectAtIndex:0] intValue];
-                    int minutes = [[arrayDepartureTimeComponents objectAtIndex:1] intValue];
-                    int seconds = [[arrayDepartureTimeComponents objectAtIndex:2] intValue];
-                    if(hours > 23){
-                        hour = hours;
-                        hours = hours - 24;
-                    }
-                    strDepartureTime = [NSString stringWithFormat:@"%d:%d:%d",hours,minutes,seconds];
+            GtfsStopTimes *stopTimes = [arrayStopTimes objectAtIndex:i];
+            NSArray *arrStopTimesPair = [dictStopTimes objectForKey:stopTimes.tripID];
+            if(arrStopTimesPair){
+                NSMutableArray *arrStopTimes = [[NSMutableArray alloc] initWithArray:arrStopTimesPair];
+                [arrStopTimes addObject:stopTimes];
+                arrStopTimesPair = arrStopTimes;
+                [dictStopTimes setObject:arrStopTimesPair forKey:stopTimes.tripID];
+            }
+            else{
+                NSArray *arrStopTimes = [NSArray arrayWithObject:stopTimes];
+                [dictStopTimes setObject:arrStopTimes forKey:stopTimes.tripID];
+            }
+        }
+        
+        NSArray *keys = [dictStopTimes allKeys];
+        
+        for(int j= 0;j<[keys count];j++){
+            int hour = 0;
+            NSArray *arrStopTimes = [dictStopTimes objectForKey:[keys objectAtIndex:j]];
+            if([arrStopTimes count] < 2 || [arrStopTimes count] > 2){
+                NIMLOG_UOS202(@"Exceptional StopTimes:%@",arrStopTimes);
+                break;
+            }
+            GtfsStopTimes *stopTimes1 = [arrStopTimes objectAtIndex:0];
+            GtfsStopTimes *stopTimes2 = [arrStopTimes objectAtIndex:1];
+            NSString *strDepartureTime;
+            NSArray *arrayDepartureTimeComponents = [stopTimes1.departureTime componentsSeparatedByString:@":"];
+            if([arrayDepartureTimeComponents count] > 0){
+                int hours = [[arrayDepartureTimeComponents objectAtIndex:0] intValue];
+                int minutes = [[arrayDepartureTimeComponents objectAtIndex:1] intValue];
+                int seconds = [[arrayDepartureTimeComponents objectAtIndex:2] intValue];
+                if(hours > 23){
+                    hour = hours;
+                    hours = hours - 24;
                 }
-                
-                NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-                formatter.dateFormat = @"HH:mm:ss";
-                NSDate *departureDate = [formatter dateFromString:strDepartureTime];
-                NSDate *departureTime = timeOnlyFromDate(departureDate);
-                NSDate *tripTime = timeOnlyFromDate(startDate);
-                
-                NSCalendar *calendarDepartureTime = [NSCalendar currentCalendar];
-                NSDateComponents *componentsDepartureTime = [calendarDepartureTime components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:departureTime];
-                int hourDepartureTime = [componentsDepartureTime hour];
-                int minuteDepartureTime = [componentsDepartureTime minute];
-                int intervalDepartureTime = (hour+hourDepartureTime)*60*60 + minuteDepartureTime*60;
-                
-                NSCalendar *calendarTripTime = [NSCalendar currentCalendar];
-                NSDateComponents *componentsTripTime = [calendarTripTime components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:tripTime];
-                int hourTripTime = [componentsTripTime hour];
-                int minuteTripTime = [componentsTripTime minute];
-                int intervalTripTime = hourTripTime*60*60 + minuteTripTime*60;
-                if(stopTimes1 && stopTimes2){
-                    if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] > [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime && intervalDepartureTime < intervalTripTime + TRIP_TIME_PLUS_INTERVAL && [self isServiceEnableForStopTimes:stopTimes1 RequestDate:startDate]){
-                        NIMLOG_UOS202(@"stoptimes1=%@",stopTimes1);
-                        NIMLOG_UOS202(@"stoptimes2=%@",stopTimes2);
-                        NSArray *arrayTemp = [NSArray arrayWithObjects:stopTimes1,stopTimes2, nil];
-                        [arrMutableStopTimes addObject:arrayTemp];
-                    }
-                    else if([stopTimes1.tripID isEqualToString:stopTimes2.tripID] && [stopTimes2.stopSequence intValue] < [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime && intervalDepartureTime < intervalTripTime + TRIP_TIME_PLUS_INTERVAL && [self isServiceEnableForStopTimes:stopTimes1 RequestDate:startDate]){
-                        NIMLOG_UOS202(@"stoptimes1=%@",stopTimes1);
-                        NIMLOG_UOS202(@"stoptimes2=%@",stopTimes2);
-                        NSArray *arrayTemp = [NSArray arrayWithObjects:stopTimes2,stopTimes1, nil];
-                        [arrMutableStopTimes addObject:arrayTemp];
-                    }
+                strDepartureTime = [NSString stringWithFormat:@"%d:%d:%d",hours,minutes,seconds];
+            }
+            
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            formatter.dateFormat = @"HH:mm:ss";
+            NSDate *departureDate = [formatter dateFromString:strDepartureTime];
+            NSDate *departureTime = timeOnlyFromDate(departureDate);
+            NSDate *tripTime = timeOnlyFromDate(startDate);
+            
+            NSCalendar *calendarDepartureTime = [NSCalendar currentCalendar];
+            NSDateComponents *componentsDepartureTime = [calendarDepartureTime components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:departureTime];
+            int hourDepartureTime = [componentsDepartureTime hour];
+            int minuteDepartureTime = [componentsDepartureTime minute];
+            int intervalDepartureTime = (hour+hourDepartureTime)*60*60 + minuteDepartureTime*60;
+            
+            NSCalendar *calendarTripTime = [NSCalendar currentCalendar];
+            NSDateComponents *componentsTripTime = [calendarTripTime components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:tripTime];
+            int hourTripTime = [componentsTripTime hour];
+            int minuteTripTime = [componentsTripTime minute];
+            int intervalTripTime = hourTripTime*60*60 + minuteTripTime*60;
+            if(stopTimes1 && stopTimes2){
+                if([stopTimes2.stopSequence intValue] > [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime && intervalDepartureTime < intervalTripTime + TRIP_TIME_PLUS_INTERVAL){
+                    NIMLOG_UOS202(@"stoptimes1=%@",stopTimes1);
+                    NIMLOG_UOS202(@"stoptimes2=%@",stopTimes2);
+                    NSArray *arrayTemp = [NSArray arrayWithObjects:stopTimes1,stopTimes2, nil];
+                    [arrMutableStopTimes addObject:arrayTemp];
+                    break;
+                }
+                else if([stopTimes2.stopSequence intValue] < [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime && intervalDepartureTime < intervalTripTime + TRIP_TIME_PLUS_INTERVAL){
+                    NIMLOG_UOS202(@"stoptimes1=%@",stopTimes1);
+                    NIMLOG_UOS202(@"stoptimes2=%@",stopTimes2);
+                    NSArray *arrayTemp = [NSArray arrayWithObjects:stopTimes2,stopTimes1, nil];
+                    [arrMutableStopTimes addObject:arrayTemp];
                     break;
                 }
             }
@@ -931,15 +953,15 @@
 - (void) addUnScheduledLegToItinerary:(Itinerary *)itinerary WalkLeg:(Leg *)leg Context:(NSManagedObjectContext *)context{
     @try {
         Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
-        //newleg = leg;
-        if([[itinerary sortedLegs] count] == 0)
+        newleg.itinerary = itinerary;
+        itinerary.sortedLegs = nil;
+        if([[itinerary sortedLegs] count] == 1)
             newleg.startTime = itinerary.startTime;
         else
             newleg.startTime = itinerary.endTime;
+        newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([leg.duration floatValue]/1000)];
         [newleg setNewlegAttributes:leg];
-        newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([newleg.duration floatValue]/1000)];
         itinerary.endTime = newleg.endTime;
-        newleg.itinerary = itinerary;
     }
     @catch (NSException *exception) {
         logException(@"GtfsParser->addUnScheduledLegToItinerary", @"", exception);
@@ -953,13 +975,13 @@
         NSArray *arrayStopTime = [self findNearestStopTimeFromStopTimeArray:arrStopTimes Itinerary:itinerary];
         GtfsStopTimes *fromStopTime = [arrayStopTime objectAtIndex:0];
         Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
+        newleg.itinerary = itinerary;
         if(fromStopTime.departureTime){
             newleg.startTime = [self timeAndDateFromString:fromStopTime.departureTime];
-            newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([newleg.duration floatValue]/1000)];
+            newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([leg.duration floatValue]/1000)];
         }
         [newleg setNewlegAttributes:leg];
         itinerary.endTime = newleg.endTime;
-        newleg.itinerary = itinerary;
         [arrStopTimes removeObject:arrayStopTime];
     }
     @catch (NSException *exception) {
@@ -971,7 +993,7 @@
 // if leg is transit leg then we get the stoptimes data for that leg.
 // Next find the nearest stoptimes by comparing departureTime with new itinerary start time or end time.
 // Then create the new leg and itinerary from stoptimes data. 
-- (void) generateItineraryFromItinerayPatern:(Itinerary *)itinerary Parameters:(PlanRequestParameters *)parameters Plan:(Plan *)plan Context:(NSManagedObjectContext *)context{
+- (void) generateItineraryFromItinerayPatern:(Itinerary *)itinerary tripDate:(NSDate *)tripDate Plan:(Plan *)plan Context:(NSManagedObjectContext *)context{
     NSMutableDictionary *dictStopTimes = [[NSMutableDictionary alloc] init];
     NSDate *startDate = [NSDate date];
     while (true) {
@@ -980,9 +1002,8 @@
             break;
         }
         Itinerary* newItinerary = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:context];
-        newItinerary.startTime = parameters.originalTripDate;
-        newItinerary.startTimeOnly = timeOnlyFromDate(parameters.originalTripDate);
         newItinerary.plan = plan;
+        newItinerary.startTime = tripDate;
         for(int j=0;j<[[itinerary sortedLegs] count];j++){
             Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
             if(![leg isScheduled]){
@@ -993,7 +1014,7 @@
                 if(!arrStopTime){
                     NSString *strTOStopID = leg.to.stopId;
                     NSString *strFromStopID = leg.from.stopId;
-                    arrStopTime = [self getStopTimes:strTOStopID strFromStopID:strFromStopID startDate:parameters.originalTripDate];
+                    arrStopTime = [self getStopTimes:strTOStopID strFromStopID:strFromStopID startDate:tripDate];
                     if(arrStopTime && [arrStopTime count] > 0){
                         [dictStopTimes setObject:arrStopTime forKey:leg.agencyName];
                     }
@@ -1006,6 +1027,7 @@
                 [dictStopTimes setObject:arrStopTime forKey:leg.agencyName];
             }
         }
+        [self adjustItineraryAndLegsTimes:newItinerary Context:context];
     }
 }
 
@@ -1080,15 +1102,36 @@
 - (void) generateLegFromPrediction:(NSDictionary *)prediction newItinerary:(Itinerary *)newItinerary Leg:(Leg *)leg Context:(NSManagedObjectContext *)context{
     NSDate *predtctionTime = [NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"epochTime"] doubleValue]/1000.0)];
     Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
-    newleg.startTime = predtctionTime;
-    newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([newleg.duration floatValue]/1000)];
-    [newleg setNewlegAttributes:leg];
-    newItinerary.endTime = newleg.endTime;
     newleg.itinerary = newItinerary;
+    newleg.startTime = predtctionTime;
+    newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([leg.duration floatValue]/1000)];
+    [newleg setNewlegAttributes:leg];
+    newleg.isRealTimeLeg = true;
+    newItinerary.isRealTimeItinerary = true;
+    newItinerary.endTime = newleg.endTime;
+}
+
+- (void) adjustItineraryAndLegsTimes:(Itinerary *)itinerary Context:(NSManagedObjectContext *)context{
+        itinerary.sortedLegs = nil;
+        if([[itinerary sortedLegs] count] > 0){
+            Leg *leg = [[itinerary sortedLegs] objectAtIndex:0];
+            if(![leg isScheduled]){
+                Leg *nextLeg = [leg getLegAtOffsetFromListOfLegs:[itinerary sortedLegs] offset:1];
+                leg.endTime = nextLeg.startTime;
+                leg.startTime = [leg.endTime dateByAddingTimeInterval:(-[leg.duration floatValue])/1000];
+                Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
+                newleg.itinerary = itinerary;
+                newleg.endTime = nextLeg.startTime;
+                [newleg setNewlegAttributes:leg];
+                newleg.startTime = [newleg.endTime dateByAddingTimeInterval:(-[newleg.duration floatValue])/1000];
+                itinerary.startTime = newleg.startTime;
+                [itinerary removeLegsObject:leg];
+            }
+        }
 }
 
 // Generate legs and itinerary from realtime data if available otherwise generate legs and itinerary from schedule data.
-- (Plan *)generateLegsAndItineraryFromPatternsOfPlan:(Plan *)plan parameters:(PlanRequestParameters *)parameters Context:(NSManagedObjectContext *)context{
+- (Plan *)generateLegsAndItineraryFromPatternsOfPlan:(Plan *)plan tripDate:(NSDate *)tripDate Context:(NSManagedObjectContext *)context{
     if(!context){
         context = self.managedObjectContext;
     }
@@ -1105,13 +1148,12 @@
         }
         int maxPredictionCount = [self findMaximumPredictionCount:predictions];
         if(maxPredictionCount == 0 ){
-           [self generateItineraryFromItinerayPatern:iti Parameters:parameters Plan:plan Context:context]; 
+           [self generateItineraryFromItinerayPatern:iti tripDate:tripDate Plan:plan Context:context];
         }
         for(int k=0;k<maxPredictionCount;k++){
             Itinerary* newItinerary = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:context];
-            newItinerary.startTime = parameters.originalTripDate;
-            newItinerary.startTimeOnly = timeOnlyFromDate(parameters.originalTripDate);
             newItinerary.plan = plan;
+            newItinerary.startTime = tripDate;
             for(int l=0;l<[iti.sortedLegs count];l++){
                 Leg *leg = [iti.sortedLegs objectAtIndex:l];
                 if(leg.predictions && [[predictions objectForKey:leg.legId] count] > 0){
@@ -1120,7 +1162,11 @@
                     if(!dictPrediction){
                         NSString *strTOStopID = leg.to.stopId;
                         NSString *strFromStopID = leg.from.stopId;
-                        NSMutableArray *arrStopTime = [self getStopTimes:strTOStopID strFromStopID:strFromStopID startDate:parameters.originalTripDate];
+                        NSMutableArray *arrStopTime = [self getStopTimes:strTOStopID strFromStopID:strFromStopID startDate:tripDate];
+                        if([arrStopTime count] == 0){
+                            [plan deleteItinerary:newItinerary];
+                            break;
+                        }
                         [self addScheduledLegToItinerary:newItinerary TransitLeg:leg StopTime:arrStopTime Context:context];
                     }
                     else{
@@ -1131,15 +1177,22 @@
                 else if([leg isScheduled]){
                     NSString *strTOStopID = leg.to.stopId;
                     NSString *strFromStopID = leg.from.stopId;
-                    NSMutableArray *arrStopTime = [self getStopTimes:strTOStopID strFromStopID:strFromStopID startDate:parameters.originalTripDate];
+                    NSMutableArray *arrStopTime = [self getStopTimes:strTOStopID strFromStopID:strFromStopID startDate:tripDate];
+                    if([arrStopTime count] == 0){
+                        [plan deleteItinerary:newItinerary];
+                        break;
+                    }
                     [self addScheduledLegToItinerary:newItinerary TransitLeg:leg StopTime:arrStopTime Context:context];
                 }
                 else{
                     [self addUnScheduledLegToItinerary:newItinerary WalkLeg:leg Context:context];
                 }
             }
+            if([[newItinerary sortedLegs] count] > 0)
+               [self adjustItineraryAndLegsTimes:newItinerary Context:context];
         }
     }
+    
     return plan;
 }
 

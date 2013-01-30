@@ -27,11 +27,12 @@
 @property (unsafe_unretained, nonatomic) RouteOptionsViewController *routeOptionsVC;
 @property (unsafe_unretained, nonatomic) RouteDetailsViewController *routeDetailVC;
 @property(strong, nonatomic) id liveData;
+@property (strong, nonatomic) NSDate *originalTripDate;
 
 +(RealTimeManager *)realTimeManager;
 
 // Request RealTime data from server with legs attributes.
-- (void) requestRealTimeDataFromServerUsingPlan:(Plan *)plan;
+- (void) requestRealTimeDataFromServerUsingPlan:(Plan *)currentPlan tripDate:(NSDate *)tripDate;
 
 // Parse the Realtime response and set realtime data to leg.
 -(void)setLiveFeed:(id)liveFees;

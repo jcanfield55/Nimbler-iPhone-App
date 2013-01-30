@@ -81,7 +81,7 @@
 - (NSMutableArray *)getStopTimes:(NSString *)strToStopID strFromStopID:(NSString *)strFromStopID startDate:(NSDate *)startDate;
 
 // Generate legs and itinerary from realtime data if available otherwise generate legs and itinerary from schedule data.
-- (Plan *)generateLegsAndItineraryFromPatternsOfPlan:(Plan *)plan parameters:(PlanRequestParameters *)parameters Context:(NSManagedObjectContext *)context;
+- (Plan *)generateLegsAndItineraryFromPatternsOfPlan:(Plan *)plan tripDate:(NSDate *)tripDate Context:(NSManagedObjectContext *)context;
 
 - (NSDate *)timeAndDateFromString:(NSString *)strTime;
 - (NSArray *) findNearestStopTimeFromStopTimeArray:(NSArray *)arrStopTimes Itinerary:(Itinerary *)itinerary;
@@ -99,6 +99,12 @@
 // TODO:- Need to add flag that determine flag is generated from realtime data or scheduled data.
 // generate new leg from prediction data.
 - (void) generateLegFromPrediction:(NSDictionary *)prediction newItinerary:(Itinerary *)newItinerary Leg:(Leg *)leg Context:(NSManagedObjectContext *)context;
+
+// Adjust the itinerary and leg times if first leg is unscheduled leg.
+- (void) adjustItineraryAndLegsTimes:(Itinerary *)itinerary Context:(NSManagedObjectContext *)context;
+
+// Generate scheduled itinerary from itinerary patterns and stoptimes data.
+- (void) generateItineraryFromItinerayPatern:(Itinerary *)itinerary tripDate:(NSDate *)tripDate Plan:(Plan *)plan Context:(NSManagedObjectContext *)context;
 
 @end
 

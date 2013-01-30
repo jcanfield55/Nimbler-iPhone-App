@@ -17,7 +17,6 @@
 
 #define TRIP_PROCESS_URL    @"http://23.23.210.156:8080/TPServer/ws/"
 #define TEST_TRIP_PROCESS_URL @"http://localhost:4567/TPServer/ws/"  // Sinatra server for automated tests
-
 //#define TRIP_PROCESS_URL      @"http://192.168.2.196:8080/TPServer/ws/"
 
 #define TWITTER_SERARCH_URL    @"https://twitter.com/#!/search/realtime/TRAIN%20from%3Acaltrain%20OR%20from%3Acaltrain_news"

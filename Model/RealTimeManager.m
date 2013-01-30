@@ -9,6 +9,7 @@
 #import "RealTimeManager.h"
 #import "nc_AppDelegate.h"
 #import "UtilityFunctions.h"
+#import "PlanRequestParameters.h"
 
 @implementation RealTimeManager
 @synthesize rkTpClient;
@@ -16,6 +17,7 @@
 @synthesize routeOptionsVC;
 @synthesize routeDetailVC;
 @synthesize liveData;
+@synthesize originalTripDate;
 
 static RealTimeManager* realTimeManager;
 
@@ -27,8 +29,9 @@ static RealTimeManager* realTimeManager;
 }
 
 // Request RealTime data from server with legs attributes.
-- (void) requestRealTimeDataFromServerUsingPlan:(Plan *)currentPlan{
+- (void) requestRealTimeDataFromServerUsingPlan:(Plan *)currentPlan tripDate:(NSDate *)tripDate{
     plan = currentPlan;
+    originalTripDate = tripDate;
     NSMutableArray *arrLegs = [[NSMutableArray alloc] init];
     for(int i=0;i<[[plan uniqueItineraries] count];i++){
         Itinerary *itinerary = [[plan uniqueItineraries] objectAtIndex:i];
@@ -83,6 +86,12 @@ static RealTimeManager* realTimeManager;
 -(void)setLiveFeed:(id)liveFees
 {
     @try {
+        for(int i=0;i<[[plan sortedItineraries] count];i++){
+            Itinerary *iti = [[plan sortedItineraries]  objectAtIndex:i];
+            if(iti.isRealTimeItinerary){
+                [plan deleteItinerary:iti];
+            }
+        }
         liveData = liveFees;
         NSNumber *respCode = [(NSDictionary *)liveData objectForKey:@"errCode"];
         if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
@@ -90,10 +99,16 @@ static RealTimeManager* realTimeManager;
             NSArray * legLiveFees = [liveData  objectForKey:@"legLiveFeeds"];
             if ([legLiveFees count] > 0) {
                 [self setRealTimePredictionsFromLiveFeeds:legLiveFees];
+                plan = [[nc_AppDelegate sharedInstance].gtfsParser generateLegsAndItineraryFromPatternsOfPlan:plan tripDate:originalTripDate Context:nil];
+                plan.sortedItineraries = nil;
+                for(int i=0;i<[[plan sortedItineraries] count];i++){
+                    Itinerary *iti = [[plan sortedItineraries] objectAtIndex:i];
+                    iti.sortedLegs = nil;
+                }
+
+                [[nc_AppDelegate sharedInstance].planStore.routeOptionsVC reloadData:plan];
+                [routeDetailVC ReloadLegWithNewData];
             }
-            routeOptionsVC.isReloadRealData = true;
-            [routeOptionsVC.mainTable reloadData];
-            [routeDetailVC ReloadLegWithNewData];
         }
         else {
             //thereare no live feeds available.
