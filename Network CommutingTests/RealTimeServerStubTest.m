@@ -23,19 +23,11 @@
 {
     [super setUp];
     
-    // Hack to fix a problem with RKManagedObjectStore -> managedObjectContext method that returns
-    // the nc_AppDelegate managedObjectContext rather than the test one created here.
-    // This problem is from RestKit v0.9.4
-    NSString* RKManagedObjectStoreThreadDictionaryContextKey = @"RKManagedObjectStoreThreadDictionaryContextKey";
-    NSString* const RKManagedObjectStoreThreadDictionaryEntityCacheKey = @"RKManagedObjectStoreThreadDictionaryEntityCacheKey";
-    NSMutableDictionary* threadDictionary = [[NSThread currentThread] threadDictionary];
-    if ([threadDictionary objectForKey:RKManagedObjectStoreThreadDictionaryContextKey]) {
-        [threadDictionary removeObjectForKey:RKManagedObjectStoreThreadDictionaryContextKey];
-    }
-    if ([threadDictionary objectForKey:RKManagedObjectStoreThreadDictionaryEntityCacheKey]) {
-        [threadDictionary removeObjectForKey:RKManagedObjectStoreThreadDictionaryEntityCacheKey];
-    }
-        
+    // Configure the RestKit RKClient object for Geocoding and trip planning
+    RKLogConfigureByName("RestKit", CUSTOM_RK_LOG_LEVELS);
+    RKLogConfigureByName("RestKit/Network/Cache", CUSTOM_RK_LOG_LEVELS);
+    RKLogConfigureByName("RestKit/Network/Reachability", CUSTOM_RK_LOG_LEVELS);
+    
     // Set-up RKManagedObjectStore per https://groups.google.com/forum/?fromgroups=#!topic/restkit/6_iu2mLOgTo
     // This avoids "Can't merge models with two different entities named" error
     NSString *modelPath = nil;

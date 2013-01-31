@@ -111,6 +111,10 @@ FeedBackForm *fbView;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+#if AUTOMATED_TESTING_SKIP_NCAPPDELEGATE
+    return YES;    // If Automated testing with alternative persistent store, skip NC_AppDelegate altogether and do all setup in test area
+#endif
+    
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     
     [[UIApplication sharedApplication]
