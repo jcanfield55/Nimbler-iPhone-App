@@ -43,10 +43,14 @@ static RealTimeManager* realTimeManager;
                 NSDictionary *dicFromStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.from.stopId,@"id", nil];
                 NSDictionary *dicFrom = [NSDictionary dictionaryWithObjectsAndKeys:dicFromStopId,@"stopId", nil];
                 NSString *strRouteShortName = leg.routeShortName;
+                NSString *strRouteLongName = leg.routeLongName;
                 double startDate = 0;
                 double endDate = 0;
                 if(!strRouteShortName){
                     strRouteShortName = @"";
+                }
+                if(!strRouteLongName){
+                    strRouteLongName = @"";
                 }
                 if(leg.startTime){
                     double startTimeInterval = [leg.startTime timeIntervalSince1970];
@@ -56,7 +60,7 @@ static RealTimeManager* realTimeManager;
                     double endTimeInterval = [leg.endTime timeIntervalSince1970];
                     endDate = endTimeInterval*1000;
                 }
-                NSDictionary *dicLegData = [NSDictionary dictionaryWithObjectsAndKeys:leg.tripId,@"tripId",leg.routeLongName,@"routeLongName",strRouteShortName,@"routeShortName",[NSNumber numberWithDouble:startDate],@"startTime",[NSNumber numberWithDouble:endDate],@"endTime",leg.routeId,@"routeId",dicTo,@"to",dicFrom,@"from",leg.mode,@"mode",leg.agencyId,@"agencyId",leg.agencyName,@"agencyName",leg.route,@"route",leg.headSign,@"headsign",leg.legId,@"id", nil];
+                NSDictionary *dicLegData = [NSDictionary dictionaryWithObjectsAndKeys:leg.tripId,@"tripId",strRouteLongName,@"routeLongName",strRouteShortName,@"routeShortName",[NSNumber numberWithDouble:startDate],@"startTime",[NSNumber numberWithDouble:endDate],@"endTime",leg.routeId,@"routeId",dicTo,@"to",dicFrom,@"from",leg.mode,@"mode",leg.agencyId,@"agencyId",leg.agencyName,@"agencyName",leg.route,@"route",leg.headSign,@"headsign",leg.legId,@"id", nil];
                 [arrLegs addObject:dicLegData];
             }
         }
@@ -139,4 +143,14 @@ static RealTimeManager* realTimeManager;
     }
 }
 
+- (NSArray *) hideItineraryIfNeeded:(NSArray *)arrItinerary{
+    NSMutableArray *arrItineraries = [[NSMutableArray alloc] init];
+    for(int i=0;i<[arrItinerary count];i++){
+        Itinerary *itinerary = [arrItinerary objectAtIndex:i];
+        if(!itinerary.hideItinerary)
+            [arrItineraries addObject:itinerary];
+            
+    }
+    return arrItineraries;
+}
 @end

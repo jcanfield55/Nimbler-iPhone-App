@@ -16,6 +16,7 @@
 #import "nc_AppDelegate.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "Itinerary.h"
+#import "RealTimeManager.h"
 
 #define IDENTIFIER_CELL         @"UIRouteOptionsViewCell"
 
@@ -128,7 +129,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[plan sortedItineraries] count];
+    RealTimeManager *realTimeManager = [RealTimeManager realTimeManager];
+    NSArray *arrItineraries = [realTimeManager hideItineraryIfNeeded:[plan sortedItineraries]];
+    return [arrItineraries count];
 }
 
 // Only usable for >= iOS6.  Returns NSMutableAttributedString with Caltrain train #s emphasized.  
@@ -192,7 +195,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
          cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.textLabel.numberOfLines = 2;
         // Get the requested itinerary
-        Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
+        RealTimeManager *realTimeManager = [RealTimeManager realTimeManager];
+        NSArray *arrItineraries = [realTimeManager hideItineraryIfNeeded:[plan sortedItineraries]];
+        Itinerary *itin = [arrItineraries objectAtIndex:[indexPath row]];
         
         // Set title
         [[cell textLabel] setFont:[UIFont MEDIUM_BOLD_FONT]];
@@ -292,7 +297,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 - (CGFloat)tableView:(UITableView *)aTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
     @try {
-    Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
+        RealTimeManager *realTimeManager = [RealTimeManager realTimeManager];
+        NSArray *arrItineraries = [realTimeManager hideItineraryIfNeeded:[plan sortedItineraries]];
+    Itinerary *itin = [arrItineraries objectAtIndex:[indexPath row]];
     
     NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
                                                      timeIntervalSinceDate:[itin startTimeOfFirstLeg]]);
@@ -342,8 +349,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         if (!routeDetailsVC) {
             routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
         }
-        
-        itinerary = [plan.sortedItineraries objectAtIndex:[indexPath row]];
+        RealTimeManager *realTimeManager = [RealTimeManager realTimeManager];
+        NSArray *arrItineraries = [realTimeManager hideItineraryIfNeeded:[plan sortedItineraries]];
+        itinerary = [arrItineraries objectAtIndex:[indexPath row]];
         itinararyId =[itinerary itinId];
 
         logEvent(FLURRY_ROUTE_SELECTED,

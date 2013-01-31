@@ -49,6 +49,7 @@
 @synthesize sortedLegs;
 @synthesize itinArrivalFlag;
 @synthesize isRealTimeItinerary;
+@synthesize hideItinerary;
 
 - (void)awakeFromInsert {
     [super awakeFromInsert];

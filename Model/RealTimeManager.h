@@ -39,4 +39,6 @@
 
 // Set realtime predictions to leg of unique itinerary.
 - (void) setRealTimePredictionsFromLiveFeeds:(NSArray *)liveFeeds;
+
+- (NSArray *) hideItineraryIfNeeded:(NSArray *)arrItinerary;
 @end
