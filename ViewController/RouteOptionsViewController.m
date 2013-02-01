@@ -108,13 +108,18 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 }
 
 -(void)popOutToNimbler{
+    
     for(int i=0;i<[[plan sortedItineraries] count];i++){
         Itinerary *iti = [[plan sortedItineraries]  objectAtIndex:i];
         if(iti.isRealTimeItinerary){
             [plan deleteItinerary:iti];
         }
+        for(int j=0;j<[[iti sortedLegs] count];j++){
+            Leg *leg = [[iti sortedLegs] objectAtIndex:j];
+            leg.predictions = nil;
+        }
     }
-    
+        
     CATransition *animation = [CATransition animation];
     [animation setDuration:0.3];
     [animation setType:kCATransitionPush];

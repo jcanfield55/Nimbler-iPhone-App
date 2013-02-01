@@ -98,7 +98,8 @@
 
 // TODO:- Need to add flag that determine flag is generated from realtime data or scheduled data.
 // generate new leg from prediction data.
-- (void) generateLegFromPrediction:(NSDictionary *)prediction newItinerary:(Itinerary *)newItinerary Leg:(Leg *)leg Context:(NSManagedObjectContext *)context;
+//- (void) generateLegFromPrediction:(NSDictionary *)prediction newItinerary:(Itinerary *)newItinerary Leg:(Leg *)leg Context:(NSManagedObjectContext *)context;
+- (void) generateLegFromepochTime:(double)epochTime newItinerary:(Itinerary *)newItinerary Leg:(Leg *)leg Context:(NSManagedObjectContext *)context;
 
 // Adjust the itinerary and leg times if first leg is unscheduled leg.
 - (void) adjustItineraryAndLegsTimes:(Itinerary *)itinerary Context:(NSManagedObjectContext *)context;

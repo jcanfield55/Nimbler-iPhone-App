@@ -457,8 +457,8 @@
 
 // Generate 16 character random string and set it as legId for scheduled leg.
 - (void) setLegsId{
-    for(int i=0;i<[[self sortedItineraries] count];i++){
-        Itinerary *itinerary = [[self sortedItineraries] objectAtIndex:i];
+    for(int i=0;i<[[self uniqueItineraries] count];i++){
+        Itinerary *itinerary = [[self uniqueItineraries] objectAtIndex:i];
         for(int j=0;j<[[itinerary sortedLegs] count];j++){
             Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
             if([leg isScheduled])

@@ -76,8 +76,9 @@
                          FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
                          FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
                          nil, nil, nil, nil);
+                
+                [[nc_AppDelegate sharedInstance].gtfsParser generateLegsAndItineraryFromPatternsOfPlan:matchingPlan tripDate:parameters.originalTripDate Context:nil];
                 [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
-                 [[nc_AppDelegate sharedInstance].gtfsParser generateLegsAndItineraryFromPatternsOfPlan:matchingPlan tripDate:parameters.originalTripDate Context:nil];
                 PlanRequestStatus status = PLAN_STATUS_OK;
                 if(toFromVC.timerGettingRealDataByItinerary != nil){
                     [toFromVC.timerGettingRealDataByItinerary invalidate];
@@ -280,6 +281,7 @@
                     } // else if routeOptions destination, do nothing
                     return;
                 }
+                 plan.uniqueItineraryPatterns = [NSSet setWithArray:[plan uniqueItineraries]];
                 [plan setLegsId];
                  saveContext(managedObjectContext);  // Save location and request chunk changes
                 plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context
@@ -287,10 +289,10 @@
                 // get Unique Itinerary from Plan.
                 if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate] departOrArrive:[planRequestParameters departOrArrive]]) {
                     
-                [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
+                    [[nc_AppDelegate sharedInstance].gtfsParser generateLegsAndItineraryFromPatternsOfPlan:plan tripDate:planRequestParameters.originalTripDate Context:nil];
+                   [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
                     
                     // Call-back the appropriate RouteOptions VC with the new plan
-                    [[nc_AppDelegate sharedInstance].gtfsParser generateLegsAndItineraryFromPatternsOfPlan:plan tripDate:planRequestParameters.originalTripDate Context:nil];
                     UIViewController *currentVC = toFromVC.navigationController.visibleViewController;
                     if (planRequestParameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC || currentVC == routeOptionsVC) {
                         [routeOptionsVC newPlanAvailable:plan status:PLAN_STATUS_OK];
