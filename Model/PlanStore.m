@@ -77,7 +77,8 @@
                          FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
                          nil, nil, nil, nil);
                 
-                [[nc_AppDelegate sharedInstance].gtfsParser generateLegsAndItineraryFromPatternsOfPlan:matchingPlan tripDate:parameters.originalTripDate Context:nil];
+                //[[nc_AppDelegate sharedInstance].gtfsParser generateScheduledItinerariesFromPatternOfPlan:matchingPlan Context:nil tripDate:parameters.originalTripDate];
+                
                 [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
                 PlanRequestStatus status = PLAN_STATUS_OK;
                 if(toFromVC.timerGettingRealDataByItinerary != nil){
@@ -288,8 +289,8 @@
                 // Now format the itineraries of the consolidated plan
                 // get Unique Itinerary from Plan.
                 if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate] departOrArrive:[planRequestParameters departOrArrive]]) {
+                    //[[nc_AppDelegate sharedInstance].gtfsParser generateScheduledItinerariesFromPatternOfPlan:plan Context:nil tripDate:planRequestParameters.originalTripDate];
                     
-                    [[nc_AppDelegate sharedInstance].gtfsParser generateLegsAndItineraryFromPatternsOfPlan:plan tripDate:planRequestParameters.originalTripDate Context:nil];
                    [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
                     
                     // Call-back the appropriate RouteOptions VC with the new plan

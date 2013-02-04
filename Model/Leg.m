@@ -52,6 +52,7 @@
 @synthesize arrivalTime,arrivalFlag,timeDiffInMins;
 @synthesize predictions;
 @synthesize isRealTimeLeg;
+@synthesize prediction;
 
 static NSDictionary* __agencyDisplayNameByAgencyId;
 
@@ -599,7 +600,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     double millisecondsRealTime = ([timeOnlyFromDate(realTimeDate) timeIntervalSince1970])*1000.0;
     
     double timeDiffInMilliSeconds = millisecondsRealTime - millisecondsSchedule;
-    int timeDiffInMinutes = timeDiffInMilliSeconds/60*1000;
+    int timeDiffInMinutes = timeDiffInMilliSeconds/(60*1000);
     return timeDiffInMinutes;
 }
 
@@ -618,6 +619,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 - (void) setRealTimeParametersUsingEpochTime:(double)epochTime{
     self.timeDiffInMins = [NSString stringWithFormat:@"%d",[self calculatetimeDiffInMins:epochTime]];
     self.realStartTime = [NSDate dateWithTimeIntervalSince1970:(epochTime/1000.0)];
+    self.arrivalTime = [NSDate dateWithTimeIntervalSince1970:(epochTime/1000.0)];
     self.realEndTime = [[self endTime] dateByAddingTimeInterval:([self.timeDiffInMins intValue]*60*1000)];
     self.arrivalFlag = [NSString stringWithFormat:@"%d",[self calculateArrivalTimeFlag]];
 }

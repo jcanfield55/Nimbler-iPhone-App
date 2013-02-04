@@ -435,7 +435,10 @@
     for(int i=1;i<[[self sortedLegs] count];i++){
         Leg *currentLeg = [[self sortedLegs] objectAtIndex:i];
         Leg *previousLeg = [[self sortedLegs] objectAtIndex:i-1];
-        if ([[currentLeg getApplicableEndTime] compare:[previousLeg getApplicableStartTime]] == NSOrderedDescending)
+        Leg *nextLeg = [[self sortedLegs] objectAtIndex:i+1];
+        if (nextLeg && [[currentLeg getApplicableEndTime] compare:[nextLeg getApplicableStartTime]] == NSOrderedDescending)
+            return currentLeg;
+        else if(previousLeg && [[currentLeg getApplicableStartTime] compare:[previousLeg getApplicableEndTime]] == NSOrderedAscending)
             return currentLeg;
     }
     return nil;
@@ -447,22 +450,44 @@
 // then compute realtime data for next leg from conflict leg realtime.
 - (Leg *) adjustLegsIfRequired{
     Leg *leg = [self conflictLegFromItinerary];
-    Leg *nextLeg = [leg getLegAtOffsetFromListOfLegs:self.sortedLegs offset:1];
-    if(!nextLeg || [nextLeg isScheduled])
-        return leg;
-    Leg *nextToNextLeg = [leg getLegAtOffsetFromListOfLegs:self.sortedLegs offset:2];
-    if(nextToNextLeg){
-        NSDate *endDate = nextLeg.endTime;
-        NSDate *startDate = timeOnlyFromDate(nextToNextLeg.startTime);
-        NSDate *newEndDate = timeOnlyFromDate([endDate dateByAddingTimeInterval:[leg.timeDiffInMins intValue]*60]);
-        if ([newEndDate compare:startDate] == NSOrderedDescending)
+    if([leg.arrivalFlag intValue] == EARLY){
+        Leg *previousLeg = [leg getLegAtOffsetFromListOfLegs:self.sortedLegs offset:-1];
+        if(!previousLeg || [previousLeg isScheduled])
             return leg;
+        Leg *previousToPreviousLeg = [leg getLegAtOffsetFromListOfLegs:self.sortedLegs offset:-2];
+        if(previousToPreviousLeg){
+            NSDate *startDate = previousLeg.startTime;
+            NSDate *endDate = timeOnlyFromDate(previousToPreviousLeg.endTime);
+            NSDate *newEndDate = timeOnlyFromDate([endDate dateByAddingTimeInterval:[leg.timeDiffInMins intValue]*60]);
+            if ([newEndDate compare:startDate] == NSOrderedDescending)
+                return leg;
+        }
+        int diffInMin = [leg.timeDiffInMins intValue];
+        if(diffInMin < 0)
+            diffInMin = - diffInMin;
+        previousLeg.timeDiffInMins = leg.timeDiffInMins;
+        previousLeg.arrivalFlag = leg.arrivalFlag;
+        previousLeg.arrivalTime = [previousLeg.endTime dateByAddingTimeInterval:diffInMin * 60];
+        return nil;
+    }
+    else{
+        Leg *nextLeg = [leg getLegAtOffsetFromListOfLegs:self.sortedLegs offset:1];
+        if(!nextLeg || [nextLeg isScheduled])
+            return leg;
+        Leg *nextToNextLeg = [leg getLegAtOffsetFromListOfLegs:self.sortedLegs offset:2];
+        if(nextToNextLeg){
+            NSDate *endDate = nextLeg.endTime;
+            NSDate *startDate = timeOnlyFromDate(nextToNextLeg.startTime);
+            NSDate *newEndDate = timeOnlyFromDate([endDate dateByAddingTimeInterval:[leg.timeDiffInMins intValue]*60]);
+            if ([newEndDate compare:startDate] == NSOrderedDescending)
+                return leg;
         }
         int diffInMin = [leg.timeDiffInMins intValue];
         nextLeg.timeDiffInMins = leg.timeDiffInMins;
         nextLeg.arrivalFlag = leg.arrivalFlag;
         nextLeg.arrivalTime = [nextLeg.endTime dateByAddingTimeInterval:diffInMin * 60];
-    return nil;
+        return nil;
+    }
 }
 
 // return true if itinerary have only unscheduled leg.

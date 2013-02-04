@@ -97,7 +97,7 @@ static RealTimeManager* realTimeManager;
             }
             for(int j=0;j<[[iti sortedLegs] count];j++){
                 Leg *leg = [[iti sortedLegs] objectAtIndex:j];
-                leg.predictions = nil;
+                leg.prediction = nil;
             }
         }
         liveData = liveFees;
@@ -106,15 +106,12 @@ static RealTimeManager* realTimeManager;
             //It means there are live feeds in response
             NSArray * legLiveFees = [liveData  objectForKey:@"legLiveFeeds"];
             if ([legLiveFees count] > 0) {
-                [self setRealTimePredictionsFromLiveFeeds:legLiveFees];
-                plan = [[nc_AppDelegate sharedInstance].gtfsParser generateLegsAndItineraryFromPatternsOfPlan:plan tripDate:originalTripDate Context:nil];
+                [self updateRealtimeForLegsAndItineraries:legLiveFees];
                 plan.sortedItineraries = nil;
-                //plan.uniqueItineraryPatterns = [NSSet setWithArray:[plan uniqueItineraries]];
                 for(int i=0;i<[[plan sortedItineraries] count];i++){
-                    Itinerary *iti = [[plan sortedItineraries] objectAtIndex:i];
-                    iti.sortedLegs = nil;
+                    Itinerary *itinerary = [[plan sortedItineraries] objectAtIndex:i];
+                    itinerary.sortedLegs = nil;
                 }
-
                 [[nc_AppDelegate sharedInstance].planStore.routeOptionsVC reloadData:plan];
                 [routeDetailVC ReloadLegWithNewData];
             }
@@ -130,24 +127,6 @@ static RealTimeManager* realTimeManager;
     }
 }
 
-// Set realtime predictions to leg of unique itinerary.
-- (void) setRealTimePredictionsFromLiveFeeds:(NSArray *)liveFeeds{
-    for(int i=0;i<[[plan uniqueItineraries] count];i++){
-        Itinerary *itinerary = [[plan uniqueItineraries] objectAtIndex:i];
-        for(int j=0;j<[[itinerary sortedLegs] count];j++){
-            Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
-            for (int j=0; j<[liveFeeds count]; j++) {
-                 id key = [liveFeeds objectAtIndex:j];
-                 NSString *legId = [[key objectForKey:@"leg"] objectForKey:@"id"];
-                if([leg.legId isEqualToString:legId]){
-                    NSArray *predictionList = [key objectForKey:@"lstPredictions"];
-                    [leg setPredictions:predictionList];
-                }
-            }
-        }
-    }
-}
-
 - (NSArray *) hideItineraryIfNeeded:(NSArray *)arrItinerary{
     NSMutableArray *arrItineraries = [[NSMutableArray alloc] init];
     for(int i=0;i<[arrItinerary count];i++){
@@ -159,76 +138,122 @@ static RealTimeManager* realTimeManager;
     return arrItineraries;
 }
 
-// Newly Created methods
 
+// return leg with matching legid
+- (Leg *) returnLegWithSameLegId:(NSString *)strLegId{
+    for(int i=0;i<[[plan uniqueItineraries] count];i++){
+        Itinerary *iti = [[plan uniqueItineraries] objectAtIndex:i];
+        for(int j=0;j<[[iti sortedLegs] count];j++){
+            Leg *leg = [[iti sortedLegs] objectAtIndex:j];
+            if([leg.legId isEqualToString:strLegId])
+                return leg;
+        }
+    }
+    return nil;
+}
 
-//- (Leg *) returnLegWithSameLegId:(NSString *)strLegId{
-//    for(int i=0;i<[[plan uniqueItineraries] count];i++){
-//        Itinerary *iti = [[plan uniqueItineraries] objectAtIndex:i];
-//        for(int j=0;j<[[iti sortedLegs] count];j++){
-//            Leg *leg = [[iti sortedLegs] objectAtIndex:j];
-//            if([leg.legId isEqualToString:strLegId])
-//                return leg;
-//        }
-//    }
-//    return nil;
-//}
+// return pattern with matching legId
+- (Itinerary *) returnPatternWithSameLegId:(NSString *)strLegId{
+    for(int i=0;i<[[plan uniqueItineraries] count];i++){
+        Itinerary *iti = [[plan uniqueItineraries] objectAtIndex:i];
+        for(int j=0;j<[[iti sortedLegs] count];j++){
+            Leg *leg = [[iti sortedLegs] objectAtIndex:j];
+            if([leg.legId isEqualToString:strLegId])
+                return iti;
+        }
+    }
+    return nil;
+}
 
-//- (NSDate *) dateWithRealtimeBoundry:(NSArray *)predictions{
-//    NSDictionary *nearestRealTime = [predictions objectAtIndex:0];
-//    for(int i=0;i<[predictions count];i++){
-//        NSDictionary *dictPrediction = [predictions objectAtIndex:i];
-//        NSDate *predtctionTime = timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[dictPrediction objectForKey:@"epochTime"] doubleValue]/1000.0)]);
-//        NSDate *nearestPredictionTime = timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[nearestRealTime objectForKey:@"epochTime"] doubleValue]/1000.0)]);
-//        if ([predtctionTime compare:nearestPredictionTime] == NSOrderedDescending) {
-//            nearestRealTime = dictPrediction;
-//        }
-//    }
-//    NSDate *nearestPredictionTime = timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[nearestRealTime objectForKey:@"epochTime"] doubleValue]/1000.0)]);
-//    return nearestPredictionTime;
-//}
+// return maximum epoch time.
+// i.e if predictions of 4,8,10 then return epoch time for 10.
 
-//- (double) findnearestEpochTime:(NSArray *)predictions{
-//    NSDictionary *nearestRealTime = [predictions objectAtIndex:0];
-//    for(int i=0;i<[predictions count];i++){
-//        NSDictionary *dictPrediction = [predictions objectAtIndex:i];
-//        NSDate *predtctionTime = timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[dictPrediction objectForKey:@"epochTime"] doubleValue]/1000.0)]);
-//        NSDate *nearestPredictionTime = timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[nearestRealTime objectForKey:@"epochTime"] doubleValue]/1000.0)]);
-//        if ([nearestPredictionTime compare:predtctionTime] == NSOrderedDescending) {
-//            nearestRealTime = dictPrediction;
-//        }
-//    }
-//    return [[nearestRealTime objectForKey:@"epochTime"] doubleValue];
-//}
+- (NSDate *) dateWithRealtimeBoundry:(NSArray *)predictions{
+    NSDictionary *nearestRealTime = [predictions objectAtIndex:0];
+    for(int i=0;i<[predictions count];i++){
+        NSDictionary *dictPrediction = [predictions objectAtIndex:i];
+        NSDate *predtctionTime = timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[dictPrediction objectForKey:@"epochTime"] doubleValue]/1000.0)]);
+        NSDate *nearestPredictionTime = timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[nearestRealTime objectForKey:@"epochTime"] doubleValue]/1000.0)]);
+        if ([predtctionTime compare:nearestPredictionTime] == NSOrderedDescending) {
+            nearestRealTime = dictPrediction;
+        }
+    }
+    NSDate *nearestPredictionTime = [NSDate dateWithTimeIntervalSince1970:([[nearestRealTime objectForKey:@"epochTime"] doubleValue]/1000.0)];
+    return nearestPredictionTime;
+}
 
-//- (void) updateRealtimeForLegsAndItineraries:(NSArray *)liveFeeds{
-//    for (int j=0; j<[liveFeeds count]; j++) {
-//        id key = [liveFeeds objectAtIndex:j];
-//        NSString *legId = [[key objectForKey:@"leg"] objectForKey:@"id"];
-//        NSArray *predictionList = [key objectForKey:@"lstPredictions"];
-//        Leg *uniqueLeg = [self returnLegWithSameLegId:legId];
-//        for(int i=0;i<[[plan sortedItineraries] count];i++){
-//            Itinerary *itinerary = [[plan sortedItineraries] objectAtIndex:i];
-//            for(int k=0;k<[[itinerary sortedLegs] count];k++){
-//                Leg *leg = [[itinerary sortedLegs] objectAtIndex:k];
-//                if(uniqueLeg.to == leg.to && uniqueLeg.from == leg.from && [uniqueLeg.routeId isEqualToString:leg.routeId]){
-//                    NSDate *realTimeBoundry = [self dateWithRealtimeBoundry:predictionList];
-//                    if(realTimeBoundry){
-//                        double epochTime = [self findnearestEpochTime:predictionList];
-//                        [leg setRealTimeParametersUsingEpochTime:epochTime];
-//                        Leg *conflictLeg = [itinerary conflictLegFromItinerary];
-//                        if(conflictLeg){
-//                           Leg *adjustedLeg =  [itinerary adjustLegsIfRequired];
-//                           if(adjustedLeg)
-//                               [[nc_AppDelegate sharedInstance].gtfsParser generateNewItineraryByRemovingConflictLegs:itinerary :adjustedLeg :nil];
-//                        }
-//                    }
-//                    else{
-//                        continue;
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
+// return dictionary with minimum time.
+// i.e if predictions of 4,8,10 then return dictionary with prediction 4.
+- (NSDictionary *) findnearestEpochTime:(NSMutableArray *)predictions{
+    NSDictionary *nearestRealTime = [predictions objectAtIndex:0];
+    for(int i=0;i<[predictions count];i++){
+        NSDictionary *dictPrediction = [predictions objectAtIndex:i];
+        NSDate *predtctionTime = timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[dictPrediction objectForKey:@"epochTime"] doubleValue]/1000.0)]);
+        NSDate *nearestPredictionTime = timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[nearestRealTime objectForKey:@"epochTime"] doubleValue]/1000.0)]);
+        if ([nearestPredictionTime compare:predtctionTime] == NSOrderedDescending) {
+            nearestRealTime = dictPrediction;
+        }
+    }
+    [predictions removeObject:nearestRealTime];
+    return nearestRealTime;
+}
+
+// Set matching prediction to leg of itineraries.
+// First get unique leg from pattern based on legid from prediction.
+// Then check if leg from itinerary match with unique pattern if yes then check if leg start time is within (realtimeBoundry-5,realtimeBoundry+15) if yes then set nearest prediction to leg.
+// if any remaining prediction from realtime response then generate new itinerary with this new realtime data.
+- (void) setRealTimePredictionsFromLiveFeeds:(NSArray *)liveFeeds{
+    for (int j=0; j<[liveFeeds count]; j++) {
+        id key = [liveFeeds objectAtIndex:j];
+        NSString *legId = [[key objectForKey:@"leg"] objectForKey:@"id"];
+        NSArray *predictionList = [key objectForKey:@"lstPredictions"];
+        NSMutableArray *mutablePredictionList = [[NSMutableArray alloc] initWithArray:predictionList];
+        NSDate *realTimeBoundry = [self dateWithRealtimeBoundry:predictionList];
+        Leg *uniqueLeg = [self returnLegWithSameLegId:legId];
+        Itinerary *uniquePattern = [self returnPatternWithSameLegId:legId];
+        for(int i=0;i<[[plan sortedItineraries] count];i++){
+            Itinerary *itinerary = [[plan sortedItineraries] objectAtIndex:i];
+            for(int k=0;k<[[itinerary sortedLegs] count];k++){
+                Leg *leg = [[itinerary sortedLegs] objectAtIndex:k];
+                NSDate *legStartTime = leg.startTime;
+                if([uniqueLeg.to.lat doubleValue] == [leg.to.lat doubleValue] && [uniqueLeg.to.lng doubleValue] == [leg.to.lng doubleValue] && [uniqueLeg.from.lat doubleValue ] == [leg.from.lat doubleValue] && [uniqueLeg.from.lng doubleValue] == [leg.from.lng doubleValue] && [uniqueLeg.routeId isEqualToString:leg.routeId]){
+                     if ([realTimeBoundry compare:[legStartTime dateByAddingTimeInterval:-REALTIME_BUFFER_FOR_EARLY]] == NSOrderedDescending && [realTimeBoundry compare:[legStartTime dateByAddingTimeInterval:REALTIME_BUFFER_FOR_DELAY]] == NSOrderedAscending) {
+                         if([mutablePredictionList count] > 0){
+                             NSDictionary *dictPrediction = [self findnearestEpochTime:mutablePredictionList];
+                             leg.prediction = dictPrediction;
+                         }
+                     }
+                }
+            }
+        }
+        for(int i=0;i<[mutablePredictionList count];i++){
+            [[nc_AppDelegate sharedInstance].gtfsParser generateNewItineraryFromExtraPrediction:[mutablePredictionList objectAtIndex:i] :plan Itinerary:uniquePattern UniqueLeg:uniqueLeg Context:nil];
+        }
+    }
+}
+
+// First set realtime data to leg of itineraries.
+// Then check if leg have prediction then calculate timeDiff,arrivalFlag etc for leg and also check for any miss connection in itinerary if yes then try to solve that if it is not solvable then generate new itinerary from realtime data and pattern.
+- (void) updateRealtimeForLegsAndItineraries:(NSArray *)liveFeeds{
+    [self setRealTimePredictionsFromLiveFeeds:liveFeeds];
+    for(int i=0;i<[[plan sortedItineraries] count];i++){
+        Itinerary *itinerary = [[plan sortedItineraries] objectAtIndex:i];
+        for(int k=0;k<[[itinerary sortedLegs] count];k++){
+            Leg *leg = [[itinerary sortedLegs] objectAtIndex:k];
+            if(leg.prediction){
+                double epochTime = [[leg.prediction objectForKey:@"epochTime"] doubleValue];
+                [leg setRealTimeParametersUsingEpochTime:epochTime];
+                Leg *conflictLeg = [itinerary conflictLegFromItinerary];
+                if(conflictLeg){
+                    Leg *adjustedLeg =  [itinerary adjustLegsIfRequired];
+                    [itinerary setArrivalFlagFromLegsRealTime];
+                    if(adjustedLeg)
+                        [[nc_AppDelegate sharedInstance].gtfsParser generateNewItineraryByRemovingConflictLegs:leg FromItinerary:itinerary Plan:plan Context:nil];
+                }
+            }
+            else
+                continue;
+        }
+    }
+}
 @end

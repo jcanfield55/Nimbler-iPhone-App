@@ -116,7 +116,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         }
         for(int j=0;j<[[iti sortedLegs] count];j++){
             Leg *leg = [[iti sortedLegs] objectAtIndex:j];
-            leg.predictions = nil;
+            leg.prediction = nil;
         }
     }
         

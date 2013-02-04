@@ -80,32 +80,30 @@
 // Then make a pair of StopTimes if both stoptimes have same tripId then check for the stopSequence and the departure time is greater than request trip time and also check if service is enabled for that stopTimes if yes the add both stopTimes as To/From StopTimes pair.
 - (NSMutableArray *)getStopTimes:(NSString *)strToStopID strFromStopID:(NSString *)strFromStopID startDate:(NSDate *)startDate;
 
-// Generate legs and itinerary from realtime data if available otherwise generate legs and itinerary from schedule data.
-- (Plan *)generateLegsAndItineraryFromPatternsOfPlan:(Plan *)plan tripDate:(NSDate *)tripDate Context:(NSManagedObjectContext *)context;
-
 - (NSDate *)timeAndDateFromString:(NSString *)strTime;
 - (NSArray *) findNearestStopTimeFromStopTimeArray:(NSArray *)arrStopTimes Itinerary:(Itinerary *)itinerary;
 
-// Remove The legs from where conflict found in itinerary.
-// Then generate new legs from Gtfs StopTimes and old legs data.
-- (void) generateNewItineraryByRemovingConflictLegs:(Itinerary *)itinerary:(Leg *)conflictLeg:(NSManagedObjectContext *)context;
-
-// Find the maximum prediction count from patterns.
-- (int) findMaximumPredictionCount:(NSMutableDictionary *)predictions;
-
-// Find the nearest realtime from multiple realtimes. 
-- (NSDictionary *) findNearestRealTimeFromPredictions:(NSMutableArray *)predictions Time:(NSDate *)time;
-
 // TODO:- Need to add flag that determine flag is generated from realtime data or scheduled data.
 // generate new leg from prediction data.
-//- (void) generateLegFromPrediction:(NSDictionary *)prediction newItinerary:(Itinerary *)newItinerary Leg:(Leg *)leg Context:(NSManagedObjectContext *)context;
-- (void) generateLegFromepochTime:(double)epochTime newItinerary:(Itinerary *)newItinerary Leg:(Leg *)leg Context:(NSManagedObjectContext *)context;
+- (void) generateLegFromPrediction:(NSDictionary *)prediction newItinerary:(Itinerary *)newItinerary Leg:(Leg *)leg Context:(NSManagedObjectContext *)context;
 
-// Adjust the itinerary and leg times if first leg is unscheduled leg.
+// Adjust itinerary first and last leg start/end time if it is unscheduled.
 - (void) adjustItineraryAndLegsTimes:(Itinerary *)itinerary Context:(NSManagedObjectContext *)context;
 
-// Generate scheduled itinerary from itinerary patterns and stoptimes data.
-- (void) generateItineraryFromItinerayPatern:(Itinerary *)itinerary tripDate:(NSDate *)tripDate Plan:(Plan *)plan Context:(NSManagedObjectContext *)context;
+// Generate new leg with all parameters from old leg
+- (void) generateNewLegFromOldLeg:(Leg *)leg Context:(NSManagedObjectContext *)context Itinerary:(Itinerary *)itinerary;
+
+// Generate new itinerary with remaining prediction and pattern.
+- (void) generateNewItineraryFromExtraPrediction:(NSDictionary *)prediction :(Plan *)plan Itinerary:(Itinerary *)itinerary UniqueLeg:(Leg *)uniqueLeg Context:(NSManagedObjectContext *)context;
+
+// Generate new itinerary by chaging the legs from miss connection found.
+// i.e if pattern is w,c,w,b and if miss connection found from c then we will create c,w,b legs.
+- (void) generateNewItineraryByRemovingConflictLegs:(Leg *)leg FromItinerary:(Itinerary *)itinerary Plan:(Plan *)plan Context:(NSManagedObjectContext *)context;
+
+// Generate new itineraries from patterns and stoptimes data.
+- (void) generateScheduledItinerariesFromPatternOfPlan:(Plan *)plan Context:(NSManagedObjectContext *)context tripDate:(NSDate *)tripDate;
+
+
 
 @end
 

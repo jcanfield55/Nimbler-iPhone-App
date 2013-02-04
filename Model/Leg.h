@@ -63,6 +63,7 @@ typedef enum {
 @property (nonatomic, retain) NSDate *realStartTime;
 @property (nonatomic, retain) NSDate *realEndTime;
 @property (nonatomic, retain) NSArray *predictions;
+@property (nonatomic, strong) NSDictionary *prediction;
 
 - (NSArray *)sortedSteps;
 - (NSString *)summaryTextWithTime:(BOOL)includeTime;  // Returns a single-line summary of the leg useful for RouteOptionsView details

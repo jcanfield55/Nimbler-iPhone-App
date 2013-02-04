@@ -37,8 +37,29 @@
 // Parse the Realtime response and set realtime data to leg.
 -(void)setLiveFeed:(id)liveFees;
 
-// Set realtime predictions to leg of unique itinerary.
+// return leg with matching legid
+- (Leg *) returnLegWithSameLegId:(NSString *)strLegId;
+
+// return pattern with matching legId
+- (Itinerary *) returnPatternWithSameLegId:(NSString *)strLegId;
+
+// return maximum epoch time.
+// i.e if predictions of 4,8,10 then return epoch time for 10.
+- (NSDate *) dateWithRealtimeBoundry:(NSArray *)predictions;
+
+// return dictionary with minimum time.
+// i.e if predictions of 4,8,10 then return dictionary with prediction 4.
+- (NSDictionary *) findnearestEpochTime:(NSMutableArray *)predictions;
+
+// Set matching prediction to leg of itineraries.
+// First get unique leg from pattern based on legid from prediction.
+// Then check if leg from itinerary match with unique pattern if yes then check if leg start time is within (realtimeBoundry-5,realtimeBoundry+15) if yes then set nearest prediction to leg.
+// if any remaining prediction from realtime response then generate new itinerary with this new realtime data.
 - (void) setRealTimePredictionsFromLiveFeeds:(NSArray *)liveFeeds;
+
+// First set realtime data to leg of itineraries.
+// Then check if leg have prediction then calculate timeDiff,arrivalFlag etc for leg and also check for any miss connection in itinerary if yes then try to solve that if it is not solvable then generate new itinerary from realtime data and pattern.
+- (void) updateRealtimeForLegsAndItineraries:(NSArray *)liveFeeds;
 
 - (NSArray *) hideItineraryIfNeeded:(NSArray *)arrItinerary;
 @end
