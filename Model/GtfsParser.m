@@ -1096,9 +1096,10 @@
 // Generate new leg with all parameters from old leg
 - (void) generateNewLegFromOldLeg:(Leg *)leg Context:(NSManagedObjectContext *)context Itinerary:(Itinerary *)itinerary{
     Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
+    newleg.itinerary = itinerary;
     newleg.startTime = leg.startTime;
     newleg.endTime = leg.endTime;
-    newleg.itinerary = itinerary;
+    itinerary.endTime = newleg.endTime;
     [newleg setNewlegAttributes:leg];
 }
 
@@ -1162,7 +1163,7 @@
                 else{
                     NSString *strTOStopID = leg.to.stopId;
                     NSString *strFromStopID = leg.from.stopId;
-                    NSMutableArray *arrStopTime = [self getStopTimes:strTOStopID strFromStopID:strFromStopID startDate:leg.startTime];
+                    NSMutableArray *arrStopTime = [self getStopTimes:strTOStopID strFromStopID:strFromStopID startDate:newItinerary.endTime];
                     if([arrStopTime count] == 0){
                         [plan deleteItinerary:newItinerary];
                         break;

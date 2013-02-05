@@ -78,8 +78,9 @@
                          nil, nil, nil, nil);
                 
                 //[[nc_AppDelegate sharedInstance].gtfsParser generateScheduledItinerariesFromPatternOfPlan:matchingPlan Context:nil tripDate:parameters.originalTripDate];
+                //saveContext(managedObjectContext);
                 
-                [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
+                //[self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
                 PlanRequestStatus status = PLAN_STATUS_OK;
                 if(toFromVC.timerGettingRealDataByItinerary != nil){
                     [toFromVC.timerGettingRealDataByItinerary invalidate];
@@ -289,9 +290,7 @@
                 // Now format the itineraries of the consolidated plan
                 // get Unique Itinerary from Plan.
                 if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate] departOrArrive:[planRequestParameters departOrArrive]]) {
-                    //[[nc_AppDelegate sharedInstance].gtfsParser generateScheduledItinerariesFromPatternOfPlan:plan Context:nil tripDate:planRequestParameters.originalTripDate];
-                    
-                   [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
+                    //[self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
                     
                     // Call-back the appropriate RouteOptions VC with the new plan
                     UIViewController *currentVC = toFromVC.navigationController.visibleViewController;

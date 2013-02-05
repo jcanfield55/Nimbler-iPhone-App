@@ -435,10 +435,13 @@
     for(int i=1;i<[[self sortedLegs] count];i++){
         Leg *currentLeg = [[self sortedLegs] objectAtIndex:i];
         Leg *previousLeg = [[self sortedLegs] objectAtIndex:i-1];
-        Leg *nextLeg = [[self sortedLegs] objectAtIndex:i+1];
+        Leg *nextLeg = nil;
+        if([[self sortedLegs] count] > i+1)
+            nextLeg = [[self sortedLegs] objectAtIndex:i+1];
+        
         if (nextLeg && [[currentLeg getApplicableEndTime] compare:[nextLeg getApplicableStartTime]] == NSOrderedDescending)
             return currentLeg;
-        else if(previousLeg && [[currentLeg getApplicableStartTime] compare:[previousLeg getApplicableEndTime]] == NSOrderedAscending)
+        else if(previousLeg && [[previousLeg getApplicableEndTime] compare:[currentLeg getApplicableStartTime]] == NSOrderedDescending)
             return currentLeg;
     }
     return nil;

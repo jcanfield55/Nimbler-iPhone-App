@@ -49,7 +49,7 @@
 
 // return dictionary with minimum time.
 // i.e if predictions of 4,8,10 then return dictionary with prediction 4.
-- (NSDictionary *) findnearestEpochTime:(NSMutableArray *)predictions;
+- (NSDictionary *) findnearestEpochTime:(NSMutableArray *)predictions Time:(NSDate *)time;
 
 // Set matching prediction to leg of itineraries.
 // First get unique leg from pattern based on legid from prediction.
@@ -59,7 +59,9 @@
 
 // First set realtime data to leg of itineraries.
 // Then check if leg have prediction then calculate timeDiff,arrivalFlag etc for leg and also check for any miss connection in itinerary if yes then try to solve that if it is not solvable then generate new itinerary from realtime data and pattern.
-- (void) updateRealtimeForLegsAndItineraries:(NSArray *)liveFeeds;
+- (void) updateRealtimeForLegsAndItineraries:(NSArray *)liveFeeds Plan:(Plan *)newPlan;
+
+- (void) removeDuplicateItineraries;
 
 - (NSArray *) hideItineraryIfNeeded:(NSArray *)arrItinerary;
 @end

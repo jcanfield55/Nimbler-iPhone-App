@@ -345,7 +345,7 @@
 #define LIVE_FEEDS_BY_LEGS             @"livefeeds/bylegs"
 #define FOR_TODAY                      @"forToday"
 #define LEGS                           @"legs"
-#define LIVE_FEEDS_IMAGE_DOWNLOAD_URL  @"livefeeds/download"
+#define LIVE_FEEDS_IMAGE_DOWNLOAD_URL  @"advisories/download"
 #define METADATA_URL                   @"metadata"
 
 // US-163 Appstore Feedback reminder constants

@@ -16,6 +16,7 @@
 #import "PlanStore.h"
 #import "nc_AppDelegate.h"
 #import "GtfsStopTimes.h"
+#import "RealTimeManager.h"
 
 @implementation RealTimeServerStubTest
 
@@ -516,35 +517,6 @@
     [gtfsParser parseAndStoreGtfsStopsData:agencyDict];
 }
 
-// First we get all gtfs Data from server and save to database.
-// Get unique itinerary patterns from database and add to plan.
-// Get Gtfs trips and stoptimes data from server and save to database.
-// generate  new itinerary from patterns and stoptimes data and add it to plan.
-
-- (void)testItineraryCreationFromPattern{
-    [gtfsParser requestAgencyDataFromServer];
-    [self someMethodToWaitForResult];
-    NSArray *uniqueitineraryFromPlan10 = [plan10 uniqueItineraries];
-    STAssertTrue([uniqueitineraryFromPlan10 count] == 2, @"");
-    NSArray *uniqueitineraryFromPlan11 = [plan11 uniqueItineraries];
-    STAssertTrue([uniqueitineraryFromPlan11 count] == 3, @"");
-    [gtfsParser generateGtfsTripsRequestStringUsingPlan:plan10];
-    [self someMethodToWaitForResult];
-    //[gtfsParser generateStopTimesRequestString:plan10];
-    [self someMethodToWaitForResult];
-    
-    [plan10 setUniqueItineraryPatterns:[NSSet setWithArray:uniqueitineraryFromPlan10]];
-    PlanRequestParameters *parameters = [[PlanRequestParameters alloc] init];
-    NSDate* date10req = [dateFormatter dateFromString:@"June 8, 2012 9:40 AM"]; // Friday before last load
-    parameters.originalTripDate = date10req;
-    
-    NSArray *arrItineraries = [[plan10 itineraries] allObjects];
-    plan10 = [gtfsParser generateLegsAndItineraryFromPatternsOfPlan:plan10 parameters:parameters Context:managedObjectContext];
-    saveContext(managedObjectContext);
-    NSArray *arrnewItineraries = [[plan10 itineraries] allObjects];
-    STAssertTrue([arrItineraries count] <= [arrnewItineraries count],@"");
-}
-
 // TODO: Need to load proper Gtfs StopTimes Data and then test result of generateNewItineraryByRemovingConflictLegs method.
 
 - (void)testgenerateNewItineraryByRemovingConflictLegs{
@@ -676,6 +648,288 @@
         // Leg adjustment is not possible and we need to create new leg from this leg and realtime.
         STAssertNotNil(legs,@"");
     }
+}
+
+- (void) testRealTime{
+    NSDate* date11 = [dateFormatter dateFromString:@"Feb 5, 2013 5:00 PM"];
+    NSDate* date12 = [dateFormatter dateFromString:@"Feb 5, 2013 5:05 PM"];
+    NSDate* date13 = [dateFormatter dateFromString:@"Feb 5, 2013 5:05 PM"];
+    NSDate* date14 = [dateFormatter dateFromString:@"Feb 5, 2013 5:20 PM"];
+    NSDate* date15 = [dateFormatter dateFromString:@"Feb 5, 2013 5:20 PM"];
+    NSDate* date16 = [dateFormatter dateFromString:@"Feb 5, 2013 5:25 PM"];
+    
+    NSDate* date21 = [dateFormatter dateFromString:@"Feb 5, 2013 5:30 PM"];
+    NSDate* date22 = [dateFormatter dateFromString:@"Feb 5, 2013 5:35 PM"];
+    NSDate* date23 = [dateFormatter dateFromString:@"Feb 5, 2013 5:35 PM"];
+    NSDate* date24 = [dateFormatter dateFromString:@"Feb 5, 2013 5:50 PM"];
+    NSDate* date25 = [dateFormatter dateFromString:@"Feb 5, 2013 5:50 PM"];
+    NSDate* date26 = [dateFormatter dateFromString:@"Feb 5, 2013 5:55 PM"];
+    
+    NSDate* date31 = [dateFormatter dateFromString:@"Feb 5, 2013 6:10 PM"];
+    NSDate* date32 = [dateFormatter dateFromString:@"Feb 5, 2013 6:15 PM"];
+    NSDate* date33 = [dateFormatter dateFromString:@"Feb 5, 2013 6:15 PM"];
+    NSDate* date34 = [dateFormatter dateFromString:@"Feb 5, 2013 6:30 PM"];
+    NSDate* date35 = [dateFormatter dateFromString:@"Feb 5, 2013 6:30 PM"];
+    NSDate* date36 = [dateFormatter dateFromString:@"Feb 5, 2013 5:35 PM"];
+    
+    NSDictionary *dict1 = [NSDictionary dictionaryWithObjectsAndKeys:@"1360113000000",@"epochTime", nil];
+    NSDictionary *dict2 = [NSDictionary dictionaryWithObjectsAndKeys:@"1360114560000",@"epochTime", nil];
+    
+    NSDictionary *dict3 = [NSDictionary dictionaryWithObjectsAndKeys:@"1360117200000",@"epochTime", nil];
+    
+    NSArray *arr1 = [NSArray arrayWithObjects:dict1,dict2,dict3,nil];
+    
+    NSDictionary *dictleg1 = [NSDictionary dictionaryWithObjectsAndKeys:@"123",@"id", nil];
+    NSDictionary *dictleg11 = [NSDictionary dictionaryWithObjectsAndKeys:dictleg1,@"leg",arr1,@"lstPredictions", nil];
+
+    
+    NSArray *arr = [NSArray arrayWithObjects:dictleg11,nil];
+    
+    
+    
+    plan12 = [NSEntityDescription insertNewObjectForEntityForName:@"Plan" inManagedObjectContext:managedObjectContext];
+   
+    itin120 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+    
+    leg1201= [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    leg1201.mode = @"WALK";
+    PlanPlace *pp101 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    PlanPlace *pp102 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    [pp101 setLat:[NSNumber numberWithDouble:37.75768017385226]];
+    [pp101 setLng:[NSNumber numberWithDouble:-122.3926363695829]];
+    [pp102 setLat:[NSNumber numberWithDouble:37.755414]];
+    [pp102 setLng:[NSNumber numberWithDouble:-122.388001]];
+    [pp102 setStopId:@"7354"];
+    [pp101 setName:@"22nd Street"];
+    [pp102 setName:@"Third Street & 23rd St"];
+    leg1201.from = pp101;
+    leg1201.to = pp102;
+    leg1201.startTime = date11;
+    leg1201.endTime = date12;
+    leg1201.duration = [NSNumber numberWithInt:300000];
+    itin120.startTime = leg1201.startTime;
+    leg1201.itinerary = itin120;
+    
+    
+    leg1202 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    leg1202.agencyId = @"SFMTA";
+    leg1202.agencyName = @"San Francisco Municipal Transportation Agency";
+    leg1202.mode = @"TRAM";
+    leg1202.route = @"KT";
+    leg1202.routeShortName = @"KT";
+    leg1202.routeLongName = @"OCEAN VIEW";
+    leg1202.routeId = @"1196";
+    leg1202.tripId = @"5249630";
+    PlanPlace *pp103 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    PlanPlace *pp104 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    [pp103 setLat:[NSNumber numberWithDouble:37.755414]];
+    [pp103 setLng:[NSNumber numberWithDouble:-122.388001]];
+    [pp104 setLat:[NSNumber numberWithDouble:37.776278]];
+    [pp104 setLng:[NSNumber numberWithDouble:-122.393864]];
+    [pp103 setStopId:@"7354"];
+    [pp104 setStopId:@"7166"];
+    [pp103 setName:@"Third Street & 23rd St"];
+    [pp104 setName:@"4th St & King St"];
+    leg1202.from = pp103;
+    leg1202.to = pp104;
+    leg1202.startTime = date13;
+    leg1202.endTime = date14;
+    leg1202.legId = @"123";
+    leg1202.duration = [NSNumber numberWithInt:900000];
+    leg1202.itinerary = itin120;
+    
+    leg1203= [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    leg1203.mode = @"WALK";
+    PlanPlace *pp105 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    PlanPlace *pp106 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    [pp105 setLat:[NSNumber numberWithDouble:37.75768017385226]];
+    [pp105 setLng:[NSNumber numberWithDouble:-122.3926363695829]];
+    [pp106 setLat:[NSNumber numberWithDouble:37.755414]];
+    [pp106 setLng:[NSNumber numberWithDouble:-122.388001]];
+    [pp106 setStopId:@"7354"];
+    [pp105 setName:@"22nd Street"];
+    [pp106 setName:@"Third Street & 23rd St"];
+    leg1203.from = pp105;
+    leg1203.to = pp106;
+    leg1203.startTime = date15;
+    leg1203.endTime = date16;
+    leg1203.duration = [NSNumber numberWithInt:300000];
+    leg1203.itinerary = itin120;
+    itin120.endTime = leg1203.endTime;
+    itin120.plan = plan12;
+    
+    
+    itin121 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+    
+    leg1211= [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    leg1211.mode = @"WALK";
+    PlanPlace *pp111 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    PlanPlace *pp112 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    [pp111 setLat:[NSNumber numberWithDouble:37.75768017385226]];
+    [pp111 setLng:[NSNumber numberWithDouble:-122.3926363695829]];
+    [pp112 setLat:[NSNumber numberWithDouble:37.755414]];
+    [pp112 setLng:[NSNumber numberWithDouble:-122.388001]];
+    [pp112 setStopId:@"7354"];
+    [pp111 setName:@"22nd Street"];
+    [pp112 setName:@"Third Street & 23rd St"];
+    leg1211.from = pp111;
+    leg1211.to = pp112;
+    leg1211.startTime = date21;
+    leg1211.endTime = date22;
+    leg1211.duration = [NSNumber numberWithInt:300000];
+    itin121.startTime = leg1211.startTime;
+    leg1211.itinerary = itin121;
+    
+    
+    leg1212 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    leg1212.agencyId = @"SFMTA";
+    leg1212.agencyName = @"San Francisco Municipal Transportation Agency";
+    leg1212.mode = @"TRAM";
+    leg1212.route = @"KT";
+    leg1212.routeShortName = @"KT";
+    leg1212.routeLongName = @"OCEAN VIEW";
+    leg1212.routeId = @"1196";
+    leg1212.tripId = @"5249630";
+    PlanPlace *pp113 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    PlanPlace *pp114 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    [pp113 setLat:[NSNumber numberWithDouble:37.755414]];
+    [pp113 setLng:[NSNumber numberWithDouble:-122.388001]];
+    [pp114 setLat:[NSNumber numberWithDouble:37.776278]];
+    [pp114 setLng:[NSNumber numberWithDouble:-122.393864]];
+    [pp113 setStopId:@"7354"];
+    [pp114 setStopId:@"7166"];
+    [pp113 setName:@"Third Street & 23rd St"];
+    [pp114 setName:@"4th St & King St"];
+    leg1212.from = pp113;
+    leg1212.to = pp114;
+    leg1212.startTime = date23;
+    leg1212.endTime = date24;
+    leg1212.legId = @"123";
+    leg1212.duration = [NSNumber numberWithInt:900000];
+    leg1212.itinerary = itin121;
+    
+    leg1211= [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    leg1211.mode = @"WALK";
+    PlanPlace *pp115 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    PlanPlace *pp116 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    [pp115 setLat:[NSNumber numberWithDouble:37.75768017385226]];
+    [pp115 setLng:[NSNumber numberWithDouble:-122.3926363695829]];
+    [pp116 setLat:[NSNumber numberWithDouble:37.755414]];
+    [pp116 setLng:[NSNumber numberWithDouble:-122.388001]];
+    [pp116 setStopId:@"7354"];
+    [pp115 setName:@"22nd Street"];
+    [pp115 setName:@"Third Street & 23rd St"];
+    leg1211.from = pp115;
+    leg1211.to = pp116;
+    leg1211.startTime = date25;
+    leg1211.endTime = date26;
+    leg1211.duration = [NSNumber numberWithInt:300000];
+    itin121.endTime = leg1211.endTime;
+    leg1211.itinerary = itin121;
+    
+    itin121.plan = plan12;
+    
+    
+    itin122 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+    
+    leg1221= [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    leg1221.mode = @"WALK";
+    PlanPlace *pp121 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    PlanPlace *pp122 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    [pp121 setLat:[NSNumber numberWithDouble:37.75768017385226]];
+    [pp121 setLng:[NSNumber numberWithDouble:-122.3926363695829]];
+    [pp122 setLat:[NSNumber numberWithDouble:37.755414]];
+    [pp122 setLng:[NSNumber numberWithDouble:-122.388001]];
+    [pp122 setStopId:@"7354"];
+    [pp121 setName:@"22nd Street"];
+    [pp122 setName:@"Third Street & 23rd St"];
+    leg1221.from = pp121;
+    leg1221.to = pp122;
+    leg1221.startTime = date31;
+    leg1221.endTime = date32;
+    leg1221.duration = [NSNumber numberWithInt:300000];
+    itin122.startTime = leg1221.startTime;
+    leg1221.itinerary = itin122;
+    
+    
+    leg1222 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    leg1222.agencyId = @"SFMTA";
+    leg1222.agencyName = @"San Francisco Municipal Transportation Agency";
+    leg1222.mode = @"TRAM";
+    leg1222.route = @"KT";
+    leg1222.routeShortName = @"KT";
+    leg1222.routeLongName = @"OCEAN VIEW";
+    leg1222.routeId = @"1196";
+    leg1222.tripId = @"5249630";
+    PlanPlace *pp123 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    PlanPlace *pp124 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    [pp123 setLat:[NSNumber numberWithDouble:37.755414]];
+    [pp123 setLng:[NSNumber numberWithDouble:-122.388001]];
+    [pp124 setLat:[NSNumber numberWithDouble:37.776278]];
+    [pp124 setLng:[NSNumber numberWithDouble:-122.393864]];
+    [pp123 setStopId:@"7354"];
+    [pp124 setStopId:@"7166"];
+    [pp123 setName:@"Third Street & 23rd St"];
+    [pp124 setName:@"4th St & King St"];
+    leg1222.from = pp123;
+    leg1222.to = pp124;
+    leg1222.startTime = date33;
+    leg1222.endTime = date34;
+    leg1222.legId = @"123";
+    leg1222.duration = [NSNumber numberWithInt:900000];
+    leg1222.itinerary = itin122;
+    
+    leg1221= [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
+    leg1221.mode = @"WALK";
+    PlanPlace *pp125 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    PlanPlace *pp126 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
+    [pp125 setLat:[NSNumber numberWithDouble:37.75768017385226]];
+    [pp125 setLng:[NSNumber numberWithDouble:-122.3926363695829]];
+    [pp126 setLat:[NSNumber numberWithDouble:37.755414]];
+    [pp126 setLng:[NSNumber numberWithDouble:-122.388001]];
+    [pp126 setStopId:@"7354"];
+    [pp125 setName:@"22nd Street"];
+    [pp125 setName:@"Third Street & 23rd St"];
+    leg1221.from = pp125;
+    leg1221.to = pp126;
+    leg1221.startTime = date35;
+    leg1221.endTime = date36;
+    leg1221.duration = [NSNumber numberWithInt:300000];
+    itin122.endTime = leg1221.endTime;
+    leg1221.itinerary = itin122;
+    
+    itin122.plan = plan12;
+    
+    saveContext(managedObjectContext);
+    
+    RealTimeManager *m = [RealTimeManager realTimeManager];
+    [m updateRealtimeForLegsAndItineraries:arr Plan:plan12];
+    plan12.sortedItineraries = nil;
+    for(int i=0;i<[[plan12 sortedItineraries] count];i++){
+        Itinerary *iti = [[plan12 sortedItineraries] objectAtIndex:i];
+        iti.sortedLegs = nil;
+    }
+    STAssertTrue([[plan12 sortedItineraries] count] == 3, @"");
+    
+    Itinerary *itinerary1 = [[plan12 sortedItineraries] objectAtIndex:0];
+    Itinerary *itinerary2 = [[plan12 sortedItineraries] objectAtIndex:1];
+    Itinerary *itinerary3 = [[plan12 sortedItineraries] objectAtIndex:2];
+    
+    Leg *leg11 = [[itinerary1 sortedLegs] objectAtIndex:1];
+    STAssertTrue([leg11.timeDiffInMins intValue] == 5, @"");
+    Leg *leg12 = [[itinerary1 sortedLegs] objectAtIndex:2];
+    STAssertTrue([leg12.timeDiffInMins intValue] == 5, @"");
+    
+    Leg *leg21 = [[itinerary2 sortedLegs] objectAtIndex:1];
+    STAssertTrue([leg21.timeDiffInMins intValue] == 1, @"");
+    Leg *leg22 = [[itinerary2 sortedLegs] objectAtIndex:2];
+    STAssertTrue([leg22.timeDiffInMins intValue] == 1, @"");
+    
+    Leg *leg31 = [[itinerary3 sortedLegs] objectAtIndex:1];
+    STAssertTrue([leg31.timeDiffInMins intValue] == 5, @"");
+    Leg *leg32 = [[itinerary3 sortedLegs] objectAtIndex:2];
+    STAssertTrue([leg32.timeDiffInMins intValue] == 5, @"");
+
 }
 
 @end

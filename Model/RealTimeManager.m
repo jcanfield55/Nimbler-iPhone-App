@@ -93,11 +93,11 @@ static RealTimeManager* realTimeManager;
         for(int i=0;i<[[plan sortedItineraries] count];i++){
             Itinerary *iti = [[plan sortedItineraries]  objectAtIndex:i];
             if(iti.isRealTimeItinerary){
+                for(int j=0;j<[[iti sortedLegs] count];j++){
+                    Leg *leg = [[iti sortedLegs] objectAtIndex:j];
+                    leg.prediction = nil;
+                }
                 [plan deleteItinerary:iti];
-            }
-            for(int j=0;j<[[iti sortedLegs] count];j++){
-                Leg *leg = [[iti sortedLegs] objectAtIndex:j];
-                leg.prediction = nil;
             }
         }
         liveData = liveFees;
@@ -106,12 +106,13 @@ static RealTimeManager* realTimeManager;
             //It means there are live feeds in response
             NSArray * legLiveFees = [liveData  objectForKey:@"legLiveFeeds"];
             if ([legLiveFees count] > 0) {
-                [self updateRealtimeForLegsAndItineraries:legLiveFees];
+                [self updateRealtimeForLegsAndItineraries:legLiveFees Plan:plan];
                 plan.sortedItineraries = nil;
                 for(int i=0;i<[[plan sortedItineraries] count];i++){
                     Itinerary *itinerary = [[plan sortedItineraries] objectAtIndex:i];
                     itinerary.sortedLegs = nil;
                 }
+                //[self removeDuplicateItineraries];
                 [[nc_AppDelegate sharedInstance].planStore.routeOptionsVC reloadData:plan];
                 [routeDetailVC ReloadLegWithNewData];
             }
@@ -124,6 +125,22 @@ static RealTimeManager* realTimeManager;
     }
     @catch (NSException *exception) {
         logException(@"RealTimeManager->liveFees", @"", exception);
+    }
+}
+
+- (void) removeDuplicateItineraries{
+    for(int i=0;i<[[plan sortedItineraries] count];i++){
+        for(int j=i+1;j<[[plan sortedItineraries] count];j++){
+            Itinerary *itinerary1 = [[plan sortedItineraries] objectAtIndex:i];
+            Itinerary *itinerary2 = [[plan sortedItineraries] objectAtIndex:j];
+            if([[itinerary1 sortedLegs] count] == [[itinerary2 sortedLegs] count]){
+                NSDate *startDate1 = timeOnlyFromDate([itinerary1 startTimeOfFirstLeg]);
+                NSDate *endDate = timeOnlyFromDate([itinerary2 startTimeOfFirstLeg]);
+                if([startDate1 isEqualToDate:endDate]){
+                    [plan deleteItinerary:itinerary2];
+                }
+            }
+        }
     }
 }
 
@@ -184,10 +201,24 @@ static RealTimeManager* realTimeManager;
 
 // return dictionary with minimum time.
 // i.e if predictions of 4,8,10 then return dictionary with prediction 4.
-- (NSDictionary *) findnearestEpochTime:(NSMutableArray *)predictions{
-    NSDictionary *nearestRealTime = [predictions objectAtIndex:0];
-    for(int i=0;i<[predictions count];i++){
-        NSDictionary *dictPrediction = [predictions objectAtIndex:i];
+- (NSDictionary *) findnearestEpochTime:(NSMutableArray *)predictions Time:(NSDate *)time{
+    NSMutableArray *arrPredictions = [[NSMutableArray alloc] initWithArray:predictions];
+    for (int i=0;i<[arrPredictions count];i++) {
+        NSDate *requestTime = timeOnlyFromDate([time dateByAddingTimeInterval:(-5*60)]);
+               NSDictionary *dictPrediction = [arrPredictions objectAtIndex:i];
+                NSDate *predtctionTime = timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[dictPrediction objectForKey:@"epochTime"] doubleValue]/1000.0)]);
+                   if ([requestTime compare:predtctionTime] == NSOrderedDescending) {
+                          [arrPredictions removeObject:dictPrediction];
+                        i = i - 1;
+                     }
+        }
+         if([arrPredictions count] == 0){
+                return nil;
+         }
+    
+    NSDictionary *nearestRealTime = [arrPredictions objectAtIndex:0];
+    for(int i=0;i<[arrPredictions count];i++){
+        NSDictionary *dictPrediction = [arrPredictions objectAtIndex:i];
         NSDate *predtctionTime = timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[dictPrediction objectForKey:@"epochTime"] doubleValue]/1000.0)]);
         NSDate *nearestPredictionTime = timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[nearestRealTime objectForKey:@"epochTime"] doubleValue]/1000.0)]);
         if ([nearestPredictionTime compare:predtctionTime] == NSOrderedDescending) {
@@ -208,7 +239,6 @@ static RealTimeManager* realTimeManager;
         NSString *legId = [[key objectForKey:@"leg"] objectForKey:@"id"];
         NSArray *predictionList = [key objectForKey:@"lstPredictions"];
         NSMutableArray *mutablePredictionList = [[NSMutableArray alloc] initWithArray:predictionList];
-        NSDate *realTimeBoundry = [self dateWithRealtimeBoundry:predictionList];
         Leg *uniqueLeg = [self returnLegWithSameLegId:legId];
         Itinerary *uniquePattern = [self returnPatternWithSameLegId:legId];
         for(int i=0;i<[[plan sortedItineraries] count];i++){
@@ -216,14 +246,14 @@ static RealTimeManager* realTimeManager;
             for(int k=0;k<[[itinerary sortedLegs] count];k++){
                 Leg *leg = [[itinerary sortedLegs] objectAtIndex:k];
                 NSDate *legStartTime = leg.startTime;
-                if([uniqueLeg.to.lat doubleValue] == [leg.to.lat doubleValue] && [uniqueLeg.to.lng doubleValue] == [leg.to.lng doubleValue] && [uniqueLeg.from.lat doubleValue ] == [leg.from.lat doubleValue] && [uniqueLeg.from.lng doubleValue] == [leg.from.lng doubleValue] && [uniqueLeg.routeId isEqualToString:leg.routeId]){
-                     if ([realTimeBoundry compare:[legStartTime dateByAddingTimeInterval:-REALTIME_BUFFER_FOR_EARLY]] == NSOrderedDescending && [realTimeBoundry compare:[legStartTime dateByAddingTimeInterval:REALTIME_BUFFER_FOR_DELAY]] == NSOrderedAscending) {
-                         if([mutablePredictionList count] > 0){
-                             NSDictionary *dictPrediction = [self findnearestEpochTime:mutablePredictionList];
-                             leg.prediction = dictPrediction;
-                         }
-                     }
-                }
+                    if([uniqueLeg.to.lat doubleValue] == [leg.to.lat doubleValue] && [uniqueLeg.to.lng doubleValue] == [leg.to.lng doubleValue] && [uniqueLeg.from.lat doubleValue ] == [leg.from.lat doubleValue] && [uniqueLeg.from.lng doubleValue] == [leg.from.lng doubleValue] && [uniqueLeg.routeId isEqualToString:leg.routeId]){
+                        if([mutablePredictionList count] > 0){
+                            NSDictionary *dictPrediction = [self findnearestEpochTime:mutablePredictionList Time:legStartTime];
+                            NSDate *realTimeBoundry = [NSDate dateWithTimeIntervalSince1970:([[dictPrediction objectForKey:@"epochTime"] doubleValue]/1000.0)];
+                            if ([realTimeBoundry compare:[legStartTime dateByAddingTimeInterval:-REALTIME_BUFFER_FOR_EARLY]] == NSOrderedDescending && [realTimeBoundry compare:[legStartTime dateByAddingTimeInterval:REALTIME_BUFFER_FOR_DELAY]] == NSOrderedAscending)
+                            leg.prediction = dictPrediction;
+                        }
+                    }
             }
         }
         for(int i=0;i<[mutablePredictionList count];i++){
@@ -234,7 +264,8 @@ static RealTimeManager* realTimeManager;
 
 // First set realtime data to leg of itineraries.
 // Then check if leg have prediction then calculate timeDiff,arrivalFlag etc for leg and also check for any miss connection in itinerary if yes then try to solve that if it is not solvable then generate new itinerary from realtime data and pattern.
-- (void) updateRealtimeForLegsAndItineraries:(NSArray *)liveFeeds{
+- (void) updateRealtimeForLegsAndItineraries:(NSArray *)liveFeeds Plan:(Plan *)newPlan {
+    plan = newPlan;
     [self setRealTimePredictionsFromLiveFeeds:liveFeeds];
     for(int i=0;i<[[plan sortedItineraries] count];i++){
         Itinerary *itinerary = [[plan sortedItineraries] objectAtIndex:i];
@@ -246,10 +277,10 @@ static RealTimeManager* realTimeManager;
                 Leg *conflictLeg = [itinerary conflictLegFromItinerary];
                 if(conflictLeg){
                     Leg *adjustedLeg =  [itinerary adjustLegsIfRequired];
-                    [itinerary setArrivalFlagFromLegsRealTime];
                     if(adjustedLeg)
                         [[nc_AppDelegate sharedInstance].gtfsParser generateNewItineraryByRemovingConflictLegs:leg FromItinerary:itinerary Plan:plan Context:nil];
                 }
+                [itinerary setArrivalFlagFromLegsRealTime];
             }
             else
                 continue;

@@ -1653,35 +1653,6 @@
     [[nc_AppDelegate sharedInstance].gtfsParser parseAndStoreGtfsStopsData:agencyDict];
 }
 
-// First we get all gtfs Data from server and save to database.
-// Get unique itinerary patterns from database and add to plan.
-// Get Gtfs trips and stoptimes data from server and save to database.
-// generate  new itinerary from patterns and stoptimes data and add it to plan.
-
-- (void)testItineraryCreationFromPattern{
-    [[nc_AppDelegate sharedInstance].gtfsParser requestAgencyDataFromServer];
-    [self someMethodToWaitForResult];
-    NSArray *uniqueitineraryFromPlan10 = [plan10 uniqueItineraries];
-    STAssertTrue([uniqueitineraryFromPlan10 count] == 2, @"");
-    NSArray *uniqueitineraryFromPlan11 = [plan11 uniqueItineraries];
-    STAssertTrue([uniqueitineraryFromPlan11 count] == 3, @"");
-    [[nc_AppDelegate sharedInstance].gtfsParser generateGtfsTripsRequestStringUsingPlan:plan10];
-    [self someMethodToWaitForResult];
-    //[[nc_AppDelegate sharedInstance].gtfsParser generateStopTimesRequestString:plan10];
-    [self someMethodToWaitForResult];
-    
-    [plan10 setUniqueItineraryPatterns:[NSSet setWithArray:uniqueitineraryFromPlan10]];
-    PlanRequestParameters *parameters = [[PlanRequestParameters alloc] init];
-    NSDate* date10req = [dateFormatter dateFromString:@"June 8, 2012 9:40 AM"]; // Friday before last load
-    parameters.originalTripDate = date10req;
-    
-    NSArray *arrItineraries = [[plan10 itineraries] allObjects];
-    plan10 = [[nc_AppDelegate sharedInstance].gtfsParser generateLegsAndItineraryFromPatternsOfPlan:plan10 parameters:parameters Context:managedObjectContext];
-    saveContext(managedObjectContext);
-    NSArray *arrnewItineraries = [[plan10 itineraries] allObjects];
-    STAssertTrue([arrItineraries count] <= [arrnewItineraries count],@"");
-}
-
 // TODO: Need to load proper Gtfs StopTimes Data and then test result of generateNewItineraryByRemovingConflictLegs method.
 
 - (void)testgenerateNewItineraryByRemovingConflictLegs{

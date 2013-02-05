@@ -57,6 +57,8 @@
     Itinerary *itin113;
     
     Itinerary *itin120;
+    Itinerary *itin121;
+    Itinerary *itin122;
     
     Leg *leg1011;
     Leg *leg1012;
@@ -75,8 +77,14 @@
     Leg *leg1201;
     Leg *leg1202;
     Leg *leg1203;
-    Leg *leg1204;
-    Leg *leg1205;
+    
+    Leg *leg1211;
+    Leg *leg1212;
+    Leg *leg1213;
+    
+    Leg *leg1221;
+    Leg *leg1222;
+    Leg *leg1223;
 }
 
 @end

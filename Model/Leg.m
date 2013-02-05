@@ -566,18 +566,26 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 
 // return startTime only from real time if exists otherwise return leg starttime only. 
 - (NSDate *) getApplicableStartTime{
-    if(self.realStartTime)
-        return timeOnlyFromDate(self.realStartTime);
-    else
-        return timeOnlyFromDate(self.startTime);
+    if(self.realStartTime){
+       NSDate *realStartTimeOnly = self.realStartTime;
+        return realStartTimeOnly;
+    }
+    else{
+        NSDate *startTimeOnly = self.startTime;
+        return startTimeOnly;
+    }
 }
 
 // return endTime only from real time if exists otherwise return leg endtime only.
 - (NSDate *) getApplicableEndTime{
-    if(self.realEndTime)
-        return timeOnlyFromDate(self.realEndTime);
-    else
-        return timeOnlyFromDate(self.endTime);
+    if(self.realEndTime){
+         NSDate *realEndTimeOnly = self.realEndTime;
+        return realEndTimeOnly;
+    }
+    else{
+         NSDate *endTimeOnly = self.endTime;
+        return endTimeOnly;
+    }
 }
 
 // return the leg at offset from current leg and sorted legs
@@ -607,9 +615,9 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 // return arrival time flag for leg.
 - (int) calculateArrivalTimeFlag{
     int timeDiff = [self.timeDiffInMins intValue];
-    if(timeDiff >= 0 && timeDiff <= 2)
+    if(timeDiff >= -2 && timeDiff <= 2)
         return ON_TIME;
-    else if(timeDiff < 0)
+    else if(timeDiff < -2)
         return EARLY;
     else
         return DELAYED;
