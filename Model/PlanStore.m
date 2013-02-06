@@ -15,6 +15,7 @@
 #import "nc_AppDelegate.h"
 #import "GtfsStopTimes.h"
 #import "GtfsStop.h"
+#import "RealTimeManager.h"
 
 @interface PlanStore()
 {
@@ -52,7 +53,6 @@
     
     return self;
 }
-
 // Requests a plan with the given parameters
 // Will get plan from the cache if available and will call OTP if not
 // Will call back the newPlanAvailable method on toFromVC when the first plan is available
@@ -68,7 +68,6 @@
         
         if (matchingPlanArray && [matchingPlanArray count]>0) {
             Plan* matchingPlan = [matchingPlanArray objectAtIndex:0]; // Take the first matching plan
-            
             if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate]
                                                           departOrArrive:[parameters departOrArrive]]) {
                 NIMLOG_EVENT1(@"Matches found in plan cache");
@@ -76,17 +75,15 @@
                          FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
                          FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
                          nil, nil, nil, nil);
-                
                 //[[nc_AppDelegate sharedInstance].gtfsParser generateScheduledItinerariesFromPatternOfPlan:matchingPlan Context:nil tripDate:parameters.originalTripDate];
                 //saveContext(managedObjectContext);
-                
-                //[self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
+                [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
                 PlanRequestStatus status = PLAN_STATUS_OK;
                 if(toFromVC.timerGettingRealDataByItinerary != nil){
                     [toFromVC.timerGettingRealDataByItinerary invalidate];
                     toFromVC.timerGettingRealDataByItinerary = nil;
                 }
-
+                
                 if (parameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
                     [routeOptionsVC newPlanAvailable:matchingPlan status:status];
                 } else {
@@ -265,7 +262,6 @@
                 } else {
                     plan.fromLocation = fromLoc;
                 }
-
                 [plan createRequestChunkWithAllItinerariesAndRequestDate:[planRequestParameters thisRequestTripDate]
                                                           departOrArrive:[planRequestParameters departOrArrive]];
                 // Make sure that we still have itineraries (ie it wasn't just overnight itineraries)
@@ -290,7 +286,7 @@
                 // Now format the itineraries of the consolidated plan
                 // get Unique Itinerary from Plan.
                 if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate] departOrArrive:[planRequestParameters departOrArrive]]) {
-                    //[self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
+                    [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
                     
                     // Call-back the appropriate RouteOptions VC with the new plan
                     UIViewController *currentVC = toFromVC.navigationController.visibleViewController;

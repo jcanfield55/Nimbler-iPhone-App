@@ -28,6 +28,7 @@
 @synthesize strTripsURL;
 @synthesize strStopTimesURL;
 @synthesize tempPlan;
+@synthesize receivedResponse;
 
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkTpClient:(RKClient *)rkClient
@@ -550,6 +551,7 @@
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response
 {
+    receivedResponse = YES;
     NSString *strRequestURL = request.resourcePath;
     @try {
         if ([request isGET]) {
@@ -581,6 +583,7 @@
                     }
                 }
                 else if ([strRequestURL isEqualToString:strCalendarURL]) {
+                    [nc_AppDelegate sharedInstance].receivedReply = true;
                     RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
                     NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
                     NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
@@ -1052,16 +1055,19 @@
 }
 
 // generate new leg from prediction data.
-- (void) generateLegFromPrediction:(NSDictionary *)prediction newItinerary:(Itinerary *)newItinerary Leg:(Leg *)leg Context:(NSManagedObjectContext *)context{
+- (void) generateLegFromPrediction:(NSDictionary *)prediction newItinerary:(Itinerary *)newItinerary Leg:(Leg *)leg Context:(NSManagedObjectContext *)context ISExtraPrediction:(BOOL)isExtraPrediction{
     NSDate *predtctionTime = [NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"epochTime"] doubleValue]/1000.0)];
     Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
     newleg.itinerary = newItinerary;
     newleg.startTime = predtctionTime;
     newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([leg.duration floatValue]/1000)];
     [newleg setNewlegAttributes:leg];
+    if(isExtraPrediction)
+        newItinerary.startTime = newleg.startTime;
+
+    newItinerary.endTime = newleg.endTime;
     newleg.isRealTimeLeg = true;
     newItinerary.isRealTimeItinerary = true;
-    newItinerary.endTime = newleg.endTime;
 }
 
 - (void) adjustItineraryAndLegsTimes:(Itinerary *)itinerary Context:(NSManagedObjectContext *)context{
@@ -1114,13 +1120,10 @@
     for(int i=0;i<[[itinerary sortedLegs] count];i++){
         Leg *leg = [[itinerary sortedLegs] objectAtIndex:i];
          if([uniqueLeg.to.lat doubleValue] == [leg.to.lat doubleValue] && [uniqueLeg.to.lng doubleValue] == [leg.to.lng doubleValue] && [uniqueLeg.from.lat doubleValue ] == [leg.from.lat doubleValue] && [uniqueLeg.from.lng doubleValue] == [leg.from.lng doubleValue] && [uniqueLeg.routeId isEqualToString:leg.routeId]){
-             [self generateLegFromPrediction:prediction newItinerary:newItinerary Leg:leg Context:context];
+             [self generateLegFromPrediction:prediction newItinerary:newItinerary Leg:leg Context:context ISExtraPrediction:true];
          }
-         else if([leg isScheduled]){
-             if(leg.prediction){
-                 [self generateLegFromPrediction:leg.prediction newItinerary:newItinerary Leg:leg Context:context];
-             }
-             else{
+         else{
+             if([leg isScheduled]){
                  NSString *strTOStopID = leg.to.stopId;
                  NSString *strFromStopID = leg.from.stopId;
                  NSMutableArray *arrStopTime = [self getStopTimes:strTOStopID strFromStopID:strFromStopID startDate:leg.startTime];
@@ -1130,9 +1133,9 @@
                  }
                  [self addScheduledLegToItinerary:newItinerary TransitLeg:leg StopTime:arrStopTime Context:context];
              }
-         }
-         else{
-             [self addUnScheduledLegToItinerary:newItinerary WalkLeg:leg Context:context];
+             else{
+                 [self addUnScheduledLegToItinerary:newItinerary WalkLeg:leg Context:context];
+             }
          }
     }
     [self adjustItineraryAndLegsTimes:newItinerary Context:context];
@@ -1158,7 +1161,7 @@
             Leg *leg = [sortedlegs objectAtIndex:i];
             if([leg isScheduled]){
                 if(leg.prediction){
-                    [self generateLegFromPrediction:leg.prediction newItinerary:newItinerary Leg:leg Context:context];
+                    [self generateLegFromPrediction:leg.prediction newItinerary:newItinerary Leg:leg Context:context ISExtraPrediction:false];
                 }
                 else{
                     NSString *strTOStopID = leg.to.stopId;

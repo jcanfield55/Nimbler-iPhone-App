@@ -435,6 +435,8 @@
     for(int i=1;i<[[self sortedLegs] count];i++){
         Leg *currentLeg = [[self sortedLegs] objectAtIndex:i];
         Leg *previousLeg = [[self sortedLegs] objectAtIndex:i-1];
+        NSDate *date1 = [previousLeg getApplicableEndTime];
+        NSDate *date2 = [currentLeg getApplicableStartTime];
         Leg *nextLeg = nil;
         if([[self sortedLegs] count] > i+1)
             nextLeg = [[self sortedLegs] objectAtIndex:i+1];

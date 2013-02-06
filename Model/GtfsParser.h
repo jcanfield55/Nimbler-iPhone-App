@@ -32,6 +32,7 @@
 @property (strong, nonatomic) NSString *strTripsURL;
 @property (strong, nonatomic) NSString *strStopTimesURL;
 @property (strong, nonatomic) Plan *tempPlan;
+@property (nonatomic) BOOL receivedResponse;
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkTpClient:(RKClient *)rkClient;
 
@@ -85,7 +86,7 @@
 
 // TODO:- Need to add flag that determine flag is generated from realtime data or scheduled data.
 // generate new leg from prediction data.
-- (void) generateLegFromPrediction:(NSDictionary *)prediction newItinerary:(Itinerary *)newItinerary Leg:(Leg *)leg Context:(NSManagedObjectContext *)context;
+- (void) generateLegFromPrediction:(NSDictionary *)prediction newItinerary:(Itinerary *)newItinerary Leg:(Leg *)leg Context:(NSManagedObjectContext *)context ISExtraPrediction:(BOOL)isExtraPrediction;
 
 // Adjust itinerary first and last leg start/end time if it is unscheduled.
 - (void) adjustItineraryAndLegsTimes:(Itinerary *)itinerary Context:(NSManagedObjectContext *)context;

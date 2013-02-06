@@ -17,6 +17,10 @@
 #import "nc_AppDelegate.h"
 #import "GtfsStopTimes.h"
 #import "RealTimeManager.h"
+#import "GtfsAgency.h"
+#import "GtfsRoutes.h"
+#import "GtfsCalendar.h"
+#import "GtfsCalendarDates.h"
 
 @implementation RealTimeServerStubTest
 
@@ -395,42 +399,82 @@
 // Methods wait until Error or Reply arrives from TP.
 -(void)someMethodToWaitForResult
 {
-    while (!([nc_AppDelegate sharedInstance].receivedReply^[nc_AppDelegate sharedInstance].receivedError))
+    while (!gtfsParser.receivedResponse)
         [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
 }
 
 
 // Test The GtfsAgency Data Parsing and DB Insertion with some test data.
 - (void)testGtfsAgencyDataParsingAndDBInsertion{
-    NSString *strTitle = @"agency_id,agency_name,agency_url";
-    NSString *strCaltrain = @"caltrain-ca-us,Caltrain,http://www.caltrain.com";
-    NSString *strAirBart = @"AirBART,AirBART,http://www.bart.gov/guide/airport/inbound_oak.aspx";
-    NSString *strBart = @"BART,Bay Area Rapid Transit,http://www.bart.gov";
-    NSString *strMuni = @"SFMTA,San Francisco Municipal Transportation Agency,http://www.sfmta.com";
-    NSString *strAcTransit = @",AC Transit,http://www.actransit.org";
+    [gtfsParser requestAgencyDataFromServer];
+    [self someMethodToWaitForResult];
+    // Retrieve all calendar entries from CoreData
+    NSFetchRequest * fetchAgency = [[NSFetchRequest alloc] init];
+    [fetchAgency setEntity:[NSEntityDescription entityForName:@"GtfsAgency" inManagedObjectContext:managedObjectContext]];
+    NSArray* arrayAgency = [managedObjectContext executeFetchRequest:fetchAgency error:nil];
+    STAssertTrue([arrayAgency count] == 5, @"");
     
-    NSArray *arrCaltrainAgencyData = [NSArray arrayWithObjects:strTitle,strCaltrain, nil];
-    NSArray *arrBartnAgencyData = [NSArray arrayWithObjects:strTitle,strAirBart,strBart, nil];
-    NSArray *arrSfmtaAgencyData = [NSArray arrayWithObjects:strTitle,strMuni, nil];
-    NSArray *arractransitAgencyData = [NSArray arrayWithObjects:strTitle,strAcTransit, nil];
-    NSDictionary *dictData = [NSDictionary dictionaryWithObjectsAndKeys:arrCaltrainAgencyData,@"1_agency",arrBartnAgencyData,@"2_agency",arrSfmtaAgencyData,@"3_agency",arractransitAgencyData,@"4_agency", nil];
-    NSDictionary *agencyDict = [NSDictionary dictionaryWithObjectsAndKeys:@"105",@"code",@"msg",@"Operation Completed Sucessfully",dictData,@"data", nil];
-    [gtfsParser parseAndStroreGtfsAgencyData:agencyDict];
+    bool test1 = false;
+    bool test2 = false;
+    bool test3 = false;
+    bool test4 = false;
+    bool test5 = false;
+    bool test6 = false;
+    bool test7 = false;
+    bool test8 = false;
+    bool test9 = false;
+    bool test10 = false;
+    
+    for (GtfsAgency* agency in arrayAgency) {
+        if ([agency.agencyID isEqualToString:@"caltrain-ca-us"]) {
+            test1 = ([agency.agencyName isEqualToString:@"Caltrain"]);
+            test2 = ([agency.agencyURL isEqualToString:@"http://www.caltrain.com"]);
+        }
+        else if ([agency.agencyID isEqualToString:@"AirBART"]) {
+            test3 = ([agency.agencyName isEqualToString:@"AirBART"]);
+            test4 = ([agency.agencyURL isEqualToString:@"http://www.bart.gov/guide/airport/inbound_oak.aspx"]);
+        }
+        else if ([agency.agencyID isEqualToString:@"BART"]) {
+            test5 = ([agency.agencyName isEqualToString:@"Bay Area Rapid Transit"]);
+            test6 = ([agency.agencyURL isEqualToString:@"http://www.bart.gov"]);
+        }
+        else if ([agency.agencyID isEqualToString:@"SFMTA"]) {
+            test7 = ([agency.agencyName isEqualToString:@"San Francisco Municipal Transportation Agency"]);
+            test8 = ([agency.agencyURL isEqualToString:@"http://www.sfmta.com"]);
+        }
+        else {
+            test9 = ([agency.agencyName isEqualToString:@"AC Transit"]);
+            test10 = ([agency.agencyURL isEqualToString:@"http://www.actransit.org"]);
+        }
+    }
+    
+    STAssertTrue(test1, @"Agency test1");
+    STAssertTrue(test2, @"Agency test2");
+    STAssertTrue(test3, @"Agency test3");
+    STAssertTrue(test4, @"Agency test4");
+    STAssertTrue(test5, @"Agency test5");
+    STAssertTrue(test6, @"Agency test6");
+    STAssertTrue(test7, @"Agency test7");
+    STAssertTrue(test8, @"Agency test8");
+    STAssertTrue(test9, @"Agency test9");
+    STAssertTrue(test10, @"Agency test10");
 }
+
 
 // Test GtfsCalendar data load using Sinatra to load file gtfs_rawdata_calendar.json
 - (void)testGtfsCalendarDataLoadAndParsing {
     [gtfsParser requestCalendarDatafromServer];
     [self someMethodToWaitForResult];
-    
     // Retrieve all calendar entries from CoreData
-    NSFetchRequest * fetchCalendar = [[NSFetchRequest alloc] init];
-    [fetchCalendar setEntity:[NSEntityDescription entityForName:@"GtfsCalendar" inManagedObjectContext:managedObjectContext]];
-    NSArray* arrayCalendar = [managedObjectContext executeFetchRequest:fetchCalendar error:nil];
     
     bool test1 = false;
     bool test2 = false;
     bool test3 = false;
+    
+    NSFetchRequest * fetchCalendar = [[NSFetchRequest alloc] init];
+    [fetchCalendar setEntity:[NSEntityDescription entityForName:@"GtfsCalendar" inManagedObjectContext:managedObjectContext]];
+    NSArray* arrayCalendar = [managedObjectContext executeFetchRequest:fetchCalendar error:nil];
+    
     for (GtfsCalendar* calendar in arrayCalendar) {
         if ([calendar.serviceID isEqualToString:@"WE_20121001"]) {
             test1 = (calendar.monday.integerValue == 0);
@@ -443,80 +487,93 @@
     STAssertTrue(test1, @"Calendar test1");
     STAssertTrue(test2, @"Calendar test2");
     STAssertTrue(test3, @"Calendar test3");
+}
+
+- (void)testGtfsCalendarDatesDataLoadAndParsing {
+    [gtfsParser requestCalendarDatesDataFromServer];
+    [self someMethodToWaitForResult];
+    // Retrieve all calendar entries from CoreData
+    NSFetchRequest * fetchCalendarDates = [[NSFetchRequest alloc] init];
+    [fetchCalendarDates setEntity:[NSEntityDescription entityForName:@"GtfsCalendarDates" inManagedObjectContext:managedObjectContext]];
+    NSArray* arrayCalendarDates = [managedObjectContext executeFetchRequest:fetchCalendarDates error:nil];
+    
+    bool test1 = false;
+    bool test2 = false;
+    bool test3 = false;
+    bool test4 = false;
+    bool test5 = false;
+    bool test6 = false;
+    for (GtfsCalendarDates* calendarDates in arrayCalendarDates) {
+        if ([calendarDates.serviceID isEqualToString:@"WE_20120701"]) {
+            NSDateFormatter *formtter = [[NSDateFormatter alloc] init];
+            [formtter setDateFormat:@"yyyyMMdd"];
+            NSDate *date = [formtter dateFromString:@"20120704"];
+            test1 = ([calendarDates.date isEqualToDate:date]);
+            test2 = ([calendarDates.exceptionType isEqualToString:@"1"]);
+        }
+        else if ([calendarDates.serviceID isEqualToString:@"SUNAB"]) {
+            NSDateFormatter *formtter = [[NSDateFormatter alloc] init];
+            [formtter setDateFormat:@"yyyyMMdd"];
+            NSDate *date = [formtter dateFromString:@"20121122"];
+            test3 = ([calendarDates.date isEqualToDate:date]);
+            test4 = ([calendarDates.exceptionType isEqualToString:@"1"]);
+        }
+        if ([calendarDates.serviceID isEqualToString:@"12SPNG-DBDB1-Weekday-01"]) {
+            NSDateFormatter *formtter = [[NSDateFormatter alloc] init];
+            [formtter setDateFormat:@"yyyyMMdd"];
+            NSDate *date = [formtter dateFromString:@"2012052"];
+            test5 = ([calendarDates.date isEqualToDate:date]);
+            test6 = ([calendarDates.exceptionType isEqualToString:@"2"]);
+        }
+    }
+    STAssertTrue(test1, @"Routes test1");
+    STAssertTrue(test2, @"Routes test2");
+    STAssertTrue(test3, @"Routes test3");
+    STAssertTrue(test4, @"Routes test4");
+    STAssertTrue(test5, @"Routes test5");
+    STAssertTrue(test6, @"Routes test6");
+    
+}
+
+
+- (void)testGtfsRoutesDataLoadAndParsing {
+    [gtfsParser requestRoutesDatafromServer];
+    [self someMethodToWaitForResult];
+    // Retrieve all calendar entries from CoreData
+    NSFetchRequest * fetchRoutes = [[NSFetchRequest alloc] init];
+    [fetchRoutes setEntity:[NSEntityDescription entityForName:@"GtfsRoutes" inManagedObjectContext:managedObjectContext]];
+    NSArray* arrayRoutes = [managedObjectContext executeFetchRequest:fetchRoutes error:nil];
+    
+    bool test1 = false;
+    bool test2 = false;
+    bool test3 = false;
+    bool test4 = false;
+    bool test5 = false;
+    bool test6 = false;
+    for (GtfsRoutes* routes in arrayRoutes) {
+        if ([routes.routeID isEqualToString:@"ct_bullet_20120701"]) {
+            test1 = ([routes.routeShortName isEqualToString:@""]);
+            test2 = ([routes.routeLongname isEqualToString:@"Bullet"]);
+        }
+        else if ([routes.routeID isEqualToString:@"03"]) {
+            test3 = ([routes.routeShortName isEqualToString:@""]);
+            test4 = ([routes.routeLongname isEqualToString:@"FREMONT - RICHMOND"]);
+        }
+        else if ([routes.routeID isEqualToString:@"7928"]) {
+            test5 = ([routes.routeShortName isEqualToString:@"1"]);
+            test6 = ([routes.routeLongname isEqualToString:@"CALIFORNIA"]);
+        }
+    }
+    STAssertTrue(test1, @"Routes test1");
+    STAssertTrue(test2, @"Routes test2");
+    STAssertTrue(test3, @"Routes test3");
+    STAssertTrue(test4, @"Routes test4");
+    STAssertTrue(test5, @"Routes test5");
+    STAssertTrue(test6, @"Routes test6");
     
 }
 
 // Test The GtfsCalendar Data Parsing and DB Insertion with some test data.
-- (void)testGtfsCalendarDataParsingAndDBInsertion{
-    NSString *strTitle = @"service_id,monday,tuesday,wednesday,thursday,friday,saturday,sunday,start_date,end_date";
-    NSString *strCalRow1 = @"ST_20120701,0,0,0,0,0,1,0,20120701,20120930";
-    NSString *strCalRow2 = @"WD_20120701,1,1,1,1,1,0,0,20120701,20120930";
-    NSString *strCalRow3 = @"WE_20120701,0,0,0,0,0,1,1,20120701,20120930";
-    NSString *strCalRow4 = @"WE_20121001,0,0,0,0,0,1,1,20121001,20131001";
-    
-    NSArray *arrCaltrainData = [NSArray arrayWithObjects:strTitle,strCalRow1,strCalRow3, nil];
-    NSArray *arrBartData = [NSArray arrayWithObjects:strTitle,strCalRow2,strCalRow4, nil];
-    NSArray *arrMuniData = [NSArray arrayWithObjects:strTitle,strCalRow1,strCalRow2, nil];
-    NSArray *arrAcTransitData = [NSArray arrayWithObjects:strTitle,strCalRow3,strCalRow4, nil];
-    NSDictionary *dictData = [NSDictionary dictionaryWithObjectsAndKeys:arrCaltrainData,@"1_calendar",arrBartData,@"2_calendar",arrMuniData,@"3_calendar",arrAcTransitData,@"4_calendar", nil];
-    NSDictionary *agencyDict = [NSDictionary dictionaryWithObjectsAndKeys:@"105",@"code",@"msg",@"Operation Completed Sucessfully",dictData,@"data", nil];
-    [gtfsParser parseAndStoreGtfsCalendarData:agencyDict];
-}
-
-// Test The GtfsCalendarDates Data Parsing and DB Insertion with some test data.
-- (void)testGtfsCalendarDatesParsingAndDBInsertion{
-    NSString *strTitle = @"service_id,date,exception_type";
-    NSString *strCalDatesRow1 = @"WE_20120701,20120704,1";
-    NSString *strCalDatesRow2 = @"WD_20120701,20120704,2";
-    NSString *strCalDatesRow3 = @"WD_20120701,20120903,2";
-    NSString *strCalDatesRow4 = @"WE_20120701,20120903,1";
-    NSString *strCalDatesRow5 = @"WE_20120701,20121122,1";
-    
-    NSArray *arrCaltrainData = [NSArray arrayWithObjects:strTitle,strCalDatesRow1,strCalDatesRow3, nil];
-    NSArray *arrBartData = [NSArray arrayWithObjects:strTitle,strCalDatesRow2,strCalDatesRow4,strCalDatesRow5, nil];
-    NSArray *arrMuniData = [NSArray arrayWithObjects:strTitle,strCalDatesRow1,strCalDatesRow2, nil];
-    NSArray *arrAcTransitData = [NSArray arrayWithObjects:strTitle,strCalDatesRow3,strCalDatesRow4,strCalDatesRow5, nil];
-    NSDictionary *dictData = [NSDictionary dictionaryWithObjectsAndKeys:arrCaltrainData,@"1_calendar_dates",arrBartData,@"2_calendar_dates",arrMuniData,@"3_calendar_dates",arrAcTransitData,@"4_calendar_dates", nil];
-    NSDictionary *agencyDict = [NSDictionary dictionaryWithObjectsAndKeys:@"105",@"code",@"msg",@"Operation Completed Sucessfully",dictData,@"data", nil];
-    [gtfsParser parseAndStoreGtfsCalendarDatesData:agencyDict];
-}
-
-// Test The GtfsRoutes Data Parsing and DB Insertion with some test data.
-- (void)testGtfsRoutesDataParsingAndDBInsertion{
-    NSString *strTitle = @"route_id,route_short_name,route_long_name,route_desc,route_type";
-    NSString *strRoutesRow1 = @"ct_bullet_20120701,,Bullet,,";
-    NSString *strRoutesRow2 = @"ct_limited_20120701,,Limited,,2";
-    NSString *strRoutesRow3 = @"ct_local_20120701,,Local,,2";
-    NSString *strRoutesRow4 = @"ct_bullet_20121001,,Bullet,,2";
-    NSString *strRoutesRow5 = @"ct_limited_20121001,,Limited,,2";
-    
-    NSArray *arrCaltrainData = [NSArray arrayWithObjects:strTitle,strRoutesRow1,strRoutesRow3, nil];
-    NSArray *arrBartData = [NSArray arrayWithObjects:strTitle,strRoutesRow2,strRoutesRow4,strRoutesRow5, nil];
-    NSArray *arrMuniData = [NSArray arrayWithObjects:strTitle,strRoutesRow1,strRoutesRow2, nil];
-    NSArray *arrAcTransitData = [NSArray arrayWithObjects:strTitle,strRoutesRow3,strRoutesRow4,strRoutesRow5, nil];
-    NSDictionary *dictData = [NSDictionary dictionaryWithObjectsAndKeys:arrCaltrainData,@"1_routes",arrBartData,@"2_routes",arrMuniData,@"3_routes",arrAcTransitData,@"4_routes", nil];
-    NSDictionary *agencyDict = [NSDictionary dictionaryWithObjectsAndKeys:@"105",@"code",@"msg",@"Operation Completed Sucessfully",dictData,@"data", nil];
-    [gtfsParser parseAndStoreGtfsRoutesData:agencyDict];
-}
-
-// Test The GtfsStops Data Parsing and DB Insertion with some test data.
-- (void)testGtfsStopsDataParsingAndDBInsertion{
-    NSString *strTitle = @"stop_id,stop_name,stop_desc,stop_lat,stop_lon,zone_id";
-    NSString *strStopsRow1 = @"22nd Street Caltrain,22nd Street Caltrain Station,1149 22nd Street-San Francisco,37.757674,-122.392636,1";
-    NSString *strStopsRow2 = @"Atherton Caltrain,Atherton Caltrain Station,1 Dinkelspiel Station Lane- Atherton,37.464349,-122.198106,3";
-    NSString *strStopsRow3 = @"Bayshore Caltrain,Bayshore Caltrain Station,400 Tunnel Avenue-San Francisco,37.709544,-122.401318,1";
-    NSString *strStopsRow4 = @"Belmont Caltrain,Belmont Caltrain Station,995 El Camino Real- Belmont,37.520504,-122.276075,2";
-    NSString *strStopsRow5 = @"Blossom Hill Caltrain,Blossom Hill Caltrain Station,5560 Monterey Hwy.-San Jose,37.252801,-121.797369,5";
-    
-    NSArray *arrCaltrainData = [NSArray arrayWithObjects:strTitle,strStopsRow1,strStopsRow3, nil];
-    NSArray *arrBartData = [NSArray arrayWithObjects:strTitle,strStopsRow2,strStopsRow4,strStopsRow5, nil];
-    NSArray *arrMuniData = [NSArray arrayWithObjects:strTitle,strStopsRow1,strStopsRow2, nil];
-    NSArray *arrAcTransitData = [NSArray arrayWithObjects:strTitle,strStopsRow4,strStopsRow5,strStopsRow3, nil];
-    NSDictionary *dictData = [NSDictionary dictionaryWithObjectsAndKeys:arrCaltrainData,@"1_stops",arrBartData,@"2_stops",arrMuniData,@"3_stops",arrAcTransitData,@"4_stops", nil];
-    NSDictionary *agencyDict = [NSDictionary dictionaryWithObjectsAndKeys:@"105",@"code",@"msg",@"Operation Completed Sucessfully",dictData,@"data", nil];
-    [gtfsParser parseAndStoreGtfsStopsData:agencyDict];
-}
-
 // TODO: Need to load proper Gtfs StopTimes Data and then test result of generateNewItineraryByRemovingConflictLegs method.
 
 - (void)testgenerateNewItineraryByRemovingConflictLegs{
@@ -650,7 +707,7 @@
     }
 }
 
-- (void) testRealTime{
+- (void)testRealTime{
     NSDate* date11 = [dateFormatter dateFromString:@"Feb 5, 2013 5:00 PM"];
     NSDate* date12 = [dateFormatter dateFromString:@"Feb 5, 2013 5:05 PM"];
     NSDate* date13 = [dateFormatter dateFromString:@"Feb 5, 2013 5:05 PM"];

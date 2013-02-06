@@ -609,6 +609,8 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     
     double timeDiffInMilliSeconds = millisecondsRealTime - millisecondsSchedule;
     int timeDiffInMinutes = timeDiffInMilliSeconds/(60*1000);
+    if(timeDiffInMilliSeconds < 0)
+        timeDiffInMilliSeconds = -timeDiffInMilliSeconds;
     return timeDiffInMinutes;
 }
 
