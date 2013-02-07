@@ -51,6 +51,8 @@
                                     managedObjectModel:mom
                                               delegate:nil];
 
+    [rkMOS deletePersistantStoreUsingSeedDatabaseName:nil];  // Make sure data store is cleared to start with
+    
     // Set up the ManagedObjectContect and RKObjectManager
     rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TEST_TRIP_PROCESS_URL];
     [rkPlanMgr setObjectStore:rkMOS];
@@ -62,7 +64,7 @@
         NIMLOG_AUTOTEST(@"managedObjectContext Store URL = %@", [[[[managedObjectContext persistentStoreCoordinator] persistentStores] objectAtIndex:0] URL]);
     }
     
-    rkTpClient = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+    rkTpClient = [RKClient clientWithBaseURL:TEST_TRIP_PROCESS_URL];
 
     // Set up the planStore
     planStore = [[PlanStore alloc] initWithManagedObjectContext:managedObjectContext rkPlanMgr:rkPlanMgr];
@@ -392,6 +394,7 @@
     
     // Delete Core Data persistent store
     [rkMOS deletePersistantStoreUsingSeedDatabaseName:nil];
+    NIMLOG_AUTOTEST(@"tearDown: PersistentStore cleared");
     
     [super tearDown];
 }
@@ -399,8 +402,9 @@
 // Methods wait until Error or Reply arrives from TP.
 -(void)someMethodToWaitForResult
 {
-    while (!gtfsParser.receivedResponse)
+    while (!gtfsParser.loadedInitialData) {
         [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+    }
 }
 
 
@@ -500,38 +504,31 @@
     bool test1 = false;
     bool test2 = false;
     bool test3 = false;
-    bool test4 = false;
-    bool test5 = false;
-    bool test6 = false;
+    NSDateFormatter *formtter = [[NSDateFormatter alloc] init];
+    [formtter setDateFormat:@"yyyyMMdd"];
+    NSDate *targetDate1 = [formtter dateFromString:@"20120704"];
+    NSDate *targetDate2 = [formtter dateFromString:@"20121122"];
+    NSDate *targetDate3 = [formtter dateFromString:@"20120528"];
     for (GtfsCalendarDates* calendarDates in arrayCalendarDates) {
-        if ([calendarDates.serviceID isEqualToString:@"WE_20120701"]) {
-            NSDateFormatter *formtter = [[NSDateFormatter alloc] init];
-            [formtter setDateFormat:@"yyyyMMdd"];
-            NSDate *date = [formtter dateFromString:@"20120704"];
-            test1 = ([calendarDates.date isEqualToDate:date]);
-            test2 = ([calendarDates.exceptionType isEqualToString:@"1"]);
+        if ([calendarDates.serviceID isEqualToString:@"WE_20120701"] &&
+            [calendarDates.date isEqualToDate:targetDate1] &&
+            [calendarDates.exceptionType isEqualToString:@"1"]){
+            test1 = true;
         }
-        else if ([calendarDates.serviceID isEqualToString:@"SUNAB"]) {
-            NSDateFormatter *formtter = [[NSDateFormatter alloc] init];
-            [formtter setDateFormat:@"yyyyMMdd"];
-            NSDate *date = [formtter dateFromString:@"20121122"];
-            test3 = ([calendarDates.date isEqualToDate:date]);
-            test4 = ([calendarDates.exceptionType isEqualToString:@"1"]);
+        else if ([calendarDates.serviceID isEqualToString:@"SUNAB"] &&
+                 [calendarDates.date isEqualToDate:targetDate2] &&
+                 [calendarDates.exceptionType isEqualToString:@"1"]) {
+            test2 = true;
         }
-        if ([calendarDates.serviceID isEqualToString:@"12SPNG-DBDB1-Weekday-01"]) {
-            NSDateFormatter *formtter = [[NSDateFormatter alloc] init];
-            [formtter setDateFormat:@"yyyyMMdd"];
-            NSDate *date = [formtter dateFromString:@"2012052"];
-            test5 = ([calendarDates.date isEqualToDate:date]);
-            test6 = ([calendarDates.exceptionType isEqualToString:@"2"]);
+        if ([calendarDates.serviceID isEqualToString:@"12SPNG-DBDB1-Weekday-01"] &&
+            [calendarDates.date isEqualToDate:targetDate3] &&
+            [calendarDates.exceptionType isEqualToString:@"2"]) {
+            test3 = true;
         }
     }
-    STAssertTrue(test1, @"Routes test1");
-    STAssertTrue(test2, @"Routes test2");
-    STAssertTrue(test3, @"Routes test3");
-    STAssertTrue(test4, @"Routes test4");
-    STAssertTrue(test5, @"Routes test5");
-    STAssertTrue(test6, @"Routes test6");
+    STAssertTrue(test1, @"");
+    STAssertTrue(test2, @"");
+    STAssertTrue(test3, @"");
     
 }
 

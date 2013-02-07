@@ -67,11 +67,6 @@ static TransitCalendar * transitCalendarSingleton;
         // // See if it is the KeyObjectStore
         KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
         [nc_AppDelegate sharedInstance].calendarByDateByAgency = [keyObjectStore objectForKey:TR_CALENDAR_BY_DATE_BY_AGENCY ];
-        // if (!calendarByDateByAgency) {
-        // // use stub function to get values -- change this once have server call
-        // [self performSelector:@selector(calendarByDate) withObject:nil afterDelay:0.5];
-        // //[keyObjectStore setObject:calendarByDateByAgency forKey:TR_CALENDAR_BY_DATE_BY_AGENCY];
-        // }
     }
     return [nc_AppDelegate sharedInstance].calendarByDateByAgency;
 }

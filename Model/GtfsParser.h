@@ -32,7 +32,7 @@
 @property (strong, nonatomic) NSString *strTripsURL;
 @property (strong, nonatomic) NSString *strStopTimesURL;
 @property (strong, nonatomic) Plan *tempPlan;
-@property (nonatomic) BOOL receivedResponse;
+@property (nonatomic) BOOL loadedInitialData;  // True if Agency data request was made and data is now loaded all the way through routes
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkTpClient:(RKClient *)rkClient;
 
@@ -52,7 +52,7 @@
 - (void) parseAndStoreGtfsStopsData:(NSDictionary *)dictFileData;
 
 // Parse the Gtfs Trips Data and store to database.
-- (void) parseAndStroreGtfsTripsData:(NSDictionary *)dictFileData;
+- (void) parseAndStroreGtfsTripsData:(NSDictionary *)dictFileData RequestUrl:(NSString *)strRequestUrl;
 
 // Parse the Gtfs StopTimes Data and store to database.
 - (void) parseAndStoreGtfsStopTimesData:(NSDictionary *)dictFileData RequestUrl:(NSString *) strResourcePath;

@@ -28,7 +28,7 @@
 @synthesize strTripsURL;
 @synthesize strStopTimesURL;
 @synthesize tempPlan;
-@synthesize receivedResponse;
+@synthesize loadedInitialData;
 
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkTpClient:(RKClient *)rkClient
@@ -551,7 +551,6 @@
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response
 {
-    receivedResponse = YES;
     NSString *strRequestURL = request.resourcePath;
     @try {
         if ([request isGET]) {
@@ -563,11 +562,11 @@
                     NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
                     NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
                     if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
-                        [self performSelector:@selector(parseAndStroreGtfsAgencyData:) withObject:res];
-                        [self performSelector:@selector(requestCalendarDatafromServer) withObject:nil];
+                        [self parseAndStroreGtfsAgencyData:res];
+                        [self requestCalendarDatafromServer];
                     }
                     else{
-                        [self performSelector:@selector(requestAgencyDataFromServer) withObject:nil];
+                        [self requestAgencyDataFromServer];
                     }
                 }
                 else if ([strRequestURL isEqualToString:strCalendarDatesURL]) {
@@ -575,11 +574,11 @@
                     NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
                     NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
                     if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
-                        [self performSelector:@selector(parseAndStoreGtfsCalendarDatesData:) withObject:res];
-                        [self performSelector:@selector(requestRoutesDatafromServer) withObject:nil];
+                        [self parseAndStoreGtfsCalendarDatesData:res];
+                        [self requestRoutesDatafromServer];
                     }
                     else{
-                        [self performSelector:@selector(requestCalendarDatesDataFromServer) withObject:nil];
+                        [self requestCalendarDatesDataFromServer];
                     }
                 }
                 else if ([strRequestURL isEqualToString:strCalendarURL]) {
@@ -588,11 +587,11 @@
                     NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
                     NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
                     if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
-                        [self performSelector:@selector(parseAndStoreGtfsCalendarData:) withObject:res];
-                        [self performSelector:@selector(requestCalendarDatesDataFromServer) withObject:nil];
+                        [self parseAndStoreGtfsCalendarData:res];
+                        [self requestCalendarDatesDataFromServer];
                     }
                     else{
-                        [self performSelector:@selector(requestCalendarDatafromServer) withObject:nil];
+                        [self requestCalendarDatafromServer];
                     }
                 }
                 else if ([strRequestURL isEqualToString:strRoutesURL]) {
@@ -600,11 +599,11 @@
                     NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
                     NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
                     if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
-                        [self performSelector:@selector(parseAndStoreGtfsRoutesData:) withObject:res];
-                        [self performSelector:@selector(requestStopsDataFromServer) withObject:nil];
+                        [self parseAndStoreGtfsRoutesData:res];
+                        [self requestStopsDataFromServer];
                     }
                     else{
-                        [self performSelector:@selector(requestRoutesDatafromServer) withObject:nil];
+                        [self requestRoutesDatafromServer];
                     }
                 }
                 else if ([strRequestURL isEqualToString:strStopsURL]) {
@@ -613,10 +612,11 @@
                     NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
                     NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
                     if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
-                        [self performSelector:@selector(parseAndStoreGtfsStopsData:) withObject:res];
+                        [self parseAndStoreGtfsStopsData:res];
+                        loadedInitialData = true;  // mark that we are done with our initial data load
                     }
                     else{
-                        [self performSelector:@selector(requestStopsDataFromServer) withObject:nil];
+                        [self requestStopsDataFromServer];
                     }
                 }
                 else if ([strRequestURL isEqualToString:strTripsURL]) {
