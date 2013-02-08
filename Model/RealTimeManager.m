@@ -65,10 +65,12 @@ static RealTimeManager* realTimeManager;
             }
         }
     }
-    NSString *str = [arrLegs JSONString];
-    RKParams *requestParameter = [RKParams params];
-    [requestParameter setValue:str forParam:LEGS];
-    [self.rkTpClient post:LIVE_FEEDS_BY_LEGS params:requestParameter delegate:self];
+    if([arrLegs count] > 0){
+        NSString *strRequestString = [arrLegs JSONString];
+        RKParams *requestParameter = [RKParams params];
+        [requestParameter setValue:strRequestString forParam:LEGS];
+        [self.rkTpClient post:LIVE_FEEDS_BY_LEGS params:requestParameter delegate:self];
+    }
 }
 
 #pragma mark RKResponse Delegate method
@@ -92,10 +94,13 @@ static RealTimeManager* realTimeManager;
     @try {
         for(int i=0;i<[[plan sortedItineraries] count];i++){
             Itinerary *iti = [[plan sortedItineraries]  objectAtIndex:i];
+            iti.itinArrivalFlag = nil;
             if(iti.isRealTimeItinerary){
                 for(int j=0;j<[[iti sortedLegs] count];j++){
                     Leg *leg = [[iti sortedLegs] objectAtIndex:j];
                     leg.prediction = nil;
+                    leg.arrivalFlag = nil;
+                    leg.timeDiffInMins = nil;
                 }
                 [plan deleteItinerary:iti];
             }
@@ -112,7 +117,7 @@ static RealTimeManager* realTimeManager;
                     Itinerary *itinerary = [[plan sortedItineraries] objectAtIndex:i];
                     itinerary.sortedLegs = nil;
                 }
-//                //[self removeDuplicateItineraries];
+                [self hideItineraryIfNeeded:[plan sortedItineraries]];
                 [[nc_AppDelegate sharedInstance].planStore.routeOptionsVC reloadData:plan];
                 [routeDetailVC ReloadLegWithNewData];
             }
@@ -144,7 +149,7 @@ static RealTimeManager* realTimeManager;
     }
 }
 
-- (NSArray *) hideItineraryIfNeeded:(NSArray *)arrItinerary{
+- (void) hideItineraryIfNeeded:(NSArray *)arrItinerary{
     NSMutableArray *arrItineraries = [[NSMutableArray alloc] init];
     for(int i=0;i<[arrItinerary count];i++){
         Itinerary *itinerary = [arrItinerary objectAtIndex:i];
@@ -152,7 +157,7 @@ static RealTimeManager* realTimeManager;
             [arrItineraries addObject:itinerary];
             
     }
-    return arrItineraries;
+    [plan setSortedItineraries:arrItinerary];
 }
 
 

@@ -63,5 +63,5 @@
 
 - (void) removeDuplicateItineraries;
 
-- (NSArray *) hideItineraryIfNeeded:(NSArray *)arrItinerary;
+- (void) hideItineraryIfNeeded:(NSArray *)arrItinerary;
 @end

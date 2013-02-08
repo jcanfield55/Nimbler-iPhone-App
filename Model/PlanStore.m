@@ -122,6 +122,8 @@
             [timeFormatter setDateStyle:NSDateFormatterNoStyle];
         }
         NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+        [params setObject:[[NSUserDefaults standardUserDefaults]objectForKey:DEVICE_TOKEN] forKey:DEVICE_TOKEN];
+        
         if([[parameters fromLocation] latLngPairStr]){
             [params setObject:[[parameters fromLocation] latLngPairStr] forKey:FROM_PLACE];
         }
@@ -195,8 +197,6 @@
         NIMLOG_DEBUG1(@"Submitted Request ID=%@",requestID);
          NSString *strPlanGenerateURL = [NSString stringWithFormat:@"%@?id=%@",PLAN_GENERATE_URL,requestID];
         
-        //[params setObject:requestID forKey:REQUEST_ID];
-        //planURLResource = requestID;
         [parametersByPlanURLResource setObject:parameters forKey:strPlanGenerateURL];
         Plan *plan;
         

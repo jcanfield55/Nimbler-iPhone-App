@@ -10,7 +10,7 @@
 
 #endif
 
-#define AUTOMATED_TESTING_SKIP_NCAPPDELEGATE 1  // if 1, skips nc_AppDelegate didFinishLaunchingWithOptions so we get a clean tests run
+#define AUTOMATED_TESTING_SKIP_NCAPPDELEGATE 0  // if 1, skips nc_AppDelegate didFinishLaunchingWithOptions so we get a clean tests run
 
 #define TRIP_GENERATE_URL     @"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/"
 //#define TRIP_GENERATE_URL @"http://ec2-23-22-169-158.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"
@@ -27,7 +27,7 @@
 #define COREDATA_DB_FILENAME    @"store101.data"
 #define TEST_COREDATA_DB_FILENAME  @"testDataStore.data" // For automated tests
 
-//#define TRIP_PROCESS_URL      @"http://192.168.3.196:6060/TPServer/ws/"
+//#define TRIP_PROCESS_URL      @"http://192.168.2.196:6060/TPServer/ws/"
 
 #define TWITTER_SERARCH_URL    @"https://twitter.com/#!/search/realtime/TRAIN%20from%3Acaltrain%20OR%20from%3Acaltrain_news"
 #define CALTRAIN_TWITTER_URL   @"https://twitter.com/#!/search/from%3Acaltrain%20OR%20from%3Acaltrain_news"
@@ -422,8 +422,18 @@
 #define GTFS_TRIPS @"gtfs/trips"
 #define AGENCY_ID_AND_ROUTE_ID @"agencyAndRouteIds"
 
+#define GTFS_AGENCY_COUNTER    @"gtfsAgencyCounter"
+#define GTFS_CALENDAR_COUNTER  @"gtfsCalendarCounter"
+#define GTFS_CALENDAR_DATES_COUNTER @"gtfsCalendarDatesCounter"
+#define GTFS_ROUTES_COUNTER @"gtfsRoutesCounter"
+#define GTFS_STOPS_COUNTER @"gtfsStopsCounter"
+#define GTFS_TRIPS_COUNTER @"gtfsTripsCounter"
+#define GTFS_STOPTIMES_COUNTER @"gtfsStopTimesCounter"
+
+
 #define TRIP_TIME_PLUS_INTERVAL  4*60*60
 #define ITINERARY_GANERATION_TIMEOUT 5
 #define REALTIME_BUFFER_FOR_DELAY  15*60
 #define REALTIME_BUFFER_FOR_EARLY   5*60
+
 

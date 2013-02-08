@@ -34,6 +34,8 @@
 @property (strong, nonatomic) Plan *tempPlan;
 @property (nonatomic) BOOL loadedInitialData;  // True if Agency data request was made and data is now loaded all the way through routes
 
+@property (nonatomic, strong) NSMutableDictionary *dictServerCallSoFar; // Contain count of how many times server is call so far for each gtfs data like GtfsAgency,GtfsCalendar,GtfsCalendarDates etc.if it is more than 3 then we will not request the server.
+
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkTpClient:(RKClient *)rkClient;
 
 // Parse the Gtfs Agency Data and store to database.

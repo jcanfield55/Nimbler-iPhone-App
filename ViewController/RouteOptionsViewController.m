@@ -16,7 +16,6 @@
 #import "nc_AppDelegate.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "Itinerary.h"
-#import "RealTimeManager.h"
 
 #define IDENTIFIER_CELL         @"UIRouteOptionsViewCell"
 
@@ -111,15 +110,18 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     
     for(int i=0;i<[[plan sortedItineraries] count];i++){
         Itinerary *iti = [[plan sortedItineraries]  objectAtIndex:i];
+        iti.itinArrivalFlag = nil;
         if(iti.isRealTimeItinerary){
             for(int j=0;j<[[iti sortedLegs] count];j++){
                 Leg *leg = [[iti sortedLegs] objectAtIndex:j];
                 leg.prediction = nil;
+                leg.arrivalFlag = nil;
+                leg.timeDiffInMins = nil;
             }
             [plan deleteItinerary:iti];
         }
     }
-        
+    
     CATransition *animation = [CATransition animation];
     [animation setDuration:0.3];
     [animation setType:kCATransitionPush];
@@ -134,9 +136,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    RealTimeManager *realTimeManager = [RealTimeManager realTimeManager];
-    NSArray *arrItineraries = [realTimeManager hideItineraryIfNeeded:[plan sortedItineraries]];
-    return [arrItineraries count];
+    return [[plan sortedItineraries] count];
 }
 
 // Only usable for >= iOS6.  Returns NSMutableAttributedString with Caltrain train #s emphasized.  
@@ -200,9 +200,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
          cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.textLabel.numberOfLines = 2;
         // Get the requested itinerary
-        RealTimeManager *realTimeManager = [RealTimeManager realTimeManager];
-        NSArray *arrItineraries = [realTimeManager hideItineraryIfNeeded:[plan sortedItineraries]];
-        Itinerary *itin = [arrItineraries objectAtIndex:[indexPath row]];
+        Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
         
         // Set title
         [[cell textLabel] setFont:[UIFont MEDIUM_BOLD_FONT]];
@@ -210,13 +208,13 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         NSString *timeDiffFirstLeg;
         NSString *timeDiffLastLeg;
         NSString *titleText;
+        Leg *firstLeg;
         if([itin.sortedLegs count] > 0){
-            Leg *leg = [itin.sortedLegs objectAtIndex:0];
-            timeDiffFirstLeg = leg.timeDiffInMins;
+            firstLeg = [itin.sortedLegs objectAtIndex:0];
+            timeDiffFirstLeg = firstLeg.timeDiffInMins;
         }
-//        Leg *leg = [itin.sortedLegs objectAtIndex:[itin.sortedLegs count]-1];
-        //timeDiffLastLeg = leg.timeDiffInMins;
-        timeDiffLastLeg = [[[itin sortedLegs] lastObject] timeDiffInMins];
+        Leg *lastLeg = [[itin sortedLegs] lastObject];
+        timeDiffLastLeg = lastLeg.timeDiffInMins;
         UIView *viewCellBackground = [[UIView alloc] init];
         [viewCellBackground setBackgroundColor:[UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW]];
         cell.backgroundView = viewCellBackground;
@@ -233,26 +231,34 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                 if([itin.itinArrivalFlag intValue] == ON_TIME) {
                     titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"On Time"];
                 }  else if([itin.itinArrivalFlag intValue] == DELAYED) {
-                    NSDate* realTimeArrivalTime;
-                    if(timeDiffLastLeg){
-                       realTimeArrivalTime = [[itin endTimeOfLastLeg]
-                                                       dateByAddingTimeInterval:[timeDiffLastLeg floatValue]*60.0];
-                    }
-                    else{
-                        realTimeArrivalTime = [itin endTimeOfLastLeg]
-                                               ;
-                    }
-                    NSString* durationStr = durationString(1000.0 * [realTimeArrivalTime
-                                                                     timeIntervalSinceDate:[itin startTimeOfFirstLeg]]);
+                    NSDate *realStartTime;
+                    NSDate *realEndTime;
+                    if(timeDiffFirstLeg)
+                        realStartTime = [[itin startTimeOfFirstLeg]
+                                               dateByAddingTimeInterval:[timeDiffFirstLeg floatValue]*60.0];
+                    else
+                        realStartTime = [itin startTimeOfFirstLeg]
+                        ;
+                    
+                    if(timeDiffLastLeg)
+                        realEndTime = [[itin endTimeOfLastLeg]
+                                         dateByAddingTimeInterval:[timeDiffLastLeg floatValue]*60.0];
+                    else
+                        realEndTime = [itin endTimeOfLastLeg]
+                        ;
+                    
+                        
+                    NSString* durationStr = durationString(1000.0 * [realEndTime
+                                                                     timeIntervalSinceDate:realStartTime]);
                     titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
-                                           superShortTimeStringForDate([itin startTimeOfFirstLeg]),
-                                           superShortTimeStringForDate(realTimeArrivalTime),
+                                 superShortTimeStringForDate(realStartTime),
+                                           superShortTimeStringForDate(realEndTime),
                                            durationStr];
                     cell.textLabel.text = titleText;
                     titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"Delayed"];
                 } else if([itin.itinArrivalFlag intValue] == EARLY) {
                      NSDate* realTimeArrivalTime;
-                    if(timeDiffLastLeg){
+                    if(timeDiffFirstLeg){
                         realTimeArrivalTime = [[itin startTimeOfFirstLeg]
                                                dateByAddingTimeInterval:[timeDiffFirstLeg floatValue]*60.0];
                     }
@@ -302,9 +308,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 - (CGFloat)tableView:(UITableView *)aTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
     @try {
-        RealTimeManager *realTimeManager = [RealTimeManager realTimeManager];
-        NSArray *arrItineraries = [realTimeManager hideItineraryIfNeeded:[plan sortedItineraries]];
-    Itinerary *itin = [arrItineraries objectAtIndex:[indexPath row]];
+    Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
     
     NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
                                                      timeIntervalSinceDate:[itin startTimeOfFirstLeg]]);
@@ -354,9 +358,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         if (!routeDetailsVC) {
             routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
         }
-        RealTimeManager *realTimeManager = [RealTimeManager realTimeManager];
-        NSArray *arrItineraries = [realTimeManager hideItineraryIfNeeded:[plan sortedItineraries]];
-        itinerary = [arrItineraries objectAtIndex:[indexPath row]];
+        itinerary = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
         itinararyId =[itinerary itinId];
 
         logEvent(FLURRY_ROUTE_SELECTED,

@@ -29,6 +29,7 @@
 @synthesize strStopTimesURL;
 @synthesize tempPlan;
 @synthesize loadedInitialData;
+@synthesize dictServerCallSoFar;
 
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkTpClient:(RKClient *)rkClient
@@ -37,6 +38,7 @@
     if (self) {
         self.managedObjectContext = moc;
         self.rkTpClient = rkClient;
+        dictServerCallSoFar = [[NSMutableDictionary alloc] init];
     }
     
     return self;
@@ -438,8 +440,10 @@
 
 // Request The Server For Agency Data.
 -(void)requestAgencyDataFromServer{
+    int serverCallSoFar = [[dictServerCallSoFar objectForKey:GTFS_AGENCY_COUNTER] intValue];
+    [dictServerCallSoFar setObject:[NSNumber numberWithInt:serverCallSoFar + 1] forKey:GTFS_AGENCY_COUNTER];
     @try {
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"agency",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"agency",ENTITY,@"1,2,3,4,5,6,7,8",AGENCY_IDS, nil];
         NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
         strAgenciesURL = request;
         NIMLOG_OBJECT1(@"Get Agencies: %@", request);
@@ -452,8 +456,11 @@
 
 // Request The Server For Calendar Dates.
 -(void)requestCalendarDatesDataFromServer{
+    int serverCallSoFar = [[dictServerCallSoFar objectForKey:GTFS_CALENDAR_DATES_COUNTER] intValue];
+    serverCallSoFar = serverCallSoFar + 1;
+    [dictServerCallSoFar setObject:[NSNumber numberWithInt:serverCallSoFar] forKey:GTFS_CALENDAR_DATES_COUNTER];
     @try {
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"calendar_dates",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"calendar_dates",ENTITY,@"1,2,3,4,5,6,7,8",AGENCY_IDS, nil];
         NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
         strCalendarDatesURL = request;
         NIMLOG_OBJECT1(@"Get Calendar Dates: %@", request);
@@ -466,8 +473,11 @@
 
 // Request The Server For Calendar Data.
 -(void)requestCalendarDatafromServer{
+    int serverCallSoFar = [[dictServerCallSoFar objectForKey:GTFS_CALENDAR_COUNTER] intValue];
+    serverCallSoFar = serverCallSoFar + 1;
+    [dictServerCallSoFar setObject:[NSNumber numberWithInt:serverCallSoFar] forKey:GTFS_CALENDAR_COUNTER];
     @try {
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"calendar",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"calendar",ENTITY,@"1,2,3,4,5,6,7,8",AGENCY_IDS, nil];
         NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
         strCalendarURL = request;
         NIMLOG_OBJECT1(@"Get Calendar: %@", request);
@@ -480,8 +490,11 @@
 
 // Request The Server For Routes Data.
 -(void)requestRoutesDatafromServer{
+    int serverCallSoFar = [[dictServerCallSoFar objectForKey:GTFS_ROUTES_COUNTER] intValue];
+    serverCallSoFar = serverCallSoFar + 1;
+    [dictServerCallSoFar setObject:[NSNumber numberWithInt:serverCallSoFar] forKey:GTFS_ROUTES_COUNTER];
     @try {
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"routes",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"routes",ENTITY,@"1,2,3,4,5,6,7,8",AGENCY_IDS, nil];
         NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
         strRoutesURL = request;
         NIMLOG_OBJECT1(@"Get Routes: %@", request);
@@ -494,8 +507,11 @@
 
 // Request The Server For Stops Data.
 -(void)requestStopsDataFromServer{
+    int serverCallSoFar = [[dictServerCallSoFar objectForKey:GTFS_STOPS_COUNTER] intValue];
+    serverCallSoFar = serverCallSoFar + 1;
+    [dictServerCallSoFar setObject:[NSNumber numberWithInt:serverCallSoFar] forKey:GTFS_STOPS_COUNTER];
     @try {
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"stops",ENTITY,@"1,2,3,4",AGENCY_IDS, nil];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"stops",ENTITY,@"1,2,3,4,5,6,7,8",AGENCY_IDS, nil];
         NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
         strStopsURL = request;
         NIMLOG_OBJECT1(@"Get Stops: %@", request);
@@ -513,6 +529,9 @@
         [strRequestString deleteCharactersInRange:NSMakeRange(nLength-1, 1)];
     }
     @try {
+        int serverCallSoFar = [[dictServerCallSoFar objectForKey:GTFS_TRIPS_COUNTER] intValue];
+        serverCallSoFar = serverCallSoFar + 1;
+        [dictServerCallSoFar setObject:[NSNumber numberWithInt:serverCallSoFar] forKey:GTFS_TRIPS_COUNTER];
         NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:strRequestString,AGENCY_ID_AND_ROUTE_ID, nil];
         NSString *request = [GTFS_TRIPS appendQueryParams:dictParameters];
         strTripsURL = request;
@@ -532,11 +551,6 @@
         [strRequestString deleteCharactersInRange:NSMakeRange(nLength-1, 1)];
     }
     @try {
-//        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:strRequestString,AGENCY_IDS, nil];
-//        NSString *request = [GTFS_STOP_TIMES appendQueryParams:dictParameters];
-//        strStopTimesURL = request;
-//        NIMLOG_OBJECT1(@"get Gtfs Stop Times: %@", request);
-//        [self.rkTpClient  get:request delegate:self];
         RKParams *requestParameter = [RKParams params];
         [requestParameter setValue:strRequestString forParam:AGENCY_IDS];
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
@@ -564,9 +578,14 @@
                     if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
                         [self parseAndStroreGtfsAgencyData:res];
                         [self requestCalendarDatafromServer];
+                        [dictServerCallSoFar setObject:[NSNumber numberWithInt:0] forKey:GTFS_AGENCY_COUNTER];
                     }
                     else{
-                        [self requestAgencyDataFromServer];
+                        int serverCallSoFar = [[dictServerCallSoFar objectForKey:GTFS_AGENCY_COUNTER] intValue];
+                        if(serverCallSoFar < 3)
+                            [self requestAgencyDataFromServer];
+                        else
+                            logError(@"No results Back from Server for GtfsAgency request", [res objectForKey:@"msg"]);
                     }
                 }
                 else if ([strRequestURL isEqualToString:strCalendarDatesURL]) {
@@ -576,9 +595,14 @@
                     if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
                         [self parseAndStoreGtfsCalendarDatesData:res];
                         [self requestRoutesDatafromServer];
+                        [dictServerCallSoFar setObject:[NSNumber numberWithInt:0] forKey:GTFS_CALENDAR_DATES_COUNTER];
                     }
                     else{
-                        [self requestCalendarDatesDataFromServer];
+                        int serverCallSoFar = [[dictServerCallSoFar objectForKey:GTFS_CALENDAR_DATES_COUNTER] intValue];
+                        if(serverCallSoFar < 3)
+                            [self requestCalendarDatesDataFromServer];
+                        else
+                            logError(@"No results Back from Server for GtfsCalendarDates request",[res objectForKey:@"msg"]);
                     }
                 }
                 else if ([strRequestURL isEqualToString:strCalendarURL]) {
@@ -589,9 +613,14 @@
                     if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
                         [self parseAndStoreGtfsCalendarData:res];
                         [self requestCalendarDatesDataFromServer];
+                        [dictServerCallSoFar setObject:[NSNumber numberWithInt:0] forKey:GTFS_CALENDAR_COUNTER];
                     }
                     else{
-                        [self requestCalendarDatafromServer];
+                        int serverCallSoFar = [[dictServerCallSoFar objectForKey:GTFS_CALENDAR_COUNTER] intValue];
+                        if(serverCallSoFar < 3)
+                            [self requestCalendarDatafromServer];
+                        else
+                            logError(@"No results Back from Server for GtfsCalendar request", [res objectForKey:@"msg"]);
                     }
                 }
                 else if ([strRequestURL isEqualToString:strRoutesURL]) {
@@ -601,9 +630,14 @@
                     if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
                         [self parseAndStoreGtfsRoutesData:res];
                         [self requestStopsDataFromServer];
+                        [dictServerCallSoFar setObject:[NSNumber numberWithInt:0] forKey:GTFS_ROUTES_COUNTER];
                     }
                     else{
-                        [self requestRoutesDatafromServer];
+                        int serverCallSoFar = [[dictServerCallSoFar objectForKey:GTFS_ROUTES_COUNTER] intValue];
+                        if(serverCallSoFar < 3)
+                            [self requestRoutesDatafromServer];
+                        else
+                            logError(@"No results Back from Server for GtfsRoutes request", [res objectForKey:@"msg"]);
                     }
                 }
                 else if ([strRequestURL isEqualToString:strStopsURL]) {
@@ -614,9 +648,14 @@
                     if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
                         [self parseAndStoreGtfsStopsData:res];
                         loadedInitialData = true;  // mark that we are done with our initial data load
+                        [dictServerCallSoFar setObject:[NSNumber numberWithInt:0] forKey:GTFS_STOPS_COUNTER];
                     }
                     else{
-                        [self requestStopsDataFromServer];
+                        int serverCallSoFar = [[dictServerCallSoFar objectForKey:GTFS_STOPS_COUNTER] intValue];
+                        if(serverCallSoFar < 3)
+                            [self requestStopsDataFromServer];
+                        else
+                            logError(@"No results Back from Server for GtfsStops request", [res objectForKey:@"msg"]);
                     }
                 }
                 else if ([strRequestURL isEqualToString:strTripsURL]) {
@@ -625,12 +664,15 @@
                     NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
                     if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
                         [self parseAndStroreGtfsTripsData:res RequestUrl:strRequestURL];
+                        [dictServerCallSoFar setObject:[NSNumber numberWithInt:0] forKey:GTFS_TRIPS_COUNTER];
                     }
                     else{
-                        [self generateGtfsTripsRequestStringUsingPlan:tempPlan];
+                        int serverCallSoFar = [[dictServerCallSoFar objectForKey:GTFS_STOPS_COUNTER] intValue];
+                        if(serverCallSoFar < 3)
+                            [self generateGtfsTripsRequestStringUsingPlan:tempPlan];
+                        else
+                            logError(@"No results Back from Server for GtfsTrips request", [res objectForKey:@"msg"]);
                     }
-                }
-                else if ([strRequestURL isEqualToString:strStopTimesURL]) {
                 }
             }
         }
@@ -798,7 +840,9 @@
                     stopTimes2 = [arrStopTimes objectAtIndex:0];
                 }
                 NSString *strDepartureTime;
-                NSArray *arrayDepartureTimeComponents = [stopTimes1.departureTime componentsSeparatedByString:@":"];
+                NSArray *arrayDepartureTimeComponents;
+                arrayDepartureTimeComponents = [stopTimes1.departureTime componentsSeparatedByString:@":"];
+                
                 if([arrayDepartureTimeComponents count] > 0){
                     int hours = [[arrayDepartureTimeComponents objectAtIndex:0] intValue];
                     int minutes = [[arrayDepartureTimeComponents objectAtIndex:1] intValue];
@@ -828,13 +872,11 @@
                 int minuteTripTime = [componentsTripTime minute];
                 int intervalTripTime = hourTripTime*60*60 + minuteTripTime*60;
                 if(stopTimes1 && stopTimes2){
-                    if([stopTimes2.stopSequence intValue] > [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime && intervalDepartureTime < intervalTripTime + TRIP_TIME_PLUS_INTERVAL && [self isServiceEnableForStopTimes:stopTimes1 RequestDate:startDate]){
-                        NIMLOG_UOS202(@"stoptimes1=%@",stopTimes1);
-                        NIMLOG_UOS202(@"stoptimes2=%@",stopTimes2);
-                        NSArray *arrayTemp = [NSArray arrayWithObjects:stopTimes1,stopTimes2, nil];
-                        [arrMutableStopTimes addObject:arrayTemp];
-                     }
-                  }
+                        if([stopTimes2.stopSequence intValue] > [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime && intervalDepartureTime < intervalTripTime + TRIP_TIME_PLUS_INTERVAL && [self isServiceEnableForStopTimes:stopTimes1 RequestDate:startDate]){
+                            NSArray *arrayTemp = [NSArray arrayWithObjects:stopTimes1,stopTimes2, nil];
+                            [arrMutableStopTimes addObject:arrayTemp];
+                        }
+                    }
                }
             }
             return arrMutableStopTimes;
@@ -1117,26 +1159,48 @@
     Itinerary* newItinerary = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:context];
     newItinerary.plan = plan;
     newItinerary.startTime = itinerary.startTime;
+    int index = 0;
+    Leg *leg;
     for(int i=0;i<[[itinerary sortedLegs] count];i++){
         Leg *leg = [[itinerary sortedLegs] objectAtIndex:i];
          if([uniqueLeg.to.lat doubleValue] == [leg.to.lat doubleValue] && [uniqueLeg.to.lng doubleValue] == [leg.to.lng doubleValue] && [uniqueLeg.from.lat doubleValue ] == [leg.from.lat doubleValue] && [uniqueLeg.from.lng doubleValue] == [leg.from.lng doubleValue] && [uniqueLeg.routeId isEqualToString:leg.routeId]){
+             index = i;
              [self generateLegFromPrediction:prediction newItinerary:newItinerary Leg:leg Context:context ISExtraPrediction:true];
-         }
-         else{
-             if([leg isScheduled]){
-                 NSString *strTOStopID = leg.to.stopId;
-                 NSString *strFromStopID = leg.from.stopId;
-                 NSMutableArray *arrStopTime = [self getStopTimes:strTOStopID strFromStopID:strFromStopID startDate:leg.startTime];
-                 if([arrStopTime count] == 0){
-                     [plan deleteItinerary:newItinerary];
-                     break;
-                 }
-                 [self addScheduledLegToItinerary:newItinerary TransitLeg:leg StopTime:arrStopTime Context:context];
-             }
-             else{
-                 [self addUnScheduledLegToItinerary:newItinerary WalkLeg:leg Context:context];
-             }
-         }
+        }
+    }
+    for(int i=index+1;i<[[itinerary sortedLegs] count];i++){
+            if([leg isScheduled] && leg.prediction){
+                   NSDate *predtctionTime = [NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"epochTime"] doubleValue]/1000.0)];
+                    NSDate *endTime = timeOnlyFromDate([predtctionTime dateByAddingTimeInterval:([leg.duration floatValue]/1000)]);
+                    NSDate *itiEndTime = timeOnlyFromDate(newItinerary.endTime);
+                    if([endTime compare:itiEndTime] == NSOrderedDescending){
+                       [self generateLegFromPrediction:leg.prediction newItinerary:newItinerary Leg:leg Context:context ISExtraPrediction:false];
+                    }
+                    else{
+                        [plan deleteItinerary:itinerary];
+                        break;
+                    }
+            }
+            else{
+                [self addUnScheduledLegToItinerary:newItinerary WalkLeg:leg Context:context];
+            }
+    }
+    for(int i=index-1;i>=0;i--){
+        if([leg isScheduled] && leg.prediction){
+                NSDate *predtctionTime = [NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"epochTime"] doubleValue]/1000.0)];
+                NSDate *endTime = timeOnlyFromDate([predtctionTime dateByAddingTimeInterval:([leg.duration floatValue]/1000)]);
+                NSDate *itiStartTime = timeOnlyFromDate(newItinerary.startTime);
+                if([itiStartTime compare:endTime] == NSOrderedDescending){
+                    [self generateLegFromPrediction:leg.prediction newItinerary:newItinerary Leg:leg Context:context ISExtraPrediction:true];
+                }
+                else{
+                    [plan deleteItinerary:newItinerary];
+                    break;
+                }
+        }
+        else{
+            [self addUnScheduledLegToItinerary:newItinerary WalkLeg:leg Context:context];
+        }
     }
     [self adjustItineraryAndLegsTimes:newItinerary Context:context];
 }
