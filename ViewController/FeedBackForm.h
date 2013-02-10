@@ -10,7 +10,6 @@
 #import <AVFoundation/AVFoundation.h>
 #import <RestKit/Restkit.h>
 #import <RestKit/CoreData.h>
-#import "TPResponse.h"
 #import "Plan.h"
 #import "FeedBackReqParam.h"
 
@@ -20,7 +19,6 @@
     NSString *tpURLResource;
     AVAudioRecorder *audioRecorder;
     AVAudioPlayer *audioPlayer;
-    TPResponse *tpResponse;
     UIProgressView *recProgressView;
     
     IBOutlet UITextView *txtFeedBack;
@@ -48,7 +46,6 @@
 
 @property (strong, nonatomic) IBOutlet UITextView *txtFeedBack;
 @property (strong, nonatomic) IBOutlet UITextField *txtEmailId;
-@property (strong, nonatomic) TPResponse *tpResponse;
 @property(nonatomic,retain) NSString *tpURLResource;
 @property(nonatomic,retain) NSString *mesg;
 @property (strong, nonatomic) UIAlertView * alertView;

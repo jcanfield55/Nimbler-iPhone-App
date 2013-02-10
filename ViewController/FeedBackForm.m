@@ -48,7 +48,7 @@
 @implementation FeedBackForm
 
 BOOL isCancelFB = FALSE;
-@synthesize tpResponse,tpURLResource,alertView,mesg,btnPlayRecording,btnStopRecording,btnPauseRecording,btnRecordRecording,fbReqParams;
+@synthesize tpURLResource,alertView,mesg,btnPlayRecording,btnStopRecording,btnPauseRecording,btnRecordRecording,fbReqParams;
 @synthesize txtEmailId,txtFeedBack;
 
 NSUserDefaults *prefs;

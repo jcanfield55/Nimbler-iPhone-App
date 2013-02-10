@@ -35,7 +35,6 @@
 		520FB150162603430083F143 /* UtilityFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB146162603430083F143 /* UtilityFunctions.m */; };
 		520FB18D1626036C0083F143 /* AddressComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB1531626036C0083F143 /* AddressComponent.m */; };
 		520FB18E1626036C0083F143 /* AgencyAndId.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB1551626036C0083F143 /* AgencyAndId.m */; };
-		520FB18F1626036C0083F143 /* Error.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB1571626036C0083F143 /* Error.m */; };
 		520FB1901626036C0083F143 /* GeocodeRequestParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB1591626036C0083F143 /* GeocodeRequestParameters.m */; };
 		520FB1911626036C0083F143 /* GeoRectangle.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB15B1626036C0083F143 /* GeoRectangle.m */; };
 		520FB1921626036C0083F143 /* Itinerary.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB15D1626036C0083F143 /* Itinerary.m */; };
@@ -47,7 +46,6 @@
 		520FB1981626036C0083F143 /* LocationPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB1691626036C0083F143 /* LocationPickerViewController.m */; };
 		520FB1991626036C0083F143 /* LocationPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB16A1626036C0083F143 /* LocationPickerViewController.xib */; };
 		520FB19A1626036C0083F143 /* Locations.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB16C1626036C0083F143 /* Locations.m */; };
-		520FB19B1626036C0083F143 /* MyAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB16E1626036C0083F143 /* MyAnnotation.m */; };
 		520FB19D1626036C0083F143 /* Plan.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB1781626036C0083F143 /* Plan.m */; };
 		520FB19E1626036C0083F143 /* PlanPlace.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB17A1626036C0083F143 /* PlanPlace.m */; };
 		520FB19F1626036C0083F143 /* PlanRequestChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB17C1626036C0083F143 /* PlanRequestChunk.m */; };
@@ -56,7 +54,6 @@
 		520FB1A21626036C0083F143 /* RawAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB1821626036C0083F143 /* RawAddress.m */; };
 		520FB1A31626036C0083F143 /* Step.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB1841626036C0083F143 /* Step.m */; };
 		520FB1A41626036C0083F143 /* SupportedRegion.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB1861626036C0083F143 /* SupportedRegion.m */; };
-		520FB1A51626036C0083F143 /* TPResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB1881626036C0083F143 /* TPResponse.m */; };
 		520FB1A61626036C0083F143 /* TransitCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB18A1626036C0083F143 /* TransitCalendar.m */; };
 		520FB1A71626036C0083F143 /* UserPreferance.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB18C1626036C0083F143 /* UserPreferance.m */; };
 		520FB213162603AF0083F143 /* caltrain.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 520FB1A9162603AF0083F143 /* caltrain.jpg */; };
@@ -328,53 +325,47 @@
 		520FB146162603430083F143 /* UtilityFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = UtilityFunctions.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB1521626036C0083F143 /* AddressComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = AddressComponent.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB1531626036C0083F143 /* AddressComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = AddressComponent.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		520FB1541626036C0083F143 /* AgencyAndId.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = AgencyAndId.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		520FB1551626036C0083F143 /* AgencyAndId.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = AgencyAndId.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		520FB1561626036C0083F143 /* Error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Error.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		520FB1571626036C0083F143 /* Error.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = Error.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		520FB1541626036C0083F143 /* AgencyAndId.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; name = AgencyAndId.h; path = ../Model/AgencyAndId.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		520FB1551626036C0083F143 /* AgencyAndId.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; name = AgencyAndId.m; path = ../Model/AgencyAndId.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB1581626036C0083F143 /* GeocodeRequestParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GeocodeRequestParameters.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB1591626036C0083F143 /* GeocodeRequestParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = GeocodeRequestParameters.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB15A1626036C0083F143 /* GeoRectangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = GeoRectangle.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB15B1626036C0083F143 /* GeoRectangle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = GeoRectangle.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		520FB15C1626036C0083F143 /* Itinerary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = Itinerary.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		520FB15D1626036C0083F143 /* Itinerary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = Itinerary.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		520FB15C1626036C0083F143 /* Itinerary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; name = Itinerary.h; path = ../Model/Itinerary.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		520FB15D1626036C0083F143 /* Itinerary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; name = Itinerary.m; path = ../Model/Itinerary.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB15E1626036C0083F143 /* LatLng.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = LatLng.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB15F1626036C0083F143 /* LatLng.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = LatLng.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		520FB1601626036C0083F143 /* Leg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = Leg.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		520FB1611626036C0083F143 /* Leg.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = Leg.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		520FB1601626036C0083F143 /* Leg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; name = Leg.h; path = ../Model/Leg.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		520FB1611626036C0083F143 /* Leg.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; name = Leg.m; path = ../Model/Leg.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB1621626036C0083F143 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Location.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB1631626036C0083F143 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = Location.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB1641626036C0083F143 /* LocationFromGoogle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LocationFromGoogle.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB1651626036C0083F143 /* LocationFromGoogle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LocationFromGoogle.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB1661626036C0083F143 /* LocationFromIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LocationFromIOS.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB1671626036C0083F143 /* LocationFromIOS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LocationFromIOS.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		520FB1681626036C0083F143 /* LocationPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LocationPickerViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		520FB1691626036C0083F143 /* LocationPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LocationPickerViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		520FB16A1626036C0083F143 /* LocationPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationPickerViewController.xib; sourceTree = "<group>"; };
+		520FB1681626036C0083F143 /* LocationPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = LocationPickerViewController.h; path = ../Model/LocationPickerViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		520FB1691626036C0083F143 /* LocationPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = LocationPickerViewController.m; path = ../Model/LocationPickerViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		520FB16A1626036C0083F143 /* LocationPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LocationPickerViewController.xib; path = ../Model/LocationPickerViewController.xib; sourceTree = "<group>"; };
 		520FB16B1626036C0083F143 /* Locations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = Locations.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB16C1626036C0083F143 /* Locations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = Locations.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		520FB16D1626036C0083F143 /* MyAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = MyAnnotation.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		520FB16E1626036C0083F143 /* MyAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = MyAnnotation.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		520FB1771626036C0083F143 /* Plan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = Plan.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		520FB1781626036C0083F143 /* Plan.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = Plan.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		520FB1791626036C0083F143 /* PlanPlace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = PlanPlace.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		520FB17A1626036C0083F143 /* PlanPlace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = PlanPlace.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		520FB17B1626036C0083F143 /* PlanRequestChunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PlanRequestChunk.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		520FB17C1626036C0083F143 /* PlanRequestChunk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PlanRequestChunk.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		520FB17D1626036C0083F143 /* PlanRequestParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PlanRequestParameters.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		520FB17E1626036C0083F143 /* PlanRequestParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PlanRequestParameters.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		520FB17F1626036C0083F143 /* PlanStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PlanStore.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		520FB1801626036C0083F143 /* PlanStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PlanStore.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		520FB1771626036C0083F143 /* Plan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; name = Plan.h; path = ../Model/Plan.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		520FB1781626036C0083F143 /* Plan.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = Plan.m; path = ../Model/Plan.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		520FB1791626036C0083F143 /* PlanPlace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; name = PlanPlace.h; path = ../Model/PlanPlace.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		520FB17A1626036C0083F143 /* PlanPlace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; name = PlanPlace.m; path = ../Model/PlanPlace.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		520FB17B1626036C0083F143 /* PlanRequestChunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = PlanRequestChunk.h; path = ../Model/PlanRequestChunk.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		520FB17C1626036C0083F143 /* PlanRequestChunk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = PlanRequestChunk.m; path = ../Model/PlanRequestChunk.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		520FB17D1626036C0083F143 /* PlanRequestParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = PlanRequestParameters.h; path = ../Model/PlanRequestParameters.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		520FB17E1626036C0083F143 /* PlanRequestParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = PlanRequestParameters.m; path = ../Model/PlanRequestParameters.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		520FB17F1626036C0083F143 /* PlanStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = PlanStore.h; path = ../Model/PlanStore.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		520FB1801626036C0083F143 /* PlanStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = PlanStore.m; path = ../Model/PlanStore.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB1811626036C0083F143 /* RawAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = RawAddress.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB1821626036C0083F143 /* RawAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = RawAddress.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		520FB1831626036C0083F143 /* Step.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = Step.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		520FB1841626036C0083F143 /* Step.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = Step.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		520FB1831626036C0083F143 /* Step.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; name = Step.h; path = ../Model/Step.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		520FB1841626036C0083F143 /* Step.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; name = Step.m; path = ../Model/Step.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB1851626036C0083F143 /* SupportedRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SupportedRegion.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB1861626036C0083F143 /* SupportedRegion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SupportedRegion.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		520FB1871626036C0083F143 /* TPResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = TPResponse.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		520FB1881626036C0083F143 /* TPResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = TPResponse.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		520FB1891626036C0083F143 /* TransitCalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = TransitCalendar.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		520FB18A1626036C0083F143 /* TransitCalendar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = TransitCalendar.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		520FB1891626036C0083F143 /* TransitCalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = TransitCalendar.h; path = ../Model/TransitCalendar.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		520FB18A1626036C0083F143 /* TransitCalendar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = TransitCalendar.m; path = ../Model/TransitCalendar.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB18B1626036C0083F143 /* UserPreferance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = UserPreferance.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB18C1626036C0083F143 /* UserPreferance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = UserPreferance.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB1A9162603AF0083F143 /* caltrain.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = caltrain.jpg; sourceTree = "<group>"; };
@@ -502,6 +493,7 @@
 		5258A89E160D617800871875 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		525C20F8151D3AF5004F8FE0 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		527E1749151EB9CD00CDBC23 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		5295B95216C6F71B008376B3 /* Network_Commuting 1.8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.8.xcdatamodel"; sourceTree = "<group>"; };
 		52A9BE9316B4B41500564D0D /* RealTimeServerStubTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RealTimeServerStubTest.h; sourceTree = "<group>"; };
 		52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RealTimeServerStubTest.m; sourceTree = "<group>"; };
 		52A9BE9716B6677500564D0D /* gtfs_rawdata_calendar.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = gtfs_rawdata_calendar.json; path = Sinatra/gtfs_rawdata_calendar.json; sourceTree = "<group>"; };
@@ -528,36 +520,36 @@
 		52E4C09E15CB7D2F00B55A65 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		52E4C0A015CC705000B55A65 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		52E4C0A215CC705D00B55A65 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		8D0FA99F169165C00038FDB2 /* LegFromOTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LegFromOTP.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LegFromOTP.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		8D0FA99F169165C00038FDB2 /* LegFromOTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = LegFromOTP.h; path = ../Model/LegFromOTP.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = LegFromOTP.m; path = ../Model/LegFromOTP.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8D0FA9AE1691984F0038FDB2 /* ItineraryFromOTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ItineraryFromOTP.h; path = ../ItineraryFromOTP.h; sourceTree = "<group>"; };
 		8D0FA9AF1691984F0038FDB2 /* ItineraryFromOTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = ItineraryFromOTP.m; path = ../ItineraryFromOTP.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8D0FA9B11691985A0038FDB2 /* ItineraryFromGtfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ItineraryFromGtfs.h; path = ../ItineraryFromGtfs.h; sourceTree = "<group>"; };
 		8D0FA9B21691985A0038FDB2 /* ItineraryFromGtfs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = ItineraryFromGtfs.m; path = ../ItineraryFromGtfs.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		8D106DD41671EB41004E0DE5 /* GtfsParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GtfsParser.h; sourceTree = "<group>"; };
-		8D106DD51671EB41004E0DE5 /* GtfsParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GtfsParser.m; sourceTree = "<group>"; };
-		8D106DD71671F0ED004E0DE5 /* GtfsAgency.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GtfsAgency.h; sourceTree = "<group>"; };
-		8D106DD81671F0ED004E0DE5 /* GtfsAgency.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GtfsAgency.m; sourceTree = "<group>"; };
-		8D106DF31671F16B004E0DE5 /* GtfsCalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GtfsCalendar.h; sourceTree = "<group>"; };
-		8D106DF41671F16B004E0DE5 /* GtfsCalendar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GtfsCalendar.m; sourceTree = "<group>"; };
-		8D106DF51671F16B004E0DE5 /* GtfsCalendarDates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GtfsCalendarDates.h; sourceTree = "<group>"; };
-		8D106DF61671F16B004E0DE5 /* GtfsCalendarDates.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GtfsCalendarDates.m; sourceTree = "<group>"; };
-		8D106DF71671F16B004E0DE5 /* GtfsRoutes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GtfsRoutes.h; sourceTree = "<group>"; };
-		8D106DF81671F16B004E0DE5 /* GtfsRoutes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GtfsRoutes.m; sourceTree = "<group>"; };
-		8D106DFB1671F16B004E0DE5 /* GtfsStopTimes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GtfsStopTimes.h; sourceTree = "<group>"; };
-		8D106DFC1671F16B004E0DE5 /* GtfsStopTimes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GtfsStopTimes.m; sourceTree = "<group>"; };
-		8D106DFD1671F16B004E0DE5 /* GtfsTrips.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GtfsTrips.h; sourceTree = "<group>"; };
-		8D106DFE1671F16B004E0DE5 /* GtfsTrips.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GtfsTrips.m; sourceTree = "<group>"; };
+		8D106DD41671EB41004E0DE5 /* GtfsParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GtfsParser.h; path = ../Model/GtfsParser.h; sourceTree = "<group>"; };
+		8D106DD51671EB41004E0DE5 /* GtfsParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GtfsParser.m; path = ../Model/GtfsParser.m; sourceTree = "<group>"; };
+		8D106DD71671F0ED004E0DE5 /* GtfsAgency.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GtfsAgency.h; path = ../Model/GtfsAgency.h; sourceTree = "<group>"; };
+		8D106DD81671F0ED004E0DE5 /* GtfsAgency.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GtfsAgency.m; path = ../Model/GtfsAgency.m; sourceTree = "<group>"; };
+		8D106DF31671F16B004E0DE5 /* GtfsCalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GtfsCalendar.h; path = ../Model/GtfsCalendar.h; sourceTree = "<group>"; };
+		8D106DF41671F16B004E0DE5 /* GtfsCalendar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GtfsCalendar.m; path = ../Model/GtfsCalendar.m; sourceTree = "<group>"; };
+		8D106DF51671F16B004E0DE5 /* GtfsCalendarDates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GtfsCalendarDates.h; path = ../Model/GtfsCalendarDates.h; sourceTree = "<group>"; };
+		8D106DF61671F16B004E0DE5 /* GtfsCalendarDates.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GtfsCalendarDates.m; path = ../Model/GtfsCalendarDates.m; sourceTree = "<group>"; };
+		8D106DF71671F16B004E0DE5 /* GtfsRoutes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GtfsRoutes.h; path = ../Model/GtfsRoutes.h; sourceTree = "<group>"; };
+		8D106DF81671F16B004E0DE5 /* GtfsRoutes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GtfsRoutes.m; path = ../Model/GtfsRoutes.m; sourceTree = "<group>"; };
+		8D106DFB1671F16B004E0DE5 /* GtfsStopTimes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GtfsStopTimes.h; path = ../Model/GtfsStopTimes.h; sourceTree = "<group>"; };
+		8D106DFC1671F16B004E0DE5 /* GtfsStopTimes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GtfsStopTimes.m; path = ../Model/GtfsStopTimes.m; sourceTree = "<group>"; };
+		8D106DFD1671F16B004E0DE5 /* GtfsTrips.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GtfsTrips.h; path = ../Model/GtfsTrips.h; sourceTree = "<group>"; };
+		8D106DFE1671F16B004E0DE5 /* GtfsTrips.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GtfsTrips.m; path = ../Model/GtfsTrips.m; sourceTree = "<group>"; };
 		8D1A64E9165B82C100176FF7 /* SettingViewController_SF.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController_SF.xib; sourceTree = "<group>"; };
-		8D3EF6AF16B24D3B00ED366B /* RealTimeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RealTimeManager.h; sourceTree = "<group>"; };
-		8D3EF6B016B24D3B00ED366B /* RealTimeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RealTimeManager.m; sourceTree = "<group>"; };
+		8D3EF6AF16B24D3B00ED366B /* RealTimeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RealTimeManager.h; path = ../Model/RealTimeManager.h; sourceTree = "<group>"; };
+		8D3EF6B016B24D3B00ED366B /* RealTimeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RealTimeManager.m; path = ../Model/RealTimeManager.m; sourceTree = "<group>"; };
 		8D42C2F8163AC05C00880B33 /* Nimbler Caltrain-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Nimbler Caltrain-Info.plist"; sourceTree = SOURCE_ROOT; };
 		8D42C2F9163AC05C00880B33 /* Nimbler Caltrain-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Nimbler Caltrain-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		8D45BD1D162BDE6A00E5CB3D /* Icon_ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon_ipad@2x.png"; sourceTree = "<group>"; };
 		8D4FC8E4162D2E1A004144DE /* bart-station.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "bart-station.json"; sourceTree = "<group>"; };
 		8D4FC8E5162D2E1A004144DE /* caltrain-station.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "caltrain-station.json"; sourceTree = "<group>"; };
-		8D6FB9661680870500952B0C /* GtfsStop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GtfsStop.h; sourceTree = "<group>"; };
-		8D6FB9671680870500952B0C /* GtfsStop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GtfsStop.m; sourceTree = "<group>"; };
+		8D6FB9661680870500952B0C /* GtfsStop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GtfsStop.h; path = ../Model/GtfsStop.h; sourceTree = "<group>"; };
+		8D6FB9671680870500952B0C /* GtfsStop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GtfsStop.m; path = ../Model/GtfsStop.m; sourceTree = "<group>"; };
 		8D8DF4AB1647BCFB00BC2A34 /* bart-station-background.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "bart-station-background.json"; sourceTree = "<group>"; };
 		8D8DF4AC1647BCFB00BC2A34 /* caltrain-station-background.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "caltrain-station-background.json"; sourceTree = "<group>"; };
 		8D93604A162FFC4500084E8E /* Icon_ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon_ipad.png; sourceTree = "<group>"; };
@@ -565,8 +557,8 @@
 		8D99B631164E2DF200C0A5AC /* stop_times.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = stop_times.txt; sourceTree = "<group>"; };
 		8D99B632164E2DF200C0A5AC /* stops.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = stops.txt; sourceTree = "<group>"; };
 		8D99B633164E2DF200C0A5AC /* trips.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trips.txt; sourceTree = "<group>"; };
-		8D9A9FBD16945A3F00D3EB55 /* LegFromGtfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LegFromGtfs.h; sourceTree = "<group>"; };
-		8D9A9FBE16945A3F00D3EB55 /* LegFromGtfs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LegFromGtfs.m; sourceTree = "<group>"; };
+		8D9A9FBD16945A3F00D3EB55 /* LegFromGtfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LegFromGtfs.h; path = ../Model/LegFromGtfs.h; sourceTree = "<group>"; };
+		8D9A9FBE16945A3F00D3EB55 /* LegFromGtfs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LegFromGtfs.m; path = ../Model/LegFromGtfs.m; sourceTree = "<group>"; };
 		8D9EA25C162D78FD002BB5FF /* Network_Commuting 1.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.1.xcdatamodel"; sourceTree = "<group>"; };
 		8D9EA25D162D78FD002BB5FF /* Network_Commuting 1.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.2.xcdatamodel"; sourceTree = "<group>"; };
 		8D9EA25E162D78FD002BB5FF /* Network_Commuting 1.3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.3.xcdatamodel"; sourceTree = "<group>"; };
@@ -638,6 +630,9 @@
 		520FB107162603090083F143 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				520FB1681626036C0083F143 /* LocationPickerViewController.h */,
+				520FB1691626036C0083F143 /* LocationPickerViewController.m */,
+				520FB16A1626036C0083F143 /* LocationPickerViewController.xib */,
 				520FB108162603090083F143 /* FeedBackForm.h */,
 				520FB109162603090083F143 /* FeedBackForm.m */,
 				520FB10A162603090083F143 /* FeedBackForm.xib */,
@@ -700,88 +695,29 @@
 			path = Utility;
 			sourceTree = SOURCE_ROOT;
 		};
-		520FB1511626036C0083F143 /* Model */ = {
+		520FB1511626036C0083F143 /* Model, Location */ = {
 			isa = PBXGroup;
 			children = (
+				520FB16B1626036C0083F143 /* Locations.h */,
+				520FB16C1626036C0083F143 /* Locations.m */,
 				520FB1521626036C0083F143 /* AddressComponent.h */,
 				520FB1531626036C0083F143 /* AddressComponent.m */,
-				520FB1541626036C0083F143 /* AgencyAndId.h */,
-				520FB1551626036C0083F143 /* AgencyAndId.m */,
-				520FB1561626036C0083F143 /* Error.h */,
-				520FB1571626036C0083F143 /* Error.m */,
 				520FB1581626036C0083F143 /* GeocodeRequestParameters.h */,
 				520FB1591626036C0083F143 /* GeocodeRequestParameters.m */,
 				520FB15A1626036C0083F143 /* GeoRectangle.h */,
 				520FB15B1626036C0083F143 /* GeoRectangle.m */,
-				8D106DD71671F0ED004E0DE5 /* GtfsAgency.h */,
-				8D106DD81671F0ED004E0DE5 /* GtfsAgency.m */,
-				8D106DF31671F16B004E0DE5 /* GtfsCalendar.h */,
-				8D106DF41671F16B004E0DE5 /* GtfsCalendar.m */,
-				8D106DF51671F16B004E0DE5 /* GtfsCalendarDates.h */,
-				8D106DF61671F16B004E0DE5 /* GtfsCalendarDates.m */,
-				8D106DD41671EB41004E0DE5 /* GtfsParser.h */,
-				8D106DD51671EB41004E0DE5 /* GtfsParser.m */,
-				8D106DF71671F16B004E0DE5 /* GtfsRoutes.h */,
-				8D106DF81671F16B004E0DE5 /* GtfsRoutes.m */,
-				8D6FB9661680870500952B0C /* GtfsStop.h */,
-				8D6FB9671680870500952B0C /* GtfsStop.m */,
-				8D106DFB1671F16B004E0DE5 /* GtfsStopTimes.h */,
-				8D106DFC1671F16B004E0DE5 /* GtfsStopTimes.m */,
-				8D106DFD1671F16B004E0DE5 /* GtfsTrips.h */,
-				8D106DFE1671F16B004E0DE5 /* GtfsTrips.m */,
-				520FB15C1626036C0083F143 /* Itinerary.h */,
-				520FB15D1626036C0083F143 /* Itinerary.m */,
-				8D0FA9B11691985A0038FDB2 /* ItineraryFromGtfs.h */,
-				8D0FA9B21691985A0038FDB2 /* ItineraryFromGtfs.m */,
-				8D0FA9AE1691984F0038FDB2 /* ItineraryFromOTP.h */,
-				8D0FA9AF1691984F0038FDB2 /* ItineraryFromOTP.m */,
 				520FB15E1626036C0083F143 /* LatLng.h */,
 				520FB15F1626036C0083F143 /* LatLng.m */,
-				520FB1601626036C0083F143 /* Leg.h */,
-				520FB1611626036C0083F143 /* Leg.m */,
-				8D9A9FBD16945A3F00D3EB55 /* LegFromGtfs.h */,
-				8D9A9FBE16945A3F00D3EB55 /* LegFromGtfs.m */,
-				8D0FA99F169165C00038FDB2 /* LegFromOTP.h */,
-				8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */,
 				520FB1621626036C0083F143 /* Location.h */,
 				520FB1631626036C0083F143 /* Location.m */,
 				520FB1641626036C0083F143 /* LocationFromGoogle.h */,
 				520FB1651626036C0083F143 /* LocationFromGoogle.m */,
 				520FB1661626036C0083F143 /* LocationFromIOS.h */,
 				520FB1671626036C0083F143 /* LocationFromIOS.m */,
-				520FB1681626036C0083F143 /* LocationPickerViewController.h */,
-				520FB1691626036C0083F143 /* LocationPickerViewController.m */,
-				520FB16A1626036C0083F143 /* LocationPickerViewController.xib */,
-				520FB16B1626036C0083F143 /* Locations.h */,
-				520FB16C1626036C0083F143 /* Locations.m */,
-				520FB16D1626036C0083F143 /* MyAnnotation.h */,
-				520FB16E1626036C0083F143 /* MyAnnotation.m */,
-				8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */,
-				520FB1771626036C0083F143 /* Plan.h */,
-				520FB1781626036C0083F143 /* Plan.m */,
-				520FB1791626036C0083F143 /* PlanPlace.h */,
-				520FB17A1626036C0083F143 /* PlanPlace.m */,
-				520FB17B1626036C0083F143 /* PlanRequestChunk.h */,
-				520FB17C1626036C0083F143 /* PlanRequestChunk.m */,
-				520FB17D1626036C0083F143 /* PlanRequestParameters.h */,
-				520FB17E1626036C0083F143 /* PlanRequestParameters.m */,
-				520FB17F1626036C0083F143 /* PlanStore.h */,
-				520FB1801626036C0083F143 /* PlanStore.m */,
 				520FB1811626036C0083F143 /* RawAddress.h */,
 				520FB1821626036C0083F143 /* RawAddress.m */,
-				8D3EF6AF16B24D3B00ED366B /* RealTimeManager.h */,
-				8D3EF6B016B24D3B00ED366B /* RealTimeManager.m */,
-				520FB1831626036C0083F143 /* Step.h */,
-				520FB1841626036C0083F143 /* Step.m */,
-				520FB1851626036C0083F143 /* SupportedRegion.h */,
-				520FB1861626036C0083F143 /* SupportedRegion.m */,
-				520FB1871626036C0083F143 /* TPResponse.h */,
-				520FB1881626036C0083F143 /* TPResponse.m */,
-				520FB1891626036C0083F143 /* TransitCalendar.h */,
-				520FB18A1626036C0083F143 /* TransitCalendar.m */,
-				520FB18B1626036C0083F143 /* UserPreferance.h */,
-				520FB18C1626036C0083F143 /* UserPreferance.m */,
 			);
+			name = "Model, Location";
 			path = Model;
 			sourceTree = SOURCE_ROOT;
 		};
@@ -938,6 +874,79 @@
 			path = "Network Commuting/TestFlightSDK1-1";
 			sourceTree = "<group>";
 		};
+		5295B95016C6F46E008376B3 /* Model, Plan */ = {
+			isa = PBXGroup;
+			children = (
+				520FB17F1626036C0083F143 /* PlanStore.h */,
+				520FB1801626036C0083F143 /* PlanStore.m */,
+				520FB1771626036C0083F143 /* Plan.h */,
+				520FB1781626036C0083F143 /* Plan.m */,
+				8D3EF6AF16B24D3B00ED366B /* RealTimeManager.h */,
+				8D3EF6B016B24D3B00ED366B /* RealTimeManager.m */,
+				520FB1541626036C0083F143 /* AgencyAndId.h */,
+				520FB1551626036C0083F143 /* AgencyAndId.m */,
+				520FB1601626036C0083F143 /* Leg.h */,
+				520FB1611626036C0083F143 /* Leg.m */,
+				8D9A9FBD16945A3F00D3EB55 /* LegFromGtfs.h */,
+				8D9A9FBE16945A3F00D3EB55 /* LegFromGtfs.m */,
+				8D0FA99F169165C00038FDB2 /* LegFromOTP.h */,
+				8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */,
+				520FB15C1626036C0083F143 /* Itinerary.h */,
+				520FB15D1626036C0083F143 /* Itinerary.m */,
+				8D0FA9B11691985A0038FDB2 /* ItineraryFromGtfs.h */,
+				8D0FA9B21691985A0038FDB2 /* ItineraryFromGtfs.m */,
+				8D0FA9AE1691984F0038FDB2 /* ItineraryFromOTP.h */,
+				8D0FA9AF1691984F0038FDB2 /* ItineraryFromOTP.m */,
+				520FB1791626036C0083F143 /* PlanPlace.h */,
+				520FB17A1626036C0083F143 /* PlanPlace.m */,
+				520FB17B1626036C0083F143 /* PlanRequestChunk.h */,
+				520FB17C1626036C0083F143 /* PlanRequestChunk.m */,
+				520FB17D1626036C0083F143 /* PlanRequestParameters.h */,
+				520FB17E1626036C0083F143 /* PlanRequestParameters.m */,
+				520FB1831626036C0083F143 /* Step.h */,
+				520FB1841626036C0083F143 /* Step.m */,
+				520FB1891626036C0083F143 /* TransitCalendar.h */,
+				520FB18A1626036C0083F143 /* TransitCalendar.m */,
+			);
+			name = "Model, Plan";
+			sourceTree = "<group>";
+		};
+		5295B95116C6F490008376B3 /* Model, GTFS */ = {
+			isa = PBXGroup;
+			children = (
+				8D106DD41671EB41004E0DE5 /* GtfsParser.h */,
+				8D106DD51671EB41004E0DE5 /* GtfsParser.m */,
+				8D106DD71671F0ED004E0DE5 /* GtfsAgency.h */,
+				8D106DD81671F0ED004E0DE5 /* GtfsAgency.m */,
+				8D106DF31671F16B004E0DE5 /* GtfsCalendar.h */,
+				8D106DF41671F16B004E0DE5 /* GtfsCalendar.m */,
+				8D106DF51671F16B004E0DE5 /* GtfsCalendarDates.h */,
+				8D106DF61671F16B004E0DE5 /* GtfsCalendarDates.m */,
+				8D106DF71671F16B004E0DE5 /* GtfsRoutes.h */,
+				8D106DF81671F16B004E0DE5 /* GtfsRoutes.m */,
+				8D6FB9661680870500952B0C /* GtfsStop.h */,
+				8D6FB9671680870500952B0C /* GtfsStop.m */,
+				8D106DFB1671F16B004E0DE5 /* GtfsStopTimes.h */,
+				8D106DFC1671F16B004E0DE5 /* GtfsStopTimes.m */,
+				8D106DFD1671F16B004E0DE5 /* GtfsTrips.h */,
+				8D106DFE1671F16B004E0DE5 /* GtfsTrips.m */,
+			);
+			name = "Model, GTFS";
+			sourceTree = "<group>";
+		};
+		5295B96016C6F8F8008376B3 /* Model, Other */ = {
+			isa = PBXGroup;
+			children = (
+				520FB18B1626036C0083F143 /* UserPreferance.h */,
+				520FB18C1626036C0083F143 /* UserPreferance.m */,
+				520FB1851626036C0083F143 /* SupportedRegion.h */,
+				520FB1861626036C0083F143 /* SupportedRegion.m */,
+				8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */,
+			);
+			name = "Model, Other";
+			path = ../Model;
+			sourceTree = "<group>";
+		};
 		52A9BE9616B6673C00564D0D /* Sinatra */ = {
 			isa = PBXGroup;
 			children = (
@@ -1008,7 +1017,10 @@
 				8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */,
 				520FB289162604950083F143 /* SupportingFiles */,
 				520FB1A8162603AF0083F143 /* Images */,
-				520FB1511626036C0083F143 /* Model */,
+				5295B95116C6F490008376B3 /* Model, GTFS */,
+				520FB1511626036C0083F143 /* Model, Location */,
+				5295B96016C6F8F8008376B3 /* Model, Other */,
+				5295B95016C6F46E008376B3 /* Model, Plan */,
 				520FB132162603430083F143 /* Utility */,
 				520FB107162603090083F143 /* ViewController */,
 			);
@@ -1387,7 +1399,6 @@
 				520FB150162603430083F143 /* UtilityFunctions.m in Sources */,
 				520FB18D1626036C0083F143 /* AddressComponent.m in Sources */,
 				520FB18E1626036C0083F143 /* AgencyAndId.m in Sources */,
-				520FB18F1626036C0083F143 /* Error.m in Sources */,
 				520FB1901626036C0083F143 /* GeocodeRequestParameters.m in Sources */,
 				520FB1911626036C0083F143 /* GeoRectangle.m in Sources */,
 				520FB1921626036C0083F143 /* Itinerary.m in Sources */,
@@ -1398,7 +1409,6 @@
 				520FB1971626036C0083F143 /* LocationFromIOS.m in Sources */,
 				520FB1981626036C0083F143 /* LocationPickerViewController.m in Sources */,
 				520FB19A1626036C0083F143 /* Locations.m in Sources */,
-				520FB19B1626036C0083F143 /* MyAnnotation.m in Sources */,
 				520FB19D1626036C0083F143 /* Plan.m in Sources */,
 				520FB19E1626036C0083F143 /* PlanPlace.m in Sources */,
 				520FB19F1626036C0083F143 /* PlanRequestChunk.m in Sources */,
@@ -1407,7 +1417,6 @@
 				520FB1A21626036C0083F143 /* RawAddress.m in Sources */,
 				520FB1A31626036C0083F143 /* Step.m in Sources */,
 				520FB1A41626036C0083F143 /* SupportedRegion.m in Sources */,
-				520FB1A51626036C0083F143 /* TPResponse.m in Sources */,
 				520FB1A61626036C0083F143 /* TransitCalendar.m in Sources */,
 				520FB1A71626036C0083F143 /* UserPreferance.m in Sources */,
 				8DC019F91627F4BE004200E5 /* nc_AppDelegate.m in Sources */,
@@ -1685,6 +1694,7 @@
 		8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				5295B95216C6F71B008376B3 /* Network_Commuting 1.8.xcdatamodel */,
 				8DF6C87D1670696E00DD4D31 /* Network_Commuting 1.7.xcdatamodel */,
 				8D9EA25C162D78FD002BB5FF /* Network_Commuting 1.1.xcdatamodel */,
 				8D9EA25D162D78FD002BB5FF /* Network_Commuting 1.2.xcdatamodel */,
@@ -1694,7 +1704,7 @@
 				8D9EA261162D78FD002BB5FF /* Network_Commuting 1.6.xcdatamodel */,
 				8D9EA262162D78FD002BB5FF /* Network_Commuting.xcdatamodel */,
 			);
-			currentVersion = 8DF6C87D1670696E00DD4D31 /* Network_Commuting 1.7.xcdatamodel */;
+			currentVersion = 5295B95216C6F71B008376B3 /* Network_Commuting 1.8.xcdatamodel */;
 			path = Network_Commuting.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

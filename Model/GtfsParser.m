@@ -553,9 +553,7 @@
     @try {
         RKParams *requestParameter = [RKParams params];
         [requestParameter setValue:strRequestString forParam:AGENCY_IDS];
-        RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
-        [RKClient setSharedClient:client];
-        [[RKClient sharedClient] post:GTFS_STOP_TIMES params:requestParameter delegate:self];
+        [self.rkTpClient post:GTFS_STOP_TIMES params:requestParameter delegate:self];
         
     }
     @catch (NSException *exception) {

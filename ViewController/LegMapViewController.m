@@ -7,7 +7,6 @@
 //
 
 #import "LegMapViewController.h"
-#import "MyAnnotation.h"
 #import "Step.h"
 #import "twitterViewController.h"
 #import "RestKit/RKJSONParserJSONKit.h"

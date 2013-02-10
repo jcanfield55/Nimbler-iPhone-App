@@ -22,6 +22,7 @@
 #import "GtfsCalendar.h"
 #import "GtfsCalendarDates.h"
 #import "GtfsStop.h"
+#import "KeyObjectStore.h"
 
 @implementation RealTimeServerStubTest
 
@@ -71,6 +72,9 @@
     // Set up the planStore
     planStore = [[PlanStore alloc] initWithManagedObjectContext:managedObjectContext rkPlanMgr:rkPlanMgr];
     
+    // Set up KeyObjectStore
+    [KeyObjectStore setUpWithManagedObjectContext:managedObjectContext];
+
     // Set up RealTimeManager
     [[RealTimeManager realTimeManager] setRkTpClient:rkTpClient];
     
@@ -79,313 +83,30 @@
                                                        rkTpClient:rkTpClient];
     
     // Set up Locations wrapper object pointing at the test Managed Object Context
-    locations = [[Locations alloc] initWithManagedObjectContext:managedObjectContext rkGeoMgr:nil];
+    rkGeoMgr = [RKObjectManager objectManagerWithBaseURL:TEST_GEO_RESPONSE_URL];
+    [rkGeoMgr setObjectStore:rkMOS];
+    locations = [[Locations alloc] initWithManagedObjectContext:managedObjectContext rkGeoMgr:rkGeoMgr];
+
+    // Set up UserPreferance
+    userPreferance = [UserPreferance userPreferance];
     
-    // Set up individual Location objects
-    // loc1 is used for testing most methods including isMatchingTypedString and has Address Components included
-    LocationFromGoogle* loc1G = [NSEntityDescription insertNewObjectForEntityForName:@"LocationFromGoogle" inManagedObjectContext:managedObjectContext];
-    AddressComponent *ac1 = [NSEntityDescription insertNewObjectForEntityForName:@"AddressComponent" inManagedObjectContext:managedObjectContext];
-    AddressComponent *ac2 = [NSEntityDescription insertNewObjectForEntityForName:@"AddressComponent" inManagedObjectContext:managedObjectContext];
-    AddressComponent *ac3 = [NSEntityDescription insertNewObjectForEntityForName:@"AddressComponent" inManagedObjectContext:managedObjectContext];
-    AddressComponent *ac4 = [NSEntityDescription insertNewObjectForEntityForName:@"AddressComponent" inManagedObjectContext:managedObjectContext];
-    AddressComponent *ac5 = [NSEntityDescription insertNewObjectForEntityForName:@"AddressComponent" inManagedObjectContext:managedObjectContext];
-    AddressComponent *ac6 = [NSEntityDescription insertNewObjectForEntityForName:@"AddressComponent" inManagedObjectContext:managedObjectContext];
-    AddressComponent *ac7 = [NSEntityDescription insertNewObjectForEntityForName:@"AddressComponent" inManagedObjectContext:managedObjectContext];
-    [ac1 setLongName:@"750"];
-    [ac2 setLongName:@"Hawthorne Street"];
-    [ac3 setLongName:@"San Francisco"];
-    [ac4 setLongName:@"San Francisco"];
-    [ac5 setLongName:@"California"];
-    [ac6 setLongName:@"94103"];
-    [ac6 setShortName:@"94103"];
-    [ac7 setLongName:@"United States of America"];
-    [ac7 setShortName:@"USA"];
-    [ac1 setTypes:[NSArray arrayWithObjects:@"street_number", nil]];
-    [ac2 setTypes:[NSArray arrayWithObjects:@"route", nil]];
-    [ac3 setTypes:[NSArray arrayWithObjects:@"locality", @"political", nil]];
-    [ac4 setTypes:[NSArray arrayWithObjects:@"political", @"locality", nil]];  // try reverse order
-    [ac5 setTypes:[NSArray arrayWithObjects:@"administrative_area_level_1", @"political", nil]];
-    [ac6 setTypes:[NSArray arrayWithObjects:@"postal_code", nil]];
-    [ac7 setTypes:[NSArray arrayWithObjects:@"country", @"political", nil]];
-    
-    [loc1G setFormattedAddress:@"750 Hawthorne Street, San Francisco, CA 94103, USA"];
-    [loc1G setAddressComponents:[NSSet setWithObjects:ac1,ac2,ac3,ac4,ac5,ac6,ac7,nil]];
-    
-    [loc1G addRawAddressString:@"750 Hawthorne St., SF"];
-    [loc1G addRawAddressString:@"750 Hawthorn, San Fran California"];
-    
-    [loc1G setFromFrequencyFloat:5.0];
-    [loc1G setToFrequencyFloat:7.0];
-    [loc1G setLatFloat:67.3];
-    [loc1G setLngFloat:-122.3];
-    loc1 = loc1G;  // Now treat it as a generic Location object
-    
-    // Additional set-up
-    // loc2 and loc3 give additional testing for formatted address and raw address retrieval
-    // It has some (number, city, state) but not all the address components from loc1
-    LocationFromGoogle* loc2G = [NSEntityDescription insertNewObjectForEntityForName:@"LocationFromGoogle" inManagedObjectContext:managedObjectContext];
-    [loc2G setFormattedAddress:@"750 Hawthorne Street, San Francisco"];
-    [loc2G addRawAddressString:@"750 Hawthorne, San Fran California"];
-    [loc2G addRawAddressString:@"750 Hawthoorn, SF"];
-    [loc2G setFromFrequencyFloat:7];  // greater than loc1
-    loc2 = loc2G; // Treat as a generic location object
-    
-    LocationFromGoogle* loc3G = [NSEntityDescription insertNewObjectForEntityForName:@"LocationFromGoogle" inManagedObjectContext:managedObjectContext];
-    [loc3G setFormattedAddress:@"1350 Hull Drive, San Carlos, CA USA"];
-    [loc3G addRawAddressString:@"1350 Hull, San Carlos CA"];
-    [loc3G addRawAddressString:@"1350 Hull Dr. San Carlos CA"];
-    loc3 = loc3G;
-    
-    //
-    // Set up plans, itineraries, and legs for testing plan caching
-    //
-    
-    // Set-up dates
     dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"MMMM dd, yyyy hh:mm a"];
-    NSDate* date10 = [dateFormatter dateFromString:@"June 8, 2012 5:00 PM"]; // Friday before last load
-    NSDate* date11 = [dateFormatter dateFromString:@"June 8, 2012 5:30 PM"]; // Friday before last load
+    [dateFormatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
     
-    //
-    // Set up plans, itineraries, and legs for testing Itinerary and leg generation from Patterns
-    //
+    // Create initial view controller
+    toFromViewController = [[ToFromViewController alloc] initWithNibName:@"ToFromViewController" bundle:nil];
+    [toFromViewController setRkGeoMgr:rkGeoMgr];    // Pass the geocoding RK object
+    [toFromViewController setRkPlanMgr:rkPlanMgr];    // Pass the planning RK object
+    [toFromViewController setLocations:locations];
+    [toFromViewController setPlanStore:planStore];
     
-    plan10 = [NSEntityDescription insertNewObjectForEntityForName:@"Plan" inManagedObjectContext:managedObjectContext];
+    // Set up tabViewController and make it visible
+    [[nc_AppDelegate sharedInstance] setToFromViewController:toFromViewController];
+    [[nc_AppDelegate sharedInstance] setUpTabViewController];
+    [nc_AppDelegate sharedInstance].window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [[[nc_AppDelegate sharedInstance] window] setRootViewController:[nc_AppDelegate sharedInstance].tabBarController];
+    [[nc_AppDelegate sharedInstance].window makeKeyAndVisible];
     
-    itin101 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin102 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin103 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    
-    leg1011 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
-    leg1012 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
-    leg1013 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
-    leg1021 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
-    leg1031 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
-    
-    leg1011.startTime = date10;
-    leg1011.duration = [NSNumber numberWithInt:519000];
-    leg1011.mode = @"WALK";
-    leg1011.itinerary = itin101;
-    itin101.startTime = date10;
-    itin101.endTime = [itin101.startTime dateByAddingTimeInterval:(30.0*60)];
-    itin101.plan = plan10;
-    PlanPlace *pp101 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
-    PlanPlace *pp102 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
-    [pp101 setLat:[NSNumber numberWithDouble:37.75768017385226]];
-    [pp101 setLng:[NSNumber numberWithDouble:-122.3926363695829]];
-    [pp102 setLat:[NSNumber numberWithDouble:37.755414]];
-    [pp102 setLng:[NSNumber numberWithDouble:-122.388001]];
-    [pp102 setStopId:@"7354"];
-    [pp101 setName:@"22nd Street"];
-    [pp102 setName:@"Third Street & 23rd St"];
-    leg1011.from = pp101;
-    leg1011.to = pp102;
-    leg1011.endTime = [leg1011.startTime dateByAddingTimeInterval:(30.0*60)];
-    
-    leg1012.startTime = date11;
-    leg1012.duration = [NSNumber numberWithInt:500000];
-    leg1012.agencyId = @"SFMTA";
-    leg1012.mode = @"TRAM";
-    leg1012.route = @"KT";
-    leg1012.routeShortName = @"KT";
-    leg1012.routeLongName = @"OCEAN VIEW";
-    leg1012.routeId = @"1196";
-    leg1012.tripId = @"5249630";
-    leg1012.itinerary = itin101;
-    itin101.startTime = date11;
-    itin101.endTime = [itin101.startTime dateByAddingTimeInterval:(30.0*60)];
-    itin101.plan = plan10;
-    
-    PlanPlace *pp103 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
-    PlanPlace *pp104 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
-    [pp103 setLat:[NSNumber numberWithDouble:37.755414]];
-    [pp103 setLng:[NSNumber numberWithDouble:-122.388001]];
-    [pp104 setLat:[NSNumber numberWithDouble:37.776278]];
-    [pp104 setLng:[NSNumber numberWithDouble:-122.393864]];
-    [pp103 setStopId:@"7354"];
-    [pp104 setStopId:@"7166"];
-    [pp103 setName:@"Third Street & 23rd St"];
-    [pp104 setName:@"4th St & King St"];
-    leg1012.from = pp103;
-    leg1012.to = pp104;
-    leg1012.endTime = [leg1013.startTime dateByAddingTimeInterval:(30.0*60)];
-    
-    leg1013.startTime = date10;
-    leg1013.duration = [NSNumber numberWithInt:519000];
-    leg1013.mode = @"WALK";
-    leg1013.itinerary = itin101;
-    itin101.startTime = date10;
-    itin101.endTime = [itin101.startTime dateByAddingTimeInterval:(30.0*60)];
-    itin101.plan = plan10;
-    PlanPlace *pp105 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
-    PlanPlace *pp106 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
-    [pp105 setLat:[NSNumber numberWithDouble:37.776281735478]];
-    [pp105 setLng:[NSNumber numberWithDouble:-122.3938669227692]];
-    [pp106 setLat:[NSNumber numberWithDouble:37.77651903369463]];
-    [pp106 setLng:[NSNumber numberWithDouble:-122.3942596619232]];
-    [pp106 setStopId:@"7354"];
-    [pp105 setName:@"King Street"];
-    [pp106 setName:@"4th Street"];
-    leg1013.from = pp105;
-    leg1013.to = pp106;
-    leg1013.endTime = [leg1013.startTime dateByAddingTimeInterval:(30.0*60)];
-    
-    
-    leg1021.startTime = date11;
-    leg1021.duration = [NSNumber numberWithInt:540000];
-    leg1021.agencyId = @"caltrain-ca-us";
-    leg1021.agencyName = @"Caltrain";
-    leg1021.mode = @"RAIL";
-    leg1021.route = @"Local";
-    leg1021.routeLongName = @"Local";
-    leg1021.routeId = @"ct_local_20121001";
-    leg1021.tripId = @"195_20121001";
-    leg1021.itinerary = itin102;
-    itin102.startTime = date11;
-    itin102.endTime = [itin102.startTime dateByAddingTimeInterval:(30.0*60)];
-    itin102.plan = plan10;
-    
-    PlanPlace *pp107 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
-    PlanPlace *pp108 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
-    [pp107 setLat:[NSNumber numberWithDouble:37.757674]];
-    [pp107 setLng:[NSNumber numberWithDouble:-122.392636]];
-    [pp108 setLat:[NSNumber numberWithDouble:37.7764393371]];
-    [pp108 setLng:[NSNumber numberWithDouble:-122.394322993]];
-    [pp107 setStopId:@"22nd Street Caltrain"];
-    [pp108 setStopId:@"San Francisco Caltrain"];
-    [pp107 setName:@"22nd Street Caltrain Station"];
-    [pp108 setName:@"San Francisco Caltrain Station"];
-    leg1021.from = pp107;
-    leg1021.to = pp108;
-    leg1021.endTime = [leg1021.startTime dateByAddingTimeInterval:(30.0*60)];
-    
-    
-    leg1031.startTime = date11;
-    leg1031.duration = [NSNumber numberWithInt:540000];
-    leg1031.agencyId = @"caltrain-ca-us";
-    leg1031.agencyName = @"Caltrain";
-    leg1031.mode = @"RAIL";
-    leg1031.route = @"Local";
-    leg1031.routeLongName = @"Local";
-    leg1031.routeId = @"ct_local_20121001";
-    leg1031.tripId = @"197_20121001";
-    leg1031.itinerary = itin103;
-    itin103.startTime = date11;
-    itin103.endTime = [itin103.startTime dateByAddingTimeInterval:(30.0*60)];
-    itin103.plan = plan10;
-    
-    PlanPlace *pp109 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
-    PlanPlace *pp1010 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
-    [pp109 setLat:[NSNumber numberWithDouble:37.757674]];
-    [pp109 setLng:[NSNumber numberWithDouble:-122.392636]];
-    [pp1010 setLat:[NSNumber numberWithDouble:37.7764393371]];
-    [pp1010 setLng:[NSNumber numberWithDouble:-122.394322993]];
-    [pp109 setStopId:@"22nd Street Caltrain"];
-    [pp1010 setStopId:@"San Francisco Caltrain"];
-    [pp109 setName:@"22nd Street Caltrain Station"];
-    [pp1010 setName:@"San Francisco Caltrain Station"];
-    leg1031.from = pp109;
-    leg1031.to = pp1010;
-    leg1031.endTime = [leg1031.startTime dateByAddingTimeInterval:(30.0*60)];
-    
-    
-    plan11 = [NSEntityDescription insertNewObjectForEntityForName:@"Plan" inManagedObjectContext:managedObjectContext];
-    itin111 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin112 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin113 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    leg1111 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
-    leg1112 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
-    leg1113 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
-    leg1121 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
-    leg1131 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
-    
-    leg1111.startTime = date11;
-    leg1111.duration = [NSNumber numberWithInt:540000];
-    leg1111.agencyId = @"caltrain-ca-us";
-    leg1111.agencyName = @"Caltrain";
-    leg1111.mode = @"RAIL";
-    leg1111.route = @"Local";
-    leg1111.routeLongName = @"Local";
-    leg1111.routeId = @"ct_local_20121001";
-    leg1111.tripId = @"197_20121001";
-    leg1111.itinerary = itin111;
-    itin111.startTime = date11;
-    itin111.endTime = [itin111.startTime dateByAddingTimeInterval:(30.0*60)];
-    itin111.plan = plan11;
-    
-    PlanPlace *pp110 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
-    PlanPlace *pp111 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
-    [pp110 setLat:[NSNumber numberWithDouble:37.757674]];
-    [pp110 setLng:[NSNumber numberWithDouble:-122.392636]];
-    [pp111 setLat:[NSNumber numberWithDouble:37.7764393371]];
-    [pp111 setLng:[NSNumber numberWithDouble:-122.394322993]];
-    [pp110 setStopId:@"22nd Street Caltrain"];
-    [pp111 setStopId:@"San Francisco Caltrain"];
-    [pp110 setName:@"22nd Street Caltrain Station"];
-    [pp111 setName:@"San Francisco Caltrain Station"];
-    leg1111.from = pp110;
-    leg1111.to = pp111;
-    leg1111.endTime = [leg1111.startTime dateByAddingTimeInterval:(30.0*60)];
-    
-    
-    leg1121.startTime = date11;
-    leg1121.duration = [NSNumber numberWithInt:540000];
-    leg1121.agencyId = @"caltrain-ca-us";
-    leg1121.agencyName = @"Caltrain";
-    leg1121.mode = @"RAIL";
-    leg1121.route = @"Local";
-    leg1121.routeLongName = @"Limited";
-    leg1121.routeId = @"ct_limited_20121001";
-    leg1121.tripId = @"195_20121001";
-    leg1121.itinerary = itin112;
-    itin112.startTime = date11;
-    itin112.endTime = [itin112.startTime dateByAddingTimeInterval:(30.0*60)];
-    itin112.plan = plan11;
-    
-    PlanPlace *pp117 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
-    PlanPlace *pp118 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
-    [pp117 setLat:[NSNumber numberWithDouble:37.757674]];
-    [pp117 setLng:[NSNumber numberWithDouble:-122.392636]];
-    [pp118 setLat:[NSNumber numberWithDouble:37.7764393371]];
-    [pp118 setLng:[NSNumber numberWithDouble:-122.394322993]];
-    [pp117 setStopId:@"22nd Street Caltrain"];
-    [pp118 setStopId:@"San Francisco Caltrain"];
-    [pp117 setName:@"22nd Street Caltrain Station"];
-    [pp118 setName:@"San Francisco Caltrain Station"];
-    leg1121.from = pp117;
-    leg1121.to = pp118;
-    leg1121.endTime = [leg1121.startTime dateByAddingTimeInterval:(30.0*60)];
-    
-    
-    leg1131.startTime = date11;
-    leg1131.duration = [NSNumber numberWithInt:540000];
-    leg1131.agencyId = @"caltrain-ca-us";
-    leg1131.agencyName = @"Caltrain";
-    leg1131.mode = @"RAIL";
-    leg1131.route = @"Local";
-    leg1131.routeLongName = @"Bullet";
-    leg1131.routeId = @"ct_bullet_20121001";
-    leg1131.tripId = @"197_20121001";
-    leg1131.itinerary = itin113;
-    itin113.startTime = date11;
-    itin113.endTime = [itin113.startTime dateByAddingTimeInterval:(30.0*60)];
-    itin113.plan = plan11;
-    
-    PlanPlace *pp119 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
-    PlanPlace *pp1110 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
-    [pp119 setLat:[NSNumber numberWithDouble:37.757674]];
-    [pp119 setLng:[NSNumber numberWithDouble:-122.392636]];
-    [pp1110 setLat:[NSNumber numberWithDouble:37.7764393371]];
-    [pp1110 setLng:[NSNumber numberWithDouble:-122.394322993]];
-    [pp119 setStopId:@"22nd Street Caltrain"];
-    [pp1110 setStopId:@"San Francisco Caltrain"];
-    [pp119 setName:@"22nd Street Caltrain Station"];
-    [pp1110 setName:@"San Francisco Caltrain Station"];
-    leg1131.from = pp119;
-    leg1131.to = pp1110;
-    leg1131.endTime = [leg1131.startTime dateByAddingTimeInterval:(30.0*60)];
-    // Save context
-    saveContext(managedObjectContext);
 }
 
 
@@ -402,7 +123,7 @@
 }
 
 // Methods wait until Error or Reply arrives from TP.
--(void)someMethodToWaitForResult
+-(void)waitForGTFSResult
 {
     while (!gtfsParser.loadedInitialData) {
         [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
@@ -414,7 +135,7 @@
 - (void)testGtfsDataParsingAndDBInsertion{
     // Agency DataParsing and DB Insertion Testing
     [gtfsParser requestAgencyDataFromServer];
-    [self someMethodToWaitForResult];
+    [self waitForGTFSResult];
     
     NSFetchRequest * fetchAgency = [[NSFetchRequest alloc] init];
     [fetchAgency setEntity:[NSEntityDescription entityForName:@"GtfsAgency" inManagedObjectContext:managedObjectContext]];
@@ -616,4 +337,104 @@
     STAssertTrue(testCalendarDates2, @"");
     STAssertTrue(testCalendarDates3, @"");
 }
+
+- (void)newGeocodeResults:(NSArray *)locationArray withStatus:(GeocodeRequestStatus)status parameters:(GeocodeRequestParameters *)parameters
+{
+    STAssertEquals(status, GEOCODE_STATUS_OK, @"Did not get OK geocoder status");
+    STAssertTrue([locationArray count] > 0, @"Did not get a Location");
+    if ([locationArray count] > 0) {
+        if (parameters.isFrom) {
+            fromLocation = [locationArray objectAtIndex:0];
+        } else {
+            toLocation = [locationArray objectAtIndex:0];
+        }
+    }
+}
+
+- (void)testPlanRetrieval{
+    /*
+    // Pull fromLocation from geocoder
+    toLocation = nil;
+    GeocodeRequestParameters* geoParam = [[GeocodeRequestParameters alloc] init];
+    geoParam.supportedRegion = [[SupportedRegion alloc] initWithDefault];
+    geoParam.rawAddress = @"1350 Hull Drive, San Carlos, CA 94070";
+    geoParam.apiType = GOOGLE_GEOCODER;
+    geoParam.isFrom = false;
+    [[NSUserDefaults standardUserDefaults] setObject:@"1350HullGeo.json" forKey:DEVICE_TOKEN];  // Tells StubTestTPServer which test file to pull
+    [locations forwardGeocodeWithParameters:geoParam callBack:self];
+    
+    
+    // Pull toLocation from geocoder
+    toLocation = nil;
+    geoParam.rawAddress = @"75 Hawthorne St, San Francisco, CA";
+    geoParam.apiType = GOOGLE_GEOCODER;
+    geoParam.isFrom = true;
+    [[NSUserDefaults standardUserDefaults] setObject:@"75HawthorneGeo.json" forKey:DEVICE_TOKEN];  // Tells StubTestTPServer which test file to pull
+    [locations forwardGeocodeWithParameters:geoParam callBack:self];
+    
+    // Wait for geolocation results
+    int i;
+    for (i=0; i<40; i++) {
+        if (fromLocation && toLocation) {
+            break;  // We are done waiting
+        } else {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    STAssertTrue(i<40, @"Timed out waiting for geolocation");
+    STAssertTrue([[fromLocation formattedAddress] isEqualToString:@""], @"");
+    */
+    
+    PlanRequestParameters* parameters = [[PlanRequestParameters alloc] init];
+    parameters.fromLocation = fromLocation;
+    parameters.toLocation = toLocation;
+    parameters.originalTripDate = [dateFormatter dateFromString:@"02/11/2013 05:30 pm"];
+    parameters.thisRequestTripDate = parameters.originalTripDate;
+    parameters.departOrArrive = DEPART;
+    parameters.maxWalkDistance = (int)([userPreferance walkDistance]*1609.544);
+    parameters.planDestination = PLAN_DESTINATION_TO_FROM_VC;
+    
+    parameters.formattedAddressTO = [toLocation formattedAddress];
+    parameters.formattedAddressFROM = [fromLocation formattedAddress];
+    parameters.latitudeTO = (NSString *)[toLocation lat];
+    parameters.longitudeTO = (NSString *)[toLocation lng];
+    parameters.latitudeFROM = (NSString *)[fromLocation lat];
+    parameters.longitudeFROM = (NSString *)[fromLocation lng];
+    if ([locations isFromGeo]) {
+        parameters.fromType = GEO_FROM;
+        parameters.rawAddressFROM = [fromLocation formattedAddress];
+        parameters.timeFROM = [locations geoRespTimeFrom];
+    } else if ([locations isToGeo]) {
+        parameters.toType = GEO_TO;
+        parameters.rawAddressFROM = [fromLocation formattedAddress] ;
+        parameters.timeTO = [locations geoRespTimeTo];
+    }
+    
+    [[NSUserDefaults standardUserDefaults] setObject:@"Hawthorne2Hull1.json" forKey:DEVICE_TOKEN];  // Tells StubTestTPServer which test file to pull
+    
+    [planStore requestPlanWithParameters:parameters];
+    // Wait for geolocation results
+    int i;
+    for (i=0; i<40; i++) {
+        if (toFromViewController.plan) {
+            break;  // We are done waiting
+        } else {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    STAssertTrue(i<40, @"Timed out waiting for plan");
+
+    Plan* plan = [toFromViewController plan];
+    
+    // Check resulting plan versus what is in Hawthorne2Hull1.json file
+    STAssertEquals(plan.itineraries.count, 3, @"");
+    Itinerary* itin0 = [[plan sortedItineraries] objectAtIndex:0];
+    STAssertTrue([[[[itin0 sortedLegs] objectAtIndex:1] route] isEqualToString:@"10"], @"");
+    Itinerary* itin2 = [[plan sortedItineraries] objectAtIndex:2];
+    STAssertEquals([[itin2 sortedLegs] count], 3,@"");
+    Leg* leg4 = [[itin2 sortedLegs] objectAtIndex:4];
+    STAssertTrue([[[leg4 from] name] isEqualToString:@"San Mateo Caltrain Station"], @"");
+    
+}
+
 @end

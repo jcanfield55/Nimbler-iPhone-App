@@ -239,43 +239,7 @@ FeedBackForm *fbView;
     
     // Create an instance of a UINavigationController and put toFromViewController as the first view
     @try {
-        /*
-         These is for navigation controller
-         
-         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:toFromViewController];
-         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-         [[self window] setRootViewController:navController];
-         
-         */
-        
-        // This is for TabBar controller
-        //[self.window makeKeyAndVisible];
-        self.tabBarController = [[RXCustomTabBar alloc] init];
-        if([[UIScreen mainScreen] bounds].size.height == 568){
-//            if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-//                settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController_568h" bundle:nil];
-//            }
-//            else{
-                settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF_568h" bundle:nil];
-            //}
-            fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm_568h" bundle:nil];
-        }
-        else{
-//            if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-//                settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController" bundle:nil];
-//            }
-//            else{
-                settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF" bundle:nil];
-            //}
-            fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
-        }
-        twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
-        
-        UINavigationController *toFromController = [[UINavigationController alloc] initWithRootViewController:toFromViewController];
-        UINavigationController *tweetController = [[UINavigationController alloc] initWithRootViewController:twitterView];
-        UINavigationController *settingController = [[UINavigationController alloc] initWithRootViewController:settingView];
-        UINavigationController *fbController = [[UINavigationController alloc] initWithRootViewController:fbView];
-        self.tabBarController.viewControllers = [NSArray arrayWithObjects:toFromController,tweetController,settingController,fbController, nil];
+        [self setUpTabViewController];
         
         [UserPreferance userPreferance];  // Saves default user preferences to server if needed
         
@@ -291,6 +255,49 @@ FeedBackForm *fbView;
     }
     return YES;
 }
+
+- (void)setUpTabViewController
+{
+    /*
+     These is for navigation controller
+     
+     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:toFromViewController];
+     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+     [[self window] setRootViewController:navController];
+     
+     */
+    
+    // This is for TabBar controller
+    //[self.window makeKeyAndVisible];
+    self.tabBarController = [[RXCustomTabBar alloc] init];
+    if([[UIScreen mainScreen] bounds].size.height == 568){
+        //            if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+        //                settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController_568h" bundle:nil];
+        //            }
+        //            else{
+        settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF_568h" bundle:nil];
+        //}
+        fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm_568h" bundle:nil];
+    }
+    else{
+        //            if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+        //                settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController" bundle:nil];
+        //            }
+        //            else{
+        settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF" bundle:nil];
+        //}
+        fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
+    }
+    twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
+    
+    UINavigationController *toFromController = [[UINavigationController alloc] initWithRootViewController:toFromViewController];
+    UINavigationController *tweetController = [[UINavigationController alloc] initWithRootViewController:twitterView];
+    UINavigationController *settingController = [[UINavigationController alloc] initWithRootViewController:settingView];
+    UINavigationController *fbController = [[UINavigationController alloc] initWithRootViewController:fbView];
+    self.tabBarController.viewControllers = [NSArray arrayWithObjects:toFromController,tweetController,settingController,fbController, nil];
+    
+}
+
 
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
 {

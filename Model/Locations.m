@@ -10,6 +10,7 @@
 #import "LocationFromGoogle.h"
 #import "UtilityFunctions.h"
 #import "Plan.h"
+#import "Constants.h"
 
 // Internal variables and methods
 
@@ -615,6 +616,11 @@
     // US108 implementation (using "bounds" parameter)
     NSDictionary *googleParameters = [NSDictionary dictionaryWithKeysAndObjects: @"address", parameters.rawAddress,
                                       @"bounds", supportedRegionGeocodeString, @"sensor", @"true", nil];
+#if AUTOMATED_TESTING_SKIP_NCAPPDELEGATE
+    googleParameters = [NSDictionary dictionaryWithKeysAndObjects: @"address", parameters.rawAddress,
+                        @"bounds", supportedRegionGeocodeString, @"sensor", @"true", 
+                        DEVICE_TOKEN, [[NSUserDefaults standardUserDefaults]objectForKey:DEVICE_TOKEN], nil];
+#endif
     geoURLResource = [@"json" appendQueryParams:googleParameters];
     
     [rkGeoMgr loadObjectsAtResourcePath:geoURLResource delegate:self];

@@ -57,7 +57,7 @@
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 @property (readonly, strong, nonatomic) Locations *locations;
 @property (readonly, strong, nonatomic) PlanStore *planStore;
-@property (readonly, strong, nonatomic) ToFromViewController *toFromViewController;
+@property (strong, nonatomic) ToFromViewController *toFromViewController;
 @property (readonly, strong, nonatomic) CLLocationManager* locationManager;
 
 // Properties for Core Data
@@ -107,6 +107,7 @@
 
 - (NSURL *)applicationDocumentsDirectory;
 
+-(void)setUpTabViewController;   // sets up TabViewController & the child navigation controllers
 -(void)suppertedRegion;
 -(void)getTwiiterLiveData;
 +(nc_AppDelegate *)sharedInstance;
@@ -118,4 +119,5 @@
 -(void)calendarByDate;
 - (NSString *)getAppTypeFromBundleId;
 - (NSString *)getAgencyIdsString;
+
 @end
