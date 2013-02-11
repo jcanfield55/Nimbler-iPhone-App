@@ -21,7 +21,6 @@
 @property (nonatomic, retain) NSString * routeTextColor;
 @property (nonatomic, retain) NSString * routeType;
 @property (nonatomic, retain) NSString * routeURL;
-@property (nonatomic, retain) GtfsAgency *agency;
 @property (nonatomic, retain) NSSet *trips;
 @end
 

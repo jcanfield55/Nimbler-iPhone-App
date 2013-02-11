@@ -133,11 +133,11 @@ static RealTimeManager* realTimeManager;
     }
 }
 
-- (void) removeDuplicateItineraries{
-    for(int i=0;i<[[plan sortedItineraries] count];i++){
-        for(int j=i+1;j<[[plan sortedItineraries] count];j++){
-            Itinerary *itinerary1 = [[plan sortedItineraries] objectAtIndex:i];
-            Itinerary *itinerary2 = [[plan sortedItineraries] objectAtIndex:j];
+- (void) removeDuplicateItineraries :(Plan *)newPlan{
+    for(int i=0;i<[[newPlan sortedItineraries] count];i++){
+        for(int j=i+1;j<[[newPlan sortedItineraries] count];j++){
+            Itinerary *itinerary1 = [[newPlan sortedItineraries] objectAtIndex:i];
+            Itinerary *itinerary2 = [[newPlan sortedItineraries] objectAtIndex:j];
             if([[itinerary1 sortedLegs] count] == [[itinerary2 sortedLegs] count]){
                 NSDate *startDate1 = timeOnlyFromDate([itinerary1 startTimeOfFirstLeg]);
                 NSDate *endDate = timeOnlyFromDate([itinerary2 startTimeOfFirstLeg]);

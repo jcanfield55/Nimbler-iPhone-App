@@ -809,10 +809,13 @@ FeedBackForm *fbView;
     @try {
         isRegionSupport = TRUE;
         // DE - 181 Fixed
-        [rkTpClient get:METADATA_URL delegate:self];
+        RKClient *client = [RKClient clientWithBaseURL:TRIP_GENERATE_URL];
+        [RKClient setSharedClient:client];
+        [[RKClient sharedClient]  get:METADATA_URL delegate:self];
     }
     @catch (NSException *exception) {
-        logException(@"ncAppDelegate->suppertedRegion", @"", exception);    }
+        logException(@"ncAppDelegate->suppertedRegion", @"", exception);
+    }
 }
 
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response

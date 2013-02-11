@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1811" systemVersion="12C60" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="11G56" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AddressComponent" representedClassName="AddressComponent" syncable="YES">
         <attribute name="longName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
@@ -27,7 +27,6 @@
         <attribute name="agencyID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="agencyName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="agencyURL" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="routes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GtfsRoutes" inverseName="agency" inverseEntity="GtfsRoutes" syncable="YES"/>
     </entity>
     <entity name="GtfsCalendar" representedClassName="GtfsCalendar" syncable="YES">
         <attribute name="endDate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -58,7 +57,6 @@
         <attribute name="routeTextColor" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="routeType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="routeURL" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="agency" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsAgency" inverseName="routes" inverseEntity="GtfsAgency" syncable="YES"/>
         <relationship name="trips" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GtfsTrips" inverseName="route" inverseEntity="GtfsTrips" syncable="YES"/>
     </entity>
     <entity name="GtfsStop" representedClassName="GtfsStop" syncable="YES">
@@ -257,7 +255,7 @@
     <fetchRequest name="GtfsStopByLatLng" entity="GtfsStop" predicateString="stopLat == $STOPLAT AND stopLon == $STOPLON"/>
     <fetchRequest name="GtfsStopTimesByAgencyID" entity="GtfsStopTimes" predicateString="tripID == $TRIPID AND agencyID == $AGENCYID"/>
     <fetchRequest name="GtfsStopTimesBySequence" entity="GtfsStopTimes" predicateString="tripID == $TRIPID AND stopSequence == $STOPSEQUENCE"/>
-    <fetchRequest name="GtfsStopTimesByStopID" entity="GtfsStopTimes" predicateString="stopID == $STOPID1 OR stopID == $STOPID2"/>
+    <fetchRequest name="GtfsStopTimesByStopID" entity="GtfsStopTimes" predicateString="(stopID == $STOPID1 OR stopID == $STOPID2) AND tripID != $TRIPID"/>
     <fetchRequest name="GtfsTrips" entity="GtfsTrips" predicateString="tripID == $TRIPID"/>
     <fetchRequest name="GtfsTripsByTripIdAndRouteId" entity="GtfsTrips" predicateString="tripID == $TRIPID AND routeID == $ROUTEID"/>
     <fetchRequest name="KeyObjectPairForKey" entity="KeyObjectPair" predicateString="key == $KEY"/>
@@ -269,10 +267,10 @@
     <elements>
         <element name="AddressComponent" positionX="0" positionY="0" width="128" height="105"/>
         <element name="BayArea" positionX="0" positionY="0" width="128" height="195"/>
-        <element name="GtfsAgency" positionX="160" positionY="192" width="128" height="105"/>
+        <element name="GtfsAgency" positionX="160" positionY="192" width="128" height="90"/>
         <element name="GtfsCalendar" positionX="160" positionY="192" width="128" height="225"/>
         <element name="GtfsCalendarDates" positionX="160" positionY="192" width="128" height="105"/>
-        <element name="GtfsRoutes" positionX="160" positionY="192" width="128" height="195"/>
+        <element name="GtfsRoutes" positionX="160" positionY="192" width="128" height="180"/>
         <element name="GtfsStop" positionX="160" positionY="192" width="128" height="165"/>
         <element name="GtfsStopTimes" positionX="160" positionY="192" width="128" height="210"/>
         <element name="GtfsTrips" positionX="160" positionY="192" width="128" height="195"/>

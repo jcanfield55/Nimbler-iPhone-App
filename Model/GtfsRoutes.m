@@ -21,7 +21,6 @@
 @dynamic routeTextColor;
 @dynamic routeType;
 @dynamic routeURL;
-@dynamic agency;
 @dynamic trips;
 
 @end
