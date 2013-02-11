@@ -263,7 +263,6 @@ NSString *strStreet2 = @"street ";
     // DE176 fix 4 of 4.  Check if we need firstResponderSetting set, and if so, set it
     if (([toFromVC editMode]==FROM_EDIT && [self isFrom] && ![[self txtField] isFirstResponder]) ||
         ([toFromVC editMode]==TO_EDIT && ![self isFrom] && ![[self txtField] isFirstResponder])) {
-        BOOL status = [[self txtField] becomeFirstResponder];
     }
     
     // Prepare the cell settings

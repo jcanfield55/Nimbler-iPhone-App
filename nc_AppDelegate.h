@@ -82,7 +82,6 @@
 @property (strong, nonatomic) Location *fromLoc;
 @property (nonatomic) BOOL isFromBackground;
 @property (nonatomic) BOOL isUpdateTime;
-@property (nonatomic) BOOL isServiceByWeekday;
 @property (nonatomic) BOOL isCalendarByDate;
 @property (nonatomic) BOOL isSettingRequest;
 
@@ -115,8 +114,6 @@
 -(void)updateBadge:(int)count;
 -(BOOL)isNetworkConnectionLive;
 -(void)updateTime;
--(void)serviceByWeekday;
--(void)calendarByDate;
 - (NSString *)getAppTypeFromBundleId;
 - (NSString *)getAgencyIdsString;
 

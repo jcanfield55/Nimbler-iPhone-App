@@ -503,7 +503,7 @@ int timeIntervalFromDate(NSDate * date){
     return intervalDepartureTime;
 }
 
-NSString *generateRandomString(){
+NSString *generateRandomString(void){
     NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     NSMutableString *randomString = [NSMutableString stringWithCapacity: REQUEST_ID_LENGTH];
     for (int i = 0; i< REQUEST_ID_LENGTH ; i++) {

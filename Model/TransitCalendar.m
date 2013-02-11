@@ -14,13 +14,19 @@
 #import "Constants.h"
 #import "nc_AppDelegate.h"
 
-@interface TransitCalendar()
+@interface TransitCalendar() {
+
+}
+
+-(void)loadServiceByWeekday;
+-(void)loadCalendarByDate;
 
 
 @end
 
 @implementation TransitCalendar
 
+@synthesize rkTpClient;
 @synthesize lastGTFSLoadDateByAgency;
 @synthesize calendarByDateByAgency;
 @synthesize serviceByWeekdayByAgency;
@@ -41,7 +47,36 @@ static TransitCalendar * transitCalendarSingleton;
     return transitCalendarSingleton;
 }
 
+// requests transitCalendar information from server, starting with last update time, but continuing with all other values if needed
+- (void)updateFromServer
+{
+    NSString *request = [UPDATE_TIME_URL appendQueryParams:nil];
+    NIMLOG_EVENT1(@"updateTime req: %@", request);
+    [rkTpClient get:request delegate:self];
+}
 
+
+-(void)loadServiceByWeekday{
+    @try {
+        NSString *serviceByWeekdayReq = [SERVICE_BY_WEEKDAY_URL appendQueryParams:nil];
+        NIMLOG_EVENT1(@"Service By Weekday req: %@", serviceByWeekdayReq);
+        [rkTpClient get:serviceByWeekdayReq delegate:self];
+    }
+    @catch (NSException *exception) {
+        logException(@"ncAppDelegate->serviceByWeekday", @"", exception);    }
+}
+
+
+-(void)loadCalendarByDate{
+    @try {
+        NSString *request = [CALENDAR_BY_DATE_URL appendQueryParams:nil];
+        NIMLOG_EVENT1(@"Calendar By Date req: %@", request);
+        [rkTpClient  get:request delegate:self];
+    }
+    @catch (NSException *exception) {
+        logException(@"ncAppDelegate->calendarByDate", @"", exception);
+    }
+}
 
 // Accessor override to populate this dictionary if not already there
 - (NSDictionary *)lastGTFSLoadDateByAgency
@@ -58,6 +93,43 @@ static TransitCalendar * transitCalendarSingleton;
     }
     // }
     return [nc_AppDelegate sharedInstance].lastGTFSLoadDateByAgency;
+}
+
+// RestKit callback with server results
+- (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response
+{
+    @try {
+        NSError *error = nil;
+        if (error == nil) {
+            RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
+            NSDictionary *tempResponseDictionary = [rkParser objectFromString:[response bodyAsString] error:nil];
+            if([tempResponseDictionary objectForKey:GTFS_UPDATE_TIME] != nil ){
+                NIMLOG_EVENT1(@"Loaded TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY");
+                if(lastGTFSLoadDateByAgency != tempResponseDictionary){
+                    lastGTFSLoadDateByAgency = tempResponseDictionary;
+                    KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
+                    [keyObjectStore setObject:lastGTFSLoadDateByAgency forKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
+                    [self loadServiceByWeekday];
+                }
+            }
+            else if([tempResponseDictionary objectForKey:GTFS_SERVICE_BY_WEEKDAY] != nil){
+                NIMLOG_EVENT1(@"Loaded TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY");
+                serviceByWeekdayByAgency = tempResponseDictionary;
+                KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
+                [keyObjectStore setObject:serviceByWeekdayByAgency forKey:TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY ];
+                [self loadCalendarByDate];
+            }
+            else if([tempResponseDictionary objectForKey:GTFS_SERVICE_EXCEPTIONS_DATES] != nil){
+                NIMLOG_EVENT1(@"Loaded TR_CALENDAR_BY_DATE_BY_AGENCY");
+                calendarByDateByAgency = tempResponseDictionary;
+                KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
+                [keyObjectStore setObject:calendarByDateByAgency forKey:TR_CALENDAR_BY_DATE_BY_AGENCY];
+            }
+        }
+    }
+    @catch (NSException *exception) {
+        logException(@"TransitCalendar->didLoadResponse", @"catching TPServer Response", exception);
+    }
 }
 
 

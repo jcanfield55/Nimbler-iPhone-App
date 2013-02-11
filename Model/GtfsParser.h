@@ -39,7 +39,7 @@
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkTpClient:(RKClient *)rkClient;
 
 // Parse the Gtfs Agency Data and store to database.
-- (void) parseAndStroreGtfsAgencyData:(NSDictionary *)dictFileData;
+- (void) parseAndStoreGtfsAgencyData:(NSDictionary *)dictFileData;
 
 // Parse the Gtfs CalendarDates Data and store to database.
 - (void) parseAndStoreGtfsCalendarDatesData:(NSDictionary *)dictFileData;
@@ -54,7 +54,7 @@
 - (void) parseAndStoreGtfsStopsData:(NSDictionary *)dictFileData;
 
 // Parse the Gtfs Trips Data and store to database.
-- (void) parseAndStroreGtfsTripsData:(NSDictionary *)dictFileData RequestUrl:(NSString *)strRequestUrl;
+- (void) parseAndStoreGtfsTripsData:(NSDictionary *)dictFileData RequestUrl:(NSString *)strRequestUrl;
 
 // Parse the Gtfs StopTimes Data and store to database.
 - (void) parseAndStoreGtfsStopTimesData:(NSDictionary *)dictFileData RequestUrl:(NSString *) strResourcePath;

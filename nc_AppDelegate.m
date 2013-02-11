@@ -66,7 +66,6 @@ static nc_AppDelegate *appDelegate;
 @synthesize continueGetTime;
 @synthesize isFromBackground;
 @synthesize isUpdateTime;
-@synthesize isServiceByWeekday;
 @synthesize isCalendarByDate;
 @synthesize isSettingRequest;
 @synthesize lastGTFSLoadDateByAgency;
@@ -188,13 +187,17 @@ FeedBackForm *fbView;
         [toFromViewController setPlanStore:planStore];
         [KeyObjectStore setUpWithManagedObjectContext:[self managedObjectContext]];
         
-        // Initialize The GtfsParser
-        
+        // Initialize The GtfsParser and TransitCalendar
         gtfsParser = [[GtfsParser alloc] initWithManagedObjectContext:self.managedObjectContext
                                                            rkTpClient:rkTpClient];
+        [[TransitCalendar transitCalendar] setRkTpClient:rkTpClient];
         
         // Initialize the RealTimeManager
         [[RealTimeManager realTimeManager] setRkTpClient:rkTpClient];
+        
+        // Set CurrentDate
+        NSDate *todayDate = dateOnlyFromDate([NSDate date]);
+        [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:CURRENT_DATE];
         
         // Pre-load stations location files
         if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
@@ -823,34 +826,8 @@ FeedBackForm *fbView;
             {
                 RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
                 NSDictionary *tempResponseDictionary = [rkParser objectFromString:[response bodyAsString] error:nil];
-                if([tempResponseDictionary objectForKey:GTFS_UPDATE_TIME] != nil ){
-                    NIMLOG_EVENT1(@"Loaded TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY");
-                    if(lastGTFSLoadDateByAgency != tempResponseDictionary){
-                        lastGTFSLoadDateByAgency = tempResponseDictionary;
-                        KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
-                        [keyObjectStore setObject:lastGTFSLoadDateByAgency forKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
-                        [self serviceByWeekday];
-                    }
-                }
-                else if([tempResponseDictionary objectForKey:GTFS_SERVICE_BY_WEEKDAY] != nil){
-                    NIMLOG_EVENT1(@"Loaded TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY");
-                    serviceByWeekdayByAgency = tempResponseDictionary;
-                    KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
-                    [keyObjectStore setObject:serviceByWeekdayByAgency forKey:TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY ];
-                    [self calendarByDate];
-                }
-                else if([tempResponseDictionary objectForKey:GTFS_SERVICE_EXCEPTIONS_DATES] != nil){
-                    NIMLOG_EVENT1(@"Loaded TR_CALENDAR_BY_DATE_BY_AGENCY");
-                    calendarByDateByAgency = tempResponseDictionary;
-                    KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
-                    [keyObjectStore setObject:calendarByDateByAgency forKey:TR_CALENDAR_BY_DATE_BY_AGENCY];
-                    [self getTwiiterLiveData];
-                    [self.gtfsParser requestAgencyDataFromServer];
-                    if (timerTweeterGetData == nil) {
-                        timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
-                    }
-                }
-                else if([tempResponseDictionary objectForKey:APPLICATION_TYPE] != nil){
+                
+                if([tempResponseDictionary objectForKey:APPLICATION_TYPE] != nil){
                     [[NSUserDefaults standardUserDefaults] setObject:[tempResponseDictionary objectForKey:APPLICATION_TYPE] forKey:APPLICATION_TYPE];
                     [[NSUserDefaults standardUserDefaults] synchronize];
                     // Call suppertedRegion for getting boundry of bay area region
@@ -911,7 +888,12 @@ FeedBackForm *fbView;
                     if (maxLatitutedLoaded) { //
                         [toFromViewController setSupportedRegion:region];
                     }
-                    [[nc_AppDelegate sharedInstance] updateTime];
+                    [[nc_AppDelegate sharedInstance] updateTime]; // Get TransitCalendar updates
+                    [self getTwiiterLiveData];
+                    [self.gtfsParser requestAgencyDataFromServer];
+                    if (timerTweeterGetData == nil) {
+                        timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
+                    }
                 }
             }
         }
@@ -979,7 +961,6 @@ FeedBackForm *fbView;
         }
         NSString *isUrgent = [userInfo valueForKey:@"isUrgent"];
         NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
-        NSString *sound = [[userInfo valueForKey:@"aps"] valueForKey:@"sound"];
         NIMLOG_EVENT1(@"Remote Notification Sound: %@",sound);
         NSString *badge = [[userInfo valueForKey:@"aps"] valueForKey:@"badge"];
         prefs = [NSUserDefaults standardUserDefaults];
@@ -1029,37 +1010,14 @@ FeedBackForm *fbView;
 -(void)updateTime{
     @try {
         isUpdateTime = YES;
-        NSString *request = [UPDATE_TIME_URL appendQueryParams:nil];
-        NIMLOG_TWITTER1(@"updateTime req: %@", request);
-        [rkTpClient  get:request delegate:self];
+        [[TransitCalendar transitCalendar] updateFromServer];
     }
     @catch (NSException *exception) {
         logException(@"ncAppDelegate->updateTime", @"", exception);
     }
 }
 
--(void)serviceByWeekday{
-    @try {
-        isServiceByWeekday = YES;
-        NSString *serviceByWeekdayReq = [SERVICE_BY_WEEKDAY_URL appendQueryParams:nil];
-        NIMLOG_EVENT1(@"Service By Weekday req: %@", serviceByWeekdayReq);
-        [rkTpClient get:serviceByWeekdayReq delegate:self];
-    }
-    @catch (NSException *exception) {
-        logException(@"ncAppDelegate->serviceByWeekday", @"", exception);    }
-}
 
--(void)calendarByDate{
-    @try {
-        isCalendarByDate = YES;
-        NSString *request = [CALENDAR_BY_DATE_URL appendQueryParams:nil];
-        NIMLOG_EVENT1(@"Calendar By Date req: %@", request);
-        [rkTpClient  get:request delegate:self];
-    }
-    @catch (NSException *exception) {
-        logException(@"ncAppDelegate->calendarByDate", @"", exception);
-    }
-}
 
 #pragma mark Twitter Live count request
 -(void)getTwiiterLiveData{

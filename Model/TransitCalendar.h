@@ -10,8 +10,11 @@
 // request would have the same schedule as a new request
 
 #import <Foundation/Foundation.h>
+#import <RestKit/RestKit.h>
 
-@interface TransitCalendar : NSObject
+@interface TransitCalendar : NSObject<RKRequestDelegate>
+
+@property(strong, nonatomic) RKClient* rkTpClient;   // RestKit client for TP Server
 
 // lastGTFSLoadDateByAgency -- dictionary
 // Dictionary where key is agencyID string and object is NSDate* of last time that agency was updated
@@ -40,6 +43,9 @@
 
 // returns the singleton value.
 + (TransitCalendar *)transitCalendar;
+
+// requests transitCalendar information from server
+- (void)updateFromServer;
 
 //
 // Returns true if the provided date comes after the last GTFS update for given agencyId

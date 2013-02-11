@@ -44,7 +44,6 @@
     double startButtonClickTime;
     float durationOfResponseTime;
     NSTimer* activityTimer;
-    RouteOptionsViewController *routeOptionsVC; 
     LocationPickerViewController *locationPickerVC;
     NSArray* sectionUILabelArray;  // Array of UILabels containing main table section headers
     UIBarButtonItem *barButtonSwap;  // Swap left bar button (for when in NO_EDIT mode)
@@ -95,6 +94,7 @@
 @synthesize timerGettingRealDataByItinerary;
 @synthesize activityIndicator;
 @synthesize strLiveDataURL;
+@synthesize routeOptionsVC;
 @synthesize datePicker,toolBar,departArriveSelector,date,btnDone,btnNow;
 @synthesize plan;
 

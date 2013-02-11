@@ -44,7 +44,7 @@
     return self;
 }
 
-- (void) parseAndStroreGtfsAgencyData:(NSDictionary *)dictFileData{
+- (void) parseAndStoreGtfsAgencyData:(NSDictionary *)dictFileData{
     NSFetchRequest * fetchAgencies = [[NSFetchRequest alloc] init];
     [fetchAgencies setEntity:[NSEntityDescription entityForName:@"GtfsAgency" inManagedObjectContext:self.managedObjectContext]];
     NSArray * arrayAgencies = [self.managedObjectContext executeFetchRequest:fetchAgencies error:nil];
@@ -296,7 +296,7 @@
     saveContext(self.managedObjectContext);
 }
 
-- (void) parseAndStroreGtfsTripsData:(NSDictionary *)dictFileData RequestUrl:(NSString *)strRequestUrl{
+- (void) parseAndStoreGtfsTripsData:(NSDictionary *)dictFileData RequestUrl:(NSString *)strRequestUrl{
     NSArray *arrayComponents = [strRequestUrl componentsSeparatedByString:@"?"];
     NSString *tempString = [arrayComponents objectAtIndex:1];
     NSArray *arraySubComponents = [tempString componentsSeparatedByString:@"="];
@@ -574,7 +574,7 @@
                     NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
                     NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
                     if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
-                        [self parseAndStroreGtfsAgencyData:res];
+                        [self parseAndStoreGtfsAgencyData:res];
                         [self requestCalendarDatafromServer];
                         [dictServerCallSoFar setObject:[NSNumber numberWithInt:0] forKey:GTFS_AGENCY_COUNTER];
                     }
@@ -661,7 +661,7 @@
                     NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
                     NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
                     if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
-                        [self parseAndStroreGtfsTripsData:res RequestUrl:strRequestURL];
+                        [self parseAndStoreGtfsTripsData:res RequestUrl:strRequestURL];
                         [dictServerCallSoFar setObject:[NSNumber numberWithInt:0] forKey:GTFS_TRIPS_COUNTER];
                     }
                     else{

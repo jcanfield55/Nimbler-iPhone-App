@@ -38,27 +38,32 @@
     // Set-up RKManagedObjectStore per https://groups.google.com/forum/?fromgroups=#!topic/restkit/6_iu2mLOgTo
     // This avoids "Can't merge models with two different entities named" error
     
-    NSString *modelPath = nil;
-    for (NSBundle* bundle in [NSBundle allBundles])
-    {
-        modelPath = [bundle pathForResource:@"Network_Commuting" ofType:@"momd"];
-        if (modelPath)
-            break;
+    if (!rkMOS) {
+        NSString *modelPath = nil;
+        for (NSBundle* bundle in [NSBundle allBundles])
+        {
+            modelPath = [bundle pathForResource:@"Network_Commuting" ofType:@"momd"];
+            if (modelPath)
+                break;
+        }
+        STAssertTrue(modelPath != nil, @"Could not find managed object model.");
+        NSManagedObjectModel* mom = [[NSManagedObjectModel alloc]
+                                     initWithContentsOfURL:[NSURL fileURLWithPath:modelPath]];
+        
+        
+        rkMOS = [RKManagedObjectStore objectStoreWithStoreFilename:TEST_COREDATA_DB_FILENAME
+                                             usingSeedDatabaseName:nil
+                                                managedObjectModel:mom
+                                                          delegate:nil];
     }
-    STAssertTrue(modelPath != nil, @"Could not find managed object model.");
-    NSManagedObjectModel* mom = [[NSManagedObjectModel alloc]
-                                 initWithContentsOfURL:[NSURL fileURLWithPath:modelPath]];
-    
-    rkMOS = [RKManagedObjectStore objectStoreWithStoreFilename:TEST_COREDATA_DB_FILENAME
-                                 usingSeedDatabaseName:nil
-                                    managedObjectModel:mom
-                                              delegate:nil];
 
     [rkMOS deletePersistantStoreUsingSeedDatabaseName:nil];  // Make sure data store is cleared to start with
     
     // Set up the ManagedObjectContect and RKObjectManager
-    rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TEST_TRIP_PROCESS_URL];
-    [rkPlanMgr setObjectStore:rkMOS];
+    if (!rkPlanMgr) {
+        rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TEST_TRIP_PROCESS_URL];
+        [rkPlanMgr setObjectStore:rkMOS];
+    }
     
     // Get the NSManagedObjectContext from restkit
     managedObjectContext = [rkMOS managedObjectContext];
@@ -67,7 +72,9 @@
         NIMLOG_AUTOTEST(@"managedObjectContext Store URL = %@", [[[[managedObjectContext persistentStoreCoordinator] persistentStores] objectAtIndex:0] URL]);
     }
     
-    rkTpClient = [RKClient clientWithBaseURL:TEST_TRIP_PROCESS_URL];
+    if (!rkTpClient) {
+        rkTpClient = [RKClient clientWithBaseURL:TEST_TRIP_PROCESS_URL];
+    }
 
     // Set up the planStore
     planStore = [[PlanStore alloc] initWithManagedObjectContext:managedObjectContext rkPlanMgr:rkPlanMgr];
@@ -78,13 +85,18 @@
     // Set up RealTimeManager
     [[RealTimeManager realTimeManager] setRkTpClient:rkTpClient];
     
-    // Initialize The GtfsParser
+    // Initialize The GtfsParser and transitCalendar
     gtfsParser = [[GtfsParser alloc] initWithManagedObjectContext:managedObjectContext
                                                        rkTpClient:rkTpClient];
+    [[nc_AppDelegate sharedInstance] setGtfsParser:gtfsParser];
+    [[TransitCalendar transitCalendar] setRkTpClient:rkTpClient];
+    [[TransitCalendar transitCalendar] updateFromServer];
     
     // Set up Locations wrapper object pointing at the test Managed Object Context
-    rkGeoMgr = [RKObjectManager objectManagerWithBaseURL:TEST_GEO_RESPONSE_URL];
-    [rkGeoMgr setObjectStore:rkMOS];
+    if (!rkGeoMgr) {
+        rkGeoMgr = [RKObjectManager objectManagerWithBaseURL:TEST_GEO_RESPONSE_URL];
+        [rkGeoMgr setObjectStore:rkMOS];
+    }
     locations = [[Locations alloc] initWithManagedObjectContext:managedObjectContext rkGeoMgr:rkGeoMgr];
 
     // Set up UserPreferance
@@ -122,20 +134,40 @@
     [super tearDown];
 }
 
-// Methods wait until Error or Reply arrives from TP.
--(void)waitForGTFSResult
+- (void)newGeocodeResults:(NSArray *)locationArray withStatus:(GeocodeRequestStatus)status parameters:(GeocodeRequestParameters *)parameters
 {
-    while (!gtfsParser.loadedInitialData) {
-        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+    STAssertEquals(status, GEOCODE_STATUS_OK, @"Did not get OK geocoder status");
+    STAssertTrue([locationArray count] > 0, @"Did not get a Location");
+    if ([locationArray count] > 0) {
+        if (parameters.isFrom) {
+            fromLocation = [locationArray objectAtIndex:0];
+        } else {
+            toLocation = [locationArray objectAtIndex:0];
+        }
     }
 }
 
+// Loops up to 5 seconds waiting for *value to become true.  When it does turn true, return true.  If it times out, return false
+- (bool)waitForNonNullValueOfBlock:(BOOL(^)(void))block
+{
+    int i;
+    for (i=0; i<25; i++) {
+        if (block()) {
+            return true;
+        } else {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    return false;  
+}
 
-// Test The GtfsAgency Data Parsing and DB Insertion with some test data.
-- (void)testGtfsDataParsingAndDBInsertion{
-    // Agency DataParsing and DB Insertion Testing
+- (void)testPlanRetrieval{
+    //
+    // Test The GtfsAgency Data Parsing and DB Insertion with some test data.
+    //
+    
     [gtfsParser requestAgencyDataFromServer];
-    [self waitForGTFSResult];
+    STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result=gtfsParser.loadedInitialData; return result;}], @"Timed out waiting for gtfsParser");
     
     NSFetchRequest * fetchAgency = [[NSFetchRequest alloc] init];
     [fetchAgency setEntity:[NSEntityDescription entityForName:@"GtfsAgency" inManagedObjectContext:managedObjectContext]];
@@ -214,10 +246,13 @@
     
     bool testRoutes1 = false;
     bool testRoutes2 = false;
+    BOOL testRoutes2b = false;
     bool testRoutes3 = false;
     bool testRoutes4 = false;
+    bool testRoutes4b = false;
     bool testRoutes5 = false;
     bool testRoutes6 = false;
+    bool testRoutes7 = false;
     
     NSFetchRequest * fetchRoutes = [[NSFetchRequest alloc] init];
     [fetchRoutes setEntity:[NSEntityDescription entityForName:@"GtfsRoutes" inManagedObjectContext:managedObjectContext]];
@@ -227,22 +262,30 @@
         if ([routes.routeID isEqualToString:@"ct_bullet_20120701"]) {
             testRoutes1 = ([routes.routeShortName isEqualToString:@""]);
             testRoutes2 = ([routes.routeLongname isEqualToString:@"Bullet"]);
+            testRoutes2b = ([[[routes agency] agencyID] isEqualToString:@"caltrain-ca-us"]);
         }
         else if ([routes.routeID isEqualToString:@"03"]) {
             testRoutes3 = ([routes.routeShortName isEqualToString:@""]);
             testRoutes4 = ([routes.routeLongname isEqualToString:@"FREMONT - RICHMOND"]);
+            testRoutes4b = ([[[routes agency] agencyID] isEqualToString:@"BART"]);
         }
         else if ([routes.routeID isEqualToString:@"7928"]) {
             testRoutes5 = ([routes.routeShortName isEqualToString:@"1"]);
             testRoutes6 = ([routes.routeLongname isEqualToString:@"CALIFORNIA"]);
         }
+        else if ([routes.routeID isEqualToString:@"DA-91"]) {
+            testRoutes7 = ([[[routes agency] agencyID] isEqualToString:@"AC Transit"]);
+        }
     }
     STAssertTrue(testRoutes1, @"Routes testRoutes1");
     STAssertTrue(testRoutes2, @"Routes testRoutes2");
+    STAssertTrue(testRoutes2b, @"Routes testRoutes2b");
     STAssertTrue(testRoutes3, @"Routes testRoutes3");
     STAssertTrue(testRoutes4, @"Routes testRoutes4");
+    STAssertTrue(testRoutes4b, @"Routes testRoutes4b");
     STAssertTrue(testRoutes5, @"Routes testRoutes5");
     STAssertTrue(testRoutes6, @"Routes testRoutes6");
+    STAssertTrue(testRoutes7, @"Routes testRoutes7");
     
     
     // Stops DataParsing and DB Insertion Testing
@@ -302,7 +345,6 @@
     
     
     // Calendar Dates DataParsing and DB Insertion Testing
-    
     bool testCalendarDates1 = false;
     bool testCalendarDates2 = false;
     bool testCalendarDates3 = false;
@@ -336,60 +378,46 @@
     STAssertTrue(testCalendarDates1, @"");
     STAssertTrue(testCalendarDates2, @"");
     STAssertTrue(testCalendarDates3, @"");
-}
+    
+    
+    //
+    // Test geolocation pull from server
+    //
 
-- (void)newGeocodeResults:(NSArray *)locationArray withStatus:(GeocodeRequestStatus)status parameters:(GeocodeRequestParameters *)parameters
-{
-    STAssertEquals(status, GEOCODE_STATUS_OK, @"Did not get OK geocoder status");
-    STAssertTrue([locationArray count] > 0, @"Did not get a Location");
-    if ([locationArray count] > 0) {
-        if (parameters.isFrom) {
-            fromLocation = [locationArray objectAtIndex:0];
-        } else {
-            toLocation = [locationArray objectAtIndex:0];
-        }
-    }
-}
-
-- (void)testPlanRetrieval{
-    /*
+    
     // Pull fromLocation from geocoder
-    toLocation = nil;
+    fromLocation = nil;
     GeocodeRequestParameters* geoParam = [[GeocodeRequestParameters alloc] init];
     geoParam.supportedRegion = [[SupportedRegion alloc] initWithDefault];
-    geoParam.rawAddress = @"1350 Hull Drive, San Carlos, CA 94070";
-    geoParam.apiType = GOOGLE_GEOCODER;
-    geoParam.isFrom = false;
-    [[NSUserDefaults standardUserDefaults] setObject:@"1350HullGeo.json" forKey:DEVICE_TOKEN];  // Tells StubTestTPServer which test file to pull
-    [locations forwardGeocodeWithParameters:geoParam callBack:self];
-    
-    
-    // Pull toLocation from geocoder
-    toLocation = nil;
     geoParam.rawAddress = @"75 Hawthorne St, San Francisco, CA";
     geoParam.apiType = GOOGLE_GEOCODER;
     geoParam.isFrom = true;
     [[NSUserDefaults standardUserDefaults] setObject:@"75HawthorneGeo.json" forKey:DEVICE_TOKEN];  // Tells StubTestTPServer which test file to pull
     [locations forwardGeocodeWithParameters:geoParam callBack:self];
+    STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result=(fromLocation!=nil); return result;}], @"Timed out waiting for fromLocation");
+    STAssertTrue([[fromLocation formattedAddress] isEqualToString:@"75 Hawthorne Street, San Francisco, CA 94105, USA"], @"");
     
-    // Wait for geolocation results
-    int i;
-    for (i=0; i<40; i++) {
-        if (fromLocation && toLocation) {
-            break;  // We are done waiting
-        } else {
-            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
-        }
-    }
-    STAssertTrue(i<40, @"Timed out waiting for geolocation");
-    STAssertTrue([[fromLocation formattedAddress] isEqualToString:@""], @"");
-    */
+    // toLocation
+    toLocation = nil;
+    geoParam.rawAddress = @"1350 Hull Drive, San Carlos, CA 94070";
+    geoParam.apiType = GOOGLE_GEOCODER;
+    geoParam.isFrom = false;
+    [[NSUserDefaults standardUserDefaults] setObject:@"1350HullGeo.json" forKey:DEVICE_TOKEN];  // Tells StubTestTPServer which test file to pull
+    [locations forwardGeocodeWithParameters:geoParam callBack:self];
+    STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result = (toLocation!=nil); return result;}], @"Timed out waiting for toLocation");
+    STAssertTrue([[toLocation formattedAddress] isEqualToString:@"1350 Hull Drive, San Carlos, CA 94070, USA"], @"");
+
+
+    //
+    // Test plan pull from server using PlanStore
+    //
     
     PlanRequestParameters* parameters = [[PlanRequestParameters alloc] init];
     parameters.fromLocation = fromLocation;
     parameters.toLocation = toLocation;
-    parameters.originalTripDate = [dateFormatter dateFromString:@"02/11/2013 05:30 pm"];
-    parameters.thisRequestTripDate = parameters.originalTripDate;
+    NSDate* tripDate = [dateFormatter dateFromString:@"02/11/2013 05:30 pm"];
+    parameters.originalTripDate = tripDate;
+    parameters.thisRequestTripDate = tripDate;
     parameters.departOrArrive = DEPART;
     parameters.maxWalkDistance = (int)([userPreferance walkDistance]*1609.544);
     parameters.planDestination = PLAN_DESTINATION_TO_FROM_VC;
@@ -413,28 +441,61 @@
     [[NSUserDefaults standardUserDefaults] setObject:@"Hawthorne2Hull1.json" forKey:DEVICE_TOKEN];  // Tells StubTestTPServer which test file to pull
     
     [planStore requestPlanWithParameters:parameters];
-    // Wait for geolocation results
-    int i;
-    for (i=0; i<40; i++) {
-        if (toFromViewController.plan) {
-            break;  // We are done waiting
-        } else {
-            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
-        }
-    }
-    STAssertTrue(i<40, @"Timed out waiting for plan");
+    STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result=(toFromViewController.plan!=nil); return result;}], @"Timed out waiting for plan");
+
 
     Plan* plan = [toFromViewController plan];
     
     // Check resulting plan versus what is in Hawthorne2Hull1.json file
-    STAssertEquals(plan.itineraries.count, 3, @"");
+    STAssertEquals(plan.itineraries.count, 4u, @"");
     Itinerary* itin0 = [[plan sortedItineraries] objectAtIndex:0];
-    STAssertTrue([[[[itin0 sortedLegs] objectAtIndex:1] route] isEqualToString:@"10"], @"");
+    Leg* leg0_1 = [[itin0 sortedLegs] objectAtIndex:1];
+    STAssertTrue([[leg0_1 route] isEqualToString:@"10"], @"");
+    NSString* stopIdNearHawthorne = [[leg0_1 from] stopId];
+    NSString* stopIdNearSFCaltrain = [[leg0_1 to] stopId];
+    Leg* leg0_3 = [[itin0 sortedLegs] objectAtIndex:3];
+    NSString* stopIdSFCaltrain = [[leg0_3 from] stopId];
+    
     Itinerary* itin2 = [[plan sortedItineraries] objectAtIndex:2];
-    STAssertEquals([[itin2 sortedLegs] count], 3,@"");
-    Leg* leg4 = [[itin2 sortedLegs] objectAtIndex:4];
-    STAssertTrue([[[leg4 from] name] isEqualToString:@"San Mateo Caltrain Station"], @"");
+    STAssertEquals([[itin2 sortedLegs] count], 6u,@"");
+    Leg* leg2_4 = [[itin2 sortedLegs] objectAtIndex:4];
+    NSString* stopIdSCarlosCalTr = [[leg2_4 to] stopId];
+    
+    STAssertTrue([[[leg2_4 from] name] isEqualToString:@"San Mateo Caltrain Station"], @"");
+    
+    //
+    // Gtfs itinerary generation
+    //
+    
+    // Wait until GtfsStopTimes have been loaded for this plan
+    STAssertTrue([self waitForNonNullValueOfBlock:^(void){
+        NSArray* stopPairs = [gtfsParser getStopTimes:stopIdSCarlosCalTr
+                                        strFromStopID:stopIdSFCaltrain
+                                            startDate:tripDate];
+        if ([stopPairs count] > 0) {
+            return YES;
+        }
+        return NO;}], @"Timed out waiting for GtfsStopTimes");
+    
+    NSArray* stopPairs = [gtfsParser getStopTimes:stopIdSCarlosCalTr
+                                    strFromStopID:stopIdSFCaltrain
+                                        startDate:tripDate];
+    STAssertEquals([stopPairs count], 4u, @"");
+    STAssertTrue([[[[stopPairs objectAtIndex:0] objectAtIndex:0] tripID] isEqualToString:@"282_20121001"], @"");
+    
+    [gtfsParser generateScheduledItinerariesFromPatternOfPlan:plan Context:managedObjectContext tripDate:tripDate];
+    
+    Leg* firstGeneratedLeg = [[[[plan sortedItineraries] objectAtIndex:0] sortedLegs] objectAtIndex:0];
+    STAssertNotNil([firstGeneratedLeg startTime], @"First leg start-time should not be nil");
+    // View in the ViewController (uncomment when above problem resolved)
+    // [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK];
+
+    // [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:15.0]];
+
     
 }
+
+// NOTE from John 2/10/2013:
+// Set-up and tear-down are not working with multiple test methods.  Recommend putting all automated tests into the above test procedure if possible.
 
 @end

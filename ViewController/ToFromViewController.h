@@ -10,6 +10,7 @@
 #import <MapKit/MapKit.h> 
 #import <RestKit/RestKit.h>
 #import "ToFromTableViewController.h"
+#import "RouteOptionsViewController.h"
 #import "Locations.h"
 #import "Plan.h"
 #import "enums.h"
@@ -52,7 +53,7 @@ typedef enum {
 @property (nonatomic) BOOL isContinueGetRealTimeData;
 @property (strong, nonatomic) NSTimer *continueGetTime;
 
-
+@property (strong, nonatomic) RouteOptionsViewController *routeOptionsVC;
 @property (strong, nonatomic) UIToolbar *toolBar;
 @property (strong, nonatomic) UIDatePicker *datePicker;
 @property (strong, nonatomic) UISegmentedControl *departArriveSelector;
