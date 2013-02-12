@@ -69,6 +69,7 @@ static RealTimeManager* realTimeManager;
         NSString *strRequestString = [arrLegs JSONString];
         RKParams *requestParameter = [RKParams params];
         [requestParameter setValue:strRequestString forParam:LEGS];
+        [requestParameter setValue:[[NSUserDefaults standardUserDefaults] objectForKey:DEVICE_TOKEN] forParam:DEVICE_TOKEN];
         [self.rkTpClient post:LIVE_FEEDS_BY_LEGS params:requestParameter delegate:self];
     }
 }
@@ -130,22 +131,6 @@ static RealTimeManager* realTimeManager;
     }
     @catch (NSException *exception) {
         logException(@"RealTimeManager->liveFees", @"", exception);
-    }
-}
-
-- (void) removeDuplicateItineraries :(Plan *)newPlan{
-    for(int i=0;i<[[newPlan sortedItineraries] count];i++){
-        for(int j=i+1;j<[[newPlan sortedItineraries] count];j++){
-            Itinerary *itinerary1 = [[newPlan sortedItineraries] objectAtIndex:i];
-            Itinerary *itinerary2 = [[newPlan sortedItineraries] objectAtIndex:j];
-            if([[itinerary1 sortedLegs] count] == [[itinerary2 sortedLegs] count]){
-                NSDate *startDate1 = timeOnlyFromDate([itinerary1 startTimeOfFirstLeg]);
-                NSDate *endDate = timeOnlyFromDate([itinerary2 startTimeOfFirstLeg]);
-                if([startDate1 isEqualToDate:endDate]){
-                    [plan deleteItinerary:itinerary2];
-                }
-            }
-        }
     }
 }
 

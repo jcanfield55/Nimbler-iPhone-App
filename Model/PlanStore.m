@@ -53,6 +53,7 @@
     
     return self;
 }
+
 // Requests a plan with the given parameters
 // Will get plan from the cache if available and will call OTP if not
 // Will call back the newPlanAvailable method on toFromVC when the first plan is available
@@ -75,15 +76,15 @@
                          FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
                          FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
                          nil, nil, nil, nil);
-                //[[nc_AppDelegate sharedInstance].gtfsParser generateScheduledItinerariesFromPatternOfPlan:matchingPlan Context:nil tripDate:parameters.originalTripDate];
-                //saveContext(managedObjectContext);
+                [[nc_AppDelegate sharedInstance].gtfsParser generateScheduledItinerariesFromPatternOfPlan:matchingPlan Context:nil tripDate:parameters.originalTripDate];
                 [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
                 PlanRequestStatus status = PLAN_STATUS_OK;
                 if(toFromVC.timerGettingRealDataByItinerary != nil){
                     [toFromVC.timerGettingRealDataByItinerary invalidate];
                     toFromVC.timerGettingRealDataByItinerary = nil;
                 }
-                
+                [matchingPlan removeDuplicateItineraries];
+                matchingPlan.sortedItineraries = nil;
                 if (parameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
                     [routeOptionsVC newPlanAvailable:matchingPlan status:status];
                 } else {
@@ -279,7 +280,7 @@
                     } // else if routeOptions destination, do nothing
                     return;
                 }
-                 plan.uniqueItineraryPatterns = [NSSet setWithArray:[plan uniqueItineraries]];
+                 //plan.uniqueItineraryPatterns = [NSSet setWithArray:[plan uniqueItineraries]];
                 [plan setLegsId];
                  saveContext(managedObjectContext);  // Save location and request chunk changes
                 plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context

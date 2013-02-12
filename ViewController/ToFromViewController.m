@@ -1690,7 +1690,7 @@ UIImage *imageDetailDisclosure;
 
 // call the requestRealTimeDataFromServer from RealtimeManager class with plan.
 - (void) requestServerForRealTime{
-    RealTimeManager *realtimeManager = [RealTimeManager realTimeManager];
-    [realtimeManager requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
+//    RealTimeManager *realtimeManager = [RealTimeManager realTimeManager];
+//    [realtimeManager requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
 }
 @end

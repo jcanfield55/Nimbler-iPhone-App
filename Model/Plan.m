@@ -461,9 +461,28 @@
         Itinerary *itinerary = [[self uniqueItineraries] objectAtIndex:i];
         for(int j=0;j<[[itinerary sortedLegs] count];j++){
             Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
-            if([leg isScheduled])
+            if([leg isScheduled] && !leg.legId)
                 leg.legId = generateRandomString();
         }
     }
 }
+
+- (void) removeDuplicateItineraries{
+    for(int i=0;i<[[self sortedItineraries] count];i++){
+        for(int j=i+1;j<[[self sortedItineraries] count];j++){
+            Itinerary *itinerary1 = [[self sortedItineraries] objectAtIndex:i];
+            Itinerary *itinerary2 = [[self sortedItineraries] objectAtIndex:j];
+            if([[itinerary1 sortedLegs] count] == [[itinerary2 sortedLegs] count]){
+                NSDate *startDate1 = timeOnlyFromDate([itinerary1 startTimeOfFirstLeg]);
+                NSDate *startDate2 = timeOnlyFromDate([itinerary2 startTimeOfFirstLeg]);
+                NSDate *endDate1 = timeOnlyFromDate([itinerary1 endTimeOfLastLeg]);
+                NSDate *endDate2 = timeOnlyFromDate([itinerary2 endTimeOfLastLeg]);
+                if([startDate1 isEqualToDate:startDate2] && [endDate1 isEqualToDate:endDate2]){
+                    [self deleteItinerary:itinerary2];
+                }
+            }
+        }
+    }
+}
+
 @end

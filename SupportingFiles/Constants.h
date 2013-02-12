@@ -19,13 +19,13 @@
 #define TEST_GEO_RESPONSE_URL  @"http://localhost:8080/TPServer/ws/mockgeolocation/"
 
 #define TRIP_PROCESS_URL    @"http://23.23.210.156:8080/TPServer/ws/"
-#define TEST_TRIP_PROCESS_URL @"http://localhost:8080/TPServer/ws/"  // TP server for automated tests
+#define TEST_TRIP_PROCESS_URL @"http://192.168.2.196:9090/TPServer/ws/"  // TP server for automated tests
 
 // Core Data database filename
 #define COREDATA_DB_FILENAME    @"store101.data"
 #define TEST_COREDATA_DB_FILENAME  @"testDataStore.data" // For automated tests
 
-//#define TRIP_PROCESS_URL      @"http://192.168.2.196:6060/TPServer/ws/"
+//#define TRIP_PROCESS_URL      @"http://192.168.2.196:8080/TPServer/ws/"
 
 #define TWITTER_SERARCH_URL    @"https://twitter.com/#!/search/realtime/TRAIN%20from%3Acaltrain%20OR%20from%3Acaltrain_news"
 #define CALTRAIN_TWITTER_URL   @"https://twitter.com/#!/search/from%3Acaltrain%20OR%20from%3Acaltrain_news"

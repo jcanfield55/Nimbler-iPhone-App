@@ -172,7 +172,6 @@
     NSFetchRequest * fetchAgency = [[NSFetchRequest alloc] init];
     [fetchAgency setEntity:[NSEntityDescription entityForName:@"GtfsAgency" inManagedObjectContext:managedObjectContext]];
     NSArray* arrayAgency = [managedObjectContext executeFetchRequest:fetchAgency error:nil];
-    NSLog(@"agency count=%d",[arrayAgency count]);
     STAssertTrue([arrayAgency count] == 11, @"");
     
     bool test1 = false;
@@ -467,9 +466,12 @@
     STAssertNotNil([firstGeneratedLeg startTime], @"First leg start-time should not be nil");
     // View in the ViewController (uncomment when above problem resolved)
     // TODO:- Need to solve coredata fault.
+    [[NSUserDefaults standardUserDefaults] setObject:@"data.json" forKey:DEVICE_TOKEN];
+    [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
+    
     [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK];
-
-     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:15.0]];
+    
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:15.0]];
 }
 
 // NOTE from John 2/10/2013:

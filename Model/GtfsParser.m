@@ -1103,6 +1103,7 @@
             }
         }
         [self adjustItineraryAndLegsTimes:newItinerary Context:context];
+        [newItinerary initializeTimeOnlyVariablesWithRequestDate:tripDate];
     }
 }
 
@@ -1123,7 +1124,7 @@
 }
 
 - (void) adjustItineraryAndLegsTimes:(Itinerary *)itinerary Context:(NSManagedObjectContext *)context{
-        itinerary.sortedLegs = nil;
+    itinerary.sortedLegs = nil;
         if([[itinerary sortedLegs] count] > 0){
             Leg *leg = [[itinerary sortedLegs] objectAtIndex:0];
             if(![leg isScheduled]){
@@ -1137,18 +1138,19 @@
                 [itinerary removeLegsObject:leg];
             }
             
-            Leg *lastLeg = [[itinerary sortedLegs] lastObject];
-            if(![lastLeg isScheduled]){
-                Leg *previousLeg = [lastLeg getLegAtOffsetFromListOfLegs:[itinerary sortedLegs] offset:-1];
-                Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
-                newleg.itinerary = itinerary;
-                newleg.startTime = previousLeg.endTime;
-                newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([newleg.duration intValue])/1000];
-                [newleg setNewlegAttributes:lastLeg];
-                itinerary.endTime = newleg.endTime;
-                [itinerary removeLegsObject:lastLeg];
-            }
+//            Leg *lastLeg = [[itinerary sortedLegs] lastObject];
+//            if(![lastLeg isScheduled]){
+//                Leg *previousLeg = [lastLeg getLegAtOffsetFromListOfLegs:[itinerary sortedLegs] offset:-1];
+//                Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
+//                newleg.itinerary = itinerary;
+//                newleg.startTime = previousLeg.endTime;
+//                newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([lastLeg.duration intValue])/1000];
+//                [newleg setNewlegAttributes:lastLeg];
+//                itinerary.endTime = newleg.endTime;
+//                [itinerary removeLegsObject:lastLeg];
+//            }
         }
+    itinerary.sortedLegs = nil;
 }
 
 // Generate new leg with all parameters from old leg
