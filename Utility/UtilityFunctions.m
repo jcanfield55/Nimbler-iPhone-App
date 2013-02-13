@@ -15,7 +15,7 @@
 
 
 static NSDateFormatter *utilitiesTimeFormatter;  // Static variable for short time formatter for use by utility
-
+static NSDateFormatter *timeFormatterForTimeString;  // used for dateForTimeString utility
 
 // This function will construct the full path for a file with name *filename
 // in the Documents Directory
@@ -248,6 +248,44 @@ NSDate *addDateOnlyWithTime(NSDate *date, NSDate *timeOnly) {
     
     // Return dateOnly plus the timeOnlyInterval
     return [[calendar dateFromComponents:dateComponents] dateByAddingTimeInterval:timeOnlyInterval];
+}
+
+//
+// Return date with time from time string like (10:45:00).
+// Also handles times like 24:30 (by adding a day) for overnight trips per the GTFS standard
+// This function should be used with addDateOnlyWithTime() function
+//
+NSDate *dateFromTimeString(NSString *strTime) {
+    @try {
+        NSString *newStrTime;
+        NSArray *arrayTimeComponents = [strTime componentsSeparatedByString:@":"];
+        int hours=0, minutes=0, seconds=0, days=0;
+        for (int i=0; i<[arrayTimeComponents count]; i++) {
+            int value = [[arrayTimeComponents objectAtIndex:i] intValue];
+            if (i == 0) {
+                hours = value;
+            } else if (i==1) {
+                minutes = [[arrayTimeComponents objectAtIndex:1] intValue];
+            } else if (i==2) {
+                seconds = [[arrayTimeComponents objectAtIndex:2] intValue];
+            }
+        }
+        if(hours > 23){
+            days = hours / 24;
+            hours = hours % 24;
+        }
+        newStrTime = [NSString stringWithFormat:@"%d/%d/%d %d:%d:%d", 1, (days+1), 1, hours,minutes,seconds];
+        
+        if (!timeFormatterForTimeString) {
+            timeFormatterForTimeString = [[NSDateFormatter alloc] init];
+            timeFormatterForTimeString.dateFormat = @"MM/dd/yyyy HH:mm:ss";
+        }
+        NSDate *returnDate = [timeFormatterForTimeString dateFromString:newStrTime];
+        return returnDate;
+    }
+    @catch (NSException *exception) {
+        logException(@"UtilityFunctions->timeAndDateFromString", @"", exception);
+    }
 }
 
 //

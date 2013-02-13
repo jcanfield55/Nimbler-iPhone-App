@@ -471,7 +471,7 @@
     
     [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK];
     
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:15.0]];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:55.0]];
 }
 
 // NOTE from John 2/10/2013:

@@ -59,37 +59,16 @@
     return [super headSign];
 }
 
-- (NSDate *)timeAndDateFromString:(NSString *)strTime{
-    NSString *strDepartureTime;
-    NSArray *arrayDepartureTimeComponents = [strTime componentsSeparatedByString:@":"];
-    if([arrayDepartureTimeComponents count] > 0){
-        int hours = [[arrayDepartureTimeComponents objectAtIndex:0] intValue];
-        int minutes = [[arrayDepartureTimeComponents objectAtIndex:1] intValue];
-        int seconds = [[arrayDepartureTimeComponents objectAtIndex:2] intValue];
-        if(hours > 23){
-            hours = hours - 24;
-        }
-        strDepartureTime = [NSString stringWithFormat:@"%d:%d:%d",hours,minutes,seconds];
-    }
-    
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    formatter.dateFormat = @"HH:mm:ss";
-    NSDate *departureDate = [formatter dateFromString:strDepartureTime];
-    NSDate *departureTime = timeOnlyFromDate(departureDate);
-    NSDate *todayDate = dateOnlyFromDate([NSDate date]);
-    NSDate *finalDate = addDateOnlyWithTimeOnly(todayDate, departureTime);
-    return finalDate;
-}
 -(NSDate *) endTime{
     if (![super endTime]) {
-        [super setEndTime:[self timeAndDateFromString:self.toStopTime.departureTime]];
+        [super setEndTime:dateFromTimeString(self.toStopTime.departureTime)];
     }
     return [super endTime];
 }
 
 -(NSDate *) startTime{
     if (![super startTime]) {
-        [super setStartTime:[self timeAndDateFromString:self.fromStopTime.departureTime]];
+        [super setStartTime:dateFromTimeString(self.fromStopTime.departureTime)];
     }
     return [super startTime];
 }

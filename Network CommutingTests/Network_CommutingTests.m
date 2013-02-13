@@ -1123,6 +1123,21 @@
     STAssertTrue([addDateOnlyWithTime(dayTime2, timeOnly4) isEqualToDate:dayTime5], @"");
     STAssertTrue([addDateOnlyWithTime(dayTime2, timeOnly4Plus10) isEqualToDate:dayTime7], @"");
     STAssertTrue([addDateOnlyWithTime(dayTime2, timeOnly6Minus20) isEqualToDate:dayTime9], @"");
+    
+    // dateFromTimeString
+    NSDate* timeStrDate1 = dateFromTimeString(@"9:30:00");
+    NSDate* timeStrDate2 = dateFromTimeString(@"23:40");
+    NSDate* timeStrDate3 = dateFromTimeString(@"25:10:00");
+    NSDate* timeStrDate4 = dateFromTimeString(@"blah");
+    NSDate* dayTime0T = [dateFormatter dateFromString:@"August 5, 2012 2:30 AM"];
+    NSDate* dayTime1T = [dateFormatter dateFromString:@"August 5, 2012 9:30 AM"];
+    NSDate* dayTime2T = [dateFormatter dateFromString:@"August 5, 2012 11:40 PM"];
+    NSDate* dayTime3T = [dateFormatter dateFromString:@"August 6, 2012 1:10 AM"];
+    NSDate* dayTime4T = [dateFormatter dateFromString:@"August 5, 2012 12:00 AM"];
+    STAssertTrue([addDateOnlyWithTime(dayTime0T, timeStrDate1) isEqualToDate:dayTime1T], @"");
+    STAssertTrue([addDateOnlyWithTime(dayTime0T, timeStrDate2) isEqualToDate:dayTime2T], @"");
+    STAssertTrue([addDateOnlyWithTime(dayTime0T, timeStrDate3) isEqualToDate:dayTime3T], @"");
+    STAssertTrue([addDateOnlyWithTime(dayTime0T, timeStrDate4) isEqualToDate:dayTime4T], @"");
 }
 
 - (void)testKeyObjectStore

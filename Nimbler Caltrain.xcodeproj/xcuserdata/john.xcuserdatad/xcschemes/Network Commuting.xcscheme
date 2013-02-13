@@ -41,9 +41,6 @@
                <Test
                   Identifier = "TestGeneratePlan">
                </Test>
-               <Test
-                  Identifier = "Network_CommutingTests">
-               </Test>
             </SkippedTests>
          </TestableReference>
       </Testables>

@@ -40,12 +40,18 @@ NSInteger dayOfWeekFromDate(NSDate *date);
 
 // Returns a date where the date components are taken from dateOnly, and the time components are
 // taken from timeOnly
+// Mostly should not be used (use addDateOnlyWithTime for proper overnight treatments per GTFS standard)
 NSDate *addDateOnlyWithTimeOnly(NSDate *dateOnly, NSDate *timeOnly);
 
 // Returns a date where the date components are taken from dateOnly, and this is added to time
 // timeOnly is assumed to have originated from a timeOnly value, but may have a value that passes midnight
 // (for example [itinerary startTimeOnly] value)
 NSDate *addDateOnlyWithTime(NSDate *date, NSDate *timeOnly);
+
+// Return date with time from time string like (10:45:00).
+// Also handles times like 24:30 (by adding a day) for overnight trips per the GTFS standard
+// This function should be used with addDateOnlyWithTime() function
+NSDate *dateFromTimeString(NSString *strTime);
 
 //
 // Returns a string that is a truncated version of string that fits within

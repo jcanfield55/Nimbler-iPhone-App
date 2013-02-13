@@ -48,8 +48,8 @@
     NSFetchRequest * fetchAgencies = [[NSFetchRequest alloc] init];
     [fetchAgencies setEntity:[NSEntityDescription entityForName:@"GtfsAgency" inManagedObjectContext:self.managedObjectContext]];
     NSArray * arrayAgencies = [self.managedObjectContext executeFetchRequest:fetchAgencies error:nil];
-    for (id planRequestChunks in arrayAgencies){
-        [self.managedObjectContext deleteObject:planRequestChunks];
+    for (id agency in arrayAgencies){
+        [self.managedObjectContext deleteObject:agency];
     }
     
     NSMutableArray *arrayAgencyID = [[NSMutableArray alloc] init];
@@ -883,32 +883,7 @@
     }
 }
 
-// Return date with time from time string like (10:45:00)
-- (NSDate *)timeAndDateFromString:(NSString *)strTime{
-    @try {
-        NSString *strDepartureTime;
-        NSArray *arrayDepartureTimeComponents = [strTime componentsSeparatedByString:@":"];
-        if([arrayDepartureTimeComponents count] > 0){
-            int hours = [[arrayDepartureTimeComponents objectAtIndex:0] intValue];
-            int minutes = [[arrayDepartureTimeComponents objectAtIndex:1] intValue];
-            int seconds = [[arrayDepartureTimeComponents objectAtIndex:2] intValue];
-            if(hours > 23){
-                hours = hours - 24;
-            }
-            strDepartureTime = [NSString stringWithFormat:@"%d:%d:%d",hours,minutes,seconds];
-        }
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        formatter.dateFormat = @"HH:mm:ss";
-        NSDate *departureDate = [formatter dateFromString:strDepartureTime];
-        NSDate *departureTime = timeOnlyFromDate(departureDate);
-        NSDate *todayDate = dateOnlyFromDate([NSDate date]);
-        NSDate *finalDate = addDateOnlyWithTimeOnly(todayDate, departureTime);
-        return finalDate;
-    }
-    @catch (NSException *exception) {
-        logException(@"GtfsParser->timeAndDateFromString", @"", exception);
-    }
-}
+
 
 // return time interval in seconds from time string like (10:45:00)
 - (int)getTimeInterValInSeconds:(NSString *)strTime{
@@ -1031,7 +1006,11 @@
 
 // This method create scheduled leg from gtfs data.
 // First find the nearest stoptimes then create transit leg from stoptimes data.
-- (BOOL) addScheduledLegToItinerary:(Itinerary *)itinerary TransitLeg:(Leg *)leg StopTime:(NSMutableArray *)arrStopTimes Context:(NSManagedObjectContext *)context{
+- (BOOL) addScheduledLegToItinerary:(Itinerary *)itinerary
+                         TransitLeg:(Leg *)leg
+                           StopTime:(NSMutableArray *)arrStopTimes
+                           TripDate:(NSDate *)tripDate
+                            Context:(NSManagedObjectContext *)context {
     @try {
         NSArray *arrayStopTime = [self findNearestStopTimeFromStopTimeArray:arrStopTimes Itinerary:itinerary];
         if(!arrayStopTime)
@@ -1041,8 +1020,10 @@
         Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
         newleg.itinerary = itinerary;
         if(fromStopTime.departureTime){
-            newleg.startTime = [self timeAndDateFromString:fromStopTime.departureTime];
-            newleg.endTime = [self timeAndDateFromString:toStopTime.departureTime];
+            newleg.startTime = addDateOnlyWithTime(dateOnlyFromDate(tripDate),
+                                                   dateFromTimeString(fromStopTime.departureTime));
+            newleg.endTime = addDateOnlyWithTime(dateOnlyFromDate(tripDate),
+                                                 dateFromTimeString(toStopTime.departureTime));
         }
         [newleg setNewlegAttributes:leg];
         newleg.tripId = fromStopTime.tripID;
@@ -1061,12 +1042,15 @@
 // if leg is transit leg then we get the stoptimes data for that leg.
 // Next find the nearest stoptimes by comparing departureTime with new itinerary start time or end time.
 // Then create the new leg and itinerary from stoptimes data. 
-- (void) generateItineraryFromItinerayPatern:(Itinerary *)itinerary tripDate:(NSDate *)tripDate Plan:(Plan *)plan Context:(NSManagedObjectContext *)context{
+- (void) generateItineraryFromItineraryPattern:(Itinerary *)itinerary tripDate:(NSDate *)tripDate Plan:(Plan *)plan Context:(NSManagedObjectContext *)context{
     NSMutableDictionary *dictStopTimes = [[NSMutableDictionary alloc] init];
-    NSDate *startDate = [NSDate date];
-    while (true) {
-        if([startDate timeIntervalSinceNow] > ITINERARY_GANERATION_TIMEOUT  || [itinerary haveOnlyUnScheduledLeg]){
-            NIMLOG_UOS202(@"Generation Of itinerary from pattern Timeout");
+    PlanRequestChunk* reqChunk;
+    for (int i=0; i<200; i++) {
+        if ([itinerary haveOnlyUnScheduledLeg]) {
+            break;
+        }
+        if(i==199){
+            logError(@"GtfsParser-->generateItineraryFromItineraryPattern", @"Reached 199 iterations in generating itinerary");
             break;
         }
         Itinerary* newItinerary = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:context];
@@ -1095,15 +1079,32 @@
                     [plan deleteItinerary:newItinerary];
                     return;
                 }
-                if(![self addScheduledLegToItinerary:newItinerary TransitLeg:leg StopTime:arrStopTime Context:context]){
+                if(![self addScheduledLegToItinerary:newItinerary
+                                          TransitLeg:leg
+                                            StopTime:arrStopTime
+                                            TripDate:tripDate
+                                             Context:context]){
                     [plan deleteItinerary:newItinerary];
                     break;
                 }
                 [dictStopTimes setObject:arrStopTime forKey:leg.tripId];
             }
         }
-        [self adjustItineraryAndLegsTimes:newItinerary Context:context];
-        [newItinerary initializeTimeOnlyVariablesWithRequestDate:tripDate];
+        if (![newItinerary isDeleted]) {
+            [self adjustItineraryAndLegsTimes:newItinerary Context:context];
+            
+            // Add these itineraries to the request chunk
+            if (!reqChunk) {
+                reqChunk = [NSEntityDescription insertNewObjectForEntityForName:@"PlanRequestChunk"
+                                                         inManagedObjectContext:context];
+                reqChunk.plan = plan;
+                reqChunk.type = REQUEST_CHUNK_TYPE_GTFS;
+                reqChunk.earliestRequestedDepartTimeDate = tripDate; // assumes Depart
+            }
+            [reqChunk addItinerariesObject:newItinerary];
+            
+            [newItinerary initializeTimeOnlyVariablesWithRequestDate:tripDate];
+        }
     }
 }
 
@@ -1247,7 +1248,11 @@
                         [plan deleteItinerary:newItinerary];
                         break;
                     }
-                    [self addScheduledLegToItinerary:newItinerary TransitLeg:leg StopTime:arrStopTime Context:context];
+                    [self addScheduledLegToItinerary:newItinerary
+                                          TransitLeg:leg
+                                            StopTime:arrStopTime
+                                            TripDate:[NSDate date]   // Note:  should use tripdate, not today's date!
+                                             Context:context];
                 }
             }
             else{
@@ -1265,8 +1270,9 @@
     }
     for(int i=0;i<[[plan uniqueItineraries] count];i++){
         Itinerary *itinerary = [[plan uniqueItineraries] objectAtIndex:i];
-        [self generateItineraryFromItinerayPatern:itinerary tripDate:tripDate Plan:plan Context:context];
+        [self generateItineraryFromItineraryPattern:itinerary tripDate:tripDate Plan:plan Context:context];
     }
+    saveContext(context);
 }
 @end
 

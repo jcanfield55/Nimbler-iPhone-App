@@ -15,7 +15,18 @@
 #import "enums.h"
 #import "TransitCalendar.h"
 
+typedef enum {
+    REQUEST_CHUNK_TYPE_OTP,  // Request chunk of OTP-generated itineraries
+    REQUEST_CHUNK_TYPE_GTFS  // Requesrt chunk of GTFS-generated itineraries
+} RequestChunkType;
+
+
 @interface PlanRequestChunk : NSManagedObject
+
+@property (nonatomic) RequestChunkType type;
+
+// Set only if type = REQUEST_CHUNK_TYPE_GTFS.  Contains the itinerary pattern used to generate the GTFS itinerary in this request chunk
+// @property (strong, nonatomic) Itinerary* gtfsItineraryPattern;
 
 // Earliest requested departure time/date used in requesting the itineraries in this RequestChunk.
 // nil if only arrive-by requests have been used so far

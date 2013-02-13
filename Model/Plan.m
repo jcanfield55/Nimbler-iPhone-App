@@ -241,6 +241,7 @@
     PlanRequestChunk* requestChunk = [NSEntityDescription insertNewObjectForEntityForName:@"PlanRequestChunk"
                                                             inManagedObjectContext:[self managedObjectContext]];
     [requestChunk setPlan:self];
+    [requestChunk setType:REQUEST_CHUNK_TYPE_OTP];
     if (depOrArrive == DEPART) {
         [requestChunk setEarliestRequestedDepartTimeDate:requestDate];
     } else { // ARRIVE
