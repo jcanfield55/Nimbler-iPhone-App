@@ -20,7 +20,6 @@
 
 #define TRIP_PROCESS_URL    @"http://23.23.210.156:8080/TPServer/ws/"
 #define TEST_TRIP_PROCESS_URL @"http://localhost:8080/TPServer/ws/"  // TP server for automated tests
-// #define TEST_TRIP_PROCESS_URL @"http://192.168.2.196:9090/TPServer/ws/"  // TP server for automated tests
 
 // Core Data database filename
 #define COREDATA_DB_FILENAME    @"store101.data"

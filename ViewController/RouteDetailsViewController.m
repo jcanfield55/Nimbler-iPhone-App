@@ -262,7 +262,6 @@ NSUserDefaults *prefs;
             [mainTable selectRowAtIndexPath:[NSIndexPath indexPathForRow:itineraryNumber inSection:0] animated:YES scrollPosition:UITableViewScrollPositionMiddle];   
         }
         [self.view bringSubviewToFront:self.mainTable];
-    
     }
     @catch (NSException *exception) {
         logException(@"RouteDetailsViewController->viewWillAppear", @"", exception);

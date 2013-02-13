@@ -100,7 +100,7 @@
 
 // Generate new itinerary by chaging the legs from miss connection found.
 // i.e if pattern is w,c,w,b and if miss connection found from c then we will create c,w,b legs.
-- (void) generateNewItineraryByRemovingConflictLegs:(Leg *)leg FromItinerary:(Itinerary *)itinerary Plan:(Plan *)plan Context:(NSManagedObjectContext *)context;
+- (void) generateNewItineraryByRemovingConflictLegs:(Leg *)leg FromItinerary:(Itinerary *)itinerary Plan:(Plan *)plan TripDate:(NSDate *)tripDate Context:(NSManagedObjectContext *)context;
 
 // Generate new itineraries from patterns and stoptimes data.
 - (void) generateScheduledItinerariesFromPatternOfPlan:(Plan *)plan Context:(NSManagedObjectContext *)context tripDate:(NSDate *)tripDate;

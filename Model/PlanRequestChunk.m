@@ -14,7 +14,7 @@
 
 @implementation PlanRequestChunk
 
-@dynamic type;
+@synthesize type;
 @dynamic earliestRequestedDepartTimeDate;
 @dynamic latestRequestedArriveTimeDate;
 @dynamic itineraries;

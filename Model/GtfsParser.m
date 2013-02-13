@@ -1027,6 +1027,7 @@
         }
         [newleg setNewlegAttributes:leg];
         newleg.tripId = fromStopTime.tripID;
+        newleg.headSign = fromStopTime.trips.tripHeadSign;
         newleg.duration = [NSNumber numberWithDouble:[newleg.startTime timeIntervalSinceDate:newleg.endTime] * 1000];
         itinerary.endTime = newleg.endTime;
         [arrStopTimes removeObject:arrayStopTime];
@@ -1139,17 +1140,17 @@
                 [itinerary removeLegsObject:leg];
             }
             
-//            Leg *lastLeg = [[itinerary sortedLegs] lastObject];
-//            if(![lastLeg isScheduled]){
-//                Leg *previousLeg = [lastLeg getLegAtOffsetFromListOfLegs:[itinerary sortedLegs] offset:-1];
-//                Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
-//                newleg.itinerary = itinerary;
-//                newleg.startTime = previousLeg.endTime;
-//                newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([lastLeg.duration intValue])/1000];
-//                [newleg setNewlegAttributes:lastLeg];
-//                itinerary.endTime = newleg.endTime;
-//                [itinerary removeLegsObject:lastLeg];
-//            }
+            Leg *lastLeg = [[itinerary sortedLegs] lastObject];
+            if(![lastLeg isScheduled]){
+                Leg *previousLeg = [lastLeg getLegAtOffsetFromListOfLegs:[itinerary sortedLegs] offset:-1];
+                Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
+                newleg.itinerary = itinerary;
+                newleg.startTime = previousLeg.endTime;
+                newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([lastLeg.duration intValue])/1000];
+                [newleg setNewlegAttributes:lastLeg];
+                itinerary.endTime = newleg.endTime;
+                [itinerary removeLegsObject:lastLeg];
+            }
         }
     itinerary.sortedLegs = nil;
 }
@@ -1173,33 +1174,38 @@
     newItinerary.plan = plan;
     newItinerary.startTime = itinerary.startTime;
     int index = 0;
-    Leg *leg;
     for(int i=0;i<[[itinerary sortedLegs] count];i++){
         Leg *leg = [[itinerary sortedLegs] objectAtIndex:i];
          if([uniqueLeg.to.lat doubleValue] == [leg.to.lat doubleValue] && [uniqueLeg.to.lng doubleValue] == [leg.to.lng doubleValue] && [uniqueLeg.from.lat doubleValue ] == [leg.from.lat doubleValue] && [uniqueLeg.from.lng doubleValue] == [leg.from.lng doubleValue] && [uniqueLeg.routeId isEqualToString:leg.routeId]){
              index = i;
              [self generateLegFromPrediction:prediction newItinerary:newItinerary Leg:leg Context:context ISExtraPrediction:true];
+             break;
         }
     }
     for(int i=index+1;i<[[itinerary sortedLegs] count];i++){
-            if([leg isScheduled] && leg.prediction){
-                   NSDate *predtctionTime = [NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"epochTime"] doubleValue]/1000.0)];
+         Leg *leg = [[itinerary sortedLegs] objectAtIndex:i];
+            if([leg isScheduled]){
+                if(leg.prediction){
+                    NSDate *predtctionTime = [NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"epochTime"] doubleValue]/1000.0)];
                     NSDate *endTime = timeOnlyFromDate([predtctionTime dateByAddingTimeInterval:([leg.duration floatValue]/1000)]);
                     NSDate *itiEndTime = timeOnlyFromDate(newItinerary.endTime);
                     if([endTime compare:itiEndTime] == NSOrderedDescending){
-                       [self generateLegFromPrediction:leg.prediction newItinerary:newItinerary Leg:leg Context:context ISExtraPrediction:false];
+                        [self generateLegFromPrediction:leg.prediction newItinerary:newItinerary Leg:leg Context:context ISExtraPrediction:false];
                     }
                     else{
                         [plan deleteItinerary:itinerary];
                         break;
                     }
+                }
             }
             else{
                 [self addUnScheduledLegToItinerary:newItinerary WalkLeg:leg Context:context];
             }
     }
     for(int i=index-1;i>=0;i--){
-        if([leg isScheduled] && leg.prediction){
+         Leg *leg = [[itinerary sortedLegs] objectAtIndex:i];
+        if([leg isScheduled]){
+            if(leg.prediction){
                 NSDate *predtctionTime = [NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"epochTime"] doubleValue]/1000.0)];
                 NSDate *endTime = timeOnlyFromDate([predtctionTime dateByAddingTimeInterval:([leg.duration floatValue]/1000)]);
                 NSDate *itiStartTime = timeOnlyFromDate(newItinerary.startTime);
@@ -1210,6 +1216,7 @@
                     [plan deleteItinerary:newItinerary];
                     break;
                 }
+            }
         }
         else{
             [self addUnScheduledLegToItinerary:newItinerary WalkLeg:leg Context:context];
@@ -1220,7 +1227,7 @@
 
 // Generate new itinerary by chaging the legs from miss connection found.
 // i.e if pattern is w,c,w,b and if miss connection found from c then we will create c,w,b legs.
-- (void) generateNewItineraryByRemovingConflictLegs:(Leg *)leg FromItinerary:(Itinerary *)itinerary Plan:(Plan *)plan Context:(NSManagedObjectContext *)context{
+- (void) generateNewItineraryByRemovingConflictLegs:(Leg *)leg FromItinerary:(Itinerary *)itinerary Plan:(Plan *)plan TripDate:(NSDate *)tripDate Context:(NSManagedObjectContext *)context{
     if(!context){
         context = managedObjectContext;
     }
@@ -1238,7 +1245,26 @@
             Leg *leg = [sortedlegs objectAtIndex:i];
             if([leg isScheduled]){
                 if(leg.prediction){
-                    [self generateLegFromPrediction:leg.prediction newItinerary:newItinerary Leg:leg Context:context ISExtraPrediction:false];
+                    NSDate *predtctionTime = [NSDate dateWithTimeIntervalSince1970:([[leg.prediction objectForKey:@"epochTime"] doubleValue]/1000.0)];
+                    NSDate *endTime = timeOnlyFromDate(predtctionTime);
+                    NSDate *itiEndTime = timeOnlyFromDate(newItinerary.endTime);
+                    if([endTime compare:itiEndTime] == NSOrderedDescending){
+                        [self generateLegFromPrediction:leg.prediction newItinerary:newItinerary Leg:leg Context:context ISExtraPrediction:false];
+                    }
+                    else{
+                        NSString *strTOStopID = leg.to.stopId;
+                        NSString *strFromStopID = leg.from.stopId;
+                        NSMutableArray *arrStopTime = [self getStopTimes:strTOStopID strFromStopID:strFromStopID startDate:newItinerary.endTime TripId:leg.tripId];
+                        if([arrStopTime count] == 0){
+                            [plan deleteItinerary:newItinerary];
+                            break;
+                        }
+                        [self addScheduledLegToItinerary:newItinerary
+                                              TransitLeg:leg
+                                                StopTime:arrStopTime
+                                                TripDate:tripDate
+                                                 Context:context];
+                    }
                 }
                 else{
                     NSString *strTOStopID = leg.to.stopId;
@@ -1251,7 +1277,7 @@
                     [self addScheduledLegToItinerary:newItinerary
                                           TransitLeg:leg
                                             StopTime:arrStopTime
-                                            TripDate:[NSDate date]   // Note:  should use tripdate, not today's date!
+                                            TripDate:tripDate
                                              Context:context];
                 }
             }

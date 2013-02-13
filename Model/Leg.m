@@ -604,20 +604,16 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     NSDate *realTimeDate = [NSDate dateWithTimeIntervalSince1970:(epochTime/1000.0)];
     double millisecondsSchedule = ([timeOnlyFromDate(self.startTime) timeIntervalSince1970])*1000.0;
     double millisecondsRealTime = ([timeOnlyFromDate(realTimeDate) timeIntervalSince1970])*1000.0;
-    
     double timeDiffInMilliSeconds = millisecondsRealTime - millisecondsSchedule;
     int timeDiffInMinutes = timeDiffInMilliSeconds/(60*1000);
-    if(timeDiffInMilliSeconds < 0)
-        timeDiffInMilliSeconds = -timeDiffInMilliSeconds;
     return timeDiffInMinutes;
 }
 
 // return arrival time flag for leg.
-- (int) calculateArrivalTimeFlag{
-    int timeDiff = [self.timeDiffInMins intValue];
-    if(timeDiff >= -2 && timeDiff <= 2)
+- (int) calculateArrivalTimeFlag:(int)timeDifference{
+    if(timeDifference >= -2 && timeDifference <= 2)
         return ON_TIME;
-    else if(timeDiff < -2)
+    else if(timeDifference < -2)
         return EARLY;
     else
         return DELAYED;
@@ -625,11 +621,14 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 
 // set timediffInMins,realStartTime,realEndTime and arrivalFlag for leg from realTime data.
 - (void) setRealTimeParametersUsingEpochTime:(double)epochTime{
-    self.timeDiffInMins = [NSString stringWithFormat:@"%d",[self calculatetimeDiffInMins:epochTime]];
+    int timeDiff = [self calculatetimeDiffInMins:epochTime];
+    self.arrivalFlag = [NSString stringWithFormat:@"%d",[self calculateArrivalTimeFlag:timeDiff]];
+    if(timeDiff < 0)
+        timeDiff = -timeDiff;
+    self.timeDiffInMins = [NSString stringWithFormat:@"%d",timeDiff];
     self.realStartTime = [NSDate dateWithTimeIntervalSince1970:(epochTime/1000.0)];
     self.arrivalTime = [NSDate dateWithTimeIntervalSince1970:(epochTime/1000.0)];
     self.realEndTime = [[self endTime] dateByAddingTimeInterval:([self.timeDiffInMins intValue]*60*1000)];
-    self.arrivalFlag = [NSString stringWithFormat:@"%d",[self calculateArrivalTimeFlag]];
 }
 
 @end

@@ -467,9 +467,14 @@
     // View in the ViewController (uncomment when above problem resolved)
     // TODO:- Need to solve coredata fault.
     [[NSUserDefaults standardUserDefaults] setObject:@"data.json" forKey:DEVICE_TOKEN];
+    [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK];
+    
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:20.0]];
+    
     [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
     
-    [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK];
+    [planStore.routeOptionsVC reloadData:plan];
+    [[RealTimeManager realTimeManager].routeDetailVC ReloadLegWithNewData];
     
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:55.0]];
 }

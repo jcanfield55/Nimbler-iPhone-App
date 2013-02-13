@@ -83,7 +83,7 @@
                     [toFromVC.timerGettingRealDataByItinerary invalidate];
                     toFromVC.timerGettingRealDataByItinerary = nil;
                 }
-                [matchingPlan removeDuplicateItineraries];
+                //[matchingPlan removeDuplicateItineraries];
                 matchingPlan.sortedItineraries = nil;
                 if (parameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
                     [routeOptionsVC newPlanAvailable:matchingPlan status:status];

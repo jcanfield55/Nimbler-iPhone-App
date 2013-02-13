@@ -238,7 +238,7 @@ static RealTimeManager* realTimeManager;
             }
         }
         Leg *uniqueLeg = [self returnLegWithSameLegId:legId];
-       // Itinerary *uniquePattern = [self returnPatternWithSameLegId:legId];
+        //Itinerary *uniquePattern = [self returnPatternWithSameLegId:legId];
         for(int i=0;i<[[plan sortedItineraries] count];i++){
             Itinerary *itinerary = [[plan sortedItineraries] objectAtIndex:i];
             for(int k=0;k<[[itinerary sortedLegs] count];k++){
@@ -278,7 +278,7 @@ static RealTimeManager* realTimeManager;
                 if(conflictLeg){
                     Leg *adjustedLeg =  [itinerary adjustLegsIfRequired];
                     if(adjustedLeg)
-                        [[nc_AppDelegate sharedInstance].gtfsParser generateNewItineraryByRemovingConflictLegs:leg FromItinerary:itinerary Plan:plan Context:nil];
+                        [[nc_AppDelegate sharedInstance].gtfsParser generateNewItineraryByRemovingConflictLegs:leg FromItinerary:itinerary Plan:plan TripDate:originalTripDate Context:nil];
                 }
                 [itinerary setArrivalFlagFromLegsRealTime];
             }
