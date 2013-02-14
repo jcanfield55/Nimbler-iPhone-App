@@ -18,6 +18,7 @@
 @synthesize routeDetailVC;
 @synthesize liveData;
 @synthesize originalTripDate;
+@synthesize loadedRealTimeData;
 
 static RealTimeManager* realTimeManager;
 
@@ -81,6 +82,7 @@ static RealTimeManager* realTimeManager;
         // DE 175 Fixed
         [nc_AppDelegate sharedInstance].isNeedToLoadRealData = YES;
         RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+        loadedRealTimeData = true;
         id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
         [routeOptionsVC setIsReloadRealData:false];
         [self setLiveFeed:res];
@@ -112,8 +114,8 @@ static RealTimeManager* realTimeManager;
             //It means there are live feeds in response
             NSArray * legLiveFees = [liveData  objectForKey:@"legLiveFeeds"];
             if ([legLiveFees count] > 0) {
-                [self updateRealtimeForLegsAndItineraries:legLiveFees Plan:plan];
-                plan.sortedItineraries = nil;
+                [self setRealTimePredictionsFromLiveFeeds1:legLiveFees];
+                [[nc_AppDelegate sharedInstance].gtfsParser generateLegFromPrediction:plan TripDate:originalTripDate Context:nil];
                 for(int i=0;i<[[plan sortedItineraries] count];i++){
                     Itinerary *itinerary = [[plan sortedItineraries] objectAtIndex:i];
                     itinerary.sortedLegs = nil;
@@ -259,6 +261,24 @@ static RealTimeManager* realTimeManager;
 //        for(int i=0;i<[mutablePredictionList count];i++){
 //            [[nc_AppDelegate sharedInstance].gtfsParser generateNewItineraryFromExtraPrediction:[mutablePredictionList objectAtIndex:i] :plan Itinerary:uniquePattern UniqueLeg:uniqueLeg Context:nil];
 //        }
+    }
+}
+
+- (void) setRealTimePredictionsFromLiveFeeds1:(NSArray *)liveFeeds{
+    for (int j=0; j<[liveFeeds count]; j++) {
+        id key = [liveFeeds objectAtIndex:j];
+        NSString *legId = [[key objectForKey:@"leg"] objectForKey:@"id"];
+        NSArray *predictionList = [key objectForKey:@"lstPredictions"];
+        Leg *uniqueLeg = [self returnLegWithSameLegId:legId];
+        for(int i=0;i<[[plan uniqueItineraries] count];i++){
+            Itinerary *itinerary = [[plan uniqueItineraries] objectAtIndex:i];
+            for(int k=0;k<[[itinerary sortedLegs] count];k++){
+                Leg *leg = [[itinerary sortedLegs] objectAtIndex:k];
+                if([leg.legId isEqualToString:uniqueLeg.legId]){
+                    leg.predictions = predictionList;
+                }
+            }
+        }
     }
 }
 

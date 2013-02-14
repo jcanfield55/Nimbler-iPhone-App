@@ -28,6 +28,7 @@
 @property (unsafe_unretained, nonatomic) RouteDetailsViewController *routeDetailVC;
 @property(strong, nonatomic) id liveData;
 @property (strong, nonatomic) NSDate *originalTripDate;
+@property (nonatomic) BOOL loadedRealTimeData;
 
 +(RealTimeManager *)realTimeManager;
 

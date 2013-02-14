@@ -472,11 +472,22 @@
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:20.0]];
     
     [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
+    STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result=[RealTimeManager realTimeManager].loadedRealTimeData; return result;}], @"Timed out waiting for RealTimeData");
+    
+    [gtfsParser generateItinerariesFromPrediction:plan TripDate:tripDate Context:managedObjectContext];
+    plan.sortedItineraries = nil;
+    for(int i=0;i<[plan.sortedItineraries count];i++){
+        Itinerary *itinerary = [plan.sortedItineraries objectAtIndex:i];
+        itinerary.sortedLegs = nil;
+        
+    }
     
     [planStore.routeOptionsVC reloadData:plan];
     [[RealTimeManager realTimeManager].routeDetailVC ReloadLegWithNewData];
     
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:55.0]];
+    
+    // TODO:- Need to work on Asserts.
 }
 
 // NOTE from John 2/10/2013:

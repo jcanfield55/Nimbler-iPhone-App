@@ -87,7 +87,7 @@
 
 // TODO:- Need to add flag that determine flag is generated from realtime data or scheduled data.
 // generate new leg from prediction data.
-- (void) generateLegFromPrediction:(NSDictionary *)prediction newItinerary:(Itinerary *)newItinerary Leg:(Leg *)leg Context:(NSManagedObjectContext *)context ISExtraPrediction:(BOOL)isExtraPrediction;
+- (Leg *) generateLegFromPrediction:(NSDictionary *)prediction newItinerary:(Itinerary *)newItinerary Leg:(Leg *)leg Context:(NSManagedObjectContext *)context ISExtraPrediction:(BOOL)isExtraPrediction;
 
 // Adjust itinerary first and last leg start/end time if it is unscheduled.
 - (void) adjustItineraryAndLegsTimes:(Itinerary *)itinerary Context:(NSManagedObjectContext *)context;
@@ -105,7 +105,7 @@
 // Generate new itineraries from patterns and stoptimes data.
 - (void) generateScheduledItinerariesFromPatternOfPlan:(Plan *)plan Context:(NSManagedObjectContext *)context tripDate:(NSDate *)tripDate;
 
-
+- (void) generateItinerariesFromPrediction:(Plan *)plan TripDate:(NSDate *)tripDate Context:(NSManagedObjectContext *)context;
 
 @end
 
