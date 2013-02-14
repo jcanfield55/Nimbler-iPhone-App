@@ -175,6 +175,7 @@
 		5258A89F160D617800871875 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5258A89B160D617800871875 /* libTestFlight.a */; };
 		525C20F9151D3AF5004F8FE0 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
 		527E174A151EB9CD00CDBC23 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527E1749151EB9CD00CDBC23 /* QuartzCore.framework */; };
+		5297117A16CCBFFD00B2796A /* StationListElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 5297117916CCBFFD00B2796A /* StationListElement.m */; };
 		52A9BE9516B4B41500564D0D /* RealTimeServerStubTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */; };
 		52A9BE9A16B6677500564D0D /* gtfs_rawdata_calendar.json in Resources */ = {isa = PBXBuildFile; fileRef = 52A9BE9716B6677500564D0D /* gtfs_rawdata_calendar.json */; };
 		52A9BE9B16B6677500564D0D /* livefeeds_bylegs1.json in Resources */ = {isa = PBXBuildFile; fileRef = 52A9BE9816B6677500564D0D /* livefeeds_bylegs1.json */; };
@@ -494,6 +495,8 @@
 		525C20F8151D3AF5004F8FE0 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		527E1749151EB9CD00CDBC23 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		5295B95216C6F71B008376B3 /* Network_Commuting 1.8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.8.xcdatamodel"; sourceTree = "<group>"; };
+		5297117816CCBFFD00B2796A /* StationListElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StationListElement.h; sourceTree = "<group>"; };
+		5297117916CCBFFD00B2796A /* StationListElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StationListElement.m; sourceTree = "<group>"; };
 		52A9BE9316B4B41500564D0D /* RealTimeServerStubTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RealTimeServerStubTest.h; sourceTree = "<group>"; };
 		52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RealTimeServerStubTest.m; sourceTree = "<group>"; };
 		52A9BE9716B6677500564D0D /* gtfs_rawdata_calendar.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = gtfs_rawdata_calendar.json; path = Sinatra/gtfs_rawdata_calendar.json; sourceTree = "<group>"; };
@@ -716,6 +719,8 @@
 				520FB1671626036C0083F143 /* LocationFromIOS.m */,
 				520FB1811626036C0083F143 /* RawAddress.h */,
 				520FB1821626036C0083F143 /* RawAddress.m */,
+				5297117816CCBFFD00B2796A /* StationListElement.h */,
+				5297117916CCBFFD00B2796A /* StationListElement.m */,
 			);
 			name = "Model, Location";
 			path = Model;
@@ -1437,6 +1442,7 @@
 				8D9A9FBF16945A3F00D3EB55 /* LegFromGtfs.m in Sources */,
 				8DE0CC4F16A9632100AE2E9D /* twitterViewController.m in Sources */,
 				8D3EF6B116B24D3B00ED366B /* RealTimeManager.m in Sources */,
+				5297117A16CCBFFD00B2796A /* StationListElement.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
