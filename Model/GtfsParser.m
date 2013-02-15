@@ -1019,10 +1019,34 @@
        return  [self returnStopTimesWithNearestStartTimeOrEndTime:itinerary.startTime ArrStopTimes:arrStopTimes];
 }
 
-// This method create unscheduled leg.
-- (void) addUnScheduledLegToItinerary:(Itinerary *)itinerary WalkLeg:(Leg *)leg Context:(NSManagedObjectContext *)context{
+// This method create unscheduled newleg based on the pattern leg.
+// Timing-wise, will add to the itinerary so that the newleg's endTime matches parameter endTime
+// This is good for adding a unscheduled leg to the beginning of an itinerary, before the first scheduled leg
+- (Leg *) addUnScheduledLegToStartOfItinerary:(Itinerary *)itinerary
+                                      WalkLeg:(Leg *)leg
+                                      endTime:(NSDate *)endTime
+                                      Context:(NSManagedObjectContext *)context{
+    Leg* newleg;
     @try {
-        Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
+        newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
+        newleg.itinerary = itinerary;
+        itinerary.sortedLegs = nil;
+        newleg.endTime = endTime;
+        newleg.startTime = [newleg.endTime dateByAddingTimeInterval:(-[leg.duration floatValue]/1000)];
+        [newleg setNewlegAttributes:leg];
+    }
+    @catch (NSException *exception) {
+        logException(@"GtfsParser->addUnScheduledLegToItinerary", @"", exception);
+    }
+    return newleg;
+}
+
+// This method creates unscheduled newleg based on the pattern leg.  Timing-wise, will add to the end of the itinerary.
+// Returns newleg
+- (Leg *) addUnScheduledLegToItinerary:(Itinerary *)itinerary WalkLeg:(Leg *)leg Context:(NSManagedObjectContext *)context{
+    Leg* newleg;
+    @try {
+        newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
         newleg.itinerary = itinerary;
         itinerary.sortedLegs = nil;
         if([[itinerary sortedLegs] count] == 1)
@@ -1036,7 +1060,9 @@
     @catch (NSException *exception) {
         logException(@"GtfsParser->addUnScheduledLegToItinerary", @"", exception);
     }
+    return newleg;
 }
+
 -(void) checkIfItinerarySame:(Itinerary *)itinerary Plan:(Plan *)plan{
     int count = 0;
     for(int i=0;i<[[plan itineraries] count];i++){
@@ -1057,9 +1083,11 @@
         [plan deleteItinerary:itinerary];
 }
 
-// This method create scheduled leg from gtfs data.
+// This method create scheduled newleg from gtfs data based on pattern from leg
 // First find the nearest stoptimes then create transit leg from stoptimes data.
-- (BOOL) addScheduledLegToItinerary:(Itinerary *)itinerary
+// Then removes the selected arrayStopTime from the arrStopTimes
+// Returns newleg
+- (Leg *) addScheduledLegToItinerary:(Itinerary *)itinerary
                          TransitLeg:(Leg *)leg
                            StopTime:(NSMutableArray *)arrStopTimes
                            TripDate:(NSDate *)tripDate
@@ -1067,7 +1095,7 @@
     @try {
         NSArray *arrayStopTime = [self findNearestStopTimeFromStopTimeArray:arrStopTimes Itinerary:itinerary];
         if(!arrayStopTime)
-            return false;
+            return nil;
         GtfsStopTimes *fromStopTime = [arrayStopTime objectAtIndex:0];
         GtfsStopTimes *toStopTime = [arrayStopTime objectAtIndex:1];
         Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
@@ -1084,7 +1112,7 @@
         newleg.duration = [NSNumber numberWithDouble:[newleg.startTime timeIntervalSinceDate:newleg.endTime] * 1000];
         itinerary.endTime = newleg.endTime;
         [arrStopTimes removeObject:arrayStopTime];
-        return true;
+        return newleg;
     }
     @catch (NSException *exception) {
         logException(@"GtfsParser->addScheduledLegToItinerary", @"", exception);
@@ -1110,12 +1138,24 @@
         Itinerary* newItinerary = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:context];
         newItinerary.plan = plan;
         newItinerary.startTime = tripDate;
-        for(int j=0;j<[[itinerary sortedLegs] count];j++){
+        NSMutableArray* previousUnscheduledLegs = [[NSMutableArray alloc] initWithCapacity:2];  // Keeps track of walk legs before transit legs
+        Boolean hasThereBeenAScheduledLeg = false;
+        Leg *lastAddedNewItineraryLeg;  
+        for(int j=0; j<[[itinerary sortedLegs] count]; j++){  
             Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
+            Leg *newLeg;
+
             if(![leg isScheduled]){
-                [self addUnScheduledLegToItinerary:newItinerary WalkLeg:leg Context:context];
+                if (!hasThereBeenAScheduledLeg) { 
+                    [previousUnscheduledLegs addObject:leg];
+                } else {
+                    newLeg = [self addUnScheduledLegToItinerary:newItinerary
+                                                        WalkLeg:leg
+                                                        Context:context];
+                }
+                lastAddedNewItineraryLeg = newLeg;
             }
-            else{
+            else{ // scheduled leg
                 NSMutableArray *arrStopTime = [dictStopTimes objectForKey:leg.tripId];
                 if(!arrStopTime){
                     NSString *strTOStopID = leg.to.stopId;
@@ -1133,14 +1173,27 @@
                     [plan deleteItinerary:newItinerary];
                     return;
                 }
-                if(![self addScheduledLegToItinerary:newItinerary
-                                          TransitLeg:leg
-                                            StopTime:arrStopTime
-                                            TripDate:tripDate
-                                             Context:context]){
+                newLeg = [self addScheduledLegToItinerary:newItinerary
+                                               TransitLeg:leg
+                                                 StopTime:arrStopTime
+                                                 TripDate:tripDate
+                                                  Context:context];
+                if(!newLeg){
                     [plan deleteItinerary:newItinerary];
                     break;
                 }
+                if (!hasThereBeenAScheduledLeg) {  // if this is the first scheduled leg, set any previous unscheduled legs
+                    NSDate* endTime = [newLeg startTime];  // The endTime should be the scheduled leg's start-time (TODO: add buffer)
+                    for (Leg* unscheduledLeg in previousUnscheduledLegs) {
+                        Leg* newUnschedLeg = [self addUnScheduledLegToStartOfItinerary:newItinerary
+                                                   WalkLeg:unscheduledLeg
+                                                   endTime:endTime
+                                                   Context:context];
+                        endTime = [newUnschedLeg startTime];  // If there is another previousUnscheduledLeg, use newUnschedLeg's start-time
+                    }
+                    hasThereBeenAScheduledLeg = true;
+                }
+                
                 [dictStopTimes setObject:arrStopTime forKey:leg.tripId];
             }
         }
