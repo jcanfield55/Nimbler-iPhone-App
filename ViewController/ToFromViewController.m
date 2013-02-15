@@ -749,7 +749,6 @@ UIImage *imageDetailDisclosure;
     }
 }
 
-
 #pragma mark set RKObjectManager 
 // One-time set-up of the RestKit Geocoder Object Manager's mapping
 - (void)setRkGeoMgr:(RKObjectManager *)rkGeoMgr0
@@ -1690,7 +1689,7 @@ UIImage *imageDetailDisclosure;
 
 // call the requestRealTimeDataFromServer from RealtimeManager class with plan.
 - (void) requestServerForRealTime{
-//    RealTimeManager *realtimeManager = [RealTimeManager realTimeManager];
-//    [realtimeManager requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
+    RealTimeManager *realtimeManager = [RealTimeManager realTimeManager];
+    [realtimeManager requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
 }
 @end

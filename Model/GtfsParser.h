@@ -105,7 +105,10 @@
 // Generate new itineraries from patterns and stoptimes data.
 - (void) generateScheduledItinerariesFromPatternOfPlan:(Plan *)plan Context:(NSManagedObjectContext *)context tripDate:(NSDate *)tripDate;
 
-- (void) generateItinerariesFromPrediction:(Plan *)plan TripDate:(NSDate *)tripDate Context:(NSManagedObjectContext *)context;
+// Generate itineraries from realtime data.
+- (void) generateItinerariesFromPrediction:(Plan *)plan Itinerary:(Itinerary *)itinerary Prediction:(NSMutableDictionary *)dictPredictions TripDate:(NSDate *)tripDate Context:(NSManagedObjectContext *)context;
+
+- (void) generateItinerariesFromRealTime:(Plan *)plan TripDate:(NSDate *)tripDate Context:(NSManagedObjectContext *)context;
 
 @end
 

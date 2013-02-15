@@ -25,7 +25,7 @@
 #define COREDATA_DB_FILENAME    @"store101.data"
 #define TEST_COREDATA_DB_FILENAME  @"testDataStore.data" // For automated tests
 
-//#define TRIP_PROCESS_URL      @"http://192.168.2.196:8080/TPServer/ws/"
+//#define TRIP_PROCESS_URL      @"http://192.168.2.196:6060/TPServer/ws/"
 
 #define TWITTER_SERARCH_URL    @"https://twitter.com/#!/search/realtime/TRAIN%20from%3Acaltrain%20OR%20from%3Acaltrain_news"
 #define CALTRAIN_TWITTER_URL   @"https://twitter.com/#!/search/from%3Acaltrain%20OR%20from%3Acaltrain_news"
@@ -435,5 +435,9 @@
 #define REALTIME_BUFFER_FOR_EARLY   5*60
 #define REALTIME_UPPER_LIMIT 30*60
 #define REALTIME_LOWER_LIMIT -5*60
+
+#define OTP_ITINERARY  0
+#define GTFS_ITINERARY 1
+#define REALTIME_ITINERARY 2
 
 

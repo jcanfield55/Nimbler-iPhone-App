@@ -241,7 +241,7 @@
     PlanRequestChunk* requestChunk = [NSEntityDescription insertNewObjectForEntityForName:@"PlanRequestChunk"
                                                             inManagedObjectContext:[self managedObjectContext]];
     [requestChunk setPlan:self];
-    [requestChunk setType:REQUEST_CHUNK_TYPE_OTP];
+    [requestChunk setType:[NSNumber numberWithInt:OTP_ITINERARY]];
     if (depOrArrive == DEPART) {
         [requestChunk setEarliestRequestedDepartTimeDate:requestDate];
     } else { // ARRIVE
@@ -479,7 +479,8 @@
                 NSDate *endDate1 = timeOnlyFromDate([itinerary1 endTimeOfLastLeg]);
                 NSDate *endDate2 = timeOnlyFromDate([itinerary2 endTimeOfLastLeg]);
                 if([startDate1 isEqualToDate:startDate2] && [endDate1 isEqualToDate:endDate2]){
-                    [self deleteItinerary:itinerary2];
+                    if(![itinerary2 isRealTimeItinerary])
+                        [self deleteItinerary:itinerary2];
                 }
             }
         }

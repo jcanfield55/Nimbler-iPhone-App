@@ -25,10 +25,10 @@ typedef enum {
     ITIN_SELF_OBSOLETE
 } ItineraryCompareResult;
 
-typedef enum {
-    REALTIME_ITINERARY,
-    SCHEDULED_ITINERARY,
-} ItineraryType;
+//typedef enum {
+//    REALTIME_ITINERARY,
+//    SCHEDULED_ITINERARY,
+//} ItineraryType;
 
 // See this URL for documentation on the elements: http://www.opentripplanner.org/apidoc/data_ns0.html#itinerary
 // This URL has example data http://groups.google.com/group/opentripplanner-dev/msg/4535900a5d18e61f?

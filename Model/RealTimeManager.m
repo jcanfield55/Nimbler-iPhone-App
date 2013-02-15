@@ -115,7 +115,9 @@ static RealTimeManager* realTimeManager;
             NSArray * legLiveFees = [liveData  objectForKey:@"legLiveFeeds"];
             if ([legLiveFees count] > 0) {
                 [self setRealTimePredictionsFromLiveFeeds1:legLiveFees];
-                [[nc_AppDelegate sharedInstance].gtfsParser generateLegFromPrediction:plan TripDate:originalTripDate Context:nil];
+                [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:originalTripDate Context:nil];
+                [plan removeDuplicateItineraries];
+                plan.sortedItineraries = nil;
                 for(int i=0;i<[[plan sortedItineraries] count];i++){
                     Itinerary *itinerary = [[plan sortedItineraries] objectAtIndex:i];
                     itinerary.sortedLegs = nil;
@@ -144,7 +146,7 @@ static RealTimeManager* realTimeManager;
             [arrItineraries addObject:itinerary];
             
     }
-    [plan setSortedItineraries:arrItinerary];
+    [plan setSortedItineraries:arrItineraries];
 }
 
 
