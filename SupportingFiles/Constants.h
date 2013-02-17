@@ -253,6 +253,10 @@
 #define PLAN_MAX_SERVER_CALLS_PER_REQUEST (3) /* Maximum calls to the server for a single user request */
 #define PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS (60)
 
+// gtfsParser
+#define MIN_TRANSFER_TIME (4*60) // Minimum # of seconds for transfers inserted when creating itineraries
+#define SMALL_TIME_THRESHOLD (15) // Number of seconds considered to be equal in time (used with timeIntervalSinceDate method)
+
 // RequestChunks
 #define REQUEST_CHUNK_OVERLAP_BUFFER_IN_SECONDS (4*60 + 30)
 

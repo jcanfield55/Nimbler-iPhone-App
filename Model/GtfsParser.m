@@ -1,4 +1,3 @@
-;
 //
 //  GtfsParser.m
 //  Nimbler Caltrain
@@ -16,6 +15,7 @@
 #import "LegFromGtfs.h"
 #import "nc_AppDelegate.h"
 #import "GtfsRoutes.h"
+#import "GtfsTempItinerary.h"
 
 @implementation GtfsParser
 
@@ -424,7 +424,9 @@
             stopTimes.tripID = [arrayTripID objectAtIndex:j];
             stopTimes.trips = [dictTrips objectForKey:stopTimes.tripID];
             stopTimes.arrivalTime = [arrayArrivalTime objectAtIndex:j];
+            stopTimes.arrivalNSDate = dateFromTimeString(stopTimes.arrivalTime);
             stopTimes.departureTime = [arrayDepartureTime objectAtIndex:j];
+            stopTimes.departureNSDate = dateFromTimeString(stopTimes.departureTime);
             stopTimes.stopID = [arrayStopID objectAtIndex:j];
             stopTimes.stop = [dictStops objectForKey:stopTimes.stopID];
             stopTimes.stopSequence = [arrayStopSequence objectAtIndex:j];
@@ -799,10 +801,19 @@
 
 // first get stoptimes from StopTimes Table based on stopId
 // Then make a pair of StopTimes if both stoptimes have same tripId then check for the stopSequence and the departure time is greater than request trip time and also check if service is enabled for that stopTimes if yes the add both stopTimes as To/From StopTimes pair.
+// Returned array is in time order (by first pair departureTime)
 
 - (NSMutableArray *)getStopTimes:(NSString *)strToStopID strFromStopID:(NSString *)strFromStopID startDate:(NSDate *)startDate TripId:(NSString *)tripId{
     @try {
-        NSFetchRequest *fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesByStopID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strToStopID,@"STOPID1",strFromStopID,@"STOPID2",tripId,@"TRIPID", nil]];
+        NSDate *tripTime = timeOnlyFromDate(startDate);
+        NSDate *cutOffTime = [tripTime dateByAddingTimeInterval:TRIP_TIME_PLUS_INTERVAL];
+        NSDictionary* fetchVars =[NSDictionary dictionaryWithObjectsAndKeys:
+                                  strToStopID,@"STOPID1",
+                                  strFromStopID,@"STOPID2",
+                                  tripId,@"TRIPID",
+                                  tripTime,@"TRIPTIME",
+                                  cutOffTime,@"CUTOFFTIME",nil];
+        NSFetchRequest *fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesByStopID" substitutionVariables:fetchVars];
         NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
         NSMutableArray *arrMutableStopTimes = [[NSMutableArray alloc] init];
         NSMutableDictionary *dictStopTimes = [[NSMutableDictionary alloc] init];
@@ -837,84 +848,27 @@
                     stopTimes1 = [arrStopTimes objectAtIndex:1];
                     stopTimes2 = [arrStopTimes objectAtIndex:0];
                 }
-                NSString *strDepartureTime;
-                NSArray *arrayDepartureTimeComponents;
-                arrayDepartureTimeComponents = [stopTimes1.departureTime componentsSeparatedByString:@":"];
-                
-                if([arrayDepartureTimeComponents count] > 0){
-                    int hours = [[arrayDepartureTimeComponents objectAtIndex:0] intValue];
-                    int minutes = [[arrayDepartureTimeComponents objectAtIndex:1] intValue];
-                    int seconds = [[arrayDepartureTimeComponents objectAtIndex:2] intValue];
-                    if(hours > 23){
-                        hour = hours;
-                        hours = hours - 24;
-                    }
-                    strDepartureTime = [NSString stringWithFormat:@"%d:%d:%d",hours,minutes,seconds];
-                }
-                
-                NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-                formatter.dateFormat = @"HH:mm:ss";
-                NSDate *departureDate = [formatter dateFromString:strDepartureTime];
-                NSDate *departureTime = timeOnlyFromDate(departureDate);
-                NSDate *tripTime = timeOnlyFromDate(startDate);
-                
-                NSCalendar *calendarDepartureTime = [NSCalendar currentCalendar];
-                NSDateComponents *componentsDepartureTime = [calendarDepartureTime components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:departureTime];
-                int hourDepartureTime = [componentsDepartureTime hour];
-                int minuteDepartureTime = [componentsDepartureTime minute];
-                int intervalDepartureTime = (hourDepartureTime)*60*60 + minuteDepartureTime*60;
-                
-                NSCalendar *calendarTripTime = [NSCalendar currentCalendar];
-                NSDateComponents *componentsTripTime = [calendarTripTime components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:tripTime];
-                int hourTripTime = [componentsTripTime hour];
-                int minuteTripTime = [componentsTripTime minute];
-                int intervalTripTime = hourTripTime*60*60 + minuteTripTime*60;
+
                 if(stopTimes1 && stopTimes2){
-                        if([stopTimes2.stopSequence intValue] > [stopTimes1.stopSequence intValue] && intervalDepartureTime >= intervalTripTime && intervalDepartureTime < intervalTripTime + TRIP_TIME_PLUS_INTERVAL && [self isServiceEnableForStopTimes:stopTimes1 RequestDate:startDate]){
+                        if([stopTimes2.stopSequence intValue] > [stopTimes1.stopSequence intValue] && [self isServiceEnableForStopTimes:stopTimes1 RequestDate:startDate]){
                             NSArray *arrayTemp = [NSArray arrayWithObjects:stopTimes1,stopTimes2, nil];
                             [arrMutableStopTimes addObject:arrayTemp];
                         }
                     }
                }
             }
-            return arrMutableStopTimes;
+        
+        // Sort the array by order of ascending first departureNSDate
+        [arrMutableStopTimes sortUsingComparator:^(id obj1, id obj2) {
+            NSDate* obj1Date = [[obj1 objectAtIndex:0] departureNSDate];
+            NSDate* obj2Date = [[obj2 objectAtIndex:0] departureNSDate];
+            return [obj1Date compare:obj2Date];
+        }];
+
+        return arrMutableStopTimes;
     }
     @catch (NSException *exception) {
         logException(@"GtfsParser->getStopTimes", @"", exception);
-    }
-}
-
-
-
-// return time interval in seconds from time string like (10:45:00)
-- (int)getTimeInterValInSeconds:(NSString *)strTime{
-    @try {
-        NSString *strDepartureTime;
-        NSArray *arrayDepartureTimeComponents = [strTime componentsSeparatedByString:@":"];
-        if([arrayDepartureTimeComponents count] > 0){
-            int hours = [[arrayDepartureTimeComponents objectAtIndex:0] intValue];
-            int minutes = [[arrayDepartureTimeComponents objectAtIndex:1] intValue];
-            int seconds = [[arrayDepartureTimeComponents objectAtIndex:2] intValue];
-            if(hours > 23){
-                hours = hours - 24;
-            }
-            strDepartureTime = [NSString stringWithFormat:@"%d:%d:%d",hours,minutes,seconds];
-        }
-        
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        formatter.dateFormat = @"HH:mm:ss";
-        NSDate *departureDate = [formatter dateFromString:strDepartureTime];
-        NSDate *departureTime = timeOnlyFromDate(departureDate);
-        
-        NSCalendar *calendarDepartureTime = [NSCalendar currentCalendar];
-        NSDateComponents *componentsDepartureTime = [calendarDepartureTime components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:departureTime];
-        int hourDepartureTime = [componentsDepartureTime hour];
-        int minuteDepartureTime = [componentsDepartureTime minute];
-        int intervalDepartureTime = (hourDepartureTime)*60*60 + minuteDepartureTime*60;
-        return intervalDepartureTime;
-    }
-    @catch (NSException *exception) {
-         logException(@"GtfsParser->getTimeInterValInSeconds", @"", exception);
     }
 }
 
@@ -1116,74 +1070,55 @@
 // if leg is transit leg then we get the stoptimes data for that leg.
 // Next find the nearest stoptimes by comparing departureTime with new itinerary start time or end time.
 // Then create the new leg and itinerary from stoptimes data. 
-- (void) generateItineraryFromItineraryPattern:(Itinerary *)itinerary tripDate:(NSDate *)tripDate Plan:(Plan *)plan Context:(NSManagedObjectContext *)context{
-    NSMutableDictionary *dictStopTimes = [[NSMutableDictionary alloc] init];
+- (void) generateItineraryFromItineraryPattern:(Itinerary *)itinerary
+                                      tripDate:(NSDate *)tripDate
+                                          Plan:(Plan *)plan
+                                       Context:(NSManagedObjectContext *)context{
+    int legCount = [[itinerary sortedLegs] count];
     PlanRequestChunk* reqChunk;
-    for (int i=0; i<200; i++) {
-        if ([itinerary haveOnlyUnScheduledLeg]) {
-            break;
-        }
-        if(i==199){
-            logError(@"GtfsParser-->generateItineraryFromItineraryPattern", @"Reached 199 iterations in generating itinerary");
-            break;
-        }
-        Itinerary* newItinerary = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:context];
-        newItinerary.plan = plan;
-        newItinerary.startTime = tripDate;
-        for(int j=0; j<[[itinerary sortedLegs] count]; j++){  
-            Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
-            Leg *newLeg;
-            if(![leg isScheduled]){
-                    newLeg = [self addUnScheduledLegToItinerary:newItinerary
-                                                        WalkLeg:leg
-                                                        Context:context];
-            }
-            else{ // scheduled leg
-                NSMutableArray *arrStopTime = [dictStopTimes objectForKey:leg.tripId];
-                if(!arrStopTime){
-                    NSString *strTOStopID = leg.to.stopId;
-                    NSString *strFromStopID = leg.from.stopId;
-                    if(newItinerary.endTime)
-                        arrStopTime = [self getStopTimes:strTOStopID strFromStopID:strFromStopID startDate:newItinerary.endTime TripId:leg.tripId];
-                    else
-                        arrStopTime = [self getStopTimes:strTOStopID strFromStopID:strFromStopID startDate:newItinerary.startTime TripId:leg.tripId];
-                        
-                    if(arrStopTime && [arrStopTime count] > 0){
-                        [dictStopTimes setObject:arrStopTime forKey:leg.tripId];
-                    }
-                }
-                if([arrStopTime count] == 0){
-                    [plan deleteItinerary:newItinerary];
-                    return;
-                }
-                newLeg = [self addScheduledLegToItinerary:newItinerary
-                                               TransitLeg:leg
-                                                 StopTime:arrStopTime
-                                                 TripDate:tripDate
-                                                  Context:context];
-                if(!newLeg){
-                    [plan deleteItinerary:newItinerary];
-                    break;
-                }
-                [dictStopTimes setObject:arrStopTime forKey:leg.tripId];
-            }
-        }
-        if (![newItinerary isDeleted]) {
-            [self adjustItineraryAndLegsTimes:newItinerary Context:context];
-            
-            // Add these itineraries to the request chunk
-            if (!reqChunk) {
-                reqChunk = [NSEntityDescription insertNewObjectForEntityForName:@"PlanRequestChunk"
-                                                         inManagedObjectContext:context];
-                reqChunk.plan = plan;
-                reqChunk.type =[NSNumber numberWithInt:GTFS_ITINERARY];
-                reqChunk.earliestRequestedDepartTimeDate = tripDate; // assumes Depart
-            }
-            [reqChunk addItinerariesObject:newItinerary];
-            
-            [newItinerary initializeTimeOnlyVariablesWithRequestDate:tripDate];
+    
+    if ([itinerary haveOnlyUnScheduledLeg]) {
+        return;  // no new itineraries to generate
+    }
+    // Get array of arrStopTimes, indexed by leg #.  Unscheduled legs have leg inserted
+    NSMutableArray* arrStopTimesArray = [[NSMutableArray alloc] initWithCapacity:legCount];
+    for (int j=0; j<legCount; j++) {
+        Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
+        if (![leg isScheduled]) {
+            [arrStopTimesArray addObject:leg];
+        } else {
+            NSArray* arrStopTimes = [self getStopTimes:leg.to.stopId strFromStopID:leg.from.stopId startDate:tripDate TripId:leg.tripId];
+            [arrStopTimesArray addObject:arrStopTimes];
         }
     }
+    
+    // Now build out an array of GtfsTempItinerary objects
+    NSMutableArray* tempItinArray = [[NSMutableArray alloc] initWithCapacity:20]; // Array of GtfsTempItinerary
+    GtfsTempItinerary* tempItinerary = [[GtfsTempItinerary alloc] initWithMinTransferTime:MIN_TRANSFER_TIME];
+    [tempItinerary buildItinerariesFromArrStopTimesArray:arrStopTimesArray
+                                                 putInto:tempItinArray
+                                      startingatLegIndex:0]; // recursively builds out all the itineraries
+    
+    // Build out itineraries from the tempItineraries
+    for (GtfsTempItinerary* tempItinerary in tempItinArray) {
+        Itinerary* newItinerary = [tempItinerary makeItineraryObjectInPlan:plan
+                                                          patternItinerary:itinerary
+                                                      managedObjectContext:context
+                                                                  tripDate:tripDate];
+        
+        // Add these itineraries to the request chunk
+        if (!reqChunk) {
+            reqChunk = [NSEntityDescription insertNewObjectForEntityForName:@"PlanRequestChunk"
+                                                     inManagedObjectContext:context];
+            reqChunk.plan = plan;
+            reqChunk.type =[NSNumber numberWithInt:GTFS_ITINERARY];
+            reqChunk.earliestRequestedDepartTimeDate = tripDate; // assumes Depart
+        }
+        if (newItinerary) {
+            [reqChunk addItinerariesObject:newItinerary];
+        }
+    }
+
 }
 
 // generate new leg from prediction data.

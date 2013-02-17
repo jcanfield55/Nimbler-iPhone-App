@@ -461,6 +461,8 @@
     STAssertEquals([stopPairs count], 4u, @"");
     STAssertTrue([[[[stopPairs objectAtIndex:0] objectAtIndex:0] tripID] isEqualToString:@"282_20121001"], @"");
     
+    NIMLOG_AUTOTEST(@"Wait 60 seconds to load GTFS");
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:60.0]]; // Temporary
     [gtfsParser generateScheduledItinerariesFromPatternOfPlan:plan Context:managedObjectContext tripDate:tripDate];
     Leg* firstGeneratedLeg = [[[[plan sortedItineraries] objectAtIndex:0] sortedLegs] objectAtIndex:0];
     STAssertNotNil([firstGeneratedLeg startTime], @"First leg start-time should not be nil");
@@ -493,7 +495,7 @@
     [planStore.routeOptionsVC reloadData:plan];
     [[RealTimeManager realTimeManager].routeDetailVC ReloadLegWithNewData];
     
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:55.0]];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:5.0]];
     
     // TODO:- Need to work on Asserts.
 }

@@ -56,6 +56,12 @@
 
 static NSDictionary* __agencyDisplayNameByAgencyId;
 
+// Returns leg duration as an NSTimeInterval
+-(NSTimeInterval)durationTimeInterval
+{
+    return [[self duration] doubleValue]/1000.0;
+}
+
 // Create the sorted array of itineraries
 - (void)sortSteps
 {

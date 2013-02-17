@@ -14,7 +14,9 @@
 @interface GtfsStopTimes : NSManagedObject
 
 @property (nonatomic, retain) NSString * arrivalTime;
+@property (nonatomic, retain) NSDate * arrivalNSDate;  // NSDate containing the dateFromTimeString(arrivalTime)
 @property (nonatomic, retain) NSString * departureTime;
+@property (nonatomic, retain) NSDate * departureNSDate; // NSDate containing the dateFromTimeString(departureTime)
 @property (nonatomic, retain) NSString * dropOfTime;
 @property (nonatomic, retain) NSString * pickUpTime;
 @property (nonatomic, retain) NSString * shapeDistTravelled;

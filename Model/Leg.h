@@ -75,6 +75,9 @@ typedef enum {
 - (BOOL)isHeavyTrain; // Note: legs that are isHeavyTrain=true are also isTrain=true
 - (BOOL)isTrain;
 
+// Returns leg duration as an NSTimeInterval
+-(NSTimeInterval)durationTimeInterval;
+
 // return false if leg is walk or bicycle otherwise return true.
 -(BOOL)isScheduled;
 
