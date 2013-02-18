@@ -10,6 +10,7 @@
 #import "GtfsStopTimes.h"
 
 
+
 @implementation GtfsStop
 
 @dynamic stopDesc;
@@ -20,5 +21,6 @@
 @dynamic stopURL;
 @dynamic zoneID;
 @dynamic stopTimes;
+@dynamic isPreloadStop;
 
 @end

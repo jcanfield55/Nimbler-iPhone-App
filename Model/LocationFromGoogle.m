@@ -40,8 +40,8 @@
     RKManagedObjectMapping* addrCompMapping = [AddressComponent objectMappingForApi:gt];
     
     // TODO figure out how to get geoRectangle element to encode correctly
-    // RKObjectMapping* geoRectMapping = [GeoRectangle objectMappingForApi:gt];
-    
+     RKObjectMapping* geoRectMapping = [GeoRectangle objectMappingForApi:gt];
+
     // Make the mappings
     if (gt==GOOGLE_GEOCODER) {
         [locationMapping mapKeyPath:@"types" toAttribute:@"types"];
@@ -52,8 +52,8 @@
         [locationMapping mapKeyPath:@"geometry.location_type" toAttribute:@"locationType"];
         [locationMapping mapKeyPath:@"toFrequency" toAttribute:@"toFrequencyFloat"];
         [locationMapping mapKeyPath:@"fromFrequency" toAttribute:@"fromFrequencyFloat"];
-        [locationMapping mapKeyPath:@"memberOfList" toAttribute:@"memberOfList"];
-        // [locationMapping mapKeyPath:@"geometry.viewport" toRelationship:@"viewPort" withMapping:geoRectMapping];
+        //[locationMapping mapKeyPath:@"memberOfList" toAttribute:@"memberOfList"];
+         //[locationMapping mapKeyPath:@"geometry.viewport" toRelationship:@"viewPort" withMapping:geoRectMapping];
         
     }
     else {

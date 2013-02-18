@@ -26,6 +26,7 @@
 #import "UserPreferance.h"
 #import "Logging.h"
 #import "RealTimeManager.h"
+#import "StationListElement.h"
 
 
 @interface ToFromViewController()
@@ -97,6 +98,7 @@
 @synthesize routeOptionsVC;
 @synthesize datePicker,toolBar,departArriveSelector,date,btnDone,btnNow;
 @synthesize plan;
+@synthesize stations;
 
 // Constants for animating up and down the To: field
 #define FROM_SECTION 0
@@ -755,6 +757,8 @@ UIImage *imageDetailDisclosure;
 {
     rkGeoMgr = rkGeoMgr0;  //set the property
     
+    
+    
     // Add the mapper from Location class to this Object Manager
     [[rkGeoMgr mappingProvider] setMapping:[LocationFromGoogle objectMappingForApi:GOOGLE_GEOCODER] forKeyPath:@"results"];
     
@@ -792,6 +796,14 @@ UIImage *imageDetailDisclosure;
     // Now also update the to & from Table View Controllers with the locations object
     [toTableVC setLocations:l];
     [fromTableVC setLocations:l];
+}
+
+- (void)setStations:(Stations *)s
+{
+    stations = s;
+    // Now also update the to & from Table View Controllers with the locations object
+    [toTableVC setStations:s];
+    [fromTableVC setStations:s];
 }
 
 // Method to change isCurrentLocationMode.

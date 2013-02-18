@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import <RestKit/RestKit.h>
+#import <RestKit/CoreData.h>
+#import <Restkit/RKJSONParserJSONKit.h>
+#import "enums.h"
 
 @class GtfsStopTimes;
 
@@ -21,6 +25,7 @@
 @property (nonatomic, retain) NSString * stopURL;
 @property (nonatomic, retain) NSString * zoneID;
 @property (nonatomic, retain) NSSet *stopTimes;
+@property (nonatomic, retain) NSNumber *isPreloadStop;
 @end
 
 @interface GtfsStop (CoreDataGeneratedAccessors)

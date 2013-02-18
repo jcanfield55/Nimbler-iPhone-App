@@ -12,6 +12,8 @@
 #import <UIKit/UIKit.h>
 #import "ToFromViewController.h"
 #import "ToFromTableViewController.h"
+#import "StationListElement.h"
+#import "nc_AppDelegate.h"
 
 @interface LocationPickerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
@@ -22,4 +24,5 @@
 @property (nonatomic) BOOL isGeocodeResults;  // True if the location picker called to disambiguate geocode results.  Falso if called to choose from a list.  
 
 -(void)popOutToNimbler;
+-(void)popViewController;
 @end

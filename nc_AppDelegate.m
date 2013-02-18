@@ -18,6 +18,7 @@
 #import "Reachability.h"
 #import "KeyObjectStore.h"
 #import "RealTimeManager.h"
+#import "StationListElement.h"
 #if TEST_FLIGHT_ENABLED
 #import "TestFlightSDK1-1/TestFlight.h"
 #endif
@@ -85,6 +86,7 @@ static nc_AppDelegate *appDelegate;
 @synthesize receivedError;
 @synthesize testLogMutableString;
 @synthesize gtfsParser;
+@synthesize stations;
 
 // Feedback parameters
 @synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId;
@@ -110,6 +112,7 @@ FeedBackForm *fbView;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    NSLog(@"Launched");
 #if AUTOMATED_TESTING_SKIP_NCAPPDELEGATE
     return YES;    // If Automated testing with alternative persistent store, skip NC_AppDelegate altogether and do all setup in test area
 #endif
@@ -147,6 +150,8 @@ FeedBackForm *fbView;
     RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];
     rkTpClient = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     
+    RKObjectManager *rkStationMgr = [RKObjectManager sharedManager];
+    
     
     // Other URLs:
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
@@ -159,6 +164,7 @@ FeedBackForm *fbView;
         rkMOS = [RKManagedObjectStore objectStoreWithStoreFilename:COREDATA_DB_FILENAME];
         [rkGeoMgr setObjectStore:rkMOS];
         [rkPlanMgr setObjectStore:rkMOS];
+        [rkStationMgr setObjectStore:rkMOS];
         
         // Call suppertedRegion for getting boundry of bay area region
         [self suppertedRegion];
@@ -184,6 +190,8 @@ FeedBackForm *fbView;
         // Initialize the planStore and KeyObjectStore
         planStore = [[PlanStore alloc] initWithManagedObjectContext:[self managedObjectContext]
                                                           rkPlanMgr:rkPlanMgr];
+        stations =  [[Stations alloc] initWithManagedObjectContext:[self managedObjectContext]
+                                                         rkPlanMgr:rkStationMgr];
         [toFromViewController setPlanStore:planStore];
         [KeyObjectStore setUpWithManagedObjectContext:[self managedObjectContext]];
         
@@ -195,23 +203,36 @@ FeedBackForm *fbView;
         // Initialize the RealTimeManager
         [[RealTimeManager realTimeManager] setRkTpClient:rkTpClient];
         
-        // Set CurrentDate
-        NSDate *todayDate = dateOnlyFromDate([NSDate date]);
-        [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:CURRENT_DATE];
         
         // Pre-load stations location files
-        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+//        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+//            NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:CALTRAIN_PRELOAD_VERSION_NUMBER];
+//            [stations preLoadIfNeededFromFile:CALTRAIN_PRELOAD_LOCATION_FILE latestVersionNumber:caltrainVersion testAddress:CALTRAIN_PRELOAD_TEST_ADDRESS];
+//        }
+//        else {
+        if([[NSUserDefaults standardUserDefaults] floatForKey:CALTRAIN_PRELOAD_LOCATION_FILE] < [CALTRAIN_PRELOAD_VERSION_NUMBER floatValue]){
             NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:CALTRAIN_PRELOAD_VERSION_NUMBER];
-            NSDecimalNumber* bartVersion = [NSDecimalNumber decimalNumberWithString:BART_PRELOAD_VERSION_NUMBER];
-            [locations preLoadIfNeededFromFile:CALTRAIN_PRELOAD_LOCATION_FILE latestVersionNumber:caltrainVersion testAddress:CALTRAIN_PRELOAD_TEST_ADDRESS];
-            [locations preLoadIfNeededFromFile:BART_BACKGROUND_PRELOAD_LOCATION_FILE latestVersionNumber:bartVersion testAddress:BART_PRELOAD_TEST_ADDRESS];
+            [stations preLoadIfNeededFromFile:CALTRAIN_PRELOAD_LOCATION_FILE latestVersionNumber:caltrainVersion testAddress:CALTRAIN_PRELOAD_TEST_ADDRESS];
         }
-        else {
-            NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:CALTRAIN_PRELOAD_VERSION_NUMBER];
+        if([[NSUserDefaults standardUserDefaults] floatForKey:BART_PRELOAD_LOCATION_FILE] < [BART_PRELOAD_VERSION_NUMBER floatValue]){
             NSDecimalNumber* bartVersion = [NSDecimalNumber decimalNumberWithString:BART_PRELOAD_VERSION_NUMBER];
-            [locations preLoadIfNeededFromFile:CALTRAIN_BACKGROUND_PRELOAD_LOCATION_FILE latestVersionNumber:caltrainVersion testAddress:CALTRAIN_PRELOAD_TEST_ADDRESS];
-            [locations preLoadIfNeededFromFile:BART_PRELOAD_LOCATION_FILE latestVersionNumber:bartVersion testAddress:BART_PRELOAD_TEST_ADDRESS];
+            [stations preLoadIfNeededFromFile:BART_PRELOAD_LOCATION_FILE latestVersionNumber:bartVersion testAddress:BART_PRELOAD_TEST_ADDRESS];
         }
+        if([[NSUserDefaults standardUserDefaults] floatForKey:ACTRANSIT_PRELOAD_LOCATION_FILE] < [ACTRANSIT_PRELOAD_VERSION_NUMBER floatValue]){
+            NSDecimalNumber* acTransitVersion = [NSDecimalNumber decimalNumberWithString:ACTRANSIT_PRELOAD_VERSION_NUMBER];
+            [stations preLoadIfNeededFromFile:ACTRANSIT_PRELOAD_LOCATION_FILE latestVersionNumber:acTransitVersion testAddress:ACTRANSIT_PRELOAD_TEST_ADDRESS];
+        }
+        if([[NSUserDefaults standardUserDefaults] floatForKey:SFMUNI_PRELOAD_LOCATION_FILE] < [SFMUNI_PRELOAD_VERSION_NUMBER floatValue]){
+            NSDecimalNumber* sfMuniVersion = [NSDecimalNumber decimalNumberWithString:SFMUNI_PRELOAD_VERSION_NUMBER];
+            [stations preLoadIfNeededFromFile:SFMUNI_PRELOAD_LOCATION_FILE latestVersionNumber:sfMuniVersion testAddress:SFMUNI_PRELOAD_TEST_ADDRESS];
+        }
+        //}
+        NSArray *arrlocations = [locations locationsWithFormattedAddress:STATION_LIST];
+        if(!arrlocations || [arrlocations count] == 0){
+            [stations generateNewTempLocationForAllStationString];
+        }
+        saveContext(self.managedObjectContext);
+        [toFromViewController setStations:stations];
     }@catch (NSException *exception) {
         logException(@"ncAppDelegate->didFinishLaunchingWithOptions #1", @"", exception);
     }
@@ -488,7 +509,7 @@ FeedBackForm *fbView;
     }
     else{
         NSDate *currentDateOnly = dateOnlyFromDate(currentDate);
-        if(![todayDate isEqual:currentDateOnly]){
+        if(![todayDate isEqualToDate:currentDateOnly]){
             [[nc_AppDelegate sharedInstance] performSelector:@selector(updateTime) withObject:nil afterDelay:0.5];
             [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:CURRENT_DATE];
             [[NSUserDefaults standardUserDefaults] synchronize];
@@ -562,6 +583,8 @@ FeedBackForm *fbView;
         }
         NSString *strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
         NSString *strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+        NSLog(@"toaddress=%@",strToFormattedAddress);
+        NSLog(@"fromaddress=%@",strFromFormattedAddress);
         if (strToFormattedAddress) {
             NSArray* toLocations = [locations locationsWithFormattedAddress:strToFormattedAddress];
             if (toLocations && [toLocations count]>0) {
@@ -585,6 +608,7 @@ FeedBackForm *fbView;
             }
         }
     }
+    NSLog(@"Success");
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -891,9 +915,16 @@ FeedBackForm *fbView;
                     if (maxLatitutedLoaded) { //
                         [toFromViewController setSupportedRegion:region];
                     }
-                    [[nc_AppDelegate sharedInstance] updateTime]; // Get TransitCalendar updates
+                    NSDate *lastSaveDate = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_DATE];
+                    NSDate *todayDate = dateOnlyFromDate([NSDate date]);
+                    if(!lastSaveDate || ![lastSaveDate isEqualToDate:todayDate]){
+                        NSDate *todayDate = dateOnlyFromDate([NSDate date]);
+                        [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:CURRENT_DATE];
+                        [[nc_AppDelegate sharedInstance] updateTime];
+                        [self.gtfsParser requestAgencyDataFromServer];
+                    }
+                    // Get TransitCalendar updates
                     [self getTwiiterLiveData];
-                    [self.gtfsParser requestAgencyDataFromServer];
                     if (timerTweeterGetData == nil) {
                         timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
                     }

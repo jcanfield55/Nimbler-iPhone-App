@@ -9,8 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <RestKit/Restkit.h>
 #import <CoreLocation/CoreLocation.h>
-
+#import "PlanRequestChunk.h"
 #import "enums.h"
+
 @interface SupportedRegion : NSObject
 
 @property(nonatomic,strong) NSNumber *lowerLeftLatitude;

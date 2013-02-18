@@ -20,6 +20,7 @@
 #import "LegMapViewController.h"
 #import "GtfsParser.h"
 
+
 @interface nc_AppDelegate : UIResponder <UIApplicationDelegate,CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate,UITabBarControllerDelegate,UIActionSheetDelegate> {
     Location* currentLocation;
     UITabBarController *_tabBarController;
@@ -52,6 +53,7 @@
     NSString *expectedRequestDate;
     BOOL isTestPlan;
     NSMutableString *testLogMutableString;
+    Stations *stations;
 }
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
@@ -103,6 +105,7 @@
 @property (nonatomic) BOOL receivedError;
 @property (nonatomic,strong) NSMutableString *testLogMutableString;
 @property (strong, nonatomic) GtfsParser *gtfsParser;
+@property (strong, nonatomic) Stations *stations;
 
 - (NSURL *)applicationDocumentsDirectory;
 
