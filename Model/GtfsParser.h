@@ -110,5 +110,11 @@
 
 - (void) generateItinerariesFromRealTime:(Plan *)plan TripDate:(NSDate *)tripDate Context:(NSManagedObjectContext *)context;
 
+// Internal method for generating itineraries based on one itinerary pattern
+- (void) generateItineraryFromItineraryPattern:(Itinerary *)itinerary
+                                      tripDate:(NSDate *)tripDate
+                                          Plan:(Plan *)plan
+                                       Context:(NSManagedObjectContext *)context;
+
 @end
 

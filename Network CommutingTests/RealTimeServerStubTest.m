@@ -420,8 +420,7 @@
     
     [planStore requestPlanWithParameters:parameters];
     STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result=(toFromViewController.plan!=nil); return result;}], @"Timed out waiting for plan");
-
-
+    
     Plan* plan = [toFromViewController plan];
     
     // Check resulting plan versus what is in Hawthorne2Hull1.json file
@@ -429,8 +428,6 @@
     Itinerary* itin0 = [[plan sortedItineraries] objectAtIndex:0];
     Leg* leg0_1 = [[itin0 sortedLegs] objectAtIndex:1];
     STAssertTrue([[leg0_1 route] isEqualToString:@"10"], @"");
-    NSString* stopIdNearHawthorne = [[leg0_1 from] stopId];
-    NSString* stopIdNearSFCaltrain = [[leg0_1 to] stopId];
     Leg* leg0_3 = [[itin0 sortedLegs] objectAtIndex:3];
     NSString* stopIdSFCaltrain = [[leg0_3 from] stopId];
     
@@ -458,13 +455,18 @@
     NSArray* stopPairs = [gtfsParser getStopTimes:stopIdSCarlosCalTr
                                     strFromStopID:stopIdSFCaltrain
                                         startDate:tripDate TripId:@""];
-    STAssertEquals([stopPairs count], 4u, @"");
+    STAssertEquals([stopPairs count], 6u, @"");
     STAssertTrue([[[[stopPairs objectAtIndex:0] objectAtIndex:0] tripID] isEqualToString:@"282_20121001"], @"");
     
-    NIMLOG_AUTOTEST(@"Wait 60 seconds to load GTFS");
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:60.0]]; // Temporary
-    [gtfsParser generateScheduledItinerariesFromPatternOfPlan:plan Context:managedObjectContext tripDate:tripDate];
-    Leg* firstGeneratedLeg = [[[[plan sortedItineraries] objectAtIndex:0] sortedLegs] objectAtIndex:0];
+    // [gtfsParser generateScheduledItinerariesFromPatternOfPlan:plan Context:managedObjectContext tripDate:tripDate];
+    [gtfsParser generateItineraryFromItineraryPattern:[[plan sortedItineraries] objectAtIndex:3]
+                                             tripDate:tripDate
+                                                 Plan:plan
+                                              Context:managedObjectContext];
+    
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:20.0]];
+     
+     Leg* firstGeneratedLeg = [[[[plan sortedItineraries] objectAtIndex:0] sortedLegs] objectAtIndex:0];
     STAssertNotNil([firstGeneratedLeg startTime], @"First leg start-time should not be nil");
     // View in the ViewController (uncomment when above problem resolved)
     // TODO:- Need to solve coredata fault.
@@ -473,7 +475,7 @@
     
     [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
     STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result=[RealTimeManager realTimeManager].loadedRealTimeData; return result;}], @"Timed out waiting for RealTimeData");
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:2000.0]];
+
     [gtfsParser generateItinerariesFromRealTime:plan TripDate:tripDate Context:managedObjectContext];
     plan.sortedItineraries = nil;
     for(int i=0;i<[plan.sortedItineraries count];i++){

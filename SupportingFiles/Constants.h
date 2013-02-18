@@ -247,15 +247,22 @@
 #define TOFROM_FREQUENCY_VISIBILITY_CUTOFF 0.99
 
 // Plan, PlanStore, and Plan caching behavior
-#define PLAN_MAX_ITINERARIES_TO_SHOW (20) /* Show at most 20 results */
+#define PLAN_MAX_ITINERARIES_TO_SHOW (30) /* Show at most 20 results */
 #define PLAN_BUFFER_SECONDS_BEFORE_ITINERARY (3*60+1) /* Take cached itineraries up to 3 minutes before the requestDate */
 #define PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW (6*60*60) /* Show at most 6 hours of results */
 #define PLAN_MAX_SERVER_CALLS_PER_REQUEST (3) /* Maximum calls to the server for a single user request */
 #define PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS (60)
 
 // gtfsParser
-#define MIN_TRANSFER_TIME (4*60) // Minimum # of seconds for transfers inserted when creating itineraries
+#define MIN_TRANSFER_TIME (3*60) // Minimum # of seconds for transfers inserted when creating itineraries
 #define SMALL_TIME_THRESHOLD (15) // Number of seconds considered to be equal in time (used with timeIntervalSinceDate method)
+#define GTFS_MAX_TIME_TO_PULL_SCHEDULES (7*60*60) // Inspect up to 7 hours of schedules for each leg of the trip
+
+// realtime
+#define REALTIME_BUFFER_FOR_DELAY  15*60
+#define REALTIME_BUFFER_FOR_EARLY   5*60
+#define REALTIME_UPPER_LIMIT 30*60
+#define REALTIME_LOWER_LIMIT -5*60
 
 // RequestChunks
 #define REQUEST_CHUNK_OVERLAP_BUFFER_IN_SECONDS (4*60 + 30)
@@ -431,14 +438,6 @@
 #define GTFS_STOPS_COUNTER @"gtfsStopsCounter"
 #define GTFS_TRIPS_COUNTER @"gtfsTripsCounter"
 #define GTFS_STOPTIMES_COUNTER @"gtfsStopTimesCounter"
-
-
-#define TRIP_TIME_PLUS_INTERVAL  4*60*60
-#define ITINERARY_GANERATION_TIMEOUT 5
-#define REALTIME_BUFFER_FOR_DELAY  15*60
-#define REALTIME_BUFFER_FOR_EARLY   5*60
-#define REALTIME_UPPER_LIMIT 30*60
-#define REALTIME_LOWER_LIMIT -5*60
 
 #define OTP_ITINERARY  0
 #define GTFS_ITINERARY 1

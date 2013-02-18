@@ -806,7 +806,7 @@
 - (NSMutableArray *)getStopTimes:(NSString *)strToStopID strFromStopID:(NSString *)strFromStopID startDate:(NSDate *)startDate TripId:(NSString *)tripId{
     @try {
         NSDate *tripTime = timeOnlyFromDate(startDate);
-        NSDate *cutOffTime = [tripTime dateByAddingTimeInterval:TRIP_TIME_PLUS_INTERVAL];
+        NSDate *cutOffTime = [tripTime dateByAddingTimeInterval:GTFS_MAX_TIME_TO_PULL_SCHEDULES];
         NSDictionary* fetchVars =[NSDictionary dictionaryWithObjectsAndKeys:
                                   strToStopID,@"STOPID1",
                                   strFromStopID,@"STOPID2",
@@ -835,7 +835,6 @@
         NSArray *keys = [dictStopTimes allKeys];
         
         for(int j= 0;j<[keys count];j++){
-            int hour = 0;
             NSArray *arrStopTimes = [dictStopTimes objectForKey:[keys objectAtIndex:j]];
             if([arrStopTimes count] < 2 || [arrStopTimes count] > 2){
                 NIMLOG_UOS202(@"Exceptional StopTimes:%@",arrStopTimes);
@@ -1075,7 +1074,7 @@
                                           Plan:(Plan *)plan
                                        Context:(NSManagedObjectContext *)context{
     int legCount = [[itinerary sortedLegs] count];
-    PlanRequestChunk* reqChunk;
+    PlanRequestChunk* reqChunk = nil;
     
     if ([itinerary haveOnlyUnScheduledLeg]) {
         return;  // no new itineraries to generate
@@ -1087,7 +1086,7 @@
         if (![leg isScheduled]) {
             [arrStopTimesArray addObject:leg];
         } else {
-            NSArray* arrStopTimes = [self getStopTimes:leg.to.stopId strFromStopID:leg.from.stopId startDate:tripDate TripId:leg.tripId];
+            NSArray* arrStopTimes = [self getStopTimes:leg.to.stopId strFromStopID:leg.from.stopId startDate:tripDate TripId:@"XYZ-Do-Not-Exclude-Any-TripIDs"];
             [arrStopTimesArray addObject:arrStopTimes];
         }
     }

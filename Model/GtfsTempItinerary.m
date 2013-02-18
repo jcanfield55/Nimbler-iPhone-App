@@ -33,7 +33,7 @@
     if ([legInfoArray count] == 0) {
         return nil;
     }
-    NSTimeInterval unscheduledTime;
+    NSTimeInterval unscheduledTime = 0.0;
     for (int i=[legInfoArray count]-1; i>=0; i--) {
         id member = [legInfoArray objectAtIndex:i];
         if ([member isKindOfClass:[Leg class]]) { // if unscheduled
@@ -126,6 +126,7 @@
     return false;
 }
 
+// Returns true if the self can make the connection to stopPairArray (i.e. there is a least minTransferTime time gap between them)
 -(BOOL)canMakeConnectionTo:(NSArray *)stopPairArray 
 {
     NSDate* endTime = [self.endTime dateByAddingTimeInterval:minTransferTime];  // endTime of the legInfoArray so far
@@ -154,6 +155,7 @@
     return copy;
 }
 
+// Removes everything from self's legInfoArray at and beyond legIndex
 -(void)clearLegsStartingAt:(int)legIndex
 {
     int originalArrayCount = [legInfoArray count];
@@ -197,7 +199,18 @@
     return 0;
 }
 
+// This is the main method for the class
+// Takes all the itinerary pattern and gtfs schedules in arrStopTimesArray and
+// returns itinArray with a GtfsTempItinerary for each optimal itinerary that can be generated based
+// on that pattern.
+// arrStopTimesArray is an array up to three dimensions:
+// First index is legIndex, which corresponds to each leg in the itinerary pattern
+// If a leg is unscheduled, then it will point to the patternLeg
+// If a leg is scheduled, then it will point to a sorted array of StopPairArrays corresponding to possible gtfs trips for that leg
+// Each stop pair array is 2 elements long with a GtfsStopTime for the beginning and end of a trip
 //
+// Implementation note:  this method is recursive.  It builds out all the itineraries by recursively
+// calling itself for each subsequent legIndex
 -(BOOL) buildItinerariesFromArrStopTimesArray:(NSArray *)arrStopTimesArray
                                      putInto:(NSMutableArray *)itinArray
                              startingatLegIndex:(int)legIndex
@@ -205,9 +218,9 @@
     @try {
         NSArray* arrStopTimes = [arrStopTimesArray objectAtIndex:legIndex];
         if (![arrStopTimes isKindOfClass:[Leg class]]) { // if this index is a scheduled leg
-            GtfsTempItinerary* bestItinSoFar;
+            GtfsTempItinerary* bestItinSoFar=nil;
             for (int i = [arrStopTimes count]-1; i>=0; i--) { // go through stoptimes backwards
-                GtfsTempItinerary* itin2;
+                GtfsTempItinerary* itin2=nil;
                 NSArray* stopPairArray = [arrStopTimes objectAtIndex:i];
                 if ([self isFullyBuiltFor:arrStopTimesArray]) {
                     // if this itinerary is fully built out, create a new copy
@@ -219,7 +232,7 @@
                 [itin2 clearLegsStartingAt:legIndex];  // Make sure there are no legs at LegIndex or beyond from previous iterations
                 if ([itin2 canMakeConnectionTo:stopPairArray]) {
                     [itin2 addStopPairArray:stopPairArray atIndex:legIndex];
-                    BOOL connectionPossible;
+                    BOOL connectionPossible = false;
                     int nextLegIndex = legIndex + 1;
                     if (nextLegIndex < [arrStopTimesArray count]) {
                         connectionPossible = [itin2 buildItinerariesFromArrStopTimesArray:arrStopTimesArray
@@ -251,14 +264,15 @@
                 } else { // can't make connection at this index
                     break;
                 }
-            }
+            } // reached end of loop
             if (!bestItinSoFar) {
                 return false; // no connections possible
             } else {
                 if (legIndex == [self indexOfFirstScheduledLeg]) { // Only add to list if this is the first scheduled leg index
                     [itinArray addObject:bestItinSoFar]; // Keep this itinerary
+                } else {
+                    [self setToCopyOf:bestItinSoFar fromLegIndex:legIndex]; // use bestItinSoFar as the self we return to the previous call
                 }
-                [self setToCopyOf:bestItinSoFar fromLegIndex:legIndex]; // use bestItinSoFar
                 return true;
             }
         } else { // legIndex points to an unscheduled leg
