@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="11G56" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="12C60" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AddressComponent" representedClassName="AddressComponent" syncable="YES">
         <attribute name="longName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
@@ -232,7 +232,7 @@
         <relationship name="itineraries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Itinerary" inverseName="planRequestChunks" inverseEntity="Itinerary" syncable="YES"/>
         <relationship name="plan" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Plan" inverseName="requestChunks" inverseEntity="Plan" syncable="YES"/>
     </entity>
-    <entity name="PreloadStop" syncable="YES">
+    <entity name="PreloadedStop" representedClassName="PreloadedStop" syncable="YES">
         <attribute name="formattedAddress" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lat" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="lon" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
@@ -248,13 +248,13 @@
             </compoundIndex>
         </compoundIndexes>
     </entity>
-    <entity name="StationListElement" syncable="YES">
+    <entity name="StationListElement" representedClassName="StationListElement" syncable="YES">
         <attribute name="containsList" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="containsListId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="memberOfListId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sequenceNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="location" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Location" syncable="YES"/>
-        <relationship name="stop" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="PreloadStop" syncable="YES"/>
+        <relationship name="stop" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="PreloadedStop" syncable="YES"/>
     </entity>
     <entity name="Step" representedClassName="Step" syncable="YES">
         <attribute name="absoluteDirection" optional="YES" attributeType="String" syncable="YES"/>
@@ -306,9 +306,9 @@
         <element name="Plan" positionX="0" positionY="0" width="128" height="195"/>
         <element name="PlanPlace" positionX="0" positionY="0" width="128" height="180"/>
         <element name="PlanRequestChunk" positionX="0" positionY="0" width="128" height="120"/>
+        <element name="PreloadedStop" positionX="160" positionY="192" width="128" height="120"/>
         <element name="RawAddress" positionX="0" positionY="0" width="128" height="75"/>
-        <element name="Step" positionX="0" positionY="0" width="128" height="195"/>
-        <element name="PreloadStop" positionX="160" positionY="192" width="128" height="120"/>
         <element name="StationListElement" positionX="160" positionY="192" width="128" height="135"/>
+        <element name="Step" positionX="0" positionY="0" width="128" height="195"/>
     </elements>
 </model>

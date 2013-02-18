@@ -17,7 +17,6 @@
 @implementation StationListElement
 
 @dynamic memberOfListId;
-@dynamic memberOfList;
 @dynamic sequenceNumber;
 @dynamic containsList;
 @dynamic containsListId;

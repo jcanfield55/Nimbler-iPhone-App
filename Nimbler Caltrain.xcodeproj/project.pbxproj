@@ -194,6 +194,12 @@
 		52CF43C014BDF2F9000565D6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A514BDF2F9000565D6 /* CoreData.framework */; };
 		52CF43C814BDF2F9000565D6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52CF43C614BDF2F9000565D6 /* InfoPlist.strings */; };
 		52CF43CB14BDF2F9000565D6 /* Network_CommutingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CF43CA14BDF2F9000565D6 /* Network_CommutingTests.m */; };
+		52DD766416D2A86B005763DE /* Stations.m in Sources */ = {isa = PBXBuildFile; fileRef = 75E8F1DC16CE4E2A00863A8C /* Stations.m */; };
+		52DD766916D2A86E005763DE /* Stations.m in Sources */ = {isa = PBXBuildFile; fileRef = 75E8F1DC16CE4E2A00863A8C /* Stations.m */; };
+		52DD766A16D2A892005763DE /* StationListElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 75E8F1CD16CE356D00863A8C /* StationListElement.m */; };
+		52DD766B16D2A893005763DE /* StationListElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 75E8F1CD16CE356D00863A8C /* StationListElement.m */; };
+		52DD766C16D2A8FD005763DE /* PreloadedStop.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D44083F16CF72FD00F8EBE5 /* PreloadedStop.m */; };
+		52DD766D16D2A8FE005763DE /* PreloadedStop.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D44083F16CF72FD00F8EBE5 /* PreloadedStop.m */; };
 		52E4C09715CB465A00B55A65 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C09615CB465A00B55A65 /* Icon.png */; };
 		52E4C09F15CB7D2F00B55A65 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C09E15CB7D2F00B55A65 /* Icon@2x.png */; };
 		52E4C0A115CC705000B55A65 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C0A015CC705000B55A65 /* Default.png */; };
@@ -1475,6 +1481,9 @@
 				8DE0CC4F16A9632100AE2E9D /* twitterViewController.m in Sources */,
 				8D3EF6B116B24D3B00ED366B /* RealTimeManager.m in Sources */,
 				52958AB116CED86900CC46C7 /* GtfsTempItinerary.m in Sources */,
+				52DD766416D2A86B005763DE /* Stations.m in Sources */,
+				52DD766A16D2A892005763DE /* StationListElement.m in Sources */,
+				52DD766C16D2A8FD005763DE /* PreloadedStop.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1485,6 +1494,9 @@
 				52CF43CB14BDF2F9000565D6 /* Network_CommutingTests.m in Sources */,
 				52C32ABC16A3A90B0094EE14 /* TestGeneratePlan.m in Sources */,
 				52A9BE9516B4B41500564D0D /* RealTimeServerStubTest.m in Sources */,
+				52DD766916D2A86E005763DE /* Stations.m in Sources */,
+				52DD766B16D2A893005763DE /* StationListElement.m in Sources */,
+				52DD766D16D2A8FE005763DE /* PreloadedStop.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
