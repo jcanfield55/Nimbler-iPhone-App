@@ -17,7 +17,6 @@
 @interface StationListElement : NSManagedObject
 
 @property (nonatomic, retain) NSString * memberOfListId;
-@property (nonatomic, retain) NSString * memberOfList;
 @property (nonatomic, retain) NSNumber * sequenceNumber;
 @property (nonatomic, retain) NSString * containsList;
 @property (nonatomic, retain) NSString * containsListId;
