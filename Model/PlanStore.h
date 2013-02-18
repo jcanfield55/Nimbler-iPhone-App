@@ -51,4 +51,7 @@
 - (NSString *)generateRandomString;
 - (void)clearCache;
 -(void)requestPlanFromOtpWithParameters:(PlanRequestParameters *)parameters;
+
+// get the route name string like KT,caltrain-loc etc from plan
+- (NSArray *) getUniqueRouteName:(Plan *)plan;
 @end
