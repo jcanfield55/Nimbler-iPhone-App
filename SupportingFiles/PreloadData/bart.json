@@ -1,0 +1,2507 @@
+{
+	"results" : [{
+			"memberOfListId" : "all_st",
+			"sequenceNumber" : 1,
+			"containsList" : "Bart Station List",
+			"containsListId" : "bart_st_list"
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 1,
+			"locationMember" : {
+				"toFrequency" : 0.7357473,
+				"fromFrequency" : 0.06,
+				"address_components" : [{
+						"long_name" : "12th St Oakland City Center BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "12th St Oakland City Center BART"
+					}, {
+						"long_name" : "Downtown",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Downtown"
+					}, {
+						"long_name" : "Oakland",
+						"types" : ["locality", "political"],
+						"short_name" : "Oakland"
+					}, {
+						"long_name" : "Alameda",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Alameda"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94612",
+						"types" : ["postal_code"],
+						"short_name" : "94612"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "12th St Oakland City Center BART, Oakland, CA 94612, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.271604,
+						"lat" : 37.803664
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.2729529802915,
+							"lat" : 37.8023150197085
+						},
+						"northeast" : {
+							"lng" : -122.2702550197085,
+							"lat" : 37.8050129802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 2,
+			"locationMember" : {
+				"toFrequency" : 0.85470694,
+				"fromFrequency" : 0.88,
+				"address_components" : [{
+						"long_name" : "16th St Mission BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "16th St Mission BART"
+					}, {
+						"long_name" : "2000",
+						"types" : ["street_number"],
+						"short_name" : "2000"
+					}, {
+						"long_name" : "Mission St",
+						"types" : ["route"],
+						"short_name" : "Mission St"
+					}, {
+						"long_name" : "Mission District",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Mission District"
+					}, {
+						"long_name" : "San Francisco",
+						"types" : ["locality", "political"],
+						"short_name" : "SF"
+					}, {
+						"long_name" : "San Francisco",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "San Francisco"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94103",
+						"types" : ["postal_code"],
+						"short_name" : "94103"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "16th St Mission BART, 2000 Mission St, San Francisco, CA 94103, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.419694,
+						"lat" : 37.765062
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.4210429802915,
+							"lat" : 37.7637130197085
+						},
+						"northeast" : {
+							"lng" : -122.4183450197085,
+							"lat" : 37.7664109802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 3,
+			"locationMember" : {
+				"toFrequency" : 0.88185287,
+				"fromFrequency" : 0.08,
+				"address_components" : [{
+						"long_name" : "19th St Oakland BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "19th St Oakland BART"
+					}, {
+						"long_name" : "Downtown",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Downtown"
+					}, {
+						"long_name" : "Oakland",
+						"types" : ["locality", "political"],
+						"short_name" : "Oakland"
+					}, {
+						"long_name" : "Alameda",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Alameda"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94612",
+						"types" : ["postal_code"],
+						"short_name" : "94612"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "19th St Oakland BART, Oakland, CA 94612, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.269029,
+						"lat" : 37.80787
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.2703779802915,
+							"lat" : 37.80652101970851
+						},
+						"northeast" : {
+							"lng" : -122.2676800197085,
+							"lat" : 37.8092189802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 4,
+			"locationMember" : {
+				"toFrequency" : 0.5545369,
+				"fromFrequency" : 0.97,
+				"address_components" : [{
+						"long_name" : "24th St Mission BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "24th St Mission BART"
+					}, {
+						"long_name" : "Mission District",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Mission District"
+					}, {
+						"long_name" : "San Francisco",
+						"types" : ["locality", "political"],
+						"short_name" : "SF"
+					}, {
+						"long_name" : "San Francisco",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "San Francisco"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94110",
+						"types" : ["postal_code"],
+						"short_name" : "94110"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "24th St Mission BART, San Francisco, CA 94110, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.418466,
+						"lat" : 37.752254
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.4198149802915,
+							"lat" : 37.7509050197085
+						},
+						"northeast" : {
+							"lng" : -122.4171170197085,
+							"lat" : 37.7536029802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 5,
+			"locationMember" : {
+				"toFrequency" : 0.56263673,
+				"fromFrequency" : 0.45,
+				"address_components" : [{
+						"long_name" : "Ashby BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Ashby BART"
+					}, {
+						"long_name" : "South Berkeley",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "South Berkeley"
+					}, {
+						"long_name" : "Berkeley",
+						"types" : ["locality", "political"],
+						"short_name" : "Berkeley"
+					}, {
+						"long_name" : "Alameda",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Alameda"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94703",
+						"types" : ["postal_code"],
+						"short_name" : "94703"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Ashby BART, Berkeley, CA 94703, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.26978,
+						"lat" : 37.853024
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.2711289802915,
+							"lat" : 37.8516750197085
+						},
+						"northeast" : {
+							"lng" : -122.2684310197085,
+							"lat" : 37.85437298029149
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 6,
+			"locationMember" : {
+				"toFrequency" : 0.57941604,
+				"fromFrequency" : 0.62,
+				"address_components" : [{
+						"long_name" : "Balboa Park BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Balboa Park BART"
+					}, {
+						"long_name" : "Ingleside",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Ingleside"
+					}, {
+						"long_name" : "San Francisco",
+						"types" : ["locality", "political"],
+						"short_name" : "SF"
+					}, {
+						"long_name" : "San Francisco",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "San Francisco"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94112",
+						"types" : ["postal_code"],
+						"short_name" : "94112"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Balboa Park BART, San Francisco, CA 94112, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.4474142,
+						"lat" : 37.7219809
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.4487631802915,
+							"lat" : 37.7206319197085
+						},
+						"northeast" : {
+							"lng" : -122.4460652197085,
+							"lat" : 37.7233298802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 7,
+			"locationMember" : {
+				"toFrequency" : 0.17407721,
+				"fromFrequency" : 0.79,
+				"address_components" : [{
+						"long_name" : "Bay Fair BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Bay Fair BART"
+					}, {
+						"long_name" : "San Leandro",
+						"types" : ["locality", "political"],
+						"short_name" : "San Leandro"
+					}, {
+						"long_name" : "Alameda",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Alameda"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94580",
+						"types" : ["postal_code"],
+						"short_name" : "94580"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Bay Fair BART, San Leandro, CA 94580, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.126871,
+						"lat" : 37.697185
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.1282199802915,
+							"lat" : 37.6958360197085
+						},
+						"northeast" : {
+							"lng" : -122.1255220197085,
+							"lat" : 37.69853398029149
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 8,
+			"locationMember" : {
+				"toFrequency" : 0.89670616,
+				"fromFrequency" : 0.42,
+				"address_components" : [{
+						"long_name" : "Castro Valley BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Castro Valley BART"
+					}, {
+						"long_name" : "Castro Valley",
+						"types" : ["locality", "political"],
+						"short_name" : "Castro Valley"
+					}, {
+						"long_name" : "Alameda",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Alameda"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94546",
+						"types" : ["postal_code"],
+						"short_name" : "94546"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Castro Valley BART, CA 94546, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.075567,
+						"lat" : 37.690754
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.0769159802915,
+							"lat" : 37.6894050197085
+						},
+						"northeast" : {
+							"lng" : -122.0742180197085,
+							"lat" : 37.6921029802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 9,
+			"locationMember" : {
+				"toFrequency" : 0.88391024,
+				"fromFrequency" : 0.87,
+				"address_components" : [{
+						"long_name" : "Civic Center/UN Plaza BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Civic Center/UN Plaza BART"
+					}, {
+						"long_name" : "Civic Center",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Civic Center"
+					}, {
+						"long_name" : "San Francisco",
+						"types" : ["locality", "political"],
+						"short_name" : "SF"
+					}, {
+						"long_name" : "San Francisco",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "San Francisco"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94142",
+						"types" : ["postal_code"],
+						"short_name" : "94142"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Civic Center/UN Plaza BART, San Francisco, CA 94142, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.413756,
+						"lat" : 37.779528
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.4151049802915,
+							"lat" : 37.7781790197085
+						},
+						"northeast" : {
+							"lng" : -122.4124070197085,
+							"lat" : 37.7808769802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 10,
+			"locationMember" : {
+				"toFrequency" : 0.06439835,
+				"fromFrequency" : 0.34,
+				"address_components" : [{
+						"long_name" : "Colma BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Colma BART"
+					}, {
+						"long_name" : "Original Daly City",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Original Daly City"
+					}, {
+						"long_name" : "San Mateo",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "San Mateo"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94014",
+						"types" : ["postal_code"],
+						"short_name" : "94014"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Colma BART, Original Daly City, CA 94014, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.466233,
+						"lat" : 37.684638
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.4675819802915,
+							"lat" : 37.6832890197085
+						},
+						"northeast" : {
+							"lng" : -122.4648840197085,
+							"lat" : 37.6859869802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 11,
+			"locationMember" : {
+				"toFrequency" : 0.98841023,
+				"fromFrequency" : 0.27,
+				"address_components" : [{
+						"long_name" : "Concord BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Concord BART"
+					}, {
+						"long_name" : "Concord",
+						"types" : ["locality", "political"],
+						"short_name" : "Concord"
+					}, {
+						"long_name" : "Contra Costa",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Contra Costa"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94520",
+						"types" : ["postal_code"],
+						"short_name" : "94520"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Concord BART, Concord CA 94520, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.029095,
+						"lat" : 37.973737
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.0304439802915,
+							"lat" : 37.9723880197085
+						},
+						"northeast" : {
+							"lng" : -122.0277460197085,
+							"lat" : 37.9750859802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 12,
+			"locationMember" : {
+				"toFrequency" : 0.5340342,
+				"fromFrequency" : 0.61,
+				"address_components" : [{
+						"long_name" : "Daly City BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Daly City BART"
+					}, {
+						"long_name" : "Original Daly City",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Original Daly City"
+					}, {
+						"long_name" : "Daly City",
+						"types" : ["locality", "political"],
+						"short_name" : "Daly City"
+					}, {
+						"long_name" : "San Mateo",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "San Mateo"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94014",
+						"types" : ["postal_code"],
+						"short_name" : "94014"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Daly City BART, CA 94014, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.4690807,
+						"lat" : 37.7061206
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.4704296802915,
+							"lat" : 37.7047716197085
+						},
+						"northeast" : {
+							"lng" : -122.4677317197085,
+							"lat" : 37.70746958029149
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 13,
+			"locationMember" : {
+				"toFrequency" : 0.8521892,
+				"fromFrequency" : 0.41,
+				"address_components" : [{
+						"long_name" : "Downtown Berkeley BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Downtown Berkeley BART"
+					}, {
+						"long_name" : "South Berkeley",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "South Berkeley"
+					}, {
+						"long_name" : "Berkeley",
+						"types" : ["locality", "political"],
+						"short_name" : "Berkeley"
+					}, {
+						"long_name" : "Alameda",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Alameda"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94704",
+						"types" : ["postal_code"],
+						"short_name" : "94704"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Downtown Berkeley BART, Berkeley, CA 94704, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.268045,
+						"lat" : 37.869867
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.2693939802915,
+							"lat" : 37.8685180197085
+						},
+						"northeast" : {
+							"lng" : -122.2666960197085,
+							"lat" : 37.8712159802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 14,
+			"locationMember" : {
+				"toFrequency" : 0.916671,
+				"fromFrequency" : 0.81,
+				"address_components" : [{
+						"long_name" : "Dublin/Pleasanton BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Dublin/Pleasanton BART"
+					}, {
+						"long_name" : "Dublin",
+						"types" : ["locality", "political"],
+						"short_name" : "Dublin"
+					}, {
+						"long_name" : "Alameda",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Alameda"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94588",
+						"types" : ["postal_code"],
+						"short_name" : "94588"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Dublin/Pleasanton BART, Dublin, CA 94588, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -121.900367,
+						"lat" : 37.701695
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -121.9017159802915,
+							"lat" : 37.7003460197085
+						},
+						"northeast" : {
+							"lng" : -121.8990180197085,
+							"lat" : 37.7030439802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 15,
+			"locationMember" : {
+				"toFrequency" : 0.32774198,
+				"fromFrequency" : 0.02,
+				"address_components" : [{
+						"long_name" : "El Cerrito del Norte BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "El Cerrito del Norte BART"
+					}, {
+						"long_name" : "El Cerrito",
+						"types" : ["locality", "political"],
+						"short_name" : "El Cerrito"
+					}, {
+						"long_name" : "Contra Costa",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Contra Costa"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94530",
+						"types" : ["postal_code"],
+						"short_name" : "94530"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "El Cerrito del Norte BART, El Cerrito, CA 94530, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.317269,
+						"lat" : 37.925655
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.3186179802915,
+							"lat" : 37.9243060197085
+						},
+						"northeast" : {
+							"lng" : -122.3159200197085,
+							"lat" : 37.9270039802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 16,
+			"locationMember" : {
+				"toFrequency" : 0.4914782,
+				"fromFrequency" : 0.43,
+				"address_components" : [{
+						"long_name" : "El Cerrito Plaza BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "El Cerrito Plaza BART"
+					}, {
+						"long_name" : "6699",
+						"types" : ["street_number"],
+						"short_name" : "6699"
+					}, {
+						"long_name" : "Fairmount Ave",
+						"types" : ["route"],
+						"short_name" : "Fairmount Ave"
+					}, {
+						"long_name" : "El Cerrito",
+						"types" : ["locality", "political"],
+						"short_name" : "El Cerrito"
+					}, {
+						"long_name" : "Contra Costa",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Contra Costa"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94530",
+						"types" : ["postal_code"],
+						"short_name" : "94530"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "El Cerrito Plaza BART, 6699 Fairmount Ave, El Cerrito, CA 94530, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.2992715,
+						"lat" : 37.9030588
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.3006204802915,
+							"lat" : 37.9017098197085
+						},
+						"northeast" : {
+							"lng" : -122.2979225197085,
+							"lat" : 37.90440778029149
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 17,
+			"locationMember" : {
+				"toFrequency" : 0.25671607,
+				"fromFrequency" : 0.07,
+				"address_components" : [{
+						"long_name" : "Embarcadero BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Embarcadero BART"
+					}, {
+						"long_name" : "Financial District",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Financial District"
+					}, {
+						"long_name" : "San Francisco",
+						"types" : ["locality", "political"],
+						"short_name" : "SF"
+					}, {
+						"long_name" : "San Francisco",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "San Francisco"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94111",
+						"types" : ["postal_code"],
+						"short_name" : "94111"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Embarcadero BART, San Francisco, CA 94111, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.396742,
+						"lat" : 37.792976
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.3980909802915,
+							"lat" : 37.7916270197085
+						},
+						"northeast" : {
+							"lng" : -122.3953930197085,
+							"lat" : 37.79432498029149
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 18,
+			"locationMember" : {
+				"toFrequency" : 0.7272337,
+				"fromFrequency" : 0.54,
+				"address_components" : [{
+						"long_name" : "Fremont BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Fremont BART"
+					}, {
+						"long_name" : "Central Downtown",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Central Downtown"
+					}, {
+						"long_name" : "Fremont",
+						"types" : ["locality", "political"],
+						"short_name" : "Fremont"
+					}, {
+						"long_name" : "Alameda",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Alameda"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94536",
+						"types" : ["postal_code"],
+						"short_name" : "94536"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Fremont BART, Fremont, CA 94536, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -121.9764,
+						"lat" : 37.557355
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -121.9777489802915,
+							"lat" : 37.55600601970851
+						},
+						"northeast" : {
+							"lng" : -121.9750510197085,
+							"lat" : 37.5587039802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 19,
+			"locationMember" : {
+				"toFrequency" : 0.318933,
+				"fromFrequency" : 0.77,
+				"address_components" : [{
+						"long_name" : "Fruitvale BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Fruitvale BART"
+					}, {
+						"long_name" : "Fruitvale Station",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Fruitvale Station"
+					}, {
+						"long_name" : "Oakland",
+						"types" : ["locality", "political"],
+						"short_name" : "Oakland"
+					}, {
+						"long_name" : "Alameda",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Alameda"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94601",
+						"types" : ["postal_code"],
+						"short_name" : "94601"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Fruitvale BART, Oakland, CA 94601, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.224274,
+						"lat" : 37.774963
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.2256229802915,
+							"lat" : 37.7736140197085
+						},
+						"northeast" : {
+							"lng" : -122.2229250197085,
+							"lat" : 37.7763119802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 20,
+			"locationMember" : {
+				"toFrequency" : 0.28305376,
+				"fromFrequency" : 0.59,
+				"address_components" : [{
+						"long_name" : "Glen Park BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Glen Park BART"
+					}, {
+						"long_name" : "Glen Park",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Glen Park"
+					}, {
+						"long_name" : "San Francisco",
+						"types" : ["locality", "political"],
+						"short_name" : "SF"
+					}, {
+						"long_name" : "San Francisco",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "San Francisco"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94131",
+						"types" : ["postal_code"],
+						"short_name" : "94131"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Glen Park BART, San Francisco, CA 94131, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.434092,
+						"lat" : 37.732921
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.4354409802915,
+							"lat" : 37.7315720197085
+						},
+						"northeast" : {
+							"lng" : -122.4327430197085,
+							"lat" : 37.7342699802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 21,
+			"locationMember" : {
+				"toFrequency" : 0.5057394,
+				"fromFrequency" : 0.7,
+				"address_components" : [{
+						"long_name" : "Hayward BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Hayward BART"
+					}, {
+						"long_name" : "Hayward",
+						"types" : ["locality", "political"],
+						"short_name" : "Hayward"
+					}, {
+						"long_name" : "Alameda",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Alameda"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94541",
+						"types" : ["postal_code"],
+						"short_name" : "94541"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Hayward BART, Hayward, CA 94541, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.087967,
+						"lat" : 37.670399
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.0893159802915,
+							"lat" : 37.6690500197085
+						},
+						"northeast" : {
+							"lng" : -122.0866180197085,
+							"lat" : 37.6717479802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 22,
+			"locationMember" : {
+				"toFrequency" : 0.064142585,
+				"fromFrequency" : 0.97,
+				"address_components" : [{
+						"long_name" : "North Concord/Martinez BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "North Concord/Martinez BART"
+					}, {
+						"long_name" : "Concord",
+						"types" : ["locality", "political"],
+						"short_name" : "Concord"
+					}, {
+						"long_name" : "Contra Costa",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Contra Costa"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94519",
+						"types" : ["postal_code"],
+						"short_name" : "94519"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "North Concord/Martinez BART, Concord, CA 94519, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.024597,
+						"lat" : 38.003275
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.0259459802915,
+							"lat" : 38.0019260197085
+						},
+						"northeast" : {
+							"lng" : -122.0232480197085,
+							"lat" : 38.00462398029149
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 23,
+			"locationMember" : {
+				"toFrequency" : 0.19212699,
+				"fromFrequency" : 0.06,
+				"address_components" : [{
+						"long_name" : "Lafayette BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Lafayette BART"
+					}, {
+						"long_name" : "3601",
+						"types" : ["street_number"],
+						"short_name" : "3601"
+					}, {
+						"long_name" : "Deer Hill Rd",
+						"types" : ["route"],
+						"short_name" : "Deer Hill Rd"
+					}, {
+						"long_name" : "Mountain View",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Mountain View"
+					}, {
+						"long_name" : "Lafayette",
+						"types" : ["locality", "political"],
+						"short_name" : "Lafayette"
+					}, {
+						"long_name" : "Contra Costa",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Contra Costa"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94549",
+						"types" : ["postal_code"],
+						"short_name" : "94549"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Lafayette BART, 3601 Deer Hill Rd, Lafayette, CA 94549, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.123801,
+						"lat" : 37.893394
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.1251499802915,
+							"lat" : 37.8920450197085
+						},
+						"northeast" : {
+							"lng" : -122.1224520197085,
+							"lat" : 37.8947429802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 24,
+			"locationMember" : {
+				"toFrequency" : 0.7173304,
+				"fromFrequency" : 0.61,
+				"address_components" : [{
+						"long_name" : "Lake Merritt BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Lake Merritt BART"
+					}, {
+						"long_name" : "Downtown Oakland",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Downtown Oakland"
+					}, {
+						"long_name" : "Oakland",
+						"types" : ["locality", "political"],
+						"short_name" : "Oakland"
+					}, {
+						"long_name" : "Alameda",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Alameda"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94607",
+						"types" : ["postal_code"],
+						"short_name" : "94607"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Lake Merritt BART, Oakland, CA 94607, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.265609,
+						"lat" : 37.797484
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.2669579802915,
+							"lat" : 37.79613501970849
+						},
+						"northeast" : {
+							"lng" : -122.2642600197085,
+							"lat" : 37.79883298029149
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 25,
+			"locationMember" : {
+				"toFrequency" : 0.7111904,
+				"fromFrequency" : 0.8,
+				"address_components" : [{
+						"long_name" : "MacArthur BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "MacArthur BART"
+					}, {
+						"long_name" : "Mosswood",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Mosswood"
+					}, {
+						"long_name" : "Oakland",
+						"types" : ["locality", "political"],
+						"short_name" : "Oakland"
+					}, {
+						"long_name" : "Alameda",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Alameda"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94609",
+						"types" : ["postal_code"],
+						"short_name" : "94609"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "MacArthur BART, Oakland, CA 94609, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.267227,
+						"lat" : 37.828415
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.2685759802915,
+							"lat" : 37.8270660197085
+						},
+						"northeast" : {
+							"lng" : -122.2658780197085,
+							"lat" : 37.8297639802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 26,
+			"locationMember" : {
+				"toFrequency" : 0.07392591,
+				"fromFrequency" : 0.87,
+				"address_components" : [{
+						"long_name" : "Millbrae BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Millbrae BART"
+					}, {
+						"long_name" : "Millbrae",
+						"types" : ["locality", "political"],
+						"short_name" : "Millbrae"
+					}, {
+						"long_name" : "San Mateo",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "San Mateo"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94030",
+						"types" : ["postal_code"],
+						"short_name" : "94030"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Millbrae BART, Millbrae, CA 94030, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.38666,
+						"lat" : 37.599787
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.3880089802915,
+							"lat" : 37.5984380197085
+						},
+						"northeast" : {
+							"lng" : -122.3853110197085,
+							"lat" : 37.6011359802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 27,
+			"locationMember" : {
+				"toFrequency" : 0.49194837,
+				"fromFrequency" : 0.23,
+				"address_components" : [{
+						"long_name" : "Montgomery St BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Montgomery St BART"
+					}, {
+						"long_name" : "Financial District",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Financial District"
+					}, {
+						"long_name" : "San Francisco",
+						"types" : ["locality", "political"],
+						"short_name" : "SF"
+					}, {
+						"long_name" : "San Francisco",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "San Francisco"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94120",
+						"types" : ["postal_code"],
+						"short_name" : "94120"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Montgomery St BART, San Francisco, CA 94104, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.401407,
+						"lat" : 37.789256
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.4027559802915,
+							"lat" : 37.7879070197085
+						},
+						"northeast" : {
+							"lng" : -122.4000580197085,
+							"lat" : 37.7906049802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 28,
+			"locationMember" : {
+				"toFrequency" : 0.6763369,
+				"fromFrequency" : 0.03,
+				"address_components" : [{
+						"long_name" : "North Berkeley BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "North Berkeley BART"
+					}, {
+						"long_name" : "Northwest Berkeley",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Northwest Berkeley"
+					}, {
+						"long_name" : "Berkeley",
+						"types" : ["locality", "political"],
+						"short_name" : "Berkeley"
+					}, {
+						"long_name" : "Alameda",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Alameda"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94702",
+						"types" : ["postal_code"],
+						"short_name" : "94702"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "North Berkeley BART, Berkeley, CA 94702, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.283451,
+						"lat" : 37.87404
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.2847999802915,
+							"lat" : 37.8726910197085
+						},
+						"northeast" : {
+							"lng" : -122.2821020197085,
+							"lat" : 37.8753889802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 29,
+			"locationMember" : {
+				"toFrequency" : 0.9075432,
+				"fromFrequency" : 0.41,
+				"address_components" : [{
+						"long_name" : "Orinda BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Orinda BART"
+					}, {
+						"long_name" : "Knickerbocker",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Knickerbocker"
+					}, {
+						"long_name" : "Orinda",
+						"types" : ["locality", "political"],
+						"short_name" : "Orinda"
+					}, {
+						"long_name" : "Contra Costa",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Contra Costa"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94563",
+						"types" : ["postal_code"],
+						"short_name" : "94563"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Orinda BART, Orinda, CA 94563, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.1837911,
+						"lat" : 37.8783609
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.1851400802915,
+							"lat" : 37.87701191970849
+						},
+						"northeast" : {
+							"lng" : -122.1824421197085,
+							"lat" : 37.87970988029149
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 30,
+			"locationMember" : {
+				"toFrequency" : 0.68050915,
+				"fromFrequency" : 0.96,
+				"address_components" : [{
+						"long_name" : "Pittsburg/Bay Point BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Pittsburg/Bay Point BART"
+					}, {
+						"long_name" : "Pittsburg",
+						"types" : ["locality", "political"],
+						"short_name" : "Pittsburg"
+					}, {
+						"long_name" : "Contra Costa",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Contra Costa"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94565",
+						"types" : ["postal_code"],
+						"short_name" : "94565"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Pittsburg/Bay Point BART, Pittsburg, CA 94565, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -121.945154,
+						"lat" : 38.018914
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -121.9465029802915,
+							"lat" : 38.0175650197085
+						},
+						"northeast" : {
+							"lng" : -121.9438050197085,
+							"lat" : 38.02026298029149
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 31,
+			"locationMember" : {
+				"toFrequency" : 0.64866704,
+				"fromFrequency" : 0.33,
+				"address_components" : [{
+						"long_name" : "Pleasant Hill/Contra Costa Centre BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Pleasant Hill/Contra Costa Centre BART"
+					}, {
+						"long_name" : "Contra Costa Centre Transit Village",
+						"types" : ["sublocality", "political"],
+						"short_name" : "Contra Costa Centre Transit Village"
+					}, {
+						"long_name" : "Contra Costa",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Contra Costa"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94597",
+						"types" : ["postal_code"],
+						"short_name" : "94597"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Pleasant Hill/Contra Costa Centre BART, Contra Costa Centre Transit Village, CA 94597, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.056013,
+						"lat" : 37.928403
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.0573619802915,
+							"lat" : 37.9270540197085
+						},
+						"northeast" : {
+							"lng" : -122.0546640197085,
+							"lat" : 37.92975198029149
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 32,
+			"locationMember" : {
+				"toFrequency" : 0.20713818,
+				"fromFrequency" : 0.56,
+				"address_components" : [{
+						"long_name" : "Powell St BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Powell St BART"
+					}, {
+						"long_name" : "Downtown",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Downtown"
+					}, {
+						"long_name" : "San Francisco",
+						"types" : ["locality", "political"],
+						"short_name" : "SF"
+					}, {
+						"long_name" : "San Francisco",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "San Francisco"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94142",
+						"types" : ["postal_code"],
+						"short_name" : "94142"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Powell St BART, San Francisco, CA 94102, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.406857,
+						"lat" : 37.784991
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.4082059802915,
+							"lat" : 37.7836420197085
+						},
+						"northeast" : {
+							"lng" : -122.4055080197085,
+							"lat" : 37.7863399802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 33,
+			"locationMember" : {
+				"toFrequency" : 0.5431933,
+				"fromFrequency" : 0.36,
+				"address_components" : [{
+						"long_name" : "Richmond BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Richmond BART"
+					}, {
+						"long_name" : "Belding Woods",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Belding Woods"
+					}, {
+						"long_name" : "Richmond",
+						"types" : ["locality", "political"],
+						"short_name" : "Richmond"
+					}, {
+						"long_name" : "Contra Costa",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Contra Costa"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94801",
+						"types" : ["postal_code"],
+						"short_name" : "94801"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Richmond BART, Richmond, CA 94801, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.353165,
+						"lat" : 37.936887
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.3545139802915,
+							"lat" : 37.9355380197085
+						},
+						"northeast" : {
+							"lng" : -122.3518160197085,
+							"lat" : 37.9382359802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 34,
+			"locationMember" : {
+				"toFrequency" : 0.0475713,
+				"fromFrequency" : 0.86,
+				"address_components" : [{
+						"long_name" : "Rockridge BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Rockridge BART"
+					}, {
+						"long_name" : "5660",
+						"types" : ["street_number"],
+						"short_name" : "5660"
+					}, {
+						"long_name" : "College Ave",
+						"types" : ["route"],
+						"short_name" : "College Ave"
+					}, {
+						"long_name" : "Rockridge",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Rockridge"
+					}, {
+						"long_name" : "Oakland",
+						"types" : ["locality", "political"],
+						"short_name" : "Oakland"
+					}, {
+						"long_name" : "Alameda",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Alameda"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94618",
+						"types" : ["postal_code"],
+						"short_name" : "94618"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Rockridge BART, 5660 College Ave, Oakland, CA 94618, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.251793,
+						"lat" : 37.844601
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.2531419802915,
+							"lat" : 37.8432520197085
+						},
+						"northeast" : {
+							"lng" : -122.2504440197085,
+							"lat" : 37.8459499802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 35,
+			"locationMember" : {
+				"toFrequency" : 0.59698284,
+				"fromFrequency" : 0.74,
+				"address_components" : [{
+						"long_name" : "San Bruno BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "San Bruno BART"
+					}, {
+						"long_name" : "San Bruno",
+						"types" : ["locality", "political"],
+						"short_name" : "San Bruno"
+					}, {
+						"long_name" : "San Mateo",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "San Mateo"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94066",
+						"types" : ["postal_code"],
+						"short_name" : "94066"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "San Bruno BART, San Bruno, CA 94066, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.416038,
+						"lat" : 37.637753
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.4173869802915,
+							"lat" : 37.63640401970849
+						},
+						"northeast" : {
+							"lng" : -122.4146890197085,
+							"lat" : 37.63910198029149
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 36,
+			"locationMember" : {
+				"toFrequency" : 0.5202326,
+				"fromFrequency" : 0.41,
+				"address_components" : [{
+						"long_name" : "San Francisco Int'l Airport BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "San Francisco Int'l Airport BART"
+					}, {
+						"long_name" : "San Mateo",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "San Mateo"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94030",
+						"types" : ["postal_code"],
+						"short_name" : "94030"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "San Francisco Int'l Airport BART, San Francisco, California 94030, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.392534,
+						"lat" : 37.6159
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.3938829802915,
+							"lat" : 37.6145510197085
+						},
+						"northeast" : {
+							"lng" : -122.3911850197085,
+							"lat" : 37.6172489802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 37,
+			"locationMember" : {
+				"toFrequency" : 0.6453875,
+				"fromFrequency" : 0.34,
+				"address_components" : [{
+						"long_name" : "San Leandro BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "San Leandro BART"
+					}, {
+						"long_name" : "Old San Leandro",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Old San Leandro"
+					}, {
+						"long_name" : "San Leandro",
+						"types" : ["locality", "political"],
+						"short_name" : "San Leandro"
+					}, {
+						"long_name" : "Alameda",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Alameda"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94577",
+						"types" : ["postal_code"],
+						"short_name" : "94577"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "San Leandro BART, San Leandro, CA 94577, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.1613112,
+						"lat" : 37.7226192
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.1626601802915,
+							"lat" : 37.7212702197085
+						},
+						"northeast" : {
+							"lng" : -122.1599622197085,
+							"lat" : 37.72396818029149
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 38,
+			"locationMember" : {
+				"toFrequency" : 0.053266585,
+				"fromFrequency" : 0.17,
+				"address_components" : [{
+						"long_name" : "South Hayward BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "South Hayward BART"
+					}, {
+						"long_name" : "Mission - Garin",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Mission - Garin"
+					}, {
+						"long_name" : "Hayward",
+						"types" : ["locality", "political"],
+						"short_name" : "Hayward"
+					}, {
+						"long_name" : "Alameda",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Alameda"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94544",
+						"types" : ["postal_code"],
+						"short_name" : "94544"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "South Hayward BART, Hayward, CA 94544, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.0575506,
+						"lat" : 37.6347995
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.0588995802915,
+							"lat" : 37.6334505197085
+						},
+						"northeast" : {
+							"lng" : -122.0562016197085,
+							"lat" : 37.6361484802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 39,
+			"locationMember" : {
+				"toFrequency" : 0.34590304,
+				"fromFrequency" : 0.61,
+				"address_components" : [{
+						"long_name" : "South San Francisco BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "South San Francisco BART"
+					}, {
+						"long_name" : "El Camino",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "El Camino"
+					}, {
+						"long_name" : "South San Francisco",
+						"types" : ["locality", "political"],
+						"short_name" : "South San Francisco"
+					}, {
+						"long_name" : "San Mateo",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "San Mateo"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94080",
+						"types" : ["postal_code"],
+						"short_name" : "94080"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "South San Francisco BART, South San Francisco, CA 94080, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.444116,
+						"lat" : 37.664174
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.4454649802915,
+							"lat" : 37.6628250197085
+						},
+						"northeast" : {
+							"lng" : -122.4427670197085,
+							"lat" : 37.66552298029149
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 40,
+			"locationMember" : {
+				"toFrequency" : 0.6500475,
+				"fromFrequency" : 0.86,
+				"address_components" : [{
+						"long_name" : "Union City BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Union City BART"
+					}, {
+						"long_name" : "Union City",
+						"types" : ["locality", "political"],
+						"short_name" : "Union City"
+					}, {
+						"long_name" : "Alameda",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Alameda"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94587",
+						"types" : ["postal_code"],
+						"short_name" : "94587"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Union City BART, Union City, CA 94587, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.017867,
+						"lat" : 37.591208
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.0192159802915,
+							"lat" : 37.58985901970851
+						},
+						"northeast" : {
+							"lng" : -122.0165180197085,
+							"lat" : 37.5925569802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 41,
+			"locationMember" : {
+				"toFrequency" : 0.4786806,
+				"fromFrequency" : 0.46,
+				"address_components" : [{
+						"long_name" : "Walnut Creek BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "Walnut Creek BART"
+					}, {
+						"long_name" : "Walnut Creek",
+						"types" : ["locality", "political"],
+						"short_name" : "Walnut Creek"
+					}, {
+						"long_name" : "Contra Costa",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Contra Costa"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94596",
+						"types" : ["postal_code"],
+						"short_name" : "94596"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "Walnut Creek BART, Walnut Creek, CA 94596, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.067423,
+						"lat" : 37.905628
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.0687719802915,
+							"lat" : 37.9042790197085
+						},
+						"northeast" : {
+							"lng" : -122.0660740197085,
+							"lat" : 37.9069769802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 42,
+			"locationMember" : {
+				"toFrequency" : 0.01549983,
+				"fromFrequency" : 0.26,
+				"address_components" : [{
+						"long_name" : "West Dublin/Pleasanton BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "West Dublin/Pleasanton BART"
+					}, {
+						"long_name" : "6501",
+						"types" : ["street_number"],
+						"short_name" : "6501"
+					}, {
+						"long_name" : "Golden Gate Dr",
+						"types" : ["route"],
+						"short_name" : "Golden Gate Dr"
+					}, {
+						"long_name" : "Pleasanton",
+						"types" : ["locality", "political"],
+						"short_name" : "Pleasanton"
+					}, {
+						"long_name" : "Alameda",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Alameda"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94588",
+						"types" : ["postal_code"],
+						"short_name" : "94588"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "West Dublin/Pleasanton BART, 6501 Golden Gate Dr, Pleasanton, CA 94588, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -121.928099,
+						"lat" : 37.699759
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -121.9296234802915,
+							"lat" : 37.6983786697085
+						},
+						"northeast" : {
+							"lng" : -121.9269255197085,
+							"lat" : 37.7010766302915
+						}
+					},
+					"bounds" : {
+						"southwest" : {
+							"lng" : -121.9294533,
+							"lat" : 37.6994374
+						},
+						"northeast" : {
+							"lng" : -121.9270957,
+							"lat" : 37.7000179
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 43,
+			"locationMember" : {
+				"toFrequency" : 0.27525538,
+				"fromFrequency" : 0.59,
+				"address_components" : [{
+						"long_name" : "West Oakland BART",
+						"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+						"short_name" : "West Oakland BART"
+					}, {
+						"long_name" : "West Oakland",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "West Oakland"
+					}, {
+						"long_name" : "Oakland",
+						"types" : ["locality", "political"],
+						"short_name" : "Oakland"
+					}, {
+						"long_name" : "Alameda",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Alameda"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94607",
+						"types" : ["postal_code"],
+						"short_name" : "94607"
+					}
+				],
+				"types" : ["subway_station", "train_station", "transit_station", "establishment"],
+				"formatted_address" : "West Oakland BART, Oakland, CA 94607, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.2945822,
+						"lat" : 37.8046748
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.2959311802915,
+							"lat" : 37.8033258197085
+						},
+						"northeast" : {
+							"lng" : -122.2932332197085,
+							"lat" : 37.8060237802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 44,
+			"locationMember" : {
+				"toFrequency" : 0.60019565,
+				"fromFrequency" : 0.21,
+				"address_components" : [{
+						"long_name" : "Oakland Airport Terminals AirBART",
+						"types" : ["bus_station", "transit_station", "establishment"],
+						"short_name" : "Oakland Airport Terminals AirBART"
+					}, {
+						"long_name" : "Oakland International Airport",
+						"types" : ["establishment"],
+						"short_name" : "OAK"
+					}, {
+						"long_name" : "Oakland",
+						"types" : ["locality", "political"],
+						"short_name" : "Oakland"
+					}, {
+						"long_name" : "Alameda",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Alameda"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94621",
+						"types" : ["postal_code"],
+						"short_name" : "94621"
+					}
+				],
+				"types" : ["bus_station", "transit_station", "establishment"],
+				"formatted_address" : "Oakland Airport Terminals AirBART, Oakland International Airport (OAK), Oakland, CA 94621, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.213165,
+						"lat" : 37.71281099999999
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.2145139802915,
+							"lat" : 37.7114620197085
+						},
+						"northeast" : {
+							"lng" : -122.2118160197085,
+							"lat" : 37.7141599802915
+						}
+					}
+				}
+			}
+		}, {
+			"memberOfListId" : "bart_st_list",
+			"sequenceNumber" : 45,
+			"locationMember" : {
+				"toFrequency" : 0.85470684,
+				"fromFrequency" : 0.88,
+				"address_components" : [{
+						"long_name" : "Coliseum/Oakland Airport",
+						"types" : ["transit_station", "establishment"],
+						"short_name" : "Coliseum/Oakland Airport"
+					}, {
+						"long_name" : "Coliseum",
+						"types" : ["neighborhood", "political"],
+						"short_name" : "Coliseum"
+					}, {
+						"long_name" : "Oakland",
+						"types" : ["locality", "political"],
+						"short_name" : "Oakland"
+					}, {
+						"long_name" : "Alameda",
+						"types" : ["administrative_area_level_2", "political"],
+						"short_name" : "Alameda"
+					}, {
+						"long_name" : "California",
+						"types" : ["administrative_area_level_1", "political"],
+						"short_name" : "CA"
+					}, {
+						"long_name" : "United States",
+						"types" : ["country", "political"],
+						"short_name" : "US"
+					}, {
+						"long_name" : "94621",
+						"types" : ["postal_code"],
+						"short_name" : "94621"
+					}
+				],
+				"types" : ["transit_station", "establishment"],
+				"formatted_address" : "Coliseum/Oakland Airport, Oakland, CA 94621, USA",
+				"geometry" : {
+					"location_type" : "APPROXIMATE",
+					"location" : {
+						"lng" : -122.197273,
+						"lat" : 37.754006
+					},
+					"viewport" : {
+						"southwest" : {
+							"lng" : -122.1986219802915,
+							"lat" : 37.7526570197085
+						},
+						"northeast" : {
+							"lng" : -122.1959240197085,
+							"lat" : 37.7553549802915
+						}
+					}
+				}
+			}
+		}
+	]
+}
