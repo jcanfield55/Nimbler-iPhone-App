@@ -13,6 +13,8 @@
 #import "Constants.h"
 #import "GeocodeRequestParameters.h"
 #import "nc_AppDelegate.h"
+#import "StationListElement.h"
+#import "Stations.h"
 
 
 @interface ToFromTableViewController () 
@@ -45,6 +47,7 @@
 @synthesize myTableView;
 @synthesize txtField;
 @synthesize supportedRegion;
+@synthesize stations;
 
 NSString *strBART1 = @" bart";
 NSString *strBART2 = @"bart ";
@@ -166,7 +169,8 @@ NSString *strStreet2 = @"street ";
                 }
                 
                 // Call the location picker with the list
-                NSArray* list = [locations locationsMembersOfList:[loc memberOfList]];
+                NSArray *list = [stations fetchStationListByMemberOfListId:ALL_STATION];
+                //NSArray* list = [locations locationsMembersOfList:[loc memberOfList]];
                 [toFromVC callLocationPickerFor:self 
                                    locationList:list 
                                          isFrom:isFrom

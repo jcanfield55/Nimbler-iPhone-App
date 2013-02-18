@@ -17,6 +17,7 @@
 #import "Locations.h"
 #import "Location.h"
 #import "SupportedRegion.h"
+#import "Stations.h"
 
 @class ToFromViewController;
 
@@ -29,6 +30,8 @@
 @property (strong, nonatomic) UITableView* myTableView;  // Table View we are controlling
 @property (strong, nonatomic) UITextField* txtField;  
 @property (strong, nonatomic) SupportedRegion* supportedRegion; // Geographic area supported by this app
+
+@property (strong, nonatomic) Stations *stations;
 
 // Textlabel that is separate from myTableView where text is entered
 - (id)initWithTable:(UITableView *)t isFrom:(BOOL)isF toFromVC:(ToFromViewController *)tfVC locations:(Locations *)l;

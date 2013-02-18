@@ -10,7 +10,7 @@
 
 #endif
 
-#define AUTOMATED_TESTING_SKIP_NCAPPDELEGATE 1 // if 1, skips nc_AppDelegate didFinishLaunchingWithOptions so we get a clean tests run
+#define AUTOMATED_TESTING_SKIP_NCAPPDELEGATE 0 // if 1, skips nc_AppDelegate didFinishLaunchingWithOptions so we get a clean tests run
 
 #define TRIP_GENERATE_URL     @"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/"
 //#define TRIP_GENERATE_URL @"http://ec2-23-22-169-158.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"
@@ -18,14 +18,14 @@
 #define GEO_RESPONSE_URL      @"http://maps.googleapis.com/maps/api/geocode/"
 #define TEST_GEO_RESPONSE_URL  @"http://localhost:8080/TPServer/ws/mockgeolocation/"
 
-#define TRIP_PROCESS_URL    @"http://23.23.210.156:8080/TPServer/ws/"
+//#define TRIP_PROCESS_URL    @"http://23.23.210.156:8080/TPServer/ws/"
 #define TEST_TRIP_PROCESS_URL @"http://localhost:8080/TPServer/ws/"  // TP server for automated tests
 
 // Core Data database filename
 #define COREDATA_DB_FILENAME    @"store101.data"
 #define TEST_COREDATA_DB_FILENAME  @"testDataStore.data" // For automated tests
 
-//#define TRIP_PROCESS_URL      @"http://192.168.2.196:8080/TPServer/ws/"
+#define TRIP_PROCESS_URL      @"http://192.168.2.196:8080/TPServer/ws/"
 
 #define TWITTER_SERARCH_URL    @"https://twitter.com/#!/search/realtime/TRAIN%20from%3Acaltrain%20OR%20from%3Acaltrain_news"
 #define CALTRAIN_TWITTER_URL   @"https://twitter.com/#!/search/from%3Acaltrain%20OR%20from%3Acaltrain_news"
@@ -52,17 +52,26 @@
 #define ALERT_URGENT     @"3"
 
 // Preload file variables
-#define CALTRAIN_PRELOAD_LOCATION_FILE     @"caltrain-station.json"
-#define CALTRAIN_BACKGROUND_PRELOAD_LOCATION_FILE @"caltrain-station-background.json"
-#define BART_PRELOAD_LOCATION_FILE         @"bart-station.json"
-#define BART_BACKGROUND_PRELOAD_LOCATION_FILE         @"bart-station-background.json"
+#define CALTRAIN_PRELOAD_LOCATION_FILE     @"caltrain.json"
+#define BART_PRELOAD_LOCATION_FILE         @"bart.json"
+#define ACTRANSIT_PRELOAD_LOCATION_FILE         @"ac-transit.json"
+#define SFMUNI_PRELOAD_LOCATION_FILE         @"sf-muni.json"
+
 #define CALTRAIN_BUNDLE_IDENTIFIER         @"com.Nimbler.Nimbler-Caltrain"
 #define BART_BUNDLE_IDENTIFIER         @"com.Nimbler.Nimbler-BART"
+
 #define CALTRAIN_PRELOAD_VERSION_NUMBER    @"1.100"
 #define CALTRAIN_PRELOAD_TEST_ADDRESS    @"San Martin Caltrain, San Martin, CA 95046, USA"
-#define BART_PRELOAD_VERSION_NUMBER      @"1.052"
 
+#define BART_PRELOAD_VERSION_NUMBER      @"1.052"
 #define BART_PRELOAD_TEST_ADDRESS        @"24th St Mission BART, San Francisco, CA 94110, USA"
+
+#define ACTRANSIT_PRELOAD_VERSION_NUMBER      @"1.500"
+#define ACTRANSIT_PRELOAD_TEST_ADDRESS        @"Coelho Dr & Mooney Av"
+
+#define SFMUNI_PRELOAD_VERSION_NUMBER      @"1.800"
+#define SFMUNI_PRELOAD_TEST_ADDRESS        @"Powell St & O'Farrell St"
+
 #define TOFROM_LIST_TYPE          @"TOFROM_LIST" // Location type indicating a ToFromList
 
 // Current Location
@@ -436,4 +445,9 @@
 #define REALTIME_UPPER_LIMIT 30*60
 #define REALTIME_LOWER_LIMIT -5*60
 
+#define CONTAINS_LIST_TYPE 1
+#define LOCATION_TYPE 2
+#define PRELOADSTOP_TYPE 3
 
+#define STATION_LIST   @"Station List"
+#define ALL_STATION    @"all_st"

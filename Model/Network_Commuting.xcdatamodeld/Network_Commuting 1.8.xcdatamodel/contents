@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1811" systemVersion="12C60" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="11G56" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AddressComponent" representedClassName="AddressComponent" syncable="YES">
         <attribute name="longName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
@@ -60,6 +60,7 @@
         <relationship name="trips" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GtfsTrips" inverseName="route" inverseEntity="GtfsTrips" syncable="YES"/>
     </entity>
     <entity name="GtfsStop" representedClassName="GtfsStop" syncable="YES">
+        <attribute name="isPreloadStop" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="stopDesc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="stopID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="stopLat" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
@@ -67,6 +68,7 @@
         <attribute name="stopName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="stopURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="zoneID" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="stationListElement" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="StationListElement" syncable="YES"/>
         <relationship name="stopTimes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GtfsStopTimes" inverseName="stop" inverseEntity="GtfsStopTimes" syncable="YES"/>
     </entity>
     <entity name="GtfsStopTimes" representedClassName="GtfsStopTimes" syncable="YES">
@@ -171,6 +173,7 @@
         <attribute name="toFrequency" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
         <relationship name="plan" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Plan" inverseName="toLocation" inverseEntity="Plan" syncable="YES"/>
         <relationship name="rawAddresses" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="RawAddress" inverseName="location" inverseEntity="RawAddress" syncable="YES"/>
+        <relationship name="stationListElement" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="StationListElement" syncable="YES"/>
         <compoundIndexes>
             <compoundIndex>
                 <index value="formattedAddress"/>
@@ -229,6 +232,13 @@
         <relationship name="itineraries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Itinerary" inverseName="planRequestChunks" inverseEntity="Itinerary" syncable="YES"/>
         <relationship name="plan" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Plan" inverseName="requestChunks" inverseEntity="Plan" syncable="YES"/>
     </entity>
+    <entity name="PreloadedStop" representedClassName="PreloadedStop" syncable="YES">
+        <attribute name="formattedAddress" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lat" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="lon" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="stopId" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="stationListElement" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="StationListElement" syncable="YES"/>
+    </entity>
     <entity name="RawAddress" representedClassName="RawAddress" syncable="YES">
         <attribute name="rawAddressString" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="location" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="rawAddresses" inverseEntity="Location" syncable="YES"/>
@@ -237,6 +247,15 @@
                 <index value="rawAddressString"/>
             </compoundIndex>
         </compoundIndexes>
+    </entity>
+    <entity name="StationListElement" representedClassName="StationListElement" syncable="YES">
+        <attribute name="containsList" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="containsListId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="memberOfList" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="memberOfListId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequenceNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="location" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Location" syncable="YES"/>
+        <relationship name="stop" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="PreloadedStop" syncable="YES"/>
     </entity>
     <entity name="Step" representedClassName="Step" syncable="YES">
         <attribute name="absoluteDirection" optional="YES" attributeType="String" syncable="YES"/>
@@ -265,6 +284,9 @@
     <fetchRequest name="PlansByToAndFromLocations" entity="Plan" predicateString="toLocation.formattedAddress == $TO_FORMATTED_ADDRESS AND fromLocation.formattedAddress == $FROM_FORMATTED_ADDRESS"/>
     <fetchRequest name="RawAddressByString" entity="RawAddress" predicateString="rawAddressString LIKE[c] $ADDRESS"/>
     <fetchRequest name="ServiceIdByTripId" entity="GtfsTrips" predicateString="tripID == $TRIPID"/>
+    <fetchRequest name="StationListByContainsId" entity="StationListElement" predicateString="containsListId == $CONTAINSLISTID"/>
+    <fetchRequest name="StationListByMemberId" entity="StationListElement" predicateString="memberOfListId == $MEMBEROFLISTID"/>
+    <fetchRequest name="StationListBySequenceNumber" entity="StationListElement" predicateString="sequenceNumber == $SEQUENCENUMBER AND memberOfListId == $MEMBEROFLISTID"/>
     <elements>
         <element name="AddressComponent" positionX="0" positionY="0" width="128" height="105"/>
         <element name="BayArea" positionX="0" positionY="0" width="128" height="195"/>
@@ -272,7 +294,7 @@
         <element name="GtfsCalendar" positionX="160" positionY="192" width="128" height="225"/>
         <element name="GtfsCalendarDates" positionX="160" positionY="192" width="128" height="105"/>
         <element name="GtfsRoutes" positionX="160" positionY="192" width="128" height="180"/>
-        <element name="GtfsStop" positionX="160" positionY="192" width="128" height="165"/>
+        <element name="GtfsStop" positionX="160" positionY="192" width="128" height="195"/>
         <element name="GtfsStopTimes" positionX="160" positionY="192" width="128" height="210"/>
         <element name="GtfsTrips" positionX="160" positionY="192" width="128" height="195"/>
         <element name="Itinerary" positionX="0" positionY="0" width="128" height="330"/>
@@ -282,13 +304,15 @@
         <element name="Leg" positionX="-45" positionY="0" width="128" height="405"/>
         <element name="LegFromGtfs" positionX="160" positionY="192" width="128" height="75"/>
         <element name="LegFromOTP" positionX="90" positionY="216" width="128" height="45"/>
-        <element name="Location" positionX="0" positionY="0" width="128" height="255"/>
+        <element name="Location" positionX="0" positionY="0" width="128" height="270"/>
         <element name="LocationFromGoogle" positionX="160" positionY="192" width="128" height="90"/>
         <element name="LocationFromIOS" positionX="160" positionY="192" width="128" height="60"/>
         <element name="Plan" positionX="0" positionY="0" width="128" height="195"/>
         <element name="PlanPlace" positionX="0" positionY="0" width="128" height="180"/>
         <element name="PlanRequestChunk" positionX="0" positionY="0" width="128" height="120"/>
+        <element name="PreloadedStop" positionX="160" positionY="192" width="128" height="120"/>
         <element name="RawAddress" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="StationListElement" positionX="160" positionY="192" width="128" height="150"/>
         <element name="Step" positionX="0" positionY="0" width="128" height="195"/>
     </elements>
 </model>

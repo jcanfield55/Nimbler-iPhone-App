@@ -9,6 +9,7 @@
 #import "LocationPickerViewController.h"
 #import "FeedBackForm.h"
 #import "UtilityFunctions.h"
+#import "PreloadedStop.h"
 
 @interface LocationPickerViewController ()
 {
@@ -72,7 +73,7 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    Location *loc = [locationArray objectAtIndex:[indexPath row]];
+    StationListElement *stationListElement = [locationArray objectAtIndex:[indexPath row]];
     UITableViewCell *cell =
     [tableView dequeueReusableCellWithIdentifier:@"LocationPickerViewCell"];
     
@@ -83,8 +84,19 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
         cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_LARGE_FONT_SIZE]];        
-    [[cell textLabel] setText:[loc shortFormattedAddress]];  
+    [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_LARGE_FONT_SIZE]];
+    int listType = [[nc_AppDelegate sharedInstance].stations returnElementType:stationListElement];
+    if(listType == 1){
+        [[cell textLabel] setText:stationListElement.containsList];
+    }
+    else if(listType == 2){
+        Location *loc = stationListElement.location;
+        [[cell textLabel] setText:[loc shortFormattedAddress]];
+    }
+    else{
+        PreloadedStop *stop = stationListElement.stop;
+        [[cell textLabel] setText:stop.formattedAddress];
+    }
     cell.textLabel.textColor = [UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0];
     tableView.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
     cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.01];
@@ -97,19 +109,65 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.3];
     // Send back the picked location and pop the view controller back to ToFromViewController
-    [toFromTableVC setPickedLocation:[locationArray objectAtIndex:[indexPath row]] 
-                       locationArray:locationArray isGeocodedResults:isGeocodeResults];
-    locationPicked = TRUE;
-    [self popOutToNimbler];   
+    StationListElement *stationListElement = [locationArray objectAtIndex:[indexPath row]];
+    int listType = [[nc_AppDelegate sharedInstance].stations returnElementType:stationListElement];
+    if(listType == 1){
+       locationArray = [[nc_AppDelegate sharedInstance].stations fetchStationListByMemberOfListId:stationListElement.containsListId];
+        NSMutableArray *arrmemberOfListIds;
+        if(![[NSUserDefaults standardUserDefaults] objectForKey:@"memberOfListId"]){
+            arrmemberOfListIds = [[NSMutableArray alloc] init];
+            [arrmemberOfListIds addObject:stationListElement.memberOfListId];
+            [[NSUserDefaults standardUserDefaults] setObject:arrmemberOfListIds forKey:@"memberOfListId"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        else{
+            arrmemberOfListIds = [[NSMutableArray alloc] initWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"memberOfListId"]];
+            [arrmemberOfListIds addObject:stationListElement.memberOfListId];
+            [[NSUserDefaults standardUserDefaults] setObject:arrmemberOfListIds forKey:@"memberOfListId"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+        CATransition *animation = [CATransition animation];
+        [animation setDuration:0.3];
+        [animation setType:kCATransitionPush];
+        [animation setSubtype:kCATransitionFromRight];
+        [animation setRemovedOnCompletion:YES];
+        [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+        [[mainTable layer] addAnimation:animation forKey:nil];
+        [mainTable reloadData];
+    }
+    else if(listType == 2){
+        Location *loc = stationListElement.location;
+        [toFromTableVC setPickedLocation:loc
+                           locationArray:locationArray isGeocodedResults:isGeocodeResults];
+        locationPicked = TRUE;
+        [self popViewController];
+    }
+    else{
+        Location *loc = [[nc_AppDelegate sharedInstance].stations createNewLocationObjectFromGtfsStop:stationListElement.stop :stationListElement];
+        [toFromTableVC setPickedLocation:loc
+                           locationArray:locationArray isGeocodedResults:isGeocodeResults];
+        locationPicked = TRUE;
+        [self popViewController];
+    }
 }
 
 //DE:21 dynamic cell height 
 #pragma mark - UIDynamic cell heght methods
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    Location *loc = [locationArray objectAtIndex:[indexPath row]];
-        
-    NSString *cellText = [loc shortFormattedAddress];
+    NSString *cellText;
+    StationListElement *stationListElement = [locationArray objectAtIndex:[indexPath row]];
+    int listType = [[nc_AppDelegate sharedInstance].stations returnElementType:stationListElement];
+    if(listType == 1){
+        cellText = stationListElement.containsList;
+    }
+    else if(listType == 2){
+        Location *loc = stationListElement.location;
+        cellText = loc.shortFormattedAddress;
+    }
+    else{
+        PreloadedStop *stop = stationListElement.stop;
+        cellText = stop.formattedAddress;
+    }
     CGSize size = [cellText 
                 sizeWithFont:[UIFont systemFontOfSize:MEDIUM_LARGE_FONT_SIZE] 
                 constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
@@ -127,10 +185,11 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
     [super viewWillDisappear:animated];
     
     if (locationPicked == FALSE) {   // If user just returning back to main page...
-        for (Location* loc in locationArray) { 
+        for (StationListElement* stationList in locationArray) {
+            int listType = [[nc_AppDelegate sharedInstance].stations returnElementType:stationList];
             // remove all the locations from Core Data if they have frequency = 0
-            if ([loc fromFrequencyFloat]<TINY_FLOAT && [loc toFrequencyFloat]<TINY_FLOAT) {
-                [[toFromTableVC locations] removeLocation:loc];
+            if (listType == 2 && [stationList.location fromFrequencyFloat]<TINY_FLOAT && [stationList.location toFrequencyFloat]<TINY_FLOAT) {
+                [[toFromTableVC locations] removeLocation:stationList.location];
             }
         }
         
@@ -200,8 +259,10 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
--(void)popOutToNimbler
+-(void)popViewController
 {
+    [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"memberOfListId"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     [toFromTableVC textSubmitted:nil forEvent:nil];
     CATransition *animation = [CATransition animation];
     [animation setDuration:0.3];
@@ -211,6 +272,30 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
     [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
     [[self.navigationController.view layer] addAnimation:animation forKey:nil];
     [[self navigationController] popViewControllerAnimated:NO];
+}
+
+-(void)popOutToNimbler
+{
+    NSMutableArray *arrMemberOfListIds = [[NSMutableArray alloc]initWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"memberOfListId"]];
+    [toFromTableVC textSubmitted:nil forEvent:nil];
+    CATransition *animation = [CATransition animation];
+    [animation setDuration:0.3];
+    [animation setType:kCATransitionPush];
+    [animation setSubtype:kCATransitionFromLeft];
+    [animation setRemovedOnCompletion:YES];
+    [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+    if([arrMemberOfListIds count] > 0){
+        locationArray = [[nc_AppDelegate sharedInstance].stations fetchStationListByMemberOfListId:[arrMemberOfListIds lastObject]];
+        [[mainTable layer] addAnimation:animation forKey:nil];
+        [arrMemberOfListIds removeLastObject];
+        [[NSUserDefaults standardUserDefaults] setObject:arrMemberOfListIds forKey:@"memberOfListId"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [mainTable reloadData];
+    }
+    else{
+        [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+        [[self navigationController] popViewControllerAnimated:NO];
+    }
 }
 
 @end

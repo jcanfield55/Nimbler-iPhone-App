@@ -15,6 +15,7 @@
 #import "Plan.h"
 #import "enums.h"
 #import "SupportedRegion.h"
+#import "Stations.h"
 
 
 @class PlanStore;
@@ -38,6 +39,7 @@ typedef enum {
 @property (strong, nonatomic) RKObjectManager *rkPlanMgr;  // RestKit object manager for trip planning
 @property (strong, nonatomic) RKObjectManager *rkSavePlanMgr;  // RestKit object manager for trip planning
 @property (strong, nonatomic) Locations *locations;  // Wrapper for collection of all Locations
+@property (strong, nonatomic) Stations *stations;  // Wrapper for collection of all Locations
 @property (strong, nonatomic) PlanStore *planStore;  // Wrapper for collection of all plans
 @property (strong, nonatomic) Location *fromLocation;
 @property (strong, nonatomic) Location *toLocation;
