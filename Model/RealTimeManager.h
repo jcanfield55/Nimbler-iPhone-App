@@ -62,7 +62,5 @@
 // Then check if leg have prediction then calculate timeDiff,arrivalFlag etc for leg and also check for any miss connection in itinerary if yes then try to solve that if it is not solvable then generate new itinerary from realtime data and pattern.
 - (void) updateRealtimeForLegsAndItineraries:(NSArray *)liveFeeds Plan:(Plan *)newPlan;
 
-- (void) removeDuplicateItineraries :(Plan *)newPlan;
-
 - (void) hideItineraryIfNeeded:(NSArray *)arrItinerary;
 @end

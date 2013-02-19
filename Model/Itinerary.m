@@ -27,6 +27,7 @@
 
 
 @implementation Itinerary
+@dynamic requestChunksCreatedByThisPattern;
 @dynamic duration;
 @dynamic endTime;
 @dynamic endTimeOnly;

@@ -13,7 +13,20 @@
 #import "Location.h"
 #import "PlanRequestChunk.h"
 #import "TransitCalendar.h"
+#import "PlanRequestParameters.h"
 #import "enums.h"
+
+@protocol PlanRequestMoreItinerariesDelegate
+
+@required
+/**
+ * Callback routines that returnSortedItinerariesWithMatchesForDate calls when it detects the need for 
+ * more OTP or GTFS itineraries
+ */
+-(void)requestMoreOTPItinerariesFor:(Plan *)plan withParameters:(PlanRequestParameters *)parameters;
+-(void)requestMoreGTFSItinerariesFor:(Plan *)plan itineraryPattern:(Itinerary *)itineraryPattern tripDate:(NSDate *)tripDate;
+@end
+
 
 @interface Plan : NSManagedObject
 
@@ -71,18 +84,44 @@
 - (void)createRequestChunkWithAllItinerariesAndRequestDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive;
 
 // Looks for matching itineraries for the requestDate and departOrArrive
+// routeIncludeExcludeDictionary specifies which routes / modes the user specifically wants to include/exclude from results
+//    Indexed by route / mode name.  If no entry for a particular route/mode, assume the user wants that mode
+// callBack is called if the method detects that we need more OTP or gtfs itineraries to show the user
 // If it finds some, returns TRUE and updates the sortedItineraries property with just those itineraries
 // If it does not find any, returns false and leaves sortedItineraries unchanged
-- (BOOL)prepareSortedItinerariesWithMatchesForDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive;
+- (BOOL)prepareSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
+                                    departOrArrive:(DepartOrArrive)depOrArrive
+                     routeIncludeExcludeDictionary:(NSDictionary *)routeIncludeExcludeDictionary
+                                          callBack:(id <PlanRequestMoreItinerariesDelegate>)delegate;
 
+
+// Variant of the above method without using an includeExcludeDictionary or callback
+- (BOOL)prepareSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
+                                    departOrArrive:(DepartOrArrive)depOrArrive;
+
+
+// returnSortedItinerariesWithMatchesForDate  -- part of Plan Caching (US78) implementation
 // returnSortedItinerariesWithMatchesForDate  -- part of Plan Caching (US78) implementation
 // Helper routine called by prepareSortedItinerariesWithMatchesForDate
 // Looks for matching itineraries for the requestDate and departOrArrive
-// If it finds some, returns a sorted array of the matching itineraries
+// routeIncludeExcludeDictionary specifies which routes / modes the user specifically wants to include/exclude from results
+//    Indexed by route / mode name.  If no entry for a particular route/mode, assume the user wants that mode
+// callBack is called if the method detects that we need more OTP or gtfs itineraries to show the user
+// If it finds some itineraries, returns a sorted array of the matching itineraries
 // Returned array will have no more than planMaxItinerariesToShow itineraries, spanning no more
 // than planMaxTimeForResultsToShow seconds.
 // It will include itineraries starting up to planBufferSecondsBeforeItinerary before requestDate
 // If there are no matching itineraries, returns nil
+- (NSArray *)returnSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
+                                        departOrArrive:(DepartOrArrive)depOrArrive
+                         routeIncludeExcludeDictionary:(NSDictionary *)routeIncludeExcludeDictionary
+                                              callBack:(id <PlanRequestMoreItinerariesDelegate>)delegate
+                              planMaxItinerariesToShow:(int)planMaxItinerariesToShow
+                      planBufferSecondsBeforeItinerary:(int)planBufferSecondsBeforeItinerary
+                           planMaxTimeForResultsToShow:(int)planMaxTimeForResultsToShow;
+
+
+// Variant of the above method without using an includeExcludeDictionary or callback
 - (NSArray *)returnSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
                                         departOrArrive:(DepartOrArrive)depOrArrive
                               planMaxItinerariesToShow:(int)planMaxItinerariesToShow

@@ -459,12 +459,14 @@
     STAssertTrue([[[[stopPairs objectAtIndex:0] objectAtIndex:0] tripID] isEqualToString:@"282_20121001"], @"");
     
     // [gtfsParser generateScheduledItinerariesFromPatternOfPlan:plan Context:managedObjectContext tripDate:tripDate];
+    // Generate itineraries using just the pattern that goes Muni -> SF Caltrain -> San Carlos Caltrain.
     [gtfsParser generateItineraryFromItineraryPattern:[[plan sortedItineraries] objectAtIndex:3]
                                              tripDate:tripDate
                                                  Plan:plan
                                               Context:managedObjectContext];
-    
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:20.0]];
+    [plan prepareSortedItinerariesWithMatchesForDate:tripDate departOrArrive:DEPART];
+    [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK];
+
      
      Leg* firstGeneratedLeg = [[[[plan sortedItineraries] objectAtIndex:0] sortedLegs] objectAtIndex:0];
     STAssertNotNil([firstGeneratedLeg startTime], @"First leg start-time should not be nil");
@@ -475,7 +477,7 @@
     
     [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
     STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result=[RealTimeManager realTimeManager].loadedRealTimeData; return result;}], @"Timed out waiting for RealTimeData");
-
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:2000.0]];
     [gtfsParser generateItinerariesFromRealTime:plan TripDate:tripDate Context:managedObjectContext];
     plan.sortedItineraries = nil;
     for(int i=0;i<[plan.sortedItineraries count];i++){
