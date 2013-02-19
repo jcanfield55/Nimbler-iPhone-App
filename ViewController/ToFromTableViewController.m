@@ -270,7 +270,7 @@ NSString *strStreet2 = @"street ";
     }
     
     // Prepare the cell settings
-    
+
     Location *loc = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]] 
                                         isFrom:isFrom];
     [[cell textLabel] setText:[loc shortFormattedAddress]];
@@ -354,6 +354,15 @@ NSString *strStreet2 = @"street ";
     } 
 }
 
+- (BOOL) contains:(NSArray *)array String:(NSString *)string{
+    for(int i=0;i<[array count];i++){
+        StationListElement *stationListElement = [array objectAtIndex:i];
+        if([stationListElement.stop.formattedAddress isEqualToString:string]){
+            return true;
+        }
+    }
+    return false;
+}
 // DE-207 Implementation
 // Delegate for when complete text entered into the UITextField
 - (IBAction)textSubmitted:(id)sender forEvent:(UIEvent *)event
@@ -383,7 +392,8 @@ NSString *strStreet2 = @"street ";
         NIMLOG_EVENT1(@"Skipping duplicate toFromTextSubmitted");
         return;  // if using the same rawAddress and less than 5 seconds between, treat as duplicate
     }
-    [toFromVC setEditMode:NO_EDIT];  // Move back to NO_EDIT mode on the ToFrom view controller
+    if([rawAddress isEqualToString:@""])
+        [toFromVC setEditMode:NO_EDIT];  // Move back to NO_EDIT mode on the ToFrom view controller
 
     if ([rawAddress length] > 0) {
         // Check if we already have a geocoded location that has used this rawAddress before
@@ -405,91 +415,52 @@ NSString *strStreet2 = @"street ";
             startTime = CFAbsoluteTimeGetCurrent();
            // DE-207 & US-166 Implementation
             rawAddress = [rawAddress lowercaseString];
+            NSMutableArray *arrStationList = [[NSMutableArray alloc] init];
+            NSString *searchString = [locations rawAddressWithOutAgencyName:rawAddress SearchStringArray:SEARCH_STRINGS_ARRAY ReplaceStringArray:REPLACE_STRINGS_ARRAY];
+            NSArray *arrComponents = [searchString componentsSeparatedByString:@" "];
+            
+            NSFetchRequest * fetchStationListElement = [[NSFetchRequest alloc] init];
+            [fetchStationListElement setEntity:[NSEntityDescription entityForName:@"StationListElement" inManagedObjectContext:managedObjectContext]];
+            NSArray * arrayStationListElement = [managedObjectContext executeFetchRequest:fetchStationListElement error:nil];
+            for(int i=0;i<[arrComponents count];i++){
+                NSString *strSearchString = [arrComponents objectAtIndex:i];
+                for(StationListElement *listElement in arrayStationListElement){
+                    if(listElement.location){
+                        NSString *shortAddress = [listElement.location.shortFormattedAddress lowercaseString];
+                        if([rawAddress isEqualToString:shortAddress]){
+                            [self markAndUpdateSelectedLocation:listElement.location];
+                            [toFromVC setEditMode:NO_EDIT];  // Move back to NO_EDIT mode on the ToFrom view controller
+                            return;
+                        }
+                        if([listElement.location isMatchingString:strSearchString]){
+                                [arrStationList addObject:listElement];
+                        }
+                    }
+                    else if(listElement.stop){
+                        NSString *shortAddress = [listElement.stop.formattedAddress lowercaseString];
+                        if([rawAddress isEqualToString:shortAddress]){
+                           Location *loc = [[nc_AppDelegate sharedInstance].stations createNewLocationObjectFromGtfsStop:listElement.stop :listElement];
+                            saveContext(managedObjectContext);
+                            [self markAndUpdateSelectedLocation:loc];
+                            [toFromVC setEditMode:NO_EDIT];  // Move back to NO_EDIT mode on the ToFrom view controller
+                            return;
+                        }
+                        if([listElement.stop isMatchingTypedString:strSearchString]){
+                            if(![self contains:arrStationList String:listElement.stop.formattedAddress])
+                                [arrStationList addObject:listElement];
+                        }
+                    }
+                }
+            }
+            if([arrStationList count] > 0){
+                [toFromVC callLocationPickerFor:self
+                                   locationList:arrStationList
+                                         isFrom:isFrom
+                               isGeocodeResults:NO];
+                return;
+            }
+
             @try {
-                if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-                    // DE-225 Fixed.Converted The raw Address into  lowerCase string.
-                    if ([rawAddress rangeOfString:strBART1 options:NSCaseInsensitiveSearch].location != NSNotFound || [rawAddress rangeOfString:strBART2 options:NSCaseInsensitiveSearch].location != NSNotFound ||  [rawAddress rangeOfString:strAirBart1 options:NSCaseInsensitiveSearch].location != NSNotFound || [rawAddress rangeOfString:strAirBart2 options:NSCaseInsensitiveSearch].location != NSNotFound) {
-                        rawAddress = [locations rawAddressWithOutAgencyName:BART_SEARCH_STRINGS_ARRAY:BART_REPLACE_STRINGS_ARRAY :rawAddress];
-                        if(rawAddress.length > 0){
-                            NSArray *arrayFilteredStation = [locations searchedStationsFromRawAddress:rawAddress :BART_SEARCH_STRINGS_ARRAY:BART_REPLACE_STRINGS_ARRAY:@"caltrain"];
-                            if(arrayFilteredStation){
-                                if([arrayFilteredStation count] == 1){
-                                    [self markAndUpdateSelectedLocation:[arrayFilteredStation objectAtIndex:0]];
-                                    return;
-                                }
-                                else{
-                                    [toFromVC callLocationPickerFor:self
-                                                       locationList:arrayFilteredStation
-                                                             isFrom:isFrom
-                                                   isGeocodeResults:YES];
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                    
-                    if ([rawAddress rangeOfString:strCaltrain1 options:NSCaseInsensitiveSearch].location != NSNotFound || [rawAddress rangeOfString:strCaltrain2 options:NSCaseInsensitiveSearch].location != NSNotFound) {
-                        rawAddress = [locations rawAddressWithOutAgencyName:CALTRAIN_SEARCH_STRINGS_ARRAY:CALTRAIN_REPLACE_STRINGS_ARRAY:rawAddress];
-                        if(rawAddress.length > 0){
-                            NSArray *arrayFilteredStation = [locations searchedStationsFromRawAddress:rawAddress :CALTRAIN_SEARCH_STRINGS_ARRAY:CALTRAIN_REPLACE_STRINGS_ARRAY:@"bart"];
-                            if(arrayFilteredStation){
-                                if([arrayFilteredStation count] == 1){
-                                    [self markAndUpdateSelectedLocation:[arrayFilteredStation objectAtIndex:0]];
-                                    return;
-                                }
-                                else{
-                                    [toFromVC callLocationPickerFor:self
-                                                       locationList:arrayFilteredStation
-                                                             isFrom:isFrom
-                                                   isGeocodeResults:YES];
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
-                else{
-                    rawAddress = [rawAddress lowercaseString];
-                    if ([rawAddress rangeOfString:strBART1 options:NSCaseInsensitiveSearch].location != NSNotFound || [rawAddress rangeOfString:strBART2 options:NSCaseInsensitiveSearch].location != NSNotFound ||  [rawAddress rangeOfString:strAirBart1 options:NSCaseInsensitiveSearch].location != NSNotFound || [rawAddress rangeOfString:strAirBart2 options:NSCaseInsensitiveSearch].location != NSNotFound) {
-                        rawAddress = [locations rawAddressWithOutAgencyName:BART_SEARCH_STRINGS_ARRAY:BART_REPLACE_STRINGS_ARRAY :rawAddress];
-                        if(rawAddress.length > 0){
-                            NSArray *arrayFilteredStation = [locations searchedStationsFromRawAddress:rawAddress :BART_SEARCH_STRINGS_ARRAY:BART_REPLACE_STRINGS_ARRAY:@"caltrain"];
-                            if(arrayFilteredStation){
-                                if([arrayFilteredStation count] == 1){
-                                    [self markAndUpdateSelectedLocation:[arrayFilteredStation objectAtIndex:0]];
-                                    return;
-                                }
-                                else{
-                                    [toFromVC callLocationPickerFor:self
-                                                       locationList:arrayFilteredStation
-                                                             isFrom:isFrom
-                                                   isGeocodeResults:YES];
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                    
-                    if ([rawAddress rangeOfString:strCaltrain1 options:NSCaseInsensitiveSearch].location != NSNotFound || [rawAddress rangeOfString:strCaltrain2 options:NSCaseInsensitiveSearch].location != NSNotFound) {
-                        rawAddress = [locations rawAddressWithOutAgencyName:CALTRAIN_SEARCH_STRINGS_ARRAY:CALTRAIN_REPLACE_STRINGS_ARRAY:rawAddress];
-                        if(rawAddress.length > 0){
-                            NSArray *arrayFilteredStation = [locations searchedStationsFromRawAddress:rawAddress :CALTRAIN_SEARCH_STRINGS_ARRAY:CALTRAIN_REPLACE_STRINGS_ARRAY:@"bart"];
-                            if(arrayFilteredStation){
-                                if([arrayFilteredStation count] == 1){
-                                    [self markAndUpdateSelectedLocation:[arrayFilteredStation objectAtIndex:0]];
-                                    return;
-                                }
-                                else{
-                                    [toFromVC callLocationPickerFor:self
-                                                       locationList:arrayFilteredStation
-                                                             isFrom:isFrom
-                                                   isGeocodeResults:YES];
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
                 GeocodeRequestParameters* parameters = [[GeocodeRequestParameters alloc] init];
                 parameters.rawAddress = rawAddress;
                 parameters.supportedRegion = [self supportedRegion];
@@ -552,7 +523,7 @@ NSString *strStreet2 = @"street ";
         }
     }
     else {  // Error cases
-        // if no valid locations (ie non in supported region), 
+        // if no valid locations (ie non in supported region),
         if (status==GEOCODE_STATUS_OK && [locationArray count]==0) {
             NSString *msg = [NSString stringWithFormat:@"Did not find the address: '%@' in the San Francisco Bay Area", rawAddress];
             alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -592,6 +563,7 @@ NSString *strStreet2 = @"street ";
         } else {
             [locations setTypedToString:@""];
         }
+        [toFromVC setEditMode:NO_EDIT];
         [myTableView reloadData];
         return ;
     }

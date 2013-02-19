@@ -20,6 +20,7 @@
 @dynamic sequenceNumber;
 @dynamic containsList;
 @dynamic containsListId;
+@dynamic agency;
 @dynamic stop;
 @dynamic location;
 
@@ -41,6 +42,7 @@
         [mapping mapKeyPath:@"sequenceNumber"  toAttribute:@"sequenceNumber"];
         [mapping mapKeyPath:@"containsList"  toAttribute:@"containsList"];
         [mapping mapKeyPath:@"containsListId" toAttribute:@"containsListId"];
+        [mapping mapKeyPath:@"agency" toAttribute:@"agency"];
         [mapping mapKeyPath:@"locationMember" toRelationship:@"location" withMapping:locationMapping];
          [mapping mapKeyPath:@"gtfsStopMember" toRelationship:@"stop" withMapping:stopMapping];
         

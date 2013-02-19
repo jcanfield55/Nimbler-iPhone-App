@@ -1038,6 +1038,14 @@
 }
 
 // Station Search From Json Files.
+- (NSString *) rawAddressWithOutAgencyName:(NSString *)address SearchStringArray:(NSArray *)searchStringArray ReplaceStringArray:(NSArray *)replaceStringArray{
+    for(int i=0;i<[searchStringArray count];i++){
+        if ([address rangeOfString:[searchStringArray objectAtIndex:i] options:NSCaseInsensitiveSearch].location != NSNotFound){
+            address = [address stringByReplacingOccurrencesOfString:[searchStringArray objectAtIndex:i] withString:[replaceStringArray objectAtIndex:i]];
+        }
+    }
+    return address;
+}
 - (NSString *)rawAddressWithOutAgencyName:(NSArray *)searchStringsArray:(NSArray *)replaceStringsArray:(NSString *)address{
     for(int i=0;i<[searchStringsArray count];i++){
         NSRange range;

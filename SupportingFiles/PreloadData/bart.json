@@ -3,7 +3,8 @@
 			"memberOfListId" : "all_st",
 			"sequenceNumber" : 1,
 			"containsList" : "Bart Station List",
-			"containsListId" : "bart_st_list"
+			"containsListId" : "bart_st_list",
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 1,
@@ -59,7 +60,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 2,
@@ -123,7 +125,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 3,
@@ -179,7 +182,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 4,
@@ -235,7 +239,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 5,
@@ -291,7 +296,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 6,
@@ -347,7 +353,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 7,
@@ -399,7 +406,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 8,
@@ -451,7 +459,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 9,
@@ -507,7 +516,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 10,
@@ -559,7 +569,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 11,
@@ -611,7 +622,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 12,
@@ -667,7 +679,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 13,
@@ -723,7 +736,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 14,
@@ -775,7 +789,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 15,
@@ -827,7 +842,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 16,
@@ -887,7 +903,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 17,
@@ -943,7 +960,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 18,
@@ -999,7 +1017,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 19,
@@ -1055,7 +1074,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 20,
@@ -1111,7 +1131,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 21,
@@ -1163,7 +1184,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 22,
@@ -1215,7 +1237,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 23,
@@ -1279,7 +1302,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 24,
@@ -1335,7 +1359,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 25,
@@ -1391,7 +1416,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 26,
@@ -1443,7 +1469,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 27,
@@ -1499,7 +1526,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 28,
@@ -1555,7 +1583,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 29,
@@ -1611,7 +1640,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 30,
@@ -1663,7 +1693,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 31,
@@ -1715,7 +1746,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 32,
@@ -1771,7 +1803,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 33,
@@ -1827,7 +1860,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 34,
@@ -1891,7 +1925,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 35,
@@ -1943,7 +1978,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 36,
@@ -1991,7 +2027,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 37,
@@ -2047,7 +2084,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 38,
@@ -2103,7 +2141,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 39,
@@ -2159,7 +2198,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 40,
@@ -2211,7 +2251,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 41,
@@ -2263,7 +2304,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 42,
@@ -2333,7 +2375,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 43,
@@ -2389,7 +2432,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 44,
@@ -2445,7 +2489,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}, {
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 45,
@@ -2501,7 +2546,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "bart"
 		}
 	]
 }

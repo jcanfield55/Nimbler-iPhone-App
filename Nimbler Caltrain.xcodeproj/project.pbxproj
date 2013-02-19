@@ -565,8 +565,6 @@
 		8D3EF6B016B24D3B00ED366B /* RealTimeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RealTimeManager.m; path = ../Model/RealTimeManager.m; sourceTree = "<group>"; };
 		8D42C2F8163AC05C00880B33 /* Nimbler Caltrain-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Nimbler Caltrain-Info.plist"; sourceTree = SOURCE_ROOT; };
 		8D42C2F9163AC05C00880B33 /* Nimbler Caltrain-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Nimbler Caltrain-Prefix.pch"; sourceTree = SOURCE_ROOT; };
-		8D44083B16CF694F00F8EBE5 /* SubLocationPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubLocationPickerViewController.h; sourceTree = "<group>"; };
-		8D44083C16CF694F00F8EBE5 /* SubLocationPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubLocationPickerViewController.m; sourceTree = "<group>"; };
 		8D44083E16CF72FD00F8EBE5 /* PreloadedStop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreloadedStop.h; sourceTree = "<group>"; };
 		8D44083F16CF72FD00F8EBE5 /* PreloadedStop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreloadedStop.m; sourceTree = "<group>"; };
 		8D44084116CF775800F8EBE5 /* ac-transit.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "ac-transit.json"; sourceTree = "<group>"; };
@@ -689,8 +687,6 @@
 				8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */,
 				8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */,
 				8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */,
-				8D44083B16CF694F00F8EBE5 /* SubLocationPickerViewController.h */,
-				8D44083C16CF694F00F8EBE5 /* SubLocationPickerViewController.m */,
 			);
 			path = ViewController;
 			sourceTree = SOURCE_ROOT;

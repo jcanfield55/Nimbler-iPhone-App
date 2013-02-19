@@ -130,12 +130,76 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     [[self.navigationController.view layer] addAnimation:animation forKey:nil];
     [[self navigationController] popViewControllerAnimated:NO];
 }
+
+// TODO:- Need to save Nsdictionary instead of Nsarray.
+-(void) toggleFirstButton:(id)sender{
+    UIButton *btn = (UIButton *)sender;
+    NSDictionary *dictRouteName = [plan getUniqueRouteName];
+    NSArray *keys  = [dictRouteName allKeys];
+    NSString *routeId;
+    for(int i=0;i<[keys count];i++){
+        NSString *strRouteName = [dictRouteName objectForKey:[keys objectAtIndex:i]];
+        if([strRouteName isEqualToString:btn.titleLabel.text]){
+           routeId = [keys objectAtIndex:i];
+           break;
+        }
+    }
+    NSArray *arrExcludedRouteId = [[NSUserDefaults standardUserDefaults]objectForKey:@"excludedRouteId"];
+   if(arrExcludedRouteId && [arrExcludedRouteId count] > 0){
+       NSMutableArray *arrRouteIds = [[NSMutableArray alloc] initWithArray:arrExcludedRouteId];
+       if([arrRouteIds containsObject:routeId]){
+           [arrRouteIds removeObject:routeId];
+       }
+       else{
+           [arrRouteIds addObject:routeId];
+       }
+       [[NSUserDefaults standardUserDefaults] setObject:arrRouteIds forKey:@"excludedRouteId"];
+       [[NSUserDefaults standardUserDefaults] synchronize];
+   }
+   else{
+       NSArray *arrExcludedRouteId = [NSArray arrayWithObject:routeId];
+       [[NSUserDefaults standardUserDefaults] setObject:arrExcludedRouteId forKey:@"excludedRouteId"];
+       [[NSUserDefaults standardUserDefaults] synchronize];
+   }
+   [mainTable reloadData];
+}
+
+// TODO:- Need to save Nsdictionary instead of Nsarray.
+-(void) toggleSecondButton:(id)sender{
+    UIButton *btn = (UIButton *)sender;
+    NSDictionary *dictRouteName = [plan getUniqueRouteName];
+    NSArray *keys  = [dictRouteName allKeys];
+    NSString *routeId;
+    for(int i=0;i<[keys count];i++){
+        NSString *strRouteName = [dictRouteName objectForKey:[keys objectAtIndex:i]];
+        if([strRouteName isEqualToString:btn.titleLabel.text])
+            routeId = [keys objectAtIndex:i];
+    }
+    NSArray *arrExcludedRouteId = [[NSUserDefaults standardUserDefaults]objectForKey:@"excludedRouteId"];
+    if(arrExcludedRouteId && [arrExcludedRouteId count] > 0){
+        NSMutableArray *arrRouteIds = [[NSMutableArray alloc] initWithArray:arrExcludedRouteId];
+        if([arrRouteIds containsObject:routeId]){
+            [arrRouteIds removeObject:routeId];
+        }
+        else{
+            [arrRouteIds addObject:routeId];
+        }
+        [[NSUserDefaults standardUserDefaults] setObject:arrRouteIds forKey:@"excludedRouteId"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    else{
+        NSArray *arrExcludedRouteId = [NSArray arrayWithObject:routeId];
+        [[NSUserDefaults standardUserDefaults] setObject:arrExcludedRouteId forKey:@"excludedRouteId"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    [mainTable reloadData];
+}
 #pragma mark - UITableViewDelegate methods
 // Table view management methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSArray *arrRouteName = [[nc_AppDelegate sharedInstance].planStore getUniqueRouteName:plan];
+    NSArray *arrRouteName = [[plan getUniqueRouteName] allKeys];
         return [[plan sortedItineraries] count] + [arrRouteName count]/2 + [arrRouteName count] % 2;
 }
 
@@ -302,18 +366,40 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                 [[cell detailTextLabel] setNumberOfLines:0];  // Allow for multi-lines
             }
             else{
-                NSArray *arrRouteName = [[nc_AppDelegate sharedInstance].planStore getUniqueRouteName:plan];
+                NSArray *arrExcludedRoute = [[NSUserDefaults standardUserDefaults] objectForKey:@"excludedRouteId"];
+                NSDictionary *dictRouteName = [plan getUniqueRouteName];
+                NSArray *keys = [dictRouteName allKeys];
                 UIButton *firstButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
                 [firstButton setFrame:CGRectMake(20, 10, 120, 40)];
-                [firstButton setTitle:[arrRouteName objectAtIndex:([indexPath row]-[[plan sortedItineraries] count])*2] forState:UIControlStateNormal];
-                [firstButton setTag:([indexPath row]-[[plan sortedItineraries] count])*2*1000];
+                NSString *btnTitle = [dictRouteName objectForKey:[keys objectAtIndex:([indexPath row]-[[plan sortedItineraries] count])*2]];
+                for(int i=0;i<[arrExcludedRoute count];i++){
+                    NSString *excludedRouteId = [arrExcludedRoute objectAtIndex:i];
+                    if([excludedRouteId isEqualToString:[keys objectAtIndex:([indexPath row]-[[plan sortedItineraries] count])*2]]){
+                        [firstButton.layer setBorderWidth:2.0];
+                        [firstButton.layer setBorderColor:[UIColor redColor].CGColor];
+                       break;
+                    }
+                }
+                [firstButton setTitle:btnTitle forState:UIControlStateNormal];
+                [firstButton setTag:([indexPath row]-[[plan sortedItineraries] count])*2+1000];
+                [firstButton addTarget:self action:@selector(toggleFirstButton:) forControlEvents:UIControlEventTouchUpInside];
                 [cell addSubview:firstButton];
                 
-                if([arrRouteName count] > ([indexPath row]-[[plan sortedItineraries] count])*2+1){
+                if([keys count] > ([indexPath row]-[[plan sortedItineraries] count])*2+1){
                     UIButton *secondButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
                     [secondButton setFrame:CGRectMake(160, 10, 120, 40)];
-                    [secondButton setTitle:[arrRouteName objectAtIndex:([indexPath row]-[[plan sortedItineraries] count])*2+1] forState:UIControlStateNormal];
-                    [secondButton setTag:(([indexPath row]-[[plan sortedItineraries] count])*2+1)*10000];
+                    NSString *btnTitle = [dictRouteName objectForKey:[keys objectAtIndex:([indexPath row]-[[plan sortedItineraries] count])*2+1]];
+                    [secondButton setTitle:btnTitle forState:UIControlStateNormal];
+                    for(int i=0;i<[arrExcludedRoute count];i++){
+                        NSString *excludedRouteId = [arrExcludedRoute objectAtIndex:i];
+                        if([excludedRouteId isEqualToString:[keys objectAtIndex:([indexPath row]-[[plan sortedItineraries] count])*2+1]]){
+                            [secondButton.layer setBorderWidth:2.0];
+                            [secondButton.layer setBorderColor:[UIColor redColor].CGColor];
+                            break;
+                        }
+                    }
+                    [secondButton setTag:(([indexPath row]-[[plan sortedItineraries] count])*2+1)+10000];
+                    [secondButton addTarget:self action:@selector(toggleSecondButton:) forControlEvents:UIControlEventTouchUpInside];
                     [cell addSubview:secondButton];
                 }
             }

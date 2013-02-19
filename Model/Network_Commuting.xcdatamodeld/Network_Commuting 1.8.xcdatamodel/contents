@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="12C60" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="11G56" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AddressComponent" representedClassName="AddressComponent" syncable="YES">
         <attribute name="longName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
@@ -251,6 +251,7 @@
         </compoundIndexes>
     </entity>
     <entity name="StationListElement" representedClassName="StationListElement" syncable="YES">
+        <attribute name="agency" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="containsList" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="containsListId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="memberOfListId" optional="YES" attributeType="String" syncable="YES"/>
@@ -287,6 +288,7 @@
     <fetchRequest name="ServiceIdByTripId" entity="GtfsTrips" predicateString="tripID == $TRIPID"/>
     <fetchRequest name="StationListByContainsId" entity="StationListElement" predicateString="containsListId == $CONTAINSLISTID"/>
     <fetchRequest name="StationListByMemberId" entity="StationListElement" predicateString="memberOfListId == $MEMBEROFLISTID"/>
+    <fetchRequest name="StationListElementByAgency" entity="StationListElement" predicateString="agency == $AGENCY"/>
     <elements>
         <element name="AddressComponent" positionX="0" positionY="0" width="128" height="105"/>
         <element name="BayArea" positionX="0" positionY="0" width="128" height="195"/>
@@ -312,7 +314,7 @@
         <element name="PlanRequestChunk" positionX="0" positionY="0" width="128" height="135"/>
         <element name="PreloadedStop" positionX="160" positionY="192" width="128" height="120"/>
         <element name="RawAddress" positionX="0" positionY="0" width="128" height="75"/>
-        <element name="StationListElement" positionX="160" positionY="192" width="128" height="135"/>
+        <element name="StationListElement" positionX="160" positionY="192" width="128" height="150"/>
         <element name="Step" positionX="0" positionY="0" width="128" height="195"/>
     </elements>
 </model>

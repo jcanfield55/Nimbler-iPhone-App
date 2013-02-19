@@ -78,6 +78,9 @@
 #define CALTRAIN_SEARCH_STRINGS_ARRAY [NSArray arrayWithObjects:@"bart station list",@"caltrain station list",@"current location",@" caltrain",@"caltrain ", nil]
 #define CALTRAIN_REPLACE_STRINGS_ARRAY [NSArray arrayWithObjects:@"",@"",@"",@"",@"", nil]
 
+#define SEARCH_STRINGS_ARRAY [NSArray arrayWithObjects:@"bart",@"caltrain",@"&",@"street ",@" street",@"st ",@" st",@"av ",@" av",@"av.",@"st.", nil]
+#define REPLACE_STRINGS_ARRAY [NSArray arrayWithObjects:@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"", nil]
+
 // New AppSetting Constants
 #define ADVISORY_CHOICES   @"Advisory Choices"
 #define PUSH_NOTIFICATION  @"Push Notification"

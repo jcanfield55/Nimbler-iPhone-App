@@ -273,6 +273,7 @@
 #define REALTIME_BUFFER_FOR_EARLY  (5*60)
 #define REALTIME_UPPER_LIMIT (30*60)
 #define REALTIME_LOWER_LIMIT (-5*60)
+#define CURRENT_DATE_PLUS_INTERVAL 90*60
 
 // RequestChunks
 #define REQUEST_CHUNK_OVERLAP_BUFFER_IN_SECONDS (4*60 + 30)
@@ -311,6 +312,11 @@
 #define ACTRANSIT_AGENCY_NAME   @"AC Transit"
 #define SFMUNI_AGENCY_NAME      @"San Francisco Municipal Transportation Agency"
 #define AIRBART_AGENCY_NAME     @"AirBART"
+
+#define AC_TRANSIT @"ac_transit"
+#define BART       @"bart"
+#define CALTRAIN   @"caltrain"
+#define SF_MUNI    @"sf-muni"
 
 #define CALTRAIN_APP_TYPE   @"1"
 #define SFMUNI_APP_TYPE     @"4"

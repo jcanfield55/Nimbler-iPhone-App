@@ -276,15 +276,15 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
 
 -(void)popOutToNimbler
 {
-    NSMutableArray *arrMemberOfListIds = [[NSMutableArray alloc]initWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"memberOfListId"]];
-    [toFromTableVC textSubmitted:nil forEvent:nil];
-    CATransition *animation = [CATransition animation];
-    [animation setDuration:0.3];
-    [animation setType:kCATransitionPush];
-    [animation setSubtype:kCATransitionFromLeft];
-    [animation setRemovedOnCompletion:YES];
-    [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+     NSMutableArray *arrMemberOfListIds = [[NSMutableArray alloc]initWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"memberOfListId"]];
     if([arrMemberOfListIds count] > 0){
+        [toFromTableVC textSubmitted:nil forEvent:nil];
+        CATransition *animation = [CATransition animation];
+        [animation setDuration:0.3];
+        [animation setType:kCATransitionPush];
+        [animation setSubtype:kCATransitionFromLeft];
+        [animation setRemovedOnCompletion:YES];
+        [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
         locationArray = [[nc_AppDelegate sharedInstance].stations fetchStationListByMemberOfListId:[arrMemberOfListIds lastObject]];
         [[mainTable layer] addAnimation:animation forKey:nil];
         [arrMemberOfListIds removeLastObject];
@@ -293,8 +293,8 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
         [mainTable reloadData];
     }
     else{
-        [[self.navigationController.view layer] addAnimation:animation forKey:nil];
-        [[self navigationController] popViewControllerAnimated:NO];
+        //[[self.navigationController.view layer] addAnimation:animation forKey:nil];
+        [[self navigationController] popViewControllerAnimated:YES];
     }
 }
 

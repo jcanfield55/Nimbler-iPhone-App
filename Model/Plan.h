@@ -135,5 +135,8 @@
 
 // Remove duplicate itineraries from plan
 - (void) removeDuplicateItineraries;
+
+// get the route name string like KT,caltrain-loc etc from plan
+- (NSDictionary *) getUniqueRouteName;
 @end
 

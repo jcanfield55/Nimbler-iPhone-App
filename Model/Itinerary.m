@@ -421,10 +421,16 @@
                 ontime = true;
         }
     }
-    if(ontime)
-       [self setItinArrivalFlag:[NSString stringWithFormat:@"%d",ON_TIME]]; 
+    if(ontime && delayed && early)
+       [self setItinArrivalFlag:[NSString stringWithFormat:@"%d",ITINERARY_TIME_SLIPPAGE]];
+    else if(ontime && delayed)
+        [self setItinArrivalFlag:[NSString stringWithFormat:@"%d",ITINERARY_TIME_SLIPPAGE]];
+    else if(ontime && early)
+        [self setItinArrivalFlag:[NSString stringWithFormat:@"%d",ITINERARY_TIME_SLIPPAGE]];
     else if(delayed && early)
         [self setItinArrivalFlag:[NSString stringWithFormat:@"%d",ITINERARY_TIME_SLIPPAGE]];
+    else if(ontime)
+        [self setItinArrivalFlag:[NSString stringWithFormat:@"%d",ON_TIME]];
     else if(delayed)
         [self setItinArrivalFlag:[NSString stringWithFormat:@"%d",DELAYED]];
     else if(early)

@@ -3,7 +3,8 @@
 			"memberOfListId" : "all_st",
 			"sequenceNumber" : 2,
 			"containsList" : "Caltrain Station List",
-			"containsListId" : "caltrain_st_list"
+			"containsListId" : "caltrain_st_list",
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 0,
@@ -63,7 +64,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 1,
@@ -119,7 +121,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 2,
@@ -175,7 +178,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 3,
@@ -231,7 +235,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 4,
@@ -283,7 +288,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 5,
@@ -335,7 +341,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 6,
@@ -391,7 +398,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 7,
@@ -447,7 +455,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 8,
@@ -503,7 +512,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 9,
@@ -559,7 +569,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 10,
@@ -615,7 +626,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 11,
@@ -667,7 +679,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 12,
@@ -729,7 +742,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 13,
@@ -785,7 +799,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 14,
@@ -837,7 +852,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 15,
@@ -889,7 +905,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 16,
@@ -941,7 +958,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 17,
@@ -1007,7 +1025,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 18,
@@ -1063,7 +1082,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 19,
@@ -1127,7 +1147,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 20,
@@ -1187,7 +1208,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 21,
@@ -1239,7 +1261,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 22,
@@ -1291,7 +1314,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 23,
@@ -1351,7 +1375,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 24,
@@ -1407,7 +1432,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 25,
@@ -1463,7 +1489,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 26,
@@ -1505,7 +1532,8 @@
 						"lat" : 37.284359
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 27,
@@ -1565,7 +1593,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 28,
@@ -1617,7 +1646,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 29,
@@ -1669,7 +1699,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 30,
@@ -1721,7 +1752,8 @@
 						}
 					}
 				}
-			}
+			},
+			"agency" : "caltrain"
 		}, {
 			"containsList" : "Station List",
 			"containsListId" : "all_st"

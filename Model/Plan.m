@@ -576,4 +576,33 @@
     }
 }
 
+- (NSDictionary *) getUniqueRouteName{
+    NSMutableDictionary *dictRouteName = [[NSMutableDictionary alloc] init];
+    for(int i=0;i<[[self sortedItineraries] count];i++){
+        Itinerary *itinerary = [[self sortedItineraries] objectAtIndex:i];
+        for(int j=0;j<[itinerary.sortedLegs count];j++){
+            Leg *leg = [itinerary.sortedLegs objectAtIndex:j];
+            if([leg isScheduled]){
+                if([leg routeShortName]){
+                    [dictRouteName setObject:[leg routeShortName] forKey:[leg routeId]];
+                }
+                else if([[leg agencyName] isEqualToString:CALTRAIN_AGENCY_NAME]){
+                    NSString *routeName = [leg.routeLongName substringWithRange:NSMakeRange(0,3)];
+                    NSString *agencyName = [leg agencyName];
+                    NSString *legName =  [agencyName stringByAppendingFormat:@" - %@ ",routeName];
+                    [dictRouteName setObject:legName forKey:[leg routeId]];
+                }
+                else if([[leg agencyName] isEqualToString:BART_AGENCY_NAME]){
+                    NSString *routeName = [leg.routeLongName substringWithRange:NSMakeRange(0,3)];
+                    NSString *agencyName = @"Bart";
+                    NSString *legName =  [agencyName stringByAppendingFormat:@" - %@ ",routeName];
+                    NSDictionary *routeDict = [NSDictionary dictionaryWithObjectsAndKeys:legName,[leg routeId], nil];
+                    [dictRouteName setObject:legName forKey:[leg routeId]];
+                }
+            }
+        }
+    }
+    return dictRouteName;
+}
+
 @end

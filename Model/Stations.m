@@ -110,4 +110,18 @@
         newLoc.formattedAddress = stationListElement.containsList;
     }
 }
+
+- (void) removeStationListElementByAgency:(NSString *)agencyName{
+    NSFetchRequest *fetchStationListElement = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"StationListElementByAgency" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:agencyName,@"AGENCY", nil]];
+    NSArray * arrayListElements = [managedObjectContext executeFetchRequest:fetchStationListElement error:nil];
+    for (StationListElement *listElement in arrayListElements){
+        if(listElement.location)
+            [managedObjectContext deleteObject:listElement.location];
+        if(listElement.stop)
+            [managedObjectContext deleteObject:listElement.stop];
+        [managedObjectContext deleteObject:listElement];
+    }
+    saveContext(managedObjectContext);
+    
+}
 @end

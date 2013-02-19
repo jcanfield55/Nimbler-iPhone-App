@@ -33,45 +33,51 @@ static RealTimeManager* realTimeManager;
 - (void) requestRealTimeDataFromServerUsingPlan:(Plan *)currentPlan tripDate:(NSDate *)tripDate{
     plan = currentPlan;
     originalTripDate = tripDate;
-    NSMutableArray *arrLegs = [[NSMutableArray alloc] init];
-    for(int i=0;i<[[plan uniqueItineraries] count];i++){
-        Itinerary *itinerary = [[plan uniqueItineraries] objectAtIndex:i];
-        for(int j=0;j<[[itinerary sortedLegs] count];j++){
-            Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
-            if([leg isScheduled]){
-                NSDictionary *dicToStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.to.stopId,@"id", nil];
-                NSDictionary *dicTo = [NSDictionary dictionaryWithObjectsAndKeys:dicToStopId,@"stopId", nil];
-                NSDictionary *dicFromStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.from.stopId,@"id", nil];
-                NSDictionary *dicFrom = [NSDictionary dictionaryWithObjectsAndKeys:dicFromStopId,@"stopId", nil];
-                NSString *strRouteShortName = leg.routeShortName;
-                NSString *strRouteLongName = leg.routeLongName;
-                double startDate = 0;
-                double endDate = 0;
-                if(!strRouteShortName){
-                    strRouteShortName = @"";
+    NSDate *tripDateOnly = dateOnlyFromDate(originalTripDate);
+    NSDate *currentDate = [NSDate date];
+    NSDate *currentDateOnly = dateOnlyFromDate(currentDate);
+    NSDate *currentDatePlus90Miuntes = [currentDate dateByAddingTimeInterval:CURRENT_DATE_PLUS_INTERVAL];
+    if([tripDateOnly isEqualToDate:currentDateOnly] && [originalTripDate compare:currentDatePlus90Miuntes] == NSOrderedAscending){
+        NSMutableArray *arrLegs = [[NSMutableArray alloc] init];
+        for(int i=0;i<[[plan uniqueItineraries] count];i++){
+            Itinerary *itinerary = [[plan uniqueItineraries] objectAtIndex:i];
+            for(int j=0;j<[[itinerary sortedLegs] count];j++){
+                Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
+                if([leg isScheduled]){
+                    NSDictionary *dicToStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.to.stopId,@"id", nil];
+                    NSDictionary *dicTo = [NSDictionary dictionaryWithObjectsAndKeys:dicToStopId,@"stopId", nil];
+                    NSDictionary *dicFromStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.from.stopId,@"id", nil];
+                    NSDictionary *dicFrom = [NSDictionary dictionaryWithObjectsAndKeys:dicFromStopId,@"stopId", nil];
+                    NSString *strRouteShortName = leg.routeShortName;
+                    NSString *strRouteLongName = leg.routeLongName;
+                    double startDate = 0;
+                    double endDate = 0;
+                    if(!strRouteShortName){
+                        strRouteShortName = @"";
+                    }
+                    if(!strRouteLongName){
+                        strRouteLongName = @"";
+                    }
+                    if(leg.startTime){
+                        double startTimeInterval = [leg.startTime timeIntervalSince1970];
+                        startDate = startTimeInterval*1000;
+                    }
+                    if(leg.endTime){
+                        double endTimeInterval = [leg.endTime timeIntervalSince1970];
+                        endDate = endTimeInterval*1000;
+                    }
+                    NSDictionary *dicLegData = [NSDictionary dictionaryWithObjectsAndKeys:leg.tripId,@"tripId",strRouteLongName,@"routeLongName",strRouteShortName,@"routeShortName",[NSNumber numberWithDouble:startDate],@"startTime",[NSNumber numberWithDouble:endDate],@"endTime",leg.routeId,@"routeId",dicTo,@"to",dicFrom,@"from",leg.mode,@"mode",leg.agencyId,@"agencyId",leg.agencyName,@"agencyName",leg.route,@"route",leg.headSign,@"headsign",leg.legId,@"id", nil];
+                    [arrLegs addObject:dicLegData];
                 }
-                if(!strRouteLongName){
-                    strRouteLongName = @"";
-                }
-                if(leg.startTime){
-                    double startTimeInterval = [leg.startTime timeIntervalSince1970];
-                    startDate = startTimeInterval*1000;
-                }
-                if(leg.endTime){
-                    double endTimeInterval = [leg.endTime timeIntervalSince1970];
-                    endDate = endTimeInterval*1000;
-                }
-                NSDictionary *dicLegData = [NSDictionary dictionaryWithObjectsAndKeys:leg.tripId,@"tripId",strRouteLongName,@"routeLongName",strRouteShortName,@"routeShortName",[NSNumber numberWithDouble:startDate],@"startTime",[NSNumber numberWithDouble:endDate],@"endTime",leg.routeId,@"routeId",dicTo,@"to",dicFrom,@"from",leg.mode,@"mode",leg.agencyId,@"agencyId",leg.agencyName,@"agencyName",leg.route,@"route",leg.headSign,@"headsign",leg.legId,@"id", nil];
-                [arrLegs addObject:dicLegData];
             }
         }
-    }
-    if([arrLegs count] > 0){
-        NSString *strRequestString = [arrLegs JSONString];
-        RKParams *requestParameter = [RKParams params];
-        [requestParameter setValue:strRequestString forParam:LEGS];
-        [requestParameter setValue:[[NSUserDefaults standardUserDefaults] objectForKey:DEVICE_TOKEN] forParam:DEVICE_TOKEN];
-        [self.rkTpClient post:LIVE_FEEDS_BY_LEGS params:requestParameter delegate:self];
+        if([arrLegs count] > 0){
+            NSString *strRequestString = [arrLegs JSONString];
+            RKParams *requestParameter = [RKParams params];
+            [requestParameter setValue:strRequestString forParam:LEGS];
+            [requestParameter setValue:[[NSUserDefaults standardUserDefaults] objectForKey:DEVICE_TOKEN] forParam:DEVICE_TOKEN];
+            [self.rkTpClient post:LIVE_FEEDS_BY_LEGS params:requestParameter delegate:self];
+        } 
     }
 }
 
@@ -198,7 +204,7 @@ static RealTimeManager* realTimeManager;
 - (NSDictionary *) findnearestEpochTime:(NSMutableArray *)predictions Time:(NSDate *)time{
     NSMutableArray *arrPredictions = [[NSMutableArray alloc] initWithArray:predictions];
     for (int i=0;i<[arrPredictions count];i++) {
-        NSDate *requestTime = timeOnlyFromDate([time dateByAddingTimeInterval:(-5*60)]);
+        NSDate *requestTime = timeOnlyFromDate([time dateByAddingTimeInterval:REALTIME_LOWER_LIMIT]);
                NSDictionary *dictPrediction = [arrPredictions objectAtIndex:i];
                 NSDate *predtctionTime = timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[dictPrediction objectForKey:@"epochTime"] doubleValue]/1000.0)]);
                    if ([requestTime compare:predtctionTime] == NSOrderedDescending) {

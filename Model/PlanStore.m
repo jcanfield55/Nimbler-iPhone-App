@@ -592,34 +592,4 @@
         logException(@"PlanStore -> clearCache", @"", exception);
     }
 }
-
-- (NSArray *) getUniqueRouteName:(Plan *)plan{
-    NSMutableArray *uniqueNameArray = [[NSMutableArray alloc] init];
-    for (int i = 0; i < [[plan sortedItineraries] count]; i++) {
-        Itinerary *itinerary = [[plan sortedItineraries] objectAtIndex:i];
-        for (int j = 0; j < [[itinerary sortedLegs] count]; j++) {
-            Leg *leg = [[itinerary sortedLegs ] objectAtIndex:j];
-            if (!leg.isWalk) {
-                if (![leg routeShortName] ) {
-                    if ([leg routeLongName]) {
-                        if ([[leg agencyName] isEqualToString:CALTRAIN_AGENCY_NAME]) {
-                            NSString *routeName = [leg.routeLongName substringWithRange:NSMakeRange(0,3)];
-                            NSString *agencyName = [leg agencyName];
-                            NSString *legName =  [agencyName stringByAppendingFormat:@" - %@ ",routeName];
-                            if(![uniqueNameArray containsObject:legName])
-                                [uniqueNameArray addObject:legName];
-                        }
-                    }
-                }
-                else {
-                     if(![uniqueNameArray containsObject:[leg routeShortName]])
-                         [uniqueNameArray addObject:[leg routeShortName]];
-                }
-                
-            }
-        }
-    }
-    [uniqueNameArray addObject:@"Bicycle"];
-    return uniqueNameArray;
-}
 @end

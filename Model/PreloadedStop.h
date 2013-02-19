@@ -24,5 +24,5 @@
 @property (nonatomic, retain) StationListElement *stationListElement;
 
 + (RKManagedObjectMapping *)objectMappingforStop:(APIType)apiType;
-
+-(BOOL) isMatchingTypedString:(NSString *)str;
 @end

@@ -20,6 +20,7 @@
 @property (nonatomic, retain) NSNumber * sequenceNumber;
 @property (nonatomic, retain) NSString * containsList;
 @property (nonatomic, retain) NSString * containsListId;
+@property (nonatomic, retain) NSString * agency;
 @property (nonatomic, retain) PreloadedStop *stop;
 @property (nonatomic, retain) Location *location;
 

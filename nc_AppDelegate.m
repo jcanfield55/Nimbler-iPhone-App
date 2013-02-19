@@ -210,18 +210,22 @@ FeedBackForm *fbView;
 //        }
 //        else {
         if([[NSUserDefaults standardUserDefaults] floatForKey:CALTRAIN_PRELOAD_LOCATION_FILE] < [CALTRAIN_PRELOAD_VERSION_NUMBER floatValue]){
+            [stations removeStationListElementByAgency:CALTRAIN];
             NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:CALTRAIN_PRELOAD_VERSION_NUMBER];
             [stations preLoadIfNeededFromFile:CALTRAIN_PRELOAD_LOCATION_FILE latestVersionNumber:caltrainVersion testAddress:CALTRAIN_PRELOAD_TEST_ADDRESS];
         }
         if([[NSUserDefaults standardUserDefaults] floatForKey:BART_PRELOAD_LOCATION_FILE] < [BART_PRELOAD_VERSION_NUMBER floatValue]){
+            [stations removeStationListElementByAgency:BART];
             NSDecimalNumber* bartVersion = [NSDecimalNumber decimalNumberWithString:BART_PRELOAD_VERSION_NUMBER];
             [stations preLoadIfNeededFromFile:BART_PRELOAD_LOCATION_FILE latestVersionNumber:bartVersion testAddress:BART_PRELOAD_TEST_ADDRESS];
         }
         if([[NSUserDefaults standardUserDefaults] floatForKey:ACTRANSIT_PRELOAD_LOCATION_FILE] < [ACTRANSIT_PRELOAD_VERSION_NUMBER floatValue]){
+            [stations removeStationListElementByAgency:AC_TRANSIT];
             NSDecimalNumber* acTransitVersion = [NSDecimalNumber decimalNumberWithString:ACTRANSIT_PRELOAD_VERSION_NUMBER];
             [stations preLoadIfNeededFromFile:ACTRANSIT_PRELOAD_LOCATION_FILE latestVersionNumber:acTransitVersion testAddress:ACTRANSIT_PRELOAD_TEST_ADDRESS];
         }
         if([[NSUserDefaults standardUserDefaults] floatForKey:SFMUNI_PRELOAD_LOCATION_FILE] < [SFMUNI_PRELOAD_VERSION_NUMBER floatValue]){
+            [stations removeStationListElementByAgency:SF_MUNI];
             NSDecimalNumber* sfMuniVersion = [NSDecimalNumber decimalNumberWithString:SFMUNI_PRELOAD_VERSION_NUMBER];
             [stations preLoadIfNeededFromFile:SFMUNI_PRELOAD_LOCATION_FILE latestVersionNumber:sfMuniVersion testAddress:SFMUNI_PRELOAD_TEST_ADDRESS];
         }

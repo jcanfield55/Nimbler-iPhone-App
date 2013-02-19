@@ -28,4 +28,6 @@
 -(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status;
 
 - (void) reloadData:(Plan *)newPlan;
+-(void) toggleFirstButton:(id)sender;
+-(void) toggleSecondButton:(id)sender;
 @end

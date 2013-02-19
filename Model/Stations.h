@@ -18,8 +18,7 @@
 
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
-@property (strong, nonatomic) RKObjectManager *rkStationMgr;  // RestKit object manager for trip planning
-
+@property (strong, nonatomic) RKObjectManager *rkStationMgr;
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkPlanMgr:(RKObjectManager *)rkP;
 - (BOOL)preLoadIfNeededFromFile:(NSString *)filename latestVersionNumber:(NSDecimalNumber *)newVersion testAddress:(NSString *)testAddress;
 - (NSArray *) fetchStationListByMemberOfListId:(NSString *)memberOfListId;
@@ -27,4 +26,5 @@
 - (int) returnElementType:(StationListElement *)stationListElement;
 - (Location *) createNewLocationObjectFromGtfsStop:(PreloadedStop *)stop :(StationListElement *)stationListElement;
 - (void) generateNewTempLocationForAllStationString;
+- (void) removeStationListElementByAgency:(NSString *)agencyName;
 @end
