@@ -149,9 +149,6 @@ FeedBackForm *fbView;
     RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];
     rkTpClient = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     
-    RKObjectManager *rkStationMgr = [RKObjectManager sharedManager];
-    
-    
     // Other URLs:
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
     // NY City demo URL is http://demo.opentripplanner.org/opentripplanner-api-webapp/ws/
@@ -163,7 +160,6 @@ FeedBackForm *fbView;
         rkMOS = [RKManagedObjectStore objectStoreWithStoreFilename:COREDATA_DB_FILENAME];
         [rkGeoMgr setObjectStore:rkMOS];
         [rkPlanMgr setObjectStore:rkMOS];
-        [rkStationMgr setObjectStore:rkMOS];
         
         // Call suppertedRegion for getting boundry of bay area region
         [self suppertedRegion];
@@ -190,7 +186,7 @@ FeedBackForm *fbView;
         planStore = [[PlanStore alloc] initWithManagedObjectContext:[self managedObjectContext]
                                                           rkPlanMgr:rkPlanMgr];
         stations =  [[Stations alloc] initWithManagedObjectContext:[self managedObjectContext]
-                                                         rkPlanMgr:rkStationMgr];
+                                                         rkPlanMgr:rkPlanMgr];
         [toFromViewController setPlanStore:planStore];
         [KeyObjectStore setUpWithManagedObjectContext:[self managedObjectContext]];
         

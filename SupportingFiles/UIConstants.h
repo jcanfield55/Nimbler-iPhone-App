@@ -56,7 +56,12 @@
 // Upadate badge count to ZERO
 #define BADGE_COUNT_ZERO 0
 
+// RouteOptionsViewController
 #define ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH 280
+#define EXCLUDE_BUTTON_HEIGHT 22
+#define EXCLUDE_BUTTON_WIDTH 80
+#define EXCLUDE_BUTTONS_PER_ROW 4
+
 
 // RouteDetailsViewController & LegMapViewController
 #define ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH 279 // Obtained thru trial & error, DE-230 fix
@@ -92,6 +97,7 @@
 #define MEDIUM_BOLD_FONT fontWithName:@"Helvetica-Bold" size:14.0
 #define MEDIUM_OBLIQUE_FONT fontWithName:@"Helvetica-Oblique" size:14.0
 #define MEDIUM_LARGE_BOLD_FONT fontWithName:@"Helvetica-Bold" size:15.0
+#define SMALL_FONT fontWithName:@"Helvetica-Bold" size:13.0
 #define SMALL_OBLIQUE_FONT    fontWithName:@"Helvetica-Oblique" size:13
 #define MEDIUM_LARGE_OBLIQUE_FONT fontWithName:@"Helvetica-Oblique" size:15.0
 #define LARGE_BOLD_FONT fontWithName:@"Helvetica-Bold" size:20.0
