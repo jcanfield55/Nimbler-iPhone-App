@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="12C60" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="11G56" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AddressComponent" representedClassName="AddressComponent" syncable="YES">
         <attribute name="longName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
@@ -283,6 +283,8 @@
     <fetchRequest name="PlansByToAndFromLocations" entity="Plan" predicateString="toLocation.formattedAddress == $TO_FORMATTED_ADDRESS AND fromLocation.formattedAddress == $FROM_FORMATTED_ADDRESS"/>
     <fetchRequest name="RawAddressByString" entity="RawAddress" predicateString="rawAddressString LIKE[c] $ADDRESS"/>
     <fetchRequest name="ServiceIdByTripId" entity="GtfsTrips" predicateString="tripID == $TRIPID"/>
+    <fetchRequest name="StationListByContainsId" entity="StationListElement" predicateString="containsListId == $CONTAINSLISTID"/>
+    <fetchRequest name="StationListByMemberId" entity="StationListElement" predicateString="memberOfListId == $MEMBEROFLISTID"/>
     <elements>
         <element name="AddressComponent" positionX="0" positionY="0" width="128" height="105"/>
         <element name="BayArea" positionX="0" positionY="0" width="128" height="195"/>

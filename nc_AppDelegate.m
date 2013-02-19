@@ -112,7 +112,6 @@ FeedBackForm *fbView;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSLog(@"Launched");
 #if AUTOMATED_TESTING_SKIP_NCAPPDELEGATE
     return YES;    // If Automated testing with alternative persistent store, skip NC_AppDelegate altogether and do all setup in test area
 #endif
@@ -583,8 +582,6 @@ FeedBackForm *fbView;
         }
         NSString *strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
         NSString *strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
-        NSLog(@"toaddress=%@",strToFormattedAddress);
-        NSLog(@"fromaddress=%@",strFromFormattedAddress);
         if (strToFormattedAddress) {
             NSArray* toLocations = [locations locationsWithFormattedAddress:strToFormattedAddress];
             if (toLocations && [toLocations count]>0) {
@@ -608,7 +605,6 @@ FeedBackForm *fbView;
             }
         }
     }
-    NSLog(@"Success");
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
