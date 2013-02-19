@@ -116,6 +116,7 @@
         <relationship name="legs" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Leg" inverseName="itinerary" inverseEntity="Leg" syncable="YES"/>
         <relationship name="plan" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Plan" inverseName="itineraries" inverseEntity="Plan" syncable="YES"/>
         <relationship name="planRequestChunks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PlanRequestChunk" inverseName="itineraries" inverseEntity="PlanRequestChunk" syncable="YES"/>
+        <relationship name="requestChunksCreatedByThisPattern" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PlanRequestChunk" inverseName="gtfsItineraryPattern" inverseEntity="PlanRequestChunk" syncable="YES"/>
     </entity>
     <entity name="ItineraryFromGtfs" representedClassName="ItineraryFromGtfs" parentEntity="Itinerary" syncable="YES"/>
     <entity name="ItineraryFromOTP" representedClassName="ItineraryFromOTP" parentEntity="Itinerary" syncable="YES"/>
@@ -229,6 +230,7 @@
         <attribute name="earliestRequestedDepartTimeDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="latestRequestedArriveTimeDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="gtfsItineraryPattern" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Itinerary" inverseName="requestChunksCreatedByThisPattern" inverseEntity="Itinerary" syncable="YES"/>
         <relationship name="itineraries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Itinerary" inverseName="planRequestChunks" inverseEntity="Itinerary" syncable="YES"/>
         <relationship name="plan" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Plan" inverseName="requestChunks" inverseEntity="Plan" syncable="YES"/>
     </entity>
@@ -295,7 +297,7 @@
         <element name="GtfsStop" positionX="160" positionY="192" width="128" height="165"/>
         <element name="GtfsStopTimes" positionX="160" positionY="192" width="128" height="240"/>
         <element name="GtfsTrips" positionX="160" positionY="192" width="128" height="195"/>
-        <element name="Itinerary" positionX="0" positionY="0" width="128" height="330"/>
+        <element name="Itinerary" positionX="0" positionY="0" width="128" height="345"/>
         <element name="ItineraryFromGtfs" positionX="160" positionY="192" width="128" height="45"/>
         <element name="ItineraryFromOTP" positionX="160" positionY="192" width="128" height="45"/>
         <element name="KeyObjectPair" positionX="0" positionY="0" width="128" height="75"/>
@@ -307,7 +309,7 @@
         <element name="LocationFromIOS" positionX="160" positionY="192" width="128" height="60"/>
         <element name="Plan" positionX="0" positionY="0" width="128" height="195"/>
         <element name="PlanPlace" positionX="0" positionY="0" width="128" height="180"/>
-        <element name="PlanRequestChunk" positionX="0" positionY="0" width="128" height="120"/>
+        <element name="PlanRequestChunk" positionX="0" positionY="0" width="128" height="135"/>
         <element name="PreloadedStop" positionX="160" positionY="192" width="128" height="120"/>
         <element name="RawAddress" positionX="0" positionY="0" width="128" height="75"/>
         <element name="StationListElement" positionX="160" positionY="192" width="128" height="135"/>

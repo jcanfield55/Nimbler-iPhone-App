@@ -19,7 +19,7 @@
 #import "PlanRequestParameters.h"
 
 
-@interface PlanStore : NSObject <RKObjectLoaderDelegate,RKRequestDelegate>
+@interface PlanStore : NSObject <RKObjectLoaderDelegate,RKRequestDelegate, PlanRequestMoreItinerariesDelegate>
 
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
@@ -47,8 +47,6 @@
 // Returns the consolidated plan
 - (Plan *)consolidateWithMatchingPlans:(Plan *)plan0;
 
-// Generate Random String of length 16
-- (NSString *)generateRandomString;
 - (void)clearCache;
 -(void)requestPlanFromOtpWithParameters:(PlanRequestParameters *)parameters;
 

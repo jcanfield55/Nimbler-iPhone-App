@@ -20,7 +20,7 @@
 @property (nonatomic) NSNumber *type;
 
 // Set only if type = REQUEST_CHUNK_TYPE_GTFS.  Contains the itinerary pattern used to generate the GTFS itinerary in this request chunk
-// @property (strong, nonatomic) Itinerary* gtfsItineraryPattern;
+@property (strong, nonatomic) Itinerary* gtfsItineraryPattern;
 
 // Earliest requested departure time/date used in requesting the itineraries in this RequestChunk.
 // nil if only arrive-by requests have been used so far

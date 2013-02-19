@@ -40,7 +40,7 @@
     RKManagedObjectMapping* addrCompMapping = [AddressComponent objectMappingForApi:gt];
     
     // TODO figure out how to get geoRectangle element to encode correctly
-     RKObjectMapping* geoRectMapping = [GeoRectangle objectMappingForApi:gt];
+    // RKObjectMapping* geoRectMapping = [GeoRectangle objectMappingForApi:gt];
 
     // Make the mappings
     if (gt==GOOGLE_GEOCODER) {

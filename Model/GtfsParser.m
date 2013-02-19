@@ -1111,6 +1111,7 @@
                                                      inManagedObjectContext:context];
             reqChunk.plan = plan;
             reqChunk.type =[NSNumber numberWithInt:GTFS_ITINERARY];
+            reqChunk.gtfsItineraryPattern = itinerary;
             reqChunk.earliestRequestedDepartTimeDate = tripDate; // assumes Depart
         }
         if (newItinerary) {

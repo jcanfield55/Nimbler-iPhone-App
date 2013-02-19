@@ -70,7 +70,9 @@
         if (matchingPlanArray && [matchingPlanArray count]>0) {
             Plan* matchingPlan = [matchingPlanArray objectAtIndex:0]; // Take the first matching plan
             if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate]
-                                                          departOrArrive:[parameters departOrArrive]]) {
+                                                          departOrArrive:[parameters departOrArrive]
+                                           routeIncludeExcludeDictionary:nil
+                                                                callBack:self]) {
                 NIMLOG_EVENT1(@"Matches found in plan cache");
                 logEvent(FLURRY_ROUTE_FROM_CACHE,
                          FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
@@ -285,7 +287,10 @@
                 plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context
                 // Now format the itineraries of the consolidated plan
                 // get Unique Itinerary from Plan.
-                if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate] departOrArrive:[planRequestParameters departOrArrive]]) {
+                if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate]
+                                                      departOrArrive:[planRequestParameters departOrArrive]
+                                       routeIncludeExcludeDictionary:nil
+                                                            callBack:self]) {
                     [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
                     
                     // Call-back the appropriate RouteOptions VC with the new plan
@@ -351,6 +356,19 @@
     }
 }
 
+// Callback from returnSortedItineraries method requesting additional OTP itineraries to fill out user request
+-(void)requestMoreOTPItinerariesFor:(Plan *)plan withParameters:(PlanRequestParameters *)parameters
+{
+    //TODO Handle callback
+}
+
+// Callback from returnSortedItineraries requesting additional GTFS itineraries to fill out user request
+-(void)requestMoreGTFSItinerariesFor:(Plan *)plan itineraryPattern:(Itinerary *)itineraryPattern tripDate:(NSDate *)tripDate
+{
+    // TODO handle callback
+}
+
+
 // Checks if more itineraries are needed for this plan, and if so requests them from the server
 -(void)requestMoreItinerariesIfNeeded:(Plan *)plan parameters:(PlanRequestParameters *)requestParams0
 {
@@ -364,6 +382,8 @@
     // Request sortedItineraries array with extremely large limits
     NSArray* testItinArray = [plan returnSortedItinerariesWithMatchesForDate:requestParams0.originalTripDate
                                                               departOrArrive:requestParams0.departOrArrive
+                                               routeIncludeExcludeDictionary:nil
+                                                                    callBack:self
                                                     planMaxItinerariesToShow:1000
                                             planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY
                                                  planMaxTimeForResultsToShow:(1000*60*60)];

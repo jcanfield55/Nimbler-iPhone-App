@@ -15,6 +15,7 @@
 @implementation PlanRequestChunk
 
 @dynamic type;
+@dynamic gtfsItineraryPattern;
 @dynamic earliestRequestedDepartTimeDate;
 @dynamic latestRequestedArriveTimeDate;
 @dynamic itineraries;

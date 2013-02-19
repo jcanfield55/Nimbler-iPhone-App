@@ -265,12 +265,20 @@
 
 // prepareSortedItinerariesWithMatchesForDate  -- part of Plan Caching (US78) implementation
 // Looks for matching itineraries for the requestDate and departOrArrive
+// routeIncludeExcludeDictionary specifies which routes / modes the user specifically wants to include/exclude from results
+//    Indexed by route / mode name.  If no entry for a particular route/mode, assume the user wants that mode
+// callBack is called if the method detects that we need more OTP or gtfs itineraries to show the user
 // If it finds some, returns TRUE and updates the sortedItineraries property with just those itineraries
 // If it does not find any, returns false and leaves sortedItineraries unchanged
-- (BOOL)prepareSortedItinerariesWithMatchesForDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive
+- (BOOL)prepareSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
+                                    departOrArrive:(DepartOrArrive)depOrArrive
+                     routeIncludeExcludeDictionary:(NSDictionary *)routeIncludeExcludeDictionary
+                                          callBack:(id <PlanRequestMoreItinerariesDelegate>)delegate
 {
     NSArray* newSortedItineraries=[self returnSortedItinerariesWithMatchesForDate:requestDate
                                                                    departOrArrive:depOrArrive
+                                                    routeIncludeExcludeDictionary:routeIncludeExcludeDictionary
+                                                                         callBack:delegate
                                                          planMaxItinerariesToShow:PLAN_MAX_ITINERARIES_TO_SHOW
                                                  planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY
                                                       planMaxTimeForResultsToShow:PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW];
@@ -282,24 +290,57 @@
     }
 }
 
-// TODO make it so that Arrive itineraries either show a smaller number of sort in reverse order
+
+// Variant of the above method without using an includeExcludeDictionary or callback
+- (BOOL)prepareSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
+                                    departOrArrive:(DepartOrArrive)depOrArrive
+{
+    return [self prepareSortedItinerariesWithMatchesForDate:requestDate
+                                             departOrArrive:depOrArrive
+                              routeIncludeExcludeDictionary:nil
+                                                   callBack:nil];
+}
+
 
 // returnSortedItinerariesWithMatchesForDate  -- part of Plan Caching (US78) implementation
 // Helper routine called by prepareSortedItinerariesWithMatchesForDate
 // Looks for matching itineraries for the requestDate and departOrArrive
-// If it finds some, returns a sorted array of the matching itineraries
+// routeIncludeExcludeDictionary specifies which routes / modes the user specifically wants to include/exclude from results
+//    Indexed by route / mode name.  If no entry for a particular route/mode, assume the user wants that mode
+// callBack is called if the method detects that we need more OTP or gtfs itineraries to show the user
+// If it finds some itineraries, returns a sorted array of the matching itineraries
 // Returned array will have no more than planMaxItinerariesToShow itineraries, spanning no more
 // than planMaxTimeForResultsToShow seconds.
 // It will include itineraries starting up to planBufferSecondsBeforeItinerary before requestDate
 // If there are no matching itineraries, returns nil
 - (NSArray *)returnSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
                                         departOrArrive:(DepartOrArrive)depOrArrive
+                         routeIncludeExcludeDictionary:(NSDictionary *)routeIncludeExcludeDictionary
+                                              callBack:(id <PlanRequestMoreItinerariesDelegate>)delegate
                               planMaxItinerariesToShow:(int)planMaxItinerariesToShow
                       planBufferSecondsBeforeItinerary:(int)planBufferSecondsBeforeItinerary
                            planMaxTimeForResultsToShow:(int)planMaxTimeForResultsToShow
 {
     @try {
         NSMutableSet* matchingItineraries = [[NSMutableSet alloc] initWithCapacity:[[self itineraries] count]];
+        
+        // Exclude any Gtfs request chunks that should be excluded per the routeIncludeExcludeDictionary
+        NSMutableSet* reqChunkSet = [NSMutableSet setWithSet:[self requestChunks]];
+        if (routeIncludeExcludeDictionary) {
+            for (PlanRequestChunk* reqChunk in [self requestChunks]) {
+                if (reqChunk.type.intValue == GTFS_ITINERARY && reqChunk.gtfsItineraryPattern) {
+                    if (reqChunk.sortedItineraries.count > 0) {
+                        // Since all itineraries follow the same pattern, take just the first and check its legs
+                        for (Leg* leg in [[reqChunk.sortedItineraries objectAtIndex:0] sortedLegs]) {
+                            if ([[routeIncludeExcludeDictionary objectForKey:[leg routeId]] isEqualToString:PLAN_ROUTE_EXCLUDE]) {
+                                [reqChunkSet removeObject:reqChunk];  // Remove this request chunk from consideration
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
         
         // Create a set of all PlanRequestChunks that match the requestDate services and time
         // Iteratively connect PlanRequestChunks together if they are adjacent in time
@@ -309,7 +350,9 @@
         int loopsExecuted = 0;
         do {
             newConnectingReqDate = nil;
-            for (PlanRequestChunk* reqChunk in [self requestChunks]) {
+            
+            // Collect the req
+            for (PlanRequestChunk* reqChunk in reqChunkSet) {
                 if ([reqChunk doAllItineraryServiceDaysMatchDate:connectingReqDate] &&
                     [reqChunk doesCoverTheSameTimeAs:connectingReqDate departOrArrive:depOrArrive]) {
                     [matchingReqChunks addObject:reqChunk];
@@ -376,14 +419,45 @@
                 }
             }
         }
-        if ([matchingItineraries count] == 0) {
+        
+        // Exclude any itineraries that are non-optimal or that are OTP itineraries and are part of exclude string
+        NSMutableSet *optimalItineraries = [NSMutableSet setWithSet:matchingItineraries];
+        for (Itinerary* itin1 in matchingItineraries) {
+            // Check for excluded OTP itineraries (GTFS itineraries were already checked above)
+            BOOL itin1removed = false;
+            if (routeIncludeExcludeDictionary && [itin1 isKindOfClass:[ItineraryFromOTP class]]) {
+                for (Leg* leg in [itin1 sortedLegs]) {
+                    if ([[routeIncludeExcludeDictionary objectForKey:[leg routeId]] isEqualToString:PLAN_ROUTE_EXCLUDE]) {
+                        [optimalItineraries removeObject:itin1];
+                        itin1removed = true;
+                        break;
+                    }
+                }
+            }
+            // Check for suboptimal itineraries
+            if (!itin1removed) {
+                for (Itinerary* itin2 in matchingItineraries) {
+                    if (itin1 != itin2) {
+                        if ([[itin1 startTimeOnly] compare:[itin2 startTimeOnly]] != NSOrderedDescending &&
+                            [[itin1 endTimeOnly] compare:[itin2 endTimeOnly]] != NSOrderedAscending) {
+                            // itin1 starts earlier or equal and ends later or equal.  Longer duration so...
+                            [optimalItineraries removeObject:itin1]; // Remove itin1
+                        }
+                        // No need to compare the other way, because will loop thru all combinations of itin1 & itin2
+                    }
+                }
+            }
+        }
+        
+        
+        if ([optimalItineraries count] == 0) {
             return nil;
         }
         
         // Sort itineraries (in reverse order if arrive-by itinerary (DE191 fix)
         NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:(depOrArrive == DEPART)];
 
-        NSArray* returnedItineraries = [matchingItineraries sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]];
+        NSArray* returnedItineraries = [optimalItineraries sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]];
         
         // Remove itineraries from returnedItineraries beyond planMaxItinerariesToShow
         if ([returnedItineraries count] > planMaxItinerariesToShow) {
@@ -401,6 +475,21 @@
     }
 }
 
+// Variant of the above method without using an includeExcludeDictionary or callback
+- (NSArray *)returnSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
+                                        departOrArrive:(DepartOrArrive)depOrArrive
+                              planMaxItinerariesToShow:(int)planMaxItinerariesToShow
+                      planBufferSecondsBeforeItinerary:(int)planBufferSecondsBeforeItinerary
+                           planMaxTimeForResultsToShow:(int)planMaxTimeForResultsToShow
+{
+    return [self returnSortedItinerariesWithMatchesForDate:requestDate
+                                            departOrArrive:depOrArrive
+                             routeIncludeExcludeDictionary:nil
+                                                  callBack:nil
+                                  planMaxItinerariesToShow:planMaxItinerariesToShow
+                          planBufferSecondsBeforeItinerary:planBufferSecondsBeforeItinerary
+                               planMaxTimeForResultsToShow:planMaxTimeForResultsToShow];
+}
 
 // Detects whether date returned by REST API is >1,000 years in the future.  If so, the value is likely being returned in milliseconds from 1970, rather than seconds from 1970, in which we correct the date by dividing by the timeSince1970 value by 1,000
 // Comment out for now, since it is not being used

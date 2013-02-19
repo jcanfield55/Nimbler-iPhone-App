@@ -40,7 +40,7 @@ typedef enum {
 @property (nonatomic, retain) NSDate * startTimeOnly;  // Time only portion of StartTime (computed with timeOnlyfromDate function).  Adds / subtracts 1 day if part of overnight request
 @property (nonatomic, retain) NSString * itinId;
 @property (nonatomic, retain) NSSet* planRequestChunks; // set of PlanRequestChunks this itinerary is part of
-// @property (nonatomic, retain) NSSet* requestChunksCreatedByThisPattern; // if this is a unique itinerary, this points to the request chunks of gtfsItineraries created off this itinerary's pattern.  Otherwise null.
+@property (nonatomic, retain) NSSet* requestChunksCreatedByThisPattern; // if this is a unique itinerary, this points to the request chunks of gtfsItineraries created off this itinerary's pattern.  Otherwise null.
 @property (nonatomic, retain) NSString *itinArrivalFlag;
 
 @property (nonatomic, retain) NSSet *legs;
