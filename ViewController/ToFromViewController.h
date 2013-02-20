@@ -86,7 +86,7 @@ typedef enum {
 -(void)setFBParameterForGeneral;
 
 // Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
--(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status;
+-(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status RequestParameter:(PlanRequestParameters *)requestParameter;
 
 -(void)doSwapLocation;
 - (void) hideTabBar;

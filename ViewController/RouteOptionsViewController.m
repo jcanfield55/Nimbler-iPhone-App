@@ -16,6 +16,7 @@
 #import "nc_AppDelegate.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "Itinerary.h"
+#import "RouteExcludeSetting.h"
 
 #define IDENTIFIER_CELL         @"UIRouteOptionsViewCell"
 
@@ -37,6 +38,7 @@
 @synthesize plan;
 @synthesize isReloadRealData;
 @synthesize btnGoToNimbler;
+@synthesize planRequestParameters;
 
 @synthesize button1b, button1c, button1d, button2a;
 
@@ -71,28 +73,39 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     
     // Enforce height of main table
     mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
-    CGRect rect0 = [mainTable frame];
-    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        rect0.size.height = ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 - 55;
-        rect0.origin.y = 55;  // TODO Replace with automatic code
-    }
-    else{
-        rect0.size.height = ROUTE_OPTIONS_TABLE_HEIGHT - 55;
-        rect0.origin.y = 55;
-    }
-    [mainTable setFrame:rect0];
-    [mainTable reloadData];
+    //[self changeMainTableSettings];
     [self setFBParameterForPlan];
 }
 
 // Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
--(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status
+-(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status RequestParameter:(PlanRequestParameters *)requestParameter
 {
     if (status == PLAN_STATUS_OK) {
-        [mainTable reloadData];
+        [self changeMainTableSettings];
+        planRequestParameters = requestParameter;
     }
 }
 
+- (void) changeMainTableSettings{
+    CGRect rect0 = [mainTable frame];
+    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+        rect0.size.height = ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5;
+        rect0.origin.y = 55;  // TODO Replace with automatic code
+    }
+    else{
+        rect0.size.height = ROUTE_OPTIONS_TABLE_HEIGHT;
+        rect0.origin.y = 55;
+    }
+    int mainTableYPOS = [self calculateTotalHeightOfButtonView];
+    if(mainTableYPOS > 0){
+        rect0.origin.y = 0;
+        rect0.origin.y = mainTableYPOS;
+        rect0.size.height = rect0.size.height - mainTableYPOS;
+        [self createViewWithButtons:mainTableYPOS];
+    }
+    [mainTable setFrame:rect0];
+    [mainTable reloadData];
+}
 - (void) reloadData:(Plan *)newPlan{
      plan = newPlan;
     self.isReloadRealData = true;
@@ -158,109 +171,19 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 
 
 // TODO:- Need to save Nsdictionary instead of Nsarray.
--(void) toggleFirstButton:(id)sender{
+-(void) toggleButton:(id)sender{
     UIButton *btn = (UIButton *)sender;
-    NSDictionary *dictRouteName = [plan getUniqueRouteName];
-    NSArray *keys  = [dictRouteName allKeys];
-    NSString *routeId;
-    for(int i=0;i<[keys count];i++){
-        NSString *strRouteName = [dictRouteName objectForKey:[keys objectAtIndex:i]];
-        if([strRouteName isEqualToString:btn.titleLabel.text]){
-            routeId = [keys objectAtIndex:i];
-            break;
-        }
-    }
-    NSArray *arrExcludedRouteId = [[NSUserDefaults standardUserDefaults]objectForKey:@"excludedRouteId"];
-    if(arrExcludedRouteId && [arrExcludedRouteId count] > 0){
-        NSMutableArray *arrRouteIds = [[NSMutableArray alloc] initWithArray:arrExcludedRouteId];
-        if([arrRouteIds containsObject:routeId]){
-            [arrRouteIds removeObject:routeId];
-        }
-        else{
-            [arrRouteIds addObject:routeId];
-        }
-        [[NSUserDefaults standardUserDefaults] setObject:arrRouteIds forKey:@"excludedRouteId"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+    if([[RouteExcludeSetting routeExcludeSetting] settingForKey:btn.titleLabel.text] == SETTING_EXCLUDE_ROUTE){
+        [[RouteExcludeSetting routeExcludeSetting] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:btn.titleLabel.text];
+        [btn setBackgroundImage:[UIImage imageNamed:@"img_on.png"] forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
     }
     else{
-        NSArray *arrExcludedRouteId = [NSArray arrayWithObject:routeId];
-        [[NSUserDefaults standardUserDefaults] setObject:arrExcludedRouteId forKey:@"excludedRouteId"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-    [mainTable reloadData];
-}
-
-// TODO:- Need to save Nsdictionary instead of Nsarray.
--(void) toggleSecondButton:(id)sender{
-    UIButton *btn = (UIButton *)sender;
-    NSDictionary *dictRouteName = [plan getUniqueRouteName];
-    NSArray *keys  = [dictRouteName allKeys];
-    NSString *routeId;
-    for(int i=0;i<[keys count];i++){
-        NSString *strRouteName = [dictRouteName objectForKey:[keys objectAtIndex:i]];
-        if([strRouteName isEqualToString:btn.titleLabel.text])
-            routeId = [keys objectAtIndex:i];
-    }
-    NSArray *arrExcludedRouteId = [[NSUserDefaults standardUserDefaults]objectForKey:@"excludedRouteId"];
-    if(arrExcludedRouteId && [arrExcludedRouteId count] > 0){
-        NSMutableArray *arrRouteIds = [[NSMutableArray alloc] initWithArray:arrExcludedRouteId];
-        if([arrRouteIds containsObject:routeId]){
-            [arrRouteIds removeObject:routeId];
-        }
-        else{
-            [arrRouteIds addObject:routeId];
-        }
-        [[NSUserDefaults standardUserDefaults] setObject:arrRouteIds forKey:@"excludedRouteId"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-    else{
-        NSArray *arrExcludedRouteId = [NSArray arrayWithObject:routeId];
-        [[NSUserDefaults standardUserDefaults] setObject:arrExcludedRouteId forKey:@"excludedRouteId"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-    [mainTable reloadData];
-}
-
-/*
-{
-    NSArray *arrExcludedRoute = [[NSUserDefaults standardUserDefaults] objectForKey:@"excludedRouteId"];
-    NSDictionary *dictRouteName = [plan getUniqueRouteName];
-    NSArray *keys = [dictRouteName allKeys];
-    UIButton *firstButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [firstButton setFrame:CGRectMake(20, 10, 120, 40)];
-    NSString *btnTitle = [dictRouteName objectForKey:[keys objectAtIndex:([indexPath row]-[[plan sortedItineraries] count])*2]];
-    for(int i=0;i<[arrExcludedRoute count];i++){
-        NSString *excludedRouteId = [arrExcludedRoute objectAtIndex:i];
-        if([excludedRouteId isEqualToString:[keys objectAtIndex:([indexPath row]-[[plan sortedItineraries] count])*2]]){
-            [firstButton.layer setBorderWidth:2.0];
-            [firstButton.layer setBorderColor:[UIColor redColor].CGColor];
-            break;
-        }
-    }
-    [firstButton setTitle:btnTitle forState:UIControlStateNormal];
-    [firstButton setTag:([indexPath row]-[[plan sortedItineraries] count])*2+1000];
-    [firstButton addTarget:self action:@selector(toggleFirstButton:) forControlEvents:UIControlEventTouchUpInside];
-    [cell addSubview:firstButton];
-    
-    if([keys count] > ([indexPath row]-[[plan sortedItineraries] count])*2+1){
-        UIButton *secondButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [secondButton setFrame:CGRectMake(160, 10, 120, 40)];
-        NSString *btnTitle = [dictRouteName objectForKey:[keys objectAtIndex:([indexPath row]-[[plan sortedItineraries] count])*2+1]];
-        [secondButton setTitle:btnTitle forState:UIControlStateNormal];
-        for(int i=0;i<[arrExcludedRoute count];i++){
-            NSString *excludedRouteId = [arrExcludedRoute objectAtIndex:i];
-            if([excludedRouteId isEqualToString:[keys objectAtIndex:([indexPath row]-[[plan sortedItineraries] count])*2+1]]){
-                [secondButton.layer setBorderWidth:2.0];
-                [secondButton.layer setBorderColor:[UIColor redColor].CGColor];
-                break;
-            }
-        }
-        [secondButton setTag:(([indexPath row]-[[plan sortedItineraries] count])*2+1)+10000];
-        [secondButton addTarget:self action:@selector(toggleSecondButton:) forControlEvents:UIControlEventTouchUpInside];
-        [cell addSubview:secondButton];
+        [[RouteExcludeSetting routeExcludeSetting] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:btn.titleLabel.text];
+        [btn setBackgroundImage:[UIImage imageNamed:@"img_off.png"] forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor GRAY_FONT_COLOR] forState:UIControlStateNormal];
     }
 }
- */
 
 
 #pragma mark - UITableViewDelegate methods
@@ -608,5 +531,60 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     [nc_AppDelegate sharedInstance].FBToAdd = nil;
     [nc_AppDelegate sharedInstance].FBSFromAdd = nil;
     [nc_AppDelegate sharedInstance].FBUniqueId = [plan planId];
+}
+
+- (void) createViewWithButtons:(int)height{
+    UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, height)];
+    [bgView setBackgroundColor:[UIColor whiteColor]];
+    [self.view addSubview:bgView];
+    
+    UILabel *lblChoose = [[UILabel alloc] initWithFrame:CGRectMake(0, 5, 80, 25)];
+    [lblChoose setText:@"Travel By:"];
+    [lblChoose setBackgroundColor:[UIColor clearColor]];
+    [lblChoose setFont:[UIFont fontWithName:@"Helvetica" size:13.0]];
+    [lblChoose setTextAlignment:UITextAlignmentCenter];
+    [bgView addSubview:lblChoose];
+    
+    int xPos = 80;
+    int yPos = 5;
+    int width = 80;
+    int btnHeight = 25;
+    
+    NSArray *arrRouteSettings = [[RouteExcludeSetting routeExcludeSetting] excludeSettingsForPlan:plan];
+    for(int i=0;i<[arrRouteSettings count];i++){
+        RouteExcludeSetting *routeExcludeSetting = [arrRouteSettings objectAtIndex:i];
+        UIButton *btnAgency = [UIButton buttonWithType:UIButtonTypeCustom];
+        if(xPos+width > 320){
+            yPos = yPos + 25 + 5;
+            xPos = 0;
+        }
+        [btnAgency setFrame:CGRectMake(xPos,yPos, width, btnHeight)];
+        xPos = xPos + width;
+        [btnAgency setTitle:routeExcludeSetting.key forState:UIControlStateNormal];
+        [btnAgency.titleLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:12.0]];
+        if([[RouteExcludeSetting routeExcludeSetting] settingForKey:routeExcludeSetting.key] == SETTING_EXCLUDE_ROUTE){
+            [btnAgency setBackgroundImage:[UIImage imageNamed:@"img_off.png"] forState:UIControlStateNormal];
+            [btnAgency setTitleColor:[UIColor GRAY_FONT_COLOR] forState:UIControlStateNormal];
+        }
+        else{
+            [btnAgency setBackgroundImage:[UIImage imageNamed:@"img_on.png"] forState:UIControlStateNormal];
+            [btnAgency setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
+        }
+        [btnAgency addTarget:self action:@selector(toggleButton:) forControlEvents:UIControlEventTouchUpInside];
+        [bgView addSubview:btnAgency];
+    }
+}
+
+- (int) calculateTotalHeightOfButtonView{
+   NSArray *arrRouteSettings = [[RouteExcludeSetting routeExcludeSetting] excludeSettingsForPlan:plan];
+    int tempButtonCounts;
+    if([arrRouteSettings count] > 3)
+       tempButtonCounts = [arrRouteSettings count] - 3;
+    else
+        tempButtonCounts = 0;
+    int nAdditionalRows = tempButtonCounts/2 + tempButtonCounts%2;
+    int totalRows = nAdditionalRows + 1;
+    int buffer = totalRows * 10;
+    return totalRows * 25 + buffer;
 }
 @end

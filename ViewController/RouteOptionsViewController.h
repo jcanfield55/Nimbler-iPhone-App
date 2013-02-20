@@ -23,6 +23,7 @@
 @property(nonatomic, strong) IBOutlet UIButton* button1c;
 @property(nonatomic, strong) IBOutlet UIButton* button1d;
 @property(nonatomic, strong) IBOutlet UIButton* button2a;
+@property (nonatomic, strong) PlanRequestParameters *planRequestParameters;
 
 - (IBAction)excludeButtonPressed:(id)sender forEvent:(UIEvent *)event;
 
@@ -31,9 +32,12 @@
 -(void)popOutToNimbler;
 
 // Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
--(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status;
+-(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status RequestParameter:(PlanRequestParameters *)requestParameter;
 
 - (void) reloadData:(Plan *)newPlan;
--(void) toggleFirstButton:(id)sender;
--(void) toggleSecondButton:(id)sender;
+-(void) toggleButton:(id)sender;
+
+- (int) calculateTotalHeightOfButtonView;
+- (void) createViewWithButtons:(int)height;
+- (void) changeMainTableSettings;
 @end

@@ -444,6 +444,14 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     return false;
 }
 
+-(BOOL)isBike{
+    if ([[self mode] isEqualToString:@"BIKE"]) {
+        return true;
+    }
+    return false;
+}
+
+
 -(BOOL)isHeavyTrain
 {
     if ([[self mode] isEqualToString:@"RAIL"] && [[self agencyId] isEqualToString:@"caltrain-ca-us"]) {

@@ -14,7 +14,6 @@
 
 #define TRIP_GENERATE_URL     @"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/"
 //#define TRIP_GENERATE_URL @"http://ec2-23-22-169-158.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"
-
 #define GEO_RESPONSE_URL      @"http://maps.googleapis.com/maps/api/geocode/"
 #define TEST_GEO_RESPONSE_URL  @"http://localhost:8080/TPServer/ws/mockgeolocation/"
 
@@ -465,3 +464,12 @@
 
 #define STATION_LIST   @"Station List"
 #define ALL_STATION    @"all_st"
+
+#define EXCLUDE_SETTINGS_DICTIONARY @"ExcludeSettingsDictionary"
+#define BIKE_MODE @"Bike"  // Key for RouteExcludeSettings
+
+#define CALTRAIN_BUTTON @"Caltrain"
+#define BART_BUTTON @"Bart"
+#define MUNI_BUTTON @"Muni"
+#define ACTRANSIT_BUTTON @"Actransit"
+

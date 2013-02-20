@@ -100,3 +100,5 @@ NSString *generateRandomString(void);
 // return the image from document directory or from server
 // First check if image exist at document directory folder if yes then take image from document directory otherwise request server for image and save image to document directory and next time use image from document directory.
 UIImage *getAgencyIcon(NSString * imageName);
+
+NSString *returnShortAgencyName(NSString *agencyName);

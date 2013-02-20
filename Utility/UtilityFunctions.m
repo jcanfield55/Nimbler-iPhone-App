@@ -567,3 +567,18 @@ UIImage *getAgencyIcon(NSString * imageName){
     }
     return agencyImage;
 }
+
+NSString *returnShortAgencyName(NSString *agencyName){
+    if([agencyName isEqualToString:CALTRAIN_AGENCY_NAME])
+        return @"Caltrain";
+    else if([agencyName isEqualToString:BART_AGENCY_NAME])
+        return @"Bart";
+    else if([agencyName isEqualToString:AIRBART_AGENCY_NAME])
+        return @"Bart";
+    else if([agencyName isEqualToString:SFMUNI_AGENCY_NAME])
+        return @"Muni";
+    else if([agencyName isEqualToString:ACTRANSIT_AGENCY_NAME])
+        return @"Actransit";
+    else
+        return agencyName;
+}

@@ -1096,7 +1096,7 @@ UIImage *imageDetailDisclosure;
 }
 
 // Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
--(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status
+-(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status RequestParameter:(PlanRequestParameters *)requestParameter
 {
     @try {
         [self stopActivityIndicator];
@@ -1128,6 +1128,7 @@ UIImage *imageDetailDisclosure;
                     }
                 }
                 [routeOptionsVC setPlan:plan];
+                [routeOptionsVC setPlanRequestParameters:requestParameter];
                 [self requestServerForRealTime];
                 self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
                 

@@ -207,6 +207,7 @@
 		75E8F1D416CE3EBC00863A8C /* bart.json in Resources */ = {isa = PBXBuildFile; fileRef = 75E8F1D316CE3EBC00863A8C /* bart.json */; };
 		75E8F1D616CE3EC800863A8C /* caltrain.json in Resources */ = {isa = PBXBuildFile; fileRef = 75E8F1D516CE3EC800863A8C /* caltrain.json */; };
 		75E8F1DA16CE4B5400863A8C /* sf-muni.json in Resources */ = {isa = PBXBuildFile; fileRef = 75E8F1D916CE4B5400863A8C /* sf-muni.json */; };
+		8D00753216D4CAB30041A64C /* RouteExcludeSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D00753116D4CAB30041A64C /* RouteExcludeSetting.m */; };
 		8D0FA9A1169165C10038FDB2 /* LegFromOTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */; };
 		8D0FA9B0169198500038FDB2 /* ItineraryFromOTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0FA9AF1691984F0038FDB2 /* ItineraryFromOTP.m */; };
 		8D0FA9B31691985B0038FDB2 /* ItineraryFromGtfs.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0FA9B21691985A0038FDB2 /* ItineraryFromGtfs.m */; };
@@ -222,6 +223,8 @@
 		8D45BD1E162BDE6A00E5CB3D /* Icon_ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D45BD1D162BDE6A00E5CB3D /* Icon_ipad@2x.png */; };
 		8D4FC8E6162D2E1A004144DE /* bart-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D4FC8E4162D2E1A004144DE /* bart-station.json */; };
 		8D4FC8E7162D2E1A004144DE /* caltrain-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D4FC8E5162D2E1A004144DE /* caltrain-station.json */; };
+		8D6F577616D4EE1800DADEA4 /* img_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D6F577416D4EE1800DADEA4 /* img_on.png */; };
+		8D6F577716D4EE1800DADEA4 /* img_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D6F577516D4EE1800DADEA4 /* img_off.png */; };
 		8D6FB9681680870500952B0C /* GtfsStop.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D6FB9671680870500952B0C /* GtfsStop.m */; };
 		8D8DF4AD1647BCFB00BC2A34 /* bart-station-background.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D8DF4AB1647BCFB00BC2A34 /* bart-station-background.json */; };
 		8D8DF4AE1647BCFB00BC2A34 /* caltrain-station-background.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D8DF4AC1647BCFB00BC2A34 /* caltrain-station-background.json */; };
@@ -540,6 +543,8 @@
 		75E8F1D916CE4B5400863A8C /* sf-muni.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "sf-muni.json"; sourceTree = "<group>"; };
 		75E8F1DB16CE4E2900863A8C /* Stations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stations.h; sourceTree = "<group>"; };
 		75E8F1DC16CE4E2A00863A8C /* Stations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stations.m; sourceTree = "<group>"; };
+		8D00753016D4CAB30041A64C /* RouteExcludeSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteExcludeSetting.h; sourceTree = "<group>"; };
+		8D00753116D4CAB30041A64C /* RouteExcludeSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteExcludeSetting.m; sourceTree = "<group>"; };
 		8D0FA99F169165C00038FDB2 /* LegFromOTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = LegFromOTP.h; path = ../Model/LegFromOTP.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = LegFromOTP.m; path = ../Model/LegFromOTP.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8D0FA9AE1691984F0038FDB2 /* ItineraryFromOTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ItineraryFromOTP.h; path = ../ItineraryFromOTP.h; sourceTree = "<group>"; };
@@ -571,6 +576,8 @@
 		8D45BD1D162BDE6A00E5CB3D /* Icon_ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon_ipad@2x.png"; sourceTree = "<group>"; };
 		8D4FC8E4162D2E1A004144DE /* bart-station.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "bart-station.json"; sourceTree = "<group>"; };
 		8D4FC8E5162D2E1A004144DE /* caltrain-station.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "caltrain-station.json"; sourceTree = "<group>"; };
+		8D6F577416D4EE1800DADEA4 /* img_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_on.png; sourceTree = "<group>"; };
+		8D6F577516D4EE1800DADEA4 /* img_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_off.png; sourceTree = "<group>"; };
 		8D6FB9661680870500952B0C /* GtfsStop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GtfsStop.h; path = ../Model/GtfsStop.h; sourceTree = "<group>"; };
 		8D6FB9671680870500952B0C /* GtfsStop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GtfsStop.m; path = ../Model/GtfsStop.m; sourceTree = "<group>"; };
 		8D8DF4AB1647BCFB00BC2A34 /* bart-station-background.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "bart-station-background.json"; sourceTree = "<group>"; };
@@ -749,6 +756,8 @@
 		520FB1A8162603AF0083F143 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8D6F577416D4EE1800DADEA4 /* img_on.png */,
+				8D6F577516D4EE1800DADEA4 /* img_off.png */,
 				8DFFB3B0165E593300A39BC4 /* img_Settings.png */,
 				8DFFB3B1165E593400A39BC4 /* img_Settings@2x.png */,
 				520FB1A9162603AF0083F143 /* caltrain.jpg */,
@@ -973,6 +982,8 @@
 				8D44083F16CF72FD00F8EBE5 /* PreloadedStop.m */,
 				75E8F1CC16CE356D00863A8C /* StationListElement.h */,
 				75E8F1CD16CE356D00863A8C /* StationListElement.m */,
+				8D00753016D4CAB30041A64C /* RouteExcludeSetting.h */,
+				8D00753116D4CAB30041A64C /* RouteExcludeSetting.m */,
 			);
 			name = "Model, Other";
 			path = ../Model;
@@ -1380,6 +1391,8 @@
 				75E8F1D616CE3EC800863A8C /* caltrain.json in Resources */,
 				75E8F1DA16CE4B5400863A8C /* sf-muni.json in Resources */,
 				8D44084216CF775800F8EBE5 /* ac-transit.json in Resources */,
+				8D6F577616D4EE1800DADEA4 /* img_on.png in Resources */,
+				8D6F577716D4EE1800DADEA4 /* img_off.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1480,6 +1493,7 @@
 				52DD766416D2A86B005763DE /* Stations.m in Sources */,
 				52DD766A16D2A892005763DE /* StationListElement.m in Sources */,
 				52DD766C16D2A8FD005763DE /* PreloadedStop.m in Sources */,
+				8D00753216D4CAB30041A64C /* RouteExcludeSetting.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

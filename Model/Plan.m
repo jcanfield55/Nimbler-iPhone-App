@@ -14,6 +14,7 @@
 #import "Itinerary.h"
 #import "ItineraryFromOTP.h"
 #import "nc_AppDelegate.h"
+#import "RouteExcludeSetting.h"
 
 
 @interface Plan (CoreDataGeneratedAccessors)
@@ -435,6 +436,14 @@
                     }
                 }
             }
+            
+            /*
+             Code Added To Remove excluded itinerary
+            if(![[RouteExcludeSetting routeExcludeSetting] isItineraryIncluded:itin1]){
+                [optimalItineraries removeObject:itin1];
+                itin1removed = true;
+            }
+             */
             // Check for suboptimal itineraries
             if (!itin1removed) {
                 for (Itinerary* itin2 in matchingItineraries) {
@@ -577,33 +586,25 @@
     }
 }
 
-- (NSDictionary *) getUniqueRouteName{
-    NSMutableDictionary *dictRouteName = [[NSMutableDictionary alloc] init];
+- (NSDictionary *) returnUniqueButtonTitle{
+    NSMutableDictionary *dictButtonTitles = [[NSMutableDictionary alloc] init];
     for(int i=0;i<[[self sortedItineraries] count];i++){
         Itinerary *itinerary = [[self sortedItineraries] objectAtIndex:i];
         for(int j=0;j<[itinerary.sortedLegs count];j++){
             Leg *leg = [itinerary.sortedLegs objectAtIndex:j];
             if([leg isScheduled]){
-                if([leg routeShortName]){
-                    [dictRouteName setObject:[leg routeShortName] forKey:[leg routeId]];
+                if([[leg agencyName] isEqualToString:SFMUNI_AGENCY_NAME]){
+                    NSString *strButtonTitle = [NSString stringWithFormat:@"%@-%@",returnShortAgencyName([leg agencyName]),[leg mode]];
+                    [dictButtonTitles setObject:PLAN_ROUTE_INCLUDE forKey:strButtonTitle];
                 }
-                else if([[leg agencyName] isEqualToString:CALTRAIN_AGENCY_NAME]){
-                    NSString *routeName = [leg.routeLongName substringWithRange:NSMakeRange(0,3)];
-                    NSString *agencyName = [leg agencyName];
-                    NSString *legName =  [agencyName stringByAppendingFormat:@" - %@ ",routeName];
-                    [dictRouteName setObject:legName forKey:[leg routeId]];
-                }
-                else if([[leg agencyName] isEqualToString:BART_AGENCY_NAME]){
-                    NSString *routeName = [leg.routeLongName substringWithRange:NSMakeRange(0,3)];
-                    NSString *agencyName = @"Bart";
-                    NSString *legName =  [agencyName stringByAppendingFormat:@" - %@ ",routeName];
-                    NSDictionary *routeDict = [NSDictionary dictionaryWithObjectsAndKeys:legName,[leg routeId], nil];
-                    [dictRouteName setObject:legName forKey:[leg routeId]];
+                else{
+                    NSString *strButtonTitle = returnShortAgencyName([leg agencyName]);
+                    [dictButtonTitles setObject:PLAN_ROUTE_INCLUDE forKey:strButtonTitle];
                 }
             }
         }
     }
-    return dictRouteName;
+    return dictButtonTitles;
 }
 
 @end

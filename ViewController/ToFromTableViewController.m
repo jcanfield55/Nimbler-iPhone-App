@@ -392,7 +392,6 @@ NSString *strStreet2 = @"street ";
         NIMLOG_EVENT1(@"Skipping duplicate toFromTextSubmitted");
         return;  // if using the same rawAddress and less than 5 seconds between, treat as duplicate
     }
-    if([rawAddress isEqualToString:@""])
         [toFromVC setEditMode:NO_EDIT];  // Move back to NO_EDIT mode on the ToFrom view controller
 
     if ([rawAddress length] > 0) {
@@ -415,25 +414,16 @@ NSString *strStreet2 = @"street ";
             startTime = CFAbsoluteTimeGetCurrent();
            // DE-207 & US-166 Implementation
             rawAddress = [rawAddress lowercaseString];
-            NSMutableArray *arrStationList = [[NSMutableArray alloc] init];
-            NSString *searchString = [locations rawAddressWithOutAgencyName:rawAddress SearchStringArray:SEARCH_STRINGS_ARRAY ReplaceStringArray:REPLACE_STRINGS_ARRAY];
-            NSArray *arrComponents = [searchString componentsSeparatedByString:@" "];
             
             NSFetchRequest * fetchStationListElement = [[NSFetchRequest alloc] init];
             [fetchStationListElement setEntity:[NSEntityDescription entityForName:@"StationListElement" inManagedObjectContext:managedObjectContext]];
             NSArray * arrayStationListElement = [managedObjectContext executeFetchRequest:fetchStationListElement error:nil];
-            for(int i=0;i<[arrComponents count];i++){
-                NSString *strSearchString = [arrComponents objectAtIndex:i];
                 for(StationListElement *listElement in arrayStationListElement){
                     if(listElement.location){
                         NSString *shortAddress = [listElement.location.shortFormattedAddress lowercaseString];
                         if([rawAddress isEqualToString:shortAddress]){
                             [self markAndUpdateSelectedLocation:listElement.location];
-                            [toFromVC setEditMode:NO_EDIT];  // Move back to NO_EDIT mode on the ToFrom view controller
                             return;
-                        }
-                        if([listElement.location isMatchingString:strSearchString]){
-                                [arrStationList addObject:listElement];
                         }
                     }
                     else if(listElement.stop){
@@ -442,23 +432,10 @@ NSString *strStreet2 = @"street ";
                            Location *loc = [[nc_AppDelegate sharedInstance].stations createNewLocationObjectFromGtfsStop:listElement.stop :listElement];
                             saveContext(managedObjectContext);
                             [self markAndUpdateSelectedLocation:loc];
-                            [toFromVC setEditMode:NO_EDIT];  // Move back to NO_EDIT mode on the ToFrom view controller
                             return;
-                        }
-                        if([listElement.stop isMatchingTypedString:strSearchString]){
-                            if(![self contains:arrStationList String:listElement.stop.formattedAddress])
-                                [arrStationList addObject:listElement];
                         }
                     }
                 }
-            }
-            if([arrStationList count] > 0){
-                [toFromVC callLocationPickerFor:self
-                                   locationList:arrStationList
-                                         isFrom:isFrom
-                               isGeocodeResults:NO];
-                return;
-            }
 
             @try {
                 GeocodeRequestParameters* parameters = [[GeocodeRequestParameters alloc] init];

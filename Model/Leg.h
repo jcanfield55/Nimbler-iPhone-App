@@ -71,6 +71,7 @@ typedef enum {
 - (NSString *)directionsDetailText:(LegPositionEnum)legPosition;
 - (NSString *)ncDescription;
 - (BOOL)isWalk;
+- (BOOL)isBike;
 - (BOOL)isBus;
 - (BOOL)isHeavyTrain; // Note: legs that are isHeavyTrain=true are also isTrain=true
 - (BOOL)isTrain;

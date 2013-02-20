@@ -87,9 +87,9 @@
                 }
                 matchingPlan.sortedItineraries = nil;
                 if (parameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
-                    [routeOptionsVC newPlanAvailable:matchingPlan status:status];
+                    [routeOptionsVC newPlanAvailable:matchingPlan status:status RequestParameter:parameters];
                 } else {
-                    [toFromVC newPlanAvailable:matchingPlan status:status];
+                   [toFromVC newPlanAvailable:matchingPlan status:status RequestParameter:parameters];
                 }
                 return;
             }
@@ -273,7 +273,7 @@
                     [managedObjectContext deleteObject:plan];
                     saveContext(managedObjectContext);
                     if (planRequestParameters.planDestination == PLAN_DESTINATION_TO_FROM_VC) {
-                        [toFromVC newPlanAvailable:nil status:PLAN_NOT_AVAILABLE_THAT_TIME];
+                        [toFromVC newPlanAvailable:nil status:PLAN_NOT_AVAILABLE_THAT_TIME RequestParameter:planRequestParameters];
                         logEvent(FLURRY_ROUTE_NOT_AVAILABLE_THAT_TIME,
                                  FLURRY_NEW_DATE, [NSString stringWithFormat:@"%@",[planRequestParameters thisRequestTripDate]],
                                  nil, nil, nil, nil, nil, nil);
@@ -296,13 +296,13 @@
                     // Call-back the appropriate RouteOptions VC with the new plan
                     UIViewController *currentVC = toFromVC.navigationController.visibleViewController;
                     if (planRequestParameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC || currentVC == routeOptionsVC) {
-                        [routeOptionsVC newPlanAvailable:plan status:PLAN_STATUS_OK];
+                        [routeOptionsVC newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:planRequestParameters];
                     } else {
-                        [toFromVC newPlanAvailable:plan status:PLAN_STATUS_OK];
+                        [toFromVC newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:planRequestParameters];
                     }
                 } else { // no matching sorted itineraries.  DE189 fix
                     if (planRequestParameters.planDestination == PLAN_DESTINATION_TO_FROM_VC) {
-                        [toFromVC newPlanAvailable:nil status:PLAN_GENERIC_EXCEPTION];
+                        [toFromVC newPlanAvailable:nil status:PLAN_GENERIC_EXCEPTION RequestParameter:planRequestParameters];
                         logEvent(FLURRY_ROUTE_NO_MATCHING_ITINERARIES, nil, nil, nil, nil, nil, nil, nil, nil);
                     } // else if routeOptions destination, do nothing
                 }
@@ -311,7 +311,7 @@
     }
     @catch (NSException *exception) {
         if (planRequestParameters && planRequestParameters.planDestination == PLAN_DESTINATION_TO_FROM_VC) {
-            [toFromVC newPlanAvailable:nil status:PLAN_GENERIC_EXCEPTION];
+            [toFromVC newPlanAvailable:nil status:PLAN_GENERIC_EXCEPTION RequestParameter:planRequestParameters];
             logException(@"PlanStore->objectLoader", @"Original request from ToFromVC", exception);
         } else {
             logException(@"PlanStore->objectLoader", @"Follow-up request to RouteOptionsVC", exception);
@@ -348,7 +348,7 @@
     } else {
         if ([parameters planDestination] == PLAN_DESTINATION_TO_FROM_VC) {
             NIMLOG_ERR1(@"Error received from RKObjectManager on first call by ToFromViewController: %@", error);
-            [toFromVC newPlanAvailable:nil status:status];
+            [toFromVC newPlanAvailable:nil status:status RequestParameter:parameters];
         }
         else { // if target is RouteOptions, do not call routeOptions and do not alert user.  This was a backup request only
             NIMLOG_ERR1(@"Error received from RKObjectManager on subsequent call RouteOptionsViewController: %@", error);
