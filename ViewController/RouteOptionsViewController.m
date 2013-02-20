@@ -38,7 +38,7 @@
 @synthesize isReloadRealData;
 @synthesize btnGoToNimbler;
 
-@synthesize button1b, button1c, button1d, button2a, button2b, button2c, button2d;
+@synthesize button1b, button1c, button1d, button2a;
 
 Itinerary * itinerary;
 NSString *itinararyId;
@@ -137,7 +137,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 - (IBAction)excludeButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     NSArray* buttonArray = [NSArray arrayWithObjects:button1b, button1c, button1d,
-                            button2a, button2b, button2c, button2d, nil];
+                            button2a, nil];
     UIButton* selectedButton = nil;
     for (UIButton* button in buttonArray) {
         if (button == sender) {

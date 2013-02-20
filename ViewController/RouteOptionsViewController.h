@@ -23,9 +23,6 @@
 @property(nonatomic, strong) IBOutlet UIButton* button1c;
 @property(nonatomic, strong) IBOutlet UIButton* button1d;
 @property(nonatomic, strong) IBOutlet UIButton* button2a;
-@property(nonatomic, strong) IBOutlet UIButton* button2b;
-@property(nonatomic, strong) IBOutlet UIButton* button2c;
-@property(nonatomic, strong) IBOutlet UIButton* button2d;
 
 - (IBAction)excludeButtonPressed:(id)sender forEvent:(UIEvent *)event;
 
