@@ -64,6 +64,8 @@ typedef enum {
 - (PlanPlace *)to;
 - (NSString *)ncDescription;
 
+- (BOOL)isOTPItinerary;  // Returns true if itinerary is from OTP
+
 // Returns true if each leg's starttime is current versus the GTFS file date for that leg's agency
 // Otherwise returns false
 - (BOOL)isCurrentVsGtfsFilesIn:(TransitCalendar *)transitCalendar;
@@ -117,7 +119,7 @@ typedef enum {
 
 // Compare Two Itineraries
 // This match itinerary like leg by leg if all match the return yes otherwise return no.
-- (BOOL) isEquivalentItinerariAs:(Itinerary *)itinerary;
+- (BOOL) isEquivalentItineraryAs:(Itinerary *)itinerary;
 
 // Set Itinerary RealTime from Legs RealTime
 // If itinerary has one scheduled leg then itinerary realtime is same as scheduled leg realtime.

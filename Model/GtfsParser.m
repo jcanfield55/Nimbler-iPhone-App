@@ -1377,7 +1377,7 @@
     NSMutableArray *itineraries = [[NSMutableArray alloc] init];
     for(int i=0;i<[[plan sortedItineraries] count];i++){
         Itinerary *tempItinerary = [[plan sortedItineraries] objectAtIndex:i];
-        if([pattern isEquivalentItinerariAs:tempItinerary])
+        if([pattern isEquivalentItineraryAs:tempItinerary])
             [itineraries addObject:tempItinerary];
     }
     return  itineraries;

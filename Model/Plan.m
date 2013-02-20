@@ -176,7 +176,8 @@
 }
 
 // If itin0 is a new itinerary that does not exist in the referencing Plan, then add itin0 the referencing Plan
-// If itin0 is the same as an existing itinerary in the referencing Plan, then keep the more current itinerary and delete the older one
+// If itin0 is the same as an existing itinerary in the referencing Plan, then keep the more current itinerary and delete the older one.
+// Note: an itinerary is used as a pattern to create gtfs Request Chunks, it will not be considered obsolete
 // Returns the result of the itinerary comparison (see Itinerary.h for enum definition)
 - (ItineraryCompareResult) addItineraryIfNew:(Itinerary *)itin0
 {
@@ -425,7 +426,7 @@
         for (Itinerary* itin1 in matchingItineraries) {
             // Check for excluded OTP itineraries (GTFS itineraries were already checked above)
             BOOL itin1removed = false;
-            if (routeIncludeExcludeDictionary && [itin1 isKindOfClass:[ItineraryFromOTP class]]) {
+            if (routeIncludeExcludeDictionary && [itin1 isOTPItinerary]) {
                 for (Leg* leg in [itin1 sortedLegs]) {
                     if ([[routeIncludeExcludeDictionary objectForKey:[leg routeId]] isEqualToString:PLAN_ROUTE_EXCLUDE]) {
                         [optimalItineraries removeObject:itin1];
@@ -534,7 +535,7 @@
         for(int j=i+1;j<[arrsortedItineraries count];j++){
             Itinerary *itinerary1 = (Itinerary*)[arrsortedItineraries objectAtIndex:i];
             Itinerary *itinerary2 = (Itinerary*)[arrsortedItineraries objectAtIndex:j];
-            BOOL isEquivalentitinerary = [itinerary1 isEquivalentItinerariAs:itinerary2];
+            BOOL isEquivalentitinerary = [itinerary1 isEquivalentItineraryAs:itinerary2];
             if(isEquivalentitinerary){
                 [arrsortedItineraries removeObjectAtIndex:j];
                 i = i-1;

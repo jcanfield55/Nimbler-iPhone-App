@@ -11,6 +11,7 @@
 #import "Plan.h"
 #import "UtilityFunctions.h"
 #import "nc_AppDelegate.h"
+#import "ItineraryFromOTP.h"
 
 @interface Itinerary()
 {
@@ -57,6 +58,11 @@
     
     // Set the date
     [self setItineraryCreationDate:[NSDate date]];
+}
+
+// Returns true if itinerary is from OTP
+- (BOOL)isOTPItinerary {
+    return ([self isKindOfClass:[ItineraryFromOTP class]]);
 }
 
 // Create the sorted array of itineraries
@@ -161,6 +167,22 @@
                     return ITINERARIES_DIFFERENT;
                 }
             }
+            // Itineraries are the same in substance...
+            // If one of the itineraries is used as a pattern for a GTFS request chunk, do not make it obsolete
+            if ([[self requestChunksCreatedByThisPattern] count] > 0 &&
+                [[itin0 requestChunksCreatedByThisPattern] count] == 0) {
+                return ITIN0_OBSOLETE;  // Keep self, since it is pattern and itin0 is not
+            }
+            else if ([[itin0 requestChunksCreatedByThisPattern] count] > 0 &&
+                [[self requestChunksCreatedByThisPattern] count] == 0) {
+                return ITIN_SELF_OBSOLETE; // Keep itin0, since it is a pattern and self is not
+            }
+            else if ([[itin0 requestChunksCreatedByThisPattern] count] > 0 &&
+                     [[self requestChunksCreatedByThisPattern] count] > 0) {
+                return ITINERARIES_DIFFERENT;  // Both are used as a pattern, so count as different (unlikely event)
+            }
+            
+            // In case that neither are used as a pattern, use the creation date to determine which is obsolete
             if ([[itin0 itineraryCreationDate] isEqualToDate:[self itineraryCreationDate]]) {
                 return ITINERARIES_SAME;
             } else if ([[itin0 itineraryCreationDate] compare:[self itineraryCreationDate]] == NSOrderedDescending) {
@@ -385,7 +407,7 @@
 
 // Compare Two Itineraries
 // This match itinerary like leg by leg if all match the return yes otherwise return no.
-- (BOOL) isEquivalentItinerariAs:(Itinerary *)itinerary{
+- (BOOL) isEquivalentItineraryAs:(Itinerary *)itinerary{
     NSArray *arrItinerary1 = [self sortedLegs];
     NSArray *arrItinerary2 = [itinerary sortedLegs];
     if([arrItinerary1 count] == [arrItinerary2 count]){

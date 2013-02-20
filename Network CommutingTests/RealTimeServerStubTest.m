@@ -458,12 +458,12 @@
     STAssertEquals([stopPairs count], 6u, @"");
     STAssertTrue([[[[stopPairs objectAtIndex:0] objectAtIndex:0] tripID] isEqualToString:@"282_20121001"], @"");
     
-    // [gtfsParser generateScheduledItinerariesFromPatternOfPlan:plan Context:managedObjectContext tripDate:tripDate];
+    [gtfsParser generateScheduledItinerariesFromPatternOfPlan:plan Context:managedObjectContext tripDate:tripDate];
     // Generate itineraries using just the pattern that goes Muni -> SF Caltrain -> San Carlos Caltrain.
-    [gtfsParser generateItineraryFromItineraryPattern:[[plan sortedItineraries] objectAtIndex:3]
-                                             tripDate:tripDate
-                                                 Plan:plan
-                                              Context:managedObjectContext];
+    // [gtfsParser generateItineraryFromItineraryPattern:[[plan sortedItineraries] objectAtIndex:3]
+    //                                         tripDate:tripDate
+    //                                             Plan:plan
+    //                                          Context:managedObjectContext];
     [plan prepareSortedItinerariesWithMatchesForDate:tripDate departOrArrive:DEPART];
     [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK];
 
@@ -474,10 +474,10 @@
     // TODO:- Need to solve coredata fault.
     [[NSUserDefaults standardUserDefaults] setObject:@"data.json" forKey:DEVICE_TOKEN];
     [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:2000.0]];
     
     [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
     STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result=[RealTimeManager realTimeManager].loadedRealTimeData; return result;}], @"Timed out waiting for RealTimeData");
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:2000.0]];
     [gtfsParser generateItinerariesFromRealTime:plan TripDate:tripDate Context:managedObjectContext];
     plan.sortedItineraries = nil;
     for(int i=0;i<[plan.sortedItineraries count];i++){
