@@ -285,7 +285,7 @@
 #define TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY @"TransitCalendarLastGTFSLoadDateByAgency"
 #define TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY @"TransitCalendarServiceByWeekdayByAgency"
 #define TR_CALENDAR_BY_DATE_BY_AGENCY @"TransitCalendarByDateByAgency"
-
+#define EXCLUDE_SETTINGS_DICTIONARY @"ExcludeSettingsDictionary"
 
 // Request timer Count
 #define TWEET_COUNT_POLLING_INTERVAL 120.0
@@ -300,6 +300,9 @@
 
 // Float thresholds
 #define TINY_FLOAT 0.000001
+
+// Modes and agency IDs
+#define BIKE_MODE @"Bike"  // Key for RouteExcludeSettings
 
 #define AGENCY_IDS   @"agencyIds"
 #define CALTRAIN_AGENCY_IDS  @"1"

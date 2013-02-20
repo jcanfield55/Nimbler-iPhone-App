@@ -174,6 +174,8 @@
 		5258A898160D5DCA00871875 /* libFlurry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC9370D815BFB97200A09A5A /* libFlurry.a */; };
 		5258A89F160D617800871875 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5258A89B160D617800871875 /* libTestFlight.a */; };
 		525C20F9151D3AF5004F8FE0 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
+		52781D9A16D494420041D864 /* RouteExcludeSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 52781D9916D494420041D864 /* RouteExcludeSettings.m */; };
+		52781DA116D49B7B0041D864 /* RouteExcludeSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 52781DA016D49B7B0041D864 /* RouteExcludeSetting.m */; };
 		527E174A151EB9CD00CDBC23 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527E1749151EB9CD00CDBC23 /* QuartzCore.framework */; };
 		52958AB116CED86900CC46C7 /* GtfsTempItinerary.m in Sources */ = {isa = PBXBuildFile; fileRef = 52958AB016CED86900CC46C7 /* GtfsTempItinerary.m */; };
 		52A9BE9516B4B41500564D0D /* RealTimeServerStubTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */; };
@@ -503,6 +505,10 @@
 		5258A89B160D617800871875 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		5258A89E160D617800871875 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		525C20F8151D3AF5004F8FE0 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		52781D9816D494420041D864 /* RouteExcludeSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteExcludeSettings.h; sourceTree = "<group>"; };
+		52781D9916D494420041D864 /* RouteExcludeSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteExcludeSettings.m; sourceTree = "<group>"; };
+		52781D9F16D49B7B0041D864 /* RouteExcludeSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteExcludeSetting.h; sourceTree = "<group>"; };
+		52781DA016D49B7B0041D864 /* RouteExcludeSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteExcludeSetting.m; sourceTree = "<group>"; };
 		527E1749151EB9CD00CDBC23 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		52958AAF16CED86900CC46C7 /* GtfsTempItinerary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GtfsTempItinerary.h; path = Model/GtfsTempItinerary.h; sourceTree = SOURCE_ROOT; };
 		52958AB016CED86900CC46C7 /* GtfsTempItinerary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GtfsTempItinerary.m; path = Model/GtfsTempItinerary.m; sourceTree = SOURCE_ROOT; };
@@ -973,6 +979,10 @@
 				8D44083F16CF72FD00F8EBE5 /* PreloadedStop.m */,
 				75E8F1CC16CE356D00863A8C /* StationListElement.h */,
 				75E8F1CD16CE356D00863A8C /* StationListElement.m */,
+				52781D9816D494420041D864 /* RouteExcludeSettings.h */,
+				52781D9916D494420041D864 /* RouteExcludeSettings.m */,
+				52781D9F16D49B7B0041D864 /* RouteExcludeSetting.h */,
+				52781DA016D49B7B0041D864 /* RouteExcludeSetting.m */,
 			);
 			name = "Model, Other";
 			path = ../Model;
@@ -1480,6 +1490,8 @@
 				52DD766416D2A86B005763DE /* Stations.m in Sources */,
 				52DD766A16D2A892005763DE /* StationListElement.m in Sources */,
 				52DD766C16D2A8FD005763DE /* PreloadedStop.m in Sources */,
+				52781D9A16D494420041D864 /* RouteExcludeSettings.m in Sources */,
+				52781DA116D49B7B0041D864 /* RouteExcludeSetting.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
