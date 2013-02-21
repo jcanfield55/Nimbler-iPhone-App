@@ -155,6 +155,9 @@ static RouteExcludeSetting *routeExcludeSetting;
                        legKey = returnShortAgencyName(leg.agencyName);
                    } else {  // BY_RAIL_BUS
                        NSString *railOrBus = (leg.isBus ? @"Bus" : @"Rail");
+                       if ([leg.agencyName isEqualToString:SFMUNI_AGENCY_NAME]) {
+                           railOrBus = (leg.isBus ? @"Bus" : @"Tram");
+                       }
                        legKey = [NSString stringWithFormat:@"%@ %@", returnShortAgencyName(leg.agencyName), railOrBus];
                    }
                    if ([self settingForKey:legKey] == SETTING_EXCLUDE_ROUTE) {

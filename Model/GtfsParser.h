@@ -115,6 +115,6 @@
                                       tripDate:(NSDate *)tripDate
                                           Plan:(Plan *)plan
                                        Context:(NSManagedObjectContext *)context;
-
+- (void)contextChanged:(NSNotification*)notification;
 @end
 

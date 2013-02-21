@@ -392,6 +392,7 @@ NSString *strStreet2 = @"street ";
         NIMLOG_EVENT1(@"Skipping duplicate toFromTextSubmitted");
         return;  // if using the same rawAddress and less than 5 seconds between, treat as duplicate
     }
+    if([rawAddress isEqualToString:@""])
         [toFromVC setEditMode:NO_EDIT];  // Move back to NO_EDIT mode on the ToFrom view controller
 
     if ([rawAddress length] > 0) {
@@ -404,6 +405,7 @@ NSString *strStreet2 = @"street ";
             }
         }
         if (matchingLocation) { //if we got a match, mark and send appropriate updates
+            [toFromVC setEditMode:NO_EDIT];
             [self markAndUpdateSelectedLocation:matchingLocation];
         }
         else {  // if no match, Geocode this new rawAddress
@@ -414,29 +416,37 @@ NSString *strStreet2 = @"street ";
             startTime = CFAbsoluteTimeGetCurrent();
            // DE-207 & US-166 Implementation
             rawAddress = [rawAddress lowercaseString];
-            
             NSFetchRequest * fetchStationListElement = [[NSFetchRequest alloc] init];
             [fetchStationListElement setEntity:[NSEntityDescription entityForName:@"StationListElement" inManagedObjectContext:managedObjectContext]];
+            NSPredicate *resultPredicate = [NSPredicate
+                                            predicateWithFormat:@"self.location.formattedAddress contains[cd] %@ || self.stop.formattedAddress contains[cd] %@",
+                                            rawAddress,rawAddress];
+            [fetchStationListElement setPredicate:resultPredicate];
+            
             NSArray * arrayStationListElement = [managedObjectContext executeFetchRequest:fetchStationListElement error:nil];
-                for(StationListElement *listElement in arrayStationListElement){
+            if([arrayStationListElement count] > 0){
+                if([arrayStationListElement count] == 1){
+                    StationListElement *listElement = [arrayStationListElement objectAtIndex:0];
                     if(listElement.location){
-                        NSString *shortAddress = [listElement.location.shortFormattedAddress lowercaseString];
-                        if([rawAddress isEqualToString:shortAddress]){
-                            [self markAndUpdateSelectedLocation:listElement.location];
-                            return;
-                        }
+                        [toFromVC setEditMode:NO_EDIT];
+                        [self markAndUpdateSelectedLocation:listElement.location];
+                        return;
                     }
                     else if(listElement.stop){
-                        NSString *shortAddress = [listElement.stop.formattedAddress lowercaseString];
-                        if([rawAddress isEqualToString:shortAddress]){
-                           Location *loc = [[nc_AppDelegate sharedInstance].stations createNewLocationObjectFromGtfsStop:listElement.stop :listElement];
-                            saveContext(managedObjectContext);
-                            [self markAndUpdateSelectedLocation:loc];
-                            return;
-                        }
+                        Location *loc = [[nc_AppDelegate sharedInstance].stations createNewLocationObjectFromGtfsStop:listElement.stop :listElement];
+                        saveContext(managedObjectContext);
+                        [toFromVC setEditMode:NO_EDIT];
+                        [self markAndUpdateSelectedLocation:loc];
+                        return;
                     }
                 }
+                [toFromVC callLocationPickerFor:self
+                                       locationList:arrayStationListElement
+                                             isFrom:isFrom
+                                   isGeocodeResults:NO];
+                return;
 
+            }
             @try {
                 GeocodeRequestParameters* parameters = [[GeocodeRequestParameters alloc] init];
                 parameters.rawAddress = rawAddress;
@@ -559,7 +569,7 @@ NSString *strStreet2 = @"street ";
     
     // Save db context with the new location object
     saveContext(managedObjectContext);
-    
+    [toFromVC setEditMode:NO_EDIT];
     // Mark and update the tableview and ToFromViewController
     [self markAndUpdateSelectedLocation:location];
 }

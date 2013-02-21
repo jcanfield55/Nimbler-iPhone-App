@@ -86,6 +86,11 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 }
 
 - (void) changeMainTableSettings{
+    UIView *bgView = [self.view viewWithTag:1000];
+    if(bgView){
+        [bgView removeFromSuperview];
+        bgView = nil;
+    }
     CGRect rect0 = [mainTable frame];
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
         rect0.size.height = ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5;
@@ -149,12 +154,12 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     UIButton *btn = (UIButton *)sender;
     if([[RouteExcludeSetting routeExcludeSetting] settingForKey:btn.titleLabel.text] == SETTING_EXCLUDE_ROUTE){
         [[RouteExcludeSetting routeExcludeSetting] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:btn.titleLabel.text];
-        [btn setBackgroundImage:[UIImage imageNamed:@"img_on.png"] forState:UIControlStateNormal];
-        [btn setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal]; 
+        [btn setBackgroundImage:[UIImage imageNamed:@"pressed1.png"] forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
     }
     else{
         [[RouteExcludeSetting routeExcludeSetting] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:btn.titleLabel.text];
-        [btn setBackgroundImage:[UIImage imageNamed:@"img_off.png"] forState:UIControlStateNormal];
+        [btn setBackgroundImage:nil forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor GRAY_FONT_COLOR] forState:UIControlStateNormal];
     }
     // Update sorted itineraries with new exclusions
@@ -520,14 +525,20 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 
 - (void) createViewWithButtons:(int)height{
     UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, height)];
+    [bgView setTag:1000];
     [bgView setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:bgView];
+    
+    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, height)];
+    [imgView setImage:[UIImage imageNamed:@"img_travel.png"]];
+    [bgView addSubview:imgView];
     
     UILabel *lblChoose = [[UILabel alloc] initWithFrame:CGRectMake(0, 5, 80, 25)];
     [lblChoose setText:@"Travel By:"];
     [lblChoose setBackgroundColor:[UIColor clearColor]];
-    [lblChoose setFont:[UIFont fontWithName:@"Helvetica" size:13.0]];
+    [lblChoose setFont:[UIFont fontWithName:@"Helvetica-Bold" size:13.0]];
     [lblChoose setTextAlignment:UITextAlignmentCenter];
+    [lblChoose setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
     [bgView addSubview:lblChoose];
     
     int xPos = 80;
@@ -548,11 +559,11 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         [btnAgency setTitle:routeExcludeSetting.key forState:UIControlStateNormal];
         [btnAgency.titleLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:12.0]];
         if([[RouteExcludeSetting routeExcludeSetting] settingForKey:routeExcludeSetting.key] == SETTING_EXCLUDE_ROUTE){
-            [btnAgency setBackgroundImage:[UIImage imageNamed:@"img_off.png"] forState:UIControlStateNormal];
+            [btnAgency setBackgroundImage:nil forState:UIControlStateNormal];
             [btnAgency setTitleColor:[UIColor GRAY_FONT_COLOR] forState:UIControlStateNormal];
         }
         else{
-            [btnAgency setBackgroundImage:[UIImage imageNamed:@"img_on.png"] forState:UIControlStateNormal];
+            [btnAgency setBackgroundImage:[UIImage imageNamed:@"pressed1.png"] forState:UIControlStateNormal];
             [btnAgency setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
         }
         [btnAgency addTarget:self action:@selector(toggleExcludeButton:) forControlEvents:UIControlEventTouchUpInside];
@@ -569,7 +580,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         tempButtonCounts = 0;
     int nAdditionalRows = tempButtonCounts/2 + tempButtonCounts%2;
     int totalRows = nAdditionalRows + 1;
-    int buffer = totalRows * 10;
+    int buffer = 0;
+    if(totalRows > 0)
+      buffer = (totalRows+1) * 5;
     return totalRows * 25 + buffer;
 }
 @end

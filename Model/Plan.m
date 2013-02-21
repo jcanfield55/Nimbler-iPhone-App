@@ -46,7 +46,6 @@
 + (RKManagedObjectMapping *)objectMappingforPlanner:(APIType)apiType
 {
     // Create empty ObjectMapping to fill and return
-    
     RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[Plan class]];
     RKManagedObjectMapping* planPlaceMapping = [PlanPlace objectMappingForApi:apiType];
     RKManagedObjectMapping* itineraryMapping = [ItineraryFromOTP  objectMappingForApi:apiType];
