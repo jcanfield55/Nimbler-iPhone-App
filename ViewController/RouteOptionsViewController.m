@@ -17,14 +17,13 @@
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "Itinerary.h"
 #import "RouteExcludeSetting.h"
+#import "PlanStore.h"
 
 #define IDENTIFIER_CELL         @"UIRouteOptionsViewCell"
 
 @interface RouteOptionsViewController()
 {
     // Variables for internal use
-    
-    RouteDetailsViewController* routeDetailsVC;
 }
 
 // Attributed strings are only supported on iOS6 or later, so do not call this method on < iOS6
@@ -39,8 +38,8 @@
 @synthesize isReloadRealData;
 @synthesize btnGoToNimbler;
 @synthesize planRequestParameters;
-
-@synthesize button1b, button1c, button1d, button2a;
+@synthesize routeDetailsVC;
+@synthesize planStore;
 
 Itinerary * itinerary;
 NSString *itinararyId;
@@ -73,7 +72,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     
     // Enforce height of main table
     mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
-    //[self changeMainTableSettings];
+    [self changeMainTableSettings];
     [self setFBParameterForPlan];
 }
 
@@ -146,43 +145,29 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     [[self navigationController] popViewControllerAnimated:NO];
 }
 
-// TODO -- Replace this all with real code -- this is just a test responder to check how the UI works on an actual phone
-- (IBAction)excludeButtonPressed:(id)sender forEvent:(UIEvent *)event
-{
-    NSArray* buttonArray = [NSArray arrayWithObjects:button1b, button1c, button1d,
-                            button2a, nil];
-    UIButton* selectedButton = nil;
-    for (UIButton* button in buttonArray) {
-        if (button == sender) {
-            selectedButton = button;
-        }
-    }
-    if (!selectedButton) {
-        NIMLOG_ERR1(@"excludeButtonPressed -> no matching button found");
-        return;
-    }
-    UILabel* buttonLabel = [selectedButton titleLabel];
-    if ([buttonLabel.text isEqualToString:@"Exclude"]) {
-        [selectedButton setTitle:@"Include" forState:UIControlStateNormal];
-    } else {
-        [selectedButton setTitle:@"Exclude" forState:UIControlStateNormal];
-    }
-}
-
-
-// TODO:- Need to save Nsdictionary instead of Nsarray.
--(void) toggleButton:(id)sender{
+-(void) toggleExcludeButton:(id)sender{
     UIButton *btn = (UIButton *)sender;
     if([[RouteExcludeSetting routeExcludeSetting] settingForKey:btn.titleLabel.text] == SETTING_EXCLUDE_ROUTE){
         [[RouteExcludeSetting routeExcludeSetting] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:btn.titleLabel.text];
         [btn setBackgroundImage:[UIImage imageNamed:@"img_on.png"] forState:UIControlStateNormal];
-        [btn setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal]; 
     }
     else{
         [[RouteExcludeSetting routeExcludeSetting] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:btn.titleLabel.text];
         [btn setBackgroundImage:[UIImage imageNamed:@"img_off.png"] forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor GRAY_FONT_COLOR] forState:UIControlStateNormal];
     }
+    // Update sorted itineraries with new exclusions
+    if (!planRequestParameters) {
+        logError(@"RouteOptionsViewController -> toggleExcludeButton",
+                 @"planRequestParameters = nil, skipping excludeButton updates");
+        return;
+    }
+    [plan prepareSortedItinerariesWithMatchesForDate:planRequestParameters.originalTripDate
+                                      departOrArrive:planRequestParameters.departOrArrive
+                                 routeExcludeSetting:[RouteExcludeSetting routeExcludeSetting]
+                                            callBack:nil];
+    [mainTable reloadData];
 }
 
 
@@ -570,7 +555,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
             [btnAgency setBackgroundImage:[UIImage imageNamed:@"img_on.png"] forState:UIControlStateNormal];
             [btnAgency setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
         }
-        [btnAgency addTarget:self action:@selector(toggleButton:) forControlEvents:UIControlEventTouchUpInside];
+        [btnAgency addTarget:self action:@selector(toggleExcludeButton:) forControlEvents:UIControlEventTouchUpInside];
         [bgView addSubview:btnAgency];
     }
 }

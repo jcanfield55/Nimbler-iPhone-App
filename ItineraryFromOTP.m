@@ -19,7 +19,7 @@
 {
     // Create empty ObjectMapping to fill and return
     
-    RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[Itinerary class]];
+    RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[ItineraryFromOTP class]];
     RKManagedObjectMapping* legMapping = [LegFromOTP objectMappingForApi:apiType];
     
     // Make the mappings

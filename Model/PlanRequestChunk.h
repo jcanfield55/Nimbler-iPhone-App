@@ -17,6 +17,9 @@
 
 @interface PlanRequestChunk : NSManagedObject
 
+// Source of the RequestChunk itineraries.  Possible values:
+// #define OTP_ITINERARY  0
+// #define GTFS_ITINERARY 1
 @property (nonatomic) NSNumber *type;
 
 // Set only if type = REQUEST_CHUNK_TYPE_GTFS.  Contains the itinerary pattern used to generate the GTFS itinerary in this request chunk

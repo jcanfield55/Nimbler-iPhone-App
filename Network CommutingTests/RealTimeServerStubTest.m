@@ -12,6 +12,7 @@
 #import "Constants.h"
 #import "Logging.h"
 #import "PlanRequestParameters.h"
+#import "RouteOptionsViewController.h"
 #import "RealTimeManager.h"
 #import "PlanStore.h"
 #import "nc_AppDelegate.h"
@@ -398,7 +399,7 @@
     parameters.thisRequestTripDate = tripDate;
     parameters.departOrArrive = DEPART;
     parameters.maxWalkDistance = (int)([userPreferance walkDistance]*1609.544);
-    parameters.planDestination = PLAN_DESTINATION_TO_FROM_VC;
+    parameters.planDestination = toFromViewController;
     
     parameters.formattedAddressTO = [toLocation formattedAddress];
     parameters.formattedAddressFROM = [fromLocation formattedAddress];
@@ -465,15 +466,14 @@
     //                                             Plan:plan
     //                                          Context:managedObjectContext];
     [plan prepareSortedItinerariesWithMatchesForDate:tripDate departOrArrive:DEPART];
-    [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK];
-
+    [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:parameters];
      
      Leg* firstGeneratedLeg = [[[[plan sortedItineraries] objectAtIndex:0] sortedLegs] objectAtIndex:0];
     STAssertNotNil([firstGeneratedLeg startTime], @"First leg start-time should not be nil");
     // View in the ViewController (uncomment when above problem resolved)
     // TODO:- Need to solve coredata fault.
     [[NSUserDefaults standardUserDefaults] setObject:@"data.json" forKey:DEVICE_TOKEN];
-    [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK];
+    [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:parameters];
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:2000.0]];
     
     [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
@@ -496,7 +496,7 @@
             STAssertTrue([fifthLeg.arrivalFlag intValue] == EARLY, @"");
         }
     }
-    [planStore.routeOptionsVC reloadData:plan];
+    [toFromViewController.routeOptionsVC reloadData:plan];
     [[RealTimeManager realTimeManager].routeDetailVC ReloadLegWithNewData];
     
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:5.0]];

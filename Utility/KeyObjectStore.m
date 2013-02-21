@@ -9,6 +9,7 @@
 // General Purpose CoreData storage for objects that meet NSCoding protocol
 //
 #import "KeyObjectStore.h"
+#import "UtilityFunctions.h"
 
 @interface KeyObjectStore()
 
@@ -89,5 +90,11 @@ static KeyObjectStore* keyObjectStoreSingleton;
         [managedObjectContext deleteObject:pair];
     }
 }
+// Saves to Core Data permanent storage using ManagedObjectContext from initialization
+- (void)saveToPermanentStore
+{
+    saveContext(managedObjectContext);
+}
+
 
 @end

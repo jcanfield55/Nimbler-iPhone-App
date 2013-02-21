@@ -23,5 +23,6 @@
 - (void)setObject:(id)obj forKey:(NSString *)key;
 - (id)objectForKey:(NSString *)key;
 - (void)removeKeyObjectForKey:(NSString *)key;
+- (void)saveToPermanentStore;   // Saves to Core Data permanent storage using ManagedObjectContext from initialization
 
 @end

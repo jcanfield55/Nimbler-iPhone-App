@@ -578,7 +578,7 @@ NSString *returnShortAgencyName(NSString *agencyName){
     else if([agencyName isEqualToString:SFMUNI_AGENCY_NAME])
         return @"Muni";
     else if([agencyName isEqualToString:ACTRANSIT_AGENCY_NAME])
-        return @"Actransit";
+        return ACTRANSIT_BUTTON;
     else
         return agencyName;
 }

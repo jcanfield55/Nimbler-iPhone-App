@@ -14,8 +14,6 @@
 #import <RestKit/RestKit.h>
 #import <RestKit/CoreData.h>
 #import "Plan.h"
-#import "RouteOptionsViewController.h"
-#import "ToFromViewController.h"
 #import "PlanRequestParameters.h"
 
 
@@ -24,8 +22,6 @@
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (strong, nonatomic) RKObjectManager *rkPlanMgr;  // RestKit object manager for trip planning
-@property (unsafe_unretained, nonatomic) ToFromViewController *toFromVC;
-@property (unsafe_unretained, nonatomic) RouteOptionsViewController *routeOptionsVC;
 
 // Designated initializer
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkPlanMgr:(RKObjectManager *)rkP;

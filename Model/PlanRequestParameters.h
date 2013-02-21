@@ -11,10 +11,14 @@
 #import <Foundation/Foundation.h>
 #import "Location.h"
 
-typedef enum {
-    PLAN_DESTINATION_TO_FROM_VC,
-    PLAN_DESTINATION_ROUTE_OPTIONS_VC
-} PlanDestination;
+@class PlanRequestParameters;
+@class Plan;
+
+@protocol NewPlanAvailableDelegate
+@required
+// Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
+-(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status RequestParameter:(PlanRequestParameters *)requestParameter;
+@end
 
 @interface PlanRequestParameters : NSObject
 
@@ -37,9 +41,15 @@ typedef enum {
 @property (nonatomic) DepartOrArrive departOrArrive;
 @property (nonatomic) int maxWalkDistance;
 @property (nonatomic) int serverCallsSoFar; // number of calls to the server that have been made for this request
-@property (nonatomic) PlanDestination planDestination;
+@property (nonatomic) id<NewPlanAvailableDelegate> planDestination;
 
 // Returns a new PlanRequestParameters object containing the same parameters as parameters0
 + (id)copyOfPlanRequestParameters:(PlanRequestParameters *)parameters0;
+
+// Returns true if the planDestination goes to a ToFromViewController class
+-(BOOL)isDestinationToFromVC;
+
+// Returns true if the planDestination goes to a RouteOptionsViewController class
+-(BOOL)isDestinationRouteOptionsVC;
 
 @end

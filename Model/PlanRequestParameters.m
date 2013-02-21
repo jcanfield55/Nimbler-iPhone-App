@@ -8,7 +8,8 @@
 
 
 #import "PlanRequestParameters.h"
-
+#import "ToFromViewController.h"
+#import "RouteOptionsViewController.h"
 
 @implementation PlanRequestParameters
 
@@ -61,5 +62,18 @@
     newParameters.rawAddressTO = parameters0.rawAddressTO;
     
     return newParameters;
+}
+
+// Returns true if the planDestination goes to a ToFromViewController class
+-(BOOL)isDestinationToFromVC
+{
+    return [self isKindOfClass:[ToFromViewController class]];
+}
+
+// Returns true if the planDestination goes to a RouteOptionsViewController class
+-(BOOL)isDestinationRouteOptionsVC
+{
+    return [self isKindOfClass:[RouteOptionsViewController class]];
+
 }
 @end

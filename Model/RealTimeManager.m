@@ -129,7 +129,7 @@ static RealTimeManager* realTimeManager;
                     itinerary.sortedLegs = nil;
                 }
                 [self hideItineraryIfNeeded:[plan sortedItineraries]];
-                [[nc_AppDelegate sharedInstance].planStore.routeOptionsVC reloadData:plan];
+                [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC reloadData:plan];
                 [routeDetailVC ReloadLegWithNewData];
             }
         }

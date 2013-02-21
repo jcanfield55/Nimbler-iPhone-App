@@ -259,8 +259,8 @@
 #define PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW (6*60*60) /* Show at most 6 hours of results */
 #define PLAN_MAX_SERVER_CALLS_PER_REQUEST (3) /* Maximum calls to the server for a single user request */
 #define PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS (60)
-#define PLAN_ROUTE_EXCLUDE @"Exclude" // Value for routeIncludeExcludeDictionary indicating to exclude a route
-#define PLAN_ROUTE_INCLUDE @"Include" // Value for routeIncludeExcludeDictionary indicating to includ a route
+#define PLAN_ROUTE_EXCLUDE @"Exclude" // Value for routeExcludeSetting indicating to exclude a route
+#define PLAN_ROUTE_INCLUDE @"Include" // Value for routeExcludeSetting indicating to includ a route
 
 // gtfsParser
 #define MIN_TRANSFER_TIME (3*60) // Minimum # of seconds for transfers inserted when creating itineraries
@@ -471,5 +471,5 @@
 #define CALTRAIN_BUTTON @"Caltrain"
 #define BART_BUTTON @"Bart"
 #define MUNI_BUTTON @"Muni"
-#define ACTRANSIT_BUTTON @"Actransit"
+#define ACTRANSIT_BUTTON @"AC Transit"
 

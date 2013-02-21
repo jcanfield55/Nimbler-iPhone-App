@@ -65,22 +65,21 @@ static RouteExcludeSetting *routeExcludeSetting;
 // Returns the main dictionary storing include / exclude settings
 -(NSMutableDictionary *)excludeDictionary
 {
+    if (!excludeDictionaryInternal) {
+        excludeDictionaryInternal = [[KeyObjectStore keyObjectStore] objectForKey:EXCLUDE_SETTINGS_DICTIONARY];
         if (!excludeDictionaryInternal) {
-               excludeDictionaryInternal = [[KeyObjectStore keyObjectStore] objectForKey:EXCLUDE_SETTINGS_DICTIONARY];
-                if (!excludeDictionaryInternal) {
-                        excludeDictionaryInternal = [[NSMutableDictionary alloc] initWithCapacity:20];
-                    [excludeDictionaryInternal setObject:SETTING_STRING_EXCLUDE forKey:BIKE_MODE];
-                }
-               [[KeyObjectStore keyObjectStore] setObject:[self excludeDictionary] forKey:EXCLUDE_SETTINGS_DICTIONARY];
+            excludeDictionaryInternal = [[NSMutableDictionary alloc] initWithCapacity:20];
+            [excludeDictionaryInternal setObject:SETTING_STRING_EXCLUDE forKey:BIKE_MODE];
         }
-       return excludeDictionaryInternal;
+        [[KeyObjectStore keyObjectStore] setObject:[self excludeDictionary] forKey:EXCLUDE_SETTINGS_DICTIONARY];
+        [[KeyObjectStore keyObjectStore] saveToPermanentStore];
+    }
+    return excludeDictionaryInternal;
 }
 
 // Returns setting for a particular key.  If key is not in dictionary, returns INCLUDE
--(IncludeExcludeSetting)settingForKey:(NSString *)key {
-        NSString* settingString = [[self excludeDictionary] objectForKey:key];
-    NSLog(@"%@",key);
-    NSLog(@"%@",settingString);
+-(IncludeExcludeSetting)settingForKey:(NSString *)key0 {
+        NSString* settingString = [[self excludeDictionary] objectForKey:key0];
         if (settingString && [settingString isEqualToString:SETTING_STRING_EXCLUDE]) {
                return SETTING_EXCLUDE_ROUTE;
         } else {
@@ -90,13 +89,14 @@ static RouteExcludeSetting *routeExcludeSetting;
 
 
 // Changes setting associated with a key
--(void)changeSettingTo:(IncludeExcludeSetting)value forKey:(NSString *)key
+-(void)changeSettingTo:(IncludeExcludeSetting)value forKey:(NSString *)key0
 {
-       if (key) {
-           NSString* setting = ((value == SETTING_EXCLUDE_ROUTE) ? SETTING_STRING_EXCLUDE : SETTING_STRING_INCLUDE);
-           [[self excludeDictionary] setObject:setting forKey:key];
+       if (key0) {
+           NSString* setting0 = ((value == SETTING_EXCLUDE_ROUTE) ? SETTING_STRING_EXCLUDE : SETTING_STRING_INCLUDE);
+           [[self excludeDictionary] setObject:setting0 forKey:key0];
            // Store in database
            [[KeyObjectStore keyObjectStore] setObject:[self excludeDictionary] forKey:EXCLUDE_SETTINGS_DICTIONARY];
+           [[KeyObjectStore keyObjectStore] saveToPermanentStore];
        }
 }
 
@@ -105,56 +105,59 @@ static RouteExcludeSetting *routeExcludeSetting;
 // Returned array containing RouteExcludeSetting objects
 // Array is ordered in the sequence options should be presented to user
 -(NSArray *)excludeSettingsForPlan:(Plan *)plan{
-        NSMutableArray* returnArray = [[NSMutableArray alloc] initWithCapacity:10];
-        for (Itinerary* itin in [plan itineraries]) {
-                for (Leg* leg in [itin legs]) {
-                    RouteExcludeSetting* routeExclSetting = [[RouteExcludeSetting alloc] init];
-                        if (leg.isScheduled && returnShortAgencyName(leg.agencyName)) {       // TODO  should we compare agencyID or agencyName?
-                                NSString* handling = [[self agencyIDHandlingDictionary] objectForKey:returnShortAgencyName(leg.agencyName)];
-                                if (handling) {
-                                       if ([handling isEqualToString:BY_AGENCY]) {
-                                                routeExclSetting.key = returnShortAgencyName(leg.agencyName);
+    NSMutableArray* returnArray = [[NSMutableArray alloc] initWithCapacity:10];
+    for (Itinerary* itin in [plan itineraries]) {
+        for (Leg* leg in [itin legs]) {
+            RouteExcludeSetting* routeExclSetting = [[RouteExcludeSetting alloc] init];
+            if (leg.isScheduled && returnShortAgencyName(leg.agencyName)) {       // TODO  should we compare agencyID or agencyName?
+                NSString* handling = [[self agencyIDHandlingDictionary] objectForKey:returnShortAgencyName(leg.agencyName)];
+                if (handling) {
+                    if ([handling isEqualToString:BY_AGENCY]) {
+                        routeExclSetting.key = returnShortAgencyName(leg.agencyName);
                         
-                                            } else {  // BY_RAIL_BUS
-                                                   NSString *railOrBus = (leg.isBus ? @"Bus" : @"Rail");
-                                                   routeExclSetting.key = [NSString stringWithFormat:@"%@ %@", returnShortAgencyName(leg.agencyName), railOrBus];
-                                                }
-                                        routeExclSetting.setting = [self settingForKey:routeExclSetting.key];
-                                    [returnArray addObject:routeExclSetting];
-                                   } // else agency not in handling dictionary, do not generate button
-                           }  // else no agency name, do not generate button
-                   }
-            }
-    
-       // Add bike button
-       RouteExcludeSetting* routeExclSetting = [[RouteExcludeSetting alloc] init];
-       routeExclSetting.key = BIKE_MODE;
-       routeExclSetting.setting = [self settingForKey:BIKE_MODE];
-       [returnArray addObject:routeExclSetting];
-        return [self returnUniqueRouteExcludeSetting:returnArray];
+                    } else {  // BY_RAIL_BUS
+                        NSString *railOrBus = (leg.isBus ? @"Bus" : @"Rail");
+                        if ([leg.agencyName isEqualToString:SFMUNI_AGENCY_NAME]) {
+                            railOrBus = (leg.isBus ? @"Bus" : @"Tram");
+                        }
+                        routeExclSetting.key = [NSString stringWithFormat:@"%@ %@", returnShortAgencyName(leg.agencyName), railOrBus];
+                    }
+                    routeExclSetting.setting = [self settingForKey:routeExclSetting.key];
+                    [returnArray addObject:routeExclSetting];
+                } // else agency not in handling dictionary, do not generate button
+            }  // else no agency name, do not generate button
+        }
     }
+    
+    // Add bike button
+    RouteExcludeSetting* routeExclSetting = [[RouteExcludeSetting alloc] init];
+    routeExclSetting.key = BIKE_MODE;
+    routeExclSetting.setting = [self settingForKey:BIKE_MODE];
+    [returnArray addObject:routeExclSetting];
+    return [self returnUniqueRouteExcludeSetting:returnArray];
+}
 
 // Returns true if itin should be included based on the RouteExclude settings
 -(BOOL)isItineraryIncluded:(Itinerary *)itin
 {
        for (Leg* leg in [itin legs]) {
-           NSString* key = nil;
+           NSString* legKey = nil;
            if (leg.isWalk && [self settingForKey:BIKE_MODE]==SETTING_INCLUDE_ROUTE) {
                return false; // exclude all walk itineraries if we are in bike mode
            }
            else if (leg.isBike && [self settingForKey:BIKE_MODE]==SETTING_EXCLUDE_ROUTE) { // TODO double-check isBike method
                return false; // Exclude bike itinerary if BIKE_MODE excluded
            }
-           if (returnShortAgencyName(leg.agencyName)) {       // TODO  should we compare agencyID or agencyName?
+           else if (returnShortAgencyName(leg.agencyName)) {       // TODO  should we compare agencyID or agencyName?
                NSString* handling = [[self agencyIDHandlingDictionary] objectForKey:returnShortAgencyName(leg.agencyName)];
                if (handling) {
                    if ([handling isEqualToString:BY_AGENCY]) {
-                       key = returnShortAgencyName(leg.agencyName);
+                       legKey = returnShortAgencyName(leg.agencyName);
                    } else {  // BY_RAIL_BUS
                        NSString *railOrBus = (leg.isBus ? @"Bus" : @"Rail");
-                       key = [NSString stringWithFormat:@"%@ %@", returnShortAgencyName(leg.agencyName), railOrBus];
+                       legKey = [NSString stringWithFormat:@"%@ %@", returnShortAgencyName(leg.agencyName), railOrBus];
                    }
-                   if ([self settingForKey:key] == SETTING_EXCLUDE_ROUTE) {
+                   if ([self settingForKey:legKey] == SETTING_EXCLUDE_ROUTE) {
                        return false;
                    }
                } // else agency not in handling dictionary, count as include

@@ -785,8 +785,7 @@ UIImage *imageDetailDisclosure;
     if (!routeOptionsVC) {
         routeOptionsVC = [[RouteOptionsViewController alloc] initWithNibName:nil bundle:nil];
     }
-    [planStore setToFromVC:self];
-    [planStore setRouteOptionsVC:routeOptionsVC];
+    [routeOptionsVC setPlanStore:planStore0];
 }
 
 #pragma mark Loacation methods
@@ -1099,6 +1098,15 @@ UIImage *imageDetailDisclosure;
 -(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status RequestParameter:(PlanRequestParameters *)requestParameter
 {
     @try {
+        // If we already on routeOptionsVC, redirect this callback there instead
+        UIViewController *currentVC = self.navigationController.visibleViewController;
+        if (currentVC == routeOptionsVC || currentVC == routeOptionsVC.routeDetailsVC) {
+            [routeOptionsVC newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:requestParameter];
+            return;
+        }
+        
+        // else, we are not on routeOptionsVC, so handle here
+        
         [self stopActivityIndicator];
         durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime;
         NIMLOG_OBJECT1(@"Plan =%@",newPlan);
@@ -1294,7 +1302,7 @@ UIImage *imageDetailDisclosure;
             parameters.thisRequestTripDate = tripDate;
             parameters.departOrArrive = departOrArrive;
             parameters.maxWalkDistance = maxDistance;
-            parameters.planDestination = PLAN_DESTINATION_TO_FROM_VC;
+            parameters.planDestination = self;
             
             parameters.formattedAddressTO = [toLocation formattedAddress];
             parameters.formattedAddressFROM = [fromLocation formattedAddress];

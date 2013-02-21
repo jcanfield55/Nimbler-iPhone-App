@@ -27,7 +27,7 @@ typedef enum {
 } ToFromEditMode;
 
 
-@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, LocationsGeocodeResultsDelegate, RKRequestDelegate,UIActionSheetDelegate,UIAlertViewDelegate>
+@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, LocationsGeocodeResultsDelegate, RKRequestDelegate, NewPlanAvailableDelegate, UIActionSheetDelegate,UIAlertViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView* mainTable;  // grouped table for main page layout
 @property (strong, nonatomic) UITableView *fromTable;  // from table embedded in mainTable
@@ -84,9 +84,6 @@ typedef enum {
 
 -(BOOL)alertUsetForLocationService;
 -(void)setFBParameterForGeneral;
-
-// Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
--(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status RequestParameter:(PlanRequestParameters *)requestParameter;
 
 -(void)doSwapLocation;
 - (void) hideTabBar;

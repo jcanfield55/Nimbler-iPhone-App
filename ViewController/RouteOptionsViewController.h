@@ -10,34 +10,29 @@
 #import "Plan.h"
 #import "enums.h"
 #import "RouteDetailsViewController.h"
+#import "PlanStore.h"
 
-@interface RouteOptionsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKRequestDelegate>{
-    Plan *plan;
-}
+@interface RouteOptionsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKRequestDelegate,
+NewPlanAvailableDelegate>
 
 @property(nonatomic, strong) IBOutlet UITableView* mainTable; // Table listing route options
 @property(nonatomic, strong) Plan *plan;
 @property(nonatomic, strong) UIButton *btnGoToNimbler;
 @property( readwrite) BOOL isReloadRealData;
-@property(nonatomic, strong) IBOutlet UIButton* button1b;
-@property(nonatomic, strong) IBOutlet UIButton* button1c;
-@property(nonatomic, strong) IBOutlet UIButton* button1d;
-@property(nonatomic, strong) IBOutlet UIButton* button2a;
 @property (nonatomic, strong) PlanRequestParameters *planRequestParameters;
+@property(nonatomic, strong) RouteDetailsViewController* routeDetailsVC;
+@property(nonatomic, strong) PlanStore* planStore;
 
-- (IBAction)excludeButtonPressed:(id)sender forEvent:(UIEvent *)event;
 
 -(void)hideUnUsedTableViewCell;
 -(void)setFBParameterForPlan;
 -(void)popOutToNimbler;
 
-// Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
--(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status RequestParameter:(PlanRequestParameters *)requestParameter;
-
 - (void) reloadData:(Plan *)newPlan;
--(void) toggleButton:(id)sender;
+-(void) toggleExcludeButton:(id)sender;
 
 - (int) calculateTotalHeightOfButtonView;
 - (void) createViewWithButtons:(int)height;
 - (void) changeMainTableSettings;
+
 @end

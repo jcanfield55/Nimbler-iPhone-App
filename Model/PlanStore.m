@@ -16,6 +16,7 @@
 #import "GtfsStopTimes.h"
 #import "GtfsStop.h"
 #import "RealTimeManager.h"
+#import "RouteExcludeSetting.h"
 
 @interface PlanStore()
 {
@@ -37,8 +38,6 @@
 @synthesize managedObjectModel;
 @synthesize managedObjectContext;
 @synthesize rkPlanMgr;
-@synthesize toFromVC;
-@synthesize routeOptionsVC;
 
 // Designated initializer
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkPlanMgr:(RKObjectManager *)rkP
@@ -71,8 +70,19 @@
             Plan* matchingPlan = [matchingPlanArray objectAtIndex:0]; // Take the first matching plan
             if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate]
                                                           departOrArrive:[parameters departOrArrive]
-                                           routeIncludeExcludeDictionary:nil
+                                                     routeExcludeSetting:[RouteExcludeSetting routeExcludeSetting]
                                                                 callBack:self]) {
+                if (matchingPlan.sortedItineraries.count == 0) {
+                    // there are itineraries, but they were all excluded by the user
+                    // TODO: create permanent solution
+                    // Temporary solution:  ask for more itineraries a certain # of times
+                    logEvent(FLURRY_ROUTE_NOT_IN_CACHE,
+                             FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
+                             FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
+                             nil, nil, nil, nil);
+                    [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
+                }
+                
                 NIMLOG_EVENT1(@"Matches found in plan cache");
                 logEvent(FLURRY_ROUTE_FROM_CACHE,
                          FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
@@ -81,15 +91,16 @@
                 [[nc_AppDelegate sharedInstance].gtfsParser generateScheduledItinerariesFromPatternOfPlan:matchingPlan Context:nil tripDate:parameters.originalTripDate];
                 [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
                 PlanRequestStatus status = PLAN_STATUS_OK;
+                ToFromViewController* toFromVC = [[nc_AppDelegate sharedInstance] toFromViewController];
                 if(toFromVC.timerGettingRealDataByItinerary != nil){
                     [toFromVC.timerGettingRealDataByItinerary invalidate];
                     toFromVC.timerGettingRealDataByItinerary = nil;
                 }
                 matchingPlan.sortedItineraries = nil;
-                if (parameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC) {
-                    [routeOptionsVC newPlanAvailable:matchingPlan status:status RequestParameter:parameters];
+                if (parameters.isDestinationRouteOptionsVC) {
+                    [parameters.planDestination newPlanAvailable:matchingPlan status:status RequestParameter:parameters];
                 } else {
-                   [toFromVC newPlanAvailable:matchingPlan status:status RequestParameter:parameters];
+                   [parameters.planDestination newPlanAvailable:matchingPlan status:status RequestParameter:parameters];
                 }
                 return;
             }
@@ -234,6 +245,7 @@
                     logEvent(FLURRY_ROUTE_OTHER_ERROR,
                              FLURRY_RK_RESPONSE_ERROR, [tempResponseDictionary objectForKey:OTP_ERROR_STATUS],
                              nil, nil, nil, nil, nil, nil);
+                    ToFromViewController* toFromVC = [[nc_AppDelegate sharedInstance] toFromViewController];
                     [toFromVC.activityIndicator stopAnimating];
                     [toFromVC.view setUserInteractionEnabled:YES];
                 }
@@ -272,8 +284,8 @@
                     NIMLOG_EVENT1(@"Plan with just overnight itinerary deleted");
                     [managedObjectContext deleteObject:plan];
                     saveContext(managedObjectContext);
-                    if (planRequestParameters.planDestination == PLAN_DESTINATION_TO_FROM_VC) {
-                        [toFromVC newPlanAvailable:nil status:PLAN_NOT_AVAILABLE_THAT_TIME RequestParameter:planRequestParameters];
+                    if (planRequestParameters.isDestinationToFromVC) {
+                        [planRequestParameters.planDestination newPlanAvailable:nil status:PLAN_NOT_AVAILABLE_THAT_TIME RequestParameter:planRequestParameters];
                         logEvent(FLURRY_ROUTE_NOT_AVAILABLE_THAT_TIME,
                                  FLURRY_NEW_DATE, [NSString stringWithFormat:@"%@",[planRequestParameters thisRequestTripDate]],
                                  nil, nil, nil, nil, nil, nil);
@@ -289,20 +301,16 @@
                 // get Unique Itinerary from Plan.
                 if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate]
                                                       departOrArrive:[planRequestParameters departOrArrive]
-                                       routeIncludeExcludeDictionary:nil
+                                       routeExcludeSetting:[RouteExcludeSetting routeExcludeSetting]
                                                             callBack:self]) {
                     [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
                     
-                    // Call-back the appropriate RouteOptions VC with the new plan
-                    UIViewController *currentVC = toFromVC.navigationController.visibleViewController;
-                    if (planRequestParameters.planDestination == PLAN_DESTINATION_ROUTE_OPTIONS_VC || currentVC == routeOptionsVC) {
-                        [routeOptionsVC newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:planRequestParameters];
-                    } else {
-                        [toFromVC newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:planRequestParameters];
-                    }
+                    // Call-back the appropriate VC with the new plan
+                    [planRequestParameters.planDestination newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:planRequestParameters];
+
                 } else { // no matching sorted itineraries.  DE189 fix
-                    if (planRequestParameters.planDestination == PLAN_DESTINATION_TO_FROM_VC) {
-                        [toFromVC newPlanAvailable:nil status:PLAN_GENERIC_EXCEPTION RequestParameter:planRequestParameters];
+                    if (planRequestParameters.isDestinationToFromVC) {
+                        [planRequestParameters.planDestination newPlanAvailable:nil status:PLAN_GENERIC_EXCEPTION RequestParameter:planRequestParameters];
                         logEvent(FLURRY_ROUTE_NO_MATCHING_ITINERARIES, nil, nil, nil, nil, nil, nil, nil, nil);
                     } // else if routeOptions destination, do nothing
                 }
@@ -310,8 +318,8 @@
         }
     }
     @catch (NSException *exception) {
-        if (planRequestParameters && planRequestParameters.planDestination == PLAN_DESTINATION_TO_FROM_VC) {
-            [toFromVC newPlanAvailable:nil status:PLAN_GENERIC_EXCEPTION RequestParameter:planRequestParameters];
+        if (planRequestParameters && planRequestParameters.isDestinationToFromVC) {
+            [planRequestParameters.planDestination newPlanAvailable:nil status:PLAN_GENERIC_EXCEPTION RequestParameter:planRequestParameters];
             logException(@"PlanStore->objectLoader", @"Original request from ToFromVC", exception);
         } else {
             logException(@"PlanStore->objectLoader", @"Follow-up request to RouteOptionsVC", exception);
@@ -346,9 +354,9 @@
     if (!parameters) {
         NIMLOG_ERR1(@"RKObjectManager failure with no retrievable parameters.  Error: %@", error);
     } else {
-        if ([parameters planDestination] == PLAN_DESTINATION_TO_FROM_VC) {
+        if (parameters.isDestinationToFromVC) {
             NIMLOG_ERR1(@"Error received from RKObjectManager on first call by ToFromViewController: %@", error);
-            [toFromVC newPlanAvailable:nil status:status RequestParameter:parameters];
+            [parameters.planDestination newPlanAvailable:nil status:status RequestParameter:parameters];
         }
         else { // if target is RouteOptions, do not call routeOptions and do not alert user.  This was a backup request only
             NIMLOG_ERR1(@"Error received from RKObjectManager on subsequent call RouteOptionsViewController: %@", error);
@@ -382,7 +390,7 @@
     // Request sortedItineraries array with extremely large limits
     NSArray* testItinArray = [plan returnSortedItinerariesWithMatchesForDate:requestParams0.originalTripDate
                                                               departOrArrive:requestParams0.departOrArrive
-                                               routeIncludeExcludeDictionary:nil
+                                               routeExcludeSetting:[RouteExcludeSetting routeExcludeSetting]
                                                                     callBack:self
                                                     planMaxItinerariesToShow:1000
                                             planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY
@@ -392,12 +400,24 @@
         return; // return if there are no matching itineraries in the original request
     }
     PlanRequestParameters* params = [PlanRequestParameters copyOfPlanRequestParameters:requestParams0];
+    if (testItinArray.count == 0) { // there are itineraries, but all are excluded
+        // TODO: create permanent solution
+        // Temporary solution -- just look for itineraries one hour later...
+        params.thisRequestTripDate = [requestParams0.thisRequestTripDate dateByAddingTimeInterval:(60.0*60.0)];
+                                      
+        NIMLOG_EVENT1(@"Requesting additional plan with parameters: %@", params);
+        [self requestPlanFromOtpWithParameters:params];
+        return;
+    }
     NSDate* firstItinTimeOnly = [[testItinArray objectAtIndex:0] startTimeOnly];
     NSDate* lastItinTimeOnly = [[testItinArray lastObject] startTimeOnly];
     if ([testItinArray count] < PLAN_MAX_ITINERARIES_TO_SHOW &&
         [lastItinTimeOnly timeIntervalSinceDate:firstItinTimeOnly] < PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW) {
         // If we are below our max parameters
-        params.planDestination = PLAN_DESTINATION_ROUTE_OPTIONS_VC;
+        if (params.isDestinationToFromVC) {
+            // Reset destination to routeOptionsViewController if not there already
+            params.planDestination = [((ToFromViewController *) params.planDestination) routeOptionsVC];
+        }
         if (params.departOrArrive == DEPART) {
             params.thisRequestTripDate = addDateOnlyWithTime(dateOnlyFromDate(params.thisRequestTripDate),
                                                              [NSDate dateWithTimeInterval:PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS
@@ -560,7 +580,7 @@
 
 - (void)clearCache{
     @try {
-        Plan *plan = routeOptionsVC.plan;
+        Plan *plan = [[[[nc_AppDelegate sharedInstance] toFromViewController] routeOptionsVC] plan];
         NSString *strPlanID = [plan planId];
         
         NSError *error;
