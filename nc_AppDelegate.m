@@ -19,6 +19,7 @@
 #import "KeyObjectStore.h"
 #import "RealTimeManager.h"
 #import "StationListElement.h"
+#import "RouteExcludeSetting.h"
 #if TEST_FLIGHT_ENABLED
 #import "TestFlightSDK1-1/TestFlight.h"
 #endif
@@ -182,13 +183,14 @@ FeedBackForm *fbView;
         locations = [[Locations alloc] initWithManagedObjectContext:[self managedObjectContext] rkGeoMgr:rkGeoMgr];
         [toFromViewController setLocations:locations];
         
-        // Initialize the planStore and KeyObjectStore
+        // Initialize the planStore, KeyObjectStore, Stations, ToFromViewController, RouteExcludeSettings, and toFromViewController
         planStore = [[PlanStore alloc] initWithManagedObjectContext:[self managedObjectContext]
                                                           rkPlanMgr:rkPlanMgr];
         stations =  [[Stations alloc] initWithManagedObjectContext:[self managedObjectContext]
                                                          rkPlanMgr:rkPlanMgr];
-        [toFromViewController setPlanStore:planStore];
         [KeyObjectStore setUpWithManagedObjectContext:[self managedObjectContext]];
+        [RouteExcludeSettings setManagedObjectContext:[self managedObjectContext]];
+        [toFromViewController setPlanStore:planStore];
         
         // Initialize The GtfsParser and TransitCalendar
         gtfsParser = [[GtfsParser alloc] initWithManagedObjectContext:self.managedObjectContext

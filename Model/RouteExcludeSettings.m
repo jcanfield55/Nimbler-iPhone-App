@@ -9,9 +9,8 @@
 // want to see or not see on their Route Options
 
 #import "RouteExcludeSettings.h"
-#import "KeyObjectStore.h"
 #import "Leg.h"
-// #import "RouteExcludeSetting.h"
+#import "RouteExcludeSetting.h"
 #import "UtilityFunctions.h"
 
 #define BY_AGENCY @"By Agency"
@@ -20,7 +19,6 @@
 #define SETTING_STRING_EXCLUDE @"Exclude"
 
 @interface RouteExcludeSettings() {
-    NSMutableDictionary *excludeDictionaryInternal;
     NSDictionary *agencyIDHandlingDictionaryInternal;
 }
 
@@ -32,14 +30,44 @@
 
 @implementation RouteExcludeSettings
 
-@synthesize key;
-@synthesize setting;
+@dynamic excludeDictionaryInternal;
+@dynamic isCurrentUserSetting;
 
-static RouteExcludeSettings *routeExcludeSettings;
+static RouteExcludeSettings *routeExcludeSettings=nil; // latest User Settings
+static NSManagedObjectContext *managedObjectContext=nil; // For storing and creating new objects
 
-+ (RouteExcludeSettings *)routeExcludeSettings{
+// Sets the ManagedObjectContext where RouteExcludeSettings are stored
++(void)setManagedObjectContext:(NSManagedObjectContext *)moc
+{
+    managedObjectContext = moc;
+}
+
+// Returns the RouteExcludeSettings that are the latest from the user.
+// Fetches from CoreData if needed
++ (RouteExcludeSettings *)latestUserSettings
+{
+    if (!managedObjectContext) {
+        logError(@"RouteExcludeSettings -> latestUserSettings", @"managedObjectContext = nil");
+        return nil;
+    }
     if(!routeExcludeSettings){
-        routeExcludeSettings = [[RouteExcludeSettings alloc] init];
+        NSManagedObjectModel *managedObjectModel = [[managedObjectContext persistentStoreCoordinator] managedObjectModel];
+        NSFetchRequest *request = [managedObjectModel fetchRequestTemplateForName:@"LatestRouteExcludeSettings"];
+        NSError *error;
+        NSArray *arraySettings = [managedObjectContext executeFetchRequest:request error:&error];
+        if (arraySettings && [arraySettings count]==1) { // Found it
+            routeExcludeSettings = [arraySettings objectAtIndex:0];
+        }
+        else if ([arraySettings count] > 1) {
+            logError(@"RouteExcludeSettings -> latestUserSettings",
+                     [NSString stringWithFormat:@"Unexpectedly latestUserSettings generating %d results",
+                      [arraySettings count]]);
+        }
+        else {  // no stored latest, so create a new one
+            routeExcludeSettings = [NSEntityDescription insertNewObjectForEntityForName:@"RouteExcludeSettings"
+                                                             inManagedObjectContext:managedObjectContext];
+            [routeExcludeSettings setIsCurrentUserSetting:[NSNumber numberWithBool:true]];
+        }
     }
     return routeExcludeSettings;
 }
@@ -70,39 +98,35 @@ static RouteExcludeSettings *routeExcludeSettings;
 // Returns the main dictionary storing include / exclude settings
 -(NSMutableDictionary *)excludeDictionary
 {
-    if (!excludeDictionaryInternal) {
-        excludeDictionaryInternal = [[KeyObjectStore keyObjectStore] objectForKey:EXCLUDE_SETTINGS_DICTIONARY];
-        if (!excludeDictionaryInternal) {
-            excludeDictionaryInternal = [[NSMutableDictionary alloc] initWithCapacity:20];
-            [excludeDictionaryInternal setObject:SETTING_STRING_EXCLUDE forKey:BIKE_MODE];
-        }
-        [[KeyObjectStore keyObjectStore] setObject:[self excludeDictionary] forKey:EXCLUDE_SETTINGS_DICTIONARY];
-        [[KeyObjectStore keyObjectStore] saveToPermanentStore];
+    if (!self.excludeDictionaryInternal) {
+        self.excludeDictionaryInternal = [[NSMutableDictionary alloc] initWithCapacity:20];
+        [self.excludeDictionaryInternal setObject:SETTING_STRING_EXCLUDE forKey:BIKE_MODE];
     }
-    return excludeDictionaryInternal;
+    return self.excludeDictionaryInternal;
 }
 
 // Returns setting for a particular key.  If key is not in dictionary, returns INCLUDE
 -(IncludeExcludeSetting)settingForKey:(NSString *)key0 {
-        NSString* settingString = [[self excludeDictionary] objectForKey:key0];
-        if (settingString && [settingString isEqualToString:SETTING_STRING_EXCLUDE]) {
-               return SETTING_EXCLUDE_ROUTE;
-        } else {
-                return SETTING_INCLUDE_ROUTE;  // if setting not in dictionary, default to "Include"
-        }
+    NSString* settingString = [[self excludeDictionary] objectForKey:key0];
+    if (settingString && [settingString isEqualToString:SETTING_STRING_EXCLUDE]) {
+        return SETTING_EXCLUDE_ROUTE;
+    } else {
+        return SETTING_INCLUDE_ROUTE;  // if setting not in dictionary, default to "Include"
+    }
 }
-
 
 // Changes setting associated with a key
 -(void)changeSettingTo:(IncludeExcludeSetting)value forKey:(NSString *)key0
 {
-       if (key0) {
-           NSString* setting0 = ((value == SETTING_EXCLUDE_ROUTE) ? SETTING_STRING_EXCLUDE : SETTING_STRING_INCLUDE);
-           [[self excludeDictionary] setObject:setting0 forKey:key0];
-           // Store in database
-           [[KeyObjectStore keyObjectStore] setObject:[self excludeDictionary] forKey:EXCLUDE_SETTINGS_DICTIONARY];
-           [[KeyObjectStore keyObjectStore] saveToPermanentStore];
-       }
+    if (key0) {
+        NSString* setting0 = ((value == SETTING_EXCLUDE_ROUTE) ? SETTING_STRING_EXCLUDE : SETTING_STRING_INCLUDE);
+        NSMutableDictionary* dictionary = [NSMutableDictionary dictionaryWithDictionary:[self excludeDictionary]];
+        [dictionary setObject:setting0 forKey:key0];
+        [self setExcludeDictionaryInternal:dictionary];  // Set it again so that Core Data will update it...
+        
+        // Store in database
+        saveContext(managedObjectContext);
+    }
 }
 
 
@@ -123,7 +147,7 @@ static RouteExcludeSettings *routeExcludeSettings;
     NSMutableArray* returnArray = [[NSMutableArray alloc] initWithCapacity:10];
     for (Itinerary* itin in relevantItineraries) {
         for (Leg* leg in [itin legs]) {
-            RouteExcludeSettings* routeExclSetting = [[RouteExcludeSettings alloc] init];
+            RouteExcludeSetting* routeExclSetting = [[RouteExcludeSetting alloc] init];
             if (leg.isScheduled && returnShortAgencyName(leg.agencyName)) {       // TODO  should we compare agencyID or agencyName?
                 NSString* handling = [[self agencyIDHandlingDictionary] objectForKey:returnShortAgencyName(leg.agencyName)];
                 if (handling) {
@@ -145,7 +169,7 @@ static RouteExcludeSettings *routeExcludeSettings;
     }
     
     // Add bike button
-    RouteExcludeSettings* routeExclSetting = [[RouteExcludeSettings alloc] init];
+    RouteExcludeSetting* routeExclSetting = [[RouteExcludeSetting alloc] init];
     routeExclSetting.key = BIKE_MODE;
     routeExclSetting.setting = [self settingForKey:BIKE_MODE];
     [returnArray addObject:routeExclSetting];
@@ -188,8 +212,8 @@ static RouteExcludeSettings *routeExcludeSettings;
     NSMutableArray *mutableArray = [[NSMutableArray alloc] initWithArray:array];
     for(int i=0;i<[mutableArray count];i++){
         for(int j=i+1;j<[mutableArray count];j++){
-            RouteExcludeSettings *setting1 = [mutableArray objectAtIndex:i];
-            RouteExcludeSettings *setting2 = [mutableArray objectAtIndex:j];
+            RouteExcludeSetting *setting1 = [mutableArray objectAtIndex:i];
+            RouteExcludeSetting *setting2 = [mutableArray objectAtIndex:j];
             if([setting1.key isEqualToString:setting2.key]){
                 [mutableArray removeObject:setting2];
                 i = i-1;

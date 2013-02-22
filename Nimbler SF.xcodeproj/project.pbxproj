@@ -175,6 +175,7 @@
 		5258A89F160D617800871875 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5258A89B160D617800871875 /* libTestFlight.a */; };
 		525C20F9151D3AF5004F8FE0 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
 		527E174A151EB9CD00CDBC23 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527E1749151EB9CD00CDBC23 /* QuartzCore.framework */; };
+		528C664E16D7011E005B7309 /* RouteExcludeSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 528C664D16D7011E005B7309 /* RouteExcludeSetting.m */; };
 		52958AB116CED86900CC46C7 /* GtfsTempItinerary.m in Sources */ = {isa = PBXBuildFile; fileRef = 52958AB016CED86900CC46C7 /* GtfsTempItinerary.m */; };
 		52A9BE9516B4B41500564D0D /* RealTimeServerStubTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */; };
 		52C10385160BEF8000BC6020 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C10384160BEF8000BC6020 /* AddressBookUI.framework */; };
@@ -507,6 +508,8 @@
 		5258A89E160D617800871875 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		525C20F8151D3AF5004F8FE0 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		527E1749151EB9CD00CDBC23 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		528C664C16D7011E005B7309 /* RouteExcludeSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteExcludeSetting.h; sourceTree = "<group>"; };
+		528C664D16D7011E005B7309 /* RouteExcludeSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteExcludeSetting.m; sourceTree = "<group>"; };
 		52958AAF16CED86900CC46C7 /* GtfsTempItinerary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GtfsTempItinerary.h; path = Model/GtfsTempItinerary.h; sourceTree = SOURCE_ROOT; };
 		52958AB016CED86900CC46C7 /* GtfsTempItinerary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GtfsTempItinerary.m; path = Model/GtfsTempItinerary.m; sourceTree = SOURCE_ROOT; };
 		5295B95216C6F71B008376B3 /* Network_Commuting 1.8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.8.xcdatamodel"; sourceTree = "<group>"; };
@@ -987,6 +990,8 @@
 				75E8F1CD16CE356D00863A8C /* StationListElement.m */,
 				8D00753016D4CAB30041A64C /* RouteExcludeSettings.h */,
 				8D00753116D4CAB30041A64C /* RouteExcludeSettings.m */,
+				528C664C16D7011E005B7309 /* RouteExcludeSetting.h */,
+				528C664D16D7011E005B7309 /* RouteExcludeSetting.m */,
 			);
 			name = "Model, Other";
 			path = ../Model;
@@ -1486,6 +1491,7 @@
 				52DD766A16D2A892005763DE /* StationListElement.m in Sources */,
 				52DD766C16D2A8FD005763DE /* PreloadedStop.m in Sources */,
 				8D00753216D4CAB30041A64C /* RouteExcludeSettings.m in Sources */,
+				528C664E16D7011E005B7309 /* RouteExcludeSetting.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

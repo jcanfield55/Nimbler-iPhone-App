@@ -70,7 +70,7 @@
             Plan* matchingPlan = [matchingPlanArray objectAtIndex:0]; // Take the first matching plan
             if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate]
                                                           departOrArrive:[parameters departOrArrive]
-                                                     RouteExcludeSettings:[RouteExcludeSettings routeExcludeSettings]
+                                                     RouteExcludeSettings:[RouteExcludeSettings latestUserSettings]
                                                                 callBack:self]) {
                 if (matchingPlan.sortedItineraries.count == 0) {
                     // there are itineraries, but they were all excluded by the user
@@ -301,7 +301,7 @@
                 // get Unique Itinerary from Plan.
                 if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate]
                                                       departOrArrive:[planRequestParameters departOrArrive]
-                                       RouteExcludeSettings:[RouteExcludeSettings routeExcludeSettings]
+                                       RouteExcludeSettings:[RouteExcludeSettings latestUserSettings]
                                                             callBack:self]) {
                     [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
                     
@@ -390,7 +390,7 @@
     // Request sortedItineraries array with extremely large limits
     NSArray* testItinArray = [plan returnSortedItinerariesWithMatchesForDate:requestParams0.originalTripDate
                                                               departOrArrive:requestParams0.departOrArrive
-                                               RouteExcludeSettings:[RouteExcludeSettings routeExcludeSettings]
+                                               RouteExcludeSettings:[RouteExcludeSettings latestUserSettings]
                                                                     callBack:self
                                                     planMaxItinerariesToShow:1000
                                             planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY

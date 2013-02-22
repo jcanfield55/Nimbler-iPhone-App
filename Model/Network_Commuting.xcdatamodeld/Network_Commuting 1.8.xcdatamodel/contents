@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="11G56" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="12C60" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AddressComponent" representedClassName="AddressComponent" syncable="YES">
         <attribute name="longName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
@@ -233,6 +233,7 @@
         <relationship name="gtfsItineraryPattern" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Itinerary" inverseName="requestChunksCreatedByThisPattern" inverseEntity="Itinerary" syncable="YES"/>
         <relationship name="itineraries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Itinerary" inverseName="planRequestChunks" inverseEntity="Itinerary" syncable="YES"/>
         <relationship name="plan" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Plan" inverseName="requestChunks" inverseEntity="Plan" syncable="YES"/>
+        <relationship name="routeExclusionSettings" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RouteExcludeSettings" inverseName="usedByRequestChunk" inverseEntity="RouteExcludeSettings" syncable="YES"/>
     </entity>
     <entity name="PreloadedStop" representedClassName="PreloadedStop" syncable="YES">
         <attribute name="formattedAddress" optional="YES" attributeType="String" syncable="YES"/>
@@ -249,6 +250,11 @@
                 <index value="rawAddressString"/>
             </compoundIndex>
         </compoundIndexes>
+    </entity>
+    <entity name="RouteExcludeSettings" representedClassName="RouteExcludeSettings" syncable="YES">
+        <attribute name="excludeDictionaryInternal" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="isCurrentUserSetting" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <relationship name="usedByRequestChunk" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PlanRequestChunk" inverseName="routeExclusionSettings" inverseEntity="PlanRequestChunk" syncable="YES"/>
     </entity>
     <entity name="StationListElement" representedClassName="StationListElement" syncable="YES">
         <attribute name="agency" optional="YES" attributeType="String" syncable="YES"/>
@@ -281,6 +287,7 @@
     <fetchRequest name="GtfsTrips" entity="GtfsTrips" predicateString="tripID == $TRIPID"/>
     <fetchRequest name="GtfsTripsByTripIdAndRouteId" entity="GtfsTrips" predicateString="tripID == $TRIPID AND routeID == $ROUTEID"/>
     <fetchRequest name="KeyObjectPairForKey" entity="KeyObjectPair" predicateString="key == $KEY"/>
+    <fetchRequest name="LatestRouteExcludeSettings" entity="RouteExcludeSettings" predicateString="isCurrentUserSetting == 1"/>
     <fetchRequest name="LocationByFormattedAddress" entity="Location" predicateString="formattedAddress ==$ADDRESS2"/>
     <fetchRequest name="LocationByMemberOfList" entity="Location" predicateString="memberOfList BEGINSWITH $LIST_PREFIX AND locationType != &quot;TOFROM_LIST&quot;"/>
     <fetchRequest name="PlansByToAndFromLocations" entity="Plan" predicateString="toLocation.formattedAddress == $TO_FORMATTED_ADDRESS AND fromLocation.formattedAddress == $FROM_FORMATTED_ADDRESS"/>
@@ -311,10 +318,11 @@
         <element name="LocationFromIOS" positionX="160" positionY="192" width="128" height="60"/>
         <element name="Plan" positionX="0" positionY="0" width="128" height="195"/>
         <element name="PlanPlace" positionX="0" positionY="0" width="128" height="180"/>
-        <element name="PlanRequestChunk" positionX="0" positionY="0" width="128" height="135"/>
+        <element name="PlanRequestChunk" positionX="0" positionY="0" width="128" height="150"/>
         <element name="PreloadedStop" positionX="160" positionY="192" width="128" height="120"/>
         <element name="RawAddress" positionX="0" positionY="0" width="128" height="75"/>
         <element name="StationListElement" positionX="160" positionY="192" width="128" height="150"/>
         <element name="Step" positionX="0" positionY="0" width="128" height="195"/>
+        <element name="RouteExcludeSettings" positionX="160" positionY="192" width="128" height="90"/>
     </elements>
 </model>

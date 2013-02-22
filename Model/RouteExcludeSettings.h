@@ -17,12 +17,17 @@ typedef enum {
     SETTING_INCLUDE_ROUTE  // Include routes of a type in the route options
 } IncludeExcludeSetting;
 
-@interface RouteExcludeSettings : NSObject
+@interface RouteExcludeSettings : NSManagedObject
 
-@property(nonatomic, strong) NSString* key;
-@property(nonatomic) IncludeExcludeSetting setting;
+@property (nonatomic, strong) NSNumber *isCurrentUserSetting; // Boolean.  True if this is the latest setting from the user
+@property (nonatomic, strong) NSMutableDictionary *excludeDictionaryInternal; // For internal use.  Stored in Core Data
 
-+ (RouteExcludeSettings *)routeExcludeSettings;
+// Sets the ManagedObjectContext where RouteExcludeSettings are stored
++(void)setManagedObjectContext:(NSManagedObjectContext *)moc;
+
+// Returns the RouteExcludeSettings that are the latest from the user.
++ (RouteExcludeSettings *)latestUserSettings;
+
 // Changes setting associated with a key
 -(void)changeSettingTo:(IncludeExcludeSetting)value forKey:(NSString *)key;
 

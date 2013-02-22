@@ -13,6 +13,7 @@
 #import "Logging.h"
 #import "PlanRequestParameters.h"
 #import "RouteOptionsViewController.h"
+#import "RouteExcludeSetting.h"
 #import "RealTimeManager.h"
 #import "PlanStore.h"
 #import "nc_AppDelegate.h"
@@ -82,6 +83,7 @@
     
     // Set up KeyObjectStore
     [KeyObjectStore setUpWithManagedObjectContext:managedObjectContext];
+    [RouteExcludeSettings setManagedObjectContext:managedObjectContext];
 
     // Set up RealTimeManager
     [[RealTimeManager realTimeManager] setRkTpClient:rkTpClient];

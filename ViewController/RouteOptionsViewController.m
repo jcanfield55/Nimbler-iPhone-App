@@ -17,6 +17,7 @@
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "Itinerary.h"
 #import "RouteExcludeSettings.h"
+#import "RouteExcludeSetting.h"
 #import "PlanStore.h"
 
 #define IDENTIFIER_CELL         @"UIRouteOptionsViewCell"
@@ -152,13 +153,13 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 
 -(void) toggleExcludeButton:(id)sender{
     UIButton *btn = (UIButton *)sender;
-    if([[RouteExcludeSettings routeExcludeSettings] settingForKey:btn.titleLabel.text] == SETTING_EXCLUDE_ROUTE){
-        [[RouteExcludeSettings routeExcludeSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:btn.titleLabel.text];
+    if([[RouteExcludeSettings latestUserSettings] settingForKey:btn.titleLabel.text] == SETTING_EXCLUDE_ROUTE){
+        [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:btn.titleLabel.text];
         [btn setBackgroundImage:[UIImage imageNamed:@"pressed1.png"] forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
     }
     else{
-        [[RouteExcludeSettings routeExcludeSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:btn.titleLabel.text];
+        [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:btn.titleLabel.text];
         [btn setBackgroundImage:nil forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor GRAY_FONT_COLOR] forState:UIControlStateNormal];
     }
@@ -170,7 +171,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     }
     [plan prepareSortedItinerariesWithMatchesForDate:planRequestParameters.originalTripDate
                                       departOrArrive:planRequestParameters.departOrArrive
-                                 RouteExcludeSettings:[RouteExcludeSettings routeExcludeSettings]
+                                 RouteExcludeSettings:[RouteExcludeSettings latestUserSettings]
                                             callBack:nil];
     [mainTable reloadData];
 }
@@ -546,10 +547,10 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     int width = 80;
     int btnHeight = 25;
     
-    NSArray *arrRouteSettings = [[RouteExcludeSettings routeExcludeSettings] excludeSettingsForPlan:plan
+    NSArray *arrRouteSettings = [[RouteExcludeSettings latestUserSettings] excludeSettingsForPlan:plan
                                                                                    withParameters:planRequestParameters];
     for(int i=0;i<[arrRouteSettings count];i++){
-        RouteExcludeSettings *routeExcludeSettings = [arrRouteSettings objectAtIndex:i];
+        RouteExcludeSetting *routeExcludeSettings = [arrRouteSettings objectAtIndex:i];
         UIButton *btnAgency = [UIButton buttonWithType:UIButtonTypeCustom];
         if(xPos+width > 320){
             yPos = yPos + 25 + 5;
@@ -559,7 +560,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         xPos = xPos + width;
         [btnAgency setTitle:routeExcludeSettings.key forState:UIControlStateNormal];
         [btnAgency.titleLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:12.0]];
-        if([[RouteExcludeSettings routeExcludeSettings] settingForKey:routeExcludeSettings.key] == SETTING_EXCLUDE_ROUTE){
+        if([[RouteExcludeSettings latestUserSettings] settingForKey:routeExcludeSettings.key] == SETTING_EXCLUDE_ROUTE){
             [btnAgency setBackgroundImage:nil forState:UIControlStateNormal];
             [btnAgency setTitleColor:[UIColor GRAY_FONT_COLOR] forState:UIControlStateNormal];
         }
@@ -573,7 +574,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 }
 
 - (int) calculateTotalHeightOfButtonView{
-   NSArray *arrRouteSettings = [[RouteExcludeSettings routeExcludeSettings] excludeSettingsForPlan:plan
+   NSArray *arrRouteSettings = [[RouteExcludeSettings latestUserSettings] excludeSettingsForPlan:plan
                                                                                   withParameters:planRequestParameters];
     int tempButtonCounts;
     if([arrRouteSettings count] > 3)
