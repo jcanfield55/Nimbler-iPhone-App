@@ -1,5 +1,5 @@
 //
-//  RouteExcludeSetting.m
+//  RouteExcludeSettings.m
 //  Nimbler SF
 //
 //  Created by John Canfield on 2/19/13.
@@ -8,10 +8,10 @@
 // This class models the settings a user makes on the Route Options page to select which modes / agencies / routes they
 // want to see or not see on their Route Options
 
-#import "RouteExcludeSetting.h"
+#import "RouteExcludeSettings.h"
 #import "KeyObjectStore.h"
 #import "Leg.h"
-#import "RouteExcludeSetting.h"
+// #import "RouteExcludeSetting.h"
 #import "UtilityFunctions.h"
 
 #define BY_AGENCY @"By Agency"
@@ -19,7 +19,7 @@
 #define SETTING_STRING_INCLUDE @"Include"
 #define SETTING_STRING_EXCLUDE @"Exclude"
 
-@interface RouteExcludeSetting() {
+@interface RouteExcludeSettings() {
     NSMutableDictionary *excludeDictionaryInternal;
     NSDictionary *agencyIDHandlingDictionaryInternal;
 }
@@ -30,18 +30,18 @@
 @end
 
 
-@implementation RouteExcludeSetting
+@implementation RouteExcludeSettings
 
 @synthesize key;
 @synthesize setting;
 
-static RouteExcludeSetting *routeExcludeSetting;
+static RouteExcludeSettings *routeExcludeSettings;
 
-+ (RouteExcludeSetting *)routeExcludeSetting{
-    if(!routeExcludeSetting){
-        routeExcludeSetting = [[RouteExcludeSetting alloc] init];
++ (RouteExcludeSettings *)routeExcludeSettings{
+    if(!routeExcludeSettings){
+        routeExcludeSettings = [[RouteExcludeSettings alloc] init];
     }
-    return routeExcludeSetting;
+    return routeExcludeSettings;
 }
 
 // Initiatializes (if needed) and returns dictionary mapping agencyIDs to how we will handle
@@ -49,14 +49,19 @@ static RouteExcludeSetting *routeExcludeSetting;
 // BY_RAIL_BUS means we will show up to two buttons for that agency, one for rail and one for bus service
 -(NSDictionary *)agencyIDHandlingDictionary{
         if (!agencyIDHandlingDictionaryInternal) {
-               agencyIDHandlingDictionaryInternal = [NSDictionary dictionaryWithKeysAndObjects:CALTRAIN_BUTTON, BY_AGENCY,BART_BUTTON, BY_AGENCY,// AIRBART, BY_AGENCY,
-                                                     MUNI_BUTTON, BY_RAIL_BUS,
-                                                    ACTRANSIT_BUTTON, BY_AGENCY,
-                                                   // VTA, BY_RAIL_BUS,
-                                                   // FERRIES, BY_AGENCY,
-                                                  // MENLO_MIDDAY, BY_AGENCY,
-                                                nil];
-        // TODO -- make sure that these constants match the agency strings returned from the leg Agency_ID field
+            agencyIDHandlingDictionaryInternal = [NSDictionary dictionaryWithKeysAndObjects:
+                                                  CALTRAIN_BUTTON, BY_AGENCY,
+                                                  BART_BUTTON, BY_AGENCY,
+                                                  AIRBART_BUTTON, BY_AGENCY,
+                                                  MUNI_BUTTON, BY_RAIL_BUS,
+                                                  ACTRANSIT_BUTTON, BY_AGENCY,
+                                                  VTA_BUTTON, BY_RAIL_BUS,
+                                                  MENLO_MIDDAY_BUTTON, BY_AGENCY,
+                                                  BLUE_GOLD_BUTTON, BY_AGENCY,
+                                                  HARBOR_BAY_BUTTON, BY_AGENCY,
+                                                  BAYLINK_BUTTON,BY_AGENCY,
+                                                  GOLDEN_GATE_BUTTON, BY_AGENCY,
+                                                  nil];
         }
         return agencyIDHandlingDictionaryInternal;
 }
@@ -101,14 +106,24 @@ static RouteExcludeSetting *routeExcludeSetting;
 }
 
 
-// Returns the keys and values for the routes that are available in the plan
-// Returned array containing RouteExcludeSetting objects
+// Returns the keys and values for the routes that are available in the plan relevant to the originalTripDate
+// in parameters.
+// Returned array containing routeExcludeSettings objects
 // Array is ordered in the sequence options should be presented to user
--(NSArray *)excludeSettingsForPlan:(Plan *)plan{
+-(NSArray *)excludeSettingsForPlan:(Plan *)plan withParameters:(PlanRequestParameters *)parameters {
+    
+    // Get the itineraries that are relevant to this particular tripDate but with no exclusions
+    NSArray* relevantItineraries = [plan returnSortedItinerariesWithMatchesForDate:parameters.originalTripDate
+                                                                    departOrArrive:parameters.departOrArrive
+                                                               RouteExcludeSettings:nil
+                                                                          callBack:nil
+                                                          planMaxItinerariesToShow:PLAN_MAX_ITINERARIES_TO_SHOW
+                                                  planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY
+                                                       planMaxTimeForResultsToShow:PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW];
     NSMutableArray* returnArray = [[NSMutableArray alloc] initWithCapacity:10];
-    for (Itinerary* itin in [plan itineraries]) {
+    for (Itinerary* itin in relevantItineraries) {
         for (Leg* leg in [itin legs]) {
-            RouteExcludeSetting* routeExclSetting = [[RouteExcludeSetting alloc] init];
+            RouteExcludeSettings* routeExclSetting = [[RouteExcludeSettings alloc] init];
             if (leg.isScheduled && returnShortAgencyName(leg.agencyName)) {       // TODO  should we compare agencyID or agencyName?
                 NSString* handling = [[self agencyIDHandlingDictionary] objectForKey:returnShortAgencyName(leg.agencyName)];
                 if (handling) {
@@ -130,11 +145,11 @@ static RouteExcludeSetting *routeExcludeSetting;
     }
     
     // Add bike button
-    RouteExcludeSetting* routeExclSetting = [[RouteExcludeSetting alloc] init];
+    RouteExcludeSettings* routeExclSetting = [[RouteExcludeSettings alloc] init];
     routeExclSetting.key = BIKE_MODE;
     routeExclSetting.setting = [self settingForKey:BIKE_MODE];
     [returnArray addObject:routeExclSetting];
-    return [self returnUniqueRouteExcludeSetting:returnArray];
+    return [self returnUniqueRouteExcludeSettings:returnArray];
 }
 
 // Returns true if itin should be included based on the RouteExclude settings
@@ -148,7 +163,7 @@ static RouteExcludeSetting *routeExcludeSetting;
            else if (leg.isBike && [self settingForKey:BIKE_MODE]==SETTING_EXCLUDE_ROUTE) { // TODO double-check isBike method
                return false; // Exclude bike itinerary if BIKE_MODE excluded
            }
-           else if (returnShortAgencyName(leg.agencyName)) {       // TODO  should we compare agencyID or agencyName?
+           else if (returnShortAgencyName(leg.agencyName)) {      
                NSString* handling = [[self agencyIDHandlingDictionary] objectForKey:returnShortAgencyName(leg.agencyName)];
                if (handling) {
                    if ([handling isEqualToString:BY_AGENCY]) {
@@ -169,12 +184,12 @@ static RouteExcludeSetting *routeExcludeSetting;
     return true;
 }
 
-- (NSArray *) returnUniqueRouteExcludeSetting:(NSArray *)array{
+- (NSArray *) returnUniqueRouteExcludeSettings:(NSArray *)array{
     NSMutableArray *mutableArray = [[NSMutableArray alloc] initWithArray:array];
     for(int i=0;i<[mutableArray count];i++){
         for(int j=i+1;j<[mutableArray count];j++){
-            RouteExcludeSetting *setting1 = [mutableArray objectAtIndex:i];
-            RouteExcludeSetting *setting2 = [mutableArray objectAtIndex:j];
+            RouteExcludeSettings *setting1 = [mutableArray objectAtIndex:i];
+            RouteExcludeSettings *setting2 = [mutableArray objectAtIndex:j];
             if([setting1.key isEqualToString:setting2.key]){
                 [mutableArray removeObject:setting2];
                 i = i-1;

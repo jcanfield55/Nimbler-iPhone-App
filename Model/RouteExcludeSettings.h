@@ -1,5 +1,5 @@
 //
-//  RouteExcludeSetting.h
+//  RouteExcludeSettings.h
 //  Nimbler SF
 //
 //  Created by John Canfield on 2/19/13.
@@ -17,24 +17,26 @@ typedef enum {
     SETTING_INCLUDE_ROUTE  // Include routes of a type in the route options
 } IncludeExcludeSetting;
 
-@interface RouteExcludeSetting : NSObject
+@interface RouteExcludeSettings : NSObject
 
 @property(nonatomic, strong) NSString* key;
 @property(nonatomic) IncludeExcludeSetting setting;
 
-+ (RouteExcludeSetting *)routeExcludeSetting;
++ (RouteExcludeSettings *)routeExcludeSettings;
 // Changes setting associated with a key
 -(void)changeSettingTo:(IncludeExcludeSetting)value forKey:(NSString *)key;
 
-// Returns the keys and values for the routes that are available in the plan
-// Returned array containing RouteExcludeSetting objects
+
+// Returns the keys and values for the routes that are available in the plan relevant to the originalTripDate
+// in parameters.
+// Returned array containing RouteExcludeSettings objects
 // Array is ordered in the sequence options should be presented to user
--(NSArray *)excludeSettingsForPlan:(Plan *)plan;
+-(NSArray *)excludeSettingsForPlan:(Plan *)plan withParameters:(PlanRequestParameters *)parameters;
 
 // Returns true if itin should be included based on the RouteExclude settings
 -(BOOL)isItineraryIncluded:(Itinerary *)itin;
 
 // Remove the duplicate settings
-- (NSArray *) returnUniqueRouteExcludeSetting:(NSArray *)array;
+- (NSArray *) returnUniqueRouteExcludeSettings:(NSArray *)array;
 -(IncludeExcludeSetting)settingForKey:(NSString *)key;
 @end

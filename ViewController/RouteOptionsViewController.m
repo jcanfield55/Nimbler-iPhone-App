@@ -16,7 +16,7 @@
 #import "nc_AppDelegate.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "Itinerary.h"
-#import "RouteExcludeSetting.h"
+#import "RouteExcludeSettings.h"
 #import "PlanStore.h"
 
 #define IDENTIFIER_CELL         @"UIRouteOptionsViewCell"
@@ -152,13 +152,13 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 
 -(void) toggleExcludeButton:(id)sender{
     UIButton *btn = (UIButton *)sender;
-    if([[RouteExcludeSetting routeExcludeSetting] settingForKey:btn.titleLabel.text] == SETTING_EXCLUDE_ROUTE){
-        [[RouteExcludeSetting routeExcludeSetting] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:btn.titleLabel.text];
+    if([[RouteExcludeSettings routeExcludeSettings] settingForKey:btn.titleLabel.text] == SETTING_EXCLUDE_ROUTE){
+        [[RouteExcludeSettings routeExcludeSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:btn.titleLabel.text];
         [btn setBackgroundImage:[UIImage imageNamed:@"pressed1.png"] forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
     }
     else{
-        [[RouteExcludeSetting routeExcludeSetting] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:btn.titleLabel.text];
+        [[RouteExcludeSettings routeExcludeSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:btn.titleLabel.text];
         [btn setBackgroundImage:nil forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor GRAY_FONT_COLOR] forState:UIControlStateNormal];
     }
@@ -170,7 +170,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     }
     [plan prepareSortedItinerariesWithMatchesForDate:planRequestParameters.originalTripDate
                                       departOrArrive:planRequestParameters.departOrArrive
-                                 routeExcludeSetting:[RouteExcludeSetting routeExcludeSetting]
+                                 RouteExcludeSettings:[RouteExcludeSettings routeExcludeSettings]
                                             callBack:nil];
     [mainTable reloadData];
 }
@@ -546,9 +546,10 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     int width = 80;
     int btnHeight = 25;
     
-    NSArray *arrRouteSettings = [[RouteExcludeSetting routeExcludeSetting] excludeSettingsForPlan:plan];
+    NSArray *arrRouteSettings = [[RouteExcludeSettings routeExcludeSettings] excludeSettingsForPlan:plan
+                                                                                   withParameters:planRequestParameters];
     for(int i=0;i<[arrRouteSettings count];i++){
-        RouteExcludeSetting *routeExcludeSetting = [arrRouteSettings objectAtIndex:i];
+        RouteExcludeSettings *routeExcludeSettings = [arrRouteSettings objectAtIndex:i];
         UIButton *btnAgency = [UIButton buttonWithType:UIButtonTypeCustom];
         if(xPos+width > 320){
             yPos = yPos + 25 + 5;
@@ -556,9 +557,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         }
         [btnAgency setFrame:CGRectMake(xPos,yPos, width, btnHeight)];
         xPos = xPos + width;
-        [btnAgency setTitle:routeExcludeSetting.key forState:UIControlStateNormal];
+        [btnAgency setTitle:routeExcludeSettings.key forState:UIControlStateNormal];
         [btnAgency.titleLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:12.0]];
-        if([[RouteExcludeSetting routeExcludeSetting] settingForKey:routeExcludeSetting.key] == SETTING_EXCLUDE_ROUTE){
+        if([[RouteExcludeSettings routeExcludeSettings] settingForKey:routeExcludeSettings.key] == SETTING_EXCLUDE_ROUTE){
             [btnAgency setBackgroundImage:nil forState:UIControlStateNormal];
             [btnAgency setTitleColor:[UIColor GRAY_FONT_COLOR] forState:UIControlStateNormal];
         }
@@ -572,7 +573,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 }
 
 - (int) calculateTotalHeightOfButtonView{
-   NSArray *arrRouteSettings = [[RouteExcludeSetting routeExcludeSetting] excludeSettingsForPlan:plan];
+   NSArray *arrRouteSettings = [[RouteExcludeSettings routeExcludeSettings] excludeSettingsForPlan:plan
+                                                                                  withParameters:planRequestParameters];
     int tempButtonCounts;
     if([arrRouteSettings count] > 3)
        tempButtonCounts = [arrRouteSettings count] - 3;

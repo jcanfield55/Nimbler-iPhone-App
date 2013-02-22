@@ -16,7 +16,7 @@
 #import "PlanRequestParameters.h"
 #import "enums.h"
 
-@class RouteExcludeSetting;
+@class RouteExcludeSettings;
 
 @protocol PlanRequestMoreItinerariesDelegate
 
@@ -86,13 +86,13 @@
 - (void)createRequestChunkWithAllItinerariesAndRequestDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive;
 
 // Looks for matching itineraries for the requestDate and departOrArrive
-// routeExcludeSetting specifies which routes / modes the user specifically wants to include/exclude from results
+// routeExcludeSettings specifies which routes / modes the user specifically wants to include/exclude from results
 // callBack is called if the method detects that we need more OTP or gtfs itineraries to show the user
 // If it finds some, returns TRUE and updates the sortedItineraries property with just those itineraries
 // If it does not find any, returns false and leaves sortedItineraries unchanged
 - (BOOL)prepareSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
                                     departOrArrive:(DepartOrArrive)depOrArrive
-                               routeExcludeSetting:(RouteExcludeSetting *)routeExcludeSetting
+                               RouteExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
                                           callBack:(id <PlanRequestMoreItinerariesDelegate>)delegate;
 
 
@@ -105,7 +105,7 @@
 // returnSortedItinerariesWithMatchesForDate  -- part of Plan Caching (US78) implementation
 // Helper routine called by prepareSortedItinerariesWithMatchesForDate
 // Looks for matching itineraries for the requestDate and departOrArrive
-// routeExcludeSetting specifies which routes / modes the user specifically wants to include/exclude from results
+// routeExcludeSettings specifies which routes / modes the user specifically wants to include/exclude from results
 // callBack is called if the method detects that we need more OTP or gtfs itineraries to show the user
 // If it finds some itineraries, returns a sorted array of the matching itineraries
 // Returned array will have no more than planMaxItinerariesToShow itineraries, spanning no more
@@ -114,7 +114,7 @@
 // If there are no matching itineraries, returns nil
 - (NSArray *)returnSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
                                         departOrArrive:(DepartOrArrive)depOrArrive
-                                   routeExcludeSetting:(RouteExcludeSetting *)routeExcludeSetting
+                                   RouteExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
                                               callBack:(id <PlanRequestMoreItinerariesDelegate>)delegate
                               planMaxItinerariesToShow:(int)planMaxItinerariesToShow
                       planBufferSecondsBeforeItinerary:(int)planBufferSecondsBeforeItinerary

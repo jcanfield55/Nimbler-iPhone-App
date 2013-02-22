@@ -535,7 +535,7 @@
         parameters.thisRequestTripDate = finalDate;
         parameters.departOrArrive = DEPART;
         parameters.maxWalkDistance = maxDistance;
-        parameters.planDestination = PLAN_DESTINATION_TO_FROM_VC;
+        parameters.planDestination = [nc_AppDelegate sharedInstance].toFromViewController;
         NSString *strLatitudeTo;
         NSString *strLatitudeFrom;
         NSString *strLongitudeTo;

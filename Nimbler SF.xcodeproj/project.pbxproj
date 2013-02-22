@@ -177,9 +177,6 @@
 		527E174A151EB9CD00CDBC23 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527E1749151EB9CD00CDBC23 /* QuartzCore.framework */; };
 		52958AB116CED86900CC46C7 /* GtfsTempItinerary.m in Sources */ = {isa = PBXBuildFile; fileRef = 52958AB016CED86900CC46C7 /* GtfsTempItinerary.m */; };
 		52A9BE9516B4B41500564D0D /* RealTimeServerStubTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */; };
-		52A9BE9A16B6677500564D0D /* gtfs_rawdata_calendar.json in Resources */ = {isa = PBXBuildFile; fileRef = 52A9BE9716B6677500564D0D /* gtfs_rawdata_calendar.json */; };
-		52A9BE9B16B6677500564D0D /* livefeeds_bylegs1.json in Resources */ = {isa = PBXBuildFile; fileRef = 52A9BE9816B6677500564D0D /* livefeeds_bylegs1.json */; };
-		52A9BE9C16B6677500564D0D /* server1.rb in Resources */ = {isa = PBXBuildFile; fileRef = 52A9BE9916B6677500564D0D /* server1.rb */; };
 		52C10385160BEF8000BC6020 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C10384160BEF8000BC6020 /* AddressBookUI.framework */; };
 		52C1CBB4161AB69600695348 /* Icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB3161AB69600695348 /* Icon-small.png */; };
 		52C1CBB6161AB6A400695348 /* Icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB5161AB6A400695348 /* Icon-small@2x.png */; };
@@ -207,7 +204,7 @@
 		75E8F1D416CE3EBC00863A8C /* bart.json in Resources */ = {isa = PBXBuildFile; fileRef = 75E8F1D316CE3EBC00863A8C /* bart.json */; };
 		75E8F1D616CE3EC800863A8C /* caltrain.json in Resources */ = {isa = PBXBuildFile; fileRef = 75E8F1D516CE3EC800863A8C /* caltrain.json */; };
 		75E8F1DA16CE4B5400863A8C /* sf-muni.json in Resources */ = {isa = PBXBuildFile; fileRef = 75E8F1D916CE4B5400863A8C /* sf-muni.json */; };
-		8D00753216D4CAB30041A64C /* RouteExcludeSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D00753116D4CAB30041A64C /* RouteExcludeSetting.m */; };
+		8D00753216D4CAB30041A64C /* RouteExcludeSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D00753116D4CAB30041A64C /* RouteExcludeSettings.m */; };
 		8D0FA9A1169165C10038FDB2 /* LegFromOTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */; };
 		8D0FA9B0169198500038FDB2 /* ItineraryFromOTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0FA9AF1691984F0038FDB2 /* ItineraryFromOTP.m */; };
 		8D0FA9B31691985B0038FDB2 /* ItineraryFromGtfs.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0FA9B21691985A0038FDB2 /* ItineraryFromGtfs.m */; };
@@ -515,9 +512,6 @@
 		5295B95216C6F71B008376B3 /* Network_Commuting 1.8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.8.xcdatamodel"; sourceTree = "<group>"; };
 		52A9BE9316B4B41500564D0D /* RealTimeServerStubTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RealTimeServerStubTest.h; sourceTree = "<group>"; };
 		52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RealTimeServerStubTest.m; sourceTree = "<group>"; };
-		52A9BE9716B6677500564D0D /* gtfs_rawdata_calendar.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = gtfs_rawdata_calendar.json; path = Sinatra/gtfs_rawdata_calendar.json; sourceTree = "<group>"; };
-		52A9BE9816B6677500564D0D /* livefeeds_bylegs1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = livefeeds_bylegs1.json; path = Sinatra/livefeeds_bylegs1.json; sourceTree = "<group>"; };
-		52A9BE9916B6677500564D0D /* server1.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = server1.rb; path = Sinatra/server1.rb; sourceTree = "<group>"; };
 		52C10384160BEF8000BC6020 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		52C1CBB3161AB69600695348 /* Icon-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-small.png"; sourceTree = "<group>"; };
 		52C1CBB5161AB6A400695348 /* Icon-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-small@2x.png"; sourceTree = "<group>"; };
@@ -546,8 +540,8 @@
 		75E8F1D916CE4B5400863A8C /* sf-muni.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "sf-muni.json"; sourceTree = "<group>"; };
 		75E8F1DB16CE4E2900863A8C /* Stations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stations.h; sourceTree = "<group>"; };
 		75E8F1DC16CE4E2A00863A8C /* Stations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stations.m; sourceTree = "<group>"; };
-		8D00753016D4CAB30041A64C /* RouteExcludeSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteExcludeSetting.h; sourceTree = "<group>"; };
-		8D00753116D4CAB30041A64C /* RouteExcludeSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteExcludeSetting.m; sourceTree = "<group>"; };
+		8D00753016D4CAB30041A64C /* RouteExcludeSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RouteExcludeSettings.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		8D00753116D4CAB30041A64C /* RouteExcludeSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RouteExcludeSettings.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8D0FA99F169165C00038FDB2 /* LegFromOTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = LegFromOTP.h; path = ../Model/LegFromOTP.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = LegFromOTP.m; path = ../Model/LegFromOTP.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8D0FA9AE1691984F0038FDB2 /* ItineraryFromOTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ItineraryFromOTP.h; path = ../ItineraryFromOTP.h; sourceTree = "<group>"; };
@@ -991,21 +985,11 @@
 				8D44083F16CF72FD00F8EBE5 /* PreloadedStop.m */,
 				75E8F1CC16CE356D00863A8C /* StationListElement.h */,
 				75E8F1CD16CE356D00863A8C /* StationListElement.m */,
-				8D00753016D4CAB30041A64C /* RouteExcludeSetting.h */,
-				8D00753116D4CAB30041A64C /* RouteExcludeSetting.m */,
+				8D00753016D4CAB30041A64C /* RouteExcludeSettings.h */,
+				8D00753116D4CAB30041A64C /* RouteExcludeSettings.m */,
 			);
 			name = "Model, Other";
 			path = ../Model;
-			sourceTree = "<group>";
-		};
-		52A9BE9616B6673C00564D0D /* Sinatra */ = {
-			isa = PBXGroup;
-			children = (
-				52A9BE9716B6677500564D0D /* gtfs_rawdata_calendar.json */,
-				52A9BE9816B6677500564D0D /* livefeeds_bylegs1.json */,
-				52A9BE9916B6677500564D0D /* server1.rb */,
-			);
-			name = Sinatra;
 			sourceTree = "<group>";
 		};
 		52CF439014BDF2F8000565D6 = {
@@ -1082,7 +1066,6 @@
 		52CF43C314BDF2F9000565D6 /* Nimbler Tests */ = {
 			isa = PBXGroup;
 			children = (
-				52A9BE9616B6673C00564D0D /* Sinatra */,
 				8D99B630164E2DF200C0A5AC /* calendar.txt */,
 				8D99B631164E2DF200C0A5AC /* stop_times.txt */,
 				8D99B632164E2DF200C0A5AC /* stops.txt */,
@@ -1415,9 +1398,6 @@
 				52CF43C814BDF2F9000565D6 /* InfoPlist.strings in Resources */,
 				520FB293162604950083F143 /* CoverageGeoJSON.geojson in Resources */,
 				520FB297162605470083F143 /* CoverageGeoJSON.geojson in Resources */,
-				52A9BE9A16B6677500564D0D /* gtfs_rawdata_calendar.json in Resources */,
-				52A9BE9B16B6677500564D0D /* livefeeds_bylegs1.json in Resources */,
-				52A9BE9C16B6677500564D0D /* server1.rb in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1505,7 +1485,7 @@
 				52DD766416D2A86B005763DE /* Stations.m in Sources */,
 				52DD766A16D2A892005763DE /* StationListElement.m in Sources */,
 				52DD766C16D2A8FD005763DE /* PreloadedStop.m in Sources */,
-				8D00753216D4CAB30041A64C /* RouteExcludeSetting.m in Sources */,
+				8D00753216D4CAB30041A64C /* RouteExcludeSettings.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

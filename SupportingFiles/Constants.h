@@ -259,8 +259,8 @@
 #define PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW (6*60*60) /* Show at most 6 hours of results */
 #define PLAN_MAX_SERVER_CALLS_PER_REQUEST (3) /* Maximum calls to the server for a single user request */
 #define PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS (60)
-#define PLAN_ROUTE_EXCLUDE @"Exclude" // Value for routeExcludeSetting indicating to exclude a route
-#define PLAN_ROUTE_INCLUDE @"Include" // Value for routeExcludeSetting indicating to includ a route
+#define PLAN_ROUTE_EXCLUDE @"Exclude" // Value for RouteExcludeSettings indicating to exclude a route
+#define PLAN_ROUTE_INCLUDE @"Include" // Value for RouteExcludeSettings indicating to includ a route
 
 // gtfsParser
 #define MIN_TRANSFER_TIME (3*60) // Minimum # of seconds for transfers inserted when creating itineraries
@@ -311,6 +311,24 @@
 #define ACTRANSIT_AGENCY_NAME   @"AC Transit"
 #define SFMUNI_AGENCY_NAME      @"San Francisco Municipal Transportation Agency"
 #define AIRBART_AGENCY_NAME     @"AirBART"
+#define VTA_AGENCY_NAME         @"VTA"
+#define MENLO_MIDDAY_AGENCY_NAME  @"Menlo Park Midday Shuttle"
+#define BLUE_GOLD_AGENCY_NAME   @"Blue & Gold Fleet"
+#define HARBOR_BAY_AGENCY_NAME  @"Harbor Bay Ferry"
+#define BAYLINK_AGENCY_NAME     @"Baylink"
+#define GOLDEN_GATE_AGENCY_NAME @"Golden Gate Ferry"
+
+#define CALTRAIN_BUTTON @"Caltrain"
+#define BART_BUTTON @"BART"
+#define AIRBART_BUTTON @"AirBART"
+#define MUNI_BUTTON @"Muni"
+#define ACTRANSIT_BUTTON @"AC Transit"
+#define VTA_BUTTON  @"VTA"
+#define MENLO_MIDDAY_BUTTON @"Menlo"
+#define BLUE_GOLD_BUTTON  @"Blue & Gold"
+#define HARBOR_BAY_BUTTON  @"Harbor Bay"
+#define BAYLINK_BUTTON     @"Baylink"
+#define GOLDEN_GATE_BUTTON @"Golden Gate"
 
 #define AC_TRANSIT @"ac_transit"
 #define BART       @"bart"
@@ -468,8 +486,4 @@
 #define EXCLUDE_SETTINGS_DICTIONARY @"ExcludeSettingsDictionary"
 #define BIKE_MODE @"Bike"  // Key for RouteExcludeSettings
 
-#define CALTRAIN_BUTTON @"Caltrain"
-#define BART_BUTTON @"Bart"
-#define MUNI_BUTTON @"Muni"
-#define ACTRANSIT_BUTTON @"AC Transit"
 

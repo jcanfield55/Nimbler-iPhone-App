@@ -14,7 +14,7 @@
 #import "Itinerary.h"
 #import "ItineraryFromOTP.h"
 #import "nc_AppDelegate.h"
-#import "RouteExcludeSetting.h"
+#import "RouteExcludeSettings.h"
 
 
 @interface Plan (CoreDataGeneratedAccessors)
@@ -265,18 +265,18 @@
 
 
 // Looks for matching itineraries for the requestDate and departOrArrive
-// routeExcludeSetting specifies which routes / modes the user specifically wants to include/exclude from results
+// routeExcludeSettings specifies which routes / modes the user specifically wants to include/exclude from results
 // callBack is called if the method detects that we need more OTP or gtfs itineraries to show the user
 // If it finds some, returns TRUE and updates the sortedItineraries property with just those itineraries
 // If it does not find any, returns false and leaves sortedItineraries unchanged
 - (BOOL)prepareSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
                                     departOrArrive:(DepartOrArrive)depOrArrive
-                               routeExcludeSetting:(RouteExcludeSetting *)routeExcludeSetting
+                               RouteExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
                                           callBack:(id <PlanRequestMoreItinerariesDelegate>)delegate
 {
     NSArray* newSortedItineraries=[self returnSortedItinerariesWithMatchesForDate:requestDate
                                                                    departOrArrive:depOrArrive
-                                                              routeExcludeSetting:routeExcludeSetting
+                                                              RouteExcludeSettings:routeExcludeSettings
                                                                          callBack:delegate
                                                          planMaxItinerariesToShow:PLAN_MAX_ITINERARIES_TO_SHOW
                                                  planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY
@@ -296,7 +296,7 @@
 {
     return [self prepareSortedItinerariesWithMatchesForDate:requestDate
                                              departOrArrive:depOrArrive
-                                        routeExcludeSetting:nil
+                                        RouteExcludeSettings:nil
                                                    callBack:nil];
 }
 
@@ -304,7 +304,7 @@
 // returnSortedItinerariesWithMatchesForDate  -- part of Plan Caching (US78) implementation
 // Helper routine called by prepareSortedItinerariesWithMatchesForDate
 // Looks for matching itineraries for the requestDate and departOrArrive
-// routeExcludeSetting specifies which routes / modes the user specifically wants to include/exclude from results
+// routeExcludeSettings specifies which routes / modes the user specifically wants to include/exclude from results
 // callBack is called if the method detects that we need more OTP or gtfs itineraries to show the user
 // If it finds some itineraries, returns a sorted array of the matching itineraries
 // Returned array will have no more than planMaxItinerariesToShow itineraries, spanning no more
@@ -313,7 +313,7 @@
 // If there are no matching itineraries, returns nil
 - (NSArray *)returnSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
                                         departOrArrive:(DepartOrArrive)depOrArrive
-                                   routeExcludeSetting:(RouteExcludeSetting *)routeExcludeSetting
+                                   RouteExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
                                               callBack:(id <PlanRequestMoreItinerariesDelegate>)delegate
                               planMaxItinerariesToShow:(int)planMaxItinerariesToShow
                       planBufferSecondsBeforeItinerary:(int)planBufferSecondsBeforeItinerary
@@ -322,14 +322,14 @@
     @try {
         NSMutableSet* matchingItineraries = [[NSMutableSet alloc] initWithCapacity:[[self itineraries] count]];
         
-        // Exclude any Gtfs request chunks that should be excluded per the routeExcludeSetting
+        // Exclude any Gtfs request chunks that should be excluded per the routeExcludeSettings
         NSMutableSet* reqChunkSet = [NSMutableSet setWithSet:[self requestChunks]];
-        if (routeExcludeSetting) {
+        if (routeExcludeSettings) {
             for (PlanRequestChunk* reqChunk in [self requestChunks]) {
                 if (reqChunk.type.intValue == GTFS_ITINERARY &&
                     reqChunk.gtfsItineraryPattern &&
                     reqChunk.sortedItineraries.count > 0) {
-                    if ([routeExcludeSetting isItineraryIncluded:[reqChunk.sortedItineraries objectAtIndex:0]]) {
+                    if ([routeExcludeSettings isItineraryIncluded:[reqChunk.sortedItineraries objectAtIndex:0]]) {
                         [reqChunkSet removeObject:reqChunk];  // Remove this request chunk from consideration
                     }
                 }
@@ -422,8 +422,8 @@
         NSMutableSet *includedItineraries = [NSMutableSet setWithSet:matchingItineraries];
         for (Itinerary* itin1 in matchingItineraries) {
             // Check for excluded OTP itineraries (GTFS itineraries were already checked above)
-            if (routeExcludeSetting && [itin1 isOTPItinerary]) {
-                if (![routeExcludeSetting isItineraryIncluded:itin1]) {
+            if (routeExcludeSettings && [itin1 isOTPItinerary]) {
+                if (![routeExcludeSettings isItineraryIncluded:itin1]) {
                     [includedItineraries removeObject:itin1];
                 }
             }
@@ -475,7 +475,7 @@
 {
     return [self returnSortedItinerariesWithMatchesForDate:requestDate
                                             departOrArrive:depOrArrive
-                             routeExcludeSetting:nil
+                             RouteExcludeSettings:nil
                                                   callBack:nil
                                   planMaxItinerariesToShow:planMaxItinerariesToShow
                           planBufferSecondsBeforeItinerary:planBufferSecondsBeforeItinerary

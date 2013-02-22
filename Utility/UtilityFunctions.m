@@ -16,6 +16,7 @@
 
 static NSDateFormatter *utilitiesTimeFormatter;  // Static variable for short time formatter for use by utility
 static NSDateFormatter *timeFormatterForTimeString;  // used for dateForTimeString utility
+static NSDictionary *agencyShortNameMapping;  // used for returnShortAgencyName
 
 // This function will construct the full path for a file with name *filename
 // in the Documents Directory
@@ -569,16 +570,28 @@ UIImage *getAgencyIcon(NSString * imageName){
 }
 
 NSString *returnShortAgencyName(NSString *agencyName){
-    if([agencyName isEqualToString:CALTRAIN_AGENCY_NAME])
-        return @"Caltrain";
-    else if([agencyName isEqualToString:BART_AGENCY_NAME])
-        return @"Bart";
-    else if([agencyName isEqualToString:AIRBART_AGENCY_NAME])
-        return @"Bart";
-    else if([agencyName isEqualToString:SFMUNI_AGENCY_NAME])
-        return @"Muni";
-    else if([agencyName isEqualToString:ACTRANSIT_AGENCY_NAME])
-        return ACTRANSIT_BUTTON;
-    else
+    if (!agencyShortNameMapping) {
+        agencyShortNameMapping = [NSDictionary dictionaryWithKeysAndObjects:
+                                  CALTRAIN_AGENCY_NAME, CALTRAIN_BUTTON,
+                                  BART_AGENCY_NAME, BART_BUTTON,
+                                  AIRBART_AGENCY_NAME, AIRBART_BUTTON,
+                                  SFMUNI_AGENCY_NAME, MUNI_BUTTON,
+                                  ACTRANSIT_AGENCY_NAME, ACTRANSIT_BUTTON,
+                                  VTA_AGENCY_NAME, VTA_BUTTON,
+                                  MENLO_MIDDAY_AGENCY_NAME, MENLO_MIDDAY_BUTTON,
+                                  BLUE_GOLD_AGENCY_NAME, BLUE_GOLD_BUTTON,
+                                  HARBOR_BAY_AGENCY_NAME, HARBOR_BAY_BUTTON,
+                                  BAYLINK_AGENCY_NAME, BAYLINK_BUTTON,
+                                  GOLDEN_GATE_AGENCY_NAME, GOLDEN_GATE_BUTTON,
+                                  nil];
+    }
+    if (!agencyName) {
+        return nil;
+    }
+    NSString* returnString = [agencyShortNameMapping objectForKey:agencyName];
+    if (returnString) {
+        return returnString;
+    } else {
         return agencyName;
+    }
 }
