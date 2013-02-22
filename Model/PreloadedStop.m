@@ -42,14 +42,14 @@
 }
 
 -(BOOL) isMatchingTypedString:(NSString *)str{
-    NSString *address = [[self formattedAddress] lowercaseString];
-    NSString *strAdress = [[nc_AppDelegate sharedInstance].locations rawAddressWithOutAgencyName:address SearchStringArray:SEARCH_STRINGS_ARRAY ReplaceStringArray:REPLACE_STRINGS_ARRAY];
-    NSArray *arrComponents = [strAdress componentsSeparatedByString:@" "];
-    for(int i=0;i<[arrComponents count];i++){
-        NSString *token = [arrComponents objectAtIndex:i];
-        if([token hasPrefix:str])
-            return true;
-    }
-    return false;
+//    NSString *address = [[self formattedAddress] lowercaseString];
+//    NSString *strAdress = [[nc_AppDelegate sharedInstance].locations rawAddressWithOutAgencyName:address SearchStringArray:SEARCH_STRINGS_ARRAY ReplaceStringArray:REPLACE_STRINGS_ARRAY];
+//    NSArray *arrComponents = [strAdress componentsSeparatedByString:@" "];
+//    for(int i=0;i<[arrComponents count];i++){
+//        NSString *token = [arrComponents objectAtIndex:i];
+//        if([token hasPrefix:str])
+//            return true;
+//    }
+//    return false;
 }
 @end

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="12C60" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="11G56" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AddressComponent" representedClassName="AddressComponent" syncable="YES">
         <attribute name="longName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
@@ -296,6 +296,7 @@
     <fetchRequest name="StationListByContainsId" entity="StationListElement" predicateString="containsListId == $CONTAINSLISTID"/>
     <fetchRequest name="StationListByMemberId" entity="StationListElement" predicateString="memberOfListId == $MEMBEROFLISTID"/>
     <fetchRequest name="StationListElementByAgency" entity="StationListElement" predicateString="agency == $AGENCY"/>
+    <fetchRequest name="StationListFetch" entity="StationListElement" predicateString="stop.formattedAddress CONTAINS[cd] $FORMATTEDADDRESS AND stop.formattedAddress CONTAINS[cd] $FORMATTEDADDRESS"/>
     <elements>
         <element name="AddressComponent" positionX="0" positionY="0" width="128" height="105"/>
         <element name="BayArea" positionX="0" positionY="0" width="128" height="195"/>
@@ -321,8 +322,8 @@
         <element name="PlanRequestChunk" positionX="0" positionY="0" width="128" height="150"/>
         <element name="PreloadedStop" positionX="160" positionY="192" width="128" height="120"/>
         <element name="RawAddress" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="RouteExcludeSettings" positionX="160" positionY="192" width="128" height="90"/>
         <element name="StationListElement" positionX="160" positionY="192" width="128" height="150"/>
         <element name="Step" positionX="0" positionY="0" width="128" height="195"/>
-        <element name="RouteExcludeSettings" positionX="160" positionY="192" width="128" height="90"/>
     </elements>
 </model>

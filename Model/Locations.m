@@ -11,6 +11,8 @@
 #import "UtilityFunctions.h"
 #import "Plan.h"
 #import "Constants.h"
+#import "StationListElement.h"
+#import "nc_AppDelegate.h"
 
 // Internal variables and methods
 
@@ -247,8 +249,38 @@
     return loc;
 }
 
+- (NSArray *) isMatchingTypedAddress:(NSString *)string{
+    NSString *newString = [self rawAddressWithOutAgencyName:[string lowercaseString] SearchStringArray:SEARCH_STRINGS_ARRAY];
+    NSArray *tokens = [newString componentsSeparatedByString:@" "];
+    NSMutableArray *predicates = [[NSMutableArray alloc] init];
+    for(int i=0;i<[tokens count];i++){
+        NSPredicate *resultPredicate = [NSPredicate
+                                        predicateWithFormat:                                           @"self.stop.formattedAddress CONTAINS[cd] %@",[tokens objectAtIndex:i]];
+        [predicates addObject:resultPredicate];
+    }
+    NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:predicates];
+    NSFetchRequest * fetchStationListElement = [[NSFetchRequest alloc] init];
+    [fetchStationListElement setEntity:[NSEntityDescription entityForName:@"StationListElement" inManagedObjectContext:managedObjectContext]];
+    [fetchStationListElement setPredicate:predicate];
+    
+    NSArray * arrayStationListElement = [managedObjectContext executeFetchRequest:fetchStationListElement error:nil];
+    NSMutableArray *arrLocations = [[NSMutableArray alloc] init];
+    for(int i=0;i<[arrayStationListElement count];i++){
+        StationListElement *listElement = [arrayStationListElement objectAtIndex:i];
+        if(listElement.stop){
+            LocationFromGoogle *loc = (LocationFromGoogle *)[[nc_AppDelegate sharedInstance].stations createNewLocationObjectFromGtfsStop:listElement.stop :listElement];
+            NSArray *locations = [self locationsWithFormattedAddress:loc.formattedAddress];
+            for(int j=1;j<[locations count];j++){
+                LocationFromGoogle *l = [locations objectAtIndex:j];
+                [managedObjectContext deleteObject:l];
+            }
+            [arrLocations addObject:loc];
+        }
+    }
+}
+
 // Utility function used by setTypedFromString & setTypedToString.  On hold for now
-/* void updateFromTyping(NSString *typedXStr0, NSString **typedXString, NSArray **sortedMatchingXLocations, 
+/* void updateFromTyping(NSString *typedXStr0, NSString **typedXString, NSArray **sortedMatchingXLocations,
                       int *matchingXRowCount)
  */
 
@@ -292,6 +324,15 @@
             areMatchingLocationsChanged = YES;   // mark for refreshing the table
         }
         matchingFromRowCount = [sortedMatchingFromLocations count];  // cases that match typing are included even if they have frequency=0
+        
+        if([finalNewArray count] == 0){
+            NSArray *arrLocations = [self isMatchingTypedAddress:typedFromString];
+            if([arrLocations count] > 0){
+                sortedMatchingFromLocations = arrLocations;
+                areMatchingLocationsChanged = YES;
+            }
+            matchingFromRowCount = [sortedMatchingFromLocations count];
+        }
     }
 }
 
@@ -335,6 +376,14 @@
             areMatchingLocationsChanged = YES;   // mark for refreshing the table
         }
         matchingToRowCount = [sortedMatchingToLocations count];  // cases that match typing are included even if they have frequency=0
+        if([finalNewArray count] == 0){
+            NSArray *arrLocations = [self isMatchingTypedAddress:typedToString];
+            if([arrLocations count] > 0){
+                sortedMatchingToLocations = arrLocations;
+                areMatchingLocationsChanged = YES;
+            }
+            matchingToRowCount = [sortedMatchingToLocations count];
+        }
     }
 }
 
@@ -1037,12 +1086,21 @@
     isLocationServiceEnable = isLocationServicesEnable;
 }
 
+- (NSString *) replaceString:(NSString *)string FromString:(NSString *)originalString{
+    NSString *strPattern1 = [NSString stringWithFormat:@" %@ ",string];
+    NSRegularExpression *regex1 = [NSRegularExpression regularExpressionWithPattern:strPattern1 options:NSRegularExpressionCaseInsensitive error:nil];
+    NSString *modifiedString1 = [regex1 stringByReplacingMatchesInString:originalString options:0 range:NSMakeRange(0, [originalString length]) withTemplate:@" "];
+    
+    NSString *strPattern2 = [NSString stringWithFormat:@" %@$|^%@ ",string,string];
+    NSRegularExpression *regex2 = [NSRegularExpression regularExpressionWithPattern:strPattern2 options:NSRegularExpressionCaseInsensitive error:nil];
+    NSString *modifiedString2 = [regex2 stringByReplacingMatchesInString:modifiedString1 options:0 range:NSMakeRange(0, [modifiedString1 length]) withTemplate:@""];
+    return modifiedString2;
+}
+
 // Station Search From Json Files.
-- (NSString *) rawAddressWithOutAgencyName:(NSString *)address SearchStringArray:(NSArray *)searchStringArray ReplaceStringArray:(NSArray *)replaceStringArray{
+- (NSString *) rawAddressWithOutAgencyName:(NSString *)address SearchStringArray:(NSArray *)searchStringArray{
     for(int i=0;i<[searchStringArray count];i++){
-        if ([address rangeOfString:[searchStringArray objectAtIndex:i] options:NSCaseInsensitiveSearch].location != NSNotFound){
-            address = [address stringByReplacingOccurrencesOfString:[searchStringArray objectAtIndex:i] withString:[replaceStringArray objectAtIndex:i]];
-        }
+        address = [self replaceString:[searchStringArray objectAtIndex:i] FromString:address];
     }
     return address;
 }

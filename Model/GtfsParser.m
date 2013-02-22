@@ -46,325 +46,376 @@
 }
 
 - (void) parseAndStoreGtfsAgencyData:(NSDictionary *)dictFileData{
-    NSFetchRequest * fetchAgencies = [[NSFetchRequest alloc] init];
-    [fetchAgencies setEntity:[NSEntityDescription entityForName:@"GtfsAgency" inManagedObjectContext:self.managedObjectContext]];
-    NSArray * arrayAgencies = [self.managedObjectContext executeFetchRequest:fetchAgencies error:nil];
-    for (id agency in arrayAgencies){
-        [self.managedObjectContext deleteObject:agency];
-    }
-    
-    NSMutableArray *arrayAgencyID = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayAgencyName = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayAgencyURL = [[NSMutableArray alloc] init];
-    
-    NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
-    for(int k=1;k<=8;k++){
-        NSArray *arrayComponentsAgency = [dictComponents objectForKey:[NSString stringWithFormat:@"%d_agency",k]];
-        for(int i=1;i<[arrayComponentsAgency count];i++){
-            NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
-            NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
-            [arrayAgencyID addObject:getItemAtIndexFromArray(0, arraySubComponents)];
-            [arrayAgencyName addObject:getItemAtIndexFromArray(1,arraySubComponents)];
-            [arrayAgencyURL addObject:getItemAtIndexFromArray(2,arraySubComponents)];
+    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
+    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
+    [moc setMergePolicy:NSOverwriteMergePolicy];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSFetchRequest * fetchAgencies = [[NSFetchRequest alloc] init];
+        [fetchAgencies setEntity:[NSEntityDescription entityForName:@"GtfsAgency" inManagedObjectContext:moc]];
+        NSArray * arrayAgencies = [moc executeFetchRequest:fetchAgencies error:nil];
+        for (id agency in arrayAgencies){
+            [moc deleteObject:agency];
         }
-    }
-    for(int i=0;i<[arrayAgencyID count];i++){
-        GtfsAgency* agency = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsAgency" inManagedObjectContext:self.managedObjectContext];
-        agency.agencyID = [arrayAgencyID objectAtIndex:i];
-        agency.agencyName = [arrayAgencyName objectAtIndex:i];
-        agency.agencyURL = [arrayAgencyURL objectAtIndex:i];
-    }
-    saveContext(self.managedObjectContext);
+        
+        NSMutableArray *arrayAgencyID = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayAgencyName = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayAgencyURL = [[NSMutableArray alloc] init];
+        
+        NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
+        for(int k=1;k<=8;k++){
+            NSArray *arrayComponentsAgency = [dictComponents objectForKey:[NSString stringWithFormat:@"%d_agency",k]];
+            for(int i=1;i<[arrayComponentsAgency count];i++){
+                NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
+                NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
+                [arrayAgencyID addObject:getItemAtIndexFromArray(0, arraySubComponents)];
+                [arrayAgencyName addObject:getItemAtIndexFromArray(1,arraySubComponents)];
+                [arrayAgencyURL addObject:getItemAtIndexFromArray(2,arraySubComponents)];
+            }
+        }
+        for(int i=0;i<[arrayAgencyID count];i++){
+            GtfsAgency* agency = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsAgency" inManagedObjectContext:moc];
+            agency.agencyID = [arrayAgencyID objectAtIndex:i];
+            agency.agencyName = [arrayAgencyName objectAtIndex:i];
+            agency.agencyURL = [arrayAgencyURL objectAtIndex:i];
+        }
+        saveContext(moc);
+        dispatch_async(dispatch_get_main_queue(), ^{
+        });
+    });
 }
 
 - (void) parseAndStoreGtfsCalendarDatesData:(NSDictionary *)dictFileData{
-    NSFetchRequest * fetchCalendarDates = [[NSFetchRequest alloc] init];
-    [fetchCalendarDates setEntity:[NSEntityDescription entityForName:@"GtfsCalendarDates" inManagedObjectContext:self.managedObjectContext]];
-    NSArray * arrayPlanCalendarDates = [self.managedObjectContext executeFetchRequest:fetchCalendarDates error:nil];
-    for (id calendarDates in arrayPlanCalendarDates){
-        [self.managedObjectContext deleteObject:calendarDates];
-    }
-    
-    NSMutableArray *arrayServiceID = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayDate = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayExceptionType = [[NSMutableArray alloc] init];
-    
-    NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
-    for(int k=1;k<=8;k++){
-        NSArray *arrayComponentsAgency = [dictComponents objectForKey:[NSString stringWithFormat:@"%d_calendar_dates",k]];
-        for(int i=1;i<[arrayComponentsAgency count];i++){
-            NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
-            if(strSubComponents && strSubComponents.length > 0){
-                NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
-                [arrayServiceID addObject:getItemAtIndexFromArray(0, arraySubComponents)];
-                [arrayDate addObject:getItemAtIndexFromArray(1,arraySubComponents)];
-                [arrayExceptionType addObject:getItemAtIndexFromArray(2,arraySubComponents)];
+    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
+    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
+    [moc setMergePolicy:NSOverwriteMergePolicy];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSFetchRequest * fetchCalendarDates = [[NSFetchRequest alloc] init];
+        [fetchCalendarDates setEntity:[NSEntityDescription entityForName:@"GtfsCalendarDates" inManagedObjectContext:moc]];
+        NSArray * arrayPlanCalendarDates = [moc executeFetchRequest:fetchCalendarDates error:nil];
+        for (id calendarDates in arrayPlanCalendarDates){
+            [moc deleteObject:calendarDates];
+        }
+        
+        NSMutableArray *arrayServiceID = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayDate = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayExceptionType = [[NSMutableArray alloc] init];
+        
+        NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
+        for(int k=1;k<=8;k++){
+            NSArray *arrayComponentsAgency = [dictComponents objectForKey:[NSString stringWithFormat:@"%d_calendar_dates",k]];
+            for(int i=1;i<[arrayComponentsAgency count];i++){
+                NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
+                if(strSubComponents && strSubComponents.length > 0){
+                    NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
+                    [arrayServiceID addObject:getItemAtIndexFromArray(0, arraySubComponents)];
+                    [arrayDate addObject:getItemAtIndexFromArray(1,arraySubComponents)];
+                    [arrayExceptionType addObject:getItemAtIndexFromArray(2,arraySubComponents)];
+                }
             }
         }
-    }
-    NSDateFormatter *formtter = [[NSDateFormatter alloc] init];
-    [formtter setDateFormat:@"yyyyMMdd"];
-    NSFetchRequest * fetchCalendar = [[NSFetchRequest alloc] init];
-    [fetchCalendar setEntity:[NSEntityDescription entityForName:@"GtfsCalendar" inManagedObjectContext:self.managedObjectContext]];
-    NSArray * arrayCalendar = [self.managedObjectContext executeFetchRequest:fetchCalendar error:nil];
-    NSMutableDictionary *dictCalendar = [[NSMutableDictionary alloc] init];
-    for(int i=0;i<[arrayCalendar count];i++){
-        GtfsCalendar *calendar = [arrayCalendar objectAtIndex:i];
-        [dictCalendar setObject:calendar forKey:calendar.serviceID];
-    }
-    for(int i=0;i<[arrayServiceID count];i++){
-        GtfsCalendarDates* calendarDates = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsCalendarDates" inManagedObjectContext:self.managedObjectContext];
-        calendarDates.serviceID = [arrayServiceID objectAtIndex:i];
-        calendarDates.calendar = [dictCalendar objectForKey:calendarDates.serviceID];
-        NSString *strDate = [arrayDate objectAtIndex:i];
-        NSDate *dates;
-        if(strDate.length > 0){
-            dates = [formtter dateFromString:[arrayDate objectAtIndex:i]];
-            calendarDates.date = dates;
+        NSDateFormatter *formtter = [[NSDateFormatter alloc] init];
+        [formtter setDateFormat:@"yyyyMMdd"];
+        NSFetchRequest * fetchCalendar = [[NSFetchRequest alloc] init];
+        [fetchCalendar setEntity:[NSEntityDescription entityForName:@"GtfsCalendar" inManagedObjectContext:moc]];
+        NSArray * arrayCalendar = [moc executeFetchRequest:fetchCalendar error:nil];
+        NSMutableDictionary *dictCalendar = [[NSMutableDictionary alloc] init];
+        for(int i=0;i<[arrayCalendar count];i++){
+            GtfsCalendar *calendar = [arrayCalendar objectAtIndex:i];
+            [dictCalendar setObject:calendar forKey:calendar.serviceID];
         }
-        calendarDates.exceptionType = [arrayExceptionType objectAtIndex:i];
-    }
-    saveContext(self.managedObjectContext);
+        for(int i=0;i<[arrayServiceID count];i++){
+            GtfsCalendarDates* calendarDates = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsCalendarDates" inManagedObjectContext:moc];
+            calendarDates.serviceID = [arrayServiceID objectAtIndex:i];
+            calendarDates.calendar = [dictCalendar objectForKey:calendarDates.serviceID];
+            NSString *strDate = [arrayDate objectAtIndex:i];
+            NSDate *dates;
+            if(strDate.length > 0){
+                dates = [formtter dateFromString:[arrayDate objectAtIndex:i]];
+                calendarDates.date = dates;
+            }
+            calendarDates.exceptionType = [arrayExceptionType objectAtIndex:i];
+        }
+        saveContext(moc);
+        dispatch_async(dispatch_get_main_queue(), ^{
+        });
+    });
 }
 
 - (void) parseAndStoreGtfsCalendarData:(NSDictionary *)dictFileData{
-    NSFetchRequest * fetchCalendar = [[NSFetchRequest alloc] init];
-    [fetchCalendar setEntity:[NSEntityDescription entityForName:@"GtfsCalendar" inManagedObjectContext:self.managedObjectContext]];
-    NSArray * arrayCalendar = [self.managedObjectContext executeFetchRequest:fetchCalendar error:nil];
-    for (id calendar in arrayCalendar){
-        [self.managedObjectContext deleteObject:calendar];
-    }
     
-    NSMutableArray *arrayServiceID = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayMonday = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayTuesday = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayWednesday = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayThursday = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayFriday = [[NSMutableArray alloc] init];
-    NSMutableArray *arraySaturday = [[NSMutableArray alloc] init];
-    NSMutableArray *arraySunday = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayStartDate = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayEndDate = [[NSMutableArray alloc] init];
-    
-    NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
-    for(int k=1;k<=8;k++){
-        NSArray *arrayComponentsAgency = [dictComponents objectForKey:[NSString stringWithFormat:@"%d_calendar",k]];
-        for(int i=1;i<[arrayComponentsAgency count];i++){
-            NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
-            if(strSubComponents && strSubComponents.length > 0){
-                NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
-                [arrayServiceID addObject:getItemAtIndexFromArray(0, arraySubComponents)];
-                [arrayMonday addObject:getItemAtIndexFromArray(1,arraySubComponents)];
-                [arrayTuesday addObject:getItemAtIndexFromArray(2,arraySubComponents)];
-                [arrayWednesday addObject:getItemAtIndexFromArray(3, arraySubComponents)];
-                [arrayThursday addObject:getItemAtIndexFromArray(4,arraySubComponents)];
-                [arrayFriday addObject:getItemAtIndexFromArray(5,arraySubComponents)];
-                [arraySaturday addObject:getItemAtIndexFromArray(6, arraySubComponents)];
-                [arraySunday addObject:getItemAtIndexFromArray(7,arraySubComponents)];
-                [arrayStartDate addObject:getItemAtIndexFromArray(8,arraySubComponents)];
-                [arrayEndDate addObject:getItemAtIndexFromArray(9,arraySubComponents)];
+    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
+    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
+    [moc setMergePolicy:NSOverwriteMergePolicy];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSFetchRequest * fetchCalendar = [[NSFetchRequest alloc] init];
+        [fetchCalendar setEntity:[NSEntityDescription entityForName:@"GtfsCalendar" inManagedObjectContext:moc]];
+        NSArray * arrayCalendar = [moc executeFetchRequest:fetchCalendar error:nil];
+        for (id calendar in arrayCalendar){
+            [moc deleteObject:calendar];
+        }
+        
+        NSMutableArray *arrayServiceID = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayMonday = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayTuesday = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayWednesday = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayThursday = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayFriday = [[NSMutableArray alloc] init];
+        NSMutableArray *arraySaturday = [[NSMutableArray alloc] init];
+        NSMutableArray *arraySunday = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayStartDate = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayEndDate = [[NSMutableArray alloc] init];
+        
+        NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
+        for(int k=1;k<=8;k++){
+            NSArray *arrayComponentsAgency = [dictComponents objectForKey:[NSString stringWithFormat:@"%d_calendar",k]];
+            for(int i=1;i<[arrayComponentsAgency count];i++){
+                NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
+                if(strSubComponents && strSubComponents.length > 0){
+                    NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
+                    [arrayServiceID addObject:getItemAtIndexFromArray(0, arraySubComponents)];
+                    [arrayMonday addObject:getItemAtIndexFromArray(1,arraySubComponents)];
+                    [arrayTuesday addObject:getItemAtIndexFromArray(2,arraySubComponents)];
+                    [arrayWednesday addObject:getItemAtIndexFromArray(3, arraySubComponents)];
+                    [arrayThursday addObject:getItemAtIndexFromArray(4,arraySubComponents)];
+                    [arrayFriday addObject:getItemAtIndexFromArray(5,arraySubComponents)];
+                    [arraySaturday addObject:getItemAtIndexFromArray(6, arraySubComponents)];
+                    [arraySunday addObject:getItemAtIndexFromArray(7,arraySubComponents)];
+                    [arrayStartDate addObject:getItemAtIndexFromArray(8,arraySubComponents)];
+                    [arrayEndDate addObject:getItemAtIndexFromArray(9,arraySubComponents)];
+                }
             }
         }
-    }
-    NSDateFormatter *formtter = [[NSDateFormatter alloc] init];
-    [formtter setDateFormat:@"yyyyMMdd"];
-    for(int i=0;i<[arrayServiceID count];i++){
-        GtfsCalendar* calendar = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsCalendar" inManagedObjectContext:self.managedObjectContext];
-        calendar.serviceID = [arrayServiceID objectAtIndex:i];
-        int dMonday = [[arrayMonday objectAtIndex:i] intValue];
-        int dTuesday = [[arrayTuesday objectAtIndex:i] intValue];
-        int dWednesday = [[arrayWednesday objectAtIndex:i] intValue];
-        int dThursday = [[arrayThursday objectAtIndex:i] intValue];
-        int dFriday = [[arrayFriday objectAtIndex:i] intValue];
-        int dSaturday = [[arraySaturday objectAtIndex:i] intValue];
-        int dSunday = [[arraySunday objectAtIndex:i] intValue];
-        calendar.monday = [NSNumber numberWithInt:dMonday];
-        calendar.tuesday = [NSNumber numberWithInt:dTuesday];
-        calendar.wednesday = [NSNumber numberWithInt:dWednesday];
-        calendar.thursday = [NSNumber numberWithInt:dThursday];
-        calendar.friday = [NSNumber numberWithInt:dFriday];
-        calendar.saturday = [NSNumber numberWithInt:dSaturday];
-        calendar.sunday = [NSNumber numberWithInt:dSunday];
-        NSString *strStartDate = [arrayStartDate objectAtIndex:i];
-        NSString *strEndDate = [arrayEndDate objectAtIndex:i];
-        if(strStartDate.length > 0){
-           NSDate *startDate = [formtter dateFromString:strStartDate];
-            calendar.startDate = startDate;
+        NSDateFormatter *formtter = [[NSDateFormatter alloc] init];
+        [formtter setDateFormat:@"yyyyMMdd"];
+        for(int i=0;i<[arrayServiceID count];i++){
+            GtfsCalendar* calendar = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsCalendar" inManagedObjectContext:moc];
+            calendar.serviceID = [arrayServiceID objectAtIndex:i];
+            int dMonday = [[arrayMonday objectAtIndex:i] intValue];
+            int dTuesday = [[arrayTuesday objectAtIndex:i] intValue];
+            int dWednesday = [[arrayWednesday objectAtIndex:i] intValue];
+            int dThursday = [[arrayThursday objectAtIndex:i] intValue];
+            int dFriday = [[arrayFriday objectAtIndex:i] intValue];
+            int dSaturday = [[arraySaturday objectAtIndex:i] intValue];
+            int dSunday = [[arraySunday objectAtIndex:i] intValue];
+            calendar.monday = [NSNumber numberWithInt:dMonday];
+            calendar.tuesday = [NSNumber numberWithInt:dTuesday];
+            calendar.wednesday = [NSNumber numberWithInt:dWednesday];
+            calendar.thursday = [NSNumber numberWithInt:dThursday];
+            calendar.friday = [NSNumber numberWithInt:dFriday];
+            calendar.saturday = [NSNumber numberWithInt:dSaturday];
+            calendar.sunday = [NSNumber numberWithInt:dSunday];
+            NSString *strStartDate = [arrayStartDate objectAtIndex:i];
+            NSString *strEndDate = [arrayEndDate objectAtIndex:i];
+            if(strStartDate.length > 0){
+                NSDate *startDate = [formtter dateFromString:strStartDate];
+                calendar.startDate = startDate;
+            }
+            if(strEndDate.length > 0){
+                NSDate *endDate = [formtter dateFromString:strEndDate];
+                calendar.endDate = endDate;
+            }
         }
-        if(strEndDate.length > 0){
-            NSDate *endDate = [formtter dateFromString:strEndDate];
-            calendar.endDate = endDate;
-        }
-    }
-    saveContext(self.managedObjectContext);
+        saveContext(moc);
+        dispatch_async(dispatch_get_main_queue(), ^{
+        });
+    });
 }
 
 - (void) parseAndStoreGtfsRoutesData:(NSDictionary *)dictFileData{
-    NSFetchRequest * fetchRoutes = [[NSFetchRequest alloc] init];
-    [fetchRoutes setEntity:[NSEntityDescription entityForName:@"GtfsRoutes" inManagedObjectContext:self.managedObjectContext]];
-    NSArray * arrayRoutes = [self.managedObjectContext executeFetchRequest:fetchRoutes error:nil];
-    for (id routes in arrayRoutes){
-        [self.managedObjectContext deleteObject:routes];
-    }
     
-    NSMutableArray *arrayRouteID = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayRouteShortName = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayRouteLongName = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayRouteDesc = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayRouteType = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayRouteURL = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayRouteColor = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayRouteTextColor = [[NSMutableArray alloc] init];
-    
-    NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
-    for(int k=1;k<=8;k++){
-        NSArray *arrayComponentsAgency = [dictComponents objectForKey:[NSString stringWithFormat:@"%d_routes",k]];
-        for(int i=1;i<[arrayComponentsAgency count];i++){
-            NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
-            if(strSubComponents && strSubComponents.length > 0){
-                NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
-                [arrayRouteID addObject:getItemAtIndexFromArray(0,arraySubComponents)];
-                [arrayRouteShortName addObject:getItemAtIndexFromArray(1,arraySubComponents)];
-                [arrayRouteLongName addObject:getItemAtIndexFromArray(2,arraySubComponents)];
-                [arrayRouteDesc addObject:getItemAtIndexFromArray(3,arraySubComponents)];
-                [arrayRouteType addObject:getItemAtIndexFromArray(4,arraySubComponents)];
-                [arrayRouteURL addObject:getItemAtIndexFromArray(5,arraySubComponents)];
-                [arrayRouteColor addObject:getItemAtIndexFromArray(6,arraySubComponents)];
-                [arrayRouteTextColor addObject:getItemAtIndexFromArray(7,arraySubComponents)];
-            }
- 
+    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
+    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
+    [moc setMergePolicy:NSOverwriteMergePolicy];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSFetchRequest * fetchRoutes = [[NSFetchRequest alloc] init];
+        [fetchRoutes setEntity:[NSEntityDescription entityForName:@"GtfsRoutes" inManagedObjectContext:moc]];
+        NSArray * arrayRoutes = [moc executeFetchRequest:fetchRoutes error:nil];
+        for (id routes in arrayRoutes){
+            [moc deleteObject:routes];
         }
-    }
-    for(int i=0;i<[arrayRouteID count];i++){
-        GtfsRoutes* routes = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsRoutes" inManagedObjectContext:self.managedObjectContext];
-        routes.routeID = [arrayRouteID objectAtIndex:i];
-        routes.routeShortName = [arrayRouteShortName objectAtIndex:i];
-        routes.routeLongname = [arrayRouteLongName objectAtIndex:i];
-        routes.routeDesc = [arrayRouteDesc objectAtIndex:i];
-        routes.routeType = [arrayRouteType objectAtIndex:i];
-        routes.routeURL = [arrayRouteURL objectAtIndex:i];
-        routes.routeColor = [arrayRouteColor objectAtIndex:i];
-        routes.routeTextColor = [arrayRouteTextColor objectAtIndex:i];
-    }
-    saveContext(self.managedObjectContext);
+        
+        NSMutableArray *arrayRouteID = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayRouteShortName = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayRouteLongName = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayRouteDesc = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayRouteType = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayRouteURL = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayRouteColor = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayRouteTextColor = [[NSMutableArray alloc] init];
+        
+        NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
+        for(int k=1;k<=8;k++){
+            NSArray *arrayComponentsAgency = [dictComponents objectForKey:[NSString stringWithFormat:@"%d_routes",k]];
+            for(int i=1;i<[arrayComponentsAgency count];i++){
+                NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
+                if(strSubComponents && strSubComponents.length > 0){
+                    NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
+                    [arrayRouteID addObject:getItemAtIndexFromArray(0,arraySubComponents)];
+                    [arrayRouteShortName addObject:getItemAtIndexFromArray(1,arraySubComponents)];
+                    [arrayRouteLongName addObject:getItemAtIndexFromArray(2,arraySubComponents)];
+                    [arrayRouteDesc addObject:getItemAtIndexFromArray(3,arraySubComponents)];
+                    [arrayRouteType addObject:getItemAtIndexFromArray(4,arraySubComponents)];
+                    [arrayRouteURL addObject:getItemAtIndexFromArray(5,arraySubComponents)];
+                    [arrayRouteColor addObject:getItemAtIndexFromArray(6,arraySubComponents)];
+                    [arrayRouteTextColor addObject:getItemAtIndexFromArray(7,arraySubComponents)];
+                }
+                
+            }
+        }
+        for(int i=0;i<[arrayRouteID count];i++){
+            GtfsRoutes* routes = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsRoutes" inManagedObjectContext:moc];
+            routes.routeID = [arrayRouteID objectAtIndex:i];
+            routes.routeShortName = [arrayRouteShortName objectAtIndex:i];
+            routes.routeLongname = [arrayRouteLongName objectAtIndex:i];
+            routes.routeDesc = [arrayRouteDesc objectAtIndex:i];
+            routes.routeType = [arrayRouteType objectAtIndex:i];
+            routes.routeURL = [arrayRouteURL objectAtIndex:i];
+            routes.routeColor = [arrayRouteColor objectAtIndex:i];
+            routes.routeTextColor = [arrayRouteTextColor objectAtIndex:i];
+        }
+        saveContext(moc);
+        dispatch_async(dispatch_get_main_queue(), ^{
+        });
+    });
 }
 
 - (void) parseAndStoreGtfsStopsData:(NSDictionary *)dictFileData{
-    NSFetchRequest * fetchStops = [[NSFetchRequest alloc] init];
-    [fetchStops setEntity:[NSEntityDescription entityForName:@"GtfsStop" inManagedObjectContext:self.managedObjectContext]];
-    NSArray * arrayStops = [self.managedObjectContext executeFetchRequest:fetchStops error:nil];
-    for (id stops in arrayStops){
-        [self.managedObjectContext deleteObject:stops];
-    }
-    
-    NSMutableArray *arrayStopID = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayStopName = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayStopDesc = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayStopLat = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayStopLong = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayZoneID = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayStopURL = [[NSMutableArray alloc] init];
-    
-    NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
-    for(int k=1;k<=8;k++){
-        NSArray *arrayComponentsAgency = [dictComponents objectForKey:[NSString stringWithFormat:@"%d_stops",k]];
-        for(int i=1;i<[arrayComponentsAgency count];i++){
-            NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
-            if(strSubComponents && strSubComponents.length > 0){
-                NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
-                 [arrayStopID addObject:getItemAtIndexFromArray(0,arraySubComponents)];
-                 [arrayStopName addObject:getItemAtIndexFromArray(1,arraySubComponents)];
-                 [arrayStopDesc addObject:getItemAtIndexFromArray(2,arraySubComponents)];
-                 [arrayStopLat addObject:getItemAtIndexFromArray(3,arraySubComponents)];
-                 [arrayStopLong addObject:getItemAtIndexFromArray(4,arraySubComponents)];
-                 [arrayZoneID addObject:getItemAtIndexFromArray(5,arraySubComponents)];
-                 [arrayStopURL addObject:getItemAtIndexFromArray(6,arraySubComponents)];
+    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
+    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
+    [moc setMergePolicy:NSOverwriteMergePolicy];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSFetchRequest * fetchStops = [[NSFetchRequest alloc] init];
+        [fetchStops setEntity:[NSEntityDescription entityForName:@"GtfsStop" inManagedObjectContext:moc]];
+        NSArray * arrayStops = [moc executeFetchRequest:fetchStops error:nil];
+        for (id stops in arrayStops){
+            [moc deleteObject:stops];
+        }
+        
+        NSMutableArray *arrayStopID = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayStopName = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayStopDesc = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayStopLat = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayStopLong = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayZoneID = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayStopURL = [[NSMutableArray alloc] init];
+        
+        NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
+        for(int k=1;k<=8;k++){
+            NSArray *arrayComponentsAgency = [dictComponents objectForKey:[NSString stringWithFormat:@"%d_stops",k]];
+            for(int i=1;i<[arrayComponentsAgency count];i++){
+                NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
+                if(strSubComponents && strSubComponents.length > 0){
+                    NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
+                    [arrayStopID addObject:getItemAtIndexFromArray(0,arraySubComponents)];
+                    [arrayStopName addObject:getItemAtIndexFromArray(1,arraySubComponents)];
+                    [arrayStopDesc addObject:getItemAtIndexFromArray(2,arraySubComponents)];
+                    [arrayStopLat addObject:getItemAtIndexFromArray(3,arraySubComponents)];
+                    [arrayStopLong addObject:getItemAtIndexFromArray(4,arraySubComponents)];
+                    [arrayZoneID addObject:getItemAtIndexFromArray(5,arraySubComponents)];
+                    [arrayStopURL addObject:getItemAtIndexFromArray(6,arraySubComponents)];
+                }
             }
         }
-    }
-    for(int i=0;i<[arrayStopID count];i++){
-        GtfsStop* routes = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsStop" inManagedObjectContext:self.managedObjectContext];
-        routes.stopID = [arrayStopID objectAtIndex:i];
-        routes.stopName = [arrayStopName objectAtIndex:i];
-        routes.stopDesc = [arrayStopDesc objectAtIndex:i];
-        double stopLat = [[arrayStopLat objectAtIndex:i] doubleValue];
-        double stopLong = [[arrayStopLong objectAtIndex:i] doubleValue];
-        routes.stopLat = [NSNumber numberWithDouble:stopLat];
-        routes.stopLon = [NSNumber numberWithDouble:stopLong];
-        routes.zoneID = [arrayZoneID objectAtIndex:i];
-        routes.stopURL = [arrayStopURL objectAtIndex:i];
-    }
-    saveContext(self.managedObjectContext);
+        for(int i=0;i<[arrayStopID count];i++){
+            GtfsStop* routes = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsStop" inManagedObjectContext:moc];
+            routes.stopID = [arrayStopID objectAtIndex:i];
+            routes.stopName = [arrayStopName objectAtIndex:i];
+            routes.stopDesc = [arrayStopDesc objectAtIndex:i];
+            double stopLat = [[arrayStopLat objectAtIndex:i] doubleValue];
+            double stopLong = [[arrayStopLong objectAtIndex:i] doubleValue];
+            routes.stopLat = [NSNumber numberWithDouble:stopLat];
+            routes.stopLon = [NSNumber numberWithDouble:stopLong];
+            routes.zoneID = [arrayZoneID objectAtIndex:i];
+            routes.stopURL = [arrayStopURL objectAtIndex:i];
+        }
+        saveContext(moc);
+        dispatch_async(dispatch_get_main_queue(), ^{
+        });
+    });
 }
 
 - (void) parseAndStoreGtfsTripsData:(NSDictionary *)dictFileData RequestUrl:(NSString *)strRequestUrl{
-    NSArray *arrayComponents = [strRequestUrl componentsSeparatedByString:@"?"];
-    NSString *tempString = [arrayComponents objectAtIndex:1];
-    NSArray *arraySubComponents = [tempString componentsSeparatedByString:@"="];
-    NSString *tempStringSubComponents = [arraySubComponents objectAtIndex:1];
-    NSArray *arrayAgencyIds = [tempStringSubComponents componentsSeparatedByString:@"%2C"];
+    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
+    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
+    [moc setMergePolicy:NSOverwriteMergePolicy];
     
-    NSMutableArray *arrayTripID = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayRouteID = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayServiceID = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayTripHeadSign = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayDirectionID = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayBlockID = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayShapeID = [[NSMutableArray alloc] init];
-    NSMutableArray *arrayAgencyID = [[NSMutableArray alloc] init];
-    
-    NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
-    for(int k=0;k<[arrayAgencyIds count];k++){
-        NSArray *arrayComponentsAgency = [dictComponents objectForKey:[arrayAgencyIds objectAtIndex:k]];
-        for(int i=0;i<[arrayComponentsAgency count];i++){
-            NSString *strAgencyIds = [arrayAgencyIds objectAtIndex:k];
-            NSArray *arrayAgencyIdsComponents = [strAgencyIds componentsSeparatedByString:@"_"];
-            [arrayAgencyID addObject:getItemAtIndexFromArray(0,arrayAgencyIdsComponents)];
-            NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
-            if(strSubComponents && strSubComponents.length > 0){
-                NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
-                [arrayTripID addObject:getItemAtIndexFromArray(0,arraySubComponents)];
-                [arrayRouteID addObject:getItemAtIndexFromArray(1,arraySubComponents)];
-                [arrayServiceID addObject:getItemAtIndexFromArray(2,arraySubComponents)];
-                [arrayTripHeadSign addObject:getItemAtIndexFromArray(3,arraySubComponents)];
-                [arrayDirectionID addObject:getItemAtIndexFromArray(4,arraySubComponents)];
-                [arrayBlockID addObject:getItemAtIndexFromArray(5,arraySubComponents)];
-                [arrayShapeID addObject:getItemAtIndexFromArray(6,arraySubComponents)];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSArray *arrayComponents = [strRequestUrl componentsSeparatedByString:@"?"];
+        NSString *tempString = [arrayComponents objectAtIndex:1];
+        NSArray *arraySubComponents = [tempString componentsSeparatedByString:@"="];
+        NSString *tempStringSubComponents = [arraySubComponents objectAtIndex:1];
+        NSArray *arrayAgencyIds = [tempStringSubComponents componentsSeparatedByString:@"%2C"];
+        
+        NSMutableArray *arrayTripID = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayRouteID = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayServiceID = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayTripHeadSign = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayDirectionID = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayBlockID = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayShapeID = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayAgencyID = [[NSMutableArray alloc] init];
+        
+        NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
+        for(int k=0;k<[arrayAgencyIds count];k++){
+            NSArray *arrayComponentsAgency = [dictComponents objectForKey:[arrayAgencyIds objectAtIndex:k]];
+            for(int i=0;i<[arrayComponentsAgency count];i++){
+                NSString *strAgencyIds = [arrayAgencyIds objectAtIndex:k];
+                NSArray *arrayAgencyIdsComponents = [strAgencyIds componentsSeparatedByString:@"_"];
+                [arrayAgencyID addObject:getItemAtIndexFromArray(0,arrayAgencyIdsComponents)];
+                NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
+                if(strSubComponents && strSubComponents.length > 0){
+                    NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
+                    [arrayTripID addObject:getItemAtIndexFromArray(0,arraySubComponents)];
+                    [arrayRouteID addObject:getItemAtIndexFromArray(1,arraySubComponents)];
+                    [arrayServiceID addObject:getItemAtIndexFromArray(2,arraySubComponents)];
+                    [arrayTripHeadSign addObject:getItemAtIndexFromArray(3,arraySubComponents)];
+                    [arrayDirectionID addObject:getItemAtIndexFromArray(4,arraySubComponents)];
+                    [arrayBlockID addObject:getItemAtIndexFromArray(5,arraySubComponents)];
+                    [arrayShapeID addObject:getItemAtIndexFromArray(6,arraySubComponents)];
+                }
             }
         }
-    }
-    NSFetchRequest * fetchRoutes = [[NSFetchRequest alloc] init];
-    [fetchRoutes setEntity:[NSEntityDescription entityForName:@"GtfsRoutes" inManagedObjectContext:self.managedObjectContext]];
-    NSArray * arrayRoutes = [self.managedObjectContext executeFetchRequest:fetchRoutes error:nil];
-    NSMutableDictionary *dictRoutes = [[NSMutableDictionary alloc] init];
-    for(int i=0;i<[arrayRoutes count];i++){
-        GtfsRoutes *routes = [arrayRoutes objectAtIndex:i];
-        [dictRoutes setObject:routes forKey:routes.routeID];
-    }
-    
-    NSFetchRequest * fetchCalendar = [[NSFetchRequest alloc] init];
-    [fetchCalendar setEntity:[NSEntityDescription entityForName:@"GtfsCalendar" inManagedObjectContext:self.managedObjectContext]];
-    NSArray * arrayCalendar = [self.managedObjectContext executeFetchRequest:fetchCalendar error:nil];
-    NSMutableDictionary *dictCalendar = [[NSMutableDictionary alloc] init];
-    for(int i=0;i<[arrayCalendar count];i++){
-        GtfsCalendar *calendar = [arrayCalendar objectAtIndex:i];
-        [dictCalendar setObject:calendar forKey:calendar.serviceID];
-    }
-    
-    for(int i=0;i<[arrayTripID count];i++){
-        GtfsTrips* trips = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsTrips" inManagedObjectContext:self.managedObjectContext];
-        trips.tripID = [arrayTripID objectAtIndex:i];
-        trips.routeID = [arrayRouteID objectAtIndex:i];
-        trips.route = [dictRoutes objectForKey:trips.routeID];
-        trips.serviceID = [arrayServiceID objectAtIndex:i];
-        trips.calendar = [dictCalendar objectForKey:trips.serviceID];
-        trips.tripHeadSign = [arrayTripHeadSign objectAtIndex:i];
-        trips.directionID = [arrayDirectionID objectAtIndex:i];
-        trips.blockID = [arrayBlockID objectAtIndex:i];
-        trips.shapeID = [arrayShapeID objectAtIndex:i];
-    }
-    saveContext(self.managedObjectContext);
-    [self generateStopTimesRequestStringUsingTripIds:arrayTripID agencyIds:arrayAgencyID];
+        NSFetchRequest * fetchRoutes = [[NSFetchRequest alloc] init];
+        [fetchRoutes setEntity:[NSEntityDescription entityForName:@"GtfsRoutes" inManagedObjectContext:moc]];
+        NSArray * arrayRoutes = [moc executeFetchRequest:fetchRoutes error:nil];
+        NSMutableDictionary *dictRoutes = [[NSMutableDictionary alloc] init];
+        for(int i=0;i<[arrayRoutes count];i++){
+            GtfsRoutes *routes = [arrayRoutes objectAtIndex:i];
+            [dictRoutes setObject:routes forKey:routes.routeID];
+        }
+        
+        NSFetchRequest * fetchCalendar = [[NSFetchRequest alloc] init];
+        [fetchCalendar setEntity:[NSEntityDescription entityForName:@"GtfsCalendar" inManagedObjectContext:moc]];
+        NSArray * arrayCalendar = [moc executeFetchRequest:fetchCalendar error:nil];
+        NSMutableDictionary *dictCalendar = [[NSMutableDictionary alloc] init];
+        for(int i=0;i<[arrayCalendar count];i++){
+            GtfsCalendar *calendar = [arrayCalendar objectAtIndex:i];
+            [dictCalendar setObject:calendar forKey:calendar.serviceID];
+        }
+        
+        for(int i=0;i<[arrayTripID count];i++){
+            GtfsTrips* trips = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsTrips" inManagedObjectContext:moc];
+            trips.tripID = [arrayTripID objectAtIndex:i];
+            trips.routeID = [arrayRouteID objectAtIndex:i];
+            trips.route = [dictRoutes objectForKey:trips.routeID];
+            trips.serviceID = [arrayServiceID objectAtIndex:i];
+            trips.calendar = [dictCalendar objectForKey:trips.serviceID];
+            trips.tripHeadSign = [arrayTripHeadSign objectAtIndex:i];
+            trips.directionID = [arrayDirectionID objectAtIndex:i];
+            trips.blockID = [arrayBlockID objectAtIndex:i];
+            trips.shapeID = [arrayShapeID objectAtIndex:i];
+        }
+        saveContext(moc);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self generateStopTimesRequestStringUsingTripIds:arrayTripID agencyIds:arrayAgencyID];
+        });
+    });
 }
 
 - (void)contextChanged:(NSNotification*)notification
@@ -711,7 +762,6 @@
         logException(@"GtfsParser->didLoadResponse", @"catching TPServer Response", exception);
     }
 }
-
 
 - (BOOL) isTripsAlreadyExistsForTripId:(NSString *)strTripId RouteId:(NSString *)routeId{
     NSFetchRequest *fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsTripsByTripIdAndRouteId" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strTripId,@"TRIPID",routeId,@"ROUTEID", nil]];

@@ -92,6 +92,8 @@
 - (NSString *)rawAddressWithOutAgencyName:(NSArray *)searchStringsArray:(NSArray *)replaceStringsArray:(NSString *)address;
 - (NSArray *)searchedStationsFromRawAddress:(NSString *)address:(NSArray *)searchStringsArray:(NSArray *)replaceStringsArray:(NSString *)agencyNameNotToInclude;
 
-- (NSString *) rawAddressWithOutAgencyName:(NSString *)address SearchStringArray:(NSArray *)searchStringArray ReplaceStringArray:(NSArray *)replaceStringArray;
+- (NSString *) rawAddressWithOutAgencyName:(NSString *)address SearchStringArray:(NSArray *)searchStringArray;
+
+- (NSArray *) isMatchingTypedAddress:(NSString *)string;
 
 @end

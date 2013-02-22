@@ -27,4 +27,5 @@
 - (Location *) createNewLocationObjectFromGtfsStop:(PreloadedStop *)stop :(StationListElement *)stationListElement;
 - (void) generateNewTempLocationForAllStationString;
 - (void) removeStationListElementByAgency:(NSString *)agencyName;
+- (void)contextChanged:(NSNotification*)notification;
 @end

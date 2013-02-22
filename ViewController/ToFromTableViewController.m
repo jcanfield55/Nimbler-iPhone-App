@@ -270,7 +270,6 @@ NSString *strStreet2 = @"street ";
     }
     
     // Prepare the cell settings
-
     Location *loc = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]] 
                                         isFrom:isFrom];
     [[cell textLabel] setText:[loc shortFormattedAddress]];
@@ -415,38 +414,38 @@ NSString *strStreet2 = @"street ";
             
             startTime = CFAbsoluteTimeGetCurrent();
            // DE-207 & US-166 Implementation
-            rawAddress = [rawAddress lowercaseString];
-            NSFetchRequest * fetchStationListElement = [[NSFetchRequest alloc] init];
-            [fetchStationListElement setEntity:[NSEntityDescription entityForName:@"StationListElement" inManagedObjectContext:managedObjectContext]];
-            NSPredicate *resultPredicate = [NSPredicate
-                                            predicateWithFormat:@"self.location.formattedAddress contains[cd] %@ || self.stop.formattedAddress contains[cd] %@",
-                                            rawAddress,rawAddress];
-            [fetchStationListElement setPredicate:resultPredicate];
-            
-            NSArray * arrayStationListElement = [managedObjectContext executeFetchRequest:fetchStationListElement error:nil];
-            if([arrayStationListElement count] > 0){
-                if([arrayStationListElement count] == 1){
-                    StationListElement *listElement = [arrayStationListElement objectAtIndex:0];
-                    if(listElement.location){
-                        [toFromVC setEditMode:NO_EDIT];
-                        [self markAndUpdateSelectedLocation:listElement.location];
-                        return;
-                    }
-                    else if(listElement.stop){
-                        Location *loc = [[nc_AppDelegate sharedInstance].stations createNewLocationObjectFromGtfsStop:listElement.stop :listElement];
-                        saveContext(managedObjectContext);
-                        [toFromVC setEditMode:NO_EDIT];
-                        [self markAndUpdateSelectedLocation:loc];
-                        return;
-                    }
-                }
-                [toFromVC callLocationPickerFor:self
-                                       locationList:arrayStationListElement
-                                             isFrom:isFrom
-                                   isGeocodeResults:NO];
-                return;
-
-            }
+//            rawAddress = [rawAddress lowercaseString];
+//            NSFetchRequest * fetchStationListElement = [[NSFetchRequest alloc] init];
+//            [fetchStationListElement setEntity:[NSEntityDescription entityForName:@"StationListElement" inManagedObjectContext:managedObjectContext]];
+//            NSPredicate *resultPredicate = [NSPredicate
+//                                            predicateWithFormat:@"self.location.formattedAddress contains[cd] %@ || self.stop.formattedAddress contains[cd] %@",
+//                                            rawAddress,rawAddress];
+//            [fetchStationListElement setPredicate:resultPredicate];
+//            
+//            NSArray * arrayStationListElement = [managedObjectContext executeFetchRequest:fetchStationListElement error:nil];
+//            if([arrayStationListElement count] > 0){
+//                if([arrayStationListElement count] == 1){
+//                    StationListElement *listElement = [arrayStationListElement objectAtIndex:0];
+//                    if(listElement.location){
+//                        [toFromVC setEditMode:NO_EDIT];
+//                        [self markAndUpdateSelectedLocation:listElement.location];
+//                        return;
+//                    }
+//                    else if(listElement.stop){
+//                        Location *loc = [[nc_AppDelegate sharedInstance].stations createNewLocationObjectFromGtfsStop:listElement.stop :listElement];
+//                        saveContext(managedObjectContext);
+//                        [toFromVC setEditMode:NO_EDIT];
+//                        [self markAndUpdateSelectedLocation:loc];
+//                        return;
+//                    }
+//                }
+//                [toFromVC callLocationPickerFor:self
+//                                       locationList:arrayStationListElement
+//                                             isFrom:isFrom
+//                                   isGeocodeResults:NO];
+//                return;
+//
+//            }
             @try {
                 GeocodeRequestParameters* parameters = [[GeocodeRequestParameters alloc] init];
                 parameters.rawAddress = rawAddress;

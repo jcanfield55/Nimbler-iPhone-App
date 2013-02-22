@@ -31,11 +31,11 @@
 }
 
 - (BOOL)preLoadIfNeededFromFile:(NSString *)filename latestVersionNumber:(NSDecimalNumber *)newVersion testAddress:(NSString *)testAddress {
-    [[rkStationMgr mappingProvider] setMapping:[StationListElement objectMappingforStation:STATION_PARSER] forKeyPath:@"results"];
-    [[NSUserDefaults standardUserDefaults] setFloat:[newVersion floatValue] forKey:filename];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    @try {
-        // Check there version number against the the PRELOAD_TEST_ADDRESS to see if we need to open the file
+        [[rkStationMgr mappingProvider] setMapping:[StationListElement objectMappingforStation:STATION_PARSER] forKeyPath:@"results"];
+        [[NSUserDefaults standardUserDefaults] setFloat:[newVersion floatValue] forKey:filename];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        @try {
+            // Check there version number against the the PRELOAD_TEST_ADDRESS to see if we need to open the file
             NSStringEncoding encoding;
             NSError* error = nil;
             NSString* preloadPath = [[NSBundle mainBundle] pathForResource:filename ofType:nil];
@@ -55,10 +55,11 @@
                     NSArray* resultArray = [result asCollection];
                 }
             }
-    }
-    @catch (NSException *exception) {
-        logException(@"Stations->preLoadIfNeededFromFile", @"", exception);
-    }
+        }
+        @catch (NSException *exception) {
+            logException(@"Stations->preLoadIfNeededFromFile", @"", exception);
+        }
+    return YES;
 }
 
 - (NSArray *) fetchStationListByMemberOfListId:(NSString *)memberOfListId{
@@ -92,13 +93,6 @@
     return newLoc;
 }
 
-- (NSArray *) fetchGtfsStop{
-    NSFetchRequest * fetchStops = [[NSFetchRequest alloc] init];
-    [fetchStops setEntity:[NSEntityDescription entityForName:@"GtfsStop" inManagedObjectContext:self.managedObjectContext]];
-    NSArray * arrayStops = [self.managedObjectContext executeFetchRequest:fetchStops error:nil];
-    return arrayStops;
-}
-
 - (void) generateNewTempLocationForAllStationString{
     NSArray *arrListElement = [self fetchStationListByContainsListId:ALL_STATION];
     if([arrListElement count] > 0){
@@ -112,16 +106,27 @@
 }
 
 - (void) removeStationListElementByAgency:(NSString *)agencyName{
-    NSFetchRequest *fetchStationListElement = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"StationListElementByAgency" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:agencyName,@"AGENCY", nil]];
-    NSArray * arrayListElements = [managedObjectContext executeFetchRequest:fetchStationListElement error:nil];
-    for (StationListElement *listElement in arrayListElements){
-        if(listElement.location)
-            [managedObjectContext deleteObject:listElement.location];
-        if(listElement.stop)
-            [managedObjectContext deleteObject:listElement.stop];
-        [managedObjectContext deleteObject:listElement];
-    }
-    saveContext(managedObjectContext);
-    
+        NSFetchRequest *fetchStationListElement = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"StationListElementByAgency" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:agencyName,@"AGENCY", nil]];
+        NSArray * arrayListElements = [managedObjectContext executeFetchRequest:fetchStationListElement error:nil];
+        for (StationListElement *listElement in arrayListElements){
+            if(listElement.location)
+                [managedObjectContext deleteObject:listElement.location];
+            if(listElement.stop)
+                [managedObjectContext deleteObject:listElement.stop];
+            [managedObjectContext deleteObject:listElement];
+        }
 }
+
+- (void)contextChanged:(NSNotification*)notification
+{
+    if ([notification object] == [self managedObjectContext]) return;
+    
+    if (![NSThread isMainThread]) {
+        [self performSelectorOnMainThread:@selector(contextChanged:) withObject:notification waitUntilDone:YES];
+        return;
+    }
+    [[self managedObjectContext] mergeChangesFromContextDidSaveNotification:notification];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 @end
