@@ -19,8 +19,9 @@ typedef enum {
 
 @interface RouteExcludeSettings : NSManagedObject
 
-@property (nonatomic, strong) NSNumber *isCurrentUserSetting; // Boolean.  True if this is the latest setting from the user
-@property (nonatomic, strong) NSMutableDictionary *excludeDictionaryInternal; // For internal use.  Stored in Core Data
+@property(nonatomic, strong) NSNumber *isCurrentUserSetting; // Boolean.  True if this is the latest setting from the user
+@property(nonatomic, strong) NSMutableDictionary *excludeDictionaryInternal; // For internal use.  Stored in Core Data
+@property(nonatomic, strong) NSSet *usedByRequestChunks; // All OTP request chunks that used this setting to generate their itineraries
 
 // Sets the ManagedObjectContext where RouteExcludeSettings are stored
 +(void)setManagedObjectContext:(NSManagedObjectContext *)moc;
@@ -28,7 +29,9 @@ typedef enum {
 // Returns the RouteExcludeSettings that are the latest from the user.
 + (RouteExcludeSettings *)latestUserSettings;
 
-// Changes setting associated with a key
+// Changes setting associated with a key.
+// If self's usedByRequestChunks is not empty, then create an archive copy that those requestChunks can still point to
+// before modifying self.  The modified self will have no 
 -(void)changeSettingTo:(IncludeExcludeSetting)value forKey:(NSString *)key;
 
 
@@ -43,5 +46,10 @@ typedef enum {
 
 // Remove the duplicate settings
 - (NSArray *) returnUniqueRouteExcludeSettings:(NSArray *)array;
+
 -(IncludeExcludeSetting)settingForKey:(NSString *)key;
+
+// Returns true if the receiver and settings0 have equivalent setting values
+// Note: does not compare isCurrentUserSetting
+-(BOOL)isEquivalentTo:(RouteExcludeSettings *)settings0;
 @end

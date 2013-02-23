@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="11G56" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="12C60" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AddressComponent" representedClassName="AddressComponent" syncable="YES">
         <attribute name="longName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
@@ -233,7 +233,7 @@
         <relationship name="gtfsItineraryPattern" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Itinerary" inverseName="requestChunksCreatedByThisPattern" inverseEntity="Itinerary" syncable="YES"/>
         <relationship name="itineraries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Itinerary" inverseName="planRequestChunks" inverseEntity="Itinerary" syncable="YES"/>
         <relationship name="plan" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Plan" inverseName="requestChunks" inverseEntity="Plan" syncable="YES"/>
-        <relationship name="routeExclusionSettings" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RouteExcludeSettings" inverseName="usedByRequestChunk" inverseEntity="RouteExcludeSettings" syncable="YES"/>
+        <relationship name="routeExcludeSettings" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RouteExcludeSettings" inverseName="usedByRequestChunks" inverseEntity="RouteExcludeSettings" syncable="YES"/>
     </entity>
     <entity name="PreloadedStop" representedClassName="PreloadedStop" syncable="YES">
         <attribute name="formattedAddress" optional="YES" attributeType="String" syncable="YES"/>
@@ -254,7 +254,15 @@
     <entity name="RouteExcludeSettings" representedClassName="RouteExcludeSettings" syncable="YES">
         <attribute name="excludeDictionaryInternal" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="isCurrentUserSetting" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <relationship name="usedByRequestChunk" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PlanRequestChunk" inverseName="routeExclusionSettings" inverseEntity="PlanRequestChunk" syncable="YES"/>
+        <relationship name="usedByRequestChunks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PlanRequestChunk" inverseName="routeExcludeSettings" inverseEntity="PlanRequestChunk" syncable="YES"/>
+        <compoundIndexes>
+            <compoundIndex>
+                <index value="excludeDictionaryInternal"/>
+            </compoundIndex>
+            <compoundIndex>
+                <index value="isCurrentUserSetting"/>
+            </compoundIndex>
+        </compoundIndexes>
     </entity>
     <entity name="StationListElement" representedClassName="StationListElement" syncable="YES">
         <attribute name="agency" optional="YES" attributeType="String" syncable="YES"/>
@@ -292,6 +300,7 @@
     <fetchRequest name="LocationByMemberOfList" entity="Location" predicateString="memberOfList BEGINSWITH $LIST_PREFIX AND locationType != &quot;TOFROM_LIST&quot;"/>
     <fetchRequest name="PlansByToAndFromLocations" entity="Plan" predicateString="toLocation.formattedAddress == $TO_FORMATTED_ADDRESS AND fromLocation.formattedAddress == $FROM_FORMATTED_ADDRESS"/>
     <fetchRequest name="RawAddressByString" entity="RawAddress" predicateString="rawAddressString LIKE[c] $ADDRESS"/>
+    <fetchRequest name="RouteExcludeSettingsWithDictionary" entity="RouteExcludeSettings" predicateString="excludeDictionaryInternal == $DICTIONARY"/>
     <fetchRequest name="ServiceIdByTripId" entity="GtfsTrips" predicateString="tripID == $TRIPID"/>
     <fetchRequest name="StationListByContainsId" entity="StationListElement" predicateString="containsListId == $CONTAINSLISTID"/>
     <fetchRequest name="StationListByMemberId" entity="StationListElement" predicateString="memberOfListId == $MEMBEROFLISTID"/>

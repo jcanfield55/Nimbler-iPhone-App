@@ -20,6 +20,7 @@
 @dynamic latestRequestedArriveTimeDate;
 @dynamic itineraries;
 @dynamic plan;
+@dynamic routeExcludeSettings;
 @synthesize sortedItineraries;
 @synthesize transitCalendar;
 @synthesize serviceStringByAgency;

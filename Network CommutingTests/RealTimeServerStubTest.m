@@ -476,7 +476,7 @@
     // TODO:- Need to solve coredata fault.
     [[NSUserDefaults standardUserDefaults] setObject:@"data.json" forKey:DEVICE_TOKEN];
     [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:parameters];
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:2000.0]];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:20.0]];
     
     [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
     STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result=[RealTimeManager realTimeManager].loadedRealTimeData; return result;}], @"Timed out waiting for RealTimeData");

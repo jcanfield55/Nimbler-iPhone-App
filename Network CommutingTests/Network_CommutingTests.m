@@ -15,6 +15,7 @@
 #import "PlanStore.h"
 #import "nc_AppDelegate.h"
 #import "GtfsStopTimes.h"
+#import "RouteExcludeSetting.h"
 
 @implementation Network_CommutingTests
 
@@ -391,6 +392,7 @@
     // Plan6 -- 3 itineraries starting at 9:00am for an 11:00am arrive time request on Wednesday August 22
     leg60.startTime = date60;
     leg60.agencyId = caltrain;
+    leg60.agencyName = CALTRAIN_AGENCY_NAME;
     leg60.itinerary = itin60;
     itin60.startTime = date60;
     itin60.endTime = [itin60.startTime dateByAddingTimeInterval:(30.0*60)];
@@ -401,6 +403,7 @@
     leg61a.itinerary = itin61;
     leg61b.startTime = date61b;
     leg61b.agencyId = Bart;
+    leg61b.agencyName = BART_AGENCY_NAME;
     leg61b.itinerary = itin61;
     itin61.startTime = date61a;
     itin61.endTime = [itin61.startTime dateByAddingTimeInterval:(30.0*60)];
@@ -408,6 +411,7 @@
     
     leg62.startTime = date62;
     leg62.agencyId = caltrain;
+    leg62.agencyName = CALTRAIN_AGENCY_NAME;
     leg62.itinerary = itin62;
     itin62.startTime = date62;
     itin62.endTime = [itin62.startTime dateByAddingTimeInterval:(30.0*60)];
@@ -1570,6 +1574,99 @@
     
 }
 
+//
+// Test RouteExcludeSettings object
+//
+-(void)testRouteExcludeSettings
+{
+    [RouteExcludeSettings setManagedObjectContext:managedObjectContext];
+    
+    // Test default settings
+    RouteExcludeSettings* settings = [RouteExcludeSettings latestUserSettings];
+    STAssertEquals([settings settingForKey:BIKE_MODE], SETTING_EXCLUDE_ROUTE, @"");  // Bike is initially set to Exclude
+    STAssertEquals([settings settingForKey:MUNI_BUTTON], SETTING_INCLUDE_ROUTE,@"");  // Any other mode is set to include by default
+    
+    // Test excludeSettingsForPlan
+    PlanRequestParameters* parameters = [[PlanRequestParameters alloc] init];
+    parameters.originalTripDate = date60req;
+    parameters.departOrArrive = ARRIVE;
+    NSArray* settingArray = [settings excludeSettingsForPlan:plan6 withParameters:parameters];
+    STAssertEquals([settingArray count], 3u, @"");  // Should have Caltrain, BART, and Bike buttons
+    STAssertEqualObjects([[settingArray objectAtIndex:0] key], CALTRAIN_BUTTON, @"");
+    STAssertEquals([[settingArray objectAtIndex:0] setting], SETTING_INCLUDE_ROUTE, @"");
+    STAssertEqualObjects([[settingArray objectAtIndex:2] key], BIKE_MODE, @"");
+    STAssertEquals([[settingArray objectAtIndex:2] setting], SETTING_EXCLUDE_ROUTE, @"");
+    
+    // Test isItineraryIncluded
+    STAssertTrue([settings isItineraryIncluded:itin61], @"");  // Has a BART leg and an unscheduled leg only
+    STAssertTrue([settings isItineraryIncluded:itin62], @"");  // Has a Caltrain leg
+    
+    // Test changing a setting and creating an archive copy
+    PlanRequestChunk *reqChunk1 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanRequestChunk"
+                                                               inManagedObjectContext:managedObjectContext];
+    [reqChunk1 addItinerariesObject:itin60];
+    [reqChunk1 setRouteExcludeSettings:settings];  // Have a request chunk using settings
+    PlanRequestChunk *reqChunk2 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanRequestChunk"
+                                                                inManagedObjectContext:managedObjectContext];
+    [reqChunk2 addItinerariesObject:itin61];
+    [reqChunk2 setRouteExcludeSettings:settings];  // Have another request chunk using settings
+    STAssertEquals([[settings usedByRequestChunks] count], 2u, @"");  // request chunks are there
+    
+    // Now change settings
+    NSDictionary* oldSettingsDictionary = [settings excludeDictionaryInternal];
+    [settings changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:BART_BUTTON];
+    STAssertEquals([settings settingForKey:BART_BUTTON], SETTING_EXCLUDE_ROUTE, @"");  // Make sure setting is there
+    STAssertEquals([[settings usedByRequestChunks] count], 0u, @"");  // request chunks should not be here any more
+    STAssertTrue([[settings isCurrentUserSetting] boolValue], @"");  // setting should still be the current setting
+
+    // Test that BART itinerary is now excluded in the modified settings
+    STAssertFalse([settings isItineraryIncluded:itin61], @"");  // Has a BART leg and an unscheduled leg only
+    STAssertTrue([settings isItineraryIncluded:itin62], @"");  // Has a Caltrain leg
+    
+    // Check if an archive has been made
+    NSFetchRequest *request = [managedObjectModel
+                               fetchRequestFromTemplateWithName:@"RouteExcludeSettingsWithDictionary"
+                               substitutionVariables:[NSDictionary dictionaryWithKeysAndObjects:
+                                                      @"DICTIONARY", oldSettingsDictionary, nil]];
+    NSError *error;
+    NSArray *arraySettings = [managedObjectContext executeFetchRequest:request error:&error];
+    STAssertEquals([arraySettings count], 1u, @"");
+    RouteExcludeSettings *archivedSetting = [arraySettings objectAtIndex:0];
+    
+    STAssertEquals([archivedSetting settingForKey:BART_BUTTON], SETTING_INCLUDE_ROUTE, @"");  // Archived BART setting
+    STAssertEquals([[archivedSetting usedByRequestChunks] count], 2u, @"");  // previous request chunks
+    STAssertFalse([[archivedSetting isCurrentUserSetting] boolValue], @"");   // Archived version should not be current
+    
+    // Test that the archived settings work for itineraries
+    STAssertTrue([archivedSetting isItineraryIncluded:itin61], @"");  // Has a BART leg and an unscheduled leg only
+    STAssertTrue([archivedSetting isItineraryIncluded:itin62], @"");  // Has a Caltrain leg
+    
+    // Test isEquivalentTo:
+    STAssertFalse([settings isEquivalentTo:archivedSetting], @"");
+    STAssertFalse([archivedSetting isEquivalentTo:settings], @"");
+    
+    // Now change current settings back to original value
+    // archivedSettings should now be merged back with settings
+    [settings changeSettingTo:SETTING_INCLUDE_ROUTE forKey:BART_BUTTON];
+    STAssertEquals([settings settingForKey:BART_BUTTON], SETTING_INCLUDE_ROUTE, @"");  // Make sure setting is there
+    STAssertEquals([[settings usedByRequestChunks] count], 2u, @"");  // settings should have the previous archived requestChunks back
+    STAssertNil([archivedSetting excludeDictionaryInternal], @"");  // indicates archivedSettings has been deleted
+    
+    // Check that we only have one RouteExcludeSettings in the database
+    NSFetchRequest * fetchSettings = [[NSFetchRequest alloc] init];
+    [fetchSettings setEntity:[NSEntityDescription entityForName:@"RouteExcludeSettings" inManagedObjectContext:managedObjectContext]];
+    arraySettings = [managedObjectContext executeFetchRequest:fetchSettings error:nil];
+    STAssertEquals([arraySettings count], 1u, @"");  // Only one RouteExcludeSettings
+    STAssertEqualObjects([arraySettings objectAtIndex:0], settings, @"");  // and that object is = settings
+    STAssertTrue([[settings isCurrentUserSetting] boolValue], @"");  // setting should still be the current setting
+    
+    // Now test isEquivalentTo: the other way.  settings has one more key set in their dictionary, but is equivalent
+    RouteExcludeSettings *testSettings = [NSEntityDescription insertNewObjectForEntityForName:@"RouteExcludeSettings"
+                                                                       inManagedObjectContext:managedObjectContext];
+    [testSettings changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:BIKE_MODE];
+    // Now settings has been deleted and incorporated into testSettings
+    STAssertEquals([[testSettings usedByRequestChunks] count], 2u, @"");
+}
 
 // Methods wait until Error or Reply arrives from TP.
 -(void)someMethodToWaitForResult

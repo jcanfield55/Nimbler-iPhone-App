@@ -32,8 +32,9 @@
 
 @dynamic excludeDictionaryInternal;
 @dynamic isCurrentUserSetting;
+@dynamic usedByRequestChunks;
 
-static RouteExcludeSettings *routeExcludeSettings=nil; // latest User Settings
+static RouteExcludeSettings *latestUserSettingsStatic=nil; // latest User Settings
 static NSManagedObjectContext *managedObjectContext=nil; // For storing and creating new objects
 
 // Sets the ManagedObjectContext where RouteExcludeSettings are stored
@@ -50,13 +51,13 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
         logError(@"RouteExcludeSettings -> latestUserSettings", @"managedObjectContext = nil");
         return nil;
     }
-    if(!routeExcludeSettings){
+    if(!latestUserSettingsStatic){
         NSManagedObjectModel *managedObjectModel = [[managedObjectContext persistentStoreCoordinator] managedObjectModel];
         NSFetchRequest *request = [managedObjectModel fetchRequestTemplateForName:@"LatestRouteExcludeSettings"];
         NSError *error;
         NSArray *arraySettings = [managedObjectContext executeFetchRequest:request error:&error];
         if (arraySettings && [arraySettings count]==1) { // Found it
-            routeExcludeSettings = [arraySettings objectAtIndex:0];
+            latestUserSettingsStatic = [arraySettings objectAtIndex:0];
         }
         else if ([arraySettings count] > 1) {
             logError(@"RouteExcludeSettings -> latestUserSettings",
@@ -64,12 +65,31 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
                       [arraySettings count]]);
         }
         else {  // no stored latest, so create a new one
-            routeExcludeSettings = [NSEntityDescription insertNewObjectForEntityForName:@"RouteExcludeSettings"
+            latestUserSettingsStatic = [NSEntityDescription insertNewObjectForEntityForName:@"RouteExcludeSettings"
                                                              inManagedObjectContext:managedObjectContext];
-            [routeExcludeSettings setIsCurrentUserSetting:[NSNumber numberWithBool:true]];
+            [latestUserSettingsStatic setIsCurrentUserSetting:[NSNumber numberWithBool:true]];
         }
     }
-    return routeExcludeSettings;
+    return latestUserSettingsStatic;
+}
+
+// Returns a new RouteExcludeSettings object which is a copy of the current object's excludeDictionary
+// The new RouteExcludeSetting has isCurrentUserSetting==false (it is the archive 
+// The usedByRequestChunks are copied over to the new object, and are cleared in self
+// This is used to create an archive copy of self, while keeping self as the latestUserSettings which can be modified
+-(RouteExcludeSettings *)copyOfCurrentSettings
+{
+    RouteExcludeSettings* returnCopy = [NSEntityDescription insertNewObjectForEntityForName:@"RouteExcludeSettings"
+                                                         inManagedObjectContext:managedObjectContext];
+    [returnCopy setExcludeDictionaryInternal:[NSMutableDictionary dictionaryWithDictionary:[self excludeDictionaryInternal]]];
+    [returnCopy setIsCurrentUserSetting:[NSNumber numberWithBool:false]];
+    
+    // Transfer over the PlanRequestChunks to the new copy
+    for (PlanRequestChunk* reqChunk in [NSSet setWithSet:[self usedByRequestChunks]]) {
+        [reqChunk setRouteExcludeSettings:returnCopy];
+    }
+    
+    return returnCopy;
 }
 
 // Initiatializes (if needed) and returns dictionary mapping agencyIDs to how we will handle
@@ -115,14 +135,55 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
     }
 }
 
+// Returns true if the receiver and settings0 have equivalent setting values
+// Note: does not compare isCurrentUserSetting
+-(BOOL)isEquivalentTo:(RouteExcludeSettings *)settings0
+{
+    NSArray* selfKeys = [[self excludeDictionary] allKeys];
+    for (NSString* key in selfKeys) {
+        if ([self settingForKey:key] != [settings0 settingForKey:key]) {
+            return false;
+        }
+    }
+    NSArray* keys0 = [[settings0 excludeDictionary] allKeys];
+    for (NSString* key in keys0) {
+        if ([self settingForKey:key] != [settings0 settingForKey:key]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 // Changes setting associated with a key
 -(void)changeSettingTo:(IncludeExcludeSetting)value forKey:(NSString *)key0
 {
     if (key0) {
+        if ([[self usedByRequestChunks] count] > 0) {   // If some requestChunks were created with these settings
+            [self copyOfCurrentSettings];  // Create a new archive copy of self
+        }
         NSString* setting0 = ((value == SETTING_EXCLUDE_ROUTE) ? SETTING_STRING_EXCLUDE : SETTING_STRING_INCLUDE);
         NSMutableDictionary* dictionary = [NSMutableDictionary dictionaryWithDictionary:[self excludeDictionary]];
         [dictionary setObject:setting0 forKey:key0];
         [self setExcludeDictionaryInternal:dictionary];  // Set it again so that Core Data will update it...
+        
+        // See if there are any archived RouteExcludeSettings with the same settings
+        // If so, merge the archive into the current...
+        
+        // Get all the objects in the database...
+        NSFetchRequest * fetchSettings = [[NSFetchRequest alloc] init];
+        [fetchSettings setEntity:[NSEntityDescription entityForName:@"RouteExcludeSettings" inManagedObjectContext:managedObjectContext]];
+        NSArray* arraySettings = [managedObjectContext executeFetchRequest:fetchSettings error:nil];
+
+        for (RouteExcludeSettings* archiveSetting in arraySettings) {
+            if (archiveSetting != self &&
+                [archiveSetting isEquivalentTo:self]) { // if this is an actual different object, but equivalent
+                // Copy over the PlanRequestChunks pointing to that archived object to self
+                for (PlanRequestChunk *reqChunk in [NSSet setWithSet:[archiveSetting usedByRequestChunks]]) {
+                    [reqChunk setRouteExcludeSettings:self];
+                }
+                [managedObjectContext deleteObject:archiveSetting]; // Remove redundant archiveSetting
+            }
+        }
         
         // Store in database
         saveContext(managedObjectContext);
@@ -148,7 +209,7 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
     for (Itinerary* itin in relevantItineraries) {
         for (Leg* leg in [itin legs]) {
             RouteExcludeSetting* routeExclSetting = [[RouteExcludeSetting alloc] init];
-            if (leg.isScheduled && returnShortAgencyName(leg.agencyName)) {       // TODO  should we compare agencyID or agencyName?
+            if (leg.isScheduled && returnShortAgencyName(leg.agencyName)) {      
                 NSString* handling = [[self agencyIDHandlingDictionary] objectForKey:returnShortAgencyName(leg.agencyName)];
                 if (handling) {
                     if ([handling isEqualToString:BY_AGENCY]) {

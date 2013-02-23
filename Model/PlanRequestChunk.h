@@ -15,6 +15,8 @@
 #import "enums.h"
 #import "TransitCalendar.h"
 
+@class RouteExcludeSettings;
+
 @interface PlanRequestChunk : NSManagedObject
 
 // Source of the RequestChunk itineraries.  Possible values:
@@ -48,6 +50,10 @@
 // Object is the serviceString corresponding to the agency and this objects request date (obtained from
 // TransitCalendar serviceStringForDate:agencyId:
 @property (strong, nonatomic) NSDictionary* serviceStringByAgency;
+
+// The RouteExcludeSettings used when this PlanRequestChunk's itineraries were fetched from OTP
+// Only set when type=OTP
+@property (strong, nonatomic) RouteExcludeSettings* routeExcludeSettings;
 
 //
 // Methods
