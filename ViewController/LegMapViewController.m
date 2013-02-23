@@ -189,7 +189,7 @@ NSString *legID;
                 if (([polyLineArray objectAtIndex:i] == overlay)) {
                     if (i == itineraryNumber) {
                         Leg *leg  = [[itinerary legDescriptionToLegMapArray] objectAtIndex:itineraryNumber];
-                        if([leg isWalk]){
+                        if([leg isWalk] || [leg isBike]){
                             aView.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:ALPHA_LIGHT] ;
                             aView.lineWidth = LINE_WIDTH;
                         } else if([leg isBus]){

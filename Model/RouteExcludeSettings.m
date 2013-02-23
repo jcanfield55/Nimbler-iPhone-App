@@ -120,7 +120,7 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
 {
     if (!self.excludeDictionaryInternal) {
         self.excludeDictionaryInternal = [[NSMutableDictionary alloc] initWithCapacity:20];
-        [self.excludeDictionaryInternal setObject:SETTING_STRING_EXCLUDE forKey:BIKE_MODE];
+        [self.excludeDictionaryInternal setObject:SETTING_STRING_EXCLUDE forKey:BIKE_BUTTON];
     }
     return self.excludeDictionaryInternal;
 }
@@ -231,8 +231,8 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
     
     // Add bike button
     RouteExcludeSetting* routeExclSetting = [[RouteExcludeSetting alloc] init];
-    routeExclSetting.key = BIKE_MODE;
-    routeExclSetting.setting = [self settingForKey:BIKE_MODE];
+    routeExclSetting.key = BIKE_BUTTON;
+    routeExclSetting.setting = [self settingForKey:BIKE_BUTTON];
     [returnArray addObject:routeExclSetting];
     return [self returnUniqueRouteExcludeSettings:returnArray];
 }
@@ -242,11 +242,11 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
 {
        for (Leg* leg in [itin legs]) {
            NSString* legKey = nil;
-           if (leg.isWalk && [self settingForKey:BIKE_MODE]==SETTING_INCLUDE_ROUTE) {
+           if (leg.isWalk && [self settingForKey:BIKE_BUTTON]==SETTING_INCLUDE_ROUTE) {
                return false; // exclude all walk itineraries if we are in bike mode
            }
-           else if (leg.isBike && [self settingForKey:BIKE_MODE]==SETTING_EXCLUDE_ROUTE) { // TODO double-check isBike method
-               return false; // Exclude bike itinerary if BIKE_MODE excluded
+           else if (leg.isBike && [self settingForKey:BIKE_BUTTON]==SETTING_EXCLUDE_ROUTE) { // TODO double-check isBike method
+               return false; // Exclude bike itinerary if BIKE_BUTTON excluded
            }
            else if (returnShortAgencyName(leg.agencyName)) {      
                NSString* handling = [[self agencyIDHandlingDictionary] objectForKey:returnShortAgencyName(leg.agencyName)];

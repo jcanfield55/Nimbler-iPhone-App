@@ -11,6 +11,8 @@
 #import <Foundation/Foundation.h>
 #import "Location.h"
 
+@class RouteExcludeSettings;
+
 @class PlanRequestParameters;
 @class Plan;
 
@@ -38,6 +40,7 @@
 @property (strong, nonatomic) Location* toLocation;
 @property (strong, nonatomic) NSDate* originalTripDate; // original date & time requested by user
 @property (strong, nonatomic) NSDate* thisRequestTripDate; // date & time request for iterative plan requests to the server
+@property (strong, nonatomic) RouteExcludeSettings* routeExcludeSettings;
 @property (nonatomic) DepartOrArrive departOrArrive;
 @property (nonatomic) int maxWalkDistance;
 @property (nonatomic) int serverCallsSoFar; // number of calls to the server that have been made for this request

@@ -154,7 +154,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     if ([[self mode] isEqualToString:@"BUS"]) {
         [summary appendString:@" Bus"];
     }
-    else if ([[self mode] isEqualToString:@"TRAM"]) {
+    else if ([[self mode] isEqualToString:OTP_TRAM_MODE]) {
         [summary appendString:@" Tram"];
     }
     if (![[self agencyId] isEqualToString:@"BART"] && ![[self agencyId] isEqualToString:@"caltrain-ca-us"]) { // don't add BART route name because too long
@@ -201,20 +201,28 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 {
     @try {
     NSMutableString *titleText=[NSMutableString stringWithString:@""];
-    if ([[self mode] isEqualToString:@"WALK"]) {
+        NSString* walkOrBikeString = nil;
+        if (self.isWalk) {
+            walkOrBikeString = @"Walk";
+        } else if (self.isBike) {
+            walkOrBikeString = @"Bike";
+        }
+    if (walkOrBikeString) {
         if (legPosition == FIRST_LEG) {    // US124 implementation
             // Part Of DE-229 & US-169 Implementation
             if([self.arrivalFlag intValue] == DELAYED) {
                 NSDate* realTimeArrivalTime = [[self startTime]
                                                dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
                 if(realTimeArrivalTime){
-                    [titleText appendFormat:@"%@ Walk to %@",
+                    [titleText appendFormat:@"%@ %@ to %@",
                      superShortTimeStringForDate(realTimeArrivalTime),
+                     walkOrBikeString,
                      [[self to] name]];
                 }
                 else{
-                    [titleText appendFormat:@"%@ Walk to %@",
+                    [titleText appendFormat:@"%@ %@ to %@",
                      superShortTimeStringForDate([self startTime]),
+                     walkOrBikeString,
                      [[self to] name]];
                 }
                 
@@ -224,21 +232,24 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
                 NSDate* realTimeArrivalTime = [[self startTime]
                                                dateByAddingTimeInterval:[timeDiffInMins floatValue]*(-60.0)];
                 if(realTimeArrivalTime){
-                    [titleText appendFormat:@"%@ Walk to %@",
+                    [titleText appendFormat:@"%@ %@ to %@",
                      superShortTimeStringForDate(realTimeArrivalTime),
+                     walkOrBikeString,
                      [[self to] name]];
                 }
                 else{
-                    [titleText appendFormat:@"%@ Walk to %@",
+                    [titleText appendFormat:@"%@ %@ to %@",
                      superShortTimeStringForDate([self startTime]),
+                     walkOrBikeString,
                      [[self to] name]];
                 }
                 
                 NIMLOG_EVENT1(@"Updated time: %@", titleText);
             }
             else {
-                [titleText appendFormat:@"%@ Walk to %@",
+                [titleText appendFormat:@"%@ %@ to %@",
                  superShortTimeStringForDate([[self itinerary] startTime]),
+                 walkOrBikeString,
                  [[self to] name]];
             }
             
@@ -282,7 +293,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
             }
         }
         else {
-            [titleText appendFormat:@"Walk to %@", [[self to] name]];
+            [titleText appendFormat:@"%@ to %@", walkOrBikeString, [[self to] name]];
         }
     }
     else {  
@@ -330,7 +341,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         if ([[self mode] isEqualToString:@"BUS"]) {
             [titleText appendString:@"Bus "];
         }
-        else if ([[self mode] isEqualToString:@"TRAM"]) {
+        else if ([[self mode] isEqualToString:OTP_TRAM_MODE]) {
             [titleText appendString:@"Tram "];
         }
         
@@ -376,7 +387,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 {
     @try {
     NSString *subTitle;
-    if ([[self mode] isEqualToString:@"WALK"]) {
+    if (self.isWalk || self.isBike) {
         if (legPosition == FIRST_LEG) {
             subTitle = [NSString stringWithFormat:@"From %@ (%@)",
                         [[self itinerary] fromAddressString], 
@@ -438,14 +449,14 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 //Implemented by Sitanshu Joshi
 -(BOOL)isWalk
 {
-    if ([[self mode] isEqualToString:@"WALK"]) {   
+    if ([[self mode] isEqualToString:OTP_WALK_MODE]) {   
         return true;   
     }
     return false;
 }
 
 -(BOOL)isBike{
-    if ([[self mode] isEqualToString:@"BIKE"]) {
+    if ([[self mode] isEqualToString:OTP_BIKE_MODE]) {
         return true;
     }
     return false;
@@ -454,7 +465,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 
 -(BOOL)isHeavyTrain
 {
-    if ([[self mode] isEqualToString:@"RAIL"] && [[self agencyId] isEqualToString:@"caltrain-ca-us"]) {
+    if ([[self mode] isEqualToString:OTP_RAIL_MODE] && [[self agencyId] isEqualToString:@"caltrain-ca-us"]) {
         return true;
     } else {
         return false;
@@ -463,8 +474,8 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 
 -(BOOL)isTrain
 {
-    if ([[self mode] isEqualToString:@"RAIL"] || [[self mode] isEqualToString:@"TRAM"] ||
-        [[self mode] isEqualToString:@"SUBWAY"]) {
+    if ([[self mode] isEqualToString:OTP_RAIL_MODE] || [[self mode] isEqualToString:OTP_TRAM_MODE] ||
+        [[self mode] isEqualToString:OTP_SUBWAY_MODE]) {
         return true;
     } // else
     return false;
@@ -478,7 +489,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 }
 -(BOOL)isSubway
 {
-    if ([[self mode] isEqualToString:@"SUBWAY"]) {   
+    if ([[self mode] isEqualToString:OTP_SUBWAY_MODE]) {   
         return true;   
     } 
     return false; 
@@ -486,7 +497,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 
 // return false if leg is walk or bicycle otherwise return true.
 -(BOOL)isScheduled{
-    if ([[self mode] isEqualToString:@"WALK"] || [[self mode] isEqualToString:@"BICYCLE"]) 
+    if (self.isWalk || self.isBike)
         return false;
     return true;
 }
@@ -510,7 +521,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 // If leg is not walk then compare routeShortname if not nill else compare routeLongName then compate TO&From Location Lat/Lng and agencyname.
 // If legs are equal then return yes otherwise return no
 - (BOOL) isEquivalentLegAs:(Leg *)leg{
-    if([self.mode isEqualToString:@"WALK"] && [leg.mode isEqualToString:@"WALK"]){
+    if((self.isWalk && leg.isWalk) || (self.isBike && leg.isBike)){
         if([self.to.lat doubleValue] != [leg.to.lat doubleValue] || [self.to.lng doubleValue] != [leg.to.lng doubleValue] || [self.from.lat doubleValue] !=[leg.from.lat doubleValue] || [self.from.lng doubleValue] != [leg.from.lng doubleValue] || [self.distance doubleValue] != [leg.distance doubleValue]){
             return NO;
         }

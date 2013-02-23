@@ -70,7 +70,7 @@
             Plan* matchingPlan = [matchingPlanArray objectAtIndex:0]; // Take the first matching plan
             if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate]
                                                           departOrArrive:[parameters departOrArrive]
-                                                     RouteExcludeSettings:[RouteExcludeSettings latestUserSettings]
+                                                     RouteExcludeSettings:[parameters routeExcludeSettings]
                                                                 callBack:self]) {
                 if (matchingPlan.sortedItineraries.count == 0) {
                     // there are itineraries, but they were all excluded by the user
@@ -197,6 +197,20 @@
         if([nc_AppDelegate sharedInstance].isTestPlan){
             [params setObject:@"false" forKey:SAVE_PLAN];
         }
+        // Set Bike Mode parameters if needed
+        if ([parameters.routeExcludeSettings settingForKey:BIKE_BUTTON]==SETTING_INCLUDE_ROUTE) {
+            [params setObject:REQUEST_TRANSIT_MODE_TRANSIT_BIKE forKey:REQUEST_TRANSIT_MODE];
+            /* [params setObject:[NSString stringWithFormat:@"%f", parameters.bikeTriangleQuick]
+             forKey:REQUEST_BIKE_TRIANGLE_QUICK];
+             [params setObject:[NSString stringWithFormat:@"%f", parameters.bikeTriangleFlat]
+             forKey:REQUEST_BIKE_TRIANGLE_FLAT];
+             [params setObject:[NSString stringWithFormat:@"%f", parameters.bikeTriangleBikeFriendly]
+             forKey:REQUEST_BIKE_TRIANGLE_BIKE_FRIENDLY];
+             [params setObject:[NSString stringWithFormat:@"%f", parameters.maxBikeDistance] forKey:MAX_WALK_DISTANCE]; */
+        } else {
+            [params setObject:REQUEST_TRANSIT_MODE_TRANSIT forKey:REQUEST_TRANSIT_MODE];
+        }
+        
         [params setObject:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] forKey:APPLICATION_TYPE];
         // Build the parameters into a resource string
         parameters.serverCallsSoFar = parameters.serverCallsSoFar + 1;
@@ -277,7 +291,8 @@
                     plan.fromLocation = fromLoc;
                 }
                 [plan createRequestChunkWithAllItinerariesAndRequestDate:[planRequestParameters thisRequestTripDate]
-                                                          departOrArrive:[planRequestParameters departOrArrive]];
+                                                          departOrArrive:[planRequestParameters departOrArrive]
+                                                     routeExcludeSettings:planRequestParameters.routeExcludeSettings];
                 // Make sure that we still have itineraries (ie it wasn't just overnight itineraries)
                 // Part of the DE161 fix
                 if ([[plan itineraries] count] == 0) {
@@ -301,7 +316,7 @@
                 // get Unique Itinerary from Plan.
                 if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate]
                                                       departOrArrive:[planRequestParameters departOrArrive]
-                                       RouteExcludeSettings:[RouteExcludeSettings latestUserSettings]
+                                       RouteExcludeSettings:[planRequestParameters routeExcludeSettings]
                                                             callBack:self]) {
                     [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
                     
@@ -384,13 +399,13 @@
         return; // Return if we have already made the max number of calls
     }
     if ([[[[plan sortedItineraries] lastObject] sortedLegs] count] == 1 &&
-        [[[[[plan sortedItineraries] lastObject] sortedLegs] objectAtIndex:0] isWalk]) {
-        return; // DE186 fix, do not request more itineraries if we currently are have walk-only itinerary
+        ![[[[[plan sortedItineraries] lastObject] sortedLegs] objectAtIndex:0] isScheduled]) {
+        return; // DE186 fix, do not request more itineraries if we currently are have walk-only or bike-only itinerary
     }
     // Request sortedItineraries array with extremely large limits
     NSArray* testItinArray = [plan returnSortedItinerariesWithMatchesForDate:requestParams0.originalTripDate
                                                               departOrArrive:requestParams0.departOrArrive
-                                               RouteExcludeSettings:[RouteExcludeSettings latestUserSettings]
+                                               RouteExcludeSettings:requestParams0.routeExcludeSettings
                                                                     callBack:self
                                                     planMaxItinerariesToShow:1000
                                             planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY

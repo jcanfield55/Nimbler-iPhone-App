@@ -399,6 +399,7 @@
     NSDate* tripDate = [dateFormatter dateFromString:@"02/11/2013 05:30 pm"];
     parameters.originalTripDate = tripDate;
     parameters.thisRequestTripDate = tripDate;
+    parameters.routeExcludeSettings = [RouteExcludeSettings latestUserSettings];
     parameters.departOrArrive = DEPART;
     parameters.maxWalkDistance = (int)([userPreferance walkDistance]*1609.544);
     parameters.planDestination = toFromViewController;

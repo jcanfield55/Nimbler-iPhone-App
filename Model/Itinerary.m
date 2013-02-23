@@ -204,7 +204,7 @@
     BOOL isFirstLegToDisplay = true;
     for (Leg* leg in [self sortedLegs]) {
         if ([leg mode] && [[leg mode] length] > 0) {
-            if (![[leg mode] isEqualToString:@"WALK"]) {  // skip Walk legs
+            if ([leg isScheduled]) {  // skip Walk or Bike legs
                 BOOL includeTime=false;
                 if (isFirstLegToDisplay && ![[leg startTime] isEqualToDate:[self startTimeOfFirstLeg]]) {
                     includeTime = true;  // Include time if first non-walk leg has a different start-time than itinerary
@@ -279,8 +279,8 @@
         Leg* leg = [legsArray objectAtIndex:i];
         @try {
             if (i==0) { // First leg of itinerary
-                // If first leg is not a walking leg, insert a startpoint entry (US124 implementation)
-                if (![[leg mode] isEqualToString:@"WALK"]) {
+                // If first leg is a scheduled one, insert a startpoint entry (US124 implementation)
+                if ([leg isScheduled]) {
                     [titleArray addObject:
                      [NSString stringWithFormat:@"%@%@", ROUTE_STARTPOINT_PREFIX, [self fromAddressString]]];
                     [subtitleArray addObject:@""];
@@ -291,8 +291,8 @@
                 [subtitleArray addObject:[leg directionsDetailText:FIRST_LEG]];
                 [legMapArray addObject:leg];
                 
-                // If there is only one leg, and it is not a walking one, insert an endpoint (US124)
-                if ([legsArray count] == 1 && ![[leg mode] isEqualToString:@"WALK"]) {
+                // If there is only one leg, and it is a scheduled one, insert an endpoint (US124)
+                if ([legsArray count] == 1 && [leg isScheduled]) {
                     [titleArray addObject:
                      [NSString stringWithFormat:@"%@%@", ROUTE_ENDPOINT_PREFIX, [self toAddressString]]];
                     [subtitleArray addObject:@""];
@@ -305,8 +305,8 @@
                 [subtitleArray addObject:[leg directionsDetailText:LAST_LEG]];
                 [legMapArray addObject:leg];
                 
-                // If last leg is not a walking leg, insert an endpoint entry (US124)
-                if (![[leg mode] isEqualToString:@"WALK"]) {
+                // If last leg is a scheduled one, insert an endpoint entry (US124)
+                if ([leg isScheduled]) {
                     [titleArray addObject:
                      [NSString stringWithFormat:@"%@%@", ROUTE_ENDPOINT_PREFIX, [self toAddressString]]];
                     [subtitleArray addObject:@""];

@@ -10,7 +10,7 @@
 
 #endif
 
-#define AUTOMATED_TESTING_SKIP_NCAPPDELEGATE 1 // if 1, skips nc_AppDelegate didFinishLaunchingWithOptions so we get a clean tests run
+#define AUTOMATED_TESTING_SKIP_NCAPPDELEGATE 0 // if 1, skips nc_AppDelegate didFinishLaunchingWithOptions so we get a clean tests run
 
 #define TRIP_GENERATE_URL     @"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/"
 //#define TRIP_GENERATE_URL @"http://ec2-23-22-169-158.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"
@@ -318,6 +318,7 @@
 #define BAYLINK_AGENCY_NAME     @"Baylink"
 #define GOLDEN_GATE_AGENCY_NAME @"Golden Gate Ferry"
 
+// Keys for RouteExcludeSettings
 #define CALTRAIN_BUTTON @"Caltrain"
 #define BART_BUTTON @"BART"
 #define AIRBART_BUTTON @"AirBART"
@@ -329,6 +330,7 @@
 #define HARBOR_BAY_BUTTON  @"Harbor Bay"
 #define BAYLINK_BUTTON     @"Baylink"
 #define GOLDEN_GATE_BUTTON @"Golden Gate"
+#define BIKE_BUTTON @"Bike"  
 
 #define AC_TRANSIT @"ac_transit"
 #define BART       @"bart"
@@ -373,12 +375,20 @@
 #define GEO_RES_TO               @"geoResTO"
 #define SAVE_PLAN                @"savePlan"
 
+// Server request keys
 #define FROM_PLACE                      @"fromPlace"
 #define TO_PLACE                        @"toPlace"
 #define REQUEST_TRIP_DATE               @"date"
 #define REQUEST_TRIP_TIME               @"time"
 #define ARRIVE_BY                       @"arriveBy"
 #define MAX_WALK_DISTANCE               @"maxWalkDistance"
+#define REQUEST_BIKE_TRIANGLE_QUICK     @"triangleTimeFactor"
+#define REQUEST_BIKE_TRIANGLE_FLAT      @"triangleSlopeFactor"
+#define REQUEST_BIKE_TRIANGLE_BIKE_FRIENDLY @"triangleSafetyFactor"
+#define REQUEST_TRANSIT_MODE            @"mode"
+#define REQUEST_TRANSIT_MODE_TRANSIT    @"TRANSIT,WALK"
+#define REQUEST_TRANSIT_MODE_BIKE_ONLY  @"BICYCLE"
+#define REQUEST_TRANSIT_MODE_TRANSIT_BIKE @"TRANSIT,BICYCLE"
 
 #define REQUEST_ID              @"reqId"
 #define REQUEST_ID_LENGTH       16
@@ -449,6 +459,15 @@
 
 #define PUSH_NOTIFY_OFF     -1
 
+// OTP Mode value strings returned in Leg object
+#define OTP_BIKE_MODE       @"BICYCLE"
+#define OTP_WALK_MODE       @"WALK"
+#define OTP_RAIL_MODE       @"RAIL"
+#define OTP_SUBWAY_MODE     @"SUBWAY"
+#define OTP_TRAM_MODE       @"TRAM"
+#define OTP_BUS_MODE        @"BUS"
+
+
 //US-184 Constant
 #define CALTRAIN_LOCAL                 @"Local"
 #define CALTRAIN_LIMITED               @"Limited"
@@ -484,6 +503,5 @@
 #define ALL_STATION    @"all_st"
 
 #define EXCLUDE_SETTINGS_DICTIONARY @"ExcludeSettingsDictionary"
-#define BIKE_MODE @"Bike"  // Key for RouteExcludeSettings
 
 

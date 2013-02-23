@@ -237,12 +237,15 @@
 
 
 // Initialization method after a plan is freshly loaded from an OTP request
-- (void)createRequestChunkWithAllItinerariesAndRequestDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive
+- (void)createRequestChunkWithAllItinerariesAndRequestDate:(NSDate *)requestDate
+                                            departOrArrive:(DepartOrArrive)depOrArrive
+                                      routeExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
 {
     PlanRequestChunk* requestChunk = [NSEntityDescription insertNewObjectForEntityForName:@"PlanRequestChunk"
                                                             inManagedObjectContext:[self managedObjectContext]];
     [requestChunk setPlan:self];
     [requestChunk setType:[NSNumber numberWithInt:OTP_ITINERARY]];
+    [requestChunk setRouteExcludeSettings:routeExcludeSettings];
     if (depOrArrive == DEPART) {
         [requestChunk setEarliestRequestedDepartTimeDate:requestDate];
     } else { // ARRIVE

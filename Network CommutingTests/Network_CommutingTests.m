@@ -241,7 +241,9 @@
     itin11.endTime = [itin11.startTime dateByAddingTimeInterval:(30.0*60)];
     itin11.plan = plan1;
     
-    [plan1 createRequestChunkWithAllItinerariesAndRequestDate:date10req departOrArrive:DEPART];
+    [plan1 createRequestChunkWithAllItinerariesAndRequestDate:date10req
+                                               departOrArrive:DEPART
+                                         routeExcludeSettings:nil];
     [plan1 setFromLocation:loc1];
     [plan1 setToLocation:loc2];
     for (Itinerary* itin in [plan1 itineraries]) {
@@ -261,12 +263,14 @@
     leg20.startTime = date20;
     leg20.agencyId = nil;
     leg20.itinerary = itin20;
-    leg20.mode = @"WALK";
+    leg20.mode = OTP_WALK_MODE;
     itin20.startTime = date20;
     itin20.endTime = [itin20.startTime dateByAddingTimeInterval:(60.0*60)];
     itin20.plan = plan2;
     
-    [plan2 createRequestChunkWithAllItinerariesAndRequestDate:date20 departOrArrive:DEPART];
+    [plan2 createRequestChunkWithAllItinerariesAndRequestDate:date20
+                                               departOrArrive:DEPART
+                                              routeExcludeSettings:nil];
     [plan2 setFromLocation:loc1];
     [plan2 setToLocation:loc2];
     for (Itinerary* itin in [plan2 itineraries]) {
@@ -304,7 +308,9 @@
     itin32.endTime = [itin32.startTime dateByAddingTimeInterval:(30.0*60)];
     itin32.plan = plan3;
     
-    [plan3 createRequestChunkWithAllItinerariesAndRequestDate:date30req departOrArrive:DEPART];
+    [plan3 createRequestChunkWithAllItinerariesAndRequestDate:date30req
+                                               departOrArrive:DEPART
+                                         routeExcludeSettings:nil];
     [plan3 setFromLocation:loc1];
     [plan3 setToLocation:loc2];
     for (Itinerary* itin in [plan3 itineraries]) {
@@ -335,7 +341,9 @@
     itin41.endTime = [itin41.startTime dateByAddingTimeInterval:(30.0*60)];
     itin41.plan = plan4;
     
-    [plan4 createRequestChunkWithAllItinerariesAndRequestDate:date40req departOrArrive:DEPART];
+    [plan4 createRequestChunkWithAllItinerariesAndRequestDate:date40req
+                                               departOrArrive:DEPART
+                                         routeExcludeSettings:nil];
     [plan4 setFromLocation:loc1];
     [plan4 setToLocation:loc2];
     for (Itinerary* itin in [plan4 itineraries]) {
@@ -373,7 +381,9 @@
     itin52.endTime = [itin52.startTime dateByAddingTimeInterval:(30.0*60)];
     itin52.plan = plan5;
 
-    [plan5 createRequestChunkWithAllItinerariesAndRequestDate:date50req departOrArrive:DEPART];
+    [plan5 createRequestChunkWithAllItinerariesAndRequestDate:date50req
+                                               departOrArrive:DEPART
+                                         routeExcludeSettings:nil];
     [plan5 setFromLocation:loc1];
     [plan5 setToLocation:loc2];
     for (Itinerary* itin in [plan5 itineraries]) {
@@ -417,7 +427,9 @@
     itin62.endTime = [itin62.startTime dateByAddingTimeInterval:(30.0*60)];
     itin62.plan = plan6;
     
-    [plan6 createRequestChunkWithAllItinerariesAndRequestDate:date60req departOrArrive:ARRIVE];
+    [plan6 createRequestChunkWithAllItinerariesAndRequestDate:date60req
+                                               departOrArrive:ARRIVE
+                                         routeExcludeSettings:nil];
     [plan6 setFromLocation:loc1];
     [plan6 setToLocation:loc2];
     for (Itinerary* itin in [plan6 itineraries]) {
@@ -455,7 +467,7 @@
     leg71a.startTime = date71a;
     leg71a.agencyId = nil;
     leg71a.itinerary = itin71;
-    leg71a.mode = @"WALK";
+    leg71a.mode = OTP_WALK_MODE;
     leg71b.startTime = date71b;
     leg71b.agencyId = ACTransit;
     leg71b.itinerary = itin71;
@@ -472,7 +484,7 @@
     leg72a.startTime = date72a;
     leg72a.agencyId = nil;
     leg72a.itinerary = itin72;
-    leg72a.mode = @"WALK";
+    leg72a.mode = OTP_WALK_MODE;
     leg72b.startTime = date72b;
     leg72b.agencyId = ACTransit;
     leg72b.itinerary = itin72;
@@ -482,7 +494,9 @@
     itin72.endTime = [itin72.startTime dateByAddingTimeInterval:(60.0*60)];
     itin72.plan = plan7;
     
-    [plan7 createRequestChunkWithAllItinerariesAndRequestDate:date70req departOrArrive:DEPART];
+    [plan7 createRequestChunkWithAllItinerariesAndRequestDate:date70req
+                                               departOrArrive:DEPART
+                                         routeExcludeSettings:nil];
     [plan7 setFromLocation:loc1];
     [plan7 setToLocation:loc2];
     for (Itinerary* itin in [plan7 itineraries]) {
@@ -505,7 +519,9 @@
     itin80.endTime = [itin80.startTime dateByAddingTimeInterval:(30.0*60)];
     itin80.plan = plan8;
     
-    [plan8 createRequestChunkWithAllItinerariesAndRequestDate:date80req departOrArrive:DEPART];
+    [plan8 createRequestChunkWithAllItinerariesAndRequestDate:date80req
+                                               departOrArrive:DEPART
+                                         routeExcludeSettings:nil];
     [plan8 setFromLocation:loc1];
     [plan8 setToLocation:loc2];
     for (Itinerary* itin in [plan8 itineraries]) {
@@ -550,7 +566,9 @@
     itin93dep.endTime = [itin93dep.startTime dateByAddingTimeInterval:(6*60*60)];  // goes overnight
     itin93dep.plan = plan9depart;
     
-    [plan9depart createRequestChunkWithAllItinerariesAndRequestDate:date90req departOrArrive:DEPART];
+    [plan9depart createRequestChunkWithAllItinerariesAndRequestDate:date90req
+                                                     departOrArrive:DEPART
+                                               routeExcludeSettings:nil];
     [plan9depart setFromLocation:loc1];
     [plan9depart setToLocation:loc2];
     for (Itinerary* itin in [plan9depart itineraries]) {
@@ -581,7 +599,9 @@
     itin91arr.endTime = [itin91arr.startTime dateByAddingTimeInterval:(30.0*60)];
     itin91arr.plan = plan9arrive;
     
-    [plan9arrive createRequestChunkWithAllItinerariesAndRequestDate:date90ArrReq departOrArrive:ARRIVE];
+    [plan9arrive createRequestChunkWithAllItinerariesAndRequestDate:date90ArrReq
+                                                     departOrArrive:ARRIVE
+                                               routeExcludeSettings:nil];
     [plan9arrive setFromLocation:loc1];
     [plan9arrive setToLocation:loc2];
     for (Itinerary* itin in [plan9arrive itineraries]) {
@@ -615,7 +635,7 @@
    
     leg1011.startTime = date10;
     leg1011.duration = [NSNumber numberWithInt:519000];
-    leg1011.mode = @"WALK";
+    leg1011.mode = OTP_WALK_MODE;
     leg1011.itinerary = itin101;
     itin101.startTime = date10;
     itin101.endTime = [itin101.startTime dateByAddingTimeInterval:(30.0*60)];
@@ -636,7 +656,7 @@
     leg1012.startTime = date11;
     leg1012.duration = [NSNumber numberWithInt:500000];
     leg1012.agencyId = @"SFMTA";
-    leg1012.mode = @"TRAM";
+    leg1012.mode = OTP_TRAM_MODE;
     leg1012.route = @"KT";
     leg1012.routeShortName = @"KT";
     leg1012.routeLongName = @"OCEAN VIEW";
@@ -663,7 +683,7 @@
     
     leg1013.startTime = date10;
     leg1013.duration = [NSNumber numberWithInt:519000];
-    leg1013.mode = @"WALK";
+    leg1013.mode = OTP_WALK_MODE;
     leg1013.itinerary = itin101;
     itin101.startTime = date10;
     itin101.endTime = [itin101.startTime dateByAddingTimeInterval:(30.0*60)];
@@ -686,7 +706,7 @@
     leg1021.duration = [NSNumber numberWithInt:540000];
     leg1021.agencyId = @"caltrain-ca-us";
     leg1021.agencyName = @"Caltrain";
-    leg1021.mode = @"RAIL";
+    leg1021.mode = OTP_RAIL_MODE;
     leg1021.route = @"Local";
     leg1021.routeLongName = @"Local";
     leg1021.routeId = @"ct_local_20121001";
@@ -715,7 +735,7 @@
     leg1031.duration = [NSNumber numberWithInt:540000];
     leg1031.agencyId = @"caltrain-ca-us";
     leg1031.agencyName = @"Caltrain";
-    leg1031.mode = @"RAIL";
+    leg1031.mode = OTP_RAIL_MODE;
     leg1031.route = @"Local";
     leg1031.routeLongName = @"Local";
     leg1031.routeId = @"ct_local_20121001";
@@ -754,7 +774,7 @@
     leg1111.duration = [NSNumber numberWithInt:540000];
     leg1111.agencyId = @"caltrain-ca-us";
     leg1111.agencyName = @"Caltrain";
-    leg1111.mode = @"RAIL";
+    leg1111.mode = OTP_RAIL_MODE;
     leg1111.route = @"Local";
     leg1111.routeLongName = @"Local";
     leg1111.routeId = @"ct_local_20121001";
@@ -783,7 +803,7 @@
     leg1121.duration = [NSNumber numberWithInt:540000];
     leg1121.agencyId = @"caltrain-ca-us";
     leg1121.agencyName = @"Caltrain";
-    leg1121.mode = @"RAIL";
+    leg1121.mode = OTP_RAIL_MODE;
     leg1121.route = @"Local";
     leg1121.routeLongName = @"Limited";
     leg1121.routeId = @"ct_limited_20121001";
@@ -812,7 +832,7 @@
     leg1131.duration = [NSNumber numberWithInt:540000];
     leg1131.agencyId = @"caltrain-ca-us";
     leg1131.agencyName = @"Caltrain";
-    leg1131.mode = @"RAIL";
+    leg1131.mode = OTP_RAIL_MODE;
     leg1131.route = @"Local";
     leg1131.routeLongName = @"Bullet";
     leg1131.routeId = @"ct_bullet_20121001";
@@ -1583,7 +1603,7 @@
     
     // Test default settings
     RouteExcludeSettings* settings = [RouteExcludeSettings latestUserSettings];
-    STAssertEquals([settings settingForKey:BIKE_MODE], SETTING_EXCLUDE_ROUTE, @"");  // Bike is initially set to Exclude
+    STAssertEquals([settings settingForKey:BIKE_BUTTON], SETTING_EXCLUDE_ROUTE, @"");  // Bike is initially set to Exclude
     STAssertEquals([settings settingForKey:MUNI_BUTTON], SETTING_INCLUDE_ROUTE,@"");  // Any other mode is set to include by default
     
     // Test excludeSettingsForPlan
@@ -1594,7 +1614,7 @@
     STAssertEquals([settingArray count], 3u, @"");  // Should have Caltrain, BART, and Bike buttons
     STAssertEqualObjects([[settingArray objectAtIndex:0] key], CALTRAIN_BUTTON, @"");
     STAssertEquals([[settingArray objectAtIndex:0] setting], SETTING_INCLUDE_ROUTE, @"");
-    STAssertEqualObjects([[settingArray objectAtIndex:2] key], BIKE_MODE, @"");
+    STAssertEqualObjects([[settingArray objectAtIndex:2] key], BIKE_BUTTON, @"");
     STAssertEquals([[settingArray objectAtIndex:2] setting], SETTING_EXCLUDE_ROUTE, @"");
     
     // Test isItineraryIncluded
@@ -1663,7 +1683,7 @@
     // Now test isEquivalentTo: the other way.  settings has one more key set in their dictionary, but is equivalent
     RouteExcludeSettings *testSettings = [NSEntityDescription insertNewObjectForEntityForName:@"RouteExcludeSettings"
                                                                        inManagedObjectContext:managedObjectContext];
-    [testSettings changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:BIKE_MODE];
+    [testSettings changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:BIKE_BUTTON];
     // Now settings has been deleted and incorporated into testSettings
     STAssertEquals([[testSettings usedByRequestChunks] count], 2u, @"");
 }
@@ -1694,7 +1714,7 @@
     itin120 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
     
     leg1201= [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
-    leg1201.mode = @"WALK";
+    leg1201.mode = OTP_WALK_MODE;
     PlanPlace *pp101 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
     PlanPlace *pp102 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
     [pp101 setLat:[NSNumber numberWithDouble:37.75768017385226]];
@@ -1715,7 +1735,7 @@
     leg1202 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
     leg1202.agencyId = @"SFMTA";
     leg1202.agencyName = @"San Francisco Municipal Transportation Agency";
-    leg1202.mode = @"TRAM";
+    leg1202.mode = OTP_TRAM_MODE;
     leg1202.route = @"KT";
     leg1202.routeShortName = @"KT";
     leg1202.routeLongName = @"OCEAN VIEW";
@@ -1748,7 +1768,7 @@
     leg1203 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
     leg1203.agencyId = @"caltrain-ca-us";
     leg1203.agencyName = @"Caltrain";
-    leg1203.mode = @"RAIL";
+    leg1203.mode = OTP_RAIL_MODE;
     leg1203.route = @"Local";
     leg1203.routeLongName = @"Bullet";
     leg1203.routeId = @"ct_bullet_20121001";
@@ -1776,7 +1796,7 @@
     itin120.plan = plan12;
     
 //    leg1203= [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
-//    leg1203.mode = @"WALK";
+//    leg1203.mode = OTP_WALK_MODE;
 //    PlanPlace *pp119 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
 //    PlanPlace *pp120 = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:managedObjectContext];
 //    [pp101 setLat:[NSNumber numberWithDouble:37.75768017385226]];

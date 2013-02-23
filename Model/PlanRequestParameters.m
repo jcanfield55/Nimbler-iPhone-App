@@ -17,6 +17,7 @@
 @synthesize fromLocation;
 @synthesize originalTripDate;
 @synthesize thisRequestTripDate;
+@synthesize routeExcludeSettings;
 @synthesize maxWalkDistance;
 @synthesize departOrArrive;
 @synthesize serverCallsSoFar;
@@ -43,6 +44,7 @@
     newParameters.fromLocation = parameters0.fromLocation;
     newParameters.originalTripDate = parameters0.originalTripDate;
     newParameters.thisRequestTripDate = parameters0.thisRequestTripDate;
+    newParameters.routeExcludeSettings = parameters0.routeExcludeSettings;
     newParameters.maxWalkDistance = parameters0.maxWalkDistance;
     newParameters.departOrArrive = parameters0.departOrArrive;
     newParameters.serverCallsSoFar = parameters0.serverCallsSoFar;

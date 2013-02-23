@@ -27,6 +27,7 @@
 #import "Logging.h"
 #import "RealTimeManager.h"
 #import "StationListElement.h"
+#import "RouteExcludeSetting.h"
 
 
 @interface ToFromViewController()
@@ -1300,6 +1301,7 @@ UIImage *imageDetailDisclosure;
             parameters.toLocation = toLocation;
             parameters.originalTripDate = tripDate;
             parameters.thisRequestTripDate = tripDate;
+            parameters.routeExcludeSettings = [RouteExcludeSettings latestUserSettings];
             parameters.departOrArrive = departOrArrive;
             parameters.maxWalkDistance = maxDistance;
             parameters.planDestination = self;

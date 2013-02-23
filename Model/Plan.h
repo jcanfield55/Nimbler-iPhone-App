@@ -83,7 +83,9 @@
 
 
 // Initialization method after a plan is freshly loaded from an OTP request
-- (void)createRequestChunkWithAllItinerariesAndRequestDate:(NSDate *)requestDate departOrArrive:(DepartOrArrive)depOrArrive;
+- (void)createRequestChunkWithAllItinerariesAndRequestDate:(NSDate *)requestDate
+                                            departOrArrive:(DepartOrArrive)depOrArrive
+                                      routeExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings;
 
 // Looks for matching itineraries for the requestDate and departOrArrive
 // routeExcludeSettings specifies which routes / modes the user specifically wants to include/exclude from results
