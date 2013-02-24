@@ -266,9 +266,6 @@ static RealTimeManager* realTimeManager;
                     }
             }
         }
-//        for(int i=0;i<[mutablePredictionList count];i++){
-//            [[nc_AppDelegate sharedInstance].gtfsParser generateNewItineraryFromExtraPrediction:[mutablePredictionList objectAtIndex:i] :plan Itinerary:uniquePattern UniqueLeg:uniqueLeg Context:nil];
-//        }
     }
 }
 
@@ -290,29 +287,4 @@ static RealTimeManager* realTimeManager;
     }
 }
 
-// First set realtime data to leg of itineraries.
-// Then check if leg have prediction then calculate timeDiff,arrivalFlag etc for leg and also check for any miss connection in itinerary if yes then try to solve that if it is not solvable then generate new itinerary from realtime data and pattern.
-- (void) updateRealtimeForLegsAndItineraries:(NSArray *)liveFeeds Plan:(Plan *)newPlan {
-    plan = newPlan;
-    [self setRealTimePredictionsFromLiveFeeds:liveFeeds];
-    for(int i=0;i<[[plan sortedItineraries] count];i++){
-        Itinerary *itinerary = [[plan sortedItineraries] objectAtIndex:i];
-        for(int k=0;k<[[itinerary sortedLegs] count];k++){
-            Leg *leg = [[itinerary sortedLegs] objectAtIndex:k];
-            if(leg.prediction){
-                double epochTime = [[leg.prediction objectForKey:@"epochTime"] doubleValue];
-                [leg setRealTimeParametersUsingEpochTime:epochTime];
-                Leg *conflictLeg = [itinerary conflictLegFromItinerary];
-                if(conflictLeg){
-                    Leg *adjustedLeg =  [itinerary adjustLegsIfRequired];
-                    if(adjustedLeg)
-                        [[nc_AppDelegate sharedInstance].gtfsParser generateNewItineraryByRemovingConflictLegs:leg FromItinerary:itinerary Plan:plan TripDate:originalTripDate Context:nil];
-                }
-                [itinerary setArrivalFlagFromLegsRealTime];
-            }
-            else
-                continue;
-        }
-    }
-}
 @end

@@ -1092,7 +1092,11 @@
     }
     return address;
 }
-- (NSString *)rawAddressWithOutAgencyName:(NSArray *)searchStringsArray:(NSArray *)replaceStringsArray:(NSString *)address{
+
+- (NSString *)rawAddressWithOutAgencyName:(NSArray *)searchStringsArray
+                      replaceStringsArray:(NSArray *)replaceStringsArray
+                                  address:(NSString *)address
+{
     for(int i=0;i<[searchStringsArray count];i++){
         NSRange range;
         if ([address rangeOfString:[searchStringsArray objectAtIndex:i] options:NSCaseInsensitiveSearch].location != NSNotFound){
@@ -1105,8 +1109,11 @@
     return address;
 }
 
-- (NSArray *)searchedStationsFromRawAddress:(NSString *)address:(NSArray *)searchStringsArray:(NSArray *)replaceStringsArray:(NSString *)agencyNameNotToInclude{
-    
+- (NSArray *)searchedStationsFromRawAddress:(NSString *)address
+                         searchStringsArray:(NSArray *)searchStringsArray
+                        replaceStringsArray:(NSArray *)replaceStringsArray
+                     agencyNameNotToInclude:(NSString *)agencyNameNotToInclude
+{
     NSMutableArray *arrMultiPleStationList = [[NSMutableArray alloc] init];
     NSMutableArray *arrUnFilteredStationList = [[NSMutableArray alloc] init];
     NSMutableArray *arrDistance = [[NSMutableArray alloc] init];
@@ -1130,7 +1137,9 @@
     for (int i=0;i<[arrUnFilteredStationList count];i++){
         Location *location = [arrUnFilteredStationList objectAtIndex:i];
         NSString *strshortFormattedAddress = [[location shortFormattedAddress]lowercaseString];
-        strshortFormattedAddress = [self rawAddressWithOutAgencyName:searchStringsArray:replaceStringsArray:strshortFormattedAddress];
+        strshortFormattedAddress = [self rawAddressWithOutAgencyName:searchStringsArray
+                                                 replaceStringsArray:replaceStringsArray
+                                                             address:strshortFormattedAddress];
         if([address isEqualToString:strshortFormattedAddress]){
             //[self markAndUpdateSelectedLocation:location];
             return [NSArray arrayWithObject:location];

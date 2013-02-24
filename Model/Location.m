@@ -27,6 +27,7 @@
 @dynamic nickName;
 @dynamic preloadVersion;
 @dynamic memberOfList;
+@dynamic stationListElement;
 @synthesize shortFormattedAddress;
 @synthesize reverseGeoLocation;
 @synthesize lastRequestReverseGeoLocation;
@@ -128,17 +129,7 @@ static Locations *locations;
     return [NSString stringWithFormat:@"%f,%f",[self latFloat],[self lngFloat]];
 }
 
-- (BOOL) isMatchingString:(NSString *)str{
-//    NSString *address = [[self formattedAddress] lowercaseString];
-//    NSString *strAdress = [locations rawAddressWithOutAgencyName:address SearchStringArray:SEARCH_STRINGS_ARRAY ReplaceStringArray:REPLACE_STRINGS_ARRAY];
-//    NSArray *arrComponents = [strAdress componentsSeparatedByString:@" "];
-//    for(int i=0;i<[arrComponents count];i++){
-//        NSString *token = [arrComponents objectAtIndex:i];
-//        if([token hasPrefix:str])
-//            return true;
-//    }
-//    return false;
-}
+
 // Returns true if the receiver's formatted address is a substring match with str.
 // Substring match is computed by doing a compare of all the atoms nd in str against number, street, city, airport, etc
 - (BOOL)isMatchingTypedString:(NSString *)str

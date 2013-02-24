@@ -12,7 +12,6 @@
 #import "GtfsCalendarDates.h"
 #import "GtfsStopTimes.h"
 #import "UtilityFunctions.h"
-#import "LegFromGtfs.h"
 #import "nc_AppDelegate.h"
 #import "GtfsRoutes.h"
 #import "GtfsTempItinerary.h"
@@ -773,7 +772,9 @@
 
 // Check StopTimes Table for particular tripID&agencyID data is exists or not.
 // If Data For tripID&agencyID  Already Exists then we will not ask StopTimes Data for that tripID from Server otherwise we will ask for StopTimes Data.
-- (BOOL) checkIfTripIDAndAgencyIDAlreadyExists:(NSString *)strTripID:(NSString *)agencyID{
+- (BOOL) checkIfTripIDAndAgencyIDAlreadyExists:(NSString *)strTripID
+                                      agencyID:(NSString *)agencyID
+{
     NSFetchRequest *fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesByAgencyID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:strTripID,@"TRIPID",agencyID,@"AGENCYID", nil]];
     NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
     if([arrayStopTimes count] > 0){
@@ -831,7 +832,7 @@
         for(int i=0;i<[tripIds count];i++){
             NSString *strTripId = [tripIds objectAtIndex:i];
             NSString *strAgencyId = [agencyIds objectAtIndex:i];
-            if(![self checkIfTripIDAndAgencyIDAlreadyExists:strTripId:strAgencyId] && [strRequestString rangeOfString:[NSString stringWithFormat:@"%@_%@,",strAgencyId,strTripId]].location == NSNotFound)
+            if(![self checkIfTripIDAndAgencyIDAlreadyExists:strTripId agencyID:strAgencyId] && [strRequestString rangeOfString:[NSString stringWithFormat:@"%@_%@,",strAgencyId,strTripId]].location == NSNotFound)
                 [strRequestString appendFormat:@"%@_%@,",strAgencyId,strTripId];
         }
         if([strRequestString length] > 0){

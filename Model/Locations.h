@@ -89,8 +89,14 @@
 - (void)reverseGeocodeWithParameters:(GeocodeRequestParameters *)parameters callBack:(id <LocationsGeocodeResultsDelegate>)delegate;
 
 // Station Search From Json Files.
-- (NSString *)rawAddressWithOutAgencyName:(NSArray *)searchStringsArray:(NSArray *)replaceStringsArray:(NSString *)address;
-- (NSArray *)searchedStationsFromRawAddress:(NSString *)address:(NSArray *)searchStringsArray:(NSArray *)replaceStringsArray:(NSString *)agencyNameNotToInclude;
+- (NSString *)rawAddressWithOutAgencyName:(NSArray *)searchStringsArray
+                      replaceStringsArray:(NSArray *)replaceStringsArray
+                                  address:(NSString *)address;
+
+- (NSArray *)searchedStationsFromRawAddress:(NSString *)address
+                         searchStringsArray:(NSArray *)searchStringsArray
+                        replaceStringsArray:(NSArray *)replaceStringsArray
+                     agencyNameNotToInclude:(NSString *)agencyNameNotToInclude;
 
 - (NSString *) rawAddressWithOutAgencyName:(NSString *)address SearchStringArray:(NSArray *)searchStringArray;
 

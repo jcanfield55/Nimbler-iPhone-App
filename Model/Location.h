@@ -50,6 +50,8 @@
 
 @property (nonatomic, strong) NSDictionary* addressComponentDictionary; // Dictionary of address components (generated dynamically by subclasses; not stored in Core Data)
 
+@property (nonatomic, strong) NSSet* stationListElement;  // Set of any stationListElements pointing to this location
+
 // Static variables and methods to retrieve the Locations set wrapper
 + (void)setLocations:(Locations *)loc;
 
@@ -77,7 +79,6 @@
 - (BOOL)isCurrentLocation;  // true if receiver is CurrentLocation
 - (BOOL)isReverseGeoValid; // Used for currentLocation.  True if there is a reverseGeoLocation and it is within the time or distance thresholds to be considered still fresh
 
-- (BOOL) isMatchingString:(NSString *)str;
 
 @end
 

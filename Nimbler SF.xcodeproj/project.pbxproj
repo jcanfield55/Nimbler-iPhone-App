@@ -164,7 +164,6 @@
 		520FB27C162603AF0083F143 /* walkb.png in Resources */ = {isa = PBXBuildFile; fileRef = 520FB212162603AF0083F143 /* walkb.png */; };
 		520FB293162604950083F143 /* CoverageGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 520FB28B162604950083F143 /* CoverageGeoJSON.geojson */; };
 		520FB296162605470083F143 /* CoverageGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 520FB295162605470083F143 /* CoverageGeoJSON.geojson */; };
-		520FB297162605470083F143 /* CoverageGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 520FB295162605470083F143 /* CoverageGeoJSON.geojson */; };
 		525442C214C3ECF2004B0E1F /* libRestKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442B814C3EA95004B0E1F /* libRestKit.a */; };
 		525442C414C3ED2C004B0E1F /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C314C3ED2C004B0E1F /* CFNetwork.framework */; };
 		525442C614C3ED4A004B0E1F /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C514C3ED4A004B0E1F /* MobileCoreServices.framework */; };
@@ -193,7 +192,6 @@
 		52CF43C814BDF2F9000565D6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52CF43C614BDF2F9000565D6 /* InfoPlist.strings */; };
 		52CF43CB14BDF2F9000565D6 /* Network_CommutingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CF43CA14BDF2F9000565D6 /* Network_CommutingTests.m */; };
 		52DD766416D2A86B005763DE /* Stations.m in Sources */ = {isa = PBXBuildFile; fileRef = 75E8F1DC16CE4E2A00863A8C /* Stations.m */; };
-		52DD766916D2A86E005763DE /* Stations.m in Sources */ = {isa = PBXBuildFile; fileRef = 75E8F1DC16CE4E2A00863A8C /* Stations.m */; };
 		52DD766A16D2A892005763DE /* StationListElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 75E8F1CD16CE356D00863A8C /* StationListElement.m */; };
 		52DD766B16D2A893005763DE /* StationListElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 75E8F1CD16CE356D00863A8C /* StationListElement.m */; };
 		52DD766C16D2A8FD005763DE /* PreloadedStop.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D44083F16CF72FD00F8EBE5 /* PreloadedStop.m */; };
@@ -208,7 +206,6 @@
 		8D00753216D4CAB30041A64C /* RouteExcludeSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D00753116D4CAB30041A64C /* RouteExcludeSettings.m */; };
 		8D0FA9A1169165C10038FDB2 /* LegFromOTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */; };
 		8D0FA9B0169198500038FDB2 /* ItineraryFromOTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0FA9AF1691984F0038FDB2 /* ItineraryFromOTP.m */; };
-		8D0FA9B31691985B0038FDB2 /* ItineraryFromGtfs.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0FA9B21691985A0038FDB2 /* ItineraryFromGtfs.m */; };
 		8D106DD91671F0ED004E0DE5 /* GtfsAgency.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DD81671F0ED004E0DE5 /* GtfsAgency.m */; };
 		8D106DFF1671F16C004E0DE5 /* GtfsCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DF41671F16B004E0DE5 /* GtfsCalendar.m */; };
 		8D106E001671F16C004E0DE5 /* GtfsCalendarDates.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DF61671F16B004E0DE5 /* GtfsCalendarDates.m */; };
@@ -234,7 +231,6 @@
 		8D99B635164E2DF200C0A5AC /* stop_times.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8D99B631164E2DF200C0A5AC /* stop_times.txt */; };
 		8D99B636164E2DF200C0A5AC /* stops.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8D99B632164E2DF200C0A5AC /* stops.txt */; };
 		8D99B637164E2DF200C0A5AC /* trips.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8D99B633164E2DF200C0A5AC /* trips.txt */; };
-		8D9A9FBF16945A3F00D3EB55 /* LegFromGtfs.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D9A9FBE16945A3F00D3EB55 /* LegFromGtfs.m */; };
 		8D9EA263162D78FD002BB5FF /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */; };
 		8DA39BDF15E3855B0029D54B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6F22E71563AD360066DFA9 /* AVFoundation.framework */; };
 		8DA39BE115E38B5E0029D54B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */; };
@@ -549,8 +545,6 @@
 		8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = LegFromOTP.m; path = ../Model/LegFromOTP.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8D0FA9AE1691984F0038FDB2 /* ItineraryFromOTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ItineraryFromOTP.h; path = ../ItineraryFromOTP.h; sourceTree = "<group>"; };
 		8D0FA9AF1691984F0038FDB2 /* ItineraryFromOTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = ItineraryFromOTP.m; path = ../ItineraryFromOTP.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		8D0FA9B11691985A0038FDB2 /* ItineraryFromGtfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ItineraryFromGtfs.h; path = ../ItineraryFromGtfs.h; sourceTree = "<group>"; };
-		8D0FA9B21691985A0038FDB2 /* ItineraryFromGtfs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = ItineraryFromGtfs.m; path = ../ItineraryFromGtfs.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8D106DD41671EB41004E0DE5 /* GtfsParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = GtfsParser.h; path = ../Model/GtfsParser.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8D106DD51671EB41004E0DE5 /* GtfsParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = GtfsParser.m; path = ../Model/GtfsParser.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8D106DD71671F0ED004E0DE5 /* GtfsAgency.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GtfsAgency.h; path = ../Model/GtfsAgency.h; sourceTree = "<group>"; };
@@ -590,8 +584,6 @@
 		8D99B631164E2DF200C0A5AC /* stop_times.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = stop_times.txt; sourceTree = "<group>"; };
 		8D99B632164E2DF200C0A5AC /* stops.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = stops.txt; sourceTree = "<group>"; };
 		8D99B633164E2DF200C0A5AC /* trips.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trips.txt; sourceTree = "<group>"; };
-		8D9A9FBD16945A3F00D3EB55 /* LegFromGtfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LegFromGtfs.h; path = ../Model/LegFromGtfs.h; sourceTree = "<group>"; };
-		8D9A9FBE16945A3F00D3EB55 /* LegFromGtfs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LegFromGtfs.m; path = ../Model/LegFromGtfs.m; sourceTree = "<group>"; };
 		8D9EA25C162D78FD002BB5FF /* Network_Commuting 1.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.1.xcdatamodel"; sourceTree = "<group>"; };
 		8D9EA25D162D78FD002BB5FF /* Network_Commuting 1.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.2.xcdatamodel"; sourceTree = "<group>"; };
 		8D9EA25E162D78FD002BB5FF /* Network_Commuting 1.3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.3.xcdatamodel"; sourceTree = "<group>"; };
@@ -927,14 +919,10 @@
 				520FB1551626036C0083F143 /* AgencyAndId.m */,
 				520FB1601626036C0083F143 /* Leg.h */,
 				520FB1611626036C0083F143 /* Leg.m */,
-				8D9A9FBD16945A3F00D3EB55 /* LegFromGtfs.h */,
-				8D9A9FBE16945A3F00D3EB55 /* LegFromGtfs.m */,
 				8D0FA99F169165C00038FDB2 /* LegFromOTP.h */,
 				8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */,
 				520FB15C1626036C0083F143 /* Itinerary.h */,
 				520FB15D1626036C0083F143 /* Itinerary.m */,
-				8D0FA9B11691985A0038FDB2 /* ItineraryFromGtfs.h */,
-				8D0FA9B21691985A0038FDB2 /* ItineraryFromGtfs.m */,
 				8D0FA9AE1691984F0038FDB2 /* ItineraryFromOTP.h */,
 				8D0FA9AF1691984F0038FDB2 /* ItineraryFromOTP.m */,
 				520FB1791626036C0083F143 /* PlanPlace.h */,
@@ -1402,7 +1390,6 @@
 			files = (
 				52CF43C814BDF2F9000565D6 /* InfoPlist.strings in Resources */,
 				520FB293162604950083F143 /* CoverageGeoJSON.geojson in Resources */,
-				520FB297162605470083F143 /* CoverageGeoJSON.geojson in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1481,9 +1468,7 @@
 				8D6FB9681680870500952B0C /* GtfsStop.m in Sources */,
 				8D0FA9A1169165C10038FDB2 /* LegFromOTP.m in Sources */,
 				8D0FA9B0169198500038FDB2 /* ItineraryFromOTP.m in Sources */,
-				8D0FA9B31691985B0038FDB2 /* ItineraryFromGtfs.m in Sources */,
 				8DC448EA169409ED00608DF6 /* GtfsParser.m in Sources */,
-				8D9A9FBF16945A3F00D3EB55 /* LegFromGtfs.m in Sources */,
 				8DE0CC4F16A9632100AE2E9D /* twitterViewController.m in Sources */,
 				8D3EF6B116B24D3B00ED366B /* RealTimeManager.m in Sources */,
 				52958AB116CED86900CC46C7 /* GtfsTempItinerary.m in Sources */,
@@ -1502,7 +1487,6 @@
 				52CF43CB14BDF2F9000565D6 /* Network_CommutingTests.m in Sources */,
 				52C32ABC16A3A90B0094EE14 /* TestGeneratePlan.m in Sources */,
 				52A9BE9516B4B41500564D0D /* RealTimeServerStubTest.m in Sources */,
-				52DD766916D2A86E005763DE /* Stations.m in Sources */,
 				52DD766B16D2A893005763DE /* StationListElement.m in Sources */,
 				52DD766D16D2A8FE005763DE /* PreloadedStop.m in Sources */,
 			);

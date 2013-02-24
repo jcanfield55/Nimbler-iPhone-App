@@ -21,8 +21,7 @@
 @property (nonatomic, retain) NSNumber * lat;
 @property (nonatomic, retain) NSNumber * lon;
 @property (nonatomic, retain) NSString * stopId;
-@property (nonatomic, retain) StationListElement *stationListElement;
+@property (nonatomic, retain) NSSet *stationListElement; // All the stationListElements pointing to this PreloadedStop
 
 + (RKManagedObjectMapping *)objectMappingforStop:(APIType)apiType;
--(BOOL) isMatchingTypedString:(NSString *)str;
 @end

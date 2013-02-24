@@ -95,13 +95,6 @@
 // Generate new leg with all parameters from old leg
 - (void) generateNewLegFromOldLeg:(Leg *)leg Context:(NSManagedObjectContext *)context Itinerary:(Itinerary *)itinerary;
 
-// Generate new itinerary with remaining prediction and pattern.
-- (void) generateNewItineraryFromExtraPrediction:(NSDictionary *)prediction :(Plan *)plan Itinerary:(Itinerary *)itinerary UniqueLeg:(Leg *)uniqueLeg Context:(NSManagedObjectContext *)context;
-
-// Generate new itinerary by chaging the legs from miss connection found.
-// i.e if pattern is w,c,w,b and if miss connection found from c then we will create c,w,b legs.
-- (void) generateNewItineraryByRemovingConflictLegs:(Leg *)leg FromItinerary:(Itinerary *)itinerary Plan:(Plan *)plan TripDate:(NSDate *)tripDate Context:(NSManagedObjectContext *)context;
-
 // Generate new itineraries from patterns and stoptimes data.
 - (void) generateScheduledItinerariesFromPatternOfPlan:(Plan *)plan Context:(NSManagedObjectContext *)context tripDate:(NSDate *)tripDate;
 
