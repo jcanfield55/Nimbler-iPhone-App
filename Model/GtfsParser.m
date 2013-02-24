@@ -46,16 +46,16 @@
 }
 
 - (void) parseAndStoreGtfsAgencyData:(NSDictionary *)dictFileData{
-    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
-    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
-    [moc setMergePolicy:NSOverwriteMergePolicy];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
+//    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
+//    [moc setMergePolicy:NSOverwriteMergePolicy];
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSFetchRequest * fetchAgencies = [[NSFetchRequest alloc] init];
-        [fetchAgencies setEntity:[NSEntityDescription entityForName:@"GtfsAgency" inManagedObjectContext:moc]];
-        NSArray * arrayAgencies = [moc executeFetchRequest:fetchAgencies error:nil];
+        [fetchAgencies setEntity:[NSEntityDescription entityForName:@"GtfsAgency" inManagedObjectContext:managedObjectContext]];
+        NSArray * arrayAgencies = [managedObjectContext executeFetchRequest:fetchAgencies error:nil];
         for (id agency in arrayAgencies){
-            [moc deleteObject:agency];
+            [managedObjectContext deleteObject:agency];
         }
         
         NSMutableArray *arrayAgencyID = [[NSMutableArray alloc] init];
@@ -74,28 +74,28 @@
             }
         }
         for(int i=0;i<[arrayAgencyID count];i++){
-            GtfsAgency* agency = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsAgency" inManagedObjectContext:moc];
+            GtfsAgency* agency = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsAgency" inManagedObjectContext:managedObjectContext];
             agency.agencyID = [arrayAgencyID objectAtIndex:i];
             agency.agencyName = [arrayAgencyName objectAtIndex:i];
             agency.agencyURL = [arrayAgencyURL objectAtIndex:i];
         }
-        saveContext(moc);
-        dispatch_async(dispatch_get_main_queue(), ^{
-        });
-    });
+        saveContext(managedObjectContext);
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//        });
+//    });
 }
 
 - (void) parseAndStoreGtfsCalendarDatesData:(NSDictionary *)dictFileData{
-    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
-    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
-    [moc setMergePolicy:NSOverwriteMergePolicy];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
+//    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
+//    [moc setMergePolicy:NSOverwriteMergePolicy];
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSFetchRequest * fetchCalendarDates = [[NSFetchRequest alloc] init];
-        [fetchCalendarDates setEntity:[NSEntityDescription entityForName:@"GtfsCalendarDates" inManagedObjectContext:moc]];
-        NSArray * arrayPlanCalendarDates = [moc executeFetchRequest:fetchCalendarDates error:nil];
+        [fetchCalendarDates setEntity:[NSEntityDescription entityForName:@"GtfsCalendarDates" inManagedObjectContext:managedObjectContext]];
+        NSArray * arrayPlanCalendarDates = [managedObjectContext executeFetchRequest:fetchCalendarDates error:nil];
         for (id calendarDates in arrayPlanCalendarDates){
-            [moc deleteObject:calendarDates];
+            [managedObjectContext deleteObject:calendarDates];
         }
         
         NSMutableArray *arrayServiceID = [[NSMutableArray alloc] init];
@@ -118,15 +118,15 @@
         NSDateFormatter *formtter = [[NSDateFormatter alloc] init];
         [formtter setDateFormat:@"yyyyMMdd"];
         NSFetchRequest * fetchCalendar = [[NSFetchRequest alloc] init];
-        [fetchCalendar setEntity:[NSEntityDescription entityForName:@"GtfsCalendar" inManagedObjectContext:moc]];
-        NSArray * arrayCalendar = [moc executeFetchRequest:fetchCalendar error:nil];
+        [fetchCalendar setEntity:[NSEntityDescription entityForName:@"GtfsCalendar" inManagedObjectContext:managedObjectContext]];
+        NSArray * arrayCalendar = [managedObjectContext executeFetchRequest:fetchCalendar error:nil];
         NSMutableDictionary *dictCalendar = [[NSMutableDictionary alloc] init];
         for(int i=0;i<[arrayCalendar count];i++){
             GtfsCalendar *calendar = [arrayCalendar objectAtIndex:i];
             [dictCalendar setObject:calendar forKey:calendar.serviceID];
         }
         for(int i=0;i<[arrayServiceID count];i++){
-            GtfsCalendarDates* calendarDates = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsCalendarDates" inManagedObjectContext:moc];
+            GtfsCalendarDates* calendarDates = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsCalendarDates" inManagedObjectContext:managedObjectContext];
             calendarDates.serviceID = [arrayServiceID objectAtIndex:i];
             calendarDates.calendar = [dictCalendar objectForKey:calendarDates.serviceID];
             NSString *strDate = [arrayDate objectAtIndex:i];
@@ -137,24 +137,24 @@
             }
             calendarDates.exceptionType = [arrayExceptionType objectAtIndex:i];
         }
-        saveContext(moc);
-        dispatch_async(dispatch_get_main_queue(), ^{
-        });
-    });
+        saveContext(managedObjectContext);
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//        });
+//    });
 }
 
 - (void) parseAndStoreGtfsCalendarData:(NSDictionary *)dictFileData{
     
-    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
-    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
-    [moc setMergePolicy:NSOverwriteMergePolicy];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
+//    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
+//    [moc setMergePolicy:NSOverwriteMergePolicy];
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSFetchRequest * fetchCalendar = [[NSFetchRequest alloc] init];
-        [fetchCalendar setEntity:[NSEntityDescription entityForName:@"GtfsCalendar" inManagedObjectContext:moc]];
-        NSArray * arrayCalendar = [moc executeFetchRequest:fetchCalendar error:nil];
+        [fetchCalendar setEntity:[NSEntityDescription entityForName:@"GtfsCalendar" inManagedObjectContext:managedObjectContext]];
+        NSArray * arrayCalendar = [managedObjectContext executeFetchRequest:fetchCalendar error:nil];
         for (id calendar in arrayCalendar){
-            [moc deleteObject:calendar];
+            [managedObjectContext deleteObject:calendar];
         }
         
         NSMutableArray *arrayServiceID = [[NSMutableArray alloc] init];
@@ -191,7 +191,7 @@
         NSDateFormatter *formtter = [[NSDateFormatter alloc] init];
         [formtter setDateFormat:@"yyyyMMdd"];
         for(int i=0;i<[arrayServiceID count];i++){
-            GtfsCalendar* calendar = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsCalendar" inManagedObjectContext:moc];
+            GtfsCalendar* calendar = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsCalendar" inManagedObjectContext:managedObjectContext];
             calendar.serviceID = [arrayServiceID objectAtIndex:i];
             int dMonday = [[arrayMonday objectAtIndex:i] intValue];
             int dTuesday = [[arrayTuesday objectAtIndex:i] intValue];
@@ -218,24 +218,24 @@
                 calendar.endDate = endDate;
             }
         }
-        saveContext(moc);
-        dispatch_async(dispatch_get_main_queue(), ^{
-        });
-    });
+        saveContext(managedObjectContext);
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//        });
+//    });
 }
 
 - (void) parseAndStoreGtfsRoutesData:(NSDictionary *)dictFileData{
     
-    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
-    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
-    [moc setMergePolicy:NSOverwriteMergePolicy];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
+//    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
+//    [moc setMergePolicy:NSOverwriteMergePolicy];
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSFetchRequest * fetchRoutes = [[NSFetchRequest alloc] init];
-        [fetchRoutes setEntity:[NSEntityDescription entityForName:@"GtfsRoutes" inManagedObjectContext:moc]];
-        NSArray * arrayRoutes = [moc executeFetchRequest:fetchRoutes error:nil];
+        [fetchRoutes setEntity:[NSEntityDescription entityForName:@"GtfsRoutes" inManagedObjectContext:managedObjectContext]];
+        NSArray * arrayRoutes = [managedObjectContext executeFetchRequest:fetchRoutes error:nil];
         for (id routes in arrayRoutes){
-            [moc deleteObject:routes];
+            [managedObjectContext deleteObject:routes];
         }
         
         NSMutableArray *arrayRouteID = [[NSMutableArray alloc] init];
@@ -267,7 +267,7 @@
             }
         }
         for(int i=0;i<[arrayRouteID count];i++){
-            GtfsRoutes* routes = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsRoutes" inManagedObjectContext:moc];
+            GtfsRoutes* routes = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsRoutes" inManagedObjectContext:managedObjectContext];
             routes.routeID = [arrayRouteID objectAtIndex:i];
             routes.routeShortName = [arrayRouteShortName objectAtIndex:i];
             routes.routeLongname = [arrayRouteLongName objectAtIndex:i];
@@ -277,23 +277,23 @@
             routes.routeColor = [arrayRouteColor objectAtIndex:i];
             routes.routeTextColor = [arrayRouteTextColor objectAtIndex:i];
         }
-        saveContext(moc);
-        dispatch_async(dispatch_get_main_queue(), ^{
-        });
-    });
+        saveContext(managedObjectContext);
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//        });
+//    });
 }
 
 - (void) parseAndStoreGtfsStopsData:(NSDictionary *)dictFileData{
-    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
-    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
-    [moc setMergePolicy:NSOverwriteMergePolicy];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
+//    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
+//    [moc setMergePolicy:NSOverwriteMergePolicy];
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSFetchRequest * fetchStops = [[NSFetchRequest alloc] init];
-        [fetchStops setEntity:[NSEntityDescription entityForName:@"GtfsStop" inManagedObjectContext:moc]];
-        NSArray * arrayStops = [moc executeFetchRequest:fetchStops error:nil];
+        [fetchStops setEntity:[NSEntityDescription entityForName:@"GtfsStop" inManagedObjectContext:managedObjectContext]];
+        NSArray * arrayStops = [managedObjectContext executeFetchRequest:fetchStops error:nil];
         for (id stops in arrayStops){
-            [moc deleteObject:stops];
+            [managedObjectContext deleteObject:stops];
         }
         
         NSMutableArray *arrayStopID = [[NSMutableArray alloc] init];
@@ -322,7 +322,7 @@
             }
         }
         for(int i=0;i<[arrayStopID count];i++){
-            GtfsStop* routes = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsStop" inManagedObjectContext:moc];
+            GtfsStop* routes = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsStop" inManagedObjectContext:managedObjectContext];
             routes.stopID = [arrayStopID objectAtIndex:i];
             routes.stopName = [arrayStopName objectAtIndex:i];
             routes.stopDesc = [arrayStopDesc objectAtIndex:i];
@@ -333,19 +333,19 @@
             routes.zoneID = [arrayZoneID objectAtIndex:i];
             routes.stopURL = [arrayStopURL objectAtIndex:i];
         }
-        saveContext(moc);
-        dispatch_async(dispatch_get_main_queue(), ^{
-        });
-    });
+        saveContext(managedObjectContext);
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//        });
+//    });
 }
 
 - (void) parseAndStoreGtfsTripsData:(NSDictionary *)dictFileData RequestUrl:(NSString *)strRequestUrl{
-    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
-    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
-    [moc setMergePolicy:NSOverwriteMergePolicy];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
+//    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
+//    [moc setMergePolicy:NSOverwriteMergePolicy];
+//    
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSArray *arrayComponents = [strRequestUrl componentsSeparatedByString:@"?"];
         NSString *tempString = [arrayComponents objectAtIndex:1];
         NSArray *arraySubComponents = [tempString componentsSeparatedByString:@"="];
@@ -382,8 +382,8 @@
             }
         }
         NSFetchRequest * fetchRoutes = [[NSFetchRequest alloc] init];
-        [fetchRoutes setEntity:[NSEntityDescription entityForName:@"GtfsRoutes" inManagedObjectContext:moc]];
-        NSArray * arrayRoutes = [moc executeFetchRequest:fetchRoutes error:nil];
+        [fetchRoutes setEntity:[NSEntityDescription entityForName:@"GtfsRoutes" inManagedObjectContext:managedObjectContext]];
+        NSArray * arrayRoutes = [managedObjectContext executeFetchRequest:fetchRoutes error:nil];
         NSMutableDictionary *dictRoutes = [[NSMutableDictionary alloc] init];
         for(int i=0;i<[arrayRoutes count];i++){
             GtfsRoutes *routes = [arrayRoutes objectAtIndex:i];
@@ -391,8 +391,8 @@
         }
         
         NSFetchRequest * fetchCalendar = [[NSFetchRequest alloc] init];
-        [fetchCalendar setEntity:[NSEntityDescription entityForName:@"GtfsCalendar" inManagedObjectContext:moc]];
-        NSArray * arrayCalendar = [moc executeFetchRequest:fetchCalendar error:nil];
+        [fetchCalendar setEntity:[NSEntityDescription entityForName:@"GtfsCalendar" inManagedObjectContext:managedObjectContext]];
+        NSArray * arrayCalendar = [managedObjectContext executeFetchRequest:fetchCalendar error:nil];
         NSMutableDictionary *dictCalendar = [[NSMutableDictionary alloc] init];
         for(int i=0;i<[arrayCalendar count];i++){
             GtfsCalendar *calendar = [arrayCalendar objectAtIndex:i];
@@ -400,7 +400,7 @@
         }
         
         for(int i=0;i<[arrayTripID count];i++){
-            GtfsTrips* trips = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsTrips" inManagedObjectContext:moc];
+            GtfsTrips* trips = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsTrips" inManagedObjectContext:managedObjectContext];
             trips.tripID = [arrayTripID objectAtIndex:i];
             trips.routeID = [arrayRouteID objectAtIndex:i];
             trips.route = [dictRoutes objectForKey:trips.routeID];
@@ -411,11 +411,11 @@
             trips.blockID = [arrayBlockID objectAtIndex:i];
             trips.shapeID = [arrayShapeID objectAtIndex:i];
         }
-        saveContext(moc);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self generateStopTimesRequestStringUsingTripIds:arrayTripID agencyIds:arrayAgencyID];
-        });
-    });
+        saveContext(managedObjectContext);
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self generateStopTimesRequestStringUsingTripIds:arrayTripID agencyIds:arrayAgencyID];
+//        });
+//    });
 }
 
 - (void)contextChanged:(NSNotification*)notification

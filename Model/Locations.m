@@ -268,15 +268,12 @@
     for(int i=0;i<[arrayStationListElement count];i++){
         StationListElement *listElement = [arrayStationListElement objectAtIndex:i];
         if(listElement.stop){
-            LocationFromGoogle *loc = (LocationFromGoogle *)[[nc_AppDelegate sharedInstance].stations createNewLocationObjectFromGtfsStop:listElement.stop :listElement];
-            NSArray *locations = [self locationsWithFormattedAddress:loc.formattedAddress];
-            for(int j=1;j<[locations count];j++){
-                LocationFromGoogle *l = [locations objectAtIndex:j];
-                [managedObjectContext deleteObject:l];
-            }
-            [arrLocations addObject:loc];
+            Location *loc = [[nc_AppDelegate sharedInstance].stations createNewLocationObjectFromGtfsStop:listElement.stop :listElement];
+            Location* newLoc = [self consolidateWithMatchingLocations:loc keepThisLocation:NO];  //
+            [arrLocations addObject:newLoc];
         }
     }
+    return arrLocations;
 }
 
 // Utility function used by setTypedFromString & setTypedToString.  On hold for now
@@ -318,21 +315,16 @@
                 [newArray addObject:loc];  //  add loc to the new array
             }
         }
+        if(typedFromString.length >= 3){
+            NSArray *arrLocations = [self isMatchingTypedAddress:typedFromString];
+            [newArray addObjectsFromArray:arrLocations];
+        }
         NSArray *finalNewArray = [NSArray arrayWithArray:newArray];  // makes a non-mutable copy
         if (![finalNewArray isEqualToArray:sortedMatchingFromLocations]) { // if there is a change
             sortedMatchingFromLocations = finalNewArray;
             areMatchingLocationsChanged = YES;   // mark for refreshing the table
         }
         matchingFromRowCount = [sortedMatchingFromLocations count];  // cases that match typing are included even if they have frequency=0
-        
-        if([finalNewArray count] == 0){
-            NSArray *arrLocations = [self isMatchingTypedAddress:typedFromString];
-            if([arrLocations count] > 0){
-                sortedMatchingFromLocations = arrLocations;
-                areMatchingLocationsChanged = YES;
-            }
-            matchingFromRowCount = [sortedMatchingFromLocations count];
-        }
     }
 }
 
@@ -370,20 +362,16 @@
                 [newArray addObject:loc];  //  add loc to the new array
             }
         }
+        if(typedToString.length >= 3){
+            NSArray *arrLocations = [self isMatchingTypedAddress:typedToString];
+            [newArray addObjectsFromArray:arrLocations];
+        }
         NSArray *finalNewArray = [NSArray arrayWithArray:newArray];  // makes a non-mutable copy
         if (![finalNewArray isEqualToArray:sortedMatchingToLocations]) { // if there is a change
             sortedMatchingToLocations = finalNewArray;
             areMatchingLocationsChanged = YES;   // mark for refreshing the table
         }
         matchingToRowCount = [sortedMatchingToLocations count];  // cases that match typing are included even if they have frequency=0
-        if([finalNewArray count] == 0){
-            NSArray *arrLocations = [self isMatchingTypedAddress:typedToString];
-            if([arrLocations count] > 0){
-                sortedMatchingToLocations = arrLocations;
-                areMatchingLocationsChanged = YES;
-            }
-            matchingToRowCount = [sortedMatchingToLocations count];
-        }
     }
 }
 

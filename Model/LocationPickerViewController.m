@@ -144,6 +144,7 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
     }
     else{
         Location *loc = [[nc_AppDelegate sharedInstance].stations createNewLocationObjectFromGtfsStop:stationListElement.stop :stationListElement];
+        stationListElement.location = loc;
         [toFromTableVC setPickedLocation:loc
                            locationArray:locationArray isGeocodedResults:isGeocodeResults];
         locationPicked = TRUE;

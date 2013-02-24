@@ -582,8 +582,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     else
         tempButtonCounts = 0;
     
-    int tempDivision = tempButtonCounts/2;
-    int tempModulo = tempButtonCounts%2;
+    int tempDivision = tempButtonCounts/4;
+    int tempModulo = tempButtonCounts%4;
     int nAdditionalRows;
     if(tempModulo > 0)
       nAdditionalRows = tempDivision + 1;

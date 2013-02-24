@@ -175,7 +175,7 @@
     NSFetchRequest * fetchAgency = [[NSFetchRequest alloc] init];
     [fetchAgency setEntity:[NSEntityDescription entityForName:@"GtfsAgency" inManagedObjectContext:managedObjectContext]];
     NSArray* arrayAgency = [managedObjectContext executeFetchRequest:fetchAgency error:nil];
-    STAssertTrue([arrayAgency count] == 11, @"");
+    STAssertTrue([arrayAgency count] == 10, @"");
     
     bool test1 = false;
     bool test2 = false;

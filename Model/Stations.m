@@ -89,7 +89,6 @@
     newLoc.lat = stop.lat;
     newLoc.lng = stop.lon;
     newLoc.formattedAddress = stop.formattedAddress;
-    stationListElement.location = newLoc;
     return newLoc;
 }
 
