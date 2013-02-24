@@ -17,6 +17,7 @@
 #import "GtfsStop.h"
 #import "RealTimeManager.h"
 #import "RouteExcludeSettings.h"
+#import "UserPreferance.h"
 
 @interface PlanStore()
 {
@@ -88,7 +89,6 @@
                          FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
                          FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
                          nil, nil, nil, nil);
-                [[nc_AppDelegate sharedInstance].gtfsParser generateScheduledItinerariesFromPatternOfPlan:matchingPlan Context:nil tripDate:parameters.originalTripDate];
                 [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
                 PlanRequestStatus status = PLAN_STATUS_OK;
                 ToFromViewController* toFromVC = [[nc_AppDelegate sharedInstance] toFromViewController];
@@ -96,12 +96,10 @@
                     [toFromVC.timerGettingRealDataByItinerary invalidate];
                     toFromVC.timerGettingRealDataByItinerary = nil;
                 }
-                matchingPlan.sortedItineraries = nil;
-                if (parameters.isDestinationRouteOptionsVC) {
-                    [parameters.planDestination newPlanAvailable:matchingPlan status:status RequestParameter:parameters];
-                } else {
-                   [parameters.planDestination newPlanAvailable:matchingPlan status:status RequestParameter:parameters];
-                }
+                
+                // Callback to planDestination with new plan
+                [parameters.planDestination newPlanAvailable:matchingPlan status:status RequestParameter:parameters];
+
                 return;
             }
         }
@@ -200,13 +198,16 @@
         // Set Bike Mode parameters if needed
         if ([parameters.routeExcludeSettings settingForKey:BIKE_BUTTON]==SETTING_INCLUDE_ROUTE) {
             [params setObject:REQUEST_TRANSIT_MODE_TRANSIT_BIKE forKey:REQUEST_TRANSIT_MODE];
-            /* [params setObject:[NSString stringWithFormat:@"%f", parameters.bikeTriangleQuick]
-             forKey:REQUEST_BIKE_TRIANGLE_QUICK];
-             [params setObject:[NSString stringWithFormat:@"%f", parameters.bikeTriangleFlat]
-             forKey:REQUEST_BIKE_TRIANGLE_FLAT];
-             [params setObject:[NSString stringWithFormat:@"%f", parameters.bikeTriangleBikeFriendly]
-             forKey:REQUEST_BIKE_TRIANGLE_BIKE_FRIENDLY];
-             [params setObject:[NSString stringWithFormat:@"%f", parameters.maxBikeDistance] forKey:MAX_WALK_DISTANCE]; */
+            /* TODO, uncomment passing of the bike parameters once we ahve 
+            UserPreferance* userPrefs = [UserPreferance userPreferance];
+            [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleQuick]
+                       forKey:REQUEST_BIKE_TRIANGLE_QUICK];
+            [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleFlat]
+                       forKey:REQUEST_BIKE_TRIANGLE_FLAT];
+            [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleBikeFriendly]
+                       forKey:REQUEST_BIKE_TRIANGLE_BIKE_FRIENDLY];
+            [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeDistance] forKey:MAX_WALK_DISTANCE];
+             */
         } else {
             [params setObject:REQUEST_TRANSIT_MODE_TRANSIT forKey:REQUEST_TRANSIT_MODE];
         }

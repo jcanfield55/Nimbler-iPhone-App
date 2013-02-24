@@ -1170,7 +1170,7 @@ UIImage *imageDetailDisclosure;
             }
             else{
                 if([nc_AppDelegate sharedInstance].isToFromView){
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:ALERT_TRIP_NOT_AVAILABLE delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil] ;
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:APP_TITLE message:ALERT_TRIP_NOT_AVAILABLE delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil] ;
                     [alert show];
                 }
             }
@@ -1250,7 +1250,7 @@ UIImage *imageDetailDisclosure;
             if(fromLocation == toLocation ||
                ([fromLocation isCurrentLocation] && [fromLocation isReverseGeoValid] && [fromLocation reverseGeoLocation] == toLocation)) {
                 [self stopActivityIndicator];
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:@"The To: and From: address are the same location.  Please choose a different destination." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:APP_TITLE message:@"The To: and From: address are the same location.  Please choose a different destination." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
                 [alert show];
                 logEvent(FLURRY_ROUTE_TO_FROM_SAME,
                          FLURRY_FROM_SELECTED_ADDRESS, [fromLocation shortFormattedAddress],
@@ -1262,7 +1262,7 @@ UIImage *imageDetailDisclosure;
             if (fromLocation == currentLocation || toLocation == currentLocation) {
                 if (![[self supportedRegion] isInRegionLat:[currentLocation latFloat] Lng:[currentLocation lngFloat]]) {
                     [self stopActivityIndicator];
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:APP_TITLE message:
                                           @"Your current location does not appear to be in the Bay Area.  Please choose a different location." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
                     [alert show];
                     NSString *supportedRegString = [NSString stringWithFormat:

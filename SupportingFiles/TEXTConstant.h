@@ -9,6 +9,10 @@
 #ifndef Nimbler_Caltrain_TEXTConstant_h
 #define Nimbler_Caltrain_TEXTConstant_h
 
+
+// App specific constants
+#define APP_TITLE                      @"Nimbler SF"
+
 // Feedback responses
 #define FB_RESPONSE_SUCCEES @"Feedback Sent Successfully"
 #define FB_RESPONSE_FAIL @"Feedback Send Fail"
@@ -22,8 +26,6 @@
 // Null String
 #define NULL_STRING @""
 
-
-#define APP_TITLE                      @"Nimbler Caltrain"
 
 // UITabbar Item
 #define TRIP_PLANNER_VIEW @"Trip Planner"

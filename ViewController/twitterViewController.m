@@ -257,7 +257,7 @@ NSUserDefaults *prefs;
     else{
         if([arrayTweet count] != 0){
             logEvent(FLURRY_ALERT_NO_NETWORK, FLURRY_ALERT_LOCATION, @"twitterViewController -> getLatestTweets", nil, nil, nil, nil, nil, nil);
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain" message:NO_NETWORK_ALERT delegate:self cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:APP_TITLE message:NO_NETWORK_ALERT delegate:self cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil];
             [alert show];
         }
         else{
@@ -403,7 +403,7 @@ NSUserDefaults *prefs;
     else{
         if([arrayTweet count] != 0){
             logEvent(FLURRY_ALERT_NO_NETWORK, FLURRY_ALERT_LOCATION, @"twitterViewController -> getAdvisoryData", nil, nil, nil, nil, nil, nil);
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain" message:NO_NETWORK_ALERT delegate:self cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:APP_TITLE message:NO_NETWORK_ALERT delegate:self cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil];
             [alert show];
         }
         else{

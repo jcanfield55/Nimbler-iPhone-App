@@ -16,6 +16,7 @@
 #import "nc_AppDelegate.h"
 #import "GtfsStopTimes.h"
 #import "RouteExcludeSetting.h"
+#import "UserPreferance.h"
 
 @implementation Network_CommutingTests
 
@@ -1593,6 +1594,39 @@
     STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:1], itin41, @"");
     
 }
+
+//
+// Test UserPreferance for setting bike preferences triangle
+//
+-(void)testUserPreferance
+{
+    UserPreferance* uprefs = [UserPreferance userPreferance];
+    uprefs.fastVsFlat = 0.5;
+    uprefs.fastVsSafe = 0.5;
+    STAssertEquals([uprefs fastVsFlat], 0.5, @"");  // Make sure default is there
+    STAssertEquals([uprefs fastVsSafe], 0.5, @"");
+    // Default values, all three are equal
+    STAssertEquals([uprefs bikeTriangleQuick], (1.0/3), @"");
+    STAssertEquals([uprefs bikeTriangleFlat], (1.0/3), @"");
+    STAssertEquals([uprefs bikeTriangleBikeFriendly], (1.0/3), @"");
+
+    // Everything toward fast
+    uprefs.fastVsFlat = 0.0;
+    uprefs.fastVsSafe = 0.0;
+    STAssertEquals([uprefs bikeTriangleQuick], 1.0, @"");
+    STAssertEquals([uprefs bikeTriangleFlat], 0.0, @"");
+    STAssertEquals([uprefs bikeTriangleBikeFriendly], (0.0), @"");
+
+    // TODO try other combinations
+    uprefs.fastVsFlat = 1.0;
+    NSLog(@"1,0 Fast = %f, Flat = %f, Safe =%f", uprefs.bikeTriangleQuick, uprefs.bikeTriangleFlat, uprefs.bikeTriangleBikeFriendly);
+    uprefs.fastVsFlat = 0.0;
+    uprefs.fastVsSafe = 1.0;
+    NSLog(@"0,1 Fast = %f, Flat = %f, Safe =%f", uprefs.bikeTriangleQuick, uprefs.bikeTriangleFlat, uprefs.bikeTriangleBikeFriendly);
+    uprefs.fastVsFlat = 1.0;
+    NSLog(@"0,1 Fast = %f, Flat = %f, Safe =%f", uprefs.bikeTriangleQuick, uprefs.bikeTriangleFlat, uprefs.bikeTriangleBikeFriendly);
+}
+
 
 //
 // Test RouteExcludeSettings object

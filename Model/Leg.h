@@ -33,7 +33,7 @@ typedef enum {
 @property (nonatomic, retain) NSString * agencyId;
 @property (nonatomic, retain) NSString * legId;
 @property (nonatomic, retain) NSNumber * bogusNonTransitLeg;
-@property (nonatomic, retain) NSNumber * distance;
+@property (nonatomic, retain) NSNumber * distance; // distance in meters
 @property (nonatomic, retain) NSNumber * duration;
 @property (nonatomic, retain) NSDate * endTime;
 @property (nonatomic, retain) NSString * headSign;

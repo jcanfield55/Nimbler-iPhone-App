@@ -146,6 +146,9 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         }
         
     }
+    if (self.isBike) {
+        return @"Bike";
+    }
     NSString* shortAgencyName = [[Leg agencyDisplayNameByAgencyId] objectForKey:[self agencyId]];
     if (!shortAgencyName) {
         shortAgencyName = [self mode];  // Use generic mode instead if name not available

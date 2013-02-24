@@ -405,7 +405,7 @@ NSUserDefaults *prefs;
     }
     else{
         logEvent(FLURRY_ALERT_NO_NETWORK, FLURRY_ALERT_LOCATION, @"FeedBackForm -> submitFeedBack", nil, nil, nil, nil, nil, nil);
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain" message:NO_NETWORK_ALERT delegate:self cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:APP_TITLE message:NO_NETWORK_ALERT delegate:self cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil];
         [alert show];
     }
 }

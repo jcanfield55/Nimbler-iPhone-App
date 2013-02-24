@@ -202,13 +202,24 @@
 {
     NSMutableString *returnString = [NSMutableString stringWithCapacity:30];
     BOOL isFirstLegToDisplay = true;
+    BOOL isFirstScheduledLegToDisplay = true;
     for (Leg* leg in [self sortedLegs]) {
         if ([leg mode] && [[leg mode] length] > 0) {
-            if ([leg isScheduled]) {  // skip Walk or Bike legs
+            if ([leg isBike] && [[leg distance] floatValue] > 650.0) { // include bike legs if >650 meters (about 0.4 miles)
+                if (!isFirstLegToDisplay) {
+                    [returnString appendString:@" -> "];
+                } else {
+                    isFirstLegToDisplay = false;
+                }
+                [returnString appendString:stringByTruncatingToWidth([leg summaryTextWithTime:false],
+                                                                     width, font)];
+            }
+            else if ([leg isScheduled]) {  // skip Walk legs
                 BOOL includeTime=false;
-                if (isFirstLegToDisplay && ![[leg startTime] isEqualToDate:[self startTimeOfFirstLeg]]) {
+                if (isFirstScheduledLegToDisplay && ![[leg startTime] isEqualToDate:[self startTimeOfFirstLeg]]) {
                     includeTime = true;  // Include time if first non-walk leg has a different start-time than itinerary
                 }
+                isFirstScheduledLegToDisplay = false;
                 if (!isFirstLegToDisplay) {
                     [returnString appendString:@" -> "];
                 } else {

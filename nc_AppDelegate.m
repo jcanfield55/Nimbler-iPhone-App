@@ -557,7 +557,7 @@ FeedBackForm *fbView;
     //    [self showFeedBackAlertIfNeeded];
     if(![self isNetworkConnectionLive]){
         logEvent(FLURRY_ALERT_NO_NETWORK, FLURRY_ALERT_LOCATION, @"applicationDidBecomeActive", nil, nil, nil, nil, nil, nil);
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler" message:NO_NETWORK_ALERT delegate:self cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:APP_TITLE message:NO_NETWORK_ALERT delegate:self cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil];
         [alert show];
     }
     
@@ -1004,7 +1004,7 @@ FeedBackForm *fbView;
                     AudioServicesPlaySystemSound(1015);
                 }
             }
-            UIAlertView *dataAlert = [[UIAlertView alloc] initWithTitle:@"Nimbler Caltrain"
+            UIAlertView *dataAlert = [[UIAlertView alloc] initWithTitle:APP_TITLE
                                                                 message:message
                                                                delegate:self
                                                       cancelButtonTitle:@"OK"
