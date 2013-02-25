@@ -117,6 +117,14 @@
         <relationship name="plan" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Plan" inverseName="itineraries" inverseEntity="Plan" syncable="YES"/>
         <relationship name="planRequestChunks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PlanRequestChunk" inverseName="itineraries" inverseEntity="PlanRequestChunk" syncable="YES"/>
         <relationship name="requestChunksCreatedByThisPattern" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PlanRequestChunk" inverseName="gtfsItineraryPattern" inverseEntity="PlanRequestChunk" syncable="YES"/>
+        <compoundIndexes>
+            <compoundIndex>
+                <index value="plan"/>
+            </compoundIndex>
+            <compoundIndex>
+                <index value="startTimeOnly"/>
+            </compoundIndex>
+        </compoundIndexes>
     </entity>
     <entity name="ItineraryFromOTP" representedClassName="ItineraryFromOTP" parentEntity="Itinerary" syncable="YES"/>
     <entity name="KeyObjectPair" syncable="YES">
@@ -289,6 +297,7 @@
     <fetchRequest name="GtfsStopTimesByStopID" entity="GtfsStopTimes" predicateString="departureNSDate > $TRIPTIME AND departureNSDate &lt; $CUTOFFTIME AND (stopID == $STOPID1 OR stopID == $STOPID2) AND tripID != $TRIPID"/>
     <fetchRequest name="GtfsTrips" entity="GtfsTrips" predicateString="tripID == $TRIPID"/>
     <fetchRequest name="GtfsTripsByTripIdAndRouteId" entity="GtfsTrips" predicateString="tripID == $TRIPID AND routeID == $ROUTEID"/>
+    <fetchRequest name="ItineraryByPlanAndTimeRange" entity="Itinerary" predicateString="plan == $PLAN AND startTimeOnly >= $TIME_RANGE_FROM AND startTimeOnly &lt;= $TIME_RANGE_TO"/>
     <fetchRequest name="KeyObjectPairForKey" entity="KeyObjectPair" predicateString="key == $KEY"/>
     <fetchRequest name="LatestRouteExcludeSettings" entity="RouteExcludeSettings" predicateString="isCurrentUserSetting == 1"/>
     <fetchRequest name="LocationByFormattedAddress" entity="Location" predicateString="formattedAddress ==$ADDRESS2"/>

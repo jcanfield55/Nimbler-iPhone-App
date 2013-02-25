@@ -416,17 +416,42 @@
     return desc;
 }
 
-// Compare Two Itineraries
+// Compare Two Itineraries whether they have the same routes and stops. 
+// Does not compare times (this test is primarily for determining unique itineraries).
 // This match itinerary like leg by leg if all match the return yes otherwise return no.
-- (BOOL) isEquivalentItineraryAs:(Itinerary *)itinerary{
+- (BOOL) isEquivalentRoutesAndStopsAs:(Itinerary *)itinerary{
     NSArray *arrItinerary1 = [self sortedLegs];
     NSArray *arrItinerary2 = [itinerary sortedLegs];
     if([arrItinerary1 count] == [arrItinerary2 count]){
         for(int i=0;i<[arrItinerary1 count];i++){
             Leg *leg1 = [arrItinerary1 objectAtIndex:i];
             Leg *leg2 = [arrItinerary2 objectAtIndex:i];
-            if(![leg1 isEquivalentLegAs:leg2]){
+            if(![leg1 isEquivalentRouteAndStopAs:leg2]){
                 return NO;
+            }
+        }
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
+
+// Compare Two Itineraries whether they have the same routes and start & endpoints
+// Compares times just for scheduled legs (not for unscheduled legs)
+// This match itinerary like leg by leg if all match the return yes otherwise return no.
+- (BOOL)isEquivalentRoutesStopsAndScheduledTimingAs:(Itinerary *)itinerary
+{
+    NSArray *arrItinerary1 = [self sortedLegs];
+    NSArray *arrItinerary2 = [itinerary sortedLegs];
+    if([arrItinerary1 count] == [arrItinerary2 count]){
+        for(int i=0;i<[arrItinerary1 count];i++){
+            Leg *leg1 = [arrItinerary1 objectAtIndex:i];
+            Leg *leg2 = [arrItinerary2 objectAtIndex:i];
+            if (leg1.isScheduled && leg2.isScheduled && ![leg1 isEqualInSubstance:leg2]) {
+                return NO;  // Compare times just for scheduled legs
+            } else if(![leg1 isEquivalentRouteAndStopAs:leg2]){
+                return NO;  // Otherwise compare just routes, start & endpoints
             }
         }
         return YES;

@@ -117,9 +117,15 @@ typedef enum {
 // Caltrain and other agencies.  Robust solution will be to fix OTP
 - (BOOL)isOvernightItinerary;
 
-// Compare Two Itineraries
+// Compare Two Itineraries whether they have the same routes and start & endpoints
+// Does not compare times (this test is primarily for determining unique itineraries).
 // This match itinerary like leg by leg if all match the return yes otherwise return no.
-- (BOOL) isEquivalentItineraryAs:(Itinerary *)itinerary;
+- (BOOL)isEquivalentRoutesAndStopsAs:(Itinerary *)itinerary;
+
+// Compare Two Itineraries whether they have the same routes and start & endpoints
+// Compares times just for scheduled legs (not for unscheduled legs)
+// This match itinerary like leg by leg if all match the return yes otherwise return no.
+- (BOOL)isEquivalentRoutesStopsAndScheduledTimingAs:(Itinerary *)itinerary;
 
 // Set Itinerary RealTime from Legs RealTime
 // If itinerary has one scheduled leg then itinerary realtime is same as scheduled leg realtime.

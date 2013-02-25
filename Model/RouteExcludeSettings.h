@@ -52,4 +52,8 @@ typedef enum {
 // Returns true if the receiver and settings0 have equivalent setting values
 // Note: does not compare isCurrentUserSetting
 -(BOOL)isEquivalentTo:(RouteExcludeSettings *)settings0;
+
+// Used for automated tests to clear out any old static latestUserSettings variable
++(void)clearLatestUserSettings;
+
 @end

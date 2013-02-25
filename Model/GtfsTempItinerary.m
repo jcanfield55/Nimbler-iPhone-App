@@ -333,6 +333,7 @@
         newItinerary.endTime = addDateOnlyWithTime(dateOnlyFromDate(tripDate), self.endTime);
         newItinerary.endTimeOnly = self.endTime;
         newItinerary.duration = [NSNumber numberWithDouble:[newItinerary.startTime timeIntervalSinceDate:newItinerary.endTime] * 1000];
+        
         return newItinerary;
     }
     @catch (NSException *exception) {

@@ -519,11 +519,12 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     }
 }
 
-// Compare Two Legs
+// Compare Two Legs whether they have the same routes and start and endpoints
 // If Leg is walk then compatr TO&From location lat/Lng and distance.
 // If leg is not walk then compare routeShortname if not nill else compare routeLongName then compate TO&From Location Lat/Lng and agencyname.
+// Does not compare times (this test is primarily for determining unique itineraries).
 // If legs are equal then return yes otherwise return no
-- (BOOL) isEquivalentLegAs:(Leg *)leg{
+- (BOOL) isEquivalentRouteAndStopAs:(Leg *)leg{
     if((self.isWalk && leg.isWalk) || (self.isBike && leg.isBike)){
         if([self.to.lat doubleValue] != [leg.to.lat doubleValue] || [self.to.lng doubleValue] != [leg.to.lng doubleValue] || [self.from.lat doubleValue] !=[leg.from.lat doubleValue] || [self.from.lng doubleValue] != [leg.from.lng doubleValue] || [self.distance doubleValue] != [leg.distance doubleValue]){
             return NO;

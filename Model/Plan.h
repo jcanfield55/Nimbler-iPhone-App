@@ -66,6 +66,11 @@
 - (NSString *)ncDescription;
 - (void)sortItineraries;  // Re-sorts the itineraries array
 
+// Returns an array of itineraries sorted by date that have the
+// StartTimeOnly field between fromTimeOnly to toTimeOnly
+// If no matches, then returns 0 element array.  If nil parameters or fetch error, returns nil
+- (NSArray *)fetchItinerariesFromTimeOnly:(NSDate *)fromTimeOnly toTimeOnly:(NSDate *)toTimeOnly;
+
 //
 // Plan Request Cache management
 //
@@ -132,6 +137,7 @@
 
 // Create unique Itineraries array from plan.
 - (NSArray *)uniqueItineraries;
+
 // Generate 16 character random string and set it as legId for scheduled leg.
 - (void) setLegsId;
 

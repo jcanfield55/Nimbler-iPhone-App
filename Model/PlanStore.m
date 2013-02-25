@@ -196,7 +196,8 @@
             [params setObject:@"false" forKey:SAVE_PLAN];
         }
         // Set Bike Mode parameters if needed
-        if ([parameters.routeExcludeSettings settingForKey:BIKE_BUTTON]==SETTING_INCLUDE_ROUTE) {
+        if (parameters.routeExcludeSettings && 
+            [parameters.routeExcludeSettings settingForKey:BIKE_BUTTON]==SETTING_INCLUDE_ROUTE) {
             [params setObject:REQUEST_TRANSIT_MODE_TRANSIT_BIKE forKey:REQUEST_TRANSIT_MODE];
             /* TODO, uncomment passing of the bike parameters once we ahve 
             UserPreferance* userPrefs = [UserPreferance userPreferance];

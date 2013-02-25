@@ -85,11 +85,12 @@ typedef enum {
 // True if the main characteristics of referring Leg is equal to leg0
 - (BOOL)isEqualInSubstance:(Leg *)leg0;
 
-// Compare Two Legs
+// Compare Two Legs whether they have the same routes and start and endpoints
 // If Leg is walk then compatr TO&From location lat/Lng and distance.
+// Does not compare times (this test is primarily for determining unique itineraries).
 // If leg is not walk then compare routeShortname if not nill else compare routeLongName then compate TO&From Location Lat/Lng and agencyname.
 // If legs are equal then return yes otherwise return no
-- (BOOL) isEquivalentLegAs:(Leg *)leg;
+- (BOOL) isEquivalentRouteAndStopAs:(Leg *)leg;
 
 // Set the newly generated leg attributes from old leg.
 - (void) setNewlegAttributes:(Leg *)leg;

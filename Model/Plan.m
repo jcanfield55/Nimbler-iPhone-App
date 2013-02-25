@@ -97,6 +97,33 @@
     [self setSortedItineraries:[[self itineraries] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
 }
 
+// Returns an array of itineraries sorted by date that have the
+// StartTimeOnly field between fromTimeOnly to toTimeOnly
+// If no matches, then returns 0 element array.  If nil parameters or fetch error, returns nil
+- (NSArray *)fetchItinerariesFromTimeOnly:(NSDate *)fromTimeOnly toTimeOnly:(NSDate *)toTimeOnly
+{
+    if (!fromTimeOnly || !toTimeOnly) {
+        return nil;
+    }
+    NSManagedObjectModel* model = [[[self managedObjectContext] persistentStoreCoordinator] managedObjectModel];
+    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ItineraryByPlanAndTimeRange"
+                                                substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                       self, @"PLAN",
+                                                                       fromTimeOnly, @"TIME_RANGE_FROM",
+                                                                       toTimeOnly, @"TIME_RANGE_TO",
+                                                                       nil]];
+    NSSortDescriptor *sd1 = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly"
+                                                          ascending:YES];
+    [request setSortDescriptors:[NSArray arrayWithObjects:sd1,nil]];
+    NSError *error;
+    NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
+    if (!result) {
+        logError(@"Locations -> fetchItinerariesFromTimeOnly",  [NSString stringWithFormat:@"Core data fetch failed with error %@", error]);
+        return nil;
+    }
+    return result;  // Return the array of matches (could be empty)
+}
+
 // consolidateIntoSelfPlan
 // If plan0 fromLocation and toLocation are the same as referring object's...
 // Consolidates plan0 itineraries and PlanRequestChunks into referring Plan
@@ -181,8 +208,8 @@
 // Returns the result of the itinerary comparison (see Itinerary.h for enum definition)
 - (ItineraryCompareResult) addItineraryIfNew:(Itinerary *)itin0
 {
-    NSSet* selfItineraries = [NSSet setWithSet:[self itineraries]];  // Make a copy since I will be deleting some
-    for (Itinerary* itinSelf in selfItineraries) {
+    NSArray* matchingTimeItins = [self fetchItinerariesFromTimeOnly:[itin0 startTimeOnly] toTimeOnly:[itin0 startTimeOnly]];  
+    for (Itinerary* itinSelf in matchingTimeItins) {
         ItineraryCompareResult itincompare = [itinSelf compareItineraries:itin0];
         if (itincompare == ITINERARIES_DIFFERENT) {
             continue;
@@ -432,16 +459,30 @@
             }
         }
         
-        // Check for suboptimal itineraries
+        // Check for suboptimal itineraries or equivalent itineraries
         NSMutableSet *optimalItineraries = [NSMutableSet setWithSet:includedItineraries];
         for (Itinerary* itin1 in includedItineraries) {
             for (Itinerary* itin2 in includedItineraries) {
                 if (itin1 != itin2) {
-                    if ([[itin1 startTimeOnly] compare:[itin2 startTimeOnly]] != NSOrderedDescending &&
-                        [[itin1 endTimeOnly] compare:[itin2 endTimeOnly]] != NSOrderedAscending) {
-                        // itin1 starts earlier or equal and ends later or equal.  Longer duration so...
-                        [optimalItineraries removeObject:itin1]; // Remove itin1
+                    // Check if equivalent itineraries
+                    if ([itin1 isEquivalentRoutesStopsAndScheduledTimingAs:itin2]) {
+                        if (itin1.isOTPItinerary && !itin2.isOTPItinerary) {
+                            [optimalItineraries removeObject:itin1];  // if equivalent GTFS & OTP itineraries, only show the GTFS one
+                        } else if (!itin1.isOTPItinerary && itin2.isOTPItinerary) {
+                            // Do nothing, will delete itin2 on the other pass
+                        }
+                        else if ([optimalItineraries containsObject:itin1] &&
+                                 [optimalItineraries containsObject:itin2]) { // both GTFS or both OTP
+                            [optimalItineraries removeObject:itin1]; // Remove itin1 if it is the first to be removed
+                        }
                     }
+                    // if not equivalent, look for sub-optimal itineries
+                    else if ([[itin1 startTimeOnly] compare:[itin2 startTimeOnly]] != NSOrderedDescending && 
+                        [[itin1 endTimeOnly] compare:[itin2 endTimeOnly]] != NSOrderedAscending) {
+                        // itin1 starts earlier or equal and ends later or equal.  Longer duration so remove itin1
+                        [optimalItineraries removeObject:itin1];
+                    }
+
                     // No need to compare the other way, because will loop thru all combinations of itin1 & itin2
                 }
             }
@@ -528,7 +569,7 @@
         for(int j=i+1;j<[arrsortedItineraries count];j++){
             Itinerary *itinerary1 = (Itinerary*)[arrsortedItineraries objectAtIndex:i];
             Itinerary *itinerary2 = (Itinerary*)[arrsortedItineraries objectAtIndex:j];
-            BOOL isEquivalentitinerary = [itinerary1 isEquivalentItineraryAs:itinerary2];
+            BOOL isEquivalentitinerary = [itinerary1 isEquivalentRoutesAndStopsAs:itinerary2];
             if(isEquivalentitinerary){
                 [arrsortedItineraries removeObjectAtIndex:j];
                 i = i-1;

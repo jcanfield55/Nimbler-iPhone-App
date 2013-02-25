@@ -43,6 +43,12 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
     managedObjectContext = moc;
 }
 
+// Used for automated tests to clear out any old static latestUserSettings variable
++(void)clearLatestUserSettings
+{
+    latestUserSettingsStatic = nil;
+}
+
 // Returns the RouteExcludeSettings that are the latest from the user.
 // Fetches from CoreData if needed
 + (RouteExcludeSettings *)latestUserSettings
@@ -119,8 +125,9 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
 -(NSMutableDictionary *)excludeDictionary
 {
     if (!self.excludeDictionaryInternal) {
-        self.excludeDictionaryInternal = [[NSMutableDictionary alloc] initWithCapacity:20];
-        [self.excludeDictionaryInternal setObject:SETTING_STRING_EXCLUDE forKey:BIKE_BUTTON];
+        NSMutableDictionary* newDictionary = [[NSMutableDictionary alloc] initWithCapacity:20];
+        [newDictionary setObject:SETTING_STRING_EXCLUDE forKey:BIKE_BUTTON];
+        [self setExcludeDictionaryInternal:newDictionary];
     }
     return self.excludeDictionaryInternal;
 }

@@ -415,6 +415,7 @@
 //            [self generateStopTimesRequestStringUsingTripIds:arrayTripID agencyIds:arrayAgencyID];
 //        });
 //    });
+    [self generateStopTimesRequestStringUsingTripIds:arrayTripID agencyIds:arrayAgencyID];
 }
 
 - (void)contextChanged:(NSNotification*)notification
@@ -1304,7 +1305,7 @@
     NSMutableArray *itineraries = [[NSMutableArray alloc] init];
     for(int i=0;i<[[plan sortedItineraries] count];i++){
         Itinerary *tempItinerary = [[plan sortedItineraries] objectAtIndex:i];
-        if([pattern isEquivalentItineraryAs:tempItinerary])
+        if([pattern isEquivalentRoutesAndStopsAs:tempItinerary])
             [itineraries addObject:tempItinerary];
     }
     return  itineraries;
