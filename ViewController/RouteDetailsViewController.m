@@ -143,7 +143,7 @@ NSUserDefaults *prefs;
                                        @"img_legBus", @"img_legBusSelect",
                                        @"img_legWalk", @"img_legWalkSelect", 
                                        @"img_backSelect", @"img_backUnSelect", 
-                                       @"img_forwardSelect", @"img_forwardUnSelect", nil];
+                                       @"img_forwardSelect", @"img_forwardUnSelect",@"img_bicycle", @"img_bicycleSelect", nil];
             imageDictionary = [[NSMutableDictionary alloc] initWithCapacity:[imageNameArray count]];
             for (NSString* filename in imageNameArray) {
                 [imageDictionary setObject:[UIImage imageNamed:filename] forKey:filename];
@@ -337,7 +337,10 @@ NSUserDefaults *prefs;
                 [imgFileName appendString:@"img_legHeavyTrain"];
             } else if([leg isTrain]){                        
                 [imgFileName appendString:@"img_legTrain"];
-            } 
+            }
+            else if([leg isBike]){
+                [imgFileName appendString:@"img_bicycle"];
+            }
         }
  
         // if this is the selected row, make red

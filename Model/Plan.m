@@ -452,7 +452,8 @@
         NSMutableSet *includedItineraries = [NSMutableSet setWithSet:matchingItineraries];
         for (Itinerary* itin1 in matchingItineraries) {
             // Check for excluded OTP itineraries (GTFS itineraries were already checked above)
-            if (routeExcludeSettings && [itin1 isOTPItinerary]) {
+            // Addded Check to hide the realtime itinerary also if it is in exclude string
+            if (routeExcludeSettings && ([itin1 isOTPItinerary] || itin1.isRealTimeItinerary)) {
                 if (![routeExcludeSettings isItineraryIncluded:itin1]) {
                     [includedItineraries removeObject:itin1];
                 }

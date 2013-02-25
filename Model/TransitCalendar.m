@@ -81,10 +81,10 @@ static TransitCalendar * transitCalendarSingleton;
 // Accessor override to populate this dictionary if not already there
 - (NSDictionary *)lastGTFSLoadDateByAgency
 {
-    if (![nc_AppDelegate sharedInstance].lastGTFSLoadDateByAgency) {
+    if (!lastGTFSLoadDateByAgency) {
         // See if it is the KeyObjectStore
         KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
-        [nc_AppDelegate sharedInstance].lastGTFSLoadDateByAgency = [keyObjectStore objectForKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
+        lastGTFSLoadDateByAgency = [keyObjectStore objectForKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
         // if (!lastGTFSLoadDateByAgency) {
         // // use stub function to get values -- change this once have server call
         // [self updateTime];
@@ -92,7 +92,7 @@ static TransitCalendar * transitCalendarSingleton;
         // //[keyObjectStore setObject:lastGTFSLoadDateByAgency forKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
     }
     // }
-    return [nc_AppDelegate sharedInstance].lastGTFSLoadDateByAgency;
+    return lastGTFSLoadDateByAgency;
 }
 
 // RestKit callback with server results
@@ -105,7 +105,9 @@ static TransitCalendar * transitCalendarSingleton;
             NSDictionary *tempResponseDictionary = [rkParser objectFromString:[response bodyAsString] error:nil];
             if([tempResponseDictionary objectForKey:GTFS_UPDATE_TIME] != nil ){
                 NIMLOG_EVENT1(@"Loaded TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY");
-                if(lastGTFSLoadDateByAgency != tempResponseDictionary){
+                 KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
+                lastGTFSLoadDateByAgency = [keyObjectStore objectForKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
+                if(![lastGTFSLoadDateByAgency isEqualToDictionary: tempResponseDictionary]){
                     lastGTFSLoadDateByAgency = tempResponseDictionary;
                     KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
                     [keyObjectStore setObject:lastGTFSLoadDateByAgency forKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
@@ -124,6 +126,8 @@ static TransitCalendar * transitCalendarSingleton;
                 calendarByDateByAgency = tempResponseDictionary;
                 KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
                 [keyObjectStore setObject:calendarByDateByAgency forKey:TR_CALENDAR_BY_DATE_BY_AGENCY];
+                [[nc_AppDelegate sharedInstance].gtfsParser removeAllTripsAndStopTimesData];
+                [[nc_AppDelegate sharedInstance].gtfsParser requestAgencyDataFromServer];
             }
         }
     }
@@ -135,20 +139,20 @@ static TransitCalendar * transitCalendarSingleton;
 
 - (NSDictionary *)calendarByDateByAgency
 {
-    if (![nc_AppDelegate sharedInstance].calendarByDateByAgency) {
+    if (!calendarByDateByAgency) {
         // // See if it is the KeyObjectStore
         KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
-        [nc_AppDelegate sharedInstance].calendarByDateByAgency = [keyObjectStore objectForKey:TR_CALENDAR_BY_DATE_BY_AGENCY ];
+        calendarByDateByAgency = [keyObjectStore objectForKey:TR_CALENDAR_BY_DATE_BY_AGENCY ];
     }
-    return [nc_AppDelegate sharedInstance].calendarByDateByAgency;
+    return calendarByDateByAgency;
 }
 
 - (NSDictionary *)serviceByWeekdayByAgency
 {
-    if (![nc_AppDelegate sharedInstance].serviceByWeekdayByAgency) {
+    if (!serviceByWeekdayByAgency) {
         // // See if it is the KeyObjectStore
         KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
-        [nc_AppDelegate sharedInstance].serviceByWeekdayByAgency = [keyObjectStore objectForKey:TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY];
+        serviceByWeekdayByAgency = [keyObjectStore objectForKey:TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY];
         // if (!serviceByWeekdayByAgency) {
         // // use stub function to get values -- change this once have server call
         // [self serviceByWeekday];

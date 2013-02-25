@@ -916,10 +916,9 @@ FeedBackForm *fbView;
                     NSDate *lastSaveDate = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_DATE];
                     NSDate *todayDate = dateOnlyFromDate([NSDate date]);
                     if(!lastSaveDate || ![lastSaveDate isEqualToDate:todayDate]){
-                        NSDate *todayDate = dateOnlyFromDate([NSDate date]);
-                        [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:CURRENT_DATE];
+                       NSDate *todayDate = dateOnlyFromDate([NSDate date]);
+                       [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:CURRENT_DATE];
                         [[nc_AppDelegate sharedInstance] updateTime];
-                        [self.gtfsParser requestAgencyDataFromServer];
                     }
                     // Get TransitCalendar updates
                     [self getTwiiterLiveData];

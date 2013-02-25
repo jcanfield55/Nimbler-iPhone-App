@@ -80,7 +80,7 @@
 #define CALTRAIN_SEARCH_STRINGS_ARRAY [NSArray arrayWithObjects:@"bart station list",@"caltrain station list",@"current location",@" caltrain",@"caltrain ", nil]
 #define CALTRAIN_REPLACE_STRINGS_ARRAY [NSArray arrayWithObjects:@"",@"",@"",@"",@"", nil]
 
-#define SEARCH_STRINGS_ARRAY [NSArray arrayWithObjects:@"&",@"street",@"st.",@"st",@"avenue",@"ave.",@"ave",@"av.",@"av",@"dr.",@"dr",@"and",@"ca.",@"ca",@"usa", nil]
+#define SEARCH_STRINGS_ARRAY [NSArray arrayWithObjects:@"&",@"street",@"st.",@"st",@"avenue",@"ave.",@"ave",@"av.",@"av",@"dr.",@"dr",@"and",@"ca.",@"ca",@"usa",@",", nil]
 #define REPLACE_STRINGS_ARRAY [NSArray arrayWithObjects:@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"", nil]
 
 // New AppSetting Constants

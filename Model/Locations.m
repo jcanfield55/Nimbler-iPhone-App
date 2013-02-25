@@ -249,8 +249,16 @@
     return loc;
 }
 
+// Search the formatted addresses from db and create new location object and return array of matched objects.
+
 - (NSArray *) isMatchingTypedAddress:(NSString *)string{
     NSString *newString = [self rawAddressWithOutAgencyName:[string lowercaseString] SearchStringArray:SEARCH_STRINGS_ARRAY];
+    newString = [newString stringByReplacingOccurrencesOfString:@"," withString:@" "];
+    NSString *tempString = [newString substringFromIndex:[newString length] - 1];
+    if([tempString rangeOfString:@" "].location != NSNotFound){
+        newString = [newString substringToIndex:[newString length] - 1];
+    }
+        
     NSArray *tokens = [newString componentsSeparatedByString:@" "];
     NSMutableArray *predicates = [[NSMutableArray alloc] init];
     for(int i=0;i<[tokens count];i++){
@@ -267,7 +275,7 @@
     NSMutableArray *arrLocations = [[NSMutableArray alloc] init];
     for(int i=0;i<[arrayStationListElement count];i++){
         StationListElement *listElement = [arrayStationListElement objectAtIndex:i];
-        if(listElement.stop){
+         if(listElement.stop){
             Location *loc = [[nc_AppDelegate sharedInstance].stations createNewLocationObjectFromGtfsStop:listElement.stop :listElement];
             Location* newLoc = [self consolidateWithMatchingLocations:loc keepThisLocation:NO];  //
             [arrLocations addObject:newLoc];
@@ -315,11 +323,13 @@
                 [newArray addObject:loc];  //  add loc to the new array
             }
         }
+        // Merge the results of typed string with newarray.
         if(typedFromString.length >= 3){
             NSArray *arrLocations = [self isMatchingTypedAddress:typedFromString];
             [newArray addObjectsFromArray:arrLocations];
         }
-        NSArray *finalNewArray = [NSArray arrayWithArray:newArray];  // makes a non-mutable copy
+        NSSet *tempSet = [[NSSet alloc] initWithArray:newArray];
+        NSArray *finalNewArray = [NSArray arrayWithArray:[tempSet allObjects]];  // makes a non-mutable copy
         if (![finalNewArray isEqualToArray:sortedMatchingFromLocations]) { // if there is a change
             sortedMatchingFromLocations = finalNewArray;
             areMatchingLocationsChanged = YES;   // mark for refreshing the table
@@ -362,11 +372,13 @@
                 [newArray addObject:loc];  //  add loc to the new array
             }
         }
+        // Merge the results of typed string with newarray.
         if(typedToString.length >= 3){
             NSArray *arrLocations = [self isMatchingTypedAddress:typedToString];
             [newArray addObjectsFromArray:arrLocations];
         }
-        NSArray *finalNewArray = [NSArray arrayWithArray:newArray];  // makes a non-mutable copy
+        NSSet *tempSet = [[NSSet alloc] initWithArray:newArray];
+        NSArray *finalNewArray = [NSArray arrayWithArray:[tempSet allObjects]];  // makes a non-mutable copy
         if (![finalNewArray isEqualToArray:sortedMatchingToLocations]) { // if there is a change
             sortedMatchingToLocations = finalNewArray;
             areMatchingLocationsChanged = YES;   // mark for refreshing the table

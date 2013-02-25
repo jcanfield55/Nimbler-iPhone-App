@@ -634,6 +634,21 @@
     }
 }
 
+- (void) removeAllTripsAndStopTimesData{
+    NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
+    [fetchTrips setEntity:[NSEntityDescription entityForName:@"GtfsTrips" inManagedObjectContext:managedObjectContext]];
+    NSArray * arrayTrips = [managedObjectContext executeFetchRequest:fetchTrips error:nil];
+    for (id trip in arrayTrips){
+        [managedObjectContext deleteObject:trip];
+    }
+    
+    NSFetchRequest * fetchStopTimes = [[NSFetchRequest alloc] init];
+    [fetchStopTimes setEntity:[NSEntityDescription entityForName:@"GtfsStopTimes" inManagedObjectContext:managedObjectContext]];
+    NSArray * arrayStopTimes = [managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
+    for (id stopTimes in arrayStopTimes){
+        [managedObjectContext deleteObject:stopTimes];
+    }
+}
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response
 {
     NSString *strRequestURL = request.resourcePath;
@@ -1004,7 +1019,8 @@
         for (int i=0;i< [arrRealTimes count];i++) {
             NSDictionary *dictRealTime = [arrRealTimes objectAtIndex:i];
             NSDate * realTime = [NSDate dateWithTimeIntervalSince1970:[[dictRealTime objectForKey:@"epochTime"] doubleValue]/1000];
-            if([realTime compare:interval] == NSOrderedDescending || [realTime isEqualToDate:interval]){
+            NSDate *realTimeOnly = timeOnlyFromDate(realTime);
+            if([realTimeOnly compare:interval] == NSOrderedDescending || [realTimeOnly isEqualToDate:interval]){
                 [arrRealtime addObject:dictRealTime];
             }
         }
@@ -1060,17 +1076,20 @@
 
 // This method creates unscheduled newleg based on the pattern leg.  Timing-wise, will add to the end of the itinerary.
 // Returns newleg
-- (Leg *) addUnScheduledLegToItinerary:(Itinerary *)itinerary WalkLeg:(Leg *)leg Context:(NSManagedObjectContext *)context{
+- (Leg *) addUnScheduledLegToItinerary:(Itinerary *)itinerary WalkLeg:(Leg *)leg Context:(NSManagedObjectContext *)context Index:(int)index{
     Leg* newleg;
     @try {
         newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
         newleg.itinerary = itinerary;
         itinerary.sortedLegs = nil;
-        if([[itinerary sortedLegs] count] == 1)
-            newleg.startTime = itinerary.startTime;
-        else
-            newleg.startTime = itinerary.endTime;
-        newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([leg.duration floatValue]/1000)];
+        if(index == 0){
+           newleg.startTime = itinerary.startTime;
+           newleg.endTime = itinerary.startTime;
+        }
+        else{
+           newleg.startTime = itinerary.endTime;
+           newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([leg.duration floatValue]/1000)];
+        }
         [newleg setNewlegAttributes:leg];
         itinerary.endTime = newleg.endTime;
     }
@@ -1271,7 +1290,7 @@
         NSDictionary *prediction = [self returnMaximumRealTime:predictions];
         NSDate *realTimeBoundry = timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"epochTime"] doubleValue]/1000.0)]);
         if([startTimeOnly compare:currentTime] == NSOrderedDescending && [startTimeOnly compare:realTimeBoundry] == NSOrderedAscending){
-            if([itinerary isRealTimeItinerary])
+            if(![itinerary isRealTimeItinerary])
                 itinerary.hideItinerary = true;
         }
     }
@@ -1342,17 +1361,17 @@
             logError(@"GtfsParser-->generateItinerariesFromPrediction", @"Reached 199 iterations in generating itinerary");
             break;
         }
-        BOOL loopBreak = NO;
+        Leg *selectedLeg;
         for(int k=0;k<[[itinerary sortedLegs] count];k++){
-            Leg *leg = [[itinerary sortedLegs] objectAtIndex:k];
-            if([leg isScheduled]){
-                NSArray *predictions = [dictPredictions objectForKey:leg.legId];
-                if(!predictions || [predictions count] == 0)
-                    loopBreak = YES;
+            selectedLeg = [[itinerary sortedLegs] objectAtIndex:k];
+            if([selectedLeg isScheduled]){
+                break;
             }
         }
-        if(loopBreak)
+        NSArray *predictions = [dictPredictions objectForKey:selectedLeg.legId];
+        if(!predictions || [predictions count] == 0)
             break;
+        
         Itinerary* newItinerary = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:context];
         newItinerary.plan = plan;
         newItinerary.startTime = tripDate;
@@ -1395,7 +1414,7 @@
                 }
             }
             else{
-                [self addUnScheduledLegToItinerary:newItinerary WalkLeg:leg Context:context];
+                [self addUnScheduledLegToItinerary:newItinerary WalkLeg:leg Context:context Index:j];
             }
         }
         if (![newItinerary isDeleted]) {

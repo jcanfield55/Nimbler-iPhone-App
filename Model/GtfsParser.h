@@ -109,5 +109,8 @@
                                           Plan:(Plan *)plan
                                        Context:(NSManagedObjectContext *)context;
 - (void)contextChanged:(NSNotification*)notification;
+
+// Remove all stopTimes and Trips Data from DB when new updates are available.
+- (void) removeAllTripsAndStopTimesData;
 @end
 

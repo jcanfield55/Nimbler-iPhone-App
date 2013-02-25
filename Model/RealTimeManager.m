@@ -41,34 +41,43 @@ static RealTimeManager* realTimeManager;
         NSMutableArray *arrLegs = [[NSMutableArray alloc] init];
         for(int i=0;i<[[plan uniqueItineraries] count];i++){
             Itinerary *itinerary = [[plan uniqueItineraries] objectAtIndex:i];
-            for(int j=0;j<[[itinerary sortedLegs] count];j++){
-                Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
-                if([leg isScheduled]){
-                    NSDictionary *dicToStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.to.stopId,@"id", nil];
-                    NSDictionary *dicTo = [NSDictionary dictionaryWithObjectsAndKeys:dicToStopId,@"stopId", nil];
-                    NSDictionary *dicFromStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.from.stopId,@"id", nil];
-                    NSDictionary *dicFrom = [NSDictionary dictionaryWithObjectsAndKeys:dicFromStopId,@"stopId", nil];
-                    NSString *strRouteShortName = leg.routeShortName;
-                    NSString *strRouteLongName = leg.routeLongName;
-                    double startDate = 0;
-                    double endDate = 0;
-                    if(!strRouteShortName){
-                        strRouteShortName = @"";
+            if(!itinerary.isRealTimeItinerary){
+                for(int j=0;j<[[itinerary sortedLegs] count];j++){
+                    Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
+                    if([leg isScheduled]){
+                        NSDictionary *dicToStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.to.stopId,@"id", nil];
+                        NSDictionary *dicTo = [NSDictionary dictionaryWithObjectsAndKeys:dicToStopId,@"stopId", nil];
+                        NSDictionary *dicFromStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.from.stopId,@"id", nil];
+                        NSDictionary *dicFrom = [NSDictionary dictionaryWithObjectsAndKeys:dicFromStopId,@"stopId", nil];
+                        NSString *strRouteShortName = leg.routeShortName;
+                        NSString *strRouteLongName = leg.routeLongName;
+                        double startDate = 0;
+                        double endDate = 0;
+                        if(!strRouteShortName){
+                            strRouteShortName = @"";
+                        }
+                        if(!strRouteLongName){
+                            strRouteLongName = @"";
+                        }
+                        if(leg.startTime){
+                            double startTimeInterval = [leg.startTime timeIntervalSince1970];
+                            startDate = startTimeInterval*1000;
+                        }
+                        if(leg.endTime){
+                            double endTimeInterval = [leg.endTime timeIntervalSince1970];
+                            endDate = endTimeInterval*1000;
+                        }
+                        NSString *tripId;
+                        if(leg.tripId){
+                            tripId = leg.tripId;
+                        }
+                        else{
+                            tripId = @"";
+                        }
+                        NSDictionary *dicLegData = [NSDictionary dictionaryWithObjectsAndKeys:leg.tripId,@"tripId",strRouteLongName,@"routeLongName",strRouteShortName,@"routeShortName",[NSNumber numberWithDouble:startDate],@"startTime",[NSNumber numberWithDouble:endDate],@"endTime",leg.routeId,@"routeId",dicTo,@"to",dicFrom,@"from",leg.mode,@"mode",leg.agencyId,@"agencyId",leg.agencyName,@"agencyName",leg.route,@"route",leg.headSign,@"headsign",leg.legId,@"id", nil];
+                        [arrLegs addObject:dicLegData];
                     }
-                    if(!strRouteLongName){
-                        strRouteLongName = @"";
-                    }
-                    if(leg.startTime){
-                        double startTimeInterval = [leg.startTime timeIntervalSince1970];
-                        startDate = startTimeInterval*1000;
-                    }
-                    if(leg.endTime){
-                        double endTimeInterval = [leg.endTime timeIntervalSince1970];
-                        endDate = endTimeInterval*1000;
-                    }
-                    NSDictionary *dicLegData = [NSDictionary dictionaryWithObjectsAndKeys:leg.tripId,@"tripId",strRouteLongName,@"routeLongName",strRouteShortName,@"routeShortName",[NSNumber numberWithDouble:startDate],@"startTime",[NSNumber numberWithDouble:endDate],@"endTime",leg.routeId,@"routeId",dicTo,@"to",dicFrom,@"from",leg.mode,@"mode",leg.agencyId,@"agencyId",leg.agencyName,@"agencyName",leg.route,@"route",leg.headSign,@"headsign",leg.legId,@"id", nil];
-                    [arrLegs addObject:dicLegData];
-                }
+                }  
             }
         }
         if([arrLegs count] > 0){
@@ -107,7 +116,7 @@ static RealTimeManager* realTimeManager;
             if(iti.isRealTimeItinerary){
                 for(int j=0;j<[[iti sortedLegs] count];j++){
                     Leg *leg = [[iti sortedLegs] objectAtIndex:j];
-                    leg.prediction = nil;
+                    leg.predictions = nil;
                     leg.arrivalFlag = nil;
                     leg.timeDiffInMins = nil;
                 }
