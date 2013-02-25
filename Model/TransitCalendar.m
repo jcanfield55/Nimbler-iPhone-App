@@ -159,7 +159,7 @@ static TransitCalendar * transitCalendarSingleton;
         // [keyObjectStore setObject:serviceByWeekdayByAgency forKey:TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY ];
     }
     // }
-    return [nc_AppDelegate sharedInstance].serviceByWeekdayByAgency;
+    return serviceByWeekdayByAgency;
 }
 
 

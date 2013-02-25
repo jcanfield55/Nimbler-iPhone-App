@@ -100,6 +100,8 @@
 
 - (NSString *) rawAddressWithOutAgencyName:(NSString *)address SearchStringArray:(NSArray *)searchStringArray;
 
-- (NSArray *) isMatchingTypedAddress:(NSString *)string;
+// Returns an array of Location objects that are created based on matches to PreloadStations
+// A pre-load station matches when each typed token has a substring match with the preloadStation name
+- (NSArray *) preloadStationLocationsMatchingTypedAddress:(NSString *)string;
 
 @end

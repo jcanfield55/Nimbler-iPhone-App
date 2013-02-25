@@ -249,9 +249,9 @@
     return loc;
 }
 
-// Search the formatted addresses from db and create new location object and return array of matched objects.
-
-- (NSArray *) isMatchingTypedAddress:(NSString *)string{
+// Returns an array of Location objects that are created based on matches to PreloadStations
+// A pre-load station matches when each typed token has a substring match with the preloadStation name
+- (NSArray *) preloadStationLocationsMatchingTypedAddress:(NSString *)string{
     NSString *newString = [self rawAddressWithOutAgencyName:[string lowercaseString] SearchStringArray:SEARCH_STRINGS_ARRAY];
     newString = [newString stringByReplacingOccurrencesOfString:@"," withString:@" "];
     NSString *tempString = [newString substringFromIndex:[newString length] - 1];
@@ -277,8 +277,10 @@
         StationListElement *listElement = [arrayStationListElement objectAtIndex:i];
          if(listElement.stop){
             Location *loc = [[nc_AppDelegate sharedInstance].stations createNewLocationObjectFromGtfsStop:listElement.stop :listElement];
-            Location* newLoc = [self consolidateWithMatchingLocations:loc keepThisLocation:NO];  //
-            [arrLocations addObject:newLoc];
+            Location* newLoc = [self consolidateWithMatchingLocations:loc keepThisLocation:NO];
+             if (loc == newLoc) {
+                 [arrLocations addObject:newLoc];  // only add to list if loc is not a duplicate of an existing Location object
+             }
         }
     }
     return arrLocations;
@@ -325,11 +327,10 @@
         }
         // Merge the results of typed string with newarray.
         if(typedFromString.length >= 3){
-            NSArray *arrLocations = [self isMatchingTypedAddress:typedFromString];
+            NSArray *arrLocations = [self preloadStationLocationsMatchingTypedAddress:typedFromString];
             [newArray addObjectsFromArray:arrLocations];
         }
-        NSSet *tempSet = [[NSSet alloc] initWithArray:newArray];
-        NSArray *finalNewArray = [NSArray arrayWithArray:[tempSet allObjects]];  // makes a non-mutable copy
+        NSArray *finalNewArray = [NSArray arrayWithArray:newArray];  // makes a non-mutable copy
         if (![finalNewArray isEqualToArray:sortedMatchingFromLocations]) { // if there is a change
             sortedMatchingFromLocations = finalNewArray;
             areMatchingLocationsChanged = YES;   // mark for refreshing the table
@@ -374,11 +375,10 @@
         }
         // Merge the results of typed string with newarray.
         if(typedToString.length >= 3){
-            NSArray *arrLocations = [self isMatchingTypedAddress:typedToString];
+            NSArray *arrLocations = [self preloadStationLocationsMatchingTypedAddress:typedToString];
             [newArray addObjectsFromArray:arrLocations];
         }
-        NSSet *tempSet = [[NSSet alloc] initWithArray:newArray];
-        NSArray *finalNewArray = [NSArray arrayWithArray:[tempSet allObjects]];  // makes a non-mutable copy
+        NSArray *finalNewArray = [NSArray arrayWithArray:newArray];  // makes a non-mutable copy
         if (![finalNewArray isEqualToArray:sortedMatchingToLocations]) { // if there is a change
             sortedMatchingToLocations = finalNewArray;
             areMatchingLocationsChanged = YES;   // mark for refreshing the table
