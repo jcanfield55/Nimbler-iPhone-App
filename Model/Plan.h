@@ -64,7 +64,8 @@
 - (void)deleteItinerary:(Itinerary *)itin0;
 
 - (NSString *)ncDescription;
-- (void)sortItineraries;  // Re-sorts the itineraries array
+- (void)sortItineraries;  // Create the sorted array of itineraries (sorted by startTimeOnly)
+
 
 // Returns an array of itineraries sorted by date that have the
 // StartTimeOnly field between fromTimeOnly to toTimeOnly
@@ -88,9 +89,11 @@
 
 
 // Initialization method after a plan is freshly loaded from an OTP request
-- (void)createRequestChunkWithAllItinerariesAndRequestDate:(NSDate *)requestDate
-                                            departOrArrive:(DepartOrArrive)depOrArrive
-                                      routeExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings;
+// Initialization includes creating request chunks, startTimeOnly and endTimeOnly variables, and
+// computing uniqueItineraries
+- (void)initializeNewPlanFromOTPWithRequestDate:(NSDate *)requestDate
+                                 departOrArrive:(DepartOrArrive)depOrArrive
+                           routeExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings;
 
 // Looks for matching itineraries for the requestDate and departOrArrive
 // routeExcludeSettings specifies which routes / modes the user specifically wants to include/exclude from results
@@ -135,7 +138,7 @@
                       planBufferSecondsBeforeItinerary:(int)planBufferSecondsBeforeItinerary
                            planMaxTimeForResultsToShow:(int)planMaxTimeForResultsToShow;
 
-// Create unique Itineraries array from plan.
+// Returns unique Itineraries array from plan sorted by StartDates
 - (NSArray *)uniqueItineraries;
 
 // Generate 16 character random string and set it as legId for scheduled leg.

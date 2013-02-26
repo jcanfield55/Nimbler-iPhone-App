@@ -79,7 +79,7 @@
 // bufferInSeconds is the max amount that two chunks can be non-overlapping and still return true
 - (BOOL)doTimesOverlapRequestChunk:(PlanRequestChunk *)requestChunk0 bufferInSeconds:(NSTimeInterval)bufferInSeconds;
 
-// Returns the latest time for the requestChunk based on depOrArrive
+// Returns the earliest time for the requestChunk based on depOrArrive
 // If DEPART, returns the earlier of earliestRequestedDepartTime or startTimeOnly of the first itinerary leg
 // If ARRIVE, returns the endTimeOnly of the first itinerary leg
 - (NSDate *)earliestTimeFor:(DepartOrArrive)depOrArrive;

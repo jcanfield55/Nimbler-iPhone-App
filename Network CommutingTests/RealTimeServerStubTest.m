@@ -441,6 +441,9 @@
     
     STAssertTrue([[[leg2_4 from] name] isEqualToString:@"San Mateo Caltrain Station"], @"");
     
+    // Test uniqueItineraries
+    STAssertEquals([[plan uniqueItineraries] count], 4u, @"");  // each of the dataset is a unique itinerary
+    
     // Test [plan fetchItinerariesFromTimeOnly ...]
     NSArray* fetchItinArray = [plan fetchItinerariesFromTimeOnly:[[plan.sortedItineraries objectAtIndex:1] startTimeOnly]
                                                       toTimeOnly:[[plan.sortedItineraries objectAtIndex:2] startTimeOnly]];
@@ -473,6 +476,7 @@
                                              tripDate:tripDate
                                                  Plan:plan
                                               Context:managedObjectContext];
+    STAssertEquals([[plan uniqueItineraries] count], 4u, @"");  // Still same # of unique itineraries
     [plan sortItineraries];   // Sort all itineraries
     
     // Check resulting itineraries

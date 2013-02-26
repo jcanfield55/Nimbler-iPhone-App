@@ -175,30 +175,30 @@
     Leg *leg91arr = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
 
     // Itineraries
-    itin10 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin11 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin20 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin30 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin31 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin32 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin40 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin41 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin50 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin51 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin52 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin60 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin61 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin62 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin70 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin71 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin72 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin80 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin90dep = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin91dep = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin92dep = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin93dep = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin90arr = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin91arr = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+    itin10 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin11 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin20 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin30 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin31 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin32 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin40 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin41 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin50 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin51 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin52 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin60 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin61 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin62 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin70 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin71 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin72 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin80 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin90dep = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin91dep = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin92dep = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin93dep = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin90arr = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin91arr = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
 
     
     // Plan
@@ -242,7 +242,7 @@
     itin11.endTime = [itin11.startTime dateByAddingTimeInterval:(30.0*60)];
     itin11.plan = plan1;
     
-    [plan1 createRequestChunkWithAllItinerariesAndRequestDate:date10req
+    [plan1 initializeNewPlanFromOTPWithRequestDate:date10req
                                                departOrArrive:DEPART
                                          routeExcludeSettings:nil];
     [plan1 setFromLocation:loc1];
@@ -269,7 +269,7 @@
     itin20.endTime = [itin20.startTime dateByAddingTimeInterval:(60.0*60)];
     itin20.plan = plan2;
     
-    [plan2 createRequestChunkWithAllItinerariesAndRequestDate:date20
+    [plan2 initializeNewPlanFromOTPWithRequestDate:date20
                                                departOrArrive:DEPART
                                               routeExcludeSettings:nil];
     [plan2 setFromLocation:loc1];
@@ -288,28 +288,37 @@
     
     
     // Plan3 -- 3 itineraries starting at 8:00am (7:45 request) until 9:00 on Friday August 17
+    // Has additional fields for testing uniqueItineraries as well
+    
+    
     leg30.startTime = date30;
+    leg30.mode = @"RAIL";
     leg30.agencyId = caltrain;
+    leg30.agencyName = caltrain;
     leg30.itinerary = itin30;
     itin30.startTime = date30;
     itin30.endTime = [itin30.startTime dateByAddingTimeInterval:(30.0*60)];
     itin30.plan = plan3;
     
     leg31.startTime = date31;
+    leg31.mode = @"RAIL";
     leg31.agencyId = Bart;
+    leg31.agencyName = Bart;
     leg31.itinerary = itin31;
     itin31.startTime = date31;
     itin31.endTime = [itin31.startTime dateByAddingTimeInterval:(30.0*60)];
     itin31.plan = plan3;
     
     leg32.startTime = date32;
+    leg32.mode = @"RAIL";
     leg32.agencyId = caltrain;
+    leg32.agencyName = caltrain;
     leg32.itinerary = itin32;
     itin32.startTime = date32;
     itin32.endTime = [itin32.startTime dateByAddingTimeInterval:(30.0*60)];
     itin32.plan = plan3;
     
-    [plan3 createRequestChunkWithAllItinerariesAndRequestDate:date30req
+    [plan3 initializeNewPlanFromOTPWithRequestDate:date30req
                                                departOrArrive:DEPART
                                          routeExcludeSettings:nil];
     [plan3 setFromLocation:loc1];
@@ -330,6 +339,8 @@
     // Plan4 -- itineraries starting at 8:40am request on Saturday, August 18
     leg40.startTime = date40;
     leg40.agencyId = caltrain;
+    leg40.mode = @"RAIL";
+    leg40.agencyName = caltrain;
     leg40.itinerary = itin40;
     itin40.startTime = date40;
     itin40.endTime = [itin40.startTime dateByAddingTimeInterval:(30.0*60)];
@@ -337,12 +348,14 @@
     
     leg41.startTime = date41;
     leg41.agencyId = Bart;
+    leg41.mode = @"RAIL";
+    leg41.agencyName = Bart;
     leg41.itinerary = itin41;
     itin41.startTime = date41;
     itin41.endTime = [itin41.startTime dateByAddingTimeInterval:(30.0*60)];
     itin41.plan = plan4;
     
-    [plan4 createRequestChunkWithAllItinerariesAndRequestDate:date40req
+    [plan4 initializeNewPlanFromOTPWithRequestDate:date40req
                                                departOrArrive:DEPART
                                          routeExcludeSettings:nil];
     [plan4 setFromLocation:loc1];
@@ -382,7 +395,7 @@
     itin52.endTime = [itin52.startTime dateByAddingTimeInterval:(30.0*60)];
     itin52.plan = plan5;
 
-    [plan5 createRequestChunkWithAllItinerariesAndRequestDate:date50req
+    [plan5 initializeNewPlanFromOTPWithRequestDate:date50req
                                                departOrArrive:DEPART
                                          routeExcludeSettings:nil];
     [plan5 setFromLocation:loc1];
@@ -428,7 +441,7 @@
     itin62.endTime = [itin62.startTime dateByAddingTimeInterval:(30.0*60)];
     itin62.plan = plan6;
     
-    [plan6 createRequestChunkWithAllItinerariesAndRequestDate:date60req
+    [plan6 initializeNewPlanFromOTPWithRequestDate:date60req
                                                departOrArrive:ARRIVE
                                          routeExcludeSettings:nil];
     [plan6 setFromLocation:loc1];
@@ -495,7 +508,7 @@
     itin72.endTime = [itin72.startTime dateByAddingTimeInterval:(60.0*60)];
     itin72.plan = plan7;
     
-    [plan7 createRequestChunkWithAllItinerariesAndRequestDate:date70req
+    [plan7 initializeNewPlanFromOTPWithRequestDate:date70req
                                                departOrArrive:DEPART
                                          routeExcludeSettings:nil];
     [plan7 setFromLocation:loc1];
@@ -520,7 +533,7 @@
     itin80.endTime = [itin80.startTime dateByAddingTimeInterval:(30.0*60)];
     itin80.plan = plan8;
     
-    [plan8 createRequestChunkWithAllItinerariesAndRequestDate:date80req
+    [plan8 initializeNewPlanFromOTPWithRequestDate:date80req
                                                departOrArrive:DEPART
                                          routeExcludeSettings:nil];
     [plan8 setFromLocation:loc1];
@@ -567,7 +580,7 @@
     itin93dep.endTime = [itin93dep.startTime dateByAddingTimeInterval:(6*60*60)];  // goes overnight
     itin93dep.plan = plan9depart;
     
-    [plan9depart createRequestChunkWithAllItinerariesAndRequestDate:date90req
+    [plan9depart initializeNewPlanFromOTPWithRequestDate:date90req
                                                      departOrArrive:DEPART
                                                routeExcludeSettings:nil];
     [plan9depart setFromLocation:loc1];
@@ -600,7 +613,7 @@
     itin91arr.endTime = [itin91arr.startTime dateByAddingTimeInterval:(30.0*60)];
     itin91arr.plan = plan9arrive;
     
-    [plan9arrive createRequestChunkWithAllItinerariesAndRequestDate:date90ArrReq
+    [plan9arrive initializeNewPlanFromOTPWithRequestDate:date90ArrReq
                                                      departOrArrive:ARRIVE
                                                routeExcludeSettings:nil];
     [plan9arrive setFromLocation:loc1];
@@ -624,9 +637,9 @@
     
     plan10 = [NSEntityDescription insertNewObjectForEntityForName:@"Plan" inManagedObjectContext:managedObjectContext];
     
-    itin101 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin102 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin103 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+    itin101 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin102 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin103 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
     
     leg1011 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
     leg1012 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
@@ -762,9 +775,9 @@
     
     
     plan11 = [NSEntityDescription insertNewObjectForEntityForName:@"Plan" inManagedObjectContext:managedObjectContext];
-    itin111 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin112 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
-    itin113 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+    itin111 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin112 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
+    itin113 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
     leg1111 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
     leg1112 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
     leg1113 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
@@ -1357,9 +1370,13 @@
     NSDate* dayTime8 = [dateFormatter dateFromString:@"August 27, 2012 8:00 AM"]; // Monday
     NSDate* dayTime9 = [dateFormatter dateFromString:@"August 28, 2012 9:55 AM"]; // Tuesday
 
+    // Test UniqueItineraries for plan3
+    STAssertEquals([[plan3 uniqueItineraries] count], 2u, @"");  // Third itinerary is not unique (duplicate of Caltrain
+    STAssertEquals([[plan3 uniqueItineraries] objectAtIndex:0], itin30, @"");
+    STAssertEquals([[plan3 uniqueItineraries] objectAtIndex:1], itin31, @"");
+    
     
     // Find matching plans
-
     NSArray* matches = [planStore fetchPlansWithToLocation:loc2 fromLocation:loc1];
     STAssertEquals([matches count], 10U, @"");
     
@@ -1417,6 +1434,12 @@
     STAssertEquals([[plan3 itineraries] count], 6U, @"");
     STAssertEquals([[plan3 requestChunks] count], 3U, @"");
     
+    // Check again uniqueItineraries
+    STAssertEquals([[plan3 uniqueItineraries] count], 3u, @"");  // Plan2's walk itinerary is the third unique one
+    STAssertEquals([[plan3 uniqueItineraries] objectAtIndex:0], itin30, @"");  // Order or uniqueItineraries is not important
+    STAssertEquals([[plan3 uniqueItineraries] objectAtIndex:1], itin31, @"");  // (i.e. it is fine if test order is switched)
+    STAssertEquals([[plan3 uniqueItineraries] objectAtIndex:2], itin20, @"");
+
     // Request for a Saturday at 8:50 again will work because of Plan4 availability
     STAssertTrue([plan3 prepareSortedItinerariesWithMatchesForDate:dayTime5 departOrArrive:DEPART], @"");
     STAssertEquals([[plan3 sortedItineraries] count], 2U, @"");
@@ -1745,7 +1768,7 @@
     NSDate* dater6 = [dateFormatter dateFromString:@"June 8, 2012 5:29 PM"];
 
     plan12 = [NSEntityDescription insertNewObjectForEntityForName:@"Plan" inManagedObjectContext:managedObjectContext];;
-    itin120 = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:managedObjectContext];
+    itin120 = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromOTP" inManagedObjectContext:managedObjectContext];
     
     leg1201= [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
     leg1201.mode = OTP_WALK_MODE;

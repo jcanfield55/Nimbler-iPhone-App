@@ -44,7 +44,8 @@ typedef enum {
 @property (nonatomic, retain) NSString *itinArrivalFlag;
 
 @property (nonatomic, retain) NSSet *legs;
-@property (nonatomic, retain) Plan *plan;
+@property (nonatomic, retain) Plan *plan;   // Plan this itinerary belongs to
+@property (nonatomic, retain) Plan *uniqueItineraryForPlan;  // If this is a unique itinerary, points to plan (otherwise nil)
 @property (nonatomic, strong) NSArray *sortedLegs; // Array of legs sorted by startTime (not stored in Core Data)
 @property (nonatomic, retain) NSNumber * elevationGained;
 @property (nonatomic, retain) NSNumber * elevationLost;
@@ -65,6 +66,7 @@ typedef enum {
 - (NSString *)ncDescription;
 
 - (BOOL)isOTPItinerary;  // Returns true if itinerary is from OTP
+- (BOOL)isUniqueItinerary; // Returns trues if itinerary is a unique itinerary
 
 // Returns true if each leg's starttime is current versus the GTFS file date for that leg's agency
 // Otherwise returns false
@@ -117,10 +119,10 @@ typedef enum {
 // Caltrain and other agencies.  Robust solution will be to fix OTP
 - (BOOL)isOvernightItinerary;
 
-// Compare Two Itineraries whether they have the same routes and start & endpoints
+// Compare Two Itineraries whether they have the same modes, agencies, and start & endpoints
 // Does not compare times (this test is primarily for determining unique itineraries).
 // This match itinerary like leg by leg if all match the return yes otherwise return no.
-- (BOOL)isEquivalentRoutesAndStopsAs:(Itinerary *)itinerary;
+- (BOOL)isEquivalentModesAndStopsAs:(Itinerary *)itinerary;
 
 // Compare Two Itineraries whether they have the same routes and start & endpoints
 // Compares times just for scheduled legs (not for unscheduled legs)
@@ -143,6 +145,15 @@ typedef enum {
 
 // return true if itinerary have only unscheduled leg.
 - (BOOL) haveOnlyUnScheduledLeg;
+
+// Returns true if the itinerary is valid given the requestTime, buffer time intervals before & after
+// the request, and the depOrArrive.
+// Note, for arrive requests, intervalBeforeRequest actually is the buffer time after the request date (slack for being late)
+- (BOOL) isWithinRequestTime:(NSDate *)requestTime
+       intervalBeforeRequest:(NSTimeInterval)intervalBeforeRequest
+        intervalAfterRequest:(NSTimeInterval)intervalAfterRequest
+              departOrArrive:(DepartOrArrive)depOrArrive;
+
 @end
 
 @interface Itinerary (CoreDataGeneratedAccessors)

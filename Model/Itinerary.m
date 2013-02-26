@@ -37,6 +37,7 @@
 @dynamic startTimeOnly;
 @dynamic legs;
 @dynamic plan;
+@dynamic uniqueItineraryForPlan;
 @dynamic itinId;
 @dynamic planRequestChunks;
 @dynamic elevationGained;
@@ -63,6 +64,11 @@
 // Returns true if itinerary is from OTP
 - (BOOL)isOTPItinerary {
     return ([self isKindOfClass:[ItineraryFromOTP class]]);
+}
+
+// Returns trues if itinerary is a unique itinerary
+- (BOOL)isUniqueItinerary {
+    return ([self uniqueItineraryForPlan] != nil);
 }
 
 // Create the sorted array of itineraries
@@ -416,17 +422,17 @@
     return desc;
 }
 
-// Compare Two Itineraries whether they have the same routes and stops. 
+// Compare Two Itineraries whether they have the same modes, agencies, and stops. 
 // Does not compare times (this test is primarily for determining unique itineraries).
 // This match itinerary like leg by leg if all match the return yes otherwise return no.
-- (BOOL) isEquivalentRoutesAndStopsAs:(Itinerary *)itinerary{
+- (BOOL) isEquivalentModesAndStopsAs:(Itinerary *)itinerary{
     NSArray *arrItinerary1 = [self sortedLegs];
     NSArray *arrItinerary2 = [itinerary sortedLegs];
     if([arrItinerary1 count] == [arrItinerary2 count]){
         for(int i=0;i<[arrItinerary1 count];i++){
             Leg *leg1 = [arrItinerary1 objectAtIndex:i];
             Leg *leg2 = [arrItinerary2 objectAtIndex:i];
-            if(![leg1 isEquivalentRouteAndStopAs:leg2]){
+            if(![leg1 isEquivalentModeAndStopsAs:leg2]){
                 return NO;
             }
         }
@@ -450,7 +456,7 @@
             Leg *leg2 = [arrItinerary2 objectAtIndex:i];
             if (leg1.isScheduled && leg2.isScheduled && ![leg1 isEqualInSubstance:leg2]) {
                 return NO;  // Compare times just for scheduled legs
-            } else if(![leg1 isEquivalentRouteAndStopAs:leg2]){
+            } else if(![leg1 isEquivalentModeAndStopsAs:leg2]){
                 return NO;  // Otherwise compare just routes, start & endpoints
             }
         }
@@ -567,4 +573,34 @@
     }
     return true;
 }
+
+// Returns true if the itinerary is valid given the requestTime, buffer time intervals before & after
+// the request, and the depOrArrive.
+// Note, for arrive requests, intervalBeforeRequest actually is the buffer time after the request date (slack for being late)
+- (BOOL) isWithinRequestTime:(NSDate *)requestTime
+       intervalBeforeRequest:(NSTimeInterval)intervalBeforeRequest
+        intervalAfterRequest:(NSTimeInterval)intervalAfterRequest
+              departOrArrive:(DepartOrArrive)depOrArrive
+{
+    NSDate* requestTimeOnly = timeOnlyFromDate(requestTime);
+    if (depOrArrive == DEPART) {
+        NSDate* requestTimeWithPreBuffer = [requestTimeOnly dateByAddingTimeInterval:(-intervalBeforeRequest)];
+        NSDate* requestTimeWithPostBuffer = [requestTimeOnly dateByAddingTimeInterval:intervalAfterRequest];
+        if ([requestTimeWithPreBuffer compare:[self startTimeOnly]]!=NSOrderedDescending &&
+            [requestTimeWithPostBuffer compare:[self startTimeOnly]]!=NSOrderedAscending) {
+            // If itin start time is within the two buffer ranges
+            return true;
+        }
+    } else { // depOrArrive = ARRIVE
+        NSDate* requestTimeWithPreBuffer = [requestTimeOnly dateByAddingTimeInterval:(intervalBeforeRequest)];
+        NSDate* requestTimeWithPostBuffer = [requestTimeOnly dateByAddingTimeInterval:-intervalAfterRequest];
+        if ([requestTimeWithPreBuffer compare:[self endTimeOnly]]!=NSOrderedAscending &&
+            [requestTimeWithPostBuffer compare:[self endTimeOnly]]!=NSOrderedDescending) {
+            // If itin start time is within the two buffer ranges
+            return true;
+        }
+    }
+    return false;
+}
+
 @end

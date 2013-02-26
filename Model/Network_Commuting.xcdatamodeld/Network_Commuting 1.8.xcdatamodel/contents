@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="11G56" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="12C60" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AddressComponent" representedClassName="AddressComponent" syncable="YES">
         <attribute name="longName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
@@ -117,6 +117,7 @@
         <relationship name="plan" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Plan" inverseName="itineraries" inverseEntity="Plan" syncable="YES"/>
         <relationship name="planRequestChunks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PlanRequestChunk" inverseName="itineraries" inverseEntity="PlanRequestChunk" syncable="YES"/>
         <relationship name="requestChunksCreatedByThisPattern" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PlanRequestChunk" inverseName="gtfsItineraryPattern" inverseEntity="PlanRequestChunk" syncable="YES"/>
+        <relationship name="uniqueItineraryForPlan" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Plan" inverseName="uniqueItineraryPatterns" inverseEntity="Plan" syncable="YES"/>
         <compoundIndexes>
             <compoundIndex>
                 <index value="plan"/>
@@ -202,7 +203,7 @@
         <relationship name="requestChunks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PlanRequestChunk" inverseName="plan" inverseEntity="PlanRequestChunk" syncable="YES"/>
         <relationship name="toLocation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="plan" inverseEntity="Location" syncable="YES"/>
         <relationship name="toPlanPlace" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="PlanPlace" inverseName="plan" inverseEntity="PlanPlace" syncable="YES"/>
-        <relationship name="uniqueItineraryPatterns" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Itinerary" inverseName="plan" inverseEntity="Itinerary" syncable="YES"/>
+        <relationship name="uniqueItineraryPatterns" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Itinerary" inverseName="uniqueItineraryForPlan" inverseEntity="Itinerary" syncable="YES"/>
         <compoundIndexes>
             <compoundIndex>
                 <index value="date"/>
@@ -319,7 +320,7 @@
         <element name="GtfsStop" positionX="160" positionY="192" width="128" height="165"/>
         <element name="GtfsStopTimes" positionX="160" positionY="192" width="128" height="240"/>
         <element name="GtfsTrips" positionX="160" positionY="192" width="128" height="195"/>
-        <element name="Itinerary" positionX="0" positionY="0" width="128" height="345"/>
+        <element name="Itinerary" positionX="0" positionY="0" width="128" height="360"/>
         <element name="ItineraryFromOTP" positionX="160" positionY="192" width="128" height="45"/>
         <element name="KeyObjectPair" positionX="0" positionY="0" width="128" height="75"/>
         <element name="Leg" positionX="-45" positionY="0" width="128" height="405"/>

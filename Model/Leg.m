@@ -521,10 +521,10 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 
 // Compare Two Legs whether they have the same routes and start and endpoints
 // If Leg is walk then compatr TO&From location lat/Lng and distance.
-// If leg is not walk then compare routeShortname if not nill else compare routeLongName then compate TO&From Location Lat/Lng and agencyname.
 // Does not compare times (this test is primarily for determining unique itineraries).
+// If leg is not walk then compare modes, TO&From Location Lat/Lng and agencyname.
 // If legs are equal then return yes otherwise return no
-- (BOOL) isEquivalentRouteAndStopAs:(Leg *)leg{
+- (BOOL) isEquivalentModeAndStopsAs:(Leg *)leg{
     if((self.isWalk && leg.isWalk) || (self.isBike && leg.isBike)){
         if([self.to.lat doubleValue] != [leg.to.lat doubleValue] || [self.to.lng doubleValue] != [leg.to.lng doubleValue] || [self.from.lat doubleValue] !=[leg.from.lat doubleValue] || [self.from.lng doubleValue] != [leg.from.lng doubleValue] || [self.distance doubleValue] != [leg.distance doubleValue]){
             return NO;
@@ -532,12 +532,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         return YES;
     }
     else if([self.mode isEqualToString:leg.mode]){
-        if(!self.routeShortName || !leg.routeShortName){
-            if(![self.routeLongName isEqualToString:leg.routeLongName] || ![self.agencyName isEqualToString:leg.agencyName] || [self.to.lat doubleValue] != [leg.to.lat doubleValue] ||  [self.to.lng doubleValue] != [leg.to.lng doubleValue] || [self.from.lat doubleValue] != [leg.from.lat doubleValue] || [self.from.lng doubleValue] != [leg.from.lng doubleValue]){
-                return NO;
-            }
-        }
-        else if(![self.routeShortName isEqualToString:leg.routeShortName] || ![self.agencyName isEqualToString:leg.agencyName] || [self.to.lat doubleValue] != [leg.to.lat doubleValue] ||  [self.to.lng doubleValue] != [leg.to.lng doubleValue] || [self.from.lat doubleValue] != [leg.from.lat doubleValue] || [self.from.lng doubleValue] != [leg.from.lng doubleValue]){
+        if(![self.agencyName isEqualToString:leg.agencyName] || [self.to.lat doubleValue] != [leg.to.lat doubleValue] ||  [self.to.lng doubleValue] != [leg.to.lng doubleValue] || [self.from.lat doubleValue] != [leg.from.lat doubleValue] || [self.from.lng doubleValue] != [leg.from.lng doubleValue]){
             return NO;
         }
         return YES;

@@ -90,10 +90,10 @@
     return sortedItineraries;
 }
 
-// Create the sorted array of itineraries
+// Create the sorted array of itineraries (sorted by startTimeOnly)
 - (void)sortItineraries
 {
-    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:YES];
+    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:YES];
     [self setSortedItineraries:[[self itineraries] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
 }
 
@@ -194,6 +194,8 @@
     for (Itinerary* itin0 in itineraries0) {
         if ([self addItineraryIfNew:itin0] == ITIN0_OBSOLETE) { // add the itinerary no matter what
             [plan0 deleteItinerary:itin0];   // if itin0 obsolete, also make sure we delete it
+        } else {
+            [self addToUniqueItinerariesIfNeeded:itin0];
         }
     }
     // Delete plan0
@@ -264,9 +266,11 @@
 
 
 // Initialization method after a plan is freshly loaded from an OTP request
-- (void)createRequestChunkWithAllItinerariesAndRequestDate:(NSDate *)requestDate
-                                            departOrArrive:(DepartOrArrive)depOrArrive
-                                      routeExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
+// Initialization includes creating request chunks, startTimeOnly and endTimeOnly variables, and
+// computing uniqueItineraries
+- (void)initializeNewPlanFromOTPWithRequestDate:(NSDate *)requestDate
+                                 departOrArrive:(DepartOrArrive)depOrArrive
+                           routeExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
 {
     PlanRequestChunk* requestChunk = [NSEntityDescription insertNewObjectForEntityForName:@"PlanRequestChunk"
                                                             inManagedObjectContext:[self managedObjectContext]];
@@ -290,6 +294,7 @@
     if ([[requestChunk itineraries] count] == 0) { // if no itineraries, get rid of request chunk
         [[self managedObjectContext] deleteObject:requestChunk];
     }
+
 }
 
 
@@ -351,6 +356,38 @@
 {
     @try {
         NSMutableSet* matchingItineraries = [[NSMutableSet alloc] initWithCapacity:[[self itineraries] count]];
+
+        /*  John (2/25/2013):  work in progress, do not modify
+        // Go through unique itineraries and generate any additional GTFS itineraries based on them
+        for (Itinerary* uniqueItin in [self uniqueItineraries]) {  // for all uniqueItineraries
+            if (!routeExcludeSettings || [routeExcludeSettings isItineraryIncluded:uniqueItin]) {  // if not an excluded itinerary
+                for (PlanRequestChunk *reqChunk in [uniqueItin requestChunksCreatedByThisPattern]) { // for all reqChunk patterns it generated
+                    if ([reqChunk doAllItineraryServiceDaysMatchDate:requestDate]) { // if reqChunk has relevant service coverage
+                        PlanRequestChunk* newReqChunk = [self generateMoreGtfsItinsIfNeededFor:reqChunk
+                                                                                   requestDate:requestDate
+                                                                         intervalBeforeRequest:planBufferSecondsBeforeItinerary
+                                                                          intervalAfterRequest:planMaxTimeForResultsToShow
+                                                                                departOrArrive:depOrArrive];
+                        // newReqChunk=nil means no new itineraries were added on (original reqChunk covered it)
+                        PlanRequestChunk *reqChunkToProcess = (newReqChunk ? newReqChunk : reqChunk);
+                                                         
+                        for (Itinerary* itin in [reqChunkToProcess sortedItineraries]) { // for all itins in reqChunk
+                            if ([itin isCurrentVsGtfsFilesIn:[self transitCalendar]] &&
+                                [itin isWithinRequestTime:requestDate
+                                    intervalBeforeRequest:planBufferSecondsBeforeItinerary
+                                     intervalAfterRequest:planMaxTimeForResultsToShow
+                                           departOrArrive:depOrArrive]) {
+                                    if (!routeExcludeSettings || [routeExcludeSettings isItineraryIncluded:uniqueItin]) {  // if not an excluded itinerary
+                                        [matchingItineraries addObject:itin];
+                                    }
+                                }
+                        }  // end itins in reqChunk loop
+                    }
+                }  // end reqChunk loop
+            }
+        }  // end of uniqueItineraries loop
+         */
+        
         
         // Exclude any Gtfs request chunks that should be excluded per the routeExcludeSettings
         NSMutableSet* reqChunkSet = [NSMutableSet setWithSet:[self requestChunks]];
@@ -511,6 +548,58 @@
     }
 }
 
+
+// Given a particular request timing and reqChunk, determine whether more GTFS itineraries need to be
+// generated.  If so, generate them.
+// If more itineraries were added to reqChunk, returns reqChunk
+// If a new reqChunk was created for the itineraries, returns that new reqChunk
+// If no new itineraries were created, returns nil.
+-(PlanRequestChunk *)generateMoreGtfsItinsIfNeededFor:(PlanRequestChunk *)reqChunk
+                                          requestDate:(NSDate *)requestDate
+                                intervalBeforeRequest:(NSTimeInterval)intervalBeforeRequest
+                                 intervalAfterRequest:(NSTimeInterval)intervalAfterRequest
+                                       departOrArrive:(DepartOrArrive)depOrArrive
+{
+    NSDate* requestTimeOnly = timeOnlyFromDate(requestDate);
+    NSDate* requestRangeFrom;
+    NSDate* requestRangeTo;
+    if (depOrArrive == DEPART) {
+        requestRangeFrom = [requestTimeOnly dateByAddingTimeInterval:(-intervalBeforeRequest)];
+        requestRangeTo = [requestTimeOnly dateByAddingTimeInterval:intervalAfterRequest];
+    } else { // depOrArrive = ARRIVE
+        requestRangeFrom = [requestTimeOnly dateByAddingTimeInterval:(intervalBeforeRequest)];
+        requestRangeTo = [requestTimeOnly dateByAddingTimeInterval:-intervalAfterRequest];
+    }
+    
+    NSDate* chunkEarliest = [reqChunk earliestTimeFor:depOrArrive];
+    NSDate* chunkLatest = [reqChunk latestTimeFor:depOrArrive];
+    
+    NSDate* earlyRequestTo = nil; // The early request goes from requestRangeFrom to earlyRequestTo
+    NSDate* lateRequestFrom = nil; // The late request goes from lateRequestFrom to requestRangeTo
+    
+    // Calculate the early request if necessary
+    if ([requestRangeFrom compare:chunkEarliest] == NSOrderedAscending) { 
+        if ([requestRangeTo compare:chunkEarliest] == NSOrderedAscending) { 
+            earlyRequestTo = requestRangeTo;  // chunkEarliest is later than the entire requestRange, request entire range
+        } else {
+            earlyRequestTo = chunkEarliest; // chunkEarliest is within the requestRange, request part of range
+        }
+        // TODO:  generate GTFS itineraries
+    } // else, no need for an early request
+    
+    if ([requestRangeTo compare:chunkLatest] == NSOrderedDescending) {
+        if ([requestRangeFrom compare:chunkLatest] == NSOrderedDescending) {
+            lateRequestFrom = requestRangeFrom;  // chunkLatest is earlier than the entire requestRange, request entire range
+        } else {
+            lateRequestFrom = requestRangeFrom;  // chunkLatest is within the requestRange, request part of range
+        }
+        // TODO: Generate GTFS itineraries
+    }
+    
+    return nil;
+}
+
+
 // Variant of the above method without using an includeExcludeDictionary or callback
 - (NSArray *)returnSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
                                         departOrArrive:(DepartOrArrive)depOrArrive
@@ -558,27 +647,65 @@
     return desc;
 }
 
-// Create unique Itineraries array from plan.
+// Returns unique Itineraries array from plan sorted by StartDates
 - (NSArray *)uniqueItineraries{
-    NSMutableArray *arrsortedItineraries = [[NSMutableArray alloc] initWithArray:[self sortedItineraries]];
-    NSArray *arrUniqueitineraries = [self.uniqueItineraryPatterns allObjects];
-    if(arrUniqueitineraries && [arrUniqueitineraries count] > 0){
-        [arrsortedItineraries addObjectsFromArray:arrUniqueitineraries];
+    if (![self uniqueItineraryPatterns] || [[self uniqueItineraryPatterns] count] == 0) {
+        [self setUniqueItineraryPatterns:[NSSet setWithArray:[self computeUniqueItineraries]]];
     }
+    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:YES];
+    return [[self uniqueItineraryPatterns] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]];
+}
+
+// Re-calculate uniqueItineraries from scratch and store in CoreData
+// Given two equivalent itineraries, will choose the itinerary that is a pattern for others to keep as unique
+- (NSArray *)computeUniqueItineraries{
+    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:YES];
+    NSMutableArray *arrItineraries = [[NSMutableArray alloc] initWithArray:[[self itineraries]
+                                                                            sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
     int i;
-    for(i=0; i < [arrsortedItineraries count];i++){
-        for(int j=i+1;j<[arrsortedItineraries count];j++){
-            Itinerary *itinerary1 = (Itinerary*)[arrsortedItineraries objectAtIndex:i];
-            Itinerary *itinerary2 = (Itinerary*)[arrsortedItineraries objectAtIndex:j];
-            BOOL isEquivalentitinerary = [itinerary1 isEquivalentRoutesAndStopsAs:itinerary2];
+    for(i=0; i < [arrItineraries count];i++){
+        for(int j=i+1;j<[arrItineraries count];j++){
+            Itinerary *itin1 = (Itinerary*)[arrItineraries objectAtIndex:i];
+            Itinerary *itin2 = (Itinerary*)[arrItineraries objectAtIndex:j];
+            BOOL isEquivalentitinerary = [itin1 isEquivalentModesAndStopsAs:itin2];
             if(isEquivalentitinerary){
-                [arrsortedItineraries removeObjectAtIndex:j];
-                i = i-1;
-                break;
+                if (![itin2 isUniqueItinerary] && [[itin2 requestChunksCreatedByThisPattern] count] == 0) {
+                    [arrItineraries removeObjectAtIndex:j];
+                    i = i-1;
+                    break;
+                } else if (![itin1 isUniqueItinerary] && [[itin1 requestChunksCreatedByThisPattern] count]== 0) {
+                    [arrItineraries removeObjectAtIndex:i];
+                    break;
+                } else {  // both itineraries are unique or have generated reqChunks
+                    logError(@"Plan -> computeUniqueItineraries", @"two unique itineraries that are equivalent");
+                    // This should be a rare case... keep both for now
+                }
             }
         }
     }
-    return arrsortedItineraries;
+    return arrItineraries;
+}
+
+// If itin0 is unique compare to all other of self's unique itineraries, then add it to the uniqueItinerary list
+// If itin0 is not unique, then clear its uniqueItineraryForPlan field
+- (BOOL)addToUniqueItinerariesIfNeeded:itin0
+{
+    if (![itin0 isOTPItinerary]) {
+        return false;   // Only OTP itineraries can be unique
+    }
+    NSArray* uniqueItinArray = [self uniqueItineraries];
+    BOOL isItin0Unique = true;
+    for (Itinerary* uniqueItin in uniqueItinArray) {
+        if ([uniqueItin isEquivalentModesAndStopsAs:itin0]) {
+            isItin0Unique = false;
+        }
+    }
+    if (isItin0Unique) {
+        [itin0 setUniqueItineraryForPlan:self];  // add to unique itineraries
+    } else {
+        [itin0 setUniqueItineraryForPlan:nil];   // declare it not to be a unique itinerary
+    }
+    return isItin0Unique;
 }
 
 // Generate 16 character random string and set it as legId for scheduled leg.

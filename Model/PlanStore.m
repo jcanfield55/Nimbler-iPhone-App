@@ -292,7 +292,7 @@
                 } else {
                     plan.fromLocation = fromLoc;
                 }
-                [plan createRequestChunkWithAllItinerariesAndRequestDate:[planRequestParameters thisRequestTripDate]
+                [plan initializeNewPlanFromOTPWithRequestDate:[planRequestParameters thisRequestTripDate]
                                                           departOrArrive:[planRequestParameters departOrArrive]
                                                      routeExcludeSettings:planRequestParameters.routeExcludeSettings];
                 // Make sure that we still have itineraries (ie it wasn't just overnight itineraries)
@@ -310,7 +310,6 @@
                     } // else if routeOptions destination, do nothing
                     return;
                 }
-                 //plan.uniqueItineraryPatterns = [NSSet setWithArray:[plan uniqueItineraries]];
                 [plan setLegsId];
                  saveContext(managedObjectContext);  // Save location and request chunk changes
                 plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context
