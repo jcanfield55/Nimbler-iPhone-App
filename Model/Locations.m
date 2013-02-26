@@ -671,7 +671,6 @@
                         DEVICE_TOKEN, [[NSUserDefaults standardUserDefaults]objectForKey:DEVICE_TOKEN], nil];
 #endif
     geoURLResource = [@"json" appendQueryParams:googleParameters];
-    
     [rkGeoMgr loadObjectsAtResourcePath:geoURLResource delegate:self];
     
     NIMLOG_EVENT1(@"Geocode Parameter String = %@", geoURLResource);

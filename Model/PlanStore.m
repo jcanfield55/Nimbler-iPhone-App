@@ -311,7 +311,7 @@
                     return;
                 }
                 [plan setLegsId];
-                 saveContext(managedObjectContext);  // Save location and request chunk changes
+                saveContext(managedObjectContext);  // Save location and request chunk changes
                 plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context
                 // Now format the itineraries of the consolidated plan
                 // get Unique Itinerary from Plan.

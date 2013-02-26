@@ -499,6 +499,13 @@
         
         // Check for suboptimal itineraries or equivalent itineraries
         NSMutableSet *optimalItineraries = [NSMutableSet setWithSet:includedItineraries];
+        // Added to hide the scheduled itinerary for which the realtime itinerary is generated.
+        for(Itinerary *itin1 in includedItineraries){
+            if(itin1.hideItinerary)
+               [optimalItineraries removeObject:itin1]; 
+        }
+        
+        // TODO:- Realtime Itineraries are removed from this loop so we need to handle realtime itinerary flag also.
         for (Itinerary* itin1 in includedItineraries) {
             for (Itinerary* itin2 in includedItineraries) {
                 if (itin1 != itin2) {

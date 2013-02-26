@@ -542,28 +542,63 @@
     [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
     STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result=[RealTimeManager realTimeManager].loadedRealTimeData; return result;}], @"Timed out waiting for RealTimeData");
     [gtfsParser generateItinerariesFromRealTime:plan TripDate:tripDate Context:managedObjectContext];
-    plan.sortedItineraries = nil;
-    for(int i=0;i<[plan.sortedItineraries count];i++){
-        Itinerary *itinerary = [plan.sortedItineraries objectAtIndex:i];
-        itinerary.sortedLegs = nil;
-        
-    }
+    
+    // TODO:- Need to add Flag in this method that handles Realtime itinerary.
+    [plan prepareSortedItinerariesWithMatchesForDate:tripDate departOrArrive:DEPART];
+
+    NSMutableArray *arrRealTimeItinerary = [[NSMutableArray alloc] init];
     for(int i=0;i<[[plan sortedItineraries] count];i++){
         Itinerary *itinerary = [[plan sortedItineraries] objectAtIndex:i];
         if(itinerary.isRealTimeItinerary){
-            Leg *secondLeg = [[itinerary sortedLegs] objectAtIndex:1];
-            Leg *fourthLeg = [[itinerary sortedLegs] objectAtIndex:3];
-            Leg *fifthLeg = [[itinerary sortedLegs] objectAtIndex:4];
-            STAssertTrue([secondLeg.arrivalFlag intValue] == DELAYED, @"");
-            STAssertTrue([fourthLeg.arrivalFlag intValue] == ON_TIME, @"");
-            STAssertTrue([fifthLeg.arrivalFlag intValue] == EARLY, @"");
+            [arrRealTimeItinerary addObject:[[plan sortedItineraries] objectAtIndex:i]];
         }
     }
-    [toFromViewController.routeOptionsVC reloadData:plan];
+    
+    STAssertTrue([arrRealTimeItinerary count] == 2, @"");
+    
+    Itinerary *firstItinerary = [arrRealTimeItinerary objectAtIndex:0];
+    Itinerary *secondItinerary = [arrRealTimeItinerary objectAtIndex:1];
+    
+    Leg *first_2Leg = [[firstItinerary sortedLegs] objectAtIndex:1];
+    Leg *first_4Leg = [[firstItinerary sortedLegs] objectAtIndex:3];
+    Leg *first_5Leg = [[firstItinerary sortedLegs] objectAtIndex:4];
+
+    STAssertTrue([first_2Leg.arrivalFlag intValue] == ON_TIME, @"");
+    STAssertTrue([first_4Leg.arrivalFlag intValue] == DELAYED, @"");
+    STAssertTrue([first_5Leg.arrivalFlag intValue] == DELAYED, @"");
+    
+    Leg *second_2Leg = [[secondItinerary sortedLegs] objectAtIndex:1];
+    Leg *second_4Leg = [[secondItinerary sortedLegs] objectAtIndex:3];
+    Leg *second_5Leg = [[secondItinerary sortedLegs] objectAtIndex:4];
+    
+    STAssertTrue([second_2Leg.arrivalFlag intValue] == DELAYED, @"");
+    STAssertTrue([second_4Leg.arrivalFlag intValue] == DELAYED, @"");
+    STAssertTrue([second_5Leg.arrivalFlag intValue] == DELAYED, @"");
+    
+    //[toFromViewController.routeOptionsVC reloadData:plan];
+    [[RealTimeManager realTimeManager].routeOptionsVC.mainTable reloadData ];
     [[RealTimeManager realTimeManager].routeDetailVC ReloadLegWithNewData];
     
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:5.0]];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:10.0]];
     
+    // Clear The Previously Generated Realtime Itineraries.
+    for(int i=0;i<[[plan sortedItineraries] count];i++){
+        Itinerary *iti = [[plan sortedItineraries]  objectAtIndex:i];
+        iti.itinArrivalFlag = nil;
+        if(iti.isRealTimeItinerary){
+            for(int j=0;j<[[iti sortedLegs] count];j++){
+                Leg *leg = [[iti sortedLegs] objectAtIndex:j];
+                leg.predictions = nil;
+                leg.arrivalFlag = nil;
+                leg.timeDiffInMins = nil;
+            }
+            [plan deleteItinerary:iti];
+        }
+    }
+    //[toFromViewController.routeOptionsVC reloadData:plan];
+    [[RealTimeManager realTimeManager].routeOptionsVC.mainTable reloadData ];
+    [[RealTimeManager realTimeManager].routeDetailVC ReloadLegWithNewData];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:30.0]];
     // TODO:- Need to work on Asserts.
 }
 

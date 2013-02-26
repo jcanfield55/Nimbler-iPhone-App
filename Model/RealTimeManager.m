@@ -37,6 +37,7 @@ static RealTimeManager* realTimeManager;
     NSDate *currentDate = [NSDate date];
     NSDate *currentDateOnly = dateOnlyFromDate(currentDate);
     NSDate *currentDatePlus90Miuntes = [currentDate dateByAddingTimeInterval:CURRENT_DATE_PLUS_INTERVAL];
+    // TODO:- Comment This if statement to run automated test case
     if([tripDateOnly isEqualToDate:currentDateOnly] && [originalTripDate compare:currentDatePlus90Miuntes] == NSOrderedAscending){
         NSMutableArray *arrLegs = [[NSMutableArray alloc] init];
         for(int i=0;i<[[plan uniqueItineraries] count];i++){
@@ -130,6 +131,7 @@ static RealTimeManager* realTimeManager;
             NSArray * legLiveFees = [liveData  objectForKey:@"legLiveFeeds"];
             if ([legLiveFees count] > 0) {
                 [self setRealTimePredictionsFromLiveFeeds1:legLiveFees];
+                // TODO:- Comment This line to run automated test case 
                 [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:originalTripDate Context:nil];
                 [plan removeDuplicateItineraries];
                 plan.sortedItineraries = nil;

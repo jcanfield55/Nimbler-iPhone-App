@@ -1712,6 +1712,7 @@ UIImage *imageDetailDisclosure;
 
 // call the requestRealTimeDataFromServer from RealtimeManager class with plan.
 - (void) requestServerForRealTime{
+    // TODO:- Comment This both line to run automated test case
     RealTimeManager *realtimeManager = [RealTimeManager realTimeManager];
     [realtimeManager requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
 }
