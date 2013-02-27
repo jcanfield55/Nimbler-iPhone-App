@@ -14,6 +14,7 @@
 #import <RestKit/CoreData.h>
 #import "Location.h"
 #import "LocationFromIOS.h"
+#import "LocationFromGoogle.h"
 #import "GeocodeRequestParameters.h"
 
 // Callback protocol used for objects calling geocoder methods
@@ -62,6 +63,7 @@
 - (Location *)locationWithRawAddress:(NSString *)rawAddress;
 - (NSArray *)locationsWithFormattedAddress:(NSString *)formattedAddress; // Array of matching locations
 - (Location *)newEmptyLocation;
+- (LocationFromGoogle *)newEmptyLocationFromGoogle;
 - (LocationFromIOS *)newLocationFromIOSWithPlacemark:(CLPlacemark *)placemark error:(NSError *)error; // set error==nil if status is OK
 - (int)numberOfLocations:(BOOL)isFrom;
 - (Location *)locationAtIndex:(int)index isFrom:(BOOL)isFrom;

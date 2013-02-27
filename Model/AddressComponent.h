@@ -12,6 +12,8 @@
 #import <CoreData/CoreData.h>
 #import "enums.h"
 
+@class LocationFromGoogle;
+
 @interface AddressComponent : NSManagedObject {
     NSString * longName;
     NSString * shortName;
@@ -21,6 +23,7 @@
 @property (nonatomic, strong) NSString * longName;
 @property (nonatomic, strong) NSString * shortName;
 @property (nonatomic, strong) NSArray * types;
+@property (nonatomic, retain) LocationFromGoogle* location;
 
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)gt;
 

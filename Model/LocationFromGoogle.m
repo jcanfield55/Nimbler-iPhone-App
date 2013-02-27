@@ -115,4 +115,17 @@ route = "Hull Dr";
     }
     return [super addressComponentDictionary];
 }
+
+// Creates and adds a new AddressComponent to self with the given parameters using ManagedObjectContext context
+-(void)addAddressComponentWithLongName:(NSString *)longName
+                             shortName:(NSString *)shortName
+                                 types:(NSArray *)types
+                               context:(NSManagedObjectContext *)context
+{
+    AddressComponent *addrComp = [NSEntityDescription insertNewObjectForEntityForName:@"AddressComponent" inManagedObjectContext:context];
+    [addrComp setLongName:longName];
+    [addrComp setShortName:shortName];
+    [addrComp setTypes:types];
+    [addrComp setLocation:self];
+}
 @end

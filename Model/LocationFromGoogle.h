@@ -25,6 +25,11 @@
 
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)gt;
 
+// Creates and adds a new AddressComponent to self with the given parameters using ManagedObjectContext context
+-(void)addAddressComponentWithLongName:(NSString *)longName
+                             shortName:(NSString *)shortName
+                                 types:(NSArray *)types
+                               context:(NSManagedObjectContext *)context;
 
 @end
 

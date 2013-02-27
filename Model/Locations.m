@@ -7,7 +7,6 @@
 //
 
 #import "Locations.h"
-#import "LocationFromGoogle.h"
 #import "UtilityFunctions.h"
 #import "Plan.h"
 #import "Constants.h"
@@ -237,6 +236,13 @@
 - (Location *)newEmptyLocation 
 {
     Location *l = [NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:managedObjectContext];
+    [self setAreLocationsChanged:YES]; // DE30 fix (2 of 2)
+    return l;
+}
+
+- (LocationFromGoogle *)newEmptyLocationFromGoogle
+{
+    LocationFromGoogle *l = [NSEntityDescription insertNewObjectForEntityForName:@"LocationFromGoogle" inManagedObjectContext:managedObjectContext];
     [self setAreLocationsChanged:YES]; // DE30 fix (2 of 2)
     return l;
 }

@@ -9,6 +9,7 @@
 #import "Stations.h"
 #import "UtilityFunctions.h"
 #import "Location.h"
+#import "LocationFromGoogle.h"
 #import "StationListElement.h"
 #import "nc_AppDelegate.h"
 #import "PreloadedStop.h"
@@ -85,10 +86,15 @@
 }
 
 - (Location *) createNewLocationObjectFromGtfsStop:(PreloadedStop *)stop :(StationListElement *)stationListElement{
-    Location *newLoc = [[nc_AppDelegate sharedInstance].locations newEmptyLocation];
+    LocationFromGoogle *newLoc = [[nc_AppDelegate sharedInstance].locations newEmptyLocationFromGoogle];
     newLoc.lat = stop.lat;
     newLoc.lng = stop.lon;
     newLoc.formattedAddress = stop.formattedAddress;
+    // Setting the following addressComponent makes the formattedAddress substring searchable
+    [newLoc addAddressComponentWithLongName:stop.formattedAddress
+                                  shortName:nil
+                                      types:[NSArray arrayWithObject:@"intersection"]
+                                    context:managedObjectContext];
     return newLoc;
 }
 

@@ -13,6 +13,7 @@
 @dynamic longName;
 @dynamic shortName;
 @dynamic types;
+@dynamic location;
 
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)gt
 {
