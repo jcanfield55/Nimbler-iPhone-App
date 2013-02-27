@@ -81,7 +81,12 @@
 
 // first get stoptimes from StopTimes Table based on stopId
 // Then make a pair of StopTimes if both stoptimes have same tripId then check for the stopSequence and the departure time is greater than request trip time and also check if service is enabled for that stopTimes if yes the add both stopTimes as To/From StopTimes pair.
-- (NSMutableArray *)getStopTimes:(NSString *)strToStopID strFromStopID:(NSString *)strFromStopID startDate:(NSDate *)startDate TripId:(NSString *)tripId;
+// timeInterval is the amount of time to pull the stoptimes for (in seconds)
+- (NSMutableArray *)getStopTimes:(NSString *)strToStopID
+                   strFromStopID:(NSString *)strFromStopID
+                       startDate:(NSDate *)startDate
+                    timeInterval:(NSTimeInterval)timeInterval
+                          TripId:(NSString *)tripId;
 
 - (NSArray *) findNearestStopTimeFromStopTimeArray:(NSArray *)arrStopTimes Itinerary:(Itinerary *)itinerary;
 
@@ -95,19 +100,22 @@
 // Generate new leg with all parameters from old leg
 - (void) generateNewLegFromOldLeg:(Leg *)leg Context:(NSManagedObjectContext *)context Itinerary:(Itinerary *)itinerary;
 
-// Generate new itineraries from patterns and stoptimes data.
-- (void) generateScheduledItinerariesFromPatternOfPlan:(Plan *)plan Context:(NSManagedObjectContext *)context tripDate:(NSDate *)tripDate;
-
 // Generate itineraries from realtime data.
 - (void) generateItinerariesFromPrediction:(Plan *)plan Itinerary:(Itinerary *)itinerary Prediction:(NSMutableDictionary *)dictPredictions TripDate:(NSDate *)tripDate Context:(NSManagedObjectContext *)context;
 
 - (void) generateItinerariesFromRealTime:(Plan *)plan TripDate:(NSDate *)tripDate Context:(NSManagedObjectContext *)context;
 
-// Internal method for generating itineraries based on one itinerary pattern
-- (void) generateItineraryFromItineraryPattern:(Itinerary *)itinerary
-                                      tripDate:(NSDate *)tripDate
-                                          Plan:(Plan *)plan
-                                       Context:(NSManagedObjectContext *)context;
+// Generates Gtfs itineraries in plan based on the pattern of itinerary
+// tripDate is the original tripDate.  fromTimeOnly and toTimeOnly is the range of start-times that should be generated
+// Generated itineraries will be associated with Plan and will be optimal for that pattern
+// Returns request chunk with new itineraries, or nil if no new itineraries created
+- (PlanRequestChunk *)generateItineraryFromItineraryPattern:(Itinerary *)itinerary
+                                          tripDate:(NSDate *)tripDate
+                                      fromTimeOnly:(NSDate *)fromTimeOnly
+                                        toTimeOnly:(NSDate *)toTimeOnly
+                                              Plan:(Plan *)plan
+                                           Context:(NSManagedObjectContext *)context;
+
 - (void)contextChanged:(NSNotification*)notification;
 
 // Remove all stopTimes and Trips Data from DB when new updates are available.

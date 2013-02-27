@@ -459,7 +459,9 @@
     STAssertTrue([self waitForNonNullValueOfBlock:^(void){
         NSArray* stopPairs = [gtfsParser getStopTimes:stopIdSCarlosCalTr
                                         strFromStopID:stopIdSFCaltrain
-                                            startDate:tripDate TripId:@""];
+                                            startDate:tripDate
+                                         timeInterval:GTFS_MAX_TIME_TO_PULL_SCHEDULES
+                                               TripId:@""];
         if ([stopPairs count] > 0) {
             return YES;
         }
@@ -467,13 +469,17 @@
     
     NSArray* stopPairs = [gtfsParser getStopTimes:stopIdSCarlosCalTr
                                     strFromStopID:stopIdSFCaltrain
-                                        startDate:tripDate TripId:@""];
+                                        startDate:tripDate
+                                     timeInterval:GTFS_MAX_TIME_TO_PULL_SCHEDULES
+                                           TripId:@""];
     STAssertEquals([stopPairs count], 6u, @"");
     STAssertTrue([[[[stopPairs objectAtIndex:0] objectAtIndex:0] tripID] isEqualToString:@"282_20121001"], @"");
     
     // Generate itineraries using just the pattern that goes Muni -> SF Caltrain -> San Carlos Caltrain.
     [gtfsParser generateItineraryFromItineraryPattern:[[plan sortedItineraries] objectAtIndex:3]
                                              tripDate:tripDate
+                                         fromTimeOnly:timeOnlyFromDate(tripDate)
+                                           toTimeOnly:[timeOnlyFromDate(tripDate) dateByAddingTimeInterval:(4.0*60*60)]
                                                  Plan:plan
                                               Context:managedObjectContext];
     STAssertEquals([[plan uniqueItineraries] count], 4u, @"");  // Still same # of unique itineraries

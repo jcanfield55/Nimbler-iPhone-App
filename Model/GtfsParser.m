@@ -890,10 +890,15 @@
 // Then make a pair of StopTimes if both stoptimes have same tripId then check for the stopSequence and the departure time is greater than request trip time and also check if service is enabled for that stopTimes if yes the add both stopTimes as To/From StopTimes pair.
 // Returned array is in time order (by first pair departureTime)
 
-- (NSMutableArray *)getStopTimes:(NSString *)strToStopID strFromStopID:(NSString *)strFromStopID startDate:(NSDate *)startDate TripId:(NSString *)tripId{
+- (NSMutableArray *)getStopTimes:(NSString *)strToStopID
+                   strFromStopID:(NSString *)strFromStopID
+                       startDate:(NSDate *)startDate
+                    timeInterval:(NSTimeInterval)timeInterval
+                          TripId:(NSString *)tripId
+{
     @try {
         NSDate *tripTime = timeOnlyFromDate(startDate);
-        NSDate *cutOffTime = [tripTime dateByAddingTimeInterval:GTFS_MAX_TIME_TO_PULL_SCHEDULES];
+        NSDate *cutOffTime = [tripTime dateByAddingTimeInterval:timeInterval];
         NSDictionary* fetchVars =[NSDictionary dictionaryWithObjectsAndKeys:
                                   strToStopID,@"STOPID1",
                                   strFromStopID,@"STOPID2",
@@ -1133,20 +1138,21 @@
     }
 }
 
-// This method continues to create itinerary until we have stoptimes data.
-// First loop through every leg of itinerary pattern if it is walk leg then we create new leg from old leg by updating some attributes.
-// if leg is transit leg then we get the stoptimes data for that leg.
-// Next find the nearest stoptimes by comparing departureTime with new itinerary start time or end time.
-// Then create the new leg and itinerary from stoptimes data. 
-- (void) generateItineraryFromItineraryPattern:(Itinerary *)itinerary
+// Generates Gtfs itineraries in plan based on the pattern of itinerary
+// tripDate is the original tripDate.  fromTimeOnly and toTimeOnly is the range of start-times that should be generated
+// Generated itineraries will be associated with Plan and will be optimal for that pattern
+// Returns request chunk with new itineraries, or nil if no new itineraries created
+- (PlanRequestChunk *)generateItineraryFromItineraryPattern:(Itinerary *)itinerary
                                       tripDate:(NSDate *)tripDate
+                                  fromTimeOnly:(NSDate *)fromTimeOnly
+                                    toTimeOnly:(NSDate *)toTimeOnly
                                           Plan:(Plan *)plan
                                        Context:(NSManagedObjectContext *)context{
     int legCount = [[itinerary sortedLegs] count];
     PlanRequestChunk* reqChunk = nil;
     
     if ([itinerary haveOnlyUnScheduledLeg]) {
-        return;  // no new itineraries to generate
+        return nil;  // no new itineraries to generate
     }
     // Get array of arrStopTimes, indexed by leg #.  Unscheduled legs have leg inserted
     NSMutableArray* arrStopTimesArray = [[NSMutableArray alloc] initWithCapacity:legCount];
@@ -1155,7 +1161,13 @@
         if (![leg isScheduled]) {
             [arrStopTimesArray addObject:leg];
         } else {
-            NSArray* arrStopTimes = [self getStopTimes:leg.to.stopId strFromStopID:leg.from.stopId startDate:tripDate TripId:@"XYZ-Do-Not-Exclude-Any-TripIDs"];
+            NSTimeInterval timeInterval = [toTimeOnly timeIntervalSinceDate:fromTimeOnly] + // time from fromTimeOnly to toTimeOnly
+            ([[leg startTime] timeIntervalSinceDate:[itinerary startTime]]*1.5);    // + enough extra time to reach this leg from startTime
+            NSArray* arrStopTimes = [self getStopTimes:leg.to.stopId
+                                         strFromStopID:leg.from.stopId
+                                             startDate:tripDate
+                                          timeInterval:timeInterval
+                                                TripId:@"XYZ-Do-Not-Exclude-Any-TripIDs"];
             [arrStopTimesArray addObject:arrStopTimes];
         }
     }
@@ -1174,20 +1186,27 @@
                                                       managedObjectContext:context
                                                                   tripDate:tripDate];
         
-        // Add these itineraries to the request chunk
-        if (!reqChunk) {
-            reqChunk = [NSEntityDescription insertNewObjectForEntityForName:@"PlanRequestChunk"
-                                                     inManagedObjectContext:context];
-            reqChunk.plan = plan;
-            reqChunk.type =[NSNumber numberWithInt:GTFS_ITINERARY];
-            reqChunk.gtfsItineraryPattern = itinerary;
-            reqChunk.earliestRequestedDepartTimeDate = tripDate; // assumes Depart
-        }
-        if (newItinerary) {
-            [reqChunk addItinerariesObject:newItinerary];
+        if ([newItinerary.startTimeOnly compare:fromTimeOnly] != NSOrderedAscending &&
+            [newItinerary.startTimeOnly compare:toTimeOnly] != NSOrderedDescending) {
+            // if newItinerary is within the requested time range...
+            
+            // Add these itineraries to the request chunk
+            if (!reqChunk) {
+                reqChunk = [NSEntityDescription insertNewObjectForEntityForName:@"PlanRequestChunk"
+                                                         inManagedObjectContext:context];
+                reqChunk.plan = plan;
+                reqChunk.type =[NSNumber numberWithInt:GTFS_ITINERARY];
+                reqChunk.gtfsItineraryPattern = itinerary;
+                reqChunk.earliestRequestedDepartTimeDate = tripDate; // assumes Depart
+            }
+            if (newItinerary) {
+                [reqChunk addItinerariesObject:newItinerary];
+            }
+        } else {  // if newItinerary is not within the desired time range, delete it
+            [context deleteObject:newItinerary];
         }
     }
-
+    return reqChunk;
 }
 
 // generate new leg from prediction data.
@@ -1244,18 +1263,6 @@
     newleg.endTime = leg.endTime;
     itinerary.endTime = newleg.endTime;
     [newleg setNewlegAttributes:leg];
-}
-
-// Generate new itineraries from patterns and stoptimes data.
-- (void) generateScheduledItinerariesFromPatternOfPlan:(Plan *)plan Context:(NSManagedObjectContext *)context tripDate:(NSDate *)tripDate{
-    if(!context){
-        context = managedObjectContext;
-    }
-    for(int i=0;i<[[plan uniqueItineraries] count];i++){
-        Itinerary *itinerary = [[plan uniqueItineraries] objectAtIndex:i];
-        [self generateItineraryFromItineraryPattern:itinerary tripDate:tripDate Plan:plan Context:context];
-    }
-    saveContext(context);
 }
 
 - (Leg *)returnNearestLeg:(NSArray *)arrLegs{
@@ -1405,7 +1412,11 @@
                     else{
                         NSString *strTOStopID = leg.to.stopId;
                         NSString *strFromStopID = leg.from.stopId;
-                        NSMutableArray *arrStopTime = [self getStopTimes:strTOStopID strFromStopID:strFromStopID startDate:newItinerary.endTime TripId:@"Include any tripId"];
+                        NSMutableArray *arrStopTime = [self getStopTimes:strTOStopID
+                                                           strFromStopID:strFromStopID
+                                                               startDate:newItinerary.endTime
+                                                            timeInterval:GTFS_MAX_TIME_TO_PULL_SCHEDULES
+                                                                  TripId:@"Include any tripId"];
                         [self addScheduledLegToItinerary:newItinerary
                                               TransitLeg:leg
                                                 StopTime:arrStopTime
@@ -1416,7 +1427,11 @@
                 else{
                     NSString *strTOStopID = leg.to.stopId;
                     NSString *strFromStopID = leg.from.stopId;
-                    NSMutableArray *arrStopTime = [self getStopTimes:strTOStopID strFromStopID:strFromStopID startDate:newItinerary.endTime TripId:@"Include any tripId"];
+                    NSMutableArray *arrStopTime = [self getStopTimes:strTOStopID
+                                                       strFromStopID:strFromStopID
+                                                           startDate:newItinerary.endTime
+                                                        timeInterval:GTFS_MAX_TIME_TO_PULL_SCHEDULES
+                                                              TripId:@"Include any tripId"];
                     [self addScheduledLegToItinerary:newItinerary
                                           TransitLeg:leg
                                             StopTime:arrStopTime

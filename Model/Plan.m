@@ -457,7 +457,8 @@
             for (Itinerary* itin in [reqChunk itineraries]) {
                 // Check that all legs are current with the GTFS file
                 
-                if ([itin isCurrentVsGtfsFilesIn:[self transitCalendar]]) { // if itin is valid
+                if ([itin isCurrentVsGtfsFilesIn:[self transitCalendar]] &&
+                    ![itin hideItinerary]) { // if itin is valid
                     // Check that the times match the requested time
                     NSDate* requestTimeOnly = timeOnlyFromDate(requestDate);
                     if (depOrArrive == DEPART) {
@@ -499,11 +500,6 @@
         
         // Check for suboptimal itineraries or equivalent itineraries
         NSMutableSet *optimalItineraries = [NSMutableSet setWithSet:includedItineraries];
-        // Added to hide the scheduled itinerary for which the realtime itinerary is generated.
-        for(Itinerary *itin1 in includedItineraries){
-            if(itin1.hideItinerary)
-               [optimalItineraries removeObject:itin1]; 
-        }
         
         // TODO:- Realtime Itineraries are removed from this loop so we need to handle realtime itinerary flag also.
         for (Itinerary* itin1 in includedItineraries) {
@@ -567,6 +563,7 @@
                                  intervalAfterRequest:(NSTimeInterval)intervalAfterRequest
                                        departOrArrive:(DepartOrArrive)depOrArrive
 {
+    PlanRequestChunk* newReqChunk = nil;
     NSDate* requestTimeOnly = timeOnlyFromDate(requestDate);
     NSDate* requestRangeFrom;
     NSDate* requestRangeTo;
@@ -585,23 +582,40 @@
     NSDate* lateRequestFrom = nil; // The late request goes from lateRequestFrom to requestRangeTo
     
     // Calculate the early request if necessary
-    if ([requestRangeFrom compare:chunkEarliest] == NSOrderedAscending) { 
-        if ([requestRangeTo compare:chunkEarliest] == NSOrderedAscending) { 
+    if ([requestRangeFrom compare:chunkEarliest] == NSOrderedAscending) {
+        if ([requestRangeTo compare:chunkEarliest] == NSOrderedAscending) {
             earlyRequestTo = requestRangeTo;  // chunkEarliest is later than the entire requestRange, request entire range
         } else {
             earlyRequestTo = chunkEarliest; // chunkEarliest is within the requestRange, request part of range
         }
-        // TODO:  generate GTFS itineraries
+        newReqChunk = [[[nc_AppDelegate sharedInstance] gtfsParser]
+                       generateItineraryFromItineraryPattern:[reqChunk gtfsItineraryPattern]
+                       tripDate:requestDate
+                       fromTimeOnly:requestRangeFrom
+                       toTimeOnly:earlyRequestTo
+                       Plan:self
+                       Context:self.managedObjectContext];
+        [reqChunk consolidateIntoSelfRequestChunk:newReqChunk];
+        
     } // else, no need for an early request
-    
+
     if ([requestRangeTo compare:chunkLatest] == NSOrderedDescending) {
         if ([requestRangeFrom compare:chunkLatest] == NSOrderedDescending) {
             lateRequestFrom = requestRangeFrom;  // chunkLatest is earlier than the entire requestRange, request entire range
         } else {
             lateRequestFrom = requestRangeFrom;  // chunkLatest is within the requestRange, request part of range
         }
-        // TODO: Generate GTFS itineraries
+        newReqChunk = [[[nc_AppDelegate sharedInstance] gtfsParser]
+                       generateItineraryFromItineraryPattern:[reqChunk gtfsItineraryPattern]
+                       tripDate:requestDate
+                       fromTimeOnly:requestRangeFrom
+                       toTimeOnly:earlyRequestTo
+                       Plan:self
+                       Context:self.managedObjectContext];
+        [reqChunk consolidateIntoSelfRequestChunk:newReqChunk];
     }
+    
+    // TODO: figure out whether there is a new requestChunk and return it if needed
     
     return nil;
 }
