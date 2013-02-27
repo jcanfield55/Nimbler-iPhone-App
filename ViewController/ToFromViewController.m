@@ -1713,6 +1713,9 @@ UIImage *imageDetailDisclosure;
 // call the requestRealTimeDataFromServer from RealtimeManager class with plan.
 - (void) requestServerForRealTime{
     // TODO:- Comment This both line to run automated test case
+#if AUTOMATED_TESTING_SKIP_NCAPPDELEGATE
+    return;
+#endif
     RealTimeManager *realtimeManager = [RealTimeManager realTimeManager];
     [realtimeManager requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
 }

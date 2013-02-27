@@ -506,7 +506,10 @@
             for (Itinerary* itin2 in includedItineraries) {
                 if (itin1 != itin2) {
                     // Check if equivalent itineraries
-                    if ([itin1 isEquivalentRoutesStopsAndScheduledTimingAs:itin2]) {
+                    if(itin1.isRealTimeItinerary || itin2.isRealTimeItinerary){
+                        // Do Nothing for RealTime Itinerary
+                    }
+                    else if ([itin1 isEquivalentRoutesStopsAndScheduledTimingAs:itin2]) {
                         if (itin1.isOTPItinerary && !itin2.isOTPItinerary) {
                             [optimalItineraries removeObject:itin1];  // if equivalent GTFS & OTP itineraries, only show the GTFS one
                         } else if (!itin1.isOTPItinerary && itin2.isOTPItinerary) {

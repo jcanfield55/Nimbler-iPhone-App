@@ -541,15 +541,16 @@
     STAssertNotNil([firstGeneratedLeg startTime], @"First leg start-time should not be nil");
     // View in the ViewController (uncomment when above problem resolved)
     // TODO:- Need to solve coredata fault.
-    [[NSUserDefaults standardUserDefaults] setObject:@"data.json" forKey:DEVICE_TOKEN];
     [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:parameters];
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:2.0]];
     
+    // Use RealTime Data from Data.json File and generate realtime itineraries.
+    [[NSUserDefaults standardUserDefaults] setObject:@"data.json" forKey:DEVICE_TOKEN];
     [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
     STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result=[RealTimeManager realTimeManager].loadedRealTimeData; return result;}], @"Timed out waiting for RealTimeData");
     [gtfsParser generateItinerariesFromRealTime:plan TripDate:tripDate Context:managedObjectContext];
     
-    // TODO:- Need to add Flag in this method that handles Realtime itinerary.
+   
     [plan prepareSortedItinerariesWithMatchesForDate:tripDate departOrArrive:DEPART];
 
     NSMutableArray *arrRealTimeItinerary = [[NSMutableArray alloc] init];
@@ -581,16 +582,17 @@
     STAssertTrue([second_4Leg.arrivalFlag intValue] == DELAYED, @"");
     STAssertTrue([second_5Leg.arrivalFlag intValue] == DELAYED, @"");
     
-    //[toFromViewController.routeOptionsVC reloadData:plan];
-    [[RealTimeManager realTimeManager].routeOptionsVC.mainTable reloadData ];
+    [toFromViewController.routeOptionsVC setIsReloadRealData:YES];
+    [toFromViewController.routeOptionsVC.mainTable reloadData];
     [[RealTimeManager realTimeManager].routeDetailVC ReloadLegWithNewData];
     
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:10.0]];
     
     // Clear The Previously Generated Realtime Itineraries.
-    for(int i=0;i<[[plan sortedItineraries] count];i++){
-        Itinerary *iti = [[plan sortedItineraries]  objectAtIndex:i];
+    for(int i=0;i<[[plan itineraries] count];i++){
+        Itinerary *iti = [[[plan itineraries] allObjects]  objectAtIndex:i];
         iti.itinArrivalFlag = nil;
+        iti.hideItinerary = false;
         if(iti.isRealTimeItinerary){
             for(int j=0;j<[[iti sortedLegs] count];j++){
                 Leg *leg = [[iti sortedLegs] objectAtIndex:j];
@@ -601,11 +603,134 @@
             [plan deleteItinerary:iti];
         }
     }
-    //[toFromViewController.routeOptionsVC reloadData:plan];
-    [[RealTimeManager realTimeManager].routeOptionsVC.mainTable reloadData ];
+    
+    for(int i=0;i<[[plan requestChunks] count];i++){
+        PlanRequestChunk *reqChunks = [[[plan requestChunks] allObjects] objectAtIndex:i];
+        if(reqChunks.type == [NSNumber numberWithInt:2]){
+            [managedObjectContext deleteObject:reqChunks];
+        }
+    }
+    saveContext(managedObjectContext);
+    
+    // Use RealTime Data from data1.json File and generate realtime itineraries.
+    [[NSUserDefaults standardUserDefaults] setObject:@"data1.json" forKey:DEVICE_TOKEN];
+    
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:10.0]];
+    
+    [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
+    [RealTimeManager realTimeManager].loadedRealTimeData = false;
+    STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result=[RealTimeManager realTimeManager].loadedRealTimeData; return result;}], @"Timed out waiting for RealTimeData");
+    [gtfsParser generateItinerariesFromRealTime:plan TripDate:tripDate Context:managedObjectContext];
+    
+    
+    [plan prepareSortedItinerariesWithMatchesForDate:tripDate departOrArrive:DEPART];
+    
+    NSMutableArray *arrRealTimeItinerary1 = [[NSMutableArray alloc] init];
+    for(int i=0;i<[[plan sortedItineraries] count];i++){
+        Itinerary *itinerary = [[plan sortedItineraries] objectAtIndex:i];
+        if(itinerary.isRealTimeItinerary){
+            [arrRealTimeItinerary1 addObject:[[plan sortedItineraries] objectAtIndex:i]];
+        }
+    }
+    
+    STAssertTrue([arrRealTimeItinerary1 count] == 3, @"");
+    
+    Itinerary *second_FirstItinerary = [arrRealTimeItinerary1 objectAtIndex:0];
+    Itinerary *second_SecondItinerary = [arrRealTimeItinerary1 objectAtIndex:1];
+    Itinerary *second_ThirdItinerary = [arrRealTimeItinerary1 objectAtIndex:2];
+    
+    Leg *second_FirstItinerary_2Leg = [[second_FirstItinerary sortedLegs] objectAtIndex:1];
+    Leg *second_FirstItinerary_4Leg = [[second_FirstItinerary sortedLegs] objectAtIndex:3];
+    Leg *second_FirstItinerary_5Leg = [[second_FirstItinerary sortedLegs] objectAtIndex:4];
+    
+    STAssertTrue([second_FirstItinerary_2Leg.arrivalFlag intValue] == ON_TIME, @"");
+    STAssertTrue([second_FirstItinerary_4Leg.arrivalFlag intValue] == ON_TIME, @"");
+    STAssertTrue([second_FirstItinerary_5Leg.arrivalFlag intValue] == ON_TIME, @"");
+    
+    Leg *second_SecondItinerary_2Leg = [[second_SecondItinerary sortedLegs] objectAtIndex:1];
+    Leg *second_SecondItinerary_4Leg = [[second_SecondItinerary sortedLegs] objectAtIndex:3];
+    Leg *second_SecondItinerary_5Leg = [[second_SecondItinerary sortedLegs] objectAtIndex:4];
+    
+    STAssertTrue([second_SecondItinerary_2Leg.arrivalFlag intValue] == DELAYED, @"");
+    NSLog(@"%@",second_SecondItinerary_4Leg.arrivalFlag);
+    NSLog(@"%@",second_SecondItinerary_5Leg.arrivalFlag);
+    STAssertTrue([second_SecondItinerary_4Leg.arrivalFlag intValue] == ON_TIME, @"");
+    STAssertTrue([second_SecondItinerary_5Leg.arrivalFlag intValue] == ON_TIME, @"");
+    
+    Leg *second_ThirdItinerary_2Leg = [[second_ThirdItinerary sortedLegs] objectAtIndex:1];
+    Leg *second_ThirdItinerary_4Leg = [[second_ThirdItinerary sortedLegs] objectAtIndex:3];
+   
+    
+    STAssertTrue([second_ThirdItinerary_2Leg.arrivalFlag intValue] == DELAYED, @"");
+    STAssertTrue([second_ThirdItinerary_4Leg.arrivalFlag intValue] == DELAYED, @"");
+    
+    [toFromViewController.routeOptionsVC setIsReloadRealData:YES];
+    [toFromViewController.routeOptionsVC.mainTable reloadData];
     [[RealTimeManager realTimeManager].routeDetailVC ReloadLegWithNewData];
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:30.0]];
-    // TODO:- Need to work on Asserts.
+    
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:40.0]];
+    
+    // Clear The Previously Generated Realtime Itineraries.
+    for(int i=0;i<[[plan itineraries] count];i++){
+        Itinerary *iti = [[[plan itineraries] allObjects]  objectAtIndex:i];
+        iti.itinArrivalFlag = nil;
+        iti.hideItinerary = false;
+        if(iti.isRealTimeItinerary){
+            for(int j=0;j<[[iti sortedLegs] count];j++){
+                Leg *leg = [[iti sortedLegs] objectAtIndex:j];
+                leg.predictions = nil;
+                leg.arrivalFlag = nil;
+                leg.timeDiffInMins = nil;
+            }
+            [plan deleteItinerary:iti];
+        }
+    }
+    
+    for(int i=0;i<[[plan requestChunks] count];i++){
+        PlanRequestChunk *reqChunks = [[[plan requestChunks] allObjects] objectAtIndex:i];
+        if(reqChunks.type == [NSNumber numberWithInt:2]){
+            [managedObjectContext deleteObject:reqChunks];
+        }
+    }
+    saveContext(managedObjectContext);
+    
+    // Use RealTime Data from data2.json File and generate realtime itineraries.
+    [[NSUserDefaults standardUserDefaults] setObject:@"data2.json" forKey:DEVICE_TOKEN];
+    
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:10.0]];
+    
+    [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
+    [RealTimeManager realTimeManager].loadedRealTimeData = false;
+    STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result=[RealTimeManager realTimeManager].loadedRealTimeData; return result;}], @"Timed out waiting for RealTimeData");
+    [gtfsParser generateItinerariesFromRealTime:plan TripDate:tripDate Context:managedObjectContext];
+    
+    
+    [plan prepareSortedItinerariesWithMatchesForDate:tripDate departOrArrive:DEPART];
+    
+    NSMutableArray *arrRealTimeItinerary2 = [[NSMutableArray alloc] init];
+    for(int i=0;i<[[plan sortedItineraries] count];i++){
+        Itinerary *itinerary = [[plan sortedItineraries] objectAtIndex:i];
+        if(itinerary.isRealTimeItinerary){
+            [arrRealTimeItinerary2 addObject:[[plan sortedItineraries] objectAtIndex:i]];
+        }
+    }
+    
+    STAssertTrue([arrRealTimeItinerary2 count] == 2, @"");
+    
+    Itinerary *third_FirstItinerary = [arrRealTimeItinerary2 objectAtIndex:0];
+    Itinerary *third_SecondItinerary = [arrRealTimeItinerary2 objectAtIndex:1];
+    
+    Leg *third_FirstItinerary_2Leg = [[third_FirstItinerary sortedLegs] objectAtIndex:1];
+    STAssertTrue([third_FirstItinerary_2Leg.arrivalFlag intValue] == DELAYED, @"");
+    
+    Leg *third_SecondItinerary_2Leg = [[third_SecondItinerary sortedLegs] objectAtIndex:1];
+    STAssertTrue([third_SecondItinerary_2Leg.arrivalFlag intValue] == DELAYED, @"");
+    
+    [toFromViewController.routeOptionsVC setIsReloadRealData:YES];
+    [toFromViewController.routeOptionsVC.mainTable reloadData];
+    [[RealTimeManager realTimeManager].routeDetailVC ReloadLegWithNewData];
+    
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:40.0]];
 }
 
 // NOTE from John 2/10/2013:

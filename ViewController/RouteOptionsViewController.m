@@ -112,7 +112,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     [mainTable reloadData];
 }
 - (void) reloadData:(Plan *)newPlan{
-     plan = newPlan;
     self.isReloadRealData = true;
     [mainTable reloadData];
 }
@@ -127,19 +126,28 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 
 -(void)popOutToNimbler{
     
-    for(int i=0;i<[[plan sortedItineraries] count];i++){
-        Itinerary *iti = [[plan sortedItineraries]  objectAtIndex:i];
+    for(int i=0;i<[[plan itineraries] count];i++){
+        Itinerary *iti = [[[plan itineraries] allObjects]  objectAtIndex:i];
         iti.itinArrivalFlag = nil;
+        iti.hideItinerary = false;
         if(iti.isRealTimeItinerary){
             for(int j=0;j<[[iti sortedLegs] count];j++){
                 Leg *leg = [[iti sortedLegs] objectAtIndex:j];
-                leg.prediction = nil;
+                leg.predictions = nil;
                 leg.arrivalFlag = nil;
                 leg.timeDiffInMins = nil;
             }
             [plan deleteItinerary:iti];
         }
     }
+    
+    for(int i=0;i<[[plan requestChunks] count];i++){
+        PlanRequestChunk *reqChunks = [[[plan requestChunks] allObjects] objectAtIndex:i];
+        if(reqChunks.type == [NSNumber numberWithInt:2]){
+            [[nc_AppDelegate sharedInstance].managedObjectContext deleteObject:reqChunks];
+        }
+    }
+    saveContext([nc_AppDelegate sharedInstance].managedObjectContext);
     
     CATransition *animation = [CATransition animation];
     [animation setDuration:0.3];
