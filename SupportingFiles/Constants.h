@@ -15,12 +15,12 @@
 #define TRIP_GENERATE_URL     @"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/"
 //#define TRIP_GENERATE_URL @"http://ec2-23-22-169-158.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"
 #define GEO_RESPONSE_URL      @"http://maps.googleapis.com/maps/api/geocode/"
-#define TEST_GEO_RESPONSE_URL  @"http://192.168.2.230:7070/TPServer/ws/mockgeolocation/"
+#define TEST_GEO_RESPONSE_URL  @"http://localhost:8080/TPServer/ws/mockgeolocation/"
 
 #define TRIP_PROCESS_URL    @"http://23.23.210.156:8080/TPServer/ws/"
 //#define TRIP_PROCESS_URL      @"http://192.168.2.230:8080/TPServer/ws/"
 
-#define TEST_TRIP_PROCESS_URL @"http://192.168.2.230:7070/TPServer/ws/"  // TP server for automated tests
+#define TEST_TRIP_PROCESS_URL @"http://localhost:8080/TPServer/ws/"  // TP server for automated tests
 
 // Core Data database filename
 #define COREDATA_DB_FILENAME    @"store101.data"
