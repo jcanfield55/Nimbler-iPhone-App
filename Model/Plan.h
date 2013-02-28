@@ -103,7 +103,8 @@
 - (BOOL)prepareSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
                                     departOrArrive:(DepartOrArrive)depOrArrive
                                RouteExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
-                                          callBack:(id <PlanRequestMoreItinerariesDelegate>)delegate;
+                                          callBack:(id <PlanRequestMoreItinerariesDelegate>)delegate
+                           generateGtfsItineraries:(BOOL)generateGtfsItinaries;
 
 
 // Variant of the above method without using an includeExcludeDictionary or callback
@@ -126,17 +127,28 @@
                                         departOrArrive:(DepartOrArrive)depOrArrive
                                    RouteExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
                                               callBack:(id <PlanRequestMoreItinerariesDelegate>)delegate
+                               generateGtfsItineraries:(BOOL)generateGtfsItinaries
                               planMaxItinerariesToShow:(int)planMaxItinerariesToShow
                       planBufferSecondsBeforeItinerary:(int)planBufferSecondsBeforeItinerary
                            planMaxTimeForResultsToShow:(int)planMaxTimeForResultsToShow;
 
 
-// Variant of the above method without using an includeExcludeDictionary or callback
+// Variant of the above method without using an includeExcludeDictionary or callback or generating any gtfsItineraries
+
 - (NSArray *)returnSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
                                         departOrArrive:(DepartOrArrive)depOrArrive
                               planMaxItinerariesToShow:(int)planMaxItinerariesToShow
                       planBufferSecondsBeforeItinerary:(int)planBufferSecondsBeforeItinerary
                            planMaxTimeForResultsToShow:(int)planMaxTimeForResultsToShow;
+
+// Given a particular request timing and unique itinerary, determine whether more GTFS itineraries need to be
+// generated.  If so, generate them.
+// Consolidate requestChunks where possible, or create new ones if needed
+-(void)generateMoreGtfsItinsIfNeededFor:(Itinerary *)uniqueItin
+                            requestDate:(NSDate *)requestDate
+                  intervalBeforeRequest:(NSTimeInterval)intervalBeforeRequest
+                   intervalAfterRequest:(NSTimeInterval)intervalAfterRequest
+                         departOrArrive:(DepartOrArrive)depOrArrive;
 
 // Returns unique Itineraries array from plan sorted by StartDates
 - (NSArray *)uniqueItineraries;

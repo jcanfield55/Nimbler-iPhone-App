@@ -38,7 +38,7 @@ static RealTimeManager* realTimeManager;
     NSDate *currentDateOnly = dateOnlyFromDate(currentDate);
     NSDate *currentDatePlus90Miuntes = [currentDate dateByAddingTimeInterval:CURRENT_DATE_PLUS_INTERVAL];
     // TODO:- Comment This if statement to run automated test case
-    if([tripDateOnly isEqualToDate:currentDateOnly] && [originalTripDate compare:currentDatePlus90Miuntes] == NSOrderedAscending){
+    // if([tripDateOnly isEqualToDate:currentDateOnly] && [originalTripDate compare:currentDatePlus90Miuntes] == NSOrderedAscending){
         NSMutableArray *arrLegs = [[NSMutableArray alloc] init];
         for(int i=0;i<[[plan uniqueItineraries] count];i++){
             Itinerary *itinerary = [[plan uniqueItineraries] objectAtIndex:i];
@@ -88,7 +88,7 @@ static RealTimeManager* realTimeManager;
             [requestParameter setValue:[[NSUserDefaults standardUserDefaults] objectForKey:DEVICE_TOKEN] forParam:DEVICE_TOKEN];
             [self.rkTpClient post:LIVE_FEEDS_BY_LEGS params:requestParameter delegate:self];
         } 
-    }
+    // }
 }
 
 #pragma mark RKResponse Delegate method
@@ -142,10 +142,10 @@ static RealTimeManager* realTimeManager;
             if ([legLiveFees count] > 0) {
                 [self setRealTimePredictionsFromLiveFeeds1:legLiveFees];
                 // TODO:- Comment Four lines to run automated test case 
-                [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:originalTripDate Context:nil];
-                [plan prepareSortedItinerariesWithMatchesForDate:originalTripDate departOrArrive:DEPART];
-                [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC reloadData:plan];
-                [routeDetailVC ReloadLegWithNewData];
+                // [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:originalTripDate Context:nil];
+                // [plan prepareSortedItinerariesWithMatchesForDate:originalTripDate departOrArrive:DEPART];
+                // [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC reloadData:plan];
+                // [routeDetailVC ReloadLegWithNewData];
             }
         }
         else {

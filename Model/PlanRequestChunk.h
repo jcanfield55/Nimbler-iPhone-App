@@ -22,6 +22,7 @@
 // Source of the RequestChunk itineraries.  Possible values:
 // #define OTP_ITINERARY  0
 // #define GTFS_ITINERARY 1
+// #define REALTIME_ITINERARY 2
 @property (nonatomic) NSNumber *type;
 
 // Set only if type = REQUEST_CHUNK_TYPE_GTFS.  Contains the itinerary pattern used to generate the GTFS itinerary in this request chunk
@@ -30,6 +31,11 @@
 // Earliest requested departure time/date used in requesting the itineraries in this RequestChunk.
 // nil if only arrive-by requests have been used so far
 @property (strong, nonatomic) NSDate* earliestRequestedDepartTimeDate;
+
+// Non-null for gtfs requests.  The end time of the request range for the request chunk
+// For Gtfs requests, we can guarantee itineraries out through the end of the range (which we cannot do for OTP requests)
+// For OTP requests, this is null and we compute the end time instead by looking at the last itinerary
+@property (strong, nonatomic) NSDate* latestEndOfRequestRangeTimeDate;
 
 // Latest requested arrival time/date used in requesting the itineraries in this RequestChunk.
 // nil if only depart requests have been used so far
@@ -58,6 +64,10 @@
 //
 // Methods
 //
+
+- (BOOL)isOTP;  // returns true if type = OTP
+- (BOOL)isGtfs;  // returns true if type = GTFS
+- (BOOL)isRealtime;  // returns true if type = Realtime
 
 - (void)sortItineraries;   // Create the sorted array of itineraries
 

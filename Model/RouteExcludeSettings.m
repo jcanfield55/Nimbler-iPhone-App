@@ -209,6 +209,7 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
                                                                     departOrArrive:parameters.departOrArrive
                                                                RouteExcludeSettings:nil
                                                                           callBack:nil
+                                                           generateGtfsItineraries:NO
                                                           planMaxItinerariesToShow:PLAN_MAX_ITINERARIES_TO_SHOW
                                                   planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY
                                                        planMaxTimeForResultsToShow:PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW];

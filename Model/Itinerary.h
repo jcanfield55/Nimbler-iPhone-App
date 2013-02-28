@@ -15,6 +15,9 @@
 
 @class Leg, Plan, PlanRequestChunk;
 
+// Utility function for sorting sets of itineraries
+NSArray *sortedByStartTimeOnly(NSSet* itinerarySet);
+
 @interface Itinerary : NSManagedObject
 
 typedef enum {

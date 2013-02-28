@@ -17,6 +17,7 @@
 @dynamic type;
 @dynamic gtfsItineraryPattern;
 @dynamic earliestRequestedDepartTimeDate;
+@dynamic latestEndOfRequestRangeTimeDate;
 @dynamic latestRequestedArriveTimeDate;
 @dynamic itineraries;
 @dynamic plan;
@@ -53,6 +54,21 @@
         return;
     if (self.itineraries.count == 0)
         [self.managedObjectContext deleteObject:self];
+}
+
+- (BOOL)isOTP  // returns true if type = OTP
+{
+    return ([[self type] integerValue] == OTP_ITINERARY);
+}
+
+- (BOOL)isGtfs  // returns true if type = GTFS
+{
+    return ([[self type] integerValue] == GTFS_ITINERARY);
+}
+
+- (BOOL)isRealtime  // returns true if type = Realtime
+{
+    return ([[self type] integerValue] == REALTIME_ITINERARY);
 }
 
 // Create the sorted array of itineraries
@@ -141,11 +157,15 @@
     return allMatch;
 }
 
-// Returns the latest timeOnly for the requestChunk based on depOrArrive
-// If DEPART, returns the earlier of earliestRequestedDepartTime or startTimeOnly of the first itinerary leg
-// If ARRIVE, returns the endTimeOnly of the first itinerary leg
+// Returns the earliest timeOnly for the requestChunk based on depOrArrive
+// If DEPART, and type = OTP, returns the earlier of earliestRequestedDepartTime or startTimeOnly of the first itinerary leg
+// If ARRIVE, and type = OTP, returns the endTimeOnly of the first itinerary leg
+// For type = gtfs, returns earliestRequestedDepartTime
 - (NSDate *)earliestTimeFor:(DepartOrArrive)depOrArrive
 {
+    if ([self isGtfs]) {
+        return timeOnlyFromDate([self earliestRequestedDepartTimeDate]);
+    }
     if (depOrArrive == DEPART) {
         NSDate *firstStartTimeOnly = [[[self sortedItineraries] objectAtIndex:0] startTimeOnly];
         if ([self earliestRequestedDepartTimeDate]) {
@@ -160,10 +180,14 @@
 }
 
 // Returns the latest timeOnly for the requestChunk based on depOrArrive
-// If ARRIVE, returns the later of latestRequestedArriveTime or endTimeOnly of the last itinerary leg
-// If DEPART, returns the startTimeOnly of the last itinerary leg
+// If ARRIVE, and type = OTP, returns the later of latestRequestedArriveTime or endTimeOnly of the last itinerary leg
+// If DEPART, and type = OTP, returns the startTimeOnly of the last itinerary leg
+// For type = gtfs, returns latestEndOfRequestRangeTimeDate
 - (NSDate *)latestTimeFor:(DepartOrArrive)depOrArrive
 {
+    if ([self isGtfs]) {
+        return timeOnlyFromDate([self latestEndOfRequestRangeTimeDate]);
+    }
     if (depOrArrive == ARRIVE) {
         NSDate *lastEndTimeOnly = [[[self sortedItineraries] lastObject] endTimeOnly];
         if ([self latestRequestedArriveTimeDate]) {
@@ -262,6 +286,14 @@
             }
         } else {
             [self setLatestRequestedArriveTimeDate:[requestChunk0 latestRequestedArriveTimeDate]];
+        }
+    }
+    
+    // Update latestEndOfRequestRangeTimeDate (if set)
+    if ([requestChunk0 latestEndOfRequestRangeTimeDate] && [self latestEndOfRequestRangeTimeDate]) {
+        if ([timeOnlyFromDate([requestChunk0 latestEndOfRequestRangeTimeDate])
+             compare:timeOnlyFromDate([self latestEndOfRequestRangeTimeDate])] == NSOrderedDescending) {
+            [self setLatestEndOfRequestRangeTimeDate:[requestChunk0 latestEndOfRequestRangeTimeDate]];
         }
     }
     

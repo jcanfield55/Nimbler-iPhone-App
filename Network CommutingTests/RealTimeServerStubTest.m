@@ -398,6 +398,8 @@
     parameters.fromLocation = fromLocation;
     parameters.toLocation = toLocation;
     NSDate* tripDate = [dateFormatter dateFromString:@"02/11/2013 05:30 pm"];
+    NSDate* tripDate2 = [dateFormatter dateFromString:@"02/12/2013 04:00 pm"];
+    NSDate* tripDate3 = [dateFormatter dateFromString:@"02/14/2013 06:00 am"];
     parameters.originalTripDate = tripDate;
     parameters.thisRequestTripDate = tripDate;
     parameters.routeExcludeSettings = [RouteExcludeSettings latestUserSettings];
@@ -452,7 +454,7 @@
     STAssertEquals([fetchItinArray objectAtIndex:1], [plan.sortedItineraries objectAtIndex:2], @"");
     
     //
-    // Gtfs itinerary generation
+    // US202 Gtfs itinerary generation
     //
     
     // Wait until GtfsStopTimes have been loaded for this plan
@@ -460,29 +462,31 @@
         NSArray* stopPairs = [gtfsParser getStopTimes:stopIdSCarlosCalTr
                                         strFromStopID:stopIdSFCaltrain
                                             startDate:tripDate
-                                         timeInterval:GTFS_MAX_TIME_TO_PULL_SCHEDULES
+                                         timeInterval:(7*60*60)
                                                TripId:@""];
         if ([stopPairs count] > 0) {
             return YES;
         }
         return NO;}], @"Timed out waiting for GtfsStopTimes");
-    
     NSArray* stopPairs = [gtfsParser getStopTimes:stopIdSCarlosCalTr
                                     strFromStopID:stopIdSFCaltrain
                                         startDate:tripDate
-                                     timeInterval:GTFS_MAX_TIME_TO_PULL_SCHEDULES
+                                     timeInterval:(7*60*60)
                                            TripId:@""];
     STAssertEquals([stopPairs count], 6u, @"");
     STAssertTrue([[[[stopPairs objectAtIndex:0] objectAtIndex:0] tripID] isEqualToString:@"282_20121001"], @"");
     
     // Generate itineraries using just the pattern that goes Muni -> SF Caltrain -> San Carlos Caltrain.
-    [gtfsParser generateItineraryFromItineraryPattern:[[plan sortedItineraries] objectAtIndex:3]
-                                             tripDate:tripDate
-                                         fromTimeOnly:timeOnlyFromDate(tripDate)
-                                           toTimeOnly:[timeOnlyFromDate(tripDate) dateByAddingTimeInterval:(4.0*60*60)]
-                                                 Plan:plan
-                                              Context:managedObjectContext];
+    Itinerary* uniqueItin3 = [[plan sortedItineraries] objectAtIndex:3];
+    [plan generateMoreGtfsItinsIfNeededFor:uniqueItin3
+                               requestDate:tripDate
+                     intervalBeforeRequest:(3*60+1)
+                      intervalAfterRequest:(6*60*60)
+                            departOrArrive:DEPART];
     STAssertEquals([[plan uniqueItineraries] count], 4u, @"");  // Still same # of unique itineraries
+    STAssertEquals([[plan requestChunks] count], 2u, @"");  // One requestChunk for newly generated itineraries
+    STAssertEquals([[uniqueItin3 requestChunksCreatedByThisPattern] count], 1u, @"");
+    STAssertEquals([[[[uniqueItin3 requestChunksCreatedByThisPattern] anyObject] sortedItineraries] count], 3u, @"");  // 3 generated itineraries
     [plan sortItineraries];   // Sort all itineraries
     
     // Check resulting itineraries
@@ -522,7 +526,69 @@
     
     [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:parameters];
     
+    //
+    // Test generateMoreGtfsItinsIfNeededFor and management of requestChunks
+    //
+    // Try a new trip date (2/12 vs 2/11) and an overlapping trip time 4:00pm vs 5:30pm
+    parameters.originalTripDate = tripDate2;
+    [plan generateMoreGtfsItinsIfNeededFor:uniqueItin3
+                               requestDate:tripDate2
+                     intervalBeforeRequest:(3*60+1)
+                      intervalAfterRequest:(6*60*60)
+                            departOrArrive:DEPART];
+    [plan sortItineraries];   // do a raw sort
+    
+    // First itinerary connects to Caltrain #272 at 5:20pm
+    // (We do not leave early enough to catch buses to catch #262 and #264)
+    STAssertEqualObjects([[[[[plan sortedItineraries] objectAtIndex:0] sortedLegs] objectAtIndex:3] tripId], @"272_20121001", @"");
+    STAssertEqualObjects([[[plan sortedItineraries] objectAtIndex:0] startTimeOfFirstLeg],
+                         [dateFormatter dateFromString:@"02/12/2013 04:59 pm"], @"");
+    // Second itinerary connects to Caltrain #274 at 5:27pm
+    STAssertEqualObjects([[[[[plan sortedItineraries] objectAtIndex:1] sortedLegs] objectAtIndex:3] tripId], @"274_20121001", @"");
+    STAssertEqualObjects([[[plan sortedItineraries] objectAtIndex:1] startTimeOfFirstLeg],
+                         [dateFormatter dateFromString:@"02/12/2013 05:07 pm"], @"");
+    // Third itinerary connects to Caltrain #282 at 6:20pm.  This itinerary is sub-optimal, but was generated
+    // because more Caltrain stopTimes pairs were generated than Muni (due to the cutoff)
+    STAssertEqualObjects([[[[[plan sortedItineraries] objectAtIndex:2] sortedLegs] objectAtIndex:3] tripId], @"282_20121001", @"");
+    STAssertEqualObjects([[[plan sortedItineraries] objectAtIndex:2] startTimeOfFirstLeg],
+                         [dateFormatter dateFromString:@"02/12/2013 05:19 pm"], @"");
+    
+    // Check the requestChunk
+    STAssertEquals([[plan requestChunks] count], 2u, @"");
+    STAssertEquals([[[[plan sortedItineraries] objectAtIndex:0] planRequestChunks] count], 1u, @"");
+    PlanRequestChunk* reqChunkFromGTFS2 = [[[[plan sortedItineraries] objectAtIndex:0] planRequestChunks] anyObject];
+    STAssertEquals([[reqChunkFromGTFS2 itineraries] count], 6u, @"");
+    STAssertEqualObjects([reqChunkFromGTFS2 earliestTimeFor:DEPART],
+                   timeOnlyFromDate([tripDate2 dateByAddingTimeInterval:(-(3*60+1))]), @"");
+    STAssertEqualObjects([reqChunkFromGTFS2 latestTimeFor:DEPART],
+                   timeOnlyFromDate([tripDate dateByAddingTimeInterval:(6*60*60)]), @"");
+    STAssertTrue([reqChunkFromGTFS2 isGtfs], @"");
+
+    // Try another tripDate 02/14/2013 06:00 am
+    parameters.originalTripDate = tripDate3;
+    [plan generateMoreGtfsItinsIfNeededFor:uniqueItin3
+                               requestDate:tripDate3
+                     intervalBeforeRequest:(3*60+1)
+                      intervalAfterRequest:(6*60*60)
+                            departOrArrive:DEPART];
+    [plan sortItineraries];   // do a raw sort
+    STAssertEquals([[plan requestChunks] count], 3u, @"");  // non-overlapping request chunk, so # goes to 3
+    STAssertEquals([[plan itineraries] count], 21u, @"");
+    STAssertEqualObjects([[[[[plan sortedItineraries] objectAtIndex:0] sortedLegs] objectAtIndex:3] tripId], @"210_20121001", @"");
+    STAssertEqualObjects([[[[[plan sortedItineraries] objectAtIndex:1] sortedLegs] objectAtIndex:3] tripId], @"216_20121001", @"");
+    STAssertEqualObjects([[[[[plan sortedItineraries] objectAtIndex:2] sortedLegs] objectAtIndex:3] tripId], @"220_20121001", @"");
+    STAssertEqualObjects([[[[[plan sortedItineraries] objectAtIndex:3] sortedLegs] objectAtIndex:3] tripId], @"226_20121001", @"");
+    STAssertEqualObjects([[[[[plan sortedItineraries] objectAtIndex:4] sortedLegs] objectAtIndex:3] tripId], @"230_20121001", @"");
+    STAssertEqualObjects([[[[[plan sortedItineraries] objectAtIndex:5] sortedLegs] objectAtIndex:3] tripId], @"134_20121001", @"");
+    STAssertEqualObjects([[[[[plan sortedItineraries] objectAtIndex:6] sortedLegs] objectAtIndex:3] tripId], @"236_20121001", @"");
+    STAssertEqualObjects([[[[[plan sortedItineraries] objectAtIndex:7] sortedLegs] objectAtIndex:3] tripId], @"138_20121001", @"");
+    STAssertEqualObjects([[[[[plan sortedItineraries] objectAtIndex:8] sortedLegs] objectAtIndex:3] tripId], @"142_20121001", @"");
+    STAssertEqualObjects([[[[[plan sortedItineraries] objectAtIndex:9] sortedLegs] objectAtIndex:3] tripId], @"146_20121001", @"");
+    STAssertEqualObjects([[[[[plan sortedItineraries] objectAtIndex:10] sortedLegs] objectAtIndex:3] tripId], @"150_20121001", @"");
+
+    //
     // Test prepareSortedItinerariesWithMatchesForDate, especially the optimization code
+    //
     [plan prepareSortedItinerariesWithMatchesForDate:tripDate departOrArrive:DEPART];
     [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:parameters];
     STAssertEquals([[plan sortedItineraries] count], 6u, @"");  // Removed itinerary #5 (OTP duplicate)
@@ -535,22 +601,27 @@
                          @"San Carlos Caltrain Station",@"");
     STAssertFalse([[[plan sortedItineraries] objectAtIndex:4] isOTPItinerary], @"");
     
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:2.0]];
-
-     Leg* firstGeneratedLeg = [[[[plan sortedItineraries] objectAtIndex:0] sortedLegs] objectAtIndex:0];
+    // [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:2.0]];
+    
+    Leg* firstGeneratedLeg = [[[[plan sortedItineraries] objectAtIndex:0] sortedLegs] objectAtIndex:0];
     STAssertNotNil([firstGeneratedLeg startTime], @"First leg start-time should not be nil");
     // View in the ViewController (uncomment when above problem resolved)
-    // TODO:- Need to solve coredata fault.
     [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:parameters];
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:2.0]];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
     
+
+    
+    [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:parameters];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
+    
+    //
     // Use RealTime Data from Data.json File and generate realtime itineraries.
+    //
     [[NSUserDefaults standardUserDefaults] setObject:@"data.json" forKey:DEVICE_TOKEN];
     [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
     STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result=[RealTimeManager realTimeManager].loadedRealTimeData; return result;}], @"Timed out waiting for RealTimeData");
     [gtfsParser generateItinerariesFromRealTime:plan TripDate:tripDate Context:managedObjectContext];
     
-   
     [plan prepareSortedItinerariesWithMatchesForDate:tripDate departOrArrive:DEPART];
 
     NSMutableArray *arrRealTimeItinerary = [[NSMutableArray alloc] init];
@@ -615,7 +686,7 @@
     // Use RealTime Data from data1.json File and generate realtime itineraries.
     [[NSUserDefaults standardUserDefaults] setObject:@"data1.json" forKey:DEVICE_TOKEN];
     
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:10.0]];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
     
     [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
     [RealTimeManager realTimeManager].loadedRealTimeData = false;
@@ -668,7 +739,7 @@
     [toFromViewController.routeOptionsVC.mainTable reloadData];
     [[RealTimeManager realTimeManager].routeDetailVC ReloadLegWithNewData];
     
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:40.0]];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
     
     // Clear The Previously Generated Realtime Itineraries.
     for(int i=0;i<[[plan itineraries] count];i++){
@@ -697,7 +768,7 @@
     // Use RealTime Data from data2.json File and generate realtime itineraries.
     [[NSUserDefaults standardUserDefaults] setObject:@"data2.json" forKey:DEVICE_TOKEN];
     
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:10.0]];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
     
     [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
     [RealTimeManager realTimeManager].loadedRealTimeData = false;
@@ -730,7 +801,7 @@
     [toFromViewController.routeOptionsVC.mainTable reloadData];
     [[RealTimeManager realTimeManager].routeDetailVC ReloadLegWithNewData];
     
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:40.0]];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
 }
 
 // NOTE from John 2/10/2013:

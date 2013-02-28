@@ -179,8 +179,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     }
     [plan prepareSortedItinerariesWithMatchesForDate:planRequestParameters.originalTripDate
                                       departOrArrive:planRequestParameters.departOrArrive
-                                 RouteExcludeSettings:[RouteExcludeSettings latestUserSettings]
-                                            callBack:nil];
+                                RouteExcludeSettings:[RouteExcludeSettings latestUserSettings]
+                                            callBack:nil
+                             generateGtfsItineraries:NO];
     [mainTable reloadData];
 }
 

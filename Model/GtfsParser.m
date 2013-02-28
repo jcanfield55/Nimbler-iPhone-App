@@ -1164,10 +1164,10 @@
             [arrStopTimesArray addObject:leg];
         } else {
             NSTimeInterval timeInterval = [toTimeOnly timeIntervalSinceDate:fromTimeOnly] + // time from fromTimeOnly to toTimeOnly
-            ([[leg startTime] timeIntervalSinceDate:[itinerary startTime]]*1.5);    // + enough extra time to reach this leg from startTime
+            ([[leg endTime] timeIntervalSinceDate:[itinerary startTime]]*2.0);    // + plenty enough extra time to reach this leg from startTime
             NSArray* arrStopTimes = [self getStopTimes:leg.to.stopId
                                          strFromStopID:leg.from.stopId
-                                             startDate:tripDate
+                                             startDate:addDateOnlyWithTime(tripDate, fromTimeOnly)
                                           timeInterval:timeInterval
                                                 TripId:@"XYZ-Do-Not-Exclude-Any-TripIDs"];
             [arrStopTimesArray addObject:arrStopTimes];
@@ -1199,7 +1199,8 @@
                 reqChunk.plan = plan;
                 reqChunk.type =[NSNumber numberWithInt:GTFS_ITINERARY];
                 reqChunk.gtfsItineraryPattern = itinerary;
-                reqChunk.earliestRequestedDepartTimeDate = tripDate; // assumes Depart
+                reqChunk.earliestRequestedDepartTimeDate = addDateOnlyWithTime(tripDate, fromTimeOnly); // assumes Depart
+                reqChunk.latestEndOfRequestRangeTimeDate = addDateOnlyWithTime(tripDate, toTimeOnly);
             }
             if (newItinerary) {
                 [reqChunk addItinerariesObject:newItinerary];
@@ -1208,6 +1209,7 @@
             [context deleteObject:newItinerary];
         }
     }
+    saveContext(context);
     return reqChunk;
 }
 

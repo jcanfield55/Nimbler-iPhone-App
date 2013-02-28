@@ -13,6 +13,14 @@
 #import "nc_AppDelegate.h"
 #import "ItineraryFromOTP.h"
 
+// Utility function for sorting sets of itineraries
+NSArray *sortedByStartTimeOnly(NSSet* itinerarySet)
+{
+    NSSortDescriptor* sd = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:YES];
+    return [itinerarySet sortedArrayUsingDescriptors:[NSArray arrayWithObject:sd]];
+}
+
+
 @interface Itinerary()
 {
     // Internal variables

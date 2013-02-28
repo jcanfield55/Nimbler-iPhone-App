@@ -72,7 +72,8 @@
             if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate]
                                                           departOrArrive:[parameters departOrArrive]
                                                      RouteExcludeSettings:[parameters routeExcludeSettings]
-                                                                callBack:self]) {
+                                                                callBack:self
+                                                 generateGtfsItineraries:NO]) {
                 if (matchingPlan.sortedItineraries.count == 0) {
                     // there are itineraries, but they were all excluded by the user
                     // TODO: create permanent solution
@@ -318,7 +319,8 @@
                 if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate]
                                                       departOrArrive:[planRequestParameters departOrArrive]
                                        RouteExcludeSettings:[planRequestParameters routeExcludeSettings]
-                                                            callBack:self]) {
+                                                            callBack:self
+                                             generateGtfsItineraries:NO]) {
                     [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
                     
                     // Call-back the appropriate VC with the new plan
@@ -406,8 +408,9 @@
     // Request sortedItineraries array with extremely large limits
     NSArray* testItinArray = [plan returnSortedItinerariesWithMatchesForDate:requestParams0.originalTripDate
                                                               departOrArrive:requestParams0.departOrArrive
-                                               RouteExcludeSettings:requestParams0.routeExcludeSettings
+                                                        RouteExcludeSettings:requestParams0.routeExcludeSettings
                                                                     callBack:self
+                                                     generateGtfsItineraries:true
                                                     planMaxItinerariesToShow:1000
                                             planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY
                                                  planMaxTimeForResultsToShow:(1000*60*60)];
