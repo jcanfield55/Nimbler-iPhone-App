@@ -194,7 +194,7 @@
         if (parameters.routeExcludeSettings && 
             [parameters.routeExcludeSettings settingForKey:BIKE_BUTTON]==SETTING_INCLUDE_ROUTE) {
             [params setObject:REQUEST_TRANSIT_MODE_TRANSIT_BIKE forKey:REQUEST_TRANSIT_MODE];
-            /* TODO, uncomment passing of the bike parameters once we ahve 
+            // TODO, uncomment passing of the bike parameters once we ahve
             UserPreferance* userPrefs = [UserPreferance userPreferance];
             [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleQuick]
                        forKey:REQUEST_BIKE_TRIANGLE_QUICK];
@@ -203,11 +203,31 @@
             [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleBikeFriendly]
                        forKey:REQUEST_BIKE_TRIANGLE_BIKE_FRIENDLY];
             [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeDistance] forKey:MAX_WALK_DISTANCE];
-             */
+            [params setObject:@"TRIANGLE" forKey:@"optimize"];
         } else {
             [params setObject:REQUEST_TRANSIT_MODE_TRANSIT forKey:REQUEST_TRANSIT_MODE];
         }
-        
+        NSMutableString *strAgencies = [[NSMutableString alloc] init];
+        NSMutableString *strAgenciesWithMode = [[NSMutableString alloc] init];
+        NSArray *allKeys = [[parameters.routeExcludeSettings excludeDictionaryInternal] allKeys];
+        for(int i=0;i<[allKeys count];i++){
+            if([parameters.routeExcludeSettings settingForKey:[allKeys objectAtIndex:i]]==SETTING_EXCLUDE_ROUTE) {
+                NSDictionary *agencyIdModeDictionary = [[NSUserDefaults standardUserDefaults] objectForKey:[allKeys objectAtIndex:i]];
+                NSString *routeType = returnRouteTypeFromLegMode([agencyIdModeDictionary objectForKey:MODE]);
+                if(routeType)
+                    [strAgenciesWithMode appendFormat:@"%@::%@,",[agencyIdModeDictionary objectForKey:AGENCY_ID],routeType];
+                else if([agencyIdModeDictionary objectForKey:AGENCY_ID])
+                    [strAgencies appendFormat:@"%@,",[agencyIdModeDictionary objectForKey:AGENCY_ID]];
+            }
+        }
+        if(strAgencies && strAgencies.length > 0){
+            NSString *agencies = [strAgencies substringToIndex:[strAgencies length]-1];
+            [params setObject:agencies forKey:BANNED_AGENCIES];
+        }
+        if(strAgenciesWithMode && strAgenciesWithMode.length > 0){
+            NSString *agencies = [strAgenciesWithMode substringToIndex:[strAgenciesWithMode length]-1];
+            [params setObject:agencies forKey:BANNED_AGENCIES_WITH_MODE];
+        }
         [params setObject:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] forKey:APPLICATION_TYPE];
         // Build the parameters into a resource string
         parameters.serverCallsSoFar = parameters.serverCallsSoFar + 1;
@@ -378,7 +398,7 @@
 // Callback from returnSortedItineraries method requesting additional OTP itineraries to fill out user request
 -(void)requestMoreOTPItinerariesFor:(Plan *)plan withParameters:(PlanRequestParameters *)parameters
 {
-    //TODO Handle callback
+    [self requestPlanFromOtpWithParameters:parameters];
 }
 
 

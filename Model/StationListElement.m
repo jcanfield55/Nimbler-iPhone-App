@@ -30,10 +30,10 @@
     
     RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[StationListElement class]];
     RKManagedObjectMapping* locationMapping = [LocationFromGoogle objectMappingForApi:GOOGLE_GEOCODER];
-     RKManagedObjectMapping* stopMapping = [PreloadedStop objectMappingforStop:apiType];
+    // RKManagedObjectMapping* stopMapping = [PreloadedStop objectMappingforStop:apiType];
     mapping.setDefaultValueForMissingAttributes = TRUE;
     locationMapping.setDefaultValueForMissingAttributes = TRUE;
-    stopMapping.setDefaultValueForMissingAttributes = TRUE;
+    //stopMapping.setDefaultValueForMissingAttributes = TRUE;
         
     // Make the mappings
     if (apiType==STATION_PARSER) {
@@ -44,7 +44,7 @@
         [mapping mapKeyPath:@"containsListId" toAttribute:@"containsListId"];
         [mapping mapKeyPath:@"agency" toAttribute:@"agency"];
         [mapping mapKeyPath:@"locationMember" toRelationship:@"location" withMapping:locationMapping];
-         [mapping mapKeyPath:@"gtfsStopMember" toRelationship:@"stop" withMapping:stopMapping];
+         //[mapping mapKeyPath:@"gtfsStopMember" toRelationship:@"stop" withMapping:stopMapping];
         
     }
     else {

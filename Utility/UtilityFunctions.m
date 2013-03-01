@@ -595,3 +595,25 @@ NSString *returnShortAgencyName(NSString *agencyName){
         return agencyName;
     }
 }
+
+NSString *returnRouteTypeFromLegMode(NSString *legMode){
+    legMode = [legMode lowercaseString];
+    if([legMode isEqualToString:@"tram"])
+        return @"0";
+    else if([legMode isEqualToString:@"subway"])
+        return @"1";
+    else if([legMode isEqualToString:@"rail"])
+        return @"2";
+    else if([legMode isEqualToString:@"bus"])
+        return @"3";
+    else if([legMode isEqualToString:@"ferry"])
+        return @"4";
+    else if([legMode isEqualToString:@"cable car"])
+        return @"5";
+    else if([legMode isEqualToString:@"gondola"])
+        return @"6";
+    else if([legMode isEqualToString:@"funicular"])
+        return @"7";
+    else
+        return nil;
+}

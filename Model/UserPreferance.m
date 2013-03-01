@@ -249,7 +249,6 @@ static UserPreferance* userPrefs;
     bikeTriangleFlat = fastVsFlat / denominator;
     bikeTriangleBikeFriendly = fastVsSafe / denominator;
     bikeTriangleQuick = (2 - fastVsFlat - fastVsSafe)/(2 * denominator);
-    
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:[NSNumber numberWithDouble:bikeTriangleFlat] forKey:BIKE_TRIANGLE_FLAT];
     [prefs setObject:[NSNumber numberWithDouble:bikeTriangleBikeFriendly] forKey:BIKE_TRIANGLE_BIKE_FRIENDLY];

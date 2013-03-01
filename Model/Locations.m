@@ -327,15 +327,15 @@
         typedFromString = typedFromStr0;   
         NSMutableArray *newArray = [NSMutableArray array];   
         for (Location *loc in startArray) {
-            if ([loc isMatchingTypedString:typedFromString]) {  // if loc matches the new string
-                [newArray addObject:loc];  //  add loc to the new array
-            }
+                if ([loc isMatchingTypedString:typedFromString]) {  // if loc matches the new string
+                    [newArray addObject:loc];  //  add loc to the new array
+                }
         }
         // Merge the results of typed string with newarray.
-        if(typedFromString.length >= 3){
-            NSArray *arrLocations = [self preloadStationLocationsMatchingTypedAddress:typedFromString];
-            [newArray addObjectsFromArray:arrLocations];
-        }
+//        if(typedFromString.length >= 3){
+//            NSArray *arrLocations = [self preloadStationLocationsMatchingTypedAddress:typedFromString];
+//            [newArray addObjectsFromArray:arrLocations];
+//        }
         NSArray *finalNewArray = [NSArray arrayWithArray:newArray];  // makes a non-mutable copy
         if (![finalNewArray isEqualToArray:sortedMatchingFromLocations]) { // if there is a change
             sortedMatchingFromLocations = finalNewArray;
@@ -375,15 +375,15 @@
         typedToString = typedToStr0;   
         NSMutableArray *newArray = [NSMutableArray array];   
         for (Location *loc in startArray) {
-            if ([loc isMatchingTypedString:typedToString]) {  // if loc matches the new string
-                [newArray addObject:loc];  //  add loc to the new array
-            }
+                if ([loc isMatchingTypedString:typedToString]) {  // if loc matches the new string
+                    [newArray addObject:loc];  //  add loc to the new array
+                }
         }
         // Merge the results of typed string with newarray.
-        if(typedToString.length >= 3){
-            NSArray *arrLocations = [self preloadStationLocationsMatchingTypedAddress:typedToString];
-            [newArray addObjectsFromArray:arrLocations];
-        }
+//        if(typedToString.length >= 3){
+//            NSArray *arrLocations = [self preloadStationLocationsMatchingTypedAddress:typedToString];
+//            [newArray addObjectsFromArray:arrLocations];
+//        }
         NSArray *finalNewArray = [NSArray arrayWithArray:newArray];  // makes a non-mutable copy
         if (![finalNewArray isEqualToArray:sortedMatchingToLocations]) { // if there is a change
             sortedMatchingToLocations = finalNewArray;

@@ -332,5 +332,4 @@ static Locations *locations;
         return false;
 }
 
-
 @end

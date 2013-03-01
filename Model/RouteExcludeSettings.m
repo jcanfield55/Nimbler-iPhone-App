@@ -221,6 +221,9 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
                 if (handling) {
                     if ([handling isEqualToString:BY_AGENCY]) {
                         routeExclSetting.key = returnShortAgencyName(leg.agencyName);
+                        NSDictionary *agencyIdModeDictionary = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,AGENCY_ID,nil];
+                        [[NSUserDefaults standardUserDefaults] setObject:agencyIdModeDictionary forKey:routeExclSetting.key];
+                        [[NSUserDefaults standardUserDefaults] synchronize];
                         
                     } else {  // BY_RAIL_BUS
                         NSString *railOrBus = (leg.isBus ? @"Bus" : @"Rail");
@@ -228,6 +231,9 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
                             railOrBus = (leg.isBus ? @"Bus" : @"Tram");
                         }
                         routeExclSetting.key = [NSString stringWithFormat:@"%@ %@", returnShortAgencyName(leg.agencyName), railOrBus];
+                        NSDictionary *agencyIdModeDictionary = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,AGENCY_ID,leg.mode,MODE,nil];
+                        [[NSUserDefaults standardUserDefaults] setObject:agencyIdModeDictionary forKey:routeExclSetting.key];
+                        [[NSUserDefaults standardUserDefaults] synchronize];
                     }
                     routeExclSetting.setting = [self settingForKey:routeExclSetting.key];
                     [returnArray addObject:routeExclSetting];

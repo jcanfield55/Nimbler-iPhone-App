@@ -53,7 +53,7 @@
                 RKObjectMapper* mapper = [RKObjectMapper mapperWithObject:parsedData mappingProvider:mappingProvider];
                 RKObjectMappingResult* result = [mapper performMapping];
                 if (result) {
-                    // NSArray* resultArray = [result asCollection];     TODO Ashvin: this variable is unused. Do we need it?  John?
+                     NSArray* resultArray = [result asCollection];
                 }
             }
         }

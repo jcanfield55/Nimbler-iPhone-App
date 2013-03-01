@@ -75,6 +75,7 @@ typedef enum {
 - (BOOL)isBus;
 - (BOOL)isHeavyTrain; // Note: legs that are isHeavyTrain=true are also isTrain=true
 - (BOOL)isTrain;
+-(BOOL)isFerry;
 
 // Returns leg duration as an NSTimeInterval
 -(NSTimeInterval)durationTimeInterval;

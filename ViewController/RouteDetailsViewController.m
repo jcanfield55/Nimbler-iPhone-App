@@ -141,9 +141,9 @@ NSUserDefaults *prefs;
                                        @"img_legTrain", @"img_legTrainSelect",
                                        @"img_legHeavyTrain", @"img_legHeavyTrainSelect",
                                        @"img_legBus", @"img_legBusSelect",
-                                       @"img_legWalk", @"img_legWalkSelect", 
-                                       @"img_backSelect", @"img_backUnSelect", 
-                                       @"img_forwardSelect", @"img_forwardUnSelect",@"img_bicycle", @"img_bicycleSelect", nil];
+                                       @"img_legWalk", @"img_legWalkSelect",
+                                       @"img_backSelect", @"img_backUnSelect",
+                                       @"img_forwardSelect", @"img_forwardUnSelect",@"img_bicycle", @"img_bicycleSelect",@"img_legFerry",@"img_legFerrySelect", nil];
             imageDictionary = [[NSMutableDictionary alloc] initWithCapacity:[imageNameArray count]];
             for (NSString* filename in imageNameArray) {
                 [imageDictionary setObject:[UIImage imageNamed:filename] forKey:filename];
@@ -340,6 +340,9 @@ NSUserDefaults *prefs;
             }
             else if([leg isBike]){
                 [imgFileName appendString:@"img_bicycle"];
+            }
+            else if([leg isFerry]){
+                [imgFileName appendString:@"img_legFerry"];
             }
         }
  

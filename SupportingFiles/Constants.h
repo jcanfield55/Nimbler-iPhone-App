@@ -53,8 +53,8 @@
 // Preload file variables
 #define CALTRAIN_PRELOAD_LOCATION_FILE     @"caltrain.json"
 #define BART_PRELOAD_LOCATION_FILE         @"bart.json"
-#define ACTRANSIT_PRELOAD_LOCATION_FILE         @"ac-transit.json"
-#define SFMUNI_PRELOAD_LOCATION_FILE         @"sf-muni.json"
+#define ACTRANSIT_PRELOAD_LOCATION_FILE         @"ac-transit1.json"
+#define SFMUNI_PRELOAD_LOCATION_FILE         @"sf-muni1.json"
 
 #define CALTRAIN_BUNDLE_IDENTIFIER         @"com.Nimbler.Nimbler-Caltrain"
 #define BART_BUNDLE_IDENTIFIER         @"com.Nimbler.Nimbler-BART"
@@ -467,7 +467,8 @@
 #define OTP_SUBWAY_MODE     @"SUBWAY"
 #define OTP_TRAM_MODE       @"TRAM"
 #define OTP_BUS_MODE        @"BUS"
-
+#define OTP_CABLE_CAR       @"cable car"
+#define OTP_FERRY           @"ferry"
 
 //US-184 Constant
 #define CALTRAIN_LOCAL                 @"Local"
@@ -504,5 +505,8 @@
 #define ALL_STATION    @"all_st"
 
 #define EXCLUDE_SETTINGS_DICTIONARY @"ExcludeSettingsDictionary"
-
+#define AGENCY_ID @"agencyId"
+#define MODE @"mode"
+#define BANNED_AGENCIES @"bannedAgencies"
+#define BANNED_AGENCIES_WITH_MODE @"bannedAgenciesWithMode"
 

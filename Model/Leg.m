@@ -478,7 +478,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 -(BOOL)isTrain
 {
     if ([[self mode] isEqualToString:OTP_RAIL_MODE] || [[self mode] isEqualToString:OTP_TRAM_MODE] ||
-        [[self mode] isEqualToString:OTP_SUBWAY_MODE]) {
+        [[self mode] isEqualToString:OTP_SUBWAY_MODE] || [[[self mode] lowercaseString] isEqualToString:OTP_CABLE_CAR]) {
         return true;
     } // else
     return false;
@@ -496,6 +496,13 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         return true;   
     } 
     return false; 
+}
+-(BOOL)isFerry
+{
+    if ([[[self mode] lowercaseString] isEqualToString:OTP_FERRY]) {
+        return true;
+    }
+    return false;
 }
 
 // return false if leg is walk or bicycle otherwise return true.

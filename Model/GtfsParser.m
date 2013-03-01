@@ -1021,10 +1021,10 @@
         if(!arrRealTimes || [arrRealTimes count] == 0)
             return nil;
         NSMutableArray *arrRealtime = [[NSMutableArray alloc] init];
-        NSDate *timeOnly = addDateOnlyWithTimeOnly(dateOnlyFromDate([NSDate date]),timeOnlyFromDate(time));
+        NSDate *timeOnly = time;
         for (int i=0;i< [arrRealTimes count];i++) {
             NSDictionary *dictRealTime = [arrRealTimes objectAtIndex:i];
-            NSDate * realTime = addDateOnlyWithTimeOnly(dateOnlyFromDate([NSDate date]),timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:[[dictRealTime objectForKey:@"epochTime"] doubleValue]/1000]));
+            NSDate * realTime = [NSDate dateWithTimeIntervalSince1970:[[dictRealTime objectForKey:@"epochTime"] doubleValue]/1000];
             if([realTime compare:timeOnly] == NSOrderedDescending || [realTime isEqualToDate:timeOnly]){
                 [arrRealtime addObject:dictRealTime];
             }
@@ -1299,7 +1299,7 @@
         NSDate *startTimeOnly = addDateOnlyWithTimeOnly(dateOnlyFromDate([NSDate date]), timeOnlyFromDate(leg.startTime));
         NSDictionary *prediction = [self returnMaximumRealTime:predictions];
         NSDate *realTimeBoundry = addDateOnlyWithTimeOnly(dateOnlyFromDate([NSDate date]),timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"epochTime"] doubleValue]/1000.0)]));
-        if([startTimeOnly compare:realTimeBoundry] == NSOrderedAscending){
+        if([startTimeOnly compare:realTimeBoundry] == NSOrderedAscending || [startTimeOnly isEqualToDate:realTimeBoundry]){
             if(![itinerary isRealTimeItinerary])
                 itinerary.hideItinerary = true;
         }

@@ -79,7 +79,6 @@
 - (BOOL)isCurrentLocation;  // true if receiver is CurrentLocation
 - (BOOL)isReverseGeoValid; // Used for currentLocation.  True if there is a reverseGeoLocation and it is within the time or distance thresholds to be considered still fresh
 
-
 @end
 
 @interface Location (CoreDataGeneratedAccessors)
