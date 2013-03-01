@@ -34,6 +34,9 @@
 // time it has an update
 - (void)requestPlanWithParameters:(PlanRequestParameters *)parameters;
 
+// Checks if more itineraries are needed for this plan, and if so requests them from the server
+-(void)requestMoreItinerariesIfNeeded:(Plan *)plan parameters:(PlanRequestParameters *)requestParams0;
+
 // Fetches array of plans going to the same to & from Location
 // Normally will return just one plan, but could return more if the plans have not been consolidated
 - (NSArray *)fetchPlansWithToLocation:(Location *)toLocation fromLocation:(Location *)fromLocation;

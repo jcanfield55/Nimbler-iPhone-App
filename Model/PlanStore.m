@@ -30,7 +30,6 @@
 
 // Internal methods
 -(void)requestPlanFromOtpWithParameters:(PlanRequestParameters *)parameters;
--(void)requestMoreItinerariesIfNeeded:(Plan *)matchingPlan parameters:(PlanRequestParameters *)requestParams0;
 
 @end
 
@@ -71,25 +70,20 @@
             Plan* matchingPlan = [matchingPlanArray objectAtIndex:0]; // Take the first matching plan
             if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate]
                                                           departOrArrive:[parameters departOrArrive]
-                                                     RouteExcludeSettings:[parameters routeExcludeSettings]
-                                                                callBack:self
-                                                 generateGtfsItineraries:NO]) {
+                                                    routeExcludeSettings:[parameters routeExcludeSettings]
+                                                 generateGtfsItineraries:YES]) {
                 if (matchingPlan.sortedItineraries.count == 0) {
-                    // there are itineraries, but they were all excluded by the user
-                    // TODO: create permanent solution
-                    // Temporary solution:  ask for more itineraries a certain # of times
                     logEvent(FLURRY_ROUTE_NOT_IN_CACHE,
                              FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
                              FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
                              nil, nil, nil, nil);
-                    [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
+                } else {
+                    NIMLOG_EVENT1(@"Matches found in plan cache");
+                    logEvent(FLURRY_ROUTE_FROM_CACHE,
+                             FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
+                             FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
+                             nil, nil, nil, nil);
                 }
-                
-                NIMLOG_EVENT1(@"Matches found in plan cache");
-                logEvent(FLURRY_ROUTE_FROM_CACHE,
-                         FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
-                         FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
-                         nil, nil, nil, nil);
                 [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
                 PlanRequestStatus status = PLAN_STATUS_OK;
                 ToFromViewController* toFromVC = [[nc_AppDelegate sharedInstance] toFromViewController];
@@ -318,9 +312,8 @@
                 // get Unique Itinerary from Plan.
                 if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate]
                                                       departOrArrive:[planRequestParameters departOrArrive]
-                                       RouteExcludeSettings:[planRequestParameters routeExcludeSettings]
-                                                            callBack:self
-                                             generateGtfsItineraries:NO]) {
+                                                routeExcludeSettings:[planRequestParameters routeExcludeSettings]
+                                             generateGtfsItineraries:YES]) {
                     [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
                     
                     // Call-back the appropriate VC with the new plan
@@ -388,12 +381,6 @@
     //TODO Handle callback
 }
 
-// Callback from returnSortedItineraries requesting additional GTFS itineraries to fill out user request
--(void)requestMoreGTFSItinerariesFor:(Plan *)plan itineraryPattern:(Itinerary *)itineraryPattern tripDate:(NSDate *)tripDate
-{
-    // TODO handle callback
-}
-
 
 // Checks if more itineraries are needed for this plan, and if so requests them from the server
 -(void)requestMoreItinerariesIfNeeded:(Plan *)plan parameters:(PlanRequestParameters *)requestParams0
@@ -401,53 +388,29 @@
     if (requestParams0.serverCallsSoFar >= PLAN_MAX_SERVER_CALLS_PER_REQUEST) {
         return; // Return if we have already made the max number of calls
     }
-    if ([[[[plan sortedItineraries] lastObject] sortedLegs] count] == 1 &&
-        ![[[[[plan sortedItineraries] lastObject] sortedLegs] objectAtIndex:0] isScheduled]) {
+    if ([plan haveOnlyUnscheduledItineraries]) {
         return; // DE186 fix, do not request more itineraries if we currently are have walk-only or bike-only itinerary
     }
-    // Request sortedItineraries array with extremely large limits
-    NSArray* testItinArray = [plan returnSortedItinerariesWithMatchesForDate:requestParams0.originalTripDate
-                                                              departOrArrive:requestParams0.departOrArrive
-                                                        RouteExcludeSettings:requestParams0.routeExcludeSettings
-                                                                    callBack:self
-                                                     generateGtfsItineraries:true
-                                                    planMaxItinerariesToShow:1000
-                                            planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY
-                                                 planMaxTimeForResultsToShow:(1000*60*60)];
-    if (!testItinArray) {
-        logError(@"PlanStore->requestMoreItinerariesIfNeeded:",@"No sortedItineraries in plan in requestMoreItinerariesIfNeeded");
-        return; // return if there are no matching itineraries in the original request
-    }
+    // Find out how far the matching OTP itineraries go with extremely large limits
+    NSDate* otpRequestDate = [plan nextOtpServerDateToCallFor:requestParams0.originalTripDate
+                                               departOrArrive:requestParams0.departOrArrive
+                                         routeExcludeSettings:requestParams0.routeExcludeSettings
+                             planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY
+                                  planMaxTimeForResultsToShow:(100*60*60)];
+    
     PlanRequestParameters* params = [PlanRequestParameters copyOfPlanRequestParameters:requestParams0];
-    if (testItinArray.count == 0) { // there are itineraries, but all are excluded
-        // TODO: create permanent solution
-        // Temporary solution -- just look for itineraries one hour later...
-        params.thisRequestTripDate = [requestParams0.thisRequestTripDate dateByAddingTimeInterval:(60.0*60.0)];
-                                      
-        NIMLOG_EVENT1(@"Requesting additional plan with parameters: %@", params);
-        [self requestPlanFromOtpWithParameters:params];
-        return;
+    
+    if (params.isDestinationToFromVC) {
+        // Reset destination to routeOptionsViewController if not there already
+        params.planDestination = [((ToFromViewController *) params.planDestination) routeOptionsVC];
     }
-    NSDate* firstItinTimeOnly = [[testItinArray objectAtIndex:0] startTimeOnly];
-    NSDate* lastItinTimeOnly = [[testItinArray lastObject] startTimeOnly];
-    if ([testItinArray count] < PLAN_MAX_ITINERARIES_TO_SHOW &&
-        [lastItinTimeOnly timeIntervalSinceDate:firstItinTimeOnly] < PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW) {
-        // If we are below our max parameters
-        if (params.isDestinationToFromVC) {
-            // Reset destination to routeOptionsViewController if not there already
-            params.planDestination = [((ToFromViewController *) params.planDestination) routeOptionsVC];
-        }
-        if (params.departOrArrive == DEPART) {
-            params.thisRequestTripDate = addDateOnlyWithTime(dateOnlyFromDate(params.thisRequestTripDate),
-                                                             [NSDate dateWithTimeInterval:PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS
-                                                                                sinceDate:lastItinTimeOnly]);
-        } else { // departOrArrive = ARRIVE
-            NSDate* firstItinEndTimeOnly = [[testItinArray objectAtIndex:0] endTimeOnly];
-            params.thisRequestTripDate = addDateOnlyWithTime(dateOnlyFromDate(params.thisRequestTripDate),
-                                                             [NSDate dateWithTimeInterval:(-PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS)
-                                                                                sinceDate:firstItinEndTimeOnly]);
-        }
-        NIMLOG_EVENT1(@"Requesting additional plan with parameters: %@", params);
+    if (params.departOrArrive == DEPART &&
+        [otpRequestDate timeIntervalSinceDate:requestParams0.originalTripDate] < PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW) {
+        params.thisRequestTripDate = [otpRequestDate dateByAddingTimeInterval:PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS];
+        [self requestPlanFromOtpWithParameters:params];
+    } else if (params.departOrArrive == ARRIVE &&
+               [otpRequestDate timeIntervalSinceDate:requestParams0.originalTripDate] > -PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW){
+        params.thisRequestTripDate = [otpRequestDate dateByAddingTimeInterval:(-PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS)];
         [self requestPlanFromOtpWithParameters:params];
     }
 }

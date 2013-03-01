@@ -177,11 +177,15 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                  @"planRequestParameters = nil, skipping excludeButton updates");
         return;
     }
-    [plan prepareSortedItinerariesWithMatchesForDate:planRequestParameters.originalTripDate
-                                      departOrArrive:planRequestParameters.departOrArrive
-                                RouteExcludeSettings:[RouteExcludeSettings latestUserSettings]
-                                            callBack:nil
-                             generateGtfsItineraries:NO];
+    
+    PlanRequestParameters* newParameters = [PlanRequestParameters copyOfPlanRequestParameters:planRequestParameters];
+    newParameters.thisRequestTripDate = newParameters.originalTripDate;
+    newParameters.serverCallsSoFar = 0;
+    [plan prepareSortedItinerariesWithMatchesForDate:newParameters.originalTripDate
+                                      departOrArrive:newParameters.departOrArrive
+                                routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
+                                generateGtfsItineraries:YES];
+    [planStore requestMoreOTPItinerariesFor:self.plan withParameters:newParameters];
     [mainTable reloadData];
 }
 

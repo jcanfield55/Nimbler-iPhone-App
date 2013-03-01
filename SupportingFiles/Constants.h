@@ -10,7 +10,7 @@
 
 #endif
 
-#define AUTOMATED_TESTING_SKIP_NCAPPDELEGATE 1 // if 1, skips nc_AppDelegate didFinishLaunchingWithOptions so we get a clean tests run
+#define AUTOMATED_TESTING_SKIP_NCAPPDELEGATE 0 // if 1, skips nc_AppDelegate didFinishLaunchingWithOptions so we get a clean tests run
 
 #define TRIP_GENERATE_URL     @"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/"
 //#define TRIP_GENERATE_URL @"http://ec2-23-22-169-158.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"

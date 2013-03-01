@@ -207,8 +207,7 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
     // Get the itineraries that are relevant to this particular tripDate but with no exclusions
     NSArray* relevantItineraries = [plan returnSortedItinerariesWithMatchesForDate:parameters.originalTripDate
                                                                     departOrArrive:parameters.departOrArrive
-                                                               RouteExcludeSettings:nil
-                                                                          callBack:nil
+                                                              routeExcludeSettings:nil
                                                            generateGtfsItineraries:NO
                                                           planMaxItinerariesToShow:PLAN_MAX_ITINERARIES_TO_SHOW
                                                   planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY

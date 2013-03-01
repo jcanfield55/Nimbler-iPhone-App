@@ -19,14 +19,12 @@
 @class RouteExcludeSettings;
 
 @protocol PlanRequestMoreItinerariesDelegate
-
 @required
 /**
  * Callback routines that returnSortedItinerariesWithMatchesForDate calls when it detects the need for 
  * more OTP or GTFS itineraries
  */
 -(void)requestMoreOTPItinerariesFor:(Plan *)plan withParameters:(PlanRequestParameters *)parameters;
--(void)requestMoreGTFSItinerariesFor:(Plan *)plan itineraryPattern:(Itinerary *)itineraryPattern tripDate:(NSDate *)tripDate;
 @end
 
 
@@ -97,13 +95,11 @@
 
 // Looks for matching itineraries for the requestDate and departOrArrive
 // routeExcludeSettings specifies which routes / modes the user specifically wants to include/exclude from results
-// callBack is called if the method detects that we need more OTP or gtfs itineraries to show the user
 // If it finds some, returns TRUE and updates the sortedItineraries property with just those itineraries
 // If it does not find any, returns false and leaves sortedItineraries unchanged
 - (BOOL)prepareSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
                                     departOrArrive:(DepartOrArrive)depOrArrive
-                               RouteExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
-                                          callBack:(id <PlanRequestMoreItinerariesDelegate>)delegate
+                              routeExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
                            generateGtfsItineraries:(BOOL)generateGtfsItinaries;
 
 
@@ -113,11 +109,9 @@
 
 
 // returnSortedItinerariesWithMatchesForDate  -- part of Plan Caching (US78) implementation
-// returnSortedItinerariesWithMatchesForDate  -- part of Plan Caching (US78) implementation
 // Helper routine called by prepareSortedItinerariesWithMatchesForDate
 // Looks for matching itineraries for the requestDate and departOrArrive
 // routeExcludeSettings specifies which routes / modes the user specifically wants to include/exclude from results
-// callBack is called if the method detects that we need more OTP or gtfs itineraries to show the user
 // If it finds some itineraries, returns a sorted array of the matching itineraries
 // Returned array will have no more than planMaxItinerariesToShow itineraries, spanning no more
 // than planMaxTimeForResultsToShow seconds.
@@ -125,8 +119,7 @@
 // If there are no matching itineraries, returns nil
 - (NSArray *)returnSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
                                         departOrArrive:(DepartOrArrive)depOrArrive
-                                   RouteExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
-                                              callBack:(id <PlanRequestMoreItinerariesDelegate>)delegate
+                                  routeExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
                                generateGtfsItineraries:(BOOL)generateGtfsItinaries
                               planMaxItinerariesToShow:(int)planMaxItinerariesToShow
                       planBufferSecondsBeforeItinerary:(int)planBufferSecondsBeforeItinerary
@@ -150,8 +143,18 @@
                    intervalAfterRequest:(NSTimeInterval)intervalAfterRequest
                          departOrArrive:(DepartOrArrive)depOrArrive;
 
+// Returns the next OtpServer request to call (called from PlanStore -> requestMoreItinerariesIfNeeded
+-(NSDate *)nextOtpServerDateToCallFor:(NSDate *)requestDate
+                       departOrArrive:(DepartOrArrive)depOrArrive
+                 routeExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
+     planBufferSecondsBeforeItinerary:(int)planBufferSecondsBeforeItinerary
+          planMaxTimeForResultsToShow:(int)planMaxTimeForResultsToShow;
+
 // Returns unique Itineraries array from plan sorted by StartDates
 - (NSArray *)uniqueItineraries;
+
+// Returns true if all the legs in all the itineraries are unscheduled
+- (BOOL)haveOnlyUnscheduledItineraries;
 
 // Generate 16 character random string and set it as legId for scheduled leg.
 - (void) setLegsId;

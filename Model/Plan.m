@@ -301,19 +301,16 @@
 
 // Looks for matching itineraries for the requestDate and departOrArrive
 // routeExcludeSettings specifies which routes / modes the user specifically wants to include/exclude from results
-// callBack is called if the method detects that we need more OTP or gtfs itineraries to show the user
 // If it finds some, returns TRUE and updates the sortedItineraries property with just those itineraries
 // If it does not find any, returns false and leaves sortedItineraries unchanged
 - (BOOL)prepareSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
                                     departOrArrive:(DepartOrArrive)depOrArrive
-                               RouteExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
-                                          callBack:(id <PlanRequestMoreItinerariesDelegate>)delegate
+                              routeExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
                            generateGtfsItineraries:(BOOL)generateGtfsItinaries
 {
     NSArray* newSortedItineraries=[self returnSortedItinerariesWithMatchesForDate:requestDate
                                                                    departOrArrive:depOrArrive
-                                                              RouteExcludeSettings:routeExcludeSettings
-                                                                         callBack:delegate
+                                                             routeExcludeSettings:routeExcludeSettings
                                                           generateGtfsItineraries:generateGtfsItinaries
                                                          planMaxItinerariesToShow:PLAN_MAX_ITINERARIES_TO_SHOW
                                                  planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY
@@ -333,8 +330,7 @@
 {
     return [self prepareSortedItinerariesWithMatchesForDate:requestDate
                                              departOrArrive:depOrArrive
-                                        RouteExcludeSettings:nil
-                                                   callBack:nil
+                                       routeExcludeSettings:nil
                                     generateGtfsItineraries:true];
 }
 
@@ -343,16 +339,15 @@
 // Helper routine called by prepareSortedItinerariesWithMatchesForDate
 // Looks for matching itineraries for the requestDate and departOrArrive
 // routeExcludeSettings specifies which routes / modes the user specifically wants to include/exclude from results
-// callBack is called if the method detects that we need more OTP or gtfs itineraries to show the user
 // If it finds some itineraries, returns a sorted array of the matching itineraries
 // Returned array will have no more than planMaxItinerariesToShow itineraries, spanning no more
 // than planMaxTimeForResultsToShow seconds.
 // It will include itineraries starting up to planBufferSecondsBeforeItinerary before requestDate
-// If there are no matching itineraries, returns nil
+// If there are no matching itineraries and routeExcludeSettings is nil, returns nil
+// Otherwise no matching itineraries case will return a 0 count array.  
 - (NSArray *)returnSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
                                         departOrArrive:(DepartOrArrive)depOrArrive
-                                   RouteExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
-                                              callBack:(id <PlanRequestMoreItinerariesDelegate>)delegate
+                                  routeExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
                                generateGtfsItineraries:(BOOL)generateGtfsItinaries
                               planMaxItinerariesToShow:(int)planMaxItinerariesToShow
                       planBufferSecondsBeforeItinerary:(int)planBufferSecondsBeforeItinerary
@@ -391,78 +386,23 @@
             }
         }  // end of uniqueItineraries loop
         
-        
-        // Create a set of all OTP PlanRequestChunks that match the requestDate services, time, and routeExcludeSettings
-        // Iteratively connect PlanRequestChunks together if they are adjacent in time
-        NSMutableSet* reqChunkSet = [NSMutableSet setWithSet:[self requestChunks]];
-        NSMutableSet* matchingReqChunks = [[NSMutableSet alloc] initWithCapacity:10];
-        NSDate* connectingReqDate = requestDate; // connectingReqDate will move to connect adjoining request chunks
-        NSDate* newConnectingReqDate;
-        int loopsExecuted = 0;
-        do {
-            newConnectingReqDate = nil;
-            // Collect the req
-            for (PlanRequestChunk* reqChunk in reqChunkSet) {
-                if ([reqChunk isOTP] &&
-                    [reqChunk doAllItineraryServiceDaysMatchDate:connectingReqDate] &&
-                    [reqChunk doesCoverTheSameTimeAs:connectingReqDate departOrArrive:depOrArrive] &&
-                    (!routeExcludeSettings || [[reqChunk routeExcludeSettings] isEquivalentTo:routeExcludeSettings])) {
-                        
-                    [matchingReqChunks addObject:reqChunk];
-                    
-                    // Compute newConnectingReqDate
-                    NSDate* possibleNewConnReqDate;
-                    if (depOrArrive == DEPART) {
-                        NSDate* lastItinTimeOnly = [reqChunk latestTimeFor:depOrArrive];
-                        possibleNewConnReqDate = addDateOnlyWithTime(dateOnlyFromDate(requestDate),
-                                                                     [NSDate dateWithTimeInterval:PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS
-                                                                                        sinceDate:lastItinTimeOnly]);
-                        if (!newConnectingReqDate ||
-                            [newConnectingReqDate compare:possibleNewConnReqDate] == NSOrderedAscending) {
-                            newConnectingReqDate = possibleNewConnReqDate;
-                        }
-                    } else { // depOrArrive = ARRIVE
-                        NSDate* firstItinEndTimeOnly = [reqChunk earliestTimeFor:depOrArrive];
-                        possibleNewConnReqDate = addDateOnlyWithTime(dateOnlyFromDate(requestDate),
-                                                                     [NSDate dateWithTimeInterval:(-PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS)
-                                                                                        sinceDate:firstItinEndTimeOnly]);
-                        if (!newConnectingReqDate ||
-                            [newConnectingReqDate compare:possibleNewConnReqDate] == NSOrderedDescending) {
-                            newConnectingReqDate = possibleNewConnReqDate;
-                        }
+        // collect all the OTP itineraries that have valid GTFS data and are in the right time range
+        for (Itinerary* itin in [self itineraries]) {
+            if ([itin isOTPItinerary] &&
+                ![itin hideItinerary] &&
+                [itin isCurrentVsGtfsFilesIn:[self transitCalendar]] &&
+                [itin isWithinRequestTime:requestDate
+                    intervalBeforeRequest:planBufferSecondsBeforeItinerary
+                     intervalAfterRequest:planMaxTimeForResultsToShow
+                           departOrArrive:depOrArrive]) {
+                    if (!routeExcludeSettings || [routeExcludeSettings isItineraryIncluded:itin]) {  // if not an excluded itinerary
+                        [matchingItineraries addObject:itin];
                     }
                 }
-            }
-            connectingReqDate = newConnectingReqDate;
-            loopsExecuted++;
-            if (loopsExecuted == 25) {
-                logError(@"PlanStore -> returnSortedItinerariesWithMatchesForDate",
-                         @"returnSortedItinerariesWithMatchesForDate loopsExecuted unexpectedly reached 25");
-            }
-        } while (newConnectingReqDate && loopsExecuted < 25);
-        
-        
-
-        // collect all the itineraries that have valid GTFS data and are in the right time range
-        for (PlanRequestChunk* reqChunk in matchingReqChunks) {
-            for (Itinerary* itin in [reqChunk itineraries]) {                
-                if ([itin isCurrentVsGtfsFilesIn:[self transitCalendar]] &&
-                    ![itin hideItinerary] &&
-                    [itin isWithinRequestTime:requestDate
-                        intervalBeforeRequest:planBufferSecondsBeforeItinerary
-                         intervalAfterRequest:planMaxTimeForResultsToShow
-                               departOrArrive:depOrArrive]) {
-                        if (!routeExcludeSettings || [routeExcludeSettings isItineraryIncluded:itin]) {  // if not an excluded itinerary
-                            [matchingItineraries addObject:itin];
-                        }
-                    }
-            }
         }
-        
-        if ([matchingItineraries count] == 0) {
+        if (!routeExcludeSettings && [matchingItineraries count] == 0) {
             return nil;
         }
-        
         
         // Check for suboptimal itineraries or equivalent itineraries
         NSMutableSet *optimalItineraries = [NSMutableSet setWithSet:matchingItineraries];
@@ -622,6 +562,72 @@
     }
 }
 
+// Returns the next OtpServer request to call (called from PlanStore -> requestMoreItinerariesIfNeeded
+-(NSDate *)nextOtpServerDateToCallFor:(NSDate *)requestDate
+                       departOrArrive:(DepartOrArrive)depOrArrive
+                 routeExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
+     planBufferSecondsBeforeItinerary:(int)planBufferSecondsBeforeItinerary
+          planMaxTimeForResultsToShow:(int)planMaxTimeForResultsToShow
+{
+    
+    // Create a set of all OTP PlanRequestChunks that match the requestDate services, time, and routeExcludeSettings
+    // Iteratively connect PlanRequestChunks together if they are adjacent in time
+    // This will tell us for what time (if any) we need to ask for more OTP itineraries to make sure we have all the
+    // unique itinerary patterns we need
+    NSMutableSet* reqChunkSet = [NSMutableSet setWithSet:[self requestChunks]];
+    NSMutableSet* matchingReqChunks = [[NSMutableSet alloc] initWithCapacity:10];
+    NSDate* connectingReqDate = requestDate; // connectingReqDate will move to connect adjoining request chunks
+    NSDate* newConnectingReqDate;
+    int loopsExecuted = 0;
+    do {
+        newConnectingReqDate = nil;
+        // Collect the req
+        for (PlanRequestChunk* reqChunk in reqChunkSet) {
+            if ([reqChunk isOTP] &&
+                [reqChunk doAllItineraryServiceDaysMatchDate:connectingReqDate] &&
+                [reqChunk doesCoverTheSameTimeAs:connectingReqDate departOrArrive:depOrArrive] &&
+                (!routeExcludeSettings || [[reqChunk routeExcludeSettings] isEquivalentTo:routeExcludeSettings])) {
+                
+                [matchingReqChunks addObject:reqChunk];
+                
+                // Compute newConnectingReqDate
+                NSDate* possibleNewConnReqDate;
+                if (depOrArrive == DEPART) {
+                    NSDate* lastItinTimeOnly = [reqChunk latestTimeFor:depOrArrive];
+                    possibleNewConnReqDate = addDateOnlyWithTime(dateOnlyFromDate(requestDate),
+                                                                 [NSDate dateWithTimeInterval:PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS
+                                                                                    sinceDate:lastItinTimeOnly]);
+                    if (!newConnectingReqDate ||
+                        [newConnectingReqDate compare:possibleNewConnReqDate] == NSOrderedAscending) {
+                        newConnectingReqDate = possibleNewConnReqDate;
+                    }
+                } else { // depOrArrive = ARRIVE
+                    NSDate* firstItinEndTimeOnly = [reqChunk earliestTimeFor:depOrArrive];
+                    possibleNewConnReqDate = addDateOnlyWithTime(dateOnlyFromDate(requestDate),
+                                                                 [NSDate dateWithTimeInterval:(-PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS)
+                                                                                    sinceDate:firstItinEndTimeOnly]);
+                    if (!newConnectingReqDate ||
+                        [newConnectingReqDate compare:possibleNewConnReqDate] == NSOrderedDescending) {
+                        newConnectingReqDate = possibleNewConnReqDate;
+                    }
+                }
+            }
+        }
+        if (newConnectingReqDate) {
+            connectingReqDate = newConnectingReqDate;
+        }
+        loopsExecuted++;
+        if (loopsExecuted == 25) {
+            logError(@"PlanStore -> nextOtpServerDateToCallFor",
+                     [NSString stringWithFormat:
+                      @"loopsExecuted unexpectedly reached 25.  self.requestChunks.count = %d", self.requestChunks.count]);
+        }
+    } while (newConnectingReqDate && loopsExecuted < 25);
+    
+    return connectingReqDate;
+
+}
+
 
 // Variant of the above method without using an includeExcludeDictionary or callback or generating any gtfsItineraries
 - (NSArray *)returnSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
@@ -632,8 +638,7 @@
 {
     return [self returnSortedItinerariesWithMatchesForDate:requestDate
                                             departOrArrive:depOrArrive
-                                      RouteExcludeSettings:nil
-                                                  callBack:nil
+                                      routeExcludeSettings:nil
                                    generateGtfsItineraries:false
                                   planMaxItinerariesToShow:planMaxItinerariesToShow
                           planBufferSecondsBeforeItinerary:planBufferSecondsBeforeItinerary
@@ -784,4 +789,14 @@
     return dictButtonTitles;
 }
 
+// Returns true if all the legs in all the itineraries are unscheduled
+- (BOOL)haveOnlyUnscheduledItineraries
+{
+    for (Itinerary* itin in [self itineraries]) {
+        if (![itin haveOnlyUnScheduledLeg]) {
+            return false;
+        }
+    }
+    return true;
+}
 @end
