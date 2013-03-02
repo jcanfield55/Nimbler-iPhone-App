@@ -49,9 +49,8 @@
 @property (nonatomic, strong) Location* lastRequestReverseGeoLocation;
 
 @property (nonatomic, strong) NSDictionary* addressComponentDictionary; // Dictionary of address components (generated dynamically by subclasses; not stored in Core Data)
-
 @property (nonatomic, strong) NSSet* stationListElement;  // Set of any stationListElements pointing to this location
-
+@property (nonatomic, strong) NSNumber *excludeFromSearch;  // True if this location should be excluded from typed string search (like for bus stops)
 // Static variables and methods to retrieve the Locations set wrapper
 + (void)setLocations:(Locations *)loc;
 

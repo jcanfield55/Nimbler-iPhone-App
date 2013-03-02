@@ -184,8 +184,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     [plan prepareSortedItinerariesWithMatchesForDate:newParameters.originalTripDate
                                       departOrArrive:newParameters.departOrArrive
                                 routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
-                                generateGtfsItineraries:YES];
-    [planStore requestMoreOTPItinerariesFor:self.plan withParameters:newParameters];
+                             generateGtfsItineraries:YES
+                               removeNonOptimalItins:YES];
+    [planStore requestMoreItinerariesIfNeeded:self.plan parameters:newParameters];
     [mainTable reloadData];
 }
 

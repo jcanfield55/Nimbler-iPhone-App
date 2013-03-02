@@ -75,6 +75,7 @@ NSString *strStreet2 = @"street ";
         [txtField setPlaceholder:@"Enter new address"];
         [txtField setClearButtonMode:UITextFieldViewModeAlways]; // Add a clear button for text field
         [txtField setFont:[UIFont MEDIUM_FONT]];
+        [txtField setReturnKeyType:UIReturnKeyDone];  // DE275 fix
         [txtField setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
         
         [txtField addTarget:self action:@selector(toFromTyping:forEvent:) forControlEvents:UIControlEventEditingChanged];

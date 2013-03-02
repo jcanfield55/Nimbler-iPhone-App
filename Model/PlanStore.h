@@ -17,7 +17,7 @@
 #import "PlanRequestParameters.h"
 
 
-@interface PlanStore : NSObject <RKObjectLoaderDelegate,RKRequestDelegate, PlanRequestMoreItinerariesDelegate>
+@interface PlanStore : NSObject <RKObjectLoaderDelegate,RKRequestDelegate>
 
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;

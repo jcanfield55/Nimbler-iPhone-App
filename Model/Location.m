@@ -28,6 +28,7 @@
 @dynamic preloadVersion;
 @dynamic memberOfList;
 @dynamic stationListElement;
+@dynamic excludeFromSearch;
 @synthesize shortFormattedAddress;
 @synthesize reverseGeoLocation;
 @synthesize lastRequestReverseGeoLocation;
@@ -111,6 +112,7 @@ static Locations *locations;
     else {
         [self setToFrequencyFloat:([self toFrequencyFloat]+1.0)];
     }
+    [self setExcludeFromSearch:[NSNumber numberWithBool:false]];  // don't exclude locations with frequency > threshold
 }
 
 - (void)incrementFromFrequency {
@@ -121,6 +123,7 @@ static Locations *locations;
     else {
         [self setFromFrequencyFloat:([self fromFrequencyFloat]+1.0)];
     }
+    [self setExcludeFromSearch:[NSNumber numberWithBool:false]];  // don't exclude locations with frequency > threshold
 }
 
 // latLng pair string is the format used by OTP geocoder for lat & lng 

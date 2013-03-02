@@ -589,7 +589,11 @@
     //
     // Test prepareSortedItinerariesWithMatchesForDate, especially the optimization code
     //
-    [plan prepareSortedItinerariesWithMatchesForDate:tripDate departOrArrive:DEPART];
+    [plan prepareSortedItinerariesWithMatchesForDate:tripDate
+                                      departOrArrive:DEPART
+                                routeExcludeSettings:nil
+                             generateGtfsItineraries:YES
+                               removeNonOptimalItins:YES];
     [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:parameters];
     STAssertEquals([[plan sortedItineraries] count], 6u, @"");  // Removed itinerary #5 (OTP duplicate)
     

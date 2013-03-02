@@ -44,6 +44,7 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
     [self setLatFloat:coord.latitude];
     [self setLngFloat:coord.longitude];
     [self setApiTypeEnum:IOS_GEOCODER];
+    [self setExcludeFromSearch:[NSNumber numberWithBool:false]];
     // Nothing to fill for locationType
 }
 

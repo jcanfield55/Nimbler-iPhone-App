@@ -15,15 +15,21 @@
 
 // Internal variables and methods
 
-@interface Locations () 
+@interface Locations ()
 {
     NSArray *sortedMatchingFromLocations; // All from locations that somehow match the typedFromString
     int matchingFromRowCount;  // Count of from locations (including frequency=0) that match the typedFromString
     NSArray *sortedMatchingToLocations;
     int matchingToRowCount;
-    NSArray *sortedFromLocations;  // All locations sorted by from frequency
-    NSArray *sortedToLocations;    // All locations sorted by to frequency
-    NSFetchRequest *locationsFetchRequest;
+    NSArray *sortedFromLocations;  // All locations with fromFrequency > TOFROM_FREQUENCY_VISIBILITY_CUTOFF sorted by from frequency
+    NSArray *sortedToLocations;    // All locations with toFrequency > TOFROM_FREQUENCY_VISIBILITY_CUTOFF sorted by to frequency
+    NSArray *searchableFromLocations;  // All locations which are searchable (excludeFromSearch != true) sorted by fromFrequency
+    NSArray *searchableToLocations;    // All locations which are searchable (excludeFromSearch != true) sorted by toFrequency
+    NSFetchRequest *fetchRequestFromFreqThreshold;
+    NSFetchRequest *fetchRequestToFreqThreshold;
+    NSFetchRequest *fetchReqSearchableFromLocations;
+    NSFetchRequest *fetchReqSearchableToLocations;
+
     Location* oldSelectedFromLocation; // This stores the previous selectedFromLocation when a new one is entered
     Location* oldSelectedToLocation; // This stores the previous selectedToLocation when a new one is entere
 
@@ -255,6 +261,8 @@
     return loc;
 }
 
+
+// John note:  This code is currently unused (3/1/2013)
 // Returns an array of Location objects that are created based on matches to PreloadStations
 // A pre-load station matches when each typed token has a substring match with the preloadStation name
 - (NSArray *) preloadStationLocationsMatchingTypedAddress:(NSString *)string{
@@ -269,7 +277,7 @@
     NSMutableArray *predicates = [[NSMutableArray alloc] init];
     for(int i=0;i<[tokens count];i++){
         NSPredicate *resultPredicate = [NSPredicate
-                                        predicateWithFormat:                                           @"self.stop.formattedAddress CONTAINS[cd] %@",[tokens objectAtIndex:i]];
+                                        predicateWithFormat:@"self.stop.formattedAddress CONTAINS[cd] %@",[tokens objectAtIndex:i]];
         [predicates addObject:resultPredicate];
     }
     NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:predicates];
@@ -292,10 +300,58 @@
     return arrLocations;
 }
 
-// Utility function used by setTypedFromString & setTypedToString.  On hold for now
-/* void updateFromTyping(NSString *typedXStr0, NSString **typedXString, NSArray **sortedMatchingXLocations,
-                      int *matchingXRowCount)
- */
+// John note:  This code is currently unused (3/1/2013)
+// Returns an array of Location objects that are matches typedString
+// Searches from Locations in startArray if size < LOCATIONS_THRESHOLD_TO_SEARCH_USING_COREDATA, otherwise searches full database using a coredata
+// Sorts using sortDescArray when retrieving from CoreData
+- (NSArray *)locationsMatchingTypedAddress:(NSString *)typedString fromArray:(NSArray *)startArray sortDescArray:(NSArray *)sortDescArray
+{
+    NSMutableArray* newArray = [NSMutableArray arrayWithCapacity:([startArray count]/8)];
+    // If startArray is small enough, figure out the matches the old-fashioned way
+    if ([startArray count] >=LOCATIONS_THRESHOLD_TO_SEARCH_USING_COREDATA) {
+        // TODO:  Get a new startArray containing all Locations not equal to LocationsFromGoogle
+    }
+    
+    if ([startArray count] < LOCATIONS_THRESHOLD_TO_SEARCH_USING_COREDATA) {
+        for (Location *loc in startArray) {
+            if ([loc isMatchingTypedString:typedString]) {  // if loc matches the new string
+                [newArray addObject:loc];  //  add loc to the new array
+            }
+        }
+    }
+    
+    NSString *newString = [self rawAddressWithOutAgencyName:[typedString lowercaseString] SearchStringArray:SEARCH_STRINGS_ARRAY];
+    newString = [newString stringByReplacingOccurrencesOfString:@"," withString:@" "];
+    NSString *tempString = [newString substringFromIndex:[newString length] - 1];
+    if([tempString rangeOfString:@" "].location != NSNotFound){
+        newString = [newString substringToIndex:[newString length] - 1];
+    }
+    
+    NSArray *tokens = [newString componentsSeparatedByString:@" "];
+    NSMutableArray *predicates = [[NSMutableArray alloc] init];
+    for(int i=0;i<[tokens count];i++){
+        NSPredicate *resultPredicate = [NSPredicate
+                                        predicateWithFormat:@"ANY addressComponents.longName BEGINSWITH[cd] %@",[tokens objectAtIndex:i]];
+        [predicates addObject:resultPredicate];
+    }
+    NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:predicates];
+    NSFetchRequest * fetchStationListElement = [[NSFetchRequest alloc] init];
+    [fetchStationListElement setEntity:[NSEntityDescription entityForName:@"LocationFromGoogle" inManagedObjectContext:managedObjectContext]];
+    [fetchStationListElement setPredicate:predicate];
+    if (sortDescArray && sortDescArray.count>0) {
+        [fetchStationListElement setSortDescriptors:sortDescArray];
+    }
+    
+    NSError* error;
+    NSArray * arrLocations = [managedObjectContext executeFetchRequest:fetchStationListElement error:&error];
+    if (!arrLocations) {
+        logError(@"Locations -> locationsMatchingTypedAddress", [NSString stringWithFormat:@"CoreData fetch error: %@", error]);
+        return [NSArray array];
+    }
+    
+    return arrLocations;
+}
+
 
 // Custom setter for updated typedFromString that recomputes the sortedMatchingFromLocations and row count
 - (void)setTypedFromString:(NSString *)typedFromStr0
@@ -322,23 +378,28 @@
             startArray = sortedMatchingFromLocations;  // start with the last array of matches, and narrow from there
         }
         else {
-            startArray = sortedFromLocations;    // otherwise, start fresh with all from locations
+            startArray = searchableFromLocations;    // otherwise, start fresh with all searchable from locations
         }
         typedFromString = typedFromStr0;   
-        NSMutableArray *newArray = [NSMutableArray array];   
+
+//        NIMLOG_PERF2(@"Start Locations search");
+//        NSArray *newArray = [self locationsMatchingTypedAddress:typedFromString
+//                                                      fromArray:startArray
+//                                                  sortDescArray:[NSArray arrayWithObjects:sd1,sd2,nil]];
+        NSMutableArray *newArray = [NSMutableArray array];
         for (Location *loc in startArray) {
-                if ([loc isMatchingTypedString:typedFromString]) {  // if loc matches the new string
-                    [newArray addObject:loc];  //  add loc to the new array
-                }
+            if ([loc isMatchingTypedString:typedFromString]) {  // if loc matches the new string
+                [newArray addObject:loc];  //  add loc to the new array
+            }
         }
+//        NIMLOG_PERF2(@"Finished.  Count = %d", [newArray count]);
         // Merge the results of typed string with newarray.
 //        if(typedFromString.length >= 3){
 //            NSArray *arrLocations = [self preloadStationLocationsMatchingTypedAddress:typedFromString];
 //            [newArray addObjectsFromArray:arrLocations];
 //        }
-        NSArray *finalNewArray = [NSArray arrayWithArray:newArray];  // makes a non-mutable copy
-        if (![finalNewArray isEqualToArray:sortedMatchingFromLocations]) { // if there is a change
-            sortedMatchingFromLocations = finalNewArray;
+        if (![newArray isEqualToArray:sortedMatchingFromLocations]) { // if there is a change
+            sortedMatchingFromLocations = newArray;
             areMatchingLocationsChanged = YES;   // mark for refreshing the table
         }
         matchingFromRowCount = [sortedMatchingFromLocations count];  // cases that match typing are included even if they have frequency=0
@@ -370,7 +431,7 @@
             startArray = sortedMatchingToLocations;  // start with the last array of matches, and narrow from there
         }
         else {
-            startArray = sortedToLocations;    // otherwise, start fresh with all To locations
+            startArray = searchableToLocations;    // otherwise, start fresh with all searchable To locations
         }
         typedToString = typedToStr0;   
         NSMutableArray *newArray = [NSMutableArray array];   
@@ -384,9 +445,8 @@
 //            NSArray *arrLocations = [self preloadStationLocationsMatchingTypedAddress:typedToString];
 //            [newArray addObjectsFromArray:arrLocations];
 //        }
-        NSArray *finalNewArray = [NSArray arrayWithArray:newArray];  // makes a non-mutable copy
-        if (![finalNewArray isEqualToArray:sortedMatchingToLocations]) { // if there is a change
-            sortedMatchingToLocations = finalNewArray;
+        if (![newArray isEqualToArray:sortedMatchingToLocations]) { // if there is a change
+            sortedMatchingToLocations = newArray;
             areMatchingLocationsChanged = YES;   // mark for refreshing the table
         }
         matchingToRowCount = [sortedMatchingToLocations count];  // cases that match typing are included even if they have frequency=0
@@ -430,33 +490,49 @@
 // Only include those locations with frequency >= 1 in the row count
 - (void)updateInternalCache
 {
-    NIMLOG_PERF1(@"Entering updateInternal Cache");
-    if (!locationsFetchRequest) {  // create the fetch request if we have not already done so
-        locationsFetchRequest = [[NSFetchRequest alloc] init];
-        NSEntityDescription *e = [[managedObjectModel entitiesByName] objectForKey:@"Location"];
-        [locationsFetchRequest setEntity:e];
-        NSSortDescriptor *sd1 = [NSSortDescriptor sortDescriptorWithKey:@"fromFrequency" 
+    // Fetch the sortedFromLocations & searchableFromLocations arrays
+    if (!fetchRequestFromFreqThreshold) {  // create the fetch request if we have not already done so
+        fetchRequestFromFreqThreshold = [managedObjectModel fetchRequestFromTemplateWithName:@"LocationByFromFrequency"
+                                                                       substitutionVariables:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:TOFROM_FREQUENCY_VISIBILITY_CUTOFF] forKey:@"THRESHOLD"]];
+        fetchReqSearchableFromLocations = [[managedObjectModel fetchRequestTemplateForName:@"LocationSearchable"] copy];
+        NSSortDescriptor *sd1 = [NSSortDescriptor sortDescriptorWithKey:@"fromFrequency"
                                                               ascending:NO];
         NSSortDescriptor *sd2 = [NSSortDescriptor sortDescriptorWithKey:@"dateLastUsed"
                                                               ascending:NO];
-        [locationsFetchRequest setSortDescriptors:[NSArray arrayWithObjects:sd1,sd2,nil]];
+        [fetchRequestFromFreqThreshold setSortDescriptors:[NSArray arrayWithObjects:sd1,sd2,nil]];
+        [fetchReqSearchableFromLocations setSortDescriptors:[NSArray arrayWithObjects:sd1,sd2,nil]];
     }
-    
-    // Fetch the sortedFromLocations array
     NSError *error;
-    sortedFromLocations = [managedObjectContext executeFetchRequest:locationsFetchRequest
+    sortedFromLocations = [managedObjectContext executeFetchRequest:fetchRequestFromFreqThreshold
                                                               error:&error];
-    if (!sortedFromLocations) {
+    searchableFromLocations = [managedObjectContext executeFetchRequest:fetchReqSearchableFromLocations
+                                                                  error:&error];
+    if (!sortedFromLocations || !searchableFromLocations) {
         [NSException raise:@"Locations -> updateInternalCache Fetch failed" format:@"Reason: %@", error];
     }
-    NIMLOG_PERF1(@"Now fetching sortedToLocations");
-    // Now create a different array with the sorted To descriptors
-    NSSortDescriptor *sd1 = [NSSortDescriptor sortDescriptorWithKey:@"toFrequency" 
-                                                          ascending:NO];
-    NSSortDescriptor *sd2 = [NSSortDescriptor sortDescriptorWithKey:@"dateLastUsed"
-                                                          ascending:NO];
-    sortedToLocations = [sortedFromLocations sortedArrayUsingDescriptors:
-                         [NSArray arrayWithObjects:sd1,sd2,nil]];
+    
+    // Now fetch sortedToLocations  & searchableFromLocations arrays
+    if (!fetchRequestToFreqThreshold) {  // create the fetch request if we have not already done so
+        
+        fetchRequestToFreqThreshold = [managedObjectModel fetchRequestFromTemplateWithName:@"LocationByToFrequency"
+                                                                       substitutionVariables:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:TOFROM_FREQUENCY_VISIBILITY_CUTOFF] forKey:@"THRESHOLD"]];
+        fetchReqSearchableToLocations = [[managedObjectModel fetchRequestTemplateForName:@"LocationSearchable"] copy];
+        NSSortDescriptor *sd1 = [NSSortDescriptor sortDescriptorWithKey:@"toFrequency"
+                                                              ascending:NO];
+        NSSortDescriptor *sd2 = [NSSortDescriptor sortDescriptorWithKey:@"dateLastUsed"
+                                                              ascending:NO];
+        [fetchRequestToFreqThreshold setSortDescriptors:[NSArray arrayWithObjects:sd1,sd2,nil]];
+        [fetchReqSearchableToLocations setSortDescriptors:[NSArray arrayWithObjects:sd1,sd2,nil]];
+    }
+    sortedToLocations = [managedObjectContext executeFetchRequest:fetchRequestToFreqThreshold
+                                                              error:&error];
+    searchableToLocations = [managedObjectContext executeFetchRequest:fetchReqSearchableToLocations error:&error];
+    if (!sortedToLocations || !searchableToLocations) {
+        [NSException raise:@"Locations -> updateInternalCache Fetch failed" format:@"Reason: %@", error];
+    }
+    
+    // Now fetch searchable locations
+    
 
     // Force recomputation of the selectedLocations
     [self updateWithSelectedLocationIsFrom:TRUE selectedLocation:selectedFromLocation oldSelectedLocation:oldSelectedFromLocation];
@@ -467,7 +543,6 @@
     [self setTypedFromString:[self typedFromString]];
     
     [self setAreLocationsChanged:NO];  // reset again
-    NIMLOG_PERF1(@"Done updating Locations cache");
 }
 
 // Updates sortedToLocations or sortedFromLocations to put the selectedLocation at the top of the list

@@ -166,6 +166,7 @@
     <entity name="Location" representedClassName="Location" syncable="YES">
         <attribute name="apiType" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="dateLastUsed" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="excludeFromSearch" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="formattedAddress" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fromFrequency" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
         <attribute name="geoCoderStatus" optional="YES" attributeType="String" syncable="YES"/>
@@ -182,6 +183,12 @@
         <compoundIndexes>
             <compoundIndex>
                 <index value="formattedAddress"/>
+            </compoundIndex>
+            <compoundIndex>
+                <index value="fromFrequency"/>
+            </compoundIndex>
+            <compoundIndex>
+                <index value="toFrequency"/>
             </compoundIndex>
         </compoundIndexes>
     </entity>
@@ -303,7 +310,10 @@
     <fetchRequest name="KeyObjectPairForKey" entity="KeyObjectPair" predicateString="key == $KEY"/>
     <fetchRequest name="LatestRouteExcludeSettings" entity="RouteExcludeSettings" predicateString="isCurrentUserSetting == 1"/>
     <fetchRequest name="LocationByFormattedAddress" entity="Location" predicateString="formattedAddress ==$ADDRESS2"/>
+    <fetchRequest name="LocationByFromFrequency" entity="Location" predicateString="fromFrequency >= $THRESHOLD"/>
     <fetchRequest name="LocationByMemberOfList" entity="Location" predicateString="memberOfList BEGINSWITH $LIST_PREFIX AND locationType != &quot;TOFROM_LIST&quot;"/>
+    <fetchRequest name="LocationByToFrequency" entity="Location" predicateString="toFrequency >= $THRESHOLD"/>
+    <fetchRequest name="LocationSearchable" entity="Location" predicateString="excludeFromSearch != 1"/>
     <fetchRequest name="PlansByToAndFromLocations" entity="Plan" predicateString="toLocation.formattedAddress == $TO_FORMATTED_ADDRESS AND fromLocation.formattedAddress == $FROM_FORMATTED_ADDRESS"/>
     <fetchRequest name="RawAddressByString" entity="RawAddress" predicateString="rawAddressString LIKE[c] $ADDRESS"/>
     <fetchRequest name="RouteExcludeSettingsWithDictionary" entity="RouteExcludeSettings" predicateString="excludeDictionaryInternal == $DICTIONARY"/>
@@ -326,7 +336,7 @@
         <element name="KeyObjectPair" positionX="0" positionY="0" width="128" height="75"/>
         <element name="Leg" positionX="-45" positionY="0" width="128" height="405"/>
         <element name="LegFromOTP" positionX="90" positionY="216" width="128" height="45"/>
-        <element name="Location" positionX="0" positionY="0" width="128" height="270"/>
+        <element name="Location" positionX="0" positionY="0" width="128" height="285"/>
         <element name="LocationFromGoogle" positionX="160" positionY="192" width="128" height="90"/>
         <element name="LocationFromIOS" positionX="160" positionY="192" width="128" height="60"/>
         <element name="Plan" positionX="0" positionY="0" width="128" height="195"/>

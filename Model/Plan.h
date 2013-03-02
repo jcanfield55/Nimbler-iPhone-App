@@ -18,15 +18,6 @@
 
 @class RouteExcludeSettings;
 
-@protocol PlanRequestMoreItinerariesDelegate
-@required
-/**
- * Callback routines that returnSortedItinerariesWithMatchesForDate calls when it detects the need for 
- * more OTP or GTFS itineraries
- */
--(void)requestMoreOTPItinerariesFor:(Plan *)plan withParameters:(PlanRequestParameters *)parameters;
-@end
-
 
 @interface Plan : NSManagedObject
 
@@ -100,8 +91,8 @@
 - (BOOL)prepareSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
                                     departOrArrive:(DepartOrArrive)depOrArrive
                               routeExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
-                           generateGtfsItineraries:(BOOL)generateGtfsItinaries;
-
+                           generateGtfsItineraries:(BOOL)generateGtfsItinaries
+                             removeNonOptimalItins:(BOOL)removeNonOptimalItins;
 
 // Variant of the above method without using an includeExcludeDictionary or callback
 - (BOOL)prepareSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
@@ -121,6 +112,7 @@
                                         departOrArrive:(DepartOrArrive)depOrArrive
                                   routeExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
                                generateGtfsItineraries:(BOOL)generateGtfsItinaries
+                                 removeNonOptimalItins:(BOOL)removeNonOptimalItins
                               planMaxItinerariesToShow:(int)planMaxItinerariesToShow
                       planBufferSecondsBeforeItinerary:(int)planBufferSecondsBeforeItinerary
                            planMaxTimeForResultsToShow:(int)planMaxTimeForResultsToShow;

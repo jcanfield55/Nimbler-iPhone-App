@@ -71,7 +71,8 @@
             if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate]
                                                           departOrArrive:[parameters departOrArrive]
                                                     routeExcludeSettings:[parameters routeExcludeSettings]
-                                                 generateGtfsItineraries:YES]) {
+                                                 generateGtfsItineraries:YES
+                                                   removeNonOptimalItins:YES]) {
                 if (matchingPlan.sortedItineraries.count == 0) {
                     logEvent(FLURRY_ROUTE_NOT_IN_CACHE,
                              FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
@@ -333,7 +334,8 @@
                 if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate]
                                                       departOrArrive:[planRequestParameters departOrArrive]
                                                 routeExcludeSettings:[planRequestParameters routeExcludeSettings]
-                                             generateGtfsItineraries:YES]) {
+                                             generateGtfsItineraries:YES
+                                               removeNonOptimalItins:YES]) {
                     [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
                     
                     // Call-back the appropriate VC with the new plan
@@ -393,12 +395,6 @@
             NIMLOG_ERR1(@"Error received from RKObjectManager on subsequent call RouteOptionsViewController: %@", error);
         }
     }
-}
-
-// Callback from returnSortedItineraries method requesting additional OTP itineraries to fill out user request
--(void)requestMoreOTPItinerariesFor:(Plan *)plan withParameters:(PlanRequestParameters *)parameters
-{
-    [self requestPlanFromOtpWithParameters:parameters];
 }
 
 

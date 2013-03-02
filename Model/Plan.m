@@ -307,11 +307,13 @@
                                     departOrArrive:(DepartOrArrive)depOrArrive
                               routeExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
                            generateGtfsItineraries:(BOOL)generateGtfsItinaries
+                             removeNonOptimalItins:(BOOL)removeNonOptimalItins
 {
     NSArray* newSortedItineraries=[self returnSortedItinerariesWithMatchesForDate:requestDate
                                                                    departOrArrive:depOrArrive
                                                              routeExcludeSettings:routeExcludeSettings
                                                           generateGtfsItineraries:generateGtfsItinaries
+                                                            removeNonOptimalItins:removeNonOptimalItins
                                                          planMaxItinerariesToShow:PLAN_MAX_ITINERARIES_TO_SHOW
                                                  planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY
                                                       planMaxTimeForResultsToShow:PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW];
@@ -324,14 +326,15 @@
 }
 
 
-// Variant of the above method without using an includeExcludeDictionary or callback
+// Variant of the above method without using an includeExcludeDictionary or generating gtfs itineraries
 - (BOOL)prepareSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
                                     departOrArrive:(DepartOrArrive)depOrArrive
 {
     return [self prepareSortedItinerariesWithMatchesForDate:requestDate
                                              departOrArrive:depOrArrive
                                        routeExcludeSettings:nil
-                                    generateGtfsItineraries:true];
+                                    generateGtfsItineraries:false
+                                      removeNonOptimalItins:false];
 }
 
 
@@ -349,6 +352,7 @@
                                         departOrArrive:(DepartOrArrive)depOrArrive
                                   routeExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
                                generateGtfsItineraries:(BOOL)generateGtfsItinaries
+                                 removeNonOptimalItins:(BOOL)removeNonOptimalItins
                               planMaxItinerariesToShow:(int)planMaxItinerariesToShow
                       planBufferSecondsBeforeItinerary:(int)planBufferSecondsBeforeItinerary
                            planMaxTimeForResultsToShow:(int)planMaxTimeForResultsToShow
@@ -426,7 +430,8 @@
                         }
                     }
                     // if not equivalent, look for sub-optimal itineries
-                    else if ([[itin1 startTimeOnly] compare:[itin2 startTimeOnly]] != NSOrderedDescending && 
+                    else if (removeNonOptimalItins && 
+                             [[itin1 startTimeOnly] compare:[itin2 startTimeOnly]] != NSOrderedDescending &&
                         [[itin1 endTimeOnly] compare:[itin2 endTimeOnly]] != NSOrderedAscending) {
                         // itin1 starts earlier or equal and ends later or equal.  Longer duration so remove itin1
                         [optimalItineraries removeObject:itin1];
@@ -640,6 +645,7 @@
                                             departOrArrive:depOrArrive
                                       routeExcludeSettings:nil
                                    generateGtfsItineraries:false
+                                     removeNonOptimalItins:false
                                   planMaxItinerariesToShow:planMaxItinerariesToShow
                           planBufferSecondsBeforeItinerary:planBufferSecondsBeforeItinerary
                                planMaxTimeForResultsToShow:planMaxTimeForResultsToShow];

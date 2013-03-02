@@ -938,10 +938,8 @@
     // Test locationAtIndex
     STAssertEquals([locations locationAtIndex:0 isFrom:YES], loc2, @"");
     STAssertEquals([locations locationAtIndex:1 isFrom:YES], loc1, @"");
-    STAssertEquals([locations locationAtIndex:2 isFrom:YES], loc3, @"");
     STAssertEquals([locations locationAtIndex:0 isFrom:NO], loc1, @"");
-    STAssertEquals([locations locationAtIndex:1 isFrom:NO], loc3, @""); // loc3 & loc2 have same toFrequency, but loc3 was created more recently
-    STAssertEquals([locations locationAtIndex:2 isFrom:NO], loc2, @"");
+
 
     // Test adding a new Location
     Location *loc4tl = [locations newEmptyLocation];
@@ -955,10 +953,8 @@
     STAssertEquals([locations locationAtIndex:0 isFrom:YES], loc2, @"");
     STAssertEquals([locations locationAtIndex:1 isFrom:YES], loc1, @"");
     STAssertEquals([locations locationAtIndex:2 isFrom:YES], loc4tl, @"");
-    STAssertEquals([locations locationAtIndex:3 isFrom:YES], loc3, @"");
     STAssertEquals([locations locationAtIndex:0 isFrom:NO], loc1, @"");
     STAssertEquals([locations locationAtIndex:1 isFrom:NO], loc4tl, @"");
-    STAssertEquals([locations locationAtIndex:2 isFrom:NO], loc3, @"");
     
     // Test response to setTypedFromString
     [locations setTypedFromString:@"750"];
@@ -969,7 +965,6 @@
     STAssertEquals([locations numberOfLocations:NO], 2, @"");  // 2 locations with address component with 750
     STAssertEquals([locations locationAtIndex:0 isFrom:NO], loc1, @"");
     STAssertEquals([locations locationAtIndex:1 isFrom:NO], loc4tl, @"");
-    STAssertEquals([locations locationAtIndex:2 isFrom:NO], loc3, @"");
     
     // Test response to setTypedToString
     [locations setTypedToString:@"Hawthorne"];
@@ -997,10 +992,16 @@
     STAssertEquals([locations numberOfLocations:NO], 1, @"");  // 1 Location with toFrequency>0
     STAssertEquals([locations locationAtIndex:0 isFrom:YES], loc2, @"");
     STAssertEquals([locations locationAtIndex:1 isFrom:YES], loc1, @"");
-    STAssertEquals([locations locationAtIndex:2 isFrom:YES], loc3, @"");
     STAssertEquals([locations locationAtIndex:0 isFrom:NO], loc1, @"");
-    STAssertEquals([locations locationAtIndex:1 isFrom:NO], loc3, @"");
-    STAssertEquals([locations locationAtIndex:2 isFrom:NO], loc2, @"");
+
+    // Test excludeFromSearch property
+    [loc2 setExcludeFromSearch:[NSNumber numberWithBool:true]];
+    [locations setAreLocationsChanged:YES];  // Force a recompute of cache
+    STAssertEquals([locations numberOfLocations:YES], 2, @"");  // All with fromFrequency >0
+    [locations setTypedFromString:@"750"];
+    STAssertEquals([locations numberOfLocations:YES], 1, @"");  // Only one that is searchable and matches
+    STAssertEquals([locations locationAtIndex:0 isFrom:YES], loc1, @"");  // Loc2 is no longer in the results
+    
     
     // locationsWithFormattedAddress
     STAssertEquals([[locations locationsWithFormattedAddress:@"750 Hawthorne Street, San Francisco"] objectAtIndex:0], loc2, @"");

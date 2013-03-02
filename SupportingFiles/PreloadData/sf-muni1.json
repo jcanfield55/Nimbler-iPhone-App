@@ -3467,7 +3467,7 @@
 		}, {
 			"memberOfListId" : "muni_st_list",
 			"sequenceNumber" : 5,
-			"containsList" : "Muni KT - OCEAN VIEW",
+			"containsList" : "Muni KT - INGLESIDE/THIRD",
 			"containsListId" : "muni_kt_ocean_view",
 			"agency" : "sf-muni"
 		}, {
@@ -9690,6 +9690,7 @@
 					}
 				],
 				"formatted_address" : "Sacramento St & Stockton St",
+                 "excludeFromSearch" : 1,
 				"geometry" : {
 					"location" : {
 						"lng" : -122.407591,

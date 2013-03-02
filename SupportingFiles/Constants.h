@@ -12,12 +12,12 @@
 
 #define AUTOMATED_TESTING_SKIP_NCAPPDELEGATE 0 // if 1, skips nc_AppDelegate didFinishLaunchingWithOptions so we get a clean tests run
 
-#define TRIP_GENERATE_URL     @"http://23.23.210.156:8080/opentripplanner-api-webapp/ws/"
+#define TRIP_GENERATE_URL     @"http://23.23.210.156:7070/opentripplanner-api-webapp/ws/"
 //#define TRIP_GENERATE_URL @"http://ec2-23-22-169-158.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"
 #define GEO_RESPONSE_URL      @"http://maps.googleapis.com/maps/api/geocode/"
 #define TEST_GEO_RESPONSE_URL  @"http://localhost:8080/TPServer/ws/mockgeolocation/"
 
-#define TRIP_PROCESS_URL    @"http://23.23.210.156:8080/TPServer/ws/"
+#define TRIP_PROCESS_URL    @"http://23.23.210.156:7070/TPServer/ws/"
 //#define TRIP_PROCESS_URL      @"http://192.168.2.230:8080/TPServer/ws/"
 
 #define TEST_TRIP_PROCESS_URL @"http://localhost:8080/TPServer/ws/"  // TP server for automated tests
@@ -253,6 +253,7 @@
 
 // Locations behavior
 #define TOFROM_FREQUENCY_VISIBILITY_CUTOFF 0.99
+#define LOCATIONS_THRESHOLD_TO_SEARCH_USING_COREDATA 500
 
 // Plan, PlanStore, and Plan caching behavior
 #define PLAN_MAX_ITINERARIES_TO_SHOW (30) /* Show at most 20 results */
