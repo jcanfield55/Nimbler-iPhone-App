@@ -120,5 +120,9 @@
 
 // Remove all stopTimes and Trips Data from DB when new updates are available.
 - (void) removeAllTripsAndStopTimesData;
+
+// This methods are used in requesting and storing trips data into seed DB. 
+- (void) requestTripsDataForCreatingSeedDB:(NSMutableString *)strRequestString;
+- (void)generateTripsRequestForSeedDB:(NSArray *)routeIds agencyIds:(NSArray *)agencyIds;
 @end
 

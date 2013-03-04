@@ -226,6 +226,7 @@
 		8D7BE0A716D5EC2A0038FF26 /* img_travel.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D7BE0A516D5EC280038FF26 /* img_travel.png */; };
 		8D7BE0A816D5EC2A0038FF26 /* pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D7BE0A616D5EC290038FF26 /* pressed.png */; };
 		8D7BE0AA16D6187B0038FF26 /* pressed1.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D7BE0A916D6187A0038FF26 /* pressed1.png */; };
+		8D82883916E4CDA600AA8FF2 /* RKSeedDatabase.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 8D82883716E4CA8000AA8FF2 /* RKSeedDatabase.sqlite */; };
 		8D8DF4AD1647BCFB00BC2A34 /* bart-station-background.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D8DF4AB1647BCFB00BC2A34 /* bart-station-background.json */; };
 		8D8DF4AE1647BCFB00BC2A34 /* caltrain-station-background.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D8DF4AC1647BCFB00BC2A34 /* caltrain-station-background.json */; };
 		8D93604B162FFC4500084E8E /* Icon_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D93604A162FFC4500084E8E /* Icon_ipad.png */; };
@@ -587,6 +588,7 @@
 		8D7BE0A516D5EC280038FF26 /* img_travel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_travel.png; sourceTree = "<group>"; };
 		8D7BE0A616D5EC290038FF26 /* pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pressed.png; sourceTree = "<group>"; };
 		8D7BE0A916D6187A0038FF26 /* pressed1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pressed1.png; sourceTree = "<group>"; };
+		8D82883716E4CA8000AA8FF2 /* RKSeedDatabase.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = RKSeedDatabase.sqlite; sourceTree = "<group>"; };
 		8D8DF4AB1647BCFB00BC2A34 /* bart-station-background.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "bart-station-background.json"; sourceTree = "<group>"; };
 		8D8DF4AC1647BCFB00BC2A34 /* caltrain-station-background.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "caltrain-station-background.json"; sourceTree = "<group>"; };
 		8D93604A162FFC4500084E8E /* Icon_ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon_ipad.png; sourceTree = "<group>"; };
@@ -1010,6 +1012,7 @@
 		52CF439014BDF2F8000565D6 = {
 			isa = PBXGroup;
 			children = (
+				8D82883616E4CA5600AA8FF2 /* DB */,
 				8D4FC8E3162D2E1A004144DE /* PreloadData */,
 				8DF35D621627F58400B99F4A /* main.m */,
 				520FB295162605470083F143 /* CoverageGeoJSON.geojson */,
@@ -1122,6 +1125,14 @@
 			);
 			name = PreloadData;
 			path = SupportingFiles/PreloadData;
+			sourceTree = "<group>";
+		};
+		8D82883616E4CA5600AA8FF2 /* DB */ = {
+			isa = PBXGroup;
+			children = (
+				8D82883716E4CA8000AA8FF2 /* RKSeedDatabase.sqlite */,
+			);
+			name = DB;
 			sourceTree = "<group>";
 		};
 		CC9370D615BFB97200A09A5A /* Flurry */ = {
@@ -1255,6 +1266,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D82883916E4CDA600AA8FF2 /* RKSeedDatabase.sqlite in Resources */,
 				52E4C09715CB465A00B55A65 /* Icon.png in Resources */,
 				52E4C09F15CB7D2F00B55A65 /* Icon@2x.png in Resources */,
 				52E4C0A115CC705000B55A65 /* Default.png in Resources */,
@@ -1610,8 +1622,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -1638,8 +1650,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
+				PROVISIONING_PROFILE = "4BFCD333-A55F-47A7-B3F0-36DF472F8E15";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4BFCD333-A55F-47A7-B3F0-36DF472F8E15";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -1651,9 +1663,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -1680,9 +1692,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
-				"PROVISIONING_PROFILE[sdk=*]" = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
+				PROVISIONING_PROFILE = "4BFCD333-A55F-47A7-B3F0-36DF472F8E15";
+				"PROVISIONING_PROFILE[sdk=*]" = "4BFCD333-A55F-47A7-B3F0-36DF472F8E15";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4BFCD333-A55F-47A7-B3F0-36DF472F8E15";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;

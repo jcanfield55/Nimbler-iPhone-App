@@ -392,7 +392,6 @@ NSString *strStreet2 = @"street ";
         NIMLOG_EVENT1(@"Skipping duplicate toFromTextSubmitted");
         return;  // if using the same rawAddress and less than 5 seconds between, treat as duplicate
     }
-    if([rawAddress isEqualToString:@""])
         [toFromVC setEditMode:NO_EDIT];  // Move back to NO_EDIT mode on the ToFrom view controller
 
     if ([rawAddress length] > 0) {
@@ -405,7 +404,6 @@ NSString *strStreet2 = @"street ";
             }
         }
         if (matchingLocation) { //if we got a match, mark and send appropriate updates
-            [toFromVC setEditMode:NO_EDIT];
             [self markAndUpdateSelectedLocation:matchingLocation];
         }
         else {  // if no match, Geocode this new rawAddress

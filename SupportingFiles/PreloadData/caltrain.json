@@ -9,6 +9,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 0,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.4,
 				"fromFrequency" : 0.4,
 				"address_components" : [{
@@ -70,6 +71,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 1,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.39,
 				"fromFrequency" : 0.39,
 				"address_components" : [{
@@ -127,6 +129,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 2,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.38,
 				"fromFrequency" : 0.38,
 				"address_components" : [{
@@ -184,6 +187,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 3,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.37,
 				"fromFrequency" : 0.37,
 				"address_components" : [{
@@ -241,6 +245,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 4,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.36,
 				"fromFrequency" : 0.36,
 				"address_components" : [{
@@ -294,6 +299,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 5,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.35,
 				"fromFrequency" : 0.35,
 				"address_components" : [{
@@ -347,6 +353,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 6,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.34,
 				"fromFrequency" : 0.34,
 				"address_components" : [{
@@ -404,6 +411,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 7,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.33,
 				"fromFrequency" : 0.33,
 				"address_components" : [{
@@ -461,6 +469,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 8,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.32,
 				"fromFrequency" : 0.32,
 				"address_components" : [{
@@ -518,6 +527,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 9,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.31,
 				"fromFrequency" : 0.31,
 				"address_components" : [{
@@ -575,6 +585,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 10,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.3,
 				"fromFrequency" : 0.3,
 				"address_components" : [{
@@ -632,6 +643,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 11,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.29,
 				"fromFrequency" : 0.29,
 				"address_components" : [{
@@ -685,6 +697,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 12,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.28,
 				"fromFrequency" : 0.28,
 				"address_components" : [{
@@ -748,6 +761,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 13,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.27,
 				"fromFrequency" : 0.27,
 				"address_components" : [{
@@ -805,6 +819,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 14,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.26,
 				"fromFrequency" : 0.26,
 				"address_components" : [{
@@ -858,6 +873,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 15,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.25,
 				"fromFrequency" : 0.25,
 				"address_components" : [{
@@ -911,6 +927,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 16,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.24,
 				"fromFrequency" : 0.24,
 				"address_components" : [{
@@ -964,6 +981,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 17,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.23,
 				"fromFrequency" : 0.23,
 				"address_components" : [{
@@ -1031,6 +1049,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 18,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.22,
 				"fromFrequency" : 0.22,
 				"address_components" : [{
@@ -1088,6 +1107,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 19,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.21,
 				"fromFrequency" : 0.21,
 				"address_components" : [{
@@ -1153,6 +1173,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 20,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.2,
 				"fromFrequency" : 0.2,
 				"address_components" : [{
@@ -1214,6 +1235,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 21,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.19,
 				"fromFrequency" : 0.19,
 				"address_components" : [{
@@ -1267,6 +1289,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 22,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.18,
 				"fromFrequency" : 0.18,
 				"address_components" : [{
@@ -1320,6 +1343,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 23,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.17,
 				"fromFrequency" : 0.17,
 				"address_components" : [{
@@ -1381,6 +1405,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 24,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.16,
 				"fromFrequency" : 0.16,
 				"address_components" : [{
@@ -1438,6 +1463,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 25,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.15,
 				"fromFrequency" : 0.15,
 				"address_components" : [{
@@ -1495,6 +1521,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 26,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.14,
 				"fromFrequency" : 0.14,
 				"address_components" : [{
@@ -1538,6 +1565,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 27,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.13,
 				"fromFrequency" : 0.13,
 				"address_components" : [{
@@ -1599,6 +1627,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 28,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.12,
 				"fromFrequency" : 0.12,
 				"address_components" : [{
@@ -1652,6 +1681,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 29,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.11,
 				"fromFrequency" : 0.11,
 				"address_components" : [{
@@ -1705,6 +1735,7 @@
 			"memberOfListId" : "caltrain_st_list",
 			"sequenceNumber" : 30,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.1,
 				"fromFrequency" : 0.1,
 				"address_components" : [{

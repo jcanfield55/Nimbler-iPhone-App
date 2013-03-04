@@ -40,7 +40,6 @@
         self.rkTpClient = rkClient;
         dictServerCallSoFar = [[NSMutableDictionary alloc] init];
     }
-    
     return self;
 }
 
@@ -245,7 +244,8 @@
         NSMutableArray *arrayRouteURL = [[NSMutableArray alloc] init];
         NSMutableArray *arrayRouteColor = [[NSMutableArray alloc] init];
         NSMutableArray *arrayRouteTextColor = [[NSMutableArray alloc] init];
-        
+    NSMutableArray *arrayAgencyId = [[NSMutableArray alloc] init];
+    
         NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
         for(int k=1;k<=8;k++){
             NSArray *arrayComponentsAgency = [dictComponents objectForKey:[NSString stringWithFormat:@"%d_routes",k]];
@@ -253,6 +253,7 @@
                 NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
                 if(strSubComponents && strSubComponents.length > 0){
                     NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
+                    [arrayAgencyId addObject:[NSString stringWithFormat:@"%d",k]];
                     [arrayRouteID addObject:getItemAtIndexFromArray(0,arraySubComponents)];
                     [arrayRouteShortName addObject:getItemAtIndexFromArray(1,arraySubComponents)];
                     [arrayRouteLongName addObject:getItemAtIndexFromArray(2,arraySubComponents)];
@@ -280,6 +281,9 @@
 //        dispatch_async(dispatch_get_main_queue(), ^{
 //        });
 //    });
+    
+    // Note:- This method call is used in Dababase seeding
+    //[self generateTripsRequestForSeedDB:arrayRouteID agencyIds:arrayAgencyId];
 }
 
 - (void) parseAndStoreGtfsStopsData:(NSDictionary *)dictFileData{
@@ -345,12 +349,12 @@
 //    [moc setMergePolicy:NSOverwriteMergePolicy];
 //    
 //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSArray *arrayComponents = [strRequestUrl componentsSeparatedByString:@"?"];
-        NSString *tempString = [arrayComponents objectAtIndex:1];
-        NSArray *arraySubComponents = [tempString componentsSeparatedByString:@"="];
-        NSString *tempStringSubComponents = [arraySubComponents objectAtIndex:1];
-        NSArray *arrayAgencyIds = [tempStringSubComponents componentsSeparatedByString:@"%2C"];
-        
+//        NSArray *arrayComponents = [strRequestUrl componentsSeparatedByString:@"?"];
+//        NSString *tempString = [arrayComponents objectAtIndex:1];
+//        NSArray *arraySubComponents = [tempString componentsSeparatedByString:@"="];
+//        NSString *tempStringSubComponents = [arraySubComponents objectAtIndex:1];
+//        NSArray *arrayAgencyIds = [tempStringSubComponents componentsSeparatedByString:@"%2C"];
+    
         NSMutableArray *arrayTripID = [[NSMutableArray alloc] init];
         NSMutableArray *arrayRouteID = [[NSMutableArray alloc] init];
         NSMutableArray *arrayServiceID = [[NSMutableArray alloc] init];
@@ -361,12 +365,13 @@
         NSMutableArray *arrayAgencyID = [[NSMutableArray alloc] init];
         
         NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
-        for(int k=0;k<[arrayAgencyIds count];k++){
-            NSArray *arrayComponentsAgency = [dictComponents objectForKey:[arrayAgencyIds objectAtIndex:k]];
-            for(int i=0;i<[arrayComponentsAgency count];i++){
-                NSString *strAgencyIds = [arrayAgencyIds objectAtIndex:k];
-                NSArray *arrayAgencyIdsComponents = [strAgencyIds componentsSeparatedByString:@"_"];
-                [arrayAgencyID addObject:getItemAtIndexFromArray(0,arrayAgencyIdsComponents)];
+    NSArray *arrayAgencyIds = [dictComponents allKeys];
+    for(int k=0;k<[arrayAgencyIds count];k++){
+        NSArray *arrayComponentsAgency = [dictComponents objectForKey:[arrayAgencyIds objectAtIndex:k]];
+        for(int i=0;i<[arrayComponentsAgency count];i++){
+            NSString *strAgencyIds = [arrayAgencyIds objectAtIndex:k];
+            NSArray *arrayAgencyIdsComponents = [strAgencyIds componentsSeparatedByString:@"_"];
+            [arrayAgencyID addObject:getItemAtIndexFromArray(0,arrayAgencyIdsComponents)];
                 NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
                 if(strSubComponents && strSubComponents.length > 0){
                     NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
@@ -595,6 +600,26 @@
     }
 }
 
+- (void) requestTripsDataForCreatingSeedDB:(NSMutableString *)strRequestString{
+    int nLength = [strRequestString length];
+    if(nLength > 0){
+        [strRequestString deleteCharactersInRange:NSMakeRange(nLength-1, 1)];
+    }
+    @try {
+        int serverCallSoFar = [[dictServerCallSoFar objectForKey:GTFS_TRIPS_COUNTER] intValue];
+        serverCallSoFar = serverCallSoFar + 1;
+        [dictServerCallSoFar setObject:[NSNumber numberWithInt:serverCallSoFar] forKey:GTFS_TRIPS_COUNTER];
+        strTripsURL = GTFS_TRIPS;
+        RKParams *requestParameter = [RKParams params];
+        [requestParameter setValue:strRequestString forParam:AGENCY_ID_AND_ROUTE_ID];
+        [self.rkTpClient post:GTFS_TRIPS params:requestParameter delegate:self];
+        
+    }
+    @catch (NSException *exception) {
+        logException(@"GtfsParser->getGtfsStopTimes", @"", exception);
+    }
+}
+
 // Request The Server For Trips Data.
 -(void)requestTripsDatafromServer:(NSMutableString *)strRequestString{
     int nLength = [strRequestString length];
@@ -763,13 +788,31 @@
             }
         }
         else{
-            [nc_AppDelegate sharedInstance].receivedReply = true;
-            RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
-            NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
-            NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
-            if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
-                [self parseAndStoreGtfsStopTimesData:res RequestUrl:strRequestURL];
-                tempPlan = nil;
+            if ([strRequestURL isEqualToString:strTripsURL]) {
+                RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+                NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
+                NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
+                if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
+                    [self parseAndStoreGtfsTripsData:res RequestUrl:strRequestURL];
+                    [dictServerCallSoFar setObject:[NSNumber numberWithInt:0] forKey:GTFS_TRIPS_COUNTER];
+                }
+                else{
+                    int serverCallSoFar = [[dictServerCallSoFar objectForKey:GTFS_STOPS_COUNTER] intValue];
+                    if(serverCallSoFar < 3)
+                        [self generateGtfsTripsRequestStringUsingPlan:tempPlan];
+                    else
+                        logError(@"No results Back from Server for GtfsTrips request", [res objectForKey:@"msg"]);
+                }
+            }
+            else{
+                [nc_AppDelegate sharedInstance].receivedReply = true;
+                RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+                NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
+                NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
+                if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
+                    [self parseAndStoreGtfsStopTimesData:res RequestUrl:strRequestURL];
+                    tempPlan = nil;
+                }
             }
         }
     }
@@ -824,6 +867,19 @@
 {
     while (!([nc_AppDelegate sharedInstance].receivedReply^[nc_AppDelegate sharedInstance].receivedError))
         [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.00001]];
+}
+
+- (void)generateTripsRequestForSeedDB:(NSArray *)routeIds agencyIds:(NSArray *)agencyIds{
+    NSMutableString *strRequestString = [[NSMutableString alloc] init];
+    for(int i=0;i<[routeIds count];i++){
+        NSString *strTripId = [routeIds objectAtIndex:i];
+        NSString *strAgencyId = [agencyIds objectAtIndex:i];
+        if([strRequestString rangeOfString:[NSString stringWithFormat:@"%@_%@,",strAgencyId,strTripId]].location == NSNotFound)
+            [strRequestString appendFormat:@"%@_%@,",strAgencyId,strTripId];
+    }
+    if([strRequestString length] > 0){
+        [self requestTripsDataForCreatingSeedDB:strRequestString];
+    }
 }
 
 

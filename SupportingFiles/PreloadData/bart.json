@@ -9,6 +9,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 1,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.7357473,
 				"fromFrequency" : 0.06,
 				"address_components" : [{
@@ -66,6 +67,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 2,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.85470694,
 				"fromFrequency" : 0.88,
 				"address_components" : [{
@@ -131,6 +133,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 3,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.88185287,
 				"fromFrequency" : 0.08,
 				"address_components" : [{
@@ -188,6 +191,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 4,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.5545369,
 				"fromFrequency" : 0.97,
 				"address_components" : [{
@@ -245,6 +249,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 5,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.56263673,
 				"fromFrequency" : 0.45,
 				"address_components" : [{
@@ -302,6 +307,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 6,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.57941604,
 				"fromFrequency" : 0.62,
 				"address_components" : [{
@@ -359,6 +365,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 7,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.17407721,
 				"fromFrequency" : 0.79,
 				"address_components" : [{
@@ -412,6 +419,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 8,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.89670616,
 				"fromFrequency" : 0.42,
 				"address_components" : [{
@@ -465,6 +473,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 9,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.88391024,
 				"fromFrequency" : 0.87,
 				"address_components" : [{
@@ -522,6 +531,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 10,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.06439835,
 				"fromFrequency" : 0.34,
 				"address_components" : [{
@@ -575,6 +585,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 11,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.98841023,
 				"fromFrequency" : 0.27,
 				"address_components" : [{
@@ -628,6 +639,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 12,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.5340342,
 				"fromFrequency" : 0.61,
 				"address_components" : [{
@@ -685,6 +697,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 13,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.8521892,
 				"fromFrequency" : 0.41,
 				"address_components" : [{
@@ -742,6 +755,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 14,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.916671,
 				"fromFrequency" : 0.81,
 				"address_components" : [{
@@ -795,6 +809,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 15,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.32774198,
 				"fromFrequency" : 0.02,
 				"address_components" : [{
@@ -848,6 +863,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 16,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.4914782,
 				"fromFrequency" : 0.43,
 				"address_components" : [{
@@ -909,6 +925,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 17,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.25671607,
 				"fromFrequency" : 0.07,
 				"address_components" : [{
@@ -966,6 +983,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 18,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.7272337,
 				"fromFrequency" : 0.54,
 				"address_components" : [{
@@ -1023,6 +1041,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 19,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.318933,
 				"fromFrequency" : 0.77,
 				"address_components" : [{
@@ -1080,6 +1099,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 20,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.28305376,
 				"fromFrequency" : 0.59,
 				"address_components" : [{
@@ -1137,6 +1157,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 21,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.5057394,
 				"fromFrequency" : 0.7,
 				"address_components" : [{
@@ -1190,6 +1211,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 22,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.064142585,
 				"fromFrequency" : 0.97,
 				"address_components" : [{
@@ -1243,6 +1265,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 23,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.19212699,
 				"fromFrequency" : 0.06,
 				"address_components" : [{
@@ -1308,6 +1331,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 24,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.7173304,
 				"fromFrequency" : 0.61,
 				"address_components" : [{
@@ -1365,6 +1389,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 25,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.7111904,
 				"fromFrequency" : 0.8,
 				"address_components" : [{
@@ -1422,6 +1447,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 26,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.07392591,
 				"fromFrequency" : 0.87,
 				"address_components" : [{
@@ -1475,6 +1501,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 27,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.49194837,
 				"fromFrequency" : 0.23,
 				"address_components" : [{
@@ -1532,6 +1559,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 28,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.6763369,
 				"fromFrequency" : 0.03,
 				"address_components" : [{
@@ -1589,6 +1617,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 29,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.9075432,
 				"fromFrequency" : 0.41,
 				"address_components" : [{
@@ -1646,6 +1675,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 30,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.68050915,
 				"fromFrequency" : 0.96,
 				"address_components" : [{
@@ -1699,6 +1729,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 31,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.64866704,
 				"fromFrequency" : 0.33,
 				"address_components" : [{
@@ -1752,6 +1783,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 32,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.20713818,
 				"fromFrequency" : 0.56,
 				"address_components" : [{
@@ -1809,6 +1841,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 33,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.5431933,
 				"fromFrequency" : 0.36,
 				"address_components" : [{
@@ -1866,6 +1899,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 34,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.0475713,
 				"fromFrequency" : 0.86,
 				"address_components" : [{
@@ -1931,6 +1965,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 35,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.59698284,
 				"fromFrequency" : 0.74,
 				"address_components" : [{
@@ -1984,6 +2019,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 36,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.5202326,
 				"fromFrequency" : 0.41,
 				"address_components" : [{
@@ -2033,6 +2069,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 37,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.6453875,
 				"fromFrequency" : 0.34,
 				"address_components" : [{
@@ -2090,6 +2127,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 38,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.053266585,
 				"fromFrequency" : 0.17,
 				"address_components" : [{
@@ -2147,6 +2185,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 39,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.34590304,
 				"fromFrequency" : 0.61,
 				"address_components" : [{
@@ -2204,6 +2243,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 40,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.6500475,
 				"fromFrequency" : 0.86,
 				"address_components" : [{
@@ -2257,6 +2297,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 41,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.4786806,
 				"fromFrequency" : 0.46,
 				"address_components" : [{
@@ -2310,6 +2351,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 42,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.01549983,
 				"fromFrequency" : 0.26,
 				"address_components" : [{
@@ -2381,6 +2423,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 43,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.27525538,
 				"fromFrequency" : 0.59,
 				"address_components" : [{
@@ -2438,6 +2481,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 44,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.60019565,
 				"fromFrequency" : 0.21,
 				"address_components" : [{
@@ -2495,6 +2539,7 @@
 			"memberOfListId" : "bart_st_list",
 			"sequenceNumber" : 45,
 			"locationMember" : {
+                "excludeFromSearch":0,
 				"toFrequency" : 0.85470684,
 				"fromFrequency" : 0.88,
 				"address_components" : [{

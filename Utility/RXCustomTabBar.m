@@ -50,8 +50,8 @@
 {
 	// Initialise our two images
         if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-            UIImageView *backView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 517, 320, 49)];
-            [backView setImage:[UIImage imageNamed:@"img_tabbar.png"]];
+            UIImageView *backView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 519, 320, 49)];
+            [backView setImage:[UIImage imageNamed:@"img_tabbar@2x.png"]];
             [self.view addSubview:backView];
         }
         else{
@@ -67,7 +67,7 @@
          if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
              btn1.frame = CGRectMake(NAVIGATION_ITEM1_XPOS, NAVIGATION_ITEM_YPOS_4INCH, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT_4INCH); // Set the frame (size and position) of the button)
              btnImage = [UIImage imageNamed:@""];
-             btnImageSelected = [UIImage imageNamed:@"img_selTrip.png"];
+             btnImageSelected = [UIImage imageNamed:@"img_selTrip@2x.png"];
          }
          else{
              btn1.frame = CGRectMake(NAVIGATION_ITEM1_XPOS, NAVIGATION_ITEM_YPOS, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT); // Set the frame (size and position) of the button)
@@ -91,7 +91,7 @@
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
             btn2.frame = CGRectMake(NAVIGATION_ITEM2_XPOS, NAVIGATION_ITEM_YPOS_4INCH, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT_4INCH);
             btnImage = [UIImage imageNamed:@""];
-            btnImageSelected = [UIImage imageNamed:@"img_selAdvisory.png"];
+            btnImageSelected = [UIImage imageNamed:@"img_selAdvisory@2x.png"];
         }
         else{
             btn2.frame = CGRectMake(NAVIGATION_ITEM2_XPOS, NAVIGATION_ITEM_YPOS, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT);
@@ -110,7 +110,7 @@
         if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
             btn3.frame = CGRectMake(NAVIGATION_ITEM3_XPOS, NAVIGATION_ITEM_YPOS_4INCH, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT_4INCH);
             btnImage = [UIImage imageNamed:@""];
-            btnImageSelected = [UIImage imageNamed:@"img_selSetting.png"];
+            btnImageSelected = [UIImage imageNamed:@"img_selSetting@2x.png"];
         }
         else{
             btn3.frame = CGRectMake(NAVIGATION_ITEM3_XPOS, NAVIGATION_ITEM_YPOS, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT);
@@ -129,7 +129,7 @@
         if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
             btn4.frame = CGRectMake(NAVIGATION_ITEM4_XPOS, NAVIGATION_ITEM_YPOS_4INCH, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT_4INCH);
             btnImage = [UIImage imageNamed:@""];
-            btnImageSelected = [UIImage imageNamed:@"img_selFB.png"];
+            btnImageSelected = [UIImage imageNamed:@"img_selFB@2x.png"];
         }
         else{
             btn4.frame = CGRectMake(NAVIGATION_ITEM4_XPOS, NAVIGATION_ITEM_YPOS, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT);

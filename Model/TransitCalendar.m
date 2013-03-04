@@ -107,7 +107,13 @@ static TransitCalendar * transitCalendarSingleton;
                 NIMLOG_EVENT1(@"Loaded TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY");
                  KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
                 lastGTFSLoadDateByAgency = [keyObjectStore objectForKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
-                if(![lastGTFSLoadDateByAgency isEqualToDictionary: tempResponseDictionary]){
+                if(!lastGTFSLoadDateByAgency){
+                    lastGTFSLoadDateByAgency = tempResponseDictionary;
+                    KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
+                    [keyObjectStore setObject:lastGTFSLoadDateByAgency forKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
+                    [self loadServiceByWeekday];
+                }
+                else if(![lastGTFSLoadDateByAgency isEqualToDictionary: tempResponseDictionary]){
                     lastGTFSLoadDateByAgency = tempResponseDictionary;
                     KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
                     [keyObjectStore setObject:lastGTFSLoadDateByAgency forKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];
@@ -123,11 +129,14 @@ static TransitCalendar * transitCalendarSingleton;
             }
             else if([tempResponseDictionary objectForKey:GTFS_SERVICE_EXCEPTIONS_DATES] != nil){
                 NIMLOG_EVENT1(@"Loaded TR_CALENDAR_BY_DATE_BY_AGENCY");
+                // Note:- Uncomment this line when using seed Database
+                //if(calendarByDateByAgency){
+                    [[nc_AppDelegate sharedInstance].gtfsParser removeAllTripsAndStopTimesData];
+                    [[nc_AppDelegate sharedInstance].gtfsParser requestAgencyDataFromServer];
+                //}
                 calendarByDateByAgency = tempResponseDictionary;
                 KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
                 [keyObjectStore setObject:calendarByDateByAgency forKey:TR_CALENDAR_BY_DATE_BY_AGENCY];
-                [[nc_AppDelegate sharedInstance].gtfsParser removeAllTripsAndStopTimesData];
-                [[nc_AppDelegate sharedInstance].gtfsParser requestAgencyDataFromServer];
             }
         }
     }
