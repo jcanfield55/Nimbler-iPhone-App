@@ -40,11 +40,14 @@
 @property (strong, nonatomic) Location* toLocation;
 @property (strong, nonatomic) NSDate* originalTripDate; // original date & time requested by user
 @property (strong, nonatomic) NSDate* thisRequestTripDate; // date & time request for iterative plan requests to the server
-@property (strong, nonatomic) RouteExcludeSettings* routeExcludeSettings;
 @property (nonatomic) DepartOrArrive departOrArrive;
 @property (nonatomic) int maxWalkDistance;
 @property (nonatomic) int serverCallsSoFar; // number of calls to the server that have been made for this request
 @property (nonatomic) id<NewPlanAvailableDelegate> planDestination;
+@property (strong, nonatomic) RouteExcludeSettings* routeExcludeSettings; // optional
+@property (strong, nonatomic) NSString* otpExcludeAgencyString;  // Set by requestPlanFromOtpWithParameters method with the OTP exclude string
+@property (strong, nonatomic) NSString* otpExcludeAgencyByModeString; // Set by requestPlanFromOtpWithParameters method with the OTP by mode exclude string
+@property (strong, nonatomic) RouteExcludeSettings* routeExcludeSettingsUsedForOTPCall; // set by requestPlanFromOtpWithParameters with parameters used for its call (may be different than routeExcludeSettings)
 
 // Returns a new PlanRequestParameters object containing the same parameters as parameters0
 + (id)copyOfPlanRequestParameters:(PlanRequestParameters *)parameters0;

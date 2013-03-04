@@ -180,7 +180,7 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
         NSFetchRequest * fetchSettings = [[NSFetchRequest alloc] init];
         [fetchSettings setEntity:[NSEntityDescription entityForName:@"RouteExcludeSettings" inManagedObjectContext:managedObjectContext]];
         NSArray* arraySettings = [managedObjectContext executeFetchRequest:fetchSettings error:nil];
-
+        
         for (RouteExcludeSettings* archiveSetting in arraySettings) {
             if (archiveSetting != self &&
                 [archiveSetting isEquivalentTo:self]) { // if this is an actual different object, but equivalent
@@ -222,21 +222,23 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
                 if (handling) {
                     if ([handling isEqualToString:BY_AGENCY]) {
                         routeExclSetting.key = returnShortAgencyName(leg.agencyName);
-                        NSDictionary *agencyIdModeDictionary = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,AGENCY_ID,nil];
-                        [[NSUserDefaults standardUserDefaults] setObject:agencyIdModeDictionary forKey:routeExclSetting.key];
-                        [[NSUserDefaults standardUserDefaults] synchronize];
-                        
                     } else {  // BY_RAIL_BUS
                         NSString *railOrBus = (leg.isBus ? @"Bus" : @"Rail");
                         if ([leg.agencyName isEqualToString:SFMUNI_AGENCY_NAME]) {
                             railOrBus = (leg.isBus ? @"Bus" : @"Tram");
                         }
                         routeExclSetting.key = [NSString stringWithFormat:@"%@ %@", returnShortAgencyName(leg.agencyName), railOrBus];
-                        NSDictionary *agencyIdModeDictionary = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,AGENCY_ID,leg.mode,MODE,nil];
-                        [[NSUserDefaults standardUserDefaults] setObject:agencyIdModeDictionary forKey:routeExclSetting.key];
-                        [[NSUserDefaults standardUserDefaults] synchronize];
                     }
                     routeExclSetting.setting = [self settingForKey:routeExclSetting.key];
+                    if (routeExclSetting.setting == SETTING_EXCLUDE_ROUTE) {
+                        if ([handling isEqualToString:BY_AGENCY]) {
+                            routeExclSetting.bannedAgencyString = leg.agencyId;
+                        } else {
+                            routeExclSetting.bannedAgencyByModeString = [NSString stringWithFormat:@"%@::%@",
+                                                                         leg.agencyId,
+                                                                         returnRouteTypeFromLegMode(leg.mode)];
+                        }
+                    }
                     [returnArray addObject:routeExclSetting];
                 } // else agency not in handling dictionary, do not generate button
             }  // else no agency name, do not generate button
@@ -249,6 +251,86 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
     routeExclSetting.setting = [self settingForKey:BIKE_BUTTON];
     [returnArray addObject:routeExclSetting];
     return [self returnUniqueRouteExcludeSettings:returnArray];
+}
+
+// Generates the bannedAgencyString which can be passed to OTP for any agency-wide excludes
+// settingArray is an array of RouteExcludeSetting objects returned by excludeSettingsForPlan method
+-(NSString *)bannedAgencyStringForSettingArray:(NSArray *)settingArray
+{
+    if (!settingArray) {
+        return nil;
+    }
+    NSMutableString *strAgencies = [[NSMutableString alloc] initWithCapacity:20];
+    for (RouteExcludeSetting* exclSetting in settingArray) {
+        if (exclSetting.bannedAgencyString && exclSetting.bannedAgencyString.length > 0) {
+            if (strAgencies.length == 0) {
+                [strAgencies appendString:exclSetting.bannedAgencyString];
+            } else {  // insert a comma if this is not the first string
+                [strAgencies appendFormat:@",%@", exclSetting.bannedAgencyString];
+            }
+        }
+    }
+    if (strAgencies.length == 0) {
+        return nil;
+    } else {
+        return strAgencies;
+    }
+}
+
+// Generates the bannedAgencyByModeString which can be passed to OTP for any agency-wide excludes
+// settingArray is an array of RouteExcludeSetting objects returned by excludeSettingsForPlan method
+-(NSString *)bannedAgencyByModeStringForSettingArray:(NSArray *)settingArray
+{
+    if (!settingArray) {
+        return nil;
+    }
+    NSMutableString *strAgencies = [[NSMutableString alloc] initWithCapacity:20];
+    for (RouteExcludeSetting* exclSetting in settingArray) {
+        if (exclSetting.bannedAgencyByModeString && exclSetting.bannedAgencyByModeString.length > 0) {
+            if (strAgencies.length == 0) {
+                [strAgencies appendString:exclSetting.bannedAgencyByModeString];
+            } else {  // insert a comma if this is not the first string
+                [strAgencies appendFormat:@",%@", exclSetting.bannedAgencyByModeString];
+            }
+        }
+    }
+    if (strAgencies.length == 0) {
+        return nil;
+    } else {
+        return strAgencies;
+    }
+}
+
+// Creates a new RouteExcludeSettings using the values in settingArray.
+// settingArray is created by excludeSettingsForPlan method
++(RouteExcludeSettings *)excludeSettingsWithSettingArray:(NSArray *)settingArray
+{
+    NSMutableDictionary* newExcludeDictionary = [NSMutableDictionary dictionaryWithCapacity:10];    
+    for (RouteExcludeSetting* exclSetting in settingArray) {
+        if (exclSetting.setting == SETTING_EXCLUDE_ROUTE) {
+            [newExcludeDictionary setObject:SETTING_STRING_EXCLUDE forKey:exclSetting.key];
+        }
+    }
+    // Create the new object
+    RouteExcludeSettings* newSettings = [NSEntityDescription insertNewObjectForEntityForName:@"RouteExcludeSettings"
+                                                                     inManagedObjectContext:managedObjectContext];
+    [newSettings setIsCurrentUserSetting:[NSNumber numberWithBool:false]];
+    [newSettings setExcludeDictionaryInternal:newExcludeDictionary];
+    
+    // Check that there are not already duplicates if so, consolidate
+    NSFetchRequest * fetchSettings = [[NSFetchRequest alloc] init];
+    [fetchSettings setEntity:[NSEntityDescription entityForName:@"RouteExcludeSettings" inManagedObjectContext:managedObjectContext]];
+    NSArray* fetchedSettingsArray = [managedObjectContext executeFetchRequest:fetchSettings error:nil];
+    
+    for (RouteExcludeSettings* archiveSetting in fetchedSettingsArray) {
+        if (archiveSetting != newSettings &&
+            [archiveSetting isEquivalentTo:newSettings]) { // if this is an actual different object, but equivalent
+            // Delete this new copy -- we don't need it -- and return archiveSetting
+            [managedObjectContext deleteObject:newSettings]; // Remove redundant archiveSetting
+            return archiveSetting;
+        }
+    }
+    return newSettings;  // if no equivalent one already in the system, return newSettings
 }
 
 // Returns true if itin should be included based on the RouteExclude settings

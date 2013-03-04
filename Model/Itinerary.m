@@ -611,4 +611,18 @@ NSArray *sortedByStartTimeOnly(NSSet* itinerarySet)
     return false;
 }
 
+// Returns true if all the itinerary's legs' serviceDays match the serviceDays for requestDate
+- (BOOL)doAllServiceDaysMatchDate:(NSDate *)requestDate
+{
+    TransitCalendar* transitCalendar = [TransitCalendar transitCalendar];
+    for (Leg* leg in [self sortedLegs]) {
+        NSString* agencyId = [leg agencyId];
+        if (agencyId && [agencyId length]>0 &&
+            ![transitCalendar isEquivalentServiceDayFor:requestDate And:[leg startTime] agencyId:agencyId]) { // Check if there is an agency for this leg
+            return false;
+        }
+    }
+    return true;
+}
+
 @end

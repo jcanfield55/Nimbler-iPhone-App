@@ -47,5 +47,10 @@
 - (Plan *)consolidateWithMatchingPlans:(Plan *)plan0;
 
 - (void)clearCache;
--(void)requestPlanFromOtpWithParameters:(PlanRequestParameters *)parameters;
+
+// Requests for a new plan from OTP using parameters
+// If exclSettingArray is nil, will not exclude any routes in the OTP request
+// To exclude routes, set exclSettingArray to an array of RouteExcludeSetting objects as returned by RouteExcludeSettings -> excludeSettingsForPlan
+-(void)requestPlanFromOtpWithParameters:(PlanRequestParameters *)parameters
+               routeExcludeSettingArray:(NSArray *)exclSettingArray;
 @end

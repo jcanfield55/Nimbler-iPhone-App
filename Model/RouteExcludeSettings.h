@@ -34,12 +34,23 @@ typedef enum {
 // before modifying self.  The modified self will have no 
 -(void)changeSettingTo:(IncludeExcludeSetting)value forKey:(NSString *)key;
 
-
 // Returns the keys and values for the routes that are available in the plan relevant to the originalTripDate
 // in parameters.
 // Returned array containing RouteExcludeSettings objects
 // Array is ordered in the sequence options should be presented to user
 -(NSArray *)excludeSettingsForPlan:(Plan *)plan withParameters:(PlanRequestParameters *)parameters;
+
+// Generates the bannedAgencyString which can be passed to OTP for any agency-wide excludes
+// settingArray is an array of RouteExcludeSetting objects returned by excludeSettingsForPlan method
+-(NSString *)bannedAgencyStringForSettingArray:(NSArray *)settingArray;
+
+// Generates the bannedAgencyByModeString which can be passed to OTP for any agency-wide excludes
+// settingArray is an array of RouteExcludeSetting objects returned by excludeSettingsForPlan method
+-(NSString *)bannedAgencyByModeStringForSettingArray:(NSArray *)settingArray;
+
+// Creates a new RouteExcludeSettings using the values in settingArray.
+// settingArray is created by excludeSettingsForPlan method
++(RouteExcludeSettings *)excludeSettingsWithSettingArray:(NSArray *)settingArray;
 
 // Returns true if itin should be included based on the RouteExclude settings
 -(BOOL)isItineraryIncluded:(Itinerary *)itin;

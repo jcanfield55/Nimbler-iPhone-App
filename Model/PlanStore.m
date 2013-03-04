@@ -28,9 +28,6 @@
     NSMutableDictionary* parametersByPlanURLResource; // Key is the planURLResource, object = request parameters
 }
 
-// Internal methods
--(void)requestPlanFromOtpWithParameters:(PlanRequestParameters *)parameters;
-
 @end
 
 @implementation PlanStore
@@ -105,15 +102,18 @@
                  FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
                  nil, nil, nil, nil);
 
-        [self requestPlanFromOtpWithParameters:parameters];
+        [self requestPlanFromOtpWithParameters:parameters routeExcludeSettingArray:nil];
     }
     @catch (NSException *exception) {
         logException(@"PlanStore->requestPlanWithParameters:", @"", exception);
     }
 }
 
-// Requests for a new plan from OTP
+// Requests for a new plan from OTP using parameters
+// If exclSettingArray is nil, will not exclude any routes in the OTP request
+// To exclude routes, set exclSettingArray to an array of RouteExcludeSetting objects as returned by RouteExcludeSettings -> excludeSettingsForPlan
 -(void)requestPlanFromOtpWithParameters:(PlanRequestParameters *)parameters
+               routeExcludeSettingArray:(NSArray *)exclSettingArray
 {
     [nc_AppDelegate sharedInstance].receivedReply = NO;
     [nc_AppDelegate sharedInstance].receivedError = NO;
@@ -208,27 +208,18 @@
         } else {
             [params setObject:REQUEST_TRANSIT_MODE_TRANSIT forKey:REQUEST_TRANSIT_MODE];
         }
-        NSMutableString *strAgencies = [[NSMutableString alloc] init];
-        NSMutableString *strAgenciesWithMode = [[NSMutableString alloc] init];
-        NSArray *allKeys = [[parameters.routeExcludeSettings excludeDictionaryInternal] allKeys];
-        for(int i=0;i<[allKeys count];i++){
-            if([parameters.routeExcludeSettings settingForKey:[allKeys objectAtIndex:i]]==SETTING_EXCLUDE_ROUTE) {
-                NSDictionary *agencyIdModeDictionary = [[NSUserDefaults standardUserDefaults] objectForKey:[allKeys objectAtIndex:i]];
-                NSString *routeType = returnRouteTypeFromLegMode([agencyIdModeDictionary objectForKey:MODE]);
-                if(routeType)
-                    [strAgenciesWithMode appendFormat:@"%@::%@,",[agencyIdModeDictionary objectForKey:AGENCY_ID],routeType];
-                else if([agencyIdModeDictionary objectForKey:AGENCY_ID])
-                    [strAgencies appendFormat:@"%@,",[agencyIdModeDictionary objectForKey:AGENCY_ID]];
-            }
-        }
+        NSString *strAgencies = [parameters.routeExcludeSettings bannedAgencyStringForSettingArray:exclSettingArray];
+        NSString *strAgenciesWithMode = [parameters.routeExcludeSettings bannedAgencyByModeStringForSettingArray:exclSettingArray];
+
         if(strAgencies && strAgencies.length > 0){
-            NSString *agencies = [strAgencies substringToIndex:[strAgencies length]-1];
-            [params setObject:agencies forKey:BANNED_AGENCIES];
+            [params setObject:strAgencies forKey:BANNED_AGENCIES];
         }
         if(strAgenciesWithMode && strAgenciesWithMode.length > 0){
-            NSString *agencies = [strAgenciesWithMode substringToIndex:[strAgenciesWithMode length]-1];
-            [params setObject:agencies forKey:BANNED_AGENCIES_WITH_MODE];
+            [params setObject:strAgenciesWithMode forKey:BANNED_AGENCIES_WITH_MODE];
         }
+        parameters.otpExcludeAgencyString = strAgencies;
+        parameters.otpExcludeAgencyByModeString = strAgenciesWithMode;
+        
         [params setObject:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] forKey:APPLICATION_TYPE];
         // Build the parameters into a resource string
         parameters.serverCallsSoFar = parameters.serverCallsSoFar + 1;
@@ -310,7 +301,7 @@
                 }
                 [plan initializeNewPlanFromOTPWithRequestDate:[planRequestParameters thisRequestTripDate]
                                                           departOrArrive:[planRequestParameters departOrArrive]
-                                                     routeExcludeSettings:planRequestParameters.routeExcludeSettings];
+                                                     routeExcludeSettings:planRequestParameters.routeExcludeSettingsUsedForOTPCall];
                 // Make sure that we still have itineraries (ie it wasn't just overnight itineraries)
                 // Part of the DE161 fix
                 if ([[plan itineraries] count] == 0) {
@@ -420,14 +411,24 @@
         // Reset destination to routeOptionsViewController if not there already
         params.planDestination = [((ToFromViewController *) params.planDestination) routeOptionsVC];
     }
+    
+    NSTimeInterval bufferSeconds;
+    if ([otpRequestDate isEqualToDate:requestParams0.originalTripDate]) {
+        bufferSeconds = 0;  // do not add any buffer if we are starting from the original Request date
+    } else {
+        bufferSeconds = PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS;
+    }
+    
+    NSArray* exclSettingArray = [requestParams0.routeExcludeSettings excludeSettingsForPlan:plan withParameters:requestParams0];
+    
     if (params.departOrArrive == DEPART &&
         [otpRequestDate timeIntervalSinceDate:requestParams0.originalTripDate] < PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW) {
-        params.thisRequestTripDate = [otpRequestDate dateByAddingTimeInterval:PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS];
-        [self requestPlanFromOtpWithParameters:params];
+        params.thisRequestTripDate = [otpRequestDate dateByAddingTimeInterval:bufferSeconds];
+        [self requestPlanFromOtpWithParameters:params routeExcludeSettingArray:exclSettingArray];
     } else if (params.departOrArrive == ARRIVE &&
                [otpRequestDate timeIntervalSinceDate:requestParams0.originalTripDate] > -PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW){
-        params.thisRequestTripDate = [otpRequestDate dateByAddingTimeInterval:(-PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS)];
-        [self requestPlanFromOtpWithParameters:params];
+        params.thisRequestTripDate = [otpRequestDate dateByAddingTimeInterval:(-bufferSeconds)];
+        [self requestPlanFromOtpWithParameters:params routeExcludeSettingArray:exclSettingArray];
     }
 }
 

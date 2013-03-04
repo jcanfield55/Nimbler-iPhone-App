@@ -506,7 +506,6 @@
 #define ALL_STATION    @"all_st"
 
 #define EXCLUDE_SETTINGS_DICTIONARY @"ExcludeSettingsDictionary"
-#define AGENCY_ID @"agencyId"
 #define MODE @"mode"
 #define BANNED_AGENCIES @"bannedAgencies"
 #define BANNED_AGENCIES_WITH_MODE @"bannedAgenciesWithMode"

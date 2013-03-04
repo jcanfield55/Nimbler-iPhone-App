@@ -1168,7 +1168,7 @@ UIImage *imageDetailDisclosure;
                     [[self navigationController] pushViewController:routeOptionsVC animated:YES];
                 }
             }
-            else{
+            else{ // plan.sortedItineraries.count == 0
                 if([nc_AppDelegate sharedInstance].isToFromView){
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:APP_TITLE message:ALERT_TRIP_NOT_AVAILABLE delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil] ;
                     [alert show];

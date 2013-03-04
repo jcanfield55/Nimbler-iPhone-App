@@ -602,7 +602,7 @@
                     strFinalDate = [strFinalDate stringByReplacingOccurrencesOfString:@"," withString:@""];
                     [nc_AppDelegate sharedInstance].expectedRequestDate = [arrayDepartureTime objectAtIndex:st1];
                     [[nc_AppDelegate sharedInstance].testLogMutableString appendFormat:@"%@,%@,%@,%@,",fromLocation.formattedAddress,toLocation.formattedAddress,strFinalDate,strTripID];
-                    [store requestPlanFromOtpWithParameters:parameters];
+                    [store requestPlanFromOtpWithParameters:parameters routeExcludeSettingArray:nil];
                     [self someMethodToWaitForResult];
                     [self planTestWithComparingTime];
                 }

@@ -172,8 +172,11 @@
     NSMutableSet* chunksConsolidated = [[NSMutableSet alloc] initWithCapacity:10];
     for (PlanRequestChunk* reqChunk0 in [plan0 requestChunks]) {
         for (PlanRequestChunk* selfRequestChunk in [self requestChunks]) {
-            if ([reqChunk0 doAllServiceStringByAgencyMatchRequestChunk:selfRequestChunk] &&
-                [reqChunk0 doTimesOverlapRequestChunk:selfRequestChunk bufferInSeconds:REQUEST_CHUNK_OVERLAP_BUFFER_IN_SECONDS]) {
+            if (((reqChunk0.routeExcludeSettings==nil) == (selfRequestChunk.routeExcludeSettings==nil)) && 
+                [[reqChunk0 routeExcludeSettings] isEquivalentTo:[selfRequestChunk routeExcludeSettings]] && // equivalent RouteExcludeSettings
+                ([reqChunk0 gtfsItineraryPattern] == [selfRequestChunk gtfsItineraryPattern]) &&   // the same gtfsItineraryPattern
+                [reqChunk0 doAllServiceStringByAgencyMatchRequestChunk:selfRequestChunk] &&  // matching serviceStrings
+                [reqChunk0 doTimesOverlapRequestChunk:selfRequestChunk bufferInSeconds:REQUEST_CHUNK_OVERLAP_BUFFER_IN_SECONDS]) { //overlapping times
                 [chunksConsolidated addObject:reqChunk0];
                 [selfRequestChunk consolidateIntoSelfRequestChunk:reqChunk0];
             }
@@ -181,7 +184,8 @@
     }
     
     // Transfer over requestChunks that were not consolidated
-    for (PlanRequestChunk* reqChunkToTransfer in [plan0 requestChunks]) {
+    NSSet* plan0RequestChunks = [NSSet setWithSet:[plan0 requestChunks]];
+    for (PlanRequestChunk* reqChunkToTransfer in plan0RequestChunks) {
         if (![chunksConsolidated containsObject:reqChunkToTransfer]) {
             // Only transfer over PlanRequestChunks that have not already been consolidated
             [reqChunkToTransfer setPlan:self];  
@@ -395,6 +399,7 @@
             if ([itin isOTPItinerary] &&
                 ![itin hideItinerary] &&
                 [itin isCurrentVsGtfsFilesIn:[self transitCalendar]] &&
+                [itin doAllServiceDaysMatchDate:requestDate] && 
                 [itin isWithinRequestTime:requestDate
                     intervalBeforeRequest:planBufferSecondsBeforeItinerary
                      intervalAfterRequest:planMaxTimeForResultsToShow

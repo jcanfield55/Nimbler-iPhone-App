@@ -1744,6 +1744,31 @@
     [testSettings changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:BIKE_BUTTON];
     // Now settings has been deleted and incorporated into testSettings
     STAssertEquals([[testSettings usedByRequestChunks] count], 2u, @"");
+    
+    // Test excludeSettingsWithSettingArray
+    [testSettings changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:VTA_BUTTON];  // creates a backup setting
+    NSFetchRequest * fetchSettings2 = [[NSFetchRequest alloc] init];
+    [fetchSettings2 setEntity:[NSEntityDescription entityForName:@"RouteExcludeSettings" inManagedObjectContext:managedObjectContext]];
+    NSArray* fetchArraySettings = [managedObjectContext executeFetchRequest:fetchSettings error:nil];
+    STAssertEquals([fetchArraySettings count], 2u, @"");  // Test Settings and it's back-up copy
+    // settings2 are have only the exclusions relevant to plan6
+    NSArray* settingArray2 = [testSettings excludeSettingsForPlan:plan6 withParameters:parameters];
+    RouteExcludeSettings* settings2 = [RouteExcludeSettings excludeSettingsWithSettingArray:settingArray2];
+    STAssertEquals([settings2 settingForKey:VTA_BUTTON], SETTING_INCLUDE_ROUTE, @"");  // VTA button not excluded, since not relevant to plan6
+    STAssertFalse([settings2 isEquivalentTo:testSettings], @"");   // The two settings are not equivalent
+    fetchArraySettings = [managedObjectContext executeFetchRequest:fetchSettings error:nil];
+    STAssertEquals([fetchArraySettings count], 2u, @"");  // settings2 is the same as the back-up copy we just created
+    BOOL test1 = false;
+    BOOL test2 = false;
+    for (RouteExcludeSettings* settings0 in fetchArraySettings) {
+        if (settings0 == testSettings) {
+            test1 = true;
+        } else if (settings0 == settings2) {
+            test2 = true;
+        }
+    }
+    STAssertTrue(test1, @""); // settings is of the settings stored in CoreData
+    STAssertTrue(test2, @""); // settings2 is the other settings stored in CoreData
 }
 
 // Methods wait until Error or Reply arrives from TP.

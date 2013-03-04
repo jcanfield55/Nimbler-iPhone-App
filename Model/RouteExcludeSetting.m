@@ -13,5 +13,6 @@
 
 @synthesize key;
 @synthesize setting;
-
+@synthesize bannedAgencyString;
+@synthesize bannedAgencyByModeString;
 @end

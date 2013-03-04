@@ -88,13 +88,13 @@
     for (int i=0; i<[legInfoArray count]; i++) {
         id member = [legInfoArray objectAtIndex:i];
         if ([member isKindOfClass:[Leg class]]) { // if unscheduled
+            Leg* leg = member;
             if (i==index) {
-                unscheduledTime = 0.0;  // if this is the start-point we want, reset unscheduledTime
+                unscheduledTime = [leg durationTimeInterval];  // if this is the start-point we want, reset unscheduledTime
                 if (lastScheduledEndTime) { 
                     return lastScheduledEndTime; // if we have a previous scheduled leg, return that endTime
                 }
             } else { 
-                Leg* leg = member;
                 unscheduledTime = unscheduledTime + [leg durationTimeInterval];
             } 
         } else { // for scheduled, get leg endTime and then add unscheduledTime

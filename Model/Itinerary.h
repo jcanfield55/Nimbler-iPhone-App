@@ -157,6 +157,9 @@ typedef enum {
         intervalAfterRequest:(NSTimeInterval)intervalAfterRequest
               departOrArrive:(DepartOrArrive)depOrArrive;
 
+// Returns true if all the itinerary's legs' serviceDays match the serviceDays for requestDate
+- (BOOL)doAllServiceDaysMatchDate:(NSDate *)requestDate;
+
 @end
 
 @interface Itinerary (CoreDataGeneratedAccessors)
