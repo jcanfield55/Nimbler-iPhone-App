@@ -12,6 +12,7 @@
 #import "UtilityFunctions.h"
 #import "KeyObjectStore.h"
 #import "Constants.h"
+#import "LocalConstants.h"
 #import "nc_AppDelegate.h"
 
 @interface TransitCalendar() {
@@ -237,7 +238,7 @@ static TransitCalendar * transitCalendarSingleton;
 {
     NSArray* agencyIDs = [NSArray arrayWithObjects:
                           @"VTA", @"SFMTA", @"BART", @"AirBART", @"AC Transit",
-                          @"caltrain-ca-us", nil];
+                          CALTRAIN_AGENCY_ID, nil];
     NSMutableDictionary* lastGTFSLoadDateMutable = [[NSMutableDictionary alloc] initWithCapacity:[agencyIDs count]];
     NSMutableDictionary* serviceByWeekdayMutable = [[NSMutableDictionary alloc] initWithCapacity:[agencyIDs count]];
     NSMutableDictionary* calendarByDateMutable = [[NSMutableDictionary alloc] initWithCapacity:[agencyIDs count]];

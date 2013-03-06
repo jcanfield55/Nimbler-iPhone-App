@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="11G56" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="12C60" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AddressComponent" representedClassName="AddressComponent" syncable="YES">
         <attribute name="longName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
@@ -48,6 +48,7 @@
         <attribute name="serviceID" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="calendar" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsCalendar" inverseName="calendarDates" inverseEntity="GtfsCalendar" syncable="YES"/>
     </entity>
+    <entity name="GtfsParsingStatus" syncable="YES"/>
     <entity name="GtfsRoutes" representedClassName="GtfsRoutes" syncable="YES">
         <attribute name="routeColor" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="routeDesc" optional="YES" attributeType="String" syncable="YES"/>
@@ -347,5 +348,6 @@
         <element name="RouteExcludeSettings" positionX="160" positionY="192" width="128" height="90"/>
         <element name="StationListElement" positionX="160" positionY="192" width="128" height="150"/>
         <element name="Step" positionX="0" positionY="0" width="128" height="195"/>
+        <element name="GtfsParsingStatus" positionX="160" positionY="192" width="128" height="45"/>
     </elements>
 </model>

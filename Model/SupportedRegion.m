@@ -7,7 +7,7 @@
 //
 
 #import "SupportedRegion.h"
-#import "Constants.h"
+#import "LocalConstants.h"
 
 @implementation SupportedRegion
 

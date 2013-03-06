@@ -10,6 +10,7 @@
 #import "LocationFromGoogle.h"
 #import "LocationFromIOS.h"
 #import "Constants.h"
+#import "LocalConstants.h"
 #import "Logging.h"
 #import "PlanRequestParameters.h"
 #import "PlanStore.h"
@@ -214,7 +215,7 @@
     plan9arrive = [NSEntityDescription insertNewObjectForEntityForName:@"Plan" inManagedObjectContext:managedObjectContext];
     
     // Agency IDs
-    NSString* caltrain = @"caltrain-ca-us";
+    NSString* caltrain = CALTRAIN_AGENCY_ID;
     NSString* Bart = @"BART";
     NSString* ACTransit = @"AC Transit";
     
@@ -718,7 +719,7 @@
     
     leg1021.startTime = date11;
     leg1021.duration = [NSNumber numberWithInt:540000];
-    leg1021.agencyId = @"caltrain-ca-us";
+    leg1021.agencyId = CALTRAIN_AGENCY_ID;
     leg1021.agencyName = @"Caltrain";
     leg1021.mode = OTP_RAIL_MODE;
     leg1021.route = @"Local";
@@ -747,7 +748,7 @@
     
     leg1031.startTime = date11;
     leg1031.duration = [NSNumber numberWithInt:540000];
-    leg1031.agencyId = @"caltrain-ca-us";
+    leg1031.agencyId = CALTRAIN_AGENCY_ID;
     leg1031.agencyName = @"Caltrain";
     leg1031.mode = OTP_RAIL_MODE;
     leg1031.route = @"Local";
@@ -786,7 +787,7 @@
     
     leg1111.startTime = date11;
     leg1111.duration = [NSNumber numberWithInt:540000];
-    leg1111.agencyId = @"caltrain-ca-us";
+    leg1111.agencyId = CALTRAIN_AGENCY_ID;
     leg1111.agencyName = @"Caltrain";
     leg1111.mode = OTP_RAIL_MODE;
     leg1111.route = @"Local";
@@ -815,7 +816,7 @@
     
     leg1121.startTime = date11;
     leg1121.duration = [NSNumber numberWithInt:540000];
-    leg1121.agencyId = @"caltrain-ca-us";
+    leg1121.agencyId = CALTRAIN_AGENCY_ID;
     leg1121.agencyName = @"Caltrain";
     leg1121.mode = OTP_RAIL_MODE;
     leg1121.route = @"Local";
@@ -844,7 +845,7 @@
     
     leg1131.startTime = date11;
     leg1131.duration = [NSNumber numberWithInt:540000];
-    leg1131.agencyId = @"caltrain-ca-us";
+    leg1131.agencyId = CALTRAIN_AGENCY_ID;
     leg1131.agencyName = @"Caltrain";
     leg1131.mode = OTP_RAIL_MODE;
     leg1131.route = @"Local";
@@ -1226,8 +1227,8 @@
 
 
     // isCurrentVsGtfsFileFor:(NSDate *)date agencyId:(NSString *)agencyId
-    STAssertTrue([transitCalendar isCurrentVsGtfsFileFor:dayTime1 agencyId:@"caltrain-ca-us"], @"");
-    STAssertFalse([transitCalendar isCurrentVsGtfsFileFor:dayTime4 agencyId:@"caltrain-ca-us"], @"");
+    STAssertTrue([transitCalendar isCurrentVsGtfsFileFor:dayTime1 agencyId:CALTRAIN_AGENCY_ID], @"");
+    STAssertFalse([transitCalendar isCurrentVsGtfsFileFor:dayTime4 agencyId:CALTRAIN_AGENCY_ID], @"");
     STAssertFalse([transitCalendar isCurrentVsGtfsFileFor:dayTime4 agencyId:@"No such agency - Blah"], @"");
 
 
@@ -1849,7 +1850,7 @@
     
     
     leg1203 = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:managedObjectContext];
-    leg1203.agencyId = @"caltrain-ca-us";
+    leg1203.agencyId = CALTRAIN_AGENCY_ID;
     leg1203.agencyName = @"Caltrain";
     leg1203.mode = OTP_RAIL_MODE;
     leg1203.route = @"Local";

@@ -14,6 +14,7 @@
 #import "LegMapViewController.h"
 #import "twitterViewController.h"
 #import "nc_AppDelegate.h"
+#import "LocalConstants.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "Itinerary.h"
 #import "RouteExcludeSettings.h"
@@ -211,7 +212,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     NSMutableAttributedString *strMutableDetailTextLabel = [[NSMutableAttributedString alloc] initWithString:strDetailtextLabel];
     for(int i=0;i<[[itinerary sortedLegs] count];i++){
         Leg *leg = [[itinerary sortedLegs] objectAtIndex:i];
-        if([[leg agencyId] isEqualToString:@"caltrain-ca-us"]){
+        if([[leg agencyId] isEqualToString:CALTRAIN_AGENCY_ID]){
             NSString *strTrainNumber;
             NSRange range;
             NSString *strHeadSign = [leg headSign];

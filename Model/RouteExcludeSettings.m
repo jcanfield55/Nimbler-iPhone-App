@@ -12,6 +12,7 @@
 #import "Leg.h"
 #import "RouteExcludeSetting.h"
 #import "UtilityFunctions.h"
+#import "LocalConstants.h"
 
 #define BY_AGENCY @"By Agency"
 #define BY_RAIL_BUS  @"By Rail/Bus"
@@ -103,19 +104,7 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
 // BY_RAIL_BUS means we will show up to two buttons for that agency, one for rail and one for bus service
 -(NSDictionary *)agencyIDHandlingDictionary{
         if (!agencyIDHandlingDictionaryInternal) {
-            agencyIDHandlingDictionaryInternal = [NSDictionary dictionaryWithKeysAndObjects:
-                                                  CALTRAIN_BUTTON, BY_AGENCY,
-                                                  BART_BUTTON, BY_AGENCY,
-                                                  AIRBART_BUTTON, BY_AGENCY,
-                                                  MUNI_BUTTON, BY_RAIL_BUS,
-                                                  ACTRANSIT_BUTTON, BY_AGENCY,
-                                                  VTA_BUTTON, BY_RAIL_BUS,
-                                                  MENLO_MIDDAY_BUTTON, BY_AGENCY,
-                                                  BLUE_GOLD_BUTTON, BY_AGENCY,
-                                                  HARBOR_BAY_BUTTON, BY_AGENCY,
-                                                  BAYLINK_BUTTON,BY_AGENCY,
-                                                  GOLDEN_GATE_BUTTON, BY_AGENCY,
-                                                  nil];
+            agencyIDHandlingDictionaryInternal = EXCLUDE_BUTTON_HANDLING_BY_AGENCY_DICTIONARY;
         }
         return agencyIDHandlingDictionaryInternal;
 }

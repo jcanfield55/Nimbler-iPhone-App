@@ -452,6 +452,7 @@
         NSMutableArray *arrayShapeDistTraveled = [[NSMutableArray alloc] init];
         NSMutableArray *arrayAgencyID = [[NSMutableArray alloc] init];
         
+        NIMLOG_PERF2(@"parse stop times start first loop");
         NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
         NSArray *arrayAgencyIds = [dictComponents allKeys];
         for(int k=0;k<[arrayAgencyIds count];k++){
@@ -491,6 +492,7 @@
                 GtfsStop *stop = [arrayStops objectAtIndex:i];
                 [dictStops setObject:stop forKey:stop.stopID];
             }
+        NIMLOG_PERF2(@"Parse stop times start 2nd loop");
             for(int j=0;j<[arrayTripID count];j++){
                 GtfsStopTimes* stopTimes = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsStopTimes" inManagedObjectContext:moc];
                 stopTimes.tripID = [arrayTripID objectAtIndex:j];
@@ -507,7 +509,9 @@
                 stopTimes.shapeDistTravelled = [arrayShapeDistTraveled objectAtIndex:j];
                 stopTimes.agencyID = [arrayAgencyID objectAtIndex:j];
             }
+        NIMLOG_PERF2(@"Parse stop times save context");
             saveContext(moc);
+        NIMLOG_PERF2(@"Parse stop times done");
         dispatch_async(dispatch_get_main_queue(), ^{
             
         });
@@ -854,8 +858,8 @@
         NSArray *legArray = [iti sortedLegs];
         for(int j=0;j<[legArray count];j++){
             Leg *leg = [legArray objectAtIndex:j];
-            if([leg isScheduled] && ![self isTripsAlreadyExistsForTripId:leg.tripId RouteId:leg.routeId] && [strRequestString rangeOfString:[NSString stringWithFormat:@"%@_%@",agencyIdFromAgencyName(leg.agencyName),leg.routeId]].location == NSNotFound){
-                [strRequestString appendFormat:@"%@_%@,",agencyIdFromAgencyName(leg.agencyName),leg.routeId];
+            if([leg isScheduled] && ![self isTripsAlreadyExistsForTripId:leg.tripId RouteId:leg.routeId] && [strRequestString rangeOfString:[NSString stringWithFormat:@"%@_%@",agencyFeedIdFromAgencyName(leg.agencyName),leg.routeId]].location == NSNotFound){
+                [strRequestString appendFormat:@"%@_%@,",agencyFeedIdFromAgencyName(leg.agencyName),leg.routeId];
             }
         }
     }

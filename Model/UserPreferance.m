@@ -9,6 +9,7 @@
 #import "UserPreferance.h"
 #import "nc_AppDelegate.h"
 #import "UtilityFunctions.h"
+#import "LocalConstants.h"
 
 // Function to translate from settings bool values to strings used to send to server
 NSString* tpBoolToStr(BOOL boolValue)

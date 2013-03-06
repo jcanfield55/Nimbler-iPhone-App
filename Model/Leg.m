@@ -11,12 +11,12 @@
 #import "Step.h"
 #import "UtilityFunctions.h"
 #import "KeyObjectStore.h"
+#import "LocalConstants.h"
 
 @interface Leg() 
 // Private instance methods
 +(NSDictionary *)agencyDisplayNameByAgencyId;
 #define AGENCY_DISPLAY_NAME_BY_AGENCYID_KEY @"agencyDisplayNameByAgencyIdKey"
-#define AGENCY_DISPLAY_NAME_BY_AGENCYID_VERSION_NUMBER @"agencyDisplayNameByAgencyIdVersionNumber"
 
 @end
 
@@ -84,20 +84,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         KeyObjectStore* store = [KeyObjectStore keyObjectStore];
         __agencyDisplayNameByAgencyId = [store objectForKey:AGENCY_DISPLAY_NAME_BY_AGENCYID_KEY];
         if (!__agencyDisplayNameByAgencyId) {  // if not stored in the database, create it
-            __agencyDisplayNameByAgencyId = [NSDictionary dictionaryWithKeysAndObjects:
-                                             AGENCY_DISPLAY_NAME_BY_AGENCYID_VERSION_NUMBER, CALTRAIN_PRELOAD_VERSION_NUMBER,
-                                             @"AC Transit", @"AC Transit",
-                                             @"BART", @"BART",
-                                             @"AirBART", @"AirBART",
-                                             @"caltrain-ca-us", @"Caltrain",
-                                             @"8", @"Blue & Gold Fleet",
-                                             @"10", @"Harbor Bay Ferry",
-                                             @"11", @"Baylink",
-                                             @"12", @"Golden Gate Ferry",
-                                             @"MIDDAY", @"Menlo Park Midday Shuttle",
-                                             @"SFMTA", @"Muni",
-                                             @"VTA", @"VTA",
-                                             nil];
+            __agencyDisplayNameByAgencyId = AGENCY_SHORT_NAME_BY_AGENCY_ID_DICTIONARY;
             [store setObject:__agencyDisplayNameByAgencyId forKey:AGENCY_DISPLAY_NAME_BY_AGENCYID_KEY];
         }
     }
@@ -160,12 +147,12 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     else if ([[self mode] isEqualToString:OTP_TRAM_MODE]) {
         [summary appendString:@" Tram"];
     }
-    if (![[self agencyId] isEqualToString:@"BART"] && ![[self agencyId] isEqualToString:@"caltrain-ca-us"]) { // don't add BART route name because too long
+    if (![[self agencyId] isEqualToString:@"BART"] && ![[self agencyId] isEqualToString:CALTRAIN_AGENCY_ID]) { // don't add BART route name because too long
         [summary appendFormat:@" %@", [self route]];
     }
     
     // US-184 Implementation
-    if ([[self agencyId] isEqualToString:@"caltrain-ca-us"]) {
+    if ([[self agencyId] isEqualToString:CALTRAIN_AGENCY_ID]) {
         NSRange range;
         NSString *strTrainNumber;
         NSString *strHeadSign = [self headSign];
@@ -468,7 +455,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 
 -(BOOL)isHeavyTrain
 {
-    if ([[self mode] isEqualToString:OTP_RAIL_MODE] && [[self agencyId] isEqualToString:@"caltrain-ca-us"]) {
+    if ([[self mode] isEqualToString:OTP_RAIL_MODE] && [[self agencyId] isEqualToString:CALTRAIN_AGENCY_ID]) {
         return true;
     } else {
         return false;

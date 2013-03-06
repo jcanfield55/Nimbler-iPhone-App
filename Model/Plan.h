@@ -154,6 +154,5 @@
 // Remove duplicate itineraries from plan
 - (void) removeDuplicateItineraries;
 
-- (NSDictionary *) returnUniqueButtonTitle;
 @end
 

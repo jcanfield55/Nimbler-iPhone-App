@@ -779,27 +779,6 @@
     }
 }
 
-- (NSDictionary *) returnUniqueButtonTitle{
-    NSMutableDictionary *dictButtonTitles = [[NSMutableDictionary alloc] init];
-    for(int i=0;i<[[self sortedItineraries] count];i++){
-        Itinerary *itinerary = [[self sortedItineraries] objectAtIndex:i];
-        for(int j=0;j<[itinerary.sortedLegs count];j++){
-            Leg *leg = [itinerary.sortedLegs objectAtIndex:j];
-            if([leg isScheduled]){
-                if([[leg agencyName] isEqualToString:SFMUNI_AGENCY_NAME]){
-                    NSString *strButtonTitle = [NSString stringWithFormat:@"%@-%@",returnShortAgencyName([leg agencyName]),[leg mode]];
-                    [dictButtonTitles setObject:PLAN_ROUTE_INCLUDE forKey:strButtonTitle];
-                }
-                else{
-                    NSString *strButtonTitle = returnShortAgencyName([leg agencyName]);
-                    [dictButtonTitles setObject:PLAN_ROUTE_INCLUDE forKey:strButtonTitle];
-                }
-            }
-        }
-    }
-    return dictButtonTitles;
-}
-
 // Returns true if all the legs in all the itineraries are unscheduled
 - (BOOL)haveOnlyUnscheduledItineraries
 {

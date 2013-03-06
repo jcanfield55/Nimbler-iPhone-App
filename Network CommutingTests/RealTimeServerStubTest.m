@@ -10,6 +10,7 @@
 #import "LocationFromGoogle.h"
 #import "LocationFromIOS.h"
 #import "Constants.h"
+#import "LocalConstants.h"
 #import "Logging.h"
 #import "PlanRequestParameters.h"
 #import "RouteOptionsViewController.h"
@@ -190,7 +191,7 @@
     bool test10 = false;
     
     for (GtfsAgency* agency in arrayAgency) {
-        if ([agency.agencyID isEqualToString:@"caltrain-ca-us"]) {
+        if ([agency.agencyID isEqualToString:CALTRAIN_AGENCY_ID]) {
             test1 = ([agency.agencyName isEqualToString:@"Caltrain"]);
             test2 = ([agency.agencyURL isEqualToString:@"http://www.caltrain.com"]);
         }

@@ -84,10 +84,10 @@ CLLocationDistance distanceBetweenTwoLocation(CLLocation *toLocation,CLLocation 
 
 
 // Get AgencyId from Agencyname
-NSString *agencyIdFromAgencyName(NSString *agencyName);
+NSString *agencyFeedIdFromAgencyName(NSString *agencyName);
 
 // Get AgencyName from AgencyId
-NSString *agencyNameFromAgencyId(NSString *agencyId);
+NSString *agencyNameFromAgencyFeedId(NSString *agencyId);
 
 // return the string at specific index from array if exists else return empty string.
 NSString *getItemAtIndexFromArray(int index,NSArray *arrayComponents);

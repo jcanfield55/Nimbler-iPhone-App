@@ -20,6 +20,7 @@
 #import "RealTimeManager.h"
 #import "StationListElement.h"
 #import "RouteExcludeSetting.h"
+#import "LocalConstants.h"
 #if TEST_FLIGHT_ENABLED
 #import "TestFlightSDK1-1/TestFlight.h"
 #endif
@@ -1170,7 +1171,7 @@ FeedBackForm *fbView;
     NSMutableString *strMutableAgencyIds = [[NSMutableString alloc] init];
     NSString *strAgencyIds;
 //    if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-//        [strMutableAgencyIds appendFormat:@"%@,",CALTRAIN_AGENCY_IDS];
+//        [strMutableAgencyIds appendFormat:@"%@,",CALTRAIN_AGENCY_FEED_ID];
 //        int nLength = [strMutableAgencyIds length];
 //        if(nLength > 0){
 //            strAgencyIds = [strMutableAgencyIds substringToIndex:nLength-1];
@@ -1181,16 +1182,16 @@ FeedBackForm *fbView;
 //    }
 //    else{
         if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] == 1){
-            [strMutableAgencyIds appendFormat:@"%@,",SFMUNI_AGENCY_ID];
+            [strMutableAgencyIds appendFormat:@"%@,",SFMUNI_AGENCY_FEED_ID];
         }
         if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] == 1){
-            [strMutableAgencyIds appendFormat:@"%@,",BART_AGENCY_ID];
+            [strMutableAgencyIds appendFormat:@"%@,",BART_AGENCY_FEED_ID];
         }
         if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] == 1){
-            [strMutableAgencyIds appendFormat:@"%@,",ACTRANSIT_AGENCY_ID];
+            [strMutableAgencyIds appendFormat:@"%@,",ACTRANSIT_AGENCY_FEED_ID];
         }
         if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] == 1){
-            [strMutableAgencyIds appendFormat:@"%@,",CALTRAIN_AGENCY_IDS];
+            [strMutableAgencyIds appendFormat:@"%@,",CALTRAIN_AGENCY_FEED_ID];
         }
         int nLength = [strMutableAgencyIds length];
         if(nLength > 0){

@@ -115,21 +115,6 @@
     if (([preloadTestLocs count] == 0) || isNewerVersion) {
         returnValue = true;
         
-        // Temporary, one-time code to reduce the frequency of current location by 100 - 7.0 (the new default)
-        // Only do the one and only time we load Caltrain pre-load file version 1.100
-        // This code can be removed by 12/2012
-        if ([testAddress isEqualToString:CALTRAIN_PRELOAD_TEST_ADDRESS] &&
-            [newVersion isEqualToNumber:[NSDecimalNumber decimalNumberWithString:@"1.100"]]) {
-            NSArray* dbCurrentLocationArray = [self locationsWithFormattedAddress:CURRENT_LOCATION];
-            if (dbCurrentLocationArray && [dbCurrentLocationArray count]>0) {
-                Location* dbCurrentLoc = [dbCurrentLocationArray objectAtIndex:0];
-                if ([dbCurrentLoc fromFrequencyFloat] >= 100.0) {
-                    [dbCurrentLoc setFromFrequencyFloat:([dbCurrentLoc fromFrequencyFloat] - 100.0 + CURRENT_LOCATION_STARTING_FROM_FREQUENCY)];
-                }
-            }
-        }
-        // end of temporary code
-        
         // Code adapted from http://stackoverflow.com/questions/10305535/iphone-restkit-how-to-load-a-local-json-file-and-map-it-to-a-core-data-entity and https://github.com/RestKit/RestKit/wiki/Object-mapping (bottom of page)
         NSStringEncoding encoding;
         NSError* error = nil;

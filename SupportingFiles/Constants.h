@@ -10,7 +10,7 @@
 
 #endif
 
-#define AUTOMATED_TESTING_SKIP_NCAPPDELEGATE 0 // if 1, skips nc_AppDelegate didFinishLaunchingWithOptions so we get a clean tests run
+#define AUTOMATED_TESTING_SKIP_NCAPPDELEGATE 1 // if 1, skips nc_AppDelegate didFinishLaunchingWithOptions so we get a clean tests run
 
 #define TRIP_GENERATE_URL     @"http://23.23.210.156:7070/opentripplanner-api-webapp/ws/"
 //#define TRIP_GENERATE_URL @"http://ec2-23-22-169-158.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"
@@ -26,19 +26,11 @@
 #define COREDATA_DB_FILENAME    @"store101.data"
 #define TEST_COREDATA_DB_FILENAME  @"testDataStore.data" // For automated tests
 
-#define TWITTER_SERARCH_URL    @"https://twitter.com/#!/search/realtime/TRAIN%20from%3Acaltrain%20OR%20from%3Acaltrain_news"
-#define CALTRAIN_TWITTER_URL   @"https://twitter.com/#!/search/from%3Acaltrain%20OR%20from%3Acaltrain_news"
-
 #define GEO_FROM          @"1"
 #define GEO_TO            @"1"
 #define REVERSE_GEO_FROM  @"2"
 #define REVERSE_GEO_TO    @"2"
 #define PREDEFINE_TYPE    @"3"
-
-#define MIN_LAT           @"36.791000000000004"
-#define MIN_LONG          @"-123.4631719"
-#define MAX_LAT           @"38.7189988"
-#define MAX_LONG          @"-121.025001"
 
 #define ON_TIME           1
 #define DELAYED           2
@@ -50,28 +42,8 @@
 #define ALERT_ON         @"2"
 #define ALERT_URGENT     @"3"
 
-// Preload file variables
-#define CALTRAIN_PRELOAD_LOCATION_FILE     @"caltrain.json"
-#define BART_PRELOAD_LOCATION_FILE         @"bart.json"
-#define ACTRANSIT_PRELOAD_LOCATION_FILE         @"ac-transit1.json"
-#define SFMUNI_PRELOAD_LOCATION_FILE         @"sf-muni1.json"
-
-#define CALTRAIN_BUNDLE_IDENTIFIER         @"com.Nimbler.Nimbler-Caltrain"
-#define BART_BUNDLE_IDENTIFIER         @"com.Nimbler.Nimbler-BART"
-
-#define CALTRAIN_PRELOAD_VERSION_NUMBER    @"1.100"
-#define CALTRAIN_PRELOAD_TEST_ADDRESS    @"San Martin Caltrain, San Martin, CA 95046, USA"
-
-#define BART_PRELOAD_VERSION_NUMBER      @"1.052"
-#define BART_PRELOAD_TEST_ADDRESS        @"24th St Mission BART, San Francisco, CA 94110, USA"
-
-#define ACTRANSIT_PRELOAD_VERSION_NUMBER      @"1.500"
-#define ACTRANSIT_PRELOAD_TEST_ADDRESS        @"Coelho Dr & Mooney Av"
-
-#define SFMUNI_PRELOAD_VERSION_NUMBER      @"1.800"
-#define SFMUNI_PRELOAD_TEST_ADDRESS        @"Powell St & O'Farrell St"
-
 #define TOFROM_LIST_TYPE          @"TOFROM_LIST" // Location type indicating a ToFromList
+#define ALL_STATION    @"all_st"
 
 // Current Location
 #define CURRENT_LOCATION_STARTING_FROM_FREQUENCY 7.0
@@ -96,10 +68,6 @@
 #define PREFS_MAX_WALK_DISTANCE           @"PrefsMaxWalkDistance"
 #define ENABLE_STANDARDNOTIFICATION_SOUND @"enableStdNotifSound"
 #define ENABLE_URGENTNOTIFICATION_SOUND   @"enableUrgntNotifSound"
-#define ENABLE_SFMUNI_ADV   @"enableSfMuniAdv"
-#define ENABLE_BART_ADV     @"enableBartAdv"
-#define ENABLE_ACTRANSIT_ADV @"enableAcTransitAdv"
-#define ENABLE_CALTRAIN_ADV @"enableCaltrainAdv"
 #define NOTIF_TIMING_MORNING @"notifTimingMorning"
 #define NOTIF_TIMING_MIDDAY  @"notifTimingMidday"
 #define NOTIF_TIMING_EVENING @"notifTimingEvening"
@@ -134,10 +102,6 @@
 
 #define ENABLE_STANDARDNOTIF_SOUND_DEFAULT FALSE
 #define ENABLE_URGENTNOTIF_SOUND_DEFAULT   TRUE
-#define ENABLE_SFMUNI_ADV_DEFAULT FALSE
-#define ENABLE_BART_ADV_DEFAULT FALSE
-#define ENABLE_ACTRANSIT_ADV_DEFAULT FALSE
-#define ENABLE_CALTRAIN_ADV_DEFAULT TRUE
 #define NOTIF_TIMING_MORNING_DEFAULT TRUE
 #define NOTIF_TIMING_MIDDAY_DEFAULT FALSE
 #define NOTIF_TIMING_EVENING_DEFAULT TRUE
@@ -261,8 +225,11 @@
 #define PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW (6*60*60) /* Show at most 6 hours of results */
 #define PLAN_MAX_SERVER_CALLS_PER_REQUEST (3) /* Maximum calls to the server for a single user request */
 #define PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS (60)
+
+// RouteExcludeSettings
 #define PLAN_ROUTE_EXCLUDE @"Exclude" // Value for RouteExcludeSettings indicating to exclude a route
 #define PLAN_ROUTE_INCLUDE @"Include" // Value for RouteExcludeSettings indicating to includ a route
+#define BIKE_BUTTON @"Bike"
 
 // gtfsParser
 #define MIN_TRANSFER_TIME (3*60) // Minimum # of seconds for transfers inserted when creating itineraries
@@ -301,46 +268,6 @@
 
 // Float thresholds
 #define TINY_FLOAT 0.000001
-
-#define AGENCY_IDS   @"agencyIds"
-#define CALTRAIN_AGENCY_IDS  @"1"
-#define BART_AGENCY_ID       @"2"
-#define SFMUNI_AGENCY_ID    @"3"
-#define ACTRANSIT_AGENCY_ID @"4"
-
-#define CALTRAIN_AGENCY_NAME    @"Caltrain"
-#define BART_AGENCY_NAME        @"Bay Area Rapid Transit"
-#define ACTRANSIT_AGENCY_NAME   @"AC Transit"
-#define SFMUNI_AGENCY_NAME      @"San Francisco Municipal Transportation Agency"
-#define AIRBART_AGENCY_NAME     @"AirBART"
-#define VTA_AGENCY_NAME         @"VTA"
-#define MENLO_MIDDAY_AGENCY_NAME  @"Menlo Park Midday Shuttle"
-#define BLUE_GOLD_AGENCY_NAME   @"Blue & Gold Fleet"
-#define HARBOR_BAY_AGENCY_NAME  @"Harbor Bay Ferry"
-#define BAYLINK_AGENCY_NAME     @"Baylink"
-#define GOLDEN_GATE_AGENCY_NAME @"Golden Gate Ferry"
-
-// Keys for RouteExcludeSettings
-#define CALTRAIN_BUTTON @"Caltrain"
-#define BART_BUTTON @"BART"
-#define AIRBART_BUTTON @"AirBART"
-#define MUNI_BUTTON @"Muni"
-#define ACTRANSIT_BUTTON @"AC Transit"
-#define VTA_BUTTON  @"VTA"
-#define MENLO_MIDDAY_BUTTON @"Menlo"
-#define BLUE_GOLD_BUTTON  @"Blue & Gold"
-#define HARBOR_BAY_BUTTON  @"Harbor Bay"
-#define BAYLINK_BUTTON     @"Baylink"
-#define GOLDEN_GATE_BUTTON @"Golden Gate"
-#define BIKE_BUTTON @"Bike"  
-
-#define AC_TRANSIT @"ac_transit"
-#define BART       @"bart"
-#define CALTRAIN   @"caltrain"
-#define SF_MUNI    @"sf-muni"
-
-#define CALTRAIN_APP_TYPE   @"1"
-#define SFMUNI_APP_TYPE     @"4"
 
 
 #define UPDATE_TIME_URL @"gtfs/updateTime"
@@ -471,13 +398,6 @@
 #define OTP_CABLE_CAR       @"cable car"
 #define OTP_FERRY           @"ferry"
 
-//US-184 Constant
-#define CALTRAIN_LOCAL                 @"Local"
-#define CALTRAIN_LIMITED               @"Limited"
-#define CALTRAIN_BULLET                @"Bullet"
-#define CALTRAIN_AGENCY_ID    @"caltrain-ca-us"
-#define CALTRAIN_TRAIN                 @"Train"
-
 // Gtfs Requests Constant
 #define GTFS_RAWDATA @"gtfs/rawdata"
 #define ENTITY  @"entity"
@@ -501,9 +421,6 @@
 #define CONTAINS_LIST_TYPE 1
 #define LOCATION_TYPE 2
 #define PRELOADSTOP_TYPE 3
-
-#define STATION_LIST   @"Station List"
-#define ALL_STATION    @"all_st"
 
 #define EXCLUDE_SETTINGS_DICTIONARY @"ExcludeSettingsDictionary"
 #define MODE @"mode"

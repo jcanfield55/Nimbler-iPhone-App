@@ -8,6 +8,7 @@
 
 #import "UtilityFunctions.h"
 #import "Constants.h"   // contains Flurry variables
+#import "LocalConstants.h"
 #import "Logging.h"
 #if FLURRY_ENABLED
 #include "Flurry.h"
@@ -17,6 +18,8 @@
 static NSDateFormatter *utilitiesTimeFormatter;  // Static variable for short time formatter for use by utility
 static NSDateFormatter *timeFormatterForTimeString;  // used for dateForTimeString utility
 static NSDictionary *agencyShortNameMapping;  // used for returnShortAgencyName
+static NSDictionary *agencyFeedIdFromAgencyNameDictionary;  // used by agencyFeedIdFromAgencyName
+static NSDictionary *agencyNameFromAgencyFeedIdDictionary;  // used by agencyNameFromAgencyFeedId
 
 // This function will construct the full path for a file with name *filename
 // in the Documents Directory
@@ -503,27 +506,19 @@ CLLocationDistance distanceBetweenTwoLocation(CLLocation *toLocation,CLLocation 
 }
 
 // Get AgencyId from Agencyname
-NSString *agencyIdFromAgencyName(NSString *agencyName){
-    if([agencyName isEqualToString:CALTRAIN_AGENCY_NAME])
-        return CALTRAIN_AGENCY_IDS;
-    else if([agencyName isEqualToString:BART_AGENCY_NAME] || [agencyName isEqualToString:AIRBART_AGENCY_NAME])
-        return BART_AGENCY_ID;
-    else if([agencyName isEqualToString:SFMUNI_AGENCY_NAME])
-        return SFMUNI_AGENCY_ID;
-    else 
-        return ACTRANSIT_AGENCY_ID;
+NSString *agencyFeedIdFromAgencyName(NSString *agencyName){
+    if (!agencyFeedIdFromAgencyNameDictionary) {
+        agencyFeedIdFromAgencyNameDictionary = AGENCY_FEED_ID_FROM_AGENCY_NAME_DICTIONARY;
+    }
+    return [agencyFeedIdFromAgencyNameDictionary objectForKey:agencyName];
 }
 
 // Get AgencyName from AgencyId
-NSString *agencyNameFromAgencyId(NSString *agencyId){
-    if([agencyId isEqualToString:CALTRAIN_AGENCY_IDS])
-        return CALTRAIN_AGENCY_NAME;
-    else if([agencyId isEqualToString:BART_AGENCY_ID])
-        return BART_AGENCY_NAME;
-    else if([agencyId isEqualToString:SFMUNI_AGENCY_ID])
-        return SFMUNI_AGENCY_NAME;
-    else
-        return ACTRANSIT_AGENCY_NAME;
+NSString *agencyNameFromAgencyFeedId(NSString *agencyId){
+    if (!agencyNameFromAgencyFeedIdDictionary) {
+        agencyNameFromAgencyFeedIdDictionary = AGENCY_NAME_FROM_AGENCY_FEED_ID_DICTIONARY;
+    }
+    return [agencyNameFromAgencyFeedIdDictionary objectForKey:agencyId];
 }
 
 NSString *getItemAtIndexFromArray(int index,NSArray *arrayComponents){
@@ -571,19 +566,7 @@ UIImage *getAgencyIcon(NSString * imageName){
 
 NSString *returnShortAgencyName(NSString *agencyName){
     if (!agencyShortNameMapping) {
-        agencyShortNameMapping = [NSDictionary dictionaryWithKeysAndObjects:
-                                  CALTRAIN_AGENCY_NAME, CALTRAIN_BUTTON,
-                                  BART_AGENCY_NAME, BART_BUTTON,
-                                  AIRBART_AGENCY_NAME, AIRBART_BUTTON,
-                                  SFMUNI_AGENCY_NAME, MUNI_BUTTON,
-                                  ACTRANSIT_AGENCY_NAME, ACTRANSIT_BUTTON,
-                                  VTA_AGENCY_NAME, VTA_BUTTON,
-                                  MENLO_MIDDAY_AGENCY_NAME, MENLO_MIDDAY_BUTTON,
-                                  BLUE_GOLD_AGENCY_NAME, BLUE_GOLD_BUTTON,
-                                  HARBOR_BAY_AGENCY_NAME, HARBOR_BAY_BUTTON,
-                                  BAYLINK_AGENCY_NAME, BAYLINK_BUTTON,
-                                  GOLDEN_GATE_AGENCY_NAME, GOLDEN_GATE_BUTTON,
-                                  nil];
+        agencyShortNameMapping = AGENCY_BUTTON_NAME_BY_AGENCY_NAME_DICTIONARY;
     }
     if (!agencyName) {
         return nil;
