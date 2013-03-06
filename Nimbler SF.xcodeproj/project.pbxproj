@@ -245,8 +245,6 @@
 		8DE42FEB16E0AEEE00A37AD3 /* img_legFerry@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE716E0AEEE00A37AD3 /* img_legFerry@2x.png */; };
 		8DE42FEC16E0AEEE00A37AD3 /* img_legFerrySelect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE816E0AEEE00A37AD3 /* img_legFerrySelect.png */; };
 		8DE42FED16E0AEEE00A37AD3 /* img_legFerrySelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE916E0AEEE00A37AD3 /* img_legFerrySelect@2x.png */; };
-		8DE42FFD16E0BE6D00A37AD3 /* ac-transit1.json in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FFB16E0BE6D00A37AD3 /* ac-transit1.json */; };
-		8DE42FFE16E0BE6D00A37AD3 /* sf-muni1.json in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FFC16E0BE6D00A37AD3 /* sf-muni1.json */; };
 		8DEE785D166338F100E4863C /* SettingViewController_SF_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */; };
 		8DEE785F166339D600E4863C /* SettingDetailViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */; };
 		8DF35D631627F58500B99F4A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF35D621627F58400B99F4A /* main.m */; };
@@ -613,8 +611,6 @@
 		8DE42FE716E0AEEE00A37AD3 /* img_legFerry@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_legFerry@2x.png"; sourceTree = "<group>"; };
 		8DE42FE816E0AEEE00A37AD3 /* img_legFerrySelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_legFerrySelect.png; sourceTree = "<group>"; };
 		8DE42FE916E0AEEE00A37AD3 /* img_legFerrySelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_legFerrySelect@2x.png"; sourceTree = "<group>"; };
-		8DE42FFB16E0BE6D00A37AD3 /* ac-transit1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "ac-transit1.json"; sourceTree = "<group>"; };
-		8DE42FFC16E0BE6D00A37AD3 /* sf-muni1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "sf-muni1.json"; sourceTree = "<group>"; };
 		8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController_SF_568h.xib; sourceTree = "<group>"; };
 		8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingDetailViewController_568h.xib; sourceTree = "<group>"; };
 		8DF35D621627F58400B99F4A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -1117,8 +1113,6 @@
 		8D4FC8E3162D2E1A004144DE /* PreloadData */ = {
 			isa = PBXGroup;
 			children = (
-				8DE42FFB16E0BE6D00A37AD3 /* ac-transit1.json */,
-				8DE42FFC16E0BE6D00A37AD3 /* sf-muni1.json */,
 				8D44084116CF775800F8EBE5 /* ac-transit.json */,
 				75E8F1D916CE4B5400863A8C /* sf-muni.json */,
 				75E8F1D516CE3EC800863A8C /* caltrain.json */,
@@ -1426,8 +1420,6 @@
 				8DE42FEB16E0AEEE00A37AD3 /* img_legFerry@2x.png in Resources */,
 				8DE42FEC16E0AEEE00A37AD3 /* img_legFerrySelect.png in Resources */,
 				8DE42FED16E0AEEE00A37AD3 /* img_legFerrySelect@2x.png in Resources */,
-				8DE42FFD16E0BE6D00A37AD3 /* ac-transit1.json in Resources */,
-				8DE42FFE16E0BE6D00A37AD3 /* sf-muni1.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

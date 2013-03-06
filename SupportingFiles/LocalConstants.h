@@ -27,8 +27,8 @@
 
 #define CALTRAIN_PRELOAD_LOCATION_FILE     @"caltrain.json"
 #define BART_PRELOAD_LOCATION_FILE         @"bart.json"
-#define ACTRANSIT_PRELOAD_LOCATION_FILE         @"ac-transit1.json"
-#define SFMUNI_PRELOAD_LOCATION_FILE         @"sf-muni1.json"
+#define ACTRANSIT_PRELOAD_LOCATION_FILE         @"ac-transit.json"
+#define SFMUNI_PRELOAD_LOCATION_FILE         @"sf-muni.json"
 
 #define CALTRAIN_PRELOAD_VERSION_NUMBER    @"1.100"
 #define CALTRAIN_PRELOAD_TEST_ADDRESS    @"San Martin Caltrain, San Martin, CA 95046, USA"
