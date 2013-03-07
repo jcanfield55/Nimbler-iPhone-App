@@ -11,6 +11,7 @@
 #import "UtilityFunctions.h"
 #import "GtfsCalendarDates.h"
 #import "GtfsStopTimes.h"
+#import "GtfsParsingStatus.h"
 #import "UtilityFunctions.h"
 #import "nc_AppDelegate.h"
 #import "GtfsRoutes.h"
@@ -860,6 +861,7 @@
             Leg *leg = [legArray objectAtIndex:j];
             if([leg isScheduled] && ![self isTripsAlreadyExistsForTripId:leg.tripId RouteId:leg.routeId] && [strRequestString rangeOfString:[NSString stringWithFormat:@"%@_%@",agencyFeedIdFromAgencyName(leg.agencyName),leg.routeId]].location == NSNotFound){
                 [strRequestString appendFormat:@"%@_%@,",agencyFeedIdFromAgencyName(leg.agencyName),leg.routeId];
+                
             }
         }
     }
@@ -1535,5 +1537,60 @@
         }
     }
 }
+
+//
+// GtfsParsingStatusMethods
+// 
+-(BOOL)hasGtfsDownloadRequestBeenSubmittedFor:(NSString *)agencyName routeId:(NSString *)routeId
+{
+    GtfsParsingStatus* status = [self getParsingStatusObjectFor:agencyName routeId:routeId];
+    return [status hasGtfsDownloadRequestBeenSubmitted];
+}
+
+-(BOOL)isGtfsDataAvailableFor:(NSString *)agencyName routeId:(NSString *)routeId
+{
+    GtfsParsingStatus* status = [self getParsingStatusObjectFor:agencyName routeId:routeId];
+    return [status isGtfsDataAvailable];
+}
+
+-(void)setGtfsRequestSubmittedFor:(NSString *)agencyName routeId:(NSString *)routeId
+{
+    GtfsParsingStatus* status = [self getParsingStatusObjectFor:agencyName routeId:routeId];
+    if (!status) {
+        status = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsParsingStatus" inManagedObjectContext:managedObjectContext];
+        [status setAgencyFeedIdAndRoute:[NSString stringWithFormat:@"%@_%@,",agencyFeedIdFromAgencyName(agencyName),routeId]];
+    }
+    [status setGtfsRequestMade];
+}
+
+-(void)setGtfsDataAvailableFor:(NSString *)agencyName routeId:(NSString *)routeId
+{
+    GtfsParsingStatus* status = [self getParsingStatusObjectFor:agencyName routeId:routeId];
+    if (!status) {
+        status = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsParsingStatus" inManagedObjectContext:managedObjectContext];
+        [status setAgencyFeedIdAndRoute:[NSString stringWithFormat:@"%@_%@,",agencyFeedIdFromAgencyName(agencyName),routeId]];
+    }
+    [status setGtfsDataAvailable];
+}
+
+-(GtfsParsingStatus *)getParsingStatusObjectFor:(NSString *)agencyName routeId:(NSString *)routeId
+{
+    NSString* feedIdAndRouteStr = [NSString stringWithFormat:@"%@_%@,",agencyFeedIdFromAgencyName(agencyName),routeId];
+    NSFetchRequest *fetchParseStatus = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsParsingStatusByFeedIdAndRoute" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:feedIdAndRouteStr,@"FEEDANDROUTE", nil]];
+    NSError *error;
+    NSArray* result = [managedObjectContext executeFetchRequest:fetchParseStatus error:&error];
+    if (!result) {
+        logError(@"GtfsParser -> getParsingStatusObjectFor", [NSString stringWithFormat:@"Error fetching from Core Data: %@", error]);
+        return nil;
+    }
+    if (result.count == 0) {
+        return nil;  // No matches found result
+    }
+    if (result.count > 1) {
+        logError(@"GtfsParser -> getParsingStatusObjectFor", [NSString stringWithFormat:@"Unexpectedly have %d matching ParsingStatusObjects", result.count]);
+    }
+    return [result objectAtIndex:0];  // Return first object
+}
+
 @end
 

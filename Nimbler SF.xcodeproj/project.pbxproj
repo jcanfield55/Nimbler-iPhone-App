@@ -164,7 +164,7 @@
 		520FB27C162603AF0083F143 /* walkb.png in Resources */ = {isa = PBXBuildFile; fileRef = 520FB212162603AF0083F143 /* walkb.png */; };
 		520FB293162604950083F143 /* CoverageGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 520FB28B162604950083F143 /* CoverageGeoJSON.geojson */; };
 		520FB296162605470083F143 /* CoverageGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 520FB295162605470083F143 /* CoverageGeoJSON.geojson */; };
-		524A921016E6C2FC00A9A0A2 /* GtfsParsingStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 524A920F16E6C2FC00A9A0A2 /* GtfsParsingStatus.m */; };
+		524A921416E7117800A9A0A2 /* GtfsParsingStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 524A921316E7117800A9A0A2 /* GtfsParsingStatus.m */; };
 		525442C214C3ECF2004B0E1F /* libRestKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442B814C3EA95004B0E1F /* libRestKit.a */; };
 		525442C414C3ED2C004B0E1F /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C314C3ED2C004B0E1F /* CFNetwork.framework */; };
 		525442C614C3ED4A004B0E1F /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C514C3ED4A004B0E1F /* MobileCoreServices.framework */; };
@@ -501,9 +501,9 @@
 		520FB292162604950083F143 /* UIConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = UIConstants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB295162605470083F143 /* CoverageGeoJSON.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CoverageGeoJSON.geojson; path = SupportingFiles/CoverageGeoJSON.geojson; sourceTree = "<group>"; };
 		522C0E6A15588E7A0072ADD6 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		524A920E16E6C2FC00A9A0A2 /* GtfsParsingStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GtfsParsingStatus.h; path = Model/GtfsParsingStatus.h; sourceTree = SOURCE_ROOT; };
-		524A920F16E6C2FC00A9A0A2 /* GtfsParsingStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GtfsParsingStatus.m; path = Model/GtfsParsingStatus.m; sourceTree = SOURCE_ROOT; };
 		524A921116E6C71C00A9A0A2 /* LocalConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LocalConstants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		524A921216E7117700A9A0A2 /* GtfsParsingStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GtfsParsingStatus.h; path = Model/GtfsParsingStatus.h; sourceTree = SOURCE_ROOT; };
+		524A921316E7117800A9A0A2 /* GtfsParsingStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GtfsParsingStatus.m; path = Model/GtfsParsingStatus.m; sourceTree = SOURCE_ROOT; };
 		525442AD14C3EA95004B0E1F /* RestKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RestKit.xcodeproj; path = RestKit/RestKit.xcodeproj; sourceTree = "<group>"; };
 		525442C314C3ED2C004B0E1F /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		525442C514C3ED4A004B0E1F /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -985,10 +985,10 @@
 				8D106DFC1671F16B004E0DE5 /* GtfsStopTimes.m */,
 				8D106DFD1671F16B004E0DE5 /* GtfsTrips.h */,
 				8D106DFE1671F16B004E0DE5 /* GtfsTrips.m */,
+				524A921216E7117700A9A0A2 /* GtfsParsingStatus.h */,
+				524A921316E7117800A9A0A2 /* GtfsParsingStatus.m */,
 				52958AAF16CED86900CC46C7 /* GtfsTempItinerary.h */,
 				52958AB016CED86900CC46C7 /* GtfsTempItinerary.m */,
-				524A920E16E6C2FC00A9A0A2 /* GtfsParsingStatus.h */,
-				524A920F16E6C2FC00A9A0A2 /* GtfsParsingStatus.m */,
 			);
 			name = "Model, GTFS";
 			sourceTree = "<group>";
@@ -1516,7 +1516,7 @@
 				52DD766C16D2A8FD005763DE /* PreloadedStop.m in Sources */,
 				8D00753216D4CAB30041A64C /* RouteExcludeSettings.m in Sources */,
 				528C664E16D7011E005B7309 /* RouteExcludeSetting.m in Sources */,
-				524A921016E6C2FC00A9A0A2 /* GtfsParsingStatus.m in Sources */,
+				524A921416E7117800A9A0A2 /* GtfsParsingStatus.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

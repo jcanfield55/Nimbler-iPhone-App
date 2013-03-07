@@ -124,5 +124,12 @@
 // This methods are used in requesting and storing trips data into seed DB. 
 - (void) requestTripsDataForCreatingSeedDB:(NSMutableString *)strRequestString;
 - (void)generateTripsRequestForSeedDB:(NSArray *)routeIds agencyIds:(NSArray *)agencyIds;
+
+// GtfsParsingStatusMethods
+-(BOOL)hasGtfsDownloadRequestBeenSubmittedFor:(NSString *)agencyName routeId:(NSString *)routeId;
+-(BOOL)isGtfsDataAvailableFor:(NSString *)agencyName routeId:(NSString *)routeId;
+-(void)setGtfsRequestSubmittedFor:(NSString *)agencyName routeId:(NSString *)routeId;
+-(void)setGtfsDataAvailableFor:(NSString *)agencyName routeId:(NSString *)routeId;
+
 @end
 
