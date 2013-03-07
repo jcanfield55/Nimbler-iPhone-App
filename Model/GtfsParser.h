@@ -126,10 +126,13 @@
 - (void)generateTripsRequestForSeedDB:(NSArray *)routeIds agencyIds:(NSArray *)agencyIds;
 
 // GtfsParsingStatusMethods
--(BOOL)hasGtfsDownloadRequestBeenSubmittedFor:(NSString *)agencyName routeId:(NSString *)routeId;
--(BOOL)isGtfsDataAvailableFor:(NSString *)agencyName routeId:(NSString *)routeId;
--(void)setGtfsRequestSubmittedFor:(NSString *)agencyName routeId:(NSString *)routeId;
--(void)setGtfsDataAvailableFor:(NSString *)agencyName routeId:(NSString *)routeId;
+-(BOOL)hasGtfsDownloadRequestBeenSubmittedForAgency:(NSString *)agencyName routeId:(NSString *)routeId;
+-(BOOL)isGtfsDataAvailableForAgency:(NSString *)agencyName routeId:(NSString *)routeId;
+-(void)setGtfsRequestSubmittedForAgency:(NSString *)agencyName routeId:(NSString *)routeId plan:(Plan *)plan;
+
+// For all the plans in requestingPlans, will call the plan's "prepareSortedItineraries" method
+// once all the needed data is available
+-(void)setGtfsDataAvailableForAgency:(NSString *)agencyName routeId:(NSString *)routeId;
 
 @end
 

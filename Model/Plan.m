@@ -38,6 +38,7 @@
 @dynamic itineraries;
 @dynamic uniqueItineraryPatterns;
 @dynamic requestChunks;
+@dynamic gtfsParsingRequests;
 @synthesize userRequestDate;
 @synthesize userRequestDepartOrArrive;
 @synthesize sortedItineraries;

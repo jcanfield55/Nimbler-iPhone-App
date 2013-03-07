@@ -14,16 +14,16 @@
 @dynamic agencyFeedIdAndRoute;
 @dynamic status;
 @dynamic dateRequested;
-
+@dynamic requestingPlans;
 
 // True if request has been made for Gtfs data but data not yet received /parsed
 -(BOOL)hasGtfsDownloadRequestBeenSubmitted
 {
     if ([self.dateRequested timeIntervalSinceNow] < -(10*60)) { // if more than 10 minutes
         return false;  // treat as if no request has been made
+        
     }
     return [self.status isEqualToString:GTFS_PARSING_STATUS_SUBMITTED];
-
 }
 
 // True if Gtfs data is fully available
@@ -33,8 +33,11 @@
 }
 
 // Sets that a Gtfs Request has been made
--(void)setGtfsRequestMade
+-(void)setGtfsRequestMadeFor:(Plan *)plan
 {
+    if (plan) {
+        [self addRequestingPlansObject:plan];
+    }
     [self setStatus:GTFS_PARSING_STATUS_SUBMITTED];
 }
 

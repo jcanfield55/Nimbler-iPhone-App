@@ -859,9 +859,17 @@
         NSArray *legArray = [iti sortedLegs];
         for(int j=0;j<[legArray count];j++){
             Leg *leg = [legArray objectAtIndex:j];
-            if([leg isScheduled] && ![self isTripsAlreadyExistsForTripId:leg.tripId RouteId:leg.routeId] && [strRequestString rangeOfString:[NSString stringWithFormat:@"%@_%@",agencyFeedIdFromAgencyName(leg.agencyName),leg.routeId]].location == NSNotFound){
-                [strRequestString appendFormat:@"%@_%@,",agencyFeedIdFromAgencyName(leg.agencyName),leg.routeId];
-                
+            if([leg isScheduled]) {
+                if (![self isGtfsDataAvailableForAgency:leg.agencyName routeId:leg.routeId] &&
+                    ![self hasGtfsDownloadRequestBeenSubmittedForAgency:leg.agencyName routeId:leg.routeId]) {
+                    // if the data has not yet been requested, make the request
+                    [strRequestString appendFormat:@"%@_%@,",agencyFeedIdFromAgencyName(leg.agencyName),leg.routeId];
+                    [self setGtfsRequestSubmittedForAgency:leg.agencyName routeId:leg.routeId plan:plan];
+                } else if ([self hasGtfsDownloadRequestBeenSubmittedForAgency:leg.agencyName routeId:leg.routeId]) {
+                    // if it has already been requested, just add this plan to the list
+                    GtfsParsingStatus* status = [self getParsingStatusObjectForAgency:leg.agencyName routeId:leg.routeId];
+                    [status addRequestingPlansObject:plan];
+                } // else data is available, so do nothing
             }
         }
     }
@@ -1543,37 +1551,55 @@
 // 
 -(BOOL)hasGtfsDownloadRequestBeenSubmittedFor:(NSString *)agencyName routeId:(NSString *)routeId
 {
-    GtfsParsingStatus* status = [self getParsingStatusObjectFor:agencyName routeId:routeId];
+    GtfsParsingStatus* status = [self getParsingStatusObjectForAgency:agencyName routeId:routeId];
     return [status hasGtfsDownloadRequestBeenSubmitted];
 }
 
--(BOOL)isGtfsDataAvailableFor:(NSString *)agencyName routeId:(NSString *)routeId
+-(BOOL)isGtfsDataAvailableForAgency:(NSString *)agencyName routeId:(NSString *)routeId
 {
-    GtfsParsingStatus* status = [self getParsingStatusObjectFor:agencyName routeId:routeId];
+    GtfsParsingStatus* status = [self getParsingStatusObjectForAgency:agencyName routeId:routeId];
     return [status isGtfsDataAvailable];
 }
 
--(void)setGtfsRequestSubmittedFor:(NSString *)agencyName routeId:(NSString *)routeId
+-(void)setGtfsRequestSubmittedForAgency:(NSString *)agencyName routeId:(NSString *)routeId plan:(Plan *)plan
 {
-    GtfsParsingStatus* status = [self getParsingStatusObjectFor:agencyName routeId:routeId];
+    GtfsParsingStatus* status = [self getParsingStatusObjectForAgency:agencyName routeId:routeId];
     if (!status) {
         status = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsParsingStatus" inManagedObjectContext:managedObjectContext];
         [status setAgencyFeedIdAndRoute:[NSString stringWithFormat:@"%@_%@,",agencyFeedIdFromAgencyName(agencyName),routeId]];
     }
-    [status setGtfsRequestMade];
+    [status setGtfsRequestMadeFor:plan];
 }
 
--(void)setGtfsDataAvailableFor:(NSString *)agencyName routeId:(NSString *)routeId
+// For all the plans in requestingPlans, will call the plan's "prepareSortedItineraries" method
+// once all the needed data is available
+-(void)setGtfsDataAvailableForAgency:(NSString *)agencyName routeId:(NSString *)routeId
 {
-    GtfsParsingStatus* status = [self getParsingStatusObjectFor:agencyName routeId:routeId];
+    GtfsParsingStatus* status = [self getParsingStatusObjectForAgency:agencyName routeId:routeId];
     if (!status) {
         status = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsParsingStatus" inManagedObjectContext:managedObjectContext];
         [status setAgencyFeedIdAndRoute:[NSString stringWithFormat:@"%@_%@,",agencyFeedIdFromAgencyName(agencyName),routeId]];
     }
     [status setGtfsDataAvailable];
+    
+    // Make callback to requestingPlans as needed
+    for (Plan* requestingPlan in [status requestingPlans]) { // for any requesting plans
+        BOOL isAllGtfsDataAvailable = true;
+        for (GtfsParsingStatus* otherStatus in [requestingPlan gtfsParsingRequests]) {
+            if (![otherStatus isGtfsDataAvailable]) { // if any of the requested data unavailable
+                isAllGtfsDataAvailable = false;
+                break;
+            }
+        }
+        if (isAllGtfsDataAvailable) { // call prepareSortedItineraries again...
+            // TODO: [requestingPlan prepareSortedItinerariesWithMatchesForDate:<#(NSDate *)#> departOrArrive:<#(DepartOrArrive)#>]
+        }
+        // Since data is now available, remove this from the plan request list
+        [status removeRequestingPlansObject:requestingPlan];
+    }
 }
 
--(GtfsParsingStatus *)getParsingStatusObjectFor:(NSString *)agencyName routeId:(NSString *)routeId
+-(GtfsParsingStatus *)getParsingStatusObjectForAgency:(NSString *)agencyName routeId:(NSString *)routeId
 {
     NSString* feedIdAndRouteStr = [NSString stringWithFormat:@"%@_%@,",agencyFeedIdFromAgencyName(agencyName),routeId];
     NSFetchRequest *fetchParseStatus = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsParsingStatusByFeedIdAndRoute" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:feedIdAndRouteStr,@"FEEDANDROUTE", nil]];

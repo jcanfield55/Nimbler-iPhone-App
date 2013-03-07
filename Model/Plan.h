@@ -38,7 +38,7 @@
 @property(nonatomic,readonly) DepartOrArrive userRequestDepartOrArrive; // Latest DepartOrArrive (could be for cached call)
 @property(nonatomic,strong) NSArray *sortedItineraries;  // Array of ordered itineraries (not stored in Core Data) relevant to the userRequestDate and userRequestDepartOrArrive.  Could be subset if a cached call
 @property(nonatomic, strong) TransitCalendar* transitCalendar;
-
+@property(nonatomic, strong) NSSet* gtfsParsingRequests; // Set of GtfsParsingStatus objects that have outstanding requests to download GTFS trips & stopTimes
 
 
 // Methods

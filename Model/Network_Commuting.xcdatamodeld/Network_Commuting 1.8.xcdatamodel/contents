@@ -52,6 +52,7 @@
         <attribute name="agencyFeedIdAndRoute" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dateRequested" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="requestingPlans" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Plan" inverseName="gtfsParsingRequests" inverseEntity="Plan" syncable="YES"/>
         <compoundIndexes>
             <compoundIndex>
                 <index value="agencyFeedIdAndRoute"/>
@@ -216,6 +217,7 @@
         <attribute name="planId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="fromLocation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="plan" inverseEntity="Location" syncable="YES"/>
         <relationship name="fromPlanPlace" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="PlanPlace" inverseName="plan" inverseEntity="PlanPlace" syncable="YES"/>
+        <relationship name="gtfsParsingRequests" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GtfsParsingStatus" inverseName="requestingPlans" inverseEntity="GtfsParsingStatus" syncable="YES"/>
         <relationship name="itineraries" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Itinerary" inverseName="plan" inverseEntity="Itinerary" syncable="YES"/>
         <relationship name="requestChunks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PlanRequestChunk" inverseName="plan" inverseEntity="PlanRequestChunk" syncable="YES"/>
         <relationship name="toLocation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="plan" inverseEntity="Location" syncable="YES"/>
@@ -338,6 +340,7 @@
         <element name="GtfsAgency" positionX="160" positionY="192" width="128" height="90"/>
         <element name="GtfsCalendar" positionX="160" positionY="192" width="128" height="225"/>
         <element name="GtfsCalendarDates" positionX="160" positionY="192" width="128" height="105"/>
+        <element name="GtfsParsingStatus" positionX="160" positionY="192" width="128" height="105"/>
         <element name="GtfsRoutes" positionX="160" positionY="192" width="128" height="180"/>
         <element name="GtfsStop" positionX="160" positionY="192" width="128" height="165"/>
         <element name="GtfsStopTimes" positionX="160" positionY="192" width="128" height="240"/>
@@ -350,7 +353,7 @@
         <element name="Location" positionX="0" positionY="0" width="128" height="285"/>
         <element name="LocationFromGoogle" positionX="160" positionY="192" width="128" height="90"/>
         <element name="LocationFromIOS" positionX="160" positionY="192" width="128" height="60"/>
-        <element name="Plan" positionX="0" positionY="0" width="128" height="195"/>
+        <element name="Plan" positionX="0" positionY="0" width="128" height="210"/>
         <element name="PlanPlace" positionX="0" positionY="0" width="128" height="180"/>
         <element name="PlanRequestChunk" positionX="0" positionY="0" width="128" height="165"/>
         <element name="PreloadedStop" positionX="160" positionY="192" width="128" height="120"/>
@@ -358,6 +361,5 @@
         <element name="RouteExcludeSettings" positionX="160" positionY="192" width="128" height="90"/>
         <element name="StationListElement" positionX="160" positionY="192" width="128" height="150"/>
         <element name="Step" positionX="0" positionY="0" width="128" height="195"/>
-        <element name="GtfsParsingStatus" positionX="160" positionY="192" width="128" height="90"/>
     </elements>
 </model>

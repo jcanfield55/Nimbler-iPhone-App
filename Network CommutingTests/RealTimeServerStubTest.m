@@ -25,6 +25,7 @@
 #import "GtfsCalendar.h"
 #import "GtfsCalendarDates.h"
 #import "GtfsStop.h"
+#import "GtfsParsingStatus.h"
 #import "KeyObjectStore.h"
 
 @implementation RealTimeServerStubTest
@@ -460,15 +461,15 @@
     
     // Wait until GtfsStopTimes have been loaded for this plan
     STAssertTrue([self waitForNonNullValueOfBlock:^(void){
-        NSArray* stopPairs = [gtfsParser getStopTimes:stopIdSCarlosCalTr
-                                        strFromStopID:stopIdSFCaltrain
-                                            startDate:tripDate
-                                         timeInterval:(7*60*60)
-                                               TripId:@""];
-        if ([stopPairs count] > 0) {
-            return YES;
+        BOOL isAllDataAvailable = true;
+        for (GtfsParsingStatus* status in [plan gtfsParsingRequests]) {
+            if (![status isGtfsDataAvailable]) {
+                isAllDataAvailable = false;
+                break;
+            }
         }
-        return NO;}], @"Timed out waiting for GtfsStopTimes");
+        return isAllDataAvailable;
+    }], @"Timed out waiting for GtfsStopTimes");
     NSArray* stopPairs = [gtfsParser getStopTimes:stopIdSCarlosCalTr
                                     strFromStopID:stopIdSFCaltrain
                                         startDate:tripDate

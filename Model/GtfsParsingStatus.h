@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "Plan.h"
 
 #define GTFS_PARSING_STATUS_SUBMITTED @"Submitted"  // Means request for trip and stopTime data has been submitted to the server, but not yet returned / process
 #define GTFS_PARSING_STATUS_AVAILABLE @"Available" // Means Gtfs data for trip and stopTime is fully available
@@ -17,12 +18,13 @@
 
 // Agency FeedId and route combined together in one string like @"%@_%@" (example 1_KT)
 @property (nonatomic, retain) NSString* agencyFeedIdAndRoute;
-
 // One of the above status strings
 @property (nonatomic, retain) NSString* status;
-
 // Date & time that the request for gtfs data was submitted
 @property (nonatomic, retain) NSDate* dateRequested;
+
+// Set of plans that have requested for gtfs and are waiting for data to be available
+@property (nonatomic, strong) NSSet* requestingPlans;
 
 // True if request has been made for Gtfs data but data not yet received /parsed
 -(BOOL)hasGtfsDownloadRequestBeenSubmitted;
@@ -30,10 +32,17 @@
 // True if Gtfs data is fully available
 -(BOOL)isGtfsDataAvailable;
 
-// Sets that a Gtfs Request has been made
--(void)setGtfsRequestMade;
+// Sets that a Gtfs Request has been made.
+// If plan is not nil, will add plan to requestingPlans property 
+-(void)setGtfsRequestMadeFor:(Plan *)plan;
 
 // Sets that Gtfs data is fully available
 -(void)setGtfsDataAvailable;
 
+@end
+
+@interface GtfsParsingStatus (CoreDataGeneratedAccessors)
+
+- (void)addRequestingPlansObject:(Plan *)value;
+- (void)removeRequestingPlansObject:(Plan *)value;
 @end
