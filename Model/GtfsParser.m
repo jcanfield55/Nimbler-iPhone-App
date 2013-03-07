@@ -236,7 +236,10 @@
         for (id routes in arrayRoutes){
             [managedObjectContext deleteObject:routes];
         }
-        
+    
+        NSMutableArray *routeIDsWithodBus = [[NSMutableArray alloc] init];
+        NSMutableArray *agencyIDsWithodBus = [[NSMutableArray alloc] init];
+    
         NSMutableArray *arrayRouteID = [[NSMutableArray alloc] init];
         NSMutableArray *arrayRouteShortName = [[NSMutableArray alloc] init];
         NSMutableArray *arrayRouteLongName = [[NSMutableArray alloc] init];
@@ -277,6 +280,10 @@
             routes.routeURL = [arrayRouteURL objectAtIndex:i];
             routes.routeColor = [arrayRouteColor objectAtIndex:i];
             routes.routeTextColor = [arrayRouteTextColor objectAtIndex:i];
+            if(![routes.routeType isEqualToString:@"3"]){
+                [routeIDsWithodBus addObject:[arrayRouteID objectAtIndex:i]];
+                [agencyIDsWithodBus addObject:[arrayAgencyId objectAtIndex:i]];
+            }
         }
         saveContext(managedObjectContext);
 //        dispatch_async(dispatch_get_main_queue(), ^{
@@ -284,7 +291,7 @@
 //    });
     
     // Note:- This method call is used in Dababase seeding
-    //[self generateTripsRequestForSeedDB:arrayRouteID agencyIds:arrayAgencyId];
+    //[self generateTripsRequestForSeedDB:routeIDsWithodBus agencyIds:agencyIDsWithodBus];
 }
 
 - (void) parseAndStoreGtfsStopsData:(NSDictionary *)dictFileData{
@@ -1618,5 +1625,35 @@
     return [result objectAtIndex:0];  // Return first object
 }
 
+- (NSArray *) returnIntermediateStopForLeg:(Leg *)leg{
+    NSFetchRequest *fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesByAgencyID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:leg.tripId,@"TRIPID",agencyFeedIdFromAgencyName(leg.agencyName),@"AGENCYID", nil]];
+    NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
+    NSSortDescriptor *sortD = [[NSSortDescriptor alloc]
+                                            
+                                            initWithKey:@"stopSequence" ascending:YES selector:@selector(localizedStandardCompare:)];
+    arrayStopTimes = [arrayStopTimes sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]];
+    int startIndex = 0;
+    int endIndex = 0;
+    for(int i=0;i<[arrayStopTimes count];i++){
+        GtfsStopTimes *stopTimes = [arrayStopTimes objectAtIndex:i];
+        if([stopTimes.stopID isEqualToString:leg.from.stopId]){
+            startIndex = i + 1;
+            break;
+        }
+    }
+    for(int i=0;i<[arrayStopTimes count];i++){
+        GtfsStopTimes *stopTimes = [arrayStopTimes objectAtIndex:i];
+        if([stopTimes.stopID isEqualToString:leg.to.stopId]){
+            endIndex = i;
+            break;
+        }
+    }
+    NSMutableArray *intermediateStops = [[NSMutableArray alloc] init];
+    for(int i = startIndex; i<endIndex ;i++){
+        GtfsStopTimes *stopTimes = [arrayStopTimes objectAtIndex:i];
+        [intermediateStops addObject:stopTimes.stop];
+    }
+    return intermediateStops;
+}
 @end
 

@@ -22,4 +22,5 @@
     #import "Logging.h"
     #import "UIDevice-Hardware.h"
     #import "UIAutomationConstants.h"
+    #import "ZipArchive.h"
 #endif

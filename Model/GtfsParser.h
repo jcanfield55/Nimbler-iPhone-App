@@ -134,5 +134,6 @@
 // once all the needed data is available
 -(void)setGtfsDataAvailableForAgency:(NSString *)agencyName routeId:(NSString *)routeId;
 
+- (NSArray *) returnIntermediateStopForLeg:(Leg *)leg;
 @end
 

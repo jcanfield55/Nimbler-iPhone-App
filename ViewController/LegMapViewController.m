@@ -115,6 +115,21 @@ NSString *legID;
             //[self refreshLegOverlay:itineraryNumber];  // refreshes the last itinerary number
             //[self refreshLegOverlay:i0];   // refreshes the new itinerary number
             itineraryNumber = i0;
+            Leg *leg = [[itinerary sortedLegs] objectAtIndex:itineraryNumber];
+            NSArray *stops = [[nc_AppDelegate sharedInstance].gtfsParser returnIntermediateStopForLeg:leg];
+            for(int i=0;i<[stops count];i++){
+                GtfsStop *stop = [stops objectAtIndex:i];
+                float langcoord = [stop.stopLat floatValue];
+                float longcoord = [stop.stopLon floatValue];
+                
+                CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(langcoord, longcoord);
+                MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
+                [point setCoordinate:coord];
+                [point setTitle:stop.stopID];
+                // Create an instance of MapPoint with the current data
+                // Add it to the map view
+                [mapView addAnnotation:point];
+            }
             [self setMapViewRegion];  // redefine the bounding box
         }
     }
