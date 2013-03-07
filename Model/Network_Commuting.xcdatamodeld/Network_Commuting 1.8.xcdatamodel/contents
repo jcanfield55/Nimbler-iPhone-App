@@ -48,7 +48,16 @@
         <attribute name="serviceID" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="calendar" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsCalendar" inverseName="calendarDates" inverseEntity="GtfsCalendar" syncable="YES"/>
     </entity>
-    <entity name="GtfsParsingStatus" syncable="YES"/>
+    <entity name="GtfsParsingStatus" representedClassName="GtfsParsingStatus" syncable="YES">
+        <attribute name="agencyFeedIdAndRoute" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dateRequested" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
+        <compoundIndexes>
+            <compoundIndex>
+                <index value="agencyFeedIdAndRoute"/>
+            </compoundIndex>
+        </compoundIndexes>
+    </entity>
     <entity name="GtfsRoutes" representedClassName="GtfsRoutes" syncable="YES">
         <attribute name="routeColor" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="routeDesc" optional="YES" attributeType="String" syncable="YES"/>
@@ -299,6 +308,7 @@
         <relationship name="leg" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Leg" inverseName="steps" inverseEntity="Leg" syncable="YES"/>
     </entity>
     <fetchRequest name="GtfsCalendar" entity="GtfsCalendar" predicateString="serviceID == $SERVICEID"/>
+    <fetchRequest name="GtfsParsingStatusByFeedIdAndRoute" entity="GtfsParsingStatus" predicateString="agencyFeedIdAndRoute == $FEEDANDROUTE"/>
     <fetchRequest name="GtfsRouteByRouteID" entity="GtfsRoutes" predicateString="routeID == $ROUTEID"/>
     <fetchRequest name="GtfsStop" entity="GtfsStop" predicateString="stopID == $STOPID"/>
     <fetchRequest name="GtfsStopByLatLng" entity="GtfsStop" predicateString="stopLat == $STOPLAT AND stopLon == $STOPLON"/>
@@ -348,6 +358,6 @@
         <element name="RouteExcludeSettings" positionX="160" positionY="192" width="128" height="90"/>
         <element name="StationListElement" positionX="160" positionY="192" width="128" height="150"/>
         <element name="Step" positionX="0" positionY="0" width="128" height="195"/>
-        <element name="GtfsParsingStatus" positionX="160" positionY="192" width="128" height="45"/>
+        <element name="GtfsParsingStatus" positionX="160" positionY="192" width="128" height="90"/>
     </elements>
 </model>

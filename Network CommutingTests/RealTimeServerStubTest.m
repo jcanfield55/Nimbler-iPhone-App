@@ -156,7 +156,7 @@
 - (bool)waitForNonNullValueOfBlock:(BOOL(^)(void))block
 {
     int i;
-    for (i=0; i<25; i++) {
+    for (i=0; i<50; i++) {
         if (block()) {
             return true;
         } else {
