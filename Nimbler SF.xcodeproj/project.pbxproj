@@ -205,6 +205,7 @@
 		75E8F1D616CE3EC800863A8C /* caltrain.json in Resources */ = {isa = PBXBuildFile; fileRef = 75E8F1D516CE3EC800863A8C /* caltrain.json */; };
 		75E8F1DA16CE4B5400863A8C /* sf-muni.json in Resources */ = {isa = PBXBuildFile; fileRef = 75E8F1D916CE4B5400863A8C /* sf-muni.json */; };
 		8D00753216D4CAB30041A64C /* RouteExcludeSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D00753116D4CAB30041A64C /* RouteExcludeSettings.m */; };
+		8D04E79C16E8A488001DB75D /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */; };
 		8D0FA9A1169165C10038FDB2 /* LegFromOTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */; };
 		8D0FA9B0169198500038FDB2 /* ItineraryFromOTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0FA9AF1691984F0038FDB2 /* ItineraryFromOTP.m */; };
 		8D106DD91671F0ED004E0DE5 /* GtfsAgency.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DD81671F0ED004E0DE5 /* GtfsAgency.m */; };
@@ -223,7 +224,6 @@
 		8D3EFCC016E85DEE00266C6A /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 8D3EFCB816E85DEE00266C6A /* unzip.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8D3EFCC116E85DEE00266C6A /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 8D3EFCBA16E85DEE00266C6A /* zip.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8D3EFCC216E85DEE00266C6A /* ZipArchive.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8D3EFCBD16E85DEE00266C6A /* ZipArchive.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		8D3EFCC416E8673F00266C6A /* testDataStore.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8D3EFCC316E8673F00266C6A /* testDataStore.zip */; };
 		8D44084216CF775800F8EBE5 /* ac-transit.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D44084116CF775800F8EBE5 /* ac-transit.json */; };
 		8D45BD1E162BDE6A00E5CB3D /* Icon_ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D45BD1D162BDE6A00E5CB3D /* Icon_ipad@2x.png */; };
 		8D4FC8E6162D2E1A004144DE /* bart-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D4FC8E4162D2E1A004144DE /* bart-station.json */; };
@@ -241,7 +241,6 @@
 		8D99B635164E2DF200C0A5AC /* stop_times.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8D99B631164E2DF200C0A5AC /* stop_times.txt */; };
 		8D99B636164E2DF200C0A5AC /* stops.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8D99B632164E2DF200C0A5AC /* stops.txt */; };
 		8D99B637164E2DF200C0A5AC /* trips.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8D99B633164E2DF200C0A5AC /* trips.txt */; };
-		8D9EA263162D78FD002BB5FF /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */; };
 		8DA39BDF15E3855B0029D54B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6F22E71563AD360066DFA9 /* AVFoundation.framework */; };
 		8DA39BE115E38B5E0029D54B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */; };
 		8DBECD5216146DBE007B71F1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */; };
@@ -593,7 +592,6 @@
 		8D3EFCBB16E85DEE00266C6A /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
 		8D3EFCBC16E85DEE00266C6A /* ZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZipArchive.h; sourceTree = "<group>"; };
 		8D3EFCBD16E85DEE00266C6A /* ZipArchive.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZipArchive.mm; sourceTree = "<group>"; };
-		8D3EFCC316E8673F00266C6A /* testDataStore.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = testDataStore.zip; sourceTree = "<group>"; };
 		8D42C2F8163AC05C00880B33 /* Nimbler Caltrain-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Nimbler Caltrain-Info.plist"; sourceTree = SOURCE_ROOT; };
 		8D42C2F9163AC05C00880B33 /* Nimbler Caltrain-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Nimbler Caltrain-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		8D44083E16CF72FD00F8EBE5 /* PreloadedStop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreloadedStop.h; sourceTree = "<group>"; };
@@ -1176,7 +1174,6 @@
 		8D82883616E4CA5600AA8FF2 /* DB */ = {
 			isa = PBXGroup;
 			children = (
-				8D3EFCC316E8673F00266C6A /* testDataStore.zip */,
 				8D3EFCA216E85BF800266C6A /* store101.zip */,
 			);
 			name = DB;
@@ -1470,7 +1467,6 @@
 				8DE42FEC16E0AEEE00A37AD3 /* img_legFerrySelect.png in Resources */,
 				8DE42FED16E0AEEE00A37AD3 /* img_legFerrySelect@2x.png in Resources */,
 				8D3EFCA316E85BF800266C6A /* store101.zip in Resources */,
-				8D3EFCC416E8673F00266C6A /* testDataStore.zip in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1547,7 +1543,6 @@
 				520FB1A71626036C0083F143 /* UserPreferance.m in Sources */,
 				8DC019F91627F4BE004200E5 /* nc_AppDelegate.m in Sources */,
 				8DF35D631627F58500B99F4A /* main.m in Sources */,
-				8D9EA263162D78FD002BB5FF /* Network_Commuting.xcdatamodeld in Sources */,
 				8DFFB36C165DFBBB00A39BC4 /* SettingDetailViewController.m in Sources */,
 				8D106DD91671F0ED004E0DE5 /* GtfsAgency.m in Sources */,
 				8D106DFF1671F16C004E0DE5 /* GtfsCalendar.m in Sources */,
@@ -1573,6 +1568,7 @@
 				8D3EFCC016E85DEE00266C6A /* unzip.c in Sources */,
 				8D3EFCC116E85DEE00266C6A /* zip.c in Sources */,
 				8D3EFCC216E85DEE00266C6A /* ZipArchive.mm in Sources */,
+				8D04E79C16E8A488001DB75D /* Network_Commuting.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1674,8 +1670,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -1702,8 +1698,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
+				PROVISIONING_PROFILE = "4BFCD333-A55F-47A7-B3F0-36DF472F8E15";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4BFCD333-A55F-47A7-B3F0-36DF472F8E15";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -1715,9 +1711,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -1744,9 +1740,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
-				"PROVISIONING_PROFILE[sdk=*]" = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
+				PROVISIONING_PROFILE = "4BFCD333-A55F-47A7-B3F0-36DF472F8E15";
+				"PROVISIONING_PROFILE[sdk=*]" = "4BFCD333-A55F-47A7-B3F0-36DF472F8E15";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4BFCD333-A55F-47A7-B3F0-36DF472F8E15";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;

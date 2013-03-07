@@ -16,6 +16,7 @@
 #import "nc_AppDelegate.h"
 #import "Leg.h"
 #import "Itinerary.h"
+#import "GtfsStopTimes.h"
 
 #define LINE_WIDTH  5
 #define ALPHA_LIGHT 0.7
@@ -68,7 +69,22 @@ NSString *legID;
             // Set up the startpoint, endpoint, overlays and annotations for the new itinerary
             
             NSArray *sortedLegs = [itinerary sortedLegs];
-            
+            for(int i=0;i<[sortedLegs count];i++){
+                Leg *leg = [sortedLegs objectAtIndex:i];
+                if([leg isScheduled]){
+                    NSArray *stopTimes = [[nc_AppDelegate sharedInstance].gtfsParser returnIntermediateStopForLeg:leg];
+                    for(int i=0;i<[stopTimes count];i++){
+                        GtfsStopTimes *stopTime = [stopTimes objectAtIndex:i];
+                        float langcoord = [stopTime.stop.stopLat floatValue];
+                        float longcoord = [stopTime.stop.stopLon floatValue];
+                        CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(langcoord, longcoord);
+                        MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
+                        [point setCoordinate:coord];
+                        [point setTitle:[NSString stringWithFormat:@"%@ %@",stopTime.stop.stopID,stopTime.departureTime]];
+                        [mapView addAnnotation:point];
+                    }
+                }
+           }
             // Take startpoint as the beginning of the first leg's polyline, and endpoint form the last leg's polyline
             startPoint = [[MKPointAnnotation alloc] init];
             [startPoint setCoordinate:[[[sortedLegs objectAtIndex:0] polylineEncodedString] startCoord]];
@@ -115,21 +131,6 @@ NSString *legID;
             //[self refreshLegOverlay:itineraryNumber];  // refreshes the last itinerary number
             //[self refreshLegOverlay:i0];   // refreshes the new itinerary number
             itineraryNumber = i0;
-            Leg *leg = [[itinerary sortedLegs] objectAtIndex:itineraryNumber];
-            NSArray *stops = [[nc_AppDelegate sharedInstance].gtfsParser returnIntermediateStopForLeg:leg];
-            for(int i=0;i<[stops count];i++){
-                GtfsStop *stop = [stops objectAtIndex:i];
-                float langcoord = [stop.stopLat floatValue];
-                float longcoord = [stop.stopLon floatValue];
-                
-                CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(langcoord, longcoord);
-                MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
-                [point setCoordinate:coord];
-                [point setTitle:stop.stopID];
-                // Create an instance of MapPoint with the current data
-                // Add it to the map view
-                [mapView addAnnotation:point];
-            }
             [self setMapViewRegion];  // redefine the bounding box
         }
     }

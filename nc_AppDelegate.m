@@ -170,8 +170,6 @@ FeedBackForm *fbView;
     
     RKManagedObjectStore *rkMOS;
     @try {
-         // Note:- This line is used in Seeding Database.
-        //rkMOS = [RKManagedObjectStore objectStoreWithStoreFilename:COREDATA_DB_FILENAME usingSeedDatabaseName:RKDefaultSeedDatabaseFileName managedObjectModel:self.managedObjectModel delegate:self];
         rkMOS = [RKManagedObjectStore objectStoreWithStoreFilename:COREDATA_DB_FILENAME];
         [rkGeoMgr setObjectStore:rkMOS];
         [rkPlanMgr setObjectStore:rkMOS];

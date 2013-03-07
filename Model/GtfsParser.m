@@ -893,10 +893,12 @@
 - (void)generateTripsRequestForSeedDB:(NSArray *)routeIds agencyIds:(NSArray *)agencyIds{
     NSMutableString *strRequestString = [[NSMutableString alloc] init];
     for(int i=0;i<[routeIds count];i++){
-        NSString *strTripId = [routeIds objectAtIndex:i];
+        NSString *strRouteId = [routeIds objectAtIndex:i];
         NSString *strAgencyId = [agencyIds objectAtIndex:i];
-        if([strRequestString rangeOfString:[NSString stringWithFormat:@"%@_%@,",strAgencyId,strTripId]].location == NSNotFound)
-            [strRequestString appendFormat:@"%@_%@,",strAgencyId,strTripId];
+        if([strRequestString rangeOfString:[NSString stringWithFormat:@"%@_%@,",strAgencyId,strRouteId]].location == NSNotFound){
+            [strRequestString appendFormat:@"%@_%@,",strAgencyId,strRouteId];
+            [self setGtfsRequestSubmittedForAgency:agencyNameFromAgencyFeedId(strAgencyId) routeId:strRouteId plan:nil];
+        }
     }
     if([strRequestString length] > 0){
         [self requestTripsDataForCreatingSeedDB:strRequestString];
@@ -1555,8 +1557,9 @@
 
 //
 // GtfsParsingStatusMethods
-// 
--(BOOL)hasGtfsDownloadRequestBeenSubmittedFor:(NSString *)agencyName routeId:(NSString *)routeId
+//
+
+-(BOOL)hasGtfsDownloadRequestBeenSubmittedForAgency:(NSString *)agencyName routeId:(NSString *)routeId
 {
     GtfsParsingStatus* status = [self getParsingStatusObjectForAgency:agencyName routeId:routeId];
     return [status hasGtfsDownloadRequestBeenSubmitted];
@@ -1651,7 +1654,7 @@
     NSMutableArray *intermediateStops = [[NSMutableArray alloc] init];
     for(int i = startIndex; i<endIndex ;i++){
         GtfsStopTimes *stopTimes = [arrayStopTimes objectAtIndex:i];
-        [intermediateStops addObject:stopTimes.stop];
+        [intermediateStops addObject:stopTimes];
     }
     return intermediateStops;
 }

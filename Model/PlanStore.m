@@ -278,7 +278,6 @@
                 if([nc_AppDelegate sharedInstance].isTestPlan){
                     [nc_AppDelegate sharedInstance].testPlan = plan;
                 }
-                [[nc_AppDelegate sharedInstance].gtfsParser generateGtfsTripsRequestStringUsingPlan:plan];
                 NSString *strResourcePath = [objectLoader resourcePath];
                 if (strResourcePath && [strResourcePath length]>0) {
                     planRequestParameters = [parametersByPlanURLResource objectForKey:strResourcePath];
@@ -331,6 +330,7 @@
                     
                     // Call-back the appropriate VC with the new plan
                     [planRequestParameters.planDestination newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:planRequestParameters];
+                    [[nc_AppDelegate sharedInstance].gtfsParser generateGtfsTripsRequestStringUsingPlan:plan];
 
                 } else { // no matching sorted itineraries.  DE189 fix
                     if (planRequestParameters.isDestinationToFromVC) {
