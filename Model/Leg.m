@@ -53,6 +53,7 @@
 @synthesize predictions;
 @synthesize isRealTimeLeg;
 @synthesize prediction;
+@synthesize timeDiff;
 
 static NSDictionary* __agencyDisplayNameByAgencyId;
 
@@ -561,6 +562,8 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     self.routeLongName = leg.routeLongName;
     self.routeShortName = leg.routeShortName;
     self.tripShortName = leg.tripShortName;
+    self.tripId = leg.tripId;
+    self.headSign = leg.headSign;
     
     PlanPlace* from = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:self.managedObjectContext];
     from.lat = leg.from.lat;

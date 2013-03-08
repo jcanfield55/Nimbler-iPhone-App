@@ -29,7 +29,9 @@
     MKPointAnnotation* endPoint;    // annotation for the endPoint of the itinerary
     NSMutableArray* polyLineArray;  // Array of polylines for each element in legDescriptionTitleSortedArray
     NSMutableArray* dotAnnotationArray;  // Array of all dot annotations
+    NSMutableArray* intermediateAnnotations;
     UIImage* dotImage;
+    UIImage* pinImage;
 }
 
 // Utility routine for setting the region on the MapView based on the itineraryNumber
@@ -50,10 +52,10 @@ NSString *legID;
         mapView = m0;
         polyLineArray = [NSMutableArray arrayWithCapacity:10];
         dotAnnotationArray = [NSMutableArray arrayWithCapacity:10];
+        intermediateAnnotations = [[NSMutableArray alloc] init];
     }
     return self;
 }
-
 - (void)setItinerary:(Itinerary *)itin
 {
     @try {
@@ -63,24 +65,49 @@ NSString *legID;
             // Clear out any previous overlays and annotations
             [mapView removeAnnotations:dotAnnotationArray];
             [mapView removeOverlays:polyLineArray];
+            [mapView removeAnnotation:intermediateAnnotations];
             [dotAnnotationArray removeAllObjects];
             [polyLineArray removeAllObjects];
             
             // Set up the startpoint, endpoint, overlays and annotations for the new itinerary
-            
+            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
+            [dateFormatter setDateFormat:[NSDateFormatter dateFormatFromTemplate:@"hh:mm:ss a" options:0 locale:[NSLocale currentLocale]]];
             NSArray *sortedLegs = [itinerary sortedLegs];
             for(int i=0;i<[sortedLegs count];i++){
                 Leg *leg = [sortedLegs objectAtIndex:i];
                 if([leg isScheduled]){
+                    NSLog(@"tripId=%@",leg.tripId);
+                    NSLog(@"fromStop=%@",leg.from.stopId);
+                    NSLog(@"toStop=%@",leg.to.stopId);
                     NSArray *stopTimes = [[nc_AppDelegate sharedInstance].gtfsParser returnIntermediateStopForLeg:leg];
                     for(int i=0;i<[stopTimes count];i++){
                         GtfsStopTimes *stopTime = [stopTimes objectAtIndex:i];
+                         NSLog(@"intermediateStop=%@",stopTime.stop.stopID);
                         float langcoord = [stopTime.stop.stopLat floatValue];
                         float longcoord = [stopTime.stop.stopLon floatValue];
                         CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(langcoord, longcoord);
                         MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
                         [point setCoordinate:coord];
-                        [point setTitle:[NSString stringWithFormat:@"%@ %@",stopTime.stop.stopID,stopTime.departureTime]];
+                        [point setTitle:stopTime.stop.stopName];
+                        if(stopTime.arrivalTime && ![stopTime.arrivalTime isEqualToString:@""]){
+                            NSDate *arrivalTime = dateFromTimeString(stopTime.arrivalTime);
+                            NSDate *realArrivalTime = nil;
+                            if([leg isRealTimeLeg]){
+                                NSLog(@"%d",leg.timeDiff);
+                               realArrivalTime =  [arrivalTime dateByAddingTimeInterval:-(leg.timeDiff * 60)];
+                            }
+                            NSString *date;
+                            if(realArrivalTime){
+                               date = [dateFormatter stringFromDate:realArrivalTime];
+                            }
+                            else{
+                                date = [dateFormatter stringFromDate:arrivalTime];
+                            }
+                            NSLog(@"time=%@",stopTime.arrivalTime);
+                            NSLog(@"date=%@",date);
+                           [point setSubtitle:[NSString stringWithFormat:@"Arrival: %@",date]];
+                        }
+                        [intermediateAnnotations addObject:point];
                         [mapView addAnnotation:point];
                     }
                 }
@@ -330,6 +357,27 @@ NSString *legID;
             }
             return pinView;
         }
+        else if([dotAnnotationArray containsObject:annotation]){
+            MKAnnotationView* dotView = (MKAnnotationView*)[mv dequeueReusableAnnotationViewWithIdentifier:@"IntermediateAnnotation"];
+            
+            if (!dotView)
+            {
+                // If an existing pin view was not available, create one.
+                dotView = [[MKAnnotationView alloc] initWithAnnotation:annotation
+                                                       reuseIdentifier:@"IntermediateAnnotation"];
+                if (!dotImage) {
+                    NSString* imageName = [[NSBundle mainBundle] pathForResource:LEGMAP_DOT_IMAGE_FILE ofType:@"png"];
+                    dotImage = [UIImage imageWithContentsOfFile:imageName];
+                }
+                if (dotImage) {
+                    [dotView setImage:dotImage];
+                }
+            }
+            else
+                dotView.annotation = annotation;
+            
+            return dotView;
+        }
         // Otherwise, use the dot view controller
         else {
             MKAnnotationView* dotView = (MKAnnotationView*)[mv dequeueReusableAnnotationViewWithIdentifier:@"MyDotAnnotationView"];
@@ -339,13 +387,13 @@ NSString *legID;
                 // If an existing pin view was not available, create one.
                 dotView = [[MKAnnotationView alloc] initWithAnnotation:annotation
                                                        reuseIdentifier:@"MyDotAnnotation"];
-                dotView.canShowCallout = NO;
-                if (!dotImage) {
-                    NSString* imageName = [[NSBundle mainBundle] pathForResource:LEGMAP_DOT_IMAGE_FILE ofType:@"png"];
-                    dotImage = [UIImage imageWithContentsOfFile:imageName];
+                dotView.canShowCallout=YES;
+                if (!pinImage) {
+                    NSString* imageName = [[NSBundle mainBundle] pathForResource:@"pin" ofType:@"png"];
+                    pinImage = [UIImage imageWithContentsOfFile:imageName];
                 }
-                if (dotImage) {
-                    [dotView setImage:dotImage];
+                if (pinImage) {
+                    [dotView setImage:pinImage];
                 }
             }
             else

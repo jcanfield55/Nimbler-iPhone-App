@@ -11,6 +11,7 @@
 #import "UtilityFunctions.h"
 #import "PreloadedStop.h"
 
+
 @interface LocationPickerViewController ()
 {
     BOOL locationPicked;  // True if a location is picked before returning to ToFromViewController
@@ -72,8 +73,6 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    StationListElement *stationListElement = [locationArray objectAtIndex:[indexPath row]];
     UITableViewCell *cell =
     [tableView dequeueReusableCellWithIdentifier:@"LocationPickerViewCell"];
     
@@ -85,17 +84,25 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_LARGE_FONT_SIZE]];
-    int listType = [[nc_AppDelegate sharedInstance].stations returnElementType:stationListElement];
-    if(listType == 1){
-        [[cell textLabel] setText:stationListElement.containsList];
-    }
-    else if(listType == 2){
-        Location *loc = stationListElement.location;
-        [[cell textLabel] setText:[loc shortFormattedAddress]];
+    id tempObject = [locationArray objectAtIndex:[indexPath row]];
+    if([tempObject isKindOfClass:[LocationFromIOS class]]){
+        LocationFromGoogle *loc = (LocationFromGoogle *)tempObject;
+        [[cell textLabel] setText:loc.shortFormattedAddress];
     }
     else{
-        PreloadedStop *stop = stationListElement.stop;
-        [[cell textLabel] setText:stop.formattedAddress];
+        StationListElement *stationListElement = [locationArray objectAtIndex:[indexPath row]];
+        int listType = [[nc_AppDelegate sharedInstance].stations returnElementType:stationListElement];
+        if(listType == 1){
+            [[cell textLabel] setText:stationListElement.containsList];
+        }
+        else if(listType == 2){
+            Location *loc = stationListElement.location;
+            [[cell textLabel] setText:[loc shortFormattedAddress]];
+        }
+        else{
+            PreloadedStop *stop = stationListElement.stop;
+            [[cell textLabel] setText:stop.formattedAddress];
+        }
     }
     cell.textLabel.textColor = [UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0];
     tableView.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
@@ -109,6 +116,15 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.3];
     // Send back the picked location and pop the view controller back to ToFromViewController
+    id tempObject = [locationArray objectAtIndex:[indexPath row]];
+    if([tempObject isKindOfClass:[LocationFromIOS class]]){
+        LocationFromGoogle *loc = (LocationFromGoogle *)tempObject;
+        [toFromTableVC setPickedLocation:loc
+                           locationArray:locationArray isGeocodedResults:isGeocodeResults];
+        locationPicked = TRUE;
+        [self popViewController];
+        return;
+    }
     StationListElement *stationListElement = [locationArray objectAtIndex:[indexPath row]];
     int listType = [[nc_AppDelegate sharedInstance].stations returnElementType:stationListElement];
     if(listType == 1){
@@ -156,18 +172,26 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
 #pragma mark - UIDynamic cell heght methods
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *cellText;
-    StationListElement *stationListElement = [locationArray objectAtIndex:[indexPath row]];
-    int listType = [[nc_AppDelegate sharedInstance].stations returnElementType:stationListElement];
-    if(listType == 1){
-        cellText = stationListElement.containsList;
-    }
-    else if(listType == 2){
-        Location *loc = stationListElement.location;
+    id tempObject = [locationArray objectAtIndex:[indexPath row]];
+    if([tempObject isKindOfClass:[LocationFromIOS class]]){
+        LocationFromGoogle *loc = (LocationFromGoogle *)tempObject;
         cellText = loc.shortFormattedAddress;
     }
     else{
-        PreloadedStop *stop = stationListElement.stop;
-        cellText = stop.formattedAddress;
+        StationListElement *stationListElement = [locationArray objectAtIndex:[indexPath row]];
+        int listType = [[nc_AppDelegate sharedInstance].stations returnElementType:stationListElement];
+        if(listType == 1){
+            cellText = stationListElement.containsList;
+        }
+        else if(listType == 2){
+            Location *loc = stationListElement.location;
+            cellText = loc.shortFormattedAddress;
+        }
+        else{
+            PreloadedStop *stop = stationListElement.stop;
+            cellText = stop.formattedAddress;
+        }
+ 
     }
     CGSize size = [cellText 
                 sizeWithFont:[UIFont systemFontOfSize:MEDIUM_LARGE_FONT_SIZE] 
