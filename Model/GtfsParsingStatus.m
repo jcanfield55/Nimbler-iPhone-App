@@ -14,7 +14,7 @@
 @dynamic agencyFeedIdAndRoute;
 @dynamic status;
 @dynamic dateRequested;
-@dynamic requestingPlans;
+@dynamic requestingPlan;
 
 // True if request has been made for Gtfs data but data not yet received /parsed
 -(BOOL)hasGtfsDownloadRequestBeenSubmitted
@@ -35,9 +35,8 @@
 // Sets that a Gtfs Request has been made
 -(void)setGtfsRequestMadeFor:(Plan *)plan
 {
-    if (plan) {
-        [self addRequestingPlansObject:plan];
-    }
+    [self setRequestingPlan:plan];
+    [self setDateRequested:[NSDate date]];
     [self setStatus:GTFS_PARSING_STATUS_SUBMITTED];
 }
 

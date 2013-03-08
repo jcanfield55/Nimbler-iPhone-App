@@ -23,8 +23,8 @@
 // Date & time that the request for gtfs data was submitted
 @property (nonatomic, retain) NSDate* dateRequested;
 
-// Set of plans that have requested for gtfs and are waiting for data to be available
-@property (nonatomic, strong) NSSet* requestingPlans;
+// Plan that has requested for gtfs and is waiting for data to be available
+@property (nonatomic, strong) Plan* requestingPlan;
 
 // True if request has been made for Gtfs data but data not yet received /parsed
 -(BOOL)hasGtfsDownloadRequestBeenSubmitted;
@@ -41,8 +41,3 @@
 
 @end
 
-@interface GtfsParsingStatus (CoreDataGeneratedAccessors)
-
-- (void)addRequestingPlansObject:(Plan *)value;
-- (void)removeRequestingPlansObject:(Plan *)value;
-@end

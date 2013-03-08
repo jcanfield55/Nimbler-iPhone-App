@@ -31,7 +31,6 @@
 @property (strong, nonatomic) NSString *strStopsURL;
 @property (strong, nonatomic) NSString *strTripsURL;
 @property (strong, nonatomic) NSString *strStopTimesURL;
-@property (strong, nonatomic) Plan *tempPlan;
 @property (nonatomic) BOOL loadedInitialData;  // True if Agency data request was made and data is now loaded all the way through routes
 
 @property (nonatomic, strong) NSMutableDictionary *dictServerCallSoFar; // Contain count of how many times server is call so far for each gtfs data like GtfsAgency,GtfsCalendar,GtfsCalendarDates etc.if it is more than 3 then we will not request the server.
@@ -64,14 +63,17 @@
 -(void)requestCalendarDatafromServer;
 -(void)requestRoutesDatafromServer;
 -(void)requestStopsDataFromServer;
--(void)requestTripsDatafromServer:(NSMutableString *)strRequestString;
+-(void)requestTripsDatafromServer:(NSString *)strRequestString;
 - (void)requestStopTimesDataFromServer:(NSMutableString *)strRequestString;
 
 // Generate The StopTimes Request Comma Separated string like agencyID_tripID
 - (void)generateStopTimesRequestStringUsingTripIds:(NSArray *)tripIds agencyIds:(NSArray *)agencyIds;
 
-// Generate The Trips Request Comma Separated string like agencyID_ROUTEID
-- (void)generateGtfsTripsRequestStringUsingPlan:(Plan *) plan;
+// Makes a request to the server for any GTFS Trips and StopTimes data not already in the database
+// If there is data needed, it will make a callback to the planDestination object in parameters once the
+// data is available.  If parameters are nil, will not make the callback.  
+- (void)generateGtfsTripsRequestStringUsingPlan:(Plan *) plan
+                              requestParameters:(PlanRequestParameters *)parameters;
 
 // This method get the serviceId based on tripId.
 // Then get the calendar data for particular serviceID.
@@ -121,18 +123,25 @@
 // Remove all stopTimes and Trips Data from DB when new updates are available.
 - (void) removeAllTripsAndStopTimesData;
 
-// This methods are used in requesting and storing trips data into seed DB. 
+// This methods are used in requesting and storing trips data into seed DB.
 - (void) requestTripsDataForCreatingSeedDB:(NSMutableString *)strRequestString;
 - (void)generateTripsRequestForSeedDB:(NSArray *)routeIds agencyIds:(NSArray *)agencyIds;
 
 // GtfsParsingStatusMethods
--(BOOL)hasGtfsDownloadRequestBeenSubmittedForAgency:(NSString *)agencyName routeId:(NSString *)routeId;
--(BOOL)isGtfsDataAvailableForAgency:(NSString *)agencyName routeId:(NSString *)routeId;
--(void)setGtfsRequestSubmittedForAgency:(NSString *)agencyName routeId:(NSString *)routeId plan:(Plan *)plan;
+-(BOOL)hasGtfsDownloadRequestBeenSubmittedForAgencyName:(NSString *)agencyName
+                                                routeId:(NSString *)routeId;
+-(BOOL)isGtfsDataAvailableForAgencyName:(NSString *)agencyName
+                                routeId:(NSString *)routeId;
+-(void)setGtfsRequestSubmittedForAgencyName:(NSString *)agencyName
+                                    routeId:(NSString *)routeId
+                                       plan:(Plan *)plan
+                          requestParameters:(PlanRequestParameters *)parameters;
 
 // For all the plans in requestingPlans, will call the plan's "prepareSortedItineraries" method
 // once all the needed data is available
--(void)setGtfsDataAvailableForAgency:(NSString *)agencyName routeId:(NSString *)routeId;
+-(void)setGtfsDataAvailableForAgencyName:(NSString *)agencyName
+                                 routeId:(NSString *)routeId
+                                 context:(NSManagedObjectContext *) context;
 
 - (NSArray *) returnIntermediateStopForLeg:(Leg *)leg;
 @end

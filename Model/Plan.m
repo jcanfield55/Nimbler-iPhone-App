@@ -15,6 +15,7 @@
 #import "ItineraryFromOTP.h"
 #import "nc_AppDelegate.h"
 #import "RouteExcludeSettings.h"
+#import "GtfsParsingStatus.h"
 
 
 @interface Plan (CoreDataGeneratedAccessors)
@@ -174,7 +175,8 @@
     for (PlanRequestChunk* reqChunk0 in [plan0 requestChunks]) {
         for (PlanRequestChunk* selfRequestChunk in [self requestChunks]) {
             if (((reqChunk0.routeExcludeSettings==nil) == (selfRequestChunk.routeExcludeSettings==nil)) && 
-                [[reqChunk0 routeExcludeSettings] isEquivalentTo:[selfRequestChunk routeExcludeSettings]] && // equivalent RouteExcludeSettings
+                (!reqChunk0.routeExcludeSettings ||      // only check routeExcludeSettings equivalency if non-nil
+                [[reqChunk0 routeExcludeSettings] isEquivalentTo:[selfRequestChunk routeExcludeSettings]]) && // equivalent RouteExcludeSettings
                 ([reqChunk0 gtfsItineraryPattern] == [selfRequestChunk gtfsItineraryPattern]) &&   // the same gtfsItineraryPattern
                 [reqChunk0 doAllServiceStringByAgencyMatchRequestChunk:selfRequestChunk] &&  // matching serviceStrings
                 [reqChunk0 doTimesOverlapRequestChunk:selfRequestChunk bufferInSeconds:REQUEST_CHUNK_OVERLAP_BUFFER_IN_SECONDS]) { //overlapping times
@@ -203,6 +205,13 @@
             [self addToUniqueItinerariesIfNeeded:itin0];
         }
     }
+    
+    // Transfer over gtfsParsingStatus objects if any
+    NSSet* parsingStatus0 = [NSSet setWithSet:[plan0 gtfsParsingRequests]];
+    for (GtfsParsingStatus* status in parsingStatus0) {
+        [status setRequestingPlan:self];
+    }
+    
     // Delete plan0
     [[self managedObjectContext] deleteObject:plan0];
     
@@ -474,6 +483,7 @@
 // Given a particular request timing and unique itinerary, determine whether more GTFS itineraries need to be
 // generated.  If so, generate them.
 // Consolidate requestChunks where possible, or create new ones if needed
+// Only attempt to generate gtfs itineraries if the gtfs data for that route is loaded.  
 -(void)generateMoreGtfsItinsIfNeededFor:(Itinerary *)uniqueItin
                             requestDate:(NSDate *)requestDate
                   intervalBeforeRequest:(NSTimeInterval)intervalBeforeRequest
@@ -481,8 +491,33 @@
                          departOrArrive:(DepartOrArrive)depOrArrive
 {
     @try {
-        NSMutableSet* newReqChunkSet = [NSMutableSet setWithCapacity:2];
         GtfsParser* gtfsParser = [[nc_AppDelegate sharedInstance] gtfsParser];
+        // See if we have the needed GTFS data loaded
+        BOOL allDataAvailable = true;
+        BOOL needToRequestMoreData = false;
+        for (Leg* leg in [uniqueItin sortedLegs]) {
+            if([leg isScheduled]) {
+                if (![gtfsParser isGtfsDataAvailableForAgencyName:leg.agencyName routeId:leg.routeId]) {
+                    allDataAvailable = false;
+                    if (![gtfsParser hasGtfsDownloadRequestBeenSubmittedForAgencyName:leg.agencyName routeId:leg.routeId]) {
+                        needToRequestMoreData = true;
+                    }
+                }
+            }
+        }
+        if (needToRequestMoreData) {
+            [gtfsParser generateGtfsTripsRequestStringUsingPlan:self requestParameters:nil];  // Put in another request for GTFS data
+            if (self.gtfsParsingRequests.count > 0) {
+                [[nc_AppDelegate sharedInstance].planStore.plansWaitingForGtfsData addObject:self]; // Put self onto list as plans waiting for gtfsRequests
+            }
+        }
+        if (!allDataAvailable) {
+            return;   // Don't try to generate GTFS itineraries if we do not have all the needed data
+        }
+        
+        // Now analyze the requestChunks
+        
+        NSMutableSet* newReqChunkSet = [NSMutableSet setWithCapacity:2];
         BOOL didRequestNewItineraries = false;
         NSDate* requestTimeOnly = timeOnlyFromDate(requestDate);
         NSDate* requestRangeFrom;
@@ -580,63 +615,68 @@
      planBufferSecondsBeforeItinerary:(int)planBufferSecondsBeforeItinerary
           planMaxTimeForResultsToShow:(int)planMaxTimeForResultsToShow
 {
-    
-    // Create a set of all OTP PlanRequestChunks that match the requestDate services, time, and routeExcludeSettings
-    // Iteratively connect PlanRequestChunks together if they are adjacent in time
-    // This will tell us for what time (if any) we need to ask for more OTP itineraries to make sure we have all the
-    // unique itinerary patterns we need
-    NSMutableSet* reqChunkSet = [NSMutableSet setWithSet:[self requestChunks]];
-    NSMutableSet* matchingReqChunks = [[NSMutableSet alloc] initWithCapacity:10];
-    NSDate* connectingReqDate = requestDate; // connectingReqDate will move to connect adjoining request chunks
-    NSDate* newConnectingReqDate;
-    int loopsExecuted = 0;
-    do {
-        newConnectingReqDate = nil;
-        // Collect the req
-        for (PlanRequestChunk* reqChunk in reqChunkSet) {
-            if ([reqChunk isOTP] &&
-                [reqChunk doAllItineraryServiceDaysMatchDate:connectingReqDate] &&
-                [reqChunk doesCoverTheSameTimeAs:connectingReqDate departOrArrive:depOrArrive] &&
-                (!routeExcludeSettings || [[reqChunk routeExcludeSettings] isEquivalentTo:routeExcludeSettings])) {
-                
-                [matchingReqChunks addObject:reqChunk];
-                
-                // Compute newConnectingReqDate
-                NSDate* possibleNewConnReqDate;
-                if (depOrArrive == DEPART) {
-                    NSDate* lastItinTimeOnly = [reqChunk latestTimeFor:depOrArrive];
-                    possibleNewConnReqDate = addDateOnlyWithTime(dateOnlyFromDate(requestDate),
-                                                                 [NSDate dateWithTimeInterval:PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS
-                                                                                    sinceDate:lastItinTimeOnly]);
-                    if (!newConnectingReqDate ||
-                        [newConnectingReqDate compare:possibleNewConnReqDate] == NSOrderedAscending) {
-                        newConnectingReqDate = possibleNewConnReqDate;
-                    }
-                } else { // depOrArrive = ARRIVE
-                    NSDate* firstItinEndTimeOnly = [reqChunk earliestTimeFor:depOrArrive];
-                    possibleNewConnReqDate = addDateOnlyWithTime(dateOnlyFromDate(requestDate),
-                                                                 [NSDate dateWithTimeInterval:(-PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS)
-                                                                                    sinceDate:firstItinEndTimeOnly]);
-                    if (!newConnectingReqDate ||
-                        [newConnectingReqDate compare:possibleNewConnReqDate] == NSOrderedDescending) {
-                        newConnectingReqDate = possibleNewConnReqDate;
+    @try {
+        // Create a set of all OTP PlanRequestChunks that match the requestDate services, time, and routeExcludeSettings
+        // Iteratively connect PlanRequestChunks together if they are adjacent in time
+        // This will tell us for what time (if any) we need to ask for more OTP itineraries to make sure we have all the
+        // unique itinerary patterns we need
+        NSMutableSet* reqChunkSet = [NSMutableSet setWithSet:[self requestChunks]];
+        NSMutableSet* matchingReqChunks = [[NSMutableSet alloc] initWithCapacity:10];
+        NSDate* connectingReqDate = requestDate; // connectingReqDate will move to connect adjoining request chunks
+        NSDate* newConnectingReqDate;
+        int loopsExecuted = 0;
+        do {
+            newConnectingReqDate = nil;
+            // Collect the req
+            for (PlanRequestChunk* reqChunk in reqChunkSet) {
+                if ([reqChunk isOTP] &&
+                    [reqChunk doAllItineraryServiceDaysMatchDate:connectingReqDate] &&
+                    [reqChunk doesCoverTheSameTimeAs:connectingReqDate departOrArrive:depOrArrive] &&
+                    (!routeExcludeSettings || [[reqChunk routeExcludeSettings] isEquivalentTo:routeExcludeSettings])) {
+                    
+                    [matchingReqChunks addObject:reqChunk];
+                    
+                    // Compute newConnectingReqDate
+                    NSDate* possibleNewConnReqDate;
+                    if (depOrArrive == DEPART) {
+                        NSDate* lastItinTimeOnly = [reqChunk latestTimeFor:depOrArrive];
+                        possibleNewConnReqDate = addDateOnlyWithTime(dateOnlyFromDate(requestDate),
+                                                                     [NSDate dateWithTimeInterval:PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS
+                                                                                        sinceDate:lastItinTimeOnly]);
+                        if (!newConnectingReqDate ||
+                            [newConnectingReqDate compare:possibleNewConnReqDate] == NSOrderedAscending) {
+                            newConnectingReqDate = possibleNewConnReqDate;
+                        }
+                    } else { // depOrArrive = ARRIVE
+                        NSDate* firstItinEndTimeOnly = [reqChunk earliestTimeFor:depOrArrive];
+                        possibleNewConnReqDate = addDateOnlyWithTime(dateOnlyFromDate(requestDate),
+                                                                     [NSDate dateWithTimeInterval:(-PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS)
+                                                                                        sinceDate:firstItinEndTimeOnly]);
+                        if (!newConnectingReqDate ||
+                            [newConnectingReqDate compare:possibleNewConnReqDate] == NSOrderedDescending) {
+                            newConnectingReqDate = possibleNewConnReqDate;
+                        }
                     }
                 }
             }
-        }
-        if (newConnectingReqDate) {
-            connectingReqDate = newConnectingReqDate;
-        }
-        loopsExecuted++;
-        if (loopsExecuted == 25) {
-            logError(@"PlanStore -> nextOtpServerDateToCallFor",
-                     [NSString stringWithFormat:
-                      @"loopsExecuted unexpectedly reached 25.  self.requestChunks.count = %d", self.requestChunks.count]);
-        }
-    } while (newConnectingReqDate && loopsExecuted < 25);
-    
-    return connectingReqDate;
-
+            if (newConnectingReqDate) {
+                connectingReqDate = newConnectingReqDate;
+            }
+            loopsExecuted++;
+            if (loopsExecuted == 25) {
+                logError(@"PlanStore -> nextOtpServerDateToCallFor",
+                         [NSString stringWithFormat:
+                          @"loopsExecuted unexpectedly reached 25.  self.requestChunks.count = %d", self.requestChunks.count]);
+            }
+        } while (newConnectingReqDate && loopsExecuted < 25);
+        
+        return connectingReqDate;
+        
+    }
+    @catch (NSException *exception) {
+        logException(@"Plan->nextOtpServerDateToCallFor:", @"", exception);
+        return [requestDate dateByAddingTimeInterval:PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW];
+    }
 }
 
 

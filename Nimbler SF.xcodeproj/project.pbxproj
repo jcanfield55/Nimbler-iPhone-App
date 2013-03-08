@@ -178,6 +178,7 @@
 		528C664E16D7011E005B7309 /* RouteExcludeSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 528C664D16D7011E005B7309 /* RouteExcludeSetting.m */; };
 		52958AB116CED86900CC46C7 /* GtfsTempItinerary.m in Sources */ = {isa = PBXBuildFile; fileRef = 52958AB016CED86900CC46C7 /* GtfsTempItinerary.m */; };
 		52A9BE9516B4B41500564D0D /* RealTimeServerStubTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */; };
+		52B0535C16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B0535B16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m */; };
 		52C10385160BEF8000BC6020 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C10384160BEF8000BC6020 /* AddressBookUI.framework */; };
 		52C1CBB4161AB69600695348 /* Icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB3161AB69600695348 /* Icon-small.png */; };
 		52C1CBB6161AB6A400695348 /* Icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB5161AB6A400695348 /* Icon-small@2x.png */; };
@@ -527,6 +528,8 @@
 		5295B95216C6F71B008376B3 /* Network_Commuting 1.8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.8.xcdatamodel"; sourceTree = "<group>"; };
 		52A9BE9316B4B41500564D0D /* RealTimeServerStubTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RealTimeServerStubTest.h; sourceTree = "<group>"; };
 		52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RealTimeServerStubTest.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		52B0535A16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanStoreForRealTimeServerStubTest.h; sourceTree = "<group>"; };
+		52B0535B16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlanStoreForRealTimeServerStubTest.m; sourceTree = "<group>"; };
 		52C10384160BEF8000BC6020 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		52C1CBB3161AB69600695348 /* Icon-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-small.png"; sourceTree = "<group>"; };
 		52C1CBB5161AB6A400695348 /* Icon-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-small@2x.png"; sourceTree = "<group>"; };
@@ -1115,6 +1118,8 @@
 				52C32AB916A3A37B0094EE14 /* TestGeneratePlan.h */,
 				52C32ABA16A3A37B0094EE14 /* TestGeneratePlan.m */,
 				52CF43C414BDF2F9000565D6 /* Supporting Files */,
+				52B0535A16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.h */,
+				52B0535B16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m */,
 			);
 			name = "Nimbler Tests";
 			path = "Network CommutingTests";
@@ -1581,6 +1586,7 @@
 				52A9BE9516B4B41500564D0D /* RealTimeServerStubTest.m in Sources */,
 				52DD766B16D2A893005763DE /* StationListElement.m in Sources */,
 				52DD766D16D2A8FE005763DE /* PreloadedStop.m in Sources */,
+				52B0535C16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -22,6 +22,8 @@
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (strong, nonatomic) RKObjectManager *rkPlanMgr;  // RestKit object manager for trip planning
+@property (strong, nonatomic) NSMutableSet* plansWaitingForGtfsData;  // Set of plans with outstanding gtfsParsingRequests
+
 
 // Designated initializer
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkPlanMgr:(RKObjectManager *)rkP;
@@ -53,4 +55,9 @@
 // To exclude routes, set exclSettingArray to an array of RouteExcludeSetting objects as returned by RouteExcludeSettings -> excludeSettingsForPlan
 -(void)requestPlanFromOtpWithParameters:(PlanRequestParameters *)parameters
                routeExcludeSettingArray:(NSArray *)exclSettingArray;
+
+// Called when there is an update of gtfsData
+// Checks whether any plans with outstanding gtfsParsingRequests now have all the data they need.
+// If so, updates those plans (using prepareSortedItinaries) and calls their planDestination
+- (void)updatePlansWithNewGtfsDataIfNeeded;
 @end

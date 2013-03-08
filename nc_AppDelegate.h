@@ -58,7 +58,7 @@
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 @property (readonly, strong, nonatomic) Locations *locations;
-@property (readonly, strong, nonatomic) PlanStore *planStore;
+@property (strong, nonatomic) PlanStore *planStore;
 @property (strong, nonatomic) ToFromViewController *toFromViewController;
 @property (readonly, strong, nonatomic) CLLocationManager* locationManager;
 
