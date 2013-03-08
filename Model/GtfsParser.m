@@ -17,6 +17,13 @@
 #import "GtfsRoutes.h"
 #import "GtfsTempItinerary.h"
 
+@interface GtfsParser ()
+{
+    NSString* lastTripsDataRequestString;
+}
+
+@end
+
 @implementation GtfsParser
 
 @synthesize managedObjectContext;
@@ -28,7 +35,6 @@
 @synthesize strStopsURL;
 @synthesize strTripsURL;
 @synthesize strStopTimesURL;
-@synthesize tempPlan;
 @synthesize loadedInitialData;
 @synthesize dictServerCallSoFar;
 
@@ -433,6 +439,7 @@
         return;
     }
     [[self managedObjectContext] mergeChangesFromContextDidSaveNotification:notification];
+    [[[nc_AppDelegate sharedInstance] planStore] updatePlansWithNewGtfsDataIfNeeded];  // see if any plans need the data just updated
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -452,6 +459,7 @@
         NSMutableArray *arrayDropOffType = [[NSMutableArray alloc] init];
         NSMutableArray *arrayShapeDistTraveled = [[NSMutableArray alloc] init];
         NSMutableArray *arrayAgencyID = [[NSMutableArray alloc] init];
+        NSMutableDictionary *routeIdAndAgencyIdDictionary = [[NSMutableDictionary alloc] initWithCapacity:10];
         
         NIMLOG_PERF2(@"parse stop times start first loop");
         NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
@@ -476,42 +484,54 @@
                 }
             }
         }
-            NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
-            [fetchTrips setEntity:[NSEntityDescription entityForName:@"GtfsTrips" inManagedObjectContext:moc]];
-            NSArray * arrayTrips = [moc executeFetchRequest:fetchTrips error:nil];
-            NSMutableDictionary *dictTrips = [[NSMutableDictionary alloc] init];
-            for(int i=0;i<[arrayTrips count];i++){
-                GtfsTrips *trips = [arrayTrips objectAtIndex:i];
-                [dictTrips setObject:trips forKey:trips.tripID];
-            }
-            
-            NSFetchRequest * fetchStops = [[NSFetchRequest alloc] init];
-            [fetchStops setEntity:[NSEntityDescription entityForName:@"GtfsStop" inManagedObjectContext:moc]];
-            NSArray * arrayStops = [moc executeFetchRequest:fetchStops error:nil];
-            NSMutableDictionary *dictStops = [[NSMutableDictionary alloc] init];
-            for(int i=0;i<[arrayStops count];i++){
-                GtfsStop *stop = [arrayStops objectAtIndex:i];
-                [dictStops setObject:stop forKey:stop.stopID];
-            }
+        NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
+        [fetchTrips setEntity:[NSEntityDescription entityForName:@"GtfsTrips" inManagedObjectContext:moc]];
+        NSArray * arrayTrips = [moc executeFetchRequest:fetchTrips error:nil];
+        NSMutableDictionary *dictTrips = [[NSMutableDictionary alloc] init];
+        for(int i=0;i<[arrayTrips count];i++){
+            GtfsTrips *trips = [arrayTrips objectAtIndex:i];
+            [dictTrips setObject:trips forKey:trips.tripID];
+        }
+        
+        NSFetchRequest * fetchStops = [[NSFetchRequest alloc] init];
+        [fetchStops setEntity:[NSEntityDescription entityForName:@"GtfsStop" inManagedObjectContext:moc]];
+        NSArray * arrayStops = [moc executeFetchRequest:fetchStops error:nil];
+        NSMutableDictionary *dictStops = [[NSMutableDictionary alloc] init];
+        for(int i=0;i<[arrayStops count];i++){
+            GtfsStop *stop = [arrayStops objectAtIndex:i];
+            [dictStops setObject:stop forKey:stop.stopID];
+        }
         NIMLOG_PERF2(@"Parse stop times start 2nd loop");
-            for(int j=0;j<[arrayTripID count];j++){
-                GtfsStopTimes* stopTimes = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsStopTimes" inManagedObjectContext:moc];
-                stopTimes.tripID = [arrayTripID objectAtIndex:j];
-                stopTimes.trips = [dictTrips objectForKey:stopTimes.tripID];
-                stopTimes.arrivalTime = [arrayArrivalTime objectAtIndex:j];
-                stopTimes.arrivalNSDate = dateFromTimeString(stopTimes.arrivalTime);
-                stopTimes.departureTime = [arrayDepartureTime objectAtIndex:j];
-                stopTimes.departureNSDate = dateFromTimeString(stopTimes.departureTime);
-                stopTimes.stopID = [arrayStopID objectAtIndex:j];
-                stopTimes.stop = [dictStops objectForKey:stopTimes.stopID];
-                stopTimes.stopSequence = [arrayStopSequence objectAtIndex:j];
-                stopTimes.pickUpTime = [arrayPickUpType objectAtIndex:j];
-                stopTimes.dropOfTime = [arrayDropOffType objectAtIndex:j];
-                stopTimes.shapeDistTravelled = [arrayShapeDistTraveled objectAtIndex:j];
-                stopTimes.agencyID = [arrayAgencyID objectAtIndex:j];
+        for(int j=0;j<[arrayTripID count];j++){
+            GtfsStopTimes* stopTimes = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsStopTimes" inManagedObjectContext:moc];
+            stopTimes.tripID = [arrayTripID objectAtIndex:j];
+            stopTimes.trips = [dictTrips objectForKey:stopTimes.tripID];
+            stopTimes.arrivalTime = [arrayArrivalTime objectAtIndex:j];
+            stopTimes.arrivalNSDate = dateFromTimeString(stopTimes.arrivalTime);
+            stopTimes.departureTime = [arrayDepartureTime objectAtIndex:j];
+            stopTimes.departureNSDate = dateFromTimeString(stopTimes.departureTime);
+            stopTimes.stopID = [arrayStopID objectAtIndex:j];
+            stopTimes.stop = [dictStops objectForKey:stopTimes.stopID];
+            stopTimes.stopSequence = [arrayStopSequence objectAtIndex:j];
+            stopTimes.pickUpTime = [arrayPickUpType objectAtIndex:j];
+            stopTimes.dropOfTime = [arrayDropOffType objectAtIndex:j];
+            stopTimes.shapeDistTravelled = [arrayShapeDistTraveled objectAtIndex:j];
+            stopTimes.agencyID = [arrayAgencyID objectAtIndex:j];
+            [routeIdAndAgencyIdDictionary setObject:stopTimes.agencyID forKey:stopTimes.trips.routeID];
+        }
+        
+        // Update gtfsParsingStatus for each routeId / AgencyId combination
+        if ([arrayTripID count] > 0) {
+            NSArray* keys = [routeIdAndAgencyIdDictionary allKeys];
+            for (NSString* routeId in keys) {
+                NSString* agencyName = agencyNameFromAgencyFeedId([routeIdAndAgencyIdDictionary objectForKey:routeId]);
+                [self setGtfsDataAvailableForAgencyName:agencyName routeId:routeId context:moc];
             }
+        }
+        
         NIMLOG_PERF2(@"Parse stop times save context");
-            saveContext(moc);
+        saveContext(moc);
+
         NIMLOG_PERF2(@"Parse stop times done");
         dispatch_async(dispatch_get_main_queue(), ^{
             
@@ -626,11 +646,7 @@
 }
 
 // Request The Server For Trips Data.
--(void)requestTripsDatafromServer:(NSMutableString *)strRequestString{
-    int nLength = [strRequestString length];
-    if(nLength > 0){
-        [strRequestString deleteCharactersInRange:NSMakeRange(nLength-1, 1)];
-    }
+-(void)requestTripsDatafromServer:(NSString *)strRequestString{
     @try {
         int serverCallSoFar = [[dictServerCallSoFar objectForKey:GTFS_TRIPS_COUNTER] intValue];
         serverCallSoFar = serverCallSoFar + 1;
@@ -644,7 +660,6 @@
     @catch (NSException *exception) {
         logException(@"GtfsParser->getTripsData", @"", exception);
     }
-
 }
 
 // Request The Server For StopTimes Data.
@@ -785,7 +800,7 @@
                     else{
                         int serverCallSoFar = [[dictServerCallSoFar objectForKey:GTFS_STOPS_COUNTER] intValue];
                         if(serverCallSoFar < 3)
-                            [self generateGtfsTripsRequestStringUsingPlan:tempPlan];
+                            [self requestTripsDatafromServer:lastTripsDataRequestString];
                         else
                             logError(@"No results Back from Server for GtfsTrips request", [res objectForKey:@"msg"]);
                     }
@@ -804,7 +819,7 @@
                 else{
                     int serverCallSoFar = [[dictServerCallSoFar objectForKey:GTFS_STOPS_COUNTER] intValue];
                     if(serverCallSoFar < 3)
-                        [self generateGtfsTripsRequestStringUsingPlan:tempPlan];
+                        [self requestTripsDatafromServer:lastTripsDataRequestString];
                     else
                         logError(@"No results Back from Server for GtfsTrips request", [res objectForKey:@"msg"]);
                 }
@@ -816,7 +831,7 @@
                 NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
                 if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
                     [self parseAndStoreGtfsStopTimesData:res RequestUrl:strRequestURL];
-                    tempPlan = nil;
+                    lastTripsDataRequestString = nil;
                 }
             }
         }
@@ -849,33 +864,44 @@
     }
 }
 
-- (void)generateGtfsTripsRequestStringUsingPlan:(Plan *) plan{
-    tempPlan = plan;
+// Makes a request to the server for any GTFS Trips and StopTimes data not already in the database
+// If there is data needed, it will make a callback to the planDestination object in parameters once the
+// data is available.  If parameters are nil, will not make the callback.  
+- (void)generateGtfsTripsRequestStringUsingPlan:(Plan *) plan
+                              requestParameters:(PlanRequestParameters *)parameters
+{
     [nc_AppDelegate sharedInstance].receivedReply = false;
     NSMutableString *strRequestString = [[NSMutableString alloc] init];
-    NSArray *itiArray = [plan sortedItineraries];
+    NSArray *itiArray = [plan uniqueItineraries];
+    BOOL isStatusChanged = false;
     for(int i=0;i<[itiArray count];i++){
         Itinerary *iti = [itiArray objectAtIndex:i];
         NSArray *legArray = [iti sortedLegs];
         for(int j=0;j<[legArray count];j++){
             Leg *leg = [legArray objectAtIndex:j];
             if([leg isScheduled]) {
-                if (![self isGtfsDataAvailableForAgency:leg.agencyName routeId:leg.routeId] &&
-                    ![self hasGtfsDownloadRequestBeenSubmittedForAgency:leg.agencyName routeId:leg.routeId]) {
+                if (![self isGtfsDataAvailableForAgencyName:leg.agencyName routeId:leg.routeId] &&
+                    ![self hasGtfsDownloadRequestBeenSubmittedForAgencyName:leg.agencyName routeId:leg.routeId]) {
                     // if the data has not yet been requested, make the request
                     [strRequestString appendFormat:@"%@_%@,",agencyFeedIdFromAgencyName(leg.agencyName),leg.routeId];
-                    [self setGtfsRequestSubmittedForAgency:leg.agencyName routeId:leg.routeId plan:plan];
-                } else if ([self hasGtfsDownloadRequestBeenSubmittedForAgency:leg.agencyName routeId:leg.routeId]) {
-                    // if it has already been requested, just add this plan to the list
-                    GtfsParsingStatus* status = [self getParsingStatusObjectForAgency:leg.agencyName routeId:leg.routeId];
-                    [status addRequestingPlansObject:plan];
-                } // else data is available, so do nothing
+                    [self setGtfsRequestSubmittedForAgencyName:leg.agencyName
+                                                   routeId:leg.routeId
+                                                      plan:plan
+                                             requestParameters:parameters];
+                    isStatusChanged = true;
+                } // if data is requested, not adding this plan also at this point
             }
         }
     }
     if([strRequestString length] > 0){
+        int nLength = [strRequestString length];
+        [strRequestString deleteCharactersInRange:NSMakeRange(nLength-1, 1)]; // Trim last comma
+        lastTripsDataRequestString = strRequestString;
         [self requestTripsDatafromServer:strRequestString];
-    } 
+    }
+    if (isStatusChanged) {
+        saveContext(managedObjectContext);
+    }
 }
 -(void)someMethodToWaitForResult
 {
@@ -1549,21 +1575,30 @@
 //
 // GtfsParsingStatusMethods
 // 
--(BOOL)hasGtfsDownloadRequestBeenSubmittedFor:(NSString *)agencyName routeId:(NSString *)routeId
+-(BOOL)hasGtfsDownloadRequestBeenSubmittedForAgencyName:(NSString *)agencyName
+                                            routeId:(NSString *)routeId
 {
-    GtfsParsingStatus* status = [self getParsingStatusObjectForAgency:agencyName routeId:routeId];
+    GtfsParsingStatus* status = [self getParsingStatusObjectForAgencyName:agencyName
+                                                              routeId:routeId
+                                                              context:managedObjectContext];
     return [status hasGtfsDownloadRequestBeenSubmitted];
 }
 
--(BOOL)isGtfsDataAvailableForAgency:(NSString *)agencyName routeId:(NSString *)routeId
+-(BOOL)isGtfsDataAvailableForAgencyName:(NSString *)agencyName
+                            routeId:(NSString *)routeId
 {
-    GtfsParsingStatus* status = [self getParsingStatusObjectForAgency:agencyName routeId:routeId];
+    GtfsParsingStatus* status = [self getParsingStatusObjectForAgencyName:agencyName
+                                                              routeId:routeId
+                                                              context:managedObjectContext];
     return [status isGtfsDataAvailable];
 }
 
--(void)setGtfsRequestSubmittedForAgency:(NSString *)agencyName routeId:(NSString *)routeId plan:(Plan *)plan
+-(void)setGtfsRequestSubmittedForAgencyName:(NSString *)agencyName
+                                    routeId:(NSString *)routeId
+                                       plan:(Plan *)plan
+                          requestParameters:(PlanRequestParameters *)parameters
 {
-    GtfsParsingStatus* status = [self getParsingStatusObjectForAgency:agencyName routeId:routeId];
+    GtfsParsingStatus* status = [self getParsingStatusObjectForAgencyName:agencyName routeId:routeId context:managedObjectContext];
     if (!status) {
         status = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsParsingStatus" inManagedObjectContext:managedObjectContext];
         [status setAgencyFeedIdAndRoute:[NSString stringWithFormat:@"%@_%@,",agencyFeedIdFromAgencyName(agencyName),routeId]];
@@ -1573,38 +1608,26 @@
 
 // For all the plans in requestingPlans, will call the plan's "prepareSortedItineraries" method
 // once all the needed data is available
--(void)setGtfsDataAvailableForAgency:(NSString *)agencyName routeId:(NSString *)routeId
+-(void)setGtfsDataAvailableForAgencyName:(NSString *)agencyName
+                             routeId:(NSString *)routeId
+                             context:(NSManagedObjectContext *) context;
 {
-    GtfsParsingStatus* status = [self getParsingStatusObjectForAgency:agencyName routeId:routeId];
+    GtfsParsingStatus* status = [self getParsingStatusObjectForAgencyName:agencyName routeId:routeId context:context];
     if (!status) {
-        status = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsParsingStatus" inManagedObjectContext:managedObjectContext];
+        status = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsParsingStatus" inManagedObjectContext:context];
         [status setAgencyFeedIdAndRoute:[NSString stringWithFormat:@"%@_%@,",agencyFeedIdFromAgencyName(agencyName),routeId]];
     }
     [status setGtfsDataAvailable];
-    
-    // Make callback to requestingPlans as needed
-    for (Plan* requestingPlan in [status requestingPlans]) { // for any requesting plans
-        BOOL isAllGtfsDataAvailable = true;
-        for (GtfsParsingStatus* otherStatus in [requestingPlan gtfsParsingRequests]) {
-            if (![otherStatus isGtfsDataAvailable]) { // if any of the requested data unavailable
-                isAllGtfsDataAvailable = false;
-                break;
-            }
-        }
-        if (isAllGtfsDataAvailable) { // call prepareSortedItineraries again...
-            // TODO: [requestingPlan prepareSortedItinerariesWithMatchesForDate:<#(NSDate *)#> departOrArrive:<#(DepartOrArrive)#>]
-        }
-        // Since data is now available, remove this from the plan request list
-        [status removeRequestingPlansObject:requestingPlan];
-    }
 }
 
--(GtfsParsingStatus *)getParsingStatusObjectForAgency:(NSString *)agencyName routeId:(NSString *)routeId
+-(GtfsParsingStatus *)getParsingStatusObjectForAgencyName:(NSString *)agencyName
+                                              routeId:(NSString *)routeId
+                                              context:(NSManagedObjectContext *)context;
 {
     NSString* feedIdAndRouteStr = [NSString stringWithFormat:@"%@_%@,",agencyFeedIdFromAgencyName(agencyName),routeId];
-    NSFetchRequest *fetchParseStatus = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsParsingStatusByFeedIdAndRoute" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:feedIdAndRouteStr,@"FEEDANDROUTE", nil]];
+    NSFetchRequest *fetchParseStatus = [[[context persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsParsingStatusByFeedIdAndRoute" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:feedIdAndRouteStr,@"FEEDANDROUTE", nil]];
     NSError *error;
-    NSArray* result = [managedObjectContext executeFetchRequest:fetchParseStatus error:&error];
+    NSArray* result = [context executeFetchRequest:fetchParseStatus error:&error];
     if (!result) {
         logError(@"GtfsParser -> getParsingStatusObjectFor", [NSString stringWithFormat:@"Error fetching from Core Data: %@", error]);
         return nil;

@@ -22,6 +22,7 @@
 #import "GtfsParser.h"
 #import "nc_AppDelegate.h"
 #import "UserPreferance.h"
+#import "PlanStoreForRealTimeServerStubTest.h"
 
 @interface RealTimeServerStubTest : SenTestCase<RKRequestDelegate,LocationsGeocodeResultsDelegate>
 {
@@ -39,7 +40,7 @@
     NSDateFormatter* dateFormatter;
     
     Locations *locations;
-    PlanStore *planStore;
+    PlanStoreForRealTimeServerStubTest *planStore;
 
     Location *fromLocation;
     Location *toLocation;

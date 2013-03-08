@@ -81,7 +81,8 @@
     }
 
     // Set up the planStore
-    planStore = [[PlanStore alloc] initWithManagedObjectContext:managedObjectContext rkPlanMgr:rkPlanMgr];
+    planStore = [[PlanStoreForRealTimeServerStubTest alloc] initWithManagedObjectContext:managedObjectContext rkPlanMgr:rkPlanMgr];
+    [nc_AppDelegate sharedInstance].planStore = planStore;
     
     // Set up KeyObjectStore
     [KeyObjectStore setUpWithManagedObjectContext:managedObjectContext];
@@ -427,6 +428,9 @@
     
     [[NSUserDefaults standardUserDefaults] setObject:@"Hawthorne2Hull1.json" forKey:DEVICE_TOKEN];  // Tells StubTestTPServer which test file to pull
     
+    // Set to not update planStore when new Gtfs data comes in (allowing us to test a single unique Itinerary)
+    [planStore setUpdatePlanWithNewGtfsData:NO];
+    
     [planStore requestPlanWithParameters:parameters];
     STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result=(toFromViewController.plan!=nil); return result;}], @"Timed out waiting for plan");
     
@@ -477,6 +481,9 @@
                                            TripId:@""];
     STAssertEquals([stopPairs count], 6u, @"");
     STAssertTrue([[[[stopPairs objectAtIndex:0] objectAtIndex:0] tripID] isEqualToString:@"282_20121001"], @"");
+    
+    //
+    STAssertTrue([planStore planWouldHaveBeenUpdatedWithNewGtfsData], @"");  // The callback would have happened to update plan had we not disabled
     
     // Generate itineraries using just the pattern that goes Muni -> SF Caltrain -> San Carlos Caltrain.
     Itinerary* uniqueItin3 = [[plan sortedItineraries] objectAtIndex:3];
@@ -543,17 +550,14 @@
     // First itinerary connects to Caltrain #272 at 5:20pm
     // (We do not leave early enough to catch buses to catch #262 and #264)
     STAssertEqualObjects([[[[[plan sortedItineraries] objectAtIndex:0] sortedLegs] objectAtIndex:3] tripId], @"272_20121001", @"");
-    STAssertEqualObjects([[[plan sortedItineraries] objectAtIndex:0] startTimeOfFirstLeg],
-                         [dateFormatter dateFromString:@"02/12/2013 04:59 pm"], @"");
+    STAssertEqualObjects([dateFormatter stringFromDate:[[[plan sortedItineraries] objectAtIndex:0] startTimeOfFirstLeg]], @"02/12/2013 04:55 PM", @"");
     // Second itinerary connects to Caltrain #274 at 5:27pm
     STAssertEqualObjects([[[[[plan sortedItineraries] objectAtIndex:1] sortedLegs] objectAtIndex:3] tripId], @"274_20121001", @"");
-    STAssertEqualObjects([[[plan sortedItineraries] objectAtIndex:1] startTimeOfFirstLeg],
-                         [dateFormatter dateFromString:@"02/12/2013 05:07 pm"], @"");
+    STAssertEqualObjects([dateFormatter stringFromDate:[[[plan sortedItineraries] objectAtIndex:1] startTimeOfFirstLeg]], @"02/12/2013 05:03 PM", @"");
     // Third itinerary connects to Caltrain #282 at 6:20pm.  This itinerary is sub-optimal, but was generated
     // because more Caltrain stopTimes pairs were generated than Muni (due to the cutoff)
     STAssertEqualObjects([[[[[plan sortedItineraries] objectAtIndex:2] sortedLegs] objectAtIndex:3] tripId], @"282_20121001", @"");
-    STAssertEqualObjects([[[plan sortedItineraries] objectAtIndex:2] startTimeOfFirstLeg],
-                         [dateFormatter dateFromString:@"02/12/2013 05:19 pm"], @"");
+    STAssertEqualObjects([dateFormatter stringFromDate:[[[plan sortedItineraries] objectAtIndex:2] startTimeOfFirstLeg]],@"02/12/2013 05:15 PM", @"");
     
     // Check the requestChunk
     STAssertEquals([[plan requestChunks] count], 2u, @"");
@@ -601,8 +605,8 @@
     
     // itin4, from GTFS, Muni bus leaves 7:19pm, straight to San Carlos
     STAssertEquals([[[[plan sortedItineraries] objectAtIndex:4] sortedLegs] count],5u, @"");
-    STAssertEqualObjects([[[[[plan sortedItineraries] objectAtIndex:4] sortedLegs] objectAtIndex:1] startTime],
-                         [dateFormatter dateFromString:@"02/11/2013 07:19 pm"],@"");
+    STAssertEqualObjects([dateFormatter stringFromDate:[[[[[plan sortedItineraries] objectAtIndex:4] sortedLegs] objectAtIndex:1] startTime]],
+                         @"02/11/2013 07:19 PM",@"");
     STAssertEqualObjects([[[[[[plan sortedItineraries] objectAtIndex:4] sortedLegs] objectAtIndex:3] to] name],
                          @"San Carlos Caltrain Station",@"");
     STAssertFalse([[[plan sortedItineraries] objectAtIndex:4] isOTPItinerary], @"");

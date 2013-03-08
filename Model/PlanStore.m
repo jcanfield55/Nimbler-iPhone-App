@@ -15,6 +15,7 @@
 #import "nc_AppDelegate.h"
 #import "GtfsStopTimes.h"
 #import "GtfsStop.h"
+#import "GtfsParsingStatus.h"
 #import "RealTimeManager.h"
 #import "RouteExcludeSettings.h"
 #import "UserPreferance.h"
@@ -26,6 +27,7 @@
     NSDateFormatter* dateFormatter; // date formatter for OTP requests
     NSDateFormatter* timeFormatter; // time formatter for OTP requests
     NSMutableDictionary* parametersByPlanURLResource; // Key is the planURLResource, object = request parameters
+    NSMutableDictionary* latestParametersForPlanIdDictionary;  // Get latest parameters indexed by the planId
 }
 
 @end
@@ -35,6 +37,7 @@
 @synthesize managedObjectModel;
 @synthesize managedObjectContext;
 @synthesize rkPlanMgr;
+@synthesize plansWaitingForGtfsData;
 
 // Designated initializer
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkPlanMgr:(RKObjectManager *)rkP
@@ -45,8 +48,9 @@
         managedObjectModel = [[moc persistentStoreCoordinator] managedObjectModel];
         rkPlanMgr = rkP;
         parametersByPlanURLResource = [[NSMutableDictionary alloc] initWithCapacity:10];
+        latestParametersForPlanIdDictionary = [NSMutableDictionary dictionaryWithCapacity:20];
+        plansWaitingForGtfsData = [NSMutableSet setWithCapacity:10];
     }
-    
     return self;
 }
 
@@ -278,7 +282,6 @@
                 if([nc_AppDelegate sharedInstance].isTestPlan){
                     [nc_AppDelegate sharedInstance].testPlan = plan;
                 }
-                [[nc_AppDelegate sharedInstance].gtfsParser generateGtfsTripsRequestStringUsingPlan:plan];
                 NSString *strResourcePath = [objectLoader resourcePath];
                 if (strResourcePath && [strResourcePath length]>0) {
                     planRequestParameters = [parametersByPlanURLResource objectForKey:strResourcePath];
@@ -286,6 +289,10 @@
                 } else {
                     [NSException raise:@"PlanStore->didLoadObjects failed to retrieve plan parameters" format:@"strResourcePath: %@", strResourcePath];
                 }
+                // Request GTFS schedule data as needed
+                [[nc_AppDelegate sharedInstance].gtfsParser generateGtfsTripsRequestStringUsingPlan:plan
+                                                                                  requestParameters:planRequestParameters];
+                
                 // Set to & from location with special handling of CurrentLocation
                 Location *toLoc = [planRequestParameters toLocation];
                 if ([toLoc isCurrentLocation] && [toLoc isReverseGeoValid]) {
@@ -320,6 +327,13 @@
                 [plan setLegsId];
                 saveContext(managedObjectContext);  // Save location and request chunk changes
                 plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context
+                // Add plans to the list for having outstanding gtfsParsingRequests if applicable
+                if (plan.planId && planRequestParameters) {
+                    [latestParametersForPlanIdDictionary setObject:planRequestParameters forKey:plan.planId];
+                    if (plan.gtfsParsingRequests.count > 0) {
+                        [plansWaitingForGtfsData addObject:plan];
+                    }
+                }
                 // Now format the itineraries of the consolidated plan
                 // get Unique Itinerary from Plan.
                 if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate]
@@ -432,6 +446,38 @@
     }
 }
 
+
+// Called when there is an update of gtfsData
+// Checks whether any plans with outstanding gtfsParsingRequests now have all the data they need.
+// If so, updates those plans (using prepareSortedItinaries) and calls their planDestination
+- (void)updatePlansWithNewGtfsDataIfNeeded
+{
+    NSSet* plansToCheck = [NSSet setWithSet:plansWaitingForGtfsData];
+    for (Plan* requestingPlan in plansToCheck) {
+        PlanRequestParameters* params = [latestParametersForPlanIdDictionary objectForKey:requestingPlan.planId];
+        if (params) {
+            // See if all of the outstanding data requests are now available
+            BOOL isAllGtfsDataAvailable = true;
+            for (GtfsParsingStatus* otherStatus in [requestingPlan gtfsParsingRequests]) {
+                if (![otherStatus isGtfsDataAvailable]) { // if any of the requested data unavailable
+                    isAllGtfsDataAvailable = false;
+                    break;
+                }
+            }
+            if (isAllGtfsDataAvailable) {
+                // If all needed gtfs data available, update prepareSortedItineraries and callback the planDestination
+                [requestingPlan setGtfsParsingRequests:[NSSet set]];  // clear outstanding requests
+                [plansWaitingForGtfsData removeObject:requestingPlan]; // remove from list
+                [requestingPlan prepareSortedItinerariesWithMatchesForDate:params.originalTripDate
+                                                            departOrArrive:params.departOrArrive
+                                                      routeExcludeSettings:params.routeExcludeSettings generateGtfsItineraries:YES
+                                                     removeNonOptimalItins:YES];
+                [params.planDestination newPlanAvailable:requestingPlan status:PLAN_STATUS_OK RequestParameter:params];
+            }
+        }
+
+    }
+}
 
 // Fetches array of plans going to the same to & from Location from the cache
 // Normally will return just one plan, but could return more if the plans have not been consolidated
