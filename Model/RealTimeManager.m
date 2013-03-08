@@ -140,7 +140,7 @@ static RealTimeManager* realTimeManager;
             //It means there are live feeds in response
             NSArray * legLiveFees = [liveData  objectForKey:@"legLiveFeeds"];
             if ([legLiveFees count] > 0) {
-                [self setRealTimePredictionsFromLiveFeeds1:legLiveFees];
+                [self setRealTimePredictionsFromLiveFeeds:legLiveFees];
                 // TODO:- Comment Four lines to run automated test case 
                  [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:originalTripDate Context:nil];
                  [plan prepareSortedItinerariesWithMatchesForDate:originalTripDate departOrArrive:DEPART];
@@ -243,7 +243,7 @@ static RealTimeManager* realTimeManager;
     return nearestRealTime;
 }
 
-- (void) setRealTimePredictionsFromLiveFeeds1:(NSArray *)liveFeeds{
+- (void) setRealTimePredictionsFromLiveFeeds:(NSArray *)liveFeeds{
     for (int j=0; j<[liveFeeds count]; j++) {
         id key = [liveFeeds objectAtIndex:j];
         NSString *legId = [[key objectForKey:@"leg"] objectForKey:@"id"];

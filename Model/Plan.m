@@ -209,7 +209,7 @@
     // Transfer over gtfsParsingStatus objects if any
     NSSet* parsingStatus0 = [NSSet setWithSet:[plan0 gtfsParsingRequests]];
     for (GtfsParsingStatus* status in parsingStatus0) {
-        [status setRequestingPlan:self];
+        status.requestingPlan = self;
     }
     
     // Delete plan0

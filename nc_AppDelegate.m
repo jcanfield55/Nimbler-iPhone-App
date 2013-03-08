@@ -112,11 +112,9 @@ FeedBackForm *fbView;
     return (__bridge_transfer NSString *)stringID;
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    
-#if AUTOMATED_TESTING_SKIP_NCAPPDELEGATE
-    return YES;    // If Automated testing with alternative persistent store, skip NC_AppDelegate altogether and do all setup in test area
+- (void) unzipZipFileToApplicationDocumentDirectory{
+#if GENERATING_SEED_DATABASE
+    return ;
 #endif
     
     NSString *dbPath = [NSString stringWithFormat:@"%@/%@",[[self applicationDocumentsDirectory] path],COREDATA_DB_FILENAME];
@@ -128,6 +126,14 @@ FeedBackForm *fbView;
         [zipArchive UnzipFileTo:[[self applicationDocumentsDirectory] path] overWrite:YES];
         [zipArchive UnzipCloseFile];
     }
+}
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    
+#if AUTOMATED_TESTING_SKIP_NCAPPDELEGATE
+    return YES;    // If Automated testing with alternative persistent store, skip NC_AppDelegate altogether and do all setup in test area
+#endif
+    [self unzipZipFileToApplicationDocumentDirectory];
     
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     
@@ -212,39 +218,40 @@ FeedBackForm *fbView;
         // Initialize the RealTimeManager
         [[RealTimeManager realTimeManager] setRkTpClient:rkTpClient];
         
-        
+#if GENERATING_SEED_DATABASE
         // Pre-load stations location files
-//        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-//            NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:CALTRAIN_PRELOAD_VERSION_NUMBER];
-//            [stations preLoadIfNeededFromFile:CALTRAIN_PRELOAD_LOCATION_FILE latestVersionNumber:caltrainVersion testAddress:CALTRAIN_PRELOAD_TEST_ADDRESS];
-//        }
-//        else {
-//        if([[NSUserDefaults standardUserDefaults] floatForKey:CALTRAIN_PRELOAD_LOCATION_FILE] < [CALTRAIN_PRELOAD_VERSION_NUMBER floatValue]){
-//            [stations removeStationListElementByAgency:CALTRAIN];
-//            NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:CALTRAIN_PRELOAD_VERSION_NUMBER];
-//            [stations preLoadIfNeededFromFile:CALTRAIN_PRELOAD_LOCATION_FILE latestVersionNumber:caltrainVersion testAddress:CALTRAIN_PRELOAD_TEST_ADDRESS];
-//        }
-//        if([[NSUserDefaults standardUserDefaults] floatForKey:BART_PRELOAD_LOCATION_FILE] < [BART_PRELOAD_VERSION_NUMBER floatValue]){
-//            [stations removeStationListElementByAgency:BART];
-//            NSDecimalNumber* bartVersion = [NSDecimalNumber decimalNumberWithString:BART_PRELOAD_VERSION_NUMBER];
-//            [stations preLoadIfNeededFromFile:BART_PRELOAD_LOCATION_FILE latestVersionNumber:bartVersion testAddress:BART_PRELOAD_TEST_ADDRESS];
-//        }
-//        if([[NSUserDefaults standardUserDefaults] floatForKey:ACTRANSIT_PRELOAD_LOCATION_FILE] < [ACTRANSIT_PRELOAD_VERSION_NUMBER floatValue]){
-//            [stations removeStationListElementByAgency:AC_TRANSIT];
-//            NSDecimalNumber* acTransitVersion = [NSDecimalNumber decimalNumberWithString:ACTRANSIT_PRELOAD_VERSION_NUMBER];
-//            [stations preLoadIfNeededFromFile:ACTRANSIT_PRELOAD_LOCATION_FILE latestVersionNumber:acTransitVersion testAddress:ACTRANSIT_PRELOAD_TEST_ADDRESS];
-//        }
-//        if([[NSUserDefaults standardUserDefaults] floatForKey:SFMUNI_PRELOAD_LOCATION_FILE] < [SFMUNI_PRELOAD_VERSION_NUMBER floatValue]){
-//            [stations removeStationListElementByAgency:SF_MUNI];
-//            NSDecimalNumber* sfMuniVersion = [NSDecimalNumber decimalNumberWithString:SFMUNI_PRELOAD_VERSION_NUMBER];
-//            [stations preLoadIfNeededFromFile:SFMUNI_PRELOAD_LOCATION_FILE latestVersionNumber:sfMuniVersion testAddress:SFMUNI_PRELOAD_TEST_ADDRESS];
-//        }
-//        //}
-//        NSArray *arrlocations = [locations locationsWithFormattedAddress:STATION_LIST];
-//        if(!arrlocations || [arrlocations count] == 0){
-//            [stations generateNewTempLocationForAllStationString];
-//        }
-//        saveContext(self.managedObjectContext);
+        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+            NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:CALTRAIN_PRELOAD_VERSION_NUMBER];
+            [stations preLoadIfNeededFromFile:CALTRAIN_PRELOAD_LOCATION_FILE latestVersionNumber:caltrainVersion testAddress:CALTRAIN_PRELOAD_TEST_ADDRESS];
+        }
+        else {
+            if([[NSUserDefaults standardUserDefaults] floatForKey:CALTRAIN_PRELOAD_LOCATION_FILE] < [CALTRAIN_PRELOAD_VERSION_NUMBER floatValue]){
+                [stations removeStationListElementByAgency:CALTRAIN];
+                NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:CALTRAIN_PRELOAD_VERSION_NUMBER];
+                [stations preLoadIfNeededFromFile:CALTRAIN_PRELOAD_LOCATION_FILE latestVersionNumber:caltrainVersion testAddress:CALTRAIN_PRELOAD_TEST_ADDRESS];
+            }
+            if([[NSUserDefaults standardUserDefaults] floatForKey:BART_PRELOAD_LOCATION_FILE] < [BART_PRELOAD_VERSION_NUMBER floatValue]){
+                [stations removeStationListElementByAgency:BART];
+                NSDecimalNumber* bartVersion = [NSDecimalNumber decimalNumberWithString:BART_PRELOAD_VERSION_NUMBER];
+                [stations preLoadIfNeededFromFile:BART_PRELOAD_LOCATION_FILE latestVersionNumber:bartVersion testAddress:BART_PRELOAD_TEST_ADDRESS];
+            }
+            if([[NSUserDefaults standardUserDefaults] floatForKey:ACTRANSIT_PRELOAD_LOCATION_FILE] < [ACTRANSIT_PRELOAD_VERSION_NUMBER floatValue]){
+                [stations removeStationListElementByAgency:AC_TRANSIT];
+                NSDecimalNumber* acTransitVersion = [NSDecimalNumber decimalNumberWithString:ACTRANSIT_PRELOAD_VERSION_NUMBER];
+                [stations preLoadIfNeededFromFile:ACTRANSIT_PRELOAD_LOCATION_FILE latestVersionNumber:acTransitVersion testAddress:ACTRANSIT_PRELOAD_TEST_ADDRESS];
+            }
+            if([[NSUserDefaults standardUserDefaults] floatForKey:SFMUNI_PRELOAD_LOCATION_FILE] < [SFMUNI_PRELOAD_VERSION_NUMBER floatValue]){
+                [stations removeStationListElementByAgency:SF_MUNI];
+                NSDecimalNumber* sfMuniVersion = [NSDecimalNumber decimalNumberWithString:SFMUNI_PRELOAD_VERSION_NUMBER];
+                [stations preLoadIfNeededFromFile:SFMUNI_PRELOAD_LOCATION_FILE latestVersionNumber:sfMuniVersion testAddress:SFMUNI_PRELOAD_TEST_ADDRESS];
+            }
+        }
+        NSArray *arrlocations = [locations locationsWithFormattedAddress:STATION_LIST];
+        if(!arrlocations || [arrlocations count] == 0){
+            [stations generateNewTempLocationForAllStationString];
+        }
+        saveContext(self.managedObjectContext);
+#endif
         [toFromViewController setStations:stations];
     }@catch (NSException *exception) {
         logException(@"ncAppDelegate->didFinishLaunchingWithOptions #1", @"", exception);

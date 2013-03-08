@@ -296,8 +296,9 @@
 //        });
 //    });
     
-    // Note:- This method call is used in Dababase seeding
-    //[self generateTripsRequestForSeedDB:routeIDsWithodBus agencyIds:agencyIDsWithodBus];
+#if GENERATING_SEED_DATABASE
+    [self generateTripsRequestForSeedDB:routeIDsWithodBus agencyIds:agencyIDsWithodBus];
+#endif
 }
 
 - (void) parseAndStoreGtfsStopsData:(NSDictionary *)dictFileData{
@@ -378,7 +379,10 @@
         NSMutableArray *arrayShapeID = [[NSMutableArray alloc] init];
         NSMutableArray *arrayAgencyID = [[NSMutableArray alloc] init];
         
-        NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
+    NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
+    NSMutableDictionary *tempDictionary = [[NSMutableDictionary alloc] initWithDictionary:dictComponents];
+    [tempDictionary removeObjectForKey:@"headers"];
+    dictComponents = tempDictionary;
     NSArray *arrayAgencyIds = [dictComponents allKeys];
     for(int k=0;k<[arrayAgencyIds count];k++){
         NSArray *arrayComponentsAgency = [dictComponents objectForKey:[arrayAgencyIds objectAtIndex:k]];
@@ -476,6 +480,9 @@
         
         NIMLOG_PERF2(@"parse stop times start first loop");
         NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
+        NSMutableDictionary *tempDictionary = [[NSMutableDictionary alloc] initWithDictionary:dictComponents];
+            [tempDictionary removeObjectForKey:@"headers"];
+        dictComponents = tempDictionary;
         NSArray *arrayAgencyIds = [dictComponents allKeys];
         for(int k=0;k<[arrayAgencyIds count];k++){
             NSArray *arrayComponentsAgency = [dictComponents objectForKey:[arrayAgencyIds objectAtIndex:k]];
@@ -520,9 +527,11 @@
             stopTimes.tripID = [arrayTripID objectAtIndex:j];
             stopTimes.trips = [dictTrips objectForKey:stopTimes.tripID];
             stopTimes.arrivalTime = [arrayArrivalTime objectAtIndex:j];
-            stopTimes.arrivalNSDate = dateFromTimeString(stopTimes.arrivalTime);
+            if(stopTimes.arrivalTime && ![stopTimes.arrivalTime isEqualToString:@""])
+                stopTimes.arrivalNSDate = dateFromTimeString(stopTimes.arrivalTime);
             stopTimes.departureTime = [arrayDepartureTime objectAtIndex:j];
-            stopTimes.departureNSDate = dateFromTimeString(stopTimes.departureTime);
+            if(stopTimes.departureTime && ![stopTimes.departureTime isEqualToString:@""])
+                stopTimes.departureNSDate = dateFromTimeString(stopTimes.departureTime);
             stopTimes.stopID = [arrayStopID objectAtIndex:j];
             stopTimes.stop = [dictStops objectForKey:stopTimes.stopID];
             stopTimes.stopSequence = [arrayStopSequence objectAtIndex:j];

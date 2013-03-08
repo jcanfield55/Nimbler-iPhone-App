@@ -53,7 +53,7 @@
                 RKObjectMapper* mapper = [RKObjectMapper mapperWithObject:parsedData mappingProvider:mappingProvider];
                 RKObjectMappingResult* result = [mapper performMapping];
                 if (result) {
-                     NSArray* resultArray = [result asCollection];
+                    // NSArray* resultArray = [result asCollection];
                 }
             }
         }

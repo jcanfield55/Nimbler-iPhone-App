@@ -35,7 +35,7 @@
 // Sets that a Gtfs Request has been made
 -(void)setGtfsRequestMadeFor:(Plan *)plan
 {
-    [self setRequestingPlan:plan];
+    self.requestingPlan = plan;
     [self setDateRequested:[NSDate date]];
     [self setStatus:GTFS_PARSING_STATUS_SUBMITTED];
 }
