@@ -70,10 +70,8 @@
 - (void)generateStopTimesRequestStringUsingTripIds:(NSArray *)tripIds agencyIds:(NSArray *)agencyIds;
 
 // Makes a request to the server for any GTFS Trips and StopTimes data not already in the database
-// If there is data needed, it will make a callback to the planDestination object in parameters once the
-// data is available.  If parameters are nil, will not make the callback.  
-- (void)generateGtfsTripsRequestStringUsingPlan:(Plan *) plan
-                              requestParameters:(PlanRequestParameters *)parameters;
+// If there is data needed, planStore will eventually be called back when the data is loaded for plan refresh
+- (void)generateGtfsTripsRequestStringUsingPlan:(Plan *)plan;
 
 // This method get the serviceId based on tripId.
 // Then get the calendar data for particular serviceID.
@@ -134,8 +132,7 @@
                                 routeId:(NSString *)routeId;
 -(void)setGtfsRequestSubmittedForAgencyName:(NSString *)agencyName
                                     routeId:(NSString *)routeId
-                                       plan:(Plan *)plan
-                          requestParameters:(PlanRequestParameters *)parameters;
+                                       plan:(Plan *)plan;
 
 // For all the plans in requestingPlans, will call the plan's "prepareSortedItineraries" method
 // once all the needed data is available

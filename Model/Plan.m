@@ -506,7 +506,7 @@
             }
         }
         if (needToRequestMoreData) {
-            [gtfsParser generateGtfsTripsRequestStringUsingPlan:self requestParameters:nil];  // Put in another request for GTFS data
+            [gtfsParser generateGtfsTripsRequestStringUsingPlan:self];  // Put in another request for GTFS data
             if (self.gtfsParsingRequests.count > 0) {
                 [[nc_AppDelegate sharedInstance].planStore.plansWaitingForGtfsData addObject:self]; // Put self onto list as plans waiting for gtfsRequests
             }

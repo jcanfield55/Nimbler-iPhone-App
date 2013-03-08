@@ -428,6 +428,10 @@
             trips.directionID = [arrayDirectionID objectAtIndex:i];
             trips.blockID = [arrayBlockID objectAtIndex:i];
             trips.shapeID = [arrayShapeID objectAtIndex:i];
+            if (!trips.calendar) {
+                logError(@"gtfsParser->parseAndStoreGtfsTripsData",
+                         [NSString stringWithFormat:@"trips.calendar==nil for tripID = %@, trips.serviceID = %@",trips.tripID, trips.serviceID]);
+            }
         }
         saveContext(managedObjectContext);
 //        dispatch_async(dispatch_get_main_queue(), ^{
@@ -457,6 +461,8 @@
     [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
     [moc setMergePolicy:NSOverwriteMergePolicy];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        @try {
+            
         NSMutableArray *arrayTripID = [[NSMutableArray alloc] init];
         NSMutableArray *arrayArrivalTime = [[NSMutableArray alloc] init];
         NSMutableArray *arrayDepartureTime = [[NSMutableArray alloc] init];
@@ -524,7 +530,12 @@
             stopTimes.dropOfTime = [arrayDropOffType objectAtIndex:j];
             stopTimes.shapeDistTravelled = [arrayShapeDistTraveled objectAtIndex:j];
             stopTimes.agencyID = [arrayAgencyID objectAtIndex:j];
-            [routeIdAndAgencyIdDictionary setObject:stopTimes.agencyID forKey:stopTimes.trips.routeID];
+            if (stopTimes.trips.routeID) {
+                [routeIdAndAgencyIdDictionary setObject:stopTimes.agencyID forKey:stopTimes.trips.routeID];
+            } else {
+                NIMLOG_ERR1(@"GtfsParser->parseAndStoreGtfsStopTimesData: Nil routeID for stopTimes.tripId: %@", stopTimes.tripID);
+                [moc deleteObject:stopTimes];
+            }
         }
         
         // Update gtfsParsingStatus for each routeId / AgencyId combination
@@ -539,9 +550,12 @@
         NIMLOG_PERF2(@"Parse stop times save context");
         saveContext(moc);
 
+        }
+        @catch (NSException *exception) {
+            logException(@"GtfsParser->parseAndStoreGtfsStopTimesData", @"exception in background task", exception);
+        }
         NIMLOG_PERF2(@"Parse stop times done");
         dispatch_async(dispatch_get_main_queue(), ^{
-            
         });
     });
 }
@@ -872,10 +886,8 @@
 }
 
 // Makes a request to the server for any GTFS Trips and StopTimes data not already in the database
-// If there is data needed, it will make a callback to the planDestination object in parameters once the
-// data is available.  If parameters are nil, will not make the callback.  
+// If there is data needed, planStore will eventually be called back when the data is loaded for plan refresh
 - (void)generateGtfsTripsRequestStringUsingPlan:(Plan *) plan
-                              requestParameters:(PlanRequestParameters *)parameters
 {
     [nc_AppDelegate sharedInstance].receivedReply = false;
     NSMutableString *strRequestString = [[NSMutableString alloc] init];
@@ -893,8 +905,7 @@
                     [strRequestString appendFormat:@"%@_%@,",agencyFeedIdFromAgencyName(leg.agencyName),leg.routeId];
                     [self setGtfsRequestSubmittedForAgencyName:leg.agencyName
                                                    routeId:leg.routeId
-                                                      plan:plan
-                                             requestParameters:parameters];
+                                                      plan:plan];
                     isStatusChanged = true;
                 } // if data is requested, not adding this plan also at this point
             }
@@ -923,7 +934,7 @@
         NSString *strAgencyId = [agencyIds objectAtIndex:i];
         if([strRequestString rangeOfString:[NSString stringWithFormat:@"%@_%@,",strAgencyId,strRouteId]].location == NSNotFound){
             [strRequestString appendFormat:@"%@_%@,",strAgencyId,strRouteId];
-            [self setGtfsRequestSubmittedForAgency:agencyNameFromAgencyFeedId(strAgencyId) routeId:strRouteId plan:nil];
+            [self setGtfsRequestSubmittedForAgencyName:agencyNameFromAgencyFeedId(strAgencyId) routeId:strRouteId plan:nil];
         }
     }
     if([strRequestString length] > 0){
@@ -1583,9 +1594,9 @@
 
 //
 // GtfsParsingStatusMethods
-//
-
--(BOOL)hasGtfsDownloadRequestBeenSubmittedForAgency:(NSString *)agencyName routeId:(NSString *)routeId
+// 
+-(BOOL)hasGtfsDownloadRequestBeenSubmittedForAgencyName:(NSString *)agencyName
+                                            routeId:(NSString *)routeId
 {
     GtfsParsingStatus* status = [self getParsingStatusObjectForAgencyName:agencyName
                                                               routeId:routeId
@@ -1605,7 +1616,6 @@
 -(void)setGtfsRequestSubmittedForAgencyName:(NSString *)agencyName
                                     routeId:(NSString *)routeId
                                        plan:(Plan *)plan
-                          requestParameters:(PlanRequestParameters *)parameters
 {
     GtfsParsingStatus* status = [self getParsingStatusObjectForAgencyName:agencyName routeId:routeId context:managedObjectContext];
     if (!status) {

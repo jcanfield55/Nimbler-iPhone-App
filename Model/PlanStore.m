@@ -290,8 +290,7 @@
                     [NSException raise:@"PlanStore->didLoadObjects failed to retrieve plan parameters" format:@"strResourcePath: %@", strResourcePath];
                 }
                 // Request GTFS schedule data as needed
-                [[nc_AppDelegate sharedInstance].gtfsParser generateGtfsTripsRequestStringUsingPlan:plan
-                                                                                  requestParameters:planRequestParameters];
+                [[nc_AppDelegate sharedInstance].gtfsParser generateGtfsTripsRequestStringUsingPlan:plan];
                 
                 // Set to & from location with special handling of CurrentLocation
                 Location *toLoc = [planRequestParameters toLocation];
@@ -345,7 +344,6 @@
                     
                     // Call-back the appropriate VC with the new plan
                     [planRequestParameters.planDestination newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:planRequestParameters];
-                    [[nc_AppDelegate sharedInstance].gtfsParser generateGtfsTripsRequestStringUsingPlan:plan];
 
                 } else { // no matching sorted itineraries.  DE189 fix
                     if (planRequestParameters.isDestinationToFromVC) {
