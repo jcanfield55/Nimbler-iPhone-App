@@ -65,7 +65,7 @@ NSString *legID;
             // Clear out any previous overlays and annotations
             [mapView removeAnnotations:dotAnnotationArray];
             [mapView removeOverlays:polyLineArray];
-            [mapView removeAnnotation:intermediateAnnotations];
+            [mapView removeAnnotations:intermediateAnnotations];
             [dotAnnotationArray removeAllObjects];
             [polyLineArray removeAllObjects];
             

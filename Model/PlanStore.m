@@ -74,20 +74,26 @@
                                                     routeExcludeSettings:[parameters routeExcludeSettings]
                                                  generateGtfsItineraries:YES
                                                    removeNonOptimalItins:YES]) {
+                PlanRequestStatus reqStatus;
+                MoreItineraryStatus moreItinStatus = [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
                 if (matchingPlan.sortedItineraries.count == 0) {
                     logEvent(FLURRY_ROUTE_NOT_IN_CACHE,
                              FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
                              FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
                              nil, nil, nil, nil);
+                    if (moreItinStatus != NO_MORE_ITINERARIES_REQUESTED) {
+                        return;  // Do not callback toFromVC, but rather wait for results from OTP
+                    } else {
+                        reqStatus = PLAN_EXCLUDED_TO_ZERO_RESULTS; // Go to RouteOptions and let users adjust excludes
+                    }
                 } else {
                     NIMLOG_EVENT1(@"Matches found in plan cache");
                     logEvent(FLURRY_ROUTE_FROM_CACHE,
                              FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
                              FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
                              nil, nil, nil, nil);
+                    reqStatus = PLAN_STATUS_OK;
                 }
-                [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
-                PlanRequestStatus status = PLAN_STATUS_OK;
                 ToFromViewController* toFromVC = [[nc_AppDelegate sharedInstance] toFromViewController];
                 if(toFromVC.timerGettingRealDataByItinerary != nil){
                     [toFromVC.timerGettingRealDataByItinerary invalidate];
@@ -95,7 +101,10 @@
                 }
                 
                 // Callback to planDestination with new plan
-                [parameters.planDestination newPlanAvailable:matchingPlan status:status RequestParameter:parameters];
+                [parameters.planDestination newPlanAvailable:matchingPlan
+                                                  fromObject:self
+                                                      status:reqStatus
+                                            RequestParameter:parameters];
 
                 return;
             }
@@ -315,7 +324,10 @@
                     [managedObjectContext deleteObject:plan];
                     saveContext(managedObjectContext);
                     if (planRequestParameters.isDestinationToFromVC) {
-                        [planRequestParameters.planDestination newPlanAvailable:nil status:PLAN_NOT_AVAILABLE_THAT_TIME RequestParameter:planRequestParameters];
+                        [planRequestParameters.planDestination newPlanAvailable:nil
+                                                                     fromObject:self
+                                                                         status:PLAN_NOT_AVAILABLE_THAT_TIME
+                                                               RequestParameter:planRequestParameters];
                         logEvent(FLURRY_ROUTE_NOT_AVAILABLE_THAT_TIME,
                                  FLURRY_NEW_DATE, [NSString stringWithFormat:@"%@",[planRequestParameters thisRequestTripDate]],
                                  nil, nil, nil, nil, nil, nil);
@@ -326,6 +338,7 @@
                 [plan setLegsId];
                 saveContext(managedObjectContext);  // Save location and request chunk changes
                 plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context
+                
                 // Add plans to the list for having outstanding gtfsParsingRequests if applicable
                 if (plan.planId && planRequestParameters) {
                     [latestParametersForPlanIdDictionary setObject:planRequestParameters forKey:plan.planId];
@@ -337,17 +350,33 @@
                 // get Unique Itinerary from Plan.
                 if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate]
                                                       departOrArrive:[planRequestParameters departOrArrive]
-                                                routeExcludeSettings:[planRequestParameters routeExcludeSettings]
+                                                routeExcludeSettings:[RouteExcludeSettings latestUserSettings] // use latest settings in case something changed
                                              generateGtfsItineraries:YES
                                                removeNonOptimalItins:YES]) {
-                    [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
                     
+                    MoreItineraryStatus moreItinStatus = [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
+                    PlanRequestStatus reqStatus = PLAN_STATUS_OK;
+                    if ([[plan sortedItineraries] count] == 0) {
+                        if (moreItinStatus == MORE_ITINERARIES_REQUESTED_DIFFERENT_EXCLUDES) {
+                            return;  // Do not call back to planDestination -- keep waiting for OTP
+                        } else {
+                            reqStatus = PLAN_EXCLUDED_TO_ZERO_RESULTS;  // Show zero results on RouteOptions page
+                        }
+                    } else {
+                        reqStatus = PLAN_STATUS_OK;
+                    }
                     // Call-back the appropriate VC with the new plan
-                    [planRequestParameters.planDestination newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:planRequestParameters];
+                    [planRequestParameters.planDestination newPlanAvailable:plan
+                                                                 fromObject:self
+                                                                     status:reqStatus
+                                                           RequestParameter:planRequestParameters];
 
                 } else { // no matching sorted itineraries.  DE189 fix
                     if (planRequestParameters.isDestinationToFromVC) {
-                        [planRequestParameters.planDestination newPlanAvailable:nil status:PLAN_GENERIC_EXCEPTION RequestParameter:planRequestParameters];
+                        [planRequestParameters.planDestination newPlanAvailable:nil
+                                                                     fromObject:self
+                                                                         status:PLAN_GENERIC_EXCEPTION
+                                                               RequestParameter:planRequestParameters];
                         logEvent(FLURRY_ROUTE_NO_MATCHING_ITINERARIES, nil, nil, nil, nil, nil, nil, nil, nil);
                     } // else if routeOptions destination, do nothing
                 }
@@ -356,7 +385,10 @@
     }
     @catch (NSException *exception) {
         if (planRequestParameters && planRequestParameters.isDestinationToFromVC) {
-            [planRequestParameters.planDestination newPlanAvailable:nil status:PLAN_GENERIC_EXCEPTION RequestParameter:planRequestParameters];
+            [planRequestParameters.planDestination newPlanAvailable:nil
+                                                         fromObject:self
+                                                             status:PLAN_GENERIC_EXCEPTION
+                                                   RequestParameter:planRequestParameters];
             logException(@"PlanStore->objectLoader", @"Original request from ToFromVC", exception);
         } else {
             logException(@"PlanStore->objectLoader", @"Follow-up request to RouteOptionsVC", exception);
@@ -393,7 +425,10 @@
     } else {
         if (parameters.isDestinationToFromVC) {
             NIMLOG_ERR1(@"Error received from RKObjectManager on first call by ToFromViewController: %@", error);
-            [parameters.planDestination newPlanAvailable:nil status:status RequestParameter:parameters];
+            [parameters.planDestination newPlanAvailable:nil
+                                              fromObject:self
+                                                  status:status
+                                        RequestParameter:parameters];
         }
         else { // if target is RouteOptions, do not call routeOptions and do not alert user.  This was a backup request only
             NIMLOG_ERR1(@"Error received from RKObjectManager on subsequent call RouteOptionsViewController: %@", error);
@@ -403,27 +438,28 @@
 
 
 // Checks if more itineraries are needed for this plan, and if so requests them from the server
--(void)requestMoreItinerariesIfNeeded:(Plan *)plan parameters:(PlanRequestParameters *)requestParams0
+-(MoreItineraryStatus)requestMoreItinerariesIfNeeded:(Plan *)plan parameters:(PlanRequestParameters *)requestParams0
 {
     if (requestParams0.serverCallsSoFar >= PLAN_MAX_SERVER_CALLS_PER_REQUEST) {
-        return; // Return if we have already made the max number of calls
+        return NO_MORE_ITINERARIES_REQUESTED; // Return if we have already made the max number of calls
     }
     if ([plan haveOnlyUnscheduledItineraries]) {
-        return; // DE186 fix, do not request more itineraries if we currently are have walk-only or bike-only itinerary
+        return NO_MORE_ITINERARIES_REQUESTED; // DE186 fix, do not request more itineraries if we currently are have walk-only or bike-only itinerary
     }
     // Find out how far the matching OTP itineraries go with extremely large limits
     NSDate* otpRequestDate = [plan nextOtpServerDateToCallFor:requestParams0.originalTripDate
                                                departOrArrive:requestParams0.departOrArrive
-                                         routeExcludeSettings:requestParams0.routeExcludeSettings
+                                         routeExcludeSettings:[RouteExcludeSettings latestUserSettings]  // use latest user settings, in case changed
                              planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY
                                   planMaxTimeForResultsToShow:(100*60*60)];
     
     PlanRequestParameters* params = [PlanRequestParameters copyOfPlanRequestParameters:requestParams0];
     
-    if (params.isDestinationToFromVC) {
+    // if (params.isDestinationToFromVC) {
         // Reset destination to routeOptionsViewController if not there already
-        params.planDestination = [((ToFromViewController *) params.planDestination) routeOptionsVC];
-    }
+    //     params.planDestination = [((ToFromViewController *) params.planDestination) routeOptionsVC];
+    // }
+    params.routeExcludeSettings = [RouteExcludeSettings latestUserSettings];  // use the latest settings in case something has changed
     
     NSTimeInterval bufferSeconds;
     if ([otpRequestDate isEqualToDate:requestParams0.originalTripDate]) {
@@ -432,17 +468,35 @@
         bufferSeconds = PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS;
     }
     
-    NSArray* exclSettingArray = [requestParams0.routeExcludeSettings excludeSettingsForPlan:plan withParameters:requestParams0];
+    NSArray* exclSettingArray = [params.routeExcludeSettings excludeSettingsForPlan:plan withParameters:requestParams0];
+    params.routeExcludeSettingsUsedForOTPCall = [RouteExcludeSettings excludeSettingsWithSettingArray:exclSettingArray];
     
+    BOOL areRouteExcludeSettingsDifferent = false;
+    if (!requestParams0.routeExcludeSettings && [RouteExcludeSettings noExcludesForSettingArray:exclSettingArray]) {
+        areRouteExcludeSettingsDifferent = false;  // both the last request and this one have no excludes
+    } else if (!requestParams0.routeExcludeSettings) {
+        areRouteExcludeSettingsDifferent = true;   // only the last request had no excludes
+    } else if ([requestParams0.routeExcludeSettingsUsedForOTPCall isEquivalentTo:params.routeExcludeSettingsUsedForOTPCall]) {
+        areRouteExcludeSettingsDifferent = false;
+    } else {
+        areRouteExcludeSettingsDifferent = true;
+    }
+    if (areRouteExcludeSettingsDifferent) { // if the settings are different, cancel out the incrementing of serverCallsSoFar
+        requestParams0.serverCallsSoFar = requestParams0.serverCallsSoFar - 1;
+    }
+    MoreItineraryStatus moreItinStatus = NO_MORE_ITINERARIES_REQUESTED;
     if (params.departOrArrive == DEPART &&
         [otpRequestDate timeIntervalSinceDate:requestParams0.originalTripDate] < PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW) {
         params.thisRequestTripDate = [otpRequestDate dateByAddingTimeInterval:bufferSeconds];
         [self requestPlanFromOtpWithParameters:params routeExcludeSettingArray:exclSettingArray];
+        moreItinStatus = (areRouteExcludeSettingsDifferent ? MORE_ITINERARIES_REQUESTED_DIFFERENT_EXCLUDES : MORE_ITINERARIES_REQUESTED_SAME_EXCLUDES);
     } else if (params.departOrArrive == ARRIVE &&
                [otpRequestDate timeIntervalSinceDate:requestParams0.originalTripDate] > -PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW){
         params.thisRequestTripDate = [otpRequestDate dateByAddingTimeInterval:(-bufferSeconds)];
         [self requestPlanFromOtpWithParameters:params routeExcludeSettingArray:exclSettingArray];
+        moreItinStatus = (areRouteExcludeSettingsDifferent ? MORE_ITINERARIES_REQUESTED_DIFFERENT_EXCLUDES : MORE_ITINERARIES_REQUESTED_SAME_EXCLUDES);
     }
+    return moreItinStatus;
 }
 
 
@@ -469,12 +523,17 @@
                 [plansWaitingForGtfsData removeObject:requestingPlan]; // remove from list
                 [requestingPlan prepareSortedItinerariesWithMatchesForDate:params.originalTripDate
                                                             departOrArrive:params.departOrArrive
-                                                      routeExcludeSettings:params.routeExcludeSettings generateGtfsItineraries:YES
+                                                      routeExcludeSettings:params.routeExcludeSettings
+                                                   generateGtfsItineraries:YES
                                                      removeNonOptimalItins:YES];
-                [params.planDestination newPlanAvailable:requestingPlan status:PLAN_STATUS_OK RequestParameter:params];
+                if (requestingPlan.sortedItineraries.count > 0) {
+                    [params.planDestination newPlanAvailable:requestingPlan
+                                                  fromObject:self
+                                                      status:PLAN_STATUS_OK
+                                            RequestParameter:params];
+                }
             }
         }
-
     }
 }
 

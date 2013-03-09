@@ -16,7 +16,8 @@
 NewPlanAvailableDelegate>
 
 @property(nonatomic, strong) IBOutlet UITableView* mainTable; // Table listing route options
-@property(nonatomic, strong) Plan *plan;
+@property(nonatomic, strong) IBOutlet UILabel* noItineraryWarning;  
+@property(nonatomic, strong, readonly) Plan *plan;  // use newPlanAvailable method to update the plan
 @property(nonatomic, strong) UIButton *btnGoToNimbler;
 @property( readwrite) BOOL isReloadRealData;
 @property (nonatomic, strong) PlanRequestParameters *planRequestParameters;

@@ -326,7 +326,7 @@
                 newleg.tripId = fromStopTime.tripID;
                 newleg.headSign = fromStopTime.trips.tripHeadSign;
             }
-            newleg.duration = [NSNumber numberWithDouble:[newleg.startTime timeIntervalSinceDate:newleg.endTime] * 1000];
+            newleg.duration = [NSNumber numberWithDouble:[newleg.endTime timeIntervalSinceDate:newleg.startTime] * 1000];
         }
         newItinerary.startTime = addDateOnlyWithTime(dateOnlyFromDate(tripDate), self.startTime);
         newItinerary.startTimeOnly = self.startTime;

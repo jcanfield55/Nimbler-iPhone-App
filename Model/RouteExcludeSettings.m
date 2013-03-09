@@ -322,6 +322,31 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
     return newSettings;  // if no equivalent one already in the system, return newSettings
 }
 
+// Creates a string showing the values in the settingArray (can be used for logging)
++(NSString *)stringFromSettingArray:(NSArray *)settingArray
+{
+    NSMutableString* resultString = [NSMutableString stringWithCapacity:50];
+    for (RouteExcludeSetting* setting in settingArray) {
+        NSString *settingStr = (setting.setting == SETTING_INCLUDE_ROUTE ? @"Include" : @"Exclude");
+        [resultString appendFormat:@"Key: %@, Value: %@\n", setting.key, settingStr];
+    }
+    return resultString;
+}
+
+// Returns true if settingArray does not contain any excludes (other than Bike mode exclude)
+// settingArray is created by excludeSettingsForPlan method
++(BOOL)noExcludesForSettingArray:(NSArray *)settingArray
+{
+    for (RouteExcludeSetting* setting in settingArray) {
+        if (![setting.key isEqualToString:BIKE_BUTTON]) { // don't care about bike mode
+            if (setting.setting == SETTING_EXCLUDE_ROUTE) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 // Returns true if itin should be included based on the RouteExclude settings
 -(BOOL)isItineraryIncluded:(Itinerary *)itin
 {

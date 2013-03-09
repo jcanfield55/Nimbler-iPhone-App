@@ -1096,13 +1096,19 @@ UIImage *imageDetailDisclosure;
 }
 
 // Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
--(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status RequestParameter:(PlanRequestParameters *)requestParameter
+-(void)newPlanAvailable:(Plan *)newPlan
+             fromObject:(id)referringObject
+                 status:(PlanRequestStatus)status
+       RequestParameter:(PlanRequestParameters *)requestParameter
 {
     @try {
         // If we already on routeOptionsVC, redirect this callback there instead
         UIViewController *currentVC = self.navigationController.visibleViewController;
         if (currentVC == routeOptionsVC || currentVC == routeOptionsVC.routeDetailsVC) {
-            [routeOptionsVC newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:requestParameter];
+            [routeOptionsVC newPlanAvailable:plan
+                                  fromObject:referringObject  // Treat toFromVC as a passthru
+                                      status:PLAN_STATUS_OK
+                            RequestParameter:requestParameter];
             return;
         }
         
@@ -1111,16 +1117,17 @@ UIImage *imageDetailDisclosure;
         [self stopActivityIndicator];
         durationOfResponseTime = CFAbsoluteTimeGetCurrent() - startButtonClickTime;
         NIMLOG_OBJECT1(@"Plan =%@",newPlan);
-        if (status == PLAN_STATUS_OK) {
+        
+        if (!routeOptionsVC) {
+            routeOptionsVC = [[RouteOptionsViewController alloc] initWithNibName:nil bundle:nil];
+        }
+        
+        if (status == PLAN_STATUS_OK || status == PLAN_EXCLUDED_TO_ZERO_RESULTS) {
             plan = newPlan;
             savetrip = FALSE;
             
-            // Pass control to the RouteOptionsViewController to display itinerary choices
-            if (!routeOptionsVC) {
-                routeOptionsVC = [[RouteOptionsViewController alloc] initWithNibName:nil bundle:nil];
-            }
             // DE - 155 Fixed
-            if([[plan sortedItineraries] count] != 0){
+            if([[plan sortedItineraries] count] != 0 || status == PLAN_EXCLUDED_TO_ZERO_RESULTS) { // if PLAN_EXCLUDED_TO_ZERO_RESULTS, its OK to go to RouteOptions even with 0 sortedItineraries
                 if(self.timerGettingRealDataByItinerary != nil){
                     [self.timerGettingRealDataByItinerary invalidate];
                     self.timerGettingRealDataByItinerary = nil;
@@ -1136,8 +1143,10 @@ UIImage *imageDetailDisclosure;
                         [[legs objectAtIndex:i] setTimeDiffInMins:nil];
                     }
                 }
-                [routeOptionsVC setPlan:plan];
-                [routeOptionsVC setPlanRequestParameters:requestParameter];
+                [routeOptionsVC newPlanAvailable:plan
+                                      fromObject:self
+                                          status:status
+                                RequestParameter:requestParameter];
                 [self requestServerForRealTime];
                 self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
                 
@@ -1168,7 +1177,7 @@ UIImage *imageDetailDisclosure;
                     [[self navigationController] pushViewController:routeOptionsVC animated:YES];
                 }
             }
-            else{ // plan.sortedItineraries.count == 0
+            else{ // plan.sortedItineraries.count == 0 (should not happen for PLAN_STATUS_OK)
                 if([nc_AppDelegate sharedInstance].isToFromView){
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:APP_TITLE message:ALERT_TRIP_NOT_AVAILABLE delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil] ;
                     [alert show];

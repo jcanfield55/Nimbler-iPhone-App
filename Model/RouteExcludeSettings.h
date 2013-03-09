@@ -52,6 +52,14 @@ typedef enum {
 // settingArray is created by excludeSettingsForPlan method
 +(RouteExcludeSettings *)excludeSettingsWithSettingArray:(NSArray *)settingArray;
 
+// Creates a string showing the values in the settingArray (can be used for logging)
+// settingArray is created by excludeSettingsForPlan method
++(NSString *)stringFromSettingArray:(NSArray *)settingArray;
+
+// Returns true if settingArray does not contain any excludes (other than Bike mode exclude)
+// settingArray is created by excludeSettingsForPlan method
++(BOOL)noExcludesForSettingArray:(NSArray *)settingArray;
+
 // Returns true if itin should be included based on the RouteExclude settings
 -(BOOL)isItineraryIncluded:(Itinerary *)itin;
 

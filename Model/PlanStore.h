@@ -16,6 +16,12 @@
 #import "Plan.h"
 #import "PlanRequestParameters.h"
 
+typedef enum {
+    NO_MORE_ITINERARIES_REQUESTED,
+    MORE_ITINERARIES_REQUESTED_SAME_EXCLUDES,     // Indicates no changes to the RouteExcludeSettings compared to the previous request
+    MORE_ITINERARIES_REQUESTED_DIFFERENT_EXCLUDES, // Indicates this is the first OTP request for these parameters, or this request has different RouteExcludeSettings than the last
+    MORE_ITINERARIES_REQUESTED_NO_EXCLUDES  // Indicates that no excludes have been chosen
+} MoreItineraryStatus;
 
 @interface PlanStore : NSObject <RKObjectLoaderDelegate,RKRequestDelegate>
 
@@ -37,7 +43,7 @@
 - (void)requestPlanWithParameters:(PlanRequestParameters *)parameters;
 
 // Checks if more itineraries are needed for this plan, and if so requests them from the server
--(void)requestMoreItinerariesIfNeeded:(Plan *)plan parameters:(PlanRequestParameters *)requestParams0;
+-(MoreItineraryStatus)requestMoreItinerariesIfNeeded:(Plan *)plan parameters:(PlanRequestParameters *)requestParams0;
 
 // Fetches array of plans going to the same to & from Location
 // Normally will return just one plan, but could return more if the plans have not been consolidated

@@ -71,13 +71,12 @@
 // Returns true if the planDestination goes to a ToFromViewController class
 -(BOOL)isDestinationToFromVC
 {
-    return [self isKindOfClass:[ToFromViewController class]];
+    return [[self planDestination] isKindOfClass:[ToFromViewController class]];
 }
 
 // Returns true if the planDestination goes to a RouteOptionsViewController class
 -(BOOL)isDestinationRouteOptionsVC
 {
-    return [self isKindOfClass:[RouteOptionsViewController class]];
-
+    return [[self planDestination] isKindOfClass:[RouteOptionsViewController class]];
 }
 @end

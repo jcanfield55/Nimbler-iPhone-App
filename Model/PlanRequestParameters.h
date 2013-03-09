@@ -16,10 +16,13 @@
 @class PlanRequestParameters;
 @class Plan;
 
-@protocol NewPlanAvailableDelegate
+@protocol NewPlanAvailableDelegate<NSObject>
 @required
 // Call-back from PlanStore requestPlanFromLocation:... method when it has a plan
--(void)newPlanAvailable:(Plan *)newPlan status:(PlanRequestStatus)status RequestParameter:(PlanRequestParameters *)requestParameter;
+-(void)newPlanAvailable:(Plan *)newPlan
+             fromObject:(id)referringObject
+                 status:(PlanRequestStatus)status
+       RequestParameter:(PlanRequestParameters *)requestParameter;
 @end
 
 @interface PlanRequestParameters : NSObject
@@ -43,7 +46,8 @@
 @property (nonatomic) DepartOrArrive departOrArrive;
 @property (nonatomic) int maxWalkDistance;
 @property (nonatomic) int serverCallsSoFar; // number of calls to the server that have been made for this request
-@property (nonatomic) id<NewPlanAvailableDelegate> planDestination;
+@property (nonatomic, unsafe_unretained) id<NewPlanAvailableDelegate> planDestination;
+@property (nonatomic) BOOL haveMadeFirstCallback;  // Set to true after first callback
 @property (strong, nonatomic) RouteExcludeSettings* routeExcludeSettings; // optional
 @property (strong, nonatomic) NSString* otpExcludeAgencyString;  // Set by requestPlanFromOtpWithParameters method with the OTP exclude string
 @property (strong, nonatomic) NSString* otpExcludeAgencyByModeString; // Set by requestPlanFromOtpWithParameters method with the OTP by mode exclude string

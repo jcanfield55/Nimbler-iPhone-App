@@ -533,7 +533,10 @@
                          @"San Carlos Caltrain Station",@"");
     STAssertFalse([[[plan sortedItineraries] objectAtIndex:6] isOTPItinerary], @"");
     
-    [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:parameters];
+    [[toFromViewController routeOptionsVC] newPlanAvailable:plan
+                                                 fromObject:self
+                                                     status:PLAN_STATUS_OK
+                                           RequestParameter:parameters];
     
     //
     // Test generateMoreGtfsItinsIfNeededFor and management of requestChunks
@@ -600,7 +603,10 @@
                                 routeExcludeSettings:nil
                              generateGtfsItineraries:YES
                                removeNonOptimalItins:YES];
-    [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:parameters];
+    [[toFromViewController routeOptionsVC] newPlanAvailable:plan
+                                                 fromObject:self
+                                                     status:PLAN_STATUS_OK
+                                           RequestParameter:parameters];
     STAssertEquals([[plan sortedItineraries] count], 6u, @"");  // Removed itinerary #5 (OTP duplicate)
     
     // itin4, from GTFS, Muni bus leaves 7:19pm, straight to San Carlos
@@ -616,12 +622,18 @@
     Leg* firstGeneratedLeg = [[[[plan sortedItineraries] objectAtIndex:0] sortedLegs] objectAtIndex:0];
     STAssertNotNil([firstGeneratedLeg startTime], @"First leg start-time should not be nil");
     // View in the ViewController (uncomment when above problem resolved)
-    [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:parameters];
+    [[toFromViewController routeOptionsVC] newPlanAvailable:plan
+                                                 fromObject:self
+                                                     status:PLAN_STATUS_OK
+                                           RequestParameter:parameters];
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
     
 
     
-    [[toFromViewController routeOptionsVC] newPlanAvailable:plan status:PLAN_STATUS_OK RequestParameter:parameters];
+    [[toFromViewController routeOptionsVC] newPlanAvailable:plan
+                                                 fromObject:self
+                                                     status:PLAN_STATUS_OK
+                                           RequestParameter:parameters];
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
     
     //
