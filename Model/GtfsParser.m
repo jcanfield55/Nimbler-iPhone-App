@@ -20,6 +20,7 @@
 @interface GtfsParser ()
 {
     NSString* lastTripsDataRequestString;
+    int backgroundThreadsOutstanding;  // Count of # of background threads outstanding for parsing
 }
 
 @end
@@ -53,6 +54,7 @@
 - (void) parseAndStoreGtfsAgencyData:(NSDictionary *)dictFileData{
 //    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
+//    backgroundThreadsOutstanding++;
 //    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
 //    [moc setMergePolicy:NSOverwriteMergePolicy];
 //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -93,6 +95,7 @@
 - (void) parseAndStoreGtfsCalendarDatesData:(NSDictionary *)dictFileData{
 //    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
+//    backgroundThreadsOutstanding++;
 //    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
 //    [moc setMergePolicy:NSOverwriteMergePolicy];
 //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -152,6 +155,7 @@
     
 //    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
+//    backgroundThreadsOutstanding++;
 //    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
 //    [moc setMergePolicy:NSOverwriteMergePolicy];
 //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -233,6 +237,7 @@
     
 //    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
+//    backgroundThreadsOutstanding++;
 //    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
 //    [moc setMergePolicy:NSOverwriteMergePolicy];
 //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -304,6 +309,7 @@
 - (void) parseAndStoreGtfsStopsData:(NSDictionary *)dictFileData{
 //    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
+//    backgroundThreadsOutstanding++;
 //    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
 //    [moc setMergePolicy:NSOverwriteMergePolicy];
 //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -360,6 +366,7 @@
 - (void) parseAndStoreGtfsTripsData:(NSDictionary *)dictFileData RequestUrl:(NSString *)strRequestUrl{
 //    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
+//    backgroundThreadsOutstanding++;
 //    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
 //    [moc setMergePolicy:NSOverwriteMergePolicy];
 //    
@@ -455,13 +462,17 @@
     }
     [[self managedObjectContext] mergeChangesFromContextDidSaveNotification:notification];
     [[[nc_AppDelegate sharedInstance] planStore] updatePlansWithNewGtfsDataIfNeeded];  // see if any plans need the data just updated
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    backgroundThreadsOutstanding--;
+    if (backgroundThreadsOutstanding <= 0) {  // only remove observer if there are no more background requests outstanding
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+    }
 }
 
 
 - (void) parseAndStoreGtfsStopTimesData:(NSDictionary *)dictFileData RequestUrl:(NSString *)strResourcePath{
     NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
+    backgroundThreadsOutstanding++;
     [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
     [moc setMergePolicy:NSOverwriteMergePolicy];
     
@@ -906,23 +917,23 @@
 {
     [nc_AppDelegate sharedInstance].receivedReply = false;
     NSMutableString *strRequestString = [[NSMutableString alloc] init];
-    NSArray *itiArray = [plan uniqueItineraries];
     BOOL isStatusChanged = false;
-    for(int i=0;i<[itiArray count];i++){
-        Itinerary *iti = [itiArray objectAtIndex:i];
-        NSArray *legArray = [iti sortedLegs];
-        for(int j=0;j<[legArray count];j++){
-            Leg *leg = [legArray objectAtIndex:j];
-            if([leg isScheduled]) {
-                if (![self isGtfsDataAvailableForAgencyName:leg.agencyName routeId:leg.routeId] &&
-                    ![self hasGtfsDownloadRequestBeenSubmittedForAgencyName:leg.agencyName routeId:leg.routeId]) {
-                    // if the data has not yet been requested, make the request
-                    [strRequestString appendFormat:@"%@_%@,",agencyFeedIdFromAgencyName(leg.agencyName),leg.routeId];
-                    [self setGtfsRequestSubmittedForAgencyName:leg.agencyName
-                                                   routeId:leg.routeId
-                                                      plan:plan];
-                    isStatusChanged = true;
-                } // if data is requested, not adding this plan also at this point
+    for (Itinerary* iti in [plan itineraries]) {
+        if (iti.isOTPItinerary) {  // only check for OTP itineraries
+            NSArray *legArray = [iti sortedLegs];
+            for(int j=0;j<[legArray count];j++){
+                Leg *leg = [legArray objectAtIndex:j];
+                if([leg isScheduled]) {
+                    if (![self isGtfsDataAvailableForAgencyName:leg.agencyName routeId:leg.routeId] &&
+                        ![self hasGtfsDownloadRequestBeenSubmittedForAgencyName:leg.agencyName routeId:leg.routeId]) {
+                        // if the data has not yet been requested, make the request
+                        [strRequestString appendFormat:@"%@_%@,",agencyFeedIdFromAgencyName(leg.agencyName),leg.routeId];
+                        [self setGtfsRequestSubmittedForAgencyName:leg.agencyName
+                                                           routeId:leg.routeId
+                                                              plan:plan];
+                        isStatusChanged = true;
+                    } // if data is requested, not adding this plan also at this point
+                }
             }
         }
     }

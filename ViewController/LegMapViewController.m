@@ -76,13 +76,13 @@ NSString *legID;
             for(int i=0;i<[sortedLegs count];i++){
                 Leg *leg = [sortedLegs objectAtIndex:i];
                 if([leg isScheduled]){
-                    NSLog(@"tripId=%@",leg.tripId);
-                    NSLog(@"fromStop=%@",leg.from.stopId);
-                    NSLog(@"toStop=%@",leg.to.stopId);
+                    NIMLOG_US191(@"tripId=%@",leg.tripId);
+                    NIMLOG_US191(@"fromStop=%@",leg.from.stopId);
+                    NIMLOG_US191(@"toStop=%@",leg.to.stopId);
                     NSArray *stopTimes = [[nc_AppDelegate sharedInstance].gtfsParser returnIntermediateStopForLeg:leg];
                     for(int i=0;i<[stopTimes count];i++){
                         GtfsStopTimes *stopTime = [stopTimes objectAtIndex:i];
-                         NSLog(@"intermediateStop=%@",stopTime.stop.stopID);
+                         NIMLOG_US191(@"intermediateStop=%@",stopTime.stop.stopID);
                         float langcoord = [stopTime.stop.stopLat floatValue];
                         float longcoord = [stopTime.stop.stopLon floatValue];
                         CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(langcoord, longcoord);
@@ -93,7 +93,7 @@ NSString *legID;
                             NSDate *arrivalTime = dateFromTimeString(stopTime.arrivalTime);
                             NSDate *realArrivalTime = nil;
                             if([leg isRealTimeLeg]){
-                                NSLog(@"%d",leg.timeDiff);
+                                NIMLOG_US191(@"%d",leg.timeDiff);
                                realArrivalTime =  [arrivalTime dateByAddingTimeInterval:-(leg.timeDiff * 60)];
                             }
                             NSString *date;
@@ -103,8 +103,8 @@ NSString *legID;
                             else{
                                 date = [dateFormatter stringFromDate:arrivalTime];
                             }
-                            NSLog(@"time=%@",stopTime.arrivalTime);
-                            NSLog(@"date=%@",date);
+                            NIMLOG_US191(@"time=%@",stopTime.arrivalTime);
+                            NIMLOG_US191(@"date=%@",date);
                            [point setSubtitle:[NSString stringWithFormat:@"Arrival: %@",date]];
                         }
                         [intermediateAnnotations addObject:point];

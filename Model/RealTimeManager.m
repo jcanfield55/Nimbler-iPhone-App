@@ -10,6 +10,7 @@
 #import "nc_AppDelegate.h"
 #import "UtilityFunctions.h"
 #import "PlanRequestParameters.h"
+#import "RouteExcludeSetting.h"
 
 @implementation RealTimeManager
 @synthesize rkTpClient;
@@ -143,7 +144,11 @@ static RealTimeManager* realTimeManager;
                 [self setRealTimePredictionsFromLiveFeeds:legLiveFees];
                 // TODO:- Comment Four lines to run automated test case 
                  [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:originalTripDate Context:nil];
-                 [plan prepareSortedItinerariesWithMatchesForDate:originalTripDate departOrArrive:DEPART];
+                 [plan prepareSortedItinerariesWithMatchesForDate:originalTripDate
+                                                   departOrArrive:DEPART
+                                             routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
+                                          generateGtfsItineraries:YES
+                                            removeNonOptimalItins:YES];
                  [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC reloadData:plan];
                  [routeDetailVC ReloadLegWithNewData];
             }

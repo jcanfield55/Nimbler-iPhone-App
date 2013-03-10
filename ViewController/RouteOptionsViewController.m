@@ -27,6 +27,7 @@
 {
     // Variables for internal use
     NSArray* arrRouteSettings;  // Array returned from RouteExcludeSettings with exclude button state
+    BOOL setWarningHidden;   // True if we should set the warning to be hidden upon viewWillAppear
 }
 
 // Attributed strings are only supported on iOS6 or later, so do not call this method on < iOS6
@@ -78,6 +79,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
     [self changeMainTableSettings];
     [self setFBParameterForPlan];
+    [noItineraryWarning setHidden:setWarningHidden];
 }
 
 // Method used to set the plan 
@@ -104,8 +106,10 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     }
     if (status == PLAN_STATUS_OK) {
         [noItineraryWarning setHidden:YES];
+        setWarningHidden = true;
     } else if (status == PLAN_EXCLUDED_TO_ZERO_RESULTS) {
         [noItineraryWarning setHidden:NO]; // show warning
+        setWarningHidden = false;
     } 
 }
 
@@ -204,7 +208,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                  @"planRequestParameters = nil, skipping excludeButton updates");
         return;
     }
-    
+    arrRouteSettings = [[RouteExcludeSettings latestUserSettings] excludeSettingsForPlan:plan
+                                                                          withParameters:planRequestParameters];
     logEvent(FLURRY_EXCLUDE_SETTING_CHANGED,
              FLURRY_CHANGED_EXCLUDE_SETTING, btn.titleLabel.text,
              FLURRY_NEW_EXCLUDE_SETTINGS, [RouteExcludeSettings stringFromSettingArray:arrRouteSettings],

@@ -14,12 +14,12 @@
 
 #define GENERATING_SEED_DATABASE  0 // when we are generating seed database the value is 1 otherwise 0
 
-#define TRIP_GENERATE_URL     @"http://23.23.210.156:7070/opentripplanner-api-webapp/ws/"
+#define TRIP_GENERATE_URL     @"http://23.23.210.156:7070/opentripplanner-api-webapp/ws/" 
 //#define TRIP_GENERATE_URL @"http://ec2-23-22-169-158.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"
 #define GEO_RESPONSE_URL      @"http://maps.googleapis.com/maps/api/geocode/"
 #define TEST_GEO_RESPONSE_URL  @"http://localhost:8080/TPServer/ws/mockgeolocation/"
 
-#define TRIP_PROCESS_URL    @"http://23.23.210.156:7070/TPServer/ws/"
+#define TRIP_PROCESS_URL    @"http://23.23.210.156:7070/TPServer/ws/"   
 //#define TRIP_PROCESS_URL      @"http://192.168.2.196:8080/TPServer/ws/"
 
 #define TEST_TRIP_PROCESS_URL @"http://localhost:8080/TPServer/ws/"  // TP server for automated tests
