@@ -54,6 +54,7 @@
 @synthesize isRealTimeLeg;
 @synthesize prediction;
 @synthesize timeDiff;
+@synthesize realTripId;
 
 static NSDictionary* __agencyDisplayNameByAgencyId;
 

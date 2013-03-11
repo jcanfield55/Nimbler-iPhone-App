@@ -277,7 +277,7 @@ NSUserDefaults *prefs;
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewWillDisappear:YES];
+    [super viewWillDisappear:animated];
 }
 
 - (void)didReceiveMemoryWarning

@@ -94,7 +94,7 @@ NSString *legID;
                             NSDate *realArrivalTime = nil;
                             if([leg isRealTimeLeg]){
                                 NIMLOG_US191(@"%d",leg.timeDiff);
-                               realArrivalTime =  [arrivalTime dateByAddingTimeInterval:-(leg.timeDiff * 60)];
+                               realArrivalTime =  [arrivalTime dateByAddingTimeInterval:(leg.timeDiff * 60)];
                             }
                             NSString *date;
                             if(realArrivalTime){

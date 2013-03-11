@@ -1,3 +1,4 @@
+
 //
 //  RealTimeManager.m
 //  Nimbler Caltrain
@@ -114,27 +115,36 @@ static RealTimeManager* realTimeManager;
     @try {
         for(int i=0;i<[[plan itineraries] count];i++){
             Itinerary *iti = [[[plan itineraries] allObjects]  objectAtIndex:i];
-            iti.itinArrivalFlag = nil;
-            iti.hideItinerary = false;
             if(iti.isRealTimeItinerary){
-                for(int j=0;j<[[iti sortedLegs] count];j++){
-                    Leg *leg = [[iti sortedLegs] objectAtIndex:j];
-                    leg.predictions = nil;
-                    leg.arrivalFlag = nil;
-                    leg.timeDiffInMins = nil;
+                [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.expiredItineraries addObject:iti];
+            }
+        }
+        NSString *class1 = NSStringFromClass([[nc_AppDelegate sharedInstance].toFromViewController.navigationController.visibleViewController class]);
+        NSString *class2 = NSStringFromClass([[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC class]);
+        if(![class1 isEqualToString:class2]){
+            for(int i=0;i<[[plan itineraries] count];i++){
+                Itinerary *iti = [[[plan itineraries] allObjects]  objectAtIndex:i];
+                iti.itinArrivalFlag = nil;
+                iti.hideItinerary = false;
+                if(iti.isRealTimeItinerary){
+                    for(int j=0;j<[[iti sortedLegs] count];j++){
+                        Leg *leg = [[iti sortedLegs] objectAtIndex:j];
+                        leg.predictions = nil;
+                        leg.arrivalFlag = nil;
+                        leg.timeDiffInMins = nil;
+                    }
+                    [plan deleteItinerary:iti];
                 }
-                [plan deleteItinerary:iti];
             }
-        }
-        
-        for(int i=0;i<[[plan requestChunks] count];i++){
-            PlanRequestChunk *reqChunks = [[[plan requestChunks] allObjects] objectAtIndex:i];
-            if(reqChunks.type == [NSNumber numberWithInt:2]){
-                [[nc_AppDelegate sharedInstance].managedObjectContext deleteObject:reqChunks];
+            
+            for(int i=0;i<[[plan requestChunks] count];i++){
+                PlanRequestChunk *reqChunks = [[[plan requestChunks] allObjects] objectAtIndex:i];
+                if(reqChunks.type == [NSNumber numberWithInt:2]){
+                    [[nc_AppDelegate sharedInstance].managedObjectContext deleteObject:reqChunks];
+                }
             }
+            saveContext([nc_AppDelegate sharedInstance].managedObjectContext);
         }
-        saveContext([nc_AppDelegate sharedInstance].managedObjectContext);
-        
         liveData = liveFees;
         NSNumber *respCode = [(NSDictionary *)liveData objectForKey:@"errCode"];
         if ([respCode intValue] == RESPONSE_SUCCESSFULL) {

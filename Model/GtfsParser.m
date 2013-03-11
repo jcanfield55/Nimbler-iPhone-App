@@ -1343,6 +1343,7 @@
 - (Leg *) generateLegFromPrediction:(NSDictionary *)prediction newItinerary:(Itinerary *)newItinerary Leg:(Leg *)leg Context:(NSManagedObjectContext *)context ISExtraPrediction:(BOOL)isExtraPrediction{
     NSDate *predtctionTime = [NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"epochTime"] doubleValue]/1000.0)];
     Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
+    newleg.realTripId = [prediction objectForKey:@"tripId"];
     newleg.itinerary = newItinerary;
     newleg.startTime = predtctionTime;
     newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([leg.duration floatValue]/1000)];
@@ -1425,7 +1426,8 @@
         NSDate *startTimeOnly = addDateOnlyWithTimeOnly(dateOnlyFromDate([NSDate date]), timeOnlyFromDate(leg.startTime));
         NSDictionary *prediction = [self returnMaximumRealTime:predictions];
         NSDate *realTimeBoundry = addDateOnlyWithTimeOnly(dateOnlyFromDate([NSDate date]),timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"epochTime"] doubleValue]/1000.0)]));
-        if([startTimeOnly compare:realTimeBoundry] == NSOrderedAscending || [startTimeOnly isEqualToDate:realTimeBoundry]){
+        NSDate *starTimeWithLowerBoundry = timeOnlyFromDate([startTimeOnly dateByAddingTimeInterval:REALTIME_LOWER_LIMIT]);
+        if([starTimeWithLowerBoundry compare:realTimeBoundry] == NSOrderedAscending || [startTimeOnly isEqualToDate:realTimeBoundry]){
             if(![itinerary isRealTimeItinerary])
                 itinerary.hideItinerary = true;
         }
@@ -1448,7 +1450,7 @@
     }
     Leg *scheduledLeg = [self returnNearestLeg:arrLegs];
     int timeDiff = [scheduledLeg calculatetimeDiffInMins:[[prediction objectForKey:@"epochTime"] doubleValue]];
-    scheduledLeg.timeDiff = timeDiff;
+    leg.timeDiff = timeDiff;
     int arrivalFlag = [scheduledLeg calculateArrivalTimeFlag:timeDiff];
     leg.arrivalFlag = [NSString stringWithFormat:@"%d",arrivalFlag];
     NSDateFormatter *dateFormatters = [[NSDateFormatter alloc] init];
@@ -1553,6 +1555,7 @@
                         [self setArrivalTimeFlagForLegsAndItinerary:itineraries Plan:plan Leg:newleg Prediction:dictPrediction Index:j];
                         [self hideItineraryIfNeeded:itineraries Leg:leg Index:j Predictions:arrPrediction];
                         if([self isFirstScheduledLeg:leg Itinerary:itinerary]){
+                            newItinerary.startTime = newleg.startTime;
                             [arrPrediction removeObject:dictPrediction];
                             [dictPredictions setObject:arrPrediction forKey:leg.legId];
                         }
@@ -1672,7 +1675,13 @@
 }
 
 - (NSArray *) returnIntermediateStopForLeg:(Leg *)leg{
-    NSFetchRequest *fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesByAgencyID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:leg.tripId,@"TRIPID",agencyFeedIdFromAgencyName(leg.agencyName),@"AGENCYID", nil]];
+    NSString *tripId  = nil;
+    if(leg.realTripId)
+        tripId = leg.realTripId;
+    else
+        tripId = leg.tripId;
+    
+    NSFetchRequest *fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesByAgencyID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:tripId,@"TRIPID",agencyFeedIdFromAgencyName(leg.agencyName),@"AGENCYID", nil]];
     NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
     NSSortDescriptor *sortD = [[NSSortDescriptor alloc]
                                             

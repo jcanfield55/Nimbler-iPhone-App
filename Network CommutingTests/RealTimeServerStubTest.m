@@ -745,8 +745,6 @@
     Leg *second_SecondItinerary_5Leg = [[second_SecondItinerary sortedLegs] objectAtIndex:4];
     
     STAssertTrue([second_SecondItinerary_2Leg.arrivalFlag intValue] == DELAYED, @"");
-    NSLog(@"%@",second_SecondItinerary_4Leg.arrivalFlag);
-    NSLog(@"%@",second_SecondItinerary_5Leg.arrivalFlag);
     STAssertTrue([second_SecondItinerary_4Leg.arrivalFlag intValue] == ON_TIME, @"");
     STAssertTrue([second_SecondItinerary_5Leg.arrivalFlag intValue] == ON_TIME, @"");
     

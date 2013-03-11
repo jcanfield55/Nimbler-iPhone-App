@@ -65,6 +65,7 @@ typedef enum {
 @property (nonatomic, retain) NSArray *predictions;
 @property (nonatomic, strong) NSDictionary *prediction;
 @property (nonatomic) int timeDiff;
+@property (nonatomic, strong) NSString *realTripId;
 
 - (NSArray *)sortedSteps;
 - (NSString *)summaryTextWithTime:(BOOL)includeTime;  // Returns a single-line summary of the leg useful for RouteOptionsView details

@@ -23,6 +23,7 @@ NewPlanAvailableDelegate>
 @property (nonatomic, strong) PlanRequestParameters *planRequestParameters;
 @property(nonatomic, strong) RouteDetailsViewController* routeDetailsVC;
 @property(nonatomic, strong) PlanStore* planStore;
+@property (nonatomic, strong) NSMutableArray *expiredItineraries;
 
 
 -(void)hideUnUsedTableViewCell;

@@ -45,6 +45,7 @@
 @synthesize planRequestParameters;
 @synthesize routeDetailsVC;
 @synthesize planStore;
+@synthesize expiredItineraries;
 
 Itinerary * itinerary;
 NSString *itinararyId;
@@ -57,6 +58,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        expiredItineraries = [[NSMutableArray alloc] init];
         UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
         [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
         lblNavigationTitle.text=ROUTE_OPTIONS_VIEW_TITLE;
@@ -80,6 +82,22 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     [self changeMainTableSettings];
     [self setFBParameterForPlan];
     [noItineraryWarning setHidden:setWarningHidden];
+    
+    for(int i=0;i<[expiredItineraries count];i++){
+        Itinerary *itinerary = [expiredItineraries objectAtIndex:i];
+        [plan deleteItinerary:itinerary];
+    }
+    saveContext([nc_AppDelegate sharedInstance].managedObjectContext);
+    [expiredItineraries removeAllObjects];
+    PlanRequestParameters* newParameters = [PlanRequestParameters copyOfPlanRequestParameters:planRequestParameters];
+    newParameters.thisRequestTripDate = newParameters.originalTripDate;
+    newParameters.serverCallsSoFar = 0;
+    [plan prepareSortedItinerariesWithMatchesForDate:newParameters.originalTripDate
+                                      departOrArrive:newParameters.departOrArrive
+                                routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
+                             generateGtfsItineraries:YES
+                               removeNonOptimalItins:YES];
+    [mainTable reloadData];
 }
 
 // Method used to set the plan 
