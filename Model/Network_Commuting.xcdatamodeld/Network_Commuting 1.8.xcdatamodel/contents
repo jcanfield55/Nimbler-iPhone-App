@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="11G56" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="12C60" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AddressComponent" representedClassName="AddressComponent" syncable="YES">
         <attribute name="longName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
@@ -82,12 +82,10 @@
     </entity>
     <entity name="GtfsStopTimes" representedClassName="GtfsStopTimes" syncable="YES">
         <attribute name="agencyID" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="arrivalNSDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="arrivalTime" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="departureNSDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="departureTime" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="dropOfTime" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="pickUpTime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dropOffType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="pickUpType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shapeDistTravelled" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="stopID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="stopSequence" optional="YES" attributeType="String" syncable="YES"/>
@@ -316,7 +314,7 @@
     <fetchRequest name="GtfsStopByLatLng" entity="GtfsStop" predicateString="stopLat == $STOPLAT AND stopLon == $STOPLON"/>
     <fetchRequest name="GtfsStopTimesByAgencyID" entity="GtfsStopTimes" predicateString="tripID == $TRIPID AND agencyID == $AGENCYID"/>
     <fetchRequest name="GtfsStopTimesBySequence" entity="GtfsStopTimes" predicateString="tripID == $TRIPID AND stopSequence == $STOPSEQUENCE"/>
-    <fetchRequest name="GtfsStopTimesByStopID" entity="GtfsStopTimes" predicateString="departureNSDate > $TRIPTIME AND departureNSDate &lt; $CUTOFFTIME AND (stopID == $STOPID1 OR stopID == $STOPID2) AND tripID != $TRIPID"/>
+    <fetchRequest name="GtfsStopTimesByStopID" entity="GtfsStopTimes" predicateString="departureTime > $TRIPTIME AND departureTime &lt; $CUTOFFTIME AND (stopID == $STOPID1 OR stopID == $STOPID2) AND tripID != $TRIPID"/>
     <fetchRequest name="GtfsTrips" entity="GtfsTrips" predicateString="tripID == $TRIPID"/>
     <fetchRequest name="GtfsTripsByTripIdAndRouteId" entity="GtfsTrips" predicateString="tripID == $TRIPID AND routeID == $ROUTEID"/>
     <fetchRequest name="ItineraryByPlanAndTimeRange" entity="Itinerary" predicateString="plan == $PLAN AND startTimeOnly >= $TIME_RANGE_FROM AND startTimeOnly &lt;= $TIME_RANGE_TO"/>
@@ -343,7 +341,7 @@
         <element name="GtfsParsingStatus" positionX="160" positionY="192" width="128" height="105"/>
         <element name="GtfsRoutes" positionX="160" positionY="192" width="128" height="180"/>
         <element name="GtfsStop" positionX="160" positionY="192" width="128" height="165"/>
-        <element name="GtfsStopTimes" positionX="160" positionY="192" width="128" height="240"/>
+        <element name="GtfsStopTimes" positionX="160" positionY="192" width="128" height="210"/>
         <element name="GtfsTrips" positionX="160" positionY="192" width="128" height="195"/>
         <element name="Itinerary" positionX="0" positionY="0" width="128" height="360"/>
         <element name="ItineraryFromOTP" positionX="160" positionY="192" width="128" height="45"/>

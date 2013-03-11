@@ -17,6 +17,7 @@
 
 static NSDateFormatter *utilitiesTimeFormatter;  // Static variable for short time formatter for use by utility
 static NSDateFormatter *timeFormatterForTimeString;  // used for dateForTimeString utility
+static NSDateFormatter *timeFormatterOnly;  // time formatter for HH:mm:ss
 static NSDictionary *agencyShortNameMapping;  // used for returnShortAgencyName
 static NSDictionary *agencyFeedIdFromAgencyNameDictionary;  // used by agencyFeedIdFromAgencyName
 static NSDictionary *agencyNameFromAgencyFeedIdDictionary;  // used by agencyNameFromAgencyFeedId
@@ -181,6 +182,55 @@ NSDate *timeOnlyFromDate(NSDate *date) {
     NSDate *returnTime = [calendar dateFromComponents:[calendar components:timeComponents
                                                                    fromDate:date]];
     return returnTime;
+}
+
+//
+// Returns a NSString containing just the time of the date parameter in the format HH:mm:ss
+//
+NSString *timeStringFromDate(NSDate *date) {
+    if (!timeFormatterOnly) {
+        timeFormatterOnly = [[NSDateFormatter alloc] init];
+        [timeFormatterOnly setDateFormat:@"HH:mm:ss"];
+    }
+    return [timeFormatterOnly stringFromDate:date];
+}
+
+//
+// Assumes that the receiver is a timeString of format HH:mm:ss
+// Returns a new timeString of the same format but with a value from adding interval (in seconds)
+// Note: this will go past 24 hours (i.e. 25:30 represents 1:30am the next day).
+//
+NSString *timeStringByAddingInterval(NSString *timeString, NSTimeInterval interval) {
+    NSArray *arrayTimeComponents = [timeString componentsSeparatedByString:@":"];
+    int hours=0, minutes=0, seconds=0;
+    for (int i=0; i<[arrayTimeComponents count]; i++) {
+        int value = [[arrayTimeComponents objectAtIndex:i] intValue];
+        if (i == 0) {
+            hours = value;
+        } else if (i==1) {
+            minutes = [[arrayTimeComponents objectAtIndex:1] intValue];
+        } else if (i==2) {
+            seconds = [[arrayTimeComponents objectAtIndex:2] intValue];
+        }
+    }
+    int intervalInt = interval;  // cast to an int
+    int hoursInterval = intervalInt / (60*60);
+    intervalInt = intervalInt - hoursInterval * (60*60);  // remaining minutes
+    int minutesInterval = intervalInt / 60;
+    int secondsInterval = intervalInt - minutesInterval * 60;  // remaining seconds
+    
+    hours = hours + hoursInterval;
+    minutes = minutes + minutesInterval;
+    seconds = seconds + secondsInterval;
+    if (seconds >= 60) {
+        minutes++;
+        seconds = seconds - 60;
+    }
+    if (minutes >= 60) {
+        hours++;
+        minutes = minutes - 60;
+    }
+    return [NSString stringWithFormat:@"%02d:%02d:%02d", hours, minutes, seconds];
 }
 
 //

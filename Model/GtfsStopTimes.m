@@ -14,11 +14,9 @@
 @implementation GtfsStopTimes
 
 @dynamic arrivalTime;
-@dynamic arrivalNSDate;
 @dynamic departureTime;
-@dynamic departureNSDate;
-@dynamic dropOfTime;
-@dynamic pickUpTime;
+@dynamic dropOffType;
+@dynamic pickUpType;
 @dynamic shapeDistTravelled;
 @dynamic stopID;
 @dynamic stopSequence;

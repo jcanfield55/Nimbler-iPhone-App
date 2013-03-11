@@ -1178,6 +1178,11 @@
     STAssertTrue([addDateOnlyWithTime(dayTime0T, timeStrDate2) isEqualToDate:dayTime2T], @"");
     STAssertTrue([addDateOnlyWithTime(dayTime0T, timeStrDate3) isEqualToDate:dayTime3T], @"");
     STAssertTrue([addDateOnlyWithTime(dayTime0T, timeStrDate4) isEqualToDate:dayTime4T], @"");
+    
+    // timeStringByAddingInterval
+    STAssertEqualObjects(timeStringByAddingInterval(@"10:05:03", (2*60*60 + 20*60 + 59)), @"12:26:02", @"");
+    STAssertEqualObjects(timeStringByAddingInterval(@"23:59:59", 2), @"24:00:01", @"");
+    STAssertEqualObjects(timeStringByAddingInterval(@"00:00:00", 59*60 + 59), @"00:59:59", @"");
 }
 
 - (void)testKeyObjectStore

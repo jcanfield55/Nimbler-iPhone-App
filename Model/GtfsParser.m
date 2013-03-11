@@ -471,6 +471,7 @@
 
 - (void) parseAndStoreGtfsStopTimesData:(NSDictionary *)dictFileData RequestUrl:(NSString *)strResourcePath{
     NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    [moc setUndoManager:nil];  // turn off undo for higher performance
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
     backgroundThreadsOutstanding++;
     [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
@@ -481,48 +482,17 @@
     backgroundQueue = dispatch_queue_create("com.backgroundQueue", NULL);
     dispatch_async(backgroundQueue, ^(void) {
         @try {
-            
-            NSMutableArray *arrayTripID = [[NSMutableArray alloc] init];
-            NSMutableArray *arrayArrivalTime = [[NSMutableArray alloc] init];
-            NSMutableArray *arrayDepartureTime = [[NSMutableArray alloc] init];
-            NSMutableArray *arrayStopID = [[NSMutableArray alloc] init];
-            NSMutableArray *arrayStopSequence = [[NSMutableArray alloc] init];
-            NSMutableArray *arrayPickUpType = [[NSMutableArray alloc] init];
-            NSMutableArray *arrayDropOffType = [[NSMutableArray alloc] init];
-            NSMutableArray *arrayShapeDistTraveled = [[NSMutableArray alloc] init];
-            NSMutableArray *arrayAgencyID = [[NSMutableArray alloc] init];
             NSMutableDictionary *routeIdAndAgencyIdDictionary = [[NSMutableDictionary alloc] initWithCapacity:10];
             
-            NIMLOG_PERF2(@"parse stop times start first loop");
+            NIMLOG_PERF2(@"parse stop times start");
             NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
-            NSMutableDictionary *tempDictionary = [[NSMutableDictionary alloc] initWithDictionary:dictComponents];
-            [tempDictionary removeObjectForKey:@"headers"];
-            dictComponents = tempDictionary;
-            NSArray *arrayAgencyIds = [dictComponents allKeys];
-            for(int k=0;k<[arrayAgencyIds count];k++){
-                NSArray *arrayComponentsAgency = [dictComponents objectForKey:[arrayAgencyIds objectAtIndex:k]];
-                for(int i=0;i<[arrayComponentsAgency count];i++){
-                    NSString *strAgencyIds = [arrayAgencyIds objectAtIndex:k];
-                    NSArray *arrayAgencyIdsComponents = [strAgencyIds componentsSeparatedByString:@"_"];
-                    [arrayAgencyID addObject:getItemAtIndexFromArray(0,arrayAgencyIdsComponents)];
-                    NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
-                    if(strSubComponents && strSubComponents.length > 0){
-                        NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
-                        [arrayTripID addObject:getItemAtIndexFromArray(0,arraySubComponents)];
-                        [arrayArrivalTime addObject:getItemAtIndexFromArray(1,arraySubComponents)];
-                        [arrayDepartureTime addObject:getItemAtIndexFromArray(2,arraySubComponents)];
-                        [arrayStopID addObject:getItemAtIndexFromArray(3,arraySubComponents)];
-                        [arrayStopSequence addObject:getItemAtIndexFromArray(4,arraySubComponents)];
-                        [arrayPickUpType addObject:getItemAtIndexFromArray(5,arraySubComponents)];
-                        [arrayDropOffType addObject:getItemAtIndexFromArray(6,arraySubComponents)];
-                        [arrayShapeDistTraveled addObject:getItemAtIndexFromArray(7,arraySubComponents)];
-                    }
-                }
-            }
+            NSArray *arrayAgency_TripIds = [dictComponents allKeys];
+            NSMutableDictionary *dictTrips = [[NSMutableDictionary alloc] initWithCapacity:[arrayAgency_TripIds count]];
+            NSMutableDictionary *dictStops = [[NSMutableDictionary alloc] initWithCapacity:100];
+            
             NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
             [fetchTrips setEntity:[NSEntityDescription entityForName:@"GtfsTrips" inManagedObjectContext:moc]];
             NSArray * arrayTrips = [moc executeFetchRequest:fetchTrips error:nil];
-            NSMutableDictionary *dictTrips = [[NSMutableDictionary alloc] init];
             for(int i=0;i<[arrayTrips count];i++){
                 GtfsTrips *trips = [arrayTrips objectAtIndex:i];
                 [dictTrips setObject:trips forKey:trips.tripID];
@@ -531,49 +501,63 @@
             NSFetchRequest * fetchStops = [[NSFetchRequest alloc] init];
             [fetchStops setEntity:[NSEntityDescription entityForName:@"GtfsStop" inManagedObjectContext:moc]];
             NSArray * arrayStops = [moc executeFetchRequest:fetchStops error:nil];
-            NSMutableDictionary *dictStops = [[NSMutableDictionary alloc] init];
             for(int i=0;i<[arrayStops count];i++){
                 GtfsStop *stop = [arrayStops objectAtIndex:i];
                 [dictStops setObject:stop forKey:stop.stopID];
             }
-            NIMLOG_PERF2(@"Parse stop times start 2nd loop");
-            for(int j=0;j<[arrayTripID count];j++){
-                GtfsStopTimes* stopTimes = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsStopTimes" inManagedObjectContext:moc];
-                stopTimes.tripID = [arrayTripID objectAtIndex:j];
-                stopTimes.trips = [dictTrips objectForKey:stopTimes.tripID];
-                stopTimes.arrivalTime = [arrayArrivalTime objectAtIndex:j];
-                if(stopTimes.arrivalTime && ![stopTimes.arrivalTime isEqualToString:@""])
-                    stopTimes.arrivalNSDate = dateFromTimeString(stopTimes.arrivalTime);
-                stopTimes.departureTime = [arrayDepartureTime objectAtIndex:j];
-                if(stopTimes.departureTime && ![stopTimes.departureTime isEqualToString:@""])
-                    stopTimes.departureNSDate = dateFromTimeString(stopTimes.departureTime);
-                stopTimes.stopID = [arrayStopID objectAtIndex:j];
-                stopTimes.stop = [dictStops objectForKey:stopTimes.stopID];
-                stopTimes.stopSequence = [arrayStopSequence objectAtIndex:j];
-                stopTimes.pickUpTime = [arrayPickUpType objectAtIndex:j];
-                stopTimes.dropOfTime = [arrayDropOffType objectAtIndex:j];
-                stopTimes.shapeDistTravelled = [arrayShapeDistTraveled objectAtIndex:j];
-                stopTimes.agencyID = [arrayAgencyID objectAtIndex:j];
-                if (stopTimes.trips.routeID) {
-                    [routeIdAndAgencyIdDictionary setObject:stopTimes.agencyID forKey:stopTimes.trips.routeID];
-                } else {
-                    NIMLOG_ERR1(@"GtfsParser->parseAndStoreGtfsStopTimesData: Nil routeID for stopTimes.tripId: %@", stopTimes.tripID);
-                    [moc deleteObject:stopTimes];
+            NIMLOG_PERF2(@"Parse stop times main loop");
+            
+            for(int k=0;k<[arrayAgency_TripIds count];k++){
+                if ([[arrayAgency_TripIds objectAtIndex:k] isEqualToString:@"headers"]) {
+                    continue;    // skip headers rows
+                }
+                NSArray *arrayComponentsAgency = [dictComponents objectForKey:[arrayAgency_TripIds objectAtIndex:k]];
+                NSString *strAgency_TripIds = [arrayAgency_TripIds objectAtIndex:k];
+                NSArray *arrayAgencyIdsComponents = [strAgency_TripIds componentsSeparatedByString:@"_"];
+                for(int i=0;i<[arrayComponentsAgency count];i++){
+                    NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
+                    if(strSubComponents && strSubComponents.length > 0){
+                        GtfsStopTimes* stopTime = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsStopTimes" inManagedObjectContext:moc];
+                        NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
+                        
+                        NSString* tripID = getItemAtIndexFromArray(0,arraySubComponents);
+                        stopTime.tripID = tripID;
+                        stopTime.arrivalTime = getItemAtIndexFromArray(1,arraySubComponents);
+                        stopTime.departureTime = getItemAtIndexFromArray(2,arraySubComponents);
+                        NSString* stopID = getItemAtIndexFromArray(3,arraySubComponents);
+                        stopTime.stopID = stopID;
+                        stopTime.stopSequence = getItemAtIndexFromArray(4,arraySubComponents);
+                        stopTime.pickUpType = getItemAtIndexFromArray(5,arraySubComponents);
+                        stopTime.dropOffType = getItemAtIndexFromArray(6,arraySubComponents);
+                        stopTime.shapeDistTravelled = getItemAtIndexFromArray(7,arraySubComponents);
+                        
+                        NSString* agencyID = getItemAtIndexFromArray(0,arrayAgencyIdsComponents);
+                        stopTime.agencyID = agencyID;
+                        GtfsTrips* trip = [dictTrips objectForKey:tripID];
+                        stopTime.trips = trip;
+                        stopTime.stop = [dictStops objectForKey:stopID];
+                        
+                        if (i==0) {  // only do once for a particular tripID
+                            if (trip.routeID) {
+                                [routeIdAndAgencyIdDictionary setObject:agencyID forKey:trip.routeID];
+                            } else {
+                                NIMLOG_ERR1(@"GtfsParser->parseAndStoreGtfsStopTimesData: Nil routeID for stopTime.tripId: %@", stopTime.tripID);
+                                [moc deleteObject:stopTime];
+                            }
+                        }
+                    }
                 }
             }
-            
+
             // Update gtfsParsingStatus for each routeId / AgencyId combination
-            if ([arrayTripID count] > 0) {
-                NSArray* keys = [routeIdAndAgencyIdDictionary allKeys];
-                for (NSString* routeId in keys) {
-                    NSString* agencyName = agencyNameFromAgencyFeedId([routeIdAndAgencyIdDictionary objectForKey:routeId]);
-                    [self setGtfsDataAvailableForAgencyName:agencyName routeId:routeId context:moc];
-                }
+            NSArray* keys = [routeIdAndAgencyIdDictionary allKeys];
+            for (NSString* routeId in keys) {
+                NSString* agencyName = agencyNameFromAgencyFeedId([routeIdAndAgencyIdDictionary objectForKey:routeId]);
+                [self setGtfsDataAvailableForAgencyName:agencyName routeId:routeId context:moc];
             }
             
-            NIMLOG_PERF2(@"Parse stop times save context");
+            NIMLOG_PERF2(@"parse stop times saving context");
             saveContext(moc);
-            
         }
         @catch (NSException *exception) {
             logException(@"GtfsParser->parseAndStoreGtfsStopTimesData", @"exception in background task", exception);
@@ -1039,8 +1023,8 @@
                           TripId:(NSString *)tripId
 {
     @try {
-        NSDate *tripTime = timeOnlyFromDate(startDate);
-        NSDate *cutOffTime = [tripTime dateByAddingTimeInterval:timeInterval];
+        NSString *tripTime = timeStringFromDate(startDate);
+        NSString *cutOffTime = timeStringByAddingInterval(tripTime, timeInterval);
         NSDictionary* fetchVars =[NSDictionary dictionaryWithObjectsAndKeys:
                                   strToStopID,@"STOPID1",
                                   strFromStopID,@"STOPID2",
@@ -1091,11 +1075,11 @@
                }
             }
         
-        // Sort the array by order of ascending first departureNSDate
+        // Sort the array by order of ascending first departureTime
         [arrMutableStopTimes sortUsingComparator:^(id obj1, id obj2) {
-            NSDate* obj1Date = [[obj1 objectAtIndex:0] departureNSDate];
-            NSDate* obj2Date = [[obj2 objectAtIndex:0] departureNSDate];
-            return [obj1Date compare:obj2Date];
+            NSString* obj1Time = [[obj1 objectAtIndex:0] departureTime];
+            NSString* obj2Time = [[obj2 objectAtIndex:0] departureTime];
+            return [obj1Time compare:obj2Time];
         }];
 
         return arrMutableStopTimes;
