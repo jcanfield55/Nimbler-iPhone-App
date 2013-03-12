@@ -95,7 +95,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     [plan prepareSortedItinerariesWithMatchesForDate:newParameters.originalTripDate
                                       departOrArrive:newParameters.departOrArrive
                                 routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
-                             generateGtfsItineraries:YES
+                             generateGtfsItineraries:NO
                                removeNonOptimalItins:YES];
     [mainTable reloadData];
 }
@@ -106,6 +106,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                  status:(PlanRequestStatus)status
        RequestParameter:(PlanRequestParameters *)requestParameter
 {
+    NIMLOG_US202(@"newPlanAvailable, status=%d, sortedItins=%d", status, newPlan.sortedItineraries.count);
     planRequestParameters = requestParameter;
     if ([referringObject isKindOfClass:[ToFromViewController class]]) {
         plan = newPlan;
@@ -239,7 +240,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     [plan prepareSortedItinerariesWithMatchesForDate:newParameters.originalTripDate
                                       departOrArrive:newParameters.departOrArrive
                                 routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
-                             generateGtfsItineraries:YES
+                             generateGtfsItineraries:NO
                                removeNonOptimalItins:YES];
     [planStore requestMoreItinerariesIfNeeded:self.plan parameters:newParameters];
     [mainTable reloadData];

@@ -925,6 +925,7 @@
         int nLength = [strRequestString length];
         [strRequestString deleteCharactersInRange:NSMakeRange(nLength-1, 1)]; // Trim last comma
         lastTripsDataRequestString = strRequestString;
+        NIMLOG_US202(@"Request GTFS data for: %@",strRequestString);
         [self requestTripsDatafromServer:strRequestString];
     }
     if (isStatusChanged) {
@@ -1055,7 +1056,7 @@
         for(int j= 0;j<[keys count];j++){
             NSArray *arrStopTimes = [dictStopTimes objectForKey:[keys objectAtIndex:j]];
             if([arrStopTimes count] < 2 || [arrStopTimes count] > 2){
-                NIMLOG_UOS202(@"Exceptional StopTimes:%@",arrStopTimes);
+                // NIMLOG_US202(@"Exceptional StopTimes:%@",arrStopTimes);
                 [dictStopTimes removeObjectForKey:[keys objectAtIndex:j]];
             }
             else{
@@ -1276,6 +1277,7 @@
                                     toTimeOnly:(NSDate *)toTimeOnly
                                           Plan:(Plan *)plan
                                        Context:(NSManagedObjectContext *)context{
+    NIMLOG_US202(@"Generating Gtfs itineraries from: %@ to: %@", fromTimeOnly, toTimeOnly);
     int legCount = [[itinerary sortedLegs] count];
     PlanRequestChunk* reqChunk = nil;
     
@@ -1299,6 +1301,7 @@
             [arrStopTimesArray addObject:arrStopTimes];
         }
     }
+    NIMLOG_PERF2(@"Finished fetching arrStopTimesArray");
     
     // Now build out an array of GtfsTempItinerary objects
     NSMutableArray* tempItinArray = [[NSMutableArray alloc] initWithCapacity:20]; // Array of GtfsTempItinerary
@@ -1307,6 +1310,7 @@
                                                  putInto:tempItinArray
                                       startingatLegIndex:0]; // recursively builds out all the itineraries
     
+    NIMLOG_PERF2(@"Finished building tempItineraries");
     // Build out itineraries from the tempItineraries
     for (GtfsTempItinerary* tempItinerary in tempItinArray) {
         Itinerary* newItinerary = [tempItinerary makeItineraryObjectInPlan:plan
@@ -1336,6 +1340,7 @@
         }
     }
     saveContext(context);
+    NIMLOG_US202(@"Finished generating Gtfs itineraries");
     return reqChunk;
 }
 

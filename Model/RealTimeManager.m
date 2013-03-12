@@ -157,7 +157,7 @@ static RealTimeManager* realTimeManager;
                  [plan prepareSortedItinerariesWithMatchesForDate:originalTripDate
                                                    departOrArrive:DEPART
                                              routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
-                                          generateGtfsItineraries:YES
+                                          generateGtfsItineraries:NO
                                             removeNonOptimalItins:YES];
                  [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC reloadData:plan];
                  [routeDetailVC ReloadLegWithNewData];

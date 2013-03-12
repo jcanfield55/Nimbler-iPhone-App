@@ -16,6 +16,8 @@
 @synthesize legInfoArray;
 @synthesize minTransferTime;
 
+static iterationCount;  // non-essential used for performance monitoring only
+
 -(id) initWithMinTransferTime:(NSTimeInterval)time0
 {
     self = [super init];
@@ -216,6 +218,9 @@
                              startingatLegIndex:(int)legIndex
 {
     @try {
+        if (iterationCount++ % 25 == 0) {
+            NIMLOG_PERF2(@"TempItinerary iteration: %d, legIndex: %d", iterationCount, legIndex);
+        }
         NSArray* arrStopTimes = [arrStopTimesArray objectAtIndex:legIndex];
         if (![arrStopTimes isKindOfClass:[Leg class]]) { // if this index is a scheduled leg
             GtfsTempItinerary* bestItinSoFar=nil;

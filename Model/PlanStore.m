@@ -72,7 +72,7 @@
             if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate]
                                                           departOrArrive:[parameters departOrArrive]
                                                     routeExcludeSettings:[parameters routeExcludeSettings]
-                                                 generateGtfsItineraries:YES
+                                                 generateGtfsItineraries:NO
                                                    removeNonOptimalItins:YES]) {
                 PlanRequestStatus reqStatus;
                 MoreItineraryStatus moreItinStatus = [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
@@ -225,6 +225,7 @@
         NSString *strAgencies = [parameters.routeExcludeSettings bannedAgencyStringForSettingArray:exclSettingArray];
         NSString *strAgenciesWithMode = [parameters.routeExcludeSettings bannedAgencyByModeStringForSettingArray:exclSettingArray];
 
+        NIMLOG_US202(@"Calling OTP at: %@, exclusions = %@,%@",parameters.thisRequestTripDate, strAgencies, strAgenciesWithMode);
         if(strAgencies && strAgencies.length > 0){
             [params setObject:strAgencies forKey:BANNED_AGENCIES];
         }
@@ -352,13 +353,14 @@
                 if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate]
                                                       departOrArrive:[planRequestParameters departOrArrive]
                                                 routeExcludeSettings:[RouteExcludeSettings latestUserSettings] // use latest settings in case something changed
-                                             generateGtfsItineraries:YES
+                                             generateGtfsItineraries:NO
                                                removeNonOptimalItins:YES]) {
                     
                     MoreItineraryStatus moreItinStatus = [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
                     PlanRequestStatus reqStatus = PLAN_STATUS_OK;
                     if ([[plan sortedItineraries] count] == 0) {
                         if (moreItinStatus == MORE_ITINERARIES_REQUESTED_DIFFERENT_EXCLUDES) {
+                            NIMLOG_US202(@"0 sorted itineraries, waiting for next OTP request");
                             return;  // Do not call back to planDestination -- keep waiting for OTP
                         } else {
                             reqStatus = PLAN_EXCLUDED_TO_ZERO_RESULTS;  // Show zero results on RouteOptions page
@@ -525,7 +527,7 @@
                 [requestingPlan prepareSortedItinerariesWithMatchesForDate:params.originalTripDate
                                                             departOrArrive:params.departOrArrive
                                                       routeExcludeSettings:params.routeExcludeSettings
-                                                   generateGtfsItineraries:YES
+                                                   generateGtfsItineraries:NO
                                                      removeNonOptimalItins:YES];
                 if (requestingPlan.sortedItineraries.count > 0) {
                     [params.planDestination newPlanAvailable:requestingPlan
