@@ -538,6 +538,23 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     }
 }
 
+- (BOOL) isEquivalentModeAndStopsAndRouteAs:(Leg *)leg{
+    if((self.isWalk && leg.isWalk) || (self.isBike && leg.isBike)){
+        if([self.to.lat doubleValue] != [leg.to.lat doubleValue] || [self.to.lng doubleValue] != [leg.to.lng doubleValue] || [self.from.lat doubleValue] !=[leg.from.lat doubleValue] || [self.from.lng doubleValue] != [leg.from.lng doubleValue] || [self.distance doubleValue] != [leg.distance doubleValue]){
+            return NO;
+        }
+        return YES;
+    }
+    else if([self.mode isEqualToString:leg.mode]){
+        if(![self.agencyName isEqualToString:leg.agencyName] || [self.to.lat doubleValue] != [leg.to.lat doubleValue] ||  [self.to.lng doubleValue] != [leg.to.lng doubleValue] || [self.from.lat doubleValue] != [leg.from.lat doubleValue] || [self.from.lng doubleValue] != [leg.from.lng doubleValue] || ![self.routeId isEqualToString:leg.routeId]){
+            return NO;
+        }
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
 - (NSString *)ncDescription
 {
     NSMutableString* desc = [NSMutableString stringWithFormat:
@@ -643,10 +660,10 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 
 // set timediffInMins,realStartTime,realEndTime and arrivalFlag for leg from realTime data.
 - (void) setRealTimeParametersUsingEpochTime:(double)epochTime{
-    int timeDiff = [self calculatetimeDiffInMins:epochTime];
-    self.arrivalFlag = [NSString stringWithFormat:@"%d",[self calculateArrivalTimeFlag:timeDiff]];
-    if(timeDiff < 0)
-        timeDiff = -timeDiff;
+    int timeDiffs = [self calculatetimeDiffInMins:epochTime];
+    self.arrivalFlag = [NSString stringWithFormat:@"%d",[self calculateArrivalTimeFlag:timeDiffs]];
+    if(timeDiffs < 0)
+        timeDiffs = -timeDiffs;
     self.timeDiffInMins = [NSString stringWithFormat:@"%d",timeDiff];
     self.realStartTime = [NSDate dateWithTimeIntervalSince1970:(epochTime/1000.0)];
     self.arrivalTime = [NSDate dateWithTimeIntervalSince1970:(epochTime/1000.0)];

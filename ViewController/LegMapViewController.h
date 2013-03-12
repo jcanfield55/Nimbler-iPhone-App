@@ -20,4 +20,5 @@
 - (id)initWithMapView:(MKMapView *)m0;  // Preferred initializer
 - (void)setMapViewRegion;  
 - (void)refreshLegOverlay:(int)number;
+- (void) addIntermediateStationsToMapView:(NSArray *)sortedLegs;
 @end

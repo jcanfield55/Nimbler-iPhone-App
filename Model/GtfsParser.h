@@ -141,5 +141,6 @@
                                  context:(NSManagedObjectContext *) context;
 
 - (NSArray *) returnIntermediateStopForLeg:(Leg *)leg;
+
 @end
 

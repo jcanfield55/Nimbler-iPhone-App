@@ -95,7 +95,6 @@ static RealTimeManager* realTimeManager;
 
 #pragma mark RKResponse Delegate method
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {
-    
     @try {
         // DE 175 Fixed
         [nc_AppDelegate sharedInstance].isNeedToLoadRealData = YES;
@@ -113,28 +112,19 @@ static RealTimeManager* realTimeManager;
 -(void)setLiveFeed:(id)liveFees
 {
     @try {
-        for(int i=0;i<[[plan itineraries] count];i++){
-            Itinerary *iti = [[[plan itineraries] allObjects]  objectAtIndex:i];
-            if(iti.isRealTimeItinerary){
-                [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.expiredItineraries addObject:iti];
-            }
-        }
-        NSString *class1 = NSStringFromClass([[nc_AppDelegate sharedInstance].toFromViewController.navigationController.visibleViewController class]);
-        NSString *class2 = NSStringFromClass([[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC class]);
-        if(![class1 isEqualToString:class2]){
             for(int i=0;i<[[plan itineraries] count];i++){
                 Itinerary *iti = [[[plan itineraries] allObjects]  objectAtIndex:i];
-                iti.itinArrivalFlag = nil;
-                iti.hideItinerary = false;
-                if(iti.isRealTimeItinerary){
-                    for(int j=0;j<[[iti sortedLegs] count];j++){
-                        Leg *leg = [[iti sortedLegs] objectAtIndex:j];
-                        leg.predictions = nil;
-                        leg.arrivalFlag = nil;
-                        leg.timeDiffInMins = nil;
+                    iti.itinArrivalFlag = nil;
+                    iti.hideItinerary = false;
+                    if(iti.isRealTimeItinerary){
+                        for(int j=0;j<[[iti sortedLegs] count];j++){
+                            Leg *leg = [[iti sortedLegs] objectAtIndex:j];
+                            leg.predictions = nil;
+                            leg.arrivalFlag = nil;
+                            leg.timeDiffInMins = nil;
+                        }
+                        [plan deleteItinerary:iti];
                     }
-                    [plan deleteItinerary:iti];
-                }
             }
             
             for(int i=0;i<[[plan requestChunks] count];i++){
@@ -144,7 +134,6 @@ static RealTimeManager* realTimeManager;
                 }
             }
             saveContext([nc_AppDelegate sharedInstance].managedObjectContext);
-        }
         liveData = liveFees;
         NSNumber *respCode = [(NSDictionary *)liveData objectForKey:@"errCode"];
         if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
@@ -153,12 +142,13 @@ static RealTimeManager* realTimeManager;
             if ([legLiveFees count] > 0) {
                 [self setRealTimePredictionsFromLiveFeeds:legLiveFees];
                 // TODO:- Comment Four lines to run automated test case 
-                 [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:originalTripDate Context:nil];
+                [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:originalTripDate Context:nil];
                  [plan prepareSortedItinerariesWithMatchesForDate:originalTripDate
                                                    departOrArrive:DEPART
                                              routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
                                           generateGtfsItineraries:NO
                                             removeNonOptimalItins:YES];
+                
                  [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC reloadData:plan];
                  [routeDetailVC ReloadLegWithNewData];
             }
@@ -275,5 +265,4 @@ static RealTimeManager* realTimeManager;
         }
     }
 }
-
 @end

@@ -116,6 +116,8 @@ typedef enum {
 // set timediffInMins,realStartTime,realEndTime and arrivalFlag for leg from realTime data.
 - (void) setRealTimeParametersUsingEpochTime:(double)epochTime;
 
+- (BOOL) isEquivalentModeAndStopsAndRouteAs:(Leg *)leg;
+
 @end
 
 @interface Leg (CoreDataGeneratedAccessors)

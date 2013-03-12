@@ -19,7 +19,7 @@
 #define GEO_RESPONSE_URL      @"http://maps.googleapis.com/maps/api/geocode/"
 #define TEST_GEO_RESPONSE_URL  @"http://localhost:8080/TPServer/ws/mockgeolocation/"
 
-#define TRIP_PROCESS_URL    @"http://23.23.210.156:7070/TPServer/ws/"   
+#define TRIP_PROCESS_URL    @"http://23.23.210.156:7070/TPServer/ws/"
 //#define TRIP_PROCESS_URL      @"http://192.168.2.196:8080/TPServer/ws/"
 
 #define TEST_TRIP_PROCESS_URL @"http://localhost:8080/TPServer/ws/"  // TP server for automated tests
@@ -244,7 +244,7 @@
 // realtime
 #define REALTIME_BUFFER_FOR_DELAY (15*60)
 #define REALTIME_BUFFER_FOR_EARLY  (5*60)
-#define REALTIME_UPPER_LIMIT (30*60)
+#define REALTIME_UPPER_LIMIT (5*60)
 #define REALTIME_LOWER_LIMIT (-5*60)
 #define CURRENT_DATE_PLUS_INTERVAL 90*60
 

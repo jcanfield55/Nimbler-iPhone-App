@@ -68,50 +68,9 @@ NSString *legID;
             [mapView removeAnnotations:intermediateAnnotations];
             [dotAnnotationArray removeAllObjects];
             [polyLineArray removeAllObjects];
-            
-            // Set up the startpoint, endpoint, overlays and annotations for the new itinerary
-            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-            [dateFormatter setDateFormat:[NSDateFormatter dateFormatFromTemplate:@"hh:mm:ss a" options:0 locale:[NSLocale currentLocale]]];
+        
             NSArray *sortedLegs = [itinerary sortedLegs];
-            for(int i=0;i<[sortedLegs count];i++){
-                Leg *leg = [sortedLegs objectAtIndex:i];
-                if([leg isScheduled]){
-                    NIMLOG_US191(@"tripId=%@",leg.tripId);
-                    NIMLOG_US191(@"fromStop=%@",leg.from.stopId);
-                    NIMLOG_US191(@"toStop=%@",leg.to.stopId);
-                    NSArray *stopTimes = [[nc_AppDelegate sharedInstance].gtfsParser returnIntermediateStopForLeg:leg];
-                    for(int i=0;i<[stopTimes count];i++){
-                        GtfsStopTimes *stopTime = [stopTimes objectAtIndex:i];
-                         NIMLOG_US191(@"intermediateStop=%@",stopTime.stop.stopID);
-                        float langcoord = [stopTime.stop.stopLat floatValue];
-                        float longcoord = [stopTime.stop.stopLon floatValue];
-                        CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(langcoord, longcoord);
-                        MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
-                        [point setCoordinate:coord];
-                        [point setTitle:stopTime.stop.stopName];
-                        if(stopTime.arrivalTime && ![stopTime.arrivalTime isEqualToString:@""]){
-                            NSDate *arrivalTime = dateFromTimeString(stopTime.arrivalTime);
-                            NSDate *realArrivalTime = nil;
-                            if([leg isRealTimeLeg]){
-                                NIMLOG_US191(@"%d",leg.timeDiff);
-                               realArrivalTime =  [arrivalTime dateByAddingTimeInterval:(leg.timeDiff * 60)];
-                            }
-                            NSString *date;
-                            if(realArrivalTime){
-                               date = [dateFormatter stringFromDate:realArrivalTime];
-                            }
-                            else{
-                                date = [dateFormatter stringFromDate:arrivalTime];
-                            }
-                            NIMLOG_US191(@"time=%@",stopTime.arrivalTime);
-                            NIMLOG_US191(@"date=%@",date);
-                           [point setSubtitle:[NSString stringWithFormat:@"Arrival: %@",date]];
-                        }
-                        [intermediateAnnotations addObject:point];
-                        [mapView addAnnotation:point];
-                    }
-                }
-           }
+            [self performSelector:@selector(addIntermediateStationsToMapView:) withObject:sortedLegs afterDelay:1.0];
             // Take startpoint as the beginning of the first leg's polyline, and endpoint form the last leg's polyline
             startPoint = [[MKPointAnnotation alloc] init];
             [startPoint setCoordinate:[[[sortedLegs objectAtIndex:0] polylineEncodedString] startCoord]];
@@ -151,6 +110,49 @@ NSString *legID;
     }
 }
 
+- (void) addIntermediateStationsToMapView:(NSArray *)sortedLegs{
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
+        [dateFormatter setDateFormat:[NSDateFormatter dateFormatFromTemplate:@"hh:mm:ss a" options:0 locale:[NSLocale currentLocale]]];
+        for(int i=0;i<[sortedLegs count];i++){
+            Leg *leg = [sortedLegs objectAtIndex:i];
+            if([leg isScheduled]){
+                NIMLOG_US191(@"tripId=%@",leg.tripId);
+                NIMLOG_US191(@"fromStop=%@",leg.from.stopId);
+                NIMLOG_US191(@"toStop=%@",leg.to.stopId);
+                NSArray *stopTimes = [[nc_AppDelegate sharedInstance].gtfsParser returnIntermediateStopForLeg:leg];
+                for(int i=0;i<[stopTimes count];i++){
+                    GtfsStopTimes *stopTime = [stopTimes objectAtIndex:i];
+                    NIMLOG_US191(@"intermediateStop=%@",stopTime.stop.stopID);
+                    float langcoord = [stopTime.stop.stopLat floatValue];
+                    float longcoord = [stopTime.stop.stopLon floatValue];
+                    CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(langcoord, longcoord);
+                    MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
+                    [point setCoordinate:coord];
+                    [point setTitle:stopTime.stop.stopName];
+                    if(stopTime.arrivalTime && ![stopTime.arrivalTime isEqualToString:@""]){
+                        NSDate *arrivalTime = dateFromTimeString(stopTime.arrivalTime);
+                        NSDate *realArrivalTime = nil;
+                        if([leg isRealTimeLeg]){
+                            NIMLOG_US191(@"%d",leg.timeDiff);
+                            realArrivalTime =  [arrivalTime dateByAddingTimeInterval:(leg.timeDiff * 60)];
+                        }
+                        NSString *date;
+                        if(realArrivalTime){
+                            date = [dateFormatter stringFromDate:realArrivalTime];
+                        }
+                        else{
+                            date = [dateFormatter stringFromDate:arrivalTime];
+                        }
+                        NIMLOG_US191(@"time=%@",stopTime.arrivalTime);
+                        NIMLOG_US191(@"date=%@",date);
+                        [point setSubtitle:[NSString stringWithFormat:@"Arrival: %@",date]];
+                        [intermediateAnnotations addObject:point];
+                        [mapView addAnnotation:point];
+                    }
+                }
+            }
+        }
+}
 - (void)setItineraryNumber:(int)i0
 {
     @try {

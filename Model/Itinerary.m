@@ -430,6 +430,24 @@ NSArray *sortedByStartTimeOnly(NSSet* itinerarySet)
     return desc;
 }
 
+- (BOOL) isEquivalentModesAndStopsAndRouteAs:(Itinerary *)itinerary{
+    NSArray *arrItinerary1 = [self sortedLegs];
+    NSArray *arrItinerary2 = [itinerary sortedLegs];
+    if([arrItinerary1 count] == [arrItinerary2 count]){
+        for(int i=0;i<[arrItinerary1 count];i++){
+            Leg *leg1 = [arrItinerary1 objectAtIndex:i];
+            Leg *leg2 = [arrItinerary2 objectAtIndex:i];
+            if(![leg1 isEquivalentModeAndStopsAndRouteAs:leg2]){
+                return NO;
+            }
+        }
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
+
 // Compare Two Itineraries whether they have the same modes, agencies, and stops. 
 // Does not compare times (this test is primarily for determining unique itineraries).
 // This match itinerary like leg by leg if all match the return yes otherwise return no.

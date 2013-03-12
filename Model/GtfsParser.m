@@ -1428,11 +1428,10 @@
     for(int i=0;i<[itineraries count];i++){
         Itinerary *itinerary = [itineraries objectAtIndex:i];
         Leg *leg = [[itinerary sortedLegs] objectAtIndex:index];
-        NSDate *startTimeOnly = addDateOnlyWithTimeOnly(dateOnlyFromDate([NSDate date]), timeOnlyFromDate(leg.startTime));
+        NSDate *startTimeOnly = timeOnlyFromDate(leg.startTime);
         NSDictionary *prediction = [self returnMaximumRealTime:predictions];
-        NSDate *realTimeBoundry = addDateOnlyWithTimeOnly(dateOnlyFromDate([NSDate date]),timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"epochTime"] doubleValue]/1000.0)]));
-        NSDate *starTimeWithLowerBoundry = timeOnlyFromDate([startTimeOnly dateByAddingTimeInterval:REALTIME_LOWER_LIMIT]);
-        if([starTimeWithLowerBoundry compare:realTimeBoundry] == NSOrderedAscending || [startTimeOnly isEqualToDate:realTimeBoundry]){
+        NSDate *realTimeBoundry = timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"epochTime"] doubleValue]/1000.0)]);
+        if([startTimeOnly compare:realTimeBoundry] == NSOrderedAscending || [startTimeOnly isEqualToDate:realTimeBoundry]){
             if(![itinerary isRealTimeItinerary])
                 itinerary.hideItinerary = true;
         }
@@ -1468,7 +1467,7 @@
     NSMutableArray *itineraries = [[NSMutableArray alloc] init];
     for(int i=0;i<[[plan sortedItineraries] count];i++){
         Itinerary *tempItinerary = [[plan sortedItineraries] objectAtIndex:i];
-        if([pattern isEquivalentModesAndStopsAs:tempItinerary])
+        if([pattern isEquivalentModesAndStopsAndRouteAs:tempItinerary])
             [itineraries addObject:tempItinerary];
     }
     return  itineraries;
@@ -1524,7 +1523,6 @@
     return NO;
 }
 
-
 // Generate reattime itineraries from pattern and realtime data.
 - (void) generateItinerariesFromPrediction:(Plan *)plan Itinerary:(Itinerary *)itinerary Prediction:(NSMutableDictionary *)dictPredictions TripDate:(NSDate *)tripDate Context:(NSManagedObjectContext *)context{
     PlanRequestChunk* reqChunk;
@@ -1576,7 +1574,7 @@
                                                                 timeInterval:GTFS_MAX_TIME_TO_PULL_SCHEDULES
                                                                       TripId:@"Include any tripId"];
                             if(!arrStopTime || [arrStopTime count] == 0){
-                                [plan deleteItinerary:itinerary];
+            [plan deleteItinerary:itinerary];
                                 break;
                             }
                             [self addScheduledLegToItinerary:newItinerary
@@ -1594,9 +1592,7 @@
         if (![newItinerary isDeleted]) {
             [self adjustItineraryAndLegsTimes:newItinerary Context:context];
             [newItinerary setArrivalFlagFromLegsRealTime];
-            
             [newItinerary initializeTimeOnlyVariablesWithRequestDate:tripDate];
-            
             // Add these itineraries to the request chunk
             if (!reqChunk) {
                 reqChunk = [NSEntityDescription insertNewObjectForEntityForName:@"PlanRequestChunk"
@@ -1685,34 +1681,33 @@
         tripId = leg.realTripId;
     else
         tripId = leg.tripId;
-    
-    NSFetchRequest *fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesByAgencyID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:tripId,@"TRIPID",agencyFeedIdFromAgencyName(leg.agencyName),@"AGENCYID", nil]];
-    NSArray * arrayStopTimes = [self.managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
-    NSSortDescriptor *sortD = [[NSSortDescriptor alloc]
-                                            
-                                            initWithKey:@"stopSequence" ascending:YES selector:@selector(localizedStandardCompare:)];
-    arrayStopTimes = [arrayStopTimes sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]];
-    int startIndex = 0;
-    int endIndex = 0;
-    for(int i=0;i<[arrayStopTimes count];i++){
-        GtfsStopTimes *stopTimes = [arrayStopTimes objectAtIndex:i];
-        if([stopTimes.stopID isEqualToString:leg.from.stopId]){
-            startIndex = i + 1;
-            break;
-        }
-    }
-    for(int i=0;i<[arrayStopTimes count];i++){
-        GtfsStopTimes *stopTimes = [arrayStopTimes objectAtIndex:i];
-        if([stopTimes.stopID isEqualToString:leg.to.stopId]){
-            endIndex = i;
-            break;
-        }
-    }
     NSMutableArray *intermediateStops = [[NSMutableArray alloc] init];
-    for(int i = startIndex; i<endIndex ;i++){
-        GtfsStopTimes *stopTimes = [arrayStopTimes objectAtIndex:i];
-        [intermediateStops addObject:stopTimes];
-    }
+        NSFetchRequest *fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesByAgencyID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:tripId,@"TRIPID",agencyFeedIdFromAgencyName(leg.agencyName),@"AGENCYID", nil]];
+        NSArray * arrayStopTimes = [managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
+        NSSortDescriptor *sortD = [[NSSortDescriptor alloc]
+                                   
+                                   initWithKey:@"stopSequence" ascending:YES selector:@selector(localizedStandardCompare:)];
+        arrayStopTimes = [arrayStopTimes sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]];
+        int startIndex = 0;
+        int endIndex = 0;
+        for(int i=0;i<[arrayStopTimes count];i++){
+            GtfsStopTimes *stopTimes = [arrayStopTimes objectAtIndex:i];
+            if([stopTimes.stopID isEqualToString:leg.from.stopId]){
+                startIndex = i + 1;
+                break;
+            }
+        }
+        for(int i=0;i<[arrayStopTimes count];i++){
+            GtfsStopTimes *stopTimes = [arrayStopTimes objectAtIndex:i];
+            if([stopTimes.stopID isEqualToString:leg.to.stopId]){
+                endIndex = i;
+                break;
+            }
+        }
+        for(int i = startIndex; i<endIndex ;i++){
+            GtfsStopTimes *stopTimes = [arrayStopTimes objectAtIndex:i];
+            [intermediateStops addObject:stopTimes];
+        }
     return intermediateStops;
 }
 @end

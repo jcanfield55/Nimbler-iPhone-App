@@ -132,6 +132,8 @@ typedef enum {
 // This match itinerary like leg by leg if all match the return yes otherwise return no.
 - (BOOL)isEquivalentRoutesStopsAndScheduledTimingAs:(Itinerary *)itinerary;
 
+- (BOOL) isEquivalentModesAndStopsAndRouteAs:(Itinerary *)itinerary;
+
 // Set Itinerary RealTime from Legs RealTime
 // If itinerary has one scheduled leg then itinerary realtime is same as scheduled leg realtime.
 // If itinerary have more than one scheduled leg then check if one leg is early and other is delayed then realtime for itinerary is time slipage else if all flag have same realtime then itinerary realtime is same as scheduled legs realtime else leg is not delayed or early then itinerary real time is ontime.

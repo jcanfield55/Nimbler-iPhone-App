@@ -59,4 +59,5 @@
 - (void) setRealTimePredictionsFromLiveFeeds:(NSArray *)liveFeeds;
 
 - (void) hideItineraryIfNeeded:(NSArray *)arrItinerary;
+
 @end
