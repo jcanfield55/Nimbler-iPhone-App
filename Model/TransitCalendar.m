@@ -37,6 +37,7 @@
 @synthesize testServiceByWeekdayByAgency;
 
 static TransitCalendar * transitCalendarSingleton;
+static NSDateFormatter* dateOnlyFormatter;  // dateFormatter with pattern @"YYYMMdd"
 
 
 // returns the singleton value.  
@@ -184,9 +185,11 @@ static TransitCalendar * transitCalendarSingleton;
 {
     //NSDate* gtfsLoadDate = [[self lastGTFSLoadDateByAgency] objectForKey:agencyId];
     NSString *gtfsLoadDate = [[[self lastGTFSLoadDateByAgency] objectForKey:GTFS_UPDATE_TIME]objectForKey:agencyId];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"YYYMMdd"];
-    NSString* strDateOnly = [dateFormatter stringFromDate:date];
+    if (!dateOnlyFormatter) {
+        dateOnlyFormatter = [[NSDateFormatter alloc] init];
+        [dateOnlyFormatter setDateFormat:@"YYYMMdd"];
+    }
+    NSString* strDateOnly = [dateOnlyFormatter stringFromDate:date];
     if (gtfsLoadDate && [strDateOnly compare:gtfsLoadDate] == NSOrderedDescending) {
         // If dates come after the gtfsLoadDate, then return true
         return true;
@@ -199,10 +202,11 @@ static TransitCalendar * transitCalendarSingleton;
 - (NSString *)serviceStringForDate:(NSDate *)date agencyId:(NSString *)agencyId
 {
     NSInteger dayOfWeek = dayOfWeekFromDate(date)-1;
-    NSDate* dateOnly = dateOnlyFromDate(date);
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"YYYMMdd"];
-    NSString* strDateOnly = [dateFormatter stringFromDate:dateOnly];
+    if (!dateOnlyFormatter) {
+        dateOnlyFormatter = [[NSDateFormatter alloc] init];
+        [dateOnlyFormatter setDateFormat:@"YYYMMdd"];
+    }
+    NSString* strDateOnly = [dateOnlyFormatter stringFromDate:date];
     
     // Get the weekday services code
     NSString* dateServices;

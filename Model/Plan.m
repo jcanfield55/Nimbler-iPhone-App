@@ -372,6 +372,7 @@
                            planMaxTimeForResultsToShow:(int)planMaxTimeForResultsToShow
 {
     @try {
+        NIMLOG_PERF2A(@"returnSortedItineraries start loop 1. reqChunk.count=%d",self.requestChunks.count);
         // Go through unique itineraries and get all GTFS itineraries based on them, generating new ones if needed
         NSMutableSet* matchingItineraries = [[NSMutableSet alloc] initWithCapacity:[[self itineraries] count]];
         for (Itinerary* uniqueItin in [self uniqueItineraries]) {  // for all uniqueItineraries
@@ -404,6 +405,7 @@
             }
         }  // end of uniqueItineraries loop
         
+        NIMLOG_PERF2A(@"End first loop, start itinerary loop. itineraries.count=%d",self.itineraries.count);
         // collect all the OTP itineraries that have valid GTFS data and are in the right time range
         for (Itinerary* itin in [self itineraries]) {
             if ([itin isOTPItinerary] &&
@@ -424,6 +426,7 @@
         }
         
         // Check for suboptimal itineraries or equivalent itineraries
+        NIMLOG_PERF2A(@"Remove non-optimal and duplicate itineraries");
         NSMutableSet *optimalItineraries = [NSMutableSet setWithSet:matchingItineraries];
         
         for (Itinerary* itin1 in matchingItineraries) {
@@ -459,6 +462,7 @@
         
         
         // Sort itineraries (in reverse order if arrive-by itinerary (DE191 fix)
+        NIMLOG_PERF2A(@"Sort and remove itineraries beyond max");
         NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:(depOrArrive == DEPART)];
 
         NSArray* returnedItineraries = [optimalItineraries sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]];
@@ -472,6 +476,7 @@
             returnedItineraries = [NSArray arrayWithArray:copyOfReturnedItineraries];
         }
         
+        NIMLOG_PERF2A(@"Finish returnSortedItineraries");
         return returnedItineraries;
     }
     @catch (NSException *exception) {

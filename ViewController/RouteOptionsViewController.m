@@ -188,6 +188,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 }
 
 -(void) toggleExcludeButton:(id)sender{
+    NIMLOG_PERF2(@"toggleExcludeButton started");
     UIButton *btn = (UIButton *)sender;
     IncludeExcludeSetting newSettingValue;
     if([[RouteExcludeSettings latestUserSettings] settingForKey:btn.titleLabel.text] == SETTING_EXCLUDE_ROUTE){
@@ -209,6 +210,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                  @"planRequestParameters = nil, skipping excludeButton updates");
         return;
     }
+    NIMLOG_PERF2(@"Finished setting button");
     arrRouteSettings = [[RouteExcludeSettings latestUserSettings] excludeSettingsForPlan:plan
                                                                           withParameters:planRequestParameters];
     logEvent(FLURRY_EXCLUDE_SETTING_CHANGED,
@@ -219,13 +221,16 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     PlanRequestParameters* newParameters = [PlanRequestParameters copyOfPlanRequestParameters:planRequestParameters];
     newParameters.thisRequestTripDate = newParameters.originalTripDate;
     newParameters.serverCallsSoFar = 0;
+    NIMLOG_PERF2(@"preparing sortedItineraries");
     [plan prepareSortedItinerariesWithMatchesForDate:newParameters.originalTripDate
                                       departOrArrive:newParameters.departOrArrive
                                 routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
                              generateGtfsItineraries:NO
                                removeNonOptimalItins:YES];
+    NIMLOG_PERF2(@"done preparing sortedItineraries");
     [planStore requestMoreItinerariesIfNeeded:self.plan parameters:newParameters];
     [mainTable reloadData];
+    NIMLOG_PERF2(@"done toggleExcludeButton");
 }
 
 

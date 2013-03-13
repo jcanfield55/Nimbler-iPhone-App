@@ -28,7 +28,6 @@ NSDateFormatter *utilitiesShortTimeFormatter(void);
 NSString *superShortTimeStringForDate(NSDate *date);
 
 // Returns a NSDate object containing just the time of the date parameter.
-// Uses [NSCalendar currentCalendar] and the hours and minutes components to compute
 NSDate *timeOnlyFromDate(NSDate *date);
 
 // Returns a NSString containing just the time of the date parameter in the format HH:mm:ss
@@ -40,7 +39,7 @@ NSString *timeStringFromDate(NSDate *date);
 NSString *timeStringByAddingInterval(NSString *timeString, NSTimeInterval interval);
     
 // Returns a NSDate object containing just the date part of the date parameter (not the time)
-// Uses [NSCalendar currentCalendar] and the month, day, and year components to compute
+// Equivalent to using [NSCalendar currentCalendar] and the month, day, and year components to compute
 NSDate *dateOnlyFromDate(NSDate *date);
 
 // Retrieves the day of week from the date (Sunday = 1, Saturday = 7)

@@ -13,6 +13,7 @@
 
 #define NIMLOG_PERF1(...)  // NSLog(__VA_ARGS__)  // Performance logging for plan caching
 #define NIMLOG_PERF2(...)  NSLog(__VA_ARGS__)   // Performance logging for locations search
+#define NIMLOG_PERF2A(...)  // NSLog(__VA_ARGS__)   // Performance logging for locations search
 #define NIMLOG_EVENT1(...) // NSLog(__VA_ARGS__) // Key events
 #define NIMLOG_OBJECT1(...)  // NSLog(__VA_ARGS__) // Extensive log printout of various objects
 #define NIMLOG_URLS(...) // NSLog(__VA_ARGS__)   // URL resources

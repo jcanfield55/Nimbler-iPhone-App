@@ -16,8 +16,12 @@
 
 
 static NSDateFormatter *utilitiesTimeFormatter;  // Static variable for short time formatter for use by utility
-static NSDateFormatter *timeFormatterForTimeString;  // used for dateForTimeString utility
+static NSDateFormatter *timeFormatterForTimeString;  // used for dateForTimeString utility @"MM/dd/yyyy HH:mm:ss"
 static NSDateFormatter *timeFormatterOnly;  // time formatter for HH:mm:ss
+static NSDateFormatter *dateFormatterOnly;  // date formatter for @"MM/dd/yyyy"
+static NSDateFormatter *dayOfWeekFormatter;  // date formatter to return day of week @"e"
+static NSDate *zeroTimeOnly;    // "Zero time, i.e. timeOnly for 00:00:00"
+static NSCalendar *currentCalendar;   // [NSCalendar currentCalendar]
 static NSDictionary *agencyShortNameMapping;  // used for returnShortAgencyName
 static NSDictionary *agencyFeedIdFromAgencyNameDictionary;  // used by agencyFeedIdFromAgencyName
 static NSDictionary *agencyNameFromAgencyFeedIdDictionary;  // used by agencyNameFromAgencyFeedId
@@ -171,17 +175,17 @@ NSString *distanceStringInMilesFeet(double meters) {
 
 //
 // Returns a NSDate object containing just the time of the date parameter.
-// Uses [NSCalendar currentCalendar] and the hours and minutes components to compute
 //
 NSDate *timeOnlyFromDate(NSDate *date) {
-    // Set up what we need to look at date components
-    NSCalendar* calendar = [NSCalendar currentCalendar];
-    NSUInteger timeComponents = NSHourCalendarUnit | NSMinuteCalendarUnit;
+    if (!zeroTimeOnly) {
+        NSDateComponents* zeroTimeComponents = [[NSDateComponents alloc] init];
+        zeroTimeOnly = [[NSCalendar currentCalendar] dateFromComponents:zeroTimeComponents];
+    }
     
-    // Get the key times (independent of date)
-    NSDate *returnTime = [calendar dateFromComponents:[calendar components:timeComponents
-                                                                   fromDate:date]];
-    return returnTime;
+    NSDate* dateOnly = dateOnlyFromDate(date);
+    NSTimeInterval timeOnlyInterval = [date timeIntervalSinceDate:dateOnly];
+    return [zeroTimeOnly dateByAddingTimeInterval:timeOnlyInterval];
+
 }
 
 //
@@ -235,30 +239,38 @@ NSString *timeStringByAddingInterval(NSString *timeString, NSTimeInterval interv
 
 //
 // Returns a NSDate object containing just the date part of the date parameter (not the time)
-// Uses [NSCalendar currentCalendar] and the month, day, and year components to compute
 //
 NSDate *dateOnlyFromDate(NSDate *date) {
-    // Set up what we need to look at date components
-    NSCalendar* calendar = [NSCalendar currentCalendar];
+    if (!currentCalendar) {
+        currentCalendar = [NSCalendar currentCalendar];
+    }
     NSUInteger timeComponents = NSMonthCalendarUnit | NSYearCalendarUnit | NSDayCalendarUnit;
     
     // Get the key times (independent of date)
-    NSDate *returnTime = [calendar dateFromComponents:[calendar components:timeComponents
-                                                                  fromDate:date]];
-    return returnTime;
+    NSDate *returnDateOnly = [currentCalendar dateFromComponents:[currentCalendar components:timeComponents
+                                                                                    fromDate:date]];
+    return returnDateOnly;
+    
+    /*
+    if (!dateFormatterOnly) {
+        dateFormatterOnly = [[NSDateFormatter alloc] init];
+        [dateFormatterOnly setDateFormat:@"MM/dd/yyyy"];
+    }
+    NSString* dateOnlyStr = [dateFormatterOnly stringFromDate:date];
+    return [dateFormatterOnly dateFromString:dateOnlyStr];
+     */
 }
 
 //
 // Retrieves the day of week from the date (Sunday = 1, Saturday = 7)
 //
 NSInteger dayOfWeekFromDate(NSDate *date) {
-    // Set up what we need to look at date components
-    NSCalendar* calendar = [NSCalendar currentCalendar];
-    NSUInteger timeComponents = NSWeekdayCalendarUnit;
-    
-    // Get the key times (independent of date)
-    NSInteger returnedWeekday = [[calendar components:timeComponents fromDate:date] weekday];
-    return returnedWeekday;
+    if (!dayOfWeekFormatter) {
+        dayOfWeekFormatter = [[NSDateFormatter alloc] init];
+        [dayOfWeekFormatter setDateFormat:@"e"];
+    }
+    NSString* dayOfWeekStr = [dayOfWeekFormatter stringFromDate:date]; // returns a number format
+    return [dayOfWeekStr intValue];
 }
 
 //
@@ -288,20 +300,17 @@ NSDate *addDateOnlyWithTimeOnly(NSDate *date, NSDate *time) {
 // This function is part of the DE161 fix
 //
 NSDate *addDateOnlyWithTime(NSDate *date, NSDate *timeOnly) {
-    NSCalendar* calendar = [NSCalendar currentCalendar];
-    NSUInteger dateComponentNames = NSMonthCalendarUnit | NSYearCalendarUnit | NSDayCalendarUnit;
-    
-    // Get the components of date 
-    NSDateComponents* dateComponents = [calendar components:dateComponentNames fromDate:date];
-    
     // Get the zeroTime, which is the time corresponding to all zeros in the NSDateComponents
-    NSDateComponents* zeroTimeComponents = [[NSDateComponents alloc] init];
-    NSDate* zeroTime = [calendar dateFromComponents:zeroTimeComponents];
+    if (!zeroTimeOnly) {
+        NSCalendar* calendar = [NSCalendar currentCalendar];
+        NSDateComponents* zeroTimeComponents = [[NSDateComponents alloc] init];
+        zeroTimeOnly = [calendar dateFromComponents:zeroTimeComponents];
+    }
     // Get the time interval from timeOnly from zeroTime
-    NSTimeInterval timeOnlyInterval = [timeOnly timeIntervalSinceDate:zeroTime];
+    NSTimeInterval timeOnlyInterval = [timeOnly timeIntervalSinceDate:zeroTimeOnly];
     
     // Return dateOnly plus the timeOnlyInterval
-    return [[calendar dateFromComponents:dateComponents] dateByAddingTimeInterval:timeOnlyInterval];
+    return [dateOnlyFromDate(date) dateByAddingTimeInterval:timeOnlyInterval];
 }
 
 //
