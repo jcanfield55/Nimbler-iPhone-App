@@ -587,9 +587,8 @@ NSString *getItemAtIndexFromArray(int index,NSArray *arrayComponents){
     return @"";
 }
 int timeIntervalFromDate(NSDate * date){
-    NSDate *time = timeOnlyFromDate(date);
     NSCalendar *calendarDepartureTime = [NSCalendar currentCalendar];
-    NSDateComponents *componentsDepartureTime = [calendarDepartureTime components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:time];
+    NSDateComponents *componentsDepartureTime = [calendarDepartureTime components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:date];
     int hourDepartureTime = [componentsDepartureTime hour];
     int minuteDepartureTime = [componentsDepartureTime minute];
     int intervalDepartureTime = (hourDepartureTime)*60*60 + minuteDepartureTime*60;
@@ -658,4 +657,21 @@ NSString *returnRouteTypeFromLegMode(NSString *legMode){
         return @"7";
     else
         return nil;
+}
+
+int timeIntervalFromTimeString(NSString *strTime) {
+    NSArray *arrayTimeComponents = [strTime componentsSeparatedByString:@":"];
+    int hours=0, minutes=0, seconds=0;
+    for (int i=0; i<[arrayTimeComponents count]; i++) {
+        int value = [[arrayTimeComponents objectAtIndex:i] intValue];
+        if (i == 0) {
+            hours = value;
+        } else if (i==1) {
+            minutes = [[arrayTimeComponents objectAtIndex:1] intValue];
+        } else if (i==2) {
+            seconds = [[arrayTimeComponents objectAtIndex:2] intValue];
+        }
+    }
+    int interval = (hours*60*60) + (minutes*60) + seconds;
+    return interval;
 }

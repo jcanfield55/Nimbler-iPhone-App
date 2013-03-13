@@ -531,6 +531,9 @@
                         stopTime.dropOffType = getItemAtIndexFromArray(6,arraySubComponents);
                         stopTime.shapeDistTravelled = getItemAtIndexFromArray(7,arraySubComponents);
                         
+                        stopTime.departureTimeInterval = [NSNumber numberWithInt:timeIntervalFromTimeString(stopTime.departureTime)] ;
+                        stopTime.arrivalTimeInterval = [NSNumber numberWithInt:timeIntervalFromTimeString(stopTime.arrivalTime)];
+                        
                         NSString* agencyID = getItemAtIndexFromArray(0,arrayAgencyIdsComponents);
                         stopTime.agencyID = agencyID;
                         GtfsTrips* trip = [dictTrips objectForKey:tripID];
@@ -1438,29 +1441,76 @@
     }
 }
 
-- (void) setArrivalTimeFlagForLegsAndItinerary:(NSArray *)itineraries Plan:(Plan *)plan Leg:(Leg *)leg Prediction:(NSDictionary *)prediction Index:(int)index{
-    NSMutableArray *arrLegs = [[NSMutableArray alloc] init];
-    for(int i=0;i<[itineraries count];i++){
-        Itinerary *itinerary = [itineraries objectAtIndex:i];
-        if(!itinerary.isRealTimeItinerary){
-            Leg *leg = [[itinerary sortedLegs] objectAtIndex:index];
-            NSDate *lowerBound = timeOnlyFromDate([leg.startTime dateByAddingTimeInterval:REALTIME_LOWER_LIMIT]);
-            NSDate *upperBound = timeOnlyFromDate([leg.startTime dateByAddingTimeInterval:REALTIME_UPPER_LIMIT]);
-            NSDate *realTime = timeOnlyFromDate([NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"epochTime"] doubleValue]/1000.0)]);
-            if([realTime compare:lowerBound] == NSOrderedDescending && [realTime compare:upperBound] == NSOrderedAscending){
-                [arrLegs addObject:leg];
-            }
-        }
-    }
-    Leg *scheduledLeg = [self returnNearestLeg:arrLegs];
-    int timeDiff = [scheduledLeg calculatetimeDiffInMins:[[prediction objectForKey:@"epochTime"] doubleValue]];
+- (void) setArrivalFlagFromRealTimeAndGtfsStopTimes:(Leg *)leg Prediction:(NSDictionary *)prediction Context:(NSManagedObjectContext *)context{
+    NSFetchRequest *fetchParseStatus = [[[context persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"StopTimesByTripIdAndStopId" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:leg.realTripId,@"TRIPID",leg.from.stopId,@"STOPID", nil]];
+    NSError *error;
+    NSArray* result = [context executeFetchRequest:fetchParseStatus error:&error];
+    if([result count] == 0)
+        return;
+    GtfsStopTimes *stopTimes = [result objectAtIndex:0];
+    NSDate *departureDate = dateFromTimeString(stopTimes.departureTime);
+    
+    NSDate *realTimeDate = [NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"epochTime"] doubleValue]/1000.0)];
+    double millisecondsSchedule = ([timeOnlyFromDate(departureDate) timeIntervalSince1970])*1000.0;
+    double millisecondsRealTime = ([timeOnlyFromDate(realTimeDate) timeIntervalSince1970])*1000.0;
+    double timeDiffInMilliSeconds = millisecondsRealTime - millisecondsSchedule;
+    int timeDiff = timeDiffInMilliSeconds/(60*1000);
+    
     leg.timeDiff = timeDiff;
-    int arrivalFlag = [scheduledLeg calculateArrivalTimeFlag:timeDiff];
+    int arrivalFlag;
+    if(timeDiff >= -2 && timeDiff <= 2)
+        arrivalFlag = ON_TIME;
+    else if(timeDiff < -2)
+        arrivalFlag = EARLY;
+    else
+        arrivalFlag = DELAYED;
     leg.arrivalFlag = [NSString stringWithFormat:@"%d",arrivalFlag];
     NSDateFormatter *dateFormatters = [[NSDateFormatter alloc] init];
     [dateFormatters setDateFormat:@"yyyyMMdd"];
     NSString *strStartDate = [dateFormatters stringFromDate:dateOnlyFromDate(leg.startTime)];
     leg.arrivalTime = strStartDate;
+    
+}
+
+- (void) setArrivalTimeFlagForLegsAndItinerary:(Leg *)leg Prediction:(NSDictionary *)prediction Context:(NSManagedObjectContext *)context{
+    NSDate *realTimeDate = [NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"epochTime"] doubleValue]/1000.0)];
+    NSDate *lowerLimit = timeOnlyFromDate([realTimeDate dateByAddingTimeInterval:REALTIME_LOWER_LIMIT]);
+    NSDate *upperLimit = timeOnlyFromDate([realTimeDate dateByAddingTimeInterval:REALTIME_UPPER_LIMIT]);
+    
+    double lowerInterval = timeIntervalFromDate(lowerLimit);
+    double upperInterval = timeIntervalFromDate(upperLimit);
+    
+    NSFetchRequest *fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"StopTimesByFromStopIdAndDepartureTime" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:leg.from.stopId,@"FROMSTOPID",leg.to.stopId,@"TOSTOPID",[NSNumber numberWithDouble:lowerInterval],@"LOWERLIMIT",[NSNumber numberWithDouble:upperInterval],@"UPPERLIMIT", nil]];
+    NSArray *arrayStopTimes = [managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
+    arrayStopTimes = [self getStopTimesBasedOnStopIdAndnearestTime:arrayStopTimes FromStopId:leg.from.stopId];
+    
+    if([arrayStopTimes count] == 0)
+        return;
+    NSArray *stopTime = [arrayStopTimes objectAtIndex:0];
+    if([stopTime count] == 0)
+        return;
+    GtfsStopTimes *stopTimes = [stopTime objectAtIndex:0];
+    NSDate *departureDate = dateFromTimeString(stopTimes.departureTime);
+    
+    double millisecondsSchedule = ([timeOnlyFromDate(departureDate) timeIntervalSince1970])*1000.0;
+    double millisecondsRealTime = ([timeOnlyFromDate(realTimeDate) timeIntervalSince1970])*1000.0;
+    double timeDiffInMilliSeconds = millisecondsRealTime - millisecondsSchedule;
+    int timeDiff = timeDiffInMilliSeconds/(60*1000);
+    
+    leg.timeDiff = timeDiff;
+    int arrivalFlag;
+    if(timeDiff >= -2 && timeDiff <= 2)
+        arrivalFlag = ON_TIME;
+    else if(timeDiff < -2)
+        arrivalFlag = EARLY;
+    else
+        arrivalFlag = DELAYED;
+    leg.arrivalFlag = [NSString stringWithFormat:@"%d",arrivalFlag];
+    NSDateFormatter *dateFormatters = [[NSDateFormatter alloc] init];
+    [dateFormatters setDateFormat:@"yyyyMMdd"];
+    NSString *strStartDate = [dateFormatters stringFromDate:dateOnlyFromDate(leg.startTime)];
+    leg.arrivalTime = strStartDate;
+    
 }
 
 - (NSArray *) returnItinerariesFromPattern:(Itinerary *)pattern Plan:(Plan *)plan{
@@ -1554,9 +1604,14 @@
                     NSDictionary *dictPrediction = [self returnNearestRealtime:newItinerary.endTime ArrRealTimes:arrPrediction];
                     if(dictPrediction){
                        Leg *newleg = [self generateLegFromPrediction:dictPrediction newItinerary:newItinerary Leg:leg Context:context ISExtraPrediction:false];
-                        NSArray *itineraries = [self returnItinerariesFromPattern:itinerary Plan:plan];
-                        [self setArrivalTimeFlagForLegsAndItinerary:itineraries Plan:plan Leg:newleg Prediction:dictPrediction Index:j];
-                        [self hideItineraryIfNeeded:itineraries Leg:leg Index:j Predictions:arrPrediction];
+                        //NSArray *itineraries = [self returnItinerariesFromPattern:itinerary Plan:plan];
+                        if([dictPrediction objectForKey:@"tripId"]){
+                            [self setArrivalFlagFromRealTimeAndGtfsStopTimes:newleg Prediction:dictPrediction Context:context];
+                        }
+                        else{
+                            [self setArrivalTimeFlagForLegsAndItinerary:newleg Prediction:dictPrediction Context:context];
+                        }
+                        //[self hideItineraryIfNeeded:itineraries Leg:leg Index:j Predictions:arrPrediction];
                         if([self isFirstScheduledLeg:leg Itinerary:itinerary]){
                             newItinerary.startTime = newleg.startTime;
                             [arrPrediction removeObject:dictPrediction];
@@ -1675,40 +1730,133 @@
     return [result objectAtIndex:0];  // Return first object
 }
 
+- (NSArray *) getStopTimesBasedOnStopIdAndnearestTime:(NSArray *)stopTime FromStopId:(NSString *)fromStopId{
+    NSMutableArray *arrMutableStopTimes = [[NSMutableArray alloc] init];
+    NSMutableDictionary *dictStopTimes = [[NSMutableDictionary alloc] init];
+    for(int i=0;i<[stopTime count];i++){
+        GtfsStopTimes *stopTimes = [stopTime objectAtIndex:i];
+        NSArray *arrStopTimesPair = [dictStopTimes objectForKey:stopTimes.tripID];
+        if(arrStopTimesPair){
+            NSMutableArray *arrStopTimes = [[NSMutableArray alloc] initWithArray:arrStopTimesPair];
+            [arrStopTimes addObject:stopTimes];
+            arrStopTimesPair = arrStopTimes;
+            [dictStopTimes setObject:arrStopTimesPair forKey:stopTimes.tripID];
+        }
+        else{
+            NSArray *arrStopTimes = [NSArray arrayWithObject:stopTimes];
+            [dictStopTimes setObject:arrStopTimes forKey:stopTimes.tripID];
+        }
+    }
+    
+    NSArray *keys = [dictStopTimes allKeys];
+    
+    for(int j= 0;j<[keys count];j++){
+        NSArray *arrStopTimes = [dictStopTimes objectForKey:[keys objectAtIndex:j]];
+        if([arrStopTimes count] < 2 || [arrStopTimes count] > 2){
+            // NIMLOG_US202(@"Exceptional StopTimes:%@",arrStopTimes);
+            [dictStopTimes removeObjectForKey:[keys objectAtIndex:j]];
+        }
+        else{
+            GtfsStopTimes *stopTimes1 = [arrStopTimes objectAtIndex:0];
+            GtfsStopTimes *stopTimes2 = [arrStopTimes objectAtIndex:1];
+            if(![stopTimes1.stopID isEqualToString:fromStopId]){
+                stopTimes1 = [arrStopTimes objectAtIndex:1];
+                stopTimes2 = [arrStopTimes objectAtIndex:0];
+            }
+            
+            if(stopTimes1 && stopTimes2){
+                if([stopTimes2.stopSequence intValue] > [stopTimes1.stopSequence intValue]){
+                    NSArray *arrayTemp = [NSArray arrayWithObjects:stopTimes1,stopTimes2, nil];
+                    [arrMutableStopTimes addObject:arrayTemp];
+                }
+            }
+        }
+    }
+    
+    // Sort the array by order of ascending first departureTime
+    [arrMutableStopTimes sortUsingComparator:^(id obj1, id obj2) {
+        NSString* obj1Time = [[obj1 objectAtIndex:0] departureTime];
+        NSString* obj2Time = [[obj2 objectAtIndex:0] departureTime];
+        return [obj1Time compare:obj2Time];
+    }];
+    
+    return arrMutableStopTimes;
+}
 - (NSArray *) returnIntermediateStopForLeg:(Leg *)leg{
-    NSString *tripId  = nil;
-    if(leg.realTripId)
-        tripId = leg.realTripId;
-    else
-        tripId = leg.tripId;
+    
     NSMutableArray *intermediateStops = [[NSMutableArray alloc] init];
-        NSFetchRequest *fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesByAgencyID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:tripId,@"TRIPID",agencyFeedIdFromAgencyName(leg.agencyName),@"AGENCYID", nil]];
-        NSArray * arrayStopTimes = [managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
+    NSString *tripId  = nil;
+    NSFetchRequest *fetchStopTimes;
+    NSArray * arrayStopTimes;
+    NSDate *lowerLimit = [leg.startTime dateByAddingTimeInterval:REALTIME_LOWER_LIMIT];
+    NSDate *upperLimit = [leg.startTime dateByAddingTimeInterval:REALTIME_UPPER_LIMIT];
+    double lowerInterval = timeIntervalFromDate(lowerLimit);
+    double upperInterval = timeIntervalFromDate(upperLimit);
+    
+    if(!leg.isRealTimeLeg){
+        tripId = leg.tripId;
+        fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesByAgencyID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:tripId,@"TRIPID",agencyFeedIdFromAgencyName(leg.agencyName),@"AGENCYID", nil]];
+        arrayStopTimes = [managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
         NSSortDescriptor *sortD = [[NSSortDescriptor alloc]
                                    
                                    initWithKey:@"stopSequence" ascending:YES selector:@selector(localizedStandardCompare:)];
         arrayStopTimes = [arrayStopTimes sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]];
-        int startIndex = 0;
-        int endIndex = 0;
-        for(int i=0;i<[arrayStopTimes count];i++){
-            GtfsStopTimes *stopTimes = [arrayStopTimes objectAtIndex:i];
-            if([stopTimes.stopID isEqualToString:leg.from.stopId]){
-                startIndex = i + 1;
-                break;
+    }
+    else{
+        if(leg.realTripId){
+            tripId = leg.realTripId;
+            fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesByAgencyID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:tripId,@"TRIPID",agencyFeedIdFromAgencyName(leg.agencyName),@"AGENCYID", nil]];
+            arrayStopTimes = [managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
+            NSSortDescriptor *sortD = [[NSSortDescriptor alloc]
+                                       
+                                       initWithKey:@"stopSequence" ascending:YES selector:@selector(localizedStandardCompare:)];
+            arrayStopTimes = [arrayStopTimes sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]];
+        }
+        else{
+            if (!leg.from.stopId || !leg.to.stopId) {
+                return nil;
+            }
+            fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"StopTimesByFromStopIdAndDepartureTime" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:leg.from.stopId,@"FROMSTOPID",leg.to.stopId,@"TOSTOPID",[NSNumber numberWithDouble:lowerInterval],@"LOWERLIMIT",[NSNumber numberWithDouble:upperInterval],@"UPPERLIMIT", nil]];
+            arrayStopTimes = [managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
+            arrayStopTimes = [self getStopTimesBasedOnStopIdAndnearestTime:arrayStopTimes FromStopId:leg.from.stopId];
+            GtfsStopTimes *stoptimes;
+            if([arrayStopTimes count] > 0){
+                NSArray *stoptime = [arrayStopTimes objectAtIndex:0];
+                if([stoptime count] > 0)
+                    stoptimes = [stoptime objectAtIndex:0];
+                else
+                    return nil;
+                fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesByAgencyID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:stoptimes.tripID,@"TRIPID",stoptimes.agencyID,@"AGENCYID", nil]];
+                arrayStopTimes = [managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
+                NSSortDescriptor *sortD = [[NSSortDescriptor alloc]
+                                           
+                                           initWithKey:@"stopSequence" ascending:YES selector:@selector(localizedStandardCompare:)];
+                arrayStopTimes = [arrayStopTimes sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]];
             }
         }
-        for(int i=0;i<[arrayStopTimes count];i++){
-            GtfsStopTimes *stopTimes = [arrayStopTimes objectAtIndex:i];
-            if([stopTimes.stopID isEqualToString:leg.to.stopId]){
-                endIndex = i;
-                break;
-            }
+    }
+    int startIndex = 0;
+    int endIndex = 0;
+    for(int i=0;i<[arrayStopTimes count];i++){
+        GtfsStopTimes *stopTimes = [arrayStopTimes objectAtIndex:i];
+        if([stopTimes.stopID isEqualToString:leg.from.stopId]){
+            startIndex = i + 1;
+            break;
         }
-        for(int i = startIndex; i<endIndex ;i++){
-            GtfsStopTimes *stopTimes = [arrayStopTimes objectAtIndex:i];
-            [intermediateStops addObject:stopTimes];
+    }
+    for(int i=0;i<[arrayStopTimes count];i++){
+        GtfsStopTimes *stopTimes = [arrayStopTimes objectAtIndex:i];
+        if([stopTimes.stopID isEqualToString:leg.to.stopId]){
+            endIndex = i;
+            break;
         }
+    }
+    for(int i = startIndex; i<endIndex ;i++){
+        GtfsStopTimes *stopTimes = [arrayStopTimes objectAtIndex:i];
+        [intermediateStops addObject:stopTimes];
+    }
     return intermediateStops;
 }
+
 @end
 

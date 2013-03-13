@@ -111,3 +111,5 @@ UIImage *getAgencyIcon(NSString * imageName);
 NSString *returnShortAgencyName(NSString *agencyName);
 
 NSString *returnRouteTypeFromLegMode(NSString *legMode);
+
+int timeIntervalFromTimeString(NSString *strTime);

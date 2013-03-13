@@ -140,7 +140,10 @@
                                  routeId:(NSString *)routeId
                                  context:(NSManagedObjectContext *) context;
 
+// return the intermediate stops between from and to stops
 - (NSArray *) returnIntermediateStopForLeg:(Leg *)leg;
+// return the stoptimes array based on from and to stopid and leg start time.
+- (NSArray *) getStopTimesBasedOnStopIdAndnearestTime:(NSArray *)stopTime FromStopId:(NSString *)fromStopId;
 
 @end
 
