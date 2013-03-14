@@ -33,6 +33,11 @@ typedef enum {
 } PlanRequestStatus;
 
 typedef enum {
+    ITINERARY_STATUS_OK,
+    ITINERARY_STATUS_CONFLICT
+} ItineraryStatus;
+
+typedef enum {
     GEOCODE_STATUS_OK,
     GEOCODE_ZERO_RESULTS,
     GEOCODE_OVER_QUERY_LIMIT,

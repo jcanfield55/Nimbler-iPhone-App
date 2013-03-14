@@ -671,6 +671,9 @@ int timeIntervalFromTimeString(NSString *strTime) {
             seconds = [[arrayTimeComponents objectAtIndex:2] intValue];
         }
     }
+    if(hours > 23){
+        hours = hours % 24;
+    }
     int interval = (hours*60*60) + (minutes*60) + seconds;
     return interval;
 }

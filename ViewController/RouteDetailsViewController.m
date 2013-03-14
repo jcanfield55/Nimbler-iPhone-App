@@ -164,7 +164,14 @@ NSUserDefaults *prefs;
 - (void) dealloc{
     self.mainTable = nil;
 }
-
+-(void)newItineraryAvailable:(Itinerary *)newItinerary
+                 status:(ItineraryStatus)status{
+    if(status == ITINERARY_STATUS_OK){
+        [self setItinerary:newItinerary];
+        [mainTable reloadData];
+    }
+    
+}
 - (void)setItinerary:(Itinerary *)i0
 {
     @try {

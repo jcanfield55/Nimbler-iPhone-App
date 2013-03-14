@@ -34,4 +34,6 @@
 -(void)popOutToItinerary;
 -(void)setFBParamater:(int)ss;
 -(void)setFBParameterForLeg:(NSString *)legId;
+-(void)newItineraryAvailable:(Itinerary *)newItinerary
+                 status:(ItineraryStatus)status;
 @end

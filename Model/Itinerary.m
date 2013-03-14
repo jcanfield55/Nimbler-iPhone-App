@@ -61,6 +61,7 @@ NSArray *sortedByStartTimeOnly(NSSet* itinerarySet)
 @synthesize itinArrivalFlag;
 @synthesize isRealTimeItinerary;
 @synthesize hideItinerary;
+@synthesize tripIdhexString;
 
 - (void)awakeFromInsert {
     [super awakeFromInsert];

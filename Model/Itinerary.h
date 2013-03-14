@@ -61,6 +61,7 @@ typedef enum {
 @property (nonatomic, retain) NSNumber * walkTime;
 @property (nonatomic) BOOL isRealTimeItinerary;
 @property (nonatomic) BOOL hideItinerary;
+@property (nonatomic, strong) NSString *tripIdhexString;
 
 - (void)sortLegs;
 - (NSArray *)sortedLegs;

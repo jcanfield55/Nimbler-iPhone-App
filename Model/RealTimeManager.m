@@ -108,12 +108,35 @@ static RealTimeManager* realTimeManager;
     }
 }
 
+// Replace the RouteDetailView itinerary with matching realtime itinerary.
+- (void) updateItineraryIfAlreadyInRouteDetailView{
+    Itinerary *detailViewitinerary = [nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC.itinerary;
+    if(!detailViewitinerary)
+        return;
+    
+    for(int i=0;i<[[plan sortedItineraries] count];i++){
+        Itinerary *itinerary = [[plan sortedItineraries] objectAtIndex:i];
+        if(itinerary.isRealTimeItinerary && [itinerary.tripIdhexString isEqualToString:detailViewitinerary.tripIdhexString]){
+            [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC newItineraryAvailable:itinerary status:ITINERARY_STATUS_OK];
+            [plan deleteItinerary:detailViewitinerary];
+            [plan prepareSortedItinerariesWithMatchesForDate:originalTripDate
+                                              departOrArrive:DEPART
+                                        routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
+                                     generateGtfsItineraries:NO
+                                       removeNonOptimalItins:YES];
+            return;
+        }
+    }
+    [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC newItineraryAvailable:nil status:ITINERARY_STATUS_CONFLICT];
+}
 // Parse the Realtime response and set realtime data to leg.
 -(void)setLiveFeed:(id)liveFees
 {
     @try {
             for(int i=0;i<[[plan itineraries] count];i++){
                 Itinerary *iti = [[[plan itineraries] allObjects]  objectAtIndex:i];
+                Itinerary *detailViewitinerary = [nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC.itinerary;
+                if(iti != detailViewitinerary){
                     iti.itinArrivalFlag = nil;
                     iti.hideItinerary = false;
                     if(iti.isRealTimeItinerary){
@@ -125,8 +148,8 @@ static RealTimeManager* realTimeManager;
                         }
                         [plan deleteItinerary:iti];
                     }
+                }
             }
-            
             for(int i=0;i<[[plan requestChunks] count];i++){
                 PlanRequestChunk *reqChunks = [[[plan requestChunks] allObjects] objectAtIndex:i];
                 if(reqChunks.type == [NSNumber numberWithInt:2]){
@@ -148,7 +171,7 @@ static RealTimeManager* realTimeManager;
                                              routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
                                           generateGtfsItineraries:NO
                                             removeNonOptimalItins:YES];
-                
+                [self updateItineraryIfAlreadyInRouteDetailView];
                  [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC reloadData:plan];
                  [routeDetailVC ReloadLegWithNewData];
             }

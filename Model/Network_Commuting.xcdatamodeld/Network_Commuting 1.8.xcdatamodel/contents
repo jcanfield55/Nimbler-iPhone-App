@@ -341,7 +341,7 @@
     <fetchRequest name="StationListByContainsId" entity="StationListElement" predicateString="containsListId == $CONTAINSLISTID"/>
     <fetchRequest name="StationListByMemberId" entity="StationListElement" predicateString="memberOfListId == $MEMBEROFLISTID"/>
     <fetchRequest name="StationListElementByAgency" entity="StationListElement" predicateString="agency == $AGENCY"/>
-    <fetchRequest name="StopTimesByFromStopIdAndDepartureTime" entity="GtfsStopTimes" predicateString="(stopID == $FROMSTOPID AND departureTimeInterval >= LOWERLIMIT AND departureTimeInterval &lt; UPPERLIMIT) OR stopID == $TOSTOPID"/>
+    <fetchRequest name="StopTimesByFromStopIdAndDepartureTime" entity="GtfsStopTimes" predicateString="(stopID == $FROMSTOPID AND departureTimeInterval >= $LOWERLIMIT AND departureTimeInterval &lt; $UPPERLIMIT) OR stopID == $TOSTOPID"/>
     <fetchRequest name="StopTimesByTripIdAndStopId" entity="GtfsStopTimes" predicateString="tripID == $TRIPID AND stopID == $STOPID"/>
     <elements>
         <element name="AddressComponent" positionX="0" positionY="0" width="128" height="105"/>
