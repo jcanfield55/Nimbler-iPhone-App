@@ -39,8 +39,9 @@
     [managedObjectContext setPersistentStoreCoordinator:psc];
     [managedObjectContext setUndoManager:nil];
     
-    // Set up KeyObjectStore
+    // Set up KeyObjectStore & RouteExcludeSettings
     [KeyObjectStore setUpWithManagedObjectContext:managedObjectContext];
+    [RouteExcludeSettings setManagedObjectContext:managedObjectContext];
     
     // Set up PlanStore
     planStore = [[PlanStore alloc] initWithManagedObjectContext:managedObjectContext rkPlanMgr:nil];
@@ -1424,8 +1425,10 @@
     STAssertEquals([[plan3 sortedItineraries] objectAtIndex:1], itin31, @"");
     STAssertEquals([[plan3 sortedItineraries] objectAtIndex:2], itin32, @"");
 
-    // Request that is too early to match any of the plans, itineraries should be unchanged
-    STAssertFalse([plan3 prepareSortedItinerariesWithMatchesForDate:dayTime2 departOrArrive:DEPART], @"");
+    // Note: this test changed with returnSortedItinerary changes in March, 2013.
+    // Previously, request was too early to match any of the requestChunks, so itineraries should be unchanged
+    // Now any matching OTP itinerary will be returned regardless of requestChunks, so will return true
+    STAssertTrue([plan3 prepareSortedItinerariesWithMatchesForDate:dayTime2 departOrArrive:DEPART], @"");
     STAssertEquals([[plan3 sortedItineraries] count], 3U, @"");
     STAssertEquals([[plan3 sortedItineraries] objectAtIndex:0], itin30, @"");
     STAssertEquals([[plan3 sortedItineraries] objectAtIndex:1], itin31, @"");
@@ -1479,7 +1482,9 @@
     STAssertEqualObjects([[plan3 sortedItineraries] objectAtIndex:2], itin32, @"");
     
     // Test against arrival time request of 10:29AM (should have no results)
-    STAssertFalse([plan3 prepareSortedItinerariesWithMatchesForDate:dayTime4 departOrArrive:ARRIVE], @"");
+    // Note: this test result changed March, 2013 because ReturnSortedItineraries looks for matches by itinerary for OTP itineraries
+    // not by requestChunk
+    STAssertTrue([plan3 prepareSortedItinerariesWithMatchesForDate:dayTime4 departOrArrive:ARRIVE], @"");
 
     // Now lets try that arrival request at 10:29 with plan6 (falls within buffer).
     // Arrive itineraries are in reverse chrono order (DE191 fix)
@@ -1663,18 +1668,18 @@
 //
 -(void)testRouteExcludeSettings
 {
-    [RouteExcludeSettings setManagedObjectContext:managedObjectContext];
     
     // Test default settings
     RouteExcludeSettings* settings = [RouteExcludeSettings latestUserSettings];
     STAssertEquals([settings settingForKey:BIKE_BUTTON], SETTING_EXCLUDE_ROUTE, @"");  // Bike is initially set to Exclude
     STAssertEquals([settings settingForKey:MUNI_BUTTON], SETTING_INCLUDE_ROUTE,@"");  // Any other mode is set to include by default
+    STAssertTrue([settings isDefaultSettings], @"");  // These are the default settings
     
     // Test excludeSettingsForPlan
     PlanRequestParameters* parameters = [[PlanRequestParameters alloc] init];
     parameters.originalTripDate = date60req;
     parameters.departOrArrive = ARRIVE;
-    NSArray* settingArray = [settings excludeSettingsForPlan:plan6 withParameters:parameters];
+    NSArray* settingArray = [settings excludeSettingsForPlan:plan6];
     STAssertEquals([settingArray count], 3u, @"");  // Should have Caltrain, BART, and Bike buttons
     STAssertEqualObjects([[settingArray objectAtIndex:0] key], CALTRAIN_BUTTON, @"");
     STAssertEquals([[settingArray objectAtIndex:0] setting], SETTING_INCLUDE_ROUTE, @"");
@@ -1699,6 +1704,7 @@
     // Now change settings
     NSDictionary* oldSettingsDictionary = [settings excludeDictionaryInternal];
     [settings changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:BART_BUTTON];
+    STAssertFalse([settings isDefaultSettings], @"");
     STAssertEquals([settings settingForKey:BART_BUTTON], SETTING_EXCLUDE_ROUTE, @"");  // Make sure setting is there
     STAssertEquals([[settings usedByRequestChunks] count], 0u, @"");  // request chunks should not be here any more
     STAssertTrue([[settings isCurrentUserSetting] boolValue], @"");  // setting should still be the current setting
@@ -1747,6 +1753,8 @@
     // Now test isEquivalentTo: the other way.  settings has one more key set in their dictionary, but is equivalent
     RouteExcludeSettings *testSettings = [NSEntityDescription insertNewObjectForEntityForName:@"RouteExcludeSettings"
                                                                        inManagedObjectContext:managedObjectContext];
+    [testSettings changeSettingTo:SETTING_INCLUDE_ROUTE forKey:BIKE_BUTTON];
+    STAssertFalse([testSettings isDefaultSettings], @"");  // Including bike is not the default settings
     [testSettings changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:BIKE_BUTTON];
     // Now settings has been deleted and incorporated into testSettings
     STAssertEquals([[testSettings usedByRequestChunks] count], 2u, @"");
@@ -1758,7 +1766,7 @@
     NSArray* fetchArraySettings = [managedObjectContext executeFetchRequest:fetchSettings error:nil];
     STAssertEquals([fetchArraySettings count], 2u, @"");  // Test Settings and it's back-up copy
     // settings2 are have only the exclusions relevant to plan6
-    NSArray* settingArray2 = [testSettings excludeSettingsForPlan:plan6 withParameters:parameters];
+    NSArray* settingArray2 = [testSettings excludeSettingsForPlan:plan6];
     RouteExcludeSettings* settings2 = [RouteExcludeSettings excludeSettingsWithSettingArray:settingArray2];
     STAssertEquals([settings2 settingForKey:VTA_BUTTON], SETTING_INCLUDE_ROUTE, @"");  // VTA button not excluded, since not relevant to plan6
     STAssertFalse([settings2 isEquivalentTo:testSettings], @"");   // The two settings are not equivalent

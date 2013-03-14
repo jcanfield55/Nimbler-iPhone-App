@@ -232,9 +232,9 @@
 #define PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS (60)
 
 // RouteExcludeSettings
-#define PLAN_ROUTE_EXCLUDE @"Exclude" // Value for RouteExcludeSettings indicating to exclude a route
-#define PLAN_ROUTE_INCLUDE @"Include" // Value for RouteExcludeSettings indicating to includ a route
 #define BIKE_BUTTON @"Bike"
+#define EXCLUSION_BY_AGENCY @"By Agency"   
+#define EXCLUSION_BY_RAIL_BUS  @"By Rail/Bus"
 
 // gtfsParser
 #define MIN_TRANSFER_TIME (3*60) // Minimum # of seconds for transfers inserted when creating itineraries

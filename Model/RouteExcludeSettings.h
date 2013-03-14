@@ -29,6 +29,11 @@ typedef enum {
 // Returns the RouteExcludeSettings that are the latest from the user.
 + (RouteExcludeSettings *)latestUserSettings;
 
+// Initiatializes (if needed) and returns dictionary mapping agency button names to how we will handle
+// BY_AGENCY means we will show just one include/exclude button for that agency
+// BY_RAIL_BUS means we will show up to two buttons for that agency, one for rail and one for bus service
++(NSDictionary *)agencyButtonHandlingDictionary;
+
 // Changes setting associated with a key.
 // If self's usedByRequestChunks is not empty, then create an archive copy that those requestChunks can still point to
 // before modifying self.  The modified self will have no 
@@ -38,7 +43,7 @@ typedef enum {
 // in parameters.
 // Returned array containing RouteExcludeSettings objects
 // Array is ordered in the sequence options should be presented to user
--(NSArray *)excludeSettingsForPlan:(Plan *)plan withParameters:(PlanRequestParameters *)parameters;
+-(NSArray *)excludeSettingsForPlan:(Plan *)plan;
 
 // Generates the bannedAgencyString which can be passed to OTP for any agency-wide excludes
 // settingArray is an array of RouteExcludeSetting objects returned by excludeSettingsForPlan method
@@ -56,9 +61,9 @@ typedef enum {
 // settingArray is created by excludeSettingsForPlan method
 +(NSString *)stringFromSettingArray:(NSArray *)settingArray;
 
-// Returns true if settingArray does not contain any excludes (other than Bike mode exclude)
-// settingArray is created by excludeSettingsForPlan method
-+(BOOL)noExcludesForSettingArray:(NSArray *)settingArray;
+// Returns true if self contains the default settings (the equivalent of a nil exclude)
+// This means no excludes except for Bike mode exclude
+-(BOOL)isDefaultSettings;
 
 // Returns true if itin should be included based on the RouteExclude settings
 -(BOOL)isItineraryIncluded:(Itinerary *)itin;

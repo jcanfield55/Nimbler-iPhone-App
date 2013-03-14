@@ -531,8 +531,8 @@
                         stopTime.dropOffType = getItemAtIndexFromArray(6,arraySubComponents);
                         stopTime.shapeDistTravelled = getItemAtIndexFromArray(7,arraySubComponents);
                         
-                        stopTime.departureTimeInterval = [NSNumber numberWithInt:timeIntervalFromTimeString(stopTime.departureTime)] ;
-                        stopTime.arrivalTimeInterval = [NSNumber numberWithInt:timeIntervalFromTimeString(stopTime.arrivalTime)];
+                        // stopTime.departureTimeInterval = [NSNumber numberWithInt:timeIntervalFromTimeString(stopTime.departureTime)] ;
+                        // stopTime.arrivalTimeInterval = [NSNumber numberWithInt:timeIntervalFromTimeString(stopTime.arrivalTime)];
                         
                         NSString* agencyID = getItemAtIndexFromArray(0,arrayAgencyIdsComponents);
                         stopTime.agencyID = agencyID;

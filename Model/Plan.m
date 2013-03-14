@@ -44,6 +44,7 @@
 @synthesize userRequestDepartOrArrive;
 @synthesize sortedItineraries;
 @synthesize transitCalendar;
+@synthesize excludeSettingsArray;
 
 + (RKManagedObjectMapping *)objectMappingforPlanner:(APIType)apiType
 {
@@ -97,6 +98,21 @@
 {
     NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:YES];
     [self setSortedItineraries:[[self itineraries] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
+}
+
+// Accessor for excludeSettingsArray
+- (NSArray *)excludeSettingsArray
+{
+    if (!excludeSettingsArray) {
+        [self updateExcludeSettingsArray];
+    }
+    return excludeSettingsArray;
+}
+
+// Updates excludeSettingsArray for the plan using the [RouteExcludeSettings latestUserSettings]
+- (void)updateExcludeSettingsArray
+{
+    excludeSettingsArray = [[RouteExcludeSettings latestUserSettings] excludeSettingsForPlan:self];
 }
 
 // Returns an array of itineraries sorted by date that have the
@@ -174,14 +190,18 @@
     NSMutableSet* chunksConsolidated = [[NSMutableSet alloc] initWithCapacity:10];
     for (PlanRequestChunk* reqChunk0 in [plan0 requestChunks]) {
         for (PlanRequestChunk* selfRequestChunk in [self requestChunks]) {
-            if (((reqChunk0.routeExcludeSettings==nil) == (selfRequestChunk.routeExcludeSettings==nil)) && 
-                (!reqChunk0.routeExcludeSettings ||      // only check routeExcludeSettings equivalency if non-nil
-                [[reqChunk0 routeExcludeSettings] isEquivalentTo:[selfRequestChunk routeExcludeSettings]]) && // equivalent RouteExcludeSettings
-                ([reqChunk0 gtfsItineraryPattern] == [selfRequestChunk gtfsItineraryPattern]) &&   // the same gtfsItineraryPattern
-                [reqChunk0 doAllServiceStringByAgencyMatchRequestChunk:selfRequestChunk] &&  // matching serviceStrings
-                [reqChunk0 doTimesOverlapRequestChunk:selfRequestChunk bufferInSeconds:REQUEST_CHUNK_OVERLAP_BUFFER_IN_SECONDS]) { //overlapping times
-                [chunksConsolidated addObject:reqChunk0];
-                [selfRequestChunk consolidateIntoSelfRequestChunk:reqChunk0];
+            if ((!reqChunk0.routeExcludeSettings && !selfRequestChunk.routeExcludeSettings) ||  // either both are nil 
+                (!reqChunk0.routeExcludeSettings && [selfRequestChunk.routeExcludeSettings isDefaultSettings]) || // OR both have default settings
+                (reqChunk0.routeExcludeSettings &&  // or reqChunk0 is non-nil and they are equivalent
+                 [[reqChunk0 routeExcludeSettings] isEquivalentTo:[selfRequestChunk routeExcludeSettings]]))
+            {
+                if ([reqChunk0 gtfsItineraryPattern] == [selfRequestChunk gtfsItineraryPattern] &&   // the same gtfsItineraryPattern
+                    [reqChunk0 doAllServiceStringByAgencyMatchRequestChunk:selfRequestChunk] &&  // matching serviceStrings
+                    [reqChunk0 doTimesOverlapRequestChunk:selfRequestChunk bufferInSeconds:REQUEST_CHUNK_OVERLAP_BUFFER_IN_SECONDS]) { //overlapping times
+                    // Consolidate reqChunks
+                    [chunksConsolidated addObject:reqChunk0];
+                    [selfRequestChunk consolidateIntoSelfRequestChunk:reqChunk0];
+                }
             }
         }
     }
@@ -406,6 +426,8 @@
         }  // end of uniqueItineraries loop
         
         NIMLOG_PERF2A(@"End first loop, start itinerary loop. itineraries.count=%d",self.itineraries.count);
+        
+        
         // collect all the OTP itineraries that have valid GTFS data and are in the right time range
         for (Itinerary* itin in [self itineraries]) {
             if ([itin isOTPItinerary] &&
@@ -427,35 +449,38 @@
         
         // Check for suboptimal itineraries or equivalent itineraries
         NIMLOG_PERF2A(@"Remove non-optimal and duplicate itineraries");
-        NSMutableSet *optimalItineraries = [NSMutableSet setWithSet:matchingItineraries];
-        
-        for (Itinerary* itin1 in matchingItineraries) {
-            for (Itinerary* itin2 in matchingItineraries) {
-                if (itin1 != itin2) {
-                    // Check if equivalent itineraries
-                    if(itin1.isRealTimeItinerary || itin2.isRealTimeItinerary){
-                        // Do Nothing for RealTime Itinerary
+        NSArray* matchingItinerariesArray = [matchingItineraries allObjects];
+        for (int i=0; i<matchingItinerariesArray.count; i++) {
+            for (int j=i+1; j<matchingItinerariesArray.count; j++) {
+                Itinerary* itin1 = [matchingItinerariesArray objectAtIndex:i];
+                Itinerary* itin2 = [matchingItinerariesArray objectAtIndex:j];
+                
+                // Check if equivalent itineraries
+                if(itin1.isRealTimeItinerary || itin2.isRealTimeItinerary){
+                    // Do Nothing for RealTime Itinerary
+                }
+                else if ([itin1 isEquivalentRoutesStopsAndScheduledTimingAs:itin2]) {
+                    if (itin1.isOTPItinerary && !itin2.isOTPItinerary) {
+                        [matchingItineraries removeObject:itin1];  // if equivalent GTFS & OTP itineraries, only show the GTFS one
+                    } else if (!itin1.isOTPItinerary && itin2.isOTPItinerary) {
+                        [matchingItineraries removeObject:itin2]; // if equivalent GTFS & OTP itineraries, only show the GTFS one
                     }
-                    else if ([itin1 isEquivalentRoutesStopsAndScheduledTimingAs:itin2]) {
-                        if (itin1.isOTPItinerary && !itin2.isOTPItinerary) {
-                            [optimalItineraries removeObject:itin1];  // if equivalent GTFS & OTP itineraries, only show the GTFS one
-                        } else if (!itin1.isOTPItinerary && itin2.isOTPItinerary) {
-                            // Do nothing, will delete itin2 on the other pass
-                        }
-                        else if ([optimalItineraries containsObject:itin1] &&
-                                 [optimalItineraries containsObject:itin2]) { // both GTFS or both OTP
-                            [optimalItineraries removeObject:itin1]; // Remove itin1 if it is the first to be removed
-                        }
+                    else { 
+                        [matchingItineraries removeObject:itin1]; // Otherwise remove itin1
                     }
-                    // if not equivalent, look for sub-optimal itineries
-                    else if (removeNonOptimalItins && 
-                             [[itin1 startTimeOnly] compare:[itin2 startTimeOnly]] != NSOrderedDescending &&
-                        [[itin1 endTimeOnly] compare:[itin2 endTimeOnly]] != NSOrderedAscending) {
+                }
+                // if not equivalent, look for sub-optimal itineries
+                else if (removeNonOptimalItins) {
+                    if ([[itin1 startTimeOnly] compare:[itin2 startTimeOnly]] != NSOrderedDescending &&
+                             [[itin1 endTimeOnly] compare:[itin2 endTimeOnly]] != NSOrderedAscending) {
                         // itin1 starts earlier or equal and ends later or equal.  Longer duration so remove itin1
-                        [optimalItineraries removeObject:itin1];
+                        [matchingItineraries removeObject:itin1];
                     }
-
-                    // No need to compare the other way, because will loop thru all combinations of itin1 & itin2
+                    else if ([[itin2 startTimeOnly] compare:[itin1 startTimeOnly]] != NSOrderedDescending &&
+                             [[itin2 endTimeOnly] compare:[itin1 endTimeOnly]] != NSOrderedAscending) {
+                        // itin2 starts earlier or equal and ends later or equal.  Longer duration so remove itin2
+                        [matchingItineraries removeObject:itin2];
+                    }
                 }
             }
         }
@@ -465,7 +490,7 @@
         NIMLOG_PERF2A(@"Sort and remove itineraries beyond max");
         NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:(depOrArrive == DEPART)];
 
-        NSArray* returnedItineraries = [optimalItineraries sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]];
+        NSArray* returnedItineraries = [matchingItineraries sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]];
         
         // Remove itineraries from returnedItineraries beyond planMaxItinerariesToShow
         if ([returnedItineraries count] > planMaxItinerariesToShow) {
@@ -637,7 +662,7 @@
                 if ([reqChunk isOTP] &&
                     [reqChunk doAllItineraryServiceDaysMatchDate:connectingReqDate] &&
                     [reqChunk doesCoverTheSameTimeAs:connectingReqDate departOrArrive:depOrArrive] &&
-                    (!routeExcludeSettings || [[reqChunk routeExcludeSettings] isEquivalentTo:routeExcludeSettings])) {
+                    (!routeExcludeSettings || [routeExcludeSettings isEquivalentTo:[reqChunk routeExcludeSettings]])) {
                     
                     [matchingReqChunks addObject:reqChunk];
                     
@@ -750,21 +775,25 @@
                                                                             sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
     int i;
     for(i=0; i < [arrItineraries count];i++){
-        for(int j=i+1;j<[arrItineraries count];j++){
-            Itinerary *itin1 = (Itinerary*)[arrItineraries objectAtIndex:i];
-            Itinerary *itin2 = (Itinerary*)[arrItineraries objectAtIndex:j];
-            BOOL isEquivalentitinerary = [itin1 isEquivalentModesAndStopsAs:itin2];
-            if(isEquivalentitinerary){
-                if (![itin2 isUniqueItinerary] && [[itin2 requestChunksCreatedByThisPattern] count] == 0) {
-                    [arrItineraries removeObjectAtIndex:j];
-                    i = i-1;
-                    break;
-                } else if (![itin1 isUniqueItinerary] && [[itin1 requestChunksCreatedByThisPattern] count]== 0) {
-                    [arrItineraries removeObjectAtIndex:i];
-                    break;
-                } else {  // both itineraries are unique or have generated reqChunks
-                    logError(@"Plan -> computeUniqueItineraries", @"two unique itineraries that are equivalent");
-                    // This should be a rare case... keep both for now
+        Itinerary *itin1 = (Itinerary*)[arrItineraries objectAtIndex:i];
+        if ([itin1 isOTPItinerary]) {
+            for(int j=i+1;j<[arrItineraries count];j++){
+                Itinerary *itin2 = (Itinerary*)[arrItineraries objectAtIndex:j];
+                if ([itin2 isOTPItinerary]) {
+                    BOOL isEquivalentitinerary = [itin1 isEquivalentModesAndStopsAs:itin2];
+                    if(isEquivalentitinerary){
+                        if (![itin2 isUniqueItinerary] && [[itin2 requestChunksCreatedByThisPattern] count] == 0) {
+                            [arrItineraries removeObjectAtIndex:j];
+                            i = i-1;
+                            break;
+                        } else if (![itin1 isUniqueItinerary] && [[itin1 requestChunksCreatedByThisPattern] count]== 0) {
+                            [arrItineraries removeObjectAtIndex:i];
+                            break;
+                        } else {  // both itineraries are unique or have generated reqChunks
+                            logError(@"Plan -> computeUniqueItineraries", @"two unique itineraries that are equivalent");
+                            // This should be a rare case... keep both for now
+                        }
+                    }
                 }
             }
         }
@@ -788,6 +817,7 @@
     }
     if (isItin0Unique) {
         [itin0 setUniqueItineraryForPlan:self];  // add to unique itineraries
+        [self updateExcludeSettingsArray]; // update routeExcludeSettings with new unique itinerary
     } else {
         [itin0 setUniqueItineraryForPlan:nil];   // declare it not to be a unique itinerary
     }

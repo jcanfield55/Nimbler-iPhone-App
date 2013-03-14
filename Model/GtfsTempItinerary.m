@@ -16,7 +16,7 @@
 @synthesize legInfoArray;
 @synthesize minTransferTime;
 
-static iterationCount;  // non-essential used for performance monitoring only
+static int iterationCount;  // non-essential used for performance monitoring only
 
 -(id) initWithMinTransferTime:(NSTimeInterval)time0
 {

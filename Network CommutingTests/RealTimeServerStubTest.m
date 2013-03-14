@@ -438,6 +438,13 @@
     
     // Check resulting plan versus what is in Hawthorne2Hull1.json file
     STAssertEquals(plan.itineraries.count, 4u, @"");
+    STAssertEquals(plan.requestChunks.count, 1u, @"");
+    NSDate* nextOtpDate = [plan nextOtpServerDateToCallFor:tripDate
+                                            departOrArrive:DEPART
+                                      routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
+                          planBufferSecondsBeforeItinerary:60
+                               planMaxTimeForResultsToShow:30];
+    STAssertEqualObjects([dateFormatter stringFromDate:nextOtpDate], @"02/11/2013 07:16 PM", @"");
     Leg* leg0_1 = [[[[plan sortedItineraries] objectAtIndex:0] sortedLegs] objectAtIndex:1];
     STAssertTrue([[leg0_1 route] isEqualToString:@"10"], @"");
     Leg* leg0_3 = [[[[plan sortedItineraries] objectAtIndex:0] sortedLegs] objectAtIndex:3];

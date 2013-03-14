@@ -69,6 +69,7 @@
         
         if (matchingPlanArray && [matchingPlanArray count]>0) {
             Plan* matchingPlan = [matchingPlanArray objectAtIndex:0]; // Take the first matching plan
+            [matchingPlan updateExcludeSettingsArray];   // Update with latest excludeSettings
             if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate]
                                                           departOrArrive:[parameters departOrArrive]
                                                     routeExcludeSettings:[parameters routeExcludeSettings]
@@ -449,12 +450,6 @@
     if ([plan haveOnlyUnscheduledItineraries]) {
         return NO_MORE_ITINERARIES_REQUESTED; // DE186 fix, do not request more itineraries if we currently are have walk-only or bike-only itinerary
     }
-    // Find out how far the matching OTP itineraries go with extremely large limits
-    NSDate* otpRequestDate = [plan nextOtpServerDateToCallFor:requestParams0.originalTripDate
-                                               departOrArrive:requestParams0.departOrArrive
-                                         routeExcludeSettings:[RouteExcludeSettings latestUserSettings]  // use latest user settings, in case changed
-                             planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY
-                                  planMaxTimeForResultsToShow:(100*60*60)];
     
     PlanRequestParameters* params = [PlanRequestParameters copyOfPlanRequestParameters:requestParams0];
     
@@ -463,6 +458,14 @@
     //     params.planDestination = [((ToFromViewController *) params.planDestination) routeOptionsVC];
     // }
     params.routeExcludeSettings = [RouteExcludeSettings latestUserSettings];  // use the latest settings in case something has changed
+    params.routeExcludeSettingsUsedForOTPCall = [RouteExcludeSettings excludeSettingsWithSettingArray:[plan excludeSettingsArray]];
+    
+    // Find out how far the matching OTP itineraries go with extremely large limits
+    NSDate* otpRequestDate = [plan nextOtpServerDateToCallFor:params.originalTripDate
+                                               departOrArrive:params.departOrArrive
+                                         routeExcludeSettings:params.routeExcludeSettingsUsedForOTPCall
+                             planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY
+                                  planMaxTimeForResultsToShow:(100*60*60)];
     
     NSTimeInterval bufferSeconds;
     if ([otpRequestDate isEqualToDate:requestParams0.originalTripDate]) {
@@ -471,19 +474,10 @@
         bufferSeconds = PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS;
     }
     
-    NSArray* exclSettingArray = [params.routeExcludeSettings excludeSettingsForPlan:plan withParameters:requestParams0];
-    params.routeExcludeSettingsUsedForOTPCall = [RouteExcludeSettings excludeSettingsWithSettingArray:exclSettingArray];
-    
-    BOOL areRouteExcludeSettingsDifferent = false;
-    if (!requestParams0.routeExcludeSettings && [RouteExcludeSettings noExcludesForSettingArray:exclSettingArray]) {
-        areRouteExcludeSettingsDifferent = false;  // both the last request and this one have no excludes
-    } else if (!requestParams0.routeExcludeSettings) {
-        areRouteExcludeSettingsDifferent = true;   // only the last request had no excludes
-    } else if ([requestParams0.routeExcludeSettingsUsedForOTPCall isEquivalentTo:params.routeExcludeSettingsUsedForOTPCall]) {
+    BOOL areRouteExcludeSettingsDifferent = true;
+    if ([params.routeExcludeSettingsUsedForOTPCall isEquivalentTo:requestParams0.routeExcludeSettingsUsedForOTPCall]) {
         areRouteExcludeSettingsDifferent = false;
-    } else {
-        areRouteExcludeSettingsDifferent = true;
-    }
+    } 
     if (areRouteExcludeSettingsDifferent) { // if the settings are different, cancel out the incrementing of serverCallsSoFar
         requestParams0.serverCallsSoFar = requestParams0.serverCallsSoFar - 1;
     }
@@ -491,12 +485,12 @@
     if (params.departOrArrive == DEPART &&
         [otpRequestDate timeIntervalSinceDate:requestParams0.originalTripDate] < PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW) {
         params.thisRequestTripDate = [otpRequestDate dateByAddingTimeInterval:bufferSeconds];
-        [self requestPlanFromOtpWithParameters:params routeExcludeSettingArray:exclSettingArray];
+        [self requestPlanFromOtpWithParameters:params routeExcludeSettingArray:[plan excludeSettingsArray]];
         moreItinStatus = (areRouteExcludeSettingsDifferent ? MORE_ITINERARIES_REQUESTED_DIFFERENT_EXCLUDES : MORE_ITINERARIES_REQUESTED_SAME_EXCLUDES);
     } else if (params.departOrArrive == ARRIVE &&
                [otpRequestDate timeIntervalSinceDate:requestParams0.originalTripDate] > -PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW){
         params.thisRequestTripDate = [otpRequestDate dateByAddingTimeInterval:(-bufferSeconds)];
-        [self requestPlanFromOtpWithParameters:params routeExcludeSettingArray:exclSettingArray];
+        [self requestPlanFromOtpWithParameters:params routeExcludeSettingArray:[plan excludeSettingsArray]];
         moreItinStatus = (areRouteExcludeSettingsDifferent ? MORE_ITINERARIES_REQUESTED_DIFFERENT_EXCLUDES : MORE_ITINERARIES_REQUESTED_SAME_EXCLUDES);
     }
     return moreItinStatus;

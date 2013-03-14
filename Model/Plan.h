@@ -39,7 +39,7 @@
 @property(nonatomic,strong) NSArray *sortedItineraries;  // Array of ordered itineraries (not stored in Core Data) relevant to the userRequestDate and userRequestDepartOrArrive.  Could be subset if a cached call
 @property(nonatomic, strong) TransitCalendar* transitCalendar;
 @property(nonatomic, strong) NSSet* gtfsParsingRequests; // Set of GtfsParsingStatus objects that have outstanding requests to download GTFS trips & stopTimes
-
+@property(nonatomic, strong) NSArray* excludeSettingsArray;  // Array of RouteExcludeSetting objects returned by RouteExcludeSettings -> excludeSettingsForPlan.  Not stored in CoreData
 
 // Methods
 
@@ -55,6 +55,8 @@
 - (NSString *)ncDescription;
 - (void)sortItineraries;  // Create the sorted array of itineraries (sorted by startTimeOnly)
 
+// Updates excludeSettingsArray for the plan using the [RouteExcludeSettings latestUserSettings]
+- (void)updateExcludeSettingsArray;
 
 // Returns an array of itineraries sorted by date that have the
 // StartTimeOnly field between fromTimeOnly to toTimeOnly

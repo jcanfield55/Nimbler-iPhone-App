@@ -14,16 +14,14 @@
 #import "UtilityFunctions.h"
 #import "LocalConstants.h"
 
-#define BY_AGENCY @"By Agency"
-#define BY_RAIL_BUS  @"By Rail/Bus"
 #define SETTING_STRING_INCLUDE @"Include"
 #define SETTING_STRING_EXCLUDE @"Exclude"
 
 @interface RouteExcludeSettings() {
-    NSDictionary *agencyIDHandlingDictionaryInternal;
+
 }
 
--(NSDictionary *)agencyIDHandlingDictionary;
+-(NSDictionary *)agencyButtonHandlingDictionary;
 -(NSMutableDictionary *)excludeDictionary;
 
 @end
@@ -36,12 +34,16 @@
 @dynamic usedByRequestChunks;
 
 static RouteExcludeSettings *latestUserSettingsStatic=nil; // latest User Settings
-static NSManagedObjectContext *managedObjectContext=nil; // For storing and creating new objects
+static NSManagedObjectContext *routeExcludeMOC=nil; // For storing and creating new objects
+static NSDictionary *agencyButtonHandlingDictionaryInternal;
 
-// Sets the ManagedObjectContext where RouteExcludeSettings are stored
+// Sets the routeExcludeMOC where RouteExcludeSettings are stored
 +(void)setManagedObjectContext:(NSManagedObjectContext *)moc
 {
-    managedObjectContext = moc;
+    if (routeExcludeMOC != moc) {
+        routeExcludeMOC = moc;
+        latestUserSettingsStatic = nil;  // clear out latestUserSettings if we have a new managed object context
+    }
 }
 
 // Used for automated tests to clear out any old static latestUserSettings variable
@@ -54,15 +56,15 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
 // Fetches from CoreData if needed
 + (RouteExcludeSettings *)latestUserSettings
 {
-    if (!managedObjectContext) {
-        logError(@"RouteExcludeSettings -> latestUserSettings", @"managedObjectContext = nil");
+    if (!routeExcludeMOC) {
+        logError(@"RouteExcludeSettings -> latestUserSettings", @"routeExcludeMOC = nil");
         return nil;
     }
     if(!latestUserSettingsStatic){
-        NSManagedObjectModel *managedObjectModel = [[managedObjectContext persistentStoreCoordinator] managedObjectModel];
+        NSManagedObjectModel *managedObjectModel = [[routeExcludeMOC persistentStoreCoordinator] managedObjectModel];
         NSFetchRequest *request = [managedObjectModel fetchRequestTemplateForName:@"LatestRouteExcludeSettings"];
         NSError *error;
-        NSArray *arraySettings = [managedObjectContext executeFetchRequest:request error:&error];
+        NSArray *arraySettings = [routeExcludeMOC executeFetchRequest:request error:&error];
         if (arraySettings && [arraySettings count]==1) { // Found it
             latestUserSettingsStatic = [arraySettings objectAtIndex:0];
         }
@@ -73,7 +75,7 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
         }
         else {  // no stored latest, so create a new one
             latestUserSettingsStatic = [NSEntityDescription insertNewObjectForEntityForName:@"RouteExcludeSettings"
-                                                             inManagedObjectContext:managedObjectContext];
+                                                             inManagedObjectContext:routeExcludeMOC];
             [latestUserSettingsStatic setIsCurrentUserSetting:[NSNumber numberWithBool:true]];
         }
     }
@@ -87,7 +89,7 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
 -(RouteExcludeSettings *)copyOfCurrentSettings
 {
     RouteExcludeSettings* returnCopy = [NSEntityDescription insertNewObjectForEntityForName:@"RouteExcludeSettings"
-                                                         inManagedObjectContext:managedObjectContext];
+                                                         inManagedObjectContext:routeExcludeMOC];
     [returnCopy setExcludeDictionaryInternal:[NSMutableDictionary dictionaryWithDictionary:[self excludeDictionaryInternal]]];
     [returnCopy setIsCurrentUserSetting:[NSNumber numberWithBool:false]];
     
@@ -99,14 +101,14 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
     return returnCopy;
 }
 
-// Initiatializes (if needed) and returns dictionary mapping agencyIDs to how we will handle
-// BY_AGENCY means we will show just one include/exclude button for that agency
-// BY_RAIL_BUS means we will show up to two buttons for that agency, one for rail and one for bus service
--(NSDictionary *)agencyIDHandlingDictionary{
-        if (!agencyIDHandlingDictionaryInternal) {
-            agencyIDHandlingDictionaryInternal = EXCLUDE_BUTTON_HANDLING_BY_AGENCY_DICTIONARY;
+// Initiatializes (if needed) and returns dictionary mapping agency button names to how we will handle
+// EXCLUSION_BY_AGENCY means we will show just one include/exclude button for that agency
+// EXCLUSION_BY_RAIL_BUS means we will show up to two buttons for that agency, one for rail and one for bus service
++(NSDictionary *)agencyButtonHandlingDictionary {
+        if (!agencyButtonHandlingDictionaryInternal) {
+            agencyButtonHandlingDictionaryInternal = EXCLUDE_BUTTON_HANDLING_BY_AGENCY_DICTIONARY;
         }
-        return agencyIDHandlingDictionaryInternal;
+        return agencyButtonHandlingDictionaryInternal;
 }
 
 
@@ -132,9 +134,13 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
 }
 
 // Returns true if the receiver and settings0 have equivalent setting values
+// If settings0 == nil, returns true if self has default exclude settings
 // Note: does not compare isCurrentUserSetting
 -(BOOL)isEquivalentTo:(RouteExcludeSettings *)settings0
 {
+    if (!settings0) {
+        return [self isDefaultSettings];
+    }
     NSArray* selfKeys = [[self excludeDictionary] allKeys];
     for (NSString* key in selfKeys) {
         if ([self settingForKey:key] != [settings0 settingForKey:key]) {
@@ -167,8 +173,8 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
         
         // Get all the objects in the database...
         NSFetchRequest * fetchSettings = [[NSFetchRequest alloc] init];
-        [fetchSettings setEntity:[NSEntityDescription entityForName:@"RouteExcludeSettings" inManagedObjectContext:managedObjectContext]];
-        NSArray* arraySettings = [managedObjectContext executeFetchRequest:fetchSettings error:nil];
+        [fetchSettings setEntity:[NSEntityDescription entityForName:@"RouteExcludeSettings" inManagedObjectContext:routeExcludeMOC]];
+        NSArray* arraySettings = [routeExcludeMOC executeFetchRequest:fetchSettings error:nil];
         
         for (RouteExcludeSettings* archiveSetting in arraySettings) {
             if (archiveSetting != self &&
@@ -177,12 +183,12 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
                 for (PlanRequestChunk *reqChunk in [NSSet setWithSet:[archiveSetting usedByRequestChunks]]) {
                     [reqChunk setRouteExcludeSettings:self];
                 }
-                [managedObjectContext deleteObject:archiveSetting]; // Remove redundant archiveSetting
+                [routeExcludeMOC deleteObject:archiveSetting]; // Remove redundant archiveSetting
             }
         }
         
         // Store in database
-        saveContext(managedObjectContext);
+        saveContext(routeExcludeMOC);
     }
 }
 
@@ -191,49 +197,35 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
 // in parameters.
 // Returned array containing routeExcludeSettings objects
 // Array is ordered in the sequence options should be presented to user
--(NSArray *)excludeSettingsForPlan:(Plan *)plan withParameters:(PlanRequestParameters *)parameters {
+-(NSArray *)excludeSettingsForPlan:(Plan *)plan {
     
     // Get the itineraries that are relevant to this particular tripDate but with no exclusions
-    NSArray* relevantItineraries = [plan returnSortedItinerariesWithMatchesForDate:parameters.originalTripDate
-                                                                    departOrArrive:parameters.departOrArrive
-                                                              routeExcludeSettings:nil
-                                                           generateGtfsItineraries:NO
-                                                             removeNonOptimalItins:NO
-                                                          planMaxItinerariesToShow:PLAN_MAX_ITINERARIES_TO_SHOW
-                                                  planBufferSecondsBeforeItinerary:PLAN_BUFFER_SECONDS_BEFORE_ITINERARY
-                                                       planMaxTimeForResultsToShow:PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW];
+    NSArray* relevantItineraries = [plan uniqueItineraries];
     NSMutableArray* returnArray = [[NSMutableArray alloc] initWithCapacity:10];
     for (Itinerary* itin in relevantItineraries) {
         for (Leg* leg in [itin legs]) {
-            RouteExcludeSetting* routeExclSetting = [[RouteExcludeSetting alloc] init];
             if (leg.isScheduled && returnShortAgencyName(leg.agencyName)) {      
-                NSString* handling = [[self agencyIDHandlingDictionary] objectForKey:returnShortAgencyName(leg.agencyName)];
+                NSString* handling = [[RouteExcludeSettings agencyButtonHandlingDictionary] objectForKey:returnShortAgencyName(leg.agencyName)];
                 if (handling) {
-                    if ([handling isEqualToString:BY_AGENCY]) {
+                    RouteExcludeSetting* routeExclSetting = [[RouteExcludeSetting alloc] init];
+                    routeExclSetting.agencyId = leg.agencyId;
+                    routeExclSetting.agencyName = leg.agencyName;
+                    routeExclSetting.mode = leg.mode;
+                    if ([handling isEqualToString:EXCLUSION_BY_AGENCY]) {
                         routeExclSetting.key = returnShortAgencyName(leg.agencyName);
-                    } else {  // BY_RAIL_BUS
+                    } else {  // EXCLUSION_BY_RAIL_BUS
                         NSString *railOrBus = (leg.isBus ? @"Bus" : @"Rail");
                         if ([leg.agencyName isEqualToString:SFMUNI_AGENCY_NAME]) {
                             railOrBus = (leg.isBus ? @"Bus" : @"Tram");
                         }
                         routeExclSetting.key = [NSString stringWithFormat:@"%@ %@", returnShortAgencyName(leg.agencyName), railOrBus];
                     }
-                    routeExclSetting.setting = [self settingForKey:routeExclSetting.key];
-                    if (routeExclSetting.setting == SETTING_EXCLUDE_ROUTE) {
-                        if ([handling isEqualToString:BY_AGENCY]) {
-                            routeExclSetting.bannedAgencyString = leg.agencyId;
-                        } else {
-                            routeExclSetting.bannedAgencyByModeString = [NSString stringWithFormat:@"%@::%@",
-                                                                         leg.agencyId,
-                                                                         returnRouteTypeFromLegMode(leg.mode)];
-                        }
-                    }
+                    routeExclSetting.setting = [self settingForKey:routeExclSetting.key]; // automatically updates agencyStrings
                     [returnArray addObject:routeExclSetting];
                 } // else agency not in handling dictionary, do not generate button
             }  // else no agency name, do not generate button
         }
     }
-    
     // Add bike button
     RouteExcludeSetting* routeExclSetting = [[RouteExcludeSetting alloc] init];
     routeExclSetting.key = BIKE_BUTTON;
@@ -302,20 +294,20 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
     }
     // Create the new object
     RouteExcludeSettings* newSettings = [NSEntityDescription insertNewObjectForEntityForName:@"RouteExcludeSettings"
-                                                                     inManagedObjectContext:managedObjectContext];
+                                                                     inManagedObjectContext:routeExcludeMOC];
     [newSettings setIsCurrentUserSetting:[NSNumber numberWithBool:false]];
     [newSettings setExcludeDictionaryInternal:newExcludeDictionary];
     
     // Check that there are not already duplicates if so, consolidate
     NSFetchRequest * fetchSettings = [[NSFetchRequest alloc] init];
-    [fetchSettings setEntity:[NSEntityDescription entityForName:@"RouteExcludeSettings" inManagedObjectContext:managedObjectContext]];
-    NSArray* fetchedSettingsArray = [managedObjectContext executeFetchRequest:fetchSettings error:nil];
+    [fetchSettings setEntity:[NSEntityDescription entityForName:@"RouteExcludeSettings" inManagedObjectContext:routeExcludeMOC]];
+    NSArray* fetchedSettingsArray = [routeExcludeMOC executeFetchRequest:fetchSettings error:nil];
     
     for (RouteExcludeSettings* archiveSetting in fetchedSettingsArray) {
         if (archiveSetting != newSettings &&
             [archiveSetting isEquivalentTo:newSettings]) { // if this is an actual different object, but equivalent
             // Delete this new copy -- we don't need it -- and return archiveSetting
-            [managedObjectContext deleteObject:newSettings]; // Remove redundant archiveSetting
+            [routeExcludeMOC deleteObject:newSettings]; // Remove redundant archiveSetting
             return archiveSetting;
         }
     }
@@ -333,13 +325,18 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
     return resultString;
 }
 
-// Returns true if settingArray does not contain any excludes (other than Bike mode exclude)
-// settingArray is created by excludeSettingsForPlan method
-+(BOOL)noExcludesForSettingArray:(NSArray *)settingArray
+                
+// Returns true if self contains the default settings (the equivalent of a nil exclude)
+// This means no excludes except for Bike mode exclude
+-(BOOL)isDefaultSettings
 {
-    for (RouteExcludeSetting* setting in settingArray) {
-        if (![setting.key isEqualToString:BIKE_BUTTON]) { // don't care about bike mode
-            if (setting.setting == SETTING_EXCLUDE_ROUTE) {
+    for (NSString* key in [[self excludeDictionary] allKeys]) {
+        if ([key isEqualToString:BIKE_BUTTON]) { // bike button must be exclude
+            if ([self settingForKey:key] == SETTING_INCLUDE_ROUTE) {
+                return false;
+            }
+        } else { // not bike mode, must be include
+            if ([self settingForKey:key] == SETTING_EXCLUDE_ROUTE) {
                 return false;
             }
         }
@@ -359,11 +356,11 @@ static NSManagedObjectContext *managedObjectContext=nil; // For storing and crea
                return false; // Exclude bike itinerary if BIKE_BUTTON excluded
            }
            else if (returnShortAgencyName(leg.agencyName)) {      
-               NSString* handling = [[self agencyIDHandlingDictionary] objectForKey:returnShortAgencyName(leg.agencyName)];
+               NSString* handling = [[RouteExcludeSettings agencyButtonHandlingDictionary] objectForKey:returnShortAgencyName(leg.agencyName)];
                if (handling) {
-                   if ([handling isEqualToString:BY_AGENCY]) {
+                   if ([handling isEqualToString:EXCLUSION_BY_AGENCY]) {
                        legKey = returnShortAgencyName(leg.agencyName);
-                   } else {  // BY_RAIL_BUS
+                   } else {  // EXCLUSION_BY_RAIL_BUS
                        NSString *railOrBus = (leg.isBus ? @"Bus" : @"Rail");
                        if ([leg.agencyName isEqualToString:SFMUNI_AGENCY_NAME]) {
                            railOrBus = (leg.isBus ? @"Bus" : @"Tram");

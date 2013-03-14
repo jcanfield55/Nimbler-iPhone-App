@@ -26,7 +26,6 @@
 @interface RouteOptionsViewController()
 {
     // Variables for internal use
-    NSArray* arrRouteSettings;  // Array returned from RouteExcludeSettings with exclude button state
     BOOL setWarningHidden;   // True if we should set the warning to be hidden upon viewWillAppear
 }
 
@@ -92,8 +91,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     planRequestParameters = requestParameter;
     if ([referringObject isKindOfClass:[ToFromViewController class]]) {
         plan = newPlan;
-        arrRouteSettings = [[RouteExcludeSettings latestUserSettings] excludeSettingsForPlan:plan
-                                                                              withParameters:planRequestParameters];
         // no need to update changeMainTableSettings since this happens in viewWillAppear
     }
     else { // not referral by toFromViewController (i.e. an update to existing view)
@@ -101,8 +98,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
             logError(@"RouteOptionsViewController -> newPlanAvailable", @"newPlan != plan for a refresh");
             return;  // This update is not relevant, so return
         }
-        arrRouteSettings = [[RouteExcludeSettings latestUserSettings] excludeSettingsForPlan:plan
-                                                                              withParameters:planRequestParameters];
         [self changeMainTableSettings];
     }
     if (status == PLAN_STATUS_OK) {
@@ -190,18 +185,24 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 -(void) toggleExcludeButton:(id)sender{
     NIMLOG_PERF2(@"toggleExcludeButton started");
     UIButton *btn = (UIButton *)sender;
-    IncludeExcludeSetting newSettingValue;
+    RouteExcludeSetting* toggledSetting;
+    for (RouteExcludeSetting *setting in [plan excludeSettingsArray]) {
+        if ([setting.key isEqualToString:btn.titleLabel.text]) {
+            toggledSetting = setting; // Getting the setting we are going to toggle in the settingArray
+            break;
+        }
+    }
     if([[RouteExcludeSettings latestUserSettings] settingForKey:btn.titleLabel.text] == SETTING_EXCLUDE_ROUTE){
         [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:btn.titleLabel.text];
+        toggledSetting.setting = SETTING_INCLUDE_ROUTE;
         [btn setBackgroundImage:[UIImage imageNamed:@"pressed1.png"] forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
-        newSettingValue = SETTING_INCLUDE_ROUTE;
     }
     else{
         [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:btn.titleLabel.text];
+        toggledSetting.setting = SETTING_EXCLUDE_ROUTE;
         [btn setBackgroundImage:nil forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor GRAY_FONT_COLOR] forState:UIControlStateNormal];
-        newSettingValue = SETTING_EXCLUDE_ROUTE;
     }
 
     // Update sorted itineraries with new exclusions
@@ -211,11 +212,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         return;
     }
     NIMLOG_PERF2(@"Finished setting button");
-    arrRouteSettings = [[RouteExcludeSettings latestUserSettings] excludeSettingsForPlan:plan
-                                                                          withParameters:planRequestParameters];
     logEvent(FLURRY_EXCLUDE_SETTING_CHANGED,
              FLURRY_CHANGED_EXCLUDE_SETTING, btn.titleLabel.text,
-             FLURRY_NEW_EXCLUDE_SETTINGS, [RouteExcludeSettings stringFromSettingArray:arrRouteSettings],
+             FLURRY_NEW_EXCLUDE_SETTINGS, [RouteExcludeSettings stringFromSettingArray:[plan excludeSettingsArray]],
              nil, nil, nil, nil);
     
     PlanRequestParameters* newParameters = [PlanRequestParameters copyOfPlanRequestParameters:planRequestParameters];
@@ -603,8 +602,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     int width = 80;
     int btnHeight = 25;
     
-    for(int i=0;i<[arrRouteSettings count];i++){
-        RouteExcludeSetting *routeExcludeSetting = [arrRouteSettings objectAtIndex:i];
+    for(int i=0;i<[[plan excludeSettingsArray] count];i++){
+        RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
         UIButton *btnAgency = [UIButton buttonWithType:UIButtonTypeCustom];
         if(xPos+width > 320){
             yPos = yPos + 25 + 5;
@@ -629,8 +628,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 
 - (int) calculateTotalHeightOfButtonView{
     int tempButtonCounts;
-    if([arrRouteSettings count] > 3)
-       tempButtonCounts = [arrRouteSettings count] - 3;
+    if([[plan excludeSettingsArray] count] > 3)
+       tempButtonCounts = [[plan excludeSettingsArray] count] - 3;
     else
         tempButtonCounts = 0;
     

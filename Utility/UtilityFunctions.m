@@ -18,7 +18,6 @@
 static NSDateFormatter *utilitiesTimeFormatter;  // Static variable for short time formatter for use by utility
 static NSDateFormatter *timeFormatterForTimeString;  // used for dateForTimeString utility @"MM/dd/yyyy HH:mm:ss"
 static NSDateFormatter *timeFormatterOnly;  // time formatter for HH:mm:ss
-static NSDateFormatter *dateFormatterOnly;  // date formatter for @"MM/dd/yyyy"
 static NSDateFormatter *dayOfWeekFormatter;  // date formatter to return day of week @"e"
 static NSDate *zeroTimeOnly;    // "Zero time, i.e. timeOnly for 00:00:00"
 static NSCalendar *currentCalendar;   // [NSCalendar currentCalendar]
@@ -178,8 +177,11 @@ NSString *distanceStringInMilesFeet(double meters) {
 //
 NSDate *timeOnlyFromDate(NSDate *date) {
     if (!zeroTimeOnly) {
+        if (!currentCalendar) {
+            currentCalendar = [NSCalendar currentCalendar];
+        }
         NSDateComponents* zeroTimeComponents = [[NSDateComponents alloc] init];
-        zeroTimeOnly = [[NSCalendar currentCalendar] dateFromComponents:zeroTimeComponents];
+        zeroTimeOnly = [currentCalendar dateFromComponents:zeroTimeComponents];
     }
     
     NSDate* dateOnly = dateOnlyFromDate(date);
@@ -250,15 +252,6 @@ NSDate *dateOnlyFromDate(NSDate *date) {
     NSDate *returnDateOnly = [currentCalendar dateFromComponents:[currentCalendar components:timeComponents
                                                                                     fromDate:date]];
     return returnDateOnly;
-    
-    /*
-    if (!dateFormatterOnly) {
-        dateFormatterOnly = [[NSDateFormatter alloc] init];
-        [dateFormatterOnly setDateFormat:@"MM/dd/yyyy"];
-    }
-    NSString* dateOnlyStr = [dateFormatterOnly stringFromDate:date];
-    return [dateFormatterOnly dateFromString:dateOnlyStr];
-     */
 }
 
 //
@@ -278,19 +271,21 @@ NSInteger dayOfWeekFromDate(NSDate *date) {
 // taken from time
 //
 NSDate *addDateOnlyWithTimeOnly(NSDate *date, NSDate *time) {
-    NSCalendar* calendar = [NSCalendar currentCalendar];
+    if (!currentCalendar) {
+        currentCalendar = [NSCalendar currentCalendar];
+    }
     NSUInteger dateComponentNames = NSMonthCalendarUnit | NSYearCalendarUnit | NSDayCalendarUnit;
     NSUInteger timeComponentNames = NSHourCalendarUnit | NSMinuteCalendarUnit;
 
     // Get the components of date and time
-    NSDateComponents* dateComponents = [calendar components:dateComponentNames fromDate:date];
-    NSDateComponents* timeComponents = [calendar components:timeComponentNames fromDate:time];
+    NSDateComponents* dateComponents = [currentCalendar components:dateComponentNames fromDate:date];
+    NSDateComponents* timeComponents = [currentCalendar components:timeComponentNames fromDate:time];
     
     // Transfer time components over
     [dateComponents setHour:[timeComponents hour]];
     [dateComponents setMinute:[timeComponents minute]];
     
-    return [calendar dateFromComponents:dateComponents];
+    return [currentCalendar dateFromComponents:dateComponents];
 }
 
 //
@@ -302,9 +297,11 @@ NSDate *addDateOnlyWithTimeOnly(NSDate *date, NSDate *time) {
 NSDate *addDateOnlyWithTime(NSDate *date, NSDate *timeOnly) {
     // Get the zeroTime, which is the time corresponding to all zeros in the NSDateComponents
     if (!zeroTimeOnly) {
-        NSCalendar* calendar = [NSCalendar currentCalendar];
+        if (!currentCalendar) {
+            currentCalendar = [NSCalendar currentCalendar];
+        }
         NSDateComponents* zeroTimeComponents = [[NSDateComponents alloc] init];
-        zeroTimeOnly = [calendar dateFromComponents:zeroTimeComponents];
+        zeroTimeOnly = [currentCalendar dateFromComponents:zeroTimeComponents];
     }
     // Get the time interval from timeOnly from zeroTime
     NSTimeInterval timeOnlyInterval = [timeOnly timeIntervalSinceDate:zeroTimeOnly];
@@ -587,8 +584,10 @@ NSString *getItemAtIndexFromArray(int index,NSArray *arrayComponents){
     return @"";
 }
 int timeIntervalFromDate(NSDate * date){
-    NSCalendar *calendarDepartureTime = [NSCalendar currentCalendar];
-    NSDateComponents *componentsDepartureTime = [calendarDepartureTime components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:date];
+    if (!currentCalendar) {
+        currentCalendar = [NSCalendar currentCalendar];
+    }
+    NSDateComponents *componentsDepartureTime = [currentCalendar components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:date];
     int hourDepartureTime = [componentsDepartureTime hour];
     int minuteDepartureTime = [componentsDepartureTime minute];
     int intervalDepartureTime = (hourDepartureTime)*60*60 + minuteDepartureTime*60;
