@@ -240,6 +240,7 @@
 #define MIN_TRANSFER_TIME (3*60) // Minimum # of seconds for transfers inserted when creating itineraries
 #define SMALL_TIME_THRESHOLD (15) // Number of seconds considered to be equal in time (used with timeIntervalSinceDate method)
 #define GTFS_MAX_TIME_TO_PULL_SCHEDULES (7*60*60) // Inspect up to 7 hours of schedules for each leg of the trip
+#define DB_ROWS_BEFORE_SAVING_TO_PSC 250  // Number of rows to insert into CoreData before saving context
 
 // realtime
 #define REALTIME_BUFFER_FOR_DELAY (15*60)
