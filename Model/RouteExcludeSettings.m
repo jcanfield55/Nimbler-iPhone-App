@@ -21,7 +21,6 @@
 
 }
 
--(NSDictionary *)agencyButtonHandlingDictionary;
 -(NSMutableDictionary *)excludeDictionary;
 
 @end

@@ -471,6 +471,7 @@
 
 - (void) parseAndStoreGtfsStopTimesData:(NSDictionary *)dictFileData RequestUrl:(NSString *)strResourcePath{
     NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    NSPersistentStoreCoordinator *psc = [self.managedObjectContext persistentStoreCoordinator];
     [moc setUndoManager:nil];  // turn off undo for higher performance
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
     backgroundThreadsOutstanding++;
@@ -1802,6 +1803,7 @@
 }
 - (NSArray *) returnIntermediateStopForLeg:(Leg *)leg{
     NSMutableArray *intermediateStops = [[NSMutableArray alloc] init];
+    NIMLOG_PERF2(@"Begin returnIntermediateStopForLeg: %@", leg.tripId);
         NSString *tripId  = nil;
         NSFetchRequest *fetchStopTimes;
         NSArray * arrayStopTimes;
@@ -1814,6 +1816,7 @@
             tripId = leg.tripId;
             fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesByAgencyID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:tripId,@"TRIPID",agencyFeedIdFromAgencyName(leg.agencyName),@"AGENCYID", nil]];
             arrayStopTimes = [managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
+            NIMLOG_PERF2(@"Completed fetch of intermediate stop times");
             NSSortDescriptor *sortD = [[NSSortDescriptor alloc]
                                        
                                        initWithKey:@"stopSequence" ascending:YES selector:@selector(localizedStandardCompare:)];
@@ -1824,6 +1827,7 @@
                 tripId = leg.realTripId;
                 fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStopTimesByAgencyID" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:tripId,@"TRIPID",agencyFeedIdFromAgencyName(leg.agencyName),@"AGENCYID", nil]];
                 arrayStopTimes = [managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
+                NIMLOG_PERF2(@"Completed fetch of intermediate stop times");
                 NSSortDescriptor *sortD = [[NSSortDescriptor alloc]
                                            
                                            initWithKey:@"stopSequence" ascending:YES selector:@selector(localizedStandardCompare:)];
@@ -1835,6 +1839,7 @@
                 }
                 fetchStopTimes = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"StopTimesByFromStopIdAndDepartureTime" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:leg.from.stopId,@"FROMSTOPID",leg.to.stopId,@"TOSTOPID",[NSNumber numberWithDouble:lowerInterval],@"LOWERLIMIT",[NSNumber numberWithDouble:upperInterval],@"UPPERLIMIT", nil]];
                 arrayStopTimes = [managedObjectContext executeFetchRequest:fetchStopTimes error:nil];
+                NIMLOG_PERF2(@"Completed fetch of intermediate stop times");
                 arrayStopTimes = [self getStopTimesBasedOnStopIdAndnearestTime:arrayStopTimes FromStopId:leg.from.stopId];
                 GtfsStopTimes *stoptimes;
                 if([arrayStopTimes count] > 0){
