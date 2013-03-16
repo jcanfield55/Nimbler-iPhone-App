@@ -1043,6 +1043,8 @@
 {
     @try {
         NSString *tripTime = timeStringFromDate(startDate);
+        if(!tripTime)
+            return nil;
         NSString *cutOffTime = timeStringByAddingInterval(tripTime, timeInterval);
         NSDictionary* fetchVars =[NSDictionary dictionaryWithObjectsAndKeys:
                                   strToStopID,@"STOPID1",
@@ -1636,14 +1638,14 @@
                     NSDictionary *dictPrediction = [self returnNearestRealtime:newItinerary.endTime ArrRealTimes:arrPrediction];
                     if(dictPrediction){
                        Leg *newleg = [self generateLegFromPrediction:dictPrediction newItinerary:newItinerary Leg:leg Context:context ISExtraPrediction:false];
-                        NSArray *itineraries = [self returnItinerariesFromPattern:itinerary Plan:plan];
+                        //NSArray *itineraries = [self returnItinerariesFromPattern:itinerary Plan:plan];
                         if([dictPrediction objectForKey:@"tripId"]){
                             [self setArrivalFlagFromRealTimeAndGtfsStopTimes:newleg Prediction:dictPrediction Context:context];
                         }
                         else{
                             [self setArrivalTimeFlagForLegsAndItinerary:newleg Prediction:dictPrediction Context:context];
                         }
-                        [self hideItineraryIfNeeded:itineraries Leg:leg Index:j Predictions:arrPrediction];
+                        //[self hideItineraryIfNeeded:itineraries Leg:leg Index:j Predictions:arrPrediction];
                         if([self isFirstScheduledLeg:leg Itinerary:itinerary]){
                             newItinerary.startTime = newleg.startTime;
                             [arrPrediction removeObject:dictPrediction];

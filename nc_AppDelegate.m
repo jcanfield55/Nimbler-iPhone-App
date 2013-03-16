@@ -798,6 +798,11 @@ FeedBackForm *fbView;
         
         NSError *error = nil;
         __persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
+//        NSMutableDictionary *pragmaOptions = [NSMutableDictionary dictionary];
+//        [pragmaOptions setObject:@"OFF" forKey:@"synchronous"];
+//        [pragmaOptions setObject:@"MEMORY" forKey:@"journal_mode"];
+        //NSDictionary *storeOptions =
+        //[NSDictionary dictionaryWithObject:pragmaOptions forKey:NSSQLitePragmasOption];
         if (![__persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error])
         {
             /*
