@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="12C60" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="11G56" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AddressComponent" representedClassName="AddressComponent" syncable="YES">
         <attribute name="longName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
@@ -94,15 +94,6 @@
         <attribute name="tripID" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="stop" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsStop" inverseName="stopTimes" inverseEntity="GtfsStop" syncable="YES"/>
         <relationship name="trips" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsTrips" inverseName="stopTimes" inverseEntity="GtfsTrips" syncable="YES"/>
-        <compoundIndexes>
-            <compoundIndex>
-                <index value="tripID"/>
-                <index value="agencyID"/>
-            </compoundIndex>
-            <compoundIndex>
-                <index value="stopID"/>
-            </compoundIndex>
-        </compoundIndexes>
     </entity>
     <entity name="GtfsTrips" representedClassName="GtfsTrips" syncable="YES">
         <attribute name="blockID" optional="YES" attributeType="String" syncable="YES"/>

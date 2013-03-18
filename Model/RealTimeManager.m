@@ -136,6 +136,7 @@ static RealTimeManager* realTimeManager;
             for(int i=0;i<[[plan itineraries] count];i++){
                 Itinerary *iti = [[[plan itineraries] allObjects]  objectAtIndex:i];
                 Itinerary *detailViewitinerary = [nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC.itinerary;
+                iti.hideItinerary = false;
                 if(iti != detailViewitinerary){
                     if(iti.isRealTimeItinerary){
                         [plan deleteItinerary:iti];
@@ -185,13 +186,13 @@ static RealTimeManager* realTimeManager;
         Itinerary *itinerary1 = [arrItinerary objectAtIndex:i];
         if(!itinerary1.isRealTimeItinerary)
             continue;
-        for(int j=i+1;j<[arrItinerary count];j++){
+        for(int j=0;j<[arrItinerary count];j++){
             Itinerary *itinerary2 = [arrItinerary objectAtIndex:j];
             if(itinerary2.isRealTimeItinerary || ![itinerary1 isEquivalentModesAndStopsAs:itinerary2])
                 continue;
-            NSDate *realStartTime = timeOnlyFromDate(itinerary1.startTime);
-            NSDate *scheduledStartTime = timeOnlyFromDate(itinerary2.startTime);
-            if([realStartTime compare:scheduledStartTime] == NSOrderedDescending){
+            NSDate *realStartTime = timeOnlyFromDate([itinerary1 startTimeOfFirstLeg]);
+            NSDate *scheduledStartTime = timeOnlyFromDate([itinerary2 startTimeOfFirstLeg]);
+            if([realStartTime compare:scheduledStartTime] == NSOrderedDescending || [realStartTime isEqualToDate:scheduledStartTime]){
                itinerary2.hideItinerary = true;
             }
         }
