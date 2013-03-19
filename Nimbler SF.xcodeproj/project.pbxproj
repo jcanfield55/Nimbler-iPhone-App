@@ -255,6 +255,11 @@
 		8DE42FED16E0AEEE00A37AD3 /* img_legFerrySelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE916E0AEEE00A37AD3 /* img_legFerrySelect@2x.png */; };
 		8DEE785D166338F100E4863C /* SettingViewController_SF_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */; };
 		8DEE785F166339D600E4863C /* SettingDetailViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */; };
+		8DF19BF416F725FC0050FE00 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */; };
+		8DF19BFA16F726AC0050FE00 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF916F726AC0050FE00 /* Social.framework */; };
+		8DF19BFC16F726CF0050FE00 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFB16F726CF0050FE00 /* AdSupport.framework */; };
+		8DF19BFE16F726D50050FE00 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFD16F726D50050FE00 /* Accounts.framework */; };
+		8DF19C0016F727A10050FE00 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFF16F727A10050FE00 /* libsqlite3.0.dylib */; };
 		8DF35D631627F58500B99F4A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF35D621627F58400B99F4A /* main.m */; };
 		8DFFB36C165DFBBB00A39BC4 /* SettingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */; };
 		8DFFB36D165DFBBB00A39BC4 /* SettingDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */; };
@@ -636,6 +641,11 @@
 		8DE42FE916E0AEEE00A37AD3 /* img_legFerrySelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_legFerrySelect@2x.png"; sourceTree = "<group>"; };
 		8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController_SF_568h.xib; sourceTree = "<group>"; };
 		8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingDetailViewController_568h.xib; sourceTree = "<group>"; };
+		8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
+		8DF19BF916F726AC0050FE00 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		8DF19BFB16F726CF0050FE00 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		8DF19BFD16F726D50050FE00 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		8DF19BFF16F727A10050FE00 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		8DF35D621627F58400B99F4A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		8DF6C87D1670696E00DD4D31 /* Network_Commuting 1.7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.7.xcdatamodel"; sourceTree = "<group>"; };
 		8DFFB369165DFBBB00A39BC4 /* SettingDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingDetailViewController.h; sourceTree = "<group>"; };
@@ -655,6 +665,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8DF19C0016F727A10050FE00 /* libsqlite3.0.dylib in Frameworks */,
+				8DF19BFE16F726D50050FE00 /* Accounts.framework in Frameworks */,
+				8DF19BFC16F726CF0050FE00 /* AdSupport.framework in Frameworks */,
+				8DF19BFA16F726AC0050FE00 /* Social.framework in Frameworks */,
 				52C10385160BEF8000BC6020 /* AddressBookUI.framework in Frameworks */,
 				5258A898160D5DCA00871875 /* libFlurry.a in Frameworks */,
 				8DA39BE115E38B5E0029D54B /* AudioToolbox.framework in Frameworks */,
@@ -674,6 +688,7 @@
 				52CF43A414BDF2F9000565D6 /* CoreGraphics.framework in Frameworks */,
 				52CF43A614BDF2F9000565D6 /* CoreData.framework in Frameworks */,
 				5258A89F160D617800871875 /* libTestFlight.a in Frameworks */,
+				8DF19BF416F725FC0050FE00 /* FacebookSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1038,6 +1053,11 @@
 		52CF439014BDF2F8000565D6 = {
 			isa = PBXGroup;
 			children = (
+				8DF19BFF16F727A10050FE00 /* libsqlite3.0.dylib */,
+				8DF19BFD16F726D50050FE00 /* Accounts.framework */,
+				8DF19BFB16F726CF0050FE00 /* AdSupport.framework */,
+				8DF19BF916F726AC0050FE00 /* Social.framework */,
+				8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */,
 				8D82883616E4CA5600AA8FF2 /* DB */,
 				8D4FC8E3162D2E1A004144DE /* PreloadData */,
 				8DF35D621627F58400B99F4A /* main.m */,
@@ -1680,11 +1700,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
+					"\"$(SRCROOT)\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Nimbler Caltrain-Prefix.pch";
@@ -1708,8 +1729,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
+				PROVISIONING_PROFILE = "4BFCD333-A55F-47A7-B3F0-36DF472F8E15";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4BFCD333-A55F-47A7-B3F0-36DF472F8E15";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -1721,12 +1742,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
+					"\"$(SRCROOT)\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Nimbler Caltrain-Prefix.pch";
@@ -1750,9 +1772,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
-				"PROVISIONING_PROFILE[sdk=*]" = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
+				PROVISIONING_PROFILE = "4BFCD333-A55F-47A7-B3F0-36DF472F8E15";
+				"PROVISIONING_PROFILE[sdk=*]" = "4BFCD333-A55F-47A7-B3F0-36DF472F8E15";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4BFCD333-A55F-47A7-B3F0-36DF472F8E15";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;

@@ -23,4 +23,5 @@
     #import "UIDevice-Hardware.h"
     #import "UIAutomationConstants.h"
     #import "ZipArchive.h"
+    #import <FacebookSDK/FacebookSDK.h>
 #endif

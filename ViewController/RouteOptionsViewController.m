@@ -151,15 +151,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     
     for(int i=0;i<[[plan itineraries] count];i++){
         Itinerary *iti = [[[plan itineraries] allObjects]  objectAtIndex:i];
-        iti.itinArrivalFlag = nil;
-        iti.hideItinerary = false;
         if(iti.isRealTimeItinerary){
-            for(int j=0;j<[[iti sortedLegs] count];j++){
-                Leg *leg = [[iti sortedLegs] objectAtIndex:j];
-                leg.predictions = nil;
-                leg.arrivalFlag = nil;
-                leg.timeDiffInMins = nil;
-            }
             [plan deleteItinerary:iti];
         }
     }

@@ -440,7 +440,6 @@ FeedBackForm *fbView;
      Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
      If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
      */
-    
     saveContext([self managedObjectContext]);
     [locationManager stopUpdatingLocation];
     
@@ -568,6 +567,10 @@ FeedBackForm *fbView;
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+    //TODO:- Need to create App in facebook and also need to add appId here.
+    /*
+    [FBSettings publishInstall:@"AppId"];
+    */
     //US-163 Implementation
     [self showFeedBackAlertIfNeeded];
     /*
@@ -798,7 +801,12 @@ FeedBackForm *fbView;
         
         NSError *error = nil;
         __persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-        if (![__persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error])
+        NSMutableDictionary *pragmaOptions = [NSMutableDictionary dictionary];
+        [pragmaOptions setObject:@"OFF" forKey:@"synchronous"];
+        [pragmaOptions setObject:@"MEMORY" forKey:@"journal_mode"];
+        NSDictionary *storeOptions =
+        [NSDictionary dictionaryWithObject:pragmaOptions forKey:NSSQLitePragmasOption];
+        if (![__persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:storeOptions error:&error])
         {
             /*
              Replace this implementation with code to handle the error appropriately.
