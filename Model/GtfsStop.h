@@ -24,14 +24,6 @@
 @property (nonatomic, retain) NSString * stopName;
 @property (nonatomic, retain) NSString * stopURL;
 @property (nonatomic, retain) NSString * zoneID;
-@property (nonatomic, retain) NSSet *stopTimes;
 @property (nonatomic, retain) NSNumber *isPreloadStop;
 @end
 
-@interface GtfsStop (CoreDataGeneratedAccessors)
-
-- (void)addStopTimesObject:(GtfsStopTimes *)value;
-- (void)removeStopTimesObject:(GtfsStopTimes *)value;
-- (void)addStopTimes:(NSSet *)values;
-- (void)removeStopTimes:(NSSet *)values;
-@end

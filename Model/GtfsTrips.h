@@ -22,13 +22,4 @@
 @property (nonatomic, retain) NSString * tripID;
 @property (nonatomic, retain) GtfsCalendar *calendar;
 @property (nonatomic, retain) GtfsRoutes *route;
-@property (nonatomic, retain) NSSet *stopTimes;
-@end
-
-@interface GtfsTrips (CoreDataGeneratedAccessors)
-
-- (void)addStopTimesObject:(GtfsStopTimes *)value;
-- (void)removeStopTimesObject:(GtfsStopTimes *)value;
-- (void)addStopTimes:(NSSet *)values;
-- (void)removeStopTimes:(NSSet *)values;
 @end

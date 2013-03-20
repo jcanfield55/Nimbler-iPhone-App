@@ -12,6 +12,7 @@
 #import "KeyObjectStore.h"
 #import "UtilityFunctions.h"
 #import "Itinerary.h"
+#import "IntermediateStops.h"
 
 @implementation LegFromOTP
 
@@ -22,6 +23,7 @@
     RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[Leg class]];
     RKManagedObjectMapping* stepsMapping = [Step objectMappingForApi:apiType];
     RKManagedObjectMapping* planPlaceMapping = [PlanPlace objectMappingForApi:apiType];
+    RKManagedObjectMapping* intermediateStops = [IntermediateStops objectMappingForApi:apiType];
     
     // Make the mappings
     if (apiType==OTP_PLANNER) {
@@ -48,6 +50,7 @@
         [mapping mapKeyPath:@"steps" toRelationship:@"steps" withMapping:stepsMapping];
         [mapping mapKeyPath:@"from" toRelationship:@"from" withMapping:planPlaceMapping];
         [mapping mapKeyPath:@"to" toRelationship:@"to" withMapping:planPlaceMapping];
+        [mapping mapKeyPath:@"intermediateStops" toRelationship:@"intermediateStops" withMapping:intermediateStops];
     }
     else {
         // TODO Unknown planner type, throw an exception

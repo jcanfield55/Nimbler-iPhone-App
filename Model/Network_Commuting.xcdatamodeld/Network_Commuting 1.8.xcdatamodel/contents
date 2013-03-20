@@ -78,7 +78,6 @@
         <attribute name="stopName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="stopURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="zoneID" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="stopTimes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GtfsStopTimes" inverseName="stop" inverseEntity="GtfsStopTimes" syncable="YES"/>
     </entity>
     <entity name="GtfsStopTimes" representedClassName="GtfsStopTimes" syncable="YES">
         <attribute name="agencyID" optional="YES" attributeType="String" syncable="YES"/>
@@ -92,8 +91,6 @@
         <attribute name="stopID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="stopSequence" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="tripID" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="stop" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsStop" inverseName="stopTimes" inverseEntity="GtfsStop" syncable="YES"/>
-        <relationship name="trips" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsTrips" inverseName="stopTimes" inverseEntity="GtfsTrips" syncable="YES"/>
     </entity>
     <entity name="GtfsTrips" representedClassName="GtfsTrips" syncable="YES">
         <attribute name="blockID" optional="YES" attributeType="String" syncable="YES"/>
@@ -105,7 +102,16 @@
         <attribute name="tripID" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="calendar" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsCalendar" inverseName="trips" inverseEntity="GtfsCalendar" syncable="YES"/>
         <relationship name="route" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsRoutes" inverseName="trips" inverseEntity="GtfsRoutes" syncable="YES"/>
-        <relationship name="stopTimes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GtfsStopTimes" inverseName="trips" inverseEntity="GtfsStopTimes" syncable="YES"/>
+    </entity>
+    <entity name="IntermediateStops" representedClassName="IntermediateStops" syncable="YES">
+        <attribute name="arrivalTime" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="departureTime" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="lat" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="lon" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="stopAgencyId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="stopId" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="leg" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Leg" inverseName="intermediateStops" inverseEntity="Leg" syncable="YES"/>
     </entity>
     <entity name="Itinerary" representedClassName="Itinerary" syncable="YES">
         <attribute name="duration" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
@@ -169,6 +175,7 @@
         <attribute name="tripId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="tripShortName" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="from" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="PlanPlace" inverseName="leg" inverseEntity="PlanPlace" syncable="YES"/>
+        <relationship name="intermediateStops" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="IntermediateStops" inverseName="leg" inverseEntity="IntermediateStops" syncable="YES"/>
         <relationship name="itinerary" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Itinerary" inverseName="legs" inverseEntity="Itinerary" syncable="YES"/>
         <relationship name="steps" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Step" inverseName="leg" inverseEntity="Step" syncable="YES"/>
         <relationship name="to" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="PlanPlace" inverseName="leg" inverseEntity="PlanPlace" syncable="YES"/>
@@ -344,9 +351,10 @@
         <element name="GtfsCalendarDates" positionX="160" positionY="192" width="128" height="105"/>
         <element name="GtfsParsingStatus" positionX="160" positionY="192" width="128" height="105"/>
         <element name="GtfsRoutes" positionX="160" positionY="192" width="128" height="180"/>
-        <element name="GtfsStop" positionX="160" positionY="192" width="128" height="165"/>
-        <element name="GtfsStopTimes" positionX="160" positionY="192" width="128" height="240"/>
-        <element name="GtfsTrips" positionX="160" positionY="192" width="128" height="195"/>
+        <element name="GtfsStop" positionX="160" positionY="192" width="128" height="150"/>
+        <element name="GtfsStopTimes" positionX="160" positionY="192" width="128" height="210"/>
+        <element name="GtfsTrips" positionX="160" positionY="192" width="128" height="180"/>
+        <element name="IntermediateStops" positionX="160" positionY="192" width="128" height="165"/>
         <element name="Itinerary" positionX="0" positionY="0" width="128" height="360"/>
         <element name="ItineraryFromOTP" positionX="160" positionY="192" width="128" height="45"/>
         <element name="KeyObjectPair" positionX="0" positionY="0" width="128" height="75"/>

@@ -38,6 +38,8 @@
 @synthesize strStopTimesURL;
 @synthesize loadedInitialData;
 @synthesize dictServerCallSoFar;
+@synthesize tripsDictionary;
+@synthesize stopsDictionary;
 
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkTpClient:(RKClient *)rkClient
@@ -435,6 +437,7 @@
             trips.route = [dictRoutes objectForKey:trips.routeID];
             trips.serviceID = [arrayServiceID objectAtIndex:i];
             trips.calendar = [dictCalendar objectForKey:trips.serviceID];
+            
             trips.tripHeadSign = [arrayTripHeadSign objectAtIndex:i];
             trips.directionID = [arrayDirectionID objectAtIndex:i];
             trips.blockID = [arrayBlockID objectAtIndex:i];
@@ -474,7 +477,9 @@
 
     NSPersistentStoreCoordinator *psc = [self.managedObjectContext persistentStoreCoordinator];
     backgroundThreadsOutstanding++;
-    
+    __block double totalTime = 0.0;
+    __block int totalrecords = 0;
+    __block int saveContextCount = 0;
     // http://www.raywenderlich.com/4295/multithreading-and-grand-central-dispatch-on-ios-for-beginners-tutorial
     dispatch_queue_t backgroundQueue;
     backgroundQueue = dispatch_queue_create("com.nimbler.backgroundQueue", NULL);
@@ -489,6 +494,7 @@
             NSMutableDictionary *routeIdAndAgencyIdDictionary = [[NSMutableDictionary alloc] initWithCapacity:10];
             
             NIMLOG_PERF2(@"parse stop times start");
+            
             NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
             NSArray *arrayAgency_TripIds = [dictComponents allKeys];
             NSMutableDictionary *dictTrips = [[NSMutableDictionary alloc] initWithCapacity:[arrayAgency_TripIds count]];
@@ -524,6 +530,7 @@
                     NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
                     if(strSubComponents && strSubComponents.length > 0){
                         insertedRowCount++;
+                        totalrecords ++;
                         GtfsStopTimes* stopTime = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsStopTimes" inManagedObjectContext:moc];
                         NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
                         
@@ -543,27 +550,32 @@
                         
                         NSString* agencyID = getItemAtIndexFromArray(0,arrayAgencyIdsComponents);
                         stopTime.agencyID = agencyID;
-                        GtfsTrips* trip = [dictTrips objectForKey:tripID];
-                        stopTime.trips = trip;
-                        stopTime.stop = [dictStops objectForKey:stopID];
+                        //GtfsTrips* trip = [dictTrips objectForKey:tripID];
+                        //stopTime.trips = trip;
+                        //stopTime.stop = [dictStops objectForKey:stopID];
                         
-                        if (i==0) {  // only do once for a particular tripID
-                            if (trip.routeID) {
-                                [routeIdAndAgencyIdDictionary setObject:agencyID forKey:trip.routeID];
-                            } else {
-                                NIMLOG_ERR1(@"GtfsParser->parseAndStoreGtfsStopTimesData: Nil routeID for stopTime.tripId: %@", stopTime.tripID);
-                                [moc deleteObject:stopTime];
-                            }
-                        }
+//                        if (i==0) {  // only do once for a particular tripID
+//                            if (trip.routeID) {
+//                                [routeIdAndAgencyIdDictionary setObject:agencyID forKey:trip.routeID];
+//                            } else {
+//                                NIMLOG_ERR1(@"GtfsParser->parseAndStoreGtfsStopTimesData: Nil routeID for stopTime.tripId: %@", stopTime.tripID);
+//                                [moc deleteObject:stopTime];
+//                            }
+//                        }
                     }
                 }  // end StopTimes loop
                 
                 if (insertedRowCount >= DB_ROWS_BEFORE_SAVING_TO_PSC) {
                     // Save context and create a new moc
                     NIMLOG_PERF2(@"Saving context after %d rows inserted", insertedRowCount);
+                    NSDate *date1 = [NSDate date];
                     insertedRowCount = 0;
+                    saveContextCount = saveContextCount + 1;
                     saveContext(moc);
-                    NIMLOG_PERF2(@"Done saving context");
+                    NSDate *date2 = [NSDate date];
+                    double diff = [date2 timeIntervalSinceDate:date1];
+                    totalTime = totalTime + diff;
+                    NIMLOG_PERF2(@"Done saving context at=%f",diff);
                 }
             } // end TripId loop
 
@@ -573,7 +585,9 @@
                 NSString* agencyName = agencyNameFromAgencyFeedId([routeIdAndAgencyIdDictionary objectForKey:routeId]);
                 [self setGtfsDataAvailableForAgencyName:agencyName routeId:routeId context:moc];
             }
-            
+            NIMLOG_PERF2(@"totalRecords=%d",totalrecords);
+            NIMLOG_PERF2(@"totalTime=%f",totalTime);
+            NIMLOG_PERF2(@"averageTime=%f",totalTime/saveContextCount);
             NIMLOG_PERF2(@"parse stop times saving context");
             saveContext(moc);
         }
@@ -720,8 +734,8 @@
     @try {
         RKParams *requestParameter = [RKParams params];
         [requestParameter setValue:strRequestString forParam:AGENCY_IDS];
+        NIMLOG_PERF2(@"StopTimes Request Sent");
         [self.rkTpClient post:GTFS_STOP_TIMES params:requestParameter delegate:self];
-        
     }
     @catch (NSException *exception) {
         logException(@"GtfsParser->getGtfsStopTimes", @"", exception);
@@ -876,10 +890,15 @@
             else{
                 [nc_AppDelegate sharedInstance].receivedReply = true;
                 RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
-                NSDictionary *  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
+                //NSData *unzippedData = uncompressGZip([response body]);
+                //NSString *jsonString = [[NSString alloc] initWithData:unzippedData encoding:NSUTF8StringEncoding];
+                NSDictionary * res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
+                NIMLOG_PERF2(@"StopTimes Arrives");
                 NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
                 if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
+                    NIMLOG_PERF2(@"StopTimes Parsing Started");
                     [self parseAndStoreGtfsStopTimesData:res RequestUrl:strRequestURL];
+                    NIMLOG_PERF2(@"StopTimes Parsing and saving Done");
                     lastTripsDataRequestString = nil;
                 }
             }
@@ -1001,13 +1020,51 @@
         }
 }
 
+// Fetch stops from stopsDictionary if available otherwise fetch all stops from database and set it to stopsDictionary and then get stops from stopsDictionary.
+
+- (GtfsStop *) fetchStopsFromStopId:(NSString *)stopId{
+    GtfsStop *stopFromDictionary = [stopsDictionary objectForKey:stopId];
+    if(stopFromDictionary)
+        return stopFromDictionary;
+    
+    NSError *error = nil;
+    NSFetchRequest *fetchStops = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsStop" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:stopId,@"STOPID", nil]];
+    NSArray* stops = [managedObjectContext executeFetchRequest:fetchStops error:&error];
+    NSMutableDictionary *stopsMutableDictionary = [[NSMutableDictionary alloc] init];
+    if([stops count] > 0){
+        GtfsStop *stop = [stops objectAtIndex:0];
+        [stopsMutableDictionary setObject:stop forKey:stop.stopID];
+    }
+    stopsDictionary = stopsMutableDictionary;
+    return [stopsDictionary objectForKey:stopId];
+}
+
+// Fetch trips from tripsDictionary if available otherwise fetch all trips from database and set it to tripsDictionary and then get trips from tripsDictionary.
+
+- (GtfsTrips *) fetchTripsFromTripId:(NSString *)tripId{
+    GtfsTrips *tripFromDictionary = [tripsDictionary objectForKey:tripId];
+    if(tripFromDictionary)
+        return tripFromDictionary;
+
+    NSError *error = nil;
+     NSFetchRequest *fetchTrips = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsTrips" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:tripId,@"TRIPID", nil]];
+    NSArray* trips = [managedObjectContext executeFetchRequest:fetchTrips error:&error];
+    NSMutableDictionary *tripsMutableDictionary = [[NSMutableDictionary alloc] init];
+    if([trips count] > 0){
+        GtfsTrips *trip = [trips objectAtIndex:0];
+        [tripsMutableDictionary setObject:trip forKey:trip.tripID];
+    }
+    tripsDictionary = tripsMutableDictionary;
+    return [tripsDictionary objectForKey:tripId];
+}
+
 // This method get the serviceId based on tripId.
 // Then get the calendar data for particular serviceID.
 // the check for the request date comes after service start date and comes befor enddate.
 // then check service is enabled on request day if yes then return yes otherwise return no.
 - (BOOL) isServiceEnableForStopTimes:(GtfsStopTimes *)stopTimes RequestDate:(NSDate *)requestDate{
     @try {
-        GtfsTrips *trips = stopTimes.trips;
+        GtfsTrips *trips = [self fetchTripsFromTripId:stopTimes.tripID];
         GtfsCalendar *calendar = trips.calendar;
         NSArray *arrServiceDays = [NSArray arrayWithObjects:calendar.sunday,calendar.monday,calendar.tuesday,calendar.wednesday,calendar.thursday,calendar.friday,calendar.saturday,nil];
         NSInteger dayOfWeek = dayOfWeekFromDate(requestDate)-1;
@@ -1276,7 +1333,8 @@
         }
         [newleg setNewlegAttributes:leg];
         newleg.tripId = fromStopTime.tripID;
-        newleg.headSign = fromStopTime.trips.tripHeadSign;
+        GtfsTrips *trips = [self fetchTripsFromTripId:fromStopTime.tripID];
+        newleg.headSign = trips.tripHeadSign;
         newleg.duration = [NSNumber numberWithDouble:[newleg.startTime timeIntervalSinceDate:newleg.endTime] * 1000];
         itinerary.endTime = newleg.endTime;
         [arrStopTimes removeObject:arrayStopTime];
@@ -1645,6 +1703,10 @@
                         else{
                             [self setArrivalTimeFlagForLegsAndItinerary:newleg Prediction:dictPrediction Context:context];
                         }
+                        NSDateFormatter *dateFormatters = [[NSDateFormatter alloc] init];
+                        [dateFormatters setDateFormat:@"yyyyMMdd"];
+                        NSString *strStartDate = [dateFormatters stringFromDate:dateOnlyFromDate(leg.startTime)];
+                        leg.arrivalTime = strStartDate;
                         //[self hideItineraryIfNeeded:itineraries Leg:leg Index:j Predictions:arrPrediction];
                         if([self isFirstScheduledLeg:leg Itinerary:itinerary]){
                             newItinerary.startTime = newleg.startTime;

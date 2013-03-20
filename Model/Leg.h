@@ -24,7 +24,7 @@ typedef enum {
     SCHEDULED_LEG,
 } LegType;
 
-@class Itinerary, PlanPlace, Step;
+@class Itinerary, PlanPlace, Step,IntermediateStops;
 
 @interface Leg : NSManagedObject 
 
@@ -66,6 +66,7 @@ typedef enum {
 @property (nonatomic, strong) NSDictionary *prediction;
 @property (nonatomic) int timeDiff;
 @property (nonatomic, strong) NSString *realTripId;
+@property (nonatomic, retain) NSSet *intermediateStops;
 
 - (NSArray *)sortedSteps;
 - (NSString *)summaryTextWithTime:(BOOL)includeTime;  // Returns a single-line summary of the leg useful for RouteOptionsView details
@@ -127,3 +128,4 @@ typedef enum {
 - (void)addSteps:(NSSet *)values;
 - (void)removeSteps:(NSSet *)values;
 @end
+

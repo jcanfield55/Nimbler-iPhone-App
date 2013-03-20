@@ -139,6 +139,7 @@ static RealTimeManager* realTimeManager;
                 iti.hideItinerary = false;
                 if(iti != detailViewitinerary){
                     if(iti.isRealTimeItinerary){
+                        if([iti.startTime compare:[NSDate date]] == NSOrderedDescending)
                         [plan deleteItinerary:iti];
                     }
                 }

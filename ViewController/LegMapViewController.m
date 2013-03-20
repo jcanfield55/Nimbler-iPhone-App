@@ -17,6 +17,7 @@
 #import "Leg.h"
 #import "Itinerary.h"
 #import "GtfsStopTimes.h"
+#import "IntermediateStops.h"
 
 #define LINE_WIDTH  5
 #define ALPHA_LIGHT 0.7
@@ -115,11 +116,59 @@ NSString *legID;
         [dateFormatter setDateFormat:[NSDateFormatter dateFormatFromTemplate:@"hh:mm:ss a" options:0 locale:[NSLocale currentLocale]]];
         for(int i=0;i<[sortedLegs count];i++){
             Leg *leg = [sortedLegs objectAtIndex:i];
+            NIMLOG_PERF2(@"tripId=%@",leg.tripId);
+            NIMLOG_PERF2(@"fromStopId=%@",leg.from.stopId);
+            NIMLOG_PERF2(@"toStopId=%@",leg.to.stopId);
+            if(!leg.isRealTimeLeg){
+                NSSet *intermediateStops = leg.intermediateStops;
+                for(int i=0;i<[intermediateStops count];i++){
+                    IntermediateStops *stop = [[intermediateStops allObjects] objectAtIndex:i];
+                    float langcoord = [stop.lat floatValue];
+                    float longcoord = [stop.lon floatValue];
+                    CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(langcoord, longcoord);
+                    MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
+                    [point setCoordinate:coord];
+                    [point setTitle:stop.name];
+                    NSDate *arrivalTime = [NSDate dateWithTimeIntervalSince1970:([stop.arrivalTime doubleValue]/1000.0)];
+                    NSString *arrivalTimeString = [dateFormatter stringFromDate:arrivalTime];
+                    [point setSubtitle:[NSString stringWithFormat:@"Arrival: %@",arrivalTimeString]];
+                    [intermediateAnnotations addObject:point];
+                    [mapView addAnnotation:point];
+                }
+            }
+            else{
+                NSArray *stopTimes = [[nc_AppDelegate sharedInstance].gtfsParser returnIntermediateStopForLeg:leg];
+                for(int k=0;k<[stopTimes count];k++){
+                    GtfsStopTimes *stopTime = [stopTimes objectAtIndex:k];
+                    GtfsStop *stop = [[nc_AppDelegate sharedInstance].gtfsParser fetchStopsFromStopId:stopTime.stopID];
+                    float langcoord = [stop.stopLat floatValue];
+                    float longcoord = [stop.stopLon floatValue];
+                    CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(langcoord, longcoord);
+                    MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
+                    [point setCoordinate:coord];
+                    [point setTitle:stop.stopName];
+                    if(stopTime.arrivalTime && ![stopTime.arrivalTime isEqualToString:@""]){
+                        NSDate *arrivalTime = dateFromTimeString(stopTime.arrivalTime);
+                        NSDate *realArrivalTime = nil;
+                        realArrivalTime =  [arrivalTime dateByAddingTimeInterval:(leg.timeDiff * 60)];
+                        NSString *arrivalTimeString;
+                        if(realArrivalTime){
+                            arrivalTimeString = [dateFormatter stringFromDate:realArrivalTime];
+                        }
+                        else{
+                            arrivalTimeString = [dateFormatter stringFromDate:arrivalTime];
+                        }
+                        [point setSubtitle:[NSString stringWithFormat:@"Arrival: %@",arrivalTimeString]];
+                    }
+                    [intermediateAnnotations addObject:point];
+                    [mapView addAnnotation:point];
+                }
+            }
+            /*
             if([leg isScheduled]){
                 NIMLOG_US191(@"tripId=%@",leg.tripId);
                 NIMLOG_US191(@"fromStop=%@",leg.from.stopId);
                 NIMLOG_US191(@"toStop=%@",leg.to.stopId);
-                NSArray *stopTimes = [[nc_AppDelegate sharedInstance].gtfsParser returnIntermediateStopForLeg:leg];
                 for(int i=0;i<[stopTimes count];i++){
                     GtfsStopTimes *stopTime = [stopTimes objectAtIndex:i];
                     NIMLOG_US191(@"intermediateStop=%@",stopTime.stop.stopID);
@@ -151,6 +200,7 @@ NSString *legID;
                     }
                 }
             }
+             */
         }
 }
 - (void)setItineraryNumber:(int)i0

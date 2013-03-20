@@ -12,6 +12,7 @@
 #import "UtilityFunctions.h"
 #import "KeyObjectStore.h"
 #import "LocalConstants.h"
+#import "IntermediateStops.h"
 
 @interface Leg() 
 // Private instance methods
@@ -45,6 +46,8 @@
 @dynamic legId;
 @dynamic tripId;
 @dynamic agencyName;
+@dynamic intermediateStops;
+
 @synthesize realStartTime;
 @synthesize realEndTime;
 @synthesize sortedSteps;

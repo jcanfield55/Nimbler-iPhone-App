@@ -233,6 +233,7 @@
         if(strAgenciesWithMode && strAgenciesWithMode.length > 0){
             [params setObject:strAgenciesWithMode forKey:BANNED_AGENCIES_WITH_MODE];
         }
+        [params setObject:@"true" forKey:SHOW_INTERMEDIATE_STOPS];
         parameters.otpExcludeAgencyString = strAgencies;
         parameters.otpExcludeAgencyByModeString = strAgenciesWithMode;
         

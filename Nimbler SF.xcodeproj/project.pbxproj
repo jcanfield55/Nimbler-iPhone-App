@@ -215,6 +215,7 @@
 		8D106E011671F16C004E0DE5 /* GtfsRoutes.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DF81671F16B004E0DE5 /* GtfsRoutes.m */; };
 		8D106E031671F16C004E0DE5 /* GtfsStopTimes.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DFC1671F16B004E0DE5 /* GtfsStopTimes.m */; };
 		8D106E041671F16C004E0DE5 /* GtfsTrips.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DFE1671F16B004E0DE5 /* GtfsTrips.m */; };
+		8D17871116F87FDA00C2EAD5 /* IntermediateStops.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D17871016F87B3E00C2EAD5 /* IntermediateStops.m */; };
 		8D1A64EA165B82C100176FF7 /* SettingViewController_SF.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D1A64E9165B82C100176FF7 /* SettingViewController_SF.xib */; };
 		8D317A3E16DB9A5A00581224 /* img_bicycle.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D317A3C16DB9A5A00581224 /* img_bicycle.png */; };
 		8D317A3F16DB9A5A00581224 /* img_bicycleSelect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D317A3D16DB9A5A00581224 /* img_bicycleSelect.png */; };
@@ -584,6 +585,8 @@
 		8D106DFC1671F16B004E0DE5 /* GtfsStopTimes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = GtfsStopTimes.m; path = ../Model/GtfsStopTimes.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8D106DFD1671F16B004E0DE5 /* GtfsTrips.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GtfsTrips.h; path = ../Model/GtfsTrips.h; sourceTree = "<group>"; };
 		8D106DFE1671F16B004E0DE5 /* GtfsTrips.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GtfsTrips.m; path = ../Model/GtfsTrips.m; sourceTree = "<group>"; };
+		8D17870F16F87B3E00C2EAD5 /* IntermediateStops.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IntermediateStops.h; path = ../Model/IntermediateStops.h; sourceTree = "<group>"; };
+		8D17871016F87B3E00C2EAD5 /* IntermediateStops.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = IntermediateStops.m; path = ../Model/IntermediateStops.m; sourceTree = "<group>"; };
 		8D1A64E9165B82C100176FF7 /* SettingViewController_SF.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController_SF.xib; sourceTree = "<group>"; };
 		8D317A3C16DB9A5A00581224 /* img_bicycle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_bicycle.png; sourceTree = "<group>"; };
 		8D317A3D16DB9A5A00581224 /* img_bicycleSelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_bicycleSelect.png; sourceTree = "<group>"; };
@@ -992,6 +995,8 @@
 				520FB15D1626036C0083F143 /* Itinerary.m */,
 				8D0FA9AE1691984F0038FDB2 /* ItineraryFromOTP.h */,
 				8D0FA9AF1691984F0038FDB2 /* ItineraryFromOTP.m */,
+				8D17870F16F87B3E00C2EAD5 /* IntermediateStops.h */,
+				8D17871016F87B3E00C2EAD5 /* IntermediateStops.m */,
 				520FB1791626036C0083F143 /* PlanPlace.h */,
 				520FB17A1626036C0083F143 /* PlanPlace.m */,
 				520FB17B1626036C0083F143 /* PlanRequestChunk.h */,
@@ -1598,6 +1603,7 @@
 				8D3EFCC116E85DEE00266C6A /* zip.c in Sources */,
 				8D3EFCC216E85DEE00266C6A /* ZipArchive.mm in Sources */,
 				8D04E79C16E8A488001DB75D /* Network_Commuting.xcdatamodeld in Sources */,
+				8D17871116F87FDA00C2EAD5 /* IntermediateStops.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

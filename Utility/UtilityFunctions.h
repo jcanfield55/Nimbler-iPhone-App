@@ -113,3 +113,6 @@ NSString *returnShortAgencyName(NSString *agencyName);
 NSString *returnRouteTypeFromLegMode(NSString *legMode);
 
 int timeIntervalFromTimeString(NSString *strTime);
+
+NSData* compressData(NSData* uncompressedData);
+NSData* uncompressGZip(NSData* compressedData);

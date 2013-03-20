@@ -23,6 +23,5 @@
 @dynamic tripID;
 @dynamic calendar;
 @dynamic route;
-@dynamic stopTimes;
 
 @end

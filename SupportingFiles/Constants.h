@@ -20,7 +20,7 @@
 #define TEST_GEO_RESPONSE_URL  @"http://localhost:8080/TPServer/ws/mockgeolocation/"
 
 #define TRIP_PROCESS_URL    @"http://23.23.210.156:7070/TPServer/ws/"
-//#define TRIP_PROCESS_URL      @"http://192.168.2.196:8080/TPServer/ws/"
+//#define TRIP_PROCESS_URL      @"http://192.168.2.57:8080/TPServer/ws/"
 
 #define TEST_TRIP_PROCESS_URL @"http://localhost:8080/TPServer/ws/"  // TP server for automated tests
 
@@ -432,4 +432,6 @@
 #define MODE @"mode"
 #define BANNED_AGENCIES @"bannedAgencies"
 #define BANNED_AGENCIES_WITH_MODE @"bannedAgenciesWithMode"
+
+#define SHOW_INTERMEDIATE_STOPS @"showIntermediateStops"
 

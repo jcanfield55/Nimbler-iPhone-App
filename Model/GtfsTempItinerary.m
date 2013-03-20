@@ -10,6 +10,7 @@
 #import "GtfsStopTimes.h"
 #import "GtfsTrips.h"
 #import "UtilityFunctions.h"
+#import "nc_AppDelegate.h"
 
 @implementation GtfsTempItinerary
 
@@ -329,7 +330,8 @@ static int iterationCount;  // non-essential used for performance monitoring onl
                                                      dateFromTimeString(toStopTime.departureTime));
 
                 newleg.tripId = fromStopTime.tripID;
-                newleg.headSign = fromStopTime.trips.tripHeadSign;
+                GtfsTrips *trips = [[nc_AppDelegate sharedInstance].gtfsParser fetchTripsFromTripId:fromStopTime.tripID];
+                newleg.headSign = trips.tripHeadSign;
             }
             newleg.duration = [NSNumber numberWithDouble:[newleg.endTime timeIntervalSinceDate:newleg.startTime] * 1000];
         }

@@ -23,8 +23,6 @@
 @dynamic tripID;
 @dynamic departureTimeInterval;
 @dynamic arrivalTimeInterval;
-@dynamic stop;
-@dynamic trips;
 @dynamic agencyID;
 
 @end

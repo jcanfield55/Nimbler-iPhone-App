@@ -20,7 +20,6 @@
 @dynamic stopName;
 @dynamic stopURL;
 @dynamic zoneID;
-@dynamic stopTimes;
 @dynamic isPreloadStop;
 
 @end
