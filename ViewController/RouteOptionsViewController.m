@@ -81,12 +81,39 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     [noItineraryWarning setHidden:setWarningHidden];
 }
 
+- (void) hideItineraryIfNeeded:(NSArray *)arrItinerary{
+    for(int i=0;i<[arrItinerary count];i++){
+        Itinerary *itinerary1 = [arrItinerary objectAtIndex:i];
+        if(!itinerary1.isRealTimeItinerary && itinerary1.hideItinerary)
+            continue;
+        for(int j=0;j<[arrItinerary count];j++){
+            Itinerary *itinerary2 = [arrItinerary objectAtIndex:j];
+            if(itinerary2.isRealTimeItinerary || ![itinerary1 isEquivalentModesAndStopsAs:itinerary2])
+                continue;
+            NSDate *realStartTime = addDateOnlyWithTime(dateOnlyFromDate([NSDate date]), [itinerary1 startTimeOfFirstLeg]);
+            NSDate *scheduledStartTime = addDateOnlyWithTime(dateOnlyFromDate([NSDate date]),[itinerary2 startTimeOfFirstLeg]);
+            double realTimeInterval = timeIntervalFromDate(realStartTime);
+            double scheduledTimeInterval = timeIntervalFromDate(scheduledStartTime);
+            if([realStartTime compare:scheduledStartTime] == NSOrderedDescending || realTimeInterval == scheduledTimeInterval){
+                itinerary2.hideItinerary = true;
+            }
+        }
+    }
+}
+
 // Method used to set the plan 
 -(void)newPlanAvailable:(Plan *)newPlan
              fromObject:(id)referringObject
                  status:(PlanRequestStatus)status
        RequestParameter:(PlanRequestParameters *)requestParameter
 {
+    [self hideItineraryIfNeeded:[plan sortedItineraries]];
+    [plan prepareSortedItinerariesWithMatchesForDate:requestParameter.originalTripDate
+                                      departOrArrive:requestParameter.departOrArrive
+                                routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
+                             generateGtfsItineraries:NO
+                               removeNonOptimalItins:YES];
+    
     NIMLOG_US202(@"newPlanAvailable, status=%d, sortedItins=%d", status, newPlan.sortedItineraries.count);
     planRequestParameters = requestParameter;
     if ([referringObject isKindOfClass:[ToFromViewController class]]) {
@@ -452,6 +479,14 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
             routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
         }
         itinerary = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
+        
+// Code Added to test the realtime itinerary with api
+//        for(int i=0;i<[[itinerary sortedLegs] count];i++){
+//            Leg *leg = [[itinerary sortedLegs] objectAtIndex:i];
+//            if([leg isScheduled]){
+//                NIMLOG_PERF2(@"routeshortName->%@, fromStop->%@, toStop->%@, fromStopId->%@, toStopId->%@, tripId->%@, headSign->%@",leg.routeShortName,leg.from.name,leg.to.name,leg.from.stopId,leg.to.stopId,leg.realTripId,leg.headSign);
+//            }
+//        }
         itinararyId =[itinerary itinId];
 
         logEvent(FLURRY_ROUTE_SELECTED,

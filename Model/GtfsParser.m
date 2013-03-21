@@ -40,6 +40,7 @@
 @synthesize dictServerCallSoFar;
 @synthesize tripsDictionary;
 @synthesize stopsDictionary;
+@synthesize backgroundMOC;
 
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkTpClient:(RKClient *)rkClient
@@ -49,6 +50,13 @@
         self.managedObjectContext = moc;
         self.rkTpClient = rkClient;
         dictServerCallSoFar = [[NSMutableDictionary alloc] init];
+        
+        NSPersistentStoreCoordinator *psc = [self.managedObjectContext persistentStoreCoordinator];
+        backgroundMOC = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+        [backgroundMOC setUndoManager:nil];  // turn off undo for higher performance
+        [backgroundMOC setPersistentStoreCoordinator:psc];
+        [backgroundMOC setMergePolicy:NSOverwriteMergePolicy];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:backgroundMOC];
     }
     return self;
 }
@@ -474,8 +482,6 @@
 
 
 - (void) parseAndStoreGtfsStopTimesData:(NSDictionary *)dictFileData RequestUrl:(NSString *)strResourcePath{
-
-    NSPersistentStoreCoordinator *psc = [self.managedObjectContext persistentStoreCoordinator];
     backgroundThreadsOutstanding++;
     __block double totalTime = 0.0;
     __block int totalrecords = 0;
@@ -485,12 +491,6 @@
     backgroundQueue = dispatch_queue_create("com.nimbler.backgroundQueue", NULL);
     dispatch_async(backgroundQueue, ^(void) {
         @try {
-            NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-            [moc setUndoManager:nil];  // turn off undo for higher performance
-            [moc setPersistentStoreCoordinator:psc];
-            [moc setMergePolicy:NSOverwriteMergePolicy];
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
-            
             NSMutableDictionary *routeIdAndAgencyIdDictionary = [[NSMutableDictionary alloc] initWithCapacity:10];
             
             NIMLOG_PERF2(@"parse stop times start");
@@ -501,16 +501,16 @@
             NSMutableDictionary *dictStops = [[NSMutableDictionary alloc] initWithCapacity:100];
             
             NSFetchRequest * fetchTrips = [[NSFetchRequest alloc] init];
-            [fetchTrips setEntity:[NSEntityDescription entityForName:@"GtfsTrips" inManagedObjectContext:moc]];
-            NSArray * arrayTrips = [moc executeFetchRequest:fetchTrips error:nil];
+            [fetchTrips setEntity:[NSEntityDescription entityForName:@"GtfsTrips" inManagedObjectContext:backgroundMOC]];
+            NSArray * arrayTrips = [backgroundMOC executeFetchRequest:fetchTrips error:nil];
             for(int i=0;i<[arrayTrips count];i++){
                 GtfsTrips *trips = [arrayTrips objectAtIndex:i];
                 [dictTrips setObject:trips forKey:trips.tripID];
             }
             
             NSFetchRequest * fetchStops = [[NSFetchRequest alloc] init];
-            [fetchStops setEntity:[NSEntityDescription entityForName:@"GtfsStop" inManagedObjectContext:moc]];
-            NSArray * arrayStops = [moc executeFetchRequest:fetchStops error:nil];
+            [fetchStops setEntity:[NSEntityDescription entityForName:@"GtfsStop" inManagedObjectContext:backgroundMOC]];
+            NSArray * arrayStops = [backgroundMOC executeFetchRequest:fetchStops error:nil];
             for(int i=0;i<[arrayStops count];i++){
                 GtfsStop *stop = [arrayStops objectAtIndex:i];
                 [dictStops setObject:stop forKey:stop.stopID];
@@ -531,7 +531,7 @@
                     if(strSubComponents && strSubComponents.length > 0){
                         insertedRowCount++;
                         totalrecords ++;
-                        GtfsStopTimes* stopTime = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsStopTimes" inManagedObjectContext:moc];
+                        GtfsStopTimes* stopTime = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsStopTimes" inManagedObjectContext:backgroundMOC];
                         NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
                         
                         NSString* tripID = getItemAtIndexFromArray(0,arraySubComponents);
@@ -571,7 +571,7 @@
                     NSDate *date1 = [NSDate date];
                     insertedRowCount = 0;
                     saveContextCount = saveContextCount + 1;
-                    saveContext(moc);
+                    saveContext(backgroundMOC);
                     NSDate *date2 = [NSDate date];
                     double diff = [date2 timeIntervalSinceDate:date1];
                     totalTime = totalTime + diff;
@@ -583,13 +583,13 @@
             NSArray* keys = [routeIdAndAgencyIdDictionary allKeys];
             for (NSString* routeId in keys) {
                 NSString* agencyName = agencyNameFromAgencyFeedId([routeIdAndAgencyIdDictionary objectForKey:routeId]);
-                [self setGtfsDataAvailableForAgencyName:agencyName routeId:routeId context:moc];
+                [self setGtfsDataAvailableForAgencyName:agencyName routeId:routeId context:backgroundMOC];
             }
             NIMLOG_PERF2(@"totalRecords=%d",totalrecords);
             NIMLOG_PERF2(@"totalTime=%f",totalTime);
             NIMLOG_PERF2(@"averageTime=%f",totalTime/saveContextCount);
             NIMLOG_PERF2(@"parse stop times saving context");
-            saveContext(moc);
+            saveContext(backgroundMOC);
         }
         @catch (NSException *exception) {
             logException(@"GtfsParser->parseAndStoreGtfsStopTimesData", @"exception in background task", exception);
@@ -890,10 +890,11 @@
             else{
                 [nc_AppDelegate sharedInstance].receivedReply = true;
                 RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
-                //NSData *unzippedData = uncompressGZip([response body]);
-                //NSString *jsonString = [[NSString alloc] initWithData:unzippedData encoding:NSUTF8StringEncoding];
+//                NIMLOG_PERF2(@"response Data Length=%d",[[response body] length]);
+//                NSData *unzippedData = uncompressGZip([response body]);
+//                NIMLOG_PERF2(@"Parsed Data Length=%d",[unzippedData length]);
+//                NSString *jsonString = [[NSString alloc] initWithData:unzippedData encoding:NSUTF8StringEncoding];
                 NSDictionary * res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
-                NIMLOG_PERF2(@"StopTimes Arrives");
                 NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
                 if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
                     NIMLOG_PERF2(@"StopTimes Parsing Started");
@@ -1889,6 +1890,8 @@
         NSDate *upperLimit = [leg.startTime dateByAddingTimeInterval:REALTIME_UPPER_LIMIT];
         double lowerInterval = timeIntervalFromDate(lowerLimit);
         double upperInterval = timeIntervalFromDate(upperLimit);
+        if(upperInterval < lowerInterval)
+            upperInterval = upperInterval + lowerInterval;
         
         if(!leg.isRealTimeLeg){
             tripId = leg.tripId;

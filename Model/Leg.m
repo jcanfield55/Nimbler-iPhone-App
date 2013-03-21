@@ -531,7 +531,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         return YES;
     }
     else if([self.mode isEqualToString:leg.mode]){
-        if(![self.agencyName isEqualToString:leg.agencyName] || [self.to.lat doubleValue] != [leg.to.lat doubleValue] ||  [self.to.lng doubleValue] != [leg.to.lng doubleValue] || [self.from.lat doubleValue] != [leg.from.lat doubleValue] || [self.from.lng doubleValue] != [leg.from.lng doubleValue]){
+        if(![self.agencyName isEqualToString:leg.agencyName] || [self.to.lat doubleValue] != [leg.to.lat doubleValue] ||  [self.to.lng doubleValue] != [leg.to.lng doubleValue] || [self.from.lat doubleValue] != [leg.from.lat doubleValue] || [self.from.lng doubleValue] != [leg.from.lng doubleValue] || ![self.routeId isEqualToString:leg.routeId]){
             return NO;
         }
         return YES;

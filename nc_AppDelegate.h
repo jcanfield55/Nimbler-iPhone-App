@@ -20,7 +20,6 @@
 #import "LegMapViewController.h"
 #import "GtfsParser.h"
 
-
 @interface nc_AppDelegate : UIResponder <UIApplicationDelegate,CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate,UITabBarControllerDelegate,UIActionSheetDelegate> {
     Location* currentLocation;
     UITabBarController *_tabBarController;

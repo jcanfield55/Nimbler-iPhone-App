@@ -136,7 +136,6 @@ static RealTimeManager* realTimeManager;
             for(int i=0;i<[[plan itineraries] count];i++){
                 Itinerary *iti = [[[plan itineraries] allObjects]  objectAtIndex:i];
                 Itinerary *detailViewitinerary = [nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC.itinerary;
-                iti.hideItinerary = false;
                 if(iti != detailViewitinerary){
                     if(iti.isRealTimeItinerary){
                         if([iti.startTime compare:[NSDate date]] == NSOrderedDescending)
@@ -160,13 +159,16 @@ static RealTimeManager* realTimeManager;
                 [self setRealTimePredictionsFromLiveFeeds:legLiveFees];
                 // TODO:- Comment Four lines to run automated test case 
                 [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:originalTripDate Context:nil];
-                [self hideItineraryIfNeeded:[plan.itineraries allObjects]];
+                //[self hideItineraryIfNeeded:[plan.itineraries allObjects]];
                  [plan prepareSortedItinerariesWithMatchesForDate:originalTripDate
                                                    departOrArrive:DEPART
                                              routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
                                           generateGtfsItineraries:NO
                                             removeNonOptimalItins:YES];
-                [self updateItineraryIfAlreadyInRouteDetailView];
+                Itinerary *detailViewitinerary = [nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC.itinerary;
+                if(detailViewitinerary.isRealTimeItinerary){
+                    [self updateItineraryIfAlreadyInRouteDetailView];
+                }
                  [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC reloadData:plan];
                  [routeDetailVC ReloadLegWithNewData];
             }
@@ -185,15 +187,17 @@ static RealTimeManager* realTimeManager;
 - (void) hideItineraryIfNeeded:(NSArray *)arrItinerary{
     for(int i=0;i<[arrItinerary count];i++){
         Itinerary *itinerary1 = [arrItinerary objectAtIndex:i];
-        if(!itinerary1.isRealTimeItinerary)
+        if(!itinerary1.isRealTimeItinerary && itinerary1.hideItinerary)
             continue;
         for(int j=0;j<[arrItinerary count];j++){
             Itinerary *itinerary2 = [arrItinerary objectAtIndex:j];
             if(itinerary2.isRealTimeItinerary || ![itinerary1 isEquivalentModesAndStopsAs:itinerary2])
                 continue;
-            NSDate *realStartTime = timeOnlyFromDate([itinerary1 startTimeOfFirstLeg]);
-            NSDate *scheduledStartTime = timeOnlyFromDate([itinerary2 startTimeOfFirstLeg]);
-            if([realStartTime compare:scheduledStartTime] == NSOrderedDescending || [realStartTime isEqualToDate:scheduledStartTime]){
+            NSDate *realStartTime = addDateOnlyWithTime(dateOnlyFromDate([NSDate date]), [itinerary1 startTimeOfFirstLeg]);
+            NSDate *scheduledStartTime = addDateOnlyWithTime(dateOnlyFromDate([NSDate date]),[itinerary2 startTimeOfFirstLeg]);
+            double realTimeInterval = timeIntervalFromDate(realStartTime);
+            double scheduledTimeInterval = timeIntervalFromDate(scheduledStartTime);
+            if([realStartTime compare:scheduledStartTime] == NSOrderedDescending || realTimeInterval == scheduledTimeInterval){
                itinerary2.hideItinerary = true;
             }
         }
