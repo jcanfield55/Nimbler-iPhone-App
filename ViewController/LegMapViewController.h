@@ -21,4 +21,5 @@
 - (void)setMapViewRegion;  
 - (void)refreshLegOverlay:(int)number;
 - (void) addIntermediateStationsToMapView:(NSArray *)sortedLegs;
+- (void) addIntermediateStops:(NSArray *)stopTimes Leg:(Leg *)leg;
 @end

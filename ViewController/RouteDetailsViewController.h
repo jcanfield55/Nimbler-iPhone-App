@@ -36,4 +36,5 @@
 -(void)setFBParameterForLeg:(NSString *)legId;
 -(void)newItineraryAvailable:(Itinerary *)newItinerary
                  status:(ItineraryStatus)status;
+- (void) intermediateStopTimesReceived:(NSArray *)stopTimes Leg:(Leg *)leg;
 @end

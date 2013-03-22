@@ -228,6 +228,10 @@ NSUserDefaults *prefs;
     // Updates legMapVC itinerary number (changing the region for the map
 }
 
+- (void) intermediateStopTimesReceived:(NSArray *)stopTimes Leg:(Leg *)leg{
+    [legMapVC addIntermediateStops:stopTimes Leg:leg];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];

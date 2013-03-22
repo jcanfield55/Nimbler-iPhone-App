@@ -38,6 +38,8 @@
 
 @property (nonatomic, strong) NSMutableDictionary *dictServerCallSoFar; // Contain count of how many times server is call so far for each gtfs data like GtfsAgency,GtfsCalendar,GtfsCalendarDates etc.if it is more than 3 then we will not request the server.
 
+@property (nonatomic) BOOL isParticularTripRequest;
+@property (nonatomic, strong) Leg *temporaryLeg;
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkTpClient:(RKClient *)rkClient;
 
 // Parse the Gtfs Agency Data and store to database.
@@ -154,5 +156,6 @@
 // Fetch stops from stopsDictionary if available otherwise fetch all stops from database and set it to stopsDictionary and then get stops from stopsDictionary.
 - (GtfsStop *) fetchStopsFromStopId:(NSString *)stopId;
 
+- (void) requestStopTimesDataForParticularTripFromServer:(NSString *)agencytripString Leg:(Leg *)leg;
 @end
 
