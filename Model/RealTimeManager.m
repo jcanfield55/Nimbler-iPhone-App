@@ -101,6 +101,7 @@ static RealTimeManager* realTimeManager;
         RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
         loadedRealTimeData = true;
         id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
+        NIMLOG_PERF2(@"Realtime Response=%@",res);
         [routeOptionsVC setIsReloadRealData:false];
         [self setLiveFeed:res];
     }  @catch (NSException *exception) {
@@ -157,8 +158,10 @@ static RealTimeManager* realTimeManager;
             NSArray * legLiveFees = [liveData  objectForKey:@"legLiveFeeds"];
             if ([legLiveFees count] > 0) {
                 [self setRealTimePredictionsFromLiveFeeds:legLiveFees];
-                // TODO:- Comment Four lines to run automated test case 
+                // TODO:- Comment Four lines to run automated test case
+                NIMLOG_PERF2(@"Realtime Itinerary Generation Started");
                 [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:originalTripDate Context:nil];
+                 NIMLOG_PERF2(@"Realtime Itinerary Generation Finished");
                 //[self hideItineraryIfNeeded:[plan.itineraries allObjects]];
                  [plan prepareSortedItinerariesWithMatchesForDate:originalTripDate
                                                    departOrArrive:DEPART

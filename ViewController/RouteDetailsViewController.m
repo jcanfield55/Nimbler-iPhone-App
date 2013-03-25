@@ -229,6 +229,8 @@ NSUserDefaults *prefs;
 }
 
 - (void) intermediateStopTimesReceived:(NSArray *)stopTimes Leg:(Leg *)leg{
+    [nc_AppDelegate sharedInstance].isNeedToLoadRealData = true;
+    [mainTable reloadData];
     [legMapVC addIntermediateStops:stopTimes Leg:leg];
 }
 

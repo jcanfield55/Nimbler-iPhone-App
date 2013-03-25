@@ -91,6 +91,15 @@
         <attribute name="stopID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="stopSequence" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="tripID" optional="YES" attributeType="String" syncable="YES"/>
+        <compoundIndexes>
+            <compoundIndex>
+                <index value="tripID"/>
+                <index value="agencyID"/>
+            </compoundIndex>
+            <compoundIndex>
+                <index value="stopID"/>
+            </compoundIndex>
+        </compoundIndexes>
     </entity>
     <entity name="GtfsTrips" representedClassName="GtfsTrips" syncable="YES">
         <attribute name="blockID" optional="YES" attributeType="String" syncable="YES"/>

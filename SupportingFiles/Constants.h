@@ -401,7 +401,7 @@
 #define OTP_SUBWAY_MODE     @"SUBWAY"
 #define OTP_TRAM_MODE       @"TRAM"
 #define OTP_BUS_MODE        @"BUS"
-#define OTP_CABLE_CAR       @"cable car"
+#define OTP_CABLE_CAR       @"cable_car"
 #define OTP_FERRY           @"ferry"
 
 // Gtfs Requests Constant

@@ -120,49 +120,52 @@ NSString *legID;
             NIMLOG_PERF2(@"tripId=%@",leg.realTripId);
             NIMLOG_PERF2(@"fromStopId=%@",leg.from.stopId);
             NIMLOG_PERF2(@"toStopId=%@",leg.to.stopId);
-            if(!leg.isRealTimeLeg){
-                NSSet *intermediateStops = leg.intermediateStops;
-                for(int i=0;i<[intermediateStops count];i++){
-                    IntermediateStops *stop = [[intermediateStops allObjects] objectAtIndex:i];
-                    float langcoord = [stop.lat floatValue];
-                    float longcoord = [stop.lon floatValue];
-                    CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(langcoord, longcoord);
-                    MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
-                    [point setCoordinate:coord];
-                    [point setTitle:stop.name];
-                    NSDate *arrivalTime = [NSDate dateWithTimeIntervalSince1970:([stop.arrivalTime doubleValue]/1000.0)];
-                    NSString *arrivalTimeString = [dateFormatter stringFromDate:arrivalTime];
-                    [point setSubtitle:[NSString stringWithFormat:@"Arrival: %@",arrivalTimeString]];
-                    [intermediateAnnotations addObject:point];
-                    [mapView addAnnotation:point];
-                }
-            }
-            else{
-                NSArray *stopTimes = [[nc_AppDelegate sharedInstance].gtfsParser returnIntermediateStopForLeg:leg];
-                for(int k=0;k<[stopTimes count];k++){
-                    GtfsStopTimes *stopTime = [stopTimes objectAtIndex:k];
-                    GtfsStop *stop = [[nc_AppDelegate sharedInstance].gtfsParser fetchStopsFromStopId:stopTime.stopID];
-                    float langcoord = [stop.stopLat floatValue];
-                    float longcoord = [stop.stopLon floatValue];
-                    CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(langcoord, longcoord);
-                    MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
-                    [point setCoordinate:coord];
-                    [point setTitle:stop.stopName];
-                    if(stopTime.arrivalTime && ![stopTime.arrivalTime isEqualToString:@""]){
-                        NSDate *arrivalTime = dateFromTimeString(stopTime.arrivalTime);
-                        NSDate *realArrivalTime = nil;
-                        realArrivalTime =  [arrivalTime dateByAddingTimeInterval:(leg.timeDiff * 60)];
-                        NSString *arrivalTimeString;
-                        if(realArrivalTime){
-                            arrivalTimeString = [dateFormatter stringFromDate:realArrivalTime];
-                        }
-                        else{
-                            arrivalTimeString = [dateFormatter stringFromDate:arrivalTime];
-                        }
+            if(leg.isScheduled){
+                if(!leg.isRealTimeLeg){
+                    NSSet *intermediateStops = leg.intermediateStops;
+                    for(int i=0;i<[intermediateStops count];i++){
+                        IntermediateStops *stop = [[intermediateStops allObjects] objectAtIndex:i];
+                        float langcoord = [stop.lat floatValue];
+                        float longcoord = [stop.lon floatValue];
+                        CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(langcoord, longcoord);
+                        MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
+                        [point setCoordinate:coord];
+                        [point setTitle:stop.name];
+                        NSDate *arrivalTime = [NSDate dateWithTimeIntervalSince1970:([stop.arrivalTime doubleValue]/1000.0)];
+                        NSString *arrivalTimeString = [dateFormatter stringFromDate:arrivalTime];
                         [point setSubtitle:[NSString stringWithFormat:@"Arrival: %@",arrivalTimeString]];
+                        [intermediateAnnotations addObject:point];
+                        [mapView addAnnotation:point];
                     }
-                    [intermediateAnnotations addObject:point];
-                    [mapView addAnnotation:point];
+                }
+                else {
+                    NSArray *stopTimes;
+                        stopTimes = [[nc_AppDelegate sharedInstance].gtfsParser returnIntermediateStopForLeg:leg Itinerary:itinerary];
+                    for(int k=0;k<[stopTimes count];k++){
+                        GtfsStopTimes *stopTime = [stopTimes objectAtIndex:k];
+                        GtfsStop *stop = [[nc_AppDelegate sharedInstance].gtfsParser fetchStopsFromStopId:stopTime.stopID];
+                        float langcoord = [stop.stopLat floatValue];
+                        float longcoord = [stop.stopLon floatValue];
+                        CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(langcoord, longcoord);
+                        MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
+                        [point setCoordinate:coord];
+                        [point setTitle:stop.stopName];
+                        if(stopTime.arrivalTime && ![stopTime.arrivalTime isEqualToString:@""]){
+                            NSDate *arrivalTime = dateFromTimeString(stopTime.arrivalTime);
+                            NSDate *realArrivalTime = nil;
+                            realArrivalTime =  [arrivalTime dateByAddingTimeInterval:(leg.timeDiff * 60)];
+                            NSString *arrivalTimeString;
+                            if(realArrivalTime){
+                                arrivalTimeString = [dateFormatter stringFromDate:realArrivalTime];
+                            }
+                            else{
+                                arrivalTimeString = [dateFormatter stringFromDate:arrivalTime];
+                            }
+                            [point setSubtitle:[NSString stringWithFormat:@"Arrival: %@",arrivalTimeString]];
+                        }
+                        [intermediateAnnotations addObject:point];
+                        [mapView addAnnotation:point];
+                    }
                 }
             }
         }
@@ -173,7 +176,7 @@ NSString *legID;
 }
 
 - (void) addIntermediateStops:(NSArray *)stopTimes Leg:(Leg *)leg{
-    [mapView removeAnnotations:intermediateAnnotations];
+    //[mapView removeAnnotations:intermediateAnnotations];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
     [dateFormatter setDateFormat:[NSDateFormatter dateFormatFromTemplate:@"hh:mm:ss a" options:0 locale:[NSLocale currentLocale]]];
     for(int k=0;k<[stopTimes count];k++){

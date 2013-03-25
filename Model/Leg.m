@@ -593,6 +593,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     from.stopId = leg.from.stopId;
     self.from = from;
     
+    
     PlanPlace * toPlace = [NSEntityDescription insertNewObjectForEntityForName:@"PlanPlace" inManagedObjectContext:self.managedObjectContext];
     toPlace.lat = leg.to.lat;
     toPlace.lng = leg.to.lng;

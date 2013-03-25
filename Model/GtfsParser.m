@@ -44,6 +44,7 @@
 // @synthesize backgroundMOC;
 @synthesize isParticularTripRequest;
 @synthesize temporaryLeg;
+@synthesize temporaryItinerary;
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkTpClient:(RKClient *)rkClient
 {
@@ -530,10 +531,14 @@
             
             int startIndex = 0;
             int endIndex = 0;
+            NIMLOG_PERF2(@"fromStopId=%@",temporaryLeg.from.stopId);
+            NIMLOG_PERF2(@"toStopId=%@",temporaryLeg.to.stopId);
+            GtfsStopTimes *matchingStopTime;
             for(int i=0;i<[arrayStopTimes count];i++){
                 GtfsStopTimes *stopTimes = [arrayStopTimes objectAtIndex:i];
                 if([stopTimes.stopID isEqualToString:temporaryLeg.from.stopId]){
                     startIndex = i + 1;
+                    matchingStopTime = [arrayStopTimes objectAtIndex:i];
                     break;
                 }
             }
@@ -548,7 +553,30 @@
                 GtfsStopTimes *stopTimes = [arrayStopTimes objectAtIndex:i];
                 [intermediateStops addObject:stopTimes];
             }
-            NIMLOG_PERF2(@"Intermediate Stops From Serve = %@",intermediateStops);
+            
+            NSDate *departureDate = dateFromTimeString(matchingStopTime.departureTime);
+            NSDate *realTimeDate = timeOnlyFromDate(temporaryLeg.startTime);
+            double millisecondsSchedule = ([timeOnlyFromDate(departureDate) timeIntervalSince1970])*1000.0;
+            double millisecondsRealTime = ([timeOnlyFromDate(realTimeDate) timeIntervalSince1970])*1000.0;
+            double timeDiffInMilliSeconds = millisecondsRealTime - millisecondsSchedule;
+            int timeDiff = timeDiffInMilliSeconds/(60*1000);
+            temporaryLeg.timeDiff = timeDiff;
+            int arrivalFlag;
+            if(timeDiff >= -2 && timeDiff <= 2)
+                arrivalFlag = ON_TIME;
+            else if(timeDiff < -2)
+                arrivalFlag = EARLY;
+            else
+                arrivalFlag = DELAYED;
+            temporaryLeg.arrivalFlag = [NSString stringWithFormat:@"%d",arrivalFlag];
+            NSDateFormatter *dateFormatters = [[NSDateFormatter alloc] init];
+            [dateFormatters setDateFormat:@"yyyyMMdd"];
+            NSString *strStartDate = [dateFormatters stringFromDate:dateOnlyFromDate(temporaryLeg.startTime)];
+            temporaryLeg.arrivalTime = strStartDate;
+            //temporaryLeg.tempIntermediateStops = intermediateStops;
+            [temporaryItinerary setArrivalFlagFromLegsRealTime];
+            [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC reloadData:nil];
+            NIMLOG_PERF2(@"Intermediate Stops From Server = %@",intermediateStops);
             [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC intermediateStopTimesReceived:intermediateStops Leg:temporaryLeg];
         }
         @catch (NSException *exception) {
@@ -635,7 +663,7 @@
                     NSDate *date1 = [NSDate date];
                     insertedRowCount = 0;
                     saveContextCount = saveContextCount + 1;
-                    saveContext(backgroundMOC);
+                    //saveContext(backgroundMOC);
                     NSDate *date2 = [NSDate date];
                     double diff = [date2 timeIntervalSinceDate:date1];
                     totalTime = totalTime + diff;
@@ -1176,7 +1204,6 @@
 {
     @try {
         NSString *tripTime = timeStringFromDate(startDate);
-        NIMLOG_PERF2(@"tripTime=%@",tripTime);
         if(!tripTime || tripTime.length==0 || !strToStopID || strToStopID.length==0 || !strFromStopID ||
            strFromStopID.length==0 || !tripId || tripId.length == 0) {
             logError(@"GtfsParser-->getStopTimes null/empty strings",
@@ -1604,7 +1631,7 @@
         NSArray *result = [context executeFetchRequest:fetchParseStatus error:&error];
     int timeDiff;
     if([result count] == 0){
-        timeDiff = 0;
+        timeDiff = ON_TIME;
     }
     else{
         GtfsStopTimes *stopTimes = [result objectAtIndex:0];
@@ -1749,7 +1776,20 @@
     }
     return strTripIdhexString;
 }
-
+- (void)removeRealtimeBeforeTripDate:(NSDate *)time RealTimes:(NSMutableDictionary *)realtimes Leg:(Leg *)leg{
+    NSMutableArray *arrRealTimes = [[NSMutableArray alloc]initWithArray:[realtimes objectForKey:leg.legId]];
+        if(!arrRealTimes || [arrRealTimes count] == 0)
+            return;
+        NSDate *timeOnly = time;
+        for (int i=0;i< [arrRealTimes count];i++) {
+            NSDictionary *dictRealTime = [arrRealTimes objectAtIndex:i];
+            NSDate * realTime = [NSDate dateWithTimeIntervalSince1970:[[dictRealTime objectForKey:@"epochTime"] doubleValue]/1000];
+            if([realTime compare:timeOnly] == NSOrderedAscending){
+                [arrRealTimes removeObjectAtIndex:i];
+            }
+        }
+    [realtimes setObject:arrRealTimes forKey:leg.legId];
+}
 // Generate reattime itineraries from pattern and realtime data.
 - (void) generateItinerariesFromPrediction:(Plan *)plan Itinerary:(Itinerary *)itinerary Prediction:(NSMutableDictionary *)dictPredictions TripDate:(NSDate *)tripDate Context:(NSManagedObjectContext *)context{
     PlanRequestChunk* reqChunk;
@@ -1766,9 +1806,10 @@
             }
         }
         NSArray *predictions = [dictPredictions objectForKey:selectedLeg.legId];
-        if(!predictions || [predictions count] == 0)
+        if(!predictions || [predictions count] == 0){
+            NIMLOG_PERF2(@"Number Of Itinerary Generated=%d",i);
             break;
-        
+        }
         Itinerary* newItinerary = [NSEntityDescription insertNewObjectForEntityForName:@"Itinerary" inManagedObjectContext:context];
         newItinerary.plan = plan;
         newItinerary.startTime = tripDate;
@@ -1777,6 +1818,9 @@
         for(int j=0;j<[[itinerary sortedLegs] count];j++){
             Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
             if([leg isScheduled]){
+                if([self isFirstScheduledLeg:leg Itinerary:itinerary]){
+                   [self removeRealtimeBeforeTripDate:newItinerary.endTime RealTimes:dictPredictions Leg:leg]; 
+                }
                 NSMutableArray *arrPrediction = [dictPredictions objectForKey:leg.legId];
                     NSDictionary *dictPrediction = [self returnNearestRealtime:newItinerary.endTime ArrRealTimes:arrPrediction];
                     if(dictPrediction){
@@ -1798,7 +1842,6 @@
                     else{
                         NSArray *itineraries = [self returnItinerariesFromPattern:itinerary Plan:plan];
                         if(![self addRestOfLegFromItineraries:itineraries Leg:leg IndexOfLeg:j NewItinerary:newItinerary Context:context]){
-                            NIMLOG_PERF2(@"new Itinerary Endtime=%@",newItinerary.endTime);
                             NSString *strTOStopID = leg.to.stopId;
                             NSString *strFromStopID = leg.from.stopId;
                             NSMutableArray *arrStopTime = [self getStopTimes:strTOStopID
@@ -1807,7 +1850,7 @@
                                                                 timeInterval:GTFS_MAX_TIME_TO_PULL_SCHEDULES
                                                                       TripId:@"Include any tripId"];
                             if(!arrStopTime || [arrStopTime count] == 0){
-            [plan deleteItinerary:itinerary];
+                               [plan deleteItinerary:newItinerary];
                                 break;
                             }
                             [self addScheduledLegToItinerary:newItinerary
@@ -1962,14 +2005,16 @@
     return arrMutableStopTimes;
 }
 
-- (NSArray *) returnIntermediateStopForLeg:(Leg *)leg{
+- (NSArray *) returnIntermediateStopForLeg:(Leg *)leg Itinerary:(Itinerary *)itinerary{
     NSMutableArray *intermediateStops = [[NSMutableArray alloc] init];
     NIMLOG_PERF2(@"Begin returnIntermediateStopForLeg: %@", leg.tripId);
         NSString *tripId  = nil;
         NSFetchRequest *fetchStopTimes;
         NSArray * arrayStopTimes;
+        NIMLOG_PERF2(@"legStartTime=%@",leg.startTime);
         NSDate *lowerLimit = [leg.startTime dateByAddingTimeInterval:REALTIME_LOWER_LIMIT];
         NSDate *upperLimit = [leg.startTime dateByAddingTimeInterval:REALTIME_UPPER_LIMIT];
+    
         double lowerInterval = timeIntervalFromDate(lowerLimit);
         double upperInterval = timeIntervalFromDate(upperLimit);
         if(upperInterval < lowerInterval)
@@ -1996,7 +2041,7 @@
                                            initWithKey:@"stopSequence" ascending:YES selector:@selector(localizedStandardCompare:)];
                 arrayStopTimes = [arrayStopTimes sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]];
                 if([arrayStopTimes count] == 0){
-                    [self requestStopTimesDataForParticularTripFromServer:[NSString stringWithFormat:@"%@_%@",agencyFeedIdFromAgencyName(leg.agencyName),leg.realTripId] Leg:leg];
+                    [self requestStopTimesDataForParticularTripFromServer:[NSString stringWithFormat:@"%@_%@",agencyFeedIdFromAgencyName(leg.agencyName),leg.realTripId] Leg:leg itinerary:itinerary];
                 }
             }
             else{
@@ -2047,9 +2092,10 @@
     return intermediateStops;
 }
 
-- (void) requestStopTimesDataForParticularTripFromServer:(NSString *)agencytripString Leg:(Leg *)leg{
+- (void) requestStopTimesDataForParticularTripFromServer:(NSString *)agencytripString Leg:(Leg *)leg itinerary:(Itinerary *)itinerary{
     @try {
         temporaryLeg = leg;
+        temporaryItinerary = itinerary;
         RKParams *requestParameter = [RKParams params];
         [requestParameter setValue:agencytripString forParam:AGENCY_IDS];
         NIMLOG_PERF2(@"StopTimes Request Sent");

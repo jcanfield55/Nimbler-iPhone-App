@@ -35,7 +35,7 @@
         [mapping mapKeyPath:@"duration" toAttribute:@"duration"];
         [mapping mapKeyPath:@"endTime" toAttribute:@"endTime"];
         [mapping mapKeyPath:@"headsign" toAttribute:@"headSign"];
-        [mapping mapKeyPath:@"interlineWithPreviousLeg" toAttribute:@"interlineWithPreviousLeg"];
+        //[mapping mapKeyPath:@"interlineWithPreviousLeg" toAttribute:@"interlineWithPreviousLeg"];
         [mapping mapKeyPath:@"legGeometry.length" toAttribute:@"legGeometryLength"];
         [mapping mapKeyPath:@"legGeometry.points" toAttribute:@"legGeometryPoints"];
         [mapping mapKeyPath:@"mode" toAttribute:@"mode"];

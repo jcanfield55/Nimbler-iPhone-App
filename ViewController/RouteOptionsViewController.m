@@ -479,15 +479,15 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
             routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
         }
         itinerary = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
-//        if(itinerary.isRealTimeItinerary){
-//            NIMLOG_PERF2(@"Realtime itinerary");
-//        }
-//        for(int i=0;i<[[itinerary sortedLegs] count];i++){
-//            Leg *leg = [[itinerary sortedLegs] objectAtIndex:i];
-//            if([leg isScheduled]){
-//                NIMLOG_PERF2(@"routeId->%@, routeshortName->%@, fromStop->%@, toStop->%@, fromStopId->%@, toStopId->%@, tripId->%@, headSign->%@",leg.routeId,leg.routeShortName,leg.from.name,leg.to.name,leg.from.stopId,leg.to.stopId,leg.realTripId,leg.headSign);
-//            }
-//        }
+        if(itinerary.isRealTimeItinerary){
+            NIMLOG_PERF2(@"Realtime itinerary");
+        }
+        for(int i=0;i<[[itinerary sortedLegs] count];i++){
+            Leg *leg = [[itinerary sortedLegs] objectAtIndex:i];
+            if([leg isScheduled]){
+                NIMLOG_PERF2(@"routeId->%@, routeshortName->%@, fromStop->%@, toStop->%@, fromStopId->%@, toStopId->%@, tripId->%@, headSign->%@, legMode->%@",leg.routeId,leg.routeShortName,leg.from.name,leg.to.name,leg.from.stopId,leg.to.stopId,leg.realTripId,leg.headSign,leg.mode);
+            }
+        }
         itinararyId =[itinerary itinId];
 
         logEvent(FLURRY_ROUTE_SELECTED,

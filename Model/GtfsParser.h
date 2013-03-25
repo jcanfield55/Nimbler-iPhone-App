@@ -40,6 +40,7 @@
 
 @property (nonatomic) BOOL isParticularTripRequest;
 @property (nonatomic, strong) Leg *temporaryLeg;
+@property (nonatomic, strong) Itinerary *temporaryItinerary;
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkTpClient:(RKClient *)rkClient;
 
 // Parse the Gtfs Agency Data and store to database.
@@ -146,7 +147,7 @@
                                  context:(NSManagedObjectContext *) context;
 
 // return the intermediate stops between from and to stops
-- (NSArray *) returnIntermediateStopForLeg:(Leg *)leg;
+- (NSArray *) returnIntermediateStopForLeg:(Leg *)leg Itinerary:(Itinerary *)itinerary;
 // return the stoptimes array based on from and to stopid and leg start time.
 - (NSArray *) getStopTimesBasedOnStopIdAndnearestTime:(NSArray *)stopTime FromStopId:(NSString *)fromStopId;
 
@@ -156,6 +157,6 @@
 // Fetch stops from stopsDictionary if available otherwise fetch all stops from database and set it to stopsDictionary and then get stops from stopsDictionary.
 - (GtfsStop *) fetchStopsFromStopId:(NSString *)stopId;
 
-- (void) requestStopTimesDataForParticularTripFromServer:(NSString *)agencytripString Leg:(Leg *)leg;
+- (void) requestStopTimesDataForParticularTripFromServer:(NSString *)agencytripString Leg:(Leg *)leg itinerary:(Itinerary *)itinerary;
 @end
 
