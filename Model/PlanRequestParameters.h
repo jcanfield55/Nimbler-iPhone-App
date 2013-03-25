@@ -10,6 +10,7 @@
 
 #import <Foundation/Foundation.h>
 #import "Location.h"
+#import "MutableBoolean.h"
 
 @class RouteExcludeSettings;
 
@@ -46,6 +47,7 @@
 @property (nonatomic) DepartOrArrive departOrArrive;
 @property (nonatomic) int maxWalkDistance;
 @property (nonatomic) int serverCallsSoFar; // number of calls to the server that have been made for this request
+@property (nonatomic) MutableBoolean *hasGoneToRouteOptions;  // pointer to boolean showing true if this plan has made the transition from ToFromView to RouteOptionsView.  The same NSNumber is used for all copies associated with a request
 @property (nonatomic, unsafe_unretained) id<NewPlanAvailableDelegate> planDestination;
 @property (nonatomic) BOOL haveMadeFirstCallback;  // Set to true after first callback
 @property (strong, nonatomic) RouteExcludeSettings* routeExcludeSettings; // optional

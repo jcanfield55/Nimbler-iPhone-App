@@ -41,7 +41,7 @@
 @synthesize dictServerCallSoFar;
 @synthesize tripsDictionary;
 @synthesize stopsDictionary;
-@synthesize backgroundMOC;
+// @synthesize backgroundMOC;
 @synthesize isParticularTripRequest;
 @synthesize temporaryLeg;
 
@@ -53,12 +53,13 @@
         self.rkTpClient = rkClient;
         dictServerCallSoFar = [[NSMutableDictionary alloc] init];
         
-        NSPersistentStoreCoordinator *psc = [self.managedObjectContext persistentStoreCoordinator];
-        backgroundMOC = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-        [backgroundMOC setUndoManager:nil];  // turn off undo for higher performance
-        [backgroundMOC setPersistentStoreCoordinator:psc];
-        [backgroundMOC setMergePolicy:NSOverwriteMergePolicy];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:backgroundMOC];
+        // John: managedObjectContext is supposed to be created in the thread using it per: http://developer.apple.com/library/mac/#documentation/cocoa/conceptual/CoreData/Articles/cdConcurrency.html
+        // NSPersistentStoreCoordinator *psc = [self.managedObjectContext persistentStoreCoordinator];
+        // backgroundMOC = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+        // [backgroundMOC setUndoManager:nil];  // turn off undo for higher performance
+        // [backgroundMOC setPersistentStoreCoordinator:psc];
+        // [backgroundMOC setMergePolicy:NSOverwriteMergePolicy];
+        // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:backgroundMOC];
     }
     return self;
 }
@@ -469,7 +470,9 @@
     if ([notification object] == [self managedObjectContext]) return;
     
     if (![NSThread isMainThread]) {
-        [self performSelectorOnMainThread:@selector(contextChanged:) withObject:notification waitUntilDone:YES];
+        // John note: Changed waitUntilDone: to NO in attempt to avoid deadlocks when main thread is waiting
+        // to be able to save context itself.  
+        [self performSelectorOnMainThread:@selector(contextChanged:) withObject:notification waitUntilDone:NO];
         return;
     }
     [[self managedObjectContext] mergeChangesFromContextDidSaveNotification:notification];
@@ -496,7 +499,7 @@
                 for(int i=0;i<[arrayComponentsAgency count];i++){
                     NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
                     if(strSubComponents && strSubComponents.length > 0){
-                        GtfsStopTimes* stopTime = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsStopTimes" inManagedObjectContext:backgroundMOC];
+                        GtfsStopTimes* stopTime = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsStopTimes" inManagedObjectContext:managedObjectContext];
                         NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
                         
                         NSString* tripID = getItemAtIndexFromArray(0,arraySubComponents);
@@ -561,8 +564,14 @@
     // http://www.raywenderlich.com/4295/multithreading-and-grand-central-dispatch-on-ios-for-beginners-tutorial
     dispatch_queue_t backgroundQueue;
     backgroundQueue = dispatch_queue_create("com.nimbler.backgroundQueue", NULL);
+    NSPersistentStoreCoordinator *psc = [self.managedObjectContext persistentStoreCoordinator];
     dispatch_async(backgroundQueue, ^(void) {
         @try {
+            NSManagedObjectContext* backgroundMOC = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+            [backgroundMOC setUndoManager:nil];  // turn off undo for higher performance
+            [backgroundMOC setPersistentStoreCoordinator:psc];
+            [backgroundMOC setMergePolicy:NSOverwriteMergePolicy];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:backgroundMOC];
             NSMutableDictionary *routeIdAndAgencyIdDictionary = [[NSMutableDictionary alloc] initWithCapacity:10];
             
             NIMLOG_PERF2(@"parse stop times start");
@@ -608,8 +617,8 @@
                         //GtfsTrips* trip = [dictTrips objectForKey:tripID];
                         //stopTime.trips = trip;
                         //stopTime.stop = [dictStops objectForKey:stopID];
-                        GtfsTrips *trip = [self fetchTripsFromTripId:tripID];
                         if (i==0) {  // only do once for a particular tripID
+                            GtfsTrips *trip = [self fetchTripsFromTripId:tripID context:backgroundMOC];
                             if (trip.routeID) {
                                 [routeIdAndAgencyIdDictionary setObject:agencyID forKey:trip.routeID];
                             } else {
@@ -1107,14 +1116,15 @@
 
 // Fetch trips from tripsDictionary if available otherwise fetch all trips from database and set it to tripsDictionary and then get trips from tripsDictionary.
 
-- (GtfsTrips *) fetchTripsFromTripId:(NSString *)tripId{
+- (GtfsTrips *) fetchTripsFromTripId:(NSString *)tripId context:(NSManagedObjectContext *)context
+{
     GtfsTrips *tripFromDictionary = [tripsDictionary objectForKey:tripId];
     if(tripFromDictionary)
         return tripFromDictionary;
 
     NSError *error = nil;
-     NSFetchRequest *fetchTrips = [[[managedObjectContext persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsTrips" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:tripId,@"TRIPID", nil]];
-    NSArray* trips = [managedObjectContext executeFetchRequest:fetchTrips error:&error];
+     NSFetchRequest *fetchTrips = [[[context persistentStoreCoordinator] managedObjectModel] fetchRequestFromTemplateWithName:@"GtfsTrips" substitutionVariables:[NSDictionary dictionaryWithObjectsAndKeys:tripId,@"TRIPID", nil]];
+    NSArray* trips = [context executeFetchRequest:fetchTrips error:&error];
     NSMutableDictionary *tripsMutableDictionary = [[NSMutableDictionary alloc] init];
     if([trips count] > 0){
         GtfsTrips *trip = [trips objectAtIndex:0];
@@ -1130,7 +1140,7 @@
 // then check service is enabled on request day if yes then return yes otherwise return no.
 - (BOOL) isServiceEnableForStopTimes:(GtfsStopTimes *)stopTimes RequestDate:(NSDate *)requestDate{
     @try {
-        GtfsTrips *trips = [self fetchTripsFromTripId:stopTimes.tripID];
+        GtfsTrips *trips = [self fetchTripsFromTripId:stopTimes.tripID context:managedObjectContext];
         GtfsCalendar *calendar = trips.calendar;
         NSArray *arrServiceDays = [NSArray arrayWithObjects:calendar.sunday,calendar.monday,calendar.tuesday,calendar.wednesday,calendar.thursday,calendar.friday,calendar.saturday,nil];
         NSInteger dayOfWeek = dayOfWeekFromDate(requestDate)-1;
@@ -1167,8 +1177,13 @@
     @try {
         NSString *tripTime = timeStringFromDate(startDate);
         NIMLOG_PERF2(@"tripTime=%@",tripTime);
-        if(!tripTime)
+        if(!tripTime || tripTime.length==0 || !strToStopID || strToStopID.length==0 || !strFromStopID ||
+           strFromStopID.length==0 || !tripId || tripId.length == 0) {
+            logError(@"GtfsParser-->getStopTimes null/empty strings",
+                     [NSString stringWithFormat:@"tripTime: '%@', strToStopId '%@', strFromStopID '%@', tripId '%@'",
+                      tripTime,strToStopID, strFromStopID, tripId]);
             return nil;
+        }
         NSString *cutOffTime = timeStringByAddingInterval(tripTime, timeInterval);
         NSDictionary* fetchVars =[NSDictionary dictionaryWithObjectsAndKeys:
                                   strToStopID,@"STOPID1",
@@ -1400,7 +1415,7 @@
         }
         [newleg setNewlegAttributes:leg];
         newleg.tripId = fromStopTime.tripID;
-        GtfsTrips *trips = [self fetchTripsFromTripId:fromStopTime.tripID];
+        GtfsTrips *trips = [self fetchTripsFromTripId:fromStopTime.tripID context:managedObjectContext];
         newleg.headSign = trips.tripHeadSign;
         newleg.duration = [NSNumber numberWithDouble:[newleg.startTime timeIntervalSinceDate:newleg.endTime] * 1000];
         itinerary.endTime = newleg.endTime;

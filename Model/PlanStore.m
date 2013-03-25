@@ -380,7 +380,7 @@
                     if (planRequestParameters.isDestinationToFromVC) {
                         [planRequestParameters.planDestination newPlanAvailable:nil
                                                                      fromObject:self
-                                                                         status:PLAN_GENERIC_EXCEPTION
+                                                                         status:PLAN_NOT_AVAILABLE_THAT_TIME
                                                                RequestParameter:planRequestParameters];
                         logEvent(FLURRY_ROUTE_NO_MATCHING_ITINERARIES, nil, nil, nil, nil, nil, nil, nil, nil);
                     } // else if routeOptions destination, do nothing
@@ -454,10 +454,6 @@
     
     PlanRequestParameters* params = [PlanRequestParameters copyOfPlanRequestParameters:requestParams0];
     
-    // if (params.isDestinationToFromVC) {
-        // Reset destination to routeOptionsViewController if not there already
-    //     params.planDestination = [((ToFromViewController *) params.planDestination) routeOptionsVC];
-    // }
     params.routeExcludeSettings = [RouteExcludeSettings latestUserSettings];  // use the latest settings in case something has changed
     params.routeExcludeSettingsUsedForOTPCall = [RouteExcludeSettings excludeSettingsWithSettingArray:[plan excludeSettingsArray]];
     

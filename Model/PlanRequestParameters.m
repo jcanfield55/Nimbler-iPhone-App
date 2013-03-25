@@ -20,6 +20,7 @@
 @synthesize maxWalkDistance;
 @synthesize departOrArrive;
 @synthesize serverCallsSoFar;
+@synthesize hasGoneToRouteOptions;
 @synthesize planDestination;
 @synthesize formattedAddressTO;
 @synthesize formattedAddressFROM;
@@ -49,6 +50,7 @@
     newParameters.maxWalkDistance = parameters0.maxWalkDistance;
     newParameters.departOrArrive = parameters0.departOrArrive;
     newParameters.serverCallsSoFar = parameters0.serverCallsSoFar;
+    newParameters.hasGoneToRouteOptions = parameters0.hasGoneToRouteOptions; // Note: points to same MutableBoolean -- does not create a new copy
     newParameters.planDestination = parameters0.planDestination;
     newParameters.formattedAddressTO = parameters0.formattedAddressTO;
     newParameters.formattedAddressFROM = parameters0.formattedAddressFROM;

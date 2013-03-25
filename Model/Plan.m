@@ -394,6 +394,7 @@
     @try {
         NIMLOG_PERF2A(@"returnSortedItineraries start loop 1. reqChunk.count=%d",self.requestChunks.count);
         // Go through unique itineraries and get all GTFS itineraries based on them, generating new ones if needed
+        BOOL areThereExcludedItineraries = false;
         NSMutableSet* matchingItineraries = [[NSMutableSet alloc] initWithCapacity:[[self itineraries] count]];
         for (Itinerary* uniqueItin in [self uniqueItineraries]) {  // for all uniqueItineraries
             if (!routeExcludeSettings || [routeExcludeSettings isItineraryIncluded:uniqueItin]) {  // if not an excluded itinerary
@@ -417,6 +418,8 @@
                                            departOrArrive:depOrArrive]) {
                                     if (!routeExcludeSettings || [routeExcludeSettings isItineraryIncluded:itin]) {  // if not an excluded itinerary
                                         [matchingItineraries addObject:itin];
+                                    } else {
+                                        areThereExcludedItineraries = true;
                                     }
                                 }
                         }  // end itins in reqChunk loop
@@ -440,11 +443,13 @@
                            departOrArrive:depOrArrive]) {
                     if (!routeExcludeSettings || [routeExcludeSettings isItineraryIncluded:itin]) {  // if not an excluded itinerary
                         [matchingItineraries addObject:itin];
+                    } else {
+                        areThereExcludedItineraries = true;
                     }
                 }
         }
-        if (!routeExcludeSettings && [matchingItineraries count] == 0) {
-            return nil;
+        if ([matchingItineraries count] == 0 && !areThereExcludedItineraries) {
+            return nil;  // Indicates no matching itineraries but not due to routeExcludeSettings
         }
         
         // Check for suboptimal itineraries or equivalent itineraries

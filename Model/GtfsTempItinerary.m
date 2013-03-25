@@ -330,7 +330,8 @@ static int iterationCount;  // non-essential used for performance monitoring onl
                                                      dateFromTimeString(toStopTime.departureTime));
 
                 newleg.tripId = fromStopTime.tripID;
-                GtfsTrips *trips = [[nc_AppDelegate sharedInstance].gtfsParser fetchTripsFromTripId:fromStopTime.tripID];
+                GtfsTrips *trips = [[nc_AppDelegate sharedInstance].gtfsParser fetchTripsFromTripId:fromStopTime.tripID
+                                    context:context];
                 newleg.headSign = trips.tripHeadSign;
             }
             newleg.duration = [NSNumber numberWithDouble:[newleg.endTime timeIntervalSinceDate:newleg.startTime] * 1000];

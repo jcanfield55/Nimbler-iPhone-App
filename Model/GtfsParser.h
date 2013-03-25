@@ -34,7 +34,7 @@
 @property (nonatomic) BOOL loadedInitialData;  // True if Agency data request was made and data is now loaded all the way through routes
 @property (nonatomic,strong) NSDictionary *tripsDictionary;
 @property (nonatomic,strong) NSDictionary *stopsDictionary;
-@property (nonatomic, strong) NSManagedObjectContext *backgroundMOC;
+// @property (nonatomic, strong) NSManagedObjectContext *backgroundMOC;
 
 @property (nonatomic, strong) NSMutableDictionary *dictServerCallSoFar; // Contain count of how many times server is call so far for each gtfs data like GtfsAgency,GtfsCalendar,GtfsCalendarDates etc.if it is more than 3 then we will not request the server.
 
@@ -151,7 +151,7 @@
 - (NSArray *) getStopTimesBasedOnStopIdAndnearestTime:(NSArray *)stopTime FromStopId:(NSString *)fromStopId;
 
 // Fetch trips from tripsDictionary if available otherwise fetch all trips from database and set it to tripsDictionary and then get trips from tripsDictionary.
-- (GtfsTrips *) fetchTripsFromTripId:(NSString *)tripId;
+- (GtfsTrips *) fetchTripsFromTripId:(NSString *)tripId context:(NSManagedObjectContext *)context;
 
 // Fetch stops from stopsDictionary if available otherwise fetch all stops from database and set it to stopsDictionary and then get stops from stopsDictionary.
 - (GtfsStop *) fetchStopsFromStopId:(NSString *)stopId;

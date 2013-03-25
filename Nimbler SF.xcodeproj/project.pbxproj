@@ -174,6 +174,7 @@
 		5258A898160D5DCA00871875 /* libFlurry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC9370D815BFB97200A09A5A /* libFlurry.a */; };
 		5258A89F160D617800871875 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5258A89B160D617800871875 /* libTestFlight.a */; };
 		525C20F9151D3AF5004F8FE0 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
+		525EC1C1170006B6009ACE5A /* MutableBoolean.m in Sources */ = {isa = PBXBuildFile; fileRef = 525EC1C0170006B6009ACE5A /* MutableBoolean.m */; };
 		527E174A151EB9CD00CDBC23 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527E1749151EB9CD00CDBC23 /* QuartzCore.framework */; };
 		528C664E16D7011E005B7309 /* RouteExcludeSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 528C664D16D7011E005B7309 /* RouteExcludeSetting.m */; };
 		52958AB116CED86900CC46C7 /* GtfsTempItinerary.m in Sources */ = {isa = PBXBuildFile; fileRef = 52958AB016CED86900CC46C7 /* GtfsTempItinerary.m */; };
@@ -527,6 +528,8 @@
 		5258A89B160D617800871875 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		5258A89E160D617800871875 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		525C20F8151D3AF5004F8FE0 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		525EC1BF170006B6009ACE5A /* MutableBoolean.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MutableBoolean.h; sourceTree = "<group>"; };
+		525EC1C0170006B6009ACE5A /* MutableBoolean.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MutableBoolean.m; sourceTree = "<group>"; };
 		527E1749151EB9CD00CDBC23 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		528C664C16D7011E005B7309 /* RouteExcludeSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteExcludeSetting.h; sourceTree = "<group>"; };
 		528C664D16D7011E005B7309 /* RouteExcludeSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RouteExcludeSetting.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -774,6 +777,8 @@
 				520FB144162603430083F143 /* UIDevice-Hardware.m */,
 				520FB145162603430083F143 /* UtilityFunctions.h */,
 				520FB146162603430083F143 /* UtilityFunctions.m */,
+				525EC1BF170006B6009ACE5A /* MutableBoolean.h */,
+				525EC1C0170006B6009ACE5A /* MutableBoolean.m */,
 			);
 			path = Utility;
 			sourceTree = SOURCE_ROOT;
@@ -1604,6 +1609,7 @@
 				8D3EFCC216E85DEE00266C6A /* ZipArchive.mm in Sources */,
 				8D04E79C16E8A488001DB75D /* Network_Commuting.xcdatamodeld in Sources */,
 				8D17871116F87FDA00C2EAD5 /* IntermediateStops.m in Sources */,
+				525EC1C1170006B6009ACE5A /* MutableBoolean.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1104,7 +1104,8 @@ UIImage *imageDetailDisclosure;
     @try {
         // If we already on routeOptionsVC, redirect this callback there instead
         UIViewController *currentVC = self.navigationController.visibleViewController;
-        if (currentVC == routeOptionsVC || currentVC == routeOptionsVC.routeDetailsVC) {
+        if (currentVC == routeOptionsVC || currentVC == routeOptionsVC.routeDetailsVC ||  
+            requestParameter.hasGoneToRouteOptions.boolValue) {   // if we have already gone to routeOptionsVC for this request
             [routeOptionsVC newPlanAvailable:plan
                                   fromObject:referringObject  // Treat toFromVC as a passthru
                                       status:PLAN_STATUS_OK
@@ -1143,6 +1144,7 @@ UIImage *imageDetailDisclosure;
                         [[legs objectAtIndex:i] setTimeDiffInMins:nil];
                     }
                 }
+                [requestParameter.hasGoneToRouteOptions setBoolValue:true];
                 [routeOptionsVC newPlanAvailable:plan
                                       fromObject:self
                                           status:status
@@ -1321,6 +1323,7 @@ UIImage *imageDetailDisclosure;
             parameters.longitudeTO = (NSString *)[toLocation lng];
             parameters.latitudeFROM = (NSString *)[fromLocation lat];
             parameters.longitudeFROM = (NSString *)[fromLocation lng];
+            parameters.hasGoneToRouteOptions = [[MutableBoolean alloc] initWithBool:false];
             if([fromLocation isCurrentLocation]) {
                 parameters.fromType = REVERSE_GEO_FROM;
                 parameters.formattedAddressFROM = currentLoc;
