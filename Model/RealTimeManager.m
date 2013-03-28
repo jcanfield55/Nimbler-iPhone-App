@@ -159,10 +159,7 @@ static RealTimeManager* realTimeManager;
             if ([legLiveFees count] > 0) {
                 [self setRealTimePredictionsFromLiveFeeds:legLiveFees];
                 // TODO:- Comment Four lines to run automated test case
-                NIMLOG_PERF2(@"Realtime Itinerary Generation Started");
                 [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:originalTripDate Context:nil];
-                 NIMLOG_PERF2(@"Realtime Itinerary Generation Finished");
-                //[self hideItineraryIfNeeded:[plan.itineraries allObjects]];
                  [plan prepareSortedItinerariesWithMatchesForDate:originalTripDate
                                                    departOrArrive:DEPART
                                              routeExcludeSettings:[RouteExcludeSettings latestUserSettings]

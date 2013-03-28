@@ -27,6 +27,11 @@
         <attribute name="agencyID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="agencyName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="agencyURL" optional="YES" attributeType="String" syncable="YES"/>
+        <compoundIndexes>
+            <compoundIndex>
+                <index value="agencyID"/>
+            </compoundIndex>
+        </compoundIndexes>
     </entity>
     <entity name="GtfsCalendar" representedClassName="GtfsCalendar" syncable="YES">
         <attribute name="endDate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -41,6 +46,11 @@
         <attribute name="wednesday" optional="YES" attributeType="Boolean" syncable="YES"/>
         <relationship name="calendarDates" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GtfsCalendarDates" inverseName="calendar" inverseEntity="GtfsCalendarDates" syncable="YES"/>
         <relationship name="trips" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GtfsTrips" inverseName="calendar" inverseEntity="GtfsTrips" syncable="YES"/>
+        <compoundIndexes>
+            <compoundIndex>
+                <index value="serviceID"/>
+            </compoundIndex>
+        </compoundIndexes>
     </entity>
     <entity name="GtfsCalendarDates" representedClassName="GtfsCalendarDates" syncable="YES">
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
@@ -69,6 +79,11 @@
         <attribute name="routeType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="routeURL" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="trips" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GtfsTrips" inverseName="route" inverseEntity="GtfsTrips" syncable="YES"/>
+        <compoundIndexes>
+            <compoundIndex>
+                <index value="routeID"/>
+            </compoundIndex>
+        </compoundIndexes>
     </entity>
     <entity name="GtfsStop" representedClassName="GtfsStop" syncable="YES">
         <attribute name="stopDesc" optional="YES" attributeType="String" syncable="YES"/>
@@ -78,6 +93,11 @@
         <attribute name="stopName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="stopURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="zoneID" optional="YES" attributeType="String" syncable="YES"/>
+        <compoundIndexes>
+            <compoundIndex>
+                <index value="stopID"/>
+            </compoundIndex>
+        </compoundIndexes>
     </entity>
     <entity name="GtfsStopTimes" representedClassName="GtfsStopTimes" syncable="YES">
         <attribute name="agencyID" optional="YES" attributeType="String" syncable="YES"/>
@@ -111,6 +131,11 @@
         <attribute name="tripID" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="calendar" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsCalendar" inverseName="trips" inverseEntity="GtfsCalendar" syncable="YES"/>
         <relationship name="route" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="GtfsRoutes" inverseName="trips" inverseEntity="GtfsRoutes" syncable="YES"/>
+        <compoundIndexes>
+            <compoundIndex>
+                <index value="tripID"/>
+            </compoundIndex>
+        </compoundIndexes>
     </entity>
     <entity name="IntermediateStops" representedClassName="IntermediateStops" syncable="YES">
         <attribute name="arrivalTime" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>

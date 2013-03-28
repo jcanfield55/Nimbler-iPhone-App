@@ -71,7 +71,12 @@ NSString *legID;
             [polyLineArray removeAllObjects];
         
             NSArray *sortedLegs = [itinerary sortedLegs];
-            [self performSelector:@selector(addIntermediateStationsToMapView:) withObject:sortedLegs afterDelay:1.0];
+            if(itinerary.isRealTimeItinerary){
+                [[nc_AppDelegate sharedInstance].gtfsParser requestStopTimesDataForParticularTripFromServer:itinerary];
+            }
+            else{
+               [self performSelector:@selector(addIntermediateStationsToMapView:) withObject:sortedLegs afterDelay:1.0]; 
+            }
             // Take startpoint as the beginning of the first leg's polyline, and endpoint form the last leg's polyline
             startPoint = [[MKPointAnnotation alloc] init];
             [startPoint setCoordinate:[[[sortedLegs objectAtIndex:0] polylineEncodedString] startCoord]];
@@ -134,35 +139,6 @@ NSString *legID;
                         NSDate *arrivalTime = [NSDate dateWithTimeIntervalSince1970:([stop.arrivalTime doubleValue]/1000.0)];
                         NSString *arrivalTimeString = [dateFormatter stringFromDate:arrivalTime];
                         [point setSubtitle:[NSString stringWithFormat:@"Arrival: %@",arrivalTimeString]];
-                        [intermediateAnnotations addObject:point];
-                        [mapView addAnnotation:point];
-                    }
-                }
-                else {
-                    NSArray *stopTimes;
-                        stopTimes = [[nc_AppDelegate sharedInstance].gtfsParser returnIntermediateStopForLeg:leg Itinerary:itinerary];
-                    for(int k=0;k<[stopTimes count];k++){
-                        GtfsStopTimes *stopTime = [stopTimes objectAtIndex:k];
-                        GtfsStop *stop = [[nc_AppDelegate sharedInstance].gtfsParser fetchStopsFromStopId:stopTime.stopID];
-                        float langcoord = [stop.stopLat floatValue];
-                        float longcoord = [stop.stopLon floatValue];
-                        CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(langcoord, longcoord);
-                        MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
-                        [point setCoordinate:coord];
-                        [point setTitle:stop.stopName];
-                        if(stopTime.arrivalTime && ![stopTime.arrivalTime isEqualToString:@""]){
-                            NSDate *arrivalTime = dateFromTimeString(stopTime.arrivalTime);
-                            NSDate *realArrivalTime = nil;
-                            realArrivalTime =  [arrivalTime dateByAddingTimeInterval:(leg.timeDiff * 60)];
-                            NSString *arrivalTimeString;
-                            if(realArrivalTime){
-                                arrivalTimeString = [dateFormatter stringFromDate:realArrivalTime];
-                            }
-                            else{
-                                arrivalTimeString = [dateFormatter stringFromDate:arrivalTime];
-                            }
-                            [point setSubtitle:[NSString stringWithFormat:@"Arrival: %@",arrivalTimeString]];
-                        }
                         [intermediateAnnotations addObject:point];
                         [mapView addAnnotation:point];
                     }
