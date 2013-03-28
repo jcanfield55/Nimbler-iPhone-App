@@ -485,7 +485,7 @@
                                     strFromStopID:stopIdSFCaltrain
                                         startDate:tripDate
                                      timeInterval:(7*60*60)
-                                           TripId:@""];
+                                           TripId:@"XYZ-Do-not-exclude-any-trips"];
     STAssertEquals([stopPairs count], 6u, @"");
     STAssertTrue([[[[stopPairs objectAtIndex:0] objectAtIndex:0] tripID] isEqualToString:@"282_20121001"], @"");
     

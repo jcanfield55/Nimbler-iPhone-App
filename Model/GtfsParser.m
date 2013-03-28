@@ -552,7 +552,7 @@
             [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC intermediateStopTimesReceived:intermediateStops Leg:temporaryLeg];
         }
         @catch (NSException *exception) {
-            logException(@"GtfsParser->parseAndStoreGtfsStopTimesData", @"exception in background task", exception);
+            logException(@"GtfsParser->parseStopTimesDataForSingleTripData", @"exception in background task", exception);
         }
 }
 
@@ -635,11 +635,19 @@
                     NSDate *date1 = [NSDate date];
                     insertedRowCount = 0;
                     saveContextCount = saveContextCount + 1;
-                    //saveContext(backgroundMOC);
+                    saveContext(backgroundMOC);
                     NSDate *date2 = [NSDate date];
                     double diff = [date2 timeIntervalSinceDate:date1];
                     totalTime = totalTime + diff;
                     NIMLOG_PERF2(@"Done saving context at=%f",diff);
+                    
+                    // Release and re-assign new backgroundMOC
+                    [[NSNotificationCenter defaultCenter] removeObserver:self];
+                    backgroundMOC = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+                    [backgroundMOC setUndoManager:nil];  // turn off undo for higher performance
+                    [backgroundMOC setPersistentStoreCoordinator:psc];
+                    [backgroundMOC setMergePolicy:NSOverwriteMergePolicy];
+                    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:backgroundMOC];
                 }
             } // end TripId loop
 
@@ -1043,8 +1051,8 @@
         int nLength = [strRequestString length];
         [strRequestString deleteCharactersInRange:NSMakeRange(nLength-1, 1)]; // Trim last comma
         lastTripsDataRequestString = strRequestString;
-        NIMLOG_US202(@"Request GTFS data for: %@",strRequestString);
-        [self requestTripsDatafromServer:strRequestString];
+        // NIMLOG_US202(@"Request GTFS data for: %@",strRequestString);
+        // [self requestTripsDatafromServer:strRequestString];  
     }
     if (isStatusChanged) {
         saveContext(managedObjectContext);

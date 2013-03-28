@@ -175,6 +175,7 @@
 		5258A89F160D617800871875 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5258A89B160D617800871875 /* libTestFlight.a */; };
 		525C20F9151D3AF5004F8FE0 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
 		525EC1C1170006B6009ACE5A /* MutableBoolean.m in Sources */ = {isa = PBXBuildFile; fileRef = 525EC1C0170006B6009ACE5A /* MutableBoolean.m */; };
+		525EC1CB17025E35009ACE5A /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */; };
 		527E174A151EB9CD00CDBC23 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527E1749151EB9CD00CDBC23 /* QuartzCore.framework */; };
 		528C664E16D7011E005B7309 /* RouteExcludeSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 528C664D16D7011E005B7309 /* RouteExcludeSetting.m */; };
 		52958AB116CED86900CC46C7 /* GtfsTempItinerary.m in Sources */ = {isa = PBXBuildFile; fileRef = 52958AB016CED86900CC46C7 /* GtfsTempItinerary.m */; };
@@ -706,6 +707,7 @@
 				52CF43BE14BDF2F9000565D6 /* UIKit.framework in Frameworks */,
 				52CF43BF14BDF2F9000565D6 /* Foundation.framework in Frameworks */,
 				52CF43C014BDF2F9000565D6 /* CoreData.framework in Frameworks */,
+				525EC1CB17025E35009ACE5A /* FacebookSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1712,8 +1714,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -1741,8 +1743,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "4BFCD333-A55F-47A7-B3F0-36DF472F8E15";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4BFCD333-A55F-47A7-B3F0-36DF472F8E15";
+				PROVISIONING_PROFILE = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -1754,9 +1756,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -1784,9 +1786,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "4BFCD333-A55F-47A7-B3F0-36DF472F8E15";
-				"PROVISIONING_PROFILE[sdk=*]" = "4BFCD333-A55F-47A7-B3F0-36DF472F8E15";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4BFCD333-A55F-47A7-B3F0-36DF472F8E15";
+				PROVISIONING_PROFILE = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
+				"PROVISIONING_PROFILE[sdk=*]" = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -1803,6 +1805,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+					"\"$(SRCROOT)\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Nimbler Caltrain-Prefix.pch";
@@ -1824,6 +1827,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+					"\"$(SRCROOT)\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Nimbler Caltrain-Prefix.pch";
