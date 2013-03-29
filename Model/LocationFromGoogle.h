@@ -22,6 +22,7 @@
 @property (nonatomic, strong) NSArray *types;  // Array of NSStrings with type properties (street address, locality)
 @property (nonatomic, strong) GeoRectangle *viewPort;   // Rectangle defining the view for the location
 @property (nonatomic, strong) NSSet *addressComponents;  // Set of AddressComponent items
+#define LOCATION_ADDRESS_COMPONENT @"addressComponents"
 
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)gt;
 

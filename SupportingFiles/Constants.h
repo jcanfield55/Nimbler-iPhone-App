@@ -13,6 +13,7 @@
 #define AUTOMATED_TESTING_SKIP_NCAPPDELEGATE 0 // if 1, skips nc_AppDelegate didFinishLaunchingWithOptions so we get a clean tests run
 
 #define GENERATING_SEED_DATABASE  0 // when we are generating seed database the value is 1 otherwise 0
+#define SKIP_REAL_TIME_UPDATES 0 // If 1, system will not request real-time updates
 
 #define TRIP_GENERATE_URL     @"http://23.23.210.156:7070/opentripplanner-api-webapp/ws/" 
 //#define TRIP_GENERATE_URL @"http://ec2-23-22-169-158.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"

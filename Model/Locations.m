@@ -27,8 +27,8 @@
     NSArray *searchableToLocations;    // All locations which are searchable (excludeFromSearch != true) sorted by toFrequency
     NSFetchRequest *fetchRequestFromFreqThreshold;
     NSFetchRequest *fetchRequestToFreqThreshold;
-    NSFetchRequest *fetchReqSearchableFromLocations;
-    NSFetchRequest *fetchReqSearchableToLocations;
+    NSFetchRequest *fetchReqSearchableGoogleFromLocations;
+    NSFetchRequest *fetchReqSearchableIosFromLocations;
 
     Location* oldSelectedFromLocation; // This stores the previous selectedFromLocation when a new one is entered
     Location* oldSelectedToLocation; // This stores the previous selectedToLocation when a new one is entere
@@ -478,47 +478,57 @@
 - (void)updateInternalCache
 {
     // Fetch the sortedFromLocations & searchableFromLocations arrays
+    NSSortDescriptor *sdFrom = [NSSortDescriptor sortDescriptorWithKey:@"fromFrequency"
+                                                          ascending:NO];
+    NSSortDescriptor *sdDate = [NSSortDescriptor sortDescriptorWithKey:@"dateLastUsed"
+                                                          ascending:NO];
+    NSSortDescriptor *sdTo = [NSSortDescriptor sortDescriptorWithKey:@"toFrequency"
+                                                          ascending:NO];
+    NSArray* fromSortDesc = [NSArray arrayWithObjects:sdFrom,sdDate,nil];
+    NSArray* toSortDesc = [NSArray arrayWithObjects:sdTo,sdDate,nil];
+    
     if (!fetchRequestFromFreqThreshold) {  // create the fetch request if we have not already done so
         fetchRequestFromFreqThreshold = [managedObjectModel fetchRequestFromTemplateWithName:@"LocationByFromFrequency"
                                                                        substitutionVariables:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:TOFROM_FREQUENCY_VISIBILITY_CUTOFF] forKey:@"THRESHOLD"]];
-        fetchReqSearchableFromLocations = [[managedObjectModel fetchRequestTemplateForName:@"LocationSearchable"] copy];
-        NSSortDescriptor *sd1 = [NSSortDescriptor sortDescriptorWithKey:@"fromFrequency"
-                                                              ascending:NO];
-        NSSortDescriptor *sd2 = [NSSortDescriptor sortDescriptorWithKey:@"dateLastUsed"
-                                                              ascending:NO];
-        [fetchRequestFromFreqThreshold setSortDescriptors:[NSArray arrayWithObjects:sd1,sd2,nil]];
-        [fetchReqSearchableFromLocations setSortDescriptors:[NSArray arrayWithObjects:sd1,sd2,nil]];
+        fetchReqSearchableGoogleFromLocations = [[managedObjectModel fetchRequestTemplateForName:@"LocationFromGoogleSearchable"] copy];
+        fetchReqSearchableIosFromLocations = [[managedObjectModel fetchRequestTemplateForName:@"LocationFromIosSearchable"] copy];
+        [fetchRequestFromFreqThreshold setSortDescriptors:fromSortDesc];
+        [fetchReqSearchableGoogleFromLocations setSortDescriptors:fromSortDesc];
+        [fetchReqSearchableIosFromLocations setSortDescriptors:fromSortDesc];
+        NSArray* preFetchArray = [NSArray arrayWithObject:LOCATION_ADDRESS_COMPONENT];
+        [fetchReqSearchableGoogleFromLocations setRelationshipKeyPathsForPrefetching:preFetchArray];
+        [fetchReqSearchableGoogleFromLocations setReturnsObjectsAsFaults:NO];
+        [fetchReqSearchableIosFromLocations setReturnsObjectsAsFaults:NO];
     }
-    NSError *error;
+    NSError *error1, *error2, *error3;
     sortedFromLocations = [managedObjectContext executeFetchRequest:fetchRequestFromFreqThreshold
-                                                              error:&error];
+                                                              error:&error1];
     NIMLOG_PERF2(@"Fetching searchableFromLocations");
-    searchableFromLocations = [managedObjectContext executeFetchRequest:fetchReqSearchableFromLocations
-                                                                  error:&error];
+    NSArray* locsFromGoogle = [managedObjectContext executeFetchRequest:fetchReqSearchableGoogleFromLocations
+                                                                  error:&error2];
+    NSArray* locsFromIos = [managedObjectContext executeFetchRequest:fetchReqSearchableIosFromLocations error:&error3];
+    searchableFromLocations = [[locsFromGoogle arrayByAddingObjectsFromArray:locsFromIos]
+                               sortedArrayUsingDescriptors:fromSortDesc];  // Combine the iOS and Google locations
     NIMLOG_PERF2(@"Done fetching searchableFromLocations");
-    if (!sortedFromLocations || !searchableFromLocations) {
-        [NSException raise:@"Locations -> updateInternalCache Fetch failed" format:@"Reason: %@", error];
+    if (!sortedFromLocations || !locsFromGoogle || !locsFromIos) {
+        [NSException raise:@"Locations -> updateInternalCache Fetch failed"
+                    format:@"Error1: %@, error2: %@, error3: %@", error1, error2, error3];
     }
     
-    // Now fetch sortedToLocations  & searchableFromLocations arrays
+    // Now resort for sortedToLocations  & searchableFromLocations arrays
+
     if (!fetchRequestToFreqThreshold) {  // create the fetch request if we have not already done so
-        
         fetchRequestToFreqThreshold = [managedObjectModel fetchRequestFromTemplateWithName:@"LocationByToFrequency"
-                                                                       substitutionVariables:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:TOFROM_FREQUENCY_VISIBILITY_CUTOFF] forKey:@"THRESHOLD"]];
-        fetchReqSearchableToLocations = [[managedObjectModel fetchRequestTemplateForName:@"LocationSearchable"] copy];
-        NSSortDescriptor *sd1 = [NSSortDescriptor sortDescriptorWithKey:@"toFrequency"
-                                                              ascending:NO];
-        NSSortDescriptor *sd2 = [NSSortDescriptor sortDescriptorWithKey:@"dateLastUsed"
-                                                              ascending:NO];
-        [fetchRequestToFreqThreshold setSortDescriptors:[NSArray arrayWithObjects:sd1,sd2,nil]];
-        [fetchReqSearchableToLocations setSortDescriptors:[NSArray arrayWithObjects:sd1,sd2,nil]];
+                                                                     substitutionVariables:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:TOFROM_FREQUENCY_VISIBILITY_CUTOFF] forKey:@"THRESHOLD"]];
+        [fetchRequestToFreqThreshold setSortDescriptors:toSortDesc];
     }
     sortedToLocations = [managedObjectContext executeFetchRequest:fetchRequestToFreqThreshold
-                                                              error:&error];
-    searchableToLocations = [managedObjectContext executeFetchRequest:fetchReqSearchableToLocations error:&error];
-    if (!sortedToLocations || !searchableToLocations) {
-        [NSException raise:@"Locations -> updateInternalCache Fetch failed" format:@"Reason: %@", error];
+                                                              error:&error1];
+    searchableToLocations = [searchableFromLocations sortedArrayUsingDescriptors:toSortDesc];
+    if (!sortedToLocations) {
+        [NSException raise:@"Locations -> updateInternalCache Fetch failed" format:@"Reason: %@", error1];
     }
+    NIMLOG_PERF2(@"Done with searchableToLocations");
     
     // Now fetch searchable locations
     

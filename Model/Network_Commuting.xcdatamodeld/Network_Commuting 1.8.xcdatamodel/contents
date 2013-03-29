@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="11G56" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="12D78" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AddressComponent" representedClassName="AddressComponent" syncable="YES">
         <attribute name="longName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
@@ -367,7 +367,8 @@
     <fetchRequest name="LocationByFromFrequency" entity="Location" predicateString="fromFrequency >= $THRESHOLD"/>
     <fetchRequest name="LocationByMemberOfList" entity="Location" predicateString="memberOfList BEGINSWITH $LIST_PREFIX AND locationType != &quot;TOFROM_LIST&quot;"/>
     <fetchRequest name="LocationByToFrequency" entity="Location" predicateString="toFrequency >= $THRESHOLD"/>
-    <fetchRequest name="LocationSearchable" entity="Location" predicateString="excludeFromSearch != 1"/>
+    <fetchRequest name="LocationFromGoogleSearchable" entity="LocationFromGoogle" predicateString="excludeFromSearch != 1"/>
+    <fetchRequest name="LocationFromIosSearchable" entity="LocationFromIOS" predicateString="excludeFromSearch != 1"/>
     <fetchRequest name="PlansByToAndFromLocations" entity="Plan" predicateString="toLocation.formattedAddress == $TO_FORMATTED_ADDRESS AND fromLocation.formattedAddress == $FROM_FORMATTED_ADDRESS"/>
     <fetchRequest name="RawAddressByString" entity="RawAddress" predicateString="rawAddressString LIKE[c] $ADDRESS"/>
     <fetchRequest name="RouteExcludeSettingsWithDictionary" entity="RouteExcludeSettings" predicateString="excludeDictionaryInternal == $DICTIONARY"/>
