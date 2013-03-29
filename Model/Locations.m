@@ -372,11 +372,13 @@
 //                                                      fromArray:startArray
 //                                                  sortDescArray:[NSArray arrayWithObjects:sd1,sd2,nil]];
         NSMutableArray *newArray = [NSMutableArray array];
+        NIMLOG_PERF2(@"Start finding typed string matches, count=%d", [startArray count]);
         for (Location *loc in startArray) {
             if ([loc isMatchingTypedString:typedFromString]) {  // if loc matches the new string
                 [newArray addObject:loc];  //  add loc to the new array
             }
         }
+        NIMLOG_PERF2(@"Finished finding typed string matches, newArray count=%d", [newArray count]);
 //        NIMLOG_PERF2(@"Finished.  Count = %d", [newArray count]);
         // Merge the results of typed string with newarray.
 //        if(typedFromString.length >= 3){
@@ -490,8 +492,10 @@
     NSError *error;
     sortedFromLocations = [managedObjectContext executeFetchRequest:fetchRequestFromFreqThreshold
                                                               error:&error];
+    NIMLOG_PERF2(@"Fetching searchableFromLocations");
     searchableFromLocations = [managedObjectContext executeFetchRequest:fetchReqSearchableFromLocations
                                                                   error:&error];
+    NIMLOG_PERF2(@"Done fetching searchableFromLocations");
     if (!sortedFromLocations || !searchableFromLocations) {
         [NSException raise:@"Locations -> updateInternalCache Fetch failed" format:@"Reason: %@", error];
     }
