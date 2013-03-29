@@ -1728,6 +1728,9 @@ UIImage *imageDetailDisclosure;
 #if AUTOMATED_TESTING_SKIP_NCAPPDELEGATE
     return;
 #endif
+#if SKIP_REAL_TIME_UPDATES
+    return;
+#endif
     RealTimeManager *realtimeManager = [RealTimeManager realTimeManager];
     [realtimeManager requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
 }

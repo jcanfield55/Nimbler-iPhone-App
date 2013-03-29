@@ -33,6 +33,8 @@
     NSMutableArray* intermediateAnnotations;
     UIImage* dotImage;
     UIImage* pinImage;
+    
+    NSDateFormatter *dateFormatter;
 }
 
 // Utility routine for setting the region on the MapView based on the itineraryNumber
@@ -118,8 +120,10 @@ NSString *legID;
 
 - (void) addIntermediateStationsToMapView:(NSArray *)sortedLegs{
     @try {
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-        [dateFormatter setDateFormat:[NSDateFormatter dateFormatFromTemplate:@"hh:mm:ss a" options:0 locale:[NSLocale currentLocale]]];
+        if (!dateFormatter) {
+            dateFormatter = [[NSDateFormatter alloc]init];
+            [dateFormatter setDateFormat:[NSDateFormatter dateFormatFromTemplate:@"hh:mm a" options:0 locale:[NSLocale currentLocale]]];
+        }
         for(int i=0;i<[sortedLegs count];i++){
             Leg *leg = [sortedLegs objectAtIndex:i];
             NIMLOG_PERF2(@"tripId=%@",leg.realTripId);
@@ -153,8 +157,10 @@ NSString *legID;
 
 - (void) addIntermediateStops:(NSArray *)stopTimes Leg:(Leg *)leg{
     //[mapView removeAnnotations:intermediateAnnotations];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-    [dateFormatter setDateFormat:[NSDateFormatter dateFormatFromTemplate:@"hh:mm:ss a" options:0 locale:[NSLocale currentLocale]]];
+    if (!dateFormatter) {
+        dateFormatter = [[NSDateFormatter alloc]init];
+        [dateFormatter setDateFormat:[NSDateFormatter dateFormatFromTemplate:@"hh:mm a" options:0 locale:[NSLocale currentLocale]]];
+    }
     for(int k=0;k<[stopTimes count];k++){
         GtfsStopTimes *stopTime = [stopTimes objectAtIndex:k];
         GtfsStop *stop = [[nc_AppDelegate sharedInstance].gtfsParser fetchStopsFromStopId:stopTime.stopID];

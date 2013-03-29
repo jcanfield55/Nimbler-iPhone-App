@@ -41,9 +41,12 @@ typedef enum {
 
 // Returns the keys and values for the routes that are available in the plan relevant to the originalTripDate
 // in parameters.
-// Returned array containing RouteExcludeSettings objects
+// Returned array containing RouteExcludeSetting objects
 // Array is ordered in the sequence options should be presented to user
 -(NSArray *)excludeSettingsForPlan:(Plan *)plan;
+
+// Returns an array of RouteExcludeSetting objects with everything default except has the specified bikeSetting
++(NSArray *)arrayWithNoExcludesExceptExcludeBike:(IncludeExcludeSetting)bikeSetting;
 
 // Generates the bannedAgencyString which can be passed to OTP for any agency-wide excludes
 // settingArray is an array of RouteExcludeSetting objects returned by excludeSettingsForPlan method

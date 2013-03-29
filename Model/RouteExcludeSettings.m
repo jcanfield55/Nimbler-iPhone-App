@@ -233,6 +233,16 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
     return [self returnUniqueRouteExcludeSettings:returnArray];
 }
 
+// Returns an array of RouteExcludeSetting objects with everything default except has the specified bikeSetting
++(NSArray *)arrayWithNoExcludesExceptExcludeBike:(IncludeExcludeSetting)bikeSetting
+{
+    RouteExcludeSetting* routeExclSetting = [[RouteExcludeSetting alloc] init];
+    routeExclSetting.key = BIKE_BUTTON;
+    routeExclSetting.setting = bikeSetting;
+    NSArray* returnArray = [NSArray arrayWithObject:routeExclSetting];
+    return returnArray;
+}
+
 // Generates the bannedAgencyString which can be passed to OTP for any agency-wide excludes
 // settingArray is an array of RouteExcludeSetting objects returned by excludeSettingsForPlan method
 -(NSString *)bannedAgencyStringForSettingArray:(NSArray *)settingArray

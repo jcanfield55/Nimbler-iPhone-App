@@ -116,7 +116,10 @@
                  FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
                  nil, nil, nil, nil);
 
-        [self requestPlanFromOtpWithParameters:parameters routeExcludeSettingArray:nil];
+        
+        NSArray *exclArray = [RouteExcludeSettings arrayWithNoExcludesExceptExcludeBike:[parameters.routeExcludeSettings settingForKey:BIKE_BUTTON]];
+        [self requestPlanFromOtpWithParameters:parameters
+                      routeExcludeSettingArray:exclArray];
     }
     @catch (NSException *exception) {
         logException(@"PlanStore->requestPlanWithParameters:", @"", exception);
