@@ -252,7 +252,6 @@
         
         [parametersByPlanURLResource setObject:parameters forKey:strPlanGenerateURL];
         Plan *plan;
-        
         RKParams *requestParameter = [RKParams paramsWithDictionary:params];
         [rkPlanMgr postObject:plan delegate:self block:^(RKObjectLoader *loader){
             loader.resourcePath = strPlanGenerateURL;

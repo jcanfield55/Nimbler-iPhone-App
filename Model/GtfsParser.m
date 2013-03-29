@@ -768,7 +768,6 @@
         RKParams *requestParameter = [RKParams params];
         [requestParameter setValue:strRequestString forParam:AGENCY_ID_AND_ROUTE_ID];
         [self.rkTpClient post:GTFS_TRIPS params:requestParameter delegate:self];
-        
     }
     @catch (NSException *exception) {
         logException(@"GtfsParser->getGtfsStopTimes", @"", exception);
@@ -1831,8 +1830,8 @@
                         }
                     }
                     else{
-                        NSArray *itineraries = [self returnItinerariesFromPattern:itinerary Plan:plan];
-                        if(![self addRestOfLegFromItineraries:itineraries Leg:leg IndexOfLeg:j NewItinerary:newItinerary Context:context]){
+//                        NSArray *itineraries = [self returnItinerariesFromPattern:itinerary Plan:plan];
+//                        if(![self addRestOfLegFromItineraries:itineraries Leg:leg IndexOfLeg:j NewItinerary:newItinerary Context:context]){
                             NSString *strTOStopID = leg.to.stopId;
                             NSString *strFromStopID = leg.from.stopId;
                             NSMutableArray *arrStopTime = [self getStopTimes:strTOStopID
@@ -1847,10 +1846,10 @@
                             [self addScheduledLegToItinerary:newItinerary
                                                   TransitLeg:leg
                                                     StopTime:arrStopTime
-                                                    TripDate:tripDate
+                                                    TripDate:newItinerary.endTime
                                                      Context:context];
                         }
-                    }
+                    //}
             }
             else{
                 [self addUnScheduledLegToItinerary:newItinerary WalkLeg:leg Context:context Index:j];
@@ -2086,12 +2085,25 @@
 - (void) requestStopTimesDataForParticularTripFromServer:(Itinerary *)itinerary{
     @try {
         if([legsArray count] == 0){
-           legsArray = [itinerary sortedLegs];   
+            NSMutableArray *tempLegs = [[NSMutableArray alloc] initWithArray:[itinerary sortedLegs]];
+            for(int i=0;i<[tempLegs count];i++){
+                Leg *leg = [tempLegs objectAtIndex:i];
+                if(![leg isScheduled]){
+                    [tempLegs removeObject:leg];
+                }
+            }
+           legsArray = tempLegs;
         }
         Leg *leg = [legsArray objectAtIndex:0];
         temporaryLeg = leg;
-        NSString *agencytripString = [NSString stringWithFormat:@"%@_%@",agencyFeedIdFromAgencyName(leg.agencyName),leg.realTripId];
-        
+        NSString *tripId;
+        if(leg.realTripId){
+            tripId = leg.realTripId;
+        }
+        else{
+            tripId = leg.tripId;
+        }
+        NSString *agencytripString = [NSString stringWithFormat:@"%@_%@",agencyFeedIdFromAgencyName(leg.agencyName),tripId];
         RKParams *requestParameter = [RKParams params];
         [requestParameter setValue:agencytripString forParam:AGENCY_IDS];
         isParticularTripRequest = true;
