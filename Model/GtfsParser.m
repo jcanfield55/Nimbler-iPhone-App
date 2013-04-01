@@ -1841,8 +1841,6 @@
                         }
                     }
                     else{
-//                        NSArray *itineraries = [self returnItinerariesFromPattern:itinerary Plan:plan];
-//                        if(![self addRestOfLegFromItineraries:itineraries Leg:leg IndexOfLeg:j NewItinerary:newItinerary Context:context]){
                             NSString *strTOStopID = leg.to.stopId;
                             NSString *strFromStopID = leg.from.stopId;
                             NSMutableArray *arrStopTime = [self getStopTimes:strTOStopID
@@ -1854,13 +1852,15 @@
                                [plan deleteItinerary:newItinerary];
                                 break;
                             }
-                            [self addScheduledLegToItinerary:newItinerary
-                                                  TransitLeg:leg
-                                                    StopTime:arrStopTime
-                                                    TripDate:newItinerary.endTime
-                                                     Context:context];
+                        if(![self addScheduledLegToItinerary:newItinerary
+                                                 TransitLeg:leg
+                                                   StopTime:arrStopTime
+                                                   TripDate:newItinerary.endTime
+                                                    Context:context]){
+                            [plan deleteItinerary:newItinerary];
+                            break;
                         }
-                    //}
+                  }
             }
             else{
                 [self addUnScheduledLegToItinerary:newItinerary WalkLeg:leg Context:context Index:j];

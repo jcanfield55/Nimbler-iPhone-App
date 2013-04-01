@@ -100,6 +100,7 @@
 @synthesize datePicker,toolBar,departArriveSelector,date,btnDone,btnNow;
 @synthesize plan;
 @synthesize stations;
+@synthesize planRequestParameters;
 
 // Constants for animating up and down the To: field
 #define FROM_SECTION 0
@@ -1102,6 +1103,7 @@ UIImage *imageDetailDisclosure;
        RequestParameter:(PlanRequestParameters *)requestParameter
 {
     @try {
+        planRequestParameters = requestParameter;
         // If we already on routeOptionsVC, redirect this callback there instead
         UIViewController *currentVC = self.navigationController.visibleViewController;
         if (currentVC == routeOptionsVC || currentVC == routeOptionsVC.routeDetailsVC ||  
@@ -1732,6 +1734,6 @@ UIImage *imageDetailDisclosure;
     return;
 #endif
     RealTimeManager *realtimeManager = [RealTimeManager realTimeManager];
-    [realtimeManager requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
+    [realtimeManager requestRealTimeDataFromServerUsingPlan:plan PlanRequestParameters:planRequestParameters];
 }
 @end

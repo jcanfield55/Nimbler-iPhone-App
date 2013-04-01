@@ -21,7 +21,7 @@
 @synthesize liveData;
 @synthesize originalTripDate;
 @synthesize loadedRealTimeData;
-
+@synthesize requestParameters;
 static RealTimeManager* realTimeManager;
 
 +(RealTimeManager *)realTimeManager{
@@ -32,9 +32,10 @@ static RealTimeManager* realTimeManager;
 }
 
 // Request RealTime data from server with legs attributes.
-- (void) requestRealTimeDataFromServerUsingPlan:(Plan *)currentPlan tripDate:(NSDate *)tripDate{
+- (void) requestRealTimeDataFromServerUsingPlan:(Plan *)currentPlan PlanRequestParameters:(PlanRequestParameters *)planrequestParameters{
     plan = currentPlan;
-    originalTripDate = tripDate;
+    requestParameters = planrequestParameters;
+    originalTripDate = planrequestParameters.originalTripDate;
     NSDate *tripDateOnly = dateOnlyFromDate(originalTripDate);
     NSDate *currentDate = [NSDate date];
     NSDate *currentDateOnly = dateOnlyFromDate(currentDate);
@@ -161,7 +162,7 @@ static RealTimeManager* realTimeManager;
                 // TODO:- Comment Four lines to run automated test case
                 [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:originalTripDate Context:nil];
                  [plan prepareSortedItinerariesWithMatchesForDate:originalTripDate
-                                                   departOrArrive:DEPART
+                                                   departOrArrive:requestParameters.departOrArrive
                                              routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
                                           generateGtfsItineraries:NO
                                             removeNonOptimalItins:YES];

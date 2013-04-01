@@ -555,7 +555,7 @@ FeedBackForm *fbView;
         [toFromViewController.toTableVC markAndUpdateSelectedLocation:self.toLoc];
         [toFromViewController.fromTableVC markAndUpdateSelectedLocation:self.fromLoc];
     }
-    if(isFromBackground){
+    if(isFromBackground && !self.isToFromView){
         toFromViewController.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
         
     }

@@ -29,11 +29,12 @@
 @property(strong, nonatomic) id liveData;
 @property (strong, nonatomic) NSDate *originalTripDate;
 @property (nonatomic) BOOL loadedRealTimeData;
+@property (nonatomic, strong) PlanRequestParameters *requestParameters;
 
 +(RealTimeManager *)realTimeManager;
 
 // Request RealTime data from server with legs attributes.
-- (void) requestRealTimeDataFromServerUsingPlan:(Plan *)currentPlan tripDate:(NSDate *)tripDate;
+- (void) requestRealTimeDataFromServerUsingPlan:(Plan *)currentPlan PlanRequestParameters:(PlanRequestParameters *)planrequestParameters;
 
 // Parse the Realtime response and set realtime data to leg.
 -(void)setLiveFeed:(id)liveFees;

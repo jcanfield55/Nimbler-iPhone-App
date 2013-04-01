@@ -66,6 +66,7 @@ typedef enum {
 @property (strong, nonatomic) UIActivityIndicatorView* activityIndicator;
 @property (strong, nonatomic) NSString *strLiveDataURL;
 @property (strong, nonatomic) Plan *plan;
+@property (strong, nonatomic) PlanRequestParameters *planRequestParameters;
 
 - (IBAction)openPickerView:(id)sender;
 
