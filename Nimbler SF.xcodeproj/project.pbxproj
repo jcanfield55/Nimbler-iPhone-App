@@ -546,7 +546,7 @@
 		52C1CBB5161AB6A400695348 /* Icon-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-small@2x.png"; sourceTree = "<group>"; };
 		52C32AB916A3A37B0094EE14 /* TestGeneratePlan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestGeneratePlan.h; sourceTree = "<group>"; };
 		52C32ABA16A3A37B0094EE14 /* TestGeneratePlan.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestGeneratePlan.m; sourceTree = "<group>"; };
-		52CF439B14BDF2F9000565D6 /* Nimbler Caltrain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nimbler Caltrain.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		52CF439B14BDF2F9000565D6 /* Nimbler SF.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nimbler SF.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52CF439F14BDF2F9000565D6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		52CF43A114BDF2F9000565D6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		52CF43A314BDF2F9000565D6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -1095,7 +1095,7 @@
 		52CF439C14BDF2F9000565D6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				52CF439B14BDF2F9000565D6 /* Nimbler Caltrain.app */,
+				52CF439B14BDF2F9000565D6 /* Nimbler SF.app */,
 				52CF43BB14BDF2F9000565D6 /* Nimbler CaltrainTests.octest */,
 			);
 			name = Products;
@@ -1245,9 +1245,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		52CF439A14BDF2F9000565D6 /* Nimbler Caltrain */ = {
+		52CF439A14BDF2F9000565D6 /* Nimbler SF */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 52CF43CE14BDF2F9000565D6 /* Build configuration list for PBXNativeTarget "Nimbler Caltrain" */;
+			buildConfigurationList = 52CF43CE14BDF2F9000565D6 /* Build configuration list for PBXNativeTarget "Nimbler SF" */;
 			buildPhases = (
 				52CF439714BDF2F9000565D6 /* Sources */,
 				52CF439814BDF2F9000565D6 /* Frameworks */,
@@ -1257,9 +1257,9 @@
 			);
 			dependencies = (
 			);
-			name = "Nimbler Caltrain";
+			name = "Nimbler SF";
 			productName = "Network Commuting";
-			productReference = 52CF439B14BDF2F9000565D6 /* Nimbler Caltrain.app */;
+			productReference = 52CF439B14BDF2F9000565D6 /* Nimbler SF.app */;
 			productType = "com.apple.product-type.application";
 		};
 		52CF43BA14BDF2F9000565D6 /* Nimbler CaltrainTests */ = {
@@ -1308,7 +1308,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				52CF439A14BDF2F9000565D6 /* Nimbler Caltrain */,
+				52CF439A14BDF2F9000565D6 /* Nimbler SF */,
 				52CF43BA14BDF2F9000565D6 /* Nimbler CaltrainTests */,
 			);
 		};
@@ -1633,7 +1633,7 @@
 /* Begin PBXTargetDependency section */
 		52CF43C214BDF2F9000565D6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 52CF439A14BDF2F9000565D6 /* Nimbler Caltrain */;
+			target = 52CF439A14BDF2F9000565D6 /* Nimbler SF */;
 			targetProxy = 52CF43C114BDF2F9000565D6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1742,7 +1742,7 @@
 					"-all_load",
 					"-v",
 				);
-				PRODUCT_NAME = "Nimbler Caltrain";
+				PRODUCT_NAME = "Nimbler SF";
 				PROVISIONING_PROFILE = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
 				SHARED_PRECOMPS_DIR = "";
@@ -1785,7 +1785,7 @@
 					"-all_load",
 					"-v",
 				);
-				PRODUCT_NAME = "Nimbler Caltrain";
+				PRODUCT_NAME = "Nimbler SF";
 				PROVISIONING_PROFILE = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
 				"PROVISIONING_PROFILE[sdk=*]" = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A8947453-5EDF-4EB1-AA97-84FE6033EC1D";
@@ -1852,7 +1852,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		52CF43CE14BDF2F9000565D6 /* Build configuration list for PBXNativeTarget "Nimbler Caltrain" */ = {
+		52CF43CE14BDF2F9000565D6 /* Build configuration list for PBXNativeTarget "Nimbler SF" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				52CF43CF14BDF2F9000565D6 /* Debug */,

@@ -1719,9 +1719,11 @@
 
 // Generate reattime itineraries from pattern and realtime data.
 - (void) generateItinerariesFromRealTime:(Plan *)plan TripDate:(NSDate *)tripDate Context:(NSManagedObjectContext *)context{
-    if(!context)
+    if(!context) {
         context = managedObjectContext;
+    }
 
+    NIMLOG_PERF2(@"Start generateItinerariesFromRealTime");
     NSMutableDictionary *dictPredictions = [[NSMutableDictionary alloc] init];
     for(int i=0;i<[[plan uniqueItineraries] count];i++){
         Itinerary *itinerary = [[plan uniqueItineraries] objectAtIndex:i];
@@ -1737,6 +1739,7 @@
         Itinerary *itinerary = [[plan uniqueItineraries] objectAtIndex:i];
         [self generateItinerariesFromPrediction:plan Itinerary:itinerary Prediction:dictPredictions TripDate:tripDate Context:context];
     }
+    NIMLOG_PERF2(@"Finish generateItinerariesFromRealTime");
 }
 
 -(BOOL) isFirstScheduledLeg:(Leg *)leg Itinerary:(Itinerary *)itinerary{
