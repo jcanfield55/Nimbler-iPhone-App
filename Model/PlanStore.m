@@ -38,15 +38,19 @@
 @synthesize managedObjectContext;
 @synthesize rkPlanMgr;
 @synthesize plansWaitingForGtfsData;
+@synthesize rkTPClient;
+@synthesize legsURL;
+@synthesize fromToStopID;
 
 // Designated initializer
-- (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkPlanMgr:(RKObjectManager *)rkP
+- (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkPlanMgr:(RKObjectManager *)rkP rkTpClient:(RKClient *)rkTpClient
 {
     self = [super init];
     if (self) {
         managedObjectContext = moc;
         managedObjectModel = [[moc persistentStoreCoordinator] managedObjectModel];
         rkPlanMgr = rkP;
+        rkTPClient = rkTpClient;
         parametersByPlanURLResource = [[NSMutableDictionary alloc] initWithCapacity:10];
         latestParametersForPlanIdDictionary = [NSMutableDictionary dictionaryWithCapacity:20];
         plansWaitingForGtfsData = [NSMutableSet setWithCapacity:10];
@@ -267,6 +271,19 @@
     }
 }
 
+- (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {
+    if ([request isPOST]) {
+        if ([response isOK] && [legsURL isEqualToString:[request resourcePath]]) {
+            legsURL = nil;
+            NIMLOG_PERF2(@"Legs Response Received");
+            RKJSONParserJSONKit* parser1 = [RKJSONParserJSONKit new];
+            NSDictionary *legsDictionary = [parser1 objectFromString:[response bodyAsString] error:nil];
+            NIMLOG_PERF2(@"legsDictionary=%@",legsDictionary);
+            [nc_AppDelegate sharedInstance].gtfsParser.legsDictionary = legsDictionary;
+            
+        }
+    }
+}
 // Delegate methods for when the RestKit has results from the Planner
 - (void)objectLoader:(RKObjectLoader*)objectLoader didLoadObjects:(NSArray *)objects{
     [nc_AppDelegate sharedInstance].receivedReply = YES;
@@ -305,7 +322,7 @@
                     [NSException raise:@"PlanStore->didLoadObjects failed to retrieve plan parameters" format:@"strResourcePath: %@", strResourcePath];
                 }
                 // Request GTFS schedule data as needed
-                [[nc_AppDelegate sharedInstance].gtfsParser generateGtfsTripsRequestStringUsingPlan:plan];
+                //[[nc_AppDelegate sharedInstance].gtfsParser generateGtfsTripsRequestStringUsingPlan:plan];
                 
                 // Set to & from location with special handling of CurrentLocation
                 Location *toLoc = [planRequestParameters toLocation];
@@ -344,7 +361,6 @@
                 [plan setLegsId];
                 saveContext(managedObjectContext);  // Save location and request chunk changes
                 plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context
-                
                 // Add plans to the list for having outstanding gtfsParsingRequests if applicable
                 if (plan.planId && planRequestParameters) {
                     [latestParametersForPlanIdDictionary setObject:planRequestParameters forKey:plan.planId];
@@ -359,8 +375,8 @@
                                                 routeExcludeSettings:[RouteExcludeSettings latestUserSettings] // use latest settings in case something changed
                                              generateGtfsItineraries:NO
                                                removeNonOptimalItins:YES]) {
-                    
                     MoreItineraryStatus moreItinStatus = [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
+                    [self requestStopTimesForItineraryPatterns:planRequestParameters.originalTripDate Plan:plan];
                     PlanRequestStatus reqStatus = PLAN_STATUS_OK;
                     if ([[plan sortedItineraries] count] == 0) {
                         if (moreItinStatus == MORE_ITINERARIES_REQUESTED_DIFFERENT_EXCLUDES) {
@@ -443,6 +459,80 @@
     }
 }
 
+- (void) requestStopTimesForItineraryPatterns:(NSDate *)tripDate Plan:(Plan *)plan{
+    NSArray *uniquePattern = [plan uniqueItineraries];
+    NSMutableArray *arrLegs = [[NSMutableArray alloc] init];
+    for(int i=0;i<[uniquePattern count];i++){
+        Itinerary *itinerary = [uniquePattern objectAtIndex:i];
+        NSDate *tempTripDate = tripDate;
+        double duration = 0.0;
+        for(int j=0;j<[[itinerary sortedLegs] count];j++){
+            Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
+            NSString *strFromToStopId = [NSString stringWithFormat:@"%@_%@",leg.from.stopId,leg.to.stopId];
+            if([fromToStopID containsObject:strFromToStopId]){
+                continue;
+            }
+            else{
+                NSMutableArray *arrFromToStopIds = [[NSMutableArray alloc] initWithArray:fromToStopID];
+                [arrFromToStopIds addObject:strFromToStopId];
+                fromToStopID = arrFromToStopIds;
+            }
+            if([leg isScheduled]){
+                NSDictionary *dicToStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.to.stopId,@"id", nil];
+                NSDictionary *dicTo = [NSDictionary dictionaryWithObjectsAndKeys:dicToStopId,@"stopId", nil];
+                NSDictionary *dicFromStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.from.stopId,@"id", nil];
+                NSDictionary *dicFrom = [NSDictionary dictionaryWithObjectsAndKeys:dicFromStopId,@"stopId", nil];
+                NSString *strRouteShortName = leg.routeShortName;
+                NSString *strRouteLongName = leg.routeLongName;
+                long long startDate = 0;
+                long long endDate = 0;
+                if(!strRouteShortName){
+                    strRouteShortName = @"";
+                }
+                if(!strRouteLongName){
+                    strRouteLongName = @"";
+                }
+                if(tempTripDate){
+                    long long startTimeInterval = [tempTripDate timeIntervalSince1970];
+                    startDate = startTimeInterval*1000;
+                }
+                NSDate *endTime;
+                if(duration == 0.0){
+                    endTime = tempTripDate;
+                }
+                else{
+                   endTime = [tempTripDate dateByAddingTimeInterval:duration/1000.0];
+                }
+                NSDate *finalEndTime = [endTime dateByAddingTimeInterval:4*60*60];
+                if(finalEndTime){
+                    long long endTimeInterval = [finalEndTime timeIntervalSince1970];
+                    endDate = endTimeInterval*1000;
+                    tempTripDate = endTime;
+                }
+                duration = duration + [leg.duration doubleValue];
+                NSString *tripId;
+                if(leg.tripId){
+                    tripId = leg.tripId;
+                }
+                else{
+                    tripId = @"";
+                }
+                NSDictionary *dicLegData = [NSDictionary dictionaryWithObjectsAndKeys:leg.tripId,@"tripId",strRouteLongName,@"routeLongName",strRouteShortName,@"routeShortName",[NSNumber numberWithLongLong:startDate],@"startTime",[NSNumber numberWithLongLong:endDate],@"endTime",leg.routeId,@"routeId",dicTo,@"to",dicFrom,@"from",leg.mode,@"mode",leg.agencyId,@"agencyId",leg.agencyName,@"agencyName",leg.route,@"route",leg.headSign,@"headsign",leg.legId,@"id",@"15",@"size", nil];
+                [arrLegs addObject:dicLegData];
+            }
+        }
+    }
+    
+    if([arrLegs count] > 0){
+        NSString *strRequestString = [arrLegs JSONString];
+        RKParams *requestParameter = [RKParams params];
+        [requestParameter setValue:strRequestString forParam:LEGS];
+        [requestParameter setValue:[[NSUserDefaults standardUserDefaults] objectForKey:DEVICE_TOKEN] forParam:DEVICE_TOKEN];
+        legsURL = NEXT_LEGS_PLAN;
+        [rkTPClient post:NEXT_LEGS_PLAN params:requestParameter delegate:self];
+        NIMLOG_PERF2(@"Legs Request Sent");
+    }
+}
 
 // Checks if more itineraries are needed for this plan, and if so requests them from the server
 -(MoreItineraryStatus)requestMoreItinerariesIfNeeded:(Plan *)plan parameters:(PlanRequestParameters *)requestParams0

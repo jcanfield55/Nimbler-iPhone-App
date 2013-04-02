@@ -203,7 +203,7 @@ FeedBackForm *fbView;
         
         // Initialize the planStore, KeyObjectStore, Stations, ToFromViewController, RouteExcludeSettings, and toFromViewController
         planStore = [[PlanStore alloc] initWithManagedObjectContext:[self managedObjectContext]
-                                                          rkPlanMgr:rkPlanMgr];
+                                                          rkPlanMgr:rkPlanMgr rkTpClient:rkTpClient];
         stations =  [[Stations alloc] initWithManagedObjectContext:[self managedObjectContext]
                                                          rkPlanMgr:rkPlanMgr];
         [KeyObjectStore setUpWithManagedObjectContext:[self managedObjectContext]];

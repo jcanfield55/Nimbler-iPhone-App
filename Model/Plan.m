@@ -459,7 +459,10 @@
             for (int j=i+1; j<matchingItinerariesArray.count; j++) {
                 Itinerary* itin1 = [matchingItinerariesArray objectAtIndex:i];
                 Itinerary* itin2 = [matchingItinerariesArray objectAtIndex:j];
-                if ([itin1 isEquivalentRoutesStopsAndScheduledTimingAs:itin2]) {
+                if(itin1.isRealTimeItinerary || itin2.isRealTimeItinerary){
+                    
+                }
+                else if ([itin1 isEquivalentRoutesStopsAndScheduledTimingAs:itin2]) {
                     if (itin1.isOTPItinerary && !itin2.isOTPItinerary) {
                         [matchingItineraries removeObject:itin1];  // if equivalent GTFS & OTP itineraries, only show the GTFS one
                     } else if (!itin1.isOTPItinerary && itin2.isOTPItinerary) {
@@ -536,7 +539,7 @@
             }
         }
         if (needToRequestMoreData) {
-            [gtfsParser generateGtfsTripsRequestStringUsingPlan:self];  // Put in another request for GTFS data
+            //[gtfsParser generateGtfsTripsRequestStringUsingPlan:self];  // Put in another request for GTFS data
             if (self.gtfsParsingRequests.count > 0) {
                 [[nc_AppDelegate sharedInstance].planStore.plansWaitingForGtfsData addObject:self]; // Put self onto list as plans waiting for gtfsRequests
             }

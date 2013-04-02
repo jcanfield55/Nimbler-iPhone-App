@@ -22,6 +22,8 @@
 @synthesize originalTripDate;
 @synthesize loadedRealTimeData;
 @synthesize requestParameters;
+
+
 static RealTimeManager* realTimeManager;
 
 +(RealTimeManager *)realTimeManager{

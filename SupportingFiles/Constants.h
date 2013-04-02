@@ -338,6 +338,7 @@
 #define LEGS                           @"legs"
 #define LIVE_FEEDS_IMAGE_DOWNLOAD_URL  @"advisories/download"
 #define METADATA_URL                   @"metadata"
+#define NEXT_LEGS_PLAN                 @"plan/nextlegs"
 
 // US-163 Appstore Feedback reminder constants
 #define DATE_OF_FIRST_USE       @"dateOfFirstUse"

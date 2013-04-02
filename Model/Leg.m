@@ -600,6 +600,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     toPlace.name = leg.to.name;
     toPlace.stopId = leg.to.stopId;
     self.to = toPlace;
+    
     self.steps = leg.steps;
     self.sortedSteps = leg.sortedSteps;
     self.polylineEncodedString = leg.polylineEncodedString;

@@ -29,10 +29,12 @@ typedef enum {
 @property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (strong, nonatomic) RKObjectManager *rkPlanMgr;  // RestKit object manager for trip planning
 @property (strong, nonatomic) NSMutableSet* plansWaitingForGtfsData;  // Set of plans with outstanding gtfsParsingRequests
-
+@property (strong,nonatomic)  RKClient *rkTPClient;
+@property (strong, nonatomic) NSString *legsURL;
+@property (strong, nonatomic) NSArray *fromToStopID;
 
 // Designated initializer
-- (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkPlanMgr:(RKObjectManager *)rkP;
+- (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkPlanMgr:(RKObjectManager *)rkP rkTpClient:(RKClient *)rkTpClient;
 
 // Requests a plan with the given parameters
 // Will get plan from the cache if available and will call OTP if not
@@ -66,4 +68,6 @@ typedef enum {
 // Checks whether any plans with outstanding gtfsParsingRequests now have all the data they need.
 // If so, updates those plans (using prepareSortedItinaries) and calls their planDestination
 - (void)updatePlansWithNewGtfsDataIfNeeded;
+
+- (void) requestStopTimesForItineraryPatterns:(NSDate *)tripDate Plan:(Plan *)plan;
 @end

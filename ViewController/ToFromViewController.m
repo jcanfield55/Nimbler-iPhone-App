@@ -341,6 +341,14 @@ UIImage *imageDetailDisclosure;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    NSDictionary *legsDictionary = [nc_AppDelegate sharedInstance].gtfsParser.legsDictionary;
+    NSArray *fromToStopId = [nc_AppDelegate sharedInstance].planStore.fromToStopID;
+    if(legsDictionary){
+        [nc_AppDelegate sharedInstance].gtfsParser.legsDictionary = nil;
+    }
+    if(fromToStopId){
+        [nc_AppDelegate sharedInstance].planStore.fromToStopID = nil;
+    }
     if(self.timerGettingRealDataByItinerary != nil){
         [self.timerGettingRealDataByItinerary invalidate];
         self.timerGettingRealDataByItinerary = nil;

@@ -42,6 +42,8 @@
 @property (nonatomic, strong) Leg *temporaryLeg;
 @property (nonatomic, strong) Itinerary *temporaryItinerary;
 @property (nonatomic, strong) NSArray *legsArray;
+@property (nonatomic, strong) NSDictionary *legsDictionary;
+
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkTpClient:(RKClient *)rkClient;
 
 // Parse the Gtfs Agency Data and store to database.
