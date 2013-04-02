@@ -118,9 +118,9 @@
 #define PREFERENCE_FAST_VS_SAFE @"Preference fast vs safe"
 #define PREFERENCE_FAST_VS_FLAT @"Preference fast vs flat"
 
-#define QUICK_WITH_HILLS      @"Quick with hills"
+#define QUICK_WITH_HILLS      @"Fast with hills"
 #define GO_AROUNG_HILLS       @"Go around hills"
-#define QUICK_WITH_ANY_STREET @"Quick, any street"
+#define QUICK_WITH_ANY_STREET @"Fast, any street"
 #define BIKE_FRIENDLY_STREET  @"Bike friendly street"
 
 #define LABEL_FREQUENTLY      @"Frequently"
