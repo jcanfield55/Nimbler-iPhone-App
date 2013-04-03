@@ -9,6 +9,8 @@
 #import "SettingDetailViewController.h"
 #import "UserPreferance.h"
 #import "nc_AppDelegate.h"
+#import "LocalConstants.h"
+#import "UtilityFunctions.h"
 
 @implementation SettingDetailViewController
 
@@ -161,19 +163,19 @@
     lblNavigationTitle.backgroundColor =[UIColor clearColor];
     lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
     
-    if(nSettingRow == 0){
+    if(nSettingRow == N_SETTINGS_ROW_ADVISORY){
         lblNavigationTitle.text = ADVISORY_CHOICES;
     }
-    else if(nSettingRow == 3){
+    else if(nSettingRow == N_SETTINGS_ROW_PUSH_SOUND){
         lblNavigationTitle.text = NOTIFICATION_SOUND;
     }
-    else if(nSettingRow == 4){
+    else if(nSettingRow == N_SETTINGS_ROW_PUSH_TIMING){
         lblNavigationTitle.text = NOTIFICATION_TIMING;
     }
-    else if(nSettingRow == 5){
+    else if(nSettingRow == N_SETTINGS_ROW_TRANSIT_MODE){
         lblNavigationTitle.text = TRANSIT_MODE;
     }
-    else if(nSettingRow == 7){
+    else if(nSettingRow == N_SETTINGS_ROW_BIKE_PREF){
         lblNavigationTitle.text = BIKE_PREFERENCES;
     }
     self.navigationItem.titleView=lblNavigationTitle;
@@ -197,7 +199,7 @@
     [nc_AppDelegate sharedInstance].isSettingDetailView = NO;
     isSettingDetail = NO;
     UserPreferance* userPrefs = [UserPreferance userPreferance];
-    if(nSettingRow == 7){
+    if(nSettingRow == N_SETTINGS_ROW_BIKE_PREF){
         userPrefs.bikeDistance = sliderMaximumBikeDistance.value;
         userPrefs.fastVsSafe = sliderPreferenceFastVsSafe.value;
         userPrefs.fastVsFlat = sliderPreferenceFastVsFlat.value;
@@ -250,27 +252,30 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     int nRowCount = 4;
-    if(nSettingRow == 0){
-        nRowCount = 4;
+    if(nSettingRow == N_SETTINGS_ROW_ADVISORY){
+        nRowCount = N_SETTINGS_ADVISORY_ROWS;
     }
-    else if(nSettingRow == 3){
-        nRowCount = 2;
+    else if(nSettingRow == N_SETTINGS_ROW_PUSH_SOUND){
+        nRowCount = N_SETTINGS_PUSH_SOUND_ROWS;
     }
-    else if(nSettingRow == 4){
-        nRowCount = 5;
+    else if(nSettingRow == N_SETTINGS_ROW_PUSH_TIMING){
+        nRowCount = N_SETTINGS_PUSH_TIMING_ROWS;
     }
-    else if(nSettingRow == 5){
-        nRowCount = 3;
+    else if(nSettingRow == N_SETTINGS_ROW_TRANSIT_MODE){
+        nRowCount = N_SETTINGS_TRANSIT_MODE_ROWS;
     }
-    else if(nSettingRow == 7){
-        nRowCount = 3;
+    else if(nSettingRow == N_SETTINGS_ROW_BIKE_PREF){
+        nRowCount = N_SETTINGS_BIKE_PREF_ROWS;
+    } else {
+        logError(@"SettingDetailViewController->numberOfRowsInSection",
+                 [NSString stringWithFormat:@"Unknown nSettingRow: %d", nSettingRow]);
     }
     return nRowCount;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     int nRowHeight;
-    if(nSettingRow == 7){
+    if(nSettingRow == N_SETTINGS_ROW_BIKE_PREF){
         nRowHeight = 80;
     }
     else{
@@ -288,57 +293,57 @@
     [cell.textLabel setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
     [cell.textLabel setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
     UserPreferance* userPrefs = [UserPreferance userPreferance];
-    if(nSettingRow == 0){
-        if(indexPath.row == 0){
+    if(nSettingRow == N_SETTINGS_ROW_ADVISORY){
+        if(indexPath.row == SETTINGS_ADVISORY_SFMUNI_ROW){
             cell.textLabel.text = SFMUNI_ADVISORIES;
             cell.accessoryType = (userPrefs.sfMuniAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
         }
-        else if(indexPath.row == 1){
+        else if(indexPath.row == SETTINGS_ADVISORY_BART_ROW){
             cell.textLabel.text = BART_ADVISORIES;
             cell.accessoryType = (userPrefs.bartAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
         }
-        else if(indexPath.row == 2){
+        else if(indexPath.row == SETTINGS_ADVISORY_ACTRANSIT_ROW){
             cell.textLabel.text = ACTRANSIT_ADVISORIES;
             cell.accessoryType = (userPrefs.acTransitAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
         }
-        else if(indexPath.row == 3){
+        else if(indexPath.row == SETTINGS_ADVISORY_CALTRAIN_ROW){
             cell.textLabel.text = CALTRAIN_ADVISORIES;
             cell.accessoryType = (userPrefs.caltrainAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
         }
     }
-    else if(nSettingRow == 3){
-        if(indexPath.row == 0){
+    else if(nSettingRow == N_SETTINGS_ROW_PUSH_SOUND){
+        if(indexPath.row == SETTINGS_SOUNDS_URGENT_ROW){
             cell.textLabel.text = URGENT_NOTIFICATIONS;
             [cell setAccessoryView:switchUrgentNotification];
         }
-        else if(indexPath.row == 1){
+        else if(indexPath.row == SETTINGS_SOUNDS_STANDARD_ROW){
             cell.textLabel.text = STANDARD_NOTIFICATIONS;
             [cell setAccessoryView:switchStandardNotification];
         }
     }
-    else if(nSettingRow == 4){
-        if(indexPath.row == 0){
+    else if(nSettingRow == N_SETTINGS_ROW_PUSH_TIMING){
+        if(indexPath.row == SETTINGS_TIMING_WEEKDAY_MORNING_ROW){
             cell.textLabel.text = WEEKDAY_MORNING;
             cell.accessoryType = (userPrefs.notificationMorning ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
         }
-        else if(indexPath.row == 1){
+        else if(indexPath.row == SETTINGS_TIMING_WEEKDAY_MIDDAY_ROW){
             cell.textLabel.text = WEEKDAY_MIDDAY;
             cell.accessoryType = (userPrefs.notificationMidday ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
         }
-        else if(indexPath.row == 2){
+        else if(indexPath.row == SETTINGS_TIMING_WEEKDAY_EVENING_ROW){
             cell.textLabel.text = WEEKDAY_EVENING_PEAK;
             cell.accessoryType = (userPrefs.notificationEvening ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
         }
-        else if(indexPath.row == 3){
+        else if(indexPath.row == SETTINGS_TIMING_WEEKDAY_NIGHT_ROW){
             cell.textLabel.text = WEEKDAY_NIGHT;
             cell.accessoryType = (userPrefs.notificationNight ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
         }
-        else if(indexPath.row == 4){
+        else if(indexPath.row == SETTINGS_TIMING_WEEKEND_ROW){
             cell.textLabel.text = WEEKENDS;
             cell.accessoryType = (userPrefs.notificationWeekend ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
         }
     }
-    else if(nSettingRow == 5){
+    else if(nSettingRow == N_SETTINGS_ROW_TRANSIT_MODE){
         if(indexPath.row == 0){
             cell.textLabel.text = TRANSIT_ONLY;
             if(userPrefs.transitMode == TRANSIT_MODE_TRANSIT_ONLY){
@@ -368,8 +373,8 @@
         }
     }
     
-    else if(nSettingRow == 7){
-        if(indexPath.row == 0){
+    else if(nSettingRow == N_SETTINGS_ROW_BIKE_PREF){
+        if(indexPath.row == SETTINGS_BIKE_MAX_DISTANCE_ROW){
             cell.textLabel.text = nil;
             [cell setAccessoryView:nil];
             UIView* cellView = [cell contentView];
@@ -396,7 +401,7 @@
                 [cell.contentView addSubview:lblMaxBikeDistance];
             }
         }
-        else if(indexPath.row == 1){
+        else if(indexPath.row == SETTINGS_FAST_VS_SAFE_ROW){
             cell.textLabel.text = nil;
             [cell setAccessoryView:nil];
             UIView* cellView = [cell contentView];
@@ -411,18 +416,18 @@
             else{
                 [cell.contentView addSubview:lblPreferenceFastVsSafe];
             }
-            if (subviews && [subviews count]>0 && [subviews indexOfObject:lblQuickWithHills] != NSNotFound) {
+            if (subviews && [subviews count]>0 && [subviews indexOfObject:lblQuickWithAnyStreet] != NSNotFound) {
             }
             else{
-                [cell.contentView addSubview:lblQuickWithHills];
+                [cell.contentView addSubview:lblQuickWithAnyStreet];
             }
-            if (subviews && [subviews count]>0 && [subviews indexOfObject:lblGoAroundHills] != NSNotFound) {
+            if (subviews && [subviews count]>0 && [subviews indexOfObject:lblBikeFriendlyStreet] != NSNotFound) {
             }
             else{
-                [cell.contentView addSubview:lblGoAroundHills];
+                [cell.contentView addSubview:lblBikeFriendlyStreet];
             }
         }
-        else if(indexPath.row == 2){
+        else if(indexPath.row == SETTINGS_FAST_VS_FLAT_ROW){
             cell.textLabel.text = nil;
             [cell setAccessoryView:nil];
             UIView* cellView = [cell contentView];
@@ -437,15 +442,15 @@
             else{
                 [cell.contentView addSubview:lblPreferenceFastVsFlat];
             }
-            if (subviews && [subviews count]>0 && [subviews indexOfObject:lblQuickWithAnyStreet] != NSNotFound) {
+            if (subviews && [subviews count]>0 && [subviews indexOfObject:lblQuickWithHills] != NSNotFound) {
             }
             else{
-                [cell.contentView addSubview:lblQuickWithAnyStreet];
+                [cell.contentView addSubview:lblQuickWithHills];
             }
-            if (subviews && [subviews count]>0 && [subviews indexOfObject:lblBikeFriendlyStreet] != NSNotFound) {
+            if (subviews && [subviews count]>0 && [subviews indexOfObject:lblGoAroundHills] != NSNotFound) {
             }
             else{
-                [cell.contentView addSubview:lblBikeFriendlyStreet];
+                [cell.contentView addSubview:lblGoAroundHills];
             }
         }
     }
@@ -454,8 +459,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     UserPreferance* userPrefs = [UserPreferance userPreferance];
-    if(nSettingRow == 0){
-        if(indexPath.row == 0){
+    if(nSettingRow == N_SETTINGS_ROW_ADVISORY){
+        if(indexPath.row == SETTINGS_ADVISORY_SFMUNI_ROW){
             if(userPrefs.sfMuniAdvisories){
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                 cell.accessoryType = UITableViewCellAccessoryNone;
@@ -467,7 +472,7 @@
                 userPrefs.sfMuniAdvisories = true;
             }
         }
-        if(indexPath.row == 1){
+        if(indexPath.row == SETTINGS_ADVISORY_BART_ROW){
             if(userPrefs.bartAdvisories){
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                 cell.accessoryType = UITableViewCellAccessoryNone;
@@ -479,7 +484,7 @@
                 userPrefs.bartAdvisories = true;
             }
         }
-        if(indexPath.row == 2){
+        if(indexPath.row == SETTINGS_ADVISORY_ACTRANSIT_ROW){
             if(userPrefs.acTransitAdvisories){
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                 cell.accessoryType = UITableViewCellAccessoryNone;
@@ -491,7 +496,7 @@
                 userPrefs.acTransitAdvisories = true;
             }
         }
-        if(indexPath.row == 3){
+        if(indexPath.row == SETTINGS_ADVISORY_CALTRAIN_ROW){
             if(userPrefs.caltrainAdvisories){
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                 cell.accessoryType = UITableViewCellAccessoryNone;
@@ -505,8 +510,8 @@
         }
         [self.tblDetailSetting reloadData];
     }
-    if(nSettingRow == 4){
-        if(indexPath.row == 0){
+    if(nSettingRow == N_SETTINGS_ROW_PUSH_TIMING){
+        if(indexPath.row == SETTINGS_TIMING_WEEKDAY_MORNING_ROW){
             if(userPrefs.notificationMorning){
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                 cell.accessoryType = UITableViewCellAccessoryNone;
@@ -518,7 +523,7 @@
                 userPrefs.notificationMorning = true;
             }
         }
-        else if(indexPath.row == 1){
+        else if(indexPath.row == SETTINGS_TIMING_WEEKDAY_MIDDAY_ROW){
             if(userPrefs.notificationMidday){
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                 cell.accessoryType = UITableViewCellAccessoryNone;
@@ -531,7 +536,7 @@
             }
         }
         
-        else if(indexPath.row == 2){
+        else if(indexPath.row == SETTINGS_TIMING_WEEKDAY_EVENING_ROW){
             if(userPrefs.notificationEvening){
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                 cell.accessoryType = UITableViewCellAccessoryNone;
@@ -543,7 +548,7 @@
                 userPrefs.notificationEvening = true;
             }
         }
-        else if(indexPath.row == 3){
+        else if(indexPath.row == SETTINGS_TIMING_WEEKDAY_NIGHT_ROW){
             if(userPrefs.notificationNight){
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                 cell.accessoryType = UITableViewCellAccessoryNone;
@@ -555,7 +560,7 @@
                 userPrefs.notificationNight = true; 
             }
         }
-        else if(indexPath.row == 4){
+        else if(indexPath.row == SETTINGS_TIMING_WEEKEND_ROW){
             if(userPrefs.notificationWeekend){
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                 cell.accessoryType = UITableViewCellAccessoryNone;
@@ -568,7 +573,7 @@
             }
         }
     }
-    if(nSettingRow == 5){
+    if(nSettingRow == N_SETTINGS_ROW_TRANSIT_MODE){
         if(indexPath.row == 0){
             userPrefs.transitMode = TRANSIT_MODE_TRANSIT_ONLY;
         }

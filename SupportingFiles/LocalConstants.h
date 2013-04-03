@@ -1,5 +1,5 @@
 //
-//  Header.h
+//  LocalConstants.h
 //  Nimbler SF
 //
 //  Created by John Canfield on 3/5/13.
@@ -19,6 +19,60 @@
 #define MIN_LONG          @"-123.4631719"
 #define MAX_LAT           @"38.7189988"
 #define MAX_LONG          @"-121.025001"
+
+//
+// Settings Page Rows
+//
+// Sections
+#define SETTINGS_NUMBER_OF_SECTIONS 3
+
+#define SETTINGS_ADVISORY_SECTION_NUM  0
+#define SETTINGS_PUSH_SECTION_NUM  1
+#define SETTINGS_BIKE_WALK_SECTION_NUM  2
+
+#define SETTINGS_ADVISORY_SECTION_ROWS  1
+
+#define SETTINGS_PUSH_SECTION_ROWS_IF_ON  4  // Row defs follow
+#define SETTINGS_PUSH_ON_OFF_ROW_NUM 0
+#define SETTINGS_PUSH_FREQUENCY_ROW_NUM 1
+#define SETTINGS_PUSH_SOUND_ROW_NUM 2
+#define SETTINGS_PUSH_TIMING_ROW_NUM 3
+
+#define SETTINGS_BIKE_WALK_SECTION_ROWS  2 // Row defs follow
+#define SETTINGS_MAX_WALK_DISTANCE_ROW_NUM 0
+#define SETTINGS_BIKE_PREF_ROW_NUM 1
+#define SETTINGS_TRANSIT_MODE_ROW_NUM 999  // This function is de-activated from the UI
+
+// Codes for detail pages
+#define N_SETTINGS_ROW_ADVISORY 0
+#define N_SETTINGS_ROW_PUSH_SOUND 3
+#define N_SETTINGS_ROW_PUSH_TIMING 4
+#define N_SETTINGS_ROW_TRANSIT_MODE 5
+#define N_SETTINGS_ROW_BIKE_PREF 7
+
+#define N_SETTINGS_ADVISORY_ROWS 4  // Row defs follow
+#define SETTINGS_ADVISORY_SFMUNI_ROW 0
+#define SETTINGS_ADVISORY_BART_ROW 1
+#define SETTINGS_ADVISORY_ACTRANSIT_ROW 2
+#define SETTINGS_ADVISORY_CALTRAIN_ROW 3
+
+#define N_SETTINGS_PUSH_SOUND_ROWS 2  // Row defs follow
+#define SETTINGS_SOUNDS_URGENT_ROW 0
+#define SETTINGS_SOUNDS_STANDARD_ROW 1
+
+#define N_SETTINGS_PUSH_TIMING_ROWS 5  // Row defs follow
+#define SETTINGS_TIMING_WEEKDAY_MORNING_ROW 0
+#define SETTINGS_TIMING_WEEKDAY_MIDDAY_ROW 1
+#define SETTINGS_TIMING_WEEKDAY_EVENING_ROW 2
+#define SETTINGS_TIMING_WEEKDAY_NIGHT_ROW 3
+#define SETTINGS_TIMING_WEEKEND_ROW 4
+
+#define N_SETTINGS_TRANSIT_MODE_ROWS 3 // Note: this function is not being used currently
+
+#define N_SETTINGS_BIKE_PREF_ROWS 3  // Row defs follow
+#define SETTINGS_BIKE_MAX_DISTANCE_ROW 0
+#define SETTINGS_FAST_VS_SAFE_ROW 1
+#define SETTINGS_FAST_VS_FLAT_ROW 2
 
 //
 // Preload station file variables and version numbers
@@ -99,10 +153,10 @@
 #define ENABLE_ACTRANSIT_ADV @"enableAcTransitAdv"
 #define ENABLE_CALTRAIN_ADV @"enableCaltrainAdv"
 
-#define ENABLE_SFMUNI_ADV_DEFAULT FALSE
-#define ENABLE_BART_ADV_DEFAULT FALSE
+#define ENABLE_SFMUNI_ADV_DEFAULT TRUE
+#define ENABLE_BART_ADV_DEFAULT TRUE
 #define ENABLE_ACTRANSIT_ADV_DEFAULT FALSE
-#define ENABLE_CALTRAIN_ADV_DEFAULT TRUE
+#define ENABLE_CALTRAIN_ADV_DEFAULT FALSE
 //
 // Dictionaries to map between various agency names, IDs
 //

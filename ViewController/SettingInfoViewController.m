@@ -10,6 +10,7 @@
 #import "nc_AppDelegate.h"
 #import "UserPreferance.h"
 #import "UtilityFunctions.h"
+#import "LocalConstants.h"
 
 #define SETTING_TITLE       @"App Settings"
 #define SETTING_ALERT_MSG   @"Updating your settings \n Please wait..."
@@ -344,7 +345,7 @@ UIImage *imageDetailDisclosure;
 - (NSString *)detailtextLabelString:(NSIndexPath *)indexPath{
     NSMutableString *strDetailTextLabel = [NSMutableString stringWithCapacity:20];
     UserPreferance* userPrefs = [UserPreferance userPreferance];
-    if(indexPath.section == 0){
+    if(indexPath.section == SETTINGS_ADVISORY_SECTION_NUM){
         if(userPrefs.sfMuniAdvisories &&
            userPrefs.bartAdvisories &&
            userPrefs.acTransitAdvisories &&
@@ -388,8 +389,8 @@ UIImage *imageDetailDisclosure;
             }
         }
     }
-    else if(indexPath.section == 1){
-        if(indexPath.row == 3){
+    else if(indexPath.section == SETTINGS_PUSH_SECTION_NUM){
+        if(indexPath.row == SETTINGS_PUSH_TIMING_ROW_NUM){
             if(userPrefs.notificationMorning &&
                 userPrefs.notificationMidday &&
                 userPrefs.notificationEvening &&
@@ -453,40 +454,35 @@ UIImage *imageDetailDisclosure;
 //-------------------------------------------------------------------------
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 3;
+    return SETTINGS_NUMBER_OF_SECTIONS;
 }
 
-//-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
-//    if(section == 0){
-//        return ADVISORY_CHOICES;
-//    }
-//    else if(section == 1){
-//        return PUSH_NOTIFICATION;
-//    }
-//    else{
-//        return WALK_BIKE_SETTINGS;
-//    }
-//    
-//}
+
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if(section == 0){
-        return 1;
+    if(section == SETTINGS_ADVISORY_SECTION_NUM){
+        return SETTINGS_ADVISORY_SECTION_ROWS;
     }
-    else if(section == 1){
+    else if(section == SETTINGS_PUSH_SECTION_NUM){
         if(!switchPushNotification.isOn){
             return 1;
         }
         else{
-            return 4;
+            return SETTINGS_PUSH_SECTION_ROWS_IF_ON;
         }
     }
-    else{
-        return 3;
+    else if (section == SETTINGS_BIKE_WALK_SECTION_NUM) {
+        return SETTINGS_BIKE_WALK_SECTION_ROWS;
+    }
+    else {
+        logError(@"SettingInfoViewController->numberOfRowsInSection",
+                 [NSString stringWithFormat:@"Unknown Section #: %d", section]);
+        return 0;
     }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if((indexPath.section == 1 && indexPath.row == 1) || (indexPath.section == 2 && indexPath.row == 1)){
+    if((indexPath.section == SETTINGS_PUSH_SECTION_NUM && indexPath.row == SETTINGS_PUSH_FREQUENCY_ROW_NUM) ||
+       (indexPath.section == SETTINGS_BIKE_WALK_SECTION_NUM && indexPath.row == SETTINGS_MAX_WALK_DISTANCE_ROW_NUM)){
         return 80;
     }
     return 40;
@@ -499,7 +495,11 @@ UIImage *imageDetailDisclosure;
     cell = nil;
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    if(indexPath.section == 0 || (indexPath.section == 1 && (indexPath.row == 2 || indexPath.row == 3)) || (indexPath.section == 2 && (indexPath.row == 0 || indexPath.row == 2))){
+    if(indexPath.section == SETTINGS_ADVISORY_SECTION_NUM ||
+       (indexPath.section == SETTINGS_PUSH_SECTION_NUM &&
+        (indexPath.row == SETTINGS_PUSH_SOUND_ROW_NUM || indexPath.row == SETTINGS_PUSH_TIMING_ROW_NUM)) ||
+       (indexPath.section == SETTINGS_BIKE_WALK_SECTION_NUM
+        && (indexPath.row == SETTINGS_TRANSIT_MODE_ROW_NUM || indexPath.row == SETTINGS_BIKE_PREF_ROW_NUM))){
         UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
         [cell setAccessoryView:imgViewDetailDisclosure];
     }
@@ -507,12 +507,12 @@ UIImage *imageDetailDisclosure;
     [cell.textLabel setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
     [cell.detailTextLabel setTextColor:[UIColor GRAY_FONT_COLOR]];
     [cell.detailTextLabel setFont:[UIFont SMALL_OBLIQUE_FONT]];
-    if(indexPath.section == 0){
+    if(indexPath.section == SETTINGS_ADVISORY_SECTION_NUM){
         cell.textLabel.text = ADVISORY_CHOICES;
          cell.detailTextLabel.text = [self detailtextLabelString:indexPath];
     }
-    else if(indexPath.section == 1){
-        if(indexPath.row == 0){
+    else if(indexPath.section == SETTINGS_PUSH_SECTION_NUM){
+        if(indexPath.row == SETTINGS_PUSH_ON_OFF_ROW_NUM){
             cell.textLabel.text = PUSH_NOTIFICATION;
             UIView* cellView = [cell accessoryView];
             NSArray* subviews = [cellView subviews];
@@ -522,7 +522,7 @@ UIImage *imageDetailDisclosure;
                 [cell setAccessoryView:switchPushNotification];
             }
         }
-        else if(indexPath.row == 1){
+        else if(indexPath.row == SETTINGS_PUSH_FREQUENCY_ROW_NUM){
             cell.textLabel.text = nil;
             [cell setAccessoryView:nil];
             UIView* cellView = [cell contentView];
@@ -548,7 +548,7 @@ UIImage *imageDetailDisclosure;
                 [cell.contentView addSubview:lblRarely];
             }
         }
-        else if(indexPath.row == 2){
+        else if(indexPath.row == SETTINGS_PUSH_SOUND_ROW_NUM){
             if(userPrefs.standardNotificationSound &&
                userPrefs.urgentNotificationSound) {
                 cell.detailTextLabel.text = URGENT_AND_STANDARD;
@@ -567,13 +567,17 @@ UIImage *imageDetailDisclosure;
             }
             cell.textLabel.text = NOTIFICATION_SOUND;
         }
-        else if(indexPath.row == 3){
+        else if(indexPath.row == SETTINGS_PUSH_TIMING_ROW_NUM){
             cell.textLabel.text = NOTIFICATION_TIMING;
             cell.detailTextLabel.text = [self detailtextLabelString:indexPath];
         }
+        else {
+            logError(@"SettingInfoViewController->cellForRowAtIndexPath",
+                     [NSString stringWithFormat:@"Unknown push row #: %d", indexPath.row]);
+        }
     }
-    else if(indexPath.section == 2){
-        if(indexPath.row == 0){
+    else if(indexPath.section == SETTINGS_BIKE_WALK_SECTION_NUM){
+        if(indexPath.row == SETTINGS_TRANSIT_MODE_ROW_NUM){
             cell.textLabel.text = TRANSIT_MODE;
             if (userPrefs.transitMode == TRANSIT_MODE_TRANSIT_ONLY){
                 cell.detailTextLabel.text = TRANSIT_ONLY;
@@ -585,7 +589,7 @@ UIImage *imageDetailDisclosure;
                 cell.detailTextLabel.text = BIKE_AND_TRANSIT;
             }
         }
-        if(indexPath.row == 1){
+        else if(indexPath.row == SETTINGS_MAX_WALK_DISTANCE_ROW_NUM){
             cell.textLabel.text = nil;
             [cell setAccessoryView:nil];
             UIView* cellView = [cell contentView];
@@ -612,15 +616,27 @@ UIImage *imageDetailDisclosure;
                 [cell.contentView addSubview:lblMaxWalkDistance];
             }
         }
-        else if(indexPath.row == 2){
+        else if(indexPath.row == SETTINGS_BIKE_PREF_ROW_NUM){
             cell.textLabel.text = BIKE_PREFERENCES;
         }
+        else {
+            logError(@"SettingInfoViewController->cellForRowAtIndexPath",
+                     [NSString stringWithFormat:@"Unknown bike/walk row #: %d", indexPath.row]);
+        }
+    }
+    else {
+        logError(@"SettingInfoViewController->cellForRowAtIndexPath",
+                 [NSString stringWithFormat:@"Unknown section #: %d", indexPath.section]);
     }
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(indexPath.section == 0 || (indexPath.section == 1 && (indexPath.row == 2 || indexPath.row == 3)) || (indexPath.section == 2 && (indexPath.row == 0 || indexPath.row == 2))){
+    if(indexPath.section == SETTINGS_ADVISORY_SECTION_NUM ||
+       (indexPath.section == SETTINGS_PUSH_SECTION_NUM &&
+        (indexPath.row == SETTINGS_PUSH_SOUND_ROW_NUM || indexPath.row == SETTINGS_PUSH_TIMING_ROW_NUM)) ||
+       (indexPath.section == SETTINGS_BIKE_WALK_SECTION_NUM &&
+        (indexPath.row == SETTINGS_TRANSIT_MODE_ROW_NUM || indexPath.row == SETTINGS_BIKE_PREF_ROW_NUM))){
         if([[UIScreen mainScreen] bounds].size.height == 568){
             settingDetailViewController = [[SettingDetailViewController alloc] initWithNibName:@"SettingDetailViewController_568h" bundle:nil];
         }
@@ -628,23 +644,23 @@ UIImage *imageDetailDisclosure;
             settingDetailViewController = [[SettingDetailViewController alloc] initWithNibName:@"SettingDetailViewController" bundle:nil];
         }
         int nSettingRow = 0;
-        if(indexPath.section == 0){
-            nSettingRow = 0;
+        if(indexPath.section == SETTINGS_ADVISORY_SECTION_NUM){
+            nSettingRow = N_SETTINGS_ROW_ADVISORY;
         }
-        else if(indexPath.section == 1){
-            if(indexPath.row == 2){
-                nSettingRow = 3;
+        else if(indexPath.section == SETTINGS_PUSH_SECTION_NUM){
+            if(indexPath.row == SETTINGS_PUSH_SOUND_ROW_NUM){
+                nSettingRow = N_SETTINGS_ROW_PUSH_SOUND;
             }
-            else if(indexPath.row == 3){
-                nSettingRow = 4;
+            else if(indexPath.row == SETTINGS_PUSH_TIMING_ROW_NUM){
+                nSettingRow = N_SETTINGS_ROW_PUSH_TIMING;
             }
         }
-        else{
-            if(indexPath.row == 0){
-                nSettingRow = 5;
+        else if (indexPath.section == SETTINGS_BIKE_WALK_SECTION_NUM) {
+            if(indexPath.row == SETTINGS_TRANSIT_MODE_ROW_NUM){
+                nSettingRow = N_SETTINGS_ROW_TRANSIT_MODE;
             }
-            else if(indexPath.row == 2){
-                nSettingRow = 7;
+            else if(indexPath.row == SETTINGS_BIKE_PREF_ROW_NUM){
+                nSettingRow = N_SETTINGS_ROW_BIKE_PREF;
             }
         }
         settingDetailViewController.nSettingRow = nSettingRow;

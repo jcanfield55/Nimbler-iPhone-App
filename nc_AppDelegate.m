@@ -272,11 +272,11 @@ FeedBackForm *fbView;
 #ifdef TEST_FLIGHT_UIDS
     [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
 #endif
-    [TestFlight takeOff:@"48a90a98948864a11c80bd2ecd7a7e5c_ODU5MzMyMDEyLTA1LTA3IDE5OjE3OjUwLjMxMDUyMg"];
+    [TestFlight takeOff:@"cce4b61c-e0ee-49da-9770-91f3204078d4"];
 #endif
     // Call to Flurry SDK
 #if FLURRY_ENABLED
-    [Flurry startSession:@"WWV2WN4JMY35D4GYCPDJ"];
+    [Flurry startSession:@"27WGHH9DG5Z5MRCB5QRN"];
     [Flurry setUserID:cfuuidString];
     [Flurry logEvent:FLURRY_APPDELEGATE_START];
 #endif
