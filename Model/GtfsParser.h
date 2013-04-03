@@ -43,6 +43,7 @@
 @property (nonatomic, strong) Itinerary *temporaryItinerary;
 @property (nonatomic, strong) NSArray *legsArray;
 @property (nonatomic, strong) NSDictionary *legsDictionary;
+@property (nonatomic, strong) NSArray *itinerariesArray;
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkTpClient:(RKClient *)rkClient;
 

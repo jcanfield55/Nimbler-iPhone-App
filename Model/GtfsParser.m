@@ -47,6 +47,7 @@
 @synthesize temporaryItinerary;
 @synthesize legsArray;
 @synthesize legsDictionary;
+@synthesize itinerariesArray;
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkTpClient:(RKClient *)rkClient
 {
@@ -979,18 +980,18 @@
                     }
                 }
             }
-            else{
-                [nc_AppDelegate sharedInstance].receivedReply = true;
-                RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
-                NSDictionary * res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
-                NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
-                if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
-                    NIMLOG_PERF2(@"StopTimes Parsing Started");
-                    [self parseAndStoreGtfsStopTimesData:res RequestUrl:strRequestURL];
-                    NIMLOG_PERF2(@"StopTimes Parsing and saving Done");
-                    lastTripsDataRequestString = nil;
-                }
-            }
+//            else{
+//                [nc_AppDelegate sharedInstance].receivedReply = true;
+//                RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+//                NSDictionary * res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
+//                NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
+//                if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
+//                    NIMLOG_PERF2(@"StopTimes Parsing Started");
+//                    [self parseAndStoreGtfsStopTimesData:res RequestUrl:strRequestURL];
+//                    NIMLOG_PERF2(@"StopTimes Parsing and saving Done");
+//                    lastTripsDataRequestString = nil;
+//                }
+//            }
         }
     }
     @catch (NSException *exception) {
@@ -1426,7 +1427,7 @@
         }
         [newleg setNewlegAttributes:leg];
         newleg.tripId = [legDictionary objectForKey:@"tripId"];
-        newleg.headSign = [legDictionary objectForKey:@"headSign"];
+        newleg.headSign = [legDictionary objectForKey:@"headsign"];
         newleg.duration = [legDictionary objectForKey:@"duration"];
         itinerary.endTime = newleg.endTime;
         return newleg;
@@ -1715,7 +1716,7 @@
 }
 
 - (NSDictionary *) getMatchingLegWithPatternLeg:(Leg *)leg PreviousLegEndTime:(NSDate *)previousLegEndTime{
-    NSArray *arrItineraries = [legsDictionary objectForKey:@"lstItineraries"];
+    NSArray *arrItineraries = itinerariesArray;
     for(int i=0;i<[arrItineraries count];i++){
         NSDictionary *itineraryDictionary = [arrItineraries objectAtIndex:i];
         NSString *legId = [itineraryDictionary objectForKey:@"id"];
@@ -1723,7 +1724,6 @@
             NSArray *arrLegs = [itineraryDictionary objectForKey:@"legs"];
             NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:YES];
             NSArray *sortedLegs = [arrLegs sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-            NSLog(@"sortedLeg=%@",sortedLegs);
             for(int j=0;j<[sortedLegs count];j++){
                 NSDictionary *legDictionary = [sortedLegs objectAtIndex:j];
                 NSDate *startTime = [NSDate dateWithTimeIntervalSince1970:[[legDictionary objectForKey:@"startTime"] doubleValue]/1000];
@@ -1851,9 +1851,7 @@
                 NSMutableArray *arrPrediction = [dictPredictions objectForKey:leg.legId];
                     NSDictionary *dictPrediction = [self returnNearestRealtime:newItinerary.endTime ArrRealTimes:arrPrediction];
                     if(dictPrediction){
-                        NIMLOG_PERF2(@"Generating Realtime Leg Started");
                        Leg *newleg = [self generateLegFromPrediction:dictPrediction newItinerary:newItinerary Leg:leg Context:context ISExtraPrediction:false];
-                        NIMLOG_PERF2(@"Generating Realtime Lef Finished");
                         if([self isFirstScheduledLeg:leg Itinerary:itinerary]){
                             newItinerary.startTime = newleg.startTime;
                             [arrPrediction removeObject:dictPrediction];
@@ -1862,7 +1860,6 @@
                     }
                     else{
                         NSDictionary *legDictionary = [self getMatchingLegWithPatternLeg:leg PreviousLegEndTime:newItinerary.endTime];
-                        NIMLOG_PERF2(@"legDictionary=%@",legDictionary);
                         if(!legDictionary){
                             [plan deleteItinerary:newItinerary];
                             break;

@@ -341,10 +341,10 @@ UIImage *imageDetailDisclosure;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSDictionary *legsDictionary = [nc_AppDelegate sharedInstance].gtfsParser.legsDictionary;
+    NSArray *itinerariesArray = [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray;
     NSArray *fromToStopId = [nc_AppDelegate sharedInstance].planStore.fromToStopID;
-    if(legsDictionary){
-        [nc_AppDelegate sharedInstance].gtfsParser.legsDictionary = nil;
+    if(itinerariesArray){
+        [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray = nil;
     }
     if(fromToStopId){
         [nc_AppDelegate sharedInstance].planStore.fromToStopID = nil;
@@ -1159,7 +1159,6 @@ UIImage *imageDetailDisclosure;
                                       fromObject:self
                                           status:status
                                 RequestParameter:requestParameter];
-                [self requestServerForRealTime];
                 self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
                 
                 if (fromLocation == currentLocation) {

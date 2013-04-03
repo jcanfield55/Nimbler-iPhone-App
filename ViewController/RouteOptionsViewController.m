@@ -107,13 +107,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                  status:(PlanRequestStatus)status
        RequestParameter:(PlanRequestParameters *)requestParameter
 {
-    [self hideItineraryIfNeeded:[plan sortedItineraries]];
-    [plan prepareSortedItinerariesWithMatchesForDate:requestParameter.originalTripDate
-                                      departOrArrive:requestParameter.departOrArrive
-                                routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
-                             generateGtfsItineraries:NO
-                               removeNonOptimalItins:YES];
-    
     NIMLOG_US202(@"newPlanAvailable, status=%d, sortedItins=%d", status, newPlan.sortedItineraries.count);
     planRequestParameters = requestParameter;
     if ([referringObject isKindOfClass:[ToFromViewController class]]) {

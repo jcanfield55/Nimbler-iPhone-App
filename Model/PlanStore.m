@@ -106,6 +106,7 @@
                 }
                 
                 // Callback to planDestination with new plan
+                 [self requestStopTimesForItineraryPatterns:parameters.originalTripDate Plan:matchingPlan];
                 [parameters.planDestination newPlanAvailable:matchingPlan
                                                   fromObject:self
                                                       status:reqStatus
@@ -278,8 +279,15 @@
             NIMLOG_PERF2(@"Legs Response Received");
             RKJSONParserJSONKit* parser1 = [RKJSONParserJSONKit new];
             NSDictionary *legsDictionary = [parser1 objectFromString:[response bodyAsString] error:nil];
-            NIMLOG_PERF2(@"legsDictionary=%@",legsDictionary);
-            [nc_AppDelegate sharedInstance].gtfsParser.legsDictionary = legsDictionary;
+            NSArray *arrayItineraries = [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray;
+            NSMutableArray *itinerariesArray = [[NSMutableArray alloc] initWithArray:arrayItineraries];
+            NSArray *arrItineraries = [legsDictionary objectForKey:@"lstItineraries"];
+            for(int i=0;i<[arrItineraries count];i++){
+                NSDictionary *itineraryDictionary = [arrItineraries objectAtIndex:i];
+                [itinerariesArray addObject:itineraryDictionary];
+            }
+            [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray = itinerariesArray;
+            [[nc_AppDelegate sharedInstance].toFromViewController requestServerForRealTime];
             
         }
     }

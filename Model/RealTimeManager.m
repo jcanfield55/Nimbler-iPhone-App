@@ -38,12 +38,10 @@ static RealTimeManager* realTimeManager;
     plan = currentPlan;
     requestParameters = planrequestParameters;
     originalTripDate = planrequestParameters.originalTripDate;
-    NSDate *tripDateOnly = dateOnlyFromDate(originalTripDate);
-    NSDate *currentDate = [NSDate date];
-    NSDate *currentDateOnly = dateOnlyFromDate(currentDate);
-    NSDate *currentDatePlus90Miuntes = [currentDate dateByAddingTimeInterval:CURRENT_DATE_PLUS_INTERVAL];
+    NSDate *currentDate = dateOnlyFromDate([NSDate date]);
+    NSDate *tripDate = dateOnlyFromDate(originalTripDate);
     // TODO:- Comment This if statement to run automated test case
-     if([tripDateOnly isEqualToDate:currentDateOnly] && [originalTripDate compare:currentDatePlus90Miuntes] == NSOrderedAscending){
+     if([tripDate compare:currentDate] != NSOrderedAscending){
         NSMutableArray *arrLegs = [[NSMutableArray alloc] init];
         for(int i=0;i<[[plan uniqueItineraries] count];i++){
             Itinerary *itinerary = [[plan uniqueItineraries] objectAtIndex:i];
@@ -163,6 +161,7 @@ static RealTimeManager* realTimeManager;
                 [self setRealTimePredictionsFromLiveFeeds:legLiveFees];
                 // TODO:- Comment Four lines to run automated test case
                 [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:originalTripDate Context:nil];
+                [self hideItineraryIfNeeded:[[plan itineraries] allObjects]];
                  [plan prepareSortedItinerariesWithMatchesForDate:originalTripDate
                                                    departOrArrive:requestParameters.departOrArrive
                                              routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
@@ -190,7 +189,7 @@ static RealTimeManager* realTimeManager;
 - (void) hideItineraryIfNeeded:(NSArray *)arrItinerary{
     for(int i=0;i<[arrItinerary count];i++){
         Itinerary *itinerary1 = [arrItinerary objectAtIndex:i];
-        if(!itinerary1.isRealTimeItinerary && itinerary1.hideItinerary)
+        if(!itinerary1.isRealTimeItinerary)
             continue;
         for(int j=0;j<[arrItinerary count];j++){
             Itinerary *itinerary2 = [arrItinerary objectAtIndex:j];
@@ -201,12 +200,11 @@ static RealTimeManager* realTimeManager;
             double realTimeInterval = timeIntervalFromDate(realStartTime);
             double scheduledTimeInterval = timeIntervalFromDate(scheduledStartTime);
             if([realStartTime compare:scheduledStartTime] == NSOrderedDescending || realTimeInterval == scheduledTimeInterval){
-               itinerary2.hideItinerary = true;
+                itinerary2.hideItinerary = true;
             }
         }
     }
 }
-
 
 // return leg with matching legid
 - (Leg *) returnLegWithSameLegId:(NSString *)strLegId{
