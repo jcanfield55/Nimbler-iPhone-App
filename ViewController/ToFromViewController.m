@@ -1118,7 +1118,7 @@ UIImage *imageDetailDisclosure;
             requestParameter.hasGoneToRouteOptions.boolValue) {   // if we have already gone to routeOptionsVC for this request
             [routeOptionsVC newPlanAvailable:plan
                                   fromObject:referringObject  // Treat toFromVC as a passthru
-                                      status:PLAN_STATUS_OK
+                                      status:status
                             RequestParameter:requestParameter];
             return;
         }

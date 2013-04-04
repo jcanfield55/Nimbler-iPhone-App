@@ -107,6 +107,14 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                  status:(PlanRequestStatus)status
        RequestParameter:(PlanRequestParameters *)requestParameter
 {
+    if (status == PLAN_GENERIC_EXCEPTION || status == PLAN_NOT_AVAILABLE_THAT_TIME) {
+        if (plan && [[plan sortedItineraries] count] == 0) {
+            // if no itineraries showing, then show warning
+            [noItineraryWarning setHidden:NO];
+            setWarningHidden = false;
+        }
+        return;
+    }
     NIMLOG_US202(@"newPlanAvailable, status=%d, sortedItins=%d", status, newPlan.sortedItineraries.count);
     planRequestParameters = requestParameter;
     if ([referringObject isKindOfClass:[ToFromViewController class]]) {
@@ -126,7 +134,10 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     } else if (status == PLAN_EXCLUDED_TO_ZERO_RESULTS) {
         [noItineraryWarning setHidden:NO]; // show warning
         setWarningHidden = false;
-    } 
+    } else {
+        logError(@"RouteOptionsViewController -> newPlanAvailable",
+                 [NSString stringWithFormat:@"Unexpected status = %d", status]);
+    }
 }
 
 - (void) changeMainTableSettings{
@@ -238,8 +249,17 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                                 routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
                              generateGtfsItineraries:NO
                                removeNonOptimalItins:YES];
+    if (!setWarningHidden && [[plan sortedItineraries] count] > 0) { // if we now have itineraries, hide warning
+        [noItineraryWarning setHidden:YES];
+        setWarningHidden = true;
+    }
     NIMLOG_PERF2(@"done preparing sortedItineraries");
-    [planStore requestMoreItinerariesIfNeeded:self.plan parameters:newParameters];
+    MoreItineraryStatus reqStatus = [planStore requestMoreItinerariesIfNeeded:self.plan parameters:newParameters];
+    if (reqStatus == NO_MORE_ITINERARIES_REQUESTED && [[plan sortedItineraries] count] == 0) {
+        // if no itineraries showing and no more requests made, show warning 
+        [noItineraryWarning setHidden:NO];
+        setWarningHidden = false;
+    }
     [mainTable reloadData];
     NIMLOG_PERF2(@"done toggleExcludeButton");
 }

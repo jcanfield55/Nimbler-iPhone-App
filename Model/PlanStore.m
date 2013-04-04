@@ -300,122 +300,121 @@
         RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
         NSDictionary *tempResponseDictionary = [rkParser objectFromString:[[objectLoader response] bodyAsString] error:nil];
         if([[tempResponseDictionary objectForKey:RESPONSE_CODE] intValue] == RESPONSE_SUCCESSFULL){
+            NSString *strResourcePath = [objectLoader resourcePath];
+            if (strResourcePath && [strResourcePath length]>0) {
+                planRequestParameters = [parametersByPlanURLResource objectForKey:strResourcePath];
+                [parametersByPlanURLResource removeObjectForKey:strResourcePath]; // Clear out entry from dictionary now we are done with it
+            } else {
+                [NSException raise:@"PlanStore->didLoadObjects failed to retrieve plan parameters" format:@"strResourcePath: %@", strResourcePath];
+            }
             if([tempResponseDictionary objectForKey:OTP_ERROR_STATUS]){
-                if ([nc_AppDelegate sharedInstance].isToFromView) {
-                    // only show error if on To & From View Controller, otherwise do nothing
-                    UIAlertView *alertView = [[UIAlertView alloc] init];
-                    [alertView setDelegate:self];
-                    [alertView setTitle:APP_TITLE];
-                    [alertView setMessage:ROUTE_NOT_POSSIBLE_MSG];
-                    [alertView addButtonWithTitle:OK_BUTTON_TITLE];
-                    [alertView show];
-                    logEvent(FLURRY_ROUTE_OTHER_ERROR,
-                             FLURRY_RK_RESPONSE_ERROR, [tempResponseDictionary objectForKey:OTP_ERROR_STATUS],
-                             nil, nil, nil, nil, nil, nil);
-                    ToFromViewController* toFromVC = [[nc_AppDelegate sharedInstance] toFromViewController];
-                    [toFromVC.activityIndicator stopAnimating];
-                    [toFromVC.view setUserInteractionEnabled:YES];
+                // If OTP error (no plan returned)
+                Plan* plan = nil;
+                PlanRequestStatus status = PLAN_GENERIC_EXCEPTION;
+                if (planRequestParameters.isDestinationToFromVC &&
+                    !planRequestParameters.routeExcludeSettingsUsedForOTPCall.isDefaultSettings) {
+                    // if there were excludes and we're going back to ToFromVC, return the plan from cache
+                    NSArray* matchingPlanArray = [self fetchPlansWithToLocation:[planRequestParameters toLocation]
+                                                                   fromLocation:[planRequestParameters fromLocation]];
+                    if (matchingPlanArray && [matchingPlanArray count]>0) {
+                        plan = [matchingPlanArray objectAtIndex:0];
+                        status = PLAN_EXCLUDED_TO_ZERO_RESULTS;  // We presume that the error status is due to excludes and allow user to go to RouteOptionsPage and adjust excludes
+                    }
+                }
+                [planRequestParameters.planDestination newPlanAvailable:plan
+                                                             fromObject:self
+                                                                 status:status
+                                                       RequestParameter:planRequestParameters];
+                logEvent(FLURRY_ROUTE_OTHER_ERROR,
+                         FLURRY_RK_RESPONSE_ERROR, [tempResponseDictionary objectForKey:OTP_ERROR_STATUS],
+                         nil, nil, nil, nil, nil, nil);
+                return;
+            }
+            Plan *plan = [objects objectAtIndex:0];
+            if([nc_AppDelegate sharedInstance].isTestPlan){
+                [nc_AppDelegate sharedInstance].testPlan = plan;
+            }
+            // Request GTFS schedule data as needed
+            //[[nc_AppDelegate sharedInstance].gtfsParser generateGtfsTripsRequestStringUsingPlan:plan];
+            
+            // Set to & from location with special handling of CurrentLocation
+            Location *toLoc = [planRequestParameters toLocation];
+            if ([toLoc isCurrentLocation] && [toLoc isReverseGeoValid]) {
+                plan.toLocation = [toLoc reverseGeoLocation];
+            } else {
+                plan.toLocation = toLoc;
+            }
+            Location* fromLoc = [planRequestParameters fromLocation];
+            if ([fromLoc isCurrentLocation] && [fromLoc isReverseGeoValid]) {
+                plan.fromLocation = [fromLoc reverseGeoLocation];
+            } else {
+                plan.fromLocation = fromLoc;
+            }
+            [plan initializeNewPlanFromOTPWithRequestDate:[planRequestParameters thisRequestTripDate]
+                                           departOrArrive:[planRequestParameters departOrArrive]
+                                     routeExcludeSettings:planRequestParameters.routeExcludeSettingsUsedForOTPCall];
+            // Make sure that we still have itineraries (ie it wasn't just overnight itineraries)
+            // Part of the DE161 fix
+            if ([[plan itineraries] count] == 0) {
+                NIMLOG_EVENT1(@"Plan with just overnight itinerary deleted");
+                [managedObjectContext deleteObject:plan];
+                saveContext(managedObjectContext);
+                [planRequestParameters.planDestination newPlanAvailable:nil
+                                                             fromObject:self
+                                                                 status:PLAN_NOT_AVAILABLE_THAT_TIME
+                                                       RequestParameter:planRequestParameters];
+                logEvent(FLURRY_ROUTE_NOT_AVAILABLE_THAT_TIME,
+                         FLURRY_NEW_DATE, [NSString stringWithFormat:@"%@",[planRequestParameters thisRequestTripDate]],
+                         nil, nil, nil, nil, nil, nil);
+                return;
+            }
+            [plan setLegsId];
+            saveContext(managedObjectContext);  // Save location and request chunk changes
+            plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context
+            // Add plans to the list for having outstanding gtfsParsingRequests if applicable
+            if (plan.planId && planRequestParameters) {
+                [latestParametersForPlanIdDictionary setObject:planRequestParameters forKey:plan.planId];
+                if (plan.gtfsParsingRequests.count > 0) {
+                    [plansWaitingForGtfsData addObject:plan];
                 }
             }
-            else{
-                Plan *plan = [objects objectAtIndex:0];
-                if([nc_AppDelegate sharedInstance].isTestPlan){
-                    [nc_AppDelegate sharedInstance].testPlan = plan;
-                }
-                NSString *strResourcePath = [objectLoader resourcePath];
-                if (strResourcePath && [strResourcePath length]>0) {
-                    planRequestParameters = [parametersByPlanURLResource objectForKey:strResourcePath];
-                    [parametersByPlanURLResource removeObjectForKey:strResourcePath]; // Clear out entry from dictionary now we are done with it
-                } else {
-                    [NSException raise:@"PlanStore->didLoadObjects failed to retrieve plan parameters" format:@"strResourcePath: %@", strResourcePath];
-                }
-                // Request GTFS schedule data as needed
-                //[[nc_AppDelegate sharedInstance].gtfsParser generateGtfsTripsRequestStringUsingPlan:plan];
-                
-                // Set to & from location with special handling of CurrentLocation
-                Location *toLoc = [planRequestParameters toLocation];
-                if ([toLoc isCurrentLocation] && [toLoc isReverseGeoValid]) {
-                    plan.toLocation = [toLoc reverseGeoLocation];
-                } else {
-                    plan.toLocation = toLoc;
-                }
-                Location* fromLoc = [planRequestParameters fromLocation];
-                if ([fromLoc isCurrentLocation] && [fromLoc isReverseGeoValid]) {
-                    plan.fromLocation = [fromLoc reverseGeoLocation];
-                } else {
-                    plan.fromLocation = fromLoc;
-                }
-                [plan initializeNewPlanFromOTPWithRequestDate:[planRequestParameters thisRequestTripDate]
-                                                          departOrArrive:[planRequestParameters departOrArrive]
-                                                     routeExcludeSettings:planRequestParameters.routeExcludeSettingsUsedForOTPCall];
-                // Make sure that we still have itineraries (ie it wasn't just overnight itineraries)
-                // Part of the DE161 fix
-                if ([[plan itineraries] count] == 0) {
-                    NIMLOG_EVENT1(@"Plan with just overnight itinerary deleted");
-                    [managedObjectContext deleteObject:plan];
-                    saveContext(managedObjectContext);
-                    if (planRequestParameters.isDestinationToFromVC) {
-                        [planRequestParameters.planDestination newPlanAvailable:nil
-                                                                     fromObject:self
-                                                                         status:PLAN_NOT_AVAILABLE_THAT_TIME
-                                                               RequestParameter:planRequestParameters];
-                        logEvent(FLURRY_ROUTE_NOT_AVAILABLE_THAT_TIME,
-                                 FLURRY_NEW_DATE, [NSString stringWithFormat:@"%@",[planRequestParameters thisRequestTripDate]],
-                                 nil, nil, nil, nil, nil, nil);
-    
-                    } // else if routeOptions destination, do nothing
-                    return;
-                }
-                [plan setLegsId];
-                saveContext(managedObjectContext);  // Save location and request chunk changes
-                plan = [self consolidateWithMatchingPlans:plan]; // Consolidate plans & save context
-                // Add plans to the list for having outstanding gtfsParsingRequests if applicable
-                if (plan.planId && planRequestParameters) {
-                    [latestParametersForPlanIdDictionary setObject:planRequestParameters forKey:plan.planId];
-                    if (plan.gtfsParsingRequests.count > 0) {
-                        [plansWaitingForGtfsData addObject:plan];
-                    }
-                }
-                // Now format the itineraries of the consolidated plan
-                // get Unique Itinerary from Plan.
-                if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate]
-                                                      departOrArrive:[planRequestParameters departOrArrive]
-                                                routeExcludeSettings:[RouteExcludeSettings latestUserSettings] // use latest settings in case something changed
-                                             generateGtfsItineraries:NO
-                                               removeNonOptimalItins:YES]) {
-                    MoreItineraryStatus moreItinStatus = [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
-                    [self requestStopTimesForItineraryPatterns:planRequestParameters.originalTripDate Plan:plan];
-                    PlanRequestStatus reqStatus = PLAN_STATUS_OK;
-                    if ([[plan sortedItineraries] count] == 0) {
-                        if (moreItinStatus == MORE_ITINERARIES_REQUESTED_DIFFERENT_EXCLUDES) {
-                            NIMLOG_US202(@"0 sorted itineraries, waiting for next OTP request");
-                            return;  // Do not call back to planDestination -- keep waiting for OTP
-                        } else {
-                            reqStatus = PLAN_EXCLUDED_TO_ZERO_RESULTS;  // Show zero results on RouteOptions page
-                        }
+            // Now format the itineraries of the consolidated plan
+            // get Unique Itinerary from Plan.
+            if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate]
+                                                  departOrArrive:[planRequestParameters departOrArrive]
+                                            routeExcludeSettings:[RouteExcludeSettings latestUserSettings] // use latest settings in case something changed
+                                         generateGtfsItineraries:NO
+                                           removeNonOptimalItins:YES]) {
+                MoreItineraryStatus moreItinStatus = [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
+                [self requestStopTimesForItineraryPatterns:planRequestParameters.originalTripDate Plan:plan];
+                PlanRequestStatus reqStatus = PLAN_STATUS_OK;
+                if ([[plan sortedItineraries] count] == 0) {
+                    if (moreItinStatus == MORE_ITINERARIES_REQUESTED_DIFFERENT_EXCLUDES) {
+                        NIMLOG_US202(@"0 sorted itineraries, waiting for next OTP request");
+                        return;  // Do not call back to planDestination -- keep waiting for OTP
                     } else {
-                        reqStatus = PLAN_STATUS_OK;
+                        reqStatus = PLAN_EXCLUDED_TO_ZERO_RESULTS;  // Show zero results on RouteOptions page
                     }
-                    // Call-back the appropriate VC with the new plan
-                    [planRequestParameters.planDestination newPlanAvailable:plan
-                                                                 fromObject:self
-                                                                     status:reqStatus
-                                                           RequestParameter:planRequestParameters];
-
-                } else { // no matching sorted itineraries.  DE189 fix
-                    if (planRequestParameters.isDestinationToFromVC) {
-                        [planRequestParameters.planDestination newPlanAvailable:nil
-                                                                     fromObject:self
-                                                                         status:PLAN_NOT_AVAILABLE_THAT_TIME
-                                                               RequestParameter:planRequestParameters];
-                        logEvent(FLURRY_ROUTE_NO_MATCHING_ITINERARIES, nil, nil, nil, nil, nil, nil, nil, nil);
-                    } // else if routeOptions destination, do nothing
+                } else {
+                    reqStatus = PLAN_STATUS_OK;
                 }
+                // Call-back the appropriate VC with the new plan
+                [planRequestParameters.planDestination newPlanAvailable:plan
+                                                             fromObject:self
+                                                                 status:reqStatus
+                                                       RequestParameter:planRequestParameters];
+                
+            } else { // no matching sorted itineraries.  DE189 fix
+                [planRequestParameters.planDestination newPlanAvailable:nil
+                                                             fromObject:self
+                                                                 status:PLAN_NOT_AVAILABLE_THAT_TIME
+                                                       RequestParameter:planRequestParameters];
+                logEvent(FLURRY_ROUTE_NO_MATCHING_ITINERARIES, nil, nil, nil, nil, nil, nil, nil, nil);
             }
         }
     }
     @catch (NSException *exception) {
-        if (planRequestParameters && planRequestParameters.isDestinationToFromVC) {
+        if (planRequestParameters) {
             [planRequestParameters.planDestination newPlanAvailable:nil
                                                          fromObject:self
                                                              status:PLAN_GENERIC_EXCEPTION
@@ -454,16 +453,11 @@
     if (!parameters) {
         NIMLOG_ERR1(@"RKObjectManager failure with no retrievable parameters.  Error: %@", error);
     } else {
-        if (parameters.isDestinationToFromVC) {
             NIMLOG_ERR1(@"Error received from RKObjectManager on first call by ToFromViewController: %@", error);
             [parameters.planDestination newPlanAvailable:nil
                                               fromObject:self
                                                   status:status
                                         RequestParameter:parameters];
-        }
-        else { // if target is RouteOptions, do not call routeOptions and do not alert user.  This was a backup request only
-            NIMLOG_ERR1(@"Error received from RKObjectManager on subsequent call RouteOptionsViewController: %@", error);
-        }
     }
 }
 
