@@ -10,7 +10,7 @@
 
 #endif
 
-#define AUTOMATED_TESTING_SKIP_NCAPPDELEGATE 0 // if 1, skips nc_AppDelegate didFinishLaunchingWithOptions so we get a clean tests run
+//#define AUTOMATED_TESTING_SKIP_NCAPPDELEGATE 0 // if 1, skips nc_AppDelegate didFinishLaunchingWithOptions so we get a clean tests run
 
 #define GENERATING_SEED_DATABASE  0 // when we are generating seed database the value is 1 otherwise 0
 #define SKIP_REAL_TIME_UPDATES 0 // If 1, system will not request real-time updates
@@ -265,7 +265,7 @@
 #define TWEET_COUNT_POLLING_INTERVAL 120.0
 #define TIMER_SMALL_REQUEST_DELAY 1.0
 #define TIMER_MEDIUM_REQUEST_DELAY 30.0
-#define TIMER_STANDARD_REQUEST_DELAY 60.0
+#define TIMER_STANDARD_REQUEST_DELAY 120.0
 
 // errorCodes from TPResponce
 #define RESPONSE_SUCCESSFULL 105

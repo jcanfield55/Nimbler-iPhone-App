@@ -20,6 +20,7 @@
 #import "RouteExcludeSettings.h"
 #import "RouteExcludeSetting.h"
 #import "PlanStore.h"
+#import "nc_AppDelegate.h"
 
 #define IDENTIFIER_CELL         @"UIRouteOptionsViewCell"
 
@@ -115,6 +116,12 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         }
         return;
     }
+    [self hideItineraryIfNeeded:[[plan itineraries] allObjects]];
+    [plan prepareSortedItinerariesWithMatchesForDate:requestParameter.originalTripDate
+                                      departOrArrive:requestParameter.departOrArrive
+                                routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
+                             generateGtfsItineraries:NO
+                               removeNonOptimalItins:YES];
     NIMLOG_US202(@"newPlanAvailable, status=%d, sortedItins=%d", status, newPlan.sortedItineraries.count);
     planRequestParameters = requestParameter;
     if ([referringObject isKindOfClass:[ToFromViewController class]]) {
@@ -139,6 +146,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                  [NSString stringWithFormat:@"Unexpected status = %d", status]);
     }
 }
+
 
 - (void) changeMainTableSettings{
     UIView *bgView = [self.view viewWithTag:1000];

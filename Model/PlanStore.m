@@ -41,6 +41,7 @@
 @synthesize rkTPClient;
 @synthesize legsURL;
 @synthesize fromToStopID;
+@synthesize stopTimesLoadSuccessfully;
 
 // Designated initializer
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkPlanMgr:(RKObjectManager *)rkP rkTpClient:(RKClient *)rkTpClient
@@ -106,6 +107,7 @@
                 }
                 
                 // Callback to planDestination with new plan
+                self.stopTimesLoadSuccessfully = false;
                  [self requestStopTimesForItineraryPatterns:parameters.originalTripDate Plan:matchingPlan];
                 [parameters.planDestination newPlanAvailable:matchingPlan
                                                   fromObject:self
@@ -280,6 +282,7 @@
             RKJSONParserJSONKit* parser1 = [RKJSONParserJSONKit new];
             NSDictionary *legsDictionary = [parser1 objectFromString:[response bodyAsString] error:nil];
             NSArray *arrayItineraries = [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray;
+            self.stopTimesLoadSuccessfully = true;
             NSMutableArray *itinerariesArray = [[NSMutableArray alloc] initWithArray:arrayItineraries];
             NSArray *arrItineraries = [legsDictionary objectForKey:@"lstItineraries"];
             for(int i=0;i<[arrItineraries count];i++){
@@ -287,8 +290,6 @@
                 [itinerariesArray addObject:itineraryDictionary];
             }
             [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray = itinerariesArray;
-            [[nc_AppDelegate sharedInstance].toFromViewController requestServerForRealTime];
-            
         }
     }
 }

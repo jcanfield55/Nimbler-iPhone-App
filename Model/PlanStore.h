@@ -32,6 +32,7 @@ typedef enum {
 @property (strong,nonatomic)  RKClient *rkTPClient;
 @property (strong, nonatomic) NSString *legsURL;
 @property (strong, nonatomic) NSArray *fromToStopID;
+@property (nonatomic) BOOL stopTimesLoadSuccessfully;
 
 // Designated initializer
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkPlanMgr:(RKObjectManager *)rkP rkTpClient:(RKClient *)rkTpClient;

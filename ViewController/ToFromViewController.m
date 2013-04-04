@@ -1159,6 +1159,7 @@ UIImage *imageDetailDisclosure;
                                       fromObject:self
                                           status:status
                                 RequestParameter:requestParameter];
+                [self requestServerForRealTime];
                 self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
                 
                 if (fromLocation == currentLocation) {
@@ -1731,6 +1732,20 @@ UIImage *imageDetailDisclosure;
     [rxCustomTabbar showNewTabBar];
 }
 
+- (bool)waitForNonNullValueOfBlock:(BOOL(^)(void))block
+{
+    int i;
+    for (i=0; i<50; i++) {
+        if (block()) {
+            return true;
+        } else {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    return false;
+}
+
+
 // call the requestRealTimeDataFromServer from RealtimeManager class with plan.
 - (void) requestServerForRealTime{
     // TODO:- Comment This both line to run automated test case
@@ -1740,6 +1755,10 @@ UIImage *imageDetailDisclosure;
 #if SKIP_REAL_TIME_UPDATES
     return;
 #endif
+    if(![nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray){
+        [self waitForNonNullValueOfBlock:^(void){BOOL result=planStore.stopTimesLoadSuccessfully; return result;}];
+    }
+    planStore.stopTimesLoadSuccessfully = false;
     RealTimeManager *realtimeManager = [RealTimeManager realTimeManager];
     [realtimeManager requestRealTimeDataFromServerUsingPlan:plan PlanRequestParameters:planRequestParameters];
 }

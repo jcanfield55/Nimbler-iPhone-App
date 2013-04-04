@@ -79,6 +79,8 @@ static RealTimeManager* realTimeManager;
                             tripId = @"";
                         }
                         NSDictionary *dicLegData = [NSDictionary dictionaryWithObjectsAndKeys:leg.tripId,@"tripId",strRouteLongName,@"routeLongName",strRouteShortName,@"routeShortName",[NSNumber numberWithDouble:startDate],@"startTime",[NSNumber numberWithDouble:endDate],@"endTime",leg.routeId,@"routeId",dicTo,@"to",dicFrom,@"from",leg.mode,@"mode",leg.agencyId,@"agencyId",leg.agencyName,@"agencyName",leg.route,@"route",leg.headSign,@"headsign",leg.legId,@"id", nil];
+                        NIMLOG_PERF2(@"fromStopId->%@, toStopId->%@, fromStopName->%@, toStopName->%@, legId->%@, routeId->%@, tripId->%@,",leg.from.stopId,leg.to.stopId,leg.from.name,leg.to.name,leg.legId,leg.routeId,leg.tripId);
+                        NIMLOG_PERF2(@"-----------------------------------------");
                         [arrLegs addObject:dicLegData];
                     }
                 }  
@@ -94,6 +96,21 @@ static RealTimeManager* realTimeManager;
      }
 }
 
+- (void) logRealtimeData:(NSDictionary *)dictionary{
+    NSArray *array = [dictionary objectForKey:@"legLiveFeeds"];
+    for(int i=0;i<[array count];i++){
+        NSDictionary *dict = [array objectAtIndex:i];
+        NIMLOG_PERF2(@"legId->%@",[[dict objectForKey:@"leg"] objectForKey:@"id"]);
+        NSArray *arrayLegs = [dict objectForKey:@"lstPredictions"];
+        for(int j=0;j<[arrayLegs count];j++){
+            NSDictionary *responseDict = [arrayLegs objectAtIndex:j];
+            NSDate *date = [NSDate dateWithTimeIntervalSince1970:[[responseDict objectForKey:@"epochTime"] doubleValue]/1000];
+            NIMLOG_PERF2(@"realTime->%@, scheduleTime->%@, scheduleTripId->%@, realTripId->%@,",date,[responseDict objectForKey:@"scheduleTime"],[responseDict objectForKey:@"scheduleTripId"],[responseDict objectForKey:@"tripId"]);
+        }
+    NIMLOG_PERF2(@"---------------------------------------------------------");
+    }
+}
+
 #pragma mark RKResponse Delegate method
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {
     @try {
@@ -102,7 +119,7 @@ static RealTimeManager* realTimeManager;
         RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
         loadedRealTimeData = true;
         id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
-        NIMLOG_PERF2(@"Realtime Response=%@",res);
+        //[self logRealtimeData:res];
         [routeOptionsVC setIsReloadRealData:false];
         [self setLiveFeed:res];
     }  @catch (NSException *exception) {
