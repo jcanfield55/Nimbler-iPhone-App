@@ -265,8 +265,8 @@ UIImage *imageDetailDisclosure;
     routeButton.layer.cornerRadius = CORNER_RADIUS_SMALL;
     [continueGetTime invalidate];
     continueGetTime = nil;
-    [timerGettingRealDataByItinerary invalidate];
-    timerGettingRealDataByItinerary = nil;
+    [routeOptionsVC.timerGettingRealDataByItinerary invalidate];
+    routeOptionsVC.timerGettingRealDataByItinerary = nil;
     
     datePicker = [[UIDatePicker alloc]initWithFrame:CGRectMake(0, 494, 320, 216)];
     datePicker.datePickerMode = UIDatePickerModeDateAndTime;
@@ -349,9 +349,9 @@ UIImage *imageDetailDisclosure;
     if(fromToStopId){
         [nc_AppDelegate sharedInstance].planStore.fromToStopID = nil;
     }
-    if(self.timerGettingRealDataByItinerary != nil){
-        [self.timerGettingRealDataByItinerary invalidate];
-        self.timerGettingRealDataByItinerary = nil;
+    if(routeOptionsVC.timerGettingRealDataByItinerary != nil){
+        [routeOptionsVC.timerGettingRealDataByItinerary invalidate];
+        routeOptionsVC.timerGettingRealDataByItinerary = nil;
     }
     NIMLOG_PERF1(@"Entered ToFromView viewWillAppear");
     [nc_AppDelegate sharedInstance].isToFromView = YES;
@@ -1111,6 +1111,7 @@ UIImage *imageDetailDisclosure;
        RequestParameter:(PlanRequestParameters *)requestParameter
 {
     @try {
+        NIMLOG_PERF2(@"PatternsCount=%d",[[plan uniqueItineraries] count]);
         planRequestParameters = requestParameter;
         // If we already on routeOptionsVC, redirect this callback there instead
         UIViewController *currentVC = self.navigationController.visibleViewController;
@@ -1136,31 +1137,14 @@ UIImage *imageDetailDisclosure;
         if (status == PLAN_STATUS_OK || status == PLAN_EXCLUDED_TO_ZERO_RESULTS) {
             plan = newPlan;
             savetrip = FALSE;
-            
             // DE - 155 Fixed
             if([[plan sortedItineraries] count] != 0 || status == PLAN_EXCLUDED_TO_ZERO_RESULTS) { // if PLAN_EXCLUDED_TO_ZERO_RESULTS, its OK to go to RouteOptions even with 0 sortedItineraries
-                if(self.timerGettingRealDataByItinerary != nil){
-                    [self.timerGettingRealDataByItinerary invalidate];
-                    self.timerGettingRealDataByItinerary = nil;
-                }
-                NSArray *ities = [plan sortedItineraries];
-                for (int i=0; i <ities.count ; i++) {
-                    [[ities objectAtIndex:i] setItinArrivalFlag:nil];
-                    Itinerary *it = [ities objectAtIndex:i];
-                    NSArray *legs =  [it sortedLegs];
-                    for (int i=0;i<legs.count;i++) {
-                        [[legs objectAtIndex:i] setArrivalFlag:nil];
-                        [[legs objectAtIndex:i] setArrivalTime:nil];
-                        [[legs objectAtIndex:i] setTimeDiffInMins:nil];
-                    }
-                }
+                
                 [requestParameter.hasGoneToRouteOptions setBoolValue:true];
                 [routeOptionsVC newPlanAvailable:plan
                                       fromObject:self
                                           status:status
                                 RequestParameter:requestParameter];
-                [self requestServerForRealTime];
-                self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
                 
                 if (fromLocation == currentLocation) {
                     // Update lastRequestReverseGeoLocation if the current one is valid, DE232 fix
@@ -1730,36 +1714,5 @@ UIImage *imageDetailDisclosure;
     }   
     RXCustomTabBar *rxCustomTabbar = (RXCustomTabBar *)self.tabBarController;
     [rxCustomTabbar showNewTabBar];
-}
-
-- (bool)waitForNonNullValueOfBlock:(BOOL(^)(void))block
-{
-    int i;
-    for (i=0; i<50; i++) {
-        if (block()) {
-            return true;
-        } else {
-            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
-        }
-    }
-    return false;
-}
-
-
-// call the requestRealTimeDataFromServer from RealtimeManager class with plan.
-- (void) requestServerForRealTime{
-    // TODO:- Comment This both line to run automated test case
-#if AUTOMATED_TESTING_SKIP_NCAPPDELEGATE
-    return;
-#endif
-#if SKIP_REAL_TIME_UPDATES
-    return;
-#endif
-    if(![nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray){
-        [self waitForNonNullValueOfBlock:^(void){BOOL result=planStore.stopTimesLoadSuccessfully; return result;}];
-    }
-    planStore.stopTimesLoadSuccessfully = false;
-    RealTimeManager *realtimeManager = [RealTimeManager realTimeManager];
-    [realtimeManager requestRealTimeDataFromServerUsingPlan:plan PlanRequestParameters:planRequestParameters];
 }
 @end

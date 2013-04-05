@@ -1719,9 +1719,8 @@
     NSArray *arrItineraries = itinerariesArray;
     for(int i=0;i<[arrItineraries count];i++){
         NSDictionary *itineraryDictionary = [arrItineraries objectAtIndex:i];
-        NSString *legId = [itineraryDictionary objectForKey:@"id"];
-        if([legId isEqualToString:leg.legId]){
-            NSArray *arrLegs = [itineraryDictionary objectForKey:@"legs"];
+        NSString *stopIdsString = [NSString stringWithFormat:@"%@_%@",leg.from.stopId,leg.to.stopId];
+            NSArray *arrLegs = [itineraryDictionary objectForKey:stopIdsString];
             NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:YES];
             NSArray *sortedLegs = [arrLegs sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
             for(int j=0;j<[sortedLegs count];j++){
@@ -1732,7 +1731,6 @@
                 }
             }
         }
-    }
     return nil;
 }
 // Generate reattime itineraries from pattern and realtime data.

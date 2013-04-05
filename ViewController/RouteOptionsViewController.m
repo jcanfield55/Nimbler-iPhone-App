@@ -21,6 +21,7 @@
 #import "RouteExcludeSetting.h"
 #import "PlanStore.h"
 #import "nc_AppDelegate.h"
+#import "RealTimeManager.h"
 
 #define IDENTIFIER_CELL         @"UIRouteOptionsViewCell"
 
@@ -45,6 +46,8 @@
 @synthesize planRequestParameters;
 @synthesize routeDetailsVC;
 @synthesize planStore;
+@synthesize activityIndicator;
+@synthesize timerGettingRealDataByItinerary;
 
 Itinerary * itinerary;
 NSString *itinararyId;
@@ -116,12 +119,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         }
         return;
     }
-    [self hideItineraryIfNeeded:[[plan itineraries] allObjects]];
-    [plan prepareSortedItinerariesWithMatchesForDate:requestParameter.originalTripDate
-                                      departOrArrive:requestParameter.departOrArrive
-                                routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
-                             generateGtfsItineraries:NO
-                               removeNonOptimalItins:YES];
     NIMLOG_US202(@"newPlanAvailable, status=%d, sortedItins=%d", status, newPlan.sortedItineraries.count);
     planRequestParameters = requestParameter;
     if ([referringObject isKindOfClass:[ToFromViewController class]]) {
@@ -135,6 +132,20 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         }
         [self changeMainTableSettings];
     }
+    NIMLOG_PERF2(@"routeDetailUniquePattern=%d",[[plan uniqueItineraries] count]);
+    if(self.timerGettingRealDataByItinerary != nil){
+        [self.timerGettingRealDataByItinerary invalidate];
+        self.timerGettingRealDataByItinerary = nil;
+    }
+    [self requestServerForRealTime];
+    self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
+    [self hideItineraryIfNeeded:[[plan itineraries] allObjects]];
+    [plan prepareSortedItinerariesWithMatchesForDate:requestParameter.originalTripDate
+                                      departOrArrive:requestParameter.departOrArrive
+                                routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
+                             generateGtfsItineraries:NO
+                               removeNonOptimalItins:YES];
+    
     if (status == PLAN_STATUS_OK) {
         [noItineraryWarning setHidden:YES];
         setWarningHidden = true;
@@ -262,16 +273,17 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         setWarningHidden = true;
     }
     NIMLOG_PERF2(@"done preparing sortedItineraries");
+    [activityIndicator startAnimating];
     MoreItineraryStatus reqStatus = [planStore requestMoreItinerariesIfNeeded:self.plan parameters:newParameters];
     if (reqStatus == NO_MORE_ITINERARIES_REQUESTED && [[plan sortedItineraries] count] == 0) {
         // if no itineraries showing and no more requests made, show warning 
         [noItineraryWarning setHidden:NO];
         setWarningHidden = false;
     }
+    //[activityIndicator stopAnimating];
     [mainTable reloadData];
     NIMLOG_PERF2(@"done toggleExcludeButton");
 }
-
 
 #pragma mark - UITableViewDelegate methods
 // Table view management methods
@@ -507,7 +519,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
             Leg *leg = [[itinerary sortedLegs] objectAtIndex:i];
             if([leg isScheduled]){
                 NIMLOG_PERF2(@"legId->%@",leg.legId);
-                NIMLOG_PERF2(@"routeId->%@, routeshortName->%@, fromStop->%@, toStop->%@, fromStopId->%@, toStopId->%@, tripId->%@, headSign->%@, legMode->%@",leg.routeId,leg.routeShortName,leg.from.name,leg.to.name,leg.from.stopId,leg.to.stopId,leg.realTripId,leg.headSign,leg.mode);
+                NIMLOG_PERF2(@"routeId->%@, routeshortName->%@, fromStop->%@, toStop->%@, fromStopId->%@, toStopId->%@, tripId->%@, headSign->%@, legMode->%@, ScheduledTripId->%@",leg.routeId,leg.routeShortName,leg.from.name,leg.to.name,leg.from.stopId,leg.to.stopId,leg.realTripId,leg.headSign,leg.mode,leg.tripId);
             }
         }
         itinararyId =[itinerary itinId];
@@ -696,5 +708,35 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     if(totalRows > 0)
       buffer = (totalRows+1) * 5;
     return totalRows * 25 + buffer;
+}
+- (bool)waitForNonNullValueOfBlock:(BOOL(^)(void))block
+{
+    int i;
+    for (i=0; i<50; i++) {
+        if (block()) {
+            return true;
+        } else {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+        }
+    }
+    return false;
+}
+
+
+// call the requestRealTimeDataFromServer from RealtimeManager class with plan.
+- (void) requestServerForRealTime{
+    // TODO:- Comment This both line to run automated test case
+#if AUTOMATED_TESTING_SKIP_NCAPPDELEGATE
+    return;
+#endif
+#if SKIP_REAL_TIME_UPDATES
+    return;
+#endif
+    if(![nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray){
+        [self waitForNonNullValueOfBlock:^(void){BOOL result=planStore.stopTimesLoadSuccessfully; return result;}];
+    }
+    planStore.stopTimesLoadSuccessfully = false;
+    RealTimeManager *realtimeManager = [RealTimeManager realTimeManager];
+    [realtimeManager requestRealTimeDataFromServerUsingPlan:plan PlanRequestParameters:planRequestParameters];
 }
 @end

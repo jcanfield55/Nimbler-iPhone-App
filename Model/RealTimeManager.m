@@ -35,10 +35,12 @@ static RealTimeManager* realTimeManager;
 
 // Request RealTime data from server with legs attributes.
 - (void) requestRealTimeDataFromServerUsingPlan:(Plan *)currentPlan PlanRequestParameters:(PlanRequestParameters *)planrequestParameters{
+    NIMLOG_PERF2(@"patternCount=%d",[[plan uniqueItineraries] count]);
     plan = currentPlan;
     requestParameters = planrequestParameters;
     originalTripDate = planrequestParameters.originalTripDate;
     NSDate *currentDate = dateOnlyFromDate([NSDate date]);
+    NIMLOG_PERF2(@"originalTripDate=%@",originalTripDate);
     NSDate *tripDate = dateOnlyFromDate(originalTripDate);
     // TODO:- Comment This if statement to run automated test case
      if([tripDate compare:currentDate] != NSOrderedAscending){
@@ -79,8 +81,8 @@ static RealTimeManager* realTimeManager;
                             tripId = @"";
                         }
                         NSDictionary *dicLegData = [NSDictionary dictionaryWithObjectsAndKeys:leg.tripId,@"tripId",strRouteLongName,@"routeLongName",strRouteShortName,@"routeShortName",[NSNumber numberWithDouble:startDate],@"startTime",[NSNumber numberWithDouble:endDate],@"endTime",leg.routeId,@"routeId",dicTo,@"to",dicFrom,@"from",leg.mode,@"mode",leg.agencyId,@"agencyId",leg.agencyName,@"agencyName",leg.route,@"route",leg.headSign,@"headsign",leg.legId,@"id", nil];
-                        NIMLOG_PERF2(@"fromStopId->%@, toStopId->%@, fromStopName->%@, toStopName->%@, legId->%@, routeId->%@, tripId->%@,",leg.from.stopId,leg.to.stopId,leg.from.name,leg.to.name,leg.legId,leg.routeId,leg.tripId);
-                        NIMLOG_PERF2(@"-----------------------------------------");
+//                        NIMLOG_PERF2(@"fromStopId->%@, toStopId->%@, fromStopName->%@, toStopName->%@, legId->%@, routeId->%@, tripId->%@,",leg.from.stopId,leg.to.stopId,leg.from.name,leg.to.name,leg.legId,leg.routeId,leg.tripId);
+//                        NIMLOG_PERF2(@"-----------------------------------------");
                         [arrLegs addObject:dicLegData];
                     }
                 }  
@@ -88,6 +90,7 @@ static RealTimeManager* realTimeManager;
         }
         if([arrLegs count] > 0){
             NSString *strRequestString = [arrLegs JSONString];
+            NIMLOG_PERF2(@"Realtime request String=%@",strRequestString);
             RKParams *requestParameter = [RKParams params];
             [requestParameter setValue:strRequestString forParam:LEGS];
             [requestParameter setValue:[[NSUserDefaults standardUserDefaults] objectForKey:DEVICE_TOKEN] forParam:DEVICE_TOKEN];
@@ -120,6 +123,7 @@ static RealTimeManager* realTimeManager;
         loadedRealTimeData = true;
         id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
         //[self logRealtimeData:res];
+        NIMLOG_PERF2(@"realtime Response=%@",res);
         [routeOptionsVC setIsReloadRealData:false];
         [self setLiveFeed:res];
     }  @catch (NSException *exception) {

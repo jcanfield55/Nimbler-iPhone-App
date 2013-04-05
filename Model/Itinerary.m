@@ -34,7 +34,6 @@ NSArray *sortedByStartTimeOnly(NSSet* itinerarySet)
 
 @end
 
-
 @implementation Itinerary
 @dynamic requestChunksCreatedByThisPattern;
 @dynamic duration;

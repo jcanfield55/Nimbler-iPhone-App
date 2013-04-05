@@ -23,6 +23,8 @@ NewPlanAvailableDelegate>
 @property (nonatomic, strong) PlanRequestParameters *planRequestParameters;
 @property(nonatomic, strong) RouteDetailsViewController* routeDetailsVC;
 @property(nonatomic, strong) PlanStore* planStore;
+@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (nonatomic, strong) NSTimer *timerGettingRealDataByItinerary;
 
 
 -(void)hideUnUsedTableViewCell;
@@ -35,5 +37,7 @@ NewPlanAvailableDelegate>
 - (int) calculateTotalHeightOfButtonView;
 - (void) createViewWithButtons:(int)height;
 - (void) changeMainTableSettings;
+
+- (void) requestServerForRealTime;
 
 @end

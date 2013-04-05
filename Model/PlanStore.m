@@ -42,6 +42,7 @@
 @synthesize legsURL;
 @synthesize fromToStopID;
 @synthesize stopTimesLoadSuccessfully;
+@synthesize legLegIdDictionary;
 
 // Designated initializer
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkPlanMgr:(RKObjectManager *)rkP rkTpClient:(RKClient *)rkTpClient
@@ -101,9 +102,9 @@
                     reqStatus = PLAN_STATUS_OK;
                 }
                 ToFromViewController* toFromVC = [[nc_AppDelegate sharedInstance] toFromViewController];
-                if(toFromVC.timerGettingRealDataByItinerary != nil){
-                    [toFromVC.timerGettingRealDataByItinerary invalidate];
-                    toFromVC.timerGettingRealDataByItinerary = nil;
+                if(toFromVC.routeOptionsVC.timerGettingRealDataByItinerary != nil){
+                    [toFromVC.routeOptionsVC.timerGettingRealDataByItinerary invalidate];
+                    toFromVC.routeOptionsVC.timerGettingRealDataByItinerary = nil;
                 }
                 
                 // Callback to planDestination with new plan
@@ -287,7 +288,12 @@
             NSArray *arrItineraries = [legsDictionary objectForKey:@"lstItineraries"];
             for(int i=0;i<[arrItineraries count];i++){
                 NSDictionary *itineraryDictionary = [arrItineraries objectAtIndex:i];
-                [itinerariesArray addObject:itineraryDictionary];
+                NSString *legId = [itineraryDictionary objectForKey:@"id"];
+                Leg *leg = [legLegIdDictionary objectForKey:legId];
+                NSString *stopIdsString = [NSString stringWithFormat:@"%@_%@",leg.from.stopId,leg.to.stopId];
+                NSArray *arrLegs = [itineraryDictionary objectForKey:@"legs"];
+                NSDictionary *tempDict = [NSDictionary dictionaryWithObject:arrLegs forKey:stopIdsString];
+                [itinerariesArray addObject:tempDict];
             }
             [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray = itinerariesArray;
         }
@@ -298,6 +304,7 @@
     [nc_AppDelegate sharedInstance].receivedReply = YES;
     PlanRequestParameters* planRequestParameters;
     @try {
+        [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.activityIndicator stopAnimating];
         RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
         NSDictionary *tempResponseDictionary = [rkParser objectFromString:[[objectLoader response] bodyAsString] error:nil];
         if([[tempResponseDictionary objectForKey:RESPONSE_CODE] intValue] == RESPONSE_SUCCESSFULL){
@@ -463,14 +470,17 @@
 }
 
 - (void) requestStopTimesForItineraryPatterns:(NSDate *)tripDate Plan:(Plan *)plan{
+    legLegIdDictionary = nil;
     NSArray *uniquePattern = [plan uniqueItineraries];
     NSMutableArray *arrLegs = [[NSMutableArray alloc] init];
+    NSMutableDictionary *legIdDictionary = [[NSMutableDictionary alloc] init];
     for(int i=0;i<[uniquePattern count];i++){
         Itinerary *itinerary = [uniquePattern objectAtIndex:i];
         NSDate *tempTripDate = tripDate;
         double duration = 0.0;
         for(int j=0;j<[[itinerary sortedLegs] count];j++){
             Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
+            [legIdDictionary setObject:leg forKey:leg.legId];
             NSString *strFromToStopId = [NSString stringWithFormat:@"%@_%@",leg.from.stopId,leg.to.stopId];
             if([fromToStopID containsObject:strFromToStopId]){
                 continue;
@@ -525,7 +535,7 @@
             }
         }
     }
-    
+    legLegIdDictionary = legIdDictionary;
     if([arrLegs count] > 0){
         NSString *strRequestString = [arrLegs JSONString];
         RKParams *requestParameter = [RKParams params];
@@ -541,9 +551,11 @@
 -(MoreItineraryStatus)requestMoreItinerariesIfNeeded:(Plan *)plan parameters:(PlanRequestParameters *)requestParams0
 {
     if (requestParams0.serverCallsSoFar >= PLAN_MAX_SERVER_CALLS_PER_REQUEST) {
+        [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.activityIndicator stopAnimating];
         return NO_MORE_ITINERARIES_REQUESTED; // Return if we have already made the max number of calls
     }
     if ([plan haveOnlyUnscheduledItineraries]) {
+        [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.activityIndicator stopAnimating];
         return NO_MORE_ITINERARIES_REQUESTED; // DE186 fix, do not request more itineraries if we currently are have walk-only or bike-only itinerary
     }
     
@@ -584,6 +596,9 @@
         params.thisRequestTripDate = [otpRequestDate dateByAddingTimeInterval:(-bufferSeconds)];
         [self requestPlanFromOtpWithParameters:params routeExcludeSettingArray:[plan excludeSettingsArray]];
         moreItinStatus = (areRouteExcludeSettingsDifferent ? MORE_ITINERARIES_REQUESTED_DIFFERENT_EXCLUDES : MORE_ITINERARIES_REQUESTED_SAME_EXCLUDES);
+    }
+    else{
+        [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.activityIndicator stopAnimating];
     }
     return moreItinStatus;
 }

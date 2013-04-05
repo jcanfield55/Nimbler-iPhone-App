@@ -482,8 +482,8 @@ FeedBackForm *fbView;
     }
     [toFromViewController.continueGetTime invalidate];
     toFromViewController.continueGetTime = nil;
-    [toFromViewController.timerGettingRealDataByItinerary invalidate];
-    toFromViewController.timerGettingRealDataByItinerary = nil;
+    [toFromViewController.routeOptionsVC.timerGettingRealDataByItinerary invalidate];
+    toFromViewController.routeOptionsVC.timerGettingRealDataByItinerary = nil;
     isFromBackground = YES;
 }
 
@@ -556,7 +556,7 @@ FeedBackForm *fbView;
         [toFromViewController.fromTableVC markAndUpdateSelectedLocation:self.fromLoc];
     }
     if(isFromBackground && !self.isToFromView){
-        toFromViewController.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
+        toFromViewController.routeOptionsVC.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController.routeOptionsVC selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
         
     }
     UserPreferance* userPrefs = [UserPreferance userPreferance];
