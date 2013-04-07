@@ -13,6 +13,6 @@
 int main(int argc, char *argv[])
 {    
     @autoreleasepool {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass([nc_AppDelegate class]));
+        return UIApplicationMain(argc, argv, @"NimblerApplication", NSStringFromClass([nc_AppDelegate class]));
     }
 }

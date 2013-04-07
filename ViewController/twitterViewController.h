@@ -36,4 +36,6 @@
 -(void)startProcessForGettingTweets;
 -(void)timerAction;
 
+- (void)openUrl:(NSURL *)url;
+
 @end

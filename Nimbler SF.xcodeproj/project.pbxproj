@@ -179,6 +179,8 @@
 		527E174A151EB9CD00CDBC23 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527E1749151EB9CD00CDBC23 /* QuartzCore.framework */; };
 		528C664E16D7011E005B7309 /* RouteExcludeSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 528C664D16D7011E005B7309 /* RouteExcludeSetting.m */; };
 		52958AB116CED86900CC46C7 /* GtfsTempItinerary.m in Sources */ = {isa = PBXBuildFile; fileRef = 52958AB016CED86900CC46C7 /* GtfsTempItinerary.m */; };
+		52A90892171102EE004CE3E8 /* NimblerApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 52A90891171102ED004CE3E8 /* NimblerApplication.m */; };
+		52A90899171106CF004CE3E8 /* WebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52A90898171106CF004CE3E8 /* WebView.m */; };
 		52A9BE9516B4B41500564D0D /* RealTimeServerStubTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */; };
 		52B0535C16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B0535B16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m */; };
 		52C10385160BEF8000BC6020 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C10384160BEF8000BC6020 /* AddressBookUI.framework */; };
@@ -537,6 +539,10 @@
 		52958AAF16CED86900CC46C7 /* GtfsTempItinerary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GtfsTempItinerary.h; path = Model/GtfsTempItinerary.h; sourceTree = SOURCE_ROOT; };
 		52958AB016CED86900CC46C7 /* GtfsTempItinerary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GtfsTempItinerary.m; path = Model/GtfsTempItinerary.m; sourceTree = SOURCE_ROOT; };
 		5295B95216C6F71B008376B3 /* Network_Commuting 1.8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.8.xcdatamodel"; sourceTree = "<group>"; };
+		52A90890171102EC004CE3E8 /* NimblerApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NimblerApplication.h; sourceTree = "<group>"; };
+		52A90891171102ED004CE3E8 /* NimblerApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NimblerApplication.m; sourceTree = "<group>"; };
+		52A90897171106CF004CE3E8 /* WebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebView.h; sourceTree = "<group>"; };
+		52A90898171106CF004CE3E8 /* WebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebView.m; sourceTree = "<group>"; };
 		52A9BE9316B4B41500564D0D /* RealTimeServerStubTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RealTimeServerStubTest.h; sourceTree = "<group>"; };
 		52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RealTimeServerStubTest.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		52B0535A16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanStoreForRealTimeServerStubTest.h; sourceTree = "<group>"; };
@@ -781,6 +787,8 @@
 				520FB146162603430083F143 /* UtilityFunctions.m */,
 				525EC1BF170006B6009ACE5A /* MutableBoolean.h */,
 				525EC1C0170006B6009ACE5A /* MutableBoolean.m */,
+				52A90897171106CF004CE3E8 /* WebView.h */,
+				52A90898171106CF004CE3E8 /* WebView.m */,
 			);
 			path = Utility;
 			sourceTree = SOURCE_ROOT;
@@ -1126,6 +1134,8 @@
 			children = (
 				8DC019F71627F4BE004200E5 /* nc_AppDelegate.h */,
 				8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */,
+				52A90890171102EC004CE3E8 /* NimblerApplication.h */,
+				52A90891171102ED004CE3E8 /* NimblerApplication.m */,
 				520FB289162604950083F143 /* SupportingFiles */,
 				520FB1A8162603AF0083F143 /* Images */,
 				5295B95116C6F490008376B3 /* Model, GTFS */,
@@ -1612,6 +1622,8 @@
 				8D04E79C16E8A488001DB75D /* Network_Commuting.xcdatamodeld in Sources */,
 				8D17871116F87FDA00C2EAD5 /* IntermediateStops.m in Sources */,
 				525EC1C1170006B6009ACE5A /* MutableBoolean.m in Sources */,
+				52A90892171102EE004CE3E8 /* NimblerApplication.m in Sources */,
+				52A90899171106CF004CE3E8 /* WebView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
