@@ -171,16 +171,24 @@ NSUserDefaults *prefs;
         NSDateFormatter *detailsTimeFormatter = [[NSDateFormatter alloc] init];
         [detailsTimeFormatter setTimeStyle:NSDateFormatterShortStyle];
         
-        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
-        cell.textLabel.text = [tempArray objectAtIndex:0];
+        UILabel *lblTextLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 10, 300, 30)];
+        [lblTextLabel setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
+        [lblTextLabel setText:[tempArray objectAtIndex:0]];
+        [lblTextLabel setTextColor:[UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0]];
+        [lblTextLabel setBackgroundColor:[UIColor clearColor]];
+        [cell.contentView addSubview:lblTextLabel];
+        //[[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
+        //cell.textLabel.text = [tempArray objectAtIndex:0];
         NSMutableString *strTweet = [[NSMutableString alloc] init];
         for(int i = 1; i < [tempArray count]; i++){
             NSString *tweetText = [[NSString alloc] initWithString:[tempArray objectAtIndex:i]];
             [strTweet appendString:tweetText];
         }
-        
         CGSize stringSize = [strTweet sizeWithFont:[UIFont boldSystemFontOfSize:15] constrainedToSize:CGSizeMake(320, 9999) lineBreakMode:UILineBreakModeWordWrap];
-        UITextView *uiTextView=[[UITextView alloc] initWithFrame:CGRectMake(55, 55, 240, stringSize.height + 10)];
+        if(stringSize.height > 70){
+            stringSize.height = 70;
+        }
+        UITextView *uiTextView=[[UITextView alloc] initWithFrame:CGRectMake(55, 37, 240, stringSize.height + 10)];
         uiTextView.font = [UIFont systemFontOfSize:15.0];
         uiTextView.text = strTweet;
         uiTextView.textColor = [UIColor blackColor];
