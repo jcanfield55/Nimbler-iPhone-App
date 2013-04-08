@@ -329,7 +329,7 @@ NSUserDefaults *prefs;
             [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:STANDARD_FONT_SIZE]];
             [[cell textLabel] setLineBreakMode:UILineBreakModeWordWrap];
             [[cell textLabel] setNumberOfLines:0];
-            [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:STANDARD_FONT_SIZE]];
+            [[cell detailTextLabel] setFont:[UIFont boldSystemFontOfSize:SMALL_FONT_SIZE]];
             [[cell detailTextLabel] setLineBreakMode:UILineBreakModeWordWrap];
             [[cell detailTextLabel] setNumberOfLines:0];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;

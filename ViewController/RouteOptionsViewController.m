@@ -133,18 +133,15 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         [self changeMainTableSettings];
     }
     NIMLOG_PERF2(@"routeDetailUniquePattern=%d",[[plan uniqueItineraries] count]);
-    if(self.timerGettingRealDataByItinerary != nil){
-        [self.timerGettingRealDataByItinerary invalidate];
-        self.timerGettingRealDataByItinerary = nil;
+    if (planRequestParameters.isFromCache || planRequestParameters.serverCallsSoFar >= PLAN_MAX_SERVER_CALLS_PER_REQUEST) {
+        if(self.timerGettingRealDataByItinerary != nil){
+            [self.timerGettingRealDataByItinerary invalidate];
+            self.timerGettingRealDataByItinerary = nil;
+        }
+        [self requestServerForRealTime];
+        self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
     }
-    [self requestServerForRealTime];
-    self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
-    [self hideItineraryIfNeeded:[[plan itineraries] allObjects]];
-    [plan prepareSortedItinerariesWithMatchesForDate:requestParameter.originalTripDate
-                                      departOrArrive:requestParameter.departOrArrive
-                                routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
-                             generateGtfsItineraries:NO
-                               removeNonOptimalItins:YES];
+   
     
     if (status == PLAN_STATUS_OK) {
         [noItineraryWarning setHidden:YES];

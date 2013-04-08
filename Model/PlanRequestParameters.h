@@ -54,6 +54,8 @@
 @property (strong, nonatomic) NSString* otpExcludeAgencyString;  // Set by requestPlanFromOtpWithParameters method with the OTP exclude string
 @property (strong, nonatomic) NSString* otpExcludeAgencyByModeString; // Set by requestPlanFromOtpWithParameters method with the OTP by mode exclude string
 @property (strong, nonatomic) RouteExcludeSettings* routeExcludeSettingsUsedForOTPCall; // set by requestPlanFromOtpWithParameters with parameters used for its call (may be different than routeExcludeSettings)
+@property (nonatomic) BOOL isFromCache;
+
 
 // Returns a new PlanRequestParameters object containing the same parameters as parameters0
 + (id)copyOfPlanRequestParameters:(PlanRequestParameters *)parameters0;

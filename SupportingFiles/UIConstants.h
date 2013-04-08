@@ -82,6 +82,7 @@
 #define ROUTE_OPTIONS_VARIABLE_TABLE_CELL_HEIGHT_BUFFER 25
 
 // Font Size
+#define SMALL_FONT_SIZE 12.0
 #define STANDARD_FONT_SIZE 13.0
 #define MEDIUM_FONT_SIZE 14.0
 #define MEDIUM_LARGE_FONT_SIZE 15.0
@@ -98,8 +99,8 @@
 #define MEDIUM_OBLIQUE_FONT fontWithName:@"Helvetica-Oblique" size:14.0
 #define MEDIUM_LARGE_BOLD_FONT fontWithName:@"Helvetica-Bold" size:15.0
 #define SMALL_FONT fontWithName:@"Helvetica-Bold" size:13.0
-#define SMALL_OBLIQUE_FONT    fontWithName:@"Helvetica-Oblique" size:13
-#define MEDIUM_LARGE_OBLIQUE_FONT fontWithName:@"Helvetica-Oblique" size:15.0
+#define SMALL_OBLIQUE_FONT    fontWithName:@"Helvetica-BoldOblique" size:13
+#define MEDIUM_LARGE_OBLIQUE_FONT fontWithName:@"Helvetica-BoldOblique" size:15.0
 #define LARGE_BOLD_FONT fontWithName:@"Helvetica-Bold" size:20.0
 
 // Colors
@@ -118,7 +119,7 @@
 #define NAVIGATION_BAR_IMAGE  [UIImage imageNamed:@"img_navigationbar.png"]
 
 #define NAVIGATION_ITEM1_XPOS 2
-#define NAVIGATION_ITEM2_XPOS 78
+#define NAVIGATION_ITEM2_XPOS 80
 #define NAVIGATION_ITEM3_XPOS 160
 #define NAVIGATION_ITEM4_XPOS 240
 

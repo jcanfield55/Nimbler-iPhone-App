@@ -110,6 +110,7 @@
                 // Callback to planDestination with new plan
                 self.stopTimesLoadSuccessfully = false;
                  [self requestStopTimesForItineraryPatterns:parameters.originalTripDate Plan:matchingPlan];
+                parameters.isFromCache = YES;
                 [parameters.planDestination newPlanAvailable:matchingPlan
                                                   fromObject:self
                                                       status:reqStatus
@@ -282,8 +283,10 @@
             NIMLOG_PERF2(@"Legs Response Received");
             RKJSONParserJSONKit* parser1 = [RKJSONParserJSONKit new];
             NSDictionary *legsDictionary = [parser1 objectFromString:[response bodyAsString] error:nil];
-            NSArray *arrayItineraries = [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray;
             self.stopTimesLoadSuccessfully = true;
+            if(!legsDictionary)
+                return;
+            NSArray *arrayItineraries = [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray;
             NSMutableArray *itinerariesArray = [[NSMutableArray alloc] initWithArray:arrayItineraries];
             NSArray *arrItineraries = [legsDictionary objectForKey:@"lstItineraries"];
             for(int i=0;i<[arrItineraries count];i++){

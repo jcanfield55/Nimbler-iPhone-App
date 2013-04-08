@@ -38,6 +38,7 @@
 @synthesize otpExcludeAgencyString;
 @synthesize otpExcludeAgencyByModeString;
 @synthesize routeExcludeSettingsUsedForOTPCall;
+@synthesize isFromCache;
 
 // Returns a new PlanRequestParameters object containing the same parameters as parameters0
 + (id)copyOfPlanRequestParameters:(PlanRequestParameters *)parameters0

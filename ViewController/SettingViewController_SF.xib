@@ -41,6 +41,7 @@
 						<int key="NSvFlags">274</int>
 						<string key="NSFrameSize">{320, 460}</string>
 						<reference key="NSSuperview" ref="563391266"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="132886828"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -55,6 +56,7 @@
 						<int key="NSvFlags">274</int>
 						<string key="NSFrameSize">{320, 460}</string>
 						<reference key="NSSuperview" ref="563391266"/>
+						<reference key="NSWindow"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
@@ -75,6 +77,7 @@
 				</array>
 				<string key="NSFrame">{{0, 20}, {320, 460}}</string>
 				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="797776870"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<object class="NSColor" key="IBUIBackgroundColor">
@@ -186,7 +189,9 @@
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="UpdateSetting:">id</string>
+						<string key="pushNotificationValueChanged:">UISlider</string>
 						<string key="sliderPushNotification:">UISlider</string>
+						<string key="sliderWalkDistance:">UISlider</string>
 						<string key="sliderWalkDistanceValueChanged:">UISlider</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
@@ -194,8 +199,16 @@
 							<string key="name">UpdateSetting:</string>
 							<string key="candidateClassName">id</string>
 						</object>
+						<object class="IBActionInfo" key="pushNotificationValueChanged:">
+							<string key="name">pushNotificationValueChanged:</string>
+							<string key="candidateClassName">UISlider</string>
+						</object>
 						<object class="IBActionInfo" key="sliderPushNotification:">
 							<string key="name">sliderPushNotification:</string>
+							<string key="candidateClassName">UISlider</string>
+						</object>
+						<object class="IBActionInfo" key="sliderWalkDistance:">
+							<string key="name">sliderWalkDistance:</string>
 							<string key="candidateClassName">UISlider</string>
 						</object>
 						<object class="IBActionInfo" key="sliderWalkDistanceValueChanged:">
@@ -208,8 +221,6 @@
 						<string key="scrollView">UIScrollView</string>
 						<string key="sliderMaxWalkDistance">UISlider</string>
 						<string key="sliderPushNotification">UISlider</string>
-						<string key="switchEnableStandardSound">UISwitch</string>
-						<string key="switchEnableUrgentSound">UISwitch</string>
 						<string key="switchPushEnable">UISwitch</string>
 						<string key="tblSetting">UITableView</string>
 					</dictionary>
@@ -229,14 +240,6 @@
 						<object class="IBToOneOutletInfo" key="sliderPushNotification">
 							<string key="name">sliderPushNotification</string>
 							<string key="candidateClassName">UISlider</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="switchEnableStandardSound">
-							<string key="name">switchEnableStandardSound</string>
-							<string key="candidateClassName">UISwitch</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="switchEnableUrgentSound">
-							<string key="name">switchEnableUrgentSound</string>
-							<string key="candidateClassName">UISwitch</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="switchPushEnable">
 							<string key="name">switchPushEnable</string>
