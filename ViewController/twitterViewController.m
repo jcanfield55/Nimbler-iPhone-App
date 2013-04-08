@@ -177,9 +177,9 @@ NSUserDefaults *prefs;
             [strTweet appendString:[tempArray objectAtIndex:i]];
         }
         cell.detailTextLabel.text = strTweet;
-        cell.textLabel.textColor = [UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0];
+        cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
         cell.detailTextLabel.numberOfLines= MAXLINE_TAG;
-        cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
+        cell.detailTextLabel.textColor = [UIColor GRAY_FONT_COLOR];
         
         labelTime = (UILabel *)[cell viewWithTag:MAXLINE_TAG];
         CGRect   lbl3Frame = CGRectMake(245,3, 120, 25);

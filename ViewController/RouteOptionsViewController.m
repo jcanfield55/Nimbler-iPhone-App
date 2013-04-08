@@ -317,7 +317,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
             if([strDetailtextLabel rangeOfString:strFullTrainNumber options:NSCaseInsensitiveSearch].location != NSNotFound){
                 range = [strDetailtextLabel rangeOfString:strFullTrainNumber];
                 if([[leg routeLongName] isEqualToString:@"Local"]){
-                    [strMutableDetailTextLabel addAttribute:NSForegroundColorAttributeName value:[UIColor darkGrayColor] range:range];
+                    [strMutableDetailTextLabel addAttribute:NSForegroundColorAttributeName value:[UIColor GRAY_FONT_COLOR] range:range];
                 }
                 // DE-227 Fixed
                 // Changed the red Color to Nimbler Red and changed limited train to italic

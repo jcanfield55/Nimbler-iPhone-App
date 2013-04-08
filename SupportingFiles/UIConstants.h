@@ -99,15 +99,15 @@
 #define MEDIUM_OBLIQUE_FONT fontWithName:@"Helvetica-Oblique" size:14.0
 #define MEDIUM_LARGE_BOLD_FONT fontWithName:@"Helvetica-Bold" size:15.0
 #define SMALL_FONT fontWithName:@"Helvetica-Bold" size:13.0
-#define SMALL_OBLIQUE_FONT    fontWithName:@"Helvetica-BoldOblique" size:13
-#define MEDIUM_LARGE_OBLIQUE_FONT fontWithName:@"Helvetica-BoldOblique" size:15.0
+#define SMALL_OBLIQUE_FONT    fontWithName:@"Helvetica-Oblique" size:13
+#define MEDIUM_LARGE_OBLIQUE_FONT fontWithName:@"Helvetica-Oblique" size:15.0
 #define LARGE_BOLD_FONT fontWithName:@"Helvetica-Bold" size:20.0
 
 // Colors
 #define NIMBLER_RED_FONT_COLOR colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0
 // #define NIMBLER_YELLOW_FONT_COLOR colorWithRed:255.0/255.0 green:161.0/255.0 blue:77.0/255.0 alpha:1.0
 #define NAVIGATION_TITLE_COLOR colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0
-#define GRAY_FONT_COLOR colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0
+#define GRAY_FONT_COLOR colorWithRed:85.0/255.0 green:85.0/255.0 blue:85.0/255.0 alpha:1.0
 
 #define CELL_BACKGROUND_ROUTE_OPTION_VIEW colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.04
 

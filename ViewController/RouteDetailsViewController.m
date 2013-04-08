@@ -329,11 +329,12 @@ NSUserDefaults *prefs;
             [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:STANDARD_FONT_SIZE]];
             [[cell textLabel] setLineBreakMode:UILineBreakModeWordWrap];
             [[cell textLabel] setNumberOfLines:0];
-            [[cell detailTextLabel] setFont:[UIFont boldSystemFontOfSize:SMALL_FONT_SIZE]];
+            [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:STANDARD_FONT_SIZE]];
             [[cell detailTextLabel] setLineBreakMode:UILineBreakModeWordWrap];
             [[cell detailTextLabel] setNumberOfLines:0];
+            [[cell detailTextLabel] setTextColor:[UIColor GRAY_FONT_COLOR]];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.07];
+            cell.contentView.backgroundColor = [UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW];
         }
         
         // Find the right image filename
@@ -364,7 +365,7 @@ NSUserDefaults *prefs;
             [cell.textLabel setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
             [imgFileName appendString:@"Select"];
         } else {
-            [cell.textLabel setTextColor:[UIColor darkGrayColor]];
+            [cell.textLabel setTextColor:[UIColor GRAY_FONT_COLOR]];
         }
         
         // Add text
