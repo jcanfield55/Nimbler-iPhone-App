@@ -1676,7 +1676,7 @@ UIImage *imageDetailDisclosure;
         CGRect _rect = view.frame;
         if([view isKindOfClass:[UITabBar class]]){
             if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                _rect.origin.y = 517;
+                _rect.origin.y = 519;
             }
             else{
                _rect.origin.y = 431; 
@@ -1685,7 +1685,7 @@ UIImage *imageDetailDisclosure;
         }
         else if([view isKindOfClass:[UIButton class]]){
             if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                _rect.size.height = 49;
+                _rect.size.height = 42;
             }
             else{
                _rect.size.height = 42; 
@@ -1695,7 +1695,7 @@ UIImage *imageDetailDisclosure;
         }
         else if([view isKindOfClass:[UIImageView class]]){
             if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                _rect.origin.y = 517;
+                _rect.origin.y = 519;
             }
             else{
                 _rect.origin.y = 431;
@@ -1704,7 +1704,7 @@ UIImage *imageDetailDisclosure;
         }
         else {
             if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                 _rect.size.height = 517;
+                 _rect.size.height = 523;
             }
             else{
                 _rect.size.height = 431; 

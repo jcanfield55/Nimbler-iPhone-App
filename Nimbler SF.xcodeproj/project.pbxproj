@@ -232,6 +232,7 @@
 		8D45BD1E162BDE6A00E5CB3D /* Icon_ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D45BD1D162BDE6A00E5CB3D /* Icon_ipad@2x.png */; };
 		8D4FC8E6162D2E1A004144DE /* bart-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D4FC8E4162D2E1A004144DE /* bart-station.json */; };
 		8D4FC8E7162D2E1A004144DE /* caltrain-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D4FC8E5162D2E1A004144DE /* caltrain-station.json */; };
+		8D58E1FC17142ED30011A8C2 /* nc_AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */; };
 		8D6F577616D4EE1800DADEA4 /* img_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D6F577416D4EE1800DADEA4 /* img_on.png */; };
 		8D6F577716D4EE1800DADEA4 /* img_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D6F577516D4EE1800DADEA4 /* img_off.png */; };
 		8D6FB9681680870500952B0C /* GtfsStop.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D6FB9671680870500952B0C /* GtfsStop.m */; };
@@ -248,7 +249,6 @@
 		8DA39BDF15E3855B0029D54B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6F22E71563AD360066DFA9 /* AVFoundation.framework */; };
 		8DA39BE115E38B5E0029D54B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */; };
 		8DBECD5216146DBE007B71F1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */; };
-		8DC019F91627F4BE004200E5 /* nc_AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */; };
 		8DC448EA169409ED00608DF6 /* GtfsParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DD51671EB41004E0DE5 /* GtfsParser.m */; };
 		8DD6A4EB16EA161F00FFC158 /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DD6A4EA16EA161F00FFC158 /* pin.png */; };
 		8DE0CC4F16A9632100AE2E9D /* twitterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB11F162603090083F143 /* twitterViewController.m */; };
@@ -258,10 +258,10 @@
 		8DE42FED16E0AEEE00A37AD3 /* img_legFerrySelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE916E0AEEE00A37AD3 /* img_legFerrySelect@2x.png */; };
 		8DEE785D166338F100E4863C /* SettingViewController_SF_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */; };
 		8DEE785F166339D600E4863C /* SettingDetailViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */; };
-		8DF19BF416F725FC0050FE00 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */; };
-		8DF19BFA16F726AC0050FE00 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF916F726AC0050FE00 /* Social.framework */; };
-		8DF19BFC16F726CF0050FE00 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFB16F726CF0050FE00 /* AdSupport.framework */; };
-		8DF19BFE16F726D50050FE00 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFD16F726D50050FE00 /* Accounts.framework */; };
+		8DF19BF416F725FC0050FE00 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		8DF19BFA16F726AC0050FE00 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF916F726AC0050FE00 /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		8DF19BFC16F726CF0050FE00 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFB16F726CF0050FE00 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		8DF19BFE16F726D50050FE00 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFD16F726D50050FE00 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8DF19C0016F727A10050FE00 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFF16F727A10050FE00 /* libsqlite3.0.dylib */; };
 		8DF35D631627F58500B99F4A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF35D621627F58400B99F4A /* main.m */; };
 		8DFFB36C165DFBBB00A39BC4 /* SettingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */; };
@@ -1582,7 +1582,6 @@
 				520FB1A41626036C0083F143 /* SupportedRegion.m in Sources */,
 				520FB1A61626036C0083F143 /* TransitCalendar.m in Sources */,
 				520FB1A71626036C0083F143 /* UserPreferance.m in Sources */,
-				8DC019F91627F4BE004200E5 /* nc_AppDelegate.m in Sources */,
 				8DF35D631627F58500B99F4A /* main.m in Sources */,
 				8DFFB36C165DFBBB00A39BC4 /* SettingDetailViewController.m in Sources */,
 				8D106DD91671F0ED004E0DE5 /* GtfsAgency.m in Sources */,
@@ -1612,6 +1611,7 @@
 				8D04E79C16E8A488001DB75D /* Network_Commuting.xcdatamodeld in Sources */,
 				8D17871116F87FDA00C2EAD5 /* IntermediateStops.m in Sources */,
 				525EC1C1170006B6009ACE5A /* MutableBoolean.m in Sources */,
+				8D58E1FC17142ED30011A8C2 /* nc_AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -133,9 +133,7 @@ FeedBackForm *fbView;
 #if AUTOMATED_TESTING_SKIP_NCAPPDELEGATE
     return YES;    // If Automated testing with alternative persistent store, skip NC_AppDelegate altogether and do all setup in test area
 #endif
-    [self unzipZipFileToApplicationDocumentDirectory];
-    
-    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
+    [self unzipZipFileToApplicationDocumentDirectory];    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     
     [[UIApplication sharedApplication]
      registerForRemoteNotificationTypes:

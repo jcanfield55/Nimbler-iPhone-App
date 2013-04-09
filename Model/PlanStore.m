@@ -483,6 +483,8 @@
         double duration = 0.0;
         for(int j=0;j<[[itinerary sortedLegs] count];j++){
             Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
+            if(!leg.legId)
+                leg.legId = generateRandomString();
             [legIdDictionary setObject:leg forKey:leg.legId];
             NSString *strFromToStopId = [NSString stringWithFormat:@"%@_%@",leg.from.stopId,leg.to.stopId];
             if([fromToStopID containsObject:strFromToStopId]){

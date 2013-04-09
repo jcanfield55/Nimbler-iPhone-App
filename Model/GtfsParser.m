@@ -686,7 +686,7 @@
     int serverCallSoFar = [[dictServerCallSoFar objectForKey:GTFS_AGENCY_COUNTER] intValue];
     [dictServerCallSoFar setObject:[NSNumber numberWithInt:serverCallSoFar + 1] forKey:GTFS_AGENCY_COUNTER];
     @try {
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"agency",ENTITY,@"1,2,3,4,5,6,7,8",AGENCY_IDS, nil];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"agency",ENTITY,@"1",AGENCY_IDS, nil];
         NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
         strAgenciesURL = request;
         NIMLOG_OBJECT1(@"Get Agencies: %@", request);
@@ -703,7 +703,7 @@
     serverCallSoFar = serverCallSoFar + 1;
     [dictServerCallSoFar setObject:[NSNumber numberWithInt:serverCallSoFar] forKey:GTFS_CALENDAR_DATES_COUNTER];
     @try {
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"calendar_dates",ENTITY,@"1,2,3,4,5,6,7,8",AGENCY_IDS, nil];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"calendar_dates",ENTITY,@"1",AGENCY_IDS, nil];
         NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
         strCalendarDatesURL = request;
         NIMLOG_OBJECT1(@"Get Calendar Dates: %@", request);
@@ -720,7 +720,7 @@
     serverCallSoFar = serverCallSoFar + 1;
     [dictServerCallSoFar setObject:[NSNumber numberWithInt:serverCallSoFar] forKey:GTFS_CALENDAR_COUNTER];
     @try {
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"calendar",ENTITY,@"1,2,3,4,5,6,7,8",AGENCY_IDS, nil];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"calendar",ENTITY,@"1",AGENCY_IDS, nil];
         NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
         strCalendarURL = request;
         NIMLOG_OBJECT1(@"Get Calendar: %@", request);
@@ -737,7 +737,7 @@
     serverCallSoFar = serverCallSoFar + 1;
     [dictServerCallSoFar setObject:[NSNumber numberWithInt:serverCallSoFar] forKey:GTFS_ROUTES_COUNTER];
     @try {
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"routes",ENTITY,@"1,2,3,4,5,6,7,8",AGENCY_IDS, nil];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"routes",ENTITY,@"1",AGENCY_IDS, nil];
         NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
         strRoutesURL = request;
         NIMLOG_OBJECT1(@"Get Routes: %@", request);

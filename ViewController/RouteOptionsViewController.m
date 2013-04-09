@@ -141,8 +141,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         [self requestServerForRealTime];
         self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
     }
-   
-    
     if (status == PLAN_STATUS_OK) {
         [noItineraryWarning setHidden:YES];
         setWarningHidden = true;
