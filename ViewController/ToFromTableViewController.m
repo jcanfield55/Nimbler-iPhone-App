@@ -278,7 +278,7 @@ NSString *strStreet2 = @"street ";
     if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) {
         // Bold italic if a list header
         [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
-        cell.textLabel.textColor = [UIColor darkGrayColor];
+        cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
         [cell setAccessoryView:nil];
     } 
     else if (loc == selectedLocation) {
@@ -294,7 +294,7 @@ NSString *strStreet2 = @"street ";
     } else {
         // just bold for normal cell
         [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
-        cell.textLabel.textColor = [UIColor darkGrayColor];
+        cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
         [cell setAccessoryView:nil];
     }
     

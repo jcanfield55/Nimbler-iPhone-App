@@ -411,6 +411,7 @@ UIImage *imageDetailDisclosure;
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
     // Release any cached data, images, etc that aren't in use.
+    logEvent(FLURRY_DID_RECEIVE_MEMORY_WARNING, nil, nil, nil, nil, nil, nil, nil, nil);
 }
 
 // Update trip date to the current time if needed

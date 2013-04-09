@@ -104,9 +104,9 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
             [[cell textLabel] setText:stop.formattedAddress];
         }
     }
-    cell.textLabel.textColor = [UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0];
+    cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
     tableView.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
-    cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.01];
+    cell.contentView.backgroundColor = [UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW];
     [cell sizeToFit];
     return cell;
 }

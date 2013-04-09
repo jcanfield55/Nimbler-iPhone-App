@@ -91,7 +91,7 @@
 #define UPDATE_SETTING_REQ    @"users/preferences/update"
 
 // UserPreferernce (user settings) defaults, max, and min
-#define PREFS_DEFAULT_IS_PUSH_ENABLE YES
+#define PREFS_DEFAULT_IS_PUSH_ENABLE NO
 #define PREFS_DEFAULT_PUSH_NOTIFICATION_THRESHOLD 5
 
 #define URGENT_NOTIFICATION_DEFAULT_VALUE   1
@@ -110,7 +110,6 @@
 #define NOTIF_TIMING_NIGHT_DEFAULT FALSE
 #define NOTIF_TIMING_WEEKEND_DEFAULT FALSE
 
-#define PUSH_FREQUENCY_DEFAULT_VALUE          5
 #define PUSH_FREQUENCY_MIN_VALUE              1
 #define PUSH_FREQUENCY_MAX_VALUE              10
 #define MAX_WALK_DISTANCE_DEFAULT_VALUE       2.0
@@ -177,6 +176,7 @@
 #define FLURRY_ALERT_NO_NETWORK @"User alert: no network"
 #define FLURRY_APPSTORE_FEEDBACK_REMINDER_SHOWN  @"Appstore Feedback Reminder Shown"
 #define FLURRY_APPSTORE_FEEDBACK_REMINDER_ACTION @"Appstore Feedback Reminder Action"
+#define FLURRY_DID_RECEIVE_MEMORY_WARNING @"Memory Warning"
 
 // Flurry parameter names
 #define FLURRY_NOTIFICATION_TOKEN @"(Notification Token)"
