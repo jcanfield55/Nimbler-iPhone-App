@@ -176,6 +176,7 @@
 #define FLURRY_ALERT_NO_NETWORK @"User alert: no network"
 #define FLURRY_APPSTORE_FEEDBACK_REMINDER_SHOWN  @"Appstore Feedback Reminder Shown"
 #define FLURRY_APPSTORE_FEEDBACK_REMINDER_ACTION @"Appstore Feedback Reminder Action"
+#define FLURRY_DID_RECEIVE_MEMORY_WARNING @"Memory Warning"
 
 // Flurry parameter names
 #define FLURRY_NOTIFICATION_TOKEN @"(Notification Token)"
