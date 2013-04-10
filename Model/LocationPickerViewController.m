@@ -85,17 +85,17 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_LARGE_FONT_SIZE]];
     id tempObject = [locationArray objectAtIndex:[indexPath row]];
-    if([tempObject isKindOfClass:[LocationFromIOS class]]){
-        LocationFromGoogle *loc = (LocationFromGoogle *)tempObject;
+    if([tempObject isKindOfClass:[Location class]]){
+        Location *loc = (Location *)tempObject;
         [[cell textLabel] setText:loc.shortFormattedAddress];
     }
     else{
         StationListElement *stationListElement = [locationArray objectAtIndex:[indexPath row]];
         int listType = [[nc_AppDelegate sharedInstance].stations returnElementType:stationListElement];
-        if(listType == 1){
+        if(listType == CONTAINS_LIST_TYPE){
             [[cell textLabel] setText:stationListElement.containsList];
         }
-        else if(listType == 2){
+        else if(listType == LOCATION_TYPE){
             Location *loc = stationListElement.location;
             [[cell textLabel] setText:[loc shortFormattedAddress]];
         }
@@ -117,8 +117,8 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
     cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.3];
     // Send back the picked location and pop the view controller back to ToFromViewController
     id tempObject = [locationArray objectAtIndex:[indexPath row]];
-    if([tempObject isKindOfClass:[LocationFromIOS class]]){
-        LocationFromGoogle *loc = (LocationFromGoogle *)tempObject;
+    if([tempObject isKindOfClass:[Location class]]){
+        Location *loc = (Location *)tempObject;
         [toFromTableVC setPickedLocation:loc
                            locationArray:locationArray isGeocodedResults:isGeocodeResults];
         locationPicked = TRUE;
@@ -127,7 +127,7 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
     }
     StationListElement *stationListElement = [locationArray objectAtIndex:[indexPath row]];
     int listType = [[nc_AppDelegate sharedInstance].stations returnElementType:stationListElement];
-    if(listType == 1){
+    if(listType == CONTAINS_LIST_TYPE){
        locationArray = [[nc_AppDelegate sharedInstance].stations fetchStationListByMemberOfListId:stationListElement.containsListId];
         NSMutableArray *arrmemberOfListIds;
         if(![[NSUserDefaults standardUserDefaults] objectForKey:@"memberOfListId"]){
@@ -151,7 +151,7 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
         [[mainTable layer] addAnimation:animation forKey:nil];
         [mainTable reloadData];
     }
-    else if(listType == 2){
+    else if(listType == LOCATION_TYPE){
         Location *loc = stationListElement.location;
         [toFromTableVC setPickedLocation:loc
                            locationArray:locationArray isGeocodedResults:isGeocodeResults];
@@ -173,17 +173,17 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *cellText;
     id tempObject = [locationArray objectAtIndex:[indexPath row]];
-    if([tempObject isKindOfClass:[LocationFromIOS class]]){
-        LocationFromGoogle *loc = (LocationFromGoogle *)tempObject;
+    if([tempObject isKindOfClass:[Location class]]){
+        Location *loc = (Location *)tempObject;
         cellText = loc.shortFormattedAddress;
     }
     else{
         StationListElement *stationListElement = [locationArray objectAtIndex:[indexPath row]];
         int listType = [[nc_AppDelegate sharedInstance].stations returnElementType:stationListElement];
-        if(listType == 1){
+        if(listType == CONTAINS_LIST_TYPE){
             cellText = stationListElement.containsList;
         }
-        else if(listType == 2){
+        else if(listType == LOCATION_TYPE){
             Location *loc = stationListElement.location;
             cellText = loc.shortFormattedAddress;
         }
@@ -210,11 +210,16 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
     [super viewWillDisappear:animated];
     
     if (locationPicked == FALSE) {   // If user just returning back to main page...
-        for (StationListElement* stationList in locationArray) {
-            int listType = [[nc_AppDelegate sharedInstance].stations returnElementType:stationList];
-            // remove all the locations from Core Data if they have frequency = 0
-            if (listType == 2 && [stationList.location fromFrequencyFloat]<TINY_FLOAT && [stationList.location toFrequencyFloat]<TINY_FLOAT) {
-                [[toFromTableVC locations] removeLocation:stationList.location];
+        for (id locationElement in locationArray) {
+            if ([locationElement isKindOfClass:[StationListElement class]]) {
+                // Do nothing... No need to remove locations that are part of stationLists
+            }
+            else if ([locationElement isKindOfClass:[Location class]]) {
+                Location* loc = (Location *)locationElement;
+                // remove all the locations from Core Data if they have frequency = 0
+                if ([loc fromFrequencyFloat]<TINY_FLOAT && [loc toFrequencyFloat]<TINY_FLOAT) {
+                    [[toFromTableVC locations] removeLocation:loc];
+                }
             }
         }
         

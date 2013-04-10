@@ -48,11 +48,6 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
     // Nothing to fill for locationType
 }
 
-// Temporary function used for setting a breakpoint only.  Can be deleted.
--(NSString *)shortFormattedAddress {
-    return [super shortFormattedAddress];
-}
-
 // Reformat the iOS address into a standard formattedAddress (as compatible with Google as possible)
 -(NSString *)standardizeFormattedAddress {
     NSMutableString* formattedAddr = [NSMutableString stringWithCapacity:25];
