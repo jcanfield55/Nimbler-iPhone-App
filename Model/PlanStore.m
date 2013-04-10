@@ -798,21 +798,23 @@
         NSError *error;
         NSManagedObjectContext * context = [self managedObjectContext];
         NSFetchRequest * fetchPlanRequestChunk = [[NSFetchRequest alloc] init];
-       NSFetchRequest * fetchPlan = [[NSFetchRequest alloc] init];
-        
         [fetchPlanRequestChunk setEntity:[NSEntityDescription entityForName:@"PlanRequestChunk" inManagedObjectContext:context]];
-        [fetchPlan setEntity:[NSEntityDescription entityForName:@"Plan" inManagedObjectContext:context]];
-        
         NSArray * arrayPlanRequestChunk = [context executeFetchRequest:fetchPlanRequestChunk error:nil];
-        NSArray * arrayPlan = [context executeFetchRequest:fetchPlan error:nil];
-       
-        for (id planRequestChunks in arrayPlanRequestChunk){
-            [context deleteObject:planRequestChunks];
-        }
         
-        for (id plans in arrayPlan){
+        for (PlanRequestChunk *planRequestChunks in arrayPlanRequestChunk){
+            Plan *plans = planRequestChunks.plan;
+            if(!plans){
+                [context deleteObject:planRequestChunks];
+                continue;
+            }
             if(![strPlanID isEqualToString:[plans planId]]){
-                [context deleteObject:plans];
+                for(int i=0;i<[[plans itineraries] count];i++){
+                    Itinerary *itinerary = [[[plans itineraries] allObjects] objectAtIndex:i];
+                    if([itinerary containsUnscheduledLeg]){
+                       [context deleteObject:itinerary];
+                    }
+                }
+                [context deleteObject:planRequestChunks];
             }
         }
         [context save:&error];

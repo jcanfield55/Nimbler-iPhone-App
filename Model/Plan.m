@@ -854,6 +854,14 @@
         }
     }
 }
+- (BOOL)containsUnscheduledLeg{
+    for (Itinerary* itin in [self itineraries]) {
+        if ([itin containsUnscheduledLeg]) {
+            return true;
+        }
+    }
+    return false;
+}
 
 // Returns true if all the legs in all the itineraries are unscheduled
 - (BOOL)haveOnlyUnscheduledItineraries

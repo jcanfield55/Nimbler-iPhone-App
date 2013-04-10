@@ -31,6 +31,7 @@
     NSMutableArray* polyLineArray;  // Array of polylines for each element in legDescriptionTitleSortedArray
     NSMutableArray* dotAnnotationArray;  // Array of all dot annotations
     NSMutableArray* intermediateAnnotations;
+    NSMutableArray * legStartEndPoint;
     UIImage* dotImage;
     UIImage* pinImage;
     
@@ -56,6 +57,7 @@ NSString *legID;
         polyLineArray = [NSMutableArray arrayWithCapacity:10];
         dotAnnotationArray = [NSMutableArray arrayWithCapacity:10];
         intermediateAnnotations = [[NSMutableArray alloc] init];
+        legStartEndPoint = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -71,7 +73,8 @@ NSString *legID;
             [mapView removeAnnotations:intermediateAnnotations];
             [dotAnnotationArray removeAllObjects];
             [polyLineArray removeAllObjects];
-        
+            [legStartEndPoint removeAllObjects];
+            
             NSArray *sortedLegs = [itinerary sortedLegs];
             if(itinerary.isRealTimeItinerary){
                 [[nc_AppDelegate sharedInstance].gtfsParser requestStopTimesDataForParticularTripFromServer:itinerary];
@@ -79,6 +82,41 @@ NSString *legID;
             else{
                [self performSelector:@selector(addIntermediateStationsToMapView:) withObject:sortedLegs afterDelay:1.0]; 
             }
+            if (!dateFormatter) {
+                dateFormatter = [[NSDateFormatter alloc]init];
+                [dateFormatter setDateFormat:[NSDateFormatter dateFormatFromTemplate:@"hh:mm a" options:0 locale:[NSLocale currentLocale]]];
+            }
+            for(int i=0;i<[sortedLegs count];i++){
+                MKPointAnnotation *fromPoint = [[MKPointAnnotation alloc] init];
+                MKPointAnnotation *toPoint = [[MKPointAnnotation alloc] init];
+                Leg *startLeg = [sortedLegs objectAtIndex:i];
+                    float fromLat = [startLeg.from.lat floatValue];
+                    float fromLng = [startLeg.from.lng floatValue];
+                    CLLocationCoordinate2D fromCoordinate = CLLocationCoordinate2DMake(fromLat, fromLng);
+                    [fromPoint setCoordinate:fromCoordinate];
+                    
+                    
+                    float toLat = [startLeg.to.lat floatValue];
+                    float toLng = [startLeg.to.lng floatValue];
+                    CLLocationCoordinate2D toCoordinate = CLLocationCoordinate2DMake(toLat, toLng);
+                    [toPoint setCoordinate:toCoordinate];
+                
+                if(startLeg.isScheduled){
+                    [fromPoint setTitle:startLeg.from.name];
+                    NSDate *arrivalTime = startLeg.startTime;
+                    NSString *arrivalTimeString = [dateFormatter stringFromDate:arrivalTime];
+                    [fromPoint setSubtitle:[NSString stringWithFormat:@"Arrival: %@",arrivalTimeString]];
+                    [toPoint setTitle:startLeg.to.name];
+                    NSDate *toArrivalTime = startLeg.endTime;
+                    NSString *toArrivalTimeString = [dateFormatter stringFromDate:toArrivalTime];
+                    [toPoint setSubtitle:[NSString stringWithFormat:@"Arrival: %@",toArrivalTimeString]];
+                }
+                    [legStartEndPoint addObject:toPoint];
+                    [mapView addAnnotation:toPoint];
+                    [legStartEndPoint addObject:fromPoint];
+                    [mapView addAnnotation:fromPoint];
+            }
+            
             // Take startpoint as the beginning of the first leg's polyline, and endpoint form the last leg's polyline
             startPoint = [[MKPointAnnotation alloc] init];
             [startPoint setCoordinate:[[[sortedLegs objectAtIndex:0] polylineEncodedString] startCoord]];
@@ -370,7 +408,7 @@ NSString *legID;
     if ([annotation isKindOfClass:[MKPointAnnotation class]])
     {
         // if startpoint or endpoint, then use MKPinAnnotationView
-        if (annotation == startPoint || annotation == endPoint) {
+        if (startPoint == annotation || endPoint == annotation) {
             // Try to dequeue an existing pin view first.
             MKPinAnnotationView* pinView = (MKPinAnnotationView*)[mv dequeueReusableAnnotationViewWithIdentifier:@"MyPinAnnotationView"];
             
@@ -393,7 +431,7 @@ NSString *legID;
             }
             return pinView;
         }
-        else if([dotAnnotationArray containsObject:annotation]){
+        else if([legStartEndPoint containsObject:annotation]){
             MKAnnotationView* dotView = (MKAnnotationView*)[mv dequeueReusableAnnotationViewWithIdentifier:@"IntermediateAnnotation"];
             
             if (!dotView)
@@ -401,6 +439,7 @@ NSString *legID;
                 // If an existing pin view was not available, create one.
                 dotView = [[MKAnnotationView alloc] initWithAnnotation:annotation
                                                        reuseIdentifier:@"IntermediateAnnotation"];
+                dotView.canShowCallout = YES;
                 if (!dotImage) {
                     NSString* imageName = [[NSBundle mainBundle] pathForResource:LEGMAP_DOT_IMAGE_FILE ofType:@"png"];
                     dotImage = [UIImage imageWithContentsOfFile:imageName];
@@ -415,7 +454,7 @@ NSString *legID;
             return dotView;
         }
         // Otherwise, use the dot view controller
-        else {
+        else if([intermediateAnnotations containsObject:annotation]){
             MKAnnotationView* dotView = (MKAnnotationView*)[mv dequeueReusableAnnotationViewWithIdentifier:@"MyDotAnnotationView"];
             
             if (!dotView)
@@ -436,6 +475,9 @@ NSString *legID;
                 dotView.annotation = annotation;
             
             return dotView;
+        }
+        else{
+            [mapView removeAnnotation:annotation];
         }
     }
     return nil;

@@ -163,6 +163,7 @@ typedef enum {
 // Returns true if all the itinerary's legs' serviceDays match the serviceDays for requestDate
 - (BOOL)doAllServiceDaysMatchDate:(NSDate *)requestDate;
 
+- (BOOL)containsUnscheduledLeg;
 @end
 
 @interface Itinerary (CoreDataGeneratedAccessors)

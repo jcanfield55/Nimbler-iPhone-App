@@ -156,5 +156,6 @@
 // Remove duplicate itineraries from plan
 - (void) removeDuplicateItineraries;
 
+- (BOOL)containsUnscheduledLeg;
 @end
 
