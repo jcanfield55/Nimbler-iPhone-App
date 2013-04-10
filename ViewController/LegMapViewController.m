@@ -268,6 +268,7 @@ NSString *legID;
                 mpRegion = minRegion;  // if minRegion is larger, replace mpRegion with it
             }
             [mapView setRegion:mpRegion];
+            [mapView addOverlay:[polyLineArray objectAtIndex:itineraryNumber]];
         }
     }
     @catch (NSException *exception) {
@@ -297,7 +298,7 @@ NSString *legID;
         if ([overlay isKindOfClass:[MKPolyline class]]) {
             MKPolylineView *aView = [[MKPolylineView alloc] initWithPolyline:(MKPolyline*)overlay];
             // aView.fillColor = [[UIColor cyanColor] colorWithAlphaComponent:0.2];
-            aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:ALPHA_LIGHTER];
+            aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:ALPHA_LIGHTER];
             aView.lineWidth = LINE_WIDTH;
             NIMLOG_EVENT1(@"itineraryNumber=%d",itineraryNumber);
             
