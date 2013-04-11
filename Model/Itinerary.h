@@ -164,6 +164,7 @@ typedef enum {
 - (BOOL)doAllServiceDaysMatchDate:(NSDate *)requestDate;
 
 - (BOOL)containsUnscheduledLeg;
+- (BOOL)containsBikeLeg;
 @end
 
 @interface Itinerary (CoreDataGeneratedAccessors)

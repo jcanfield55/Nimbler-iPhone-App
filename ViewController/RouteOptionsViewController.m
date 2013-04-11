@@ -132,15 +132,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         }
         [self changeMainTableSettings];
     }
-    NIMLOG_PERF2(@"routeDetailUniquePattern=%d",[[plan uniqueItineraries] count]);
-    if (planRequestParameters.isFromCache || planRequestParameters.serverCallsSoFar >= PLAN_MAX_SERVER_CALLS_PER_REQUEST) {
-        if(self.timerGettingRealDataByItinerary != nil){
-            [self.timerGettingRealDataByItinerary invalidate];
-            self.timerGettingRealDataByItinerary = nil;
-        }
-        [self requestServerForRealTime];
-        self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
-    }
     if (status == PLAN_STATUS_OK) {
         [noItineraryWarning setHidden:YES];
         setWarningHidden = true;
@@ -150,6 +141,15 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     } else {
         logError(@"RouteOptionsViewController -> newPlanAvailable",
                  [NSString stringWithFormat:@"Unexpected status = %d", status]);
+    }
+    if (planRequestParameters.needToRequestRealtime || planRequestParameters.serverCallsSoFar >= PLAN_MAX_SERVER_CALLS_PER_REQUEST) {
+        NIMLOG_PERF2(@"routeDetailUniquePattern=%d",[[plan uniqueItineraries] count]);
+        if(self.timerGettingRealDataByItinerary != nil){
+            [self.timerGettingRealDataByItinerary invalidate];
+            self.timerGettingRealDataByItinerary = nil;
+        }
+        [self requestServerForRealTime];
+        self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
     }
 }
 

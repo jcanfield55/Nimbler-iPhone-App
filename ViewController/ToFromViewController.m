@@ -1112,7 +1112,6 @@ UIImage *imageDetailDisclosure;
        RequestParameter:(PlanRequestParameters *)requestParameter
 {
     @try {
-        NIMLOG_PERF2(@"PatternsCount=%d",[[plan uniqueItineraries] count]);
         planRequestParameters = requestParameter;
         // If we already on routeOptionsVC, redirect this callback there instead
         UIViewController *currentVC = self.navigationController.visibleViewController;

@@ -35,10 +35,29 @@ static RealTimeManager* realTimeManager;
 
 // Request RealTime data from server with legs attributes.
 - (void) requestRealTimeDataFromServerUsingPlan:(Plan *)currentPlan PlanRequestParameters:(PlanRequestParameters *)planrequestParameters{
-    NIMLOG_PERF2(@"patternCount=%d",[[plan uniqueItineraries] count]);
     plan = currentPlan;
     requestParameters = planrequestParameters;
     originalTripDate = planrequestParameters.originalTripDate;
+    
+    NIMLOG_PERF2(@"planId=%@",plan.planId);
+    NIMLOG_PERF2(@"itineraries count=%d",[[plan itineraries] count]);
+//    for(int i=0;i<[[plan itineraries] count];i++){
+//        Itinerary *itinerary = [[[plan itineraries] allObjects] objectAtIndex:i];
+//        for(int j=0;j<[[itinerary sortedLegs] count];j++){
+//            Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
+//            NIMLOG_PERF2(@"fromStopId->%@, toStopId->%@, routeId->%@, mode->%@",leg.from.stopId,leg.to.stopId,leg.routeShortName,leg.mode);
+//        }
+//    }
+    NIMLOG_PERF2(@"PatternsCount=%d",[[plan uniqueItineraries] count]);
+    
+//    for(int i=0;i<[[plan uniqueItineraries] count];i++){
+//        Itinerary *itinerary = [[plan uniqueItineraries]  objectAtIndex:i];
+//        for(int j=0;j<[[itinerary sortedLegs] count];j++){
+//            Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
+//            NIMLOG_PERF2(@"fromStopId->%@, toStopId->%@, routeId->%@, mode->%@",leg.from.stopId,leg.to.stopId,leg.routeShortName,leg.mode);
+//        }
+//    }
+    
     NSDate *currentDate = dateOnlyFromDate([NSDate date]);
     NIMLOG_PERF2(@"originalTripDate=%@",originalTripDate);
     NSDate *tripDate = dateOnlyFromDate(originalTripDate);

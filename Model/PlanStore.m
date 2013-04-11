@@ -75,6 +75,17 @@
         
         if (matchingPlanArray && [matchingPlanArray count]>0) {
             Plan* matchingPlan = [matchingPlanArray objectAtIndex:0]; // Take the first matching plan
+            for(int i=0;i<[[matchingPlan itineraries] count];i++){
+                Itinerary *iti = [[[matchingPlan itineraries] allObjects] objectAtIndex:i];
+                if(iti.hideItinerary){
+                    iti.hideItinerary = false;
+                }
+            }
+            [matchingPlan prepareSortedItinerariesWithMatchesForDate:parameters.originalTripDate
+                                              departOrArrive:parameters.departOrArrive
+                                        routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
+                                     generateGtfsItineraries:NO
+                                       removeNonOptimalItins:YES];
             [matchingPlan updateExcludeSettingsArray];   // Update with latest excludeSettings
             if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate]
                                                           departOrArrive:[parameters departOrArrive]
@@ -83,6 +94,9 @@
                                                    removeNonOptimalItins:YES]) {
                 PlanRequestStatus reqStatus;
                 MoreItineraryStatus moreItinStatus = [self requestMoreItinerariesIfNeeded:matchingPlan parameters:parameters];
+                if(moreItinStatus == NO_MORE_ITINERARIES_REQUESTED){
+                    parameters.needToRequestRealtime = YES;
+                }
                 if (matchingPlan.sortedItineraries.count == 0) {
                     logEvent(FLURRY_ROUTE_NOT_IN_CACHE,
                              FLURRY_FROM_SELECTED_ADDRESS, [parameters.fromLocation shortFormattedAddress],
@@ -110,7 +124,6 @@
                 // Callback to planDestination with new plan
                 self.stopTimesLoadSuccessfully = false;
                  [self requestStopTimesForItineraryPatterns:parameters.originalTripDate Plan:matchingPlan];
-                parameters.isFromCache = YES;
                 [parameters.planDestination newPlanAvailable:matchingPlan
                                                   fromObject:self
                                                       status:reqStatus
@@ -292,13 +305,17 @@
             for(int i=0;i<[arrItineraries count];i++){
                 NSDictionary *itineraryDictionary = [arrItineraries objectAtIndex:i];
                 NSString *legId = [itineraryDictionary objectForKey:@"id"];
-                Leg *leg = [legLegIdDictionary objectForKey:legId];
-                NSString *stopIdsString = [NSString stringWithFormat:@"%@_%@",leg.from.stopId,leg.to.stopId];
-                NSArray *arrLegs = [itineraryDictionary objectForKey:@"legs"];
-                NSDictionary *tempDict = [NSDictionary dictionaryWithObject:arrLegs forKey:stopIdsString];
-                [itinerariesArray addObject:tempDict];
+                if(legLegIdDictionary){
+                    Leg *leg = [legLegIdDictionary objectForKey:legId];
+                    NSString *stopIdsString = [NSString stringWithFormat:@"%@_%@",leg.from.stopId,leg.to.stopId];
+                    NSArray *arrLegs = [itineraryDictionary objectForKey:@"legs"];
+                    NSDictionary *tempDict = [NSDictionary dictionaryWithObject:arrLegs forKey:stopIdsString];
+                    [itinerariesArray addObject:tempDict];
+                }
             }
-            [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray = itinerariesArray;
+            if(itinerariesArray && [itinerariesArray count] > 0){
+               [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray = itinerariesArray;   
+            }
         }
     }
 }
@@ -397,6 +414,9 @@
                                          generateGtfsItineraries:NO
                                            removeNonOptimalItins:YES]) {
                 MoreItineraryStatus moreItinStatus = [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
+                if(moreItinStatus == NO_MORE_ITINERARIES_REQUESTED){
+                    planRequestParameters.needToRequestRealtime = true;
+                }
                 [self requestStopTimesForItineraryPatterns:planRequestParameters.originalTripDate Plan:plan];
                 PlanRequestStatus reqStatus = PLAN_STATUS_OK;
                 if ([[plan sortedItineraries] count] == 0) {
@@ -483,8 +503,8 @@
         double duration = 0.0;
         for(int j=0;j<[[itinerary sortedLegs] count];j++){
             Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
-            if(!leg.legId)
-                leg.legId = generateRandomString();
+//            if(!leg.legId)
+//                leg.legId = generateRandomString();
             [legIdDictionary setObject:leg forKey:leg.legId];
             NSString *strFromToStopId = [NSString stringWithFormat:@"%@_%@",leg.from.stopId,leg.to.stopId];
             if([fromToStopID containsObject:strFromToStopId]){
@@ -812,6 +832,43 @@
                     Itinerary *itinerary = [[[plans itineraries] allObjects] objectAtIndex:i];
                     if([itinerary containsUnscheduledLeg]){
                        [context deleteObject:itinerary];
+                    }
+                }
+                [context deleteObject:planRequestChunks];
+            }
+        }
+        [context save:&error];
+        if(error){
+            logError(@"PlanStore --> clearCache", [NSString stringWithFormat:@"Error While Clearing Cache:%@",error]);
+        }
+    }
+    @catch (NSException *exception) {
+        logException(@"PlanStore -> clearCache", @"", exception);
+    }
+}
+
+- (void)clearCacheForBikePref{
+    @try {
+        Plan *plan = [[[[nc_AppDelegate sharedInstance] toFromViewController] routeOptionsVC] plan];
+        NSString *strPlanID = [plan planId];
+        
+        NSError *error;
+        NSManagedObjectContext * context = [self managedObjectContext];
+        NSFetchRequest * fetchPlanRequestChunk = [[NSFetchRequest alloc] init];
+        [fetchPlanRequestChunk setEntity:[NSEntityDescription entityForName:@"PlanRequestChunk" inManagedObjectContext:context]];
+        NSArray * arrayPlanRequestChunk = [context executeFetchRequest:fetchPlanRequestChunk error:nil];
+        
+        for (PlanRequestChunk *planRequestChunks in arrayPlanRequestChunk){
+            Plan *plans = planRequestChunks.plan;
+            if(!plans){
+                [context deleteObject:planRequestChunks];
+                continue;
+            }
+            if(![strPlanID isEqualToString:[plans planId]]){
+                for(int i=0;i<[[plans itineraries] count];i++){
+                    Itinerary *itinerary = [[[plans itineraries] allObjects] objectAtIndex:i];
+                    if([itinerary containsBikeLeg]){
+                        [context deleteObject:itinerary];
                     }
                 }
                 [context deleteObject:planRequestChunks];

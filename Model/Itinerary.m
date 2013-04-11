@@ -590,10 +590,19 @@ NSArray *sortedByStartTimeOnly(NSSet* itinerarySet)
     }
 }
 
+- (BOOL)containsBikeLeg{
+    for(int i=0;i<[self.sortedLegs count];i++){
+        Leg *leg = [self.sortedLegs objectAtIndex:i];
+        if([leg isBike])
+            return true;
+    }
+    return false;
+}
+
 - (BOOL)containsUnscheduledLeg{
     for(int i=0;i<[self.sortedLegs count];i++){
         Leg *leg = [self.sortedLegs objectAtIndex:i];
-        if(![leg isScheduled])
+        if([leg isWalk])
             return true;
     }
     return false;

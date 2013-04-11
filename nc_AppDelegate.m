@@ -1080,7 +1080,7 @@ FeedBackForm *fbView;
 -(void)getTwiiterLiveData{
     @try {
         NSString *strAgencyIDs = [self getAgencyIdsString];
-        if(strAgencyIDs.length > 0){
+        if(strAgencyIDs.length > 0 && [prefs objectForKey:DEVICE_TOKEN]){
             NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],APPLICATION_TYPE,[self getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs, nil];
             isTwitterLivaData = TRUE;
             NSString *twitCountReq = [TWEET_COUNT_URL appendQueryParams:params];

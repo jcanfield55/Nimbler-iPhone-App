@@ -59,6 +59,7 @@ typedef enum {
 - (Plan *)consolidateWithMatchingPlans:(Plan *)plan0;
 
 - (void)clearCache;
+- (void)clearCacheForBikePref;
 
 // Requests for a new plan from OTP using parameters
 // If exclSettingArray is nil, will not exclude any routes in the OTP request

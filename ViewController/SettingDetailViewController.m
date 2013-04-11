@@ -204,6 +204,13 @@
         userPrefs.fastVsSafe = sliderPreferenceFastVsSafe.value;
         userPrefs.fastVsFlat = sliderPreferenceFastVsFlat.value;
     }
+    
+    if(![lblCurrentBikeDistance.text isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_MAX_BIKE_DISTANCE]])
+    {
+        PlanStore *planStore = [[nc_AppDelegate sharedInstance] planStore];
+        [planStore  clearCacheForBikePref];
+    }
+    
     [settingDetailDelegate updateSetting];
     // if(![[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
        if(!userPrefs.sfMuniAdvisories && !userPrefs.bartAdvisories && !userPrefs.acTransitAdvisories && !userPrefs.caltrainAdvisories) {
