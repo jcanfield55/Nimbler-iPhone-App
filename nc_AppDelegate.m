@@ -129,7 +129,6 @@ FeedBackForm *fbView;
 }
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
 #if AUTOMATED_TESTING_SKIP_NCAPPDELEGATE
     return YES;    // If Automated testing with alternative persistent store, skip NC_AppDelegate altogether and do all setup in test area
 #endif
@@ -493,7 +492,7 @@ FeedBackForm *fbView;
     int daysToShowAlert = [[NSUserDefaults standardUserDefaults]integerForKey:DAYS_TO_SHOW_FEEDBACK_ALERT];
     appLastUseDate = dateOnlyFromDate(appLastUseDate);
     NSDate *todayDate = dateOnlyFromDate([NSDate date]);
-    if(![appLastUseDate isEqual:todayDate]){
+    if(![appLastUseDate isEqualToDate:todayDate]){
         [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:DATE_OF_USE];
         [[NSUserDefaults standardUserDefaults] setInteger:ndaysCount + 1  forKey:DAYS_COUNT];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -1080,6 +1079,7 @@ FeedBackForm *fbView;
 -(void)getTwiiterLiveData{
     @try {
         NSString *strAgencyIDs = [self getAgencyIdsString];
+        //DE-290 Fixed
         if(strAgencyIDs.length > 0 && [prefs objectForKey:DEVICE_TOKEN]){
             NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],APPLICATION_TYPE,[self getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs, nil];
             isTwitterLivaData = TRUE;

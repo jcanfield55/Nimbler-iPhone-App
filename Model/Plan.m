@@ -873,4 +873,20 @@
     }
     return true;
 }
+
+-(void) changeUnscheduledItineraryTime:(NSDate *)tripDate{
+    for(int i=0;i<[[self sortedItineraries] count];i++){
+        Itinerary *iti = [[self sortedItineraries] objectAtIndex:i];
+        if([iti haveOnlyUnScheduledLeg]){
+            for(int j=0;j<[[iti sortedLegs] count];j++){
+                Leg *leg = [[iti sortedLegs] objectAtIndex:j];
+                leg.startTime = tripDate;
+                leg.endTime = [tripDate dateByAddingTimeInterval:[leg.duration doubleValue]/1000.0];
+            }
+            [iti initializeTimeOnlyVariablesWithRequestDate:tripDate];
+            iti.startTime = [iti startTimeOfFirstLeg];
+            iti.endTime = [iti endTimeOfLastLeg];
+        }
+    }
+}
 @end

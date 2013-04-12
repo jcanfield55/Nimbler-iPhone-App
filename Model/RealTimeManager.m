@@ -39,8 +39,6 @@ static RealTimeManager* realTimeManager;
     requestParameters = planrequestParameters;
     originalTripDate = planrequestParameters.originalTripDate;
     
-    NIMLOG_PERF2(@"planId=%@",plan.planId);
-    NIMLOG_PERF2(@"itineraries count=%d",[[plan itineraries] count]);
 //    for(int i=0;i<[[plan itineraries] count];i++){
 //        Itinerary *itinerary = [[[plan itineraries] allObjects] objectAtIndex:i];
 //        for(int j=0;j<[[itinerary sortedLegs] count];j++){
@@ -162,7 +160,7 @@ static RealTimeManager* realTimeManager;
             [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC newItineraryAvailable:itinerary status:ITINERARY_STATUS_OK];
             [plan deleteItinerary:detailViewitinerary];
             [plan prepareSortedItinerariesWithMatchesForDate:originalTripDate
-                                              departOrArrive:DEPART
+                                              departOrArrive:requestParameters.departOrArrive
                                         routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
                                      generateGtfsItineraries:NO
                                        removeNonOptimalItins:YES];
@@ -170,6 +168,20 @@ static RealTimeManager* realTimeManager;
         }
     }
     [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC newItineraryAvailable:nil status:ITINERARY_STATUS_CONFLICT];
+}
+
+- (void) removeRealtimeItinerary{
+    NSDate *tripDate = originalTripDate;
+    NSInteger epochTripDate = [tripDate timeIntervalSince1970];
+    for(int i=0;i<[[plan itineraries] count];i++){
+        Itinerary *itinerary = [[[plan itineraries] allObjects] objectAtIndex:i];
+        if(itinerary.isRealTimeItinerary){
+            NSDate *itineraryEndTime = itinerary.endTimeOfLastLeg;
+            NSInteger itineraryEpoch = [itineraryEndTime timeIntervalSince1970];
+            if(epochTripDate > itineraryEpoch)
+                [plan deleteItinerary:itinerary];
+        }
+    }
 }
 // Parse the Realtime response and set realtime data to leg.
 -(void)setLiveFeed:(id)liveFees
@@ -201,6 +213,8 @@ static RealTimeManager* realTimeManager;
                 [self setRealTimePredictionsFromLiveFeeds:legLiveFees];
                 // TODO:- Comment Four lines to run automated test case
                 [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:originalTripDate Context:nil];
+                // Part of DE-292 Fix
+                [self removeRealtimeItinerary];
                 [self hideItineraryIfNeeded:[[plan itineraries] allObjects]];
                  [plan prepareSortedItinerariesWithMatchesForDate:originalTripDate
                                                    departOrArrive:requestParameters.departOrArrive
@@ -226,7 +240,10 @@ static RealTimeManager* realTimeManager;
     }
 }
 
+// Part of DE-292 Fix
 - (void) hideItineraryIfNeeded:(NSArray *)arrItinerary{
+    NSDate *currentDate = [NSDate date];
+    NSInteger currentEpoch = [currentDate timeIntervalSince1970];
     for(int i=0;i<[arrItinerary count];i++){
         Itinerary *itinerary1 = [arrItinerary objectAtIndex:i];
         if(!itinerary1.isRealTimeItinerary)
@@ -235,11 +252,11 @@ static RealTimeManager* realTimeManager;
             Itinerary *itinerary2 = [arrItinerary objectAtIndex:j];
             if(itinerary2.isRealTimeItinerary || ![itinerary1 isEquivalentModesAndStopsAs:itinerary2])
                 continue;
-            NSDate *realStartTime = addDateOnlyWithTime(dateOnlyFromDate([NSDate date]), [itinerary1 startTimeOfFirstLeg]);
-            NSDate *scheduledStartTime = addDateOnlyWithTime(dateOnlyFromDate([NSDate date]),[itinerary2 startTimeOfFirstLeg]);
-            double realTimeInterval = timeIntervalFromDate(realStartTime);
-            double scheduledTimeInterval = timeIntervalFromDate(scheduledStartTime);
-            if([realStartTime compare:scheduledStartTime] == NSOrderedDescending || realTimeInterval == scheduledTimeInterval){
+            
+            NSDate *realStartTime =  [itinerary1 maximumPredictionDate];
+            NSInteger realEpoch = [realStartTime timeIntervalSince1970];
+            NSInteger scheduledEpoch = [[itinerary2 startTimeOfFirstLeg] timeIntervalSince1970];
+            if(realEpoch >= scheduledEpoch && scheduledEpoch > currentEpoch){
                 itinerary2.hideItinerary = true;
             }
         }

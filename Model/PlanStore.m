@@ -305,6 +305,7 @@
             for(int i=0;i<[arrItineraries count];i++){
                 NSDictionary *itineraryDictionary = [arrItineraries objectAtIndex:i];
                 NSString *legId = [itineraryDictionary objectForKey:@"id"];
+                //Part of DE-291 Fixed
                 if(legLegIdDictionary){
                     Leg *leg = [legLegIdDictionary objectForKey:legId];
                     NSString *stopIdsString = [NSString stringWithFormat:@"%@_%@",leg.from.stopId,leg.to.stopId];
@@ -359,6 +360,8 @@
                 return;
             }
             Plan *plan = [objects objectAtIndex:0];
+            // DE-295 Fixed
+            [plan changeUnscheduledItineraryTime:planRequestParameters.originalTripDate];
             if([nc_AppDelegate sharedInstance].isTestPlan){
                 [nc_AppDelegate sharedInstance].testPlan = plan;
             }
@@ -503,8 +506,9 @@
         double duration = 0.0;
         for(int j=0;j<[[itinerary sortedLegs] count];j++){
             Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
-//            if(!leg.legId)
-//                leg.legId = generateRandomString();
+            //Part of DE-291 Fixed
+            if(!leg.legId)
+                leg.legId = generateRandomString();
             [legIdDictionary setObject:leg forKey:leg.legId];
             NSString *strFromToStopId = [NSString stringWithFormat:@"%@_%@",leg.from.stopId,leg.to.stopId];
             if([fromToStopID containsObject:strFromToStopId]){
@@ -810,6 +814,7 @@
 // Get  All PlanRequestChunk and delete them when max walk distance change.
 // Get All  Plan and delete plan excepting current plan. 
 
+// Part Of DE-288 Fixed
 - (void)clearCache{
     @try {
         Plan *plan = [[[[nc_AppDelegate sharedInstance] toFromViewController] routeOptionsVC] plan];
@@ -847,6 +852,7 @@
     }
 }
 
+// Part Of DE-288 Fixed
 - (void)clearCacheForBikePref{
     @try {
         Plan *plan = [[[[nc_AppDelegate sharedInstance] toFromViewController] routeOptionsVC] plan];

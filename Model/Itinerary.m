@@ -61,6 +61,7 @@ NSArray *sortedByStartTimeOnly(NSSet* itinerarySet)
 @synthesize isRealTimeItinerary;
 @synthesize hideItinerary;
 @synthesize tripIdhexString;
+@synthesize maximumPredictionDate;
 
 - (void)awakeFromInsert {
     [super awakeFromInsert];

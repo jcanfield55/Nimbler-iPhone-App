@@ -221,6 +221,10 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 
 -(void) toggleExcludeButton:(id)sender{
     NIMLOG_PERF2(@"toggleExcludeButton started");
+    
+    // DE-293 Fixed
+    [noItineraryWarning setHidden:YES];
+    setWarningHidden = true;
     UIButton *btn = (UIButton *)sender;
     RouteExcludeSetting* toggledSetting;
     for (RouteExcludeSetting *setting in [plan excludeSettingsArray]) {

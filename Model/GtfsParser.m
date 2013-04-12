@@ -1832,6 +1832,7 @@
             }
         }
         NSArray *predictions = [dictPredictions objectForKey:selectedLeg.legId];
+        NSDictionary *maximumPrediction = [self returnMaximumRealTime:predictions];
         if(!predictions || [predictions count] == 0){
             break;
         }
@@ -1871,6 +1872,7 @@
         }
         if (![newItinerary isDeleted]) {
             [self adjustItineraryAndLegsTimes:newItinerary Context:context];
+            newItinerary.maximumPredictionDate =  [NSDate dateWithTimeIntervalSince1970:[[maximumPrediction objectForKey:@"epochTime"] doubleValue]/1000];
             [newItinerary setArrivalFlagFromLegsRealTime];
             [newItinerary initializeTimeOnlyVariablesWithRequestDate:tripDate];
             newItinerary.tripIdhexString = [self generateTripIdHexString:newItinerary];
