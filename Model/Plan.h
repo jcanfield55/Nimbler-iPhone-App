@@ -158,7 +158,5 @@
 
 - (BOOL)containsUnscheduledLeg;
 -(void) changeUnscheduledItineraryTime:(NSDate *)tripDate;
-- (BOOL) haveUnscheduledItinerary;
-- (void) removeUnscheduledItineraries;
 @end
 

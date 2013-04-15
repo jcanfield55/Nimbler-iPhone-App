@@ -81,11 +81,6 @@
                     iti.hideItinerary = false;
                 }
             }
-            [matchingPlan prepareSortedItinerariesWithMatchesForDate:parameters.originalTripDate
-                                              departOrArrive:parameters.departOrArrive
-                                        routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
-                                     generateGtfsItineraries:NO
-                                       removeNonOptimalItins:YES];
             [matchingPlan updateExcludeSettingsArray];   // Update with latest excludeSettings
             if ([matchingPlan prepareSortedItinerariesWithMatchesForDate:[parameters originalTripDate]
                                                           departOrArrive:[parameters departOrArrive]
@@ -140,6 +135,7 @@
 
         
         NSArray *exclArray = [RouteExcludeSettings arrayWithNoExcludesExceptExcludeBike:[parameters.routeExcludeSettings settingForKey:BIKE_BUTTON]];
+        parameters.routeExcludeSettingsUsedForOTPCall = [RouteExcludeSettings excludeSettingsWithSettingArray:exclArray]; // DE298 partial fix
         [self requestPlanFromOtpWithParameters:parameters
                       routeExcludeSettingArray:exclArray];
     }
@@ -583,15 +579,19 @@
         [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.activityIndicator stopAnimating];
         return NO_MORE_ITINERARIES_REQUESTED; // Return if we have already made the max number of calls
     }
-    if ([plan haveOnlyUnscheduledItineraries]) {
-        [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.activityIndicator stopAnimating];
-        return NO_MORE_ITINERARIES_REQUESTED; // DE186 fix, do not request more itineraries if we currently are have walk-only or bike-only itinerary
-    }
-    
+
     PlanRequestParameters* params = [PlanRequestParameters copyOfPlanRequestParameters:requestParams0];
     
+    // Update routeExcludeSettings
     params.routeExcludeSettings = [RouteExcludeSettings latestUserSettings];  // use the latest settings in case something has changed
     params.routeExcludeSettingsUsedForOTPCall = [RouteExcludeSettings excludeSettingsWithSettingArray:[plan excludeSettingsArray]];
+    BOOL areRouteExcludeSettingsDifferent = true;
+    if ([params.routeExcludeSettingsUsedForOTPCall isEquivalentTo:requestParams0.routeExcludeSettingsUsedForOTPCall]) {
+        areRouteExcludeSettingsDifferent = false;
+    }
+    if (areRouteExcludeSettingsDifferent) { // if the settings are different, cancel out the incrementing of serverCallsSoFar
+        requestParams0.serverCallsSoFar = requestParams0.serverCallsSoFar - 1;
+    }
     
     // Find out how far the matching OTP itineraries go with extremely large limits
     NSDate* otpRequestDate = [plan nextOtpServerDateToCallFor:params.originalTripDate
@@ -605,15 +605,13 @@
         bufferSeconds = 0;  // do not add any buffer if we are starting from the original Request date
     } else {
         bufferSeconds = PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS;
+        // DE298 fix:  only check for unscheduled itineraries if there are itineraries visible
+        if ([plan haveOnlyUnscheduledItineraries]) {
+            [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.activityIndicator stopAnimating];
+            return NO_MORE_ITINERARIES_REQUESTED; // DE186 fix, do not request more itineraries if we currently have walk-only or bike-only itinerary that is visible 
+        }
     }
-    
-    BOOL areRouteExcludeSettingsDifferent = true;
-    if ([params.routeExcludeSettingsUsedForOTPCall isEquivalentTo:requestParams0.routeExcludeSettingsUsedForOTPCall]) {
-        areRouteExcludeSettingsDifferent = false;
-    } 
-    if (areRouteExcludeSettingsDifferent) { // if the settings are different, cancel out the incrementing of serverCallsSoFar
-        requestParams0.serverCallsSoFar = requestParams0.serverCallsSoFar - 1;
-    }
+
     MoreItineraryStatus moreItinStatus = NO_MORE_ITINERARIES_REQUESTED;
     if (params.departOrArrive == DEPART &&
         [otpRequestDate timeIntervalSinceDate:requestParams0.originalTripDate] < PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW) {

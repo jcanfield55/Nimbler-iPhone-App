@@ -91,6 +91,4 @@ typedef enum {
 - (void) showTabbar;
 - (void)endEdit;
 
-// call the requestRealTimeDataFromServer from RealtimeManager class with plan.
-- (void) requestServerForRealTime;
 @end

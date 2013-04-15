@@ -158,6 +158,11 @@ FeedBackForm *fbView;
     RKLogConfigureByName("RestKit/Network/Cache", CUSTOM_RK_LOG_LEVELS);
     RKLogConfigureByName("RestKit/Network/Reachability", CUSTOM_RK_LOG_LEVELS);
     
+    // Set default time zone
+    id localTimeZone = [NSTimeZone timeZoneWithName:DEFAULT_TIME_ZONE];
+    if (localTimeZone) {
+        [NSTimeZone setDefaultTimeZone:localTimeZone];
+    }
     
     RKObjectManager* rkGeoMgr = [RKObjectManager objectManagerWithBaseURL:GEO_RESPONSE_URL];
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/

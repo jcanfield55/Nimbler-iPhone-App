@@ -9,6 +9,9 @@
 #ifndef Nimbler_SF_Header_h
 #define Nimbler_SF_Header_h
 
+// Default time zone
+#define DEFAULT_TIME_ZONE @"America/Los_Angeles"
+
 // Bundle and App Types
 #define CALTRAIN_BUNDLE_IDENTIFIER         @"com.Nimbler.Nimbler-Caltrain"
 #define CALTRAIN_APP_TYPE   @"1"
