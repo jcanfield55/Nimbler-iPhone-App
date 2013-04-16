@@ -834,7 +834,7 @@
         for(int j=0;j<[[itinerary sortedLegs] count];j++){
             Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
             if([leg isScheduled] && !leg.legId)
-                leg.legId = generateRandomString();
+                leg.legId = generateRandomString(REQUEST_ID_LENGTH);
         }
     }
 }

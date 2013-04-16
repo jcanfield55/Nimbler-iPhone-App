@@ -46,7 +46,6 @@ static RealTimeManager* realTimeManager;
 //            NIMLOG_PERF2(@"fromStopId->%@, toStopId->%@, routeId->%@, mode->%@",leg.from.stopId,leg.to.stopId,leg.routeShortName,leg.mode);
 //        }
 //    }
-    NIMLOG_PERF2(@"PatternsCount=%d",[[plan uniqueItineraries] count]);
     
 //    for(int i=0;i<[[plan uniqueItineraries] count];i++){
 //        Itinerary *itinerary = [[plan uniqueItineraries]  objectAtIndex:i];
@@ -57,7 +56,6 @@ static RealTimeManager* realTimeManager;
 //    }
     
     NSDate *currentDate = dateOnlyFromDate([NSDate date]);
-    NIMLOG_PERF2(@"originalTripDate=%@",originalTripDate);
     NSDate *tripDate = dateOnlyFromDate(originalTripDate);
     // TODO:- Comment This if statement to run automated test case
      if([tripDate compare:currentDate] != NSOrderedAscending){
@@ -110,7 +108,7 @@ static RealTimeManager* realTimeManager;
             NIMLOG_PERF2(@"Realtime request String=%@",strRequestString);
             RKParams *requestParameter = [RKParams params];
             [requestParameter setValue:strRequestString forParam:LEGS];
-            [requestParameter setValue:[[NSUserDefaults standardUserDefaults] objectForKey:DEVICE_TOKEN] forParam:DEVICE_TOKEN];
+            [requestParameter setValue:[[nc_AppDelegate sharedInstance] deviceTokenString] forParam:DEVICE_TOKEN];
             [self.rkTpClient post:LIVE_FEEDS_BY_LEGS params:requestParameter delegate:self];
         } 
      }

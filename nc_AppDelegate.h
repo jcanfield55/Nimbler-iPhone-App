@@ -53,6 +53,7 @@
     BOOL isTestPlan;
     NSMutableString *testLogMutableString;
     Stations *stations;
+    NSString *updateDeviceTokenURL;
 }
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
@@ -105,7 +106,7 @@
 @property (nonatomic,strong) NSMutableString *testLogMutableString;
 @property (strong, nonatomic) GtfsParser *gtfsParser;
 @property (strong, nonatomic) Stations *stations;
-
+@property (strong, nonatomic) NSString *updateDeviceTokenURL;
 - (NSURL *)applicationDocumentsDirectory;
 
 -(void)setUpTabViewController;   // sets up TabViewController & the child navigation controllers
@@ -118,5 +119,6 @@
 -(void)updateTime;
 - (NSString *)getAppTypeFromBundleId;
 - (NSString *)getAgencyIdsString;
+- (NSString *) deviceTokenString;
 
 @end

@@ -102,7 +102,7 @@ NSString *getItemAtIndexFromArray(int index,NSArray *arrayComponents);
 int timeIntervalFromDate(NSDate * date);
 
 // generate 16 character random string
-NSString *generateRandomString(void);
+NSString *generateRandomString(int length);
 
 // return the image from document directory or from server
 // First check if image exist at document directory folder if yes then take image from document directory otherwise request server for image and save image to document directory and next time use image from document directory.

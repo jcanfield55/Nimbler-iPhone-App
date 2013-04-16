@@ -89,6 +89,7 @@ static nc_AppDelegate *appDelegate;
 @synthesize testLogMutableString;
 @synthesize gtfsParser;
 @synthesize stations;
+@synthesize updateDeviceTokenURL;
 
 // Feedback parameters
 @synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId;
@@ -881,7 +882,6 @@ FeedBackForm *fbView;
             {
                 RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
                 NSDictionary *tempResponseDictionary = [rkParser objectFromString:[response bodyAsString] error:nil];
-                
                 if([tempResponseDictionary objectForKey:APPLICATION_TYPE] != nil){
                     [[NSUserDefaults standardUserDefaults] setObject:[tempResponseDictionary objectForKey:APPLICATION_TYPE] forKey:APPLICATION_TYPE];
                     [[NSUserDefaults standardUserDefaults] synchronize];
@@ -956,6 +956,10 @@ FeedBackForm *fbView;
                         timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
                     }
                 }
+                else if([strRequestURL isEqualToString:updateDeviceTokenURL]){
+                    [[NSUserDefaults standardUserDefaults] setObject:nil forKey:DUMMY_TOKEN_ID];
+                    [[NSUserDefaults standardUserDefaults] synchronize];
+                }
             }
         }
     }
@@ -976,9 +980,25 @@ FeedBackForm *fbView;
       UIRemoteNotificationTypeSound)];
 }
 
+- (void) updateDeviceToken{
+    RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+    [RKClient setSharedClient:client];
+    NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
+                            
+                            DEVICE_TOKEN, [[nc_AppDelegate sharedInstance] deviceTokenString],
+                            APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],DUMMY_TOKEN_ID,[[NSUserDefaults standardUserDefaults] valueForKey:DUMMY_TOKEN_ID],
+                            // TODO -- add bicycle settings saving as needed
+                            nil];
+    NSString *updateURL = [UPDATE_DEVICE_TOKEN appendQueryParams:params];
+    updateDeviceTokenURL = updateURL;
+    [[RKClient sharedClient] get:updateURL delegate:self];
+}
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     @try {
         NSString *token = [[[[deviceToken description] stringByReplacingOccurrencesOfString: @"<" withString: NULL_STRING] stringByReplacingOccurrencesOfString: @">" withString: NULL_STRING] stringByReplacingOccurrencesOfString: @" " withString: @""];
+        if([prefs objectForKey:DUMMY_TOKEN_ID]){
+            [self updateDeviceToken];
+        }
         NIMLOG_PERF2(@"deviceTokenString: %@",token);
         [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
         [prefs setObject:token forKey:DEVICE_TOKEN];
@@ -1000,8 +1020,9 @@ FeedBackForm *fbView;
         NSString *str = [NSString stringWithFormat: @"Error: %@", err];
         NIMLOG_ERR1(@"didFail To Register For RemoteNotifications With Error: %@",str);
         prefs = [NSUserDefaults standardUserDefaults];
-        NSString  *token = @"26d906c5c273446d5f40d2c173ddd3f6869b2666b1c7afd5173d69b6629def70";
-        [prefs setObject:token forKey:DEVICE_TOKEN];
+        NSString *dummyToken = [NSString stringWithFormat:@"SF%@",generateRandomString(64)];
+        //NSString  *token = @"26d906c5c273446d5f40d2c173ddd3f6869b2666b1c7afd5173d69b6629def70";
+        [prefs setObject:dummyToken forKey:DUMMY_TOKEN_ID];
         [[UserPreferance userPreferance] performSelector:@selector(saveToServer) withObject:nil afterDelay:2.0];
         //    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Push Alert" message:@"your device couldn't connect with apple. Please reinstall application" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         //    [alert show];
@@ -1085,8 +1106,8 @@ FeedBackForm *fbView;
     @try {
         NSString *strAgencyIDs = [self getAgencyIdsString];
         //DE-290 Fixed
-        if(strAgencyIDs.length > 0 && [prefs objectForKey:DEVICE_TOKEN]){
-            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],APPLICATION_TYPE,[self getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs, nil];
+        if(strAgencyIDs.length > 0 && [[nc_AppDelegate sharedInstance] deviceTokenString]){
+            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_TOKEN, [[nc_AppDelegate sharedInstance] deviceTokenString],APPLICATION_TYPE,[self getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs, nil];
             isTwitterLivaData = TRUE;
             NSString *twitCountReq = [TWEET_COUNT_URL appendQueryParams:params];
             strTweetCountURL = twitCountReq;
@@ -1231,5 +1252,22 @@ FeedBackForm *fbView;
         }
     //}
     return strAgencyIds;
+}
+
+- (NSString *) deviceTokenString{
+    NSString *dummyToken = [prefs objectForKey:DUMMY_TOKEN_ID];
+    if(!dummyToken){
+         dummyToken = [NSString stringWithFormat:@"SF%@",generateRandomString(64)];
+        [prefs setObject:dummyToken forKey:DUMMY_TOKEN_ID];
+    }
+    NSString *deviceToken = [prefs objectForKey:DEVICE_TOKEN];
+    if(deviceToken){
+        return deviceToken;
+    }
+    else{
+        UserPreferance* userPrefs = [UserPreferance userPreferance];
+        userPrefs.pushEnable = NO;
+        return [prefs objectForKey:DUMMY_TOKEN_ID];   
+    }
 }
 @end

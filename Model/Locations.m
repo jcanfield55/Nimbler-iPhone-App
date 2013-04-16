@@ -748,7 +748,7 @@
 #if AUTOMATED_TESTING_SKIP_NCAPPDELEGATE
     googleParameters = [NSDictionary dictionaryWithKeysAndObjects: @"address", parameters.rawAddress,
                         @"bounds", supportedRegionGeocodeString, @"sensor", @"true", 
-                        DEVICE_TOKEN, [[NSUserDefaults standardUserDefaults]objectForKey:DEVICE_TOKEN], nil];
+                        DEVICE_TOKEN,[[nc_AppDelegate sharedInstance] deviceTokenString], nil];
 #endif
     geoURLResource = [@"json" appendQueryParams:googleParameters];
     [rkGeoMgr loadObjectsAtResourcePath:geoURLResource delegate:self];

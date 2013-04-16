@@ -89,9 +89,10 @@
 #define ALERT_COUNT           @"alertCount"
 #define MAXIMUM_WALK_DISTANCE @"maxDistance"
 #define UPDATE_SETTING_REQ    @"users/preferences/update"
+#define UPDATE_DEVICE_TOKEN   @"/preferences/update/token"
 
 // UserPreferernce (user settings) defaults, max, and min
-#define PREFS_DEFAULT_IS_PUSH_ENABLE NO
+#define PREFS_DEFAULT_IS_PUSH_ENABLE YES
 #define PREFS_DEFAULT_PUSH_NOTIFICATION_THRESHOLD 5
 
 #define URGENT_NOTIFICATION_DEFAULT_VALUE   1
@@ -349,6 +350,7 @@
 
 // User Preferance
 #define DEVICE_TOKEN      @"deviceToken"
+#define DUMMY_TOKEN_ID    @"dummyTokenId"
 #define USER_EMAIL        @"eMailId"
 #define TWEET_COUNT       @"tweetCount"
 

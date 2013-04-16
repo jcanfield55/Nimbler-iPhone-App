@@ -317,7 +317,7 @@ static UserPreferance* userPrefs;
         
         // We will Request Server Only if We have Device Token.
         // The previous problem was calling this method from initWithNibName before We have Device Token.
-        if([prefs objectForKey:DEVICE_TOKEN ] && [prefs objectForKey:DEVICE_CFUUID]){
+        if([[nc_AppDelegate sharedInstance] deviceTokenString] && [prefs objectForKey:DEVICE_CFUUID]){
             RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
             [RKClient setSharedClient:client];
             
@@ -326,7 +326,7 @@ static UserPreferance* userPrefs;
             NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
                                     DEVICE_ID, [prefs objectForKey:DEVICE_CFUUID],
                                     ALERT_COUNT,[NSNumber numberWithInt:alertCount],
-                                    DEVICE_TOKEN, [prefs objectForKey:DEVICE_TOKEN],
+                                    DEVICE_TOKEN, [[nc_AppDelegate sharedInstance] deviceTokenString],
                                     MAXIMUM_WALK_DISTANCE,[prefs objectForKey:PREFS_MAX_WALK_DISTANCE],
                                     ENABLE_URGENTNOTIFICATION_SOUND,[prefs objectForKey:ENABLE_URGENTNOTIFICATION_SOUND],
                                     ENABLE_STANDARDNOTIFICATION_SOUND,[prefs objectForKey:ENABLE_STANDARDNOTIFICATION_SOUND],

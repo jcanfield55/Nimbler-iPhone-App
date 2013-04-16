@@ -164,7 +164,7 @@
             [timeFormatter setDateStyle:NSDateFormatterNoStyle];
         }
         NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-        [params setObject:[[NSUserDefaults standardUserDefaults]objectForKey:DEVICE_TOKEN] forKey:DEVICE_TOKEN];
+        [params setObject:[[nc_AppDelegate sharedInstance] deviceTokenString] forKey:DEVICE_TOKEN];
         
         if([[parameters fromLocation] latLngPairStr]){
             [params setObject:[[parameters fromLocation] latLngPairStr] forKey:FROM_PLACE];
@@ -262,7 +262,7 @@
         // Build the parameters into a resource string
         parameters.serverCallsSoFar = parameters.serverCallsSoFar + 1;
         // TODO handle changes to maxWalkDistance with plan caching
-        NSString *requestID = generateRandomString();
+        NSString *requestID = generateRandomString(REQUEST_ID_LENGTH);
         
         // Append The requestID to the URL.
         // Now we set that String as key of our  parametersByPlanURLResource Dictionary.
@@ -502,7 +502,7 @@
             Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
             //Part of DE-291 Fixed
             if(!leg.legId)
-                leg.legId = generateRandomString();
+                leg.legId = generateRandomString(REQUEST_ID_LENGTH);
             [legIdDictionary setObject:leg forKey:leg.legId];
             NSString *strFromToStopId = [NSString stringWithFormat:@"%@_%@",leg.from.stopId,leg.to.stopId];
             if([fromToStopID containsObject:strFromToStopId]){
@@ -568,7 +568,7 @@
         NSString *strRequestString = [arrLegs JSONString];
         RKParams *requestParameter = [RKParams params];
         [requestParameter setValue:strRequestString forParam:LEGS];
-        [requestParameter setValue:[[NSUserDefaults standardUserDefaults] objectForKey:DEVICE_TOKEN] forParam:DEVICE_TOKEN];
+        [requestParameter setValue:[[nc_AppDelegate sharedInstance] deviceTokenString] forParam:DEVICE_TOKEN];
         legsURL = NEXT_LEGS_PLAN;
         [rkTPClient post:NEXT_LEGS_PLAN params:requestParameter delegate:self];
         NIMLOG_PERF2(@"Legs Request Sent");

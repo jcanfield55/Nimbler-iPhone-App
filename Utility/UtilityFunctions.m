@@ -594,10 +594,10 @@ int timeIntervalFromDate(NSDate * date){
     return intervalDepartureTime;
 }
 
-NSString *generateRandomString(void){
+NSString *generateRandomString(int length){
     NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    NSMutableString *randomString = [NSMutableString stringWithCapacity: REQUEST_ID_LENGTH];
-    for (int i = 0; i< REQUEST_ID_LENGTH ; i++) {
+    NSMutableString *randomString = [NSMutableString stringWithCapacity: length];
+    for (int i = 0; i< length ; i++) {
         [randomString appendFormat: @"%C", [letters characterAtIndex: arc4random() % [letters length]]];
     }
     return randomString;
