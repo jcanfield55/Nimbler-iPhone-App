@@ -89,10 +89,10 @@
 #define ALERT_COUNT           @"alertCount"
 #define MAXIMUM_WALK_DISTANCE @"maxDistance"
 #define UPDATE_SETTING_REQ    @"users/preferences/update"
-#define UPDATE_DEVICE_TOKEN   @"/preferences/update/token"
+#define UPDATE_DEVICE_TOKEN   @"users/preferences/update/token"
 
 // UserPreferernce (user settings) defaults, max, and min
-#define PREFS_DEFAULT_IS_PUSH_ENABLE YES
+#define PREFS_DEFAULT_IS_PUSH_ENABLE NO
 #define PREFS_DEFAULT_PUSH_NOTIFICATION_THRESHOLD 5
 
 #define URGENT_NOTIFICATION_DEFAULT_VALUE   1
@@ -272,6 +272,7 @@
 #define RESPONSE_SUCCESSFULL 105
 #define RESPONSE_DATA_NOT_EXIST 107
 #define RESPONSE_INVALID_REQUEST 106
+#define RESPONSE_RETRY 100
 
 // Float thresholds
 #define TINY_FLOAT 0.000001
@@ -353,6 +354,7 @@
 #define DUMMY_TOKEN_ID    @"dummyTokenId"
 #define USER_EMAIL        @"eMailId"
 #define TWEET_COUNT       @"tweetCount"
+#define DEVICE_TOKEN_UPDATED @"deviceTokenUpdated"
 
 // Tweeter Parameter
 #define LATEST_TWEETS_REQ       @"advisories/latest"

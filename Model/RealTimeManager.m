@@ -38,7 +38,10 @@ static RealTimeManager* realTimeManager;
     plan = currentPlan;
     requestParameters = planrequestParameters;
     originalTripDate = planrequestParameters.originalTripDate;
-    
+    if([plan haveOnlyUnScheduledSorteditineraries]){
+        [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.activityIndicator stopAnimating];
+        return;
+    }
 //    for(int i=0;i<[[plan itineraries] count];i++){
 //        Itinerary *itinerary = [[[plan itineraries] allObjects] objectAtIndex:i];
 //        for(int j=0;j<[[itinerary sortedLegs] count];j++){

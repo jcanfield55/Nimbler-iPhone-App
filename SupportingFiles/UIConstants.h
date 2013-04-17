@@ -110,6 +110,7 @@
 #define GRAY_FONT_COLOR colorWithRed:85.0/255.0 green:85.0/255.0 blue:85.0/255.0 alpha:1.0
 
 #define CELL_BACKGROUND_ROUTE_OPTION_VIEW colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.04
+#define LIGHT_GRAY_FONT_COLOR colorWithRed:170.0/255.0 green:170.0/255.0 blue:170.0/255.0 alpha:1.0
 
 // UIanimation motion
 #define ANIMATION_STANDART_MOTION_SPEED 0.3

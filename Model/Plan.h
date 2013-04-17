@@ -158,5 +158,6 @@
 
 - (BOOL)containsUnscheduledLeg;
 -(void) changeUnscheduledItineraryTime:(NSDate *)tripDate;
+- (BOOL) haveOnlyUnScheduledSorteditineraries;
 @end
 

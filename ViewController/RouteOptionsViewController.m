@@ -222,9 +222,11 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     [[self navigationController] popViewControllerAnimated:NO];
 }
 
+
 -(void) toggleExcludeButton:(id)sender{
+   
     NIMLOG_PERF2(@"toggleExcludeButton started");
-    
+    [activityIndicator startAnimating];
     // DE-293 Fixed
     [noItineraryWarning setHidden:YES];
     setWarningHidden = true;
@@ -239,16 +241,15 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     if([[RouteExcludeSettings latestUserSettings] settingForKey:btn.titleLabel.text] == SETTING_EXCLUDE_ROUTE){
         [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:btn.titleLabel.text];
         toggledSetting.setting = SETTING_INCLUDE_ROUTE;
-        [btn setBackgroundImage:[UIImage imageNamed:@"pressed1.png"] forState:UIControlStateNormal];
+        [btn setBackgroundImage:[UIImage imageNamed:@"Updated_Pressed.png"] forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
     }
     else{
         [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:btn.titleLabel.text];
         toggledSetting.setting = SETTING_EXCLUDE_ROUTE;
-        [btn setBackgroundImage:nil forState:UIControlStateNormal];
-        [btn setTitleColor:[UIColor GRAY_FONT_COLOR] forState:UIControlStateNormal];
+        [btn setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
     }
-
     // Update sorted itineraries with new exclusions
     if (!planRequestParameters) {
         logError(@"RouteOptionsViewController -> toggleExcludeButton",
@@ -275,7 +276,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         setWarningHidden = true;
     }
     NIMLOG_PERF2(@"done preparing sortedItineraries");
-    [activityIndicator startAnimating];
     MoreItineraryStatus reqStatus = [planStore requestMoreItinerariesIfNeeded:self.plan parameters:newParameters];
     if (reqStatus == NO_MORE_ITINERARIES_REQUESTED && [[plan sortedItineraries] count] == 0) {
         // if no itineraries showing and no more requests made, show warning 
@@ -678,11 +678,11 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         [btnAgency setTitle:routeExcludeSetting.key forState:UIControlStateNormal];
         [btnAgency.titleLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:12.0]];
         if([[RouteExcludeSettings latestUserSettings] settingForKey:routeExcludeSetting.key] == SETTING_EXCLUDE_ROUTE){
-            [btnAgency setBackgroundImage:nil forState:UIControlStateNormal];
-            [btnAgency setTitleColor:[UIColor GRAY_FONT_COLOR] forState:UIControlStateNormal];
+            [btnAgency setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
+            [btnAgency setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
         }
         else{
-            [btnAgency setBackgroundImage:[UIImage imageNamed:@"pressed1.png"] forState:UIControlStateNormal];
+            [btnAgency setBackgroundImage:[UIImage imageNamed:@"Updated_Pressed.png"] forState:UIControlStateNormal];
             [btnAgency setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
         }
         [btnAgency addTarget:self action:@selector(toggleExcludeButton:) forControlEvents:UIControlEventTouchUpInside];

@@ -120,5 +120,6 @@
 - (NSString *)getAppTypeFromBundleId;
 - (NSString *)getAgencyIdsString;
 - (NSString *) deviceTokenString;
+- (void) updateDeviceToken;
 
 @end

@@ -292,6 +292,7 @@
             NIMLOG_PERF2(@"Legs Response Received");
             RKJSONParserJSONKit* parser1 = [RKJSONParserJSONKit new];
             NSDictionary *legsDictionary = [parser1 objectFromString:[response bodyAsString] error:nil];
+            NIMLOG_PERF2(@"legsDictionary=%@",legsDictionary);
             self.stopTimesLoadSuccessfully = true;
             if(!legsDictionary)
                 return;
@@ -300,6 +301,8 @@
             NSArray *arrItineraries = [legsDictionary objectForKey:@"lstItineraries"];
             for(int i=0;i<[arrItineraries count];i++){
                 NSDictionary *itineraryDictionary = [arrItineraries objectAtIndex:i];
+                if(!itineraryDictionary)
+                    continue;
                 NSString *legId = [itineraryDictionary objectForKey:@"id"];
                 //Part of DE-291 Fixed
                 if(legLegIdDictionary){

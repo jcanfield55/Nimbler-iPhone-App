@@ -134,12 +134,14 @@ FeedBackForm *fbView;
     return YES;    // If Automated testing with alternative persistent store, skip NC_AppDelegate altogether and do all setup in test area
 #endif
     [self unzipZipFileToApplicationDocumentDirectory];    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
-    
+#if PREFS_DEFAULT_IS_PUSH_ENABLE
     [[UIApplication sharedApplication]
      registerForRemoteNotificationTypes:
      (UIRemoteNotificationTypeAlert |
       UIRemoteNotificationTypeBadge |
       UIRemoteNotificationTypeSound)];
+#endif
+   
     
     prefs = [NSUserDefaults standardUserDefaults];
     
@@ -520,6 +522,14 @@ FeedBackForm *fbView;
     
     // Check the date and if it is not today's date we will make request.
     // Previously comparing string with date so changed the logic to compare date.
+    
+    // Part Of DE-286 Fixed.
+    BOOL isTokenUpdated = [[NSUserDefaults standardUserDefaults] boolForKey:DEVICE_TOKEN_UPDATED];
+    if(!isTokenUpdated && [[NSUserDefaults standardUserDefaults] objectForKey:DUMMY_TOKEN_ID]){
+        [self updateDeviceToken];
+    }
+    
+    
     NSDate *todayDate = dateOnlyFromDate([NSDate date]);
     //    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     //    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
@@ -957,8 +967,12 @@ FeedBackForm *fbView;
                     }
                 }
                 else if([strRequestURL isEqualToString:updateDeviceTokenURL]){
-                    [[NSUserDefaults standardUserDefaults] setObject:nil forKey:DUMMY_TOKEN_ID];
-                    [[NSUserDefaults standardUserDefaults] synchronize];
+                    NSDictionary *tempResponseDictionary = [rkParser objectFromString:[response bodyAsString] error:nil];
+                    if([[tempResponseDictionary objectForKey:RESPONSE_CODE] intValue] != RESPONSE_RETRY){
+                        [[NSUserDefaults standardUserDefaults] setObject:nil forKey:DUMMY_TOKEN_ID];
+                        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:DEVICE_TOKEN_UPDATED];
+                        [[NSUserDefaults standardUserDefaults] synchronize];
+                    }
                 }
             }
         }
@@ -972,14 +986,16 @@ FeedBackForm *fbView;
 #pragma mark Nimbler push notification
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
-    NIMLOG_PERF1(@"Registering for push notifications...");
+#if PREFS_DEFAULT_IS_PUSH_ENABLE
     [[UIApplication sharedApplication]
      registerForRemoteNotificationTypes:
      (UIRemoteNotificationTypeAlert |
       UIRemoteNotificationTypeBadge |
       UIRemoteNotificationTypeSound)];
+#endif
 }
 
+// Part Of DE-286 Fixed.
 - (void) updateDeviceToken{
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     [RKClient setSharedClient:client];
@@ -987,7 +1003,6 @@ FeedBackForm *fbView;
                             
                             DEVICE_TOKEN, [[nc_AppDelegate sharedInstance] deviceTokenString],
                             APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],DUMMY_TOKEN_ID,[[NSUserDefaults standardUserDefaults] valueForKey:DUMMY_TOKEN_ID],
-                            // TODO -- add bicycle settings saving as needed
                             nil];
     NSString *updateURL = [UPDATE_DEVICE_TOKEN appendQueryParams:params];
     updateDeviceTokenURL = updateURL;
@@ -996,14 +1011,15 @@ FeedBackForm *fbView;
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     @try {
         NSString *token = [[[[deviceToken description] stringByReplacingOccurrencesOfString: @"<" withString: NULL_STRING] stringByReplacingOccurrencesOfString: @">" withString: NULL_STRING] stringByReplacingOccurrencesOfString: @" " withString: @""];
+        [prefs setObject:token forKey:DEVICE_TOKEN];
+        [prefs synchronize];
+        // Part Of DE-286 Fixed.
         if([prefs objectForKey:DUMMY_TOKEN_ID]){
             [self updateDeviceToken];
         }
         NIMLOG_PERF2(@"deviceTokenString: %@",token);
         [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
-        [prefs setObject:token forKey:DEVICE_TOKEN];
-        [prefs synchronize];
-        [[UserPreferance userPreferance] performSelector:@selector(saveToServer) withObject:nil afterDelay:2.0];
+        [[UserPreferance userPreferance] performSelector:@selector(saveToServer) withObject:nil afterDelay:3.0];
         logEvent(FLURRY_PUSH_AVAILABLE,
                  FLURRY_NOTIFICATION_TOKEN, token,
                  nil, nil, nil, nil, nil, nil);
@@ -1017,6 +1033,7 @@ FeedBackForm *fbView;
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
     @try {
+        [self updateDeviceToken];
         NSString *str = [NSString stringWithFormat: @"Error: %@", err];
         NIMLOG_ERR1(@"didFail To Register For RemoteNotifications With Error: %@",str);
         prefs = [NSUserDefaults standardUserDefaults];
@@ -1265,8 +1282,6 @@ FeedBackForm *fbView;
         return deviceToken;
     }
     else{
-        UserPreferance* userPrefs = [UserPreferance userPreferance];
-        userPrefs.pushEnable = NO;
         return [prefs objectForKey:DUMMY_TOKEN_ID];   
     }
 }
