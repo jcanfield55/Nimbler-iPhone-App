@@ -117,6 +117,7 @@ static RealTimeManager* realTimeManager;
      }
 }
 
+/*
 - (void) logRealtimeData:(NSDictionary *)dictionary{
     NSArray *array = [dictionary objectForKey:@"legLiveFeeds"];
     for(int i=0;i<[array count];i++){
@@ -131,6 +132,7 @@ static RealTimeManager* realTimeManager;
     NIMLOG_PERF2(@"---------------------------------------------------------");
     }
 }
+ */
 
 #pragma mark RKResponse Delegate method
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {
