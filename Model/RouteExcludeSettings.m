@@ -225,6 +225,10 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
             }  // else no agency name, do not generate button
         }
     }
+    NSSortDescriptor *sortD = [[NSSortDescriptor alloc]
+                               initWithKey:@"key" ascending:YES selector:@selector(localizedStandardCompare:)];
+    [returnArray sortUsingDescriptors:[NSArray arrayWithObject:sortD]];
+    
     // Add bike button
     RouteExcludeSetting* routeExclSetting = [[RouteExcludeSetting alloc] init];
     routeExclSetting.key = BIKE_BUTTON;

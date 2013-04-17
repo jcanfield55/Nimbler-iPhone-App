@@ -506,7 +506,13 @@
     NIMLOG_PERF2(@"Fetching searchableFromLocations");
     NSArray* locsFromGoogle = [managedObjectContext executeFetchRequest:fetchReqSearchableGoogleFromLocations
                                                                   error:&error2];
-    NSArray* locsFromIos = [managedObjectContext executeFetchRequest:fetchReqSearchableIosFromLocations error:&error3];
+    NSArray* locsFromIos;
+    if([[[UIDevice currentDevice] systemVersion] intValue] >= 5) {
+        locsFromIos = [managedObjectContext executeFetchRequest:fetchReqSearchableIosFromLocations error:&error3];
+    } else {
+        // If < iOS4, then there will be no locations from iOS.  DE300 fix
+        locsFromIos = [NSArray array];
+    }
     searchableFromLocations = [[locsFromGoogle arrayByAddingObjectsFromArray:locsFromIos]
                                sortedArrayUsingDescriptors:fromSortDesc];  // Combine the iOS and Google locations
     NIMLOG_PERF2(@"Done fetching searchableFromLocations");
@@ -885,12 +891,17 @@
                          FLURRY_GEOCODE_RAWADDRESS, rawAddress,
                          nil, nil, nil, nil);
                 NIMLOG_ERR1(@"Geocode over query limit.  Status = %@", geocodeStatus);
-                // If google geocoder unavailable, try iOS geocoder
-                [parameters setApiType:IOS_GEOCODER];
-                if (parameters.rawAddress) {
-                    [self forwardGeocodeWithParameters:parameters callBack:callback];
+                // If google geocoder unavailable, try iOS geocoder if iOS v 5.0+
+                if([[[UIDevice currentDevice] systemVersion] intValue] >= 5) {
+                    [parameters setApiType:IOS_GEOCODER];
+                    if (parameters.rawAddress) {
+                        [self forwardGeocodeWithParameters:parameters callBack:callback];
+                    } else {
+                        [self reverseGeocodeWithParameters:parameters callBack:callback];
+                    }
                 } else {
-                    [self reverseGeocodeWithParameters:parameters callBack:callback];
+                    // if iOS4, return over query message
+                    [callback newGeocodeResults:nil withStatus:GEOCODE_OVER_QUERY_LIMIT parameters:parameters];
                 }
             }
             else if ([geocodeStatus compare:@"REQUEST_DENIED" options:NSCaseInsensitiveSearch] == NSOrderedSame) {

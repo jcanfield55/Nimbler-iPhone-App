@@ -125,6 +125,7 @@
 
 // Flurry analytics and logging
 #define FLURRY_ENABLED 0
+#define IS_KICKFOLIO 0
 
 // Flurry events
 #define FLURRY_APPDELEGATE_START @"Start of App Delegate"
@@ -181,6 +182,7 @@
 
 // Flurry parameter names
 #define FLURRY_NOTIFICATION_TOKEN @"(Notification Token)"
+#define FLURRY_IS_KICKFOLIO @"(Kickfolio)"
 #define FLURRY_PRELOADED_FILE_NAME @"(Preloaded file name)"
 #define FLURRY_TO_SELECTED_ADDRESS @"(To Selected Address)"
 #define FLURRY_FROM_SELECTED_ADDRESS @"(From Selected Address)"

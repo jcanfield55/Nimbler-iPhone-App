@@ -428,6 +428,9 @@ void logEvent(NSString *eventName, NSString *param1name, NSString *param1value, 
             }
             [dictionary setObject:param4value forKey:param4name];
         }
+#if IS_KICKFOLIO
+        [dictionary setObject:@"1" forKey:FLURRY_IS_KICKFOLIO];
+#endif
 #if FLURRY_ENABLED
         if ([dictionary count]>0) {
             [Flurry logEvent:eventName withParameters:dictionary];

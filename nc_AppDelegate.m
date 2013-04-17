@@ -134,13 +134,15 @@ FeedBackForm *fbView;
     return YES;    // If Automated testing with alternative persistent store, skip NC_AppDelegate altogether and do all setup in test area
 #endif
     [self unzipZipFileToApplicationDocumentDirectory];    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
-#if PREFS_DEFAULT_IS_PUSH_ENABLE
-    [[UIApplication sharedApplication]
-     registerForRemoteNotificationTypes:
-     (UIRemoteNotificationTypeAlert |
-      UIRemoteNotificationTypeBadge |
-      UIRemoteNotificationTypeSound)];
-#endif
+
+    [UserPreferance userPreferance];  // Saves default user preferences to server if needed
+    if ([[UserPreferance userPreferance] pushEnable]) {
+        [[UIApplication sharedApplication]
+         registerForRemoteNotificationTypes:
+         (UIRemoteNotificationTypeAlert |
+          UIRemoteNotificationTypeBadge |
+          UIRemoteNotificationTypeSound)];
+    }
    
     
     prefs = [NSUserDefaults standardUserDefaults];
@@ -289,8 +291,6 @@ FeedBackForm *fbView;
     // Create an instance of a UINavigationController and put toFromViewController as the first view
     @try {
         [self setUpTabViewController];
-        
-        [UserPreferance userPreferance];  // Saves default user preferences to server if needed
         
         //        [self.tabBarController.tabBar setSelectedImageTintColor:[UIColor redColor]];
         //        [self.tabBarController.tabBar setBackgroundImage:[UIImage imageNamed:@"img_tabbar.png"]];
