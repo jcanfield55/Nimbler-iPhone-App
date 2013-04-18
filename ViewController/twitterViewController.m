@@ -11,6 +11,7 @@
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "nc_AppDelegate.h"
 #import "QuartzCore/QuartzCore.h"
+#import "WebView.h"
 
 #define TWEETERVIEW_MANE        @"Advisories"
 #define TABLE_CELL              @"Cell"
@@ -27,7 +28,7 @@
 UITableViewCell *cell;
 NSUserDefaults *prefs;
 
-@synthesize mainTable,twitterData,dateFormatter,reload,isFromAppDelegate,isTwitterLiveData,noAdvisory,getTweetInProgress,timerForStopProcees,arrayTweet,strAllAdvisories;
+@synthesize mainTable,twitterData,dateFormatter,reload,isFromAppDelegate,isTwitterLiveData,noAdvisory,getTweetInProgress,timerForStopProcees,arrayTweet,strAllAdvisories,activityIndicatorView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -170,16 +171,35 @@ NSUserDefaults *prefs;
         NSDateFormatter *detailsTimeFormatter = [[NSDateFormatter alloc] init];
         [detailsTimeFormatter setTimeStyle:NSDateFormatterShortStyle];
         
-        [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
-        cell.textLabel.text = [tempArray objectAtIndex:0];
+        UILabel *lblTextLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 10, 300, 30)];
+        [lblTextLabel setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
+        [lblTextLabel setText:[tempArray objectAtIndex:0]];
+        [lblTextLabel setTextColor:[UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0]];
+        [lblTextLabel setBackgroundColor:[UIColor clearColor]];
+        [cell.contentView addSubview:lblTextLabel];
+        
         NSMutableString *strTweet = [[NSMutableString alloc] init];
-        for(int i=1;i<[tempArray count];i++){
-            [strTweet appendString:[tempArray objectAtIndex:i]];
+        for(int i = 1; i < [tempArray count]; i++){
+            NSString *tweetText = [[NSString alloc] initWithString:[tempArray objectAtIndex:i]];
+            if ([tweetText rangeOfString:@"http"].location != NSNotFound) {
+                tweetText = [NSString stringWithFormat:@"%@:",tweetText];
+            }
+            [strTweet appendString:tweetText];
         }
-        cell.detailTextLabel.text = strTweet;
-        cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
+        CGSize stringSize = [strTweet sizeWithFont:[UIFont systemFontOfSize:15.0] constrainedToSize:CGSizeMake(320, 9999) lineBreakMode:UILineBreakModeWordWrap];
+        UITextView *uiTextView=[[UITextView alloc] initWithFrame:CGRectMake(55, 37, 240, stringSize.height + 50)];
+        uiTextView.font = [UIFont systemFontOfSize:15.0];
+        uiTextView.text = strTweet;
+        uiTextView.textColor = [UIColor blackColor];
+        uiTextView.editable = NO;
+        uiTextView.dataDetectorTypes = UIDataDetectorTypeLink;
+        uiTextView.scrollEnabled = NO;
+        uiTextView.backgroundColor = [UIColor clearColor];
+        [cell.contentView addSubview:uiTextView];
+        
+        cell.textLabel.textColor = [UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0];
         cell.detailTextLabel.numberOfLines= MAXLINE_TAG;
-        cell.detailTextLabel.textColor = [UIColor GRAY_FONT_COLOR];
+        cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
         
         labelTime = (UILabel *)[cell viewWithTag:MAXLINE_TAG];
         CGRect   lbl3Frame = CGRectMake(245,3, 120, 25);
@@ -201,20 +221,20 @@ NSUserDefaults *prefs;
         return cell;
     }
     @catch (NSException *exception) {
-         logException(@"twitterViewController -> cellForRowAtIndexPath", @"", exception);
+        logException(@"twitterViewController -> cellForRowAtIndexPath", @"", exception);
     }
 }
 
 
-- (CGFloat)tableView:(UITableView *)aTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
+- (CGFloat)tableView:(UITableView *)aTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if([arrayTweet count] > indexPath.row){
         id key = [arrayTweet objectAtIndex:indexPath.row];
         NSString *tweetDetail = [(NSDictionary*)key objectForKey:TWEET];
-        UIFont *cellFont = [UIFont fontWithName:@"Helvetica" size:15];
+        UIFont *cellFont = [UIFont systemFontOfSize:15.0];
         CGSize constraintSize = CGSizeMake(320.0f, MAXFLOAT);
         CGSize labelSize = [tweetDetail sizeWithFont:cellFont constrainedToSize:constraintSize lineBreakMode:UILineBreakModeWordWrap];
-        return labelSize.height + 50;
+        return labelSize.height + 80;
     }
     return 50;
 }
@@ -433,6 +453,40 @@ NSUserDefaults *prefs;
 -(void)timerAction
 {
     timerForStopProcees = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(stopProcessForGettingTweets) userInfo:nil repeats:NO];
+}
+
+- (void)openUrl:(NSURL *)url {
+    UIViewController *webViewController = [[UIViewController alloc] init];
+    [webViewController.view addSubview:[WebView instance]];
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20];
+    [[WebView instance] loadRequest:request];
+    [WebView instance].delegate = self;
+    if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
+        CATransition *animation = [CATransition animation];
+        [animation setDuration:0.3];
+        [animation setType:kCATransitionPush];
+        [animation setSubtype:kCATransitionFromRight];
+        [animation setRemovedOnCompletion:YES];
+        [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+        [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+        [[self navigationController] pushViewController:webViewController animated:NO];
+    } else {
+        [[self navigationController] pushViewController:webViewController animated:YES];
+    }
+}
+
+
+-(void)webViewDidStartLoad:(UIWebView *)webView{
+    if(!activityIndicatorView){
+        activityIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(145, 168, 37, 37)];
+        [activityIndicatorView setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
+        [webView addSubview:activityIndicatorView];
+    }
+    [activityIndicatorView startAnimating];
+}
+
+-(void)webViewDidFinishLoad:(UIWebView *)webView{
+    [activityIndicatorView stopAnimating];
 }
 
 @end
