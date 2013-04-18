@@ -28,7 +28,7 @@
 UITableViewCell *cell;
 NSUserDefaults *prefs;
 
-@synthesize mainTable,twitterData,dateFormatter,reload,isFromAppDelegate,isTwitterLiveData,noAdvisory,getTweetInProgress,timerForStopProcees,arrayTweet,strAllAdvisories;
+@synthesize mainTable,twitterData,dateFormatter,reload,isFromAppDelegate,isTwitterLiveData,noAdvisory,getTweetInProgress,timerForStopProcees,arrayTweet,strAllAdvisories,activityIndicatorView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -177,23 +177,23 @@ NSUserDefaults *prefs;
         [lblTextLabel setTextColor:[UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0]];
         [lblTextLabel setBackgroundColor:[UIColor clearColor]];
         [cell.contentView addSubview:lblTextLabel];
-        //[[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
-        //cell.textLabel.text = [tempArray objectAtIndex:0];
+        
         NSMutableString *strTweet = [[NSMutableString alloc] init];
         for(int i = 1; i < [tempArray count]; i++){
             NSString *tweetText = [[NSString alloc] initWithString:[tempArray objectAtIndex:i]];
+            if ([tweetText rangeOfString:@"http"].location != NSNotFound) {
+                tweetText = [NSString stringWithFormat:@"%@:",tweetText];
+            } 
             [strTweet appendString:tweetText];
         }
-        CGSize stringSize = [strTweet sizeWithFont:[UIFont boldSystemFontOfSize:15] constrainedToSize:CGSizeMake(320, 9999) lineBreakMode:UILineBreakModeWordWrap];
-        if(stringSize.height > 70){
-            stringSize.height = 70;
-        }
-        UITextView *uiTextView=[[UITextView alloc] initWithFrame:CGRectMake(55, 37, 240, stringSize.height + 10)];
+        CGSize stringSize = [strTweet sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(320, 9999) lineBreakMode:UILineBreakModeWordWrap];
+        UITextView *uiTextView=[[UITextView alloc] initWithFrame:CGRectMake(55, 37, 240, stringSize.height + 50)];
         uiTextView.font = [UIFont systemFontOfSize:15.0];
         uiTextView.text = strTweet;
         uiTextView.textColor = [UIColor blackColor];
         uiTextView.editable = NO;
         uiTextView.dataDetectorTypes = UIDataDetectorTypeLink;
+        uiTextView.scrollEnabled = NO;
         uiTextView.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:uiTextView];
         
@@ -231,10 +231,10 @@ NSUserDefaults *prefs;
     if([arrayTweet count] > indexPath.row){
         id key = [arrayTweet objectAtIndex:indexPath.row];
         NSString *tweetDetail = [(NSDictionary*)key objectForKey:TWEET];
-        UIFont *cellFont = [UIFont fontWithName:@"Helvetica" size:15];
+        UIFont *cellFont = [UIFont systemFontOfSize:15];
         CGSize constraintSize = CGSizeMake(320.0f, MAXFLOAT);
         CGSize labelSize = [tweetDetail sizeWithFont:cellFont constrainedToSize:constraintSize lineBreakMode:UILineBreakModeWordWrap];
-        return labelSize.height + 50;
+        return labelSize.height + 80;
     }
     return 50;
 }
@@ -460,8 +460,10 @@ NSUserDefaults *prefs;
 - (void)openUrl:(NSURL *)url {
     UIViewController *webViewController = [[UIViewController alloc] init];
     [webViewController.view addSubview:[WebView instance]];
+    
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20];
     [[WebView instance] loadRequest:request];
+    [WebView instance].delegate = self;
     if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
         CATransition *animation = [CATransition animation];
         [animation setDuration:0.3];
@@ -476,4 +478,19 @@ NSUserDefaults *prefs;
     }
 }
 
+
+// WebView Delegate Methods
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView{
+    [activityIndicatorView stopAnimating];
+}
+
+- (void)webViewDidStartLoad:(UIWebView *)webView{
+    if(!activityIndicatorView){
+        activityIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(145, 168, 37, 37)];
+        [activityIndicatorView setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
+        [webView addSubview:activityIndicatorView];
+    }
+    [activityIndicatorView startAnimating];
+}
 @end
