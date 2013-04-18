@@ -243,6 +243,8 @@
 		8D7BE0A716D5EC2A0038FF26 /* img_travel.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D7BE0A516D5EC280038FF26 /* img_travel.png */; };
 		8D7BE0A816D5EC2A0038FF26 /* pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D7BE0A616D5EC290038FF26 /* pressed.png */; };
 		8D7BE0AA16D6187B0038FF26 /* pressed1.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D7BE0A916D6187A0038FF26 /* pressed1.png */; };
+		8D8B10CD1720268B0093E110 /* NimblerApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B10CC1720268B0093E110 /* NimblerApplication.m */; };
+		8D8B10D0172026970093E110 /* WebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B10CF172026970093E110 /* WebView.m */; };
 		8D8DF4AD1647BCFB00BC2A34 /* bart-station-background.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D8DF4AB1647BCFB00BC2A34 /* bart-station-background.json */; };
 		8D8DF4AE1647BCFB00BC2A34 /* caltrain-station-background.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D8DF4AC1647BCFB00BC2A34 /* caltrain-station-background.json */; };
 		8D93604B162FFC4500084E8E /* Icon_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D93604A162FFC4500084E8E /* Icon_ipad.png */; };
@@ -631,6 +633,10 @@
 		8D7BE0A516D5EC280038FF26 /* img_travel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_travel.png; sourceTree = "<group>"; };
 		8D7BE0A616D5EC290038FF26 /* pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pressed.png; sourceTree = "<group>"; };
 		8D7BE0A916D6187A0038FF26 /* pressed1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pressed1.png; sourceTree = "<group>"; };
+		8D8B10CB1720268B0093E110 /* NimblerApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NimblerApplication.h; sourceTree = SOURCE_ROOT; };
+		8D8B10CC1720268B0093E110 /* NimblerApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NimblerApplication.m; sourceTree = SOURCE_ROOT; };
+		8D8B10CE172026970093E110 /* WebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebView.h; sourceTree = "<group>"; };
+		8D8B10CF172026970093E110 /* WebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebView.m; sourceTree = "<group>"; };
 		8D8DF4AB1647BCFB00BC2A34 /* bart-station-background.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "bart-station-background.json"; sourceTree = "<group>"; };
 		8D8DF4AC1647BCFB00BC2A34 /* caltrain-station-background.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "caltrain-station-background.json"; sourceTree = "<group>"; };
 		8D93604A162FFC4500084E8E /* Icon_ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon_ipad.png; sourceTree = "<group>"; };
@@ -725,6 +731,8 @@
 		520FB107162603090083F143 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				8D8B10CE172026970093E110 /* WebView.h */,
+				8D8B10CF172026970093E110 /* WebView.m */,
 				520FB1681626036C0083F143 /* LocationPickerViewController.h */,
 				520FB1691626036C0083F143 /* LocationPickerViewController.m */,
 				520FB16A1626036C0083F143 /* LocationPickerViewController.xib */,
@@ -1136,6 +1144,8 @@
 		52CF43A714BDF2F9000565D6 /* Nimbler */ = {
 			isa = PBXGroup;
 			children = (
+				8D8B10CB1720268B0093E110 /* NimblerApplication.h */,
+				8D8B10CC1720268B0093E110 /* NimblerApplication.m */,
 				8DC019F71627F4BE004200E5 /* nc_AppDelegate.h */,
 				8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */,
 				520FB289162604950083F143 /* SupportingFiles */,
@@ -1628,6 +1638,8 @@
 				8D17871116F87FDA00C2EAD5 /* IntermediateStops.m in Sources */,
 				525EC1C1170006B6009ACE5A /* MutableBoolean.m in Sources */,
 				8D58E1FC17142ED30011A8C2 /* nc_AppDelegate.m in Sources */,
+				8D8B10CD1720268B0093E110 /* NimblerApplication.m in Sources */,
+				8D8B10D0172026970093E110 /* WebView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
