@@ -115,7 +115,7 @@ typedef enum {
 - (int) calculateArrivalTimeFlag:(int)timeDifference;
 
 // set timediffInMins,realStartTime,realEndTime and arrivalFlag for leg from realTime data.
-- (void) setRealTimeParametersUsingEpochTime:(double)epochTime;
+//- (void) setRealTimeParametersUsingEpochTime:(double)epochTime;
 
 - (BOOL) isEquivalentModeAndStopsAndRouteAs:(Leg *)leg;
 

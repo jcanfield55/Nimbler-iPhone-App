@@ -664,15 +664,15 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 }
 
 // set timediffInMins,realStartTime,realEndTime and arrivalFlag for leg from realTime data.
-- (void) setRealTimeParametersUsingEpochTime:(double)epochTime{
-    int timeDiffs = [self calculatetimeDiffInMins:epochTime];
-    self.arrivalFlag = [NSString stringWithFormat:@"%d",[self calculateArrivalTimeFlag:timeDiffs]];
-    if(timeDiffs < 0)
-        timeDiffs = -timeDiffs;
-    self.timeDiffInMins = [NSString stringWithFormat:@"%d",timeDiff];
-    self.realStartTime = [NSDate dateWithTimeIntervalSince1970:(epochTime/1000.0)];
-    self.arrivalTime = [NSDate dateWithTimeIntervalSince1970:(epochTime/1000.0)];
-    self.realEndTime = [[self endTime] dateByAddingTimeInterval:([self.timeDiffInMins intValue]*60*1000)];
-}
+//- (void) setRealTimeParametersUsingEpochTime:(double)epochTime{
+//    int timeDiffs = [self calculatetimeDiffInMins:epochTime];
+//    self.arrivalFlag = [NSString stringWithFormat:@"%d",[self calculateArrivalTimeFlag:timeDiffs]];
+//    if(timeDiffs < 0)
+//        timeDiffs = -timeDiffs;
+//    self.timeDiffInMins = [NSString stringWithFormat:@"%d",timeDiff];
+//    self.realStartTime = [NSDate dateWithTimeIntervalSince1970:(epochTime/1000.0)];
+//    self.arrivalTime = [NSDate dateWithTimeIntervalSince1970:(epochTime/1000.0)];
+//    self.realEndTime = [[self endTime] dateByAddingTimeInterval:([self.timeDiffInMins intValue]*60*1000)];
+//}
 
 @end

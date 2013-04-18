@@ -95,10 +95,10 @@
                       replaceStringsArray:(NSArray *)replaceStringsArray
                                   address:(NSString *)address;
 
-- (NSArray *)searchedStationsFromRawAddress:(NSString *)address
-                         searchStringsArray:(NSArray *)searchStringsArray
-                        replaceStringsArray:(NSArray *)replaceStringsArray
-                     agencyNameNotToInclude:(NSString *)agencyNameNotToInclude;
+//- (NSArray *)searchedStationsFromRawAddress:(NSString *)address
+//                         searchStringsArray:(NSArray *)searchStringsArray
+//                        replaceStringsArray:(NSArray *)replaceStringsArray
+//                     agencyNameNotToInclude:(NSString *)agencyNameNotToInclude;
 
 - (NSString *) rawAddressWithOutAgencyName:(NSString *)address SearchStringArray:(NSArray *)searchStringArray;
 

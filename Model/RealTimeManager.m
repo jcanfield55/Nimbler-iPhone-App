@@ -98,7 +98,14 @@ static RealTimeManager* realTimeManager;
                         else{
                             tripId = @"";
                         }
-                        NSDictionary *dicLegData = [NSDictionary dictionaryWithObjectsAndKeys:leg.tripId,@"tripId",strRouteLongName,@"routeLongName",strRouteShortName,@"routeShortName",[NSNumber numberWithDouble:startDate],@"startTime",[NSNumber numberWithDouble:endDate],@"endTime",leg.routeId,@"routeId",dicTo,@"to",dicFrom,@"from",leg.mode,@"mode",leg.agencyId,@"agencyId",leg.agencyName,@"agencyName",leg.route,@"route",leg.headSign,@"headsign",leg.legId,@"id", nil];
+                        NSString *headSign;
+                        if(leg.headSign){
+                            headSign = leg.headSign;
+                        }
+                        else{
+                            headSign = @"";
+                        }
+                        NSDictionary *dicLegData = [NSDictionary dictionaryWithObjectsAndKeys:tripId,@"tripId",strRouteLongName,@"routeLongName",strRouteShortName,@"routeShortName",[NSNumber numberWithDouble:startDate],@"startTime",[NSNumber numberWithDouble:endDate],@"endTime",leg.routeId,@"routeId",dicTo,@"to",dicFrom,@"from",leg.mode,@"mode",leg.agencyId,@"agencyId",leg.agencyName,@"agencyName",leg.route,@"route",headSign,@"headsign",leg.legId,@"id", nil];
 //                        NIMLOG_PERF2(@"fromStopId->%@, toStopId->%@, fromStopName->%@, toStopName->%@, legId->%@, routeId->%@, tripId->%@,",leg.from.stopId,leg.to.stopId,leg.from.name,leg.to.name,leg.legId,leg.routeId,leg.tripId);
 //                        NIMLOG_PERF2(@"-----------------------------------------");
                         [arrLegs addObject:dicLegData];
