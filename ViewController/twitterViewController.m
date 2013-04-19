@@ -190,7 +190,7 @@ NSUserDefaults *prefs;
         UITextView *uiTextView=[[UITextView alloc] initWithFrame:CGRectMake(55, 37, 240, stringSize.height + 50)];
         uiTextView.font = [UIFont systemFontOfSize:15.0];
         uiTextView.text = strTweet;
-        uiTextView.textColor = [UIColor blackColor];
+        uiTextView.textColor = [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
         uiTextView.editable = NO;
         uiTextView.dataDetectorTypes = UIDataDetectorTypeLink;
         uiTextView.scrollEnabled = NO;
@@ -455,8 +455,19 @@ NSUserDefaults *prefs;
     timerForStopProcees = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(stopProcessForGettingTweets) userInfo:nil repeats:NO];
 }
 
+- (void) backToTwitterView{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 - (void)openUrl:(NSURL *)url {
     UIViewController *webViewController = [[UIViewController alloc] init];
+    UIButton * btnGoToNimbler = [[UIButton alloc] initWithFrame:CGRectMake(0,0,65,34)];
+    [btnGoToNimbler addTarget:self action:@selector(backToTwitterView) forControlEvents:UIControlEventTouchUpInside];
+    [btnGoToNimbler setBackgroundImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
+    
+    UIBarButtonItem *backTonimbler = [[UIBarButtonItem alloc] initWithCustomView:btnGoToNimbler];
+    webViewController.navigationItem.leftBarButtonItem = backTonimbler;
+    
     [webViewController.view addSubview:[WebView instance]];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20];
     [[WebView instance] loadRequest:request];

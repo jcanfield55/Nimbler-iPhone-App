@@ -579,6 +579,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     btnGoToNimbler.accessibilityLabel =BACK_TO_NIMBLER_BUTTON;
     
     UIBarButtonItem *backTonimbler = [[UIBarButtonItem alloc] initWithCustomView:btnGoToNimbler];
+    
     self.navigationItem.leftBarButtonItem = backTonimbler;
     
     [self hideUnUsedTableViewCell];

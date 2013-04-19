@@ -80,6 +80,7 @@
 @property (strong, nonatomic) CustomBadge *twitterCount;
 @property (nonatomic) BOOL isTwitterView;
 @property (nonatomic) BOOL isToFromView;
+@property (nonatomic) BOOL isFeedBackView;
 @property (strong, nonatomic) Location *toLoc;
 @property (strong, nonatomic) Location *fromLoc;
 @property (nonatomic) BOOL isFromBackground;

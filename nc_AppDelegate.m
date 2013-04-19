@@ -90,6 +90,7 @@ static nc_AppDelegate *appDelegate;
 @synthesize gtfsParser;
 @synthesize stations;
 @synthesize updateDeviceTokenURL;
+@synthesize isFeedBackView;
 
 // Feedback parameters
 @synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId;
@@ -133,8 +134,10 @@ FeedBackForm *fbView;
 #if AUTOMATED_TESTING_SKIP_NCAPPDELEGATE
     return YES;    // If Automated testing with alternative persistent store, skip NC_AppDelegate altogether and do all setup in test area
 #endif
+    
     [self unzipZipFileToApplicationDocumentDirectory];    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
 
+    prefs = [NSUserDefaults standardUserDefaults];
     [UserPreferance userPreferance];  // Saves default user preferences to server if needed
     if ([[UserPreferance userPreferance] pushEnable]) {
         [[UIApplication sharedApplication]
@@ -143,9 +146,9 @@ FeedBackForm *fbView;
           UIRemoteNotificationTypeBadge |
           UIRemoteNotificationTypeSound)];
     }
-   
-    
-    prefs = [NSUserDefaults standardUserDefaults];
+    else{
+        [[UserPreferance userPreferance] performSelector:@selector(saveToServer) withObject:nil afterDelay:0.0];
+    }
     
     // US-163 set-up for feedback reminders (also DE-238 fix)
     NSDate *date = [NSDate date];
@@ -524,16 +527,15 @@ FeedBackForm *fbView;
     // Previously comparing string with date so changed the logic to compare date.
     
     // Part Of DE-286 Fixed.
+    NSString *deviceToken = [[nc_AppDelegate sharedInstance] deviceTokenString];
+    NSString *dummyToken = [[NSUserDefaults standardUserDefaults] objectForKey:DUMMY_TOKEN_ID];
     BOOL isTokenUpdated = [[NSUserDefaults standardUserDefaults] boolForKey:DEVICE_TOKEN_UPDATED];
-    if(!isTokenUpdated && [[NSUserDefaults standardUserDefaults] objectForKey:DUMMY_TOKEN_ID]){
+    if(!isTokenUpdated && dummyToken && ![deviceToken isEqualToString:dummyToken]){
         [self updateDeviceToken];
     }
     
     
     NSDate *todayDate = dateOnlyFromDate([NSDate date]);
-    //    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    //    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
-    //    NSString *strTodayDate = [dateFormatter stringFromDate:todayDate];
     NSDate *currentDate = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_DATE];
     if(!currentDate){
         [[nc_AppDelegate sharedInstance] performSelector:@selector(updateTime) withObject:nil afterDelay:0.5];
@@ -568,7 +570,7 @@ FeedBackForm *fbView;
         [toFromViewController.toTableVC markAndUpdateSelectedLocation:self.toLoc];
         [toFromViewController.fromTableVC markAndUpdateSelectedLocation:self.fromLoc];
     }
-    if(isFromBackground && !self.isToFromView){
+    if(isFromBackground && !self.isToFromView && !self.isTwitterView && !self.isSettingView && !self.isFeedBackView && !self.isSettingDetailView){
         toFromViewController.routeOptionsVC.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController.routeOptionsVC selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
         
     }
@@ -1017,9 +1019,9 @@ FeedBackForm *fbView;
         if([prefs objectForKey:DUMMY_TOKEN_ID]){
             [self updateDeviceToken];
         }
+        [[UserPreferance userPreferance] performSelector:@selector(saveToServer) withObject:nil afterDelay:3.0];
         NIMLOG_PERF2(@"deviceTokenString: %@",token);
         [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
-        [[UserPreferance userPreferance] performSelector:@selector(saveToServer) withObject:nil afterDelay:3.0];
         logEvent(FLURRY_PUSH_AVAILABLE,
                  FLURRY_NOTIFICATION_TOKEN, token,
                  nil, nil, nil, nil, nil, nil);
@@ -1033,13 +1035,12 @@ FeedBackForm *fbView;
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
     @try {
-        [self updateDeviceToken];
         NSString *str = [NSString stringWithFormat: @"Error: %@", err];
         NIMLOG_ERR1(@"didFail To Register For RemoteNotifications With Error: %@",str);
         prefs = [NSUserDefaults standardUserDefaults];
-        NSString *dummyToken = [NSString stringWithFormat:@"SF%@",generateRandomString(64)];
-        //NSString  *token = @"26d906c5c273446d5f40d2c173ddd3f6869b2666b1c7afd5173d69b6629def70";
-        [prefs setObject:dummyToken forKey:DUMMY_TOKEN_ID];
+        //NSString *dummyToken = [NSString stringWithFormat:@"SF%@",generateRandomString(64)];
+        NSString  *token = @"26d906c5c273446d5f40d2c173ddd3f6869b2666b1c7afd5173d69b6629def70";
+        [prefs setObject:token forKey:DEVICE_TOKEN];
         [[UserPreferance userPreferance] performSelector:@selector(saveToServer) withObject:nil afterDelay:2.0];
         //    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Push Alert" message:@"your device couldn't connect with apple. Please reinstall application" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         //    [alert show];

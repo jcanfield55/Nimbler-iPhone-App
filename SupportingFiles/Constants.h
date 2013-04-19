@@ -20,8 +20,22 @@
 #define GEO_RESPONSE_URL      @"http://maps.googleapis.com/maps/api/geocode/"
 #define TEST_GEO_RESPONSE_URL  @"http://localhost:8080/TPServer/ws/mockgeolocation/"
 
-#define TRIP_PROCESS_URL    @"http://23.23.210.156:8080/TPServer/ws/"
-//#define TRIP_PROCESS_URL      @"http://192.168.2.57:8080/TPServer/ws/"
+// To select server URL select 1 otherwise select 0,At a time only one of below must be 1.
+#define PRODUCTION_URL  1
+#define STAGGING_URL    0
+#define LOCAL_URL       0
+
+#if PRODUCTION_URL
+    #define TRIP_PROCESS_URL    @"http://23.23.210.156:8080/TPServer/ws/"
+#endif
+
+#if STAGGING_URL
+    #define TRIP_PROCESS_URL    @"http://23.23.210.156:7070/TPServer/ws/"
+#endif
+
+#if LOCAL_URL
+    #define TRIP_PROCESS_URL      @"http://192.168.2.57:8080/TPServer/ws/"
+#endif
 
 #define TEST_TRIP_PROCESS_URL @"http://localhost:8080/TPServer/ws/"  // TP server for automated tests
 

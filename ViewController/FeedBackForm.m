@@ -126,6 +126,7 @@ NSUserDefaults *prefs;
 {
     [super viewWillAppear:animated];
     logEvent(FLURRY_FEEDBACK_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
+    [nc_AppDelegate sharedInstance].isFeedBackView = YES;
 
     btnSubmitFeedback.layer.cornerRadius = CORNER_RADIUS_SMALL;
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -144,6 +145,7 @@ NSUserDefaults *prefs;
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    [nc_AppDelegate sharedInstance].isFeedBackView = NO;
 }
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
 {
