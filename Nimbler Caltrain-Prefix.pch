@@ -12,7 +12,7 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
     #import <CoreData/CoreData.h>
-    #import "Constants.h"
+    #import "ConstantsCaltrain.h"
     #import "UIConstants.h"
     #import "TEXTConstant.h"
     #import "CustomBadge.h"
@@ -24,4 +24,5 @@
     #import "UIAutomationConstants.h"
     #import "ZipArchive.h"
     #import <FacebookSDK/FacebookSDK.h>
+    #import "LocalConstants.h"
 #endif

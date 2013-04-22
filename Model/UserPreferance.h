@@ -19,6 +19,7 @@ BOOL tpStrToBool(NSObject* stringValue);  // Function to translate from settings
 @property(nonatomic) BOOL pushEnable;
 @property(nonatomic) int pushNotificationThreshold;
 @property(nonatomic) double walkDistance;
+@property(nonatomic) BOOL wMataAdvisories;
 @property(nonatomic) BOOL sfMuniAdvisories;
 @property(nonatomic) BOOL bartAdvisories;
 @property(nonatomic) BOOL acTransitAdvisories;

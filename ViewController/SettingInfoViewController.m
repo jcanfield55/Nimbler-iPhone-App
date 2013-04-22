@@ -173,6 +173,9 @@ UIImage *imageDetailDisclosure;
     [self.sliderMaxWalkDistance addSubview:lblSliderMaxWalkDistanceValue];
     
     [switchPushNotification setOn:userPrefs.pushEnable];
+    if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
+        [switchPushNotification setUserInteractionEnabled:NO];
+    }
 }
 
 - (void)viewDidUnload{
@@ -346,46 +349,56 @@ UIImage *imageDetailDisclosure;
     NSMutableString *strDetailTextLabel = [NSMutableString stringWithCapacity:20];
     UserPreferance* userPrefs = [UserPreferance userPreferance];
     if(indexPath.section == SETTINGS_ADVISORY_SECTION_NUM){
-        if(userPrefs.sfMuniAdvisories &&
-           userPrefs.bartAdvisories &&
-           userPrefs.acTransitAdvisories &&
-           userPrefs.caltrainAdvisories) {
-            [strDetailTextLabel appendString:LABEL_ALL];
+        if ([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]) {
+            if(userPrefs.wMataAdvisories) {
+                [strDetailTextLabel appendString:LABEL_WMATA];
+            }
+            else if (!userPrefs.wMataAdvisories) {
+                [strDetailTextLabel appendString:LABEL_NONE];
+            }
         }
-        else if (!userPrefs.sfMuniAdvisories &&
-                 !userPrefs.bartAdvisories &&
-                 !userPrefs.acTransitAdvisories &&
-                 !userPrefs.caltrainAdvisories) {
-            [strDetailTextLabel appendString:LABEL_NONE];
-        } else { // Some combination of agencies
-            int agencyCount=0;
-            if (userPrefs.sfMuniAdvisories) {
-                [strDetailTextLabel appendString:LABEL_SFMUNI];
-                agencyCount++;
+        else{
+            if(userPrefs.sfMuniAdvisories &&
+               userPrefs.bartAdvisories &&
+               userPrefs.acTransitAdvisories &&
+               userPrefs.caltrainAdvisories) {
+                [strDetailTextLabel appendString:LABEL_ALL];
             }
-            if (userPrefs.bartAdvisories) {
-                if (agencyCount > 0) {
-                    [strDetailTextLabel appendFormat:@" + %@",LABEL_BART];
-                } else {
-                    [strDetailTextLabel appendFormat:LABEL_BART];
+            else if (!userPrefs.sfMuniAdvisories &&
+                     !userPrefs.bartAdvisories &&
+                     !userPrefs.acTransitAdvisories &&
+                     !userPrefs.caltrainAdvisories) {
+                [strDetailTextLabel appendString:LABEL_NONE];
+            } else { // Some combination of agencies
+                int agencyCount=0;
+                if (userPrefs.sfMuniAdvisories) {
+                    [strDetailTextLabel appendString:LABEL_SFMUNI];
+                    agencyCount++;
                 }
-                agencyCount++;
-            }
-            if (userPrefs.acTransitAdvisories) {
-                if (agencyCount > 0) {
-                    [strDetailTextLabel appendFormat:@" + %@",LABEL_ACTRANSIT];
-                } else {
-                    [strDetailTextLabel appendFormat:LABEL_ACTRANSIT];
+                if (userPrefs.bartAdvisories) {
+                    if (agencyCount > 0) {
+                        [strDetailTextLabel appendFormat:@" + %@",LABEL_BART];
+                    } else {
+                        [strDetailTextLabel appendFormat:LABEL_BART];
+                    }
+                    agencyCount++;
                 }
-                agencyCount++;
-            }
-            if (userPrefs.caltrainAdvisories) {
-                if (agencyCount > 0) {
-                    [strDetailTextLabel appendFormat:@" + %@",LABEL_CALTRAIN];
-                } else {
-                    [strDetailTextLabel appendFormat:LABEL_CALTRAIN];
+                if (userPrefs.acTransitAdvisories) {
+                    if (agencyCount > 0) {
+                        [strDetailTextLabel appendFormat:@" + %@",LABEL_ACTRANSIT];
+                    } else {
+                        [strDetailTextLabel appendFormat:LABEL_ACTRANSIT];
+                    }
+                    agencyCount++;
                 }
-                agencyCount++;
+                if (userPrefs.caltrainAdvisories) {
+                    if (agencyCount > 0) {
+                        [strDetailTextLabel appendFormat:@" + %@",LABEL_CALTRAIN];
+                    } else {
+                        [strDetailTextLabel appendFormat:LABEL_CALTRAIN];
+                    }
+                    agencyCount++;
+                }
             }
         }
     }

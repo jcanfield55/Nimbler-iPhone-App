@@ -260,7 +260,11 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     int nRowCount = 4;
     if(nSettingRow == N_SETTINGS_ROW_ADVISORY){
-        nRowCount = N_SETTINGS_ADVISORY_ROWS;
+        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
+            nRowCount = WMATA_SETTINGS_ADVISORIES_ROWS;
+        }else{
+            nRowCount = N_SETTINGS_ADVISORY_ROWS;
+        }
     }
     else if(nSettingRow == N_SETTINGS_ROW_PUSH_SOUND){
         nRowCount = N_SETTINGS_PUSH_SOUND_ROWS;
@@ -301,21 +305,27 @@
     [cell.textLabel setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
     UserPreferance* userPrefs = [UserPreferance userPreferance];
     if(nSettingRow == N_SETTINGS_ROW_ADVISORY){
-        if(indexPath.row == SETTINGS_ADVISORY_SFMUNI_ROW){
-            cell.textLabel.text = SFMUNI_ADVISORIES;
-            cell.accessoryType = (userPrefs.sfMuniAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
+            cell.textLabel.text = WMATA_ADVISORIES;
+            cell.accessoryType = (userPrefs.wMataAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
         }
-        else if(indexPath.row == SETTINGS_ADVISORY_BART_ROW){
-            cell.textLabel.text = BART_ADVISORIES;
-            cell.accessoryType = (userPrefs.bartAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
-        }
-        else if(indexPath.row == SETTINGS_ADVISORY_ACTRANSIT_ROW){
-            cell.textLabel.text = ACTRANSIT_ADVISORIES;
-            cell.accessoryType = (userPrefs.acTransitAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
-        }
-        else if(indexPath.row == SETTINGS_ADVISORY_CALTRAIN_ROW){
-            cell.textLabel.text = CALTRAIN_ADVISORIES;
-            cell.accessoryType = (userPrefs.caltrainAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+        else{
+            if(indexPath.row == SETTINGS_ADVISORY_SFMUNI_ROW){
+                cell.textLabel.text = SFMUNI_ADVISORIES;
+                cell.accessoryType = (userPrefs.sfMuniAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+            }
+            else if(indexPath.row == SETTINGS_ADVISORY_BART_ROW){
+                cell.textLabel.text = BART_ADVISORIES;
+                cell.accessoryType = (userPrefs.bartAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+            }
+            else if(indexPath.row == SETTINGS_ADVISORY_ACTRANSIT_ROW){
+                cell.textLabel.text = ACTRANSIT_ADVISORIES;
+                cell.accessoryType = (userPrefs.acTransitAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+            }
+            else if(indexPath.row == SETTINGS_ADVISORY_CALTRAIN_ROW){
+                cell.textLabel.text = CALTRAIN_ADVISORIES;
+                cell.accessoryType = (userPrefs.caltrainAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+            }
         }
     }
     else if(nSettingRow == N_SETTINGS_ROW_PUSH_SOUND){
@@ -467,53 +477,69 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     UserPreferance* userPrefs = [UserPreferance userPreferance];
     if(nSettingRow == N_SETTINGS_ROW_ADVISORY){
-        if(indexPath.row == SETTINGS_ADVISORY_SFMUNI_ROW){
-            if(userPrefs.sfMuniAdvisories){
-                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryNone;
-                userPrefs.sfMuniAdvisories = false;
-            }
-            else{
-                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryCheckmark;
-                userPrefs.sfMuniAdvisories = true;
-            }
-        }
-        if(indexPath.row == SETTINGS_ADVISORY_BART_ROW){
-            if(userPrefs.bartAdvisories){
-                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryNone;
-                userPrefs.bartAdvisories = false;
-            }
-            else{
-                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryCheckmark;
-                userPrefs.bartAdvisories = true;
+        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
+            if(indexPath.row == SETTINGS_ADVISORY_WMATA_ROW){
+                if(userPrefs.wMataAdvisories){
+                    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    userPrefs.wMataAdvisories = false;
+                }
+                else{
+                    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                    cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                    userPrefs.wMataAdvisories = true;
+                }
             }
         }
-        if(indexPath.row == SETTINGS_ADVISORY_ACTRANSIT_ROW){
-            if(userPrefs.acTransitAdvisories){
-                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryNone;
-                userPrefs.acTransitAdvisories = false;
+        else{
+            if(indexPath.row == SETTINGS_ADVISORY_SFMUNI_ROW){
+                if(userPrefs.sfMuniAdvisories){
+                    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    userPrefs.sfMuniAdvisories = false;
+                }
+                else{
+                    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                    cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                    userPrefs.sfMuniAdvisories = true;
+                }
             }
-            else{
-                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryCheckmark;
-                userPrefs.acTransitAdvisories = true;
+            if(indexPath.row == SETTINGS_ADVISORY_BART_ROW){
+                if(userPrefs.bartAdvisories){
+                    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    userPrefs.bartAdvisories = false;
+                }
+                else{
+                    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                    cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                    userPrefs.bartAdvisories = true;
+                }
             }
-        }
-        if(indexPath.row == SETTINGS_ADVISORY_CALTRAIN_ROW){
-            if(userPrefs.caltrainAdvisories){
-                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryNone;
-                userPrefs.caltrainAdvisories = false;
+            if(indexPath.row == SETTINGS_ADVISORY_ACTRANSIT_ROW){
+                if(userPrefs.acTransitAdvisories){
+                    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    userPrefs.acTransitAdvisories = false;
+                }
+                else{
+                    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                    cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                    userPrefs.acTransitAdvisories = true;
+                }
             }
-            else{
-                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryCheckmark;
-                userPrefs.caltrainAdvisories = true;
-            }
+            if(indexPath.row == SETTINGS_ADVISORY_CALTRAIN_ROW){
+                if(userPrefs.caltrainAdvisories){
+                    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    userPrefs.caltrainAdvisories = false;
+                }
+                else{
+                    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                    cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                    userPrefs.caltrainAdvisories = true;
+                }
+            } 
         }
         [self.tblDetailSetting reloadData];
     }

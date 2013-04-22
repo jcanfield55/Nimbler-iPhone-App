@@ -24,5 +24,5 @@
                #import "UIAutomationConstants.h"
                #import "ZipArchive.h"
                #import <FacebookSDK/FacebookSDK.h>
-               #import "LocalConstants.h"
+               #import "LocalConstantsDC.h"
 #endif

@@ -30,6 +30,7 @@
                                          "short_name" : "94612"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "12th St Oakland City Center BART, Oakland, CA 94612, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart01",
@@ -91,6 +92,7 @@
                                          "short_name" : "94103"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "16th St Mission BART, 2000 Mission St, San Francisco, CA 94103, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart02",
@@ -144,6 +146,7 @@
                                          "short_name" : "94612"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "19th St Oakland BART, Oakland, CA 94612, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart03",
@@ -197,6 +200,7 @@
                                          "short_name" : "94110"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "24th St Mission BART, San Francisco, CA 94110, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart04",
@@ -250,6 +254,7 @@
                                          "short_name" : "94703"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Ashby BART, Berkeley, CA 94703, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart05",
@@ -303,6 +308,7 @@
                                          "short_name" : "94112"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Balboa Park BART, San Francisco, CA 94112, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart06",
@@ -352,6 +358,7 @@
                                          "short_name" : "94580"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Bay Fair BART, San Leandro, CA 94580, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart07",
@@ -401,6 +408,7 @@
                                          "short_name" : "94546"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Castro Valley BART, CA 94546, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart08",
@@ -454,6 +462,7 @@
                                          "short_name" : "94142"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Civic Center\/UN Plaza BART, San Francisco, CA 94142, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart09",
@@ -503,6 +512,7 @@
                                          "short_name" : "94014"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Colma BART, Original Daly City, CA 94014, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart11",
@@ -552,6 +562,7 @@
                                          "short_name" : "94520"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Concord BART, Concord CA 94520, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart12",
@@ -605,6 +616,7 @@
                                          "short_name" : "94014"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Daly City BART, CA 94014, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart13",
@@ -658,6 +670,7 @@
                                          "short_name" : "94704"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Downtown Berkeley BART, Berkeley, CA 94704, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart14",
@@ -707,6 +720,7 @@
                                          "short_name" : "94588"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Dublin\/Pleasanton BART, Dublin, CA 94588, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart15",
@@ -756,6 +770,7 @@
                                          "short_name" : "94530"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "El Cerrito del Norte BART, El Cerrito, CA 94530, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart16",
@@ -813,6 +828,7 @@
                                          "short_name" : "94530"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "El Cerrito Plaza BART, 6699 Fairmount Ave, El Cerrito, CA 94530, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart17",
@@ -866,6 +882,7 @@
                                          "short_name" : "94111"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Embarcadero BART, San Francisco, CA 94111, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart18",
@@ -919,6 +936,7 @@
                                          "short_name" : "94536"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Fremont BART, Fremont, CA 94536, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart19",
@@ -972,6 +990,7 @@
                                          "short_name" : "94601"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Fruitvale BART, Oakland, CA 94601, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart20",
@@ -1025,6 +1044,7 @@
                                          "short_name" : "94131"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Glen Park BART, San Francisco, CA 94131, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart21",
@@ -1074,6 +1094,7 @@
                                          "short_name" : "94541"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Hayward BART, Hayward, CA 94541, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart22",
@@ -1123,6 +1144,7 @@
                                          "short_name" : "94519"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "North Concord\/Martinez BART, Concord, CA 94519, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart23",
@@ -1184,6 +1206,7 @@
                                          "short_name" : "94549"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Lafayette BART, 3601 Deer Hill Rd, Lafayette, CA 94549, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart24",
@@ -1237,6 +1260,7 @@
                                          "short_name" : "94607"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Lake Merritt BART, Oakland, CA 94607, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart25",
@@ -1290,6 +1314,7 @@
                                          "short_name" : "94609"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "MacArthur BART, Oakland, CA 94609, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart26",
@@ -1339,6 +1364,7 @@
                                          "short_name" : "94030"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Millbrae BART, Millbrae, CA 94030, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart27",
@@ -1392,6 +1418,7 @@
                                          "short_name" : "94120"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Montgomery St BART, San Francisco, CA 94104, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart28",
@@ -1445,6 +1472,7 @@
                                          "short_name" : "94702"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "North Berkeley BART, Berkeley, CA 94702, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart29",
@@ -1498,6 +1526,7 @@
                                          "short_name" : "94563"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Orinda BART, Orinda, CA 94563, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart30",
@@ -1547,6 +1576,7 @@
                                          "short_name" : "94565"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Pittsburg\/Bay Point BART, Pittsburg, CA 94565, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart31",
@@ -1596,6 +1626,7 @@
                                          "short_name" : "94597"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Pleasant Hill\/Contra Costa Centre BART, Contra Costa Centre Transit Village, CA 94597, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart32",
@@ -1649,6 +1680,7 @@
                                          "short_name" : "94142"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Powell St BART, San Francisco, CA 94102, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart33",
@@ -1702,6 +1734,7 @@
                                          "short_name" : "94801"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Richmond BART, Richmond, CA 94801, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart34",
@@ -1763,6 +1796,7 @@
                                          "short_name" : "94618"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Rockridge BART, 5660 College Ave, Oakland, CA 94618, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart35",
@@ -1812,6 +1846,7 @@
                                          "short_name" : "94066"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "San Bruno BART, San Bruno, CA 94066, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart36",
@@ -1857,6 +1892,7 @@
                                          "short_name" : "94030"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "San Francisco Int'l Airport BART, San Francisco, California 94030, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart37",
@@ -1910,6 +1946,7 @@
                                          "short_name" : "94577"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "San Leandro BART, San Leandro, CA 94577, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart38",
@@ -1963,6 +2000,7 @@
                                          "short_name" : "94544"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "South Hayward BART, Hayward, CA 94544, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart39",
@@ -2016,6 +2054,7 @@
                                          "short_name" : "94080"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "South San Francisco BART, South San Francisco, CA 94080, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart40",
@@ -2065,6 +2104,7 @@
                                          "short_name" : "94587"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Union City BART, Union City, CA 94587, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart41",
@@ -2114,6 +2154,7 @@
                                          "short_name" : "94596"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Walnut Creek BART, Walnut Creek, CA 94596, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart42",
@@ -2171,6 +2212,7 @@
                                          "short_name" : "94588"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "West Dublin\/Pleasanton BART, 6501 Golden Gate Dr, Pleasanton, CA 94588, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart43",
@@ -2234,6 +2276,7 @@
                                          "short_name" : "94607"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "West Oakland BART, Oakland, CA 94607, USA",
                  "types" : ["subway_station", "train_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart44",
@@ -2287,6 +2330,7 @@
                                          "short_name" : "94621"
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Oakland Airport Terminals AirBART, Oakland International Airport (OAK), Oakland, CA 94621, USA",
                  "types" : ["bus_station", "transit_station", "establishment"],
                  "memberOfList" : "Bart45",
@@ -2362,6 +2406,7 @@
                                                     ]
                                          }
                                          ],
+                 "excludeFromSearch":0,
                  "formatted_address" : "Coliseum/Oakland Airport, Oakland, CA 94621, USA",
                  "geometry" : {
                  "location" : {

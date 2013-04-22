@@ -71,6 +71,7 @@ BOOL tpStrToBool(NSObject* value)
 @synthesize bikeTriangleBikeFriendly;
 @synthesize dateOfLastUserPrefChange;
 @synthesize dateOfLastSuccessfulSaveToServer;
+@synthesize wMataAdvisories;
 
 
 static UserPreferance* userPrefs;
@@ -106,6 +107,14 @@ static UserPreferance* userPrefs;
             userPrefs.walkDistance = walkDistTemp.doubleValue;
         } else {
             userPrefs.walkDistance = MAX_WALK_DISTANCE_DEFAULT_VALUE;
+            saveNeeded = true;
+        }
+        
+        NSString* wMataTemp = [prefs objectForKey:ENABLE_WMATA_ADV];
+        if (wMataTemp) {
+            userPrefs.wMataAdvisories = tpStrToBool(wMataTemp);
+        } else {
+            userPrefs.wMataAdvisories = ENABLE_WMATA_ADV_DEFAULT;
             saveNeeded = true;
         }
         
@@ -459,6 +468,15 @@ static UserPreferance* userPrefs;
     walkDistance = walkDist;
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:[NSNumber numberWithFloat:walkDistance] forKey:PREFS_MAX_WALK_DISTANCE];
+    [prefs synchronize];
+    [self markChanges];
+}
+
+-(void) setWMataAdvisories:(BOOL)wMataAdv
+{
+    wMataAdvisories = wMataAdv;
+    NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:tpBoolToStr(wMataAdvisories) forKey:ENABLE_WMATA_ADV];
     [prefs synchronize];
     [self markChanges];
 }

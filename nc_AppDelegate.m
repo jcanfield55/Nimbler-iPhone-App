@@ -23,6 +23,8 @@
 #import "LocalConstants.h"
 #if TEST_FLIGHT_ENABLED
 #import "TestFlightSDK1-1/TestFlight.h"
+#import "ZipArchive.h"
+#import "Constants.h"
 #endif
 #if FLURRY_ENABLED
 #import "Flurry.h"
@@ -121,7 +123,16 @@ FeedBackForm *fbView;
     
     NSString *dbPath = [NSString stringWithFormat:@"%@/%@",[[self applicationDocumentsDirectory] path],COREDATA_DB_FILENAME];
     if(![[NSFileManager defaultManager] fileExistsAtPath:dbPath]){
-        NSString *strPath = [[NSBundle mainBundle] pathForResource:@"store101" ofType:@"zip"];
+        NSString *strPath;
+        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+            strPath = [[NSBundle mainBundle] pathForResource:@"store101_Caltrain" ofType:@"zip"];
+        }
+        else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
+            strPath = [[NSBundle mainBundle] pathForResource:@"store101_DC" ofType:@"zip"];
+        }
+        else{
+           strPath = [[NSBundle mainBundle] pathForResource:@"store101" ofType:@"zip"]; 
+        }
         // Unzip file to document directory folder
         ZipArchive *zipArchive = [[ZipArchive alloc] init];
         [zipArchive UnzipOpenFile:strPath];
@@ -147,7 +158,7 @@ FeedBackForm *fbView;
           UIRemoteNotificationTypeSound)];
     }
     else{
-        [[UserPreferance userPreferance] performSelector:@selector(saveToServer) withObject:nil afterDelay:0.0];
+        [[UserPreferance userPreferance] performSelector:@selector(saveToServer) withObject:nil afterDelay:3.0];
     }
     
     // US-163 set-up for feedback reminders (also DE-238 fix)
@@ -232,7 +243,13 @@ FeedBackForm *fbView;
         // Pre-load stations location files
         if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
             NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:CALTRAIN_PRELOAD_VERSION_NUMBER];
-            [stations preLoadIfNeededFromFile:CALTRAIN_PRELOAD_LOCATION_FILE latestVersionNumber:caltrainVersion testAddress:CALTRAIN_PRELOAD_TEST_ADDRESS];
+            NSDecimalNumber* bartVersion = [NSDecimalNumber decimalNumberWithString:BART_PRELOAD_VERSION_NUMBER];
+            [locations preLoadIfNeededFromFile:CALTRAIN_PRELOAD_LOCATION_FILE_CALTRAIN_APPLICATION latestVersionNumber:caltrainVersion testAddress:CALTRAIN_PRELOAD_TEST_ADDRESS];
+            [locations preLoadIfNeededFromFile:BART_BACKGROUND_PRELOAD_LOCATION_FILE latestVersionNumber:bartVersion testAddress:BART_PRELOAD_TEST_ADDRESS];
+        }
+        else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
+            NSDecimalNumber* wMataVersion = [NSDecimalNumber decimalNumberWithString:WMATA_PRELOAD_VERSION_NUMBER];
+            [locations preLoadIfNeededFromFile:WMATA_PRELOAD_LOCATION_FILE latestVersionNumber:wMataVersion testAddress:WMATA_PRELOAD_TEST_ADDRESS];
         }
         else {
             if([[NSUserDefaults standardUserDefaults] floatForKey:CALTRAIN_PRELOAD_LOCATION_FILE] < [CALTRAIN_PRELOAD_VERSION_NUMBER floatValue]){
@@ -1041,7 +1058,7 @@ FeedBackForm *fbView;
         //NSString *dummyToken = [NSString stringWithFormat:@"SF%@",generateRandomString(64)];
         NSString  *token = @"26d906c5c273446d5f40d2c173ddd3f6869b2666b1c7afd5173d69b6629def70";
         [prefs setObject:token forKey:DEVICE_TOKEN];
-        [[UserPreferance userPreferance] performSelector:@selector(saveToServer) withObject:nil afterDelay:2.0];
+        [[UserPreferance userPreferance] performSelector:@selector(saveToServer) withObject:nil afterDelay:3.0];
         //    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Nimbler Push Alert" message:@"your device couldn't connect with apple. Please reinstall application" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         //    [alert show];
     }
@@ -1227,6 +1244,9 @@ FeedBackForm *fbView;
     if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
         strAppType = CALTRAIN_APP_TYPE;
     }
+    else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
+        strAppType = WMATA_APP_TYPE;
+    }
     else{
         strAppType = SFMUNI_APP_TYPE;
     }
@@ -1238,17 +1258,12 @@ FeedBackForm *fbView;
 - (NSString *)getAgencyIdsString{
     NSMutableString *strMutableAgencyIds = [[NSMutableString alloc] init];
     NSString *strAgencyIds;
-//    if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-//        [strMutableAgencyIds appendFormat:@"%@,",CALTRAIN_AGENCY_FEED_ID];
-//        int nLength = [strMutableAgencyIds length];
-//        if(nLength > 0){
-//            strAgencyIds = [strMutableAgencyIds substringToIndex:nLength-1];
-//        }
-//        else{
-//            strAgencyIds = strMutableAgencyIds;
-//        }
-//    }
-//    else{
+    if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
+        if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_WMATA_ADV] intValue] == 1){
+            [strMutableAgencyIds appendFormat:@"%@,",WMATA_AGENCY_ID];
+        }
+    }
+    else{
         if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] == 1){
             [strMutableAgencyIds appendFormat:@"%@,",SFMUNI_AGENCY_FEED_ID];
         }
@@ -1261,14 +1276,14 @@ FeedBackForm *fbView;
         if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] == 1){
             [strMutableAgencyIds appendFormat:@"%@,",CALTRAIN_AGENCY_FEED_ID];
         }
-        int nLength = [strMutableAgencyIds length];
-        if(nLength > 0){
-            strAgencyIds = [strMutableAgencyIds substringToIndex:nLength-1];
-        }
-        else{
-            strAgencyIds = strMutableAgencyIds;
-        }
-    //}
+    }
+    int nLength = [strMutableAgencyIds length];
+    if(nLength > 0){
+        strAgencyIds = [strMutableAgencyIds substringToIndex:nLength-1];
+    }
+    else{
+        strAgencyIds = strMutableAgencyIds;
+    }
     return strAgencyIds;
 }
 

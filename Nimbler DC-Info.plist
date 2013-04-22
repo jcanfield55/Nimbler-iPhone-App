@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Nimbler SF</string>
+	<string>Nimbler DC</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -29,16 +29,18 @@
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
+	<key>CFBundleIconFile</key>
+	<string>Icon-DC.png</string>
 	<key>CFBundleIconFiles</key>
 	<array>
 		<string>Icon_ipad.png</string>
 		<string>Icon_ipad@2x.png</string>
-		<string>Icon-Small.png</string>
-		<string>Icon-Small@2x.png</string>
+		<string>Icon-small.png</string>
+		<string>Icon-small@2x.png</string>
 		<string>Default.png</string>
 		<string>Default@2x.png</string>
-		<string>Icon.png</string>
-		<string>Icon@2x.png</string>
+		<string>Icon-DC.png</string>
+		<string>Icon-DC@2x.png</string>
 	</array>
 	<key>CFBundleIcons</key>
 	<dict>
@@ -52,15 +54,15 @@
 				<string>Icon-small@2x.png</string>
 				<string>Default.png</string>
 				<string>Default@2x.png</string>
-				<string>Icon.png</string>
-				<string>Icon@2x.png</string>
+				<string>Icon-DC.png</string>
+				<string>Icon-DC@2x.png</string>
 			</array>
 			<key>UIPrerenderedIcon</key>
 			<true/>
 		</dict>
 	</dict>
 	<key>CFBundleIdentifier</key>
-	<string>com.nimbler.Nimbler-SF</string>
+	<string>com.Nimbler.Nimbler-DC</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -82,6 +84,8 @@
 		<string>MKDirectionsModeTrain</string>
 		<string>MKDirectionsModeStreetCar</string>
 	</array>
+	<key>UILaunchImageFile</key>
+	<string>Default-DC.png</string>
 	<key>UIPrerenderedIcon</key>
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>

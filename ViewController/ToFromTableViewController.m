@@ -171,7 +171,9 @@ NSString *strStreet2 = @"street ";
                 
                 // Call the location picker with the list
                 NSArray *list = [stations fetchStationListByMemberOfListId:ALL_STATION];
-                //NSArray* list = [locations locationsMembersOfList:[loc memberOfList]];
+                if(!list || [list count] == 0){
+                    list = [locations locationsMembersOfList:[loc memberOfList]];
+                }
                 [toFromVC callLocationPickerFor:self 
                                    locationList:list 
                                          isFrom:isFrom

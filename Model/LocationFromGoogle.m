@@ -53,7 +53,7 @@
         [locationMapping mapKeyPath:@"toFrequency" toAttribute:@"toFrequencyFloat"];
         [locationMapping mapKeyPath:@"fromFrequency" toAttribute:@"fromFrequencyFloat"];
         [locationMapping mapKeyPath:@"excludeFromSearch" toAttribute:@"excludeFromSearch"];
-        //[locationMapping mapKeyPath:@"memberOfList" toAttribute:@"memberOfList"];
+        [locationMapping mapKeyPath:@"memberOfList" toAttribute:@"memberOfList"];
          //[locationMapping mapKeyPath:@"geometry.viewport" toRelationship:@"viewPort" withMapping:geoRectMapping];
         
     }

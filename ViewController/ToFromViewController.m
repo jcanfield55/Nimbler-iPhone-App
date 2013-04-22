@@ -253,7 +253,13 @@ UIImage *imageDetailDisclosure;
     else {
         [self.navigationController.navigationBar insertSubview:[[UIImageView alloc]initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
     }
-    UIImage *imgTitle = [UIImage imageNamed:@"nimblr.png"];
+    UIImage *imgTitle;
+    if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+        imgTitle = [UIImage imageNamed:@"nimblrCaltrain.png"];
+    }
+    else{
+        imgTitle = [UIImage imageNamed:@"nimblr.png"];
+    }
     self.navigationItem.titleView = [[UIImageView alloc]  initWithImage:imgTitle];
 
     if(editMode == NO_EDIT){

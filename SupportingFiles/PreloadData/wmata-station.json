@@ -1,0 +1,4646 @@
+{
+	"results" : [{
+			"formatted_address" : "Metro Station List",
+			"toFrequency" : 25.0,
+			"fromFrequency" : 25.0,
+			"memberOfList" : "Wmata",
+			"geometry" : {
+				"location_type" : "TOFROM_LIST"
+			}
+		}, {
+			"memberOfList" : "Wmata01",
+			"fromFrequency" : "0.9022772071824351",
+			"toFrequency" : 0.45012939688228537,
+			"address_components" : [{
+					"long_name" : "Addison Road Metro Station",
+					"short_name" : "Addison Road Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Walker Mill",
+					"short_name" : "Walker Mill",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Walker Mill",
+					"short_name" : "Walker Mill",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "18, Seat Pleasant",
+					"short_name" : "18, Seat Pleasant",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Prince George's",
+					"short_name" : "Prince George's",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20743",
+					"short_name" : "20743",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Addison Road Metro Station, Walker Mill, MD 20743, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.886702,
+					"lng" : -76.893290
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.88806998029150,
+						"lng" : -76.89216301970851
+					},
+					"southwest" : {
+						"lat" : 38.88537201970851,
+						"lng" : -76.89486098029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata02",
+			"fromFrequency" : "0.7825496443260336",
+			"toFrequency" : 0.8586452593372078,
+			"address_components" : [{
+					"long_name" : "Anacostia Metro Station",
+					"short_name" : "Anacostia Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Southeast Washington",
+					"short_name" : "Southeast Washington",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20020",
+					"short_name" : "20020",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Anacostia Metro Station, Washington, DC 20020, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.862117,
+					"lng" : -76.995325
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.86346598029150,
+						"lng" : -76.99397601970848
+					},
+					"southwest" : {
+						"lat" : 38.86076801970850,
+						"lng" : -76.99667398029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata03",
+			"fromFrequency" : "0.1054248756675834",
+			"toFrequency" : 0.5344499191625313,
+			"address_components" : [{
+					"long_name" : "Archives Metro Station",
+					"short_name" : "Archives Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20004",
+					"short_name" : "20004",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Archives Metro Station, Washington, DC 20004, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.893907,
+					"lng" : -77.021592
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.89525598029150,
+						"lng" : -77.02024301970850
+					},
+					"southwest" : {
+						"lat" : 38.89255801970850,
+						"lng" : -77.02294098029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata04",
+			"fromFrequency" : "0.4268606242006967",
+			"toFrequency" : 0.31789534427276533,
+			"address_components" : [{
+					"long_name" : "Arlington Cemetery Metro Station",
+					"short_name" : "Arlington Cemetery Metro",
+					"types" : ["transit_station", "train_station", "establishment"]
+				}, {
+					"long_name" : "George Washington Memorial Parkway",
+					"short_name" : "George Washington Memorial Parkway",
+					"types" : ["establishment"]
+				}, {
+					"long_name" : "Arlington",
+					"short_name" : "Arlington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "Arlington",
+					"short_name" : "Arlington",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Virginia",
+					"short_name" : "VA",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "22209",
+					"short_name" : "22209",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Arlington Cemetery Metro Station, George Washington Memorial Parkway, Arlington, VA 22209, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.884612,
+					"lng" : -77.062795
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.88596098029149,
+						"lng" : -77.06144601970850
+					},
+					"southwest" : {
+						"lat" : 38.88326301970850,
+						"lng" : -77.06414398029150
+					}
+				}
+			},
+			"types" : ["transit_station", "train_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata05",
+			"fromFrequency" : "0.9433318370172736",
+			"toFrequency" : 0.7189424652943076,
+			"address_components" : [{
+					"long_name" : "Ballston Metro Station",
+					"short_name" : "Ballston Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Virginia Square",
+					"short_name" : "Virginia Square",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Arlington",
+					"short_name" : "Arlington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "Arlington",
+					"short_name" : "Arlington",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Virginia",
+					"short_name" : "VA",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "22201",
+					"short_name" : "22201",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Ballston Metro, Arlington, VA 22201, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.8822380,
+					"lng" : -77.11154999999999
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.882238,
+						"lng" : -77.111550
+					},
+					"southwest" : {
+						"lat" : 38.88088901970850,
+						"lng" : -77.11289898029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata06",
+			"fromFrequency" : "0.6315796638890041",
+			"toFrequency" : 0.44018913278625293,
+			"address_components" : [{
+					"long_name" : "Benning Rd Metro Station",
+					"short_name" : "Benning Rd Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Capitol View",
+					"short_name" : "Capitol View",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20019",
+					"short_name" : "20019",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Benning Rd Metro Station, Washington, DC 20019, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.890418,
+					"lng" : -76.937662
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.89176698029149,
+						"lng" : -76.93631301970849
+					},
+					"southwest" : {
+						"lat" : 38.88906901970850,
+						"lng" : -76.93901098029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata07",
+			"fromFrequency" : "0.7566608570824581",
+			"toFrequency" : 0.3888781891369153,
+			"address_components" : [{
+					"long_name" : "Bethesda Metro Station",
+					"short_name" : "Bethesda Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Bethesda",
+					"short_name" : "Bethesda",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Bethesda",
+					"short_name" : "Bethesda",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "7",
+					"short_name" : "7",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Montgomery",
+					"short_name" : "Montgomery",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20814",
+					"short_name" : "20814",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Bethesda Metro Station, Bethesda, MD 20814, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.984431,
+					"lng" : -77.094151
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.98577998029150,
+						"lng" : -77.09280201970850
+					},
+					"southwest" : {
+						"lat" : 38.98308201970850,
+						"lng" : -77.09549998029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata08",
+			"fromFrequency" : "0.23110953576554072",
+			"toFrequency" : 0.37230893956990074,
+			"address_components" : [{
+					"long_name" : "Braddock Road Metro Station",
+					"short_name" : "Braddock Rd Metro",
+					"types" : ["establishment", "train_station"]
+				}, {
+					"long_name" : "700",
+					"short_name" : "700",
+					"types" : ["street_number"]
+				}, {
+					"long_name" : "North West Street",
+					"short_name" : "N West St",
+					"types" : ["route"]
+				}, {
+					"long_name" : "Old Town West",
+					"short_name" : "Old Town West",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Alexandria",
+					"short_name" : "Alexandria",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "Virginia",
+					"short_name" : "VA",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "22314",
+					"short_name" : "22314",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Braddock Road Metro Station, 700 North West Street, Alexandria, VA 22314, USA",
+			"geometry" : {
+				"bounds" : {
+					"northeast" : {
+						"lat" : 38.81431540000001,
+						"lng" : -77.05320780
+					},
+					"southwest" : {
+						"lat" : 38.81287120,
+						"lng" : -77.05396290
+					}
+				},
+				"location" : {
+					"lat" : 38.814052,
+					"lng" : -77.053434
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.81494228029150,
+						"lng" : -77.05223636970850
+					},
+					"southwest" : {
+						"lat" : 38.81224431970850,
+						"lng" : -77.05493433029150
+					}
+				}
+			},
+			"types" : ["parking", "establishment", "train_station"]
+		}, {
+			"memberOfList" : "Wmata09",
+			"fromFrequency" : "0.4624005034299743",
+			"toFrequency" : 0.08573599088822059,
+			"address_components" : [{
+					"long_name" : "Branch Ave Metro Station",
+					"short_name" : "Branch Ave Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Camp Springs",
+					"short_name" : "Camp Springs",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Camp Springs",
+					"short_name" : "Camp Springs",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "6, Spauldings",
+					"short_name" : "6, Spauldings",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Prince George's",
+					"short_name" : "Prince George's",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20746",
+					"short_name" : "20746",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Branch Ave Metro Station, Camp Springs, MD 20746, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.827022,
+					"lng" : -76.911802
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.82837098029150,
+						"lng" : -76.91045301970850
+					},
+					"southwest" : {
+						"lat" : 38.82567301970850,
+						"lng" : -76.91315098029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata10",
+			"fromFrequency" : "0.3985542549883092",
+			"toFrequency" : 0.6165138603802296,
+			"address_components" : [{
+					"long_name" : "Brookland-CUA Metro",
+					"short_name" : "Brookland-CUA Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Northeast Washington",
+					"short_name" : "Northeast Washington",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20017",
+					"short_name" : "20017",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Brookland-Cua Metro, Washington, DC 20017, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.933232,
+					"lng" : -76.994474
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.93458098029149,
+						"lng" : -76.99312501970850
+					},
+					"southwest" : {
+						"lat" : 38.93188301970849,
+						"lng" : -76.99582298029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata11",
+			"fromFrequency" : "0.5869064373336025",
+			"toFrequency" : 1.0596001638329966E-6,
+			"address_components" : [{
+					"long_name" : "Capitol Heights Metro Station",
+					"short_name" : "Capitol Heights Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Capitol Heights",
+					"short_name" : "Capitol Heights",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "18, Seat Pleasant",
+					"short_name" : "18, Seat Pleasant",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Prince George's",
+					"short_name" : "Prince George's",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20743",
+					"short_name" : "20743",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Capitol Heights Metro Station, Capitol Heights, MD 20743, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.889571,
+					"lng" : -76.913313
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.89091998029151,
+						"lng" : -76.91196401970851
+					},
+					"southwest" : {
+						"lat" : 38.88822201970851,
+						"lng" : -76.91466198029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata12",
+			"fromFrequency" : "0.8911613173986788",
+			"toFrequency" : 0.5717720942594422,
+			"address_components" : [{
+					"long_name" : "Capitol South Metro Station",
+					"short_name" : "Capitol South Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Capitol Hill",
+					"short_name" : "Capitol Hill",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20003",
+					"short_name" : "20003",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Capitol South Metro Station, Washington, DC 20003, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.885669,
+					"lng" : -77.005892
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.88701798029151,
+						"lng" : -77.00454301970851
+					},
+					"southwest" : {
+						"lat" : 38.88432001970851,
+						"lng" : -77.00724098029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata13",
+			"fromFrequency" : "0.5873692947603464",
+			"toFrequency" : 0.12031731274706459,
+			"address_components" : [{
+					"long_name" : "Cheverly Metro Station",
+					"short_name" : "Cheverly Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Cheverly",
+					"short_name" : "Cheverly",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Cheverly",
+					"short_name" : "Cheverly",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "18, Seat Pleasant",
+					"short_name" : "18, Seat Pleasant",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Prince George's",
+					"short_name" : "Prince George's",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20785",
+					"short_name" : "20785",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Cheverly Metro Station, Cheverly, MD 20785, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.916552,
+					"lng" : -76.915104
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.91790098029149,
+						"lng" : -76.91375501970850
+					},
+					"southwest" : {
+						"lat" : 38.91520301970849,
+						"lng" : -76.91645298029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata14",
+			"fromFrequency" : "0.4790420829266019",
+			"toFrequency" : 0.5110864986785618,
+			"address_components" : [{
+					"long_name" : "Clarendon Metrorail Station",
+					"short_name" : "Clarendon Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Wilson Boulevard",
+					"short_name" : "Wilson Blvd",
+					"types" : ["route"]
+				}, {
+					"long_name" : "Clarendon - Courthouse",
+					"short_name" : "Clarendon - Courthouse",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Arlington",
+					"short_name" : "Arlington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "Arlington",
+					"short_name" : "Arlington",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Virginia",
+					"short_name" : "VA",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "22201",
+					"short_name" : "22201",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Clarendon Metrorail Station, Wilson Boulevard, Arlington, VA 22201, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.887176,
+					"lng" : -77.094987
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.88852498029149,
+						"lng" : -77.09363801970849
+					},
+					"southwest" : {
+						"lat" : 38.88582701970849,
+						"lng" : -77.09633598029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata15",
+			"fromFrequency" : "0.36200789694712443",
+			"toFrequency" : 0.3360213112062975,
+			"address_components" : [{
+					"long_name" : "Cleveland Park Metro Station",
+					"short_name" : "Cleveland Park Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Cleveland Park",
+					"short_name" : "Cleveland Park",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20008",
+					"short_name" : "20008",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Cleveland Park Metro Station, Washington, DC 20008, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.935852,
+					"lng" : -77.058624
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.93720098029150,
+						"lng" : -77.05727501970848
+					},
+					"southwest" : {
+						"lat" : 38.93450301970850,
+						"lng" : -77.05997298029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata16",
+			"fromFrequency" : "0.13569197964439506",
+			"toFrequency" : 0.7553199703690066,
+			"address_components" : [{
+					"long_name" : "College Park/U of MD Metro Station",
+					"short_name" : "College Park/U of MD Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "College Park",
+					"short_name" : "College Park",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "Berwyn",
+					"short_name" : "21, Berwyn",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Prince George's",
+					"short_name" : "Prince George's",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20737",
+					"short_name" : "20737",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "College Park/U of MD Metro Station, College Park, MD 20737, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.978400,
+					"lng" : -76.928197
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.97974898029150,
+						"lng" : -76.92684801970849
+					},
+					"southwest" : {
+						"lat" : 38.97705101970850,
+						"lng" : -76.92954598029149
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata17",
+			"fromFrequency" : "0.43229488081791045",
+			"toFrequency" : 0.5059056973369048,
+			"address_components" : [{
+					"long_name" : "Columbia Heights Metro Station",
+					"short_name" : "Columbia Heights Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Columbia Heights",
+					"short_name" : "Columbia Heights",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20010",
+					"short_name" : "20010",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Columbia Heights Metro Station, Washington, DC 20010, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.928711,
+					"lng" : -77.032454
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.92997198029150,
+						"lng" : -77.03162801970851
+					},
+					"southwest" : {
+						"lat" : 38.92727401970851,
+						"lng" : -77.03432598029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata18",
+			"fromFrequency" : "0.2299650841134725",
+			"toFrequency" : 0.7228725521179753,
+			"address_components" : [{
+					"long_name" : "Congress Heights Metro Station",
+					"short_name" : "Congress Heights Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Southeast Washington",
+					"short_name" : "Southeast Washington",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20020",
+					"short_name" : "20020",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Congress Heights Metro Station, Washington, DC 20020, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.845379,
+					"lng" : -76.987860
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.84672798029150,
+						"lng" : -76.98651101970849
+					},
+					"southwest" : {
+						"lat" : 38.84403001970851,
+						"lng" : -76.98920898029149
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata19",
+			"fromFrequency" : "0.26977937377329086",
+			"toFrequency" : 0.878130248950269,
+			"address_components" : [{
+					"long_name" : "Courthouse Metro Station",
+					"short_name" : "Courthouse Metro",
+					"types" : ["transit_station", "train_station", "establishment"]
+				}, {
+					"long_name" : "Clarendon - Courthouse",
+					"short_name" : "Clarendon - Courthouse",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Arlington",
+					"short_name" : "Arlington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "Arlington",
+					"short_name" : "Arlington",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Virginia",
+					"short_name" : "VA",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "22201",
+					"short_name" : "22201",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Courthouse Metro Station, Arlington, VA 22201, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.891331,
+					"lng" : -77.084823
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.89267998029150,
+						"lng" : -77.08347401970849
+					},
+					"southwest" : {
+						"lat" : 38.88998201970850,
+						"lng" : -77.08617198029151
+					}
+				}
+			},
+			"types" : ["transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata20",
+			"fromFrequency" : "0.5265403618982883",
+			"toFrequency" : 0.609757131050672,
+			"address_components" : [{
+					"long_name" : "Crystal City Metro Station",
+					"short_name" : "Crystal City Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "1750",
+					"short_name" : "1750",
+					"types" : ["street_number"]
+				}, {
+					"long_name" : "South Bell Street",
+					"short_name" : "S Bell St",
+					"types" : ["route"]
+				}, {
+					"long_name" : "Crystal City",
+					"short_name" : "Crystal City",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Arlington",
+					"short_name" : "Arlington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "Arlington",
+					"short_name" : "Arlington",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Virginia",
+					"short_name" : "VA",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "22202",
+					"short_name" : "22202",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Crystal City Metro Station, 1750 South Bell Street, Arlington, VA 22202, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.857817,
+					"lng" : -77.050346
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.85916598029150,
+						"lng" : -77.04899701970851
+					},
+					"southwest" : {
+						"lat" : 38.85646801970850,
+						"lng" : -77.05169498029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata21",
+			"fromFrequency" : "0.6355792036828413",
+			"toFrequency" : 0.2745190973231213,
+			"address_components" : [{
+					"long_name" : "Deanwood Metro Station",
+					"short_name" : "Deanwood Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Deanwood",
+					"short_name" : "Deanwood",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20019",
+					"short_name" : "20019",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Deanwood Metro Station, Washington, DC 20019, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.907945,
+					"lng" : -76.935569
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.90929398029150,
+						"lng" : -76.93422001970849
+					},
+					"southwest" : {
+						"lat" : 38.90659601970850,
+						"lng" : -76.93691798029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata22",
+			"fromFrequency" : "0.27554977080706",
+			"toFrequency" : 0.6860665729146617,
+			"address_components" : [{
+					"long_name" : "Dunn Loring Merrifield Metro Station",
+					"short_name" : "Dunn Loring Merrifield Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Merrifield",
+					"short_name" : "Merrifield",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Merrifield",
+					"short_name" : "Merrifield",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "Providence",
+					"short_name" : "Providence",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Fairfax",
+					"short_name" : "Fairfax",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Virginia",
+					"short_name" : "VA",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "22180",
+					"short_name" : "22180",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Dunn Loring Merrifield Metro Station, Merrifield, VA 22180, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.883146,
+					"lng" : -77.228654
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.88449498029149,
+						"lng" : -77.22730501970848
+					},
+					"southwest" : {
+						"lat" : 38.88179701970849,
+						"lng" : -77.23000298029149
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata23",
+			"fromFrequency" : "0.6023730054001022",
+			"toFrequency" : 0.13705298656510223,
+			"address_components" : [{
+					"long_name" : "Dupont Circle Metro Station",
+					"short_name" : "Dupont Circle Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Dupont Circle",
+					"short_name" : "Dupont Circle",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20009",
+					"short_name" : "20009",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Dupont Circle Metro Station, Washington, DC 20009, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.911129,
+					"lng" : -77.044428
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.91247798029149,
+						"lng" : -77.04307901970849
+					},
+					"southwest" : {
+						"lat" : 38.90978001970850,
+						"lng" : -77.04577698029149
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                 }, {
+                 "memberOfList" : "Wmata23.5",
+                 "fromFrequency" : "0.7287057452789545",
+                 "toFrequency" : 0.7088018294963051,
+                 "address_components" : [{
+                                         "long_name" : "East Falls Church Metro Station",
+                                         "short_name" : "East Falls Church Metro",
+                                         "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                                         }, {
+                                         "long_name" : "East Falls Church",
+                                         "short_name" : "East Falls Church",
+                                         "types" : ["neighborhood", "political"]
+                                         }, {
+                                         "long_name" : "Arlington",
+                                         "short_name" : "Arlington",
+                                         "types" : ["locality", "political"]
+                                         }, {
+                                         "long_name" : "Arlington",
+                                         "short_name" : "Arlington",
+                                         "types" : ["administrative_area_level_2", "political"]
+                                         }, {
+                                         "long_name" : "Virginia",
+                                         "short_name" : "VA",
+                                         "types" : ["administrative_area_level_1", "political"]
+                                         }, {
+                                         "long_name" : "United States",
+                                         "short_name" : "US",
+                                         "types" : ["country", "political"]
+                                         }, {
+                                         "long_name" : "22205",
+                                         "short_name" : "22205",
+                                         "types" : ["postal_code"]
+                                         }
+                                         ],
+                 "formatted_address" : "East Falls Church Metro Station, Arlington, VA 22205, USA",
+                 "geometry" : {
+                 "location" : {
+                 "lat" : 38.886042,
+                 "lng" : -77.156567
+                 },
+                 "location_type" : "APPROXIMATE",
+                 "viewport" : {
+                 "northeast" : {
+                 "lat" : 38.88739098029149,
+                 "lng" : -77.15521801970849
+                 },
+                 "southwest" : {
+                 "lat" : 38.88469301970850,
+                 "lng" : -77.15791598029151
+                 }
+                 }
+                 },
+                 "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                 }, {
+			"memberOfList" : "Wmata24",
+			"fromFrequency" : "0.05192128523990458",
+			"toFrequency" : 0.582519447409531,
+			"address_components" : [{
+					"long_name" : "Eastern Market Metro Station",
+					"short_name" : "Eastern Market Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Capitol Hill",
+					"short_name" : "Capitol Hill",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20003",
+					"short_name" : "20003",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Eastern Market Metro Station, Washington, DC 20003, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.884148,
+					"lng" : -76.995010
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.88549698029149,
+						"lng" : -76.99366101970848
+					},
+					"southwest" : {
+						"lat" : 38.88279901970849,
+						"lng" : -76.99635898029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata25",
+			"fromFrequency" : "0.1367304299979485",
+			"toFrequency" : 0.8751856993243132,
+			"address_components" : [{
+					"long_name" : "Eisenhower Av Metro Station",
+					"short_name" : "Eisenhower Av Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Eisenhower East",
+					"short_name" : "Eisenhower East",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Alexandria",
+					"short_name" : "Alexandria",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "Virginia",
+					"short_name" : "VA",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "22314",
+					"short_name" : "22314",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Eisenhower Av Metro Station, Alexandria, VA 22314, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.800345,
+					"lng" : -77.070831
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.80169398029150,
+						"lng" : -77.06948201970852
+					},
+					"southwest" : {
+						"lat" : 38.79899601970850,
+						"lng" : -77.07217998029152
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata26",
+			"fromFrequency" : "0.2911224843655358",
+			"toFrequency" : 0.4847180308715796,
+			"address_components" : [{
+					"long_name" : "Farragut North Metro Station",
+					"short_name" : "Farragut North Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Downtown",
+					"short_name" : "Downtown",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20036",
+					"short_name" : "20036",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Farragut North Metro Station, Washington, DC 20036, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.903297,
+					"lng" : -77.039502
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.90464598029149,
+						"lng" : -77.03815301970849
+					},
+					"southwest" : {
+						"lat" : 38.90194801970849,
+						"lng" : -77.04085098029149
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata27",
+			"fromFrequency" : "0.7338761543632409",
+			"toFrequency" : 0.9496841039075565,
+			"address_components" : [{
+					"long_name" : "Farragut West Metro Station",
+					"short_name" : "Farragut West Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Downtown",
+					"short_name" : "Downtown",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20006",
+					"short_name" : "20006",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Farragut West Metro Station, Washington, DC 20006, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.901366,
+					"lng" : -77.039482
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.90271498029150,
+						"lng" : -77.03813301970848
+					},
+					"southwest" : {
+						"lat" : 38.90001701970850,
+						"lng" : -77.04083098029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata28",
+			"fromFrequency" : "0.660373449469206",
+			"toFrequency" : 0.8529464946755034,
+			"address_components" : [{
+					"long_name" : "Federal Center Metro Station",
+					"short_name" : "Federal Center Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Southwest Washington",
+					"short_name" : "Southwest Washington",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20024",
+					"short_name" : "20024",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Federal Center Metro Station, Washington, DC 20024, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.884981,
+					"lng" : -77.015536
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.88632998029150,
+						"lng" : -77.01418701970850
+					},
+					"southwest" : {
+						"lat" : 38.88363201970850,
+						"lng" : -77.01688498029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata29",
+			"fromFrequency" : "0.6174918082936874",
+			"toFrequency" : 0.7820115264945089,
+			"address_components" : [{
+					"long_name" : "Federal Triangle Metro Station",
+					"short_name" : "Federal Triangle Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20004",
+					"short_name" : "20004",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Federal Triangle Metro Station, Washington, DC 20004, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.893789,
+					"lng" : -77.027896
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.89516298029150,
+						"lng" : -77.02747701970848
+					},
+					"southwest" : {
+						"lat" : 38.89246501970850,
+						"lng" : -77.03017498029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata30",
+			"fromFrequency" : "0.5030302638335178",
+			"toFrequency" : 0.1417832281745881,
+			"address_components" : [{
+					"long_name" : "Foggy Bottom Metro Station",
+					"short_name" : "Foggy Bottom Metro",
+					"types" : ["transit_station", "train_station", "establishment"]
+				}, {
+					"long_name" : "George Washington University-Development and Alumni Relations",
+					"short_name" : "George Washington University-Development and Alumni Relations",
+					"types" : ["establishment"]
+				}, {
+					"long_name" : "George Washington University",
+					"short_name" : "George Washington University",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20052",
+					"short_name" : "20052",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Foggy Bottom Metro Station, George Washington University-Development and Alumni Relations, Washington, DC 20052, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.900705,
+					"lng" : -77.050026
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.90205398029149,
+						"lng" : -77.04867701970849
+					},
+					"southwest" : {
+						"lat" : 38.89935601970849,
+						"lng" : -77.05137498029151
+					}
+				}
+			},
+			"types" : ["transit_station", "train_station", "establishment"]
+                 }, {
+                 "memberOfList" : "Wmata30.5",
+                 "fromFrequency" : "0.8794244296777148",
+                 "toFrequency" : 0.08798994817048222,
+                 "address_components" : [{
+                                         "long_name" : "Forest Glen Metro Station",
+                                         "short_name" : "Forest Glen Metro",
+                                         "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                                         }, {
+                                         "long_name" : "Forest Glen",
+                                         "short_name" : "Forest Glen",
+                                         "types" : ["neighborhood", "political"]
+                                         }, {
+                                         "long_name" : "Forest Glen",
+                                         "short_name" : "Forest Glen",
+                                         "types" : ["locality", "political"]
+                                         }, {
+                                         "long_name" : "13",
+                                         "short_name" : "13",
+                                         "types" : ["administrative_area_level_3", "political"]
+                                         }, {
+                                         "long_name" : "Montgomery",
+                                         "short_name" : "Montgomery",
+                                         "types" : ["administrative_area_level_2", "political"]
+                                         }, {
+                                         "long_name" : "Maryland",
+                                         "short_name" : "MD",
+                                         "types" : ["administrative_area_level_1", "political"]
+                                         }, {
+                                         "long_name" : "United States",
+                                         "short_name" : "US",
+                                         "types" : ["country", "political"]
+                                         }, {
+                                         "long_name" : "20910",
+                                         "short_name" : "20910",
+                                         "types" : ["postal_code"]
+                                         }
+                                         ],
+                 "excludeFromSearch":0,
+                 "formatted_address" : "Forest Glen Metro Station, Forest Glen, MD 20910, USA",
+                 "geometry" : {
+                 "location" : {
+                 "lat" : 39.015465,
+                 "lng" : -77.042667
+                 },
+                 "location_type" : "APPROXIMATE",
+                 "viewport" : {
+                 "northeast" : {
+                 "lat" : 39.01681398029150,
+                 "lng" : -77.04131801970848
+                 },
+                 "southwest" : {
+                 "lat" : 39.01411601970850,
+                 "lng" : -77.04401598029149
+                 }
+                 }
+                 },
+                 "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                 }, {
+			"memberOfList" : "Wmata31",
+			"fromFrequency" : "0.4439169890280027",
+			"toFrequency" : 0.8878448258763629,
+			"address_components" : [{
+					"long_name" : "Fort Totten Metro Station",
+					"short_name" : "Fort Totten Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Northeast Washington",
+					"short_name" : "Northeast Washington",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20011",
+					"short_name" : "20011",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Fort Totten Metro Station, Washington, DC 20011, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.951808,
+					"lng" : -77.001864
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.95315698029150,
+						"lng" : -77.00051501970849
+					},
+					"southwest" : {
+						"lat" : 38.95045901970850,
+						"lng" : -77.00321298029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata32",
+			"fromFrequency" : "0.5987234748136815",
+			"toFrequency" : 0.006496019327452474,
+			"address_components" : [{
+					"long_name" : "Franconia Springfield Metro Station",
+					"short_name" : "Franconia Springfield Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Springfield",
+					"short_name" : "Springfield",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Springfield",
+					"short_name" : "Springfield",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "Lee",
+					"short_name" : "Lee",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Fairfax",
+					"short_name" : "Fairfax",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Virginia",
+					"short_name" : "VA",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "22150",
+					"short_name" : "22150",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Franconia Springfield Metro, Springfield, VA 22150, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.766196,
+					"lng" : -77.168487
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.76754498029150,
+						"lng" : -77.16713801970850
+					},
+					"southwest" : {
+						"lat" : 38.76484701970850,
+						"lng" : -77.16983598029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata33",
+			"fromFrequency" : "0.2831192143461404",
+			"toFrequency" : 0.5991350526252783,
+			"address_components" : [{
+					"long_name" : "Friendship Heights Metro Station",
+					"short_name" : "Friendship Heights Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Bethesda",
+					"short_name" : "Bethesda",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Bethesda",
+					"short_name" : "Bethesda",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "7",
+					"short_name" : "7",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Montgomery",
+					"short_name" : "Montgomery",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20815",
+					"short_name" : "20815",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Friendship Heights Metro Station, Bethesda, MD 20815, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.960997,
+					"lng" : -77.085767
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.96234598029150,
+						"lng" : -77.08441801970849
+					},
+					"southwest" : {
+						"lat" : 38.95964801970850,
+						"lng" : -77.08711598029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata34",
+			"fromFrequency" : "0.3929684192684808",
+			"toFrequency" : 0.6521348426490995,
+			"address_components" : [{
+					"long_name" : "Gallery Place Chinatown Metro Station",
+					"short_name" : "Gallery Pl Chinatown Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20001",
+					"short_name" : "20001",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Gallery Pl-Chinatown Metro Station, Washington, DC 20001, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.898354,
+					"lng" : -77.021527
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.90124998029150,
+						"lng" : -77.02019001970849
+					},
+					"southwest" : {
+						"lat" : 38.89855201970850,
+						"lng" : -77.02288798029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata35",
+			"fromFrequency" : "0.8880595030290171",
+			"toFrequency" : 0.3611930539463044,
+			"address_components" : [{
+					"long_name" : "Georgia Ave Petworth Metro Station",
+					"short_name" : "Georgia Ave Petworth Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20010",
+					"short_name" : "20010",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Georgia Ave Petworth Station, Washington, DC 20010, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.936255,
+					"lng" : -77.024252
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.93847398029150,
+						"lng" : -77.02329601970848
+					},
+					"southwest" : {
+						"lat" : 38.93577601970850,
+						"lng" : -77.02599398029149
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata36",
+			"fromFrequency" : "0.6673473583877403",
+			"toFrequency" : 0.3064313323470408,
+			"address_components" : [{
+					"long_name" : "Glenmont Metro Station",
+					"short_name" : "Glenmont Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Wheaton - Glenmont",
+					"short_name" : "Wheaton - Glenmont",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Wheaton-Glenmont",
+					"short_name" : "Wheaton-Glenmont",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "13",
+					"short_name" : "13",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Montgomery",
+					"short_name" : "Montgomery",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20906",
+					"short_name" : "20906",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Glenmont Metro Station, Wheaton-Glenmont, MD 20906, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 39.061743,
+					"lng" : -77.053097
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 39.06309198029150,
+						"lng" : -77.05174801970850
+					},
+					"southwest" : {
+						"lat" : 39.06039401970850,
+						"lng" : -77.05444598029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata37",
+			"fromFrequency" : "0.9095890653628631",
+			"toFrequency" : 0.8696004289345663,
+			"address_components" : [{
+					"long_name" : "Greenbelt Metro Station",
+					"short_name" : "Greenbelt Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Greenbelt",
+					"short_name" : "Greenbelt",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Greenbelt",
+					"short_name" : "Greenbelt",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "Berwyn",
+					"short_name" : "21, Berwyn",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Prince George's",
+					"short_name" : "Prince George's",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20740",
+					"short_name" : "20740",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Greenbelt Metro Station, Greenbelt, MD 20740, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 39.011067,
+					"lng" : -76.911011
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 39.01327598029150,
+						"lng" : -76.90845201970849
+					},
+					"southwest" : {
+						"lat" : 39.01057801970850,
+						"lng" : -76.91114998029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata38",
+			"fromFrequency" : "0.34499611155377097",
+			"toFrequency" : 0.2790602992440431,
+			"address_components" : [{
+					"long_name" : "Grosvenor Metro Station",
+					"short_name" : "Grosvenor Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "North Bethesda",
+					"short_name" : "North Bethesda",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "North Bethesda",
+					"short_name" : "North Bethesda",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "4",
+					"short_name" : "4",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Montgomery",
+					"short_name" : "Montgomery",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20852",
+					"short_name" : "20852",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Grosvenor Metro Station, North Bethesda, MD 20852, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 39.029243,
+					"lng" : -77.103838
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 39.03011498029149,
+						"lng" : -77.10254701970850
+					},
+					"southwest" : {
+						"lat" : 39.02741701970849,
+						"lng" : -77.10524498029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata39",
+			"fromFrequency" : "0.76576950691369",
+			"toFrequency" : 0.24631757022553946,
+			"address_components" : [{
+					"long_name" : "Huntington Av Metro Station",
+					"short_name" : "Huntington Av Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Huntington",
+					"short_name" : "Huntington",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Huntington",
+					"short_name" : "Huntington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "Mount Vernon",
+					"short_name" : "Mt Vernon",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Fairfax",
+					"short_name" : "Fairfax",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Virginia",
+					"short_name" : "VA",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "22303",
+					"short_name" : "22303",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Huntington Av Metro Station, Huntington, VA 22303, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.793895,
+					"lng" : -77.074955
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.79524398029150,
+						"lng" : -77.07360601970849
+					},
+					"southwest" : {
+						"lat" : 38.79254601970850,
+						"lng" : -77.07630398029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata40",
+			"fromFrequency" : "0.7560105149031945",
+			"toFrequency" : 0.7075132772665965,
+			"address_components" : [{
+					"long_name" : "Judiciary Square Metro Station",
+					"short_name" : "Judiciary Square Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20001",
+					"short_name" : "20001",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Judiciary Square Metro Station, Washington, DC 20001, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.896121,
+					"lng" : -77.016312
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.89746998029150,
+						"lng" : -77.01496301970850
+					},
+					"southwest" : {
+						"lat" : 38.89477201970850,
+						"lng" : -77.01766098029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                 }, {
+                 "memberOfList" : "Wmata40.5",
+                 "fromFrequency" : "0.7083749042632178",
+                 "toFrequency" : 0.3855850730434317,
+                 "address_components" : [{
+                                         "long_name" : "King Street Metro Station - Bay B",
+                                         "short_name" : "King Street Metro",
+                                         "types" : ["bus_station", "transit_station", "train_station", "establishment"]
+                                         }, {
+                                         "long_name" : "Old Town",
+                                         "short_name" : "Old Town",
+                                         "types" : ["neighborhood", "political"]
+                                         }, {
+                                         "long_name" : "Alexandria",
+                                         "short_name" : "Alexandria",
+                                         "types" : ["locality", "political"]
+                                         }, {
+                                         "long_name" : "Virginia",
+                                         "short_name" : "VA",
+                                         "types" : ["administrative_area_level_1", "political"]
+                                         }, {
+                                         "long_name" : "United States",
+                                         "short_name" : "US",
+                                         "types" : ["country", "political"]
+                                         }, {
+                                         "long_name" : "22314",
+                                         "short_name" : "22314",
+                                         "types" : ["postal_code"]
+                                         }
+                                         ],
+                 "excludeFromSearch":0,
+                 "formatted_address" : "King Street Metro Station - Bay B, Alexandria, VA 22314, USA",
+                 "geometry" : {
+                 "location" : {
+                 "lat" : 38.806506,
+                 "lng" : -77.060796
+                 },
+                 "location_type" : "APPROXIMATE",
+                 "viewport" : {
+                 "northeast" : {
+                 "lat" : 38.80774898029150,
+                 "lng" : -77.05956401970849
+                 },
+                 "southwest" : {
+                 "lat" : 38.80505101970850,
+                 "lng" : -77.06226198029151
+                 }
+                 }
+                 },
+                 "types" : ["bus_station", "transit_station", "train_station", "establishment"]
+                 }, {
+			"memberOfList" : "Wmata41",
+			"fromFrequency" : "0.33251754245872855",
+			"toFrequency" : 0.04518036219023003,
+			"address_components" : [{
+					"long_name" : "Landover Metro Station",
+					"short_name" : "Landover Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Greater Landover",
+					"short_name" : "Greater Landover",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Greater Landover",
+					"short_name" : "Greater Landover",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "Lanham",
+					"short_name" : "20, Lanham",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Prince George's",
+					"short_name" : "Prince George's",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20785",
+					"short_name" : "20785",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Landover Metro Station, Greater Landover, MD 20785, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.933994,
+					"lng" : -76.890005
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.93534298029150,
+						"lng" : -76.88865601970851
+					},
+					"southwest" : {
+						"lat" : 38.93264501970850,
+						"lng" : -76.89135398029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata42",
+			"fromFrequency" : "0.22352118456548264",
+			"toFrequency" : 0.8837799497177994,
+			"address_components" : [{
+					"long_name" : "Largo Town Center Metro Station",
+					"short_name" : "Largo Town Center Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Lake Arbor",
+					"short_name" : "Lake Arbor",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Lake Arbor",
+					"short_name" : "Lake Arbor",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "13, Kent",
+					"short_name" : "13, Kent",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Prince George's",
+					"short_name" : "Prince George's",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20774",
+					"short_name" : "20774",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Largo Town Center Metro Station, Lake Arbor, MD 20774, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.900269,
+					"lng" : -76.844540
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.90161798029151,
+						"lng" : -76.84319101970848
+					},
+					"southwest" : {
+						"lat" : 38.89892001970851,
+						"lng" : -76.84588898029149
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata43",
+			"fromFrequency" : "0.48673244390717196",
+			"toFrequency" : 0.1240473800409937,
+			"address_components" : [{
+					"long_name" : "L'Enfant Plaza Metro Station",
+					"short_name" : "L'Enfant Plaza Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Southwest Washington",
+					"short_name" : "Southwest Washington",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20024",
+					"short_name" : "20024",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "L'Enfant Plaza Metro Station, Washington, DC 20024, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.884886,
+					"lng" : -77.021600
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.88605198029149,
+						"lng" : -77.01960801970850
+					},
+					"southwest" : {
+						"lat" : 38.88335401970850,
+						"lng" : -77.02230598029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata44",
+			"fromFrequency" : "0.27356758975608664",
+			"toFrequency" : 0.006227799551777213,
+			"address_components" : [{
+					"long_name" : "McPherson Sq Metro Station",
+					"short_name" : "McPherson Sq Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Downtown",
+					"short_name" : "Downtown",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20005",
+					"short_name" : "20005",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "McPherson Sq Metro Station, Washington, DC 20005, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.901335,
+					"lng" : -77.031958
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.90248498029151,
+						"lng" : -77.03072301970850
+					},
+					"southwest" : {
+						"lat" : 38.89978701970851,
+						"lng" : -77.03342098029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                 }, {
+                 "memberOfList" : "Wmata44.5",
+                 "fromFrequency" : "0.891816802404412",
+                 "toFrequency" : 0.8301946259078761,
+                 "address_components" : [{
+                                         "long_name" : "Medical Center Metro/Naval Med Ctr & NIH",
+                                         "short_name" : "Medical Center Metro",
+                                         "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                                         }, {
+                                         "long_name" : "Bethesda",
+                                         "short_name" : "Bethesda",
+                                         "types" : ["neighborhood", "political"]
+                                         }, {
+                                         "long_name" : "Bethesda",
+                                         "short_name" : "Bethesda",
+                                         "types" : ["locality", "political"]
+                                         }, {
+                                         "long_name" : "7",
+                                         "short_name" : "7",
+                                         "types" : ["administrative_area_level_3", "political"]
+                                         }, {
+                                         "long_name" : "Montgomery",
+                                         "short_name" : "Montgomery",
+                                         "types" : ["administrative_area_level_2", "political"]
+                                         }, {
+                                         "long_name" : "Maryland",
+                                         "short_name" : "MD",
+                                         "types" : ["administrative_area_level_1", "political"]
+                                         }, {
+                                         "long_name" : "United States",
+                                         "short_name" : "US",
+                                         "types" : ["country", "political"]
+                                         }, {
+                                         "long_name" : "20892",
+                                         "short_name" : "20892",
+                                         "types" : ["postal_code"]
+                                         }
+                                         ],
+                 "excludeFromSearch":0,
+                 "formatted_address" : "Medical Center Metro/Naval Med Ctr & NIH, Bethesda, MD 20892, USA",
+                 "geometry" : {
+                 "location" : {
+                 "lat" : 39.000062,
+                 "lng" : -77.096948
+                 },
+                 "location_type" : "APPROXIMATE",
+                 "viewport" : {
+                 "northeast" : {
+                 "lat" : 39.00141098029150,
+                 "lng" : -77.09559901970849
+                 },
+                 "southwest" : {
+                 "lat" : 38.99871301970850,
+                 "lng" : -77.09829698029149
+                 }
+                 }
+                 },
+                 "partial_match" : true,
+                 "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                 }, {
+			"memberOfList" : "Wmata45",
+			"fromFrequency" : "0.8035725116440205",
+			"toFrequency" : 0.3241799547624542,
+			"address_components" : [{
+					"long_name" : "Metro Center Metro Station",
+					"short_name" : "Metro Center Station",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20001",
+					"short_name" : "20001",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Metro Center Metro Station, Washington, DC 20001, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.898327,
+					"lng" : -77.027777
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.89967598029150,
+						"lng" : -77.02642801970850
+					},
+					"southwest" : {
+						"lat" : 38.89697801970850,
+						"lng" : -77.02912598029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata46",
+			"fromFrequency" : "0.12053539497761456",
+			"toFrequency" : 0.30751683398759855,
+			"address_components" : [{
+					"long_name" : "Minnesota Ave Metro Station",
+					"short_name" : "Minnesota Ave Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Lower Central NE",
+					"short_name" : "Lower Central NE",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20019",
+					"short_name" : "20019",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Minnesota Ave Metro Station, Washington, DC 20019, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.898313,
+					"lng" : -76.947716
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.89966198029150,
+						"lng" : -76.94636701970849
+					},
+					"southwest" : {
+						"lat" : 38.89696401970850,
+						"lng" : -76.94906498029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata47",
+			"fromFrequency" : "0.38630474970930395",
+			"toFrequency" : 0.457007803531861,
+			"address_components" : [{
+					"long_name" : "Morgan Boulevard Metro Station",
+					"short_name" : "Morgan Boulevard Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "13, Kent",
+					"short_name" : "13, Kent",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Prince George's",
+					"short_name" : "Prince George's",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20785",
+					"short_name" : "20785",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Morgan Boulevard Metro Station, 13, Kent, MD 20785, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.893586,
+					"lng" : -76.868498
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.89493498029150,
+						"lng" : -76.86714901970849
+					},
+					"southwest" : {
+						"lat" : 38.89223701970850,
+						"lng" : -76.86984698029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                 }, {
+                 "memberOfList" : "Wmata47.5",
+                 "fromFrequency" : "0.8645589488991782",
+                 "toFrequency" : 0.7893899617198662,
+                 "address_components" : [{
+                                         "long_name" : "Mt Vernon Sq/7th St-Convention Center",
+                                         "short_name" : "Mt Vernon Sq Metro",
+                                         "types" : ["transit_station", "train_station", "establishment"]
+                                         }, {
+                                         "long_name" : "Mount Vernon Square",
+                                         "short_name" : "Mount Vernon Square",
+                                         "types" : ["neighborhood", "political"]
+                                         }, {
+                                         "long_name" : "Washington",
+                                         "short_name" : "Washington",
+                                         "types" : ["locality", "political"]
+                                         }, {
+                                         "long_name" : "District of Columbia",
+                                         "short_name" : "DC",
+                                         "types" : ["administrative_area_level_1", "political"]
+                                         }, {
+                                         "long_name" : "United States",
+                                         "short_name" : "US",
+                                         "types" : ["country", "political"]
+                                         }, {
+                                         "long_name" : "20001",
+                                         "short_name" : "20001",
+                                         "types" : ["postal_code"]
+                                         }
+                                         ],
+                 "excludeFromSearch":0,
+                 "formatted_address" : "MT Vernon Sq/7th St-Convention Center, Washington, DC 20001, USA",
+                 "geometry" : {
+                 "location" : {
+                 "lat" : 38.905638,
+                 "lng" : -77.021905
+                 },
+                 "location_type" : "APPROXIMATE",
+                 "viewport" : {
+                 "northeast" : {
+                 "lat" : 38.90698698029149,
+                 "lng" : -77.02055601970849
+                 },
+                 "southwest" : {
+                 "lat" : 38.90428901970849,
+                 "lng" : -77.02325398029150
+                 }
+                 }
+                 },
+                 "partial_match" : true,
+                 "types" : ["transit_station", "train_station", "establishment"]
+                 }, {
+			"memberOfList" : "Wmata48",
+			"fromFrequency" : "0.3348036535729222",
+			"toFrequency" : 0.7720802965967264,
+			"address_components" : [{
+					"long_name" : "National Airport Metro Station",
+					"short_name" : "National Airport Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "2400",
+					"short_name" : "2400",
+					"types" : ["street_number"]
+				}, {
+					"long_name" : "South Smith Boulevard",
+					"short_name" : "S Smith Blvd",
+					"types" : ["route"]
+				}, {
+					"long_name" : "Arlington",
+					"short_name" : "Arlington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "Arlington",
+					"short_name" : "Arlington",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Virginia",
+					"short_name" : "VA",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "22202",
+					"short_name" : "22202",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "National Airport Metro Station, 2400 South Smith Boulevard, Arlington, VA 22202, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.853003,
+					"lng" : -77.043475
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.85435198029151,
+						"lng" : -77.04212601970850
+					},
+					"southwest" : {
+						"lat" : 38.85165401970851,
+						"lng" : -77.04482398029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                 }, {
+                 "memberOfList" : "Wmata48.5",
+                 "fromFrequency" : "0.6492697016432616",
+                 "toFrequency" : 0.5986185848229282,
+                 "address_components" : [{
+                                         "long_name" : "Navy Yard Metro Station",
+                                         "short_name" : "Navy Yard Metro",
+                                         "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                                         }, {
+                                         "long_name" : "Southeast Washington",
+                                         "short_name" : "Southeast Washington",
+                                         "types" : ["neighborhood", "political"]
+                                         }, {
+                                         "long_name" : "Washington",
+                                         "short_name" : "Washington",
+                                         "types" : ["locality", "political"]
+                                         }, {
+                                         "long_name" : "District of Columbia",
+                                         "short_name" : "DC",
+                                         "types" : ["administrative_area_level_1", "political"]
+                                         }, {
+                                         "long_name" : "United States",
+                                         "short_name" : "US",
+                                         "types" : ["country", "political"]
+                                         }, {
+                                         "long_name" : "20003",
+                                         "short_name" : "20003",
+                                         "types" : ["postal_code"]
+                                         }
+                                         ],
+                 "excludeFromSearch":0,
+                 "formatted_address" : "Navy Yard Metro Station, Washington, DC 20003, USA",
+                 "geometry" : {
+                 "location" : {
+                 "lat" : 38.876517,
+                 "lng" : -77.004749
+                 },
+                 "location_type" : "APPROXIMATE",
+                 "viewport" : {
+                 "northeast" : {
+                 "lat" : 38.87786598029150,
+                 "lng" : -77.00340001970849
+                 },
+                 "southwest" : {
+                 "lat" : 38.87516801970850,
+                 "lng" : -77.00609798029150
+                 }
+                 }
+                 },
+                 "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                 }, {
+			"memberOfList" : "Wmata49",
+			"fromFrequency" : "0.8901594180630358",
+			"toFrequency" : 0.3142527762210293,
+			"address_components" : [{
+					"long_name" : "Naylor Road Metro Station",
+					"short_name" : "Naylor Road Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Hillcrest Heights",
+					"short_name" : "Hillcrest Heights",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Hillcrest Heights",
+					"short_name" : "Hillcrest Heights",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "6, Spauldings",
+					"short_name" : "6, Spauldings",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Prince George's",
+					"short_name" : "Prince George's",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20748",
+					"short_name" : "20748",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Naylor Road Metro Station, Hillcrest Heights, MD 20748, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.851164,
+					"lng" : -76.956314
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.85251298029149,
+						"lng" : -76.95496501970848
+					},
+					"southwest" : {
+						"lat" : 38.84981501970850,
+						"lng" : -76.95766298029149
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata50",
+			"fromFrequency" : "0.7603815761454044",
+			"toFrequency" : 0.0756486082362744,
+			"address_components" : [{
+					"long_name" : "New Carrollton Metro Station",
+					"short_name" : "New Carrollton Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Lanham",
+					"short_name" : "20, Lanham",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Prince George's",
+					"short_name" : "Prince George's",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20785",
+					"short_name" : "20785",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "New Carrollton Metro Station, Lanham, MD 20785, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.946912,
+					"lng" : -76.870445
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.94826098029149,
+						"lng" : -76.86909601970849
+					},
+					"southwest" : {
+						"lat" : 38.94556301970850,
+						"lng" : -76.87179398029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata51",
+			"fromFrequency" : "0.2908795411861159",
+			"toFrequency" : 0.2894543791135865,
+			"address_components" : [{
+					"long_name" : "Noma-Gallaudet U (New York Ave) Metro Station",
+					"short_name" : "Noma - Gallaudet U Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "NoMa",
+					"short_name" : "NoMa",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20002",
+					"short_name" : "20002",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Noma-Gallaudet U (New York Ave) Metro Station, Washington, DC 20002, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.907413,
+					"lng" : -77.002981
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.90876198029149,
+						"lng" : -77.00163201970848
+					},
+					"southwest" : {
+						"lat" : 38.90606401970850,
+						"lng" : -77.00432998029149
+					}
+				}
+			},
+			"partial_match" : true,
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata52",
+			"fromFrequency" : "0.8176973181410518",
+			"toFrequency" : 0.9544883038637322,
+			"address_components" : [{
+					"long_name" : "Pentagon City Metro Station",
+					"short_name" : "Pentagon City Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Aurora Highlands",
+					"short_name" : "Aurora Highlands",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Arlington",
+					"short_name" : "Arlington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "Arlington",
+					"short_name" : "Arlington",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Virginia",
+					"short_name" : "VA",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "22202",
+					"short_name" : "22202",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Pentagon City Metro Station, Arlington, VA 22202, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.862961,
+					"lng" : -77.059142
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.86401898029150,
+						"lng" : -77.05851401970850
+					},
+					"southwest" : {
+						"lat" : 38.86132101970851,
+						"lng" : -77.06121198029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata53",
+			"fromFrequency" : "0.8441622978362867",
+			"toFrequency" : 0.727260290807148,
+			"address_components" : [{
+					"long_name" : "Pentagon Metro Station",
+					"short_name" : "Pentagon Metro",
+					"types" : ["transit_station", "train_station", "establishment"]
+				}, {
+					"long_name" : "Arlington",
+					"short_name" : "Arlington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "Arlington",
+					"short_name" : "Arlington",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Virginia",
+					"short_name" : "VA",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "22202",
+					"short_name" : "22202",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Pentagon Metro Station, Arlington, VA 22202, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.869474,
+					"lng" : -77.053777
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.87082298029150,
+						"lng" : -77.05242801970850
+					},
+					"southwest" : {
+						"lat" : 38.86812501970850,
+						"lng" : -77.05512598029151
+					}
+				}
+			},
+			"types" : ["transit_station", "train_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata54",
+			"fromFrequency" : "0.3003335013716507",
+			"toFrequency" : 0.9434735995023821,
+			"address_components" : [{
+					"long_name" : "Potomac Ave Metro",
+					"short_name" : "Potomac Ave Metro",
+					"types" : ["transit_station", "train_station", "establishment"]
+				}, {
+					"long_name" : "Hill East",
+					"short_name" : "Hill East",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20003",
+					"short_name" : "20003",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Potomac Ave Metro, Washington, DC 20003, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.880874,
+					"lng" : -76.985397
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.88222298029150,
+						"lng" : -76.98404801970848
+					},
+					"southwest" : {
+						"lat" : 38.87952501970850,
+						"lng" : -76.98674598029149
+					}
+				}
+			},
+			"types" : ["transit_station", "train_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata55",
+			"fromFrequency" : "0.9839482868111056",
+			"toFrequency" : 0.30141576460928,
+			"address_components" : [{
+					"long_name" : "Prince Georges Plaza Metro Station",
+					"short_name" : "Prince Georges Plaza Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Chillum",
+					"short_name" : "Chillum",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Hyattsville",
+					"short_name" : "Hyattsville",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "17, Chillum",
+					"short_name" : "17, Chillum",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Prince George's",
+					"short_name" : "Prince George's",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20782",
+					"short_name" : "20782",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Prince Georges Plaza Metro Station, Hyattsville, MD 20782, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.965252,
+					"lng" : -76.955988
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.96660098029150,
+						"lng" : -76.95463901970849
+					},
+					"southwest" : {
+						"lat" : 38.96390301970850,
+						"lng" : -76.95733698029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata56",
+			"fromFrequency" : "0.6543879714021317",
+			"toFrequency" : 0.3098034058724385,
+			"address_components" : [{
+					"long_name" : "Rhode Island Metro Station",
+					"short_name" : "Rhode Island Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Brentwood",
+					"short_name" : "Brentwood",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20018",
+					"short_name" : "20018",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Rhode Island Metro Station, Washington, DC 20018, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.920778,
+					"lng" : -76.995682
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.92212698029150,
+						"lng" : -76.99433301970851
+					},
+					"southwest" : {
+						"lat" : 38.91942901970850,
+						"lng" : -76.99703098029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata57",
+			"fromFrequency" : "0.6155212194974672",
+			"toFrequency" : 0.563206171166027,
+			"address_components" : [{
+					"long_name" : "Rockville Metro Station",
+					"short_name" : "Rockville Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Rockville",
+					"short_name" : "Rockville",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Rockville",
+					"short_name" : "Rockville",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "4",
+					"short_name" : "4",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Montgomery",
+					"short_name" : "Montgomery",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20850",
+					"short_name" : "20850",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Rockville Metro Station, Rockville, MD 20850, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 39.085452,
+					"lng" : -77.146689
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 39.08680098029150,
+						"lng" : -77.14534001970848
+					},
+					"southwest" : {
+						"lat" : 39.08410301970850,
+						"lng" : -77.14803798029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata58",
+			"fromFrequency" : "0.5152702735685634",
+			"toFrequency" : 0.0531215345946664,
+			"address_components" : [{
+					"long_name" : "Rosslyn Metro Station",
+					"short_name" : "Rosslyn Metro",
+					"types" : ["transit_station", "train_station", "establishment"]
+				}, {
+					"long_name" : "North Rosslyn",
+					"short_name" : "North Rosslyn",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Rosslyn",
+					"short_name" : "Rosslyn",
+					"types" : ["sublocality", "political"]
+				}, {
+					"long_name" : "Arlington",
+					"short_name" : "Arlington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "Arlington",
+					"short_name" : "Arlington",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Virginia",
+					"short_name" : "VA",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "22209",
+					"short_name" : "22209",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Rosslyn Metro Station, Arlington, VA 22209, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.895493,
+					"lng" : -77.071954
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.89684198029149,
+						"lng" : -77.07060501970849
+					},
+					"southwest" : {
+						"lat" : 38.89414401970850,
+						"lng" : -77.07330298029150
+					}
+				}
+			},
+			"types" : ["transit_station", "train_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata59",
+			"fromFrequency" : "0.3736394001810661",
+			"toFrequency" : 0.29917704908821907,
+			"address_components" : [{
+					"long_name" : "Shady Grove Metro Station",
+					"short_name" : "Shady Grove Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "15903",
+					"short_name" : "15903",
+					"types" : ["street_number"]
+				}, {
+					"long_name" : "Somerville Drive",
+					"short_name" : "Somerville Drive",
+					"types" : ["route"]
+				}, {
+					"long_name" : "Rockville",
+					"short_name" : "Rockville",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "9",
+					"short_name" : "9",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Montgomery",
+					"short_name" : "Montgomery",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20855",
+					"short_name" : "20855",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Shady Grove Metro Station, 15903 Somerville Drive, Rockville, MD 20855, USA",
+			"geometry" : {
+				"bounds" : {
+					"northeast" : {
+						"lat" : 39.12091220,
+						"lng" : -77.16405929999999
+					},
+					"southwest" : {
+						"lat" : 39.11919430,
+						"lng" : -77.16548510
+					}
+				},
+				"location" : {
+					"lat" : 39.119990,
+					"lng" : -77.164761
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 39.12140223029149,
+						"lng" : -77.16342321970849
+					},
+					"southwest" : {
+						"lat" : 39.11870426970849,
+						"lng" : -77.16612118029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata60",
+			"fromFrequency" : "0.9691274851688888",
+			"toFrequency" : 0.04299387541655597,
+			"address_components" : [{
+					"long_name" : "Shaw Metro Station",
+					"short_name" : "Shaw Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Cardozo / Shaw",
+					"short_name" : "Cardozo / Shaw",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20001",
+					"short_name" : "20001",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Shaw Metro Station, Washington, DC 20001, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.914546,
+					"lng" : -77.021927
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.91589498029150,
+						"lng" : -77.02057801970848
+					},
+					"southwest" : {
+						"lat" : 38.91319701970851,
+						"lng" : -77.02327598029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                 }, {
+                 "memberOfList" : "Wmata60.5",
+                 "fromFrequency" : "0.17119032286523728",
+                 "toFrequency" : 0.9575869354721709,
+                 "address_components" : [{
+                                         "long_name" : "Silver Spring Metro Station",
+                                         "short_name" : "Silver Spring Metro",
+                                         "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                                         }, {
+                                         "long_name" : "Downtown Silver Spring",
+                                         "short_name" : "Downtown Silver Spring",
+                                         "types" : ["neighborhood", "political"]
+                                         }, {
+                                         "long_name" : "Silver Spring",
+                                         "short_name" : "Silver Spring",
+                                         "types" : ["locality", "political"]
+                                         }, {
+                                         "long_name" : "13",
+                                         "short_name" : "13",
+                                         "types" : ["administrative_area_level_3", "political"]
+                                         }, {
+                                         "long_name" : "Montgomery",
+                                         "short_name" : "Montgomery",
+                                         "types" : ["administrative_area_level_2", "political"]
+                                         }, {
+                                         "long_name" : "Maryland",
+                                         "short_name" : "MD",
+                                         "types" : ["administrative_area_level_1", "political"]
+                                         }, {
+                                         "long_name" : "United States",
+                                         "short_name" : "US",
+                                         "types" : ["country", "political"]
+                                         }, {
+                                         "long_name" : "20910",
+                                         "short_name" : "20910",
+                                         "types" : ["postal_code"]
+                                         }
+                                         ],
+                 "excludeFromSearch":0,
+                 "formatted_address" : "Silver Spring Metro Station, Silver Spring, MD 20910, USA",
+                 "geometry" : {
+                 "location" : {
+                 "lat" : 38.993658,
+                 "lng" : -77.032307
+                 },
+                 "location_type" : "APPROXIMATE",
+                 "viewport" : {
+                 "northeast" : {
+                 "lat" : 38.99527698029149,
+                 "lng" : -77.02671601970849
+                 },
+                 "southwest" : {
+                 "lat" : 38.99257901970849,
+                 "lng" : -77.02941398029151
+                 }
+                 }
+                 },
+                 "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                 }, {
+			"memberOfList" : "Wmata61",
+			"fromFrequency" : "0.9364274856427882",
+			"toFrequency" : 0.49027640660317373,
+			"address_components" : [{
+					"long_name" : "Smithsonian Metro Station",
+					"short_name" : "Smithsonian Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Southwest Washington",
+					"short_name" : "Southwest Washington",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20024",
+					"short_name" : "20024",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Smithsonian Metro Station, Washington, DC 20024, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.887587,
+					"lng" : -77.028174
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.88872398029150,
+						"lng" : -77.02709601970848
+					},
+					"southwest" : {
+						"lat" : 38.88602601970850,
+						"lng" : -77.02979398029149
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata62",
+			"fromFrequency" : "0.6047260140705314",
+			"toFrequency" : 0.721140821100503,
+			"address_components" : [{
+					"long_name" : "Southern Ave Metro Station",
+					"short_name" : "Southern Ave Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Hillcrest Heights",
+					"short_name" : "Hillcrest Heights",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Hillcrest Heights",
+					"short_name" : "Hillcrest Heights",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "12, Oxon Hill",
+					"short_name" : "12, Oxon Hill",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Prince George's",
+					"short_name" : "Prince George's",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20745",
+					"short_name" : "20745",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Southern Ave Metro Station, Hillcrest Heights, MD 20745, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.841047,
+					"lng" : -76.975003
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.84239598029149,
+						"lng" : -76.97365401970850
+					},
+					"southwest" : {
+						"lat" : 38.83969801970849,
+						"lng" : -76.97635198029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata63",
+			"fromFrequency" : "0.4125152082960125",
+			"toFrequency" : 0.4741345792520042,
+			"address_components" : [{
+					"long_name" : "Stadium Armory Metro Station",
+					"short_name" : "Stadium Armory Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Hill East",
+					"short_name" : "Hill East",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20003",
+					"short_name" : "20003",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Stadium Armory Metro Station, Washington, DC 20003, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.885982,
+					"lng" : -76.977168
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.88733098029150,
+						"lng" : -76.97581901970848
+					},
+					"southwest" : {
+						"lat" : 38.88463301970850,
+						"lng" : -76.97851698029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata64",
+			"fromFrequency" : "0.9264982132645115",
+			"toFrequency" : 0.30851925008808734,
+			"address_components" : [{
+					"long_name" : "Suitland Metro Station",
+					"short_name" : "Suitland Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Suitland - Silver Hill",
+					"short_name" : "Suitland - Silver Hill",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Suitland-Silver Hill",
+					"short_name" : "Suitland-Silver Hill",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "6, Spauldings",
+					"short_name" : "6, Spauldings",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Prince George's",
+					"short_name" : "Prince George's",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20746",
+					"short_name" : "20746",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Suitland Metro Station, Suitland-Silver Hill, MD 20746, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.843839,
+					"lng" : -76.931610
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.84518798029150,
+						"lng" : -76.93026101970848
+					},
+					"southwest" : {
+						"lat" : 38.84249001970850,
+						"lng" : -76.93295898029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata65",
+			"fromFrequency" : "0.1519176162112027",
+			"toFrequency" : 0.37801666919537724,
+			"address_components" : [{
+					"long_name" : "Takoma Metro Station",
+					"short_name" : "Takoma Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Takoma",
+					"short_name" : "Takoma",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20012",
+					"short_name" : "20012",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Takoma Metro Station, Washington, DC 20012, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.975432,
+					"lng" : -77.017421
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.97678098029149,
+						"lng" : -77.01607201970849
+					},
+					"southwest" : {
+						"lat" : 38.97408301970849,
+						"lng" : -77.01876998029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata66",
+			"fromFrequency" : "0.11059635723538475",
+			"toFrequency" : 0.12629318909962173,
+			"address_components" : [{
+					"long_name" : "Tenleytown Metro Station",
+					"short_name" : "Tenleytown Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Tenleytown",
+					"short_name" : "Tenleytown",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20016",
+					"short_name" : "20016",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Tenleytown Metro Station, Washington, DC 20016, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.947849,
+					"lng" : -77.079299
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.94919798029150,
+						"lng" : -77.07795001970848
+					},
+					"southwest" : {
+						"lat" : 38.94650001970850,
+						"lng" : -77.08064798029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata67",
+			"fromFrequency" : "0.0704084668959758",
+			"toFrequency" : 0.012053720858605677,
+			"address_components" : [{
+					"long_name" : "Twinbrook Metro Station",
+					"short_name" : "Twinbrook Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Rockville",
+					"short_name" : "Rockville",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Rockville",
+					"short_name" : "Rockville",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "4",
+					"short_name" : "4",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Montgomery",
+					"short_name" : "Montgomery",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20852",
+					"short_name" : "20852",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Twinbrook Metro Station, Rockville, MD 20852, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 39.062389,
+					"lng" : -77.120792
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 39.06373798029149,
+						"lng" : -77.11944301970850
+					},
+					"southwest" : {
+						"lat" : 39.06104001970849,
+						"lng" : -77.12214098029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata68",
+			"fromFrequency" : "0.40317831174772667",
+			"toFrequency" : 0.4649279099027597,
+			"address_components" : [{
+					"long_name" : "U Street Metro Station",
+					"short_name" : "U Street Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Cardozo / Shaw",
+					"short_name" : "Cardozo / Shaw",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20009",
+					"short_name" : "20009",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "U Street Metro Station, Washington, DC 20009, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.917015,
+					"lng" : -77.029169
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.91798898029150,
+						"lng" : -77.02781001970851
+					},
+					"southwest" : {
+						"lat" : 38.91529101970850,
+						"lng" : -77.03050798029152
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata69",
+			"fromFrequency" : "0.7226476451788023",
+			"toFrequency" : 0.19067819619653303,
+			"address_components" : [{
+					"long_name" : "Union Station Metro Station",
+					"short_name" : "Union Station Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Near Northeast",
+					"short_name" : "Near Northeast",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20002",
+					"short_name" : "20002",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Union Station Metro Station, Washington, DC 20002, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.897770,
+					"lng" : -77.006402
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.89911898029150,
+						"lng" : -77.00505301970848
+					},
+					"southwest" : {
+						"lat" : 38.89642101970851,
+						"lng" : -77.00775098029149
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                 }, {
+                 "memberOfList" : "Wmata69.5",
+                 "fromFrequency" : "0.6004961411654655",
+                 "toFrequency" : 0.47743726440183465,
+                 "address_components" : [{
+                                         "long_name" : "Van Dorn Metro Station",
+                                         "short_name" : "Van Dorn Metro",
+                                         "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                                         }, {
+                                         "long_name" : "Rose Hill",
+                                         "short_name" : "Rose Hill",
+                                         "types" : ["neighborhood", "political"]
+                                         }, {
+                                         "long_name" : "Rose Hill",
+                                         "short_name" : "Rose Hill",
+                                         "types" : ["locality", "political"]
+                                         }, {
+                                         "long_name" : "Lee",
+                                         "short_name" : "Lee",
+                                         "types" : ["administrative_area_level_3", "political"]
+                                         }, {
+                                         "long_name" : "Fairfax",
+                                         "short_name" : "Fairfax",
+                                         "types" : ["administrative_area_level_2", "political"]
+                                         }, {
+                                         "long_name" : "Virginia",
+                                         "short_name" : "VA",
+                                         "types" : ["administrative_area_level_1", "political"]
+                                         }, {
+                                         "long_name" : "United States",
+                                         "short_name" : "US",
+                                         "types" : ["country", "political"]
+                                         }, {
+                                         "long_name" : "22333",
+                                         "short_name" : "22333",
+                                         "types" : ["postal_code"]
+                                         }
+                                         ],
+                 "excludeFromSearch":0,
+                 "formatted_address" : "Van Dorn Metro Station, Rose Hill, VA 22333, USA",
+                 "geometry" : {
+                 "location" : {
+                 "lat" : 38.799263,
+                 "lng" : -77.129111
+                 },
+                 "location_type" : "APPROXIMATE",
+                 "viewport" : {
+                 "northeast" : {
+                 "lat" : 38.80061198029149,
+                 "lng" : -77.12776201970848
+                 },
+                 "southwest" : {
+                 "lat" : 38.79791401970850,
+                 "lng" : -77.13045998029150
+                 }
+                 }
+                 },
+                 "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                 }, {
+			"memberOfList" : "Wmata70",
+			"fromFrequency" : "0.6837829780749558",
+			"toFrequency" : 0.41708716157079884,
+			"address_components" : [{
+					"long_name" : "Van Ness-UDC Metro Station",
+					"short_name" : "Van Ness-UDC Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Forest Hills",
+					"short_name" : "Forest Hills",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20008",
+					"short_name" : "20008",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Van Ness-UDC Metro Station, Washington, DC 20008, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.944519,
+					"lng" : -77.063716
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.94586798029150,
+						"lng" : -77.06236701970850
+					},
+					"southwest" : {
+						"lat" : 38.94317001970850,
+						"lng" : -77.06506498029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata71",
+			"fromFrequency" : "0.9110795839715684",
+			"toFrequency" : 0.8847605919696403,
+			"address_components" : [{
+					"long_name" : "Vienna Metro Station",
+					"short_name" : "Vienna Metro",
+					"types" : ["transit_station", "train_station", "establishment"]
+				}, {
+					"long_name" : "9550",
+					"short_name" : "9550",
+					"types" : ["street_number"]
+				}, {
+					"long_name" : "Saintsbury Drive",
+					"short_name" : "Saintsbury Dr",
+					"types" : ["route"]
+				}, {
+					"long_name" : "Oakton",
+					"short_name" : "Oakton",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Fairfax",
+					"short_name" : "Fairfax",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "Providence",
+					"short_name" : "Providence",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Fairfax",
+					"short_name" : "Fairfax",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Virginia",
+					"short_name" : "VA",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "22031",
+					"short_name" : "22031",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Vienna Metro Station, 9550 Saintsbury Drive, Fairfax, VA 22031, USA",
+			"geometry" : {
+				"bounds" : {
+					"northeast" : {
+						"lat" : 38.877881,
+						"lng" : -77.271363
+					},
+					"southwest" : {
+						"lat" : 38.87630490,
+						"lng" : -77.26977070
+					}
+				},
+				"location" : {
+					"lat" : 38.87712740,
+					"lng" : -77.26871160
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.87830788029150,
+						"lng" : -77.26728041970848
+					},
+					"southwest" : {
+						"lat" : 38.87560991970850,
+						"lng" : -77.26997838029151
+					}
+				}
+			},
+			"types" : ["parking", "transit_station", "train_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata72",
+			"fromFrequency" : "0.846535714635142",
+			"toFrequency" : 0.22770917058048268,
+			"address_components" : [{
+					"long_name" : "Virginia Square Metro Station",
+					"short_name" : "Virginia Square Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Virginia Square",
+					"short_name" : "Virginia Square",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Arlington",
+					"short_name" : "Arlington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "Arlington",
+					"short_name" : "Arlington",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Virginia",
+					"short_name" : "VA",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "22203",
+					"short_name" : "22203",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Virginia Square Metro Station, Arlington, VA 22203, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.883074,
+					"lng" : -77.103809
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.88442298029150,
+						"lng" : -77.10246001970849
+					},
+					"southwest" : {
+						"lat" : 38.88172501970850,
+						"lng" : -77.10515798029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata73",
+			"fromFrequency" : "0.5756287893388076",
+			"toFrequency" : 0.6977633018920917,
+			"address_components" : [{
+					"long_name" : "Waterfront Metro Station",
+					"short_name" : "Waterfront Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Southwest Washington",
+					"short_name" : "Southwest Washington",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20024",
+					"short_name" : "20024",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Waterfront Metro Station, Washington, DC 20024, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.876478,
+					"lng" : -77.017189
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.87824298029150,
+						"lng" : -77.01620701970849
+					},
+					"southwest" : {
+						"lat" : 38.87554501970850,
+						"lng" : -77.01890498029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                 }, {
+                 "memberOfList" : "Wmata73.5",
+                 "fromFrequency" : "0.7800120610319795",
+                 "toFrequency" : 0.6655222759190202,
+                 "address_components" : [{
+                                         "long_name" : "West Falls Church Metro",
+                                         "short_name" : "West Falls Church Metro",
+                                         "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                                         }, {
+                                         "long_name" : "Idylwood",
+                                         "short_name" : "Idylwood",
+                                         "types" : ["neighborhood", "political"]
+                                         }, {
+                                         "long_name" : "Idylwood",
+                                         "short_name" : "Idylwood",
+                                         "types" : ["locality", "political"]
+                                         }, {
+                                         "long_name" : "Dranesville",
+                                         "short_name" : "Dranesville",
+                                         "types" : ["administrative_area_level_3", "political"]
+                                         }, {
+                                         "long_name" : "Fairfax",
+                                         "short_name" : "Fairfax",
+                                         "types" : ["administrative_area_level_2", "political"]
+                                         }, {
+                                         "long_name" : "Virginia",
+                                         "short_name" : "VA",
+                                         "types" : ["administrative_area_level_1", "political"]
+                                         }, {
+                                         "long_name" : "United States",
+                                         "short_name" : "US",
+                                         "types" : ["country", "political"]
+                                         }, {
+                                         "long_name" : "22043",
+                                         "short_name" : "22043",
+                                         "types" : ["postal_code"]
+                                         }
+                                         ],
+                 "excludeFromSearch":0,
+                 "formatted_address" : "West Falls Church Metro, Idylwood, VA 22043, USA",
+                 "geometry" : {
+                 "location" : {
+                 "lat" : 38.900738,
+                 "lng" : -77.188871
+                 },
+                 "location_type" : "APPROXIMATE",
+                 "viewport" : {
+                 "northeast" : {
+                 "lat" : 38.90208698029149,
+                 "lng" : -77.18752201970850
+                 },
+                 "southwest" : {
+                 "lat" : 38.89938901970849,
+                 "lng" : -77.19021998029150
+                 }
+                 }
+                 },
+                 "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                 }, {
+			"memberOfList" : "Wmata74",
+			"fromFrequency" : "0.6880572348694215",
+			"toFrequency" : 0.008581482477794444,
+			"address_components" : [{
+					"long_name" : "West Hyattsville Metro Station",
+					"short_name" : "West Hyattsville Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Hyattsville",
+					"short_name" : "Hyattsville",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Hyattsville",
+					"short_name" : "Hyattsville",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "17, Chillum",
+					"short_name" : "17, Chillum",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Prince George's",
+					"short_name" : "Prince George's",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20782",
+					"short_name" : "20782",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "West Hyattsville Metro Station, Hyattsville, MD 20782, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.955028,
+					"lng" : -76.969522
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.95637698029149,
+						"lng" : -76.96817301970850
+					},
+					"southwest" : {
+						"lat" : 38.95367901970850,
+						"lng" : -76.97087098029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                 }, {
+                 "memberOfList" : "Wmata74.5",
+                 "fromFrequency" : "0.5695670485567497",
+                 "toFrequency" : 0.22166672930307763,
+                 "address_components" : [{
+                                         "long_name" : "Wheaton Metro Station",
+                                         "short_name" : "Wheaton Metro",
+                                         "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                                         }, {
+                                         "long_name" : "Wheaton - Glenmont",
+                                         "short_name" : "Wheaton - Glenmont",
+                                         "types" : ["neighborhood", "political"]
+                                         }, {
+                                         "long_name" : "Wheaton-Glenmont",
+                                         "short_name" : "Wheaton-Glenmont",
+                                         "types" : ["locality", "political"]
+                                         }, {
+                                         "long_name" : "13",
+                                         "short_name" : "13",
+                                         "types" : ["administrative_area_level_3", "political"]
+                                         }, {
+                                         "long_name" : "Montgomery",
+                                         "short_name" : "Montgomery",
+                                         "types" : ["administrative_area_level_2", "political"]
+                                         }, {
+                                         "long_name" : "Maryland",
+                                         "short_name" : "MD",
+                                         "types" : ["administrative_area_level_1", "political"]
+                                         }, {
+                                         "long_name" : "United States",
+                                         "short_name" : "US",
+                                         "types" : ["country", "political"]
+                                         }, {
+                                         "long_name" : "20902",
+                                         "short_name" : "20902",
+                                         "types" : ["postal_code"]
+                                         }
+                                         ],
+                 "excludeFromSearch":0,
+                 "formatted_address" : "Wheaton Metro Station, Wheaton-Glenmont, MD 20902, USA",
+                 "geometry" : {
+                 "location" : {
+                 "lat" : 39.038565,
+                 "lng" : -77.050776
+                 },
+                 "location_type" : "APPROXIMATE",
+                 "viewport" : {
+                 "northeast" : {
+                 "lat" : 39.03991398029150,
+                 "lng" : -77.04942701970850
+                 },
+                 "southwest" : {
+                 "lat" : 39.03721601970850,
+                 "lng" : -77.05212498029151
+                 }
+                 }
+                 },
+                 "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                 }, {
+			"memberOfList" : "Wmata75",
+			"fromFrequency" : "0.07347599941257599",
+			"toFrequency" : 0.9062991959616961,
+			"address_components" : [{
+					"long_name" : "White Flint Metro Station",
+					"short_name" : "White Flint Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "North Bethesda",
+					"short_name" : "North Bethesda",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "North Bethesda",
+					"short_name" : "North Bethesda",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "4",
+					"short_name" : "4",
+					"types" : ["administrative_area_level_3", "political"]
+				}, {
+					"long_name" : "Montgomery",
+					"short_name" : "Montgomery",
+					"types" : ["administrative_area_level_2", "political"]
+				}, {
+					"long_name" : "Maryland",
+					"short_name" : "MD",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20852",
+					"short_name" : "20852",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "White Flint Metro Station, North Bethesda, MD 20852, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 39.047162,
+					"lng" : -77.112782
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 39.04851098029150,
+						"lng" : -77.11143301970849
+					},
+					"southwest" : {
+						"lat" : 39.04581301970850,
+						"lng" : -77.11413098029151
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}, {
+			"memberOfList" : "Wmata76",
+			"fromFrequency" : "0.9333318936414666",
+			"toFrequency" : 0.11493099352742853,
+			"address_components" : [{
+					"long_name" : "Woodley Park-Zoo Metro Station",
+					"short_name" : "Woodley Park-Zoo Metro",
+					"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+				}, {
+					"long_name" : "Woodley Park",
+					"short_name" : "Woodley Park",
+					"types" : ["neighborhood", "political"]
+				}, {
+					"long_name" : "Washington",
+					"short_name" : "Washington",
+					"types" : ["locality", "political"]
+				}, {
+					"long_name" : "District of Columbia",
+					"short_name" : "DC",
+					"types" : ["administrative_area_level_1", "political"]
+				}, {
+					"long_name" : "United States",
+					"short_name" : "US",
+					"types" : ["country", "political"]
+				}, {
+					"long_name" : "20008",
+					"short_name" : "20008",
+					"types" : ["postal_code"]
+				}
+			],
+            "excludeFromSearch":0,
+			"formatted_address" : "Woodley Park-Zoo Metro Station, Washington, DC 20008, USA",
+			"geometry" : {
+				"location" : {
+					"lat" : 38.925000,
+					"lng" : -77.05235
+				},
+				"location_type" : "APPROXIMATE",
+				"viewport" : {
+					"northeast" : {
+						"lat" : 38.92634898029149,
+						"lng" : -77.05100101970849
+					},
+					"southwest" : {
+						"lat" : 38.92365101970849,
+						"lng" : -77.05369898029150
+					}
+				}
+			},
+			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
+		}
+	],
+	"status" : "OK"
+}
+ 
