@@ -783,7 +783,6 @@
 		8DE18C461725415800AA8112 /* back.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D398778172180BA0055BF06 /* back.png */; };
 		8DE18C471725415800AA8112 /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D398779172180BA0055BF06 /* back@2x.png */; };
 		8DE18C481725415800AA8112 /* nimblrCaltrain.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE18B301725316700AA8112 /* nimblrCaltrain.png */; };
-		8DE18C491725415800AA8112 /* Nimbler SF-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8D42C2F8163AC05C00880B33 /* Nimbler SF-Info.plist */; };
 		8DE18C531725460B00AA8112 /* Icon-DC.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE18C521725460B00AA8112 /* Icon-DC.png */; };
 		8DE18C551725461600AA8112 /* Icon-DC@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE18C541725461600AA8112 /* Icon-DC@2x.png */; };
 		8DE18C571725461F00AA8112 /* Default-DC.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE18C561725461E00AA8112 /* Default-DC.png */; };
@@ -807,6 +806,7 @@
 		8DF19C0016F727A10050FE00 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFF16F727A10050FE00 /* libsqlite3.0.dylib */; };
 		8DF35D631627F58500B99F4A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF35D621627F58400B99F4A /* main.m */; };
 		8DFD0DAD17263B56003FCB5A /* store101_DC.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE2B85172575F000CCD3D1 /* store101_DC.zip */; };
+		8DFD0DAF17265C92003FCB5A /* Nimbler DC-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8DE18C4F1725415A00AA8112 /* Nimbler DC-Info.plist */; };
 		8DFFB36C165DFBBB00A39BC4 /* SettingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */; };
 		8DFFB36D165DFBBB00A39BC4 /* SettingDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */; };
 		8DFFB3B2165E593400A39BC4 /* img_Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB3B0165E593300A39BC4 /* img_Settings.png */; };
@@ -2593,7 +2593,6 @@
 				8DE18C461725415800AA8112 /* back.png in Resources */,
 				8DE18C471725415800AA8112 /* back@2x.png in Resources */,
 				8DE18C481725415800AA8112 /* nimblrCaltrain.png in Resources */,
-				8DE18C491725415800AA8112 /* Nimbler SF-Info.plist in Resources */,
 				8DE18C531725460B00AA8112 /* Icon-DC.png in Resources */,
 				8DE18C551725461600AA8112 /* Icon-DC@2x.png in Resources */,
 				8DE18C571725461F00AA8112 /* Default-DC.png in Resources */,
@@ -2605,6 +2604,7 @@
 				8DE18C671725469F00AA8112 /* Icon-DC-72.png in Resources */,
 				8DE18C6B17254EE500AA8112 /* wmata-station.json in Resources */,
 				8DFD0DAD17263B56003FCB5A /* store101_DC.zip in Resources */,
+				8DFD0DAF17265C92003FCB5A /* Nimbler DC-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
