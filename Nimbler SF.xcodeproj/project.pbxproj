@@ -797,6 +797,8 @@
 		8DE42FEB16E0AEEE00A37AD3 /* img_legFerry@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE716E0AEEE00A37AD3 /* img_legFerry@2x.png */; };
 		8DE42FEC16E0AEEE00A37AD3 /* img_legFerrySelect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE816E0AEEE00A37AD3 /* img_legFerrySelect.png */; };
 		8DE42FED16E0AEEE00A37AD3 /* img_legFerrySelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE916E0AEEE00A37AD3 /* img_legFerrySelect@2x.png */; };
+		8DE505841726A034005A41A4 /* Nimbler DC-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8DE18C4F1725415A00AA8112 /* Nimbler DC-Info.plist */; };
+		8DE505851726A03A005A41A4 /* Nimbler DC-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8DE18C4F1725415A00AA8112 /* Nimbler DC-Info.plist */; };
 		8DEE785D166338F100E4863C /* SettingViewController_SF_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */; };
 		8DEE785F166339D600E4863C /* SettingDetailViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */; };
 		8DF19BF416F725FC0050FE00 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -2239,6 +2241,7 @@
 				8D39877B172180BA0055BF06 /* back@2x.png in Resources */,
 				8DE18B311725316700AA8112 /* nimblrCaltrain.png in Resources */,
 				8DE18B381725380200AA8112 /* Nimbler SF-Info.plist in Resources */,
+				8DE505841726A034005A41A4 /* Nimbler DC-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2421,6 +2424,7 @@
 				8DE18B361725337A00AA8112 /* Icon_ipad-Caltrain@2x.png in Resources */,
 				8DE18B37172537F700AA8112 /* Nimbler Caltrain-Info.plist in Resources */,
 				8DE18B3B17253DDF00AA8112 /* store101_Caltrain.zip in Resources */,
+				8DE505851726A03A005A41A4 /* Nimbler DC-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
