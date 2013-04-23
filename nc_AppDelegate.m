@@ -158,7 +158,6 @@ FeedBackForm *fbView;
           UIRemoteNotificationTypeSound)];
     }
     else{
-        [[UIApplication sharedApplication] unregisterForRemoteNotifications];
         [[UserPreferance userPreferance] performSelector:@selector(saveToServer) withObject:nil afterDelay:3.0];
     }
     
