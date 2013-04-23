@@ -798,7 +798,6 @@
 		8DE42FEB16E0AEEE00A37AD3 /* img_legFerry@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE716E0AEEE00A37AD3 /* img_legFerry@2x.png */; };
 		8DE42FEC16E0AEEE00A37AD3 /* img_legFerrySelect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE816E0AEEE00A37AD3 /* img_legFerrySelect.png */; };
 		8DE42FED16E0AEEE00A37AD3 /* img_legFerrySelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE916E0AEEE00A37AD3 /* img_legFerrySelect@2x.png */; };
-		8DEE2B86172575F000CCD3D1 /* store101_DC.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE2B85172575F000CCD3D1 /* store101_DC.zip */; };
 		8DEE785D166338F100E4863C /* SettingViewController_SF_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */; };
 		8DEE785F166339D600E4863C /* SettingDetailViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */; };
 		8DF19BF416F725FC0050FE00 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -807,6 +806,7 @@
 		8DF19BFE16F726D50050FE00 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFD16F726D50050FE00 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8DF19C0016F727A10050FE00 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFF16F727A10050FE00 /* libsqlite3.0.dylib */; };
 		8DF35D631627F58500B99F4A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF35D621627F58400B99F4A /* main.m */; };
+		8DFD0DAD17263B56003FCB5A /* store101_DC.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE2B85172575F000CCD3D1 /* store101_DC.zip */; };
 		8DFFB36C165DFBBB00A39BC4 /* SettingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */; };
 		8DFFB36D165DFBBB00A39BC4 /* SettingDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */; };
 		8DFFB3B2165E593400A39BC4 /* img_Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB3B0165E593300A39BC4 /* img_Settings.png */; };
@@ -1238,6 +1238,7 @@
 		8DF19BFF16F727A10050FE00 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		8DF35D621627F58400B99F4A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		8DF6C87D1670696E00DD4D31 /* Network_Commuting 1.7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.7.xcdatamodel"; sourceTree = "<group>"; };
+		8DFD0DAE17264CDB003FCB5A /* LocalConstantsCaltrain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalConstantsCaltrain.h; sourceTree = "<group>"; };
 		8DFFB369165DFBBB00A39BC4 /* SettingDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingDetailViewController.h; sourceTree = "<group>"; };
 		8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingDetailViewController.m; sourceTree = "<group>"; };
 		8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingDetailViewController.xib; sourceTree = "<group>"; };
@@ -1601,6 +1602,7 @@
 		520FB289162604950083F143 /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
+				8DFD0DAE17264CDB003FCB5A /* LocalConstantsCaltrain.h */,
 				8DE18C6E17256CD200AA8112 /* ConstantsCaltrain.h */,
 				8DE18C6D1725630600AA8112 /* Nimbler DC-Prefix.pch */,
 				8DE18C6C17255CBA00AA8112 /* LocalConstantsDC.h */,
@@ -2237,7 +2239,6 @@
 				8D39877B172180BA0055BF06 /* back@2x.png in Resources */,
 				8DE18B311725316700AA8112 /* nimblrCaltrain.png in Resources */,
 				8DE18B381725380200AA8112 /* Nimbler SF-Info.plist in Resources */,
-				8DEE2B86172575F000CCD3D1 /* store101_DC.zip in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2603,6 +2604,7 @@
 				8DE18C661725469A00AA8112 /* Icon-DC-72@2x.png in Resources */,
 				8DE18C671725469F00AA8112 /* Icon-DC-72.png in Resources */,
 				8DE18C6B17254EE500AA8112 /* wmata-station.json in Resources */,
+				8DFD0DAD17263B56003FCB5A /* store101_DC.zip in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

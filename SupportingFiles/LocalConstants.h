@@ -123,7 +123,7 @@
 #define VTA_AGENCY_FEED_ID       @"5"
 #define MENLO_MIDDAY_AGENCY_FEED_ID @"6"
 #define SF_FERRIES_AGENCY_FEED_ID        @"7"
-#define WMATA_AGENCY_ID @"8"
+#define WMATA_AGENCY_FEED_ID @"8"
 
 // Agencies without a feed ID will not get GTFS schedules (need to do mapping only through OTP)
 
