@@ -8,7 +8,6 @@
 
 #import "Location.h"
 #import "Locations.h"
-#import "Constants.h"
 #import <CoreLocation/CoreLocation.h>
 
 @implementation Location

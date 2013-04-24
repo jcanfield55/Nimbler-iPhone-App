@@ -105,7 +105,7 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
 // EXCLUSION_BY_RAIL_BUS means we will show up to two buttons for that agency, one for rail and one for bus service
 +(NSDictionary *)agencyButtonHandlingDictionary {
         if (!agencyButtonHandlingDictionaryInternal) {
-            agencyButtonHandlingDictionaryInternal = EXCLUDE_BUTTON_HANDLING_BY_AGENCY_DICTIONARY;
+            agencyButtonHandlingDictionaryInternal = [Agencies agencies].excludeButtonHandlingByAgencyDictionary;
         }
         return agencyButtonHandlingDictionaryInternal;
 }

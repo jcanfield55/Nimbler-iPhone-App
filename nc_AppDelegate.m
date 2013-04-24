@@ -24,7 +24,6 @@
 #if TEST_FLIGHT_ENABLED
 #import "TestFlightSDK1-1/TestFlight.h"
 #import "ZipArchive.h"
-#import "Constants.h"
 #endif
 #if FLURRY_ENABLED
 #import "Flurry.h"
@@ -235,6 +234,7 @@ FeedBackForm *fbView;
         gtfsParser = [[GtfsParser alloc] initWithManagedObjectContext:self.managedObjectContext
                                                            rkTpClient:rkTpClient];
         [[TransitCalendar transitCalendar] setRkTpClient:rkTpClient];
+        [[Agencies agencies] setRkTpClient:rkTpClient];
         
         // Initialize the RealTimeManager
         [[RealTimeManager realTimeManager] setRkTpClient:rkTpClient];
@@ -1128,6 +1128,7 @@ FeedBackForm *fbView;
     @try {
         isUpdateTime = YES;
         [[TransitCalendar transitCalendar] updateFromServer];
+        [[Agencies agencies] performSelector:@selector(updateAgenciesFromServer) withObject:[Agencies class] afterDelay:1.0];
     }
     @catch (NSException *exception) {
         logException(@"ncAppDelegate->updateTime", @"", exception);

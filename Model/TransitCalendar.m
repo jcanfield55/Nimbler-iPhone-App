@@ -11,8 +11,6 @@
 #import "TransitCalendar.h"
 #import "UtilityFunctions.h"
 #import "KeyObjectStore.h"
-#import "Constants.h"
-#import "LocalConstants.h"
 #import "nc_AppDelegate.h"
 
 @interface TransitCalendar() {

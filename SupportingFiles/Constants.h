@@ -75,6 +75,7 @@
 #define LAST_REQUEST_REVERSE_GEO      @"lastRequestReverseGeoLocation"
 #define APPLICATION_BUNDLE_IDENTIFIER  @"appBundleId"
 #define APPLICATION_TYPE               @"appType"
+#define APPLICATION_VERSION            @"appVer"
 
 // NSUserDefaults keys
 #define USER_PREFERANCE                   @"UserPreference"
@@ -276,6 +277,20 @@
 #define TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY @"TransitCalendarLastGTFSLoadDateByAgency"
 #define TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY @"TransitCalendarServiceByWeekdayByAgency"
 #define TR_CALENDAR_BY_DATE_BY_AGENCY @"TransitCalendarByDateByAgency"
+
+#define NIMBLER_AGENCY_ID  @"nimberAgencyId"
+#define GTFS_AGENCY_ID     @"gtfsAgencyId"
+#define AGENCY_NAME        @"agencyName"
+#define DISPLAY_NAME       @"displayName"
+#define EXCLUSION_TYPE     @"exclusionType"
+
+#define APP_AGENCIES                  @"users/getAppAgencies"
+#define AGENCIES_DICTIONARY           @"agencies"
+#define EXCLUDE_BUTTON_HANDLING_BY_AGENCY_DICTIONARY @"excludeButtonHandlingByAgencyDictionary"
+#define AGENCY_BUTTON_NAME_BY_AGENCY_DICTIONARY @"agencyButtonNameByAgencyDictionary"
+#define AGENCY_SHORT_NAME_BY_AGENCY_ID_DICTIONARY @"agencyShortNameByAgencyIdDictionary"
+#define AGENCY_FEED_ID_FROM_AGENCY_NAME_DICTIONARY @"agencyFeedIdFromAgencyNameDictionary"
+#define AGENCY_NAME_FROM_AGENCY_FEED_ID_DICTIONARY @"agencyNameFromAgencyFeedIdDictionary"
 
 
 // Request timer Count

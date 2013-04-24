@@ -19,6 +19,7 @@
 #import "RouteDetailsViewController.h"
 #import "LegMapViewController.h"
 #import "GtfsParser.h"
+#import "Agencies.h"
 
 @interface nc_AppDelegate : UIResponder <UIApplicationDelegate,CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate,UITabBarControllerDelegate,UIActionSheetDelegate> {
     Location* currentLocation;

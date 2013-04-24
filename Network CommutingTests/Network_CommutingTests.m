@@ -9,8 +9,6 @@
 #import "Network_CommutingTests.h"
 #import "LocationFromGoogle.h"
 #import "LocationFromIOS.h"
-#import "Constants.h"
-#import "LocalConstants.h"
 #import "Logging.h"
 #import "PlanRequestParameters.h"
 #import "PlanStore.h"

@@ -7,8 +7,6 @@
 //
 
 #import "UtilityFunctions.h"
-#import "Constants.h"   // contains Flurry variables
-#import "LocalConstants.h"
 #import "Logging.h"
 #if FLURRY_ENABLED
 #include "Flurry.h"
@@ -567,7 +565,7 @@ CLLocationDistance distanceBetweenTwoLocation(CLLocation *toLocation,CLLocation 
 // Get AgencyId from Agencyname
 NSString *agencyFeedIdFromAgencyName(NSString *agencyName){
     if (!agencyFeedIdFromAgencyNameDictionary) {
-        agencyFeedIdFromAgencyNameDictionary = AGENCY_FEED_ID_FROM_AGENCY_NAME_DICTIONARY;
+        agencyFeedIdFromAgencyNameDictionary = [Agencies agencies].agencyFeedIdFromAgencyNameDictionary;
     }
     return [agencyFeedIdFromAgencyNameDictionary objectForKey:agencyName];
 }
@@ -575,7 +573,7 @@ NSString *agencyFeedIdFromAgencyName(NSString *agencyName){
 // Get AgencyName from AgencyId
 NSString *agencyNameFromAgencyFeedId(NSString *agencyId){
     if (!agencyNameFromAgencyFeedIdDictionary) {
-        agencyNameFromAgencyFeedIdDictionary = AGENCY_NAME_FROM_AGENCY_FEED_ID_DICTIONARY;
+        agencyNameFromAgencyFeedIdDictionary = [Agencies agencies].agencyNameFromAgencyFeedIdDictionary;
     }
     return [agencyNameFromAgencyFeedIdDictionary objectForKey:agencyId];
 }
@@ -625,8 +623,9 @@ UIImage *getAgencyIcon(NSString * imageName){
 }
 
 NSString *returnShortAgencyName(NSString *agencyName){
+    ;
     if (!agencyShortNameMapping) {
-        agencyShortNameMapping = AGENCY_BUTTON_NAME_BY_AGENCY_NAME_DICTIONARY;
+        agencyShortNameMapping = [Agencies agencies].agencyButtonNameByAgencyDictionary;
     }
     if (!agencyName) {
         return nil;

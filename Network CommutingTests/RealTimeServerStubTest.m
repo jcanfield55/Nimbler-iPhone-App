@@ -9,8 +9,6 @@
 #import "RealTimeServerStubTest.h"
 #import "LocationFromGoogle.h"
 #import "LocationFromIOS.h"
-#import "Constants.h"
-#import "LocalConstants.h"
 #import "Logging.h"
 #import "PlanRequestParameters.h"
 #import "RouteOptionsViewController.h"

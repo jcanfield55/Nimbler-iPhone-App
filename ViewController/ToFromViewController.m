@@ -21,7 +21,6 @@
 #import "SettingInfoViewController.h"
 #import "nc_AppDelegate.h"
 #import "UIConstants.h"
-#import "Constants.h"
 #import "TEXTConstant.h"
 #import "UserPreferance.h"
 #import "Logging.h"

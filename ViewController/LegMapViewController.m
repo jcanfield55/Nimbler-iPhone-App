@@ -11,7 +11,6 @@
 #import "twitterViewController.h"
 #import "RestKit/RKJSONParserJSONKit.h"
 #import "UtilityFunctions.h"
-#import "Constants.h"
 #import <CoreImage/CoreImageDefines.h>
 #import "nc_AppDelegate.h"
 #import "Leg.h"

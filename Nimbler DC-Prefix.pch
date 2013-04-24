@@ -25,4 +25,5 @@
                #import "ZipArchive.h"
                #import <FacebookSDK/FacebookSDK.h>
                #import "LocalConstantsDC.h"
+               #import "Agencies.h"
 #endif

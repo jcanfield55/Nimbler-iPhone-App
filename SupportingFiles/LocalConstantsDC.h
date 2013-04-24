@@ -185,6 +185,7 @@
 #define ENABLE_CALTRAIN_ADV_DEFAULT FALSE
 #define ENABLE_WMATA_ADV_DEFAULT TRUE
 
+/*
 //
 // Dictionaries to map between various agency names, IDs
 //
@@ -271,5 +272,5 @@ DC_CIRCULATOR_AGENCY_NAME, DC_CIRCULATOR_BUTTON, \
 METRO_AGENCY_NAME, METRO_BUTTON, \
 SAM_TRANS_AGENCY_NAME, SAM_TRANS_BUTTON, \
 nil];
-
+*/
 #endif

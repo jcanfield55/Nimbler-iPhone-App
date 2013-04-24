@@ -806,6 +806,9 @@
 		8DF19BFE16F726D50050FE00 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFD16F726D50050FE00 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8DF19C0016F727A10050FE00 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFF16F727A10050FE00 /* libsqlite3.0.dylib */; };
 		8DF35D631627F58500B99F4A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DF35D621627F58400B99F4A /* main.m */; };
+		8DFADCB21727B04B003DDACF /* Agencies.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFADCAA1727AAB0003DDACF /* Agencies.m */; };
+		8DFADCB31727B059003DDACF /* Agencies.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFADCAA1727AAB0003DDACF /* Agencies.m */; };
+		8DFADCB41727B06A003DDACF /* Agencies.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFADCAA1727AAB0003DDACF /* Agencies.m */; };
 		8DFD0DAD17263B56003FCB5A /* store101_DC.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE2B85172575F000CCD3D1 /* store101_DC.zip */; };
 		8DFFB36C165DFBBB00A39BC4 /* SettingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */; };
 		8DFFB36D165DFBBB00A39BC4 /* SettingDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */; };
@@ -1238,6 +1241,8 @@
 		8DF19BFF16F727A10050FE00 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		8DF35D621627F58400B99F4A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		8DF6C87D1670696E00DD4D31 /* Network_Commuting 1.7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.7.xcdatamodel"; sourceTree = "<group>"; };
+		8DFADCA91727AAB0003DDACF /* Agencies.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Agencies.h; path = Model/Agencies.h; sourceTree = SOURCE_ROOT; };
+		8DFADCAA1727AAB0003DDACF /* Agencies.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Agencies.m; path = Model/Agencies.m; sourceTree = SOURCE_ROOT; };
 		8DFD0DAE17264CDB003FCB5A /* LocalConstantsCaltrain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalConstantsCaltrain.h; sourceTree = "<group>"; };
 		8DFFB369165DFBBB00A39BC4 /* SettingDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingDetailViewController.h; sourceTree = "<group>"; };
 		8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingDetailViewController.m; sourceTree = "<group>"; };
@@ -1676,6 +1681,8 @@
 				520FB1841626036C0083F143 /* Step.m */,
 				520FB1891626036C0083F143 /* TransitCalendar.h */,
 				520FB18A1626036C0083F143 /* TransitCalendar.m */,
+				8DFADCA91727AAB0003DDACF /* Agencies.h */,
+				8DFADCAA1727AAB0003DDACF /* Agencies.m */,
 			);
 			name = "Model, Plan";
 			sourceTree = "<group>";
@@ -2631,6 +2638,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8DFADCB41727B06A003DDACF /* Agencies.m in Sources */,
 				520FB121162603090083F143 /* FeedBackForm.m in Sources */,
 				520FB125162603090083F143 /* LegMapViewController.m in Sources */,
 				520FB126162603090083F143 /* RouteDetailsViewController.m in Sources */,
@@ -2722,6 +2730,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8DFADCB21727B04B003DDACF /* Agencies.m in Sources */,
 				8DA77F8A1724FF0D0090C2EA /* FeedBackForm.m in Sources */,
 				8DA77F8B1724FF0D0090C2EA /* LegMapViewController.m in Sources */,
 				8DA77F8C1724FF0D0090C2EA /* RouteDetailsViewController.m in Sources */,
@@ -2800,6 +2809,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8DFADCB31727B059003DDACF /* Agencies.m in Sources */,
 				8DE18B431725415800AA8112 /* FeedBackForm.m in Sources */,
 				8DE18B441725415800AA8112 /* LegMapViewController.m in Sources */,
 				8DE18B451725415800AA8112 /* RouteDetailsViewController.m in Sources */,

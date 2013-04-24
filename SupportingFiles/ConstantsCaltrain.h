@@ -12,7 +12,7 @@
 
 //#define AUTOMATED_TESTING_SKIP_NCAPPDELEGATE 0 // if 1, skips nc_AppDelegate didFinishLaunchingWithOptions so we get a clean tests run
 
-#define GENERATING_SEED_DATABASE  1 // when we are generating seed database the value is 1 otherwise 0
+#define GENERATING_SEED_DATABASE  0 // when we are generating seed database the value is 1 otherwise 0
 #define SKIP_REAL_TIME_UPDATES 0 // If 1, system will not request real-time updates
 
 #define TRIP_GENERATE_URL     @"http://23.23.210.156:7070/opentripplanner-api-webapp/ws/" 
@@ -277,6 +277,19 @@
 #define TR_CALENDAR_SERVICE_BY_WEEKDAY_BY_AGENCY @"TransitCalendarServiceByWeekdayByAgency"
 #define TR_CALENDAR_BY_DATE_BY_AGENCY @"TransitCalendarByDateByAgency"
 
+#define NIMBLER_AGENCY_ID  @"nimberAgencyId"
+#define GTFS_AGENCY_ID     @"gtfsAgencyID"
+#define AGENCY_NAME        @"agencyName"
+#define DISPLAY_NAME       @"displayName"
+#define EXCLUSION_TYPE     @"exclusionType"
+
+#define APP_AGENCIES                  @"users/getAppAgencies"
+#define AGENCIES_DICTIONARY           @"agencies"
+#define EXCLUDE_BUTTON_HANDLING_BY_AGENCY_DICTIONARY @"excludeButtonHandlingByAgencyDictionary"
+#define AGENCY_BUTTON_NAME_BY_AGENCY_DICTIONARY @"agencyButtonNameByAgencyDictionary"
+#define AGENCY_SHORT_NAME_BY_AGENCY_ID_DICTIONARY @"agencyShortNameByAgencyIdDictionary"
+#define AGENCY_FEED_ID_FROM_AGENCY_NAME_DICTIONARY @"agencyFeedIdFromAgencyNameDictionary"
+#define AGENCY_NAME_FROM_AGENCY_FEED_ID_DICTIONARY @"agencyNameFromAgencyFeedIdDictionary"
 
 // Request timer Count
 #define TWEET_COUNT_POLLING_INTERVAL 120.0

@@ -185,6 +185,7 @@
 #define ENABLE_CALTRAIN_ADV_DEFAULT TRUE
 #define ENABLE_WMATA_ADV_DEFAULT FALSE
 
+/*
 //
 // Dictionaries to map between various agency names, IDs
 //
@@ -272,4 +273,5 @@ nil]
  SAM_TRANS_AGENCY_NAME, SAM_TRANS_BUTTON, \
  nil];
 
+ */
 #endif

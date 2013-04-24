@@ -89,7 +89,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         KeyObjectStore* store = [KeyObjectStore keyObjectStore];
         __agencyDisplayNameByAgencyId = [store objectForKey:AGENCY_DISPLAY_NAME_BY_AGENCYID_KEY];
         if (!__agencyDisplayNameByAgencyId) {  // if not stored in the database, create it
-            __agencyDisplayNameByAgencyId = AGENCY_SHORT_NAME_BY_AGENCY_ID_DICTIONARY;
+            __agencyDisplayNameByAgencyId = [Agencies agencies].agencyShortNameByAgencyIdDictionary;
             [store setObject:__agencyDisplayNameByAgencyId forKey:AGENCY_DISPLAY_NAME_BY_AGENCYID_KEY];
         }
     }
