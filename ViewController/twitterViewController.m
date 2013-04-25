@@ -186,8 +186,8 @@ NSUserDefaults *prefs;
             }
             [strTweet appendString:tweetText];
         }
-        CGSize stringSize = [strTweet sizeWithFont:[UIFont systemFontOfSize:15.0] constrainedToSize:CGSizeMake(320, 9999) lineBreakMode:UILineBreakModeWordWrap];
-        UITextView *uiTextView=[[UITextView alloc] initWithFrame:CGRectMake(55, 37, 240, stringSize.height + 50)];
+        CGSize stringSize = [strTweet sizeWithFont:[UIFont systemFontOfSize:15.0] constrainedToSize:CGSizeMake(240, 9999) lineBreakMode:UILineBreakModeWordWrap];
+        UITextView *uiTextView=[[UITextView alloc] initWithFrame:CGRectMake(55, 28, 240, stringSize.height + 40)];
         uiTextView.font = [UIFont systemFontOfSize:15.0];
         uiTextView.text = strTweet;
         uiTextView.textColor = [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
@@ -232,9 +232,9 @@ NSUserDefaults *prefs;
         id key = [arrayTweet objectAtIndex:indexPath.row];
         NSString *tweetDetail = [(NSDictionary*)key objectForKey:TWEET];
         UIFont *cellFont = [UIFont systemFontOfSize:15.0];
-        CGSize constraintSize = CGSizeMake(320.0f, MAXFLOAT);
+        CGSize constraintSize = CGSizeMake(240.0f, MAXFLOAT);
         CGSize labelSize = [tweetDetail sizeWithFont:cellFont constrainedToSize:constraintSize lineBreakMode:UILineBreakModeWordWrap];
-        return labelSize.height + 80;
+        return labelSize.height + 40;
     }
     return 50;
 }
