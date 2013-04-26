@@ -67,12 +67,15 @@ NSString *legID;
             itinerary = itin;  
             
             // Clear out any previous overlays and annotations
+           // Fixed DE-307.
+            [mapView removeAnnotations:legStartEndPoint];
             [mapView removeAnnotations:dotAnnotationArray];
             [mapView removeOverlays:polyLineArray];
             [mapView removeAnnotations:intermediateAnnotations];
             [dotAnnotationArray removeAllObjects];
             [polyLineArray removeAllObjects];
             [legStartEndPoint removeAllObjects];
+            [intermediateAnnotations removeAllObjects];
             
             NSArray *sortedLegs = [itinerary sortedLegs];
             if(itinerary.isRealTimeItinerary){

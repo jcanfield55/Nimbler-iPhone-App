@@ -149,6 +149,10 @@ FeedBackForm *fbView;
 
     prefs = [NSUserDefaults standardUserDefaults];
     [UserPreferance userPreferance];  // Saves default user preferences to server if needed
+    
+    // Call suppertedRegion for getting boundry of bay area region
+    [self suppertedRegion];
+    
     if ([[UserPreferance userPreferance] pushEnable]) {
         [[UIApplication sharedApplication]
          registerForRemoteNotificationTypes:
