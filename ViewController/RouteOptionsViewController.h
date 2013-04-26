@@ -27,6 +27,7 @@ NewPlanAvailableDelegate>
 @property (nonatomic, strong) NSTimer *timerGettingRealDataByItinerary;
 
 
+
 -(void)hideUnUsedTableViewCell;
 -(void)setFBParameterForPlan;
 -(void)popOutToNimbler;

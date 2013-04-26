@@ -16,6 +16,7 @@
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "ToFromViewController.h"
 #import "nc_AppDelegate.h"
+#import "RealTimeManager.h"
 
 @interface RouteDetailsViewController()
 {
@@ -36,6 +37,10 @@
 @synthesize itineraryNumber;
 @synthesize mainTableTotalHeight;
 @synthesize btnBackItem,btnForwardItem,btnGoToItinerary;
+@synthesize progressView;
+@synthesize timer;
+@synthesize count;
+@synthesize progress;
 
 NSUserDefaults *prefs;
 
@@ -172,10 +177,38 @@ NSUserDefaults *prefs;
     }
     
 }
+
+-(void) updateRecCountdown {
+    count++;
+    progress = progress + 0.0083;
+    if(count > 120){
+        if(timer){
+            [timer invalidate];
+            timer = nil;
+        }
+    }
+    [progressView setProgress:progress];
+}
+
+
 - (void)setItinerary:(Itinerary *)i0
 {
     @try {
+        count = 0;
+        progress = 0.0;
         itinerary = i0;
+        if(itinerary.isRealTimeItinerary){
+            [progressView setHidden:NO];
+            [progressView setProgress:0.0];
+            if(timer){
+                [timer invalidate];
+                timer = nil;
+            }
+            timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(updateRecCountdown) userInfo:nil repeats:YES];
+        }
+        else{
+            [progressView setHidden:YES];
+        }
         // DE-183 Fixed
         [self setItineraryNumber:0];  // Initially start on the first row of itinerary
         [legMapVC setItinerary:i0];
@@ -244,6 +277,7 @@ NSUserDefaults *prefs;
         // Enforce height of main table
         CGRect tableFrame = [mainTable frame];
         CGRect mapFrame = [mapView frame];
+        CGRect progressFrame = [progressView frame];
         mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
         // If we have a small itinerary, reduce the table size so it just fits it, and increase the map size
         CGFloat newMainTableHeight;
@@ -251,9 +285,9 @@ NSUserDefaults *prefs;
             newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH, mainTableTotalHeight);
         }
         else{
-           newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT, mainTableTotalHeight); 
+            newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT, mainTableTotalHeight);
         }
-        if (tableFrame.size.height != newMainTableHeight) { // if something is changing...
+        //if (tableFrame.size.height != newMainTableHeight) { // if something is changing...
             CGFloat combinedHeight;
             if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
                  combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH + ROUTE_LEGMAP_MIN_HEIGHT_4INCH+1;
@@ -261,13 +295,21 @@ NSUserDefaults *prefs;
             else{
                 combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT + ROUTE_LEGMAP_MIN_HEIGHT+1;
             }
-            tableFrame.size.height = newMainTableHeight;
-            tableFrame.origin.y = combinedHeight - newMainTableHeight + 10;
-            mapFrame.size.height = combinedHeight - newMainTableHeight - 1;
-            
+            if(!itinerary.isRealTimeItinerary){
+                tableFrame.size.height = newMainTableHeight;
+                tableFrame.origin.y = combinedHeight - newMainTableHeight + 10;
+                mapFrame.size.height = combinedHeight - newMainTableHeight - 1;
+            }
+            else{
+                mapFrame.size.height = combinedHeight - newMainTableHeight - 1;
+                progressFrame.origin.y = mapFrame.origin.y + mapFrame.size.height+5;
+                tableFrame.size.height = newMainTableHeight - (10 +progressFrame.size.height);
+                tableFrame.origin.y = combinedHeight - newMainTableHeight + 15 +progressFrame.size.height;
+            }
             [mainTable setFrame:tableFrame];
             [mapView setFrame:mapFrame];
-        }
+            [progressView setFrame:progressFrame];
+        //}
         [mainTable reloadData];
         
         // Scrolls the table to the new area and selects the row
@@ -508,6 +550,15 @@ NSUserDefaults *prefs;
 
 -(void)popOutToItinerary
 {
+    if(timer){
+        [timer invalidate];
+        timer = nil;
+    }
+    
+    if(legMapVC.timerVehiclePosition){
+        [legMapVC.timerVehiclePosition invalidate];
+        legMapVC.timerVehiclePosition = nil;
+    }
     CATransition *animation = [CATransition animation];
     [animation setDuration:0.3];
     [animation setType:kCATransitionPush];

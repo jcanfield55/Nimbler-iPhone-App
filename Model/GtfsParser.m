@@ -1536,6 +1536,8 @@
     else{
         newleg.realTripId = [prediction objectForKey:@"scheduleTripId"];
     }
+    newleg.vehicleId = [prediction objectForKey:@"vehicleId"];
+    newleg.legId = generateRandomString(REQUEST_ID_LENGTH);
     newleg.timeDiff = timeDiff;
     int arrivalFlag;
     if(timeDiff >= -2 && timeDiff <= 2)

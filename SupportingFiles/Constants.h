@@ -21,8 +21,8 @@
 #define TEST_GEO_RESPONSE_URL  @"http://localhost:8080/TPServer/ws/mockgeolocation/"
 
 // To select server URL select 1 otherwise select 0,At a time only one of below must be 1.
-#define PRODUCTION_URL  1
-#define STAGGING_URL    0
+#define PRODUCTION_URL  0
+#define STAGGING_URL    1
 #define LOCAL_URL       0
 
 #if PRODUCTION_URL
@@ -472,3 +472,4 @@
 
 #define SHOW_INTERMEDIATE_STOPS @"showIntermediateStops"
 
+#define LIVE_FEEDS_BY_VEHICLE_POSITION @"livefeeds/vehiclePosition"

@@ -22,6 +22,7 @@
 @synthesize originalTripDate;
 @synthesize loadedRealTimeData;
 @synthesize requestParameters;
+@synthesize realTimeURL;
 
 
 static RealTimeManager* realTimeManager;
@@ -119,6 +120,7 @@ static RealTimeManager* realTimeManager;
             RKParams *requestParameter = [RKParams params];
             [requestParameter setValue:strRequestString forParam:LEGS];
             [requestParameter setValue:[[nc_AppDelegate sharedInstance] deviceTokenString] forParam:DEVICE_TOKEN];
+            realTimeURL = LIVE_FEEDS_BY_LEGS;
             [self.rkTpClient post:LIVE_FEEDS_BY_LEGS params:requestParameter delegate:self];
         } 
      }
@@ -144,15 +146,24 @@ static RealTimeManager* realTimeManager;
 #pragma mark RKResponse Delegate method
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {
     @try {
-        // DE 175 Fixed
-        [nc_AppDelegate sharedInstance].isNeedToLoadRealData = YES;
-        RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
-        loadedRealTimeData = true;
-        id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
-        //[self logRealtimeData:res];
-        NIMLOG_PERF2(@"realtime Response=%@",res);
-        [routeOptionsVC setIsReloadRealData:false];
-        [self setLiveFeed:res];
+        NSString *resourcePath = [request resourcePath];
+        if([resourcePath isEqualToString:realTimeURL]){
+            // DE 175 Fixed
+            [nc_AppDelegate sharedInstance].isNeedToLoadRealData = YES;
+            RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+            loadedRealTimeData = true;
+            id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
+            //[self logRealtimeData:res];
+            NIMLOG_PERF2(@"realtime Response=%@",res);
+            [routeOptionsVC setIsReloadRealData:false];
+            [self setLiveFeed:res];
+        }
+        else{
+            RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+            id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
+            NSLog(@"res=%@",res);
+            [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC.legMapVC addVehicleTomapView:[res objectForKey:@"legLiveFeeds"]];
+        }
     }  @catch (NSException *exception) {
         logException(@"RealTimeManager->didLoadResponse", @"load response for real time request", exception);
     }
@@ -362,4 +373,27 @@ static RealTimeManager* realTimeManager;
         }
     }
 }
+
+// Request the vehicle position data from server
+- (void) requestVehiclePositionForRealTimeLeg:(NSArray *)sortedLegs{
+    NSMutableArray *legArray = [[NSMutableArray alloc] init];
+    for(int i=0;i<[sortedLegs count];i++){
+        Leg *leg = [sortedLegs objectAtIndex:i];
+        NSString *route = leg.route;
+        if(!route)
+            route = @"";
+        if(leg.isRealTimeLeg && leg.vehicleId){
+            NSDictionary *legData = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.legId,@"id",route,@"route",leg.vehicleId,@"vehicleId",leg.mode,@"mode", nil];
+            [legArray addObject:legData];
+        }
+    }
+    if([legArray count] > 0){
+        NSString *strRequestString = [legArray JSONString];
+        RKParams *requestParameter = [RKParams params];
+        [requestParameter setValue:strRequestString forParam:LEGS];
+        [requestParameter setValue:[[nc_AppDelegate sharedInstance] deviceTokenString] forParam:DEVICE_TOKEN];
+        [self.rkTpClient post:LIVE_FEEDS_BY_VEHICLE_POSITION params:requestParameter delegate:self];
+    }
+}
+
 @end

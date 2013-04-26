@@ -58,6 +58,7 @@
 @synthesize prediction;
 @synthesize timeDiff;
 @synthesize realTripId;
+@synthesize vehicleId;
 
 static NSDictionary* __agencyDisplayNameByAgencyId;
 

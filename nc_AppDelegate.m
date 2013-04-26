@@ -149,6 +149,9 @@ FeedBackForm *fbView;
 
     prefs = [NSUserDefaults standardUserDefaults];
     [UserPreferance userPreferance];  // Saves default user preferences to server if needed
+    // Call suppertedRegion for getting boundry of bay area region
+    [self suppertedRegion];
+    
     if ([[UserPreferance userPreferance] pushEnable]) {
         [[UIApplication sharedApplication]
          registerForRemoteNotificationTypes:
@@ -199,9 +202,6 @@ FeedBackForm *fbView;
         rkMOS = [RKManagedObjectStore objectStoreWithStoreFilename:COREDATA_DB_FILENAME];
         [rkGeoMgr setObjectStore:rkMOS];
         [rkPlanMgr setObjectStore:rkMOS];
-        
-        // Call suppertedRegion for getting boundry of bay area region
-        [self suppertedRegion];
         
         // Get the NSManagedObjectContext from restkit
         __managedObjectContext = [rkMOS managedObjectContext];
