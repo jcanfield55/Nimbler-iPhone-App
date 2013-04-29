@@ -30,6 +30,7 @@
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic) int count;
 @property (nonatomic) float progress;
+@property (nonatomic, strong) IBOutlet UILabel *lblRealtimeUpdates;
 
 - (IBAction)navigateBack:(id)sender;
 - (IBAction)navigateForward:(id)sender;

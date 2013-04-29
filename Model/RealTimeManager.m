@@ -161,7 +161,6 @@ static RealTimeManager* realTimeManager;
         else{
             RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
             id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
-            NSLog(@"res=%@",res);
             [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC.legMapVC addVehicleTomapView:[res objectForKey:@"legLiveFeeds"]];
         }
     }  @catch (NSException *exception) {

@@ -416,13 +416,17 @@ NSString *legID;
     } 
 }
 
+- (UIImage *)scale:(UIImage *)image toSize:(CGSize)size{
+    UIGraphicsBeginImageContext(size);
+    [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return scaledImage;
+}
 
 // Callback for providing any annotation views
 - (MKAnnotationView *)mapView:(MKMapView *)mv viewForAnnotation:(id <MKAnnotation>)annotation
 {
-    NSLog(@"moving Annotations Count=%d",[movingAnnotations count]);
-    MKPointAnnotation *annot = (MKPointAnnotation *)annotation;
-    NSLog(@"string=%@",annot.title);
     // If it's the user location, just return nil.
     if ([annotation isKindOfClass:[MKUserLocation class]]){
         return nil;
@@ -508,11 +512,10 @@ NSString *legID;
                 // If an existing pin view was not available, create one.
                 dotView = [[MKAnnotationView alloc] initWithAnnotation:annotation
                                                        reuseIdentifier:@"MyMovingAnnotationView"];
-                dotView.canShowCallout=YES;
+                    dotView.canShowCallout=YES;
                 if (!carImage) {
-                    NSString* imageName = [[NSBundle mainBundle] pathForResource:@"car" ofType:@"png"];
-                    carImage = [UIImage imageWithContentsOfFile:imageName];
-                    NSLog(@"%@",carImage);
+                    NSString* imageName = [[NSBundle mainBundle] pathForResource:@"bus" ofType:@"png"];
+                    carImage = [self scale:[UIImage imageWithContentsOfFile:imageName] toSize:CGSizeMake(25, 26)];
                 }
                 if (carImage) {
                     [dotView setImage:carImage];
@@ -543,13 +546,19 @@ NSString *legID;
         for(int j=0;j<[vehiclePosistions count];j++){
             NSDictionary *tempVehicleDictionary = [vehiclePosistions objectAtIndex:0];
             MKPointAnnotation *movingAnnotation = [[MKPointAnnotation alloc] init];
+            NSString *vehicleId = [NSString stringWithFormat:@"Vehicle:%@",[tempVehicleDictionary objectForKey:@"vehicleId"]];
+            [movingAnnotation setTitle:vehicleId];
             float fromLat = [[tempVehicleDictionary objectForKey:@"lat"] floatValue];
             float fromLng = [[tempVehicleDictionary objectForKey:@"lon"] floatValue];
             CLLocationCoordinate2D fromCoordinate = CLLocationCoordinate2DMake(fromLat, fromLng);
-            [movingAnnotation setTitle:@"title"];
             [movingAnnotation setCoordinate:fromCoordinate];
             [movingAnnotations addObject:movingAnnotation];
+            [UIView beginAnimations:nil context:nil];
+            [UIView setAnimationDuration:0.5];
+            [UIView setAnimationDelay:1.0];
+            [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
             [mapView addAnnotation:movingAnnotation];
+            [UIView commitAnimations];
         }
     }
 }

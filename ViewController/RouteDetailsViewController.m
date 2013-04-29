@@ -41,6 +41,7 @@
 @synthesize timer;
 @synthesize count;
 @synthesize progress;
+@synthesize lblRealtimeUpdates;
 
 NSUserDefaults *prefs;
 
@@ -178,7 +179,7 @@ NSUserDefaults *prefs;
     
 }
 
--(void) updateRecCountdown {
+-(void) progressViewProgress {
     count++;
     progress = progress + 0.0083;
     if(count > 120){
@@ -190,10 +191,18 @@ NSUserDefaults *prefs;
     [progressView setProgress:progress];
 }
 
+// Hide the realtime updates after 3 seconds
+- (void) hideRealtimeUpdateLabel{
+    [lblRealtimeUpdates setHidden:YES];
+}
 
 - (void)setItinerary:(Itinerary *)i0
 {
     @try {
+        if(itinerary && itinerary.isRealTimeItinerary){
+            [lblRealtimeUpdates setHidden:NO];
+            [self performSelector:@selector(hideRealtimeUpdateLabel) withObject:nil afterDelay:3.0];
+        }
         count = 0;
         progress = 0.0;
         itinerary = i0;
@@ -204,7 +213,7 @@ NSUserDefaults *prefs;
                 [timer invalidate];
                 timer = nil;
             }
-            timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(updateRecCountdown) userInfo:nil repeats:YES];
+            timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(progressViewProgress) userInfo:nil repeats:YES];
         }
         else{
             [progressView setHidden:YES];
@@ -309,6 +318,8 @@ NSUserDefaults *prefs;
             [mainTable setFrame:tableFrame];
             [mapView setFrame:mapFrame];
             [progressView setFrame:progressFrame];
+        [lblRealtimeUpdates setCenter:progressView.center];
+        [self.view bringSubviewToFront:lblRealtimeUpdates];
         //}
         [mainTable reloadData];
         
