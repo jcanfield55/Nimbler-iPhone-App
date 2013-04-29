@@ -17,6 +17,7 @@
 #import "Itinerary.h"
 #import "GtfsStopTimes.h"
 #import "IntermediateStops.h"
+#import "RealTimeManager.h"
 
 #define LINE_WIDTH  5
 #define ALPHA_LIGHT 0.7
@@ -31,10 +32,14 @@
     NSMutableArray* dotAnnotationArray;  // Array of all dot annotations
     NSMutableArray* intermediateAnnotations;
     NSMutableArray * legStartEndPoint;
+    NSMutableArray *movingAnnotations;
     UIImage* dotImage;
     UIImage* pinImage;
+    UIImage*carImage;
     
     NSDateFormatter *dateFormatter;
+    
+    
 }
 
 // Utility routine for setting the region on the MapView based on the itineraryNumber
@@ -45,6 +50,7 @@
 @synthesize itinerary;
 @synthesize itineraryNumber;
 @synthesize mapView;
+@synthesize timerVehiclePosition;
 
 NSString *legID;
 
@@ -57,14 +63,23 @@ NSString *legID;
         dotAnnotationArray = [NSMutableArray arrayWithCapacity:10];
         intermediateAnnotations = [[NSMutableArray alloc] init];
         legStartEndPoint = [[NSMutableArray alloc] init];
+        movingAnnotations = [[NSMutableArray alloc] init];
     }
     return self;
 }
+
 - (void)setItinerary:(Itinerary *)itin
 {
     @try {
         if (itin != itinerary) {  // if something actually changed...
             itinerary = itin;  
+            
+            if(self.timerVehiclePosition){
+                [self.timerVehiclePosition invalidate];
+                self.timerVehiclePosition = nil;
+            }
+            [self requestVehicleDataFromServer];
+            self.timerVehiclePosition =  [NSTimer scheduledTimerWithTimeInterval:TIMER_MEDIUM_REQUEST_DELAY target:self selector:@selector(requestVehicleDataFromServer) userInfo:nil repeats: YES];
             
             // Clear out any previous overlays and annotations
            // Fixed DE-307.
@@ -120,6 +135,7 @@ NSString *legID;
             }
             
             // Take startpoint as the beginning of the first leg's polyline, and endpoint form the last leg's polyline
+            
             startPoint = [[MKPointAnnotation alloc] init];
             [startPoint setCoordinate:[[[sortedLegs objectAtIndex:0] polylineEncodedString] startCoord]];
             [dotAnnotationArray addObject:startPoint];
@@ -399,6 +415,13 @@ NSString *legID;
     } 
 }
 
+- (UIImage *)scale:(UIImage *)image toSize:(CGSize)size{
+    UIGraphicsBeginImageContext(size);
+    [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return scaledImage;
+}
 
 // Callback for providing any annotation views
 - (MKAnnotationView *)mapView:(MKMapView *)mv viewForAnnotation:(id <MKAnnotation>)annotation
@@ -479,10 +502,63 @@ NSString *legID;
             
             return dotView;
         }
+        
+        else if([movingAnnotations containsObject:annotation]){
+            MKAnnotationView* dotView = (MKAnnotationView*)[mv dequeueReusableAnnotationViewWithIdentifier:@"MyMovingAnnotationView"];
+            
+            if (!dotView)
+            {
+                // If an existing pin view was not available, create one.
+                dotView = [[MKAnnotationView alloc] initWithAnnotation:annotation
+                                                       reuseIdentifier:@"MyMovingAnnotationView"];
+                    dotView.canShowCallout=YES;
+                if (!carImage) {
+                    NSString* imageName = [[NSBundle mainBundle] pathForResource:@"bus" ofType:@"png"];
+                    carImage = [self scale:[UIImage imageWithContentsOfFile:imageName] toSize:CGSizeMake(25, 26)];
+                }
+                if (carImage) {
+                    [dotView setImage:carImage];
+                }
+            }
+            else
+                dotView.annotation = annotation;
+            
+            return dotView;
+        }
         else{
             [mapView removeAnnotation:annotation];
         }
     }
     return nil;
+}
+
+// Request realtime data from server
+- (void) requestVehicleDataFromServer{
+    [[RealTimeManager realTimeManager] requestVehiclePositionForRealTimeLeg:itinerary.sortedLegs];
+}
+- (void) addVehicleTomapView:(NSArray *)vehiclesData{
+    [mapView removeAnnotations:movingAnnotations];
+    [movingAnnotations removeAllObjects];
+    for(int i=0;i<[vehiclesData count];i++){
+        NSDictionary *vehicleDictionary = [vehiclesData objectAtIndex:i];
+        NSArray *vehiclePosistions = [vehicleDictionary objectForKey:@"lstVehiclePositions"];
+        for(int j=0;j<[vehiclePosistions count];j++){
+            NSDictionary *tempVehicleDictionary = [vehiclePosistions objectAtIndex:0];
+            MKPointAnnotation *movingAnnotation = [[MKPointAnnotation alloc] init];
+            NSString *vehicleId = [NSString stringWithFormat:@"Vehicle:%@",[tempVehicleDictionary objectForKey:@"vehicleId"]];
+            [movingAnnotation setTitle:vehicleId];
+            float fromLat = [[tempVehicleDictionary objectForKey:@"lat"] floatValue];
+            float fromLng = [[tempVehicleDictionary objectForKey:@"lon"] floatValue];
+            CLLocationCoordinate2D fromCoordinate = CLLocationCoordinate2DMake(fromLat, fromLng);
+            [movingAnnotation setCoordinate:fromCoordinate];
+            [movingAnnotations addObject:movingAnnotation];
+            [UIView beginAnimations:nil context:nil];
+            [UIView setAnimationDuration:0.5];
+            [UIView setAnimationDelay:1.0];
+            [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+            [mapView addAnnotation:movingAnnotation];
+            [UIView commitAnimations];
+        }
+    }
 }
 @end

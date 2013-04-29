@@ -23,9 +23,14 @@
 @property(nonatomic) int itineraryNumber; // selected row on the itinerary list
 @property(nonatomic, readonly) CGFloat mainTableTotalHeight;  // the total height (height needed so that no scrolling needed) of the mainTable in pixels for a given itinerary
 
-@property(nonatomic, strong) UIButton *btnBackItem;
-@property(nonatomic, strong) UIButton *btnForwardItem;
-@property(nonatomic, strong) UIButton *btnGoToItinerary;
+@property(nonatomic, strong)  UIButton *btnBackItem;
+@property(nonatomic, strong)  UIButton *btnForwardItem;
+@property(nonatomic, strong)  UIButton *btnGoToItinerary;
+@property (nonatomic, strong) IBOutlet UIProgressView *progressView;
+@property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic) int count;
+@property (nonatomic) float progress;
+@property (nonatomic, strong) IBOutlet UILabel *lblRealtimeUpdates;
 
 - (IBAction)navigateBack:(id)sender;
 - (IBAction)navigateForward:(id)sender;

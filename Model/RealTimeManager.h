@@ -30,6 +30,7 @@
 @property (strong, nonatomic) NSDate *originalTripDate;
 @property (nonatomic) BOOL loadedRealTimeData;
 @property (nonatomic, strong) PlanRequestParameters *requestParameters;
+@property (nonatomic, strong) NSString *realTimeURL;
 
 +(RealTimeManager *)realTimeManager;
 
@@ -60,5 +61,8 @@
 - (void) setRealTimePredictionsFromLiveFeeds:(NSArray *)liveFeeds;
 
 - (void) hideItineraryIfNeeded:(NSArray *)arrItinerary;
+
+// Request the vehicle position data from server
+- (void) requestVehiclePositionForRealTimeLeg:(NSArray *)sortedLegs;
 
 @end

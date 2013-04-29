@@ -472,3 +472,5 @@
 
 #define APPLICATION_VERSION            @"appVer"
 
+#define LIVE_FEEDS_BY_VEHICLE_POSITION @"livefeeds/vehiclePosition"
+

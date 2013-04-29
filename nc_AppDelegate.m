@@ -204,9 +204,6 @@ FeedBackForm *fbView;
         [rkGeoMgr setObjectStore:rkMOS];
         [rkPlanMgr setObjectStore:rkMOS];
         
-        // Call suppertedRegion for getting boundry of bay area region
-        [self suppertedRegion];
-        
         // Get the NSManagedObjectContext from restkit
         __managedObjectContext = [rkMOS managedObjectContext];
         

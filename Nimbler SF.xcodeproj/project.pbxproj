@@ -506,6 +506,9 @@
 		8DA7808C1724FF0D0090C2EA /* Updated_UnPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D613EE5171E95B000070B51 /* Updated_UnPressed@2x.png */; };
 		8DA7808D1724FF0D0090C2EA /* back.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D398778172180BA0055BF06 /* back.png */; };
 		8DA7808E1724FF0D0090C2EA /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D398779172180BA0055BF06 /* back@2x.png */; };
+		8DBE17FB172E8D7A0020B034 /* bus.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBE17FA172E8D7A0020B034 /* bus.png */; };
+		8DBE17FE172E97EA0020B034 /* bus.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBE17FA172E8D7A0020B034 /* bus.png */; };
+		8DBE17FF172E97EB0020B034 /* bus.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBE17FA172E8D7A0020B034 /* bus.png */; };
 		8DBECD5216146DBE007B71F1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */; };
 		8DC448EA169409ED00608DF6 /* GtfsParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DD51671EB41004E0DE5 /* GtfsParser.m */; };
 		8DD6A4EB16EA161F00FFC158 /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DD6A4EA16EA161F00FFC158 /* pin.png */; };
@@ -1198,6 +1201,7 @@
 		8DA780921724FF0D0090C2EA /* Nimbler Caltrain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nimbler Caltrain.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DA780951724FF820090C2EA /* Nimbler Caltrain-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Nimbler Caltrain-Info.plist"; sourceTree = SOURCE_ROOT; };
 		8DA780961724FF820090C2EA /* Nimbler SF-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Nimbler SF-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		8DBE17FA172E8D7A0020B034 /* bus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bus.png; sourceTree = "<group>"; };
 		8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		8DC019F71627F4BE004200E5 /* nc_AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nc_AppDelegate.h; sourceTree = SOURCE_ROOT; };
 		8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = nc_AppDelegate.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -1473,6 +1477,7 @@
 		520FB1A8162603AF0083F143 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8DBE17FA172E8D7A0020B034 /* bus.png */,
 				8DE18B301725316700AA8112 /* nimblrCaltrain.png */,
 				8D398778172180BA0055BF06 /* back.png */,
 				8D398779172180BA0055BF06 /* back@2x.png */,
@@ -2246,6 +2251,7 @@
 				8D39877B172180BA0055BF06 /* back@2x.png in Resources */,
 				8DE18B311725316700AA8112 /* nimblrCaltrain.png in Resources */,
 				8DE18B381725380200AA8112 /* Nimbler SF-Info.plist in Resources */,
+				8DBE17FB172E8D7A0020B034 /* bus.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2428,6 +2434,7 @@
 				8DE18B361725337A00AA8112 /* Icon_ipad-Caltrain@2x.png in Resources */,
 				8DE18B37172537F700AA8112 /* Nimbler Caltrain-Info.plist in Resources */,
 				8DE18B3B17253DDF00AA8112 /* store101_Caltrain.zip in Resources */,
+				8DBE17FE172E97EA0020B034 /* bus.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2612,6 +2619,7 @@
 				8DE18C6B17254EE500AA8112 /* wmata-station.json in Resources */,
 				8DFD0DAD17263B56003FCB5A /* store101_DC.zip in Resources */,
 				524100A41727542E0007D956 /* Nimbler DC-Info.plist in Resources */,
+				8DBE17FF172E97EB0020B034 /* bus.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
