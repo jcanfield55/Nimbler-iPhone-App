@@ -490,7 +490,7 @@
             
             if (error != nil) {
                 
-                NSLog(@"Error = %@",[error localizedDescription]);
+                NIMLOG_ERR1(@"Error = %@",[error localizedDescription]);
                 return;
             }
             
@@ -498,16 +498,13 @@
                 return;
                 
             }
-            NSLog(@"Response == %d",[response.mapItems count]);
          for(int i=0;i<[response.mapItems count];i++){
              NSError *error = nil;
              MKMapItem *mapItem = [response.mapItems objectAtIndex:i];
              LocationFromIOS *loc = [self newLocationFromIOSWithPlacemark:mapItem.placemark error:error IsLocalSearchResult:true];
-             NSLog(@"LocalSearch == %@",loc.formattedAddress);
              if(![localSearchFromLocations containsObject:loc])
              [localSearchFromLocations addObject:loc];
          }
-            NSLog(@"LocalSearch Count == %d",[localSearchFromLocations count]);
             sortedMatchingFromLocations = localSearchFromLocations;
             matchingFromRowCount = [sortedMatchingFromLocations count];
             areMatchingLocationsChanged = YES;
@@ -556,7 +553,7 @@
             
             if (error != nil) {
                 
-                NSLog(@"Error = %@",[error localizedDescription]);
+                NIMLOG_ERR1(@"Error = %@",[error localizedDescription]);
                 return;
             }
             
@@ -564,15 +561,15 @@
                 return;
                 
             }
-            NSLog(@"Response == %d",[response.mapItems count]);
             for(int i=0;i<[response.mapItems count];i++){
                 NSError *error = nil;
                 MKMapItem *mapItem = [response.mapItems objectAtIndex:i];
                 LocationFromIOS *loc = [self newLocationFromIOSWithPlacemark:mapItem.placemark error:error IsLocalSearchResult:true];
-                 NSLog(@"LocalSearch == %@",loc.formattedAddress);
-                [localSearchToLocations addObject:loc];
+                 NIMLOG_PERF2(@"LocalSearch == %@",loc.formattedAddress);
+                if(![localSearchToLocations containsObject:loc])
+                    [localSearchToLocations addObject:loc];
             }
-            NSLog(@"LocalSearch Count == %d",[localSearchToLocations count]);
+            NIMLOG_PERF2(@"LocalSearch Count == %d",[localSearchToLocations count]);
             sortedMatchingToLocations = localSearchToLocations;
             matchingToRowCount = [sortedMatchingToLocations count];
             areMatchingLocationsChanged = YES;
