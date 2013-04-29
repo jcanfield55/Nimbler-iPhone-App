@@ -14,6 +14,7 @@
 #import "nc_AppDelegate.h"
 #import "StationListElement.h"
 #import "Stations.h"
+#import <MapKit/MapKit.h>
 
 
 @interface ToFromTableViewController () 
@@ -135,6 +136,7 @@ NSString *strStreet2 = @"street ";
         } else {
             [toFromVC setEditMode:TO_EDIT];
         }
+        locations.isLocationEditing = YES;
     }
     // Else it is one of the locations which was selected
     else {
@@ -149,9 +151,12 @@ NSString *strStreet2 = @"street ";
             } else {
                 [toFromVC setEditMode:TO_EDIT];
             }
+            locations.isLocationEditing = YES;
         }
         else {
             [toFromVC setEditMode:NO_EDIT];  // Have toFromVC end the edit mode (DE96 fix)
+            
+            locations.isLocationEditing = NO;
             
             NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
 
@@ -344,15 +349,37 @@ NSString *strStreet2 = @"street ";
         [locations updateSelectedLocation:nil isFrom:isFrom];
         [toFromVC updateToFromLocation:self isFrom:isFrom location:nil];
     }
-    if (isFrom) {
-        [locations setTypedFromString:[txtField text]];
+    if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= IOS_LOCALSEARCH_VER) {
+        if (isFrom) {
+            [locations setTypedFromString:[txtField text]];
+            [locations setTypedFromStringForLocalSearch:[txtField text]];
+        } else {
+            [locations setTypedToString:[txtField text]];
+            [locations setTypedToStringForLocalSearch:[txtField text]];
+        }
+        
     } else {
-        [locations setTypedToString:[txtField text]];
+        if (isFrom) {
+            [locations setTypedFromString:[txtField text]];
+        } else {
+            [locations setTypedToString:[txtField text]];
+        }
+        
+        if ([locations areMatchingLocationsChanged]) {  //if typing has changed matrix, reload the array
+            [myTableView reloadData];
+        }
     }
-    
     if ([locations areMatchingLocationsChanged]) {  //if typing has changed matrix, reload the array
         [myTableView reloadData];
-    } 
+    }
+    
+}
+
+-(void)reloadLocationWithLocalSearch
+{
+    if ([locations areMatchingLocationsChanged]) {  //if typing has changed matrix, reload the array
+        [myTableView reloadData];
+    }
 }
 
 - (BOOL) contains:(NSArray *)array String:(NSString *)string{

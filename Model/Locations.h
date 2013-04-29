@@ -30,7 +30,7 @@
 @end
 
 
-@interface Locations : NSObject <RKObjectLoaderDelegate>
+@interface Locations : NSObject <RKObjectLoaderDelegate,CLLocationManagerDelegate>
 
 @property (strong, nonatomic) NSString *typedFromString;  // Typed string in the from field 
 @property (strong, nonatomic) NSString *typedToString;    // Typed string in the to field
@@ -49,6 +49,8 @@
 @property (nonatomic) BOOL isFromGeo;
 @property (nonatomic) BOOL isToGeo;
 @property (nonatomic) BOOL isLocationServiceEnable;
+
+@property (nonatomic) BOOL isLocationEditing;
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkGeoMgr:(RKObjectManager *)rkG;
 
@@ -106,4 +108,9 @@
 // A pre-load station matches when each typed token has a substring match with the preloadStation name
 - (NSArray *) preloadStationLocationsMatchingTypedAddress:(NSString *)string;
 
+// Local Search
+- (void)setTypedFromStringForLocalSearch:(NSString *)typedFromStr0;
+- (void)setTypedToStringForLocalSearch:(NSString *)typedToStr0;
+
+- (LocationFromIOS *)newLocationFromIOSWithPlacemark:(CLPlacemark *)placemark error:(NSError *)error IsLocalSearchResult:(BOOL) isLocalSearchResult;
 @end

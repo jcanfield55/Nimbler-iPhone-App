@@ -49,4 +49,8 @@
 
 - (void)markAndUpdateSelectedLocation:(Location *)loc;
 -(BOOL)alertUsetForLocationService;
+
+// Reload myTableView using MkLocalSearchResponse
+-(void)reloadLocationWithLocalSearch;
+
 @end

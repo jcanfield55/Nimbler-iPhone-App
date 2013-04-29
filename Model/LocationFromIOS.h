@@ -16,6 +16,7 @@
 @interface LocationFromIOS : Location
 
 @property (nonatomic, retain) CLPlacemark* placemark;  // Placemark returned from CLGeocoder
+@property (nonatomic) BOOL isLocalSearchResult;
 
 // Initializes an empty LocationIOS and its superclass Location using placemark0
 // Use this instead of setPlacemark method
