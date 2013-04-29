@@ -104,6 +104,8 @@ static NSDateFormatter* dateOnlyFormatter;  // dateFormatter with pattern @"YYYM
             RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
             NSDictionary *tempResponseDictionary = [rkParser objectFromString:[response bodyAsString] error:nil];
             if([tempResponseDictionary objectForKey:GTFS_UPDATE_TIME] != nil ){
+                [[NSUserDefaults standardUserDefaults] setObject:dateOnlyFromDate([NSDate date]) forKey:CURRENT_DATE];
+                [[NSUserDefaults standardUserDefaults] synchronize];
                 NIMLOG_EVENT1(@"Loaded TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY");
                  KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
                 lastGTFSLoadDateByAgency = [keyObjectStore objectForKey:TR_CALENDAR_LAST_GTFS_LOAD_DATE_BY_AGENCY];

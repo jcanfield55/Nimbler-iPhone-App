@@ -96,8 +96,6 @@ static Agencies * agenciesSingleton;
     NSMutableDictionary *mutableagencyShortNameByAgencyIdDictionary = [[NSMutableDictionary alloc] init];
     NSMutableDictionary *mutableagencyFeedIdFromAgencyNameDictionary = [[NSMutableDictionary alloc] init];
     NSMutableDictionary *mutableagencyNameFromAgencyFeedIdDictionary = [[NSMutableDictionary alloc] init];
-    NSMutableDictionary *mutableAdvisoriesChoices = [[NSMutableDictionary alloc] init];
-    
     NSArray *agenciesArray = [agencyDictionary objectForKey:AGENCIES_DICTIONARY];
     for(int i=0;i<[agenciesArray count];i++){
         NSDictionary *dictAgencies = [agenciesArray objectAtIndex:i];
@@ -133,6 +131,8 @@ static Agencies * agenciesSingleton;
         RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
         NSDictionary *tempResponseDictionary = [rkParser objectFromString:[response bodyAsString] error:nil];
         if([tempResponseDictionary objectForKey:AGENCIES_DICTIONARY] != nil ){
+            [[NSUserDefaults standardUserDefaults] setObject:dateOnlyFromDate([NSDate date]) forKey:CURRENT_DATE_AGENCIES];
+            [[NSUserDefaults standardUserDefaults] synchronize];
             KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
             agenciesDictionary = [keyObjectStore objectForKey:AGENCIES_DICTIONARY];
             if(!agenciesDictionary){

@@ -278,7 +278,7 @@
 #define TR_CALENDAR_BY_DATE_BY_AGENCY @"TransitCalendarByDateByAgency"
 
 #define NIMBLER_AGENCY_ID  @"nimberAgencyId"
-#define GTFS_AGENCY_ID     @"gtfsAgencyID"
+#define GTFS_AGENCY_ID     @"gtfsAgencyId"
 #define AGENCY_NAME        @"agencyName"
 #define DISPLAY_NAME       @"displayName"
 #define EXCLUSION_TYPE     @"exclusionType"
@@ -315,6 +315,7 @@
 #define GTFS_SERVICE_BY_WEEKDAY @"gtfsServiceByWeekDay"
 #define GTFS_SERVICE_EXCEPTIONS_DATES @"gtfsServiceExceptionDates"
 #define CURRENT_DATE @"current_Date"
+#define CURRENT_DATE_AGENCIES @"current_Date_Agencies"
 #define TIMER_TYPE  @"continueGetTime"
 
 #define GET_PLAN_URL  @"plan/get"
@@ -468,4 +469,6 @@
 #define BANNED_AGENCIES_WITH_MODE @"bannedAgenciesWithMode"
 
 #define SHOW_INTERMEDIATE_STOPS @"showIntermediateStops"
+
+#define APPLICATION_VERSION            @"appVer"
 

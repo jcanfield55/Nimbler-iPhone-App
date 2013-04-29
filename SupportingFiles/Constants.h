@@ -320,6 +320,7 @@
 #define GTFS_SERVICE_BY_WEEKDAY @"gtfsServiceByWeekDay"
 #define GTFS_SERVICE_EXCEPTIONS_DATES @"gtfsServiceExceptionDates"
 #define CURRENT_DATE @"current_Date"
+#define CURRENT_DATE_AGENCIES @"current_Date_Agencies"
 #define TIMER_TYPE  @"continueGetTime"
 
 #define GET_PLAN_URL  @"plan/get"

@@ -984,8 +984,8 @@ UIImage *imageDetailDisclosure;
              FLURRY_EDIT_MODE_VALUE, edit_string,
              nil, nil, nil, nil, nil, nil);
     
-    NSRange range;
-    ToFromEditMode oldEditMode = editMode;
+    //NSRange range;
+    //ToFromEditMode oldEditMode = editMode;
     editMode = newEditMode;  
     
     // Adjust the heights of the to & from tables, as needed
@@ -999,52 +999,54 @@ UIImage *imageDetailDisclosure;
         self.navigationItem.leftBarButtonItem = barButtonCancel;
     }
     
-    if (newEditMode == TO_EDIT && oldEditMode == NO_EDIT) {
-        // Delete second & third sections (moving To Table to top)
-        range.location = 1;
-        range.length = 2;
-        [mainTable beginUpdates];
-        [mainTable deleteSections:[NSIndexSet indexSetWithIndexesInRange:range] withRowAnimation:UITableViewRowAnimationAutomatic];  // Leave only the To section
-        [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
-        [mainTable endUpdates];
-    } else if (newEditMode == NO_EDIT && oldEditMode == TO_EDIT) {
-        range.location = 1;
-        range.length = 2;
-        [mainTable beginUpdates];
-        [mainTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Delete the row for txtField
-        [mainTable insertSections:[NSIndexSet indexSetWithIndexesInRange:range] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [mainTable endUpdates];
-    } else if (newEditMode == FROM_EDIT && oldEditMode == NO_EDIT) {
-        [mainTable beginUpdates];
-        [mainTable deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [mainTable deleteSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
-        [mainTable endUpdates];
-    } 
-    else if (newEditMode == NO_EDIT && oldEditMode == FROM_EDIT) {
-        [mainTable beginUpdates];
-        [mainTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Delete row for txtField
-        [mainTable insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [mainTable insertSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [mainTable endUpdates];
-    }
-    else if (newEditMode == FROM_EDIT && oldEditMode == TO_EDIT) {
-        // Note: this code is not used yet -- it is here as a placeholder
-        [mainTable beginUpdates];
-        [mainTable deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [mainTable insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
-        [mainTable endUpdates];
-    }
-    else if (newEditMode == TO_EDIT && oldEditMode == FROM_EDIT) {
-        // Note: this code is not used yet -- it is here as a placeholder
-        [mainTable beginUpdates];
-        [mainTable deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [mainTable insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
-        [mainTable endUpdates];
-    }  
+// Note:- Commented this code to solve the DE-305
     
+//        if (newEditMode == TO_EDIT && oldEditMode == NO_EDIT) {
+//            // Delete second & third sections (moving To Table to top)
+//            range.location = 1;
+//            range.length = 2;
+//            [mainTable beginUpdates];
+//            [mainTable deleteSections:[NSIndexSet indexSetWithIndexesInRange:range] withRowAnimation:UITableViewRowAnimationAutomatic];  // Leave only the To section
+//            [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
+//            [mainTable endUpdates];
+//        } else if (newEditMode == NO_EDIT && oldEditMode == TO_EDIT) {
+//            range.location = 1;
+//            range.length = 2;
+//            [mainTable beginUpdates];
+//            [mainTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Delete the row for txtField
+//            [mainTable insertSections:[NSIndexSet indexSetWithIndexesInRange:range] withRowAnimation:UITableViewRowAnimationAutomatic];
+//            [mainTable endUpdates];
+//        } else if (newEditMode == FROM_EDIT && oldEditMode == NO_EDIT) {
+//            [mainTable beginUpdates];
+//            [mainTable deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+//            [mainTable deleteSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationAutomatic];
+//            [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
+//            [mainTable endUpdates];
+//        }
+//        else if (newEditMode == NO_EDIT && oldEditMode == FROM_EDIT) {
+//            [mainTable beginUpdates];
+//            [mainTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Delete row for txtField
+//            [mainTable insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+//            [mainTable insertSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationAutomatic];
+//            [mainTable endUpdates];
+//        }
+//        else if (newEditMode == FROM_EDIT && oldEditMode == TO_EDIT) {
+//            // Note: this code is not used yet -- it is here as a placeholder
+//            [mainTable beginUpdates];
+//            [mainTable deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+//            [mainTable insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+//            [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
+//            [mainTable endUpdates];
+//        }
+//        else if (newEditMode == TO_EDIT && oldEditMode == FROM_EDIT) {
+//            // Note: this code is not used yet -- it is here as a placeholder
+//            [mainTable beginUpdates];
+//            [mainTable deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+//            [mainTable insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+//            [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
+//            [mainTable endUpdates];
+//        }  
+
     // Reload all the data
     [toTable reloadData];
     [fromTable reloadData];

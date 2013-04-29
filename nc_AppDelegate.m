@@ -149,6 +149,10 @@ FeedBackForm *fbView;
 
     prefs = [NSUserDefaults standardUserDefaults];
     [UserPreferance userPreferance];  // Saves default user preferences to server if needed
+    
+    // Call suppertedRegion for getting boundry of bay area region
+    [self suppertedRegion];
+    
     if ([[UserPreferance userPreferance] pushEnable]) {
         [[UIApplication sharedApplication]
          registerForRemoteNotificationTypes:
@@ -554,17 +558,24 @@ FeedBackForm *fbView;
     
     NSDate *todayDate = dateOnlyFromDate([NSDate date]);
     NSDate *currentDate = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_DATE];
+    NSDate *currentDateAgencies = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_DATE_AGENCIES];
     if(!currentDate){
         [[nc_AppDelegate sharedInstance] performSelector:@selector(updateTime) withObject:nil afterDelay:0.5];
-        [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:CURRENT_DATE];
-        [[NSUserDefaults standardUserDefaults] synchronize];
     }
     else{
         NSDate *currentDateOnly = dateOnlyFromDate(currentDate);
         if(![todayDate isEqualToDate:currentDateOnly]){
             [[nc_AppDelegate sharedInstance] performSelector:@selector(updateTime) withObject:nil afterDelay:0.5];
-            [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:CURRENT_DATE];
-            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+    }
+    
+    if(!currentDateAgencies){
+        [[Agencies agencies] performSelector:@selector(updateAgenciesFromServer) withObject:nil afterDelay:0.5];
+    }
+    else{
+        NSDate *currentDateOnly = dateOnlyFromDate(currentDateAgencies);
+        if(![todayDate isEqualToDate:currentDateOnly]){
+            [[Agencies agencies] performSelector:@selector(updateAgenciesFromServer) withObject:nil afterDelay:0.5];
         }
     }
     if(actionsheet){
@@ -979,6 +990,14 @@ FeedBackForm *fbView;
                        [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:CURRENT_DATE];
                         [[nc_AppDelegate sharedInstance] updateTime];
                     }
+                    
+                    NSDate *lastAgenciesSaveDate = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_DATE_AGENCIES];
+                    if(!lastAgenciesSaveDate || ![lastAgenciesSaveDate isEqualToDate:todayDate]){
+                        NSDate *todayDate = dateOnlyFromDate([NSDate date]);
+                        [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:CURRENT_DATE];
+                        [[Agencies agencies] updateAgenciesFromServer];
+                    }
+                    
                     // Get TransitCalendar updates
                     [self getTwiiterLiveData];
                     if (timerTweeterGetData == nil) {
@@ -1128,7 +1147,6 @@ FeedBackForm *fbView;
     @try {
         isUpdateTime = YES;
         [[TransitCalendar transitCalendar] updateFromServer];
-        [[Agencies agencies] performSelector:@selector(updateAgenciesFromServer) withObject:[Agencies class] afterDelay:1.0];
     }
     @catch (NSException *exception) {
         logException(@"ncAppDelegate->updateTime", @"", exception);
