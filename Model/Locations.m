@@ -468,17 +468,6 @@
         
         MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
         request.naturalLanguageQuery = typedFromStr0;
-
-        CLLocationManager *locationManager;
-        locationManager = [[CLLocationManager alloc] init];
-        locationManager.delegate = self;
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-        CLLocation *location = [locationManager location];
-        [locationManager startUpdatingLocation];
-        CLLocationCoordinate2D coordinate = [location coordinate];
-        MKCoordinateRegion mpRegion =  MKCoordinateRegionMakeWithDistance(coordinate,200, 200);
-        
-        request.region = mpRegion;
         
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         
@@ -502,8 +491,13 @@
              NSError *error = nil;
              MKMapItem *mapItem = [response.mapItems objectAtIndex:i];
              LocationFromIOS *loc = [self newLocationFromIOSWithPlacemark:mapItem.placemark error:error IsLocalSearchResult:true];
-             if(![localSearchFromLocations containsObject:loc])
-             [localSearchFromLocations addObject:loc];
+             loc.placeName = mapItem.name;
+             
+             if ([[[nc_AppDelegate sharedInstance].toFromViewController supportedRegion] isInRegionLat:[loc latFloat] Lng:[loc lngFloat]]) {
+                 if(![localSearchFromLocations containsObject:loc])
+                     [localSearchFromLocations addObject:loc];
+             } 
+             
          }
             sortedMatchingFromLocations = localSearchFromLocations;
             matchingFromRowCount = [sortedMatchingFromLocations count];
@@ -511,6 +505,13 @@
             
             [[nc_AppDelegate sharedInstance].toFromViewController.fromTableVC reloadLocationWithLocalSearch];
         }];
+    }
+    else {
+        sortedMatchingFromLocations = localSearchFromLocations;
+        matchingFromRowCount = [sortedMatchingFromLocations count];
+        areMatchingLocationsChanged = YES;
+        
+        [[nc_AppDelegate sharedInstance].toFromViewController.fromTableVC reloadLocationWithLocalSearch];
     }
 }
 
@@ -532,17 +533,6 @@
         MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
         request.naturalLanguageQuery = typedToStr0;
         
-        CLLocationManager *locationManager;
-        locationManager = [[CLLocationManager alloc] init];
-        locationManager.delegate = self;
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-        CLLocation *location = [locationManager location];
-        [locationManager startUpdatingLocation];
-        CLLocationCoordinate2D coordinate = [location coordinate];
-        MKCoordinateRegion mpRegion =  MKCoordinateRegionMakeWithDistance(coordinate,200, 200);
-        
-        request.region = mpRegion;
-        
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         
         MKLocalSearch  *localSearch = [[MKLocalSearch alloc] initWithRequest:request];
@@ -561,21 +551,33 @@
                 return;
                 
             }
+            
             for(int i=0;i<[response.mapItems count];i++){
                 NSError *error = nil;
                 MKMapItem *mapItem = [response.mapItems objectAtIndex:i];
                 LocationFromIOS *loc = [self newLocationFromIOSWithPlacemark:mapItem.placemark error:error IsLocalSearchResult:true];
-                 NIMLOG_PERF2(@"LocalSearch == %@",loc.formattedAddress);
-                if(![localSearchToLocations containsObject:loc])
-                    [localSearchToLocations addObject:loc];
+                loc.placeName = mapItem.name;
+                
+                if ([[[nc_AppDelegate sharedInstance].toFromViewController supportedRegion] isInRegionLat:[loc latFloat] Lng:[loc lngFloat]]) {
+                    if(![localSearchToLocations containsObject:loc])
+                        [localSearchToLocations addObject:loc];
+                }
             }
-            NIMLOG_PERF2(@"LocalSearch Count == %d",[localSearchToLocations count]);
+            NIMLOG_PERF1(@"LocalSearch Count == %d",[localSearchToLocations count]);
             sortedMatchingToLocations = localSearchToLocations;
             matchingToRowCount = [sortedMatchingToLocations count];
             areMatchingLocationsChanged = YES;
             
             [[nc_AppDelegate sharedInstance].toFromViewController.toTableVC reloadLocationWithLocalSearch];
         }];
+    }
+    else
+    {
+        sortedMatchingToLocations = localSearchToLocations;
+        matchingToRowCount = [sortedMatchingToLocations count];
+        areMatchingLocationsChanged = YES;
+        
+        [[nc_AppDelegate sharedInstance].toFromViewController.toTableVC reloadLocationWithLocalSearch];
     }
 }
 

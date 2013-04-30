@@ -279,8 +279,22 @@ NSString *strStreet2 = @"street ";
     // Prepare the cell settings
     Location *loc = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]] 
                                         isFrom:isFrom];
-    [[cell textLabel] setText:[loc shortFormattedAddress]];
-    
+    // if There is PlaceName available for location
+    if([loc isKindOfClass:[LocationFromIOS class ]])
+    {
+        LocationFromIOS *locFromIOS = (LocationFromIOS *)loc;
+        
+        if(locFromIOS.placeName)
+        {
+            cell.textLabel.numberOfLines = 2;
+            cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+            [[cell textLabel] setText:[NSString stringWithFormat:@"%@\n%@",locFromIOS.placeName,[loc shortFormattedAddress]]];
+        }
+    }
+    else
+    {
+        [[cell textLabel] setText:[loc shortFormattedAddress]];
+    }
     if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) {
         // Bold italic if a list header
         [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
