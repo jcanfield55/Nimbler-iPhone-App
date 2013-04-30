@@ -392,6 +392,10 @@
                            planMaxTimeForResultsToShow:(int)planMaxTimeForResultsToShow
 {
     @try {
+        
+        // DE-295 & DE-299 Fixed
+        [self changeUnscheduledItineraryTime:requestDate];
+        
         NIMLOG_PERF2A(@"returnSortedItineraries start loop 1. reqChunk.count=%d",self.requestChunks.count);
         // Go through unique itineraries and get all GTFS itineraries based on them, generating new ones if needed
         BOOL areThereExcludedItineraries = false;
@@ -484,7 +488,6 @@
                 }
             }
         }
-        
         
         // Sort itineraries (in reverse order if arrive-by itinerary (DE191 fix)
         NIMLOG_PERF2A(@"Sort and remove itineraries beyond max");

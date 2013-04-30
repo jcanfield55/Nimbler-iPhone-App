@@ -979,7 +979,7 @@ FeedBackForm *fbView;
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     @try {
         NSString *token = [[[[deviceToken description] stringByReplacingOccurrencesOfString: @"<" withString: NULL_STRING] stringByReplacingOccurrencesOfString: @">" withString: NULL_STRING] stringByReplacingOccurrencesOfString: @" " withString: @""];
-        NIMLOG_OBJECT1(@"deviceTokenString: %@",token);
+        NIMLOG_PERF2(@"deviceTokenString: %@",token);
         [UIApplication sharedApplication].applicationIconBadgeNumber = BADGE_COUNT_ZERO;
         [prefs setObject:token forKey:DEVICE_TOKEN];
         [prefs synchronize];

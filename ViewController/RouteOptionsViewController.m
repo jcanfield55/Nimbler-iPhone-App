@@ -731,10 +731,10 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 #if SKIP_REAL_TIME_UPDATES
     return;
 #endif
-    if(![nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray){
-        [self waitForNonNullValueOfBlock:^(void){BOOL result=planStore.stopTimesLoadSuccessfully; return result;}];
-    }
-    planStore.stopTimesLoadSuccessfully = false;
+//    if(![nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray){
+//        [self waitForNonNullValueOfBlock:^(void){BOOL result=planStore.stopTimesLoadSuccessfully; return result;}];
+//    }
+//    planStore.stopTimesLoadSuccessfully = false;
     RealTimeManager *realtimeManager = [RealTimeManager realTimeManager];
     [realtimeManager requestRealTimeDataFromServerUsingPlan:plan PlanRequestParameters:planRequestParameters];
 }

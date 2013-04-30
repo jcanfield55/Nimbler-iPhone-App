@@ -356,8 +356,6 @@
                 return;
             }
             Plan *plan = [objects objectAtIndex:0];
-            // DE-295 Fixed
-            [plan changeUnscheduledItineraryTime:planRequestParameters.originalTripDate];
             if([nc_AppDelegate sharedInstance].isTestPlan){
                 [nc_AppDelegate sharedInstance].testPlan = plan;
             }
@@ -555,6 +553,11 @@
                 else{
                     tripId = @"";
                 }
+                NSString *headSign;
+                if(leg.headSign)
+                    headSign = leg.headSign;
+                else
+                    headSign = @"";
                 NSDictionary *dicLegData = [NSDictionary dictionaryWithObjectsAndKeys:leg.tripId,@"tripId",strRouteLongName,@"routeLongName",strRouteShortName,@"routeShortName",[NSNumber numberWithLongLong:startDate],@"startTime",[NSNumber numberWithLongLong:endDate],@"endTime",leg.routeId,@"routeId",dicTo,@"to",dicFrom,@"from",leg.mode,@"mode",leg.agencyId,@"agencyId",leg.agencyName,@"agencyName",leg.route,@"route",leg.headSign,@"headsign",leg.legId,@"id",@"15",@"size", nil];
                 [arrLegs addObject:dicLegData];
             }
