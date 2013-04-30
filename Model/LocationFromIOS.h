@@ -18,6 +18,9 @@
 @property (nonatomic, retain) CLPlacemark* placemark;  // Placemark returned from CLGeocoder
 @property (nonatomic) BOOL isLocalSearchResult;
 
+//For Local Search
+@property (nonatomic , strong)NSString *placeName;
+
 // Initializes an empty LocationIOS and its superclass Location using placemark0
 // Use this instead of setPlacemark method
 // Status will be "OK" if error==nil, otherwise it will be marked with the error
