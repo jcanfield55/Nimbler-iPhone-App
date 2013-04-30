@@ -28,4 +28,6 @@
 - (void) requestVehicleDataFromServer;
 
 - (void) addVehicleTomapView:(NSArray *)vehiclesData;
+
+- (void) removeMovingAnnotations;
 @end

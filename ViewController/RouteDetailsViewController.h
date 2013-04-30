@@ -26,11 +26,10 @@
 @property(nonatomic, strong)  UIButton *btnBackItem;
 @property(nonatomic, strong)  UIButton *btnForwardItem;
 @property(nonatomic, strong)  UIButton *btnGoToItinerary;
-@property (nonatomic, strong) IBOutlet UIProgressView *progressView;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic) int count;
-@property (nonatomic) float progress;
-@property (nonatomic, strong) IBOutlet UILabel *lblRealtimeUpdates;
+@property (nonatomic, strong) IBOutlet UILabel *lblNextRealtime;
+@property (nonatomic, strong) IBOutlet UIImageView *realTimeImageView;
 
 - (IBAction)navigateBack:(id)sender;
 - (IBAction)navigateForward:(id)sender;
@@ -40,6 +39,10 @@
 -(void)setFBParamater:(int)ss;
 -(void)setFBParameterForLeg:(NSString *)legId;
 -(void)newItineraryAvailable:(Itinerary *)newItinerary
-                 status:(ItineraryStatus)status;
+status:(ItineraryStatus)status ItineraryNumber:(int)itiNumber;
 - (void) intermediateStopTimesReceived:(NSArray *)stopTimes Leg:(Leg *)leg;
+- (void) setViewFrames;
+
+// return Formatted string like 00:58
+- (NSString *) returnFormattedStringFromSeconds:(int) seconds;;
 @end

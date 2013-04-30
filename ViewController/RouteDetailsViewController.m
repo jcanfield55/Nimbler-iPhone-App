@@ -37,11 +37,10 @@
 @synthesize itineraryNumber;
 @synthesize mainTableTotalHeight;
 @synthesize btnBackItem,btnForwardItem,btnGoToItinerary;
-@synthesize progressView;
 @synthesize timer;
 @synthesize count;
-@synthesize progress;
-@synthesize lblRealtimeUpdates;
+@synthesize lblNextRealtime;
+@synthesize realTimeImageView;
 
 NSUserDefaults *prefs;
 
@@ -171,44 +170,50 @@ NSUserDefaults *prefs;
     self.mainTable = nil;
 }
 -(void)newItineraryAvailable:(Itinerary *)newItinerary
-                 status:(ItineraryStatus)status{
+                      status:(ItineraryStatus)status ItineraryNumber:(int)itiNumber{
     if(status == ITINERARY_STATUS_OK){
         [self setItinerary:newItinerary];
+        [self setItineraryNumber:itiNumber];
         [mainTable reloadData];
     }
     
 }
 
 -(void) progressViewProgress {
-    count++;
-    progress = progress + 0.0083;
-    if(count > 120){
+    count--;
+    [lblNextRealtime setText:[NSString stringWithFormat:@"Time to next refresh: %@ ",[self returnFormattedStringFromSeconds:count]]];
+    UIImage *realtime1 = [UIImage imageNamed:@"realtime1.png"];
+    UIImage *realtime2 = [UIImage imageNamed:@"realtime2.png"];
+    [realTimeImageView setAnimationImages:[NSArray arrayWithObjects:realtime1,realtime2, nil]];
+    [realTimeImageView setAnimationDuration:1.0];
+    [realTimeImageView startAnimating];
+    
+    if(count == 0){
         if(timer){
             [timer invalidate];
             timer = nil;
         }
+        [lblNextRealtime setText:@"No Realtime Updates"];
+        [realTimeImageView setHidden:YES];
     }
-    [progressView setProgress:progress];
-}
-
-// Hide the realtime updates after 3 seconds
-- (void) hideRealtimeUpdateLabel{
-    [lblRealtimeUpdates setHidden:YES];
 }
 
 - (void)setItinerary:(Itinerary *)i0
 {
     @try {
-        if(itinerary && itinerary.isRealTimeItinerary){
-            [lblRealtimeUpdates setHidden:NO];
-            [self performSelector:@selector(hideRealtimeUpdateLabel) withObject:nil afterDelay:3.0];
-        }
-        count = 0;
-        progress = 0.0;
+        count = 119;
         itinerary = i0;
         if(itinerary.isRealTimeItinerary){
-            [progressView setHidden:NO];
-            [progressView setProgress:0.0];
+            [lblNextRealtime setHidden:NO];
+            [lblNextRealtime setText:[NSString stringWithFormat:@"Time to next refresh: %@ ",[self returnFormattedStringFromSeconds:count]]];
+            [realTimeImageView setHidden:NO];
+            UIImage *realtime1 = [UIImage imageNamed:@"realtime1.png"];
+            UIImage *realtime2 = [UIImage imageNamed:@"realtime2.png"];
+            
+            [realTimeImageView setAnimationImages:[NSArray arrayWithObjects:realtime1,realtime2, nil]];
+            [realTimeImageView setAnimationDuration:1.0];
+            [realTimeImageView startAnimating];
+            
             if(timer){
                 [timer invalidate];
                 timer = nil;
@@ -216,7 +221,8 @@ NSUserDefaults *prefs;
             timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(progressViewProgress) userInfo:nil repeats:YES];
         }
         else{
-            [progressView setHidden:YES];
+            [lblNextRealtime setHidden:YES];
+            [realTimeImageView setHidden:YES];
         }
         // DE-183 Fixed
         [self setItineraryNumber:0];  // Initially start on the first row of itinerary
@@ -276,51 +282,54 @@ NSUserDefaults *prefs;
     [legMapVC addIntermediateStops:stopTimes Leg:leg];
 }
 
+- (void) setViewFrames{
+    // Enforce height of main table
+    CGRect tableFrame = [mainTable frame];
+    CGRect mapFrame = [mapView frame];
+    CGRect nextRealtimeFrame = [lblNextRealtime frame];
+    CGRect realTimeImageFrame = [realTimeImageView frame];
+    mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
+    // If we have a small itinerary, reduce the table size so it just fits it, and increase the map size
+    CGFloat newMainTableHeight;
+    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+        newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH, mainTableTotalHeight);
+    }
+    else{
+        newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT, mainTableTotalHeight);
+    }
+    //if (tableFrame.size.height != newMainTableHeight) { // if something is changing...
+    CGFloat combinedHeight;
+    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+        combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH + ROUTE_LEGMAP_MIN_HEIGHT_4INCH+1;
+    }
+    else{
+        combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT + ROUTE_LEGMAP_MIN_HEIGHT+1;
+    }
+    if(lblNextRealtime.isHidden){
+        tableFrame.size.height = newMainTableHeight;
+        tableFrame.origin.y = combinedHeight - newMainTableHeight + 10;
+        mapFrame.size.height = combinedHeight - newMainTableHeight - 1;
+    }
+    else{
+        mapFrame.size.height = combinedHeight - newMainTableHeight - 1;
+        realTimeImageFrame.origin.y = mapFrame.origin.y + mapFrame.size.height+5;
+        nextRealtimeFrame.origin.y = mapFrame.origin.y + mapFrame.size.height+5;
+        tableFrame.size.height = newMainTableHeight - (10 +nextRealtimeFrame.size.height);
+        tableFrame.origin.y = combinedHeight - newMainTableHeight + 15 +nextRealtimeFrame.size.height;
+    }
+    [mainTable setFrame:tableFrame];
+    [mapView setFrame:mapFrame];
+    [lblNextRealtime setFrame:nextRealtimeFrame];
+    [realTimeImageView setFrame:realTimeImageFrame];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
     @try {
         logEvent(FLURRY_ROUTE_DETAILS_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
-
-        // Enforce height of main table
-        CGRect tableFrame = [mainTable frame];
-        CGRect mapFrame = [mapView frame];
-        CGRect progressFrame = [progressView frame];
-        mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
-        // If we have a small itinerary, reduce the table size so it just fits it, and increase the map size
-        CGFloat newMainTableHeight;
-        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-            newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH, mainTableTotalHeight);
-        }
-        else{
-            newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT, mainTableTotalHeight);
-        }
-        //if (tableFrame.size.height != newMainTableHeight) { // if something is changing...
-            CGFloat combinedHeight;
-            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                 combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH + ROUTE_LEGMAP_MIN_HEIGHT_4INCH+1;
-            }
-            else{
-                combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT + ROUTE_LEGMAP_MIN_HEIGHT+1;
-            }
-            if(!itinerary.isRealTimeItinerary){
-                tableFrame.size.height = newMainTableHeight;
-                tableFrame.origin.y = combinedHeight - newMainTableHeight + 10;
-                mapFrame.size.height = combinedHeight - newMainTableHeight - 1;
-            }
-            else{
-                mapFrame.size.height = combinedHeight - newMainTableHeight - 1;
-                progressFrame.origin.y = mapFrame.origin.y + mapFrame.size.height+5;
-                tableFrame.size.height = newMainTableHeight - (10 +progressFrame.size.height);
-                tableFrame.origin.y = combinedHeight - newMainTableHeight + 15 +progressFrame.size.height;
-            }
-            [mainTable setFrame:tableFrame];
-            [mapView setFrame:mapFrame];
-            [progressView setFrame:progressFrame];
-        [lblRealtimeUpdates setCenter:progressView.center];
-        [self.view bringSubviewToFront:lblRealtimeUpdates];
-        //}
+        [self setViewFrames];
         [mainTable reloadData];
         
         // Scrolls the table to the new area and selects the row
@@ -513,7 +522,6 @@ NSUserDefaults *prefs;
 }
 
 
-
 -(void)ReloadLegWithNewData
 {
     @try {
@@ -578,5 +586,26 @@ NSUserDefaults *prefs;
     [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
     [[self.navigationController.view layer] addAnimation:animation forKey:nil];
     [[self navigationController] popViewControllerAnimated:NO];
+}
+
+- (NSString *) returnFormattedStringFromSeconds:(int) seconds{
+    NSString *timeString;
+    if(seconds > 59){
+        if(seconds-60 < 10){
+            timeString = [NSString stringWithFormat:@"01:0%d",seconds-60];
+        }
+        else{
+            timeString = [NSString stringWithFormat:@"01:%d",seconds-60];
+        }
+    }
+    else{
+        if(seconds < 10){
+            timeString = [NSString stringWithFormat:@"00:0%d",seconds];
+        }
+        else{
+            timeString = [NSString stringWithFormat:@"00:%d",seconds];
+        }
+    }
+    return timeString;
 }
 @end

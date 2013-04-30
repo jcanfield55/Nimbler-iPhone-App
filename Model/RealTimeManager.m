@@ -171,13 +171,14 @@ static RealTimeManager* realTimeManager;
 // Replace the RouteDetailView itinerary with matching realtime itinerary.
 - (void) updateItineraryIfAlreadyInRouteDetailView{
     Itinerary *detailViewitinerary = [nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC.itinerary;
+    int itineraryNumber = [nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC.itineraryNumber;
     if(!detailViewitinerary)
         return;
     
     for(int i=0;i<[[plan sortedItineraries] count];i++){
         Itinerary *itinerary = [[plan sortedItineraries] objectAtIndex:i];
         if(itinerary.isRealTimeItinerary && [itinerary.tripIdhexString isEqualToString:detailViewitinerary.tripIdhexString]){
-            [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC newItineraryAvailable:itinerary status:ITINERARY_STATUS_OK];
+            [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC newItineraryAvailable:itinerary status:ITINERARY_STATUS_OK ItineraryNumber:itineraryNumber];
             [plan deleteItinerary:detailViewitinerary];
             [plan prepareSortedItinerariesWithMatchesForDate:originalTripDate
                                               departOrArrive:requestParameters.departOrArrive
@@ -187,7 +188,7 @@ static RealTimeManager* realTimeManager;
             return;
         }
     }
-    [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC newItineraryAvailable:nil status:ITINERARY_STATUS_CONFLICT];
+    [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC newItineraryAvailable:nil status:ITINERARY_STATUS_CONFLICT ItineraryNumber:itineraryNumber];
 }
 
 - (void) removeRealtimeItinerary{
@@ -381,9 +382,22 @@ static RealTimeManager* realTimeManager;
         NSString *route = leg.route;
         if(!route)
             route = @"";
+        
+        NSString *routeShortName = leg.routeShortName;
+        if(!routeShortName)
+            routeShortName = @"";
+        
+        NSString *headSign = leg.headSign;
+        if(!headSign)
+            headSign = @"";
+        
         if(leg.isRealTimeLeg && leg.vehicleId){
-            NSDictionary *legData = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.legId,@"id",route,@"route",leg.vehicleId,@"vehicleId",leg.mode,@"mode", nil];
-            [legArray addObject:legData];
+            NSInteger epochLegEndDate = [leg.endTime timeIntervalSince1970];
+            NSInteger epochCurrentDate = [[NSDate date] timeIntervalSince1970];
+            if(epochCurrentDate <= epochLegEndDate){
+                NSDictionary *legData = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.legId,@"id",route,@"route",leg.vehicleId,@"vehicleId",leg.mode,@"mode",routeShortName,@"routeShortName",headSign,@"headsign", nil];
+                [legArray addObject:legData];
+            }
         }
     }
     if([legArray count] > 0){
@@ -392,6 +406,9 @@ static RealTimeManager* realTimeManager;
         [requestParameter setValue:strRequestString forParam:LEGS];
         [requestParameter setValue:[[nc_AppDelegate sharedInstance] deviceTokenString] forParam:DEVICE_TOKEN];
         [self.rkTpClient post:LIVE_FEEDS_BY_VEHICLE_POSITION params:requestParameter delegate:self];
+    }else{
+        LegMapViewController *legMapVC = [nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC.legMapVC;
+        [legMapVC removeMovingAnnotations];
     }
 }
 

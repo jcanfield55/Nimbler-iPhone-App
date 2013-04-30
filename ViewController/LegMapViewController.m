@@ -35,7 +35,8 @@
     NSMutableArray *movingAnnotations;
     UIImage* dotImage;
     UIImage* pinImage;
-    UIImage*carImage;
+    UIImage* busImage;
+    UIImage* tramImage;
     
     NSDateFormatter *dateFormatter;
     
@@ -505,24 +506,35 @@ NSString *legID;
         
         else if([movingAnnotations containsObject:annotation]){
             MKAnnotationView* dotView = (MKAnnotationView*)[mv dequeueReusableAnnotationViewWithIdentifier:@"MyMovingAnnotationView"];
-            
-            if (!dotView)
-            {
+            if(!dotView){
                 // If an existing pin view was not available, create one.
                 dotView = [[MKAnnotationView alloc] initWithAnnotation:annotation
                                                        reuseIdentifier:@"MyMovingAnnotationView"];
-                    dotView.canShowCallout=YES;
-                if (!carImage) {
-                    NSString* imageName = [[NSBundle mainBundle] pathForResource:@"bus" ofType:@"png"];
-                    carImage = [self scale:[UIImage imageWithContentsOfFile:imageName] toSize:CGSizeMake(25, 26)];
-                }
-                if (carImage) {
-                    [dotView setImage:carImage];
-                }
             }
-            else
-                dotView.annotation = annotation;
-            
+            else{
+                [dotView setAnnotation:annotation];
+            }
+            [mapView bringSubviewToFront:dotView];
+                dotView.canShowCallout=YES;
+                MKPointAnnotation *anno = (MKPointAnnotation *)annotation;
+                if([anno.accessibilityLabel isEqualToString:@"bus"]){
+                    if (!busImage) {
+                        NSString* imageName = [[NSBundle mainBundle] pathForResource:@"bus" ofType:@"png"];
+                        busImage = [self scale:[UIImage imageWithContentsOfFile:imageName] toSize:CGSizeMake(25,26)];
+                    }
+                    if (busImage) {
+                        [dotView setImage:busImage];
+                    }
+                }
+                else{
+                    if (!tramImage) {
+                        NSString* imageName = [[NSBundle mainBundle] pathForResource:@"tram" ofType:@"png"];
+                        tramImage = [self scale:[UIImage imageWithContentsOfFile:imageName] toSize:CGSizeMake(25,26)];
+                    }
+                    if (tramImage) {
+                        [dotView setImage:tramImage];
+                    }
+                }
             return dotView;
         }
         else{
@@ -543,22 +555,49 @@ NSString *legID;
         NSDictionary *vehicleDictionary = [vehiclesData objectAtIndex:i];
         NSArray *vehiclePosistions = [vehicleDictionary objectForKey:@"lstVehiclePositions"];
         for(int j=0;j<[vehiclePosistions count];j++){
-            NSDictionary *tempVehicleDictionary = [vehiclePosistions objectAtIndex:0];
+            NSDictionary *tempVehicleDictionary = [vehiclePosistions objectAtIndex:j];
             MKPointAnnotation *movingAnnotation = [[MKPointAnnotation alloc] init];
+            NSString *mode = [tempVehicleDictionary objectForKey:@"mode"];
+            if([[mode lowercaseString] isEqualToString:@"bus"]){
+                [movingAnnotation setAccessibilityLabel:@"bus"];
+            }
+            else{
+                [movingAnnotation setAccessibilityLabel:@"tram"];
+            }
             NSString *vehicleId = [NSString stringWithFormat:@"Vehicle:%@",[tempVehicleDictionary objectForKey:@"vehicleId"]];
-            [movingAnnotation setTitle:vehicleId];
+            NSString *route = [NSString stringWithFormat:@"Route:%@",[tempVehicleDictionary objectForKey:@"routeShortName"]];
+            [movingAnnotation setTitle:[NSString stringWithFormat:@"%@  %@",vehicleId,route]];
+            NSString *headSign = [NSString stringWithFormat:@"%@",[tempVehicleDictionary objectForKey:@"headsign"]];
+            [movingAnnotation setSubtitle:headSign];
             float fromLat = [[tempVehicleDictionary objectForKey:@"lat"] floatValue];
             float fromLng = [[tempVehicleDictionary objectForKey:@"lon"] floatValue];
             CLLocationCoordinate2D fromCoordinate = CLLocationCoordinate2DMake(fromLat, fromLng);
             [movingAnnotation setCoordinate:fromCoordinate];
             [movingAnnotations addObject:movingAnnotation];
-            [UIView beginAnimations:nil context:nil];
-            [UIView setAnimationDuration:0.5];
-            [UIView setAnimationDelay:1.0];
-            [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+//            [UIView beginAnimations:nil context:nil];
+//            [UIView setAnimationDuration:0.5];
+//            [UIView setAnimationDelay:1.0];
+//            [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
             [mapView addAnnotation:movingAnnotation];
-            [UIView commitAnimations];
+            //[UIView commitAnimations];
         }
     }
+}
+
+// Brings the bus and tram annotations to front and other annotations to back.
+- (void)mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views {
+    for (MKAnnotationView * annView in views) {
+        MKPointAnnotation * ann = (MKPointAnnotation *) [annView annotation];
+        if ([movingAnnotations containsObject:ann]) {
+            [[annView superview] bringSubviewToFront:annView];
+        } else {
+            [[annView superview] sendSubviewToBack:annView];
+        }
+    }
+}
+
+- (void) removeMovingAnnotations{
+    [mapView removeAnnotations:movingAnnotations];
+    [movingAnnotations removeAllObjects];
 }
 @end

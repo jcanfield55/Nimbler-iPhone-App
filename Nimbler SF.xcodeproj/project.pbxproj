@@ -208,6 +208,15 @@
 		75E8F1D616CE3EC800863A8C /* caltrain.json in Resources */ = {isa = PBXBuildFile; fileRef = 75E8F1D516CE3EC800863A8C /* caltrain.json */; };
 		75E8F1DA16CE4B5400863A8C /* sf-muni.json in Resources */ = {isa = PBXBuildFile; fileRef = 75E8F1D916CE4B5400863A8C /* sf-muni.json */; };
 		8D00753216D4CAB30041A64C /* RouteExcludeSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D00753116D4CAB30041A64C /* RouteExcludeSettings.m */; };
+		8D00AFF6172F952C00B01ED3 /* realtime1.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D00AFF2172F952C00B01ED3 /* realtime1.png */; };
+		8D00AFF7172F952C00B01ED3 /* realtime2.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D00AFF3172F952C00B01ED3 /* realtime2.png */; };
+		8D00AFFE172F97E900B01ED3 /* realtime1.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D00AFF2172F952C00B01ED3 /* realtime1.png */; };
+		8D00AFFF172F97EA00B01ED3 /* realtime1.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D00AFF2172F952C00B01ED3 /* realtime1.png */; };
+		8D00B000172F97ED00B01ED3 /* realtime2.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D00AFF3172F952C00B01ED3 /* realtime2.png */; };
+		8D00B001172F97EE00B01ED3 /* realtime2.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D00AFF3172F952C00B01ED3 /* realtime2.png */; };
+		8D00B007172FD22900B01ED3 /* tram.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D00B006172FD22900B01ED3 /* tram.png */; };
+		8D00B008172FD22C00B01ED3 /* tram.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D00B006172FD22900B01ED3 /* tram.png */; };
+		8D00B009172FD22D00B01ED3 /* tram.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D00B006172FD22900B01ED3 /* tram.png */; };
 		8D04E79C16E8A488001DB75D /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */; };
 		8D052F6E171E6969008D4CE0 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
 		8D0FA9A1169165C10038FDB2 /* LegFromOTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */; };
@@ -1121,6 +1130,9 @@
 		75E8F1DC16CE4E2A00863A8C /* Stations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stations.m; sourceTree = "<group>"; };
 		8D00753016D4CAB30041A64C /* RouteExcludeSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RouteExcludeSettings.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8D00753116D4CAB30041A64C /* RouteExcludeSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RouteExcludeSettings.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		8D00AFF2172F952C00B01ED3 /* realtime1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = realtime1.png; sourceTree = "<group>"; };
+		8D00AFF3172F952C00B01ED3 /* realtime2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = realtime2.png; sourceTree = "<group>"; };
+		8D00B006172FD22900B01ED3 /* tram.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tram.png; sourceTree = "<group>"; };
 		8D0FA99F169165C00038FDB2 /* LegFromOTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = LegFromOTP.h; path = ../Model/LegFromOTP.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = LegFromOTP.m; path = ../Model/LegFromOTP.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8D0FA9AE1691984F0038FDB2 /* ItineraryFromOTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ItineraryFromOTP.h; path = ../ItineraryFromOTP.h; sourceTree = "<group>"; };
@@ -1477,6 +1489,9 @@
 		520FB1A8162603AF0083F143 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8D00B006172FD22900B01ED3 /* tram.png */,
+				8D00AFF2172F952C00B01ED3 /* realtime1.png */,
+				8D00AFF3172F952C00B01ED3 /* realtime2.png */,
 				8DBE17FA172E8D7A0020B034 /* bus.png */,
 				8DE18B301725316700AA8112 /* nimblrCaltrain.png */,
 				8D398778172180BA0055BF06 /* back.png */,
@@ -2252,6 +2267,9 @@
 				8DE18B311725316700AA8112 /* nimblrCaltrain.png in Resources */,
 				8DE18B381725380200AA8112 /* Nimbler SF-Info.plist in Resources */,
 				8DBE17FB172E8D7A0020B034 /* bus.png in Resources */,
+				8D00AFF6172F952C00B01ED3 /* realtime1.png in Resources */,
+				8D00AFF7172F952C00B01ED3 /* realtime2.png in Resources */,
+				8D00B007172FD22900B01ED3 /* tram.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2435,6 +2453,9 @@
 				8DE18B37172537F700AA8112 /* Nimbler Caltrain-Info.plist in Resources */,
 				8DE18B3B17253DDF00AA8112 /* store101_Caltrain.zip in Resources */,
 				8DBE17FE172E97EA0020B034 /* bus.png in Resources */,
+				8D00AFFE172F97E900B01ED3 /* realtime1.png in Resources */,
+				8D00B000172F97ED00B01ED3 /* realtime2.png in Resources */,
+				8D00B008172FD22C00B01ED3 /* tram.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2620,6 +2641,9 @@
 				8DFD0DAD17263B56003FCB5A /* store101_DC.zip in Resources */,
 				524100A41727542E0007D956 /* Nimbler DC-Info.plist in Resources */,
 				8DBE17FF172E97EB0020B034 /* bus.png in Resources */,
+				8D00AFFF172F97EA00B01ED3 /* realtime1.png in Resources */,
+				8D00B001172F97EE00B01ED3 /* realtime2.png in Resources */,
+				8D00B009172FD22D00B01ED3 /* tram.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
