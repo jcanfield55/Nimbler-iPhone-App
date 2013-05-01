@@ -392,12 +392,19 @@ static RealTimeManager* realTimeManager;
             headSign = @"";
         
         if(leg.isRealTimeLeg && leg.vehicleId){
-            NSInteger epochLegEndDate = [leg.endTime timeIntervalSince1970];
-            NSInteger epochCurrentDate = [[NSDate date] timeIntervalSince1970];
-            if(epochCurrentDate <= epochLegEndDate){
+            //NSInteger epochLegEndDate = [leg.endTime timeIntervalSince1970];
+            //NSInteger epochCurrentDate = [[NSDate date] timeIntervalSince1970];
+//            NSDictionary *latLonDictionary = [[NSUserDefaults standardUserDefaults] objectForKey:leg.legId];
+//            float lat = 0.0;
+//            float lon = 0.0;
+//            if(latLonDictionary){
+//                lat = [[latLonDictionary objectForKey:@"lat"] floatValue];
+//                lon = [[latLonDictionary objectForKey:@"lon"] floatValue];
+//            }
+//            if((epochCurrentDate <= epochLegEndDate) || (lat && lon && lat <= [leg.to.lat floatValue] && lon <= [leg.to.lng floatValue])){
                 NSDictionary *legData = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.legId,@"id",route,@"route",leg.vehicleId,@"vehicleId",leg.mode,@"mode",routeShortName,@"routeShortName",headSign,@"headsign", nil];
                 [legArray addObject:legData];
-            }
+           // }
         }
     }
     if([legArray count] > 0){

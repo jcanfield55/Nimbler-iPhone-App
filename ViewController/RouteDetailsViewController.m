@@ -40,7 +40,6 @@
 @synthesize timer;
 @synthesize count;
 @synthesize lblNextRealtime;
-@synthesize realTimeImageView;
 
 NSUserDefaults *prefs;
 
@@ -182,19 +181,12 @@ NSUserDefaults *prefs;
 -(void) progressViewProgress {
     count--;
     [lblNextRealtime setText:[NSString stringWithFormat:@"Time to next refresh: %@ ",[self returnFormattedStringFromSeconds:count]]];
-    UIImage *realtime1 = [UIImage imageNamed:@"realtime1.png"];
-    UIImage *realtime2 = [UIImage imageNamed:@"realtime2.png"];
-    [realTimeImageView setAnimationImages:[NSArray arrayWithObjects:realtime1,realtime2, nil]];
-    [realTimeImageView setAnimationDuration:1.0];
-    [realTimeImageView startAnimating];
-    
     if(count == 0){
         if(timer){
             [timer invalidate];
             timer = nil;
         }
         [lblNextRealtime setText:@"No Realtime Updates"];
-        [realTimeImageView setHidden:YES];
     }
 }
 
@@ -206,14 +198,6 @@ NSUserDefaults *prefs;
         if(itinerary.isRealTimeItinerary){
             [lblNextRealtime setHidden:NO];
             [lblNextRealtime setText:[NSString stringWithFormat:@"Time to next refresh: %@ ",[self returnFormattedStringFromSeconds:count]]];
-            [realTimeImageView setHidden:NO];
-            UIImage *realtime1 = [UIImage imageNamed:@"realtime1.png"];
-            UIImage *realtime2 = [UIImage imageNamed:@"realtime2.png"];
-            
-            [realTimeImageView setAnimationImages:[NSArray arrayWithObjects:realtime1,realtime2, nil]];
-            [realTimeImageView setAnimationDuration:1.0];
-            [realTimeImageView startAnimating];
-            
             if(timer){
                 [timer invalidate];
                 timer = nil;
@@ -222,7 +206,6 @@ NSUserDefaults *prefs;
         }
         else{
             [lblNextRealtime setHidden:YES];
-            [realTimeImageView setHidden:YES];
         }
         // DE-183 Fixed
         [self setItineraryNumber:0];  // Initially start on the first row of itinerary
@@ -287,7 +270,6 @@ NSUserDefaults *prefs;
     CGRect tableFrame = [mainTable frame];
     CGRect mapFrame = [mapView frame];
     CGRect nextRealtimeFrame = [lblNextRealtime frame];
-    CGRect realTimeImageFrame = [realTimeImageView frame];
     mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
     // If we have a small itinerary, reduce the table size so it just fits it, and increase the map size
     CGFloat newMainTableHeight;
@@ -312,7 +294,6 @@ NSUserDefaults *prefs;
     }
     else{
         mapFrame.size.height = combinedHeight - newMainTableHeight - 1;
-        realTimeImageFrame.origin.y = mapFrame.origin.y + mapFrame.size.height+5;
         nextRealtimeFrame.origin.y = mapFrame.origin.y + mapFrame.size.height+5;
         tableFrame.size.height = newMainTableHeight - (10 +nextRealtimeFrame.size.height);
         tableFrame.origin.y = combinedHeight - newMainTableHeight + 15 +nextRealtimeFrame.size.height;
@@ -320,7 +301,6 @@ NSUserDefaults *prefs;
     [mainTable setFrame:tableFrame];
     [mapView setFrame:mapFrame];
     [lblNextRealtime setFrame:nextRealtimeFrame];
-    [realTimeImageView setFrame:realTimeImageFrame];
 }
 
 - (void)viewWillAppear:(BOOL)animated
