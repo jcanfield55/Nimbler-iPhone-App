@@ -136,7 +136,6 @@ NSString *strStreet2 = @"street ";
         } else {
             [toFromVC setEditMode:TO_EDIT];
         }
-        locations.isLocationEditing = YES;
     }
     // Else it is one of the locations which was selected
     else {
@@ -151,13 +150,10 @@ NSString *strStreet2 = @"street ";
             } else {
                 [toFromVC setEditMode:TO_EDIT];
             }
-            locations.isLocationEditing = YES;
         }
         else {
             [toFromVC setEditMode:NO_EDIT];  // Have toFromVC end the edit mode (DE96 fix)
-            
-            locations.isLocationEditing = NO;
-            
+           
             NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
 
             if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) { // If a list (like 'Caltrain Station List')
@@ -289,6 +285,10 @@ NSString *strStreet2 = @"street ";
             cell.textLabel.numberOfLines = 2;
             cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
             [[cell textLabel] setText:[NSString stringWithFormat:@"%@\n%@",locFromIOS.placeName,[loc shortFormattedAddress]]];
+        }
+        else
+        {
+            [[cell textLabel] setText:[loc shortFormattedAddress]];
         }
     }
     else
@@ -585,11 +585,24 @@ NSString *strStreet2 = @"street ";
          For Solving DE:27
          */
         [txtField setText:@""];
-        if (isFrom) {
-            [locations setTypedFromString:@""];
+        if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= IOS_LOCALSEARCH_VER) {
+            if (isFrom) {
+                [locations setTypedFromString:@""];
+                [locations setTypedFromStringForLocalSearch:@""];
+            } else {
+                [locations setTypedToString:@""];
+                [locations setTypedToStringForLocalSearch:@""];
+            }
+            
         } else {
-            [locations setTypedToString:@""];
+            if (isFrom) {
+                [locations setTypedFromString:@""];
+            } else {
+                [locations setTypedToString:@""];
+            }
         }
+        
+        
         [toFromVC setEditMode:NO_EDIT];
         [myTableView reloadData];
         return ;

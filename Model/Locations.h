@@ -50,8 +50,6 @@
 @property (nonatomic) BOOL isToGeo;
 @property (nonatomic) BOOL isLocationServiceEnable;
 
-@property (nonatomic) BOOL isLocationEditing;
-
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkGeoMgr:(RKObjectManager *)rkG;
 
 // Preloads locations (like Caltrain stations) from a file.  testAddress is a formatted address of a station name that it can test whether the stored version is up-to-date
