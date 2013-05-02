@@ -73,8 +73,6 @@
 @synthesize isFromGeo,isToGeo;
 @synthesize isLocationServiceEnable;
 
-@synthesize isLocationEditing;
-
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkGeoMgr:(RKObjectManager *)rkG
 {
     self = [super init];
@@ -370,13 +368,13 @@
     }
     else {
         NSArray *startArray = nil;
-        if (typedFromString && [typedFromString length]>0 && [typedFromStr0 hasPrefix:typedFromString]) { // if new string is an extension of the previous one...
+        if (typedFromString && [typedFromString length]>0 && [typedFromStr0 hasPrefix:typedFromString]) { // if new string is an extension of the previoeus one...
             startArray = sortedMatchingFromLocations;  // start with the last array of matches, and narrow from there
         }
         else {
             startArray = searchableFromLocations;    // otherwise, start fresh with all searchable from locations
         }
-        typedFromString = typedFromStr0;   
+        typedFromString = typedFromStr0;
 
 //        NIMLOG_PERF2(@"Start Locations search");
 //        NSArray *newArray = [self locationsMatchingTypedAddress:typedFromString
@@ -385,7 +383,16 @@
         NSMutableArray *newArray = [NSMutableArray array];
         NIMLOG_PERF2(@"Start finding typed string matches, count=%d", [startArray count]);
         for (Location *loc in startArray) {
-            if ([loc isMatchingTypedString:typedFromString]) {  // if loc matches the new string
+            if([loc isKindOfClass:[LocationFromIOS class]]){
+                LocationFromIOS *locIos = (LocationFromIOS *)loc;
+                if(locIos.isLocalSearchResult){
+                    [newArray addObject:loc];
+                }
+                else if([loc isMatchingTypedString:typedFromString]){
+                   [newArray addObject:loc]; 
+                }
+            }
+             else if ([loc isMatchingTypedString:typedFromString]) {  // if loc matches the new string
                 [newArray addObject:loc];  //  add loc to the new array
             }
         }
@@ -401,7 +408,9 @@
             areMatchingLocationsChanged = YES;   // mark for refreshing the table
         }
         matchingFromRowCount = [sortedMatchingFromLocations count];  // cases that match typing are included even if they have frequency=0
-        
+//        if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= IOS_LOCALSEARCH_VER) {
+//            [self setTypedFromStringForLocalSearch:[self typedFromString]];
+//        }
     }
 }
 
@@ -433,12 +442,26 @@
             startArray = searchableToLocations;    // otherwise, start fresh with all searchable To locations
         }
         typedToString = typedToStr0;   
-        NSMutableArray *newArray = [NSMutableArray array];   
+        NSMutableArray *newArray = [NSMutableArray array];
         for (Location *loc in startArray) {
-                if ([loc isMatchingTypedString:typedToString]) {  // if loc matches the new string
-                    [newArray addObject:loc];  //  add loc to the new array
+            if([loc isKindOfClass:[LocationFromIOS class]]){
+                LocationFromIOS *locIos = (LocationFromIOS *)loc;
+                if(locIos.isLocalSearchResult){
+                    [newArray addObject:loc];
                 }
+                else if([loc isMatchingTypedString:typedToString]){
+                    [newArray addObject:loc];
+                }
+            }
+            else if ([loc isMatchingTypedString:typedToString]) {  // if loc matches the new string
+                [newArray addObject:loc];  //  add loc to the new array
+            }
         }
+//        for (Location *loc in startArray) {
+//                if ([loc isMatchingTypedString:typedToString]) {  // if loc matches the new string
+//                    [newArray addObject:loc];  //  add loc to the new array
+//                }
+//        }
         // Merge the results of typed string with newarray.
 //        if(typedToString.length >= 3){
 //            NSArray *arrLocations = [self preloadStationLocationsMatchingTypedAddress:typedToString];
@@ -454,14 +477,22 @@
 // Local Search that recomputes the sortedMatchingFromLocations and row count
 - (void)setTypedFromStringForLocalSearch:(NSString *)typedFromStr0
 {
-    NSMutableArray *localSearchFromLocations = [[NSMutableArray alloc] initWithArray:sortedMatchingFromLocations];
+   NSMutableArray *localSearchFromLocations = [[NSMutableArray alloc] initWithArray:sortedMatchingFromLocations];
     for(int i=0;i<[localSearchFromLocations count];i++){
         LocationFromIOS *loc = [localSearchFromLocations objectAtIndex:i];
-        if([loc isKindOfClass:[LocationFromIOS class ]] && loc.isLocalSearchResult){
-            [localSearchFromLocations removeObject:loc];
-            i =i -1;
+        
+        if([loc isKindOfClass:[LocationFromIOS class ]]){
+           //NSLog(@"Bool== %d",loc.isLocalSearchResult);
+           if(loc.isLocalSearchResult)
+           {
+                [localSearchFromLocations removeObject:loc];
+                i =i -1;
+            }
+           
         }
     }
+    
+    //NSMutableArray *localSearchFromLocations =[NSMutableArray array];
     if([typedFromStr0 length]>=3)
     {
         // Perform a new search.
@@ -472,14 +503,13 @@
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         
         MKLocalSearch  *localSearch = [[MKLocalSearch alloc] initWithRequest:request];
-        
+       
         [localSearch startWithCompletionHandler:^(MKLocalSearchResponse *response, NSError *error){
             
             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
             
             if (error != nil) {
-                
-                NIMLOG_ERR1(@"Error = %@",[error localizedDescription]);
+                NIMLOG_ERR1(@"Error = %@/%d",[error localizedDescription],[response.mapItems count]);
                 return;
             }
             
@@ -487,31 +517,43 @@
                 return;
                 
             }
+        int locCount = 0;
          for(int i=0;i<[response.mapItems count];i++){
              NSError *error = nil;
+            
              MKMapItem *mapItem = [response.mapItems objectAtIndex:i];
-             LocationFromIOS *loc = [self newLocationFromIOSWithPlacemark:mapItem.placemark error:error IsLocalSearchResult:true];
-             loc.placeName = mapItem.name;
              
-             if ([[[nc_AppDelegate sharedInstance].toFromViewController supportedRegion] isInRegionLat:[loc latFloat] Lng:[loc lngFloat]]) {
-                 if(![localSearchFromLocations containsObject:loc])
-                     [localSearchFromLocations addObject:loc];
+             if ([[[nc_AppDelegate sharedInstance].toFromViewController supportedRegion] isInRegionLat:mapItem.placemark.location.coordinate.latitude Lng:mapItem.placemark.location.coordinate.longitude]) {
+                 
+                   LocationFromIOS *loc = [self newLocationFromIOSWithPlacemark:mapItem.placemark error:error IsLocalSearchResult:true];
+                 
+                   NSArray *formattedAdd = [loc.formattedAddress componentsSeparatedByString:@","];
+                   if(![[formattedAdd objectAtIndex:0] isEqualToString:mapItem.name]){
+                         loc.placeName = mapItem.name;
+                     }
+                 
+                 [localSearchFromLocations addObject:loc];
+                 locCount++;
+                 
              } 
              
          }
-            sortedMatchingFromLocations = localSearchFromLocations;
-            matchingFromRowCount = [sortedMatchingFromLocations count];
-            areMatchingLocationsChanged = YES;
+          sortedMatchingFromLocations = localSearchFromLocations;
+          matchingFromRowCount = [sortedMatchingFromLocations count];
+          areMatchingLocationsChanged = YES;
             
-            [[nc_AppDelegate sharedInstance].toFromViewController.fromTableVC reloadLocationWithLocalSearch];
+            if(locCount>0)
+            {
+                [[nc_AppDelegate sharedInstance].toFromViewController.fromTableVC reloadLocationWithLocalSearch];
+            }
+           
         }];
+        
     }
     else {
         sortedMatchingFromLocations = localSearchFromLocations;
         matchingFromRowCount = [sortedMatchingFromLocations count];
         areMatchingLocationsChanged = YES;
-        
-        [[nc_AppDelegate sharedInstance].toFromViewController.fromTableVC reloadLocationWithLocalSearch];
     }
 }
 
@@ -521,9 +563,13 @@
     NSMutableArray *localSearchToLocations = [[NSMutableArray alloc] initWithArray:sortedMatchingToLocations];
     for(int i=0;i<[localSearchToLocations count];i++){
         LocationFromIOS *loc = [localSearchToLocations objectAtIndex:i];
-        if([loc isKindOfClass:[LocationFromIOS class ]] && loc.isLocalSearchResult){
-            [localSearchToLocations removeObject:loc];
-            i =i -1;
+       if([loc isKindOfClass:[LocationFromIOS class ]]){
+        if(loc.isLocalSearchResult)
+          {
+               [localSearchToLocations removeObject:loc];
+               i =i -1;
+           }
+           
         }
     }
     if([typedToStr0 length]>=3)
@@ -552,23 +598,34 @@
                 
             }
             
+            int locCount = 0;
             for(int i=0;i<[response.mapItems count];i++){
                 NSError *error = nil;
                 MKMapItem *mapItem = [response.mapItems objectAtIndex:i];
-                LocationFromIOS *loc = [self newLocationFromIOSWithPlacemark:mapItem.placemark error:error IsLocalSearchResult:true];
-                loc.placeName = mapItem.name;
                 
-                if ([[[nc_AppDelegate sharedInstance].toFromViewController supportedRegion] isInRegionLat:[loc latFloat] Lng:[loc lngFloat]]) {
-                    if(![localSearchToLocations containsObject:loc])
-                        [localSearchToLocations addObject:loc];
-                }
+                if ([[[nc_AppDelegate sharedInstance].toFromViewController supportedRegion] isInRegionLat:mapItem.placemark.location.coordinate.latitude Lng:mapItem.placemark.location.coordinate.longitude]) {
+                    
+                    LocationFromIOS *loc = [self newLocationFromIOSWithPlacemark:mapItem.placemark error:error IsLocalSearchResult:true];
+                    
+                    NSArray *formattedAdd = [loc.formattedAddress componentsSeparatedByString:@","];
+                    if(![[formattedAdd objectAtIndex:0] isEqualToString:mapItem.name]){
+                        loc.placeName = mapItem.name;
+                    }
+                    
+                    [localSearchToLocations addObject:loc];
+                    locCount++;
+                  }
             }
+                
             NIMLOG_PERF1(@"LocalSearch Count == %d",[localSearchToLocations count]);
             sortedMatchingToLocations = localSearchToLocations;
             matchingToRowCount = [sortedMatchingToLocations count];
             areMatchingLocationsChanged = YES;
-            
-            [[nc_AppDelegate sharedInstance].toFromViewController.toTableVC reloadLocationWithLocalSearch];
+            if(locCount>0)
+            {
+                [[nc_AppDelegate sharedInstance].toFromViewController.toTableVC reloadLocationWithLocalSearch];
+            }
+           
         }];
     }
     else
@@ -577,7 +634,6 @@
         matchingToRowCount = [sortedMatchingToLocations count];
         areMatchingLocationsChanged = YES;
         
-        [[nc_AppDelegate sharedInstance].toFromViewController.toTableVC reloadLocationWithLocalSearch];
     }
 }
 
@@ -585,7 +641,7 @@
 // Implementation only counts locations with frequency>0.   
 - (int)numberOfLocations:(BOOL)isFrom {
 
-    if (areLocationsChanged && !isLocationEditing) { // if cache outdated, then query & update the internal memory array
+    if (areLocationsChanged) { // if cache outdated, then query & update the internal memory array
         [self updateInternalCache];
     }
     // Now that the internal variables are updated, return the row value
@@ -600,7 +656,7 @@
 // Returns the Location from the sorted array at the specified index.  isFrom = true if it is the from table. 
 - (Location *)locationAtIndex:(int)index isFrom:(BOOL)isFrom {
 
-    if (areLocationsChanged && !isLocationEditing) { // if cache outdated, then query & update the internal memory array
+    if (areLocationsChanged) { // if cache outdated, then query & update the internal memory array
         [self updateInternalCache];
     }
     // Now that the internal variables are updated, return the row value
@@ -617,6 +673,16 @@
 // Only include those locations with frequency >= 1 in the row count
 - (void)updateInternalCache
 {
+//    NSMutableArray *tempSortedFromLocation = [[NSMutableArray alloc]initWithArray:sortedMatchingFromLocations];
+//    for(int i=0;i<[tempSortedFromLocation count];i++)
+//    {
+//        LocationFromIOS *loc = [tempSortedFromLocation objectAtIndex:i];
+//        if(![loc isKindOfClass:[LocationFromIOS class]] || !loc.isLocalSearchResult)
+//        {
+//            [tempSortedFromLocation removeObject:loc];
+//            i = i-1;
+//        }
+//    }
     // Fetch the sortedFromLocations & searchableFromLocations arrays
     NSSortDescriptor *sdFrom = [NSSortDescriptor sortDescriptorWithKey:@"fromFrequency"
                                                           ascending:NO];
@@ -675,10 +741,8 @@
         [NSException raise:@"Locations -> updateInternalCache Fetch failed" format:@"Reason: %@", error1];
     }
     NIMLOG_PERF2(@"Done with searchableToLocations");
-    
-    // Now fetch searchable locations
-    
-
+//    [tempSortedFromLocation addObjectsFromArray:sortedFromLocations];
+//    sortedFromLocations = tempSortedFromLocation;
     // Force recomputation of the selectedLocations
     [self updateWithSelectedLocationIsFrom:TRUE selectedLocation:selectedFromLocation oldSelectedLocation:oldSelectedFromLocation];
     [self updateWithSelectedLocationIsFrom:FALSE selectedLocation:selectedToLocation oldSelectedLocation:oldSelectedToLocation];
@@ -686,10 +750,8 @@
     // Force the recomputation of the sortedMatchedLocations arrays
     [self setTypedToString:[self typedToString]];
     [self setTypedFromString:[self typedFromString]];
-    
     [self setAreLocationsChanged:NO];  // reset again
 }
-
 // Updates sortedToLocations or sortedFromLocations to put the selectedLocation at the top of the list
 // Note: this does not update the sortedMatchingLocations array, so this method should only be used when
 // typing field is already cleared
