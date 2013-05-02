@@ -511,7 +511,12 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         [viewCellBackground setBackgroundColor:[UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW]];
         cell.backgroundView = viewCellBackground;
         if (!routeDetailsVC) {
-            routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailViewController_568h" bundle:nil];
+            }
+            else{
+                routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
+            }
         }
         itinerary = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
         if(itinerary.isRealTimeItinerary){

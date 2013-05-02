@@ -14,7 +14,9 @@
 @interface RouteDetailsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,RKRequestDelegate>
 {
     NSDateFormatter *timeFormatter;
-    UIBarButtonItem *twitterCaltrain;    
+    UIBarButtonItem *twitterCaltrain;
+    int mapHeight;
+    int tableHeight;
 }
 @property(nonatomic, strong) IBOutlet UITableView* mainTable; // Table listing route details
 @property(nonatomic, strong) MKMapView *mapView; 
@@ -28,8 +30,8 @@
 @property(nonatomic, strong)  UIButton *btnGoToItinerary;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic) int count;
-@property (nonatomic, strong) IBOutlet UILabel *lblNextRealtime;
-@property (nonatomic, strong) IBOutlet UIImageView *realTimeImageView;
+@property (nonatomic, strong) IBOutlet UILabel  * lblNextRealtime;
+@property (nonatomic, strong) IBOutlet UIButton * handleControl;
 
 - (IBAction)navigateBack:(id)sender;
 - (IBAction)navigateForward:(id)sender;
@@ -44,5 +46,8 @@ status:(ItineraryStatus)status ItineraryNumber:(int)itiNumber;
 - (void) setViewFrames;
 
 // return Formatted string like 00:58
-- (NSString *) returnFormattedStringFromSeconds:(int) seconds;;
+- (NSString *) returnFormattedStringFromSeconds:(int) seconds;
+
+// handle drag inside event of handleControl button
+- (IBAction) imageMoved:(id) sender withEvent:(UIEvent *) event;
 @end

@@ -40,7 +40,7 @@
 @synthesize timer;
 @synthesize count;
 @synthesize lblNextRealtime;
-@synthesize realTimeImageView;
+@synthesize handleControl;
 
 NSUserDefaults *prefs;
 
@@ -98,13 +98,22 @@ NSUserDefaults *prefs;
             mapView = [[MKMapView alloc] init];
             mapView.layer.borderWidth = 3.0;
             mapView.layer.borderColor = [UIColor whiteColor].CGColor;
-            CGRect mapFrame = CGRectMake(ROUTE_LEGMAP_X_ORIGIN, ROUTE_LEGMAP_Y_ORIGIN,
-                                         ROUTE_LEGMAP_WIDTH,  ROUTE_LEGMAP_MIN_HEIGHT_4INCH);
+            CGRect mapFrame;
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                mapFrame = CGRectMake(ROUTE_LEGMAP_X_ORIGIN, ROUTE_LEGMAP_Y_ORIGIN,
+                                      ROUTE_LEGMAP_WIDTH,  ROUTE_LEGMAP_MIN_HEIGHT_4INCH);
+            }
+            else{
+                mapFrame = CGRectMake(ROUTE_LEGMAP_X_ORIGIN, ROUTE_LEGMAP_Y_ORIGIN,
+                                      ROUTE_LEGMAP_WIDTH,ROUTE_LEGMAP_MIN_HEIGHT);
+            }
             
             [mapView setFrame:mapFrame];
             [[self view] addSubview:mapView];
             legMapVC = [[LegMapViewController alloc] initWithMapView:mapView];
             [mapView setDelegate:legMapVC];
+            
+            [self.view bringSubviewToFront:handleControl];
             
             UIImage* backImage = [UIImage imageNamed:@"img_backSelect.png"];
             UIImage* forwardImage = [UIImage imageNamed:@"img_forwardSelect.png"];
@@ -154,6 +163,8 @@ NSUserDefaults *prefs;
                 [imageDictionary setObject:[UIImage imageNamed:filename] forKey:filename];
             }
         }
+        mapHeight = mapView.frame.size.height;
+        tableHeight = mainTable.frame.size.height;
     }
     @catch (NSException *exception) {
         logException(@"RouteDetailsViewController->initWithNibName", @"", exception);
@@ -182,19 +193,12 @@ NSUserDefaults *prefs;
 -(void) progressViewProgress {
     count--;
     [lblNextRealtime setText:[NSString stringWithFormat:@"Time to next refresh: %@ ",[self returnFormattedStringFromSeconds:count]]];
-    UIImage *realtime1 = [UIImage imageNamed:@"realtime1.png"];
-    UIImage *realtime2 = [UIImage imageNamed:@"realtime2.png"];
-    [realTimeImageView setAnimationImages:[NSArray arrayWithObjects:realtime1,realtime2, nil]];
-    [realTimeImageView setAnimationDuration:1.0];
-    [realTimeImageView startAnimating];
-    
     if(count == 0){
         if(timer){
             [timer invalidate];
             timer = nil;
         }
         [lblNextRealtime setText:@"No Realtime Updates"];
-        [realTimeImageView setHidden:YES];
     }
 }
 
@@ -206,14 +210,6 @@ NSUserDefaults *prefs;
         if(itinerary.isRealTimeItinerary){
             [lblNextRealtime setHidden:NO];
             [lblNextRealtime setText:[NSString stringWithFormat:@"Time to next refresh: %@ ",[self returnFormattedStringFromSeconds:count]]];
-            [realTimeImageView setHidden:NO];
-            UIImage *realtime1 = [UIImage imageNamed:@"realtime1.png"];
-            UIImage *realtime2 = [UIImage imageNamed:@"realtime2.png"];
-            
-            [realTimeImageView setAnimationImages:[NSArray arrayWithObjects:realtime1,realtime2, nil]];
-            [realTimeImageView setAnimationDuration:1.0];
-            [realTimeImageView startAnimating];
-            
             if(timer){
                 [timer invalidate];
                 timer = nil;
@@ -222,7 +218,6 @@ NSUserDefaults *prefs;
         }
         else{
             [lblNextRealtime setHidden:YES];
-            [realTimeImageView setHidden:YES];
         }
         // DE-183 Fixed
         [self setItineraryNumber:0];  // Initially start on the first row of itinerary
@@ -283,44 +278,51 @@ NSUserDefaults *prefs;
 }
 
 - (void) setViewFrames{
-    // Enforce height of main table
-    CGRect tableFrame = [mainTable frame];
-    CGRect mapFrame = [mapView frame];
-    CGRect nextRealtimeFrame = [lblNextRealtime frame];
-    CGRect realTimeImageFrame = [realTimeImageView frame];
-    mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
-    // If we have a small itinerary, reduce the table size so it just fits it, and increase the map size
-    CGFloat newMainTableHeight;
-    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH, mainTableTotalHeight);
-    }
-    else{
-        newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT, mainTableTotalHeight);
-    }
-    //if (tableFrame.size.height != newMainTableHeight) { // if something is changing...
-    CGFloat combinedHeight;
-    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH + ROUTE_LEGMAP_MIN_HEIGHT_4INCH+1;
-    }
-    else{
-        combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT + ROUTE_LEGMAP_MIN_HEIGHT+1;
-    }
-    if(lblNextRealtime.isHidden){
-        tableFrame.size.height = newMainTableHeight;
-        tableFrame.origin.y = combinedHeight - newMainTableHeight + 10;
-        mapFrame.size.height = combinedHeight - newMainTableHeight - 1;
-    }
-    else{
-        mapFrame.size.height = combinedHeight - newMainTableHeight - 1;
-        realTimeImageFrame.origin.y = mapFrame.origin.y + mapFrame.size.height+5;
-        nextRealtimeFrame.origin.y = mapFrame.origin.y + mapFrame.size.height+5;
-        tableFrame.size.height = newMainTableHeight - (10 +nextRealtimeFrame.size.height);
-        tableFrame.origin.y = combinedHeight - newMainTableHeight + 15 +nextRealtimeFrame.size.height;
-    }
-    [mainTable setFrame:tableFrame];
-    [mapView setFrame:mapFrame];
-    [lblNextRealtime setFrame:nextRealtimeFrame];
-    [realTimeImageView setFrame:realTimeImageFrame];
+//    // Enforce height of main table
+//    CGRect tableFrame = [mainTable frame];
+//    CGRect mapFrame = [mapView frame];
+//    CGRect nextRealtimeFrame = [lblNextRealtime frame];
+//    CGRect handleControlFrame = [handleControl frame];
+//    mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
+//    // If we have a small itinerary, reduce the table size so it just fits it, and increase the map size
+//    CGFloat newMainTableHeight;
+//    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+//        newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH, mainTableTotalHeight);
+//    }
+//    else{
+//        newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT, mainTableTotalHeight);
+//    }
+//    //if (tableFrame.size.height != newMainTableHeight) { // if something is changing...
+//    CGFloat combinedHeight;
+//    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+//        combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH + ROUTE_LEGMAP_MIN_HEIGHT_4INCH+1;
+//    }
+//    else{
+//        combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT + ROUTE_LEGMAP_MIN_HEIGHT+1;
+//    }
+//    if(lblNextRealtime.isHidden){
+//        tableFrame.size.height = newMainTableHeight;
+//        tableFrame.origin.y = combinedHeight - newMainTableHeight + 10;
+//        handleControlFrame.origin.y = tableFrame.origin.y - 16;
+//        mapFrame.size.height = combinedHeight - newMainTableHeight - 1-handleControlFrame.size.height;
+//        if(!previousYPOS){
+//            previousYPOS = tableFrame.origin.y;
+//        }
+//    }
+//    else{
+//        nextRealtimeFrame.origin.y = mapFrame.origin.y + mapFrame.size.height+5;
+//        handleControlFrame.origin.y = nextRealtimeFrame.origin.y - 16;
+//        tableFrame.size.height = newMainTableHeight - (10 +nextRealtimeFrame.size.height);
+//        tableFrame.origin.y = combinedHeight - newMainTableHeight + 15 +nextRealtimeFrame.size.height;
+//         mapFrame.size.height = combinedHeight - newMainTableHeight - 1 -handleControlFrame.size.height;
+//        if(!previousYPOS){
+//            previousYPOS = tableFrame.origin.y;
+//        }
+//    }
+//    [mainTable setFrame:tableFrame];
+//    [mapView setFrame:mapFrame];
+//    [lblNextRealtime setFrame:nextRealtimeFrame];
+//    [handleControl setFrame:handleControlFrame];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -608,4 +610,30 @@ NSUserDefaults *prefs;
     }
     return timeString;
 }
+
+- (IBAction) imageMoved:(id) sender withEvent:(UIEvent *) event
+{
+    CGPoint point = [[[event allTouches] anyObject] locationInView:self.view];
+    int maxHeight;
+    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+        maxHeight = 425;
+    }
+    else{
+        maxHeight = 335;
+    }
+    if(point.y <= maxHeight && point.y >=15){
+        [lblNextRealtime setFrame:CGRectMake(lblNextRealtime.frame.origin.x, point.y+17, lblNextRealtime.frame.size.width,lblNextRealtime.frame.size.height)];
+        [handleControl setFrame:CGRectMake(handleControl.frame.origin.x, point.y, 320, 16)];
+        [mapView setFrame:CGRectMake(mapView.frame.origin.x,mapView.frame.origin.y,mapView.frame.size.width,mapView.frame.size.height+(point.y-mapHeight))];
+        [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,point.y+30, 320,self.view.frame.size.height-(handleControl.frame.size.height+lblNextRealtime.frame.size.height+mapView.frame.size.height))];
+        mapHeight = mapView.frame.size.height;
+        tableHeight = mainTable.frame.size.height;
+    }
+    [self.view bringSubviewToFront:handleControl];
+    [self.view bringSubviewToFront:lblNextRealtime];
+    
+}
+
+
+
 @end
