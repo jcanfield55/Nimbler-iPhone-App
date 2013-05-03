@@ -161,7 +161,7 @@ FeedBackForm *fbView;
           UIRemoteNotificationTypeSound)];
     }
     else{
-        [[UserPreferance userPreferance] performSelector:@selector(saveToServer) withObject:nil afterDelay:3.0];
+        [[UserPreferance userPreferance] performSelector:@selector(saveToServer) withObject:nil afterDelay:5.0];
     }
     
     // US-163 set-up for feedback reminders (also DE-238 fix)
@@ -472,8 +472,8 @@ FeedBackForm *fbView;
     
     //Reload ToFromViewController
     if(self.isToFromView){
-        self.toLoc = toFromViewController.toLocation;
-        self.fromLoc = toFromViewController.fromLocation;
+        self.toLoc = locations.tempSelectedToLocation;
+        self.fromLoc = locations.tempSelectedFromLocation;
         [toFromViewController setEditMode:NO_EDIT];
         toFromViewController.toTableVC.txtField.text = NULL_STRING;
         toFromViewController.fromTableVC.txtField.text = NULL_STRING;
@@ -487,10 +487,10 @@ FeedBackForm *fbView;
     [[NSUserDefaults standardUserDefaults] setInteger:rxCustomTabBar.selectedIndex forKey:LAST_SELECTED_TAB_INDEX];
     // Fixed DE-231
     if(self.toLoc.formattedAddress){
-        [[NSUserDefaults standardUserDefaults]setObject:self.toLoc.formattedAddress forKey:LAST_TO_LOCATION];
+        [[NSUserDefaults standardUserDefaults]setObject:locations.tempSelectedToLocation.formattedAddress forKey:LAST_TO_LOCATION];
     }
     if(self.fromLoc.formattedAddress){
-        [[NSUserDefaults standardUserDefaults]setObject:self.fromLoc.formattedAddress forKey:LAST_FROM_LOCATION];
+        [[NSUserDefaults standardUserDefaults]setObject:locations.tempSelectedFromLocation.formattedAddress forKey:LAST_FROM_LOCATION];
     }
     [[NSUserDefaults standardUserDefaults] synchronize];
     

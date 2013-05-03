@@ -15,6 +15,7 @@
 #import "StationListElement.h"
 #import "Stations.h"
 #import <MapKit/MapKit.h>
+#import "LocationFromLocalSearch.h"
 
 
 @interface ToFromTableViewController () 
@@ -142,7 +143,12 @@ NSString *strStreet2 = @"street ";
         
         Location *loc = [locations 
                          locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]]
-                         isFrom:isFrom];  //selected Location 
+                         isFrom:isFrom];  //selected Location
+        if([loc isKindOfClass:[LocationFromLocalSearch class]])
+        {
+            LocationFromLocalSearch *locationFromLocalSearch = (LocationFromLocalSearch *)loc;
+            loc = [locations selectedLocationOfLocalSearchWithLocation:locationFromLocalSearch IsFrom:isFrom error:nil];
+        }
         // If user tapped the selected location, then go into Edit Mode if not there already
         if ([toFromVC editMode] == NO_EDIT && loc == selectedLocation) {
             if (isFrom) {
@@ -276,9 +282,9 @@ NSString *strStreet2 = @"street ";
     Location *loc = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]] 
                                         isFrom:isFrom];
     // if There is PlaceName available for location
-    if([loc isKindOfClass:[LocationFromIOS class ]])
+    if([loc isKindOfClass:[LocationFromLocalSearch class ]])
     {
-        LocationFromIOS *locFromIOS = (LocationFromIOS *)loc;
+        LocationFromLocalSearch *locFromIOS = (LocationFromLocalSearch *)loc;
         
         if(locFromIOS.placeName)
         {
@@ -290,34 +296,54 @@ NSString *strStreet2 = @"street ";
         {
             [[cell textLabel] setText:[loc shortFormattedAddress]];
         }
-    }
-    else
-    {
-        [[cell textLabel] setText:[loc shortFormattedAddress]];
-    }
-    if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) {
-        // Bold italic if a list header
         [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
         cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
         [cell setAccessoryView:nil];
-    } 
-    else if (loc == selectedLocation) {
-        [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
-        cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
-        if ([toFromVC editMode] == NO_EDIT) {
-            UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
-            [cell setAccessoryView:imgViewDetailDisclosure];
-        } else {
-            // cell.textLabel.text = @"Current Location"; // This line causes DE124
+    }
+    else
+    {
+        if([loc isKindOfClass:[LocationFromIOS class ]])
+        {
+            LocationFromIOS *locFromIOS = (LocationFromIOS *)loc;
+            
+            if(locFromIOS.placeName){
+                cell.textLabel.numberOfLines = 2;
+                cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+                [[cell textLabel] setText:[NSString stringWithFormat:@"%@\n%@",locFromIOS.placeName,[loc shortFormattedAddress]]];
+            }
+            else
+            {
+                [[cell textLabel] setText:[loc shortFormattedAddress]];
+            }
+        }
+        else{
+             [[cell textLabel] setText:[loc shortFormattedAddress]];
+        }
+       
+        if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) {
+            // Bold italic if a list header
+            [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
+            cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
             [cell setAccessoryView:nil];
         }
-    } else {
-        // just bold for normal cell
-        [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
-        cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
-        [cell setAccessoryView:nil];
+        else if (loc == selectedLocation) {
+            [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
+            cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
+            if ([toFromVC editMode] == NO_EDIT) {
+                UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
+                [cell setAccessoryView:imgViewDetailDisclosure];
+            } else {
+                // cell.textLabel.text = @"Current Location"; // This line causes DE124
+                [cell setAccessoryView:nil];
+            }
+        } else {
+            // just bold for normal cell
+            [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
+            cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
+            [cell setAccessoryView:nil];
+        }
+        
     }
-    
     cell.textLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
 
     return cell;
@@ -363,26 +389,18 @@ NSString *strStreet2 = @"street ";
         [locations updateSelectedLocation:nil isFrom:isFrom];
         [toFromVC updateToFromLocation:self isFrom:isFrom location:nil];
     }
-    if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= IOS_LOCALSEARCH_VER) {
+    
         if (isFrom) {
             [locations setTypedFromString:[txtField text]];
-            [locations setTypedFromStringForLocalSearch:[txtField text]];
+            if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= IOS_LOCALSEARCH_VER) {
+                [locations setTypedFromStringForLocalSearch:[txtField text]];
+            }
         } else {
-            [locations setTypedToString:[txtField text]];
-            [locations setTypedToStringForLocalSearch:[txtField text]];
+             [locations setTypedToString:[txtField text]];
+            if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= IOS_LOCALSEARCH_VER) {
+                [locations setTypedToStringForLocalSearch:[txtField text]];
+            }
         }
-        
-    } else {
-        if (isFrom) {
-            [locations setTypedFromString:[txtField text]];
-        } else {
-            [locations setTypedToString:[txtField text]];
-        }
-        
-        if ([locations areMatchingLocationsChanged]) {  //if typing has changed matrix, reload the array
-            [myTableView reloadData];
-        }
-    }
     if ([locations areMatchingLocationsChanged]) {  //if typing has changed matrix, reload the array
         [myTableView reloadData];
     }

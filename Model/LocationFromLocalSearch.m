@@ -1,53 +1,53 @@
 //
-//  LocationFromIOS.m
-//  Nimbler Caltrain
+//  LocationFromLocalSearch.m
+//  Nimbler SF
 //
-//  Created by John Canfield on 9/20/12.
-//  Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
+//  Created by Gunjan ribadiya on 5/2/13.
+//  Copyright (c) 2013 Network Commuting. All rights reserved.
 //
 
-#import "LocationFromIOS.h"
+#import "LocationFromLocalSearch.h"
 #import "UtilityFunctions.h"
 #import <AddressBookUI/AddressBookUI.h>
 
-@interface LocationFromIOS ()
+@implementation LocationFromLocalSearch
 
-// Internal functions
--(NSString *)standardizeFormattedAddress;
-
-@end
-
-@implementation LocationFromIOS
-
-@dynamic placemark;
+@synthesize placemark;
 @synthesize isLocalSearchResult;
-@dynamic  placeName;
+@synthesize placeName;
+@synthesize formattedAddress;
+@synthesize shortFormattedAddress;
+@synthesize addressComponentDictionary;
+@synthesize lat;
+@synthesize lng;
 
 static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
+
+- (double)latFloat {
+    return [[self lat] doubleValue];
+}
+- (void)setLatFloat:(double)lat0 {
+    [self setLat:[NSNumber numberWithDouble:lat0]];
+}
+- (double)lngFloat {
+    return [[self lng] doubleValue];
+}
+- (void)setLngFloat:(double)lng0 {
+    [self setLng:[NSNumber numberWithDouble:lng0]];
+}
 
 // Initializes an empty LocationIOS and its superclass Location using placemark0
 // Use this instead of setPlacemark method
 - (void)initWithPlacemark:(CLPlacemark *)placemark0 error:(NSError *)error;
 {
     [self setPlacemark:placemark0];
-
-    // Set the status code
-    if (!error) {
-        [self setGeoCoderStatus:@"OK"];
-    } else if ([error code]==kCLErrorGeocodeFoundPartialResult) {
-        [self setGeoCoderStatus:@"kCLErrorGeocodeFoundPartialResult"];
-    } else {
-        [self setGeoCoderStatus:[NSString stringWithFormat:@"kCLError Geocode unknown code: %@", [error localizedDescription]]];
-    }
     
+    // Set the status code
     // Set the other properties
     [self setFormattedAddress:[self standardizeFormattedAddress]];
     CLLocationCoordinate2D coord = [[placemark0 location] coordinate];
     [self setLatFloat:coord.latitude];
     [self setLngFloat:coord.longitude];
-    [self setApiTypeEnum:IOS_GEOCODER];
-    [self setExcludeFromSearch:[NSNumber numberWithBool:false]];
-    // Nothing to fill for locationType
 }
 
 // Reformat the iOS address into a standard formattedAddress (as compatible with Google as possible)
@@ -155,6 +155,58 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
     }
 }
 
+// Returns the formatted address minus everything after the postal code
+// Also take out ", CA" if it is at the end (don't need to show California for Bay Area app)
+// For pre-loaded transit stations (like Caltrain), show only the transit station name
+- (NSString *)shortFormattedAddress
+{
+    if (shortFormattedAddress) {
+        return shortFormattedAddress;  // Return the property if it has already been created
+    }
+    // Otherwise, compute the shortFormattedAddress
+    NSString* addr = [self formattedAddress];
+    if (!addr) {
+        shortFormattedAddress = nil;
+    }
+    else {
+        // Find whether it is a train station (
+        NSString* trainStationName = [[self addressComponentDictionary] objectForKey:@"train_station(short)"];
+        if (!trainStationName) {
+            trainStationName = [[self addressComponentDictionary] objectForKey:@"train_station"];
+        }
+        if (trainStationName && [trainStationName length] >0) {
+            // if a train station, return just the train_station name
+            shortFormattedAddress = trainStationName;
+        }
+        else {
+            // Find the postal code
+            NSString* postalCode = [[self addressComponentDictionary] objectForKey:@"postal_code"];
+            NSString* returnString;
+            if (postalCode && [postalCode length] > 0) {
+                NSRange range = [addr rangeOfString:postalCode options:NSBackwardsSearch];
+                if (range.location != NSNotFound) {
+                    returnString = [addr substringToIndex:range.location]; // Clip from postal code on
+                }
+            }
+            
+            if (returnString && [returnString length] > 0) { // check to make sure we have something to return (DE25 fix)
+                if ([returnString hasSuffix:@", CA "]) { // Get rid of final ", CA"
+                    returnString = [returnString substringToIndex:([returnString length]-5)];
+                }
+                shortFormattedAddress = returnString;
+            }
+            
+            else if ([addr hasSuffix:@", CA, USA"]) { // If not postal code, but ends with CA, USA, clip that
+                returnString = [addr substringToIndex:([addr length]-9)];
+                shortFormattedAddress = returnString;
+            }
+            else {
+                shortFormattedAddress = addr;  // postal code not found or in the front of string, return whole string
+            }
+        }
+    }
+    return shortFormattedAddress;
+}
 
 /* Examples of iOS ABCreateStringWithAddressDictionary results (9/26/2012 on iOS6):
  Hull Dr & Laurel St
@@ -228,7 +280,6 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
 // Returns an addressComponentDictionary using the same key names as LocationFromGoogle where possible
 - (NSDictionary *)addressComponentDictionary
 {
-    if (![super addressComponentDictionary]) {
         if (!locationFromIOSAddressMappingDictionary) {
             locationFromIOSAddressMappingDictionary =
             [NSDictionary dictionaryWithObjectsAndKeys:
@@ -262,8 +313,6 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
             }
         }
         
-        [super setAddressComponentDictionary:newAddrDict];
-    }
-    return [super addressComponentDictionary];
+    return newAddrDict;
 }
 @end

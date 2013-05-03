@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2E02C785173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */; };
+		2E02C786173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */; };
+		2E02C787173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */; };
 		520FB121162603090083F143 /* FeedBackForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB109162603090083F143 /* FeedBackForm.m */; };
 		520FB122162603090083F143 /* FeedBackForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10A162603090083F143 /* FeedBackForm.xib */; };
 		520FB123162603090083F143 /* FeedBackForm_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10B162603090083F143 /* FeedBackForm_568h.xib */; };
@@ -870,6 +873,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2E02C783173381C0001F2F28 /* LocationFromLocalSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationFromLocalSearch.h; sourceTree = "<group>"; };
+		2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationFromLocalSearch.m; sourceTree = "<group>"; };
+		2E02C78C1733D82D001F2F28 /* Network_Commuting 1. 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Network_Commuting 1. 9.xcdatamodel"; sourceTree = "<group>"; };
 		520FB108162603090083F143 /* FeedBackForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FeedBackForm.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB109162603090083F143 /* FeedBackForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FeedBackForm.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB10A162603090083F143 /* FeedBackForm.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedBackForm.xib; sourceTree = "<group>"; };
@@ -1481,6 +1487,8 @@
 				520FB1821626036C0083F143 /* RawAddress.m */,
 				75E8F1DB16CE4E2900863A8C /* Stations.h */,
 				75E8F1DC16CE4E2A00863A8C /* Stations.m */,
+				2E02C783173381C0001F2F28 /* LocationFromLocalSearch.h */,
+				2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */,
 			);
 			name = "Model, Location";
 			path = Model;
@@ -2742,6 +2750,7 @@
 				8D58E1FC17142ED30011A8C2 /* nc_AppDelegate.m in Sources */,
 				8D8B10CD1720268B0093E110 /* NimblerApplication.m in Sources */,
 				8D8B10D0172026970093E110 /* WebView.m in Sources */,
+				2E02C785173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2834,6 +2843,7 @@
 				8DA77FCE1724FF0D0090C2EA /* nc_AppDelegate.m in Sources */,
 				8DA77FCF1724FF0D0090C2EA /* NimblerApplication.m in Sources */,
 				8DA77FD01724FF0D0090C2EA /* WebView.m in Sources */,
+				2E02C786173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2913,6 +2923,7 @@
 				8DE18B871725415800AA8112 /* nc_AppDelegate.m in Sources */,
 				8DE18B881725415800AA8112 /* NimblerApplication.m in Sources */,
 				8DE18B891725415800AA8112 /* WebView.m in Sources */,
+				2E02C787173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3354,6 +3365,7 @@
 		8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				2E02C78C1733D82D001F2F28 /* Network_Commuting 1. 9.xcdatamodel */,
 				5295B95216C6F71B008376B3 /* Network_Commuting 1.8.xcdatamodel */,
 				8DF6C87D1670696E00DD4D31 /* Network_Commuting 1.7.xcdatamodel */,
 				8D9EA25C162D78FD002BB5FF /* Network_Commuting 1.1.xcdatamodel */,
@@ -3364,7 +3376,7 @@
 				8D9EA261162D78FD002BB5FF /* Network_Commuting 1.6.xcdatamodel */,
 				8D9EA262162D78FD002BB5FF /* Network_Commuting.xcdatamodel */,
 			);
-			currentVersion = 5295B95216C6F71B008376B3 /* Network_Commuting 1.8.xcdatamodel */;
+			currentVersion = 2E02C78C1733D82D001F2F28 /* Network_Commuting 1. 9.xcdatamodel */;
 			path = Network_Commuting.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

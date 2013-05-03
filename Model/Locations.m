@@ -11,6 +11,7 @@
 #import "Plan.h"
 #import "StationListElement.h"
 #import "nc_AppDelegate.h"
+#import "LocationFromLocalSearch.h"
 
 // Internal variables and methods
 
@@ -72,6 +73,8 @@
 @synthesize geoRespTimeTo,geoRespTimeFrom;
 @synthesize isFromGeo,isToGeo;
 @synthesize isLocationServiceEnable;
+@synthesize tempSelectedFromLocation;
+@synthesize tempSelectedToLocation;
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkGeoMgr:(RKObjectManager *)rkG
 {
@@ -206,6 +209,9 @@
 }
 - (void)setSelectedFromLocation:(Location *)sFL
 {
+    if(sFL){
+        tempSelectedFromLocation = sFL;
+    }
     selectedFromLocation = sFL;
     [self updateWithSelectedLocationIsFrom:TRUE selectedLocation:selectedFromLocation oldSelectedLocation:oldSelectedFromLocation];
     oldSelectedFromLocation = selectedFromLocation;
@@ -213,6 +219,9 @@
 
 -(void)setSelectedToLocation:(Location *)sTL
 {
+    if(sTL){
+        tempSelectedToLocation = sTL;
+    }
     selectedToLocation = sTL;
     [self updateWithSelectedLocationIsFrom:FALSE selectedLocation:selectedToLocation oldSelectedLocation:oldSelectedToLocation];
     oldSelectedToLocation = selectedToLocation;
@@ -246,15 +255,61 @@
 }
 
 // Create new LocationFromIos object from MkLocalSearchResponse
-- (LocationFromIOS *)newLocationFromIOSWithPlacemark:(CLPlacemark *)placemark error:(NSError *)error IsLocalSearchResult:(BOOL) isLocalSearchResult
+- (LocationFromLocalSearch *)newLocationFromIOSWithPlacemark:(CLPlacemark *)placemark error:(NSError *)error IsLocalSearchResult:(BOOL) isLocalSearchResult
+{
+    LocationFromLocalSearch *locFromLocalSearch = [[LocationFromLocalSearch alloc] init];
+    [locFromLocalSearch initWithPlacemark:placemark error:error];
+    [self setAreLocationsChanged:YES];
+    return locFromLocalSearch;
+}
+
+//Add selected Local Search Result to Location and remove from LocationFromLocalSearch
+-(LocationFromIOS *)selectedLocationOfLocalSearchWithLocation:(LocationFromLocalSearch *)localSearchLocation IsFrom:(BOOL)isFrom error:(NSError *)error
 {
     LocationFromIOS *loc = [NSEntityDescription insertNewObjectForEntityForName:@"LocationFromIOS" inManagedObjectContext:managedObjectContext];
-    [loc initWithPlacemark:placemark error:error];
-    loc.isLocalSearchResult = isLocalSearchResult;
+    loc.placeName = localSearchLocation.placeName;
+    [loc initWithPlacemark:localSearchLocation.placemark error:error];
+    NSMutableArray *localSearchArr;
+    if(isFrom){
+        if([tempSelectedFromLocation.formattedAddress isEqualToString:loc.formattedAddress]){
+            [managedObjectContext deleteObject:loc];
+            return (LocationFromIOS *)tempSelectedFromLocation;
+        }
+        localSearchArr = [[NSMutableArray alloc] initWithArray:sortedMatchingFromLocations];
+        [localSearchArr removeObject:localSearchLocation];
+        sortedMatchingFromLocations = localSearchArr;
+        matchingFromRowCount = [sortedMatchingFromLocations count];
+        
+        for(int i=0;i<[sortedFromLocations count];i++){
+            Location *locForRemoveObj = [sortedFromLocations objectAtIndex:i];
+            if([locForRemoveObj.formattedAddress isEqualToString:loc.formattedAddress]){
+                [managedObjectContext deleteObject:loc];
+                return (LocationFromIOS *)locForRemoveObj;
+            }
+        }
+    }
+    else{
+        if([tempSelectedToLocation.formattedAddress isEqualToString:loc.formattedAddress]){
+            [managedObjectContext deleteObject:loc];
+            return (LocationFromIOS *)tempSelectedToLocation;
+        }
+        localSearchArr = [[NSMutableArray alloc] initWithArray:sortedMatchingToLocations];
+        [localSearchArr removeObject:localSearchLocation];
+        sortedMatchingToLocations = localSearchArr;
+        matchingToRowCount = [sortedMatchingToLocations count];
+        
+        for(int i=0;i<[sortedToLocations count];i++){
+            Location *locForRemoveObj = [sortedToLocations objectAtIndex:i];
+            if([locForRemoveObj.formattedAddress isEqualToString:loc.formattedAddress]){
+                [managedObjectContext deleteObject:loc];
+                return (LocationFromIOS *)locForRemoveObj;
+            }
+        }
+    }
+    areMatchingLocationsChanged = YES;
     [self setAreLocationsChanged:YES];
     return loc;
 }
-
 
 // John note:  This code is currently unused (3/1/2013)
 // Returns an array of Location objects that are created based on matches to PreloadStations
@@ -383,16 +438,11 @@
         NSMutableArray *newArray = [NSMutableArray array];
         NIMLOG_PERF2(@"Start finding typed string matches, count=%d", [startArray count]);
         for (Location *loc in startArray) {
-            if([loc isKindOfClass:[LocationFromIOS class]]){
-                LocationFromIOS *locIos = (LocationFromIOS *)loc;
-                if(locIos.isLocalSearchResult){
+            if([loc isKindOfClass:[LocationFromLocalSearch class]]){
+                
                     [newArray addObject:loc];
-                }
-                else if([loc isMatchingTypedString:typedFromString]){
-                   [newArray addObject:loc]; 
-                }
             }
-             else if ([loc isMatchingTypedString:typedFromString]) {  // if loc matches the new string
+            else if ([loc isMatchingTypedString:typedFromString]) {  // if loc matches the new string
                 [newArray addObject:loc];  //  add loc to the new array
             }
         }
@@ -444,16 +494,10 @@
         typedToString = typedToStr0;   
         NSMutableArray *newArray = [NSMutableArray array];
         for (Location *loc in startArray) {
-            if([loc isKindOfClass:[LocationFromIOS class]]){
-                LocationFromIOS *locIos = (LocationFromIOS *)loc;
-                if(locIos.isLocalSearchResult){
-                    [newArray addObject:loc];
-                }
-                else if([loc isMatchingTypedString:typedToString]){
-                    [newArray addObject:loc];
-                }
+            if([loc isKindOfClass:[LocationFromLocalSearch class]]){
+                [newArray addObject:loc];
             }
-            else if ([loc isMatchingTypedString:typedToString]) {  // if loc matches the new string
+            else if ([loc isMatchingTypedString:typedToStr0]) {  // if loc matches the new string
                 [newArray addObject:loc];  //  add loc to the new array
             }
         }
@@ -479,26 +523,28 @@
 {
    NSMutableArray *localSearchFromLocations = [[NSMutableArray alloc] initWithArray:sortedMatchingFromLocations];
     for(int i=0;i<[localSearchFromLocations count];i++){
-        LocationFromIOS *loc = [localSearchFromLocations objectAtIndex:i];
-        
-        if([loc isKindOfClass:[LocationFromIOS class ]]){
-           //NSLog(@"Bool== %d",loc.isLocalSearchResult);
-           if(loc.isLocalSearchResult)
-           {
+        LocationFromLocalSearch *loc = [localSearchFromLocations objectAtIndex:i];
+        if([loc isKindOfClass:[LocationFromLocalSearch class ]]){
                 [localSearchFromLocations removeObject:loc];
                 i =i -1;
-            }
-           
         }
     }
     
-    //NSMutableArray *localSearchFromLocations =[NSMutableArray array];
     if([typedFromStr0 length]>=3)
     {
         // Perform a new search.
         
         MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
         request.naturalLanguageQuery = typedFromStr0;
+        CLLocationManager *locationManager;
+        locationManager = [[CLLocationManager alloc] init];
+        locationManager.delegate = self;
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        CLLocation *location = [locationManager location];
+        [locationManager startUpdatingLocation];
+        CLLocationCoordinate2D coordinate = [location coordinate];
+        MKCoordinateRegion mpRegion =  MKCoordinateRegionMakeWithDistance(coordinate,100000, 100000);
+        request.region = mpRegion;
         
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         
@@ -524,17 +570,15 @@
              MKMapItem *mapItem = [response.mapItems objectAtIndex:i];
              
              if ([[[nc_AppDelegate sharedInstance].toFromViewController supportedRegion] isInRegionLat:mapItem.placemark.location.coordinate.latitude Lng:mapItem.placemark.location.coordinate.longitude]) {
-                 
-                   LocationFromIOS *loc = [self newLocationFromIOSWithPlacemark:mapItem.placemark error:error IsLocalSearchResult:true];
-                 
-                   NSArray *formattedAdd = [loc.formattedAddress componentsSeparatedByString:@","];
-                   if(![[formattedAdd objectAtIndex:0] isEqualToString:mapItem.name]){
-                         loc.placeName = mapItem.name;
-                     }
-                 
-                 [localSearchFromLocations addObject:loc];
-                 locCount++;
-                 
+                     LocationFromLocalSearch *loc = [self newLocationFromIOSWithPlacemark:mapItem.placemark error:error IsLocalSearchResult:true];
+                
+                         NSArray *formattedAdd = [loc.formattedAddress componentsSeparatedByString:@","];
+                         if(![[formattedAdd objectAtIndex:0] isEqualToString:mapItem.name]){
+                             loc.placeName = mapItem.name;
+                         }
+                         
+                         [localSearchFromLocations addObject:loc];
+                         locCount++;
              } 
              
          }
@@ -554,6 +598,7 @@
         sortedMatchingFromLocations = localSearchFromLocations;
         matchingFromRowCount = [sortedMatchingFromLocations count];
         areMatchingLocationsChanged = YES;
+        [[nc_AppDelegate sharedInstance].toFromViewController.fromTableVC reloadLocationWithLocalSearch];
     }
 }
 
@@ -562,13 +607,10 @@
 {
     NSMutableArray *localSearchToLocations = [[NSMutableArray alloc] initWithArray:sortedMatchingToLocations];
     for(int i=0;i<[localSearchToLocations count];i++){
-        LocationFromIOS *loc = [localSearchToLocations objectAtIndex:i];
-       if([loc isKindOfClass:[LocationFromIOS class ]]){
-        if(loc.isLocalSearchResult)
-          {
-               [localSearchToLocations removeObject:loc];
-               i =i -1;
-           }
+        LocationFromLocalSearch *loc = [localSearchToLocations objectAtIndex:i];
+       if([loc isKindOfClass:[LocationFromLocalSearch class ]]){
+            [localSearchToLocations removeObject:loc];
+            i =i -1;
            
         }
     }
@@ -578,6 +620,15 @@
         
         MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
         request.naturalLanguageQuery = typedToStr0;
+        CLLocationManager *locationManager;
+        locationManager = [[CLLocationManager alloc] init];
+        locationManager.delegate = self;
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        CLLocation *location = [locationManager location];
+        [locationManager startUpdatingLocation];
+        CLLocationCoordinate2D coordinate = [location coordinate];
+        MKCoordinateRegion mpRegion =  MKCoordinateRegionMakeWithDistance(coordinate,100000, 100000);
+        request.region = mpRegion;
         
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         
@@ -603,15 +654,15 @@
                 NSError *error = nil;
                 MKMapItem *mapItem = [response.mapItems objectAtIndex:i];
                 
+                
                 if ([[[nc_AppDelegate sharedInstance].toFromViewController supportedRegion] isInRegionLat:mapItem.placemark.location.coordinate.latitude Lng:mapItem.placemark.location.coordinate.longitude]) {
                     
-                    LocationFromIOS *loc = [self newLocationFromIOSWithPlacemark:mapItem.placemark error:error IsLocalSearchResult:true];
+                    LocationFromLocalSearch *loc = [self newLocationFromIOSWithPlacemark:mapItem.placemark error:error IsLocalSearchResult:true];
                     
                     NSArray *formattedAdd = [loc.formattedAddress componentsSeparatedByString:@","];
                     if(![[formattedAdd objectAtIndex:0] isEqualToString:mapItem.name]){
                         loc.placeName = mapItem.name;
                     }
-                    
                     [localSearchToLocations addObject:loc];
                     locCount++;
                   }
@@ -633,6 +684,7 @@
         sortedMatchingToLocations = localSearchToLocations;
         matchingToRowCount = [sortedMatchingToLocations count];
         areMatchingLocationsChanged = YES;
+        [[nc_AppDelegate sharedInstance].toFromViewController.toTableVC reloadLocationWithLocalSearch];
         
     }
 }
@@ -655,17 +707,16 @@
 
 // Returns the Location from the sorted array at the specified index.  isFrom = true if it is the from table. 
 - (Location *)locationAtIndex:(int)index isFrom:(BOOL)isFrom {
-
-    if (areLocationsChanged) { // if cache outdated, then query & update the internal memory array
-        [self updateInternalCache];
-    }
-    // Now that the internal variables are updated, return the row value
-    if (isFrom) {
-        return [sortedMatchingFromLocations objectAtIndex:index];
-    }
-    else {
-        return [sortedMatchingToLocations objectAtIndex:index];
-    }
+        if (areLocationsChanged) { // if cache outdated, then query & update the internal memory array
+            [self updateInternalCache];
+        }
+        // Now that the internal variables are updated, return the row value
+        if (isFrom) {
+            return [sortedMatchingFromLocations objectAtIndex:index];
+        }
+        else {
+            return [sortedMatchingToLocations objectAtIndex:index];
+        }
 }
 
 

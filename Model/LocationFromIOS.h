@@ -19,7 +19,7 @@
 @property (nonatomic) BOOL isLocalSearchResult;
 
 //For Local Search
-@property (nonatomic , strong)NSString *placeName;
+@property (nonatomic , retain)NSString *placeName;
 
 // Initializes an empty LocationIOS and its superclass Location using placemark0
 // Use this instead of setPlacemark method

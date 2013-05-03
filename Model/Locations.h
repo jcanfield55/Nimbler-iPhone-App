@@ -16,6 +16,7 @@
 #import "LocationFromIOS.h"
 #import "LocationFromGoogle.h"
 #import "GeocodeRequestParameters.h"
+#import "LocationFromLocalSearch.h"
 
 // Callback protocol used for objects calling geocoder methods
 @protocol LocationsGeocodeResultsDelegate
@@ -50,6 +51,9 @@
 @property (nonatomic) BOOL isToGeo;
 @property (nonatomic) BOOL isLocationServiceEnable;
 
+@property (nonatomic , strong) Location *tempSelectedFromLocation;
+@property (nonatomic , strong) Location *tempSelectedToLocation;
+
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkGeoMgr:(RKObjectManager *)rkG;
 
 // Preloads locations (like Caltrain stations) from a file.  testAddress is a formatted address of a station name that it can test whether the stored version is up-to-date
@@ -65,6 +69,8 @@
 - (Location *)newEmptyLocation;
 - (LocationFromGoogle *)newEmptyLocationFromGoogle;
 - (LocationFromIOS *)newLocationFromIOSWithPlacemark:(CLPlacemark *)placemark error:(NSError *)error; // set error==nil if status is OK
+//Add selected Local Search Result to Location and remove from LocationFromLocalSearch
+-(LocationFromIOS *)selectedLocationOfLocalSearchWithLocation:(LocationFromLocalSearch *)localSearchLocation IsFrom:(BOOL)isFrom error:(NSError *)error;
 - (int)numberOfLocations:(BOOL)isFrom;
 - (Location *)locationAtIndex:(int)index isFrom:(BOOL)isFrom;
 
@@ -110,5 +116,5 @@
 - (void)setTypedFromStringForLocalSearch:(NSString *)typedFromStr0;
 - (void)setTypedToStringForLocalSearch:(NSString *)typedToStr0;
 
-- (LocationFromIOS *)newLocationFromIOSWithPlacemark:(CLPlacemark *)placemark error:(NSError *)error IsLocalSearchResult:(BOOL) isLocalSearchResult;
+- (LocationFromLocalSearch *)newLocationFromIOSWithPlacemark:(CLPlacemark *)placemark error:(NSError *)error IsLocalSearchResult:(BOOL) isLocalSearchResult;
 @end
