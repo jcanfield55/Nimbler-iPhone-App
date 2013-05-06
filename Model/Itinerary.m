@@ -170,7 +170,24 @@ NSArray *sortedByStartTimeOnly(NSSet* itinerarySet)
 {
     if (self == itin0) {
         return ITINERARIES_IDENTICAL;
-    } else if ([timeOnlyFromDate([itin0 startTimeOfFirstLeg]) isEqualToDate:
+    }
+    else if ([itin0 haveOnlyUnScheduledLeg] && [self haveOnlyUnScheduledLeg]){
+        // If both unscheduled, call identical if the legs match in destination regardless of times
+        // This is because unscheduled leg times will be adjusted to match request time
+        if (![self isEquivalentModesAndStopsAndRouteAs:itin0]) {
+            return ITINERARIES_DIFFERENT;
+        } else {
+            // Itineraries are the same in substance, so indicate which to delete
+            if ([[itin0 itineraryCreationDate] isEqualToDate:[self itineraryCreationDate]]) {
+                return ITINERARIES_SAME;
+            } else if ([[itin0 itineraryCreationDate] compare:[self itineraryCreationDate]] == NSOrderedDescending) {
+                return ITIN_SELF_OBSOLETE;
+            } else {
+                return ITIN0_OBSOLETE;
+            }
+        }
+    }
+    else if ([timeOnlyFromDate([itin0 startTimeOfFirstLeg]) isEqualToDate:
                 timeOnlyFromDate([self startTimeOfFirstLeg])]) {
         // If the start time is the same, then check if the legs are the same
         NSArray* itin0LegsArray = [itin0 sortedLegs];
