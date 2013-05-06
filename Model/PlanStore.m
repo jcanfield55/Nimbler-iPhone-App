@@ -610,7 +610,7 @@
     if ([otpRequestDate isEqualToDate:requestParams0.originalTripDate]) {
         bufferSeconds = 0;  // do not add any buffer if we are starting from the original Request date
     } else {
-        bufferSeconds = PLAN_NEXT_REQUEST_TIME_INTERVAL_SECONDS;
+        bufferSeconds = 0; // no bufferSeconds needed here either because added in nextOtpServerDateToCallFor
         // DE298 fix:  only check for unscheduled itineraries if there are itineraries visible
         if ([plan haveOnlyUnscheduledItineraries]) {
             [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.activityIndicator stopAnimating];

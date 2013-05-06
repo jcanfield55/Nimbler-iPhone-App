@@ -244,7 +244,14 @@
 // Returns the result of the itinerary comparison (see Itinerary.h for enum definition)
 - (ItineraryCompareResult) addItineraryIfNew:(Itinerary *)itin0
 {
-    NSArray* matchingTimeItins = [self fetchItinerariesFromTimeOnly:[itin0 startTimeOnly] toTimeOnly:[itin0 startTimeOnly]];  
+    NSArray* matchingTimeItins;
+    if ([itin0 haveOnlyUnScheduledLeg]) {
+        // if itin0 is unscheduled, compare against all itineraries
+        matchingTimeItins = [[self itineraries] allObjects];
+    } else {
+        // if itin0 not unscheduled, compare just against mathcing time itineraries
+        matchingTimeItins = [self fetchItinerariesFromTimeOnly:[itin0 startTimeOnly] toTimeOnly:[itin0 startTimeOnly]];
+    }
     for (Itinerary* itinSelf in matchingTimeItins) {
         ItineraryCompareResult itincompare = [itinSelf compareItineraries:itin0];
         if (itincompare == ITINERARIES_DIFFERENT) {
@@ -466,11 +473,13 @@
                  if ([itin1 isEquivalentRoutesStopsAndScheduledTimingAs:itin2]) {
                     if (itin1.isOTPItinerary && !itin2.isOTPItinerary) {
                         [matchingItineraries removeObject:itin1];  // if equivalent GTFS & OTP itineraries, only show the GTFS one
+                        break;
                     } else if (!itin1.isOTPItinerary && itin2.isOTPItinerary) {
                         [matchingItineraries removeObject:itin2]; // if equivalent GTFS & OTP itineraries, only show the GTFS one
                     }
                     else { 
                         [matchingItineraries removeObject:itin1]; // Otherwise remove itin1
+                        break;
                     }
                 }
                 // if not equivalent, look for sub-optimal itineries
@@ -479,6 +488,7 @@
                              [[itin1 endTimeOnly] compare:[itin2 endTimeOnly]] != NSOrderedAscending) {
                         // itin1 starts earlier or equal and ends later or equal.  Longer duration so remove itin1
                         [matchingItineraries removeObject:itin1];
+                        break;
                     }
                     else if ([[itin2 startTimeOnly] compare:[itin1 startTimeOnly]] != NSOrderedDescending &&
                              [[itin2 endTimeOnly] compare:[itin1 endTimeOnly]] != NSOrderedAscending) {
@@ -886,17 +896,19 @@
 }
 
 -(void) changeUnscheduledItineraryTime:(NSDate *)tripDate{
-    for(int i=0;i<[[self sortedItineraries] count];i++){
-        Itinerary *iti = [[self sortedItineraries] objectAtIndex:i];
+    for(Itinerary *iti in [self itineraries]) {
         if([iti haveOnlyUnScheduledLeg]){
+            NSDate* connectingDate = tripDate;
             for(int j=0;j<[[iti sortedLegs] count];j++){
                 Leg *leg = [[iti sortedLegs] objectAtIndex:j];
-                leg.startTime = tripDate;
-                leg.endTime = [tripDate dateByAddingTimeInterval:[leg.duration doubleValue]/1000.0];
+                leg.startTime = connectingDate;
+                // Now compute a new connectingDate at the endTime of this leg
+                connectingDate = [connectingDate dateByAddingTimeInterval:[leg.duration doubleValue]/1000.0];
+                leg.endTime = connectingDate;
             }
-            [iti initializeTimeOnlyVariablesWithRequestDate:tripDate];
             iti.startTime = [iti startTimeOfFirstLeg];
             iti.endTime = [iti endTimeOfLastLeg];
+            [iti initializeTimeOnlyVariablesWithRequestDate:tripDate];
         }
     }
 }
