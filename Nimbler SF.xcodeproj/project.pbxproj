@@ -222,6 +222,9 @@
 		8D00B009172FD22D00B01ED3 /* tram.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D00B006172FD22900B01ED3 /* tram.png */; };
 		8D04E79C16E8A488001DB75D /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */; };
 		8D052F6E171E6969008D4CE0 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
+		8D0C2962173124DA00E6AA1B /* Handle_control.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D0C2961173124DA00E6AA1B /* Handle_control.png */; };
+		8D0C2967173124E000E6AA1B /* Handle_control.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D0C2961173124DA00E6AA1B /* Handle_control.png */; };
+		8D0C2968173124E100E6AA1B /* Handle_control.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D0C2961173124DA00E6AA1B /* Handle_control.png */; };
 		8D0FA9A1169165C10038FDB2 /* LegFromOTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */; };
 		8D0FA9B0169198500038FDB2 /* ItineraryFromOTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0FA9AF1691984F0038FDB2 /* ItineraryFromOTP.m */; };
 		8D106DD91671F0ED004E0DE5 /* GtfsAgency.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DD81671F0ED004E0DE5 /* GtfsAgency.m */; };
@@ -809,6 +812,7 @@
 		8DE18C661725469A00AA8112 /* Icon-DC-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE18C5D1725468200AA8112 /* Icon-DC-72@2x.png */; };
 		8DE18C671725469F00AA8112 /* Icon-DC-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE18C5C1725468100AA8112 /* Icon-DC-72.png */; };
 		8DE18C6B17254EE500AA8112 /* wmata-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 8DE18C50172543B100AA8112 /* wmata-station.json */; };
+		8DE28CA81732379300403CD0 /* RouteDetailViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DE28CA71732379300403CD0 /* RouteDetailViewController_568h.xib */; };
 		8DE42FEA16E0AEEE00A37AD3 /* img_legFerry.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE616E0AEED00A37AD3 /* img_legFerry.png */; };
 		8DE42FEB16E0AEEE00A37AD3 /* img_legFerry@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE716E0AEEE00A37AD3 /* img_legFerry@2x.png */; };
 		8DE42FEC16E0AEEE00A37AD3 /* img_legFerrySelect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE816E0AEEE00A37AD3 /* img_legFerrySelect.png */; };
@@ -1139,6 +1143,7 @@
 		8D00AFF2172F952C00B01ED3 /* realtime1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = realtime1.png; sourceTree = "<group>"; };
 		8D00AFF3172F952C00B01ED3 /* realtime2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = realtime2.png; sourceTree = "<group>"; };
 		8D00B006172FD22900B01ED3 /* tram.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tram.png; sourceTree = "<group>"; };
+		8D0C2961173124DA00E6AA1B /* Handle_control.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Handle_control.png; sourceTree = "<group>"; };
 		8D0FA99F169165C00038FDB2 /* LegFromOTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = LegFromOTP.h; path = ../Model/LegFromOTP.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = LegFromOTP.m; path = ../Model/LegFromOTP.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8D0FA9AE1691984F0038FDB2 /* ItineraryFromOTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ItineraryFromOTP.h; path = ../ItineraryFromOTP.h; sourceTree = "<group>"; };
@@ -1249,6 +1254,7 @@
 		8DE18C6C17255CBA00AA8112 /* LocalConstantsDC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalConstantsDC.h; sourceTree = "<group>"; };
 		8DE18C6D1725630600AA8112 /* Nimbler DC-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Nimbler DC-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		8DE18C6E17256CD200AA8112 /* ConstantsCaltrain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConstantsCaltrain.h; sourceTree = "<group>"; };
+		8DE28CA71732379300403CD0 /* RouteDetailViewController_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RouteDetailViewController_568h.xib; sourceTree = "<group>"; };
 		8DE42FE616E0AEED00A37AD3 /* img_legFerry.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_legFerry.png; sourceTree = "<group>"; };
 		8DE42FE716E0AEEE00A37AD3 /* img_legFerry@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_legFerry@2x.png"; sourceTree = "<group>"; };
 		8DE42FE816E0AEEE00A37AD3 /* img_legFerrySelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_legFerrySelect.png; sourceTree = "<group>"; };
@@ -1405,6 +1411,7 @@
 				520FB10F162603090083F143 /* RouteDetailsViewController.h */,
 				520FB110162603090083F143 /* RouteDetailsViewController.m */,
 				520FB111162603090083F143 /* RouteDetailsViewController.xib */,
+				8DE28CA71732379300403CD0 /* RouteDetailViewController_568h.xib */,
 				520FB112162603090083F143 /* RouteOptionsViewController.h */,
 				520FB113162603090083F143 /* RouteOptionsViewController.m */,
 				520FB114162603090083F143 /* RouteOptionsViewController.xib */,
@@ -1497,6 +1504,7 @@
 		520FB1A8162603AF0083F143 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8D0C2961173124DA00E6AA1B /* Handle_control.png */,
 				8D00B006172FD22900B01ED3 /* tram.png */,
 				8D00AFF2172F952C00B01ED3 /* realtime1.png */,
 				8D00AFF3172F952C00B01ED3 /* realtime2.png */,
@@ -2278,6 +2286,8 @@
 				8D00AFF6172F952C00B01ED3 /* realtime1.png in Resources */,
 				8D00AFF7172F952C00B01ED3 /* realtime2.png in Resources */,
 				8D00B007172FD22900B01ED3 /* tram.png in Resources */,
+				8D0C2962173124DA00E6AA1B /* Handle_control.png in Resources */,
+				8DE28CA81732379300403CD0 /* RouteDetailViewController_568h.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2464,6 +2474,7 @@
 				8D00AFFE172F97E900B01ED3 /* realtime1.png in Resources */,
 				8D00B000172F97ED00B01ED3 /* realtime2.png in Resources */,
 				8D00B008172FD22C00B01ED3 /* tram.png in Resources */,
+				8D0C2967173124E000E6AA1B /* Handle_control.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2652,6 +2663,7 @@
 				8D00AFFF172F97EA00B01ED3 /* realtime1.png in Resources */,
 				8D00B001172F97EE00B01ED3 /* realtime2.png in Resources */,
 				8D00B009172FD22D00B01ED3 /* tram.png in Resources */,
+				8D0C2968173124E100E6AA1B /* Handle_control.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

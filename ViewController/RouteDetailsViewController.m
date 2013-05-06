@@ -97,13 +97,22 @@ NSUserDefaults *prefs;
             mapView = [[MKMapView alloc] init];
             mapView.layer.borderWidth = 3.0;
             mapView.layer.borderColor = [UIColor whiteColor].CGColor;
-            CGRect mapFrame = CGRectMake(ROUTE_LEGMAP_X_ORIGIN, ROUTE_LEGMAP_Y_ORIGIN,
-                                         ROUTE_LEGMAP_WIDTH,  ROUTE_LEGMAP_MIN_HEIGHT_4INCH);
+            CGRect mapFrame;
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                mapFrame = CGRectMake(ROUTE_LEGMAP_X_ORIGIN, ROUTE_LEGMAP_Y_ORIGIN,
+                                      ROUTE_LEGMAP_WIDTH,  ROUTE_LEGMAP_MIN_HEIGHT_4INCH);
+            }
+            else{
+                mapFrame = CGRectMake(ROUTE_LEGMAP_X_ORIGIN, ROUTE_LEGMAP_Y_ORIGIN,
+                                      ROUTE_LEGMAP_WIDTH,ROUTE_LEGMAP_MIN_HEIGHT);
+            }
             
             [mapView setFrame:mapFrame];
             [[self view] addSubview:mapView];
             legMapVC = [[LegMapViewController alloc] initWithMapView:mapView];
             [mapView setDelegate:legMapVC];
+            
+            [self.view bringSubviewToFront:handleControl];
             
             UIImage* backImage = [UIImage imageNamed:@"img_backSelect.png"];
             UIImage* forwardImage = [UIImage imageNamed:@"img_forwardSelect.png"];
@@ -153,6 +162,8 @@ NSUserDefaults *prefs;
                 [imageDictionary setObject:[UIImage imageNamed:filename] forKey:filename];
             }
         }
+        mapHeight = mapView.frame.size.height;
+        tableHeight = mainTable.frame.size.height;
     }
     @catch (NSException *exception) {
         logException(@"RouteDetailsViewController->initWithNibName", @"", exception);
@@ -194,6 +205,8 @@ NSUserDefaults *prefs;
 {
     @try {
         count = 119;
+        [[NSUserDefaults standardUserDefaults] setBool:self.lblNextRealtime.isHidden forKey:@"labelHidden"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
         itinerary = i0;
         if(itinerary.isRealTimeItinerary){
             [lblNextRealtime setHidden:NO];
@@ -214,7 +227,19 @@ NSUserDefaults *prefs;
         
         //set FbParameterForItinerary
         [self setFBParameterForItinerary];
-        
+        BOOL previousStatus = [[NSUserDefaults standardUserDefaults] boolForKey:@"labelHidden"];
+        if(previousStatus && lblNextRealtime.isHidden){
+           [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y,320,mainTable.frame.size.height+self.lblNextRealtime.frame.size.height)];
+        }
+        else if(!previousStatus && lblNextRealtime.isHidden){
+           [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y - self.lblNextRealtime.frame.size.height,320,mainTable.frame.size.height+self.lblNextRealtime.frame.size.height)];
+        }
+        else if(previousStatus && !lblNextRealtime.isHidden){
+           [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y + self.lblNextRealtime.frame.size.height,320,mainTable.frame.size.height-self.lblNextRealtime.frame.size.height)];
+        }
+        else{
+            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y,320,mainTable.frame.size.height)];
+        }
         // Compute the mainTableTotalHeight by calling the height of each row
         mainTableTotalHeight = 0.0;
         for (int i=0; i<[self tableView:mainTable numberOfRowsInSection:0]; i++) {
@@ -333,6 +358,8 @@ NSUserDefaults *prefs;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    [[NSUserDefaults standardUserDefaults] setBool:self.lblNextRealtime.isHidden forKey:@"labelHidden"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)didReceiveMemoryWarning
@@ -588,4 +615,35 @@ NSUserDefaults *prefs;
     }
     return timeString;
 }
+
+- (IBAction) imageMoved:(id) sender withEvent:(UIEvent *) event
+{
+    CGPoint point = [[[event allTouches] anyObject] locationInView:self.view];
+    int maxHeight;
+    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+        maxHeight = 425;
+    }
+    else{
+        maxHeight = 338;
+    }
+    if(point.y <= maxHeight && point.y >=15){
+        [lblNextRealtime setFrame:CGRectMake(lblNextRealtime.frame.origin.x, point.y+17, lblNextRealtime.frame.size.width,lblNextRealtime.frame.size.height)];
+        [handleControl setFrame:CGRectMake(handleControl.frame.origin.x, point.y, 320, 16)];
+        [mapView setFrame:CGRectMake(mapView.frame.origin.x,mapView.frame.origin.y,mapView.frame.size.width,mapView.frame.size.height+(point.y-mapHeight))];
+        if(lblNextRealtime.isHidden){
+            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,handleControl.frame.origin.y+handleControl.frame.size.height,320,self.view.frame.size.height-(handleControl.frame.size.height+mapView.frame.size.height))];
+        }
+        else{
+           [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,point.y+30, 320,self.view.frame.size.height-(handleControl.frame.size.height+lblNextRealtime.frame.size.height+mapView.frame.size.height))];
+        }
+        mapHeight = mapView.frame.size.height;
+        tableHeight = mainTable.frame.size.height;
+    }
+    [self.view bringSubviewToFront:handleControl];
+    [self.view bringSubviewToFront:lblNextRealtime];
+    
+}
+
+
+
 @end
