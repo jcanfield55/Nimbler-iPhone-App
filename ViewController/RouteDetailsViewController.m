@@ -40,6 +40,9 @@
 @synthesize timer;
 @synthesize count;
 @synthesize lblNextRealtime;
+@synthesize handleControl;
+@synthesize mapHeight;
+@synthesize tableHeight;
 
 NSUserDefaults *prefs;
 
@@ -291,41 +294,51 @@ NSUserDefaults *prefs;
 }
 
 - (void) setViewFrames{
-    // Enforce height of main table
-    CGRect tableFrame = [mainTable frame];
-    CGRect mapFrame = [mapView frame];
-    CGRect nextRealtimeFrame = [lblNextRealtime frame];
-    mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
-    // If we have a small itinerary, reduce the table size so it just fits it, and increase the map size
-    CGFloat newMainTableHeight;
-    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH, mainTableTotalHeight);
-    }
-    else{
-        newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT, mainTableTotalHeight);
-    }
-    //if (tableFrame.size.height != newMainTableHeight) { // if something is changing...
-    CGFloat combinedHeight;
-    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH + ROUTE_LEGMAP_MIN_HEIGHT_4INCH+1;
-    }
-    else{
-        combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT + ROUTE_LEGMAP_MIN_HEIGHT+1;
-    }
-    if(lblNextRealtime.isHidden){
-        tableFrame.size.height = newMainTableHeight;
-        tableFrame.origin.y = combinedHeight - newMainTableHeight + 10;
-        mapFrame.size.height = combinedHeight - newMainTableHeight - 1;
-    }
-    else{
-        mapFrame.size.height = combinedHeight - newMainTableHeight - 1;
-        nextRealtimeFrame.origin.y = mapFrame.origin.y + mapFrame.size.height+5;
-        tableFrame.size.height = newMainTableHeight - (10 +nextRealtimeFrame.size.height);
-        tableFrame.origin.y = combinedHeight - newMainTableHeight + 15 +nextRealtimeFrame.size.height;
-    }
-    [mainTable setFrame:tableFrame];
-    [mapView setFrame:mapFrame];
-    [lblNextRealtime setFrame:nextRealtimeFrame];
+//    // Enforce height of main table
+//    CGRect tableFrame = [mainTable frame];
+//    CGRect mapFrame = [mapView frame];
+//    CGRect nextRealtimeFrame = [lblNextRealtime frame];
+//    CGRect handleControlFrame = [handleControl frame];
+//    mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
+//    // If we have a small itinerary, reduce the table size so it just fits it, and increase the map size
+//    CGFloat newMainTableHeight;
+//    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+//        newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH, mainTableTotalHeight);
+//    }
+//    else{
+//        newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT, mainTableTotalHeight);
+//    }
+//    //if (tableFrame.size.height != newMainTableHeight) { // if something is changing...
+//    CGFloat combinedHeight;
+//    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+//        combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH + ROUTE_LEGMAP_MIN_HEIGHT_4INCH+1;
+//    }
+//    else{
+//        combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT + ROUTE_LEGMAP_MIN_HEIGHT+1;
+//    }
+//    if(lblNextRealtime.isHidden){
+//        tableFrame.size.height = newMainTableHeight;
+//        tableFrame.origin.y = combinedHeight - newMainTableHeight + 10;
+//        handleControlFrame.origin.y = tableFrame.origin.y - 16;
+//        mapFrame.size.height = combinedHeight - newMainTableHeight - 1-handleControlFrame.size.height;
+//        if(!previousYPOS){
+//            previousYPOS = tableFrame.origin.y;
+//        }
+//    }
+//    else{
+//        nextRealtimeFrame.origin.y = mapFrame.origin.y + mapFrame.size.height+5;
+//        handleControlFrame.origin.y = nextRealtimeFrame.origin.y - 16;
+//        tableFrame.size.height = newMainTableHeight - (10 +nextRealtimeFrame.size.height);
+//        tableFrame.origin.y = combinedHeight - newMainTableHeight + 15 +nextRealtimeFrame.size.height;
+//         mapFrame.size.height = combinedHeight - newMainTableHeight - 1 -handleControlFrame.size.height;
+//        if(!previousYPOS){
+//            previousYPOS = tableFrame.origin.y;
+//        }
+//    }
+//    [mainTable setFrame:tableFrame];
+//    [mapView setFrame:mapFrame];
+//    [lblNextRealtime setFrame:nextRealtimeFrame];
+//    [handleControl setFrame:handleControlFrame];
 }
 
 - (void)viewWillAppear:(BOOL)animated

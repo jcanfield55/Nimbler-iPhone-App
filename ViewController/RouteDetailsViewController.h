@@ -30,6 +30,8 @@
 @property (nonatomic) int count;
 @property (nonatomic, strong) IBOutlet UILabel  * lblNextRealtime;
 @property (nonatomic, strong) IBOutlet UIButton * handleControl;
+@property (nonatomic) int mapHeight;
+@property (nonatomic) int tableHeight;
 
 - (IBAction)navigateBack:(id)sender;
 - (IBAction)navigateForward:(id)sender;
