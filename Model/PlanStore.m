@@ -75,8 +75,7 @@
         
         if (matchingPlanArray && [matchingPlanArray count]>0) {
             Plan* matchingPlan = [matchingPlanArray objectAtIndex:0]; // Take the first matching plan
-            for(int i=0;i<[[matchingPlan itineraries] count];i++){
-                Itinerary *iti = [[[matchingPlan itineraries] allObjects] objectAtIndex:i];
+            for(Itinerary *iti in [matchingPlan itineraries]){
                 if(iti.hideItinerary){
                     iti.hideItinerary = false;
                 }
@@ -837,8 +836,7 @@
                 continue;
             }
             if(![strPlanID isEqualToString:[plans planId]]){
-                for(int i=0;i<[[plans itineraries] count];i++){
-                    Itinerary *itinerary = [[[plans itineraries] allObjects] objectAtIndex:i];
+                for(Itinerary *itinerary in [plans itineraries]){
                     if([itinerary containsUnscheduledLeg]){
                        [context deleteObject:itinerary];
                     }
@@ -875,8 +873,7 @@
                 continue;
             }
             if(![strPlanID isEqualToString:[plans planId]]){
-                for(int i=0;i<[[plans itineraries] count];i++){
-                    Itinerary *itinerary = [[[plans itineraries] allObjects] objectAtIndex:i];
+                for(Itinerary *itinerary in [plans itineraries]){
                     if([itinerary containsBikeLeg]){
                         [context deleteObject:itinerary];
                     }

@@ -465,7 +465,6 @@ NSUserDefaults *prefs;
 {
     
     alertView = [self feedbackConfirmAlert];
-    
     // NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     RKParams *rkp = [RKParams params];

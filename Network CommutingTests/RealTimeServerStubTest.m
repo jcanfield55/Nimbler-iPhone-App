@@ -702,8 +702,7 @@
         }
     }
     
-    for(int i=0;i<[[plan requestChunks] count];i++){
-        PlanRequestChunk *reqChunks = [[[plan requestChunks] allObjects] objectAtIndex:i];
+    for(PlanRequestChunk *reqChunks in [plan requestChunks]){
         if(reqChunks.type == [NSNumber numberWithInt:2]){
             [managedObjectContext deleteObject:reqChunks];
         }
@@ -782,8 +781,7 @@
         }
     }
     
-    for(int i=0;i<[[plan requestChunks] count];i++){
-        PlanRequestChunk *reqChunks = [[[plan requestChunks] allObjects] objectAtIndex:i];
+    for(PlanRequestChunk *reqChunks in [plan requestChunks]){
         if(reqChunks.type == [NSNumber numberWithInt:2]){
             [managedObjectContext deleteObject:reqChunks];
         }

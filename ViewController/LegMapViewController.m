@@ -188,9 +188,7 @@ NSString *legID;
             NIMLOG_PERF2(@"toStopId=%@",leg.to.stopId);
             if(leg.isScheduled){
                 if(!leg.isRealTimeLeg){
-                    NSSet *intermediateStops = leg.intermediateStops;
-                    for(int i=0;i<[intermediateStops count];i++){
-                        IntermediateStops *stop = [[intermediateStops allObjects] objectAtIndex:i];
+                    for(IntermediateStops *stop in leg.intermediateStops){
                         float langcoord = [stop.lat floatValue];
                         float longcoord = [stop.lon floatValue];
                         CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(langcoord, longcoord);

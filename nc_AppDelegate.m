@@ -24,6 +24,7 @@
 #if TEST_FLIGHT_ENABLED
 #import "TestFlightSDK1-1/TestFlight.h"
 #import "ZipArchive.h"
+#import "UIDevice-Hardware.h"
 #endif
 #if FLURRY_ENABLED
 #import "Flurry.h"
@@ -161,7 +162,30 @@ FeedBackForm *fbView;
           UIRemoteNotificationTypeSound)];
     }
     else{
-        [[UserPreferance userPreferance] performSelector:@selector(saveToServer) withObject:nil afterDelay:5.0];
+        [[UserPreferance userPreferance] performSelector:@selector(saveToServer) withObject:nil afterDelay:0.0];
+    }
+    NSDate *lastSaveDate = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_DATE];
+    NSDate *todayDate = dateOnlyFromDate([NSDate date]);
+    if(!lastSaveDate || ![lastSaveDate isEqualToDate:todayDate]){
+        NSDate *todayDate = dateOnlyFromDate([NSDate date]);
+        [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:CURRENT_DATE];
+        //[[nc_AppDelegate sharedInstance] updateTime];
+        [[nc_AppDelegate sharedInstance] performSelector:@selector(updateTime) withObject:nil afterDelay:1.0];
+    }
+    
+    NSDate *lastAgenciesSaveDate = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_DATE_AGENCIES];
+    if(!lastAgenciesSaveDate || ![lastAgenciesSaveDate isEqualToDate:todayDate]){
+        NSDate *todayDate = dateOnlyFromDate([NSDate date]);
+        [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:CURRENT_DATE];
+        //[[Agencies agencies] updateAgenciesFromServer];
+        [[Agencies agencies] performSelector:@selector(updateAgenciesFromServer) withObject:nil afterDelay:2.0];
+    }
+    
+    // Get TransitCalendar updates
+    //[self getTwiiterLiveData];
+    [self performSelector:@selector(getTwiiterLiveData) withObject:nil afterDelay:4.0];
+    if (timerTweeterGetData == nil) {
+        timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
     }
     
     // US-163 set-up for feedback reminders (also DE-238 fix)
@@ -980,26 +1004,6 @@ FeedBackForm *fbView;
                     if (maxLatitutedLoaded) { //
                         [toFromViewController setSupportedRegion:region];
                     }
-                    NSDate *lastSaveDate = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_DATE];
-                    NSDate *todayDate = dateOnlyFromDate([NSDate date]);
-                    if(!lastSaveDate || ![lastSaveDate isEqualToDate:todayDate]){
-                       NSDate *todayDate = dateOnlyFromDate([NSDate date]);
-                       [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:CURRENT_DATE];
-                        [[nc_AppDelegate sharedInstance] updateTime];
-                    }
-                    
-                    NSDate *lastAgenciesSaveDate = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_DATE_AGENCIES];
-                    if(!lastAgenciesSaveDate || ![lastAgenciesSaveDate isEqualToDate:todayDate]){
-                        NSDate *todayDate = dateOnlyFromDate([NSDate date]);
-                        [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:CURRENT_DATE];
-                        [[Agencies agencies] updateAgenciesFromServer];
-                    }
-                    
-                    // Get TransitCalendar updates
-                    [self getTwiiterLiveData];
-                    if (timerTweeterGetData == nil) {
-                        timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
-                    }
                 }
                 else if([strRequestURL isEqualToString:updateDeviceTokenURL]){
                     NSDictionary *tempResponseDictionary = [rkParser objectFromString:[response bodyAsString] error:nil];
@@ -1304,6 +1308,11 @@ FeedBackForm *fbView;
 }
 
 - (NSString *) deviceTokenString{
+    // Return Hard Coded Token for iPhone or ipad simulator
+    if([[[UIDevice currentDevice] platformString] isEqualToString:SIMULATOR_IPHONE_NAMESTRING] || [[[UIDevice currentDevice] platformString] isEqualToString:SIMULATOR_IPAD_NAMESTRING]){
+        NSString  *token = @"26d906c5c273446d5f40d2c173ddd3f6869b2666b1c7afd5173d69b6629def70";
+        return token;
+    }
     NSString *dummyToken = [prefs objectForKey:DUMMY_TOKEN_ID];
     if(!dummyToken){
          dummyToken = [NSString stringWithFormat:@"SF%@",generateRandomString(64)];

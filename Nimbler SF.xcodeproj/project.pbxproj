@@ -875,7 +875,7 @@
 /* Begin PBXFileReference section */
 		2E02C783173381C0001F2F28 /* LocationFromLocalSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationFromLocalSearch.h; sourceTree = "<group>"; };
 		2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationFromLocalSearch.m; sourceTree = "<group>"; };
-		2E02C78C1733D82D001F2F28 /* Network_Commuting 1. 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Network_Commuting 1. 9.xcdatamodel"; sourceTree = "<group>"; };
+		2E02C78C1733D82D001F2F28 /* Network_Commuting 1. 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1. 9.xcdatamodel"; sourceTree = "<group>"; };
 		520FB108162603090083F143 /* FeedBackForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FeedBackForm.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB109162603090083F143 /* FeedBackForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FeedBackForm.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB10A162603090083F143 /* FeedBackForm.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedBackForm.xib; sourceTree = "<group>"; };
@@ -3042,8 +3042,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler SF";
-				PROVISIONING_PROFILE = "ACF5F610-0E29-4410-BEC4-9E2B275F6825";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "ACF5F610-0E29-4410-BEC4-9E2B275F6825";
+				PROVISIONING_PROFILE = "190AE823-AD52-4922-8058-4E54D4C697C5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "190AE823-AD52-4922-8058-4E54D4C697C5";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -3085,9 +3085,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler SF";
-				PROVISIONING_PROFILE = "ACF5F610-0E29-4410-BEC4-9E2B275F6825";
-				"PROVISIONING_PROFILE[sdk=*]" = "ACF5F610-0E29-4410-BEC4-9E2B275F6825";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "ACF5F610-0E29-4410-BEC4-9E2B275F6825";
+				PROVISIONING_PROFILE = "190AE823-AD52-4922-8058-4E54D4C697C5";
+				"PROVISIONING_PROFILE[sdk=*]" = "190AE823-AD52-4922-8058-4E54D4C697C5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "190AE823-AD52-4922-8058-4E54D4C697C5";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;

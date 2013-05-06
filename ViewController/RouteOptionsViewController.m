@@ -204,8 +204,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         }
     }
     
-    for(int i=0;i<[[plan requestChunks] count];i++){
-        PlanRequestChunk *reqChunks = [[[plan requestChunks] allObjects] objectAtIndex:i];
+    for(PlanRequestChunk *reqChunks in [plan requestChunks]){
         if(reqChunks.type == [NSNumber numberWithInt:2]){
             [[nc_AppDelegate sharedInstance].managedObjectContext deleteObject:reqChunks];
         }
@@ -531,20 +530,30 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                  FLURRY_SELECTED_DEPARTURE_TIME, [NSString stringWithFormat:@"%@", [itinerary startTimeOfFirstLeg]],
                  nil, nil, nil, nil);
         
-        [routeDetailsVC setItinerary:itinerary];
-        if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
-            CATransition *animation = [CATransition animation];
-            [animation setDuration:0.3];
-            [animation setType:kCATransitionPush];
-            [animation setSubtype:kCATransitionFromRight];
-            [animation setRemovedOnCompletion:YES];
-            [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
-            [[self.navigationController.view layer] addAnimation:animation forKey:nil];
-            [[self navigationController] pushViewController:routeDetailsVC animated:NO];
+        // DE-309 Fixed
+        // Added Error Handling such that RouteDetailViewController is pushed only once even if user select the row multiple times.
+        BOOL isAlreadyPushed = NO;
+        for(UIViewController *controller in self.navigationController.viewControllers){
+            if([controller isKindOfClass:[RouteDetailsViewController class]]){
+                isAlreadyPushed = YES;
+            }
         }
-        else{
-            [[self navigationController] pushViewController:routeDetailsVC animated:YES];
-        } 
+        if(!isAlreadyPushed){
+            [routeDetailsVC setItinerary:itinerary];
+            if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
+                CATransition *animation = [CATransition animation];
+                [animation setDuration:0.3];
+                [animation setType:kCATransitionPush];
+                [animation setSubtype:kCATransitionFromRight];
+                [animation setRemovedOnCompletion:YES];
+                [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+                [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+                [[self navigationController] pushViewController:routeDetailsVC animated:NO];
+            }
+            else{
+                [[self navigationController] pushViewController:routeDetailsVC animated:YES];
+            }
+        }
     }
     @catch (NSException *exception) {
         logException(@"RouteOptionsViewController->didSelectRowAtIndexPath", @"", exception);

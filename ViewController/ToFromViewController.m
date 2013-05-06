@@ -1423,19 +1423,30 @@ UIImage *imageDetailDisclosure;
         [locationPickerVC setLocationArray:locationList0];
         [locationPickerVC setIsFrom:isFrom0];
         [locationPickerVC setIsGeocodeResults:isGeocodeResults0];
-        if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
-            CATransition *animation = [CATransition animation];
-            [animation setDuration:0.3];
-            [animation setType:kCATransitionPush];
-            [animation setSubtype:kCATransitionFromRight];
-            [animation setRemovedOnCompletion:YES];
-            [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
-            [[self.navigationController.view layer] addAnimation:animation forKey:nil];
-            [[self navigationController] pushViewController:locationPickerVC animated:NO];
+        
+        // DE-310 Fixed
+        // Added Error Handling such that LocationPickerViewController is pushed only once even if user select the StationList multiple times.
+        BOOL isAlreadyPushed = NO;
+        for(UIViewController *controller in self.navigationController.viewControllers){
+            if([controller isKindOfClass:[LocationPickerViewController class]]){
+                isAlreadyPushed = YES;
+            }
         }
-        else{
-            [[self navigationController] pushViewController:locationPickerVC animated:YES];
-        } 
+        if(!isAlreadyPushed){
+            if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
+                CATransition *animation = [CATransition animation];
+                [animation setDuration:0.3];
+                [animation setType:kCATransitionPush];
+                [animation setSubtype:kCATransitionFromRight];
+                [animation setRemovedOnCompletion:YES];
+                [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+                [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+                [[self navigationController] pushViewController:locationPickerVC animated:NO];
+            }
+            else{
+                [[self navigationController] pushViewController:locationPickerVC animated:YES];
+            }
+        }
     }
     @catch (NSException *exception) {
         logException(@"ToFromViewController->callLocationPickerFor", @"", exception);

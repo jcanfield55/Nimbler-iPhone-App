@@ -194,8 +194,7 @@ static RealTimeManager* realTimeManager;
 - (void) removeRealtimeItinerary{
     NSDate *tripDate = originalTripDate;
     NSInteger epochTripDate = [tripDate timeIntervalSince1970];
-    for(int i=0;i<[[plan itineraries] count];i++){
-        Itinerary *itinerary = [[[plan itineraries] allObjects] objectAtIndex:i];
+    for(Itinerary *itinerary in [plan itineraries]){
         if(itinerary.isRealTimeItinerary){
             NSDate *itineraryEndTime = itinerary.endTimeOfLastLeg;
             NSInteger itineraryEpoch = [itineraryEndTime timeIntervalSince1970];
@@ -218,8 +217,7 @@ static RealTimeManager* realTimeManager;
                     }
                 }
             }
-            for(int i=0;i<[[plan requestChunks] count];i++){
-                PlanRequestChunk *reqChunks = [[[plan requestChunks] allObjects] objectAtIndex:i];
+            for(PlanRequestChunk *reqChunks in [plan requestChunks]){
                 if(reqChunks.type == [NSNumber numberWithInt:2]){
                     [[nc_AppDelegate sharedInstance].managedObjectContext deleteObject:reqChunks];
                 }
