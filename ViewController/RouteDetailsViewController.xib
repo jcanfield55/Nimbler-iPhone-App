@@ -56,7 +56,7 @@
 					<object class="IBUITableView" id="292780480">
 						<reference key="NSNextResponder" ref="458693968"/>
 						<int key="NSvFlags">301</int>
-						<string key="NSFrame">{{0, 249}, {320, 138}}</string>
+						<string key="NSFrame">{{0, 253}, {320, 134}}</string>
 						<reference key="NSSuperview" ref="458693968"/>
 						<reference key="NSWindow"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>

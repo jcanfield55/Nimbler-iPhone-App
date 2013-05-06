@@ -476,3 +476,20 @@
 #define SHOW_INTERMEDIATE_STOPS @"showIntermediateStops"
 
 #define LIVE_FEEDS_BY_VEHICLE_POSITION @"livefeeds/vehiclePosition"
+
+
+//5) Get realtime By leg
+//6) get scheduled data(Next legs)
+//7) Get vehicle position
+//plan generate
+//9) Send Feedback
+//10) Update Setting
+//11) Get raw data (Gtfs Agency Data)
+//12) Get Stoptimes
+//13) get trips
+//14) Get Agency Data
+//15) gtfs updateTime
+//16) serviceByWeekday
+//17) calendarByDate
+//18) advisory image fetch (image/<img-name>)
+//19) update token
