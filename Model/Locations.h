@@ -50,6 +50,7 @@
 @property (nonatomic) BOOL isFromGeo;
 @property (nonatomic) BOOL isToGeo;
 @property (nonatomic) BOOL isLocationServiceEnable;
+@property (nonatomic) BOOL isLocationSelected;
 
 @property (nonatomic , strong) Location *tempSelectedFromLocation;
 @property (nonatomic , strong) Location *tempSelectedToLocation;

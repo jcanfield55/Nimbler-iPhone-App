@@ -78,7 +78,7 @@ NSString *strStreet2 = @"street ";
         [txtField setFont:[UIFont MEDIUM_FONT]];
         [txtField setReturnKeyType:UIReturnKeyDone];  // DE275 fix
         [txtField setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
-        
+        txtField.delegate = self;
         [txtField addTarget:self action:@selector(toFromTyping:forEvent:) forControlEvents:UIControlEventEditingChanged];
         [txtField addTarget:self action:@selector(textSubmitted:forEvent:) forControlEvents:(UIControlEventEditingDidEndOnExit)];
         [txtField setBackgroundColor:[UIColor whiteColor]];
@@ -137,10 +137,11 @@ NSString *strStreet2 = @"street ";
         } else {
             [toFromVC setEditMode:TO_EDIT];
         }
+        locations.isLocationSelected = false;
     }
     // Else it is one of the locations which was selected
     else {
-        
+        locations.isLocationSelected = true;
         Location *loc = [locations 
                          locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]]
                          isFrom:isFrom];  //selected Location
@@ -151,6 +152,7 @@ NSString *strStreet2 = @"street ";
         }
         // If user tapped the selected location, then go into Edit Mode if not there already
         if ([toFromVC editMode] == NO_EDIT && loc == selectedLocation) {
+             locations.isLocationSelected = false;
             if (isFrom) {
                 [toFromVC setEditMode:FROM_EDIT]; 
             } else {
@@ -376,6 +378,14 @@ NSString *strStreet2 = @"street ";
     }
 }
 
+// For TextFieldEditing Delegate
+
+-(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    locations.isLocationSelected = false;
+    return YES;
+}
+
 // 
 // txtField editing callback methods
 //
@@ -383,7 +393,6 @@ NSString *strStreet2 = @"street ";
 // Delegate for when text is typed into the to: or from: UITextField (see below for when text submitted)
 // This method updates the to & from table to reflect entries that match the text
 - (IBAction)toFromTyping:(id)sender forEvent:(UIEvent *)event {
-
     if (selectedLocation) {
         selectedLocation = nil;
         [locations updateSelectedLocation:nil isFrom:isFrom];

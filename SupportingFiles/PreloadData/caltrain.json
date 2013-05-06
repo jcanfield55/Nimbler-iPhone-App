@@ -4,6 +4,8 @@
 			"sequenceNumber" : 2,
 			"containsList" : "Caltrain Station List",
 			"containsListId" : "caltrain_st_list",
+            "toFrequency" : 25.0,
+            "fromFrequency" : 25.0,
 			"agency" : "caltrain"
 		}, {
 			"memberOfListId" : "caltrain_st_list",
