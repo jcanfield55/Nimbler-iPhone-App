@@ -1527,8 +1527,8 @@ UIImage *imageDetailDisclosure;
 //    [self.toTableVC textSubmitted:self.toTableVC.txtField forEvent:nil];
 //    [self.fromTableVC toFromTyping:self.fromTableVC.txtField forEvent:nil];
 //    [self.fromTableVC textSubmitted:self.fromTableVC.txtField forEvent:nil];
-    [self.toTableVC markAndUpdateSelectedLocation:toLocation];
-    [self.fromTableVC markAndUpdateSelectedLocation:fromLocation];
+    [self.toTableVC markAndUpdateSelectedLocation:locations.tempSelectedToLocation];
+    [self.fromTableVC markAndUpdateSelectedLocation:locations.tempSelectedFromLocation];
 }
 
 #pragma mark UIdatePicker functionality

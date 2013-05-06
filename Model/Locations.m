@@ -75,6 +75,7 @@
 @synthesize isLocationServiceEnable;
 @synthesize tempSelectedFromLocation;
 @synthesize tempSelectedToLocation;
+@synthesize isLocationSelected;
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkGeoMgr:(RKObjectManager *)rkG
 {
@@ -530,8 +531,7 @@
         }
     }
     
-    if([typedFromStr0 length]>=3)
-    {
+    if([typedFromStr0 length]>=3){
         // Perform a new search.
         
         MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
@@ -563,7 +563,11 @@
                 return;
                 
             }
-        int locCount = 0;
+    
+           if(isLocationSelected){
+             return;
+               
+           }
          for(int i=0;i<[response.mapItems count];i++){
              NSError *error = nil;
             
@@ -578,7 +582,6 @@
                          }
                          
                          [localSearchFromLocations addObject:loc];
-                         locCount++;
              } 
              
          }
@@ -586,10 +589,7 @@
           matchingFromRowCount = [sortedMatchingFromLocations count];
           areMatchingLocationsChanged = YES;
             
-            if(locCount>0)
-            {
-                [[nc_AppDelegate sharedInstance].toFromViewController.fromTableVC reloadLocationWithLocalSearch];
-            }
+        [[nc_AppDelegate sharedInstance].toFromViewController.fromTableVC reloadLocationWithLocalSearch];
            
         }];
         
@@ -614,8 +614,7 @@
            
         }
     }
-    if([typedToStr0 length]>=3)
-    {
+    if([typedToStr0 length]>=3){
         // Perform a new search.
         
         MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
@@ -649,12 +648,13 @@
                 
             }
             
-            int locCount = 0;
+            if(isLocationSelected){
+                return;
+                
+            }
             for(int i=0;i<[response.mapItems count];i++){
                 NSError *error = nil;
                 MKMapItem *mapItem = [response.mapItems objectAtIndex:i];
-                
-                
                 if ([[[nc_AppDelegate sharedInstance].toFromViewController supportedRegion] isInRegionLat:mapItem.placemark.location.coordinate.latitude Lng:mapItem.placemark.location.coordinate.longitude]) {
                     
                     LocationFromLocalSearch *loc = [self newLocationFromIOSWithPlacemark:mapItem.placemark error:error IsLocalSearchResult:true];
@@ -664,23 +664,19 @@
                         loc.placeName = mapItem.name;
                     }
                     [localSearchToLocations addObject:loc];
-                    locCount++;
                   }
             }
                 
             NIMLOG_PERF1(@"LocalSearch Count == %d",[localSearchToLocations count]);
             sortedMatchingToLocations = localSearchToLocations;
             matchingToRowCount = [sortedMatchingToLocations count];
-            areMatchingLocationsChanged = YES;
-            if(locCount>0)
-            {
-                [[nc_AppDelegate sharedInstance].toFromViewController.toTableVC reloadLocationWithLocalSearch];
-            }
+            areMatchingLocationsChanged = YES; 
            
+        [[nc_AppDelegate sharedInstance].toFromViewController.toTableVC reloadLocationWithLocalSearch];
+         
         }];
     }
-    else
-    {
+    else{
         sortedMatchingToLocations = localSearchToLocations;
         matchingToRowCount = [sortedMatchingToLocations count];
         areMatchingLocationsChanged = YES;
@@ -724,16 +720,6 @@
 // Only include those locations with frequency >= 1 in the row count
 - (void)updateInternalCache
 {
-//    NSMutableArray *tempSortedFromLocation = [[NSMutableArray alloc]initWithArray:sortedMatchingFromLocations];
-//    for(int i=0;i<[tempSortedFromLocation count];i++)
-//    {
-//        LocationFromIOS *loc = [tempSortedFromLocation objectAtIndex:i];
-//        if(![loc isKindOfClass:[LocationFromIOS class]] || !loc.isLocalSearchResult)
-//        {
-//            [tempSortedFromLocation removeObject:loc];
-//            i = i-1;
-//        }
-//    }
     // Fetch the sortedFromLocations & searchableFromLocations arrays
     NSSortDescriptor *sdFrom = [NSSortDescriptor sortDescriptorWithKey:@"fromFrequency"
                                                           ascending:NO];
@@ -791,6 +777,7 @@
     if (!sortedToLocations) {
         [NSException raise:@"Locations -> updateInternalCache Fetch failed" format:@"Reason: %@", error1];
     }
+    
     NIMLOG_PERF2(@"Done with searchableToLocations");
 //    [tempSortedFromLocation addObjectsFromArray:sortedFromLocations];
 //    sortedFromLocations = tempSortedFromLocation;
