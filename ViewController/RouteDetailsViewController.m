@@ -17,6 +17,7 @@
 #import "ToFromViewController.h"
 #import "nc_AppDelegate.h"
 #import "RealTimeManager.h"
+#import "KeyObjectStore.h"
 
 @interface RouteDetailsViewController()
 {
@@ -208,8 +209,8 @@ NSUserDefaults *prefs;
 {
     @try {
         count = 119;
-        [[NSUserDefaults standardUserDefaults] setBool:self.lblNextRealtime.isHidden forKey:@"labelHidden"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+            [[NSUserDefaults standardUserDefaults] setBool:self.lblNextRealtime.isHidden forKey:@"labelHidden"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
         itinerary = i0;
         if(itinerary.isRealTimeItinerary){
             [lblNextRealtime setHidden:NO];
@@ -230,15 +231,16 @@ NSUserDefaults *prefs;
         
         //set FbParameterForItinerary
         [self setFBParameterForItinerary];
+        
         BOOL previousStatus = [[NSUserDefaults standardUserDefaults] boolForKey:@"labelHidden"];
         if(previousStatus && lblNextRealtime.isHidden){
-           [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y,320,mainTable.frame.size.height+self.lblNextRealtime.frame.size.height)];
+            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y,320,mainTable.frame.size.height+self.lblNextRealtime.frame.size.height)];
         }
         else if(!previousStatus && lblNextRealtime.isHidden){
-           [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y - self.lblNextRealtime.frame.size.height,320,mainTable.frame.size.height+self.lblNextRealtime.frame.size.height)];
+            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y - self.lblNextRealtime.frame.size.height,320,mainTable.frame.size.height+self.lblNextRealtime.frame.size.height)];
         }
         else if(previousStatus && !lblNextRealtime.isHidden){
-           [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y + self.lblNextRealtime.frame.size.height,320,mainTable.frame.size.height-self.lblNextRealtime.frame.size.height)];
+            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y + self.lblNextRealtime.frame.size.height,320,mainTable.frame.size.height-self.lblNextRealtime.frame.size.height)];
         }
         else{
             [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y,320,mainTable.frame.size.height)];
@@ -373,6 +375,7 @@ NSUserDefaults *prefs;
     [super viewWillDisappear:animated];
     [[NSUserDefaults standardUserDefaults] setBool:self.lblNextRealtime.isHidden forKey:@"labelHidden"];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    
 }
 
 - (void)didReceiveMemoryWarning

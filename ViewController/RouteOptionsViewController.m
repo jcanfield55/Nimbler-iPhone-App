@@ -48,6 +48,7 @@
 @synthesize planStore;
 @synthesize activityIndicator;
 @synthesize timerGettingRealDataByItinerary;
+@synthesize timerRealtime;
 
 Itinerary * itinerary;
 NSString *itinararyId;
@@ -71,6 +72,14 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
     }
     return self;
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    if(self.timerRealtime){
+        [self.timerRealtime invalidate];
+        self.timerRealtime = nil;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -148,7 +157,11 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
             [self.timerGettingRealDataByItinerary invalidate];
             self.timerGettingRealDataByItinerary = nil;
         }
-        [self requestServerForRealTime];
+        if(self.timerRealtime){
+            [self.timerRealtime invalidate];
+            self.timerRealtime = nil;
+        }
+        self.timerRealtime =  [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: NO];
         self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
     }
 }
@@ -223,7 +236,11 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 
 
 -(void) toggleExcludeButton:(id)sender{
-   
+    if(self.timerRealtime){
+        [self.timerRealtime invalidate];
+        self.timerRealtime = nil;
+    }
+    self.timerRealtime =  [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: NO];
     NIMLOG_PERF2(@"toggleExcludeButton started");
     [activityIndicator startAnimating];
     // DE-293 Fixed
@@ -753,7 +770,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 //        [self waitForNonNullValueOfBlock:^(void){BOOL result=planStore.stopTimesLoadSuccessfully; return result;}];
 //    }
 //    planStore.stopTimesLoadSuccessfully = false;
-    RealTimeManager *realtimeManager = [RealTimeManager realTimeManager];
-    [realtimeManager requestRealTimeDataFromServerUsingPlan:plan PlanRequestParameters:planRequestParameters];
+    if([self navigationController].visibleViewController == self || [self navigationController].visibleViewController == routeDetailsVC){
+        RealTimeManager *realtimeManager = [RealTimeManager realTimeManager];
+        [realtimeManager requestRealTimeDataFromServerUsingPlan:plan PlanRequestParameters:planRequestParameters];
+    }
 }
 @end

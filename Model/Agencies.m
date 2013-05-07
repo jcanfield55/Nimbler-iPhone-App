@@ -148,5 +148,6 @@ static Agencies * agenciesSingleton;
                 [keyObjectStore setObject:agenciesDictionary forKey:AGENCIES_DICTIONARY];
             }
         }
+    saveContext([nc_AppDelegate sharedInstance].managedObjectContext);
 }
 @end
