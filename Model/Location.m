@@ -74,7 +74,6 @@ static Locations *locations;
     [self setFromFrequency:[NSNumber numberWithDouble:fromFreq0]];
 }
 
-
 - (void)awakeFromInsert {
     [super awakeFromInsert];
     

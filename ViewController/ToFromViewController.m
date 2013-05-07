@@ -1348,7 +1348,7 @@ UIImage *imageDetailDisclosure;
             [planStore requestPlanWithParameters:parameters];
             savetrip = TRUE;
             isContinueGetRealTimeData = NO;
-            
+            [locations setAreLocationsChanged:YES];
             // Reload the to/from tables for next time
             [[self fromTable] reloadData];
             [[self toTable] reloadData];
