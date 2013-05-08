@@ -23,6 +23,17 @@
 #define ALPHA_LIGHT 0.7
 #define ALPHA_MEDIUM 0.8
 #define ALPHA_LIGHTER 0.4
+#define ARRIVAL @"Arrival"
+#define LIST_VEHICLE_POSITIONS @"lstVehiclePositions"
+#define BUS  @"bus"
+#define TRAM @"tram"
+#define VEHICLE @"Vehicle"
+#define VEHICLE_ID @"vehicleId"
+#define ROUTE  @"Route"
+#define ROUTE_SHORT_NAME @"routeShortName"
+#define HEADSIGN  @"headsign"
+#define LATITUDE  @"lat"
+#define LONGITUDE @"lon"
 
 @interface LegMapViewController() {
     // Internal variables
@@ -123,11 +134,11 @@ NSString *legID;
                     [fromPoint setTitle:startLeg.from.name];
                     NSDate *arrivalTime = startLeg.startTime;
                     NSString *arrivalTimeString = [dateFormatter stringFromDate:arrivalTime];
-                    [fromPoint setSubtitle:[NSString stringWithFormat:@"Arrival: %@",arrivalTimeString]];
+                    [fromPoint setSubtitle:[NSString stringWithFormat:@"%@: %@",ARRIVAL,arrivalTimeString]];
                     [toPoint setTitle:startLeg.to.name];
                     NSDate *toArrivalTime = startLeg.endTime;
                     NSString *toArrivalTimeString = [dateFormatter stringFromDate:toArrivalTime];
-                    [toPoint setSubtitle:[NSString stringWithFormat:@"Arrival: %@",toArrivalTimeString]];
+                    [toPoint setSubtitle:[NSString stringWithFormat:@"%@: %@",ARRIVAL,toArrivalTimeString]];
                 }
                     [legStartEndPoint addObject:toPoint];
                     [mapView addAnnotation:toPoint];
@@ -197,7 +208,7 @@ NSString *legID;
                         [point setTitle:stop.name];
                         NSDate *arrivalTime = [NSDate dateWithTimeIntervalSince1970:([stop.arrivalTime doubleValue]/1000.0)];
                         NSString *arrivalTimeString = [dateFormatter stringFromDate:arrivalTime];
-                        [point setSubtitle:[NSString stringWithFormat:@"Arrival: %@",arrivalTimeString]];
+                        [point setSubtitle:[NSString stringWithFormat:@"%@: %@",ARRIVAL,arrivalTimeString]];
                         [intermediateAnnotations addObject:point];
                         [mapView addAnnotation:point];
                     }
@@ -236,7 +247,7 @@ NSString *legID;
             else{
                 arrivalTimeString = [dateFormatter stringFromDate:arrivalTime];
             }
-            [point setSubtitle:[NSString stringWithFormat:@"Arrival: %@",arrivalTimeString]];
+            [point setSubtitle:[NSString stringWithFormat:@"%@: %@",ARRIVAL,arrivalTimeString]];
         }
         [intermediateAnnotations addObject:point];
         [mapView addAnnotation:point];
@@ -551,36 +562,30 @@ NSString *legID;
     [movingAnnotations removeAllObjects];
     for(int i=0;i<[vehiclesData count];i++){
         NSDictionary *vehicleDictionary = [vehiclesData objectAtIndex:i];
-        NSArray *vehiclePosistions = [vehicleDictionary objectForKey:@"lstVehiclePositions"];
+        NSArray *vehiclePosistions = [vehicleDictionary objectForKey:LIST_VEHICLE_POSITIONS];
         for(int j=0;j<[vehiclePosistions count];j++){
             NSDictionary *tempVehicleDictionary = [vehiclePosistions objectAtIndex:j];
             MKPointAnnotation *movingAnnotation = [[MKPointAnnotation alloc] init];
-            NSString *mode = [tempVehicleDictionary objectForKey:@"mode"];
-            if([[mode lowercaseString] isEqualToString:@"bus"]){
-                [movingAnnotation setAccessibilityLabel:@"bus"];
+            NSString *mode = [tempVehicleDictionary objectForKey:MODE];
+            if([[mode lowercaseString] isEqualToString:BUS]){
+                [movingAnnotation setAccessibilityLabel:BUS];
             }
             else{
-                [movingAnnotation setAccessibilityLabel:@"tram"];
+                [movingAnnotation setAccessibilityLabel:TRAM];
             }
-            NSString *vehicleId = [NSString stringWithFormat:@"Vehicle:%@",[tempVehicleDictionary objectForKey:@"vehicleId"]];
-            NSString *route = [NSString stringWithFormat:@"Route:%@",[tempVehicleDictionary objectForKey:@"routeShortName"]];
+            NSString *vehicleId = [NSString stringWithFormat:@"%@:%@",VEHICLE,[tempVehicleDictionary objectForKey:VEHICLE_ID]];
+            NSString *route = [NSString stringWithFormat:@"%@:%@",ROUTE,[tempVehicleDictionary objectForKey:ROUTE_SHORT_NAME]];
             [movingAnnotation setTitle:[NSString stringWithFormat:@"%@  %@",vehicleId,route]];
-            NSString *headSign = [NSString stringWithFormat:@"%@",[tempVehicleDictionary objectForKey:@"headsign"]];
+            NSString *headSign = [NSString stringWithFormat:@"%@",[tempVehicleDictionary objectForKey:HEADSIGN]];
             [movingAnnotation setSubtitle:headSign];
-            float fromLat = [[tempVehicleDictionary objectForKey:@"lat"] floatValue];
-            float fromLng = [[tempVehicleDictionary objectForKey:@"lon"] floatValue];
+            float fromLat = [[tempVehicleDictionary objectForKey:LATITUDE] floatValue];
+            float fromLng = [[tempVehicleDictionary objectForKey:LONGITUDE] floatValue];
             CLLocationCoordinate2D fromCoordinate = CLLocationCoordinate2DMake(fromLat, fromLng);
-//            NSDictionary *latLonDictionary = [NSDictionary dictionaryWithObjectsAndKeys:[tempVehicleDictionary objectForKey:@"lat"],@"lat",[tempVehicleDictionary objectForKey:@"lon"],@"lon", nil];
-//            [[NSUserDefaults standardUserDefaults] setObject:latLonDictionary forKey:[tempVehicleDictionary objectForKey:@"id"]];
-//            [[NSUserDefaults standardUserDefaults] synchronize];
+
             [movingAnnotation setCoordinate:fromCoordinate];
             [movingAnnotations addObject:movingAnnotation];
-//            [UIView beginAnimations:nil context:nil];
-//            [UIView setAnimationDuration:0.5];
-//            [UIView setAnimationDelay:1.0];
-//            [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
             [mapView addAnnotation:movingAnnotation];
-            //[UIView commitAnimations];
+            
         }
     }
 }

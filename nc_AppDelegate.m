@@ -1041,7 +1041,7 @@ FeedBackForm *fbView;
     NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
                             
                             DEVICE_TOKEN, [[nc_AppDelegate sharedInstance] deviceTokenString],
-                            APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],DUMMY_TOKEN_ID,[[NSUserDefaults standardUserDefaults] valueForKey:DUMMY_TOKEN_ID],
+                            APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],DUMMY_TOKEN_ID,[[NSUserDefaults standardUserDefaults] valueForKey:DUMMY_TOKEN_ID],APPLICATION_VERSION,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"],
                             nil];
     NSString *updateURL = [UPDATE_DEVICE_TOKEN appendQueryParams:params];
     updateDeviceTokenURL = updateURL;
@@ -1162,7 +1162,7 @@ FeedBackForm *fbView;
         NSString *strAgencyIDs = [self getAgencyIdsString];
         //DE-290 Fixed
         if(strAgencyIDs.length > 0 && [[nc_AppDelegate sharedInstance] deviceTokenString]){
-            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_TOKEN, [[nc_AppDelegate sharedInstance] deviceTokenString],APPLICATION_TYPE,[self getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs, nil];
+            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_TOKEN, [[nc_AppDelegate sharedInstance] deviceTokenString],APPLICATION_TYPE,[self getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs,APPLICATION_VERSION,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"], nil];
             isTwitterLivaData = TRUE;
             NSString *twitCountReq = [TWEET_COUNT_URL appendQueryParams:params];
             strTweetCountURL = twitCountReq;

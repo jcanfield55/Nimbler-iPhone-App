@@ -119,7 +119,9 @@ static RealTimeManager* realTimeManager;
             NIMLOG_PERF2(@"Realtime request String=%@",strRequestString);
             RKParams *requestParameter = [RKParams params];
             [requestParameter setValue:strRequestString forParam:LEGS];
-            [requestParameter setValue:[[nc_AppDelegate sharedInstance] deviceTokenString] forParam:DEVICE_TOKEN];
+            [requestParameter setValue:[[nc_AppDelegate sharedInstance] deviceTokenString]  forParam:DEVICE_TOKEN];
+            [requestParameter setValue:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] forParam:APPLICATION_TYPE];
+            [requestParameter setValue:[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"] forParam:APPLICATION_VERSION];
             realTimeURL = LIVE_FEEDS_BY_LEGS;
             [self.rkTpClient post:LIVE_FEEDS_BY_LEGS params:requestParameter delegate:self];
         } 
@@ -409,7 +411,9 @@ static RealTimeManager* realTimeManager;
         NSString *strRequestString = [legArray JSONString];
         RKParams *requestParameter = [RKParams params];
         [requestParameter setValue:strRequestString forParam:LEGS];
-        [requestParameter setValue:[[nc_AppDelegate sharedInstance] deviceTokenString] forParam:DEVICE_TOKEN];
+        [requestParameter setValue:[[nc_AppDelegate sharedInstance] deviceTokenString]  forParam:DEVICE_TOKEN];
+        [requestParameter setValue:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] forParam:APPLICATION_TYPE];
+        [requestParameter setValue:[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"] forParam:APPLICATION_VERSION];
         [self.rkTpClient post:LIVE_FEEDS_BY_VEHICLE_POSITION params:requestParameter delegate:self];
     }else{
         LegMapViewController *legMapVC = [nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC.legMapVC;

@@ -260,7 +260,7 @@ NSUserDefaults *prefs;
             if(strAgencyIDs.length > 0){
                 NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
                                       LAST_TWEET_TIME,tweetTime,
-                                      DEVICE_TOKEN, [[nc_AppDelegate sharedInstance] deviceTokenString],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs,
+                                      DEVICE_TOKEN, [[nc_AppDelegate sharedInstance] deviceTokenString],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs,APPLICATION_VERSION,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"],
                                       nil];
                 NSString *req = [LATEST_TWEETS_REQ appendQueryParams:dict];
                 [[RKClient sharedClient]  get:req delegate:self];
@@ -404,7 +404,7 @@ NSUserDefaults *prefs;
             NSString *strAgencyIDs = [[nc_AppDelegate sharedInstance] getAgencyIdsString];
             if(strAgencyIDs.length > 0){
                 NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
-                                        DEVICE_TOKEN, [[nc_AppDelegate sharedInstance] deviceTokenString],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs,
+                                        DEVICE_TOKEN, [[nc_AppDelegate sharedInstance] deviceTokenString],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs,APPLICATION_VERSION,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"],
                                         nil];
                 NSString *allAdvisories = [ALL_TWEETS_REQ appendQueryParams:params];
                 strAllAdvisories = allAdvisories;

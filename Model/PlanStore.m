@@ -254,10 +254,12 @@
             [params setObject:strAgenciesWithMode forKey:BANNED_AGENCIES_WITH_MODE];
         }
         [params setObject:@"true" forKey:SHOW_INTERMEDIATE_STOPS];
+        [params setObject:[[nc_AppDelegate sharedInstance] deviceTokenString]  forKey:DEVICE_TOKEN];
         parameters.otpExcludeAgencyString = strAgencies;
         parameters.otpExcludeAgencyByModeString = strAgenciesWithMode;
         
         [params setObject:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] forKey:APPLICATION_TYPE];
+        [params setObject:[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"] forKey:APPLICATION_VERSION];
         // Build the parameters into a resource string
         parameters.serverCallsSoFar = parameters.serverCallsSoFar + 1;
         // TODO handle changes to maxWalkDistance with plan caching
@@ -268,8 +270,7 @@
         // Now when we receive response or we receive an error we can get our planRequestParamater by key [objectloader resourcePath].
         
         NIMLOG_DEBUG1(@"Submitted Request ID=%@",requestID);
-         NSString *strPlanGenerateURL = [NSString stringWithFormat:@"%@?id=%@",PLAN_GENERATE_URL,requestID];
-        
+        NSString *strPlanGenerateURL = [NSString stringWithFormat:@"%@?id=%@",PLAN_GENERATE_URL,requestID];
         [parametersByPlanURLResource setObject:parameters forKey:strPlanGenerateURL];
         Plan *plan;
         RKParams *requestParameter = [RKParams paramsWithDictionary:params];
@@ -571,6 +572,8 @@
         RKParams *requestParameter = [RKParams params];
         [requestParameter setValue:strRequestString forParam:LEGS];
         [requestParameter setValue:[[nc_AppDelegate sharedInstance] deviceTokenString] forParam:DEVICE_TOKEN];
+        [requestParameter setValue:[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"] forParam:APPLICATION_VERSION];
+        [requestParameter setValue:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] forParam:APPLICATION_TYPE];
         legsURL = NEXT_LEGS_PLAN;
         [rkTPClient post:NEXT_LEGS_PLAN params:requestParameter delegate:self];
         NIMLOG_PERF2(@"Legs Request Sent");

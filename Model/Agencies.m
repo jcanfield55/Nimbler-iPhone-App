@@ -35,7 +35,7 @@ static Agencies * agenciesSingleton;
 
 // Call server for updated agencies data.
 - (void)updateAgenciesFromServer{
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],APPLICATION_TYPE, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] deviceTokenString],DEVICE_TOKEN,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"],APPLICATION_VERSION, nil];
     NSString *request = [APP_AGENCIES appendQueryParams:params];
     [rkTpClient get:request delegate:self];
 }

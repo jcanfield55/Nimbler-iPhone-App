@@ -19,6 +19,18 @@
 #import "RealTimeManager.h"
 #import "KeyObjectStore.h"
 
+#define MAXIMUM_SCROLL_POINT   338
+#define MAXIMUM_SCROLL_POINT_4_INCH  425 
+#define MINIMUM_SCROLL_POINT 15
+#define IPHONE_SCREEM_WIDTH   320
+#define LABEL__NEXT_REALTIME_Y_BUFFER  17
+#define MAIN_TABLE_Y_BUFFER  30
+#define PREFS_IS_LABEL_HIDDEN  @"labelHidden"
+#define NO_REALTIME_UPDATES @"No Realtime Updates"
+#define TIME_TO_NEXT_REFRESH @"Time to next refresh"
+#define TIMER_DEFAULT_VALUE  119
+
+
 @interface RouteDetailsViewController()
 {
     UIBarButtonItem *forwardButton;
@@ -195,26 +207,26 @@ NSUserDefaults *prefs;
 
 -(void) progressViewProgress {
     count--;
-    [lblNextRealtime setText:[NSString stringWithFormat:@"Time to next refresh: %@ ",[self returnFormattedStringFromSeconds:count]]];
+    [lblNextRealtime setText:[NSString stringWithFormat:@"%@: %@ ",TIME_TO_NEXT_REFRESH,[self returnFormattedStringFromSeconds:count]]];
     if(count == 0){
         if(timer){
             [timer invalidate];
             timer = nil;
         }
-        [lblNextRealtime setText:@"No Realtime Updates"];
+        [lblNextRealtime setText:NO_REALTIME_UPDATES];
     }
 }
 
 - (void)setItinerary:(Itinerary *)i0
 {
     @try {
-        count = 119;
-            [[NSUserDefaults standardUserDefaults] setBool:self.lblNextRealtime.isHidden forKey:@"labelHidden"];
+        count = TIMER_DEFAULT_VALUE;
+            [[NSUserDefaults standardUserDefaults] setBool:self.lblNextRealtime.isHidden forKey:PREFS_IS_LABEL_HIDDEN];
             [[NSUserDefaults standardUserDefaults] synchronize];
         itinerary = i0;
         if(itinerary.isRealTimeItinerary){
             [lblNextRealtime setHidden:NO];
-            [lblNextRealtime setText:[NSString stringWithFormat:@"Time to next refresh: %@ ",[self returnFormattedStringFromSeconds:count]]];
+            [lblNextRealtime setText:[NSString stringWithFormat:@"%@: %@ ",TIME_TO_NEXT_REFRESH,[self returnFormattedStringFromSeconds:count]]];
             if(timer){
                 [timer invalidate];
                 timer = nil;
@@ -232,18 +244,18 @@ NSUserDefaults *prefs;
         //set FbParameterForItinerary
         [self setFBParameterForItinerary];
         
-        BOOL previousStatus = [[NSUserDefaults standardUserDefaults] boolForKey:@"labelHidden"];
+        BOOL previousStatus = [[NSUserDefaults standardUserDefaults] boolForKey:PREFS_IS_LABEL_HIDDEN];
         if(previousStatus && lblNextRealtime.isHidden){
-            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y,320,mainTable.frame.size.height+self.lblNextRealtime.frame.size.height)];
+            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y,IPHONE_SCREEM_WIDTH,mainTable.frame.size.height+self.lblNextRealtime.frame.size.height)];
         }
         else if(!previousStatus && lblNextRealtime.isHidden){
-            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y - self.lblNextRealtime.frame.size.height,320,mainTable.frame.size.height+self.lblNextRealtime.frame.size.height)];
+            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y - self.lblNextRealtime.frame.size.height,IPHONE_SCREEM_WIDTH,mainTable.frame.size.height+self.lblNextRealtime.frame.size.height)];
         }
         else if(previousStatus && !lblNextRealtime.isHidden){
-            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y + self.lblNextRealtime.frame.size.height,320,mainTable.frame.size.height-self.lblNextRealtime.frame.size.height)];
+            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y + self.lblNextRealtime.frame.size.height,IPHONE_SCREEM_WIDTH,mainTable.frame.size.height-self.lblNextRealtime.frame.size.height)];
         }
         else{
-            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y,320,mainTable.frame.size.height)];
+            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y,IPHONE_SCREEM_WIDTH,mainTable.frame.size.height)];
         }
         // Compute the mainTableTotalHeight by calling the height of each row
         mainTableTotalHeight = 0.0;
@@ -373,7 +385,7 @@ NSUserDefaults *prefs;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [[NSUserDefaults standardUserDefaults] setBool:self.lblNextRealtime.isHidden forKey:@"labelHidden"];
+    [[NSUserDefaults standardUserDefaults] setBool:self.lblNextRealtime.isHidden forKey:PREFS_IS_LABEL_HIDDEN];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
 }
@@ -632,25 +644,24 @@ NSUserDefaults *prefs;
     return timeString;
 }
 
-- (IBAction) imageMoved:(id) sender withEvent:(UIEvent *) event
-{
+- (IBAction) imageMoved:(id) sender withEvent:(UIEvent *) event{
     CGPoint point = [[[event allTouches] anyObject] locationInView:self.view];
     int maxHeight;
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        maxHeight = 425;
+        maxHeight = MAXIMUM_SCROLL_POINT_4_INCH;
     }
     else{
-        maxHeight = 338;
+        maxHeight = MAXIMUM_SCROLL_POINT;
     }
-    if(point.y <= maxHeight && point.y >=15){
-        [lblNextRealtime setFrame:CGRectMake(lblNextRealtime.frame.origin.x, point.y+17, lblNextRealtime.frame.size.width,lblNextRealtime.frame.size.height)];
-        [handleControl setFrame:CGRectMake(handleControl.frame.origin.x, point.y, 320, 16)];
+    if(point.y <= maxHeight && point.y >=MINIMUM_SCROLL_POINT){
+        [lblNextRealtime setFrame:CGRectMake(lblNextRealtime.frame.origin.x, point.y+LABEL__NEXT_REALTIME_Y_BUFFER, lblNextRealtime.frame.size.width,lblNextRealtime.frame.size.height)];
+        [handleControl setFrame:CGRectMake(handleControl.frame.origin.x, point.y, IPHONE_SCREEM_WIDTH, handleControl.frame.size.height)];
         [mapView setFrame:CGRectMake(mapView.frame.origin.x,mapView.frame.origin.y,mapView.frame.size.width,mapView.frame.size.height+(point.y-mapHeight))];
         if(lblNextRealtime.isHidden){
-            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,handleControl.frame.origin.y+handleControl.frame.size.height,320,self.view.frame.size.height-(handleControl.frame.size.height+mapView.frame.size.height))];
+            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,handleControl.frame.origin.y+handleControl.frame.size.height,IPHONE_SCREEM_WIDTH,self.view.frame.size.height-(handleControl.frame.size.height+mapView.frame.size.height))];
         }
         else{
-           [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,point.y+30, 320,self.view.frame.size.height-(handleControl.frame.size.height+lblNextRealtime.frame.size.height+mapView.frame.size.height))];
+           [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,point.y+MAIN_TABLE_Y_BUFFER, IPHONE_SCREEM_WIDTH,self.view.frame.size.height-(handleControl.frame.size.height+lblNextRealtime.frame.size.height+mapView.frame.size.height))];
         }
         mapHeight = mapView.frame.size.height;
         tableHeight = mainTable.frame.size.height;

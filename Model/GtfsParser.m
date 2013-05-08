@@ -686,7 +686,7 @@
     int serverCallSoFar = [[dictServerCallSoFar objectForKey:GTFS_AGENCY_COUNTER] intValue];
     [dictServerCallSoFar setObject:[NSNumber numberWithInt:serverCallSoFar + 1] forKey:GTFS_AGENCY_COUNTER];
     @try {
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"agency",ENTITY,@"1",AGENCY_IDS, nil];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"agency",ENTITY,@"1",AGENCY_IDS,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] deviceTokenString],DEVICE_TOKEN,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"],APPLICATION_VERSION, nil];
         NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
         strAgenciesURL = request;
         NIMLOG_OBJECT1(@"Get Agencies: %@", request);
@@ -703,7 +703,7 @@
     serverCallSoFar = serverCallSoFar + 1;
     [dictServerCallSoFar setObject:[NSNumber numberWithInt:serverCallSoFar] forKey:GTFS_CALENDAR_DATES_COUNTER];
     @try {
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"calendar_dates",ENTITY,@"1",AGENCY_IDS, nil];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"calendar_dates",ENTITY,@"1",AGENCY_IDS, [[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] deviceTokenString],DEVICE_TOKEN,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"],APPLICATION_VERSION,nil];
         NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
         strCalendarDatesURL = request;
         NIMLOG_OBJECT1(@"Get Calendar Dates: %@", request);
@@ -720,7 +720,7 @@
     serverCallSoFar = serverCallSoFar + 1;
     [dictServerCallSoFar setObject:[NSNumber numberWithInt:serverCallSoFar] forKey:GTFS_CALENDAR_COUNTER];
     @try {
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"calendar",ENTITY,@"1",AGENCY_IDS, nil];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"calendar",ENTITY,@"1",AGENCY_IDS,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] deviceTokenString],DEVICE_TOKEN,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"],APPLICATION_VERSION, nil];
         NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
         strCalendarURL = request;
         NIMLOG_OBJECT1(@"Get Calendar: %@", request);
@@ -737,7 +737,7 @@
     serverCallSoFar = serverCallSoFar + 1;
     [dictServerCallSoFar setObject:[NSNumber numberWithInt:serverCallSoFar] forKey:GTFS_ROUTES_COUNTER];
     @try {
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"routes",ENTITY,@"1",AGENCY_IDS, nil];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"routes",ENTITY,@"1",AGENCY_IDS,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] deviceTokenString],DEVICE_TOKEN,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"],APPLICATION_VERSION, nil];
         NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
         strRoutesURL = request;
         NIMLOG_OBJECT1(@"Get Routes: %@", request);
@@ -754,7 +754,7 @@
     serverCallSoFar = serverCallSoFar + 1;
     [dictServerCallSoFar setObject:[NSNumber numberWithInt:serverCallSoFar] forKey:GTFS_STOPS_COUNTER];
     @try {
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"stops",ENTITY,@"1,2,3,4,5,6,7,8",AGENCY_IDS, nil];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"stops",ENTITY,@"1,2,3,4,5,6,7,8",AGENCY_IDS,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] deviceTokenString],DEVICE_TOKEN,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"],APPLICATION_VERSION, nil];
         NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
         strStopsURL = request;
         NIMLOG_OBJECT1(@"Get Stops: %@", request);
@@ -777,6 +777,9 @@
         strTripsURL = GTFS_TRIPS;
         RKParams *requestParameter = [RKParams params];
         [requestParameter setValue:strRequestString forParam:AGENCY_ID_AND_ROUTE_ID];
+        [requestParameter setValue:[[nc_AppDelegate sharedInstance] deviceTokenString]  forParam:DEVICE_TOKEN];
+        [requestParameter setValue:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] forParam:APPLICATION_TYPE];
+        [requestParameter setValue:[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"] forParam:APPLICATION_VERSION];
         [self.rkTpClient post:GTFS_TRIPS params:requestParameter delegate:self];
     }
     @catch (NSException *exception) {
@@ -790,7 +793,7 @@
         int serverCallSoFar = [[dictServerCallSoFar objectForKey:GTFS_TRIPS_COUNTER] intValue];
         serverCallSoFar = serverCallSoFar + 1;
         [dictServerCallSoFar setObject:[NSNumber numberWithInt:serverCallSoFar] forKey:GTFS_TRIPS_COUNTER];
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:strRequestString,AGENCY_ID_AND_ROUTE_ID, nil];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:strRequestString,AGENCY_ID_AND_ROUTE_ID,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] deviceTokenString],DEVICE_TOKEN,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"],APPLICATION_VERSION, nil];
         NSString *request = [GTFS_TRIPS appendQueryParams:dictParameters];
         strTripsURL = request;
         NIMLOG_OBJECT1(@"get Trips Data: %@", request);
@@ -810,6 +813,10 @@
     @try {
         RKParams *requestParameter = [RKParams params];
         [requestParameter setValue:strRequestString forParam:AGENCY_IDS];
+        [requestParameter setValue:[[nc_AppDelegate sharedInstance] deviceTokenString]  forParam:DEVICE_TOKEN];
+        [requestParameter setValue:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] forParam:APPLICATION_TYPE];
+        [requestParameter setValue:[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"] forParam:APPLICATION_VERSION];
+        
         NIMLOG_PERF2(@"StopTimes Request Sent");
         [self.rkTpClient post:GTFS_STOP_TIMES params:requestParameter delegate:self];
     }
@@ -2124,6 +2131,9 @@
         NSString *agencytripString = [NSString stringWithFormat:@"%@_%@",agencyFeedIdFromAgencyName(leg.agencyName),tripId];
         RKParams *requestParameter = [RKParams params];
         [requestParameter setValue:agencytripString forParam:AGENCY_IDS];
+        [requestParameter setValue:[[nc_AppDelegate sharedInstance] deviceTokenString]  forParam:DEVICE_TOKEN];
+        [requestParameter setValue:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] forParam:APPLICATION_TYPE];
+        [requestParameter setValue:[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"] forParam:APPLICATION_VERSION];
         isParticularTripRequest = true;
         [self.rkTpClient post:GTFS_STOP_TIMES params:requestParameter delegate:self];
     }
