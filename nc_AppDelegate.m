@@ -94,6 +94,7 @@ static nc_AppDelegate *appDelegate;
 @synthesize updateDeviceTokenURL;
 @synthesize isFeedBackView;
 
+
 // Feedback parameters
 @synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId;
 twitterViewController *twitterView;
@@ -674,28 +675,90 @@ FeedBackForm *fbView;
         if (strToFormattedAddress) {
             NSArray* toLocations = [locations locationsWithFormattedAddress:strToFormattedAddress];
             if (toLocations && [toLocations count]>0) {
-                if ([[toLocations objectAtIndex:0] isCurrentLocation] && !toFromViewController.currentLocation) {
-                    // If toLocation == currentLocation, but currentLocation not yet set,
-                    // keep toLocation == nil and set it when currentLocaiton service available (updated DE-233 Attempted Fix)
-                } else {
-                    [toFromViewController.toTableVC markAndUpdateSelectedLocation:[toLocations objectAtIndex:0]];
+                if([toLocations count]>1){
+                    Location *toLocation = [self findHighestFrequencyToLocation:toLocations];
+                    if ([toLocation isCurrentLocation] && !toFromViewController.currentLocation) {
+                        // If toLocation == currentLocation, but currentLocation not yet set,
+                        // keep toLocation == nil and set it when currentLocaiton service available (updated DE-233 Attempted Fix)
+                    } else {
+                        [toFromViewController.toTableVC markAndUpdateSelectedLocation:toLocation];
+                    }
                 }
+                else{
+                    if ([[toLocations objectAtIndex:0] isCurrentLocation] && !toFromViewController.currentLocation) {
+                        // If toLocation == currentLocation, but currentLocation not yet set,
+                        // keep toLocation == nil and set it when currentLocaiton service available (updated DE-233 Attempted Fix)
+                    } else {
+                        [toFromViewController.toTableVC markAndUpdateSelectedLocation:[toLocations objectAtIndex:0]];
+                    }
+                }
+                
             }
         }
         if (strFromFormattedAddress) {
             NSArray* fromLocations = [locations locationsWithFormattedAddress:strFromFormattedAddress];
             if (fromLocations && [fromLocations count]>0) {
-                if ([[fromLocations objectAtIndex:0] isCurrentLocation] && !toFromViewController.currentLocation) {
-                    // If fromLocation == currentLocation, but currentLocation not yet set,
-                    // keep toLocation == nil and set it when currentLocaiton service available (updated DE-233 Attempted Fix)
-                } else {
-                    [toFromViewController.fromTableVC markAndUpdateSelectedLocation:[fromLocations objectAtIndex:0]];
+                if([fromLocations count]>1){
+                    Location *fromLocation = [self findHighestFrequencyFromLocation:fromLocations];
+                    if ([fromLocation isCurrentLocation] && !toFromViewController.currentLocation) {
+                        // If toLocation == currentLocation, but currentLocation not yet set,
+                        // keep toLocation == nil and set it when currentLocaiton service available (updated DE-233 Attempted Fix)
+                    } else {
+                        [toFromViewController.fromTableVC markAndUpdateSelectedLocation:fromLocation];
+                    }
+                }
+                else{
+                    if ([[fromLocations objectAtIndex:0] isCurrentLocation] && !toFromViewController.currentLocation) {
+                        // If fromLocation == currentLocation, but currentLocation not yet set,
+                        // keep toLocation == nil and set it when currentLocaiton service available (updated DE-233 Attempted Fix)
+                    } else {
+                        [toFromViewController.fromTableVC markAndUpdateSelectedLocation:[fromLocations objectAtIndex:0]];
+                    }
                 }
             }
         }
     }
 }
 
+#pragma mark - Check and return High Frequency Location
+
+-(Location *)findHighestFrequencyToLocation:(NSArray *)toLocation
+{
+    Location *highFrToLocation;
+    double tofrequency = 0;
+    double highfrequency = 0;
+    int toLocationNumber = 0;
+    for(int i=0;i<[toLocation count];i++){
+        highFrToLocation = [toLocation objectAtIndex:i];
+        tofrequency = [highFrToLocation.toFrequency doubleValue];
+        if (tofrequency > highfrequency) {
+            highfrequency = tofrequency;
+            toLocationNumber = i;
+        }
+    }
+    highFrToLocation = [toLocation objectAtIndex:toLocationNumber];
+    
+  return highFrToLocation;
+}
+
+-(Location *)findHighestFrequencyFromLocation:(NSArray *)fromLocation
+{
+    Location *highFrFromLocation;
+    double fromfrequency = 0;
+    double highfrequency = 0;
+    int fromLocationNumber = 0;
+    for(int i=0;i<[fromLocation count];i++){
+        highFrFromLocation = [fromLocation objectAtIndex:i];
+        fromfrequency = [highFrFromLocation.fromFrequency doubleValue];
+        if (fromfrequency > highfrequency) {
+            highfrequency = fromfrequency;
+            fromLocationNumber = i;
+        }
+    }
+    highFrFromLocation = [fromLocation objectAtIndex:fromLocationNumber];
+    
+  return highFrFromLocation;
+}
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     NIMLOG_PERF1(@"Will Terminate Called");
