@@ -147,6 +147,7 @@ FeedBackForm *fbView;
     return YES;    // If Automated testing with alternative persistent store, skip NC_AppDelegate altogether and do all setup in test area
 #endif
     
+    
     [self unzipZipFileToApplicationDocumentDirectory];    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
 
     prefs = [NSUserDefaults standardUserDefaults];
@@ -216,6 +217,10 @@ FeedBackForm *fbView;
     
     RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];
     rkTpClient = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+    
+    // Fixed:- DE-306
+    //http://stackoverflow.com/questions/9463259/restkit-disable-caching
+    rkTpClient.cachePolicy = RKRequestCachePolicyNone;
     
     // Other URLs:
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/

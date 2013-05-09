@@ -234,7 +234,7 @@ UIImage *imageDetailDisclosure;
 }
 - (void)viewDidLoad{
     [super viewDidLoad];
-    
+    [routeButton setShowsTouchWhenHighlighted:YES];
     // Accessibility Label For UI Automation.
     self.mainTable.accessibilityLabel = TO_FROM_TABLE_VIEW;
     
