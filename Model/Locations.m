@@ -43,6 +43,8 @@
     
     CLGeocoder* clGeocoder;  // IOS Geocoder object
     
+    MKLocalSearchRequest *localSearchRequest; //MKLocalSearchRequest Object
+    
 }
 - (void)updateWithSelectedLocationIsFrom:(BOOL)isFrom selectedLocation:(Location *)selectedLocation oldSelectedLocation:(Location *)oldSelectedLocation;
 - (void)updateInternalCache;
@@ -88,6 +90,20 @@
         [Location setLocations:self];
         
         areLocationsChanged = YES;  // Force cache stale upon start-up so it gets properly loaded
+        
+        
+        // Set region For MKLocalSearch
+        localSearchRequest = [[MKLocalSearchRequest alloc] init];
+        CLLocationManager *locationManager;
+        locationManager = [[CLLocationManager alloc] init];
+        locationManager.delegate = self;
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        CLLocation *location = [locationManager location];
+        [locationManager startUpdatingLocation];
+        CLLocationCoordinate2D coordinate = [location coordinate];
+        MKCoordinateRegion mpRegion =  MKCoordinateRegionMakeWithDistance(coordinate,100000, 100000);
+        localSearchRequest.region = mpRegion;
+        
     }
 
     return self;
@@ -534,21 +550,11 @@
     if([typedFromStr0 length]>=3){
         // Perform a new search.
         
-        MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
-        request.naturalLanguageQuery = typedFromStr0;
-        CLLocationManager *locationManager;
-        locationManager = [[CLLocationManager alloc] init];
-        locationManager.delegate = self;
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-        CLLocation *location = [locationManager location];
-        [locationManager startUpdatingLocation];
-        CLLocationCoordinate2D coordinate = [location coordinate];
-        MKCoordinateRegion mpRegion =  MKCoordinateRegionMakeWithDistance(coordinate,100000, 100000);
-        request.region = mpRegion;
+        localSearchRequest.naturalLanguageQuery = typedFromStr0;
         
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         
-        MKLocalSearch  *localSearch = [[MKLocalSearch alloc] initWithRequest:request];
+        MKLocalSearch  *localSearch = [[MKLocalSearch alloc] initWithRequest:localSearchRequest];
        
         [localSearch startWithCompletionHandler:^(MKLocalSearchResponse *response, NSError *error){
             
@@ -617,21 +623,11 @@
     if([typedToStr0 length]>=3){
         // Perform a new search.
         
-        MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
-        request.naturalLanguageQuery = typedToStr0;
-        CLLocationManager *locationManager;
-        locationManager = [[CLLocationManager alloc] init];
-        locationManager.delegate = self;
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-        CLLocation *location = [locationManager location];
-        [locationManager startUpdatingLocation];
-        CLLocationCoordinate2D coordinate = [location coordinate];
-        MKCoordinateRegion mpRegion =  MKCoordinateRegionMakeWithDistance(coordinate,100000, 100000);
-        request.region = mpRegion;
+        localSearchRequest.naturalLanguageQuery = typedToStr0;
         
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         
-        MKLocalSearch  *localSearch = [[MKLocalSearch alloc] initWithRequest:request];
+        MKLocalSearch  *localSearch = [[MKLocalSearch alloc] initWithRequest:localSearchRequest];
         
         [localSearch startWithCompletionHandler:^(MKLocalSearchResponse *response, NSError *error){
             
