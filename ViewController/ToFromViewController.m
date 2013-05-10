@@ -234,7 +234,6 @@ UIImage *imageDetailDisclosure;
 }
 - (void)viewDidLoad{
     [super viewDidLoad];
-    [routeButton setShowsTouchWhenHighlighted:YES];
     // Accessibility Label For UI Automation.
     self.mainTable.accessibilityLabel = TO_FROM_TABLE_VIEW;
     
@@ -1214,6 +1213,12 @@ UIImage *imageDetailDisclosure;
     }
 }
 
+- (void) reloadDataWithLocationChanged{
+    [locations setAreLocationsChanged:YES];
+    // Reload the to/from tables for next time
+    [[self fromTable] reloadData];
+    [[self toTable] reloadData];
+}
 
 #pragma mark get Plan Request
 // Routine for calling and populating a trip-plan object
@@ -1345,13 +1350,11 @@ UIImage *imageDetailDisclosure;
                 parameters.rawAddressFROM = [fromLocation formattedAddress] ;
                 parameters.timeTO = [locations geoRespTimeTo];
             }
+            [nc_AppDelegate sharedInstance].isRouteOptionView = true;
             [planStore requestPlanWithParameters:parameters];
             savetrip = TRUE;
             isContinueGetRealTimeData = NO;
-            [locations setAreLocationsChanged:YES];
-            // Reload the to/from tables for next time
-            [[self fromTable] reloadData];
-            [[self toTable] reloadData];
+            [self performSelector:@selector(reloadDataWithLocationChanged) withObject:nil afterDelay:0.01];
         }
         return true; 
     }

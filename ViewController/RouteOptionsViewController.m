@@ -76,6 +76,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
+    [nc_AppDelegate sharedInstance].isRouteOptionView = false;
     if(self.timerRealtime){
         [self.timerRealtime invalidate];
         self.timerRealtime = nil;
@@ -86,7 +87,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 {
     [super viewWillAppear:animated];
     logEvent(FLURRY_ROUTE_OPTIONS_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
-    
+    [nc_AppDelegate sharedInstance].isRouteOptionView = true;
     // Enforce height of main table
     mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
     [self changeMainTableSettings];
@@ -766,11 +767,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 #if SKIP_REAL_TIME_UPDATES
     return;
 #endif
-//    if(![nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray){
-//        [self waitForNonNullValueOfBlock:^(void){BOOL result=planStore.stopTimesLoadSuccessfully; return result;}];
-//    }
-//    planStore.stopTimesLoadSuccessfully = false;
-    if([self navigationController].visibleViewController == self || [self navigationController].visibleViewController == routeDetailsVC){
+    BOOL isRouteOptionView = [nc_AppDelegate sharedInstance].isRouteOptionView;
+    BOOL isRouteDetailView = [nc_AppDelegate sharedInstance].isRouteDetailView;
+    if(isRouteDetailView || isRouteOptionView){
         RealTimeManager *realtimeManager = [RealTimeManager realTimeManager];
         [realtimeManager requestRealTimeDataFromServerUsingPlan:plan PlanRequestParameters:planRequestParameters];
     }

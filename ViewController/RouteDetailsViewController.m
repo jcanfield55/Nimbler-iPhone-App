@@ -358,7 +358,7 @@ NSUserDefaults *prefs;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    [nc_AppDelegate sharedInstance].isRouteDetailView = true;
     @try {
         logEvent(FLURRY_ROUTE_DETAILS_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
         [self setViewFrames];
@@ -385,6 +385,7 @@ NSUserDefaults *prefs;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    [nc_AppDelegate sharedInstance].isRouteDetailView = false;
     [[NSUserDefaults standardUserDefaults] setBool:self.lblNextRealtime.isHidden forKey:PREFS_IS_LABEL_HIDDEN];
     [[NSUserDefaults standardUserDefaults] synchronize];
     

@@ -279,6 +279,9 @@
             loader.params = requestParameter;
             loader.method = RKRequestMethodPOST;
         }];
+        NIMLOG_PERF2(@"Plan Request Sent At-->%f",[[NSDate date] timeIntervalSince1970]);
+        NIMLOG_PERF2(@"TripDate-->%@",parameters.originalTripDate);
+        NIMLOG_PERF2(@"ThisRequestTripDate-->%@",parameters.thisRequestTripDate);
     }
     @catch (NSException *exception) {
         logException(@"PlanStore->requestPlanFromOTPWithParameters", @"", exception);
@@ -289,10 +292,9 @@
     if ([request isPOST]) {
         if ([response isOK] && [legsURL isEqualToString:[request resourcePath]]) {
             legsURL = nil;
-            NIMLOG_PERF2(@"Legs Response Received");
+            NIMLOG_PERF2(@"Legs Response Arrives At-->%f",[[NSDate date] timeIntervalSince1970]);
             RKJSONParserJSONKit* parser1 = [RKJSONParserJSONKit new];
             NSDictionary *legsDictionary = [parser1 objectFromString:[response bodyAsString] error:nil];
-            NIMLOG_PERF2(@"legsDictionary=%@",legsDictionary);
             self.stopTimesLoadSuccessfully = true;
             if(!legsDictionary)
                 return;
@@ -327,6 +329,7 @@
         [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.activityIndicator stopAnimating];
         RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
         NSDictionary *tempResponseDictionary = [rkParser objectFromString:[[objectLoader response] bodyAsString] error:nil];
+        NIMLOG_PERF2(@"Plan Response Arrives At-->%f",[[NSDate date] timeIntervalSince1970]);
         if([[tempResponseDictionary objectForKey:RESPONSE_CODE] intValue] == RESPONSE_SUCCESSFULL){
             NSString *strResourcePath = [objectLoader resourcePath];
             if (strResourcePath && [strResourcePath length]>0) {
@@ -413,6 +416,9 @@
                                             routeExcludeSettings:[RouteExcludeSettings latestUserSettings] // use latest settings in case something changed
                                          generateGtfsItineraries:NO
                                            removeNonOptimalItins:YES]) {
+                Itinerary *itinerary = [[plan sortedItineraries] lastObject];
+                NIMLOG_PERF2(@"Last Itinerary Start Time-->%@",itinerary.startTime);
+                NIMLOG_PERF2(@"Last Itinerary End Time-->%@",itinerary.endTime);
                 MoreItineraryStatus moreItinStatus = [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
                 if(moreItinStatus == NO_MORE_ITINERARIES_REQUESTED){
                     planRequestParameters.needToRequestRealtime = true;
@@ -429,6 +435,7 @@
                 } else {
                     reqStatus = PLAN_STATUS_OK;
                 }
+                 NIMLOG_PERF2(@"Plan Parsing And Processing Completed At-->%f",[[NSDate date] timeIntervalSince1970]);
                 // Call-back the appropriate VC with the new plan
                 [planRequestParameters.planDestination newPlanAvailable:plan
                                                              fromObject:self
@@ -576,13 +583,18 @@
         [requestParameter setValue:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] forParam:APPLICATION_TYPE];
         legsURL = NEXT_LEGS_PLAN;
         [rkTPClient post:NEXT_LEGS_PLAN params:requestParameter delegate:self];
-        NIMLOG_PERF2(@"Legs Request Sent");
+         NIMLOG_PERF2(@"Legs request Sent At-->%f",[[NSDate date] timeIntervalSince1970]);
     }
 }
 
 // Checks if more itineraries are needed for this plan, and if so requests them from the server
 -(MoreItineraryStatus)requestMoreItinerariesIfNeeded:(Plan *)plan parameters:(PlanRequestParameters *)requestParams0
 {
+    BOOL isRouteOptionView = [nc_AppDelegate sharedInstance].isRouteOptionView;
+    BOOL isRouteDetailView = [nc_AppDelegate sharedInstance].isRouteDetailView;
+    if(!isRouteOptionView && !isRouteDetailView){
+        return NO_MORE_ITINERARIES_REQUESTED;
+    }
     if (requestParams0.serverCallsSoFar >= PLAN_MAX_SERVER_CALLS_PER_REQUEST) {
         [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.activityIndicator stopAnimating];
         return NO_MORE_ITINERARIES_REQUESTED; // Return if we have already made the max number of calls

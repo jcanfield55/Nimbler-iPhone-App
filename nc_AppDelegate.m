@@ -93,6 +93,8 @@ static nc_AppDelegate *appDelegate;
 @synthesize stations;
 @synthesize updateDeviceTokenURL;
 @synthesize isFeedBackView;
+@synthesize isRouteOptionView;
+@synthesize isRouteDetailView;
 
 
 // Feedback parameters

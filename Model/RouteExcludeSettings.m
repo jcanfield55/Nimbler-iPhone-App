@@ -357,9 +357,31 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
     return true;
 }
 
+// Fixed DE-313
+// Returns true if itin contains walk and bike and also route exclude settings for bike is SETTING_INCLUDE_ROUTE otherwise return false.
+- (BOOL) itineraryContainsWalkAndBike:(NSSet *)legs{
+    BOOL containWalk = false;
+    BOOL containBike = false;
+    for(Leg *leg in legs){
+        if(leg.isBike){
+            containBike = true;
+        }
+        if(leg.isWalk){
+            containWalk = true;
+        }
+    }
+    if(containBike && containWalk && [self settingForKey:BIKE_BUTTON]==SETTING_INCLUDE_ROUTE)
+        return true;
+    else
+        return false;
+}
+
+
 // Returns true if itin should be included based on the RouteExclude settings
--(BOOL)isItineraryIncluded:(Itinerary *)itin
-{
+-(BOOL)isItineraryIncluded:(Itinerary *)itin {
+       if([self itineraryContainsWalkAndBike:[itin legs]]){
+          return true;
+       }
        for (Leg* leg in [itin legs]) {
            NSString* legKey = nil;
            if (leg.isWalk && [self settingForKey:BIKE_BUTTON]==SETTING_INCLUDE_ROUTE) {

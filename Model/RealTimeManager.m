@@ -116,7 +116,6 @@ static RealTimeManager* realTimeManager;
         }
         if([arrLegs count] > 0){
             NSString *strRequestString = [arrLegs JSONString];
-            NIMLOG_PERF2(@"Realtime request String=%@",strRequestString);
             RKParams *requestParameter = [RKParams params];
             [requestParameter setValue:strRequestString forParam:LEGS];
             [requestParameter setValue:[[nc_AppDelegate sharedInstance] deviceTokenString]  forParam:DEVICE_TOKEN];
@@ -124,6 +123,7 @@ static RealTimeManager* realTimeManager;
             [requestParameter setValue:[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"] forParam:APPLICATION_VERSION];
             realTimeURL = LIVE_FEEDS_BY_LEGS;
             [self.rkTpClient post:LIVE_FEEDS_BY_LEGS params:requestParameter delegate:self];
+            NIMLOG_PERF2(@"Realtime Data Request Sent At-->%f",[[NSDate date] timeIntervalSince1970]);
         } 
      }
 }
@@ -151,14 +151,17 @@ static RealTimeManager* realTimeManager;
         NSString *resourcePath = [request resourcePath];
         if([resourcePath isEqualToString:realTimeURL]){
             // DE 175 Fixed
-            [nc_AppDelegate sharedInstance].isNeedToLoadRealData = YES;
-            RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
-            loadedRealTimeData = true;
-            id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
-            //[self logRealtimeData:res];
-            NIMLOG_PERF2(@"realtime Response=%@",res);
-            [routeOptionsVC setIsReloadRealData:false];
-            [self setLiveFeed:res];
+            BOOL isRouteOptionView = [nc_AppDelegate sharedInstance].isRouteOptionView;
+            BOOL isRouteDetailView = [nc_AppDelegate sharedInstance].isRouteDetailView;
+            if(isRouteOptionView || isRouteDetailView){
+                [nc_AppDelegate sharedInstance].isNeedToLoadRealData = YES;
+                RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+                loadedRealTimeData = true;
+                id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
+                NIMLOG_PERF2(@"Realtime Response Arrives At-->%f",[[NSDate date] timeIntervalSince1970]);
+                [routeOptionsVC setIsReloadRealData:false];
+                [self setLiveFeed:res];
+            }
         }
         else{
             RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
@@ -231,6 +234,7 @@ static RealTimeManager* realTimeManager;
             //It means there are live feeds in response
             NSArray * legLiveFees = [liveData  objectForKey:@"legLiveFeeds"];
             if ([legLiveFees count] > 0) {
+                NIMLOG_PERF2(@"Realtime Parsing and Processing Started At-->%f",[[NSDate date] timeIntervalSince1970]);
                 [self setRealTimePredictionsFromLiveFeeds:legLiveFees];
                 // TODO:- Comment Four lines to run automated test case
                 [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:originalTripDate Context:nil];
@@ -248,6 +252,7 @@ static RealTimeManager* realTimeManager;
                 }
                  [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC reloadData:plan];
                  [routeDetailVC ReloadLegWithNewData];
+                NIMLOG_PERF2(@"Realtime Parsing and Processing Finished At-->%f",[[NSDate date] timeIntervalSince1970]);
             }
         }
         else {
