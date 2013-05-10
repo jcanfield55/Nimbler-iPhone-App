@@ -44,6 +44,7 @@
     CLGeocoder* clGeocoder;  // IOS Geocoder object
     
     MKLocalSearchRequest *localSearchRequest; //MKLocalSearchRequest Object
+    MKCoordinateRegion mpRegion;  // Supported Region For MKLocalSearch
     
 }
 - (void)updateWithSelectedLocationIsFrom:(BOOL)isFrom selectedLocation:(Location *)selectedLocation oldSelectedLocation:(Location *)oldSelectedLocation;
@@ -91,7 +92,6 @@
         
         areLocationsChanged = YES;  // Force cache stale upon start-up so it gets properly loaded
         
-        
         // Set region For MKLocalSearch
         localSearchRequest = [[MKLocalSearchRequest alloc] init];
         CLLocationManager *locationManager;
@@ -101,8 +101,7 @@
         CLLocation *location = [locationManager location];
         [locationManager startUpdatingLocation];
         CLLocationCoordinate2D coordinate = [location coordinate];
-        MKCoordinateRegion mpRegion =  MKCoordinateRegionMakeWithDistance(coordinate,100000, 100000);
-        localSearchRequest.region = mpRegion;
+        mpRegion =  MKCoordinateRegionMakeWithDistance(coordinate,100000, 100000);
         
     }
 
@@ -276,7 +275,7 @@
 {
     LocationFromLocalSearch *locFromLocalSearch = [[LocationFromLocalSearch alloc] init];
     [locFromLocalSearch initWithPlacemark:placemark error:error];
-    [self setAreLocationsChanged:YES];
+    //[self setAreLocationsChanged:YES];
     return locFromLocalSearch;
 }
 
@@ -551,6 +550,7 @@
         // Perform a new search.
         
         localSearchRequest.naturalLanguageQuery = typedFromStr0;
+        localSearchRequest.region = mpRegion;
         
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         
@@ -624,6 +624,7 @@
         // Perform a new search.
         
         localSearchRequest.naturalLanguageQuery = typedToStr0;
+        localSearchRequest.region = mpRegion;
         
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         
@@ -664,6 +665,7 @@
             }
                 
             NIMLOG_PERF1(@"LocalSearch Count == %d",[localSearchToLocations count]);
+            
             sortedMatchingToLocations = localSearchToLocations;
             matchingToRowCount = [sortedMatchingToLocations count];
             areMatchingLocationsChanged = YES; 
