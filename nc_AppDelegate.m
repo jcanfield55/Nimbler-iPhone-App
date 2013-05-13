@@ -506,6 +506,7 @@ FeedBackForm *fbView;
     if(self.isToFromView){
         self.toLoc = locations.tempSelectedToLocation;
         self.fromLoc = locations.tempSelectedFromLocation;
+        locations.isLocationSelected = true;
         [toFromViewController setEditMode:NO_EDIT];
         toFromViewController.toTableVC.txtField.text = NULL_STRING;
         toFromViewController.fromTableVC.txtField.text = NULL_STRING;
