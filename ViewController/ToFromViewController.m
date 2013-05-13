@@ -1436,7 +1436,6 @@ UIImage *imageDetailDisclosure;
             }
         }
         if(!isAlreadyPushed){
-            if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
                 CATransition *animation = [CATransition animation];
                 [animation setDuration:0.3];
                 [animation setType:kCATransitionPush];
@@ -1445,10 +1444,6 @@ UIImage *imageDetailDisclosure;
                 [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
                 [[self.navigationController.view layer] addAnimation:animation forKey:nil];
                 [[self navigationController] pushViewController:locationPickerVC animated:NO];
-            }
-            else{
-                [[self navigationController] pushViewController:locationPickerVC animated:YES];
-            }
         }
     }
     @catch (NSException *exception) {

@@ -207,7 +207,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 }
 
 -(void)popOutToNimbler{
-    
     for(int i=0;i<[[plan itineraries] count];i++){
         Itinerary *iti = [[[plan itineraries] allObjects]  objectAtIndex:i];
         if(iti.isRealTimeItinerary){
@@ -216,15 +215,12 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         if(iti.hideItinerary){
             iti.hideItinerary = false;
         }
-    }
-    
+    }    
     for(PlanRequestChunk *reqChunks in [plan requestChunks]){
         if(reqChunks.type == [NSNumber numberWithInt:2]){
             [[nc_AppDelegate sharedInstance].managedObjectContext deleteObject:reqChunks];
         }
     }
-    saveContext([nc_AppDelegate sharedInstance].managedObjectContext);
-    
     CATransition *animation = [CATransition animation];
     [animation setDuration:0.3];
     [animation setType:kCATransitionPush];

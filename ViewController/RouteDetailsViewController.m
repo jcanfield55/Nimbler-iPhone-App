@@ -603,8 +603,7 @@ NSUserDefaults *prefs;
     [nc_AppDelegate sharedInstance].FBUniqueId = legId;
 }
 
--(void)popOutToItinerary
-{
+-(void)popOutToItinerary{
     if(timer){
         [timer invalidate];
         timer = nil;

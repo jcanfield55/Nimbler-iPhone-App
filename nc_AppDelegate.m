@@ -519,10 +519,10 @@ FeedBackForm *fbView;
     [[NSUserDefaults standardUserDefaults] setInteger:rxCustomTabBar.selectedIndex forKey:LAST_SELECTED_TAB_INDEX];
     // Fixed DE-231
     if(self.toLoc.formattedAddress){
-        [[NSUserDefaults standardUserDefaults]setObject:locations.tempSelectedToLocation.formattedAddress forKey:LAST_TO_LOCATION];
+        [[NSUserDefaults standardUserDefaults]setObject:self.toLoc.formattedAddress forKey:LAST_TO_LOCATION];
     }
     if(self.fromLoc.formattedAddress){
-        [[NSUserDefaults standardUserDefaults]setObject:locations.tempSelectedFromLocation.formattedAddress forKey:LAST_FROM_LOCATION];
+        [[NSUserDefaults standardUserDefaults]setObject:self.fromLoc.formattedAddress forKey:LAST_FROM_LOCATION];
     }
     [[NSUserDefaults standardUserDefaults] synchronize];
     

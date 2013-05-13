@@ -323,8 +323,13 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
         [mainTable reloadData];
     }
     else{
-        //[[self.navigationController.view layer] addAnimation:animation forKey:nil];
-        [[self navigationController] popViewControllerAnimated:YES];
+        CATransition *animation = [CATransition animation];
+        [animation setDuration:0.3];
+        [animation setType:kCATransitionPush];
+        [animation setSubtype:kCATransitionFromLeft];
+        [animation setRemovedOnCompletion:YES];
+        [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+        [[self navigationController] popViewControllerAnimated:NO];
     }
 }
 
