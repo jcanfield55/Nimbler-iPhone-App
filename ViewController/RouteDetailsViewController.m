@@ -208,7 +208,7 @@ NSUserDefaults *prefs;
 -(void) progressViewProgress {
     count--;
     [lblNextRealtime setText:[NSString stringWithFormat:@"%@: %@ ",TIME_TO_NEXT_REFRESH,[self returnFormattedStringFromSeconds:count]]];
-    if(count == 0){
+    if(count < 0){
         if(timer){
             [timer invalidate];
             timer = nil;
@@ -220,7 +220,6 @@ NSUserDefaults *prefs;
 - (void)setItinerary:(Itinerary *)i0
 {
     @try {
-        count = TIMER_DEFAULT_VALUE;
             [[NSUserDefaults standardUserDefaults] setBool:self.lblNextRealtime.isHidden forKey:PREFS_IS_LABEL_HIDDEN];
             [[NSUserDefaults standardUserDefaults] synchronize];
         itinerary = i0;

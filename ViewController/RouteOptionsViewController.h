@@ -26,6 +26,7 @@ NewPlanAvailableDelegate>
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, strong) NSTimer *timerGettingRealDataByItinerary;
 @property (nonatomic, strong) NSTimer *timerRealtime;
+@property (nonatomic) int remainingCount;
 
 
 

@@ -24,6 +24,7 @@
 #import "RealTimeManager.h"
 
 #define IDENTIFIER_CELL         @"UIRouteOptionsViewCell"
+#define TIMER_DEFAULT_VALUE  119
 
 @interface RouteOptionsViewController()
 {
@@ -49,6 +50,7 @@
 @synthesize activityIndicator;
 @synthesize timerGettingRealDataByItinerary;
 @synthesize timerRealtime;
+@synthesize remainingCount;
 
 Itinerary * itinerary;
 NSString *itinararyId;
@@ -115,6 +117,18 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     }
 }
 
+- (void) decrementCounter{
+    if(remainingCount == 0){
+        remainingCount = TIMER_DEFAULT_VALUE;
+        [self requestServerForRealTime];
+        if(self.timerGettingRealDataByItinerary){
+            [self.timerGettingRealDataByItinerary invalidate];
+            self.timerGettingRealDataByItinerary = nil;
+        }
+        self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(decrementCounter) userInfo:nil repeats: YES];
+    }
+    remainingCount = remainingCount - 1;
+}
 // Method used to set the plan 
 -(void)newPlanAvailable:(Plan *)newPlan
              fromObject:(id)referringObject
@@ -162,8 +176,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
             [self.timerRealtime invalidate];
             self.timerRealtime = nil;
         }
+        remainingCount = TIMER_DEFAULT_VALUE;
         self.timerRealtime =  [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: NO];
-        self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
+        self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(decrementCounter) userInfo:nil repeats: YES];
     }
 }
 
@@ -558,6 +573,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
             }
         }
         if(!isAlreadyPushed){
+            routeDetailsVC.count = remainingCount;
             [routeDetailsVC setItinerary:itinerary];
             if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
                 CATransition *animation = [CATransition animation];
