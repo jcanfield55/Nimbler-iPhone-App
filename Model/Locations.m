@@ -323,7 +323,7 @@
         }
     }
     areMatchingLocationsChanged = YES;
-    [self setAreLocationsChanged:YES];
+    [self setAreLocationsChanged:NO];
     return loc;
 }
 

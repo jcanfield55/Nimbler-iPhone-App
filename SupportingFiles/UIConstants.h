@@ -64,7 +64,8 @@
 
 
 // RouteDetailsViewController & LegMapViewController
-#define ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH 279 // Obtained thru trial & error, DE-230 fix
+//#define ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH 279 // Obtained thru trial & error, DE-230 fix
+#define ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH 270 // Obtained thru trial & error, DE-315 fix
 #define ROUTE_LEGMAP_X_ORIGIN 5
 #define ROUTE_LEGMAP_Y_ORIGIN 5
 #define ROUTE_LEGMAP_WIDTH 309
