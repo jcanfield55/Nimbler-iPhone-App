@@ -183,6 +183,7 @@ static RealTimeManager* realTimeManager;
     for(int i=0;i<[[plan sortedItineraries] count];i++){
         Itinerary *itinerary = [[plan sortedItineraries] objectAtIndex:i];
         if(itinerary.isRealTimeItinerary && [itinerary.tripIdhexString isEqualToString:detailViewitinerary.tripIdhexString]){
+            [nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC.count = [nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.remainingCount;
             [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC newItineraryAvailable:itinerary status:ITINERARY_STATUS_OK ItineraryNumber:itineraryNumber];
             [plan deleteItinerary:detailViewitinerary];
             [plan prepareSortedItinerariesWithMatchesForDate:originalTripDate
