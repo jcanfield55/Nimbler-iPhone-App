@@ -149,8 +149,9 @@ FeedBackForm *fbView;
     return YES;    // If Automated testing with alternative persistent store, skip NC_AppDelegate altogether and do all setup in test area
 #endif
     
-    
-    [self unzipZipFileToApplicationDocumentDirectory];    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
+    NIMLOG_EVENT1(@"nc_AppDelegate didFinishLaunchingWithOptions started");
+    [self unzipZipFileToApplicationDocumentDirectory];
+    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
 
     prefs = [NSUserDefaults standardUserDefaults];
     [UserPreferance userPreferance];  // Saves default user preferences to server if needed
@@ -1169,7 +1170,6 @@ FeedBackForm *fbView;
         }
         NSString *isUrgent = [userInfo valueForKey:@"isUrgent"];
         NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
-        NIMLOG_EVENT1(@"Remote Notification Sound: %@",sound);
         NSString *badge = [[userInfo valueForKey:@"aps"] valueForKey:@"badge"];
         prefs = [NSUserDefaults standardUserDefaults];
         [prefs setObject:badge forKey:TWEET_COUNT];
