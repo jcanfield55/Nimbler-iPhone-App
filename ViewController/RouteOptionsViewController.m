@@ -88,6 +88,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    if(plan){
+      self.timerRealtime =  [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: NO];  
+    }
     logEvent(FLURRY_ROUTE_OPTIONS_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
     [nc_AppDelegate sharedInstance].isRouteOptionView = true;
     // Enforce height of main table

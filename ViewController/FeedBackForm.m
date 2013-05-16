@@ -80,10 +80,26 @@ NSUserDefaults *prefs;
     // Release any cached data, images, etc that aren't in use.
 }
 
+// Part Of DE-318 Fix
+// Will resign first responder if textview or textfield become first responder.
+- (void)handleSingleTap{
+    if([txtFeedBack becomeFirstResponder]){
+        [txtFeedBack resignFirstResponder];
+    }
+    if([txtEmailId becomeFirstResponder]){
+        [txtEmailId resignFirstResponder];
+    }
+}
+
 #pragma mark - View lifecycle
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    // Part Of DE-318 Fix
+    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap)];
+    [singleTap setNumberOfTapsRequired:1];
+    [self.view addGestureRecognizer:singleTap];
+    
     self.txtFeedBack.delegate = self;
     self.txtEmailId.delegate = self;
     if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {

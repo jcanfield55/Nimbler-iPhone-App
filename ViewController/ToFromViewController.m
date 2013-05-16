@@ -1704,7 +1704,7 @@ UIImage *imageDetailDisclosure;
                 _rect.size.height = 42;
             }
             else{
-               _rect.size.height = 42; 
+               _rect.size.height = 42;
             }
             [view setFrame:_rect];
             

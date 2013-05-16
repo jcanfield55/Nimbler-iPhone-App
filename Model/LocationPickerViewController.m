@@ -329,6 +329,7 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
         [animation setSubtype:kCATransitionFromLeft];
         [animation setRemovedOnCompletion:YES];
         [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+        [[self.navigationController.view layer] addAnimation:animation forKey:nil];
         [[self navigationController] popViewControllerAnimated:NO];
     }
 }

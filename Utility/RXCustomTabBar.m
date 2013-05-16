@@ -108,12 +108,12 @@
     self.btn3.accessibilityLabel = SETTINGS_BUTTON;
     
         if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-            btn3.frame = CGRectMake(NAVIGATION_ITEM3_XPOS, NAVIGATION_ITEM_YPOS_4INCH, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT_4INCH);
+            btn3.frame = CGRectMake(NAVIGATION_ITEM3_XPOS, NAVIGATION_ITEM_YPOS_4INCH, NAVIGATION_ITEM_WIDTH-0.8, NAVIGATION_ITEM_HEIGHT_4INCH);
             btnImage = [UIImage imageNamed:@""];
             btnImageSelected = [UIImage imageNamed:@"img_selSetting@2x.png"];
         }
         else{
-            btn3.frame = CGRectMake(NAVIGATION_ITEM3_XPOS, NAVIGATION_ITEM_YPOS, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT);
+            btn3.frame = CGRectMake(NAVIGATION_ITEM3_XPOS, NAVIGATION_ITEM_YPOS, NAVIGATION_ITEM_WIDTH-0.8, NAVIGATION_ITEM_HEIGHT);
             btnImage = [UIImage imageNamed:@""];
             btnImageSelected = [UIImage imageNamed:@"img_selSetting.png"];
         }

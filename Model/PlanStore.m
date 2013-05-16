@@ -836,9 +836,6 @@
 // Part Of DE-288 Fixed
 - (void)clearCache{
     @try {
-        Plan *plan = [[[[nc_AppDelegate sharedInstance] toFromViewController] routeOptionsVC] plan];
-        NSString *strPlanID = [plan planId];
-        
         NSError *error;
         NSManagedObjectContext * context = [self managedObjectContext];
         NSFetchRequest * fetchPlanRequestChunk = [[NSFetchRequest alloc] init];
@@ -851,14 +848,12 @@
                 [context deleteObject:planRequestChunks];
                 continue;
             }
-            if(![strPlanID isEqualToString:[plans planId]]){
                 for(Itinerary *itinerary in [plans itineraries]){
                     if([itinerary containsUnscheduledLeg]){
                        [context deleteObject:itinerary];
                     }
                 }
-                [context deleteObject:planRequestChunks];
-            }
+            [context deleteObject:planRequestChunks];
         }
         [context save:&error];
         if(error){
@@ -873,9 +868,6 @@
 // Part Of DE-288 Fixed
 - (void)clearCacheForBikePref{
     @try {
-        Plan *plan = [[[[nc_AppDelegate sharedInstance] toFromViewController] routeOptionsVC] plan];
-        NSString *strPlanID = [plan planId];
-        
         NSError *error;
         NSManagedObjectContext * context = [self managedObjectContext];
         NSFetchRequest * fetchPlanRequestChunk = [[NSFetchRequest alloc] init];
@@ -888,14 +880,12 @@
                 [context deleteObject:planRequestChunks];
                 continue;
             }
-            if(![strPlanID isEqualToString:[plans planId]]){
                 for(Itinerary *itinerary in [plans itineraries]){
                     if([itinerary containsBikeLeg]){
                         [context deleteObject:itinerary];
                     }
                 }
                 [context deleteObject:planRequestChunks];
-            }
         }
         [context save:&error];
         if(error){

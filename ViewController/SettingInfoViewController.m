@@ -278,6 +278,12 @@ UIImage *imageDetailDisclosure;
 // Slider callback method for new settings page
 -(IBAction)sliderWalkDistance:(UISlider *)sender
 {
+    
+    ToFromViewController *toFromVc = [nc_AppDelegate sharedInstance].toFromViewController;
+    if(![nc_AppDelegate sharedInstance].isToFromView){
+       [toFromVc.navigationController popToRootViewControllerAnimated:YES]; 
+    }
+    
     [sliderMaximumWalkDistance setValue:sliderMaximumWalkDistance.value];
     [sliderMaximumWalkDistance setSelected:YES];
     [UserPreferance userPreferance].walkDistance = sliderMaximumWalkDistance.value;

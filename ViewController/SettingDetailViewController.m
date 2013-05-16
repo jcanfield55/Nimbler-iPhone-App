@@ -205,10 +205,14 @@
         userPrefs.fastVsFlat = sliderPreferenceFastVsFlat.value;
     }
     
-    if(![lblCurrentBikeDistance.text isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_MAX_BIKE_DISTANCE]])
-    {
+    if(![lblCurrentBikeDistance.text isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_MAX_BIKE_DISTANCE]] || sliderPreferenceFastVsSafe.value != [[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_BIKE_FAST_VS_SAFE] floatValue] || sliderPreferenceFastVsFlat.value != [[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_BIKE_FAST_VS_FLAT] floatValue]){
+        ToFromViewController *toFromVc = [nc_AppDelegate sharedInstance].toFromViewController;
+        if(![nc_AppDelegate sharedInstance].isToFromView){
+            [toFromVc.navigationController popToRootViewControllerAnimated:YES];
+        }
+        
         PlanStore *planStore = [[nc_AppDelegate sharedInstance] planStore];
-        [planStore  clearCacheForBikePref];
+        [planStore  performSelector:@selector(clearCacheForBikePref) withObject:nil afterDelay:0.5];
     }
     
     [settingDetailDelegate updateSetting];
