@@ -79,7 +79,7 @@
     }
 
     // Set up the planStore
-    planStore = [[PlanStoreForRealTimeServerStubTest alloc] initWithManagedObjectContext:managedObjectContext rkPlanMgr:rkPlanMgr];
+    planStore = [[PlanStoreForRealTimeServerStubTest alloc] initWithManagedObjectContext:managedObjectContext rkPlanMgr:rkPlanMgr rkTpClient:rkTpClient];
     [nc_AppDelegate sharedInstance].planStore = planStore;
     
     // Set up KeyObjectStore
@@ -645,7 +645,7 @@
     // Use RealTime Data from Data.json File and generate realtime itineraries.
     //
     [[NSUserDefaults standardUserDefaults] setObject:@"data.json" forKey:DEVICE_TOKEN];
-    [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
+    [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan PlanRequestParameters:parameters];
     STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result=[RealTimeManager realTimeManager].loadedRealTimeData; return result;}], @"Timed out waiting for RealTimeData");
     [gtfsParser generateItinerariesFromRealTime:plan TripDate:tripDate Context:managedObjectContext];
     
@@ -714,7 +714,7 @@
     
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
     
-    [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
+    [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan PlanRequestParameters:parameters];
     [RealTimeManager realTimeManager].loadedRealTimeData = false;
     STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result=[RealTimeManager realTimeManager].loadedRealTimeData; return result;}], @"Timed out waiting for RealTimeData");
     [gtfsParser generateItinerariesFromRealTime:plan TripDate:tripDate Context:managedObjectContext];
@@ -793,7 +793,7 @@
     
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
     
-    [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan tripDate:tripDate];
+    [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan PlanRequestParameters:parameters];
     [RealTimeManager realTimeManager].loadedRealTimeData = false;
     STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result=[RealTimeManager realTimeManager].loadedRealTimeData; return result;}], @"Timed out waiting for RealTimeData");
     [gtfsParser generateItinerariesFromRealTime:plan TripDate:tripDate Context:managedObjectContext];

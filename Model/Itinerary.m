@@ -63,6 +63,8 @@ NSArray *sortedByStartTimeOnly(NSSet* itinerarySet)
 @synthesize tripIdhexString;
 @synthesize maximumPredictionDate;
 
+static NSDate* midnightTimeOnly;  // represents 24:00 for a timeOnly time
+
 - (void)awakeFromInsert {
     [super awakeFromInsert];
     
@@ -668,6 +670,16 @@ NSArray *sortedByStartTimeOnly(NSSet* itinerarySet)
 - (BOOL)doAllServiceDaysMatchDate:(NSDate *)requestDate
 {
     TransitCalendar* transitCalendar = [TransitCalendar transitCalendar];
+    if (!midnightTimeOnly) {
+        NSCalendar* currentCalendar = [NSCalendar currentCalendar];
+        NSDateComponents* midnightTimeComponents = [[NSDateComponents alloc] init];
+        [midnightTimeComponents setDay:2];
+        midnightTimeOnly = [currentCalendar dateFromComponents:midnightTimeComponents];
+    }
+    if ([self.startTimeOnly compare:midnightTimeOnly] != NSOrderedAscending) {
+        // handle past midnight case by adjusting requestDate to be a day later
+        requestDate = [requestDate dateByAddingTimeInterval:(24*60*60)];  // add one day
+    }
     for (Leg* leg in [self sortedLegs]) {
         NSString* agencyId = [leg agencyId];
         if (agencyId && [agencyId length]>0 &&

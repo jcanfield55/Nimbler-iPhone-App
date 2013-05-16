@@ -382,7 +382,7 @@
                 plan.fromLocation = fromLoc;
             }
             // Part Of DE-292 Fix
-            [plan initializeNewPlanFromOTPWithRequestDate:[planRequestParameters originalTripDate]
+            [plan initializeNewPlanFromOTPWithRequestDate:[planRequestParameters thisRequestTripDate]
                                            departOrArrive:[planRequestParameters departOrArrive]
                                      routeExcludeSettings:planRequestParameters.routeExcludeSettingsUsedForOTPCall];
             // Make sure that we still have itineraries (ie it wasn't just overnight itineraries)
