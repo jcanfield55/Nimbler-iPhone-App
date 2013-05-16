@@ -315,4 +315,24 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
         
     return newAddrDict;
 }
+
+- (BOOL)isEqual:(LocationFromLocalSearch*)tempLocation {
+    if(!tempLocation)
+        return NO;
+    if(!self.formattedAddress || !tempLocation.formattedAddress)
+        return NO;
+    if ([self.formattedAddress isEqualToString:tempLocation.formattedAddress])
+        return YES;
+    return NO;
+}
+
+- (NSUInteger)hash {
+    NSUInteger prime = 31;
+    NSUInteger result = 1;
+    if(!self.formattedAddress)
+        result = prime * result + 0;
+    else
+        result = prime * result + [self.formattedAddress hash];
+    return result;
+}
 @end

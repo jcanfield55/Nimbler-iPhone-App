@@ -581,14 +581,16 @@
              
              if ([[[nc_AppDelegate sharedInstance].toFromViewController supportedRegion] isInRegionLat:mapItem.placemark.location.coordinate.latitude Lng:mapItem.placemark.location.coordinate.longitude]) {
                      LocationFromLocalSearch *loc = [self newLocationFromIOSWithPlacemark:mapItem.placemark error:error IsLocalSearchResult:true];
-                
-                         NSArray *formattedAdd = [loc.formattedAddress componentsSeparatedByString:@","];
-                         if(![[formattedAdd objectAtIndex:0] isEqualToString:mapItem.name]){
-                             loc.placeName = mapItem.name;
-                         }
-                         
+                 
+                     NSArray *formattedAdd = [loc.formattedAddress componentsSeparatedByString:@","];
+                     if(![[formattedAdd objectAtIndex:0] isEqualToString:mapItem.name]){
+                         loc.placeName = mapItem.name;
+                     }
+                     if(![localSearchFromLocations containsObject:loc]){
                          [localSearchFromLocations addObject:loc];
-             } 
+                     }
+                     
+             }
              
          }
           sortedMatchingFromLocations = localSearchFromLocations;
@@ -660,7 +662,10 @@
                     if(![[formattedAdd objectAtIndex:0] isEqualToString:mapItem.name]){
                         loc.placeName = mapItem.name;
                     }
-                    [localSearchToLocations addObject:loc];
+                    if(![localSearchToLocations containsObject:loc]){
+                        [localSearchToLocations addObject:loc];
+                    }
+                    
                   }
             }
                 
@@ -1343,7 +1348,18 @@
         // Go through the returned objects and see which are in supportedRegion
         // DE18 new fix
         NSMutableArray* validLocations = [NSMutableArray arrayWithCapacity:[placemarks count]];
-        for (CLPlacemark* placemark in placemarks) {
+        NSMutableArray *placemarkArray = [[NSMutableArray alloc] initWithArray:placemarks];
+        for (int i=0;i<[placemarkArray count];i++) {
+            for(int j=i+1;j<[placemarkArray count];i++){
+                MKPlacemark *placemark1 = [placemarkArray objectAtIndex:i];
+                MKPlacemark *placemark2 = [placemarkArray objectAtIndex:j];
+                if([placemark1.addressDictionary isEqual:placemark2.addressDictionary]){
+                    [placemarkArray removeObject:placemark1];
+                }
+                
+            }
+        }
+        for (CLPlacemark* placemark in placemarkArray) {
             LocationFromIOS* loc = [self newLocationFromIOSWithPlacemark:placemark error:error];
             if ([[parameters supportedRegion] isInRegionLat:[loc latFloat] Lng:[loc lngFloat]]) {
                 [validLocations addObject:loc];
