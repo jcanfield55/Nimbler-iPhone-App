@@ -436,6 +436,7 @@ NSString *strStreet2 = @"street ";
 // Delegate for when complete text entered into the UITextField
 - (IBAction)textSubmitted:(id)sender forEvent:(UIEvent *)event
 {
+    locations.isLocationSelected = true; 
     rawAddress = [sender text];
     
     if (rawAddress == nil) {
