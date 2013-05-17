@@ -158,7 +158,6 @@ static RealTimeManager* realTimeManager;
                 RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
                 loadedRealTimeData = true;
                 id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
-                NIMLOG_PERF2(@"Realtime Response Arrives At-->%f",[[NSDate date] timeIntervalSince1970]);
                 [routeOptionsVC setIsReloadRealData:false];
                 [self setLiveFeed:res];
             }

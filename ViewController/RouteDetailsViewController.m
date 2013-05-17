@@ -245,7 +245,7 @@ NSUserDefaults *prefs;
         
         BOOL previousStatus = [[NSUserDefaults standardUserDefaults] boolForKey:PREFS_IS_LABEL_HIDDEN];
         if(previousStatus && lblNextRealtime.isHidden){
-            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y,IPHONE_SCREEM_WIDTH,mainTable.frame.size.height+self.lblNextRealtime.frame.size.height)];
+            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y,IPHONE_SCREEM_WIDTH,mainTable.frame.size.height)];
         }
         else if(!previousStatus && lblNextRealtime.isHidden){
             [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y - self.lblNextRealtime.frame.size.height,IPHONE_SCREEM_WIDTH,mainTable.frame.size.height+self.lblNextRealtime.frame.size.height)];

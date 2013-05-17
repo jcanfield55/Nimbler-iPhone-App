@@ -11,6 +11,8 @@
 #import "UserPreferance.h"
 #import "UtilityFunctions.h"
 #import "LocalConstants.h"
+#import "RouteExcludeSettings.h"
+#import "RouteExcludeSetting.h"
 
 #define SETTING_TITLE       @"App Settings"
 #define SETTING_ALERT_MSG   @"Updating your settings \n Please wait..."
@@ -279,9 +281,13 @@ UIImage *imageDetailDisclosure;
 -(IBAction)sliderWalkDistance:(UISlider *)sender
 {
     
-    ToFromViewController *toFromVc = [nc_AppDelegate sharedInstance].toFromViewController;
-    if(![nc_AppDelegate sharedInstance].isToFromView){
-       [toFromVc.navigationController popToRootViewControllerAnimated:YES]; 
+    RouteExcludeSettings *excludesettings = [RouteExcludeSettings latestUserSettings];
+    IncludeExcludeSetting setting = [excludesettings settingForKey:BIKE_BUTTON];
+    if(setting == SETTING_EXCLUDE_ROUTE){
+        ToFromViewController *toFromVc = [nc_AppDelegate sharedInstance].toFromViewController;
+        if(![nc_AppDelegate sharedInstance].isToFromView){
+            [toFromVc.navigationController popToRootViewControllerAnimated:YES];
+        }
     }
     
     [sliderMaximumWalkDistance setValue:sliderMaximumWalkDistance.value];
