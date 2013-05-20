@@ -287,7 +287,7 @@
     [loc initWithPlacemark:localSearchLocation.placemark error:error];
     NSMutableArray *localSearchArr;
     if(isFrom){
-        if([tempSelectedFromLocation.formattedAddress isEqualToString:loc.formattedAddress]){
+        if([tempSelectedFromLocation.lat doubleValue] == [loc.lat doubleValue] && [tempSelectedFromLocation.lng doubleValue] == [loc.lng doubleValue]){
             [managedObjectContext deleteObject:loc];
             return (LocationFromIOS *)tempSelectedFromLocation;
         }
@@ -298,14 +298,14 @@
         
         for(int i=0;i<[sortedFromLocations count];i++){
             Location *locForRemoveObj = [sortedFromLocations objectAtIndex:i];
-            if([locForRemoveObj.formattedAddress isEqualToString:loc.formattedAddress]){
+            if([locForRemoveObj.lat doubleValue] == [loc.lat doubleValue] && [locForRemoveObj.lng doubleValue] == [loc.lng doubleValue]){
                 [managedObjectContext deleteObject:loc];
                 return (LocationFromIOS *)locForRemoveObj;
             }
         }
     }
     else{
-        if([tempSelectedToLocation.formattedAddress isEqualToString:loc.formattedAddress]){
+        if([tempSelectedToLocation.lat doubleValue] == [loc.lat doubleValue] && [tempSelectedToLocation.lng doubleValue] == [loc.lng doubleValue]){
             [managedObjectContext deleteObject:loc];
             return (LocationFromIOS *)tempSelectedToLocation;
         }
@@ -316,7 +316,7 @@
         
         for(int i=0;i<[sortedToLocations count];i++){
             Location *locForRemoveObj = [sortedToLocations objectAtIndex:i];
-            if([locForRemoveObj.formattedAddress isEqualToString:loc.formattedAddress]){
+            if([locForRemoveObj.lat doubleValue] == [loc.lat doubleValue] && [locForRemoveObj.lng doubleValue] == [loc.lng doubleValue]){
                 [managedObjectContext deleteObject:loc];
                 return (LocationFromIOS *)locForRemoveObj;
             }
