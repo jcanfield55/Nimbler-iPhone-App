@@ -291,11 +291,15 @@
 }
 
 // Remove itin0 from the plan and from Core Data
-- (void)deleteItinerary:(Itinerary *)itin0
-{
-    [self removeItinerariesObject:itin0];
-    [[self managedObjectContext] deleteObject:itin0];
-    [self setSortedItineraries:nil];  // Resort itineraries
+- (void)deleteItinerary:(Itinerary *)itin0{
+    // DE-320 Fixed
+    // We will not remove itinerary if itinerary is displayed in routedetail page
+    Itinerary *detailViewitinerary = [nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC.itinerary;
+    if(itin0 != detailViewitinerary){
+        [self removeItinerariesObject:itin0];
+        [[self managedObjectContext] deleteObject:itin0];
+        [self setSortedItineraries:nil];  // Resort itineraries
+    }
 }
 
 // Add itin0 to the plan

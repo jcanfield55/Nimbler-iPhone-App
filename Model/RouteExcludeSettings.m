@@ -362,6 +362,7 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
 - (BOOL) itineraryContainsWalkAndBike:(NSSet *)legs{
     BOOL containWalk = false;
     BOOL containBike = false;
+    BOOL needToIncludeLeg = true;
     for(Leg *leg in legs){
         if(leg.isBike){
             containBike = true;
@@ -369,8 +370,26 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
         if(leg.isWalk){
             containWalk = true;
         }
+        if (returnShortAgencyName(leg.agencyName)) {
+            NSString *legKey;
+            NSString* handling = [[RouteExcludeSettings agencyButtonHandlingDictionary] objectForKey:returnShortAgencyName(leg.agencyName)];
+            if (handling) {
+                if ([handling isEqualToString:EXCLUSION_BY_AGENCY]) {
+                    legKey = returnShortAgencyName(leg.agencyName);
+                } else {  // EXCLUSION_BY_RAIL_BUS
+                    NSString *railOrBus = (leg.isBus ? @"Bus" : @"Rail");
+                    if ([leg.agencyName isEqualToString:SFMUNI_AGENCY_NAME]) {
+                        railOrBus = (leg.isBus ? @"Bus" : @"Tram");
+                    }
+                    legKey = [NSString stringWithFormat:@"%@ %@", returnShortAgencyName(leg.agencyName), railOrBus];
+                }
+                if ([self settingForKey:legKey] == SETTING_EXCLUDE_ROUTE) {
+                    needToIncludeLeg = false;
+                }
+            }
+        }
     }
-    if(containBike && containWalk && [self settingForKey:BIKE_BUTTON]==SETTING_INCLUDE_ROUTE)
+    if(containBike && containWalk && [self settingForKey:BIKE_BUTTON]==SETTING_INCLUDE_ROUTE && needToIncludeLeg)
         return true;
     else
         return false;

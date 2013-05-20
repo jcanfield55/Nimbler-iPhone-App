@@ -284,39 +284,19 @@ NSString *strStreet2 = @"street ";
     Location *loc = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]] 
                                         isFrom:isFrom];
     // if There is PlaceName available for location
-    if([loc isKindOfClass:[LocationFromLocalSearch class ]])
-    {
-        LocationFromLocalSearch *locFromIOS = (LocationFromLocalSearch *)loc;
-        
-        if(locFromIOS.placeName)
-        {
+    if([loc isKindOfClass:[LocationFromLocalSearch class ]]){
             cell.textLabel.numberOfLines = 2;
             cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
-            [[cell textLabel] setText:[NSString stringWithFormat:@"%@\n%@",locFromIOS.placeName,[loc shortFormattedAddress]]];
-        }
-        else
-        {
             [[cell textLabel] setText:[loc shortFormattedAddress]];
-        }
         [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
         cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
         [cell setAccessoryView:nil];
     }
-    else
-    {
-        if([loc isKindOfClass:[LocationFromIOS class ]])
-        {
-            LocationFromIOS *locFromIOS = (LocationFromIOS *)loc;
-            
-            if(locFromIOS.placeName){
+    else{
+        if([loc isKindOfClass:[LocationFromIOS class ]]){
                 cell.textLabel.numberOfLines = 2;
                 cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
-                [[cell textLabel] setText:[NSString stringWithFormat:@"%@\n%@",locFromIOS.placeName,[loc shortFormattedAddress]]];
-            }
-            else
-            {
                 [[cell textLabel] setText:[loc shortFormattedAddress]];
-            }
         }
         else{
              [[cell textLabel] setText:[loc shortFormattedAddress]];

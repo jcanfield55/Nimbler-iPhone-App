@@ -283,8 +283,9 @@
 -(LocationFromIOS *)selectedLocationOfLocalSearchWithLocation:(LocationFromLocalSearch *)localSearchLocation IsFrom:(BOOL)isFrom error:(NSError *)error
 {
     LocationFromIOS *loc = [NSEntityDescription insertNewObjectForEntityForName:@"LocationFromIOS" inManagedObjectContext:managedObjectContext];
-    loc.placeName = localSearchLocation.placeName;
+    //loc.placeName = localSearchLocation.placeName;
     [loc initWithPlacemark:localSearchLocation.placemark error:error];
+    loc.formattedAddress = localSearchLocation.formattedAddress;
     NSMutableArray *localSearchArr;
     if(isFrom){
         if([tempSelectedFromLocation.formattedAddress isEqualToString:loc.formattedAddress]){
@@ -584,7 +585,8 @@
                  
                      NSArray *formattedAdd = [loc.formattedAddress componentsSeparatedByString:@","];
                      if(![[formattedAdd objectAtIndex:0] isEqualToString:mapItem.name]){
-                         loc.placeName = mapItem.name;
+                         //loc.placeName = mapItem.name;
+                         loc.formattedAddress = [NSString stringWithFormat:@"%@\n%@",mapItem.name,loc.formattedAddress];
                      }
                      if(![localSearchFromLocations containsObject:loc]){
                          [localSearchFromLocations addObject:loc];
@@ -660,7 +662,8 @@
                     
                     NSArray *formattedAdd = [loc.formattedAddress componentsSeparatedByString:@","];
                     if(![[formattedAdd objectAtIndex:0] isEqualToString:mapItem.name]){
-                        loc.placeName = mapItem.name;
+                        //loc.placeName = mapItem.name;
+                        loc.formattedAddress = [NSString stringWithFormat:@"%@\n%@",mapItem.name,loc.formattedAddress];
                     }
                     if(![localSearchToLocations containsObject:loc]){
                         [localSearchToLocations addObject:loc];

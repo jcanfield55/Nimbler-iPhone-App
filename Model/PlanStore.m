@@ -417,9 +417,6 @@
                                             routeExcludeSettings:[RouteExcludeSettings latestUserSettings] // use latest settings in case something changed
                                          generateGtfsItineraries:NO
                                            removeNonOptimalItins:YES]) {
-                Itinerary *itinerary = [[plan sortedItineraries] lastObject];
-                NIMLOG_PERF2(@"Last Itinerary Start Time-->%@",itinerary.startTime);
-                NIMLOG_PERF2(@"Last Itinerary End Time-->%@",itinerary.endTime);
                 MoreItineraryStatus moreItinStatus = [self requestMoreItinerariesIfNeeded:plan parameters:planRequestParameters];
                 if(moreItinStatus == NO_MORE_ITINERARIES_REQUESTED){
                     planRequestParameters.needToRequestRealtime = true;
