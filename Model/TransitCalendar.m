@@ -134,11 +134,11 @@ static NSDateFormatter* dateOnlyFormatter;  // dateFormatter with pattern @"YYYM
                 // Note:- Uncomment this line when using seed Database
            #if GENERATING_SEED_DATABASE
                 [[nc_AppDelegate sharedInstance].gtfsParser removeAllTripsAndStopTimesData];
-                [[nc_AppDelegate sharedInstance].gtfsParser requestAgencyDataFromServer];
+                [[nc_AppDelegate sharedInstance].gtfsParser requestStopsDataFromServer];
            #endif
                 if(calendarByDateByAgency){
                     [[nc_AppDelegate sharedInstance].gtfsParser removeAllTripsAndStopTimesData];
-                    [[nc_AppDelegate sharedInstance].gtfsParser requestAgencyDataFromServer];
+                    [[nc_AppDelegate sharedInstance].gtfsParser requestStopsDataFromServer];
                 }
                 calendarByDateByAgency = tempResponseDictionary;
                 KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];

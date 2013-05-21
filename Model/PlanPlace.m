@@ -27,7 +27,7 @@
     if (tpt==OTP_PLANNER) {
         [mapping mapKeyPath:@"name" toAttribute:@"name"];
         [mapping mapKeyPath:@"stopId.id" toAttribute:@"stopId"];
-        [mapping mapKeyPath:@"stopId.agencyID" toAttribute:@"stopAgencyId"];
+        [mapping mapKeyPath:@"stopId.agencyId" toAttribute:@"stopAgencyId"];
         [mapping mapKeyPath:@"lat" toAttribute:@"lat"];
         [mapping mapKeyPath:@"lon" toAttribute:@"lng"];
         [mapping mapKeyPath:@"arrival" toAttribute:@"arrival"];

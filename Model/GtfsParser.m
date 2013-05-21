@@ -17,6 +17,7 @@
 #import "GtfsRoutes.h"
 #import "GtfsTempItinerary.h"
 #import "RealTimeManager.h"
+#import "Agencies.h"
 
 @interface GtfsParser ()
 {
@@ -754,7 +755,7 @@
     serverCallSoFar = serverCallSoFar + 1;
     [dictServerCallSoFar setObject:[NSNumber numberWithInt:serverCallSoFar] forKey:GTFS_STOPS_COUNTER];
     @try {
-        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"stops",ENTITY,@"1,2,3,4,5,6,7,8",AGENCY_IDS,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] deviceTokenString],DEVICE_TOKEN,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"],APPLICATION_VERSION, nil];
+        NSDictionary *dictParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"stops",ENTITY,[Agencies agencies].supportedFeedIdString,AGENCY_IDS,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] deviceTokenString],DEVICE_TOKEN,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"],APPLICATION_VERSION, nil];
         NSString *request = [GTFS_RAWDATA appendQueryParams:dictParameters];
         strStopsURL = request;
         NIMLOG_OBJECT1(@"Get Stops: %@", request);
