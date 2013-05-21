@@ -95,6 +95,7 @@ static nc_AppDelegate *appDelegate;
 @synthesize isFeedBackView;
 @synthesize isRouteOptionView;
 @synthesize isRouteDetailView;
+@synthesize locationFromlocManager;
 
 
 // Feedback parameters
@@ -434,6 +435,8 @@ FeedBackForm *fbView;
                 currentLocation = [matchingLocations objectAtIndex:0];
                 [locations setIsLocationServiceEnable:TRUE];
             }
+            
+            locationFromlocManager = newLocation;
             
             // Set the coordinates (DE215, DE217 fix)
             [currentLocation setLatFloat:[newLocation coordinate].latitude];

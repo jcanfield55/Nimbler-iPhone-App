@@ -92,16 +92,8 @@
         
         areLocationsChanged = YES;  // Force cache stale upon start-up so it gets properly loaded
         
-        // Set region For MKLocalSearch
+        // Create MKLocalSearchRequest Instance
         localSearchRequest = [[MKLocalSearchRequest alloc] init];
-        CLLocationManager *locationManager;
-        locationManager = [[CLLocationManager alloc] init];
-        locationManager.delegate = self;
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-        CLLocation *location = [locationManager location];
-        [locationManager startUpdatingLocation];
-        CLLocationCoordinate2D coordinate = [location coordinate];
-        mpRegion =  MKCoordinateRegionMakeWithDistance(coordinate,100000, 100000);
         
     }
 
@@ -535,6 +527,15 @@
         matchingToRowCount = [sortedMatchingToLocations count];  // cases that match typing are included even if they have frequency=0
     }
 }
+
+// Set Region For MKLocalSearch
+-(MKCoordinateRegion)setRegionForMKLocalSeach{
+    
+    CLLocationCoordinate2D coordinate = [[nc_AppDelegate sharedInstance].locationFromlocManager coordinate];
+    mpRegion =  MKCoordinateRegionMakeWithDistance(coordinate,100000, 100000);
+    return mpRegion;
+}
+
 // Local Search that recomputes the sortedMatchingFromLocations and row count
 - (void)setTypedFromStringForLocalSearch:(NSString *)typedFromStr0
 {
@@ -549,9 +550,8 @@
     
     if([typedFromStr0 length]>=3){
         // Perform a new search.
-        
         localSearchRequest.naturalLanguageQuery = typedFromStr0;
-        localSearchRequest.region = mpRegion;
+        localSearchRequest.region = [self setRegionForMKLocalSeach];
         
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         
@@ -628,7 +628,7 @@
         // Perform a new search.
         
         localSearchRequest.naturalLanguageQuery = typedToStr0;
-        localSearchRequest.region = mpRegion;
+        localSearchRequest.region = [self setRegionForMKLocalSeach];
         
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         

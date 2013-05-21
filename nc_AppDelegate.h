@@ -62,6 +62,7 @@
 @property (strong, nonatomic) PlanStore *planStore;
 @property (strong, nonatomic) ToFromViewController *toFromViewController;
 @property (readonly, strong, nonatomic) CLLocationManager* locationManager;
+@property (readonly, strong, nonatomic) CLLocation *locationFromlocManager;
 
 // Properties for Core Data
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
