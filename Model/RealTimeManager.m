@@ -70,9 +70,9 @@ static RealTimeManager* realTimeManager;
                 for(int j=0;j<[[itinerary sortedLegs] count];j++){
                     Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
                     if([leg isScheduled]){
-                        NSDictionary *dicToStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.to.stopId,@"id", nil];
+                        NSDictionary *dicToStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.to.stopAgencyId,@"agencyId",leg.to.stopId,@"id", nil];
                         NSDictionary *dicTo = [NSDictionary dictionaryWithObjectsAndKeys:dicToStopId,@"stopId", nil];
-                        NSDictionary *dicFromStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.from.stopId,@"id", nil];
+                        NSDictionary *dicFromStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.from.stopAgencyId,@"agencyId",leg.from.stopId,@"id", nil];
                         NSDictionary *dicFrom = [NSDictionary dictionaryWithObjectsAndKeys:dicFromStopId,@"stopId", nil];
                         NSString *strRouteShortName = leg.routeShortName;
                         NSString *strRouteLongName = leg.routeLongName;

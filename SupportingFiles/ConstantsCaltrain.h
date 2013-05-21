@@ -293,6 +293,8 @@
 #define AGENCY_FEED_ID_FROM_AGENCY_NAME_DICTIONARY @"agencyFeedIdFromAgencyNameDictionary"
 #define AGENCY_NAME_FROM_AGENCY_FEED_ID_DICTIONARY @"agencyNameFromAgencyFeedIdDictionary"
 
+#define SUPPORTED_FEED_ID_STRING   @"supportedFeedIdString"
+
 // Request timer Count
 #define TWEET_COUNT_POLLING_INTERVAL 120.0
 #define TIMER_SMALL_REQUEST_DELAY 1.0

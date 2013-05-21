@@ -258,6 +258,9 @@
 - (LocationFromGoogle *)newEmptyLocationFromGoogle
 {
     LocationFromGoogle *l = [NSEntityDescription insertNewObjectForEntityForName:@"LocationFromGoogle" inManagedObjectContext:managedObjectContext];
+    NSMutableArray *searchableLocations = [[NSMutableArray alloc] initWithArray:searchableFromLocations];
+    [searchableLocations addObject:l];
+    searchableFromLocations = searchableLocations;
     [self setAreLocationsChanged:YES]; // DE30 fix (2 of 2)
     return l;
 }
@@ -266,7 +269,10 @@
 {
     LocationFromIOS *loc = [NSEntityDescription insertNewObjectForEntityForName:@"LocationFromIOS" inManagedObjectContext:managedObjectContext];
     [loc initWithPlacemark:placemark error:error];
-    [self setAreLocationsChanged:YES]; 
+    NSMutableArray *searchableLocations = [[NSMutableArray alloc] initWithArray:searchableFromLocations];
+    [searchableLocations addObject:loc];
+    searchableFromLocations = searchableLocations;
+    [self setAreLocationsChanged:YES];
     return loc;
 }
 
@@ -286,6 +292,7 @@
     //loc.placeName = localSearchLocation.placeName;
     [loc initWithPlacemark:localSearchLocation.placemark error:error];
     loc.formattedAddress = localSearchLocation.formattedAddress;
+    [loc setExcludeFromSearch:[NSNumber numberWithBool:true]];
     NSMutableArray *localSearchArr;
     if(isFrom){
         if([tempSelectedFromLocation.formattedAddress isEqualToString:loc.formattedAddress]){
@@ -753,21 +760,29 @@
     sortedFromLocations = [managedObjectContext executeFetchRequest:fetchRequestFromFreqThreshold
                                                               error:&error1];
     NIMLOG_PERF2(@"Fetching searchableFromLocations");
-    NSArray* locsFromGoogle = [managedObjectContext executeFetchRequest:fetchReqSearchableGoogleFromLocations
-                                                                  error:&error2];
-    NSArray* locsFromIos;
-    if([[[UIDevice currentDevice] systemVersion] intValue] >= 5) {
-        locsFromIos = [managedObjectContext executeFetchRequest:fetchReqSearchableIosFromLocations error:&error3];
-    } else {
-        // If < iOS4, then there will be no locations from iOS.  DE300 fix
-        locsFromIos = [NSArray array];
+    if(!searchableFromLocations){
+        NSArray* locsFromGoogle = [managedObjectContext executeFetchRequest:fetchReqSearchableGoogleFromLocations
+                                                                      error:&error2];
+        NSArray* locsFromIos;
+        if([[[UIDevice currentDevice] systemVersion] intValue] >= 5) {
+            locsFromIos = [managedObjectContext executeFetchRequest:fetchReqSearchableIosFromLocations error:&error3];
+        } else {
+            // If < iOS4, then there will be no locations from iOS.  DE300 fix
+            locsFromIos = [NSArray array];
+        }
+        searchableFromLocations = [[locsFromGoogle arrayByAddingObjectsFromArray:locsFromIos]
+                                   sortedArrayUsingDescriptors:fromSortDesc];  // Combine the iOS and Google locations
+        
+        NIMLOG_PERF2(@"Done fetching searchableFromLocations");
+        if (!sortedFromLocations || !locsFromGoogle || !locsFromIos) {
+            [NSException raise:@"Locations -> updateInternalCache Fetch failed"
+                        format:@"Error1: %@, error2: %@, error3: %@", error1, error2, error3];
+        }
     }
-    searchableFromLocations = [[locsFromGoogle arrayByAddingObjectsFromArray:locsFromIos]
-                               sortedArrayUsingDescriptors:fromSortDesc];  // Combine the iOS and Google locations
-    NIMLOG_PERF2(@"Done fetching searchableFromLocations");
-    if (!sortedFromLocations || !locsFromGoogle || !locsFromIos) {
-        [NSException raise:@"Locations -> updateInternalCache Fetch failed"
-                    format:@"Error1: %@, error2: %@, error3: %@", error1, error2, error3];
+    else{
+        NSArray *locs = [NSArray arrayWithArray:searchableFromLocations];
+        searchableFromLocations = [locs 
+                                   sortedArrayUsingDescriptors:fromSortDesc];  // Combine the iOS and Google locations
     }
     
     // Now resort for sortedToLocations  & searchableFromLocations arrays

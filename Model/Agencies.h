@@ -19,6 +19,7 @@
 @property (nonatomic, strong) NSDictionary *agencyShortNameByAgencyIdDictionary;
 @property (nonatomic, strong) NSDictionary *agencyFeedIdFromAgencyNameDictionary;
 @property (nonatomic, strong) NSDictionary *agencyNameFromAgencyFeedIdDictionary;
+@property (nonatomic, strong) NSString *supportedFeedIdString;
 
 @property (nonatomic, strong) NSDictionary *advisoriesChoices;
 
