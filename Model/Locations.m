@@ -304,7 +304,7 @@
     //loc.placeName = localSearchLocation.placeName;
     [loc initWithPlacemark:localSearchLocation.placemark error:error];
     loc.formattedAddress = localSearchLocation.formattedAddress;
-    [loc setExcludeFromSearch:[NSNumber numberWithBool:true]];
+    [loc setExcludeFromSearch:[NSNumber numberWithBool:false]];
     NSMutableArray *localSearchArr;
     if(isFrom){
         if([tempSelectedFromLocation.lat doubleValue] == [loc.lat doubleValue] && [tempSelectedFromLocation.lng doubleValue] == [loc.lng doubleValue]){
@@ -563,6 +563,14 @@
     return mpRegion;
 }
 
+- (NSArray *) locationsWithLat:(double)lat Lng:(double)lng{
+    NSFetchRequest * fetchLocations = [[NSFetchRequest alloc] init];
+    [fetchLocations setEntity:[NSEntityDescription entityForName:@"Location"  inManagedObjectContext:managedObjectContext]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"lat=%lf && lng=%lf",lat,lng];
+    [fetchLocations setPredicate:predicate];
+    NSArray * arrayAgencies = [managedObjectContext executeFetchRequest:fetchLocations error:nil];
+    return arrayAgencies;
+}
 // Local Search that recomputes the sortedMatchingFromLocations and row count
 - (void)setTypedFromStringForLocalSearch:(NSString *)typedFromStr0
 {
@@ -612,13 +620,12 @@
                  
                      NSArray *formattedAdd = [loc.formattedAddress componentsSeparatedByString:@","];
                      if(![[formattedAdd objectAtIndex:0] isEqualToString:mapItem.name]){
-                         //loc.placeName = mapItem.name;
                          loc.formattedAddress = [NSString stringWithFormat:@"%@\n%@",mapItem.name,loc.formattedAddress];
                      }
-                     if(![localSearchFromLocations containsObject:loc]){
-                         [localSearchFromLocations addObject:loc];
-                     }
-                     
+                 NSArray *locations = [self locationsWithLat:[loc.lat doubleValue] Lng:[loc.lng doubleValue]];
+                 if(![localSearchFromLocations containsObject:loc] && [locations count] == 0){
+                    [localSearchFromLocations addObject:loc];
+                 }
              }
              
          }
@@ -692,7 +699,8 @@
                         //loc.placeName = mapItem.name;
                         loc.formattedAddress = [NSString stringWithFormat:@"%@\n%@",mapItem.name,loc.formattedAddress];
                     }
-                    if(![localSearchToLocations containsObject:loc]){
+                     NSArray *locations = [self locationsWithLat:[loc.lat doubleValue] Lng:[loc.lng doubleValue]];
+                    if(![localSearchToLocations containsObject:loc] && [locations count] == 0){
                         [localSearchToLocations addObject:loc];
                     }
                     
@@ -1398,12 +1406,18 @@
             }
         }
         for (CLPlacemark* placemark in placemarkArray) {
-            LocationFromIOS* loc = [self newLocationFromIOSWithPlacemark:placemark error:error];
-            if ([[parameters supportedRegion] isInRegionLat:[loc latFloat] Lng:[loc lngFloat]]) {
-                [validLocations addObject:loc];
-            } else {
-                // if a location not in supported region,
-                [self removeLocation:loc]; // and out of Core Data
+            NSArray *fetchedLocations = [self locationsWithLat:placemark.location.coordinate.latitude Lng:placemark.location.coordinate.longitude];
+            if([fetchedLocations count] > 0){
+                [validLocations addObjectsFromArray:fetchedLocations];
+            }
+            else{
+                LocationFromIOS* loc = [self newLocationFromIOSWithPlacemark:placemark error:error];
+                if ([[parameters supportedRegion] isInRegionLat:[loc latFloat] Lng:[loc lngFloat]]) {
+                    [validLocations addObject:loc];
+                } else {
+                    // if a location not in supported region,
+                    [self removeLocation:loc]; // and out of Core Data
+                }
             }
         }
         NIMLOG_EVENT1(@"Geocode valid Locations = %d", [validLocations count]);

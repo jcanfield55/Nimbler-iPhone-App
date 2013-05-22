@@ -162,7 +162,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     if (status == PLAN_STATUS_OK) {
         [noItineraryWarning setHidden:YES];
         setWarningHidden = true;
-    } else if (status == PLAN_EXCLUDED_TO_ZERO_RESULTS) {
+    }
+    // Fixed DE-322
+    else if (status == PLAN_EXCLUDED_TO_ZERO_RESULTS && [[plan sortedItineraries] count] == 0) {
         [noItineraryWarning setHidden:NO]; // show warning
         setWarningHidden = false;
     } else {
@@ -309,7 +311,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     NIMLOG_PERF2(@"done preparing sortedItineraries");
     MoreItineraryStatus reqStatus = [planStore requestMoreItinerariesIfNeeded:self.plan parameters:newParameters];
     if (reqStatus == NO_MORE_ITINERARIES_REQUESTED && [[plan sortedItineraries] count] == 0) {
-        // if no itineraries showing and no more requests made, show warning 
+        // if no itineraries showing and no more requests made, show warning
         [noItineraryWarning setHidden:NO];
         setWarningHidden = false;
     }

@@ -464,6 +464,7 @@
 
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error
 {
+    [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.activityIndicator stopAnimating];
     [nc_AppDelegate sharedInstance].receivedError = YES;
     if([nc_AppDelegate sharedInstance].isTestPlan){
         [nc_AppDelegate sharedInstance].testPlan = nil;
