@@ -47,6 +47,7 @@
 @dynamic tripId;
 @dynamic agencyName;
 @dynamic intermediateStops;
+@dynamic rentedBike;
 
 @synthesize realStartTime;
 @synthesize realEndTime;
@@ -201,7 +202,12 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         if (self.isWalk) {
             walkOrBikeString = @"Walk";
         } else if (self.isBike) {
-            walkOrBikeString = @"Bike";
+            if(self.rentedBike){
+               walkOrBikeString = [NSString stringWithFormat:@"Rent bike from %@ and Bike",self.from.name];
+            }
+            else{
+                walkOrBikeString = @"Bike";
+            }
         }
     if (walkOrBikeString) {
         if (legPosition == FIRST_LEG) {    // US124 implementation

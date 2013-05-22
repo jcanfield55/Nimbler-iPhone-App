@@ -10,7 +10,7 @@
 #define Nimbler_SF_Header_h
 
 // Default time zone
-#define DEFAULT_TIME_ZONE @"America/Los_Angeles"
+#define DEFAULT_TIME_ZONE @"Eastern Time (US & Canada)"
 
 // Bundle and App Types
 #define CALTRAIN_BUNDLE_IDENTIFIER         @"com.Nimbler.Nimbler-Caltrain"
@@ -22,10 +22,10 @@
 #define WMATA_APP_TYPE      @"5"
 
 // Default boundaries for geolocation and routing
-#define MIN_LAT           @"36.791000000000004"
-#define MIN_LONG          @"-123.4631719"
-#define MAX_LAT           @"38.7189988"
-#define MAX_LONG          @"-121.025001"
+#define MIN_LAT           @"38.598692"
+#define MIN_LONG          @"-77.449457"
+#define MAX_LAT           @"39.191489"
+#define MAX_LONG          @"-76.668939"
 
 //
 // Settings Page Rows

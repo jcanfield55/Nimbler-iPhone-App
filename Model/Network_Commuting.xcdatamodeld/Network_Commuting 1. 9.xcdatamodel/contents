@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="12C3103" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="11G56" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AddressComponent" representedClassName="AddressComponent" syncable="YES">
         <attribute name="longName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
@@ -201,6 +201,7 @@
         <attribute name="legGeometryPoints" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="legId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="mode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="rentedBike" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="route" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="routeId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="routeLongName" optional="YES" attributeType="String" syncable="YES"/>
@@ -394,7 +395,7 @@
         <element name="Itinerary" positionX="0" positionY="0" width="128" height="360"/>
         <element name="ItineraryFromOTP" positionX="160" positionY="192" width="128" height="45"/>
         <element name="KeyObjectPair" positionX="0" positionY="0" width="128" height="75"/>
-        <element name="Leg" positionX="-45" positionY="0" width="128" height="405"/>
+        <element name="Leg" positionX="-45" positionY="0" width="128" height="420"/>
         <element name="LegFromOTP" positionX="90" positionY="216" width="128" height="45"/>
         <element name="Location" positionX="0" positionY="0" width="128" height="285"/>
         <element name="LocationFromGoogle" positionX="160" positionY="192" width="128" height="90"/>

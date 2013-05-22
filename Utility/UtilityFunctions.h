@@ -116,3 +116,5 @@ int timeIntervalFromTimeString(NSString *strTime);
 
 NSData* compressData(NSData* uncompressedData);
 NSData* uncompressGZip(NSData* compressedData);
+
+NSString *returnBikeButtonTitle(void);

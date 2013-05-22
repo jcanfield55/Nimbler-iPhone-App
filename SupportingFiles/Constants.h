@@ -34,7 +34,7 @@
 #endif
 
 #if LOCAL_URL
-    #define TRIP_PROCESS_URL      @"http://192.168.2.57:8080/TPServer/ws/"
+    #define TRIP_PROCESS_URL      @"http://192.168.2.57:6060/TPServer/ws/"
 #endif
 
 #define TEST_TRIP_PROCESS_URL @"http://localhost:8080/TPServer/ws/"  // TP server for automated tests
@@ -254,6 +254,9 @@
 
 // RouteExcludeSettings
 #define BIKE_BUTTON @"Bike"
+#define MY_BIKE @"My Bike"
+#define BIKE_SHARE @"Bike Share"
+#define RENTED_BIKE @"rentedBike"
 #define EXCLUSION_BY_AGENCY @"By Agency"   
 #define EXCLUSION_BY_RAIL_BUS  @"By Rail/Bus"
 
@@ -361,6 +364,7 @@
 #define REQUEST_TRANSIT_MODE_TRANSIT    @"TRANSIT,WALK"
 #define REQUEST_TRANSIT_MODE_BIKE_ONLY  @"BICYCLE"
 #define REQUEST_TRANSIT_MODE_TRANSIT_BIKE @"TRANSIT,BICYCLE"
+#define REQUEST_TRANSIT_MODE_WALK_BIKE @"WALK,BICYCLE"
 
 #define REQUEST_ID              @"reqId"
 #define REQUEST_ID_LENGTH       16

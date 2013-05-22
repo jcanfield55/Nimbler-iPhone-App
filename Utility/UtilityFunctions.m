@@ -8,6 +8,7 @@
 
 #import "UtilityFunctions.h"
 #import "Logging.h"
+#import "nc_AppDelegate.h"
 #if FLURRY_ENABLED
 #include "Flurry.h"
 #endif
@@ -767,5 +768,14 @@ NSData* uncompressGZip(NSData* compressedData) {
         return [NSData dataWithData: decompressed];
     } else {
         return nil;
+    }
+}
+
+NSString *returnBikeButtonTitle(void){
+    if([[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] isEqualToString:WMATA_APP_TYPE]){
+        return MY_BIKE;
+    }
+    else{
+        return BIKE_BUTTON;
     }
 }
