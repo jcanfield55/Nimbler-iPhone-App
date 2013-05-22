@@ -148,7 +148,13 @@ NSString *strStreet2 = @"street ";
         if([loc isKindOfClass:[LocationFromLocalSearch class]])
         {
             LocationFromLocalSearch *locationFromLocalSearch = (LocationFromLocalSearch *)loc;
-            loc = [locations selectedLocationOfLocalSearchWithLocation:locationFromLocalSearch IsFrom:isFrom error:nil];
+                NSArray *matchingLocations = [locations locationsWithFormattedAddress:locationFromLocalSearch.formattedAddress];
+                if ([matchingLocations count] > 0) {
+                    loc = [matchingLocations objectAtIndex:0];  // Get the first matching location
+                }
+                else{
+                    loc = [locations selectedLocationOfLocalSearchWithLocation:locationFromLocalSearch IsFrom:isFrom error:nil];
+                }
         }
         // If user tapped the selected location, then go into Edit Mode if not there already
         if ([toFromVC editMode] == NO_EDIT && loc == selectedLocation) {

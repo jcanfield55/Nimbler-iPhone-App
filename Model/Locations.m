@@ -251,8 +251,18 @@
 {
     LocationFromGoogle *l = [NSEntityDescription insertNewObjectForEntityForName:@"LocationFromGoogle" inManagedObjectContext:managedObjectContext];
     NSMutableArray *searchableLocations = [[NSMutableArray alloc] initWithArray:searchableFromLocations];
-    [searchableLocations addObject:l];
-    searchableFromLocations = searchableLocations;
+    BOOL containsLocation = false;
+    for(int i=0;i<[searchableLocations count];i++){
+        Location *tempLoc = [searchableLocations objectAtIndex:i];
+        if([tempLoc.formattedAddress isEqualToString:l.formattedAddress]){
+            containsLocation = true;
+            break;
+        }
+    }
+    if(!containsLocation){
+        [searchableLocations addObject:l];
+        searchableFromLocations = searchableLocations;
+    }
     [self setAreLocationsChanged:YES]; // DE30 fix (2 of 2)
     return l;
 }
@@ -262,8 +272,18 @@
     LocationFromIOS *loc = [NSEntityDescription insertNewObjectForEntityForName:@"LocationFromIOS" inManagedObjectContext:managedObjectContext];
     [loc initWithPlacemark:placemark error:error];
     NSMutableArray *searchableLocations = [[NSMutableArray alloc] initWithArray:searchableFromLocations];
-    [searchableLocations addObject:loc];
-    searchableFromLocations = searchableLocations;
+    BOOL containsLocation = false;
+    for(int i=0;i<[searchableLocations count];i++){
+        Location *tempLoc = [searchableLocations objectAtIndex:i];
+        if([tempLoc.formattedAddress isEqualToString:loc.formattedAddress]){
+            containsLocation = true;
+            break;
+        }
+    }
+    if(!containsLocation){
+        [searchableLocations addObject:loc];
+        searchableFromLocations = searchableLocations;
+    }
     [self setAreLocationsChanged:YES];
     return loc;
 }
