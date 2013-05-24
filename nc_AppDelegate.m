@@ -1116,7 +1116,7 @@ FeedBackForm *fbView;
     NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
                             
                             DEVICE_TOKEN, [[nc_AppDelegate sharedInstance] deviceTokenString],
-                            APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],DUMMY_TOKEN_ID,[[NSUserDefaults standardUserDefaults] valueForKey:DUMMY_TOKEN_ID],APPLICATION_VERSION,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"],
+                            APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],DUMMY_TOKEN_ID,[[NSUserDefaults standardUserDefaults] objectForKey:DUMMY_TOKEN_ID],APPLICATION_VERSION,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"],
                             nil];
     NSString *updateURL = [UPDATE_DEVICE_TOKEN appendQueryParams:params];
     updateDeviceTokenURL = updateURL;
@@ -1304,7 +1304,17 @@ FeedBackForm *fbView;
     NSString* buttonResponse;
     if(buttonIndex == 0){
         buttonResponse = @"App Store feedback";
-        NSURL *url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL];
+        //Fixed DE-326
+        NSURL *url;
+        if([[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] isEqualToString:CALTRAIN_APP_TYPE]){
+            url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL]; 
+        }
+        else if([[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] isEqualToString:SFMUNI_APP_TYPE]){
+             url = [[NSURL alloc] initWithString:NIMBLER_SF_REVIEW_URL];
+        }
+        else{
+            url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL]; 
+        }
         [[UIApplication sharedApplication] openURL:url];
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -1387,17 +1397,21 @@ FeedBackForm *fbView;
         NSString  *token = @"26d906c5c273446d5f40d2c173ddd3f6869b2666b1c7afd5173d69b6629def70";
         return token;
     }
-    NSString *dummyToken = [prefs objectForKey:DUMMY_TOKEN_ID];
-    if(!dummyToken){
-         dummyToken = [NSString stringWithFormat:@"SF%@",generateRandomString(64)];
-        [prefs setObject:dummyToken forKey:DUMMY_TOKEN_ID];
-    }
+    
     NSString *deviceToken = [prefs objectForKey:DEVICE_TOKEN];
     if(deviceToken){
         return deviceToken;
     }
     else{
-        return [prefs objectForKey:DUMMY_TOKEN_ID];   
+        NSString *dummyToken = [prefs objectForKey:DUMMY_TOKEN_ID];
+        if(!dummyToken){
+            dummyToken = [NSString stringWithFormat:@"SF%@",generateRandomString(64)];
+            //Fixed DE-327
+            if(![[NSUserDefaults standardUserDefaults] boolForKey:DEVICE_TOKEN_UPDATED]){
+                [prefs setObject:dummyToken forKey:DUMMY_TOKEN_ID];
+            }
+        }
+        return dummyToken;   
     }
 }
 @end
