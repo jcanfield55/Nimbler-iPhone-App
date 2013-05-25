@@ -328,6 +328,7 @@ static UserPreferance* userPrefs;
         // The previous problem was calling this method from initWithNibName before We have Device Token.
         if([[nc_AppDelegate sharedInstance] deviceTokenString] && [prefs objectForKey:DEVICE_CFUUID]){
             RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+            client.cachePolicy = RKRequestCachePolicyNone;
             [RKClient setSharedClient:client];
             
             int alertCount = (pushEnable ? pushNotificationThreshold : PUSH_NOTIFY_OFF); // -1 if push notification is off

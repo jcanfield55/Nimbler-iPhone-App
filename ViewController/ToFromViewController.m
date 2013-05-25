@@ -1529,13 +1529,9 @@ UIImage *imageDetailDisclosure;
 
 //US 137 implementation
 - (void)endEdit{
-    [self setEditMode:NO_EDIT]; 
     self.toTableVC.txtField.text = NULL_STRING;
     self.fromTableVC.txtField.text = NULL_STRING;
-//    [self.toTableVC toFromTyping:self.toTableVC.txtField forEvent:nil];
-//    [self.toTableVC textSubmitted:self.toTableVC.txtField forEvent:nil];
-//    [self.fromTableVC toFromTyping:self.fromTableVC.txtField forEvent:nil];
-//    [self.fromTableVC textSubmitted:self.fromTableVC.txtField forEvent:nil];
+    [self setEditMode:NO_EDIT];
     [self.toTableVC markAndUpdateSelectedLocation:locations.tempSelectedToLocation];
     [self.fromTableVC markAndUpdateSelectedLocation:locations.tempSelectedFromLocation];
 }
@@ -1600,6 +1596,7 @@ UIImage *imageDetailDisclosure;
 
 - (IBAction)openPickerView:(id)sender {
     [self.mainTable setUserInteractionEnabled:NO];
+    [datePicker reloadInputViews];
     [nc_AppDelegate sharedInstance].isDatePickerOpen = YES;
      [self.navigationController.navigationBar setUserInteractionEnabled:NO];
     toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 450, 320, 44)];

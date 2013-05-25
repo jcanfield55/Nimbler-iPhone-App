@@ -122,14 +122,15 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 
 - (void) decrementCounter{
     if(remainingCount == 0){
-        remainingCount = TIMER_DEFAULT_VALUE;
         [self requestServerForRealTime];
         if(self.timerGettingRealDataByItinerary){
             [self.timerGettingRealDataByItinerary invalidate];
             self.timerGettingRealDataByItinerary = nil;
         }
+        remainingCount = TIMER_DEFAULT_VALUE;
         self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(decrementCounter) userInfo:nil repeats: YES];
     }
+    NIMLOG_PERF2(@"remainingCount=%d",remainingCount);
     remainingCount = remainingCount - 1;
 }
 // Method used to set the plan 
@@ -578,6 +579,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
             }
         }
         if(!isAlreadyPushed){
+            NIMLOG_PERF2(@"remaining Count While Push=%d",remainingCount);
             routeDetailsVC.count = remainingCount;
             [routeDetailsVC setItinerary:itinerary];
             if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){

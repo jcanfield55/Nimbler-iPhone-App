@@ -1401,6 +1401,8 @@
                 MKPlacemark *placemark2 = [placemarkArray objectAtIndex:j];
                 if([placemark1.addressDictionary isEqual:placemark2.addressDictionary]){
                     [placemarkArray removeObject:placemark1];
+                    i = i - 1;
+                    break;
                 }
                 
             }

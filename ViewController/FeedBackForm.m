@@ -483,6 +483,7 @@ NSUserDefaults *prefs;
     alertView = [self feedbackConfirmAlert];
     // NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+    client.cachePolicy = RKRequestCachePolicyNone;
     RKParams *rkp = [RKParams params];
     [RKClient setSharedClient:client];
     

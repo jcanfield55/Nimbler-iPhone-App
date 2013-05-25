@@ -999,6 +999,7 @@ FeedBackForm *fbView;
         isRegionSupport = TRUE;
         // DE - 181 Fixed
         RKClient *client = [RKClient clientWithBaseURL:TRIP_GENERATE_URL];
+        client.cachePolicy = RKRequestCachePolicyNone;
         [RKClient setSharedClient:client];
         [[RKClient sharedClient]  get:METADATA_URL delegate:self];
     }
@@ -1112,6 +1113,7 @@ FeedBackForm *fbView;
 // Part Of DE-286 Fixed.
 - (void) updateDeviceToken{
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+    client.cachePolicy = RKRequestCachePolicyNone;
     [RKClient setSharedClient:client];
     NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
                             
