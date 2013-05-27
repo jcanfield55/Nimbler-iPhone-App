@@ -633,7 +633,8 @@ FeedBackForm *fbView;
         [toFromViewController.fromTableVC markAndUpdateSelectedLocation:self.fromLoc];
     }
     if(isFromBackground && !self.isToFromView && !self.isTwitterView && !self.isSettingView && !self.isFeedBackView && !self.isSettingDetailView){
-        toFromViewController.routeOptionsVC.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController.routeOptionsVC selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
+        // Fixed DE-329
+        toFromViewController.routeOptionsVC.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:toFromViewController.routeOptionsVC selector:@selector(decrementCounter) userInfo:nil repeats: YES];
         
     }
     UserPreferance* userPrefs = [UserPreferance userPreferance];

@@ -295,6 +295,8 @@
     // DE-320 Fixed
     // We will not remove itinerary if itinerary is displayed in routedetail page
     Itinerary *detailViewitinerary = [nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC.itinerary;
+    // Fixed DE-320
+    // Remove Itinerary if it is not RouteDetailView itinerary.
     if(itin0 != detailViewitinerary){
         [self removeItinerariesObject:itin0];
         [[self managedObjectContext] deleteObject:itin0];

@@ -28,8 +28,7 @@ NewPlanAvailableDelegate>
 @property (nonatomic, strong) NSTimer *timerRealtime;
 @property (nonatomic) int remainingCount;
 
-
-
+- (void) decrementCounter;
 -(void)hideUnUsedTableViewCell;
 -(void)setFBParameterForPlan;
 -(void)popOutToNimbler;

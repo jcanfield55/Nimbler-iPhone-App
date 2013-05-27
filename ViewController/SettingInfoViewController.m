@@ -225,7 +225,7 @@ UIImage *imageDetailDisclosure;
         // US 161 Implementation -- clear cache if max walk distance has been modified
         if(planCacheNeedsClearing) {
             PlanStore *planStore = [[nc_AppDelegate sharedInstance] planStore];
-            [planStore  clearCache];
+            [planStore  performSelector:@selector(clearCache) withObject:nil afterDelay:0.5];
             planCacheNeedsClearing = NO;
         }
         

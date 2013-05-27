@@ -272,11 +272,6 @@ UIImage *imageDetailDisclosure;
     [routeOptionsVC.timerGettingRealDataByItinerary invalidate];
     routeOptionsVC.timerGettingRealDataByItinerary = nil;
     
-    datePicker = [[UIDatePicker alloc]initWithFrame:CGRectMake(0, 494, 320, 216)];
-    datePicker.datePickerMode = UIDatePickerModeDateAndTime;
-    datePicker.minuteInterval = 5;
-    [self.view addSubview:datePicker];
-    
     NSArray *array = [NSArray arrayWithObjects:DATE_PICKER_DEPART,DATE_PICKER_ARRIVE, nil];
     departArriveSelector = [[UISegmentedControl alloc] initWithItems:array];
     
@@ -1529,6 +1524,8 @@ UIImage *imageDetailDisclosure;
 
 //US 137 implementation
 - (void)endEdit{
+    //Fixed DE-330
+    // Clearing both textfield before calling seteditMode method.
     self.toTableVC.txtField.text = NULL_STRING;
     self.fromTableVC.txtField.text = NULL_STRING;
     [self setEditMode:NO_EDIT];
@@ -1567,6 +1564,7 @@ UIImage *imageDetailDisclosure;
 //---------------------------------------------------------------------------
 
 - (void)selectCurrentDate {
+    date = [NSDate date];
     [self.navigationController.navigationBar setUserInteractionEnabled:YES];
     [nc_AppDelegate sharedInstance].isDatePickerOpen = NO;
     [self.mainTable setUserInteractionEnabled:YES];
@@ -1596,7 +1594,16 @@ UIImage *imageDetailDisclosure;
 
 - (IBAction)openPickerView:(id)sender {
     [self.mainTable setUserInteractionEnabled:NO];
-    [datePicker reloadInputViews];
+    // Fixed DE-331
+    datePicker = nil;
+    datePicker = [[UIDatePicker alloc]initWithFrame:CGRectMake(0, 494, 320, 216)];
+    datePicker.datePickerMode = UIDatePickerModeDateAndTime;
+    datePicker.minuteInterval = 5;
+    NSDate *todayDate = date;
+    if(todayDate){
+      [datePicker setDate:todayDate];  
+    }
+    [self.view addSubview:datePicker];
     [nc_AppDelegate sharedInstance].isDatePickerOpen = YES;
      [self.navigationController.navigationBar setUserInteractionEnabled:NO];
     toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 450, 320, 44)];

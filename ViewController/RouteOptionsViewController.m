@@ -130,7 +130,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         remainingCount = TIMER_DEFAULT_VALUE;
         self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(decrementCounter) userInfo:nil repeats: YES];
     }
-    NIMLOG_PERF2(@"remainingCount=%d",remainingCount);
     remainingCount = remainingCount - 1;
 }
 // Method used to set the plan 
@@ -173,7 +172,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                  [NSString stringWithFormat:@"Unexpected status = %d", status]);
     }
     if (planRequestParameters.needToRequestRealtime || planRequestParameters.serverCallsSoFar >= PLAN_MAX_SERVER_CALLS_PER_REQUEST) {
-        NIMLOG_PERF2(@"routeDetailUniquePattern=%d",[[plan uniqueItineraries] count]);
         if(self.timerGettingRealDataByItinerary != nil){
             [self.timerGettingRealDataByItinerary invalidate];
             self.timerGettingRealDataByItinerary = nil;
@@ -328,6 +326,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 {
     return [[plan sortedItineraries] count];
 }
+
 
 // Only usable for >= iOS6.  Returns NSMutableAttributedString with Caltrain train #s emphasized.  
 - (NSMutableAttributedString *)detailTextLabelColor:(NSString *)strDetailtextLabel itinerary:(Itinerary *)itinerary{
@@ -579,7 +578,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
             }
         }
         if(!isAlreadyPushed){
-            NIMLOG_PERF2(@"remaining Count While Push=%d",remainingCount);
             routeDetailsVC.count = remainingCount;
             [routeDetailsVC setItinerary:itinerary];
             if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
@@ -717,7 +715,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     int yPos = 5;
     int width = 80;
     int btnHeight = 25;
-    
     for(int i=0;i<[[plan excludeSettingsArray] count];i++){
         RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
         UIButton *btnAgency = [UIButton buttonWithType:UIButtonTypeCustom];

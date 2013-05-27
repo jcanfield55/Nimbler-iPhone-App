@@ -599,7 +599,6 @@
 		8DE18B791725415800AA8112 /* Stations.m in Sources */ = {isa = PBXBuildFile; fileRef = 75E8F1DC16CE4E2A00863A8C /* Stations.m */; };
 		8DE18B7A1725415800AA8112 /* StationListElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 75E8F1CD16CE356D00863A8C /* StationListElement.m */; };
 		8DE18B7B1725415800AA8112 /* PreloadedStop.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D44083F16CF72FD00F8EBE5 /* PreloadedStop.m */; };
-		8DE18B7C1725415800AA8112 /* RouteExcludeSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D00753116D4CAB30041A64C /* RouteExcludeSettings.m */; };
 		8DE18B7D1725415800AA8112 /* RouteExcludeSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 528C664D16D7011E005B7309 /* RouteExcludeSetting.m */; };
 		8DE18B7E1725415800AA8112 /* GtfsParsingStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 524A921316E7117800A9A0A2 /* GtfsParsingStatus.m */; };
 		8DE18B7F1725415800AA8112 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 8D3EFCB416E85DEE00266C6A /* ioapi.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -2921,7 +2920,6 @@
 				8DE18B791725415800AA8112 /* Stations.m in Sources */,
 				8DE18B7A1725415800AA8112 /* StationListElement.m in Sources */,
 				8DE18B7B1725415800AA8112 /* PreloadedStop.m in Sources */,
-				8DE18B7C1725415800AA8112 /* RouteExcludeSettings.m in Sources */,
 				8DE18B7D1725415800AA8112 /* RouteExcludeSetting.m in Sources */,
 				8DE18B7E1725415800AA8112 /* GtfsParsingStatus.m in Sources */,
 				8DE18B7F1725415800AA8112 /* ioapi.c in Sources */,
