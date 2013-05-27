@@ -21,8 +21,8 @@
 #define TEST_GEO_RESPONSE_URL  @"http://localhost:8080/TPServer/ws/mockgeolocation/"
 
 // To select server URL select 1 otherwise select 0,At a time only one of below must be 1.
-#define PRODUCTION_URL  1
-#define STAGGING_URL    0
+#define PRODUCTION_URL  0
+#define STAGGING_URL    1
 #define LOCAL_URL       0
 
 #if PRODUCTION_URL
@@ -233,6 +233,9 @@
 // Geocode behavior
 #define IOS_GEOCODE_VER_THRESHOLD (6.0)  // Version at which we start using iOS geocoding (rather than Google)
 
+// Local Search behavior
+#define IOS_LOCALSEARCH_VER (6.1)  // Version at which we start using iOS MAPKIT LOCAL SEARCH
+
 // Reverse Geocode behavior
 #define REVERSE_GEO_DISTANCE_THRESHOLD  (50.0)  // Maximum distance in meters before we redo a reverse geolocation
 #define REVERSE_GEO_TIME_THRESHOLD  (60)  // Minimum seconds between reverse geocode requests
@@ -291,7 +294,7 @@
 #define AGENCY_SHORT_NAME_BY_AGENCY_ID_DICTIONARY @"agencyShortNameByAgencyIdDictionary"
 #define AGENCY_FEED_ID_FROM_AGENCY_NAME_DICTIONARY @"agencyFeedIdFromAgencyNameDictionary"
 #define AGENCY_NAME_FROM_AGENCY_FEED_ID_DICTIONARY @"agencyNameFromAgencyFeedIdDictionary"
-
+#define SUPPORTED_FEED_ID_STRING   @"supportedFeedIdString"
 
 // Request timer Count
 #define TWEET_COUNT_POLLING_INTERVAL 120.0
@@ -472,3 +475,21 @@
 
 #define SHOW_INTERMEDIATE_STOPS @"showIntermediateStops"
 
+#define LIVE_FEEDS_BY_VEHICLE_POSITION @"livefeeds/vehiclePosition"
+
+
+//5) Get realtime By leg
+//6) get scheduled data(Next legs)
+//7) Get vehicle position
+//plan generate
+//9) Send Feedback
+//10) Update Setting
+//11) Get raw data (Gtfs Agency Data)
+//12) Get Stoptimes
+//13) get trips
+//14) Get Agency Data
+//15) gtfs updateTime
+//16) serviceByWeekday
+//17) calendarByDate
+//18) advisory image fetch (image/<img-name>)
+//19) update token

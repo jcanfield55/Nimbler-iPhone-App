@@ -16,6 +16,20 @@
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "ToFromViewController.h"
 #import "nc_AppDelegate.h"
+#import "RealTimeManager.h"
+#import "KeyObjectStore.h"
+
+#define MAXIMUM_SCROLL_POINT   338
+#define MAXIMUM_SCROLL_POINT_4_INCH  425 
+#define MINIMUM_SCROLL_POINT 15
+#define IPHONE_SCREEM_WIDTH   320
+#define LABEL__NEXT_REALTIME_Y_BUFFER  17
+#define MAIN_TABLE_Y_BUFFER  30
+#define PREFS_IS_LABEL_HIDDEN  @"labelHidden"
+#define NO_REALTIME_UPDATES @"No Realtime Updates"
+#define TIME_TO_NEXT_REFRESH @"Time to next refresh"
+#define TIMER_DEFAULT_VALUE  119
+
 
 @interface RouteDetailsViewController()
 {
@@ -36,6 +50,12 @@
 @synthesize itineraryNumber;
 @synthesize mainTableTotalHeight;
 @synthesize btnBackItem,btnForwardItem,btnGoToItinerary;
+@synthesize timer;
+@synthesize count;
+@synthesize lblNextRealtime;
+@synthesize handleControl;
+@synthesize mapHeight;
+@synthesize tableHeight;
 
 NSUserDefaults *prefs;
 
@@ -93,13 +113,22 @@ NSUserDefaults *prefs;
             mapView = [[MKMapView alloc] init];
             mapView.layer.borderWidth = 3.0;
             mapView.layer.borderColor = [UIColor whiteColor].CGColor;
-            CGRect mapFrame = CGRectMake(ROUTE_LEGMAP_X_ORIGIN, ROUTE_LEGMAP_Y_ORIGIN,
-                                         ROUTE_LEGMAP_WIDTH,  ROUTE_LEGMAP_MIN_HEIGHT_4INCH);
+            CGRect mapFrame;
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                mapFrame = CGRectMake(ROUTE_LEGMAP_X_ORIGIN, ROUTE_LEGMAP_Y_ORIGIN,
+                                      ROUTE_LEGMAP_WIDTH,  ROUTE_LEGMAP_MIN_HEIGHT_4INCH);
+            }
+            else{
+                mapFrame = CGRectMake(ROUTE_LEGMAP_X_ORIGIN, ROUTE_LEGMAP_Y_ORIGIN,
+                                      ROUTE_LEGMAP_WIDTH,ROUTE_LEGMAP_MIN_HEIGHT);
+            }
             
             [mapView setFrame:mapFrame];
             [[self view] addSubview:mapView];
             legMapVC = [[LegMapViewController alloc] initWithMapView:mapView];
             [mapView setDelegate:legMapVC];
+            
+            [self.view bringSubviewToFront:handleControl];
             
             UIImage* backImage = [UIImage imageNamed:@"img_backSelect.png"];
             UIImage* forwardImage = [UIImage imageNamed:@"img_forwardSelect.png"];
@@ -149,6 +178,8 @@ NSUserDefaults *prefs;
                 [imageDictionary setObject:[UIImage imageNamed:filename] forKey:filename];
             }
         }
+        mapHeight = mapView.frame.size.height;
+        tableHeight = mainTable.frame.size.height;
     }
     @catch (NSException *exception) {
         logException(@"RouteDetailsViewController->initWithNibName", @"", exception);
@@ -165,17 +196,45 @@ NSUserDefaults *prefs;
     self.mainTable = nil;
 }
 -(void)newItineraryAvailable:(Itinerary *)newItinerary
-                 status:(ItineraryStatus)status{
+                      status:(ItineraryStatus)status ItineraryNumber:(int)itiNumber{
     if(status == ITINERARY_STATUS_OK){
         [self setItinerary:newItinerary];
+        [self setItineraryNumber:itiNumber];
         [mainTable reloadData];
     }
     
 }
+
+-(void) progressViewProgress {
+    count--;
+    [lblNextRealtime setText:[NSString stringWithFormat:@"%@: %@ ",TIME_TO_NEXT_REFRESH,[self returnFormattedStringFromSeconds:count]]];
+    if(count < 0){
+        if(timer){
+            [timer invalidate];
+            timer = nil;
+        }
+        [lblNextRealtime setText:NO_REALTIME_UPDATES];
+    }
+}
+
 - (void)setItinerary:(Itinerary *)i0
 {
     @try {
+            [[NSUserDefaults standardUserDefaults] setBool:self.lblNextRealtime.isHidden forKey:PREFS_IS_LABEL_HIDDEN];
+            [[NSUserDefaults standardUserDefaults] synchronize];
         itinerary = i0;
+        if(itinerary.isRealTimeItinerary){
+            [lblNextRealtime setHidden:NO];
+            [lblNextRealtime setText:[NSString stringWithFormat:@"%@: %@ ",TIME_TO_NEXT_REFRESH,[self returnFormattedStringFromSeconds:count]]];
+            if(timer){
+                [timer invalidate];
+                timer = nil;
+            }
+            timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(progressViewProgress) userInfo:nil repeats:YES];
+        }
+        else{
+            [lblNextRealtime setHidden:YES];
+        }
         // DE-183 Fixed
         [self setItineraryNumber:0];  // Initially start on the first row of itinerary
         [legMapVC setItinerary:i0];
@@ -184,6 +243,19 @@ NSUserDefaults *prefs;
         //set FbParameterForItinerary
         [self setFBParameterForItinerary];
         
+        BOOL previousStatus = [[NSUserDefaults standardUserDefaults] boolForKey:PREFS_IS_LABEL_HIDDEN];
+        if(previousStatus && lblNextRealtime.isHidden){
+            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y,IPHONE_SCREEM_WIDTH,mainTable.frame.size.height)];
+        }
+        else if(!previousStatus && lblNextRealtime.isHidden){
+            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y - self.lblNextRealtime.frame.size.height,IPHONE_SCREEM_WIDTH,mainTable.frame.size.height+self.lblNextRealtime.frame.size.height)];
+        }
+        else if(previousStatus && !lblNextRealtime.isHidden){
+            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y + self.lblNextRealtime.frame.size.height,IPHONE_SCREEM_WIDTH,mainTable.frame.size.height-self.lblNextRealtime.frame.size.height)];
+        }
+        else{
+            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y,IPHONE_SCREEM_WIDTH,mainTable.frame.size.height)];
+        }
         // Compute the mainTableTotalHeight by calling the height of each row
         mainTableTotalHeight = 0.0;
         for (int i=0; i<[self tableView:mainTable numberOfRowsInSection:0]; i++) {
@@ -234,40 +306,61 @@ NSUserDefaults *prefs;
     [legMapVC addIntermediateStops:stopTimes Leg:leg];
 }
 
+- (void) setViewFrames{
+//    // Enforce height of main table
+//    CGRect tableFrame = [mainTable frame];
+//    CGRect mapFrame = [mapView frame];
+//    CGRect nextRealtimeFrame = [lblNextRealtime frame];
+//    CGRect handleControlFrame = [handleControl frame];
+//    mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
+//    // If we have a small itinerary, reduce the table size so it just fits it, and increase the map size
+//    CGFloat newMainTableHeight;
+//    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+//        newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH, mainTableTotalHeight);
+//    }
+//    else{
+//        newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT, mainTableTotalHeight);
+//    }
+//    //if (tableFrame.size.height != newMainTableHeight) { // if something is changing...
+//    CGFloat combinedHeight;
+//    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+//        combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH + ROUTE_LEGMAP_MIN_HEIGHT_4INCH+1;
+//    }
+//    else{
+//        combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT + ROUTE_LEGMAP_MIN_HEIGHT+1;
+//    }
+//    if(lblNextRealtime.isHidden){
+//        tableFrame.size.height = newMainTableHeight;
+//        tableFrame.origin.y = combinedHeight - newMainTableHeight + 10;
+//        handleControlFrame.origin.y = tableFrame.origin.y - 16;
+//        mapFrame.size.height = combinedHeight - newMainTableHeight - 1-handleControlFrame.size.height;
+//        if(!previousYPOS){
+//            previousYPOS = tableFrame.origin.y;
+//        }
+//    }
+//    else{
+//        nextRealtimeFrame.origin.y = mapFrame.origin.y + mapFrame.size.height+5;
+//        handleControlFrame.origin.y = nextRealtimeFrame.origin.y - 16;
+//        tableFrame.size.height = newMainTableHeight - (10 +nextRealtimeFrame.size.height);
+//        tableFrame.origin.y = combinedHeight - newMainTableHeight + 15 +nextRealtimeFrame.size.height;
+//         mapFrame.size.height = combinedHeight - newMainTableHeight - 1 -handleControlFrame.size.height;
+//        if(!previousYPOS){
+//            previousYPOS = tableFrame.origin.y;
+//        }
+//    }
+//    [mainTable setFrame:tableFrame];
+//    [mapView setFrame:mapFrame];
+//    [lblNextRealtime setFrame:nextRealtimeFrame];
+//    [handleControl setFrame:handleControlFrame];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    [nc_AppDelegate sharedInstance].isRouteDetailView = true;
     @try {
         logEvent(FLURRY_ROUTE_DETAILS_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
-
-        // Enforce height of main table
-        CGRect tableFrame = [mainTable frame];
-        CGRect mapFrame = [mapView frame];
-        mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
-        // If we have a small itinerary, reduce the table size so it just fits it, and increase the map size
-        CGFloat newMainTableHeight;
-        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-            newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH, mainTableTotalHeight);
-        }
-        else{
-           newMainTableHeight = fmin(ROUTE_DETAILS_TABLE_MAX_HEIGHT, mainTableTotalHeight); 
-        }
-        if (tableFrame.size.height != newMainTableHeight) { // if something is changing...
-            CGFloat combinedHeight;
-            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                 combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH + ROUTE_LEGMAP_MIN_HEIGHT_4INCH+1;
-            }
-            else{
-                combinedHeight = ROUTE_DETAILS_TABLE_MAX_HEIGHT + ROUTE_LEGMAP_MIN_HEIGHT+1;
-            }
-            tableFrame.size.height = newMainTableHeight;
-            tableFrame.origin.y = combinedHeight - newMainTableHeight + 10;
-            mapFrame.size.height = combinedHeight - newMainTableHeight - 1;
-            
-            [mainTable setFrame:tableFrame];
-            [mapView setFrame:mapFrame];
-        }
+        [self setViewFrames];
         [mainTable reloadData];
         
         // Scrolls the table to the new area and selects the row
@@ -291,6 +384,10 @@ NSUserDefaults *prefs;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    [nc_AppDelegate sharedInstance].isRouteDetailView = false;
+    [[NSUserDefaults standardUserDefaults] setBool:self.lblNextRealtime.isHidden forKey:PREFS_IS_LABEL_HIDDEN];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -460,7 +557,6 @@ NSUserDefaults *prefs;
 }
 
 
-
 -(void)ReloadLegWithNewData
 {
     @try {
@@ -506,8 +602,16 @@ NSUserDefaults *prefs;
     [nc_AppDelegate sharedInstance].FBUniqueId = legId;
 }
 
--(void)popOutToItinerary
-{
+-(void)popOutToItinerary{
+    if(timer){
+        [timer invalidate];
+        timer = nil;
+    }
+    
+    if(legMapVC.timerVehiclePosition){
+        [legMapVC.timerVehiclePosition invalidate];
+        legMapVC.timerVehiclePosition = nil;
+    }
     CATransition *animation = [CATransition animation];
     [animation setDuration:0.3];
     [animation setType:kCATransitionPush];
@@ -517,4 +621,55 @@ NSUserDefaults *prefs;
     [[self.navigationController.view layer] addAnimation:animation forKey:nil];
     [[self navigationController] popViewControllerAnimated:NO];
 }
+
+- (NSString *) returnFormattedStringFromSeconds:(int) seconds{
+    NSString *timeString;
+    if(seconds > 59){
+        if(seconds-60 < 10){
+            timeString = [NSString stringWithFormat:@"01:0%d",seconds-60];
+        }
+        else{
+            timeString = [NSString stringWithFormat:@"01:%d",seconds-60];
+        }
+    }
+    else{
+        if(seconds < 10){
+            timeString = [NSString stringWithFormat:@"00:0%d",seconds];
+        }
+        else{
+            timeString = [NSString stringWithFormat:@"00:%d",seconds];
+        }
+    }
+    return timeString;
+}
+
+- (IBAction) imageMoved:(id) sender withEvent:(UIEvent *) event{
+    CGPoint point = [[[event allTouches] anyObject] locationInView:self.view];
+    int maxHeight;
+    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+        maxHeight = MAXIMUM_SCROLL_POINT_4_INCH;
+    }
+    else{
+        maxHeight = MAXIMUM_SCROLL_POINT;
+    }
+    if(point.y <= maxHeight && point.y >=MINIMUM_SCROLL_POINT){
+        [lblNextRealtime setFrame:CGRectMake(lblNextRealtime.frame.origin.x, point.y+LABEL__NEXT_REALTIME_Y_BUFFER, lblNextRealtime.frame.size.width,lblNextRealtime.frame.size.height)];
+        [handleControl setFrame:CGRectMake(handleControl.frame.origin.x, point.y, IPHONE_SCREEM_WIDTH, handleControl.frame.size.height)];
+        [mapView setFrame:CGRectMake(mapView.frame.origin.x,mapView.frame.origin.y,mapView.frame.size.width,mapView.frame.size.height+(point.y-mapHeight))];
+        if(lblNextRealtime.isHidden){
+            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,handleControl.frame.origin.y+handleControl.frame.size.height,IPHONE_SCREEM_WIDTH,self.view.frame.size.height-(handleControl.frame.size.height+mapView.frame.size.height))];
+        }
+        else{
+           [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,point.y+MAIN_TABLE_Y_BUFFER, IPHONE_SCREEM_WIDTH,self.view.frame.size.height-(handleControl.frame.size.height+lblNextRealtime.frame.size.height+mapView.frame.size.height))];
+        }
+        mapHeight = mapView.frame.size.height;
+        tableHeight = mainTable.frame.size.height;
+    }
+    [self.view bringSubviewToFront:handleControl];
+    [self.view bringSubviewToFront:lblNextRealtime];
+    
+}
+
+
+
 @end

@@ -24,6 +24,7 @@
 #import "RealTimeManager.h"
 
 #define IDENTIFIER_CELL         @"UIRouteOptionsViewCell"
+#define TIMER_DEFAULT_VALUE  119
 
 @interface RouteOptionsViewController()
 {
@@ -48,6 +49,8 @@
 @synthesize planStore;
 @synthesize activityIndicator;
 @synthesize timerGettingRealDataByItinerary;
+@synthesize timerRealtime;
+@synthesize remainingCount;
 
 Itinerary * itinerary;
 NSString *itinararyId;
@@ -73,11 +76,23 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     return self;
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [nc_AppDelegate sharedInstance].isRouteOptionView = false;
+    if(self.timerRealtime){
+        [self.timerRealtime invalidate];
+        self.timerRealtime = nil;
+    }
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    if(plan){
+      self.timerRealtime =  [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: NO];  
+    }
     logEvent(FLURRY_ROUTE_OPTIONS_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
-    
+    [nc_AppDelegate sharedInstance].isRouteOptionView = true;
     // Enforce height of main table
     mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
     [self changeMainTableSettings];
@@ -105,6 +120,18 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     }
 }
 
+- (void) decrementCounter{
+    if(remainingCount == 0){
+        [self requestServerForRealTime];
+        if(self.timerGettingRealDataByItinerary){
+            [self.timerGettingRealDataByItinerary invalidate];
+            self.timerGettingRealDataByItinerary = nil;
+        }
+        remainingCount = TIMER_DEFAULT_VALUE;
+        self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(decrementCounter) userInfo:nil repeats: YES];
+    }
+    remainingCount = remainingCount - 1;
+}
 // Method used to set the plan 
 -(void)newPlanAvailable:(Plan *)newPlan
              fromObject:(id)referringObject
@@ -135,7 +162,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     if (status == PLAN_STATUS_OK) {
         [noItineraryWarning setHidden:YES];
         setWarningHidden = true;
-    } else if (status == PLAN_EXCLUDED_TO_ZERO_RESULTS) {
+    }
+    // Fixed DE-322
+    else if (status == PLAN_EXCLUDED_TO_ZERO_RESULTS && [[plan sortedItineraries] count] == 0) {
         [noItineraryWarning setHidden:NO]; // show warning
         setWarningHidden = false;
     } else {
@@ -143,13 +172,17 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                  [NSString stringWithFormat:@"Unexpected status = %d", status]);
     }
     if (planRequestParameters.needToRequestRealtime || planRequestParameters.serverCallsSoFar >= PLAN_MAX_SERVER_CALLS_PER_REQUEST) {
-        NIMLOG_PERF2(@"routeDetailUniquePattern=%d",[[plan uniqueItineraries] count]);
         if(self.timerGettingRealDataByItinerary != nil){
             [self.timerGettingRealDataByItinerary invalidate];
             self.timerGettingRealDataByItinerary = nil;
         }
-        [self requestServerForRealTime];
-        self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
+        if(self.timerRealtime){
+            [self.timerRealtime invalidate];
+            self.timerRealtime = nil;
+        }
+        remainingCount = TIMER_DEFAULT_VALUE;
+        self.timerRealtime =  [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: NO];
+        self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(decrementCounter) userInfo:nil repeats: YES];
     }
 }
 
@@ -193,7 +226,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 }
 
 -(void)popOutToNimbler{
-    
     for(int i=0;i<[[plan itineraries] count];i++){
         Itinerary *iti = [[[plan itineraries] allObjects]  objectAtIndex:i];
         if(iti.isRealTimeItinerary){
@@ -202,16 +234,12 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         if(iti.hideItinerary){
             iti.hideItinerary = false;
         }
-    }
-    
-    for(int i=0;i<[[plan requestChunks] count];i++){
-        PlanRequestChunk *reqChunks = [[[plan requestChunks] allObjects] objectAtIndex:i];
+    }    
+    for(PlanRequestChunk *reqChunks in [plan requestChunks]){
         if(reqChunks.type == [NSNumber numberWithInt:2]){
             [[nc_AppDelegate sharedInstance].managedObjectContext deleteObject:reqChunks];
         }
     }
-    saveContext([nc_AppDelegate sharedInstance].managedObjectContext);
-    
     CATransition *animation = [CATransition animation];
     [animation setDuration:0.3];
     [animation setType:kCATransitionPush];
@@ -224,7 +252,11 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 
 
 -(void) toggleExcludeButton:(id)sender{
-   
+    if(self.timerRealtime){
+        [self.timerRealtime invalidate];
+        self.timerRealtime = nil;
+    }
+    self.timerRealtime =  [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: NO];
     NIMLOG_PERF2(@"toggleExcludeButton started");
     [activityIndicator startAnimating];
     // DE-293 Fixed
@@ -278,7 +310,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     NIMLOG_PERF2(@"done preparing sortedItineraries");
     MoreItineraryStatus reqStatus = [planStore requestMoreItinerariesIfNeeded:self.plan parameters:newParameters];
     if (reqStatus == NO_MORE_ITINERARIES_REQUESTED && [[plan sortedItineraries] count] == 0) {
-        // if no itineraries showing and no more requests made, show warning 
+        // if no itineraries showing and no more requests made, show warning
         [noItineraryWarning setHidden:NO];
         setWarningHidden = false;
     }
@@ -294,6 +326,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 {
     return [[plan sortedItineraries] count];
 }
+
 
 // Only usable for >= iOS6.  Returns NSMutableAttributedString with Caltrain train #s emphasized.  
 - (NSMutableAttributedString *)detailTextLabelColor:(NSString *)strDetailtextLabel itinerary:(Itinerary *)itinerary{
@@ -511,7 +544,12 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         [viewCellBackground setBackgroundColor:[UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW]];
         cell.backgroundView = viewCellBackground;
         if (!routeDetailsVC) {
-            routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailViewController_568h" bundle:nil];
+            }
+            else{
+                routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
+            }
         }
         itinerary = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
         if(itinerary.isRealTimeItinerary){
@@ -531,20 +569,31 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                  FLURRY_SELECTED_DEPARTURE_TIME, [NSString stringWithFormat:@"%@", [itinerary startTimeOfFirstLeg]],
                  nil, nil, nil, nil);
         
-        [routeDetailsVC setItinerary:itinerary];
-        if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
-            CATransition *animation = [CATransition animation];
-            [animation setDuration:0.3];
-            [animation setType:kCATransitionPush];
-            [animation setSubtype:kCATransitionFromRight];
-            [animation setRemovedOnCompletion:YES];
-            [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
-            [[self.navigationController.view layer] addAnimation:animation forKey:nil];
-            [[self navigationController] pushViewController:routeDetailsVC animated:NO];
+        // DE-309 Fixed
+        // Added Error Handling such that RouteDetailViewController is pushed only once even if user select the row multiple times.
+        BOOL isAlreadyPushed = NO;
+        for(UIViewController *controller in self.navigationController.viewControllers){
+            if([controller isKindOfClass:[RouteDetailsViewController class]]){
+                isAlreadyPushed = YES;
+            }
         }
-        else{
-            [[self navigationController] pushViewController:routeDetailsVC animated:YES];
-        } 
+        if(!isAlreadyPushed){
+            routeDetailsVC.count = remainingCount;
+            [routeDetailsVC setItinerary:itinerary];
+            if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
+                CATransition *animation = [CATransition animation];
+                [animation setDuration:0.3];
+                [animation setType:kCATransitionPush];
+                [animation setSubtype:kCATransitionFromRight];
+                [animation setRemovedOnCompletion:YES];
+                [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+                [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+                [[self navigationController] pushViewController:routeDetailsVC animated:NO];
+            }
+            else{
+                [[self navigationController] pushViewController:routeDetailsVC animated:YES];
+            }
+        }
     }
     @catch (NSException *exception) {
         logException(@"RouteOptionsViewController->didSelectRowAtIndexPath", @"", exception);
@@ -666,7 +715,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     int yPos = 5;
     int width = 80;
     int btnHeight = 25;
-    
     for(int i=0;i<[[plan excludeSettingsArray] count];i++){
         RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
         UIButton *btnAgency = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -735,11 +783,11 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 #if SKIP_REAL_TIME_UPDATES
     return;
 #endif
-//    if(![nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray){
-//        [self waitForNonNullValueOfBlock:^(void){BOOL result=planStore.stopTimesLoadSuccessfully; return result;}];
-//    }
-//    planStore.stopTimesLoadSuccessfully = false;
-    RealTimeManager *realtimeManager = [RealTimeManager realTimeManager];
-    [realtimeManager requestRealTimeDataFromServerUsingPlan:plan PlanRequestParameters:planRequestParameters];
+    BOOL isRouteOptionView = [nc_AppDelegate sharedInstance].isRouteOptionView;
+    BOOL isRouteDetailView = [nc_AppDelegate sharedInstance].isRouteDetailView;
+    if(isRouteDetailView || isRouteOptionView){
+        RealTimeManager *realtimeManager = [RealTimeManager realTimeManager];
+        [realtimeManager requestRealTimeDataFromServerUsingPlan:plan PlanRequestParameters:planRequestParameters];
+    }
 }
 @end

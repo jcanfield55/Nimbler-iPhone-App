@@ -25,8 +25,10 @@ NewPlanAvailableDelegate>
 @property(nonatomic, strong) PlanStore* planStore;
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, strong) NSTimer *timerGettingRealDataByItinerary;
+@property (nonatomic, strong) NSTimer *timerRealtime;
+@property (nonatomic) int remainingCount;
 
-
+- (void) decrementCounter;
 -(void)hideUnUsedTableViewCell;
 -(void)setFBParameterForPlan;
 -(void)popOutToNimbler;

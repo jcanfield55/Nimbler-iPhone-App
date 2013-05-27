@@ -14,7 +14,7 @@
 
 // Bundle and App Types
 #define CALTRAIN_BUNDLE_IDENTIFIER         @"com.Nimbler.Nimbler-Caltrain"
-#define WMATA_BUNDLE_IDENTIFIER            @"com.Nimbler.Nimbler-DC"
+#define WMATA_BUNDLE_IDENTIFIER            @"com.nimbler.washingtondc"
 
 
 #define CALTRAIN_APP_TYPE   @"1"

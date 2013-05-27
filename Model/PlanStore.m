@@ -75,8 +75,7 @@
         
         if (matchingPlanArray && [matchingPlanArray count]>0) {
             Plan* matchingPlan = [matchingPlanArray objectAtIndex:0]; // Take the first matching plan
-            for(int i=0;i<[[matchingPlan itineraries] count];i++){
-                Itinerary *iti = [[[matchingPlan itineraries] allObjects] objectAtIndex:i];
+            for(Itinerary *iti in [matchingPlan itineraries]){
                 if(iti.hideItinerary){
                     iti.hideItinerary = false;
                 }
@@ -255,10 +254,12 @@
             [params setObject:strAgenciesWithMode forKey:BANNED_AGENCIES_WITH_MODE];
         }
         [params setObject:@"true" forKey:SHOW_INTERMEDIATE_STOPS];
+        [params setObject:[[nc_AppDelegate sharedInstance] deviceTokenString]  forKey:DEVICE_TOKEN];
         parameters.otpExcludeAgencyString = strAgencies;
         parameters.otpExcludeAgencyByModeString = strAgenciesWithMode;
         
         [params setObject:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] forKey:APPLICATION_TYPE];
+        [params setObject:[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"] forKey:APPLICATION_VERSION];
         // Build the parameters into a resource string
         parameters.serverCallsSoFar = parameters.serverCallsSoFar + 1;
         // TODO handle changes to maxWalkDistance with plan caching
@@ -267,10 +268,7 @@
         // Append The requestID to the URL.
         // Now we set that String as key of our  parametersByPlanURLResource Dictionary.
         // Now when we receive response or we receive an error we can get our planRequestParamater by key [objectloader resourcePath].
-        
-        NIMLOG_DEBUG1(@"Submitted Request ID=%@",requestID);
-         NSString *strPlanGenerateURL = [NSString stringWithFormat:@"%@?id=%@",PLAN_GENERATE_URL,requestID];
-        
+        NSString *strPlanGenerateURL = [NSString stringWithFormat:@"%@?id=%@",PLAN_GENERATE_URL,requestID];
         [parametersByPlanURLResource setObject:parameters forKey:strPlanGenerateURL];
         Plan *plan;
         RKParams *requestParameter = [RKParams paramsWithDictionary:params];
@@ -279,6 +277,9 @@
             loader.params = requestParameter;
             loader.method = RKRequestMethodPOST;
         }];
+        NIMLOG_PERF2(@"Plan Request Sent At-->%f",[[NSDate date] timeIntervalSince1970]);
+        NIMLOG_PERF2(@"TripDate-->%@",parameters.originalTripDate);
+        NIMLOG_PERF2(@"ThisRequestTripDate-->%@",parameters.thisRequestTripDate);
     }
     @catch (NSException *exception) {
         logException(@"PlanStore->requestPlanFromOTPWithParameters", @"", exception);
@@ -289,10 +290,9 @@
     if ([request isPOST]) {
         if ([response isOK] && [legsURL isEqualToString:[request resourcePath]]) {
             legsURL = nil;
-            NIMLOG_PERF2(@"Legs Response Received");
+            NIMLOG_PERF2(@"Legs Response Arrives At-->%f",[[NSDate date] timeIntervalSince1970]);
             RKJSONParserJSONKit* parser1 = [RKJSONParserJSONKit new];
             NSDictionary *legsDictionary = [parser1 objectFromString:[response bodyAsString] error:nil];
-            NIMLOG_PERF2(@"legsDictionary=%@",legsDictionary);
             self.stopTimesLoadSuccessfully = true;
             if(!legsDictionary)
                 return;
@@ -337,6 +337,7 @@
             }
             if([tempResponseDictionary objectForKey:OTP_ERROR_STATUS]){
                 // If OTP error (no plan returned)
+                [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.activityIndicator stopAnimating];
                 Plan* plan = nil;
                 PlanRequestStatus status = PLAN_GENERIC_EXCEPTION;
                 if (planRequestParameters.isDestinationToFromVC &&
@@ -378,6 +379,7 @@
             } else {
                 plan.fromLocation = fromLoc;
             }
+            // Part Of DE-292 Fix
             [plan initializeNewPlanFromOTPWithRequestDate:[planRequestParameters thisRequestTripDate]
                                            departOrArrive:[planRequestParameters departOrArrive]
                                      routeExcludeSettings:planRequestParameters.routeExcludeSettingsUsedForOTPCall];
@@ -429,6 +431,7 @@
                 } else {
                     reqStatus = PLAN_STATUS_OK;
                 }
+                 NIMLOG_PERF2(@"Plan Parsing And Processing Completed At-->%f",[[NSDate date] timeIntervalSince1970]);
                 // Call-back the appropriate VC with the new plan
                 [planRequestParameters.planDestination newPlanAvailable:plan
                                                              fromObject:self
@@ -459,6 +462,7 @@
 
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error
 {
+    [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.activityIndicator stopAnimating];
     [nc_AppDelegate sharedInstance].receivedError = YES;
     if([nc_AppDelegate sharedInstance].isTestPlan){
         [nc_AppDelegate sharedInstance].testPlan = nil;
@@ -572,15 +576,22 @@
         RKParams *requestParameter = [RKParams params];
         [requestParameter setValue:strRequestString forParam:LEGS];
         [requestParameter setValue:[[nc_AppDelegate sharedInstance] deviceTokenString] forParam:DEVICE_TOKEN];
+        [requestParameter setValue:[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"] forParam:APPLICATION_VERSION];
+        [requestParameter setValue:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] forParam:APPLICATION_TYPE];
         legsURL = NEXT_LEGS_PLAN;
         [rkTPClient post:NEXT_LEGS_PLAN params:requestParameter delegate:self];
-        NIMLOG_PERF2(@"Legs Request Sent");
+         NIMLOG_PERF2(@"Legs request Sent At-->%f",[[NSDate date] timeIntervalSince1970]);
     }
 }
 
 // Checks if more itineraries are needed for this plan, and if so requests them from the server
 -(MoreItineraryStatus)requestMoreItinerariesIfNeeded:(Plan *)plan parameters:(PlanRequestParameters *)requestParams0
 {
+    BOOL isRouteOptionView = [nc_AppDelegate sharedInstance].isRouteOptionView;
+    BOOL isRouteDetailView = [nc_AppDelegate sharedInstance].isRouteDetailView;
+    if(!isRouteOptionView && !isRouteDetailView){
+        return NO_MORE_ITINERARIES_REQUESTED;
+    }
     if (requestParams0.serverCallsSoFar >= PLAN_MAX_SERVER_CALLS_PER_REQUEST) {
         [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.activityIndicator stopAnimating];
         return NO_MORE_ITINERARIES_REQUESTED; // Return if we have already made the max number of calls
@@ -821,9 +832,6 @@
 // Part Of DE-288 Fixed
 - (void)clearCache{
     @try {
-        Plan *plan = [[[[nc_AppDelegate sharedInstance] toFromViewController] routeOptionsVC] plan];
-        NSString *strPlanID = [plan planId];
-        
         NSError *error;
         NSManagedObjectContext * context = [self managedObjectContext];
         NSFetchRequest * fetchPlanRequestChunk = [[NSFetchRequest alloc] init];
@@ -836,15 +844,12 @@
                 [context deleteObject:planRequestChunks];
                 continue;
             }
-            if(![strPlanID isEqualToString:[plans planId]]){
-                for(int i=0;i<[[plans itineraries] count];i++){
-                    Itinerary *itinerary = [[[plans itineraries] allObjects] objectAtIndex:i];
+                for(Itinerary *itinerary in [plans itineraries]){
                     if([itinerary containsUnscheduledLeg]){
                        [context deleteObject:itinerary];
                     }
                 }
-                [context deleteObject:planRequestChunks];
-            }
+            [context deleteObject:planRequestChunks];
         }
         [context save:&error];
         if(error){
@@ -859,9 +864,6 @@
 // Part Of DE-288 Fixed
 - (void)clearCacheForBikePref{
     @try {
-        Plan *plan = [[[[nc_AppDelegate sharedInstance] toFromViewController] routeOptionsVC] plan];
-        NSString *strPlanID = [plan planId];
-        
         NSError *error;
         NSManagedObjectContext * context = [self managedObjectContext];
         NSFetchRequest * fetchPlanRequestChunk = [[NSFetchRequest alloc] init];
@@ -874,15 +876,12 @@
                 [context deleteObject:planRequestChunks];
                 continue;
             }
-            if(![strPlanID isEqualToString:[plans planId]]){
-                for(int i=0;i<[[plans itineraries] count];i++){
-                    Itinerary *itinerary = [[[plans itineraries] allObjects] objectAtIndex:i];
+                for(Itinerary *itinerary in [plans itineraries]){
                     if([itinerary containsBikeLeg]){
                         [context deleteObject:itinerary];
                     }
                 }
                 [context deleteObject:planRequestChunks];
-            }
         }
         [context save:&error];
         if(error){

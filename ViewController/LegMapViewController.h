@@ -16,10 +16,18 @@
 @property(nonatomic, strong) MKMapView *mapView;
 @property(nonatomic, strong) Itinerary *itinerary;
 @property(nonatomic) int itineraryNumber;
+@property (nonatomic, strong) NSTimer *timerVehiclePosition;
 
 - (id)initWithMapView:(MKMapView *)m0;  // Preferred initializer
 - (void)setMapViewRegion;  
 - (void)refreshLegOverlay:(int)number;
 - (void) addIntermediateStationsToMapView:(NSArray *)sortedLegs;
 - (void) addIntermediateStops:(NSArray *)stopTimes Leg:(Leg *)leg;
+
+// Request Vehicle position data from server
+- (void) requestVehicleDataFromServer;
+
+- (void) addVehicleTomapView:(NSArray *)vehiclesData;
+
+- (void) removeMovingAnnotations;
 @end

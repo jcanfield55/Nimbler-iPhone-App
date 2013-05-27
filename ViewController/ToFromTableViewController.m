@@ -14,6 +14,8 @@
 #import "nc_AppDelegate.h"
 #import "StationListElement.h"
 #import "Stations.h"
+#import <MapKit/MapKit.h>
+#import "LocationFromLocalSearch.h"
 
 
 @interface ToFromTableViewController () 
@@ -76,7 +78,7 @@ NSString *strStreet2 = @"street ";
         [txtField setFont:[UIFont MEDIUM_FONT]];
         [txtField setReturnKeyType:UIReturnKeyDone];  // DE275 fix
         [txtField setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
-        
+        txtField.delegate = self;
         [txtField addTarget:self action:@selector(toFromTyping:forEvent:) forControlEvents:UIControlEventEditingChanged];
         [txtField addTarget:self action:@selector(textSubmitted:forEvent:) forControlEvents:(UIControlEventEditingDidEndOnExit)];
         [txtField setBackgroundColor:[UIColor whiteColor]];
@@ -135,15 +137,28 @@ NSString *strStreet2 = @"street ";
         } else {
             [toFromVC setEditMode:TO_EDIT];
         }
+        locations.isLocationSelected = false;
     }
     // Else it is one of the locations which was selected
     else {
-        
+        locations.isLocationSelected = true;
         Location *loc = [locations 
                          locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]]
-                         isFrom:isFrom];  //selected Location 
+                         isFrom:isFrom];  //selected Location
+        if([loc isKindOfClass:[LocationFromLocalSearch class]])
+        {
+            LocationFromLocalSearch *locationFromLocalSearch = (LocationFromLocalSearch *)loc;
+                NSArray *matchingLocations = [locations locationsWithFormattedAddress:locationFromLocalSearch.formattedAddress];
+                if ([matchingLocations count] > 0) {
+                    loc = [matchingLocations objectAtIndex:0];  // Get the first matching location
+                }
+                else{
+                    loc = [locations selectedLocationOfLocalSearchWithLocation:locationFromLocalSearch IsFrom:isFrom error:nil];
+                }
+        }
         // If user tapped the selected location, then go into Edit Mode if not there already
         if ([toFromVC editMode] == NO_EDIT && loc == selectedLocation) {
+             locations.isLocationSelected = false;
             if (isFrom) {
                 [toFromVC setEditMode:FROM_EDIT]; 
             } else {
@@ -152,7 +167,7 @@ NSString *strStreet2 = @"street ";
         }
         else {
             [toFromVC setEditMode:NO_EDIT];  // Have toFromVC end the edit mode (DE96 fix)
-            
+           
             NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
 
             if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) { // If a list (like 'Caltrain Station List')
@@ -274,31 +289,49 @@ NSString *strStreet2 = @"street ";
     // Prepare the cell settings
     Location *loc = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]] 
                                         isFrom:isFrom];
-    [[cell textLabel] setText:[loc shortFormattedAddress]];
-    
-    if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) {
-        // Bold italic if a list header
+    // if There is PlaceName available for location
+    if([loc isKindOfClass:[LocationFromLocalSearch class ]]){
+            cell.textLabel.numberOfLines = 2;
+            cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+            [[cell textLabel] setText:[loc shortFormattedAddress]];
         [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
         cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
         [cell setAccessoryView:nil];
-    } 
-    else if (loc == selectedLocation) {
-        [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
-        cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
-        if ([toFromVC editMode] == NO_EDIT) {
-            UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
-            [cell setAccessoryView:imgViewDetailDisclosure];
-        } else {
-            // cell.textLabel.text = @"Current Location"; // This line causes DE124
+    }
+    else{
+        if([loc isKindOfClass:[LocationFromIOS class ]]){
+                cell.textLabel.numberOfLines = 2;
+                cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+                [[cell textLabel] setText:[loc shortFormattedAddress]];
+        }
+        else{
+             [[cell textLabel] setText:[loc shortFormattedAddress]];
+        }
+       
+        if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) {
+            // Bold italic if a list header
+            [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
+            cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
             [cell setAccessoryView:nil];
         }
-    } else {
-        // just bold for normal cell
-        [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
-        cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
-        [cell setAccessoryView:nil];
+        else if (loc == selectedLocation) {
+            [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
+            cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
+            if ([toFromVC editMode] == NO_EDIT) {
+                UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
+                [cell setAccessoryView:imgViewDetailDisclosure];
+            } else {
+                // cell.textLabel.text = @"Current Location"; // This line causes DE124
+                [cell setAccessoryView:nil];
+            }
+        } else {
+            // just bold for normal cell
+            [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
+            cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
+            [cell setAccessoryView:nil];
+        }
+        
     }
-    
     cell.textLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
 
     return cell;
@@ -331,6 +364,14 @@ NSString *strStreet2 = @"street ";
     }
 }
 
+// For TextFieldEditing Delegate
+
+-(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    locations.isLocationSelected = false;
+    return YES;
+}
+
 // 
 // txtField editing callback methods
 //
@@ -338,21 +379,34 @@ NSString *strStreet2 = @"street ";
 // Delegate for when text is typed into the to: or from: UITextField (see below for when text submitted)
 // This method updates the to & from table to reflect entries that match the text
 - (IBAction)toFromTyping:(id)sender forEvent:(UIEvent *)event {
-
     if (selectedLocation) {
         selectedLocation = nil;
         [locations updateSelectedLocation:nil isFrom:isFrom];
         [toFromVC updateToFromLocation:self isFrom:isFrom location:nil];
     }
-    if (isFrom) {
-        [locations setTypedFromString:[txtField text]];
-    } else {
-        [locations setTypedToString:[txtField text]];
-    }
     
+        if (isFrom) {
+            [locations setTypedFromString:[txtField text]];
+            if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= IOS_LOCALSEARCH_VER) {
+                [locations setTypedFromStringForLocalSearch:[txtField text]];
+            }
+        } else {
+             [locations setTypedToString:[txtField text]];
+            if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= IOS_LOCALSEARCH_VER) {
+                [locations setTypedToStringForLocalSearch:[txtField text]];
+            }
+        }
     if ([locations areMatchingLocationsChanged]) {  //if typing has changed matrix, reload the array
         [myTableView reloadData];
-    } 
+    }
+    
+}
+
+-(void)reloadLocationWithLocalSearch
+{
+    if ([locations areMatchingLocationsChanged]) {  //if typing has changed matrix, reload the array
+        [myTableView reloadData];
+    }
 }
 
 - (BOOL) contains:(NSArray *)array String:(NSString *)string{
@@ -368,6 +422,7 @@ NSString *strStreet2 = @"street ";
 // Delegate for when complete text entered into the UITextField
 - (IBAction)textSubmitted:(id)sender forEvent:(UIEvent *)event
 {
+    locations.isLocationSelected = true; 
     rawAddress = [sender text];
     
     if (rawAddress == nil) {
@@ -413,39 +468,6 @@ NSString *strStreet2 = @"street ";
             lastGeoRequestTime = [[NSDate alloc] init];
             
             startTime = CFAbsoluteTimeGetCurrent();
-           // DE-207 & US-166 Implementation
-//            rawAddress = [rawAddress lowercaseString];
-//            NSFetchRequest * fetchStationListElement = [[NSFetchRequest alloc] init];
-//            [fetchStationListElement setEntity:[NSEntityDescription entityForName:@"StationListElement" inManagedObjectContext:managedObjectContext]];
-//            NSPredicate *resultPredicate = [NSPredicate
-//                                            predicateWithFormat:@"self.location.formattedAddress contains[cd] %@ || self.stop.formattedAddress contains[cd] %@",
-//                                            rawAddress,rawAddress];
-//            [fetchStationListElement setPredicate:resultPredicate];
-//            
-//            NSArray * arrayStationListElement = [managedObjectContext executeFetchRequest:fetchStationListElement error:nil];
-//            if([arrayStationListElement count] > 0){
-//                if([arrayStationListElement count] == 1){
-//                    StationListElement *listElement = [arrayStationListElement objectAtIndex:0];
-//                    if(listElement.location){
-//                        [toFromVC setEditMode:NO_EDIT];
-//                        [self markAndUpdateSelectedLocation:listElement.location];
-//                        return;
-//                    }
-//                    else if(listElement.stop){
-//                        Location *loc = [[nc_AppDelegate sharedInstance].stations createNewLocationObjectFromGtfsStop:listElement.stop :listElement];
-//                        saveContext(managedObjectContext);
-//                        [toFromVC setEditMode:NO_EDIT];
-//                        [self markAndUpdateSelectedLocation:loc];
-//                        return;
-//                    }
-//                }
-//                [toFromVC callLocationPickerFor:self
-//                                       locationList:arrayStationListElement
-//                                             isFrom:isFrom
-//                                   isGeocodeResults:NO];
-//                return;
-//
-//            }
             @try {
                 GeocodeRequestParameters* parameters = [[GeocodeRequestParameters alloc] init];
                 parameters.rawAddress = rawAddress;
@@ -544,11 +566,24 @@ NSString *strStreet2 = @"street ";
          For Solving DE:27
          */
         [txtField setText:@""];
-        if (isFrom) {
-            [locations setTypedFromString:@""];
+        if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= IOS_LOCALSEARCH_VER) {
+            if (isFrom) {
+                [locations setTypedFromString:@""];
+                [locations setTypedFromStringForLocalSearch:@""];
+            } else {
+                [locations setTypedToString:@""];
+                [locations setTypedToStringForLocalSearch:@""];
+            }
+            
         } else {
-            [locations setTypedToString:@""];
+            if (isFrom) {
+                [locations setTypedFromString:@""];
+            } else {
+                [locations setTypedToString:@""];
+            }
         }
+        
+        
         [toFromVC setEditMode:NO_EDIT];
         [myTableView reloadData];
         return ;

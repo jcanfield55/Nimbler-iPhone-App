@@ -248,6 +248,7 @@ NSUserDefaults *prefs;
         [self startProcessForGettingTweets];
         NSString *latestTweetTime = @"0";
         RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+        client.cachePolicy = RKRequestCachePolicyNone;
         [RKClient setSharedClient:client];
         if([arrayTweet count] > 0){
             id key = [arrayTweet objectAtIndex:0];
@@ -260,7 +261,7 @@ NSUserDefaults *prefs;
             if(strAgencyIDs.length > 0){
                 NSDictionary *dict = [NSDictionary dictionaryWithKeysAndObjects:
                                       LAST_TWEET_TIME,tweetTime,
-                                      DEVICE_TOKEN, [[nc_AppDelegate sharedInstance] deviceTokenString],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs,
+                                      DEVICE_TOKEN, [[nc_AppDelegate sharedInstance] deviceTokenString],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs,APPLICATION_VERSION,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"],
                                       nil];
                 NSString *req = [LATEST_TWEETS_REQ appendQueryParams:dict];
                 [[RKClient sharedClient]  get:req delegate:self];
@@ -399,12 +400,13 @@ NSUserDefaults *prefs;
             [[self.tabBarController.tabBar.items objectAtIndex:1] setBadgeValue:nil];
             [[nc_AppDelegate sharedInstance] updateBadge:0];
             RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+            client.cachePolicy = RKRequestCachePolicyNone;
             [RKClient setSharedClient:client];
             isTwitterLiveData = TRUE;
             NSString *strAgencyIDs = [[nc_AppDelegate sharedInstance] getAgencyIdsString];
             if(strAgencyIDs.length > 0){
                 NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
-                                        DEVICE_TOKEN, [[nc_AppDelegate sharedInstance] deviceTokenString],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs,
+                                        DEVICE_TOKEN, [[nc_AppDelegate sharedInstance] deviceTokenString],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs,APPLICATION_VERSION,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"],
                                         nil];
                 NSString *allAdvisories = [ALL_TWEETS_REQ appendQueryParams:params];
                 strAllAdvisories = allAdvisories;

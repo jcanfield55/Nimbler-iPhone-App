@@ -72,6 +72,7 @@
 #define NIMBLER_FEEDBACK_BUTTON_TITLE        @"Feedback for Nimbler"
 #define REMIND_ME_LATER_BUTTON_TITLE         @"Remind Me Later"
 #define NIMBLER_REVIEW_URL                   @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=567382474"
+#define NIMBLER_SF_REVIEW_URL                   @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=638067545"
 
 // NOTE :- Sequence matter.
 #define BART_SEARCH_STRINGS_ARRAY [NSArray arrayWithObjects:@"bart station list",@"caltrain station list",@"current location",@" bart",@"bart ",@" airbart",@"airbart ",@" street",@"street ", nil]

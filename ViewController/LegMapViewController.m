@@ -17,11 +17,23 @@
 #import "Itinerary.h"
 #import "GtfsStopTimes.h"
 #import "IntermediateStops.h"
+#import "RealTimeManager.h"
 
 #define LINE_WIDTH  5
 #define ALPHA_LIGHT 0.7
 #define ALPHA_MEDIUM 0.8
 #define ALPHA_LIGHTER 0.4
+#define ARRIVAL @"Arrival"
+#define LIST_VEHICLE_POSITIONS @"lstVehiclePositions"
+#define BUS  @"bus"
+#define TRAM @"tram"
+#define VEHICLE @"Vehicle"
+#define VEHICLE_ID @"vehicleId"
+#define ROUTE  @"Route"
+#define ROUTE_SHORT_NAME @"routeShortName"
+#define HEADSIGN  @"headsign"
+#define LATITUDE  @"lat"
+#define LONGITUDE @"lon"
 
 @interface LegMapViewController() {
     // Internal variables
@@ -31,10 +43,15 @@
     NSMutableArray* dotAnnotationArray;  // Array of all dot annotations
     NSMutableArray* intermediateAnnotations;
     NSMutableArray * legStartEndPoint;
+    NSMutableArray *movingAnnotations;
     UIImage* dotImage;
     UIImage* pinImage;
+    UIImage* busImage;
+    UIImage* tramImage;
     
     NSDateFormatter *dateFormatter;
+    
+    
 }
 
 // Utility routine for setting the region on the MapView based on the itineraryNumber
@@ -45,6 +62,7 @@
 @synthesize itinerary;
 @synthesize itineraryNumber;
 @synthesize mapView;
+@synthesize timerVehiclePosition;
 
 NSString *legID;
 
@@ -57,14 +75,23 @@ NSString *legID;
         dotAnnotationArray = [NSMutableArray arrayWithCapacity:10];
         intermediateAnnotations = [[NSMutableArray alloc] init];
         legStartEndPoint = [[NSMutableArray alloc] init];
+        movingAnnotations = [[NSMutableArray alloc] init];
     }
     return self;
 }
+
 - (void)setItinerary:(Itinerary *)itin
 {
     @try {
         if (itin != itinerary) {  // if something actually changed...
             itinerary = itin;  
+            
+            if(self.timerVehiclePosition){
+                [self.timerVehiclePosition invalidate];
+                self.timerVehiclePosition = nil;
+            }
+            [self requestVehicleDataFromServer];
+            self.timerVehiclePosition =  [NSTimer scheduledTimerWithTimeInterval:TIMER_MEDIUM_REQUEST_DELAY target:self selector:@selector(requestVehicleDataFromServer) userInfo:nil repeats: YES];
             
             // Clear out any previous overlays and annotations
            // Fixed DE-307.
@@ -107,11 +134,11 @@ NSString *legID;
                     [fromPoint setTitle:startLeg.from.name];
                     NSDate *arrivalTime = startLeg.startTime;
                     NSString *arrivalTimeString = [dateFormatter stringFromDate:arrivalTime];
-                    [fromPoint setSubtitle:[NSString stringWithFormat:@"Arrival: %@",arrivalTimeString]];
+                    [fromPoint setSubtitle:[NSString stringWithFormat:@"%@: %@",ARRIVAL,arrivalTimeString]];
                     [toPoint setTitle:startLeg.to.name];
                     NSDate *toArrivalTime = startLeg.endTime;
                     NSString *toArrivalTimeString = [dateFormatter stringFromDate:toArrivalTime];
-                    [toPoint setSubtitle:[NSString stringWithFormat:@"Arrival: %@",toArrivalTimeString]];
+                    [toPoint setSubtitle:[NSString stringWithFormat:@"%@: %@",ARRIVAL,toArrivalTimeString]];
                 }
                     [legStartEndPoint addObject:toPoint];
                     [mapView addAnnotation:toPoint];
@@ -120,6 +147,7 @@ NSString *legID;
             }
             
             // Take startpoint as the beginning of the first leg's polyline, and endpoint form the last leg's polyline
+            
             startPoint = [[MKPointAnnotation alloc] init];
             [startPoint setCoordinate:[[[sortedLegs objectAtIndex:0] polylineEncodedString] startCoord]];
             [dotAnnotationArray addObject:startPoint];
@@ -171,9 +199,7 @@ NSString *legID;
             NIMLOG_PERF2(@"toStopId=%@",leg.to.stopId);
             if(leg.isScheduled){
                 if(!leg.isRealTimeLeg){
-                    NSSet *intermediateStops = leg.intermediateStops;
-                    for(int i=0;i<[intermediateStops count];i++){
-                        IntermediateStops *stop = [[intermediateStops allObjects] objectAtIndex:i];
+                    for(IntermediateStops *stop in leg.intermediateStops){
                         float langcoord = [stop.lat floatValue];
                         float longcoord = [stop.lon floatValue];
                         CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(langcoord, longcoord);
@@ -182,7 +208,7 @@ NSString *legID;
                         [point setTitle:stop.name];
                         NSDate *arrivalTime = [NSDate dateWithTimeIntervalSince1970:([stop.arrivalTime doubleValue]/1000.0)];
                         NSString *arrivalTimeString = [dateFormatter stringFromDate:arrivalTime];
-                        [point setSubtitle:[NSString stringWithFormat:@"Arrival: %@",arrivalTimeString]];
+                        [point setSubtitle:[NSString stringWithFormat:@"%@: %@",ARRIVAL,arrivalTimeString]];
                         [intermediateAnnotations addObject:point];
                         [mapView addAnnotation:point];
                     }
@@ -221,7 +247,7 @@ NSString *legID;
             else{
                 arrivalTimeString = [dateFormatter stringFromDate:arrivalTime];
             }
-            [point setSubtitle:[NSString stringWithFormat:@"Arrival: %@",arrivalTimeString]];
+            [point setSubtitle:[NSString stringWithFormat:@"%@: %@",ARRIVAL,arrivalTimeString]];
         }
         [intermediateAnnotations addObject:point];
         [mapView addAnnotation:point];
@@ -399,6 +425,13 @@ NSString *legID;
     } 
 }
 
+- (UIImage *)scale:(UIImage *)image toSize:(CGSize)size{
+    UIGraphicsBeginImageContext(size);
+    [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return scaledImage;
+}
 
 // Callback for providing any annotation views
 - (MKAnnotationView *)mapView:(MKMapView *)mv viewForAnnotation:(id <MKAnnotation>)annotation
@@ -479,10 +512,98 @@ NSString *legID;
             
             return dotView;
         }
+        
+        else if([movingAnnotations containsObject:annotation]){
+            MKAnnotationView* dotView = (MKAnnotationView*)[mv dequeueReusableAnnotationViewWithIdentifier:@"MyMovingAnnotationView"];
+            if(!dotView){
+                // If an existing pin view was not available, create one.
+                dotView = [[MKAnnotationView alloc] initWithAnnotation:annotation
+                                                       reuseIdentifier:@"MyMovingAnnotationView"];
+            }
+            else{
+                [dotView setAnnotation:annotation];
+            }
+            [mapView bringSubviewToFront:dotView];
+                dotView.canShowCallout=YES;
+                MKPointAnnotation *anno = (MKPointAnnotation *)annotation;
+                if([anno.accessibilityLabel isEqualToString:@"bus"]){
+                    if (!busImage) {
+                        NSString* imageName = [[NSBundle mainBundle] pathForResource:@"bus" ofType:@"png"];
+                        busImage = [self scale:[UIImage imageWithContentsOfFile:imageName] toSize:CGSizeMake(25,26)];
+                    }
+                    if (busImage) {
+                        [dotView setImage:busImage];
+                    }
+                }
+                else{
+                    if (!tramImage) {
+                        NSString* imageName = [[NSBundle mainBundle] pathForResource:@"tram" ofType:@"png"];
+                        tramImage = [self scale:[UIImage imageWithContentsOfFile:imageName] toSize:CGSizeMake(25,26)];
+                    }
+                    if (tramImage) {
+                        [dotView setImage:tramImage];
+                    }
+                }
+            return dotView;
+        }
         else{
             [mapView removeAnnotation:annotation];
         }
     }
     return nil;
+}
+
+// Request realtime data from server
+- (void) requestVehicleDataFromServer{
+    [[RealTimeManager realTimeManager] requestVehiclePositionForRealTimeLeg:itinerary.sortedLegs];
+}
+- (void) addVehicleTomapView:(NSArray *)vehiclesData{
+    [mapView removeAnnotations:movingAnnotations];
+    [movingAnnotations removeAllObjects];
+    for(int i=0;i<[vehiclesData count];i++){
+        NSDictionary *vehicleDictionary = [vehiclesData objectAtIndex:i];
+        NSArray *vehiclePosistions = [vehicleDictionary objectForKey:LIST_VEHICLE_POSITIONS];
+        for(int j=0;j<[vehiclePosistions count];j++){
+            NSDictionary *tempVehicleDictionary = [vehiclePosistions objectAtIndex:j];
+            MKPointAnnotation *movingAnnotation = [[MKPointAnnotation alloc] init];
+            NSString *mode = [tempVehicleDictionary objectForKey:MODE];
+            if([[mode lowercaseString] isEqualToString:BUS]){
+                [movingAnnotation setAccessibilityLabel:BUS];
+            }
+            else{
+                [movingAnnotation setAccessibilityLabel:TRAM];
+            }
+            NSString *vehicleId = [NSString stringWithFormat:@"%@:%@",VEHICLE,[tempVehicleDictionary objectForKey:VEHICLE_ID]];
+            NSString *route = [NSString stringWithFormat:@"%@:%@",ROUTE,[tempVehicleDictionary objectForKey:ROUTE_SHORT_NAME]];
+            [movingAnnotation setTitle:[NSString stringWithFormat:@"%@  %@",vehicleId,route]];
+            NSString *headSign = [NSString stringWithFormat:@"%@",[tempVehicleDictionary objectForKey:HEADSIGN]];
+            [movingAnnotation setSubtitle:headSign];
+            float fromLat = [[tempVehicleDictionary objectForKey:LATITUDE] floatValue];
+            float fromLng = [[tempVehicleDictionary objectForKey:LONGITUDE] floatValue];
+            CLLocationCoordinate2D fromCoordinate = CLLocationCoordinate2DMake(fromLat, fromLng);
+
+            [movingAnnotation setCoordinate:fromCoordinate];
+            [movingAnnotations addObject:movingAnnotation];
+            [mapView addAnnotation:movingAnnotation];
+            
+        }
+    }
+}
+
+// Brings the bus and tram annotations to front and other annotations to back.
+- (void)mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views {
+    for (MKAnnotationView * annView in views) {
+        MKPointAnnotation * ann = (MKPointAnnotation *) [annView annotation];
+        if ([movingAnnotations containsObject:ann]) {
+            [[annView superview] bringSubviewToFront:annView];
+        } else {
+            [[annView superview] sendSubviewToBack:annView];
+        }
+    }
+}
+
+- (void) removeMovingAnnotations{
+    [mapView removeAnnotations:movingAnnotations];
+    [movingAnnotations removeAllObjects];
 }
 @end

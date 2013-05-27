@@ -21,6 +21,7 @@
 @synthesize agencyFeedIdFromAgencyNameDictionary;
 @synthesize agencyNameFromAgencyFeedIdDictionary;
 @synthesize advisoriesChoices;
+@synthesize supportedFeedIdString;
 
 static Agencies * agenciesSingleton;
 
@@ -35,7 +36,7 @@ static Agencies * agenciesSingleton;
 
 // Call server for updated agencies data.
 - (void)updateAgenciesFromServer{
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],APPLICATION_TYPE, nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] deviceTokenString],DEVICE_TOKEN,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"],APPLICATION_VERSION, nil];
     NSString *request = [APP_AGENCIES appendQueryParams:params];
     [rkTpClient get:request delegate:self];
 }
@@ -90,6 +91,14 @@ static Agencies * agenciesSingleton;
     return agencyNameFromAgencyFeedIdDictionary;
 }
 
+- (NSString *)supportedFeedIdString{
+    if (!supportedFeedIdString) {
+        KeyObjectStore* keyObjectStore = [KeyObjectStore keyObjectStore];
+        supportedFeedIdString = [keyObjectStore objectForKey:SUPPORTED_FEED_ID_STRING];
+    }
+    return supportedFeedIdString;
+}
+
 - (void) addvaluesToDictionaryFromResponseData:(NSDictionary *)agencyDictionary{
     NSMutableDictionary *mutableexcludeButtonHandlingByAgencyDictionary = [[NSMutableDictionary alloc] init];
     NSMutableDictionary *mutableagencyButtonNameByAgencyDictionary = [[NSMutableDictionary alloc] init];
@@ -97,9 +106,11 @@ static Agencies * agenciesSingleton;
     NSMutableDictionary *mutableagencyFeedIdFromAgencyNameDictionary = [[NSMutableDictionary alloc] init];
     NSMutableDictionary *mutableagencyNameFromAgencyFeedIdDictionary = [[NSMutableDictionary alloc] init];
     NSArray *agenciesArray = [agencyDictionary objectForKey:AGENCIES_DICTIONARY];
+    NSMutableString *feedIdString = [[NSMutableString alloc] init];
     for(int i=0;i<[agenciesArray count];i++){
         NSDictionary *dictAgencies = [agenciesArray objectAtIndex:i];
         NSString *feedId = [dictAgencies objectForKey:NIMBLER_AGENCY_ID];
+        [feedIdString appendFormat:@"%@,",feedId];
         NSString *exclusionType = [dictAgencies objectForKey:EXCLUSION_TYPE];
         NSArray *subAgenciesArray = [dictAgencies objectForKey:AGENCIES_DICTIONARY];
         for(int j=0;j<[subAgenciesArray count];j++){
@@ -126,6 +137,7 @@ static Agencies * agenciesSingleton;
     [keyObjectStore setObject:agencyShortNameByAgencyIdDictionary forKey:AGENCY_SHORT_NAME_BY_AGENCY_ID_DICTIONARY];
     [keyObjectStore setObject:agencyFeedIdFromAgencyNameDictionary forKey:AGENCY_FEED_ID_FROM_AGENCY_NAME_DICTIONARY];
     [keyObjectStore setObject:agencyNameFromAgencyFeedIdDictionary forKey:AGENCY_NAME_FROM_AGENCY_FEED_ID_DICTIONARY];
+    [keyObjectStore setObject:feedIdString forKey:SUPPORTED_FEED_ID_STRING];
 }
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response{
         RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
@@ -148,5 +160,6 @@ static Agencies * agenciesSingleton;
                 [keyObjectStore setObject:agenciesDictionary forKey:AGENCIES_DICTIONARY];
             }
         }
+    saveContext([nc_AppDelegate sharedInstance].managedObjectContext);
 }
 @end

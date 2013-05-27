@@ -20,6 +20,8 @@
 @implementation LocationFromIOS
 
 @dynamic placemark;
+@synthesize isLocalSearchResult;
+@dynamic  placeName;
 
 static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
 

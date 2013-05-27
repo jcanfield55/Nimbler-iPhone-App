@@ -22,6 +22,7 @@
 @synthesize originalTripDate;
 @synthesize loadedRealTimeData;
 @synthesize requestParameters;
+@synthesize realTimeURL;
 
 
 static RealTimeManager* realTimeManager;
@@ -69,9 +70,9 @@ static RealTimeManager* realTimeManager;
                 for(int j=0;j<[[itinerary sortedLegs] count];j++){
                     Leg *leg = [[itinerary sortedLegs] objectAtIndex:j];
                     if([leg isScheduled]){
-                        NSDictionary *dicToStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.to.stopId,@"id", nil];
+                        NSDictionary *dicToStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.to.stopAgencyId,@"agencyId",leg.to.stopId,@"id", nil];
                         NSDictionary *dicTo = [NSDictionary dictionaryWithObjectsAndKeys:dicToStopId,@"stopId", nil];
-                        NSDictionary *dicFromStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.from.stopId,@"id", nil];
+                        NSDictionary *dicFromStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.from.stopAgencyId,@"agencyId",leg.from.stopId,@"id", nil];
                         NSDictionary *dicFrom = [NSDictionary dictionaryWithObjectsAndKeys:dicFromStopId,@"stopId", nil];
                         NSString *strRouteShortName = leg.routeShortName;
                         NSString *strRouteLongName = leg.routeLongName;
@@ -115,11 +116,14 @@ static RealTimeManager* realTimeManager;
         }
         if([arrLegs count] > 0){
             NSString *strRequestString = [arrLegs JSONString];
-            NIMLOG_PERF2(@"Realtime request String=%@",strRequestString);
             RKParams *requestParameter = [RKParams params];
             [requestParameter setValue:strRequestString forParam:LEGS];
-            [requestParameter setValue:[[nc_AppDelegate sharedInstance] deviceTokenString] forParam:DEVICE_TOKEN];
+            [requestParameter setValue:[[nc_AppDelegate sharedInstance] deviceTokenString]  forParam:DEVICE_TOKEN];
+            [requestParameter setValue:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] forParam:APPLICATION_TYPE];
+            [requestParameter setValue:[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"] forParam:APPLICATION_VERSION];
+            realTimeURL = LIVE_FEEDS_BY_LEGS;
             [self.rkTpClient post:LIVE_FEEDS_BY_LEGS params:requestParameter delegate:self];
+            NIMLOG_PERF2(@"Realtime Data Request Sent At-->%f",[[NSDate date] timeIntervalSince1970]);
         } 
      }
 }
@@ -144,15 +148,26 @@ static RealTimeManager* realTimeManager;
 #pragma mark RKResponse Delegate method
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {
     @try {
-        // DE 175 Fixed
-        [nc_AppDelegate sharedInstance].isNeedToLoadRealData = YES;
-        RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
-        loadedRealTimeData = true;
-        id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
-        //[self logRealtimeData:res];
-        NIMLOG_PERF2(@"realtime Response=%@",res);
-        [routeOptionsVC setIsReloadRealData:false];
-        [self setLiveFeed:res];
+        NSString *resourcePath = [request resourcePath];
+        if([resourcePath isEqualToString:realTimeURL]){
+            // DE 175 Fixed
+            BOOL isRouteOptionView = [nc_AppDelegate sharedInstance].isRouteOptionView;
+            BOOL isRouteDetailView = [nc_AppDelegate sharedInstance].isRouteDetailView;
+            if(isRouteOptionView || isRouteDetailView){
+                [nc_AppDelegate sharedInstance].isNeedToLoadRealData = YES;
+                RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+                loadedRealTimeData = true;
+                id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
+                [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.activityIndicator stopAnimating];
+                [routeOptionsVC setIsReloadRealData:false];
+                [self setLiveFeed:res];
+            }
+        }
+        else{
+            RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
+            id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
+            [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC.legMapVC addVehicleTomapView:[res objectForKey:@"legLiveFeeds"]];
+        }
     }  @catch (NSException *exception) {
         logException(@"RealTimeManager->didLoadResponse", @"load response for real time request", exception);
     }
@@ -161,13 +176,15 @@ static RealTimeManager* realTimeManager;
 // Replace the RouteDetailView itinerary with matching realtime itinerary.
 - (void) updateItineraryIfAlreadyInRouteDetailView{
     Itinerary *detailViewitinerary = [nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC.itinerary;
+    int itineraryNumber = [nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC.itineraryNumber;
     if(!detailViewitinerary)
         return;
     
     for(int i=0;i<[[plan sortedItineraries] count];i++){
         Itinerary *itinerary = [[plan sortedItineraries] objectAtIndex:i];
         if(itinerary.isRealTimeItinerary && [itinerary.tripIdhexString isEqualToString:detailViewitinerary.tripIdhexString]){
-            [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC newItineraryAvailable:itinerary status:ITINERARY_STATUS_OK];
+            [nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC.count = [nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.remainingCount;
+            [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC newItineraryAvailable:itinerary status:ITINERARY_STATUS_OK ItineraryNumber:itineraryNumber];
             [plan deleteItinerary:detailViewitinerary];
             [plan prepareSortedItinerariesWithMatchesForDate:originalTripDate
                                               departOrArrive:requestParameters.departOrArrive
@@ -177,14 +194,13 @@ static RealTimeManager* realTimeManager;
             return;
         }
     }
-    [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC newItineraryAvailable:nil status:ITINERARY_STATUS_CONFLICT];
+    [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC newItineraryAvailable:nil status:ITINERARY_STATUS_CONFLICT ItineraryNumber:itineraryNumber];
 }
 
 - (void) removeRealtimeItinerary{
     NSDate *tripDate = originalTripDate;
     NSInteger epochTripDate = [tripDate timeIntervalSince1970];
-    for(int i=0;i<[[plan itineraries] count];i++){
-        Itinerary *itinerary = [[[plan itineraries] allObjects] objectAtIndex:i];
+    for(Itinerary *itinerary in [plan itineraries]){
         if(itinerary.isRealTimeItinerary){
             NSDate *itineraryEndTime = itinerary.endTimeOfLastLeg;
             NSInteger itineraryEpoch = [itineraryEndTime timeIntervalSince1970];
@@ -207,8 +223,7 @@ static RealTimeManager* realTimeManager;
                     }
                 }
             }
-            for(int i=0;i<[[plan requestChunks] count];i++){
-                PlanRequestChunk *reqChunks = [[[plan requestChunks] allObjects] objectAtIndex:i];
+            for(PlanRequestChunk *reqChunks in [plan requestChunks]){
                 if(reqChunks.type == [NSNumber numberWithInt:2]){
                     [[nc_AppDelegate sharedInstance].managedObjectContext deleteObject:reqChunks];
                 }
@@ -220,6 +235,7 @@ static RealTimeManager* realTimeManager;
             //It means there are live feeds in response
             NSArray * legLiveFees = [liveData  objectForKey:@"legLiveFeeds"];
             if ([legLiveFees count] > 0) {
+                NIMLOG_PERF2(@"Realtime Parsing and Processing Started At-->%f",[[NSDate date] timeIntervalSince1970]);
                 [self setRealTimePredictionsFromLiveFeeds:legLiveFees];
                 // TODO:- Comment Four lines to run automated test case
                 [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:originalTripDate Context:nil];
@@ -237,6 +253,7 @@ static RealTimeManager* realTimeManager;
                 }
                  [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC reloadData:plan];
                  [routeDetailVC ReloadLegWithNewData];
+                NIMLOG_PERF2(@"Realtime Parsing and Processing Finished At-->%f",[[NSDate date] timeIntervalSince1970]);
             }
         }
         else {
@@ -362,4 +379,52 @@ static RealTimeManager* realTimeManager;
         }
     }
 }
+
+// Request the vehicle position data from server
+- (void) requestVehiclePositionForRealTimeLeg:(NSArray *)sortedLegs{
+    NSMutableArray *legArray = [[NSMutableArray alloc] init];
+    for(int i=0;i<[sortedLegs count];i++){
+        Leg *leg = [sortedLegs objectAtIndex:i];
+        NSString *route = leg.route;
+        if(!route)
+            route = @"";
+        
+        NSString *routeShortName = leg.routeShortName;
+        if(!routeShortName)
+            routeShortName = @"";
+        
+        NSString *headSign = leg.headSign;
+        if(!headSign)
+            headSign = @"";
+        
+        if(leg.isRealTimeLeg && leg.vehicleId){
+            //NSInteger epochLegEndDate = [leg.endTime timeIntervalSince1970];
+            //NSInteger epochCurrentDate = [[NSDate date] timeIntervalSince1970];
+//            NSDictionary *latLonDictionary = [[NSUserDefaults standardUserDefaults] objectForKey:leg.legId];
+//            float lat = 0.0;
+//            float lon = 0.0;
+//            if(latLonDictionary){
+//                lat = [[latLonDictionary objectForKey:@"lat"] floatValue];
+//                lon = [[latLonDictionary objectForKey:@"lon"] floatValue];
+//            }
+//            if((epochCurrentDate <= epochLegEndDate) || (lat && lon && lat <= [leg.to.lat floatValue] && lon <= [leg.to.lng floatValue])){
+                NSDictionary *legData = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.legId,@"id",route,@"route",leg.vehicleId,@"vehicleId",leg.mode,@"mode",routeShortName,@"routeShortName",headSign,@"headsign", nil];
+                [legArray addObject:legData];
+           // }
+        }
+    }
+    if([legArray count] > 0){
+        NSString *strRequestString = [legArray JSONString];
+        RKParams *requestParameter = [RKParams params];
+        [requestParameter setValue:strRequestString forParam:LEGS];
+        [requestParameter setValue:[[nc_AppDelegate sharedInstance] deviceTokenString]  forParam:DEVICE_TOKEN];
+        [requestParameter setValue:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] forParam:APPLICATION_TYPE];
+        [requestParameter setValue:[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"] forParam:APPLICATION_VERSION];
+        [self.rkTpClient post:LIVE_FEEDS_BY_VEHICLE_POSITION params:requestParameter delegate:self];
+    }else{
+        LegMapViewController *legMapVC = [nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC.legMapVC;
+        [legMapVC removeMovingAnnotations];
+    }
+}
+
 @end

@@ -62,6 +62,7 @@
 @property (strong, nonatomic) PlanStore *planStore;
 @property (strong, nonatomic) ToFromViewController *toFromViewController;
 @property (readonly, strong, nonatomic) CLLocationManager* locationManager;
+@property (readonly, strong, nonatomic) CLLocation *locationFromlocManager;
 
 // Properties for Core Data
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
@@ -109,6 +110,8 @@
 @property (strong, nonatomic) GtfsParser *gtfsParser;
 @property (strong, nonatomic) Stations *stations;
 @property (strong, nonatomic) NSString *updateDeviceTokenURL;
+@property (nonatomic) BOOL isRouteOptionView;
+@property (nonatomic) BOOL isRouteDetailView;
 - (NSURL *)applicationDocumentsDirectory;
 
 -(void)setUpTabViewController;   // sets up TabViewController & the child navigation controllers

@@ -24,6 +24,7 @@
 #if TEST_FLIGHT_ENABLED
 #import "TestFlightSDK1-1/TestFlight.h"
 #import "ZipArchive.h"
+#import "UIDevice-Hardware.h"
 #endif
 #if FLURRY_ENABLED
 #import "Flurry.h"
@@ -92,6 +93,10 @@ static nc_AppDelegate *appDelegate;
 @synthesize stations;
 @synthesize updateDeviceTokenURL;
 @synthesize isFeedBackView;
+@synthesize isRouteOptionView;
+@synthesize isRouteDetailView;
+@synthesize locationFromlocManager;
+
 
 // Feedback parameters
 @synthesize FBDate,FBToAdd,FBSource,FBSFromAdd,FBUniqueId;
@@ -145,7 +150,9 @@ FeedBackForm *fbView;
     return YES;    // If Automated testing with alternative persistent store, skip NC_AppDelegate altogether and do all setup in test area
 #endif
     
-    [self unzipZipFileToApplicationDocumentDirectory];    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
+    NIMLOG_EVENT1(@"nc_AppDelegate didFinishLaunchingWithOptions started");
+    [self unzipZipFileToApplicationDocumentDirectory];
+    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
 
     prefs = [NSUserDefaults standardUserDefaults];
     [UserPreferance userPreferance];  // Saves default user preferences to server if needed
@@ -161,7 +168,30 @@ FeedBackForm *fbView;
           UIRemoteNotificationTypeSound)];
     }
     else{
-        [[UserPreferance userPreferance] performSelector:@selector(saveToServer) withObject:nil afterDelay:3.0];
+        [[UserPreferance userPreferance] performSelector:@selector(saveToServer) withObject:nil afterDelay:0.0];
+    }
+    NSDate *lastSaveDate = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_DATE];
+    NSDate *todayDate = dateOnlyFromDate([NSDate date]);
+    if(!lastSaveDate || ![lastSaveDate isEqualToDate:todayDate]){
+        NSDate *todayDate = dateOnlyFromDate([NSDate date]);
+        [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:CURRENT_DATE];
+        //[[nc_AppDelegate sharedInstance] updateTime];
+        [[nc_AppDelegate sharedInstance] performSelector:@selector(updateTime) withObject:nil afterDelay:1.0];
+    }
+    
+    NSDate *lastAgenciesSaveDate = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_DATE_AGENCIES];
+    if(!lastAgenciesSaveDate || ![lastAgenciesSaveDate isEqualToDate:todayDate]){
+        NSDate *todayDate = dateOnlyFromDate([NSDate date]);
+        [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:CURRENT_DATE];
+        //[[Agencies agencies] updateAgenciesFromServer];
+        [[Agencies agencies] performSelector:@selector(updateAgenciesFromServer) withObject:nil afterDelay:2.0];
+    }
+    
+    // Get TransitCalendar updates
+    //[self getTwiiterLiveData];
+    [self performSelector:@selector(getTwiiterLiveData) withObject:nil afterDelay:4.0];
+    if (timerTweeterGetData == nil) {
+        timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
     }
     
     // US-163 set-up for feedback reminders (also DE-238 fix)
@@ -192,6 +222,10 @@ FeedBackForm *fbView;
     RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];
     rkTpClient = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     
+    // Fixed:- DE-306
+    //http://stackoverflow.com/questions/9463259/restkit-disable-caching
+    rkTpClient.cachePolicy = RKRequestCachePolicyNone;
+    
     // Other URLs:
     // Trimet base URL is http://rtp.trimet.org/opentripplanner-api-webapp/ws/
     // NY City demo URL is http://demo.opentripplanner.org/opentripplanner-api-webapp/ws/
@@ -203,9 +237,6 @@ FeedBackForm *fbView;
         rkMOS = [RKManagedObjectStore objectStoreWithStoreFilename:COREDATA_DB_FILENAME];
         [rkGeoMgr setObjectStore:rkMOS];
         [rkPlanMgr setObjectStore:rkMOS];
-        
-        // Call suppertedRegion for getting boundry of bay area region
-        [self suppertedRegion];
         
         // Get the NSManagedObjectContext from restkit
         __managedObjectContext = [rkMOS managedObjectContext];
@@ -405,6 +436,8 @@ FeedBackForm *fbView;
                 [locations setIsLocationServiceEnable:TRUE];
             }
             
+            locationFromlocManager = newLocation;
+            
             // Set the coordinates (DE215, DE217 fix)
             [currentLocation setLatFloat:[newLocation coordinate].latitude];
             [currentLocation setLngFloat:[newLocation coordinate].longitude];
@@ -475,8 +508,9 @@ FeedBackForm *fbView;
     
     //Reload ToFromViewController
     if(self.isToFromView){
-        self.toLoc = toFromViewController.toLocation;
-        self.fromLoc = toFromViewController.fromLocation;
+        self.toLoc = locations.tempSelectedToLocation;
+        self.fromLoc = locations.tempSelectedFromLocation;
+        locations.isLocationSelected = true;
         [toFromViewController setEditMode:NO_EDIT];
         toFromViewController.toTableVC.txtField.text = NULL_STRING;
         toFromViewController.fromTableVC.txtField.text = NULL_STRING;
@@ -599,7 +633,8 @@ FeedBackForm *fbView;
         [toFromViewController.fromTableVC markAndUpdateSelectedLocation:self.fromLoc];
     }
     if(isFromBackground && !self.isToFromView && !self.isTwitterView && !self.isSettingView && !self.isFeedBackView && !self.isSettingDetailView){
-        toFromViewController.routeOptionsVC.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController.routeOptionsVC selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
+        // Fixed DE-329
+        toFromViewController.routeOptionsVC.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:toFromViewController.routeOptionsVC selector:@selector(decrementCounter) userInfo:nil repeats: YES];
         
     }
     UserPreferance* userPrefs = [UserPreferance userPreferance];
@@ -653,28 +688,90 @@ FeedBackForm *fbView;
         if (strToFormattedAddress) {
             NSArray* toLocations = [locations locationsWithFormattedAddress:strToFormattedAddress];
             if (toLocations && [toLocations count]>0) {
-                if ([[toLocations objectAtIndex:0] isCurrentLocation] && !toFromViewController.currentLocation) {
-                    // If toLocation == currentLocation, but currentLocation not yet set,
-                    // keep toLocation == nil and set it when currentLocaiton service available (updated DE-233 Attempted Fix)
-                } else {
-                    [toFromViewController.toTableVC markAndUpdateSelectedLocation:[toLocations objectAtIndex:0]];
+                if([toLocations count]>1){
+                    Location *toLocation = [self findHighestFrequencyToLocation:toLocations];
+                    if ([toLocation isCurrentLocation] && !toFromViewController.currentLocation) {
+                        // If toLocation == currentLocation, but currentLocation not yet set,
+                        // keep toLocation == nil and set it when currentLocaiton service available (updated DE-233 Attempted Fix)
+                    } else {
+                        [toFromViewController.toTableVC markAndUpdateSelectedLocation:toLocation];
+                    }
                 }
+                else{
+                    if ([[toLocations objectAtIndex:0] isCurrentLocation] && !toFromViewController.currentLocation) {
+                        // If toLocation == currentLocation, but currentLocation not yet set,
+                        // keep toLocation == nil and set it when currentLocaiton service available (updated DE-233 Attempted Fix)
+                    } else {
+                        [toFromViewController.toTableVC markAndUpdateSelectedLocation:[toLocations objectAtIndex:0]];
+                    }
+                }
+                
             }
         }
         if (strFromFormattedAddress) {
             NSArray* fromLocations = [locations locationsWithFormattedAddress:strFromFormattedAddress];
             if (fromLocations && [fromLocations count]>0) {
-                if ([[fromLocations objectAtIndex:0] isCurrentLocation] && !toFromViewController.currentLocation) {
-                    // If fromLocation == currentLocation, but currentLocation not yet set,
-                    // keep toLocation == nil and set it when currentLocaiton service available (updated DE-233 Attempted Fix)
-                } else {
-                    [toFromViewController.fromTableVC markAndUpdateSelectedLocation:[fromLocations objectAtIndex:0]];
+                if([fromLocations count]>1){
+                    Location *fromLocation = [self findHighestFrequencyFromLocation:fromLocations];
+                    if ([fromLocation isCurrentLocation] && !toFromViewController.currentLocation) {
+                        // If toLocation == currentLocation, but currentLocation not yet set,
+                        // keep toLocation == nil and set it when currentLocaiton service available (updated DE-233 Attempted Fix)
+                    } else {
+                        [toFromViewController.fromTableVC markAndUpdateSelectedLocation:fromLocation];
+                    }
+                }
+                else{
+                    if ([[fromLocations objectAtIndex:0] isCurrentLocation] && !toFromViewController.currentLocation) {
+                        // If fromLocation == currentLocation, but currentLocation not yet set,
+                        // keep toLocation == nil and set it when currentLocaiton service available (updated DE-233 Attempted Fix)
+                    } else {
+                        [toFromViewController.fromTableVC markAndUpdateSelectedLocation:[fromLocations objectAtIndex:0]];
+                    }
                 }
             }
         }
     }
 }
 
+#pragma mark - Check and return High Frequency Location
+
+-(Location *)findHighestFrequencyToLocation:(NSArray *)toLocation
+{
+    Location *highFrToLocation;
+    double tofrequency = 0;
+    double highfrequency = 0;
+    int toLocationNumber = 0;
+    for(int i=0;i<[toLocation count];i++){
+        highFrToLocation = [toLocation objectAtIndex:i];
+        tofrequency = [highFrToLocation.toFrequency doubleValue];
+        if (tofrequency > highfrequency) {
+            highfrequency = tofrequency;
+            toLocationNumber = i;
+        }
+    }
+    highFrToLocation = [toLocation objectAtIndex:toLocationNumber];
+    
+  return highFrToLocation;
+}
+
+-(Location *)findHighestFrequencyFromLocation:(NSArray *)fromLocation
+{
+    Location *highFrFromLocation;
+    double fromfrequency = 0;
+    double highfrequency = 0;
+    int fromLocationNumber = 0;
+    for(int i=0;i<[fromLocation count];i++){
+        highFrFromLocation = [fromLocation objectAtIndex:i];
+        fromfrequency = [highFrFromLocation.fromFrequency doubleValue];
+        if (fromfrequency > highfrequency) {
+            highfrequency = fromfrequency;
+            fromLocationNumber = i;
+        }
+    }
+    highFrFromLocation = [fromLocation objectAtIndex:fromLocationNumber];
+    
+  return highFrFromLocation;
+}
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     NIMLOG_PERF1(@"Will Terminate Called");
@@ -903,6 +1000,7 @@ FeedBackForm *fbView;
         isRegionSupport = TRUE;
         // DE - 181 Fixed
         RKClient *client = [RKClient clientWithBaseURL:TRIP_GENERATE_URL];
+        client.cachePolicy = RKRequestCachePolicyNone;
         [RKClient setSharedClient:client];
         [[RKClient sharedClient]  get:METADATA_URL delegate:self];
     }
@@ -983,26 +1081,6 @@ FeedBackForm *fbView;
                     if (maxLatitutedLoaded) { //
                         [toFromViewController setSupportedRegion:region];
                     }
-                    NSDate *lastSaveDate = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_DATE];
-                    NSDate *todayDate = dateOnlyFromDate([NSDate date]);
-                    if(!lastSaveDate || ![lastSaveDate isEqualToDate:todayDate]){
-                       NSDate *todayDate = dateOnlyFromDate([NSDate date]);
-                       [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:CURRENT_DATE];
-                        [[nc_AppDelegate sharedInstance] updateTime];
-                    }
-                    
-                    NSDate *lastAgenciesSaveDate = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_DATE_AGENCIES];
-                    if(!lastAgenciesSaveDate || ![lastAgenciesSaveDate isEqualToDate:todayDate]){
-                        NSDate *todayDate = dateOnlyFromDate([NSDate date]);
-                        [[NSUserDefaults standardUserDefaults] setObject:todayDate forKey:CURRENT_DATE];
-                        [[Agencies agencies] updateAgenciesFromServer];
-                    }
-                    
-                    // Get TransitCalendar updates
-                    [self getTwiiterLiveData];
-                    if (timerTweeterGetData == nil) {
-                        timerTweeterGetData =   [NSTimer scheduledTimerWithTimeInterval:TWEET_COUNT_POLLING_INTERVAL target:self selector:@selector(getTwiiterLiveData) userInfo:nil repeats: YES];
-                    }
                 }
                 else if([strRequestURL isEqualToString:updateDeviceTokenURL]){
                     NSDictionary *tempResponseDictionary = [rkParser objectFromString:[response bodyAsString] error:nil];
@@ -1036,11 +1114,12 @@ FeedBackForm *fbView;
 // Part Of DE-286 Fixed.
 - (void) updateDeviceToken{
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+    client.cachePolicy = RKRequestCachePolicyNone;
     [RKClient setSharedClient:client];
     NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
                             
                             DEVICE_TOKEN, [[nc_AppDelegate sharedInstance] deviceTokenString],
-                            APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],DUMMY_TOKEN_ID,[[NSUserDefaults standardUserDefaults] valueForKey:DUMMY_TOKEN_ID],
+                            APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],DUMMY_TOKEN_ID,[[NSUserDefaults standardUserDefaults] objectForKey:DUMMY_TOKEN_ID],APPLICATION_VERSION,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"],
                             nil];
     NSString *updateURL = [UPDATE_DEVICE_TOKEN appendQueryParams:params];
     updateDeviceTokenURL = updateURL;
@@ -1097,7 +1176,6 @@ FeedBackForm *fbView;
         }
         NSString *isUrgent = [userInfo valueForKey:@"isUrgent"];
         NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
-        NIMLOG_EVENT1(@"Remote Notification Sound: %@",sound);
         NSString *badge = [[userInfo valueForKey:@"aps"] valueForKey:@"badge"];
         prefs = [NSUserDefaults standardUserDefaults];
         [prefs setObject:badge forKey:TWEET_COUNT];
@@ -1161,7 +1239,7 @@ FeedBackForm *fbView;
         NSString *strAgencyIDs = [self getAgencyIdsString];
         //DE-290 Fixed
         if(strAgencyIDs.length > 0 && [[nc_AppDelegate sharedInstance] deviceTokenString]){
-            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_TOKEN, [[nc_AppDelegate sharedInstance] deviceTokenString],APPLICATION_TYPE,[self getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs, nil];
+            NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:DEVICE_TOKEN, [[nc_AppDelegate sharedInstance] deviceTokenString],APPLICATION_TYPE,[self getAppTypeFromBundleId],AGENCY_IDS,strAgencyIDs,APPLICATION_VERSION,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"], nil];
             isTwitterLivaData = TRUE;
             NSString *twitCountReq = [TWEET_COUNT_URL appendQueryParams:params];
             strTweetCountURL = twitCountReq;
@@ -1229,7 +1307,17 @@ FeedBackForm *fbView;
     NSString* buttonResponse;
     if(buttonIndex == 0){
         buttonResponse = @"App Store feedback";
-        NSURL *url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL];
+        //Fixed DE-326
+        NSURL *url;
+        if([[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] isEqualToString:CALTRAIN_APP_TYPE]){
+            url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL]; 
+        }
+        else if([[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] isEqualToString:SFMUNI_APP_TYPE]){
+             url = [[NSURL alloc] initWithString:NIMBLER_SF_REVIEW_URL];
+        }
+        else{
+            url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL]; 
+        }
         [[UIApplication sharedApplication] openURL:url];
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -1307,17 +1395,26 @@ FeedBackForm *fbView;
 }
 
 - (NSString *) deviceTokenString{
-    NSString *dummyToken = [prefs objectForKey:DUMMY_TOKEN_ID];
-    if(!dummyToken){
-         dummyToken = [NSString stringWithFormat:@"SF%@",generateRandomString(64)];
-        [prefs setObject:dummyToken forKey:DUMMY_TOKEN_ID];
+    // Return Hard Coded Token for iPhone or ipad simulator
+    if([[[UIDevice currentDevice] platformString] isEqualToString:SIMULATOR_IPHONE_NAMESTRING] || [[[UIDevice currentDevice] platformString] isEqualToString:SIMULATOR_IPAD_NAMESTRING]){
+        NSString  *token = @"26d906c5c273446d5f40d2c173ddd3f6869b2666b1c7afd5173d69b6629def70";
+        return token;
     }
+    
     NSString *deviceToken = [prefs objectForKey:DEVICE_TOKEN];
     if(deviceToken){
         return deviceToken;
     }
     else{
-        return [prefs objectForKey:DUMMY_TOKEN_ID];   
+        NSString *dummyToken = [prefs objectForKey:DUMMY_TOKEN_ID];
+        if(!dummyToken){
+            dummyToken = [NSString stringWithFormat:@"SF%@",generateRandomString(64)];
+            //Fixed DE-327
+            if(![[NSUserDefaults standardUserDefaults] boolForKey:DEVICE_TOKEN_UPDATED]){
+                [prefs setObject:dummyToken forKey:DUMMY_TOKEN_ID];
+            }
+        }
+        return dummyToken;   
     }
 }
 @end

@@ -42,7 +42,7 @@
     [RouteExcludeSettings setManagedObjectContext:managedObjectContext];
     
     // Set up PlanStore
-    planStore = [[PlanStore alloc] initWithManagedObjectContext:managedObjectContext rkPlanMgr:nil];
+    planStore = [[PlanStore alloc] initWithManagedObjectContext:managedObjectContext rkPlanMgr:nil rkTpClient:nil];
     
     // Set up Locations wrapper object pointing at the test Managed Object Context
     locations = [[Locations alloc] initWithManagedObjectContext:managedObjectContext rkGeoMgr:nil];

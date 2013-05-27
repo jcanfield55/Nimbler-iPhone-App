@@ -234,7 +234,6 @@ UIImage *imageDetailDisclosure;
 }
 - (void)viewDidLoad{
     [super viewDidLoad];
-    
     // Accessibility Label For UI Automation.
     self.mainTable.accessibilityLabel = TO_FROM_TABLE_VIEW;
     
@@ -272,11 +271,6 @@ UIImage *imageDetailDisclosure;
     continueGetTime = nil;
     [routeOptionsVC.timerGettingRealDataByItinerary invalidate];
     routeOptionsVC.timerGettingRealDataByItinerary = nil;
-    
-    datePicker = [[UIDatePicker alloc]initWithFrame:CGRectMake(0, 494, 320, 216)];
-    datePicker.datePickerMode = UIDatePickerModeDateAndTime;
-    datePicker.minuteInterval = 5;
-    [self.view addSubview:datePicker];
     
     NSArray *array = [NSArray arrayWithObjects:DATE_PICKER_DEPART,DATE_PICKER_ARRIVE, nil];
     departArriveSelector = [[UISegmentedControl alloc] initWithItems:array];
@@ -1214,6 +1208,12 @@ UIImage *imageDetailDisclosure;
     }
 }
 
+- (void) reloadDataWithLocationChanged{
+    [locations setAreLocationsChanged:YES];
+    // Reload the to/from tables for next time
+    [[self fromTable] reloadData];
+    [[self toTable] reloadData];
+}
 
 #pragma mark get Plan Request
 // Routine for calling and populating a trip-plan object
@@ -1345,13 +1345,11 @@ UIImage *imageDetailDisclosure;
                 parameters.rawAddressFROM = [fromLocation formattedAddress] ;
                 parameters.timeTO = [locations geoRespTimeTo];
             }
+            [nc_AppDelegate sharedInstance].isRouteOptionView = true;
             [planStore requestPlanWithParameters:parameters];
             savetrip = TRUE;
             isContinueGetRealTimeData = NO;
-            
-            // Reload the to/from tables for next time
-            [[self fromTable] reloadData];
-            [[self toTable] reloadData];
+            [self performSelector:@selector(reloadDataWithLocationChanged) withObject:nil afterDelay:0.01];
         }
         return true; 
     }
@@ -1423,19 +1421,25 @@ UIImage *imageDetailDisclosure;
         [locationPickerVC setLocationArray:locationList0];
         [locationPickerVC setIsFrom:isFrom0];
         [locationPickerVC setIsGeocodeResults:isGeocodeResults0];
-        if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
-            CATransition *animation = [CATransition animation];
-            [animation setDuration:0.3];
-            [animation setType:kCATransitionPush];
-            [animation setSubtype:kCATransitionFromRight];
-            [animation setRemovedOnCompletion:YES];
-            [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
-            [[self.navigationController.view layer] addAnimation:animation forKey:nil];
-            [[self navigationController] pushViewController:locationPickerVC animated:NO];
+        
+        // DE-310 Fixed
+        // Added Error Handling such that LocationPickerViewController is pushed only once even if user select the StationList multiple times.
+        BOOL isAlreadyPushed = NO;
+        for(UIViewController *controller in self.navigationController.viewControllers){
+            if([controller isKindOfClass:[LocationPickerViewController class]]){
+                isAlreadyPushed = YES;
+            }
         }
-        else{
-            [[self navigationController] pushViewController:locationPickerVC animated:YES];
-        } 
+        if(!isAlreadyPushed){
+                CATransition *animation = [CATransition animation];
+                [animation setDuration:0.3];
+                [animation setType:kCATransitionPush];
+                [animation setSubtype:kCATransitionFromRight];
+                [animation setRemovedOnCompletion:YES];
+                [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+                [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+                [[self navigationController] pushViewController:locationPickerVC animated:NO];
+        }
     }
     @catch (NSException *exception) {
         logException(@"ToFromViewController->callLocationPickerFor", @"", exception);
@@ -1520,15 +1524,13 @@ UIImage *imageDetailDisclosure;
 
 //US 137 implementation
 - (void)endEdit{
-    [self setEditMode:NO_EDIT]; 
+    //Fixed DE-330
+    // Clearing both textfield before calling seteditMode method.
     self.toTableVC.txtField.text = NULL_STRING;
     self.fromTableVC.txtField.text = NULL_STRING;
-//    [self.toTableVC toFromTyping:self.toTableVC.txtField forEvent:nil];
-//    [self.toTableVC textSubmitted:self.toTableVC.txtField forEvent:nil];
-//    [self.fromTableVC toFromTyping:self.fromTableVC.txtField forEvent:nil];
-//    [self.fromTableVC textSubmitted:self.fromTableVC.txtField forEvent:nil];
-    [self.toTableVC markAndUpdateSelectedLocation:toLocation];
-    [self.fromTableVC markAndUpdateSelectedLocation:fromLocation];
+    [self setEditMode:NO_EDIT];
+    [self.toTableVC markAndUpdateSelectedLocation:locations.tempSelectedToLocation];
+    [self.fromTableVC markAndUpdateSelectedLocation:locations.tempSelectedFromLocation];
 }
 
 #pragma mark UIdatePicker functionality
@@ -1562,6 +1564,7 @@ UIImage *imageDetailDisclosure;
 //---------------------------------------------------------------------------
 
 - (void)selectCurrentDate {
+    date = [NSDate date];
     [self.navigationController.navigationBar setUserInteractionEnabled:YES];
     [nc_AppDelegate sharedInstance].isDatePickerOpen = NO;
     [self.mainTable setUserInteractionEnabled:YES];
@@ -1591,6 +1594,16 @@ UIImage *imageDetailDisclosure;
 
 - (IBAction)openPickerView:(id)sender {
     [self.mainTable setUserInteractionEnabled:NO];
+    // Fixed DE-331
+    datePicker = nil;
+    datePicker = [[UIDatePicker alloc]initWithFrame:CGRectMake(0, 494, 320, 216)];
+    datePicker.datePickerMode = UIDatePickerModeDateAndTime;
+    datePicker.minuteInterval = 5;
+    NSDate *todayDate = date;
+    if(todayDate){
+      [datePicker setDate:todayDate];  
+    }
+    [self.view addSubview:datePicker];
     [nc_AppDelegate sharedInstance].isDatePickerOpen = YES;
      [self.navigationController.navigationBar setUserInteractionEnabled:NO];
     toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 450, 320, 44)];
@@ -1695,7 +1708,7 @@ UIImage *imageDetailDisclosure;
                 _rect.size.height = 42;
             }
             else{
-               _rect.size.height = 42; 
+               _rect.size.height = 42;
             }
             [view setFrame:_rect];
             

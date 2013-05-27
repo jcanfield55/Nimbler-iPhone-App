@@ -11,6 +11,8 @@
 #import "UserPreferance.h"
 #import "UtilityFunctions.h"
 #import "LocalConstants.h"
+#import "RouteExcludeSettings.h"
+#import "RouteExcludeSetting.h"
 
 #define SETTING_TITLE       @"App Settings"
 #define SETTING_ALERT_MSG   @"Updating your settings \n Please wait..."
@@ -223,7 +225,7 @@ UIImage *imageDetailDisclosure;
         // US 161 Implementation -- clear cache if max walk distance has been modified
         if(planCacheNeedsClearing) {
             PlanStore *planStore = [[nc_AppDelegate sharedInstance] planStore];
-            [planStore  clearCache];
+            [planStore  performSelector:@selector(clearCache) withObject:nil afterDelay:0.5];
             planCacheNeedsClearing = NO;
         }
         
@@ -278,6 +280,16 @@ UIImage *imageDetailDisclosure;
 // Slider callback method for new settings page
 -(IBAction)sliderWalkDistance:(UISlider *)sender
 {
+    
+    RouteExcludeSettings *excludesettings = [RouteExcludeSettings latestUserSettings];
+    IncludeExcludeSetting setting = [excludesettings settingForKey:BIKE_BUTTON];
+    if(setting == SETTING_EXCLUDE_ROUTE){
+        ToFromViewController *toFromVc = [nc_AppDelegate sharedInstance].toFromViewController;
+        if(![nc_AppDelegate sharedInstance].isToFromView){
+            [toFromVc.navigationController popToRootViewControllerAnimated:YES];
+        }
+    }
+    
     [sliderMaximumWalkDistance setValue:sliderMaximumWalkDistance.value];
     [sliderMaximumWalkDistance setSelected:YES];
     [UserPreferance userPreferance].walkDistance = sliderMaximumWalkDistance.value;

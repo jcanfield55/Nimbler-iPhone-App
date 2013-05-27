@@ -21,8 +21,8 @@
 #define TEST_GEO_RESPONSE_URL  @"http://localhost:8080/TPServer/ws/mockgeolocation/"
 
 // To select server URL select 1 otherwise select 0,At a time only one of below must be 1.
-#define PRODUCTION_URL  1
-#define STAGGING_URL    0
+#define PRODUCTION_URL  0
+#define STAGGING_URL    1
 #define LOCAL_URL       0
 
 #if PRODUCTION_URL
@@ -231,6 +231,8 @@
 
 // Geocode behavior
 #define IOS_GEOCODE_VER_THRESHOLD (6.0)  // Version at which we start using iOS geocoding (rather than Google)
+// Local Search behavior
+#define IOS_LOCALSEARCH_VER (6.1)  // Version at which we start using iOS MAPKIT LOCAL SEARCH
 
 // Reverse Geocode behavior
 #define REVERSE_GEO_DISTANCE_THRESHOLD  (50.0)  // Maximum distance in meters before we redo a reverse geolocation
@@ -290,6 +292,8 @@
 #define AGENCY_SHORT_NAME_BY_AGENCY_ID_DICTIONARY @"agencyShortNameByAgencyIdDictionary"
 #define AGENCY_FEED_ID_FROM_AGENCY_NAME_DICTIONARY @"agencyFeedIdFromAgencyNameDictionary"
 #define AGENCY_NAME_FROM_AGENCY_FEED_ID_DICTIONARY @"agencyNameFromAgencyFeedIdDictionary"
+
+#define SUPPORTED_FEED_ID_STRING   @"supportedFeedIdString"
 
 // Request timer Count
 #define TWEET_COUNT_POLLING_INTERVAL 120.0
@@ -471,4 +475,6 @@
 #define SHOW_INTERMEDIATE_STOPS @"showIntermediateStops"
 
 #define APPLICATION_VERSION            @"appVer"
+
+#define LIVE_FEEDS_BY_VEHICLE_POSITION @"livefeeds/vehiclePosition"
 

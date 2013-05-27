@@ -80,10 +80,26 @@ NSUserDefaults *prefs;
     // Release any cached data, images, etc that aren't in use.
 }
 
+// Part Of DE-318 Fix
+// Will resign first responder if textview or textfield become first responder.
+- (void)handleSingleTap{
+    if([txtFeedBack becomeFirstResponder]){
+        [txtFeedBack resignFirstResponder];
+    }
+    if([txtEmailId becomeFirstResponder]){
+        [txtEmailId resignFirstResponder];
+    }
+}
+
 #pragma mark - View lifecycle
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    // Part Of DE-318 Fix
+    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap)];
+    [singleTap setNumberOfTapsRequired:1];
+    [self.view addGestureRecognizer:singleTap];
+    
     self.txtFeedBack.delegate = self;
     self.txtEmailId.delegate = self;
     if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
@@ -465,9 +481,9 @@ NSUserDefaults *prefs;
 {
     
     alertView = [self feedbackConfirmAlert];
-    
     // NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+    client.cachePolicy = RKRequestCachePolicyNone;
     RKParams *rkp = [RKParams params];
     [RKClient setSharedClient:client];
     
@@ -514,7 +530,10 @@ NSUserDefaults *prefs;
             [rkp setValue:[nc_AppDelegate sharedInstance].FBUniqueId forParam:FB_UNIQUEID];
         } 
     }
+    [rkp setValue:[[nc_AppDelegate sharedInstance] deviceTokenString]  forParam:DEVICE_TOKEN];
     [rkp setValue:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] forParam:APPLICATION_TYPE];
+    [rkp setValue:[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"] forParam:APPLICATION_VERSION];
+    
     timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(popOut) userInfo:nil repeats: NO];
     [[RKClient sharedClient] post:FB_REQUEST params:rkp delegate:self];
 }

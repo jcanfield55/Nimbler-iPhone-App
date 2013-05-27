@@ -16,6 +16,7 @@
 #import "LocationFromIOS.h"
 #import "LocationFromGoogle.h"
 #import "GeocodeRequestParameters.h"
+#import "LocationFromLocalSearch.h"
 
 // Callback protocol used for objects calling geocoder methods
 @protocol LocationsGeocodeResultsDelegate
@@ -30,7 +31,7 @@
 @end
 
 
-@interface Locations : NSObject <RKObjectLoaderDelegate>
+@interface Locations : NSObject <RKObjectLoaderDelegate,CLLocationManagerDelegate>
 
 @property (strong, nonatomic) NSString *typedFromString;  // Typed string in the from field 
 @property (strong, nonatomic) NSString *typedToString;    // Typed string in the to field
@@ -49,6 +50,10 @@
 @property (nonatomic) BOOL isFromGeo;
 @property (nonatomic) BOOL isToGeo;
 @property (nonatomic) BOOL isLocationServiceEnable;
+@property (nonatomic) BOOL isLocationSelected;
+
+@property (nonatomic , strong) Location *tempSelectedFromLocation;
+@property (nonatomic , strong) Location *tempSelectedToLocation;
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkGeoMgr:(RKObjectManager *)rkG;
 
@@ -65,6 +70,8 @@
 - (Location *)newEmptyLocation;
 - (LocationFromGoogle *)newEmptyLocationFromGoogle;
 - (LocationFromIOS *)newLocationFromIOSWithPlacemark:(CLPlacemark *)placemark error:(NSError *)error; // set error==nil if status is OK
+//Add selected Local Search Result to Location and remove from LocationFromLocalSearch
+-(LocationFromIOS *)selectedLocationOfLocalSearchWithLocation:(LocationFromLocalSearch *)localSearchLocation IsFrom:(BOOL)isFrom error:(NSError *)error;
 - (int)numberOfLocations:(BOOL)isFrom;
 - (Location *)locationAtIndex:(int)index isFrom:(BOOL)isFrom;
 
@@ -106,4 +113,12 @@
 // A pre-load station matches when each typed token has a substring match with the preloadStation name
 - (NSArray *) preloadStationLocationsMatchingTypedAddress:(NSString *)string;
 
+// Local Search
+- (void)setTypedFromStringForLocalSearch:(NSString *)typedFromStr0;
+- (void)setTypedToStringForLocalSearch:(NSString *)typedToStr0;
+
+- (LocationFromLocalSearch *)newLocationFromIOSWithPlacemark:(CLPlacemark *)placemark error:(NSError *)error IsLocalSearchResult:(BOOL) isLocalSearchResult;
+
+// Check in database for exact lat lng match
+- (NSArray *) locationsWithLat:(double)lat Lng:(double)lng;
 @end

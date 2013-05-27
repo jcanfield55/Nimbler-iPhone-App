@@ -199,7 +199,7 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
 -(NSArray *)excludeSettingsForPlan:(Plan *)plan {
     
     // Get the itineraries that are relevant to this particular tripDate but with no exclusions
-    NSArray* relevantItineraries = [plan uniqueItineraries];
+    NSArray* relevantItineraries = [[plan itineraries] allObjects];
     NSMutableArray* returnArray = [[NSMutableArray alloc] initWithCapacity:10];
     for (Itinerary* itin in relevantItineraries) {
         for (Leg* leg in [itin legs]) {
@@ -357,9 +357,50 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
     return true;
 }
 
+// Fixed DE-313
+// Returns true if itin contains walk and bike and also route exclude settings for bike is SETTING_INCLUDE_ROUTE otherwise return false.
+- (BOOL) itineraryContainsWalkAndBike:(NSSet *)legs{
+    BOOL containWalk = false;
+    BOOL containBike = false;
+    BOOL needToIncludeLeg = true;
+    for(Leg *leg in legs){
+        if(leg.isBike){
+            containBike = true;
+        }
+        if(leg.isWalk){
+            containWalk = true;
+        }
+        if (returnShortAgencyName(leg.agencyName)) {
+            NSString *legKey;
+            NSString* handling = [[RouteExcludeSettings agencyButtonHandlingDictionary] objectForKey:returnShortAgencyName(leg.agencyName)];
+            if (handling) {
+                if ([handling isEqualToString:EXCLUSION_BY_AGENCY]) {
+                    legKey = returnShortAgencyName(leg.agencyName);
+                } else {  // EXCLUSION_BY_RAIL_BUS
+                    NSString *railOrBus = (leg.isBus ? @"Bus" : @"Rail");
+                    if ([leg.agencyName isEqualToString:SFMUNI_AGENCY_NAME]) {
+                        railOrBus = (leg.isBus ? @"Bus" : @"Tram");
+                    }
+                    legKey = [NSString stringWithFormat:@"%@ %@", returnShortAgencyName(leg.agencyName), railOrBus];
+                }
+                if ([self settingForKey:legKey] == SETTING_EXCLUDE_ROUTE) {
+                    needToIncludeLeg = false;
+                }
+            }
+        }
+    }
+    if(containBike && containWalk && [self settingForKey:BIKE_BUTTON]==SETTING_INCLUDE_ROUTE && needToIncludeLeg)
+        return true;
+    else
+        return false;
+}
+
+
 // Returns true if itin should be included based on the RouteExclude settings
--(BOOL)isItineraryIncluded:(Itinerary *)itin
-{
+-(BOOL)isItineraryIncluded:(Itinerary *)itin {
+       if([self itineraryContainsWalkAndBike:[itin legs]]){
+          return true;
+       }
        for (Leg* leg in [itin legs]) {
            NSString* legKey = nil;
            if (leg.isWalk && [self settingForKey:BIKE_BUTTON]==SETTING_INCLUDE_ROUTE) {

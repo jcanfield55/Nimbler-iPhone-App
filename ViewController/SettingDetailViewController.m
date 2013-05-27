@@ -11,6 +11,8 @@
 #import "nc_AppDelegate.h"
 #import "LocalConstants.h"
 #import "UtilityFunctions.h"
+#import "RouteExcludeSettings.h"
+#import "RouteExcludeSetting.h"
 
 @implementation SettingDetailViewController
 
@@ -196,6 +198,20 @@
 }
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
+    if(sliderMaximumBikeDistance.value !=  [[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_MAX_BIKE_DISTANCE] floatValue] || sliderPreferenceFastVsSafe.value != [[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_BIKE_FAST_VS_SAFE] floatValue] || sliderPreferenceFastVsFlat.value != [[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_BIKE_FAST_VS_FLAT] floatValue]){
+        RouteExcludeSettings *excludesettings = [RouteExcludeSettings latestUserSettings];
+        IncludeExcludeSetting setting = [excludesettings settingForKey:BIKE_BUTTON];
+        if(setting == SETTING_INCLUDE_ROUTE){
+            ToFromViewController *toFromVc = [nc_AppDelegate sharedInstance].toFromViewController;
+            if(![nc_AppDelegate sharedInstance].isToFromView){
+                [toFromVc.navigationController popToRootViewControllerAnimated:YES];
+            }
+        }
+        PlanStore *planStore = [[nc_AppDelegate sharedInstance] planStore];
+        [planStore  performSelector:@selector(clearCacheForBikePref) withObject:nil afterDelay:0.5];
+    }
+
+    
     [nc_AppDelegate sharedInstance].isSettingDetailView = NO;
     isSettingDetail = NO;
     UserPreferance* userPrefs = [UserPreferance userPreferance];
@@ -203,12 +219,6 @@
         userPrefs.bikeDistance = sliderMaximumBikeDistance.value;
         userPrefs.fastVsSafe = sliderPreferenceFastVsSafe.value;
         userPrefs.fastVsFlat = sliderPreferenceFastVsFlat.value;
-    }
-    
-    if(![lblCurrentBikeDistance.text isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_MAX_BIKE_DISTANCE]])
-    {
-        PlanStore *planStore = [[nc_AppDelegate sharedInstance] planStore];
-        [planStore  clearCacheForBikePref];
     }
     
     [settingDetailDelegate updateSetting];

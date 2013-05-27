@@ -14,7 +14,7 @@
 @interface RouteDetailsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,RKRequestDelegate>
 {
     NSDateFormatter *timeFormatter;
-    UIBarButtonItem *twitterCaltrain;    
+    UIBarButtonItem *twitterCaltrain;
 }
 @property(nonatomic, strong) IBOutlet UITableView* mainTable; // Table listing route details
 @property(nonatomic, strong) MKMapView *mapView; 
@@ -23,9 +23,15 @@
 @property(nonatomic) int itineraryNumber; // selected row on the itinerary list
 @property(nonatomic, readonly) CGFloat mainTableTotalHeight;  // the total height (height needed so that no scrolling needed) of the mainTable in pixels for a given itinerary
 
-@property(nonatomic, strong) UIButton *btnBackItem;
-@property(nonatomic, strong) UIButton *btnForwardItem;
-@property(nonatomic, strong) UIButton *btnGoToItinerary;
+@property(nonatomic, strong)  UIButton *btnBackItem;
+@property(nonatomic, strong)  UIButton *btnForwardItem;
+@property(nonatomic, strong)  UIButton *btnGoToItinerary;
+@property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic) int count;
+@property (nonatomic, strong) IBOutlet UILabel  * lblNextRealtime;
+@property (nonatomic, strong) IBOutlet UIButton * handleControl;
+@property (nonatomic) int mapHeight;
+@property (nonatomic) int tableHeight;
 
 - (IBAction)navigateBack:(id)sender;
 - (IBAction)navigateForward:(id)sender;
@@ -35,6 +41,10 @@
 -(void)setFBParamater:(int)ss;
 -(void)setFBParameterForLeg:(NSString *)legId;
 -(void)newItineraryAvailable:(Itinerary *)newItinerary
-                 status:(ItineraryStatus)status;
+status:(ItineraryStatus)status ItineraryNumber:(int)itiNumber;
 - (void) intermediateStopTimesReceived:(NSArray *)stopTimes Leg:(Leg *)leg;
+- (void) setViewFrames;
+
+// return Formatted string like 00:58
+- (NSString *) returnFormattedStringFromSeconds:(int) seconds;
 @end
