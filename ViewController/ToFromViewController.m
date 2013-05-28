@@ -748,7 +748,7 @@ UIImage *imageDetailDisclosure;
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([indexPath section] == TIME_DATE_SECTION) {  
-        [datePicker setDate:tripDate];
+        [datePicker setDate:tripDate animated:YES];
         [self openPickerView:self];
         
         [self hideTabBar];
@@ -1594,15 +1594,26 @@ UIImage *imageDetailDisclosure;
 
 - (IBAction)openPickerView:(id)sender {
     [self.mainTable setUserInteractionEnabled:NO];
+    
     // Fixed DE-331
     datePicker = nil;
     datePicker = [[UIDatePicker alloc]initWithFrame:CGRectMake(0, 494, 320, 216)];
     datePicker.datePickerMode = UIDatePickerModeDateAndTime;
     datePicker.minuteInterval = 5;
-    NSDate *todayDate = date;
-    if(todayDate){
-      [datePicker setDate:todayDate];  
+    
+    NSDate *savedDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"todayDate"];
+    if(savedDate && [savedDate isEqualToDate:dateOnlyFromDate([NSDate date])]){
+        NSDate *selectedDate = date;
+        if(selectedDate){
+            [datePicker setDate:selectedDate animated:YES];
+        }
     }
+    else{
+        [datePicker setDate:[NSDate date] animated:YES];
+        [[NSUserDefaults standardUserDefaults] setObject:dateOnlyFromDate([NSDate date]) forKey:@"todayDate"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
     [self.view addSubview:datePicker];
     [nc_AppDelegate sharedInstance].isDatePickerOpen = YES;
      [self.navigationController.navigationBar setUserInteractionEnabled:NO];

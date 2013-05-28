@@ -250,7 +250,20 @@ NSString *strStreet2 = @"street ";
     [myTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];     // scroll to the top of the table
 }
 
-
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if ([toFromVC editMode]==NO_EDIT &&
+        [self adjustedForEnterNewAddressFor:[indexPath row]] == -1) {
+        return 36;
+    }
+    else{
+        Location *loc = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]]
+                                            isFrom:isFrom];
+        if([loc.formattedAddress rangeOfString:@"\n"].location != NSNotFound){
+            return 44;
+        }
+    }
+    return 36;
+}
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([toFromVC editMode]==NO_EDIT && 
@@ -291,18 +304,18 @@ NSString *strStreet2 = @"street ";
                                         isFrom:isFrom];
     // if There is PlaceName available for location
     if([loc isKindOfClass:[LocationFromLocalSearch class ]]){
-            cell.textLabel.numberOfLines = 2;
-            cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
-            [[cell textLabel] setText:[loc shortFormattedAddress]];
+        cell.textLabel.numberOfLines = 2;
+        cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+        [[cell textLabel] setText:[loc shortFormattedAddress]];
         [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
         cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
         [cell setAccessoryView:nil];
     }
     else{
         if([loc isKindOfClass:[LocationFromIOS class ]]){
-                cell.textLabel.numberOfLines = 2;
-                cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
-                [[cell textLabel] setText:[loc shortFormattedAddress]];
+           cell.textLabel.numberOfLines = 2;
+           cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+           [[cell textLabel] setText:[loc shortFormattedAddress]];
         }
         else{
              [[cell textLabel] setText:[loc shortFormattedAddress]];
@@ -315,7 +328,7 @@ NSString *strStreet2 = @"street ";
             [cell setAccessoryView:nil];
         }
         else if (loc == selectedLocation) {
-            [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
+            [[cell textLabel] setFont:[UIFont MEDIUM_BOLD_FONT]];
             cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
             if ([toFromVC editMode] == NO_EDIT) {
                 UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
