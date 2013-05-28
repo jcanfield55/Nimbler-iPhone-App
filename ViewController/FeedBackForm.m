@@ -451,6 +451,13 @@ NSUserDefaults *prefs;
         if ([response isOK]) {
             // Success! Let's take a look at the data
             txtFeedBack.text = NULL_STRING;
+            // Resign First responder of both textfield and textview when feedback sent success received from server
+            if([txtFeedBack becomeFirstResponder]){
+               [txtFeedBack resignFirstResponder];  
+            }
+            if([txtEmailId becomeFirstResponder]){
+               [txtEmailId resignFirstResponder];  
+            }
             RKJSONParserJSONKit* parser1 = [RKJSONParserJSONKit new];
             NSDictionary *fbParser = [parser1 objectFromString:[response bodyAsString] error:nil];
             NSString *msg;
