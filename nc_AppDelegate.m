@@ -314,20 +314,18 @@ FeedBackForm *fbView;
         }
         // Fixed DE-337
         // Added value of excludeFromSearch to NO if the excludeFromSearch is nil in db.
+#endif
         NIMLOG_PERF2(@"Started Updating ExcludeFromSearch");
-         if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-             NSFetchRequest * fetchLocation = [[NSFetchRequest alloc] init];
-             [fetchLocation setEntity:[NSEntityDescription entityForName:@"Location" inManagedObjectContext:self.managedObjectContext]];
-             NSArray * arrayLocations = [self.managedObjectContext executeFetchRequest:fetchLocation error:nil];
-             for (Location *loc in arrayLocations){
-                 if(!loc.excludeFromSearch){
-                    loc.excludeFromSearch = [NSNumber numberWithBool:NO]; 
-                 }
-             }
-         }
+        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+            NSFetchRequest * fetchLocation = [[NSFetchRequest alloc] init];
+            [fetchLocation setEntity:[NSEntityDescription entityForName:@"Location" inManagedObjectContext:self.managedObjectContext]];
+            NSArray * arrayLocations = [self.managedObjectContext executeFetchRequest:fetchLocation error:nil];
+            for (Location *loc in arrayLocations){
+                loc.excludeFromSearch = [NSNumber numberWithBool:NO];
+            }
+        }
         NIMLOG_PERF2(@"Finished Updating ExcludeFromSearch");
         saveContext(self.managedObjectContext);
-#endif
         [toFromViewController setStations:stations];
     }@catch (NSException *exception) {
         logException(@"ncAppDelegate->didFinishLaunchingWithOptions #1", @"", exception);
