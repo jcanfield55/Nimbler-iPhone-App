@@ -27,6 +27,12 @@
 #define MAX_LAT           @"38.7189988"
 #define MAX_LONG          @"-121.025001"
 
+// Facebook App ID (for tracking referrals)
+#define FB_APP_ID @"247868928685317"  // Nimbler SF FB App ID
+
+// Review reminder URL
+#define NIMBLER_REVIEW_URL                   @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=638067545"   // Nimbler SF Review URL
+
 //
 // Settings Page Rows
 //

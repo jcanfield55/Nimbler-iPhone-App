@@ -1642,21 +1642,21 @@
 		520FB289162604950083F143 /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
-				8DFD0DAE17264CDB003FCB5A /* LocalConstantsCaltrain.h */,
-				8DE18C6E17256CD200AA8112 /* ConstantsCaltrain.h */,
-				8DE18C6D1725630600AA8112 /* Nimbler DC-Prefix.pch */,
-				8DE18C6C17255CBA00AA8112 /* LocalConstantsDC.h */,
-				8DA780951724FF820090C2EA /* Nimbler Caltrain-Info.plist */,
-				524100A31727542E0007D956 /* Nimbler DC-Info.plist */,
-				8DA780961724FF820090C2EA /* Nimbler SF-Prefix.pch */,
-				8D42C2F8163AC05C00880B33 /* Nimbler SF-Info.plist */,
-				8D42C2F9163AC05C00880B33 /* Nimbler Caltrain-Prefix.pch */,
-				52CF43AA14BDF2F9000565D6 /* InfoPlist.strings */,
 				520FB28A162604950083F143 /* Constants.h */,
-				524A921116E6C71C00A9A0A2 /* LocalConstants.h */,
+				8DE18C6E17256CD200AA8112 /* ConstantsCaltrain.h */,
 				520FB28B162604950083F143 /* CoverageGeoJSON.geojson */,
 				520FB28C162604950083F143 /* enums.h */,
+				52CF43AA14BDF2F9000565D6 /* InfoPlist.strings */,
+				524A921116E6C71C00A9A0A2 /* LocalConstants.h */,
+				8DFD0DAE17264CDB003FCB5A /* LocalConstantsCaltrain.h */,
+				8DE18C6C17255CBA00AA8112 /* LocalConstantsDC.h */,
 				520FB28D162604950083F143 /* Logging.h */,
+				8DA780951724FF820090C2EA /* Nimbler Caltrain-Info.plist */,
+				8D42C2F9163AC05C00880B33 /* Nimbler Caltrain-Prefix.pch */,
+				524100A31727542E0007D956 /* Nimbler DC-Info.plist */,
+				8DE18C6D1725630600AA8112 /* Nimbler DC-Prefix.pch */,
+				8D42C2F8163AC05C00880B33 /* Nimbler SF-Info.plist */,
+				8DA780961724FF820090C2EA /* Nimbler SF-Prefix.pch */,
 				520FB290162604950083F143 /* TEXTConstant.h */,
 				520FB291162604950083F143 /* UIAutomationConstants.h */,
 				520FB292162604950083F143 /* UIConstants.h */,
@@ -3023,8 +3023,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -3052,8 +3052,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler SF";
-				PROVISIONING_PROFILE = "190AE823-AD52-4922-8058-4E54D4C697C5";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "190AE823-AD52-4922-8058-4E54D4C697C5";
+				PROVISIONING_PROFILE = "0A91B105-7AE5-46F8-A3AF-8DFA7C7DDF39";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0A91B105-7AE5-46F8-A3AF-8DFA7C7DDF39";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -3065,7 +3065,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3095,7 +3095,7 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler SF";
-				PROVISIONING_PROFILE = "190AE823-AD52-4922-8058-4E54D4C697C5";
+				PROVISIONING_PROFILE = "0A91B105-7AE5-46F8-A3AF-8DFA7C7DDF39";
 				"PROVISIONING_PROFILE[sdk=*]" = "190AE823-AD52-4922-8058-4E54D4C697C5";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "190AE823-AD52-4922-8058-4E54D4C697C5";
 				SHARED_PRECOMPS_DIR = "";

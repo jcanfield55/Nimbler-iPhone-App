@@ -343,6 +343,12 @@ FeedBackForm *fbView;
     [Flurry logEvent:FLURRY_APPDELEGATE_START];
 #endif
     
+    //Log App in facebook so we can track referrals from Facebook advertisements
+    NIMLOG_PERF2(@"Facebook SDK with ID: %@", FB_APP_ID);
+    [FBSettings publishInstall:FB_APP_ID];
+    NIMLOG_PERF2(@"Finished calling FB SDK");
+    
+    
     // Create an instance of a UINavigationController and put toFromViewController as the first view
     @try {
         [self setUpTabViewController];
@@ -646,10 +652,7 @@ FeedBackForm *fbView;
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    //TODO:- Need to create App in facebook and also need to add appId here.
-    /*
-    [FBSettings publishInstall:@"AppId"];
-    */
+
     //US-163 Implementation
     [self showFeedBackAlertIfNeeded];
     /*
@@ -1308,16 +1311,7 @@ FeedBackForm *fbView;
     if(buttonIndex == 0){
         buttonResponse = @"App Store feedback";
         //Fixed DE-326
-        NSURL *url;
-        if([[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] isEqualToString:CALTRAIN_APP_TYPE]){
-            url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL]; 
-        }
-        else if([[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] isEqualToString:SFMUNI_APP_TYPE]){
-             url = [[NSURL alloc] initWithString:NIMBLER_SF_REVIEW_URL];
-        }
-        else{
-            url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL]; 
-        }
+        NSURL *url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL];
         [[UIApplication sharedApplication] openURL:url];
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
         [[NSUserDefaults standardUserDefaults] synchronize];
