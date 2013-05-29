@@ -33,10 +33,10 @@
 	<string>Icon-Caltrain.png</string>
 	<key>CFBundleIconFiles</key>
 	<array>
-		<string>Icon-Caltrain-72.png</string>
-		<string>Icon-Caltrain-72@2x.png</string>
-		<string>Icon-Caltrain-Small.png</string>
-		<string>Icon-Caltrain-Small@2x.png</string>
+		<string>Icon_ipad-Caltrain.png</string>
+		<string>Icon_ipad-Caltrain@2x.png</string>
+		<string>Icon-small-Caltrain.png</string>
+		<string>Icon-small-Caltrain@2x.png</string>
 		<string>Icon-Caltrain.png</string>
 		<string>Icon-Caltrain@2x.png</string>
 	</array>
@@ -50,8 +50,6 @@
 				<string>Icon_ipad-Caltrain@2x.png</string>
 				<string>Icon-small-Caltrain.png</string>
 				<string>Icon-small-Caltrain@2x.png</string>
-				<string>Default-Caltrain.png</string>
-				<string>Default-Caltrain@2x.png</string>
 				<string>Icon-Caltrain.png</string>
 				<string>Icon-Caltrain@2x.png</string>
 			</array>
