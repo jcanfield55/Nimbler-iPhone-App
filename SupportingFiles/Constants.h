@@ -21,8 +21,8 @@
 #define TEST_GEO_RESPONSE_URL  @"http://localhost:8080/TPServer/ws/mockgeolocation/"
 
 // To select server URL select 1 otherwise select 0,At a time only one of below must be 1.
-#define PRODUCTION_URL  0
-#define STAGGING_URL    1
+#define PRODUCTION_URL  1
+#define STAGGING_URL    0
 #define LOCAL_URL       0
 
 #if PRODUCTION_URL
@@ -139,7 +139,7 @@
 #define MAX_BIKE_DISTANCE_MAX_VALUE           20
 
 // Flurry analytics and logging
-#define FLURRY_ENABLED 0
+#define FLURRY_ENABLED 1
 #define IS_KICKFOLIO 0
 
 // Flurry events
