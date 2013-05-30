@@ -112,6 +112,7 @@
 @property (strong, nonatomic) NSString *updateDeviceTokenURL;
 @property (nonatomic) BOOL isRouteOptionView;
 @property (nonatomic) BOOL isRouteDetailView;
+
 - (NSURL *)applicationDocumentsDirectory;
 
 -(void)setUpTabViewController;   // sets up TabViewController & the child navigation controllers

@@ -122,16 +122,4 @@
         }
 }
 
-- (void)contextChanged:(NSNotification*)notification
-{
-    if ([notification object] == [self managedObjectContext]) return;
-    
-    if (![NSThread isMainThread]) {
-        [self performSelectorOnMainThread:@selector(contextChanged:) withObject:notification waitUntilDone:YES];
-        return;
-    }
-    [[self managedObjectContext] mergeChangesFromContextDidSaveNotification:notification];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 @end
