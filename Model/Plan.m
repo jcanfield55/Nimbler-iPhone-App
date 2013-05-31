@@ -295,6 +295,8 @@
     // DE-320 Fixed
     // We will not remove itinerary if itinerary is displayed in routedetail page
     Itinerary *detailViewitinerary = [nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC.itinerary;
+    // Fixed DE-320
+    // Remove Itinerary if it is not RouteDetailView itinerary.
     if(itin0 != detailViewitinerary){
         [self removeItinerariesObject:itin0];
         [[self managedObjectContext] deleteObject:itin0];
@@ -317,29 +319,39 @@
                                  departOrArrive:(DepartOrArrive)depOrArrive
                            routeExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
 {
-    PlanRequestChunk* requestChunk = [NSEntityDescription insertNewObjectForEntityForName:@"PlanRequestChunk"
-                                                            inManagedObjectContext:[self managedObjectContext]];
-    [requestChunk setPlan:self];
-    [requestChunk setType:[NSNumber numberWithInt:OTP_ITINERARY]];
-    [requestChunk setRouteExcludeSettings:routeExcludeSettings];
-    if (depOrArrive == DEPART) {
-        [requestChunk setEarliestRequestedDepartTimeDate:requestDate];
-    } else { // ARRIVE
-        [requestChunk setLatestRequestedArriveTimeDate:requestDate];
-    }
-    for (Itinerary* itin in [NSSet setWithSet:[self itineraries]]) { // Add all the itineraries to this request chunk
-        if ([itin isOvernightItinerary]) {
-            [self deleteItinerary:itin];
-        } else {
-            // Only initialize variables if we did not already delete the itinerary
-            [requestChunk addItinerariesObject:itin];
-            [itin initializeTimeOnlyVariablesWithRequestDate:requestDate]; // Set startTimeOnly & endTimeOnly
+    @try {
+        PlanRequestChunk* requestChunk = [NSEntityDescription insertNewObjectForEntityForName:@"PlanRequestChunk"
+                                                                       inManagedObjectContext:[self managedObjectContext]];
+        [requestChunk setPlan:self];
+        [requestChunk setType:[NSNumber numberWithInt:OTP_ITINERARY]];
+        if (requestChunk.managedObjectContext == routeExcludeSettings.managedObjectContext) {
+            [requestChunk setRouteExcludeSettings:routeExcludeSettings];
+        } else {  // DE311 error checking
+            logError(@"Plan->initializeNewPlanFromOTPWithRequestDate",
+                     [NSString stringWithFormat:@"Managed Object Context not equal, isMainThread = %d",
+                      [NSThread isMainThread]]);
+        }
+        if (depOrArrive == DEPART) {
+            [requestChunk setEarliestRequestedDepartTimeDate:requestDate];
+        } else { // ARRIVE
+            [requestChunk setLatestRequestedArriveTimeDate:requestDate];
+        }
+        for (Itinerary* itin in [NSSet setWithSet:[self itineraries]]) { // Add all the itineraries to this request chunk
+            if ([itin isOvernightItinerary]) {
+                [self deleteItinerary:itin];
+            } else {
+                // Only initialize variables if we did not already delete the itinerary
+                [requestChunk addItinerariesObject:itin];
+                [itin initializeTimeOnlyVariablesWithRequestDate:requestDate]; // Set startTimeOnly & endTimeOnly
+            }
+        }
+        if ([[requestChunk itineraries] count] == 0) { // if no itineraries, get rid of request chunk
+            [[self managedObjectContext] deleteObject:requestChunk];
         }
     }
-    if ([[requestChunk itineraries] count] == 0) { // if no itineraries, get rid of request chunk
-        [[self managedObjectContext] deleteObject:requestChunk];
+    @catch (NSException *exception) {
+        logException(@"initializeNewPlanFromOTPWithRequestDate:", @"", exception);
     }
-
 }
 
 

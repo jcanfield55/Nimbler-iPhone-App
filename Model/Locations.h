@@ -118,4 +118,7 @@
 - (void)setTypedToStringForLocalSearch:(NSString *)typedToStr0;
 
 - (LocationFromLocalSearch *)newLocationFromIOSWithPlacemark:(CLPlacemark *)placemark error:(NSError *)error IsLocalSearchResult:(BOOL) isLocalSearchResult;
+
+// Check in database for exact lat lng match
+- (NSArray *) locationsWithLat:(double)lat Lng:(double)lng;
 @end

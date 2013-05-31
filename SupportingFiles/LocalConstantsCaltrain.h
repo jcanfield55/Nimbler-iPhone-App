@@ -14,7 +14,7 @@
 
 // Bundle and App Types
 #define CALTRAIN_BUNDLE_IDENTIFIER         @"com.Nimbler.Nimbler-Caltrain"
-#define WMATA_BUNDLE_IDENTIFIER            @"com.Nimbler.Nimbler-DC"
+#define WMATA_BUNDLE_IDENTIFIER            @"com.nimbler.washingtondc"
 
 
 #define CALTRAIN_APP_TYPE   @"1"
@@ -27,6 +27,11 @@
 #define MAX_LAT           @"38.7189988"
 #define MAX_LONG          @"-121.025001"
 
+// Facebook App ID (for tracking referrals)
+#define FB_APP_ID @"130900483754939"  // Nimbler Caltrain FB App ID
+
+// Review reminder URL
+#define NIMBLER_REVIEW_URL                   @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=567382474"  // Nimbler Caltrain review URL
 //
 // Settings Page Rows
 //

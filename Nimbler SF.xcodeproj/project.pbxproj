@@ -184,6 +184,9 @@
 		52958AB116CED86900CC46C7 /* GtfsTempItinerary.m in Sources */ = {isa = PBXBuildFile; fileRef = 52958AB016CED86900CC46C7 /* GtfsTempItinerary.m */; };
 		52A9BE9516B4B41500564D0D /* RealTimeServerStubTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */; };
 		52B0535C16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B0535B16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m */; };
+		52B3AE1A1755D0B1009FFD94 /* RouteDetailViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DE28CA71732379300403CD0 /* RouteDetailViewController_568h.xib */; };
+		52B3AE211755E1B3009FFD94 /* Icon-Caltrain.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE18B141725135600AA8112 /* Icon-Caltrain.png */; };
+		52B3AE221755E1B8009FFD94 /* Icon-Caltrain@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE18B161725135E00AA8112 /* Icon-Caltrain@2x.png */; };
 		52C10385160BEF8000BC6020 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C10384160BEF8000BC6020 /* AddressBookUI.framework */; };
 		52C1CBB4161AB69600695348 /* Icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB3161AB69600695348 /* Icon-small.png */; };
 		52C1CBB6161AB6A400695348 /* Icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB5161AB6A400695348 /* Icon-small@2x.png */; };
@@ -531,8 +534,6 @@
 		8DE18B0F1725133800AA8112 /* Default-Caltrain.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE18B0E1725133800AA8112 /* Default-Caltrain.png */; };
 		8DE18B111725134100AA8112 /* Default-Caltrain@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE18B101725134100AA8112 /* Default-Caltrain@2x.png */; };
 		8DE18B131725134900AA8112 /* Default-Caltrain-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE18B121725134900AA8112 /* Default-Caltrain-568h@2x.png */; };
-		8DE18B151725135600AA8112 /* Icon-Caltrain.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE18B141725135600AA8112 /* Icon-Caltrain.png */; };
-		8DE18B171725135E00AA8112 /* Icon-Caltrain@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE18B161725135E00AA8112 /* Icon-Caltrain@2x.png */; };
 		8DE18B311725316700AA8112 /* nimblrCaltrain.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE18B301725316700AA8112 /* nimblrCaltrain.png */; };
 		8DE18B321725335100AA8112 /* nimblrCaltrain.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE18B301725316700AA8112 /* nimblrCaltrain.png */; };
 		8DE18B331725336D00AA8112 /* Icon-small-Caltrain.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE18B1A172513A900AA8112 /* Icon-small-Caltrain.png */; };
@@ -599,7 +600,6 @@
 		8DE18B791725415800AA8112 /* Stations.m in Sources */ = {isa = PBXBuildFile; fileRef = 75E8F1DC16CE4E2A00863A8C /* Stations.m */; };
 		8DE18B7A1725415800AA8112 /* StationListElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 75E8F1CD16CE356D00863A8C /* StationListElement.m */; };
 		8DE18B7B1725415800AA8112 /* PreloadedStop.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D44083F16CF72FD00F8EBE5 /* PreloadedStop.m */; };
-		8DE18B7C1725415800AA8112 /* RouteExcludeSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D00753116D4CAB30041A64C /* RouteExcludeSettings.m */; };
 		8DE18B7D1725415800AA8112 /* RouteExcludeSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 528C664D16D7011E005B7309 /* RouteExcludeSetting.m */; };
 		8DE18B7E1725415800AA8112 /* GtfsParsingStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 524A921316E7117800A9A0A2 /* GtfsParsingStatus.m */; };
 		8DE18B7F1725415800AA8112 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 8D3EFCB416E85DEE00266C6A /* ioapi.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -1643,21 +1643,21 @@
 		520FB289162604950083F143 /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
-				8DFD0DAE17264CDB003FCB5A /* LocalConstantsCaltrain.h */,
-				8DE18C6E17256CD200AA8112 /* ConstantsCaltrain.h */,
-				8DE18C6D1725630600AA8112 /* Nimbler DC-Prefix.pch */,
-				8DE18C6C17255CBA00AA8112 /* LocalConstantsDC.h */,
-				8DA780951724FF820090C2EA /* Nimbler Caltrain-Info.plist */,
-				524100A31727542E0007D956 /* Nimbler DC-Info.plist */,
-				8DA780961724FF820090C2EA /* Nimbler SF-Prefix.pch */,
-				8D42C2F8163AC05C00880B33 /* Nimbler SF-Info.plist */,
-				8D42C2F9163AC05C00880B33 /* Nimbler Caltrain-Prefix.pch */,
-				52CF43AA14BDF2F9000565D6 /* InfoPlist.strings */,
 				520FB28A162604950083F143 /* Constants.h */,
-				524A921116E6C71C00A9A0A2 /* LocalConstants.h */,
+				8DE18C6E17256CD200AA8112 /* ConstantsCaltrain.h */,
 				520FB28B162604950083F143 /* CoverageGeoJSON.geojson */,
 				520FB28C162604950083F143 /* enums.h */,
+				52CF43AA14BDF2F9000565D6 /* InfoPlist.strings */,
+				524A921116E6C71C00A9A0A2 /* LocalConstants.h */,
+				8DFD0DAE17264CDB003FCB5A /* LocalConstantsCaltrain.h */,
+				8DE18C6C17255CBA00AA8112 /* LocalConstantsDC.h */,
 				520FB28D162604950083F143 /* Logging.h */,
+				8DA780951724FF820090C2EA /* Nimbler Caltrain-Info.plist */,
+				8D42C2F9163AC05C00880B33 /* Nimbler Caltrain-Prefix.pch */,
+				524100A31727542E0007D956 /* Nimbler DC-Info.plist */,
+				8DE18C6D1725630600AA8112 /* Nimbler DC-Prefix.pch */,
+				8D42C2F8163AC05C00880B33 /* Nimbler SF-Info.plist */,
+				8DA780961724FF820090C2EA /* Nimbler SF-Prefix.pch */,
 				520FB290162604950083F143 /* TEXTConstant.h */,
 				520FB291162604950083F143 /* UIAutomationConstants.h */,
 				520FB292162604950083F143 /* UIConstants.h */,
@@ -2461,8 +2461,6 @@
 				8DE18B0F1725133800AA8112 /* Default-Caltrain.png in Resources */,
 				8DE18B111725134100AA8112 /* Default-Caltrain@2x.png in Resources */,
 				8DE18B131725134900AA8112 /* Default-Caltrain-568h@2x.png in Resources */,
-				8DE18B151725135600AA8112 /* Icon-Caltrain.png in Resources */,
-				8DE18B171725135E00AA8112 /* Icon-Caltrain@2x.png in Resources */,
 				8DE18B321725335100AA8112 /* nimblrCaltrain.png in Resources */,
 				8DE18B331725336D00AA8112 /* Icon-small-Caltrain.png in Resources */,
 				8DE18B341725337200AA8112 /* Icon-small-Caltrain@2x.png in Resources */,
@@ -2475,6 +2473,9 @@
 				8D00B000172F97ED00B01ED3 /* realtime2.png in Resources */,
 				8D00B008172FD22C00B01ED3 /* tram.png in Resources */,
 				8D0C2967173124E000E6AA1B /* Handle_control.png in Resources */,
+				52B3AE1A1755D0B1009FFD94 /* RouteDetailViewController_568h.xib in Resources */,
+				52B3AE211755E1B3009FFD94 /* Icon-Caltrain.png in Resources */,
+				52B3AE221755E1B8009FFD94 /* Icon-Caltrain@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2921,7 +2922,6 @@
 				8DE18B791725415800AA8112 /* Stations.m in Sources */,
 				8DE18B7A1725415800AA8112 /* StationListElement.m in Sources */,
 				8DE18B7B1725415800AA8112 /* PreloadedStop.m in Sources */,
-				8DE18B7C1725415800AA8112 /* RouteExcludeSettings.m in Sources */,
 				8DE18B7D1725415800AA8112 /* RouteExcludeSetting.m in Sources */,
 				8DE18B7E1725415800AA8112 /* GtfsParsingStatus.m in Sources */,
 				8DE18B7F1725415800AA8112 /* ioapi.c in Sources */,
@@ -3270,8 +3270,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler DC";
-				PROVISIONING_PROFILE = "5D529E30-807D-4536-80B1-5D929ACA011C";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5D529E30-807D-4536-80B1-5D929ACA011C";
+				PROVISIONING_PROFILE = "BF7C9447-4B7B-4116-BFB3-0A78EEBE19E0";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "BF7C9447-4B7B-4116-BFB3-0A78EEBE19E0";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -3313,9 +3313,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler DC";
-				PROVISIONING_PROFILE = "5D529E30-807D-4536-80B1-5D929ACA011C";
-				"PROVISIONING_PROFILE[sdk=*]" = "5D529E30-807D-4536-80B1-5D929ACA011C";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5D529E30-807D-4536-80B1-5D929ACA011C";
+				PROVISIONING_PROFILE = "BF7C9447-4B7B-4116-BFB3-0A78EEBE19E0";
+				"PROVISIONING_PROFILE[sdk=*]" = "BF7C9447-4B7B-4116-BFB3-0A78EEBE19E0";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "BF7C9447-4B7B-4116-BFB3-0A78EEBE19E0";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;

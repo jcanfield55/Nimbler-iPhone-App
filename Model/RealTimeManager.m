@@ -158,6 +158,7 @@ static RealTimeManager* realTimeManager;
                 RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
                 loadedRealTimeData = true;
                 id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
+                [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.activityIndicator stopAnimating];
                 [routeOptionsVC setIsReloadRealData:false];
                 [self setLiveFeed:res];
             }

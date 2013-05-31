@@ -272,11 +272,6 @@ UIImage *imageDetailDisclosure;
     [routeOptionsVC.timerGettingRealDataByItinerary invalidate];
     routeOptionsVC.timerGettingRealDataByItinerary = nil;
     
-    datePicker = [[UIDatePicker alloc]initWithFrame:CGRectMake(0, 494, 320, 216)];
-    datePicker.datePickerMode = UIDatePickerModeDateAndTime;
-    datePicker.minuteInterval = 5;
-    [self.view addSubview:datePicker];
-    
     NSArray *array = [NSArray arrayWithObjects:DATE_PICKER_DEPART,DATE_PICKER_ARRIVE, nil];
     departArriveSelector = [[UISegmentedControl alloc] initWithItems:array];
     
@@ -753,7 +748,7 @@ UIImage *imageDetailDisclosure;
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([indexPath section] == TIME_DATE_SECTION) {  
-        [datePicker setDate:tripDate];
+        [datePicker setDate:tripDate animated:YES];
         [self openPickerView:self];
         
         [self hideTabBar];
@@ -1529,13 +1524,11 @@ UIImage *imageDetailDisclosure;
 
 //US 137 implementation
 - (void)endEdit{
-    [self setEditMode:NO_EDIT]; 
+    //Fixed DE-330
+    // Clearing both textfield before calling seteditMode method.
     self.toTableVC.txtField.text = NULL_STRING;
     self.fromTableVC.txtField.text = NULL_STRING;
-//    [self.toTableVC toFromTyping:self.toTableVC.txtField forEvent:nil];
-//    [self.toTableVC textSubmitted:self.toTableVC.txtField forEvent:nil];
-//    [self.fromTableVC toFromTyping:self.fromTableVC.txtField forEvent:nil];
-//    [self.fromTableVC textSubmitted:self.fromTableVC.txtField forEvent:nil];
+    [self setEditMode:NO_EDIT];
     [self.toTableVC markAndUpdateSelectedLocation:locations.tempSelectedToLocation];
     [self.fromTableVC markAndUpdateSelectedLocation:locations.tempSelectedFromLocation];
 }
@@ -1571,6 +1564,7 @@ UIImage *imageDetailDisclosure;
 //---------------------------------------------------------------------------
 
 - (void)selectCurrentDate {
+    date = [NSDate date];
     [self.navigationController.navigationBar setUserInteractionEnabled:YES];
     [nc_AppDelegate sharedInstance].isDatePickerOpen = NO;
     [self.mainTable setUserInteractionEnabled:YES];
@@ -1600,6 +1594,27 @@ UIImage *imageDetailDisclosure;
 
 - (IBAction)openPickerView:(id)sender {
     [self.mainTable setUserInteractionEnabled:NO];
+    
+    // Fixed DE-331
+    datePicker = nil;
+    datePicker = [[UIDatePicker alloc]initWithFrame:CGRectMake(0, 494, 320, 216)];
+    datePicker.datePickerMode = UIDatePickerModeDateAndTime;
+    datePicker.minuteInterval = 5;
+    
+    NSDate *savedDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"todayDate"];
+    if(savedDate && [savedDate isEqualToDate:dateOnlyFromDate([NSDate date])]){
+        NSDate *selectedDate = date;
+        if(selectedDate){
+            [datePicker setDate:selectedDate animated:YES];
+        }
+    }
+    else{
+        [datePicker setDate:[NSDate date] animated:YES];
+        [[NSUserDefaults standardUserDefaults] setObject:dateOnlyFromDate([NSDate date]) forKey:@"todayDate"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
+    [self.view addSubview:datePicker];
     [nc_AppDelegate sharedInstance].isDatePickerOpen = YES;
      [self.navigationController.navigationBar setUserInteractionEnabled:NO];
     toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 450, 320, 44)];

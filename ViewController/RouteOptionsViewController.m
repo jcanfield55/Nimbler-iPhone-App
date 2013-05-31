@@ -122,12 +122,12 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 
 - (void) decrementCounter{
     if(remainingCount == 0){
-        remainingCount = TIMER_DEFAULT_VALUE;
         [self requestServerForRealTime];
         if(self.timerGettingRealDataByItinerary){
             [self.timerGettingRealDataByItinerary invalidate];
             self.timerGettingRealDataByItinerary = nil;
         }
+        remainingCount = TIMER_DEFAULT_VALUE;
         self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(decrementCounter) userInfo:nil repeats: YES];
     }
     remainingCount = remainingCount - 1;
@@ -162,7 +162,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     if (status == PLAN_STATUS_OK) {
         [noItineraryWarning setHidden:YES];
         setWarningHidden = true;
-    } else if (status == PLAN_EXCLUDED_TO_ZERO_RESULTS) {
+    }
+    // Fixed DE-322
+    else if (status == PLAN_EXCLUDED_TO_ZERO_RESULTS && [[plan sortedItineraries] count] == 0) {
         [noItineraryWarning setHidden:NO]; // show warning
         setWarningHidden = false;
     } else {
@@ -170,7 +172,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                  [NSString stringWithFormat:@"Unexpected status = %d", status]);
     }
     if (planRequestParameters.needToRequestRealtime || planRequestParameters.serverCallsSoFar >= PLAN_MAX_SERVER_CALLS_PER_REQUEST) {
-        NIMLOG_PERF2(@"routeDetailUniquePattern=%d",[[plan uniqueItineraries] count]);
         if(self.timerGettingRealDataByItinerary != nil){
             [self.timerGettingRealDataByItinerary invalidate];
             self.timerGettingRealDataByItinerary = nil;
@@ -309,7 +310,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     NIMLOG_PERF2(@"done preparing sortedItineraries");
     MoreItineraryStatus reqStatus = [planStore requestMoreItinerariesIfNeeded:self.plan parameters:newParameters];
     if (reqStatus == NO_MORE_ITINERARIES_REQUESTED && [[plan sortedItineraries] count] == 0) {
-        // if no itineraries showing and no more requests made, show warning 
+        // if no itineraries showing and no more requests made, show warning
         [noItineraryWarning setHidden:NO];
         setWarningHidden = false;
     }
@@ -325,6 +326,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 {
     return [[plan sortedItineraries] count];
 }
+
 
 // Only usable for >= iOS6.  Returns NSMutableAttributedString with Caltrain train #s emphasized.  
 - (NSMutableAttributedString *)detailTextLabelColor:(NSString *)strDetailtextLabel itinerary:(Itinerary *)itinerary{
@@ -713,7 +715,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     int yPos = 5;
     int width = 80;
     int btnHeight = 25;
-    
     for(int i=0;i<[[plan excludeSettingsArray] count];i++){
         RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
         UIButton *btnAgency = [UIButton buttonWithType:UIButtonTypeCustom];

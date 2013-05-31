@@ -287,8 +287,6 @@
         // Append The requestID to the URL.
         // Now we set that String as key of our  parametersByPlanURLResource Dictionary.
         // Now when we receive response or we receive an error we can get our planRequestParamater by key [objectloader resourcePath].
-        
-        NIMLOG_DEBUG1(@"Submitted Request ID=%@",requestID);
         NSString *strPlanGenerateURL = [NSString stringWithFormat:@"%@?id=%@",PLAN_GENERATE_URL,requestID];
         [parametersByPlanURLResource setObject:parameters forKey:strPlanGenerateURL];
         Plan *plan;
@@ -348,7 +346,6 @@
         [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.activityIndicator stopAnimating];
         RKJSONParserJSONKit* rkParser = [RKJSONParserJSONKit new];
         NSDictionary *tempResponseDictionary = [rkParser objectFromString:[[objectLoader response] bodyAsString] error:nil];
-        NIMLOG_PERF2(@"Plan Response Arrives At-->%f",[[NSDate date] timeIntervalSince1970]);
         if([[tempResponseDictionary objectForKey:RESPONSE_CODE] intValue] == RESPONSE_SUCCESSFULL){
             NSString *strResourcePath = [objectLoader resourcePath];
             if (strResourcePath && [strResourcePath length]>0) {
@@ -359,6 +356,7 @@
             }
             if([tempResponseDictionary objectForKey:OTP_ERROR_STATUS]){
                 // If OTP error (no plan returned)
+                [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.activityIndicator stopAnimating];
                 Plan* plan = nil;
                 PlanRequestStatus status = PLAN_GENERIC_EXCEPTION;
                 if (planRequestParameters.isDestinationToFromVC &&
@@ -483,6 +481,7 @@
 
 - (void)objectLoader:(RKObjectLoader *)objectLoader didFailWithError:(NSError *)error
 {
+    [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.activityIndicator stopAnimating];
     [nc_AppDelegate sharedInstance].receivedError = YES;
     if([nc_AppDelegate sharedInstance].isTestPlan){
         [nc_AppDelegate sharedInstance].testPlan = nil;

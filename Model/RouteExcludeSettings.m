@@ -206,7 +206,7 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
 -(NSArray *)excludeSettingsForPlan:(Plan *)plan {
     
     // Get the itineraries that are relevant to this particular tripDate but with no exclusions
-    NSArray* relevantItineraries = [plan uniqueItineraries];
+    NSArray* relevantItineraries = [[plan itineraries] allObjects];
     NSMutableArray* returnArray = [[NSMutableArray alloc] initWithCapacity:10];
     for (Itinerary* itin in relevantItineraries) {
         for (Leg* leg in [itin legs]) {

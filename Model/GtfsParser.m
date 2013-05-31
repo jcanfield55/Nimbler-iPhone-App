@@ -42,7 +42,6 @@
 @synthesize dictServerCallSoFar;
 @synthesize tripsDictionary;
 @synthesize stopsDictionary;
-// @synthesize backgroundMOC;
 @synthesize isParticularTripRequest;
 @synthesize temporaryLeg;
 @synthesize temporaryItinerary;
@@ -57,25 +56,11 @@
         self.managedObjectContext = moc;
         self.rkTpClient = rkClient;
         dictServerCallSoFar = [[NSMutableDictionary alloc] init];
-        
-        // John: managedObjectContext is supposed to be created in the thread using it per: http://developer.apple.com/library/mac/#documentation/cocoa/conceptual/CoreData/Articles/cdConcurrency.html
-        // NSPersistentStoreCoordinator *psc = [self.managedObjectContext persistentStoreCoordinator];
-        // backgroundMOC = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-        // [backgroundMOC setUndoManager:nil];  // turn off undo for higher performance
-        // [backgroundMOC setPersistentStoreCoordinator:psc];
-        // [backgroundMOC setMergePolicy:NSOverwriteMergePolicy];
-        // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:backgroundMOC];
     }
     return self;
 }
 
 - (void) parseAndStoreGtfsAgencyData:(NSDictionary *)dictFileData{
-//    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
-//    backgroundThreadsOutstanding++;
-//    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
-//    [moc setMergePolicy:NSOverwriteMergePolicy];
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSFetchRequest * fetchAgencies = [[NSFetchRequest alloc] init];
         [fetchAgencies setEntity:[NSEntityDescription entityForName:@"GtfsAgency" inManagedObjectContext:managedObjectContext]];
         NSArray * arrayAgencies = [managedObjectContext executeFetchRequest:fetchAgencies error:nil];
@@ -105,18 +90,9 @@
             agency.agencyURL = [arrayAgencyURL objectAtIndex:i];
         }
         saveContext(managedObjectContext);
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//        });
-//    });
 }
 
 - (void) parseAndStoreGtfsCalendarDatesData:(NSDictionary *)dictFileData{
-//    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
-//    backgroundThreadsOutstanding++;
-//    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
-//    [moc setMergePolicy:NSOverwriteMergePolicy];
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSFetchRequest * fetchCalendarDates = [[NSFetchRequest alloc] init];
         [fetchCalendarDates setEntity:[NSEntityDescription entityForName:@"GtfsCalendarDates" inManagedObjectContext:managedObjectContext]];
         NSArray * arrayPlanCalendarDates = [managedObjectContext executeFetchRequest:fetchCalendarDates error:nil];
@@ -164,19 +140,9 @@
             calendarDates.exceptionType = [arrayExceptionType objectAtIndex:i];
         }
         saveContext(managedObjectContext);
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//        });
-//    });
 }
 
 - (void) parseAndStoreGtfsCalendarData:(NSDictionary *)dictFileData{
-    
-//    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
-//    backgroundThreadsOutstanding++;
-//    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
-//    [moc setMergePolicy:NSOverwriteMergePolicy];
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSFetchRequest * fetchCalendar = [[NSFetchRequest alloc] init];
         [fetchCalendar setEntity:[NSEntityDescription entityForName:@"GtfsCalendar" inManagedObjectContext:managedObjectContext]];
         NSArray * arrayCalendar = [managedObjectContext executeFetchRequest:fetchCalendar error:nil];
@@ -246,19 +212,9 @@
             }
         }
         saveContext(managedObjectContext);
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//        });
-//    });
 }
 
 - (void) parseAndStoreGtfsRoutesData:(NSDictionary *)dictFileData{
-    
-//    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
-//    backgroundThreadsOutstanding++;
-//    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
-//    [moc setMergePolicy:NSOverwriteMergePolicy];
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSFetchRequest * fetchRoutes = [[NSFetchRequest alloc] init];
         [fetchRoutes setEntity:[NSEntityDescription entityForName:@"GtfsRoutes" inManagedObjectContext:managedObjectContext]];
         NSArray * arrayRoutes = [managedObjectContext executeFetchRequest:fetchRoutes error:nil];
@@ -315,22 +271,12 @@
             }
         }
         saveContext(managedObjectContext);
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//        });
-//    });
-    
 #if GENERATING_SEED_DATABASE
     [self generateTripsRequestForSeedDB:routeIDsWithodBus agencyIds:agencyIDsWithodBus];
 #endif
 }
 
 - (void) parseAndStoreGtfsStopsData:(NSDictionary *)dictFileData{
-//    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
-//    backgroundThreadsOutstanding++;
-//    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
-//    [moc setMergePolicy:NSOverwriteMergePolicy];
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSFetchRequest * fetchStops = [[NSFetchRequest alloc] init];
         [fetchStops setEntity:[NSEntityDescription entityForName:@"GtfsStop" inManagedObjectContext:managedObjectContext]];
         NSArray * arrayStops = [managedObjectContext executeFetchRequest:fetchStops error:nil];
@@ -376,24 +322,9 @@
             routes.stopURL = [arrayStopURL objectAtIndex:i];
         }
         saveContext(managedObjectContext);
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//        });
-//    });
 }
 
 - (void) parseAndStoreGtfsTripsData:(NSDictionary *)dictFileData RequestUrl:(NSString *)strRequestUrl{
-//    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:moc];
-//    backgroundThreadsOutstanding++;
-//    [moc setPersistentStoreCoordinator:[self.managedObjectContext persistentStoreCoordinator]];
-//    [moc setMergePolicy:NSOverwriteMergePolicy];
-//    
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        NSArray *arrayComponents = [strRequestUrl componentsSeparatedByString:@"?"];
-//        NSString *tempString = [arrayComponents objectAtIndex:1];
-//        NSArray *arraySubComponents = [tempString componentsSeparatedByString:@"="];
-//        NSString *tempStringSubComponents = [arraySubComponents objectAtIndex:1];
-//        NSArray *arrayAgencyIds = [tempStringSubComponents componentsSeparatedByString:@"%2C"];
         NSMutableArray *arrayTripID = [[NSMutableArray alloc] init];
         NSMutableArray *arrayRouteID = [[NSMutableArray alloc] init];
         NSMutableArray *arrayServiceID = [[NSMutableArray alloc] init];
@@ -463,25 +394,6 @@
         }
         saveContext(managedObjectContext);
     [self generateStopTimesRequestStringUsingTripIds:arrayTripID agencyIds:arrayAgencyID];
-}
-
-- (void)contextChanged:(NSNotification*)notification
-{
-    if ([notification object] == [self managedObjectContext]) return;
-    
-    if (![NSThread isMainThread]) {
-        // John note: Changed waitUntilDone: to NO in attempt to avoid deadlocks when main thread is waiting
-        // to be able to save context itself.  
-        [self performSelectorOnMainThread:@selector(contextChanged:) withObject:notification waitUntilDone:NO];
-        return;
-    }
-    [[self managedObjectContext] mergeChangesFromContextDidSaveNotification:notification];
-    // TODO:  uncomment below code once we can distinguish between interim and final parseStopTimes notification
-    // [[[nc_AppDelegate sharedInstance] planStore] updatePlansWithNewGtfsDataIfNeeded];  // see if any plans need the data just updated
-    // backgroundThreadsOutstanding--;
-    // if (backgroundThreadsOutstanding <= 0) {  // only remove observer if there are no more background requests outstanding
-    //     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    // }
 }
 
 - (void) parseStopTimesDataForSingleTripData:(NSDictionary *)dictFileData{
@@ -557,127 +469,6 @@
         @catch (NSException *exception) {
             logException(@"GtfsParser->parseStopTimesDataForSingleTripData", @"exception in background task", exception);
         }
-}
-
-- (void) parseAndStoreGtfsStopTimesData:(NSDictionary *)dictFileData RequestUrl:(NSString *)strResourcePath{
-    backgroundThreadsOutstanding++;
-    __block double totalTime = 0.0;
-    __block int totalrecords = 0;
-    __block int saveContextCount = 0;
-    // http://www.raywenderlich.com/4295/multithreading-and-grand-central-dispatch-on-ios-for-beginners-tutorial
-    dispatch_queue_t backgroundQueue;
-    backgroundQueue = dispatch_queue_create("com.nimbler.backgroundQueue", NULL);
-    NSPersistentStoreCoordinator *psc = [self.managedObjectContext persistentStoreCoordinator];
-    dispatch_async(backgroundQueue, ^(void) {
-        @try {
-            NSManagedObjectContext* backgroundMOC = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-            [backgroundMOC setUndoManager:nil];  // turn off undo for higher performance
-            [backgroundMOC setPersistentStoreCoordinator:psc];
-            [backgroundMOC setMergePolicy:NSOverwriteMergePolicy];
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:backgroundMOC];
-            NSMutableDictionary *routeIdAndAgencyIdDictionary = [[NSMutableDictionary alloc] initWithCapacity:10];
-            
-            NIMLOG_PERF2(@"parse stop times start");
-            
-            NSDictionary *dictComponents = [dictFileData objectForKey:@"data"];
-            NSArray *arrayAgency_TripIds = [dictComponents allKeys];
-            
-            NIMLOG_PERF2(@"Parse stop times main loop");
-            
-            int insertedRowCount = 0;
-            
-            for(int k=0;k<[arrayAgency_TripIds count];k++){
-                if ([[arrayAgency_TripIds objectAtIndex:k] isEqualToString:@"headers"]) {
-                    continue;    // skip headers rows
-                }
-                NSArray *arrayComponentsAgency = [dictComponents objectForKey:[arrayAgency_TripIds objectAtIndex:k]];
-                NSString *strAgency_TripIds = [arrayAgency_TripIds objectAtIndex:k];
-                NSArray *arrayAgencyIdsComponents = [strAgency_TripIds componentsSeparatedByString:@"_"];
-                for(int i=0;i<[arrayComponentsAgency count];i++){
-                    NSString *strSubComponents = [arrayComponentsAgency objectAtIndex:i];
-                    if(strSubComponents && strSubComponents.length > 0){
-                        insertedRowCount++;
-                        totalrecords ++;
-                        GtfsStopTimes* stopTime = [NSEntityDescription insertNewObjectForEntityForName:@"GtfsStopTimes" inManagedObjectContext:backgroundMOC];
-                        NSArray *arraySubComponents = [strSubComponents componentsSeparatedByString:@","];
-                        
-                        NSString* tripID = getItemAtIndexFromArray(0,arraySubComponents);
-                        stopTime.tripID = tripID;
-                        stopTime.arrivalTime = getItemAtIndexFromArray(1,arraySubComponents);
-                        stopTime.departureTime = getItemAtIndexFromArray(2,arraySubComponents);
-                        NSString* stopID = getItemAtIndexFromArray(3,arraySubComponents);
-                        stopTime.stopID = stopID;
-                        stopTime.stopSequence = getItemAtIndexFromArray(4,arraySubComponents);
-                        stopTime.pickUpType = getItemAtIndexFromArray(5,arraySubComponents);
-                        stopTime.dropOffType = getItemAtIndexFromArray(6,arraySubComponents);
-                        stopTime.shapeDistTravelled = getItemAtIndexFromArray(7,arraySubComponents);
-                        
-                         stopTime.departureTimeInterval = [NSNumber numberWithInt:timeIntervalFromTimeString(getItemAtIndexFromArray(2,arraySubComponents))] ;
-                         stopTime.arrivalTimeInterval = [NSNumber numberWithInt:timeIntervalFromTimeString(getItemAtIndexFromArray(1, arraySubComponents))];
-                        
-                        NSString* agencyID = getItemAtIndexFromArray(0,arrayAgencyIdsComponents);
-                        stopTime.agencyID = agencyID;
-                        //GtfsTrips* trip = [dictTrips objectForKey:tripID];
-                        //stopTime.trips = trip;
-                        //stopTime.stop = [dictStops objectForKey:stopID];
-                        if (i==0) {  // only do once for a particular tripID
-                            GtfsTrips *trip = [self fetchTripsFromTripId:tripID context:backgroundMOC];
-                            if (trip.routeID) {
-                                [routeIdAndAgencyIdDictionary setObject:agencyID forKey:trip.routeID];
-                            } else {
-                                NIMLOG_ERR1(@"GtfsParser->parseAndStoreGtfsStopTimesData: Nil routeID for stopTime.tripId: %@", stopTime.tripID);
-                                [backgroundMOC deleteObject:stopTime];
-                            }
-                        }
-                    }
-                }  // end StopTimes loop
-                
-                if (insertedRowCount >= DB_ROWS_BEFORE_SAVING_TO_PSC) {
-                    // Save context and create a new moc
-                    NIMLOG_PERF2(@"Saving context after %d rows inserted", insertedRowCount);
-                    NSDate *date1 = [NSDate date];
-                    insertedRowCount = 0;
-                    saveContextCount = saveContextCount + 1;
-                    saveContext(backgroundMOC);
-                    NSDate *date2 = [NSDate date];
-                    double diff = [date2 timeIntervalSinceDate:date1];
-                    totalTime = totalTime + diff;
-                    NIMLOG_PERF2(@"Done saving context at=%f",diff);
-                    
-                    // Release and re-assign new backgroundMOC
-                    [[NSNotificationCenter defaultCenter] removeObserver:self];
-                    backgroundMOC = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-                    [backgroundMOC setUndoManager:nil];  // turn off undo for higher performance
-                    [backgroundMOC setPersistentStoreCoordinator:psc];
-                    [backgroundMOC setMergePolicy:NSOverwriteMergePolicy];
-                    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextChanged:) name:NSManagedObjectContextDidSaveNotification object:backgroundMOC];
-                }
-            } // end TripId loop
-
-            // Update gtfsParsingStatus for each routeId / AgencyId combination
-            NSArray* keys = [routeIdAndAgencyIdDictionary allKeys];
-            for (NSString* routeId in keys) {
-                NSString* agencyName = agencyNameFromAgencyFeedId([routeIdAndAgencyIdDictionary objectForKey:routeId]);
-                [self setGtfsDataAvailableForAgencyName:agencyName routeId:routeId context:backgroundMOC];
-            }
-            NIMLOG_PERF2(@"totalRecords=%d",totalrecords);
-            NIMLOG_PERF2(@"totalTime=%f",totalTime);
-            NIMLOG_PERF2(@"averageTime=%f",totalTime/saveContextCount);
-            NIMLOG_PERF2(@"parse stop times saving context");
-            saveContext(backgroundMOC);
-            
-            //NSDictionary *lastRealtimeResponse = [RealTimeManager realTimeManager].lastRealtimeResponse;
-            //[[RealTimeManager realTimeManager] setLiveFeed:lastRealtimeResponse];
-        }
-        @catch (NSException *exception) {
-            logException(@"GtfsParser->parseAndStoreGtfsStopTimesData", @"exception in background task", exception);
-        }
-        NIMLOG_PERF2(@"Parse stop times done");
-    });
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//        });
-//    });
 }
 
 #pragma mark  GTFS Requests
@@ -988,18 +779,6 @@
                     }
                 }
             }
-//            else{
-//                [nc_AppDelegate sharedInstance].receivedReply = true;
-//                RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
-//                NSDictionary * res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
-//                NSNumber *respCode = [res objectForKey:RESPONSE_CODE];
-//                if ([respCode intValue] == RESPONSE_SUCCESSFULL) {
-//                    NIMLOG_PERF2(@"StopTimes Parsing Started");
-//                    [self parseAndStoreGtfsStopTimesData:res RequestUrl:strRequestURL];
-//                    NIMLOG_PERF2(@"StopTimes Parsing and saving Done");
-//                    lastTripsDataRequestString = nil;
-//                }
-//            }
         }
     }
     @catch (NSException *exception) {
@@ -1091,21 +870,6 @@
 
 // Generate The StopTimes Request Comma Separated string like agencyID_tripID
 - (void)generateStopTimesRequestStringUsingTripIds:(NSArray *)tripIds agencyIds:(NSArray *)agencyIds{
-//    NSArray *arrTripId;
-//    NSArray *arrAgencyId;
-//    int n1 = [tripIds count]/50;
-//    int n2 = [tripIds count]%50;
-//    int loopCount = 0;
-//    for(int i=0;i<[tripIds count];i=i+50){
-//        [nc_AppDelegate sharedInstance].receivedReply = false;
-//        NSRange range;
-//        if(loopCount < n1)
-//            range = NSMakeRange (i, 50);
-//        else
-//            range = NSMakeRange(i,n2);
-//        loopCount++;
-//        arrTripId = [tripIds subarrayWithRange:range];
-//        arrAgencyId = [agencyIds subarrayWithRange:range];
         NSMutableString *strRequestString = [[NSMutableString alloc] init];
         for(int i=0;i<[tripIds count];i++){
             NSString *strTripId = [tripIds objectAtIndex:i];

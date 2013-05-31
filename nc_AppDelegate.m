@@ -125,7 +125,16 @@ FeedBackForm *fbView;
     return ;
 #endif
     
-    NSString *dbPath = [NSString stringWithFormat:@"%@/%@",[[self applicationDocumentsDirectory] path],COREDATA_DB_FILENAME];
+     NSString *dbPath = [NSString stringWithFormat:@"%@/%@",[[self applicationDocumentsDirectory] path],COREDATA_DB_FILENAME];
+    // Remove the Caltrain 1.16 app database
+     if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+         BOOL isOldDBDeleted = [[NSUserDefaults standardUserDefaults] objectForKey:@"oldDbDeleted"];
+         if(!isOldDBDeleted && [[NSFileManager defaultManager] fileExistsAtPath:dbPath]){
+             [[NSFileManager defaultManager] removeItemAtPath:dbPath error:nil];
+             [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"oldDbDeleted"];
+         }
+     }
+    
     if(![[NSFileManager defaultManager] fileExistsAtPath:dbPath]){
         NSString *strPath;
         if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
@@ -342,6 +351,12 @@ FeedBackForm *fbView;
     [Flurry setUserID:cfuuidString];
     [Flurry logEvent:FLURRY_APPDELEGATE_START];
 #endif
+    
+    //Log App in facebook so we can track referrals from Facebook advertisements
+    NIMLOG_PERF2(@"Facebook SDK with ID: %@", FB_APP_ID);
+    [FBSettings publishInstall:FB_APP_ID];
+    NIMLOG_PERF2(@"Finished calling FB SDK");
+    
     
     // Create an instance of a UINavigationController and put toFromViewController as the first view
     @try {
@@ -633,7 +648,8 @@ FeedBackForm *fbView;
         [toFromViewController.fromTableVC markAndUpdateSelectedLocation:self.fromLoc];
     }
     if(isFromBackground && !self.isToFromView && !self.isTwitterView && !self.isSettingView && !self.isFeedBackView && !self.isSettingDetailView){
-        toFromViewController.routeOptionsVC.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_STANDARD_REQUEST_DELAY target:toFromViewController.routeOptionsVC selector:@selector(requestServerForRealTime) userInfo:nil repeats: YES];
+        // Fixed DE-329
+        toFromViewController.routeOptionsVC.timerGettingRealDataByItinerary =   [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:toFromViewController.routeOptionsVC selector:@selector(decrementCounter) userInfo:nil repeats: YES];
         
     }
     UserPreferance* userPrefs = [UserPreferance userPreferance];
@@ -645,10 +661,7 @@ FeedBackForm *fbView;
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    //TODO:- Need to create App in facebook and also need to add appId here.
-    /*
-    [FBSettings publishInstall:@"AppId"];
-    */
+
     //US-163 Implementation
     [self showFeedBackAlertIfNeeded];
     /*
@@ -999,6 +1012,7 @@ FeedBackForm *fbView;
         isRegionSupport = TRUE;
         // DE - 181 Fixed
         RKClient *client = [RKClient clientWithBaseURL:TRIP_GENERATE_URL];
+        client.cachePolicy = RKRequestCachePolicyNone;
         [RKClient setSharedClient:client];
         [[RKClient sharedClient]  get:METADATA_URL delegate:self];
     }
@@ -1112,11 +1126,12 @@ FeedBackForm *fbView;
 // Part Of DE-286 Fixed.
 - (void) updateDeviceToken{
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+    client.cachePolicy = RKRequestCachePolicyNone;
     [RKClient setSharedClient:client];
     NSDictionary *params = [NSDictionary dictionaryWithKeysAndObjects:
                             
                             DEVICE_TOKEN, [[nc_AppDelegate sharedInstance] deviceTokenString],
-                            APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],DUMMY_TOKEN_ID,[[NSUserDefaults standardUserDefaults] valueForKey:DUMMY_TOKEN_ID],APPLICATION_VERSION,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"],
+                            APPLICATION_TYPE,[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId],DUMMY_TOKEN_ID,[[NSUserDefaults standardUserDefaults] objectForKey:DUMMY_TOKEN_ID],APPLICATION_VERSION,[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"],
                             nil];
     NSString *updateURL = [UPDATE_DEVICE_TOKEN appendQueryParams:params];
     updateDeviceTokenURL = updateURL;
@@ -1304,6 +1319,7 @@ FeedBackForm *fbView;
     NSString* buttonResponse;
     if(buttonIndex == 0){
         buttonResponse = @"App Store feedback";
+        //Fixed DE-326
         NSURL *url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL];
         [[UIApplication sharedApplication] openURL:url];
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
@@ -1387,17 +1403,21 @@ FeedBackForm *fbView;
         NSString  *token = @"26d906c5c273446d5f40d2c173ddd3f6869b2666b1c7afd5173d69b6629def70";
         return token;
     }
-    NSString *dummyToken = [prefs objectForKey:DUMMY_TOKEN_ID];
-    if(!dummyToken){
-         dummyToken = [NSString stringWithFormat:@"SF%@",generateRandomString(64)];
-        [prefs setObject:dummyToken forKey:DUMMY_TOKEN_ID];
-    }
+    
     NSString *deviceToken = [prefs objectForKey:DEVICE_TOKEN];
     if(deviceToken){
         return deviceToken;
     }
     else{
-        return [prefs objectForKey:DUMMY_TOKEN_ID];   
+        NSString *dummyToken = [prefs objectForKey:DUMMY_TOKEN_ID];
+        if(!dummyToken){
+            dummyToken = [NSString stringWithFormat:@"SF%@",generateRandomString(64)];
+            //Fixed DE-327
+            if(![[NSUserDefaults standardUserDefaults] boolForKey:DEVICE_TOKEN_UPDATED]){
+                [prefs setObject:dummyToken forKey:DUMMY_TOKEN_ID];
+            }
+        }
+        return dummyToken;   
     }
 }
 @end

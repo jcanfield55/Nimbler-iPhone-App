@@ -97,8 +97,11 @@ NSUserDefaults *prefs;
     [super viewDidLoad];
     // Part Of DE-318 Fix
     UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap)];
+    singleTap.delegate = self;
     [singleTap setNumberOfTapsRequired:1];
     [self.view addGestureRecognizer:singleTap];
+    
+    [btnSubmitFeedback addTarget:self action:@selector(submitFeedBack:) forControlEvents:UIControlEventTouchUpInside];
     
     self.txtFeedBack.delegate = self;
     self.txtEmailId.delegate = self;
@@ -407,13 +410,23 @@ NSUserDefaults *prefs;
     NIMLOG_ERR1(@"Encoder Error occurred = %@",error);
 }
 
+#pragma mark GestureRecognizer delegate method
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    // Allow Tap gesture recognizer to only view not to buttons and textfields
+    if(touch.view == self.view){
+        return YES;
+    }
+    return NO;
+}
 
 #pragma mark Restful request
 -(IBAction)submitFeedBack:(id)sender
 {
     // DE- 195 Fixed
     if([[nc_AppDelegate sharedInstance] isNetworkConnectionLive]){
-        if((soundFilePath == nil) && ([txtFeedBack.text isEqualToString:NULL_STRING])) {
+        // Fixed DE-338
+        // Removing the white space character from feedback text and then check the length
+        if((soundFilePath == nil) && ([txtFeedBack.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length == 0)) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:FB_TITLE_MSG message:FB_WHEN_NO_VOICE_OR_TEXT delegate:self cancelButtonTitle:BUTTON_OK otherButtonTitles:nil, nil];
             [alert show];
         } else {
@@ -438,6 +451,13 @@ NSUserDefaults *prefs;
         if ([response isOK]) {
             // Success! Let's take a look at the data
             txtFeedBack.text = NULL_STRING;
+            // Resign First responder of both textfield and textview when feedback sent success received from server
+            if([txtFeedBack becomeFirstResponder]){
+               [txtFeedBack resignFirstResponder];  
+            }
+            if([txtEmailId becomeFirstResponder]){
+               [txtEmailId resignFirstResponder];  
+            }
             RKJSONParserJSONKit* parser1 = [RKJSONParserJSONKit new];
             NSDictionary *fbParser = [parser1 objectFromString:[response bodyAsString] error:nil];
             NSString *msg;
@@ -483,6 +503,7 @@ NSUserDefaults *prefs;
     alertView = [self feedbackConfirmAlert];
     // NSString *udid = [UIDevice currentDevice].uniqueIdentifier;
     RKClient *client = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+    client.cachePolicy = RKRequestCachePolicyNone;
     RKParams *rkp = [RKParams params];
     [RKClient setSharedClient:client];
     
