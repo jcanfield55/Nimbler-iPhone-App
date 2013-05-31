@@ -31,7 +31,8 @@
 #define FB_APP_ID @"130900483754939"  // Nimbler Caltrain FB App ID
 
 // Review reminder URL
-#define NIMBLER_REVIEW_URL                   @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=567382474"  // Nimbler Caltrain review URL
+#define NIMBLER_REVIEW_URL                   @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=567382474"
+#define NIMBLER_SF_REVIEW_URL                   @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=638067545"
 //
 // Settings Page Rows
 //
