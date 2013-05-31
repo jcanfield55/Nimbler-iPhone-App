@@ -3025,8 +3025,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Nimbler World, Inc.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nimbler World, Inc.";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -3054,8 +3054,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler SF";
-				PROVISIONING_PROFILE = "7C51E5B5-CA67-4729-B373-BACBD19FC90A";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "7C51E5B5-CA67-4729-B373-BACBD19FC90A";
+				PROVISIONING_PROFILE = "190AE823-AD52-4922-8058-4E54D4C697C5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "190AE823-AD52-4922-8058-4E54D4C697C5";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -3067,9 +3067,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Nimbler World, Inc.";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: Nimbler World, Inc.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nimbler World, Inc.";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -3097,9 +3097,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler SF";
-				PROVISIONING_PROFILE = "7C51E5B5-CA67-4729-B373-BACBD19FC90A";
-				"PROVISIONING_PROFILE[sdk=*]" = "7C51E5B5-CA67-4729-B373-BACBD19FC90A";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "7C51E5B5-CA67-4729-B373-BACBD19FC90A";
+				PROVISIONING_PROFILE = "190AE823-AD52-4922-8058-4E54D4C697C5";
+				"PROVISIONING_PROFILE[sdk=*]" = "190AE823-AD52-4922-8058-4E54D4C697C5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "190AE823-AD52-4922-8058-4E54D4C697C5";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -3155,8 +3155,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Nimbler World, Inc.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nimbler World, Inc.";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -3184,8 +3184,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "472F570B-1668-4D89-A2B2-1F66DEF88097";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "472F570B-1668-4D89-A2B2-1F66DEF88097";
+				PROVISIONING_PROFILE = "1ED7BA0B-E45B-4DCB-ADAE-CA9BC48E3DA0";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1ED7BA0B-E45B-4DCB-ADAE-CA9BC48E3DA0";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -3197,9 +3197,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Nimbler World, Inc.";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: Nimbler World, Inc.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nimbler World, Inc.";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -3227,9 +3227,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "472F570B-1668-4D89-A2B2-1F66DEF88097";
-				"PROVISIONING_PROFILE[sdk=*]" = "472F570B-1668-4D89-A2B2-1F66DEF88097";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "472F570B-1668-4D89-A2B2-1F66DEF88097";
+				PROVISIONING_PROFILE = "1ED7BA0B-E45B-4DCB-ADAE-CA9BC48E3DA0";
+				"PROVISIONING_PROFILE[sdk=*]" = "1ED7BA0B-E45B-4DCB-ADAE-CA9BC48E3DA0";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1ED7BA0B-E45B-4DCB-ADAE-CA9BC48E3DA0";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
