@@ -30,6 +30,9 @@
 // Facebook App ID (for tracking referrals)
 #define FB_APP_ID @"130900483754939"  // Nimbler Caltrain FB App ID
 
+// Flurry Key
+#define FLURRY_API_KEY @"WWV2WN4JMY35D4GYCPDJ"
+
 // Review reminder URL
 #define NIMBLER_REVIEW_URL                   @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=567382474"  // Nimbler Caltrain review URL
 //

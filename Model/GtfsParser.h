@@ -63,9 +63,6 @@
 // Parse the Gtfs Trips Data and store to database.
 - (void) parseAndStoreGtfsTripsData:(NSDictionary *)dictFileData RequestUrl:(NSString *)strRequestUrl;
 
-// Parse the Gtfs StopTimes Data and store to database.
-- (void) parseAndStoreGtfsStopTimesData:(NSDictionary *)dictFileData RequestUrl:(NSString *) strResourcePath;
-
 -(void)requestAgencyDataFromServer;
 -(void)requestCalendarDatesDataFromServer;
 -(void)requestCalendarDatafromServer;
