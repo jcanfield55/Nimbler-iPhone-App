@@ -27,6 +27,13 @@
 #define MAX_LAT           @"39.191489"
 #define MAX_LONG          @"-76.668939"
 
+
+// Facebook App ID (for tracking referrals)
+#define FB_APP_ID @""  // Nimbler SF FB App ID
+
+// Review reminder URL
+#define NIMBLER_REVIEW_URL                   @""
+
 //
 // Settings Page Rows
 //

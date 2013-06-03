@@ -122,7 +122,8 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
            [newDictionary setObject:SETTING_STRING_INCLUDE forKey:BIKE_SHARE];
         }
         else{
-           [newDictionary setObject:SETTING_STRING_EXCLUDE forKey:BIKE_BUTTON]; 
+           [newDictionary setObject:SETTING_STRING_EXCLUDE forKey:BIKE_BUTTON];
+           [newDictionary setObject:SETTING_STRING_EXCLUDE forKey:BIKE_SHARE];
         }
         [self setExcludeDictionaryInternal:newDictionary];
     }
@@ -390,12 +391,16 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
     BOOL containWalk = false;
     BOOL containBike = false;
     BOOL needToIncludeLeg = true;
+    BOOL rentedBike = false;
     for(Leg *leg in legs){
         if(leg.isBike){
             containBike = true;
         }
         if(leg.isWalk){
             containWalk = true;
+        }
+        if(leg.rentedBike){
+            rentedBike = true;
         }
         if (returnShortAgencyName(leg.agencyName)) {
             NSString *legKey;
@@ -416,7 +421,11 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
             }
         }
     }
-    if(containBike && containWalk && [self settingForKey:returnBikeButtonTitle()]==SETTING_INCLUDE_ROUTE && needToIncludeLeg)
+    if(containBike && containWalk && [self settingForKey:returnBikeButtonTitle()]==SETTING_INCLUDE_ROUTE && [self settingForKey:BIKE_SHARE]==SETTING_INCLUDE_ROUTE && needToIncludeLeg)
+        return true;
+    else if(containBike && containWalk && [self settingForKey:returnBikeButtonTitle()]==SETTING_INCLUDE_ROUTE && [self settingForKey:BIKE_SHARE]==SETTING_EXCLUDE_ROUTE && !rentedBike && needToIncludeLeg)
+        return true;
+    else if(containBike && containWalk && [self settingForKey:returnBikeButtonTitle()]==SETTING_EXCLUDE_ROUTE && [self settingForKey:BIKE_SHARE]==SETTING_INCLUDE_ROUTE && rentedBike && needToIncludeLeg)
         return true;
     else
         return false;

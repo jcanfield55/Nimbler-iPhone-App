@@ -32,7 +32,6 @@
 
 // Review reminder URL
 #define NIMBLER_REVIEW_URL                   @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=567382474"
-#define NIMBLER_SF_REVIEW_URL                   @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=638067545"
 //
 // Settings Page Rows
 //

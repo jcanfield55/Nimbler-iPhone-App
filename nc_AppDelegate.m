@@ -1268,7 +1268,7 @@ FeedBackForm *fbView;
 -(void)updateBadge:(int)count
 {
     //if(![[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-        if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] != 1){
+        if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_WMATA_ADV] intValue] != 1){
             count = 0;
        // }
     }
@@ -1320,16 +1320,10 @@ FeedBackForm *fbView;
     if(buttonIndex == 0){
         buttonResponse = @"App Store feedback";
         //Fixed DE-326
-        NSURL *url;
-        if([[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] isEqualToString:CALTRAIN_APP_TYPE]){
-            url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL];
-        }
-        else if([[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] isEqualToString:SFMUNI_APP_TYPE]){
-            url = [[NSURL alloc] initWithString:NIMBLER_SF_REVIEW_URL];
-        }
-        else{
-            url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL];
-        }
+        NSURL *url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL];
+        [[UIApplication sharedApplication] openURL:url];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
     else if(buttonIndex == 1){
         buttonResponse = @"Nimbler feedback";

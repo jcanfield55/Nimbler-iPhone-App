@@ -21,8 +21,8 @@
 #define TEST_GEO_RESPONSE_URL  @"http://localhost:8080/TPServer/ws/mockgeolocation/"
 
 // To select server URL select 1 otherwise select 0,At a time only one of below must be 1.
-#define PRODUCTION_URL  1
-#define STAGGING_URL    0
+#define PRODUCTION_URL  0
+#define STAGGING_URL    1
 #define LOCAL_URL       0
 
 #if PRODUCTION_URL
@@ -363,7 +363,7 @@
 #define REQUEST_TRANSIT_MODE_TRANSIT    @"TRANSIT,WALK"
 #define REQUEST_TRANSIT_MODE_BIKE_ONLY  @"BICYCLE"
 #define REQUEST_TRANSIT_MODE_TRANSIT_BIKE @"TRANSIT,BICYCLE"
-#define REQUEST_TRANSIT_MODE_WALK_BIKE @"WALK,BICYCLE"
+#define REQUEST_TRANSIT_MODE_WALK_BIKE @"TRANSIT,WALK,BICYCLE"
 
 #define REQUEST_ID              @"reqId"
 #define REQUEST_ID_LENGTH       16

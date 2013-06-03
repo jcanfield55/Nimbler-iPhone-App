@@ -829,6 +829,7 @@
 		8DFADCB31727B059003DDACF /* Agencies.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFADCAA1727AAB0003DDACF /* Agencies.m */; };
 		8DFADCB41727B06A003DDACF /* Agencies.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFADCAA1727AAB0003DDACF /* Agencies.m */; };
 		8DFD0DAD17263B56003FCB5A /* store101_DC.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE2B85172575F000CCD3D1 /* store101_DC.zip */; };
+		8DFEBCC4175C4D5800A3916A /* RouteExcludeSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D00753116D4CAB30041A64C /* RouteExcludeSettings.m */; };
 		8DFFB36C165DFBBB00A39BC4 /* SettingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */; };
 		8DFFB36D165DFBBB00A39BC4 /* SettingDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */; };
 		8DFFB3B2165E593400A39BC4 /* img_Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB3B0165E593300A39BC4 /* img_Settings.png */; };
@@ -1272,6 +1273,8 @@
 		8DFADCA91727AAB0003DDACF /* Agencies.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Agencies.h; path = Model/Agencies.h; sourceTree = SOURCE_ROOT; };
 		8DFADCAA1727AAB0003DDACF /* Agencies.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Agencies.m; path = Model/Agencies.m; sourceTree = SOURCE_ROOT; };
 		8DFD0DAE17264CDB003FCB5A /* LocalConstantsCaltrain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalConstantsCaltrain.h; sourceTree = "<group>"; };
+		8DFEBCC9175C624700A3916A /* ConstantsDC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConstantsDC.h; sourceTree = "<group>"; };
+		8DFEBCCA175C924E00A3916A /* Network_Commuting 1. 10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Network_Commuting 1. 10.xcdatamodel"; sourceTree = "<group>"; };
 		8DFFB369165DFBBB00A39BC4 /* SettingDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingDetailViewController.h; sourceTree = "<group>"; };
 		8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingDetailViewController.m; sourceTree = "<group>"; };
 		8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingDetailViewController.xib; sourceTree = "<group>"; };
@@ -1643,6 +1646,7 @@
 		520FB289162604950083F143 /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
+				8DFEBCC9175C624700A3916A /* ConstantsDC.h */,
 				520FB28A162604950083F143 /* Constants.h */,
 				8DE18C6E17256CD200AA8112 /* ConstantsCaltrain.h */,
 				520FB28B162604950083F143 /* CoverageGeoJSON.geojson */,
@@ -2936,6 +2940,7 @@
 				8DE18B881725415800AA8112 /* NimblerApplication.m in Sources */,
 				8DE18B891725415800AA8112 /* WebView.m in Sources */,
 				2E02C787173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */,
+				8DFEBCC4175C4D5800A3916A /* RouteExcludeSettings.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3270,8 +3275,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler DC";
-				PROVISIONING_PROFILE = "BF7C9447-4B7B-4116-BFB3-0A78EEBE19E0";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "BF7C9447-4B7B-4116-BFB3-0A78EEBE19E0";
+				PROVISIONING_PROFILE = "8D45DFAE-2ADE-4632-B1D2-EA6AD19B18A6";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "8D45DFAE-2ADE-4632-B1D2-EA6AD19B18A6";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -3313,9 +3318,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler DC";
-				PROVISIONING_PROFILE = "BF7C9447-4B7B-4116-BFB3-0A78EEBE19E0";
-				"PROVISIONING_PROFILE[sdk=*]" = "BF7C9447-4B7B-4116-BFB3-0A78EEBE19E0";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "BF7C9447-4B7B-4116-BFB3-0A78EEBE19E0";
+				PROVISIONING_PROFILE = "8D45DFAE-2ADE-4632-B1D2-EA6AD19B18A6";
+				"PROVISIONING_PROFILE[sdk=*]" = "8D45DFAE-2ADE-4632-B1D2-EA6AD19B18A6";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "8D45DFAE-2ADE-4632-B1D2-EA6AD19B18A6";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -3377,6 +3382,7 @@
 		8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				8DFEBCCA175C924E00A3916A /* Network_Commuting 1. 10.xcdatamodel */,
 				2E02C78C1733D82D001F2F28 /* Network_Commuting 1. 9.xcdatamodel */,
 				5295B95216C6F71B008376B3 /* Network_Commuting 1.8.xcdatamodel */,
 				8DF6C87D1670696E00DD4D31 /* Network_Commuting 1.7.xcdatamodel */,
@@ -3388,7 +3394,7 @@
 				8D9EA261162D78FD002BB5FF /* Network_Commuting 1.6.xcdatamodel */,
 				8D9EA262162D78FD002BB5FF /* Network_Commuting.xcdatamodel */,
 			);
-			currentVersion = 2E02C78C1733D82D001F2F28 /* Network_Commuting 1. 9.xcdatamodel */;
+			currentVersion = 8DFEBCCA175C924E00A3916A /* Network_Commuting 1. 10.xcdatamodel */;
 			path = Network_Commuting.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

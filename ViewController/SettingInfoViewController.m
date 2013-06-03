@@ -173,11 +173,7 @@ UIImage *imageDetailDisclosure;
     [lblSliderMaxWalkDistanceValue setBackgroundColor:[UIColor clearColor]];
     [lblSliderMaxWalkDistanceValue setTextAlignment:UITextAlignmentCenter];
     [self.sliderMaxWalkDistance addSubview:lblSliderMaxWalkDistanceValue];
-    
     [switchPushNotification setOn:userPrefs.pushEnable];
-    if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
-        [switchPushNotification setUserInteractionEnabled:NO];
-    }
 }
 
 - (void)viewDidUnload{

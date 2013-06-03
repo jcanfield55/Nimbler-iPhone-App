@@ -540,9 +540,9 @@
                 fromToStopID = arrFromToStopIds;
             }
             if([leg isScheduled]){
-                NSDictionary *dicToStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.to.stopId,@"id", nil];
+                NSDictionary *dicToStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.to.stopAgencyId,@"agencyId",leg.to.stopId,@"id", nil];
                 NSDictionary *dicTo = [NSDictionary dictionaryWithObjectsAndKeys:dicToStopId,@"stopId", nil];
-                NSDictionary *dicFromStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.from.stopId,@"id", nil];
+                NSDictionary *dicFromStopId = [NSDictionary dictionaryWithObjectsAndKeys:leg.from.stopAgencyId,@"agencyId",leg.from.stopId,@"id", nil];
                 NSDictionary *dicFrom = [NSDictionary dictionaryWithObjectsAndKeys:dicFromStopId,@"stopId", nil];
                 NSString *strRouteShortName = leg.routeShortName;
                 NSString *strRouteLongName = leg.routeLongName;
@@ -589,6 +589,7 @@
             }
         }
     }
+    
     legLegIdDictionary = legIdDictionary;
     if([arrLegs count] > 0){
         NSString *strRequestString = [arrLegs JSONString];
@@ -599,7 +600,6 @@
         [requestParameter setValue:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] forParam:APPLICATION_TYPE];
         legsURL = NEXT_LEGS_PLAN;
         [rkTPClient post:NEXT_LEGS_PLAN params:requestParameter delegate:self];
-         NIMLOG_PERF2(@"Legs request Sent At-->%f",[[NSDate date] timeIntervalSince1970]);
     }
 }
 

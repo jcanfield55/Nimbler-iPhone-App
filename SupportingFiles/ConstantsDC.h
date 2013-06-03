@@ -1,4 +1,4 @@
-// Constants.h
+// ConstantsDC.h
 // Nimbler
 //
 // Created by Sitanshu Joshi on 5/26/12.
@@ -15,15 +15,15 @@
 #define GENERATING_SEED_DATABASE  0 // when we are generating seed database the value is 1 otherwise 0
 #define SKIP_REAL_TIME_UPDATES 0 // If 1, system will not request real-time updates
 
-#define TRIP_GENERATE_URL     @"http://23.23.210.156:7070/opentripplanner-api-webapp/ws/" 
+#define TRIP_GENERATE_URL     @"http://23.23.210.156:7070/TPServer/ws/" 
 //#define TRIP_GENERATE_URL @"http://ec2-23-22-169-158.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"
 #define GEO_RESPONSE_URL      @"http://maps.googleapis.com/maps/api/geocode/"
 #define TEST_GEO_RESPONSE_URL  @"http://localhost:8080/TPServer/ws/mockgeolocation/"
 
 // To select server URL select 1 otherwise select 0,At a time only one of below must be 1.
 #define PRODUCTION_URL  0
-#define STAGGING_URL    1
-#define LOCAL_URL       0
+#define STAGGING_URL    0
+#define LOCAL_URL       1
 
 #if PRODUCTION_URL
     #define TRIP_PROCESS_URL    @"http://23.23.210.156:8080/TPServer/ws/"
@@ -107,7 +107,7 @@
 #define UPDATE_DEVICE_TOKEN   @"users/preferences/update/token"
 
 // UserPreferernce (user settings) defaults, max, and min
-#define PREFS_DEFAULT_IS_PUSH_ENABLE NO
+#define PREFS_DEFAULT_IS_PUSH_ENABLE YES
 #define PREFS_DEFAULT_PUSH_NOTIFICATION_THRESHOLD 5
 
 #define URGENT_NOTIFICATION_DEFAULT_VALUE   1
@@ -377,7 +377,7 @@
 #define FOR_TODAY                      @"forToday"
 #define LEGS                           @"legs"
 #define LIVE_FEEDS_IMAGE_DOWNLOAD_URL  @"advisories/download"
-#define METADATA_URL                   @"metadata"
+#define METADATA_URL                   @"plan/graph/metadata?appType=5"
 #define NEXT_LEGS_PLAN                 @"plan/nextlegs"
 
 // US-163 Appstore Feedback reminder constants

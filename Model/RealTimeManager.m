@@ -107,8 +107,6 @@ static RealTimeManager* realTimeManager;
                             headSign = @"";
                         }
                         NSDictionary *dicLegData = [NSDictionary dictionaryWithObjectsAndKeys:tripId,@"tripId",strRouteLongName,@"routeLongName",strRouteShortName,@"routeShortName",[NSNumber numberWithDouble:startDate],@"startTime",[NSNumber numberWithDouble:endDate],@"endTime",leg.routeId,@"routeId",dicTo,@"to",dicFrom,@"from",leg.mode,@"mode",leg.agencyId,@"agencyId",leg.agencyName,@"agencyName",leg.route,@"route",headSign,@"headsign",leg.legId,@"id", nil];
-//                        NIMLOG_PERF2(@"fromStopId->%@, toStopId->%@, fromStopName->%@, toStopName->%@, legId->%@, routeId->%@, tripId->%@,",leg.from.stopId,leg.to.stopId,leg.from.name,leg.to.name,leg.legId,leg.routeId,leg.tripId);
-//                        NIMLOG_PERF2(@"-----------------------------------------");
                         [arrLegs addObject:dicLegData];
                     }
                 }  
@@ -127,23 +125,6 @@ static RealTimeManager* realTimeManager;
         } 
      }
 }
-
-/*
-- (void) logRealtimeData:(NSDictionary *)dictionary{
-    NSArray *array = [dictionary objectForKey:@"legLiveFeeds"];
-    for(int i=0;i<[array count];i++){
-        NSDictionary *dict = [array objectAtIndex:i];
-        NIMLOG_PERF2(@"legId->%@",[[dict objectForKey:@"leg"] objectForKey:@"id"]);
-        NSArray *arrayLegs = [dict objectForKey:@"lstPredictions"];
-        for(int j=0;j<[arrayLegs count];j++){
-            NSDictionary *responseDict = [arrayLegs objectAtIndex:j];
-            NSDate *date = [NSDate dateWithTimeIntervalSince1970:[[responseDict objectForKey:@"epochTime"] doubleValue]/1000];
-            NIMLOG_PERF2(@"realTime->%@, scheduleTime->%@, scheduleTripId->%@, realTripId->%@,",date,[responseDict objectForKey:@"scheduleTime"],[responseDict objectForKey:@"scheduleTripId"],[responseDict objectForKey:@"tripId"]);
-        }
-    NIMLOG_PERF2(@"---------------------------------------------------------");
-    }
-}
- */
 
 #pragma mark RKResponse Delegate method
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {
@@ -398,19 +379,8 @@ static RealTimeManager* realTimeManager;
             headSign = @"";
         
         if(leg.isRealTimeLeg && leg.vehicleId){
-            //NSInteger epochLegEndDate = [leg.endTime timeIntervalSince1970];
-            //NSInteger epochCurrentDate = [[NSDate date] timeIntervalSince1970];
-//            NSDictionary *latLonDictionary = [[NSUserDefaults standardUserDefaults] objectForKey:leg.legId];
-//            float lat = 0.0;
-//            float lon = 0.0;
-//            if(latLonDictionary){
-//                lat = [[latLonDictionary objectForKey:@"lat"] floatValue];
-//                lon = [[latLonDictionary objectForKey:@"lon"] floatValue];
-//            }
-//            if((epochCurrentDate <= epochLegEndDate) || (lat && lon && lat <= [leg.to.lat floatValue] && lon <= [leg.to.lng floatValue])){
-                NSDictionary *legData = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.legId,@"id",route,@"route",leg.vehicleId,@"vehicleId",leg.mode,@"mode",routeShortName,@"routeShortName",headSign,@"headsign", nil];
+                NSDictionary *legData = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.legId,@"id",route,@"route",leg.vehicleId,@"vehicleId",leg.mode,@"mode",routeShortName,@"routeShortName",headSign,@"headsign",leg.agencyName,@"agencyName", nil];
                 [legArray addObject:legData];
-           // }
         }
     }
     if([legArray count] > 0){
