@@ -241,12 +241,12 @@ UIImage *imageDetailDisclosure;
        [self.mainTable setBackgroundView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_background.png"]]];
     }
     // Added To solve the crash related to ios 4.3
-//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
-//        [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
-//    }
-//    else {
-//        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc]initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
-//    }
+    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+        [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+    }
+    else {
+        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc]initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+    }
     UIImage *imgTitle;
     if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
         imgTitle = [UIImage imageNamed:@"nimblrCaltrain.png"];
@@ -338,9 +338,12 @@ UIImage *imageDetailDisclosure;
     [super viewWillAppear:animated];
     
     [self.navigationController setNavigationBarHidden:YES animated:NO];
-    
-    [mainTable setFrame:CGRectMake(0, 0, 320, 319)];
-    
+//    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+//        [mainTable setFrame:CGRectMake(0, 0, 320, 455)];
+//    }
+//    else{
+//        [mainTable setFrame:CGRectMake(0, 0, 320, 366)];
+//    }
     NSArray *itinerariesArray = [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray;
     NSArray *fromToStopId = [nc_AppDelegate sharedInstance].planStore.fromToStopID;
     if(itinerariesArray){
@@ -363,7 +366,7 @@ UIImage *imageDetailDisclosure;
              rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT_4INCH;
          }
         else{
-           rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT; 
+           rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT;
         }
         [mainTable setFrame:rect0];
         logEvent(FLURRY_TOFROMVC_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
@@ -597,9 +600,9 @@ UIImage *imageDetailDisclosure;
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     if (section == FROM_SECTION) {
-        return TOFROM_SECTION_LABEL_HEIGHT;
+        return FROM_SECTION_LABEL_HEIGHT;
     } else if(section == TO_SECTION) {
-         return TOFROM_SECTION_LABEL_HEIGHT;
+         return TO_SECTION_LABEL_HEIGHT;
     } else {
         if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
             return TOFROM_SECTION_NOLABEL_HEIGHT_4INCH;
@@ -1536,6 +1539,7 @@ UIImage *imageDetailDisclosure;
 - (void)endEdit{
     //Fixed DE-330
     // Clearing both textfield before calling seteditMode method.
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
     self.toTableVC.txtField.text = NULL_STRING;
     self.fromTableVC.txtField.text = NULL_STRING;
     [self setEditMode:NO_EDIT];
@@ -1646,8 +1650,8 @@ UIImage *imageDetailDisclosure;
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        [toolBar setFrame:CGRectMake(0, 246, 320, 44)];
-        [datePicker setFrame:CGRectMake(0, 290, 320, 216)];
+        [toolBar setFrame:CGRectMake(0, 288, 320, 44)];
+        [datePicker setFrame:CGRectMake(0, 332, 320, 216)];
 
     }
     else{
