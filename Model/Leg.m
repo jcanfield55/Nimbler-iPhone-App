@@ -196,13 +196,25 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 - (NSString *)directionsTitleText:(LegPositionEnum)legPosition
 {
     @try {
+        NSArray *arrayLegs = [self.itinerary sortedLegs];
+        int index = [arrayLegs indexOfObject:self];
+        Leg *previosLeg = nil;
+        if(index > 0){
+            previosLeg = [arrayLegs objectAtIndex:index-1];
+        }
     NSMutableString *titleText=[NSMutableString stringWithString:@""];
         NSString* walkOrBikeString = nil;
         if (self.isWalk) {
             walkOrBikeString = @"Walk";
         } else if (self.isBike) {
-            if(self.rentedBike){
-               walkOrBikeString = [NSString stringWithFormat:@"Rent bike from %@ and Bike",self.from.name];
+            if(self.rentedBike && previosLeg && previosLeg.rentedBike){
+                walkOrBikeString = @"Bike";
+            }
+            else if(self.rentedBike  && previosLeg && !previosLeg.rentedBike){
+                 walkOrBikeString = [NSString stringWithFormat:@"Rent bike from %@ and Bike",self.from.name];
+            }
+            else if(self.rentedBike && !previosLeg){
+                walkOrBikeString = [NSString stringWithFormat:@"Rent bike from %@ and Bike",self.from.name];
             }
             else{
                 walkOrBikeString = @"Bike";
