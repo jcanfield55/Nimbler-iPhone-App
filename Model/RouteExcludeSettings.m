@@ -12,7 +12,6 @@
 #import "Leg.h"
 #import "RouteExcludeSetting.h"
 #import "UtilityFunctions.h"
-#import "LocalConstants.h"
 
 #define SETTING_STRING_INCLUDE @"Include"
 #define SETTING_STRING_EXCLUDE @"Exclude"

@@ -30,6 +30,8 @@
 // Facebook App ID (for tracking referrals)
 #define FB_APP_ID @"247868928685317"  // Nimbler SF FB App ID
 
+// Flurry API Key
+#define FLURRY_API_KEY @"27WGHH9DG5Z5MRCB5QRN"
 // Review reminder URL
 #define NIMBLER_REVIEW_URL                   @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=567382474"
 #define NIMBLER_SF_REVIEW_URL                   @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=638067545"

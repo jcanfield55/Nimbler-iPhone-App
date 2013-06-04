@@ -20,7 +20,6 @@
 #import "RealTimeManager.h"
 #import "StationListElement.h"
 #import "RouteExcludeSetting.h"
-#import "LocalConstants.h"
 #if TEST_FLIGHT_ENABLED
 #import "TestFlightSDK1-1/TestFlight.h"
 #import "ZipArchive.h"
@@ -132,6 +131,7 @@ FeedBackForm *fbView;
          if(!isOldDBDeleted && [[NSFileManager defaultManager] fileExistsAtPath:dbPath]){
              [[NSFileManager defaultManager] removeItemAtPath:dbPath error:nil];
              [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"oldDbDeleted"];
+             [[NSUserDefaults standardUserDefaults] synchronize];
          }
      }
     
@@ -347,7 +347,7 @@ FeedBackForm *fbView;
 #endif
     // Call to Flurry SDK
 #if FLURRY_ENABLED
-    [Flurry startSession:@"27WGHH9DG5Z5MRCB5QRN"];
+    [Flurry startSession:FLURRY_API_KEY];
     [Flurry setUserID:cfuuidString];
     [Flurry logEvent:FLURRY_APPDELEGATE_START];
 #endif

@@ -9,7 +9,6 @@
 #import "SettingDetailViewController.h"
 #import "UserPreferance.h"
 #import "nc_AppDelegate.h"
-#import "LocalConstants.h"
 #import "UtilityFunctions.h"
 #import "RouteExcludeSettings.h"
 #import "RouteExcludeSetting.h"
