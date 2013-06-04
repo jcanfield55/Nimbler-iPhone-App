@@ -37,7 +37,7 @@
 #define TOFROM_INSERT_INTO_CELL_MARGIN 2 // spacer added to cell height when there is an inserted field or table
 #define TOFROM_TABLE_CORNER_RADIUS 10.0
 
-#define TOFROM_SECTION_LABEL_HEIGHT 23.0
+#define TOFROM_SECTION_LABEL_HEIGHT 35.0
 #define TOFROM_SECTION_LABEL_WIDTH 60.0
 #define TOFROM_SECTION_NOLABEL_HEIGHT 5.0 // spacer when there is no label
 #define TOFROM_SECTION_NOLABEL_HEIGHT_4INCH 5.0 // spacer when there is no label

@@ -205,12 +205,8 @@ UIImage *imageDetailDisclosure;
             
             // Set up NavBar left buttons
             
-            UIImage* btnSwapImage = [UIImage imageNamed:@"img_swapLocation.png"];
-            UIButton *btnSwap = [[UIButton alloc] initWithFrame:CGRectMake(0,0,btnSwapImage.size.width,btnSwapImage.size.height)];
-            [btnSwap setTag:101];
-            [btnSwap addTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
-            [btnSwap setBackgroundImage:btnSwapImage forState:UIControlStateNormal];
-            barButtonSwap = [[UIBarButtonItem alloc] initWithCustomView:btnSwap];
+            
+//            barButtonSwap = [[UIBarButtonItem alloc] initWithCustomView:btnSwap];
             
             // Accessibility Label For UI Automation.
             barButtonSwap.accessibilityLabel = SWAP_BUTTON;
@@ -245,12 +241,12 @@ UIImage *imageDetailDisclosure;
        [self.mainTable setBackgroundView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_background.png"]]];
     }
     // Added To solve the crash related to ios 4.3
-    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
-        [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
-    }
-    else {
-        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc]initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
-    }
+//    if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+//        [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+//    }
+//    else {
+//        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc]initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+//    }
     UIImage *imgTitle;
     if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
         imgTitle = [UIImage imageNamed:@"nimblrCaltrain.png"];
@@ -340,6 +336,11 @@ UIImage *imageDetailDisclosure;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    
+    [mainTable setFrame:CGRectMake(0, 0, 320, 319)];
+    
     NSArray *itinerariesArray = [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray;
     NSArray *fromToStopId = [nc_AppDelegate sharedInstance].planStore.fromToStopID;
     if(itinerariesArray){
@@ -613,7 +614,15 @@ UIImage *imageDetailDisclosure;
 {
     UIView *headerView;
     if(editMode == NO_EDIT){
-       headerView = [sectionUILabelArray objectAtIndex:section]; 
+       headerView = [sectionUILabelArray objectAtIndex:section];
+        if(section == 1){
+            UIImage* btnSwapImage = [UIImage imageNamed:@"img_swapLocation.png"];
+            UIButton *btnSwap = [[UIButton alloc] initWithFrame:CGRectMake(130,1,btnSwapImage.size.width,btnSwapImage.size.height)];
+            [btnSwap setTag:101];
+            [btnSwap addTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
+            [btnSwap setBackgroundImage:btnSwapImage forState:UIControlStateNormal];
+            [headerView addSubview:btnSwap];
+        }
     }
     else{
         UIView *tempView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, TOFROM_SECTION_LABEL_WIDTH, TOFROM_SECTION_LABEL_HEIGHT)];
@@ -624,6 +633,7 @@ UIImage *imageDetailDisclosure;
         label.textColor = [UIColor lightGrayColor];
         label.backgroundColor = [UIColor clearColor];
         label.font = [UIFont MEDIUM_OBLIQUE_FONT];
+        
         if(editMode == TO_EDIT){
             label.text = @"To:";
             [tempView addSubview:label];
@@ -1641,8 +1651,8 @@ UIImage *imageDetailDisclosure;
 
     }
     else{
-        [toolBar setFrame:CGRectMake(0, 160, 320, 44)];
-        [datePicker setFrame:CGRectMake(0, 204, 320, 216)]; 
+        [toolBar setFrame:CGRectMake(0, 200, 320, 44)];
+        [datePicker setFrame:CGRectMake(0, 244, 320, 216)];
     }
     [UIView commitAnimations];
 }

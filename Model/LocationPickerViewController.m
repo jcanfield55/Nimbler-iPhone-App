@@ -41,6 +41,9 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    [self.navigationController setNavigationBarHidden:NO animated:NO];
+    
     logEvent(FLURRY_LOCATION_PICKER_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
 
     locationPicked = FALSE;
