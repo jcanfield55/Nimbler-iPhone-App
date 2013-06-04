@@ -10,7 +10,6 @@
 #import "nc_AppDelegate.h"
 #import "UserPreferance.h"
 #import "UtilityFunctions.h"
-#import "LocalConstants.h"
 #import "RouteExcludeSettings.h"
 #import "RouteExcludeSetting.h"
 

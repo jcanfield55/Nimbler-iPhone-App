@@ -11,7 +11,6 @@
 #import "Step.h"
 #import "UtilityFunctions.h"
 #import "KeyObjectStore.h"
-#import "LocalConstants.h"
 #import "IntermediateStops.h"
 
 @interface Leg() 

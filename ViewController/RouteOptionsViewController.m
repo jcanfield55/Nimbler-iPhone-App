@@ -14,7 +14,6 @@
 #import "LegMapViewController.h"
 #import "twitterViewController.h"
 #import "nc_AppDelegate.h"
-#import "LocalConstants.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "Itinerary.h"
 #import "RouteExcludeSettings.h"
