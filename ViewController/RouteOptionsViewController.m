@@ -271,6 +271,31 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         }
     }
     if([[RouteExcludeSettings latestUserSettings] settingForKey:btn.titleLabel.text] == SETTING_EXCLUDE_ROUTE){
+        
+        UIView *bgView = [self.view viewWithTag:1000];
+        NSArray *subViews = [bgView subviews];
+        if([btn.titleLabel.text isEqualToString:returnBikeButtonTitle()]){
+            [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:BIKE_SHARE];
+            for(int i=0;i<[subViews count];i++){
+                UIButton *button = [subViews objectAtIndex:i];
+                if([button isKindOfClass:[UIButton class]] && [button.titleLabel.text isEqualToString:BIKE_SHARE]){
+                    [button setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
+                    [button setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
+                    break;
+                }
+            }
+        }
+        else if([btn.titleLabel.text isEqualToString:BIKE_SHARE]){
+            [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:returnBikeButtonTitle()];
+            for(int i=0;i<[subViews count];i++){
+                UIButton *button = [subViews objectAtIndex:i];
+                if([button isKindOfClass:[UIButton class]] && [button.titleLabel.text isEqualToString:returnBikeButtonTitle()]){
+                    [button setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
+                    [button setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
+                    break;
+                }
+            }
+        }
         [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:btn.titleLabel.text];
         toggledSetting.setting = SETTING_INCLUDE_ROUTE;
         [btn setBackgroundImage:[UIImage imageNamed:@"Updated_Pressed.png"] forState:UIControlStateNormal];

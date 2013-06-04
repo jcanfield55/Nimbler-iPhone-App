@@ -241,7 +241,6 @@
             int maxDistance = (int)(userPrefs.bikeDistance*1609.544);
             [params setObject:[NSNumber numberWithInt:maxDistance] forKey:MAX_WALK_DISTANCE];
             if ([parameters.routeExcludeSettings settingForKey:BIKE_SHARE]==SETTING_INCLUDE_ROUTE){
-                [params setObject:@"true" forKey:RENTED_BIKE];
                 [params setObject:REQUEST_TRANSIT_MODE_WALK_BIKE forKey:REQUEST_TRANSIT_MODE];
             }
         } else if (parameters.routeExcludeSettings &&
@@ -257,7 +256,6 @@
                 [params setObject:@"TRIANGLE" forKey:@"optimize"];
                 int maxDistance = (int)(userPrefs.bikeDistance*1609.544);
                 [params setObject:[NSNumber numberWithInt:maxDistance] forKey:MAX_WALK_DISTANCE];
-               [params setObject:@"true" forKey:RENTED_BIKE];
                [params setObject:REQUEST_TRANSIT_MODE_WALK_BIKE forKey:REQUEST_TRANSIT_MODE];
         } else {
             [params setObject:REQUEST_TRANSIT_MODE_TRANSIT forKey:REQUEST_TRANSIT_MODE];
