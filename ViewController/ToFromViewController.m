@@ -205,12 +205,8 @@ UIImage *imageDetailDisclosure;
             
             // Set up NavBar left buttons
             
-            UIImage* btnSwapImage = [UIImage imageNamed:@"img_swapLocation.png"];
-            UIButton *btnSwap = [[UIButton alloc] initWithFrame:CGRectMake(0,0,btnSwapImage.size.width,btnSwapImage.size.height)];
-            [btnSwap setTag:101];
-            [btnSwap addTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
-            [btnSwap setBackgroundImage:btnSwapImage forState:UIControlStateNormal];
-            barButtonSwap = [[UIBarButtonItem alloc] initWithCustomView:btnSwap];
+            
+//            barButtonSwap = [[UIBarButtonItem alloc] initWithCustomView:btnSwap];
             
             // Accessibility Label For UI Automation.
             barButtonSwap.accessibilityLabel = SWAP_BUTTON;
@@ -340,6 +336,14 @@ UIImage *imageDetailDisclosure;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
+//    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+//        [mainTable setFrame:CGRectMake(0, 0, 320, 455)];
+//    }
+//    else{
+//        [mainTable setFrame:CGRectMake(0, 0, 320, 366)];
+//    }
     NSArray *itinerariesArray = [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray;
     NSArray *fromToStopId = [nc_AppDelegate sharedInstance].planStore.fromToStopID;
     if(itinerariesArray){
@@ -362,7 +366,7 @@ UIImage *imageDetailDisclosure;
              rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT_4INCH;
          }
         else{
-           rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT; 
+           rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT;
         }
         [mainTable setFrame:rect0];
         logEvent(FLURRY_TOFROMVC_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
@@ -596,9 +600,9 @@ UIImage *imageDetailDisclosure;
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     if (section == FROM_SECTION) {
-        return TOFROM_SECTION_LABEL_HEIGHT;
+        return FROM_SECTION_LABEL_HEIGHT;
     } else if(section == TO_SECTION) {
-         return TOFROM_SECTION_LABEL_HEIGHT;
+         return TO_SECTION_LABEL_HEIGHT;
     } else {
         if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
             return TOFROM_SECTION_NOLABEL_HEIGHT_4INCH;
@@ -613,7 +617,15 @@ UIImage *imageDetailDisclosure;
 {
     UIView *headerView;
     if(editMode == NO_EDIT){
-       headerView = [sectionUILabelArray objectAtIndex:section]; 
+       headerView = [sectionUILabelArray objectAtIndex:section];
+        if(section == 1){
+            UIImage* btnSwapImage = [UIImage imageNamed:@"img_swapLocation.png"];
+            UIButton *btnSwap = [[UIButton alloc] initWithFrame:CGRectMake(130,1,btnSwapImage.size.width,btnSwapImage.size.height)];
+            [btnSwap setTag:101];
+            [btnSwap addTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
+            [btnSwap setBackgroundImage:btnSwapImage forState:UIControlStateNormal];
+            [headerView addSubview:btnSwap];
+        }
     }
     else{
         UIView *tempView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, TOFROM_SECTION_LABEL_WIDTH, TOFROM_SECTION_LABEL_HEIGHT)];
@@ -624,6 +636,7 @@ UIImage *imageDetailDisclosure;
         label.textColor = [UIColor lightGrayColor];
         label.backgroundColor = [UIColor clearColor];
         label.font = [UIFont MEDIUM_OBLIQUE_FONT];
+        
         if(editMode == TO_EDIT){
             label.text = @"To:";
             [tempView addSubview:label];
@@ -1526,6 +1539,7 @@ UIImage *imageDetailDisclosure;
 - (void)endEdit{
     //Fixed DE-330
     // Clearing both textfield before calling seteditMode method.
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
     self.toTableVC.txtField.text = NULL_STRING;
     self.fromTableVC.txtField.text = NULL_STRING;
     [self setEditMode:NO_EDIT];
@@ -1636,13 +1650,13 @@ UIImage *imageDetailDisclosure;
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        [toolBar setFrame:CGRectMake(0, 246, 320, 44)];
-        [datePicker setFrame:CGRectMake(0, 290, 320, 216)];
+        [toolBar setFrame:CGRectMake(0, 288, 320, 44)];
+        [datePicker setFrame:CGRectMake(0, 332, 320, 216)];
 
     }
     else{
-        [toolBar setFrame:CGRectMake(0, 160, 320, 44)];
-        [datePicker setFrame:CGRectMake(0, 204, 320, 216)]; 
+        [toolBar setFrame:CGRectMake(0, 200, 320, 44)];
+        [datePicker setFrame:CGRectMake(0, 244, 320, 216)];
     }
     [UIView commitAnimations];
 }

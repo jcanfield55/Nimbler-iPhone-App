@@ -382,6 +382,12 @@ NSString *strStreet2 = @"street ";
 -(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
     locations.isLocationSelected = false;
+    if([toFromVC editMode] == NO_EDIT){
+        [toFromVC.navigationController setNavigationBarHidden:YES animated:NO];
+    }
+    else{
+        [toFromVC.navigationController setNavigationBarHidden:NO animated:NO];
+    }
     return YES;
 }
 
@@ -435,6 +441,7 @@ NSString *strStreet2 = @"street ";
 // Delegate for when complete text entered into the UITextField
 - (IBAction)textSubmitted:(id)sender forEvent:(UIEvent *)event
 {
+    [toFromVC.navigationController setNavigationBarHidden:YES animated:NO];
     locations.isLocationSelected = true; 
     rawAddress = [sender text];
     

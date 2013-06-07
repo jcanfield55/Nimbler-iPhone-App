@@ -11,24 +11,24 @@
 #define Nimbler_Caltrain_UIConstants_h
 
 // ToFromViewController constants
-#define TOFROM_MAIN_TABLE_HEIGHT 319
-#define TOFROM_MAIN_TABLE_HEIGHT_4INCH 405
+#define TOFROM_MAIN_TABLE_HEIGHT 366
+#define TOFROM_MAIN_TABLE_HEIGHT_4INCH 499
 #define TOFROM_TIME_DATE_HEIGHT 36
 #define TOFROM_ROW_HEIGHT 36
 
 // To & From table heights for regular (3.5") iPhone screen
 #define FROM_TABLE_HEIGHT_NO_CL_MODE 107 // height when not isCurrentLocationMode
-#define TO_TABLE_HEIGHT_NO_CL_MODE 113
+#define TO_TABLE_HEIGHT_NO_CL_MODE 143
 #define FROM_TABLE_HEIGHT_CL_MODE 71 // height when isCurrentLocationMode
 #define TO_TABLE_HEIGHT_CL_MODE 152
 #define FROM_TABLE_HEIGHT_EDIT_MODE 148 // height when in Edit mode
 #define TO_TABLE_HEIGHT_EDIT_MODE 148
 
 // To & From table heights for iPhone5 and other 4" screens
-#define FROM_TABLE_HEIGHT_NO_CL_MODE_4INCH 148 // height when not isCurrentLocationMode
-#define TO_TABLE_HEIGHT_NO_CL_MODE_4INCH 148
-#define FROM_TABLE_HEIGHT_CL_MODE_4INCH 148 // height when isCurrentLocationMode
-#define TO_TABLE_HEIGHT_CL_MODE_4INCH 148
+#define FROM_TABLE_HEIGHT_NO_CL_MODE_4INCH 143 // height when not isCurrentLocationMode
+#define TO_TABLE_HEIGHT_NO_CL_MODE_4INCH 143
+#define FROM_TABLE_HEIGHT_CL_MODE_4INCH 143 // height when isCurrentLocationMode
+#define TO_TABLE_HEIGHT_CL_MODE_4INCH 143
 #define FROM_TABLE_HEIGHT_EDIT_MODE_4INCH 222 // height when in FROM_EDIT mode
 #define TO_TABLE_HEIGHT_EDIT_MODE_4INCH 222 // height when in TO_EDIT mode
 
@@ -37,6 +37,8 @@
 #define TOFROM_INSERT_INTO_CELL_MARGIN 2 // spacer added to cell height when there is an inserted field or table
 #define TOFROM_TABLE_CORNER_RADIUS 10.0
 
+#define FROM_SECTION_LABEL_HEIGHT 23.0
+#define TO_SECTION_LABEL_HEIGHT 35.0
 #define TOFROM_SECTION_LABEL_HEIGHT 23.0
 #define TOFROM_SECTION_LABEL_WIDTH 60.0
 #define TOFROM_SECTION_NOLABEL_HEIGHT 5.0 // spacer when there is no label
