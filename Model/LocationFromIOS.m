@@ -62,6 +62,9 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
                     if ([addrLine isEqualToString:@"United States"]) {
                         addrLine = @"USA";
                     }
+                    else if([addrLine isEqualToString:@"Washington D.C.‎ District of Columbia"]){
+                        addrLine = @"Washington";
+                    }
                 }
                 if (i==[addrLines count]-2) { // if this is the 2nd to last line, the one with zipcode
                     // Remove +4 if it is a Zip+4
@@ -127,6 +130,14 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
                                                      withString:@", "
                                                         options:options1
                                                           range:range];
+                
+                range.location = 0;
+                range.length = [formattedAddr length];
+                num = [formattedAddr replaceOccurrencesOfString:@"Washington D.C.‎ District of Columbia"
+                                                     withString:@"Washington"
+                                                        options:options1
+                                                          range:range];
+
                 
                 // Get rid of random Unicode "left-to-right mark" I found around "California"  http://www.fileformat.info/info/unicode/char/200e/index.htm
                 range.length = [formattedAddr length];

@@ -130,7 +130,7 @@ NSString *strStreet2 = @"street ";
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NIMLOG_EVENT1(@"Select Row: isFrom=%d, section=%d, row=%d", isFrom, [indexPath section], [indexPath row]);
-    
+    [toFromVC.navigationController setNavigationBarHidden:YES animated:NO];
     if ([self adjustedForEnterNewAddressFor:[indexPath row]] == -1) {  // "Enter New Address" cell
         if (isFrom) {
             [toFromVC setEditMode:FROM_EDIT]; 

@@ -58,6 +58,7 @@ UIImage *imageDetailDisclosure;
         imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
         
         switchPushNotification = [[UISwitch alloc] init];
+        switchPushNotification.accessibilityLabel = @"Push Notifications Switch";
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
             [switchPushNotification setOnTintColor:[UIColor lightGrayColor]];
         }

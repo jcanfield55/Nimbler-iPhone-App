@@ -185,16 +185,20 @@ UIImage *imageDetailDisclosure;
             for (int i=0; i<3; i++) {
                 UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, TOFROM_SECTION_LABEL_WIDTH, TOFROM_SECTION_LABEL_HEIGHT)];
                 UILabel *label = [[UILabel alloc] 
-                                  initWithFrame:CGRectMake(TOFROM_SECTION_LABEL_INDENT, 0, 
-                                                           TOFROM_SECTION_LABEL_WIDTH - TOFROM_SECTION_LABEL_INDENT, 
-                                                           TOFROM_SECTION_LABEL_HEIGHT)];
+                                  init];
                 label.textColor = [UIColor lightGrayColor];
                 label.backgroundColor = [UIColor clearColor];
                 label.font = [UIFont MEDIUM_OBLIQUE_FONT];
                 if (i == TO_SECTION) {
                     label.text = @"To:";
+                    [label setFrame:CGRectMake(TOFROM_SECTION_LABEL_INDENT, 12,
+                                               TOFROM_SECTION_LABEL_WIDTH - TOFROM_SECTION_LABEL_INDENT,
+                                               TOFROM_SECTION_LABEL_HEIGHT)];
                 } else if (i == FROM_SECTION) {
                     label.text = @"From:";
+                    [label setFrame:CGRectMake(TOFROM_SECTION_LABEL_INDENT, 0,
+                                               TOFROM_SECTION_LABEL_WIDTH - TOFROM_SECTION_LABEL_INDENT,
+                                               TOFROM_SECTION_LABEL_HEIGHT)];
                 } else {
                     // No label for "Depart"
                 }
@@ -250,6 +254,9 @@ UIImage *imageDetailDisclosure;
     UIImage *imgTitle;
     if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
         imgTitle = [UIImage imageNamed:@"nimblrCaltrain.png"];
+    }
+    else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
+       imgTitle = [UIImage imageNamed:@"nimblrDC.png"]; 
     }
     else{
         imgTitle = [UIImage imageNamed:@"nimblr.png"];

@@ -96,7 +96,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     [nc_AppDelegate sharedInstance].isRouteOptionView = true;
     // Enforce height of main table
     mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
-    [self changeMainTableSettings];
+    //[self changeMainTableSettings];
+    [mainTable reloadData];
     [self setFBParameterForPlan];
     [noItineraryWarning setHidden:setWarningHidden];
 }
@@ -139,6 +140,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                  status:(PlanRequestStatus)status
        RequestParameter:(PlanRequestParameters *)requestParameter
 {
+    [self.navigationController setNavigationBarHidden:NO animated:NO];
     if (status == PLAN_GENERIC_EXCEPTION || status == PLAN_NOT_AVAILABLE_THAT_TIME) {
         if (plan && [[plan sortedItineraries] count] == 0) {
             // if no itineraries showing, then show warning
@@ -210,6 +212,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         rect0.size.height = rect0.size.height - mainTableYPOS;
         [self createViewWithButtons:mainTableYPOS];
     }
+    
     [mainTable setFrame:rect0];
     [mainTable reloadData];
 }

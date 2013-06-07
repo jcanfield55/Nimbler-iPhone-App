@@ -17,18 +17,18 @@
 #define TOFROM_ROW_HEIGHT 36
 
 // To & From table heights for regular (3.5") iPhone screen
-#define FROM_TABLE_HEIGHT_NO_CL_MODE 107 // height when not isCurrentLocationMode
-#define TO_TABLE_HEIGHT_NO_CL_MODE 143
-#define FROM_TABLE_HEIGHT_CL_MODE 71 // height when isCurrentLocationMode
-#define TO_TABLE_HEIGHT_CL_MODE 152
+#define FROM_TABLE_HEIGHT_NO_CL_MODE 110 // height when not isCurrentLocationMode
+#define TO_TABLE_HEIGHT_NO_CL_MODE 146
+#define FROM_TABLE_HEIGHT_CL_MODE 74 // height when isCurrentLocationMode
+#define TO_TABLE_HEIGHT_CL_MODE 155
 #define FROM_TABLE_HEIGHT_EDIT_MODE 148 // height when in Edit mode
 #define TO_TABLE_HEIGHT_EDIT_MODE 148
 
 // To & From table heights for iPhone5 and other 4" screens
-#define FROM_TABLE_HEIGHT_NO_CL_MODE_4INCH 143 // height when not isCurrentLocationMode
-#define TO_TABLE_HEIGHT_NO_CL_MODE_4INCH 143
-#define FROM_TABLE_HEIGHT_CL_MODE_4INCH 143 // height when isCurrentLocationMode
-#define TO_TABLE_HEIGHT_CL_MODE_4INCH 143
+#define FROM_TABLE_HEIGHT_NO_CL_MODE_4INCH 184 // height when not isCurrentLocationMode
+#define TO_TABLE_HEIGHT_NO_CL_MODE_4INCH 148
+#define FROM_TABLE_HEIGHT_CL_MODE_4INCH 148 // height when isCurrentLocationMode
+#define TO_TABLE_HEIGHT_CL_MODE_4INCH 148
 #define FROM_TABLE_HEIGHT_EDIT_MODE_4INCH 222 // height when in FROM_EDIT mode
 #define TO_TABLE_HEIGHT_EDIT_MODE_4INCH 222 // height when in TO_EDIT mode
 
@@ -137,7 +137,7 @@
 #define NAVIGATION_ITEM_HEIGHT    42
 
 #define ROUTE_BUTTON_XPOS_4INCH       124
-#define ROUTE_BUTTON_YPOS_4INCH       410
+#define ROUTE_BUTTON_YPOS_4INCH       450
 #define ROUTE_BUTTON_WIDTH_4INCH      72
 #define ROUTE_BUTTON_HEIGHT_4INCH     37
 
