@@ -311,14 +311,14 @@
             RKJSONParserJSONKit* parser1 = [RKJSONParserJSONKit new];
             NSDictionary *legsDictionary = [parser1 objectFromString:[response bodyAsString] error:nil];
             self.stopTimesLoadSuccessfully = true;
-            if(!legsDictionary)
+            if(!legsDictionary || [legsDictionary isEqual:[NSNull null]])
                 return;
             NSArray *arrayItineraries = [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray;
             NSMutableArray *itinerariesArray = [[NSMutableArray alloc] initWithArray:arrayItineraries];
             NSArray *arrItineraries = [legsDictionary objectForKey:@"lstItineraries"];
             for(int i=0;i<[arrItineraries count];i++){
                 NSDictionary *itineraryDictionary = [arrItineraries objectAtIndex:i];
-                if(!itineraryDictionary)
+                if(!itineraryDictionary || [itineraryDictionary isEqual:[NSNull null]])
                     continue;
                 NSString *legId = [itineraryDictionary objectForKey:@"id"];
                 //Part of DE-291 Fixed
