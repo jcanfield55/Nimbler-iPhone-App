@@ -212,7 +212,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         rect0.size.height = rect0.size.height - mainTableYPOS;
         [self createViewWithButtons:mainTableYPOS];
     }
-    
+    if(self.navigationController.navigationBarHidden==YES){
+        rect0.origin.y = mainTableYPOS+44;
+    }
     [mainTable setFrame:rect0];
     [mainTable reloadData];
 }

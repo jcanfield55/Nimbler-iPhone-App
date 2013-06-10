@@ -324,6 +324,7 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
         [[NSUserDefaults standardUserDefaults] setObject:arrMemberOfListIds forKey:@"memberOfListId"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [mainTable reloadData];
+        [self.navigationController setNavigationBarHidden:NO animated:NO];
     }
     else{
         CATransition *animation = [CATransition animation];
