@@ -10,7 +10,7 @@
 #define Nimbler_SF_Header_h
 
 // Default time zone
-#define DEFAULT_TIME_ZONE @"Eastern Time (US & Canada)"
+#define DEFAULT_TIME_ZONE @"America/New_York"
 
 // Bundle and App Types
 #define CALTRAIN_BUNDLE_IDENTIFIER         @"com.Nimbler.Nimbler-Caltrain"
