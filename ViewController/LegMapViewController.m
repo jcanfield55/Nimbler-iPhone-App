@@ -140,6 +140,20 @@ NSString *legID;
                     NSString *toArrivalTimeString = [dateFormatter stringFromDate:toArrivalTime];
                     [toPoint setSubtitle:[NSString stringWithFormat:@"%@: %@",ARRIVAL,toArrivalTimeString]];
                 }
+                else if(startLeg.isBike && startLeg.rentedBike){
+                    if(i-1 > 0){
+                        Leg *previoueLeg = [sortedLegs objectAtIndex:i-1];
+                        if(!previoueLeg.rentedBike){
+                            [fromPoint setTitle:[NSString stringWithFormat:@"Capital Bikeshare at %@",startLeg.from.name]]; 
+                        }
+                    }
+                    if([sortedLegs count] > i + 1){
+                        Leg *nextLeg = [sortedLegs objectAtIndex:i+1];
+                        if(!nextLeg.rentedBike){
+                            [toPoint setTitle:[NSString stringWithFormat:@"Capital Bikeshare to %@",startLeg.to.name]];
+                        }
+                    }
+                }
                     [legStartEndPoint addObject:toPoint];
                     [mapView addAnnotation:toPoint];
                     [legStartEndPoint addObject:fromPoint];

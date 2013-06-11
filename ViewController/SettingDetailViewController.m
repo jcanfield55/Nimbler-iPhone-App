@@ -200,7 +200,9 @@
     if(sliderMaximumBikeDistance.value !=  [[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_MAX_BIKE_DISTANCE] floatValue] || sliderPreferenceFastVsSafe.value != [[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_BIKE_FAST_VS_SAFE] floatValue] || sliderPreferenceFastVsFlat.value != [[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_BIKE_FAST_VS_FLAT] floatValue]){
         RouteExcludeSettings *excludesettings = [RouteExcludeSettings latestUserSettings];
         IncludeExcludeSetting setting = [excludesettings settingForKey:returnBikeButtonTitle()];
-        if(setting == SETTING_INCLUDE_ROUTE){
+        // Fixed DE-351
+        IncludeExcludeSetting bikeShareSetting = [excludesettings settingForKey:BIKE_SHARE];
+        if(setting == SETTING_INCLUDE_ROUTE || bikeShareSetting == SETTING_INCLUDE_ROUTE){
             ToFromViewController *toFromVc = [nc_AppDelegate sharedInstance].toFromViewController;
             if(![nc_AppDelegate sharedInstance].isToFromView){
                 [toFromVc.navigationController popToRootViewControllerAnimated:YES];

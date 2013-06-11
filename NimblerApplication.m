@@ -22,6 +22,10 @@
         [(twitterViewController *)currentViewController openUrl:url];
          return NO;
     }
+    else if([currentViewController isKindOfClass:[RouteDetailsViewController class]]){
+        [(RouteDetailsViewController *)currentViewController openUrl:url];
+        return NO;
+    }
     return [super openURL:url];
 }
 

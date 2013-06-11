@@ -18,6 +18,7 @@
 #import "nc_AppDelegate.h"
 #import "RealTimeManager.h"
 #import "KeyObjectStore.h"
+#import "WebView.h"
 
 #define MAXIMUM_SCROLL_POINT   338
 #define MAXIMUM_SCROLL_POINT_4_INCH  425 
@@ -56,6 +57,7 @@
 @synthesize handleControl;
 @synthesize mapHeight;
 @synthesize tableHeight;
+@synthesize activityIndicatorView;
 
 NSUserDefaults *prefs;
 
@@ -417,21 +419,49 @@ NSUserDefaults *prefs;
     }
 }
 
+- (void) backToTwitterView{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+// Part Of DE-318 Fix
+// Will resign first responder if textview or textfield become first responder.
+- (void)openUrl:(NSURL *)url{
+    UIViewController *webViewController = [[UIViewController alloc] init];
+    UIButton * btnGoToNimbler = [[UIButton alloc] initWithFrame:CGRectMake(0,0,65,34)];
+    [btnGoToNimbler addTarget:self action:@selector(backToTwitterView) forControlEvents:UIControlEventTouchUpInside];
+    [btnGoToNimbler setBackgroundImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
+    
+    UIBarButtonItem *backTonimbler = [[UIBarButtonItem alloc] initWithCustomView:btnGoToNimbler];
+    webViewController.navigationItem.leftBarButtonItem = backTonimbler;
+    
+    [webViewController.view addSubview:[WebView instance]];
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20];
+    [[WebView instance] loadRequest:request];
+    [[WebView instance] setScalesPageToFit:YES];
+    [WebView instance].delegate = self;
+    if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
+        CATransition *animation = [CATransition animation];
+        [animation setDuration:0.3];
+        [animation setType:kCATransitionPush];
+        [animation setSubtype:kCATransitionFromRight];
+        [animation setRemovedOnCompletion:YES];
+        [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+        [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+        [[self navigationController] pushViewController:webViewController animated:NO];
+    } else {
+        [[self navigationController] pushViewController:webViewController animated:YES];
+    }
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Check for a reusable cell first, use that if it exists
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UIRouteDetailsViewCell"];
     @try {
+        cell = nil;
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
                                           reuseIdentifier:@"UIRouteDetailsViewCell"];
-            [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:STANDARD_FONT_SIZE]];
-            [[cell textLabel] setLineBreakMode:UILineBreakModeWordWrap];
-            [[cell textLabel] setNumberOfLines:0];
-            [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:STANDARD_FONT_SIZE]];
-            [[cell detailTextLabel] setLineBreakMode:UILineBreakModeWordWrap];
-            [[cell detailTextLabel] setNumberOfLines:0];
-            [[cell detailTextLabel] setTextColor:[UIColor GRAY_FONT_COLOR]];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.contentView.backgroundColor = [UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW];
         }
@@ -460,16 +490,40 @@ NSUserDefaults *prefs;
         }
  
         // if this is the selected row, make red
-        if (itineraryNumber == [indexPath row]) { 
-            [cell.textLabel setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+        
+       NSString *textString = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
+       TTTAttributedLabel *attributedLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectMake(45,5,260, 30)];
+        attributedLabel.font=[UIFont boldSystemFontOfSize:STANDARD_FONT_SIZE];
+        attributedLabel.numberOfLines = 2;
+        if (itineraryNumber == [indexPath row]) {
+            attributedLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
             [imgFileName appendString:@"Select"];
         } else {
-            [cell.textLabel setTextColor:[UIColor GRAY_FONT_COLOR]];
+            attributedLabel.textColor = [UIColor GRAY_FONT_COLOR];
         }
+       attributedLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [attributedLabel setText:textString];
+        [attributedLabel setBackgroundColor:[UIColor clearColor]];
+        attributedLabel.delegate = self;
         
-        // Add text
-        [[cell textLabel] setText:[[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]]];
-        [[cell detailTextLabel] setText:[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]]];
+        NSMutableDictionary *mutableLinkAttributes = [NSMutableDictionary dictionary];
+        [mutableLinkAttributes setValue:[NSNumber numberWithBool:YES] forKey:(NSString *)kCTUnderlineStyleAttributeName];
+        [mutableLinkAttributes setValue:(__bridge id)[[UIColor colorWithRed:123.0/255.0 green:104.0/255.0 blue:238.0/255.0 alpha:1.0f] CGColor] forKey:(NSString *)kCTForegroundColorAttributeName];
+        
+        attributedLabel.linkAttributes = mutableLinkAttributes;
+        NSRange range = [textString rangeOfString:@"Capital BikeShare"];
+        [attributedLabel addLinkToURL:[NSURL URLWithString:@"Capital BikeShare"] withRange:range];
+        [cell.contentView addSubview:attributedLabel];
+        
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(45,40,260, 30)];
+        label.numberOfLines = 2;
+        [label setFont:[UIFont systemFontOfSize:STANDARD_FONT_SIZE]];
+        [label setLineBreakMode:UILineBreakModeWordWrap];
+        [label setNumberOfLines:0];
+        [label setBackgroundColor:[UIColor clearColor]];
+        [label setTextColor:[UIColor GRAY_FONT_COLOR]];
+        [label setText:[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]]];
+        [cell.contentView addSubview:label];
 
         // Add icon if there is one
         if ([imgFileName length] == 0) {
@@ -484,23 +538,28 @@ NSUserDefaults *prefs;
     return cell;
 }
 
+
+- (void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.capitalbikeshare.com/pricing"]];
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
 {    
     @try {
         // NSString *patchString;
-        NSString* titleText = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
-        NSString* subtitleText = [[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]];
-        CGSize titleSize = [titleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE] 
-              constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
-        CGSize subtitleSize = [subtitleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]
-                 constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
-
-       CGFloat height = titleSize.height + subtitleSize.height + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
-        if (height < STANDARD_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
-            height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
-        }
+//        NSString* titleText = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
+//        NSString* subtitleText = [[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]];
+//        CGSize titleSize = [titleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE] 
+//              constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
+//        CGSize subtitleSize = [subtitleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]
+//                 constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
+//
+//       CGFloat height = titleSize.height + subtitleSize.height + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
+//        if (height < STANDARD_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
+//            height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
+//        }
         
-        return height;
+        return 70;
     }
     @catch (NSException *exception) {
         logException(@"RouteDetailsViewController->heightForRowAtIndexPath", @"", exception);
@@ -672,6 +731,18 @@ NSUserDefaults *prefs;
     
 }
 
+-(void)webViewDidStartLoad:(UIWebView *)webView{
+    if(!activityIndicatorView){
+        activityIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(145, 168, 37, 37)];
+        [activityIndicatorView setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
+        [webView addSubview:activityIndicatorView];
+    }
+    [activityIndicatorView startAnimating];
+}
+
+-(void)webViewDidFinishLoad:(UIWebView *)webView{
+    [activityIndicatorView stopAnimating];
+}
 
 
 @end
