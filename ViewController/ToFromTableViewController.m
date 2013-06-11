@@ -553,7 +553,7 @@ NSString *strStreet2 = @"street ";
     else {  // Error cases
         // if no valid locations (ie non in supported region),
         if (status==GEOCODE_STATUS_OK && [locationArray count]==0) {
-            NSString *msg = [NSString stringWithFormat:@"Did not find the address: '%@' in the San Francisco Bay Area", rawAddress];
+            NSString *msg = [NSString stringWithFormat:@"Did not find the address: '%@' %@", rawAddress,NEWGEOCODE_RESULT_MSG];
             alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
         }

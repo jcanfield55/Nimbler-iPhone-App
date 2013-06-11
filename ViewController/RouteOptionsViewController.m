@@ -87,7 +87,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    [self changeMainTableSettings];
     [self.navigationController setNavigationBarHidden:NO animated:NO];
     if(plan){
       self.timerRealtime =  [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: NO];  
@@ -96,8 +96,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     [nc_AppDelegate sharedInstance].isRouteOptionView = true;
     // Enforce height of main table
     mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
-    //[self changeMainTableSettings];
-    [mainTable reloadData];
+    //[mainTable reloadData];
     [self setFBParameterForPlan];
     [noItineraryWarning setHidden:setWarningHidden];
 }

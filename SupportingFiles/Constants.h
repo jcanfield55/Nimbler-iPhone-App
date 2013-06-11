@@ -65,6 +65,9 @@
 // Current Location
 #define CURRENT_LOCATION_STARTING_FROM_FREQUENCY 7.0
 
+#define NEWGEOCODE_RESULT_MSG @"in the San Francisco Bay Area"
+#define LOCATION_NOTAPPEAR_MSG @"Bay Area"
+
 // Testflight App Analytics and logging
 #define TEST_FLIGHT_ENABLED 0 // If 0, then do not include testFlightApp at all
 #define TEST_FLIGHT_UIDS 1 // If 1, then testFlightApp will collect device UIDs, if 0, it will not

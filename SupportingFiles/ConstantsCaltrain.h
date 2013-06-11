@@ -62,6 +62,9 @@
 #define TOFROM_LIST_TYPE          @"TOFROM_LIST" // Location type indicating a ToFromList
 #define ALL_STATION    @"all_st"
 
+#define NEWGEOCODE_RESULT_MSG @"in the San Francisco Bay Area"
+#define LOCATION_NOTAPPEAR_MSG @"Bay Area"
+
 // Current Location
 #define CURRENT_LOCATION_STARTING_FROM_FREQUENCY 7.0
 
