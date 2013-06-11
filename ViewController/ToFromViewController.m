@@ -1294,8 +1294,9 @@ UIImage *imageDetailDisclosure;
             if (fromLocation == currentLocation || toLocation == currentLocation) {
                 if (![[self supportedRegion] isInRegionLat:[currentLocation latFloat] Lng:[currentLocation lngFloat]]) {
                     [self stopActivityIndicator];
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:APP_TITLE message:
-                                          @"Your current location does not appear to be in the Bay Area.  Please choose a different location." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
+                    NSString *msg = [NSString stringWithFormat:@"Your current location does not appear to be in the %@.  Please choose a different location.",LOCATION_NOTAPPEAR_MSG];
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:APP_TITLE message:msg
+                                           delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
                     [alert show];
                     NSString *supportedRegString = [NSString stringWithFormat:
                                                     @"supportedRegion minLat = %f, minLng = %f, maxLat = %f, maxLng = %f",
