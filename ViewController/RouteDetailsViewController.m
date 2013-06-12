@@ -490,18 +490,23 @@ NSUserDefaults *prefs;
         }
  
         // if this is the selected row, make red
+        NSInteger attributedLblYPOS = 0;
+        if(![[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]] length]>0){
+            attributedLblYPOS =10;
+        }
+        NSString *textString = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
+        CGSize attributedLabelSize = [textString sizeWithFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
         
-       NSString *textString = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
-       TTTAttributedLabel *attributedLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectMake(45,5,260, 30)];
-        attributedLabel.font=[UIFont boldSystemFontOfSize:STANDARD_FONT_SIZE];
-        attributedLabel.numberOfLines = 2;
+        TTTAttributedLabel *attributedLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectMake(45,attributedLblYPOS,ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, attributedLabelSize.height)];
+        attributedLabel.font=[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE];
+        attributedLabel.numberOfLines = 5;
         if (itineraryNumber == [indexPath row]) {
             attributedLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
             [imgFileName appendString:@"Select"];
         } else {
             attributedLabel.textColor = [UIColor GRAY_FONT_COLOR];
         }
-       attributedLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        
         [attributedLabel setText:textString];
         [attributedLabel setBackgroundColor:[UIColor clearColor]];
         attributedLabel.delegate = self;
@@ -515,7 +520,9 @@ NSUserDefaults *prefs;
         [attributedLabel addLinkToURL:[NSURL URLWithString:@"Capital BikeShare"] withRange:range];
         [cell.contentView addSubview:attributedLabel];
         
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(45,40,260, 30)];
+        CGSize subTitleLabelSize = [[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]] sizeWithFont:[UIFont systemFontOfSize:STANDARD_FONT_SIZE] constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
+        
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(45,attributedLabelSize.height+3,ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, subTitleLabelSize.height)];
         label.numberOfLines = 2;
         [label setFont:[UIFont systemFontOfSize:STANDARD_FONT_SIZE]];
         [label setLineBreakMode:UILineBreakModeWordWrap];
@@ -524,7 +531,8 @@ NSUserDefaults *prefs;
         [label setTextColor:[UIColor GRAY_FONT_COLOR]];
         [label setText:[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]]];
         [cell.contentView addSubview:label];
-
+        
+    
         // Add icon if there is one
         if ([imgFileName length] == 0) {
             cell.imageView.image = nil;
@@ -547,19 +555,19 @@ NSUserDefaults *prefs;
 {    
     @try {
         // NSString *patchString;
-//        NSString* titleText = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
-//        NSString* subtitleText = [[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]];
-//        CGSize titleSize = [titleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE] 
-//              constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
-//        CGSize subtitleSize = [subtitleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]
-//                 constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
-//
-//       CGFloat height = titleSize.height + subtitleSize.height + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
-//        if (height < STANDARD_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
-//            height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
-//        }
+        NSString* titleText = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
+        NSString* subtitleText = [[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]];
+        CGSize titleSize = [titleText sizeWithFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE] 
+              constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
+        CGSize subtitleSize = [subtitleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]
+                 constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
+
+       CGFloat height = titleSize.height + subtitleSize.height + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
+        if (height < STANDARD_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
+            height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
+        }
         
-        return 70;
+        return height;
     }
     @catch (NSException *exception) {
         logException(@"RouteDetailsViewController->heightForRowAtIndexPath", @"", exception);
