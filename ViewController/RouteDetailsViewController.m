@@ -359,8 +359,6 @@ NSUserDefaults *prefs;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:NO animated:NO];
-    
     [nc_AppDelegate sharedInstance].isRouteDetailView = true;
     @try {
         logEvent(FLURRY_ROUTE_DETAILS_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
@@ -419,16 +417,21 @@ NSUserDefaults *prefs;
     }
 }
 
-- (void) backToTwitterView{
-    [self.navigationController popViewControllerAnimated:YES];
+- (void) backToRouteDetailView{
+    CATransition *animation = [CATransition animation];
+    [animation setDuration:0.3];
+    [animation setType:kCATransitionPush];
+    [animation setSubtype:kCATransitionFromLeft];
+    [animation setRemovedOnCompletion:YES];
+    [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+    [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+    [[self navigationController] popViewControllerAnimated:NO];
 }
 
-// Part Of DE-318 Fix
-// Will resign first responder if textview or textfield become first responder.
 - (void)openUrl:(NSURL *)url{
     UIViewController *webViewController = [[UIViewController alloc] init];
     UIButton * btnGoToNimbler = [[UIButton alloc] initWithFrame:CGRectMake(0,0,65,34)];
-    [btnGoToNimbler addTarget:self action:@selector(backToTwitterView) forControlEvents:UIControlEventTouchUpInside];
+    [btnGoToNimbler addTarget:self action:@selector(backToRouteDetailView) forControlEvents:UIControlEventTouchUpInside];
     [btnGoToNimbler setBackgroundImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
     
     UIBarButtonItem *backTonimbler = [[UIBarButtonItem alloc] initWithCustomView:btnGoToNimbler];

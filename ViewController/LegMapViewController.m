@@ -144,13 +144,15 @@ NSString *legID;
                     if(i-1 > 0){
                         Leg *previoueLeg = [sortedLegs objectAtIndex:i-1];
                         if(!previoueLeg.rentedBike){
-                            [fromPoint setTitle:[NSString stringWithFormat:@"Capital Bikeshare at %@",startLeg.from.name]]; 
+                            [fromPoint setTitle:startLeg.from.name];
+                            [fromPoint setSubtitle:@"Capital BikeShare Station"];
                         }
                     }
                     if([sortedLegs count] > i + 1){
                         Leg *nextLeg = [sortedLegs objectAtIndex:i+1];
                         if(!nextLeg.rentedBike){
-                            [toPoint setTitle:[NSString stringWithFormat:@"Capital Bikeshare to %@",startLeg.to.name]];
+                            [toPoint setTitle:startLeg.to.name];
+                            [toPoint setSubtitle:@"Capital BikeShare Station"];
                         }
                     }
                 }

@@ -294,11 +294,7 @@ UIImage *imageDetailDisclosure;
     
     // Accessibility Label For UI Automation.
     btnNow.accessibilityLabel = NOW_BUTTON;
-    
-    // Added To Clear Color Of mainTable for ios 4.3
-    if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
-        [self.mainTable setBackgroundColor: [UIColor clearColor]];
-    }
+    [self.mainTable setBackgroundColor: [UIColor clearColor]];
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -619,7 +615,11 @@ UIImage *imageDetailDisclosure;
         }
     } 
 }
-
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0,0,320,1)];
+    //view setBackgroundColor:[UIColor yellowColor]];
+    return view;
+}
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     UIView *headerView;
@@ -662,6 +662,7 @@ UIImage *imageDetailDisclosure;
 {
     return TOFROM_SECTION_FOOTER_HEIGHT;
 }
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
