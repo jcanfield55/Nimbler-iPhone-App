@@ -10,6 +10,8 @@
 		2E02C785173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */; };
 		2E02C786173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */; };
 		2E02C787173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */; };
+		2EF279EE17682CD500FB454F /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DECCA52176746EB00DD5E92 /* CoreText.framework */; };
+		2EF279F317682CD600FB454F /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DECCA52176746EB00DD5E92 /* CoreText.framework */; };
 		520FB121162603090083F143 /* FeedBackForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB109162603090083F143 /* FeedBackForm.m */; };
 		520FB122162603090083F143 /* FeedBackForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10A162603090083F143 /* FeedBackForm.xib */; };
 		520FB123162603090083F143 /* FeedBackForm_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10B162603090083F143 /* FeedBackForm_568h.xib */; };
@@ -1332,6 +1334,7 @@
 				52CF43A614BDF2F9000565D6 /* CoreData.framework in Frameworks */,
 				5258A89F160D617800871875 /* libTestFlight.a in Frameworks */,
 				8DF19BF416F725FC0050FE00 /* FacebookSDK.framework in Frameworks */,
+				2EF279EE17682CD500FB454F /* CoreText.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1375,6 +1378,7 @@
 				8DA77FE71724FF0D0090C2EA /* CoreData.framework in Frameworks */,
 				8DA77FE81724FF0D0090C2EA /* libTestFlight.a in Frameworks */,
 				8DA77FE91724FF0D0090C2EA /* FacebookSDK.framework in Frameworks */,
+				2EF279F317682CD600FB454F /* CoreText.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
