@@ -500,7 +500,7 @@ NSUserDefaults *prefs;
         NSString *textString = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
         CGSize attributedLabelSize = [textString sizeWithFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
         
-        TTTAttributedLabel *attributedLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectMake(45,attributedLblYPOS,ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, attributedLabelSize.height)];
+        TTTAttributedLabel *attributedLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectMake(40,attributedLblYPOS,ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, attributedLabelSize.height)];
         attributedLabel.font=[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE];
         attributedLabel.numberOfLines = 5;
         if (itineraryNumber == [indexPath row]) {
@@ -525,7 +525,7 @@ NSUserDefaults *prefs;
         
         CGSize subTitleLabelSize = [[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]] sizeWithFont:[UIFont systemFontOfSize:STANDARD_FONT_SIZE] constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
         
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(45,attributedLabelSize.height+3,ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, subTitleLabelSize.height)];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(40,attributedLabelSize.height+3,ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, subTitleLabelSize.height)];
         label.numberOfLines = 2;
         [label setFont:[UIFont systemFontOfSize:STANDARD_FONT_SIZE]];
         [label setLineBreakMode:UILineBreakModeWordWrap];
@@ -562,7 +562,7 @@ NSUserDefaults *prefs;
         NSString* subtitleText = [[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]];
         CGSize titleSize = [titleText sizeWithFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE] 
               constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
-        CGSize subtitleSize = [subtitleText sizeWithFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]
+        CGSize subtitleSize = [subtitleText sizeWithFont:[UIFont systemFontOfSize:STANDARD_FONT_SIZE]
                  constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
 
        CGFloat height = titleSize.height + subtitleSize.height + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
