@@ -1649,6 +1649,7 @@
             newItinerary.maximumPredictionDate =  [NSDate dateWithTimeIntervalSince1970:[[maximumPrediction objectForKey:@"epochTime"] doubleValue]/1000];
             [newItinerary setArrivalFlagFromLegsRealTime];
             [newItinerary initializeTimeOnlyVariablesWithRequestDate:tripDate];
+            [newItinerary initializeLegStartTime];
             newItinerary.tripIdhexString = [self generateTripIdHexString:newItinerary];
             // Add these itineraries to the request chunk
             if (!reqChunk) {

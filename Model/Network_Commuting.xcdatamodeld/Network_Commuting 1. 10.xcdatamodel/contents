@@ -157,6 +157,7 @@
         <attribute name="itineraryCreationDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="itinId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="startTime" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="startTimeOfLeg" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="startTimeOnly" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="tooSloped" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="transfers" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
@@ -392,7 +393,7 @@
         <element name="GtfsStopTimes" positionX="160" positionY="192" width="128" height="210"/>
         <element name="GtfsTrips" positionX="160" positionY="192" width="128" height="180"/>
         <element name="IntermediateStops" positionX="160" positionY="192" width="128" height="165"/>
-        <element name="Itinerary" positionX="0" positionY="0" width="128" height="360"/>
+        <element name="Itinerary" positionX="0" positionY="0" width="128" height="375"/>
         <element name="ItineraryFromOTP" positionX="160" positionY="192" width="128" height="45"/>
         <element name="KeyObjectPair" positionX="0" positionY="0" width="128" height="75"/>
         <element name="Leg" positionX="-45" positionY="0" width="128" height="420"/>

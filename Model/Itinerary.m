@@ -16,7 +16,7 @@
 // Utility function for sorting sets of itineraries
 NSArray *sortedByStartTimeOnly(NSSet* itinerarySet)
 {
-    NSSortDescriptor* sd = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:YES];
+    NSSortDescriptor* sd = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOfLeg" ascending:YES];
     return [itinerarySet sortedArrayUsingDescriptors:[NSArray arrayWithObject:sd]];
 }
 
@@ -56,6 +56,8 @@ NSArray *sortedByStartTimeOnly(NSSet* itinerarySet)
 @dynamic waitingTime;
 @dynamic walkDistance;
 @dynamic walkTime;
+@dynamic startTimeOfLeg;
+
 @synthesize sortedLegs;
 @synthesize itinArrivalFlag;
 @synthesize isRealTimeItinerary;
@@ -140,6 +142,13 @@ static NSDate* midnightTimeOnly;  // represents 24:00 for a timeOnly time
         [self setEndTimeOnly:[timeOnlyFromDate([self endTime]) dateByAddingTimeInterval:endDayDiff]];
     }
 }
+
+// Fixed DE-343
+// Store start time of First leg into startTimeOfLeg which is stored in itinerary table and the sort itineraries according to that instead of startTimeOnly.
+- (void) initializeLegStartTime{
+    self.startTimeOfLeg = [self startTimeOfFirstLeg];
+}
+
 
 // Returns the starting point PlanPlace
 - (PlanPlace *)from

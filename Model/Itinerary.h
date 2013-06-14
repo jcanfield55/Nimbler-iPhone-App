@@ -63,6 +63,7 @@ typedef enum {
 @property (nonatomic) BOOL hideItinerary;
 @property (nonatomic, strong) NSString *tripIdhexString;
 @property (nonatomic, strong) NSDate *maximumPredictionDate;
+@property (nonatomic, retain) NSDate *startTimeOfLeg;
 
 - (void)sortLegs;
 - (NSArray *)sortedLegs;
@@ -166,6 +167,7 @@ typedef enum {
 
 - (BOOL)containsUnscheduledLeg;
 - (BOOL)containsBikeLeg;
+- (void) initializeLegStartTime;
 @end
 
 @interface Itinerary (CoreDataGeneratedAccessors)

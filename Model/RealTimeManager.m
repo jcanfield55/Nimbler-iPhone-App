@@ -178,11 +178,10 @@ static RealTimeManager* realTimeManager;
     [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC newItineraryAvailable:nil status:ITINERARY_STATUS_CONFLICT ItineraryNumber:itineraryNumber];
 }
 
-- (void) removeRealtimeItinerary{
-    NSDate *tripDate = originalTripDate;
+- (void) removeRealtimeItinerary:(NSDate *)tripDate{
     NSInteger epochTripDate = [tripDate timeIntervalSince1970];
     for(Itinerary *itinerary in [plan itineraries]){
-        if(itinerary.isRealTimeItinerary){
+        if(itinerary && itinerary.isRealTimeItinerary){
             NSDate *itineraryEndTime = itinerary.endTimeOfLastLeg;
             NSInteger itineraryEpoch = [itineraryEndTime timeIntervalSince1970];
             if(epochTripDate > itineraryEpoch)
@@ -219,9 +218,16 @@ static RealTimeManager* realTimeManager;
                 NIMLOG_PERF2(@"Realtime Parsing and Processing Started At-->%f",[[NSDate date] timeIntervalSince1970]);
                 [self setRealTimePredictionsFromLiveFeeds:legLiveFees];
                 // TODO:- Comment Four lines to run automated test case
-                [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:originalTripDate Context:nil];
+                NSDate *tripDate;
+                if(requestParameters.departOrArrive == ARRIVE){
+                    tripDate = [originalTripDate dateByAddingTimeInterval:-(1*60*60)];
+                }
+                else{
+                    tripDate = originalTripDate;
+                }
+                [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:tripDate Context:nil];
                 // Part of DE-292 Fix
-                [self removeRealtimeItinerary];
+                [self removeRealtimeItinerary:tripDate];
                 [self hideItineraryIfNeeded:[[plan itineraries] allObjects]];
                  [plan prepareSortedItinerariesWithMatchesForDate:originalTripDate
                                                    departOrArrive:requestParameters.departOrArrive
