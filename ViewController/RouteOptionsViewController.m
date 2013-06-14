@@ -257,96 +257,101 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 
 
 -(void) toggleExcludeButton:(id)sender{
-    if(self.timerRealtime){
-        [self.timerRealtime invalidate];
-        self.timerRealtime = nil;
-    }
-    self.timerRealtime =  [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: NO];
-    NIMLOG_PERF2(@"toggleExcludeButton started");
-    [activityIndicator startAnimating];
-    // DE-293 Fixed
-    [noItineraryWarning setHidden:YES];
-    setWarningHidden = true;
-    UIButton *btn = (UIButton *)sender;
-    RouteExcludeSetting* toggledSetting;
-    for (RouteExcludeSetting *setting in [plan excludeSettingsArray]) {
-        if ([setting.key isEqualToString:btn.titleLabel.text]) {
-            toggledSetting = setting; // Getting the setting we are going to toggle in the settingArray
-            break;
+    @try {
+        if(self.timerRealtime){
+            [self.timerRealtime invalidate];
+            self.timerRealtime = nil;
         }
-    }
-    if([[RouteExcludeSettings latestUserSettings] settingForKey:btn.titleLabel.text] == SETTING_EXCLUDE_ROUTE){
-        
-        UIView *bgView = [self.view viewWithTag:1000];
-        NSArray *subViews = [bgView subviews];
-        if([btn.titleLabel.text isEqualToString:returnBikeButtonTitle()]){
-            [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:BIKE_SHARE];
-            for(int i=0;i<[subViews count];i++){
-                UIButton *button = [subViews objectAtIndex:i];
-                if([button isKindOfClass:[UIButton class]] && [button.titleLabel.text isEqualToString:BIKE_SHARE]){
-                    [button setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
-                    [button setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
-                    break;
-                }
-            }
-        }
-        else if([btn.titleLabel.text isEqualToString:BIKE_SHARE]){
-            [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:returnBikeButtonTitle()];
-            for(int i=0;i<[subViews count];i++){
-                UIButton *button = [subViews objectAtIndex:i];
-                if([button isKindOfClass:[UIButton class]] && [button.titleLabel.text isEqualToString:returnBikeButtonTitle()]){
-                    [button setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
-                    [button setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
-                    break;
-                }
-            }
-        }
-        [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:btn.titleLabel.text];
-        toggledSetting.setting = SETTING_INCLUDE_ROUTE;
-        [btn setBackgroundImage:[UIImage imageNamed:@"Updated_Pressed.png"] forState:UIControlStateNormal];
-        [btn setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
-    }
-    else{
-        [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:btn.titleLabel.text];
-        toggledSetting.setting = SETTING_EXCLUDE_ROUTE;
-        [btn setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
-        [btn setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
-    }
-    // Update sorted itineraries with new exclusions
-    if (!planRequestParameters) {
-        logError(@"RouteOptionsViewController -> toggleExcludeButton",
-                 @"planRequestParameters = nil, skipping excludeButton updates");
-        return;
-    }
-    NIMLOG_PERF2(@"Finished setting button");
-    logEvent(FLURRY_EXCLUDE_SETTING_CHANGED,
-             FLURRY_CHANGED_EXCLUDE_SETTING, btn.titleLabel.text,
-             FLURRY_NEW_EXCLUDE_SETTINGS, [RouteExcludeSettings stringFromSettingArray:[plan excludeSettingsArray]],
-             nil, nil, nil, nil);
-    
-    PlanRequestParameters* newParameters = [PlanRequestParameters copyOfPlanRequestParameters:planRequestParameters];
-    newParameters.thisRequestTripDate = newParameters.originalTripDate;
-    newParameters.serverCallsSoFar = 0;
-    NIMLOG_PERF2(@"preparing sortedItineraries");
-    [plan prepareSortedItinerariesWithMatchesForDate:newParameters.originalTripDate
-                                      departOrArrive:newParameters.departOrArrive
-                                routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
-                             generateGtfsItineraries:NO
-                               removeNonOptimalItins:YES];
-    if (!setWarningHidden && [[plan sortedItineraries] count] > 0) { // if we now have itineraries, hide warning
+        self.timerRealtime =  [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: NO];
+        NIMLOG_PERF2(@"toggleExcludeButton started");
+        [activityIndicator startAnimating];
+        // DE-293 Fixed
         [noItineraryWarning setHidden:YES];
         setWarningHidden = true;
+        UIButton *btn = (UIButton *)sender;
+        RouteExcludeSetting* toggledSetting;
+        for (RouteExcludeSetting *setting in [plan excludeSettingsArray]) {
+            if ([setting.key isEqualToString:btn.titleLabel.text]) {
+                toggledSetting = setting; // Getting the setting we are going to toggle in the settingArray
+                break;
+            }
+        }
+        if([[RouteExcludeSettings latestUserSettings] settingForKey:btn.titleLabel.text] == SETTING_EXCLUDE_ROUTE){
+            
+            UIView *bgView = [self.view viewWithTag:1000];
+            NSArray *subViews = [bgView subviews];
+            if([btn.titleLabel.text isEqualToString:returnBikeButtonTitle()]){
+                [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:BIKE_SHARE];
+                for(int i=0;i<[subViews count];i++){
+                    UIButton *button = [subViews objectAtIndex:i];
+                    if([button isKindOfClass:[UIButton class]] && [button.titleLabel.text isEqualToString:BIKE_SHARE]){
+                        [button setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
+                        [button setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
+                        break;
+                    }
+                }
+            }
+            else if([btn.titleLabel.text isEqualToString:BIKE_SHARE]){
+                [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:returnBikeButtonTitle()];
+                for(int i=0;i<[subViews count];i++){
+                    UIButton *button = [subViews objectAtIndex:i];
+                    if([button isKindOfClass:[UIButton class]] && [button.titleLabel.text isEqualToString:returnBikeButtonTitle()]){
+                        [button setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
+                        [button setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
+                        break;
+                    }
+                }
+            }
+            [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:btn.titleLabel.text];
+            toggledSetting.setting = SETTING_INCLUDE_ROUTE;
+            [btn setBackgroundImage:[UIImage imageNamed:@"Updated_Pressed.png"] forState:UIControlStateNormal];
+            [btn setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
+        }
+        else{
+            [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:btn.titleLabel.text];
+            toggledSetting.setting = SETTING_EXCLUDE_ROUTE;
+            [btn setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
+            [btn setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
+        }
+        // Update sorted itineraries with new exclusions
+        if (!planRequestParameters) {
+            logError(@"RouteOptionsViewController -> toggleExcludeButton",
+                     @"planRequestParameters = nil, skipping excludeButton updates");
+            return;
+        }
+        NIMLOG_PERF2(@"Finished setting button");
+        logEvent(FLURRY_EXCLUDE_SETTING_CHANGED,
+                 FLURRY_CHANGED_EXCLUDE_SETTING, btn.titleLabel.text,
+                 FLURRY_NEW_EXCLUDE_SETTINGS, [RouteExcludeSettings stringFromSettingArray:[plan excludeSettingsArray]],
+                 nil, nil, nil, nil);
+        
+        PlanRequestParameters* newParameters = [PlanRequestParameters copyOfPlanRequestParameters:planRequestParameters];
+        newParameters.thisRequestTripDate = newParameters.originalTripDate;
+        newParameters.serverCallsSoFar = 0;
+        NIMLOG_PERF2(@"preparing sortedItineraries");
+        [plan prepareSortedItinerariesWithMatchesForDate:newParameters.originalTripDate
+                                          departOrArrive:newParameters.departOrArrive
+                                    routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
+                                 generateGtfsItineraries:NO
+                                   removeNonOptimalItins:YES];
+        if (!setWarningHidden && [[plan sortedItineraries] count] > 0) { // if we now have itineraries, hide warning
+            [noItineraryWarning setHidden:YES];
+            setWarningHidden = true;
+        }
+        NIMLOG_PERF2(@"done preparing sortedItineraries");
+        MoreItineraryStatus reqStatus = [planStore requestMoreItinerariesIfNeeded:self.plan parameters:newParameters];
+        if (reqStatus == NO_MORE_ITINERARIES_REQUESTED && [[plan sortedItineraries] count] == 0) {
+            // if no itineraries showing and no more requests made, show warning
+            [noItineraryWarning setHidden:NO];
+            setWarningHidden = false;
+        }
+        //[activityIndicator stopAnimating];
+        [mainTable reloadData];
+        NIMLOG_PERF2(@"done toggleExcludeButton");
     }
-    NIMLOG_PERF2(@"done preparing sortedItineraries");
-    MoreItineraryStatus reqStatus = [planStore requestMoreItinerariesIfNeeded:self.plan parameters:newParameters];
-    if (reqStatus == NO_MORE_ITINERARIES_REQUESTED && [[plan sortedItineraries] count] == 0) {
-        // if no itineraries showing and no more requests made, show warning
-        [noItineraryWarning setHidden:NO];
-        setWarningHidden = false;
+    @catch (NSException *exception) {
+        logException(@"RouteOptionsViewController->toggleExcludeButton", @"", exception);
     }
-    //[activityIndicator stopAnimating];
-    [mainTable reloadData];
-    NIMLOG_PERF2(@"done toggleExcludeButton");
 }
 
 #pragma mark - UITableViewDelegate methods
@@ -724,48 +729,53 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 }
 
 - (void) createViewWithButtons:(int)height{
-    UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, height)];
-    [bgView setTag:1000];
-    [bgView setBackgroundColor:[UIColor whiteColor]];
-    [self.view addSubview:bgView];
-    
-    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, height)];
-    [imgView setImage:[UIImage imageNamed:@"img_travel.png"]];
-    [bgView addSubview:imgView];
-    
-    UILabel *lblChoose = [[UILabel alloc] initWithFrame:CGRectMake(0, 5, 80, 25)];
-    [lblChoose setText:@"Travel By:"];
-    [lblChoose setBackgroundColor:[UIColor clearColor]];
-    [lblChoose setFont:[UIFont fontWithName:@"Helvetica-Bold" size:13.0]];
-    [lblChoose setTextAlignment:UITextAlignmentCenter];
-    [lblChoose setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
-    [bgView addSubview:lblChoose];
-    
-    int xPos = 80;
-    int yPos = 5;
-    int width = 80;
-    int btnHeight = 25;
-    for(int i=0;i<[[plan excludeSettingsArray] count];i++){
-        RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
-        UIButton *btnAgency = [UIButton buttonWithType:UIButtonTypeCustom];
-        if(xPos+width > 320){
-            yPos = yPos + 25 + 5;
-            xPos = 0;
+    @try {
+        UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, height)];
+        [bgView setTag:1000];
+        [bgView setBackgroundColor:[UIColor whiteColor]];
+        [self.view addSubview:bgView];
+        
+        UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, height)];
+        [imgView setImage:[UIImage imageNamed:@"img_travel.png"]];
+        [bgView addSubview:imgView];
+        
+        UILabel *lblChoose = [[UILabel alloc] initWithFrame:CGRectMake(0, 5, 80, 25)];
+        [lblChoose setText:@"Travel By:"];
+        [lblChoose setBackgroundColor:[UIColor clearColor]];
+        [lblChoose setFont:[UIFont fontWithName:@"Helvetica-Bold" size:13.0]];
+        [lblChoose setTextAlignment:UITextAlignmentCenter];
+        [lblChoose setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+        [bgView addSubview:lblChoose];
+        
+        int xPos = 80;
+        int yPos = 5;
+        int width = 80;
+        int btnHeight = 25;
+        for(int i=0;i<[[plan excludeSettingsArray] count];i++){
+            RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
+            UIButton *btnAgency = [UIButton buttonWithType:UIButtonTypeCustom];
+            if(xPos+width > 320){
+                yPos = yPos + 25 + 5;
+                xPos = 0;
+            }
+            [btnAgency setFrame:CGRectMake(xPos,yPos, width, btnHeight)];
+            xPos = xPos + width;
+            [btnAgency setTitle:routeExcludeSetting.key forState:UIControlStateNormal];
+            [btnAgency.titleLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:12.0]];
+            if([[RouteExcludeSettings latestUserSettings] settingForKey:routeExcludeSetting.key] == SETTING_EXCLUDE_ROUTE){
+                [btnAgency setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
+                [btnAgency setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
+            }
+            else{
+                [btnAgency setBackgroundImage:[UIImage imageNamed:@"Updated_Pressed.png"] forState:UIControlStateNormal];
+                [btnAgency setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
+            }
+            [btnAgency addTarget:self action:@selector(toggleExcludeButton:) forControlEvents:UIControlEventTouchUpInside];
+            [bgView addSubview:btnAgency];
         }
-        [btnAgency setFrame:CGRectMake(xPos,yPos, width, btnHeight)];
-        xPos = xPos + width;
-        [btnAgency setTitle:routeExcludeSetting.key forState:UIControlStateNormal];
-        [btnAgency.titleLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:12.0]];
-        if([[RouteExcludeSettings latestUserSettings] settingForKey:routeExcludeSetting.key] == SETTING_EXCLUDE_ROUTE){
-            [btnAgency setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
-            [btnAgency setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
-        }
-        else{
-            [btnAgency setBackgroundImage:[UIImage imageNamed:@"Updated_Pressed.png"] forState:UIControlStateNormal];
-            [btnAgency setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
-        }
-        [btnAgency addTarget:self action:@selector(toggleExcludeButton:) forControlEvents:UIControlEventTouchUpInside];
-        [bgView addSubview:btnAgency];
+    }
+    @catch (NSException *exception) {
+         logException(@"RouteOptionsViewController->createViewWithButtons", @"", exception);
     }
 }
 
