@@ -27,9 +27,11 @@
 #define MAX_LAT           @"39.191489"
 #define MAX_LONG          @"-76.668939"
 
+// Flurry API Key
+#define FLURRY_API_KEY @"DSTDN6ST2YDWF4V9RWFZ"
 
 // Facebook App ID (for tracking referrals)
-#define FB_APP_ID @""  // Nimbler SF FB App ID
+#define FB_APP_ID @""  // Nimbler DC FB App ID
 
 // Review reminder URL
 #define NIMBLER_REVIEW_URL                   @""

@@ -646,14 +646,7 @@
 		8DE18BA01725415800AA8112 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A514BDF2F9000565D6 /* CoreData.framework */; };
 		8DE18BA11725415800AA8112 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5258A89B160D617800871875 /* libTestFlight.a */; };
 		8DE18BA21725415800AA8112 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		8DE18BA41725415800AA8112 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C09615CB465A00B55A65 /* Icon.png */; };
-		8DE18BA51725415800AA8112 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C09E15CB7D2F00B55A65 /* Icon@2x.png */; };
-		8DE18BA61725415800AA8112 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C0A015CC705000B55A65 /* Default.png */; };
-		8DE18BA71725415800AA8112 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C0A215CC705D00B55A65 /* Default@2x.png */; };
 		8DE18BA81725415800AA8112 /* aps_development.cer in Resources */ = {isa = PBXBuildFile; fileRef = CCA4C7E415D92CC7009BE7A1 /* aps_development.cer */; };
-		8DE18BA91725415800AA8112 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */; };
-		8DE18BAA1725415800AA8112 /* Icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB3161AB69600695348 /* Icon-small.png */; };
-		8DE18BAB1725415800AA8112 /* Icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB5161AB6A400695348 /* Icon-small@2x.png */; };
 		8DE18BAC1725415800AA8112 /* FeedBackForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10A162603090083F143 /* FeedBackForm.xib */; };
 		8DE18BAD1725415800AA8112 /* FeedBackForm_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10B162603090083F143 /* FeedBackForm_568h.xib */; };
 		8DE18BAE1725415800AA8112 /* FeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10C162603090083F143 /* FeedbackViewController.xib */; };
@@ -771,10 +764,8 @@
 		8DE18C1E1725415800AA8112 /* Speaker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 520FB211162603AF0083F143 /* Speaker@2x.png */; };
 		8DE18C1F1725415800AA8112 /* walkb.png in Resources */ = {isa = PBXBuildFile; fileRef = 520FB212162603AF0083F143 /* walkb.png */; };
 		8DE18C201725415800AA8112 /* CoverageGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 520FB295162605470083F143 /* CoverageGeoJSON.geojson */; };
-		8DE18C211725415800AA8112 /* Icon_ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D45BD1D162BDE6A00E5CB3D /* Icon_ipad@2x.png */; };
 		8DE18C221725415800AA8112 /* bart-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D4FC8E4162D2E1A004144DE /* bart-station.json */; };
 		8DE18C231725415800AA8112 /* caltrain-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D4FC8E5162D2E1A004144DE /* caltrain-station.json */; };
-		8DE18C241725415800AA8112 /* Icon_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D93604A162FFC4500084E8E /* Icon_ipad.png */; };
 		8DE18C251725415800AA8112 /* bart-station-background.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D8DF4AB1647BCFB00BC2A34 /* bart-station-background.json */; };
 		8DE18C261725415800AA8112 /* caltrain-station-background.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D8DF4AC1647BCFB00BC2A34 /* caltrain-station-background.json */; };
 		8DE18C271725415800AA8112 /* calendar.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8D99B630164E2DF200C0A5AC /* calendar.txt */; };
@@ -2517,14 +2508,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8DE18BA41725415800AA8112 /* Icon.png in Resources */,
-				8DE18BA51725415800AA8112 /* Icon@2x.png in Resources */,
-				8DE18BA61725415800AA8112 /* Default.png in Resources */,
-				8DE18BA71725415800AA8112 /* Default@2x.png in Resources */,
 				8DE18BA81725415800AA8112 /* aps_development.cer in Resources */,
-				8DE18BA91725415800AA8112 /* Default-568h@2x.png in Resources */,
-				8DE18BAA1725415800AA8112 /* Icon-small.png in Resources */,
-				8DE18BAB1725415800AA8112 /* Icon-small@2x.png in Resources */,
 				8DE18BAC1725415800AA8112 /* FeedBackForm.xib in Resources */,
 				8DE18BAD1725415800AA8112 /* FeedBackForm_568h.xib in Resources */,
 				8DE18BAE1725415800AA8112 /* FeedbackViewController.xib in Resources */,
@@ -2642,10 +2626,8 @@
 				8DE18C1E1725415800AA8112 /* Speaker@2x.png in Resources */,
 				8DE18C1F1725415800AA8112 /* walkb.png in Resources */,
 				8DE18C201725415800AA8112 /* CoverageGeoJSON.geojson in Resources */,
-				8DE18C211725415800AA8112 /* Icon_ipad@2x.png in Resources */,
 				8DE18C221725415800AA8112 /* bart-station.json in Resources */,
 				8DE18C231725415800AA8112 /* caltrain-station.json in Resources */,
-				8DE18C241725415800AA8112 /* Icon_ipad.png in Resources */,
 				8DE18C251725415800AA8112 /* bart-station-background.json in Resources */,
 				8DE18C261725415800AA8112 /* caltrain-station-background.json in Resources */,
 				8DE18C271725415800AA8112 /* calendar.txt in Resources */,
@@ -3066,8 +3048,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -3095,8 +3077,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler SF";
-				PROVISIONING_PROFILE = "190AE823-AD52-4922-8058-4E54D4C697C5";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "190AE823-AD52-4922-8058-4E54D4C697C5";
+				PROVISIONING_PROFILE = "0A91B105-7AE5-46F8-A3AF-8DFA7C7DDF39";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0A91B105-7AE5-46F8-A3AF-8DFA7C7DDF39";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -3108,9 +3090,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -3138,9 +3120,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler SF";
-				PROVISIONING_PROFILE = "190AE823-AD52-4922-8058-4E54D4C697C5";
-				"PROVISIONING_PROFILE[sdk=*]" = "190AE823-AD52-4922-8058-4E54D4C697C5";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "190AE823-AD52-4922-8058-4E54D4C697C5";
+				PROVISIONING_PROFILE = "0A91B105-7AE5-46F8-A3AF-8DFA7C7DDF39";
+				"PROVISIONING_PROFILE[sdk=*]" = "0A91B105-7AE5-46F8-A3AF-8DFA7C7DDF39";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0A91B105-7AE5-46F8-A3AF-8DFA7C7DDF39";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -3282,8 +3264,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -3311,8 +3293,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler DC";
-				PROVISIONING_PROFILE = "8D45DFAE-2ADE-4632-B1D2-EA6AD19B18A6";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "8D45DFAE-2ADE-4632-B1D2-EA6AD19B18A6";
+				PROVISIONING_PROFILE = "65804D7E-1C86-4974-8475-25E3A2069FA8";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "65804D7E-1C86-4974-8475-25E3A2069FA8";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -3324,9 +3306,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -3354,9 +3336,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler DC";
-				PROVISIONING_PROFILE = "8D45DFAE-2ADE-4632-B1D2-EA6AD19B18A6";
-				"PROVISIONING_PROFILE[sdk=*]" = "8D45DFAE-2ADE-4632-B1D2-EA6AD19B18A6";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "8D45DFAE-2ADE-4632-B1D2-EA6AD19B18A6";
+				PROVISIONING_PROFILE = "65804D7E-1C86-4974-8475-25E3A2069FA8";
+				"PROVISIONING_PROFILE[sdk=*]" = "65804D7E-1C86-4974-8475-25E3A2069FA8";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "65804D7E-1C86-4974-8475-25E3A2069FA8";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
