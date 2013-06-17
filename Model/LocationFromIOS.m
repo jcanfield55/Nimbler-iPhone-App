@@ -62,12 +62,6 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
                     if ([addrLine isEqualToString:@"United States"]) {
                         addrLine = @"USA";
                     }
-                    else if([addrLine isEqualToString:@"Washington D.C.‎ District of Columbia"]){
-                        addrLine = @"Washington";
-                    }
-                    else if([addrLine isEqualToString:@"Washington, DC"]){
-                        addrLine = @"Washington";
-                    }
                 }
                 if (i==[addrLines count]-2) { // if this is the 2nd to last line, the one with zipcode
                     // Remove +4 if it is a Zip+4
@@ -95,6 +89,23 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
                     [formattedAddr appendString:@", "];
                 }
             }
+            NSRange range;
+            int num;
+            NSStringCompareOptions options1 = 0;
+            range.location = 0;
+            range.length = [formattedAddr length];
+            num = [formattedAddr replaceOccurrencesOfString:@"Washington D.C.‎ District of Columbia"
+                                                 withString:@"Washington"
+                                                    options:options1
+                                                      range:range];
+            
+            range.location = 0;
+            range.length = [formattedAddr length];
+            num = [formattedAddr replaceOccurrencesOfString:@"Washington, DC"
+                                                 withString:@"Washington"
+                                                    options:options1
+                                                      range:range];
+            
             return [NSString stringWithString:formattedAddr];
         }
         else { // if cannot get formatted address lines, try our best for California addresses
