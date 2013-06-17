@@ -121,4 +121,10 @@
 
 // Check in database for exact lat lng match
 - (NSArray *) locationsWithLat:(double)lat Lng:(double)lng;
+
+// fetch matching location from searchableFromLocations or searchableToLocations array using matching lat lng.
+- (NSArray *) locationsWithLat:(double)lat Lng:(double)lng FromArray:(NSArray *)array;
+
+// Fetch Searchable from and to locations from DB if required.
+- (void) fetchSearchableLocations;
 @end

@@ -369,6 +369,10 @@ static RealTimeManager* realTimeManager;
 
 // Request the vehicle position data from server
 - (void) requestVehiclePositionForRealTimeLeg:(NSArray *)sortedLegs{
+    // Don't ask server for vehicle position in Washington DC application.
+    if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
+        return;
+    }
     NSMutableArray *legArray = [[NSMutableArray alloc] init];
     for(int i=0;i<[sortedLegs count];i++){
         Leg *leg = [sortedLegs objectAtIndex:i];

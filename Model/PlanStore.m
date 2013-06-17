@@ -396,7 +396,6 @@
             } else {
                 plan.fromLocation = fromLoc;
             }
-            // Part Of DE-292 Fix
             [plan initializeNewPlanFromOTPWithRequestDate:[planRequestParameters thisRequestTripDate]
                                            departOrArrive:[planRequestParameters departOrArrive]
                                      routeExcludeSettings:planRequestParameters.routeExcludeSettingsUsedForOTPCall];

@@ -987,6 +987,9 @@ UIImage *imageDetailDisclosure;
     if (editMode == newEditMode) {
         return;  // If no change in mode return immediately
     }
+    if(newEditMode != NO_EDIT){
+        [locations fetchSearchableLocations];
+    }
     NSString *edit_string;
     if (newEditMode==NO_EDIT){
         edit_string = @"NO_EDIT";
@@ -1013,7 +1016,6 @@ UIImage *imageDetailDisclosure;
     } else{
         self.navigationItem.leftBarButtonItem = barButtonCancel;
     }
-    
 // Note:- Commented this code to solve the DE-305
     
 //        if (newEditMode == TO_EDIT && oldEditMode == NO_EDIT) {
