@@ -493,13 +493,17 @@ NSUserDefaults *prefs;
         }
  
         // if this is the selected row, make red
-        NSInteger attributedLblYPOS = 0;
-        if(![[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]] length]>0){
-            attributedLblYPOS =10;
-        }
+        
         NSString *textString = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
         CGSize attributedLabelSize = [textString sizeWithFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
         
+        NSInteger attributedLblYPOS = 0;
+        if(![[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]] length]>0 && attributedLabelSize.height>18){
+            attributedLblYPOS =5;
+        }
+        else if(![[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]] length]>0){
+            attributedLblYPOS =10;
+        }
         TTTAttributedLabel *attributedLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectMake(40,attributedLblYPOS,ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, attributedLabelSize.height)];
         attributedLabel.font=[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE];
         attributedLabel.numberOfLines = 5;
