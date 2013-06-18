@@ -144,9 +144,10 @@ static NSDate* midnightTimeOnly;  // represents 24:00 for a timeOnly time
 }
 
 // Fixed DE-343
+// Fixed DE-361
 // Store start time of First leg into startTimeOfLeg which is stored in itinerary table and the sort itineraries according to that instead of startTimeOnly.
 - (void) initializeLegStartTime{
-    self.startTimeOfLeg = [self startTimeOfFirstLeg];
+    self.startTimeOfLeg = timeOnlyFromDate([self startTimeOfFirstLeg]);
 }
 
 
