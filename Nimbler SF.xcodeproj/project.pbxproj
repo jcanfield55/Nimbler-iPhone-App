@@ -343,7 +343,6 @@
 		8DA77FC81724FF0D0090C2EA /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 8D3EFCB816E85DEE00266C6A /* unzip.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8DA77FC91724FF0D0090C2EA /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 8D3EFCBA16E85DEE00266C6A /* zip.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8DA77FCA1724FF0D0090C2EA /* ZipArchive.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8D3EFCBD16E85DEE00266C6A /* ZipArchive.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		8DA77FCB1724FF0D0090C2EA /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */; };
 		8DA77FCC1724FF0D0090C2EA /* IntermediateStops.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D17871016F87B3E00C2EAD5 /* IntermediateStops.m */; };
 		8DA77FCD1724FF0D0090C2EA /* MutableBoolean.m in Sources */ = {isa = PBXBuildFile; fileRef = 525EC1C0170006B6009ACE5A /* MutableBoolean.m */; };
 		8DA77FCE1724FF0D0090C2EA /* nc_AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */; };
@@ -616,7 +615,6 @@
 		8DE18B811725415800AA8112 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 8D3EFCB816E85DEE00266C6A /* unzip.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8DE18B821725415800AA8112 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 8D3EFCBA16E85DEE00266C6A /* zip.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8DE18B831725415800AA8112 /* ZipArchive.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8D3EFCBD16E85DEE00266C6A /* ZipArchive.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		8DE18B841725415800AA8112 /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */; };
 		8DE18B851725415800AA8112 /* IntermediateStops.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D17871016F87B3E00C2EAD5 /* IntermediateStops.m */; };
 		8DE18B861725415800AA8112 /* MutableBoolean.m in Sources */ = {isa = PBXBuildFile; fileRef = 525EC1C0170006B6009ACE5A /* MutableBoolean.m */; };
 		8DE18B871725415800AA8112 /* nc_AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */; };
@@ -821,6 +819,8 @@
 		8DECCA501767449E00DD5E92 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DECCA4E1767447A00DD5E92 /* TTTAttributedLabel.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8DECCA511767449F00DD5E92 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DECCA4E1767447A00DD5E92 /* TTTAttributedLabel.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8DECCA53176746EB00DD5E92 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DECCA52176746EB00DD5E92 /* CoreText.framework */; };
+		8DEE527017705BEE00D1830E /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */; };
+		8DEE527117705BEF00D1830E /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */; };
 		8DEE785D166338F100E4863C /* SettingViewController_SF_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */; };
 		8DEE785F166339D600E4863C /* SettingDetailViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */; };
 		8DF19BF416F725FC0050FE00 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -2868,7 +2868,6 @@
 				8DA77FC81724FF0D0090C2EA /* unzip.c in Sources */,
 				8DA77FC91724FF0D0090C2EA /* zip.c in Sources */,
 				8DA77FCA1724FF0D0090C2EA /* ZipArchive.mm in Sources */,
-				8DA77FCB1724FF0D0090C2EA /* Network_Commuting.xcdatamodeld in Sources */,
 				8DA77FCC1724FF0D0090C2EA /* IntermediateStops.m in Sources */,
 				8DA77FCD1724FF0D0090C2EA /* MutableBoolean.m in Sources */,
 				8DA77FCE1724FF0D0090C2EA /* nc_AppDelegate.m in Sources */,
@@ -2876,6 +2875,7 @@
 				8DA77FD01724FF0D0090C2EA /* WebView.m in Sources */,
 				2E02C786173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */,
 				8DECCA501767449E00DD5E92 /* TTTAttributedLabel.m in Sources */,
+				8DEE527117705BEF00D1830E /* Network_Commuting.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2948,7 +2948,6 @@
 				8DE18B811725415800AA8112 /* unzip.c in Sources */,
 				8DE18B821725415800AA8112 /* zip.c in Sources */,
 				8DE18B831725415800AA8112 /* ZipArchive.mm in Sources */,
-				8DE18B841725415800AA8112 /* Network_Commuting.xcdatamodeld in Sources */,
 				8DE18B851725415800AA8112 /* IntermediateStops.m in Sources */,
 				8DE18B861725415800AA8112 /* MutableBoolean.m in Sources */,
 				8DE18B871725415800AA8112 /* nc_AppDelegate.m in Sources */,
@@ -2957,6 +2956,7 @@
 				2E02C787173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */,
 				8DFEBCC4175C4D5800A3916A /* RouteExcludeSettings.m in Sources */,
 				8DECCA511767449F00DD5E92 /* TTTAttributedLabel.m in Sources */,
+				8DEE527017705BEE00D1830E /* Network_Commuting.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3046,8 +3046,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -3075,8 +3075,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler SF";
-				PROVISIONING_PROFILE = "0A91B105-7AE5-46F8-A3AF-8DFA7C7DDF39";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0A91B105-7AE5-46F8-A3AF-8DFA7C7DDF39";
+				PROVISIONING_PROFILE = "190AE823-AD52-4922-8058-4E54D4C697C5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "190AE823-AD52-4922-8058-4E54D4C697C5";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -3088,9 +3088,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -3118,9 +3118,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler SF";
-				PROVISIONING_PROFILE = "0A91B105-7AE5-46F8-A3AF-8DFA7C7DDF39";
-				"PROVISIONING_PROFILE[sdk=*]" = "0A91B105-7AE5-46F8-A3AF-8DFA7C7DDF39";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0A91B105-7AE5-46F8-A3AF-8DFA7C7DDF39";
+				PROVISIONING_PROFILE = "190AE823-AD52-4922-8058-4E54D4C697C5";
+				"PROVISIONING_PROFILE[sdk=*]" = "190AE823-AD52-4922-8058-4E54D4C697C5";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "190AE823-AD52-4922-8058-4E54D4C697C5";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -3262,8 +3262,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -3291,8 +3291,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler DC";
-				PROVISIONING_PROFILE = "65804D7E-1C86-4974-8475-25E3A2069FA8";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "65804D7E-1C86-4974-8475-25E3A2069FA8";
+				PROVISIONING_PROFILE = "8D45DFAE-2ADE-4632-B1D2-EA6AD19B18A6";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "8D45DFAE-2ADE-4632-B1D2-EA6AD19B18A6";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -3304,9 +3304,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -3334,9 +3334,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler DC";
-				PROVISIONING_PROFILE = "65804D7E-1C86-4974-8475-25E3A2069FA8";
-				"PROVISIONING_PROFILE[sdk=*]" = "65804D7E-1C86-4974-8475-25E3A2069FA8";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "65804D7E-1C86-4974-8475-25E3A2069FA8";
+				PROVISIONING_PROFILE = "8D45DFAE-2ADE-4632-B1D2-EA6AD19B18A6";
+				"PROVISIONING_PROFILE[sdk=*]" = "8D45DFAE-2ADE-4632-B1D2-EA6AD19B18A6";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "8D45DFAE-2ADE-4632-B1D2-EA6AD19B18A6";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
