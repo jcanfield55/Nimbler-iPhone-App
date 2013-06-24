@@ -9,6 +9,7 @@
 #import "NimblerApplication.h"
 #import "nc_AppDelegate.h"
 #import "twitterViewController.h"
+#import "RouteDetailsViewController.h"
 
 #import "WebView.h"
 
@@ -21,6 +22,10 @@
     if ([currentViewController isKindOfClass:[twitterViewController class]]) {
         [(twitterViewController *)currentViewController openUrl:url];
          return NO;
+    }
+    else if([currentViewController isKindOfClass:[RouteDetailsViewController class]]){
+        [(RouteDetailsViewController *)currentViewController openUrl:url];
+        return NO;
     }
     return [super openURL:url];
 }

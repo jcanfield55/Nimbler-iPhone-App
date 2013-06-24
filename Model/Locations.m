@@ -259,16 +259,38 @@
             break;
         }
     }
-    if(!containsLocation){
+    if(!containsLocation && searchableFromLocations){
         [searchableLocations addObject:l];
         searchableFromLocations = searchableLocations;
     }
+    
+    NSMutableArray *searchabletoLocations = [[NSMutableArray alloc] initWithArray:searchableToLocations];
+    BOOL containsLocations = false;
+       for(int i=0;i<[searchabletoLocations count];i++){
+          Location *tempLoc = [searchabletoLocations objectAtIndex:i];
+           if([tempLoc.formattedAddress isEqualToString:l.formattedAddress]){
+               containsLocations = true;
+                break;
+            }
+       }
+    if(!containsLocations && searchableToLocations){
+        [searchabletoLocations addObject:l];
+        searchableToLocations = searchabletoLocations;
+    }
+    
     [self setAreLocationsChanged:YES]; // DE30 fix (2 of 2)
     return l;
 }
 
 - (LocationFromIOS *)newLocationFromIOSWithPlacemark:(CLPlacemark *)placemark error:(NSError *)error
 {
+    ToFromViewController *toFromVC = [nc_AppDelegate sharedInstance].toFromViewController;
+    if(!searchableFromLocations|| !searchableToLocations){
+        if(toFromVC.editMode != NO_EDIT){
+            [self fetchSearchableLocations];
+        }
+    }
+    
     LocationFromIOS *loc = [NSEntityDescription insertNewObjectForEntityForName:@"LocationFromIOS" inManagedObjectContext:managedObjectContext];
     [loc initWithPlacemark:placemark error:error];
     NSMutableArray *searchableLocations = [[NSMutableArray alloc] initWithArray:searchableFromLocations];
@@ -280,10 +302,24 @@
             break;
         }
     }
-    if(!containsLocation){
+    if(!containsLocation && searchableFromLocations){
         [searchableLocations addObject:loc];
         searchableFromLocations = searchableLocations;
     }
+    
+    NSMutableArray *searchabletoLocations = [[NSMutableArray alloc] initWithArray:searchableToLocations];
+    BOOL containsLocations = false;
+     for(int i=0;i<[searchabletoLocations count];i++){
+        Location *tempLoc = [searchabletoLocations objectAtIndex:i];
+            if([tempLoc.formattedAddress isEqualToString:loc.formattedAddress]){
+                containsLocations = true;
+                break;
+            }
+        }
+        if(!containsLocations && searchableToLocations){
+          [searchabletoLocations addObject:loc];
+          searchableToLocations = searchabletoLocations;
+        }
     [self setAreLocationsChanged:YES];
     return loc;
 }
@@ -293,7 +329,6 @@
 {
     LocationFromLocalSearch *locFromLocalSearch = [[LocationFromLocalSearch alloc] init];
     [locFromLocalSearch initWithPlacemark:placemark error:error];
-    //[self setAreLocationsChanged:YES];
     return locFromLocalSearch;
 }
 
@@ -441,6 +476,12 @@
 // Custom setter for updated typedFromString that recomputes the sortedMatchingFromLocations and row count
 - (void)setTypedFromString:(NSString *)typedFromStr0
 {
+    ToFromViewController *toFromVC = [nc_AppDelegate sharedInstance].toFromViewController;
+     if(!searchableFromLocations|| !searchableToLocations){
+       if(toFromVC.editMode != NO_EDIT){
+          [self fetchSearchableLocations];
+       }
+     }
     areMatchingLocationsChanged = NO;
     // updateFromTyping(typedFromStr0, &typedFromString, &sortedMatchingFromLocations, &matchingFromRowCount);
     if (!typedFromStr0 || [typedFromStr0 length] == 0) { // if sorted string = 0
@@ -503,6 +544,12 @@
 // Custom setter for updated typedToString that recomputes the sortedMatchingToLocations and row count
 - (void)setTypedToString:(NSString *)typedToStr0
 {
+    ToFromViewController *toFromVC = [nc_AppDelegate sharedInstance].toFromViewController;
+    if(!searchableFromLocations|| !searchableToLocations){
+      if(toFromVC.editMode != NO_EDIT){
+         [self fetchSearchableLocations];
+      }
+    }
     areMatchingLocationsChanged = NO;
     // updateToTyping(typedToStr0, &typedToString, &sortedMatchingToLocations, &matchingToRowCount);
     if (!typedToStr0 || [typedToStr0 length] == 0) { // if sorted string = 0
@@ -563,6 +610,17 @@
     return mpRegion;
 }
 
+- (NSArray *) locationsWithLat:(double)lat Lng:(double)lng FromArray:(NSArray *)array{
+   NSMutableArray *mutableLocations = [[NSMutableArray alloc] init];
+    for(int i=0;i<[array count];i++){
+        Location *loc = [array objectAtIndex:i];
+        if([loc.lat doubleValue] == lat && [loc.lng doubleValue] == lng){
+            [mutableLocations addObject:loc];
+        }
+    }
+    return mutableLocations;
+}
+
 - (NSArray *) locationsWithLat:(double)lat Lng:(double)lng{
     NSFetchRequest * fetchLocations = [[NSFetchRequest alloc] init];
     [fetchLocations setEntity:[NSEntityDescription entityForName:@"Location"  inManagedObjectContext:managedObjectContext]];
@@ -617,12 +675,11 @@
              
              if ([[[nc_AppDelegate sharedInstance].toFromViewController supportedRegion] isInRegionLat:mapItem.placemark.location.coordinate.latitude Lng:mapItem.placemark.location.coordinate.longitude]) {
                      LocationFromLocalSearch *loc = [self newLocationFromIOSWithPlacemark:mapItem.placemark error:error IsLocalSearchResult:true];
-                 
-                     NSArray *formattedAdd = [loc.formattedAddress componentsSeparatedByString:@","];
-                     if(![[formattedAdd objectAtIndex:0] isEqualToString:mapItem.name]){
-                         loc.formattedAddress = [NSString stringWithFormat:@"%@\n%@",mapItem.name,loc.formattedAddress];
-                     }
-                 NSArray *locations = [self locationsWithLat:[loc.lat doubleValue] Lng:[loc.lng doubleValue]];
+                 NSArray *formattedAdd = [loc.formattedAddress componentsSeparatedByString:@","];
+                  if(![[formattedAdd objectAtIndex:0] isEqualToString:mapItem.name]){
+                      loc.formattedAddress = [NSString stringWithFormat:@"%@\n%@",mapItem.name,loc.formattedAddress];
+                  }
+                 NSArray *locations = [self locationsWithLat:[loc.lat doubleValue] Lng:[loc.lng doubleValue] FromArray:searchableFromLocations];
                  if(![localSearchFromLocations containsObject:loc] && [locations count] == 0){
                     [localSearchFromLocations addObject:loc];
                  }
@@ -699,7 +756,7 @@
                         //loc.placeName = mapItem.name;
                         loc.formattedAddress = [NSString stringWithFormat:@"%@\n%@",mapItem.name,loc.formattedAddress];
                     }
-                     NSArray *locations = [self locationsWithLat:[loc.lat doubleValue] Lng:[loc.lng doubleValue]];
+                     NSArray *locations = [self locationsWithLat:[loc.lat doubleValue] Lng:[loc.lng doubleValue] FromArray:searchableToLocations]; 
                     if(![localSearchToLocations containsObject:loc] && [locations count] == 0){
                         [localSearchToLocations addObject:loc];
                     }
@@ -756,24 +813,18 @@
         }
 }
 
-
-// Internal method for updating cache after locations have changed
-// Only include those locations with frequency >= 1 in the row count
-- (void)updateInternalCache
-{
-    // Fetch the sortedFromLocations & searchableFromLocations arrays
+// Fetch searchable locations from database if necessary.
+- (void) fetchSearchableLocations{
     NSSortDescriptor *sdFrom = [NSSortDescriptor sortDescriptorWithKey:@"fromFrequency"
-                                                          ascending:NO];
+                                                             ascending:NO];
     NSSortDescriptor *sdDate = [NSSortDescriptor sortDescriptorWithKey:@"dateLastUsed"
-                                                          ascending:NO];
+                                                             ascending:NO];
     NSSortDescriptor *sdTo = [NSSortDescriptor sortDescriptorWithKey:@"toFrequency"
-                                                          ascending:NO];
+                                                           ascending:NO];
     NSArray* fromSortDesc = [NSArray arrayWithObjects:sdFrom,sdDate,nil];
     NSArray* toSortDesc = [NSArray arrayWithObjects:sdTo,sdDate,nil];
     
-    if (!fetchRequestFromFreqThreshold) {  // create the fetch request if we have not already done so
-        fetchRequestFromFreqThreshold = [managedObjectModel fetchRequestFromTemplateWithName:@"LocationByFromFrequency"
-                                                                       substitutionVariables:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:TOFROM_FREQUENCY_VISIBILITY_CUTOFF] forKey:@"THRESHOLD"]];
+    if (!fetchReqSearchableGoogleFromLocations) { // create the fetch request if we have not already done so
         fetchReqSearchableGoogleFromLocations = [[managedObjectModel fetchRequestTemplateForName:@"LocationFromGoogleSearchable"] copy];
         fetchReqSearchableIosFromLocations = [[managedObjectModel fetchRequestTemplateForName:@"LocationFromIosSearchable"] copy];
         [fetchRequestFromFreqThreshold setSortDescriptors:fromSortDesc];
@@ -784,9 +835,7 @@
         [fetchReqSearchableGoogleFromLocations setReturnsObjectsAsFaults:NO];
         [fetchReqSearchableIosFromLocations setReturnsObjectsAsFaults:NO];
     }
-    NSError *error1, *error2, *error3;
-    sortedFromLocations = [managedObjectContext executeFetchRequest:fetchRequestFromFreqThreshold
-                                                              error:&error1];
+    NSError *error2, *error3;
     NIMLOG_PERF2(@"Fetching searchableFromLocations");
     if(!searchableFromLocations){
         NSArray* locsFromGoogle = [managedObjectContext executeFetchRequest:fetchReqSearchableGoogleFromLocations
@@ -795,41 +844,25 @@
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 5) {
             locsFromIos = [managedObjectContext executeFetchRequest:fetchReqSearchableIosFromLocations error:&error3];
         } else {
-            // If < iOS4, then there will be no locations from iOS.  DE300 fix
+            // If < iOS4, then there will be no locations from iOS. DE300 fix
             locsFromIos = [NSArray array];
         }
         searchableFromLocations = [[locsFromGoogle arrayByAddingObjectsFromArray:locsFromIos]
-                                   sortedArrayUsingDescriptors:fromSortDesc];  // Combine the iOS and Google locations
+                                   sortedArrayUsingDescriptors:fromSortDesc]; // Combine the iOS and Google locations
         
         NIMLOG_PERF2(@"Done fetching searchableFromLocations");
-        if (!sortedFromLocations || !locsFromGoogle || !locsFromIos) {
-            [NSException raise:@"Locations -> updateInternalCache Fetch failed"
-                        format:@"Error1: %@, error2: %@, error3: %@", error1, error2, error3];
-        }
     }
     else{
         NSArray *locs = [NSArray arrayWithArray:searchableFromLocations];
-        searchableFromLocations = [locs 
-                                   sortedArrayUsingDescriptors:fromSortDesc];  // Combine the iOS and Google locations
+        searchableFromLocations = [locs
+                                   sortedArrayUsingDescriptors:fromSortDesc]; // Combine the iOS and Google locations
     }
     
-    // Now resort for sortedToLocations  & searchableFromLocations arrays
-
-    if (!fetchRequestToFreqThreshold) {  // create the fetch request if we have not already done so
-        fetchRequestToFreqThreshold = [managedObjectModel fetchRequestFromTemplateWithName:@"LocationByToFrequency"
-                                                                     substitutionVariables:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:TOFROM_FREQUENCY_VISIBILITY_CUTOFF] forKey:@"THRESHOLD"]];
-        [fetchRequestToFreqThreshold setSortDescriptors:toSortDesc];
-    }
-    sortedToLocations = [managedObjectContext executeFetchRequest:fetchRequestToFreqThreshold
-                                                              error:&error1];
+    // Now resort for sortedToLocations & searchableFromLocations arrays
+    
     searchableToLocations = [searchableFromLocations sortedArrayUsingDescriptors:toSortDesc];
-    if (!sortedToLocations) {
-        [NSException raise:@"Locations -> updateInternalCache Fetch failed" format:@"Reason: %@", error1];
-    }
     
     NIMLOG_PERF2(@"Done with searchableToLocations");
-//    [tempSortedFromLocation addObjectsFromArray:sortedFromLocations];
-//    sortedFromLocations = tempSortedFromLocation;
     // Force recomputation of the selectedLocations
     [self updateWithSelectedLocationIsFrom:TRUE selectedLocation:selectedFromLocation oldSelectedLocation:oldSelectedFromLocation];
     [self updateWithSelectedLocationIsFrom:FALSE selectedLocation:selectedToLocation oldSelectedLocation:oldSelectedToLocation];
@@ -837,8 +870,53 @@
     // Force the recomputation of the sortedMatchedLocations arrays
     [self setTypedToString:[self typedToString]];
     [self setTypedFromString:[self typedFromString]];
-    [self setAreLocationsChanged:NO];  // reset again
+    [self setAreLocationsChanged:NO]; // reset again
 }
+
+// Internal method for updating cache after locations have changed
+// Only include those locations with frequency >= 1 in the row count
+- (void)updateInternalCache
+{
+    // Fetch the sortedFromLocations & searchableFromLocations arrays
+    NSSortDescriptor *sdFrom = [NSSortDescriptor sortDescriptorWithKey:@"fromFrequency"
+                                                             ascending:NO];
+    NSSortDescriptor *sdDate = [NSSortDescriptor sortDescriptorWithKey:@"dateLastUsed"
+                                                             ascending:NO];
+    NSSortDescriptor *sdTo = [NSSortDescriptor sortDescriptorWithKey:@"toFrequency"
+                                                           ascending:NO];
+    NSArray* fromSortDesc = [NSArray arrayWithObjects:sdFrom,sdDate,nil];
+    NSArray* toSortDesc = [NSArray arrayWithObjects:sdTo,sdDate,nil];
+    
+    if (!fetchRequestFromFreqThreshold) { // create the fetch request if we have not already done so
+        fetchRequestFromFreqThreshold = [managedObjectModel fetchRequestFromTemplateWithName:@"LocationByFromFrequency"
+                                                                       substitutionVariables:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:TOFROM_FREQUENCY_VISIBILITY_CUTOFF] forKey:@"THRESHOLD"]];
+        [fetchRequestFromFreqThreshold setSortDescriptors:fromSortDesc];
+    }
+    NSError *error1;
+    sortedFromLocations = [managedObjectContext executeFetchRequest:fetchRequestFromFreqThreshold
+                                                              error:&error1];
+    // Now resort for sortedToLocations & searchableFromLocations arrays
+    
+    if (!fetchRequestToFreqThreshold) { // create the fetch request if we have not already done so
+        fetchRequestToFreqThreshold = [managedObjectModel fetchRequestFromTemplateWithName:@"LocationByToFrequency"
+                                                                     substitutionVariables:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:TOFROM_FREQUENCY_VISIBILITY_CUTOFF] forKey:@"THRESHOLD"]];
+        [fetchRequestToFreqThreshold setSortDescriptors:toSortDesc];
+    }
+    sortedToLocations = [managedObjectContext executeFetchRequest:fetchRequestToFreqThreshold
+                                                            error:&error1];
+    if (!sortedToLocations) {
+        [NSException raise:@"Locations -> updateInternalCache Fetch failed" format:@"Reason: %@", error1];
+    }
+    // Force recomputation of the selectedLocations
+    [self updateWithSelectedLocationIsFrom:TRUE selectedLocation:selectedFromLocation oldSelectedLocation:oldSelectedFromLocation];
+    [self updateWithSelectedLocationIsFrom:FALSE selectedLocation:selectedToLocation oldSelectedLocation:oldSelectedToLocation];
+    
+    // Force the recomputation of the sortedMatchedLocations arrays
+    [self setTypedToString:[self typedToString]];
+    [self setTypedFromString:[self typedFromString]];
+    [self setAreLocationsChanged:NO]; // reset again
+}
+
 // Updates sortedToLocations or sortedFromLocations to put the selectedLocation at the top of the list
 // Note: this does not update the sortedMatchingLocations array, so this method should only be used when
 // typing field is already cleared

@@ -96,7 +96,7 @@
 // Create the sorted array of itineraries (sorted by startTimeOnly)
 - (void)sortItineraries
 {
-    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:YES];
+    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOfLeg" ascending:YES];
     [self setSortedItineraries:[[self itineraries] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
 }
 
@@ -130,7 +130,7 @@
                                                                        fromTimeOnly, @"TIME_RANGE_FROM",
                                                                        toTimeOnly, @"TIME_RANGE_TO",
                                                                        nil]];
-    NSSortDescriptor *sd1 = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly"
+    NSSortDescriptor *sd1 = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOfLeg"
                                                           ascending:YES];
     [request setSortDescriptors:[NSArray arrayWithObjects:sd1,nil]];
     NSError *error;
@@ -792,14 +792,14 @@
     if (![self uniqueItineraryPatterns] || [[self uniqueItineraryPatterns] count] == 0) {
         [self setUniqueItineraryPatterns:[NSSet setWithArray:[self computeUniqueItineraries]]];
     }
-    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:YES];
+    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOfLeg" ascending:YES];
     return [[self uniqueItineraryPatterns] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]];
 }
 
 // Re-calculate uniqueItineraries from scratch and store in CoreData
 // Given two equivalent itineraries, will choose the itinerary that is a pattern for others to keep as unique
 - (NSArray *)computeUniqueItineraries{
-    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:YES];
+    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOfLeg" ascending:YES];
     NSMutableArray *arrItineraries = [[NSMutableArray alloc] initWithArray:[[self itineraries]
                                                                             sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
     int i;

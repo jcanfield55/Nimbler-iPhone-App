@@ -185,16 +185,16 @@ UIImage *imageDetailDisclosure;
             for (int i=0; i<3; i++) {
                 UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, TOFROM_SECTION_LABEL_WIDTH, TOFROM_SECTION_LABEL_HEIGHT)];
                 UILabel *label = [[UILabel alloc] 
-                                  initWithFrame:CGRectMake(TOFROM_SECTION_LABEL_INDENT, 0, 
-                                                           TOFROM_SECTION_LABEL_WIDTH - TOFROM_SECTION_LABEL_INDENT, 
-                                                           TOFROM_SECTION_LABEL_HEIGHT)];
+                                  init];
                 label.textColor = [UIColor lightGrayColor];
                 label.backgroundColor = [UIColor clearColor];
                 label.font = [UIFont MEDIUM_OBLIQUE_FONT];
                 if (i == TO_SECTION) {
                     label.text = @"To:";
+                    [label setFrame:CGRectMake(TOFROM_SECTION_LABEL_INDENT, 12,TOFROM_SECTION_LABEL_WIDTH - TOFROM_SECTION_LABEL_INDENT,TOFROM_SECTION_LABEL_HEIGHT)];
                 } else if (i == FROM_SECTION) {
                     label.text = @"From:";
+                    [label setFrame:CGRectMake(TOFROM_SECTION_LABEL_INDENT, 0,TOFROM_SECTION_LABEL_WIDTH - TOFROM_SECTION_LABEL_INDENT,TOFROM_SECTION_LABEL_HEIGHT)];
                 } else {
                     // No label for "Depart"
                 }
@@ -210,7 +210,7 @@ UIImage *imageDetailDisclosure;
             [btnSwap setTag:101];
             [btnSwap addTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
             [btnSwap setBackgroundImage:btnSwapImage forState:UIControlStateNormal];
-            barButtonSwap = [[UIBarButtonItem alloc] initWithCustomView:btnSwap];
+            //barButtonSwap = [[UIBarButtonItem alloc] initWithCustomView:btnSwap];
             
             // Accessibility Label For UI Automation.
             barButtonSwap.accessibilityLabel = SWAP_BUTTON;
@@ -255,6 +255,9 @@ UIImage *imageDetailDisclosure;
     if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
         imgTitle = [UIImage imageNamed:@"nimblrCaltrain.png"];
     }
+    else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
+        imgTitle = [UIImage imageNamed:@"nimblrDC.png"];
+    }
     else{
         imgTitle = [UIImage imageNamed:@"nimblr.png"];
     }
@@ -293,9 +296,10 @@ UIImage *imageDetailDisclosure;
     btnNow.accessibilityLabel = NOW_BUTTON;
     
     // Added To Clear Color Of mainTable for ios 4.3
-    if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
-        [self.mainTable setBackgroundColor: [UIColor clearColor]];
-    }
+//    if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
+//        [self.mainTable setBackgroundColor: [UIColor clearColor]];
+//    }
+    [self.mainTable setBackgroundColor: [UIColor clearColor]]; 
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -340,6 +344,8 @@ UIImage *imageDetailDisclosure;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    [mainTable setFrame:CGRectMake(0, 0, 320, 319)];
     NSArray *itinerariesArray = [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray;
     NSArray *fromToStopId = [nc_AppDelegate sharedInstance].planStore.fromToStopID;
     if(itinerariesArray){
@@ -596,9 +602,9 @@ UIImage *imageDetailDisclosure;
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     if (section == FROM_SECTION) {
-        return TOFROM_SECTION_LABEL_HEIGHT;
+        return FROM_SECTION_LABEL_HEIGHT;
     } else if(section == TO_SECTION) {
-         return TOFROM_SECTION_LABEL_HEIGHT;
+         return TO_SECTION_LABEL_HEIGHT;
     } else {
         if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
             return TOFROM_SECTION_NOLABEL_HEIGHT_4INCH;
@@ -609,11 +615,24 @@ UIImage *imageDetailDisclosure;
     } 
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0,0,320,1)];
+    return view;
+}
+
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     UIView *headerView;
     if(editMode == NO_EDIT){
-       headerView = [sectionUILabelArray objectAtIndex:section]; 
+        headerView = [sectionUILabelArray objectAtIndex:section];
+        if(section == 1){
+           UIImage* btnSwapImage = [UIImage imageNamed:@"img_swapLocation.png"];
+           UIButton *btnSwap = [[UIButton alloc] initWithFrame:CGRectMake(130,1,btnSwapImage.size.width,btnSwapImage.size.height)];
+           [btnSwap setTag:101];
+           [btnSwap addTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
+           [btnSwap setBackgroundImage:btnSwapImage forState:UIControlStateNormal];
+           [headerView addSubview:btnSwap];
+        }
     }
     else{
         UIView *tempView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, TOFROM_SECTION_LABEL_WIDTH, TOFROM_SECTION_LABEL_HEIGHT)];
@@ -966,6 +985,9 @@ UIImage *imageDetailDisclosure;
     if (editMode == newEditMode) {
         return;  // If no change in mode return immediately
     }
+    if(newEditMode != NO_EDIT){
+      [locations fetchSearchableLocations];
+    }
     NSString *edit_string;
     if (newEditMode==NO_EDIT){
         edit_string = @"NO_EDIT";
@@ -1274,8 +1296,8 @@ UIImage *imageDetailDisclosure;
             if (fromLocation == currentLocation || toLocation == currentLocation) {
                 if (![[self supportedRegion] isInRegionLat:[currentLocation latFloat] Lng:[currentLocation lngFloat]]) {
                     [self stopActivityIndicator];
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:APP_TITLE message:
-                                          @"Your current location does not appear to be in the Bay Area.  Please choose a different location." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
+                    NSString *msg = [NSString stringWithFormat:@"Your current location does not appear to be in the %@.  Please choose a different location.",LOCATION_NOTAPPEAR_MSG];
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:APP_TITLE message:msg delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil ];
                     [alert show];
                     NSString *supportedRegString = [NSString stringWithFormat:
                                                     @"supportedRegion minLat = %f, minLng = %f, maxLat = %f, maxLng = %f",
@@ -1526,6 +1548,7 @@ UIImage *imageDetailDisclosure;
 - (void)endEdit{
     //Fixed DE-330
     // Clearing both textfield before calling seteditMode method.
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
     self.toTableVC.txtField.text = NULL_STRING;
     self.fromTableVC.txtField.text = NULL_STRING;
     [self setEditMode:NO_EDIT];
@@ -1636,13 +1659,12 @@ UIImage *imageDetailDisclosure;
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        [toolBar setFrame:CGRectMake(0, 246, 320, 44)];
-        [datePicker setFrame:CGRectMake(0, 290, 320, 216)];
-
+        [toolBar setFrame:CGRectMake(0, 288, 320, 44)];
+        [datePicker setFrame:CGRectMake(0, 332, 320, 216)];
     }
     else{
-        [toolBar setFrame:CGRectMake(0, 160, 320, 44)];
-        [datePicker setFrame:CGRectMake(0, 204, 320, 216)]; 
+        [toolBar setFrame:CGRectMake(0, 200, 320, 44)];
+        [datePicker setFrame:CGRectMake(0, 244, 320, 216)];
     }
     [UIView commitAnimations];
 }

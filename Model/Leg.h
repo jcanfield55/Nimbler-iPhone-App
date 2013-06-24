@@ -56,6 +56,7 @@ typedef enum {
 @property (nonatomic, strong) NSArray *sortedSteps;
 @property (nonatomic, strong) PolylineEncodedString *polylineEncodedString;
 @property (nonatomic) BOOL isRealTimeLeg;
+@property (nonatomic, retain) NSNumber *rentedBike;
 
 @property (nonatomic, retain) NSString *arrivalTime;
 @property (nonatomic, retain) NSString *arrivalFlag;

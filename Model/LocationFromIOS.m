@@ -89,6 +89,20 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
                     [formattedAddr appendString:@", "];
                 }
             }
+            
+            NSRange range;
+            int num;
+            NSStringCompareOptions options1 = 0;
+            range.location = 0;
+            range.length = [formattedAddr length];
+            num = [formattedAddr replaceOccurrencesOfString:@"Washington D.C.‎ District of Columbia"
+                                                            withString:@"Washington"
+                                                                options:options1 range:range];
+            range.location = 0;
+            range.length = [formattedAddr length];
+            num = [formattedAddr replaceOccurrencesOfString:@"Washington, DC"
+                                    withString:@"Washington"
+                                        options:options1 range:range];
             return [NSString stringWithString:formattedAddr];
         }
         else { // if cannot get formatted address lines, try our best for California addresses
@@ -135,6 +149,13 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
                                                         options:options1
                                                           range:range];
                 
+                range.location = 0;
+                range.length = [formattedAddr length];
+                num = [formattedAddr replaceOccurrencesOfString:@"Washington D.C.‎ District of Columbia" withString:@"Washington"
+                                    options:options1 range:range];
+                range.location = 0;
+                range.length = [formattedAddr length];
+                num = [formattedAddr replaceOccurrencesOfString:@"Washington, DC"withString:@"Washington" options:options1 range:range];
                 
                 if ([formattedAddr length]>5 &&
                     [[formattedAddr substringFromIndex:([formattedAddr length]-5)] intValue] < 0) {

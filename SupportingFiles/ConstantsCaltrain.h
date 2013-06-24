@@ -64,6 +64,8 @@
 
 // Current Location
 #define CURRENT_LOCATION_STARTING_FROM_FREQUENCY 7.0
+#define NEWGEOCODE_RESULT_MSG @"in the San Francisco Bay Area"
+#define LOCATION_NOTAPPEAR_MSG @"Bay Area"
 
 // Testflight App Analytics and logging
 #define TEST_FLIGHT_ENABLED 0 // If 0, then do not include testFlightApp at all
@@ -252,6 +254,9 @@
 
 // RouteExcludeSettings
 #define BIKE_BUTTON @"Bike"
+#define MY_BIKE @"My Bike"
+#define BIKE_SHARE @"Bike Share"
+#define RENTED_BIKE @"rentedBike"
 #define EXCLUSION_BY_AGENCY @"By Agency"   
 #define EXCLUSION_BY_RAIL_BUS  @"By Rail/Bus"
 
@@ -360,6 +365,7 @@
 #define REQUEST_TRANSIT_MODE_TRANSIT    @"TRANSIT,WALK"
 #define REQUEST_TRANSIT_MODE_BIKE_ONLY  @"BICYCLE"
 #define REQUEST_TRANSIT_MODE_TRANSIT_BIKE @"TRANSIT,BICYCLE"
+#define REQUEST_TRANSIT_MODE_WALK_BIKE @"TRANSIT,WALK,BICYCLE"
 
 #define REQUEST_ID              @"reqId"
 #define REQUEST_ID_LENGTH       16

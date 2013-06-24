@@ -10,11 +10,13 @@
 #import <MapKit/MapKit.h> 
 #import "Itinerary.h"
 #import "LegMapViewController.h"
+#import "TTTAttributedLabel.h"
 
-@interface RouteDetailsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,RKRequestDelegate>
+@interface RouteDetailsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,RKRequestDelegate,UIGestureRecognizerDelegate,UIWebViewDelegate,TTTAttributedLabelDelegate>
 {
     NSDateFormatter *timeFormatter;
     UIBarButtonItem *twitterCaltrain;
+    UIActivityIndicatorView *activityIndicatorView;
 }
 @property(nonatomic, strong) IBOutlet UITableView* mainTable; // Table listing route details
 @property(nonatomic, strong) MKMapView *mapView; 
@@ -32,6 +34,7 @@
 @property (nonatomic, strong) IBOutlet UIButton * handleControl;
 @property (nonatomic) int mapHeight;
 @property (nonatomic) int tableHeight;
+@property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
 
 - (IBAction)navigateBack:(id)sender;
 - (IBAction)navigateForward:(id)sender;
@@ -44,6 +47,7 @@
 status:(ItineraryStatus)status ItineraryNumber:(int)itiNumber;
 - (void) intermediateStopTimesReceived:(NSArray *)stopTimes Leg:(Leg *)leg;
 - (void) setViewFrames;
+- (void)openUrl:(NSURL *)url;
 
 // return Formatted string like 00:58
 - (NSString *) returnFormattedStringFromSeconds:(int) seconds;

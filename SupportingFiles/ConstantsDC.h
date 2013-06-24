@@ -1,4 +1,4 @@
-// Constants.h
+// ConstantsDC.h
 // Nimbler
 //
 // Created by Sitanshu Joshi on 5/26/12.
@@ -15,7 +15,7 @@
 #define GENERATING_SEED_DATABASE  0 // when we are generating seed database the value is 1 otherwise 0
 #define SKIP_REAL_TIME_UPDATES 0 // If 1, system will not request real-time updates
 
-#define TRIP_GENERATE_URL     @"http://23.23.210.156:7070/opentripplanner-api-webapp/ws/" 
+#define TRIP_GENERATE_URL     @"http://23.23.210.156:7070/TPServer/ws/"
 //#define TRIP_GENERATE_URL @"http://ec2-23-22-169-158.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"
 #define GEO_RESPONSE_URL      @"http://maps.googleapis.com/maps/api/geocode/"
 #define TEST_GEO_RESPONSE_URL  @"http://localhost:8080/TPServer/ws/mockgeolocation/"
@@ -61,11 +61,11 @@
 
 #define TOFROM_LIST_TYPE          @"TOFROM_LIST" // Location type indicating a ToFromList
 #define ALL_STATION    @"all_st"
+#define NEWGEOCODE_RESULT_MSG @"in the Washington DC"
+#define LOCATION_NOTAPPEAR_MSG @"Washington DC"
 
 // Current Location
 #define CURRENT_LOCATION_STARTING_FROM_FREQUENCY 7.0
-#define NEWGEOCODE_RESULT_MSG @"in the San Francisco Bay Area"
-#define LOCATION_NOTAPPEAR_MSG @"Bay Area"
 
 // Testflight App Analytics and logging
 #define TEST_FLIGHT_ENABLED 0 // If 0, then do not include testFlightApp at all
@@ -109,7 +109,7 @@
 #define UPDATE_DEVICE_TOKEN   @"users/preferences/update/token"
 
 // UserPreferernce (user settings) defaults, max, and min
-#define PREFS_DEFAULT_IS_PUSH_ENABLE NO
+#define PREFS_DEFAULT_IS_PUSH_ENABLE YES
 #define PREFS_DEFAULT_PUSH_NOTIFICATION_THRESHOLD 5
 
 #define URGENT_NOTIFICATION_DEFAULT_VALUE   1
@@ -259,7 +259,7 @@
 #define MY_BIKE @"My Bike"
 #define BIKE_SHARE @"Bike Share"
 #define RENTED_BIKE @"rentedBike"
-#define EXCLUSION_BY_AGENCY @"By Agency"   
+#define EXCLUSION_BY_AGENCY @"By Agency"
 #define EXCLUSION_BY_RAIL_BUS  @"By Rail/Bus"
 
 // gtfsParser
@@ -379,7 +379,7 @@
 #define FOR_TODAY                      @"forToday"
 #define LEGS                           @"legs"
 #define LIVE_FEEDS_IMAGE_DOWNLOAD_URL  @"advisories/download"
-#define METADATA_URL                   @"metadata"
+#define METADATA_URL                   @"plan/graph/metadata?appType=5"
 #define NEXT_LEGS_PLAN                 @"plan/nextlegs"
 
 // US-163 Appstore Feedback reminder constants
@@ -482,20 +482,3 @@
 #define SHOW_INTERMEDIATE_STOPS @"showIntermediateStops"
 
 #define LIVE_FEEDS_BY_VEHICLE_POSITION @"livefeeds/vehiclePosition"
-
-
-//5) Get realtime By leg
-//6) get scheduled data(Next legs)
-//7) Get vehicle position
-//plan generate
-//9) Send Feedback
-//10) Update Setting
-//11) Get raw data (Gtfs Agency Data)
-//12) Get Stoptimes
-//13) get trips
-//14) Get Agency Data
-//15) gtfs updateTime
-//16) serviceByWeekday
-//17) calendarByDate
-//18) advisory image fetch (image/<img-name>)
-//19) update token

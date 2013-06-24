@@ -637,14 +637,10 @@
 		8DE18BA01725415800AA8112 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A514BDF2F9000565D6 /* CoreData.framework */; };
 		8DE18BA11725415800AA8112 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5258A89B160D617800871875 /* libTestFlight.a */; };
 		8DE18BA21725415800AA8112 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		8DE18BA41725415800AA8112 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C09615CB465A00B55A65 /* Icon.png */; };
-		8DE18BA51725415800AA8112 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C09E15CB7D2F00B55A65 /* Icon@2x.png */; };
 		8DE18BA61725415800AA8112 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C0A015CC705000B55A65 /* Default.png */; };
 		8DE18BA71725415800AA8112 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C0A215CC705D00B55A65 /* Default@2x.png */; };
 		8DE18BA81725415800AA8112 /* aps_development.cer in Resources */ = {isa = PBXBuildFile; fileRef = CCA4C7E415D92CC7009BE7A1 /* aps_development.cer */; };
 		8DE18BA91725415800AA8112 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */; };
-		8DE18BAA1725415800AA8112 /* Icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB3161AB69600695348 /* Icon-small.png */; };
-		8DE18BAB1725415800AA8112 /* Icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB5161AB6A400695348 /* Icon-small@2x.png */; };
 		8DE18BAC1725415800AA8112 /* FeedBackForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10A162603090083F143 /* FeedBackForm.xib */; };
 		8DE18BAD1725415800AA8112 /* FeedBackForm_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10B162603090083F143 /* FeedBackForm_568h.xib */; };
 		8DE18BAE1725415800AA8112 /* FeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10C162603090083F143 /* FeedbackViewController.xib */; };
@@ -762,10 +758,8 @@
 		8DE18C1E1725415800AA8112 /* Speaker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 520FB211162603AF0083F143 /* Speaker@2x.png */; };
 		8DE18C1F1725415800AA8112 /* walkb.png in Resources */ = {isa = PBXBuildFile; fileRef = 520FB212162603AF0083F143 /* walkb.png */; };
 		8DE18C201725415800AA8112 /* CoverageGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 520FB295162605470083F143 /* CoverageGeoJSON.geojson */; };
-		8DE18C211725415800AA8112 /* Icon_ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D45BD1D162BDE6A00E5CB3D /* Icon_ipad@2x.png */; };
 		8DE18C221725415800AA8112 /* bart-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D4FC8E4162D2E1A004144DE /* bart-station.json */; };
 		8DE18C231725415800AA8112 /* caltrain-station.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D4FC8E5162D2E1A004144DE /* caltrain-station.json */; };
-		8DE18C241725415800AA8112 /* Icon_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D93604A162FFC4500084E8E /* Icon_ipad.png */; };
 		8DE18C251725415800AA8112 /* bart-station-background.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D8DF4AB1647BCFB00BC2A34 /* bart-station-background.json */; };
 		8DE18C261725415800AA8112 /* caltrain-station-background.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D8DF4AC1647BCFB00BC2A34 /* caltrain-station-background.json */; };
 		8DE18C271725415800AA8112 /* calendar.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8D99B630164E2DF200C0A5AC /* calendar.txt */; };
@@ -793,7 +787,6 @@
 		8DE18C3D1725415800AA8112 /* img_legFerry@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE716E0AEEE00A37AD3 /* img_legFerry@2x.png */; };
 		8DE18C3E1725415800AA8112 /* img_legFerrySelect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE816E0AEEE00A37AD3 /* img_legFerrySelect.png */; };
 		8DE18C3F1725415800AA8112 /* img_legFerrySelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE916E0AEEE00A37AD3 /* img_legFerrySelect@2x.png */; };
-		8DE18C401725415800AA8112 /* store101.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8D3EFCA216E85BF800266C6A /* store101.zip */; };
 		8DE18C411725415800AA8112 /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DD6A4EA16EA161F00FFC158 /* pin.png */; };
 		8DE18C421725415800AA8112 /* Updated_Pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D613EE0171E7D6600070B51 /* Updated_Pressed.png */; };
 		8DE18C431725415800AA8112 /* Updated_UnPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D613EE1171E7D6600070B51 /* Updated_UnPressed.png */; };
@@ -817,6 +810,15 @@
 		8DE42FEB16E0AEEE00A37AD3 /* img_legFerry@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE716E0AEEE00A37AD3 /* img_legFerry@2x.png */; };
 		8DE42FEC16E0AEEE00A37AD3 /* img_legFerrySelect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE816E0AEEE00A37AD3 /* img_legFerrySelect.png */; };
 		8DE42FED16E0AEEE00A37AD3 /* img_legFerrySelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE916E0AEEE00A37AD3 /* img_legFerrySelect@2x.png */; };
+		8DEAC18F1778246400D7997C /* RouteExcludeSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D00753116D4CAB30041A64C /* RouteExcludeSettings.m */; };
+		8DEAC192177841F400D7997C /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DEAC191177841F400D7997C /* TTTAttributedLabel.m */; };
+		8DEAC193177841F700D7997C /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DEAC191177841F400D7997C /* TTTAttributedLabel.m */; };
+		8DEAC194177841F800D7997C /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DEAC191177841F400D7997C /* TTTAttributedLabel.m */; };
+		8DEAC1961778469700D7997C /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DEAC1951778469600D7997C /* CoreText.framework */; };
+		8DEAC1971778469900D7997C /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DEAC1951778469600D7997C /* CoreText.framework */; };
+		8DEAC1981778469900D7997C /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DEAC1951778469600D7997C /* CoreText.framework */; };
+		8DEAC1A217785F2200D7997C /* nimblrDC.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DEAC19A1778517800D7997C /* nimblrDC.png */; };
+		8DEAC1A317785F2500D7997C /* nimblrDC@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DEAC19B1778517800D7997C /* nimblrDC@2x.png */; };
 		8DEE785D166338F100E4863C /* SettingViewController_SF_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */; };
 		8DEE785F166339D600E4863C /* SettingDetailViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */; };
 		8DF19BF416F725FC0050FE00 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -1259,6 +1261,13 @@
 		8DE42FE716E0AEEE00A37AD3 /* img_legFerry@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_legFerry@2x.png"; sourceTree = "<group>"; };
 		8DE42FE816E0AEEE00A37AD3 /* img_legFerrySelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_legFerrySelect.png; sourceTree = "<group>"; };
 		8DE42FE916E0AEEE00A37AD3 /* img_legFerrySelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_legFerrySelect@2x.png"; sourceTree = "<group>"; };
+		8DEAC189177812DF00D7997C /* ConstantsDC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConstantsDC.h; sourceTree = "<group>"; };
+		8DEAC18E177823EA00D7997C /* Network_Commuting 1.10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.10.xcdatamodel"; sourceTree = "<group>"; };
+		8DEAC190177841F400D7997C /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
+		8DEAC191177841F400D7997C /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
+		8DEAC1951778469600D7997C /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		8DEAC19A1778517800D7997C /* nimblrDC.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nimblrDC.png; sourceTree = "<group>"; };
+		8DEAC19B1778517800D7997C /* nimblrDC@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nimblrDC@2x.png"; sourceTree = "<group>"; };
 		8DEE2B85172575F000CCD3D1 /* store101_DC.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = store101_DC.zip; sourceTree = "<group>"; };
 		8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController_SF_568h.xib; sourceTree = "<group>"; };
 		8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingDetailViewController_568h.xib; sourceTree = "<group>"; };
@@ -1289,6 +1298,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8DEAC1961778469700D7997C /* CoreText.framework in Frameworks */,
 				8D052F6E171E6969008D4CE0 /* MapKit.framework in Frameworks */,
 				8DF19C0016F727A10050FE00 /* libsqlite3.0.dylib in Frameworks */,
 				8DF19BFE16F726D50050FE00 /* Accounts.framework in Frameworks */,
@@ -1356,6 +1366,7 @@
 				8DA77FE71724FF0D0090C2EA /* CoreData.framework in Frameworks */,
 				8DA77FE81724FF0D0090C2EA /* libTestFlight.a in Frameworks */,
 				8DA77FE91724FF0D0090C2EA /* FacebookSDK.framework in Frameworks */,
+				8DEAC1971778469900D7997C /* CoreText.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1387,6 +1398,7 @@
 				8DE18BA01725415800AA8112 /* CoreData.framework in Frameworks */,
 				8DE18BA11725415800AA8112 /* libTestFlight.a in Frameworks */,
 				8DE18BA21725415800AA8112 /* FacebookSDK.framework in Frameworks */,
+				8DEAC1981778469900D7997C /* CoreText.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1440,6 +1452,8 @@
 		520FB132162603430083F143 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				8DEAC190177841F400D7997C /* TTTAttributedLabel.h */,
+				8DEAC191177841F400D7997C /* TTTAttributedLabel.m */,
 				8D3EFCB116E85DEE00266C6A /* ZipArchive */,
 				520FB133162603430083F143 /* CustomBadge.h */,
 				520FB134162603430083F143 /* CustomBadge.m */,
@@ -1504,6 +1518,8 @@
 		520FB1A8162603AF0083F143 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8DEAC19A1778517800D7997C /* nimblrDC.png */,
+				8DEAC19B1778517800D7997C /* nimblrDC@2x.png */,
 				8D0C2961173124DA00E6AA1B /* Handle_control.png */,
 				8D00B006172FD22900B01ED3 /* tram.png */,
 				8D00AFF2172F952C00B01ED3 /* realtime1.png */,
@@ -1645,6 +1661,7 @@
 			children = (
 				520FB28A162604950083F143 /* Constants.h */,
 				8DE18C6E17256CD200AA8112 /* ConstantsCaltrain.h */,
+				8DEAC189177812DF00D7997C /* ConstantsDC.h */,
 				520FB28B162604950083F143 /* CoverageGeoJSON.geojson */,
 				520FB28C162604950083F143 /* enums.h */,
 				52CF43AA14BDF2F9000565D6 /* InfoPlist.strings */,
@@ -1770,6 +1787,7 @@
 		52CF439014BDF2F8000565D6 = {
 			isa = PBXGroup;
 			children = (
+				8DEAC1951778469600D7997C /* CoreText.framework */,
 				8DF19BFF16F727A10050FE00 /* libsqlite3.0.dylib */,
 				8DF19BFD16F726D50050FE00 /* Accounts.framework */,
 				8DF19BFB16F726CF0050FE00 /* AdSupport.framework */,
@@ -2483,14 +2501,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8DE18BA41725415800AA8112 /* Icon.png in Resources */,
-				8DE18BA51725415800AA8112 /* Icon@2x.png in Resources */,
 				8DE18BA61725415800AA8112 /* Default.png in Resources */,
 				8DE18BA71725415800AA8112 /* Default@2x.png in Resources */,
 				8DE18BA81725415800AA8112 /* aps_development.cer in Resources */,
 				8DE18BA91725415800AA8112 /* Default-568h@2x.png in Resources */,
-				8DE18BAA1725415800AA8112 /* Icon-small.png in Resources */,
-				8DE18BAB1725415800AA8112 /* Icon-small@2x.png in Resources */,
 				8DE18BAC1725415800AA8112 /* FeedBackForm.xib in Resources */,
 				8DE18BAD1725415800AA8112 /* FeedBackForm_568h.xib in Resources */,
 				8DE18BAE1725415800AA8112 /* FeedbackViewController.xib in Resources */,
@@ -2608,10 +2622,8 @@
 				8DE18C1E1725415800AA8112 /* Speaker@2x.png in Resources */,
 				8DE18C1F1725415800AA8112 /* walkb.png in Resources */,
 				8DE18C201725415800AA8112 /* CoverageGeoJSON.geojson in Resources */,
-				8DE18C211725415800AA8112 /* Icon_ipad@2x.png in Resources */,
 				8DE18C221725415800AA8112 /* bart-station.json in Resources */,
 				8DE18C231725415800AA8112 /* caltrain-station.json in Resources */,
-				8DE18C241725415800AA8112 /* Icon_ipad.png in Resources */,
 				8DE18C251725415800AA8112 /* bart-station-background.json in Resources */,
 				8DE18C261725415800AA8112 /* caltrain-station-background.json in Resources */,
 				8DE18C271725415800AA8112 /* calendar.txt in Resources */,
@@ -2639,7 +2651,6 @@
 				8DE18C3D1725415800AA8112 /* img_legFerry@2x.png in Resources */,
 				8DE18C3E1725415800AA8112 /* img_legFerrySelect.png in Resources */,
 				8DE18C3F1725415800AA8112 /* img_legFerrySelect@2x.png in Resources */,
-				8DE18C401725415800AA8112 /* store101.zip in Resources */,
 				8DE18C411725415800AA8112 /* pin.png in Resources */,
 				8DE18C421725415800AA8112 /* Updated_Pressed.png in Resources */,
 				8DE18C431725415800AA8112 /* Updated_UnPressed.png in Resources */,
@@ -2665,6 +2676,8 @@
 				8D00B001172F97EE00B01ED3 /* realtime2.png in Resources */,
 				8D00B009172FD22D00B01ED3 /* tram.png in Resources */,
 				8D0C2968173124E100E6AA1B /* Handle_control.png in Resources */,
+				8DEAC1A217785F2200D7997C /* nimblrDC.png in Resources */,
+				8DEAC1A317785F2500D7997C /* nimblrDC@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2764,6 +2777,7 @@
 				8D8B10CD1720268B0093E110 /* NimblerApplication.m in Sources */,
 				8D8B10D0172026970093E110 /* WebView.m in Sources */,
 				2E02C785173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */,
+				8DEAC192177841F400D7997C /* TTTAttributedLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2857,6 +2871,7 @@
 				8DA77FCF1724FF0D0090C2EA /* NimblerApplication.m in Sources */,
 				8DA77FD01724FF0D0090C2EA /* WebView.m in Sources */,
 				2E02C786173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */,
+				8DEAC193177841F700D7997C /* TTTAttributedLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2936,6 +2951,8 @@
 				8DE18B881725415800AA8112 /* NimblerApplication.m in Sources */,
 				8DE18B891725415800AA8112 /* WebView.m in Sources */,
 				2E02C787173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */,
+				8DEAC18F1778246400D7997C /* RouteExcludeSettings.m in Sources */,
+				8DEAC194177841F800D7997C /* TTTAttributedLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3155,8 +3172,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Nimbler World, Inc.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nimbler World, Inc.";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -3184,8 +3201,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "472F570B-1668-4D89-A2B2-1F66DEF88097";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "472F570B-1668-4D89-A2B2-1F66DEF88097";
+				PROVISIONING_PROFILE = "1ED7BA0B-E45B-4DCB-ADAE-CA9BC48E3DA0";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1ED7BA0B-E45B-4DCB-ADAE-CA9BC48E3DA0";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -3197,9 +3214,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Nimbler World, Inc.";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: Nimbler World, Inc.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nimbler World, Inc.";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -3227,9 +3244,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "472F570B-1668-4D89-A2B2-1F66DEF88097";
-				"PROVISIONING_PROFILE[sdk=*]" = "472F570B-1668-4D89-A2B2-1F66DEF88097";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "472F570B-1668-4D89-A2B2-1F66DEF88097";
+				PROVISIONING_PROFILE = "1ED7BA0B-E45B-4DCB-ADAE-CA9BC48E3DA0";
+				"PROVISIONING_PROFILE[sdk=*]" = "1ED7BA0B-E45B-4DCB-ADAE-CA9BC48E3DA0";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1ED7BA0B-E45B-4DCB-ADAE-CA9BC48E3DA0";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -3377,6 +3394,7 @@
 		8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				8DEAC18E177823EA00D7997C /* Network_Commuting 1.10.xcdatamodel */,
 				2E02C78C1733D82D001F2F28 /* Network_Commuting 1. 9.xcdatamodel */,
 				5295B95216C6F71B008376B3 /* Network_Commuting 1.8.xcdatamodel */,
 				8DF6C87D1670696E00DD4D31 /* Network_Commuting 1.7.xcdatamodel */,
@@ -3388,7 +3406,7 @@
 				8D9EA261162D78FD002BB5FF /* Network_Commuting 1.6.xcdatamodel */,
 				8D9EA262162D78FD002BB5FF /* Network_Commuting.xcdatamodel */,
 			);
-			currentVersion = 2E02C78C1733D82D001F2F28 /* Network_Commuting 1. 9.xcdatamodel */;
+			currentVersion = 8DEAC18E177823EA00D7997C /* Network_Commuting 1.10.xcdatamodel */;
 			path = Network_Commuting.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

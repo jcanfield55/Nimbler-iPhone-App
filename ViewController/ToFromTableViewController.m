@@ -130,6 +130,7 @@ NSString *strStreet2 = @"street ";
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NIMLOG_EVENT1(@"Select Row: isFrom=%d, section=%d, row=%d", isFrom, [indexPath section], [indexPath row]);
+    [toFromVC.navigationController setNavigationBarHidden:YES animated:NO];
     
     if ([self adjustedForEnterNewAddressFor:[indexPath row]] == -1) {  // "Enter New Address" cell
         if (isFrom) {
@@ -212,6 +213,16 @@ NSString *strStreet2 = @"street ";
 // (in locations object, in toFromVC, and in the table selected cell)
 - (void)markAndUpdateSelectedLocation:(Location *)loc
 {
+    //Fixed DE-363
+    if([loc isKindOfClass:[LocationFromIOS class]]){
+        LocationFromIOS *iosLocations = (LocationFromIOS *)loc;
+        NSArray *formattedAdd = [loc.formattedAddress componentsSeparatedByString:@","];
+        NSString *subLocality = [iosLocations.placemark.addressDictionary objectForKey:@"SubLocality"];
+        if(subLocality && ![[formattedAdd objectAtIndex:0] isEqualToString:subLocality]){
+           loc.formattedAddress = [NSString stringWithFormat:@"%@\n%@",subLocality,loc.formattedAddress];
+        }
+    }
+    
     if ([loc isCurrentLocation]) {
         if ([self alertUsetForLocationService]) {
             NSString* msg;  // DE193 fix
@@ -382,6 +393,12 @@ NSString *strStreet2 = @"street ";
 -(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
     locations.isLocationSelected = false;
+    if([toFromVC editMode] == NO_EDIT){
+        [toFromVC.navigationController setNavigationBarHidden:YES animated:NO];
+    }
+    else{
+        [toFromVC.navigationController setNavigationBarHidden:NO animated:NO];
+    }
     return YES;
 }
 
@@ -435,6 +452,7 @@ NSString *strStreet2 = @"street ";
 // Delegate for when complete text entered into the UITextField
 - (IBAction)textSubmitted:(id)sender forEvent:(UIEvent *)event
 {
+    [toFromVC.navigationController setNavigationBarHidden:YES animated:NO]; 
     locations.isLocationSelected = true; 
     rawAddress = [sender text];
     
@@ -546,7 +564,7 @@ NSString *strStreet2 = @"street ";
     else {  // Error cases
         // if no valid locations (ie non in supported region),
         if (status==GEOCODE_STATUS_OK && [locationArray count]==0) {
-            NSString *msg = [NSString stringWithFormat:@"Did not find the address: '%@' in the San Francisco Bay Area", rawAddress];
+            NSString *msg = [NSString stringWithFormat:@"Did not find the address: '%@' %@", rawAddress,NEWGEOCODE_RESULT_MSG];
             alert = [[UIAlertView alloc] initWithTitle:@"Trip Planner" message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
         }

@@ -10,7 +10,7 @@
 #define Nimbler_SF_Header_h
 
 // Default time zone
-#define DEFAULT_TIME_ZONE @"America/Los_Angeles"
+#define DEFAULT_TIME_ZONE @"America/New_York"
 
 // Bundle and App Types
 #define CALTRAIN_BUNDLE_IDENTIFIER         @"com.Nimbler.Nimbler-Caltrain"
@@ -26,6 +26,13 @@
 #define MIN_LONG          @"-123.4631719"
 #define MAX_LAT           @"38.7189988"
 #define MAX_LONG          @"-121.025001"
+
+
+// Flurry API Key
+#define FLURRY_API_KEY @"DSTDN6ST2YDWF4V9RWFZ"
+
+// Facebook App ID (for tracking referrals)
+#define FB_APP_ID @""  // Nimbler DC FB App ID
 
 //
 // Settings Page Rows

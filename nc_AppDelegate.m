@@ -126,14 +126,6 @@ FeedBackForm *fbView;
     
      NSString *dbPath = [NSString stringWithFormat:@"%@/%@",[[self applicationDocumentsDirectory] path],COREDATA_DB_FILENAME];
     // Remove the Caltrain 1.16 app database
-     if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-         BOOL isOldDBDeleted = [[NSUserDefaults standardUserDefaults] objectForKey:@"oldDbDeleted"];
-         if(!isOldDBDeleted && [[NSFileManager defaultManager] fileExistsAtPath:dbPath]){
-             [[NSFileManager defaultManager] removeItemAtPath:dbPath error:nil];
-             [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"oldDbDeleted"];
-             [[NSUserDefaults standardUserDefaults] synchronize];
-         }
-     }
     
     if(![[NSFileManager defaultManager] fileExistsAtPath:dbPath]){
         NSString *strPath;
@@ -1267,10 +1259,8 @@ FeedBackForm *fbView;
 // update badge
 -(void)updateBadge:(int)count
 {
-    //if(![[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-        if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] != 1){
+        if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_WMATA_ADV] intValue] != 1){ 
             count = 0;
-       // }
     }
     int tweetConut =count;
     [twitterCount removeFromSuperview];

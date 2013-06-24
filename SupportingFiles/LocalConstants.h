@@ -33,7 +33,7 @@
 // Flurry API Key
 #define FLURRY_API_KEY @"27WGHH9DG5Z5MRCB5QRN"
 // Review reminder URL
-#define NIMBLER_REVIEW_URL                   @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=638067545"   // Nimbler SF Review URL
+#define NIMBLER_REVIEW_URL                   @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=638067545"
 
 //
 // Settings Page Rows

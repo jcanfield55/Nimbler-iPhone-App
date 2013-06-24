@@ -46,6 +46,7 @@
 @dynamic tripId;
 @dynamic agencyName;
 @dynamic intermediateStops;
+@dynamic rentedBike;
 
 @synthesize realStartTime;
 @synthesize realEndTime;
@@ -195,12 +196,39 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 - (NSString *)directionsTitleText:(LegPositionEnum)legPosition
 {
     @try {
+        NSArray *arrayLegs = [self.itinerary sortedLegs];
+        int index = [arrayLegs indexOfObject:self];
+        Leg *previosLeg = nil;
+        Leg *nextLeg = nil; 
+        if(index > 0){
+           previosLeg = [arrayLegs objectAtIndex:index-1];
+        }
+        if([arrayLegs count] > index + 1){
+            nextLeg = [arrayLegs objectAtIndex:index+1];
+        }
+        
     NSMutableString *titleText=[NSMutableString stringWithString:@""];
         NSString* walkOrBikeString = nil;
         if (self.isWalk) {
-            walkOrBikeString = @"Walk";
+            if(nextLeg.isBike && nextLeg.rentedBike){
+               walkOrBikeString = @"Walk to Capital Bikeshare at";
+            }
+            else{
+                walkOrBikeString = @"Walk to";
+            }
         } else if (self.isBike) {
-            walkOrBikeString = @"Bike";
+            if(self.rentedBike && previosLeg && previosLeg.rentedBike){
+                walkOrBikeString = @"Bike to";
+            }
+            else if(self.rentedBike  && previosLeg && !previosLeg.rentedBike){
+                 walkOrBikeString = [NSString stringWithFormat:@"Rent bike from %@ and Bike to",self.from.name];
+            }
+            else if(self.rentedBike && !previosLeg){
+                 walkOrBikeString = [NSString stringWithFormat:@"Rent bike from %@ and Bike to",self.from.name];
+            }
+            else{
+                walkOrBikeString = @"Bike to";
+            }
         }
     if (walkOrBikeString) {
         if (legPosition == FIRST_LEG) {    // US124 implementation
@@ -209,13 +237,13 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
                 NSDate* realTimeArrivalTime = [[self startTime]
                                                dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
                 if(realTimeArrivalTime){
-                    [titleText appendFormat:@"%@ %@ to %@",
+                    [titleText appendFormat:@"%@ %@ %@",
                      superShortTimeStringForDate(realTimeArrivalTime),
                      walkOrBikeString,
                      [[self to] name]];
                 }
                 else{
-                    [titleText appendFormat:@"%@ %@ to %@",
+                    [titleText appendFormat:@"%@ %@ %@",
                      superShortTimeStringForDate([self startTime]),
                      walkOrBikeString,
                      [[self to] name]];
@@ -227,13 +255,13 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
                 NSDate* realTimeArrivalTime = [[self startTime]
                                                dateByAddingTimeInterval:[timeDiffInMins floatValue]*(-60.0)];
                 if(realTimeArrivalTime){
-                    [titleText appendFormat:@"%@ %@ to %@",
+                    [titleText appendFormat:@"%@ %@ %@",
                      superShortTimeStringForDate(realTimeArrivalTime),
                      walkOrBikeString,
                      [[self to] name]];
                 }
                 else{
-                    [titleText appendFormat:@"%@ %@ to %@",
+                    [titleText appendFormat:@"%@ %@ %@",
                      superShortTimeStringForDate([self startTime]),
                      walkOrBikeString,
                      [[self to] name]];
@@ -242,7 +270,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
                 NIMLOG_EVENT1(@"Updated time: %@", titleText);
             }
             else {
-                [titleText appendFormat:@"%@ %@ to %@",
+                [titleText appendFormat:@"%@ %@ %@",
                  superShortTimeStringForDate([[self itinerary] startTime]),
                  walkOrBikeString,
                  [[self to] name]];
@@ -288,7 +316,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
             }
         }
         else {
-            [titleText appendFormat:@"%@ to %@", walkOrBikeString, [[self to] name]];
+            [titleText appendFormat:@"%@ %@", walkOrBikeString, [[self to] name]];
         }
     }
     else {  
