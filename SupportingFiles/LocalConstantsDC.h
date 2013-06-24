@@ -22,17 +22,19 @@
 #define WMATA_APP_TYPE      @"5"
 
 // Default boundaries for geolocation and routing
-#define MIN_LAT           @"36.791000000000004"
-#define MIN_LONG          @"-123.4631719"
-#define MAX_LAT           @"38.7189988"
-#define MAX_LONG          @"-121.025001"
-
+#define MIN_LAT @"38.598692"
+#define MIN_LONG @"-77.449457"
+#define MAX_LAT @"39.191489"
+#define MAX_LONG @"-76.668939"
 
 // Flurry API Key
 #define FLURRY_API_KEY @"DSTDN6ST2YDWF4V9RWFZ"
 
 // Facebook App ID (for tracking referrals)
-#define FB_APP_ID @""  // Nimbler DC FB App ID
+#define FB_APP_ID @"" // Nimbler DC FB App ID
+
+// Review reminder URL
+#define NIMBLER_REVIEW_URL @""
 
 //
 // Settings Page Rows

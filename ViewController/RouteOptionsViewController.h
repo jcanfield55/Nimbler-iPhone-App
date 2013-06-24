@@ -1,9 +1,9 @@
 //
-//  RouteOptionsViewController.h
-//  Nimbler World, Inc.
+// RouteOptionsViewController.h
+// Nimbler World, Inc.
 //
-//  Created by John Canfield on 1/20/12.
-//  Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
+// Created by John Canfield on 1/20/12.
+// Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -16,8 +16,8 @@
 NewPlanAvailableDelegate>
 
 @property(nonatomic, strong) IBOutlet UITableView* mainTable; // Table listing route options
-@property(nonatomic, strong) IBOutlet UILabel* noItineraryWarning;  
-@property(nonatomic, strong, readonly) Plan *plan;  // use newPlanAvailable method to update the plan
+@property(nonatomic, strong) IBOutlet UILabel* noItineraryWarning;
+@property(nonatomic, strong, readonly) Plan *plan; // use newPlanAvailable method to update the plan
 @property(nonatomic, strong) UIButton *btnGoToNimbler;
 @property( readwrite) BOOL isReloadRealData;
 @property (nonatomic, strong) PlanRequestParameters *planRequestParameters;

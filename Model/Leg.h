@@ -1,9 +1,9 @@
 //
-//  Leg.h
-//  Nimbler World, Inc.
+// Leg.h
+// Nimbler World, Inc.
 //
-//  Created by John Canfield on 2/24/12.
-//  Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
+// Created by John Canfield on 2/24/12.
+// Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -26,7 +26,7 @@ typedef enum {
 
 @class Itinerary, PlanPlace, Step,IntermediateStops;
 
-@interface Leg : NSManagedObject 
+@interface Leg : NSManagedObject
 
 // See this URL for documentation on the elements: http://www.opentripplanner.org/apidoc/data_ns0.html#leg
 // This URL has example data http://groups.google.com/group/opentripplanner-dev/msg/4535900a5d18e61f?
@@ -56,7 +56,6 @@ typedef enum {
 @property (nonatomic, strong) NSArray *sortedSteps;
 @property (nonatomic, strong) PolylineEncodedString *polylineEncodedString;
 @property (nonatomic) BOOL isRealTimeLeg;
-@property (nonatomic, retain) NSNumber *rentedBike;
 
 @property (nonatomic, retain) NSString *arrivalTime;
 @property (nonatomic, retain) NSString *arrivalFlag;
@@ -69,9 +68,10 @@ typedef enum {
 @property (nonatomic, strong) NSString *realTripId;
 @property (nonatomic, retain) NSSet *intermediateStops;
 @property (nonatomic, strong) NSString *vehicleId;
+@property (nonatomic, retain) NSNumber * rentedBike;
 
 - (NSArray *)sortedSteps;
-- (NSString *)summaryTextWithTime:(BOOL)includeTime;  // Returns a single-line summary of the leg useful for RouteOptionsView details
+- (NSString *)summaryTextWithTime:(BOOL)includeTime; // Returns a single-line summary of the leg useful for RouteOptionsView details
 - (NSString *)directionsTitleText:(LegPositionEnum)legPosition;
 - (NSString *)directionsDetailText:(LegPositionEnum)legPosition;
 - (NSString *)ncDescription;

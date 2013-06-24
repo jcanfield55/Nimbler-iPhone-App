@@ -1,9 +1,9 @@
 //
-//  Plan.m
-//  Nimbler World, Inc.
+// Plan.m
+// Nimbler World, Inc.
 //
-//  Created by John Canfield on 1/20/12.
-//  Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
+// Created by John Canfield on 1/20/12.
+// Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
 //
 
 #import "Plan.h"
@@ -51,20 +51,20 @@
     // Create empty ObjectMapping to fill and return
     RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[Plan class]];
     RKManagedObjectMapping* planPlaceMapping = [PlanPlace objectMappingForApi:apiType];
-    RKManagedObjectMapping* itineraryMapping = [ItineraryFromOTP  objectMappingForApi:apiType];
+    RKManagedObjectMapping* itineraryMapping = [ItineraryFromOTP objectMappingForApi:apiType];
     mapping.setDefaultValueForMissingAttributes = TRUE;
     planPlaceMapping.setDefaultValueForMissingAttributes = TRUE;
     itineraryMapping.setDefaultValueForMissingAttributes = TRUE;
     
     // Make the mappings
     if (apiType==OTP_PLANNER) {
-        // TODO  Do all the mapping
+        // TODO Do all the mapping
         [mapping mapKeyPath:@"date" toAttribute:@"date"];
         [mapping mapKeyPath:@"id" toAttribute:@"planId"];
         [mapping mapKeyPath:@"from" toRelationship:@"fromPlanPlace" withMapping:planPlaceMapping];
         [mapping mapKeyPath:@"to" toRelationship:@"toPlanPlace" withMapping:planPlaceMapping];
         [mapping mapKeyPath:@"itineraries" toRelationship:@"itineraries" withMapping:itineraryMapping];
-
+        
     }
     else {
         // TODO Unknown planner type, throw an exception
@@ -75,7 +75,7 @@
 - (void)awakeFromInsert {
     [super awakeFromInsert];
     
-    [self setLastUpdatedFromServer:[NSDate date]];    // Set the date
+    [self setLastUpdatedFromServer:[NSDate date]]; // Set the date
 }
 
 - (TransitCalendar *)transitCalendar {
@@ -88,7 +88,7 @@
 - (NSArray *)sortedItineraries
 {
     if (!sortedItineraries) {
-        [self sortItineraries];  // create the itinerary array
+        [self sortItineraries]; // create the itinerary array
     }
     return sortedItineraries;
 }
@@ -117,7 +117,7 @@
 
 // Returns an array of itineraries sorted by date that have the
 // StartTimeOnly field between fromTimeOnly to toTimeOnly
-// If no matches, then returns 0 element array.  If nil parameters or fetch error, returns nil
+// If no matches, then returns 0 element array. If nil parameters or fetch error, returns nil
 - (NSArray *)fetchItinerariesFromTimeOnly:(NSDate *)fromTimeOnly toTimeOnly:(NSDate *)toTimeOnly
 {
     if (!fromTimeOnly || !toTimeOnly) {
@@ -136,10 +136,10 @@
     NSError *error;
     NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
     if (!result) {
-        logError(@"Locations -> fetchItinerariesFromTimeOnly",  [NSString stringWithFormat:@"Core data fetch failed with error %@", error]);
+        logError(@"Locations -> fetchItinerariesFromTimeOnly", [NSString stringWithFormat:@"Core data fetch failed with error %@", error]);
         return nil;
     }
-    return result;  // Return the array of matches (could be empty)
+    return result; // Return the array of matches (could be empty)
 }
 
 // consolidateIntoSelfPlan
@@ -149,7 +149,7 @@
 - (void)consolidateIntoSelfPlan:(Plan *)plan0
 {
     NIMLOG_PERF1(@"consolidateIntoSelfPlans: Check self itineraries valid");
-    // Make sure all itineraries in self are still valid GTFS data.  Delete otherwise
+    // Make sure all itineraries in self are still valid GTFS data. Delete otherwise
     BOOL wereAnyDeleted = false;
     for (Itinerary* itin in [NSSet setWithSet:[self itineraries]]) {
         if (![itin isCurrentVsGtfsFilesIn:[self transitCalendar]] ||
@@ -190,13 +190,13 @@
     NSMutableSet* chunksConsolidated = [[NSMutableSet alloc] initWithCapacity:10];
     for (PlanRequestChunk* reqChunk0 in [plan0 requestChunks]) {
         for (PlanRequestChunk* selfRequestChunk in [self requestChunks]) {
-            if ((!reqChunk0.routeExcludeSettings && !selfRequestChunk.routeExcludeSettings) ||  // either both are nil 
+            if ((!reqChunk0.routeExcludeSettings && !selfRequestChunk.routeExcludeSettings) || // either both are nil
                 (!reqChunk0.routeExcludeSettings && [selfRequestChunk.routeExcludeSettings isDefaultSettings]) || // OR both have default settings
-                (reqChunk0.routeExcludeSettings &&  // or reqChunk0 is non-nil and they are equivalent
+                (reqChunk0.routeExcludeSettings && // or reqChunk0 is non-nil and they are equivalent
                  [[reqChunk0 routeExcludeSettings] isEquivalentTo:[selfRequestChunk routeExcludeSettings]]))
             {
-                if ([reqChunk0 gtfsItineraryPattern] == [selfRequestChunk gtfsItineraryPattern] &&   // the same gtfsItineraryPattern
-                    [reqChunk0 doAllServiceStringByAgencyMatchRequestChunk:selfRequestChunk] &&  // matching serviceStrings
+                if ([reqChunk0 gtfsItineraryPattern] == [selfRequestChunk gtfsItineraryPattern] && // the same gtfsItineraryPattern
+                    [reqChunk0 doAllServiceStringByAgencyMatchRequestChunk:selfRequestChunk] && // matching serviceStrings
                     [reqChunk0 doTimesOverlapRequestChunk:selfRequestChunk bufferInSeconds:REQUEST_CHUNK_OVERLAP_BUFFER_IN_SECONDS]) { //overlapping times
                     // Consolidate reqChunks
                     [chunksConsolidated addObject:reqChunk0];
@@ -211,7 +211,7 @@
     for (PlanRequestChunk* reqChunkToTransfer in plan0RequestChunks) {
         if (![chunksConsolidated containsObject:reqChunkToTransfer]) {
             // Only transfer over PlanRequestChunks that have not already been consolidated
-            [reqChunkToTransfer setPlan:self];  
+            [reqChunkToTransfer setPlan:self];
         }
     }
     
@@ -220,7 +220,7 @@
     NSSet* itineraries0 = [NSSet setWithSet:[plan0 itineraries]];
     for (Itinerary* itin0 in itineraries0) {
         if ([self addItineraryIfNew:itin0] == ITIN0_OBSOLETE) { // add the itinerary no matter what
-            [plan0 deleteItinerary:itin0];   // if itin0 obsolete, also make sure we delete it
+            [plan0 deleteItinerary:itin0]; // if itin0 obsolete, also make sure we delete it
         } else {
             [self addToUniqueItinerariesIfNeeded:itin0];
         }
@@ -258,13 +258,13 @@
             continue;
         }
         if (itincompare == ITINERARIES_IDENTICAL) {
-            return itincompare;  // two are identical objects, so no duplication
+            return itincompare; // two are identical objects, so no duplication
         }
         if (itincompare == ITIN_SELF_OBSOLETE){
             // Make sure all of itinSelf requestChunks over to itin0
             for (PlanRequestChunk* reqChunk in [itinSelf planRequestChunks]) {
                 [reqChunk addItinerariesObject:itin0];
-                [reqChunk setSortedItineraries:nil];  // Flag for resorting
+                [reqChunk setSortedItineraries:nil]; // Flag for resorting
             }
             // Replace itinSelf with itin0
             [self deleteItinerary:itinSelf];
@@ -274,7 +274,7 @@
             // Make sure all of itin0's requestChunks over to itinSelf
             for (PlanRequestChunk* reqChunk in [itin0 planRequestChunks]) {
                 [reqChunk addItinerariesObject:itinSelf];
-                [reqChunk setSortedItineraries:nil];  // Flag for resorting
+                [reqChunk setSortedItineraries:nil]; // Flag for resorting
             }
             return itincompare;
         } else if (itincompare == ITINERARIES_SAME) {
@@ -300,7 +300,7 @@
     if(itin0 != detailViewitinerary){
         [self removeItinerariesObject:itin0];
         [[self managedObjectContext] deleteObject:itin0];
-        [self setSortedItineraries:nil];  // Resort itineraries
+        [self setSortedItineraries:nil]; // Resort itineraries
     }
 }
 
@@ -326,7 +326,7 @@
         [requestChunk setType:[NSNumber numberWithInt:OTP_ITINERARY]];
         if (requestChunk.managedObjectContext == routeExcludeSettings.managedObjectContext) {
             [requestChunk setRouteExcludeSettings:routeExcludeSettings];
-        } else {  // DE311 error checking
+        } else { // DE311 error checking
             logError(@"Plan->initializeNewPlanFromOTPWithRequestDate",
                      [NSString stringWithFormat:@"Managed Object Context not equal, isMainThread = %d",
                       [NSThread isMainThread]]);
@@ -343,6 +343,7 @@
                 // Only initialize variables if we did not already delete the itinerary
                 [requestChunk addItinerariesObject:itin];
                 [itin initializeTimeOnlyVariablesWithRequestDate:requestDate]; // Set startTimeOnly & endTimeOnly
+                [itin initializeLegStartTime];
             }
         }
         if ([[requestChunk itineraries] count] == 0) { // if no itineraries, get rid of request chunk
@@ -395,7 +396,7 @@
 }
 
 
-// returnSortedItinerariesWithMatchesForDate  -- part of Plan Caching (US78) implementation
+// returnSortedItinerariesWithMatchesForDate -- part of Plan Caching (US78) implementation
 // Helper routine called by prepareSortedItinerariesWithMatchesForDate
 // Looks for matching itineraries for the requestDate and departOrArrive
 // routeExcludeSettings specifies which routes / modes the user specifically wants to include/exclude from results
@@ -404,7 +405,7 @@
 // than planMaxTimeForResultsToShow seconds.
 // It will include itineraries starting up to planBufferSecondsBeforeItinerary before requestDate
 // If there are no matching itineraries and routeExcludeSettings is nil, returns nil
-// Otherwise no matching itineraries case will return a 0 count array.  
+// Otherwise no matching itineraries case will return a 0 count array.
 - (NSArray *)returnSortedItinerariesWithMatchesForDate:(NSDate *)requestDate
                                         departOrArrive:(DepartOrArrive)depOrArrive
                                   routeExcludeSettings:(RouteExcludeSettings *)routeExcludeSettings
@@ -423,10 +424,10 @@
         // Go through unique itineraries and get all GTFS itineraries based on them, generating new ones if needed
         BOOL areThereExcludedItineraries = false;
         NSMutableSet* matchingItineraries = [[NSMutableSet alloc] initWithCapacity:[[self itineraries] count]];
-        for (Itinerary* uniqueItin in [self uniqueItineraries]) {  // for all uniqueItineraries
-            if (!routeExcludeSettings || [routeExcludeSettings isItineraryIncluded:uniqueItin]) {  // if not an excluded itinerary
-
-                if (generateGtfsItinaries) {                   // Generate additional gtfs itineraries and reqChunks if needed
+        for (Itinerary* uniqueItin in [self uniqueItineraries]) { // for all uniqueItineraries
+            if (!routeExcludeSettings || [routeExcludeSettings isItineraryIncluded:uniqueItin]) { // if not an excluded itinerary
+                
+                if (generateGtfsItinaries) { // Generate additional gtfs itineraries and reqChunks if needed
                     [self generateMoreGtfsItinsIfNeededFor:uniqueItin
                                                requestDate:requestDate
                                      intervalBeforeRequest:planBufferSecondsBeforeItinerary
@@ -435,25 +436,25 @@
                 }
                 for (PlanRequestChunk *reqChunk in [uniqueItin requestChunksCreatedByThisPattern]) { // for all reqChunk patterns it generated
                     if ([reqChunk doAllItineraryServiceDaysMatchDate:requestDate] &&
-                         [reqChunk doesCoverTheSameTimeAs:requestDate departOrArrive:depOrArrive]) { // if reqChunk has relevant service coverage
+                        [reqChunk doesCoverTheSameTimeAs:requestDate departOrArrive:depOrArrive]) { // if reqChunk has relevant service coverage
                         for (Itinerary* itin in [reqChunk sortedItineraries]) { // for all itins in reqChunk
                             if ([itin isCurrentVsGtfsFilesIn:[self transitCalendar]] &&
-                                ![itin hideItinerary] && 
+                                ![itin hideItinerary] &&
                                 [itin isWithinRequestTime:requestDate
                                     intervalBeforeRequest:planBufferSecondsBeforeItinerary
                                      intervalAfterRequest:planMaxTimeForResultsToShow
                                            departOrArrive:depOrArrive]) {
-                                    if (!routeExcludeSettings || [routeExcludeSettings isItineraryIncluded:itin]) {  // if not an excluded itinerary
+                                    if (!routeExcludeSettings || [routeExcludeSettings isItineraryIncluded:itin]) { // if not an excluded itinerary
                                         [matchingItineraries addObject:itin];
                                     } else {
                                         areThereExcludedItineraries = true;
                                     }
                                 }
-                        }  // end itins in reqChunk loop
+                        } // end itins in reqChunk loop
                     }
-                }  // end reqChunk loop
+                } // end reqChunk loop
             }
-        }  // end of uniqueItineraries loop
+        } // end of uniqueItineraries loop
         
         NIMLOG_PERF2A(@"End first loop, start itinerary loop. itineraries.count=%d",self.itineraries.count);
         
@@ -463,12 +464,12 @@
             if ([itin isOTPItinerary] &&
                 ![itin hideItinerary] &&
                 [itin isCurrentVsGtfsFilesIn:[self transitCalendar]] &&
-                [itin doAllServiceDaysMatchDate:requestDate] && 
+                [itin doAllServiceDaysMatchDate:requestDate] &&
                 [itin isWithinRequestTime:requestDate
                     intervalBeforeRequest:planBufferSecondsBeforeItinerary
                      intervalAfterRequest:planMaxTimeForResultsToShow
                            departOrArrive:depOrArrive]) {
-                    if (!routeExcludeSettings || [routeExcludeSettings isItineraryIncluded:itin]) {  // if not an excluded itinerary
+                    if (!routeExcludeSettings || [routeExcludeSettings isItineraryIncluded:itin]) { // if not an excluded itinerary
                         [matchingItineraries addObject:itin];
                     } else {
                         areThereExcludedItineraries = true;
@@ -476,7 +477,7 @@
                 }
         }
         if ([matchingItineraries count] == 0 && !areThereExcludedItineraries) {
-            return nil;  // Indicates no matching itineraries but not due to routeExcludeSettings
+            return nil; // Indicates no matching itineraries but not due to routeExcludeSettings
         }
         
         // Check for suboptimal itineraries or equivalent itineraries
@@ -486,14 +487,14 @@
             for (int j=i+1; j<matchingItinerariesArray.count; j++) {
                 Itinerary* itin1 = [matchingItinerariesArray objectAtIndex:i];
                 Itinerary* itin2 = [matchingItinerariesArray objectAtIndex:j];
-                 if ([itin1 isEquivalentRoutesStopsAndScheduledTimingAs:itin2]) {
+                if ([itin1 isEquivalentRoutesStopsAndScheduledTimingAs:itin2]) {
                     if (itin1.isOTPItinerary && !itin2.isOTPItinerary) {
-                        [matchingItineraries removeObject:itin1];  // if equivalent GTFS & OTP itineraries, only show the GTFS one
+                        [matchingItineraries removeObject:itin1]; // if equivalent GTFS & OTP itineraries, only show the GTFS one
                         break;
                     } else if (!itin1.isOTPItinerary && itin2.isOTPItinerary) {
                         [matchingItineraries removeObject:itin2]; // if equivalent GTFS & OTP itineraries, only show the GTFS one
                     }
-                    else { 
+                    else {
                         [matchingItineraries removeObject:itin1]; // Otherwise remove itin1
                         break;
                     }
@@ -501,14 +502,14 @@
                 // if not equivalent, look for sub-optimal itineries
                 else if (removeNonOptimalItins) {
                     if ([[itin1 startTimeOnly] compare:[itin2 startTimeOnly]] != NSOrderedDescending &&
-                             [[itin1 endTimeOnly] compare:[itin2 endTimeOnly]] != NSOrderedAscending) {
-                        // itin1 starts earlier or equal and ends later or equal.  Longer duration so remove itin1
+                        [[itin1 endTimeOnly] compare:[itin2 endTimeOnly]] != NSOrderedAscending) {
+                        // itin1 starts earlier or equal and ends later or equal. Longer duration so remove itin1
                         [matchingItineraries removeObject:itin1];
                         break;
                     }
                     else if ([[itin2 startTimeOnly] compare:[itin1 startTimeOnly]] != NSOrderedDescending &&
                              [[itin2 endTimeOnly] compare:[itin1 endTimeOnly]] != NSOrderedAscending) {
-                        // itin2 starts earlier or equal and ends later or equal.  Longer duration so remove itin2
+                        // itin2 starts earlier or equal and ends later or equal. Longer duration so remove itin2
                         [matchingItineraries removeObject:itin2];
                     }
                 }
@@ -517,8 +518,8 @@
         
         // Sort itineraries (in reverse order if arrive-by itinerary (DE191 fix)
         NIMLOG_PERF2A(@"Sort and remove itineraries beyond max");
-        NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:(depOrArrive == DEPART)];
-
+        NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOfLeg" ascending:(depOrArrive == DEPART)];
+        
         NSArray* returnedItineraries = [matchingItineraries sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]];
         
         // Remove itineraries from returnedItineraries beyond planMaxItinerariesToShow
@@ -540,9 +541,9 @@
 
 
 // Given a particular request timing and unique itinerary, determine whether more GTFS itineraries need to be
-// generated.  If so, generate them.
+// generated. If so, generate them.
 // Consolidate requestChunks where possible, or create new ones if needed
-// Only attempt to generate gtfs itineraries if the gtfs data for that route is loaded.  
+// Only attempt to generate gtfs itineraries if the gtfs data for that route is loaded.
 -(void)generateMoreGtfsItinsIfNeededFor:(Itinerary *)uniqueItin
                             requestDate:(NSDate *)requestDate
                   intervalBeforeRequest:(NSTimeInterval)intervalBeforeRequest
@@ -565,13 +566,13 @@
             }
         }
         if (needToRequestMoreData) {
-            //[gtfsParser generateGtfsTripsRequestStringUsingPlan:self];  // Put in another request for GTFS data
+            //[gtfsParser generateGtfsTripsRequestStringUsingPlan:self]; // Put in another request for GTFS data
             if (self.gtfsParsingRequests.count > 0) {
                 [[nc_AppDelegate sharedInstance].planStore.plansWaitingForGtfsData addObject:self]; // Put self onto list as plans waiting for gtfsRequests
             }
         }
         if (!allDataAvailable) {
-            return;   // Don't try to generate GTFS itineraries if we do not have all the needed data
+            return; // Don't try to generate GTFS itineraries if we do not have all the needed data
         }
         
         // Now analyze the requestChunks
@@ -597,15 +598,15 @@
         
         for (PlanRequestChunk *reqChunk in reqChunkSet) { // for all reqChunk patterns uniqueItin generated
             if ([reqChunk doAllItineraryServiceDaysMatchDate:requestDate]) { // if reqChunk has relevant service coverage
-
+                
                 PlanRequestChunk* newReqChunk = nil;
                 NSDate* chunkEarliest = [reqChunk earliestTimeFor:depOrArrive];
                 NSDate* chunkLatest = [reqChunk latestTimeFor:depOrArrive];
                 didRequestNewItineraries = false;
                 
                 if ([requestRangeFrom compare:chunkEarliest] != NSOrderedAscending &&
-                    [requestRangeTo compare:chunkLatest] != NSOrderedDescending) {   // reqChunk already covers the requestRange
-                    return;  // No need to generate more itineraries, return
+                    [requestRangeTo compare:chunkLatest] != NSOrderedDescending) { // reqChunk already covers the requestRange
+                    return; // No need to generate more itineraries, return
                 }
                 // Calculate the early request if necessary
                 if ([requestRangeFrom compare:chunkEarliest] == NSOrderedAscending &&
@@ -636,10 +637,10 @@
                     }
                 }
                 if (didRequestNewItineraries) {
-                    break;  // Only need one overlapping request chunk to expand
+                    break; // Only need one overlapping request chunk to expand
                 }
             }
-        }  // end of reqChunk loop
+        } // end of reqChunk loop
         
         if (!didRequestNewItineraries) { // if no existing reqChunks are overlapping, create a new oe
             [gtfsParser generateItineraryFromItineraryPattern:uniqueItin
@@ -725,7 +726,7 @@
             if (loopsExecuted == 25) {
                 logError(@"PlanStore -> nextOtpServerDateToCallFor",
                          [NSString stringWithFormat:
-                          @"loopsExecuted unexpectedly reached 25.  self.requestChunks.count = %d", self.requestChunks.count]);
+                          @"loopsExecuted unexpectedly reached 25. self.requestChunks.count = %d", self.requestChunks.count]);
             }
         } while (newConnectingReqDate && loopsExecuted < 25);
         
@@ -756,31 +757,31 @@
                                planMaxTimeForResultsToShow:planMaxTimeForResultsToShow];
 }
 
-// Detects whether date returned by REST API is >1,000 years in the future.  If so, the value is likely being returned in milliseconds from 1970, rather than seconds from 1970, in which we correct the date by dividing by the timeSince1970 value by 1,000
+// Detects whether date returned by REST API is >1,000 years in the future. If so, the value is likely being returned in milliseconds from 1970, rather than seconds from 1970, in which we correct the date by dividing by the timeSince1970 value by 1,000
 // Comment out for now, since it is not being used
 /*
-- (BOOL)validateDate:(__autoreleasing id *)ioValue error:(NSError *__autoreleasing *)outError
-{
-    if ([*ioValue isKindOfClass:[NSDate class]]) {
-        NSDate* ioDate = *ioValue;
-        NSDate* farFutureDate = [NSDate dateWithTimeIntervalSinceNow:(60.0*60*24*365*1000)]; // 1,000 years in future
-        if ([ioDate laterDate:farFutureDate]==ioDate) {   // if date is >1,000 years in future, divide time since 1970 by 1000
-            NSDate* newDate = [NSDate dateWithTimeIntervalSince1970:([ioDate timeIntervalSince1970] / 1000.0)];
-            NSLog(@"[self date] = %@", [self date]);
-            NSLog(@"New Date = %@", newDate);
-            *ioValue = newDate;
-            NSLog(@"New ioValue = %@", *ioValue);
-            NSLog(@"[self date] = %@", [self date]);
-        }
-        return YES;
-    }
-    return NO;
-} */
+ - (BOOL)validateDate:(__autoreleasing id *)ioValue error:(NSError *__autoreleasing *)outError
+ {
+ if ([*ioValue isKindOfClass:[NSDate class]]) {
+ NSDate* ioDate = *ioValue;
+ NSDate* farFutureDate = [NSDate dateWithTimeIntervalSinceNow:(60.0*60*24*365*1000)]; // 1,000 years in future
+ if ([ioDate laterDate:farFutureDate]==ioDate) { // if date is >1,000 years in future, divide time since 1970 by 1000
+ NSDate* newDate = [NSDate dateWithTimeIntervalSince1970:([ioDate timeIntervalSince1970] / 1000.0)];
+ NSLog(@"[self date] = %@", [self date]);
+ NSLog(@"New Date = %@", newDate);
+ *ioValue = newDate;
+ NSLog(@"New ioValue = %@", *ioValue);
+ NSLog(@"[self date] = %@", [self date]);
+ }
+ return YES;
+ }
+ return NO;
+ } */
 
 - (NSString *)ncDescription
 {
     NSMutableString* desc = [NSMutableString stringWithFormat:
-                      @"{Plan Object: date: %@;  from: %@;  to: %@; ", [self date], [[self fromPlanPlace] ncDescription], [[self toPlanPlace] ncDescription]];
+                             @"{Plan Object: date: %@; from: %@; to: %@; ", [self date], [[self fromPlanPlace] ncDescription], [[self toPlanPlace] ncDescription]];
     for (Itinerary *itin in [self itineraries]) {
         [desc appendString:[NSString stringWithFormat:@"\n %@", [itin ncDescription]]];
     }
@@ -818,7 +819,7 @@
                         } else if (![itin1 isUniqueItinerary] && [[itin1 requestChunksCreatedByThisPattern] count]== 0) {
                             [arrItineraries removeObjectAtIndex:i];
                             break;
-                        } else {  // both itineraries are unique or have generated reqChunks
+                        } else { // both itineraries are unique or have generated reqChunks
                             logError(@"Plan -> computeUniqueItineraries", @"two unique itineraries that are equivalent");
                             // This should be a rare case... keep both for now
                         }
@@ -835,7 +836,7 @@
 - (BOOL)addToUniqueItinerariesIfNeeded:itin0
 {
     if (![itin0 isOTPItinerary]) {
-        return false;   // Only OTP itineraries can be unique
+        return false; // Only OTP itineraries can be unique
     }
     NSArray* uniqueItinArray = [self uniqueItineraries];
     BOOL isItin0Unique = true;
@@ -845,10 +846,10 @@
         }
     }
     if (isItin0Unique) {
-        [itin0 setUniqueItineraryForPlan:self];  // add to unique itineraries
+        [itin0 setUniqueItineraryForPlan:self]; // add to unique itineraries
         [self updateExcludeSettingsArray]; // update routeExcludeSettings with new unique itinerary
     } else {
-        [itin0 setUniqueItineraryForPlan:nil];   // declare it not to be a unique itinerary
+        [itin0 setUniqueItineraryForPlan:nil]; // declare it not to be a unique itinerary
     }
     return isItin0Unique;
 }
@@ -925,6 +926,7 @@
             iti.startTime = [iti startTimeOfFirstLeg];
             iti.endTime = [iti endTimeOfLastLeg];
             [iti initializeTimeOnlyVariablesWithRequestDate:tripDate];
+            [iti initializeLegStartTime];
         }
     }
 }

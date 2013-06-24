@@ -1,9 +1,9 @@
 //
-//  Leg.m
-//  Nimbler World, Inc.
+// Leg.m
+// Nimbler World, Inc.
 //
-//  Created by John Canfield on 2/24/12.
-//  Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
+// Created by John Canfield on 2/24/12.
+// Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
 //
 
 #import "Leg.h"
@@ -13,7 +13,7 @@
 #import "KeyObjectStore.h"
 #import "IntermediateStops.h"
 
-@interface Leg() 
+@interface Leg()
 // Private instance methods
 +(NSDictionary *)agencyDisplayNameByAgencyId;
 #define AGENCY_DISPLAY_NAME_BY_AGENCYID_KEY @"agencyDisplayNameByAgencyIdKey"
@@ -79,7 +79,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 - (NSArray *)sortedSteps
 {
     if (!sortedSteps) {
-        [self sortSteps];  // create the itinerary array
+        [self sortSteps]; // create the itinerary array
     }
     return sortedSteps;
 }
@@ -89,7 +89,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     if (!__agencyDisplayNameByAgencyId) { // if not already set, check in database
         KeyObjectStore* store = [KeyObjectStore keyObjectStore];
         __agencyDisplayNameByAgencyId = [store objectForKey:AGENCY_DISPLAY_NAME_BY_AGENCYID_KEY];
-        if (!__agencyDisplayNameByAgencyId) {  // if not stored in the database, create it
+        if (!__agencyDisplayNameByAgencyId) { // if not stored in the database, create it
             __agencyDisplayNameByAgencyId = [Agencies agencies].agencyShortNameByAgencyIdDictionary;
             [store setObject:__agencyDisplayNameByAgencyId forKey:AGENCY_DISPLAY_NAME_BY_AGENCYID_KEY];
         }
@@ -111,79 +111,79 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 - (NSString *)summaryTextWithTime:(BOOL)includeTime
 {
     @try {
-    NSMutableString* summary = [NSMutableString stringWithString:@""];
-    if (includeTime) {
-        //Part Of DE-229 Implementation
-        if([self.arrivalFlag intValue] == DELAYED) {
-            NSDate* realTimeArrivalTime = [[self startTime]
-                                           dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
-            if(realTimeArrivalTime){
-              [summary appendFormat:@"%@ ", superShortTimeStringForDate(realTimeArrivalTime)];  
-            }
-            else{
-                [summary appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
-            }
-        }
-        else if([self.arrivalFlag intValue] == EARLY){
-            NSDate* realTimeArrivalTime = [[self startTime]
-                                           dateByAddingTimeInterval:[timeDiffInMins floatValue]*(-60.0)];
-            if(realTimeArrivalTime){
-                [summary appendFormat:@"%@ ", superShortTimeStringForDate(realTimeArrivalTime)];
-            }
-            else{
-                [summary appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
-            }
-        }
-        else{
-            [summary appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
-        }
-        
-    }
-    if (self.isBike) {
-        return @"Bike";
-    }
-    NSString* shortAgencyName = [[Leg agencyDisplayNameByAgencyId] objectForKey:[self agencyId]];
-    if (!shortAgencyName) {
-        shortAgencyName = [self mode];  // Use generic mode instead if name not available
-    }
-    [summary appendFormat:@"%@", shortAgencyName];
-    if ([[self mode] isEqualToString:@"BUS"]) {
-        [summary appendString:@" Bus"];
-    }
-    else if ([[self mode] isEqualToString:OTP_TRAM_MODE]) {
-        [summary appendString:@" Tram"];
-    }
-    if (![[self agencyId] isEqualToString:@"BART"] && ![[self agencyId] isEqualToString:CALTRAIN_AGENCY_ID]) { // don't add BART route name because too long
-        [summary appendFormat:@" %@", [self route]];
-    }
-    
-    // US-184 Implementation
-    if ([[self agencyId] isEqualToString:CALTRAIN_AGENCY_ID]) {
-        NSRange range;
-        NSString *strTrainNumber;
-        NSString *strHeadSign = [self headSign];
-        NSArray *headSignComponent = [strHeadSign componentsSeparatedByString:CALTRAIN_TRAIN];
-        if([headSignComponent count] > 1){
-            strTrainNumber = [headSignComponent objectAtIndex:1];
-            if(!strTrainNumber){
-                [summary appendFormat:@" %@", [self route]];
-            }
-            else{
-                if([strTrainNumber rangeOfString:@")" options:NSCaseInsensitiveSearch].location != NSNotFound){
-                    range = [strTrainNumber rangeOfString:@")"];
-                    strTrainNumber = [strTrainNumber substringToIndex:range.location];
-                    NSString * strTemp = [strTrainNumber stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-                    NSString *strFullTrainNumber = [NSString stringWithFormat:@"#%@",strTemp];
-                    [summary appendFormat:@" %@", strFullTrainNumber];
-                    
+        NSMutableString* summary = [NSMutableString stringWithString:@""];
+        if (includeTime) {
+            //Part Of DE-229 Implementation
+            if([self.arrivalFlag intValue] == DELAYED) {
+                NSDate* realTimeArrivalTime = [[self startTime]
+                                               dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
+                if(realTimeArrivalTime){
+                    [summary appendFormat:@"%@ ", superShortTimeStringForDate(realTimeArrivalTime)];
+                }
+                else{
+                    [summary appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
                 }
             }
+            else if([self.arrivalFlag intValue] == EARLY){
+                NSDate* realTimeArrivalTime = [[self startTime]
+                                               dateByAddingTimeInterval:[timeDiffInMins floatValue]*(-60.0)];
+                if(realTimeArrivalTime){
+                    [summary appendFormat:@"%@ ", superShortTimeStringForDate(realTimeArrivalTime)];
+                }
+                else{
+                    [summary appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
+                }
+            }
+            else{
+                [summary appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
+            }
+            
         }
-        else{
+        if (self.isBike) {
+            return @"Bike";
+        }
+        NSString* shortAgencyName = [[Leg agencyDisplayNameByAgencyId] objectForKey:[self agencyId]];
+        if (!shortAgencyName) {
+            shortAgencyName = [self mode]; // Use generic mode instead if name not available
+        }
+        [summary appendFormat:@"%@", shortAgencyName];
+        if ([[self mode] isEqualToString:@"BUS"]) {
+            [summary appendString:@" Bus"];
+        }
+        else if ([[self mode] isEqualToString:OTP_TRAM_MODE]) {
+            [summary appendString:@" Tram"];
+        }
+        if (![[self agencyId] isEqualToString:@"BART"] && ![[self agencyId] isEqualToString:CALTRAIN_AGENCY_ID]) { // don't add BART route name because too long
             [summary appendFormat:@" %@", [self route]];
         }
-    }
-    return summary;
+        
+        // US-184 Implementation
+        if ([[self agencyId] isEqualToString:CALTRAIN_AGENCY_ID]) {
+            NSRange range;
+            NSString *strTrainNumber;
+            NSString *strHeadSign = [self headSign];
+            NSArray *headSignComponent = [strHeadSign componentsSeparatedByString:CALTRAIN_TRAIN];
+            if([headSignComponent count] > 1){
+                strTrainNumber = [headSignComponent objectAtIndex:1];
+                if(!strTrainNumber){
+                    [summary appendFormat:@" %@", [self route]];
+                }
+                else{
+                    if([strTrainNumber rangeOfString:@")" options:NSCaseInsensitiveSearch].location != NSNotFound){
+                        range = [strTrainNumber rangeOfString:@")"];
+                        strTrainNumber = [strTrainNumber substringToIndex:range.location];
+                        NSString * strTemp = [strTrainNumber stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                        NSString *strFullTrainNumber = [NSString stringWithFormat:@"#%@",strTemp];
+                        [summary appendFormat:@" %@", strFullTrainNumber];
+                        
+                    }
+                }
+            }
+            else{
+                [summary appendFormat:@" %@", [self route]];
+            }
+        }
+        return summary;
     }
     @catch (NSException *exception) {
         logException(@"Leg->summaryTextWithTime:", @"", exception);
@@ -199,19 +199,18 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         NSArray *arrayLegs = [self.itinerary sortedLegs];
         int index = [arrayLegs indexOfObject:self];
         Leg *previosLeg = nil;
-        Leg *nextLeg = nil; 
+        Leg *nextLeg = nil;
         if(index > 0){
-           previosLeg = [arrayLegs objectAtIndex:index-1];
+            previosLeg = [arrayLegs objectAtIndex:index-1];
         }
         if([arrayLegs count] > index + 1){
             nextLeg = [arrayLegs objectAtIndex:index+1];
         }
-        
-    NSMutableString *titleText=[NSMutableString stringWithString:@""];
+        NSMutableString *titleText=[NSMutableString stringWithString:@""];
         NSString* walkOrBikeString = nil;
         if (self.isWalk) {
             if(nextLeg.isBike && nextLeg.rentedBike){
-               walkOrBikeString = @"Walk to Capital Bikeshare at";
+                walkOrBikeString = @"Walk to Capital Bikeshare at";
             }
             else{
                 walkOrBikeString = @"Walk to";
@@ -220,185 +219,185 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
             if(self.rentedBike && previosLeg && previosLeg.rentedBike){
                 walkOrBikeString = @"Bike to";
             }
-            else if(self.rentedBike  && previosLeg && !previosLeg.rentedBike){
-                 walkOrBikeString = [NSString stringWithFormat:@"Rent bike from %@ and Bike to",self.from.name];
+            else if(self.rentedBike && previosLeg && !previosLeg.rentedBike){
+                walkOrBikeString = [NSString stringWithFormat:@"Rent bike from Capital BikeShare and Bike to"];
             }
             else if(self.rentedBike && !previosLeg){
-                 walkOrBikeString = [NSString stringWithFormat:@"Rent bike from %@ and Bike to",self.from.name];
+                walkOrBikeString = [NSString stringWithFormat:@"Rent bike from Capital BikeShare and"];
             }
             else{
                 walkOrBikeString = @"Bike to";
             }
         }
-    if (walkOrBikeString) {
-        if (legPosition == FIRST_LEG) {    // US124 implementation
-            // Part Of DE-229 & US-169 Implementation
-            if([self.arrivalFlag intValue] == DELAYED) {
-                NSDate* realTimeArrivalTime = [[self startTime]
-                                               dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
-                if(realTimeArrivalTime){
-                    [titleText appendFormat:@"%@ %@ %@",
-                     superShortTimeStringForDate(realTimeArrivalTime),
-                     walkOrBikeString,
-                     [[self to] name]];
+        if (walkOrBikeString) {
+            if (legPosition == FIRST_LEG) { // US124 implementation
+                // Part Of DE-229 & US-169 Implementation
+                if([self.arrivalFlag intValue] == DELAYED) {
+                    NSDate* realTimeArrivalTime = [[self startTime]
+                                                   dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
+                    if(realTimeArrivalTime){
+                        [titleText appendFormat:@"%@ %@ %@",
+                         superShortTimeStringForDate(realTimeArrivalTime),
+                         walkOrBikeString,
+                         [[self to] name]];
+                    }
+                    else{
+                        [titleText appendFormat:@"%@ %@ %@",
+                         superShortTimeStringForDate([self startTime]),
+                         walkOrBikeString,
+                         [[self to] name]];
+                    }
+                    
+                    NIMLOG_EVENT1(@"Updated time: %@", titleText);
                 }
-                else{
+                else if ([self.arrivalFlag intValue] == EARLY || [self.arrivalFlag intValue] == EARLIER) {
+                    NSDate* realTimeArrivalTime = [[self startTime]
+                                                   dateByAddingTimeInterval:[timeDiffInMins floatValue]*(-60.0)];
+                    if(realTimeArrivalTime){
+                        [titleText appendFormat:@"%@ %@ %@",
+                         superShortTimeStringForDate(realTimeArrivalTime),
+                         walkOrBikeString,
+                         [[self to] name]];
+                    }
+                    else{
+                        [titleText appendFormat:@"%@ %@ %@",
+                         superShortTimeStringForDate([self startTime]),
+                         walkOrBikeString,
+                         [[self to] name]];
+                    }
+                    
+                    NIMLOG_EVENT1(@"Updated time: %@", titleText);
+                }
+                else {
                     [titleText appendFormat:@"%@ %@ %@",
-                     superShortTimeStringForDate([self startTime]),
+                     superShortTimeStringForDate([[self itinerary] startTime]),
                      walkOrBikeString,
                      [[self to] name]];
                 }
                 
-                NIMLOG_EVENT1(@"Updated time: %@", titleText);
             }
-            else if ([self.arrivalFlag intValue] == EARLY || [self.arrivalFlag intValue] == EARLIER) {
-                NSDate* realTimeArrivalTime = [[self startTime]
-                                               dateByAddingTimeInterval:[timeDiffInMins floatValue]*(-60.0)];
-                if(realTimeArrivalTime){
-                    [titleText appendFormat:@"%@ %@ %@",
-                     superShortTimeStringForDate(realTimeArrivalTime),
-                     walkOrBikeString,
-                     [[self to] name]];
+            else if (legPosition == LAST_LEG) { // US124 implementation
+                if([self.arrivalFlag intValue] == DELAYED) {
+                    NSDate* realTimeArrivalTime = [[self endTime]
+                                                   dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
+                    if(realTimeArrivalTime){
+                        [titleText appendFormat:@"%@ Arrive at %@",
+                         superShortTimeStringForDate(realTimeArrivalTime),
+                         [[self itinerary] toAddressString]];
+                    }
+                    else{
+                        [titleText appendFormat:@"%@ Arrive at %@",
+                         superShortTimeStringForDate([self endTime]),
+                         [[self itinerary] toAddressString]];
+                    }
+                    
+                    NIMLOG_EVENT1(@"Updated time: %@", titleText);
                 }
-                else{
-                    [titleText appendFormat:@"%@ %@ %@",
-                     superShortTimeStringForDate([self startTime]),
-                     walkOrBikeString,
-                     [[self to] name]];
+                else if ([self.arrivalFlag intValue] == EARLY || [self.arrivalFlag intValue] == EARLIER) {
+                    NSDate* realTimeArrivalTime = [[self endTime]
+                                                   dateByAddingTimeInterval:[timeDiffInMins floatValue]*(-60.0)];
+                    if(realTimeArrivalTime){
+                        [titleText appendFormat:@"%@ Arrive at %@",
+                         superShortTimeStringForDate(realTimeArrivalTime),
+                         [[self itinerary] toAddressString]];
+                    }
+                    else{
+                        [titleText appendFormat:@"%@ Arrive at %@",
+                         superShortTimeStringForDate([self endTime]),
+                         [[self itinerary] toAddressString]];
+                    }
+                    NIMLOG_EVENT1(@"Updated time: %@", titleText);
                 }
-                
-                NIMLOG_EVENT1(@"Updated time: %@", titleText);
+                else {
+                    [titleText appendFormat:@"%@ Arrive at %@",
+                     superShortTimeStringForDate([[self itinerary] endTime]),
+                     [[self itinerary] toAddressString]];
+                }
             }
             else {
-                [titleText appendFormat:@"%@ %@ %@",
-                 superShortTimeStringForDate([[self itinerary] startTime]),
-                 walkOrBikeString,
-                 [[self to] name]];
-            }
-            
-        }
-        else if (legPosition == LAST_LEG) {   // US124 implementation
-            if([self.arrivalFlag intValue] == DELAYED) {
-                NSDate* realTimeArrivalTime = [[self endTime]
-                                               dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
-                if(realTimeArrivalTime){
-                    [titleText appendFormat:@"%@ Arrive at %@",
-                     superShortTimeStringForDate(realTimeArrivalTime),
-                     [[self itinerary] toAddressString]];
-                }
-                else{
-                    [titleText appendFormat:@"%@ Arrive at %@",
-                     superShortTimeStringForDate([self endTime]),
-                     [[self itinerary] toAddressString]];
-                }
-                
-                NIMLOG_EVENT1(@"Updated time: %@", titleText);
-            }
-            else if ([self.arrivalFlag intValue] == EARLY || [self.arrivalFlag intValue] == EARLIER) {
-                NSDate* realTimeArrivalTime = [[self endTime]
-                                               dateByAddingTimeInterval:[timeDiffInMins floatValue]*(-60.0)];
-                if(realTimeArrivalTime){
-                    [titleText appendFormat:@"%@ Arrive at %@",
-                     superShortTimeStringForDate(realTimeArrivalTime),
-                     [[self itinerary] toAddressString]];
-                }
-                else{
-                    [titleText appendFormat:@"%@ Arrive at %@",
-                     superShortTimeStringForDate([self endTime]),
-                     [[self itinerary] toAddressString]];
-                }
-                NIMLOG_EVENT1(@"Updated time: %@", titleText);
-            }
-            else {
-                [titleText appendFormat:@"%@ Arrive at %@",
-                 superShortTimeStringForDate([[self itinerary] endTime]),
-                 [[self itinerary] toAddressString]];
+                [titleText appendFormat:@"%@ %@", walkOrBikeString, [[self to] name]];
             }
         }
         else {
-            [titleText appendFormat:@"%@ %@", walkOrBikeString, [[self to] name]];
-        }
-    }
-    else {  
-        BOOL areRealTimeUpdates = NO;
-        
-        // if not walking, check for real-time updates:
-        if([self arrivalTime]) {
-            areRealTimeUpdates = YES;
-            NIMLOG_EVENT1(@"Real-time flag: %@, scheduled arrival: %@, real-time arrival: %@, diff: %@", 
-                  [self arrivalFlag], superShortTimeStringForDate([self startTime]),
-                  [self arrivalTime],  timeDiffInMins);
-
-            if([self.arrivalFlag intValue] == DELAYED) {
-                NSDate* realTimeArrivalTime = [[self startTime] 
-                                               dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
-                if(realTimeArrivalTime){
-                   [titleText appendFormat:@"%@ ", superShortTimeStringForDate(realTimeArrivalTime)]; 
+            BOOL areRealTimeUpdates = NO;
+            
+            // if not walking, check for real-time updates:
+            if([self arrivalTime]) {
+                areRealTimeUpdates = YES;
+                NIMLOG_EVENT1(@"Real-time flag: %@, scheduled arrival: %@, real-time arrival: %@, diff: %@",
+                              [self arrivalFlag], superShortTimeStringForDate([self startTime]),
+                              [self arrivalTime], timeDiffInMins);
+                
+                if([self.arrivalFlag intValue] == DELAYED) {
+                    NSDate* realTimeArrivalTime = [[self startTime]
+                                                   dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
+                    if(realTimeArrivalTime){
+                        [titleText appendFormat:@"%@ ", superShortTimeStringForDate(realTimeArrivalTime)];
+                    }
+                    else{
+                        [titleText appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
+                    }
+                    
+                    NIMLOG_EVENT1(@"Updated time: %@", titleText);
                 }
-                else{
+                else if ([self.arrivalFlag intValue] == EARLY || [self.arrivalFlag intValue] == EARLIER) {
+                    NSDate* realTimeArrivalTime = [[self startTime]
+                                                   dateByAddingTimeInterval:[timeDiffInMins floatValue]*(-60.0)];
+                    if(realTimeArrivalTime){
+                        [titleText appendFormat:@"%@ ", superShortTimeStringForDate(realTimeArrivalTime)];
+                    }
+                    else{
+                        [titleText appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
+                    }
+                    NIMLOG_EVENT1(@"Updated time: %@", titleText);
+                }
+                else {
                     [titleText appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
                 }
-                
-                NIMLOG_EVENT1(@"Updated time: %@", titleText);
-            }
-            else if ([self.arrivalFlag intValue] == EARLY || [self.arrivalFlag intValue] == EARLIER) {
-                NSDate* realTimeArrivalTime = [[self startTime] 
-                                               dateByAddingTimeInterval:[timeDiffInMins floatValue]*(-60.0)];
-                if(realTimeArrivalTime){
-                  [titleText appendFormat:@"%@ ", superShortTimeStringForDate(realTimeArrivalTime)];  
-                }
-                else{
-                   [titleText appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
-                }
-                NIMLOG_EVENT1(@"Updated time: %@", titleText);
             }
             else {
+                // add the departure time (US 121 implementation)
                 [titleText appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
             }
-        }
-        else {
-            // add the departure time (US 121 implementation)
-            [titleText appendFormat:@"%@ ", superShortTimeStringForDate([self startTime])];
-        }
             
-        if ([[self mode] isEqualToString:@"BUS"]) {
-            [titleText appendString:@"Bus "];
-        }
-        else if ([[self mode] isEqualToString:OTP_TRAM_MODE]) {
-            [titleText appendString:@"Tram "];
-        }
-        
-        BOOL isShortName = false;
-        if ([self routeShortName] && [[self routeShortName] length]>0) {
-            [titleText appendFormat:@"%@", [self routeShortName]];
-            isShortName = true;
-        }
-        if ([self routeLongName] && [[self routeLongName] length]>0) {
-            if (isShortName) {
-                [titleText appendFormat:@" - "];
+            if ([[self mode] isEqualToString:@"BUS"]) {
+                [titleText appendString:@"Bus "];
             }
-            if ([[self agencyId] isEqualToString:@"BART"]) {
-                [titleText appendString:@"BART"];  // special case for BART -- just show "BART" rather than route name
-            } else {
-                [titleText appendFormat:@"%@", [self routeLongName]];
+            else if ([[self mode] isEqualToString:OTP_TRAM_MODE]) {
+                [titleText appendString:@"Tram "];
+            }
+            
+            BOOL isShortName = false;
+            if ([self routeShortName] && [[self routeShortName] length]>0) {
+                [titleText appendFormat:@"%@", [self routeShortName]];
+                isShortName = true;
+            }
+            if ([self routeLongName] && [[self routeLongName] length]>0) {
+                if (isShortName) {
+                    [titleText appendFormat:@" - "];
+                }
+                if ([[self agencyId] isEqualToString:@"BART"]) {
+                    [titleText appendString:@"BART"]; // special case for BART -- just show "BART" rather than route name
+                } else {
+                    [titleText appendFormat:@"%@", [self routeLongName]];
+                }
+            }
+            if ([self headSign] && [[self headSign] length]>0) {
+                [titleText appendFormat:@" to %@", [self headSign]];
+            }
+            if (areRealTimeUpdates) {
+                if ([self.arrivalFlag intValue] == ON_TIME) {
+                    [titleText appendString:@" (On-Time)"];
+                }
+                else if([self.arrivalFlag intValue] == DELAYED) {
+                    [titleText appendString:@" (Delayed)"];
+                }
+                else if ([self.arrivalFlag intValue] == EARLY || [self.arrivalFlag intValue] == EARLIER) {
+                    [titleText appendString:@" (Early)"];
+                }
             }
         }
-        if ([self headSign] && [[self headSign] length]>0) {
-            [titleText appendFormat:@" to %@", [self headSign]];
-        }
-        if (areRealTimeUpdates) {
-            if ([self.arrivalFlag intValue] == ON_TIME) {
-                [titleText appendString:@" (On-Time)"];
-            }
-            else if([self.arrivalFlag intValue] == DELAYED) {
-                [titleText appendString:@" (Delayed)"];
-            }
-            else if ([self.arrivalFlag intValue] == EARLY || [self.arrivalFlag intValue] == EARLIER) {
-                [titleText appendString:@" (Early)"];
-            }
-        }
-    }
-    return titleText;
+        return titleText;
     }
     @catch (NSException *exception) {
         logException(@"Leg->directionsTitleText:", @"", exception);
@@ -409,71 +408,71 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 - (NSString *)directionsDetailText:(LegPositionEnum)legPosition
 {
     @try {
-    NSString *subTitle;
-    if (self.isWalk || self.isBike) {
-        if (legPosition == FIRST_LEG) {
-            subTitle = [NSString stringWithFormat:@"From %@ (%@)",
-                        [[self itinerary] fromAddressString], 
-                        distanceStringInMilesFeet([[self distance] floatValue])];
-        } else {
-            subTitle = [NSString stringWithFormat:@"About %@, %@", 
-                        durationString([[self duration] floatValue]), 
-                        distanceStringInMilesFeet([[self distance] floatValue])];
-        }
-    }
-    else {
-        // Part Of DE-229 & US-169 Implementation
-        if([self.arrivalFlag intValue] == DELAYED) {
-            NSDate* realTimeArrivalTime = [[self endTime]
-                                           dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
-            if(realTimeArrivalTime){
-                subTitle = [NSString stringWithFormat:@"%@  Arrive %@",
-                            superShortTimeStringForDate(realTimeArrivalTime),
-                            [[self to] name]];
+        NSString *subTitle;
+        if (self.isWalk || self.isBike) {
+            if (legPosition == FIRST_LEG) {
+                subTitle = [NSString stringWithFormat:@"From %@ (%@)",
+                            [[self itinerary] fromAddressString],
+                            distanceStringInMilesFeet([[self distance] floatValue])];
+            } else {
+                subTitle = [NSString stringWithFormat:@"About %@, %@",
+                            durationString([[self duration] floatValue]),
+                            distanceStringInMilesFeet([[self distance] floatValue])];
             }
-            else{
-                subTitle = [NSString stringWithFormat:@"%@  Arrive %@",
-                            superShortTimeStringForDate([self endTime]),
-                            [[self to] name]];
-            }
-            NIMLOG_EVENT1(@"Updated time: %@", subTitle);
-        }
-        else if ([self.arrivalFlag intValue] == EARLY || [self.arrivalFlag intValue] == EARLIER) {
-            NSDate* realTimeArrivalTime = [[self endTime]
-                                           dateByAddingTimeInterval:[timeDiffInMins floatValue]*(-60.0)];
-            if(realTimeArrivalTime){
-                subTitle = [NSString stringWithFormat:@"%@  Arrive %@",
-                            superShortTimeStringForDate(realTimeArrivalTime),
-                            [[self to] name]];
-            }
-            else{
-                subTitle = [NSString stringWithFormat:@"%@  Arrive %@",
-                            superShortTimeStringForDate([self endTime]),
-                            [[self to] name]];
-            }
-            NIMLOG_EVENT1(@"Updated time: %@", subTitle);
         }
         else {
-            subTitle = [NSString stringWithFormat:@"%@  Arrive %@",
-                        superShortTimeStringForDate([self endTime]),
-                        [[self to] name]];
+            // Part Of DE-229 & US-169 Implementation
+            if([self.arrivalFlag intValue] == DELAYED) {
+                NSDate* realTimeArrivalTime = [[self endTime]
+                                               dateByAddingTimeInterval:[timeDiffInMins floatValue]*60.0];
+                if(realTimeArrivalTime){
+                    subTitle = [NSString stringWithFormat:@"%@ Arrive %@",
+                                superShortTimeStringForDate(realTimeArrivalTime),
+                                [[self to] name]];
+                }
+                else{
+                    subTitle = [NSString stringWithFormat:@"%@ Arrive %@",
+                                superShortTimeStringForDate([self endTime]),
+                                [[self to] name]];
+                }
+                NIMLOG_EVENT1(@"Updated time: %@", subTitle);
+            }
+            else if ([self.arrivalFlag intValue] == EARLY || [self.arrivalFlag intValue] == EARLIER) {
+                NSDate* realTimeArrivalTime = [[self endTime]
+                                               dateByAddingTimeInterval:[timeDiffInMins floatValue]*(-60.0)];
+                if(realTimeArrivalTime){
+                    subTitle = [NSString stringWithFormat:@"%@ Arrive %@",
+                                superShortTimeStringForDate(realTimeArrivalTime),
+                                [[self to] name]];
+                }
+                else{
+                    subTitle = [NSString stringWithFormat:@"%@ Arrive %@",
+                                superShortTimeStringForDate([self endTime]),
+                                [[self to] name]];
+                }
+                NIMLOG_EVENT1(@"Updated time: %@", subTitle);
+            }
+            else {
+                subTitle = [NSString stringWithFormat:@"%@ Arrive %@",
+                            superShortTimeStringForDate([self endTime]),
+                            [[self to] name]];
+            }
+            
         }
-                    
+        return subTitle;
     }
-    return subTitle;
+    @catch (NSException *exception) {
+        logException(@"Leg->directionsDetailText", @"", exception);
+        return @"";
     }
-@catch (NSException *exception) {
-    logException(@"Leg->directionsDetailText", @"", exception);
-    return @"";
-}
 }
 
 
 //Implemented by Sitanshu Joshi
 -(BOOL)isWalk
 {
-    if ([[self mode] isEqualToString:OTP_WALK_MODE]) {   
-        return true;   
+    if ([[self mode] isEqualToString:OTP_WALK_MODE]) {
+        return true;
     }
     return false;
 }
@@ -505,17 +504,17 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 }
 -(BOOL)isBus
 {
-    if ([[self mode] isEqualToString:@"BUS"]) {   
-        return true;   
-    } 
+    if ([[self mode] isEqualToString:@"BUS"]) {
+        return true;
+    }
     return false;
 }
 -(BOOL)isSubway
 {
-    if ([[self mode] isEqualToString:OTP_SUBWAY_MODE]) {   
-        return true;   
-    } 
-    return false; 
+    if ([[self mode] isEqualToString:OTP_SUBWAY_MODE]) {
+        return true;
+    }
+    return false;
 }
 -(BOOL)isFerry
 {
@@ -559,7 +558,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         return YES;
     }
     else if([self.mode isEqualToString:leg.mode]){
-        if(![self.agencyName isEqualToString:leg.agencyName] || [self.to.lat doubleValue] != [leg.to.lat doubleValue] ||  [self.to.lng doubleValue] != [leg.to.lng doubleValue] || [self.from.lat doubleValue] != [leg.from.lat doubleValue] || [self.from.lng doubleValue] != [leg.from.lng doubleValue] || ![self.routeId isEqualToString:leg.routeId]){
+        if(![self.agencyName isEqualToString:leg.agencyName] || [self.to.lat doubleValue] != [leg.to.lat doubleValue] || [self.to.lng doubleValue] != [leg.to.lng doubleValue] || [self.from.lat doubleValue] != [leg.from.lat doubleValue] || [self.from.lng doubleValue] != [leg.from.lng doubleValue] || ![self.routeId isEqualToString:leg.routeId]){
             return NO;
         }
         return YES;
@@ -577,7 +576,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
         return YES;
     }
     else if([self.mode isEqualToString:leg.mode]){
-        if(![self.agencyName isEqualToString:leg.agencyName] || [self.to.lat doubleValue] != [leg.to.lat doubleValue] ||  [self.to.lng doubleValue] != [leg.to.lng doubleValue] || [self.from.lat doubleValue] != [leg.from.lat doubleValue] || [self.from.lng doubleValue] != [leg.from.lng doubleValue] || ![self.routeId isEqualToString:leg.routeId]){
+        if(![self.agencyName isEqualToString:leg.agencyName] || [self.to.lat doubleValue] != [leg.to.lat doubleValue] || [self.to.lng doubleValue] != [leg.to.lng doubleValue] || [self.from.lat doubleValue] != [leg.from.lat doubleValue] || [self.from.lng doubleValue] != [leg.from.lng doubleValue] || ![self.routeId isEqualToString:leg.routeId]){
             return NO;
         }
         return YES;
@@ -589,7 +588,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 - (NSString *)ncDescription
 {
     NSMutableString* desc = [NSMutableString stringWithFormat:
-                             @"{Leg Object: mode: %@;  headSign: %@;  endTime: %@ ... ", [self mode], [self headSign], [self endTime]];
+                             @"{Leg Object: mode: %@; headSign: %@; endTime: %@ ... ", [self mode], [self headSign], [self endTime]];
     for (Step *step in [self steps]) {
         [desc appendString:[NSString stringWithFormat:@"\n%@", [step ncDescription]]];
     }
@@ -634,10 +633,10 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     self.polylineEncodedString = leg.polylineEncodedString;
 }
 
-// return startTime only from real time if exists otherwise return leg starttime only. 
+// return startTime only from real time if exists otherwise return leg starttime only.
 - (NSDate *) getApplicableStartTime{
     if(self.realStartTime){
-       NSDate *realStartTimeOnly = self.realStartTime;
+        NSDate *realStartTimeOnly = self.realStartTime;
         return realStartTimeOnly;
     }
     else{
@@ -649,11 +648,11 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 // return endTime only from real time if exists otherwise return leg endtime only.
 - (NSDate *) getApplicableEndTime{
     if(self.realEndTime){
-         NSDate *realEndTimeOnly = self.realEndTime;
+        NSDate *realEndTimeOnly = self.realEndTime;
         return realEndTimeOnly;
     }
     else{
-         NSDate *endTimeOnly = self.endTime;
+        NSDate *endTimeOnly = self.endTime;
         return endTimeOnly;
     }
 }
@@ -693,14 +692,14 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 
 // set timediffInMins,realStartTime,realEndTime and arrivalFlag for leg from realTime data.
 //- (void) setRealTimeParametersUsingEpochTime:(double)epochTime{
-//    int timeDiffs = [self calculatetimeDiffInMins:epochTime];
-//    self.arrivalFlag = [NSString stringWithFormat:@"%d",[self calculateArrivalTimeFlag:timeDiffs]];
-//    if(timeDiffs < 0)
-//        timeDiffs = -timeDiffs;
-//    self.timeDiffInMins = [NSString stringWithFormat:@"%d",timeDiff];
-//    self.realStartTime = [NSDate dateWithTimeIntervalSince1970:(epochTime/1000.0)];
-//    self.arrivalTime = [NSDate dateWithTimeIntervalSince1970:(epochTime/1000.0)];
-//    self.realEndTime = [[self endTime] dateByAddingTimeInterval:([self.timeDiffInMins intValue]*60*1000)];
+// int timeDiffs = [self calculatetimeDiffInMins:epochTime];
+// self.arrivalFlag = [NSString stringWithFormat:@"%d",[self calculateArrivalTimeFlag:timeDiffs]];
+// if(timeDiffs < 0)
+// timeDiffs = -timeDiffs;
+// self.timeDiffInMins = [NSString stringWithFormat:@"%d",timeDiff];
+// self.realStartTime = [NSDate dateWithTimeIntervalSince1970:(epochTime/1000.0)];
+// self.arrivalTime = [NSDate dateWithTimeIntervalSince1970:(epochTime/1000.0)];
+// self.realEndTime = [[self endTime] dateByAddingTimeInterval:([self.timeDiffInMins intValue]*60*1000)];
 //}
 
 @end

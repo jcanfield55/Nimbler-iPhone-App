@@ -38,6 +38,7 @@
         //[mapping mapKeyPath:@"interlineWithPreviousLeg" toAttribute:@"interlineWithPreviousLeg"];
         [mapping mapKeyPath:@"legGeometry.length" toAttribute:@"legGeometryLength"];
         [mapping mapKeyPath:@"legGeometry.points" toAttribute:@"legGeometryPoints"];
+        [mapping mapKeyPath:@"rentedBike" toAttribute:@"rentedBike"];
         [mapping mapKeyPath:@"mode" toAttribute:@"mode"];
         [mapping mapKeyPath:@"routeId" toAttribute:@"routeId"];
         [mapping mapKeyPath:@"route" toAttribute:@"route"];

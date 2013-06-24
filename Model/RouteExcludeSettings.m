@@ -12,6 +12,8 @@
 #import "Leg.h"
 #import "RouteExcludeSetting.h"
 #import "UtilityFunctions.h"
+#import "LocalConstants.h"
+#import "nc_AppDelegate.h"
 
 #define SETTING_STRING_INCLUDE @"Include"
 #define SETTING_STRING_EXCLUDE @"Exclude"
@@ -115,8 +117,14 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
 {
     if (!self.excludeDictionaryInternal) {
         NSMutableDictionary* newDictionary = [[NSMutableDictionary alloc] initWithCapacity:20];
-        [newDictionary setObject:SETTING_STRING_EXCLUDE forKey:BIKE_BUTTON];
-        [newDictionary setObject:SETTING_STRING_EXCLUDE forKey:BIKE_SHARE];
+        if([[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] isEqualToString:WMATA_APP_TYPE]){
+            [newDictionary setObject:SETTING_STRING_EXCLUDE forKey:MY_BIKE];
+            [newDictionary setObject:SETTING_STRING_INCLUDE forKey:BIKE_SHARE];
+        }
+        else{
+            [newDictionary setObject:SETTING_STRING_EXCLUDE forKey:BIKE_BUTTON];
+            [newDictionary setObject:SETTING_STRING_EXCLUDE forKey:BIKE_SHARE];
+        }
         [self setExcludeDictionaryInternal:newDictionary];
     }
     return self.excludeDictionaryInternal;
@@ -229,11 +237,26 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
                                initWithKey:@"key" ascending:YES selector:@selector(localizedStandardCompare:)];
     [returnArray sortUsingDescriptors:[NSArray arrayWithObject:sortD]];
     
-    // Add bike button
-    RouteExcludeSetting* routeExclSetting = [[RouteExcludeSetting alloc] init];
-    routeExclSetting.key = BIKE_BUTTON;
-    routeExclSetting.setting = [self settingForKey:BIKE_BUTTON];
-    [returnArray addObject:routeExclSetting];
+    if([[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] isEqualToString:WMATA_APP_TYPE]){
+        // Add bike button
+        RouteExcludeSetting* routeExclSettingBike = [[RouteExcludeSetting alloc] init];
+        routeExclSettingBike.key = MY_BIKE;
+        routeExclSettingBike.setting = [self settingForKey:MY_BIKE];
+        [returnArray addObject:routeExclSettingBike];
+        
+        // Add bike button
+        RouteExcludeSetting* routeExclSettingBikeShare = [[RouteExcludeSetting alloc] init];
+        routeExclSettingBikeShare.key = BIKE_SHARE;
+        routeExclSettingBikeShare.setting = [self settingForKey:BIKE_SHARE];
+        [returnArray addObject:routeExclSettingBikeShare];
+    }
+    else{
+        // Add bike button
+        RouteExcludeSetting* routeExclSetting = [[RouteExcludeSetting alloc] init];
+        routeExclSetting.key = BIKE_BUTTON;
+        routeExclSetting.setting = [self settingForKey:BIKE_BUTTON];
+        [returnArray addObject:routeExclSetting];
+    }
     return [self returnUniqueRouteExcludeSettings:returnArray];
 }
 
@@ -241,7 +264,12 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
 +(NSArray *)arrayWithNoExcludesExceptExcludeBike:(IncludeExcludeSetting)bikeSetting
 {
     RouteExcludeSetting* routeExclSetting = [[RouteExcludeSetting alloc] init];
-    routeExclSetting.key = BIKE_BUTTON;
+    if([[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] isEqualToString:WMATA_APP_TYPE]){
+        routeExclSetting.key = MY_BIKE;
+    }
+    else{
+        routeExclSetting.key = BIKE_BUTTON;
+    }
     routeExclSetting.setting = bikeSetting;
     NSArray* returnArray = [NSArray arrayWithObject:routeExclSetting];
     return returnArray;
@@ -344,7 +372,7 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
 -(BOOL)isDefaultSettings
 {
     for (NSString* key in [[self excludeDictionary] allKeys]) {
-        if ([key isEqualToString:BIKE_BUTTON]) { // bike button must be exclude
+        if ([key isEqualToString:returnBikeButtonTitle()]) { // bike button must be exclude
             if ([self settingForKey:key] == SETTING_INCLUDE_ROUTE) {
                 return false;
             }
@@ -409,35 +437,41 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
 
 // Returns true if itin should be included based on the RouteExclude settings
 -(BOOL)isItineraryIncluded:(Itinerary *)itin {
-       if([self itineraryContainsWalkAndBike:[itin legs]]){
-          return true;
-       }
-       for (Leg* leg in [itin legs]) {
-           NSString* legKey = nil;
-           if (leg.isWalk && [self settingForKey:BIKE_BUTTON]==SETTING_INCLUDE_ROUTE) {
-               return false; // exclude all walk itineraries if we are in bike mode
-           }
-           else if (leg.isBike && [self settingForKey:BIKE_BUTTON]==SETTING_EXCLUDE_ROUTE) { // TODO double-check isBike method
-               return false; // Exclude bike itinerary if BIKE_BUTTON excluded
-           }
-           else if (returnShortAgencyName(leg.agencyName)) {      
-               NSString* handling = [[RouteExcludeSettings agencyButtonHandlingDictionary] objectForKey:returnShortAgencyName(leg.agencyName)];
-               if (handling) {
-                   if ([handling isEqualToString:EXCLUSION_BY_AGENCY]) {
-                       legKey = returnShortAgencyName(leg.agencyName);
-                   } else {  // EXCLUSION_BY_RAIL_BUS
-                       NSString *railOrBus = (leg.isBus ? @"Bus" : @"Rail");
-                       if ([leg.agencyName isEqualToString:SFMUNI_AGENCY_NAME]) {
-                           railOrBus = (leg.isBus ? @"Bus" : @"Tram");
-                       }
-                       legKey = [NSString stringWithFormat:@"%@ %@", returnShortAgencyName(leg.agencyName), railOrBus];
-                   }
-                   if ([self settingForKey:legKey] == SETTING_EXCLUDE_ROUTE) {
-                       return false;
-                   }
-               } // else agency not in handling dictionary, count as include
-           }  // else no agency name, do not generate button
-       }
+    if([self itineraryContainsWalkAndBike:[itin legs]]){
+        return true;
+    }
+    for (Leg* leg in [itin legs]) {
+        NSString* legKey = nil;
+        if (leg.isWalk && [self settingForKey:returnBikeButtonTitle()]==SETTING_INCLUDE_ROUTE) {
+            return false; // exclude all walk itineraries if we are in bike mode
+        }
+        else if (leg.isBike && [self settingForKey:returnBikeButtonTitle()]==SETTING_EXCLUDE_ROUTE && [self settingForKey:BIKE_SHARE] == SETTING_EXCLUDE_ROUTE) { // TODO double-check isBike method
+            return false; // Exclude bike itinerary if BIKE_BUTTON excluded
+        }
+        else if (leg.isBike && [self settingForKey:returnBikeButtonTitle()]==SETTING_INCLUDE_ROUTE && ([self settingForKey:BIKE_SHARE] == SETTING_EXCLUDE_ROUTE && leg.rentedBike)) { // TODO double-check isBike method
+            return false; // Exclude bike itinerary if BIKE_BUTTON excluded
+        }
+        else if (leg.isBike && [self settingForKey:returnBikeButtonTitle()]==SETTING_EXCLUDE_ROUTE && ([self settingForKey:BIKE_SHARE] == SETTING_INCLUDE_ROUTE && !leg.rentedBike)) { // TODO double-check isBike method
+            return false; // Exclude bike itinerary if BIKE_BUTTON excluded
+        }
+        else if (returnShortAgencyName(leg.agencyName)) {
+            NSString* handling = [[RouteExcludeSettings agencyButtonHandlingDictionary] objectForKey:returnShortAgencyName(leg.agencyName)];
+            if (handling) {
+                if ([handling isEqualToString:EXCLUSION_BY_AGENCY]) {
+                    legKey = returnShortAgencyName(leg.agencyName);
+                } else { // EXCLUSION_BY_RAIL_BUS
+                    NSString *railOrBus = (leg.isBus ? @"Bus" : @"Rail");
+                    if ([leg.agencyName isEqualToString:SFMUNI_AGENCY_NAME]) {
+                        railOrBus = (leg.isBus ? @"Bus" : @"Tram");
+                    }
+                    legKey = [NSString stringWithFormat:@"%@ %@", returnShortAgencyName(leg.agencyName), railOrBus];
+                }
+                if ([self settingForKey:legKey] == SETTING_EXCLUDE_ROUTE) {
+                    return false;
+                }
+            } // else agency not in handling dictionary, count as include
+        } // else no agency name, do not generate button
+    }
     return true;
 }
 

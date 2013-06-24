@@ -1,9 +1,9 @@
 //
-//  RouteOptionsViewController.m
-//  Nimbler World, Inc.
+// RouteOptionsViewController.m
+// Nimbler World, Inc.
 //
-//  Created by John Canfield on 1/20/12.
-//  Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
+// Created by John Canfield on 1/20/12.
+// Copyright (c) 2012 Nimbler World, Inc.. All rights reserved.
 //
 
 #import "RouteOptionsViewController.h"
@@ -22,13 +22,13 @@
 #import "nc_AppDelegate.h"
 #import "RealTimeManager.h"
 
-#define IDENTIFIER_CELL         @"UIRouteOptionsViewCell"
-#define TIMER_DEFAULT_VALUE  119
+#define IDENTIFIER_CELL @"UIRouteOptionsViewCell"
+#define TIMER_DEFAULT_VALUE 119
 
 @interface RouteOptionsViewController()
 {
     // Variables for internal use
-    BOOL setWarningHidden;   // True if we should set the warning to be hidden upon viewWillAppear
+    BOOL setWarningHidden; // True if we should set the warning to be hidden upon viewWillAppear
 }
 
 // Attributed strings are only supported on iOS6 or later, so do not call this method on < iOS6
@@ -90,12 +90,13 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     [self changeMainTableSettings];
     [self.navigationController setNavigationBarHidden:NO animated:NO];
     if(plan){
-      self.timerRealtime =  [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: NO];  
+        self.timerRealtime = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: NO];
     }
     logEvent(FLURRY_ROUTE_OPTIONS_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
     [nc_AppDelegate sharedInstance].isRouteOptionView = true;
     // Enforce height of main table
     mainTable.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
+    //[mainTable reloadData];
     [self setFBParameterForPlan];
     [noItineraryWarning setHidden:setWarningHidden];
 }
@@ -128,17 +129,17 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
             self.timerGettingRealDataByItinerary = nil;
         }
         remainingCount = TIMER_DEFAULT_VALUE;
-        self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(decrementCounter) userInfo:nil repeats: YES];
+        self.timerGettingRealDataByItinerary = [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(decrementCounter) userInfo:nil repeats: YES];
     }
     remainingCount = remainingCount - 1;
 }
-// Method used to set the plan 
+// Method used to set the plan
 -(void)newPlanAvailable:(Plan *)newPlan
              fromObject:(id)referringObject
                  status:(PlanRequestStatus)status
        RequestParameter:(PlanRequestParameters *)requestParameter
 {
-    [self.navigationController setNavigationBarHidden:NO animated:NO]; 
+    [self.navigationController setNavigationBarHidden:NO animated:NO];
     if (status == PLAN_GENERIC_EXCEPTION || status == PLAN_NOT_AVAILABLE_THAT_TIME) {
         if (plan && [[plan sortedItineraries] count] == 0) {
             // if no itineraries showing, then show warning
@@ -156,7 +157,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     else { // not referral by toFromViewController (i.e. an update to existing view)
         if (plan != newPlan) {
             logError(@"RouteOptionsViewController -> newPlanAvailable", @"newPlan != plan for a refresh");
-            return;  // This update is not relevant, so return
+            return; // This update is not relevant, so return
         }
         [self changeMainTableSettings];
     }
@@ -182,8 +183,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
             self.timerRealtime = nil;
         }
         remainingCount = TIMER_DEFAULT_VALUE;
-        self.timerRealtime =  [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: NO];
-        self.timerGettingRealDataByItinerary =  [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(decrementCounter) userInfo:nil repeats: YES];
+        self.timerRealtime = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: NO];
+        self.timerGettingRealDataByItinerary = [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(decrementCounter) userInfo:nil repeats: YES];
     }
 }
 
@@ -197,7 +198,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     CGRect rect0 = [mainTable frame];
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
         rect0.size.height = ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5;
-        rect0.origin.y = 55;  // TODO Replace with automatic code
+        rect0.origin.y = 55; // TODO Replace with automatic code
     }
     else{
         rect0.size.height = ROUTE_OPTIONS_TABLE_HEIGHT;
@@ -211,7 +212,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         [self createViewWithButtons:mainTableYPOS];
     }
     if(self.navigationController.navigationBarHidden==YES){
-       rect0.origin.y = mainTableYPOS+44;
+        rect0.origin.y = mainTableYPOS+44;
     }
     [mainTable setFrame:rect0];
     [mainTable reloadData];
@@ -231,14 +232,14 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 
 -(void)popOutToNimbler{
     for(int i=0;i<[[plan itineraries] count];i++){
-        Itinerary *iti = [[[plan itineraries] allObjects]  objectAtIndex:i];
+        Itinerary *iti = [[[plan itineraries] allObjects] objectAtIndex:i];
         if(iti.isRealTimeItinerary){
             [plan deleteItinerary:iti];
         }
         if(iti.hideItinerary){
             iti.hideItinerary = false;
         }
-    }    
+    }
     for(PlanRequestChunk *reqChunks in [plan requestChunks]){
         if(reqChunks.type == [NSNumber numberWithInt:2]){
             [[nc_AppDelegate sharedInstance].managedObjectContext deleteObject:reqChunks];
@@ -257,99 +258,97 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 
 -(void) toggleExcludeButton:(id)sender{
     @try {
-        
-    if(self.timerRealtime){
-        [self.timerRealtime invalidate];
-        self.timerRealtime = nil;
-    }
-    self.timerRealtime =  [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: NO];
-    NIMLOG_PERF2(@"toggleExcludeButton started");
-    [activityIndicator startAnimating];
-    // DE-293 Fixed
-    [noItineraryWarning setHidden:YES];
-    setWarningHidden = true;
-    UIButton *btn = (UIButton *)sender;
-    RouteExcludeSetting* toggledSetting;
-    for (RouteExcludeSetting *setting in [plan excludeSettingsArray]) {
-        if ([setting.key isEqualToString:btn.titleLabel.text]) {
-            toggledSetting = setting; // Getting the setting we are going to toggle in the settingArray
-            break;
+        if(self.timerRealtime){
+            [self.timerRealtime invalidate];
+            self.timerRealtime = nil;
         }
-    }
-    if([[RouteExcludeSettings latestUserSettings] settingForKey:btn.titleLabel.text] == SETTING_EXCLUDE_ROUTE){
-        
-        UIView *bgView = [self.view viewWithTag:1000];
-        NSArray *subViews = [bgView subviews];
-        if([btn.titleLabel.text isEqualToString:returnBikeButtonTitle()]){
-           [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:BIKE_SHARE];
-            for(int i=0;i<[subViews count];i++){
-                UIButton *button = [subViews objectAtIndex:i];
-                if([button isKindOfClass:[UIButton class]] && [button.titleLabel.text isEqualToString:BIKE_SHARE]){
-                    [button setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
-                    [button setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
-                    break;
-                }
-            }
-        }
-        else if([btn.titleLabel.text isEqualToString:BIKE_SHARE]){
-            [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:returnBikeButtonTitle()];
-            for(int i=0;i<[subViews count];i++){
-                UIButton *button = [subViews objectAtIndex:i];
-                if([button isKindOfClass:[UIButton class]] && [button.titleLabel.text isEqualToString:returnBikeButtonTitle()]){
-                    [button setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
-                    [button setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
-                    break;
-                }
-            }
-        }
-        
-        [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:btn.titleLabel.text];
-        toggledSetting.setting = SETTING_INCLUDE_ROUTE;
-        [btn setBackgroundImage:[UIImage imageNamed:@"Updated_Pressed.png"] forState:UIControlStateNormal];
-        [btn setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
-    }
-    else{
-        [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:btn.titleLabel.text];
-        toggledSetting.setting = SETTING_EXCLUDE_ROUTE;
-        [btn setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
-        [btn setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
-    }
-    // Update sorted itineraries with new exclusions
-    if (!planRequestParameters) {
-        logError(@"RouteOptionsViewController -> toggleExcludeButton",
-                 @"planRequestParameters = nil, skipping excludeButton updates");
-        return;
-    }
-    NIMLOG_PERF2(@"Finished setting button");
-    logEvent(FLURRY_EXCLUDE_SETTING_CHANGED,
-             FLURRY_CHANGED_EXCLUDE_SETTING, btn.titleLabel.text,
-             FLURRY_NEW_EXCLUDE_SETTINGS, [RouteExcludeSettings stringFromSettingArray:[plan excludeSettingsArray]],
-             nil, nil, nil, nil);
-    
-    PlanRequestParameters* newParameters = [PlanRequestParameters copyOfPlanRequestParameters:planRequestParameters];
-    newParameters.thisRequestTripDate = newParameters.originalTripDate;
-    newParameters.serverCallsSoFar = 0;
-    NIMLOG_PERF2(@"preparing sortedItineraries");
-    [plan prepareSortedItinerariesWithMatchesForDate:newParameters.originalTripDate
-                                      departOrArrive:newParameters.departOrArrive
-                                routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
-                             generateGtfsItineraries:NO
-                               removeNonOptimalItins:YES];
-    if (!setWarningHidden && [[plan sortedItineraries] count] > 0) { // if we now have itineraries, hide warning
+        self.timerRealtime = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(requestServerForRealTime) userInfo:nil repeats: NO];
+        NIMLOG_PERF2(@"toggleExcludeButton started");
+        [activityIndicator startAnimating];
+        // DE-293 Fixed
         [noItineraryWarning setHidden:YES];
         setWarningHidden = true;
+        UIButton *btn = (UIButton *)sender;
+        RouteExcludeSetting* toggledSetting;
+        for (RouteExcludeSetting *setting in [plan excludeSettingsArray]) {
+            if ([setting.key isEqualToString:btn.titleLabel.text]) {
+                toggledSetting = setting; // Getting the setting we are going to toggle in the settingArray
+                break;
+            }
+        }
+        if([[RouteExcludeSettings latestUserSettings] settingForKey:btn.titleLabel.text] == SETTING_EXCLUDE_ROUTE){
+            
+            UIView *bgView = [self.view viewWithTag:1000];
+            NSArray *subViews = [bgView subviews];
+            if([btn.titleLabel.text isEqualToString:returnBikeButtonTitle()]){
+                [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:BIKE_SHARE];
+                for(int i=0;i<[subViews count];i++){
+                    UIButton *button = [subViews objectAtIndex:i];
+                    if([button isKindOfClass:[UIButton class]] && [button.titleLabel.text isEqualToString:BIKE_SHARE]){
+                        [button setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
+                        [button setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
+                        break;
+                    }
+                }
+            }
+            else if([btn.titleLabel.text isEqualToString:BIKE_SHARE]){
+                [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:returnBikeButtonTitle()];
+                for(int i=0;i<[subViews count];i++){
+                    UIButton *button = [subViews objectAtIndex:i];
+                    if([button isKindOfClass:[UIButton class]] && [button.titleLabel.text isEqualToString:returnBikeButtonTitle()]){
+                        [button setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
+                        [button setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
+                        break;
+                    }
+                }
+            }
+            [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:btn.titleLabel.text];
+            toggledSetting.setting = SETTING_INCLUDE_ROUTE;
+            [btn setBackgroundImage:[UIImage imageNamed:@"Updated_Pressed.png"] forState:UIControlStateNormal];
+            [btn setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
+        }
+        else{
+            [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:btn.titleLabel.text];
+            toggledSetting.setting = SETTING_EXCLUDE_ROUTE;
+            [btn setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
+            [btn setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
+        }
+        // Update sorted itineraries with new exclusions
+        if (!planRequestParameters) {
+            logError(@"RouteOptionsViewController -> toggleExcludeButton",
+                     @"planRequestParameters = nil, skipping excludeButton updates");
+            return;
+        }
+        NIMLOG_PERF2(@"Finished setting button");
+        logEvent(FLURRY_EXCLUDE_SETTING_CHANGED,
+                 FLURRY_CHANGED_EXCLUDE_SETTING, btn.titleLabel.text,
+                 FLURRY_NEW_EXCLUDE_SETTINGS, [RouteExcludeSettings stringFromSettingArray:[plan excludeSettingsArray]],
+                 nil, nil, nil, nil);
+        
+        PlanRequestParameters* newParameters = [PlanRequestParameters copyOfPlanRequestParameters:planRequestParameters];
+        newParameters.thisRequestTripDate = newParameters.originalTripDate;
+        newParameters.serverCallsSoFar = 0;
+        NIMLOG_PERF2(@"preparing sortedItineraries");
+        [plan prepareSortedItinerariesWithMatchesForDate:newParameters.originalTripDate
+                                          departOrArrive:newParameters.departOrArrive
+                                    routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
+                                 generateGtfsItineraries:NO
+                                   removeNonOptimalItins:YES];
+        if (!setWarningHidden && [[plan sortedItineraries] count] > 0) { // if we now have itineraries, hide warning
+            [noItineraryWarning setHidden:YES];
+            setWarningHidden = true;
+        }
+        NIMLOG_PERF2(@"done preparing sortedItineraries");
+        MoreItineraryStatus reqStatus = [planStore requestMoreItinerariesIfNeeded:self.plan parameters:newParameters];
+        if (reqStatus == NO_MORE_ITINERARIES_REQUESTED && [[plan sortedItineraries] count] == 0) {
+            // if no itineraries showing and no more requests made, show warning
+            [noItineraryWarning setHidden:NO];
+            setWarningHidden = false;
+        }
+        //[activityIndicator stopAnimating];
+        [mainTable reloadData];
+        NIMLOG_PERF2(@"done toggleExcludeButton");
     }
-    NIMLOG_PERF2(@"done preparing sortedItineraries");
-    MoreItineraryStatus reqStatus = [planStore requestMoreItinerariesIfNeeded:self.plan parameters:newParameters];
-    if (reqStatus == NO_MORE_ITINERARIES_REQUESTED && [[plan sortedItineraries] count] == 0) {
-        // if no itineraries showing and no more requests made, show warning
-        [noItineraryWarning setHidden:NO];
-        setWarningHidden = false;
-    }
-    //[activityIndicator stopAnimating];
-    [mainTable reloadData];
-    NIMLOG_PERF2(@"done toggleExcludeButton");
-   }
     @catch (NSException *exception) {
         logException(@"RouteOptionsViewController->toggleExcludeButton", @"", exception);
     }
@@ -364,7 +363,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 }
 
 
-// Only usable for >= iOS6.  Returns NSMutableAttributedString with Caltrain train #s emphasized.  
+// Only usable for >= iOS6. Returns NSMutableAttributedString with Caltrain train #s emphasized.
 - (NSMutableAttributedString *)detailTextLabelColor:(NSString *)strDetailtextLabel itinerary:(Itinerary *)itinerary{
     if([[[UIDevice currentDevice] systemVersion] floatValue] < 6.0){
         logError(@"RouteOptionsViewController -> detailTextLabelColor",
@@ -416,13 +415,13 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     [tableView dequeueReusableCellWithIdentifier:IDENTIFIER_CELL];
     @try {
         if (!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
                                           reuseIdentifier:IDENTIFIER_CELL];
             [cell.imageView setImage:nil];
         }
         UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
         [cell setAccessoryView:imgViewDetailDisclosure];
-         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.textLabel.numberOfLines = 2;
         // Get the requested itinerary
         Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
@@ -454,34 +453,34 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
             if([itin itinArrivalFlag] >= 0) {
                 if([itin.itinArrivalFlag intValue] == ON_TIME) {
                     titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"On Time"];
-                }  else if([itin.itinArrivalFlag intValue] == DELAYED) {
+                } else if([itin.itinArrivalFlag intValue] == DELAYED) {
                     NSDate *realStartTime;
                     NSDate *realEndTime;
                     if(timeDiffFirstLeg)
                         realStartTime = [[itin startTimeOfFirstLeg]
-                                               dateByAddingTimeInterval:[timeDiffFirstLeg floatValue]*60.0];
+                                         dateByAddingTimeInterval:[timeDiffFirstLeg floatValue]*60.0];
                     else
                         realStartTime = [itin startTimeOfFirstLeg]
                         ;
                     
                     if(timeDiffLastLeg)
                         realEndTime = [[itin endTimeOfLastLeg]
-                                         dateByAddingTimeInterval:[timeDiffLastLeg floatValue]*60.0];
+                                       dateByAddingTimeInterval:[timeDiffLastLeg floatValue]*60.0];
                     else
                         realEndTime = [itin endTimeOfLastLeg]
                         ;
                     
-                        
+                    
                     NSString* durationStr = durationString(1000.0 * [realEndTime
                                                                      timeIntervalSinceDate:realStartTime]);
                     titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
                                  superShortTimeStringForDate(realStartTime),
-                                           superShortTimeStringForDate(realEndTime),
-                                           durationStr];
+                                 superShortTimeStringForDate(realEndTime),
+                                 durationStr];
                     cell.textLabel.text = titleText;
                     titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"Delayed"];
                 } else if([itin.itinArrivalFlag intValue] == EARLY) {
-                     NSDate* realTimeArrivalTime;
+                    NSDate* realTimeArrivalTime;
                     if(timeDiffFirstLeg){
                         realTimeArrivalTime = [[itin startTimeOfFirstLeg]
                                                dateByAddingTimeInterval:[timeDiffFirstLeg floatValue]*60.0];
@@ -493,18 +492,18 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
                     NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
                                                                      timeIntervalSinceDate:realTimeArrivalTime]);
                     titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
-                                           superShortTimeStringForDate(realTimeArrivalTime),
-                                           superShortTimeStringForDate([itin endTimeOfLastLeg]),
-                                           durationStr];
+                                 superShortTimeStringForDate(realTimeArrivalTime),
+                                 superShortTimeStringForDate([itin endTimeOfLastLeg]),
+                                 durationStr];
                     titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"Early"];
                 } else if([itin.itinArrivalFlag intValue] == EARLIER) {
-                   titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"Earlier"];
+                    titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"Earlier"];
                 } else if ([itin.itinArrivalFlag intValue] == ITINERARY_TIME_SLIPPAGE ) {
-                     titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"Updated"];
+                    titleText = [NSString stringWithFormat:@"%@ %@",titleText,@"Updated"];
                 }
-                 [[cell textLabel] setText:titleText];
+                [[cell textLabel] setText:titleText];
             }
-        }         
+        }
         cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
         [[cell detailTextLabel] setFont:[UIFont MEDIUM_FONT]];
         cell.detailTextLabel.textColor = [UIColor GRAY_FONT_COLOR];
@@ -521,7 +520,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
             cell.detailTextLabel.text = [itin itinerarySummaryStringForWidth:ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
                                                                         Font:cell.detailTextLabel.font];
         }
-        [[cell detailTextLabel] setNumberOfLines:0];  // Allow for multi-lines
+        [[cell detailTextLabel] setNumberOfLines:0]; // Allow for multi-lines
     }
     @catch (NSException *exception) {
         logException(@"RouteOptionsViewController->cellForRowAtIndexPath", @"", exception);
@@ -529,39 +528,39 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     return cell;
 }
 
-- (CGFloat)tableView:(UITableView *)aTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath 
+- (CGFloat)tableView:(UITableView *)aTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     @try {
-    Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
-    
-    NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
-                                                     timeIntervalSinceDate:[itin startTimeOfFirstLeg]]);
-    
-    // TODO -- make sure not text wrapping on first line
-    NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
-                           superShortTimeStringForDate([itin startTimeOfFirstLeg]),
-                           superShortTimeStringForDate([itin endTimeOfLastLeg]),
-                           durationStr];
-    NSString* subtitleText = [itin itinerarySummaryStringForWidth:(CGFloat)ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
-                                                             Font:(UIFont *)[UIFont MEDIUM_FONT]];
-    
-    CGSize titleSize = [titleText sizeWithFont:[UIFont MEDIUM_BOLD_FONT]
-                             constrainedToSize:CGSizeMake(ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
-
-    CGSize subtitleSize = [subtitleText sizeWithFont:[UIFont MEDIUM_FONT]
-                                   constrainedToSize:CGSizeMake(ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
-    
-    CGFloat height = titleSize.height + subtitleSize.height + ROUTE_OPTIONS_VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
-    if (height < ROUTE_OPTIONS_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
-        height = ROUTE_OPTIONS_TABLE_CELL_MINIMUM_HEIGHT;
+        Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
+        
+        NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
+                                                         timeIntervalSinceDate:[itin startTimeOfFirstLeg]]);
+        
+        // TODO -- make sure not text wrapping on first line
+        NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
+                               superShortTimeStringForDate([itin startTimeOfFirstLeg]),
+                               superShortTimeStringForDate([itin endTimeOfLastLeg]),
+                               durationStr];
+        NSString* subtitleText = [itin itinerarySummaryStringForWidth:(CGFloat)ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
+                                                                 Font:(UIFont *)[UIFont MEDIUM_FONT]];
+        
+        CGSize titleSize = [titleText sizeWithFont:[UIFont MEDIUM_BOLD_FONT]
+                                 constrainedToSize:CGSizeMake(ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
+        
+        CGSize subtitleSize = [subtitleText sizeWithFont:[UIFont MEDIUM_FONT]
+                                       constrainedToSize:CGSizeMake(ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
+        
+        CGFloat height = titleSize.height + subtitleSize.height + ROUTE_OPTIONS_VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
+        if (height < ROUTE_OPTIONS_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
+            height = ROUTE_OPTIONS_TABLE_CELL_MINIMUM_HEIGHT;
+        }
+        
+        return height;
     }
-    
-    return height;
+    @catch (NSException *exception) {
+        logException(@"RouteOptionsViewController->heightForRowAtIndexPath", @"", exception);
+        return ROUTE_OPTIONS_TABLE_CELL_MINIMUM_HEIGHT;
     }
-   @catch (NSException *exception) {
-       logException(@"RouteOptionsViewController->heightForRowAtIndexPath", @"", exception);
-       return ROUTE_OPTIONS_TABLE_CELL_MINIMUM_HEIGHT;
-   }
 }
 
 -(void)hideUnUsedTableViewCell
@@ -599,7 +598,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
             }
         }
         itinararyId =[itinerary itinId];
-
+        
         logEvent(FLURRY_ROUTE_SELECTED,
                  FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d", [indexPath row]],
                  FLURRY_SELECTED_DEPARTURE_TIME, [NSString stringWithFormat:@"%@", [itinerary startTimeOfFirstLeg]],
@@ -704,17 +703,17 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-- (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {  
+- (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {
     @try {
-        if ([request isGET]) {       
+        if ([request isGET]) {
             RKJSONParserJSONKit* rkLiveDataParser = [RKJSONParserJSONKit new];
-            id  res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];                
+            id res = [rkLiveDataParser objectFromString:[response bodyAsString] error:nil];
             twitterViewController *twit = [[twitterViewController alloc] init];
             [twit setTwitterLiveData:res];
-            [[self navigationController] pushViewController:twit animated:YES];     
-        } 
+            [[self navigationController] pushViewController:twit animated:YES];
+        }
         
-    }  @catch (NSException *exception) {
+    } @catch (NSException *exception) {
         logException(@"RouteOptionsViewController->didLoadResponse", @"Exception while getting unique IDs from TP Server response: %@", exception);
     }
 }
@@ -776,14 +775,14 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
         }
     }
     @catch (NSException *exception) {
-          logException(@"RouteOptionsViewController->createViewWithButtons", @"", exception);
+        logException(@"RouteOptionsViewController->createViewWithButtons", @"", exception);
     }
 }
 
 - (int) calculateTotalHeightOfButtonView{
     int tempButtonCounts;
     if([[plan excludeSettingsArray] count] > 3)
-       tempButtonCounts = [[plan excludeSettingsArray] count] - 3;
+        tempButtonCounts = [[plan excludeSettingsArray] count] - 3;
     else
         tempButtonCounts = 0;
     
@@ -791,14 +790,14 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
     int tempModulo = tempButtonCounts%4;
     int nAdditionalRows;
     if(tempModulo > 0)
-      nAdditionalRows = tempDivision + 1;
+        nAdditionalRows = tempDivision + 1;
     else
         nAdditionalRows = tempDivision;
     
     int totalRows = nAdditionalRows + 1;
     int buffer = 0;
     if(totalRows > 0)
-      buffer = (totalRows+1) * 5;
+        buffer = (totalRows+1) * 5;
     return totalRows * 25 + buffer;
 }
 - (bool)waitForNonNullValueOfBlock:(BOOL(^)(void))block
