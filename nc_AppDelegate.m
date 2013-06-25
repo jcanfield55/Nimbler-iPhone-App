@@ -125,8 +125,15 @@ FeedBackForm *fbView;
 #endif
     
      NSString *dbPath = [NSString stringWithFormat:@"%@/%@",[[self applicationDocumentsDirectory] path],COREDATA_DB_FILENAME];
-    // Remove the Caltrain 1.16 app database
-    
+    // Remove the Caltrain 1.16 or previous version app database
+    if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
+        BOOL isOldDBDeleted = [[NSUserDefaults standardUserDefaults] objectForKey:@"oldDbDeleted"];
+        if(!isOldDBDeleted && [[NSFileManager defaultManager] fileExistsAtPath:dbPath]){
+            [[NSFileManager defaultManager] removeItemAtPath:dbPath error:nil];
+            [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"oldDbDeleted"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+    }
     if(![[NSFileManager defaultManager] fileExistsAtPath:dbPath]){
         NSString *strPath;
         if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
@@ -143,6 +150,8 @@ FeedBackForm *fbView;
         [zipArchive UnzipOpenFile:strPath];
         [zipArchive UnzipFileTo:[[self applicationDocumentsDirectory] path] overWrite:YES];
         [zipArchive UnzipCloseFile];
+        [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"oldDbDeleted"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions

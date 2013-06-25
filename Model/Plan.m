@@ -96,7 +96,7 @@
 // Create the sorted array of itineraries (sorted by startTimeOnly)
 - (void)sortItineraries
 {
-    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOfLeg" ascending:YES];
+    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:YES];
     [self setSortedItineraries:[[self itineraries] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
 }
 
@@ -130,7 +130,7 @@
                                                                        fromTimeOnly, @"TIME_RANGE_FROM",
                                                                        toTimeOnly, @"TIME_RANGE_TO",
                                                                        nil]];
-    NSSortDescriptor *sd1 = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOfLeg"
+    NSSortDescriptor *sd1 = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly"
                                                           ascending:YES];
     [request setSortDescriptors:[NSArray arrayWithObjects:sd1,nil]];
     NSError *error;
@@ -518,7 +518,7 @@
         
         // Sort itineraries (in reverse order if arrive-by itinerary (DE191 fix)
         NIMLOG_PERF2A(@"Sort and remove itineraries beyond max");
-        NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOfLeg" ascending:(depOrArrive == DEPART)];
+        NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:(depOrArrive == DEPART)];
         
         NSArray* returnedItineraries = [matchingItineraries sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]];
         
@@ -793,14 +793,14 @@
     if (![self uniqueItineraryPatterns] || [[self uniqueItineraryPatterns] count] == 0) {
         [self setUniqueItineraryPatterns:[NSSet setWithArray:[self computeUniqueItineraries]]];
     }
-    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOfLeg" ascending:YES];
+    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:YES];
     return [[self uniqueItineraryPatterns] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]];
 }
 
 // Re-calculate uniqueItineraries from scratch and store in CoreData
 // Given two equivalent itineraries, will choose the itinerary that is a pattern for others to keep as unique
 - (NSArray *)computeUniqueItineraries{
-    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOfLeg" ascending:YES];
+    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:YES];
     NSMutableArray *arrItineraries = [[NSMutableArray alloc] initWithArray:[[self itineraries]
                                                                             sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
     int i;

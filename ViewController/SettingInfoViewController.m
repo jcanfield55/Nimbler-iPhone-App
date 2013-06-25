@@ -279,7 +279,7 @@ UIImage *imageDetailDisclosure;
 {
     
     RouteExcludeSettings *excludesettings = [RouteExcludeSettings latestUserSettings];
-    IncludeExcludeSetting setting = [excludesettings settingForKey:BIKE_BUTTON];
+    IncludeExcludeSetting setting = [excludesettings settingForKey:returnBikeButtonTitle()];
     if(setting == SETTING_EXCLUDE_ROUTE){
         ToFromViewController *toFromVc = [nc_AppDelegate sharedInstance].toFromViewController;
         if(![nc_AppDelegate sharedInstance].isToFromView){

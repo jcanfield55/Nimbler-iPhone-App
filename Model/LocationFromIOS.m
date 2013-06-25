@@ -74,7 +74,7 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
                     // Remove any double spaces (like between the state and zipcode)
                     BOOL doAnotherLoop = true;
                     for (int j=0; (doAnotherLoop && j<5); j++) {
-                        NSRange range = [addrLine rangeOfString:@"  "];
+                        NSRange range = [addrLine rangeOfString:@" "];
                         if (range.location == NSNotFound) {
                             doAnotherLoop = false;
                         } else {
@@ -96,13 +96,17 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
             range.location = 0;
             range.length = [formattedAddr length];
             num = [formattedAddr replaceOccurrencesOfString:@"Washington D.C.‎ District of Columbia"
-                                                            withString:@"Washington"
-                                                                options:options1 range:range];
+                                                 withString:@"Washington"
+                                                    options:options1
+                                                      range:range];
+            
             range.location = 0;
             range.length = [formattedAddr length];
             num = [formattedAddr replaceOccurrencesOfString:@"Washington, DC"
-                                    withString:@"Washington"
-                                        options:options1 range:range];
+                                                 withString:@"Washington"
+                                                    options:options1
+                                                      range:range];
+            
             return [NSString stringWithString:formattedAddr];
         }
         else { // if cannot get formatted address lines, try our best for California addresses
@@ -142,20 +146,26 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
                                                         options:options1
                                                           range:range];
                 
-                // Get rid of random Unicode "left-to-right mark" I found around "California"  http://www.fileformat.info/info/unicode/char/200e/index.htm
+                range.location = 0;
+                range.length = [formattedAddr length];
+                num = [formattedAddr replaceOccurrencesOfString:@"Washington D.C.‎ District of Columbia"
+                                                     withString:@"Washington"
+                                                        options:options1
+                                                          range:range];
+                
+                range.location = 0;
+                range.length = [formattedAddr length];
+                num = [formattedAddr replaceOccurrencesOfString:@"Washington, DC"
+                                                     withString:@"Washington"
+                                                        options:options1
+                                                          range:range];
+                // Get rid of random Unicode "left-to-right mark" I found around "California" http://www.fileformat.info/info/unicode/char/200e/index.htm
                 range.length = [formattedAddr length];
                 num = [formattedAddr replaceOccurrencesOfString:@"\u200e"
                                                      withString:@""
                                                         options:options1
                                                           range:range];
                 
-                range.location = 0;
-                range.length = [formattedAddr length];
-                num = [formattedAddr replaceOccurrencesOfString:@"Washington D.C.‎ District of Columbia" withString:@"Washington"
-                                    options:options1 range:range];
-                range.location = 0;
-                range.length = [formattedAddr length];
-                num = [formattedAddr replaceOccurrencesOfString:@"Washington, DC"withString:@"Washington" options:options1 range:range];
                 
                 if ([formattedAddr length]>5 &&
                     [[formattedAddr substringFromIndex:([formattedAddr length]-5)] intValue] < 0) {
@@ -182,13 +192,13 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
  San Carlos‎ California‎ 94070
  United States
  */
-/*  Example of a iOS addressComponentDictionary
+/* Example of a iOS addressComponentDictionary
  { City = "San Francisco";
  Country = "United States";
  CountryCode = US;
- FormattedAddressLines =     (
+ FormattedAddressLines = (
  "40 Spear St",
- "San Francisco, CA  94105",
+ "San Francisco, CA 94105",
  "United States"
  );
  State = California;

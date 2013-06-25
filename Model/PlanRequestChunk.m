@@ -73,7 +73,7 @@
 // Create the sorted array of itineraries
 - (void)sortItineraries
 {
-    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOfLeg" ascending:YES];
+    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"startTimeOnly" ascending:YES];
     [self setSortedItineraries:[[self itineraries] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
 }
 

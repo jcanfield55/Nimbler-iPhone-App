@@ -322,7 +322,7 @@
                     continue;
                 NSString *legId = [itineraryDictionary objectForKey:@"id"];
                 //Part of DE-291 Fixed
-                if(legLegIdDictionary){
+                if(legLegIdDictionary && ![legLegIdDictionary isEqual:[NSNull null]]){
                     Leg *leg = [legLegIdDictionary objectForKey:legId];
                     NSString *stopIdsString = [NSString stringWithFormat:@"%@_%@",leg.from.stopId,leg.to.stopId];
                     NSArray *arrLegs = [itineraryDictionary objectForKey:@"legs"];

@@ -66,7 +66,7 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
                         addrLine = @"Washington";
                     }
                     else if([addrLine isEqualToString:@"Washington, DC"]){
-                         addrLine = @"Washington";
+                        addrLine = @"Washington";
                     }
                 }
                 if (i==[addrLines count]-2) { // if this is the 2nd to last line, the one with zipcode
@@ -80,7 +80,7 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
                     // Remove any double spaces (like between the state and zipcode)
                     BOOL doAnotherLoop = true;
                     for (int j=0; (doAnotherLoop && j<5); j++) {
-                        NSRange range = [addrLine rangeOfString:@"  "];
+                        NSRange range = [addrLine rangeOfString:@" "];
                         if (range.location == NSNotFound) {
                             doAnotherLoop = false;
                         } else {
@@ -101,10 +101,18 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
             NSStringCompareOptions options1 = 0;
             range.location = 0;
             range.length = [formattedAddr length];
-            num = [formattedAddr replaceOccurrencesOfString:@"Washington D.C.‎ District of Columbia" withString:@"Washington" options:options1 range:range];
+            num = [formattedAddr replaceOccurrencesOfString:@"Washington D.C.‎ District of Columbia"
+                                                 withString:@"Washington"
+                                                    options:options1
+                                                      range:range];
+            
             range.location = 0;
             range.length = [formattedAddr length];
-            num = [formattedAddr replaceOccurrencesOfString:@"Washington, DC" withString:@"Washington" options:options1 range:range];
+            num = [formattedAddr replaceOccurrencesOfString:@"Washington, DC"
+                                                 withString:@"Washington"
+                                                    options:options1
+                                                      range:range];
+            
             return [NSString stringWithString:formattedAddr];
         }
         else { // if cannot get formatted address lines, try our best for California addresses
@@ -144,22 +152,26 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
                                                         options:options1
                                                           range:range];
                 
-                // Get rid of random Unicode "left-to-right mark" I found around "California"  http://www.fileformat.info/info/unicode/char/200e/index.htm
+                range.location = 0;
                 range.length = [formattedAddr length];
-                num = [formattedAddr replaceOccurrencesOfString:@"\u200e"
-                                                     withString:@""
+                num = [formattedAddr replaceOccurrencesOfString:@"Washington D.C.‎ District of Columbia"
+                                                     withString:@"Washington"
                                                         options:options1
                                                           range:range];
                 
                 range.location = 0;
                 range.length = [formattedAddr length];
-                num = [formattedAddr replaceOccurrencesOfString:@"Washington D.C.‎ District of Columbia" withString:@"Washington" options:options1
-                                                               range:range];
-                
-                range.location = 0;
-                range.length = [formattedAddr length];
                 num = [formattedAddr replaceOccurrencesOfString:@"Washington, DC"
-                            withString:@"Washington" options:options1 range:range];
+                                                     withString:@"Washington"
+                                                        options:options1
+                                                          range:range];
+                
+                // Get rid of random Unicode "left-to-right mark" I found around "California" http://www.fileformat.info/info/unicode/char/200e/index.htm
+                range.length = [formattedAddr length];
+                num = [formattedAddr replaceOccurrencesOfString:@"\u200e"
+                                                     withString:@""
+                                                        options:options1
+                                                          range:range];
                 
                 
                 if ([formattedAddr length]>5 &&
@@ -306,39 +318,39 @@ static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
 // Returns an addressComponentDictionary using the same key names as LocationFromGoogle where possible
 - (NSDictionary *)addressComponentDictionary
 {
-        if (!locationFromIOSAddressMappingDictionary) {
-            locationFromIOSAddressMappingDictionary =
-            [NSDictionary dictionaryWithObjectsAndKeys:
-             @"locality",@"City",
-             @"country",@"Country",
-             @"country(short)",@"CountryCode",
-             @"administrative_area_level_1",@"State",
-             @"administrative_area_level_2",@"SubAdministrativeArea",
-             @"neighborhood",@"SubLocality",
-             @"street_number",@"SubThoroughfare",
-             @"route",@"Thoroughfare",
-             @"postal_code",@"ZIP",
-             nil];
-        }
-        
-        NSDictionary* addrDict = [[self placemark] addressDictionary];
-        NSMutableDictionary* newAddrDict = [[NSMutableDictionary alloc] initWithCapacity:[addrDict count]];
-        
-        // Go through and remove anything that is not a string object (for example, "FormattedAddressLines")
-        NSEnumerator* enumerator = [addrDict keyEnumerator];
-        NSString* type;
-        while (type = [enumerator nextObject]) {  // enumerate thru all the type strings in the dictionary
-            NSString* value = [addrDict objectForKey:type];
-            if ([value isKindOfClass:[NSString class]]) {
-                // only add elements that are strings
-                NSString* key = [locationFromIOSAddressMappingDictionary objectForKey:type];
-                if (!key) {
-                    key = type; // if no translation for type, use type itself
-                }
-                [newAddrDict setObject:value forKey:key];
+    if (!locationFromIOSAddressMappingDictionary) {
+        locationFromIOSAddressMappingDictionary =
+        [NSDictionary dictionaryWithObjectsAndKeys:
+         @"locality",@"City",
+         @"country",@"Country",
+         @"country(short)",@"CountryCode",
+         @"administrative_area_level_1",@"State",
+         @"administrative_area_level_2",@"SubAdministrativeArea",
+         @"neighborhood",@"SubLocality",
+         @"street_number",@"SubThoroughfare",
+         @"route",@"Thoroughfare",
+         @"postal_code",@"ZIP",
+         nil];
+    }
+    
+    NSDictionary* addrDict = [[self placemark] addressDictionary];
+    NSMutableDictionary* newAddrDict = [[NSMutableDictionary alloc] initWithCapacity:[addrDict count]];
+    
+    // Go through and remove anything that is not a string object (for example, "FormattedAddressLines")
+    NSEnumerator* enumerator = [addrDict keyEnumerator];
+    NSString* type;
+    while (type = [enumerator nextObject]) { // enumerate thru all the type strings in the dictionary
+        NSString* value = [addrDict objectForKey:type];
+        if ([value isKindOfClass:[NSString class]]) {
+            // only add elements that are strings
+            NSString* key = [locationFromIOSAddressMappingDictionary objectForKey:type];
+            if (!key) {
+                key = type; // if no translation for type, use type itself
             }
+            [newAddrDict setObject:value forKey:key];
         }
-        
+    }
+    
     return newAddrDict;
 }
 
