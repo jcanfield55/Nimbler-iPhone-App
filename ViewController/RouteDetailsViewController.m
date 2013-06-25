@@ -422,7 +422,6 @@ NSUserDefaults *prefs;
     // Check for a reusable cell first, use that if it exists
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UIRouteDetailsViewCell"];
     @try {
-        cell = nil;
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
                                           reuseIdentifier:@"UIRouteDetailsViewCell"];
@@ -435,6 +434,12 @@ NSUserDefaults *prefs;
             [[cell detailTextLabel] setTextColor:[UIColor GRAY_FONT_COLOR]];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.contentView.backgroundColor = [UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW];
+        }
+        
+        if ([cell.contentView subviews]){
+            for (UIView *subview in [cell.contentView subviews]) {
+                [subview removeFromSuperview];
+            }
         }
         
         // Find the right image filename
