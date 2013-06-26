@@ -63,6 +63,7 @@
 #define ALL_STATION    @"all_st"
 #define NEWGEOCODE_RESULT_MSG @"in the Washington DC"
 #define LOCATION_NOTAPPEAR_MSG @"Washington DC"
+#define APP_TITLE              @"Nimbler DC"
 
 // Current Location
 #define CURRENT_LOCATION_STARTING_FROM_FREQUENCY 7.0

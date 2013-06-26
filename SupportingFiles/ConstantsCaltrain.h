@@ -66,6 +66,7 @@
 #define CURRENT_LOCATION_STARTING_FROM_FREQUENCY 7.0
 #define NEWGEOCODE_RESULT_MSG @"in the San Francisco Bay Area"
 #define LOCATION_NOTAPPEAR_MSG @"Bay Area"
+#define APP_TITLE              @"Nimbler Caltrain"
 
 // Testflight App Analytics and logging
 #define TEST_FLIGHT_ENABLED 0 // If 0, then do not include testFlightApp at all
