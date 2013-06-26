@@ -357,9 +357,13 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
 #pragma mark - UITableViewDelegate methods
 // Table view management methods
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return [[plan sortedItineraries] count];
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    @try {
+        return [[plan sortedItineraries] count];
+    }
+    @catch (NSException *exception) {
+        logException(@"RouteOptionsViewController->numberOfRowsInSection", @"", exception);
+    }
 }
 
 
