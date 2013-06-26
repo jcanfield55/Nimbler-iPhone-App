@@ -11,7 +11,7 @@
 
 
 // App specific constants
-#define APP_TITLE                      @"Nimbler SF"
+//#define APP_TITLE                      @"Nimbler SF"
 
 // Feedback responses
 #define FB_RESPONSE_SUCCEES @"Feedback Sent Successfully"
