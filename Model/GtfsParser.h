@@ -106,9 +106,9 @@
 - (void) generateNewLegFromOldLeg:(Leg *)leg Context:(NSManagedObjectContext *)context Itinerary:(Itinerary *)itinerary;
 
 // Generate itineraries from realtime data.
-- (void) generateItinerariesFromPrediction:(Plan *)plan Itinerary:(Itinerary *)itinerary Prediction:(NSMutableDictionary *)dictPredictions TripDate:(NSDate *)tripDate Context:(NSManagedObjectContext *)context;
+- (void) generateItinerariesFromPrediction:(Plan *)plan Itinerary:(Itinerary *)itinerary Prediction:(NSMutableDictionary *)dictPredictions TripDate:(NSDate *)tripDate DepartOrArrive:(DepartOrArrive)departOrArrive Context:(NSManagedObjectContext *)context;
 
-- (void) generateItinerariesFromRealTime:(Plan *)plan TripDate:(NSDate *)tripDate Context:(NSManagedObjectContext *)context;
+- (void) generateItinerariesFromRealTime:(Plan *)plan TripDate:(NSDate *)tripDate DepartOrArrive:(DepartOrArrive)departOrArrive Context:(NSManagedObjectContext *)context;
 
 // Generates Gtfs itineraries in plan based on the pattern of itinerary
 // tripDate is the original tripDate.  fromTimeOnly and toTimeOnly is the range of start-times that should be generated

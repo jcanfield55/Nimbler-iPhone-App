@@ -1508,7 +1508,7 @@
     return nil;
 }
 // Generate reattime itineraries from pattern and realtime data.
-- (void) generateItinerariesFromRealTime:(Plan *)plan TripDate:(NSDate *)tripDate Context:(NSManagedObjectContext *)context{
+- (void) generateItinerariesFromRealTime:(Plan *)plan TripDate:(NSDate *)tripDate DepartOrArrive:(DepartOrArrive)departOrArrive Context:(NSManagedObjectContext *)context{
     if(!context) {
         context = managedObjectContext;
     }
@@ -1527,7 +1527,7 @@
     }
     for(int i=0;i<[[plan uniqueItineraries] count];i++){
         Itinerary *itinerary = [[plan uniqueItineraries] objectAtIndex:i];
-        [self generateItinerariesFromPrediction:plan Itinerary:itinerary Prediction:dictPredictions TripDate:tripDate Context:context];
+        [self generateItinerariesFromPrediction:plan Itinerary:itinerary Prediction:dictPredictions TripDate:tripDate DepartOrArrive:departOrArrive Context:context];
     }
     NIMLOG_PERF2(@"Finish generateItinerariesFromRealTime");
 }
@@ -1591,7 +1591,7 @@
     [realtimes setObject:arrRealTimes forKey:leg.legId];
 }
 // Generate reattime itineraries from pattern and realtime data.
-- (void) generateItinerariesFromPrediction:(Plan *)plan Itinerary:(Itinerary *)itinerary Prediction:(NSMutableDictionary *)dictPredictions TripDate:(NSDate *)tripDate Context:(NSManagedObjectContext *)context{
+- (void) generateItinerariesFromPrediction:(Plan *)plan Itinerary:(Itinerary *)itinerary Prediction:(NSMutableDictionary *)dictPredictions TripDate:(NSDate *)tripDate DepartOrArrive:(DepartOrArrive)departOrArrive Context:(NSManagedObjectContext *)context{
     PlanRequestChunk* reqChunk;
     for (int i=0; i<200; i++) {
         if(i==199){
@@ -1658,7 +1658,12 @@
                 reqChunk.plan = plan;
                 reqChunk.gtfsItineraryPattern = itinerary;
                 reqChunk.type =[NSNumber numberWithInt:REALTIME_ITINERARY];
-                reqChunk.earliestRequestedDepartTimeDate = tripDate; // assumes Depart
+                if(departOrArrive == ARRIVE){
+                   reqChunk.latestRequestedArriveTimeDate = tripDate; 
+                }
+                else{
+                    reqChunk.earliestRequestedDepartTimeDate = tripDate; // assumes Depart
+                }
             }
             [reqChunk addItinerariesObject:newItinerary];
         }

@@ -213,16 +213,6 @@ NSString *strStreet2 = @"street ";
 // (in locations object, in toFromVC, and in the table selected cell)
 - (void)markAndUpdateSelectedLocation:(Location *)loc
 {
-    //Fixed DE-363
-    if([loc isKindOfClass:[LocationFromIOS class]]){
-        LocationFromIOS *iosLocations = (LocationFromIOS *)loc;
-        NSArray *formattedAdd = [loc.formattedAddress componentsSeparatedByString:@","];
-        NSString *subLocality = [iosLocations.placemark.addressDictionary objectForKey:@"SubLocality"];
-        if(subLocality && ![[formattedAdd objectAtIndex:0] isEqualToString:subLocality]){
-           loc.formattedAddress = [NSString stringWithFormat:@"%@\n%@",subLocality,loc.formattedAddress];
-        }
-    }
-    
     if ([loc isCurrentLocation]) {
         if ([self alertUsetForLocationService]) {
             NSString* msg;  // DE193 fix

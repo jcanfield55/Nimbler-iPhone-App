@@ -239,20 +239,25 @@ static RealTimeManager* realTimeManager;
                 // TODO:- Comment Four lines to run automated test case
                 NSDate *tripDate;
                 if(requestParameters.departOrArrive == ARRIVE){
-                    tripDate = [originalTripDate dateByAddingTimeInterval:-(1*60*60)];
+                    tripDate = [NSDate date];
                 }
                 else{
                     tripDate = originalTripDate;
                 }
-                [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:tripDate Context:nil];
+                [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:tripDate DepartOrArrive:requestParameters.departOrArrive Context:nil];
                 // Part of DE-292 Fix
-                 [self removeRealtimeItinerary:tripDate]; 
-                [self hideItineraryIfNeeded:[[plan itineraries] allObjects]];
+                 [self hideItineraryIfNeeded:[[plan itineraries] allObjects]];
                  [plan prepareSortedItinerariesWithMatchesForDate:originalTripDate
                                                    departOrArrive:requestParameters.departOrArrive
                                              routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
                                           generateGtfsItineraries:NO
                                             removeNonOptimalItins:YES];
+                [self unhideitinerariesIfNoRealtimeItineraries:[plan sortedItineraries]];
+                [plan prepareSortedItinerariesWithMatchesForDate:originalTripDate
+                                                  departOrArrive:requestParameters.departOrArrive
+                                            routeExcludeSettings:[RouteExcludeSettings latestUserSettings]
+                                         generateGtfsItineraries:NO
+                                           removeNonOptimalItins:YES];
                 Itinerary *detailViewitinerary = [nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.routeDetailsVC.itinerary;
                 if(detailViewitinerary.isRealTimeItinerary){
                     [self updateItineraryIfAlreadyInRouteDetailView];
@@ -295,7 +300,23 @@ static RealTimeManager* realTimeManager;
         }
     }
 }
+- (BOOL) containsRealtimeItinerary:(NSArray *)itineraries{
+    for(int i=0;i<[itineraries count];i++){
+        Itinerary *itinerary = [itineraries objectAtIndex:i];
+        if(itinerary.isRealTimeItinerary)
+            return YES;
+    }
+    return NO;
+}
 
+- (void) unhideitinerariesIfNoRealtimeItineraries:(NSArray *)itineraries{
+    if(![self containsRealtimeItinerary:itineraries]){
+        for(int i=0;i<[itineraries count];i++){
+            Itinerary *itinerary = [itineraries objectAtIndex:i];
+            itinerary.hideItinerary = NO;
+        }
+    }
+}
 // return leg with matching legid
 - (Leg *) returnLegWithSameLegId:(NSString *)strLegId{
     for(int i=0;i<[[plan uniqueItineraries] count];i++){
