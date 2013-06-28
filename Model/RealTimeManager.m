@@ -237,7 +237,7 @@ static RealTimeManager* realTimeManager;
                 NIMLOG_PERF2(@"Realtime Parsing and Processing Started At-->%f",[[NSDate date] timeIntervalSince1970]);
                 [self setRealTimePredictionsFromLiveFeeds:legLiveFees];
                 // TODO:- Comment Four lines to run automated test case
-                [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:originalTripDate Context:nil];
+                [[nc_AppDelegate sharedInstance].gtfsParser generateItinerariesFromRealTime:plan TripDate:originalTripDate DepartOrArrive:requestParameters.departOrArrive Context:nil];
                 // Part of DE-292 Fix
                  [self removeRealtimeItinerary:originalTripDate];
                 [self hideItineraryIfNeeded:[[plan itineraries] allObjects]];
