@@ -1333,22 +1333,8 @@ UIImage *imageDetailDisclosure;
             PlanRequestParameters* parameters = [[PlanRequestParameters alloc] init];
             parameters.fromLocation = fromLocation;
             parameters.toLocation = toLocation;
-            if(parameters.departOrArrive == ARRIVE){
-                //tripDate = [originalTripDate dateByAddingTimeInterval:-(1*60*60)];
-                if([tripDate timeIntervalSince1970]>[[[NSDate date] dateByAddingTimeInterval:(3*60*60)] timeIntervalSince1970]){
-                    parameters.originalTripDate = tripDate;
-                    parameters.thisRequestTripDate = tripDate;
-                }
-                else{
-                    parameters.originalTripDate = [NSDate date];
-                    parameters.thisRequestTripDate = [NSDate date];
-                }
-                
-            }
-            else{
-                parameters.originalTripDate = tripDate;
-                parameters.thisRequestTripDate = tripDate;
-            }
+            parameters.originalTripDate = tripDate;
+            parameters.thisRequestTripDate = tripDate;
             parameters.routeExcludeSettings = [RouteExcludeSettings latestUserSettings];
             parameters.departOrArrive = departOrArrive;
             parameters.maxWalkDistance = maxDistance;
