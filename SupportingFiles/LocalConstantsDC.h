@@ -22,8 +22,8 @@
 #define WMATA_APP_TYPE      @"5"
 
 // Default boundaries for geolocation and routing
-#define MIN_LAT @"38.598692"
-#define MIN_LONG @"-77.449457"
+#define MIN_LAT @"38.5"
+#define MIN_LONG @"-77.6"
 #define MAX_LAT @"39.191489"
 #define MAX_LONG @"-76.668939"
 

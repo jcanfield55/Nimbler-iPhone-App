@@ -236,6 +236,7 @@
 #define IOS_GEOCODE_VER_THRESHOLD (6.0)  // Version at which we start using iOS geocoding (rather than Google)
 // Local Search behavior
 #define IOS_LOCALSEARCH_VER (6.1)  // Version at which we start using iOS MAPKIT LOCAL SEARCH
+#define MK_LOCAL_SEARCH_SPAN 120000  // Meters span around the current location used by MKLocalSearch
 
 // Reverse Geocode behavior
 #define REVERSE_GEO_DISTANCE_THRESHOLD  (50.0)  // Maximum distance in meters before we redo a reverse geolocation

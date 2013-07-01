@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <RestKit/Restkit.h>
 #import <CoreLocation/CoreLocation.h>
+#import <MapKit/MapKit.h>
 #import "PlanRequestChunk.h"
 #import "enums.h"
 
@@ -28,4 +29,5 @@
 - (id)initWithDefault;  // loads default min & max supported region values from constants.h file
 - (BOOL)isInRegionLat:(double)lat Lng:(double)lng; // Returns true if the given lat/lng are in the supported region
 - (CLRegion *)encirclingCLRegion;  // Returns a clRegion that just encircles the supportedRegion
+- (MKCoordinateRegion)equivalentMKCoordinateRegion;  // Returns a MKCoordinateRegion which is equivalent to supportedRegion
 @end

@@ -110,7 +110,7 @@
 #define UPDATE_DEVICE_TOKEN   @"users/preferences/update/token"
 
 // UserPreferernce (user settings) defaults, max, and min
-#define PREFS_DEFAULT_IS_PUSH_ENABLE YES
+#define PREFS_DEFAULT_IS_PUSH_ENABLE NO
 #define PREFS_DEFAULT_PUSH_NOTIFICATION_THRESHOLD 5
 
 #define URGENT_NOTIFICATION_DEFAULT_VALUE   1
@@ -142,7 +142,7 @@
 #define MAX_BIKE_DISTANCE_MAX_VALUE           20
 
 // Flurry analytics and logging
-#define FLURRY_ENABLED 0
+#define FLURRY_ENABLED 1
 #define IS_KICKFOLIO 0
 
 // Flurry events
@@ -238,6 +238,7 @@
 
 // Local Search behavior
 #define IOS_LOCALSEARCH_VER (6.1)  // Version at which we start using iOS MAPKIT LOCAL SEARCH
+#define MK_LOCAL_SEARCH_SPAN 200000  // Meters span around the current location used by MKLocalSearch
 
 // Reverse Geocode behavior
 #define REVERSE_GEO_DISTANCE_THRESHOLD  (50.0)  // Maximum distance in meters before we redo a reverse geolocation

@@ -21,8 +21,8 @@
 #define TEST_GEO_RESPONSE_URL  @"http://localhost:8080/TPServer/ws/mockgeolocation/"
 
 // To select server URL select 1 otherwise select 0,At a time only one of below must be 1.
-#define PRODUCTION_URL  0
-#define STAGGING_URL    1
+#define PRODUCTION_URL  1
+#define STAGGING_URL    0
 #define LOCAL_URL       0
 
 #if PRODUCTION_URL
@@ -142,7 +142,7 @@
 #define MAX_BIKE_DISTANCE_MAX_VALUE           20
 
 // Flurry analytics and logging
-#define FLURRY_ENABLED 0
+#define FLURRY_ENABLED 1
 #define IS_KICKFOLIO 0
 
 // Flurry events
@@ -238,6 +238,8 @@
 
 // Local Search behavior
 #define IOS_LOCALSEARCH_VER (6.1)  // Version at which we start using iOS MAPKIT LOCAL SEARCH
+#define MK_LOCAL_SEARCH_SPAN 120000  // Meters span around the current location used by MKLocalSearch
+
 
 // Reverse Geocode behavior
 #define REVERSE_GEO_DISTANCE_THRESHOLD  (50.0)  // Maximum distance in meters before we redo a reverse geolocation

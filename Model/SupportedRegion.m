@@ -82,4 +82,19 @@
     return clRegion;
 }
 
+// Returns a MKCoordinateRegion that equals the supportedRegion
+- (MKCoordinateRegion)equivalentMKCoordinateRegion
+{
+    CLLocationCoordinate2D center;
+    center.latitude = (lowerLeftLatitude.doubleValue + upperRightLatitude.doubleValue)/2;
+    center.longitude = (lowerLeftLongitude.doubleValue + upperRightLongitude.doubleValue)/2;
+    
+    CLLocationDegrees latSpanDegrees = upperRightLatitude.doubleValue - lowerLeftLatitude.doubleValue;
+    CLLocationDegrees longSpanDegrees = upperRightLongitude.doubleValue - lowerLeftLongitude.doubleValue;
+    MKCoordinateSpan span = MKCoordinateSpanMake(latSpanDegrees, longSpanDegrees);
+    
+    MKCoordinateRegion region = MKCoordinateRegionMake(center,span);
+    return region;
+}
+
 @end

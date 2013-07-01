@@ -45,7 +45,7 @@
     
     MKLocalSearchRequest *localSearchRequest; //MKLocalSearchRequest Object
     MKCoordinateRegion mpRegion;  // Supported Region For MKLocalSearch
-    
+    BOOL useExistingMpRegion;  // True if you can re-use the existing value of mpRegion.  Reset every now and then so that it will incorporate a new current location.
 }
 - (void)updateWithSelectedLocationIsFrom:(BOOL)isFrom selectedLocation:(Location *)selectedLocation oldSelectedLocation:(Location *)oldSelectedLocation;
 - (void)updateInternalCache;
@@ -223,6 +223,7 @@
     selectedFromLocation = sFL;
     [self updateWithSelectedLocationIsFrom:TRUE selectedLocation:selectedFromLocation oldSelectedLocation:oldSelectedFromLocation];
     oldSelectedFromLocation = selectedFromLocation;
+    useExistingMpRegion = false;
 }
 
 -(void)setSelectedToLocation:(Location *)sTL
@@ -233,6 +234,7 @@
     selectedToLocation = sTL;
     [self updateWithSelectedLocationIsFrom:FALSE selectedLocation:selectedToLocation oldSelectedLocation:oldSelectedToLocation];
     oldSelectedToLocation = selectedToLocation;
+    useExistingMpRegion = false; 
 }
 
 // Called after there has been a significant update to a Location so that cache is invalidated
@@ -604,9 +606,21 @@
 
 // Set Region For MKLocalSearch
 -(MKCoordinateRegion)setRegionForMKLocalSeach{
-    
-    CLLocationCoordinate2D coordinate = [[nc_AppDelegate sharedInstance].locationFromlocManager coordinate];
-    mpRegion =  MKCoordinateRegionMakeWithDistance(coordinate,100000, 100000);
+    if (useExistingMpRegion) {
+        return mpRegion;
+    }
+    SupportedRegion *supportedRegion = [[nc_AppDelegate sharedInstance].toFromViewController supportedRegion];
+    CLLocation* currentCLLocation = [[nc_AppDelegate sharedInstance] locationFromlocManager];
+    CLLocationCoordinate2D coordinate = [currentCLLocation coordinate];
+    if (currentCLLocation && [supportedRegion isInRegionLat:coordinate.latitude Lng:coordinate.longitude]) {
+        // If current location is in supportedRegion, then center region around coordinate (DE367 fix)
+        mpRegion =  MKCoordinateRegionMakeWithDistance(coordinate, MK_LOCAL_SEARCH_SPAN, MK_LOCAL_SEARCH_SPAN);
+    }
+    else {
+        // Otherwise just return the supportedRegion (DE367 fix)
+        mpRegion = [supportedRegion equivalentMKCoordinateRegion];
+    }
+    useExistingMpRegion = true;
     return mpRegion;
 }
 
@@ -655,7 +669,7 @@
             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
             
             if (error != nil) {
-                NIMLOG_ERR1(@"Error = %@/%d",[error localizedDescription],[response.mapItems count]);
+                NIMLOG_ERR1(@"MKLocalSearch Error = %@/%d",[error localizedDescription],[response.mapItems count]);
                 return;
             }
             
@@ -731,7 +745,7 @@
             
             if (error != nil) {
                 
-                NIMLOG_ERR1(@"Error = %@",[error localizedDescription]);
+                NIMLOG_ERR1(@"MKLocalSearch Error = %@",[error localizedDescription]);
                 return;
             }
             
