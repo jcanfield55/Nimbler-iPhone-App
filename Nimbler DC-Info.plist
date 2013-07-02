@@ -29,16 +29,14 @@
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
-	<key>CFBundleIconFile</key>
-	<string>Icon-DC.png</string>
 	<key>CFBundleIconFiles</key>
 	<array>
-		<string>Icon_ipad.png</string>
-		<string>Icon_ipad@2x.png</string>
-		<string>Icon-small.png</string>
-		<string>Icon-small@2x.png</string>
-		<string>Default.png</string>
-		<string>Default@2x.png</string>
+		<string>Icon_ipad-DC.png</string>
+		<string>Icon_ipad-DC@2x.png</string>
+		<string>Icon-small-DC.png</string>
+		<string>Icon-small-DC@2x.png</string>
+		<string>Default-DC.png</string>
+		<string>Default-DC@2x.png</string>
 		<string>Icon-DC.png</string>
 		<string>Icon-DC@2x.png</string>
 	</array>
@@ -48,12 +46,12 @@
 		<dict>
 			<key>CFBundleIconFiles</key>
 			<array>
-				<string>Icon_ipad.png</string>
-				<string>Icon_ipad@2x.png</string>
-				<string>Icon-small.png</string>
-				<string>Icon-small@2x.png</string>
-				<string>Default.png</string>
-				<string>Default@2x.png</string>
+				<string>Icon_ipad-DC.png</string>
+				<string>Icon_ipad-DC@2x.png</string>
+				<string>Icon-small-DC.png</string>
+				<string>Icon-small-DC@2x.png</string>
+				<string>Default-DC.png</string>
+				<string>Default-DC@2x.png</string>
 				<string>Icon-DC.png</string>
 				<string>Icon-DC@2x.png</string>
 			</array>

@@ -723,12 +723,12 @@
                 connectingReqDate = newConnectingReqDate;
             }
             loopsExecuted++;
-            if (loopsExecuted == 25) {
+            if (loopsExecuted == 45) {
                 logError(@"PlanStore -> nextOtpServerDateToCallFor",
                          [NSString stringWithFormat:
-                          @"loopsExecuted unexpectedly reached 25. self.requestChunks.count = %d", self.requestChunks.count]);
+                          @"loopsExecuted unexpectedly reached 45. self.requestChunks.count = %d", self.requestChunks.count]);
             }
-        } while (newConnectingReqDate && loopsExecuted < 25);
+        } while (newConnectingReqDate && loopsExecuted < 45);
         
         return connectingReqDate;
         
