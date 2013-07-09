@@ -142,6 +142,9 @@ FeedBackForm *fbView;
         else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
             strPath = [[NSBundle mainBundle] pathForResource:@"store101_DC" ofType:@"zip"];
         }
+        else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:PORTLAND_BUNDLE_IDENTIFIER]){
+            strPath = [[NSBundle mainBundle] pathForResource:@"store101_Portland" ofType:@"zip"];
+        }
         else{
            strPath = [[NSBundle mainBundle] pathForResource:@"store101" ofType:@"zip"]; 
         }
@@ -295,6 +298,10 @@ FeedBackForm *fbView;
         else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
             NSDecimalNumber* wMataVersion = [NSDecimalNumber decimalNumberWithString:WMATA_PRELOAD_VERSION_NUMBER];
             [locations preLoadIfNeededFromFile:WMATA_PRELOAD_LOCATION_FILE latestVersionNumber:wMataVersion testAddress:WMATA_PRELOAD_TEST_ADDRESS];
+        }
+        else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:PORTLAND_BUNDLE_IDENTIFIER]){
+            NSDecimalNumber* wMataVersion = [NSDecimalNumber decimalNumberWithString:PORTLAND_PRELOAD_VERSION_NUMBER];
+            [locations preLoadIfNeededFromFile:PORTLAND_PRELOAD_LOCATION_FILE latestVersionNumber:wMataVersion testAddress:PORTLAND_PRELOAD_TEST_ADDRESS];
         }
         else {
             if([[NSUserDefaults standardUserDefaults] floatForKey:CALTRAIN_PRELOAD_LOCATION_FILE] < [CALTRAIN_PRELOAD_VERSION_NUMBER floatValue]){
@@ -1356,6 +1363,9 @@ FeedBackForm *fbView;
     else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
         strAppType = WMATA_APP_TYPE;
     }
+    else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:PORTLAND_BUNDLE_IDENTIFIER]){
+        strAppType = PORTLAND_APP_TYPE;
+    }
     else{
         strAppType = SFMUNI_APP_TYPE;
     }
@@ -1367,9 +1377,15 @@ FeedBackForm *fbView;
 - (NSString *)getAgencyIdsString{
     NSMutableString *strMutableAgencyIds = [[NSMutableString alloc] init];
     NSString *strAgencyIds;
+    NSLog(@"bundleIdentifier=%@",[[NSBundle mainBundle] bundleIdentifier]);
     if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
         if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_WMATA_ADV] intValue] == 1){
             [strMutableAgencyIds appendFormat:@"%@,",WMATA_AGENCY_FEED_ID];
+        }
+    }
+    else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:PORTLAND_BUNDLE_IDENTIFIER]){
+        if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_TRIMET_ADV] intValue] == 1){
+            [strMutableAgencyIds appendFormat:@"%@,",TRIMET_AGENCY_FEED_ID];
         }
     }
     else{

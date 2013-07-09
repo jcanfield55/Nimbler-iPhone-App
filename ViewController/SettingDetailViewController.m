@@ -273,6 +273,9 @@
     if(nSettingRow == N_SETTINGS_ROW_ADVISORY){
         if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
             nRowCount = WMATA_SETTINGS_ADVISORIES_ROWS;
+        }
+        else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:PORTLAND_BUNDLE_IDENTIFIER]){
+            nRowCount = TRIMET_SETTINGS_ADVISORIES_ROWS;
         }else{
             nRowCount = N_SETTINGS_ADVISORY_ROWS;
         }
@@ -319,6 +322,10 @@
         if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
             cell.textLabel.text = WMATA_ADVISORIES;
             cell.accessoryType = (userPrefs.wMataAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+        }
+        else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:PORTLAND_BUNDLE_IDENTIFIER]){
+            cell.textLabel.text = TRIMET_ADVISORIES;
+            cell.accessoryType = (userPrefs.trimetAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
         }
         else{
             if(indexPath.row == SETTINGS_ADVISORY_SFMUNI_ROW){
@@ -499,6 +506,20 @@
                     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                     cell.accessoryType = UITableViewCellAccessoryCheckmark;
                     userPrefs.wMataAdvisories = true;
+                }
+            }
+        }
+        else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:PORTLAND_BUNDLE_IDENTIFIER]){
+            if(indexPath.row == SETTINGS_ADVISORY_TRIMET_ROW){
+                if(userPrefs.trimetAdvisories){
+                    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    userPrefs.trimetAdvisories = false;
+                }
+                else{
+                    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                    cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                    userPrefs.trimetAdvisories = true;
                 }
             }
         }

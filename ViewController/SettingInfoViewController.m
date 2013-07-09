@@ -366,6 +366,14 @@ UIImage *imageDetailDisclosure;
                 [strDetailTextLabel appendString:LABEL_NONE];
             }
         }
+        else if ([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:PORTLAND_BUNDLE_IDENTIFIER]) {
+            if(userPrefs.trimetAdvisories) {
+                [strDetailTextLabel appendString:LABEL_TRIMET];
+            }
+            else if (!userPrefs.trimetAdvisories) {
+                [strDetailTextLabel appendString:LABEL_NONE];
+            }
+        }
         else{
             if(userPrefs.sfMuniAdvisories &&
                userPrefs.bartAdvisories &&

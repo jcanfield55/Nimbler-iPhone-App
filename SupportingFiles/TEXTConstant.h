@@ -93,6 +93,7 @@
 #define ACTRANSIT_ADVISORIES @"A/C transit advisories"
 #define CALTRAIN_ADVISORIES  @"Caltrain advisories"
 #define WMATA_ADVISORIES     @"WMATA advisories"
+#define TRIMET_ADVISORIES     @"Trimet advisories"
 
 
 #define FREQUENCY_OF_PUSH       @"Frequency of push notification"
@@ -137,6 +138,7 @@
 #define LABEL_ACTRANSIT         @"Ac Transit"
 #define LABEL_CALTRAIN          @"Caltrain"
 #define LABEL_WMATA             @"Wmata"
+#define LABEL_TRIMET            @"Trimet"
 
 #define LABEL_NO_NOTIFICATIONS  @"No Notifications"
 #define LABEL_WKDAY_ALL         @"Wkday all"

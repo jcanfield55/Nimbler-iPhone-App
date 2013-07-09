@@ -15,11 +15,13 @@
 // Bundle and App Types
 #define CALTRAIN_BUNDLE_IDENTIFIER         @"com.Nimbler.Nimbler-Caltrain"
 #define WMATA_BUNDLE_IDENTIFIER            @"com.nimbler.washingtondc"
+#define PORTLAND_BUNDLE_IDENTIFIER         @"com.nimbler.Nimbler-Portland"
 
 
 #define CALTRAIN_APP_TYPE   @"1"
 #define SFMUNI_APP_TYPE     @"4"
 #define WMATA_APP_TYPE      @"5"
+#define PORTLAND_APP_TYPE   @"6"
 
 // Default boundaries for geolocation and routing
 #define MIN_LAT           @"36.791000000000004"
@@ -67,11 +69,13 @@
 
 #define N_SETTINGS_ADVISORY_ROWS 4  // Row defs follow
 #define WMATA_SETTINGS_ADVISORIES_ROWS 1
+#define TRIMET_SETTINGS_ADVISORIES_ROWS 1
 #define SETTINGS_ADVISORY_SFMUNI_ROW 0
 #define SETTINGS_ADVISORY_BART_ROW 1
 #define SETTINGS_ADVISORY_ACTRANSIT_ROW 2
 #define SETTINGS_ADVISORY_CALTRAIN_ROW 3
 #define SETTINGS_ADVISORY_WMATA_ROW 0
+#define SETTINGS_ADVISORY_TRIMET_ROW 0
 
 #define N_SETTINGS_PUSH_SOUND_ROWS 2  // Row defs follow
 #define SETTINGS_SOUNDS_URGENT_ROW 0
@@ -104,6 +108,7 @@
 #define ACTRANSIT_PRELOAD_LOCATION_FILE         @"ac-transit.json"
 #define SFMUNI_PRELOAD_LOCATION_FILE         @"sf-muni.json"
 #define WMATA_PRELOAD_LOCATION_FILE          @"wmata-station.json"
+#define PORTLAND_PRELOAD_LOCATION_FILE          @"portland-station.json"
 
 #define CALTRAIN_PRELOAD_VERSION_NUMBER    @"1.100"
 #define CALTRAIN_PRELOAD_TEST_ADDRESS    @"San Martin Caltrain, San Martin, CA 95046, USA"
@@ -120,6 +125,9 @@
 #define WMATA_PRELOAD_VERSION_NUMBER    @"1.120"
 #define WMATA_PRELOAD_TEST_ADDRESS    @"Anacostia Metro Station, Washington, DC 20020, USA"
 
+#define PORTLAND_PRELOAD_VERSION_NUMBER    @"2.100"
+#define PORTLAND_PRELOAD_TEST_ADDRESS    @"Anacostia Metro Station, Washington, DC 20020, USA"
+
 //
 // Agency IDs, names, shortnames, etc
 //
@@ -133,6 +141,7 @@
 #define SF_FERRIES_AGENCY_FEED_ID        @"7"
 #define WMATA_AGENCY_FEED_ID @"8"
 #define SAM_TRANS_AGENCY_FEED_ID    @"9"
+#define TRIMET_AGENCY_FEED_ID    @"21"
 
 // Agencies without a feed ID will not get GTFS schedules (need to do mapping only through OTP)
 
@@ -185,6 +194,7 @@
 #define ENABLE_ACTRANSIT_ADV @"enableAcTransitAdv"
 #define ENABLE_CALTRAIN_ADV @"enableCaltrainAdv"
 #define ENABLE_WMATA_ADV     @"enableWmataAdv"
+#define ENABLE_TRIMET_ADV     @"enableTrimetAdv"
 
 
 #define ENABLE_SFMUNI_ADV_DEFAULT FALSE
@@ -192,6 +202,7 @@
 #define ENABLE_ACTRANSIT_ADV_DEFAULT FALSE
 #define ENABLE_CALTRAIN_ADV_DEFAULT TRUE
 #define ENABLE_WMATA_ADV_DEFAULT FALSE
+#define ENABLE_TRIMET_ADV_DEFAULT FALSE
 
 /*
 //

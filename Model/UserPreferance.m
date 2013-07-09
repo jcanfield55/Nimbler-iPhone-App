@@ -71,6 +71,7 @@ BOOL tpStrToBool(NSObject* value)
 @synthesize dateOfLastUserPrefChange;
 @synthesize dateOfLastSuccessfulSaveToServer;
 @synthesize wMataAdvisories;
+@synthesize trimetAdvisories;
 
 
 static UserPreferance* userPrefs;
@@ -114,6 +115,14 @@ static UserPreferance* userPrefs;
             userPrefs.wMataAdvisories = tpStrToBool(wMataTemp);
         } else {
             userPrefs.wMataAdvisories = ENABLE_WMATA_ADV_DEFAULT;
+            saveNeeded = true;
+        }
+        
+        NSString* trimetTemp = [prefs objectForKey:ENABLE_TRIMET_ADV];
+        if (trimetTemp) {
+            userPrefs.trimetAdvisories = tpStrToBool(trimetTemp);
+        } else {
+            userPrefs.trimetAdvisories = ENABLE_TRIMET_ADV_DEFAULT;
             saveNeeded = true;
         }
         
@@ -477,6 +486,15 @@ static UserPreferance* userPrefs;
     wMataAdvisories = wMataAdv;
     NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
     [prefs setObject:tpBoolToStr(wMataAdvisories) forKey:ENABLE_WMATA_ADV];
+    [prefs synchronize];
+    [self markChanges];
+}
+
+-(void) setTrimetAdvisories:(BOOL)trimetAdv
+{
+    trimetAdvisories = trimetAdv;
+    NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setObject:tpBoolToStr(trimetAdvisories) forKey:ENABLE_TRIMET_ADV];
     [prefs synchronize];
     [self markChanges];
 }

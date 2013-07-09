@@ -15,7 +15,7 @@
 #define GENERATING_SEED_DATABASE  0 // when we are generating seed database the value is 1 otherwise 0
 #define SKIP_REAL_TIME_UPDATES 0 // If 1, system will not request real-time updates
 
-#define TRIP_GENERATE_URL     @"http://23.23.210.156:7070/opentripplanner-api-webapp/ws/" 
+#define TRIP_GENERATE_URL     @"http://23.23.210.156:7070/TPServer/ws/" 
 //#define TRIP_GENERATE_URL @"http://ec2-23-22-169-158.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"
 #define GEO_RESPONSE_URL      @"http://maps.googleapis.com/maps/api/geocode/"
 #define TEST_GEO_RESPONSE_URL  @"http://localhost:8080/TPServer/ws/mockgeolocation/"
@@ -64,9 +64,9 @@
 
 // Current Location
 #define CURRENT_LOCATION_STARTING_FROM_FREQUENCY 7.0
-#define NEWGEOCODE_RESULT_MSG @"in the San Francisco Bay Area"
-#define LOCATION_NOTAPPEAR_MSG @"Bay Area"
-#define APP_TITLE              @"Nimbler SF"
+#define NEWGEOCODE_RESULT_MSG @"in the Portland"
+#define LOCATION_NOTAPPEAR_MSG @"Portland"
+#define APP_TITLE              @"Nimbler Portland"
 
 // Testflight App Analytics and logging
 #define TEST_FLIGHT_ENABLED 0 // If 0, then do not include testFlightApp at all
@@ -382,7 +382,7 @@
 #define FOR_TODAY                      @"forToday"
 #define LEGS                           @"legs"
 #define LIVE_FEEDS_IMAGE_DOWNLOAD_URL  @"advisories/download"
-#define METADATA_URL                   @"metadata"
+#define METADATA_URL                   @"plan/graph/metadata?appType=6"
 #define NEXT_LEGS_PLAN                 @"plan/nextlegs"
 
 // US-163 Appstore Feedback reminder constants
@@ -485,3 +485,4 @@
 #define SHOW_INTERMEDIATE_STOPS @"showIntermediateStops"
 
 #define LIVE_FEEDS_BY_VEHICLE_POSITION @"livefeeds/vehiclePosition"
+

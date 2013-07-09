@@ -1,0 +1,29 @@
+//
+// Prefix header for all source files of the 'Network Commuting' target in the 'Network Commuting' project
+//
+
+#import <Availability.h>
+
+#ifndef __IPHONE_3_0
+#warning "This project uses features only available in iOS SDK 3.0 and later."
+#endif
+
+#ifdef __OBJC__
+               #import <UIKit/UIKit.h>
+               #import <Foundation/Foundation.h>
+               #import <CoreData/CoreData.h>
+               #import "ConstantsPortland.h"
+               #import "UIConstants.h"
+               #import "TEXTConstant.h"
+               #import "CustomBadge.h"
+               #import "RXCustomTabBar.h"
+               #import <QuartzCore/QuartzCore.h>
+               #import <AudioToolbox/AudioServices.h>
+               #import "Logging.h"
+               #import "UIDevice-Hardware.h"
+               #import "UIAutomationConstants.h"
+               #import "ZipArchive.h"
+               #import <FacebookSDK/FacebookSDK.h>
+               #import "LocalConstantsPortland.h"
+               #import "Agencies.h"
+#endif

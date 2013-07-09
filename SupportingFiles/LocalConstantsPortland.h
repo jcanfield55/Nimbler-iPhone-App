@@ -10,7 +10,7 @@
 #define Nimbler_SF_Header_h
 
 // Default time zone
-#define DEFAULT_TIME_ZONE @"America/New_York"
+#define DEFAULT_TIME_ZONE @"America/Los_Angeles"
 
 // Bundle and App Types
 #define CALTRAIN_BUNDLE_IDENTIFIER         @"com.Nimbler.Nimbler-Caltrain"
@@ -24,19 +24,18 @@
 #define PORTLAND_APP_TYPE   @"6"
 
 // Default boundaries for geolocation and routing
-#define MIN_LAT @"38.5"
-#define MIN_LONG @"-77.6"
-#define MAX_LAT @"39.191489"
-#define MAX_LONG @"-76.668939"
-
-// Flurry API Key
-#define FLURRY_API_KEY @"DSTDN6ST2YDWF4V9RWFZ"
+#define MIN_LAT           @"45.096058"
+#define MIN_LONG          @"-123.2109336"
+#define MAX_LAT           @"45.896979"
+#define MAX_LONG          @"-122.11313380000001"
 
 // Facebook App ID (for tracking referrals)
-#define FB_APP_ID @"" // Nimbler DC FB App ID
+#define FB_APP_ID @"247868928685317"  // Nimbler SF FB App ID
 
+// Flurry API Key
+#define FLURRY_API_KEY @"27WGHH9DG5Z5MRCB5QRN"
 // Review reminder URL
-#define NIMBLER_REVIEW_URL @""
+#define NIMBLER_REVIEW_URL                   @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=638067545"
 
 //
 // Settings Page Rows
@@ -197,13 +196,12 @@
 #define ENABLE_WMATA_ADV     @"enableWmataAdv"
 #define ENABLE_TRIMET_ADV     @"enableTrimetAdv"
 
-
-#define ENABLE_SFMUNI_ADV_DEFAULT FALSE
-#define ENABLE_BART_ADV_DEFAULT FALSE
+#define ENABLE_SFMUNI_ADV_DEFAULT TRUE
+#define ENABLE_BART_ADV_DEFAULT TRUE
 #define ENABLE_ACTRANSIT_ADV_DEFAULT FALSE
 #define ENABLE_CALTRAIN_ADV_DEFAULT FALSE
-#define ENABLE_WMATA_ADV_DEFAULT TRUE
-#define ENABLE_TRIMET_ADV_DEFAULT FALSE
+#define ENABLE_WMATA_ADV_DEFAULT FALSE
+#define ENABLE_TRIMET_ADV_DEFAULT TRUE
 
 /*
 //
