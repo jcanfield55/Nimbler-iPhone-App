@@ -157,12 +157,42 @@ FeedBackForm *fbView;
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }
+
+// This methods will prevent document directory backups to icloud
+-(BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL
+{
+    const char* filePath = [[URL path] fileSystemRepresentation];
+    const char* attrName = "com.apple.MobileBackup";
+    if (&NSURLIsExcludedFromBackupKey == nil) {
+        // iOS 5.0.1 and lower
+        u_int8_t attrValue = 1;
+        int result = setxattr(filePath, attrName, &attrValue, sizeof(attrValue), 0, 0);
+        return result == 0;
+        
+    }
+    else {
+        // First try and remove the extended attribute if it is present
+        int result = getxattr(filePath, attrName, NULL, sizeof(u_int8_t), 0, 0);
+        if (result != -1) {
+            // The attribute exists, we need to remove it
+            int removeResult = removexattr(filePath, attrName, 0);
+            if (removeResult == 0) {
+                NSLog(@"Removed extended attribute on file %@", URL);
+            }
+        }
+        
+        // Set the new key
+        NSError *error = nil;
+        [URL setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:&error];
+        return error == nil;
+    }
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 #if AUTOMATED_TESTING_SKIP_NCAPPDELEGATE
     return YES;    // If Automated testing with alternative persistent store, skip NC_AppDelegate altogether and do all setup in test area
 #endif
-    
     NIMLOG_EVENT1(@"nc_AppDelegate didFinishLaunchingWithOptions started");
     [self unzipZipFileToApplicationDocumentDirectory];
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
@@ -300,8 +330,8 @@ FeedBackForm *fbView;
             [locations preLoadIfNeededFromFile:WMATA_PRELOAD_LOCATION_FILE latestVersionNumber:wMataVersion testAddress:WMATA_PRELOAD_TEST_ADDRESS];
         }
         else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:PORTLAND_BUNDLE_IDENTIFIER]){
-            NSDecimalNumber* wMataVersion = [NSDecimalNumber decimalNumberWithString:PORTLAND_PRELOAD_VERSION_NUMBER];
-            [locations preLoadIfNeededFromFile:PORTLAND_PRELOAD_LOCATION_FILE latestVersionNumber:wMataVersion testAddress:PORTLAND_PRELOAD_TEST_ADDRESS];
+            NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:PORTLAND_PRELOAD_VERSION_NUMBER];
+            [stations preLoadIfNeededFromFile:PORTLAND_PRELOAD_LOCATION_FILE latestVersionNumber:caltrainVersion testAddress:PORTLAND_PRELOAD_TEST_ADDRESS];
         }
         else {
             if([[NSUserDefaults standardUserDefaults] floatForKey:CALTRAIN_PRELOAD_LOCATION_FILE] < [CALTRAIN_PRELOAD_VERSION_NUMBER floatValue]){
@@ -325,6 +355,7 @@ FeedBackForm *fbView;
                 [stations preLoadIfNeededFromFile:SFMUNI_PRELOAD_LOCATION_FILE latestVersionNumber:sfMuniVersion testAddress:SFMUNI_PRELOAD_TEST_ADDRESS];
             }
         }
+        saveContext(self.managedObjectContext);
         NSArray *arrlocations = [locations locationsWithFormattedAddress:STATION_LIST];
         if(!arrlocations || [arrlocations count] == 0){
             [stations generateNewTempLocationForAllStationString];
@@ -365,6 +396,7 @@ FeedBackForm *fbView;
     [FBSettings publishInstall:FB_APP_ID];
     NIMLOG_PERF2(@"Finished calling FB SDK");
     
+    [self addSkipBackupAttributeToItemAtURL:[self applicationDocumentsDirectory]];
     
     // Create an instance of a UINavigationController and put toFromViewController as the first view
     @try {
@@ -571,6 +603,12 @@ FeedBackForm *fbView;
     [toFromViewController.routeOptionsVC.timerGettingRealDataByItinerary invalidate];
     toFromViewController.routeOptionsVC.timerGettingRealDataByItinerary = nil;
     isFromBackground = YES;
+    
+    [toFromViewController.routeOptionsVC.routeDetailsVC.timer invalidate];
+    toFromViewController.routeOptionsVC.routeDetailsVC.timer = nil;
+    
+    [toFromViewController.routeOptionsVC.timerRealtime invalidate];
+    toFromViewController.routeOptionsVC.timerRealtime = nil;
 }
 
 // DE-238 Fixed
@@ -664,6 +702,13 @@ FeedBackForm *fbView;
     if([userPrefs isSaveToServerNeeded]){
         [userPrefs saveToServer];  // Save settings to server if they have not been already
     }
+    
+    toFromViewController.routeOptionsVC.routeDetailsVC.count = 119;
+    toFromViewController.routeOptionsVC.remainingCount = 119;
+    toFromViewController.routeOptionsVC.timerRealtime = [NSTimer scheduledTimerWithTimeInterval:0 target:toFromViewController.routeOptionsVC selector:@selector(requestServerForRealTime) userInfo:nil repeats: NO];
+    
+//    toFromViewController.routeOptionsVC.routeDetailsVC.timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:toFromViewController.routeOptionsVC.routeDetailsVC selector:@selector(progressViewProgress) userInfo:nil repeats:YES];
+    
     //    sleep(2);
 }
 
@@ -1377,7 +1422,6 @@ FeedBackForm *fbView;
 - (NSString *)getAgencyIdsString{
     NSMutableString *strMutableAgencyIds = [[NSMutableString alloc] init];
     NSString *strAgencyIds;
-    NSLog(@"bundleIdentifier=%@",[[NSBundle mainBundle] bundleIdentifier]);
     if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
         if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_WMATA_ADV] intValue] == 1){
             [strMutableAgencyIds appendFormat:@"%@,",WMATA_AGENCY_FEED_ID];

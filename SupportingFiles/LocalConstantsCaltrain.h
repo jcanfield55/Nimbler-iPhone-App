@@ -108,7 +108,7 @@
 #define ACTRANSIT_PRELOAD_LOCATION_FILE         @"ac-transit.json"
 #define SFMUNI_PRELOAD_LOCATION_FILE         @"sf-muni.json"
 #define WMATA_PRELOAD_LOCATION_FILE          @"wmata-station.json"
-#define PORTLAND_PRELOAD_LOCATION_FILE          @"portland-station.json"
+#define PORTLAND_PRELOAD_LOCATION_FILE          @"trimet.json"
 
 #define CALTRAIN_PRELOAD_VERSION_NUMBER    @"1.100"
 #define CALTRAIN_PRELOAD_TEST_ADDRESS    @"San Martin Caltrain, San Martin, CA 95046, USA"
@@ -126,7 +126,7 @@
 #define WMATA_PRELOAD_TEST_ADDRESS    @"Anacostia Metro Station, Washington, DC 20020, USA"
 
 #define PORTLAND_PRELOAD_VERSION_NUMBER    @"2.100"
-#define PORTLAND_PRELOAD_TEST_ADDRESS    @"Anacostia Metro Station, Washington, DC 20020, USA"
+#define PORTLAND_PRELOAD_TEST_ADDRESS    @"Hatfield Government Center MAX Station"
 
 //
 // Agency IDs, names, shortnames, etc

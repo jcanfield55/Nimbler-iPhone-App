@@ -351,7 +351,7 @@ static UserPreferance* userPrefs;
                                     ENABLE_SFMUNI_ADV,[prefs objectForKey:ENABLE_SFMUNI_ADV],
                                     ENABLE_BART_ADV,[prefs objectForKey:ENABLE_BART_ADV],
                                     ENABLE_ACTRANSIT_ADV,[prefs objectForKey:ENABLE_ACTRANSIT_ADV],
-                                    ENABLE_CALTRAIN_ADV,[prefs objectForKey:ENABLE_CALTRAIN_ADV],
+                                    ENABLE_CALTRAIN_ADV,[prefs objectForKey:ENABLE_CALTRAIN_ADV],ENABLE_WMATA_ADV,[prefs objectForKey:ENABLE_WMATA_ADV],ENABLE_TRIMET_ADV,[prefs objectForKey:ENABLE_TRIMET_ADV],
                                     NOTIF_TIMING_MORNING,[prefs objectForKey:NOTIF_TIMING_MORNING],
                                     NOTIF_TIMING_MIDDAY,[prefs objectForKey:NOTIF_TIMING_MIDDAY],
                                     NOTIF_TIMING_EVENING,[prefs objectForKey:NOTIF_TIMING_EVENING],
