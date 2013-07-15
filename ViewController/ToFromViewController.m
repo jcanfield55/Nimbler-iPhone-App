@@ -301,6 +301,8 @@ UIImage *imageDetailDisclosure;
 //    }
     [self.mainTable setBackgroundColor: [UIColor clearColor]]; 
     // Do any additional setup after loading the view from its nib.
+    
+     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"ADV" style:UIBarButtonItemStylePlain target:self.navigationController.parentViewController action:@selector(revealToggle:)];
 }
 
 - (void)setSupportedRegion:(SupportedRegion *)supportedReg0
@@ -344,7 +346,7 @@ UIImage *imageDetailDisclosure;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    //[self.navigationController setNavigationBarHidden:YES animated:NO];
     [mainTable setFrame:CGRectMake(0, 0, 320, 319)];
     NSArray *itinerariesArray = [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray;
     NSArray *fromToStopId = [nc_AppDelegate sharedInstance].planStore.fromToStopID;
@@ -384,6 +386,8 @@ UIImage *imageDetailDisclosure;
         [toTable reloadData];
         [fromTable reloadData];
         [mainTable reloadData];
+        
+         [[nc_AppDelegate sharedInstance].window bringSubviewToFront:[nc_AppDelegate sharedInstance].twitterCount];
     }
     @catch (NSException *exception) {
         logException(@"ToFromViewController->viewWillAppear", @"", exception);
@@ -409,6 +413,7 @@ UIImage *imageDetailDisclosure;
     if (isCurrentLocationMode) {
         [self reverseGeocodeCurrentLocationIfNeeded];
     }
+     [[nc_AppDelegate sharedInstance].window bringSubviewToFront:[nc_AppDelegate sharedInstance].twitterCount];
 }
 
 - (void)didReceiveMemoryWarning
@@ -1548,7 +1553,7 @@ UIImage *imageDetailDisclosure;
 - (void)endEdit{
     //Fixed DE-330
     // Clearing both textfield before calling seteditMode method.
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    //[self.navigationController setNavigationBarHidden:YES animated:NO];
     self.toTableVC.txtField.text = NULL_STRING;
     self.fromTableVC.txtField.text = NULL_STRING;
     [self setEditMode:NO_EDIT];

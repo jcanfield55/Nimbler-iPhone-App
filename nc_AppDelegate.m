@@ -7,6 +7,7 @@
 //
 
 #import "nc_AppDelegate.h"
+#import "RevealController.h"
 #import "UtilityFunctions.h"
 #import "Logging.h"
 #import "LocationFromGoogle.h"
@@ -400,15 +401,15 @@ FeedBackForm *fbView;
     
     // Create an instance of a UINavigationController and put toFromViewController as the first view
     @try {
-        [self setUpTabViewController];
-        
-        //        [self.tabBarController.tabBar setSelectedImageTintColor:[UIColor redColor]];
-        //        [self.tabBarController.tabBar setBackgroundImage:[UIImage imageNamed:@"img_tabbar.png"]];
+        twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:toFromViewController];
+        UINavigationController *tweetController = [[UINavigationController alloc] initWithRootViewController:twitterView];
+        RevealController *revealController = [[RevealController alloc] initWithFrontViewController:navigationController rearViewController:tweetController];
+        self.window.rootViewController = revealController;
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        [[self window] setRootViewController:self.tabBarController];
+        [[self window] setRootViewController:revealController];
         [self.window makeKeyAndVisible];
-        }
-   // }
+    }
     @catch (NSException *exception) {
         logException(@"ncAppDelegate->didFinishLaunchingWithOptions #2", @"", exception);
     }
@@ -1322,16 +1323,16 @@ FeedBackForm *fbView;
 {
         if([[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_SFMUNI_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_BART_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_ACTRANSIT_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_CALTRAIN_ADV] intValue] != 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:ENABLE_WMATA_ADV] intValue] != 1){ 
             count = 0;
-    }
+        }
     int tweetConut =count;
     [twitterCount removeFromSuperview];
     twitterCount = [[CustomBadge alloc] init];
     twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        [twitterCount setFrame:CGRectMake(130,511, twitterCount.frame.size.width, twitterCount.frame.size.height)];
+        [twitterCount setFrame:CGRectMake(45,28,twitterCount.frame.size.width,twitterCount.frame.size.height)];
     }
     else{
-        [twitterCount setFrame:CGRectMake(130,430, twitterCount.frame.size.width, twitterCount.frame.size.height)];
+        [twitterCount setFrame:CGRectMake(45,28,twitterCount.frame.size.width,twitterCount.frame.size.height)];
     }
     if (tweetConut == 0) {
         [twitterCount setHidden:YES];

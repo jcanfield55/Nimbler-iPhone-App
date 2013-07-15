@@ -792,6 +792,18 @@
 		8DAA2988178C0FB800C3FA30 /* Default-Portland.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DAA2971178C0E1200C3FA30 /* Default-Portland.png */; };
 		8DAA2989178C0FBB00C3FA30 /* Default-Portland@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DAA2972178C0E1300C3FA30 /* Default-Portland@2x.png */; };
 		8DAA298A178C0FBF00C3FA30 /* Default-Portland-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DAA2970178C0E1200C3FA30 /* Default-Portland-568h@2x.png */; };
+		8DABCDAC1793C2FB00C1BDCF /* RevealController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DABCDA91793C2FB00C1BDCF /* RevealController.m */; };
+		8DABCDAD1793C2FB00C1BDCF /* ZUUIRevealController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DABCDAB1793C2FB00C1BDCF /* ZUUIRevealController.m */; };
+		8DABCDB21793C39500C1BDCF /* RevealController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DABCDA91793C2FB00C1BDCF /* RevealController.m */; };
+		8DABCDB31793C39500C1BDCF /* RevealController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DABCDA91793C2FB00C1BDCF /* RevealController.m */; };
+		8DABCDB41793C39600C1BDCF /* RevealController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DABCDA91793C2FB00C1BDCF /* RevealController.m */; };
+		8DABCDB51793C39900C1BDCF /* ZUUIRevealController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DABCDAB1793C2FB00C1BDCF /* ZUUIRevealController.m */; };
+		8DABCDB61793C39A00C1BDCF /* ZUUIRevealController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DABCDAB1793C2FB00C1BDCF /* ZUUIRevealController.m */; };
+		8DABCDB71793C39A00C1BDCF /* ZUUIRevealController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DABCDAB1793C2FB00C1BDCF /* ZUUIRevealController.m */; };
+		8DABCDBF1793C8BC00C1BDCF /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DABCDBE1793C8BC00C1BDCF /* arrow.png */; };
+		8DABCDC01793C8BC00C1BDCF /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DABCDBE1793C8BC00C1BDCF /* arrow.png */; };
+		8DABCDC11793C8BC00C1BDCF /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DABCDBE1793C8BC00C1BDCF /* arrow.png */; };
+		8DABCDC21793C8BC00C1BDCF /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DABCDBE1793C8BC00C1BDCF /* arrow.png */; };
 		8DBE17FB172E8D7A0020B034 /* bus.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBE17FA172E8D7A0020B034 /* bus.png */; };
 		8DBE17FE172E97EA0020B034 /* bus.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBE17FA172E8D7A0020B034 /* bus.png */; };
 		8DBE17FF172E97EB0020B034 /* bus.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBE17FA172E8D7A0020B034 /* bus.png */; };
@@ -1499,6 +1511,11 @@
 		8DAA2979178C0E5100C3FA30 /* Icon-Portland-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Portland-Small@2x.png"; sourceTree = "<group>"; };
 		8DAA297A178C0E5100C3FA30 /* Icon-Portland.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Portland.png"; sourceTree = "<group>"; };
 		8DAA297B178C0E5100C3FA30 /* Icon-Portland@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Portland@2x.png"; sourceTree = "<group>"; };
+		8DABCDA81793C2FB00C1BDCF /* RevealController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RevealController.h; sourceTree = "<group>"; };
+		8DABCDA91793C2FB00C1BDCF /* RevealController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RevealController.m; sourceTree = "<group>"; };
+		8DABCDAA1793C2FB00C1BDCF /* ZUUIRevealController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZUUIRevealController.h; sourceTree = "<group>"; };
+		8DABCDAB1793C2FB00C1BDCF /* ZUUIRevealController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZUUIRevealController.m; sourceTree = "<group>"; };
+		8DABCDBE1793C8BC00C1BDCF /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
 		8DBE17FA172E8D7A0020B034 /* bus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bus.png; sourceTree = "<group>"; };
 		8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		8DC019F71627F4BE004200E5 /* nc_AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nc_AppDelegate.h; sourceTree = SOURCE_ROOT; };
@@ -1758,6 +1775,7 @@
 		520FB132162603430083F143 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				8DABCDA71793C2FB00C1BDCF /* SlideView */,
 				8DEAC190177841F400D7997C /* TTTAttributedLabel.h */,
 				8DEAC191177841F400D7997C /* TTTAttributedLabel.m */,
 				8D3EFCB116E85DEE00266C6A /* ZipArchive */,
@@ -1824,6 +1842,7 @@
 		520FB1A8162603AF0083F143 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8DABCDBE1793C8BC00C1BDCF /* arrow.png */,
 				8DEAC19A1778517800D7997C /* nimblrDC.png */,
 				8DEAC19B1778517800D7997C /* nimblrDC@2x.png */,
 				8D0C2961173124DA00E6AA1B /* Handle_control.png */,
@@ -2271,6 +2290,17 @@
 			name = DB;
 			sourceTree = "<group>";
 		};
+		8DABCDA71793C2FB00C1BDCF /* SlideView */ = {
+			isa = PBXGroup;
+			children = (
+				8DABCDA81793C2FB00C1BDCF /* RevealController.h */,
+				8DABCDA91793C2FB00C1BDCF /* RevealController.m */,
+				8DABCDAA1793C2FB00C1BDCF /* ZUUIRevealController.h */,
+				8DABCDAB1793C2FB00C1BDCF /* ZUUIRevealController.m */,
+			);
+			path = SlideView;
+			sourceTree = "<group>";
+		};
 		CC9370D615BFB97200A09A5A /* Flurry */ = {
 			isa = PBXGroup;
 			children = (
@@ -2646,6 +2676,7 @@
 				8D00B007172FD22900B01ED3 /* tram.png in Resources */,
 				8D0C2962173124DA00E6AA1B /* Handle_control.png in Resources */,
 				8DE28CA81732379300403CD0 /* RouteDetailViewController_568h.xib in Resources */,
+				8DABCDBF1793C8BC00C1BDCF /* arrow.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2834,6 +2865,7 @@
 				52B3AE1A1755D0B1009FFD94 /* RouteDetailViewController_568h.xib in Resources */,
 				52B3AE211755E1B3009FFD94 /* Icon-Caltrain.png in Resources */,
 				52B3AE221755E1B8009FFD94 /* Icon-Caltrain@2x.png in Resources */,
+				8DABCDC01793C8BC00C1BDCF /* arrow.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3010,6 +3042,7 @@
 				8DAA298A178C0FBF00C3FA30 /* Default-Portland-568h@2x.png in Resources */,
 				8DF77CCA178D570700B45C52 /* trimet.json in Resources */,
 				8D5008EC178D680A002E7820 /* store101_Portland.zip in Resources */,
+				8DABCDC21793C8BC00C1BDCF /* arrow.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3184,6 +3217,7 @@
 				8DEAC1A217785F2200D7997C /* nimblrDC.png in Resources */,
 				8DEAC1A317785F2500D7997C /* nimblrDC@2x.png in Resources */,
 				8D5008ED178D7D42002E7820 /* RouteDetailViewController_568h.xib in Resources */,
+				8DABCDC11793C8BC00C1BDCF /* arrow.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3284,6 +3318,8 @@
 				8D8B10D0172026970093E110 /* WebView.m in Sources */,
 				2E02C785173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */,
 				8DEAC192177841F400D7997C /* TTTAttributedLabel.m in Sources */,
+				8DABCDAC1793C2FB00C1BDCF /* RevealController.m in Sources */,
+				8DABCDAD1793C2FB00C1BDCF /* ZUUIRevealController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3378,6 +3414,8 @@
 				8DA77FD01724FF0D0090C2EA /* WebView.m in Sources */,
 				2E02C786173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */,
 				8DEAC193177841F700D7997C /* TTTAttributedLabel.m in Sources */,
+				8DABCDB31793C39500C1BDCF /* RevealController.m in Sources */,
+				8DABCDB51793C39900C1BDCF /* ZUUIRevealController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3459,6 +3497,8 @@
 				8DAA289A178BDFEF00C3FA30 /* WebView.m in Sources */,
 				8DAA289B178BDFEF00C3FA30 /* LocationFromLocalSearch.m in Sources */,
 				8DAA289C178BDFEF00C3FA30 /* TTTAttributedLabel.m in Sources */,
+				8DABCDB41793C39600C1BDCF /* RevealController.m in Sources */,
+				8DABCDB71793C39A00C1BDCF /* ZUUIRevealController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3540,6 +3580,8 @@
 				2E02C787173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */,
 				8DEAC18F1778246400D7997C /* RouteExcludeSettings.m in Sources */,
 				8DEAC194177841F800D7997C /* TTTAttributedLabel.m in Sources */,
+				8DABCDB21793C39500C1BDCF /* RevealController.m in Sources */,
+				8DABCDB61793C39A00C1BDCF /* ZUUIRevealController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

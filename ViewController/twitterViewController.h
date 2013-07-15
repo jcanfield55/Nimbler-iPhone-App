@@ -14,6 +14,17 @@
     NSMutableArray *arrayTweet;
     NSString *strAllAdvisories;
     UIActivityIndicatorView *activityIndicatorView;
+    
+    // Pull To Refresh variables
+    UIView *refreshHeaderView;
+    UILabel *refreshLabel;
+    UIImageView *refreshArrow;
+    UIActivityIndicatorView *refreshSpinner;
+    BOOL isDragging;
+    BOOL isLoading;
+    NSString *textPull;
+    NSString *textRelease;
+    NSString *textLoading;
 }
 
 @property (strong, nonatomic) IBOutlet UITableView* mainTable;
@@ -28,6 +39,22 @@
 @property (strong, nonatomic) NSMutableArray *arrayTweet;
 @property (strong, nonatomic) NSString *strAllAdvisories;
 @property (strong, nonatomic) UIActivityIndicatorView *activityIndicatorView;
+
+
+// Pull To Refresh properties and methods
+@property (nonatomic, retain) UIView *refreshHeaderView;
+@property (nonatomic, retain) UILabel *refreshLabel;
+@property (nonatomic, retain) UIImageView *refreshArrow;
+@property (nonatomic, retain) UIActivityIndicatorView *refreshSpinner;
+@property (nonatomic, copy) NSString *textPull;
+@property (nonatomic, copy) NSString *textRelease;
+@property (nonatomic, copy) NSString *textLoading;
+
+- (void)setupStrings;
+- (void)addPullToRefreshHeader;
+- (void)startLoading;
+- (void)stopLoading;
+- (void)refresh;
 
 -(void)setTwitterLiveData:(id)tweetData;
 

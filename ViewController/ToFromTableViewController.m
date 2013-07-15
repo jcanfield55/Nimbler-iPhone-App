@@ -130,7 +130,7 @@ NSString *strStreet2 = @"street ";
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NIMLOG_EVENT1(@"Select Row: isFrom=%d, section=%d, row=%d", isFrom, [indexPath section], [indexPath row]);
-    [toFromVC.navigationController setNavigationBarHidden:YES animated:NO];
+    //[toFromVC.navigationController setNavigationBarHidden:YES animated:NO];
     
     if ([self adjustedForEnterNewAddressFor:[indexPath row]] == -1) {  // "Enter New Address" cell
         if (isFrom) {
@@ -383,12 +383,12 @@ NSString *strStreet2 = @"street ";
 -(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
     locations.isLocationSelected = false;
-    if([toFromVC editMode] == NO_EDIT){
-        [toFromVC.navigationController setNavigationBarHidden:YES animated:NO];
-    }
-    else{
-        [toFromVC.navigationController setNavigationBarHidden:NO animated:NO];
-    }
+//    if([toFromVC editMode] == NO_EDIT){
+//        [toFromVC.navigationController setNavigationBarHidden:YES animated:NO];
+//    }
+//    else{
+//        [toFromVC.navigationController setNavigationBarHidden:NO animated:NO];
+//    }
     return YES;
 }
 
@@ -442,7 +442,7 @@ NSString *strStreet2 = @"street ";
 // Delegate for when complete text entered into the UITextField
 - (IBAction)textSubmitted:(id)sender forEvent:(UIEvent *)event
 {
-    [toFromVC.navigationController setNavigationBarHidden:YES animated:NO]; 
+    //[toFromVC.navigationController setNavigationBarHidden:YES animated:NO];
     locations.isLocationSelected = true; 
     rawAddress = [sender text];
     

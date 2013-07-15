@@ -23,6 +23,7 @@
 
 #define MAXLINE_TAG             5
 #define CELL_HEIGHT             110
+#define REFRESH_HEADER_HEIGHT 52.0f
 
 @implementation twitterViewController
 UITableViewCell *cell;
@@ -30,10 +31,12 @@ NSUserDefaults *prefs;
 
 @synthesize mainTable,twitterData,dateFormatter,reload,isFromAppDelegate,isTwitterLiveData,noAdvisory,getTweetInProgress,timerForStopProcees,arrayTweet,strAllAdvisories,activityIndicatorView;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+@synthesize textPull, textRelease, textLoading, refreshHeaderView, refreshLabel, refreshArrow, refreshSpinner;
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
+    if (self != nil) {
+        [self setupStrings];
     }
     return self;
 }
@@ -61,7 +64,7 @@ NSUserDefaults *prefs;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    [self addPullToRefreshHeader];
     // Accessibility Label For UI Automation.
     self.mainTable.accessibilityLabel = TWITTER_TABLE_VIEW;
     
@@ -85,18 +88,114 @@ NSUserDefaults *prefs;
     dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle:NSDateFormatterFullStyle];
     prefs = [NSUserDefaults standardUserDefaults];
-    UIButton *btnReload = [[UIButton alloc] initWithFrame:CGRectMake(0,0,48,34)];
-    [btnReload addTarget:self action:@selector(getLatestTweets) forControlEvents:UIControlEventTouchUpInside];
-    [btnReload setBackgroundImage:[UIImage imageNamed:@"img_reload.png"] forState:UIControlStateNormal];
-    
-    reload = [[UIBarButtonItem alloc] initWithCustomView:btnReload];
-    
-    // Accessibility Label For UI Automation.
-    reload.accessibilityLabel = RELOAD_BUTTON;
-    
-    self.navigationItem.rightBarButtonItem = reload;
+}
 
-    // Do any additional setup after loading the view from its nib.
+- (void)setupStrings{
+    textPull = @"Pull down to refresh...";
+    textRelease =@"Release to refresh...";
+    textLoading = @"Loading...";
+}
+
+- (void)addPullToRefreshHeader {
+    refreshHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0 - REFRESH_HEADER_HEIGHT, 285, REFRESH_HEADER_HEIGHT)];
+    refreshHeaderView.backgroundColor = [UIColor clearColor];
+    
+    refreshLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 285, REFRESH_HEADER_HEIGHT)];
+    refreshLabel.backgroundColor = [UIColor clearColor];
+    refreshLabel.font = [UIFont boldSystemFontOfSize:12.0];
+    refreshLabel.textAlignment = NSTextAlignmentCenter;
+    
+    refreshArrow = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow.png"]];
+    refreshArrow.frame = CGRectMake(floorf((REFRESH_HEADER_HEIGHT - 27) / 2),
+                                    (floorf(REFRESH_HEADER_HEIGHT - 44) / 2),
+                                    27, 44);
+    
+    refreshSpinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    refreshSpinner.frame = CGRectMake(floorf(floorf(REFRESH_HEADER_HEIGHT - 20) / 2), floorf((REFRESH_HEADER_HEIGHT - 20) / 2), 20, 20);
+    refreshSpinner.hidesWhenStopped = YES;
+    
+    [refreshHeaderView addSubview:refreshLabel];
+    [refreshHeaderView addSubview:refreshArrow];
+    [refreshHeaderView addSubview:refreshSpinner];
+    [mainTable addSubview:refreshHeaderView];
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    if (isLoading) return;
+    isDragging = YES;
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (isLoading) {
+        // Update the content inset, good for section headers
+        if (scrollView.contentOffset.y > 0)
+            mainTable.contentInset = UIEdgeInsetsZero;
+        else if (scrollView.contentOffset.y >= -REFRESH_HEADER_HEIGHT)
+            mainTable.contentInset = UIEdgeInsetsMake(-scrollView.contentOffset.y, 0, 0, 0);
+    } else if (isDragging && scrollView.contentOffset.y < 0) {
+        // Update the arrow direction and label
+        [UIView animateWithDuration:0.25 animations:^{
+            if (scrollView.contentOffset.y < -REFRESH_HEADER_HEIGHT) {
+                // User is scrolling above the header
+                refreshLabel.text = self.textRelease;
+                [refreshArrow layer].transform = CATransform3DMakeRotation(M_PI, 0, 0, 1);
+            } else {
+                // User is scrolling somewhere within the header
+                refreshLabel.text = self.textPull;
+                [refreshArrow layer].transform = CATransform3DMakeRotation(M_PI * 2, 0, 0, 1);
+            }
+        }];
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if (isLoading) return;
+    isDragging = NO;
+    if (scrollView.contentOffset.y <= -REFRESH_HEADER_HEIGHT) {
+        // Released above the header
+        [self startLoading];
+    }
+}
+
+- (void)startLoading {
+    isLoading = YES;
+    
+    // Show the header
+    [UIView animateWithDuration:0.3 animations:^{
+        mainTable.contentInset = UIEdgeInsetsMake(REFRESH_HEADER_HEIGHT, 0, 0, 0);
+        refreshLabel.text = self.textLoading;
+        refreshArrow.hidden = YES;
+        [refreshSpinner startAnimating];
+    }];
+    
+    // Refresh action!
+    [self refresh];
+}
+
+- (void)stopLoading {
+    isLoading = NO;
+    
+    // Hide the header
+    [UIView animateWithDuration:0.3 animations:^{
+        mainTable.contentInset = UIEdgeInsetsZero;
+        [refreshArrow layer].transform = CATransform3DMakeRotation(M_PI * 2, 0, 0, 1);
+    }
+                     completion:^(BOOL finished) {
+                         [self performSelector:@selector(stopLoadingComplete)];
+                     }];
+}
+
+- (void)stopLoadingComplete {
+    // Reset the header
+    refreshLabel.text = self.textPull;
+    refreshArrow.hidden = NO;
+    [refreshSpinner stopAnimating];
+}
+
+- (void)refresh {
+    // This is just a demo. Override this method with your custom reload action.
+    // Don't forget to call stopLoading at the end.
+    [self getLatestTweets];
 }
 
 - (void)viewDidUnload{
@@ -117,7 +216,6 @@ NSUserDefaults *prefs;
     [super viewWillAppear:animated];
     logEvent(FLURRY_ADVISORIES_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
     
-    [nc_AppDelegate sharedInstance].isTwitterView = YES;
    [self startProcessForGettingTweets]; 
     mainTable.delegate = self;
     mainTable.dataSource = self;
@@ -125,7 +223,6 @@ NSUserDefaults *prefs;
 
 - (void) viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    [self getAdvisoryData];
 }
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:YES];
@@ -193,8 +290,8 @@ NSUserDefaults *prefs;
             }
             [strTweet appendString:tweetText];
         }
-        CGSize stringSize = [strTweet sizeWithFont:[UIFont systemFontOfSize:16.0] constrainedToSize:CGSizeMake(240, 9999) lineBreakMode:UILineBreakModeWordWrap];
-        UITextView *uiTextView=[[UITextView alloc] initWithFrame:CGRectMake(55, 28, 240, stringSize.height + 40)];
+        CGSize stringSize = [strTweet sizeWithFont:[UIFont systemFontOfSize:16.0] constrainedToSize:CGSizeMake(220, 9999) lineBreakMode:UILineBreakModeWordWrap];
+        UITextView *uiTextView=[[UITextView alloc] initWithFrame:CGRectMake(55, 28, 220, stringSize.height + 40)];
         uiTextView.font = [UIFont systemFontOfSize:15.0];
         uiTextView.text = strTweet;
         uiTextView.textColor = [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
@@ -209,7 +306,7 @@ NSUserDefaults *prefs;
         cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
         
         labelTime = (UILabel *)[cell viewWithTag:MAXLINE_TAG];
-        CGRect   lbl3Frame = CGRectMake(245,3, 120, 25);
+        CGRect   lbl3Frame = CGRectMake(210,3, 73, 25);
         labelTime = [[UILabel alloc] initWithFrame:lbl3Frame];
         labelTime.tag = MAXLINE_TAG;
         labelTime.backgroundColor = [UIColor clearColor];
@@ -239,7 +336,7 @@ NSUserDefaults *prefs;
         id key = [arrayTweet objectAtIndex:indexPath.row];
         NSString *tweetDetail = [(NSDictionary*)key objectForKey:TWEET];
         UIFont *cellFont = [UIFont systemFontOfSize:16.0];
-        CGSize constraintSize = CGSizeMake(240.0f, MAXFLOAT);
+        CGSize constraintSize = CGSizeMake(220.0f, MAXFLOAT);
         CGSize labelSize = [tweetDetail sizeWithFont:cellFont constrainedToSize:constraintSize lineBreakMode:UILineBreakModeWordWrap];
         return labelSize.height + 40;
     }
@@ -289,6 +386,7 @@ NSUserDefaults *prefs;
             [alert show];
         }
         else{
+            [self stopLoading];
             noAdvisory.text = @"No advisories available.  Unable to connect to server.  Please try again when you have network connectivity";
         }
     }
@@ -304,6 +402,7 @@ NSUserDefaults *prefs;
                 NIMLOG_TWITTER1(@"Twitter response %@", [response bodyAsString]);
                 id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];
                 [self setTwitterLiveData:res];
+                [[nc_AppDelegate sharedInstance].twitterCount setHidden:YES];
             } else {
                 NIMLOG_TWITTER1(@"latest tweets: %@", [response bodyAsString]);
                 id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];
@@ -316,6 +415,7 @@ NSUserDefaults *prefs;
                         [arrayTweet removeAllObjects];
                         [arrayTweet addObjectsFromArray:arrayLatestTweet];
                         [arrayTweet addObjectsFromArray:tempArray];
+                        [self stopLoading];
                         [mainTable reloadData]; 
                     }
                 }
@@ -458,6 +558,7 @@ NSUserDefaults *prefs;
     }
     [getTweetInProgress stopAnimating];
     [getTweetInProgress setHidesWhenStopped:TRUE];
+    [self stopLoading];
 }
 -(void)timerAction
 {
