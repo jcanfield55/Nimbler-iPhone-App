@@ -25,6 +25,10 @@
     NSString *textPull;
     NSString *textRelease;
     NSString *textLoading;
+    
+    UIButton *advisoriesButton;
+    UIButton *settingsButton;
+    UIButton *feedBackButton;
 }
 
 @property (strong, nonatomic) IBOutlet UITableView* mainTable;
@@ -40,6 +44,9 @@
 @property (strong, nonatomic) NSString *strAllAdvisories;
 @property (strong, nonatomic) UIActivityIndicatorView *activityIndicatorView;
 
+@property (nonatomic, strong) IBOutlet UIButton *advisoriesButton;
+@property (nonatomic, strong) IBOutlet UIButton *settingsButton;
+@property (nonatomic, strong) IBOutlet UIButton *feedBackButton;
 
 // Pull To Refresh properties and methods
 @property (nonatomic, retain) UIView *refreshHeaderView;
@@ -65,5 +72,9 @@
 -(void)startProcessForGettingTweets;
 -(void)timerAction;
 - (void)openUrl:(NSURL *)url;
+
+-(IBAction)advisoriesButtonClicked:(id)sender;
+-(IBAction)settingsButtonClicked:(id)sender;
+-(IBAction)feedBackButtonClicked:(id)sender;
 
 @end

@@ -20,6 +20,7 @@
 #import "LegMapViewController.h"
 #import "GtfsParser.h"
 #import "Agencies.h"
+#import "RevealController.h"
 
 @interface nc_AppDelegate : UIResponder <UIApplicationDelegate,CLLocationManagerDelegate,RKRequestDelegate,UIAlertViewDelegate,UITabBarControllerDelegate,UIActionSheetDelegate> {
     Location* currentLocation;
@@ -55,6 +56,7 @@
     NSMutableString *testLogMutableString;
     Stations *stations;
     NSString *updateDeviceTokenURL;
+    RevealController *revealController;
 }
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
@@ -112,6 +114,7 @@
 @property (strong, nonatomic) NSString *updateDeviceTokenURL;
 @property (nonatomic) BOOL isRouteOptionView;
 @property (nonatomic) BOOL isRouteDetailView;
+@property (nonatomic, strong) RevealController *revealController;
 
 - (NSURL *)applicationDocumentsDirectory;
 

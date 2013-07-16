@@ -41,7 +41,10 @@
     
     FeedBackReqParam *fbReqParams;
     
-    
+    UIScrollView *scrollView;
+    UIButton *advisoriesButton;
+    UIButton *settingsButton;
+    UIButton *feedBackButton;
 }
 
 @property (strong, nonatomic) IBOutlet UITextView *txtFeedBack;
@@ -50,6 +53,10 @@
 @property(nonatomic,retain) NSString *mesg;
 @property (strong, nonatomic) UIAlertView * alertView;
 @property (strong, nonatomic) IBOutlet UIButton *btnPlayRecording,*btnStopRecording,*btnPauseRecording,*btnRecordRecording;
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (strong, nonatomic) IBOutlet UIButton *advisoriesButton;
+@property (strong, nonatomic) IBOutlet UIButton *settingsButton;
+@property (strong, nonatomic) IBOutlet UIButton *feedBackButton;
 
 
 -(IBAction)startRecord:(id)sender;
@@ -57,6 +64,10 @@
 -(IBAction)pauseRecord:(id)sender;
 -(IBAction)playRecord:(id)sender;
 -(IBAction)submitFeedBack:(id)sender;
+
+-(IBAction)advisoriesButtonClicked:(id)sender;
+-(IBAction)settingsButtonClicked:(id)sender;
+-(IBAction)feedBackButtonClicked:(id)sender;
 
 @property (strong, nonatomic) FeedBackReqParam *fbReqParams;;
 

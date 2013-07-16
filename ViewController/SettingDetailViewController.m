@@ -315,7 +315,7 @@
     cell = nil;
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    [cell.textLabel setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
+    [cell.textLabel setFont:[UIFont SMALL_FONT]];
     [cell.textLabel setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
     UserPreferance* userPrefs = [UserPreferance userPreferance];
     if(nSettingRow == N_SETTINGS_ROW_ADVISORY){

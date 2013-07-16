@@ -73,7 +73,8 @@
     [nc_AppDelegate sharedInstance].isTwitterView = YES;
 	UINavigationController *navController = (UINavigationController *)rearViewController;
     twitterViewController *twitterVC = (twitterViewController*)navController.visibleViewController;
-    [twitterVC getAdvisoryData];
+    if([twitterVC isKindOfClass:[twitterViewController class]])
+        [twitterVC getAdvisoryData];
 }
 
 - (void)revealController:(ZUUIRevealController *)revealController didRevealRearViewController:(UIViewController *)rearViewController

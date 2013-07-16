@@ -12,6 +12,8 @@
 #import "nc_AppDelegate.h"
 #import "QuartzCore/QuartzCore.h"
 #import "WebView.h"
+#import "SettingInfoViewController.h"
+#import "FeedBackForm.h"
 
 #define TWEETERVIEW_MANE        @"Advisories"
 #define TABLE_CELL              @"Cell"
@@ -32,6 +34,8 @@ NSUserDefaults *prefs;
 @synthesize mainTable,twitterData,dateFormatter,reload,isFromAppDelegate,isTwitterLiveData,noAdvisory,getTweetInProgress,timerForStopProcees,arrayTweet,strAllAdvisories,activityIndicatorView;
 
 @synthesize textPull, textRelease, textLoading, refreshHeaderView, refreshLabel, refreshArrow, refreshSpinner;
+
+@synthesize advisoriesButton,settingsButton,feedBackButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -64,6 +68,9 @@ NSUserDefaults *prefs;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [self.navigationItem setHidesBackButton:YES animated:YES];
+    
     [self addPullToRefreshHeader];
     // Accessibility Label For UI Automation.
     self.mainTable.accessibilityLabel = TWITTER_TABLE_VIEW;
@@ -585,10 +592,10 @@ NSUserDefaults *prefs;
     UIBarButtonItem *backTonimbler = [[UIBarButtonItem alloc] initWithCustomView:btnGoToNimbler];
     webViewController.navigationItem.leftBarButtonItem = backTonimbler;
     
-    [webViewController.view addSubview:[WebView instance]];
+    [webViewController.view addSubview:[WebView instance:285]];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20];
-    [[WebView instance] loadRequest:request];
-    [WebView instance].delegate = self;
+    [[WebView instance:285] loadRequest:request];
+    [WebView instance:285].delegate = self;
     if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
         CATransition *animation = [CATransition animation];
         [animation setDuration:0.3];
@@ -616,5 +623,28 @@ NSUserDefaults *prefs;
 -(void)webViewDidFinishLoad:(UIWebView *)webView{
     [activityIndicatorView stopAnimating];
 }
+
+-(IBAction)advisoriesButtonClicked:(id)sender{
+    
+}
+-(IBAction)settingsButtonClicked:(id)sender{
+    SettingInfoViewController *secondView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF" bundle:nil];
+    CATransition *animation = [CATransition animation];
+    [animation setDuration:0.5];
+    [animation setType:kCATransition];
+    [animation setSubtype:kCATransitionFromTop];
+    [[self.navigationController.view layer] addAnimation:animation forKey:@"SwitchToView1"];
+    [self.navigationController pushViewController:secondView animated:NO];
+}
+-(IBAction)feedBackButtonClicked:(id)sender{
+    FeedBackForm *secondView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
+    CATransition *animation = [CATransition animation];
+    [animation setDuration:0.5];
+    [animation setType:kCATransition];
+    [animation setSubtype:kCATransitionFromTop];
+    [[self.navigationController.view layer] addAnimation:animation forKey:@"SwitchToView1"];
+    [self.navigationController pushViewController:secondView animated:NO];
+}
+
 
 @end

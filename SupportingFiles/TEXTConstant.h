@@ -155,36 +155,36 @@
 #define DETAIL_SETTING_MAIN_LABEL_WIDTH       250
 #define DETAIL_SETTING_MAIN_LABEL_HEIGHT      20
 
-#define SLIDERS_XOPS                          60
+#define SLIDERS_XOPS                          30
 #define SLIDERS_YPOS                          42
 #define SLIDERS_YPOS1                         50
 #define SLIDERS_WIDTH                         197
 #define SLIDERS_HEIGHT                        20
 
-#define BIKE_DISTANCE_LABEL_XPOS              50
-#define BIKE_DISTANCE_LABEL_XPOS1             260
+#define BIKE_DISTANCE_LABEL_XPOS              20
+#define BIKE_DISTANCE_LABEL_XPOS1             230
 #define BIKE_DISTANCE_LABEL_YPOS              41
 #define BIKE_DISTANCE_LABEL_WIDTH             50
 #define BIKE_DISTANCE_LABEL_HEIGHT            20
 
 #define BIKE_PREFERENCE_LABEL_XPOS                  10
-#define BIKE_PREFERENCE_LABEL_XPOS1                 180
+#define BIKE_PREFERENCE_LABEL_XPOS1                 140
 #define BIKE_PREFERENCE_LABEL_YPOS                  29
 #define BIKE_PREFERENCE_LABEL_WIDTH                 150
 #define BIKE_PREFERENCE_LABEL_HEIGHT                20
 
 #define LABEL_FREQUENTLY_XPOS   3
-#define LABEL_FREQUENTLY_YPOS   38
+#define LABEL_FREQUENTLY_YPOS   48
 #define LABEL_FREQUENTLY_WIDTH  70
 #define LABEL_FREQUENTLY_HEIGHT 20
 
-#define LABEL_RARELY_XPOS       260
-#define LABEL_RARELY_YPOS       39
+#define LABEL_RARELY_XPOS       210
+#define LABEL_RARELY_YPOS       49
 #define LABEL_RARELY_WIDTH      50
 #define LABEL_RARELY_HEIGHT     20
 
-#define SLIDER_PUSH_FREQUENCY_XPOS    68
-#define SLIDER_PUSH_FREQUENCY_YPOS    42
+#define SLIDER_PUSH_FREQUENCY_XPOS    40
+#define SLIDER_PUSH_FREQUENCY_YPOS    30
 #define SLIDER_PUSH_FREQUENCY_WIDTH   190
 #define SLIDER_PUSH_FREQUENCY_HEIGHT  20
 
@@ -193,8 +193,8 @@
 #define SETTING_MAIN_LABEL_WIDTH      250
 #define SETTING_MAIN_LABEL_HEIGHT     20
 
-#define SETTING_SUB_LABEL_XPOS        33
-#define SETTING_SUB_LABEL_XPOS1       260
+#define SETTING_SUB_LABEL_XPOS        5
+#define SETTING_SUB_LABEL_XPOS1       230
 #define SETTING_SUB_LABEL_YPOS        41
 #define SETTING_SUB_LABEL_WIDTH       50
 #define SETTING_SUB_LABEL_HEIGHT      20

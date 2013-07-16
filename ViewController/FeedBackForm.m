@@ -10,6 +10,8 @@
 #import "UtilityFunctions.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "nc_AppDelegate.h"
+#import "SettingInfoViewController.h"
+#import "twitterViewController.h"
 
 #define RECORD_MSG @"Recording your feedback \nSpeak ..."
 #define SUBMIT_MSG @"Sending your feedback \nPlease wait ..."
@@ -50,6 +52,7 @@
 BOOL isCancelFB = FALSE;
 @synthesize tpURLResource,alertView,mesg,btnPlayRecording,btnStopRecording,btnPauseRecording,btnRecordRecording,fbReqParams;
 @synthesize txtEmailId,txtFeedBack;
+@synthesize scrollView,advisoriesButton,settingsButton,feedBackButton;
 
 NSUserDefaults *prefs;
 
@@ -95,11 +98,16 @@ NSUserDefaults *prefs;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.navigationItem setHidesBackButton:YES animated:YES];
+    [scrollView setFrame:CGRectMake(0,155,285,300)];
+    [scrollView setContentSize:CGSizeMake(285,371)];
+    [scrollView flashScrollIndicators];
+    
     // Part Of DE-318 Fix
     UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap)];
     singleTap.delegate = self;
     [singleTap setNumberOfTapsRequired:1];
-    [self.view addGestureRecognizer:singleTap];
+    [scrollView addGestureRecognizer:singleTap];
     
     [btnSubmitFeedback addTarget:self action:@selector(submitFeedBack:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -413,7 +421,7 @@ NSUserDefaults *prefs;
 #pragma mark GestureRecognizer delegate method
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     // Allow Tap gesture recognizer to only view not to buttons and textfields
-    if(touch.view == self.view){
+    if(touch.view == scrollView){
         return YES;
     }
     return NO;
@@ -633,11 +641,22 @@ NSUserDefaults *prefs;
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
-    [self animateTextField: textField up: YES];
+    [UIView beginAnimations:ANIMATION_PARAM context: nil];
+    [UIView setAnimationBeginsFromCurrentState: YES];
+    [UIView setAnimationDuration: 0.5];
+    [scrollView setContentOffset:CGPointMake(0,280)];
+    [UIView commitAnimations];
+    
+    //[self animateTextField: textField up: YES];
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField{
-    [self animateTextField: textField up: NO];
+    //[self animateTextField: textField up: NO];
+    [UIView beginAnimations:ANIMATION_PARAM context: nil];
+    [UIView setAnimationBeginsFromCurrentState: YES];
+    [UIView setAnimationDuration: 0.5];
+    [scrollView setContentOffset:CGPointMake(0,0)];
+    [UIView commitAnimations];
 }
 
 #pragma mark TextView animation at selected
@@ -654,10 +673,44 @@ NSUserDefaults *prefs;
 }
 
 - (void)textViewDidBeginEditing:(UITextView *)textView{
-    [self animateTextView: textView up: YES];
+    //[self animateTextView: textView up: YES];
+    [UIView beginAnimations:ANIMATION_PARAM context: nil];
+    [UIView setAnimationBeginsFromCurrentState: YES];
+    [UIView setAnimationDuration: 0.5];
+    [scrollView setContentOffset:CGPointMake(0,180)];
+    [UIView commitAnimations];
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView{
-    [self animateTextView: textView up: NO];
+    //[self animateTextView: textView up: NO];
+    [UIView beginAnimations:ANIMATION_PARAM context: nil];
+    [UIView setAnimationBeginsFromCurrentState: YES];
+    [UIView setAnimationDuration: 0.5];
+    [scrollView setContentOffset:CGPointMake(0,0)];
+    [UIView commitAnimations];
 }
+
+-(IBAction)advisoriesButtonClicked:(id)sender{
+    twitterViewController *secondView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
+    [secondView getAdvisoryData];
+    CATransition *animation = [CATransition animation];
+    [animation setDuration:0.5];
+    [animation setType:kCATransition];
+    [animation setSubtype:kCATransitionFromTop];
+    [[self.navigationController.view layer] addAnimation:animation forKey:@"SwitchToView1"];
+    [self.navigationController pushViewController:secondView animated:NO];
+}
+-(IBAction)settingsButtonClicked:(id)sender{
+    SettingInfoViewController *secondView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF" bundle:nil];
+    CATransition *animation = [CATransition animation];
+    [animation setDuration:0.5];
+    [animation setType:kCATransition];
+    [animation setSubtype:kCATransitionFromTop];
+    [[self.navigationController.view layer] addAnimation:animation forKey:@"SwitchToView1"];
+    [self.navigationController pushViewController:secondView animated:NO];
+}
+-(IBAction)feedBackButtonClicked:(id)sender{
+    
+}
+
 @end

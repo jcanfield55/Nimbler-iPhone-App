@@ -96,6 +96,7 @@ static nc_AppDelegate *appDelegate;
 @synthesize isRouteOptionView;
 @synthesize isRouteDetailView;
 @synthesize locationFromlocManager;
+@synthesize revealController;
 
 
 // Feedback parameters
@@ -404,7 +405,7 @@ FeedBackForm *fbView;
         twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:toFromViewController];
         UINavigationController *tweetController = [[UINavigationController alloc] initWithRootViewController:twitterView];
-        RevealController *revealController = [[RevealController alloc] initWithFrontViewController:navigationController rearViewController:tweetController];
+        revealController = [[RevealController alloc] initWithFrontViewController:navigationController rearViewController:tweetController];
         self.window.rootViewController = revealController;
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         [[self window] setRootViewController:revealController];

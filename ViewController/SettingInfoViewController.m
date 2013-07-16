@@ -12,6 +12,8 @@
 #import "UtilityFunctions.h"
 #import "RouteExcludeSettings.h"
 #import "RouteExcludeSetting.h"
+#import "twitterViewController.h"
+#import "FeedBackForm.h"
 
 #define SETTING_TITLE       @"App Settings"
 #define SETTING_ALERT_MSG   @"Updating your settings \n Please wait..."
@@ -47,6 +49,10 @@
 @synthesize lblMaxWalkDistance;
 @synthesize lblCurrentMaxWalkDistance;
 @synthesize settingDetailViewController;
+
+@synthesize advisoriesButton;
+@synthesize settingsButton;
+@synthesize feedBackButton;
 
 UIImage *imageDetailDisclosure;
 
@@ -149,6 +155,8 @@ UIImage *imageDetailDisclosure;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.navigationItem setHidesBackButton:YES animated:YES];
+    
     UserPreferance* userPrefs = [UserPreferance userPreferance];
     self.tblSetting.delegate = self;
     self.tblSetting.dataSource = self;
@@ -728,5 +736,28 @@ UIImage *imageDetailDisclosure;
     }
     [UserPreferance userPreferance].pushEnable = switchPushNotification.on; // Save setting
     [self.tblSetting reloadData];
+}
+
+-(IBAction)advisoriesButtonClicked:(id)sender{
+    twitterViewController *secondView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
+    [secondView getAdvisoryData];
+    CATransition *animation = [CATransition animation];
+    [animation setDuration:0.5];
+    [animation setType:kCATransition];
+    [animation setSubtype:kCATransitionFromBottom];
+    [[self.navigationController.view layer] addAnimation:animation forKey:@"SwitchToView1"];
+    [self.navigationController pushViewController:secondView animated:NO];
+}
+-(IBAction)settingsButtonClicked:(id)sender{
+    
+}
+-(IBAction)feedBackButtonClicked:(id)sender{
+    FeedBackForm *secondView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
+    CATransition *animation = [CATransition animation];
+    [animation setDuration:0.5];
+    [animation setType:kCATransition];
+    [animation setSubtype:kCATransitionFromTop];
+    [[self.navigationController.view layer] addAnimation:animation forKey:@"SwitchToView1"];
+    [self.navigationController pushViewController:secondView animated:NO];
 }
 @end
