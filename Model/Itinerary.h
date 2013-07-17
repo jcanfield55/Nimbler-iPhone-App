@@ -63,7 +63,8 @@ typedef enum {
 @property (nonatomic) BOOL hideItinerary;
 @property (nonatomic, strong) NSString *tripIdhexString;
 @property (nonatomic, strong) NSDate *maximumPredictionDate;
-@property (nonatomic, retain) NSDate *startTimeOfLeg; 
+@property (nonatomic, retain) NSDate *startTimeOfLeg;
+@property (nonatomic) int status;
 
 - (void)sortLegs;
 - (NSArray *)sortedLegs;

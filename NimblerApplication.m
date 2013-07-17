@@ -18,13 +18,14 @@
 // Open the custom Webview in case we click on advisories links.
 // Open the appstore page when we click on App Store Review Button 
 - (BOOL)openURL:(NSURL*)url {
-    UIViewController *currentViewController = [nc_AppDelegate sharedInstance].revealController.rearViewController.navigationController.topViewController;
-    if ([currentViewController isKindOfClass:[twitterViewController class]]) {
-        [(twitterViewController *)currentViewController openUrl:url];
+    UIViewController *frontViewController = ((UINavigationController *) [nc_AppDelegate sharedInstance].revealViewController.frontViewController).topViewController;
+    UIViewController *rearViewController = ((UINavigationController *) [nc_AppDelegate sharedInstance].revealViewController.rearViewController).topViewController;
+    if ([rearViewController isKindOfClass:[twitterViewController class]]) {
+        [(twitterViewController *)rearViewController openUrl:url];
          return NO;
     }
-    else if([currentViewController isKindOfClass:[RouteDetailsViewController class]]){
-        [(RouteDetailsViewController *)currentViewController openUrl:url];
+    else if([frontViewController isKindOfClass:[RouteDetailsViewController class]]){
+        [(RouteDetailsViewController *)frontViewController openUrl:url];
         return NO;
     }
     return [super openURL:url];

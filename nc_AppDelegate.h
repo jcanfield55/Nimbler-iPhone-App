@@ -56,7 +56,7 @@
     NSMutableString *testLogMutableString;
     Stations *stations;
     NSString *updateDeviceTokenURL;
-    RevealController *revealController;
+    RevealController *revealViewController;
 }
 
 @property (strong, nonatomic) IBOutlet UIWindow *window;
@@ -114,7 +114,7 @@
 @property (strong, nonatomic) NSString *updateDeviceTokenURL;
 @property (nonatomic) BOOL isRouteOptionView;
 @property (nonatomic) BOOL isRouteDetailView;
-@property (nonatomic, strong) RevealController *revealController;
+@property (nonatomic, strong) RevealController *revealViewController;
 
 - (NSURL *)applicationDocumentsDirectory;
 

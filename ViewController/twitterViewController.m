@@ -408,6 +408,8 @@ NSUserDefaults *prefs;
                 isTwitterLiveData = false;
                 NIMLOG_TWITTER1(@"Twitter response %@", [response bodyAsString]);
                 id  res = [rkTwitDataParser objectFromString:[response bodyAsString] error:nil];
+                if(!res)
+                    [noAdvisory setHidden:NO];
                 [self setTwitterLiveData:res];
                 [[nc_AppDelegate sharedInstance].twitterCount setHidden:YES];
             } else {
@@ -591,11 +593,15 @@ NSUserDefaults *prefs;
     
     UIBarButtonItem *backTonimbler = [[UIBarButtonItem alloc] initWithCustomView:btnGoToNimbler];
     webViewController.navigationItem.leftBarButtonItem = backTonimbler;
-    
-    [webViewController.view addSubview:[WebView instance:285]];
+    [webViewController.view addSubview:[WebView instance]];
+    if ([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT) {
+        [WebView instance].frame = CGRectMake(0, 0, 285, 479);
+    } else {
+        [WebView instance].frame = CGRectMake(0, 0, 285, 415);
+    }
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20];
-    [[WebView instance:285] loadRequest:request];
-    [WebView instance:285].delegate = self;
+    [[WebView instance] loadRequest:request];
+    [WebView instance].delegate = self;
     if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
         CATransition *animation = [CATransition animation];
         [animation setDuration:0.3];

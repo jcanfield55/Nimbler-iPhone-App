@@ -10,5 +10,5 @@
 
 @interface WebView : UIWebView
 
-+ (WebView *)instance:(int)width;
++ (WebView *)instance;
 @end

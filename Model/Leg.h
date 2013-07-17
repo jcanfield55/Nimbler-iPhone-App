@@ -70,6 +70,8 @@ typedef enum {
 @property (nonatomic, strong) NSString *vehicleId;
 @property (nonatomic, retain) NSNumber * rentedBike;
 
+@property (nonatomic) int status;
+
 - (NSArray *)sortedSteps;
 - (NSString *)summaryTextWithTime:(BOOL)includeTime; // Returns a single-line summary of the leg useful for RouteOptionsView details
 - (NSString *)directionsTitleText:(LegPositionEnum)legPosition;

@@ -64,6 +64,7 @@ NSArray *sortedByStartTimeOnly(NSSet* itinerarySet)
 @synthesize hideItinerary;
 @synthesize tripIdhexString;
 @synthesize maximumPredictionDate;
+@synthesize status;
 
 static NSDate* midnightTimeOnly;  // represents 24:00 for a timeOnly time
 

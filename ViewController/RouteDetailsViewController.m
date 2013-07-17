@@ -729,12 +729,16 @@ NSUserDefaults *prefs;
     
     UIBarButtonItem *backTonimbler = [[UIBarButtonItem alloc] initWithCustomView:btnGoToNimbler];
     webViewController.navigationItem.leftBarButtonItem = backTonimbler;
-    
-    [webViewController.view addSubview:[WebView instance:320]];
+    [webViewController.view addSubview:[WebView instance]];
+    if ([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT) {
+        [WebView instance].frame = CGRectMake(0, 0, 320, 479);
+    } else {
+        [WebView instance].frame = CGRectMake(0, 0, 320, 415);
+    }
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20];
-    [[WebView instance:320] loadRequest:request];
-    [[WebView instance:320] setScalesPageToFit:YES];
-    [WebView instance:320].delegate = self;
+    [[WebView instance] loadRequest:request];
+    [[WebView instance] setScalesPageToFit:YES];
+    [WebView instance].delegate = self;
     if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
         CATransition *animation = [CATransition animation];
         [animation setDuration:0.3];

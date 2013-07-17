@@ -86,10 +86,10 @@ NSUserDefaults *prefs;
 // Part Of DE-318 Fix
 // Will resign first responder if textview or textfield become first responder.
 - (void)handleSingleTap{
-    if([txtFeedBack becomeFirstResponder]){
+    if([txtFeedBack isFirstResponder]){
         [txtFeedBack resignFirstResponder];
     }
-    if([txtEmailId becomeFirstResponder]){
+    if([txtEmailId isFirstResponder]){
         [txtEmailId resignFirstResponder];
     }
 }

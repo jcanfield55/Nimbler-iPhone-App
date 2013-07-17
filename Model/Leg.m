@@ -59,6 +59,7 @@
 @synthesize timeDiff;
 @synthesize realTripId;
 @synthesize vehicleId;
+@synthesize status;
 
 static NSDictionary* __agencyDisplayNameByAgencyId;
 

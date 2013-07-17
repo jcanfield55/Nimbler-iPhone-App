@@ -1288,8 +1288,15 @@
 
 // generate new leg from prediction data.
 - (Leg *) generateLegFromPrediction:(NSDictionary *)prediction newItinerary:(Itinerary *)newItinerary Leg:(Leg *)leg Context:(NSManagedObjectContext *)context ISExtraPrediction:(BOOL)isExtraPrediction{
+    NSString *status = [prediction objectForKey:@"status"];
     NSDate *predtctionTime = [NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"epochTime"] doubleValue]/1000.0)];
-    NSDate *scheduleTime = timeOnlyFromDate(dateFromTimeString([prediction objectForKey:@"scheduleTime"]));
+    NSDate *scheduleTime;
+    scheduleTime = [NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"scheduleTime"] doubleValue]/1000.0)];
+    if(!scheduleTime)
+        scheduleTime = timeOnlyFromDate(dateFromTimeString([prediction objectForKey:@"scheduleTime"]));
+    if(status && [status intValue] == 2){
+        predtctionTime = scheduleTime;
+    }
     Leg* newleg = [NSEntityDescription insertNewObjectForEntityForName:@"Leg" inManagedObjectContext:context];
     newleg.itinerary = newItinerary;
     newleg.startTime = predtctionTime;
@@ -1300,8 +1307,7 @@
     newItinerary.endTime = newleg.endTime;
     newleg.isRealTimeLeg = true;
     newItinerary.isRealTimeItinerary = true;
-    NSDate *predictionOnly = timeOnlyFromDate(predtctionTime);
-    int timeDiff = [predictionOnly timeIntervalSinceDate:scheduleTime]/60;
+    int timeDiff = [timeOnlyFromDate(predtctionTime) timeIntervalSinceDate:timeOnlyFromDate(scheduleTime)]/60;
     if([prediction objectForKey:@"tripId"]){
         newleg.realTripId = [prediction objectForKey:@"tripId"];
     }
@@ -1318,8 +1324,9 @@
         arrivalFlag = EARLY;
     else
         arrivalFlag = DELAYED;
-    
-    newleg.arrivalFlag = [NSString stringWithFormat:@"%d",arrivalFlag];
+     if(!status || [status intValue] != 2){
+         newleg.arrivalFlag = [NSString stringWithFormat:@"%d",arrivalFlag];
+     }
     NSDateFormatter *dateFormatters = [[NSDateFormatter alloc] init];
     [dateFormatters setDateFormat:@"yyyyMMdd"];
     NSString *strStartDate = [dateFormatters stringFromDate:dateOnlyFromDate([NSDate date])];
@@ -1512,7 +1519,7 @@
     if(!context) {
         context = managedObjectContext;
     }
-
+    
     NIMLOG_PERF2(@"Start generateItinerariesFromRealTime");
     NSMutableDictionary *dictPredictions = [[NSMutableDictionary alloc] init];
     for(int i=0;i<[[plan uniqueItineraries] count];i++){

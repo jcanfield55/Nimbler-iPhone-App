@@ -96,7 +96,8 @@ static nc_AppDelegate *appDelegate;
 @synthesize isRouteOptionView;
 @synthesize isRouteDetailView;
 @synthesize locationFromlocManager;
-@synthesize revealController;
+@synthesize revealViewController;
+
 
 
 // Feedback parameters
@@ -403,12 +404,11 @@ FeedBackForm *fbView;
     // Create an instance of a UINavigationController and put toFromViewController as the first view
     @try {
         twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
-        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:toFromViewController];
-        UINavigationController *tweetController = [[UINavigationController alloc] initWithRootViewController:twitterView];
-        revealController = [[RevealController alloc] initWithFrontViewController:navigationController rearViewController:tweetController];
-        self.window.rootViewController = revealController;
+        UINavigationController *navController1 = [[UINavigationController alloc] initWithRootViewController:toFromViewController];
+        UINavigationController *navController2 = [[UINavigationController alloc] initWithRootViewController:twitterView];
+        revealViewController = [[RevealController alloc] initWithFrontViewController:navController1 rearViewController:navController2];
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        [[self window] setRootViewController:revealController];
+         self.window.rootViewController = revealViewController;
         [self.window makeKeyAndVisible];
     }
     @catch (NSException *exception) {

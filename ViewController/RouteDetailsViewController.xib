@@ -41,7 +41,7 @@
 					<object class="IBUIImageView" id="42885857">
 						<reference key="NSNextResponder" ref="458693968"/>
 						<int key="NSvFlags">274</int>
-						<string key="NSFrameSize">{320, 387}</string>
+						<string key="NSFrameSize">{320, 436}</string>
 						<reference key="NSSuperview" ref="458693968"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="772200455"/>
@@ -56,7 +56,7 @@
 					<object class="IBUITableView" id="292780480">
 						<reference key="NSNextResponder" ref="458693968"/>
 						<int key="NSvFlags">301</int>
-						<string key="NSFrame">{{0, 253}, {320, 134}}</string>
+						<string key="NSFrame">{{0, 254}, {320, 182}}</string>
 						<reference key="NSSuperview" ref="458693968"/>
 						<reference key="NSWindow"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -146,7 +146,7 @@
 						</object>
 					</object>
 				</array>
-				<string key="NSFrame">{{0, 44}, {320, 387}}</string>
+				<string key="NSFrame">{{0, 44}, {320, 436}}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="42885857"/>
@@ -161,7 +161,6 @@
 				<object class="IBUISimulatedNavigationBarMetrics" key="IBUISimulatedTopBarMetrics">
 					<bool key="IBUIPrompted">NO</bool>
 				</object>
-				<object class="IBUISimulatedTabBarMetrics" key="IBUISimulatedBottomBarMetrics"/>
 				<object class="IBUIScreenMetrics" key="IBUISimulatedDestinationMetrics">
 					<string key="IBUISimulatedSizeMetricsClass">IBUIScreenMetrics</string>
 					<object class="NSMutableDictionary" key="IBUINormalizedOrientationToSizeMap">

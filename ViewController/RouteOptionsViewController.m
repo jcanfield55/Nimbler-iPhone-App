@@ -55,8 +55,8 @@ Itinerary * itinerary;
 NSString *itinararyId;
 UIImage *imageDetailDisclosure;
 
-int const ROUTE_OPTIONS_TABLE_HEIGHT = 366;
-int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 450;
+int const ROUTE_OPTIONS_TABLE_HEIGHT = 416;
+int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 500;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
