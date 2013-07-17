@@ -100,6 +100,7 @@
 @synthesize plan;
 @synthesize stations;
 @synthesize planRequestParameters;
+@synthesize btnToFrom;
 
 // Constants for animating up and down the To: field
 #define FROM_SECTION 0
@@ -133,8 +134,8 @@ UIImage *imageDetailDisclosure;
             
             // Initialize the to & from tables
             CGRect rect1;
-            rect1.origin.x = 0;
-            rect1.origin.y = 0;
+            rect1.origin.x = 20;
+            rect1.origin.y = 60;
             rect1.size.width = TOFROM_TABLE_WIDTH ;
             if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
                 toTableHeight = TO_TABLE_HEIGHT_NO_CL_MODE_4INCH;
@@ -156,8 +157,8 @@ UIImage *imageDetailDisclosure;
             toTable.layer.cornerRadius = TOFROM_TABLE_CORNER_RADIUS;
             
             CGRect rect2;
-            rect2.origin.x = 0;
-            rect2.origin.y = 0;               
+            rect2.origin.x = 20;
+            rect2.origin.y = 60;
             rect2.size.width = TOFROM_TABLE_WIDTH; 
             if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
                 fromTableHeight = FROM_TABLE_HEIGHT_NO_CL_MODE_4INCH;
@@ -242,7 +243,7 @@ UIImage *imageDetailDisclosure;
     }
     //Added To clear The Background Color of UitableView in Ios - 6
     if([[[UIDevice currentDevice] systemVersion] intValue] >= 6){
-       [self.mainTable setBackgroundView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_background.png"]]];
+//       [self.mainTable setBackgroundView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_background.png"]]];
     }
     // Added To solve the crash related to ios 4.3
     if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
@@ -347,7 +348,7 @@ UIImage *imageDetailDisclosure;
 {
     [super viewWillAppear:animated];
     //[self.navigationController setNavigationBarHidden:YES animated:NO];
-    [mainTable setFrame:CGRectMake(0, 0, 320, 319)];
+   // [mainTable setFrame:CGRectMake(0, 0, 320, 319)];
     NSArray *itinerariesArray = [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray;
     NSArray *fromToStopId = [nc_AppDelegate sharedInstance].planStore.fromToStopID;
     if(itinerariesArray){
@@ -579,10 +580,10 @@ UIImage *imageDetailDisclosure;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (editMode == NO_EDIT) {
-        return 1;  // each section in the mainTable has only one cell when not editng
-    }
-    return 2;
+//    if (editMode == NO_EDIT) {
+//        return 1;  // each section in the mainTable has only one cell when not editng
+//    }
+    return 1;
     // In edit mode, the To or From section has two cells
 }
 
@@ -590,7 +591,10 @@ UIImage *imageDetailDisclosure;
 {
     if (editMode == NO_EDIT && [indexPath section] == TIME_DATE_SECTION) {  
         return TOFROM_TIME_DATE_HEIGHT;
-    }  
+    }
+    else if (editMode == FROM_EDIT && [indexPath row] == 0) {
+        return TOFROM_ROW_HEIGHT;
+    }
     else if (editMode != NO_EDIT && [indexPath row] == 0) {  // txtField row in Edit mode
         return TOFROM_ROW_HEIGHT;
     }
@@ -604,7 +608,7 @@ UIImage *imageDetailDisclosure;
     }
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+/*-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     if (section == FROM_SECTION) {
         return FROM_SECTION_LABEL_HEIGHT;
@@ -618,11 +622,6 @@ UIImage *imageDetailDisclosure;
             return TOFROM_SECTION_NOLABEL_HEIGHT;
         }
     } 
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0,0,320,1)];
-    return view;
 }
 
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -660,8 +659,14 @@ UIImage *imageDetailDisclosure;
         }
     }
     return headerView;
-}
+}*/
 
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+   UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0,0,320,2)];
+    [view setBackgroundColor:[UIColor grayColor]];
+   return view;
+}
+ 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     return TOFROM_SECTION_FOOTER_HEIGHT;
@@ -697,7 +702,7 @@ UIImage *imageDetailDisclosure;
         }
         return cell;
     }
-    else if (editMode==NO_EDIT || [indexPath row] == 1) { // the to or from table sections
+//    else if (editMode==NO_EDIT || [indexPath row] == 1) { // the to or from table sections
         BOOL isFrom = (editMode==FROM_EDIT || (editMode==NO_EDIT && [indexPath section]==FROM_SECTION))
         ? TRUE : FALSE;  
         NSString* cellIdentifier = isFrom ? @"fromTableCell" : @"toTableCell";
@@ -708,30 +713,70 @@ UIImage *imageDetailDisclosure;
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 
                                           reuseIdentifier:cellIdentifier];
         }
+    if ([cell.contentView subviews]){
+        for (UIView *subview in [cell.contentView subviews]) {
+            [subview removeFromSuperview];
+        }
+    }
         UIView* cellView = [cell contentView];
         
         NSArray* subviews = [cellView subviews];
+        self.btnToFrom = [[UIButton alloc]initWithFrame:CGRectMake(20, 10, 280, 50)];
+        [self.btnToFrom setTag:indexPath.section];
+        self.btnToFrom.titleLabel.numberOfLines = 2;
+        self.btnToFrom.titleLabel.lineBreakMode = UILineBreakModeWordWrap;
+        [self.btnToFrom setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+        [self.btnToFrom setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        [self.btnToFrom setBackgroundColor:[UIColor grayColor]];
+        [self.btnToFrom addTarget:self action:@selector(btnClickedToFrom:) forControlEvents:UIControlEventTouchUpInside];
+        if(editMode == FROM_EDIT){
+            [cellView addSubview:fromTable];
+        }
+        else if (editMode == TO_EDIT){
+            [cellView addSubview:toTable];
+        }
         if (isFrom) {
             if (subviews && [subviews count]>0 && [subviews indexOfObject:fromTable] != NSNotFound) {
                 // if fromTable is already in the subview (due to recycling, no need to add again
             } else {
+                NSString *strFromFormattedAddress;
+                if([[[locations selectedFromLocation] formattedAddress] length]>0){
+                    strFromFormattedAddress = [[locations selectedFromLocation] formattedAddress];
+                }else{
+                    strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+                }
                 
+                [self.btnToFrom setTitle:[NSString stringWithFormat:@"From: %@",strFromFormattedAddress] forState:UIControlStateNormal];
+                [cell.contentView addSubview:self.btnToFrom];
                 //Accessibility Label For UIAutomation
-                fromTable.accessibilityLabel = @"From Table";
-                [cellView addSubview:fromTable]; // add fromTable
+//                fromTable.accessibilityLabel = @"From Table";
+//                [cellView addSubview:fromTable]; // add fromTable
             }
         } else {   // do same for toTable case
             if (subviews && [subviews count]>0 && [subviews indexOfObject:toTable] != NSNotFound) {
                 // if toTable is already in the subview (due to recycling, no need to add again
             } else {
+                NSString *strToFormattedAddress;
+                if([[[locations selectedFromLocation] formattedAddress] length]>0){
+                    strToFormattedAddress = [[locations selectedToLocation] formattedAddress];
+                }else{
+                    strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
+                }if(strToFormattedAddress){
+                    strToFormattedAddress = [NSString stringWithFormat:@"To: %@",strToFormattedAddress];
+                }
+                else{
+                    strToFormattedAddress = @"To: ";
+                }
+                [self.btnToFrom setTitle:strToFormattedAddress forState:UIControlStateNormal];
+                [cell.contentView addSubview:self.btnToFrom];
                  //Accessibility Label For UIAutomation
-                toTable.accessibilityLabel = @"To Table";
-                [cellView addSubview:toTable]; // add toTable
+//                toTable.accessibilityLabel = @"To Table";
+//                [cellView addSubview:toTable]; // add toTable
             }
         }        
         return cell;
-    }
-    // Else it is the To or From txtField in Edit mode
+   // }
+    /*// Else it is the To or From txtField in Edit mode
     BOOL isFrom = (editMode == FROM_EDIT) ? TRUE : FALSE;
     NSString* cellIdentifier = isFrom ? @"fromTxtFieldCell" : @"toTxtFieldCell";
     UITableViewCell *cell =
@@ -766,7 +811,8 @@ UIImage *imageDetailDisclosure;
         }
     }
     
-    return cell;
+    return cell;*/
+    return nil;
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -913,6 +959,20 @@ UIImage *imageDetailDisclosure;
 }
 
 #pragma mark Button Press Event
+-(void) btnClickedToFrom:(id)sender
+{
+    CGRect rect0 = [self.mainTable frame];
+    rect0.size.height = 300;
+    [self.mainTable setFrame:rect0];
+    if([sender tag]==0){
+        [self setEditMode:FROM_EDIT];
+    }
+    else{
+        [self setEditMode:TO_EDIT];
+    }
+    
+}
+
 // Requesting a plan
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
@@ -1074,12 +1134,12 @@ UIImage *imageDetailDisclosure;
     [mainTable reloadData];
     
     // If TO_EDIT or FROM_EDIT, make the txt field the first responder
-    if (newEditMode == TO_EDIT) {
-        [[toTableVC txtField] becomeFirstResponder];
-    } 
-    else if (newEditMode == FROM_EDIT) {
-        [[fromTableVC txtField] becomeFirstResponder];
-    }
+//    if (newEditMode == TO_EDIT) {
+//        [[toTableVC txtField] becomeFirstResponder];
+//    } 
+//    else if (newEditMode == FROM_EDIT) {
+//        [[fromTableVC txtField] becomeFirstResponder];
+//    }
     return;
 }
 

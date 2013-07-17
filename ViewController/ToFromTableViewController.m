@@ -111,7 +111,9 @@ NSString *strStreet2 = @"street ";
 
 //
 // Table view management methods
+
 //
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;  // one section only
@@ -319,6 +321,7 @@ NSString *strStreet2 = @"street ";
            [[cell textLabel] setText:[loc shortFormattedAddress]];
         }
         else{
+            
              [[cell textLabel] setText:[loc shortFormattedAddress]];
         }
        

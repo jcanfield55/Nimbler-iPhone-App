@@ -10,6 +10,7 @@
 		2E02C785173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */; };
 		2E02C786173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */; };
 		2E02C787173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */; };
+		2EF3788F1796549D00A96272 /* Nimbler Portland-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2EF3788E1796549D00A96272 /* Nimbler Portland-Info.plist */; };
 		520FB121162603090083F143 /* FeedBackForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB109162603090083F143 /* FeedBackForm.m */; };
 		520FB122162603090083F143 /* FeedBackForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10A162603090083F143 /* FeedBackForm.xib */; };
 		520FB123162603090083F143 /* FeedBackForm_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10B162603090083F143 /* FeedBackForm_568h.xib */; };
@@ -1152,6 +1153,7 @@
 		2E02C783173381C0001F2F28 /* LocationFromLocalSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationFromLocalSearch.h; sourceTree = "<group>"; };
 		2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationFromLocalSearch.m; sourceTree = "<group>"; };
 		2E02C78C1733D82D001F2F28 /* Network_Commuting 1. 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1. 9.xcdatamodel"; sourceTree = "<group>"; };
+		2EF3788E1796549D00A96272 /* Nimbler Portland-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Nimbler Portland-Info.plist"; sourceTree = SOURCE_ROOT; };
 		520FB108162603090083F143 /* FeedBackForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FeedBackForm.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB109162603090083F143 /* FeedBackForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FeedBackForm.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB10A162603090083F143 /* FeedBackForm.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedBackForm.xib; sourceTree = "<group>"; };
@@ -1498,7 +1500,6 @@
 		8DA780951724FF820090C2EA /* Nimbler Caltrain-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Nimbler Caltrain-Info.plist"; sourceTree = SOURCE_ROOT; };
 		8DA780961724FF820090C2EA /* Nimbler SF-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Nimbler SF-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		8DAA2967178BDFEF00C3FA30 /* Nimbler Portland.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nimbler Portland.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8DAA2968178BDFEF00C3FA30 /* Nimbler Portland-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Nimbler Portland-Info.plist"; path = "/Users/apprikamac1/Desktop/Nimbler/NC_iPhone/Nimbler Portland-Info.plist"; sourceTree = "<absolute>"; };
 		8DAA296D178BE0EF00C3FA30 /* Nimbler Portland-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Nimbler Portland-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		8DAA296E178BE13C00C3FA30 /* ConstantsPortland.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConstantsPortland.h; sourceTree = "<group>"; };
 		8DAA296F178BE17F00C3FA30 /* LocalConstantsPortland.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalConstantsPortland.h; sourceTree = "<group>"; };
@@ -1984,6 +1985,7 @@
 		520FB289162604950083F143 /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
+				2EF3788E1796549D00A96272 /* Nimbler Portland-Info.plist */,
 				520FB28A162604950083F143 /* Constants.h */,
 				8DE18C6E17256CD200AA8112 /* ConstantsCaltrain.h */,
 				8DEAC189177812DF00D7997C /* ConstantsDC.h */,
@@ -2002,7 +2004,6 @@
 				8DE18C6D1725630600AA8112 /* Nimbler DC-Prefix.pch */,
 				8D42C2F8163AC05C00880B33 /* Nimbler SF-Info.plist */,
 				8DA780961724FF820090C2EA /* Nimbler SF-Prefix.pch */,
-				8DAA2968178BDFEF00C3FA30 /* Nimbler Portland-Info.plist */,
 				8DAA296D178BE0EF00C3FA30 /* Nimbler Portland-Prefix.pch */,
 				520FB290162604950083F143 /* TEXTConstant.h */,
 				520FB291162604950083F143 /* UIAutomationConstants.h */,
@@ -3043,6 +3044,7 @@
 				8DF77CCA178D570700B45C52 /* trimet.json in Resources */,
 				8D5008EC178D680A002E7820 /* store101_Portland.zip in Resources */,
 				8DABCDC21793C8BC00C1BDCF /* arrow.png in Resources */,
+				2EF3788F1796549D00A96272 /* Nimbler Portland-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3622,8 +3624,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -3638,8 +3640,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				PROVISIONING_PROFILE = "ACF5F610-0E29-4410-BEC4-9E2B275F6825";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "ACF5F610-0E29-4410-BEC4-9E2B275F6825";
+				PROVISIONING_PROFILE = "39902EDA-5EE6-4B37-9103-8EE92FBDC539";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "39902EDA-5EE6-4B37-9103-8EE92FBDC539";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -3650,8 +3652,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Jay Kumbhani (9PBW78BWK6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -3660,8 +3662,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "ACF5F610-0E29-4410-BEC4-9E2B275F6825";
-				"PROVISIONING_PROFILE[sdk=*]" = "ACF5F610-0E29-4410-BEC4-9E2B275F6825";
+				PROVISIONING_PROFILE = "39902EDA-5EE6-4B37-9103-8EE92FBDC539";
+				"PROVISIONING_PROFILE[sdk=*]" = "39902EDA-5EE6-4B37-9103-8EE92FBDC539";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -3887,8 +3889,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -3916,8 +3918,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Portland";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "39902EDA-5EE6-4B37-9103-8EE92FBDC539";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "39902EDA-5EE6-4B37-9103-8EE92FBDC539";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -3929,9 +3931,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -3959,9 +3961,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Portland";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=*]" = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "39902EDA-5EE6-4B37-9103-8EE92FBDC539";
+				"PROVISIONING_PROFILE[sdk=*]" = "39902EDA-5EE6-4B37-9103-8EE92FBDC539";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "39902EDA-5EE6-4B37-9103-8EE92FBDC539";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;

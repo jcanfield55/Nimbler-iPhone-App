@@ -497,7 +497,7 @@
         for (i=0; (i < [sortedMatchingFromLocations count]) && 
              ((selectedFromLocation == [sortedMatchingFromLocations objectAtIndex:i]) ||
               [[sortedMatchingFromLocations objectAtIndex:i] fromFrequencyFloat] > TOFROM_FREQUENCY_VISIBILITY_CUTOFF); i++);
-        matchingFromRowCount = i;
+        matchingFromRowCount = [sortedMatchingFromLocations count];
         NIMLOG_PERF1(@"MatchingFromRowCount = %d", matchingFromRowCount);
     }
     else {
@@ -561,11 +561,11 @@
 
         // Calculate the count, up to the first location with frequency below threshold (excluding the selected Location)
         NIMLOG_PERF1(@"sortedMatchingToLocations count = %d", [sortedMatchingToLocations count]);
-        int i;
-        for (i=0; (i < [sortedMatchingToLocations count]) && 
-             ((selectedToLocation == [sortedMatchingToLocations objectAtIndex:i]) ||
-             [[sortedMatchingToLocations objectAtIndex:i] toFrequencyFloat] > TOFROM_FREQUENCY_VISIBILITY_CUTOFF); i++);
-        matchingToRowCount = i;
+//        int i;
+//        for (i=0; (i < [sortedMatchingToLocations count]) &&
+//             ((selectedToLocation == [sortedMatchingToLocations objectAtIndex:i]) ||
+//             [[sortedMatchingToLocations objectAtIndex:i] toFrequencyFloat] > TOFROM_FREQUENCY_VISIBILITY_CUTOFF); i++);
+        matchingToRowCount = [sortedMatchingToLocations count];
         NIMLOG_PERF1(@"matchingToRowCount = %d", matchingToRowCount);
     }
     else {
@@ -943,6 +943,7 @@
         newArray = [[NSMutableArray alloc] initWithArray:sortedToLocations];
     }
     if (oldSelectedLocation && (oldSelectedLocation != selectedLocation)) { // if there was a non-nil oldSelectedLocation, and this is a new request, then re-sort
+        [newArray insertObject:oldSelectedLocation atIndex:0];
         NSSortDescriptor *sd1 = [NSSortDescriptor 
                                  sortDescriptorWithKey:(isFrom ? @"fromFrequency" : @"toFrequency")
                                                               ascending:NO];
@@ -952,7 +953,7 @@
     }
     if (selectedLocation) { // if there is a non-nil selectedLocation, then move it to the top
         [newArray removeObject:selectedLocation];  // remove selected object from current location
-        [newArray insertObject:selectedLocation atIndex:0];  // inserts it at the front of the object
+          // inserts it at the front of the object
     }
     
     // Write newArray back into the appropriate sorted array

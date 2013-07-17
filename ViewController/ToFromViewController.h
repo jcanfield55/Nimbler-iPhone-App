@@ -54,7 +54,7 @@ typedef enum {
 
 @property (nonatomic) BOOL isContinueGetRealTimeData;
 @property (strong, nonatomic) NSTimer *continueGetTime;
-
+@property (strong, nonatomic) UIButton *btnToFrom;
 @property (strong, nonatomic) RouteOptionsViewController *routeOptionsVC;
 @property (strong, nonatomic) UIToolbar *toolBar;
 @property (strong, nonatomic) UIDatePicker *datePicker;
