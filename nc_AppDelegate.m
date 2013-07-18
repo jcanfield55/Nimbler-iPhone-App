@@ -404,8 +404,27 @@ FeedBackForm *fbView;
     // Create an instance of a UINavigationController and put toFromViewController as the first view
     @try {
         twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
+        SettingInfoViewController *settingsView;
+        FeedBackForm *feedbackView;
+        if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
+            settingsView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF_568h" bundle:nil];
+            feedbackView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm_568h" bundle:nil];
+        }
+        else{
+            settingsView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF" bundle:nil];
+            feedbackView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
+        }
+        
         UINavigationController *navController1 = [[UINavigationController alloc] initWithRootViewController:toFromViewController];
-        UINavigationController *navController2 = [[UINavigationController alloc] initWithRootViewController:twitterView];
+        UINavigationController *navController2;
+        NSString *currentViewControllerValue = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_VIEW_CONTROLLER];
+        if(!currentViewControllerValue || [currentViewControllerValue intValue] == 1)
+            navController2 = [[UINavigationController alloc] initWithRootViewController:twitterView];
+        else if([currentViewControllerValue intValue] == 2)
+            navController2 = [[UINavigationController alloc] initWithRootViewController:settingsView];
+        else if([currentViewControllerValue intValue] == 3)
+             navController2 = [[UINavigationController alloc] initWithRootViewController:feedbackView];
+        
         revealViewController = [[RevealController alloc] initWithFrontViewController:navController1 rearViewController:navController2];
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
          self.window.rootViewController = revealViewController;

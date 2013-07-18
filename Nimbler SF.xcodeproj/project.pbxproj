@@ -238,6 +238,10 @@
 		8D106E041671F16C004E0DE5 /* GtfsTrips.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DFE1671F16B004E0DE5 /* GtfsTrips.m */; };
 		8D17871116F87FDA00C2EAD5 /* IntermediateStops.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D17871016F87B3E00C2EAD5 /* IntermediateStops.m */; };
 		8D1A64EA165B82C100176FF7 /* SettingViewController_SF.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D1A64E9165B82C100176FF7 /* SettingViewController_SF.xib */; };
+		8D2D51C917981F4800A5E007 /* twitterViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */; };
+		8D2D51CA17981F4800A5E007 /* twitterViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */; };
+		8D2D51CB17981F4800A5E007 /* twitterViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */; };
+		8D2D51CC17981F4800A5E007 /* twitterViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */; };
 		8D317A3E16DB9A5A00581224 /* img_bicycle.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D317A3C16DB9A5A00581224 /* img_bicycle.png */; };
 		8D317A3F16DB9A5A00581224 /* img_bicycleSelect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D317A3D16DB9A5A00581224 /* img_bicycleSelect.png */; };
 		8D39877A172180BA0055BF06 /* back.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D398778172180BA0055BF06 /* back.png */; };
@@ -1437,6 +1441,7 @@
 		8D17870F16F87B3E00C2EAD5 /* IntermediateStops.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IntermediateStops.h; path = ../Model/IntermediateStops.h; sourceTree = "<group>"; };
 		8D17871016F87B3E00C2EAD5 /* IntermediateStops.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = IntermediateStops.m; path = ../Model/IntermediateStops.m; sourceTree = "<group>"; };
 		8D1A64E9165B82C100176FF7 /* SettingViewController_SF.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController_SF.xib; sourceTree = "<group>"; };
+		8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = twitterViewController_568h.xib; sourceTree = "<group>"; };
 		8D317A3C16DB9A5A00581224 /* img_bicycle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_bicycle.png; sourceTree = "<group>"; };
 		8D317A3D16DB9A5A00581224 /* img_bicycleSelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_bicycleSelect.png; sourceTree = "<group>"; };
 		8D398778172180BA0055BF06 /* back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back.png; sourceTree = "<group>"; };
@@ -1755,6 +1760,7 @@
 				520FB117162603090083F143 /* SettingInfoViewController.xib */,
 				520FB118162603090083F143 /* SettingInfoViewController_568h.xib */,
 				8D1A64E9165B82C100176FF7 /* SettingViewController_SF.xib */,
+				8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */,
 				520FB119162603090083F143 /* ToFromTableViewController.h */,
 				520FB11A162603090083F143 /* ToFromTableViewController.m */,
 				520FB11B162603090083F143 /* ToFromViewController.h */,
@@ -1763,10 +1769,10 @@
 				520FB11E162603090083F143 /* twitterViewController.h */,
 				520FB11F162603090083F143 /* twitterViewController.m */,
 				520FB120162603090083F143 /* twitterViewController.xib */,
+				8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */,
 				8DFFB369165DFBBB00A39BC4 /* SettingDetailViewController.h */,
 				8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */,
 				8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */,
-				8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */,
 				8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */,
 			);
 			path = ViewController;
@@ -2677,6 +2683,7 @@
 				8D0C2962173124DA00E6AA1B /* Handle_control.png in Resources */,
 				8DE28CA81732379300403CD0 /* RouteDetailViewController_568h.xib in Resources */,
 				8DABCDBF1793C8BC00C1BDCF /* arrow.png in Resources */,
+				8D2D51C917981F4800A5E007 /* twitterViewController_568h.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2866,6 +2873,7 @@
 				52B3AE211755E1B3009FFD94 /* Icon-Caltrain.png in Resources */,
 				52B3AE221755E1B8009FFD94 /* Icon-Caltrain@2x.png in Resources */,
 				8DABCDC01793C8BC00C1BDCF /* arrow.png in Resources */,
+				8D2D51CA17981F4800A5E007 /* twitterViewController_568h.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3043,6 +3051,7 @@
 				8DF77CCA178D570700B45C52 /* trimet.json in Resources */,
 				8D5008EC178D680A002E7820 /* store101_Portland.zip in Resources */,
 				8DABCDC21793C8BC00C1BDCF /* arrow.png in Resources */,
+				8D2D51CC17981F4800A5E007 /* twitterViewController_568h.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3218,6 +3227,7 @@
 				8DEAC1A317785F2500D7997C /* nimblrDC@2x.png in Resources */,
 				8D5008ED178D7D42002E7820 /* RouteDetailViewController_568h.xib in Resources */,
 				8DABCDC11793C8BC00C1BDCF /* arrow.png in Resources */,
+				8D2D51CB17981F4800A5E007 /* twitterViewController_568h.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

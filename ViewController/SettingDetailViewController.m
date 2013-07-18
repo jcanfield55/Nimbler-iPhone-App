@@ -12,6 +12,8 @@
 #import "UtilityFunctions.h"
 #import "RouteExcludeSettings.h"
 #import "RouteExcludeSetting.h"
+#import "twitterViewController.h"
+#import "FeedBackForm.h"
 
 @implementation SettingDetailViewController
 
@@ -35,26 +37,33 @@
 @synthesize isSettingDetail;
 @synthesize settingDetailDelegate;
 
+@synthesize advisoriesButton;
+@synthesize setttingsButton;
+@synthesize feedBackButton;
+@synthesize backButton;
+@synthesize titleLabel;
+@synthesize titleLabelString;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         UserPreferance* userPrefs = [UserPreferance userPreferance];
         switchUrgentNotification = [[UISwitch alloc] init];
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
-            [switchUrgentNotification setOnTintColor:[UIColor lightGrayColor]];
+            [switchUrgentNotification setOnTintColor:[UIColor NIMBLER_RED_FONT_COLOR]];
         }
         [switchUrgentNotification setOn:[userPrefs urgentNotificationSound]];
         [switchUrgentNotification addTarget:self action:@selector(switchUrgentNotificationChanged) forControlEvents:UIControlEventValueChanged];
 
         switchStandardNotification = [[UISwitch alloc] init];
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
-            [switchStandardNotification setOnTintColor:[UIColor lightGrayColor]];
+            [switchStandardNotification setOnTintColor:[UIColor NIMBLER_RED_FONT_COLOR]];
         }
         [switchStandardNotification setOn:[userPrefs standardNotificationSound]];
         [switchStandardNotification addTarget:self action:@selector(switchStandardNotificationChanged) forControlEvents:UIControlEventValueChanged];
         
         lblMaximumBikeDistance=[[UILabel alloc] initWithFrame:CGRectMake(DETAIL_SETTING_MAIN_LABEL_XPOS,DETAIL_SETTING_MAIN_LABEL_YPOS, DETAIL_SETTING_MAIN_LABEL_WIDTH, DETAIL_SETTING_MAIN_LABEL_HEIGHT)];
-        [lblMaximumBikeDistance setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+        [lblMaximumBikeDistance setTextColor:[UIColor whiteColor]];
         lblMaximumBikeDistance.backgroundColor =[UIColor clearColor];
         lblMaximumBikeDistance.adjustsFontSizeToFitWidth=YES;
         lblMaximumBikeDistance.text=MAXIMUM_BIKE_DISTANCE;
@@ -63,7 +72,7 @@
         sliderMaximumBikeDistance = [[UISlider alloc] initWithFrame:CGRectMake(SLIDERS_XOPS,SLIDERS_YPOS,SLIDERS_WIDTH,SLIDERS_HEIGHT)];
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
             [sliderMaximumBikeDistance
-             setMinimumTrackTintColor:[UIColor lightGrayColor]];
+             setMinimumTrackTintColor:[UIColor NIMBLER_RED_FONT_COLOR]];
         }
         [sliderMaximumBikeDistance setMinimumValue:MAX_BIKE_DISTANCE_MIN_VALUE];
         [sliderMaximumBikeDistance setMaximumValue:MAX_BIKE_DISTANCE_MAX_VALUE];
@@ -73,7 +82,7 @@
         
         
         lblPreferenceFastVsSafe=[[UILabel alloc] initWithFrame:CGRectMake(DETAIL_SETTING_MAIN_LABEL_XPOS,DETAIL_SETTING_MAIN_LABEL_YPOS, DETAIL_SETTING_MAIN_LABEL_WIDTH, DETAIL_SETTING_MAIN_LABEL_HEIGHT)];
-        [lblPreferenceFastVsSafe setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+        [lblPreferenceFastVsSafe setTextColor:[UIColor whiteColor]];
         lblPreferenceFastVsSafe.backgroundColor =[UIColor clearColor];
         lblPreferenceFastVsSafe.adjustsFontSizeToFitWidth=YES;
         lblPreferenceFastVsSafe.text=PREFERENCE_FAST_VS_SAFE;
@@ -82,14 +91,14 @@
         sliderPreferenceFastVsSafe = [[UISlider alloc] initWithFrame:CGRectMake(SLIDERS_XOPS, SLIDERS_YPOS1, SLIDERS_WIDTH,SLIDERS_HEIGHT)];
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
             [sliderPreferenceFastVsSafe
-             setMinimumTrackTintColor:[UIColor lightGrayColor]];
+             setMinimumTrackTintColor:[UIColor NIMBLER_RED_FONT_COLOR]];
         }
         [sliderPreferenceFastVsSafe setMinimumValue:BIKE_PREFERENCE_MIN_VALUE];
         [sliderPreferenceFastVsSafe setMaximumValue:BIKE_PREFERENCE_MAX_VALUE];
         [sliderPreferenceFastVsSafe setValue:[userPrefs fastVsSafe]];
         
         lblPreferenceFastVsFlat=[[UILabel alloc] initWithFrame:CGRectMake(DETAIL_SETTING_MAIN_LABEL_XPOS,DETAIL_SETTING_MAIN_LABEL_YPOS, DETAIL_SETTING_MAIN_LABEL_WIDTH, DETAIL_SETTING_MAIN_LABEL_HEIGHT)];
-        [lblPreferenceFastVsFlat setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+        [lblPreferenceFastVsFlat setTextColor:[UIColor whiteColor]];
         lblPreferenceFastVsFlat.backgroundColor =[UIColor clearColor];
         lblPreferenceFastVsFlat.adjustsFontSizeToFitWidth=YES;
         lblPreferenceFastVsFlat.text=PREFERENCE_FAST_VS_FLAT;
@@ -98,55 +107,55 @@
         sliderPreferenceFastVsFlat = [[UISlider alloc] initWithFrame:CGRectMake(SLIDERS_XOPS, SLIDERS_YPOS1, SLIDERS_WIDTH,SLIDERS_HEIGHT)];
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
             [sliderPreferenceFastVsFlat
-             setMinimumTrackTintColor:[UIColor lightGrayColor]];
+             setMinimumTrackTintColor:[UIColor NIMBLER_RED_FONT_COLOR]];
         }
         [sliderPreferenceFastVsFlat setMinimumValue:BIKE_PREFERENCE_MIN_VALUE];
         [sliderPreferenceFastVsFlat setMaximumValue:BIKE_PREFERENCE_MAX_VALUE];
         [sliderPreferenceFastVsFlat setValue:[userPrefs fastVsFlat]];
 
         lblCurrentBikeDistance = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, LABEL_MAXWALK_Distance_WIDTH, LABEL_MAXWALK_Distance_HEIGHT)] ;
-        [lblCurrentBikeDistance setTextColor:[UIColor redColor]];
+        [lblCurrentBikeDistance setTextColor:[UIColor whiteColor]];
         [lblCurrentBikeDistance setBackgroundColor:[UIColor clearColor]];
         [lblCurrentBikeDistance setTextAlignment:UITextAlignmentCenter];
         [lblCurrentBikeDistance setFont:[UIFont MEDIUM_FONT]];
         
         lblMinBikeDistance=[[UILabel alloc] initWithFrame:CGRectMake(BIKE_DISTANCE_LABEL_XPOS,BIKE_DISTANCE_LABEL_YPOS, BIKE_DISTANCE_LABEL_WIDTH, BIKE_DISTANCE_LABEL_HEIGHT)];
-        [lblMinBikeDistance setTextColor:[UIColor GRAY_FONT_COLOR]];
+        [lblMinBikeDistance setTextColor:[UIColor whiteColor]];
         lblMinBikeDistance.backgroundColor =[UIColor clearColor];
         lblMinBikeDistance.adjustsFontSizeToFitWidth=YES;
         lblMinBikeDistance.text=[NSString stringWithFormat:@"%d",MAX_BIKE_DISTANCE_MIN_VALUE];
         [lblMinBikeDistance setFont:[UIFont SMALL_OBLIQUE_FONT]];
         
         lblMaxBikeDistance=[[UILabel alloc] initWithFrame:CGRectMake(BIKE_DISTANCE_LABEL_XPOS1,BIKE_DISTANCE_LABEL_YPOS, BIKE_DISTANCE_LABEL_WIDTH, BIKE_DISTANCE_LABEL_HEIGHT)];
-        [lblMaxBikeDistance setTextColor:[UIColor GRAY_FONT_COLOR]];
+        [lblMaxBikeDistance setTextColor:[UIColor whiteColor]];
         lblMaxBikeDistance.backgroundColor =[UIColor clearColor];
         lblMaxBikeDistance.adjustsFontSizeToFitWidth=YES;
         lblMaxBikeDistance.text=[NSString stringWithFormat:@"%d",MAX_BIKE_DISTANCE_MAX_VALUE];;
         [lblMaxBikeDistance setFont:[UIFont SMALL_OBLIQUE_FONT]];
         
         lblQuickWithHills=[[UILabel alloc] initWithFrame:CGRectMake(BIKE_PREFERENCE_LABEL_XPOS,BIKE_PREFERENCE_LABEL_YPOS,BIKE_PREFERENCE_LABEL_WIDTH,BIKE_PREFERENCE_LABEL_HEIGHT)];
-        [lblQuickWithHills setTextColor:[UIColor GRAY_FONT_COLOR]];
+        [lblQuickWithHills setTextColor:[UIColor whiteColor]];
         lblQuickWithHills.backgroundColor =[UIColor clearColor];
         lblQuickWithHills.adjustsFontSizeToFitWidth=YES;
         lblQuickWithHills.text= QUICK_WITH_HILLS;
         [lblQuickWithHills setFont:[UIFont SMALL_OBLIQUE_FONT]];
         
         lblGoAroundHills=[[UILabel alloc] initWithFrame:CGRectMake(BIKE_PREFERENCE_LABEL_XPOS1,BIKE_PREFERENCE_LABEL_YPOS,BIKE_PREFERENCE_LABEL_WIDTH,BIKE_PREFERENCE_LABEL_HEIGHT)];
-        [lblGoAroundHills setTextColor:[UIColor GRAY_FONT_COLOR]];
+        [lblGoAroundHills setTextColor:[UIColor whiteColor]];
         lblGoAroundHills.backgroundColor =[UIColor clearColor];
         lblGoAroundHills.adjustsFontSizeToFitWidth=YES;
         lblGoAroundHills.text= GO_AROUNG_HILLS;
         [lblGoAroundHills setFont:[UIFont SMALL_OBLIQUE_FONT]];
         
         lblQuickWithAnyStreet=[[UILabel alloc] initWithFrame:CGRectMake(BIKE_PREFERENCE_LABEL_XPOS,BIKE_PREFERENCE_LABEL_YPOS,BIKE_PREFERENCE_LABEL_WIDTH,BIKE_PREFERENCE_LABEL_HEIGHT)];
-        [lblQuickWithAnyStreet setTextColor:[UIColor GRAY_FONT_COLOR]];
+        [lblQuickWithAnyStreet setTextColor:[UIColor whiteColor]];
         lblQuickWithAnyStreet.backgroundColor =[UIColor clearColor];
         lblQuickWithAnyStreet.adjustsFontSizeToFitWidth=YES;
         lblQuickWithAnyStreet.text= QUICK_WITH_ANY_STREET;
         [lblQuickWithAnyStreet setFont:[UIFont SMALL_OBLIQUE_FONT]];
         
         lblBikeFriendlyStreet=[[UILabel alloc] initWithFrame:CGRectMake(BIKE_PREFERENCE_LABEL_XPOS1,BIKE_PREFERENCE_LABEL_YPOS,BIKE_PREFERENCE_LABEL_WIDTH,BIKE_PREFERENCE_LABEL_HEIGHT)];
-        [lblBikeFriendlyStreet setTextColor:[UIColor GRAY_FONT_COLOR]];
+        [lblBikeFriendlyStreet setTextColor:[UIColor whiteColor]];
         lblBikeFriendlyStreet.backgroundColor =[UIColor clearColor];
         lblBikeFriendlyStreet.adjustsFontSizeToFitWidth=YES;
         lblBikeFriendlyStreet.text= BIKE_FRIENDLY_STREET;
@@ -165,19 +174,19 @@
     lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
     
     if(nSettingRow == N_SETTINGS_ROW_ADVISORY){
-        lblNavigationTitle.text = ADVISORY_CHOICES;
+        titleLabel.text = ADVISORY_CHOICES;
     }
     else if(nSettingRow == N_SETTINGS_ROW_PUSH_SOUND){
-        lblNavigationTitle.text = NOTIFICATION_SOUND;
+        titleLabel.text = NOTIFICATION_SOUND;
     }
     else if(nSettingRow == N_SETTINGS_ROW_PUSH_TIMING){
-        lblNavigationTitle.text = NOTIFICATION_TIMING;
+        titleLabel.text = NOTIFICATION_TIMING;
     }
     else if(nSettingRow == N_SETTINGS_ROW_TRANSIT_MODE){
-        lblNavigationTitle.text = TRANSIT_MODE;
+        titleLabel.text = TRANSIT_MODE;
     }
     else if(nSettingRow == N_SETTINGS_ROW_BIKE_PREF){
-        lblNavigationTitle.text = BIKE_PREFERENCES;
+        titleLabel.text = BIKE_PREFERENCES;
     }
     self.navigationItem.titleView=lblNavigationTitle;
     UIImage* btnImage = [UIImage imageNamed:@"img_Settings.png"];
@@ -189,7 +198,7 @@
     
     self.tblDetailSetting.delegate = self;
     self.tblDetailSetting.dataSource = self;
-    [self.tblDetailSetting setBackgroundView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_background.png"]]];
+    //[self.tblDetailSetting setBackgroundView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_background.png"]]];
 }
 - (void) viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -230,7 +239,6 @@
      }
 }
 - (void)popOutToSettings{
-    [self.navigationController popViewControllerAnimated:YES];
 }
 // Methods Added to Get The Position of Thumb
 - (float)mapValueInIntervalInPercents: (float)value min: (float)minimum max: (float)maximum{
@@ -316,7 +324,7 @@
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell.textLabel setFont:[UIFont SMALL_FONT]];
-    [cell.textLabel setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+    [cell.textLabel setTextColor:[UIColor whiteColor]];
     UserPreferance* userPrefs = [UserPreferance userPreferance];
     if(nSettingRow == N_SETTINGS_ROW_ADVISORY){
         if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
@@ -489,6 +497,7 @@
             }
         }
     }
+    [cell setBackgroundColor:[UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0]];
     return cell;
 }
 
@@ -660,6 +669,47 @@
 
 -(void)switchStandardNotificationChanged {
     [UserPreferance userPreferance].standardNotificationSound = switchStandardNotification.isOn;
+}
+
+-(IBAction)advisoriesButtonClicked:(id)sender{
+    twitterViewController *secondView;
+    if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
+        secondView = [[twitterViewController alloc] initWithNibName:@"twitterViewController_568h" bundle:nil];
+    }
+    else{
+        secondView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
+    }
+    [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:CURRENT_VIEW_CONTROLLER];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    CATransition *animation = [CATransition animation];
+    [animation setDuration:0.5];
+    [animation setType:kCATransitionPush];
+    [animation setSubtype:kCATransitionFromBottom];
+    [[self.navigationController.view layer] addAnimation:animation forKey:@"SwitchToView1"];
+    [self.navigationController pushViewController:secondView animated:NO];
+}
+-(IBAction)settingsButtonClicked:(id)sender{
+    
+}
+-(IBAction)feedBackButtonClicked:(id)sender{
+    FeedBackForm *secondView;
+    if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
+        secondView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm_568h" bundle:nil];
+    }
+    else{
+        secondView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
+    }
+    [[NSUserDefaults standardUserDefaults] setObject:@"3" forKey:CURRENT_VIEW_CONTROLLER];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    CATransition *animation = [CATransition animation];
+    [animation setDuration:0.5];
+    [animation setType:kCATransitionPush];
+    [animation setSubtype:kCATransitionFromTop];
+    [[self.navigationController.view layer] addAnimation:animation forKey:@"SwitchToView1"];
+    [self.navigationController pushViewController:secondView animated:NO];
+}
+-(IBAction)popOutToSettings:(id)sender{
+  [self.navigationController popViewControllerAnimated:YES];  
 }
 
 @end

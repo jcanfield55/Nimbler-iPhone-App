@@ -66,18 +66,18 @@ UIImage *imageDetailDisclosure;
         switchPushNotification = [[UISwitch alloc] init];
         switchPushNotification.accessibilityLabel = @"Push Notifications Switch"; 
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
-            [switchPushNotification setOnTintColor:[UIColor lightGrayColor]];
+            [switchPushNotification setOnTintColor:[UIColor NIMBLER_RED_FONT_COLOR]];
         }
         [switchPushNotification addTarget:self action:@selector(switchPushNotificationChanged) forControlEvents:UIControlEventValueChanged];
         lblFrequently=[[UILabel alloc] initWithFrame:CGRectMake(LABEL_FREQUENTLY_XPOS,LABEL_FREQUENTLY_YPOS, LABEL_FREQUENTLY_WIDTH, LABEL_FREQUENTLY_HEIGHT)];
-        [lblFrequently setTextColor:[UIColor GRAY_FONT_COLOR]];
+        [lblFrequently setTextColor:[UIColor whiteColor]];
         lblFrequently.backgroundColor =[UIColor clearColor];
         lblFrequently.adjustsFontSizeToFitWidth=YES;
         lblFrequently.text= LABEL_FREQUENTLY;
         [lblFrequently setFont:[UIFont SMALL_OBLIQUE_FONT]];
         
         lblRarely=[[UILabel alloc] initWithFrame:CGRectMake(LABEL_RARELY_XPOS,LABEL_RARELY_YPOS,LABEL_RARELY_WIDTH,LABEL_RARELY_HEIGHT)];
-        [lblRarely setTextColor:[UIColor GRAY_FONT_COLOR]];
+        [lblRarely setTextColor:[UIColor whiteColor]];
         lblRarely.backgroundColor =[UIColor clearColor];
         lblRarely.adjustsFontSizeToFitWidth=YES;
         lblRarely.text= LABEL_RARELY;
@@ -86,7 +86,7 @@ UIImage *imageDetailDisclosure;
         sliderPushNotificationFrequency = [[UISlider alloc] initWithFrame:CGRectMake(SLIDER_PUSH_FREQUENCY_XPOS,SLIDER_PUSH_FREQUENCY_YPOS,SLIDER_PUSH_FREQUENCY_WIDTH,SLIDER_PUSH_FREQUENCY_HEIGHT)];
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
             [sliderPushNotificationFrequency
-             setMinimumTrackTintColor:[UIColor lightGrayColor]];
+             setMinimumTrackTintColor:[UIColor NIMBLER_RED_FONT_COLOR]];
         }
         [sliderPushNotificationFrequency setMinimumValue:PUSH_FREQUENCY_MIN_VALUE];
         [sliderPushNotificationFrequency setMaximumValue:PUSH_FREQUENCY_MAX_VALUE];
@@ -96,28 +96,28 @@ UIImage *imageDetailDisclosure;
         
         
         lblFrequencyOfPush=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_MAIN_LABEL_XPOS,SETTING_MAIN_LABEL_YPOS,SETTING_MAIN_LABEL_WIDTH,SETTING_MAIN_LABEL_HEIGHT)];
-        [lblFrequencyOfPush setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+        [lblFrequencyOfPush setTextColor:[UIColor whiteColor]];
         lblFrequencyOfPush.backgroundColor =[UIColor clearColor];
         lblFrequencyOfPush.adjustsFontSizeToFitWidth=YES;
         lblFrequencyOfPush.text=FREQUENCY_OF_PUSH;
         [lblFrequencyOfPush setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
         
         lblMaximumWalkDistance=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_MAIN_LABEL_XPOS,SETTING_MAIN_LABEL_YPOS,SETTING_MAIN_LABEL_WIDTH,SETTING_MAIN_LABEL_HEIGHT)];
-        [lblMaximumWalkDistance setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+        [lblMaximumWalkDistance setTextColor:[UIColor whiteColor]];
         lblMaximumWalkDistance.backgroundColor =[UIColor clearColor];
         lblMaximumWalkDistance.adjustsFontSizeToFitWidth=YES;
         lblMaximumWalkDistance.text=MAXIMUM_WALK_DISTANCE_LABEL;
         [lblMaximumWalkDistance setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
         
         lblMinWalkDistance=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_SUB_LABEL_XPOS,SETTING_SUB_LABEL_YPOS,SETTING_SUB_LABEL_WIDTH,SETTING_SUB_LABEL_HEIGHT)];
-        [lblMinWalkDistance setTextColor:[UIColor GRAY_FONT_COLOR]];
+        [lblMinWalkDistance setTextColor:[UIColor whiteColor]];
         lblMinWalkDistance.backgroundColor =[UIColor clearColor];
         lblMinWalkDistance.adjustsFontSizeToFitWidth=YES;
         lblMinWalkDistance.text= [NSString stringWithFormat:@"%0.2f",MAX_WALK_DISTANCE_MIN_VALUE];
         [lblMinWalkDistance setFont:[UIFont SMALL_OBLIQUE_FONT]];
         
         lblMaxWalkDistance=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_SUB_LABEL_XPOS1,SETTING_SUB_LABEL_YPOS,SETTING_SUB_LABEL_WIDTH,SETTING_SUB_LABEL_HEIGHT)];
-        [lblMaxWalkDistance setTextColor:[UIColor GRAY_FONT_COLOR]];
+        [lblMaxWalkDistance setTextColor:[UIColor whiteColor]];
         lblMaxWalkDistance.backgroundColor =[UIColor clearColor];
         lblMaxWalkDistance.adjustsFontSizeToFitWidth=YES;
         lblMaxWalkDistance.text= [NSString stringWithFormat:@"%0.2f",MAX_WALK_DISTANCE_MAX_VALUE];
@@ -126,7 +126,7 @@ UIImage *imageDetailDisclosure;
         sliderMaximumWalkDistance = [[UISlider alloc] initWithFrame:CGRectMake(SLIDERS_XOPS,SLIDERS_YPOS, SLIDERS_WIDTH,SLIDERS_HEIGHT)];
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
             [sliderMaximumWalkDistance
-             setMinimumTrackTintColor:[UIColor lightGrayColor]];
+             setMinimumTrackTintColor:[UIColor NIMBLER_RED_FONT_COLOR]];
         }
         [sliderMaximumWalkDistance setMinimumValue:MAX_WALK_DISTANCE_MIN_VALUE];
         [sliderMaximumWalkDistance setMaximumValue:MAX_WALK_DISTANCE_MAX_VALUE];
@@ -135,7 +135,7 @@ UIImage *imageDetailDisclosure;
         [sliderMaximumWalkDistance addTarget:self action:@selector(sliderWalkDistance:) forControlEvents:UIControlEventValueChanged];
         
         lblCurrentMaxWalkDistance = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, LABEL_MAXWALK_Distance_WIDTH, LABEL_MAXWALK_Distance_HEIGHT)] ;
-        [lblCurrentMaxWalkDistance setTextColor:[UIColor redColor]];
+        [lblCurrentMaxWalkDistance setTextColor:[UIColor whiteColor]];
         [lblCurrentMaxWalkDistance setBackgroundColor:[UIColor clearColor]];
         [lblCurrentMaxWalkDistance setTextAlignment:UITextAlignmentCenter];
         [lblCurrentMaxWalkDistance setFont:[UIFont MEDIUM_FONT]];
@@ -155,12 +155,13 @@ UIImage *imageDetailDisclosure;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.navigationController.navigationBar setHidden:YES];
     [self.navigationItem setHidesBackButton:YES animated:YES];
     
     UserPreferance* userPrefs = [UserPreferance userPreferance];
     self.tblSetting.delegate = self;
     self.tblSetting.dataSource = self;
-    [self.tblSetting setBackgroundView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_background.png"]]];
+    //[self.tblSetting setBackgroundView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_background.png"]]];
     if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
         [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
     }
@@ -495,7 +496,13 @@ UIImage *imageDetailDisclosure;
     return SETTINGS_NUMBER_OF_SECTIONS;
 }
 
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    return 3;
+}
 
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 3;
+}
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if(section == SETTINGS_ADVISORY_SECTION_NUM){
         return SETTINGS_ADVISORY_SECTION_ROWS;
@@ -541,9 +548,10 @@ UIImage *imageDetailDisclosure;
         UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
         [cell setAccessoryView:imgViewDetailDisclosure];
     }
+    [cell setBackgroundColor:[UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0]];
     [cell.textLabel setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
-    [cell.textLabel setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
-    [cell.detailTextLabel setTextColor:[UIColor GRAY_FONT_COLOR]];
+    [cell.textLabel setTextColor:[UIColor whiteColor]];
+    [cell.detailTextLabel setTextColor:[UIColor whiteColor]];
     [cell.detailTextLabel setFont:[UIFont SMALL_OBLIQUE_FONT]];
     if(indexPath.section == SETTINGS_ADVISORY_SECTION_NUM){
         cell.textLabel.text = ADVISORY_CHOICES;
@@ -739,11 +747,19 @@ UIImage *imageDetailDisclosure;
 }
 
 -(IBAction)advisoriesButtonClicked:(id)sender{
-    twitterViewController *secondView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
+    twitterViewController *secondView;
+    if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
+        secondView = [[twitterViewController alloc] initWithNibName:@"twitterViewController_568h" bundle:nil];
+    }
+    else{
+        secondView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
+    }
+    [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:CURRENT_VIEW_CONTROLLER];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     [secondView getAdvisoryData];
     CATransition *animation = [CATransition animation];
     [animation setDuration:0.5];
-    [animation setType:kCATransition];
+    [animation setType:kCATransitionPush];
     [animation setSubtype:kCATransitionFromBottom];
     [[self.navigationController.view layer] addAnimation:animation forKey:@"SwitchToView1"];
     [self.navigationController pushViewController:secondView animated:NO];
@@ -752,10 +768,18 @@ UIImage *imageDetailDisclosure;
     
 }
 -(IBAction)feedBackButtonClicked:(id)sender{
-    FeedBackForm *secondView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
+    FeedBackForm *secondView;
+    if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
+        secondView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm_568h" bundle:nil];
+    }
+    else{
+        secondView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
+    }
+    [[NSUserDefaults standardUserDefaults] setObject:@"3" forKey:CURRENT_VIEW_CONTROLLER];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     CATransition *animation = [CATransition animation];
     [animation setDuration:0.5];
-    [animation setType:kCATransition];
+    [animation setType:kCATransitionPush];
     [animation setSubtype:kCATransitionFromTop];
     [[self.navigationController.view layer] addAnimation:animation forKey:@"SwitchToView1"];
     [self.navigationController pushViewController:secondView animated:NO];

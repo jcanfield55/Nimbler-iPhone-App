@@ -68,7 +68,7 @@ NSUserDefaults *prefs;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    [self.navigationController.navigationBar setHidden:YES];
     [self.navigationItem setHidesBackButton:YES animated:YES];
     
     [self addPullToRefreshHeader];
@@ -111,6 +111,7 @@ NSUserDefaults *prefs;
     refreshLabel.backgroundColor = [UIColor clearColor];
     refreshLabel.font = [UIFont boldSystemFontOfSize:12.0];
     refreshLabel.textAlignment = NSTextAlignmentCenter;
+    [refreshLabel setTextColor:[UIColor whiteColor]];
     
     refreshArrow = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow.png"]];
     refreshArrow.frame = CGRectMake(floorf((REFRESH_HEADER_HEIGHT - 27) / 2),
@@ -120,6 +121,7 @@ NSUserDefaults *prefs;
     refreshSpinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     refreshSpinner.frame = CGRectMake(floorf(floorf(REFRESH_HEADER_HEIGHT - 20) / 2), floorf((REFRESH_HEADER_HEIGHT - 20) / 2), 20, 20);
     refreshSpinner.hidesWhenStopped = YES;
+    [refreshSpinner setColor:[UIColor whiteColor]];
     
     [refreshHeaderView addSubview:refreshLabel];
     [refreshHeaderView addSubview:refreshArrow];
@@ -285,7 +287,7 @@ NSUserDefaults *prefs;
         UILabel *lblTextLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 10, 300, 30)];
         [lblTextLabel setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
         [lblTextLabel setText:[tempArray objectAtIndex:0]];
-        [lblTextLabel setTextColor:[UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0]];
+        [lblTextLabel setTextColor:[UIColor whiteColor]];
         [lblTextLabel setBackgroundColor:[UIColor clearColor]];
         [cell.contentView addSubview:lblTextLabel];
         
@@ -301,14 +303,14 @@ NSUserDefaults *prefs;
         UITextView *uiTextView=[[UITextView alloc] initWithFrame:CGRectMake(55, 28, 220, stringSize.height + 40)];
         uiTextView.font = [UIFont systemFontOfSize:15.0];
         uiTextView.text = strTweet;
-        uiTextView.textColor = [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
+        uiTextView.textColor = [UIColor whiteColor];
         uiTextView.editable = NO;
         uiTextView.dataDetectorTypes = UIDataDetectorTypeLink;
         uiTextView.scrollEnabled = NO;
         uiTextView.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:uiTextView];
         
-        cell.textLabel.textColor = [UIColor colorWithRed:252.0/255.0 green:103.0/255.0 blue:88.0/255.0 alpha:1.0];
+        cell.textLabel.textColor = [UIColor whiteColor];
         cell.detailTextLabel.numberOfLines= MAXLINE_TAG;
         cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
         
@@ -320,6 +322,7 @@ NSUserDefaults *prefs;
         [cell.contentView addSubview:labelTime];
         labelTime.text = [[detailsTimeFormatter stringFromDate:epochNSDate] lowercaseString];
         [labelTime setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
+        [labelTime setTextColor:[UIColor whiteColor]];
         
         // DE-270 Fixed
         UIImage *image = getAgencyIcon([key objectForKey:TWEET_SOURCE]);
@@ -329,6 +332,7 @@ NSUserDefaults *prefs;
             cell.imageView.image = [UIImage imageNamed:CALTRAIN_IMG];
         cell.imageView.layer.cornerRadius = CORNER_RADIUS_MEDIUM;
         cell.imageView.layer.masksToBounds = YES;
+        [cell setBackgroundColor:[UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0]];
         return cell;
     }
     @catch (NSException *exception) {
@@ -634,19 +638,35 @@ NSUserDefaults *prefs;
     
 }
 -(IBAction)settingsButtonClicked:(id)sender{
-    SettingInfoViewController *secondView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF" bundle:nil];
+    SettingInfoViewController *secondView;
+    if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
+        secondView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF_568h" bundle:nil];
+    }
+    else{
+        secondView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF" bundle:nil];
+    }
+    [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:CURRENT_VIEW_CONTROLLER];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     CATransition *animation = [CATransition animation];
     [animation setDuration:0.5];
-    [animation setType:kCATransition];
+    [animation setType:kCATransitionPush];
     [animation setSubtype:kCATransitionFromTop];
     [[self.navigationController.view layer] addAnimation:animation forKey:@"SwitchToView1"];
     [self.navigationController pushViewController:secondView animated:NO];
 }
 -(IBAction)feedBackButtonClicked:(id)sender{
-    FeedBackForm *secondView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
+    FeedBackForm *secondView;
+    if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
+        secondView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm_568h" bundle:nil];
+    }
+    else{
+        secondView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
+    }
+    [[NSUserDefaults standardUserDefaults] setObject:@"3" forKey:CURRENT_VIEW_CONTROLLER];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     CATransition *animation = [CATransition animation];
     [animation setDuration:0.5];
-    [animation setType:kCATransition];
+    [animation setType:kCATransitionPush];
     [animation setSubtype:kCATransitionFromTop];
     [[self.navigationController.view layer] addAnimation:animation forKey:@"SwitchToView1"];
     [self.navigationController pushViewController:secondView animated:NO];

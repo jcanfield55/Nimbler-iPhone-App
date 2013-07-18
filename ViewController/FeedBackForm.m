@@ -52,7 +52,8 @@
 BOOL isCancelFB = FALSE;
 @synthesize tpURLResource,alertView,mesg,btnPlayRecording,btnStopRecording,btnPauseRecording,btnRecordRecording,fbReqParams;
 @synthesize txtEmailId,txtFeedBack;
-@synthesize scrollView,advisoriesButton,settingsButton,feedBackButton;
+@synthesize advisoriesButton,settingsButton,feedBackButton;
+@synthesize buttonsBackgroundView,textViewBackground,textFieldBackground;
 
 NSUserDefaults *prefs;
 
@@ -98,16 +99,14 @@ NSUserDefaults *prefs;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.navigationController.navigationBar setHidden:YES];
     [self.navigationItem setHidesBackButton:YES animated:YES];
-    [scrollView setFrame:CGRectMake(0,155,285,300)];
-    [scrollView setContentSize:CGSizeMake(285,371)];
-    [scrollView flashScrollIndicators];
     
     // Part Of DE-318 Fix
     UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap)];
     singleTap.delegate = self;
     [singleTap setNumberOfTapsRequired:1];
-    [scrollView addGestureRecognizer:singleTap];
+    [self.view addGestureRecognizer:singleTap];
     
     [btnSubmitFeedback addTarget:self action:@selector(submitFeedBack:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -127,7 +126,13 @@ NSUserDefaults *prefs;
     lblNavigationTitle.backgroundColor =[UIColor clearColor];
     lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
     self.navigationItem.titleView=lblNavigationTitle;
-    // Do any additional setup after loading the view from its nib.
+    
+    [buttonsBackgroundView.layer setCornerRadius:5.0];
+    [textViewBackground.layer setCornerRadius:5.0];
+    [textFieldBackground.layer setCornerRadius:5.0];
+    
+    [txtFeedBack setReturnKeyType:UIReturnKeyNext];
+    [txtEmailId setReturnKeyType:UIReturnKeyDone];
 }
 
 - (void)viewDidUnload{
@@ -160,8 +165,6 @@ NSUserDefaults *prefs;
     txtEmailId.text = [prefs objectForKey:USER_EMAIL];
     labelCurrentActivityStatus.text = NULL_STRING;
     txtFeedBack.layer.cornerRadius = CORNER_RADIUS_SMALL;
-    txtFeedBack.layer.borderWidth = BORDER_WIDTH;
-    [txtFeedBack.layer setBorderColor:[[UIColor grayColor] CGColor]];
     
     [btnPlayRecording setEnabled:FALSE];
     [btnPauseRecording setEnabled:FALSE];
@@ -421,7 +424,7 @@ NSUserDefaults *prefs;
 #pragma mark GestureRecognizer delegate method
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     // Allow Tap gesture recognizer to only view not to buttons and textfields
-    if(touch.view == scrollView){
+    if(touch.view == self.view || touch.view == buttonsBackgroundView || touch.view == textViewBackground || touch.view == textFieldBackground){
         return YES;
     }
     return NO;
@@ -434,7 +437,8 @@ NSUserDefaults *prefs;
     if([[nc_AppDelegate sharedInstance] isNetworkConnectionLive]){
         // Fixed DE-338
         // Removing the white space character from feedback text and then check the length
-        if((soundFilePath == nil) && ([txtFeedBack.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length == 0)) {
+        NSString *feedBackText = [txtFeedBack.text stringByReplacingOccurrencesOfString:@"Type message here" withString:@""];
+        if((soundFilePath == nil) && ([feedBackText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length == 0)) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:FB_TITLE_MSG message:FB_WHEN_NO_VOICE_OR_TEXT delegate:self cancelButtonTitle:BUTTON_OK otherButtonTitles:nil, nil];
             [alert show];
         } else {
@@ -644,7 +648,7 @@ NSUserDefaults *prefs;
     [UIView beginAnimations:ANIMATION_PARAM context: nil];
     [UIView setAnimationBeginsFromCurrentState: YES];
     [UIView setAnimationDuration: 0.5];
-    [scrollView setContentOffset:CGPointMake(0,280)];
+    [self.view setFrame:CGRectMake(self.view.frame.origin.x,-200, self.view.frame.size.width, self.view.frame.size.height)];
     [UIView commitAnimations];
     
     //[self animateTextField: textField up: YES];
@@ -655,7 +659,7 @@ NSUserDefaults *prefs;
     [UIView beginAnimations:ANIMATION_PARAM context: nil];
     [UIView setAnimationBeginsFromCurrentState: YES];
     [UIView setAnimationDuration: 0.5];
-    [scrollView setContentOffset:CGPointMake(0,0)];
+    [self.view setFrame:CGRectMake(self.view.frame.origin.x,0, self.view.frame.size.width, self.view.frame.size.height)];
     [UIView commitAnimations];
 }
 
@@ -673,44 +677,64 @@ NSUserDefaults *prefs;
 }
 
 - (void)textViewDidBeginEditing:(UITextView *)textView{
-    //[self animateTextView: textView up: YES];
+    if([textView.text isEqualToString:@"Type message here"]){
+        [textView setText:@""];
+        [textView setTextColor:[UIColor whiteColor]];
+    }
     [UIView beginAnimations:ANIMATION_PARAM context: nil];
     [UIView setAnimationBeginsFromCurrentState: YES];
     [UIView setAnimationDuration: 0.5];
-    [scrollView setContentOffset:CGPointMake(0,180)];
+    [self.view setFrame:CGRectMake(self.view.frame.origin.x,-100, self.view.frame.size.width, self.view.frame.size.height)];
     [UIView commitAnimations];
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView{
-    //[self animateTextView: textView up: NO];
+    if([textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length == 0){
+        [textView setText:@"Type message here"];
+        [textView setTextColor:[UIColor lightGrayColor]];
+    }
     [UIView beginAnimations:ANIMATION_PARAM context: nil];
     [UIView setAnimationBeginsFromCurrentState: YES];
     [UIView setAnimationDuration: 0.5];
-    [scrollView setContentOffset:CGPointMake(0,0)];
+    [self.view setFrame:CGRectMake(self.view.frame.origin.x,0, self.view.frame.size.width, self.view.frame.size.height)];
+    [txtEmailId becomeFirstResponder];
     [UIView commitAnimations];
 }
 
 -(IBAction)advisoriesButtonClicked:(id)sender{
-    twitterViewController *secondView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
+    twitterViewController *secondView;
+    if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
+      secondView = [[twitterViewController alloc] initWithNibName:@"twitterViewController_568h" bundle:nil];  
+    }
+    else{
+      secondView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];  
+    }
+    [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:CURRENT_VIEW_CONTROLLER];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     [secondView getAdvisoryData];
     CATransition *animation = [CATransition animation];
     [animation setDuration:0.5];
-    [animation setType:kCATransition];
-    [animation setSubtype:kCATransitionFromTop];
+    [animation setType:kCATransitionPush];
+    [animation setSubtype:kCATransitionFromBottom];
     [[self.navigationController.view layer] addAnimation:animation forKey:@"SwitchToView1"];
     [self.navigationController pushViewController:secondView animated:NO];
 }
 -(IBAction)settingsButtonClicked:(id)sender{
-    SettingInfoViewController *secondView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF" bundle:nil];
+    SettingInfoViewController *secondView;
+    if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
+       secondView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF_568h" bundle:nil]; 
+    }
+    else{
+       secondView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF" bundle:nil]; 
+    }
+    [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:CURRENT_VIEW_CONTROLLER];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     CATransition *animation = [CATransition animation];
     [animation setDuration:0.5];
-    [animation setType:kCATransition];
-    [animation setSubtype:kCATransitionFromTop];
+    [animation setType:kCATransitionPush];
+    [animation setSubtype:kCATransitionFromBottom];
     [[self.navigationController.view layer] addAnimation:animation forKey:@"SwitchToView1"];
     [self.navigationController pushViewController:secondView animated:NO];
-}
--(IBAction)feedBackButtonClicked:(id)sender{
-    
 }
 
 @end

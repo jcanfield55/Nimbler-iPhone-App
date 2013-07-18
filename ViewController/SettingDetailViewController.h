@@ -33,6 +33,12 @@
     UILabel *lblBikeFriendlyStreet;
     BOOL isSettingDetail;
     id<SettingDetailViewControllerDelegate> settingDetailDelegate;
+    
+    UIButton *advisoriesButton;
+    UIButton *setttingsButton;
+    UIButton *feedBackButton;
+    UIButton *backButton;
+    UILabel *titleLabel;
 }
 @property (nonatomic, strong) IBOutlet UITableView *tblDetailSetting;
 @property (nonatomic) int nSettingRow;
@@ -53,8 +59,18 @@
 @property (nonatomic, strong) UILabel *lblBikeFriendlyStreet;
 @property (nonatomic) BOOL isSettingDetail;
 @property (nonatomic, strong) id<SettingDetailViewControllerDelegate> settingDetailDelegate;
+@property (nonatomic, strong) IBOutlet UIButton *advisoriesButton;
+@property (nonatomic, strong) IBOutlet UIButton *setttingsButton;
+@property (nonatomic, strong) IBOutlet UIButton *feedBackButton;
+@property (nonatomic, strong) IBOutlet UIButton *backButton;
+@property (nonatomic, strong) IBOutlet UILabel *titleLabel;
+@property (nonatomic, strong) NSString *titleLabelString;
 
-- (void)popOutToSettings;
+-(IBAction)advisoriesButtonClicked:(id)sender;
+-(IBAction)settingsButtonClicked:(id)sender;
+-(IBAction)feedBackButtonClicked:(id)sender;
+-(IBAction)popOutToSettings:(id)sender;
+
 -(IBAction)maxBikeDistanceValueChanged:(UISlider *)sender;
 
 -(void)switchUrgentNotificationChanged;

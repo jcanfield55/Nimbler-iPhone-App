@@ -202,4 +202,8 @@
 #define CURRENT_DATE_INC_DEC_INTERVAL 12*60*60
 #define ITINERARY_START_DATE_INC_DEC_INTERVAL 4*60*60
 
+// Key that states current view controller from 1,2 or 3
+// 1 - Advisories View  2 - Settings View 3 - Feedback View  
+#define CURRENT_VIEW_CONTROLLER @"currentViewController"
+
 #endif
