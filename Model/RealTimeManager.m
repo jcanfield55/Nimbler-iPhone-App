@@ -434,9 +434,18 @@ static RealTimeManager* realTimeManager;
         NSString *headSign = leg.headSign;
         if(!headSign)
             headSign = @"";
-        
-        if(leg.isRealTimeLeg && leg.vehicleId){
-                NSDictionary *legData = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.legId,@"id",route,@"route",leg.vehicleId,@"vehicleId",leg.mode,@"mode",routeShortName,@"routeShortName",headSign,@"headsign",leg.agencyName,@"agencyName", nil];
+        NSString *vehicleIdorTripId;
+        NSString *vehicleIdOrTripIdkey;
+        if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:PORTLAND_BUNDLE_IDENTIFIER]){
+            vehicleIdorTripId = leg.realTripId;
+            vehicleIdOrTripIdkey = @"tripId";
+        }
+        else{
+            vehicleIdorTripId = leg.vehicleId;
+            vehicleIdOrTripIdkey = @"vehicleId";
+        }
+        if(leg.isRealTimeLeg && vehicleIdorTripId){
+                NSDictionary *legData = [NSDictionary dictionaryWithObjectsAndKeys:leg.agencyId,@"agencyId",leg.legId,@"id",route,@"route",vehicleIdorTripId,vehicleIdOrTripIdkey,leg.mode,@"mode",routeShortName,@"routeShortName",headSign,@"headsign",leg.agencyName,@"agencyName", nil];
                 [legArray addObject:legData];
         }
     }

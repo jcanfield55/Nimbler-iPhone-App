@@ -590,8 +590,13 @@ NSString *legID;
                 [movingAnnotation setAccessibilityLabel:TRAM];
             }
             NSString *vehicleId = [NSString stringWithFormat:@"%@:%@",VEHICLE,[tempVehicleDictionary objectForKey:VEHICLE_ID]];
-            NSString *route = [NSString stringWithFormat:@"%@:%@",ROUTE,[tempVehicleDictionary objectForKey:ROUTE_SHORT_NAME]];
-            [movingAnnotation setTitle:[NSString stringWithFormat:@"%@  %@",vehicleId,route]];
+            if([tempVehicleDictionary objectForKey:ROUTE_SHORT_NAME]){
+                NSString *route = [NSString stringWithFormat:@"%@:%@",ROUTE,[tempVehicleDictionary objectForKey:ROUTE_SHORT_NAME]];
+                [movingAnnotation setTitle:[NSString stringWithFormat:@"%@  %@",vehicleId,route]];
+            }
+            else{
+               [movingAnnotation setTitle:[NSString stringWithFormat:@"%@",vehicleId]]; 
+            }
             NSString *headSign = [NSString stringWithFormat:@"%@",[tempVehicleDictionary objectForKey:HEADSIGN]];
             [movingAnnotation setSubtitle:headSign];
             float fromLat = [[tempVehicleDictionary objectForKey:LATITUDE] floatValue];
