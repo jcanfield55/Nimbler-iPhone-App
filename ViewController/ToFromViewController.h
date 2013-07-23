@@ -29,6 +29,18 @@ typedef enum {
 
 @interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, LocationsGeocodeResultsDelegate, RKRequestDelegate, NewPlanAvailableDelegate, UIActionSheetDelegate,UIAlertViewDelegate>
 
+@property (strong, nonatomic) IBOutlet UIView* mainToFromView;
+@property (strong, nonatomic) IBOutlet UIView* fromView;
+@property (strong, nonatomic) IBOutlet UIView* toView;
+@property (strong, nonatomic) IBOutlet UIView* PicketSelectView;  
+@property (strong, nonatomic) IBOutlet UITextView* txtFromView;
+@property (strong, nonatomic) IBOutlet UITextView* txtToView;
+@property (strong, nonatomic) IBOutlet UIImageView* imgViewFromBG;
+@property (strong, nonatomic) IBOutlet UIImageView* imgViewToBG;
+@property (strong, nonatomic) IBOutlet UIButton* btnSwap;
+@property (strong, nonatomic) IBOutlet UIButton* btnPicker;
+@property (nonatomic,readwrite) BOOL isToFromMode;
+
 @property (strong, nonatomic) IBOutlet UITableView* mainTable;  // grouped table for main page layout
 @property (strong, nonatomic) UITableView *fromTable;  // from table embedded in mainTable
 @property (strong, nonatomic) ToFromTableViewController* fromTableVC; // View controller for fromTable
@@ -68,8 +80,8 @@ typedef enum {
 @property (strong, nonatomic) Plan *plan;
 @property (strong, nonatomic) PlanRequestParameters *planRequestParameters;
 
+- (IBAction)doSwapLocation:(id)sender;
 - (IBAction)openPickerView:(id)sender;
-
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (void)getRouteForMKDirectionsRequest;   // Process an event from MapKit URL
 

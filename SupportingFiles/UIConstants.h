@@ -17,8 +17,8 @@
 #define TOFROM_ROW_HEIGHT 36
 
 // To & From table heights for regular (3.5") iPhone screen
-#define FROM_TABLE_HEIGHT_NO_CL_MODE 110 // height when not isCurrentLocationMode
-#define TO_TABLE_HEIGHT_NO_CL_MODE 146
+#define FROM_TABLE_HEIGHT_NO_CL_MODE 300 // height when not isCurrentLocationMode
+#define TO_TABLE_HEIGHT_NO_CL_MODE 400
 #define FROM_TABLE_HEIGHT_CL_MODE 74 // height when isCurrentLocationMode
 #define TO_TABLE_HEIGHT_CL_MODE 155
 #define FROM_TABLE_HEIGHT_EDIT_MODE 148 // height when in Edit mode
@@ -33,7 +33,7 @@
 #define TO_TABLE_HEIGHT_EDIT_MODE_4INCH 222 // height when in TO_EDIT mode
 
 
-#define TOFROM_TABLE_WIDTH 300
+#define TOFROM_TABLE_WIDTH 283
 #define TOFROM_INSERT_INTO_CELL_MARGIN 2 // spacer added to cell height when there is an inserted field or table
 #define TOFROM_TABLE_CORNER_RADIUS 10.0
 

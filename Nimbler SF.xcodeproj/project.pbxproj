@@ -10,6 +10,7 @@
 		2E02C785173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */; };
 		2E02C786173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */; };
 		2E02C787173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */; };
+		2E9C9277179EB56000BF0770 /* Nimbler Portland-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2E9C9276179EB56000BF0770 /* Nimbler Portland-Info.plist */; };
 		520FB121162603090083F143 /* FeedBackForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB109162603090083F143 /* FeedBackForm.m */; };
 		520FB122162603090083F143 /* FeedBackForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10A162603090083F143 /* FeedBackForm.xib */; };
 		520FB123162603090083F143 /* FeedBackForm_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10B162603090083F143 /* FeedBackForm_568h.xib */; };
@@ -1156,6 +1157,7 @@
 		2E02C783173381C0001F2F28 /* LocationFromLocalSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationFromLocalSearch.h; sourceTree = "<group>"; };
 		2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationFromLocalSearch.m; sourceTree = "<group>"; };
 		2E02C78C1733D82D001F2F28 /* Network_Commuting 1. 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1. 9.xcdatamodel"; sourceTree = "<group>"; };
+		2E9C9276179EB56000BF0770 /* Nimbler Portland-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Nimbler Portland-Info.plist"; sourceTree = SOURCE_ROOT; };
 		520FB108162603090083F143 /* FeedBackForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FeedBackForm.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB109162603090083F143 /* FeedBackForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FeedBackForm.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB10A162603090083F143 /* FeedBackForm.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedBackForm.xib; sourceTree = "<group>"; };
@@ -1503,7 +1505,6 @@
 		8DA780951724FF820090C2EA /* Nimbler Caltrain-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Nimbler Caltrain-Info.plist"; sourceTree = SOURCE_ROOT; };
 		8DA780961724FF820090C2EA /* Nimbler SF-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Nimbler SF-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		8DAA2967178BDFEF00C3FA30 /* Nimbler Portland.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nimbler Portland.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8DAA2968178BDFEF00C3FA30 /* Nimbler Portland-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Nimbler Portland-Info.plist"; path = "/Users/apprikamac1/Desktop/Nimbler/NC_iPhone/Nimbler Portland-Info.plist"; sourceTree = "<absolute>"; };
 		8DAA296D178BE0EF00C3FA30 /* Nimbler Portland-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Nimbler Portland-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		8DAA296E178BE13C00C3FA30 /* ConstantsPortland.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConstantsPortland.h; sourceTree = "<group>"; };
 		8DAA296F178BE17F00C3FA30 /* LocalConstantsPortland.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalConstantsPortland.h; sourceTree = "<group>"; };
@@ -1990,6 +1991,7 @@
 		520FB289162604950083F143 /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
+				2E9C9276179EB56000BF0770 /* Nimbler Portland-Info.plist */,
 				520FB28A162604950083F143 /* Constants.h */,
 				8DE18C6E17256CD200AA8112 /* ConstantsCaltrain.h */,
 				8DEAC189177812DF00D7997C /* ConstantsDC.h */,
@@ -2008,7 +2010,6 @@
 				8DE18C6D1725630600AA8112 /* Nimbler DC-Prefix.pch */,
 				8D42C2F8163AC05C00880B33 /* Nimbler SF-Info.plist */,
 				8DA780961724FF820090C2EA /* Nimbler SF-Prefix.pch */,
-				8DAA2968178BDFEF00C3FA30 /* Nimbler Portland-Info.plist */,
 				8DAA296D178BE0EF00C3FA30 /* Nimbler Portland-Prefix.pch */,
 				520FB290162604950083F143 /* TEXTConstant.h */,
 				520FB291162604950083F143 /* UIAutomationConstants.h */,
@@ -3052,6 +3053,7 @@
 				8D5008EC178D680A002E7820 /* store101_Portland.zip in Resources */,
 				8DABCDC21793C8BC00C1BDCF /* arrow.png in Resources */,
 				8D2D51CC17981F4800A5E007 /* twitterViewController_568h.xib in Resources */,
+				2E9C9277179EB56000BF0770 /* Nimbler Portland-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
