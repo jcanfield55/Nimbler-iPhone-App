@@ -156,6 +156,7 @@ NSString *strStreet2 = @"street ";
                 else{
                     loc = [locations selectedLocationOfLocalSearchWithLocation:locationFromLocalSearch IsFrom:isFrom error:nil];
                 }
+            [toFromVC setEditMode:NO_EDIT];
         }
         // If user tapped the selected location, then go into Edit Mode if not there already
         if ([toFromVC editMode] == NO_EDIT && loc == selectedLocation) {
@@ -167,7 +168,7 @@ NSString *strStreet2 = @"street ";
             }
         }
         else {
-            [toFromVC setEditMode:NO_EDIT];  // Have toFromVC end the edit mode (DE96 fix)
+             // Have toFromVC end the edit mode (DE96 fix)
            
             NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
 
@@ -203,6 +204,7 @@ NSString *strStreet2 = @"street ";
                          nil, nil);
 
                 [self markAndUpdateSelectedLocation:loc];  // Mark the selected location and send updates to locations and toFromVC
+                [toFromVC setEditMode:NO_EDIT]; 
             }
         }
     }

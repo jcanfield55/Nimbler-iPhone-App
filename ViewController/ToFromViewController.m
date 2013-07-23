@@ -100,6 +100,7 @@
 @synthesize plan;
 @synthesize stations;
 @synthesize planRequestParameters;
+@synthesize mainToFromView,PicketSelectView,fromView,toView,txtFromView,txtToView,btnSwap,imgViewFromBG,imgViewToBG,isToFromMode,btnPicker;
 
 // Constants for animating up and down the To: field
 #define FROM_SECTION 0
@@ -133,8 +134,8 @@ UIImage *imageDetailDisclosure;
             
             // Initialize the to & from tables
             CGRect rect1;
-            rect1.origin.x = 0;
-            rect1.origin.y = 0;
+            rect1.origin.x = 7;
+            rect1.origin.y = 56;
             rect1.size.width = TOFROM_TABLE_WIDTH ;
             if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
                 toTableHeight = TO_TABLE_HEIGHT_NO_CL_MODE_4INCH;
@@ -156,8 +157,8 @@ UIImage *imageDetailDisclosure;
             toTable.layer.cornerRadius = TOFROM_TABLE_CORNER_RADIUS;
             
             CGRect rect2;
-            rect2.origin.x = 0;
-            rect2.origin.y = 0;               
+            rect2.origin.x = 7;
+            rect2.origin.y = 56;
             rect2.size.width = TOFROM_TABLE_WIDTH; 
             if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
                 fromTableHeight = FROM_TABLE_HEIGHT_NO_CL_MODE_4INCH;
@@ -205,7 +206,7 @@ UIImage *imageDetailDisclosure;
             
             // Set up NavBar left buttons
             
-            UIImage* btnSwapImage = [UIImage imageNamed:@"img_swapLocation.png"];
+       /*     UIImage* btnSwapImage = [UIImage imageNamed:@"img_swapLocation.png"];
             UIButton *btnSwap = [[UIButton alloc] initWithFrame:CGRectMake(0,0,btnSwapImage.size.width,btnSwapImage.size.height)];
             [btnSwap setTag:101];
             [btnSwap addTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
@@ -213,7 +214,7 @@ UIImage *imageDetailDisclosure;
             //barButtonSwap = [[UIBarButtonItem alloc] initWithCustomView:btnSwap];
             
             // Accessibility Label For UI Automation.
-            barButtonSwap.accessibilityLabel = SWAP_BUTTON;
+            barButtonSwap.accessibilityLabel = SWAP_BUTTON;*/
             
             UIImage* btnCancelImage = [UIImage imageNamed:@"img_cancel.png"];
             UIButton *btnCancel = [[UIButton alloc] initWithFrame:CGRectMake(0,0,btnCancelImage.size.width,btnCancelImage.size.height)];
@@ -234,8 +235,32 @@ UIImage *imageDetailDisclosure;
 }
 - (void)viewDidLoad{
     [super viewDidLoad];
+    
     // Accessibility Label For UI Automation.
     self.mainTable.accessibilityLabel = TO_FROM_TABLE_VIEW;
+    
+    NSString *strFromFormattedAddress;
+    if([[[locations selectedFromLocation] formattedAddress] length]>0){
+        strFromFormattedAddress = [[locations selectedFromLocation] formattedAddress];
+    }else{
+        strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+    }
+    if(!strFromFormattedAddress){
+        strFromFormattedAddress = @"";
+    }
+    [self.txtFromView setText:strFromFormattedAddress];
+    
+    
+    NSString *strToFormattedAddress;
+    if([[[locations selectedFromLocation] formattedAddress] length]>0){
+        strToFormattedAddress = [[locations selectedToLocation] formattedAddress];
+    }else{
+        strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
+    }if(!strToFormattedAddress){
+        strToFormattedAddress = @"";
+    }
+    
+    [self.txtToView setText:strToFormattedAddress];
     
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
         [self.routeButton setFrame:CGRectMake(ROUTE_BUTTON_XPOS_4INCH, ROUTE_BUTTON_YPOS_4INCH, ROUTE_BUTTON_WIDTH_4INCH, ROUTE_BUTTON_HEIGHT_4INCH)];
@@ -480,7 +505,7 @@ UIImage *imageDetailDisclosure;
         }
     }
 }
-
+/*
 // Returns the height constant suitable for the particular to or from table with editMode and isCurrentLocationMode
 - (CGFloat)tableHeightFor:(UITableView *)table
 {
@@ -571,7 +596,7 @@ UIImage *imageDetailDisclosure;
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     if (editMode == NO_EDIT) {
-        return 3;  // Include all three sections
+        return 2;  // Include all three sections
     } 
     return 1;  // Include just the To or the From section
     
@@ -682,7 +707,6 @@ UIImage *imageDetailDisclosure;
             [cell setAccessoryView:imgViewDetailDisclosure];
             cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
         }        
-        
         if (isTripDateCurrentTime) { 
             [[cell textLabel] setText:@"Depart now"];
         } 
@@ -783,7 +807,7 @@ UIImage *imageDetailDisclosure;
     else if (isCurrentLocationMode && [indexPath section] == FROM_SECTION) {  // if single-row From field selected
         [self setEditMode:FROM_EDIT]; // go into edit mode
     }
-}
+}*/
 
 #pragma mark set RKObjectManager 
 // One-time set-up of the RestKit Geocoder Object Manager's mapping
@@ -822,6 +846,116 @@ UIImage *imageDetailDisclosure;
     [routeOptionsVC setPlanStore:planStore0];
 }
 
+#pragma mark ToFromEdit mode Delegate
+
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
+    if(textView==self.txtFromView){
+        [self setEditMode:FROM_EDIT];
+        isToFromMode = true;
+    }
+    else{
+        [self setEditMode:TO_EDIT];
+        isToFromMode = false;
+    }
+    return YES;
+}
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
+    if([text isEqualToString:@"\n"]) {
+        [textView resignFirstResponder];
+        return NO;
+    }
+    
+    if (textView==self.txtFromView) {
+        [locations setTypedFromString:[self.txtFromView text]];
+        if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= IOS_LOCALSEARCH_VER) {
+            [locations setTypedFromStringForLocalSearch:[self.txtFromView text]];
+        }
+    } else {
+        [locations setTypedToString:[self.txtFromView text]];
+        if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= IOS_LOCALSEARCH_VER) {
+            [locations setTypedToStringForLocalSearch:[self.txtFromView text]];
+        }
+    }
+    if ([locations areMatchingLocationsChanged]) {
+        //if typing has changed matrix, reload the array
+        [[fromTableVC myTableView] reloadData];
+        
+    }
+    return YES;
+}
+
+- (void)setEditMode:(ToFromEditMode)newEditMode
+{
+    if(newEditMode == FROM_EDIT){
+        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 400)];
+        [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, self.fromView.frame.size.width+46, fromView.frame.size.height)];
+        [self.imgViewFromBG setFrame:CGRectMake(self.imgViewFromBG.frame.origin.x, self.imgViewFromBG.frame.origin.y, self.imgViewFromBG.frame.size.width+46, imgViewFromBG.frame.size.height)];
+        [self.toView setHidden:YES];
+        [self.btnSwap setHidden:YES];
+        [self.PicketSelectView setFrame:CGRectMake(self.PicketSelectView.frame.origin.x, self.PicketSelectView.frame.origin.y+500, self.PicketSelectView.frame.size.width, self.PicketSelectView.frame.size.height)];
+        [self.mainToFromView addSubview:fromTable];
+    }
+    else if (newEditMode == TO_EDIT){
+        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 400)];
+        [self.fromView setHidden:YES];
+        [self.toView setFrame:CGRectMake(self.toView.frame.origin.x, self.fromView.frame.origin.y, self.toView.frame.size.width+46, toView.frame.size.height)];
+        [self.imgViewToBG setFrame:CGRectMake(self.imgViewToBG.frame.origin.x, self.imgViewToBG.frame.origin.y, self.imgViewToBG.frame.size.width+46, imgViewToBG.frame.size.height)];
+        [self.btnSwap setHidden:YES];
+        [self.PicketSelectView setFrame:CGRectMake(self.PicketSelectView.frame.origin.x, self.PicketSelectView.frame.origin.y+500, self.PicketSelectView.frame.size.width, self.PicketSelectView.frame.size.height)];
+        [self.mainToFromView addSubview:toTable];
+    }
+    else if (editMode == NO_EDIT){
+        [self SetToFromViewOnNoEditMode];
+        
+    }
+    
+}
+
+- (void) SetToFromViewOnNoEditMode{
+    
+    if(isToFromMode){
+        NSString *strFromFormattedAddress;
+        if([[[locations selectedFromLocation] formattedAddress] length]>0){
+            strFromFormattedAddress = [[locations selectedFromLocation] formattedAddress];
+        }else{
+            strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+        }
+        if(!strFromFormattedAddress){
+            strFromFormattedAddress = @"";
+        }
+        [self.txtFromView setText:strFromFormattedAddress];
+        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 131)];
+        [self.toView setHidden:NO];
+        [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, fromView.frame.size.width-46, fromView.frame.size.height)];
+        [self.imgViewFromBG setFrame:CGRectMake(self.imgViewFromBG.frame.origin.x, self.imgViewFromBG.frame.origin.y, imgViewFromBG.frame.size.width-46, imgViewFromBG.frame.size.height)];
+        [fromTable removeFromSuperview];
+        [self.txtFromView resignFirstResponder];
+    }
+    else{
+        
+        NSString *strToFormattedAddress;
+        if([[[locations selectedFromLocation] formattedAddress] length]>0){
+            strToFormattedAddress = [[locations selectedToLocation] formattedAddress];
+        }else{
+            strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
+        }if(!strToFormattedAddress){
+            strToFormattedAddress = @"";
+        }
+        
+        [self.txtToView setText:strToFormattedAddress];
+        
+        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 131)];
+        [self.fromView setHidden:NO];
+        [self.toView setFrame:CGRectMake(self.toView.frame.origin.x, 70, 237, toView.frame.size.height)];
+        [self.imgViewToBG setFrame:CGRectMake(self.imgViewToBG.frame.origin.x, self.imgViewToBG.frame.origin.y, 237, imgViewToBG.frame.size.height)];
+        [toTable removeFromSuperview];
+        [self.txtToView resignFirstResponder];
+    }
+    
+    [self.btnSwap setHidden:NO];
+    [self.PicketSelectView setFrame:CGRectMake(self.PicketSelectView.frame.origin.x, 164, self.PicketSelectView.frame.size.width, self.PicketSelectView.frame.size.height)];
+    
+}
 #pragma mark Loacation methods
 - (void)setLocations:(Locations *)l
 {
@@ -852,8 +986,8 @@ UIImage *imageDetailDisclosure;
             [fromTableVC initializeCurrentLocation:currentLocation]; 
         }
         // Adjust the toTable & fromTable heights
-        [self setToFromHeightForTable:toTable Height:[self tableHeightFor:toTable]];
-        [self setToFromHeightForTable:fromTable Height:[self tableHeightFor:fromTable]];
+//        [self setToFromHeightForTable:toTable Height:[self tableHeightFor:toTable]];
+//        [self setToFromHeightForTable:fromTable Height:[self tableHeightFor:fromTable]];
 
         if (editMode != FROM_EDIT) {
             // DE59 fix -- only update table if not in FROM_EDIT mode
@@ -985,7 +1119,7 @@ UIImage *imageDetailDisclosure;
 #pragma mark Edit events for ToFrom table
 // Method to adjust the mainTable for editing mode
 //
-- (void)setEditMode:(ToFromEditMode)newEditMode
+/*- (void)setEditMode:(ToFromEditMode)newEditMode
 {
     if (editMode == newEditMode) {
         return;  // If no change in mode return immediately
@@ -1081,7 +1215,7 @@ UIImage *imageDetailDisclosure;
         [[fromTableVC txtField] becomeFirstResponder];
     }
     return;
-}
+}*/
 
 #pragma mark Reverse Geocoding
 
@@ -1516,7 +1650,7 @@ UIImage *imageDetailDisclosure;
 }
 
 // US132 implementation
--(void)doSwapLocation
+- (IBAction)doSwapLocation:(id)sender
 {
      // Part Of DE-236 Fxed
     if([[NSUserDefaults standardUserDefaults] objectForKey:LAST_REQUEST_REVERSE_GEO]){
@@ -1543,6 +1677,28 @@ UIImage *imageDetailDisclosure;
             [fromTableVC markAndUpdateSelectedLocation:toLoc];
         }
     }
+    
+    NSString *strFromFormattedAddress;
+    if([[[locations selectedFromLocation] formattedAddress] length]>0){
+        strFromFormattedAddress = [[locations selectedFromLocation] formattedAddress];
+    }else{
+        strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+    }
+    if(!strFromFormattedAddress){
+        strFromFormattedAddress = @"";
+    }
+    [self.txtFromView setText:strFromFormattedAddress];
+    
+    
+    NSString *strToFormattedAddress;
+    if([[[locations selectedFromLocation] formattedAddress] length]>0){
+        strToFormattedAddress = [[locations selectedToLocation] formattedAddress];
+    }else{
+        strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
+    }if(!strToFormattedAddress){
+        strToFormattedAddress = @"";
+    }
+    [self.txtToView setText:strToFormattedAddress];
     logEvent(FLURRY_TOFROM_SWAP_LOCATION,
              FLURRY_TO_SELECTED_ADDRESS, [[self toLocation] shortFormattedAddress],
              FLURRY_FROM_SELECTED_ADDRESS, [[self fromLocation] shortFormattedAddress],
@@ -1580,6 +1736,15 @@ UIImage *imageDetailDisclosure;
     }
     [UIView commitAnimations];
     
+    
+        if (departOrArrive==DEPART) {
+            [self.btnPicker setTitle:[NSString stringWithFormat:@"Depart %@",
+                                      [[tripDateFormatter stringFromDate:[datePicker date]] lowercaseString]] forState:UIControlStateNormal];
+        } else {
+            [self.btnPicker setTitle:[NSString stringWithFormat:@"Arrive by %@",
+                                      [[tripDateFormatter stringFromDate:[datePicker date]] lowercaseString]] forState:UIControlStateNormal];
+        }
+   
     date = [datePicker date];
     [self setTripDate:date];
     [self setTripDateLastChangedByUser:[[NSDate alloc] init]];
@@ -1610,7 +1775,9 @@ UIImage *imageDetailDisclosure;
     [UIView commitAnimations];
     
     isTripDateCurrentTime = TRUE;
-
+    if (isTripDateCurrentTime) {
+        [self.btnPicker setTitle:@"Depart now" forState:UIControlStateNormal];
+    }
     [self setTripDateLastChangedByUser:[[NSDate alloc] init]];
     [self setIsTripDateCurrentTime:YES];
     [self setDepartOrArrive:DEPART];  // DE201 fix -- always select Depart if we pick the Now button
