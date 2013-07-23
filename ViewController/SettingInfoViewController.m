@@ -330,6 +330,7 @@ UIImage *imageDetailDisclosure;
     // Code Added to select Trip Planner Tab
     RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
     [rxCustomTabBar selectTab:0];
+    [rxCustomTabBar selectTab1:0];
 }
 
 -(UIAlertView *) upadetSettings

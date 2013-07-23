@@ -18,15 +18,16 @@
 // Open the custom Webview in case we click on advisories links.
 // Open the appstore page when we click on App Store Review Button 
 - (BOOL)openURL:(NSURL*)url {
+    RXCustomTabBar *rxCustomTabbar = (RXCustomTabBar*)[nc_AppDelegate sharedInstance].tabBarController;
+    twitterViewController *twitterVC = (twitterViewController *)((UINavigationController *)[rxCustomTabbar.viewControllers objectAtIndex:0]).visibleViewController;
     UIViewController *frontViewController = ((UINavigationController *) [nc_AppDelegate sharedInstance].revealViewController.frontViewController).topViewController;
-    UIViewController *rearViewController = ((UINavigationController *) [nc_AppDelegate sharedInstance].revealViewController.rearViewController).topViewController;
-    if ([rearViewController isKindOfClass:[twitterViewController class]]) {
-        [(twitterViewController *)rearViewController openUrl:url];
-         return NO;
-    }
-    else if([frontViewController isKindOfClass:[RouteDetailsViewController class]]){
+    if([frontViewController isKindOfClass:[RouteDetailsViewController class]]){
         [(RouteDetailsViewController *)frontViewController openUrl:url];
         return NO;
+    }
+    else if ([twitterVC isKindOfClass:[twitterViewController class]]) {
+        [(twitterViewController *)twitterVC openUrl:url];
+         return NO;
     }
     return [super openURL:url];
 }

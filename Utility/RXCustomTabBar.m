@@ -49,14 +49,14 @@
 -(void)addCustomElements
 {
 	// Initialise our two images
-        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-            UIImageView *backView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 519, 320, 49)];
-            [backView setImage:[UIImage imageNamed:@"img_tabbar@2x.png"]];
-            [self.view addSubview:backView];
-        }
-        else{
-           [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"img_tabbar.png"]]]; 
-        }
+        //if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+//            UIImageView *backView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 49)];
+//            [backView setImage:[UIImage imageNamed:@"img_tabbar@2x.png"]];
+//            [self.view addSubview:backView];
+//        }
+//        else{
+//           [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"img_tabbar.png"]]]; 
+//        }
     UIImage *btnImage;
     UIImage *btnImageSelected;
 	self.btn1 = [UIButton buttonWithType:UIButtonTypeCustom]; //Setup the button
@@ -65,19 +65,19 @@
     self.btn1.accessibilityLabel = TRIP_PLANNER_BUTTON;
     
          if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-             btn1.frame = CGRectMake(NAVIGATION_ITEM1_XPOS, NAVIGATION_ITEM_YPOS_4INCH, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT_4INCH); // Set the frame (size and position) of the button)
+             btn1.frame = CGRectMake(NAVIGATION_ITEM1_XPOS, 0, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT_4INCH); // Set the frame (size and position) of the button)
              btnImage = [UIImage imageNamed:@""];
              btnImageSelected = [UIImage imageNamed:@"img_selTrip@2x.png"];
          }
          else{
-             btn1.frame = CGRectMake(NAVIGATION_ITEM1_XPOS, NAVIGATION_ITEM_YPOS, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT); // Set the frame (size and position) of the button)
+             btn1.frame = CGRectMake(NAVIGATION_ITEM1_XPOS, 0, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT); // Set the frame (size and position) of the button)
              btnImage = [UIImage imageNamed:@""];
              btnImageSelected = [UIImage imageNamed:@"img_selTrip.png"];
          }
-    [btn1 setBackgroundImage:btnImage forState:UIControlStateNormal]; // Set the image for the normal state of the button
-	[btn1 setBackgroundImage:btnImageSelected forState:UIControlStateSelected]; // Set the image for the selected state of the button
+    [btn1 setTitle:@"Notifications" forState:UIControlStateNormal];
+    //[btn1 setBackgroundImage:btnImage forState:UIControlStateNormal]; // Set the image for the normal state of the button
+	//[btn1 setBackgroundImage:btnImageSelected forState:UIControlStateSelected]; // Set the image for the selected state of the button
 	[btn1 setTag:0]; // Assign the button a "tag" so when our "click" event is called we know which button was pressed.
-	[btn1 setSelected:true]; // Set this button as selected (we will select the others to false as we only want Tab 1 to be selected initially
 	
 	// Now we repeat the process for the other buttons
     
@@ -89,17 +89,18 @@
     
     
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-            btn2.frame = CGRectMake(NAVIGATION_ITEM2_XPOS, NAVIGATION_ITEM_YPOS_4INCH, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT_4INCH);
+            btn2.frame = CGRectMake(NAVIGATION_ITEM2_XPOS, 0, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT_4INCH);
             btnImage = [UIImage imageNamed:@""];
             btnImageSelected = [UIImage imageNamed:@"img_selAdvisory@2x.png"];
         }
         else{
-            btn2.frame = CGRectMake(NAVIGATION_ITEM2_XPOS, NAVIGATION_ITEM_YPOS, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT);
+            btn2.frame = CGRectMake(NAVIGATION_ITEM2_XPOS, 0, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT);
             btnImage = [UIImage imageNamed:@""];
             btnImageSelected = [UIImage imageNamed:@"img_selAdvisory.png"];
         }
-	[btn2 setBackgroundImage:btnImage forState:UIControlStateNormal];
-	[btn2 setBackgroundImage:btnImageSelected forState:UIControlStateSelected];
+    [btn2 setTitle:@"Settings" forState:UIControlStateNormal];
+	//[btn2 setBackgroundImage:btnImage forState:UIControlStateNormal];
+	//[btn2 setBackgroundImage:btnImageSelected forState:UIControlStateSelected];
 	[btn2 setTag:1];
 	
 	self.btn3 = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -108,56 +109,91 @@
     self.btn3.accessibilityLabel = SETTINGS_BUTTON;
     
         if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-            btn3.frame = CGRectMake(NAVIGATION_ITEM3_XPOS, NAVIGATION_ITEM_YPOS_4INCH, NAVIGATION_ITEM_WIDTH-0.8, NAVIGATION_ITEM_HEIGHT_4INCH);
+            btn3.frame = CGRectMake(NAVIGATION_ITEM3_XPOS, 0, NAVIGATION_ITEM_WIDTH-0.8, NAVIGATION_ITEM_HEIGHT_4INCH);
             btnImage = [UIImage imageNamed:@""];
             btnImageSelected = [UIImage imageNamed:@"img_selSetting@2x.png"];
         }
         else{
-            btn3.frame = CGRectMake(NAVIGATION_ITEM3_XPOS, NAVIGATION_ITEM_YPOS, NAVIGATION_ITEM_WIDTH-0.8, NAVIGATION_ITEM_HEIGHT);
+            btn3.frame = CGRectMake(NAVIGATION_ITEM3_XPOS, 0, NAVIGATION_ITEM_WIDTH-0.8, NAVIGATION_ITEM_HEIGHT);
             btnImage = [UIImage imageNamed:@""];
             btnImageSelected = [UIImage imageNamed:@"img_selSetting.png"];
         }
-	[btn3 setBackgroundImage:btnImage forState:UIControlStateNormal];
-	[btn3 setBackgroundImage:btnImageSelected forState:UIControlStateSelected];
+    [btn3 setTitle:@"Feedback" forState:UIControlStateNormal];
+	//[btn3 setBackgroundImage:btnImage forState:UIControlStateNormal];
+	//[btn3 setBackgroundImage:btnImageSelected forState:UIControlStateSelected];
 	[btn3 setTag:2];
-	
-	self.btn4 = [UIButton buttonWithType:UIButtonTypeCustom];
-    
-    // Accessibility Label For UI Automation.
-    self.btn4.accessibilityLabel = FEEDBACK_BUTTON;
-    
-        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-            btn4.frame = CGRectMake(NAVIGATION_ITEM4_XPOS, NAVIGATION_ITEM_YPOS_4INCH, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT_4INCH);
-            btnImage = [UIImage imageNamed:@""];
-            btnImageSelected = [UIImage imageNamed:@"img_selFB@2x.png"];
-        }
-        else{
-            btn4.frame = CGRectMake(NAVIGATION_ITEM4_XPOS, NAVIGATION_ITEM_YPOS, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT);
-            btnImage = [UIImage imageNamed:@""];
-            btnImageSelected = [UIImage imageNamed:@"img_selFB.png"]; 
-        }
-	[btn4 setBackgroundImage:btnImage forState:UIControlStateNormal];
-	[btn4 setBackgroundImage:btnImageSelected forState:UIControlStateSelected];
-	[btn4 setTag:3];
-	
+		
 	// Add my new buttons to the view
 	[self.view addSubview:btn1];
 	[self.view addSubview:btn2];
 	[self.view addSubview:btn3];
-	[self.view addSubview:btn4];
 	
+    [btn1.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
+    [btn2.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
+    [btn3.titleLabel setFont:[UIFont fontWithName:@"Helvetica" size:12]];
+    
 	// Setup event handlers so that the buttonClicked method will respond to the touch up inside event.
+    [btn1 addTarget:self action:@selector(buttonClicked1:) forControlEvents:UIControlEventTouchDown];
+	[btn2 addTarget:self action:@selector(buttonClicked1:) forControlEvents:UIControlEventTouchDown];
+	[btn3 addTarget:self action:@selector(buttonClicked1:) forControlEvents:UIControlEventTouchDown];
 	[btn1 addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
 	[btn2 addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
 	[btn3 addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
-	[btn4 addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
+	//[btn4 addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
+    int lastSelectedIndex = [[NSUserDefaults standardUserDefaults] integerForKey:LAST_SELECTED_TAB_INDEX];
+    if(lastSelectedIndex == 0){
+        [btn1 setBackgroundColor:[UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0]];
+        [btn2 setBackgroundColor:[UIColor colorWithRed:116.0/255.0 green:116.0/255.0 blue:116.0/255.0 alpha:1.0]];
+        [btn3 setBackgroundColor:[UIColor colorWithRed:116.0/255.0 green:116.0/255.0 blue:116.0/255.0 alpha:1.0]];
+        [btn1 setSelected:true];
+    }
+    else if(lastSelectedIndex == 1){
+        [btn2 setBackgroundColor:[UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0]];
+        [btn1 setBackgroundColor:[UIColor colorWithRed:116.0/255.0 green:116.0/255.0 blue:116.0/255.0 alpha:1.0]];
+        [btn3 setBackgroundColor:[UIColor colorWithRed:116.0/255.0 green:116.0/255.0 blue:116.0/255.0 alpha:1.0]];
+        [btn2 setSelected:true];
+    }
+    else if(lastSelectedIndex == 2){
+        [btn3 setBackgroundColor:[UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0]];
+        [btn2 setBackgroundColor:[UIColor colorWithRed:116.0/255.0 green:116.0/255.0 blue:116.0/255.0 alpha:1.0]];
+        [btn1 setBackgroundColor:[UIColor colorWithRed:116.0/255.0 green:116.0/255.0 blue:116.0/255.0 alpha:1.0]];
+         [btn3 setSelected:true];
+    }
+}
+
+- (void)buttonClicked1:(id)sender
+{
+	int tagNum = [sender tag];
+	[self selectTab1:tagNum];
 }
 
 - (void)buttonClicked:(id)sender
 {
 	int tagNum = [sender tag];
 	[self selectTab:tagNum];
+}
+
+- (void)selectTab1:(int)tabID
+{
+	switch(tabID)
+	{
+		case 0:
+			[btn1 setBackgroundColor:[UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0]];
+			[btn2 setBackgroundColor:[UIColor colorWithRed:116.0/255.0 green:116.0/255.0 blue:116.0/255.0 alpha:1.0]];
+            [btn3 setBackgroundColor:[UIColor colorWithRed:116.0/255.0 green:116.0/255.0 blue:116.0/255.0 alpha:1.0]];
+			break;
+		case 1:
+			[btn2 setBackgroundColor:[UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0]];
+			[btn1 setBackgroundColor:[UIColor colorWithRed:116.0/255.0 green:116.0/255.0 blue:116.0/255.0 alpha:1.0]];
+            [btn3 setBackgroundColor:[UIColor colorWithRed:116.0/255.0 green:116.0/255.0 blue:116.0/255.0 alpha:1.0]];
+			break;
+		case 2:
+			[btn3 setBackgroundColor:[UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0]];
+			[btn2 setBackgroundColor:[UIColor colorWithRed:116.0/255.0 green:116.0/255.0 blue:116.0/255.0 alpha:1.0]];
+            [btn1 setBackgroundColor:[UIColor colorWithRed:116.0/255.0 green:116.0/255.0 blue:116.0/255.0 alpha:1.0]];
+			break;
+	}
 }
 
 - (void)selectTab:(int)tabID
@@ -192,24 +228,5 @@
 	self.selectedIndex = tabID;
 	
 }
-
-// update badge
-//-(void)updateBadge
-//{
-//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-//    int tweetConut = [[prefs objectForKey:@"tweetCount"] intValue];
-//    [twitterCount removeFromSuperview];
-//    tweetConut = 2;
-//    twitterCount = [[CustomBadge alloc] init];
-//    twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
-//    [twitterCount setFrame:CGRectMake(100,100, twitterCount.frame.size.width, twitterCount.frame.size.height)];        
-//    if (tweetConut == 0) {
-//        [twitterCount setHidden:YES];
-//    } else {
-//        [self.btn2 addSubview:twitterCount];
-//        [twitterCount setHidden:NO];
-//    }
-//    
-//}
 
 @end

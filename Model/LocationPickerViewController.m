@@ -26,8 +26,8 @@
 @synthesize isFrom;
 @synthesize isGeocodeResults;
 
-int const LOCATION_PICKER_TABLE_HEIGHT = 370;
-int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 453;
+int const LOCATION_PICKER_TABLE_HEIGHT = 410;
+int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 498;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {

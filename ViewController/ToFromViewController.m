@@ -1015,7 +1015,7 @@ UIImage *imageDetailDisclosure;
     
     // Change NavBar buttons accordingly
     if(editMode == NO_EDIT){
-        self.navigationItem.leftBarButtonItem = barButtonSwap;
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"ADV" style:UIBarButtonItemStylePlain target:self.navigationController.parentViewController action:@selector(revealToggle:)];
     } else{
         self.navigationItem.leftBarButtonItem = barButtonCancel;
     }
@@ -1559,6 +1559,7 @@ UIImage *imageDetailDisclosure;
     [self setEditMode:NO_EDIT];
     [self.toTableVC markAndUpdateSelectedLocation:locations.tempSelectedToLocation];
     [self.fromTableVC markAndUpdateSelectedLocation:locations.tempSelectedFromLocation];
+    [self.navigationController.navigationBar setHidden:NO];
 }
 
 #pragma mark UIdatePicker functionality

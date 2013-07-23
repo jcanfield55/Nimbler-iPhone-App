@@ -599,13 +599,14 @@ NSUserDefaults *prefs;
     webViewController.navigationItem.leftBarButtonItem = backTonimbler;
     [webViewController.view addSubview:[WebView instance]];
     if ([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT) {
-        [WebView instance].frame = CGRectMake(0, 0, 285, 479);
+        [WebView instance].frame = CGRectMake(0, 50, 285, 518);
     } else {
-        [WebView instance].frame = CGRectMake(0, 0, 285, 415);
+        [WebView instance].frame = CGRectMake(0, 50, 285, 430);
     }
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20];
     [[WebView instance] loadRequest:request];
     [WebView instance].delegate = self;
+    [self hideTabBar];
     if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
         CATransition *animation = [CATransition animation];
         [animation setDuration:0.3];
@@ -613,9 +614,11 @@ NSUserDefaults *prefs;
         [animation setSubtype:kCATransitionFromRight];
         [animation setRemovedOnCompletion:YES];
         [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+        [self.navigationController hidesBottomBarWhenPushed];
         [[self.navigationController.view layer] addAnimation:animation forKey:nil];
         [[self navigationController] pushViewController:webViewController animated:NO];
     } else {
+         [self.navigationController hidesBottomBarWhenPushed];
         [[self navigationController] pushViewController:webViewController animated:YES];
     }
 }
@@ -624,6 +627,7 @@ NSUserDefaults *prefs;
 -(void)webViewDidStartLoad:(UIWebView *)webView{
     if(!activityIndicatorView){
         activityIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(145, 168, 37, 37)];
+        activityIndicatorView.center = self.view.center;
         [activityIndicatorView setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
         [webView addSubview:activityIndicatorView];
     }
@@ -672,5 +676,40 @@ NSUserDefaults *prefs;
     [self.navigationController pushViewController:secondView animated:NO];
 }
 
+- (void) hideTabBar {
+    [[nc_AppDelegate sharedInstance].twitterCount setHidden:YES];
+    for(UIView *view in self.tabBarController.view.subviews)
+    {
+        CGRect _rect = view.frame;
+        if([view isKindOfClass:[UITabBar class]])
+        {
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                _rect.origin.y = 0;
+            }
+            else{
+                _rect.origin.y = 0;
+            }
+            [view setFrame:_rect];
+        }
+        else if([view isKindOfClass:[UIImageView class]]){
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                _rect.origin.y = 0;
+            }
+            else{
+                _rect.origin.y = 0;
+            }
+            [view setFrame:_rect];
+        }
+        else if(![view isKindOfClass:[UIButton class]]){
+            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+                _rect.size.height = 568;
+            }
+            else{
+                _rect.size.height = 480;
+            }
+            [view setFrame:_rect];
+        }
+    }
+}
 
 @end

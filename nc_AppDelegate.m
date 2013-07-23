@@ -415,17 +415,16 @@ FeedBackForm *fbView;
             feedbackView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
         }
         
-        UINavigationController *navController1 = [[UINavigationController alloc] initWithRootViewController:toFromViewController];
-        UINavigationController *navController2;
-        NSString *currentViewControllerValue = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_VIEW_CONTROLLER];
-        if(!currentViewControllerValue || [currentViewControllerValue intValue] == 1)
-            navController2 = [[UINavigationController alloc] initWithRootViewController:twitterView];
-        else if([currentViewControllerValue intValue] == 2)
-            navController2 = [[UINavigationController alloc] initWithRootViewController:settingsView];
-        else if([currentViewControllerValue intValue] == 3)
-             navController2 = [[UINavigationController alloc] initWithRootViewController:feedbackView];
+        self.tabBarController = [[RXCustomTabBar alloc] init];
         
-        revealViewController = [[RevealController alloc] initWithFrontViewController:navController1 rearViewController:navController2];
+        UINavigationController *navController1 = [[UINavigationController alloc] initWithRootViewController:toFromViewController];
+        
+        UINavigationController *tweetController = [[UINavigationController alloc] initWithRootViewController:twitterView];
+        UINavigationController *settingController = [[UINavigationController alloc] initWithRootViewController:settingsView];
+        UINavigationController *fbController = [[UINavigationController alloc] initWithRootViewController:feedbackView];
+        self.tabBarController.viewControllers = [NSArray arrayWithObjects:tweetController,settingController,fbController, nil];
+        
+        revealViewController = [[RevealController alloc] initWithFrontViewController:navController1 rearViewController:self.tabBarController];
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
          self.window.rootViewController = revealViewController;
         [self.window makeKeyAndVisible];
@@ -757,6 +756,7 @@ FeedBackForm *fbView;
             RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
             if (rxCustomTabBar.selectedIndex != 1) {
                 [rxCustomTabBar selectTab:1];
+                [rxCustomTabBar selectTab1:1];
             }
             [[NSUserDefaults standardUserDefaults] setInteger:1 forKey:LAST_SELECTED_TAB_INDEX];
             [[NSUserDefaults standardUserDefaults] synchronize];
@@ -886,6 +886,7 @@ FeedBackForm *fbView;
             RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
             if (rxCustomTabBar.selectedIndex != 0) {
                 [rxCustomTabBar selectTab:0];
+                [rxCustomTabBar selectTab1:0];
             }
             // If not at ToFromViewController on the Nav Controller, pop to home
             if ([[toFromViewController navigationController] visibleViewController] != toFromViewController) {
@@ -1285,6 +1286,7 @@ FeedBackForm *fbView;
             if(self.isFromBackground){
                 RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
                 [rxCustomTabBar selectTab:1];
+                [rxCustomTabBar selectTab1:1];
                 [twitterView getAdvisoryData];
             }
             else{
@@ -1400,8 +1402,9 @@ FeedBackForm *fbView;
     else if(buttonIndex == 1){
         buttonResponse = @"Nimbler feedback";
         RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
-        if (rxCustomTabBar.selectedIndex != 3) {
-            [rxCustomTabBar selectTab:3];
+        if (rxCustomTabBar.selectedIndex != 2) {
+            [rxCustomTabBar selectTab:2];
+            [rxCustomTabBar selectTab1:2];
         }
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
         [[NSUserDefaults standardUserDefaults] synchronize];

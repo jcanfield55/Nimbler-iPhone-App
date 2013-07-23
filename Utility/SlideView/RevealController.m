@@ -71,10 +71,12 @@
 - (void)revealController:(ZUUIRevealController *)revealController willRevealRearViewController:(UIViewController *)rearViewController 
 {
     [nc_AppDelegate sharedInstance].isTwitterView = YES;
-	UINavigationController *navController = (UINavigationController *)rearViewController;
-    twitterViewController *twitterVC = (twitterViewController*)navController.visibleViewController;
-    if([twitterVC isKindOfClass:[twitterViewController class]])
-        [twitterVC getAdvisoryData];
+    RXCustomTabBar *rxCustomTabbar = (RXCustomTabBar*)[nc_AppDelegate sharedInstance].tabBarController;
+   twitterViewController *twitterVC = (twitterViewController *)((UINavigationController *)[rxCustomTabbar.viewControllers objectAtIndex:0]).visibleViewController;
+    if([twitterVC isKindOfClass:[twitterViewController class]]){
+       [twitterVC getAdvisoryData];
+        [twitterVC hideTabBar];
+    }
 }
 
 - (void)revealController:(ZUUIRevealController *)revealController didRevealRearViewController:(UIViewController *)rearViewController

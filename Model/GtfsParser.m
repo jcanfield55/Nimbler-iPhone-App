@@ -1291,9 +1291,12 @@
     NSString *status = [prediction objectForKey:@"status"];
     NSDate *predtctionTime = [NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"epochTime"] doubleValue]/1000.0)];
     NSDate *scheduleTime;
-    scheduleTime = [NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"scheduleTime"] doubleValue]/1000.0)];
-    if(!scheduleTime)
-        scheduleTime = timeOnlyFromDate(dateFromTimeString([prediction objectForKey:@"scheduleTime"]));
+    if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:PORTLAND_BUNDLE_IDENTIFIER]){
+        scheduleTime = [NSDate dateWithTimeIntervalSince1970:([[prediction objectForKey:@"scheduleTime"] doubleValue]/1000.0)];
+    }
+    else{
+        scheduleTime = timeOnlyFromDate(dateFromTimeString([prediction objectForKey:@"scheduleTime"])); 
+    }
     if(status && [status intValue] == 2){
         predtctionTime = scheduleTime;
     }

@@ -76,5 +76,6 @@
 -(IBAction)advisoriesButtonClicked:(id)sender;
 -(IBAction)settingsButtonClicked:(id)sender;
 -(IBAction)feedBackButtonClicked:(id)sender;
+- (void) hideTabBar;
 
 @end
