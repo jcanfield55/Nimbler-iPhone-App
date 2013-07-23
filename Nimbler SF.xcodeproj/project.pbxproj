@@ -530,6 +530,7 @@
 		8DBE17FF172E97EB0020B034 /* bus.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBE17FA172E8D7A0020B034 /* bus.png */; };
 		8DBECD5216146DBE007B71F1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */; };
 		8DC448EA169409ED00608DF6 /* GtfsParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DD51671EB41004E0DE5 /* GtfsParser.m */; };
+		8DC7EF47179EA83300050FCB /* RouteDetailViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DE28CA71732379300403CD0 /* RouteDetailViewController_568h.xib */; };
 		8DD6A4EB16EA161F00FFC158 /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DD6A4EA16EA161F00FFC158 /* pin.png */; };
 		8DE0CC4F16A9632100AE2E9D /* twitterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB11F162603090083F143 /* twitterViewController.m */; };
 		8DE18B0F1725133800AA8112 /* Default-Caltrain.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE18B0E1725133800AA8112 /* Default-Caltrain.png */; };
@@ -2676,6 +2677,7 @@
 				8DEAC1A217785F2200D7997C /* nimblrDC.png in Resources */,
 				8DEAC1A317785F2500D7997C /* nimblrDC@2x.png in Resources */,
 				522307441781601E00EAEDFC /* CoverageDCGeoJSON.geojson in Resources */,
+				8DC7EF47179EA83300050FCB /* RouteDetailViewController_568h.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
