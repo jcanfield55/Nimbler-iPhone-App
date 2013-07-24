@@ -871,9 +871,9 @@ UIImage *imageDetailDisclosure;
             [locations setTypedFromStringForLocalSearch:[self.txtFromView text]];
         }
     } else {
-        [locations setTypedToString:[self.txtFromView text]];
+        [locations setTypedToString:[self.txtToView text]];
         if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= IOS_LOCALSEARCH_VER) {
-            [locations setTypedToStringForLocalSearch:[self.txtFromView text]];
+            [locations setTypedToStringForLocalSearch:[self.txtToView text]];
         }
     }
     if ([locations areMatchingLocationsChanged]) {
@@ -896,6 +896,7 @@ UIImage *imageDetailDisclosure;
         [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 400)];
         [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, self.fromView.frame.size.width+46, fromView.frame.size.height)];
         [self.imgViewFromBG setFrame:CGRectMake(self.imgViewFromBG.frame.origin.x, self.imgViewFromBG.frame.origin.y, self.imgViewFromBG.frame.size.width+46, imgViewFromBG.frame.size.height)];
+        [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width+44, txtFromView.frame.size.height)];
         [self.toView setHidden:YES];
         [self.btnSwap setHidden:YES];
         [self.PicketSelectView setFrame:CGRectMake(self.PicketSelectView.frame.origin.x, self.PicketSelectView.frame.origin.y+500, self.PicketSelectView.frame.size.width, self.PicketSelectView.frame.size.height)];
@@ -906,6 +907,7 @@ UIImage *imageDetailDisclosure;
         [self.fromView setHidden:YES];
         [self.toView setFrame:CGRectMake(self.toView.frame.origin.x, self.fromView.frame.origin.y, self.toView.frame.size.width+46, toView.frame.size.height)];
         [self.imgViewToBG setFrame:CGRectMake(self.imgViewToBG.frame.origin.x, self.imgViewToBG.frame.origin.y, self.imgViewToBG.frame.size.width+46, imgViewToBG.frame.size.height)];
+        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x, self.txtToView.frame.origin.y, self.txtToView.frame.size.width+49, txtToView.frame.size.height)];
         [self.btnSwap setHidden:YES];
         [self.PicketSelectView setFrame:CGRectMake(self.PicketSelectView.frame.origin.x, self.PicketSelectView.frame.origin.y+500, self.PicketSelectView.frame.size.width, self.PicketSelectView.frame.size.height)];
         [self.mainToFromView addSubview:toTable];
@@ -934,6 +936,7 @@ UIImage *imageDetailDisclosure;
         [self.toView setHidden:NO];
         [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, fromView.frame.size.width-46, fromView.frame.size.height)];
         [self.imgViewFromBG setFrame:CGRectMake(self.imgViewFromBG.frame.origin.x, self.imgViewFromBG.frame.origin.y, imgViewFromBG.frame.size.width-46, imgViewFromBG.frame.size.height)];
+        [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width-44, txtFromView.frame.size.height)];
         [fromTable removeFromSuperview];
         [self.txtFromView resignFirstResponder];
     }
@@ -954,6 +957,7 @@ UIImage *imageDetailDisclosure;
         [self.fromView setHidden:NO];
         [self.toView setFrame:CGRectMake(self.toView.frame.origin.x, 70, 237, toView.frame.size.height)];
         [self.imgViewToBG setFrame:CGRectMake(self.imgViewToBG.frame.origin.x, self.imgViewToBG.frame.origin.y, 237, imgViewToBG.frame.size.height)];
+        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x, self.txtToView.frame.origin.y, self.txtToView.frame.size.width-49, txtToView.frame.size.height)];
         [toTable removeFromSuperview];
         [self.txtToView resignFirstResponder];
     }

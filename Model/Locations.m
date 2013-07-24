@@ -678,10 +678,10 @@
                 
             }
     
-           if(isLocationSelected){
-             return;
-               
-           }
+//           if(isLocationSelected){ No need in LatestUI
+//             return;
+//               
+//           }
          for(int i=0;i<[response.mapItems count];i++){
              NSError *error = nil;
             
@@ -754,10 +754,10 @@
                 
             }
             
-            if(isLocationSelected){
-                return;
-                
-            }
+//            if(isLocationSelected){ No need in LatestUI
+//                return;
+//                
+//            }
             for(int i=0;i<[response.mapItems count];i++){
                 NSError *error = nil;
                 MKMapItem *mapItem = [response.mapItems objectAtIndex:i];
