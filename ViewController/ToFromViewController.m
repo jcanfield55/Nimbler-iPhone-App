@@ -248,7 +248,7 @@ UIImage *imageDetailDisclosure;
     
     
     NSString *strToFormattedAddress;
-    if([[[locations selectedFromLocation] shortFormattedAddress] length]>0){
+    if([[[locations selectedToLocation] shortFormattedAddress] length]>0){
         strToFormattedAddress = [[locations selectedToLocation] shortFormattedAddress];
     }else{
         strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
@@ -490,19 +490,19 @@ UIImage *imageDetailDisclosure;
 - (void)newLocationVisible
 {
     // Check whether toTableHeight needs to be dynamically adjusted (due to additional locations)
-//    if (isCurrentLocationMode && editMode == NO_EDIT) {
-//        // Check if height is updated, and if it is, reload the tables
-//        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-//            if ([self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE_4INCH]) {
-//                [self reloadTables];
-//            }
-//        }
-//        else{
-//            if ([self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE]) {
-//                [self reloadTables];
-//            }
-//        }
-//    }
+    if (isCurrentLocationMode && editMode == NO_EDIT) {
+        // Check if height is updated, and if it is, reload the tables
+        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+            //if ([self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE_4INCH]) {
+                [self reloadTables];
+            //}
+        }
+        else{
+           // if ([self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE]) {
+                [self reloadTables];
+           // }
+        }
+    }
 }
 /*
 // Returns the height constant suitable for the particular to or from table with editMode and isCurrentLocationMode
@@ -892,6 +892,7 @@ UIImage *imageDetailDisclosure;
     } else{
         self.navigationItem.leftBarButtonItem = barButtonCancel;
     }
+    
     if(newEditMode == FROM_EDIT){
         [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 400)];
         [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, self.fromView.frame.size.width+46, fromView.frame.size.height)];
@@ -1024,7 +1025,7 @@ UIImage *imageDetailDisclosure;
             [self setIsCurrentLocationMode:FALSE];
         }
         [self.txtFromView setText:[fromLocation shortFormattedAddress]];
-    }
+    } 
     else {
         BOOL locBecomingVisible = loc && ([loc toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF);
         BOOL toLocationBecomingInvisible = toLocation && ([toLocation toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF);
