@@ -3258,8 +3258,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Nimbler World, Inc. (452SUSN2GU)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nimbler World, Inc. (452SUSN2GU)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -3287,8 +3287,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler DC";
-				PROVISIONING_PROFILE = "8B75133D-1716-4609-A134-5855EE0A72CB";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "8B75133D-1716-4609-A134-5855EE0A72CB";
+				PROVISIONING_PROFILE = "75B6F001-B778-49F6-AD85-F4E5BAD3F415";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "75B6F001-B778-49F6-AD85-F4E5BAD3F415";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -3300,9 +3300,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Nimbler World, Inc. (452SUSN2GU)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: Nimbler World, Inc. (452SUSN2GU)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nimbler World, Inc. (452SUSN2GU)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -3330,9 +3330,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler DC";
-				PROVISIONING_PROFILE = "8B75133D-1716-4609-A134-5855EE0A72CB";
-				"PROVISIONING_PROFILE[sdk=*]" = "8B75133D-1716-4609-A134-5855EE0A72CB";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "8B75133D-1716-4609-A134-5855EE0A72CB";
+				PROVISIONING_PROFILE = "75B6F001-B778-49F6-AD85-F4E5BAD3F415";
+				"PROVISIONING_PROFILE[sdk=*]" = "75B6F001-B778-49F6-AD85-F4E5BAD3F415";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "75B6F001-B778-49F6-AD85-F4E5BAD3F415";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
