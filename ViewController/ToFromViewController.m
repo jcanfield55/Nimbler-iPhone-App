@@ -240,8 +240,8 @@ UIImage *imageDetailDisclosure;
     self.mainTable.accessibilityLabel = TO_FROM_TABLE_VIEW;
     
     NSString *strFromFormattedAddress;
-    if([[[locations selectedFromLocation] formattedAddress] length]>0){
-        strFromFormattedAddress = [[locations selectedFromLocation] formattedAddress];
+    if([[[locations selectedFromLocation] shortFormattedAddress] length]>0){
+        strFromFormattedAddress = [[locations selectedFromLocation] shortFormattedAddress];
     }else{
         strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
     }
@@ -252,8 +252,8 @@ UIImage *imageDetailDisclosure;
     
     
     NSString *strToFormattedAddress;
-    if([[[locations selectedFromLocation] formattedAddress] length]>0){
-        strToFormattedAddress = [[locations selectedToLocation] formattedAddress];
+    if([[[locations selectedToLocation] shortFormattedAddress] length]>0){
+        strToFormattedAddress = [[locations selectedToLocation] shortFormattedAddress];
     }else{
         strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
     }if(!strToFormattedAddress){
@@ -494,14 +494,14 @@ UIImage *imageDetailDisclosure;
     if (isCurrentLocationMode && editMode == NO_EDIT) {
         // Check if height is updated, and if it is, reload the tables
         if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-            if ([self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE_4INCH]) {
+            //if ([self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE_4INCH]) {
                 [self reloadTables];
-            }
+            //}
         }
         else{
-            if ([self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE]) {
+           // if ([self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE]) {
                 [self reloadTables];
-            }
+           // }
         }
     }
 }
@@ -849,6 +849,7 @@ UIImage *imageDetailDisclosure;
 #pragma mark ToFromEdit mode Delegate
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
+    textView.text = @"";
     if(textView==self.txtFromView){
         [self setEditMode:FROM_EDIT];
         isToFromMode = true;
@@ -871,9 +872,9 @@ UIImage *imageDetailDisclosure;
             [locations setTypedFromStringForLocalSearch:[self.txtFromView text]];
         }
     } else {
-        [locations setTypedToString:[self.txtFromView text]];
+        [locations setTypedToString:[self.txtToView text]];
         if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= IOS_LOCALSEARCH_VER) {
-            [locations setTypedToStringForLocalSearch:[self.txtFromView text]];
+            [locations setTypedToStringForLocalSearch:[self.txtToView text]];
         }
     }
     if ([locations areMatchingLocationsChanged]) {
@@ -886,10 +887,18 @@ UIImage *imageDetailDisclosure;
 
 - (void)setEditMode:(ToFromEditMode)newEditMode
 {
+    // Change NavBar buttons accordingly
+    if(newEditMode == NO_EDIT){
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"ADV" style:UIBarButtonItemStylePlain target:self.navigationController.parentViewController action:@selector(revealToggle:)];
+    } else{
+        self.navigationItem.leftBarButtonItem = barButtonCancel;
+    }
+    
     if(newEditMode == FROM_EDIT){
         [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 400)];
         [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, self.fromView.frame.size.width+46, fromView.frame.size.height)];
         [self.imgViewFromBG setFrame:CGRectMake(self.imgViewFromBG.frame.origin.x, self.imgViewFromBG.frame.origin.y, self.imgViewFromBG.frame.size.width+46, imgViewFromBG.frame.size.height)];
+        [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width+44, txtFromView.frame.size.height)];
         [self.toView setHidden:YES];
         [self.btnSwap setHidden:YES];
         [self.PicketSelectView setFrame:CGRectMake(self.PicketSelectView.frame.origin.x, self.PicketSelectView.frame.origin.y+500, self.PicketSelectView.frame.size.width, self.PicketSelectView.frame.size.height)];
@@ -900,6 +909,7 @@ UIImage *imageDetailDisclosure;
         [self.fromView setHidden:YES];
         [self.toView setFrame:CGRectMake(self.toView.frame.origin.x, self.fromView.frame.origin.y, self.toView.frame.size.width+46, toView.frame.size.height)];
         [self.imgViewToBG setFrame:CGRectMake(self.imgViewToBG.frame.origin.x, self.imgViewToBG.frame.origin.y, self.imgViewToBG.frame.size.width+46, imgViewToBG.frame.size.height)];
+        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x, self.txtToView.frame.origin.y, self.txtToView.frame.size.width+49, txtToView.frame.size.height)];
         [self.btnSwap setHidden:YES];
         [self.PicketSelectView setFrame:CGRectMake(self.PicketSelectView.frame.origin.x, self.PicketSelectView.frame.origin.y+500, self.PicketSelectView.frame.size.width, self.PicketSelectView.frame.size.height)];
         [self.mainToFromView addSubview:toTable];
@@ -915,8 +925,8 @@ UIImage *imageDetailDisclosure;
     
     if(isToFromMode){
         NSString *strFromFormattedAddress;
-        if([[[locations selectedFromLocation] formattedAddress] length]>0){
-            strFromFormattedAddress = [[locations selectedFromLocation] formattedAddress];
+        if([[[locations selectedFromLocation] shortFormattedAddress] length]>0){
+            strFromFormattedAddress = [[locations selectedFromLocation] shortFormattedAddress];
         }else{
             strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
         }
@@ -928,14 +938,15 @@ UIImage *imageDetailDisclosure;
         [self.toView setHidden:NO];
         [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, fromView.frame.size.width-46, fromView.frame.size.height)];
         [self.imgViewFromBG setFrame:CGRectMake(self.imgViewFromBG.frame.origin.x, self.imgViewFromBG.frame.origin.y, imgViewFromBG.frame.size.width-46, imgViewFromBG.frame.size.height)];
+        [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width-44, txtFromView.frame.size.height)];
         [fromTable removeFromSuperview];
         [self.txtFromView resignFirstResponder];
     }
     else{
         
         NSString *strToFormattedAddress;
-        if([[[locations selectedFromLocation] formattedAddress] length]>0){
-            strToFormattedAddress = [[locations selectedToLocation] formattedAddress];
+        if([[[locations selectedToLocation] shortFormattedAddress] length]>0){
+            strToFormattedAddress = [[locations selectedToLocation] shortFormattedAddress];
         }else{
             strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
         }if(!strToFormattedAddress){
@@ -948,6 +959,7 @@ UIImage *imageDetailDisclosure;
         [self.fromView setHidden:NO];
         [self.toView setFrame:CGRectMake(self.toView.frame.origin.x, 70, 237, toView.frame.size.height)];
         [self.imgViewToBG setFrame:CGRectMake(self.imgViewToBG.frame.origin.x, self.imgViewToBG.frame.origin.y, 237, imgViewToBG.frame.size.height)];
+        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x, self.txtToView.frame.origin.y, self.txtToView.frame.size.width-49, txtToView.frame.size.height)];
         [toTable removeFromSuperview];
         [self.txtToView resignFirstResponder];
     }
@@ -1013,6 +1025,7 @@ UIImage *imageDetailDisclosure;
         else if (loc != currentLocation && isCurrentLocationMode) {
             [self setIsCurrentLocationMode:FALSE];
         }
+        [self.txtFromView setText:[fromLocation shortFormattedAddress]];
     } 
     else {
         BOOL locBecomingVisible = loc && ([loc toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF);
@@ -1679,8 +1692,8 @@ UIImage *imageDetailDisclosure;
     }
     
     NSString *strFromFormattedAddress;
-    if([[[locations selectedFromLocation] formattedAddress] length]>0){
-        strFromFormattedAddress = [[locations selectedFromLocation] formattedAddress];
+    if([[[locations selectedFromLocation] shortFormattedAddress] length]>0){
+        strFromFormattedAddress = [[locations selectedFromLocation] shortFormattedAddress];
     }else{
         strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
     }
@@ -1691,8 +1704,8 @@ UIImage *imageDetailDisclosure;
     
     
     NSString *strToFormattedAddress;
-    if([[[locations selectedFromLocation] formattedAddress] length]>0){
-        strToFormattedAddress = [[locations selectedToLocation] formattedAddress];
+    if([[[locations selectedToLocation] shortFormattedAddress] length]>0){
+        strToFormattedAddress = [[locations selectedToLocation] shortFormattedAddress];
     }else{
         strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
     }if(!strToFormattedAddress){

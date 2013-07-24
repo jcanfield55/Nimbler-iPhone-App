@@ -156,16 +156,16 @@ NSString *strStreet2 = @"street ";
                 else{
                     loc = [locations selectedLocationOfLocalSearchWithLocation:locationFromLocalSearch IsFrom:isFrom error:nil];
                 }
-            [toFromVC setEditMode:NO_EDIT];
         }
         // If user tapped the selected location, then go into Edit Mode if not there already
         if ([toFromVC editMode] == NO_EDIT && loc == selectedLocation) {
              locations.isLocationSelected = false;
-            if (isFrom) {
+             [toFromVC setEditMode:NO_EDIT];
+     /*       if (isFrom) {
                 [toFromVC setEditMode:FROM_EDIT]; 
             } else {
                 [toFromVC setEditMode:TO_EDIT];
-            }
+            }*/
         }
         else {
              // Have toFromVC end the edit mode (DE96 fix)
@@ -328,18 +328,19 @@ NSString *strStreet2 = @"street ";
             // Bold italic if a list header
             [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
             cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
-            [cell setAccessoryView:nil];
+            UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
+            [cell setAccessoryView:imgViewDetailDisclosure];
         }
         else if (loc == selectedLocation) {
             [[cell textLabel] setFont:[UIFont MEDIUM_BOLD_FONT]];
             cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
-            if ([toFromVC editMode] == NO_EDIT) {
+           /* if ([toFromVC editMode] == NO_EDIT) {
                 UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
                 [cell setAccessoryView:imgViewDetailDisclosure];
             } else {
                 // cell.textLabel.text = @"Current Location"; // This line causes DE124
                 [cell setAccessoryView:nil];
-            }
+            }*/
         } else {
             // just bold for normal cell
             [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
@@ -349,7 +350,7 @@ NSString *strStreet2 = @"street ";
         
     }
     cell.textLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
-
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     return cell;
     
     // In the future, we can support Nicknames by putting formatted address into subtitle, as shown below
