@@ -56,7 +56,6 @@
 - (void)stopActivityIndicator;
 - (void)startActivityIndicator;
 - (CGFloat)tableHeightFor:(UITableView *)table;  // Returns the height constant suitable for the particular table
-- (BOOL)setToFromHeightForTable:(UITableView *)table Height:(CGFloat)tableHeight;
 - (CGFloat)toFromTableHeightByNumberOfRowsForMaxHeight:(CGFloat)maxHeight  isFrom:(BOOL)isFrom;
 - (void)newLocationVisible;  // Callback for whenever a new location is made visible to update dynamic table height
 -(void)segmentChange;
@@ -235,13 +234,10 @@ UIImage *imageDetailDisclosure;
 }
 - (void)viewDidLoad{
     [super viewDidLoad];
-    
-    // Accessibility Label For UI Automation.
-    self.mainTable.accessibilityLabel = TO_FROM_TABLE_VIEW;
-    
+    [self.btnPicker setTitle:@"Depart now" forState:UIControlStateNormal];
     NSString *strFromFormattedAddress;
-    if([[[locations selectedFromLocation] formattedAddress] length]>0){
-        strFromFormattedAddress = [[locations selectedFromLocation] formattedAddress];
+    if([[[locations selectedFromLocation] shortFormattedAddress] length]>0){
+        strFromFormattedAddress = [[locations selectedFromLocation] shortFormattedAddress];
     }else{
         strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
     }
@@ -252,8 +248,8 @@ UIImage *imageDetailDisclosure;
     
     
     NSString *strToFormattedAddress;
-    if([[[locations selectedFromLocation] formattedAddress] length]>0){
-        strToFormattedAddress = [[locations selectedToLocation] formattedAddress];
+    if([[[locations selectedFromLocation] shortFormattedAddress] length]>0){
+        strToFormattedAddress = [[locations selectedToLocation] shortFormattedAddress];
     }else{
         strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
     }if(!strToFormattedAddress){
@@ -261,6 +257,9 @@ UIImage *imageDetailDisclosure;
     }
     
     [self.txtToView setText:strToFormattedAddress];
+    
+    // Accessibility Label For UI Automation.
+    self.mainTable.accessibilityLabel = TO_FROM_TABLE_VIEW;
     
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
         [self.routeButton setFrame:CGRectMake(ROUTE_BUTTON_XPOS_4INCH, ROUTE_BUTTON_YPOS_4INCH, ROUTE_BUTTON_WIDTH_4INCH, ROUTE_BUTTON_HEIGHT_4INCH)];
@@ -491,19 +490,19 @@ UIImage *imageDetailDisclosure;
 - (void)newLocationVisible
 {
     // Check whether toTableHeight needs to be dynamically adjusted (due to additional locations)
-    if (isCurrentLocationMode && editMode == NO_EDIT) {
-        // Check if height is updated, and if it is, reload the tables
-        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-            if ([self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE_4INCH]) {
-                [self reloadTables];
-            }
-        }
-        else{
-            if ([self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE]) {
-                [self reloadTables];
-            }
-        }
-    }
+//    if (isCurrentLocationMode && editMode == NO_EDIT) {
+//        // Check if height is updated, and if it is, reload the tables
+//        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+//            if ([self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE_4INCH]) {
+//                [self reloadTables];
+//            }
+//        }
+//        else{
+//            if ([self setToFromHeightForTable:toTable Height:TO_TABLE_HEIGHT_CL_MODE]) {
+//                [self reloadTables];
+//            }
+//        }
+//    }
 }
 /*
 // Returns the height constant suitable for the particular to or from table with editMode and isCurrentLocationMode
@@ -849,6 +848,7 @@ UIImage *imageDetailDisclosure;
 #pragma mark ToFromEdit mode Delegate
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
+    textView.text = @"";
     if(textView==self.txtFromView){
         [self setEditMode:FROM_EDIT];
         isToFromMode = true;
@@ -886,6 +886,12 @@ UIImage *imageDetailDisclosure;
 
 - (void)setEditMode:(ToFromEditMode)newEditMode
 {
+    // Change NavBar buttons accordingly
+    if(newEditMode == NO_EDIT){
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"ADV" style:UIBarButtonItemStylePlain target:self.navigationController.parentViewController action:@selector(revealToggle:)];
+    } else{
+        self.navigationItem.leftBarButtonItem = barButtonCancel;
+    }
     if(newEditMode == FROM_EDIT){
         [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 400)];
         [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, self.fromView.frame.size.width+46, fromView.frame.size.height)];
@@ -916,7 +922,7 @@ UIImage *imageDetailDisclosure;
     if(isToFromMode){
         NSString *strFromFormattedAddress;
         if([[[locations selectedFromLocation] formattedAddress] length]>0){
-            strFromFormattedAddress = [[locations selectedFromLocation] formattedAddress];
+            strFromFormattedAddress = [[locations selectedFromLocation] shortFormattedAddress];
         }else{
             strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
         }
@@ -934,8 +940,8 @@ UIImage *imageDetailDisclosure;
     else{
         
         NSString *strToFormattedAddress;
-        if([[[locations selectedFromLocation] formattedAddress] length]>0){
-            strToFormattedAddress = [[locations selectedToLocation] formattedAddress];
+        if([[[locations selectedToLocation] formattedAddress] length]>0){
+            strToFormattedAddress = [[locations selectedToLocation] shortFormattedAddress];
         }else{
             strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
         }if(!strToFormattedAddress){
@@ -1013,7 +1019,8 @@ UIImage *imageDetailDisclosure;
         else if (loc != currentLocation && isCurrentLocationMode) {
             [self setIsCurrentLocationMode:FALSE];
         }
-    } 
+        [self.txtFromView setText:[fromLocation shortFormattedAddress]];
+    }
     else {
         BOOL locBecomingVisible = loc && ([loc toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF);
         BOOL toLocationBecomingInvisible = toLocation && ([toLocation toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF);
@@ -1680,7 +1687,7 @@ UIImage *imageDetailDisclosure;
     
     NSString *strFromFormattedAddress;
     if([[[locations selectedFromLocation] formattedAddress] length]>0){
-        strFromFormattedAddress = [[locations selectedFromLocation] formattedAddress];
+        strFromFormattedAddress = [[locations selectedFromLocation] shortFormattedAddress];
     }else{
         strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
     }
@@ -1691,8 +1698,8 @@ UIImage *imageDetailDisclosure;
     
     
     NSString *strToFormattedAddress;
-    if([[[locations selectedFromLocation] formattedAddress] length]>0){
-        strToFormattedAddress = [[locations selectedToLocation] formattedAddress];
+    if([[[locations selectedToLocation] formattedAddress] length]>0){
+        strToFormattedAddress = [[locations selectedToLocation] shortFormattedAddress];
     }else{
         strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
     }if(!strToFormattedAddress){

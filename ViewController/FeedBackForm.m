@@ -679,7 +679,7 @@ NSUserDefaults *prefs;
 - (void)textViewDidBeginEditing:(UITextView *)textView{
     if([textView.text isEqualToString:@"Type message here"]){
         [textView setText:@""];
-        [textView setTextColor:[UIColor whiteColor]];
+        [textView setTextColor:[UIColor darkGrayColor]];
     }
     [UIView beginAnimations:ANIMATION_PARAM context: nil];
     [UIView setAnimationBeginsFromCurrentState: YES];

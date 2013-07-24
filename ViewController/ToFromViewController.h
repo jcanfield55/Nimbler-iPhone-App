@@ -103,4 +103,7 @@ typedef enum {
 - (void) showTabbar;
 - (void)endEdit;
 
+- (BOOL)setToFromHeightForTable:(UITableView *)table Height:(CGFloat)tableHeight;
+
+
 @end

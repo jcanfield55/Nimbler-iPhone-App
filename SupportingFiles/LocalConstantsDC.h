@@ -30,13 +30,13 @@
 #define MAX_LONG @"-76.668939"
 
 // Flurry API Key
-#define FLURRY_API_KEY @"DSTDN6ST2YDWF4V9RWFZ"
+#define FLURRY_API_KEY @"34N6BPVG3TR3GYTSFY9P"
 
 // Facebook App ID (for tracking referrals)
 #define FB_APP_ID @"" // Nimbler DC FB App ID
 
 // Review reminder URL
-#define NIMBLER_REVIEW_URL @""
+#define NIMBLER_REVIEW_URL @"tms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=668593695"
 
 //
 // Settings Page Rows

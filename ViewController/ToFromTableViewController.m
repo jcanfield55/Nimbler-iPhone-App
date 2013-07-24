@@ -120,7 +120,7 @@ NSString *strStreet2 = @"street ";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if ([toFromVC editMode] == NO_EDIT && !selectedLocation) {  // DE122 fix
-        return ([locations numberOfLocations:isFrom] + 1); // matching rows + 1 for "Enter New Address" Row
+        return ([locations numberOfLocations:isFrom]); // matching rows + 1 for "Enter New Address" Row
     }
     else {
         return [locations numberOfLocations:isFrom];  // matching rows only
@@ -269,24 +269,6 @@ NSString *strStreet2 = @"street ";
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([toFromVC editMode]==NO_EDIT && 
-        [self adjustedForEnterNewAddressFor:[indexPath row]] == -1) {  
-        // If it is the 'Enter new address' row...
-        UITableViewCell *cell =
-        [tableView dequeueReusableCellWithIdentifier:@"ToFromEnterNewLocationCell"];
-        
-        if (!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
-                                          reuseIdentifier:@"ToFromEnterNewLocationCell"];
-            [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
-            cell.textLabel.textColor = [UIColor lightGrayColor];
-            [[cell textLabel] setText:TOFROMTABLE_ENTER_ADDRESS_TEXT];
-            UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
-            [cell setAccessoryView:imgViewDetailDisclosure];
-        }
-
-        return cell;
-    }
     // If not the 'Enter new address row', show the appropriate location cell
     // Check for a reusable cell first, use that if it exists
     UITableViewCell *cell =
@@ -349,7 +331,7 @@ NSString *strStreet2 = @"street ";
         
     }
     cell.textLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
-
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     return cell;
     
     // In the future, we can support Nicknames by putting formatted address into subtitle, as shown below
@@ -376,7 +358,7 @@ NSString *strStreet2 = @"street ";
         return rawIndexRow; // "Enter New Address" does not show up when there is a selected location
     }
     else {  // if no selected address, ENTER_NEW_ADDRESS is in row 0
-        return (rawIndexRow - 1);
+        return (rawIndexRow);
     }
 }
 

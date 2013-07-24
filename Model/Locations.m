@@ -943,7 +943,7 @@
         newArray = [[NSMutableArray alloc] initWithArray:sortedToLocations];
     }
     if (oldSelectedLocation && (oldSelectedLocation != selectedLocation)) { // if there was a non-nil oldSelectedLocation, and this is a new request, then re-sort
-        [newArray insertObject:oldSelectedLocation atIndex:0];
+        
         NSSortDescriptor *sd1 = [NSSortDescriptor 
                                  sortDescriptorWithKey:(isFrom ? @"fromFrequency" : @"toFrequency")
                                                               ascending:NO];
@@ -953,6 +953,7 @@
     }
     if (selectedLocation) { // if there is a non-nil selectedLocation, then move it to the top
         [newArray removeObject:selectedLocation];  // remove selected object from current location
+        [newArray insertObject:selectedLocation atIndex:0];
           // inserts it at the front of the object
     }
     
