@@ -11,6 +11,7 @@
 		2E02C786173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */; };
 		2E02C787173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */; };
 		2E9C9277179EB56000BF0770 /* Nimbler Portland-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2E9C9276179EB56000BF0770 /* Nimbler Portland-Info.plist */; };
+		2EFDDCDF17A160F7000FC261 /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0CAE4717A0F6D5000F4BAA /* KxMenu.m */; };
 		520FB121162603090083F143 /* FeedBackForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB109162603090083F143 /* FeedBackForm.m */; };
 		520FB122162603090083F143 /* FeedBackForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10A162603090083F143 /* FeedBackForm.xib */; };
 		520FB123162603090083F143 /* FeedBackForm_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10B162603090083F143 /* FeedBackForm_568h.xib */; };
@@ -1427,7 +1428,7 @@
 		8D0C2961173124DA00E6AA1B /* Handle_control.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Handle_control.png; sourceTree = "<group>"; };
 		8D0CAE4617A0F6D5000F4BAA /* KxMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KxMenu.h; sourceTree = "<group>"; };
 		8D0CAE4717A0F6D5000F4BAA /* KxMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KxMenu.m; sourceTree = "<group>"; };
-		8D0CAE4C17A1370B000F4BAA /* Network_Commuting 1.11.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Network_Commuting 1.11.xcdatamodel"; sourceTree = "<group>"; };
+		8D0CAE4C17A1370B000F4BAA /* Network_Commuting 1.11.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.11.xcdatamodel"; sourceTree = "<group>"; };
 		8D0FA99F169165C00038FDB2 /* LegFromOTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = LegFromOTP.h; path = ../Model/LegFromOTP.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = LegFromOTP.m; path = ../Model/LegFromOTP.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8D0FA9AE1691984F0038FDB2 /* ItineraryFromOTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ItineraryFromOTP.h; path = ../ItineraryFromOTP.h; sourceTree = "<group>"; };
@@ -3605,6 +3606,7 @@
 				8DEAC194177841F800D7997C /* TTTAttributedLabel.m in Sources */,
 				8DABCDB21793C39500C1BDCF /* RevealController.m in Sources */,
 				8DABCDB61793C39A00C1BDCF /* ZUUIRevealController.m in Sources */,
+				2EFDDCDF17A160F7000FC261 /* KxMenu.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
