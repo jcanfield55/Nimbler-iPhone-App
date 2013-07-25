@@ -39,6 +39,7 @@ typedef enum {
 @property (strong, nonatomic) IBOutlet UIImageView* imgViewToBG;
 @property (strong, nonatomic) IBOutlet UIButton* btnSwap;
 @property (strong, nonatomic) IBOutlet UIButton* btnPicker;
+@property (strong, nonatomic) UILabel* lblTxtToFromPlaceholder;
 @property (nonatomic,readwrite) BOOL isToFromMode;
 
 @property (strong, nonatomic) IBOutlet UITableView* mainTable;  // grouped table for main page layout

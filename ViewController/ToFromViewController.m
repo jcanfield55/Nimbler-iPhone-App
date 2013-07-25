@@ -100,7 +100,7 @@
 @synthesize plan;
 @synthesize stations;
 @synthesize planRequestParameters;
-@synthesize mainToFromView,PicketSelectView,fromView,toView,txtFromView,txtToView,btnSwap,imgViewFromBG,imgViewToBG,isToFromMode,btnPicker;
+@synthesize mainToFromView,PicketSelectView,fromView,toView,txtFromView,txtToView,btnSwap,imgViewFromBG,imgViewToBG,isToFromMode,btnPicker,lblTxtToFromPlaceholder;
 
 // Constants for animating up and down the To: field
 #define FROM_SECTION 0
@@ -235,6 +235,12 @@ UIImage *imageDetailDisclosure;
 }
 - (void)viewDidLoad{
     [super viewDidLoad];
+    
+    lblTxtToFromPlaceholder = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 0.0, txtFromView.frame.size.width - 20.0, 34.0)];
+    [lblTxtToFromPlaceholder setText:Placeholder_Text];
+    [lblTxtToFromPlaceholder setBackgroundColor:[UIColor clearColor]];
+    [lblTxtToFromPlaceholder setTextColor:[UIColor lightGrayColor]];
+
     [self.btnPicker setTitle:@"Depart now" forState:UIControlStateNormal];
     NSString *strFromFormattedAddress;
     if([[[locations selectedFromLocation] shortFormattedAddress] length]>0){
@@ -850,13 +856,18 @@ UIImage *imageDetailDisclosure;
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
     textView.text = @"";
+    [textView addSubview:lblTxtToFromPlaceholder];
     if(textView==self.txtFromView){
+        fromTableVC.isFrom=true;
         [self setEditMode:FROM_EDIT];
+        editMode = FROM_EDIT;
         isToFromMode = true;
         editMode = FROM_EDIT;
     }
     else{
+        fromTableVC.isFrom=false;
         [self setEditMode:TO_EDIT];
+        editMode = TO_EDIT;
         isToFromMode = false;
         editMode = TO_EDIT;
     }
@@ -864,11 +875,22 @@ UIImage *imageDetailDisclosure;
 }
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
     if([text isEqualToString:@"\n"]) {
+        [fromTableVC textSubmitted:[textView text] forEvent:nil];
         [textView resignFirstResponder];
         return NO;
     }
     
-    if (textView==self.txtFromView) {
+    return YES;
+}
+- (void) textViewDidChange:(UITextView *)theTextView
+{
+    if(![theTextView hasText]) {
+        [theTextView addSubview:lblTxtToFromPlaceholder];
+    } else if ([[theTextView subviews] containsObject:lblTxtToFromPlaceholder]) {
+        [lblTxtToFromPlaceholder removeFromSuperview];
+    }
+    
+    if (theTextView==self.txtFromView) {
         [locations setTypedFromString:[self.txtFromView text]];
         if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= IOS_LOCALSEARCH_VER) {
             [locations setTypedFromStringForLocalSearch:[self.txtFromView text]];
@@ -884,9 +906,8 @@ UIImage *imageDetailDisclosure;
         [[fromTableVC myTableView] reloadData];
         
     }
-    return YES;
+    
 }
-
 - (void)setEditMode:(ToFromEditMode)newEditMode
 {
     // Change NavBar buttons accordingly

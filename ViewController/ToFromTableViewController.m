@@ -419,6 +419,7 @@ NSString *strStreet2 = @"street ";
                 // cell.textLabel.text = @"Current Location"; // This line causes DE124
                 [cell setAccessoryView:nil];
             }*/
+            [cell setAccessoryView:nil];
         } else {
             // just bold for normal cell
             [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
@@ -628,11 +629,11 @@ NSString *strStreet2 = @"street ";
 }
 // DE-207 Implementation
 // Delegate for when complete text entered into the UITextField
-- (IBAction)textSubmitted:(id)sender forEvent:(UIEvent *)event
+- (void)textSubmitted:(NSString *)strRowAddress forEvent:(UIEvent *)event
 {
     //[toFromVC.navigationController setNavigationBarHidden:YES animated:NO];
     locations.isLocationSelected = true; 
-    rawAddress = [sender text];
+    rawAddress = strRowAddress;
     
     if (rawAddress == nil) {
         rawAddress = NULL_STRING;
@@ -657,7 +658,7 @@ NSString *strStreet2 = @"street ";
         NIMLOG_EVENT1(@"Skipping duplicate toFromTextSubmitted");
         return;  // if using the same rawAddress and less than 5 seconds between, treat as duplicate
     }
-        [toFromVC setEditMode:NO_EDIT];  // Move back to NO_EDIT mode on the ToFrom view controller
+       [toFromVC setEditMode:NO_EDIT];  // Move back to NO_EDIT mode on the ToFrom view controller
 
     if ([rawAddress length] > 0) {
         // Check if we already have a geocoded location that has used this rawAddress before
@@ -793,7 +794,7 @@ NSString *strStreet2 = @"street ";
         }
         
         
-        [toFromVC setEditMode:NO_EDIT];
+      //  [toFromVC setEditMode:NO_EDIT];
         [myTableView reloadData];
         return ;
     }
@@ -812,7 +813,7 @@ NSString *strStreet2 = @"street ";
     
     // Save db context with the new location object
     saveContext(managedObjectContext);
-    [toFromVC setEditMode:NO_EDIT];
+    //[toFromVC setEditMode:NO_EDIT];
     // Mark and update the tableview and ToFromViewController
     [self markAndUpdateSelectedLocation:location];
 }
