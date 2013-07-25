@@ -105,5 +105,4 @@ typedef enum {
 
 - (BOOL)setToFromHeightForTable:(UITableView *)table Height:(CGFloat)tableHeight;
 
-
 @end

@@ -16,6 +16,7 @@
 #import "Stations.h"
 #import <MapKit/MapKit.h>
 #import "LocationFromLocalSearch.h"
+#import "kxMenu.h"
 
 
 @interface ToFromTableViewController () 
@@ -49,6 +50,9 @@
 @synthesize txtField;
 @synthesize supportedRegion;
 @synthesize stations;
+@synthesize isDeleteMode;
+@synthesize isRearrangeMode;
+@synthesize isRenameMode;
 
 NSString *strBART1 = @" bart";
 NSString *strBART2 = @"bart ";
@@ -127,28 +131,115 @@ NSString *strStreet2 = @"street ";
     }
 }
 
+- (UITableViewCellEditingStyle) tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if(isDeleteMode){
+        return UITableViewCellEditingStyleDelete;
+    }
+    return UITableViewCellEditingStyleNone;
+}
+
+- (BOOL) tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    if(isRearrangeMode){
+        return YES;
+    }
+    return NO;
+}
+
+- (void) tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
+    
+    NSInteger sourceRow = sourceIndexPath.row;
+    NSInteger destRow = destinationIndexPath.row;
+    if(toFromVC.editMode == FROM_EDIT){
+        NSMutableArray *sortedlocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingFromLocations];
+        id object = [sortedlocations objectAtIndex:sourceRow];
+        [sortedlocations removeObjectAtIndex:sourceRow];
+        [sortedlocations insertObject:object atIndex:destRow];
+        locations.sortedMatchingFromLocations = sortedlocations;
+    }
+    else if(toFromVC.editMode == TO_EDIT){
+        NSMutableArray *sortedlocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingToLocations];
+        id object = [sortedlocations objectAtIndex:sourceRow];
+        [sortedlocations removeObjectAtIndex:sourceRow];
+        [sortedlocations insertObject:object atIndex:destRow];
+        locations.sortedMatchingToLocations = sortedlocations;
+    }
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        if(toFromVC.editMode == FROM_EDIT){
+            NSMutableArray *sortedLocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingFromLocations];
+            Location *location = [locations.sortedMatchingFromLocations objectAtIndex:[indexPath row]];
+            location.fromFrequency = [NSNumber numberWithDouble:0.5];
+            location.toFrequency = [NSNumber numberWithDouble:0.5];
+            saveContext(managedObjectContext);
+            [sortedLocations removeObjectAtIndex:[indexPath row]];
+            locations.sortedMatchingFromLocations = sortedLocations;
+            locations.matchingFromRowCount = locations.matchingFromRowCount - 1;
+        }
+        else if(toFromVC.editMode == TO_EDIT){
+            NSMutableArray *sortedLocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingToLocations];
+            Location *location = [locations.sortedMatchingFromLocations objectAtIndex:[indexPath row]];
+            location.fromFrequency = [NSNumber numberWithDouble:0.5];
+            location.toFrequency = [NSNumber numberWithDouble:0.5];
+            saveContext(managedObjectContext);
+            [sortedLocations removeObjectAtIndex:[indexPath row]];
+            locations.sortedMatchingToLocations = sortedLocations;
+            locations.matchingToRowCount = locations.matchingToRowCount - 1;
+        }
+        [myTableView reloadData];
+    }
+}
+
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NIMLOG_EVENT1(@"Select Row: isFrom=%d, section=%d, row=%d", isFrom, [indexPath section], [indexPath row]);
-    //[toFromVC.navigationController setNavigationBarHidden:YES animated:NO];
-    
-    if ([self adjustedForEnterNewAddressFor:[indexPath row]] == -1) {  // "Enter New Address" cell
-        if (isFrom) {
-            [toFromVC setEditMode:FROM_EDIT]; 
-        } else {
-            [toFromVC setEditMode:TO_EDIT];
+    if(isRenameMode){
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        UITextView *txtView = [[UITextView alloc] initWithFrame:CGRectMake(1,2,300,40)];
+        txtView.delegate = self;
+        [txtView setBackgroundColor:[UIColor whiteColor]];
+        Location *location;
+        if(toFromVC.editMode == FROM_EDIT){
+          location = [locations.sortedMatchingFromLocations objectAtIndex:[indexPath row]];  
         }
-        locations.isLocationSelected = false;
+        else if(toFromVC.editMode == TO_EDIT){
+           location = [locations.sortedMatchingToLocations objectAtIndex:[indexPath row]];
+        }
+        if([location.userUpdatedLocation boolValue]){
+            txtView.text = [location formattedAddress];
+        }
+        else{
+            txtView.text = [location shortFormattedAddress];
+        }
+        
+        [txtView setFont:cell.textLabel.font];
+        [txtView setTag:[indexPath row]+10000];
+        [cell addSubview:txtView];
+        [txtView becomeFirstResponder];
+        
+        NSArray *views = [tableView subviews];
+        for(int i=0;i<[views count];i++){
+            UIView *subView = [views objectAtIndex:i];
+            NSArray *subViews = [subView subviews];
+            for(int j=0;j<[subViews count];j++){
+                UIView *tempSubView = [subViews objectAtIndex:j];
+                if([tempSubView isKindOfClass:[UITextView class]] && ![tempSubView isEqual:txtView]){
+                    [tempSubView removeFromSuperview];
+                }
+            }
+        }
     }
-    // Else it is one of the locations which was selected
-    else {
-        locations.isLocationSelected = true;
-        Location *loc = [locations 
-                         locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]]
-                         isFrom:isFrom];  //selected Location
-        if([loc isKindOfClass:[LocationFromLocalSearch class]])
-        {
-            LocationFromLocalSearch *locationFromLocalSearch = (LocationFromLocalSearch *)loc;
+    else{
+        NIMLOG_EVENT1(@"Select Row: isFrom=%d, section=%d, row=%d", isFrom, [indexPath section], [indexPath row]);
+        //[toFromVC.navigationController setNavigationBarHidden:YES animated:NO];
+        
+            locations.isLocationSelected = true;
+            Location *loc = [locations
+                             locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]]
+                             isFrom:isFrom];  //selected Location
+            if([loc isKindOfClass:[LocationFromLocalSearch class]])
+            {
+                LocationFromLocalSearch *locationFromLocalSearch = (LocationFromLocalSearch *)loc;
                 NSArray *matchingLocations = [locations locationsWithFormattedAddress:locationFromLocalSearch.formattedAddress];
                 if ([matchingLocations count] > 0) {
                     loc = [matchingLocations objectAtIndex:0];  // Get the first matching location
@@ -156,58 +247,53 @@ NSString *strStreet2 = @"street ";
                 else{
                     loc = [locations selectedLocationOfLocalSearchWithLocation:locationFromLocalSearch IsFrom:isFrom error:nil];
                 }
-        }
-        // If user tapped the selected location, then go into Edit Mode if not there already
-        if ([toFromVC editMode] == NO_EDIT && loc == selectedLocation) {
-             locations.isLocationSelected = false;
-             [toFromVC setEditMode:NO_EDIT];
-     /*       if (isFrom) {
-                [toFromVC setEditMode:FROM_EDIT]; 
-            } else {
-                [toFromVC setEditMode:TO_EDIT];
-            }*/
-        }
-        else {
-             // Have toFromVC end the edit mode (DE96 fix)
-           
-            NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
-
-            if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) { // If a list (like 'Caltrain Station List')
-                logEvent(FLURRY_TOFROMTABLE_CALTRAIN_LIST,
-                         FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                         FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d",[indexPath row]],
-                         nil, nil, nil, nil);
-
-                // Increment frequency of the list header
-                if (isFrom) {
-                    [loc incrementFromFrequency];
-                } else {
-                    [loc incrementToFrequency];
-                }
+            }
+            // If user tapped the selected location, then go into Edit Mode if not there already
+            if ([toFromVC editMode] == NO_EDIT && loc == selectedLocation) {
+                locations.isLocationSelected = false;
+                [toFromVC setEditMode:NO_EDIT];
+            }
+            else {
+                // Have toFromVC end the edit mode (DE96 fix)
                 
-                // Call the location picker with the list
-                NSArray *list = [stations fetchStationListByMemberOfListId:ALL_STATION];
-                if(!list || [list count] == 0){
-                    list = [locations locationsMembersOfList:[loc memberOfList]];
+                NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
+                
+                if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) { // If a list (like 'Caltrain Station List')
+                    logEvent(FLURRY_TOFROMTABLE_CALTRAIN_LIST,
+                             FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                             FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d",[indexPath row]],
+                             nil, nil, nil, nil);
+                    
+                    // Increment frequency of the list header
+                    if (isFrom) {
+                        [loc incrementFromFrequency];
+                    } else {
+                        [loc incrementToFrequency];
+                    }
+                    
+                    // Call the location picker with the list
+                    NSArray *list = [stations fetchStationListByMemberOfListId:ALL_STATION];
+                    if(!list || [list count] == 0){
+                        list = [locations locationsMembersOfList:[loc memberOfList]];
+                    }
+                    [toFromVC callLocationPickerFor:self
+                                       locationList:list
+                                             isFrom:isFrom
+                                   isGeocodeResults:NO];
                 }
-                [toFromVC callLocationPickerFor:self 
-                                   locationList:list 
-                                         isFrom:isFrom
-                               isGeocodeResults:NO];
-            }
-            else {    // if a normal location
-                NSString* selectedAddressParam = (isFrom ? FLURRY_FROM_SELECTED_ADDRESS : FLURRY_TO_SELECTED_ADDRESS);
-                logEvent(FLURRY_TOFROMTABLE_SELECT_ROW,
-                         FLURRY_TOFROM_WHICH_TABLE, isFromString,
-                         FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d",[indexPath row]],
-                         selectedAddressParam, [loc shortFormattedAddress],
-                         nil, nil);
-
-                [self markAndUpdateSelectedLocation:loc];  // Mark the selected location and send updates to locations and toFromVC
-                [toFromVC setEditMode:NO_EDIT]; 
+                else {    // if a normal location
+                    NSString* selectedAddressParam = (isFrom ? FLURRY_FROM_SELECTED_ADDRESS : FLURRY_TO_SELECTED_ADDRESS);
+                    logEvent(FLURRY_TOFROMTABLE_SELECT_ROW,
+                             FLURRY_TOFROM_WHICH_TABLE, isFromString,
+                             FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d",[indexPath row]],
+                             selectedAddressParam, [loc shortFormattedAddress],
+                             nil, nil);
+                    
+                    [self markAndUpdateSelectedLocation:loc];  // Mark the selected location and send updates to locations and toFromVC
+                    [toFromVC setEditMode:NO_EDIT]; 
+                }
             }
         }
-    }
 }
 
 
@@ -277,6 +363,9 @@ NSString *strStreet2 = @"street ";
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
                                       reuseIdentifier:@"ToFromTableLocationRow"];
+        if(isRearrangeMode){
+            cell.showsReorderControl = YES;
+        }
     }
     
     // DE176 fix 4 of 4.  Check if we need firstResponderSetting set, and if so, set it
@@ -291,19 +380,26 @@ NSString *strStreet2 = @"street ";
     if([loc isKindOfClass:[LocationFromLocalSearch class ]]){
         cell.textLabel.numberOfLines = 2;
         cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
-        [[cell textLabel] setText:[loc shortFormattedAddress]];
+        [[cell textLabel] setText:loc.shortFormattedAddress];
         [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
         cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
         [cell setAccessoryView:nil];
     }
     else{
+        NSString *locationDisplayString;
+        if([loc.userUpdatedLocation boolValue]){
+            locationDisplayString = loc.formattedAddress;
+        }
+        else{
+            locationDisplayString = loc.shortFormattedAddress;
+        }
         if([loc isKindOfClass:[LocationFromIOS class ]]){
            cell.textLabel.numberOfLines = 2;
            cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
-           [[cell textLabel] setText:[loc shortFormattedAddress]];
+           [[cell textLabel] setText:locationDisplayString];
         }
         else{
-             [[cell textLabel] setText:[loc shortFormattedAddress]];
+             [[cell textLabel] setText:locationDisplayString];
         }
        
         if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) {
@@ -343,6 +439,113 @@ NSString *strStreet2 = @"street ";
      } else {  // if no nickname, just show one row with the formatted address */
 
 }
+
+- (void)deleteButtonClicked:(id)sender{
+    isDeleteMode = true;
+    isRearrangeMode = false;
+    isRenameMode = false;
+    [myTableView setEditing:YES animated:YES];
+    [myTableView reloadData];
+}
+- (void)rearrangeButtonClicked:(id)sender{
+    isDeleteMode = false;
+    isRearrangeMode = true;
+    isRenameMode = false;
+    [myTableView setEditing:YES animated:YES];
+    [myTableView reloadData];
+}
+
+- (void)renameButtonClicked:(id)sender{
+    isDeleteMode = false;
+    isRearrangeMode = false;
+    isRenameMode = true;
+    [myTableView setEditing:NO animated:YES];
+    [myTableView reloadData];
+}
+
+-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
+    if([text isEqualToString:@"\n"]){
+        int row = [textView tag] - 10000;
+       
+        if(toFromVC.editMode == FROM_EDIT){
+            NSMutableArray *sortedLocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingFromLocations];
+            Location *location = [sortedLocations objectAtIndex:row];
+            location.formattedAddress = textView.text;
+            location.userUpdatedLocation = [NSNumber numberWithBool:true];
+            saveContext(managedObjectContext);
+            [sortedLocations replaceObjectAtIndex:row withObject:location];
+            locations.sortedMatchingFromLocations = sortedLocations;
+            [textView removeFromSuperview];
+            [textView resignFirstResponder];
+            if([location.shortFormattedAddress isEqualToString:locations.selectedFromLocation.shortFormattedAddress]){
+                locations.selectedFromLocation = location;
+            }
+            if([location.shortFormattedAddress isEqualToString:locations.selectedToLocation.shortFormattedAddress]){
+                locations.selectedToLocation = location;
+            }
+        }
+        else if(toFromVC.editMode == TO_EDIT){
+            NSMutableArray *sortedLocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingToLocations];
+            Location *location = [sortedLocations objectAtIndex:row];
+            location.formattedAddress = textView.text;
+            location.userUpdatedLocation = [NSNumber numberWithBool:true];
+            saveContext(managedObjectContext);
+            [sortedLocations replaceObjectAtIndex:row withObject:location];
+            locations.sortedMatchingToLocations = sortedLocations;
+            [textView removeFromSuperview];
+            [textView resignFirstResponder];
+            if([location.shortFormattedAddress isEqualToString:locations.selectedFromLocation.shortFormattedAddress]){
+                locations.selectedFromLocation = location;
+            }
+            if([location.shortFormattedAddress isEqualToString:locations.selectedToLocation.shortFormattedAddress]){
+                locations.selectedToLocation = location;
+            }
+        }
+        [myTableView reloadData];
+    }
+    return YES;
+}
+
+- (void)editButtonClicked:(id)sender{
+    UIButton *editButton = (UIButton *)sender;
+    NSArray *menuItems =
+    @[
+      [KxMenuItem menuItem:@"Delete locations"
+                     image:[UIImage imageNamed:@""]
+                    target:self
+                    action:@selector(deleteButtonClicked:)],
+      
+      [KxMenuItem menuItem:@"Rearrange locations"
+                     image:[UIImage imageNamed:@""]
+                    target:self
+                    action:@selector(rearrangeButtonClicked:)],
+      
+      [KxMenuItem menuItem:@"Rename locations"
+                     image:[UIImage imageNamed:@""]
+                    target:self
+                    action:@selector(renameButtonClicked:)],
+      ];
+    [KxMenu showMenuInView:toFromVC.view
+                  fromRect:editButton.frame
+                 menuItems:menuItems];
+}
+
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 40.0;
+}
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0,0,320, 40)];
+    UIButton *btnEdit = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btnEdit setFrame:CGRectMake(230,5,50,20)];
+    [btnEdit setTitle:@"Edit" forState:UIControlStateNormal];
+    [btnEdit setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    [btnEdit addTarget:self action:@selector(editButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [headerView addSubview:btnEdit];
+    return headerView;
+}
+
 
 // This function makes adjustments for inserting the "Enter New Address" row in the right location
 // If there is a selectedLocation, there is no "Enter New Address" row 

@@ -27,6 +27,7 @@
 #import "RealTimeManager.h"
 #import "StationListElement.h"
 #import "RouteExcludeSetting.h"
+#import "KxMenu.h"
 
 
 @interface ToFromViewController()
@@ -852,10 +853,12 @@ UIImage *imageDetailDisclosure;
     if(textView==self.txtFromView){
         [self setEditMode:FROM_EDIT];
         isToFromMode = true;
+        editMode = FROM_EDIT;
     }
     else{
         [self setEditMode:TO_EDIT];
         isToFromMode = false;
+        editMode = TO_EDIT;
     }
     return YES;
 }
@@ -913,7 +916,7 @@ UIImage *imageDetailDisclosure;
         [self.PicketSelectView setFrame:CGRectMake(self.PicketSelectView.frame.origin.x, self.PicketSelectView.frame.origin.y+500, self.PicketSelectView.frame.size.width, self.PicketSelectView.frame.size.height)];
         [self.mainToFromView addSubview:toTable];
     }
-    else if (editMode == NO_EDIT){
+    else if (newEditMode == NO_EDIT){
         [self SetToFromViewOnNoEditMode];
         
     }
@@ -921,18 +924,39 @@ UIImage *imageDetailDisclosure;
 }
 
 - (void) SetToFromViewOnNoEditMode{
-    
     if(isToFromMode){
+        Location *selectedFromLocation = [locations selectedFromLocation];
         NSString *strFromFormattedAddress;
-        if([[[locations selectedFromLocation] formattedAddress] length]>0){
-            strFromFormattedAddress = [[locations selectedFromLocation] shortFormattedAddress];
-        }else{
-            strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+        if([selectedFromLocation.userUpdatedLocation boolValue]){
+            strFromFormattedAddress = [selectedFromLocation formattedAddress];
+        }
+        else{
+            strFromFormattedAddress = [selectedFromLocation shortFormattedAddress];
+        }
+        if(![strFromFormattedAddress length]>0){
+             strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
         }
         if(!strFromFormattedAddress){
             strFromFormattedAddress = @"";
         }
         [self.txtFromView setText:strFromFormattedAddress];
+        
+        Location *selectedToLocation = [locations selectedToLocation];
+        NSString *strToFormattedAddress;
+        if([selectedToLocation.userUpdatedLocation boolValue]){
+            strToFormattedAddress = [selectedToLocation formattedAddress];
+        }
+        else{
+            strToFormattedAddress = [selectedToLocation shortFormattedAddress];
+        }
+        if(![strToFormattedAddress length]>0){
+            strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+        }
+        if(!strToFormattedAddress){
+            strToFormattedAddress = @"";
+        }
+        [self.txtToView setText:strToFormattedAddress];
+
         [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 131)];
         [self.toView setHidden:NO];
         [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, fromView.frame.size.width-46, fromView.frame.size.height)];
@@ -942,16 +966,36 @@ UIImage *imageDetailDisclosure;
         [self.txtFromView resignFirstResponder];
     }
     else{
+        Location *selectedFromLocation = [locations selectedFromLocation];
+        NSString *strFromFormattedAddress;
+        if([selectedFromLocation.userUpdatedLocation boolValue]){
+            strFromFormattedAddress = [selectedFromLocation formattedAddress];
+        }
+        else{
+            strFromFormattedAddress = [selectedFromLocation shortFormattedAddress];
+        }
+        if(![strFromFormattedAddress length]>0){
+            strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+        }
+        if(!strFromFormattedAddress){
+            strFromFormattedAddress = @"";
+        }
+        [self.txtFromView setText:strFromFormattedAddress];
         
+        Location *selectedToLocation = [locations selectedToLocation];
         NSString *strToFormattedAddress;
-        if([[[locations selectedToLocation] formattedAddress] length]>0){
-            strToFormattedAddress = [[locations selectedToLocation] shortFormattedAddress];
-        }else{
-            strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
-        }if(!strToFormattedAddress){
+        if([selectedToLocation.userUpdatedLocation boolValue]){
+            strToFormattedAddress = [selectedToLocation formattedAddress];
+        }
+        else{
+            strToFormattedAddress = [selectedToLocation shortFormattedAddress];
+        }
+        if(![strToFormattedAddress length]>0){
+            strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+        }
+        if(!strToFormattedAddress){
             strToFormattedAddress = @"";
         }
-        
         [self.txtToView setText:strToFormattedAddress];
         
         [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 131)];
@@ -1024,7 +1068,12 @@ UIImage *imageDetailDisclosure;
         else if (loc != currentLocation && isCurrentLocationMode) {
             [self setIsCurrentLocationMode:FALSE];
         }
-        [self.txtFromView setText:[fromLocation shortFormattedAddress]];
+        if(fromLocation.userUpdatedLocation){
+            [self.txtFromView setText:[fromLocation formattedAddress]];
+        }
+        else{
+            [self.txtFromView setText:[fromLocation shortFormattedAddress]];
+        }
     } 
     else {
         BOOL locBecomingVisible = loc && ([loc toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF);
@@ -1690,10 +1739,15 @@ UIImage *imageDetailDisclosure;
         }
     }
     
+    Location *selectedFromLocation = [locations selectedFromLocation];
     NSString *strFromFormattedAddress;
-    if([[[locations selectedFromLocation] formattedAddress] length]>0){
-        strFromFormattedAddress = [[locations selectedFromLocation] shortFormattedAddress];
-    }else{
+    if([selectedFromLocation.userUpdatedLocation boolValue]){
+        strFromFormattedAddress = [selectedFromLocation formattedAddress];
+    }
+    else{
+        strFromFormattedAddress = [selectedFromLocation shortFormattedAddress];
+    }
+    if(![strFromFormattedAddress length]>0){
         strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
     }
     if(!strFromFormattedAddress){
@@ -1701,13 +1755,18 @@ UIImage *imageDetailDisclosure;
     }
     [self.txtFromView setText:strFromFormattedAddress];
     
-    
+    Location *selectedToLocation = [locations selectedToLocation];
     NSString *strToFormattedAddress;
-    if([[[locations selectedToLocation] formattedAddress] length]>0){
-        strToFormattedAddress = [[locations selectedToLocation] shortFormattedAddress];
-    }else{
-        strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
-    }if(!strToFormattedAddress){
+    if([selectedToLocation.userUpdatedLocation boolValue]){
+        strToFormattedAddress = [selectedToLocation formattedAddress];
+    }
+    else{
+        strToFormattedAddress = [selectedToLocation shortFormattedAddress];
+    }
+    if(![strToFormattedAddress length]>0){
+        strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+    }
+    if(!strToFormattedAddress){
         strToFormattedAddress = @"";
     }
     [self.txtToView setText:strToFormattedAddress];
@@ -1722,6 +1781,41 @@ UIImage *imageDetailDisclosure;
     //Fixed DE-330
     // Clearing both textfield before calling seteditMode method.
     //[self.navigationController setNavigationBarHidden:YES animated:NO];
+    
+    if(editMode == FROM_EDIT){
+        [self.fromTable setEditing:NO animated:NO];
+        self.fromTableVC.isDeleteMode = false;
+        self.fromTableVC.isRenameMode = false;
+        self.fromTableVC.isRearrangeMode = false;
+        NSArray *views = [self.fromTable subviews];
+        for(int i=0;i<[views count];i++){
+            UIView *subView = [views objectAtIndex:i];
+            NSArray *subViews = [subView subviews];
+            for(int j=0;j<[subViews count];j++){
+                UIView *tempSubView = [subViews objectAtIndex:j];
+                if([tempSubView isKindOfClass:[UITextView class]]){
+                    [tempSubView removeFromSuperview];
+                }
+            }
+        }
+    }
+    else if(editMode == TO_EDIT){
+        [self.toTable setEditing:NO animated:NO];
+        self.toTableVC.isDeleteMode = false;
+        self.toTableVC.isRenameMode = false;
+        self.toTableVC.isRearrangeMode = false;
+        NSArray *views = [self.toTable subviews];
+        for(int i=0;i<[views count];i++){
+            UIView *subView = [views objectAtIndex:i];
+            NSArray *subViews = [subView subviews];
+            for(int j=0;j<[subViews count];j++){
+                UIView *tempSubView = [subViews objectAtIndex:j];
+                if([tempSubView isKindOfClass:[UITextView class]]){
+                    [tempSubView removeFromSuperview];
+                }
+            }
+        }  
+    }
     self.toTableVC.txtField.text = NULL_STRING;
     self.fromTableVC.txtField.text = NULL_STRING;
     [self setEditMode:NO_EDIT];

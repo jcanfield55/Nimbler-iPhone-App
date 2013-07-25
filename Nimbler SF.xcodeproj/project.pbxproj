@@ -229,6 +229,9 @@
 		8D0C2962173124DA00E6AA1B /* Handle_control.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D0C2961173124DA00E6AA1B /* Handle_control.png */; };
 		8D0C2967173124E000E6AA1B /* Handle_control.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D0C2961173124DA00E6AA1B /* Handle_control.png */; };
 		8D0C2968173124E100E6AA1B /* Handle_control.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D0C2961173124DA00E6AA1B /* Handle_control.png */; };
+		8D0CAE4817A0F6D5000F4BAA /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0CAE4717A0F6D5000F4BAA /* KxMenu.m */; };
+		8D0CAE4917A0F6D5000F4BAA /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0CAE4717A0F6D5000F4BAA /* KxMenu.m */; };
+		8D0CAE4B17A0F6D5000F4BAA /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0CAE4717A0F6D5000F4BAA /* KxMenu.m */; };
 		8D0FA9A1169165C10038FDB2 /* LegFromOTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */; };
 		8D0FA9B0169198500038FDB2 /* ItineraryFromOTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0FA9AF1691984F0038FDB2 /* ItineraryFromOTP.m */; };
 		8D106DD91671F0ED004E0DE5 /* GtfsAgency.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DD81671F0ED004E0DE5 /* GtfsAgency.m */; };
@@ -1422,6 +1425,9 @@
 		8D00AFF3172F952C00B01ED3 /* realtime2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = realtime2.png; sourceTree = "<group>"; };
 		8D00B006172FD22900B01ED3 /* tram.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tram.png; sourceTree = "<group>"; };
 		8D0C2961173124DA00E6AA1B /* Handle_control.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Handle_control.png; sourceTree = "<group>"; };
+		8D0CAE4617A0F6D5000F4BAA /* KxMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KxMenu.h; sourceTree = "<group>"; };
+		8D0CAE4717A0F6D5000F4BAA /* KxMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KxMenu.m; sourceTree = "<group>"; };
+		8D0CAE4C17A1370B000F4BAA /* Network_Commuting 1.11.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Network_Commuting 1.11.xcdatamodel"; sourceTree = "<group>"; };
 		8D0FA99F169165C00038FDB2 /* LegFromOTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = LegFromOTP.h; path = ../Model/LegFromOTP.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = LegFromOTP.m; path = ../Model/LegFromOTP.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8D0FA9AE1691984F0038FDB2 /* ItineraryFromOTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ItineraryFromOTP.h; path = ../ItineraryFromOTP.h; sourceTree = "<group>"; };
@@ -1782,6 +1788,8 @@
 		520FB132162603430083F143 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				8D0CAE4617A0F6D5000F4BAA /* KxMenu.h */,
+				8D0CAE4717A0F6D5000F4BAA /* KxMenu.m */,
 				8DABCDA71793C2FB00C1BDCF /* SlideView */,
 				8DEAC190177841F400D7997C /* TTTAttributedLabel.h */,
 				8DEAC191177841F400D7997C /* TTTAttributedLabel.m */,
@@ -3332,6 +3340,7 @@
 				8DEAC192177841F400D7997C /* TTTAttributedLabel.m in Sources */,
 				8DABCDAC1793C2FB00C1BDCF /* RevealController.m in Sources */,
 				8DABCDAD1793C2FB00C1BDCF /* ZUUIRevealController.m in Sources */,
+				8D0CAE4817A0F6D5000F4BAA /* KxMenu.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3428,6 +3437,7 @@
 				8DEAC193177841F700D7997C /* TTTAttributedLabel.m in Sources */,
 				8DABCDB31793C39500C1BDCF /* RevealController.m in Sources */,
 				8DABCDB51793C39900C1BDCF /* ZUUIRevealController.m in Sources */,
+				8D0CAE4917A0F6D5000F4BAA /* KxMenu.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3511,6 +3521,7 @@
 				8DAA289C178BDFEF00C3FA30 /* TTTAttributedLabel.m in Sources */,
 				8DABCDB41793C39600C1BDCF /* RevealController.m in Sources */,
 				8DABCDB71793C39A00C1BDCF /* ZUUIRevealController.m in Sources */,
+				8D0CAE4B17A0F6D5000F4BAA /* KxMenu.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4130,6 +4141,7 @@
 		8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				8D0CAE4C17A1370B000F4BAA /* Network_Commuting 1.11.xcdatamodel */,
 				8DEAC18E177823EA00D7997C /* Network_Commuting 1.10.xcdatamodel */,
 				2E02C78C1733D82D001F2F28 /* Network_Commuting 1. 9.xcdatamodel */,
 				5295B95216C6F71B008376B3 /* Network_Commuting 1.8.xcdatamodel */,
@@ -4142,7 +4154,7 @@
 				8D9EA261162D78FD002BB5FF /* Network_Commuting 1.6.xcdatamodel */,
 				8D9EA262162D78FD002BB5FF /* Network_Commuting.xcdatamodel */,
 			);
-			currentVersion = 8DEAC18E177823EA00D7997C /* Network_Commuting 1.10.xcdatamodel */;
+			currentVersion = 8D0CAE4C17A1370B000F4BAA /* Network_Commuting 1.11.xcdatamodel */;
 			path = Network_Commuting.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

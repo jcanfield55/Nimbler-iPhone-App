@@ -18,9 +18,7 @@
 @interface Locations ()
 {
     NSArray *sortedMatchingFromLocations; // All from locations that somehow match the typedFromString
-    int matchingFromRowCount;  // Count of from locations (including frequency=0) that match the typedFromString
     NSArray *sortedMatchingToLocations;
-    int matchingToRowCount;
     NSArray *sortedFromLocations;  // All locations with fromFrequency > TOFROM_FREQUENCY_VISIBILITY_CUTOFF sorted by from frequency
     NSArray *sortedToLocations;    // All locations with toFrequency > TOFROM_FREQUENCY_VISIBILITY_CUTOFF sorted by to frequency
     NSArray *searchableFromLocations;  // All locations which are searchable (excludeFromSearch != true) sorted by fromFrequency
@@ -79,6 +77,10 @@
 @synthesize tempSelectedFromLocation;
 @synthesize tempSelectedToLocation;
 @synthesize isLocationSelected;
+@synthesize sortedMatchingFromLocations;
+@synthesize sortedMatchingToLocations;
+@synthesize matchingFromRowCount;
+@synthesize matchingToRowCount;
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkGeoMgr:(RKObjectManager *)rkG
 {
