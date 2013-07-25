@@ -938,13 +938,15 @@ UIImage *imageDetailDisclosure;
         [self.mainToFromView addSubview:toTable];
     }
     else if (newEditMode == NO_EDIT){
-        [self SetToFromViewOnNoEditMode];
+        [self setToFromViewOnNoEditMode];
         
     }
     
 }
 
-- (void) SetToFromViewOnNoEditMode{
+- (void) setToFromViewOnNoEditMode{
+    [lblTxtToFromPlaceholder removeFromSuperview];
+    
     if(isToFromMode){
         Location *selectedFromLocation = [locations selectedFromLocation];
         NSString *strFromFormattedAddress;
