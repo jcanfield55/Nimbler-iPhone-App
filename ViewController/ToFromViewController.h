@@ -40,7 +40,6 @@ typedef enum {
 @property (strong, nonatomic) IBOutlet UIButton* btnSwap;
 @property (strong, nonatomic) IBOutlet UIButton* btnPicker;
 @property (strong, nonatomic) UILabel* lblTxtToFromPlaceholder;
-@property (nonatomic,readwrite) BOOL isToFromMode;
 
 @property (strong, nonatomic) IBOutlet UITableView* mainTable;  // grouped table for main page layout
 @property (strong, nonatomic) UITableView *fromTable;  // from table embedded in mainTable
@@ -103,7 +102,7 @@ typedef enum {
 - (void) hideTabBar;
 - (void) showTabbar;
 - (void)endEdit;
-
+- (void)heightToFromTable;
 - (BOOL)setToFromHeightForTable:(UITableView *)table Height:(CGFloat)tableHeight;
 
 @end

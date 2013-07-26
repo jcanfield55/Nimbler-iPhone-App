@@ -99,7 +99,7 @@
 @synthesize plan;
 @synthesize stations;
 @synthesize planRequestParameters;
-@synthesize mainToFromView,PicketSelectView,fromView,toView,txtFromView,txtToView,btnSwap,imgViewFromBG,imgViewToBG,isToFromMode,btnPicker,lblTxtToFromPlaceholder;
+@synthesize mainToFromView,PicketSelectView,fromView,toView,txtFromView,txtToView,btnSwap,imgViewFromBG,imgViewToBG,btnPicker,lblTxtToFromPlaceholder;
 
 // Constants for animating up and down the To: field
 #define FROM_SECTION 0
@@ -140,7 +140,7 @@ UIImage *imageDetailDisclosure;
                 toTableHeight = TO_TABLE_HEIGHT_NO_CL_MODE_4INCH;
             }
             else{
-                toTableHeight = TO_TABLE_HEIGHT_NO_CL_MODE;
+                toTableHeight = TOFROM_HEIGHT_EDIT_MODE;
             }
             rect1.size.height = toTableHeight;
             
@@ -163,7 +163,7 @@ UIImage *imageDetailDisclosure;
                 fromTableHeight = FROM_TABLE_HEIGHT_NO_CL_MODE_4INCH;
             }
             else{
-                fromTableHeight = FROM_TABLE_HEIGHT_NO_CL_MODE;
+                fromTableHeight = TOFROM_HEIGHT_EDIT_MODE;
             }
             rect2.size.height = fromTableHeight;
             
@@ -860,14 +860,10 @@ UIImage *imageDetailDisclosure;
         fromTableVC.isFrom=true;
         [self setEditMode:FROM_EDIT];
         editMode = FROM_EDIT;
-        isToFromMode = true;
-        editMode = FROM_EDIT;
     }
     else{
         fromTableVC.isFrom=false;
         [self setEditMode:TO_EDIT];
-        editMode = TO_EDIT;
-        isToFromMode = false;
         editMode = TO_EDIT;
     }
     return YES;
@@ -922,6 +918,14 @@ UIImage *imageDetailDisclosure;
     }
     
 }
+- (void)heightToFromTable{
+    if(editMode == FROM_EDIT){
+        [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y, fromTable.frame.size.width, TOFROM_HEIGHT_EDIT_MODE)];
+    }
+    else if (editMode == TO_EDIT){
+        [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y, toTable.frame.size.width, TOFROM_HEIGHT_EDIT_MODE)];
+    }
+}
 - (void)setEditMode:(ToFromEditMode)newEditMode
 {
     // Change NavBar buttons accordingly
@@ -961,7 +965,7 @@ UIImage *imageDetailDisclosure;
 - (void) setToFromViewOnNoEditMode{
     [lblTxtToFromPlaceholder removeFromSuperview];
     
-    if(isToFromMode){
+    if(editMode == FROM_EDIT){
         Location *selectedFromLocation = [locations selectedFromLocation];
         NSString *strFromFormattedAddress;
         if([selectedFromLocation.userUpdatedLocation boolValue]){
@@ -1002,7 +1006,7 @@ UIImage *imageDetailDisclosure;
         [fromTable removeFromSuperview];
         [self.txtFromView resignFirstResponder];
     }
-    else{
+    else if (editMode == TO_EDIT){
         Location *selectedFromLocation = [locations selectedFromLocation];
         NSString *strFromFormattedAddress;
         if([selectedFromLocation.userUpdatedLocation boolValue]){
@@ -1801,7 +1805,7 @@ UIImage *imageDetailDisclosure;
         strToFormattedAddress = [selectedToLocation shortFormattedAddress];
     }
     if(![strToFormattedAddress length]>0){
-        strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+        strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
     }
     if(!strToFormattedAddress){
         strToFormattedAddress = @"";
@@ -1818,7 +1822,7 @@ UIImage *imageDetailDisclosure;
     //Fixed DE-330
     // Clearing both textfield before calling seteditMode method.
     //[self.navigationController setNavigationBarHidden:YES animated:NO];
-    
+    [self heightToFromTable];
     if(editMode == FROM_EDIT){
         [self.fromTable setEditing:NO animated:NO];
         self.fromTableVC.isDeleteMode = false;
@@ -1853,6 +1857,7 @@ UIImage *imageDetailDisclosure;
             }
         }  
     }
+    
     self.toTableVC.txtField.text = NULL_STRING;
     self.fromTableVC.txtField.text = NULL_STRING;
     [self setEditMode:NO_EDIT];
