@@ -27,7 +27,6 @@
 #import "RealTimeManager.h"
 #import "StationListElement.h"
 #import "RouteExcludeSetting.h"
-#import "KxMenu.h"
 
 
 @interface ToFromViewController()
@@ -875,13 +874,28 @@ UIImage *imageDetailDisclosure;
 }
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
     if([text isEqualToString:@"\n"]) {
-        [fromTableVC textSubmitted:[textView text] forEvent:nil];
+        //[fromTableVC textSubmitted:[textView text] forEvent:nil];
+        if(editMode == FROM_EDIT){
+            [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y, fromTable.frame.size.width, TOFROM_HEIGHT_LOCATION_EDIT_MODE)];
+        }
+        else if (editMode == TO_EDIT){
+            [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y, toTable.frame.size.width, TOFROM_HEIGHT_LOCATION_EDIT_MODE)];
+        }
         [textView resignFirstResponder];
         return NO;
     }
-    
     return YES;
 }
+
+- (void)heightToFromTable{
+    if(editMode == FROM_EDIT){
+        [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y, fromTable.frame.size.width, TOFROM_HEIGHT_EDIT_MODE)];
+    }
+    else if (editMode == TO_EDIT){
+        [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y, toTable.frame.size.width, TOFROM_HEIGHT_EDIT_MODE)];
+    }
+}
+
 - (void) textViewDidChange:(UITextView *)theTextView
 {
     if(![theTextView hasText]) {

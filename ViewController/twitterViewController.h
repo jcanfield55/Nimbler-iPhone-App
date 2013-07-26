@@ -44,10 +44,6 @@
 @property (strong, nonatomic) NSString *strAllAdvisories;
 @property (strong, nonatomic) UIActivityIndicatorView *activityIndicatorView;
 
-@property (nonatomic, strong) IBOutlet UIButton *advisoriesButton;
-@property (nonatomic, strong) IBOutlet UIButton *settingsButton;
-@property (nonatomic, strong) IBOutlet UIButton *feedBackButton;
-
 // Pull To Refresh properties and methods
 @property (nonatomic, retain) UIView *refreshHeaderView;
 @property (nonatomic, retain) UILabel *refreshLabel;
@@ -73,9 +69,6 @@
 -(void)timerAction;
 - (void)openUrl:(NSURL *)url;
 
--(IBAction)advisoriesButtonClicked:(id)sender;
--(IBAction)settingsButtonClicked:(id)sender;
--(IBAction)feedBackButtonClicked:(id)sender;
 - (void) hideTabBar;
 
 @end

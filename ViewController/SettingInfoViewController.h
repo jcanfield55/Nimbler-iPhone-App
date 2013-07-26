@@ -65,15 +65,6 @@
 @property (nonatomic, strong) UILabel *lblCurrentMaxWalkDistance;
 @property (nonatomic, strong) SettingDetailViewController *settingDetailViewController;
 
-@property (nonatomic, strong) IBOutlet  UIButton *advisoriesButton;
-@property (nonatomic, strong) IBOutlet  UIButton *settingsButton;
-@property (nonatomic, strong) IBOutlet  UIButton *feedBackButton;
-
--(IBAction)advisoriesButtonClicked:(id)sender;
--(IBAction)settingsButtonClicked:(id)sender;
--(IBAction)feedBackButtonClicked:(id)sender;
-
-
 -(IBAction)UpdateSetting:(id)sender;
 -(IBAction)sliderWalkDistance:(UISlider *)sender;
 -(IBAction)sliderWalkDistanceValueChanged:(UISlider *)sender;

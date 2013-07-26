@@ -52,7 +52,6 @@
 BOOL isCancelFB = FALSE;
 @synthesize tpURLResource,alertView,mesg,btnPlayRecording,btnStopRecording,btnPauseRecording,btnRecordRecording,fbReqParams;
 @synthesize txtEmailId,txtFeedBack;
-@synthesize advisoriesButton,settingsButton,feedBackButton;
 @synthesize buttonsBackgroundView,textViewBackground,textFieldBackground;
 
 NSUserDefaults *prefs;
@@ -700,41 +699,4 @@ NSUserDefaults *prefs;
     [txtEmailId becomeFirstResponder];
     [UIView commitAnimations];
 }
-
--(IBAction)advisoriesButtonClicked:(id)sender{
-    twitterViewController *secondView;
-    if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
-      secondView = [[twitterViewController alloc] initWithNibName:@"twitterViewController_568h" bundle:nil];  
-    }
-    else{
-      secondView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];  
-    }
-    [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:CURRENT_VIEW_CONTROLLER];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    [secondView getAdvisoryData];
-    CATransition *animation = [CATransition animation];
-    [animation setDuration:0.5];
-    [animation setType:kCATransitionPush];
-    [animation setSubtype:kCATransitionFromBottom];
-    [[self.navigationController.view layer] addAnimation:animation forKey:@"SwitchToView1"];
-    [self.navigationController pushViewController:secondView animated:NO];
-}
--(IBAction)settingsButtonClicked:(id)sender{
-    SettingInfoViewController *secondView;
-    if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
-       secondView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF_568h" bundle:nil]; 
-    }
-    else{
-       secondView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF" bundle:nil]; 
-    }
-    [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:CURRENT_VIEW_CONTROLLER];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    CATransition *animation = [CATransition animation];
-    [animation setDuration:0.5];
-    [animation setType:kCATransitionPush];
-    [animation setSubtype:kCATransitionFromBottom];
-    [[self.navigationController.view layer] addAnimation:animation forKey:@"SwitchToView1"];
-    [self.navigationController pushViewController:secondView animated:NO];
-}
-
 @end

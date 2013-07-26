@@ -24,6 +24,9 @@
 #define FROM_TABLE_HEIGHT_EDIT_MODE 148 // height when in Edit mode
 #define TO_TABLE_HEIGHT_EDIT_MODE 148
 
+#define TOFROM_HEIGHT_EDIT_MODE 131 // HEIGHT WHEN ONLY TOFROM TABLE EDIT MODE
+#define TOFROM_HEIGHT_LOCATION_EDIT_MODE 300 // HEIGHT WHEN ONLY TOFROM LOCATION EDIT MODE
+
 // To & From table heights for iPhone5 and other 4" screens
 #define FROM_TABLE_HEIGHT_NO_CL_MODE_4INCH 184 // height when not isCurrentLocationMode
 #define TO_TABLE_HEIGHT_NO_CL_MODE_4INCH 148

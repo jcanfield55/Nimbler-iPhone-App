@@ -16,7 +16,6 @@
 #import "Stations.h"
 #import <MapKit/MapKit.h>
 #import "LocationFromLocalSearch.h"
-#import "kxMenu.h"
 
 
 @interface ToFromTableViewController () 
@@ -53,6 +52,7 @@
 @synthesize isDeleteMode;
 @synthesize isRearrangeMode;
 @synthesize isRenameMode;
+@synthesize btnEdit;
 
 NSString *strBART1 = @" bart";
 NSString *strBART2 = @"bart ";
@@ -91,6 +91,13 @@ NSString *strStreet2 = @"street ";
         txtField.accessibilityLabel = TEXTFIELD_TOFROMTABLEVIEW;
         
         imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
+        
+        btnEdit = [UIButton buttonWithType:UIButtonTypeCustom];
+        [btnEdit setFrame:CGRectMake(230,5,50,20)];
+        [btnEdit setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+        [btnEdit setTitle:@"Edit" forState:UIControlStateNormal];
+        [btnEdit setTitle:@"Done" forState:UIControlStateSelected];
+        [btnEdit addTarget:self action:@selector(editButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
 }
@@ -509,26 +516,6 @@ NSString *strStreet2 = @"street ";
 
 - (void)editButtonClicked:(id)sender{
     UIButton *editButton = (UIButton *)sender;
-    NSArray *menuItems =
-    @[
-      [KxMenuItem menuItem:@"Delete locations"
-                     image:[UIImage imageNamed:@""]
-                    target:self
-                    action:@selector(deleteButtonClicked:)],
-      
-      [KxMenuItem menuItem:@"Rearrange locations"
-                     image:[UIImage imageNamed:@""]
-                    target:self
-                    action:@selector(rearrangeButtonClicked:)],
-      
-      [KxMenuItem menuItem:@"Rename locations"
-                     image:[UIImage imageNamed:@""]
-                    target:self
-                    action:@selector(renameButtonClicked:)],
-      ];
-    [KxMenu showMenuInView:toFromVC.view
-                  fromRect:editButton.frame
-                 menuItems:menuItems];
 }
 
 
@@ -538,11 +525,6 @@ NSString *strStreet2 = @"street ";
 }
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0,0,320, 40)];
-    UIButton *btnEdit = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btnEdit setFrame:CGRectMake(230,5,50,20)];
-    [btnEdit setTitle:@"Edit" forState:UIControlStateNormal];
-    [btnEdit setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-    [btnEdit addTarget:self action:@selector(editButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [headerView addSubview:btnEdit];
     return headerView;
 }
