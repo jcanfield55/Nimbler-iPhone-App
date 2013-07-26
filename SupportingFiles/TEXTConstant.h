@@ -33,6 +33,10 @@
 #define SETTING_VIEW @"Settings"
 #define FEEDBACK_VIEW @"Feedback"
 
+// Default PlaceHolder ToFrom Text
+#define Placeholder_Text                  @"Search for location"
+
+
 // NavigationBar Titles
 
 #define LOCATION_PICKER_VIEW_TITLE @"Pick a location"

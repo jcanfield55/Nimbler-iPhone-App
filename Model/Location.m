@@ -32,6 +32,7 @@
 @synthesize reverseGeoLocation;
 @synthesize lastRequestReverseGeoLocation;
 @synthesize addressComponentDictionary;
+@synthesize userUpdatedLocation;
 
 // Static variables and methods to retrieve the Locations set wrapper
 static Locations *locations;

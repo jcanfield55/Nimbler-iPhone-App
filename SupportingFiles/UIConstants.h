@@ -17,8 +17,8 @@
 #define TOFROM_ROW_HEIGHT 36
 
 // To & From table heights for regular (3.5") iPhone screen
-#define FROM_TABLE_HEIGHT_NO_CL_MODE 300 // height when not isCurrentLocationMode
-#define TO_TABLE_HEIGHT_NO_CL_MODE 400
+#define FROM_TABLE_HEIGHT_NO_CL_MODE 131 // height when not isCurrentLocationMode
+#define TO_TABLE_HEIGHT_NO_CL_MODE 131
 #define FROM_TABLE_HEIGHT_CL_MODE 74 // height when isCurrentLocationMode
 #define TO_TABLE_HEIGHT_CL_MODE 155
 #define FROM_TABLE_HEIGHT_EDIT_MODE 148 // height when in Edit mode

@@ -21,7 +21,7 @@
 
 @class ToFromViewController;
 
-@interface ToFromTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,LocationsGeocodeResultsDelegate,UITextFieldDelegate>
+@interface ToFromTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,LocationsGeocodeResultsDelegate,UITextFieldDelegate,UITextViewDelegate>
 
 @property (nonatomic, unsafe_unretained) ToFromViewController* toFromVC;  // Parent view controller
 @property (strong, nonatomic) RKObjectManager *rkGeoMgr;  // RestKit Object Manager for geocoding
@@ -32,6 +32,9 @@
 @property (strong, nonatomic) SupportedRegion* supportedRegion; // Geographic area supported by this app
 
 @property (strong, nonatomic) Stations *stations;
+@property (nonatomic) BOOL isDeleteMode;
+@property (nonatomic) BOOL isRearrangeMode;
+@property (nonatomic) BOOL isRenameMode;
 
 // Textlabel that is separate from myTableView where text is entered
 - (id)initWithTable:(UITableView *)t isFrom:(BOOL)isF toFromVC:(ToFromViewController *)tfVC locations:(Locations *)l;
@@ -52,5 +55,10 @@
 
 // Reload myTableView using MkLocalSearchResponse
 -(void)reloadLocationWithLocalSearch;
+
+- (void)editButtonClicked:(id)sender;
+- (void)deleteButtonClicked:(id)sender;
+- (void)rearrangeButtonClicked:(id)sender;
+- (void)renameButtonClicked:(id)sender;
 
 @end
