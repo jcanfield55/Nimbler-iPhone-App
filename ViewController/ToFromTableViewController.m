@@ -315,7 +315,7 @@ NSString *strStreet2 = @"street ";
     }
     else{
         NIMLOG_EVENT1(@"Select Row: isFrom=%d, section=%d, row=%d", isFrom, [indexPath section], [indexPath row]);
-        //[toFromVC.navigationController setNavigationBarHidden:YES animated:NO];
+        [toFromVC.navigationController setNavigationBarHidden:NO animated:NO];
         
             locations.isLocationSelected = true;
             Location *loc = [locations
