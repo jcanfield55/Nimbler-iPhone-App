@@ -79,7 +79,7 @@ typedef enum {
 @property (strong, nonatomic) NSString *strLiveDataURL;
 @property (strong, nonatomic) Plan *plan;
 @property (strong, nonatomic) PlanRequestParameters *planRequestParameters;
-
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 - (IBAction)doSwapLocation:(id)sender;
 - (IBAction)openPickerView:(id)sender;
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;

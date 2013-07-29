@@ -121,7 +121,7 @@
 - (void)setTypedFromStringForLocalSearch:(NSString *)typedFromStr0;
 - (void)setTypedToStringForLocalSearch:(NSString *)typedToStr0;
 
-- (LocationFromLocalSearch *)newLocationFromIOSWithPlacemark:(CLPlacemark *)placemark error:(NSError *)error IsLocalSearchResult:(BOOL) isLocalSearchResult;
+- (LocationFromLocalSearch *)newLocationFromIOSWithPlacemark:(CLPlacemark *)placemark error:(NSError *)error IsLocalSearchResult:(BOOL) isLocalSearchResult locationName:(NSString *)locationName;
 
 // Check in database for exact lat lng match
 - (NSArray *) locationsWithLat:(double)lat Lng:(double)lng;

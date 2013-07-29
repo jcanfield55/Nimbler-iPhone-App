@@ -1106,6 +1106,14 @@
 		8DFADCB31727B059003DDACF /* Agencies.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFADCAA1727AAB0003DDACF /* Agencies.m */; };
 		8DFADCB41727B06A003DDACF /* Agencies.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFADCAA1727AAB0003DDACF /* Agencies.m */; };
 		8DFD0DAD17263B56003FCB5A /* store101_DC.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE2B85172575F000CCD3D1 /* store101_DC.zip */; };
+		8DFD345717A631C600078D05 /* StarOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EF99C2E17A2863000F91CE4 /* StarOn.png */; };
+		8DFD345C17A631C600078D05 /* StarOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EF99C2E17A2863000F91CE4 /* StarOn.png */; };
+		8DFD345D17A631C700078D05 /* StarOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EF99C2E17A2863000F91CE4 /* StarOn.png */; };
+		8DFD345E17A631C800078D05 /* StarOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EF99C2E17A2863000F91CE4 /* StarOn.png */; };
+		8DFD345F17A631CC00078D05 /* star.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EF99C2F17A2863000F91CE4 /* star.png */; };
+		8DFD346017A631CC00078D05 /* star.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EF99C2F17A2863000F91CE4 /* star.png */; };
+		8DFD346117A631CD00078D05 /* star.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EF99C2F17A2863000F91CE4 /* star.png */; };
+		8DFD346217A631CE00078D05 /* star.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EF99C2F17A2863000F91CE4 /* star.png */; };
 		8DFFB36C165DFBBB00A39BC4 /* SettingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */; };
 		8DFFB36D165DFBBB00A39BC4 /* SettingDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */; };
 		8DFFB3B2165E593400A39BC4 /* img_Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB3B0165E593300A39BC4 /* img_Settings.png */; };
@@ -2690,8 +2698,8 @@
 				8DE28CA81732379300403CD0 /* RouteDetailViewController_568h.xib in Resources */,
 				8DABCDBF1793C8BC00C1BDCF /* arrow.png in Resources */,
 				8D2D51C917981F4800A5E007 /* twitterViewController_568h.xib in Resources */,
-				2EF99C3017A2863000F91CE4 /* StarOn.png in Resources */,
-				2EF99C3417A2863100F91CE4 /* star.png in Resources */,
+				8DFD345E17A631C800078D05 /* StarOn.png in Resources */,
+				8DFD346217A631CE00078D05 /* star.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2882,8 +2890,8 @@
 				52B3AE221755E1B8009FFD94 /* Icon-Caltrain@2x.png in Resources */,
 				8DABCDC01793C8BC00C1BDCF /* arrow.png in Resources */,
 				8D2D51CA17981F4800A5E007 /* twitterViewController_568h.xib in Resources */,
-				2EF99C3117A2863000F91CE4 /* StarOn.png in Resources */,
-				2EF99C3517A2863100F91CE4 /* star.png in Resources */,
+				8DFD345D17A631C700078D05 /* StarOn.png in Resources */,
+				8DFD346117A631CD00078D05 /* star.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3063,8 +3071,8 @@
 				8DABCDC21793C8BC00C1BDCF /* arrow.png in Resources */,
 				8D2D51CC17981F4800A5E007 /* twitterViewController_568h.xib in Resources */,
 				2E9C9277179EB56000BF0770 /* Nimbler Portland-Info.plist in Resources */,
-				2EF99C3317A2863000F91CE4 /* StarOn.png in Resources */,
-				2EF99C3717A2863100F91CE4 /* star.png in Resources */,
+				8DFD345717A631C600078D05 /* StarOn.png in Resources */,
+				8DFD345F17A631CC00078D05 /* star.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3241,8 +3249,8 @@
 				8D5008ED178D7D42002E7820 /* RouteDetailViewController_568h.xib in Resources */,
 				8DABCDC11793C8BC00C1BDCF /* arrow.png in Resources */,
 				8D2D51CB17981F4800A5E007 /* twitterViewController_568h.xib in Resources */,
-				2EF99C3217A2863000F91CE4 /* StarOn.png in Resources */,
-				2EF99C3617A2863100F91CE4 /* star.png in Resources */,
+				8DFD345C17A631C600078D05 /* StarOn.png in Resources */,
+				8DFD346017A631CC00078D05 /* star.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

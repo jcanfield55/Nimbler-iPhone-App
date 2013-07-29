@@ -53,7 +53,9 @@
 @property (nonatomic, strong) NSNumber *excludeFromSearch;  // True if this location should be excluded from typed string search (like for bus stops)
 // Static variables and methods to retrieve the Locations set wrapper
 
-@property (nonatomic, strong) NSNumber *userUpdatedLocation;
+@property (nonatomic, retain) NSNumber *userUpdatedLocation;
+@property (nonatomic, retain) NSString *locationName;
+
 
 + (void)setLocations:(Locations *)loc;
 

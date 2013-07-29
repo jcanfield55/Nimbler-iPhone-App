@@ -501,7 +501,7 @@ FeedBackForm *fbView;
             NSArray* matchingLocations = [locations locationsWithFormattedAddress:CURRENT_LOCATION];
             if ([matchingLocations count] == 0) { // if current location not in db
                 currentLocation = [locations newEmptyLocation];
-                [currentLocation setFormattedAddress:CURRENT_LOCATION];
+                [currentLocation setLocationName:CURRENT_LOCATION];
                 [currentLocation setFromFrequencyFloat:CURRENT_LOCATION_STARTING_FROM_FREQUENCY];
                 [toFromViewController reloadTables]; // DE30 fix (1 of 2)
                 [locations setIsLocationServiceEnable:TRUE];
@@ -907,7 +907,7 @@ FeedBackForm *fbView;
             } else {
                 MKPlacemark* sourcePlacemark = [[directionsInfo source] placemark];
                 if (sourcePlacemark) {
-                    sourceLoc = [locations newLocationFromIOSWithPlacemark:sourcePlacemark error:nil];
+                    sourceLoc = [locations newLocationFromIOSWithPlacemark:sourcePlacemark error:nil ];
                 }
             }
             if (sourceLoc) {

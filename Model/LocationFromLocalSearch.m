@@ -20,6 +20,7 @@
 @synthesize addressComponentDictionary;
 @synthesize lat;
 @synthesize lng;
+@synthesize locationName;
 
 static NSMutableDictionary* locationFromIOSAddressMappingDictionary;
 

@@ -37,7 +37,6 @@
     NSMutableArray *planRequestHistory; // Array of all the past plan request parameter histories in sequential order (most recent one last)
     CGFloat toTableHeight;   // Current height of the toTable (US123 implementation)
     CGFloat fromTableHeight;  // Current height of the fromTable
-    NSManagedObjectContext *managedObjectContext;
     BOOL toGeocodeRequestOutstanding;  // true if there is an outstanding To geocode request
     BOOL fromGeocodeRequestOutstanding;  //true if there is an outstanding From geocode request
     NSDate* lastReverseGeoReqTime; 
@@ -100,7 +99,7 @@
 @synthesize stations;
 @synthesize planRequestParameters;
 @synthesize mainToFromView,PicketSelectView,fromView,toView,txtFromView,txtToView,btnSwap,imgViewFromBG,imgViewToBG,btnPicker,lblTxtToFromPlaceholder;
-
+@synthesize managedObjectContext;
 // Constants for animating up and down the To: field
 #define FROM_SECTION 0
 #define TO_SECTION 1
@@ -242,7 +241,10 @@ UIImage *imageDetailDisclosure;
 
     [self.btnPicker setTitle:@"Depart now" forState:UIControlStateNormal];
     NSString *strFromFormattedAddress;
-    if([[[locations selectedFromLocation] shortFormattedAddress] length]>0){
+    if([locations selectedFromLocation].locationName){
+       strFromFormattedAddress = [locations selectedFromLocation].locationName;
+    }
+    else if([[[locations selectedFromLocation] shortFormattedAddress] length]>0){
         strFromFormattedAddress = [[locations selectedFromLocation] shortFormattedAddress];
     }else{
         strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
@@ -254,7 +256,10 @@ UIImage *imageDetailDisclosure;
     
     
     NSString *strToFormattedAddress;
-    if([[[locations selectedToLocation] shortFormattedAddress] length]>0){
+    if([locations selectedToLocation].locationName){
+       strToFormattedAddress = [locations selectedToLocation].locationName;
+    }
+    else if([[[locations selectedToLocation] shortFormattedAddress] length]>0){
         strToFormattedAddress = [[locations selectedToLocation] shortFormattedAddress];
     }else{
         strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
@@ -862,7 +867,7 @@ UIImage *imageDetailDisclosure;
         editMode = FROM_EDIT;
     }
     else{
-        fromTableVC.isFrom=false;
+        toTableVC.isFrom=false;
         [self setEditMode:TO_EDIT];
         editMode = TO_EDIT;
     }
@@ -964,12 +969,16 @@ UIImage *imageDetailDisclosure;
     if(editMode == FROM_EDIT){
         Location *selectedFromLocation = [locations selectedFromLocation];
         NSString *strFromFormattedAddress;
-        if([selectedFromLocation.userUpdatedLocation boolValue]){
+        if(selectedFromLocation.locationName){
+           strFromFormattedAddress = [selectedFromLocation locationName];
+        }
+        else if([selectedFromLocation.userUpdatedLocation boolValue]){
             strFromFormattedAddress = [selectedFromLocation formattedAddress];
         }
         else{
             strFromFormattedAddress = [selectedFromLocation shortFormattedAddress];
         }
+        
         if(![strFromFormattedAddress length]>0){
              strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
         }
@@ -980,7 +989,10 @@ UIImage *imageDetailDisclosure;
         
         Location *selectedToLocation = [locations selectedToLocation];
         NSString *strToFormattedAddress;
-        if([selectedToLocation.userUpdatedLocation boolValue]){
+        if(selectedToLocation.locationName){
+          strToFormattedAddress = [selectedToLocation locationName];
+        }
+        else if([selectedToLocation.userUpdatedLocation boolValue]){
             strToFormattedAddress = [selectedToLocation formattedAddress];
         }
         else{
@@ -1005,7 +1017,10 @@ UIImage *imageDetailDisclosure;
     else if (editMode == TO_EDIT){
         Location *selectedFromLocation = [locations selectedFromLocation];
         NSString *strFromFormattedAddress;
-        if([selectedFromLocation.userUpdatedLocation boolValue]){
+        if(selectedFromLocation.locationName){
+           strFromFormattedAddress = [selectedFromLocation locationName];
+        }
+        else if([selectedFromLocation.userUpdatedLocation boolValue]){
             strFromFormattedAddress = [selectedFromLocation formattedAddress];
         }
         else{
@@ -1021,7 +1036,10 @@ UIImage *imageDetailDisclosure;
         
         Location *selectedToLocation = [locations selectedToLocation];
         NSString *strToFormattedAddress;
-        if([selectedToLocation.userUpdatedLocation boolValue]){
+        if(selectedToLocation.locationName){
+           strToFormattedAddress = [selectedToLocation locationName];
+        }
+        else if([selectedToLocation.userUpdatedLocation boolValue]){
             strToFormattedAddress = [selectedToLocation formattedAddress];
         }
         else{
@@ -1105,7 +1123,10 @@ UIImage *imageDetailDisclosure;
         else if (loc != currentLocation && isCurrentLocationMode) {
             [self setIsCurrentLocationMode:FALSE];
         }
-        if(fromLocation.userUpdatedLocation){
+        if(fromLocation.locationName){
+           [self.txtFromView setText:[fromLocation locationName]];
+        }
+        else if(fromLocation.userUpdatedLocation){
             [self.txtFromView setText:[fromLocation formattedAddress]];
         }
         else{
@@ -1778,7 +1799,10 @@ UIImage *imageDetailDisclosure;
     
     Location *selectedFromLocation = [locations selectedFromLocation];
     NSString *strFromFormattedAddress;
-    if([selectedFromLocation.userUpdatedLocation boolValue]){
+    if(selectedFromLocation.locationName){
+      strFromFormattedAddress = [selectedFromLocation locationName];
+    }
+    else if([selectedFromLocation.userUpdatedLocation boolValue]){
         strFromFormattedAddress = [selectedFromLocation formattedAddress];
     }
     else{
@@ -1859,6 +1883,7 @@ UIImage *imageDetailDisclosure;
     [self setEditMode:NO_EDIT];
     [self.toTableVC markAndUpdateSelectedLocation:locations.tempSelectedToLocation];
     [self.fromTableVC markAndUpdateSelectedLocation:locations.tempSelectedFromLocation];
+    saveContext(managedObjectContext);
     [self.navigationController.navigationBar setHidden:NO];
 }
 

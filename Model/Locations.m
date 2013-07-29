@@ -329,9 +329,10 @@
 }
 
 // Create new LocationFromIos object from MkLocalSearchResponse
-- (LocationFromLocalSearch *)newLocationFromIOSWithPlacemark:(CLPlacemark *)placemark error:(NSError *)error IsLocalSearchResult:(BOOL) isLocalSearchResult
+- (LocationFromLocalSearch *)newLocationFromIOSWithPlacemark:(CLPlacemark *)placemark error:(NSError *)error IsLocalSearchResult:(BOOL) isLocalSearchResult locationName:(NSString *)locationName
 {
     LocationFromLocalSearch *locFromLocalSearch = [[LocationFromLocalSearch alloc] init];
+    locFromLocalSearch.locationName = locationName;
     [locFromLocalSearch initWithPlacemark:placemark error:error];
     return locFromLocalSearch;
 }
@@ -344,6 +345,7 @@
     [loc initWithPlacemark:localSearchLocation.placemark error:error];
     loc.formattedAddress = localSearchLocation.formattedAddress;
     [loc setExcludeFromSearch:[NSNumber numberWithBool:false]];
+    [loc setLocationName:localSearchLocation.locationName];
     NSMutableArray *localSearchArr;
     if(isFrom){
         if([tempSelectedFromLocation.lat doubleValue] == [loc.lat doubleValue] && [tempSelectedFromLocation.lng doubleValue] == [loc.lng doubleValue]){
@@ -690,7 +692,7 @@
              MKMapItem *mapItem = [response.mapItems objectAtIndex:i];
              
              if ([[[nc_AppDelegate sharedInstance].toFromViewController supportedRegion] isInRegionLat:mapItem.placemark.location.coordinate.latitude Lng:mapItem.placemark.location.coordinate.longitude]) {
-                     LocationFromLocalSearch *loc = [self newLocationFromIOSWithPlacemark:mapItem.placemark error:error IsLocalSearchResult:true];
+                     LocationFromLocalSearch *loc = [self newLocationFromIOSWithPlacemark:mapItem.placemark error:error IsLocalSearchResult:true locationName:mapItem.name];
                  NSArray *formattedAdd = [loc.formattedAddress componentsSeparatedByString:@","];
                   if(![[formattedAdd objectAtIndex:0] isEqualToString:mapItem.name]){
                       loc.formattedAddress = [NSString stringWithFormat:@"%@\n%@",mapItem.name,loc.formattedAddress];
@@ -765,7 +767,7 @@
                 MKMapItem *mapItem = [response.mapItems objectAtIndex:i];
                 if ([[[nc_AppDelegate sharedInstance].toFromViewController supportedRegion] isInRegionLat:mapItem.placemark.location.coordinate.latitude Lng:mapItem.placemark.location.coordinate.longitude]) {
                     
-                    LocationFromLocalSearch *loc = [self newLocationFromIOSWithPlacemark:mapItem.placemark error:error IsLocalSearchResult:true];
+                    LocationFromLocalSearch *loc = [self newLocationFromIOSWithPlacemark:mapItem.placemark error:error IsLocalSearchResult:true locationName:mapItem.name];
                     
                     NSArray *formattedAdd = [loc.formattedAddress componentsSeparatedByString:@","];
                     if(![[formattedAdd objectAtIndex:0] isEqualToString:mapItem.name]){
@@ -944,20 +946,20 @@
     } else {
         newArray = [[NSMutableArray alloc] initWithArray:sortedToLocations];
     }
-    if (oldSelectedLocation && (oldSelectedLocation != selectedLocation)) { // if there was a non-nil oldSelectedLocation, and this is a new request, then re-sort
-        
-        NSSortDescriptor *sd1 = [NSSortDescriptor 
+    if (selectedLocation) { // if there is a non-nil selectedLocation, then move it to the top
+        [newArray removeObject:selectedLocation];  // remove selected object from current location
+        [newArray insertObject:selectedLocation atIndex:0];
+        // inserts it at the front of the object
+    }
+//    if (oldSelectedLocation && (oldSelectedLocation != selectedLocation)) { // if there was a non-nil oldSelectedLocation, and this is a new request, then re-sort
+//        
+        NSSortDescriptor *sd1 = [NSSortDescriptor
                                  sortDescriptorWithKey:(isFrom ? @"fromFrequency" : @"toFrequency")
                                                               ascending:NO];
         NSSortDescriptor *sd2 = [NSSortDescriptor sortDescriptorWithKey:@"dateLastUsed"
                                                               ascending:NO];
         [newArray sortUsingDescriptors:[NSArray arrayWithObjects:sd1,sd2, nil]];
-    }
-    if (selectedLocation) { // if there is a non-nil selectedLocation, then move it to the top
-        [newArray removeObject:selectedLocation];  // remove selected object from current location
-        [newArray insertObject:selectedLocation atIndex:0];
-          // inserts it at the front of the object
-    }
+   // }
     
     // Write newArray back into the appropriate sorted array
     if (isFrom) {
