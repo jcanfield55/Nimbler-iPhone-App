@@ -31,7 +31,7 @@
 
 @interface ToFromViewController()
 {
-    // Variables for internal use    
+    // Variables for internal use
     NSDateFormatter *tripDateFormatter;  // Formatter for showing the trip date / time
     NSString *planURLResource; // URL resource sent to planner
     NSMutableArray *planRequestHistory; // Array of all the past plan request parameter histories in sequential order (most recent one last)
@@ -98,7 +98,7 @@
 @synthesize plan;
 @synthesize stations;
 @synthesize planRequestParameters;
-@synthesize mainToFromView,PicketSelectView,fromView,toView,txtFromView,txtToView,btnSwap,imgViewFromBG,imgViewToBG,btnPicker,lblTxtToFromPlaceholder;
+@synthesize mainToFromView,PicketSelectView,fromView,toView,txtFromView,txtToView,btnSwap,imgViewFromBG,imgViewToBG,btnPicker,lblTxtToFromPlaceholder,lblTxtDepartArrive,viewMode,btnFromEditCancel,btnToEditCancel,lblTxtFrom,lblTxtTo;
 @synthesize managedObjectContext;
 // Constants for animating up and down the To: field
 #define FROM_SECTION 0
@@ -1931,8 +1931,7 @@ UIImage *imageDetailDisclosure;
     [self setEditMode:NO_EDIT];
     [self.toTableVC markAndUpdateSelectedLocation:locations.tempSelectedToLocation];
     [self.fromTableVC markAndUpdateSelectedLocation:locations.tempSelectedFromLocation];
-    saveContext(managedObjectContext);
-    [self.navigationController.navigationBar setHidden:NO];
+    [self.navigationController setNavigationBarHidden:NO animated:NO];
 }
 
 #pragma mark UIdatePicker functionality
