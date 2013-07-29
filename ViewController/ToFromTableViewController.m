@@ -247,7 +247,7 @@ NSString *strStreet2 = @"street ";
     }
     else{
         NIMLOG_EVENT1(@"Select Row: isFrom=%d, section=%d, row=%d", isFrom, [indexPath section], [indexPath row]);
-        //[toFromVC.navigationController setNavigationBarHidden:YES animated:NO];
+        [toFromVC.navigationController setNavigationBarHidden:NO animated:NO];
         
             locations.isLocationSelected = true;
             Location *loc = [locations
@@ -522,6 +522,17 @@ NSString *strStreet2 = @"street ";
 
 - (void)editButtonClicked:(id)sender{
     UIButton *editButton = (UIButton *)sender;
+    if(editButton.selected==YES){
+        [editButton setSelected:NO];
+        isDeleteMode = false;
+        isRearrangeMode = false;
+        isRenameMode = false;
+        [myTableView setEditing:NO animated:NO];
+    }
+    else{
+       [editButton setSelected:YES];
+       [self deleteButtonClicked:nil];
+    }
 }
 
 - (void) btnFavoriteClicked:(id)sender{

@@ -32,6 +32,7 @@ typedef enum {
 @property (strong, nonatomic) IBOutlet UIView* mainToFromView;
 @property (strong, nonatomic) IBOutlet UIView* fromView;
 @property (strong, nonatomic) IBOutlet UIView* toView;
+@property (strong, nonatomic) IBOutlet UIView* viewMode;
 @property (strong, nonatomic) IBOutlet UIView* PicketSelectView;  
 @property (strong, nonatomic) IBOutlet UITextView* txtFromView;
 @property (strong, nonatomic) IBOutlet UITextView* txtToView;
@@ -39,7 +40,12 @@ typedef enum {
 @property (strong, nonatomic) IBOutlet UIImageView* imgViewToBG;
 @property (strong, nonatomic) IBOutlet UIButton* btnSwap;
 @property (strong, nonatomic) IBOutlet UIButton* btnPicker;
+@property (strong, nonatomic) IBOutlet UIButton* btnFromEditCancel;
+@property (strong, nonatomic) IBOutlet UIButton* btnToEditCancel;
 @property (strong, nonatomic) UILabel* lblTxtToFromPlaceholder;
+@property (strong, nonatomic) IBOutlet UILabel* lblTxtDepartArrive;
+@property (strong, nonatomic) IBOutlet UILabel* lblTxtFrom;
+@property (strong, nonatomic) IBOutlet UILabel* lblTxtTo;
 
 @property (strong, nonatomic) IBOutlet UITableView* mainTable;  // grouped table for main page layout
 @property (strong, nonatomic) UITableView *fromTable;  // from table embedded in mainTable
@@ -80,7 +86,10 @@ typedef enum {
 @property (strong, nonatomic) Plan *plan;
 @property (strong, nonatomic) PlanRequestParameters *planRequestParameters;
 
+-(IBAction)btnModeClicked:(id)sender;
+
 - (IBAction)doSwapLocation:(id)sender;
+- (IBAction)editCancelClicked:(id)sender;
 - (IBAction)openPickerView:(id)sender;
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (void)getRouteForMKDirectionsRequest;   // Process an event from MapKit URL
