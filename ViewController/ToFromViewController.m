@@ -957,7 +957,7 @@ UIImage *imageDetailDisclosure;
     // Change NavBar buttons accordingly
     
     if(newEditMode == FROM_EDIT){
-        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 400)];
+        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 500)];
         [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, self.fromView.frame.size.width+46, fromView.frame.size.height)];
         [self.imgViewFromBG setFrame:CGRectMake(self.imgViewFromBG.frame.origin.x, self.imgViewFromBG.frame.origin.y, self.imgViewFromBG.frame.size.width+46, imgViewFromBG.frame.size.height)];
         [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x-45, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width+33, txtFromView.frame.size.height)];
@@ -970,7 +970,7 @@ UIImage *imageDetailDisclosure;
         [self.mainToFromView addSubview:fromTable];
     }
     else if (newEditMode == TO_EDIT){
-        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 400)];
+        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 500)];
         [self.fromView setHidden:YES];
         [self.toView setFrame:CGRectMake(self.toView.frame.origin.x, self.fromView.frame.origin.y, self.toView.frame.size.width+46, toView.frame.size.height)];
         [self.imgViewToBG setFrame:CGRectMake(self.imgViewToBG.frame.origin.x, self.imgViewToBG.frame.origin.y, self.imgViewToBG.frame.size.width+46, imgViewToBG.frame.size.height)];
@@ -1094,8 +1094,7 @@ UIImage *imageDetailDisclosure;
     [self.btnSwap setHidden:NO];
     [self.viewMode setHidden:NO];
     [self.PicketSelectView setHidden:NO];
-    
-}
+ }
 #pragma mark Loacation methods
 - (void)setLocations:(Locations *)l
 {
@@ -1174,6 +1173,15 @@ UIImage *imageDetailDisclosure;
         if (loc == currentLocation) {  // if current location chosen for toLocation
             [self reverseGeocodeCurrentLocationIfNeeded];
         }
+        if(toLocation.locationName){
+            [self.txtToView setText:[toLocation locationName]];
+        }
+        else if(toLocation.userUpdatedLocation){
+            [self.txtToView setText:[toLocation formattedAddress]];
+        }
+        else{
+            [self.txtToView setText:[toLocation shortFormattedAddress]];
+        }
     }
 }
 
@@ -1210,12 +1218,15 @@ UIImage *imageDetailDisclosure;
     }
     if([sender tag]==[BIKE_MODE_Tag intValue]){
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",strMode] forKey:DEFAULT_BIKE_MODE];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
     else if([sender tag]==[TRANSIT_MODE_Tag intValue]){
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",strMode] forKey:DEFAULT_TRANSIT_MODE];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
     else if([sender tag]==[WALK_MODE_Tag intValue]){
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",strMode] forKey:DEFAULT_WALK_MODE];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
     
 }
@@ -1872,7 +1883,10 @@ UIImage *imageDetailDisclosure;
     
     Location *selectedToLocation = [locations selectedToLocation];
     NSString *strToFormattedAddress;
-    if([selectedToLocation.userUpdatedLocation boolValue]){
+    if(selectedToLocation.locationName){
+        strToFormattedAddress = [selectedToLocation locationName];
+    }
+    else if([selectedToLocation.userUpdatedLocation boolValue]){
         strToFormattedAddress = [selectedToLocation formattedAddress];
     }
     else{
@@ -1955,8 +1969,8 @@ UIImage *imageDetailDisclosure;
         [datePicker setFrame:CGRectMake(0, 544, 320, 216)];
     }
     else{
-        [toolBar setFrame:CGRectMake(0, 450, 320, 44)];
-        [datePicker setFrame:CGRectMake(0, 494, 320, 216)];
+        [toolBar setFrame:CGRectMake(0, 460, 320, 44)];
+        [datePicker setFrame:CGRectMake(0, 504, 320, 216)];
     }
     [UIView commitAnimations];
     
@@ -1996,8 +2010,8 @@ UIImage *imageDetailDisclosure;
          [datePicker setFrame:CGRectMake(0, 544, 320, 216)];
      }
      else{
-         [toolBar setFrame:CGRectMake(0, 450, 320, 44)];
-         [datePicker setFrame:CGRectMake(0, 494, 320, 216)];
+         [toolBar setFrame:CGRectMake(0, 460, 320, 44)];
+         [datePicker setFrame:CGRectMake(0, 504, 320, 216)];
      }
     [UIView commitAnimations];
     

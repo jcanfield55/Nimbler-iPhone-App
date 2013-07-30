@@ -343,6 +343,7 @@ NSString *strStreet2 = @"street ";
                 NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
                 
                 if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) { // If a list (like 'Caltrain Station List')
+                    [toFromVC setEditMode:NO_EDIT];
                     logEvent(FLURRY_TOFROMTABLE_CALTRAIN_LIST,
                              FLURRY_TOFROM_WHICH_TABLE, isFromString,
                              FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d",[indexPath row]],
@@ -656,7 +657,28 @@ NSString *strStreet2 = @"street ";
     return 40.0;
 }
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0,0,320, 40)];
+    UIImageView *imgView = [[UIImageView alloc]initWithFrame:CGRectMake(4, 12, 16, 16)];
+    [imgView setImage:[UIImage imageNamed:@"search.png"]];
+    UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, 200, 40)];
+    [lbl setFont:[UIFont systemFontOfSize:14]];
+    lbl.text = @"Searching Locations";
+    lbl.textColor = [UIColor lightGrayColor];
+    if(toFromVC.editMode == FROM_EDIT){
+      if([[toFromVC.txtFromView text] length]>0){
+        [headerView addSubview:imgView];
+        [headerView addSubview:lbl];
+        return headerView;
+      }
+    }
+    else if(toFromVC.editMode == TO_EDIT){
+        if([[toFromVC.txtToView text] length]>0){
+            [headerView addSubview:imgView];
+            [headerView addSubview:lbl];
+            return headerView;
+        }
+    }
     [headerView addSubview:btnEdit];
     return headerView;
 }

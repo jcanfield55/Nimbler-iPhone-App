@@ -11,6 +11,10 @@
 		2E02C786173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */; };
 		2E02C787173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */; };
 		2E9C9277179EB56000BF0770 /* Nimbler Portland-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2E9C9276179EB56000BF0770 /* Nimbler Portland-Info.plist */; };
+		2E9CEE2D17A7BA34008033FD /* search.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E9CEE2C17A7BA34008033FD /* search.png */; };
+		2E9CEE2E17A7BA34008033FD /* search.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E9CEE2C17A7BA34008033FD /* search.png */; };
+		2E9CEE2F17A7BA34008033FD /* search.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E9CEE2C17A7BA34008033FD /* search.png */; };
+		2E9CEE3017A7BA34008033FD /* search.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E9CEE2C17A7BA34008033FD /* search.png */; };
 		520FB121162603090083F143 /* FeedBackForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB109162603090083F143 /* FeedBackForm.m */; };
 		520FB122162603090083F143 /* FeedBackForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10A162603090083F143 /* FeedBackForm.xib */; };
 		520FB123162603090083F143 /* FeedBackForm_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10B162603090083F143 /* FeedBackForm_568h.xib */; };
@@ -1166,6 +1170,7 @@
 		2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationFromLocalSearch.m; sourceTree = "<group>"; };
 		2E02C78C1733D82D001F2F28 /* Network_Commuting 1. 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1. 9.xcdatamodel"; sourceTree = "<group>"; };
 		2E9C9276179EB56000BF0770 /* Nimbler Portland-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Nimbler Portland-Info.plist"; sourceTree = SOURCE_ROOT; };
+		2E9CEE2C17A7BA34008033FD /* search.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search.png; sourceTree = "<group>"; };
 		2EF99C2E17A2863000F91CE4 /* StarOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = StarOn.png; sourceTree = "<group>"; };
 		2EF99C2F17A2863000F91CE4 /* star.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star.png; sourceTree = "<group>"; };
 		520FB108162603090083F143 /* FeedBackForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FeedBackForm.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -1860,6 +1865,7 @@
 		520FB1A8162603AF0083F143 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				2E9CEE2C17A7BA34008033FD /* search.png */,
 				2EF99C2E17A2863000F91CE4 /* StarOn.png */,
 				2EF99C2F17A2863000F91CE4 /* star.png */,
 				8DABCDBE1793C8BC00C1BDCF /* arrow.png */,
@@ -2700,6 +2706,7 @@
 				8D2D51C917981F4800A5E007 /* twitterViewController_568h.xib in Resources */,
 				8DFD345E17A631C800078D05 /* StarOn.png in Resources */,
 				8DFD346217A631CE00078D05 /* star.png in Resources */,
+				2E9CEE2D17A7BA34008033FD /* search.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2892,6 +2899,7 @@
 				8D2D51CA17981F4800A5E007 /* twitterViewController_568h.xib in Resources */,
 				8DFD345D17A631C700078D05 /* StarOn.png in Resources */,
 				8DFD346117A631CD00078D05 /* star.png in Resources */,
+				2E9CEE2E17A7BA34008033FD /* search.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3073,6 +3081,7 @@
 				2E9C9277179EB56000BF0770 /* Nimbler Portland-Info.plist in Resources */,
 				8DFD345717A631C600078D05 /* StarOn.png in Resources */,
 				8DFD345F17A631CC00078D05 /* star.png in Resources */,
+				2E9CEE3017A7BA34008033FD /* search.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3251,6 +3260,7 @@
 				8D2D51CB17981F4800A5E007 /* twitterViewController_568h.xib in Resources */,
 				8DFD345C17A631C600078D05 /* StarOn.png in Resources */,
 				8DFD346017A631CC00078D05 /* star.png in Resources */,
+				2E9CEE2F17A7BA34008033FD /* search.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

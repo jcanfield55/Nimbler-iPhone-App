@@ -500,11 +500,20 @@ FeedBackForm *fbView;
         if (!currentLocation) {
             NSArray* matchingLocations = [locations locationsWithFormattedAddress:CURRENT_LOCATION];
             if ([matchingLocations count] == 0) { // if current location not in db
-                currentLocation = [locations newEmptyLocation];
-                [currentLocation setLocationName:CURRENT_LOCATION];
-                [currentLocation setFromFrequencyFloat:CURRENT_LOCATION_STARTING_FROM_FREQUENCY];
-                [toFromViewController reloadTables]; // DE30 fix (1 of 2)
-                [locations setIsLocationServiceEnable:TRUE];
+                matchingLocations = [locations locationsWithLocationName:CURRENT_LOCATION];
+                if([matchingLocations count]==0){
+                    currentLocation = [locations newEmptyLocation];
+                    [currentLocation setLocationName:CURRENT_LOCATION];
+                    [currentLocation setFromFrequencyFloat:CURRENT_LOCATION_STARTING_FROM_FREQUENCY];
+                    [currentLocation setToFrequencyFloat:CURRENT_LOCATION_STARTING_FROM_FREQUENCY];
+                    [toFromViewController reloadTables]; // DE30 fix (1 of 2)
+                    [locations setIsLocationServiceEnable:TRUE];
+                }
+                else {
+                    currentLocation = [matchingLocations objectAtIndex:0];
+                    [locations setIsLocationServiceEnable:TRUE];
+                }
+                
             }
             else {
                 currentLocation = [matchingLocations objectAtIndex:0];
