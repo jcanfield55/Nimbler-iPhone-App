@@ -601,7 +601,6 @@
 		8DAA2896178BDFEF00C3FA30 /* IntermediateStops.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D17871016F87B3E00C2EAD5 /* IntermediateStops.m */; };
 		8DAA2897178BDFEF00C3FA30 /* MutableBoolean.m in Sources */ = {isa = PBXBuildFile; fileRef = 525EC1C0170006B6009ACE5A /* MutableBoolean.m */; };
 		8DAA2898178BDFEF00C3FA30 /* nc_AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */; };
-		8DAA2899178BDFEF00C3FA30 /* NimblerApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B10CC1720268B0093E110 /* NimblerApplication.m */; };
 		8DAA289A178BDFEF00C3FA30 /* WebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B10CF172026970093E110 /* WebView.m */; };
 		8DAA289B178BDFEF00C3FA30 /* LocationFromLocalSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E02C784173381C0001F2F28 /* LocationFromLocalSearch.m */; };
 		8DAA289C178BDFEF00C3FA30 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DEAC191177841F400D7997C /* TTTAttributedLabel.m */; };
@@ -896,7 +895,6 @@
 		8DE18B851725415800AA8112 /* IntermediateStops.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D17871016F87B3E00C2EAD5 /* IntermediateStops.m */; };
 		8DE18B861725415800AA8112 /* MutableBoolean.m in Sources */ = {isa = PBXBuildFile; fileRef = 525EC1C0170006B6009ACE5A /* MutableBoolean.m */; };
 		8DE18B871725415800AA8112 /* nc_AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC019F81627F4BE004200E5 /* nc_AppDelegate.m */; };
-		8DE18B881725415800AA8112 /* NimblerApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B10CC1720268B0093E110 /* NimblerApplication.m */; };
 		8DE18B891725415800AA8112 /* WebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B10CF172026970093E110 /* WebView.m */; };
 		8DE18B8B1725415800AA8112 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
 		8DE18B8C1725415800AA8112 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFF16F727A10050FE00 /* libsqlite3.0.dylib */; };
@@ -1114,6 +1112,8 @@
 		8DFD346017A631CC00078D05 /* star.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EF99C2F17A2863000F91CE4 /* star.png */; };
 		8DFD346117A631CD00078D05 /* star.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EF99C2F17A2863000F91CE4 /* star.png */; };
 		8DFD346217A631CE00078D05 /* star.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EF99C2F17A2863000F91CE4 /* star.png */; };
+		8DFE7EDF17A773E300348B40 /* NimblerApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B10CC1720268B0093E110 /* NimblerApplication.m */; };
+		8DFE7EE017A773E400348B40 /* NimblerApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B10CC1720268B0093E110 /* NimblerApplication.m */; };
 		8DFFB36C165DFBBB00A39BC4 /* SettingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */; };
 		8DFFB36D165DFBBB00A39BC4 /* SettingDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */; };
 		8DFFB3B2165E593400A39BC4 /* img_Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB3B0165E593300A39BC4 /* img_Settings.png */; };
@@ -3526,12 +3526,12 @@
 				8DAA2896178BDFEF00C3FA30 /* IntermediateStops.m in Sources */,
 				8DAA2897178BDFEF00C3FA30 /* MutableBoolean.m in Sources */,
 				8DAA2898178BDFEF00C3FA30 /* nc_AppDelegate.m in Sources */,
-				8DAA2899178BDFEF00C3FA30 /* NimblerApplication.m in Sources */,
 				8DAA289A178BDFEF00C3FA30 /* WebView.m in Sources */,
 				8DAA289B178BDFEF00C3FA30 /* LocationFromLocalSearch.m in Sources */,
 				8DAA289C178BDFEF00C3FA30 /* TTTAttributedLabel.m in Sources */,
 				8DABCDB41793C39600C1BDCF /* RevealController.m in Sources */,
 				8DABCDB71793C39A00C1BDCF /* ZUUIRevealController.m in Sources */,
+				8DFE7EE017A773E400348B40 /* NimblerApplication.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3608,13 +3608,13 @@
 				8DE18B851725415800AA8112 /* IntermediateStops.m in Sources */,
 				8DE18B861725415800AA8112 /* MutableBoolean.m in Sources */,
 				8DE18B871725415800AA8112 /* nc_AppDelegate.m in Sources */,
-				8DE18B881725415800AA8112 /* NimblerApplication.m in Sources */,
 				8DE18B891725415800AA8112 /* WebView.m in Sources */,
 				2E02C787173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */,
 				8DEAC18F1778246400D7997C /* RouteExcludeSettings.m in Sources */,
 				8DEAC194177841F800D7997C /* TTTAttributedLabel.m in Sources */,
 				8DABCDB21793C39500C1BDCF /* RevealController.m in Sources */,
 				8DABCDB61793C39A00C1BDCF /* ZUUIRevealController.m in Sources */,
+				8DFE7EDF17A773E300348B40 /* NimblerApplication.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
