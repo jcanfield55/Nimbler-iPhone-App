@@ -76,7 +76,7 @@
 					<object class="IBUIButton" id="739508527">
 						<reference key="NSNextResponder" ref="1001726659"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{11, 65}, {73, 44}}</string>
+						<string key="NSFrame">{{11, 66}, {73, 44}}</string>
 						<reference key="NSSuperview" ref="1001726659"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="870228564"/>
@@ -112,7 +112,7 @@
 					<object class="IBUILabel" id="870228564">
 						<reference key="NSNextResponder" ref="1001726659"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{118, 76}, {156, 21}}</string>
+						<string key="NSFrame">{{118, 77}, {156, 21}}</string>
 						<reference key="NSSuperview" ref="1001726659"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="552417573"/>
@@ -288,21 +288,10 @@
 					<string key="className">SettingDetailViewController</string>
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="advisoriesButtonClicked:">id</string>
-						<string key="feedBackButtonClicked:">id</string>
 						<string key="maxBikeDistanceValueChanged:">UISlider</string>
 						<string key="popOutToSettings:">id</string>
-						<string key="settingsButtonClicked:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="advisoriesButtonClicked:">
-							<string key="name">advisoriesButtonClicked:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="feedBackButtonClicked:">
-							<string key="name">feedBackButtonClicked:</string>
-							<string key="candidateClassName">id</string>
-						</object>
 						<object class="IBActionInfo" key="maxBikeDistanceValueChanged:">
 							<string key="name">maxBikeDistanceValueChanged:</string>
 							<string key="candidateClassName">UISlider</string>
@@ -311,34 +300,15 @@
 							<string key="name">popOutToSettings:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-						<object class="IBActionInfo" key="settingsButtonClicked:">
-							<string key="name">settingsButtonClicked:</string>
-							<string key="candidateClassName">id</string>
-						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="advisoriesButton">UIButton</string>
 						<string key="backButton">UIButton</string>
-						<string key="feedBackButton">UIButton</string>
-						<string key="setttingsButton">UIButton</string>
 						<string key="tblDetailSetting">UITableView</string>
 						<string key="titleLabel">UILabel</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="advisoriesButton">
-							<string key="name">advisoriesButton</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="backButton">
 							<string key="name">backButton</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="feedBackButton">
-							<string key="name">feedBackButton</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="setttingsButton">
-							<string key="name">setttingsButton</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="tblDetailSetting">

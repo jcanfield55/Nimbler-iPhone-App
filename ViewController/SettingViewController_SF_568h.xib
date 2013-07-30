@@ -50,7 +50,7 @@
 					<object class="IBUITableView" id="27615550">
 						<reference key="NSNextResponder" ref="547689528"/>
 						<int key="NSvFlags">274</int>
-						<string key="NSFrame">{{0, 50}, {285, 518}}</string>
+						<string key="NSFrame">{{0, 66}, {285, 502}}</string>
 						<reference key="NSSuperview" ref="547689528"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView"/>
@@ -182,10 +182,7 @@
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="UpdateSetting:">id</string>
-						<string key="advisoriesButtonClicked:">id</string>
-						<string key="feedBackButtonClicked:">id</string>
 						<string key="pushNotificationValueChanged:">UISlider</string>
-						<string key="settingsButtonClicked:">id</string>
 						<string key="sliderPushNotification:">UISlider</string>
 						<string key="sliderWalkDistance:">UISlider</string>
 						<string key="sliderWalkDistanceValueChanged:">UISlider</string>
@@ -195,21 +192,9 @@
 							<string key="name">UpdateSetting:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-						<object class="IBActionInfo" key="advisoriesButtonClicked:">
-							<string key="name">advisoriesButtonClicked:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="feedBackButtonClicked:">
-							<string key="name">feedBackButtonClicked:</string>
-							<string key="candidateClassName">id</string>
-						</object>
 						<object class="IBActionInfo" key="pushNotificationValueChanged:">
 							<string key="name">pushNotificationValueChanged:</string>
 							<string key="candidateClassName">UISlider</string>
-						</object>
-						<object class="IBActionInfo" key="settingsButtonClicked:">
-							<string key="name">settingsButtonClicked:</string>
-							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="sliderPushNotification:">
 							<string key="name">sliderPushNotification:</string>
@@ -225,36 +210,21 @@
 						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="advisoriesButton">UIButton</string>
 						<string key="btnUpdateSetting">UIButton</string>
-						<string key="feedBackButton">UIButton</string>
 						<string key="scrollView">UIScrollView</string>
-						<string key="settingsButton">UIButton</string>
 						<string key="sliderMaxWalkDistance">UISlider</string>
 						<string key="sliderPushNotification">UISlider</string>
 						<string key="switchPushEnable">UISwitch</string>
 						<string key="tblSetting">UITableView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="advisoriesButton">
-							<string key="name">advisoriesButton</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="btnUpdateSetting">
 							<string key="name">btnUpdateSetting</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="feedBackButton">
-							<string key="name">feedBackButton</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="scrollView">
 							<string key="name">scrollView</string>
 							<string key="candidateClassName">UIScrollView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="settingsButton">
-							<string key="name">settingsButton</string>
-							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="sliderMaxWalkDistance">
 							<string key="name">sliderMaxWalkDistance</string>

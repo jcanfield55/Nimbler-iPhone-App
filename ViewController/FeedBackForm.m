@@ -53,6 +53,7 @@ BOOL isCancelFB = FALSE;
 @synthesize tpURLResource,alertView,mesg,btnPlayRecording,btnStopRecording,btnPauseRecording,btnRecordRecording,fbReqParams;
 @synthesize txtEmailId,txtFeedBack;
 @synthesize buttonsBackgroundView,textViewBackground,textFieldBackground;
+@synthesize sentMessageView;
 
 NSUserDefaults *prefs;
 
@@ -452,6 +453,12 @@ NSUserDefaults *prefs;
     }
 }
 
+// Hide the sent message view after 3 seconds
+- (void) hideMessageView{
+    [self.navigationController.navigationBar setHidden:NO];
+    [sentMessageView setHidden:YES];
+    [[nc_AppDelegate sharedInstance].toFromViewController revealtoggle];
+}
 #pragma mark Restful Response
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {
     if ([request isGET]) {
@@ -476,7 +483,11 @@ NSUserDefaults *prefs;
                 NIMLOG_EVENT1(@"key: %@, value: %@", key, [fbParser objectForKey:key]);
                 if ([key isEqualToString:FB_RESPONSE_MSG]) {
                     if ([[fbParser objectForKey:FB_RESPONCE_CODE] intValue] == RESPONSE_SUCCESSFULL) {
-                        msg = FB_RESPONSE_SUCCEES;
+                        //msg = FB_RESPONSE_SUCCEES;
+                        [self.navigationController.navigationBar setHidden:YES];
+                        [sentMessageView setHidden:NO];
+                        [self performSelector:@selector(hideMessageView) withObject:nil afterDelay:3.0];
+                        return;
                     } else {
                         msg = FB_RESPONSE_FAIL ;
                     }
@@ -565,7 +576,6 @@ NSUserDefaults *prefs;
     [rkp setValue:[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] forParam:APPLICATION_TYPE];
     [rkp setValue:[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"] forParam:APPLICATION_VERSION];
     
-    timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_SMALL_REQUEST_DELAY target:self selector:@selector(popOut) userInfo:nil repeats: NO];
     [[RKClient sharedClient] post:FB_REQUEST params:rkp delegate:self];
 }
 
@@ -621,10 +631,9 @@ NSUserDefaults *prefs;
 
 -(void)popOut
 {
+    //revealToggle
     [alertView dismissWithClickedButtonIndex:0 animated:NO];
-    [self.navigationController popViewControllerAnimated:YES];
-    RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
-    [rxCustomTabBar selectTab:0];
+    [[nc_AppDelegate sharedInstance].toFromViewController revealtoggle];
 }
 
 #pragma mark TextField animation at selected

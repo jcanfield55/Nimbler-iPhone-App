@@ -173,8 +173,8 @@ NSString *strStreet2 = @"street ";
         locations.sortedMatchingToLocations = sortedlocations;
     }
     
-   Location *locationMoved =  [locations locationAtIndex:[self adjustedForEnterNewAddressFor:destRow]
-                        isFrom:isFrom];
+    Location *locationMoved =  [locations locationAtIndex:[self adjustedForEnterNewAddressFor:destRow]
+                                                   isFrom:isFrom];
     Location *nextLocation = nil;
     Location *previousLocation = nil;
     if([locations.sortedMatchingFromLocations count] > destRow+1){
@@ -199,15 +199,15 @@ NSString *strStreet2 = @"street ";
         isNextLocationFavorite = true;
     }
     if(isPreviousLocationFavorite && isNextLocationFavorite){
-            double avgFromFrequency = ([previousLocation fromFrequencyFloat] + [nextLocation fromFrequencyFloat])/2.0;
-            double avgToFrequency = ([previousLocation toFrequencyFloat] + [nextLocation toFrequencyFloat])/2.0;
-            [locationMoved setFromFrequencyFloat:avgFromFrequency];
-            [locationMoved setToFrequencyFloat:avgToFrequency];
+        double avgFromFrequency = ([previousLocation fromFrequencyFloat] + [nextLocation fromFrequencyFloat])/2.0;
+        double avgToFrequency = ([previousLocation toFrequencyFloat] + [nextLocation toFrequencyFloat])/2.0;
+        [locationMoved setFromFrequencyFloat:avgFromFrequency];
+        [locationMoved setToFrequencyFloat:avgToFrequency];
     }
     else if(!isPreviousLocationFavorite && !isNextLocationFavorite){
-        if(isMovedLocationFavorite){
-            [locationMoved setFromFrequencyFloat:([locationMoved fromFrequencyFloat]- 100000)];
-            [locationMoved setToFrequencyFloat:([locationMoved toFrequencyFloat]-100000)];
+        if(isMovedLocationFavorite && !nextLocation){
+            [locationMoved setFromFrequencyFloat:([previousLocation fromFrequencyFloat]- 1)];
+            [locationMoved setToFrequencyFloat:([previousLocation toFrequencyFloat]-1)];
         }
         else{
             double avgFromFrequency = ([previousLocation fromFrequencyFloat] + [nextLocation fromFrequencyFloat])/2.0;
@@ -217,8 +217,8 @@ NSString *strStreet2 = @"street ";
         }
     }
     else if(!isPreviousLocationFavorite && isNextLocationFavorite){
-            [locationMoved setFromFrequencyFloat:([nextLocation fromFrequencyFloat]+1)];
-            [locationMoved setToFrequencyFloat:([nextLocation toFrequencyFloat]+1)];
+        [locationMoved setFromFrequencyFloat:([nextLocation fromFrequencyFloat]+1)];
+        [locationMoved setToFrequencyFloat:([nextLocation toFrequencyFloat]+1)];
     }
     else if(isPreviousLocationFavorite && !isNextLocationFavorite){
         if(isMovedLocationFavorite){

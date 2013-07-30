@@ -239,7 +239,7 @@ UIImage *imageDetailDisclosure;
     [lblTxtToFromPlaceholder setBackgroundColor:[UIColor clearColor]];
     [lblTxtToFromPlaceholder setTextColor:[UIColor lightGrayColor]];
 
-    [self.btnPicker setTitle:@"now" forState:UIControlStateNormal];
+    [self.btnPicker setTitle:@"Now" forState:UIControlStateNormal];
     NSString *strFromFormattedAddress;
     if([locations selectedFromLocation].locationName){
        strFromFormattedAddress = [locations selectedFromLocation].locationName;
@@ -354,6 +354,9 @@ UIImage *imageDetailDisclosure;
      self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"ADV" style:UIBarButtonItemStylePlain target:self.navigationController.parentViewController action:@selector(revealToggle:)];
 }
 
+- (void) revealtoggle{
+    [self.navigationController.parentViewController performSelector:@selector(revealToggle:) withObject:nil afterDelay:0.0];
+}
 - (void)setSupportedRegion:(SupportedRegion *)supportedReg0
 {
     supportedRegion = supportedReg0;
@@ -436,7 +439,8 @@ UIImage *imageDetailDisclosure;
         [fromTable reloadData];
         [mainTable reloadData];
         
-         [[nc_AppDelegate sharedInstance].window bringSubviewToFront:[nc_AppDelegate sharedInstance].twitterCount];
+        [[nc_AppDelegate sharedInstance].window bringSubviewToFront:[nc_AppDelegate sharedInstance].twitterCount];
+        [[nc_AppDelegate sharedInstance].twitterCount setHidden:NO];
     }
     @catch (NSException *exception) {
         logException(@"ToFromViewController->viewWillAppear", @"", exception);
@@ -450,6 +454,7 @@ UIImage *imageDetailDisclosure;
     //Part Of US-177 Implementation
     [nc_AppDelegate sharedInstance].toLoc = self.toLocation;
     [nc_AppDelegate sharedInstance].fromLoc = self.fromLocation;
+    [[nc_AppDelegate sharedInstance].twitterCount setHidden:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -874,6 +879,7 @@ UIImage *imageDetailDisclosure;
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    [[nc_AppDelegate sharedInstance].twitterCount setHidden:YES];
     if(editMode==FROM_EDIT || editMode==TO_EDIT){
         [self heightToFromTable];
         return YES;
@@ -1890,6 +1896,7 @@ UIImage *imageDetailDisclosure;
     //Fixed DE-330
     // Clearing both textfield before calling seteditMode method.
     //[self.navigationController setNavigationBarHidden:YES animated:NO];
+    [[nc_AppDelegate sharedInstance].twitterCount setHidden:NO];
     [self heightToFromTable];
     if(editMode == FROM_EDIT){
         [self.fromTable setEditing:NO animated:NO];
@@ -1996,7 +2003,7 @@ UIImage *imageDetailDisclosure;
     
     isTripDateCurrentTime = TRUE;
     if (isTripDateCurrentTime) {
-        [self.btnPicker setTitle:@"now" forState:UIControlStateNormal];
+        [self.btnPicker setTitle:@"Now" forState:UIControlStateNormal];
     }
     [self setTripDateLastChangedByUser:[[NSDate alloc] init]];
     [self setIsTripDateCurrentTime:YES];

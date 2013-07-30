@@ -116,4 +116,5 @@ typedef enum {
 - (void)heightToFromTable;
 - (BOOL)setToFromHeightForTable:(UITableView *)table Height:(CGFloat)tableHeight;
 
+- (void) revealtoggle;
 @end
