@@ -56,9 +56,6 @@
 @property(nonatomic,retain) NSString *mesg;
 @property (strong, nonatomic) UIAlertView * alertView;
 @property (strong, nonatomic) IBOutlet UIButton *btnPlayRecording,*btnStopRecording,*btnPauseRecording,*btnRecordRecording;
-@property (strong, nonatomic) IBOutlet UIButton *advisoriesButton;
-@property (strong, nonatomic) IBOutlet UIButton *settingsButton;
-@property (strong, nonatomic) IBOutlet UIButton *feedBackButton;
 @property (strong, nonatomic) IBOutlet UIView *buttonsBackgroundView;
 @property (strong, nonatomic) IBOutlet UIView *textViewBackground;
 @property (strong, nonatomic) IBOutlet UIView *textFieldBackground;
@@ -68,10 +65,6 @@
 -(IBAction)pauseRecord:(id)sender;
 -(IBAction)playRecord:(id)sender;
 -(IBAction)submitFeedBack:(id)sender;
-
--(IBAction)advisoriesButtonClicked:(id)sender;
--(IBAction)settingsButtonClicked:(id)sender;
--(IBAction)feedBackButtonClicked:(id)sender;
 
 @property (strong, nonatomic) FeedBackReqParam *fbReqParams;;
 

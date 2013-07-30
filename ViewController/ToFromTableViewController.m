@@ -16,7 +16,6 @@
 #import "Stations.h"
 #import <MapKit/MapKit.h>
 #import "LocationFromLocalSearch.h"
-#import "kxMenu.h"
 
 
 @interface ToFromTableViewController () 
@@ -53,6 +52,7 @@
 @synthesize isDeleteMode;
 @synthesize isRearrangeMode;
 @synthesize isRenameMode;
+@synthesize btnEdit;
 
 NSString *strBART1 = @" bart";
 NSString *strBART2 = @"bart ";
@@ -91,6 +91,13 @@ NSString *strStreet2 = @"street ";
         txtField.accessibilityLabel = TEXTFIELD_TOFROMTABLEVIEW;
         
         imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
+        
+        btnEdit = [UIButton buttonWithType:UIButtonTypeCustom];
+        [btnEdit setFrame:CGRectMake(230,5,50,20)];
+        [btnEdit setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+        [btnEdit setTitle:@"Edit" forState:UIControlStateNormal];
+        [btnEdit setTitle:@"Done" forState:UIControlStateSelected];
+        [btnEdit addTarget:self action:@selector(editButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
 }
@@ -104,6 +111,7 @@ NSString *strStreet2 = @"street ";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+   
 	// Do any additional setup after loading the view.
 }
 
@@ -149,6 +157,7 @@ NSString *strStreet2 = @"street ";
     
     NSInteger sourceRow = sourceIndexPath.row;
     NSInteger destRow = destinationIndexPath.row;
+    
     if(toFromVC.editMode == FROM_EDIT){
         NSMutableArray *sortedlocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingFromLocations];
         id object = [sortedlocations objectAtIndex:sourceRow];
@@ -163,6 +172,74 @@ NSString *strStreet2 = @"street ";
         [sortedlocations insertObject:object atIndex:destRow];
         locations.sortedMatchingToLocations = sortedlocations;
     }
+    
+   Location *locationMoved =  [locations locationAtIndex:[self adjustedForEnterNewAddressFor:destRow]
+                        isFrom:isFrom];
+    Location *nextLocation = nil;
+    Location *previousLocation = nil;
+    if([locations.sortedMatchingFromLocations count] > destRow+1){
+        nextLocation = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:destRow+1]
+                                           isFrom:isFrom];
+    }
+    if( destRow-1 >= 0 && [locations.sortedMatchingFromLocations count] > destRow-1){
+        previousLocation = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:destRow-1]
+                                               isFrom:isFrom];
+    }
+    BOOL isMovedLocationFavorite = false;
+    BOOL isNextLocationFavorite = false;
+    BOOL isPreviousLocationFavorite = false;
+    
+    if((locationMoved.fromFrequencyFloat >= 100000 && locationMoved.toFrequencyFloat >= 100000)){
+        isMovedLocationFavorite = true;
+    }
+    if(previousLocation && (previousLocation.fromFrequencyFloat >= 100000 && previousLocation.toFrequencyFloat >= 100000)){
+        isPreviousLocationFavorite = true;
+    }
+    if(nextLocation && (nextLocation.fromFrequencyFloat >= 100000 && nextLocation.toFrequencyFloat >= 100000)){
+        isNextLocationFavorite = true;
+    }
+    if(isPreviousLocationFavorite && isNextLocationFavorite){
+            double avgFromFrequency = ([previousLocation fromFrequencyFloat] + [nextLocation fromFrequencyFloat])/2.0;
+            double avgToFrequency = ([previousLocation toFrequencyFloat] + [nextLocation toFrequencyFloat])/2.0;
+            [locationMoved setFromFrequencyFloat:avgFromFrequency];
+            [locationMoved setToFrequencyFloat:avgToFrequency];
+    }
+    else if(!isPreviousLocationFavorite && !isNextLocationFavorite){
+        if(isMovedLocationFavorite){
+            [locationMoved setFromFrequencyFloat:([locationMoved fromFrequencyFloat]- 100000)];
+            [locationMoved setToFrequencyFloat:([locationMoved toFrequencyFloat]-100000)];
+        }
+        else{
+            double avgFromFrequency = ([previousLocation fromFrequencyFloat] + [nextLocation fromFrequencyFloat])/2.0;
+            double avgToFrequency = ([previousLocation toFrequencyFloat] + [nextLocation toFrequencyFloat])/2.0;
+            [locationMoved setFromFrequencyFloat:avgFromFrequency];
+            [locationMoved setToFrequencyFloat:avgToFrequency];
+        }
+    }
+    else if(!isPreviousLocationFavorite && isNextLocationFavorite){
+            [locationMoved setFromFrequencyFloat:([nextLocation fromFrequencyFloat]+1)];
+            [locationMoved setToFrequencyFloat:([nextLocation toFrequencyFloat]+1)];
+    }
+    else if(isPreviousLocationFavorite && !isNextLocationFavorite){
+        if(isMovedLocationFavorite){
+            [locationMoved setFromFrequencyFloat:([previousLocation fromFrequencyFloat]-1)];
+            [locationMoved setToFrequencyFloat:([previousLocation toFrequencyFloat]-1)];
+        }
+        else{
+            [locationMoved setFromFrequencyFloat:([nextLocation fromFrequencyFloat]+1)];
+            [locationMoved setToFrequencyFloat:([nextLocation toFrequencyFloat]+1)];
+        }
+    }
+    saveContext(managedObjectContext);
+    NSSortDescriptor *sdFrom = [NSSortDescriptor sortDescriptorWithKey:@"fromFrequency"
+                                                             ascending:NO];
+    locations.sortedMatchingFromLocations = [[locations sortedMatchingFromLocations] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sdFrom]];
+    
+    NSSortDescriptor *sdTo = [NSSortDescriptor sortDescriptorWithKey:@"toFrequency"
+                                                           ascending:NO];
+    locations.sortedMatchingToLocations = [[locations sortedMatchingToLocations] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sdTo]];
+    
+    [myTableView reloadData];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -194,8 +271,11 @@ NSString *strStreet2 = @"street ";
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if(isRenameMode){
+        [tableView beginUpdates];
+        [myTableView setFrame:CGRectMake(myTableView.frame.origin.x, myTableView.frame.origin.y, myTableView.frame.size.width, TOFROM_HEIGHT_EDIT_MODE)];
+        
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        UITextView *txtView = [[UITextView alloc] initWithFrame:CGRectMake(1,2,300,40)];
+        UITextView *txtView = [[UITextView alloc] initWithFrame:CGRectMake(1,2,300,50)];
         txtView.delegate = self;
         [txtView setBackgroundColor:[UIColor whiteColor]];
         Location *location;
@@ -205,13 +285,16 @@ NSString *strStreet2 = @"street ";
         else if(toFromVC.editMode == TO_EDIT){
            location = [locations.sortedMatchingToLocations objectAtIndex:[indexPath row]];
         }
-        if([location.userUpdatedLocation boolValue]){
-            txtView.text = [location formattedAddress];
+        if(location.locationName){
+            NSString *address = [NSString stringWithFormat:@"%@?%@",location.locationName,[location shortFormattedAddress]];
+            address = [address stringByReplacingOccurrencesOfString:@"?" withString:@"\n"];
+            txtView.text = address;
         }
         else{
-            txtView.text = [location shortFormattedAddress];
+            NSString *address = [NSString stringWithFormat:@"?%@",[location shortFormattedAddress]];
+            address = [address stringByReplacingOccurrencesOfString:@"?" withString:@"\n"];
+            txtView.text = address;
         }
-        
         [txtView setFont:cell.textLabel.font];
         [txtView setTag:[indexPath row]+10000];
         [cell addSubview:txtView];
@@ -228,10 +311,11 @@ NSString *strStreet2 = @"street ";
                 }
             }
         }
+        [tableView endUpdates];
     }
     else{
         NIMLOG_EVENT1(@"Select Row: isFrom=%d, section=%d, row=%d", isFrom, [indexPath section], [indexPath row]);
-        //[toFromVC.navigationController setNavigationBarHidden:YES animated:NO];
+        [toFromVC.navigationController setNavigationBarHidden:NO animated:NO];
         
             locations.isLocationSelected = true;
             Location *loc = [locations
@@ -294,6 +378,7 @@ NSString *strStreet2 = @"street ";
                 }
             }
         }
+    saveContext(managedObjectContext);
 }
 
 
@@ -342,16 +427,16 @@ NSString *strStreet2 = @"street ";
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if ([toFromVC editMode]==NO_EDIT &&
         [self adjustedForEnterNewAddressFor:[indexPath row]] == -1) {
-        return 36;
+        return 50;
     }
     else{
         Location *loc = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]]
                                             isFrom:isFrom];
         if([loc.formattedAddress rangeOfString:@"\n"].location != NSNotFound){
-            return 44;
+            return 50;
         }
     }
-    return 36;
+    return 50;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -361,70 +446,82 @@ NSString *strStreet2 = @"street ";
     [tableView dequeueReusableCellWithIdentifier:@"ToFromTableLocationRow"];
     
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
                                       reuseIdentifier:@"ToFromTableLocationRow"];
         if(isRearrangeMode){
             cell.showsReorderControl = YES;
         }
     }
-    
+     cell.textLabel.numberOfLines = 2;
     // DE176 fix 4 of 4.  Check if we need firstResponderSetting set, and if so, set it
     if (([toFromVC editMode]==FROM_EDIT && [self isFrom] && ![[self txtField] isFirstResponder]) ||
         ([toFromVC editMode]==TO_EDIT && ![self isFrom] && ![[self txtField] isFirstResponder])) {
     }
     
     // Prepare the cell settings
-    Location *loc = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]] 
+    Location *loc = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]]
                                         isFrom:isFrom];
     // if There is PlaceName available for location
     if([loc isKindOfClass:[LocationFromLocalSearch class ]]){
-        cell.textLabel.numberOfLines = 2;
         cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
-        [[cell textLabel] setText:loc.shortFormattedAddress];
+        if(loc.locationName){
+            cell.textLabel.text = loc.locationName;
+            cell.detailTextLabel.text = loc.shortFormattedAddress;
+        }
+        else{
+            cell.textLabel.text = loc.shortFormattedAddress;
+            cell.detailTextLabel.text = nil;
+            cell.textLabel.numberOfLines = 2;
+        }
         [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
         cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
         [cell setAccessoryView:nil];
     }
     else{
-        NSString *locationDisplayString;
-        if([loc.userUpdatedLocation boolValue]){
-            locationDisplayString = loc.formattedAddress;
+        if(loc.locationName){
+            cell.textLabel.text = loc.locationName;
+            cell.detailTextLabel.text = loc.shortFormattedAddress;
         }
         else{
-            locationDisplayString = loc.shortFormattedAddress;
+            cell.textLabel.text = loc.shortFormattedAddress;
+            cell.detailTextLabel.text = nil;
+            cell.textLabel.numberOfLines = 2;
         }
-        if([loc isKindOfClass:[LocationFromIOS class ]]){
-           cell.textLabel.numberOfLines = 2;
-           cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
-           [[cell textLabel] setText:locationDisplayString];
-        }
-        else{
-             [[cell textLabel] setText:locationDisplayString];
-        }
-       
+        UIButton *btnFavorite = [UIButton buttonWithType:UIButtonTypeCustom];
+        [btnFavorite setTag:indexPath.row];
+        [btnFavorite setFrame:CGRectMake(0, 0, 16, 16)];
+        [btnFavorite setImage:[UIImage imageNamed:@"star"] forState:UIControlStateNormal];
+        [btnFavorite addTarget:self action:@selector(btnFavoriteClicked:) forControlEvents:UIControlEventTouchUpInside];
         if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) {
             // Bold italic if a list header
             [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
             cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
-            UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
-            [cell setAccessoryView:imgViewDetailDisclosure];
+            [cell setEditing:NO];
+//            UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
+//            [cell setAccessoryView:imgViewDetailDisclosure];
+            if([[loc fromFrequency] doubleValue]>=100000.0){
+                [btnFavorite setSelected:YES];
+                [btnFavorite setImage:[UIImage imageNamed:@"StarOn"] forState:UIControlStateNormal];
+            }
+            [cell setAccessoryView:btnFavorite];
         }
         else if (loc == selectedLocation) {
-            [[cell textLabel] setFont:[UIFont MEDIUM_BOLD_FONT]];
-            cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
-           /* if ([toFromVC editMode] == NO_EDIT) {
-                UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
-                [cell setAccessoryView:imgViewDetailDisclosure];
-            } else {
-                // cell.textLabel.text = @"Current Location"; // This line causes DE124
-                [cell setAccessoryView:nil];
-            }*/
-            [cell setAccessoryView:nil];
+            [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
+            cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
+            if([[loc fromFrequency] doubleValue]>=100000.0){
+                [btnFavorite setSelected:YES];
+                [btnFavorite setImage:[UIImage imageNamed:@"StarOn"] forState:UIControlStateNormal];
+            }
+            [cell setAccessoryView:btnFavorite];
         } else {
             // just bold for normal cell
             [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
             cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
-            [cell setAccessoryView:nil];
+            if([[loc fromFrequency] doubleValue]>=100000.0){
+                [btnFavorite setSelected:YES];
+                [btnFavorite setImage:[UIImage imageNamed:@"StarOn"] forState:UIControlStateNormal];
+            }
+            [cell setAccessoryView:btnFavorite];
         }
         
     }
@@ -443,37 +540,34 @@ NSString *strStreet2 = @"street ";
 
 - (void)deleteButtonClicked:(id)sender{
     isDeleteMode = true;
-    isRearrangeMode = false;
-    isRenameMode = false;
-    [myTableView setEditing:YES animated:YES];
-    [myTableView reloadData];
-}
-- (void)rearrangeButtonClicked:(id)sender{
-    isDeleteMode = false;
     isRearrangeMode = true;
-    isRenameMode = false;
+    isRenameMode = true;
     [myTableView setEditing:YES animated:YES];
-    [myTableView reloadData];
+    [myTableView setAllowsSelectionDuringEditing:YES];
 }
 
-- (void)renameButtonClicked:(id)sender{
-    isDeleteMode = false;
-    isRearrangeMode = false;
-    isRenameMode = true;
-    [myTableView setEditing:NO animated:YES];
-    [myTableView reloadData];
+-(void)textViewDidBeginEditing:(UITextView *)textView{
+    textView.selectedRange = NSMakeRange(0, 0);
+}
+
+- (void) saveContext{
+    saveContext(toFromVC.managedObjectContext);
 }
 
 -(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
     if([text isEqualToString:@"\n"]){
         int row = [textView tag] - 10000;
-       
         if(toFromVC.editMode == FROM_EDIT){
+            [toFromVC.fromTable setFrame:CGRectMake(toFromVC.fromTable.frame.origin.x, toFromVC.fromTable.frame.origin.y, toFromVC.fromTable.frame.size.width, TOFROM_HEIGHT_LOCATION_EDIT_MODE)];
             NSMutableArray *sortedLocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingFromLocations];
             Location *location = [sortedLocations objectAtIndex:row];
-            location.formattedAddress = textView.text;
+            NSString *textViewText = textView.text;
+            if([textViewText rangeOfString:@"\n"].location != NSNotFound){
+                NSArray *array = [textViewText componentsSeparatedByString:@"\n"];
+                NSString *locationName = [array objectAtIndex:0];
+                location.locationName = locationName;
+            }
             location.userUpdatedLocation = [NSNumber numberWithBool:true];
-            saveContext(managedObjectContext);
             [sortedLocations replaceObjectAtIndex:row withObject:location];
             locations.sortedMatchingFromLocations = sortedLocations;
             [textView removeFromSuperview];
@@ -484,13 +578,20 @@ NSString *strStreet2 = @"street ";
             if([location.shortFormattedAddress isEqualToString:locations.selectedToLocation.shortFormattedAddress]){
                 locations.selectedToLocation = location;
             }
+            [self performSelector:@selector(saveContext) withObject:nil afterDelay:0.5];
+            
         }
         else if(toFromVC.editMode == TO_EDIT){
+             [toFromVC.toTable setFrame:CGRectMake(toFromVC.toTable.frame.origin.x, toFromVC.toTable.frame.origin.y, toFromVC.toTable.frame.size.width, TOFROM_HEIGHT_LOCATION_EDIT_MODE)];
             NSMutableArray *sortedLocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingToLocations];
             Location *location = [sortedLocations objectAtIndex:row];
-            location.formattedAddress = textView.text;
+            NSString *textViewText = textView.text;
+            if([textViewText rangeOfString:@"\n"].location != NSNotFound){
+                NSArray *array = [textViewText componentsSeparatedByString:@"\n"];
+                NSString *locationName = [array objectAtIndex:0];
+                location.locationName = locationName;
+            }
             location.userUpdatedLocation = [NSNumber numberWithBool:true];
-            saveContext(managedObjectContext);
             [sortedLocations replaceObjectAtIndex:row withObject:location];
             locations.sortedMatchingToLocations = sortedLocations;
             [textView removeFromSuperview];
@@ -501,6 +602,7 @@ NSString *strStreet2 = @"street ";
             if([location.shortFormattedAddress isEqualToString:locations.selectedToLocation.shortFormattedAddress]){
                 locations.selectedToLocation = location;
             }
+            [self performSelector:@selector(saveContext) withObject:nil afterDelay:0.0];
         }
         [myTableView reloadData];
     }
@@ -509,28 +611,45 @@ NSString *strStreet2 = @"street ";
 
 - (void)editButtonClicked:(id)sender{
     UIButton *editButton = (UIButton *)sender;
-    NSArray *menuItems =
-    @[
-      [KxMenuItem menuItem:@"Delete locations"
-                     image:[UIImage imageNamed:@""]
-                    target:self
-                    action:@selector(deleteButtonClicked:)],
-      
-      [KxMenuItem menuItem:@"Rearrange locations"
-                     image:[UIImage imageNamed:@""]
-                    target:self
-                    action:@selector(rearrangeButtonClicked:)],
-      
-      [KxMenuItem menuItem:@"Rename locations"
-                     image:[UIImage imageNamed:@""]
-                    target:self
-                    action:@selector(renameButtonClicked:)],
-      ];
-    [KxMenu showMenuInView:toFromVC.view
-                  fromRect:editButton.frame
-                 menuItems:menuItems];
+    if(editButton.selected==YES){
+        [editButton setSelected:NO];
+        isDeleteMode = false;
+        isRearrangeMode = false;
+        isRenameMode = false;
+        [myTableView setEditing:NO animated:NO];
+    }
+    else{
+        [editButton setSelected:YES];
+        [self deleteButtonClicked:nil];
+    }
 }
 
+- (void) btnFavoriteClicked:(id)sender{
+    UIButton *favoriteButton = (UIButton *)sender;
+    Location *loc = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:[sender tag]]
+                                        isFrom:isFrom];
+    if(favoriteButton.selected==YES){
+        [favoriteButton setSelected:NO];
+        [favoriteButton setImage:[UIImage imageNamed:@"star"] forState:UIControlStateNormal];
+        [loc setFromFrequencyFloat:([loc fromFrequencyFloat]-100000)];
+        [loc setToFrequencyFloat:([loc toFrequencyFloat]-100000)];
+    }
+    else{
+        [favoriteButton setSelected:YES];
+        [favoriteButton setImage:[UIImage imageNamed:@"StarOn"] forState:UIControlStateNormal];
+        [loc setFromFrequencyFloat:([loc fromFrequencyFloat]+ 100000)];
+        [loc setToFrequencyFloat:([loc toFrequencyFloat]+100000)];
+    }
+    saveContext(managedObjectContext);
+    NSSortDescriptor *sdFrom = [NSSortDescriptor sortDescriptorWithKey:@"fromFrequency"
+                                                             ascending:NO];
+    locations.sortedMatchingFromLocations = [[locations sortedMatchingFromLocations] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sdFrom]];
+    
+    NSSortDescriptor *sdTo = [NSSortDescriptor sortDescriptorWithKey:@"toFrequency"
+                                                             ascending:NO];
+    locations.sortedMatchingToLocations = [[locations sortedMatchingToLocations] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sdTo]];
+    [myTableView reloadData];
+}
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
@@ -538,11 +657,6 @@ NSString *strStreet2 = @"street ";
 }
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0,0,320, 40)];
-    UIButton *btnEdit = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btnEdit setFrame:CGRectMake(230,5,50,20)];
-    [btnEdit setTitle:@"Edit" forState:UIControlStateNormal];
-    [btnEdit setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-    [btnEdit addTarget:self action:@selector(editButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [headerView addSubview:btnEdit];
     return headerView;
 }

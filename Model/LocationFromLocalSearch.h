@@ -23,7 +23,7 @@
 
 @property (nonatomic, strong) NSNumber *lat;  // double floating point
 @property (nonatomic, strong) NSNumber *lng;  // double floating point
-
+@property (nonatomic, strong) NSString *locationName;
 // Initializes an empty LocationIOS and its superclass Location using placemark0
 // Use this instead of setPlacemark method
 // Status will be "OK" if error==nil, otherwise it will be marked with the error

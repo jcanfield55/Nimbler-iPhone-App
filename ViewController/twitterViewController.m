@@ -35,8 +35,6 @@ NSUserDefaults *prefs;
 
 @synthesize textPull, textRelease, textLoading, refreshHeaderView, refreshLabel, refreshArrow, refreshSpinner;
 
-@synthesize advisoriesButton,settingsButton,feedBackButton;
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self != nil) {
@@ -636,44 +634,6 @@ NSUserDefaults *prefs;
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView{
     [activityIndicatorView stopAnimating];
-}
-
--(IBAction)advisoriesButtonClicked:(id)sender{
-    
-}
--(IBAction)settingsButtonClicked:(id)sender{
-    SettingInfoViewController *secondView;
-    if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
-        secondView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF_568h" bundle:nil];
-    }
-    else{
-        secondView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF" bundle:nil];
-    }
-    [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:CURRENT_VIEW_CONTROLLER];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    CATransition *animation = [CATransition animation];
-    [animation setDuration:0.5];
-    [animation setType:kCATransitionPush];
-    [animation setSubtype:kCATransitionFromTop];
-    [[self.navigationController.view layer] addAnimation:animation forKey:@"SwitchToView1"];
-    [self.navigationController pushViewController:secondView animated:NO];
-}
--(IBAction)feedBackButtonClicked:(id)sender{
-    FeedBackForm *secondView;
-    if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
-        secondView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm_568h" bundle:nil];
-    }
-    else{
-        secondView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
-    }
-    [[NSUserDefaults standardUserDefaults] setObject:@"3" forKey:CURRENT_VIEW_CONTROLLER];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    CATransition *animation = [CATransition animation];
-    [animation setDuration:0.5];
-    [animation setType:kCATransitionPush];
-    [animation setSubtype:kCATransitionFromTop];
-    [[self.navigationController.view layer] addAnimation:animation forKey:@"SwitchToView1"];
-    [self.navigationController pushViewController:secondView animated:NO];
 }
 
 - (void) hideTabBar {

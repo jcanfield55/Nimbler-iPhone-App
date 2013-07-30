@@ -27,18 +27,16 @@
 #import "RealTimeManager.h"
 #import "StationListElement.h"
 #import "RouteExcludeSetting.h"
-#import "KxMenu.h"
 
 
 @interface ToFromViewController()
 {
-    // Variables for internal use    
+    // Variables for internal use
     NSDateFormatter *tripDateFormatter;  // Formatter for showing the trip date / time
     NSString *planURLResource; // URL resource sent to planner
     NSMutableArray *planRequestHistory; // Array of all the past plan request parameter histories in sequential order (most recent one last)
     CGFloat toTableHeight;   // Current height of the toTable (US123 implementation)
     CGFloat fromTableHeight;  // Current height of the fromTable
-    NSManagedObjectContext *managedObjectContext;
     BOOL toGeocodeRequestOutstanding;  // true if there is an outstanding To geocode request
     BOOL fromGeocodeRequestOutstanding;  //true if there is an outstanding From geocode request
     NSDate* lastReverseGeoReqTime; 
@@ -100,8 +98,8 @@
 @synthesize plan;
 @synthesize stations;
 @synthesize planRequestParameters;
-@synthesize mainToFromView,PicketSelectView,fromView,toView,txtFromView,txtToView,btnSwap,imgViewFromBG,imgViewToBG,isToFromMode,btnPicker,lblTxtToFromPlaceholder;
-
+@synthesize mainToFromView,PicketSelectView,fromView,toView,txtFromView,txtToView,btnSwap,imgViewFromBG,imgViewToBG,btnPicker,lblTxtToFromPlaceholder,lblTxtDepartArrive,viewMode,btnFromEditCancel,btnToEditCancel,lblTxtFrom,lblTxtTo;
+@synthesize managedObjectContext;
 // Constants for animating up and down the To: field
 #define FROM_SECTION 0
 #define TO_SECTION 1
@@ -141,7 +139,7 @@ UIImage *imageDetailDisclosure;
                 toTableHeight = TO_TABLE_HEIGHT_NO_CL_MODE_4INCH;
             }
             else{
-                toTableHeight = TO_TABLE_HEIGHT_NO_CL_MODE;
+                toTableHeight = TOFROM_HEIGHT_EDIT_MODE;
             }
             rect1.size.height = toTableHeight;
             
@@ -164,7 +162,7 @@ UIImage *imageDetailDisclosure;
                 fromTableHeight = FROM_TABLE_HEIGHT_NO_CL_MODE_4INCH;
             }
             else{
-                fromTableHeight = FROM_TABLE_HEIGHT_NO_CL_MODE;
+                fromTableHeight = TOFROM_HEIGHT_EDIT_MODE;
             }
             rect2.size.height = fromTableHeight;
             
@@ -214,13 +212,13 @@ UIImage *imageDetailDisclosure;
             //barButtonSwap = [[UIBarButtonItem alloc] initWithCustomView:btnSwap];
             
             // Accessibility Label For UI Automation.
-            barButtonSwap.accessibilityLabel = SWAP_BUTTON;*/
+            barButtonSwap.accessibilityLabel = SWAP_BUTTON;
             
             UIImage* btnCancelImage = [UIImage imageNamed:@"img_cancel.png"];
             UIButton *btnCancel = [[UIButton alloc] initWithFrame:CGRectMake(0,0,btnCancelImage.size.width,btnCancelImage.size.height)];
             [btnCancel addTarget:self action:@selector(endEdit) forControlEvents:UIControlEventTouchUpInside];
             [btnCancel setBackgroundImage:btnCancelImage forState:UIControlStateNormal];
-            barButtonCancel = [[UIBarButtonItem alloc] initWithCustomView:btnCancel];
+            barButtonCancel = [[UIBarButtonItem alloc] initWithCustomView:btnCancel];*/
             
             // Accessibility Label For UI Automation.
             barButtonCancel.accessibilityLabel = CANCEL_BUTTON;
@@ -241,9 +239,12 @@ UIImage *imageDetailDisclosure;
     [lblTxtToFromPlaceholder setBackgroundColor:[UIColor clearColor]];
     [lblTxtToFromPlaceholder setTextColor:[UIColor lightGrayColor]];
 
-    [self.btnPicker setTitle:@"Depart now" forState:UIControlStateNormal];
+    [self.btnPicker setTitle:@"now" forState:UIControlStateNormal];
     NSString *strFromFormattedAddress;
-    if([[[locations selectedFromLocation] shortFormattedAddress] length]>0){
+    if([locations selectedFromLocation].locationName){
+       strFromFormattedAddress = [locations selectedFromLocation].locationName;
+    }
+    else if([[[locations selectedFromLocation] shortFormattedAddress] length]>0){
         strFromFormattedAddress = [[locations selectedFromLocation] shortFormattedAddress];
     }else{
         strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
@@ -255,7 +256,10 @@ UIImage *imageDetailDisclosure;
     
     
     NSString *strToFormattedAddress;
-    if([[[locations selectedToLocation] shortFormattedAddress] length]>0){
+    if([locations selectedToLocation].locationName){
+       strToFormattedAddress = [locations selectedToLocation].locationName;
+    }
+    else if([[[locations selectedToLocation] shortFormattedAddress] length]>0){
         strToFormattedAddress = [[locations selectedToLocation] shortFormattedAddress];
     }else{
         strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
@@ -265,6 +269,20 @@ UIImage *imageDetailDisclosure;
     
     [self.txtToView setText:strToFormattedAddress];
     
+    //Mode
+    UIButton *btnMode;
+    btnMode = (UIButton *)[self.viewMode viewWithTag:[BIKE_MODE_Tag intValue]];
+    if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE] isEqualToString:@"1"]){
+        [btnMode setSelected:YES];
+    }
+    btnMode = (UIButton *)[self.viewMode viewWithTag:[TRANSIT_MODE_Tag intValue]];
+    if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] isEqualToString:@"1"]){
+        [btnMode setSelected:YES];
+    }
+    btnMode = (UIButton *)[self.viewMode viewWithTag:[WALK_MODE_Tag intValue]];
+    if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] isEqualToString:@"1"]){
+        [btnMode setSelected:YES];
+    }
     // Accessibility Label For UI Automation.
     self.mainTable.accessibilityLabel = TO_FROM_TABLE_VIEW;
     
@@ -855,33 +873,53 @@ UIImage *imageDetailDisclosure;
 #pragma mark ToFromEdit mode Delegate
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
+   [self.navigationController setNavigationBarHidden:YES animated:NO];
+    if(editMode==FROM_EDIT || editMode==TO_EDIT){
+        [self heightToFromTable];
+        return YES;
+    }
     textView.text = @"";
     [textView addSubview:lblTxtToFromPlaceholder];
     if(textView==self.txtFromView){
         fromTableVC.isFrom=true;
         [self setEditMode:FROM_EDIT];
         editMode = FROM_EDIT;
-        isToFromMode = true;
-        editMode = FROM_EDIT;
     }
     else{
-        fromTableVC.isFrom=false;
+        toTableVC.isFrom=false;
         [self setEditMode:TO_EDIT];
-        editMode = TO_EDIT;
-        isToFromMode = false;
         editMode = TO_EDIT;
     }
     return YES;
 }
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
     if([text isEqualToString:@"\n"]) {
-        [fromTableVC textSubmitted:[textView text] forEvent:nil];
+        
+        if(editMode == FROM_EDIT){
+            [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y, fromTable.frame.size.width, TOFROM_HEIGHT_LOCATION_EDIT_MODE)];
+        }
+        else if (editMode == TO_EDIT){
+            [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y, toTable.frame.size.width, TOFROM_HEIGHT_LOCATION_EDIT_MODE)];
+        }
+        
+        // [fromTableVC textSubmitted:[textView text] forEvent:nil];
+        
+        
         [textView resignFirstResponder];
         return NO;
     }
-    
     return YES;
 }
+
+- (void)heightToFromTable{
+    if(editMode == FROM_EDIT){
+        [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y, fromTable.frame.size.width, TOFROM_HEIGHT_EDIT_MODE)];
+    }
+    else if (editMode == TO_EDIT){
+        [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y, toTable.frame.size.width, TOFROM_HEIGHT_EDIT_MODE)];
+    }
+}
+
 - (void) textViewDidChange:(UITextView *)theTextView
 {
     if(![theTextView hasText]) {
@@ -911,20 +949,18 @@ UIImage *imageDetailDisclosure;
 - (void)setEditMode:(ToFromEditMode)newEditMode
 {
     // Change NavBar buttons accordingly
-    if(newEditMode == NO_EDIT){
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"ADV" style:UIBarButtonItemStylePlain target:self.navigationController.parentViewController action:@selector(revealToggle:)];
-    } else{
-        self.navigationItem.leftBarButtonItem = barButtonCancel;
-    }
     
     if(newEditMode == FROM_EDIT){
         [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 400)];
         [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, self.fromView.frame.size.width+46, fromView.frame.size.height)];
         [self.imgViewFromBG setFrame:CGRectMake(self.imgViewFromBG.frame.origin.x, self.imgViewFromBG.frame.origin.y, self.imgViewFromBG.frame.size.width+46, imgViewFromBG.frame.size.height)];
-        [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width+44, txtFromView.frame.size.height)];
+        [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x-45, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width+33, txtFromView.frame.size.height)];
         [self.toView setHidden:YES];
+        [self.lblTxtFrom setHidden:YES];
+        [self.btnFromEditCancel setHidden:NO];
         [self.btnSwap setHidden:YES];
-        [self.PicketSelectView setFrame:CGRectMake(self.PicketSelectView.frame.origin.x, self.PicketSelectView.frame.origin.y+500, self.PicketSelectView.frame.size.width, self.PicketSelectView.frame.size.height)];
+        [self.PicketSelectView setHidden:YES];
+        [self.viewMode setHidden:YES];
         [self.mainToFromView addSubview:fromTable];
     }
     else if (newEditMode == TO_EDIT){
@@ -932,14 +968,17 @@ UIImage *imageDetailDisclosure;
         [self.fromView setHidden:YES];
         [self.toView setFrame:CGRectMake(self.toView.frame.origin.x, self.fromView.frame.origin.y, self.toView.frame.size.width+46, toView.frame.size.height)];
         [self.imgViewToBG setFrame:CGRectMake(self.imgViewToBG.frame.origin.x, self.imgViewToBG.frame.origin.y, self.imgViewToBG.frame.size.width+46, imgViewToBG.frame.size.height)];
-        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x, self.txtToView.frame.origin.y, self.txtToView.frame.size.width+49, txtToView.frame.size.height)];
+        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x-26, self.txtToView.frame.origin.y, self.txtToView.frame.size.width+15, txtToView.frame.size.height)];
         [self.btnSwap setHidden:YES];
-        [self.PicketSelectView setFrame:CGRectMake(self.PicketSelectView.frame.origin.x, self.PicketSelectView.frame.origin.y+500, self.PicketSelectView.frame.size.width, self.PicketSelectView.frame.size.height)];
+        [self.lblTxtTo setHidden:YES];
+        [self.btnToEditCancel setHidden:NO];
+        [self.PicketSelectView setHidden:YES];
+        [self.viewMode setHidden:YES];
         [self.mainToFromView addSubview:toTable];
     }
     else if (newEditMode == NO_EDIT){
         [self setToFromViewOnNoEditMode];
-        
+        editMode = NO_EDIT;
     }
     
 }
@@ -947,15 +986,19 @@ UIImage *imageDetailDisclosure;
 - (void) setToFromViewOnNoEditMode{
     [lblTxtToFromPlaceholder removeFromSuperview];
     
-    if(isToFromMode){
+    if(editMode == FROM_EDIT){
         Location *selectedFromLocation = [locations selectedFromLocation];
         NSString *strFromFormattedAddress;
-        if([selectedFromLocation.userUpdatedLocation boolValue]){
+        if(selectedFromLocation.locationName){
+           strFromFormattedAddress = [selectedFromLocation locationName];
+        }
+        else if([selectedFromLocation.userUpdatedLocation boolValue]){
             strFromFormattedAddress = [selectedFromLocation formattedAddress];
         }
         else{
             strFromFormattedAddress = [selectedFromLocation shortFormattedAddress];
         }
+        
         if(![strFromFormattedAddress length]>0){
              strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
         }
@@ -966,7 +1009,10 @@ UIImage *imageDetailDisclosure;
         
         Location *selectedToLocation = [locations selectedToLocation];
         NSString *strToFormattedAddress;
-        if([selectedToLocation.userUpdatedLocation boolValue]){
+        if(selectedToLocation.locationName){
+          strToFormattedAddress = [selectedToLocation locationName];
+        }
+        else if([selectedToLocation.userUpdatedLocation boolValue]){
             strToFormattedAddress = [selectedToLocation formattedAddress];
         }
         else{
@@ -980,18 +1026,23 @@ UIImage *imageDetailDisclosure;
         }
         [self.txtToView setText:strToFormattedAddress];
 
-        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 131)];
+        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 121)];
         [self.toView setHidden:NO];
         [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, fromView.frame.size.width-46, fromView.frame.size.height)];
         [self.imgViewFromBG setFrame:CGRectMake(self.imgViewFromBG.frame.origin.x, self.imgViewFromBG.frame.origin.y, imgViewFromBG.frame.size.width-46, imgViewFromBG.frame.size.height)];
-        [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width-44, txtFromView.frame.size.height)];
+        [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x+45, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width-33, txtFromView.frame.size.height)];
+        [self.lblTxtFrom setHidden:NO];
+        [self.btnFromEditCancel setHidden:YES];
         [fromTable removeFromSuperview];
         [self.txtFromView resignFirstResponder];
     }
-    else{
+    else if (editMode == TO_EDIT){
         Location *selectedFromLocation = [locations selectedFromLocation];
         NSString *strFromFormattedAddress;
-        if([selectedFromLocation.userUpdatedLocation boolValue]){
+        if(selectedFromLocation.locationName){
+           strFromFormattedAddress = [selectedFromLocation locationName];
+        }
+        else if([selectedFromLocation.userUpdatedLocation boolValue]){
             strFromFormattedAddress = [selectedFromLocation formattedAddress];
         }
         else{
@@ -1007,7 +1058,10 @@ UIImage *imageDetailDisclosure;
         
         Location *selectedToLocation = [locations selectedToLocation];
         NSString *strToFormattedAddress;
-        if([selectedToLocation.userUpdatedLocation boolValue]){
+        if(selectedToLocation.locationName){
+           strToFormattedAddress = [selectedToLocation locationName];
+        }
+        else if([selectedToLocation.userUpdatedLocation boolValue]){
             strToFormattedAddress = [selectedToLocation formattedAddress];
         }
         else{
@@ -1021,17 +1075,19 @@ UIImage *imageDetailDisclosure;
         }
         [self.txtToView setText:strToFormattedAddress];
         
-        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 131)];
+        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 122)];
         [self.fromView setHidden:NO];
         [self.toView setFrame:CGRectMake(self.toView.frame.origin.x, 70, 237, toView.frame.size.height)];
         [self.imgViewToBG setFrame:CGRectMake(self.imgViewToBG.frame.origin.x, self.imgViewToBG.frame.origin.y, 237, imgViewToBG.frame.size.height)];
-        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x, self.txtToView.frame.origin.y, self.txtToView.frame.size.width-49, txtToView.frame.size.height)];
+        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x+26, self.txtToView.frame.origin.y, self.txtToView.frame.size.width-15, txtToView.frame.size.height)];
+        [self.btnToEditCancel setHidden:YES];
+        [self.lblTxtTo setHidden:NO];
         [toTable removeFromSuperview];
         [self.txtToView resignFirstResponder];
     }
-    
     [self.btnSwap setHidden:NO];
-    [self.PicketSelectView setFrame:CGRectMake(self.PicketSelectView.frame.origin.x, 164, self.PicketSelectView.frame.size.width, self.PicketSelectView.frame.size.height)];
+    [self.viewMode setHidden:NO];
+    [self.PicketSelectView setHidden:NO];
     
 }
 #pragma mark Loacation methods
@@ -1091,7 +1147,10 @@ UIImage *imageDetailDisclosure;
         else if (loc != currentLocation && isCurrentLocationMode) {
             [self setIsCurrentLocationMode:FALSE];
         }
-        if(fromLocation.userUpdatedLocation){
+        if(fromLocation.locationName){
+           [self.txtFromView setText:[fromLocation locationName]];
+        }
+        else if(fromLocation.userUpdatedLocation){
             [self.txtFromView setText:[fromLocation formattedAddress]];
         }
         else{
@@ -1131,6 +1190,30 @@ UIImage *imageDetailDisclosure;
 }
 
 #pragma mark Button Press Event
+
+-(IBAction)btnModeClicked:(id)sender{
+    UIButton *btnMode = (UIButton *)sender;
+    NSString *strMode;
+    if(btnMode.selected == YES){
+        strMode = MODE_DISABLE;
+        [btnMode setSelected:NO];
+    }
+    else{
+        strMode = MODE_ENABLE;
+        [btnMode setSelected:YES];
+    }
+    if([sender tag]==[BIKE_MODE_Tag intValue]){
+        [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",strMode] forKey:DEFAULT_BIKE_MODE];
+    }
+    else if([sender tag]==[TRANSIT_MODE_Tag intValue]){
+        [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",strMode] forKey:DEFAULT_TRANSIT_MODE];
+    }
+    else if([sender tag]==[WALK_MODE_Tag intValue]){
+        [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",strMode] forKey:DEFAULT_WALK_MODE];
+    }
+    
+}
+
 // Requesting a plan
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
@@ -1764,7 +1847,10 @@ UIImage *imageDetailDisclosure;
     
     Location *selectedFromLocation = [locations selectedFromLocation];
     NSString *strFromFormattedAddress;
-    if([selectedFromLocation.userUpdatedLocation boolValue]){
+    if(selectedFromLocation.locationName){
+      strFromFormattedAddress = [selectedFromLocation locationName];
+    }
+    else if([selectedFromLocation.userUpdatedLocation boolValue]){
         strFromFormattedAddress = [selectedFromLocation formattedAddress];
     }
     else{
@@ -1787,7 +1873,7 @@ UIImage *imageDetailDisclosure;
         strToFormattedAddress = [selectedToLocation shortFormattedAddress];
     }
     if(![strToFormattedAddress length]>0){
-        strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+        strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
     }
     if(!strToFormattedAddress){
         strToFormattedAddress = @"";
@@ -1800,11 +1886,11 @@ UIImage *imageDetailDisclosure;
 }
 
 //US 137 implementation
-- (void)endEdit{
+- (IBAction)editCancelClicked:(id)sender{
     //Fixed DE-330
     // Clearing both textfield before calling seteditMode method.
     //[self.navigationController setNavigationBarHidden:YES animated:NO];
-    
+    [self heightToFromTable];
     if(editMode == FROM_EDIT){
         [self.fromTable setEditing:NO animated:NO];
         self.fromTableVC.isDeleteMode = false;
@@ -1839,12 +1925,13 @@ UIImage *imageDetailDisclosure;
             }
         }  
     }
+    [fromTableVC.btnEdit setSelected:NO];
     self.toTableVC.txtField.text = NULL_STRING;
     self.fromTableVC.txtField.text = NULL_STRING;
     [self setEditMode:NO_EDIT];
     [self.toTableVC markAndUpdateSelectedLocation:locations.tempSelectedToLocation];
     [self.fromTableVC markAndUpdateSelectedLocation:locations.tempSelectedFromLocation];
-    [self.navigationController.navigationBar setHidden:NO];
+    [self.navigationController setNavigationBarHidden:NO animated:NO];
 }
 
 #pragma mark UIdatePicker functionality
@@ -1868,10 +1955,13 @@ UIImage *imageDetailDisclosure;
     
     
         if (departOrArrive==DEPART) {
-            [self.btnPicker setTitle:[NSString stringWithFormat:@"Depart %@",
+            self.lblTxtDepartArrive.text = @"Depart:";
+            [self.btnPicker setTitle:[NSString stringWithFormat:@"%@",
                                       [[tripDateFormatter stringFromDate:[datePicker date]] lowercaseString]] forState:UIControlStateNormal];
         } else {
-            [self.btnPicker setTitle:[NSString stringWithFormat:@"Arrive by %@",
+            self.lblTxtDepartArrive.text = @"Arrive:";
+            [self.lblTxtDepartArrive setTextAlignment:NSTextAlignmentRight];
+            [self.btnPicker setTitle:[NSString stringWithFormat:@"%@",
                                       [[tripDateFormatter stringFromDate:[datePicker date]] lowercaseString]] forState:UIControlStateNormal];
         }
    
@@ -1906,7 +1996,7 @@ UIImage *imageDetailDisclosure;
     
     isTripDateCurrentTime = TRUE;
     if (isTripDateCurrentTime) {
-        [self.btnPicker setTitle:@"Depart now" forState:UIControlStateNormal];
+        [self.btnPicker setTitle:@"now" forState:UIControlStateNormal];
     }
     [self setTripDateLastChangedByUser:[[NSDate alloc] init]];
     [self setIsTripDateCurrentTime:YES];

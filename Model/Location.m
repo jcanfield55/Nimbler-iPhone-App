@@ -32,7 +32,8 @@
 @synthesize reverseGeoLocation;
 @synthesize lastRequestReverseGeoLocation;
 @synthesize addressComponentDictionary;
-@synthesize userUpdatedLocation;
+@dynamic userUpdatedLocation;
+@dynamic  locationName;
 
 // Static variables and methods to retrieve the Locations set wrapper
 static Locations *locations;
@@ -106,7 +107,7 @@ static Locations *locations;
 - (void)incrementToFrequency {
     if ([self toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF) { // if this is the first use...
         [self setFromFrequencyFloat:([self fromFrequencyFloat]+ 1.0)];  // insure this location will be visible in the from list as well 
-        [self setToFrequencyFloat:([self toFrequencyFloat]+2.0)];   // but give more weight to this location in the to list
+        [self setToFrequencyFloat:([self toFrequencyFloat]+1.0)];   // but give more weight to this location in the to list
     }
     else {
         [self setToFrequencyFloat:([self toFrequencyFloat]+1.0)];
@@ -117,7 +118,7 @@ static Locations *locations;
 - (void)incrementFromFrequency {
     if ([self fromFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF) { // if this is the first use...
         [self setToFrequencyFloat:([self toFrequencyFloat]+1.0)];  // insure this location will be visible in the to list as well 
-        [self setFromFrequencyFloat:([self fromFrequencyFloat]+2.0)];   // but give more weight to this location in the from list
+        [self setFromFrequencyFloat:([self fromFrequencyFloat]+1.0)];   // but give more weight to this location in the from list
     }
     else {
         [self setFromFrequencyFloat:([self fromFrequencyFloat]+1.0)];
