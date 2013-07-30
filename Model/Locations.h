@@ -71,6 +71,7 @@
 
 - (Location *)locationWithRawAddress:(NSString *)rawAddress;
 - (NSArray *)locationsWithFormattedAddress:(NSString *)formattedAddress; // Array of matching locations
+- (NSArray *)locationsWithLocationName:(NSString *)locationName;
 - (Location *)newEmptyLocation;
 - (LocationFromGoogle *)newEmptyLocationFromGoogle;
 - (LocationFromIOS *)newLocationFromIOSWithPlacemark:(CLPlacemark *)placemark error:(NSError *)error; // set error==nil if status is OK
