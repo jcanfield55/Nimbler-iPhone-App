@@ -36,12 +36,12 @@ typedef enum {
 @property (strong, nonatomic) IBOutlet UIView* PicketSelectView;  
 @property (strong, nonatomic) IBOutlet UITextView* txtFromView;
 @property (strong, nonatomic) IBOutlet UITextView* txtToView;
+@property (strong, nonatomic) IBOutlet UIImageView* imgViewMainToFromBG;
 @property (strong, nonatomic) IBOutlet UIImageView* imgViewFromBG;
 @property (strong, nonatomic) IBOutlet UIImageView* imgViewToBG;
 @property (strong, nonatomic) IBOutlet UIButton* btnSwap;
 @property (strong, nonatomic) IBOutlet UIButton* btnPicker;
-@property (strong, nonatomic) IBOutlet UIButton* btnFromEditCancel;
-@property (strong, nonatomic) IBOutlet UIButton* btnToEditCancel;
+@property (strong, nonatomic) IBOutlet UIButton* btnToFromEditCancel;
 @property (strong, nonatomic) UILabel* lblTxtToFromPlaceholder;
 @property (strong, nonatomic) IBOutlet UILabel* lblTxtDepartArrive;
 @property (strong, nonatomic) IBOutlet UILabel* lblTxtFrom;

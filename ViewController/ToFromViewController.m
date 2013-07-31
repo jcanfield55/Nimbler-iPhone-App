@@ -98,7 +98,7 @@
 @synthesize plan;
 @synthesize stations;
 @synthesize planRequestParameters;
-@synthesize mainToFromView,PicketSelectView,fromView,toView,txtFromView,txtToView,btnSwap,imgViewFromBG,imgViewToBG,btnPicker,lblTxtToFromPlaceholder,lblTxtDepartArrive,viewMode,btnFromEditCancel,btnToEditCancel,lblTxtFrom,lblTxtTo;
+@synthesize mainToFromView,PicketSelectView,fromView,toView,txtFromView,txtToView,btnSwap,imgViewMainToFromBG,imgViewFromBG,imgViewToBG,btnPicker,lblTxtToFromPlaceholder,lblTxtDepartArrive,viewMode,btnToFromEditCancel,lblTxtFrom,lblTxtTo;
 @synthesize managedObjectContext;
 // Constants for animating up and down the To: field
 #define FROM_SECTION 0
@@ -132,11 +132,11 @@ UIImage *imageDetailDisclosure;
             
             // Initialize the to & from tables
             CGRect rect1;
-            rect1.origin.x = 7;
-            rect1.origin.y = 56;
+            rect1.origin.x = 0;
+            rect1.origin.y = 76;
             rect1.size.width = TOFROM_TABLE_WIDTH ;
             if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                toTableHeight = TO_TABLE_HEIGHT_NO_CL_MODE_4INCH;
+                toTableHeight = TOFROM_HEIGHT_EDIT_MODE_4INCH;
             }
             else{
                 toTableHeight = TOFROM_HEIGHT_EDIT_MODE;
@@ -152,14 +152,13 @@ UIImage *imageDetailDisclosure;
             // Accessibility Label For UI Automation.
             self.mainTable.accessibilityLabel = TO_TABLE_VIEW;
             
-            toTable.layer.cornerRadius = TOFROM_TABLE_CORNER_RADIUS;
             
             CGRect rect2;
-            rect2.origin.x = 7;
-            rect2.origin.y = 56;
+            rect2.origin.x = 0;
+            rect2.origin.y = 76;
             rect2.size.width = TOFROM_TABLE_WIDTH; 
             if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                fromTableHeight = FROM_TABLE_HEIGHT_NO_CL_MODE_4INCH;
+                fromTableHeight = TOFROM_HEIGHT_EDIT_MODE_4INCH;
             }
             else{
                 fromTableHeight = TOFROM_HEIGHT_EDIT_MODE;
@@ -168,9 +167,8 @@ UIImage *imageDetailDisclosure;
             
             fromTable = [[UITableView alloc] initWithFrame:rect2 style:UITableViewStylePlain];
             [fromTable setRowHeight:TOFROM_ROW_HEIGHT];
-            fromTable.layer.cornerRadius = TOFROM_TABLE_CORNER_RADIUS;
+           
             fromTableVC = [[ToFromTableViewController alloc] initWithTable:fromTable isFrom:TRUE toFromVC:self locations: locations];
-            
             // Accessibility Label For UI Automation.
             fromTable.accessibilityLabel = FROM_TABLE_VIEW;
             
@@ -234,7 +232,7 @@ UIImage *imageDetailDisclosure;
 - (void)viewDidLoad{
     [super viewDidLoad];
     
-    lblTxtToFromPlaceholder = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 0.0, txtFromView.frame.size.width - 20.0, 34.0)];
+    lblTxtToFromPlaceholder = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 0.0, txtFromView.frame.size.width - 20.0, 30.0)];
     [lblTxtToFromPlaceholder setText:Placeholder_Text];
     [lblTxtToFromPlaceholder setBackgroundColor:[UIColor clearColor]];
     [lblTxtToFromPlaceholder setTextColor:[UIColor lightGrayColor]];
@@ -905,12 +903,17 @@ UIImage *imageDetailDisclosure;
 }
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
     if([text isEqualToString:@"\n"]) {
-        
+        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+            fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE_4INCH;
+        }
+        else{
+            fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE;
+        }
         if(editMode == FROM_EDIT){
-            [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y, fromTable.frame.size.width, TOFROM_HEIGHT_LOCATION_EDIT_MODE)];
+            [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y, fromTable.frame.size.width, fromTableHeight)];
         }
         else if (editMode == TO_EDIT){
-            [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y, toTable.frame.size.width, TOFROM_HEIGHT_LOCATION_EDIT_MODE)];
+            [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y, toTable.frame.size.width, fromTableHeight)];
         }
         
         // [fromTableVC textSubmitted:[textView text] forEvent:nil];
@@ -923,11 +926,17 @@ UIImage *imageDetailDisclosure;
 }
 
 - (void)heightToFromTable{
+    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+        fromTableHeight = TOFROM_HEIGHT_EDIT_MODE_4INCH;
+    }
+    else{
+        fromTableHeight = TOFROM_HEIGHT_EDIT_MODE;
+    }
     if(editMode == FROM_EDIT){
-        [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y, fromTable.frame.size.width, TOFROM_HEIGHT_EDIT_MODE)];
+        [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y, fromTable.frame.size.width, fromTableHeight)];
     }
     else if (editMode == TO_EDIT){
-        [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y, toTable.frame.size.width, TOFROM_HEIGHT_EDIT_MODE)];
+        [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y, toTable.frame.size.width, fromTableHeight)];
     }
 }
 
@@ -962,30 +971,34 @@ UIImage *imageDetailDisclosure;
     // Change NavBar buttons accordingly
     
     if(newEditMode == FROM_EDIT){
-        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 500)];
-        [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, self.fromView.frame.size.width+46, fromView.frame.size.height)];
-        [self.imgViewFromBG setFrame:CGRectMake(self.imgViewFromBG.frame.origin.x, self.imgViewFromBG.frame.origin.y, self.imgViewFromBG.frame.size.width+46, imgViewFromBG.frame.size.height)];
-        [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x-45, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width+33, txtFromView.frame.size.height)];
+        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height-48)];
+        [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height-48)];
+        [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_modeBG.png"]];
+        [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, self.fromView.frame.size.width-30, fromView.frame.size.height)];
+        [self.imgViewFromBG setFrame:CGRectMake(self.imgViewFromBG.frame.origin.x, self.imgViewFromBG.frame.origin.y, self.imgViewFromBG.frame.size.width-30, imgViewFromBG.frame.size.height)];
+        [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x-45, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width+13, txtFromView.frame.size.height)];
         [self.toView setHidden:YES];
         [self.lblTxtFrom setHidden:YES];
-        [self.btnFromEditCancel setHidden:NO];
+        [self.btnToFromEditCancel setHidden:NO];
         [self.btnSwap setHidden:YES];
         [self.PicketSelectView setHidden:YES];
         [self.viewMode setHidden:YES];
-        [self.mainToFromView addSubview:fromTable];
+        [self.view addSubview:fromTable];
     }
     else if (newEditMode == TO_EDIT){
-        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 500)];
+        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height-48)];
+        [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height-48)];
+        [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_modeBG.png"]];
         [self.fromView setHidden:YES];
-        [self.toView setFrame:CGRectMake(self.toView.frame.origin.x, self.fromView.frame.origin.y, self.toView.frame.size.width+46, toView.frame.size.height)];
-        [self.imgViewToBG setFrame:CGRectMake(self.imgViewToBG.frame.origin.x, self.imgViewToBG.frame.origin.y, self.imgViewToBG.frame.size.width+46, imgViewToBG.frame.size.height)];
-        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x-26, self.txtToView.frame.origin.y, self.txtToView.frame.size.width+15, txtToView.frame.size.height)];
+        [self.toView setFrame:CGRectMake(self.toView.frame.origin.x, self.toView.frame.origin.y-45, self.toView.frame.size.width-18, toView.frame.size.height)];
+        [self.imgViewToBG setFrame:CGRectMake(self.imgViewToBG.frame.origin.x, self.imgViewToBG.frame.origin.y, self.imgViewToBG.frame.size.width-30, imgViewToBG.frame.size.height)];
+        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x-30, self.txtToView.frame.origin.y, self.txtToView.frame.size.width-4, txtToView.frame.size.height)];
         [self.btnSwap setHidden:YES];
         [self.lblTxtTo setHidden:YES];
-        [self.btnToEditCancel setHidden:NO];
+        [self.btnToFromEditCancel setHidden:NO];
         [self.PicketSelectView setHidden:YES];
         [self.viewMode setHidden:YES];
-        [self.mainToFromView addSubview:toTable];
+        [self.view addSubview:toTable];
     }
     else if (newEditMode == NO_EDIT){
         [self setToFromViewOnNoEditMode];
@@ -1037,13 +1050,15 @@ UIImage *imageDetailDisclosure;
         }
         [self.txtToView setText:strToFormattedAddress];
 
-        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 121)];
+        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height+48)];
+        [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height+48)];
+        [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_MainToFromBG.png"]];
         [self.toView setHidden:NO];
-        [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, fromView.frame.size.width-46, fromView.frame.size.height)];
-        [self.imgViewFromBG setFrame:CGRectMake(self.imgViewFromBG.frame.origin.x, self.imgViewFromBG.frame.origin.y, imgViewFromBG.frame.size.width-46, imgViewFromBG.frame.size.height)];
-        [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x+45, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width-33, txtFromView.frame.size.height)];
+        [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, fromView.frame.size.width+30, fromView.frame.size.height)];
+        [self.imgViewFromBG setFrame:CGRectMake(self.imgViewFromBG.frame.origin.x, self.imgViewFromBG.frame.origin.y, imgViewFromBG.frame.size.width+30, imgViewFromBG.frame.size.height)];
+        [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x+43, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width-13, txtFromView.frame.size.height)];
         [self.lblTxtFrom setHidden:NO];
-        [self.btnFromEditCancel setHidden:YES];
+        [self.btnToFromEditCancel setHidden:YES];
         [fromTable removeFromSuperview];
         [self.txtFromView resignFirstResponder];
     }
@@ -1086,12 +1101,14 @@ UIImage *imageDetailDisclosure;
         }
         [self.txtToView setText:strToFormattedAddress];
         
-        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, 122)];
+        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height+50)];
+        [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height+48)];
+        [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_MainToFromBG.png"]];
         [self.fromView setHidden:NO];
-        [self.toView setFrame:CGRectMake(self.toView.frame.origin.x, 70, 237, toView.frame.size.height)];
-        [self.imgViewToBG setFrame:CGRectMake(self.imgViewToBG.frame.origin.x, self.imgViewToBG.frame.origin.y, 237, imgViewToBG.frame.size.height)];
-        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x+26, self.txtToView.frame.origin.y, self.txtToView.frame.size.width-15, txtToView.frame.size.height)];
-        [self.btnToEditCancel setHidden:YES];
+        [self.toView setFrame:CGRectMake(self.toView.frame.origin.x, self.toView.frame.origin.y+45, toView.frame.size.width+30, toView.frame.size.height)];
+        [self.imgViewToBG setFrame:CGRectMake(self.imgViewToBG.frame.origin.x, self.imgViewToBG.frame.origin.y, imgViewToBG.frame.size.width+30, imgViewToBG.frame.size.height)];
+        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x+26, self.txtToView.frame.origin.y, self.txtToView.frame.size.width+12, txtToView.frame.size.height)];
+        [self.btnToFromEditCancel setHidden:YES];
         [self.lblTxtTo setHidden:NO];
         [toTable removeFromSuperview];
         [self.txtToView resignFirstResponder];
@@ -1970,8 +1987,8 @@ UIImage *imageDetailDisclosure;
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        [toolBar setFrame:CGRectMake(0, 500, 320, 44)];
-        [datePicker setFrame:CGRectMake(0, 544, 320, 216)];
+        [toolBar setFrame:CGRectMake(0, 520, 320, 44)];
+        [datePicker setFrame:CGRectMake(0, 564, 320, 216)];
     }
     else{
         [toolBar setFrame:CGRectMake(0, 460, 320, 44)];
@@ -2011,8 +2028,8 @@ UIImage *imageDetailDisclosure;
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
      if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-         [toolBar setFrame:CGRectMake(0, 500, 320, 44)];
-         [datePicker setFrame:CGRectMake(0, 544, 320, 216)];
+         [toolBar setFrame:CGRectMake(0, 520, 320, 44)];
+         [datePicker setFrame:CGRectMake(0, 564, 320, 216)];
      }
      else{
          [toolBar setFrame:CGRectMake(0, 460, 320, 44)];
