@@ -351,7 +351,12 @@ UIImage *imageDetailDisclosure;
     [self.mainTable setBackgroundColor: [UIColor clearColor]]; 
     // Do any additional setup after loading the view from its nib.
     
-     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"ADV" style:UIBarButtonItemStylePlain target:self.navigationController.parentViewController action:@selector(revealToggle:)];
+    UIButton *btnAdvisories = [[UIButton alloc] initWithFrame:CGRectMake(0,0,25,22)];
+    [btnAdvisories addTarget:self.navigationController.parentViewController action:@selector(revealToggle:) forControlEvents:UIControlEventTouchUpInside];
+    [btnAdvisories setBackgroundImage:[UIImage imageNamed:@"notificationicon.png"] forState:UIControlStateNormal];
+    
+    UIBarButtonItem *btnBarAdvisories = [[UIBarButtonItem alloc] initWithCustomView:btnAdvisories];
+    self.navigationItem.leftBarButtonItem = btnBarAdvisories;
 }
 
 - (void) revealtoggle{

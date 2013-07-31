@@ -1362,10 +1362,10 @@ FeedBackForm *fbView;
     twitterCount = [[CustomBadge alloc] init];
     twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        [twitterCount setFrame:CGRectMake(45,28,twitterCount.frame.size.width,twitterCount.frame.size.height)];
+        [twitterCount setFrame:CGRectMake(25,28,twitterCount.frame.size.width,twitterCount.frame.size.height)];
     }
     else{
-        [twitterCount setFrame:CGRectMake(45,28,twitterCount.frame.size.width,twitterCount.frame.size.height)];
+        [twitterCount setFrame:CGRectMake(25,28,twitterCount.frame.size.width,twitterCount.frame.size.height)];
     }
     if (tweetConut == 0) {
         [twitterCount setHidden:YES];

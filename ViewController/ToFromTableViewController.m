@@ -205,9 +205,9 @@ NSString *strStreet2 = @"street ";
         [locationMoved setToFrequencyFloat:avgToFrequency];
     }
     else if(!isPreviousLocationFavorite && !isNextLocationFavorite){
-        if(isMovedLocationFavorite && !nextLocation){
-            [locationMoved setFromFrequencyFloat:([previousLocation fromFrequencyFloat]- 1)];
-            [locationMoved setToFrequencyFloat:([previousLocation toFrequencyFloat]-1)];
+        if(isMovedLocationFavorite || !nextLocation){
+            [locationMoved setFromFrequencyFloat:([nextLocation fromFrequencyFloat]+ 1)];
+            [locationMoved setToFrequencyFloat:([nextLocation toFrequencyFloat]+1)];
         }
         else{
             double avgFromFrequency = ([previousLocation fromFrequencyFloat] + [nextLocation fromFrequencyFloat])/2.0;

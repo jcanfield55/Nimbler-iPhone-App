@@ -64,7 +64,7 @@
 		<string>MKDirectionsModeStreetCar</string>
 	</array>
 	<key>UILaunchImageFile</key>
-	<string>Default-Portland.png</string>
+	<string>Default.png</string>
 	<key>UIPrerenderedIcon</key>
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>

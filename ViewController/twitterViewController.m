@@ -251,7 +251,7 @@ NSUserDefaults *prefs;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [arrayTweet count];
+    return [arrayTweet count]*2;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -269,68 +269,74 @@ NSUserDefaults *prefs;
                 [subview removeFromSuperview];
             }
         }
-        
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        
-        id key = [arrayTweet objectAtIndex:indexPath.row];
-        NSString *tweetDetail = [(NSDictionary*)key objectForKey:TWEET];
-        NSArray *tempArray = [tweetDetail componentsSeparatedByString:@":"];
-        
-        NSString *tweetTime =  [(NSDictionary*)key objectForKey:TWEET_TIME];
-        NSTimeInterval seconds = [tweetTime doubleValue]/1000;
-        NSDate *epochNSDate = [[NSDate alloc] initWithTimeIntervalSince1970:seconds];
-        NSDateFormatter *detailsTimeFormatter = [[NSDateFormatter alloc] init];
-        [detailsTimeFormatter setTimeStyle:NSDateFormatterShortStyle];
-        
-        UILabel *lblTextLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 10, 300, 30)];
-        [lblTextLabel setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
-        [lblTextLabel setText:[tempArray objectAtIndex:0]];
-        [lblTextLabel setTextColor:[UIColor whiteColor]];
-        [lblTextLabel setBackgroundColor:[UIColor clearColor]];
-        [cell.contentView addSubview:lblTextLabel];
-        
-        NSMutableString *strTweet = [[NSMutableString alloc] init];
-        for(int i = 1; i < [tempArray count]; i++){
-            NSString *tweetText = [[NSString alloc] initWithString:[tempArray objectAtIndex:i]];
-            if ([tweetText rangeOfString:@"http"].location != NSNotFound) {
-                tweetText = [NSString stringWithFormat:@"%@:",tweetText];
+         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        if(indexPath.row % 2 == 0){
+            id key = [arrayTweet objectAtIndex:indexPath.row/2];
+            NSString *tweetDetail = [(NSDictionary*)key objectForKey:TWEET];
+            NSArray *tempArray = [tweetDetail componentsSeparatedByString:@":"];
+            
+            NSString *tweetTime =  [(NSDictionary*)key objectForKey:TWEET_TIME];
+            NSTimeInterval seconds = [tweetTime doubleValue]/1000;
+            NSDate *epochNSDate = [[NSDate alloc] initWithTimeIntervalSince1970:seconds];
+            NSDateFormatter *detailsTimeFormatter = [[NSDateFormatter alloc] init];
+            [detailsTimeFormatter setTimeStyle:NSDateFormatterShortStyle];
+            
+            UILabel *lblTextLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 10, 300, 30)];
+            [lblTextLabel setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
+            [lblTextLabel setText:[tempArray objectAtIndex:0]];
+            [lblTextLabel setTextColor:[UIColor whiteColor]];
+            [lblTextLabel setBackgroundColor:[UIColor clearColor]];
+            [cell.contentView addSubview:lblTextLabel];
+            
+            NSMutableString *strTweet = [[NSMutableString alloc] init];
+            for(int i = 1; i < [tempArray count]; i++){
+                NSString *tweetText = [[NSString alloc] initWithString:[tempArray objectAtIndex:i]];
+                if ([tweetText rangeOfString:@"http"].location != NSNotFound) {
+                    tweetText = [NSString stringWithFormat:@"%@:",tweetText];
+                }
+                [strTweet appendString:tweetText];
             }
-            [strTweet appendString:tweetText];
+            CGSize stringSize = [strTweet sizeWithFont:[UIFont systemFontOfSize:16.0] constrainedToSize:CGSizeMake(220, 9999) lineBreakMode:UILineBreakModeWordWrap];
+            UITextView *uiTextView=[[UITextView alloc] initWithFrame:CGRectMake(55, 28, 220, stringSize.height + 40)];
+            uiTextView.font = [UIFont systemFontOfSize:15.0];
+            uiTextView.text = strTweet;
+            uiTextView.textColor = [UIColor whiteColor];
+            uiTextView.editable = NO;
+            uiTextView.dataDetectorTypes = UIDataDetectorTypeLink;
+            uiTextView.scrollEnabled = NO;
+            uiTextView.backgroundColor = [UIColor clearColor];
+            [cell.contentView addSubview:uiTextView];
+            
+            cell.textLabel.textColor = [UIColor whiteColor];
+            cell.detailTextLabel.numberOfLines= MAXLINE_TAG;
+            cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
+            
+            labelTime = (UILabel *)[cell viewWithTag:MAXLINE_TAG];
+            CGRect   lbl3Frame = CGRectMake(210,3, 73, 25);
+            labelTime = [[UILabel alloc] initWithFrame:lbl3Frame];
+            labelTime.tag = MAXLINE_TAG;
+            labelTime.backgroundColor = [UIColor clearColor];
+            [cell.contentView addSubview:labelTime];
+            labelTime.text = [[detailsTimeFormatter stringFromDate:epochNSDate] lowercaseString];
+            [labelTime setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
+            [labelTime setTextColor:[UIColor whiteColor]];
+            
+            // DE-270 Fixed
+            UIImage *image = getAgencyIcon([key objectForKey:TWEET_SOURCE]);
+            if(image)
+                cell.imageView.image =image;
+            else
+                cell.imageView.image = [UIImage imageNamed:CALTRAIN_IMG];
+            cell.imageView.layer.cornerRadius = CORNER_RADIUS_MEDIUM;
+            cell.imageView.layer.masksToBounds = YES;
+            [cell setBackgroundColor:[UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0]];
         }
-        CGSize stringSize = [strTweet sizeWithFont:[UIFont systemFontOfSize:16.0] constrainedToSize:CGSizeMake(220, 9999) lineBreakMode:UILineBreakModeWordWrap];
-        UITextView *uiTextView=[[UITextView alloc] initWithFrame:CGRectMake(55, 28, 220, stringSize.height + 40)];
-        uiTextView.font = [UIFont systemFontOfSize:15.0];
-        uiTextView.text = strTweet;
-        uiTextView.textColor = [UIColor whiteColor];
-        uiTextView.editable = NO;
-        uiTextView.dataDetectorTypes = UIDataDetectorTypeLink;
-        uiTextView.scrollEnabled = NO;
-        uiTextView.backgroundColor = [UIColor clearColor];
-        [cell.contentView addSubview:uiTextView];
-        
-        cell.textLabel.textColor = [UIColor whiteColor];
-        cell.detailTextLabel.numberOfLines= MAXLINE_TAG;
-        cell.detailTextLabel.textColor = [UIColor colorWithRed:98.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0];
-        
-        labelTime = (UILabel *)[cell viewWithTag:MAXLINE_TAG];
-        CGRect   lbl3Frame = CGRectMake(210,3, 73, 25);
-        labelTime = [[UILabel alloc] initWithFrame:lbl3Frame];
-        labelTime.tag = MAXLINE_TAG;
-        labelTime.backgroundColor = [UIColor clearColor];
-        [cell.contentView addSubview:labelTime];
-        labelTime.text = [[detailsTimeFormatter stringFromDate:epochNSDate] lowercaseString];
-        [labelTime setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
-        [labelTime setTextColor:[UIColor whiteColor]];
-        
-        // DE-270 Fixed
-        UIImage *image = getAgencyIcon([key objectForKey:TWEET_SOURCE]);
-        if(image)
-            cell.imageView.image =image;
-        else
-            cell.imageView.image = [UIImage imageNamed:CALTRAIN_IMG];
-        cell.imageView.layer.cornerRadius = CORNER_RADIUS_MEDIUM;
-        cell.imageView.layer.masksToBounds = YES;
-        [cell setBackgroundColor:[UIColor colorWithRed:96.0/255.0 green:96.0/255.0 blue:96.0/255.0 alpha:1.0]];
+        else{
+            UIImage *separatorImage = [UIImage imageNamed:@"separater@2x.png"];
+            UIImageView *imgView = [[UIImageView alloc] initWithImage:separatorImage];
+            [imgView setFrame:CGRectMake(0,0,separatorImage.size.width, separatorImage.size.height)];
+            [cell.contentView addSubview:imgView];
+        }
         return cell;
     }
     @catch (NSException *exception) {
@@ -341,8 +347,11 @@ NSUserDefaults *prefs;
 
 - (CGFloat)tableView:(UITableView *)aTableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if([arrayTweet count] > indexPath.row){
-        id key = [arrayTweet objectAtIndex:indexPath.row];
+    if(indexPath.row % 2 != 0){
+        return 2;
+    }
+    else if([arrayTweet count] > indexPath.row/2){
+        id key = [arrayTweet objectAtIndex:indexPath.row/2];
         NSString *tweetDetail = [(NSDictionary*)key objectForKey:TWEET];
         UIFont *cellFont = [UIFont systemFontOfSize:16.0];
         CGSize constraintSize = CGSizeMake(220.0f, MAXFLOAT);

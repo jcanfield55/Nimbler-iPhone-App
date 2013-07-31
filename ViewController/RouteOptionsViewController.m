@@ -207,7 +207,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 500;
     int mainTableYPOS = [self calculateTotalHeightOfButtonView];
     if(mainTableYPOS > 0){
         rect0.origin.y = 0;
-        rect0.origin.y = mainTableYPOS;
+        rect0.origin.y = mainTableYPOS+10;
         rect0.size.height = rect0.size.height - mainTableYPOS;
         [self createViewWithButtons:mainTableYPOS];
     }
@@ -285,7 +285,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 500;
                 for(int i=0;i<[subViews count];i++){
                     UIButton *button = [subViews objectAtIndex:i];
                     if([button isKindOfClass:[UIButton class]] && [button.titleLabel.text isEqualToString:BIKE_SHARE]){
-                        [button setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
+                        [button setBackgroundImage:[UIImage imageNamed:@"excludeUnSelected@2x.png"] forState:UIControlStateNormal];
                         [button setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
                         break;
                     }
@@ -296,7 +296,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 500;
                 for(int i=0;i<[subViews count];i++){
                     UIButton *button = [subViews objectAtIndex:i];
                     if([button isKindOfClass:[UIButton class]] && [button.titleLabel.text isEqualToString:returnBikeButtonTitle()]){
-                        [button setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
+                        [button setBackgroundImage:[UIImage imageNamed:@"excludeUnSelected@2x.png"] forState:UIControlStateNormal];
                         [button setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
                         break;
                     }
@@ -304,13 +304,13 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 500;
             }
             [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:btn.titleLabel.text];
             toggledSetting.setting = SETTING_INCLUDE_ROUTE;
-            [btn setBackgroundImage:[UIImage imageNamed:@"Updated_Pressed.png"] forState:UIControlStateNormal];
+            [btn setBackgroundImage:[UIImage imageNamed:@"excludeSelected@2x.png"] forState:UIControlStateNormal];
             [btn setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
         }
         else{
             [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:btn.titleLabel.text];
             toggledSetting.setting = SETTING_EXCLUDE_ROUTE;
-            [btn setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
+            [btn setBackgroundImage:[UIImage imageNamed:@"excludeUnSelected@2x.png"] forState:UIControlStateNormal];
             [btn setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
         }
         // Update sorted itineraries with new exclusions
@@ -734,44 +734,46 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 500;
 
 - (void) createViewWithButtons:(int)height{
     @try {
-        UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, height)];
+        UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(10, 10, 300, height)];
         [bgView setTag:1000];
-        [bgView setBackgroundColor:[UIColor whiteColor]];
+        [bgView setBackgroundColor:[UIColor clearColor]];
         [self.view addSubview:bgView];
         
-        UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, height)];
-        [imgView setImage:[UIImage imageNamed:@"img_travel.png"]];
+        UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 300, height)];
+        imgView.layer.cornerRadius = 5.0;
+        [imgView setImage:[UIImage imageNamed:@"excludeBackground@2x.png"]];
         [bgView addSubview:imgView];
         
         UILabel *lblChoose = [[UILabel alloc] initWithFrame:CGRectMake(0, 5, 80, 25)];
         [lblChoose setText:@"Travel By:"];
         [lblChoose setBackgroundColor:[UIColor clearColor]];
-        [lblChoose setFont:[UIFont fontWithName:@"Helvetica-Bold" size:13.0]];
+        [lblChoose setFont:[UIFont fontWithName:@"Helvetica" size:13.0]];
         [lblChoose setTextAlignment:UITextAlignmentCenter];
-        [lblChoose setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+        [lblChoose setTextColor:[UIColor lightGrayColor]];
         [bgView addSubview:lblChoose];
         
         int xPos = 80;
         int yPos = 5;
-        int width = 80;
-        int btnHeight = 25;
+        //int width = 80;
+        int btnHeight = 38;
         for(int i=0;i<[[plan excludeSettingsArray] count];i++){
             RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
+            CGSize stringsize = [routeExcludeSetting.key sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:12.0]];
             UIButton *btnAgency = [UIButton buttonWithType:UIButtonTypeCustom];
-            if(xPos+width > 320){
-                yPos = yPos + 25 + 5;
-                xPos = 0;
+            if(xPos+stringsize.width+13 > 300){
+                yPos = yPos + btnHeight + 5;
+                xPos = 5;
             }
-            [btnAgency setFrame:CGRectMake(xPos,yPos, width, btnHeight)];
-            xPos = xPos + width;
+            [btnAgency setFrame:CGRectMake(xPos,yPos, stringsize.width+13, btnHeight)];
+            xPos = xPos + stringsize.width+15;
             [btnAgency setTitle:routeExcludeSetting.key forState:UIControlStateNormal];
             [btnAgency.titleLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:12.0]];
             if([[RouteExcludeSettings latestUserSettings] settingForKey:routeExcludeSetting.key] == SETTING_EXCLUDE_ROUTE){
-                [btnAgency setBackgroundImage:[UIImage imageNamed:@"Updated_UnPressed.png"] forState:UIControlStateNormal];
+                [btnAgency setBackgroundImage:[UIImage imageNamed:@"excludeUnSelected@2x.png"] forState:UIControlStateNormal];
                 [btnAgency setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
             }
             else{
-                [btnAgency setBackgroundImage:[UIImage imageNamed:@"Updated_Pressed.png"] forState:UIControlStateNormal];
+                [btnAgency setBackgroundImage:[UIImage imageNamed:@"excludeSelected@2x.png"] forState:UIControlStateNormal];
                 [btnAgency setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
             }
             [btnAgency addTarget:self action:@selector(toggleExcludeButton:) forControlEvents:UIControlEventTouchUpInside];
@@ -802,7 +804,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 500;
     int buffer = 0;
     if(totalRows > 0)
         buffer = (totalRows+1) * 5;
-    return totalRows * 25 + buffer;
+    return totalRows * 38 + buffer;
 }
 - (bool)waitForNonNullValueOfBlock:(BOOL(^)(void))block
 {

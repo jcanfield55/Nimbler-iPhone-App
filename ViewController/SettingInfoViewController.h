@@ -64,6 +64,8 @@
 @property (nonatomic, strong) UILabel *lblMaxWalkDistance;
 @property (nonatomic, strong) UILabel *lblCurrentMaxWalkDistance;
 @property (nonatomic, strong) SettingDetailViewController *settingDetailViewController;
+@property (nonatomic, strong) UIImageView *imgViewPushFrequency;
+@property (nonatomic, strong) UIImageView *imgViewMaxWalkDistance;
 
 -(IBAction)UpdateSetting:(id)sender;
 -(IBAction)sliderWalkDistance:(UISlider *)sender;
