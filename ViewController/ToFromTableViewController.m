@@ -93,7 +93,7 @@ NSString *strStreet2 = @"street ";
         imageDetailDisclosure = [UIImage imageNamed:@"img_locListArrow.png"];
         
         btnEdit = [UIButton buttonWithType:UIButtonTypeCustom];
-        [btnEdit setFrame:CGRectMake(280,8,40,10)];
+        [btnEdit setFrame:CGRectMake(275,8,40,10)];
         [btnEdit setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
         btnEdit.titleLabel.font = [UIFont systemFontOfSize:14];
         [btnEdit setTitle:@"Edit" forState:UIControlStateNormal];
@@ -463,6 +463,18 @@ NSString *strStreet2 = @"street ";
     // Prepare the cell settings
     Location *loc = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]]
                                         isFrom:isFrom];
+    
+    if(loc.locationName){
+        [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
+        cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR_CELLTEXT];
+        cell.detailTextLabel.textColor = [UIColor GRAY_FONT_COLOR_CELLDETAILTEXT];
+    }
+    else{
+        [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
+        cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR_CELLTEXT];
+    }
+    
+    
     // if There is PlaceName available for location
     if([loc isKindOfClass:[LocationFromLocalSearch class ]]){
         cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
@@ -475,9 +487,7 @@ NSString *strStreet2 = @"street ";
             cell.detailTextLabel.text = nil;
             cell.textLabel.numberOfLines = 2;
         }
-        [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
-        cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR_CELLTEXT];
-        cell.detailTextLabel.textColor = [UIColor GRAY_FONT_COLOR_CELLDETAILTEXT];
+        
         [cell setAccessoryView:nil];
     }
     else{
@@ -506,8 +516,6 @@ NSString *strStreet2 = @"street ";
             
         }
         else if (loc == selectedLocation) {
-            [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
-            cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
             if([[loc fromFrequency] doubleValue]>=100000.0){
                 [btnFavorite setSelected:YES];
                 [btnFavorite setImage:[UIImage imageNamed:@"img_activeStar.png"] forState:UIControlStateNormal];
@@ -515,8 +523,6 @@ NSString *strStreet2 = @"street ";
             [cell setAccessoryView:btnFavorite];
         } else {
             // just bold for normal cell
-            [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
-            cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
             if([[loc fromFrequency] doubleValue]>=100000.0){
                 [btnFavorite setSelected:YES];
                 [btnFavorite setImage:[UIImage imageNamed:@"img_activeStar.png"] forState:UIControlStateNormal];

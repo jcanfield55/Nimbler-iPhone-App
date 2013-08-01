@@ -100,7 +100,7 @@
 									<object class="IBUITextView" id="290086056">
 										<reference key="NSNextResponder" ref="356756940"/>
 										<int key="NSvFlags">292</int>
-										<string key="NSFrame">{{50, 4}, {198, 30}}</string>
+										<string key="NSFrame">{{44, 4}, {204, 30}}</string>
 										<reference key="NSSuperview" ref="356756940"/>
 										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView" ref="300246328"/>
@@ -228,7 +228,7 @@
 									<object class="IBUITextView" id="96071631">
 										<reference key="NSNextResponder" ref="236705478"/>
 										<int key="NSvFlags">292</int>
-										<string key="NSFrame">{{33, 4}, {214, 30}}</string>
+										<string key="NSFrame">{{26, 4}, {221, 30}}</string>
 										<reference key="NSSuperview" ref="236705478"/>
 										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView" ref="408106998"/>
@@ -343,7 +343,6 @@
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<int key="IBUIContentHorizontalAlignment">0</int>
 								<int key="IBUIContentVerticalAlignment">0</int>
-								<int key="IBUIButtonType">1</int>
 								<reference key="IBUIHighlightedTitleColor" ref="140259170"/>
 								<object class="NSColor" key="IBUINormalTitleColor">
 									<int key="NSColorSpace">1</int>
@@ -1327,20 +1326,20 @@
 			</object>
 			<object class="NSArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
-				<string>{16, 16}</string>
-				<string>{16, 16}</string>
-				<string>{16, 16}</string>
-				<string>{16, 16}</string>
-				<string>{16, 16}</string>
-				<string>{16, 16}</string>
-				<string>{16, 16}</string>
-				<string>{16, 16}</string>
+				<string>{606, 206}</string>
+				<string>{506, 76}</string>
+				<string>{86, 76}</string>
+				<string>{86, 76}</string>
+				<string>{120, 76}</string>
+				<string>{606, 116}</string>
+				<string>{406, 76}</string>
+				<string>{602, 112}</string>
 				<string>{61, 37}</string>
-				<string>{16, 16}</string>
-				<string>{16, 16}</string>
-				<string>{16, 16}</string>
-				<string>{16, 16}</string>
-				<string>{16, 16}</string>
+				<string>{47, 29}</string>
+				<string>{86, 76}</string>
+				<string>{86, 76}</string>
+				<string>{86, 76}</string>
+				<string>{86, 76}</string>
 			</object>
 		</object>
 		<string key="IBCocoaTouchPluginVersion">2083</string>

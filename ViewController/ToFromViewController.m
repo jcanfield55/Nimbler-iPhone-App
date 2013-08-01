@@ -968,15 +968,15 @@ UIImage *imageDetailDisclosure;
 }
 - (void)setEditMode:(ToFromEditMode)newEditMode
 {
-    // Change NavBar buttons accordingly
+    // Change TOFROMVIEW FRAMES accordingly EDIT MODE
     
     if(newEditMode == FROM_EDIT){
-        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height-48)];
-        [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height-48)];
+        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
+        [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
         [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_modeBG.png"]];
-        [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, self.fromView.frame.size.width-30, fromView.frame.size.height)];
-        [self.imgViewFromBG setFrame:CGRectMake(self.imgViewFromBG.frame.origin.x, self.imgViewFromBG.frame.origin.y, self.imgViewFromBG.frame.size.width-30, imgViewFromBG.frame.size.height)];
-        [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x-45, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width+13, txtFromView.frame.size.height)];
+        [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, self.fromView.frame.size.width-TOFROMVIEW_HEIGHT_EDIT_MODE, fromView.frame.size.height)];
+        [self.imgViewFromBG setFrame:CGRectMake(self.imgViewFromBG.frame.origin.x, self.imgViewFromBG.frame.origin.y, self.imgViewFromBG.frame.size.width-TOFROMVIEW_HEIGHT_EDIT_MODE, imgViewFromBG.frame.size.height)];
+        [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x-TXTFROMVIEW_X_POSITION_EDIT_MODE, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width+TXTFROMVIEW_WIDTH_EDIT_MODE, txtFromView.frame.size.height)];
         [self.toView setHidden:YES];
         [self.lblTxtFrom setHidden:YES];
         [self.btnToFromEditCancel setHidden:NO];
@@ -986,13 +986,13 @@ UIImage *imageDetailDisclosure;
         [self.view addSubview:fromTable];
     }
     else if (newEditMode == TO_EDIT){
-        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height-48)];
-        [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height-48)];
+        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
+        [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
         [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_modeBG.png"]];
         [self.fromView setHidden:YES];
-        [self.toView setFrame:CGRectMake(self.toView.frame.origin.x, self.toView.frame.origin.y-45, self.toView.frame.size.width-18, toView.frame.size.height)];
-        [self.imgViewToBG setFrame:CGRectMake(self.imgViewToBG.frame.origin.x, self.imgViewToBG.frame.origin.y, self.imgViewToBG.frame.size.width-30, imgViewToBG.frame.size.height)];
-        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x-30, self.txtToView.frame.origin.y, self.txtToView.frame.size.width-4, txtToView.frame.size.height)];
+        [self.toView setFrame:CGRectMake(self.toView.frame.origin.x, self.toView.frame.origin.y-45, self.toView.frame.size.width-TOFROMVIEW_HEIGHT_EDIT_MODE, toView.frame.size.height)];
+        [self.imgViewToBG setFrame:CGRectMake(self.imgViewToBG.frame.origin.x, self.imgViewToBG.frame.origin.y, self.imgViewToBG.frame.size.width-TOFROMVIEW_HEIGHT_EDIT_MODE, imgViewToBG.frame.size.height)];
+        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x-TXTTOVIEW_X_POSITION_EDIT_MODE, self.txtToView.frame.origin.y, self.txtToView.frame.size.width+3, txtToView.frame.size.height)];
         [self.btnSwap setHidden:YES];
         [self.lblTxtTo setHidden:YES];
         [self.btnToFromEditCancel setHidden:NO];
@@ -1050,13 +1050,13 @@ UIImage *imageDetailDisclosure;
         }
         [self.txtToView setText:strToFormattedAddress];
 
-        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height+48)];
-        [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height+48)];
+        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
+        [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
         [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_MainToFromBG.png"]];
         [self.toView setHidden:NO];
-        [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, fromView.frame.size.width+30, fromView.frame.size.height)];
-        [self.imgViewFromBG setFrame:CGRectMake(self.imgViewFromBG.frame.origin.x, self.imgViewFromBG.frame.origin.y, imgViewFromBG.frame.size.width+30, imgViewFromBG.frame.size.height)];
-        [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x+43, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width-13, txtFromView.frame.size.height)];
+        [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, fromView.frame.size.width+TOFROMVIEW_HEIGHT_EDIT_MODE, fromView.frame.size.height)];
+        [self.imgViewFromBG setFrame:CGRectMake(self.imgViewFromBG.frame.origin.x, self.imgViewFromBG.frame.origin.y, imgViewFromBG.frame.size.width+TOFROMVIEW_HEIGHT_EDIT_MODE, imgViewFromBG.frame.size.height)];
+        [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x+TXTFROMVIEW_X_POSITION_EDIT_MODE, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width-TXTFROMVIEW_WIDTH_EDIT_MODE, txtFromView.frame.size.height)];
         [self.lblTxtFrom setHidden:NO];
         [self.btnToFromEditCancel setHidden:YES];
         [fromTable removeFromSuperview];
@@ -1101,13 +1101,13 @@ UIImage *imageDetailDisclosure;
         }
         [self.txtToView setText:strToFormattedAddress];
         
-        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height+50)];
-        [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height+48)];
+        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
+        [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
         [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_MainToFromBG.png"]];
         [self.fromView setHidden:NO];
-        [self.toView setFrame:CGRectMake(self.toView.frame.origin.x, self.toView.frame.origin.y+45, toView.frame.size.width+30, toView.frame.size.height)];
-        [self.imgViewToBG setFrame:CGRectMake(self.imgViewToBG.frame.origin.x, self.imgViewToBG.frame.origin.y, imgViewToBG.frame.size.width+30, imgViewToBG.frame.size.height)];
-        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x+26, self.txtToView.frame.origin.y, self.txtToView.frame.size.width+12, txtToView.frame.size.height)];
+        [self.toView setFrame:CGRectMake(self.toView.frame.origin.x, self.toView.frame.origin.y+45, toView.frame.size.width+TOFROMVIEW_HEIGHT_EDIT_MODE, toView.frame.size.height)];
+        [self.imgViewToBG setFrame:CGRectMake(self.imgViewToBG.frame.origin.x, self.imgViewToBG.frame.origin.y, imgViewToBG.frame.size.width+TOFROMVIEW_HEIGHT_EDIT_MODE, imgViewToBG.frame.size.height)];
+        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x+TXTTOVIEW_X_POSITION_EDIT_MODE, self.txtToView.frame.origin.y, self.txtToView.frame.size.width+9, txtToView.frame.size.height)];
         [self.btnToFromEditCancel setHidden:YES];
         [self.lblTxtTo setHidden:NO];
         [toTable removeFromSuperview];
@@ -1987,8 +1987,8 @@ UIImage *imageDetailDisclosure;
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        [toolBar setFrame:CGRectMake(0, 520, 320, 44)];
-        [datePicker setFrame:CGRectMake(0, 564, 320, 216)];
+        [toolBar setFrame:CGRectMake(0, 530, 320, 44)];
+        [datePicker setFrame:CGRectMake(0, 574, 320, 216)];
     }
     else{
         [toolBar setFrame:CGRectMake(0, 460, 320, 44)];
@@ -2028,8 +2028,8 @@ UIImage *imageDetailDisclosure;
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
      if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-         [toolBar setFrame:CGRectMake(0, 520, 320, 44)];
-         [datePicker setFrame:CGRectMake(0, 564, 320, 216)];
+         [toolBar setFrame:CGRectMake(0, 530, 320, 44)];
+         [datePicker setFrame:CGRectMake(0, 574, 320, 216)];
      }
      else{
          [toolBar setFrame:CGRectMake(0, 460, 320, 44)];
