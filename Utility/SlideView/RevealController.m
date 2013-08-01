@@ -70,12 +70,13 @@
 
 - (void)revealController:(ZUUIRevealController *)revealController willRevealRearViewController:(UIViewController *)rearViewController 
 {
-    [nc_AppDelegate sharedInstance].isTwitterView = YES;
-    RXCustomTabBar *rxCustomTabbar = (RXCustomTabBar*)[nc_AppDelegate sharedInstance].tabBarController;
-   twitterViewController *twitterVC = (twitterViewController *)((UINavigationController *)[rxCustomTabbar.viewControllers objectAtIndex:0]).visibleViewController;
+   UINavigationController *navController = (UINavigationController *) ((UITabBarController *) rearViewController).selectedViewController;
+    twitterViewController *twitterVC = (twitterViewController *)navController.topViewController;
     if([twitterVC isKindOfClass:[twitterViewController class]]){
-       [twitterVC getAdvisoryData];
+        [twitterVC getAdvisoryData];
         [twitterVC hideTabBar];
+        [nc_AppDelegate sharedInstance].isNotificationsButtonClicked = YES;
+        [nc_AppDelegate sharedInstance].isTwitterView = YES;
     }
 }
 
@@ -86,6 +87,7 @@
 
 - (void)revealController:(ZUUIRevealController *)revealController willHideRearViewController:(UIViewController *)rearViewController
 {
+    [nc_AppDelegate sharedInstance].isNotificationsButtonClicked = NO;
     [nc_AppDelegate sharedInstance].isTwitterView = NO;
 	NSLog(@"%@", NSStringFromSelector(_cmd));
 }

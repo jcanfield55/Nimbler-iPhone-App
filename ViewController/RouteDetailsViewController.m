@@ -433,7 +433,7 @@ NSUserDefaults *prefs;
             [[cell detailTextLabel] setNumberOfLines:0];
             [[cell detailTextLabel] setTextColor:[UIColor GRAY_FONT_COLOR]];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            cell.contentView.backgroundColor = [UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW];
+           // cell.contentView.backgroundColor = [UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW];
         }
         
         if ([cell.contentView subviews]){

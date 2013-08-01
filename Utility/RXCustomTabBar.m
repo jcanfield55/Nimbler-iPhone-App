@@ -7,6 +7,7 @@
 //
 
 #import "RXCustomTabBar.h"
+#import "nc_AppDelegate.h"
 
 @implementation RXCustomTabBar
 
@@ -62,6 +63,7 @@
 	[btn1 setBackgroundImage:btnImageSelected forState:UIControlStateSelected]; // Set the image for the selected state of the button
 	[btn1 setTag:0]; // Assign the button a "tag" so when our "click" event is called we know which button was pressed.
 	[self selectTab:0];
+    [nc_AppDelegate sharedInstance].isNotificationsButtonClicked = NO;
 	// Now we repeat the process for the other buttons
     
 	
@@ -113,6 +115,7 @@
 			[btn2 setSelected:false];
 			[btn3 setSelected:false];
 			[btn4 setSelected:false];
+            [nc_AppDelegate sharedInstance].isNotificationsButtonClicked = YES;
 			break;
 		case 1:
 			[btn1 setSelected:false];

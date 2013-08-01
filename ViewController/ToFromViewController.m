@@ -299,15 +299,7 @@ UIImage *imageDetailDisclosure;
         [self.navigationController.navigationBar insertSubview:[[UIImageView alloc]initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
     }
     UIImage *imgTitle;
-    if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-        imgTitle = [UIImage imageNamed:@"nimblrCaltrain.png"];
-    }
-    else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
-        imgTitle = [UIImage imageNamed:@"nimblrDC.png"];
-    }
-    else{
-        imgTitle = [UIImage imageNamed:@"nimblr.png"];
-    }
+        imgTitle = [UIImage imageNamed:@"nimbler.png"];
     self.navigationItem.titleView = [[UIImageView alloc]  initWithImage:imgTitle];
 
     if(editMode == NO_EDIT){
@@ -457,7 +449,7 @@ UIImage *imageDetailDisclosure;
     //Part Of US-177 Implementation
     [nc_AppDelegate sharedInstance].toLoc = self.toLocation;
     [nc_AppDelegate sharedInstance].fromLoc = self.fromLocation;
-    [[nc_AppDelegate sharedInstance].twitterCount setHidden:YES];
+    //[[nc_AppDelegate sharedInstance].twitterCount setHidden:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -1734,7 +1726,7 @@ UIImage *imageDetailDisclosure;
         if (!activityIndicator) {
             UIActivityIndicatorViewStyle style;
             BOOL setColorToBlack = NO;
-            if ([UIActivityIndicatorView instancesRespondToSelector:@selector(color)]) {
+            if ([UIActivityIndicatorView instancesRespondToSelector:@selector(setColor:)]) {
                 style = UIActivityIndicatorViewStyleWhiteLarge;
                 setColorToBlack = YES;
             }
@@ -1742,7 +1734,7 @@ UIImage *imageDetailDisclosure;
                 style = UIActivityIndicatorViewStyleGray;
             }
             activityIndicator = [[UIActivityIndicatorView alloc]  
-                                 initWithActivityIndicatorStyle:style]; 
+                                 initWithActivityIndicatorStyle:style];
             if (setColorToBlack) {
                 [activityIndicator setColor:[UIColor blackColor]];
             }

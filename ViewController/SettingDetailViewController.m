@@ -169,6 +169,9 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+    if([[[UIDevice currentDevice] systemVersion] intValue] < 5) {
+        [tblDetailSetting setBackgroundColor:[UIColor colorWithRed:128.0/255.0 green:128.0/255.0 blue:128.0/255.0 alpha:1.0]];
+    }
     UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
     [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
     lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];

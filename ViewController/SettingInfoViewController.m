@@ -162,6 +162,9 @@ UIImage *imageDetailDisclosure;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if([[[UIDevice currentDevice] systemVersion] intValue] < 5) {
+        [tblSetting setBackgroundColor:[UIColor colorWithRed:128.0/255.0 green:128.0/255.0 blue:128.0/255.0 alpha:1.0]];
+    }
     [self.navigationController.navigationBar setHidden:YES];
     [self.navigationItem setHidesBackButton:YES animated:YES];
     
@@ -337,7 +340,6 @@ UIImage *imageDetailDisclosure;
     // Code Added to select Trip Planner Tab
     RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
     [rxCustomTabBar selectTab:0];
-    [rxCustomTabBar selectTab1:0];
 }
 
 -(UIAlertView *) upadetSettings

@@ -135,7 +135,7 @@
 
 // Images
 
-#define NAVIGATION_BAR_IMAGE  [UIImage imageNamed:@"img_navigationbar.png"]
+#define NAVIGATION_BAR_IMAGE  [UIImage imageNamed:@"navBar.png"]
 
 #define NAVIGATION_ITEM1_XPOS 0
 #define NAVIGATION_ITEM2_XPOS 95

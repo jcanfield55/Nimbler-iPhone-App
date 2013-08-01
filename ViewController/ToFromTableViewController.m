@@ -206,15 +206,37 @@ NSString *strStreet2 = @"street ";
         [locationMoved setToFrequencyFloat:avgToFrequency];
     }
     else if(!isPreviousLocationFavorite && !isNextLocationFavorite){
-        if(isMovedLocationFavorite || !nextLocation){
-            [locationMoved setFromFrequencyFloat:([nextLocation fromFrequencyFloat]+ 1)];
-            [locationMoved setToFrequencyFloat:([nextLocation toFrequencyFloat]+1)];
+        if(isMovedLocationFavorite){
+            if(!nextLocation){
+                [locationMoved setFromFrequencyFloat:([previousLocation fromFrequencyFloat] - 1)];
+                [locationMoved setToFrequencyFloat:([previousLocation toFrequencyFloat] - 1)];
+            }
+            else if(!previousLocation){
+                [locationMoved setFromFrequencyFloat:([nextLocation fromFrequencyFloat] + 1)];
+                [locationMoved setToFrequencyFloat:([nextLocation toFrequencyFloat] + 1)];
+            }
+            else{
+                double avgFromFrequency = ([previousLocation fromFrequencyFloat] + [nextLocation fromFrequencyFloat])/2.0;
+                double avgToFrequency = ([previousLocation toFrequencyFloat] + [nextLocation toFrequencyFloat])/2.0;
+                [locationMoved setFromFrequencyFloat:avgFromFrequency];
+                [locationMoved setToFrequencyFloat:avgToFrequency];
+            }
         }
         else{
-            double avgFromFrequency = ([previousLocation fromFrequencyFloat] + [nextLocation fromFrequencyFloat])/2.0;
-            double avgToFrequency = ([previousLocation toFrequencyFloat] + [nextLocation toFrequencyFloat])/2.0;
-            [locationMoved setFromFrequencyFloat:avgFromFrequency];
-            [locationMoved setToFrequencyFloat:avgToFrequency];
+            if(!nextLocation){
+                [locationMoved setFromFrequencyFloat:([previousLocation fromFrequencyFloat] - 1)];
+                [locationMoved setToFrequencyFloat:([previousLocation toFrequencyFloat] - 1)];
+            }
+            else if(!previousLocation){
+                [locationMoved setFromFrequencyFloat:([nextLocation fromFrequencyFloat] + 1)];
+                [locationMoved setToFrequencyFloat:([nextLocation toFrequencyFloat] + 1)];
+            }
+            else{
+                double avgFromFrequency = ([previousLocation fromFrequencyFloat] + [nextLocation fromFrequencyFloat])/2.0;
+                double avgToFrequency = ([previousLocation toFrequencyFloat] + [nextLocation toFrequencyFloat])/2.0;
+                [locationMoved setFromFrequencyFloat:avgFromFrequency];
+                [locationMoved setToFrequencyFloat:avgToFrequency];
+            }
         }
     }
     else if(!isPreviousLocationFavorite && isNextLocationFavorite){

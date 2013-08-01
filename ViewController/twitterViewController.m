@@ -119,7 +119,9 @@ NSUserDefaults *prefs;
     refreshSpinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     refreshSpinner.frame = CGRectMake(floorf(floorf(REFRESH_HEADER_HEIGHT - 20) / 2), floorf((REFRESH_HEADER_HEIGHT - 20) / 2), 20, 20);
     refreshSpinner.hidesWhenStopped = YES;
-    [refreshSpinner setColor:[UIColor whiteColor]];
+    if ([UIActivityIndicatorView instancesRespondToSelector:@selector(setColor:)]) {
+        [refreshSpinner setColor:[UIColor whiteColor]];
+    }
     
     [refreshHeaderView addSubview:refreshLabel];
     [refreshHeaderView addSubview:refreshArrow];
@@ -226,6 +228,11 @@ NSUserDefaults *prefs;
    [self startProcessForGettingTweets]; 
     mainTable.delegate = self;
     mainTable.dataSource = self;
+    if([nc_AppDelegate sharedInstance].isNotificationsButtonClicked){
+        [self getAdvisoryData];
+        [self hideTabBar];
+        [nc_AppDelegate sharedInstance].isTwitterView = YES;
+    }
 }
 
 - (void) viewDidAppear:(BOOL)animated{
@@ -646,7 +653,7 @@ NSUserDefaults *prefs;
 }
 
 - (void) hideTabBar {
-    [[nc_AppDelegate sharedInstance].twitterCount setHidden:YES];
+    //[[nc_AppDelegate sharedInstance].twitterCount setHidden:YES];
     for(UIView *view in self.tabBarController.view.subviews)
     {
         CGRect _rect = view.frame;

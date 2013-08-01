@@ -97,6 +97,7 @@ static nc_AppDelegate *appDelegate;
 @synthesize isRouteDetailView;
 @synthesize locationFromlocManager;
 @synthesize revealViewController;
+@synthesize isNotificationsButtonClicked;
 
 
 
@@ -403,6 +404,8 @@ FeedBackForm *fbView;
     
     // Create an instance of a UINavigationController and put toFromViewController as the first view
     @try {
+        
+        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
         SettingInfoViewController *settingsView;
         FeedBackForm *feedbackView;
@@ -425,7 +428,6 @@ FeedBackForm *fbView;
         self.tabBarController.viewControllers = [NSArray arrayWithObjects:tweetController,settingController,fbController, nil];
         
         revealViewController = [[RevealController alloc] initWithFrontViewController:navController1 rearViewController:self.tabBarController];
-        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
          self.window.rootViewController = revealViewController;
         [self.window makeKeyAndVisible];
     }
@@ -503,7 +505,7 @@ FeedBackForm *fbView;
                 matchingLocations = [locations locationsWithLocationName:CURRENT_LOCATION];
                 if([matchingLocations count]==0){
                     currentLocation = [locations newEmptyLocation];
-                    [currentLocation setLocationName:CURRENT_LOCATION];
+                    [currentLocation setFormattedAddress:CURRENT_LOCATION];
                     [currentLocation setFromFrequencyFloat:CURRENT_LOCATION_STARTING_FROM_FREQUENCY];
                     [currentLocation setToFrequencyFloat:CURRENT_LOCATION_STARTING_FROM_FREQUENCY];
                     [toFromViewController reloadTables]; // DE30 fix (1 of 2)
@@ -767,7 +769,6 @@ FeedBackForm *fbView;
             RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
             if (rxCustomTabBar.selectedIndex != 1) {
                 [rxCustomTabBar selectTab:1];
-                [rxCustomTabBar selectTab1:1];
             }
             [[NSUserDefaults standardUserDefaults] setInteger:1 forKey:LAST_SELECTED_TAB_INDEX];
             [[NSUserDefaults standardUserDefaults] synchronize];
@@ -897,7 +898,6 @@ FeedBackForm *fbView;
             RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
             if (rxCustomTabBar.selectedIndex != 0) {
                 [rxCustomTabBar selectTab:0];
-                [rxCustomTabBar selectTab1:0];
             }
             // If not at ToFromViewController on the Nav Controller, pop to home
             if ([[toFromViewController navigationController] visibleViewController] != toFromViewController) {
@@ -1297,7 +1297,6 @@ FeedBackForm *fbView;
             if(self.isFromBackground){
                 RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
                 [rxCustomTabBar selectTab:1];
-                [rxCustomTabBar selectTab1:1];
                 [twitterView getAdvisoryData];
             }
             else{
@@ -1362,15 +1361,15 @@ FeedBackForm *fbView;
     twitterCount = [[CustomBadge alloc] init];
     twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        [twitterCount setFrame:CGRectMake(25,28,twitterCount.frame.size.width,twitterCount.frame.size.height)];
+        [twitterCount setFrame:CGRectMake(25,8,twitterCount.frame.size.width,twitterCount.frame.size.height)];
     }
     else{
-        [twitterCount setFrame:CGRectMake(25,28,twitterCount.frame.size.width,twitterCount.frame.size.height)];
+        [twitterCount setFrame:CGRectMake(25,8,twitterCount.frame.size.width,twitterCount.frame.size.height)];
     }
     if (tweetConut == 0) {
         [twitterCount setHidden:YES];
     } else {
-        [self.window addSubview:twitterCount];
+        [toFromViewController.navigationController.navigationBar addSubview:twitterCount];
         [twitterCount setHidden:NO];
     }
     if(isDatePickerOpen){
@@ -1415,7 +1414,6 @@ FeedBackForm *fbView;
         RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
         if (rxCustomTabBar.selectedIndex != 2) {
             [rxCustomTabBar selectTab:2];
-            [rxCustomTabBar selectTab1:2];
         }
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
         [[NSUserDefaults standardUserDefaults] synchronize];

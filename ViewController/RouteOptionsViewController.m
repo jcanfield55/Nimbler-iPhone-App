@@ -207,8 +207,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 500;
     int mainTableYPOS = [self calculateTotalHeightOfButtonView];
     if(mainTableYPOS > 0){
         rect0.origin.y = 0;
-        rect0.origin.y = mainTableYPOS+10;
-        rect0.size.height = rect0.size.height - mainTableYPOS;
+        rect0.origin.y = mainTableYPOS+20;
+        rect0.size.height = rect0.size.height - (mainTableYPOS+20);
         [self createViewWithButtons:mainTableYPOS];
     }
     if(self.navigationController.navigationBarHidden==YES){
@@ -442,9 +442,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 500;
         }
         Leg *lastLeg = [[itin sortedLegs] lastObject];
         timeDiffLastLeg = lastLeg.timeDiffInMins;
-        UIView *viewCellBackground = [[UIView alloc] init];
-        [viewCellBackground setBackgroundColor:[UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW]];
-        cell.backgroundView = viewCellBackground;
+//        UIView *viewCellBackground = [[UIView alloc] init];
+//        [viewCellBackground setBackgroundColor:[UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW]];
+//        cell.backgroundView = viewCellBackground;
         NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
                                                          timeIntervalSinceDate:[itin startTimeOfFirstLeg]]);
         titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
@@ -752,20 +752,20 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 500;
         [lblChoose setTextColor:[UIColor lightGrayColor]];
         [bgView addSubview:lblChoose];
         
-        int xPos = 80;
+        int xPos = 70;
         int yPos = 5;
-        //int width = 80;
         int btnHeight = 38;
+        int width = 72;
         for(int i=0;i<[[plan excludeSettingsArray] count];i++){
             RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
             CGSize stringsize = [routeExcludeSetting.key sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:12.0]];
             UIButton *btnAgency = [UIButton buttonWithType:UIButtonTypeCustom];
-            if(xPos+stringsize.width+13 > 300){
+            if(xPos+width > 300){
                 yPos = yPos + btnHeight + 5;
                 xPos = 5;
             }
-            [btnAgency setFrame:CGRectMake(xPos,yPos, stringsize.width+13, btnHeight)];
-            xPos = xPos + stringsize.width+15;
+            [btnAgency setFrame:CGRectMake(xPos,yPos,width, btnHeight)];
+            xPos = xPos+width;
             [btnAgency setTitle:routeExcludeSetting.key forState:UIControlStateNormal];
             [btnAgency.titleLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:12.0]];
             if([[RouteExcludeSettings latestUserSettings] settingForKey:routeExcludeSetting.key] == SETTING_EXCLUDE_ROUTE){
