@@ -58,6 +58,8 @@
 @property (nonatomic , strong) NSArray *sortedMatchingToLocations;
 @property (nonatomic) int matchingFromRowCount;
 @property (nonatomic) int matchingToRowCount;
+@property (nonatomic, strong)  NSArray *searchableFromLocations;
+@property (nonatomic, strong)  NSArray *searchableToLocations;
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkGeoMgr:(RKObjectManager *)rkG;
 

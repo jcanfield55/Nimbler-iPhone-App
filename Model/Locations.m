@@ -21,8 +21,6 @@
     NSArray *sortedMatchingToLocations;
     NSArray *sortedFromLocations;  // All locations with fromFrequency > TOFROM_FREQUENCY_VISIBILITY_CUTOFF sorted by from frequency
     NSArray *sortedToLocations;    // All locations with toFrequency > TOFROM_FREQUENCY_VISIBILITY_CUTOFF sorted by to frequency
-    NSArray *searchableFromLocations;  // All locations which are searchable (excludeFromSearch != true) sorted by fromFrequency
-    NSArray *searchableToLocations;    // All locations which are searchable (excludeFromSearch != true) sorted by toFrequency
     NSFetchRequest *fetchRequestFromFreqThreshold;
     NSFetchRequest *fetchRequestToFreqThreshold;
     NSFetchRequest *fetchReqSearchableGoogleFromLocations;
@@ -81,6 +79,9 @@
 @synthesize sortedMatchingToLocations;
 @synthesize matchingFromRowCount;
 @synthesize matchingToRowCount;
+
+@synthesize searchableFromLocations;
+@synthesize searchableToLocations;
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkGeoMgr:(RKObjectManager *)rkG
 {

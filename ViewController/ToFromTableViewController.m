@@ -267,7 +267,6 @@ NSString *strStreet2 = @"street ";
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        if(toFromVC.editMode == FROM_EDIT){
             NSMutableArray *sortedLocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingFromLocations];
             Location *location = [locations.sortedMatchingFromLocations objectAtIndex:[indexPath row]];
             location.fromFrequency = [NSNumber numberWithDouble:0.5];
@@ -276,17 +275,18 @@ NSString *strStreet2 = @"street ";
             [sortedLocations removeObjectAtIndex:[indexPath row]];
             locations.sortedMatchingFromLocations = sortedLocations;
             locations.matchingFromRowCount = locations.matchingFromRowCount - 1;
-        }
-        else if(toFromVC.editMode == TO_EDIT){
-            NSMutableArray *sortedLocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingToLocations];
-            Location *location = [locations.sortedMatchingFromLocations objectAtIndex:[indexPath row]];
-            location.fromFrequency = [NSNumber numberWithDouble:0.5];
-            location.toFrequency = [NSNumber numberWithDouble:0.5];
-            saveContext(managedObjectContext);
-            [sortedLocations removeObjectAtIndex:[indexPath row]];
             locations.sortedMatchingToLocations = sortedLocations;
             locations.matchingToRowCount = locations.matchingToRowCount - 1;
+        if([location isEqual:locations.selectedFromLocation]){
+            locations.selectedFromLocation = nil;
+            locations.tempSelectedFromLocation = nil;
         }
+        if([location isEqual:locations.selectedToLocation]){
+            locations.selectedToLocation = nil;
+            locations.tempSelectedToLocation = nil;
+        }
+        locations.searchableFromLocations = nil;
+        locations.searchableToLocations = nil;
         [myTableView reloadData];
     }
 }
