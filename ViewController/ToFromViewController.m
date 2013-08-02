@@ -267,20 +267,6 @@ UIImage *imageDetailDisclosure;
     
     [self.txtToView setText:strToFormattedAddress];
     
-    //Mode
-    UIButton *btnMode;
-    btnMode = (UIButton *)[self.viewMode viewWithTag:[BIKE_MODE_Tag intValue]];
-    if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE] isEqualToString:@"1"]){
-        [btnMode setSelected:YES];
-    }
-    btnMode = (UIButton *)[self.viewMode viewWithTag:[TRANSIT_MODE_Tag intValue]];
-    if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] isEqualToString:@"1"]){
-        [btnMode setSelected:YES];
-    }
-    btnMode = (UIButton *)[self.viewMode viewWithTag:[WALK_MODE_Tag intValue]];
-    if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] isEqualToString:@"1"]){
-        [btnMode setSelected:YES];
-    }
     // Accessibility Label For UI Automation.
     self.mainTable.accessibilityLabel = TO_FROM_TABLE_VIEW;
     
@@ -393,6 +379,29 @@ UIImage *imageDetailDisclosure;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    if(![[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE]){
+        [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_TRANSIT_MODE];
+    }
+    if(![[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE]){
+       [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_WALK_MODE]; 
+    }
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    //Mode
+    UIButton *btnMode;
+    btnMode = (UIButton *)[self.viewMode viewWithTag:[BIKE_MODE_Tag intValue]];
+    if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE] isEqualToString:@"1"]){
+        [btnMode setSelected:YES];
+    }
+    btnMode = (UIButton *)[self.viewMode viewWithTag:[TRANSIT_MODE_Tag intValue]];
+    if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] isEqualToString:@"1"]){
+        [btnMode setSelected:YES];
+    }
+    btnMode = (UIButton *)[self.viewMode viewWithTag:[WALK_MODE_Tag intValue]];
+    if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] isEqualToString:@"1"]){
+        [btnMode setSelected:YES];
+    }
+    
     //[self.navigationController setNavigationBarHidden:YES animated:NO];
     [mainTable setFrame:CGRectMake(0, 0, 320, 319)];
     NSArray *itinerariesArray = [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray;

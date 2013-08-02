@@ -758,7 +758,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 500;
         int width = 72;
         for(int i=0;i<[[plan excludeSettingsArray] count];i++){
             RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
-            CGSize stringsize = [routeExcludeSetting.key sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:12.0]];
             UIButton *btnAgency = [UIButton buttonWithType:UIButtonTypeCustom];
             if(xPos+width > 300){
                 yPos = yPos + btnHeight + 5;
