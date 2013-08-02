@@ -142,6 +142,11 @@ NSString *strStreet2 = @"street ";
 
 - (UITableViewCellEditingStyle) tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
     if(isDeleteMode){
+        Location *loc = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]]
+                                            isFrom:isFrom];
+        if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) {
+            return UITableViewCellEditingStyleNone;
+        }
         return UITableViewCellEditingStyleDelete;
     }
     return UITableViewCellEditingStyleNone;
@@ -344,6 +349,11 @@ NSString *strStreet2 = @"street ";
             Location *loc = [locations
                              locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]]
                              isFrom:isFrom];  //selected Location
+        if(loc != toFromVC.currentLocation){
+            [toFromVC.btnCureentLoc setUserInteractionEnabled:YES];
+            [toFromVC.btnCureentLoc setSelected:NO];
+        }
+        
             if([loc isKindOfClass:[LocationFromLocalSearch class]])
             {
                 LocationFromLocalSearch *locationFromLocalSearch = (LocationFromLocalSearch *)loc;
