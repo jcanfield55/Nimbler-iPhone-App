@@ -36,6 +36,7 @@
 @synthesize lblBikeFriendlyStreet;
 @synthesize isSettingDetail;
 @synthesize settingDetailDelegate;
+@synthesize imgViewCheckMark;
 
 @synthesize backButton;
 @synthesize titleLabel;
@@ -68,8 +69,9 @@
         
         sliderMaximumBikeDistance = [[UISlider alloc] initWithFrame:CGRectMake(SLIDERS_XOPS,SLIDERS_YPOS,SLIDERS_WIDTH,SLIDERS_HEIGHT)];
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
-            [sliderMaximumBikeDistance
-             setMinimumTrackTintColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+            [sliderMaximumBikeDistance setMinimumTrackImage:[UIImage imageNamed:@"redSlider.png"] forState:UIControlStateNormal];
+            [sliderMaximumBikeDistance setMaximumTrackImage:[UIImage imageNamed:@"whiteSlider.png"] forState:UIControlStateNormal];
+            [sliderMaximumBikeDistance setThumbImage:[UIImage imageNamed:@"thumbSlider.png"] forState:UIControlStateNormal];
         }
         [sliderMaximumBikeDistance setMinimumValue:MAX_BIKE_DISTANCE_MIN_VALUE];
         [sliderMaximumBikeDistance setMaximumValue:MAX_BIKE_DISTANCE_MAX_VALUE];
@@ -87,8 +89,9 @@
         
         sliderPreferenceFastVsSafe = [[UISlider alloc] initWithFrame:CGRectMake(SLIDERS_XOPS, SLIDERS_YPOS1, SLIDERS_WIDTH,SLIDERS_HEIGHT)];
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
-            [sliderPreferenceFastVsSafe
-             setMinimumTrackTintColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+            [sliderPreferenceFastVsSafe setMinimumTrackImage:[UIImage imageNamed:@"redSlider.png"] forState:UIControlStateNormal];
+            [sliderPreferenceFastVsSafe setMaximumTrackImage:[UIImage imageNamed:@"whiteSlider.png"] forState:UIControlStateNormal];
+            [sliderPreferenceFastVsSafe setThumbImage:[UIImage imageNamed:@"thumbSlider.png"] forState:UIControlStateNormal];
         }
         [sliderPreferenceFastVsSafe setMinimumValue:BIKE_PREFERENCE_MIN_VALUE];
         [sliderPreferenceFastVsSafe setMaximumValue:BIKE_PREFERENCE_MAX_VALUE];
@@ -103,8 +106,9 @@
         
         sliderPreferenceFastVsFlat = [[UISlider alloc] initWithFrame:CGRectMake(SLIDERS_XOPS, SLIDERS_YPOS1, SLIDERS_WIDTH,SLIDERS_HEIGHT)];
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
-            [sliderPreferenceFastVsFlat
-             setMinimumTrackTintColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+            [sliderPreferenceFastVsFlat setMinimumTrackImage:[UIImage imageNamed:@"redSlider.png"] forState:UIControlStateNormal];
+            [sliderPreferenceFastVsFlat setMaximumTrackImage:[UIImage imageNamed:@"whiteSlider.png"] forState:UIControlStateNormal];
+            [sliderPreferenceFastVsFlat setThumbImage:[UIImage imageNamed:@"thumbSlider.png"] forState:UIControlStateNormal];
         }
         [sliderPreferenceFastVsFlat setMinimumValue:BIKE_PREFERENCE_MIN_VALUE];
         [sliderPreferenceFastVsFlat setMaximumValue:BIKE_PREFERENCE_MAX_VALUE];
@@ -157,12 +161,17 @@
         lblBikeFriendlyStreet.adjustsFontSizeToFitWidth=YES;
         lblBikeFriendlyStreet.text= BIKE_FRIENDLY_STREET;
         [lblBikeFriendlyStreet setFont:[UIFont SMALL_OBLIQUE_FONT]];
+        
+        imgViewCheckMark = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]];
     }
     return self;
 }
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+    if([[[UIDevice currentDevice] systemVersion] intValue] < 5) {
+        [tblDetailSetting setBackgroundColor:[UIColor colorWithRed:128.0/255.0 green:128.0/255.0 blue:128.0/255.0 alpha:1.0]];
+    }
     UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
     [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
     lblNavigationTitle.textColor= [UIColor NAVIGATION_TITLE_COLOR];
@@ -326,28 +335,28 @@
     if(nSettingRow == N_SETTINGS_ROW_ADVISORY){
         if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
             cell.textLabel.text = WMATA_ADVISORIES;
-            cell.accessoryType = (userPrefs.wMataAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+            cell.accessoryView = (userPrefs.wMataAdvisories ? [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]] : nil);
         }
         else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:PORTLAND_BUNDLE_IDENTIFIER]){
             cell.textLabel.text = TRIMET_ADVISORIES;
-            cell.accessoryType = (userPrefs.trimetAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+            cell.accessoryView = (userPrefs.trimetAdvisories ? [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]] : nil);
         }
         else{
             if(indexPath.row == SETTINGS_ADVISORY_SFMUNI_ROW){
                 cell.textLabel.text = SFMUNI_ADVISORIES;
-                cell.accessoryType = (userPrefs.sfMuniAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+                cell.accessoryView = (userPrefs.sfMuniAdvisories ? [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]] : nil);
             }
             else if(indexPath.row == SETTINGS_ADVISORY_BART_ROW){
                 cell.textLabel.text = BART_ADVISORIES;
-                cell.accessoryType = (userPrefs.bartAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+                cell.accessoryView = (userPrefs.bartAdvisories ? [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]] : nil);
             }
             else if(indexPath.row == SETTINGS_ADVISORY_ACTRANSIT_ROW){
                 cell.textLabel.text = ACTRANSIT_ADVISORIES;
-                cell.accessoryType = (userPrefs.acTransitAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+                cell.accessoryView = (userPrefs.acTransitAdvisories ? [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]] : nil);
             }
             else if(indexPath.row == SETTINGS_ADVISORY_CALTRAIN_ROW){
                 cell.textLabel.text = CALTRAIN_ADVISORIES;
-                cell.accessoryType = (userPrefs.caltrainAdvisories ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+                cell.accessoryView = (userPrefs.caltrainAdvisories ? [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]] : nil);
             }
         }
     }
@@ -364,51 +373,51 @@
     else if(nSettingRow == N_SETTINGS_ROW_PUSH_TIMING){
         if(indexPath.row == SETTINGS_TIMING_WEEKDAY_MORNING_ROW){
             cell.textLabel.text = WEEKDAY_MORNING;
-            cell.accessoryType = (userPrefs.notificationMorning ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+            cell.accessoryView = (userPrefs.notificationMorning ? [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]] : nil);
         }
         else if(indexPath.row == SETTINGS_TIMING_WEEKDAY_MIDDAY_ROW){
             cell.textLabel.text = WEEKDAY_MIDDAY;
-            cell.accessoryType = (userPrefs.notificationMidday ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+            cell.accessoryView = (userPrefs.notificationMidday ? [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]] : nil);
         }
         else if(indexPath.row == SETTINGS_TIMING_WEEKDAY_EVENING_ROW){
             cell.textLabel.text = WEEKDAY_EVENING_PEAK;
-            cell.accessoryType = (userPrefs.notificationEvening ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+            cell.accessoryView = (userPrefs.notificationEvening ? [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]] : nil);
         }
         else if(indexPath.row == SETTINGS_TIMING_WEEKDAY_NIGHT_ROW){
             cell.textLabel.text = WEEKDAY_NIGHT;
-            cell.accessoryType = (userPrefs.notificationNight ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+            cell.accessoryView = (userPrefs.notificationNight ? [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]] : nil);
         }
         else if(indexPath.row == SETTINGS_TIMING_WEEKEND_ROW){
             cell.textLabel.text = WEEKENDS;
-            cell.accessoryType = (userPrefs.notificationWeekend ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+            cell.accessoryView = (userPrefs.notificationWeekend ? [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]] : nil);
         }
     }
     else if(nSettingRow == N_SETTINGS_ROW_TRANSIT_MODE){
         if(indexPath.row == 0){
             cell.textLabel.text = TRANSIT_ONLY;
             if(userPrefs.transitMode == TRANSIT_MODE_TRANSIT_ONLY){
-                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]];
             }
             else{
-                cell.accessoryType = UITableViewCellAccessoryNone;
+                cell.accessoryView = nil;
             }
         }
         else if(indexPath.row == 1){
             cell.textLabel.text = BIKE_ONLY;
             if(userPrefs.transitMode == TRANSIT_MODE_BIKE_ONLY){
-                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]];
             }
             else{
-                cell.accessoryType = UITableViewCellAccessoryNone;
+                cell.accessoryView = nil;
             }
         }
         else if(indexPath.row == 2){
             cell.textLabel.text = BIKE_AND_TRANSIT;
             if(userPrefs.transitMode == TRANSIT_MODE_BIKE_AND_TRANSIT){
-                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]];
             }
             else{
-                cell.accessoryType = UITableViewCellAccessoryNone;
+                cell.accessoryView = nil;
             }
         }
     }
@@ -505,12 +514,12 @@
             if(indexPath.row == SETTINGS_ADVISORY_WMATA_ROW){
                 if(userPrefs.wMataAdvisories){
                     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    cell.accessoryView = nil;
                     userPrefs.wMataAdvisories = false;
                 }
                 else{
                     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                    cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                    cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]];
                     userPrefs.wMataAdvisories = true;
                 }
             }
@@ -519,12 +528,12 @@
             if(indexPath.row == SETTINGS_ADVISORY_TRIMET_ROW){
                 if(userPrefs.trimetAdvisories){
                     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                    cell.accessoryType = UITableViewCellAccessoryNone;
+                   cell.accessoryView = nil;
                     userPrefs.trimetAdvisories = false;
                 }
                 else{
                     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                    cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                    cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]];
                     userPrefs.trimetAdvisories = true;
                 }
             }
@@ -533,48 +542,48 @@
             if(indexPath.row == SETTINGS_ADVISORY_SFMUNI_ROW){
                 if(userPrefs.sfMuniAdvisories){
                     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    cell.accessoryView = nil;
                     userPrefs.sfMuniAdvisories = false;
                 }
                 else{
                     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                    cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                    cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]];
                     userPrefs.sfMuniAdvisories = true;
                 }
             }
             if(indexPath.row == SETTINGS_ADVISORY_BART_ROW){
                 if(userPrefs.bartAdvisories){
                     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    cell.accessoryView = nil;
                     userPrefs.bartAdvisories = false;
                 }
                 else{
                     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                    cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                    cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]];
                     userPrefs.bartAdvisories = true;
                 }
             }
             if(indexPath.row == SETTINGS_ADVISORY_ACTRANSIT_ROW){
                 if(userPrefs.acTransitAdvisories){
                     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    cell.accessoryView = nil;
                     userPrefs.acTransitAdvisories = false;
                 }
                 else{
                     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                    cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                    cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]];
                     userPrefs.acTransitAdvisories = true;
                 }
             }
             if(indexPath.row == SETTINGS_ADVISORY_CALTRAIN_ROW){
                 if(userPrefs.caltrainAdvisories){
                     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                    cell.accessoryType = UITableViewCellAccessoryNone;
+                    cell.accessoryView = nil;
                     userPrefs.caltrainAdvisories = false;
                 }
                 else{
                     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                    cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                    cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]];
                     userPrefs.caltrainAdvisories = true;
                 }
             } 
@@ -585,24 +594,24 @@
         if(indexPath.row == SETTINGS_TIMING_WEEKDAY_MORNING_ROW){
             if(userPrefs.notificationMorning){
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryNone;
+                cell.accessoryView = nil;
                 userPrefs.notificationMorning = false;
             }
             else{
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]];
                 userPrefs.notificationMorning = true;
             }
         }
         else if(indexPath.row == SETTINGS_TIMING_WEEKDAY_MIDDAY_ROW){
             if(userPrefs.notificationMidday){
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryNone;
+               cell.accessoryView = nil;
                 userPrefs.notificationMidday = false;
             }
             else{
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]];
                 userPrefs.notificationMidday = true;
             }
         }
@@ -610,36 +619,36 @@
         else if(indexPath.row == SETTINGS_TIMING_WEEKDAY_EVENING_ROW){
             if(userPrefs.notificationEvening){
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryNone;
+                cell.accessoryView = nil;
                 userPrefs.notificationEvening = false; 
             }
             else{
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]];
                 userPrefs.notificationEvening = true;
             }
         }
         else if(indexPath.row == SETTINGS_TIMING_WEEKDAY_NIGHT_ROW){
             if(userPrefs.notificationNight){
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryNone;
+                cell.accessoryView = nil;
                 userPrefs.notificationNight = false;
             }
             else{
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]];
                 userPrefs.notificationNight = true; 
             }
         }
         else if(indexPath.row == SETTINGS_TIMING_WEEKEND_ROW){
             if(userPrefs.notificationWeekend){
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryNone;
+                cell.accessoryView = nil;
                 userPrefs.notificationWeekend = false; 
             }
             else{
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkMark.png"]];
                 userPrefs.notificationWeekend = true;
             }
         }

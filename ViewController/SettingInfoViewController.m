@@ -49,6 +49,8 @@
 @synthesize lblMaxWalkDistance;
 @synthesize lblCurrentMaxWalkDistance;
 @synthesize settingDetailViewController;
+@synthesize imgViewPushFrequency;
+@synthesize imgViewMaxWalkDistance;
 
 UIImage *imageDetailDisclosure;
 
@@ -81,8 +83,11 @@ UIImage *imageDetailDisclosure;
         
         sliderPushNotificationFrequency = [[UISlider alloc] initWithFrame:CGRectMake(SLIDER_PUSH_FREQUENCY_XPOS,SLIDER_PUSH_FREQUENCY_YPOS,SLIDER_PUSH_FREQUENCY_WIDTH,SLIDER_PUSH_FREQUENCY_HEIGHT)];
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
-            [sliderPushNotificationFrequency
-             setMinimumTrackTintColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+//            [sliderPushNotificationFrequency
+//             setMinimumTrackTintColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+            [sliderPushNotificationFrequency setMinimumTrackImage:[UIImage imageNamed:@"redSlider.png"] forState:UIControlStateNormal];
+            [sliderPushNotificationFrequency setMaximumTrackImage:[UIImage imageNamed:@"whiteSlider.png"] forState:UIControlStateNormal];
+            [sliderPushNotificationFrequency setThumbImage:[UIImage imageNamed:@"thumbSlider.png"] forState:UIControlStateNormal];
         }
         [sliderPushNotificationFrequency setMinimumValue:PUSH_FREQUENCY_MIN_VALUE];
         [sliderPushNotificationFrequency setMaximumValue:PUSH_FREQUENCY_MAX_VALUE];
@@ -97,6 +102,9 @@ UIImage *imageDetailDisclosure;
         lblFrequencyOfPush.adjustsFontSizeToFitWidth=YES;
         lblFrequencyOfPush.text=FREQUENCY_OF_PUSH;
         [lblFrequencyOfPush setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
+        
+        imgViewPushFrequency = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 25, 25)];
+        imgViewMaxWalkDistance = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 25, 25)];
         
         lblMaximumWalkDistance=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_MAIN_LABEL_XPOS,SETTING_MAIN_LABEL_YPOS,SETTING_MAIN_LABEL_WIDTH,SETTING_MAIN_LABEL_HEIGHT)];
         [lblMaximumWalkDistance setTextColor:[UIColor whiteColor]];
@@ -121,8 +129,11 @@ UIImage *imageDetailDisclosure;
         
         sliderMaximumWalkDistance = [[UISlider alloc] initWithFrame:CGRectMake(SLIDERS_XOPS,SLIDERS_YPOS, SLIDERS_WIDTH,SLIDERS_HEIGHT)];
         if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
-            [sliderMaximumWalkDistance
-             setMinimumTrackTintColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+//            [sliderMaximumWalkDistance
+//             setMinimumTrackTintColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+            [sliderMaximumWalkDistance setMinimumTrackImage:[UIImage imageNamed:@"redSlider.png"] forState:UIControlStateNormal];
+            [sliderMaximumWalkDistance setMaximumTrackImage:[UIImage imageNamed:@"whiteSlider.png"] forState:UIControlStateNormal];
+            [sliderMaximumWalkDistance setThumbImage:[UIImage imageNamed:@"thumbSlider.png"] forState:UIControlStateNormal];
         }
         [sliderMaximumWalkDistance setMinimumValue:MAX_WALK_DISTANCE_MIN_VALUE];
         [sliderMaximumWalkDistance setMaximumValue:MAX_WALK_DISTANCE_MAX_VALUE];
@@ -151,6 +162,9 @@ UIImage *imageDetailDisclosure;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if([[[UIDevice currentDevice] systemVersion] intValue] < 5) {
+        [tblSetting setBackgroundColor:[UIColor colorWithRed:128.0/255.0 green:128.0/255.0 blue:128.0/255.0 alpha:1.0]];
+    }
     [self.navigationController.navigationBar setHidden:YES];
     [self.navigationItem setHidesBackButton:YES animated:YES];
     
@@ -326,7 +340,6 @@ UIImage *imageDetailDisclosure;
     // Code Added to select Trip Planner Tab
     RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
     [rxCustomTabBar selectTab:0];
-    [rxCustomTabBar selectTab1:0];
 }
 
 -(UIAlertView *) upadetSettings
@@ -552,7 +565,9 @@ UIImage *imageDetailDisclosure;
     [cell.detailTextLabel setFont:[UIFont SMALL_OBLIQUE_FONT]];
     if(indexPath.section == SETTINGS_ADVISORY_SECTION_NUM){
         cell.textLabel.text = ADVISORY_CHOICES;
+        [cell.detailTextLabel setTextColor:[UIColor colorWithRed:180.0/255.0 green:180.0/255.0 blue:180.0/255.0 alpha:1.0]];
          cell.detailTextLabel.text = [self detailtextLabelString:indexPath];
+        cell.imageView.image = [UIImage imageNamed:@"advisories.png"];
     }
     else if(indexPath.section == SETTINGS_PUSH_SECTION_NUM){
         if(indexPath.row == SETTINGS_PUSH_ON_OFF_ROW_NUM){
@@ -564,6 +579,7 @@ UIImage *imageDetailDisclosure;
             else{
                 [cell setAccessoryView:switchPushNotification];
             }
+            cell.imageView.image = [UIImage imageNamed:@"push.png"];
         }
         else if(indexPath.row == SETTINGS_PUSH_FREQUENCY_ROW_NUM){
             cell.textLabel.text = nil;
@@ -590,6 +606,12 @@ UIImage *imageDetailDisclosure;
             else{
                 [cell.contentView addSubview:lblRarely];
             }
+            if (subviews && [subviews count]>0 && [subviews indexOfObject:imgViewPushFrequency] != NSNotFound) {
+            }
+            else{
+                [cell.contentView addSubview:imgViewPushFrequency];
+            }
+            [imgViewPushFrequency setImage:[UIImage imageNamed:@"pushFrequency.png"]];
         }
         else if(indexPath.row == SETTINGS_PUSH_SOUND_ROW_NUM){
             if(userPrefs.standardNotificationSound &&
@@ -609,10 +631,14 @@ UIImage *imageDetailDisclosure;
                 cell.detailTextLabel.text = STANDARD;
             }
             cell.textLabel.text = NOTIFICATION_SOUND;
+            cell.imageView.image = [UIImage imageNamed:@"notifSound.png"];
+            [cell.detailTextLabel setTextColor:[UIColor colorWithRed:180.0/255.0 green:180.0/255.0 blue:180.0/255.0 alpha:1.0]];
         }
         else if(indexPath.row == SETTINGS_PUSH_TIMING_ROW_NUM){
             cell.textLabel.text = NOTIFICATION_TIMING;
             cell.detailTextLabel.text = [self detailtextLabelString:indexPath];
+            cell.imageView.image = [UIImage imageNamed:@"notifTiming.png"];
+            [cell.detailTextLabel setTextColor:[UIColor colorWithRed:180.0/255.0 green:180.0/255.0 blue:180.0/255.0 alpha:1.0]];
         }
         else {
             logError(@"SettingInfoViewController->cellForRowAtIndexPath",
@@ -631,6 +657,7 @@ UIImage *imageDetailDisclosure;
             if (userPrefs.transitMode == TRANSIT_MODE_BIKE_AND_TRANSIT) {
                 cell.detailTextLabel.text = BIKE_AND_TRANSIT;
             }
+            [cell.detailTextLabel setTextColor:[UIColor colorWithRed:180.0/255.0 green:180.0/255.0 blue:180.0/255.0 alpha:1.0]];
         }
         else if(indexPath.row == SETTINGS_MAX_WALK_DISTANCE_ROW_NUM){
             cell.textLabel.text = nil;
@@ -658,9 +685,16 @@ UIImage *imageDetailDisclosure;
             else{
                 [cell.contentView addSubview:lblMaxWalkDistance];
             }
+            if (subviews && [subviews count]>0 && [subviews indexOfObject:imgViewMaxWalkDistance] != NSNotFound) {
+            }
+            else{
+                [cell.contentView addSubview:imgViewMaxWalkDistance];
+            }
+            [imgViewMaxWalkDistance setImage:[UIImage imageNamed:@"maxWalkDistance.png"]];
         }
         else if(indexPath.row == SETTINGS_BIKE_PREF_ROW_NUM){
             cell.textLabel.text = BIKE_PREFERENCES;
+            cell.imageView.image = [UIImage imageNamed:@"bikePreference.png"];
         }
         else {
             logError(@"SettingInfoViewController->cellForRowAtIndexPath",
@@ -709,10 +743,10 @@ UIImage *imageDetailDisclosure;
         settingDetailViewController.nSettingRow = nSettingRow;
         settingDetailViewController.isSettingDetail = YES;
         settingDetailViewController.settingDetailDelegate = self;
-        if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
-            [self.navigationController pushViewController:settingDetailViewController animated:YES];
-        }
-        else{
+//        if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
+//            [self.navigationController pushViewController:settingDetailViewController animated:YES];
+//        }
+//        else{
             CATransition *animation = [CATransition animation];
             [animation setDuration:0.3];
             [animation setType:kCATransitionPush];
@@ -723,7 +757,7 @@ UIImage *imageDetailDisclosure;
             [[self navigationController] pushViewController:settingDetailViewController animated:NO];
         }
         
-    }
+    //}
 }
 
 - (void) updateSetting{

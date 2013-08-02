@@ -23,7 +23,6 @@
 -(void) hideTabBar;
 -(void) addCustomElements;
 -(void) selectTab:(int)tabID;
-- (void)selectTab1:(int)tabID;
 
 -(void) hideNewTabBar;
 - (void)buttonClicked:(id)sender;

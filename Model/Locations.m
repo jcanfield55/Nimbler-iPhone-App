@@ -693,10 +693,7 @@
              
              if ([[[nc_AppDelegate sharedInstance].toFromViewController supportedRegion] isInRegionLat:mapItem.placemark.location.coordinate.latitude Lng:mapItem.placemark.location.coordinate.longitude]) {
                      LocationFromLocalSearch *loc = [self newLocationFromIOSWithPlacemark:mapItem.placemark error:error IsLocalSearchResult:true locationName:mapItem.name];
-                 NSArray *formattedAdd = [loc.formattedAddress componentsSeparatedByString:@","];
-                  if(![[formattedAdd objectAtIndex:0] isEqualToString:mapItem.name]){
-                      loc.formattedAddress = [NSString stringWithFormat:@"%@\n%@",mapItem.name,loc.formattedAddress];
-                  }
+
                  NSArray *locations = [self locationsWithLat:[loc.lat doubleValue] Lng:[loc.lng doubleValue] FromArray:searchableFromLocations];
                  if(![localSearchFromLocations containsObject:loc] && [locations count] == 0){
                     [localSearchFromLocations addObject:loc];
@@ -769,11 +766,6 @@
                     
                     LocationFromLocalSearch *loc = [self newLocationFromIOSWithPlacemark:mapItem.placemark error:error IsLocalSearchResult:true locationName:mapItem.name];
                     
-                    NSArray *formattedAdd = [loc.formattedAddress componentsSeparatedByString:@","];
-                    if(![[formattedAdd objectAtIndex:0] isEqualToString:mapItem.name]){
-                        //loc.placeName = mapItem.name;
-                        loc.formattedAddress = [NSString stringWithFormat:@"%@\n%@",mapItem.name,loc.formattedAddress];
-                    }
                      NSArray *locations = [self locationsWithLat:[loc.lat doubleValue] Lng:[loc.lng doubleValue] FromArray:searchableToLocations]; 
                     if(![localSearchToLocations containsObject:loc] && [locations count] == 0){
                         [localSearchToLocations addObject:loc];
@@ -954,7 +946,7 @@
 //    if (oldSelectedLocation && (oldSelectedLocation != selectedLocation)) { // if there was a non-nil oldSelectedLocation, and this is a new request, then re-sort
 //        
         NSSortDescriptor *sd1 = [NSSortDescriptor
-                                 sortDescriptorWithKey:(isFrom ? @"fromFrequency" : @"toFrequency")
+                                 sortDescriptorWithKey:(@"fromFrequency")
                                                               ascending:NO];
         NSSortDescriptor *sd2 = [NSSortDescriptor sortDescriptorWithKey:@"dateLastUsed"
                                                               ascending:NO];
@@ -985,6 +977,26 @@
                             formattedAddress]
                     format:@"Error message: %@", error];
     } 
+    return result;  // Return the array of matches (could be empty)
+}
+- (NSArray *)locationsWithLocationName:(NSString *)locationName
+{
+    if (!locationName) {
+        return nil;
+    }
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    request.entity = [NSEntityDescription entityForName:@"Location" inManagedObjectContext:managedObjectContext];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"locationName=%@",locationName];
+    [request setPredicate:predicate];
+    
+    NSError *error;
+    NSArray *result = [managedObjectContext executeFetchRequest:request error:&error];
+    if (!result) {
+        [NSException raise:[NSString stringWithFormat:@"Locations -> locationsWithLocationName: Fetch failed for locationName %@",
+                            locationName]
+                    format:@"Error message: %@", error];
+    }
     return result;  // Return the array of matches (could be empty)
 }
 

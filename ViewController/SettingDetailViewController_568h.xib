@@ -52,12 +52,11 @@
 					<object class="IBUITableView" id="552417573">
 						<reference key="NSNextResponder" ref="1001726659"/>
 						<int key="NSvFlags">274</int>
-						<string key="NSFrame">{{0, 122}, {285, 426}}</string>
+						<string key="NSFrame">{{0, 97}, {285, 451}}</string>
 						<reference key="NSSuperview" ref="1001726659"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
-						<object class="NSColor" key="IBUIBackgroundColor">
+						<object class="NSColor" key="IBUIBackgroundColor" id="458499823">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MCAwAA</bytes>
 						</object>
@@ -66,7 +65,6 @@
 						<bool key="IBUIAlwaysBounceVertical">YES</bool>
 						<bool key="IBUIScrollEnabled">NO</bool>
 						<int key="IBUIStyle">1</int>
-						<int key="IBUISeparatorStyle">2</int>
 						<int key="IBUISectionIndexMinimumDisplayRowCount">0</int>
 						<bool key="IBUIShowsSelectionImmediatelyOnTouchBegin">YES</bool>
 						<float key="IBUIRowHeight">44</float>
@@ -76,20 +74,16 @@
 					<object class="IBUIButton" id="739508527">
 						<reference key="NSNextResponder" ref="1001726659"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{11, 65}, {73, 44}}</string>
+						<string key="NSFrame">{{11, 66}, {63, 33}}</string>
 						<reference key="NSSuperview" ref="1001726659"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="870228564"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
-						<object class="NSColor" key="IBUIBackgroundColor">
-							<int key="NSColorSpace">3</int>
-							<bytes key="NSWhite">MAA</bytes>
-						</object>
+						<reference key="IBUIBackgroundColor" ref="458499823"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
-						<string key="IBUINormalTitle">Back</string>
 						<object class="NSColor" key="IBUIHighlightedTitleColor" id="43404918">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MQA</bytes>
@@ -98,6 +92,10 @@
 						<object class="NSColor" key="IBUINormalTitleShadowColor">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MC41AA</bytes>
+						</object>
+						<object class="NSCustomResource" key="IBUINormalBackgroundImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">backSettingDetail.png</string>
 						</object>
 						<object class="IBUIFontDescription" key="IBUIFontDescription">
 							<int key="type">2</int>
@@ -112,7 +110,7 @@
 					<object class="IBUILabel" id="870228564">
 						<reference key="NSNextResponder" ref="1001726659"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{118, 76}, {156, 21}}</string>
+						<string key="NSFrame">{{118, 72}, {156, 21}}</string>
 						<reference key="NSSuperview" ref="1001726659"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="552417573"/>
@@ -288,21 +286,10 @@
 					<string key="className">SettingDetailViewController</string>
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="advisoriesButtonClicked:">id</string>
-						<string key="feedBackButtonClicked:">id</string>
 						<string key="maxBikeDistanceValueChanged:">UISlider</string>
 						<string key="popOutToSettings:">id</string>
-						<string key="settingsButtonClicked:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="advisoriesButtonClicked:">
-							<string key="name">advisoriesButtonClicked:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="feedBackButtonClicked:">
-							<string key="name">feedBackButtonClicked:</string>
-							<string key="candidateClassName">id</string>
-						</object>
 						<object class="IBActionInfo" key="maxBikeDistanceValueChanged:">
 							<string key="name">maxBikeDistanceValueChanged:</string>
 							<string key="candidateClassName">UISlider</string>
@@ -311,34 +298,15 @@
 							<string key="name">popOutToSettings:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-						<object class="IBActionInfo" key="settingsButtonClicked:">
-							<string key="name">settingsButtonClicked:</string>
-							<string key="candidateClassName">id</string>
-						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="advisoriesButton">UIButton</string>
 						<string key="backButton">UIButton</string>
-						<string key="feedBackButton">UIButton</string>
-						<string key="setttingsButton">UIButton</string>
 						<string key="tblDetailSetting">UITableView</string>
 						<string key="titleLabel">UILabel</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="advisoriesButton">
-							<string key="name">advisoriesButton</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="backButton">
 							<string key="name">backButton</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="feedBackButton">
-							<string key="name">feedBackButton</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="setttingsButton">
-							<string key="name">setttingsButton</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="tblDetailSetting">
@@ -361,6 +329,10 @@
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
+		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="NS.key.0">backSettingDetail.png</string>
+			<string key="NS.object.0">{63, 33}</string>
+		</object>
 		<string key="IBCocoaTouchPluginVersion">2083</string>
 	</data>
 </archive>

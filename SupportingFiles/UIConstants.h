@@ -10,6 +10,25 @@
 #ifndef Nimbler_Caltrain_UIConstants_h
 #define Nimbler_Caltrain_UIConstants_h
 
+//Latest UI Constants
+
+// To & From table heights for regular (3.5") iPhone screen
+
+#define TOFROM_HEIGHT_EDIT_MODE 175 // HEIGHT WHEN ONLY TOFROM TABLE EDIT MODE
+#define TOFROM_HEIGHT_LOCATION_EDIT_MODE 380 // HEIGHT WHEN ONLY TOFROM LOCATION EDIT MODE
+
+// To & From table heights for iPhone5 and other 4" screens
+
+#define TOFROM_HEIGHT_EDIT_MODE_4INCH 260 // HEIGHT WHEN ONLY TOFROM TABLE EDIT MODE
+#define TOFROM_HEIGHT_LOCATION_EDIT_MODE_4INCH 465 // HEIGHT WHEN ONLY TOFROM LOCATION EDIT MODE
+
+#define TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE 48
+#define TOFROMVIEW_HEIGHT_EDIT_MODE 30
+#define TXTFROMVIEW_X_POSITION_EDIT_MODE 39
+#define TXTTOVIEW_X_POSITION_EDIT_MODE 23
+#define TXTFROMVIEW_WIDTH_EDIT_MODE 19
+//
+
 // ToFromViewController constants
 #define TOFROM_MAIN_TABLE_HEIGHT 366
 #define TOFROM_MAIN_TABLE_HEIGHT_4INCH 499
@@ -24,9 +43,6 @@
 #define FROM_TABLE_HEIGHT_EDIT_MODE 300 // height when in Edit mode
 #define TO_TABLE_HEIGHT_EDIT_MODE 300
 
-#define TOFROM_HEIGHT_EDIT_MODE 155 // HEIGHT WHEN ONLY TOFROM TABLE EDIT MODE
-#define TOFROM_HEIGHT_LOCATION_EDIT_MODE 300 // HEIGHT WHEN ONLY TOFROM LOCATION EDIT MODE
-
 // To & From table heights for iPhone5 and other 4" screens
 #define FROM_TABLE_HEIGHT_NO_CL_MODE_4INCH 184 // height when not isCurrentLocationMode
 #define TO_TABLE_HEIGHT_NO_CL_MODE_4INCH 148
@@ -36,7 +52,7 @@
 #define TO_TABLE_HEIGHT_EDIT_MODE_4INCH 222 // height when in TO_EDIT mode
 
 
-#define TOFROM_TABLE_WIDTH 283
+#define TOFROM_TABLE_WIDTH 320
 #define TOFROM_INSERT_INTO_CELL_MARGIN 2 // spacer added to cell height when there is an inserted field or table
 #define TOFROM_TABLE_CORNER_RADIUS 10.0
 
@@ -115,6 +131,9 @@
 #define NAVIGATION_TITLE_COLOR colorWithRed:98.0/256.0 green:96.0/256.0 blue:96.0/256.0 alpha:1.0
 #define GRAY_FONT_COLOR colorWithRed:85.0/255.0 green:85.0/255.0 blue:85.0/255.0 alpha:1.0
 
+#define GRAY_FONT_COLOR_CELLDETAILTEXT colorWithRed:137.0/255.0 green:137.0/255.0 blue:137.0/255.0 alpha:1.0
+#define GRAY_FONT_COLOR_CELLTEXT colorWithRed:29.0/255.0 green:29.0/255.0 blue:29.0/255.0 alpha:1.0
+
 #define CELL_BACKGROUND_ROUTE_OPTION_VIEW colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.04
 #define LIGHT_GRAY_FONT_COLOR colorWithRed:170.0/255.0 green:170.0/255.0 blue:170.0/255.0 alpha:1.0
 
@@ -123,7 +142,7 @@
 
 // Images
 
-#define NAVIGATION_BAR_IMAGE  [UIImage imageNamed:@"img_navigationbar.png"]
+#define NAVIGATION_BAR_IMAGE  [UIImage imageNamed:@"navBar.png"]
 
 #define NAVIGATION_ITEM1_XPOS 0
 #define NAVIGATION_ITEM2_XPOS 95
@@ -133,7 +152,7 @@
 
 #define NAVIGATION_ITEM_YPOS_4INCH      523
 #define NAVIGATION_ITEM_WIDTH_4INCH     77
-#define NAVIGATION_ITEM_HEIGHT_4INCH    43
+#define NAVIGATION_ITEM_HEIGHT_4INCH    49
 
 #define NAVIGATION_ITEM_YPOS      436
 #define NAVIGATION_ITEM_WIDTH     95

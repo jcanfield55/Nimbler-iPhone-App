@@ -90,11 +90,12 @@ NSString *strStreet2 = @"street ";
         // Accessibility Label For UI Automation.
         txtField.accessibilityLabel = TEXTFIELD_TOFROMTABLEVIEW;
         
-        imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
+        imageDetailDisclosure = [UIImage imageNamed:@"img_locListArrow.png"];
         
         btnEdit = [UIButton buttonWithType:UIButtonTypeCustom];
-        [btnEdit setFrame:CGRectMake(230,5,50,20)];
-        [btnEdit setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+        [btnEdit setFrame:CGRectMake(275,8,40,10)];
+        [btnEdit setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        btnEdit.titleLabel.font = [UIFont systemFontOfSize:14];
         [btnEdit setTitle:@"Edit" forState:UIControlStateNormal];
         [btnEdit setTitle:@"Done" forState:UIControlStateSelected];
         [btnEdit addTarget:self action:@selector(editButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -173,8 +174,8 @@ NSString *strStreet2 = @"street ";
         locations.sortedMatchingToLocations = sortedlocations;
     }
     
-   Location *locationMoved =  [locations locationAtIndex:[self adjustedForEnterNewAddressFor:destRow]
-                        isFrom:isFrom];
+    Location *locationMoved =  [locations locationAtIndex:[self adjustedForEnterNewAddressFor:destRow]
+                                                   isFrom:isFrom];
     Location *nextLocation = nil;
     Location *previousLocation = nil;
     if([locations.sortedMatchingFromLocations count] > destRow+1){
@@ -199,26 +200,48 @@ NSString *strStreet2 = @"street ";
         isNextLocationFavorite = true;
     }
     if(isPreviousLocationFavorite && isNextLocationFavorite){
-            double avgFromFrequency = ([previousLocation fromFrequencyFloat] + [nextLocation fromFrequencyFloat])/2.0;
-            double avgToFrequency = ([previousLocation toFrequencyFloat] + [nextLocation toFrequencyFloat])/2.0;
-            [locationMoved setFromFrequencyFloat:avgFromFrequency];
-            [locationMoved setToFrequencyFloat:avgToFrequency];
+        double avgFromFrequency = ([previousLocation fromFrequencyFloat] + [nextLocation fromFrequencyFloat])/2.0;
+        double avgToFrequency = ([previousLocation toFrequencyFloat] + [nextLocation toFrequencyFloat])/2.0;
+        [locationMoved setFromFrequencyFloat:avgFromFrequency];
+        [locationMoved setToFrequencyFloat:avgToFrequency];
     }
     else if(!isPreviousLocationFavorite && !isNextLocationFavorite){
         if(isMovedLocationFavorite){
-            [locationMoved setFromFrequencyFloat:([locationMoved fromFrequencyFloat]- 100000)];
-            [locationMoved setToFrequencyFloat:([locationMoved toFrequencyFloat]-100000)];
+            if(!nextLocation){
+                [locationMoved setFromFrequencyFloat:([previousLocation fromFrequencyFloat] - 1)];
+                [locationMoved setToFrequencyFloat:([previousLocation toFrequencyFloat] - 1)];
+            }
+            else if(!previousLocation){
+                [locationMoved setFromFrequencyFloat:([nextLocation fromFrequencyFloat] + 1)];
+                [locationMoved setToFrequencyFloat:([nextLocation toFrequencyFloat] + 1)];
+            }
+            else{
+                double avgFromFrequency = ([previousLocation fromFrequencyFloat] + [nextLocation fromFrequencyFloat])/2.0;
+                double avgToFrequency = ([previousLocation toFrequencyFloat] + [nextLocation toFrequencyFloat])/2.0;
+                [locationMoved setFromFrequencyFloat:avgFromFrequency];
+                [locationMoved setToFrequencyFloat:avgToFrequency];
+            }
         }
         else{
-            double avgFromFrequency = ([previousLocation fromFrequencyFloat] + [nextLocation fromFrequencyFloat])/2.0;
-            double avgToFrequency = ([previousLocation toFrequencyFloat] + [nextLocation toFrequencyFloat])/2.0;
-            [locationMoved setFromFrequencyFloat:avgFromFrequency];
-            [locationMoved setToFrequencyFloat:avgToFrequency];
+            if(!nextLocation){
+                [locationMoved setFromFrequencyFloat:([previousLocation fromFrequencyFloat] - 1)];
+                [locationMoved setToFrequencyFloat:([previousLocation toFrequencyFloat] - 1)];
+            }
+            else if(!previousLocation){
+                [locationMoved setFromFrequencyFloat:([nextLocation fromFrequencyFloat] + 1)];
+                [locationMoved setToFrequencyFloat:([nextLocation toFrequencyFloat] + 1)];
+            }
+            else{
+                double avgFromFrequency = ([previousLocation fromFrequencyFloat] + [nextLocation fromFrequencyFloat])/2.0;
+                double avgToFrequency = ([previousLocation toFrequencyFloat] + [nextLocation toFrequencyFloat])/2.0;
+                [locationMoved setFromFrequencyFloat:avgFromFrequency];
+                [locationMoved setToFrequencyFloat:avgToFrequency];
+            }
         }
     }
     else if(!isPreviousLocationFavorite && isNextLocationFavorite){
-            [locationMoved setFromFrequencyFloat:([nextLocation fromFrequencyFloat]+1)];
-            [locationMoved setToFrequencyFloat:([nextLocation toFrequencyFloat]+1)];
+        [locationMoved setFromFrequencyFloat:([nextLocation fromFrequencyFloat]+1)];
+        [locationMoved setToFrequencyFloat:([nextLocation toFrequencyFloat]+1)];
     }
     else if(isPreviousLocationFavorite && !isNextLocationFavorite){
         if(isMovedLocationFavorite){
@@ -343,6 +366,7 @@ NSString *strStreet2 = @"street ";
                 NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
                 
                 if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) { // If a list (like 'Caltrain Station List')
+                    [toFromVC setEditMode:NO_EDIT];
                     logEvent(FLURRY_TOFROMTABLE_CALTRAIN_LIST,
                              FLURRY_TOFROM_WHICH_TABLE, isFromString,
                              FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d",[indexPath row]],
@@ -461,6 +485,18 @@ NSString *strStreet2 = @"street ";
     // Prepare the cell settings
     Location *loc = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]]
                                         isFrom:isFrom];
+    
+    if(loc.locationName){
+        [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
+        cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR_CELLTEXT];
+        cell.detailTextLabel.textColor = [UIColor GRAY_FONT_COLOR_CELLDETAILTEXT];
+    }
+    else{
+        [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
+        cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR_CELLTEXT];
+    }
+    
+    
     // if There is PlaceName available for location
     if([loc isKindOfClass:[LocationFromLocalSearch class ]]){
         cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
@@ -473,8 +509,7 @@ NSString *strStreet2 = @"street ";
             cell.detailTextLabel.text = nil;
             cell.textLabel.numberOfLines = 2;
         }
-        [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
-        cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
+        
         [cell setAccessoryView:nil];
     }
     else{
@@ -490,36 +525,29 @@ NSString *strStreet2 = @"street ";
         UIButton *btnFavorite = [UIButton buttonWithType:UIButtonTypeCustom];
         [btnFavorite setTag:indexPath.row];
         [btnFavorite setFrame:CGRectMake(0, 0, 16, 16)];
-        [btnFavorite setImage:[UIImage imageNamed:@"star"] forState:UIControlStateNormal];
+        [btnFavorite setImage:[UIImage imageNamed:@"img_inActiveStar.png"] forState:UIControlStateNormal];
         [btnFavorite addTarget:self action:@selector(btnFavoriteClicked:) forControlEvents:UIControlEventTouchUpInside];
         if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) {
             // Bold italic if a list header
             [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
             cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
             [cell setEditing:NO];
-//            UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
-//            [cell setAccessoryView:imgViewDetailDisclosure];
-            if([[loc fromFrequency] doubleValue]>=100000.0){
-                [btnFavorite setSelected:YES];
-                [btnFavorite setImage:[UIImage imageNamed:@"StarOn"] forState:UIControlStateNormal];
-            }
-            [cell setAccessoryView:btnFavorite];
+            UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 11, 18)];
+            [imgViewDetailDisclosure setImage:imageDetailDisclosure];
+            [cell setAccessoryView:imgViewDetailDisclosure];
+            
         }
         else if (loc == selectedLocation) {
-            [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
-            cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
             if([[loc fromFrequency] doubleValue]>=100000.0){
                 [btnFavorite setSelected:YES];
-                [btnFavorite setImage:[UIImage imageNamed:@"StarOn"] forState:UIControlStateNormal];
+                [btnFavorite setImage:[UIImage imageNamed:@"img_activeStar.png"] forState:UIControlStateNormal];
             }
             [cell setAccessoryView:btnFavorite];
         } else {
             // just bold for normal cell
-            [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
-            cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
             if([[loc fromFrequency] doubleValue]>=100000.0){
                 [btnFavorite setSelected:YES];
-                [btnFavorite setImage:[UIImage imageNamed:@"StarOn"] forState:UIControlStateNormal];
+                [btnFavorite setImage:[UIImage imageNamed:@"img_activeStar.png"] forState:UIControlStateNormal];
             }
             [cell setAccessoryView:btnFavorite];
         }
@@ -630,13 +658,13 @@ NSString *strStreet2 = @"street ";
                                         isFrom:isFrom];
     if(favoriteButton.selected==YES){
         [favoriteButton setSelected:NO];
-        [favoriteButton setImage:[UIImage imageNamed:@"star"] forState:UIControlStateNormal];
+        [favoriteButton setImage:[UIImage imageNamed:@"img_inActiveStar.png"] forState:UIControlStateNormal];
         [loc setFromFrequencyFloat:([loc fromFrequencyFloat]-100000)];
         [loc setToFrequencyFloat:([loc toFrequencyFloat]-100000)];
     }
     else{
         [favoriteButton setSelected:YES];
-        [favoriteButton setImage:[UIImage imageNamed:@"StarOn"] forState:UIControlStateNormal];
+        [favoriteButton setImage:[UIImage imageNamed:@"img_activeStar.png"] forState:UIControlStateNormal];
         [loc setFromFrequencyFloat:([loc fromFrequencyFloat]+ 100000)];
         [loc setToFrequencyFloat:([loc toFrequencyFloat]+100000)];
     }
@@ -653,10 +681,35 @@ NSString *strStreet2 = @"street ";
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 40.0;
+    return 25.0;
 }
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0,0,320, 40)];
+    
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0,0,320, 25)];
+    UIImageView *imgViewHeader = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 25)];
+    [imgViewHeader setImage:[UIImage imageNamed:@"img_searchEditBG.png"]];
+    [headerView addSubview:imgViewHeader];
+    UIImageView *imgView = [[UIImageView alloc]initWithFrame:CGRectMake(4, 7, 12, 12)];
+    [imgView setImage:[UIImage imageNamed:@"img_search.png"]];
+    UILabel *lbl = [[UILabel alloc]initWithFrame:CGRectMake(18, 0, 200, 25)];
+    [lbl setBackgroundColor:[UIColor clearColor]];
+    [lbl setFont:[UIFont systemFontOfSize:14]];
+    lbl.text = @"Searching Locations";
+    lbl.textColor = [UIColor lightGrayColor];
+    if(toFromVC.editMode == FROM_EDIT){
+      if([[toFromVC.txtFromView text] length]>0){
+        [headerView addSubview:imgView];
+        [headerView addSubview:lbl];
+        return headerView;
+      }
+    }
+    else if(toFromVC.editMode == TO_EDIT){
+        if([[toFromVC.txtToView text] length]>0){
+            [headerView addSubview:imgView];
+            [headerView addSubview:lbl];
+            return headerView;
+        }
+    }
     [headerView addSubview:btnEdit];
     return headerView;
 }

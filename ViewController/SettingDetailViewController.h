@@ -62,6 +62,7 @@
 @property (nonatomic, strong) IBOutlet UIButton *backButton;
 @property (nonatomic, strong) IBOutlet UILabel *titleLabel;
 @property (nonatomic, strong) NSString *titleLabelString;
+@property (nonatomic, strong) UIImageView *imgViewCheckMark;
 
 
 -(IBAction)popOutToSettings:(id)sender;

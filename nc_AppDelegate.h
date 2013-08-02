@@ -115,6 +115,7 @@
 @property (nonatomic) BOOL isRouteOptionView;
 @property (nonatomic) BOOL isRouteDetailView;
 @property (nonatomic, strong) RevealController *revealViewController;
+@property (nonatomic) BOOL isNotificationsButtonClicked;
 
 - (NSURL *)applicationDocumentsDirectory;
 

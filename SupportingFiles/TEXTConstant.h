@@ -100,7 +100,7 @@
 #define TRIMET_ADVISORIES     @"Trimet advisories"
 
 
-#define FREQUENCY_OF_PUSH       @"Frequency of push notification"
+#define FREQUENCY_OF_PUSH       @"Frequency Of Push Notification"
 #define NOTIFICATION_SOUND      @"Notification sound"
 #define URGENT_NOTIFICATIONS    @"Urgent Notifications"
 #define STANDARD_NOTIFICATIONS  @"Standard Notifications"
@@ -128,8 +128,8 @@
 #define QUICK_WITH_ANY_STREET @"Fast, any street"
 #define BIKE_FRIENDLY_STREET  @"Bike friendly street"
 
-#define LABEL_FREQUENTLY      @"Frequently"
-#define LABEL_RARELY          @"Rarely"
+#define LABEL_FREQUENTLY      @"Less"
+#define LABEL_RARELY          @"More"
 
 #define URGENT_AND_STANDARD     @"Urgent + Standard"
 #define URGENT                  @"Urgent Only"
@@ -178,21 +178,21 @@
 #define BIKE_PREFERENCE_LABEL_HEIGHT                20
 
 #define LABEL_FREQUENTLY_XPOS   3
-#define LABEL_FREQUENTLY_YPOS   48
+#define LABEL_FREQUENTLY_YPOS   42
 #define LABEL_FREQUENTLY_WIDTH  70
 #define LABEL_FREQUENTLY_HEIGHT 20
 
-#define LABEL_RARELY_XPOS       210
-#define LABEL_RARELY_YPOS       49
+#define LABEL_RARELY_XPOS       225
+#define LABEL_RARELY_YPOS       42
 #define LABEL_RARELY_WIDTH      50
 #define LABEL_RARELY_HEIGHT     20
 
-#define SLIDER_PUSH_FREQUENCY_XPOS    40
-#define SLIDER_PUSH_FREQUENCY_YPOS    30
+#define SLIDER_PUSH_FREQUENCY_XPOS    32
+#define SLIDER_PUSH_FREQUENCY_YPOS    42
 #define SLIDER_PUSH_FREQUENCY_WIDTH   190
-#define SLIDER_PUSH_FREQUENCY_HEIGHT  20
+#define SLIDER_PUSH_FREQUENCY_HEIGHT  12
 
-#define SETTING_MAIN_LABEL_XPOS       10
+#define SETTING_MAIN_LABEL_XPOS       35
 #define SETTING_MAIN_LABEL_YPOS       5
 #define SETTING_MAIN_LABEL_WIDTH      250
 #define SETTING_MAIN_LABEL_HEIGHT     20

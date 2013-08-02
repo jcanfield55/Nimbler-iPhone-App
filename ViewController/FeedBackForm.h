@@ -48,6 +48,8 @@
     UIView *textViewBackground;
     UIView *textFieldBackground;
     
+    UIView *sentMessageView;
+    
 }
 
 @property (strong, nonatomic) IBOutlet UITextView *txtFeedBack;
@@ -59,6 +61,7 @@
 @property (strong, nonatomic) IBOutlet UIView *buttonsBackgroundView;
 @property (strong, nonatomic) IBOutlet UIView *textViewBackground;
 @property (strong, nonatomic) IBOutlet UIView *textFieldBackground;
+@property (strong, nonatomic) IBOutlet UIView *sentMessageView;
 
 -(IBAction)startRecord:(id)sender;
 -(IBAction)stopRecord:(id)sender;
