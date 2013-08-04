@@ -430,6 +430,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 500;
         // Get the requested itinerary
         Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
         // Set title
+        [cell setBackgroundColor:[UIColor clearColor]];
         [[cell textLabel] setFont:[UIFont MEDIUM_BOLD_FONT]];
         //Part Of DE-229 Implementation
         NSString *timeDiffFirstLeg;
@@ -578,10 +579,10 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 500;
 - (void) tableView:(UITableView *)atableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     @try {
-        UITableViewCell *cell = [atableView cellForRowAtIndexPath:indexPath];
+        /*UITableViewCell *cell = [atableView cellForRowAtIndexPath:indexPath];
         UIView *viewCellBackground = [[UIView alloc] init];
         [viewCellBackground setBackgroundColor:[UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW]];
-        cell.backgroundView = viewCellBackground;
+        cell.backgroundView = viewCellBackground;*/
         if (!routeDetailsVC) {
             if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
                 routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailViewController_568h" bundle:nil];
@@ -758,7 +759,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 500;
         int width = 72;
         for(int i=0;i<[[plan excludeSettingsArray] count];i++){
             RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
-            CGSize stringsize = [routeExcludeSetting.key sizeWithFont:[UIFont fontWithName:@"Helvetica-Bold" size:12.0]];
             UIButton *btnAgency = [UIButton buttonWithType:UIButtonTypeCustom];
             if(xPos+width > 300){
                 yPos = yPos + btnHeight + 5;

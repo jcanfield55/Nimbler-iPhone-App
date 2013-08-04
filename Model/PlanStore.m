@@ -225,41 +225,106 @@
         if([nc_AppDelegate sharedInstance].isTestPlan){
             [params setObject:@"false" forKey:SAVE_PLAN];
         }
-        // Set Bike Mode parameters if needed
-        if (parameters.routeExcludeSettings &&
-            [parameters.routeExcludeSettings settingForKey:returnBikeButtonTitle()]==SETTING_INCLUDE_ROUTE) {
-            [params setObject:REQUEST_TRANSIT_MODE_TRANSIT_BIKE forKey:REQUEST_TRANSIT_MODE];
-            UserPreferance* userPrefs = [UserPreferance userPreferance];
-            [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleQuick]
-                       forKey:REQUEST_BIKE_TRIANGLE_QUICK];
-            [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleFlat]
-                       forKey:REQUEST_BIKE_TRIANGLE_FLAT];
-            float bikeRemainder = 1.0 - [[params objectForKey:REQUEST_BIKE_TRIANGLE_QUICK] floatValue] - [[params objectForKey:REQUEST_BIKE_TRIANGLE_FLAT] floatValue];
-            [params setObject:[NSString stringWithFormat:@"%f", bikeRemainder] // use bikeRemainder so we exactly add up to 1.0
-                       forKey:REQUEST_BIKE_TRIANGLE_BIKE_FRIENDLY];
-            [params setObject:@"TRIANGLE" forKey:@"optimize"];
-            int maxDistance = (int)(userPrefs.bikeDistance*1609.544);
-            [params setObject:[NSNumber numberWithInt:maxDistance] forKey:MAX_WALK_DISTANCE];
-            if ([parameters.routeExcludeSettings settingForKey:BIKE_SHARE]==SETTING_INCLUDE_ROUTE){
-                [params setObject:REQUEST_TRANSIT_MODE_WALK_BIKE forKey:REQUEST_TRANSIT_MODE];
-            }
-        } else if (parameters.routeExcludeSettings &&
-                   [parameters.routeExcludeSettings settingForKey:BIKE_SHARE]==SETTING_INCLUDE_ROUTE){
-            UserPreferance* userPrefs = [UserPreferance userPreferance];
-            [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleQuick]
-                       forKey:REQUEST_BIKE_TRIANGLE_QUICK];
-            [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleFlat]
-                       forKey:REQUEST_BIKE_TRIANGLE_FLAT];
-            float bikeRemainder = 1.0 - [[params objectForKey:REQUEST_BIKE_TRIANGLE_QUICK] floatValue] - [[params objectForKey:REQUEST_BIKE_TRIANGLE_FLAT] floatValue];
-            [params setObject:[NSString stringWithFormat:@"%f", bikeRemainder] // use bikeRemainder so we exactly add up to 1.0
-                       forKey:REQUEST_BIKE_TRIANGLE_BIKE_FRIENDLY];
-            [params setObject:@"TRIANGLE" forKey:@"optimize"];
-            int maxDistance = (int)(userPrefs.bikeDistance*1609.544);
-            [params setObject:[NSNumber numberWithInt:maxDistance] forKey:MAX_WALK_DISTANCE];
+        
+        BOOL bikeMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE] boolValue];
+        BOOL transitMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] boolValue];
+        BOOL walkMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] boolValue];
+        
+        if(bikeMode && transitMode && walkMode){
+            [parameters.routeExcludeSettings changeSettingTo:SETTING_INCLUDE_ROUTE forKey:returnBikeButtonTitle()];
             [params setObject:REQUEST_TRANSIT_MODE_WALK_BIKE forKey:REQUEST_TRANSIT_MODE];
-        } else {
-            [params setObject:REQUEST_TRANSIT_MODE_TRANSIT forKey:REQUEST_TRANSIT_MODE];
+            UserPreferance* userPrefs = [UserPreferance userPreferance];
+            [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleQuick]
+                           forKey:REQUEST_BIKE_TRIANGLE_QUICK];
+            [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleFlat]
+                           forKey:REQUEST_BIKE_TRIANGLE_FLAT];
+            float bikeRemainder = 1.0 - [[params objectForKey:REQUEST_BIKE_TRIANGLE_QUICK] floatValue] - [[params objectForKey:REQUEST_BIKE_TRIANGLE_FLAT] floatValue];
+            [params setObject:[NSString stringWithFormat:@"%f", bikeRemainder] // use bikeRemainder so we exactly add up to 1.0
+                           forKey:REQUEST_BIKE_TRIANGLE_BIKE_FRIENDLY];
+            [params setObject:@"TRIANGLE" forKey:@"optimize"];
+            int maxDistance = (int)(userPrefs.bikeDistance*1609.544);
+            [params setObject:[NSNumber numberWithInt:maxDistance] forKey:MAX_WALK_DISTANCE];
         }
+        else if(bikeMode && transitMode){
+                [parameters.routeExcludeSettings changeSettingTo:SETTING_INCLUDE_ROUTE forKey:returnBikeButtonTitle()];
+                [params setObject:REQUEST_TRANSIT_MODE_TRANSIT_BIKE forKey:REQUEST_TRANSIT_MODE];
+                UserPreferance* userPrefs = [UserPreferance userPreferance];
+                [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleQuick]
+                           forKey:REQUEST_BIKE_TRIANGLE_QUICK];
+                [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleFlat]
+                           forKey:REQUEST_BIKE_TRIANGLE_FLAT];
+                float bikeRemainder = 1.0 - [[params objectForKey:REQUEST_BIKE_TRIANGLE_QUICK] floatValue] - [[params objectForKey:REQUEST_BIKE_TRIANGLE_FLAT] floatValue];
+                [params setObject:[NSString stringWithFormat:@"%f", bikeRemainder] // use bikeRemainder so we exactly add up to 1.0
+                           forKey:REQUEST_BIKE_TRIANGLE_BIKE_FRIENDLY];
+                [params setObject:@"TRIANGLE" forKey:@"optimize"];
+                int maxDistance = (int)(userPrefs.bikeDistance*1609.544);
+                [params setObject:[NSNumber numberWithInt:maxDistance] forKey:MAX_WALK_DISTANCE];
+        }
+        else if(transitMode && walkMode){
+            [parameters.routeExcludeSettings changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:returnBikeButtonTitle()];
+           [params setObject:REQUEST_TRANSIT_MODE_TRANSIT forKey:REQUEST_TRANSIT_MODE]; 
+        }
+        else if(walkMode){
+            [parameters.routeExcludeSettings changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:returnBikeButtonTitle()];
+           [params setObject:REQUEST_MODE_WALK forKey:REQUEST_TRANSIT_MODE];
+            int maxDistance = (int)(100*1609.544);
+            [params setObject:[NSNumber numberWithInt:maxDistance] forKey:MAX_WALK_DISTANCE];
+        }
+        else if (transitMode){
+           [parameters.routeExcludeSettings changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:returnBikeButtonTitle()];
+           [params setObject:REQUEST_TRANSIT_MODE_TRANSIT forKey:REQUEST_TRANSIT_MODE]; 
+        }
+        else if(bikeMode){
+                [parameters.routeExcludeSettings changeSettingTo:SETTING_INCLUDE_ROUTE forKey:returnBikeButtonTitle()];
+                [params setObject:REQUEST_TRANSIT_MODE_BIKE_ONLY forKey:REQUEST_TRANSIT_MODE];
+                UserPreferance* userPrefs = [UserPreferance userPreferance];
+                [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleQuick]
+                           forKey:REQUEST_BIKE_TRIANGLE_QUICK];
+                [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleFlat]
+                           forKey:REQUEST_BIKE_TRIANGLE_FLAT];
+                float bikeRemainder = 1.0 - [[params objectForKey:REQUEST_BIKE_TRIANGLE_QUICK] floatValue] - [[params objectForKey:REQUEST_BIKE_TRIANGLE_FLAT] floatValue];
+                [params setObject:[NSString stringWithFormat:@"%f", bikeRemainder] // use bikeRemainder so we exactly add up to 1.0
+                           forKey:REQUEST_BIKE_TRIANGLE_BIKE_FRIENDLY];
+                [params setObject:@"TRIANGLE" forKey:@"optimize"];
+                int maxDistance = (int)(userPrefs.bikeDistance*1609.544);
+                [params setObject:[NSNumber numberWithInt:maxDistance] forKey:MAX_WALK_DISTANCE];
+        }
+        
+//        // Set Bike Mode parameters if needed
+//        if (parameters.routeExcludeSettings &&
+//            [parameters.routeExcludeSettings settingForKey:returnBikeButtonTitle()]==SETTING_INCLUDE_ROUTE) {
+//            [params setObject:REQUEST_TRANSIT_MODE_TRANSIT_BIKE forKey:REQUEST_TRANSIT_MODE];
+//            UserPreferance* userPrefs = [UserPreferance userPreferance];
+//            [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleQuick]
+//                       forKey:REQUEST_BIKE_TRIANGLE_QUICK];
+//            [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleFlat]
+//                       forKey:REQUEST_BIKE_TRIANGLE_FLAT];
+//            float bikeRemainder = 1.0 - [[params objectForKey:REQUEST_BIKE_TRIANGLE_QUICK] floatValue] - [[params objectForKey:REQUEST_BIKE_TRIANGLE_FLAT] floatValue];
+//            [params setObject:[NSString stringWithFormat:@"%f", bikeRemainder] // use bikeRemainder so we exactly add up to 1.0
+//                       forKey:REQUEST_BIKE_TRIANGLE_BIKE_FRIENDLY];
+//            [params setObject:@"TRIANGLE" forKey:@"optimize"];
+//            int maxDistance = (int)(userPrefs.bikeDistance*1609.544);
+//            [params setObject:[NSNumber numberWithInt:maxDistance] forKey:MAX_WALK_DISTANCE];
+//            if ([parameters.routeExcludeSettings settingForKey:BIKE_SHARE]==SETTING_INCLUDE_ROUTE){
+//                [params setObject:REQUEST_TRANSIT_MODE_WALK_BIKE forKey:REQUEST_TRANSIT_MODE];
+//            }
+//        } else if (parameters.routeExcludeSettings &&
+//                   [parameters.routeExcludeSettings settingForKey:BIKE_SHARE]==SETTING_INCLUDE_ROUTE){
+//            UserPreferance* userPrefs = [UserPreferance userPreferance];
+//            [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleQuick]
+//                       forKey:REQUEST_BIKE_TRIANGLE_QUICK];
+//            [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleFlat]
+//                       forKey:REQUEST_BIKE_TRIANGLE_FLAT];
+//            float bikeRemainder = 1.0 - [[params objectForKey:REQUEST_BIKE_TRIANGLE_QUICK] floatValue] - [[params objectForKey:REQUEST_BIKE_TRIANGLE_FLAT] floatValue];
+//            [params setObject:[NSString stringWithFormat:@"%f", bikeRemainder] // use bikeRemainder so we exactly add up to 1.0
+//                       forKey:REQUEST_BIKE_TRIANGLE_BIKE_FRIENDLY];
+//            [params setObject:@"TRIANGLE" forKey:@"optimize"];
+//            int maxDistance = (int)(userPrefs.bikeDistance*1609.544);
+//            [params setObject:[NSNumber numberWithInt:maxDistance] forKey:MAX_WALK_DISTANCE];
+//            [params setObject:REQUEST_TRANSIT_MODE_WALK_BIKE forKey:REQUEST_TRANSIT_MODE];
+//        } else {
+//            [params setObject:REQUEST_TRANSIT_MODE_TRANSIT forKey:REQUEST_TRANSIT_MODE];
+//        }
         NSString *strAgencies = [parameters.routeExcludeSettings bannedAgencyStringForSettingArray:exclSettingArray];
         NSString *strAgenciesWithMode = [parameters.routeExcludeSettings bannedAgencyByModeStringForSettingArray:exclSettingArray];
 

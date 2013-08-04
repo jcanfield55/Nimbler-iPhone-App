@@ -98,7 +98,7 @@
 @synthesize plan;
 @synthesize stations;
 @synthesize planRequestParameters;
-@synthesize mainToFromView,PicketSelectView,fromView,toView,txtFromView,txtToView,btnSwap,imgViewMainToFromBG,imgViewFromBG,imgViewToBG,btnPicker,lblTxtToFromPlaceholder,lblTxtDepartArrive,viewMode,btnToFromEditCancel,lblTxtFrom,lblTxtTo;
+@synthesize mainToFromView,PicketSelectView,fromView,toView,txtFromView,txtToView,btnSwap,btnCureentLoc,imgViewMainToFromBG,imgViewFromBG,imgViewToBG,btnPicker,lblTxtToFromPlaceholder,lblTxtDepartArrive,viewMode,btnToFromEditCancel,lblTxtFrom,lblTxtTo;
 @synthesize managedObjectContext;
 // Constants for animating up and down the To: field
 #define FROM_SECTION 0
@@ -250,6 +250,10 @@ UIImage *imageDetailDisclosure;
     if(!strFromFormattedAddress){
         strFromFormattedAddress = @"";
     }
+    if([strFromFormattedAddress isEqualToString:@"Current Location"]){
+        [btnCureentLoc setSelected:YES];
+        [btnCureentLoc setUserInteractionEnabled:NO];
+    }
     [self.txtFromView setText:strFromFormattedAddress];
     
     
@@ -267,20 +271,6 @@ UIImage *imageDetailDisclosure;
     
     [self.txtToView setText:strToFormattedAddress];
     
-    //Mode
-    UIButton *btnMode;
-    btnMode = (UIButton *)[self.viewMode viewWithTag:[BIKE_MODE_Tag intValue]];
-    if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE] isEqualToString:@"1"]){
-        [btnMode setSelected:YES];
-    }
-    btnMode = (UIButton *)[self.viewMode viewWithTag:[TRANSIT_MODE_Tag intValue]];
-    if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] isEqualToString:@"1"]){
-        [btnMode setSelected:YES];
-    }
-    btnMode = (UIButton *)[self.viewMode viewWithTag:[WALK_MODE_Tag intValue]];
-    if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] isEqualToString:@"1"]){
-        [btnMode setSelected:YES];
-    }
     // Accessibility Label For UI Automation.
     self.mainTable.accessibilityLabel = TO_FROM_TABLE_VIEW;
     
@@ -393,6 +383,29 @@ UIImage *imageDetailDisclosure;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    if(![[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE]){
+        [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_TRANSIT_MODE];
+    }
+    if(![[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE]){
+       [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_WALK_MODE]; 
+    }
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    //Mode
+    UIButton *btnMode;
+    btnMode = (UIButton *)[self.viewMode viewWithTag:[BIKE_MODE_Tag intValue]];
+    if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE] isEqualToString:@"1"]){
+        [btnMode setSelected:YES];
+    }
+    btnMode = (UIButton *)[self.viewMode viewWithTag:[TRANSIT_MODE_Tag intValue]];
+    if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] isEqualToString:@"1"]){
+        [btnMode setSelected:YES];
+    }
+    btnMode = (UIButton *)[self.viewMode viewWithTag:[WALK_MODE_Tag intValue]];
+    if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] isEqualToString:@"1"]){
+        [btnMode setSelected:YES];
+    }
+    
     //[self.navigationController setNavigationBarHidden:YES animated:NO];
     [mainTable setFrame:CGRectMake(0, 0, 320, 319)];
     NSArray *itinerariesArray = [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray;
@@ -449,7 +462,7 @@ UIImage *imageDetailDisclosure;
     //Part Of US-177 Implementation
     [nc_AppDelegate sharedInstance].toLoc = self.toLocation;
     [nc_AppDelegate sharedInstance].fromLoc = self.fromLocation;
-    //[[nc_AppDelegate sharedInstance].twitterCount setHidden:YES];
+    [[nc_AppDelegate sharedInstance].twitterCount setHidden:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -973,6 +986,7 @@ UIImage *imageDetailDisclosure;
         [self.lblTxtFrom setHidden:YES];
         [self.btnToFromEditCancel setHidden:NO];
         [self.btnSwap setHidden:YES];
+        [self.btnCureentLoc setHidden:YES];
         [self.PicketSelectView setHidden:YES];
         [self.viewMode setHidden:YES];
         [self.view addSubview:fromTable];
@@ -1051,6 +1065,7 @@ UIImage *imageDetailDisclosure;
         [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x+TXTFROMVIEW_X_POSITION_EDIT_MODE, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width-TXTFROMVIEW_WIDTH_EDIT_MODE, txtFromView.frame.size.height)];
         [self.lblTxtFrom setHidden:NO];
         [self.btnToFromEditCancel setHidden:YES];
+        [self.btnCureentLoc setHidden:NO];
         [fromTable removeFromSuperview];
         [self.txtFromView resignFirstResponder];
     }
@@ -1159,6 +1174,10 @@ UIImage *imageDetailDisclosure;
 - (void)updateToFromLocation:(id)sender isFrom:(BOOL)isFrom location:(Location *)loc; {
     if (isFrom) {
         fromLocation = loc;
+        if([fromLocation.formattedAddress isEqualToString:@"Current Location"]){
+            [self.btnCureentLoc setSelected:YES];
+            [self.btnCureentLoc setUserInteractionEnabled:NO];
+        }
         [self setFBParameterForGeneral];
         if (currentLocation && loc == currentLocation && !isCurrentLocationMode) { // Part of DE194 fix
             [self setIsCurrentLocationMode:TRUE];
@@ -1218,7 +1237,15 @@ UIImage *imageDetailDisclosure;
 }
 
 #pragma mark Button Press Event
-
+- (IBAction)btnCurrentLocationClicked:(id)sender{
+    UIButton *btnLoc = (UIButton *)sender;
+    if(btnLoc.selected == NO){
+        [btnLoc setSelected:YES];
+        [btnCureentLoc setUserInteractionEnabled:NO];
+        fromTableVC.isFrom = true;
+        [fromTableVC markAndUpdateSelectedLocation:currentLocation];
+    }
+}
 -(IBAction)btnModeClicked:(id)sender{
     UIButton *btnMode = (UIButton *)sender;
     NSString *strMode;

@@ -593,6 +593,9 @@ NSUserDefaults *prefs;
 }
 
 - (void) backToTwitterView{
+    [self.navigationController.navigationBar setHidden:YES];
+    RXCustomTabBar *rxCustomTabbar = (RXCustomTabBar *)[nc_AppDelegate sharedInstance].tabBarController;
+    [rxCustomTabbar showAllElements];
      CATransition *animation = [CATransition animation];
      [animation setDuration:0.3];
      [animation setType:kCATransitionPush];
@@ -604,6 +607,7 @@ NSUserDefaults *prefs;
 }
 
 - (void)openUrl:(NSURL *)url {
+    [self.navigationController.navigationBar setHidden:NO];
     UIViewController *webViewController = [[UIViewController alloc] init];
     UIButton * btnGoToNimbler = [[UIButton alloc] initWithFrame:CGRectMake(0,0,65,34)];
     [btnGoToNimbler addTarget:self action:@selector(backToTwitterView) forControlEvents:UIControlEventTouchUpInside];
@@ -613,14 +617,17 @@ NSUserDefaults *prefs;
     webViewController.navigationItem.leftBarButtonItem = backTonimbler;
     [webViewController.view addSubview:[WebView instance]];
     if ([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT) {
-        [WebView instance].frame = CGRectMake(0, 50, 285, 518);
+        [WebView instance].frame = CGRectMake(0, 0, 285, 518);
     } else {
-        [WebView instance].frame = CGRectMake(0, 50, 285, 430);
+        [WebView instance].frame = CGRectMake(0,0, 285, 430);
     }
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20];
     [[WebView instance] loadRequest:request];
     [WebView instance].delegate = self;
     [self hideTabBar];
+    RXCustomTabBar *rxCustomTabbar = (RXCustomTabBar *)[nc_AppDelegate sharedInstance].tabBarController;
+    [rxCustomTabbar hideAllElements];
+    
     if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
         CATransition *animation = [CATransition animation];
         [animation setDuration:0.3];

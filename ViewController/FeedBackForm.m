@@ -656,7 +656,12 @@ NSUserDefaults *prefs;
     [UIView beginAnimations:ANIMATION_PARAM context: nil];
     [UIView setAnimationBeginsFromCurrentState: YES];
     [UIView setAnimationDuration: 0.5];
-    [self.view setFrame:CGRectMake(self.view.frame.origin.x,-200, self.view.frame.size.width, self.view.frame.size.height)];
+    if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
+       [self.view setFrame:CGRectMake(self.view.frame.origin.x,-90, self.view.frame.size.width, self.view.frame.size.height)];
+    }
+    else{
+       [self.view setFrame:CGRectMake(self.view.frame.origin.x,-160, self.view.frame.size.width, self.view.frame.size.height)]; 
+    }
     [UIView commitAnimations];
     
     //[self animateTextField: textField up: YES];
@@ -692,7 +697,7 @@ NSUserDefaults *prefs;
     [UIView beginAnimations:ANIMATION_PARAM context: nil];
     [UIView setAnimationBeginsFromCurrentState: YES];
     [UIView setAnimationDuration: 0.5];
-    [self.view setFrame:CGRectMake(self.view.frame.origin.x,-100, self.view.frame.size.width, self.view.frame.size.height)];
+    [self.view setFrame:CGRectMake(self.view.frame.origin.x,-90, self.view.frame.size.width, self.view.frame.size.height)];
     [UIView commitAnimations];
 }
 

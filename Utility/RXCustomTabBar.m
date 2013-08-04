@@ -140,4 +140,14 @@
 	
 }
 
+- (void) hideAllElements{
+    [btn1 setHidden:YES];
+    [btn2 setHidden:YES];
+    [btn3 setHidden:YES];
+}
+- (void) showAllElements{
+    [btn1 setHidden:NO];
+    [btn2 setHidden:NO];
+    [btn3 setHidden:NO];
+}
 @end

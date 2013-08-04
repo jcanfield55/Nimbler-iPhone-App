@@ -40,6 +40,7 @@ typedef enum {
 @property (strong, nonatomic) IBOutlet UIImageView* imgViewFromBG;
 @property (strong, nonatomic) IBOutlet UIImageView* imgViewToBG;
 @property (strong, nonatomic) IBOutlet UIButton* btnSwap;
+@property (strong, nonatomic) IBOutlet UIButton* btnCureentLoc;
 @property (strong, nonatomic) IBOutlet UIButton* btnPicker;
 @property (strong, nonatomic) IBOutlet UIButton* btnToFromEditCancel;
 @property (strong, nonatomic) UILabel* lblTxtToFromPlaceholder;
@@ -89,7 +90,7 @@ typedef enum {
 @property(nonatomic)NSManagedObjectContext *managedObjectContext;
 
 -(IBAction)btnModeClicked:(id)sender;
-
+- (IBAction)btnCurrentLocationClicked:(id)sender;
 - (IBAction)doSwapLocation:(id)sender;
 - (IBAction)editCancelClicked:(id)sender;
 - (IBAction)openPickerView:(id)sender;

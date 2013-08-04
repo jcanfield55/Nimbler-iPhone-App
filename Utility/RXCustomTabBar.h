@@ -28,4 +28,7 @@
 - (void)buttonClicked:(id)sender;
 - (void)showNewTabBar;
 
+- (void) hideAllElements;
+- (void) showAllElements;
+
 @end

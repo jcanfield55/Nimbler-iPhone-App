@@ -21,6 +21,7 @@ WebView *singleton;
             singleton.frame = CGRectMake(0, 0, 320, 415);
         }
         [singleton setClipsToBounds:YES];
+        [singleton setScalesPageToFit:YES];
     }
     
     return singleton;
