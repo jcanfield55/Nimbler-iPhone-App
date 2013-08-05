@@ -1354,6 +1354,14 @@
 		8DE42FEB16E0AEEE00A37AD3 /* img_legFerry@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE716E0AEEE00A37AD3 /* img_legFerry@2x.png */; };
 		8DE42FEC16E0AEEE00A37AD3 /* img_legFerrySelect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE816E0AEEE00A37AD3 /* img_legFerrySelect.png */; };
 		8DE42FED16E0AEEE00A37AD3 /* img_legFerrySelect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DE42FE916E0AEEE00A37AD3 /* img_legFerrySelect@2x.png */; };
+		8DE4B23317AF77EB00105A41 /* BikeStepsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE4B23117AF77EB00105A41 /* BikeStepsViewController.m */; };
+		8DE4B23417AF77EB00105A41 /* BikeStepsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE4B23117AF77EB00105A41 /* BikeStepsViewController.m */; };
+		8DE4B23517AF77EB00105A41 /* BikeStepsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE4B23117AF77EB00105A41 /* BikeStepsViewController.m */; };
+		8DE4B23617AF77EB00105A41 /* BikeStepsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE4B23117AF77EB00105A41 /* BikeStepsViewController.m */; };
+		8DE4B23717AF77EB00105A41 /* BikeStepsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DE4B23217AF77EB00105A41 /* BikeStepsViewController.xib */; };
+		8DE4B23817AF77EB00105A41 /* BikeStepsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DE4B23217AF77EB00105A41 /* BikeStepsViewController.xib */; };
+		8DE4B23917AF77EB00105A41 /* BikeStepsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DE4B23217AF77EB00105A41 /* BikeStepsViewController.xib */; };
+		8DE4B23A17AF77EB00105A41 /* BikeStepsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DE4B23217AF77EB00105A41 /* BikeStepsViewController.xib */; };
 		8DEAC18F1778246400D7997C /* RouteExcludeSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D00753116D4CAB30041A64C /* RouteExcludeSettings.m */; };
 		8DEAC192177841F400D7997C /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DEAC191177841F400D7997C /* TTTAttributedLabel.m */; };
 		8DEAC193177841F700D7997C /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DEAC191177841F400D7997C /* TTTAttributedLabel.m */; };
@@ -1889,6 +1897,9 @@
 		8DE42FE716E0AEEE00A37AD3 /* img_legFerry@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_legFerry@2x.png"; sourceTree = "<group>"; };
 		8DE42FE816E0AEEE00A37AD3 /* img_legFerrySelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_legFerrySelect.png; sourceTree = "<group>"; };
 		8DE42FE916E0AEEE00A37AD3 /* img_legFerrySelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_legFerrySelect@2x.png"; sourceTree = "<group>"; };
+		8DE4B23017AF77EB00105A41 /* BikeStepsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BikeStepsViewController.h; sourceTree = "<group>"; };
+		8DE4B23117AF77EB00105A41 /* BikeStepsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BikeStepsViewController.m; sourceTree = "<group>"; };
+		8DE4B23217AF77EB00105A41 /* BikeStepsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BikeStepsViewController.xib; sourceTree = "<group>"; };
 		8DEAC189177812DF00D7997C /* ConstantsDC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConstantsDC.h; sourceTree = "<group>"; };
 		8DEAC18E177823EA00D7997C /* Network_Commuting 1.10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.10.xcdatamodel"; sourceTree = "<group>"; };
 		8DEAC190177841F400D7997C /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
@@ -2107,6 +2118,9 @@
 				8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */,
 				8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */,
 				8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */,
+				8DE4B23017AF77EB00105A41 /* BikeStepsViewController.h */,
+				8DE4B23117AF77EB00105A41 /* BikeStepsViewController.m */,
+				8DE4B23217AF77EB00105A41 /* BikeStepsViewController.xib */,
 			);
 			path = ViewController;
 			sourceTree = SOURCE_ROOT;
@@ -3152,6 +3166,7 @@
 				8D06AB2017AA1A8E00ACC806 /* nimbler@2x.png in Resources */,
 				2E1F619417AB8604003B7EAF /* currenticon.png in Resources */,
 				2E1F619817AB8604003B7EAF /* currenticonlive.png in Resources */,
+				8DE4B23717AF77EB00105A41 /* BikeStepsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3410,6 +3425,7 @@
 				8D06AB3017AA601C00ACC806 /* nimbler@2x.png in Resources */,
 				2E1F619517AB8604003B7EAF /* currenticon.png in Resources */,
 				2E1F619917AB8604003B7EAF /* currenticonlive.png in Resources */,
+				8DE4B23817AF77EB00105A41 /* BikeStepsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3657,6 +3673,7 @@
 				8D06AB2E17AA601A00ACC806 /* nimbler@2x.png in Resources */,
 				2E1F619717AB8604003B7EAF /* currenticon.png in Resources */,
 				2E1F619B17AB8604003B7EAF /* currenticonlive.png in Resources */,
+				8DE4B23A17AF77EB00105A41 /* BikeStepsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3901,6 +3918,7 @@
 				8D06AB2F17AA601C00ACC806 /* nimbler@2x.png in Resources */,
 				2E1F619617AB8604003B7EAF /* currenticon.png in Resources */,
 				2E1F619A17AB8604003B7EAF /* currenticonlive.png in Resources */,
+				8DE4B23917AF77EB00105A41 /* BikeStepsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4003,6 +4021,7 @@
 				8DEAC192177841F400D7997C /* TTTAttributedLabel.m in Sources */,
 				8DABCDAC1793C2FB00C1BDCF /* RevealController.m in Sources */,
 				8DABCDAD1793C2FB00C1BDCF /* ZUUIRevealController.m in Sources */,
+				8DE4B23317AF77EB00105A41 /* BikeStepsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4099,6 +4118,7 @@
 				8DEAC193177841F700D7997C /* TTTAttributedLabel.m in Sources */,
 				8DABCDB31793C39500C1BDCF /* RevealController.m in Sources */,
 				8DABCDB51793C39900C1BDCF /* ZUUIRevealController.m in Sources */,
+				8DE4B23417AF77EB00105A41 /* BikeStepsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4182,6 +4202,7 @@
 				8DABCDB41793C39600C1BDCF /* RevealController.m in Sources */,
 				8DABCDB71793C39A00C1BDCF /* ZUUIRevealController.m in Sources */,
 				8DFE7EE017A773E400348B40 /* NimblerApplication.m in Sources */,
+				8DE4B23617AF77EB00105A41 /* BikeStepsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4265,6 +4286,7 @@
 				8DABCDB21793C39500C1BDCF /* RevealController.m in Sources */,
 				8DABCDB61793C39A00C1BDCF /* ZUUIRevealController.m in Sources */,
 				8DFE7EDF17A773E300348B40 /* NimblerApplication.m in Sources */,
+				8DE4B23517AF77EB00105A41 /* BikeStepsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

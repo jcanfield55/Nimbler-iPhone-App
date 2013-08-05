@@ -231,7 +231,7 @@
         BOOL walkMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] boolValue];
         
         if(bikeMode && transitMode && walkMode){
-            [parameters.routeExcludeSettings changeSettingTo:SETTING_INCLUDE_ROUTE forKey:returnBikeButtonTitle()];
+            //[parameters.routeExcludeSettings changeSettingTo:SETTING_INCLUDE_ROUTE forKey:returnBikeButtonTitle()];
             [params setObject:REQUEST_TRANSIT_MODE_WALK_BIKE forKey:REQUEST_TRANSIT_MODE];
             UserPreferance* userPrefs = [UserPreferance userPreferance];
             [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleQuick]
@@ -246,7 +246,7 @@
             [params setObject:[NSNumber numberWithInt:maxDistance] forKey:MAX_WALK_DISTANCE];
         }
         else if(bikeMode && transitMode){
-                [parameters.routeExcludeSettings changeSettingTo:SETTING_INCLUDE_ROUTE forKey:returnBikeButtonTitle()];
+                //[parameters.routeExcludeSettings changeSettingTo:SETTING_INCLUDE_ROUTE forKey:returnBikeButtonTitle()];
                 [params setObject:REQUEST_TRANSIT_MODE_TRANSIT_BIKE forKey:REQUEST_TRANSIT_MODE];
                 UserPreferance* userPrefs = [UserPreferance userPreferance];
                 [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleQuick]
@@ -261,21 +261,21 @@
                 [params setObject:[NSNumber numberWithInt:maxDistance] forKey:MAX_WALK_DISTANCE];
         }
         else if(transitMode && walkMode){
-            [parameters.routeExcludeSettings changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:returnBikeButtonTitle()];
+            //[parameters.routeExcludeSettings changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:returnBikeButtonTitle()];
            [params setObject:REQUEST_TRANSIT_MODE_TRANSIT forKey:REQUEST_TRANSIT_MODE]; 
         }
         else if(walkMode){
-            [parameters.routeExcludeSettings changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:returnBikeButtonTitle()];
+            //[parameters.routeExcludeSettings changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:returnBikeButtonTitle()];
            [params setObject:REQUEST_MODE_WALK forKey:REQUEST_TRANSIT_MODE];
             int maxDistance = (int)(100*1609.544);
             [params setObject:[NSNumber numberWithInt:maxDistance] forKey:MAX_WALK_DISTANCE];
         }
         else if (transitMode){
-           [parameters.routeExcludeSettings changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:returnBikeButtonTitle()];
+           //[parameters.routeExcludeSettings changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:returnBikeButtonTitle()];
            [params setObject:REQUEST_TRANSIT_MODE_TRANSIT forKey:REQUEST_TRANSIT_MODE]; 
         }
         else if(bikeMode){
-                [parameters.routeExcludeSettings changeSettingTo:SETTING_INCLUDE_ROUTE forKey:returnBikeButtonTitle()];
+               // [parameters.routeExcludeSettings changeSettingTo:SETTING_INCLUDE_ROUTE forKey:returnBikeButtonTitle()];
                 [params setObject:REQUEST_TRANSIT_MODE_BIKE_ONLY forKey:REQUEST_TRANSIT_MODE];
                 UserPreferance* userPrefs = [UserPreferance userPreferance];
                 [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleQuick]

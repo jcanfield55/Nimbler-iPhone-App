@@ -498,12 +498,12 @@ NSString *strStreet2 = @"street ";
     
     if(loc.locationName){
         [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
-        cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR_CELLTEXT];
-        cell.detailTextLabel.textColor = [UIColor GRAY_FONT_COLOR_CELLDETAILTEXT];
+        //cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR_CELLTEXT];
+        //cell.detailTextLabel.textColor = [UIColor GRAY_FONT_COLOR_CELLDETAILTEXT];
     }
     else{
         [[cell textLabel] setFont:[UIFont systemFontOfSize:MEDIUM_FONT_SIZE]];
-        cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR_CELLTEXT];
+        //cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR_CELLTEXT];
     }
     
     
@@ -534,13 +534,13 @@ NSString *strStreet2 = @"street ";
         }
         UIButton *btnFavorite = [UIButton buttonWithType:UIButtonTypeCustom];
         [btnFavorite setTag:indexPath.row];
-        [btnFavorite setFrame:CGRectMake(0, 0, 16, 16)];
+        [btnFavorite setFrame:CGRectMake(0, 0, 24, 24)];
         [btnFavorite setImage:[UIImage imageNamed:@"img_inActiveStar.png"] forState:UIControlStateNormal];
         [btnFavorite addTarget:self action:@selector(btnFavoriteClicked:) forControlEvents:UIControlEventTouchUpInside];
         if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) {
             // Bold italic if a list header
             [[cell textLabel] setFont:[UIFont MEDIUM_LARGE_OBLIQUE_FONT]];
-            cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
+            //cell.textLabel.textColor = [UIColor GRAY_FONT_COLOR];
             [cell setEditing:NO];
             UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 11, 18)];
             [imgViewDetailDisclosure setImage:imageDetailDisclosure];
