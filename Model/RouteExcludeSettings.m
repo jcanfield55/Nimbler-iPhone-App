@@ -388,6 +388,16 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
 // Fixed DE-313
 // Returns true if itin contains walk and bike and also route exclude settings for bike is SETTING_INCLUDE_ROUTE otherwise return false.
 - (BOOL) itineraryContainsWalkAndBike:(NSSet *)legs{
+    
+    BOOL bikeMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE] boolValue];
+    BOOL bikeShare = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_SHARE_MODE] boolValue];
+    BOOL walkMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] boolValue];
+    
+    if((bikeMode || bikeShare) && walkMode){
+        return true;
+    }
+    
+    
     BOOL containWalk = false;
     BOOL containBike = false;
     BOOL needToIncludeLeg = true;
@@ -438,10 +448,8 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
 // Returns true if itin should be included based on the RouteExclude settings
 -(BOOL)isItineraryIncluded:(Itinerary *)itin {
    
-//    BOOL bikeMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE] boolValue];
-//    BOOL transitMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] boolValue];
-//    BOOL walkMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] boolValue];
-    
+    BOOL transitMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] boolValue];
+
     if([self itineraryContainsWalkAndBike:[itin legs]]){
         return true;
     }
@@ -460,6 +468,9 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
             return false; // Exclude bike itinerary if BIKE_BUTTON excluded
         }
         else if (returnShortAgencyName(leg.agencyName)) {
+            if(!transitMode){
+                return false;
+            }
             NSString* handling = [[RouteExcludeSettings agencyButtonHandlingDictionary] objectForKey:returnShortAgencyName(leg.agencyName)];
             if (handling) {
                 if ([handling isEqualToString:EXCLUSION_BY_AGENCY]) {

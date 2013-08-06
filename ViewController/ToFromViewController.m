@@ -383,6 +383,7 @@ UIImage *imageDetailDisclosure;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    NSLog(@"Bike Mode = %@",[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE]);
     if(![[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE]){
         [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_TRANSIT_MODE];
     }
@@ -397,15 +398,40 @@ UIImage *imageDetailDisclosure;
     if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE] isEqualToString:@"1"]){
         [btnMode setSelected:YES];
     }
+    else{
+        [btnMode setSelected:NO];
+    }
     btnMode = (UIButton *)[self.viewMode viewWithTag:[TRANSIT_MODE_Tag intValue]];
     if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] isEqualToString:@"1"]){
         [btnMode setSelected:YES];
+    }
+    else{
+        [btnMode setSelected:NO];
     }
     btnMode = (UIButton *)[self.viewMode viewWithTag:[WALK_MODE_Tag intValue]];
     if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] isEqualToString:@"1"]){
         [btnMode setSelected:YES];
     }
-    
+    else{
+        [btnMode setSelected:NO];
+    }
+    if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
+        btnMode = (UIButton *)[self.viewMode viewWithTag:[BIKE_SHARE_MODE_Tag intValue]];
+        [btnMode setHidden:NO];
+        if(![[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_SHARE_MODE]){
+            [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_SHARE_MODE];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            [btnMode setSelected:YES];
+        }
+        else{
+            if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_SHARE_MODE] isEqualToString:@"1"]){
+                [btnMode setSelected:YES];
+            }
+            else{
+                [btnMode setSelected:NO];
+            }
+        }
+    }
     //[self.navigationController setNavigationBarHidden:YES animated:NO];
     [mainTable setFrame:CGRectMake(0, 0, 320, 319)];
     NSArray *itinerariesArray = [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray;
@@ -1260,6 +1286,19 @@ UIImage *imageDetailDisclosure;
     if([sender tag]==[BIKE_MODE_Tag intValue]){
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",strMode] forKey:DEFAULT_BIKE_MODE];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        btnMode = (UIButton *)[self.viewMode viewWithTag:[BIKE_SHARE_MODE_Tag intValue]];
+        if([strMode isEqualToString:@"1"]){
+            if(btnMode.selected == YES){
+                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"0"] forKey:DEFAULT_SHARE_MODE];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                [btnMode setSelected:NO];
+            }
+        }
+        else{
+            [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"1"] forKey:DEFAULT_SHARE_MODE];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            [btnMode setSelected:YES];
+        }
     }
     else if([sender tag]==[TRANSIT_MODE_Tag intValue]){
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",strMode] forKey:DEFAULT_TRANSIT_MODE];
@@ -1270,6 +1309,26 @@ UIImage *imageDetailDisclosure;
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     
+    if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
+        if([sender tag]==[BIKE_SHARE_MODE_Tag intValue]){
+            [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",strMode] forKey:DEFAULT_SHARE_MODE];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            btnMode = (UIButton *)[self.viewMode viewWithTag:[BIKE_MODE_Tag intValue]];
+            if([strMode isEqualToString:@"1"]){
+                if(btnMode.selected == YES){
+                    [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"0"] forKey:DEFAULT_BIKE_MODE];
+                    [[NSUserDefaults standardUserDefaults] synchronize];
+                    [btnMode setSelected:NO];
+                }
+            }
+            else{
+                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"1"] forKey:DEFAULT_BIKE_MODE];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                [btnMode setSelected:YES];
+            }
+        }
+
+    }
 }
 
 // Requesting a plan

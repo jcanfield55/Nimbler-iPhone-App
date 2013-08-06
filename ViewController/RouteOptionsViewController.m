@@ -281,10 +281,14 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 500;
             UIView *bgView = [self.view viewWithTag:1000];
             NSArray *subViews = [bgView subviews];
             if([btn.titleLabel.text isEqualToString:returnBikeButtonTitle()]){
+                [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_BIKE_MODE];
+                [[NSUserDefaults standardUserDefaults] synchronize];
                 [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:BIKE_SHARE];
                 for(int i=0;i<[subViews count];i++){
                     UIButton *button = [subViews objectAtIndex:i];
                     if([button isKindOfClass:[UIButton class]] && [button.titleLabel.text isEqualToString:BIKE_SHARE]){
+                        [[NSUserDefaults standardUserDefaults] setObject:MODE_DISABLE forKey:DEFAULT_SHARE_MODE];
+                        [[NSUserDefaults standardUserDefaults] synchronize];
                         [button setBackgroundImage:[UIImage imageNamed:@"excludeUnSelected@2x.png"] forState:UIControlStateNormal];
                         [button setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
                         break;
@@ -292,27 +296,54 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 500;
                 }
             }
             else if([btn.titleLabel.text isEqualToString:BIKE_SHARE]){
+                [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_SHARE_MODE];
+                [[NSUserDefaults standardUserDefaults] synchronize];
                 [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:returnBikeButtonTitle()];
                 for(int i=0;i<[subViews count];i++){
                     UIButton *button = [subViews objectAtIndex:i];
                     if([button isKindOfClass:[UIButton class]] && [button.titleLabel.text isEqualToString:returnBikeButtonTitle()]){
+                        [[NSUserDefaults standardUserDefaults] setObject:MODE_DISABLE forKey:DEFAULT_BIKE_MODE];
+                        [[NSUserDefaults standardUserDefaults] synchronize];
                         [button setBackgroundImage:[UIImage imageNamed:@"excludeUnSelected@2x.png"] forState:UIControlStateNormal];
                         [button setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
                         break;
                     }
                 }
             }
+            else if([btn.titleLabel.text isEqualToString:@"walk"]){
+                [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_WALK_MODE];
+            }
+            else{
+                [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_TRANSIT_MODE];
+            }
+            [[NSUserDefaults standardUserDefaults] synchronize];
             [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:btn.titleLabel.text];
             toggledSetting.setting = SETTING_INCLUDE_ROUTE;
             [btn setBackgroundImage:[UIImage imageNamed:@"excludeSelected@2x.png"] forState:UIControlStateNormal];
             [btn setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
         }
         else{
+            if([btn.titleLabel.text isEqualToString:returnBikeButtonTitle()]){
+                [[NSUserDefaults standardUserDefaults] setObject:MODE_DISABLE forKey:DEFAULT_BIKE_MODE];
+            }
+            else if([btn.titleLabel.text isEqualToString:BIKE_SHARE]){
+                [[NSUserDefaults standardUserDefaults] setObject:MODE_DISABLE forKey:DEFAULT_SHARE_MODE];
+            }
+            else if([btn.titleLabel.text isEqualToString:@"walk"]){
+                [[NSUserDefaults standardUserDefaults] setObject:MODE_DISABLE forKey:DEFAULT_WALK_MODE];
+            }
+            else{
+                [[NSUserDefaults standardUserDefaults] setObject:MODE_DISABLE forKey:DEFAULT_TRANSIT_MODE];
+            }
+            [[NSUserDefaults standardUserDefaults] synchronize];
             [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:btn.titleLabel.text];
             toggledSetting.setting = SETTING_EXCLUDE_ROUTE;
             [btn setBackgroundImage:[UIImage imageNamed:@"excludeUnSelected@2x.png"] forState:UIControlStateNormal];
             [btn setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
         }
+        
+        NIMLOG_PERF2(@"Bike Mode Exclude = %@",[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE]);
+        
         // Update sorted itineraries with new exclusions
         if (!planRequestParameters) {
             logError(@"RouteOptionsViewController -> toggleExcludeButton",
@@ -779,6 +810,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 500;
             [btnAgency addTarget:self action:@selector(toggleExcludeButton:) forControlEvents:UIControlEventTouchUpInside];
             [bgView addSubview:btnAgency];
         }
+        
     }
     @catch (NSException *exception) {
         logException(@"RouteOptionsViewController->createViewWithButtons", @"", exception);
