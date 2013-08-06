@@ -580,6 +580,29 @@
 								<reference key="IBUIFontDescription" ref="180028135"/>
 								<reference key="IBUIFont" ref="682956579"/>
 							</object>
+							<object class="IBUIButton" id="134970656">
+								<reference key="NSNextResponder" ref="253658398"/>
+								<int key="NSvFlags">-2147483356</int>
+								<string key="NSFrame">{{227, 9}, {43, 39}}</string>
+								<reference key="NSSuperview" ref="253658398"/>
+								<reference key="NSNextKeyView" ref="210563169"/>
+								<string key="NSReuseIdentifierKey">_NS:9</string>
+								<bool key="IBUIOpaque">NO</bool>
+								<int key="IBUITag">104</int>
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<int key="IBUIContentHorizontalAlignment">0</int>
+								<int key="IBUIContentVerticalAlignment">0</int>
+								<string key="IBUINormalTitle">Share</string>
+								<reference key="IBUIHighlightedTitleColor" ref="140259170"/>
+								<object class="NSColor" key="IBUISelectedTitleColor">
+									<int key="NSColorSpace">2</int>
+									<bytes key="NSRGB">MC45NDExNzY1MzM3IDAuMzg0MzEzNzYyMiAwLjMyOTQxMTc3NDkAA</bytes>
+								</object>
+								<reference key="IBUINormalTitleColor" ref="734717287"/>
+								<reference key="IBUINormalTitleShadowColor" ref="403191613"/>
+								<reference key="IBUIFontDescription" ref="180028135"/>
+								<reference key="IBUIFont" ref="682956579"/>
+							</object>
 						</object>
 						<string key="NSFrame">{{10, 124}, {301, 56}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
@@ -838,6 +861,15 @@
 					</object>
 					<int key="connectionID">167</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">btnModeClicked:</string>
+						<reference key="source" ref="134970656"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">171</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -1006,6 +1038,7 @@
 							<reference ref="396014608"/>
 							<reference ref="957901220"/>
 							<reference ref="937024213"/>
+							<reference ref="134970656"/>
 						</object>
 						<reference key="parent" ref="191373211"/>
 					</object>
@@ -1049,6 +1082,11 @@
 						<reference key="object" ref="175499998"/>
 						<reference key="parent" ref="356756940"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">170</int>
+						<reference key="object" ref="134970656"/>
+						<reference key="parent" ref="253658398"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -1076,6 +1114,8 @@
 					<string>162.IBPluginDependency</string>
 					<string>165.IBPluginDependency</string>
 					<string>165.IBUIButtonInspectorSelectedStateConfigurationMetadataKey</string>
+					<string>170.IBPluginDependency</string>
+					<string>170.IBUIButtonInspectorSelectedStateConfigurationMetadataKey</string>
 					<string>68.IBPluginDependency</string>
 					<string>77.IBPluginDependency</string>
 					<string>79.IBPluginDependency</string>
@@ -1115,6 +1155,8 @@
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<real value="0.0"/>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+					<real value="0.0"/>
+					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -1142,7 +1184,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">167</int>
+			<int key="maxID">171</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
