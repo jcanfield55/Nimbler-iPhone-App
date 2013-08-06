@@ -1691,7 +1691,7 @@ UIImage *imageDetailDisclosure;
                                            @"date", [NSDate date], nil]];
 
             // convert miles into meters. 1 mile = 1609.344 meters
-            int maxDistance = (int)([[UserPreferance userPreferance] walkDistance]*1609.544);
+            int maxDistance = (int)([[UserPreferance userPreferance] walkDistance]*1609.344);
             
             // Request the plan (callback will come in newPlanAvailable method)
             PlanRequestParameters* parameters = [[PlanRequestParameters alloc] init];

@@ -437,11 +437,11 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
 // Returns true if itin should be included based on the RouteExclude settings
 -(BOOL)isItineraryIncluded:(Itinerary *)itin {
    
-    BOOL bikeMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE] boolValue];
-    BOOL transitMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] boolValue];
-    BOOL walkMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] boolValue];
+//    BOOL bikeMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE] boolValue];
+//    BOOL transitMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] boolValue];
+//    BOOL walkMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] boolValue];
     
-    if(bikeMode && walkMode && [self itineraryContainsWalkAndBike:[itin legs]]){
+    if([self itineraryContainsWalkAndBike:[itin legs]]){
         return true;
     }
     for (Leg* leg in [itin legs]) {
@@ -459,9 +459,6 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
             return false; // Exclude bike itinerary if BIKE_BUTTON excluded
         }
         else if (returnShortAgencyName(leg.agencyName)) {
-            if(!transitMode){
-                return false;
-            }
             NSString* handling = [[RouteExcludeSettings agencyButtonHandlingDictionary] objectForKey:returnShortAgencyName(leg.agencyName)];
             if (handling) {
                 if ([handling isEqualToString:EXCLUSION_BY_AGENCY]) {

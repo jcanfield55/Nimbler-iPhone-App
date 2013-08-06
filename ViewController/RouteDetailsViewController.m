@@ -19,6 +19,7 @@
 #import "RealTimeManager.h"
 #import "KeyObjectStore.h"
 #import "WebView.h"
+#import "BikeStepsViewController.h"
 
 #define MAXIMUM_SCROLL_POINT 338
 #define MAXIMUM_SCROLL_POINT_4_INCH 425
@@ -513,6 +514,11 @@ NSUserDefaults *prefs;
         } else {
             cell.imageView.image = [imageDictionary objectForKey:imgFileName];
         }
+        
+        if([leg isBike]){
+           UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_DetailDesclosure.png"]];
+            cell.accessoryView = imageView;
+        }
     }
     @catch (NSException *exception) {
         logException(@"RouteDetailsViewController->cellForRowAtIndexPath", @"", exception);
@@ -549,6 +555,13 @@ NSUserDefaults *prefs;
 {
     [self setItineraryNumber:[indexPath row]];
     [self setFBParamater:[indexPath row]];
+    
+     Leg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:[indexPath row]];
+    if([leg isBike]){
+        BikeStepsViewController *bikeStepsView = [[BikeStepsViewController alloc] initWithNibName:@"BikeStepsViewController" bundle:nil];
+        bikeStepsView.steps = [leg.steps allObjects];
+        [self.navigationController pushViewController:bikeStepsView animated:YES];
+    }
 }
 
 -(void)setFBParamater:(int)ss
