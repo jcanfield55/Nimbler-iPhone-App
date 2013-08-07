@@ -136,10 +136,10 @@ UIImage *imageDetailDisclosure;
             rect1.origin.y = 76;
             rect1.size.width = TOFROM_TABLE_WIDTH ;
             if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                toTableHeight = TOFROM_HEIGHT_EDIT_MODE_4INCH;
+                toTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE_4INCH;
             }
             else{
-                toTableHeight = TOFROM_HEIGHT_EDIT_MODE;
+                toTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE;
             }
             rect1.size.height = toTableHeight;
             
@@ -158,10 +158,10 @@ UIImage *imageDetailDisclosure;
             rect2.origin.y = 76;
             rect2.size.width = TOFROM_TABLE_WIDTH; 
             if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                fromTableHeight = TOFROM_HEIGHT_EDIT_MODE_4INCH;
+                fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE_4INCH;
             }
             else{
-                fromTableHeight = TOFROM_HEIGHT_EDIT_MODE;
+                fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE;
             }
             rect2.size.height = fromTableHeight;
             
@@ -383,7 +383,6 @@ UIImage *imageDetailDisclosure;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSLog(@"Bike Mode = %@",[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE]);
     if(![[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE]){
         [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_TRANSIT_MODE];
     }
@@ -933,7 +932,7 @@ UIImage *imageDetailDisclosure;
         editMode = TO_EDIT;
     }
 
-    return YES;
+    return NO;
 }
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
     if([text isEqualToString:@"\n"]) {
@@ -1008,6 +1007,13 @@ UIImage *imageDetailDisclosure;
 {
     // Change TOFROMVIEW FRAMES accordingly EDIT MODE
     
+    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+        fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE_4INCH;
+    }
+    else{
+        fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE;
+    }
+    
     if(newEditMode == FROM_EDIT){
         [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
         [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
@@ -1022,6 +1028,7 @@ UIImage *imageDetailDisclosure;
         [self.btnCureentLoc setHidden:YES];
         [self.PicketSelectView setHidden:YES];
         [self.viewMode setHidden:YES];
+        [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y, fromTable.frame.size.width, fromTableHeight)];
         [self.view addSubview:fromTable];
     }
     else if (newEditMode == TO_EDIT){
@@ -1031,12 +1038,13 @@ UIImage *imageDetailDisclosure;
         [self.fromView setHidden:YES];
         [self.toView setFrame:CGRectMake(self.toView.frame.origin.x, self.toView.frame.origin.y-45, self.toView.frame.size.width-TOFROMVIEW_HEIGHT_EDIT_MODE, toView.frame.size.height)];
         [self.imgViewToBG setFrame:CGRectMake(self.imgViewToBG.frame.origin.x, self.imgViewToBG.frame.origin.y, self.imgViewToBG.frame.size.width-TOFROMVIEW_HEIGHT_EDIT_MODE, imgViewToBG.frame.size.height)];
-        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x-TXTTOVIEW_X_POSITION_EDIT_MODE, self.txtToView.frame.origin.y, self.txtToView.frame.size.width+3, txtToView.frame.size.height)];
+        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x-TXTTOVIEW_X_POSITION_EDIT_MODE, self.txtToView.frame.origin.y, self.txtToView.frame.size.width-7, txtToView.frame.size.height)];
         [self.btnSwap setHidden:YES];
         [self.lblTxtTo setHidden:YES];
         [self.btnToFromEditCancel setHidden:NO];
         [self.PicketSelectView setHidden:YES];
         [self.viewMode setHidden:YES];
+        [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y, toTable.frame.size.width, fromTableHeight)];
         [self.view addSubview:toTable];
     }
     else if (newEditMode == NO_EDIT){
@@ -1147,7 +1155,7 @@ UIImage *imageDetailDisclosure;
         [self.fromView setHidden:NO];
         [self.toView setFrame:CGRectMake(self.toView.frame.origin.x, self.toView.frame.origin.y+45, toView.frame.size.width+TOFROMVIEW_HEIGHT_EDIT_MODE, toView.frame.size.height)];
         [self.imgViewToBG setFrame:CGRectMake(self.imgViewToBG.frame.origin.x, self.imgViewToBG.frame.origin.y, imgViewToBG.frame.size.width+TOFROMVIEW_HEIGHT_EDIT_MODE, imgViewToBG.frame.size.height)];
-        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x+TXTTOVIEW_X_POSITION_EDIT_MODE, self.txtToView.frame.origin.y, self.txtToView.frame.size.width+9, txtToView.frame.size.height)];
+        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x+TXTTOVIEW_X_POSITION_EDIT_MODE, self.txtToView.frame.origin.y, self.txtToView.frame.size.width+7, txtToView.frame.size.height)];
         [self.btnToFromEditCancel setHidden:YES];
         [self.lblTxtTo setHidden:NO];
         [toTable removeFromSuperview];
@@ -1205,6 +1213,8 @@ UIImage *imageDetailDisclosure;
 // Callback from ToFromTableViewController to update a new user entered/selected location
 
 - (void)updateToFromLocation:(id)sender isFrom:(BOOL)isFrom location:(Location *)loc; {
+    [self.txtFromView setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+    [self.txtToView setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
     if (isFrom) {
         fromLocation = loc;
         if([fromLocation.formattedAddress isEqualToString:@"Current Location"]){
@@ -1290,30 +1300,56 @@ UIImage *imageDetailDisclosure;
         strMode = MODE_ENABLE;
         [btnMode setSelected:YES];
     }
+    NSString *bikeName;
+    bikeName = returnBikeButtonTitle();
     if([sender tag]==[BIKE_MODE_Tag intValue]){
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",strMode] forKey:DEFAULT_BIKE_MODE];
         [[NSUserDefaults standardUserDefaults] synchronize];
         btnMode = (UIButton *)[self.viewMode viewWithTag:[BIKE_SHARE_MODE_Tag intValue]];
         if([strMode isEqualToString:@"1"]){
+            [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:bikeName];
             if(btnMode.selected == YES){
                 [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"0"] forKey:DEFAULT_SHARE_MODE];
                 [[NSUserDefaults standardUserDefaults] synchronize];
                 [btnMode setSelected:NO];
+                [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:BIKE_SHARE];
             }
         }
         else{
-            [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"1"] forKey:DEFAULT_SHARE_MODE];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-            [btnMode setSelected:YES];
+            [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:bikeName];
         }
     }
     else if([sender tag]==[TRANSIT_MODE_Tag intValue]){
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",strMode] forKey:DEFAULT_TRANSIT_MODE];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        if([strMode isEqualToString:@"1"]){
+            for(int i=0;i<[[plan excludeSettingsArray] count];i++){
+                RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
+                NSString *key = routeExcludeSetting.key;
+                if([[RouteExcludeSettings latestUserSettings] settingForKey:routeExcludeSetting.key] == SETTING_INCLUDE_ROUTE && ![key isEqualToString:bikeName] && ![key isEqualToString:BIKE_SHARE]){
+                    [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:routeExcludeSetting.key];
+                }
+            }
+        }
+        else{
+            for(int i=0;i<[[plan excludeSettingsArray] count];i++){
+                RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
+                NSString *key = routeExcludeSetting.key;
+                if(![key isEqualToString:bikeName] && ![key isEqualToString:BIKE_SHARE]){
+                    [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:routeExcludeSetting.key];
+                }
+            }
+        }
     }
     else if([sender tag]==[WALK_MODE_Tag intValue]){
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",strMode] forKey:DEFAULT_WALK_MODE];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        if([strMode isEqualToString:@"1"]){
+            [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:@"WALK"];
+        }
+        else{
+            [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:@"WALK"];
+        }
     }
     
     if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
@@ -1322,16 +1358,16 @@ UIImage *imageDetailDisclosure;
             [[NSUserDefaults standardUserDefaults] synchronize];
             btnMode = (UIButton *)[self.viewMode viewWithTag:[BIKE_MODE_Tag intValue]];
             if([strMode isEqualToString:@"1"]){
+                [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:BIKE_SHARE];
                 if(btnMode.selected == YES){
                     [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"0"] forKey:DEFAULT_BIKE_MODE];
                     [[NSUserDefaults standardUserDefaults] synchronize];
                     [btnMode setSelected:NO];
+                    [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:bikeName];
                 }
             }
             else{
-                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"1"] forKey:DEFAULT_BIKE_MODE];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                [btnMode setSelected:YES];
+                [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:BIKE_SHARE];
             }
         }
 
@@ -1365,6 +1401,7 @@ UIImage *imageDetailDisclosure;
             if (isTripDateCurrentTime) { // if current time, get the latest before getting plan
                 [self updateTripDate];
             }
+            
             [self getPlan];
         }
         // if user has not entered/selected fromLocation, send them an alert

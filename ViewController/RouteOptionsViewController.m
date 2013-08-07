@@ -313,12 +313,12 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 457;
                     }
                 }
             }
-            else if([btn.titleLabel.text isEqualToString:@"walk"]){
+            else if([btn.titleLabel.text isEqualToString:@"WALK"]){
                 [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_WALK_MODE];
             }
-            else{
+         /*   else{
                 [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_TRANSIT_MODE];
-            }
+            } */
             [[NSUserDefaults standardUserDefaults] synchronize];
             [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:btn.titleLabel.text];
             toggledSetting.setting = SETTING_INCLUDE_ROUTE;
@@ -332,11 +332,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 457;
             else if([btn.titleLabel.text isEqualToString:BIKE_SHARE]){
                 [[NSUserDefaults standardUserDefaults] setObject:MODE_DISABLE forKey:DEFAULT_SHARE_MODE];
             }
-            else if([btn.titleLabel.text isEqualToString:@"walk"]){
+            else if([btn.titleLabel.text isEqualToString:@"WALK"]){
                 [[NSUserDefaults standardUserDefaults] setObject:MODE_DISABLE forKey:DEFAULT_WALK_MODE];
-            }
-            else{
-                [[NSUserDefaults standardUserDefaults] setObject:MODE_DISABLE forKey:DEFAULT_TRANSIT_MODE];
             }
             [[NSUserDefaults standardUserDefaults] synchronize];
             [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:btn.titleLabel.text];
@@ -344,8 +341,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 457;
             [btn setBackgroundImage:[UIImage imageNamed:@"excludeUnSelected@2x.png"] forState:UIControlStateNormal];
             [btn setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
         }
-        
-        NIMLOG_PERF2(@"Bike Mode Exclude = %@",[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE]);
         
         // Update sorted itineraries with new exclusions
         if (!planRequestParameters) {
@@ -791,6 +786,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 457;
         int yPos = 5;
         int btnHeight = 38;
         int width = 72;
+        
         for(int i=0;i<[[plan excludeSettingsArray] count];i++){
             RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
             UIButton *btnAgency = [UIButton buttonWithType:UIButtonTypeCustom];
