@@ -40,7 +40,7 @@
 #define TEST_TRIP_PROCESS_URL @"http://localhost:8080/TPServer/ws/"  // TP server for automated tests
 
 // Core Data database filename
-#define COREDATA_DB_FILENAME    @"store101.data"
+#define COREDATA_DB_FILENAME    @"store102.data"
 #define TEST_COREDATA_DB_FILENAME  @"testDataStore.data" // For automated tests
 
 #define GEO_FROM          @"1"

@@ -585,6 +585,7 @@
 								<int key="NSvFlags">-2147483356</int>
 								<string key="NSFrame">{{227, 9}, {43, 39}}</string>
 								<reference key="NSSuperview" ref="253658398"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="210563169"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>

@@ -89,7 +89,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 457;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [btnFeedBack setFrame:CGRectMake(124, 460, 73, 44)];
+    if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
+      [btnFeedBack setFrame:CGRectMake(124, 460, 73, 44)];   
+    }
     [self changeMainTableSettings];
     [self.navigationController setNavigationBarHidden:NO animated:NO];
     if(plan){

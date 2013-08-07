@@ -373,6 +373,13 @@
         [btnForwardItem setEnabled:TRUE];
         [btnForwardItem setBackgroundImage:[UIImage imageNamed:@"img_forwardSelect.png"] forState:UIControlStateNormal];
     }
+    
+    CLLocationCoordinate2D curCoordinate = CLLocationCoordinate2DMake([step.startLat doubleValue],[step.startLng doubleValue]);
+    if([steps count] > selectedRowIndex + 1){
+        Step *nextStep = [steps objectAtIndex:selectedRowIndex+1];
+        CLLocationCoordinate2D nextCoordinate = CLLocationCoordinate2DMake([nextStep.startLat doubleValue],[nextStep.startLng doubleValue]);
+        [self createOverlayForSelectedStep:curCoordinate NextCoordinate:nextCoordinate];
+    }
 }
 
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay

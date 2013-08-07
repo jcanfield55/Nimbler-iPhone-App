@@ -231,7 +231,6 @@ UIImage *imageDetailDisclosure;
 }
 - (void)viewDidLoad{
     [super viewDidLoad];
-    
     lblTxtToFromPlaceholder = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 0.0, txtFromView.frame.size.width - 20.0, 30.0)];
     [lblTxtToFromPlaceholder setText:Placeholder_Text];
     [lblTxtToFromPlaceholder setBackgroundColor:[UIColor clearColor]];
@@ -1376,7 +1375,7 @@ UIImage *imageDetailDisclosure;
         else if (![toLocation formattedAddress] && !toGeocodeRequestOutstanding) {
             alert = [[UIAlertView alloc] initWithTitle:@"TripPlanner" message:@"Select a destination address" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
-        }    
+        }
         // otherwise, just wait for the geocoding and then submit the plan
         else {
             NIMLOG_PERF1(@"look for state");

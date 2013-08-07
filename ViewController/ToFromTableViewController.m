@@ -53,6 +53,7 @@
 @synthesize isRearrangeMode;
 @synthesize isRenameMode;
 @synthesize btnEdit;
+@synthesize currentRowIndex;
 
 NSString *strBART1 = @" bart";
 NSString *strBART2 = @"bart ";
@@ -299,6 +300,7 @@ NSString *strStreet2 = @"street ";
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if(isRenameMode){
+        currentRowIndex = indexPath.row;
         [tableView beginUpdates];
         [myTableView setFrame:CGRectMake(myTableView.frame.origin.x, myTableView.frame.origin.y, myTableView.frame.size.width, TOFROM_HEIGHT_EDIT_MODE)];
         
@@ -653,6 +655,7 @@ NSString *strStreet2 = @"street ";
     if([text isEqualToString:@"\n"]){
         int row = [textView tag] - 10000;
         [self renameAddress:textView Row:row];
+        currentRowIndex = 0;
     }
     return YES;
 }
@@ -665,6 +668,12 @@ NSString *strStreet2 = @"street ";
         isRearrangeMode = false;
         isRenameMode = false;
         [myTableView setEditing:NO animated:NO];
+        
+        UITableViewCell *cell = [myTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:currentRowIndex inSection:0]];
+        UITextView *txtView = (UITextView *)[cell viewWithTag:currentRowIndex+10000];
+        [self renameAddress:txtView Row:currentRowIndex];
+        [txtView removeFromSuperview];
+        currentRowIndex = 0;
     }
     else{
         [editButton setSelected:YES];
