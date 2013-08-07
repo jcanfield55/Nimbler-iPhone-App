@@ -306,7 +306,7 @@ NSUserDefaults *prefs;
             CGSize stringSize = [strTweet sizeWithFont:[UIFont systemFontOfSize:16.0] constrainedToSize:CGSizeMake(220, 9999) lineBreakMode:UILineBreakModeWordWrap];
             UITextView *uiTextView=[[UITextView alloc] initWithFrame:CGRectMake(55, 28, 220, stringSize.height + 40)];
             uiTextView.font = [UIFont systemFontOfSize:15.0];
-            uiTextView.text = [strTweet stringByAppendingString:@" http://www.sfmta.com/calendar/san-francisco-2013-americas-cup"];
+            uiTextView.text = strTweet;
             uiTextView.textColor = [UIColor whiteColor];
             uiTextView.editable = NO;
             uiTextView.dataDetectorTypes = UIDataDetectorTypeLink;
