@@ -145,7 +145,7 @@ NSString *strStreet2 = @"street ";
     if(isDeleteMode){
         Location *loc = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]]
                                             isFrom:isFrom];
-        if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) {
+        if (![loc isKindOfClass:[LocationFromLocalSearch class]] && [[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) {
             return UITableViewCellEditingStyleNone;
         }
         return UITableViewCellEditingStyleDelete;
@@ -602,10 +602,15 @@ NSString *strStreet2 = @"street ";
             NSString *formattedAddress = [array objectAtIndex:1];
             if(locationName && [locationName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length > 0)
                 location.locationName = locationName;
+            else
+                location.locationName = nil;
             if(formattedAddress && [formattedAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length > 0){
-                location.formattedAddress = formattedAddress;
-                location.userUpdatedLocation = [NSNumber numberWithBool:true];
+                //location.formattedAddress = formattedAddress;
+                //location.userUpdatedLocation = [NSNumber numberWithBool:true];
             }
+        }
+        else{
+            location.locationName = nil;
         }
         [sortedLocations replaceObjectAtIndex:row withObject:location];
         locations.sortedMatchingFromLocations = sortedLocations;
@@ -631,11 +636,16 @@ NSString *strStreet2 = @"street ";
             
             if(locationName && [locationName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length > 0)
                 location.locationName = locationName;
+            else
+                location.locationName = nil;
             
             if(formattedAddress && [formattedAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length > 0){
-                location.formattedAddress = formattedAddress;
-                location.userUpdatedLocation = [NSNumber numberWithBool:true];
+                //location.formattedAddress = formattedAddress;
+                //location.userUpdatedLocation = [NSNumber numberWithBool:true];
             }
+        }
+        else{
+            location.locationName = nil;
         }
         [sortedLocations replaceObjectAtIndex:row withObject:location];
         locations.sortedMatchingToLocations = sortedLocations;

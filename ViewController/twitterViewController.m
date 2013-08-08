@@ -596,55 +596,40 @@ NSUserDefaults *prefs;
     [self.navigationController.navigationBar setHidden:YES];
     RXCustomTabBar *rxCustomTabbar = (RXCustomTabBar *)[nc_AppDelegate sharedInstance].tabBarController;
     [rxCustomTabbar showAllElements];
-     CATransition *animation = [CATransition animation];
-     [animation setDuration:0.3];
-     [animation setType:kCATransitionPush];
-     [animation setSubtype:kCATransitionFromLeft];
-     [animation setRemovedOnCompletion:YES];
-     [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
-     [[self.navigationController.view layer] addAnimation:animation forKey:nil];
-     [[self navigationController] popViewControllerAnimated:NO];
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)openUrl:(NSURL *)url {
     [self.navigationController.navigationBar setHidden:NO];
     UIViewController *webViewController = [[UIViewController alloc] init];
-    UIButton * btnGoToNimbler = [[UIButton alloc] initWithFrame:CGRectMake(0,0,65,34)];
-    [btnGoToNimbler addTarget:self action:@selector(backToTwitterView) forControlEvents:UIControlEventTouchUpInside];
-    [btnGoToNimbler setBackgroundImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
-    
-    UIBarButtonItem *backTonimbler = [[UIBarButtonItem alloc] initWithCustomView:btnGoToNimbler];
-    webViewController.navigationItem.leftBarButtonItem = backTonimbler;
     [webViewController.view addSubview:[WebView instance]];
     if ([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT) {
-        [WebView instance].frame = CGRectMake(0, 0, 285, 518);
+        [WebView instance].frame = CGRectMake(0, 0, 320, 518);
     } else {
-        [WebView instance].frame = CGRectMake(0,0, 285, 430);
+        [WebView instance].frame = CGRectMake(0,0, 320, 430);
     }
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20];
     [[WebView instance] loadRequest:request];
     [WebView instance].delegate = self;
-//    [[WebView instance] stringByEvaluatingJavaScriptFromString:[[WebView instance] stringByEvaluatingJavaScriptFromString:
-//                                                                [NSString stringWithFormat:
-//                                                                 @"document.body.style.maxWidth='10px';"]]];
     [self hideTabBar];
     RXCustomTabBar *rxCustomTabbar = (RXCustomTabBar *)[nc_AppDelegate sharedInstance].tabBarController;
     [rxCustomTabbar hideAllElements];
     
-    if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
-        CATransition *animation = [CATransition animation];
-        [animation setDuration:0.3];
-        [animation setType:kCATransitionPush];
-        [animation setSubtype:kCATransitionFromRight];
-        [animation setRemovedOnCompletion:YES];
-        [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
-        [self.navigationController hidesBottomBarWhenPushed];
-        [[self.navigationController.view layer] addAnimation:animation forKey:nil];
-        [[self navigationController] pushViewController:webViewController animated:NO];
-    } else {
-         [self.navigationController hidesBottomBarWhenPushed];
-        [[self navigationController] pushViewController:webViewController animated:YES];
+    UIButton * btnGoToNimbler = [[UIButton alloc] initWithFrame:CGRectMake(5,6,65,34)];
+    [btnGoToNimbler addTarget:self action:@selector(backToTwitterView) forControlEvents:UIControlEventTouchUpInside];
+    [btnGoToNimbler setBackgroundImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
+    
+    UINavigationController *controller = [[UINavigationController alloc] initWithRootViewController:webViewController];
+    [controller.navigationBar addSubview:btnGoToNimbler];
+    
+    if([controller.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+        [controller.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
     }
+    else {
+        [controller.navigationBar insertSubview:[[UIImageView alloc] initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+    }
+    
+    [self presentModalViewController:controller animated:YES];
 }
 
 
