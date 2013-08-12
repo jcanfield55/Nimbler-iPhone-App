@@ -1325,7 +1325,7 @@ UIImage *imageDetailDisclosure;
             for(int i=0;i<[[plan excludeSettingsArray] count];i++){
                 RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
                 NSString *key = routeExcludeSetting.key;
-                if([[RouteExcludeSettings latestUserSettings] settingForKey:routeExcludeSetting.key] == SETTING_INCLUDE_ROUTE && ![key isEqualToString:bikeName] && ![key isEqualToString:BIKE_SHARE]){
+                if(![key isEqualToString:bikeName] && ![key isEqualToString:BIKE_SHARE]){
                     [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:routeExcludeSetting.key];
                 }
             }
@@ -1379,6 +1379,13 @@ UIImage *imageDetailDisclosure;
     @try {
         NIMLOG_EVENT1(@"Route Button Pressed");
         UIAlertView *alert;
+        
+        if(![[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE] isEqualToString:MODE_ENABLE] && ![[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_SHARE_MODE] isEqualToString:MODE_ENABLE] && ![[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] isEqualToString:MODE_ENABLE] && ![[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] isEqualToString:MODE_ENABLE]){
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ROUTE_MODE_TITLE_MSG message:ROUTE_MODE_NOT_SELECTED_MSG delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert show];
+            return ;
+        }
+        
         startButtonClickTime = CFAbsoluteTimeGetCurrent();
         
         if ([fromLocation isCurrentLocation]) {
