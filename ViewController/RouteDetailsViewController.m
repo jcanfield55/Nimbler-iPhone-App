@@ -251,12 +251,14 @@ NSUserDefaults *prefs;
             [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y,IPHONE_SCREEM_WIDTH,mainTable.frame.size.height)];
         }
         else if(!previousStatus && lblNextRealtime.isHidden){
+            NSLog(@"mainTableHeight=%f",mainTable.frame.size.height);
             [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y - self.lblNextRealtime.frame.size.height,IPHONE_SCREEM_WIDTH,mainTable.frame.size.height+self.lblNextRealtime.frame.size.height)];
         }
         else if(previousStatus && !lblNextRealtime.isHidden){
             [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y + self.lblNextRealtime.frame.size.height,IPHONE_SCREEM_WIDTH,mainTable.frame.size.height-self.lblNextRealtime.frame.size.height)];
         }
         else{
+            NSLog(@"mainTableHeight=%f",mainTable.frame.size.height);
             [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,mainTable.frame.origin.y,IPHONE_SCREEM_WIDTH,mainTable.frame.size.height)];
         }
         // Compute the mainTableTotalHeight by calling the height of each row
@@ -717,10 +719,10 @@ NSUserDefaults *prefs;
         [handleControl setFrame:CGRectMake(handleControl.frame.origin.x, point.y, IPHONE_SCREEM_WIDTH, handleControl.frame.size.height)];
         [mapView setFrame:CGRectMake(mapView.frame.origin.x,mapView.frame.origin.y,mapView.frame.size.width,mapView.frame.size.height+(point.y-mapHeight))];
         if(lblNextRealtime.isHidden){
-            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,handleControl.frame.origin.y+handleControl.frame.size.height,IPHONE_SCREEM_WIDTH,self.view.frame.size.height-(handleControl.frame.size.height+mapView.frame.size.height))];
+            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,handleControl.frame.origin.y+handleControl.frame.size.height,IPHONE_SCREEM_WIDTH,self.view.frame.size.height-(handleControl.frame.size.height+mapView.frame.size.height+self.btnFeedBack.frame.size.height))];
         }
         else{
-            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,point.y+MAIN_TABLE_Y_BUFFER, IPHONE_SCREEM_WIDTH,self.view.frame.size.height-(handleControl.frame.size.height+lblNextRealtime.frame.size.height+mapView.frame.size.height))];
+            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,point.y+MAIN_TABLE_Y_BUFFER, IPHONE_SCREEM_WIDTH,self.view.frame.size.height-(handleControl.frame.size.height+lblNextRealtime.frame.size.height+mapView.frame.size.height+self.btnFeedBack.frame.size.height))];
         }
         mapHeight = mapView.frame.size.height;
         tableHeight = mainTable.frame.size.height;
@@ -786,6 +788,18 @@ NSUserDefaults *prefs;
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView{
     [activityIndicatorView stopAnimating];
+}
+
+- (IBAction)feedBackClicked:(id)sender{
+    FeedBackForm *feedBackForm;
+    if ([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT) {
+        feedBackForm = [[FeedBackForm alloc] initWithNibName:@"FeedBackFormPopUp_568h" bundle:nil];
+    }
+    else{
+        feedBackForm = [[FeedBackForm alloc] initWithNibName:@"FeedBackFormPopUp" bundle:nil];
+    }
+    feedBackForm.isViewPresented = true;
+    [self presentModalViewController:feedBackForm animated:YES];
 }
 
 @end

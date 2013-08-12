@@ -25,6 +25,6 @@
 - (NSArray *) fetchStationListByContainsListId:(NSString *)containsListId;
 - (int) returnElementType:(StationListElement *)stationListElement;
 - (Location *) createNewLocationObjectFromGtfsStop:(PreloadedStop *)stop :(StationListElement *)stationListElement;
-- (void) generateNewTempLocationForAllStationString;
+- (Location *) generateNewTempLocationForAllStationString:(NSString *)containslistId;
 - (void) removeStationListElementByAgency:(NSString *)agencyName;
 @end

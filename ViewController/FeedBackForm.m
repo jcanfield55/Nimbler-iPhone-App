@@ -181,6 +181,14 @@ NSUserDefaults *prefs;
     [btnPauseRecording setEnabled:FALSE];
     [btnStopRecording setEnabled:FALSE];
     soundFilePath = nil;
+    
+    if(isViewPresented){
+        UIButton *btnCancel = [UIButton buttonWithType:UIButtonTypeCustom];
+        [btnCancel setBackgroundImage:[UIImage imageNamed:@"img_cancel.png"] forState:UIControlStateNormal];
+        [btnCancel setFrame:CGRectMake(250, 7, 62, 30)];
+        [btnCancel addTarget:self action:@selector(cancelButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [navBar addSubview:btnCancel];
+    }
 }
 
 -(void)viewWillDisappear:(BOOL)animated

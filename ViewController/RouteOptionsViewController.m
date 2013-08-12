@@ -57,8 +57,8 @@ Itinerary * itinerary;
 NSString *itinararyId;
 UIImage *imageDetailDisclosure;
 
-int const ROUTE_OPTIONS_TABLE_HEIGHT = 373;
-int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 457;
+int const ROUTE_OPTIONS_TABLE_HEIGHT = 396;
+int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -90,7 +90,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 457;
 {
     [super viewWillAppear:animated];
     if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
-      [btnFeedBack setFrame:CGRectMake(124, 460, 73, 44)];   
+      [btnFeedBack setFrame:CGRectMake(btnFeedBack.frame.origin.x, 483, btnFeedBack.frame.size.width,btnFeedBack.frame.size.height)];
     }
     [self changeMainTableSettings];
     [self.navigationController setNavigationBarHidden:NO animated:NO];

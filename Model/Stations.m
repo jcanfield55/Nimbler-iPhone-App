@@ -98,16 +98,18 @@
     return newLoc;
 }
 
-- (void) generateNewTempLocationForAllStationString{
-    NSArray *arrListElement = [self fetchStationListByContainsListId:ALL_STATION];
+- (Location *) generateNewTempLocationForAllStationString:(NSString *)containslistId{
+    NSArray *arrListElement = [self fetchStationListByContainsListId:containslistId];
+    Location *newLoc;
     if([arrListElement count] > 0){
         StationListElement *stationListElement = [arrListElement objectAtIndex:0];
-        Location *newLoc = [[nc_AppDelegate sharedInstance].locations newEmptyLocation];
+        newLoc = [[nc_AppDelegate sharedInstance].locations newEmptyLocation];
         newLoc.fromFrequency = [NSNumber numberWithFloat:25.0];
         newLoc.toFrequency = [NSNumber numberWithFloat:25.0];
         newLoc.locationType = TOFROM_LIST_TYPE;
         newLoc.formattedAddress = stationListElement.containsList;
     }
+    return newLoc;
 }
 
 - (void) removeStationListElementByAgency:(NSString *)agencyName{

@@ -118,3 +118,5 @@ NSData* compressData(NSData* uncompressedData);
 NSData* uncompressGZip(NSData* compressedData);
 
 NSString *returnBikeButtonTitle(void);
+
+NSString *containsListFromFormattedAddress(NSString *formattedAddress);

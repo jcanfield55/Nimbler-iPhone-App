@@ -2057,34 +2057,30 @@ UIImage *imageDetailDisclosure;
         self.fromTableVC.isDeleteMode = false;
         self.fromTableVC.isRenameMode = false;
         self.fromTableVC.isRearrangeMode = false;
-        NSArray *views = [self.fromTable subviews];
-        for(int i=0;i<[views count];i++){
-            UIView *subView = [views objectAtIndex:i];
-            NSArray *subViews = [subView subviews];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.fromTableVC.currentRowIndex inSection:0];
+        UITableViewCell *cell = [self.fromTable cellForRowAtIndexPath:indexPath];
+            NSArray *subViews = [cell subviews];
             for(int j=0;j<[subViews count];j++){
                 UIView *tempSubView = [subViews objectAtIndex:j];
                 if([tempSubView isKindOfClass:[UITextView class]]){
                     [tempSubView removeFromSuperview];
                 }
             }
-        }
     }
     else if(editMode == TO_EDIT){
         [self.toTable setEditing:NO animated:NO];
         self.toTableVC.isDeleteMode = false;
         self.toTableVC.isRenameMode = false;
         self.toTableVC.isRearrangeMode = false;
-        NSArray *views = [self.toTable subviews];
-        for(int i=0;i<[views count];i++){
-            UIView *subView = [views objectAtIndex:i];
-            NSArray *subViews = [subView subviews];
-            for(int j=0;j<[subViews count];j++){
-                UIView *tempSubView = [subViews objectAtIndex:j];
-                if([tempSubView isKindOfClass:[UITextView class]]){
-                    [tempSubView removeFromSuperview];
-                }
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.toTableVC.currentRowIndex inSection:0];
+        UITableViewCell *cell = [self.toTable cellForRowAtIndexPath:indexPath];
+        NSArray *subViews = [cell subviews];
+        for(int j=0;j<[subViews count];j++){
+            UIView *tempSubView = [subViews objectAtIndex:j];
+            if([tempSubView isKindOfClass:[UITextView class]]){
+                [tempSubView removeFromSuperview];
             }
-        }  
+        }
     }
     [fromTableVC.btnEdit setSelected:NO];
     [toTableVC.btnEdit setSelected:NO];
