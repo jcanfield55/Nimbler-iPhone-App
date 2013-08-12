@@ -262,6 +262,7 @@
             }
             
             else if(walkMode){
+                //[parameters.routeExcludeSettings changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:returnBikeButtonTitle()];
                 [params setObject:REQUEST_TRANSIT_MODE_BIKE_ONLY forKey:REQUEST_TRANSIT_MODE];
                 UserPreferance* userPrefs = [UserPreferance userPreferance];
                 [params setObject:[NSString stringWithFormat:@"%f", userPrefs.bikeTriangleQuick]
