@@ -27,6 +27,7 @@ NewPlanAvailableDelegate>
 @property (nonatomic, strong) NSTimer *timerGettingRealDataByItinerary;
 @property (nonatomic, strong) NSTimer *timerRealtime;
 @property (nonatomic) int remainingCount;
+@property (nonatomic, strong) IBOutlet UIButton *btnFeedBack;
 
 - (void) decrementCounter;
 -(void)hideUnUsedTableViewCell;
@@ -41,5 +42,7 @@ NewPlanAvailableDelegate>
 - (void) changeMainTableSettings;
 
 - (void) requestServerForRealTime;
+
+- (IBAction)feedBackClicked:(id)sender;
 
 @end

@@ -73,7 +73,7 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
 - (void)sortSteps
 {
     //Edited by Sitanshu Joshi
-    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"absoluteDirection" ascending:YES];
+    NSSortDescriptor *sortD = [NSSortDescriptor sortDescriptorWithKey:@"stepIndex" ascending:YES];
     [self setSortedSteps:[[self steps] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortD]]];
 }
 

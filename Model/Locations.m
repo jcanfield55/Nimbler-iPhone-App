@@ -680,7 +680,6 @@
             
             if ([response.mapItems count] == 0) {
                 return;
-                
             }
     
 //           if(isLocationSelected){ No need in LatestUI

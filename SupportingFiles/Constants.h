@@ -40,7 +40,7 @@
 #define TEST_TRIP_PROCESS_URL @"http://localhost:8080/TPServer/ws/"  // TP server for automated tests
 
 // Core Data database filename
-#define COREDATA_DB_FILENAME    @"store101.data"
+#define COREDATA_DB_FILENAME    @"store102.data"
 #define TEST_COREDATA_DB_FILENAME  @"testDataStore.data" // For automated tests
 
 #define GEO_FROM          @"1"
@@ -367,6 +367,7 @@
 #define REQUEST_BIKE_TRIANGLE_BIKE_FRIENDLY @"triangleSafetyFactor"
 #define REQUEST_TRANSIT_MODE            @"mode"
 #define REQUEST_TRANSIT_MODE_TRANSIT    @"TRANSIT,WALK"
+#define REQUEST_MODE_WALK_BIKE    @"WALK,BICYCLE"
 #define REQUEST_TRANSIT_MODE_BIKE_ONLY  @"BICYCLE"
 #define REQUEST_TRANSIT_MODE_TRANSIT_BIKE @"TRANSIT,BICYCLE"
 #define REQUEST_TRANSIT_MODE_WALK_BIKE @"TRANSIT,WALK,BICYCLE"

@@ -515,9 +515,12 @@ NSUserDefaults *prefs;
             cell.imageView.image = [imageDictionary objectForKey:imgFileName];
         }
         
-        if([leg isBike]){
+        if(![leg isEqual:[NSNull null]] && [leg isBike]){
            UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_DetailDesclosure.png"]];
             cell.accessoryView = imageView;
+        }
+        else{
+            cell.accessoryView = nil;
         }
     }
     @catch (NSException *exception) {
@@ -557,9 +560,15 @@ NSUserDefaults *prefs;
     [self setFBParamater:[indexPath row]];
     
      Leg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:[indexPath row]];
-    if([leg isBike]){
-        BikeStepsViewController *bikeStepsView = [[BikeStepsViewController alloc] initWithNibName:@"BikeStepsViewController" bundle:nil];
-        bikeStepsView.steps = [leg.steps allObjects];
+    if(![leg isEqual:[NSNull null]] && [leg isBike]){
+        BikeStepsViewController *bikeStepsView;
+        if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
+          bikeStepsView = [[BikeStepsViewController alloc] initWithNibName:@"BikeStepsViewController_568h" bundle:nil];  
+        }
+        else{
+           bikeStepsView = [[BikeStepsViewController alloc] initWithNibName:@"BikeStepsViewController" bundle:nil]; 
+        }
+        bikeStepsView.steps = [leg sortedSteps];
         [self.navigationController pushViewController:bikeStepsView animated:YES];
     }
 }

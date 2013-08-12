@@ -54,6 +54,8 @@ BOOL isCancelFB = FALSE;
 @synthesize txtEmailId,txtFeedBack;
 @synthesize buttonsBackgroundView,textViewBackground,textFieldBackground;
 @synthesize sentMessageView;
+@synthesize navBar,cancelButton;
+@synthesize isViewPresented;
 
 NSUserDefaults *prefs;
 
@@ -125,7 +127,8 @@ NSUserDefaults *prefs;
     [lblNavigationTitle setTextAlignment:UITextAlignmentCenter];
     lblNavigationTitle.backgroundColor =[UIColor clearColor];
     lblNavigationTitle.adjustsFontSizeToFitWidth=YES;
-    self.navigationItem.titleView=lblNavigationTitle;
+    [lblNavigationTitle setCenter:navBar.center];
+    [navBar addSubview:lblNavigationTitle];
     
     [buttonsBackgroundView.layer setCornerRadius:5.0];
     [textViewBackground.layer setCornerRadius:5.0];
@@ -133,6 +136,14 @@ NSUserDefaults *prefs;
     
     [txtFeedBack setReturnKeyType:UIReturnKeyNext];
     [txtEmailId setReturnKeyType:UIReturnKeyDone];
+    
+    if([navBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
+        [navBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+    }
+    else {
+        [navBar insertSubview:[[UIImageView alloc] initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+    }
+
 }
 
 - (void)viewDidUnload{
@@ -455,9 +466,14 @@ NSUserDefaults *prefs;
 
 // Hide the sent message view after 3 seconds
 - (void) hideMessageView{
-    [self.navigationController.navigationBar setHidden:NO];
-    [sentMessageView setHidden:YES];
-    [[nc_AppDelegate sharedInstance].toFromViewController revealtoggle];
+    if(isViewPresented){
+        [self dismissModalViewControllerAnimated:YES];
+    }
+    else{
+        [self.navigationController.navigationBar setHidden:NO];
+        [sentMessageView setHidden:YES];
+        [[nc_AppDelegate sharedInstance].toFromViewController revealtoggle];
+    }
 }
 #pragma mark Restful Response
 - (void)request:(RKRequest*)request didLoadResponse:(RKResponse*)response {
@@ -672,7 +688,12 @@ NSUserDefaults *prefs;
     [UIView beginAnimations:ANIMATION_PARAM context: nil];
     [UIView setAnimationBeginsFromCurrentState: YES];
     [UIView setAnimationDuration: 0.5];
-    [self.view setFrame:CGRectMake(self.view.frame.origin.x,0, self.view.frame.size.width, self.view.frame.size.height)];
+    if(isViewPresented){
+      [self.view setFrame:CGRectMake(self.view.frame.origin.x,20, self.view.frame.size.width, self.view.frame.size.height)];
+    }
+    else{
+        [self.view setFrame:CGRectMake(self.view.frame.origin.x,0, self.view.frame.size.width, self.view.frame.size.height)];
+    }
     [UIView commitAnimations];
 }
 
@@ -712,5 +733,9 @@ NSUserDefaults *prefs;
     [self.view setFrame:CGRectMake(self.view.frame.origin.x,0, self.view.frame.size.width, self.view.frame.size.height)];
     [txtEmailId becomeFirstResponder];
     [UIView commitAnimations];
+}
+
+-(IBAction)cancelButtonClicked:(id)sender{
+    [self dismissModalViewControllerAnimated:YES];
 }
 @end

@@ -28,6 +28,7 @@
 @property (nonatomic, retain) NSNumber * stayOn;
 @property (nonatomic, retain) NSString * streetName;
 @property (nonatomic, retain) Leg *leg;
+@property (nonatomic, retain) NSNumber *stepIndex;
 
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType;
 
