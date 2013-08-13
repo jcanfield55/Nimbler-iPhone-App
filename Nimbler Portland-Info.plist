@@ -30,15 +30,15 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
-	<string>Icon-Portland</string>
+	<string>Icon</string>
 	<key>CFBundleIconFiles</key>
 	<array>
 		<string>Icon_ipad.png</string>
 		<string>Icon_ipad@2x.png</string>
 		<string>Icon-small.png</string>
 		<string>Icon-small@2x.png</string>
-		<string>Icon-Portland.png</string>
-		<string>Icon-Portland@2x.png</string>
+		<string>Icon.png</string>
+		<string>Icon@2x.png</string>
 	</array>
 	<key>CFBundleIdentifier</key>
 	<string>com.nimbler.Nimbler-Portland</string>
