@@ -1,6 +1,5 @@
 {
 	"results" : [{
-			"memberOfListId" : "all_st",
 			"sequenceNumber" : 2,
 			"containsList" : "Caltrain Station List",
 			"containsListId" : "caltrain_st_list",
@@ -1787,9 +1786,6 @@
 				}
 			},
 			"agency" : "caltrain"
-		}, {
-			"containsList" : "Station List",
-			"containsListId" : "all_st"
 		}
 	]
 }

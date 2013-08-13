@@ -779,3 +779,18 @@ NSString *returnBikeButtonTitle(void){
         return BIKE_BUTTON;
     }
 }
+
+NSString *containsListFromFormattedAddress(NSString *formattedAddress){
+    if([formattedAddress isEqualToString:@"SF-Muni Station List"]){
+        return @"muni_st_list";
+    }
+    else if([formattedAddress isEqualToString:@"Caltrain Station List"]){
+       return @"caltrain_st_list";
+    }
+    else if([formattedAddress isEqualToString:@"Trimet Station List"]){
+       return @"trimet_st_list";
+    }
+    else{
+        return @"bart_st_list";
+    }
+}

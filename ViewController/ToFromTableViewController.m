@@ -299,13 +299,19 @@ NSString *strStreet2 = @"street ";
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(isRenameMode){
+    Location *loc = [locations
+                     locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]]
+                     isFrom:isFrom];
+    if(![loc isKindOfClass:[LocationFromLocalSearch class]] && [[loc locationType] isEqualToString:TOFROM_LIST_TYPE] && isRenameMode){
+        return;
+    }
+     if(isRenameMode){
         currentRowIndex = indexPath.row;
-        [tableView beginUpdates];
+         [tableView beginUpdates];
         [myTableView setFrame:CGRectMake(myTableView.frame.origin.x, myTableView.frame.origin.y, myTableView.frame.size.width, TOFROM_HEIGHT_EDIT_MODE)];
         
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        UITextView *txtView = [[UITextView alloc] initWithFrame:CGRectMake(1,2,300,50)];
+        UITextView *txtView = [[UITextView alloc] initWithFrame:CGRectMake(1,2,300,40)];
         txtView.delegate = self;
         [txtView setBackgroundColor:[UIColor whiteColor]];
         Location *location;
@@ -316,14 +322,10 @@ NSString *strStreet2 = @"street ";
            location = [locations.sortedMatchingToLocations objectAtIndex:[indexPath row]];
         }
         if(location.locationName){
-            NSString *address = [NSString stringWithFormat:@"%@?%@",location.locationName,[location shortFormattedAddress]];
-            address = [address stringByReplacingOccurrencesOfString:@"?" withString:@"\n"];
-            txtView.text = address;
+            txtView.text = location.locationName;
         }
         else{
-            NSString *address = [NSString stringWithFormat:@"?%@",[location shortFormattedAddress]];
-            address = [address stringByReplacingOccurrencesOfString:@"?" withString:@"\n"];
-            txtView.text = address;
+            txtView.text = @"";
         }
         [txtView setFont:cell.textLabel.font];
         [txtView setTag:[indexPath row]+10000];
@@ -346,11 +348,7 @@ NSString *strStreet2 = @"street ";
     else{
         NIMLOG_EVENT1(@"Select Row: isFrom=%d, section=%d, row=%d", isFrom, [indexPath section], [indexPath row]);
         [toFromVC.navigationController setNavigationBarHidden:NO animated:NO];
-        
-            locations.isLocationSelected = true;
-            Location *loc = [locations
-                             locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]]
-                             isFrom:isFrom];  //selected Location
+        locations.isLocationSelected = true;
         if(loc != toFromVC.currentLocation){
             [toFromVC.btnCureentLoc setUserInteractionEnabled:YES];
             [toFromVC.btnCureentLoc setSelected:NO];
@@ -392,7 +390,7 @@ NSString *strStreet2 = @"street ";
                     }
                     
                     // Call the location picker with the list
-                    NSArray *list = [stations fetchStationListByMemberOfListId:ALL_STATION];
+                    NSArray *list = [stations fetchStationListByMemberOfListId:containsListFromFormattedAddress(loc.formattedAddress)];
                     if(!list || [list count] == 0){
                         list = [locations locationsMembersOfList:[loc memberOfList]];
                     }
@@ -587,7 +585,8 @@ NSString *strStreet2 = @"street ";
 }
 
 -(void)textViewDidBeginEditing:(UITextView *)textView{
-    textView.selectedRange = NSMakeRange(0, 0);
+    NSString *textViewText = textView.text;
+    textView.selectedRange = NSMakeRange(textViewText.length,0);
 }
 
 - (void) renameAddress:(UITextView *)textView Row:(int)row{
@@ -596,18 +595,8 @@ NSString *strStreet2 = @"street ";
         NSMutableArray *sortedLocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingFromLocations];
         Location *location = [sortedLocations objectAtIndex:row];
         NSString *textViewText = textView.text;
-        if([textViewText rangeOfString:@"\n"].location != NSNotFound){
-            NSArray *array = [textViewText componentsSeparatedByString:@"\n"];
-            NSString *locationName = [array objectAtIndex:0];
-            NSString *formattedAddress = [array objectAtIndex:1];
-            if(locationName && [locationName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length > 0)
-                location.locationName = locationName;
-            else
-                location.locationName = nil;
-            if(formattedAddress && [formattedAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length > 0){
-                //location.formattedAddress = formattedAddress;
-                //location.userUpdatedLocation = [NSNumber numberWithBool:true];
-            }
+        if([textViewText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length > 0){
+            location.locationName = textViewText;
         }
         else{
             location.locationName = nil;
@@ -629,20 +618,8 @@ NSString *strStreet2 = @"street ";
         NSMutableArray *sortedLocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingToLocations];
         Location *location = [sortedLocations objectAtIndex:row];
         NSString *textViewText = textView.text;
-        if([textViewText rangeOfString:@"\n"].location != NSNotFound){
-            NSArray *array = [textViewText componentsSeparatedByString:@"\n"];
-            NSString *locationName = [array objectAtIndex:0];
-            NSString *formattedAddress = [array objectAtIndex:1];
-            
-            if(locationName && [locationName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length > 0)
-                location.locationName = locationName;
-            else
-                location.locationName = nil;
-            
-            if(formattedAddress && [formattedAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length > 0){
-                //location.formattedAddress = formattedAddress;
-                //location.userUpdatedLocation = [NSNumber numberWithBool:true];
-            }
+        if([textViewText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length > 0){
+            location.locationName = textViewText;
         }
         else{
             location.locationName = nil;

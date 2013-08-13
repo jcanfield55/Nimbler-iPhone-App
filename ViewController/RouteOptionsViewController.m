@@ -57,8 +57,8 @@ Itinerary * itinerary;
 NSString *itinararyId;
 UIImage *imageDetailDisclosure;
 
-int const ROUTE_OPTIONS_TABLE_HEIGHT = 373;
-int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 457;
+int const ROUTE_OPTIONS_TABLE_HEIGHT = 396;
+int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -90,7 +90,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 457;
 {
     [super viewWillAppear:animated];
     if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
-      [btnFeedBack setFrame:CGRectMake(124, 460, 73, 44)];   
+      [btnFeedBack setFrame:CGRectMake(btnFeedBack.frame.origin.x, 483, btnFeedBack.frame.size.width,btnFeedBack.frame.size.height)];
     }
     [self changeMainTableSettings];
     [self.navigationController setNavigationBarHidden:NO animated:NO];
@@ -318,9 +318,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 457;
             else if([btn.titleLabel.text isEqualToString:@"WALK"]){
                 [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_WALK_MODE];
             }
-         /*   else{
+            else{
                 [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_TRANSIT_MODE];
-            } */
+            } 
             [[NSUserDefaults standardUserDefaults] synchronize];
             [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:btn.titleLabel.text];
             toggledSetting.setting = SETTING_INCLUDE_ROUTE;
@@ -328,6 +328,12 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 457;
             [btn setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
         }
         else{
+            
+            [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:btn.titleLabel.text];
+            toggledSetting.setting = SETTING_EXCLUDE_ROUTE;
+            [btn setBackgroundImage:[UIImage imageNamed:@"excludeUnSelected@2x.png"] forState:UIControlStateNormal];
+            [btn setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
+            
             if([btn.titleLabel.text isEqualToString:returnBikeButtonTitle()]){
                 [[NSUserDefaults standardUserDefaults] setObject:MODE_DISABLE forKey:DEFAULT_BIKE_MODE];
             }
@@ -337,11 +343,23 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 457;
             else if([btn.titleLabel.text isEqualToString:@"WALK"]){
                 [[NSUserDefaults standardUserDefaults] setObject:MODE_DISABLE forKey:DEFAULT_WALK_MODE];
             }
+            else{
+                BOOL isTransitModeExcluded = false;
+                for(int i=0;i<[[plan excludeSettingsArray] count];i++){
+                    RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
+                    NSString *key = routeExcludeSetting.key;
+                    if(![key isEqualToString:returnBikeButtonTitle()] && ![key isEqualToString:BIKE_SHARE]){
+                        if([[RouteExcludeSettings latestUserSettings] settingForKey:key] == SETTING_INCLUDE_ROUTE){
+                            isTransitModeExcluded = true;
+                            break;
+                        }
+                    }
+                }
+                if(!isTransitModeExcluded){
+                  [[NSUserDefaults standardUserDefaults] setObject:MODE_DISABLE forKey:DEFAULT_TRANSIT_MODE];
+                }
+            }
             [[NSUserDefaults standardUserDefaults] synchronize];
-            [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:btn.titleLabel.text];
-            toggledSetting.setting = SETTING_EXCLUDE_ROUTE;
-            [btn setBackgroundImage:[UIImage imageNamed:@"excludeUnSelected@2x.png"] forState:UIControlStateNormal];
-            [btn setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
         }
         
         // Update sorted itineraries with new exclusions
@@ -788,6 +806,17 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 457;
         int yPos = 5;
         int btnHeight = 38;
         int width = 72;
+        
+        BOOL transitMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] boolValue];
+        if(!transitMode){
+            for(int i=0;i<[[plan excludeSettingsArray] count];i++){
+                RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
+                NSString *key = routeExcludeSetting.key;
+                if(![key isEqualToString:returnBikeButtonTitle()] && ![key isEqualToString:BIKE_SHARE]){
+                    [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:key];
+                }
+            }
+        }
         
         for(int i=0;i<[[plan excludeSettingsArray] count];i++){
             RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];

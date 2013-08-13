@@ -446,13 +446,17 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
 -(BOOL)isItineraryIncluded:(Itinerary *)itin {
    
     BOOL transitMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] boolValue];
-
+    BOOL walkMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] boolValue];
+    
     if([self itineraryContainsWalkAndBike:[itin legs]]){
         return true;
     }
     for (Leg* leg in [itin legs]) {
         NSString* legKey = nil;
-        if (leg.isWalk && [self settingForKey:returnBikeButtonTitle()]==SETTING_INCLUDE_ROUTE) {
+        if(leg.isWalk && !walkMode){
+            return false; // Exclude walk itinerary if WALK Mode disable
+        }
+        else if (leg.isWalk && [self settingForKey:returnBikeButtonTitle()]==SETTING_INCLUDE_ROUTE) {
             return false; // exclude all walk itineraries if we are in bike mode
         }
         else if (leg.isBike && [self settingForKey:returnBikeButtonTitle()]==SETTING_EXCLUDE_ROUTE && [self settingForKey:BIKE_SHARE] == SETTING_EXCLUDE_ROUTE) { // TODO double-check isBike method

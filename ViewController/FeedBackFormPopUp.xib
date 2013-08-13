@@ -12,7 +12,6 @@
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>IBProxyObject</string>
-			<string>IBUIBarButtonItem</string>
 			<string>IBUIButton</string>
 			<string>IBUIImageView</string>
 			<string>IBUILabel</string>
@@ -445,7 +444,6 @@
 						<string key="NSFrame">{{10, 353}, {303, 44}}</string>
 						<reference key="NSSuperview" ref="67813551"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<reference key="IBUIBackgroundColor" ref="949970371"/>
 						<bool key="IBUIOpaque">NO</bool>
@@ -475,12 +473,6 @@
 							<object class="IBUINavigationItem" id="788108015">
 								<reference key="IBUINavigationBar" ref="1037238863"/>
 								<string key="IBUITitle"/>
-								<object class="IBUIBarButtonItem" key="IBUIRightBarButtonItem" id="57087712">
-									<string key="IBUITitle">Cancel</string>
-									<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-									<int key="IBUIStyle">1</int>
-									<reference key="IBUINavigationItem" ref="788108015"/>
-								</object>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 							</object>
 						</array>
@@ -644,14 +636,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">cancelButton</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="57087712"/>
-					</object>
-					<int key="connectionID">408</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">navBar</string>
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="1037238863"/>
@@ -702,14 +686,6 @@
 						<int key="IBEventType">7</int>
 					</object>
 					<int key="connectionID">397</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">cancelButtonClicked:</string>
-						<reference key="source" ref="57087712"/>
-						<reference key="destination" ref="372490531"/>
-					</object>
-					<int key="connectionID">410</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -885,15 +861,8 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">406</int>
 						<reference key="object" ref="788108015"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="57087712"/>
-						</array>
+						<array class="NSMutableArray" key="children"/>
 						<reference key="parent" ref="1037238863"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">407</int>
-						<reference key="object" ref="57087712"/>
-						<reference key="parent" ref="788108015"/>
 					</object>
 				</array>
 			</object>
@@ -924,7 +893,6 @@
 				<string key="404.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="405.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="406.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="407.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="97.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="98.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>

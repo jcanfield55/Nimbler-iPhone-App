@@ -35,6 +35,7 @@
 @property (nonatomic) int mapHeight;
 @property (nonatomic) int tableHeight;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
+@property (nonatomic, strong) IBOutlet UIButton *btnFeedBack;
 
 - (IBAction)navigateBack:(id)sender;
 - (IBAction)navigateForward:(id)sender;
@@ -51,4 +52,5 @@
 
 // return Formatted string like 00:58
 - (NSString *) returnFormattedStringFromSeconds:(int) seconds;
+- (IBAction)feedBackClicked:(id)sender;
 @end

@@ -1325,7 +1325,7 @@ UIImage *imageDetailDisclosure;
             for(int i=0;i<[[plan excludeSettingsArray] count];i++){
                 RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
                 NSString *key = routeExcludeSetting.key;
-                if([[RouteExcludeSettings latestUserSettings] settingForKey:routeExcludeSetting.key] == SETTING_INCLUDE_ROUTE && ![key isEqualToString:bikeName] && ![key isEqualToString:BIKE_SHARE]){
+                if(![key isEqualToString:bikeName] && ![key isEqualToString:BIKE_SHARE]){
                     [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:routeExcludeSetting.key];
                 }
             }
@@ -1379,6 +1379,13 @@ UIImage *imageDetailDisclosure;
     @try {
         NIMLOG_EVENT1(@"Route Button Pressed");
         UIAlertView *alert;
+        
+        if(![[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE] isEqualToString:MODE_ENABLE] && ![[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_SHARE_MODE] isEqualToString:MODE_ENABLE] && ![[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] isEqualToString:MODE_ENABLE] && ![[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] isEqualToString:MODE_ENABLE]){
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ROUTE_MODE_TITLE_MSG message:ROUTE_MODE_NOT_SELECTED_MSG delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert show];
+            return ;
+        }
+        
         startButtonClickTime = CFAbsoluteTimeGetCurrent();
         
         if ([fromLocation isCurrentLocation]) {
@@ -2057,34 +2064,30 @@ UIImage *imageDetailDisclosure;
         self.fromTableVC.isDeleteMode = false;
         self.fromTableVC.isRenameMode = false;
         self.fromTableVC.isRearrangeMode = false;
-        NSArray *views = [self.fromTable subviews];
-        for(int i=0;i<[views count];i++){
-            UIView *subView = [views objectAtIndex:i];
-            NSArray *subViews = [subView subviews];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.fromTableVC.currentRowIndex inSection:0];
+        UITableViewCell *cell = [self.fromTable cellForRowAtIndexPath:indexPath];
+            NSArray *subViews = [cell subviews];
             for(int j=0;j<[subViews count];j++){
                 UIView *tempSubView = [subViews objectAtIndex:j];
                 if([tempSubView isKindOfClass:[UITextView class]]){
                     [tempSubView removeFromSuperview];
                 }
             }
-        }
     }
     else if(editMode == TO_EDIT){
         [self.toTable setEditing:NO animated:NO];
         self.toTableVC.isDeleteMode = false;
         self.toTableVC.isRenameMode = false;
         self.toTableVC.isRearrangeMode = false;
-        NSArray *views = [self.toTable subviews];
-        for(int i=0;i<[views count];i++){
-            UIView *subView = [views objectAtIndex:i];
-            NSArray *subViews = [subView subviews];
-            for(int j=0;j<[subViews count];j++){
-                UIView *tempSubView = [subViews objectAtIndex:j];
-                if([tempSubView isKindOfClass:[UITextView class]]){
-                    [tempSubView removeFromSuperview];
-                }
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.toTableVC.currentRowIndex inSection:0];
+        UITableViewCell *cell = [self.toTable cellForRowAtIndexPath:indexPath];
+        NSArray *subViews = [cell subviews];
+        for(int j=0;j<[subViews count];j++){
+            UIView *tempSubView = [subViews objectAtIndex:j];
+            if([tempSubView isKindOfClass:[UITextView class]]){
+                [tempSubView removeFromSuperview];
             }
-        }  
+        }
     }
     [fromTableVC.btnEdit setSelected:NO];
     [toTableVC.btnEdit setSelected:NO];
