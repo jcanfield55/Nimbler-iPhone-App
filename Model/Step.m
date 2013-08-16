@@ -22,6 +22,7 @@
 @dynamic stayOn;
 @dynamic streetName;
 @dynamic leg;
+@dynamic stepIndex;
 
 + (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType
 {
@@ -40,6 +41,7 @@
         [mapping mapKeyPath:@"lon" toAttribute:@"startLng"];
         [mapping mapKeyPath:@"stayOn" toAttribute:@"stayOn"];
         [mapping mapKeyPath:@"streetName" toAttribute:@"streetName"];
+        [mapping mapKeyPath:@"index" toAttribute:@"stepIndex"];
     }
     else {
         // TODO Unknown planner type, throw an exception

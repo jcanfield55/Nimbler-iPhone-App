@@ -588,61 +588,71 @@ NSString *strStreet2 = @"street ";
     textView.selectedRange = NSMakeRange(0, 0);
 }
 
-- (void) saveContext{
-    saveContext(toFromVC.managedObjectContext);
+- (void) renameAddress:(UITextView *)textView Row:(int)row{
+    if(toFromVC.editMode == FROM_EDIT){
+        [toFromVC.fromTable setFrame:CGRectMake(toFromVC.fromTable.frame.origin.x, toFromVC.fromTable.frame.origin.y, toFromVC.fromTable.frame.size.width, TOFROM_HEIGHT_LOCATION_EDIT_MODE)];
+        NSMutableArray *sortedLocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingFromLocations];
+        Location *location = [sortedLocations objectAtIndex:row];
+        NSString *textViewText = textView.text;
+        if([textViewText rangeOfString:@"\n"].location != NSNotFound){
+            NSArray *array = [textViewText componentsSeparatedByString:@"\n"];
+            NSString *locationName = [array objectAtIndex:0];
+            NSString *formattedAddress = [array objectAtIndex:1];
+            if(locationName && [locationName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length > 0)
+                location.locationName = locationName;
+            if(formattedAddress && [formattedAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length > 0){
+                location.formattedAddress = formattedAddress;
+                location.userUpdatedLocation = [NSNumber numberWithBool:true];
+            }
+        }
+        [sortedLocations replaceObjectAtIndex:row withObject:location];
+        locations.sortedMatchingFromLocations = sortedLocations;
+        [textView removeFromSuperview];
+        [textView resignFirstResponder];
+        if([location.shortFormattedAddress isEqualToString:locations.selectedFromLocation.shortFormattedAddress]){
+            locations.selectedFromLocation = location;
+        }
+        if([location.shortFormattedAddress isEqualToString:locations.selectedToLocation.shortFormattedAddress]){
+            locations.selectedToLocation = location;
+        }
+        saveContext(toFromVC.managedObjectContext);
+    }
+    else if(toFromVC.editMode == TO_EDIT){
+        [toFromVC.toTable setFrame:CGRectMake(toFromVC.toTable.frame.origin.x, toFromVC.toTable.frame.origin.y, toFromVC.toTable.frame.size.width, TOFROM_HEIGHT_LOCATION_EDIT_MODE)];
+        NSMutableArray *sortedLocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingToLocations];
+        Location *location = [sortedLocations objectAtIndex:row];
+        NSString *textViewText = textView.text;
+        if([textViewText rangeOfString:@"\n"].location != NSNotFound){
+            NSArray *array = [textViewText componentsSeparatedByString:@"\n"];
+            NSString *locationName = [array objectAtIndex:0];
+            NSString *formattedAddress = [array objectAtIndex:1];
+            
+            if(locationName && [locationName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length > 0)
+                location.locationName = locationName;
+            
+            if(formattedAddress && [formattedAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length > 0){
+                location.formattedAddress = formattedAddress;
+                location.userUpdatedLocation = [NSNumber numberWithBool:true];
+            }
+        }
+        [sortedLocations replaceObjectAtIndex:row withObject:location];
+        locations.sortedMatchingToLocations = sortedLocations;
+        [textView removeFromSuperview];
+        [textView resignFirstResponder];
+        if([location.shortFormattedAddress isEqualToString:locations.selectedFromLocation.shortFormattedAddress]){
+            locations.selectedFromLocation = location;
+        }
+        if([location.shortFormattedAddress isEqualToString:locations.selectedToLocation.shortFormattedAddress]){
+            locations.selectedToLocation = location;
+        }
+        saveContext(toFromVC.managedObjectContext);
+    }
+    [myTableView reloadData];
 }
-
 -(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
     if([text isEqualToString:@"\n"]){
         int row = [textView tag] - 10000;
-        if(toFromVC.editMode == FROM_EDIT){
-            [toFromVC.fromTable setFrame:CGRectMake(toFromVC.fromTable.frame.origin.x, toFromVC.fromTable.frame.origin.y, toFromVC.fromTable.frame.size.width, TOFROM_HEIGHT_LOCATION_EDIT_MODE)];
-            NSMutableArray *sortedLocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingFromLocations];
-            Location *location = [sortedLocations objectAtIndex:row];
-            NSString *textViewText = textView.text;
-            if([textViewText rangeOfString:@"\n"].location != NSNotFound){
-                NSArray *array = [textViewText componentsSeparatedByString:@"\n"];
-                NSString *locationName = [array objectAtIndex:0];
-                location.locationName = locationName;
-            }
-            location.userUpdatedLocation = [NSNumber numberWithBool:true];
-            [sortedLocations replaceObjectAtIndex:row withObject:location];
-            locations.sortedMatchingFromLocations = sortedLocations;
-            [textView removeFromSuperview];
-            [textView resignFirstResponder];
-            if([location.shortFormattedAddress isEqualToString:locations.selectedFromLocation.shortFormattedAddress]){
-                locations.selectedFromLocation = location;
-            }
-            if([location.shortFormattedAddress isEqualToString:locations.selectedToLocation.shortFormattedAddress]){
-                locations.selectedToLocation = location;
-            }
-            [self performSelector:@selector(saveContext) withObject:nil afterDelay:0.5];
-            
-        }
-        else if(toFromVC.editMode == TO_EDIT){
-             [toFromVC.toTable setFrame:CGRectMake(toFromVC.toTable.frame.origin.x, toFromVC.toTable.frame.origin.y, toFromVC.toTable.frame.size.width, TOFROM_HEIGHT_LOCATION_EDIT_MODE)];
-            NSMutableArray *sortedLocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingToLocations];
-            Location *location = [sortedLocations objectAtIndex:row];
-            NSString *textViewText = textView.text;
-            if([textViewText rangeOfString:@"\n"].location != NSNotFound){
-                NSArray *array = [textViewText componentsSeparatedByString:@"\n"];
-                NSString *locationName = [array objectAtIndex:0];
-                location.locationName = locationName;
-            }
-            location.userUpdatedLocation = [NSNumber numberWithBool:true];
-            [sortedLocations replaceObjectAtIndex:row withObject:location];
-            locations.sortedMatchingToLocations = sortedLocations;
-            [textView removeFromSuperview];
-            [textView resignFirstResponder];
-            if([location.shortFormattedAddress isEqualToString:locations.selectedFromLocation.shortFormattedAddress]){
-                locations.selectedFromLocation = location;
-            }
-            if([location.shortFormattedAddress isEqualToString:locations.selectedToLocation.shortFormattedAddress]){
-                locations.selectedToLocation = location;
-            }
-            [self performSelector:@selector(saveContext) withObject:nil afterDelay:0.0];
-        }
-        [myTableView reloadData];
+        [self renameAddress:textView Row:row];
     }
     return YES;
 }

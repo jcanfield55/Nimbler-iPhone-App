@@ -35,6 +35,7 @@
 #import "ToFromViewController.h"
 #import "twitterViewController.h"
 #import "nc_AppDelegate.h"
+#import "FeedBackForm.h"
 
 @implementation RevealController
 
@@ -71,7 +72,7 @@
 - (void)revealController:(ZUUIRevealController *)revealController willRevealRearViewController:(UIViewController *)rearViewController 
 {
    UINavigationController *navController = (UINavigationController *) ((UITabBarController *) rearViewController).selectedViewController;
-    twitterViewController *twitterVC = (twitterViewController *)navController.topViewController;
+   twitterViewController *twitterVC = (twitterViewController *)navController.topViewController;
     if([twitterVC isKindOfClass:[twitterViewController class]]){
         [twitterVC getAdvisoryData];
         [twitterVC hideTabBar];
@@ -89,6 +90,16 @@
 {
     [nc_AppDelegate sharedInstance].isNotificationsButtonClicked = NO;
     [nc_AppDelegate sharedInstance].isTwitterView = NO;
+    UINavigationController *navController = (UINavigationController *) ((UITabBarController *) rearViewController).selectedViewController;
+    FeedBackForm *feedbackVC = (FeedBackForm *)navController.topViewController;
+    if([feedbackVC isKindOfClass:[FeedBackForm class]]){
+        if([feedbackVC.txtFeedBack isFirstResponder]){
+            [feedbackVC.txtFeedBack resignFirstResponder];
+        }
+        if([feedbackVC.txtEmailId isFirstResponder]){
+           [feedbackVC.txtEmailId resignFirstResponder]; 
+        }
+    }
 	NSLog(@"%@", NSStringFromSelector(_cmd));
 }
 

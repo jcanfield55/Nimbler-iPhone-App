@@ -1411,10 +1411,15 @@ FeedBackForm *fbView;
     }
     else if(buttonIndex == 1){
         buttonResponse = @"Nimbler feedback";
-        RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;
-        if (rxCustomTabBar.selectedIndex != 2) {
-            [rxCustomTabBar selectTab:2];
+        FeedBackForm *feedBackForm;
+        if ([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT) {
+            feedBackForm = [[FeedBackForm alloc] initWithNibName:@"FeedBackFormPopUp_568h" bundle:nil];
         }
+        else{
+            feedBackForm = [[FeedBackForm alloc] initWithNibName:@"FeedBackFormPopUp" bundle:nil];
+        }
+        feedBackForm.isViewPresented = true;
+        [self.toFromViewController presentModalViewController:feedBackForm animated:YES];
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }

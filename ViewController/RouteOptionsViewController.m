@@ -21,6 +21,7 @@
 #import "PlanStore.h"
 #import "nc_AppDelegate.h"
 #import "RealTimeManager.h"
+#import "FeedBackForm.h"
 
 #define IDENTIFIER_CELL @"UIRouteOptionsViewCell"
 #define TIMER_DEFAULT_VALUE 119
@@ -50,13 +51,14 @@
 @synthesize timerGettingRealDataByItinerary;
 @synthesize timerRealtime;
 @synthesize remainingCount;
+@synthesize btnFeedBack;
 
 Itinerary * itinerary;
 NSString *itinararyId;
 UIImage *imageDetailDisclosure;
 
-int const ROUTE_OPTIONS_TABLE_HEIGHT = 416;
-int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 500;
+int const ROUTE_OPTIONS_TABLE_HEIGHT = 373;
+int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 457;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -87,6 +89,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 500;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [btnFeedBack setFrame:CGRectMake(124, 460, 73, 44)];
     [self changeMainTableSettings];
     [self.navigationController setNavigationBarHidden:NO animated:NO];
     if(plan){
@@ -745,7 +748,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 500;
         [imgView setImage:[UIImage imageNamed:@"excludeBackground@2x.png"]];
         [bgView addSubview:imgView];
         
-        UILabel *lblChoose = [[UILabel alloc] initWithFrame:CGRectMake(0, 5, 80, 25)];
+        UILabel *lblChoose = [[UILabel alloc] initWithFrame:CGRectMake(0, 12, 80, 25)];
         [lblChoose setText:@"Travel By:"];
         [lblChoose setBackgroundColor:[UIColor clearColor]];
         [lblChoose setFont:[UIFont fontWithName:@"Helvetica" size:13.0]];
@@ -835,5 +838,17 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 500;
         RealTimeManager *realtimeManager = [RealTimeManager realTimeManager];
         [realtimeManager requestRealTimeDataFromServerUsingPlan:plan PlanRequestParameters:planRequestParameters];
     }
+}
+
+- (IBAction)feedBackClicked:(id)sender{
+    FeedBackForm *feedBackForm;
+    if ([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT) {
+        feedBackForm = [[FeedBackForm alloc] initWithNibName:@"FeedBackFormPopUp_568h" bundle:nil];
+    }
+    else{
+        feedBackForm = [[FeedBackForm alloc] initWithNibName:@"FeedBackFormPopUp" bundle:nil];
+    }
+    feedBackForm.isViewPresented = true;
+    [self presentModalViewController:feedBackForm animated:YES];
 }
 @end

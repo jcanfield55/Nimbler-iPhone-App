@@ -63,11 +63,16 @@
 @property (strong, nonatomic) IBOutlet UIView *textFieldBackground;
 @property (strong, nonatomic) IBOutlet UIView *sentMessageView;
 
+@property (strong, nonatomic) IBOutlet UINavigationBar *navBar;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
+@property (nonatomic) BOOL isViewPresented;
+
 -(IBAction)startRecord:(id)sender;
 -(IBAction)stopRecord:(id)sender;
 -(IBAction)pauseRecord:(id)sender;
 -(IBAction)playRecord:(id)sender;
 -(IBAction)submitFeedBack:(id)sender;
+-(IBAction)cancelButtonClicked:(id)sender;
 
 @property (strong, nonatomic) FeedBackReqParam *fbReqParams;;
 

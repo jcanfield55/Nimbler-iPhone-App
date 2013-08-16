@@ -887,6 +887,8 @@ UIImage *imageDetailDisclosure;
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    [self.txtFromView setTextColor:[UIColor blackColor]];
+    [self.txtToView setTextColor:[UIColor blackColor]];
     [[nc_AppDelegate sharedInstance].twitterCount setHidden:YES];
     if(editMode==FROM_EDIT || editMode==TO_EDIT){
         [self heightToFromTable];
@@ -904,6 +906,7 @@ UIImage *imageDetailDisclosure;
         [self setEditMode:TO_EDIT];
         editMode = TO_EDIT;
     }
+
     return YES;
 }
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
@@ -945,6 +948,10 @@ UIImage *imageDetailDisclosure;
     }
 }
 
+- (void)textViewDidEndEditing:(UITextView *)textView{
+    [self.txtFromView setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+    [self.txtToView setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+}
 - (void) textViewDidChange:(UITextView *)theTextView
 {
     if(![theTextView hasText]) {
@@ -1948,9 +1955,6 @@ UIImage *imageDetailDisclosure;
 
 //US 137 implementation
 - (IBAction)editCancelClicked:(id)sender{
-    //Fixed DE-330
-    // Clearing both textfield before calling seteditMode method.
-    //[self.navigationController setNavigationBarHidden:YES animated:NO];
     [[nc_AppDelegate sharedInstance].twitterCount setHidden:NO];
     [self heightToFromTable];
     if(editMode == FROM_EDIT){
@@ -1988,6 +1992,7 @@ UIImage *imageDetailDisclosure;
         }  
     }
     [fromTableVC.btnEdit setSelected:NO];
+    [toTableVC.btnEdit setSelected:NO];
     self.toTableVC.txtField.text = NULL_STRING;
     self.fromTableVC.txtField.text = NULL_STRING;
     [self setEditMode:NO_EDIT];

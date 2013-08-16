@@ -23,6 +23,7 @@
 @synthesize steps;
 @synthesize selectedRowIndex;
 @synthesize annotationArray;
+@synthesize currentPolyLine;
 
 #define MAXIMUM_SCROLL_POINT 360
 #define MAXIMUM_SCROLL_POINT_4_INCH 425
@@ -185,9 +186,8 @@
     
     Step *step = [steps objectAtIndex:selectedRowIndex];
     CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([step.startLat doubleValue],[step.startLng doubleValue]);
-    MKCoordinateRegion mpRegion = MKCoordinateRegionMakeWithDistance(coordinate, 200, 200);
+    MKCoordinateRegion mpRegion = MKCoordinateRegionMakeWithDistance(coordinate, 400, 400);
     [mapView setRegion:mpRegion animated:NO];
-    [mapView setRegion:mpRegion];
 }
 - (void) viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -212,6 +212,14 @@
     } else {
         [btnForwardItem setEnabled:TRUE];
         [btnForwardItem setBackgroundImage:[UIImage imageNamed:@"img_forwardSelect.png"] forState:UIControlStateNormal];
+    }
+    
+    Step *step = [steps objectAtIndex:selectedRowIndex];
+    CLLocationCoordinate2D curCoordinate = CLLocationCoordinate2DMake([step.startLat doubleValue],[step.startLng doubleValue]);
+    if([steps count] > selectedRowIndex + 1){
+        Step *nextStep = [steps objectAtIndex:selectedRowIndex+1];
+        CLLocationCoordinate2D nextCoordinate = CLLocationCoordinate2DMake([nextStep.startLat doubleValue],[nextStep.startLng doubleValue]);
+        [self createOverlayForSelectedStep:curCoordinate NextCoordinate:nextCoordinate];
     }
 }
 - (void)didReceiveMemoryWarning{
@@ -256,9 +264,7 @@
     
     if(indexPath.row == 0){
         Step *step = [steps objectAtIndex:indexPath.row];
-        float distance = [step.distance floatValue]/1609.34;
-        NSString *distanceInMile = [NSString stringWithFormat:@"%f mi",distance];
-        cell.textLabel.text = [NSString stringWithFormat:@"Bike %@ on %@ - %@",step.absoluteDirection,step.streetName,distanceInMile];
+        cell.textLabel.text = [NSString stringWithFormat:@"Bike %@ on %@ - %@",step.absoluteDirection,step.streetName,distanceStringInMilesFeet([step.distance doubleValue])];
     }
     else{
         Step *step = [steps objectAtIndex:indexPath.row];
@@ -266,9 +272,7 @@
         if(!direction){
             direction = step.absoluteDirection;
         }
-        float distance = [step.distance floatValue]/1609.34;
-        NSString *distanceInMile = [NSString stringWithFormat:@"%f mi",distance];
-        cell.textLabel.text = [NSString stringWithFormat:@"%@ on %@ - %@",direction,step.streetName,distanceInMile];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@ on %@ - %@",direction,step.streetName,distanceStringInMilesFeet([step.distance doubleValue])];
     }
     if(indexPath.row == selectedRowIndex){
        [cell.textLabel setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]]; 
@@ -281,6 +285,15 @@
 }
 
 - (IBAction)navigateBack:(id)sender {
+    
+    Step *step = [steps objectAtIndex:selectedRowIndex];
+    CLLocationCoordinate2D curCoordinate = CLLocationCoordinate2DMake([step.startLat doubleValue],[step.startLng doubleValue]);
+    if([steps count] > selectedRowIndex - 1){
+        Step *nextStep = [steps objectAtIndex:selectedRowIndex-1];
+        CLLocationCoordinate2D nextCoordinate = CLLocationCoordinate2DMake([nextStep.startLat doubleValue],[nextStep.startLng doubleValue]);
+        [self createOverlayForSelectedStep:curCoordinate NextCoordinate:nextCoordinate];
+    }
+    
     if(selectedRowIndex > 0){
         selectedRowIndex = selectedRowIndex - 1;
         [bikeStepsTableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:selectedRowIndex inSection:0] animated:YES scrollPosition:UITableViewScrollPositionMiddle];
@@ -329,6 +342,14 @@
         [btnForwardItem setEnabled:TRUE];
         [btnForwardItem setBackgroundImage:[UIImage imageNamed:@"img_forwardSelect.png"] forState:UIControlStateNormal];
     }
+    
+    Step *step = [steps objectAtIndex:selectedRowIndex];
+    CLLocationCoordinate2D curCoordinate = CLLocationCoordinate2DMake([step.startLat doubleValue],[step.startLng doubleValue]);
+    if([steps count] > selectedRowIndex + 1){
+        Step *nextStep = [steps objectAtIndex:selectedRowIndex+1];
+        CLLocationCoordinate2D nextCoordinate = CLLocationCoordinate2DMake([nextStep.startLat doubleValue],[nextStep.startLng doubleValue]);
+        [self createOverlayForSelectedStep:curCoordinate NextCoordinate:nextCoordinate];
+    }
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -359,7 +380,12 @@
     @try {
         if ([overlay isKindOfClass:[MKPolyline class]]) {
             MKPolylineView *aView = [[MKPolylineView alloc] initWithPolyline:(MKPolyline*)overlay];
-            aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:ALPHA_MEDIUM];
+            if([overlay isEqual:currentPolyLine]){
+               aView.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:ALPHA_MEDIUM];
+            }
+            else{
+               aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:ALPHA_MEDIUM]; 
+            }
             aView.lineWidth = LINE_WIDTH;
             return aView;
         }
@@ -389,17 +415,30 @@
             }
             else
                 pinView.annotation = annotation;
-            if([annotation isEqual:[annotationArray objectAtIndex:0]] || [annotation isEqual:[annotationArray lastObject]]){
-                pinView.pinColor = MKPinAnnotationColorGreen;
-            }
-            else{
-               pinView.pinColor = MKPinAnnotationColorRed;
-            }
+                pinView.pinColor = MKPinAnnotationColorRed;
             return pinView;
 }
 
 - (void) refreshOverlay:(CLLocationCoordinate2D)coordinate{
-    MKCoordinateRegion mpRegion = MKCoordinateRegionMakeWithDistance(coordinate, 200, 200);
+    MKCoordinateRegion mpRegion = MKCoordinateRegionMakeWithDistance(coordinate, 400, 400);
+    [mapView setRegion:mpRegion animated:NO];
+    [mapView setNeedsDisplay];
+}
+
+
+- (void) createOverlayForSelectedStep:(CLLocationCoordinate2D)curCoordinate NextCoordinate:(CLLocationCoordinate2D)nextCoordinate{
+    if(currentPolyLine){
+        [mapView removeOverlay:currentPolyLine];
+    }
+    NSValue *value1 = [NSValue valueWithMKCoordinate:curCoordinate];
+    NSValue *value2 = [NSValue valueWithMKCoordinate:nextCoordinate];
+    NSArray *coordinateArray = [NSArray arrayWithObjects:value1,value2, nil];
+    NSString *str = [self encodeStringWithCoordinates:coordinateArray];
+    PolylineEncodedString *encodedString = [[PolylineEncodedString alloc] initWithEncodedString:str];
+    MKPolyline *polyLine = [encodedString polyline];
+    currentPolyLine = polyLine;
+    [mapView addOverlay:polyLine];
+    MKCoordinateRegion mpRegion = MKCoordinateRegionMakeWithDistance(curCoordinate, 400, 400);
     [mapView setRegion:mpRegion animated:NO];
     [mapView setNeedsDisplay];
 }
