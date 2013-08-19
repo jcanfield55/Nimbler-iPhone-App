@@ -35,9 +35,30 @@
 		<string>Icon_ipad@2x.png</string>
 		<string>Icon-small.png</string>
 		<string>Icon-small@2x.png</string>
+		<string>Default.png</string>
+		<string>Default@2x.png</string>
 		<string>Icon.png</string>
 		<string>Icon@2x.png</string>
 	</array>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>Icon_ipad.png</string>
+				<string>Icon_ipad@2x.png</string>
+				<string>Icon-small.png</string>
+				<string>Icon-small@2x.png</string>
+				<string>Default.png</string>
+				<string>Default@2x.png</string>
+				<string>Icon.png</string>
+				<string>Icon@2x.png</string>
+			</array>
+			<key>UIPrerenderedIcon</key>
+			<true/>
+		</dict>
+	</dict>
 	<key>CFBundleIdentifier</key>
 	<string>com.nimbler.Nimbler-SF</string>
 	<key>CFBundleInfoDictionaryVersion</key>

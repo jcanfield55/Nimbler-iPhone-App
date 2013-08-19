@@ -517,7 +517,7 @@ NSUserDefaults *prefs;
             cell.imageView.image = [imageDictionary objectForKey:imgFileName];
         }
         
-        if(![leg isEqual:[NSNull null]] && [leg isBike]){
+        if(![leg isEqual:[NSNull null]] && [leg isBike] && [[leg sortedSteps] count] > 0){
            UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_DetailDesclosure.png"]];
             cell.accessoryView = imageView;
         }
@@ -562,7 +562,7 @@ NSUserDefaults *prefs;
     [self setFBParamater:[indexPath row]];
     
      Leg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:[indexPath row]];
-    if(![leg isEqual:[NSNull null]] && [leg isBike]){
+    if(![leg isEqual:[NSNull null]] && [leg isBike] && [[leg sortedSteps] count] > 0){
         BikeStepsViewController *bikeStepsView;
         if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
           bikeStepsView = [[BikeStepsViewController alloc] initWithNibName:@"BikeStepsViewController_568h" bundle:nil];  

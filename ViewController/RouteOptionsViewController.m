@@ -89,6 +89,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+     [[nc_AppDelegate sharedInstance].twitterCount setHidden:YES];
     if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
       [btnFeedBack setFrame:CGRectMake(btnFeedBack.frame.origin.x, 483, btnFeedBack.frame.size.width,btnFeedBack.frame.size.height)];
     }

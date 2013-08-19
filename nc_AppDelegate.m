@@ -181,7 +181,6 @@ FeedBackForm *fbView;
             // The attribute exists, we need to remove it
             int removeResult = removexattr(filePath, attrName, 0);
             if (removeResult == 0) {
-                NSLog(@"Removed extended attribute on file %@", URL);
             }
         }
         
@@ -1391,14 +1390,13 @@ FeedBackForm *fbView;
     if (tweetConut == 0) {
         [twitterCount setHidden:YES];
     } else {
-        [toFromViewController.navigationController.navigationBar addSubview:twitterCount];
-        [twitterCount setHidden:NO];
-    }
-    if(isDatePickerOpen){
-        [twitterCount setHidden:YES];
-    }
-    else{
-        [twitterCount setHidden:NO];
+         [toFromViewController.navigationController.navigationBar addSubview:twitterCount];
+        if(toFromViewController.navigationController.topViewController == toFromViewController){
+            [twitterCount setHidden:NO];
+        }
+        else{
+            [twitterCount setHidden:YES];
+        }
     }
 }
 

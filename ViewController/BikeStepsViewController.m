@@ -24,6 +24,7 @@
 @synthesize selectedRowIndex;
 @synthesize annotationArray;
 @synthesize currentPolyLine;
+@synthesize startPoint;
 
 #define MAXIMUM_SCROLL_POINT 360
 #define MAXIMUM_SCROLL_POINT_4_INCH 425
@@ -174,7 +175,8 @@
         else{
             [point setSubtitle:step.absoluteDirection];
         }
-
+        if(i==0)
+            startPoint = point;
         [annotations addObject:point];
         [mapView addAnnotation:point];
     }
@@ -420,9 +422,13 @@
                 pinView.animatesDrop = NO;
                 pinView.canShowCallout = YES;
             }
-            else
-                pinView.annotation = annotation;
+            pinView.annotation = annotation;
+            if(annotation == startPoint){
+               pinView.pinColor = MKPinAnnotationColorGreen;
+            }
+            else{
                 pinView.pinColor = MKPinAnnotationColorRed;
+            }
             return pinView;
 }
 
