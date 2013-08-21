@@ -629,8 +629,6 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     toPlace.stopId = leg.to.stopId;
     self.to = toPlace;
     
-    self.steps = leg.steps;
-    self.sortedSteps = leg.sortedSteps;
     self.polylineEncodedString = leg.polylineEncodedString;
 }
 

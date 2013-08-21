@@ -1171,7 +1171,6 @@
            newleg.endTime = [newleg.startTime dateByAddingTimeInterval:([leg.duration floatValue]/1000)];
         }
         [newleg setNewlegAttributes:leg];
-        //newleg.steps = leg.steps;
         itinerary.endTime = newleg.endTime;
     }
     @catch (NSException *exception) {
