@@ -36,6 +36,8 @@
 #import "twitterViewController.h"
 #import "nc_AppDelegate.h"
 #import "FeedBackForm.h"
+#import "SettingInfoViewController.h"
+#import "SettingDetailViewController.h"
 
 @implementation RevealController
 
@@ -99,6 +101,17 @@
         if([feedbackVC.txtEmailId isFirstResponder]){
            [feedbackVC.txtEmailId resignFirstResponder]; 
         }
+    }
+    
+    // Fixed DE-383
+    SettingInfoViewController *settingsVC = (SettingInfoViewController *)navController.topViewController;
+    if([settingsVC isKindOfClass:[SettingInfoViewController class]]){
+        [settingsVC saveSetting];
+    }
+    
+    SettingDetailViewController*settingsDetailVC = (SettingDetailViewController *)navController.topViewController;
+    if([settingsVC isKindOfClass:[SettingDetailViewController class]]){
+        [settingsDetailVC.settingDetailDelegate updateSetting];
     }
 	NSLog(@"%@", NSStringFromSelector(_cmd));
 }

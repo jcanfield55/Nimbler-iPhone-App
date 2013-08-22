@@ -346,6 +346,7 @@ NSString *strStreet2 = @"street ";
         [tableView endUpdates];
     }
     else{
+        [[nc_AppDelegate sharedInstance].twitterCount setHidden:NO];
         NIMLOG_EVENT1(@"Select Row: isFrom=%d, section=%d, row=%d", isFrom, [indexPath section], [indexPath row]);
         [toFromVC.navigationController setNavigationBarHidden:NO animated:NO];
         locations.isLocationSelected = true;

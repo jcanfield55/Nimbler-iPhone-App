@@ -17,6 +17,7 @@
     UIButton * handleControl;
     NSArray *annotationArray;
     MKPolyline *currentPolyLine;
+    MKPointAnnotation *startPoint;
 }
 
 @property (nonatomic, strong) IBOutlet  UITableView *bikeStepsTableView;
@@ -33,6 +34,7 @@
 @property (nonatomic) int selectedRowIndex;
 @property (nonatomic, strong) NSArray *annotationArray;
 @property (nonatomic, strong) MKPolyline *currentPolyLine;
+@property (nonatomic, strong) MKPointAnnotation *startPoint;
  
 - (IBAction) imageMoved:(id) sender withEvent:(UIEvent *) event;
 - (void) refreshOverlay:(CLLocationCoordinate2D)coordinate;

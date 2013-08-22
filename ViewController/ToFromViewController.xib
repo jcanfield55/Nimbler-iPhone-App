@@ -103,7 +103,7 @@
 										<string key="NSFrame">{{44, 4}, {189, 30}}</string>
 										<reference key="NSSuperview" ref="356756940"/>
 										<reference key="NSWindow"/>
-										<reference key="NSNextKeyView" ref="300246328"/>
+										<reference key="NSNextKeyView" ref="175499998"/>
 										<string key="NSReuseIdentifierKey">_NS:9</string>
 										<reference key="IBUIBackgroundColor" ref="1063313518"/>
 										<bool key="IBUIClipsSubviews">YES</bool>
@@ -166,7 +166,7 @@
 										<string key="NSFrame">{{232, 12}, {14, 14}}</string>
 										<reference key="NSSuperview" ref="356756940"/>
 										<reference key="NSWindow"/>
-										<reference key="NSNextKeyView" ref="236705478"/>
+										<reference key="NSNextKeyView" ref="300246328"/>
 										<string key="NSReuseIdentifierKey">_NS:9</string>
 										<bool key="IBUIOpaque">NO</bool>
 										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -316,7 +316,7 @@
 								<string key="NSFrame">{{234, 8}, {60, 38}}</string>
 								<reference key="NSSuperview" ref="372381045"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="175499998"/>
+								<reference key="NSNextKeyView" ref="236705478"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -368,6 +368,7 @@
 								<string key="NSFrame">{{221, 11}, {73, 37}}</string>
 								<reference key="NSSuperview" ref="210563169"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -559,7 +560,7 @@
 								<string key="NSFrame">{{176, 9}, {43, 38}}</string>
 								<reference key="NSSuperview" ref="253658398"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="210563169"/>
+								<reference key="NSNextKeyView" ref="134970656"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<int key="IBUITag">103</int>
@@ -593,14 +594,17 @@
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<int key="IBUIContentHorizontalAlignment">0</int>
 								<int key="IBUIContentVerticalAlignment">0</int>
-								<string key="IBUINormalTitle">Share</string>
 								<reference key="IBUIHighlightedTitleColor" ref="140259170"/>
-								<object class="NSColor" key="IBUISelectedTitleColor">
-									<int key="NSColorSpace">2</int>
-									<bytes key="NSRGB">MC45NDExNzY1MzM3IDAuMzg0MzEzNzYyMiAwLjMyOTQxMTc3NDkAA</bytes>
-								</object>
 								<reference key="IBUINormalTitleColor" ref="734717287"/>
 								<reference key="IBUINormalTitleShadowColor" ref="403191613"/>
+								<object class="NSCustomResource" key="IBUISelectedImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">bikeshare_Selected.png</string>
+								</object>
+								<object class="NSCustomResource" key="IBUINormalImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">bikeshare_Unselected.png</string>
+								</object>
 								<reference key="IBUIFontDescription" ref="180028135"/>
 								<reference key="IBUIFont" ref="682956579"/>
 							</object>
@@ -1423,6 +1427,8 @@
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<object class="NSArray" key="dict.sortedKeys">
 				<bool key="EncodedWithXMLCoder">YES</bool>
+				<string>bikeshare_Selected.png</string>
+				<string>bikeshare_Unselected.png</string>
 				<string>currenticon.png</string>
 				<string>currenticonlive.png</string>
 				<string>img_MainToFromBG.png</string>
@@ -1442,6 +1448,8 @@
 			</object>
 			<object class="NSArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
+				<string>{43, 38}</string>
+				<string>{43, 38}</string>
 				<string>{27, 27}</string>
 				<string>{27, 27}</string>
 				<string>{606, 206}</string>
