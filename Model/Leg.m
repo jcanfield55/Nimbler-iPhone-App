@@ -629,6 +629,22 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
     toPlace.stopId = leg.to.stopId;
     self.to = toPlace;
     
+    for(int i=0;i<[[leg sortedSteps] count];i++){
+        Step *oldStep = [[leg sortedSteps] objectAtIndex:i];
+        Step * step = [NSEntityDescription insertNewObjectForEntityForName:@"Step" inManagedObjectContext:self.managedObjectContext];
+        step.absoluteDirection = oldStep.absoluteDirection;
+        step.bogusName = oldStep.bogusName;
+        step.distance = oldStep.distance;
+        step.exit = oldStep.exit;
+        step.relativeDirection = oldStep.relativeDirection;
+        step.startLat = oldStep.startLat;
+        step.startLng = oldStep.startLng;
+        step.stayOn = oldStep.stayOn;
+        step.streetName = oldStep.streetName;
+        step.stepIndex = oldStep.stepIndex;
+        step.leg = self;
+    }
+    
     self.polylineEncodedString = leg.polylineEncodedString;
 }
 
