@@ -1214,6 +1214,9 @@ UIImage *imageDetailDisclosure;
 - (void)updateToFromLocation:(id)sender isFrom:(BOOL)isFrom location:(Location *)loc; {
     [self.txtFromView setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
     [self.txtToView setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+    
+    NSString *strLocation;
+    
     if (isFrom) {
         fromLocation = loc;
         if([fromLocation.formattedAddress isEqualToString:@"Current Location"]){
@@ -1236,6 +1239,25 @@ UIImage *imageDetailDisclosure;
         else{
             [self.txtFromView setText:[fromLocation shortFormattedAddress]];
         }
+        
+        strLocation = self.txtFromView.text;
+        
+        CGSize stringSize = [strLocation sizeWithFont:[UIFont boldSystemFontOfSize:13.0] constrainedToSize:CGSizeMake(self.txtFromView.frame.size.width, 9999) lineBreakMode:nil];
+        if(stringSize.width>170 || stringSize.height>16){
+            CGPoint scrollPoint = self.txtFromView.contentOffset;
+            if(scrollPoint.y<8){
+                scrollPoint.y= scrollPoint.y+8;
+                [self.txtFromView setContentOffset:scrollPoint animated:NO];
+            }
+        }
+        else{
+            CGPoint scrollPoint = self.txtFromView.contentOffset;
+            if(scrollPoint.y==2){
+                scrollPoint.y= scrollPoint.y-2;
+                [self.txtFromView setContentOffset:scrollPoint animated:NO];
+            }
+            
+        }
     } 
     else {
         BOOL locBecomingVisible = loc && ([loc toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF);
@@ -1257,7 +1279,27 @@ UIImage *imageDetailDisclosure;
         else{
             [self.txtToView setText:[toLocation shortFormattedAddress]];
         }
+        
+        strLocation = self.txtToView.text;
+        
+        CGSize stringSize = [strLocation sizeWithFont:[UIFont boldSystemFontOfSize:13.0] constrainedToSize:CGSizeMake(self.txtToView.frame.size.width, 9999) lineBreakMode:nil];
+        if(stringSize.width>210 || stringSize.height>16){
+            CGPoint scrollPoint = self.txtToView.contentOffset;
+            if(scrollPoint.y<8){
+                scrollPoint.y= scrollPoint.y+8;
+                [self.txtToView setContentOffset:scrollPoint animated:NO];
+            }
+        }
+        else{
+            CGPoint scrollPoint = self.txtToView.contentOffset;
+            if(scrollPoint.y==2){
+                scrollPoint.y= scrollPoint.y-2;
+                [self.txtToView setContentOffset:scrollPoint animated:NO];
+            }
+            
+        }
     }
+    
 }
 
 // Callback from ToFromTableViewController to update geocoding status
