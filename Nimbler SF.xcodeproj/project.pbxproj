@@ -184,7 +184,6 @@
 		525442C814C3ED57004B0E1F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C714C3ED57004B0E1F /* Security.framework */; };
 		525442CA14C3ED66004B0E1F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C914C3ED66004B0E1F /* SystemConfiguration.framework */; };
 		525442CC14C3ED8A004B0E1F /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442CB14C3ED8A004B0E1F /* libxml2.dylib */; };
-		5258A898160D5DCA00871875 /* libFlurry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC9370D815BFB97200A09A5A /* libFlurry.a */; };
 		5258A89F160D617800871875 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5258A89B160D617800871875 /* libTestFlight.a */; };
 		525EC1C1170006B6009ACE5A /* MutableBoolean.m in Sources */ = {isa = PBXBuildFile; fileRef = 525EC1C0170006B6009ACE5A /* MutableBoolean.m */; };
 		525EC1CB17025E35009ACE5A /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */; };
@@ -543,6 +542,7 @@
 		8D178ADB17A9482400BF873F /* img_walkMode.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D178A9417A9482300BF873F /* img_walkMode.png */; };
 		8D178ADC17A9482400BF873F /* img_walkMode.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D178A9417A9482300BF873F /* img_walkMode.png */; };
 		8D1A64EA165B82C100176FF7 /* SettingViewController_SF.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D1A64E9165B82C100176FF7 /* SettingViewController_SF.xib */; };
+		8D26425C17C714DF008551FE /* libFlurry_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D26425B17C714DF008551FE /* libFlurry_4.2.3.a */; };
 		8D2D51C917981F4800A5E007 /* twitterViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */; };
 		8D2D51CA17981F4800A5E007 /* twitterViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */; };
 		8D2D51CB17981F4800A5E007 /* twitterViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */; };
@@ -665,7 +665,6 @@
 		8DA77FD51724FF0D0090C2EA /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFB16F726CF0050FE00 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8DA77FD61724FF0D0090C2EA /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF916F726AC0050FE00 /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8DA77FD71724FF0D0090C2EA /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C10384160BEF8000BC6020 /* AddressBookUI.framework */; };
-		8DA77FD81724FF0D0090C2EA /* libFlurry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC9370D815BFB97200A09A5A /* libFlurry.a */; };
 		8DA77FD91724FF0D0090C2EA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */; };
 		8DA77FDA1724FF0D0090C2EA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6F22E71563AD360066DFA9 /* AVFoundation.framework */; };
 		8DA77FDB1724FF0D0090C2EA /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCDCC0781576287900D4B4D3 /* CoreLocation.framework */; };
@@ -917,7 +916,6 @@
 		8DAA28A2178BDFEF00C3FA30 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFB16F726CF0050FE00 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8DAA28A3178BDFEF00C3FA30 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF916F726AC0050FE00 /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8DAA28A4178BDFEF00C3FA30 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C10384160BEF8000BC6020 /* AddressBookUI.framework */; };
-		8DAA28A5178BDFEF00C3FA30 /* libFlurry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC9370D815BFB97200A09A5A /* libFlurry.a */; };
 		8DAA28A6178BDFEF00C3FA30 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */; };
 		8DAA28A7178BDFEF00C3FA30 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6F22E71563AD360066DFA9 /* AVFoundation.framework */; };
 		8DAA28A8178BDFEF00C3FA30 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCDCC0781576287900D4B4D3 /* CoreLocation.framework */; };
@@ -1192,7 +1190,6 @@
 		8DE18B8E1725415800AA8112 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFB16F726CF0050FE00 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8DE18B8F1725415800AA8112 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF916F726AC0050FE00 /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8DE18B901725415800AA8112 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C10384160BEF8000BC6020 /* AddressBookUI.framework */; };
-		8DE18B911725415800AA8112 /* libFlurry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC9370D815BFB97200A09A5A /* libFlurry.a */; };
 		8DE18B921725415800AA8112 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */; };
 		8DE18B931725415800AA8112 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6F22E71563AD360066DFA9 /* AVFoundation.framework */; };
 		8DE18B941725415800AA8112 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCDCC0781576287900D4B4D3 /* CoreLocation.framework */; };
@@ -1893,6 +1890,8 @@
 		8D178A9317A9482100BF873F /* img_walkActiveMode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_walkActiveMode.png; sourceTree = "<group>"; };
 		8D178A9417A9482300BF873F /* img_walkMode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_walkMode.png; sourceTree = "<group>"; };
 		8D1A64E9165B82C100176FF7 /* SettingViewController_SF.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController_SF.xib; sourceTree = "<group>"; };
+		8D26425A17C714DF008551FE /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
+		8D26425B17C714DF008551FE /* libFlurry_4.2.3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_4.2.3.a; sourceTree = "<group>"; };
 		8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = twitterViewController_568h.xib; sourceTree = "<group>"; };
 		8D317A3C16DB9A5A00581224 /* img_bicycle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_bicycle.png; sourceTree = "<group>"; };
 		8D317A3D16DB9A5A00581224 /* img_bicycleSelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_bicycleSelect.png; sourceTree = "<group>"; };
@@ -2034,8 +2033,6 @@
 		8DFFB3B0165E593300A39BC4 /* img_Settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_Settings.png; sourceTree = "<group>"; };
 		8DFFB3B1165E593400A39BC4 /* img_Settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_Settings@2x.png"; sourceTree = "<group>"; };
 		CC6F22E71563AD360066DFA9 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		CC9370D715BFB97200A09A5A /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
-		CC9370D815BFB97200A09A5A /* libFlurry.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry.a; sourceTree = "<group>"; };
 		CCA4C7E415D92CC7009BE7A1 /* aps_development.cer */ = {isa = PBXFileReference; lastKnownFileType = file; name = aps_development.cer; path = "Network Commuting/aps_development.cer"; sourceTree = "<group>"; };
 		CCDCC0781576287900D4B4D3 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -2052,7 +2049,6 @@
 				8DF19BFC16F726CF0050FE00 /* AdSupport.framework in Frameworks */,
 				8DF19BFA16F726AC0050FE00 /* Social.framework in Frameworks */,
 				52C10385160BEF8000BC6020 /* AddressBookUI.framework in Frameworks */,
-				5258A898160D5DCA00871875 /* libFlurry.a in Frameworks */,
 				8DA39BE115E38B5E0029D54B /* AudioToolbox.framework in Frameworks */,
 				8DA39BDF15E3855B0029D54B /* AVFoundation.framework in Frameworks */,
 				CCDCC0791576287900D4B4D3 /* CoreLocation.framework in Frameworks */,
@@ -2070,6 +2066,7 @@
 				52CF43A614BDF2F9000565D6 /* CoreData.framework in Frameworks */,
 				5258A89F160D617800871875 /* libTestFlight.a in Frameworks */,
 				8DF19BF416F725FC0050FE00 /* FacebookSDK.framework in Frameworks */,
+				8D26425C17C714DF008551FE /* libFlurry_4.2.3.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2095,7 +2092,6 @@
 				8DA77FD51724FF0D0090C2EA /* AdSupport.framework in Frameworks */,
 				8DA77FD61724FF0D0090C2EA /* Social.framework in Frameworks */,
 				8DA77FD71724FF0D0090C2EA /* AddressBookUI.framework in Frameworks */,
-				8DA77FD81724FF0D0090C2EA /* libFlurry.a in Frameworks */,
 				8DA77FD91724FF0D0090C2EA /* AudioToolbox.framework in Frameworks */,
 				8DA77FDA1724FF0D0090C2EA /* AVFoundation.framework in Frameworks */,
 				8DA77FDB1724FF0D0090C2EA /* CoreLocation.framework in Frameworks */,
@@ -2128,7 +2124,6 @@
 				8DAA28A2178BDFEF00C3FA30 /* AdSupport.framework in Frameworks */,
 				8DAA28A3178BDFEF00C3FA30 /* Social.framework in Frameworks */,
 				8DAA28A4178BDFEF00C3FA30 /* AddressBookUI.framework in Frameworks */,
-				8DAA28A5178BDFEF00C3FA30 /* libFlurry.a in Frameworks */,
 				8DAA28A6178BDFEF00C3FA30 /* AudioToolbox.framework in Frameworks */,
 				8DAA28A7178BDFEF00C3FA30 /* AVFoundation.framework in Frameworks */,
 				8DAA28A8178BDFEF00C3FA30 /* CoreLocation.framework in Frameworks */,
@@ -2159,7 +2154,6 @@
 				8DE18B8E1725415800AA8112 /* AdSupport.framework in Frameworks */,
 				8DE18B8F1725415800AA8112 /* Social.framework in Frameworks */,
 				8DE18B901725415800AA8112 /* AddressBookUI.framework in Frameworks */,
-				8DE18B911725415800AA8112 /* libFlurry.a in Frameworks */,
 				8DE18B921725415800AA8112 /* AudioToolbox.framework in Frameworks */,
 				8DE18B931725415800AA8112 /* AVFoundation.framework in Frameworks */,
 				8DE18B941725415800AA8112 /* CoreLocation.framework in Frameworks */,
@@ -2579,23 +2573,16 @@
 		52CF439014BDF2F8000565D6 = {
 			isa = PBXGroup;
 			children = (
-				8DEAC1951778469600D7997C /* CoreText.framework */,
-				8DF19BFF16F727A10050FE00 /* libsqlite3.0.dylib */,
-				8DF19BFD16F726D50050FE00 /* Accounts.framework */,
-				8DF19BFB16F726CF0050FE00 /* AdSupport.framework */,
-				8DF19BF916F726AC0050FE00 /* Social.framework */,
-				8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */,
-				8D82883616E4CA5600AA8FF2 /* DB */,
+				8D26425917C714DF008551FE /* Flurry */,
 				8D4FC8E3162D2E1A004144DE /* PreloadData */,
 				8DF35D621627F58400B99F4A /* main.m */,
 				520FB295162605470083F143 /* CoverageGeoJSON.geojson */,
-				52C10384160BEF8000BC6020 /* AddressBookUI.framework */,
 				8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */,
-				CC9370D615BFB97200A09A5A /* Flurry */,
 				CCD3990C15A2FAD20020BC85 /* Resources */,
 				CC6F22E71563AD360066DFA9 /* AVFoundation.framework */,
 				522C0E6A15588E7A0072ADD6 /* libz.dylib */,
 				52E4C0A015CC705000B55A65 /* Default.png */,
+				8D82883616E4CA5600AA8FF2 /* DB */,
 				52E4C0A215CC705D00B55A65 /* Default@2x.png */,
 				8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */,
 				5258A89A160D617800871875 /* TestFlightSDK1-1 */,
@@ -2622,6 +2609,13 @@
 		52CF439E14BDF2F9000565D6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				52C10384160BEF8000BC6020 /* AddressBookUI.framework */,
+				8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */,
+				8DF19BF916F726AC0050FE00 /* Social.framework */,
+				8DF19BFB16F726CF0050FE00 /* AdSupport.framework */,
+				8DF19BFD16F726D50050FE00 /* Accounts.framework */,
+				8DF19BFF16F727A10050FE00 /* libsqlite3.0.dylib */,
+				8DEAC1951778469600D7997C /* CoreText.framework */,
 				CCDCC0781576287900D4B4D3 /* CoreLocation.framework */,
 				527E1749151EB9CD00CDBC23 /* QuartzCore.framework */,
 				525C20F8151D3AF5004F8FE0 /* MapKit.framework */,
@@ -2771,6 +2765,15 @@
 			path = NewImages;
 			sourceTree = SOURCE_ROOT;
 		};
+		8D26425917C714DF008551FE /* Flurry */ = {
+			isa = PBXGroup;
+			children = (
+				8D26425A17C714DF008551FE /* Flurry.h */,
+				8D26425B17C714DF008551FE /* libFlurry_4.2.3.a */,
+			);
+			path = Flurry;
+			sourceTree = "<group>";
+		};
 		8D3EFCB116E85DEE00266C6A /* ZipArchive */ = {
 			isa = PBXGroup;
 			children = (
@@ -2835,15 +2838,6 @@
 				8DABCDAB1793C2FB00C1BDCF /* ZUUIRevealController.m */,
 			);
 			path = SlideView;
-			sourceTree = "<group>";
-		};
-		CC9370D615BFB97200A09A5A /* Flurry */ = {
-			isa = PBXGroup;
-			children = (
-				CC9370D715BFB97200A09A5A /* Flurry.h */,
-				CC9370D815BFB97200A09A5A /* libFlurry.a */,
-			);
-			path = Flurry;
 			sourceTree = "<group>";
 		};
 		CCD3990C15A2FAD20020BC85 /* Resources */ = {
