@@ -33,10 +33,10 @@
 	<string>Icon-Portland</string>
 	<key>CFBundleIconFiles</key>
 	<array>
-		<string>Icon_ipad.png</string>
-		<string>Icon_ipad@2x.png</string>
-		<string>Icon-small.png</string>
-		<string>Icon-small@2x.png</string>
+		<string>Icon-Portland-72.png</string>
+		<string>Icon-Portland-72@2x.png</string>
+		<string>Icon-Portland-small.png</string>
+		<string>Icon-Portland-small@2x.png</string>
 		<string>Icon-Portland.png</string>
 		<string>Icon-Portland@2x.png</string>
 	</array>
