@@ -70,4 +70,5 @@
 
 -(void)switchUrgentNotificationChanged;
 -(void)switchStandardNotificationChanged;
+- (void) clearCacheAndSaveSettingsToServer;
 @end

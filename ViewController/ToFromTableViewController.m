@@ -401,6 +401,7 @@ NSString *strStreet2 = @"street ";
                                    isGeocodeResults:NO];
                 }
                 else {    // if a normal location
+                    [toFromVC setEditMode:NO_EDIT]; 
                     NSString* selectedAddressParam = (isFrom ? FLURRY_FROM_SELECTED_ADDRESS : FLURRY_TO_SELECTED_ADDRESS);
                     logEvent(FLURRY_TOFROMTABLE_SELECT_ROW,
                              FLURRY_TOFROM_WHICH_TABLE, isFromString,
@@ -409,7 +410,6 @@ NSString *strStreet2 = @"street ";
                              nil, nil);
                     
                     [self markAndUpdateSelectedLocation:loc];  // Mark the selected location and send updates to locations and toFromVC
-                    [toFromVC setEditMode:NO_EDIT]; 
                 }
             }
         }

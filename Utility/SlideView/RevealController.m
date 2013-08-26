@@ -111,7 +111,7 @@
     
     SettingDetailViewController*settingsDetailVC = (SettingDetailViewController *)navController.topViewController;
     if([settingsVC isKindOfClass:[SettingDetailViewController class]]){
-        [settingsDetailVC.settingDetailDelegate updateSetting];
+        [settingsDetailVC clearCacheAndSaveSettingsToServer];
     }
 	NSLog(@"%@", NSStringFromSelector(_cmd));
 }
