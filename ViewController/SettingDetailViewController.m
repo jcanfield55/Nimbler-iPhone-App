@@ -210,8 +210,8 @@
     [super viewWillAppear:animated];
     [nc_AppDelegate sharedInstance].isSettingDetailView = YES;
 }
-- (void)viewWillDisappear:(BOOL)animated{
-    [super viewWillDisappear:animated];
+// Clear cache and update latest settings to server
+- (void) clearCacheAndSaveSettingsToServer{
     if(sliderMaximumBikeDistance.value !=  [[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_MAX_BIKE_DISTANCE] floatValue] || sliderPreferenceFastVsSafe.value != [[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_BIKE_FAST_VS_SAFE] floatValue] || sliderPreferenceFastVsFlat.value != [[[NSUserDefaults standardUserDefaults] objectForKey:PREFS_BIKE_FAST_VS_FLAT] floatValue]){
         RouteExcludeSettings *excludesettings = [RouteExcludeSettings latestUserSettings];
         IncludeExcludeSetting setting = [excludesettings settingForKey:BIKE_BUTTON];
@@ -226,7 +226,6 @@
         PlanStore *planStore = [[nc_AppDelegate sharedInstance] planStore];
         [planStore  performSelector:@selector(clearCacheForBikePref) withObject:nil afterDelay:0.5];
     }
-
     
     [nc_AppDelegate sharedInstance].isSettingDetailView = NO;
     isSettingDetail = NO;
@@ -239,10 +238,15 @@
     
     [settingDetailDelegate updateSetting];
     // if(![[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-       if(!userPrefs.sfMuniAdvisories && !userPrefs.bartAdvisories && !userPrefs.acTransitAdvisories && !userPrefs.caltrainAdvisories) {
-             [[nc_AppDelegate sharedInstance] updateBadge:0];
+    if(!userPrefs.sfMuniAdvisories && !userPrefs.bartAdvisories && !userPrefs.acTransitAdvisories && !userPrefs.caltrainAdvisories) {
+        [[nc_AppDelegate sharedInstance] updateBadge:0];
         // }
-     }
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [self clearCacheAndSaveSettingsToServer];
 }
 - (void)popOutToSettings{
 }

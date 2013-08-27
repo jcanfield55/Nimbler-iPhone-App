@@ -132,8 +132,8 @@
 #define QUICK_WITH_ANY_STREET @"Fast, any street"
 #define BIKE_FRIENDLY_STREET  @"Bike friendly street"
 
-#define LABEL_FREQUENTLY      @"Less"
-#define LABEL_RARELY          @"More"
+#define LABEL_FREQUENTLY      @"More"
+#define LABEL_RARELY          @"Less"
 
 #define URGENT_AND_STANDARD     @"Urgent + Standard"
 #define URGENT                  @"Urgent Only"
