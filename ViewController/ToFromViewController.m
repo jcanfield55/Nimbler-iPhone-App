@@ -997,7 +997,12 @@ UIImage *imageDetailDisclosure;
     }
     if ([locations areMatchingLocationsChanged]) {
         //if typing has changed matrix, reload the array
-        [[fromTableVC myTableView] reloadData];
+        if (theTextView==self.txtFromView) {
+            [[fromTableVC myTableView] reloadData];
+        }
+        else{
+            [[toTableVC myTableView] reloadData];
+        }
         
     }
     
