@@ -21,8 +21,8 @@
 #define TEST_GEO_RESPONSE_URL  @"http://localhost:8080/TPServer/ws/mockgeolocation/"
 
 // To select server URL select 1 otherwise select 0,At a time only one of below must be 1.
-#define PRODUCTION_URL  0
-#define STAGGING_URL    1
+#define PRODUCTION_URL  1
+#define STAGGING_URL    0
 #define LOCAL_URL       0
 
 #if PRODUCTION_URL
@@ -73,8 +73,8 @@
 #define TEST_FLIGHT_UIDS 1 // If 1, then testFlightApp will collect device UIDs, if 0, it will not
 
 #define LAST_SELECTED_TAB_INDEX       @"lastSelectedTabIndex"
-#define LAST_TO_LOCATION              @"lastToLocation"
-#define LAST_FROM_LOCATION            @"lastFromLocation"
+#define LAST_TO_LOCATION              @"newLastToLocation"
+#define LAST_FROM_LOCATION            @"newLastFromLocation"
 #define LAST_REQUEST_REVERSE_GEO      @"lastRequestReverseGeoLocation"
 #define APPLICATION_BUNDLE_IDENTIFIER  @"appBundleId"
 #define APPLICATION_TYPE               @"appType"

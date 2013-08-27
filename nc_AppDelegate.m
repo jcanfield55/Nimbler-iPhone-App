@@ -150,7 +150,7 @@ FeedBackForm *fbView;
             strPath = [[NSBundle mainBundle] pathForResource:@"store101_Portland" ofType:@"zip"];
         }
         else{
-           strPath = [[NSBundle mainBundle] pathForResource:@"store101" ofType:@"zip"]; 
+           strPath = [[NSBundle mainBundle] pathForResource:@"store101" ofType:@"zip"];
         }
         // Unzip file to document directory folder
         ZipArchive *zipArchive = [[ZipArchive alloc] init];
@@ -427,16 +427,18 @@ FeedBackForm *fbView;
     @try {
         
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
         SettingInfoViewController *settingsView;
         FeedBackForm *feedbackView;
         if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
             settingsView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF_568h" bundle:nil];
             feedbackView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm_568h" bundle:nil];
+            // DE-387 Fixed
+            twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController_568h" bundle:nil];
         }
         else{
             settingsView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF" bundle:nil];
             feedbackView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
+            twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
         }
         
         self.tabBarController = [[RXCustomTabBar alloc] init];

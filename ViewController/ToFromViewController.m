@@ -245,6 +245,10 @@ UIImage *imageDetailDisclosure;
         strFromFormattedAddress = [[locations selectedFromLocation] shortFormattedAddress];
     }else{
         strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+        NSArray *matchingLocations = [locations locationsWithFormattedAddress:strFromFormattedAddress];
+        if([matchingLocations count] > 0){
+            strFromFormattedAddress = ((Location *)[matchingLocations objectAtIndex:0]).shortFormattedAddress;
+        }
     }
     if(!strFromFormattedAddress){
         strFromFormattedAddress = @"";
@@ -264,6 +268,10 @@ UIImage *imageDetailDisclosure;
         strToFormattedAddress = [[locations selectedToLocation] shortFormattedAddress];
     }else{
         strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
+        NSArray *matchingLocations = [locations locationsWithFormattedAddress:strToFormattedAddress];
+        if([matchingLocations count] > 0){
+            strToFormattedAddress = ((Location *)[matchingLocations objectAtIndex:0]).shortFormattedAddress;
+        }
     }if(!strToFormattedAddress){
         strToFormattedAddress = @"";
     }
@@ -911,6 +919,15 @@ UIImage *imageDetailDisclosure;
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    if(datePicker){
+        [datePicker removeFromSuperview];
+        datePicker = nil;
+    }
+    if(toolBar){
+        [toolBar removeFromSuperview];
+        toolBar = nil;
+    }
+    [btnPicker setUserInteractionEnabled:YES];
     [self.txtFromView setTextColor:[UIColor blackColor]];
     [self.txtToView setTextColor:[UIColor blackColor]];
     [[nc_AppDelegate sharedInstance].twitterCount setHidden:YES];
@@ -1071,6 +1088,10 @@ UIImage *imageDetailDisclosure;
         
         if(![strFromFormattedAddress length]>0){
              strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+            NSArray *matchingLocations = [locations locationsWithFormattedAddress:strFromFormattedAddress];
+            if([matchingLocations count] > 0){
+                strFromFormattedAddress = ((Location *)[matchingLocations objectAtIndex:0]).shortFormattedAddress;
+            }
         }
         if(!strFromFormattedAddress){
             strFromFormattedAddress = @"";
@@ -1090,6 +1111,10 @@ UIImage *imageDetailDisclosure;
         }
         if(![strToFormattedAddress length]>0){
             strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+            NSArray *matchingLocations = [locations locationsWithFormattedAddress:strToFormattedAddress];
+            if([matchingLocations count] > 0){
+                strToFormattedAddress = ((Location *)[matchingLocations objectAtIndex:0]).shortFormattedAddress;
+            }
         }
         if(!strToFormattedAddress){
             strToFormattedAddress = @"";
@@ -1123,6 +1148,10 @@ UIImage *imageDetailDisclosure;
         }
         if(![strFromFormattedAddress length]>0){
             strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+            NSArray *matchingLocations = [locations locationsWithFormattedAddress:strFromFormattedAddress];
+            if([matchingLocations count] > 0){
+                strFromFormattedAddress = ((Location *)[matchingLocations objectAtIndex:0]).shortFormattedAddress;
+            }
         }
         if(!strFromFormattedAddress){
             strFromFormattedAddress = @"";
@@ -1142,6 +1171,10 @@ UIImage *imageDetailDisclosure;
         }
         if(![strToFormattedAddress length]>0){
             strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+            NSArray *matchingLocations = [locations locationsWithFormattedAddress:strToFormattedAddress];
+            if([matchingLocations count] > 0){
+                strToFormattedAddress = ((Location *)[matchingLocations objectAtIndex:0]).shortFormattedAddress;
+            }
         }
         if(!strToFormattedAddress){
             strToFormattedAddress = @"";
@@ -1419,6 +1452,17 @@ UIImage *imageDetailDisclosure;
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     @try {
+        
+        if(datePicker){
+            [datePicker removeFromSuperview];
+            datePicker = nil;
+        }
+        if(toolBar){
+            [toolBar removeFromSuperview];
+            toolBar = nil;
+        }
+        [btnPicker setUserInteractionEnabled:YES];
+        
         NIMLOG_EVENT1(@"Route Button Pressed");
         UIAlertView *alert;
         
@@ -2067,6 +2111,10 @@ UIImage *imageDetailDisclosure;
     }
     if(![strFromFormattedAddress length]>0){
         strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+        NSArray *matchingLocations = [locations locationsWithFormattedAddress:strFromFormattedAddress];
+        if([matchingLocations count] > 0){
+            strFromFormattedAddress = ((Location *)[matchingLocations objectAtIndex:0]).shortFormattedAddress;
+        }
     }
     if(!strFromFormattedAddress){
         strFromFormattedAddress = @"";
@@ -2086,6 +2134,10 @@ UIImage *imageDetailDisclosure;
     }
     if(![strToFormattedAddress length]>0){
         strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
+        NSArray *matchingLocations = [locations locationsWithFormattedAddress:strToFormattedAddress];
+        if([matchingLocations count] > 0){
+            strToFormattedAddress = ((Location *)[matchingLocations objectAtIndex:0]).shortFormattedAddress;
+        }
     }
     if(!strToFormattedAddress){
         strToFormattedAddress = @"";
@@ -2144,7 +2196,7 @@ UIImage *imageDetailDisclosure;
 #pragma mark UIdatePicker functionality
 
 - (void)selectDate {
-    [self.mainTable setUserInteractionEnabled:YES];
+    [btnPicker setUserInteractionEnabled:YES];
      [self.navigationController.navigationBar setUserInteractionEnabled:YES];
     [nc_AppDelegate sharedInstance].isDatePickerOpen = NO;
     [self showTabbar];
@@ -2187,7 +2239,7 @@ UIImage *imageDetailDisclosure;
     date = [NSDate date];
     [self.navigationController.navigationBar setUserInteractionEnabled:YES];
     [nc_AppDelegate sharedInstance].isDatePickerOpen = NO;
-    [self.mainTable setUserInteractionEnabled:YES];
+    [btnPicker setUserInteractionEnabled:YES];
     [self showTabbar];
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
@@ -2215,7 +2267,7 @@ UIImage *imageDetailDisclosure;
 //---------------------------------------------------------------------------
 
 - (IBAction)openPickerView:(id)sender {
-    [self.mainTable setUserInteractionEnabled:NO];
+    [btnPicker setUserInteractionEnabled:NO];
     
     // Fixed DE-331
     datePicker = nil;
@@ -2258,12 +2310,12 @@ UIImage *imageDetailDisclosure;
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        [toolBar setFrame:CGRectMake(0, 288, 320, 44)];
-        [datePicker setFrame:CGRectMake(0, 332, 320, 216)];
+        [toolBar setFrame:CGRectMake(0, 244, 320, 44)];
+        [datePicker setFrame:CGRectMake(0, 288, 320, 216)];
     }
     else{
-        [toolBar setFrame:CGRectMake(0, 200, 320, 44)];
-        [datePicker setFrame:CGRectMake(0, 244, 320, 216)];
+        [toolBar setFrame:CGRectMake(0, 156, 320, 44)];
+        [datePicker setFrame:CGRectMake(0, 200, 320, 216)];
     }
     [UIView commitAnimations];
 }
