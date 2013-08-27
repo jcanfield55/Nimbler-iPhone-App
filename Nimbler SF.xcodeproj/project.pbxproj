@@ -4583,8 +4583,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -4612,8 +4612,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler SF";
-				PROVISIONING_PROFILE = "C64D977F-8F83-4077-8043-8D9F120D2520";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C64D977F-8F83-4077-8043-8D9F120D2520";
+				PROVISIONING_PROFILE = "02B61AA9-A3A0-409B-9C1D-CB2D07A7252B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "02B61AA9-A3A0-409B-9C1D-CB2D07A7252B";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -4625,9 +4625,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -4655,9 +4655,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler SF";
-				PROVISIONING_PROFILE = "C64D977F-8F83-4077-8043-8D9F120D2520";
-				"PROVISIONING_PROFILE[sdk=*]" = "C64D977F-8F83-4077-8043-8D9F120D2520";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C64D977F-8F83-4077-8043-8D9F120D2520";
+				PROVISIONING_PROFILE = "02B61AA9-A3A0-409B-9C1D-CB2D07A7252B";
+				"PROVISIONING_PROFILE[sdk=*]" = "02B61AA9-A3A0-409B-9C1D-CB2D07A7252B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "02B61AA9-A3A0-409B-9C1D-CB2D07A7252B";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -4799,8 +4799,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -4828,8 +4828,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Portland";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "517D12B1-4B24-4D83-8573-FBD960C9526C";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "517D12B1-4B24-4D83-8573-FBD960C9526C";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -4841,9 +4841,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -4871,9 +4871,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Portland";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=*]" = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "517D12B1-4B24-4D83-8573-FBD960C9526C";
+				"PROVISIONING_PROFILE[sdk=*]" = "517D12B1-4B24-4D83-8573-FBD960C9526C";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "517D12B1-4B24-4D83-8573-FBD960C9526C";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
