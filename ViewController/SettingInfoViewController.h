@@ -80,6 +80,6 @@
 
 // Callbacks for when User changes values for settings controls
 -(void)switchPushNotificationChanged;
-
+- (void) hideTabBar;
 
 @end

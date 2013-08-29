@@ -77,9 +77,11 @@
    twitterViewController *twitterVC = (twitterViewController *)navController.topViewController;
     if([twitterVC isKindOfClass:[twitterViewController class]]){
         [twitterVC getAdvisoryData];
-        [twitterVC hideTabBar];
         [nc_AppDelegate sharedInstance].isNotificationsButtonClicked = YES;
         [nc_AppDelegate sharedInstance].isTwitterView = YES;
+    }
+    if([twitterVC isKindOfClass:[twitterViewController class]] || [twitterVC isKindOfClass:[SettingInfoViewController class]] || [twitterVC isKindOfClass:[FeedBackForm class]]){
+        [twitterVC hideTabBar];
     }
 }
 

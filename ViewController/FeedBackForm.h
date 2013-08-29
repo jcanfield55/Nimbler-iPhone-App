@@ -83,6 +83,7 @@
 
 -(id)initWithFeedBack:(NSString *)nibNameOrNil fbParam:(FeedBackReqParam *)fbParam bundle:(NSBundle *)nibBundle;
 -(BOOL)isPhoneSilent;
+- (void) hideTabBar;
 
 @end
 
