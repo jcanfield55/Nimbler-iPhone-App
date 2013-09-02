@@ -10,7 +10,7 @@
 #import "Foundation/foundation.h"
 #import "SettingDetailViewController.h"
 
-@interface SettingInfoViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,SettingDetailViewControllerDelegate>{
+@interface SettingInfoViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,SettingDetailViewControllerDelegate,UIApplicationDelegate>{
     
     UIAlertView *alertView;
     IBOutlet UISlider *sliderMaxWalkDistance;

@@ -208,6 +208,10 @@
 }
 - (void) viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+        [backButton setFrame:CGRectMake(backButton.frame.origin.x,backButton.frame.origin.y+20, backButton.frame.size.width, backButton.frame.size.height)];
+        [titleLabel setFrame:CGRectMake(titleLabel.frame.origin.x,titleLabel.frame.origin.y+20, titleLabel.frame.size.width, titleLabel.frame.size.height)];
+    }
     [nc_AppDelegate sharedInstance].isSettingDetailView = YES;
 }
 // Clear cache and update latest settings to server
@@ -246,6 +250,10 @@
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
+    if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+        [backButton setFrame:CGRectMake(backButton.frame.origin.x,backButton.frame.origin.y-20, backButton.frame.size.width, backButton.frame.size.height)];
+        [titleLabel setFrame:CGRectMake(titleLabel.frame.origin.x,titleLabel.frame.origin.y-20, titleLabel.frame.size.width, titleLabel.frame.size.height)];
+    }
     [self clearCacheAndSaveSettingsToServer];
 }
 - (void)popOutToSettings{

@@ -794,3 +794,13 @@ NSString *containsListFromFormattedAddress(NSString *formattedAddress){
         return @"bart_st_list";
     }
 }
+UIImage *returnNavigationBarBackgroundImage(void){
+    UIImage *navBarBackgroundImage;
+    if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+        navBarBackgroundImage = [UIImage imageNamed:@"navBar.png"];
+    }
+    else{
+       navBarBackgroundImage = [UIImage imageNamed:@"navBarNormal.png"];
+    }
+    return navBarBackgroundImage;
+}

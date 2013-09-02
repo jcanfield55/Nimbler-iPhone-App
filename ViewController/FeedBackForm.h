@@ -13,7 +13,7 @@
 #import "Plan.h"
 #import "FeedBackReqParam.h"
 
-@interface FeedBackForm : UIViewController <AVAudioRecorderDelegate, AVAudioPlayerDelegate, RKRequestDelegate, UIAlertViewDelegate,UITextViewDelegate,UITextFieldDelegate,UIGestureRecognizerDelegate>{
+@interface FeedBackForm : UIViewController <AVAudioRecorderDelegate, AVAudioPlayerDelegate, RKRequestDelegate, UIAlertViewDelegate,UITextViewDelegate,UITextFieldDelegate,UIGestureRecognizerDelegate,UIApplicationDelegate>{
     
     NSString *soundFilePath;
     NSString *tpURLResource;

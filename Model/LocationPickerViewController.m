@@ -107,15 +107,16 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 498;
     }
     cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
     tableView.separatorColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"img_line.png"]];
-    cell.contentView.backgroundColor = [UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW];
-    [cell sizeToFit];
+    //cell.contentView.backgroundColor = [UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW];
+    //[cell sizeToFit];
+    [cell setBackgroundColor:[UIColor clearColor]];
     return cell;
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.3];
+    //UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+   // cell.contentView.backgroundColor = [UIColor colorWithRed:109.0/255.0 green:109.0/255.0 blue:109.0/255.0 alpha:0.3];
     // Send back the picked location and pop the view controller back to ToFromViewController
     id tempObject = [locationArray objectAtIndex:[indexPath row]];
     if([tempObject isKindOfClass:[Location class]]){
@@ -238,14 +239,16 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 498;
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    
+    if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
     //Accessibility Label for UIAutomation.
     self.mainTable.accessibilityLabel = LOCATION_PICKER_TABLE_VIEW;
     if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
-        [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+        [self.navigationController.navigationBar setBackgroundImage:returnNavigationBarBackgroundImage() forBarMetrics:UIBarMetricsDefault];
     }
     else {
-        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:returnNavigationBarBackgroundImage()] aboveSubview:self.navigationController.navigationBar];
     }
     // Do any additional setup after loading the view from its nib.
     UIButton *btnGoToNimbler = [[UIButton alloc] initWithFrame:CGRectMake(0,0,65,34)];

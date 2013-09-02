@@ -76,10 +76,10 @@ NSUserDefaults *prefs;
     arrayTweet = [[NSMutableArray alloc] init];
     [self hideUnUsedTableViewCell];
     if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
-        [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+        [self.navigationController.navigationBar setBackgroundImage:returnNavigationBarBackgroundImage() forBarMetrics:UIBarMetricsDefault];
     }
     else {
-        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:returnNavigationBarBackgroundImage()] aboveSubview:self.navigationController.navigationBar];
     }
     UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
     [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
@@ -223,8 +223,10 @@ NSUserDefaults *prefs;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+        [self.mainTable setFrame:CGRectMake(self.mainTable.frame.origin.x,self.mainTable.frame.origin.y+20,self.mainTable.frame.size.width, self.mainTable.frame.size.height)];
+    }
     logEvent(FLURRY_ADVISORIES_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
-    
    [self startProcessForGettingTweets]; 
     mainTable.delegate = self;
     mainTable.dataSource = self;
@@ -240,6 +242,9 @@ NSUserDefaults *prefs;
 }
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:YES];
+    if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+        [self.mainTable setFrame:CGRectMake(self.mainTable.frame.origin.x,self.mainTable.frame.origin.y-20,self.mainTable.frame.size.width, self.mainTable.frame.size.height)];
+    }
     [nc_AppDelegate sharedInstance].isTwitterView = NO;
 }
 - (NSUInteger) supportedInterfaceOrientations{
@@ -288,7 +293,13 @@ NSUserDefaults *prefs;
             NSDateFormatter *detailsTimeFormatter = [[NSDateFormatter alloc] init];
             [detailsTimeFormatter setTimeStyle:NSDateFormatterShortStyle];
             
-            UILabel *lblTextLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 10, 300, 30)];
+            UILabel *lblTextLabel = [[UILabel alloc] init];
+            if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+               [lblTextLabel setFrame:CGRectMake(70, 10, 290, 30)];
+            }
+            else{
+               [lblTextLabel setFrame:CGRectMake(60, 10, 300, 30)];
+            }
             [lblTextLabel setFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]];
             [lblTextLabel setText:[tempArray objectAtIndex:0]];
             [lblTextLabel setTextColor:[UIColor whiteColor]];
@@ -303,8 +314,16 @@ NSUserDefaults *prefs;
                 }
                 [strTweet appendString:tweetText];
             }
-            CGSize stringSize = [strTweet sizeWithFont:[UIFont systemFontOfSize:16.0] constrainedToSize:CGSizeMake(220, 9999) lineBreakMode:UILineBreakModeWordWrap];
-            UITextView *uiTextView=[[UITextView alloc] initWithFrame:CGRectMake(55, 28, 220, stringSize.height + 40)];
+            CGSize stringSize;
+             UITextView *uiTextView=[[UITextView alloc] init];
+             if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+                 stringSize = [strTweet sizeWithFont:[UIFont systemFontOfSize:16.0] constrainedToSize:CGSizeMake(205, 9999) lineBreakMode:UILineBreakModeWordWrap];
+                 [uiTextView setFrame:CGRectMake(70, 28, 220, stringSize.height + 40)];
+             }
+             else{
+                 stringSize = [strTweet sizeWithFont:[UIFont systemFontOfSize:16.0] constrainedToSize:CGSizeMake(220, 9999) lineBreakMode:UILineBreakModeWordWrap];
+                [uiTextView setFrame:CGRectMake(60, 28, 220, stringSize.height + 40)];
+             }
             uiTextView.font = [UIFont systemFontOfSize:15.0];
             uiTextView.text = strTweet;
             uiTextView.textColor = [UIColor whiteColor];
@@ -343,6 +362,7 @@ NSUserDefaults *prefs;
             UIImageView *imgView = [[UIImageView alloc] initWithImage:separatorImage];
             [imgView setFrame:CGRectMake(0,0,separatorImage.size.width, separatorImage.size.height)];
             [cell.contentView addSubview:imgView];
+            [cell setBackgroundColor:[UIColor clearColor]];
         }
         return cell;
     }
@@ -361,7 +381,13 @@ NSUserDefaults *prefs;
         id key = [arrayTweet objectAtIndex:indexPath.row/2];
         NSString *tweetDetail = [(NSDictionary*)key objectForKey:TWEET];
         UIFont *cellFont = [UIFont systemFontOfSize:16.0];
-        CGSize constraintSize = CGSizeMake(220.0f, MAXFLOAT);
+        CGSize constraintSize;
+         if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+             constraintSize = CGSizeMake(205.0f, MAXFLOAT);
+         }
+         else{
+            constraintSize = CGSizeMake(220.0f, MAXFLOAT);
+         }
         CGSize labelSize = [tweetDetail sizeWithFont:cellFont constrainedToSize:constraintSize lineBreakMode:UILineBreakModeWordWrap];
         return labelSize.height + 40;
     }
@@ -677,8 +703,10 @@ NSUserDefaults *prefs;
             }
             else{
                 _rect.size.height = 480;
+                
             }
             [view setFrame:_rect];
+            //[view setHidden:YES];
         }
     }
 }

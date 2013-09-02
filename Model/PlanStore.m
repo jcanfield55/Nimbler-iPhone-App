@@ -790,8 +790,7 @@
         // DE298 fix:  only check for unscheduled itineraries if there are itineraries visible
         if ([plan haveOnlyUnscheduledItineraries]) {
             [[nc_AppDelegate sharedInstance].toFromViewController.routeOptionsVC.activityIndicator stopAnimating];
-            //DE-393 Fixed.
-            //return NO_MORE_ITINERARIES_REQUESTED; // DE186 fix, do not request more itineraries if we currently have walk-only or bike-only itinerary that is visible
+            return NO_MORE_ITINERARIES_REQUESTED; // DE186 fix, do not request more itineraries if we currently have walk-only or bike-only itinerary that is visible
         }
     }
 

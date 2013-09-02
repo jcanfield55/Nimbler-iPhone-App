@@ -197,6 +197,8 @@ FeedBackForm *fbView;
     return YES;    // If Automated testing with alternative persistent store, skip NC_AppDelegate altogether and do all setup in test area
 #endif
     NIMLOG_EVENT1(@"nc_AppDelegate didFinishLaunchingWithOptions started");
+    
+    // Hide Status Bar in Ios 7.0
     [self unzipZipFileToApplicationDocumentDirectory];
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
 

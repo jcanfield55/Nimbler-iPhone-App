@@ -70,6 +70,9 @@ NSUserDefaults *prefs;
 
 -(void)viewDidLoad{
     [super viewDidLoad];
+    if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
     self.mainTable.delegate = self;
     self.mainTable.dataSource = self;
     
@@ -95,10 +98,10 @@ NSUserDefaults *prefs;
     @try {
         if (self) {
             if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
-                [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+                [self.navigationController.navigationBar setBackgroundImage:returnNavigationBarBackgroundImage() forBarMetrics:UIBarMetricsDefault];
             }
             else {
-                [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+                [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:returnNavigationBarBackgroundImage()] aboveSubview:self.navigationController.navigationBar];
             }
             
             UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
