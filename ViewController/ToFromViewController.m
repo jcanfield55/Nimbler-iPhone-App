@@ -1103,6 +1103,8 @@ UIImage *imageDetailDisclosure;
         }
         [self.txtFromView setText:strFromFormattedAddress];
         
+        [self setToFromTextViewScrollPosition:true];
+        
         Location *selectedToLocation = [locations selectedToLocation];
         NSString *strToFormattedAddress;
         if(selectedToLocation.locationName){
@@ -1115,7 +1117,7 @@ UIImage *imageDetailDisclosure;
             strToFormattedAddress = [selectedToLocation shortFormattedAddress];
         }
         if(![strToFormattedAddress length]>0){
-            strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+            strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
             NSArray *matchingLocations = [locations locationsWithFormattedAddress:strToFormattedAddress];
             if([matchingLocations count] > 0){
                 strToFormattedAddress = ((Location *)[matchingLocations objectAtIndex:0]).shortFormattedAddress;
@@ -1125,6 +1127,7 @@ UIImage *imageDetailDisclosure;
             strToFormattedAddress = @"";
         }
         [self.txtToView setText:strToFormattedAddress];
+        [self setToFromTextViewScrollPosition:false];
 
         [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
         [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
@@ -1152,7 +1155,7 @@ UIImage *imageDetailDisclosure;
             strFromFormattedAddress = [selectedFromLocation shortFormattedAddress];
         }
         if(![strFromFormattedAddress length]>0){
-            strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+            strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
             NSArray *matchingLocations = [locations locationsWithFormattedAddress:strFromFormattedAddress];
             if([matchingLocations count] > 0){
                 strFromFormattedAddress = ((Location *)[matchingLocations objectAtIndex:0]).shortFormattedAddress;
@@ -1162,6 +1165,7 @@ UIImage *imageDetailDisclosure;
             strFromFormattedAddress = @"";
         }
         [self.txtFromView setText:strFromFormattedAddress];
+        [self setToFromTextViewScrollPosition:true];
         
         Location *selectedToLocation = [locations selectedToLocation];
         NSString *strToFormattedAddress;
@@ -1185,6 +1189,7 @@ UIImage *imageDetailDisclosure;
             strToFormattedAddress = @"";
         }
         [self.txtToView setText:strToFormattedAddress];
+        [self setToFromTextViewScrollPosition:false];
         
         [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
         [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
@@ -1201,6 +1206,8 @@ UIImage *imageDetailDisclosure;
     [self.btnSwap setHidden:NO];
     [self.viewMode setHidden:NO];
     [self.PicketSelectView setHidden:NO];
+    [self.txtFromView setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+    [self.txtToView setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
  }
 #pragma mark Loacation methods
 - (void)setLocations:(Locations *)l
@@ -1253,14 +1260,8 @@ UIImage *imageDetailDisclosure;
     [self.txtFromView setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
     [self.txtToView setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
     
-    NSString *strLocation;
-    
     if (isFrom) {
         fromLocation = loc;
-        if([fromLocation.formattedAddress isEqualToString:@"Current Location"]){
-            [self.btnCureentLoc setSelected:YES];
-            [self.btnCureentLoc setUserInteractionEnabled:NO];
-        }
         [self setFBParameterForGeneral];
         if (currentLocation && loc == currentLocation && !isCurrentLocationMode) { // Part of DE194 fix
             [self setIsCurrentLocationMode:TRUE];
@@ -1277,25 +1278,8 @@ UIImage *imageDetailDisclosure;
         else{
             [self.txtFromView setText:[fromLocation shortFormattedAddress]];
         }
+        [self setToFromTextViewScrollPosition:true];
         
-        strLocation = self.txtFromView.text;
-        
-        CGSize stringSize = [strLocation sizeWithFont:[UIFont boldSystemFontOfSize:13.0] constrainedToSize:CGSizeMake(self.txtFromView.frame.size.width, 9999) lineBreakMode:nil];
-        if(stringSize.width>170 || stringSize.height>16){
-            CGPoint scrollPoint = self.txtFromView.contentOffset;
-            if(scrollPoint.y<8){
-                scrollPoint.y= scrollPoint.y+8;
-                [self.txtFromView setContentOffset:scrollPoint animated:NO];
-            }
-        }
-        else{
-            CGPoint scrollPoint = self.txtFromView.contentOffset;
-            if(scrollPoint.y==2){
-                scrollPoint.y= scrollPoint.y-2;
-                [self.txtFromView setContentOffset:scrollPoint animated:NO];
-            }
-            
-        }
     } 
     else {
         BOOL locBecomingVisible = loc && ([loc toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF);
@@ -1318,6 +1302,41 @@ UIImage *imageDetailDisclosure;
             [self.txtToView setText:[toLocation shortFormattedAddress]];
         }
         
+        [self setToFromTextViewScrollPosition:false];
+    }
+    if([fromLocation.formattedAddress isEqualToString:@"Current Location"]){
+        [self.btnCureentLoc setSelected:YES];
+        [self.btnCureentLoc setUserInteractionEnabled:NO];
+    }
+    else{
+        [self.btnCureentLoc setSelected:NO];
+        [self.btnCureentLoc setUserInteractionEnabled:YES];
+    }
+}
+
+-(void) setToFromTextViewScrollPosition:(BOOL)isFrom{
+    NSString *strLocation;
+    if(isFrom){
+        strLocation = self.txtFromView.text;
+        
+        CGSize stringSize = [strLocation sizeWithFont:[UIFont boldSystemFontOfSize:13.0] constrainedToSize:CGSizeMake(self.txtFromView.frame.size.width, 9999) lineBreakMode:nil];
+        if(stringSize.width>170 || stringSize.height>16){
+            CGPoint scrollPoint = self.txtFromView.contentOffset;
+            if(scrollPoint.y<8){
+                scrollPoint.y= scrollPoint.y+8;
+                [self.txtFromView setContentOffset:scrollPoint animated:NO];
+            }
+        }
+        else{
+            CGPoint scrollPoint = self.txtFromView.contentOffset;
+            if(scrollPoint.y==2){
+                scrollPoint.y= scrollPoint.y-2;
+                [self.txtFromView setContentOffset:scrollPoint animated:NO];
+            }
+            
+        }
+    }
+    else{
         strLocation = self.txtToView.text;
         
         CGSize stringSize = [strLocation sizeWithFont:[UIFont boldSystemFontOfSize:13.0] constrainedToSize:CGSizeMake(self.txtToView.frame.size.width, 9999) lineBreakMode:nil];
@@ -1337,7 +1356,6 @@ UIImage *imageDetailDisclosure;
             
         }
     }
-    
 }
 
 // Callback from ToFromTableViewController to update geocoding status
@@ -2192,9 +2210,10 @@ UIImage *imageDetailDisclosure;
     [toTableVC.btnEdit setSelected:NO];
     self.toTableVC.txtField.text = NULL_STRING;
     self.fromTableVC.txtField.text = NULL_STRING;
+    /*[self.toTableVC markAndUpdateSelectedLocation:locations.tempSelectedToLocation];
+    [self.fromTableVC markAndUpdateSelectedLocation:locations.tempSelectedFromLocation];*/
     [self setEditMode:NO_EDIT];
-    [self.toTableVC markAndUpdateSelectedLocation:locations.tempSelectedToLocation];
-    [self.fromTableVC markAndUpdateSelectedLocation:locations.tempSelectedFromLocation];
+
     [self.navigationController setNavigationBarHidden:NO animated:NO];
 }
 

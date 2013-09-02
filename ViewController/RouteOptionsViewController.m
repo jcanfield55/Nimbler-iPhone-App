@@ -818,7 +818,16 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
                 }
             }
         }
-        
+        if(transitMode){
+            for(int i=0;i<[[plan excludeSettingsArray] count];i++){
+                RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
+                NSString *key = routeExcludeSetting.key;
+                NSLog(@"Key=%@",key);
+                if(![key isEqualToString:returnBikeButtonTitle()] && ![key isEqualToString:BIKE_SHARE] && [[RouteExcludeSettings latestUserSettings] settingForKey:key] != SETTING_EXCLUDE_ROUTE){
+                    [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:key];
+                }
+            }
+        }
         for(int i=0;i<[[plan excludeSettingsArray] count];i++){
             RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
             UIButton *btnAgency = [UIButton buttonWithType:UIButtonTypeCustom];
