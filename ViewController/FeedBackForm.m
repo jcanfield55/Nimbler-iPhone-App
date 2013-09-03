@@ -196,6 +196,8 @@ NSUserDefaults *prefs;
         [btnCancel setFrame:CGRectMake(250, 7, 62, 30)];
         [btnCancel addTarget:self action:@selector(cancelButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [navBar addSubview:btnCancel];
+        
+        [navBar setFrame:CGRectMake(navBar.frame.origin.x, navBar.frame.origin.y+20, navBar.frame.size.width,navBar.frame.size.height)];
     }
 }
 
@@ -207,6 +209,10 @@ NSUserDefaults *prefs;
         [textFieldBackground setFrame:CGRectMake(textFieldBackground.frame.origin.x,textFieldBackground.frame.origin.y-20,textFieldBackground.frame.size.width,textFieldBackground.frame.size.height)];
         [textViewBackground setFrame:CGRectMake(textViewBackground.frame.origin.x,textViewBackground.frame.origin.y-20,textViewBackground.frame.size.width,textViewBackground.frame.size.height)];
         [btnSubmitFeedback setFrame:CGRectMake(btnSubmitFeedback.frame.origin.x,btnSubmitFeedback.frame.origin.y-20,btnSubmitFeedback.frame.size.width,btnSubmitFeedback.frame.size.height)];
+    }
+    
+    if(isViewPresented){
+         [navBar setFrame:CGRectMake(navBar.frame.origin.x, navBar.frame.origin.y-20, navBar.frame.size.width,navBar.frame.size.height)];
     }
 
     [nc_AppDelegate sharedInstance].isFeedBackView = NO;

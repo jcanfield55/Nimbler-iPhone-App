@@ -368,6 +368,7 @@ NSUserDefaults *prefs;
     [nc_AppDelegate sharedInstance].isRouteDetailView = true;
     @try {
         logEvent(FLURRY_ROUTE_DETAILS_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
+        yPos = handleControl.frame.origin.y;
         [self setViewFrames];
         [mainTable reloadData];
         
@@ -573,6 +574,7 @@ NSUserDefaults *prefs;
         else{
            bikeStepsView = [[BikeStepsViewController alloc] initWithNibName:@"BikeStepsViewController" bundle:nil]; 
         }
+        bikeStepsView.yPos = yPos;
         bikeStepsView.steps = [leg sortedSteps];
         [self.navigationController pushViewController:bikeStepsView animated:YES];
     }
@@ -720,6 +722,7 @@ NSUserDefaults *prefs;
     if(point.y <= maxHeight && point.y >=MINIMUM_SCROLL_POINT){
         [lblNextRealtime setFrame:CGRectMake(lblNextRealtime.frame.origin.x, point.y+LABEL__NEXT_REALTIME_Y_BUFFER, lblNextRealtime.frame.size.width,lblNextRealtime.frame.size.height)];
         [handleControl setFrame:CGRectMake(handleControl.frame.origin.x, point.y, IPHONE_SCREEM_WIDTH, handleControl.frame.size.height)];
+        yPos = handleControl.frame.origin.y;
         [mapView setFrame:CGRectMake(mapView.frame.origin.x,mapView.frame.origin.y,mapView.frame.size.width,mapView.frame.size.height+(point.y-mapHeight))];
         if(lblNextRealtime.isHidden){
             [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,handleControl.frame.origin.y+handleControl.frame.size.height,IPHONE_SCREEM_WIDTH,self.view.frame.size.height-(handleControl.frame.size.height+mapView.frame.size.height+self.btnFeedBack.frame.size.height))];

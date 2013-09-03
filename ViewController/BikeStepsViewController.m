@@ -25,6 +25,7 @@
 @synthesize annotationArray;
 @synthesize currentPolyLine;
 @synthesize startPoint;
+@synthesize yPos;
 
 #define MAXIMUM_SCROLL_POINT 360
 #define MAXIMUM_SCROLL_POINT_4_INCH 425
@@ -194,6 +195,27 @@
     MKCoordinateRegion mpRegion = MKCoordinateRegionMakeWithDistance(coordinate, 400, 400);
     [mapView setRegion:mpRegion animated:NO];
 }
+
+- (void) setFramesOfView:(float) ypos{
+    NSLog(@"ypos=%f",ypos);
+    int maxHeight;
+    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+        maxHeight = MAXIMUM_SCROLL_POINT_4_INCH;
+    }
+    else{
+        maxHeight = MAXIMUM_SCROLL_POINT;
+    }
+    if(ypos <= maxHeight && ypos >=MINIMUM_SCROLL_POINT){
+        [handleControl setFrame:CGRectMake(handleControl.frame.origin.x,ypos, IPHONE_SCREEN_WIDTH, handleControl.frame.size.height)];
+        [mapView setFrame:CGRectMake(mapView.frame.origin.x,mapView.frame.origin.y,mapView.frame.size.width,mapView.frame.size.height+(ypos-mapHeight-5))];
+        [bikeStepsTableView setFrame:CGRectMake(bikeStepsTableView.frame.origin.x,handleControl.frame.origin.y+handleControl.frame.size.height,IPHONE_SCREEN_WIDTH,self.view.frame.size.height-(handleControl.frame.size.height+mapView.frame.size.height))];
+        mapHeight = mapView.frame.size.height;
+        tableHeight = bikeStepsTableView.frame.size.height;
+    }
+    [self.view bringSubviewToFront:handleControl];
+}
+
+
 - (void) viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
@@ -226,6 +248,7 @@
         CLLocationCoordinate2D nextCoordinate = CLLocationCoordinate2DMake([nextStep.startLat doubleValue],[nextStep.startLng doubleValue]);
         [self createOverlayForSelectedStep:curCoordinate NextCoordinate:nextCoordinate];
     }
+    [self setFramesOfView:yPos];
 }
 - (void)didReceiveMemoryWarning{
     [super didReceiveMemoryWarning];
@@ -234,21 +257,7 @@
 
 - (IBAction) imageMoved:(id) sender withEvent:(UIEvent *) event{
     CGPoint point = [[[event allTouches] anyObject] locationInView:self.view];
-    int maxHeight;
-    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        maxHeight = MAXIMUM_SCROLL_POINT_4_INCH;
-    }
-    else{
-        maxHeight = MAXIMUM_SCROLL_POINT;
-    }
-    if(point.y <= maxHeight && point.y >=MINIMUM_SCROLL_POINT){
-        [handleControl setFrame:CGRectMake(handleControl.frame.origin.x, point.y, IPHONE_SCREEN_WIDTH, handleControl.frame.size.height)];
-        [mapView setFrame:CGRectMake(mapView.frame.origin.x,mapView.frame.origin.y,mapView.frame.size.width,mapView.frame.size.height+(point.y-mapHeight-5))];
-        [bikeStepsTableView setFrame:CGRectMake(bikeStepsTableView.frame.origin.x,handleControl.frame.origin.y+handleControl.frame.size.height,IPHONE_SCREEN_WIDTH,self.view.frame.size.height-(handleControl.frame.size.height+mapView.frame.size.height))];
-        mapHeight = mapView.frame.size.height;
-        tableHeight = bikeStepsTableView.frame.size.height;
-    }
-    [self.view bringSubviewToFront:handleControl];
+    [self setFramesOfView:point.y];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
