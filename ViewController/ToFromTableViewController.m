@@ -305,7 +305,14 @@ NSString *strStreet2 = @"street ";
      if(isRenameMode){
         currentRowIndex = indexPath.row;
          [tableView beginUpdates];
-        [myTableView setFrame:CGRectMake(myTableView.frame.origin.x, myTableView.frame.origin.y, myTableView.frame.size.width, TOFROM_HEIGHT_EDIT_MODE)];
+         CGFloat fromTableHeight;
+         if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+             fromTableHeight = TOFROM_HEIGHT_EDIT_MODE_4INCH;
+         }
+         else{
+             fromTableHeight = TOFROM_HEIGHT_EDIT_MODE;
+         }
+        [myTableView setFrame:CGRectMake(myTableView.frame.origin.x, myTableView.frame.origin.y, myTableView.frame.size.width, fromTableHeight)];
         
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         UITextView *txtView = [[UITextView alloc] initWithFrame:CGRectMake(1,2,300,40)];
@@ -589,7 +596,14 @@ NSString *strStreet2 = @"street ";
 
 - (void) renameAddress:(UITextView *)textView Row:(int)row{
     if(toFromVC.editMode == FROM_EDIT){
-        [toFromVC.fromTable setFrame:CGRectMake(toFromVC.fromTable.frame.origin.x, toFromVC.fromTable.frame.origin.y, toFromVC.fromTable.frame.size.width, TOFROM_HEIGHT_LOCATION_EDIT_MODE)];
+        CGFloat fromTableHeight;
+        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+            fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE_4INCH;
+        }
+        else{
+            fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE;
+        }
+        [toFromVC.fromTable setFrame:CGRectMake(toFromVC.fromTable.frame.origin.x, toFromVC.fromTable.frame.origin.y, toFromVC.fromTable.frame.size.width, fromTableHeight)];
         NSMutableArray *sortedLocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingFromLocations];
         Location *location = [sortedLocations objectAtIndex:row];
         NSString *textViewText = textView.text;
@@ -612,7 +626,14 @@ NSString *strStreet2 = @"street ";
         saveContext(toFromVC.managedObjectContext);
     }
     else if(toFromVC.editMode == TO_EDIT){
-        [toFromVC.toTable setFrame:CGRectMake(toFromVC.toTable.frame.origin.x, toFromVC.toTable.frame.origin.y, toFromVC.toTable.frame.size.width, TOFROM_HEIGHT_LOCATION_EDIT_MODE)];
+        CGFloat fromTableHeight;
+        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+            fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE_4INCH;
+        }
+        else{
+            fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE;
+        }
+        [toFromVC.toTable setFrame:CGRectMake(toFromVC.toTable.frame.origin.x, toFromVC.toTable.frame.origin.y, toFromVC.toTable.frame.size.width, fromTableHeight)];
         NSMutableArray *sortedLocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingToLocations];
         Location *location = [sortedLocations objectAtIndex:row];
         NSString *textViewText = textView.text;
