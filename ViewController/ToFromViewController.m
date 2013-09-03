@@ -947,7 +947,6 @@ UIImage *imageDetailDisclosure;
         [self setEditMode:TO_EDIT];
         editMode = TO_EDIT;
     }
-
     return NO;
 }
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
@@ -1419,24 +1418,24 @@ UIImage *imageDetailDisclosure;
     else if([sender tag]==[TRANSIT_MODE_Tag intValue]){
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",strMode] forKey:DEFAULT_TRANSIT_MODE];
         [[NSUserDefaults standardUserDefaults] synchronize];
-        if([strMode isEqualToString:@"1"]){
-            for(int i=0;i<[[plan excludeSettingsArray] count];i++){
-                RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
-                NSString *key = routeExcludeSetting.key;
-                if(![key isEqualToString:bikeName] && ![key isEqualToString:BIKE_SHARE]){
-                    [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:routeExcludeSetting.key];
-                }
-            }
-        }
-        else{
-            for(int i=0;i<[[plan excludeSettingsArray] count];i++){
-                RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
-                NSString *key = routeExcludeSetting.key;
-                if(![key isEqualToString:bikeName] && ![key isEqualToString:BIKE_SHARE]){
-                    [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:routeExcludeSetting.key];
-                }
-            }
-        }
+//        if([strMode isEqualToString:@"1"]){
+//            for(int i=0;i<[[plan excludeSettingsArray] count];i++){
+//                RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
+//                NSString *key = routeExcludeSetting.key;
+//                if(![key isEqualToString:bikeName] && ![key isEqualToString:BIKE_SHARE]){
+//                    [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:routeExcludeSetting.key];
+//                }
+//            }
+//        }
+//        else{
+//            for(int i=0;i<[[plan excludeSettingsArray] count];i++){
+//                RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
+//                NSString *key = routeExcludeSetting.key;
+//                if(![key isEqualToString:bikeName] && ![key isEqualToString:BIKE_SHARE]){
+//                    [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:routeExcludeSetting.key];
+//                }
+//            }
+//        }
     }
     else if([sender tag]==[WALK_MODE_Tag intValue]){
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",strMode] forKey:DEFAULT_WALK_MODE];
@@ -2210,8 +2209,8 @@ UIImage *imageDetailDisclosure;
     [toTableVC.btnEdit setSelected:NO];
     self.toTableVC.txtField.text = NULL_STRING;
     self.fromTableVC.txtField.text = NULL_STRING;
-    /*[self.toTableVC markAndUpdateSelectedLocation:locations.tempSelectedToLocation];
-    [self.fromTableVC markAndUpdateSelectedLocation:locations.tempSelectedFromLocation];*/
+    [self.toTableVC markAndUpdateSelectedLocation:locations.tempSelectedToLocation];
+    [self.fromTableVC markAndUpdateSelectedLocation:locations.tempSelectedFromLocation];
     [self setEditMode:NO_EDIT];
 
     [self.navigationController setNavigationBarHidden:NO animated:NO];
@@ -2314,7 +2313,6 @@ UIImage *imageDetailDisclosure;
     
     [self.view addSubview:datePicker];
     [nc_AppDelegate sharedInstance].isDatePickerOpen = YES;
-     [self.navigationController.navigationBar setUserInteractionEnabled:NO];
     toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 450, 320, 44)];
     [toolBar setTintColor:[UIColor darkGrayColor]];
     

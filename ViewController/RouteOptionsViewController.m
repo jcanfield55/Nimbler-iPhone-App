@@ -812,45 +812,57 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
         if(!transitMode){
             for(int i=0;i<[[plan excludeSettingsArray] count];i++){
                 RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
-                NSString *key = routeExcludeSetting.key;
-                if(![key isEqualToString:returnBikeButtonTitle()] && ![key isEqualToString:BIKE_SHARE]){
-                    [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:key];
+                UIButton *btnAgency = [UIButton buttonWithType:UIButtonTypeCustom];
+                if(xPos+width > 300){
+                    yPos = yPos + btnHeight + 5;
+                    xPos = 5;
                 }
+                [btnAgency setFrame:CGRectMake(xPos,yPos,width, btnHeight)];
+                xPos = xPos+width;
+                [btnAgency setTitle:routeExcludeSetting.key forState:UIControlStateNormal];
+                [btnAgency.titleLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:12.0]];
+                if([routeExcludeSetting.key isEqualToString:returnBikeButtonTitle()] || [routeExcludeSetting.key isEqualToString:BIKE_SHARE]){
+                    if([[RouteExcludeSettings latestUserSettings] settingForKey:routeExcludeSetting.key] == SETTING_EXCLUDE_ROUTE){
+                        [btnAgency setBackgroundImage:[UIImage imageNamed:@"excludeUnSelected@2x.png"] forState:UIControlStateNormal];
+                        [btnAgency setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
+                    }
+                    else{
+                        [btnAgency setBackgroundImage:[UIImage imageNamed:@"excludeSelected@2x.png"] forState:UIControlStateNormal];
+                        [btnAgency setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
+                    }
+                }
+                else{
+                    [btnAgency setBackgroundImage:[UIImage imageNamed:@"excludeUnSelected@2x.png"] forState:UIControlStateNormal];
+                    [btnAgency setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
+                }
+                [btnAgency addTarget:self action:@selector(toggleExcludeButton:) forControlEvents:UIControlEventTouchUpInside];
+                [bgView addSubview:btnAgency];
             }
         }
-        if(transitMode){
+        else{
             for(int i=0;i<[[plan excludeSettingsArray] count];i++){
                 RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
-                NSString *key = routeExcludeSetting.key;
-                NSLog(@"Key=%@",key);
-                if(![key isEqualToString:returnBikeButtonTitle()] && ![key isEqualToString:BIKE_SHARE] && [[RouteExcludeSettings latestUserSettings] settingForKey:key] != SETTING_EXCLUDE_ROUTE){
-                    [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:key];
+                UIButton *btnAgency = [UIButton buttonWithType:UIButtonTypeCustom];
+                if(xPos+width > 300){
+                    yPos = yPos + btnHeight + 5;
+                    xPos = 5;
                 }
+                [btnAgency setFrame:CGRectMake(xPos,yPos,width, btnHeight)];
+                xPos = xPos+width;
+                [btnAgency setTitle:routeExcludeSetting.key forState:UIControlStateNormal];
+                [btnAgency.titleLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:12.0]];
+                if([[RouteExcludeSettings latestUserSettings] settingForKey:routeExcludeSetting.key] == SETTING_EXCLUDE_ROUTE){
+                    [btnAgency setBackgroundImage:[UIImage imageNamed:@"excludeUnSelected@2x.png"] forState:UIControlStateNormal];
+                    [btnAgency setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
+                }
+                else{
+                    [btnAgency setBackgroundImage:[UIImage imageNamed:@"excludeSelected@2x.png"] forState:UIControlStateNormal];
+                    [btnAgency setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
+                }
+                [btnAgency addTarget:self action:@selector(toggleExcludeButton:) forControlEvents:UIControlEventTouchUpInside];
+                [bgView addSubview:btnAgency];
             }
         }
-        for(int i=0;i<[[plan excludeSettingsArray] count];i++){
-            RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
-            UIButton *btnAgency = [UIButton buttonWithType:UIButtonTypeCustom];
-            if(xPos+width > 300){
-                yPos = yPos + btnHeight + 5;
-                xPos = 5;
-            }
-            [btnAgency setFrame:CGRectMake(xPos,yPos,width, btnHeight)];
-            xPos = xPos+width;
-            [btnAgency setTitle:routeExcludeSetting.key forState:UIControlStateNormal];
-            [btnAgency.titleLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:12.0]];
-            if([[RouteExcludeSettings latestUserSettings] settingForKey:routeExcludeSetting.key] == SETTING_EXCLUDE_ROUTE){
-                [btnAgency setBackgroundImage:[UIImage imageNamed:@"excludeUnSelected@2x.png"] forState:UIControlStateNormal];
-                [btnAgency setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
-            }
-            else{
-                [btnAgency setBackgroundImage:[UIImage imageNamed:@"excludeSelected@2x.png"] forState:UIControlStateNormal];
-                [btnAgency setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
-            }
-            [btnAgency addTarget:self action:@selector(toggleExcludeButton:) forControlEvents:UIControlEventTouchUpInside];
-            [bgView addSubview:btnAgency];
-        }
-        
     }
     @catch (NSException *exception) {
         logException(@"RouteOptionsViewController->createViewWithButtons", @"", exception);

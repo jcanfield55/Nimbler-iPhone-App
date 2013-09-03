@@ -267,22 +267,16 @@ NSString *strStreet2 = @"street ";
     NSSortDescriptor *sdTo = [NSSortDescriptor sortDescriptorWithKey:@"toFrequency"
                                                            ascending:NO];
     locations.sortedMatchingToLocations = [[locations sortedMatchingToLocations] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sdTo]];
-    
     [myTableView reloadData];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-            NSMutableArray *sortedLocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingFromLocations];
-            Location *location = [locations.sortedMatchingFromLocations objectAtIndex:[indexPath row]];
-            location.fromFrequency = [NSNumber numberWithDouble:0.5];
-            location.toFrequency = [NSNumber numberWithDouble:0.5];
-            saveContext(managedObjectContext);
-            [sortedLocations removeObjectAtIndex:[indexPath row]];
-            locations.sortedMatchingFromLocations = sortedLocations;
-            locations.matchingFromRowCount = locations.matchingFromRowCount - 1;
-            locations.sortedMatchingToLocations = sortedLocations;
-            locations.matchingToRowCount = locations.matchingToRowCount - 1;
+        NSMutableArray *sortedLocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingFromLocations];
+        Location *location = [locations.sortedMatchingFromLocations objectAtIndex:[indexPath row]];
+        location.fromFrequency = [NSNumber numberWithDouble:0.5];
+        location.toFrequency = [NSNumber numberWithDouble:0.5];
+        [sortedLocations removeObjectAtIndex:[indexPath row]];
         if([location isEqual:locations.selectedFromLocation]){
             locations.selectedFromLocation = nil;
             locations.tempSelectedFromLocation = nil;
@@ -291,8 +285,11 @@ NSString *strStreet2 = @"street ";
             locations.selectedToLocation = nil;
             locations.tempSelectedToLocation = nil;
         }
-        locations.searchableFromLocations = nil;
-        locations.searchableToLocations = nil;
+        saveContext(managedObjectContext);
+        locations.sortedMatchingFromLocations = sortedLocations;
+        locations.matchingFromRowCount = [locations.sortedMatchingFromLocations count];
+        locations.sortedMatchingToLocations = sortedLocations;
+        locations.matchingToRowCount =  [locations.sortedMatchingToLocations count];
         [myTableView reloadData];
     }
 }

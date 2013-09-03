@@ -220,9 +220,7 @@
 }
 - (void)setSelectedFromLocation:(Location *)sFL
 {
-    if(sFL){
-        tempSelectedFromLocation = sFL;
-    }
+    tempSelectedFromLocation = sFL;
     selectedFromLocation = sFL;
     [self updateWithSelectedLocationIsFrom:TRUE selectedLocation:selectedFromLocation oldSelectedLocation:oldSelectedFromLocation];
     oldSelectedFromLocation = selectedFromLocation;
@@ -231,9 +229,7 @@
 
 -(void)setSelectedToLocation:(Location *)sTL
 {
-    if(sTL){
-        tempSelectedToLocation = sTL;
-    }
+    tempSelectedToLocation = sTL;
     selectedToLocation = sTL;
     [self updateWithSelectedLocationIsFrom:FALSE selectedLocation:selectedToLocation oldSelectedLocation:oldSelectedToLocation];
     oldSelectedToLocation = selectedToLocation;

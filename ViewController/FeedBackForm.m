@@ -560,6 +560,9 @@ NSUserDefaults *prefs;
         attachment.fileName = FB_FILE_NAME;
         [rkp setValue:[NSNumber numberWithInt:FEEDBACK_AUDIO] forParam:FB_FILE_FORMAT_TYPE];
     }
+    if([txtFeedBack.text isEqualToString:@"Type message here"]){
+        txtFeedBack.text = @"";
+    }
     if (txtFeedBack.text != nil){
         [rkp setValue:txtFeedBack.text forParam:FB_TEXT];
         [rkp setValue:[NSNumber numberWithInt:FEEDBACK_TEXT] forParam:FB_FILE_FORMAT_TYPE];
