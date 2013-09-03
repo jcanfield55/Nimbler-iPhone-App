@@ -502,7 +502,7 @@
         for (i=0; (i < [sortedMatchingFromLocations count]) && 
              ((selectedFromLocation == [sortedMatchingFromLocations objectAtIndex:i]) ||
               [[sortedMatchingFromLocations objectAtIndex:i] fromFrequencyFloat] > TOFROM_FREQUENCY_VISIBILITY_CUTOFF); i++);
-        matchingFromRowCount = i;
+        matchingFromRowCount = [sortedMatchingFromLocations count]; // added all location in Both TOFROM Table
         NIMLOG_PERF1(@"MatchingFromRowCount = %d", matchingFromRowCount);
     }
     else {
@@ -570,7 +570,7 @@
         for (i=0; (i < [sortedMatchingToLocations count]) && 
              ((selectedToLocation == [sortedMatchingToLocations objectAtIndex:i]) ||
              [[sortedMatchingToLocations objectAtIndex:i] toFrequencyFloat] > TOFROM_FREQUENCY_VISIBILITY_CUTOFF); i++);
-        matchingToRowCount = i;
+        matchingToRowCount = [sortedMatchingToLocations count]; // added all location in Both TOFROM Table
         NIMLOG_PERF1(@"matchingToRowCount = %d", matchingToRowCount);
     }
     else {
