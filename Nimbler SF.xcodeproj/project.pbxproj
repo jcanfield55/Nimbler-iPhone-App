@@ -1484,6 +1484,14 @@
 		8DFFB36D165DFBBB00A39BC4 /* SettingDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */; };
 		8DFFB3B2165E593400A39BC4 /* img_Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB3B0165E593300A39BC4 /* img_Settings.png */; };
 		8DFFB3B3165E593500A39BC4 /* img_Settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB3B1165E593400A39BC4 /* img_Settings@2x.png */; };
+		CAC3C69817D4B9F3008898E9 /* navBarNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = CAC3C69617D4B9F3008898E9 /* navBarNormal.png */; };
+		CAC3C69917D4B9F3008898E9 /* navBarNormal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CAC3C69717D4B9F3008898E9 /* navBarNormal@2x.png */; };
+		CAC3C69A17D4BC25008898E9 /* navBarNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = CAC3C69617D4B9F3008898E9 /* navBarNormal.png */; };
+		CAC3C69B17D4BC26008898E9 /* navBarNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = CAC3C69617D4B9F3008898E9 /* navBarNormal.png */; };
+		CAC3C69C17D4BC26008898E9 /* navBarNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = CAC3C69617D4B9F3008898E9 /* navBarNormal.png */; };
+		CAC3C69D17D4BC29008898E9 /* navBarNormal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CAC3C69717D4B9F3008898E9 /* navBarNormal@2x.png */; };
+		CAC3C69E17D4BC29008898E9 /* navBarNormal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CAC3C69717D4B9F3008898E9 /* navBarNormal@2x.png */; };
+		CAC3C69F17D4BC2A008898E9 /* navBarNormal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CAC3C69717D4B9F3008898E9 /* navBarNormal@2x.png */; };
 		CC35E729155965E7003995D8 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 522C0E6A15588E7A0072ADD6 /* libz.dylib */; };
 		CCA4C7E515D92CC7009BE7A1 /* aps_development.cer in Resources */ = {isa = PBXBuildFile; fileRef = CCA4C7E415D92CC7009BE7A1 /* aps_development.cer */; };
 		CCDCC0791576287900D4B4D3 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCDCC0781576287900D4B4D3 /* CoreLocation.framework */; };
@@ -2032,6 +2040,8 @@
 		8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingDetailViewController.xib; sourceTree = "<group>"; };
 		8DFFB3B0165E593300A39BC4 /* img_Settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_Settings.png; sourceTree = "<group>"; };
 		8DFFB3B1165E593400A39BC4 /* img_Settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_Settings@2x.png"; sourceTree = "<group>"; };
+		CAC3C69617D4B9F3008898E9 /* navBarNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navBarNormal.png; sourceTree = "<group>"; };
+		CAC3C69717D4B9F3008898E9 /* navBarNormal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navBarNormal@2x.png"; sourceTree = "<group>"; };
 		CC6F22E71563AD360066DFA9 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		CCA4C7E415D92CC7009BE7A1 /* aps_development.cer */ = {isa = PBXFileReference; lastKnownFileType = file; name = aps_development.cer; path = "Network Commuting/aps_development.cer"; sourceTree = "<group>"; };
 		CCDCC0781576287900D4B4D3 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -2687,6 +2697,8 @@
 		8D17895D17A8D1A300BF873F /* NewImages */ = {
 			isa = PBXGroup;
 			children = (
+				CAC3C69617D4B9F3008898E9 /* navBarNormal.png */,
+				CAC3C69717D4B9F3008898E9 /* navBarNormal@2x.png */,
 				8DEA577117BA6A4E00FB1A00 /* bikeshare_Selected.png */,
 				8DEA577217BA6A4E00FB1A00 /* bikeshare_Selected@2x.png */,
 				8DEA577317BA6A4E00FB1A00 /* bikeshare_Unselected.png */,
@@ -3205,6 +3217,7 @@
 				8D00AFF7172F952C00B01ED3 /* realtime2.png in Resources */,
 				8D00B007172FD22900B01ED3 /* tram.png in Resources */,
 				8D0C2962173124DA00E6AA1B /* Handle_control.png in Resources */,
+				CAC3C69817D4B9F3008898E9 /* navBarNormal.png in Resources */,
 				8DE28CA81732379300403CD0 /* RouteDetailViewController_568h.xib in Resources */,
 				8DABCDBF1793C8BC00C1BDCF /* arrow.png in Resources */,
 				8D2D51C917981F4800A5E007 /* twitterViewController_568h.xib in Resources */,
@@ -3244,6 +3257,7 @@
 				8D178A4E17A935B800BF873F /* notificationicon.png in Resources */,
 				8D178A5217A935B800BF873F /* notificationicon@2x.png in Resources */,
 				8D178A5917A9396500BF873F /* excludeBackground@2x.png in Resources */,
+				CAC3C69917D4B9F3008898E9 /* navBarNormal@2x.png in Resources */,
 				8D178A5D17A9396500BF873F /* excludeSelected@2x.png in Resources */,
 				8D178A6117A9396500BF873F /* excludeUnSelected@2x.png in Resources */,
 				8D178A6B17A939E300BF873F /* email.png in Resources */,
@@ -3479,6 +3493,7 @@
 				8DE18B3B17253DDF00AA8112 /* store101_Caltrain.zip in Resources */,
 				8DBE17FE172E97EA0020B034 /* bus.png in Resources */,
 				8D00AFFE172F97E900B01ED3 /* realtime1.png in Resources */,
+				CAC3C69D17D4BC29008898E9 /* navBarNormal@2x.png in Resources */,
 				8D00B000172F97ED00B01ED3 /* realtime2.png in Resources */,
 				8D00B008172FD22C00B01ED3 /* tram.png in Resources */,
 				8D0C2967173124E000E6AA1B /* Handle_control.png in Resources */,
@@ -3539,6 +3554,7 @@
 				8D178AA617A9482400BF873F /* img_departBG.png in Resources */,
 				8D178AAA17A9482400BF873F /* img_departTimeBG.png in Resources */,
 				8D178AAE17A9482400BF873F /* img_inActiveStar.png in Resources */,
+				CAC3C69A17D4BC25008898E9 /* navBarNormal.png in Resources */,
 				8D178AB217A9482400BF873F /* img_locListArrow.png in Resources */,
 				8D178AB617A9482400BF873F /* img_MainToFromBG.png in Resources */,
 				8D178ABA17A9482400BF873F /* img_modeBG.png in Resources */,
@@ -3645,6 +3661,7 @@
 				8DAA28EE178BDFEF00C3FA30 /* img_legPoint@2x.png in Resources */,
 				8DAA28EF178BDFEF00C3FA30 /* img_legPointSelect.png in Resources */,
 				8DAA28F0178BDFEF00C3FA30 /* img_legPointSelect@2x.png in Resources */,
+				CAC3C69C17D4BC26008898E9 /* navBarNormal.png in Resources */,
 				8DAA28F1178BDFEF00C3FA30 /* img_legTrain.png in Resources */,
 				8DAA28F2178BDFEF00C3FA30 /* img_legTrain@2x.png in Resources */,
 				8DAA28F3178BDFEF00C3FA30 /* img_legTrainSelect.png in Resources */,
@@ -3851,6 +3868,7 @@
 				8DF63E6117C1D1D3004FC3BB /* Icon-DC@2x.png in Resources */,
 				8DF63E6517C1D1D3004FC3BB /* Icon-Portland-72.png in Resources */,
 				8DF63E6917C1D1D3004FC3BB /* Icon-Portland-72@2x.png in Resources */,
+				CAC3C69F17D4BC2A008898E9 /* navBarNormal@2x.png in Resources */,
 				8DF63E6D17C1D1D3004FC3BB /* Icon-Portland-Small.png in Resources */,
 				8DF63E7117C1D1D3004FC3BB /* Icon-Portland-Small@2x.png in Resources */,
 				8DF63E7517C1D1D3004FC3BB /* Icon-Portland.png in Resources */,
@@ -3956,6 +3974,7 @@
 				8DE18C041725415800AA8112 /* img_send.png in Resources */,
 				8DE18C051725415800AA8112 /* img_send@2x.png in Resources */,
 				8DE18C061725415800AA8112 /* img_stop.png in Resources */,
+				CAC3C69E17D4BC29008898E9 /* navBarNormal@2x.png in Resources */,
 				8DE18C071725415800AA8112 /* img_stop@2x.png in Resources */,
 				8DE18C081725415800AA8112 /* img_swapLocation.png in Resources */,
 				8DE18C091725415800AA8112 /* img_swapLocation@2x.png in Resources */,
@@ -4010,6 +4029,7 @@
 				8DE18C451725415800AA8112 /* Updated_UnPressed@2x.png in Resources */,
 				8DE18C461725415800AA8112 /* back.png in Resources */,
 				8DE18C471725415800AA8112 /* back@2x.png in Resources */,
+				CAC3C69B17D4BC26008898E9 /* navBarNormal.png in Resources */,
 				8DE18C481725415800AA8112 /* nimblrCaltrain.png in Resources */,
 				8DE18C6B17254EE500AA8112 /* wmata-station.json in Resources */,
 				8DFD0DAD17263B56003FCB5A /* store101_DC.zip in Resources */,
@@ -4799,8 +4819,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -4828,8 +4848,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Portland";
-				PROVISIONING_PROFILE = "F29C98E3-7889-44B1-A234-82875D8E957B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F29C98E3-7889-44B1-A234-82875D8E957B";
+				PROVISIONING_PROFILE = "86ACF5B8-B6D9-4973-92B1-26DA9FFECFB1";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "86ACF5B8-B6D9-4973-92B1-26DA9FFECFB1";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -4841,9 +4861,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -4871,9 +4891,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Portland";
-				PROVISIONING_PROFILE = "F29C98E3-7889-44B1-A234-82875D8E957B";
-				"PROVISIONING_PROFILE[sdk=*]" = "F29C98E3-7889-44B1-A234-82875D8E957B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F29C98E3-7889-44B1-A234-82875D8E957B";
+				PROVISIONING_PROFILE = "86ACF5B8-B6D9-4973-92B1-26DA9FFECFB1";
+				"PROVISIONING_PROFILE[sdk=*]" = "86ACF5B8-B6D9-4973-92B1-26DA9FFECFB1";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "86ACF5B8-B6D9-4973-92B1-26DA9FFECFB1";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;

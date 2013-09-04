@@ -10,7 +10,7 @@
 #import "RestKit/RestKit.h"
 #import "Foundation/foundation.h"
 
-@interface twitterViewController : UIViewController <UITableViewDelegate, UITableViewDataSource,RKRequestDelegate,UIWebViewDelegate>{
+@interface twitterViewController : UIViewController <UITableViewDelegate, UITableViewDataSource,RKRequestDelegate,UIWebViewDelegate,UIApplicationDelegate>{
     NSMutableArray *arrayTweet;
     NSString *strAllAdvisories;
     UIActivityIndicatorView *activityIndicatorView;

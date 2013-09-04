@@ -700,15 +700,18 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
     
     // Accessibility Label For UI Automation.
     self.mainTable.accessibilityLabel =ROUTE_OPTIONS_TABLE_VIEW;
     
     if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
-        [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+        [self.navigationController.navigationBar setBackgroundImage:returnNavigationBarBackgroundImage() forBarMetrics:UIBarMetricsDefault];
     }
     else {
-        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:returnNavigationBarBackgroundImage()] aboveSubview:self.navigationController.navigationBar];
     }
     btnGoToNimbler = [[UIButton alloc] initWithFrame:CGRectMake(0,0,65,34)];
     [btnGoToNimbler addTarget:self action:@selector(popOutToNimbler) forControlEvents:UIControlEventTouchUpInside];

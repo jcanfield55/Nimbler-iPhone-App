@@ -95,18 +95,27 @@ UIImage *imageDetailDisclosure;
         
         [sliderPushNotificationFrequency addTarget:self action:@selector(pushNotificationValueChanged:) forControlEvents:UIControlEventTouchUpInside];
         
+        if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+           lblFrequencyOfPush=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_MAIN_LABEL_XPOS_IOS7,SETTING_MAIN_LABEL_YPOS,SETTING_MAIN_LABEL_WIDTH_IOS7,SETTING_MAIN_LABEL_HEIGHT)];
+            imgViewPushFrequency = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 25, 25)];
+            imgViewMaxWalkDistance = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 25, 25)];
+            
+            lblMaximumWalkDistance=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_MAIN_LABEL_XPOS_IOS7,SETTING_MAIN_LABEL_YPOS,SETTING_MAIN_LABEL_WIDTH_IOS7,SETTING_MAIN_LABEL_HEIGHT)];
+        }
+        else{
+             lblFrequencyOfPush=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_MAIN_LABEL_XPOS,SETTING_MAIN_LABEL_YPOS,SETTING_MAIN_LABEL_WIDTH,SETTING_MAIN_LABEL_HEIGHT)];
+            imgViewPushFrequency = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 25, 25)];
+            imgViewMaxWalkDistance = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 25, 25)];
+            
+            lblMaximumWalkDistance=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_MAIN_LABEL_XPOS,SETTING_MAIN_LABEL_YPOS,SETTING_MAIN_LABEL_WIDTH,SETTING_MAIN_LABEL_HEIGHT)];
+        }
         
-        lblFrequencyOfPush=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_MAIN_LABEL_XPOS,SETTING_MAIN_LABEL_YPOS,SETTING_MAIN_LABEL_WIDTH,SETTING_MAIN_LABEL_HEIGHT)];
         [lblFrequencyOfPush setTextColor:[UIColor whiteColor]];
         lblFrequencyOfPush.backgroundColor =[UIColor clearColor];
         lblFrequencyOfPush.adjustsFontSizeToFitWidth=YES;
         lblFrequencyOfPush.text=FREQUENCY_OF_PUSH;
         [lblFrequencyOfPush setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
         
-        imgViewPushFrequency = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 25, 25)];
-        imgViewMaxWalkDistance = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 25, 25)];
-        
-        lblMaximumWalkDistance=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_MAIN_LABEL_XPOS,SETTING_MAIN_LABEL_YPOS,SETTING_MAIN_LABEL_WIDTH,SETTING_MAIN_LABEL_HEIGHT)];
         [lblMaximumWalkDistance setTextColor:[UIColor whiteColor]];
         lblMaximumWalkDistance.backgroundColor =[UIColor clearColor];
         lblMaximumWalkDistance.adjustsFontSizeToFitWidth=YES;
@@ -173,10 +182,10 @@ UIImage *imageDetailDisclosure;
     self.tblSetting.dataSource = self;
     //[self.tblSetting setBackgroundView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_background.png"]]];
     if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
-        [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+        [self.navigationController.navigationBar setBackgroundImage:returnNavigationBarBackgroundImage() forBarMetrics:UIBarMetricsDefault];
     }
     else {
-        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:returnNavigationBarBackgroundImage()] aboveSubview:self.navigationController.navigationBar];
     }
     UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
     [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
@@ -212,10 +221,12 @@ UIImage *imageDetailDisclosure;
     self.btnUpdateSetting = nil;
     self.sliderPushNotification = nil;
 }
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+        [self.tblSetting setFrame:CGRectMake(self.tblSetting.frame.origin.x,self.tblSetting.frame.origin.y+20,self.tblSetting.frame.size.width, self.tblSetting.frame.size.height)];
+    }
     //[scrollView setFrame:CGRectMake(0,0,320,480)];
     [scrollView setContentSize:CGSizeMake(320,1075)];
     [nc_AppDelegate sharedInstance].isSettingView = YES;
@@ -227,6 +238,9 @@ UIImage *imageDetailDisclosure;
 
 - (void) viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
+    if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+        [self.tblSetting setFrame:CGRectMake(self.tblSetting.frame.origin.x,self.tblSetting.frame.origin.y-20,self.tblSetting.frame.size.width, self.tblSetting.frame.size.height)];
+    }
     [nc_AppDelegate sharedInstance].isSettingView = NO;
     if(!settingDetailViewController.isSettingDetail){
         [self saveSetting];

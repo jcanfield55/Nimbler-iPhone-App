@@ -18,6 +18,8 @@
     NSArray *annotationArray;
     MKPolyline *currentPolyLine;
     MKPointAnnotation *startPoint;
+    
+    float yPos;
 }
 
 @property (nonatomic, strong) IBOutlet  UITableView *bikeStepsTableView;
@@ -35,6 +37,7 @@
 @property (nonatomic, strong) NSArray *annotationArray;
 @property (nonatomic, strong) MKPolyline *currentPolyLine;
 @property (nonatomic, strong) MKPointAnnotation *startPoint;
+@property (nonatomic) float yPos;
  
 - (IBAction) imageMoved:(id) sender withEvent:(UIEvent *) event;
 - (void) refreshOverlay:(CLLocationCoordinate2D)coordinate;

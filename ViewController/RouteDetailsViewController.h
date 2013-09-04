@@ -17,6 +17,7 @@
     NSDateFormatter *timeFormatter;
     UIBarButtonItem *twitterCaltrain;
     UIActivityIndicatorView *activityIndicatorView;
+    float yPos;
 }
 @property(nonatomic, strong) IBOutlet UITableView* mainTable; // Table listing route details
 @property(nonatomic, strong) MKMapView *mapView;

@@ -229,8 +229,13 @@ UIImage *imageDetailDisclosure;
     }
     return self;
 }
+
 - (void)viewDidLoad{
     [super viewDidLoad];
+    
+    if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
     lblTxtToFromPlaceholder = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 0.0, txtFromView.frame.size.width - 20.0, 30.0)];
     [lblTxtToFromPlaceholder setText:Placeholder_Text];
     [lblTxtToFromPlaceholder setBackgroundColor:[UIColor clearColor]];
@@ -290,10 +295,10 @@ UIImage *imageDetailDisclosure;
     }
     // Added To solve the crash related to ios 4.3
     if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
-        [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+        [self.navigationController.navigationBar setBackgroundImage:returnNavigationBarBackgroundImage() forBarMetrics:UIBarMetricsDefault];
     }
     else {
-        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc]initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc]initWithImage:returnNavigationBarBackgroundImage()] aboveSubview:self.navigationController.navigationBar];
     }
     UIImage *imgTitle;
         imgTitle = [UIImage imageNamed:@"nimbler.png"];
@@ -1035,7 +1040,14 @@ UIImage *imageDetailDisclosure;
     }
     
     if(newEditMode == FROM_EDIT){
-        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
+        if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+            [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y+20, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
+            [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y+20, fromTable.frame.size.width, fromTableHeight)];
+        }
+        else{
+            [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
+            [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y, fromTable.frame.size.width, fromTableHeight)];
+        }
         [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
         [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_modeBG.png"]];
         [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, self.fromView.frame.size.width-TOFROMVIEW_HEIGHT_EDIT_MODE, fromView.frame.size.height)];
@@ -1048,11 +1060,17 @@ UIImage *imageDetailDisclosure;
         [self.btnCureentLoc setHidden:YES];
         [self.PicketSelectView setHidden:YES];
         [self.viewMode setHidden:YES];
-        [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y, fromTable.frame.size.width, fromTableHeight)];
         [self.view addSubview:fromTable];
     }
     else if (newEditMode == TO_EDIT){
-        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
+         if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+             [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y+20, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
+             [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y+20, toTable.frame.size.width, fromTableHeight)];
+         }
+         else{
+             [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
+             [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y, toTable.frame.size.width, fromTableHeight)];
+         }
         [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
         [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_modeBG.png"]];
         [self.fromView setHidden:YES];
@@ -1064,7 +1082,6 @@ UIImage *imageDetailDisclosure;
         [self.btnToFromEditCancel setHidden:NO];
         [self.PicketSelectView setHidden:YES];
         [self.viewMode setHidden:YES];
-        [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y, toTable.frame.size.width, fromTableHeight)];
         [self.view addSubview:toTable];
     }
     else if (newEditMode == NO_EDIT){
@@ -1190,7 +1207,6 @@ UIImage *imageDetailDisclosure;
         [self.txtToView setText:strToFormattedAddress];
         [self setToFromTextViewScrollPosition:false];
         
-        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
         [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
         [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_MainToFromBG.png"]];
         [self.fromView setHidden:NO];
@@ -2332,12 +2348,24 @@ UIImage *imageDetailDisclosure;
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        [toolBar setFrame:CGRectMake(0, 244, 320, 44)];
-        [datePicker setFrame:CGRectMake(0, 288, 320, 216)];
+        if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+            [toolBar setFrame:CGRectMake(0, 260, 320, 44)];
+            [datePicker setFrame:CGRectMake(0, 304, 320, 216)];
+        }
+        else{
+            [toolBar setFrame:CGRectMake(0, 244, 320, 44)];
+            [datePicker setFrame:CGRectMake(0, 288, 320, 216)];
+        }
     }
     else{
-        [toolBar setFrame:CGRectMake(0, 156, 320, 44)];
-        [datePicker setFrame:CGRectMake(0, 200, 320, 216)];
+        if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+            [toolBar setFrame:CGRectMake(0, 202, 320, 44)];
+            [datePicker setFrame:CGRectMake(0, 246, 320, 180)];
+        }
+        else{
+            [toolBar setFrame:CGRectMake(0, 156, 320, 44)];
+            [datePicker setFrame:CGRectMake(0, 200, 320, 216)];
+        }
     }
     [UIView commitAnimations];
 }

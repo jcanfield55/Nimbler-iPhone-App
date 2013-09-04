@@ -70,6 +70,9 @@ NSUserDefaults *prefs;
 
 -(void)viewDidLoad{
     [super viewDidLoad];
+    if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
     self.mainTable.delegate = self;
     self.mainTable.dataSource = self;
     
@@ -95,10 +98,10 @@ NSUserDefaults *prefs;
     @try {
         if (self) {
             if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
-                [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+                [self.navigationController.navigationBar setBackgroundImage:returnNavigationBarBackgroundImage() forBarMetrics:UIBarMetricsDefault];
             }
             else {
-                [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+                [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:returnNavigationBarBackgroundImage()] aboveSubview:self.navigationController.navigationBar];
             }
             
             UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
@@ -365,6 +368,7 @@ NSUserDefaults *prefs;
     [nc_AppDelegate sharedInstance].isRouteDetailView = true;
     @try {
         logEvent(FLURRY_ROUTE_DETAILS_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
+        yPos = handleControl.frame.origin.y;
         [self setViewFrames];
         [mainTable reloadData];
         
@@ -570,6 +574,7 @@ NSUserDefaults *prefs;
         else{
            bikeStepsView = [[BikeStepsViewController alloc] initWithNibName:@"BikeStepsViewController" bundle:nil]; 
         }
+        bikeStepsView.yPos = yPos;
         bikeStepsView.steps = [leg sortedSteps];
         [self.navigationController pushViewController:bikeStepsView animated:YES];
     }
@@ -717,6 +722,7 @@ NSUserDefaults *prefs;
     if(point.y <= maxHeight && point.y >=MINIMUM_SCROLL_POINT){
         [lblNextRealtime setFrame:CGRectMake(lblNextRealtime.frame.origin.x, point.y+LABEL__NEXT_REALTIME_Y_BUFFER, lblNextRealtime.frame.size.width,lblNextRealtime.frame.size.height)];
         [handleControl setFrame:CGRectMake(handleControl.frame.origin.x, point.y, IPHONE_SCREEM_WIDTH, handleControl.frame.size.height)];
+        yPos = handleControl.frame.origin.y;
         [mapView setFrame:CGRectMake(mapView.frame.origin.x,mapView.frame.origin.y,mapView.frame.size.width,mapView.frame.size.height+(point.y-mapHeight))];
         if(lblNextRealtime.isHidden){
             [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,handleControl.frame.origin.y+handleControl.frame.size.height,IPHONE_SCREEM_WIDTH,self.view.frame.size.height-(handleControl.frame.size.height+mapView.frame.size.height+self.btnFeedBack.frame.size.height))];

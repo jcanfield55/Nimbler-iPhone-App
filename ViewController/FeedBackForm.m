@@ -12,6 +12,7 @@
 #import "nc_AppDelegate.h"
 #import "SettingInfoViewController.h"
 #import "twitterViewController.h"
+#import "UtilityFunctions.h"
 
 #define RECORD_MSG @"Recording your feedback \nSpeak ..."
 #define SUBMIT_MSG @"Sending your feedback \nPlease wait ..."
@@ -68,6 +69,7 @@ NSUserDefaults *prefs;
     }
     return self;
 }
+
 -(id)initWithFeedBack:(NSString *)nibNameOrNil fbParam:(FeedBackReqParam *)fbParam bundle:(NSBundle *)nibBundle
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundle];
@@ -115,10 +117,10 @@ NSUserDefaults *prefs;
     self.txtFeedBack.delegate = self;
     self.txtEmailId.delegate = self;
     if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
-        [self.navigationController.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+        [self.navigationController.navigationBar setBackgroundImage:returnNavigationBarBackgroundImage() forBarMetrics:UIBarMetricsDefault];
     }
     else {
-        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+        [self.navigationController.navigationBar insertSubview:[[UIImageView alloc] initWithImage:returnNavigationBarBackgroundImage()] aboveSubview:self.navigationController.navigationBar];
     }
     UILabel* lblNavigationTitle=[[UILabel alloc] initWithFrame:CGRectMake(0,0, NAVIGATION_LABEL_WIDTH, NAVIGATION_LABEL_HEIGHT)];
     [lblNavigationTitle setFont:[UIFont LARGE_BOLD_FONT]];
@@ -168,6 +170,12 @@ NSUserDefaults *prefs;
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+        [buttonsBackgroundView setFrame:CGRectMake(buttonsBackgroundView.frame.origin.x,buttonsBackgroundView.frame.origin.y+20,buttonsBackgroundView.frame.size.width,buttonsBackgroundView.frame.size.height)];
+        [textFieldBackground setFrame:CGRectMake(textFieldBackground.frame.origin.x,textFieldBackground.frame.origin.y+20,textFieldBackground.frame.size.width,textFieldBackground.frame.size.height)];
+        [textViewBackground setFrame:CGRectMake(textViewBackground.frame.origin.x,textViewBackground.frame.origin.y+20,textViewBackground.frame.size.width,textViewBackground.frame.size.height)];
+        [btnSubmitFeedback setFrame:CGRectMake(btnSubmitFeedback.frame.origin.x,btnSubmitFeedback.frame.origin.y+20,btnSubmitFeedback.frame.size.width,btnSubmitFeedback.frame.size.height)];
+    }
     logEvent(FLURRY_FEEDBACK_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
     [nc_AppDelegate sharedInstance].isFeedBackView = YES;
 
@@ -188,12 +196,25 @@ NSUserDefaults *prefs;
         [btnCancel setFrame:CGRectMake(250, 7, 62, 30)];
         [btnCancel addTarget:self action:@selector(cancelButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [navBar addSubview:btnCancel];
+        
+        [navBar setFrame:CGRectMake(navBar.frame.origin.x, navBar.frame.origin.y+20, navBar.frame.size.width,navBar.frame.size.height)];
     }
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+        [buttonsBackgroundView setFrame:CGRectMake(buttonsBackgroundView.frame.origin.x,buttonsBackgroundView.frame.origin.y-20,buttonsBackgroundView.frame.size.width,buttonsBackgroundView.frame.size.height)];
+        [textFieldBackground setFrame:CGRectMake(textFieldBackground.frame.origin.x,textFieldBackground.frame.origin.y-20,textFieldBackground.frame.size.width,textFieldBackground.frame.size.height)];
+        [textViewBackground setFrame:CGRectMake(textViewBackground.frame.origin.x,textViewBackground.frame.origin.y-20,textViewBackground.frame.size.width,textViewBackground.frame.size.height)];
+        [btnSubmitFeedback setFrame:CGRectMake(btnSubmitFeedback.frame.origin.x,btnSubmitFeedback.frame.origin.y-20,btnSubmitFeedback.frame.size.width,btnSubmitFeedback.frame.size.height)];
+    }
+    
+    if(isViewPresented){
+         [navBar setFrame:CGRectMake(navBar.frame.origin.x, navBar.frame.origin.y-20, navBar.frame.size.width,navBar.frame.size.height)];
+    }
+
     [nc_AppDelegate sharedInstance].isFeedBackView = NO;
 }
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation

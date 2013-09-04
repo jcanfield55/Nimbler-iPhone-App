@@ -120,3 +120,5 @@ NSData* uncompressGZip(NSData* compressedData);
 NSString *returnBikeButtonTitle(void);
 
 NSString *containsListFromFormattedAddress(NSString *formattedAddress);
+
+UIImage *returnNavigationBarBackgroundImage(void);
