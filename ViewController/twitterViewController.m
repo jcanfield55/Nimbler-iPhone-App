@@ -634,6 +634,10 @@ NSUserDefaults *prefs;
     } else {
         [WebView instance].frame = CGRectMake(0,0, 320, 430);
     }
+    if([[[UIDevice currentDevice] systemVersion] intValue]>=7){
+        webViewController.edgesForExtendedLayout = UIRectEdgeNone;
+    }
+    
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20];
     [[WebView instance] loadRequest:request];
     [WebView instance].delegate = self;
@@ -649,10 +653,10 @@ NSUserDefaults *prefs;
     [controller.navigationBar addSubview:btnGoToNimbler];
     
     if([controller.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
-        [controller.navigationBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+        [controller.navigationBar setBackgroundImage:returnNavigationBarBackgroundImage() forBarMetrics:UIBarMetricsDefault];
     }
     else {
-        [controller.navigationBar insertSubview:[[UIImageView alloc] initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+        [controller.navigationBar insertSubview:[[UIImageView alloc] initWithImage:returnNavigationBarBackgroundImage()] aboveSubview:self.navigationController.navigationBar];
     }
     
     [self presentModalViewController:controller animated:YES];

@@ -140,10 +140,10 @@ NSUserDefaults *prefs;
     [txtEmailId setReturnKeyType:UIReturnKeyDone];
     
     if([navBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
-        [navBar setBackgroundImage:NAVIGATION_BAR_IMAGE forBarMetrics:UIBarMetricsDefault];
+        [navBar setBackgroundImage:returnNavigationBarBackgroundImage() forBarMetrics:UIBarMetricsDefault];
     }
     else {
-        [navBar insertSubview:[[UIImageView alloc] initWithImage:NAVIGATION_BAR_IMAGE] aboveSubview:self.navigationController.navigationBar];
+        [navBar insertSubview:[[UIImageView alloc] initWithImage:returnNavigationBarBackgroundImage()] aboveSubview:self.navigationController.navigationBar];
     }
 
 }
@@ -196,8 +196,9 @@ NSUserDefaults *prefs;
         [btnCancel setFrame:CGRectMake(250, 7, 62, 30)];
         [btnCancel addTarget:self action:@selector(cancelButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [navBar addSubview:btnCancel];
-        
-        [navBar setFrame:CGRectMake(navBar.frame.origin.x, navBar.frame.origin.y+20, navBar.frame.size.width,navBar.frame.size.height)];
+        if([[[UIDevice currentDevice] systemVersion] intValue]>=7){
+            [navBar setFrame:CGRectMake(navBar.frame.origin.x, navBar.frame.origin.y+20, navBar.frame.size.width,navBar.frame.size.height)];
+        }
     }
 }
 
@@ -212,7 +213,9 @@ NSUserDefaults *prefs;
     }
     
     if(isViewPresented){
-         [navBar setFrame:CGRectMake(navBar.frame.origin.x, navBar.frame.origin.y-20, navBar.frame.size.width,navBar.frame.size.height)];
+        if([[[UIDevice currentDevice] systemVersion] intValue]>=7){
+            [navBar setFrame:CGRectMake(navBar.frame.origin.x, navBar.frame.origin.y-20, navBar.frame.size.width,navBar.frame.size.height)];
+        }
     }
 
     [nc_AppDelegate sharedInstance].isFeedBackView = NO;

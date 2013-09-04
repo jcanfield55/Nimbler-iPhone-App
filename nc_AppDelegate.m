@@ -1385,8 +1385,9 @@ FeedBackForm *fbView;
     [twitterCount removeFromSuperview];
     twitterCount = [[CustomBadge alloc] init];
     twitterCount = [CustomBadge customBadgeWithString:[NSString stringWithFormat:@"%d",tweetConut]];
-    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        [twitterCount setFrame:CGRectMake(25,8,twitterCount.frame.size.width,twitterCount.frame.size.height)];
+    
+    if([[[UIDevice currentDevice] systemVersion] intValue]>=    7){
+        [twitterCount setFrame:CGRectMake(35,8,twitterCount.frame.size.width,twitterCount.frame.size.height)];
     }
     else{
         [twitterCount setFrame:CGRectMake(25,8,twitterCount.frame.size.width,twitterCount.frame.size.height)];

@@ -761,9 +761,12 @@ NSUserDefaults *prefs;
     webViewController.navigationItem.leftBarButtonItem = backTonimbler;
     [webViewController.view addSubview:[WebView instance]];
     if ([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT) {
-        [WebView instance].frame = CGRectMake(0, 0, 320, 479);
+        [WebView instance].frame = CGRectMake(0, 0, 320, 503);
     } else {
         [WebView instance].frame = CGRectMake(0, 0, 320, 415);
+    }
+    if([[[UIDevice currentDevice] systemVersion] intValue]>=7){
+        webViewController.edgesForExtendedLayout = UIRectEdgeNone;
     }
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20];
     [[WebView instance] loadRequest:request];

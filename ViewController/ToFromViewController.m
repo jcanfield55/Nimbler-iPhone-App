@@ -924,6 +924,33 @@ UIImage *imageDetailDisclosure;
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    
+//    if(editMode == FROM_EDIT){
+//        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.fromTableVC.currentRowIndex inSection:0];
+//        UITableViewCell *cell = [self.fromTable cellForRowAtIndexPath:indexPath];
+//        NSArray *subViews = [cell subviews];
+//        for(int j=0;j<[subViews count];j++){
+//            NSArray *tempArray = [[subViews objectAtIndex:j] subviews];
+//            for(UIView *tempSubView in tempArray){
+//                if([tempSubView isKindOfClass:[UITextView class]]){
+//                    [tempSubView removeFromSuperview];
+//                }
+//            }
+//        }
+//    }
+//    else if(editMode == TO_EDIT){
+//        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.toTableVC.currentRowIndex inSection:0];
+//        UITableViewCell *cell = [self.toTable cellForRowAtIndexPath:indexPath];
+//        NSArray *subViews = [cell subviews];
+//        for(int j=0;j<[subViews count];j++){
+//            NSArray *tempArray = [[subViews objectAtIndex:j] subviews];
+//            for(UIView *tempSubView in tempArray){
+//                if([tempSubView isKindOfClass:[UITextView class]]){
+//                    [tempSubView removeFromSuperview];
+//                }
+//            }
+//        }
+//    }
     if(datePicker){
         [datePicker removeFromSuperview];
         datePicker = nil;
@@ -946,11 +973,13 @@ UIImage *imageDetailDisclosure;
         fromTableVC.isFrom=true;
         [self setEditMode:FROM_EDIT];
         editMode = FROM_EDIT;
+        
     }
     else{
         toTableVC.isFrom=false;
         [self setEditMode:TO_EDIT];
         editMode = TO_EDIT;
+        
     }
     return NO;
 }
@@ -999,6 +1028,20 @@ UIImage *imageDetailDisclosure;
 }
 - (void) textViewDidChange:(UITextView *)theTextView
 {
+    if([theTextView.text length]>0){
+        if(editMode==FROM_EDIT ){
+            [fromTable setEditing:NO animated:NO];
+        }else if(editMode==TO_EDIT){
+            [toTable setEditing:NO animated:NO];
+        }
+    }
+    else{
+        if(editMode==FROM_EDIT ){
+            [fromTable setEditing:YES animated:NO];
+        }else if(editMode==TO_EDIT){
+            [toTable setEditing:YES animated:NO];
+        }
+    }
     if(![theTextView hasText]) {
         [theTextView addSubview:lblTxtToFromPlaceholder];
     } else if ([[theTextView subviews] containsObject:lblTxtToFromPlaceholder]) {
@@ -1098,7 +1141,7 @@ UIImage *imageDetailDisclosure;
         Location *selectedFromLocation = [locations selectedFromLocation];
         NSString *strFromFormattedAddress;
         if(selectedFromLocation.locationName){
-           strFromFormattedAddress = [selectedFromLocation locationName];
+            strFromFormattedAddress = [selectedFromLocation locationName];
         }
         else if([selectedFromLocation.userUpdatedLocation boolValue]){
             strFromFormattedAddress = [selectedFromLocation formattedAddress];
@@ -1108,7 +1151,7 @@ UIImage *imageDetailDisclosure;
         }
         
         if(![strFromFormattedAddress length]>0){
-             strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+            strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
             NSArray *matchingLocations = [locations locationsWithFormattedAddress:strFromFormattedAddress];
             if([matchingLocations count] > 0){
                 strFromFormattedAddress = ((Location *)[matchingLocations objectAtIndex:0]).shortFormattedAddress;
@@ -1119,74 +1162,10 @@ UIImage *imageDetailDisclosure;
         }
         [self.txtFromView setText:strFromFormattedAddress];
         
-        [self setToFromTextViewScrollPosition:true];
-        
         Location *selectedToLocation = [locations selectedToLocation];
         NSString *strToFormattedAddress;
         if(selectedToLocation.locationName){
-          strToFormattedAddress = [selectedToLocation locationName];
-        }
-        else if([selectedToLocation.userUpdatedLocation boolValue]){
-            strToFormattedAddress = [selectedToLocation formattedAddress];
-        }
-        else{
-            strToFormattedAddress = [selectedToLocation shortFormattedAddress];
-        }
-        if(![strToFormattedAddress length]>0){
-            strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
-            NSArray *matchingLocations = [locations locationsWithFormattedAddress:strToFormattedAddress];
-            if([matchingLocations count] > 0){
-                strToFormattedAddress = ((Location *)[matchingLocations objectAtIndex:0]).shortFormattedAddress;
-            }
-        }
-        if(!strToFormattedAddress){
-            strToFormattedAddress = @"";
-        }
-        [self.txtToView setText:strToFormattedAddress];
-        [self setToFromTextViewScrollPosition:false];
-
-        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
-        [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
-        [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_MainToFromBG.png"]];
-        [self.toView setHidden:NO];
-        [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, fromView.frame.size.width+TOFROMVIEW_HEIGHT_EDIT_MODE, fromView.frame.size.height)];
-        [self.imgViewFromBG setFrame:CGRectMake(self.imgViewFromBG.frame.origin.x, self.imgViewFromBG.frame.origin.y, imgViewFromBG.frame.size.width+TOFROMVIEW_HEIGHT_EDIT_MODE, imgViewFromBG.frame.size.height)];
-        [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x+TXTFROMVIEW_X_POSITION_EDIT_MODE, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width-TXTFROMVIEW_WIDTH_EDIT_MODE, txtFromView.frame.size.height)];
-        [self.lblTxtFrom setHidden:NO];
-        [self.btnToFromEditCancel setHidden:YES];
-        [self.btnCureentLoc setHidden:NO];
-        [fromTable removeFromSuperview];
-        [self.txtFromView resignFirstResponder];
-    }
-    else if (editMode == TO_EDIT){
-        Location *selectedFromLocation = [locations selectedFromLocation];
-        NSString *strFromFormattedAddress;
-        if(selectedFromLocation.locationName){
-           strFromFormattedAddress = [selectedFromLocation locationName];
-        }
-        else if([selectedFromLocation.userUpdatedLocation boolValue]){
-            strFromFormattedAddress = [selectedFromLocation formattedAddress];
-        }
-        else{
-            strFromFormattedAddress = [selectedFromLocation shortFormattedAddress];
-        }
-        if(![strFromFormattedAddress length]>0){
-            strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_TO_LOCATION];
-            NSArray *matchingLocations = [locations locationsWithFormattedAddress:strFromFormattedAddress];
-            if([matchingLocations count] > 0){
-                strFromFormattedAddress = ((Location *)[matchingLocations objectAtIndex:0]).shortFormattedAddress;
-            }
-        }
-        if(!strFromFormattedAddress){
-            strFromFormattedAddress = @"";
-        }
-        [self.txtFromView setText:strFromFormattedAddress];
-        [self setToFromTextViewScrollPosition:true];
-        
-        Location *selectedToLocation = [locations selectedToLocation];
-        NSString *strToFormattedAddress;
-        if(selectedToLocation.locationName){
-           strToFormattedAddress = [selectedToLocation locationName];
+            strToFormattedAddress = [selectedToLocation locationName];
         }
         else if([selectedToLocation.userUpdatedLocation boolValue]){
             strToFormattedAddress = [selectedToLocation formattedAddress];
@@ -1205,7 +1184,80 @@ UIImage *imageDetailDisclosure;
             strToFormattedAddress = @"";
         }
         [self.txtToView setText:strToFormattedAddress];
-        [self setToFromTextViewScrollPosition:false];
+        if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+            [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y-20, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
+            [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y-20, fromTable.frame.size.width, fromTableHeight)];
+        }
+        else{
+            [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
+            [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y, fromTable.frame.size.width, fromTableHeight)];
+        }
+        [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
+        [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_MainToFromBG.png"]];
+        [self.toView setHidden:NO];
+        [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, fromView.frame.size.width+TOFROMVIEW_HEIGHT_EDIT_MODE, fromView.frame.size.height)];
+        [self.imgViewFromBG setFrame:CGRectMake(self.imgViewFromBG.frame.origin.x, self.imgViewFromBG.frame.origin.y, imgViewFromBG.frame.size.width+TOFROMVIEW_HEIGHT_EDIT_MODE, imgViewFromBG.frame.size.height)];
+        [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x+TXTFROMVIEW_X_POSITION_EDIT_MODE, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width-TXTFROMVIEW_WIDTH_EDIT_MODE, txtFromView.frame.size.height)];
+        [self.lblTxtFrom setHidden:NO];
+        [self.btnToFromEditCancel setHidden:YES];
+        [self.btnCureentLoc setHidden:NO];
+        [fromTable removeFromSuperview];
+        [self.txtFromView resignFirstResponder];
+    }
+    else if (editMode == TO_EDIT){
+        Location *selectedFromLocation = [locations selectedFromLocation];
+        NSString *strFromFormattedAddress;
+        if(selectedFromLocation.locationName){
+            strFromFormattedAddress = [selectedFromLocation locationName];
+        }
+        else if([selectedFromLocation.userUpdatedLocation boolValue]){
+            strFromFormattedAddress = [selectedFromLocation formattedAddress];
+        }
+        else{
+            strFromFormattedAddress = [selectedFromLocation shortFormattedAddress];
+        }
+        if(![strFromFormattedAddress length]>0){
+            strFromFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+            NSArray *matchingLocations = [locations locationsWithFormattedAddress:strFromFormattedAddress];
+            if([matchingLocations count] > 0){
+                strFromFormattedAddress = ((Location *)[matchingLocations objectAtIndex:0]).shortFormattedAddress;
+            }
+        }
+        if(!strFromFormattedAddress){
+            strFromFormattedAddress = @"";
+        }
+        [self.txtFromView setText:strFromFormattedAddress];
+        
+        Location *selectedToLocation = [locations selectedToLocation];
+        NSString *strToFormattedAddress;
+        if(selectedToLocation.locationName){
+            strToFormattedAddress = [selectedToLocation locationName];
+        }
+        else if([selectedToLocation.userUpdatedLocation boolValue]){
+            strToFormattedAddress = [selectedToLocation formattedAddress];
+        }
+        else{
+            strToFormattedAddress = [selectedToLocation shortFormattedAddress];
+        }
+        if(![strToFormattedAddress length]>0){
+            strToFormattedAddress = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_FROM_LOCATION];
+            NSArray *matchingLocations = [locations locationsWithFormattedAddress:strToFormattedAddress];
+            if([matchingLocations count] > 0){
+                strToFormattedAddress = ((Location *)[matchingLocations objectAtIndex:0]).shortFormattedAddress;
+            }
+        }
+        if(!strToFormattedAddress){
+            strToFormattedAddress = @"";
+        }
+        [self.txtToView setText:strToFormattedAddress];
+        if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
+            [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y-20, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
+            [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y-20, toTable.frame.size.width, fromTableHeight)];
+        }
+        else{
+            [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
+            [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y, toTable.frame.size.width, fromTableHeight)];
+        }
         
         [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
         [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_MainToFromBG.png"]];
@@ -1221,9 +1273,7 @@ UIImage *imageDetailDisclosure;
     [self.btnSwap setHidden:NO];
     [self.viewMode setHidden:NO];
     [self.PicketSelectView setHidden:NO];
-    [self.txtFromView setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
-    [self.txtToView setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
- }
+}
 #pragma mark Loacation methods
 - (void)setLocations:(Locations *)l
 {

@@ -16,7 +16,7 @@ WebView *singleton;
     if (singleton == nil) {
         singleton = [[WebView alloc] init];
         if ([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT) {
-            singleton.frame = CGRectMake(0, 0, 320, 479);
+            singleton.frame = CGRectMake(0, 0, 320, 503);
         } else {
             singleton.frame = CGRectMake(0, 0, 320, 415);
         }

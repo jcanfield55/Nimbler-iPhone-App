@@ -278,7 +278,12 @@ NSString *strStreet2 = @"street ";
         Location *location = [locations.sortedMatchingFromLocations objectAtIndex:[indexPath row]];
         location.fromFrequency = [NSNumber numberWithDouble:0.5];
         location.toFrequency = [NSNumber numberWithDouble:0.5];
+        saveContext(managedObjectContext);
         [sortedLocations removeObjectAtIndex:[indexPath row]];
+        locations.sortedMatchingFromLocations = sortedLocations;
+        locations.matchingFromRowCount = locations.matchingFromRowCount - 1;
+        locations.sortedMatchingToLocations = sortedLocations;
+        locations.matchingToRowCount = locations.matchingToRowCount - 1;
         if([location isEqual:locations.selectedFromLocation]){
             locations.selectedFromLocation = nil;
             locations.tempSelectedFromLocation = nil;
@@ -287,11 +292,8 @@ NSString *strStreet2 = @"street ";
             locations.selectedToLocation = nil;
             locations.tempSelectedToLocation = nil;
         }
-        saveContext(managedObjectContext);
-        locations.sortedMatchingFromLocations = sortedLocations;
-        locations.matchingFromRowCount = [locations.sortedMatchingFromLocations count];
-        locations.sortedMatchingToLocations = sortedLocations;
-        locations.matchingToRowCount =  [locations.sortedMatchingToLocations count];
+        locations.searchableFromLocations = nil;
+        locations.searchableToLocations = nil;
         [myTableView reloadData];
     }
 }
@@ -305,6 +307,8 @@ NSString *strStreet2 = @"street ";
         return;
     }
      if(isRenameMode){
+         [myTableView setEditing:NO animated:NO];
+         
         currentRowIndex = indexPath.row;
          [tableView beginUpdates];
          CGFloat fromTableHeight;
@@ -664,6 +668,7 @@ NSString *strStreet2 = @"street ";
         int row = [textView tag] - 10000;
         [self renameAddress:textView Row:row];
         currentRowIndex = 0;
+        [myTableView setEditing:YES animated:NO];
     }
     return YES;
 }
@@ -713,9 +718,28 @@ NSString *strStreet2 = @"street ";
     NSSortDescriptor *sdTo = [NSSortDescriptor sortDescriptorWithKey:@"toFrequency"
                                                              ascending:NO];
     locations.sortedMatchingToLocations = [[locations sortedMatchingToLocations] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sdTo]];
+    
+    UITableViewCell *cell = [myTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:currentRowIndex inSection:0]];
+    UITextView *txtView = (UITextView *)[cell viewWithTag:currentRowIndex+10000];
+    [self renameAddress:txtView Row:currentRowIndex];
+    [txtView removeFromSuperview];
+    currentRowIndex = 0;
+    
+    
+    if(btnEdit.selected==YES){
+        [ myTableView setEditing:YES animated:NO];
+    }
+    CGFloat fromTableHeight;
+    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
+        fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE_4INCH;
+    }
+    else{
+        fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE;
+    }
+    [myTableView setFrame:CGRectMake(myTableView.frame.origin.x, myTableView.frame.origin.y, myTableView.frame.size.width, fromTableHeight)];
     [myTableView reloadData];
+   
 }
-
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     return 25.0;
@@ -1053,7 +1077,8 @@ NSString *strStreet2 = @"street ";
         [self selectedGeocodedLocation:pickedLocation];
     }
     else {  // for location picked from a preloaded list...
-        
+        [pickedLocation incrementFromFrequency];
+        [pickedLocation incrementToFrequency];
         [self markAndUpdateSelectedLocation:pickedLocation];
     }
 }
