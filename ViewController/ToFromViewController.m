@@ -924,33 +924,16 @@ UIImage *imageDetailDisclosure;
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
    [self.navigationController setNavigationBarHidden:YES animated:NO];
-    
-//    if(editMode == FROM_EDIT){
-//        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.fromTableVC.currentRowIndex inSection:0];
-//        UITableViewCell *cell = [self.fromTable cellForRowAtIndexPath:indexPath];
-//        NSArray *subViews = [cell subviews];
-//        for(int j=0;j<[subViews count];j++){
-//            NSArray *tempArray = [[subViews objectAtIndex:j] subviews];
-//            for(UIView *tempSubView in tempArray){
-//                if([tempSubView isKindOfClass:[UITextView class]]){
-//                    [tempSubView removeFromSuperview];
-//                }
-//            }
-//        }
-//    }
-//    else if(editMode == TO_EDIT){
-//        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.toTableVC.currentRowIndex inSection:0];
-//        UITableViewCell *cell = [self.toTable cellForRowAtIndexPath:indexPath];
-//        NSArray *subViews = [cell subviews];
-//        for(int j=0;j<[subViews count];j++){
-//            NSArray *tempArray = [[subViews objectAtIndex:j] subviews];
-//            for(UIView *tempSubView in tempArray){
-//                if([tempSubView isKindOfClass:[UITextView class]]){
-//                    [tempSubView removeFromSuperview];
-//                }
-//            }
-//        }
-//    }
+    if(editMode == FROM_EDIT && self.fromTableVC.cellTextView){
+        [self.fromTableVC.cellTextView setHidden:YES];
+        [self.fromTableVC.btnEdit setSelected:NO];
+        [self.fromTableVC editButtonClicked:self.fromTableVC.btnEdit];
+    }
+    if(editMode == TO_EDIT && self.toTableVC.cellTextView){
+        [self.toTableVC.cellTextView setHidden:YES];
+        [self.toTableVC.btnEdit setSelected:NO];
+        [self.toTableVC editButtonClicked:self.toTableVC.btnEdit];
+    }
     if(datePicker){
         [datePicker removeFromSuperview];
         datePicker = nil;
@@ -2246,29 +2229,19 @@ UIImage *imageDetailDisclosure;
         self.fromTableVC.isDeleteMode = false;
         self.fromTableVC.isRenameMode = false;
         self.fromTableVC.isRearrangeMode = false;
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.fromTableVC.currentRowIndex inSection:0];
-        UITableViewCell *cell = [self.fromTable cellForRowAtIndexPath:indexPath];
-            NSArray *subViews = [cell subviews];
-            for(int j=0;j<[subViews count];j++){
-                UIView *tempSubView = [subViews objectAtIndex:j];
-                if([tempSubView isKindOfClass:[UITextView class]]){
-                    [tempSubView removeFromSuperview];
-                }
-            }
+        if(self.fromTableVC.cellTextView){
+            [self.fromTableVC.cellTextView removeFromSuperview];
+            self.fromTableVC.cellTextView = nil;
+        }
     }
     else if(editMode == TO_EDIT){
         [self.toTable setEditing:NO animated:NO];
         self.toTableVC.isDeleteMode = false;
         self.toTableVC.isRenameMode = false;
         self.toTableVC.isRearrangeMode = false;
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.toTableVC.currentRowIndex inSection:0];
-        UITableViewCell *cell = [self.toTable cellForRowAtIndexPath:indexPath];
-        NSArray *subViews = [cell subviews];
-        for(int j=0;j<[subViews count];j++){
-            UIView *tempSubView = [subViews objectAtIndex:j];
-            if([tempSubView isKindOfClass:[UITextView class]]){
-                [tempSubView removeFromSuperview];
-            }
+        if(self.toTableVC.cellTextView){
+            [self.toTableVC.cellTextView removeFromSuperview];
+            self.toTableVC.cellTextView = nil;
         }
     }
     [fromTableVC.btnEdit setSelected:NO];

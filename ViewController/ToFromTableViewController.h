@@ -37,6 +37,7 @@
 @property (nonatomic) BOOL isRenameMode;
 @property (strong, nonatomic) UIButton *btnEdit;
 @property (nonatomic) int currentRowIndex;
+@property (strong, nonatomic) UITextView *cellTextView;
 
 // Textlabel that is separate from myTableView where text is entered
 - (id)initWithTable:(UITableView *)t isFrom:(BOOL)isF toFromVC:(ToFromViewController *)tfVC locations:(Locations *)l;

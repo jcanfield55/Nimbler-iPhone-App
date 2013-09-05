@@ -54,6 +54,7 @@
 @synthesize isRenameMode;
 @synthesize btnEdit;
 @synthesize currentRowIndex;
+@synthesize cellTextView;
 
 NSString *strBART1 = @" bart";
 NSString *strBART2 = @"bart ";
@@ -308,7 +309,10 @@ NSString *strStreet2 = @"street ";
     }
      if(isRenameMode){
          [myTableView setEditing:NO animated:NO];
-         
+         if(cellTextView){
+             [cellTextView removeFromSuperview];
+             cellTextView = nil;
+         }
         currentRowIndex = indexPath.row;
          [tableView beginUpdates];
          CGFloat fromTableHeight;
@@ -321,9 +325,9 @@ NSString *strStreet2 = @"street ";
         [myTableView setFrame:CGRectMake(myTableView.frame.origin.x, myTableView.frame.origin.y, myTableView.frame.size.width, fromTableHeight)];
         
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        UITextView *txtView = [[UITextView alloc] initWithFrame:CGRectMake(1,2,300,40)];
-        txtView.delegate = self;
-        [txtView setBackgroundColor:[UIColor whiteColor]];
+        cellTextView = [[UITextView alloc] initWithFrame:CGRectMake(1,2,300,40)];
+        cellTextView.delegate = self;
+        [cellTextView setBackgroundColor:[UIColor whiteColor]];
         Location *location;
         if(toFromVC.editMode == FROM_EDIT){
           location = [locations.sortedMatchingFromLocations objectAtIndex:[indexPath row]];  
@@ -332,27 +336,15 @@ NSString *strStreet2 = @"street ";
            location = [locations.sortedMatchingToLocations objectAtIndex:[indexPath row]];
         }
         if(location.locationName){
-            txtView.text = location.locationName;
+            cellTextView.text = location.locationName;
         }
         else{
-            txtView.text = @"";
+            cellTextView.text = @"";
         }
-        [txtView setFont:cell.textLabel.font];
-        [txtView setTag:[indexPath row]+10000];
-        [cell addSubview:txtView];
-        [txtView becomeFirstResponder];
-        
-        NSArray *views = [tableView subviews];
-        for(int i=0;i<[views count];i++){
-            UIView *subView = [views objectAtIndex:i];
-            NSArray *subViews = [subView subviews];
-            for(int j=0;j<[subViews count];j++){
-                UIView *tempSubView = [subViews objectAtIndex:j];
-                if([tempSubView isKindOfClass:[UITextView class]] && ![tempSubView isEqual:txtView]){
-                    [tempSubView removeFromSuperview];
-                }
-            }
-        }
+        [cellTextView setFont:cell.textLabel.font];
+        [cellTextView setTag:[indexPath row]+10000];
+        [cell addSubview:cellTextView];
+        [cellTextView becomeFirstResponder];
         [tableView endUpdates];
     }
     else{
