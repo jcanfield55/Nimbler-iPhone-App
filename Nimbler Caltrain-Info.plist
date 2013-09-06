@@ -39,6 +39,8 @@
 		<string>Icon-small-Caltrain@2x.png</string>
 		<string>Icon-Caltrain.png</string>
 		<string>Icon-Caltrain@2x.png</string>
+		<string>Icon-Caltrain-120@2x.png</string>
+		<string>Icon-Caltrain-152@2x.png</string>
 	</array>
 	<key>CFBundleIcons</key>
 	<dict>

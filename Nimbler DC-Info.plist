@@ -39,6 +39,8 @@
 		<string>Icon-DC-small@2x.png</string>
 		<string>Icon-DC.png</string>
 		<string>Icon-DC@2x.png</string>
+		<string>Icon-DC-120@2x.png</string>
+		<string>Icon-DC-152@2x.png</string>
 	</array>
 	<key>CFBundleIdentifier</key>
 	<string>com.nimbler.washingtondc</string>

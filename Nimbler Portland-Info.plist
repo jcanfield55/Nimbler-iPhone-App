@@ -39,6 +39,8 @@
 		<string>Icon-Portland-small@2x.png</string>
 		<string>Icon-Portland.png</string>
 		<string>Icon-Portland@2x.png</string>
+		<string>Icon-Portland-120@2x.png</string>
+		<string>Icon-Portland-152@2x.png</string>
 	</array>
 	<key>CFBundleIdentifier</key>
 	<string>com.nimbler.Nimbler-Portland</string>
