@@ -390,7 +390,7 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
     
     BOOL bikeMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE] boolValue];
     BOOL bikeShare = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_SHARE_MODE] boolValue];
-    BOOL walkMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] boolValue];
+   // BOOL walkMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] boolValue];
     BOOL transitMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] boolValue];
     
     BOOL containWalk = false;
@@ -428,13 +428,13 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
             }
         }
     }
-     if((bikeMode || bikeShare) && walkMode && containBike && containWalk && [self settingForKey:returnBikeButtonTitle()]==SETTING_INCLUDE_ROUTE && [self settingForKey:BIKE_SHARE]==SETTING_INCLUDE_ROUTE && needToIncludeLeg)
+     if((bikeMode || bikeShare) && containBike && containWalk && [self settingForKey:returnBikeButtonTitle()]==SETTING_INCLUDE_ROUTE && [self settingForKey:BIKE_SHARE]==SETTING_INCLUDE_ROUTE && needToIncludeLeg)
          return true;
     
-     else if( (bikeMode || bikeShare) && walkMode && containBike && containWalk && [self settingForKey:returnBikeButtonTitle()]==SETTING_INCLUDE_ROUTE && [self settingForKey:BIKE_SHARE]==SETTING_EXCLUDE_ROUTE && !rentedBike && needToIncludeLeg)
+     else if( (bikeMode || bikeShare) && containBike && containWalk && [self settingForKey:returnBikeButtonTitle()]==SETTING_INCLUDE_ROUTE && [self settingForKey:BIKE_SHARE]==SETTING_EXCLUDE_ROUTE && !rentedBike && needToIncludeLeg)
          return true;
     
-     else if((bikeMode || bikeShare) && walkMode && containBike && containWalk && [self settingForKey:returnBikeButtonTitle()]==SETTING_EXCLUDE_ROUTE && [self settingForKey:BIKE_SHARE]==SETTING_INCLUDE_ROUTE && rentedBike && needToIncludeLeg)
+     else if((bikeMode || bikeShare) && containBike && containWalk && [self settingForKey:returnBikeButtonTitle()]==SETTING_EXCLUDE_ROUTE && [self settingForKey:BIKE_SHARE]==SETTING_INCLUDE_ROUTE && rentedBike && needToIncludeLeg)
         return true;
     
     else
