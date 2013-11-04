@@ -141,7 +141,7 @@
 #define MAX_BIKE_DISTANCE_MAX_VALUE           20
 
 // Flurry analytics and logging
-#define FLURRY_ENABLED 0
+#define FLURRY_ENABLED 1
 #define IS_KICKFOLIO 0
 
 // Flurry events

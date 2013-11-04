@@ -33,6 +33,8 @@
 	<string>Icon-Portland</string>
 	<key>CFBundleIconFiles</key>
 	<array>
+		<string>Icon-Portland-Small</string>
+		<string>Icon-small</string>
 		<string>Icon-Portland-72.png</string>
 		<string>Icon-Portland-72@2x.png</string>
 		<string>Icon-Portland-small.png</string>
@@ -55,7 +57,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>2.31</string>
+	<string>2.35</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MKDirectionsApplicationSupportedModes</key>

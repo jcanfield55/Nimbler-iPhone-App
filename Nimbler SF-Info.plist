@@ -46,6 +46,8 @@
 		<dict>
 			<key>CFBundleIconFiles</key>
 			<array>
+				<string>Icon-120</string>
+				<string>Icon-80</string>
 				<string>Icon_ipad.png</string>
 				<string>Icon_ipad@2x.png</string>
 				<string>Icon-small.png</string>
@@ -72,7 +74,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>2.31</string>
+	<string>2.35</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MKDirectionsApplicationSupportedModes</key>

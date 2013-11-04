@@ -177,6 +177,7 @@
 		520FB293162604950083F143 /* CoverageGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 520FB28B162604950083F143 /* CoverageGeoJSON.geojson */; };
 		520FB296162605470083F143 /* CoverageGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 520FB295162605470083F143 /* CoverageGeoJSON.geojson */; };
 		524100A41727542E0007D956 /* Nimbler DC-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 524100A31727542E0007D956 /* Nimbler DC-Info.plist */; };
+		52451C9418272A2900519BC4 /* libFlurry_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D26425B17C714DF008551FE /* libFlurry_4.2.3.a */; };
 		524A921416E7117800A9A0A2 /* GtfsParsingStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 524A921316E7117800A9A0A2 /* GtfsParsingStatus.m */; };
 		525442C214C3ECF2004B0E1F /* libRestKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442B814C3EA95004B0E1F /* libRestKit.a */; };
 		525442C414C3ED2C004B0E1F /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C314C3ED2C004B0E1F /* CFNetwork.framework */; };
@@ -193,6 +194,9 @@
 		52A9BE9516B4B41500564D0D /* RealTimeServerStubTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */; };
 		52B0535C16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B0535B16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m */; };
 		52B3AE1A1755D0B1009FFD94 /* RouteDetailViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DE28CA71732379300403CD0 /* RouteDetailViewController_568h.xib */; };
+		52BEFB4718272C15000DFF9B /* libFlurry_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D26425B17C714DF008551FE /* libFlurry_4.2.3.a */; };
+		52BEFB4C18272C33000DFF9B /* libFlurry_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D26425B17C714DF008551FE /* libFlurry_4.2.3.a */; };
+		52BEFB4E182754F3000DFF9B /* Icon-80@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52BEFB4D182754F3000DFF9B /* Icon-80@2x.png */; };
 		52C10385160BEF8000BC6020 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C10384160BEF8000BC6020 /* AddressBookUI.framework */; };
 		52C1CBB4161AB69600695348 /* Icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB3161AB69600695348 /* Icon-small.png */; };
 		52C1CBB6161AB6A400695348 /* Icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB5161AB6A400695348 /* Icon-small@2x.png */; };
@@ -1780,6 +1784,7 @@
 		52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RealTimeServerStubTest.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		52B0535A16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanStoreForRealTimeServerStubTest.h; sourceTree = "<group>"; };
 		52B0535B16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlanStoreForRealTimeServerStubTest.m; sourceTree = "<group>"; };
+		52BEFB4D182754F3000DFF9B /* Icon-80@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-80@2x.png"; sourceTree = SOURCE_ROOT; };
 		52C10384160BEF8000BC6020 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		52C1CBB3161AB69600695348 /* Icon-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-small.png"; sourceTree = "<group>"; };
 		52C1CBB5161AB6A400695348 /* Icon-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-small@2x.png"; sourceTree = "<group>"; };
@@ -2112,6 +2117,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52BEFB4718272C15000DFF9B /* libFlurry_4.2.3.a in Frameworks */,
 				8DA77FD21724FF0D0090C2EA /* MapKit.framework in Frameworks */,
 				8DA77FD31724FF0D0090C2EA /* libsqlite3.0.dylib in Frameworks */,
 				8DA77FD41724FF0D0090C2EA /* Accounts.framework in Frameworks */,
@@ -2143,6 +2149,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52BEFB4C18272C33000DFF9B /* libFlurry_4.2.3.a in Frameworks */,
 				8DAA289E178BDFEF00C3FA30 /* CoreText.framework in Frameworks */,
 				8DAA289F178BDFEF00C3FA30 /* MapKit.framework in Frameworks */,
 				8DAA28A0178BDFEF00C3FA30 /* libsqlite3.0.dylib in Frameworks */,
@@ -2174,6 +2181,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52451C9418272A2900519BC4 /* libFlurry_4.2.3.a in Frameworks */,
 				8DE18B8B1725415800AA8112 /* MapKit.framework in Frameworks */,
 				8DE18B8C1725415800AA8112 /* libsqlite3.0.dylib in Frameworks */,
 				8DE18B8D1725415800AA8112 /* Accounts.framework in Frameworks */,
@@ -2897,6 +2905,7 @@
 				8DF63E3917C1D1D3004FC3BB /* Icon-small-Caltrain@2x.png */,
 				8D93604A162FFC4500084E8E /* Icon_ipad.png */,
 				8D45BD1D162BDE6A00E5CB3D /* Icon_ipad@2x.png */,
+				52BEFB4D182754F3000DFF9B /* Icon-80@2x.png */,
 				52E4C09615CB465A00B55A65 /* Icon.png */,
 				52E4C09E15CB7D2F00B55A65 /* Icon@2x.png */,
 				52C1CBB3161AB69600695348 /* Icon-small.png */,
@@ -3008,6 +3017,9 @@
 				ORGANIZATIONNAME = "Network Commuting";
 				TargetAttributes = {
 					52CF439A14BDF2F9000565D6 = {
+						DevelopmentTeam = 452SUSN2GU;
+					};
+					8DA77F881724FF0D0090C2EA = {
 						DevelopmentTeam = 452SUSN2GU;
 					};
 				};
@@ -3272,6 +3284,7 @@
 				8D1789CE17A90E0300BF873F /* notifSound.png in Resources */,
 				8D1789D217A90E0300BF873F /* notifTiming.png in Resources */,
 				8D1789D617A90E0300BF873F /* push.png in Resources */,
+				52BEFB4E182754F3000DFF9B /* Icon-80@2x.png in Resources */,
 				8D1789DA17A90E0300BF873F /* pushFrequency.png in Resources */,
 				8D1789E117A919AD00BF873F /* feedBackSelected@2x.png in Resources */,
 				8D1789E517A919AD00BF873F /* notificationSelected@2x.png in Resources */,
@@ -4653,7 +4666,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
 				INFOPLIST_FILE = "$(SRCROOT)/Nimbler SF-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1-1\"",
@@ -4696,7 +4709,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
 				INFOPLIST_FILE = "$(SRCROOT)/Nimbler SF-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1-1\"",
@@ -4770,8 +4783,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -4786,12 +4799,13 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1-1\"",
-					"\"$(SRCROOT)/Flurry\"",
-					"\"$(SRCROOT)/RestKit/build/Debug-iphoneos\"",
-					"\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\"",
-					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\"",
-					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\"",
+					"\\\"$(SRCROOT)/Network\\ Commuting/TestFlightSDK1-1\\\"",
+					"\\\"$(SRCROOT)/Flurry\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/Debug-iphoneos\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\\\"",
+					"/Users/john/Documents/iOS-dev/Nimbler-nc_iPhone/Flurry",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -4799,8 +4813,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "C748221D-609C-4033-8B53-B202E54B7BB3";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C748221D-609C-4033-8B53-B202E54B7BB3";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C7B3B77E-C221-4A47-94DB-3DB0D847415E";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -4812,9 +4826,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -4829,12 +4843,13 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1-1\"",
-					"\"$(SRCROOT)/Flurry\"",
-					"\"$(SRCROOT)/RestKit/build/Debug-iphoneos\"",
-					"\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\"",
-					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\"",
-					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\"",
+					"\\\"$(SRCROOT)/Network\\ Commuting/TestFlightSDK1-1\\\"",
+					"\\\"$(SRCROOT)/Flurry\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/Debug-iphoneos\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\\\"",
+					"/Users/john/Documents/iOS-dev/Nimbler-nc_iPhone/Flurry",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -4842,9 +4857,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "C748221D-609C-4033-8B53-B202E54B7BB3";
-				"PROVISIONING_PROFILE[sdk=*]" = "C748221D-609C-4033-8B53-B202E54B7BB3";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C748221D-609C-4033-8B53-B202E54B7BB3";
+				PROVISIONING_PROFILE = "C7B3B77E-C221-4A47-94DB-3DB0D847415E";
+				"PROVISIONING_PROFILE[sdk=*]" = "C7B3B77E-C221-4A47-94DB-3DB0D847415E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C7B3B77E-C221-4A47-94DB-3DB0D847415E";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -4856,8 +4871,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -4869,15 +4884,16 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
 				INFOPLIST_FILE = "$(SRCROOT)/Nimbler Portland-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1-1\"",
-					"\"$(SRCROOT)/Flurry\"",
-					"\"$(SRCROOT)/RestKit/build/Debug-iphoneos\"",
-					"\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\"",
-					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\"",
-					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\"",
+					"\\\"$(SRCROOT)/Network\\ Commuting/TestFlightSDK1-1\\\"",
+					"\\\"$(SRCROOT)/Flurry\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/Debug-iphoneos\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\\\"",
+					"/Users/john/Documents/iOS-dev/Nimbler-nc_iPhone/Flurry",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -4885,8 +4901,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Portland";
-				PROVISIONING_PROFILE = "86ACF5B8-B6D9-4973-92B1-26DA9FFECFB1";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "86ACF5B8-B6D9-4973-92B1-26DA9FFECFB1";
+				PROVISIONING_PROFILE = "02B61AA9-A3A0-409B-9C1D-CB2D07A7252B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "02B61AA9-A3A0-409B-9C1D-CB2D07A7252B";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -4898,9 +4914,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -4912,15 +4928,16 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
 				INFOPLIST_FILE = "$(SRCROOT)/Nimbler Portland-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1-1\"",
-					"\"$(SRCROOT)/Flurry\"",
-					"\"$(SRCROOT)/RestKit/build/Debug-iphoneos\"",
-					"\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\"",
-					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\"",
-					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\"",
+					"\\\"$(SRCROOT)/Network\\ Commuting/TestFlightSDK1-1\\\"",
+					"\\\"$(SRCROOT)/Flurry\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/Debug-iphoneos\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\\\"",
+					"/Users/john/Documents/iOS-dev/Nimbler-nc_iPhone/Flurry",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -4928,9 +4945,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Portland";
-				PROVISIONING_PROFILE = "86ACF5B8-B6D9-4973-92B1-26DA9FFECFB1";
-				"PROVISIONING_PROFILE[sdk=*]" = "86ACF5B8-B6D9-4973-92B1-26DA9FFECFB1";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "86ACF5B8-B6D9-4973-92B1-26DA9FFECFB1";
+				PROVISIONING_PROFILE = "C8738E4C-936A-4D45-B900-77F5B5DD9156";
+				"PROVISIONING_PROFILE[sdk=*]" = "C8738E4C-936A-4D45-B900-77F5B5DD9156";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C8738E4C-936A-4D45-B900-77F5B5DD9156";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -4958,12 +4975,13 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1-1\"",
-					"\"$(SRCROOT)/Flurry\"",
-					"\"$(SRCROOT)/RestKit/build/Debug-iphoneos\"",
-					"\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\"",
-					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\"",
-					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\"",
+					"\\\"$(SRCROOT)/Network\\ Commuting/TestFlightSDK1-1\\\"",
+					"\\\"$(SRCROOT)/Flurry\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/Debug-iphoneos\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\\\"",
+					"/Users/john/Documents/iOS-dev/Nimbler-nc_iPhone/Flurry",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -5001,12 +5019,13 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1-1\"",
-					"\"$(SRCROOT)/Flurry\"",
-					"\"$(SRCROOT)/RestKit/build/Debug-iphoneos\"",
-					"\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\"",
-					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\"",
-					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\"",
+					"\\\"$(SRCROOT)/Network\\ Commuting/TestFlightSDK1-1\\\"",
+					"\\\"$(SRCROOT)/Flurry\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/Debug-iphoneos\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\\\"",
+					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\\\"",
+					"/Users/john/Documents/iOS-dev/Nimbler-nc_iPhone/Flurry",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
