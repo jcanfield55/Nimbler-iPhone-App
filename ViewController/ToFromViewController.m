@@ -2151,22 +2151,16 @@ UIImage *imageDetailDisclosure;
         }
     }
     //DE-237 Fixed
-    if(fromLocation == toLocation ||
-       ([fromLocation isCurrentLocation] && [fromLocation isReverseGeoValid] && [fromLocation reverseGeoLocation] == toLocation)) {
+    // US-243 implementation (removing custom code so we do not treat Current Location differently)
+    if(fromLocation == toLocation) {
+        // Do nothing if locations are the same
     }
-    else{
-        if (fromLocation == currentLocation && [currentLocation lastRequestReverseGeoLocation] &&
-            [currentLocation lastRequestReverseGeoLocation] != toLocation) {
-            // If from = currentLocation and there is a reverse geolocation
-            [toTableVC markAndUpdateSelectedLocation:[currentLocation lastRequestReverseGeoLocation]];
-        }
-        else {  // do a normal swap
-            Location *fromloc = fromLocation;
-            Location *toLoc = toLocation;
-            // Swap Location (could be nil)
-            [toTableVC markAndUpdateSelectedLocation:fromloc];
-            [fromTableVC markAndUpdateSelectedLocation:toLoc];
-        }
+    else {  // do a normal swap
+        Location *fromloc = fromLocation;
+        Location *toLoc = toLocation;
+        // Swap Location (could be nil)
+        [toTableVC markAndUpdateSelectedLocation:fromloc];
+        [fromTableVC markAndUpdateSelectedLocation:toLoc];
     }
     
     Location *selectedFromLocation = [locations selectedFromLocation];

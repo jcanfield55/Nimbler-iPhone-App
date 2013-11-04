@@ -3006,6 +3006,11 @@
 			attributes = {
 				LastUpgradeCheck = 0450;
 				ORGANIZATIONNAME = "Network Commuting";
+				TargetAttributes = {
+					52CF439A14BDF2F9000565D6 = {
+						DevelopmentTeam = 452SUSN2GU;
+					};
+				};
 			};
 			buildConfigurationList = 52CF439514BDF2F8000565D6 /* Build configuration list for PBXProject "Nimbler SF" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -4635,8 +4640,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -4664,7 +4669,7 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler SF";
-				PROVISIONING_PROFILE = "02B61AA9-A3A0-409B-9C1D-CB2D07A7252B";
+				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "02B61AA9-A3A0-409B-9C1D-CB2D07A7252B";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -4677,9 +4682,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -4707,7 +4712,7 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler SF";
-				PROVISIONING_PROFILE = "02B61AA9-A3A0-409B-9C1D-CB2D07A7252B";
+				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=*]" = "02B61AA9-A3A0-409B-9C1D-CB2D07A7252B";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "02B61AA9-A3A0-409B-9C1D-CB2D07A7252B";
 				SHARED_PRECOMPS_DIR = "";
