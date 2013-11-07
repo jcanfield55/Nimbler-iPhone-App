@@ -177,7 +177,6 @@
 		520FB293162604950083F143 /* CoverageGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 520FB28B162604950083F143 /* CoverageGeoJSON.geojson */; };
 		520FB296162605470083F143 /* CoverageGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 520FB295162605470083F143 /* CoverageGeoJSON.geojson */; };
 		524100A41727542E0007D956 /* Nimbler DC-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 524100A31727542E0007D956 /* Nimbler DC-Info.plist */; };
-		52451C9418272A2900519BC4 /* libFlurry_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D26425B17C714DF008551FE /* libFlurry_4.2.3.a */; };
 		524A921416E7117800A9A0A2 /* GtfsParsingStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 524A921316E7117800A9A0A2 /* GtfsParsingStatus.m */; };
 		525442C214C3ECF2004B0E1F /* libRestKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442B814C3EA95004B0E1F /* libRestKit.a */; };
 		525442C414C3ED2C004B0E1F /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C314C3ED2C004B0E1F /* CFNetwork.framework */; };
@@ -194,8 +193,6 @@
 		52A9BE9516B4B41500564D0D /* RealTimeServerStubTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */; };
 		52B0535C16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B0535B16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m */; };
 		52B3AE1A1755D0B1009FFD94 /* RouteDetailViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DE28CA71732379300403CD0 /* RouteDetailViewController_568h.xib */; };
-		52BEFB4718272C15000DFF9B /* libFlurry_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D26425B17C714DF008551FE /* libFlurry_4.2.3.a */; };
-		52BEFB4C18272C33000DFF9B /* libFlurry_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D26425B17C714DF008551FE /* libFlurry_4.2.3.a */; };
 		52BEFB4E182754F3000DFF9B /* Icon-80@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52BEFB4D182754F3000DFF9B /* Icon-80@2x.png */; };
 		52C10385160BEF8000BC6020 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C10384160BEF8000BC6020 /* AddressBookUI.framework */; };
 		52C1CBB4161AB69600695348 /* Icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB3161AB69600695348 /* Icon-small.png */; };
@@ -553,6 +550,9 @@
 		8D2D51CC17981F4800A5E007 /* twitterViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */; };
 		8D317A3E16DB9A5A00581224 /* img_bicycle.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D317A3C16DB9A5A00581224 /* img_bicycle.png */; };
 		8D317A3F16DB9A5A00581224 /* img_bicycleSelect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D317A3D16DB9A5A00581224 /* img_bicycleSelect.png */; };
+		8D320F2B182B5731002720D6 /* libFlurry_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D26425B17C714DF008551FE /* libFlurry_4.2.3.a */; };
+		8D320F2C182B5731002720D6 /* libFlurry_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D26425B17C714DF008551FE /* libFlurry_4.2.3.a */; };
+		8D320F2D182B5732002720D6 /* libFlurry_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D26425B17C714DF008551FE /* libFlurry_4.2.3.a */; };
 		8D361EC217B8FA6900246A55 /* feedBackLink.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D361EC117B8FA6900246A55 /* feedBackLink.png */; };
 		8D361EC917B916E100246A55 /* feedBackLink@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D361EC817B916E100246A55 /* feedBackLink@2x.png */; };
 		8D39877A172180BA0055BF06 /* back.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D398778172180BA0055BF06 /* back.png */; };
@@ -2117,7 +2117,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52BEFB4718272C15000DFF9B /* libFlurry_4.2.3.a in Frameworks */,
 				8DA77FD21724FF0D0090C2EA /* MapKit.framework in Frameworks */,
 				8DA77FD31724FF0D0090C2EA /* libsqlite3.0.dylib in Frameworks */,
 				8DA77FD41724FF0D0090C2EA /* Accounts.framework in Frameworks */,
@@ -2138,6 +2137,7 @@
 				8DA77FE41724FF0D0090C2EA /* UIKit.framework in Frameworks */,
 				8DA77FE51724FF0D0090C2EA /* Foundation.framework in Frameworks */,
 				8DA77FE61724FF0D0090C2EA /* CoreGraphics.framework in Frameworks */,
+				8D320F2D182B5732002720D6 /* libFlurry_4.2.3.a in Frameworks */,
 				8DA77FE71724FF0D0090C2EA /* CoreData.framework in Frameworks */,
 				8DA77FE81724FF0D0090C2EA /* libTestFlight.a in Frameworks */,
 				8DA77FE91724FF0D0090C2EA /* FacebookSDK.framework in Frameworks */,
@@ -2149,7 +2149,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52BEFB4C18272C33000DFF9B /* libFlurry_4.2.3.a in Frameworks */,
 				8DAA289E178BDFEF00C3FA30 /* CoreText.framework in Frameworks */,
 				8DAA289F178BDFEF00C3FA30 /* MapKit.framework in Frameworks */,
 				8DAA28A0178BDFEF00C3FA30 /* libsqlite3.0.dylib in Frameworks */,
@@ -2170,6 +2169,7 @@
 				8DAA28B0178BDFEF00C3FA30 /* libRestKit.a in Frameworks */,
 				8DAA28B1178BDFEF00C3FA30 /* UIKit.framework in Frameworks */,
 				8DAA28B2178BDFEF00C3FA30 /* Foundation.framework in Frameworks */,
+				8D320F2B182B5731002720D6 /* libFlurry_4.2.3.a in Frameworks */,
 				8DAA28B3178BDFEF00C3FA30 /* CoreGraphics.framework in Frameworks */,
 				8DAA28B4178BDFEF00C3FA30 /* CoreData.framework in Frameworks */,
 				8DAA28B5178BDFEF00C3FA30 /* libTestFlight.a in Frameworks */,
@@ -2181,7 +2181,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52451C9418272A2900519BC4 /* libFlurry_4.2.3.a in Frameworks */,
 				8DE18B8B1725415800AA8112 /* MapKit.framework in Frameworks */,
 				8DE18B8C1725415800AA8112 /* libsqlite3.0.dylib in Frameworks */,
 				8DE18B8D1725415800AA8112 /* Accounts.framework in Frameworks */,
@@ -2202,6 +2201,7 @@
 				8DE18B9D1725415800AA8112 /* UIKit.framework in Frameworks */,
 				8DE18B9E1725415800AA8112 /* Foundation.framework in Frameworks */,
 				8DE18B9F1725415800AA8112 /* CoreGraphics.framework in Frameworks */,
+				8D320F2C182B5731002720D6 /* libFlurry_4.2.3.a in Frameworks */,
 				8DE18BA01725415800AA8112 /* CoreData.framework in Frameworks */,
 				8DE18BA11725415800AA8112 /* libTestFlight.a in Frameworks */,
 				8DE18BA21725415800AA8112 /* FacebookSDK.framework in Frameworks */,
@@ -4798,14 +4798,13 @@
 				INFOPLIST_FILE = "Nimbler Caltrain-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
+					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1-1\"",
 					"$(inherited)",
-					"\\\"$(SRCROOT)/Network\\ Commuting/TestFlightSDK1-1\\\"",
-					"\\\"$(SRCROOT)/Flurry\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/Debug-iphoneos\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\\\"",
-					"/Users/john/Documents/iOS-dev/Nimbler-nc_iPhone/Flurry",
+					"\"$(SRCROOT)/Flurry\"",
+					"\"$(SRCROOT)/RestKit/build/Debug-iphoneos\"",
+					"\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\"",
+					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\"",
+					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -4842,14 +4841,13 @@
 				INFOPLIST_FILE = "Nimbler Caltrain-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
+					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1-1\"",
 					"$(inherited)",
-					"\\\"$(SRCROOT)/Network\\ Commuting/TestFlightSDK1-1\\\"",
-					"\\\"$(SRCROOT)/Flurry\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/Debug-iphoneos\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\\\"",
-					"/Users/john/Documents/iOS-dev/Nimbler-nc_iPhone/Flurry",
+					"\"$(SRCROOT)/Flurry\"",
+					"\"$(SRCROOT)/RestKit/build/Debug-iphoneos\"",
+					"\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\"",
+					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\"",
+					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -4887,13 +4885,12 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\\\"$(SRCROOT)/Network\\ Commuting/TestFlightSDK1-1\\\"",
-					"\\\"$(SRCROOT)/Flurry\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/Debug-iphoneos\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\\\"",
-					"/Users/john/Documents/iOS-dev/Nimbler-nc_iPhone/Flurry",
+					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1-1\"",
+					"\"$(SRCROOT)/Flurry\"",
+					"\"$(SRCROOT)/RestKit/build/Debug-iphoneos\"",
+					"\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\"",
+					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\"",
+					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -4931,13 +4928,12 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\\\"$(SRCROOT)/Network\\ Commuting/TestFlightSDK1-1\\\"",
-					"\\\"$(SRCROOT)/Flurry\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/Debug-iphoneos\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\\\"",
-					"/Users/john/Documents/iOS-dev/Nimbler-nc_iPhone/Flurry",
+					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1-1\"",
+					"\"$(SRCROOT)/Flurry\"",
+					"\"$(SRCROOT)/RestKit/build/Debug-iphoneos\"",
+					"\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\"",
+					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\"",
+					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -4975,13 +4971,12 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\\\"$(SRCROOT)/Network\\ Commuting/TestFlightSDK1-1\\\"",
-					"\\\"$(SRCROOT)/Flurry\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/Debug-iphoneos\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\\\"",
-					"/Users/john/Documents/iOS-dev/Nimbler-nc_iPhone/Flurry",
+					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1-1\"",
+					"\"$(SRCROOT)/Flurry\"",
+					"\"$(SRCROOT)/RestKit/build/Debug-iphoneos\"",
+					"\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\"",
+					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\"",
+					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -5019,13 +5014,12 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\\\"$(SRCROOT)/Network\\ Commuting/TestFlightSDK1-1\\\"",
-					"\\\"$(SRCROOT)/Flurry\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/Debug-iphoneos\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\\\"",
-					"\\\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\\\"",
-					"/Users/john/Documents/iOS-dev/Nimbler-nc_iPhone/Flurry",
+					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1-1\"",
+					"\"$(SRCROOT)/Flurry\"",
+					"\"$(SRCROOT)/RestKit/build/Debug-iphoneos\"",
+					"\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\"",
+					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\"",
+					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
