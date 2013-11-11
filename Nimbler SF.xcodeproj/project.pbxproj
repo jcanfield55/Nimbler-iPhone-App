@@ -176,6 +176,9 @@
 		520FB27C162603AF0083F143 /* walkb.png in Resources */ = {isa = PBXBuildFile; fileRef = 520FB212162603AF0083F143 /* walkb.png */; };
 		520FB293162604950083F143 /* CoverageGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 520FB28B162604950083F143 /* CoverageGeoJSON.geojson */; };
 		520FB296162605470083F143 /* CoverageGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 520FB295162605470083F143 /* CoverageGeoJSON.geojson */; };
+		522C03D018304A72004BC6AF /* CoverageDCGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 522C03CF18304A72004BC6AF /* CoverageDCGeoJSON.geojson */; };
+		522C03D218304FFB004BC6AF /* Icon-DC-58@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 522C03D118304FFB004BC6AF /* Icon-DC-58@2x.png */; };
+		522C03D41830501C004BC6AF /* Icon-DC-80@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 522C03D31830501C004BC6AF /* Icon-DC-80@2x.png */; };
 		524100A41727542E0007D956 /* Nimbler DC-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 524100A31727542E0007D956 /* Nimbler DC-Info.plist */; };
 		524A921416E7117800A9A0A2 /* GtfsParsingStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 524A921316E7117800A9A0A2 /* GtfsParsingStatus.m */; };
 		525442C214C3ECF2004B0E1F /* libRestKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442B814C3EA95004B0E1F /* libRestKit.a */; };
@@ -194,6 +197,7 @@
 		52B0535C16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B0535B16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m */; };
 		52B3AE1A1755D0B1009FFD94 /* RouteDetailViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DE28CA71732379300403CD0 /* RouteDetailViewController_568h.xib */; };
 		52BEFB4E182754F3000DFF9B /* Icon-80@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52BEFB4D182754F3000DFF9B /* Icon-80@2x.png */; };
+		52BEFB55182F07C8000DFF9B /* Icon-Caltrain-80@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52BEFB54182F07C7000DFF9B /* Icon-Caltrain-80@2x.png */; };
 		52C10385160BEF8000BC6020 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C10384160BEF8000BC6020 /* AddressBookUI.framework */; };
 		52C1CBB4161AB69600695348 /* Icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB3161AB69600695348 /* Icon-small.png */; };
 		52C1CBB6161AB6A400695348 /* Icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB5161AB6A400695348 /* Icon-small@2x.png */; };
@@ -1429,30 +1433,12 @@
 		8DF63E4717C1D1D3004FC3BB /* Icon-Caltrain@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E2B17C1D1D3004FC3BB /* Icon-Caltrain@2x.png */; };
 		8DF63E4817C1D1D3004FC3BB /* Icon-Caltrain@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E2B17C1D1D3004FC3BB /* Icon-Caltrain@2x.png */; };
 		8DF63E4917C1D1D3004FC3BB /* Icon-Caltrain@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E2B17C1D1D3004FC3BB /* Icon-Caltrain@2x.png */; };
-		8DF63E4A17C1D1D3004FC3BB /* Icon-DC-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E2C17C1D1D3004FC3BB /* Icon-DC-72.png */; };
-		8DF63E4B17C1D1D3004FC3BB /* Icon-DC-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E2C17C1D1D3004FC3BB /* Icon-DC-72.png */; };
 		8DF63E4C17C1D1D3004FC3BB /* Icon-DC-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E2C17C1D1D3004FC3BB /* Icon-DC-72.png */; };
-		8DF63E4D17C1D1D3004FC3BB /* Icon-DC-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E2C17C1D1D3004FC3BB /* Icon-DC-72.png */; };
-		8DF63E4E17C1D1D3004FC3BB /* Icon-DC-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E2D17C1D1D3004FC3BB /* Icon-DC-72@2x.png */; };
-		8DF63E4F17C1D1D3004FC3BB /* Icon-DC-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E2D17C1D1D3004FC3BB /* Icon-DC-72@2x.png */; };
 		8DF63E5017C1D1D3004FC3BB /* Icon-DC-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E2D17C1D1D3004FC3BB /* Icon-DC-72@2x.png */; };
-		8DF63E5117C1D1D3004FC3BB /* Icon-DC-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E2D17C1D1D3004FC3BB /* Icon-DC-72@2x.png */; };
-		8DF63E5217C1D1D3004FC3BB /* Icon-DC-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E2E17C1D1D3004FC3BB /* Icon-DC-Small.png */; };
-		8DF63E5317C1D1D3004FC3BB /* Icon-DC-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E2E17C1D1D3004FC3BB /* Icon-DC-Small.png */; };
 		8DF63E5417C1D1D3004FC3BB /* Icon-DC-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E2E17C1D1D3004FC3BB /* Icon-DC-Small.png */; };
-		8DF63E5517C1D1D3004FC3BB /* Icon-DC-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E2E17C1D1D3004FC3BB /* Icon-DC-Small.png */; };
-		8DF63E5617C1D1D3004FC3BB /* Icon-DC-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E2F17C1D1D3004FC3BB /* Icon-DC-Small@2x.png */; };
-		8DF63E5717C1D1D3004FC3BB /* Icon-DC-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E2F17C1D1D3004FC3BB /* Icon-DC-Small@2x.png */; };
 		8DF63E5817C1D1D3004FC3BB /* Icon-DC-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E2F17C1D1D3004FC3BB /* Icon-DC-Small@2x.png */; };
-		8DF63E5917C1D1D3004FC3BB /* Icon-DC-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E2F17C1D1D3004FC3BB /* Icon-DC-Small@2x.png */; };
-		8DF63E5A17C1D1D3004FC3BB /* Icon-DC.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E3017C1D1D3004FC3BB /* Icon-DC.png */; };
-		8DF63E5B17C1D1D3004FC3BB /* Icon-DC.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E3017C1D1D3004FC3BB /* Icon-DC.png */; };
 		8DF63E5C17C1D1D3004FC3BB /* Icon-DC.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E3017C1D1D3004FC3BB /* Icon-DC.png */; };
-		8DF63E5D17C1D1D3004FC3BB /* Icon-DC.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E3017C1D1D3004FC3BB /* Icon-DC.png */; };
-		8DF63E5E17C1D1D3004FC3BB /* Icon-DC@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E3117C1D1D3004FC3BB /* Icon-DC@2x.png */; };
-		8DF63E5F17C1D1D3004FC3BB /* Icon-DC@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E3117C1D1D3004FC3BB /* Icon-DC@2x.png */; };
 		8DF63E6017C1D1D3004FC3BB /* Icon-DC@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E3117C1D1D3004FC3BB /* Icon-DC@2x.png */; };
-		8DF63E6117C1D1D3004FC3BB /* Icon-DC@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E3117C1D1D3004FC3BB /* Icon-DC@2x.png */; };
 		8DF63E6217C1D1D3004FC3BB /* Icon-Portland-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E3217C1D1D3004FC3BB /* Icon-Portland-72.png */; };
 		8DF63E6317C1D1D3004FC3BB /* Icon-Portland-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E3217C1D1D3004FC3BB /* Icon-Portland-72.png */; };
 		8DF63E6417C1D1D3004FC3BB /* Icon-Portland-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DF63E3217C1D1D3004FC3BB /* Icon-Portland-72.png */; };
@@ -1758,6 +1744,9 @@
 		520FB291162604950083F143 /* UIAutomationConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = UIAutomationConstants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB292162604950083F143 /* UIConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = UIConstants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB295162605470083F143 /* CoverageGeoJSON.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CoverageGeoJSON.geojson; path = SupportingFiles/CoverageGeoJSON.geojson; sourceTree = "<group>"; };
+		522C03CF18304A72004BC6AF /* CoverageDCGeoJSON.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CoverageDCGeoJSON.geojson; sourceTree = "<group>"; };
+		522C03D118304FFB004BC6AF /* Icon-DC-58@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-DC-58@2x.png"; sourceTree = "<group>"; };
+		522C03D31830501C004BC6AF /* Icon-DC-80@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-DC-80@2x.png"; sourceTree = "<group>"; };
 		522C0E6A15588E7A0072ADD6 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		524100A31727542E0007D956 /* Nimbler DC-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Nimbler DC-Info.plist"; sourceTree = SOURCE_ROOT; };
 		524A921116E6C71C00A9A0A2 /* LocalConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LocalConstants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -1785,6 +1774,7 @@
 		52B0535A16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanStoreForRealTimeServerStubTest.h; sourceTree = "<group>"; };
 		52B0535B16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlanStoreForRealTimeServerStubTest.m; sourceTree = "<group>"; };
 		52BEFB4D182754F3000DFF9B /* Icon-80@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-80@2x.png"; sourceTree = SOURCE_ROOT; };
+		52BEFB54182F07C7000DFF9B /* Icon-Caltrain-80@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Caltrain-80@2x.png"; sourceTree = "<group>"; };
 		52C10384160BEF8000BC6020 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		52C1CBB3161AB69600695348 /* Icon-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-small.png"; sourceTree = "<group>"; };
 		52C1CBB5161AB6A400695348 /* Icon-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-small@2x.png"; sourceTree = "<group>"; };
@@ -2480,6 +2470,7 @@
 				8DEAC189177812DF00D7997C /* ConstantsDC.h */,
 				8DAA296E178BE13C00C3FA30 /* ConstantsPortland.h */,
 				520FB28B162604950083F143 /* CoverageGeoJSON.geojson */,
+				522C03CF18304A72004BC6AF /* CoverageDCGeoJSON.geojson */,
 				520FB28C162604950083F143 /* enums.h */,
 				52CF43AA14BDF2F9000565D6 /* InfoPlist.strings */,
 				524A921116E6C71C00A9A0A2 /* LocalConstants.h */,
@@ -2885,8 +2876,11 @@
 				8DF63E2B17C1D1D3004FC3BB /* Icon-Caltrain@2x.png */,
 				8DA862BE17D9F21F00CE8285 /* Icon-Caltrain-152@2x.png */,
 				8DA862BD17D9F21F00CE8285 /* Icon-Caltrain-120@2x.png */,
+				52BEFB54182F07C7000DFF9B /* Icon-Caltrain-80@2x.png */,
+				522C03D118304FFB004BC6AF /* Icon-DC-58@2x.png */,
 				8DF63E2C17C1D1D3004FC3BB /* Icon-DC-72.png */,
 				8DF63E2D17C1D1D3004FC3BB /* Icon-DC-72@2x.png */,
+				522C03D31830501C004BC6AF /* Icon-DC-80@2x.png */,
 				8DF63E2E17C1D1D3004FC3BB /* Icon-DC-Small.png */,
 				8DF63E2F17C1D1D3004FC3BB /* Icon-DC-Small@2x.png */,
 				8DF63E3017C1D1D3004FC3BB /* Icon-DC.png */,
@@ -3346,12 +3340,6 @@
 				8DF63E3E17C1D1D3004FC3BB /* Icon_ipad-Caltrain@2x.png in Resources */,
 				8DF63E4217C1D1D3004FC3BB /* Icon-Caltrain.png in Resources */,
 				8DF63E4617C1D1D3004FC3BB /* Icon-Caltrain@2x.png in Resources */,
-				8DF63E4A17C1D1D3004FC3BB /* Icon-DC-72.png in Resources */,
-				8DF63E4E17C1D1D3004FC3BB /* Icon-DC-72@2x.png in Resources */,
-				8DF63E5217C1D1D3004FC3BB /* Icon-DC-Small.png in Resources */,
-				8DF63E5617C1D1D3004FC3BB /* Icon-DC-Small@2x.png in Resources */,
-				8DF63E5A17C1D1D3004FC3BB /* Icon-DC.png in Resources */,
-				8DF63E5E17C1D1D3004FC3BB /* Icon-DC@2x.png in Resources */,
 				8DF63E6217C1D1D3004FC3BB /* Icon-Portland-72.png in Resources */,
 				8DF63E6617C1D1D3004FC3BB /* Icon-Portland-72@2x.png in Resources */,
 				8DF63E6A17C1D1D3004FC3BB /* Icon-Portland-Small.png in Resources */,
@@ -3546,6 +3534,7 @@
 				8D2D51CA17981F4800A5E007 /* twitterViewController_568h.xib in Resources */,
 				8D17896017A8D1A300BF873F /* sentFeedBack@2x.png in Resources */,
 				8D17896917A8D29300BF873F /* feedBackButton@2x.png in Resources */,
+				52BEFB55182F07C8000DFF9B /* Icon-Caltrain-80@2x.png in Resources */,
 				8D17896E17A8D5DF00BF873F /* separater@2x.png in Resources */,
 				8D17897117A8EE5100BF873F /* Default.png in Resources */,
 				8D17897217A8EE5700BF873F /* Default@2x.png in Resources */,
@@ -3632,12 +3621,6 @@
 				8DF63E3F17C1D1D3004FC3BB /* Icon_ipad-Caltrain@2x.png in Resources */,
 				8DF63E4317C1D1D3004FC3BB /* Icon-Caltrain.png in Resources */,
 				8DF63E4717C1D1D3004FC3BB /* Icon-Caltrain@2x.png in Resources */,
-				8DF63E4B17C1D1D3004FC3BB /* Icon-DC-72.png in Resources */,
-				8DF63E4F17C1D1D3004FC3BB /* Icon-DC-72@2x.png in Resources */,
-				8DF63E5317C1D1D3004FC3BB /* Icon-DC-Small.png in Resources */,
-				8DF63E5717C1D1D3004FC3BB /* Icon-DC-Small@2x.png in Resources */,
-				8DF63E5B17C1D1D3004FC3BB /* Icon-DC.png in Resources */,
-				8DF63E5F17C1D1D3004FC3BB /* Icon-DC@2x.png in Resources */,
 				8DF63E6317C1D1D3004FC3BB /* Icon-Portland-72.png in Resources */,
 				8DF63E6717C1D1D3004FC3BB /* Icon-Portland-72@2x.png in Resources */,
 				8DF63E6B17C1D1D3004FC3BB /* Icon-Portland-Small.png in Resources */,
@@ -3906,12 +3889,6 @@
 				8DF63E4117C1D1D3004FC3BB /* Icon_ipad-Caltrain@2x.png in Resources */,
 				8DF63E4517C1D1D3004FC3BB /* Icon-Caltrain.png in Resources */,
 				8DF63E4917C1D1D3004FC3BB /* Icon-Caltrain@2x.png in Resources */,
-				8DF63E4D17C1D1D3004FC3BB /* Icon-DC-72.png in Resources */,
-				8DF63E5117C1D1D3004FC3BB /* Icon-DC-72@2x.png in Resources */,
-				8DF63E5517C1D1D3004FC3BB /* Icon-DC-Small.png in Resources */,
-				8DF63E5917C1D1D3004FC3BB /* Icon-DC-Small@2x.png in Resources */,
-				8DF63E5D17C1D1D3004FC3BB /* Icon-DC.png in Resources */,
-				8DF63E6117C1D1D3004FC3BB /* Icon-DC@2x.png in Resources */,
 				8DF63E6517C1D1D3004FC3BB /* Icon-Portland-72.png in Resources */,
 				8DF63E6917C1D1D3004FC3BB /* Icon-Portland-72@2x.png in Resources */,
 				CAC3C69F17D4BC2A008898E9 /* navBarNormal@2x.png in Resources */,
@@ -4010,6 +3987,7 @@
 				8DE18BF81725415800AA8112 /* img_route.png in Resources */,
 				8DE18BF91725415800AA8112 /* img_route@2x.png in Resources */,
 				8DE18BFA1725415800AA8112 /* img_selAdvisory.png in Resources */,
+				522C03D41830501C004BC6AF /* Icon-DC-80@2x.png in Resources */,
 				8DE18BFB1725415800AA8112 /* img_selAdvisory@2x.png in Resources */,
 				8DE18BFC1725415800AA8112 /* img_select.png in Resources */,
 				8DE18BFD1725415800AA8112 /* img_select@2x.png in Resources */,
@@ -4142,6 +4120,7 @@
 				8D178A9717A9482400BF873F /* img_activeStar.png in Resources */,
 				8D178A9B17A9482400BF873F /* img_bikeActiveMode.png in Resources */,
 				8D178A9F17A9482400BF873F /* img_bikeMode.png in Resources */,
+				522C03D218304FFB004BC6AF /* Icon-DC-58@2x.png in Resources */,
 				8D178AA317A9482400BF873F /* img_cancelUpdated.png in Resources */,
 				8D178AA717A9482400BF873F /* img_departBG.png in Resources */,
 				8D178AAB17A9482400BF873F /* img_departTimeBG.png in Resources */,
@@ -4176,6 +4155,7 @@
 				8DEA577F17BA6A4E00FB1A00 /* bikeshare_Unselected.png in Resources */,
 				8DEA578317BA6A4E00FB1A00 /* bikeshare_Unselected@2x.png in Resources */,
 				8DF63E3C17C1D1D3004FC3BB /* Icon_ipad-Caltrain.png in Resources */,
+				522C03D018304A72004BC6AF /* CoverageDCGeoJSON.geojson in Resources */,
 				8DF63E4017C1D1D3004FC3BB /* Icon_ipad-Caltrain@2x.png in Resources */,
 				8DF63E4417C1D1D3004FC3BB /* Icon-Caltrain.png in Resources */,
 				8DF63E4817C1D1D3004FC3BB /* Icon-Caltrain@2x.png in Resources */,
@@ -4796,7 +4776,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
 				INFOPLIST_FILE = "Nimbler Caltrain-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1-1\"",
 					"$(inherited)",
@@ -4825,9 +4805,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Nimbler World, Inc. (452SUSN2GU)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: Nimbler World, Inc. (452SUSN2GU)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nimbler World, Inc. (452SUSN2GU)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -4839,7 +4819,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
 				INFOPLIST_FILE = "Nimbler Caltrain-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1-1\"",
 					"$(inherited)",
@@ -4855,9 +4835,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "C7B3B77E-C221-4A47-94DB-3DB0D847415E";
-				"PROVISIONING_PROFILE[sdk=*]" = "C7B3B77E-C221-4A47-94DB-3DB0D847415E";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C7B3B77E-C221-4A47-94DB-3DB0D847415E";
+				PROVISIONING_PROFILE = "A0B2F364-8F87-459B-8886-1134C72C781A";
+				"PROVISIONING_PROFILE[sdk=*]" = "A0B2F364-8F87-459B-8886-1134C72C781A";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A0B2F364-8F87-459B-8886-1134C72C781A";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -4968,7 +4948,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
 				INFOPLIST_FILE = "Nimbler DC-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1-1\"",
@@ -4998,8 +4978,8 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: Nimbler World, Inc. (452SUSN2GU)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nimbler World, Inc. (452SUSN2GU)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -5011,7 +4991,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)/RestKit/Build\"";
 				INFOPLIST_FILE = "Nimbler DC-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Network Commuting/TestFlightSDK1-1\"",
@@ -5027,9 +5007,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler DC";
-				PROVISIONING_PROFILE = "A1AC6859-3731-477A-BACB-CB6A4024EBA3";
-				"PROVISIONING_PROFILE[sdk=*]" = "A1AC6859-3731-477A-BACB-CB6A4024EBA3";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A1AC6859-3731-477A-BACB-CB6A4024EBA3";
+				PROVISIONING_PROFILE = "8B75133D-1716-4609-A134-5855EE0A72CB";
+				"PROVISIONING_PROFILE[sdk=*]" = "8B75133D-1716-4609-A134-5855EE0A72CB";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "8B75133D-1716-4609-A134-5855EE0A72CB";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;

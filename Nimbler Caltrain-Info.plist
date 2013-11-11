@@ -48,6 +48,8 @@
 		<dict>
 			<key>CFBundleIconFiles</key>
 			<array>
+				<string>Icon-Caltrain-80</string>
+				<string>Icon-Caltrain-120</string>
 				<string>Icon_ipad-Caltrain.png</string>
 				<string>Icon_ipad-Caltrain@2x.png</string>
 				<string>Icon-small-Caltrain.png</string>

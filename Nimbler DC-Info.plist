@@ -33,10 +33,12 @@
 	<string>Icon-DC.png</string>
 	<key>CFBundleIconFiles</key>
 	<array>
+		<string>Icon-DC-80</string>
+		<string>Icon-DC-58</string>
 		<string>Icon-DC-72.png</string>
 		<string>Icon-DC-72@2x.png</string>
-		<string>Icon-DC-small.png</string>
-		<string>Icon-DC-small@2x.png</string>
+		<string>Icon-DC-Small.png</string>
+		<string>Icon-DC-Small@2x.png</string>
 		<string>Icon-DC.png</string>
 		<string>Icon-DC@2x.png</string>
 		<string>Icon-DC-120@2x.png</string>
