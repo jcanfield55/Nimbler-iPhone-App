@@ -4764,7 +4764,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -4792,7 +4792,7 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Caltrain";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "C7B3B77E-C221-4A47-94DB-3DB0D847415E";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C7B3B77E-C221-4A47-94DB-3DB0D847415E";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;

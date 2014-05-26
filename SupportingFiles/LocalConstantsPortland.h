@@ -33,7 +33,7 @@
 #define FB_APP_ID @""  // Nimbler SF FB App ID
 
 // Flurry API Key
-#define FLURRY_API_KEY @"34N6BPVG3TR3GYTSFY9P"
+#define FLURRY_API_KEY @"VV2CQHMG5JJ93VXZ56BD"
 // Review reminder URL
 #define NIMBLER_REVIEW_URL                   @""
 
