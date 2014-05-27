@@ -343,9 +343,9 @@ UIImage *imageDetailDisclosure;
     [self.mainTable setBackgroundColor: [UIColor clearColor]]; 
     // Do any additional setup after loading the view from its nib.
     
-    UIButton *btnAdvisories = [[UIButton alloc] initWithFrame:CGRectMake(0,0,25,22)];
+    UIButton *btnAdvisories = [[UIButton alloc] initWithFrame:CGRectMake(0,0,47,26)];
     [btnAdvisories addTarget:self.navigationController.parentViewController action:@selector(revealToggle:) forControlEvents:UIControlEventTouchUpInside];
-    [btnAdvisories setBackgroundImage:[UIImage imageNamed:@"notificationicon.png"] forState:UIControlStateNormal];
+    [btnAdvisories setBackgroundImage:[UIImage imageNamed:@"notificationicon6.png"] forState:UIControlStateNormal];
     
     UIBarButtonItem *btnBarAdvisories = [[UIBarButtonItem alloc] initWithCustomView:btnAdvisories];
     self.navigationItem.leftBarButtonItem = btnBarAdvisories;
@@ -419,13 +419,14 @@ UIImage *imageDetailDisclosure;
     else{
         [btnMode setSelected:NO];
     }
-    btnMode = (UIButton *)[self.viewMode viewWithTag:[WALK_MODE_Tag intValue]];
-    if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] isEqualToString:@"1"]){
-        [btnMode setSelected:YES];
-    }
-    else{
-        [btnMode setSelected:NO];
-    }
+    /* Eliminated WALK_MODE button 5/26/2014 for Portland, so do not set this button */
+    // btnMode = (UIButton *)[self.viewMode viewWithTag:[WALK_MODE_Tag intValue]];
+    // if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] isEqualToString:@"1"]){
+    //     [btnMode setSelected:YES];
+    // }
+    // else{
+    //     [btnMode setSelected:NO];
+    // }
     if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
         btnMode = (UIButton *)[self.viewMode viewWithTag:[BIKE_SHARE_MODE_Tag intValue]];
         [btnMode setHidden:NO];
