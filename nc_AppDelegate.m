@@ -419,9 +419,12 @@ FeedBackForm *fbView;
 #endif
     
     //Log App in facebook so we can track referrals from Facebook advertisements
-    NIMLOG_PERF2(@"Facebook SDK with ID: %@", FB_APP_ID);
-    [FBSettings publishInstall:FB_APP_ID];
-    NIMLOG_PERF2(@"Finished calling FB SDK");
+    // John: Turn off Facebook logging 5/29/2014 because it is causing an error re: IDMA for Apple submission
+    // Probably can be fixed with newer version of Facebook SDK, but defer that for now
+    // Need to re-add FacebookSDK when ready to re-activate this 
+    // NIMLOG_PERF2(@"Facebook SDK with ID: %@", FB_APP_ID);
+    // [FBSettings publishInstall:FB_APP_ID];
+    // NIMLOG_PERF2(@"Finished calling FB SDK");
     
     [self addSkipBackupAttributeToItemAtURL:[self applicationDocumentsDirectory]];
     

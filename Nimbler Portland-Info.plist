@@ -33,12 +33,13 @@
 	<string>Icon-Portland</string>
 	<key>CFBundleIconFiles</key>
 	<array>
+		<string>Icon-Portland-120</string>
+		<string>Icon-Portland-80</string>
 		<string>Icon-Portland-Small</string>
-		<string>Icon-small</string>
 		<string>Icon-Portland-72.png</string>
 		<string>Icon-Portland-72@2x.png</string>
-		<string>Icon-Portland-small.png</string>
-		<string>Icon-Portland-small@2x.png</string>
+		<string>Icon-Portland-Small.png</string>
+		<string>Icon-Portland-Small@2x.png</string>
 		<string>Icon-Portland.png</string>
 		<string>Icon-Portland@2x.png</string>
 		<string>Icon-Portland-120@2x.png</string>

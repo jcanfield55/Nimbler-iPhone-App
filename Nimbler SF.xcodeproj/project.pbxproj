@@ -176,6 +176,11 @@
 		520FB27C162603AF0083F143 /* walkb.png in Resources */ = {isa = PBXBuildFile; fileRef = 520FB212162603AF0083F143 /* walkb.png */; };
 		520FB293162604950083F143 /* CoverageGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 520FB28B162604950083F143 /* CoverageGeoJSON.geojson */; };
 		520FB296162605470083F143 /* CoverageGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 520FB295162605470083F143 /* CoverageGeoJSON.geojson */; };
+		5224EA701937199700AE67C7 /* Icon-Portland-80@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5224EA6F1937199700AE67C7 /* Icon-Portland-80@2x.png */; };
+		5224EA7219371D1700AE67C7 /* libFlurry_5.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5224EA7119371D1700AE67C7 /* libFlurry_5.0.0.a */; };
+		5224EA7319371D1700AE67C7 /* libFlurry_5.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5224EA7119371D1700AE67C7 /* libFlurry_5.0.0.a */; };
+		5224EA7419371D1700AE67C7 /* libFlurry_5.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5224EA7119371D1700AE67C7 /* libFlurry_5.0.0.a */; };
+		5224EA7519371D1700AE67C7 /* libFlurry_5.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5224EA7119371D1700AE67C7 /* libFlurry_5.0.0.a */; };
 		522C03D018304A72004BC6AF /* CoverageDCGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 522C03CF18304A72004BC6AF /* CoverageDCGeoJSON.geojson */; };
 		522C03D218304FFB004BC6AF /* Icon-DC-58@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 522C03D118304FFB004BC6AF /* Icon-DC-58@2x.png */; };
 		522C03D41830501C004BC6AF /* Icon-DC-80@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 522C03D31830501C004BC6AF /* Icon-DC-80@2x.png */; };
@@ -197,6 +202,10 @@
 		524EAEE1193450ED00EE00B4 /* notificationicon6@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 524EAEDB193450ED00EE00B4 /* notificationicon6@2x.png */; };
 		524EAEE2193450ED00EE00B4 /* notificationicon6@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 524EAEDB193450ED00EE00B4 /* notificationicon6@2x.png */; };
 		524EAEE3193450ED00EE00B4 /* notificationicon6@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 524EAEDB193450ED00EE00B4 /* notificationicon6@2x.png */; };
+		524EAEE519370D4C00EE00B4 /* CoveragePDXGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 524EAEE419370D4C00EE00B4 /* CoveragePDXGeoJSON.geojson */; };
+		524EAEE619370D4C00EE00B4 /* CoveragePDXGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 524EAEE419370D4C00EE00B4 /* CoveragePDXGeoJSON.geojson */; };
+		524EAEE719370D4D00EE00B4 /* CoveragePDXGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 524EAEE419370D4C00EE00B4 /* CoveragePDXGeoJSON.geojson */; };
+		524EAEE819370D4D00EE00B4 /* CoveragePDXGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 524EAEE419370D4C00EE00B4 /* CoveragePDXGeoJSON.geojson */; };
 		525442C214C3ECF2004B0E1F /* libRestKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442B814C3EA95004B0E1F /* libRestKit.a */; };
 		525442C414C3ED2C004B0E1F /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C314C3ED2C004B0E1F /* CFNetwork.framework */; };
 		525442C614C3ED4A004B0E1F /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C514C3ED4A004B0E1F /* MobileCoreServices.framework */; };
@@ -559,16 +568,12 @@
 		8D178ADB17A9482400BF873F /* img_walkMode.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D178A9417A9482300BF873F /* img_walkMode.png */; };
 		8D178ADC17A9482400BF873F /* img_walkMode.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D178A9417A9482300BF873F /* img_walkMode.png */; };
 		8D1A64EA165B82C100176FF7 /* SettingViewController_SF.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D1A64E9165B82C100176FF7 /* SettingViewController_SF.xib */; };
-		8D26425C17C714DF008551FE /* libFlurry_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D26425B17C714DF008551FE /* libFlurry_4.2.3.a */; };
 		8D2D51C917981F4800A5E007 /* twitterViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */; };
 		8D2D51CA17981F4800A5E007 /* twitterViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */; };
 		8D2D51CB17981F4800A5E007 /* twitterViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */; };
 		8D2D51CC17981F4800A5E007 /* twitterViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */; };
 		8D317A3E16DB9A5A00581224 /* img_bicycle.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D317A3C16DB9A5A00581224 /* img_bicycle.png */; };
 		8D317A3F16DB9A5A00581224 /* img_bicycleSelect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D317A3D16DB9A5A00581224 /* img_bicycleSelect.png */; };
-		8D320F2B182B5731002720D6 /* libFlurry_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D26425B17C714DF008551FE /* libFlurry_4.2.3.a */; };
-		8D320F2C182B5731002720D6 /* libFlurry_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D26425B17C714DF008551FE /* libFlurry_4.2.3.a */; };
-		8D320F2D182B5732002720D6 /* libFlurry_4.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D26425B17C714DF008551FE /* libFlurry_4.2.3.a */; };
 		8D361EC217B8FA6900246A55 /* feedBackLink.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D361EC117B8FA6900246A55 /* feedBackLink.png */; };
 		8D361EC917B916E100246A55 /* feedBackLink@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D361EC817B916E100246A55 /* feedBackLink@2x.png */; };
 		8D39877A172180BA0055BF06 /* back.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D398778172180BA0055BF06 /* back.png */; };
@@ -941,7 +946,6 @@
 		8DAA289F178BDFEF00C3FA30 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
 		8DAA28A0178BDFEF00C3FA30 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFF16F727A10050FE00 /* libsqlite3.0.dylib */; };
 		8DAA28A1178BDFEF00C3FA30 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFD16F726D50050FE00 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		8DAA28A2178BDFEF00C3FA30 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFB16F726CF0050FE00 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8DAA28A3178BDFEF00C3FA30 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF916F726AC0050FE00 /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8DAA28A4178BDFEF00C3FA30 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C10384160BEF8000BC6020 /* AddressBookUI.framework */; };
 		8DAA28A6178BDFEF00C3FA30 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA39BE015E38B5E0029D54B /* AudioToolbox.framework */; };
@@ -959,8 +963,7 @@
 		8DAA28B2178BDFEF00C3FA30 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A114BDF2F9000565D6 /* Foundation.framework */; };
 		8DAA28B3178BDFEF00C3FA30 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A314BDF2F9000565D6 /* CoreGraphics.framework */; };
 		8DAA28B4178BDFEF00C3FA30 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A514BDF2F9000565D6 /* CoreData.framework */; };
-		8DAA28B5178BDFEF00C3FA30 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5258A89B160D617800871875 /* libTestFlight.a */; };
-		8DAA28B6178BDFEF00C3FA30 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		8DAA28B5178BDFEF00C3FA30 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5258A89B160D617800871875 /* libTestFlight.a */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8DAA28BC178BDFEF00C3FA30 /* aps_development.cer in Resources */ = {isa = PBXBuildFile; fileRef = CCA4C7E415D92CC7009BE7A1 /* aps_development.cer */; };
 		8DAA28BE178BDFEF00C3FA30 /* Icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB3161AB69600695348 /* Icon-small.png */; };
 		8DAA28BF178BDFEF00C3FA30 /* Icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB5161AB6A400695348 /* Icon-small@2x.png */; };
@@ -1756,6 +1759,8 @@
 		520FB291162604950083F143 /* UIAutomationConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = UIAutomationConstants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB292162604950083F143 /* UIConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = UIConstants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB295162605470083F143 /* CoverageGeoJSON.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CoverageGeoJSON.geojson; path = SupportingFiles/CoverageGeoJSON.geojson; sourceTree = "<group>"; };
+		5224EA6F1937199700AE67C7 /* Icon-Portland-80@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Portland-80@2x.png"; sourceTree = "<group>"; };
+		5224EA7119371D1700AE67C7 /* libFlurry_5.0.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_5.0.0.a; sourceTree = "<group>"; };
 		522C03CF18304A72004BC6AF /* CoverageDCGeoJSON.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CoverageDCGeoJSON.geojson; sourceTree = "<group>"; };
 		522C03D118304FFB004BC6AF /* Icon-DC-58@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-DC-58@2x.png"; sourceTree = "<group>"; };
 		522C03D31830501C004BC6AF /* Icon-DC-80@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-DC-80@2x.png"; sourceTree = "<group>"; };
@@ -1768,6 +1773,7 @@
 		524EAEAD1933EFA900EE00B4 /* img_switcherarrows2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_switcherarrows2.png; sourceTree = "<group>"; };
 		524EAEDA193450EC00EE00B4 /* notificationicon6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notificationicon6.png; sourceTree = "<group>"; };
 		524EAEDB193450ED00EE00B4 /* notificationicon6@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "notificationicon6@2x.png"; sourceTree = "<group>"; };
+		524EAEE419370D4C00EE00B4 /* CoveragePDXGeoJSON.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CoveragePDXGeoJSON.geojson; sourceTree = "<group>"; };
 		525442AD14C3EA95004B0E1F /* RestKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RestKit.xcodeproj; path = RestKit/RestKit.xcodeproj; sourceTree = "<group>"; };
 		525442C314C3ED2C004B0E1F /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		525442C514C3ED4A004B0E1F /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -1917,7 +1923,6 @@
 		8D178A9417A9482300BF873F /* img_walkMode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_walkMode.png; sourceTree = "<group>"; };
 		8D1A64E9165B82C100176FF7 /* SettingViewController_SF.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController_SF.xib; sourceTree = "<group>"; };
 		8D26425A17C714DF008551FE /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
-		8D26425B17C714DF008551FE /* libFlurry_4.2.3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_4.2.3.a; sourceTree = "<group>"; };
 		8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = twitterViewController_568h.xib; sourceTree = "<group>"; };
 		8D317A3C16DB9A5A00581224 /* img_bicycle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_bicycle.png; sourceTree = "<group>"; };
 		8D317A3D16DB9A5A00581224 /* img_bicycleSelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_bicycleSelect.png; sourceTree = "<group>"; };
@@ -2095,6 +2100,7 @@
 				525442C814C3ED57004B0E1F /* Security.framework in Frameworks */,
 				525442C614C3ED4A004B0E1F /* MobileCoreServices.framework in Frameworks */,
 				525442C414C3ED2C004B0E1F /* CFNetwork.framework in Frameworks */,
+				5224EA7219371D1700AE67C7 /* libFlurry_5.0.0.a in Frameworks */,
 				525442C214C3ECF2004B0E1F /* libRestKit.a in Frameworks */,
 				52CF43A014BDF2F9000565D6 /* UIKit.framework in Frameworks */,
 				52CF43A214BDF2F9000565D6 /* Foundation.framework in Frameworks */,
@@ -2102,7 +2108,6 @@
 				52CF43A614BDF2F9000565D6 /* CoreData.framework in Frameworks */,
 				5258A89F160D617800871875 /* libTestFlight.a in Frameworks */,
 				8DF19BF416F725FC0050FE00 /* FacebookSDK.framework in Frameworks */,
-				8D26425C17C714DF008551FE /* libFlurry_4.2.3.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2139,10 +2144,10 @@
 				8DA77FE11724FF0D0090C2EA /* MobileCoreServices.framework in Frameworks */,
 				8DA77FE21724FF0D0090C2EA /* CFNetwork.framework in Frameworks */,
 				8DA77FE31724FF0D0090C2EA /* libRestKit.a in Frameworks */,
+				5224EA7319371D1700AE67C7 /* libFlurry_5.0.0.a in Frameworks */,
 				8DA77FE41724FF0D0090C2EA /* UIKit.framework in Frameworks */,
 				8DA77FE51724FF0D0090C2EA /* Foundation.framework in Frameworks */,
 				8DA77FE61724FF0D0090C2EA /* CoreGraphics.framework in Frameworks */,
-				8D320F2D182B5732002720D6 /* libFlurry_4.2.3.a in Frameworks */,
 				8DA77FE71724FF0D0090C2EA /* CoreData.framework in Frameworks */,
 				8DA77FE81724FF0D0090C2EA /* libTestFlight.a in Frameworks */,
 				8DA77FE91724FF0D0090C2EA /* FacebookSDK.framework in Frameworks */,
@@ -2158,7 +2163,6 @@
 				8DAA289F178BDFEF00C3FA30 /* MapKit.framework in Frameworks */,
 				8DAA28A0178BDFEF00C3FA30 /* libsqlite3.0.dylib in Frameworks */,
 				8DAA28A1178BDFEF00C3FA30 /* Accounts.framework in Frameworks */,
-				8DAA28A2178BDFEF00C3FA30 /* AdSupport.framework in Frameworks */,
 				8DAA28A3178BDFEF00C3FA30 /* Social.framework in Frameworks */,
 				8DAA28A4178BDFEF00C3FA30 /* AddressBookUI.framework in Frameworks */,
 				8DAA28A6178BDFEF00C3FA30 /* AudioToolbox.framework in Frameworks */,
@@ -2174,11 +2178,10 @@
 				8DAA28B0178BDFEF00C3FA30 /* libRestKit.a in Frameworks */,
 				8DAA28B1178BDFEF00C3FA30 /* UIKit.framework in Frameworks */,
 				8DAA28B2178BDFEF00C3FA30 /* Foundation.framework in Frameworks */,
-				8D320F2B182B5731002720D6 /* libFlurry_4.2.3.a in Frameworks */,
+				5224EA7519371D1700AE67C7 /* libFlurry_5.0.0.a in Frameworks */,
 				8DAA28B3178BDFEF00C3FA30 /* CoreGraphics.framework in Frameworks */,
 				8DAA28B4178BDFEF00C3FA30 /* CoreData.framework in Frameworks */,
 				8DAA28B5178BDFEF00C3FA30 /* libTestFlight.a in Frameworks */,
-				8DAA28B6178BDFEF00C3FA30 /* FacebookSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2203,10 +2206,10 @@
 				8DE18B9A1725415800AA8112 /* MobileCoreServices.framework in Frameworks */,
 				8DE18B9B1725415800AA8112 /* CFNetwork.framework in Frameworks */,
 				8DE18B9C1725415800AA8112 /* libRestKit.a in Frameworks */,
+				5224EA7419371D1700AE67C7 /* libFlurry_5.0.0.a in Frameworks */,
 				8DE18B9D1725415800AA8112 /* UIKit.framework in Frameworks */,
 				8DE18B9E1725415800AA8112 /* Foundation.framework in Frameworks */,
 				8DE18B9F1725415800AA8112 /* CoreGraphics.framework in Frameworks */,
-				8D320F2C182B5731002720D6 /* libFlurry_4.2.3.a in Frameworks */,
 				8DE18BA01725415800AA8112 /* CoreData.framework in Frameworks */,
 				8DE18BA11725415800AA8112 /* libTestFlight.a in Frameworks */,
 				8DE18BA21725415800AA8112 /* FacebookSDK.framework in Frameworks */,
@@ -2486,6 +2489,7 @@
 				8DAA296E178BE13C00C3FA30 /* ConstantsPortland.h */,
 				520FB28B162604950083F143 /* CoverageGeoJSON.geojson */,
 				522C03CF18304A72004BC6AF /* CoverageDCGeoJSON.geojson */,
+				524EAEE419370D4C00EE00B4 /* CoveragePDXGeoJSON.geojson */,
 				520FB28C162604950083F143 /* enums.h */,
 				52CF43AA14BDF2F9000565D6 /* InfoPlist.strings */,
 				524A921116E6C71C00A9A0A2 /* LocalConstants.h */,
@@ -2814,7 +2818,7 @@
 			isa = PBXGroup;
 			children = (
 				8D26425A17C714DF008551FE /* Flurry.h */,
-				8D26425B17C714DF008551FE /* libFlurry_4.2.3.a */,
+				5224EA7119371D1700AE67C7 /* libFlurry_5.0.0.a */,
 			);
 			path = Flurry;
 			sourceTree = "<group>";
@@ -2907,6 +2911,7 @@
 				8DA862C017D9F21F00CE8285 /* Icon-DC-152@2x.png */,
 				8DF63E3217C1D1D3004FC3BB /* Icon-Portland-72.png */,
 				8DF63E3317C1D1D3004FC3BB /* Icon-Portland-72@2x.png */,
+				5224EA6F1937199700AE67C7 /* Icon-Portland-80@2x.png */,
 				8DF63E3417C1D1D3004FC3BB /* Icon-Portland-Small.png */,
 				8DF63E3517C1D1D3004FC3BB /* Icon-Portland-Small@2x.png */,
 				8DF63E3617C1D1D3004FC3BB /* Icon-Portland.png */,
@@ -3313,6 +3318,7 @@
 				8D178A4E17A935B800BF873F /* notificationicon.png in Resources */,
 				8D178A5217A935B800BF873F /* notificationicon@2x.png in Resources */,
 				8D178A5917A9396500BF873F /* excludeBackground@2x.png in Resources */,
+				524EAEE519370D4C00EE00B4 /* CoveragePDXGeoJSON.geojson in Resources */,
 				CAC3C69917D4B9F3008898E9 /* navBarNormal@2x.png in Resources */,
 				8D178A5D17A9396500BF873F /* excludeSelected@2x.png in Resources */,
 				8D178A6117A9396500BF873F /* excludeUnSelected@2x.png in Resources */,
@@ -3477,6 +3483,7 @@
 				8DA780481724FF0D0090C2EA /* img_selSetting@2x.png in Resources */,
 				8DA780491724FF0D0090C2EA /* img_selTrip.png in Resources */,
 				8DA7804A1724FF0D0090C2EA /* img_selTrip@2x.png in Resources */,
+				524EAEE619370D4C00EE00B4 /* CoveragePDXGeoJSON.geojson in Resources */,
 				8DA7804B1724FF0D0090C2EA /* img_send.png in Resources */,
 				8DA7804C1724FF0D0090C2EA /* img_send@2x.png in Resources */,
 				8DA7804D1724FF0D0090C2EA /* img_stop.png in Resources */,
@@ -3666,6 +3673,7 @@
 				8DAA28BE178BDFEF00C3FA30 /* Icon-small.png in Resources */,
 				8DAA28BF178BDFEF00C3FA30 /* Icon-small@2x.png in Resources */,
 				8DAA28C0178BDFEF00C3FA30 /* FeedBackForm.xib in Resources */,
+				524EAEE819370D4D00EE00B4 /* CoveragePDXGeoJSON.geojson in Resources */,
 				8DAA28C1178BDFEF00C3FA30 /* FeedBackForm_568h.xib in Resources */,
 				8DAA28C2178BDFEF00C3FA30 /* FeedbackViewController.xib in Resources */,
 				8DAA28C3178BDFEF00C3FA30 /* RouteDetailsViewController.xib in Resources */,
@@ -3678,6 +3686,7 @@
 				8DAA28CA178BDFEF00C3FA30 /* caltrain.jpg in Resources */,
 				8DAA28CB178BDFEF00C3FA30 /* feedback.png in Resources */,
 				524EAEB11933EFA900EE00B4 /* img_switcherarrows2.png in Resources */,
+				5224EA701937199700AE67C7 /* Icon-Portland-80@2x.png in Resources */,
 				8DAA28CC178BDFEF00C3FA30 /* img_ recording@2x.png in Resources */,
 				8DAA28CD178BDFEF00C3FA30 /* img_3baged.png in Resources */,
 				8DAA28CE178BDFEF00C3FA30 /* img_appTitle.png in Resources */,
@@ -4152,6 +4161,7 @@
 				8D178A9F17A9482400BF873F /* img_bikeMode.png in Resources */,
 				522C03D218304FFB004BC6AF /* Icon-DC-58@2x.png in Resources */,
 				8D178AA317A9482400BF873F /* img_cancelUpdated.png in Resources */,
+				524EAEE719370D4D00EE00B4 /* CoveragePDXGeoJSON.geojson in Resources */,
 				8D178AA717A9482400BF873F /* img_departBG.png in Resources */,
 				8D178AAB17A9482400BF873F /* img_departTimeBG.png in Resources */,
 				8D178AAF17A9482400BF873F /* img_inActiveStar.png in Resources */,
@@ -4685,6 +4695,7 @@
 					"\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\"",
 					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\"",
 					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\"",
+					"$(PROJECT_DIR)/Flurry",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -4728,6 +4739,7 @@
 					"\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\"",
 					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\"",
 					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\"",
+					"$(PROJECT_DIR)/Flurry",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -4815,6 +4827,7 @@
 					"\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\"",
 					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\"",
 					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\"",
+					"$(PROJECT_DIR)/Flurry",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -4858,6 +4871,7 @@
 					"\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\"",
 					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\"",
 					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\"",
+					"$(PROJECT_DIR)/Flurry",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -4901,6 +4915,7 @@
 					"\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\"",
 					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\"",
 					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\"",
+					"$(PROJECT_DIR)/Flurry",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -4921,9 +4936,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Nimbler World, Inc. (452SUSN2GU)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Distribution: Nimbler World, Inc. (452SUSN2GU)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Nimbler World, Inc. (452SUSN2GU)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/RestKit/Specs/Runner/OCHamcrest\"",
@@ -4944,6 +4959,7 @@
 					"\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\"",
 					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\"",
 					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\"",
+					"$(PROJECT_DIR)/Flurry",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -4951,9 +4967,9 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler Portland";
-				PROVISIONING_PROFILE = "C8738E4C-936A-4D45-B900-77F5B5DD9156";
-				"PROVISIONING_PROFILE[sdk=*]" = "C8738E4C-936A-4D45-B900-77F5B5DD9156";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C8738E4C-936A-4D45-B900-77F5B5DD9156";
+				PROVISIONING_PROFILE = "8206DA1B-70EA-4295-899F-72D67B4A50FA";
+				"PROVISIONING_PROFILE[sdk=*]" = "8206DA1B-70EA-4295-899F-72D67B4A50FA";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "8206DA1B-70EA-4295-899F-72D67B4A50FA";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -4987,6 +5003,7 @@
 					"\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\"",
 					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\"",
 					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\"",
+					"$(PROJECT_DIR)/Flurry",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -5030,6 +5047,7 @@
 					"\"$(SRCROOT)/RestKit/build/Debug-iphonesimulator\"",
 					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv6\"",
 					"\"$(SRCROOT)/RestKit/build/RestKit.build/Debug-iphoneos/RestKit.build/Objects-normal/armv7\"",
+					"$(PROJECT_DIR)/Flurry",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
