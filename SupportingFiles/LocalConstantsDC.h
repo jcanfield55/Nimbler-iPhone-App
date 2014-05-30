@@ -36,7 +36,8 @@
 #define FB_APP_ID @"" // Nimbler DC FB App ID
 
 // Review reminder URL
-#define NIMBLER_REVIEW_URL @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=668593695"
+#define NIMBLER_REVIEW_URL @"itms-apps://itunes.apple.com/app/id668593695"
+// old NIMBLER_REVIEW_URL @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=668593695"
 
 //
 // Settings Page Rows
