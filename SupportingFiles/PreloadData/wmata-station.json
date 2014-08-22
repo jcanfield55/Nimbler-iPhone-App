@@ -2030,7 +2030,7 @@
 			},
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
 		}, {
-			"memberOfList" : "Wmata37",
+			"memberOfList" : "Wmata37.0",
 			"fromFrequency" : "0.9095890653628631",
 			"toFrequency" : 0.8696004289345663,
 			"address_components" : [{
@@ -2088,6 +2088,34 @@
 			},
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
 		}, {
+                 "memberOfList" : "Wmata37.1",
+                 "fromFrequency" : "0.48673244390717196",
+                 "toFrequency" : 0.1240473800409937,
+                 "address_components" : [{
+                                         "long_name" : "Greensboro Metro Station",
+                                         "short_name" : "Greensboro Metro",
+                                         "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                                         }, {
+                                         "long_name" : "Virginia",
+                                         "short_name" : "VA",
+                                         "types" : ["administrative_area_level_1", "political"]
+                                         }, {
+                                         "long_name" : "United States",
+                                         "short_name" : "US",
+                                         "types" : ["country", "political"]
+                                         }
+                                         ],
+                 "excludeFromSearch":0,
+                 "formatted_address" : "Greensboro Metro Station, Virginia, USA",
+                 "geometry" : {
+                 "location" : {
+                 "lat" : 38.919564,
+                 "lng" : -77.232555
+                 },
+                 "location_type" : "APPROXIMATE"
+                 },
+                 "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+            }, {
 			"memberOfList" : "Wmata38",
 			"fromFrequency" : "0.34499611155377097",
 			"toFrequency" : 0.2790602992440431,
@@ -2416,7 +2444,7 @@
 			},
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
 		}, {
-			"memberOfList" : "Wmata43",
+			"memberOfList" : "Wmata43.0",
 			"fromFrequency" : "0.48673244390717196",
 			"toFrequency" : 0.1240473800409937,
 			"address_components" : [{
@@ -2466,6 +2494,34 @@
 			},
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
 		}, {
+                 "memberOfList" : "Wmata43.1",
+                 "fromFrequency" : "0.48673244390717196",
+                 "toFrequency" : 0.1240473800409937,
+                 "address_components" : [{
+                                         "long_name" : "McLean Metro Station",
+                                         "short_name" : "McLean Metro",
+                                         "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                                         }, {
+                                         "long_name" : "Virginia",
+                                         "short_name" : "VA",
+                                         "types" : ["administrative_area_level_1", "political"]
+                                         }, {
+                                         "long_name" : "United States",
+                                         "short_name" : "US",
+                                         "types" : ["country", "political"]
+                                         }
+                                         ],
+                 "excludeFromSearch":0,
+                 "formatted_address" : "McLean Metro Station, Virginia, USA",
+                 "geometry" : {
+                 "location" : {
+                 "lat" : 38.925069,
+                 "lng" : -77.208304
+                 },
+                 "location_type" : "APPROXIMATE"
+                 },
+                 "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+            }, {
 			"memberOfList" : "Wmata44",
 			"fromFrequency" : "0.27356758975608664",
 			"toFrequency" : 0.006227799551777213,
@@ -3705,7 +3761,35 @@
 			},
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
 		}, {
-			"memberOfList" : "Wmata63",
+                 "memberOfList" : "Wmata63.0",
+                 "fromFrequency" : "0.48673244390717196",
+                 "toFrequency" : 0.1240473800409937,
+                 "address_components" : [{
+                                         "long_name" : "Spring Hill Metro Station",
+                                         "short_name" : "Spring Hill Metro",
+                                         "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                                         }, {
+                                         "long_name" : "Virginia",
+                                         "short_name" : "VA",
+                                         "types" : ["administrative_area_level_1", "political"]
+                                         }, {
+                                         "long_name" : "United States",
+                                         "short_name" : "US",
+                                         "types" : ["country", "political"]
+                                         }
+                                         ],
+                 "excludeFromSearch":0,
+                 "formatted_address" : "Spring Hill Metro Station, Virginia, USA",
+                 "geometry" : {
+                 "location" : {
+                 "lat" : 38.928544,
+                 "lng" : -77.240880
+                 },
+                 "location_type" : "APPROXIMATE"
+                 },
+                 "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+            }, {
+			"memberOfList" : "Wmata63.1",
 			"fromFrequency" : "0.4125152082960125",
 			"toFrequency" : 0.4741345792520042,
 			"address_components" : [{
@@ -3913,7 +3997,7 @@
 			},
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
 		}, {
-			"memberOfList" : "Wmata67",
+			"memberOfList" : "Wmata67.0",
 			"fromFrequency" : "0.0704084668959758",
 			"toFrequency" : 0.012053720858605677,
 			"address_components" : [{
@@ -3971,6 +4055,34 @@
 			},
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
 		}, {
+                 "memberOfList" : "Wmata67.1",
+                 "fromFrequency" : "0.48673244390717196",
+                 "toFrequency" : 0.1240473800409937,
+                 "address_components" : [{
+                                         "long_name" : "Tysons Corner Metro Station",
+                                         "short_name" : "Tysons Corner Metro",
+                                         "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                                         }, {
+                                         "long_name" : "Virginia",
+                                         "short_name" : "VA",
+                                         "types" : ["administrative_area_level_1", "political"]
+                                         }, {
+                                         "long_name" : "United States",
+                                         "short_name" : "US",
+                                         "types" : ["country", "political"]
+                                         }
+                                         ],
+                 "excludeFromSearch":0,
+                 "formatted_address" : "Tysons Corner Metro Station, Virginia, USA",
+                 "geometry" : {
+                 "location" : {
+                 "lat" : 38.920304,
+                 "lng" : -77.221713
+                 },
+                 "location_type" : "APPROXIMATE"
+                 },
+                 "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                 }, {
 			"memberOfList" : "Wmata68",
 			"fromFrequency" : "0.40317831174772667",
 			"toFrequency" : 0.4649279099027597,
@@ -4591,7 +4703,35 @@
 			},
 			"types" : ["subway_station", "train_station", "transit_station", "establishment"]
 		}, {
-			"memberOfList" : "Wmata76",
+                 "memberOfList" : "Wmata76.0",
+                 "fromFrequency" : "0.48673244390717196",
+                 "toFrequency" : 0.1240473800409937,
+                 "address_components" : [{
+                                         "long_name" : "Wiehle-Reston Metro Station",
+                                         "short_name" : "Wiehle-Reston Metro",
+                                         "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+                                         }, {
+                                         "long_name" : "Virginia",
+                                         "short_name" : "VA",
+                                         "types" : ["administrative_area_level_1", "political"]
+                                         }, {
+                                         "long_name" : "United States",
+                                         "short_name" : "US",
+                                         "types" : ["country", "political"]
+                                         }
+                                         ],
+                 "excludeFromSearch":0,
+                 "formatted_address" : "Wiehle-Reston Metro Station, Virginia, USA",
+                 "geometry" : {
+                 "location" : {
+                 "lat" : 38.947134,
+                 "lng" : -77.337699
+                 },
+                 "location_type" : "APPROXIMATE"
+                 },
+                 "types" : ["subway_station", "train_station", "transit_station", "establishment"]
+        }, {
+			"memberOfList" : "Wmata76.1",
 			"fromFrequency" : "0.9333318936414666",
 			"toFrequency" : 0.11493099352742853,
 			"address_components" : [{
