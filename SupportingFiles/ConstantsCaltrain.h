@@ -37,6 +37,10 @@
     #define TRIP_PROCESS_URL      @"http://192.168.2.57:8080/TPServer/ws/"
 #endif
 
+#define UBER_PRODUCTS_URL    @"https://api.uber.com/v1/products"
+#define UBER_PRICE_URL    @"https://api.uber.com/v1/estimates/price"
+#define UBER_TIME_URL    @"https://api.uber.com/v1/estimates/time"
+
 #define TEST_TRIP_PROCESS_URL @"http://localhost:8080/TPServer/ws/"  // TP server for automated tests
 
 // Core Data database filename

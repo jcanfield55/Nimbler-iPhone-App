@@ -237,6 +237,21 @@
 		52CF43C014BDF2F9000565D6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CF43A514BDF2F9000565D6 /* CoreData.framework */; };
 		52CF43C814BDF2F9000565D6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52CF43C614BDF2F9000565D6 /* InfoPlist.strings */; };
 		52CF43CB14BDF2F9000565D6 /* Network_CommutingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52CF43CA14BDF2F9000565D6 /* Network_CommutingTests.m */; };
+		52D9666A19A71296004CD555 /* ItineraryFromUber.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9666919A71295004CD555 /* ItineraryFromUber.m */; };
+		52D9666B19A71296004CD555 /* ItineraryFromUber.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9666919A71295004CD555 /* ItineraryFromUber.m */; };
+		52D9666C19A71296004CD555 /* ItineraryFromUber.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9666919A71295004CD555 /* ItineraryFromUber.m */; };
+		52D9666D19A71296004CD555 /* ItineraryFromUber.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9666919A71295004CD555 /* ItineraryFromUber.m */; };
+		52D9666E19A71296004CD555 /* ItineraryFromUber.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9666919A71295004CD555 /* ItineraryFromUber.m */; };
+		52D9667519A713BD004CD555 /* LegFromUber.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9667419A713BD004CD555 /* LegFromUber.m */; };
+		52D9667619A713BD004CD555 /* LegFromUber.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9667419A713BD004CD555 /* LegFromUber.m */; };
+		52D9667719A713BD004CD555 /* LegFromUber.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9667419A713BD004CD555 /* LegFromUber.m */; };
+		52D9667819A713BD004CD555 /* LegFromUber.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9667419A713BD004CD555 /* LegFromUber.m */; };
+		52D9667919A713BD004CD555 /* LegFromUber.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9667419A713BD004CD555 /* LegFromUber.m */; };
+		52D9667C19A71873004CD555 /* UberMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9667B19A71873004CD555 /* UberMgr.m */; };
+		52D9667D19A71873004CD555 /* UberMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9667B19A71873004CD555 /* UberMgr.m */; };
+		52D9667E19A71873004CD555 /* UberMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9667B19A71873004CD555 /* UberMgr.m */; };
+		52D9667F19A71873004CD555 /* UberMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9667B19A71873004CD555 /* UberMgr.m */; };
+		52D9668019A71873004CD555 /* UberMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9667B19A71873004CD555 /* UberMgr.m */; };
 		52DD766416D2A86B005763DE /* Stations.m in Sources */ = {isa = PBXBuildFile; fileRef = 75E8F1DC16CE4E2A00863A8C /* Stations.m */; };
 		52DD766A16D2A892005763DE /* StationListElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 75E8F1CD16CE356D00863A8C /* StationListElement.m */; };
 		52DD766B16D2A893005763DE /* StationListElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 75E8F1CD16CE356D00863A8C /* StationListElement.m */; };
@@ -1814,6 +1829,12 @@
 		52CF43C714BDF2F9000565D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		52CF43C914BDF2F9000565D6 /* Network_CommutingTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = Network_CommutingTests.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		52CF43CA14BDF2F9000565D6 /* Network_CommutingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = Network_CommutingTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		52D9666819A71295004CD555 /* ItineraryFromUber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ItineraryFromUber.h; path = Model/ItineraryFromUber.h; sourceTree = SOURCE_ROOT; };
+		52D9666919A71295004CD555 /* ItineraryFromUber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ItineraryFromUber.m; path = Model/ItineraryFromUber.m; sourceTree = SOURCE_ROOT; };
+		52D9667319A713BD004CD555 /* LegFromUber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LegFromUber.h; path = Model/LegFromUber.h; sourceTree = SOURCE_ROOT; };
+		52D9667419A713BD004CD555 /* LegFromUber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LegFromUber.m; path = Model/LegFromUber.m; sourceTree = SOURCE_ROOT; };
+		52D9667A19A71873004CD555 /* UberMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UberMgr.h; path = Model/UberMgr.h; sourceTree = SOURCE_ROOT; };
+		52D9667B19A71873004CD555 /* UberMgr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UberMgr.m; path = Model/UberMgr.m; sourceTree = SOURCE_ROOT; };
 		52E4C09615CB465A00B55A65 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		52E4C09E15CB7D2F00B55A65 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		52E4C0A015CC705000B55A65 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
@@ -2538,6 +2559,8 @@
 			children = (
 				520FB17F1626036C0083F143 /* PlanStore.h */,
 				520FB1801626036C0083F143 /* PlanStore.m */,
+				52D9667A19A71873004CD555 /* UberMgr.h */,
+				52D9667B19A71873004CD555 /* UberMgr.m */,
 				520FB1771626036C0083F143 /* Plan.h */,
 				520FB1781626036C0083F143 /* Plan.m */,
 				8D3EF6AF16B24D3B00ED366B /* RealTimeManager.h */,
@@ -2546,10 +2569,14 @@
 				520FB1551626036C0083F143 /* AgencyAndId.m */,
 				520FB1601626036C0083F143 /* Leg.h */,
 				520FB1611626036C0083F143 /* Leg.m */,
+				52D9667319A713BD004CD555 /* LegFromUber.h */,
+				52D9667419A713BD004CD555 /* LegFromUber.m */,
 				8D0FA99F169165C00038FDB2 /* LegFromOTP.h */,
 				8D0FA9A0169165C10038FDB2 /* LegFromOTP.m */,
 				520FB15C1626036C0083F143 /* Itinerary.h */,
 				520FB15D1626036C0083F143 /* Itinerary.m */,
+				52D9666819A71295004CD555 /* ItineraryFromUber.h */,
+				52D9666919A71295004CD555 /* ItineraryFromUber.m */,
 				8D0FA9AE1691984F0038FDB2 /* ItineraryFromOTP.h */,
 				8D0FA9AF1691984F0038FDB2 /* ItineraryFromOTP.m */,
 				8D17870F16F87B3E00C2EAD5 /* IntermediateStops.h */,
@@ -4244,8 +4271,10 @@
 				8DFADCB41727B06A003DDACF /* Agencies.m in Sources */,
 				520FB121162603090083F143 /* FeedBackForm.m in Sources */,
 				520FB125162603090083F143 /* LegMapViewController.m in Sources */,
+				52D9667519A713BD004CD555 /* LegFromUber.m in Sources */,
 				520FB126162603090083F143 /* RouteDetailsViewController.m in Sources */,
 				520FB128162603090083F143 /* RouteOptionsViewController.m in Sources */,
+				52D9666A19A71296004CD555 /* ItineraryFromUber.m in Sources */,
 				520FB12A162603090083F143 /* SettingInfoViewController.m in Sources */,
 				520FB12D162603090083F143 /* ToFromTableViewController.m in Sources */,
 				520FB12E162603090083F143 /* ToFromViewController.m in Sources */,
@@ -4311,6 +4340,7 @@
 				8D17871116F87FDA00C2EAD5 /* IntermediateStops.m in Sources */,
 				525EC1C1170006B6009ACE5A /* MutableBoolean.m in Sources */,
 				8D58E1FC17142ED30011A8C2 /* nc_AppDelegate.m in Sources */,
+				52D9667C19A71873004CD555 /* UberMgr.m in Sources */,
 				8D8B10CD1720268B0093E110 /* NimblerApplication.m in Sources */,
 				8D8B10D0172026970093E110 /* WebView.m in Sources */,
 				2E02C785173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */,
@@ -4327,11 +4357,14 @@
 			files = (
 				52CF43CB14BDF2F9000565D6 /* Network_CommutingTests.m in Sources */,
 				52C32ABC16A3A90B0094EE14 /* TestGeneratePlan.m in Sources */,
+				52D9667D19A71873004CD555 /* UberMgr.m in Sources */,
 				52A9BE9516B4B41500564D0D /* RealTimeServerStubTest.m in Sources */,
 				52DD766B16D2A893005763DE /* StationListElement.m in Sources */,
 				52DD766D16D2A8FE005763DE /* PreloadedStop.m in Sources */,
 				52B0535C16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m in Sources */,
 				8D04A9BE17B0C5D7007DB944 /* BikeStepsViewController.m in Sources */,
+				52D9666B19A71296004CD555 /* ItineraryFromUber.m in Sources */,
+				52D9667619A713BD004CD555 /* LegFromUber.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4342,8 +4375,10 @@
 				8DFADCB21727B04B003DDACF /* Agencies.m in Sources */,
 				8DA77F8A1724FF0D0090C2EA /* FeedBackForm.m in Sources */,
 				8DA77F8B1724FF0D0090C2EA /* LegMapViewController.m in Sources */,
+				52D9667719A713BD004CD555 /* LegFromUber.m in Sources */,
 				8DA77F8C1724FF0D0090C2EA /* RouteDetailsViewController.m in Sources */,
 				8DA77F8D1724FF0D0090C2EA /* RouteOptionsViewController.m in Sources */,
+				52D9666C19A71296004CD555 /* ItineraryFromUber.m in Sources */,
 				8DA77F8E1724FF0D0090C2EA /* SettingInfoViewController.m in Sources */,
 				8DA77F8F1724FF0D0090C2EA /* ToFromTableViewController.m in Sources */,
 				8DA77F901724FF0D0090C2EA /* ToFromViewController.m in Sources */,
@@ -4409,6 +4444,7 @@
 				8DA77FCC1724FF0D0090C2EA /* IntermediateStops.m in Sources */,
 				8DA77FCD1724FF0D0090C2EA /* MutableBoolean.m in Sources */,
 				8DA77FCE1724FF0D0090C2EA /* nc_AppDelegate.m in Sources */,
+				52D9667E19A71873004CD555 /* UberMgr.m in Sources */,
 				8DA77FCF1724FF0D0090C2EA /* NimblerApplication.m in Sources */,
 				8DA77FD01724FF0D0090C2EA /* WebView.m in Sources */,
 				2E02C786173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */,
@@ -4426,8 +4462,10 @@
 				8DAA2853178BDFEF00C3FA30 /* Agencies.m in Sources */,
 				8DAA2854178BDFEF00C3FA30 /* FeedBackForm.m in Sources */,
 				8DAA2855178BDFEF00C3FA30 /* LegMapViewController.m in Sources */,
+				52D9667919A713BD004CD555 /* LegFromUber.m in Sources */,
 				8DAA2856178BDFEF00C3FA30 /* RouteDetailsViewController.m in Sources */,
 				8DAA2857178BDFEF00C3FA30 /* RouteOptionsViewController.m in Sources */,
+				52D9666E19A71296004CD555 /* ItineraryFromUber.m in Sources */,
 				8DAA2858178BDFEF00C3FA30 /* SettingInfoViewController.m in Sources */,
 				8DAA2859178BDFEF00C3FA30 /* ToFromTableViewController.m in Sources */,
 				8DAA285A178BDFEF00C3FA30 /* ToFromViewController.m in Sources */,
@@ -4493,6 +4531,7 @@
 				8DAA2896178BDFEF00C3FA30 /* IntermediateStops.m in Sources */,
 				8DAA2897178BDFEF00C3FA30 /* MutableBoolean.m in Sources */,
 				8DAA2898178BDFEF00C3FA30 /* nc_AppDelegate.m in Sources */,
+				52D9668019A71873004CD555 /* UberMgr.m in Sources */,
 				8DAA289A178BDFEF00C3FA30 /* WebView.m in Sources */,
 				8DAA289B178BDFEF00C3FA30 /* LocationFromLocalSearch.m in Sources */,
 				8DAA289C178BDFEF00C3FA30 /* TTTAttributedLabel.m in Sources */,
@@ -4510,8 +4549,10 @@
 				8DFADCB31727B059003DDACF /* Agencies.m in Sources */,
 				8DE18B431725415800AA8112 /* FeedBackForm.m in Sources */,
 				8DE18B441725415800AA8112 /* LegMapViewController.m in Sources */,
+				52D9667819A713BD004CD555 /* LegFromUber.m in Sources */,
 				8DE18B451725415800AA8112 /* RouteDetailsViewController.m in Sources */,
 				8DE18B461725415800AA8112 /* RouteOptionsViewController.m in Sources */,
+				52D9666D19A71296004CD555 /* ItineraryFromUber.m in Sources */,
 				8DE18B471725415800AA8112 /* SettingInfoViewController.m in Sources */,
 				8DE18B481725415800AA8112 /* ToFromTableViewController.m in Sources */,
 				8DE18B491725415800AA8112 /* ToFromViewController.m in Sources */,
@@ -4577,6 +4618,7 @@
 				8DE18B861725415800AA8112 /* MutableBoolean.m in Sources */,
 				8DE18B871725415800AA8112 /* nc_AppDelegate.m in Sources */,
 				8DE18B891725415800AA8112 /* WebView.m in Sources */,
+				52D9667F19A71873004CD555 /* UberMgr.m in Sources */,
 				2E02C787173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */,
 				8DEAC18F1778246400D7997C /* RouteExcludeSettings.m in Sources */,
 				8DEAC194177841F800D7997C /* TTTAttributedLabel.m in Sources */,

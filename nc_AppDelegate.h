@@ -13,6 +13,7 @@
 #import "ToFromViewController.h"
 #import "Locations.h"
 #import "PlanStore.h"
+#import "UberMgr.h"
 #import "SupportedRegion.h"
 #import <Restkit/RKJSONParserJSONKit.h>
 #import "RouteOptionsViewController.h"
@@ -62,6 +63,7 @@
 @property (strong, nonatomic) IBOutlet UIWindow *window;
 @property (readonly, strong, nonatomic) Locations *locations;
 @property (strong, nonatomic) PlanStore *planStore;
+@property (strong, nonatomic) UberMgr *uberMgr;
 @property (strong, nonatomic) ToFromViewController *toFromViewController;
 @property (readonly, strong, nonatomic) CLLocationManager* locationManager;
 @property (readonly, strong, nonatomic) CLLocation *locationFromlocManager;

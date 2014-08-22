@@ -44,6 +44,7 @@
     BOOL mkDirectionsRequestInProgress;
     
     RKClient* rkTpClient;  // RKClient for calling TP Server
+    RKClient* rkUberClient;  // RKClient for calling Uber API
 }
 
 @end
@@ -269,6 +270,10 @@ FeedBackForm *fbView;
     
     RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];
     rkTpClient = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
+    
+    RKObjectManager *rkUberProductsMgr = [RKObjectManager objectManagerWithBaseURL:UBER_PRODUCTS_URL];
+    RKObjectManager *rkUberPriceMgr = [RKObjectManager objectManagerWithBaseURL:UBER_PRICE_URL];
+    RKObjectManager *rkUberTimeMgr = [RKObjectManager objectManagerWithBaseURL:UBER_TIME_URL];
     
     // Fixed:- DE-306
     //http://stackoverflow.com/questions/9463259/restkit-disable-caching
