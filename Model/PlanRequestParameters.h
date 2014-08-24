@@ -55,6 +55,7 @@
 @property (strong, nonatomic) NSString* otpExcludeAgencyByModeString; // Set by requestPlanFromOtpWithParameters method with the OTP by mode exclude string
 @property (strong, nonatomic) RouteExcludeSettings* routeExcludeSettingsUsedForOTPCall; // set by requestPlanFromOtpWithParameters with parameters used for its call (may be different than routeExcludeSettings)
 @property (nonatomic) BOOL needToRequestRealtime;
+@property (nonatomic, strong) NSArray *itinFromUberArray;  // Array where we can store Uber itineraries once generated (optional)
 
 
 // Returns a new PlanRequestParameters object containing the same parameters as parameters0

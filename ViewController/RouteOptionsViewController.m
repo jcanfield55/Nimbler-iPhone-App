@@ -319,6 +319,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
             else if([btn.titleLabel.text isEqualToString:@"WALK"]){
                 [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_WALK_MODE];
             }
+            else if([btn.titleLabel.text isEqualToString:UBER_EXCLUDE_BUTTON_DISPLAY_NAME]) {
+                [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_UBER_MODE];
+            }
             else{
                 [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_TRANSIT_MODE];
             } 
@@ -343,6 +346,9 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
             }
             else if([btn.titleLabel.text isEqualToString:@"WALK"]){
                 [[NSUserDefaults standardUserDefaults] setObject:MODE_DISABLE forKey:DEFAULT_WALK_MODE];
+            }
+            else if([btn.titleLabel.text isEqualToString:UBER_EXCLUDE_BUTTON_DISPLAY_NAME]){
+                [[NSUserDefaults standardUserDefaults] setObject:MODE_DISABLE forKey:DEFAULT_UBER_MODE];
             }
             else{
                 BOOL isTransitModeExcluded = false;

@@ -401,6 +401,12 @@ UIImage *imageDetailDisclosure;
     if(![[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE]){
        [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_WALK_MODE]; 
     }
+#if UBER_ENABLED
+    if(![[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_UBER_MODE]){
+        [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_UBER_MODE];
+    }
+#endif
+    
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     //Mode

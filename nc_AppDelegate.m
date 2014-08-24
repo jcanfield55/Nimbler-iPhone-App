@@ -56,6 +56,7 @@ static nc_AppDelegate *appDelegate;
 @synthesize twitterCount;
 @synthesize locations;
 @synthesize planStore;
+@synthesize uberMgr;
 @synthesize locationManager;
 @synthesize toFromViewController;
 @synthesize managedObjectContext = __managedObjectContext;
@@ -271,9 +272,6 @@ FeedBackForm *fbView;
     RKObjectManager *rkPlanMgr = [RKObjectManager objectManagerWithBaseURL:TRIP_PROCESS_URL];
     rkTpClient = [RKClient clientWithBaseURL:TRIP_PROCESS_URL];
     
-    RKObjectManager *rkUberProductsMgr = [RKObjectManager objectManagerWithBaseURL:UBER_PRODUCTS_URL];
-    RKObjectManager *rkUberPriceMgr = [RKObjectManager objectManagerWithBaseURL:UBER_PRICE_URL];
-    RKObjectManager *rkUberTimeMgr = [RKObjectManager objectManagerWithBaseURL:UBER_TIME_URL];
     
     // Fixed:- DE-306
     //http://stackoverflow.com/questions/9463259/restkit-disable-caching
@@ -309,9 +307,12 @@ FeedBackForm *fbView;
         locations = [[Locations alloc] initWithManagedObjectContext:[self managedObjectContext] rkGeoMgr:rkGeoMgr];
         [toFromViewController setLocations:locations];
         
-        // Initialize the planStore, KeyObjectStore, Stations, ToFromViewController, RouteExcludeSettings, and toFromViewController
+        // Initialize the planStore, uberMgr, KeyObjectStore, Stations, ToFromViewController, RouteExcludeSettings, and toFromViewController
         planStore = [[PlanStore alloc] initWithManagedObjectContext:[self managedObjectContext]
                                                           rkPlanMgr:rkPlanMgr rkTpClient:rkTpClient];
+        uberMgr = [[UberMgr alloc] initWithManagedObjectContext:[self managedObjectContext]];
+        planStore.uberMgr = uberMgr;
+        
         stations =  [[Stations alloc] initWithManagedObjectContext:[self managedObjectContext]
                                                          rkPlanMgr:rkPlanMgr];
         [KeyObjectStore setUpWithManagedObjectContext:[self managedObjectContext]];

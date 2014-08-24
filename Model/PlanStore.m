@@ -43,6 +43,7 @@
 @synthesize fromToStopID;
 @synthesize stopTimesLoadSuccessfully;
 @synthesize legLegIdDictionary;
+@synthesize uberMgr;
 
 // Designated initializer
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkPlanMgr:(RKObjectManager *)rkP rkTpClient:(RKClient *)rkTpClient
@@ -230,6 +231,7 @@
         BOOL bikeShareMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_SHARE_MODE] boolValue];
         BOOL transitMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] boolValue];
         BOOL walkMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] boolValue];
+        BOOL uberMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_UBER_MODE] boolValue];
         
         if(bikeMode){
             if(transitMode && walkMode){
@@ -373,6 +375,10 @@
             [params setObject:[NSNumber numberWithInt:maxDistance] forKey:MAX_WALK_DISTANCE];
         }
         
+        if (uberMode && parameters.serverCallsSoFar <= 0) {
+            [uberMgr requestUberItineraryWithParameters:parameters];
+        }
+        
 //        // Set Bike Mode parameters if needed
 //        if (parameters.routeExcludeSettings &&
 //            [parameters.routeExcludeSettings settingForKey:returnBikeButtonTitle()]==SETTING_INCLUDE_ROUTE) {
@@ -427,7 +433,7 @@
         [params setObject:[[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"] forKey:APPLICATION_VERSION];
         // Build the parameters into a resource string
         parameters.serverCallsSoFar = parameters.serverCallsSoFar + 1;
-        // TODO handle changes to maxWalkDistance with plan caching
+
         NSString *requestID = generateRandomString(REQUEST_ID_LENGTH);
         
         // Append The requestID to the URL.

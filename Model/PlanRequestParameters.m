@@ -39,6 +39,7 @@
 @synthesize otpExcludeAgencyByModeString;
 @synthesize routeExcludeSettingsUsedForOTPCall;
 @synthesize needToRequestRealtime;
+@synthesize itinFromUberArray;
 
 // Returns a new PlanRequestParameters object containing the same parameters as parameters0
 + (id)copyOfPlanRequestParameters:(PlanRequestParameters *)parameters0
@@ -68,6 +69,7 @@
     newParameters.routeExcludeSettings = parameters0.routeExcludeSettings;
     newParameters.otpExcludeAgencyString = parameters0.otpExcludeAgencyString;
     newParameters.otpExcludeAgencyByModeString = parameters0.otpExcludeAgencyByModeString;
+    newParameters.itinFromUberArray = parameters0.itinFromUberArray;
     return newParameters;
 }
 

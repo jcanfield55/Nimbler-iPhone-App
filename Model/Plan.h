@@ -40,6 +40,7 @@
 @property(nonatomic, strong) TransitCalendar* transitCalendar;
 @property(nonatomic, strong) NSSet* gtfsParsingRequests; // Set of GtfsParsingStatus objects that have outstanding requests to download GTFS trips & stopTimes
 @property(nonatomic, strong) NSArray* excludeSettingsArray;  // Array of RouteExcludeSetting objects returned by RouteExcludeSettings -> excludeSettingsForPlan.  Not stored in CoreData
+@property(nonatomic) NSArray *itinFromUberArray;  // Array of itineraries from Uber, which are added to the sortedItineraries at the last minute
 
 // Methods
 

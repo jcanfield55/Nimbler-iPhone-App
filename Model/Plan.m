@@ -45,6 +45,7 @@
 @synthesize sortedItineraries;
 @synthesize transitCalendar;
 @synthesize excludeSettingsArray;
+@synthesize itinFromUberArray;
 
 + (RKManagedObjectMapping *)objectMappingforPlanner:(APIType)apiType
 {

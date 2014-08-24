@@ -124,6 +124,9 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
             [newDictionary setObject:SETTING_STRING_EXCLUDE forKey:BIKE_BUTTON];
             [newDictionary setObject:SETTING_STRING_EXCLUDE forKey:BIKE_SHARE];
         }
+#if UBER_ENABLED
+        [newDictionary setObject:SETTING_STRING_INCLUDE forKey:UBER_EXCLUDE_BUTTON_DISPLAY_NAME];
+#endif
         [self setExcludeDictionaryInternal:newDictionary];
     }
     return self.excludeDictionaryInternal;
@@ -235,6 +238,14 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
     NSSortDescriptor *sortD = [[NSSortDescriptor alloc]
                                initWithKey:@"key" ascending:YES selector:@selector(localizedStandardCompare:)];
     [returnArray sortUsingDescriptors:[NSArray arrayWithObject:sortD]];
+
+#if UBER_ENABLED
+    // Add Uber button
+    RouteExcludeSetting* routeExclSetting = [[RouteExcludeSetting alloc] init];
+    routeExclSetting.key = UBER_EXCLUDE_BUTTON_DISPLAY_NAME;
+    routeExclSetting.setting = [self settingForKey:UBER_EXCLUDE_BUTTON_DISPLAY_NAME];
+    [returnArray addObject:routeExclSetting];
+#endif
     
     if([[[nc_AppDelegate sharedInstance] getAppTypeFromBundleId] isEqualToString:WMATA_APP_TYPE]){
         // Add bike button

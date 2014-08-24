@@ -25,4 +25,5 @@
 #define NIMLOG_US202(...)  // NSLog(__VA_ARGS__) // Debugging logging
 #define NIMLOG_US191(...)   // NSLog(__VA_ARGS__) // Logging for US191 (show intermediate stops)
 #define NIMLOG_AUTOTEST(...) // NSLog(__VA_ARGS__) // Logging in automated tests
+#define NIMLOG_UBER(...) NSLog(__VA_ARGS__) // Logging for Uber additions
 #endif

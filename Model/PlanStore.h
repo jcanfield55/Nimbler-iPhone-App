@@ -15,6 +15,7 @@
 #import <RestKit/CoreData.h>
 #import "Plan.h"
 #import "PlanRequestParameters.h"
+#import "UberMgr.h"
 
 typedef enum {
     NO_MORE_ITINERARIES_REQUESTED,
@@ -34,6 +35,7 @@ typedef enum {
 @property (strong, nonatomic) NSArray *fromToStopID;
 @property (nonatomic) BOOL stopTimesLoadSuccessfully;
 @property (nonatomic, strong) NSDictionary *legLegIdDictionary;
+@property (nonatomic, strong) UberMgr *uberMgr;
 
 // Designated initializer
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc rkPlanMgr:(RKObjectManager *)rkP rkTpClient:(RKClient *)rkTpClient;
