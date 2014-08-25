@@ -779,6 +779,20 @@
  return NO;
  } */
 
+// Tacks on an array of uber itineraries to the beginning of the sorted itinerary array
+-(void)addUberItinsToSortedItineraries:(NSArray *)uberItins
+{
+    // Only do this is sortedItineraries != nil
+    if (self.sortedItineraries) {
+        NSMutableArray *itins = [NSMutableArray arrayWithArray:self.sortedItineraries];
+        // Insert uberItins in the same order as in the uberItins array at the beginning of the sortedItineraries
+        for (int i=0; i< uberItins.count; i++) {
+            [itins insertObject:[uberItins objectAtIndex:i] atIndex:i];
+        }
+        self.sortedItineraries = itins;
+    }
+}
+
 - (NSString *)ncDescription
 {
     NSMutableString* desc = [NSMutableString stringWithFormat:

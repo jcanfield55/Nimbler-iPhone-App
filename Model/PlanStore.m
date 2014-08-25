@@ -109,6 +109,9 @@
                              FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
                              nil, nil, nil, nil);
                     reqStatus = PLAN_STATUS_OK;
+                    if (parameters.itinFromUberArray && parameters.itinFromUberArray.count > 0) {
+                        [matchingPlan addUberItinsToSortedItineraries:parameters.itinFromUberArray];
+                    }
                 }
                 ToFromViewController* toFromVC = [[nc_AppDelegate sharedInstance] toFromViewController];
                 if(toFromVC.routeOptionsVC.timerGettingRealDataByItinerary != nil){
@@ -592,6 +595,9 @@
                 }
                 [self requestStopTimesForItineraryPatterns:planRequestParameters.originalTripDate Plan:plan];
                 PlanRequestStatus reqStatus = PLAN_STATUS_OK;
+                if (planRequestParameters.itinFromUberArray && planRequestParameters.itinFromUberArray.count > 0) {
+                    [plan addUberItinsToSortedItineraries:planRequestParameters.itinFromUberArray];
+                }
                 if ([[plan sortedItineraries] count] == 0) {
                     if (moreItinStatus == MORE_ITINERARIES_REQUESTED_DIFFERENT_EXCLUDES) {
                         NIMLOG_US202(@"0 sorted itineraries, waiting for next OTP request");
@@ -855,6 +861,7 @@
         }
     }
 }
+
 
 // Fetches array of plans going to the same to & from Location from the cache
 // Normally will return just one plan, but could return more if the plans have not been consolidated

@@ -18,6 +18,8 @@
 @synthesize managedObjectContext;
 @synthesize rkUberClient;
 @synthesize itineraryArray;
+@synthesize receivedPrices;
+@synthesize receivedTimes;
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc
 {
@@ -36,7 +38,9 @@
 - (void)requestUberItineraryWithParameters:(PlanRequestParameters *)parameters
 {
     self.currentRequest = parameters;
-    [self.itineraryArray removeAllObjects]; // Clear the itinerary array
+    [self.itineraryArray removeAllObjects]; // Clear the itinerary array.  TODO: delete from CoreData too
+    self.receivedTimes = false;
+    self.receivedPrices = false;
     
     NSMutableDictionary *priceParams = [[NSMutableDictionary alloc] init];
     [priceParams setObject:parameters.latitudeFROM forKey:UBER_START_LATITUDE];
@@ -66,9 +70,11 @@
         NSString *arrayKey;
         if ([request.resourcePath isEqualToString:UBER_PRICE_URL]) {   // Price request response
             arrayKey = UBER_PRICES_KEY;
+            self.receivedPrices = true;
         }
         else if ([request.resourcePath isEqualToString:UBER_TIME_URL]) {   // Time request response
             arrayKey = UBER_TIMES_KEY;
+            self.receivedTimes = true;
         }
         
         NSArray *responseArray = [responseDictionary objectForKey:arrayKey];
@@ -109,12 +115,14 @@
                     }
                 }
             }
-
-            
+            // Save Uber itineraries in request parameters if we have received both prices and times
+            if (self.receivedTimes && self.receivedPrices) {
+                self.currentRequest.itinFromUberArray = itineraryArray;
+            }
         }
     }
     @catch (NSException *exception) {
-        logException(@"PlanStore->requestPlanWithParameters:", @"", exception);
+        logException(@"UberMgr->requestPlanWithParameters:", @"", exception);
     }
 
 }

@@ -80,6 +80,11 @@ static NSDate* midnightTimeOnly;  // represents 24:00 for a timeOnly time
     return ([self isKindOfClass:[ItineraryFromOTP class]]);
 }
 
+// Returns true if itinerary is from Uber API
+- (BOOL)isUberItinerary {
+    return ([self isKindOfClass:[ItineraryFromUber class]]);
+}
+
 // Returns trues if itinerary is a unique itinerary
 - (BOOL)isUniqueItinerary {
     return ([self uniqueItineraryForPlan] != nil);

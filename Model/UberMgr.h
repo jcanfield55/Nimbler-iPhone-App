@@ -16,17 +16,21 @@
 #import "LegFromUber.h"
 #import "PlanRequestParameters.h"
 
+
 @interface UberMgr : NSObject <RKRequestDelegate>
 
 @property (strong,nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong,nonatomic)  RKClient *rkUberClient;
 @property (strong,nonatomic) PlanRequestParameters *currentRequest;
 @property (strong,nonatomic) NSMutableArray *itineraryArray;  // Array of ItineraryFromUber objects for currentRequest
+@property (nonatomic) BOOL receivedTimes;
+@property (nonatomic) BOOL receivedPrices;
 
 // Designated initializer
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc;
 
 // Requests a Uber itinerary given the provided parameters (to and from lat and long)
 - (void)requestUberItineraryWithParameters:(PlanRequestParameters *)parameters;
+
 
 @end

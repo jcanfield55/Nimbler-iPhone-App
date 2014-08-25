@@ -485,6 +485,20 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
         cell.textLabel.numberOfLines = 2;
         // Get the requested itinerary
         Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
+        
+        // Handle Uber itinerary case first
+        if (itin.isUberItinerary) {
+            ItineraryFromUber *uberItin = (ItineraryFromUber *)itin;
+            cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
+            [[cell detailTextLabel] setFont:[UIFont MEDIUM_FONT]];
+            cell.detailTextLabel.textColor = [UIColor GRAY_FONT_COLOR];
+            
+            [[cell textLabel] setText:uberItin.uberDisplayName];
+            [[cell detailTextLabel] setText:uberItin.uberPriceEstimate];
+            return cell;
+        }
+        
+        // ... else not an uber itinerary
         // Set title
         [cell setBackgroundColor:[UIColor clearColor]];
         [[cell textLabel] setFont:[UIFont MEDIUM_BOLD_FONT]];

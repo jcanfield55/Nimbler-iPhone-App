@@ -73,6 +73,7 @@ typedef enum {
 - (NSString *)ncDescription;
 
 - (BOOL)isOTPItinerary;  // Returns true if itinerary is from OTP
+- (BOOL)isUberItinerary; // Returns true if itinerary is from Uber API
 - (BOOL)isUniqueItinerary; // Returns trues if itinerary is a unique itinerary
 
 // Returns true if each leg's starttime is current versus the GTFS file date for that leg's agency
