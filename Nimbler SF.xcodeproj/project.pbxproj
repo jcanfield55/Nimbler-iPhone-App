@@ -185,6 +185,16 @@
 		522C03D218304FFB004BC6AF /* Icon-DC-58@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 522C03D118304FFB004BC6AF /* Icon-DC-58@2x.png */; };
 		522C03D41830501C004BC6AF /* Icon-DC-80@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 522C03D31830501C004BC6AF /* Icon-DC-80@2x.png */; };
 		524100A41727542E0007D956 /* Nimbler DC-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 524100A31727542E0007D956 /* Nimbler DC-Info.plist */; };
+		524402E019B23A6900B449FD /* UberMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9667B19A71873004CD555 /* UberMgr.m */; };
+		524402E119B23C4400B449FD /* GtfsParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D106DD51671EB41004E0DE5 /* GtfsParser.m */; };
+		524402E219B23C4C00B449FD /* RealTimeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3EF6B016B24D3B00ED366B /* RealTimeManager.m */; };
+		524402E419B23E0900B449FD /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCDCC0781576287900D4B4D3 /* CoreLocation.framework */; };
+		524402E519B23E2A00B449FD /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
+		524402E819B5721D00B449FD /* UberQueueEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 524402E719B5721D00B449FD /* UberQueueEntry.m */; };
+		524402E919B5721D00B449FD /* UberQueueEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 524402E719B5721D00B449FD /* UberQueueEntry.m */; };
+		524402EA19B5721D00B449FD /* UberQueueEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 524402E719B5721D00B449FD /* UberQueueEntry.m */; };
+		524402EB19B5721D00B449FD /* UberQueueEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 524402E719B5721D00B449FD /* UberQueueEntry.m */; };
+		524402EC19B5721D00B449FD /* UberQueueEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 524402E719B5721D00B449FD /* UberQueueEntry.m */; };
 		524A921416E7117800A9A0A2 /* GtfsParsingStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 524A921316E7117800A9A0A2 /* GtfsParsingStatus.m */; };
 		524EAEA91933EF8C00EE00B4 /* img_switcherarrows2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 524EAEA81933EF8B00EE00B4 /* img_switcherarrows2@2x.png */; };
 		524EAEAA1933EF8C00EE00B4 /* img_switcherarrows2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 524EAEA81933EF8B00EE00B4 /* img_switcherarrows2@2x.png */; };
@@ -248,7 +258,6 @@
 		52D9667819A713BD004CD555 /* LegFromUber.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9667419A713BD004CD555 /* LegFromUber.m */; };
 		52D9667919A713BD004CD555 /* LegFromUber.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9667419A713BD004CD555 /* LegFromUber.m */; };
 		52D9667C19A71873004CD555 /* UberMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9667B19A71873004CD555 /* UberMgr.m */; };
-		52D9667D19A71873004CD555 /* UberMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9667B19A71873004CD555 /* UberMgr.m */; };
 		52D9667E19A71873004CD555 /* UberMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9667B19A71873004CD555 /* UberMgr.m */; };
 		52D9667F19A71873004CD555 /* UberMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9667B19A71873004CD555 /* UberMgr.m */; };
 		52D9668019A71873004CD555 /* UberMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9667B19A71873004CD555 /* UberMgr.m */; };
@@ -286,7 +295,6 @@
 		8D01D35417B9EEBD002DB6CA /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C09E15CB7D2F00B55A65 /* Icon@2x.png */; };
 		8D01D35517B9EEC5002DB6CA /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C09615CB465A00B55A65 /* Icon.png */; };
 		8D01D35617B9EECE002DB6CA /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C09E15CB7D2F00B55A65 /* Icon@2x.png */; };
-		8D04A9BE17B0C5D7007DB944 /* BikeStepsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE4B23117AF77EB00105A41 /* BikeStepsViewController.m */; };
 		8D04A9C517B1046D007DB944 /* FeedBackFormPopUp_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D04A9C317B1046D007DB944 /* FeedBackFormPopUp_568h.xib */; };
 		8D04A9C617B1046D007DB944 /* FeedBackFormPopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D04A9C417B1046D007DB944 /* FeedBackFormPopUp.xib */; };
 		8D04A9C717B10838007DB944 /* FeedBackFormPopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D04A9C417B1046D007DB944 /* FeedBackFormPopUp.xib */; };
@@ -1781,6 +1789,9 @@
 		522C03D31830501C004BC6AF /* Icon-DC-80@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-DC-80@2x.png"; sourceTree = "<group>"; };
 		522C0E6A15588E7A0072ADD6 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		524100A31727542E0007D956 /* Nimbler DC-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Nimbler DC-Info.plist"; sourceTree = SOURCE_ROOT; };
+		524402DB19ADA10300B449FD /* Network_Commuting 1.13.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.13.xcdatamodel"; sourceTree = "<group>"; };
+		524402E619B5721D00B449FD /* UberQueueEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UberQueueEntry.h; path = Model/UberQueueEntry.h; sourceTree = SOURCE_ROOT; };
+		524402E719B5721D00B449FD /* UberQueueEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UberQueueEntry.m; path = Model/UberQueueEntry.m; sourceTree = SOURCE_ROOT; };
 		524A921116E6C71C00A9A0A2 /* LocalConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LocalConstants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		524A921216E7117700A9A0A2 /* GtfsParsingStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GtfsParsingStatus.h; path = Model/GtfsParsingStatus.h; sourceTree = SOURCE_ROOT; };
 		524A921316E7117800A9A0A2 /* GtfsParsingStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GtfsParsingStatus.m; path = Model/GtfsParsingStatus.m; sourceTree = SOURCE_ROOT; };
@@ -2136,6 +2147,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				524402E519B23E2A00B449FD /* MapKit.framework in Frameworks */,
+				524402E419B23E0900B449FD /* CoreLocation.framework in Frameworks */,
 				52CF43BD14BDF2F9000565D6 /* SenTestingKit.framework in Frameworks */,
 				52CF43BE14BDF2F9000565D6 /* UIKit.framework in Frameworks */,
 				52CF43BF14BDF2F9000565D6 /* Foundation.framework in Frameworks */,
@@ -2561,6 +2574,8 @@
 				520FB1801626036C0083F143 /* PlanStore.m */,
 				52D9667A19A71873004CD555 /* UberMgr.h */,
 				52D9667B19A71873004CD555 /* UberMgr.m */,
+				524402E619B5721D00B449FD /* UberQueueEntry.h */,
+				524402E719B5721D00B449FD /* UberQueueEntry.m */,
 				520FB1771626036C0083F143 /* Plan.h */,
 				520FB1781626036C0083F143 /* Plan.m */,
 				8D3EF6AF16B24D3B00ED366B /* RealTimeManager.h */,
@@ -4320,6 +4335,7 @@
 				8D106E041671F16C004E0DE5 /* GtfsTrips.m in Sources */,
 				8D6FB9681680870500952B0C /* GtfsStop.m in Sources */,
 				8D0FA9A1169165C10038FDB2 /* LegFromOTP.m in Sources */,
+				524402E819B5721D00B449FD /* UberQueueEntry.m in Sources */,
 				8D0FA9B0169198500038FDB2 /* ItineraryFromOTP.m in Sources */,
 				8DC448EA169409ED00608DF6 /* GtfsParser.m in Sources */,
 				8DE0CC4F16A9632100AE2E9D /* twitterViewController.m in Sources */,
@@ -4357,12 +4373,14 @@
 			files = (
 				52CF43CB14BDF2F9000565D6 /* Network_CommutingTests.m in Sources */,
 				52C32ABC16A3A90B0094EE14 /* TestGeneratePlan.m in Sources */,
-				52D9667D19A71873004CD555 /* UberMgr.m in Sources */,
+				524402E019B23A6900B449FD /* UberMgr.m in Sources */,
+				524402E119B23C4400B449FD /* GtfsParser.m in Sources */,
+				524402E919B5721D00B449FD /* UberQueueEntry.m in Sources */,
 				52A9BE9516B4B41500564D0D /* RealTimeServerStubTest.m in Sources */,
 				52DD766B16D2A893005763DE /* StationListElement.m in Sources */,
+				524402E219B23C4C00B449FD /* RealTimeManager.m in Sources */,
 				52DD766D16D2A8FE005763DE /* PreloadedStop.m in Sources */,
 				52B0535C16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m in Sources */,
-				8D04A9BE17B0C5D7007DB944 /* BikeStepsViewController.m in Sources */,
 				52D9666B19A71296004CD555 /* ItineraryFromUber.m in Sources */,
 				52D9667619A713BD004CD555 /* LegFromUber.m in Sources */,
 			);
@@ -4424,6 +4442,7 @@
 				8DA77FB81724FF0D0090C2EA /* GtfsTrips.m in Sources */,
 				8DA77FB91724FF0D0090C2EA /* GtfsStop.m in Sources */,
 				8DA77FBA1724FF0D0090C2EA /* LegFromOTP.m in Sources */,
+				524402EA19B5721D00B449FD /* UberQueueEntry.m in Sources */,
 				8DA77FBB1724FF0D0090C2EA /* ItineraryFromOTP.m in Sources */,
 				8DA77FBC1724FF0D0090C2EA /* GtfsParser.m in Sources */,
 				8DA77FBD1724FF0D0090C2EA /* twitterViewController.m in Sources */,
@@ -4511,6 +4530,7 @@
 				8DAA2882178BDFEF00C3FA30 /* GtfsTrips.m in Sources */,
 				8DAA2883178BDFEF00C3FA30 /* GtfsStop.m in Sources */,
 				8DAA2884178BDFEF00C3FA30 /* LegFromOTP.m in Sources */,
+				524402EC19B5721D00B449FD /* UberQueueEntry.m in Sources */,
 				8DAA2885178BDFEF00C3FA30 /* ItineraryFromOTP.m in Sources */,
 				8DAA2886178BDFEF00C3FA30 /* GtfsParser.m in Sources */,
 				8DAA2887178BDFEF00C3FA30 /* twitterViewController.m in Sources */,
@@ -4598,6 +4618,7 @@
 				8DE18B711725415800AA8112 /* GtfsTrips.m in Sources */,
 				8DE18B721725415800AA8112 /* GtfsStop.m in Sources */,
 				8DE18B731725415800AA8112 /* LegFromOTP.m in Sources */,
+				524402EB19B5721D00B449FD /* UberQueueEntry.m in Sources */,
 				8DE18B741725415800AA8112 /* ItineraryFromOTP.m in Sources */,
 				8DE18B751725415800AA8112 /* GtfsParser.m in Sources */,
 				8DE18B761725415800AA8112 /* twitterViewController.m in Sources */,
@@ -5171,6 +5192,7 @@
 			isa = XCVersionGroup;
 			children = (
 				8D04A9CD17BE49C3007DB944 /* Network_Commuting 1.12.xcdatamodel */,
+				524402DB19ADA10300B449FD /* Network_Commuting 1.13.xcdatamodel */,
 				8D0CAE4C17A1370B000F4BAA /* Network_Commuting 1.11.xcdatamodel */,
 				8DEAC18E177823EA00D7997C /* Network_Commuting 1.10.xcdatamodel */,
 				2E02C78C1733D82D001F2F28 /* Network_Commuting 1. 9.xcdatamodel */,
@@ -5184,7 +5206,7 @@
 				8D9EA261162D78FD002BB5FF /* Network_Commuting 1.6.xcdatamodel */,
 				8D9EA262162D78FD002BB5FF /* Network_Commuting.xcdatamodel */,
 			);
-			currentVersion = 8D04A9CD17BE49C3007DB944 /* Network_Commuting 1.12.xcdatamodel */;
+			currentVersion = 524402DB19ADA10300B449FD /* Network_Commuting 1.13.xcdatamodel */;
 			path = Network_Commuting.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

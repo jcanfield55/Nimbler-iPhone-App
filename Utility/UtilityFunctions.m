@@ -804,3 +804,37 @@ UIImage *returnNavigationBarBackgroundImage(void){
     }
     return navBarBackgroundImage;
 }
+
+// Takes a NSObject, object, of unknown type and returns a NSNumber if possible.
+// If object is a NSNumber, returns that.
+// If object is a NSString, converts string to a number if possible using a doubleValue.
+// NSString objects with non-numberic values will return a NSNumber with value = 0
+// If object is nil or any other type, returns nil.
+NSNumber *NSNumberFromNSObject(NSObject *object)
+{
+    if (object == nil) {
+        return nil;
+    }
+    else if ([object isKindOfClass:[NSNumber class]]) {
+        return (NSNumber *)object;
+    }
+    else if ([object isKindOfClass:[NSString class]]) {
+        NSString *string = (NSString *) object;
+        NSNumber *number = [NSNumber numberWithDouble:[string doubleValue]];
+        return number;
+    }
+    return nil;  // return nil if not a NSNumber or NSString
+}
+
+// Takes a NSObject, object, of unknown type and returns an NSString if possible.
+// If object is nil or any other type, returns nil.
+NSString *NSStringFromNSObject(NSObject *object)
+{
+    if (object == nil) {
+        return nil;
+    }
+    else if ([object isKindOfClass:[NSString class]]) {
+        return (NSString *)object;
+    }
+    return nil;  // return nil if not an NSString
+}

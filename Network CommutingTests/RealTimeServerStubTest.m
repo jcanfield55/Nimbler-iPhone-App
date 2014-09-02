@@ -647,7 +647,7 @@
     [[NSUserDefaults standardUserDefaults] setObject:@"data.json" forKey:DEVICE_TOKEN];
     [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan PlanRequestParameters:parameters];
     STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result=[RealTimeManager realTimeManager].loadedRealTimeData; return result;}], @"Timed out waiting for RealTimeData");
-    [gtfsParser generateItinerariesFromRealTime:plan TripDate:tripDate Context:managedObjectContext];
+    [gtfsParser generateItinerariesFromRealTime:plan TripDate:tripDate DepartOrArrive:DEPART Context:managedObjectContext];
     
     [plan prepareSortedItinerariesWithMatchesForDate:tripDate departOrArrive:DEPART];
 
@@ -717,7 +717,7 @@
     [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan PlanRequestParameters:parameters];
     [RealTimeManager realTimeManager].loadedRealTimeData = false;
     STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result=[RealTimeManager realTimeManager].loadedRealTimeData; return result;}], @"Timed out waiting for RealTimeData");
-    [gtfsParser generateItinerariesFromRealTime:plan TripDate:tripDate Context:managedObjectContext];
+    [gtfsParser generateItinerariesFromRealTime:plan TripDate:tripDate DepartOrArrive:DEPART Context:managedObjectContext];
     
     
     [plan prepareSortedItinerariesWithMatchesForDate:tripDate departOrArrive:DEPART];
@@ -796,7 +796,7 @@
     [[RealTimeManager realTimeManager] requestRealTimeDataFromServerUsingPlan:plan PlanRequestParameters:parameters];
     [RealTimeManager realTimeManager].loadedRealTimeData = false;
     STAssertTrue([self waitForNonNullValueOfBlock:^(void){BOOL result=[RealTimeManager realTimeManager].loadedRealTimeData; return result;}], @"Timed out waiting for RealTimeData");
-    [gtfsParser generateItinerariesFromRealTime:plan TripDate:tripDate Context:managedObjectContext];
+    [gtfsParser generateItinerariesFromRealTime:plan TripDate:tripDate DepartOrArrive:DEPART Context:managedObjectContext];
     
     
     [plan prepareSortedItinerariesWithMatchesForDate:tripDate departOrArrive:DEPART];

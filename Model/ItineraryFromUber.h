@@ -14,10 +14,10 @@
 @property (nonatomic, strong) NSString *uberProductID;
 @property (nonatomic, strong) NSString *uberDisplayName;
 @property (nonatomic, strong) NSString *uberPriceEstimate;
-@property (nonatomic) int uberLowEstimate;
-@property (nonatomic) int uberHighEstimate;
-@property (nonatomic) float uberSurgeMultiplier;
-@property (nonatomic) int uberTimeEstimateSeconds;
+@property (nonatomic, strong) NSNumber *uberLowEstimate;
+@property (nonatomic, strong) NSNumber *uberHighEstimate;
+@property (nonatomic, strong) NSNumber *uberSurgeMultiplier;
+@property (nonatomic, strong) NSNumber *uberTimeEstimateSeconds;
 
 
 @end

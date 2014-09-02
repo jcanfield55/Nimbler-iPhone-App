@@ -58,6 +58,7 @@
 #define UBER_HIGH_ESTIMATE_KEY @"high_estimate"
 #define UBER_SURGE_MULTIPLIER_KEY @"surge_multiplier"
 #define UBER_TIME_ESTIMATE_KEY @"estimate"
+#define UBER_MAX_RETAIN_SECONDS 120  // Maximum amount of time before a partial Uber request result is thrown out
 
 
 #define TEST_TRIP_PROCESS_URL @"http://localhost:8080/TPServer/ws/"  // TP server for automated tests

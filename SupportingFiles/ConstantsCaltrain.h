@@ -37,6 +37,29 @@
     #define TRIP_PROCESS_URL      @"http://192.168.2.57:8080/TPServer/ws/"
 #endif
 
+// See https://developer.uber.com/v1/endpoints/ for details of the Uber API
+#define UBER_ENABLED  1   // 1 to enable Uber in RouteExcludeSettings, 0 otherwise
+#define UBER_BASE_URL    @"https://api.uber.com/v1"
+#define UBER_PRODUCTS_URL    @"/products"
+#define UBER_PRICE_URL    @"/estimates/price"
+#define UBER_TIME_URL    @"/estimates/time"
+#define UBER_SERVER_TOKEN @"8wPZ8UFdreBCTwk_DVeL8Al-ejn7Z3GsPbUX4w45"
+#define UBER_START_LATITUDE @"start_latitude"
+#define UBER_START_LONGITUDE @"start_longitude"
+#define UBER_END_LATITUDE @"end_latitude"
+#define UBER_END_LONGITUDE @"end_longitude"
+#define UBER_EXCLUDE_BUTTON_DISPLAY_NAME @"Uber"
+#define UBER_TIMES_KEY @"times"
+#define UBER_PRICES_KEY @"prices"
+#define UBER_PRODUCT_ID_KEY @"product_id"
+#define UBER_DISPLAY_NAME_KEY @"display_name"
+#define UBER_PRICE_ESTIMATE_KEY @"estimate"
+#define UBER_LOW_ESTIMATE_KEY @"low_estimate"
+#define UBER_HIGH_ESTIMATE_KEY @"high_estimate"
+#define UBER_SURGE_MULTIPLIER_KEY @"surge_multiplier"
+#define UBER_TIME_ESTIMATE_KEY @"estimate"
+
+
 #define TEST_TRIP_PROCESS_URL @"http://localhost:8080/TPServer/ws/"  // TP server for automated tests
 
 // Core Data database filename
@@ -178,6 +201,8 @@
 #define FLURRY_ROUTE_NO_MATCHING_ITINERARIES @"Route no matching itineraries"
 #define FLURRY_ROUTE_OTHER_ERROR @"RK Error when retrieving Plan"
 #define FLURRY_ROUTE_OPTIONS_APPEAR @"RouteOptions appear"
+#define FLURRY_UBER_NO_NETWORK @"No network connection for Uber API"
+#define FLURRY_UBER_OTHER_ERROR @"RK Error when retrieving Uber"
 #define FLURRY_EXCLUDE_SETTING_CHANGED @"ExcludeSetting changed"
 #define FLURRY_ROUTE_SELECTED @"Route selected"
 #define FLURRY_ROUTE_DETAILS_APPEAR @"RouteDetails appear"

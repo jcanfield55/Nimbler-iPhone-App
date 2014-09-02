@@ -109,9 +109,6 @@
                              FLURRY_TO_SELECTED_ADDRESS, [parameters.toLocation shortFormattedAddress],
                              nil, nil, nil, nil);
                     reqStatus = PLAN_STATUS_OK;
-                    if (parameters.itinFromUberArray && parameters.itinFromUberArray.count > 0) {
-                        [matchingPlan addUberItinsToSortedItineraries:parameters.itinFromUberArray];
-                    }
                 }
                 ToFromViewController* toFromVC = [[nc_AppDelegate sharedInstance] toFromViewController];
                 if(toFromVC.routeOptionsVC.timerGettingRealDataByItinerary != nil){
@@ -378,8 +375,8 @@
             [params setObject:[NSNumber numberWithInt:maxDistance] forKey:MAX_WALK_DISTANCE];
         }
         
-        if (uberMode && parameters.serverCallsSoFar <= 0) {
-            [uberMgr requestUberItineraryWithParameters:parameters];
+        if (uberMode) {
+            [uberMgr requestUberItineraryWithParameters:parameters]; // Will only actually call UberAPI once per user request
         }
         
 //        // Set Bike Mode parameters if needed
@@ -582,6 +579,9 @@
                     [plansWaitingForGtfsData addObject:plan];
                 }
             }
+            if (planRequestParameters.itinFromUberArray && planRequestParameters.itinFromUberArray.count > 0) {
+                [plan addUberItinsToPlan:planRequestParameters.itinFromUberArray];
+            }
             // Now format the itineraries of the consolidated plan
             // get Unique Itinerary from Plan.
             if ([plan prepareSortedItinerariesWithMatchesForDate:[planRequestParameters originalTripDate]
@@ -595,9 +595,6 @@
                 }
                 [self requestStopTimesForItineraryPatterns:planRequestParameters.originalTripDate Plan:plan];
                 PlanRequestStatus reqStatus = PLAN_STATUS_OK;
-                if (planRequestParameters.itinFromUberArray && planRequestParameters.itinFromUberArray.count > 0) {
-                    [plan addUberItinsToSortedItineraries:planRequestParameters.itinFromUberArray];
-                }
                 if ([[plan sortedItineraries] count] == 0) {
                     if (moreItinStatus == MORE_ITINERARIES_REQUESTED_DIFFERENT_EXCLUDES) {
                         NIMLOG_US202(@"0 sorted itineraries, waiting for next OTP request");

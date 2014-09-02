@@ -219,6 +219,7 @@
 #define DEFAULT_SHARE_MODE @"bikeShareModeEnable"
 #define DEFAULT_TRANSIT_MODE @"TransitModeEnable"
 #define DEFAULT_WALK_MODE @"walkModeEnable"
+#define DEFAULT_UBER_MODE @"uberModeEnable"
 
 /*
 //

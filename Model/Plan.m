@@ -233,6 +233,11 @@
         status.requestingPlan = self;
     }
     
+    // Transfer itinFromUberArray if necessary
+    if (plan0.itinFromUberArray && [plan0.itinFromUberArray count] > 0 && !self.itinFromUberArray) {
+        self.itinFromUberArray = plan0.itinFromUberArray;
+    }
+    
     // Delete plan0
     [[self managedObjectContext] deleteObject:plan0];
     
@@ -378,6 +383,9 @@
                                                       planMaxTimeForResultsToShow:PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW];
     if (newSortedItineraries) {
         [self setSortedItineraries:newSortedItineraries];
+        if ([routeExcludeSettings settingForKey:UBER_DISPLAY_NAME_KEY] == SETTING_INCLUDE_ROUTE) {
+            [self addUberItinsToSortedItinerariesInternalHelper:self.itinFromUberArray]; // add uber itins if there are any
+        }
         return true;
     } else {
         return false;
@@ -779,11 +787,10 @@
  return NO;
  } */
 
-// Tacks on an array of uber itineraries to the beginning of the sorted itinerary array
--(void)addUberItinsToSortedItineraries:(NSArray *)uberItins
+-(void)addUberItinsToSortedItinerariesInternalHelper:(NSArray *)uberItins
 {
-    // Only do this is sortedItineraries != nil
-    if (self.sortedItineraries) {
+    // Only do this is sortedItineraries and uberItins != nil
+    if (self.sortedItineraries && uberItins) {
         NSMutableArray *itins = [NSMutableArray arrayWithArray:self.sortedItineraries];
         // Insert uberItins in the same order as in the uberItins array at the beginning of the sortedItineraries
         for (int i=0; i< uberItins.count; i++) {
@@ -791,6 +798,13 @@
         }
         self.sortedItineraries = itins;
     }
+}
+
+// Adds uberItins to plan to be inserted into sorted itineraries when uber button active
+-(void)addUberItinsToPlan:(NSArray *)uberItins
+{
+    
+    self.itinFromUberArray = uberItins;
 }
 
 - (NSString *)ncDescription

@@ -122,3 +122,14 @@ NSString *returnBikeButtonTitle(void);
 NSString *containsListFromFormattedAddress(NSString *formattedAddress);
 
 UIImage *returnNavigationBarBackgroundImage(void);
+
+// Takes a NSObject, object, of unknown type and returns a NSNumber if possible.
+// If object is a NSNumber, returns that.
+// If object is a NSString, converts string to a number if possible using a doubleValue.
+// NSString objects with non-numberic values will return a NSNumber with value = 0
+// If object is nil or any other type, returns nil.
+NSNumber *NSNumberFromNSObject(NSObject *object);
+
+// Takes a NSObject, object, of unknown type and returns an NSString if possible.
+// If object is nil or any other type, returns nil.
+NSString *NSStringFromNSObject(NSObject *object);

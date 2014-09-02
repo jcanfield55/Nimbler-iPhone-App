@@ -15,21 +15,23 @@
 #import "ItineraryFromUber.h"
 #import "LegFromUber.h"
 #import "PlanRequestParameters.h"
+#import "UberQueueEntry.h"
 
 
 @interface UberMgr : NSObject <RKRequestDelegate>
 
 @property (strong,nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong,nonatomic)  RKClient *rkUberClient;
-@property (strong,nonatomic) PlanRequestParameters *currentRequest;
-@property (strong,nonatomic) NSMutableArray *itineraryArray;  // Array of ItineraryFromUber objects for currentRequest
-@property (nonatomic) BOOL receivedTimes;
-@property (nonatomic) BOOL receivedPrices;
+@property (strong,nonatomic) NSMutableDictionary *uberQueueDictionary;  // dictionary of all UberQueueEntry objects corresponding to Uber API requests
 
 // Designated initializer
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc;
 
 // Requests a Uber itinerary given the provided parameters (to and from lat and long)
+// When a response is received from UberAPI, the itinFromUberArray property of parameters will be updated accordingly
+// This method should be called with each unique copy of PlanRequestParameters associated with a particular
+// user request.  The UberAPI will only be called once, but the results will be updated in all
+// PlanRequestParameters.
 - (void)requestUberItineraryWithParameters:(PlanRequestParameters *)parameters;
 
 

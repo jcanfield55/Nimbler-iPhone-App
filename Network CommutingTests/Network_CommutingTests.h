@@ -20,6 +20,7 @@
 #import "Itinerary.h"
 #import "Leg.h"
 #import "nc_AppDelegate.h"
+#import "RouteExcludeSettings.h"
 
 @interface Network_CommutingTests : SenTestCase<RKRequestDelegate>
 {
@@ -35,6 +36,7 @@
     Locations *locations;
     PlanStore *planStore;
     
+    RouteExcludeSettings *routeExclSettings;
     Plan *plan1;
     Plan *plan2;
     Plan *plan3;

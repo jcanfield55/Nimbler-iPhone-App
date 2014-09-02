@@ -40,6 +40,7 @@
     // Set up KeyObjectStore & RouteExcludeSettings
     [KeyObjectStore setUpWithManagedObjectContext:managedObjectContext];
     [RouteExcludeSettings setManagedObjectContext:managedObjectContext];
+    routeExclSettings = [RouteExcludeSettings latestUserSettings];
     
     // Set up PlanStore
     planStore = [[PlanStore alloc] initWithManagedObjectContext:managedObjectContext rkPlanMgr:nil rkTpClient:nil];
@@ -244,7 +245,7 @@
     
     [plan1 initializeNewPlanFromOTPWithRequestDate:date10req
                                                departOrArrive:DEPART
-                                         routeExcludeSettings:nil];
+                                         routeExcludeSettings:routeExclSettings];
     [plan1 setFromLocation:loc1];
     [plan1 setToLocation:loc2];
     for (Itinerary* itin in [plan1 itineraries]) {
@@ -271,7 +272,7 @@
     
     [plan2 initializeNewPlanFromOTPWithRequestDate:date20
                                                departOrArrive:DEPART
-                                              routeExcludeSettings:nil];
+                                              routeExcludeSettings:routeExclSettings];
     [plan2 setFromLocation:loc1];
     [plan2 setToLocation:loc2];
     for (Itinerary* itin in [plan2 itineraries]) {
@@ -320,7 +321,7 @@
     
     [plan3 initializeNewPlanFromOTPWithRequestDate:date30req
                                                departOrArrive:DEPART
-                                         routeExcludeSettings:nil];
+                                         routeExcludeSettings:routeExclSettings];
     [plan3 setFromLocation:loc1];
     [plan3 setToLocation:loc2];
     for (Itinerary* itin in [plan3 itineraries]) {
@@ -357,7 +358,7 @@
     
     [plan4 initializeNewPlanFromOTPWithRequestDate:date40req
                                                departOrArrive:DEPART
-                                         routeExcludeSettings:nil];
+                                         routeExcludeSettings:routeExclSettings];
     [plan4 setFromLocation:loc1];
     [plan4 setToLocation:loc2];
     for (Itinerary* itin in [plan4 itineraries]) {
@@ -397,7 +398,7 @@
 
     [plan5 initializeNewPlanFromOTPWithRequestDate:date50req
                                                departOrArrive:DEPART
-                                         routeExcludeSettings:nil];
+                                         routeExcludeSettings:routeExclSettings];
     [plan5 setFromLocation:loc1];
     [plan5 setToLocation:loc2];
     for (Itinerary* itin in [plan5 itineraries]) {
@@ -443,7 +444,7 @@
     
     [plan6 initializeNewPlanFromOTPWithRequestDate:date60req
                                                departOrArrive:ARRIVE
-                                         routeExcludeSettings:nil];
+                                         routeExcludeSettings:routeExclSettings];
     [plan6 setFromLocation:loc1];
     [plan6 setToLocation:loc2];
     for (Itinerary* itin in [plan6 itineraries]) {
@@ -510,7 +511,7 @@
     
     [plan7 initializeNewPlanFromOTPWithRequestDate:date70req
                                                departOrArrive:DEPART
-                                         routeExcludeSettings:nil];
+                                         routeExcludeSettings:routeExclSettings];
     [plan7 setFromLocation:loc1];
     [plan7 setToLocation:loc2];
     for (Itinerary* itin in [plan7 itineraries]) {
@@ -535,7 +536,7 @@
     
     [plan8 initializeNewPlanFromOTPWithRequestDate:date80req
                                                departOrArrive:DEPART
-                                         routeExcludeSettings:nil];
+                                         routeExcludeSettings:routeExclSettings];
     [plan8 setFromLocation:loc1];
     [plan8 setToLocation:loc2];
     for (Itinerary* itin in [plan8 itineraries]) {
@@ -582,7 +583,7 @@
     
     [plan9depart initializeNewPlanFromOTPWithRequestDate:date90req
                                                      departOrArrive:DEPART
-                                               routeExcludeSettings:nil];
+                                               routeExcludeSettings:routeExclSettings];
     [plan9depart setFromLocation:loc1];
     [plan9depart setToLocation:loc2];
     for (Itinerary* itin in [plan9depart itineraries]) {
@@ -615,7 +616,7 @@
     
     [plan9arrive initializeNewPlanFromOTPWithRequestDate:date90ArrReq
                                                      departOrArrive:ARRIVE
-                                               routeExcludeSettings:nil];
+                                               routeExcludeSettings:routeExclSettings];
     [plan9arrive setFromLocation:loc1];
     [plan9arrive setToLocation:loc2];
     for (Itinerary* itin in [plan9arrive itineraries]) {
@@ -1182,6 +1183,16 @@
     STAssertEqualObjects(timeStringByAddingInterval(@"10:05:03", (2*60*60 + 20*60 + 59)), @"12:26:02", @"");
     STAssertEqualObjects(timeStringByAddingInterval(@"23:59:59", 2), @"24:00:01", @"");
     STAssertEqualObjects(timeStringByAddingInterval(@"00:00:00", 59*60 + 59), @"00:59:59", @"");
+    
+    // NSNumberfromNSObject test
+    STAssertFalse(NSNumberFromNSObject([NSNull null]), @"");  // should return nil
+    STAssertEqualObjects(NSNumberFromNSObject([NSMutableString stringWithString:@"535"]),
+                         [NSNumber numberWithInt:535], @"");
+    STAssertEqualObjects(NSNumberFromNSObject([NSMutableString stringWithString:@"Blah"]),
+                         [NSNumber numberWithInt:0], @"");  // If non-numeric string, returns 0
+    STAssertEqualObjects(NSNumberFromNSObject([NSNumber numberWithFloat:535.0]),
+                         [NSNumber numberWithInt:535], @"");
+    
 }
 
 - (void)testKeyObjectStore

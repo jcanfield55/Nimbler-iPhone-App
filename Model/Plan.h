@@ -146,7 +146,7 @@
           planMaxTimeForResultsToShow:(int)planMaxTimeForResultsToShow;
 
 // Tacks on an array of uber itineraries to the beginning of the sorted itinerary array
--(void)addUberItinsToSortedItineraries:(NSArray *)uberItins;
+-(void)addUberItinsToPlan:(NSArray *)uberItins;
 
 // Returns unique Itineraries array from plan sorted by StartDates
 - (NSArray *)uniqueItineraries;

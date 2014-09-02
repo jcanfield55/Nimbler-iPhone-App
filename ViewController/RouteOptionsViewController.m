@@ -487,6 +487,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
         Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
         
         // Handle Uber itinerary case first
+        NIMLOG_UBER(@"TableCell row:%d, isUber:%d",[indexPath row], itin.isUberItinerary);
         if (itin.isUberItinerary) {
             ItineraryFromUber *uberItin = (ItineraryFromUber *)itin;
             cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
@@ -608,17 +609,26 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
     @try {
         Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
         
-        NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
-                                                         timeIntervalSinceDate:[itin startTimeOfFirstLeg]]);
+        NSString *titleText;
+        NSString *subtitleText;
+        // Uber case
+        if (itin.isUberItinerary) {
+            ItineraryFromUber *uberItin = (ItineraryFromUber *)itin;
+            titleText =  uberItin.uberDisplayName;
+            subtitleText = uberItin.uberPriceEstimate;
+        }
         
-        // TODO -- make sure not text wrapping on first line
-        NSString *titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
-                               superShortTimeStringForDate([itin startTimeOfFirstLeg]),
-                               superShortTimeStringForDate([itin endTimeOfLastLeg]),
-                               durationStr];
-        NSString* subtitleText = [itin itinerarySummaryStringForWidth:(CGFloat)ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
-                                                                 Font:(UIFont *)[UIFont MEDIUM_FONT]];
-        
+        else {  // non-Uber case
+            NSString* durationStr = durationString(1000.0 * [[itin endTimeOfLastLeg]
+                                                             timeIntervalSinceDate:[itin startTimeOfFirstLeg]]);
+            // TODO -- make sure not text wrapping on first line
+            titleText = [NSString stringWithFormat:@"%@ - %@ (%@)",
+                         superShortTimeStringForDate([itin startTimeOfFirstLeg]),
+                         superShortTimeStringForDate([itin endTimeOfLastLeg]),
+                         durationStr];
+            subtitleText = [itin itinerarySummaryStringForWidth:(CGFloat)ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH
+                                                           Font:(UIFont *)[UIFont MEDIUM_FONT]];
+        }
         CGSize titleSize = [titleText sizeWithFont:[UIFont MEDIUM_BOLD_FONT]
                                  constrainedToSize:CGSizeMake(ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
         
