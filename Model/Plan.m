@@ -383,7 +383,7 @@
                                                       planMaxTimeForResultsToShow:PLAN_MAX_TIME_FOR_RESULTS_TO_SHOW];
     if (newSortedItineraries) {
         [self setSortedItineraries:newSortedItineraries];
-        if ([routeExcludeSettings settingForKey:UBER_DISPLAY_NAME_KEY] == SETTING_INCLUDE_ROUTE) {
+        if ([routeExcludeSettings settingForKey:UBER_EXCLUDE_BUTTON_DISPLAY_NAME] == SETTING_INCLUDE_ROUTE) {
             [self addUberItinsToSortedItinerariesInternalHelper:self.itinFromUberArray]; // add uber itins if there are any
         }
         return true;
