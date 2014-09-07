@@ -629,11 +629,7 @@ NSUserDefaults *prefs;
     [self.navigationController.navigationBar setHidden:NO];
     UIViewController *webViewController = [[UIViewController alloc] init];
     [webViewController.view addSubview:[WebView instance]];
-    if ([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT) {
-        [WebView instance].frame = CGRectMake(0, 0, 320, 518);
-    } else {
-        [WebView instance].frame = CGRectMake(0,0, 320, 430);
-    }
+
     if([[[UIDevice currentDevice] systemVersion] intValue]>=7){
         webViewController.edgesForExtendedLayout = UIRectEdgeNone;
     }

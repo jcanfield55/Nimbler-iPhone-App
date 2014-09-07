@@ -19,5 +19,5 @@
 @property (nonatomic, strong) NSNumber *uberSurgeMultiplier;
 @property (nonatomic, strong) NSNumber *uberTimeEstimateSeconds;
 
-
+-(int)uberTimeEstimateMinutes;
 @end

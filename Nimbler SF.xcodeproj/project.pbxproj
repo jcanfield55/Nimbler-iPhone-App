@@ -4766,8 +4766,8 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler SF";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "02B61AA9-A3A0-409B-9C1D-CB2D07A7252B";
+				PROVISIONING_PROFILE = "94f73853-ecd6-4f81-9d56-f733ed652372";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "94f73853-ecd6-4f81-9d56-f733ed652372";
 				SHARED_PRECOMPS_DIR = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = armv7;
@@ -4779,8 +4779,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: Nikunj Patel (3RJ2URD5C2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4810,7 +4810,7 @@
 					"-v",
 				);
 				PRODUCT_NAME = "Nimbler SF";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "94f73853-ecd6-4f81-9d56-f733ed652372";
 				"PROVISIONING_PROFILE[sdk=*]" = "02B61AA9-A3A0-409B-9C1D-CB2D07A7252B";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "02B61AA9-A3A0-409B-9C1D-CB2D07A7252B";
 				SHARED_PRECOMPS_DIR = "";
@@ -4824,8 +4824,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Nimbler Caltrain.app/Nimbler Caltrain";
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
@@ -4835,8 +4835,8 @@
 				GCC_PREFIX_HEADER = "Nimbler Caltrain-Prefix.pch";
 				INFOPLIST_FILE = "Network CommutingTests/Nimbler CaltrainTests-Info.plist";
 				PRODUCT_NAME = "Nimbler CaltrainTests";
-				PROVISIONING_PROFILE = "7E85A08B-3D33-4E0C-9788-7778F7F8D97B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "7E85A08B-3D33-4E0C-9788-7778F7F8D97B";
+				PROVISIONING_PROFILE = "94f73853-ecd6-4f81-9d56-f733ed652372";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "94f73853-ecd6-4f81-9d56-f733ed652372";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
@@ -4846,7 +4846,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Nimbler Caltrain.app/Nimbler Caltrain";
-				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -4857,8 +4857,8 @@
 				GCC_PREFIX_HEADER = "Nimbler Caltrain-Prefix.pch";
 				INFOPLIST_FILE = "Network CommutingTests/Nimbler CaltrainTests-Info.plist";
 				PRODUCT_NAME = "Nimbler CaltrainTests";
-				PROVISIONING_PROFILE = "7E85A08B-3D33-4E0C-9788-7778F7F8D97B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "7E85A08B-3D33-4E0C-9788-7778F7F8D97B";
+				PROVISIONING_PROFILE = "94f73853-ecd6-4f81-9d56-f733ed652372";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "94f73853-ecd6-4f81-9d56-f733ed652372";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};

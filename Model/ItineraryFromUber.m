@@ -20,6 +20,10 @@
 @synthesize uberSurgeMultiplier;
 @synthesize uberTimeEstimateSeconds;
 
-
+-(int)uberTimeEstimateMinutes
+{
+    int minutes = ceil(uberTimeEstimateSeconds.floatValue / 60.0);
+    return minutes;
+}
 
 @end

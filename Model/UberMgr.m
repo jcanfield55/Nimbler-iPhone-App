@@ -23,7 +23,7 @@
 {
     self = [super init];
     if (self) {
-        rkUberClient = [RKClient clientWithBaseURL:UBER_BASE_URL];
+        rkUberClient = [RKClient clientWithBaseURL:UBER_API_BASE_URL];
         
         NSString *header = [@"Token " stringByAppendingString:UBER_SERVER_TOKEN];
         [rkUberClient setValue:header  forHTTPHeaderField:@"Authorization"];
@@ -45,7 +45,7 @@
     [priceParams setObject:parameters.latitudeFROM forKey:UBER_START_LATITUDE];
     [priceParams setObject:parameters.longitudeFROM forKey:UBER_START_LONGITUDE];
     [priceParams setObject:parameters.latitudeTO forKey:UBER_END_LATITUDE];
-    [priceParams setObject:parameters.longitudeFROM forKey:UBER_END_LONGITUDE];
+    [priceParams setObject:parameters.longitudeTO forKey:UBER_END_LONGITUDE];
     
     NSString *parameterKey = [UberQueueEntry parameterKeyWithParams:priceParams];
     UberQueueEntry *queueEntry = [uberQueueDictionary objectForKey:parameterKey];
@@ -145,8 +145,21 @@
                     }
                 }
             }
-            // Save Uber itineraries in all the request parameters if we have received both prices and times
+            // If we have received all the responses back from Uber API
             if (queueEntry.receivedTimes && queueEntry.receivedPrices) {
+                // Eliminate any itinerary that does not have a time and a price estimate
+                NSMutableArray *newItinArray = [NSMutableArray arrayWithCapacity:8];
+                for (ItineraryFromUber *itin in queueEntry.itineraryArray) {
+                    if (itin.uberTimeEstimateSeconds && itin.uberPriceEstimate) {
+                        [newItinArray addObject:itin];
+                    }
+                    else {
+                        [managedObjectContext deleteObject:itin];  // Delete the itinerary
+                    }
+                }
+                queueEntry.itineraryArray = newItinArray; // Use the newItinArray with incomplete itineraries removed
+                
+                // Save Uber itineraries in all the request parameters if we have received both prices and times
                 for (PlanRequestParameters* planReqParams in queueEntry.planRequestParamArray) {
                     planReqParams.itinFromUberArray = queueEntry.itineraryArray;
                 }

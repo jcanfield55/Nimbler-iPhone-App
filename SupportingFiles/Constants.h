@@ -39,11 +39,12 @@
 
 // See https://developer.uber.com/v1/endpoints/ for details of the Uber API
 #define UBER_ENABLED  1   // 1 to enable Uber in RouteExcludeSettings, 0 otherwise
-#define UBER_BASE_URL    @"https://api.uber.com/v1"
+#define UBER_API_BASE_URL    @"https://api.uber.com/v1"
 #define UBER_PRODUCTS_URL    @"/products"
 #define UBER_PRICE_URL    @"/estimates/price"
 #define UBER_TIME_URL    @"/estimates/time"
 #define UBER_SERVER_TOKEN @"8wPZ8UFdreBCTwk_DVeL8Al-ejn7Z3GsPbUX4w45"
+#define UBER_CLIENT_ID @"m2FjJwmSSurnjRUpfYjYhyb_zX5--zE6"
 #define UBER_START_LATITUDE @"start_latitude"
 #define UBER_START_LONGITUDE @"start_longitude"
 #define UBER_END_LATITUDE @"end_latitude"
@@ -58,6 +59,28 @@
 #define UBER_HIGH_ESTIMATE_KEY @"high_estimate"
 #define UBER_SURGE_MULTIPLIER_KEY @"surge_multiplier"
 #define UBER_TIME_ESTIMATE_KEY @"estimate"
+#define UBER_APP_BASE_URL @"uber://"
+#define UBER_APP_ACTION_KEY @"action"
+#define UBER_APP_ACTION_PICKUP @"setPickup"
+#define UBER_APP_PICKUP_LATITUDE @"pickup[latitude]"
+#define UBER_APP_PICKUP_LONGITUDE @"pickup[longitude]"
+#define UBER_APP_PICKUP_NICKNAME @"pickup[nickname]"
+#define UBER_APP_PICKUP_FORMATTED_ADDRESS @"pickup[formatted_address]"
+#define UBER_APP_DROPOFF_LATITUDE @"dropoff[latitude]"
+#define UBER_APP_DROPOFF_LONGITUDE @"dropoff[longitude]"
+#define UBER_APP_DROPOFF_NICKNAME @"dropoff[nickname]"
+#define UBER_APP_DROPOFF_FORMATTED_ADDRESS @"dropoff[formatted_address]"
+#define UBER_WEB_BASE_URL @"https://m.uber.com/sign-up"
+#define UBER_WEB_PICKUP_LATITUDE @"pickup_latitude"
+#define UBER_WEB_PICKUP_LONGITUDE @"pickup_longitude"
+#define UBER_WEB_PICKUP_NICKNAME @"pickup_nickname"
+#define UBER_WEB_PICKUP_FORMATTED_ADDRESS @"pickup_address"
+#define UBER_WEB_DROPOFF_LATITUDE @"dropoff_latitude"
+#define UBER_WEB_DROPOFF_LONGITUDE @"dropoff_longitude"
+#define UBER_WEB_DROPOFF_NICKNAME @"dropoff_nickname"
+#define UBER_WEB_DROPOFF_FORMATTED_ADDRESS @"dropoff_address"
+#define UBER_WEB_CLIENT_ID_KEY @"client_id"
+#define UBER_WEB_COUNTRY_CODE @"country_code"
 #define UBER_MAX_RETAIN_SECONDS 120  // Maximum amount of time before a partial Uber request result is thrown out
 
 

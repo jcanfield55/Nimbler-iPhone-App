@@ -13,7 +13,7 @@
 #import "PlanStore.h"
 
 @interface RouteOptionsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKRequestDelegate,
-NewPlanAvailableDelegate>
+NewPlanAvailableDelegate, UIWebViewDelegate>
 
 @property(nonatomic, strong) IBOutlet UITableView* mainTable; // Table listing route options
 @property(nonatomic, strong) IBOutlet UILabel* noItineraryWarning;
@@ -42,6 +42,7 @@ NewPlanAvailableDelegate>
 - (void) changeMainTableSettings;
 
 - (void) requestServerForRealTime;
+- (void)openUrl:(NSURL *)url;  // Used to open Uber urls, etc
 
 - (IBAction)feedBackClicked:(id)sender;
 

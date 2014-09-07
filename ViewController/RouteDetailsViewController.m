@@ -760,11 +760,7 @@ NSUserDefaults *prefs;
     UIBarButtonItem *backTonimbler = [[UIBarButtonItem alloc] initWithCustomView:btnGoToNimbler];
     webViewController.navigationItem.leftBarButtonItem = backTonimbler;
     [webViewController.view addSubview:[WebView instance]];
-    if ([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT) {
-        [WebView instance].frame = CGRectMake(0, 0, 320, 503);
-    } else {
-        [WebView instance].frame = CGRectMake(0, 0, 320, 415);
-    }
+    
     if([[[UIDevice currentDevice] systemVersion] intValue]>=7){
         webViewController.edgesForExtendedLayout = UIRectEdgeNone;
     }
@@ -772,18 +768,7 @@ NSUserDefaults *prefs;
     [[WebView instance] loadRequest:request];
     [[WebView instance] setScalesPageToFit:YES];
     [WebView instance].delegate = self;
-    if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
-        CATransition *animation = [CATransition animation];
-        [animation setDuration:0.3];
-        [animation setType:kCATransitionPush];
-        [animation setSubtype:kCATransitionFromRight];
-        [animation setRemovedOnCompletion:YES];
-        [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
-        [[self.navigationController.view layer] addAnimation:animation forKey:nil];
-        [[self navigationController] pushViewController:webViewController animated:NO];
-    } else {
-        [[self navigationController] pushViewController:webViewController animated:YES];
-    }
+    [[self navigationController] pushViewController:webViewController animated:YES];
 }
 
 -(void)webViewDidStartLoad:(UIWebView *)webView{
