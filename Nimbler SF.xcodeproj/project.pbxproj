@@ -2028,8 +2028,7 @@
 		8DA862CC17D9F24E00CE8285 /* Icon-Portland-152@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Portland-152@2x.png"; sourceTree = "<group>"; };
 		8DAA2967178BDFEF00C3FA30 /* Nimbler Portland.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nimbler Portland.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DAA296D178BE0EF00C3FA30 /* Nimbler Portland-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Nimbler Portland-Prefix.pch"; sourceTree = SOURCE_ROOT; };
-		8DAA296E178BE13C00C3FA30 /* ConstantsPortland.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConstantsPortland.h; sourceTree = "<group>"; };
-		8DAA296F178BE17F00C3FA30 /* LocalConstantsPortland.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalConstantsPortland.h; sourceTree = "<group>"; };
+		8DAA296F178BE17F00C3FA30 /* LocalConstantsPortland.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LocalConstantsPortland.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8DABCDA81793C2FB00C1BDCF /* RevealController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RevealController.h; sourceTree = "<group>"; };
 		8DABCDA91793C2FB00C1BDCF /* RevealController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RevealController.m; sourceTree = "<group>"; };
 		8DABCDAA1793C2FB00C1BDCF /* ZUUIRevealController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZUUIRevealController.h; sourceTree = "<group>"; };
@@ -2044,9 +2043,8 @@
 		8DE18B3917253DDC00AA8112 /* store101_Caltrain.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = store101_Caltrain.zip; sourceTree = "<group>"; };
 		8DE18C4D1725415800AA8112 /* Nimbler DC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nimbler DC.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DE18C50172543B100AA8112 /* wmata-station.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "wmata-station.json"; sourceTree = "<group>"; };
-		8DE18C6C17255CBA00AA8112 /* LocalConstantsDC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalConstantsDC.h; sourceTree = "<group>"; };
+		8DE18C6C17255CBA00AA8112 /* LocalConstantsDC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LocalConstantsDC.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8DE18C6D1725630600AA8112 /* Nimbler DC-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Nimbler DC-Prefix.pch"; sourceTree = SOURCE_ROOT; };
-		8DE18C6E17256CD200AA8112 /* ConstantsCaltrain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConstantsCaltrain.h; sourceTree = "<group>"; };
 		8DE28CA71732379300403CD0 /* RouteDetailViewController_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RouteDetailViewController_568h.xib; sourceTree = "<group>"; };
 		8DE42FE616E0AEED00A37AD3 /* img_legFerry.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_legFerry.png; sourceTree = "<group>"; };
 		8DE42FE716E0AEEE00A37AD3 /* img_legFerry@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_legFerry@2x.png"; sourceTree = "<group>"; };
@@ -2059,7 +2057,6 @@
 		8DEA577217BA6A4E00FB1A00 /* bikeshare_Selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bikeshare_Selected@2x.png"; sourceTree = "<group>"; };
 		8DEA577317BA6A4E00FB1A00 /* bikeshare_Unselected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bikeshare_Unselected.png; sourceTree = "<group>"; };
 		8DEA577417BA6A4E00FB1A00 /* bikeshare_Unselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bikeshare_Unselected@2x.png"; sourceTree = "<group>"; };
-		8DEAC189177812DF00D7997C /* ConstantsDC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConstantsDC.h; sourceTree = "<group>"; };
 		8DEAC18E177823EA00D7997C /* Network_Commuting 1.10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.10.xcdatamodel"; sourceTree = "<group>"; };
 		8DEAC190177841F400D7997C /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
 		8DEAC191177841F400D7997C /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
@@ -2097,7 +2094,7 @@
 		8DF77CC4178D53B500B45C52 /* trimet.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = trimet.json; sourceTree = "<group>"; };
 		8DFADCA91727AAB0003DDACF /* Agencies.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Agencies.h; path = Model/Agencies.h; sourceTree = SOURCE_ROOT; };
 		8DFADCAA1727AAB0003DDACF /* Agencies.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Agencies.m; path = Model/Agencies.m; sourceTree = SOURCE_ROOT; };
-		8DFD0DAE17264CDB003FCB5A /* LocalConstantsCaltrain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalConstantsCaltrain.h; sourceTree = "<group>"; };
+		8DFD0DAE17264CDB003FCB5A /* LocalConstantsCaltrain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LocalConstantsCaltrain.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8DFFB369165DFBBB00A39BC4 /* SettingDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingDetailViewController.h; sourceTree = "<group>"; };
 		8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingDetailViewController.m; sourceTree = "<group>"; };
 		8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingDetailViewController.xib; sourceTree = "<group>"; };
@@ -2518,9 +2515,6 @@
 			isa = PBXGroup;
 			children = (
 				520FB28A162604950083F143 /* Constants.h */,
-				8DE18C6E17256CD200AA8112 /* ConstantsCaltrain.h */,
-				8DEAC189177812DF00D7997C /* ConstantsDC.h */,
-				8DAA296E178BE13C00C3FA30 /* ConstantsPortland.h */,
 				520FB28B162604950083F143 /* CoverageGeoJSON.geojson */,
 				522C03CF18304A72004BC6AF /* CoverageDCGeoJSON.geojson */,
 				524EAEE419370D4C00EE00B4 /* CoveragePDXGeoJSON.geojson */,

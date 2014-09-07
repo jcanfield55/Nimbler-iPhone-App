@@ -335,7 +335,7 @@ FeedBackForm *fbView;
             NSDecimalNumber* bartVersion = [NSDecimalNumber decimalNumberWithString:BART_PRELOAD_VERSION_NUMBER];
             [locations preLoadIfNeededFromFile:CALTRAIN_PRELOAD_LOCATION_FILE_CALTRAIN_APPLICATION latestVersionNumber:caltrainVersion testAddress:CALTRAIN_PRELOAD_TEST_ADDRESS];
             [locations preLoadIfNeededFromFile:BART_BACKGROUND_PRELOAD_LOCATION_FILE latestVersionNumber:bartVersion testAddress:BART_PRELOAD_TEST_ADDRESS];
-            NSArray *arrlocations = [locations locationsWithFormattedAddress:STATION_LIST];
+            NSArray *arrlocations = [locations locationsWithFormattedAddress:STATION_LIST_TEXT];
             if(!arrlocations || [arrlocations count] == 0){
                Location *loc = [stations generateNewTempLocationForAllStationString:ALL_STATION];
             }
@@ -343,7 +343,7 @@ FeedBackForm *fbView;
         else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
             NSDecimalNumber* wMataVersion = [NSDecimalNumber decimalNumberWithString:WMATA_PRELOAD_VERSION_NUMBER];
             [locations preLoadIfNeededFromFile:WMATA_PRELOAD_LOCATION_FILE latestVersionNumber:wMataVersion testAddress:WMATA_PRELOAD_TEST_ADDRESS];
-            NSArray *arrlocations = [locations locationsWithFormattedAddress:STATION_LIST];
+            NSArray *arrlocations = [locations locationsWithFormattedAddress:STATION_LIST_TEXT];
             if(!arrlocations || [arrlocations count] == 0){
               Location *loc =  [stations generateNewTempLocationForAllStationString:ALL_STATION];
             }
@@ -351,7 +351,7 @@ FeedBackForm *fbView;
         else if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:PORTLAND_BUNDLE_IDENTIFIER]){
             NSDecimalNumber* caltrainVersion = [NSDecimalNumber decimalNumberWithString:PORTLAND_PRELOAD_VERSION_NUMBER];
             [stations preLoadIfNeededFromFile:PORTLAND_PRELOAD_LOCATION_FILE latestVersionNumber:caltrainVersion testAddress:PORTLAND_PRELOAD_TEST_ADDRESS];
-            NSArray *arrlocations = [locations locationsWithFormattedAddress:STATION_LIST];
+            NSArray *arrlocations = [locations locationsWithFormattedAddress:STATION_LIST_TEXT];
             if(!arrlocations || [arrlocations count] == 0){
                Location *loc = [stations generateNewTempLocationForAllStationString:ALL_STATION];
             }

@@ -15,7 +15,7 @@
 #define GENERATING_SEED_DATABASE  0 // when we are generating seed database the value is 1 otherwise 0
 #define SKIP_REAL_TIME_UPDATES 0 // If 1, system will not request real-time updates
 
-#define TRIP_GENERATE_URL     @"http://23.23.210.156:7070/opentripplanner-api-webapp/ws/" 
+#define TRIP_GENERATE_URL     @"http://23.23.210.156:7070/TPServer/ws/"
 //#define TRIP_GENERATE_URL @"http://ec2-23-22-169-158.compute-1.amazonaws.com:8080/opentripplanner-api-webapp/ws/"
 #define GEO_RESPONSE_URL      @"http://maps.googleapis.com/maps/api/geocode/"
 #define TEST_GEO_RESPONSE_URL  @"http://localhost:8080/TPServer/ws/mockgeolocation/"
@@ -26,69 +26,29 @@
 #define LOCAL_URL       0
 
 #if PRODUCTION_URL
-    #define TRIP_PROCESS_URL    @"http://23.23.210.156:8080/TPServer/ws/"
+#define TRIP_PROCESS_URL    @"http://23.23.210.156:8080/TPServer/ws/"
 #endif
 
 #if STAGGING_URL
-    #define TRIP_PROCESS_URL    @"http://23.23.210.156:7070/TPServer/ws/"
+#define TRIP_PROCESS_URL    @"http://23.23.210.156:7070/TPServer/ws/"
 #endif
 
 #if LOCAL_URL
-    #define TRIP_PROCESS_URL      @"http://192.168.2.94:8080/TPServer/ws/"
+#define TRIP_PROCESS_URL      @"http://192.168.2.57:8080/TPServer/ws/"
 #endif
 
-// See https://developer.uber.com/v1/endpoints/ for details of the Uber API
-#define UBER_ENABLED  1   // 1 to enable Uber in RouteExcludeSettings, 0 otherwise
-#define UBER_API_BASE_URL    @"https://api.uber.com/v1"
-#define UBER_PRODUCTS_URL    @"/products"
-#define UBER_PRICE_URL    @"/estimates/price"
-#define UBER_TIME_URL    @"/estimates/time"
-#define UBER_SERVER_TOKEN @"8wPZ8UFdreBCTwk_DVeL8Al-ejn7Z3GsPbUX4w45"
-#define UBER_CLIENT_ID @"m2FjJwmSSurnjRUpfYjYhyb_zX5--zE6"
-#define UBER_START_LATITUDE @"start_latitude"
-#define UBER_START_LONGITUDE @"start_longitude"
-#define UBER_END_LATITUDE @"end_latitude"
-#define UBER_END_LONGITUDE @"end_longitude"
-#define UBER_EXCLUDE_BUTTON_DISPLAY_NAME @"Uber"
-#define UBER_TIMES_KEY @"times"
-#define UBER_PRICES_KEY @"prices"
-#define UBER_PRODUCT_ID_KEY @"product_id"
-#define UBER_DISPLAY_NAME_KEY @"display_name"
-#define UBER_PRICE_ESTIMATE_KEY @"estimate"
-#define UBER_LOW_ESTIMATE_KEY @"low_estimate"
-#define UBER_HIGH_ESTIMATE_KEY @"high_estimate"
-#define UBER_SURGE_MULTIPLIER_KEY @"surge_multiplier"
-#define UBER_TIME_ESTIMATE_KEY @"estimate"
-#define UBER_APP_BASE_URL @"uber://"
-#define UBER_APP_ACTION_KEY @"action"
-#define UBER_APP_ACTION_PICKUP @"setPickup"
-#define UBER_APP_PICKUP_LATITUDE @"pickup[latitude]"
-#define UBER_APP_PICKUP_LONGITUDE @"pickup[longitude]"
-#define UBER_APP_PICKUP_NICKNAME @"pickup[nickname]"
-#define UBER_APP_PICKUP_FORMATTED_ADDRESS @"pickup[formatted_address]"
-#define UBER_APP_DROPOFF_LATITUDE @"dropoff[latitude]"
-#define UBER_APP_DROPOFF_LONGITUDE @"dropoff[longitude]"
-#define UBER_APP_DROPOFF_NICKNAME @"dropoff[nickname]"
-#define UBER_APP_DROPOFF_FORMATTED_ADDRESS @"dropoff[formatted_address]"
-#define UBER_WEB_BASE_URL @"https://m.uber.com/sign-up"
-#define UBER_WEB_PICKUP_LATITUDE @"pickup_latitude"
-#define UBER_WEB_PICKUP_LONGITUDE @"pickup_longitude"
-#define UBER_WEB_PICKUP_NICKNAME @"pickup_nickname"
-#define UBER_WEB_PICKUP_FORMATTED_ADDRESS @"pickup_address"
-#define UBER_WEB_DROPOFF_LATITUDE @"dropoff_latitude"
-#define UBER_WEB_DROPOFF_LONGITUDE @"dropoff_longitude"
-#define UBER_WEB_DROPOFF_NICKNAME @"dropoff_nickname"
-#define UBER_WEB_DROPOFF_FORMATTED_ADDRESS @"dropoff_address"
-#define UBER_WEB_CLIENT_ID_KEY @"client_id"
-#define UBER_WEB_COUNTRY_CODE @"country_code"
-#define UBER_MAX_RETAIN_SECONDS 120  // Maximum amount of time before a partial Uber request result is thrown out
+// Bundle and App Types
+#define CALTRAIN_BUNDLE_IDENTIFIER         @"com.Nimbler.Nimbler-Caltrain"
+#define WMATA_BUNDLE_IDENTIFIER            @"com.nimbler.washingtondc"
+#define PORTLAND_BUNDLE_IDENTIFIER         @"com.nimbler.Nimbler-Portland"
 
+// App types
+#define CALTRAIN_APP_TYPE   @"1"
+#define SFMUNI_APP_TYPE     @"4"
+#define WMATA_APP_TYPE      @"5"
+#define PORTLAND_APP_TYPE   @"6"
 
 #define TEST_TRIP_PROCESS_URL @"http://localhost:8080/TPServer/ws/"  // TP server for automated tests
-
-// Core Data database filename
-#define COREDATA_DB_FILENAME    @"store102.data"
-#define TEST_COREDATA_DB_FILENAME  @"testDataStore.data" // For automated tests
 
 #define GEO_FROM          @"1"
 #define GEO_TO            @"1"
@@ -107,21 +67,15 @@
 #define ALERT_URGENT     @"3"
 
 #define TOFROM_LIST_TYPE          @"TOFROM_LIST" // Location type indicating a ToFromList
-#define ALL_STATION    @"all_st"
 
 // Current Location
 #define CURRENT_LOCATION_STARTING_FROM_FREQUENCY 7.0
-#define NEWGEOCODE_RESULT_MSG @"in the San Francisco Bay Area"
-#define LOCATION_NOTAPPEAR_MSG @"Bay Area"
-#define APP_TITLE              @"Nimbler SF"
 
 // Testflight App Analytics and logging
 #define TEST_FLIGHT_ENABLED 0 // If 0, then do not include testFlightApp at all
 #define TEST_FLIGHT_UIDS 1 // If 1, then testFlightApp will collect device UIDs, if 0, it will not
 
 #define LAST_SELECTED_TAB_INDEX       @"lastSelectedTabIndex"
-#define LAST_TO_LOCATION              @"newLastToLocation"
-#define LAST_FROM_LOCATION            @"newLastFromLocation"
 #define LAST_REQUEST_REVERSE_GEO      @"lastRequestReverseGeoLocation"
 #define APPLICATION_BUNDLE_IDENTIFIER  @"appBundleId"
 #define APPLICATION_TYPE               @"appType"
@@ -157,7 +111,6 @@
 #define UPDATE_DEVICE_TOKEN   @"users/preferences/update/token"
 
 // UserPreferernce (user settings) defaults, max, and min
-#define PREFS_DEFAULT_IS_PUSH_ENABLE NO
 #define PREFS_DEFAULT_PUSH_NOTIFICATION_THRESHOLD 5
 
 #define URGENT_NOTIFICATION_DEFAULT_VALUE   1
@@ -189,7 +142,7 @@
 #define MAX_BIKE_DISTANCE_MAX_VALUE           20
 
 // Flurry analytics and logging
-#define FLURRY_ENABLED 0
+#define FLURRY_ENABLED 1
 #define IS_KICKFOLIO 0
 
 // Flurry events
@@ -284,11 +237,8 @@
 
 // Geocode behavior
 #define IOS_GEOCODE_VER_THRESHOLD (6.0)  // Version at which we start using iOS geocoding (rather than Google)
-
 // Local Search behavior
 #define IOS_LOCALSEARCH_VER (6.1)  // Version at which we start using iOS MAPKIT LOCAL SEARCH
-#define MK_LOCAL_SEARCH_SPAN 120000  // Meters span around the current location used by MKLocalSearch
-
 
 // Reverse Geocode behavior
 #define REVERSE_GEO_DISTANCE_THRESHOLD  (50.0)  // Maximum distance in meters before we redo a reverse geolocation
@@ -311,7 +261,7 @@
 #define MY_BIKE @"My Bike"
 #define BIKE_SHARE @"Bike Share"
 #define RENTED_BIKE @"rentedBike"
-#define EXCLUSION_BY_AGENCY @"By Agency"   
+#define EXCLUSION_BY_AGENCY @"By Agency"
 #define EXCLUSION_BY_RAIL_BUS  @"By Rail/Bus"
 
 // gtfsParser
@@ -351,6 +301,7 @@
 #define AGENCY_SHORT_NAME_BY_AGENCY_ID_DICTIONARY @"agencyShortNameByAgencyIdDictionary"
 #define AGENCY_FEED_ID_FROM_AGENCY_NAME_DICTIONARY @"agencyFeedIdFromAgencyNameDictionary"
 #define AGENCY_NAME_FROM_AGENCY_FEED_ID_DICTIONARY @"agencyNameFromAgencyFeedIdDictionary"
+
 #define SUPPORTED_FEED_ID_STRING   @"supportedFeedIdString"
 
 // Request timer Count
@@ -434,7 +385,6 @@
 #define FOR_TODAY                      @"forToday"
 #define LEGS                           @"legs"
 #define LIVE_FEEDS_IMAGE_DOWNLOAD_URL  @"advisories/download"
-#define METADATA_URL                   @"metadata"
 #define NEXT_LEGS_PLAN                 @"plan/nextlegs"
 
 // US-163 Appstore Feedback reminder constants
@@ -537,3 +487,224 @@
 #define SHOW_INTERMEDIATE_STOPS @"showIntermediateStops"
 
 #define LIVE_FEEDS_BY_VEHICLE_POSITION @"livefeeds/vehiclePosition"
+
+//
+// Settings Page Rows
+//
+// Sections
+#define SETTINGS_NUMBER_OF_SECTIONS 3
+
+#define SETTINGS_ADVISORY_SECTION_NUM  0
+#define SETTINGS_PUSH_SECTION_NUM  1
+#define SETTINGS_BIKE_WALK_SECTION_NUM  2
+
+#define SETTINGS_ADVISORY_SECTION_ROWS  1
+
+#define SETTINGS_PUSH_SECTION_ROWS_IF_ON  4  // Row defs follow
+#define SETTINGS_PUSH_ON_OFF_ROW_NUM 0
+#define SETTINGS_PUSH_FREQUENCY_ROW_NUM 1
+#define SETTINGS_PUSH_SOUND_ROW_NUM 2
+#define SETTINGS_PUSH_TIMING_ROW_NUM 3
+
+#define SETTINGS_BIKE_WALK_SECTION_ROWS  2 // Row defs follow
+#define SETTINGS_MAX_WALK_DISTANCE_ROW_NUM 0
+#define SETTINGS_BIKE_PREF_ROW_NUM 1
+#define SETTINGS_TRANSIT_MODE_ROW_NUM 999  // This function is de-activated from the UI
+
+// Codes for detail pages
+#define N_SETTINGS_ROW_ADVISORY 0
+#define N_SETTINGS_ROW_PUSH_SOUND 3
+#define N_SETTINGS_ROW_PUSH_TIMING 4
+#define N_SETTINGS_ROW_TRANSIT_MODE 5
+#define N_SETTINGS_ROW_BIKE_PREF 7
+
+#define N_SETTINGS_ADVISORY_ROWS 4  // Row defs follow
+#define WMATA_SETTINGS_ADVISORIES_ROWS 1
+#define TRIMET_SETTINGS_ADVISORIES_ROWS 1
+#define SETTINGS_ADVISORY_SFMUNI_ROW 0
+#define SETTINGS_ADVISORY_BART_ROW 1
+#define SETTINGS_ADVISORY_ACTRANSIT_ROW 2
+#define SETTINGS_ADVISORY_CALTRAIN_ROW 3
+#define SETTINGS_ADVISORY_WMATA_ROW 0
+#define SETTINGS_ADVISORY_TRIMET_ROW 0
+
+#define N_SETTINGS_PUSH_SOUND_ROWS 2  // Row defs follow
+#define SETTINGS_SOUNDS_URGENT_ROW 0
+#define SETTINGS_SOUNDS_STANDARD_ROW 1
+
+#define N_SETTINGS_PUSH_TIMING_ROWS 5  // Row defs follow
+#define SETTINGS_TIMING_WEEKDAY_MORNING_ROW 0
+#define SETTINGS_TIMING_WEEKDAY_MIDDAY_ROW 1
+#define SETTINGS_TIMING_WEEKDAY_EVENING_ROW 2
+#define SETTINGS_TIMING_WEEKDAY_NIGHT_ROW 3
+#define SETTINGS_TIMING_WEEKEND_ROW 4
+
+#define N_SETTINGS_TRANSIT_MODE_ROWS 3 // Note: this function is not being used currently
+
+#define N_SETTINGS_BIKE_PREF_ROWS 3  // Row defs follow
+#define SETTINGS_BIKE_MAX_DISTANCE_ROW 0
+#define SETTINGS_FAST_VS_SAFE_ROW 1
+#define SETTINGS_FAST_VS_FLAT_ROW 2
+
+//Mode Define
+#define BIKE_MODE_Tag @"101"
+#define TRANSIT_MODE_Tag @"102"
+#define WALK_MODE_Tag @"103"
+#define BIKE_SHARE_MODE_Tag @"104"
+
+#define MODE_ENABLE @"1"
+#define MODE_DISABLE @"0"
+
+#define DEFAULT_BIKE_MODE @"bikeModeEnable"
+#define DEFAULT_SHARE_MODE @"bikeShareModeEnable"
+#define DEFAULT_TRANSIT_MODE @"TransitModeEnable"
+#define DEFAULT_WALK_MODE @"walkModeEnable"
+#define DEFAULT_UBER_MODE @"uberModeEnable"
+
+
+//
+// Preload station file variables and version numbers
+//
+#define CALTRAIN_PRELOAD_LOCATION_FILE_CALTRAIN_APPLICATION @"caltrain-station.json"
+#define BART_BACKGROUND_PRELOAD_LOCATION_FILE @"bart-station-background.json"
+
+#define CALTRAIN_PRELOAD_LOCATION_FILE     @"caltrain.json"
+#define BART_PRELOAD_LOCATION_FILE         @"bart.json"
+#define ACTRANSIT_PRELOAD_LOCATION_FILE         @"ac-transit.json"
+#define SFMUNI_PRELOAD_LOCATION_FILE         @"sf-muni.json"
+#define WMATA_PRELOAD_LOCATION_FILE          @"wmata-station.json"
+#define PORTLAND_PRELOAD_LOCATION_FILE          @"trimet.json"
+
+#define CALTRAIN_PRELOAD_VERSION_NUMBER    @"1.100"
+#define CALTRAIN_PRELOAD_TEST_ADDRESS    @"San Martin Caltrain, San Martin, CA 95046, USA"
+
+#define BART_PRELOAD_VERSION_NUMBER      @"1.052"
+#define BART_PRELOAD_TEST_ADDRESS        @"24th St Mission BART, San Francisco, CA 94110, USA"
+
+#define ACTRANSIT_PRELOAD_VERSION_NUMBER      @"1.500"
+#define ACTRANSIT_PRELOAD_TEST_ADDRESS        @"Coelho Dr & Mooney Av"
+
+#define SFMUNI_PRELOAD_VERSION_NUMBER      @"1.800"
+#define SFMUNI_PRELOAD_TEST_ADDRESS        @"Powell St & O'Farrell St"
+
+#define WMATA_PRELOAD_VERSION_NUMBER    @"1.120"
+#define WMATA_PRELOAD_TEST_ADDRESS    @"Anacostia Metro Station, Washington, DC 20020, USA"
+
+#define PORTLAND_PRELOAD_VERSION_NUMBER    @"2.100"
+#define PORTLAND_PRELOAD_TEST_ADDRESS      @"Hatfield Government Center MAX Station"
+
+//
+// Agency IDs, names, shortnames, etc
+//
+#define AGENCY_IDS   @"agencyIds"
+#define CALTRAIN_AGENCY_FEED_ID  @"1"
+#define BART_AGENCY_FEED_ID       @"2"
+#define SFMUNI_AGENCY_FEED_ID    @"3"
+#define ACTRANSIT_AGENCY_FEED_ID @"4"
+#define VTA_AGENCY_FEED_ID       @"5"
+#define MENLO_MIDDAY_AGENCY_FEED_ID @"6"
+#define SF_FERRIES_AGENCY_FEED_ID        @"7"
+#define WMATA_AGENCY_FEED_ID @"8"
+#define SAM_TRANS_AGENCY_FEED_ID    @"9"
+#define TRIMET_AGENCY_FEED_ID    @"21"
+
+// Agencies without a feed ID will not get GTFS schedules (need to do mapping only through OTP)
+
+#define CALTRAIN_AGENCY_NAME    @"Caltrain"
+#define BART_AGENCY_NAME        @"Bay Area Rapid Transit"
+#define ACTRANSIT_AGENCY_NAME   @"AC Transit"
+#define SFMUNI_AGENCY_NAME      @"San Francisco Municipal Transportation Agency"
+#define AIRBART_AGENCY_NAME     @"AirBART"
+#define VTA_AGENCY_NAME         @"VTA"
+#define MENLO_MIDDAY_AGENCY_NAME  @"Menlo Park Midday Shuttle"
+#define BLUE_GOLD_AGENCY_NAME   @"Blue & Gold Fleet"
+#define HARBOR_BAY_AGENCY_NAME  @"Harbor Bay Ferry"
+#define BAYLINK_AGENCY_NAME     @"Baylink"
+#define GOLDEN_GATE_AGENCY_NAME @"Golden Gate Ferry"
+#define DC_CIRCULATOR_AGENCY_NAME @"DC Circulator"
+#define METRO_AGENCY_NAME         @"METRO"
+#define SAM_TRANS_AGENCY_NAME     @"SamTrans"
+
+// Keys for RouteExcludeSettings Agencies
+#define CALTRAIN_BUTTON @"Caltrain"
+#define BART_BUTTON @"BART"
+#define AIRBART_BUTTON @"AirBART"
+#define MUNI_BUTTON @"Muni"
+#define ACTRANSIT_BUTTON @"AC Transit"
+#define VTA_BUTTON  @"VTA"
+#define MENLO_MIDDAY_BUTTON @"Menlo"
+#define BLUE_GOLD_BUTTON  @"Blue & Gold"
+#define HARBOR_BAY_BUTTON  @"Harbor Bay"
+#define BAYLINK_BUTTON     @"Baylink"
+#define GOLDEN_GATE_BUTTON @"Golden Gate"
+#define DC_CIRCULATOR_BUTTON @"DC Cir"
+#define METRO_BUTTON @"Metro"
+#define SAM_TRANS_BUTTON @"SamTrans"
+
+#define AC_TRANSIT @"ac_transit"
+#define BART       @"bart"
+#define CALTRAIN   @"caltrain"
+#define SF_MUNI    @"sf-muni"
+
+//US-184 Constant
+#define CALTRAIN_LOCAL                 @"Local"
+#define CALTRAIN_LIMITED               @"Limited"
+#define CALTRAIN_BULLET                @"Bullet"
+#define CALTRAIN_AGENCY_ID    @"caltrain-ca-us"
+#define CALTRAIN_TRAIN                 @"Train"
+
+// User Preferences settings constants for activating advisories
+#define ENABLE_SFMUNI_ADV   @"enableSfMuniAdv"
+#define ENABLE_BART_ADV     @"enableBartAdv"
+#define ENABLE_ACTRANSIT_ADV @"enableAcTransitAdv"
+#define ENABLE_CALTRAIN_ADV @"enableCaltrainAdv"
+#define ENABLE_WMATA_ADV     @"enableWmataAdv"
+#define ENABLE_TRIMET_ADV     @"enableTrimetAdv"
+
+// See https://developer.uber.com/v1/endpoints/ for details of the Uber API
+#define UBER_ENABLED  1   // 1 to enable Uber in RouteExcludeSettings, 0 otherwise
+#define UBER_API_BASE_URL    @"https://api.uber.com/v1"
+#define UBER_PRODUCTS_URL    @"/products"
+#define UBER_PRICE_URL    @"/estimates/price"
+#define UBER_TIME_URL    @"/estimates/time"
+#define UBER_SERVER_TOKEN @"8wPZ8UFdreBCTwk_DVeL8Al-ejn7Z3GsPbUX4w45"
+#define UBER_CLIENT_ID @"m2FjJwmSSurnjRUpfYjYhyb_zX5--zE6"
+#define UBER_START_LATITUDE @"start_latitude"
+#define UBER_START_LONGITUDE @"start_longitude"
+#define UBER_END_LATITUDE @"end_latitude"
+#define UBER_END_LONGITUDE @"end_longitude"
+#define UBER_EXCLUDE_BUTTON_DISPLAY_NAME @"Uber"
+#define UBER_TIMES_KEY @"times"
+#define UBER_PRICES_KEY @"prices"
+#define UBER_PRODUCT_ID_KEY @"product_id"
+#define UBER_DISPLAY_NAME_KEY @"display_name"
+#define UBER_PRICE_ESTIMATE_KEY @"estimate"
+#define UBER_LOW_ESTIMATE_KEY @"low_estimate"
+#define UBER_HIGH_ESTIMATE_KEY @"high_estimate"
+#define UBER_SURGE_MULTIPLIER_KEY @"surge_multiplier"
+#define UBER_TIME_ESTIMATE_KEY @"estimate"
+#define UBER_APP_BASE_URL @"uber://"
+#define UBER_APP_ACTION_KEY @"action"
+#define UBER_APP_ACTION_PICKUP @"setPickup"
+#define UBER_APP_PICKUP_LATITUDE @"pickup[latitude]"
+#define UBER_APP_PICKUP_LONGITUDE @"pickup[longitude]"
+#define UBER_APP_PICKUP_NICKNAME @"pickup[nickname]"
+#define UBER_APP_PICKUP_FORMATTED_ADDRESS @"pickup[formatted_address]"
+#define UBER_APP_DROPOFF_LATITUDE @"dropoff[latitude]"
+#define UBER_APP_DROPOFF_LONGITUDE @"dropoff[longitude]"
+#define UBER_APP_DROPOFF_NICKNAME @"dropoff[nickname]"
+#define UBER_APP_DROPOFF_FORMATTED_ADDRESS @"dropoff[formatted_address]"
+#define UBER_WEB_BASE_URL @"https://m.uber.com/sign-up"
+#define UBER_WEB_PICKUP_LATITUDE @"pickup_latitude"
+#define UBER_WEB_PICKUP_LONGITUDE @"pickup_longitude"
+#define UBER_WEB_PICKUP_NICKNAME @"pickup_nickname"
+#define UBER_WEB_PICKUP_FORMATTED_ADDRESS @"pickup_address"
+#define UBER_WEB_DROPOFF_LATITUDE @"dropoff_latitude"
+#define UBER_WEB_DROPOFF_LONGITUDE @"dropoff_longitude"
+#define UBER_WEB_DROPOFF_NICKNAME @"dropoff_nickname"
+#define UBER_WEB_DROPOFF_FORMATTED_ADDRESS @"dropoff_address"
+#define UBER_WEB_CLIENT_ID_KEY @"client_id"
+#define UBER_WEB_COUNTRY_CODE @"country_code"
+#define UBER_MAX_RETAIN_SECONDS 120  // Maximum amount of time before a partial Uber request result is thrown out
+
+
