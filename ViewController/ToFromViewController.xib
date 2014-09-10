@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -223,7 +223,7 @@
                             <color key="textColor" red="0.69422901459999997" green="0.69727988139999997" blue="0.69271783760000005" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <button opaque="NO" tag="101" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="139">
+                        <button opaque="NO" tag="101" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="139" userLabel="Button - bike mode">
                             <rect key="frame" x="74" y="9" width="43" height="38"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -239,7 +239,7 @@
                                 <action selector="btnModeClicked:" destination="-1" eventType="touchUpInside" id="143"/>
                             </connections>
                         </button>
-                        <button opaque="NO" tag="102" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="140">
+                        <button opaque="NO" tag="102" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="140" userLabel="Button - transit mode">
                             <rect key="frame" x="125" y="9" width="43" height="38"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -253,6 +253,22 @@
                             </state>
                             <connections>
                                 <action selector="btnModeClicked:" destination="-1" eventType="touchUpInside" id="144"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" tag="103" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="w5s-aG-SA2" userLabel="Button - car mode">
+                            <rect key="frame" x="176" y="9" width="43" height="38"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                            <state key="normal" image="img_carMode.png">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <state key="selected" image="img_carActiveMode.png"/>
+                            <state key="highlighted">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="btnModeClicked:" destination="-1" eventType="touchUpInside" id="J9x-sd-A3h"/>
                             </connections>
                         </button>
                         <button hidden="YES" opaque="NO" tag="104" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="170">
@@ -290,6 +306,8 @@
         <image name="img_bikeActiveMode.png" width="86" height="76"/>
         <image name="img_bikeMode.png" width="86" height="76"/>
         <image name="img_cancelUpdated.png" width="120" height="76"/>
+        <image name="img_carActiveMode.png" width="86" height="76"/>
+        <image name="img_carMode.png" width="86" height="76"/>
         <image name="img_departBG.png" width="606" height="116"/>
         <image name="img_departTimeBG.png" width="406" height="76"/>
         <image name="img_modeBG.png" width="602" height="112"/>

@@ -216,6 +216,14 @@
 		524EAEE619370D4C00EE00B4 /* CoveragePDXGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 524EAEE419370D4C00EE00B4 /* CoveragePDXGeoJSON.geojson */; };
 		524EAEE719370D4D00EE00B4 /* CoveragePDXGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 524EAEE419370D4C00EE00B4 /* CoveragePDXGeoJSON.geojson */; };
 		524EAEE819370D4D00EE00B4 /* CoveragePDXGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 524EAEE419370D4C00EE00B4 /* CoveragePDXGeoJSON.geojson */; };
+		525293F119C01FA40059F7C7 /* img_carActiveMode.png in Resources */ = {isa = PBXBuildFile; fileRef = 525293EF19C01FA40059F7C7 /* img_carActiveMode.png */; };
+		525293F219C01FA40059F7C7 /* img_carActiveMode.png in Resources */ = {isa = PBXBuildFile; fileRef = 525293EF19C01FA40059F7C7 /* img_carActiveMode.png */; };
+		525293F319C01FA40059F7C7 /* img_carActiveMode.png in Resources */ = {isa = PBXBuildFile; fileRef = 525293EF19C01FA40059F7C7 /* img_carActiveMode.png */; };
+		525293F419C01FA40059F7C7 /* img_carActiveMode.png in Resources */ = {isa = PBXBuildFile; fileRef = 525293EF19C01FA40059F7C7 /* img_carActiveMode.png */; };
+		525293F519C01FA40059F7C7 /* img_carMode.png in Resources */ = {isa = PBXBuildFile; fileRef = 525293F019C01FA40059F7C7 /* img_carMode.png */; };
+		525293F619C01FA40059F7C7 /* img_carMode.png in Resources */ = {isa = PBXBuildFile; fileRef = 525293F019C01FA40059F7C7 /* img_carMode.png */; };
+		525293F719C01FA40059F7C7 /* img_carMode.png in Resources */ = {isa = PBXBuildFile; fileRef = 525293F019C01FA40059F7C7 /* img_carMode.png */; };
+		525293F819C01FA40059F7C7 /* img_carMode.png in Resources */ = {isa = PBXBuildFile; fileRef = 525293F019C01FA40059F7C7 /* img_carMode.png */; };
 		525442C214C3ECF2004B0E1F /* libRestKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442B814C3EA95004B0E1F /* libRestKit.a */; };
 		525442C414C3ED2C004B0E1F /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C314C3ED2C004B0E1F /* CFNetwork.framework */; };
 		525442C614C3ED4A004B0E1F /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525442C514C3ED4A004B0E1F /* MobileCoreServices.framework */; };
@@ -1800,6 +1808,8 @@
 		524EAEDA193450EC00EE00B4 /* notificationicon6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notificationicon6.png; sourceTree = "<group>"; };
 		524EAEDB193450ED00EE00B4 /* notificationicon6@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "notificationicon6@2x.png"; sourceTree = "<group>"; };
 		524EAEE419370D4C00EE00B4 /* CoveragePDXGeoJSON.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CoveragePDXGeoJSON.geojson; sourceTree = "<group>"; };
+		525293EF19C01FA40059F7C7 /* img_carActiveMode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_carActiveMode.png; sourceTree = "<group>"; };
+		525293F019C01FA40059F7C7 /* img_carMode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_carMode.png; sourceTree = "<group>"; };
 		525442AD14C3EA95004B0E1F /* RestKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RestKit.xcodeproj; path = RestKit/RestKit.xcodeproj; sourceTree = "<group>"; };
 		525442C314C3ED2C004B0E1F /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		525442C514C3ED4A004B0E1F /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -2767,24 +2777,36 @@
 		8D17895D17A8D1A300BF873F /* NewImages */ = {
 			isa = PBXGroup;
 			children = (
-				CAC3C69617D4B9F3008898E9 /* navBarNormal.png */,
-				CAC3C69717D4B9F3008898E9 /* navBarNormal@2x.png */,
+				8D1789BB17A90E0300BF873F /* advisories.png */,
+				8D17899817A90D5000BF873F /* advisories@2x.png */,
+				8D178A2417A9276600BF873F /* backSettingDetail.png */,
+				8D178A1A17A9254600BF873F /* backSettingDetail@2x.png */,
+				8D1789BC17A90E0300BF873F /* bikePreference.png */,
+				8D17899917A90D5000BF873F /* bikePreference@2x.png */,
 				8DEA577117BA6A4E00FB1A00 /* bikeshare_Selected.png */,
 				8DEA577217BA6A4E00FB1A00 /* bikeshare_Selected@2x.png */,
 				8DEA577317BA6A4E00FB1A00 /* bikeshare_Unselected.png */,
 				8DEA577417BA6A4E00FB1A00 /* bikeshare_Unselected@2x.png */,
-				8D361EC117B8FA6900246A55 /* feedBackLink.png */,
-				8D361EC817B916E100246A55 /* feedBackLink@2x.png */,
+				8D178A2517A9276700BF873F /* checkMark.png */,
+				8D178A1B17A9254600BF873F /* checkMark@2x.png */,
 				2E1F619217AB8604003B7EAF /* currenticon.png */,
 				2E1F619317AB8604003B7EAF /* currenticonlive.png */,
-				8D06AB1917AA1A8E00ACC806 /* navBar.png */,
-				8D06AB1A17AA1A8E00ACC806 /* navBar@2x.png */,
-				8D06AB1B17AA1A8E00ACC806 /* nimbler.png */,
-				8D06AB1C17AA1A8E00ACC806 /* nimbler@2x.png */,
+				8D178A6517A939DF00BF873F /* email.png */,
+				8D178A6617A939E000BF873F /* email@2x.png */,
+				8D178A5617A9396300BF873F /* excludeBackground@2x.png */,
+				8D178A5717A9396300BF873F /* excludeSelected@2x.png */,
+				8D178A5817A9396400BF873F /* excludeUnSelected@2x.png */,
+				8D17896717A8D29300BF873F /* feedBackButton@2x.png */,
+				8D361EC117B8FA6900246A55 /* feedBackLink.png */,
+				8D361EC817B916E100246A55 /* feedBackLink@2x.png */,
+				8D1789DE17A919AD00BF873F /* feedBackSelected@2x.png */,
+				8D1789FD17A920A900BF873F /* feedBackUnSelected@2x.png */,
 				8D178A8317A9481100BF873F /* img_activeStar.png */,
 				8D178A8417A9481100BF873F /* img_bikeActiveMode.png */,
 				8D178A8517A9481300BF873F /* img_bikeMode.png */,
 				8D178A8617A9481400BF873F /* img_cancelUpdated.png */,
+				525293EF19C01FA40059F7C7 /* img_carActiveMode.png */,
+				525293F019C01FA40059F7C7 /* img_carMode.png */,
 				8D178A8717A9481600BF873F /* img_departBG.png */,
 				8D178A8817A9481600BF873F /* img_departTimeBG.png */,
 				8D178A8917A9481800BF873F /* img_inActiveStar.png */,
@@ -2800,52 +2822,42 @@
 				8D178A9217A9482100BF873F /* img_transitMode.png */,
 				8D178A9317A9482100BF873F /* img_walkActiveMode.png */,
 				8D178A9417A9482300BF873F /* img_walkMode.png */,
-				8D178A6517A939DF00BF873F /* email.png */,
-				8D178A6617A939E000BF873F /* email@2x.png */,
+				8D1789BD17A90E0300BF873F /* maxWalkDistance.png */,
+				8D17899A17A90D5000BF873F /* maxWalkDistance@2x.png */,
 				8D178A6717A939E100BF873F /* message.png */,
 				8D178A6817A939E100BF873F /* message@2x.png */,
-				8D178A6917A939E200BF873F /* record.png */,
-				8D178A6A17A939E300BF873F /* record@2x.png */,
-				8D178A5617A9396300BF873F /* excludeBackground@2x.png */,
-				8D178A5717A9396300BF873F /* excludeSelected@2x.png */,
-				8D178A5817A9396400BF873F /* excludeUnSelected@2x.png */,
+				8D06AB1917AA1A8E00ACC806 /* navBar.png */,
+				8D06AB1A17AA1A8E00ACC806 /* navBar@2x.png */,
+				CAC3C69617D4B9F3008898E9 /* navBarNormal.png */,
+				CAC3C69717D4B9F3008898E9 /* navBarNormal@2x.png */,
+				8D06AB1B17AA1A8E00ACC806 /* nimbler.png */,
+				8D06AB1C17AA1A8E00ACC806 /* nimbler@2x.png */,
 				8D178A4C17A935B700BF873F /* notificationicon.png */,
-				8D178A4D17A935B700BF873F /* notificationicon@2x.png */,
 				524EAEDA193450EC00EE00B4 /* notificationicon6.png */,
 				524EAEDB193450ED00EE00B4 /* notificationicon6@2x.png */,
-				8D178A2417A9276600BF873F /* backSettingDetail.png */,
-				8D178A1A17A9254600BF873F /* backSettingDetail@2x.png */,
-				8D178A2517A9276700BF873F /* checkMark.png */,
-				8D178A1B17A9254600BF873F /* checkMark@2x.png */,
-				8D1789DE17A919AD00BF873F /* feedBackSelected@2x.png */,
-				8D1789FD17A920A900BF873F /* feedBackUnSelected@2x.png */,
+				8D178A4D17A935B700BF873F /* notificationicon@2x.png */,
 				8D1789DF17A919AD00BF873F /* notificationSelected@2x.png */,
 				8D1789FF17A920A900BF873F /* notificationUnSelected@2x.png */,
+				8D1789BE17A90E0300BF873F /* notifSound.png */,
+				8D17899B17A90D5000BF873F /* notifSound@2x.png */,
+				8D1789BF17A90E0300BF873F /* notifTiming.png */,
+				8D17899C17A90D5000BF873F /* notifTiming@2x.png */,
+				8D1789C017A90E0300BF873F /* push.png */,
+				8D17899D17A90D5000BF873F /* push@2x.png */,
+				8D1789C117A90E0300BF873F /* pushFrequency.png */,
+				8D17899E17A90D5100BF873F /* pushFrequency@2x.png */,
+				8D178A6917A939E200BF873F /* record.png */,
+				8D178A6A17A939E300BF873F /* record@2x.png */,
+				8D17898917A90C9B00BF873F /* redSlider.png */,
+				8D17897A17A90B2300BF873F /* redSlider@2x.png */,
+				8D17895E17A8D1A300BF873F /* sentFeedBack@2x.png */,
+				8D17896C17A8D5DF00BF873F /* separater@2x.png */,
 				8D1789E017A919AD00BF873F /* settingSelected@2x.png */,
 				8D178A0117A920AA00BF873F /* settingUnSelected@2x.png */,
-				8D1789BB17A90E0300BF873F /* advisories.png */,
-				8D1789BC17A90E0300BF873F /* bikePreference.png */,
-				8D1789BD17A90E0300BF873F /* maxWalkDistance.png */,
-				8D1789BE17A90E0300BF873F /* notifSound.png */,
-				8D1789BF17A90E0300BF873F /* notifTiming.png */,
-				8D1789C017A90E0300BF873F /* push.png */,
-				8D1789C117A90E0300BF873F /* pushFrequency.png */,
-				8D17899817A90D5000BF873F /* advisories@2x.png */,
-				8D17899917A90D5000BF873F /* bikePreference@2x.png */,
-				8D17899A17A90D5000BF873F /* maxWalkDistance@2x.png */,
-				8D17899B17A90D5000BF873F /* notifSound@2x.png */,
-				8D17899C17A90D5000BF873F /* notifTiming@2x.png */,
-				8D17899D17A90D5000BF873F /* push@2x.png */,
-				8D17899E17A90D5100BF873F /* pushFrequency@2x.png */,
-				8D17898917A90C9B00BF873F /* redSlider.png */,
 				8D17898A17A90C9B00BF873F /* thumbSlider.png */,
-				8D17898B17A90C9B00BF873F /* whiteSlider.png */,
-				8D17897A17A90B2300BF873F /* redSlider@2x.png */,
 				8D17897B17A90B2300BF873F /* thumbSlider@2x.png */,
+				8D17898B17A90C9B00BF873F /* whiteSlider.png */,
 				8D17897C17A90B2300BF873F /* whiteSlider@2x.png */,
-				8D17896C17A8D5DF00BF873F /* separater@2x.png */,
-				8D17896717A8D29300BF873F /* feedBackButton@2x.png */,
-				8D17895E17A8D1A300BF873F /* sentFeedBack@2x.png */,
 			);
 			path = NewImages;
 			sourceTree = SOURCE_ROOT;
@@ -3141,6 +3153,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E4C09715CB465A00B55A65 /* Icon.png in Resources */,
+				525293F119C01FA40059F7C7 /* img_carActiveMode.png in Resources */,
 				52E4C09F15CB7D2F00B55A65 /* Icon@2x.png in Resources */,
 				52E4C0A115CC705000B55A65 /* Default.png in Resources */,
 				52E4C0A315CC705D00B55A65 /* Default@2x.png in Resources */,
@@ -3162,6 +3175,7 @@
 				520FB214162603AF0083F143 /* feedback.png in Resources */,
 				520FB215162603AF0083F143 /* img_ recording@2x.png in Resources */,
 				520FB216162603AF0083F143 /* img_3baged.png in Resources */,
+				525293F519C01FA40059F7C7 /* img_carMode.png in Resources */,
 				520FB217162603AF0083F143 /* img_appTitle.png in Resources */,
 				520FB218162603AF0083F143 /* img_appTitle@2x.png in Resources */,
 				520FB219162603AF0083F143 /* img_background.png in Resources */,
@@ -3469,6 +3483,7 @@
 				8DA780171724FF0D0090C2EA /* img_itineraryNavigation@2x.png in Resources */,
 				8DA780181724FF0D0090C2EA /* img_legBus.png in Resources */,
 				8DA780191724FF0D0090C2EA /* img_legBus@2x.png in Resources */,
+				525293F619C01FA40059F7C7 /* img_carMode.png in Resources */,
 				8DA7801A1724FF0D0090C2EA /* img_legBusSelect.png in Resources */,
 				8DA7801B1724FF0D0090C2EA /* img_legBusSelect@2x.png in Resources */,
 				8DA7801C1724FF0D0090C2EA /* img_legHeavyTrain.png in Resources */,
@@ -3548,6 +3563,7 @@
 				8DA780631724FF0D0090C2EA /* send@2x.png in Resources */,
 				8DA780641724FF0D0090C2EA /* Speaker.png in Resources */,
 				8DA780651724FF0D0090C2EA /* Speaker@2x.png in Resources */,
+				525293F219C01FA40059F7C7 /* img_carActiveMode.png in Resources */,
 				8DA780661724FF0D0090C2EA /* walkb.png in Resources */,
 				8DA780671724FF0D0090C2EA /* CoverageGeoJSON.geojson in Resources */,
 				8DA780691724FF0D0090C2EA /* bart-station.json in Resources */,
@@ -3844,6 +3860,7 @@
 				8DAA2943178BDFEF00C3FA30 /* SettingViewController_SF_568h.xib in Resources */,
 				8DAA2944178BDFEF00C3FA30 /* SettingDetailViewController_568h.xib in Resources */,
 				8DAA2949178BDFEF00C3FA30 /* img_on.png in Resources */,
+				525293F419C01FA40059F7C7 /* img_carActiveMode.png in Resources */,
 				8DAA294A178BDFEF00C3FA30 /* img_off.png in Resources */,
 				8DAA294B178BDFEF00C3FA30 /* img_travel.png in Resources */,
 				8DAA294C178BDFEF00C3FA30 /* pressed.png in Resources */,
@@ -3876,6 +3893,7 @@
 				2E9C9277179EB56000BF0770 /* Nimbler Portland-Info.plist in Resources */,
 				8D17896217A8D1A300BF873F /* sentFeedBack@2x.png in Resources */,
 				8D17896B17A8D29300BF873F /* feedBackButton@2x.png in Resources */,
+				525293F819C01FA40059F7C7 /* img_carMode.png in Resources */,
 				8D17897017A8D5DF00BF873F /* separater@2x.png in Resources */,
 				8D17897717A8EEFE00BF873F /* Default.png in Resources */,
 				8D17897817A8EF0300BF873F /* Default@2x.png in Resources */,
@@ -3982,6 +4000,7 @@
 				8DE18BA81725415800AA8112 /* aps_development.cer in Resources */,
 				8DE18BAC1725415800AA8112 /* FeedBackForm.xib in Resources */,
 				8DE18BAD1725415800AA8112 /* FeedBackForm_568h.xib in Resources */,
+				525293F719C01FA40059F7C7 /* img_carMode.png in Resources */,
 				524EAEB01933EFA900EE00B4 /* img_switcherarrows2.png in Resources */,
 				8DE18BAE1725415800AA8112 /* FeedbackViewController.xib in Resources */,
 				8DE18BAF1725415800AA8112 /* RouteDetailsViewController.xib in Resources */,
@@ -4044,6 +4063,7 @@
 				8DE18BE81725415800AA8112 /* img_mail@2x.png in Resources */,
 				8DE18BE91725415800AA8112 /* img_mapDot.png in Resources */,
 				8DE18BEA1725415800AA8112 /* img_mapDot@2x.png in Resources */,
+				525293F319C01FA40059F7C7 /* img_carActiveMode.png in Resources */,
 				8DE18BEB1725415800AA8112 /* img_navigationbar.png in Resources */,
 				8DE18BEC1725415800AA8112 /* img_navigationbar@2x.png in Resources */,
 				8DE18BED1725415800AA8112 /* img_nimblerNavigation.png in Resources */,

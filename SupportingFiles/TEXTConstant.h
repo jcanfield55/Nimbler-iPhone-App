@@ -23,7 +23,6 @@
 #define ROUTE_ENDPOINT_PREFIX @"End at "
 #define ROUTE_TITLE_MSG @"Route"
 
-#define ROUTE_MODE_TITLE_MSG @"Route Mode"
 
 // Null String
 #define NULL_STRING @""
@@ -52,7 +51,6 @@
 // Alert text
 #define ALERT_TRIP_NOT_AVAILABLE       @"Sorry, we are unable to calculate a route for that To & From address"
 #define ROUTE_NOT_POSSIBLE_MSG         @"Route is not possible"
-#define ROUTE_MODE_NOT_SELECTED_MSG    @"Please select any route mode"
 #define OK_BUTTON_TITLE                @"OK"
 
 // Current Location related messages

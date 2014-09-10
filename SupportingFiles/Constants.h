@@ -549,7 +549,7 @@
 //Mode Define
 #define BIKE_MODE_Tag @"101"
 #define TRANSIT_MODE_Tag @"102"
-#define WALK_MODE_Tag @"103"
+#define CAR_MODE_Tag @"103"
 #define BIKE_SHARE_MODE_Tag @"104"
 
 #define MODE_ENABLE @"1"
@@ -558,9 +558,7 @@
 #define DEFAULT_BIKE_MODE @"bikeModeEnable"
 #define DEFAULT_SHARE_MODE @"bikeShareModeEnable"
 #define DEFAULT_TRANSIT_MODE @"TransitModeEnable"
-#define DEFAULT_WALK_MODE @"walkModeEnable"
-#define DEFAULT_UBER_MODE @"uberModeEnable"
-
+#define DEFAULT_CAR_MODE @"carModeEnable"
 
 //
 // Preload station file variables and version numbers

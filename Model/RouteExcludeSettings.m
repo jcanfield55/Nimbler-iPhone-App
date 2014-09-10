@@ -401,7 +401,6 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
     
     BOOL bikeMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE] boolValue];
     BOOL bikeShare = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_SHARE_MODE] boolValue];
-   // BOOL walkMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] boolValue];
     BOOL transitMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] boolValue];
     
     BOOL containWalk = false;
@@ -457,27 +456,24 @@ static NSDictionary *agencyButtonHandlingDictionaryInternal;
 -(BOOL)isItineraryIncluded:(Itinerary *)itin {
    
     BOOL transitMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] boolValue];
-    BOOL walkMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] boolValue];
     
     if([self itineraryContainsWalkAndBike:[itin legs]]){
         return true;
     }
     for (Leg* leg in [itin legs]) {
         NSString* legKey = nil;
-        if(leg.isWalk && !walkMode){
-            return false; // Exclude walk itinerary if WALK Mode disable
-        }
-        else if (leg.isWalk && [self settingForKey:returnBikeButtonTitle()]==SETTING_INCLUDE_ROUTE) {
-            return false; // exclude all walk itineraries if we are in bike mode
-        }
-        else if (leg.isBike && [self settingForKey:returnBikeButtonTitle()]==SETTING_EXCLUDE_ROUTE && [self settingForKey:BIKE_SHARE] == SETTING_EXCLUDE_ROUTE) { // TODO double-check isBike method
-            return false; // Exclude bike itinerary if BIKE_BUTTON excluded
+        // Remove this clause -- allow walk legs if bike legs are enabled
+        // if (leg.isWalk && [self settingForKey:returnBikeButtonTitle()]==SETTING_INCLUDE_ROUTE) {
+        //     return false; // exclude all walk itineraries if we are in bike mode
+        // }
+        if (leg.isBike && [self settingForKey:returnBikeButtonTitle()]==SETTING_EXCLUDE_ROUTE && [self settingForKey:BIKE_SHARE] == SETTING_EXCLUDE_ROUTE) { // TODO double-check isBike method
+            return false; // Exclude any bike itinerary if BIKE_BUTTON and BIKE_SHARE excluded
         }
         else if (leg.isBike && [self settingForKey:returnBikeButtonTitle()]==SETTING_INCLUDE_ROUTE && ([self settingForKey:BIKE_SHARE] == SETTING_EXCLUDE_ROUTE && leg.rentedBike)) { // TODO double-check isBike method
-            return false; // Exclude bike itinerary if BIKE_BUTTON excluded
+            return false; // Exclude shared bike itinerary if BIKE_SHARE excluded
         }
         else if (leg.isBike && [self settingForKey:returnBikeButtonTitle()]==SETTING_EXCLUDE_ROUTE && ([self settingForKey:BIKE_SHARE] == SETTING_INCLUDE_ROUTE && !leg.rentedBike)) { // TODO double-check isBike method
-            return false; // Exclude bike itinerary if BIKE_BUTTON excluded
+            return false; // Exclude non-shared bike itinerary if BIKE_BUTTON excluded
         }
         else if (returnShortAgencyName(leg.agencyName)) {
             if(!transitMode){

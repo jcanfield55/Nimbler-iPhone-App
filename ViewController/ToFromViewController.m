@@ -398,41 +398,37 @@ UIImage *imageDetailDisclosure;
     if(![[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE]){
         [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_TRANSIT_MODE];
     }
-    if(![[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE]){
-       [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_WALK_MODE]; 
+    if(![[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_CAR_MODE]){
+        [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_CAR_MODE];
     }
-#if UBER_ENABLED
-    if(![[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_UBER_MODE]){
-        [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_UBER_MODE];
-    }
-#endif
     
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     //Mode
     UIButton *btnMode;
     btnMode = (UIButton *)[self.viewMode viewWithTag:[BIKE_MODE_Tag intValue]];
-    if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE] isEqualToString:@"1"]){
+    if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE] isEqualToString:MODE_ENABLE]){
         [btnMode setSelected:YES];
     }
     else{
         [btnMode setSelected:NO];
     }
     btnMode = (UIButton *)[self.viewMode viewWithTag:[TRANSIT_MODE_Tag intValue]];
-    if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] isEqualToString:@"1"]){
+    if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] isEqualToString:MODE_ENABLE]){
         [btnMode setSelected:YES];
     }
     else{
         [btnMode setSelected:NO];
     }
-    /* Eliminated WALK_MODE button 5/26/2014 for Portland, so do not set this button */
-    // btnMode = (UIButton *)[self.viewMode viewWithTag:[WALK_MODE_Tag intValue]];
-    // if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] isEqualToString:@"1"]){
-    //     [btnMode setSelected:YES];
-    // }
-    // else{
-    //     [btnMode setSelected:NO];
-    // }
+
+    btnMode = (UIButton *)[self.viewMode viewWithTag:[CAR_MODE_Tag intValue]];
+    if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_CAR_MODE] isEqualToString:MODE_ENABLE]){
+        [btnMode setSelected:YES];
+    }
+    else{
+        [btnMode setSelected:NO];
+    }
+    
     if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:WMATA_BUNDLE_IDENTIFIER]){
         btnMode = (UIButton *)[self.viewMode viewWithTag:[BIKE_SHARE_MODE_Tag intValue]];
         [btnMode setHidden:NO];
@@ -442,7 +438,7 @@ UIImage *imageDetailDisclosure;
             [btnMode setSelected:YES];
         }
         else{
-            if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_SHARE_MODE] isEqualToString:@"1"]){
+            if([[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_SHARE_MODE] isEqualToString:MODE_ENABLE]){
                 [btnMode setSelected:YES];
             }
             else{
@@ -1458,7 +1454,7 @@ UIImage *imageDetailDisclosure;
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",strMode] forKey:DEFAULT_BIKE_MODE];
         [[NSUserDefaults standardUserDefaults] synchronize];
         btnMode = (UIButton *)[self.viewMode viewWithTag:[BIKE_SHARE_MODE_Tag intValue]];
-        if([strMode isEqualToString:@"1"]){
+        if([strMode isEqualToString:MODE_ENABLE]){
             [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:bikeName];
             if(btnMode.selected == YES){
                 [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"0"] forKey:DEFAULT_SHARE_MODE];
@@ -1474,7 +1470,7 @@ UIImage *imageDetailDisclosure;
     else if([sender tag]==[TRANSIT_MODE_Tag intValue]){
         [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",strMode] forKey:DEFAULT_TRANSIT_MODE];
         [[NSUserDefaults standardUserDefaults] synchronize];
-//        if([strMode isEqualToString:@"1"]){
+//        if([strMode isEqualToString:MODE_ENABLE]){
 //            for(int i=0;i<[[plan excludeSettingsArray] count];i++){
 //                RouteExcludeSetting *routeExcludeSetting = [[plan excludeSettingsArray] objectAtIndex:i];
 //                NSString *key = routeExcludeSetting.key;
@@ -1493,14 +1489,14 @@ UIImage *imageDetailDisclosure;
 //            }
 //        }
     }
-    else if([sender tag]==[WALK_MODE_Tag intValue]){
-        [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",strMode] forKey:DEFAULT_WALK_MODE];
+    else if([sender tag]==[CAR_MODE_Tag intValue]){
+        [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",strMode] forKey:DEFAULT_CAR_MODE];
         [[NSUserDefaults standardUserDefaults] synchronize];
-        if([strMode isEqualToString:@"1"]){
-            [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:@"WALK"];
+        if([strMode isEqualToString:MODE_ENABLE]){
+            [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:UBER_EXCLUDE_BUTTON_DISPLAY_NAME];
         }
         else{
-            [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:@"WALK"];
+            [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_EXCLUDE_ROUTE forKey:UBER_EXCLUDE_BUTTON_DISPLAY_NAME];
         }
     }
     
@@ -1509,7 +1505,7 @@ UIImage *imageDetailDisclosure;
             [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",strMode] forKey:DEFAULT_SHARE_MODE];
             [[NSUserDefaults standardUserDefaults] synchronize];
             btnMode = (UIButton *)[self.viewMode viewWithTag:[BIKE_MODE_Tag intValue]];
-            if([strMode isEqualToString:@"1"]){
+            if([strMode isEqualToString:MODE_ENABLE]){
                 [[RouteExcludeSettings latestUserSettings] changeSettingTo:SETTING_INCLUDE_ROUTE forKey:BIKE_SHARE];
                 if(btnMode.selected == YES){
                     [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"0"] forKey:DEFAULT_BIKE_MODE];
@@ -1543,12 +1539,6 @@ UIImage *imageDetailDisclosure;
         
         NIMLOG_EVENT1(@"Route Button Pressed");
         UIAlertView *alert;
-        
-        if(![[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_BIKE_MODE] isEqualToString:MODE_ENABLE] && ![[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_SHARE_MODE] isEqualToString:MODE_ENABLE] && ![[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] isEqualToString:MODE_ENABLE] && ![[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_WALK_MODE] isEqualToString:MODE_ENABLE]){
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ROUTE_MODE_TITLE_MSG message:ROUTE_MODE_NOT_SELECTED_MSG delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [alert show];
-            return ;
-        }
         
         startButtonClickTime = CFAbsoluteTimeGetCurrent();
         
