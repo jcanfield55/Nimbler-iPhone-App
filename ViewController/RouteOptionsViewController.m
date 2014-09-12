@@ -23,6 +23,7 @@
 #import "RealTimeManager.h"
 #import "FeedBackForm.h"
 #import "WebView.h"
+#import "UberMgr.h"
 
 #define IDENTIFIER_CELL @"UIRouteOptionsViewCell"
 #define TIMER_DEFAULT_VALUE 119
@@ -489,7 +490,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
             [[cell detailTextLabel] setFont:[UIFont MEDIUM_FONT]];
             cell.detailTextLabel.textColor = [UIColor GRAY_FONT_COLOR];
             
-            [[cell textLabel] setText:uberItin.uberDisplayName];
+            [[cell textLabel] setText:@"Uber"];
             
             NSMutableString* pricelabel = [NSMutableString stringWithCapacity:40];
             if (uberItin.uberTimeEstimateSeconds) {
@@ -620,7 +621,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
         // Uber case
         if (itin.isUberItinerary) {
             ItineraryFromUber *uberItin = (ItineraryFromUber *)itin;
-            titleText =  uberItin.uberDisplayName;
+            titleText =  @"Uber";
             subtitleText = uberItin.uberPriceEstimate;
         }
         
@@ -666,55 +667,14 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
 {
     @try {
         itinerary = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
+
+        // Uber itineraries are handled the same as others -- push to the RouteDetailsView to see LegsFromUber
         
         // Handle Uber itinerary use case first
         if (itinerary.isUberItinerary) {
             ItineraryFromUber* itin = (ItineraryFromUber *)itinerary;
-            // Prepare common parameters for App & mobile web links
-            NSMutableDictionary *paramDictionary = [NSMutableDictionary dictionaryWithCapacity:10];
-            [paramDictionary setObject:itin.uberProductID forKey:UBER_PRODUCT_ID_KEY];
-            
-            if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"uber://"]]) {
-                // Uber app is installed.  Deep link into app.
-                [paramDictionary setObject:UBER_APP_ACTION_PICKUP forKey:UBER_APP_ACTION_KEY];
-                [paramDictionary setObject:plan.fromLocation.lat forKey:UBER_APP_PICKUP_LATITUDE];
-                [paramDictionary setObject:plan.fromLocation.lng forKey:UBER_APP_PICKUP_LONGITUDE];
-                [paramDictionary setObject:plan.fromLocation.shortFormattedAddress forKey:UBER_APP_PICKUP_FORMATTED_ADDRESS];
-                if (plan.fromLocation.nickName) {
-                    [paramDictionary setObject:plan.fromLocation.nickName forKey:UBER_APP_PICKUP_NICKNAME];
-                }
-                [paramDictionary setObject:plan.toLocation.lat forKey:UBER_APP_DROPOFF_LATITUDE];
-                [paramDictionary setObject:plan.toLocation.lng forKey:UBER_APP_DROPOFF_LONGITUDE];
-                [paramDictionary setObject:plan.toLocation.shortFormattedAddress forKey:UBER_APP_DROPOFF_FORMATTED_ADDRESS];
-                if (plan.fromLocation.nickName) {
-                    [paramDictionary setObject:plan.toLocation.nickName forKey:UBER_APP_DROPOFF_NICKNAME];
-                }
-
-                NSString *uberAppURLString = [UBER_APP_BASE_URL appendQueryParams:paramDictionary];
-                NSURL *uberAppURL = [NSURL URLWithString:uberAppURLString];
-                [[UIApplication sharedApplication] openURL:uberAppURL];
-            }
-            else { // No Uber app. Open Mobile Website.
-                [paramDictionary setObject:plan.fromLocation.lat forKey:UBER_WEB_PICKUP_LATITUDE];
-                [paramDictionary setObject:plan.fromLocation.lng forKey:UBER_WEB_PICKUP_LONGITUDE];
-                [paramDictionary setObject:plan.fromLocation.shortFormattedAddress forKey:UBER_WEB_PICKUP_FORMATTED_ADDRESS];
-                if (plan.fromLocation.nickName) {
-                    [paramDictionary setObject:plan.fromLocation.nickName forKey:UBER_WEB_PICKUP_NICKNAME];
-                }
-                [paramDictionary setObject:plan.toLocation.lat forKey:UBER_WEB_DROPOFF_LATITUDE];
-                [paramDictionary setObject:plan.toLocation.lng forKey:UBER_WEB_DROPOFF_LONGITUDE];
-                [paramDictionary setObject:plan.toLocation.shortFormattedAddress forKey:UBER_WEB_DROPOFF_FORMATTED_ADDRESS];
-                if (plan.fromLocation.nickName) {
-                    [paramDictionary setObject:plan.toLocation.nickName forKey:UBER_WEB_DROPOFF_NICKNAME];
-                }
-                [paramDictionary setObject:@"US" forKey:UBER_WEB_COUNTRY_CODE];
-                [paramDictionary setObject:UBER_CLIENT_ID forKey:UBER_WEB_CLIENT_ID_KEY];
-                
-                NSString *uberWebURLString = [UBER_WEB_BASE_URL appendQueryParams:paramDictionary];
-                NSURL *uberWebURL = [NSURL URLWithString:uberWebURLString];
-                [self openUrl:uberWebURL];   // Go to webview with designated URL
-            }
-            return;  // done with Uber handling
+            [UberMgr callUberWith:itin.legs.anyObject forPlan:plan];  // temp -- call with any Uber leg
+            return;
         }
         
         /*UITableViewCell *cell = [atableView cellForRowAtIndexPath:indexPath];

@@ -10,40 +10,19 @@
 
 @implementation LegFromUber
 
-+ (RKManagedObjectMapping *)objectMappingForApi:(APIType)apiType
-{
-    // Create empty ObjectMapping to fill and return
-    
-    RKManagedObjectMapping* mapping = [RKManagedObjectMapping mappingForClass:[Leg class]];
-    
-    // Make the mappings
-    if (apiType==OTP_PLANNER) {
-        
-        [mapping mapKeyPath:@"agencyId" toAttribute:@"agencyId"];
-        [mapping mapKeyPath:@"id" toAttribute:@"legId"];
-        [mapping mapKeyPath:@"bogusNonTransitLeg" toAttribute:@"bogusNonTransitLeg"];
-        [mapping mapKeyPath:@"distance" toAttribute:@"distance"];
-        [mapping mapKeyPath:@"duration" toAttribute:@"duration"];
-        [mapping mapKeyPath:@"endTime" toAttribute:@"endTime"];
-        [mapping mapKeyPath:@"headsign" toAttribute:@"headSign"];
-        //[mapping mapKeyPath:@"interlineWithPreviousLeg" toAttribute:@"interlineWithPreviousLeg"];
-        [mapping mapKeyPath:@"legGeometry.length" toAttribute:@"legGeometryLength"];
-        [mapping mapKeyPath:@"legGeometry.points" toAttribute:@"legGeometryPoints"];
-        [mapping mapKeyPath:@"rentedBike" toAttribute:@"rentedBike"];
-        [mapping mapKeyPath:@"mode" toAttribute:@"mode"];
-        [mapping mapKeyPath:@"routeId" toAttribute:@"routeId"];
-        [mapping mapKeyPath:@"route" toAttribute:@"route"];
-        [mapping mapKeyPath:@"routeLongName" toAttribute:@"routeLongName"];
-        [mapping mapKeyPath:@"routeShortName" toAttribute:@"routeShortName"];
-        [mapping mapKeyPath:@"startTime" toAttribute:@"startTime"];
-        [mapping mapKeyPath:@"tripId" toAttribute:@"tripId"];
-        [mapping mapKeyPath:@"agencyName" toAttribute:@"agencyName"];
+@synthesize uberProductID;
+@synthesize uberDisplayName;
+@synthesize uberPriceEstimate;
+@synthesize uberLowEstimate;
+@synthesize uberHighEstimate;
+@synthesize uberSurgeMultiplier;
+@synthesize uberTimeEstimateSeconds;
 
-    }
-    else {
-        // TODO Unknown planner type, throw an exception
-    }
-    return mapping;
+-(int)uberTimeEstimateMinutes
+{
+    int minutes = ceil(uberTimeEstimateSeconds.floatValue / 60.0);
+    return minutes;
 }
+
 
 @end

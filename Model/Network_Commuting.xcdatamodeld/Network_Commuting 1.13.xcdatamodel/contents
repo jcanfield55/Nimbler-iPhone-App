@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13E28" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6244" systemVersion="13E28" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AddressComponent" representedClassName="AddressComponent" syncable="YES">
         <attribute name="longName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
@@ -218,6 +218,7 @@
         <relationship name="to" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="PlanPlace" inverseName="leg" inverseEntity="PlanPlace" syncable="YES"/>
     </entity>
     <entity name="LegFromOTP" representedClassName="LegFromOTP" parentEntity="Leg" syncable="YES"/>
+    <entity name="LegFromUber" representedClassName="LegFromUber" parentEntity="Leg" syncable="YES"/>
     <entity name="Location" representedClassName="Location" syncable="YES">
         <attribute name="apiType" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="dateLastUsed" optional="YES" attributeType="Date" syncable="YES"/>
@@ -399,6 +400,7 @@
         <element name="IntermediateStops" positionX="160" positionY="192" width="128" height="165"/>
         <element name="Itinerary" positionX="0" positionY="0" width="128" height="375"/>
         <element name="ItineraryFromOTP" positionX="160" positionY="192" width="128" height="45"/>
+        <element name="ItineraryFromUber" positionX="72" positionY="153" width="128" height="45"/>
         <element name="KeyObjectPair" positionX="0" positionY="0" width="128" height="75"/>
         <element name="Leg" positionX="-45" positionY="0" width="128" height="420"/>
         <element name="LegFromOTP" positionX="90" positionY="216" width="128" height="45"/>
@@ -413,6 +415,6 @@
         <element name="RouteExcludeSettings" positionX="160" positionY="192" width="128" height="90"/>
         <element name="StationListElement" positionX="160" positionY="192" width="128" height="150"/>
         <element name="Step" positionX="0" positionY="0" width="128" height="210"/>
-        <element name="ItineraryFromUber" positionX="72" positionY="153" width="128" height="43"/>
+        <element name="LegFromUber" positionX="72" positionY="153" width="128" height="43"/>
     </elements>
 </model>

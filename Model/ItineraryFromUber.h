@@ -8,16 +8,18 @@
 
 #import <CoreData/CoreData.h>
 #import "Itinerary.h"
+#import "LegFromUber.h"
 
 @interface ItineraryFromUber : Itinerary
 // See https://developer.uber.com/v1/endpoints/ for explanation of the variables below from price & time estimates
-@property (nonatomic, strong) NSString *uberProductID;
-@property (nonatomic, strong) NSString *uberDisplayName;
-@property (nonatomic, strong) NSString *uberPriceEstimate;
-@property (nonatomic, strong) NSNumber *uberLowEstimate;
-@property (nonatomic, strong) NSNumber *uberHighEstimate;
-@property (nonatomic, strong) NSNumber *uberSurgeMultiplier;
-@property (nonatomic, strong) NSNumber *uberTimeEstimateSeconds;
+
+// The following properties are derived from the LegFromUber object which is the best to show
+@property (nonatomic, strong, readonly) NSString *uberPriceEstimate;
+@property (nonatomic, strong, readonly) NSNumber *uberLowEstimate;
+@property (nonatomic, strong, readonly) NSNumber *uberHighEstimate;
+@property (nonatomic, strong, readonly) NSNumber *uberSurgeMultiplier;
+@property (nonatomic, strong, readonly) NSNumber *uberTimeEstimateSeconds;
 
 -(int)uberTimeEstimateMinutes;
+
 @end

@@ -12,6 +12,7 @@
 #import "Logging.h"
 #import "UtilityFunctions.h"
 #import <Restkit/RKJSONParserJSONKit.h>
+#import "Plan.h"
 
 @implementation UberMgr
 
@@ -70,10 +71,10 @@
         NSMutableDictionary *timeParams = priceParams;
         [rkUberClient get:UBER_TIME_URL queryParams:timeParams delegate:self];
     }
-    else if (queueEntry.itineraryArray.count > 0) {
+    else if (queueEntry.itinerary) {
         // If the UberAPI has already come back and there is an itinerary array already
         // Add it to parameters
-        parameters.itinFromUberArray = queueEntry.itineraryArray;
+        parameters.itinFromUberArray = [NSArray arrayWithObject:queueEntry.itinerary];
     }
 }
 
@@ -113,55 +114,61 @@
             for (NSDictionary* responseElement in responseArray) {
                 NSString *productID = NSStringFromNSObject([responseElement objectForKey:UBER_PRODUCT_ID_KEY]);
                 if (productID) {
+                    if (!queueEntry.itinerary) {
+                        // Create an itinerary for this queueEntry if there is not one already
+                        queueEntry.itinerary = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromUber" inManagedObjectContext:self.managedObjectContext];
+                    }
                     // Search for an existing itinerary with the same product id
-                    ItineraryFromUber *matchingItin = nil;
-                    for (ItineraryFromUber* itin in queueEntry.itineraryArray) {
-                        if ([itin.uberProductID isEqualToString:productID]) {
-                            matchingItin = itin;
+                    LegFromUber *matchingLeg = nil;
+                    for (Leg* leg in queueEntry.itinerary.legs) {
+                        LegFromUber* uLeg = (LegFromUber *) leg;
+                        if ([uLeg.uberProductID isEqualToString:productID]) {
+                            matchingLeg = uLeg;
                             break;
                         }
                     }
-                    if (!matchingItin) {  // If no matching itinerary, create one
-                        matchingItin = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromUber" inManagedObjectContext:self.managedObjectContext];
-                        [queueEntry.itineraryArray addObject:matchingItin];
-                        matchingItin.uberProductID = productID;
-                        matchingItin.uberDisplayName = NSStringFromNSObject([responseElement objectForKey:UBER_DISPLAY_NAME_KEY]);
+                    if (!matchingLeg) {  // If no matching itinerary, create one
+                        matchingLeg = [NSEntityDescription insertNewObjectForEntityForName:@"LegFromUber" inManagedObjectContext:self.managedObjectContext];
+                        [queueEntry.itinerary addLegsObject:matchingLeg];
+                        matchingLeg.uberProductID = productID;
+                        matchingLeg.uberDisplayName = NSStringFromNSObject([responseElement objectForKey:UBER_DISPLAY_NAME_KEY]);
 
                     }
                     
-                    // Now fill in matchingItin with the data
+                    // Now fill in matchingLeg with the data
                     if ([request.resourcePath isEqualToString:UBER_PRICE_URL]) {   // Price request response
-                        matchingItin.uberPriceEstimate = NSStringFromNSObject([responseElement objectForKey:UBER_PRICE_ESTIMATE_KEY]);
-                        matchingItin.uberHighEstimate = NSNumberFromNSObject([responseElement objectForKey:UBER_HIGH_ESTIMATE_KEY]);
-                        matchingItin.uberLowEstimate = NSNumberFromNSObject([responseElement objectForKey:UBER_LOW_ESTIMATE_KEY]);
-                        matchingItin.uberSurgeMultiplier = NSNumberFromNSObject([responseElement objectForKey:UBER_SURGE_MULTIPLIER_KEY]);
+                        matchingLeg.uberPriceEstimate = NSStringFromNSObject([responseElement objectForKey:UBER_PRICE_ESTIMATE_KEY]);
+                        matchingLeg.uberHighEstimate = NSNumberFromNSObject([responseElement objectForKey:UBER_HIGH_ESTIMATE_KEY]);
+                        matchingLeg.uberLowEstimate = NSNumberFromNSObject([responseElement objectForKey:UBER_LOW_ESTIMATE_KEY]);
+                        matchingLeg.uberSurgeMultiplier = NSNumberFromNSObject([responseElement objectForKey:UBER_SURGE_MULTIPLIER_KEY]);
                     }
                     else if ([request.resourcePath isEqualToString:UBER_TIME_URL]) {   // Time request response
-                        matchingItin.uberTimeEstimateSeconds = NSNumberFromNSObject([responseElement objectForKey:UBER_TIME_ESTIMATE_KEY]);
+                        matchingLeg.uberTimeEstimateSeconds = NSNumberFromNSObject([responseElement objectForKey:UBER_TIME_ESTIMATE_KEY]);
                         
                         // Set startTime to be requestTime + time estimate
                         // TODO This assumes Uber cars always available with same timing & price as now.  Is this appropriate?
-                        matchingItin.startTime = [[[queueEntry.planRequestParamArray objectAtIndex:0] originalTripDate] dateByAddingTimeInterval:[matchingItin.uberTimeEstimateSeconds intValue]];
+                        matchingLeg.startTime = [[[queueEntry.planRequestParamArray objectAtIndex:0] originalTripDate] dateByAddingTimeInterval:[matchingLeg.uberTimeEstimateSeconds intValue]];
                     }
                 }
             }
             // If we have received all the responses back from Uber API
             if (queueEntry.receivedTimes && queueEntry.receivedPrices) {
                 // Eliminate any itinerary that does not have a time and a price estimate
-                NSMutableArray *newItinArray = [NSMutableArray arrayWithCapacity:8];
-                for (ItineraryFromUber *itin in queueEntry.itineraryArray) {
-                    if (itin.uberTimeEstimateSeconds && itin.uberPriceEstimate) {
-                        [newItinArray addObject:itin];
+                NSSet *legSet = [NSSet setWithSet:queueEntry.itinerary.legs];
+                for (Leg *leg in legSet) {
+                    LegFromUber* uLeg = (LegFromUber *) leg;
+                    if (uLeg.uberTimeEstimateSeconds && uLeg.uberPriceEstimate) {
+                        // All is good, keep that leg
                     }
-                    else {
-                        [managedObjectContext deleteObject:itin];  // Delete the itinerary
+                    else { // leg does not have both time and price estimates, delete it
+                        [queueEntry.itinerary removeLegsObject:uLeg]; // remove leg from itinerary
+                        [managedObjectContext deleteObject:uLeg];  // Delete the leg
                     }
                 }
-                queueEntry.itineraryArray = newItinArray; // Use the newItinArray with incomplete itineraries removed
                 
                 // Save Uber itineraries in all the request parameters if we have received both prices and times
                 for (PlanRequestParameters* planReqParams in queueEntry.planRequestParamArray) {
-                    planReqParams.itinFromUberArray = queueEntry.itineraryArray;
+                    planReqParams.itinFromUberArray = [NSArray arrayWithObject:queueEntry.itinerary];
                 }
             }
         }
@@ -184,4 +191,52 @@
                  nil, nil, nil, nil, nil, nil);
     }
 }
+
+// Prepares the URL for calling Uber app (if installed) or Uber website using the provided legFromUber
++(void)callUberWith:(LegFromUber *)legFromUber forPlan:(Plan *)plan {
+    NSMutableDictionary *paramDictionary = [NSMutableDictionary dictionaryWithCapacity:10];
+    [paramDictionary setObject:legFromUber.uberProductID forKey:UBER_PRODUCT_ID_KEY];
+    
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"uber://"]]) {
+        // Uber app is installed.  Deep link into app.
+        [paramDictionary setObject:UBER_APP_ACTION_PICKUP forKey:UBER_APP_ACTION_KEY];
+        [paramDictionary setObject:plan.fromLocation.lat forKey:UBER_APP_PICKUP_LATITUDE];
+        [paramDictionary setObject:plan.fromLocation.lng forKey:UBER_APP_PICKUP_LONGITUDE];
+        [paramDictionary setObject:plan.fromLocation.shortFormattedAddress forKey:UBER_APP_PICKUP_FORMATTED_ADDRESS];
+        if (plan.fromLocation.nickName) {
+            [paramDictionary setObject:plan.fromLocation.nickName forKey:UBER_APP_PICKUP_NICKNAME];
+        }
+        [paramDictionary setObject:plan.toLocation.lat forKey:UBER_APP_DROPOFF_LATITUDE];
+        [paramDictionary setObject:plan.toLocation.lng forKey:UBER_APP_DROPOFF_LONGITUDE];
+        [paramDictionary setObject:plan.toLocation.shortFormattedAddress forKey:UBER_APP_DROPOFF_FORMATTED_ADDRESS];
+        if (plan.fromLocation.nickName) {
+            [paramDictionary setObject:plan.toLocation.nickName forKey:UBER_APP_DROPOFF_NICKNAME];
+        }
+        
+        NSString *uberAppURLString = [UBER_APP_BASE_URL appendQueryParams:paramDictionary];
+        NSURL *uberAppURL = [NSURL URLWithString:uberAppURLString];
+        [[UIApplication sharedApplication] openURL:uberAppURL];
+    }
+    else { // No Uber app. Open Mobile Website.
+        [paramDictionary setObject:plan.fromLocation.lat forKey:UBER_WEB_PICKUP_LATITUDE];
+        [paramDictionary setObject:plan.fromLocation.lng forKey:UBER_WEB_PICKUP_LONGITUDE];
+        [paramDictionary setObject:plan.fromLocation.shortFormattedAddress forKey:UBER_WEB_PICKUP_FORMATTED_ADDRESS];
+        if (plan.fromLocation.nickName) {
+            [paramDictionary setObject:plan.fromLocation.nickName forKey:UBER_WEB_PICKUP_NICKNAME];
+        }
+        [paramDictionary setObject:plan.toLocation.lat forKey:UBER_WEB_DROPOFF_LATITUDE];
+        [paramDictionary setObject:plan.toLocation.lng forKey:UBER_WEB_DROPOFF_LONGITUDE];
+        [paramDictionary setObject:plan.toLocation.shortFormattedAddress forKey:UBER_WEB_DROPOFF_FORMATTED_ADDRESS];
+        if (plan.fromLocation.nickName) {
+            [paramDictionary setObject:plan.toLocation.nickName forKey:UBER_WEB_DROPOFF_NICKNAME];
+        }
+        [paramDictionary setObject:@"US" forKey:UBER_WEB_COUNTRY_CODE];
+        [paramDictionary setObject:UBER_CLIENT_ID forKey:UBER_WEB_CLIENT_ID_KEY];
+        
+        NSString *uberWebURLString = [UBER_WEB_BASE_URL appendQueryParams:paramDictionary];
+        NSURL *uberWebURL = [NSURL URLWithString:uberWebURLString];
+        [[UIApplication sharedApplication] openURL:uberWebURL];   // Go to webview with designated URL
+    }
+}
+
 @end

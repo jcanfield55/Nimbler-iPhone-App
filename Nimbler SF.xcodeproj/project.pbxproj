@@ -19,6 +19,14 @@
 		2E1F619A17AB8604003B7EAF /* currenticonlive.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E1F619317AB8604003B7EAF /* currenticonlive.png */; };
 		2E1F619B17AB8604003B7EAF /* currenticonlive.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E1F619317AB8604003B7EAF /* currenticonlive.png */; };
 		5202D1E519C2BA6100A800EC /* WebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B10CF172026970093E110 /* WebView.m */; };
+		5202D1E919C2D1DA00A800EC /* UberDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5202D1E719C2D1DA00A800EC /* UberDetailViewController.m */; };
+		5202D1EA19C2D1DA00A800EC /* UberDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5202D1E719C2D1DA00A800EC /* UberDetailViewController.m */; };
+		5202D1EB19C2D1DA00A800EC /* UberDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5202D1E719C2D1DA00A800EC /* UberDetailViewController.m */; };
+		5202D1EC19C2D1DA00A800EC /* UberDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5202D1E719C2D1DA00A800EC /* UberDetailViewController.m */; };
+		5202D1ED19C2D1DA00A800EC /* UberDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5202D1E819C2D1DA00A800EC /* UberDetailViewController.xib */; };
+		5202D1EE19C2D1DA00A800EC /* UberDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5202D1E819C2D1DA00A800EC /* UberDetailViewController.xib */; };
+		5202D1EF19C2D1DA00A800EC /* UberDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5202D1E819C2D1DA00A800EC /* UberDetailViewController.xib */; };
+		5202D1F019C2D1DA00A800EC /* UberDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5202D1E819C2D1DA00A800EC /* UberDetailViewController.xib */; };
 		520FB121162603090083F143 /* FeedBackForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB109162603090083F143 /* FeedBackForm.m */; };
 		520FB122162603090083F143 /* FeedBackForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10A162603090083F143 /* FeedBackForm.xib */; };
 		520FB123162603090083F143 /* FeedBackForm_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10B162603090083F143 /* FeedBackForm_568h.xib */; };
@@ -1582,6 +1590,9 @@
 		2E1F619217AB8604003B7EAF /* currenticon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = currenticon.png; sourceTree = "<group>"; };
 		2E1F619317AB8604003B7EAF /* currenticonlive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = currenticonlive.png; sourceTree = "<group>"; };
 		2E9C9276179EB56000BF0770 /* Nimbler Portland-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Nimbler Portland-Info.plist"; sourceTree = SOURCE_ROOT; };
+		5202D1E619C2D1DA00A800EC /* UberDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UberDetailViewController.h; sourceTree = "<group>"; };
+		5202D1E719C2D1DA00A800EC /* UberDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UberDetailViewController.m; sourceTree = "<group>"; };
+		5202D1E819C2D1DA00A800EC /* UberDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UberDetailViewController.xib; sourceTree = "<group>"; };
 		520FB108162603090083F143 /* FeedBackForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FeedBackForm.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB109162603090083F143 /* FeedBackForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FeedBackForm.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB10A162603090083F143 /* FeedBackForm.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedBackForm.xib; sourceTree = "<group>"; };
@@ -2304,6 +2315,9 @@
 				8D04A9CE17BE4FD8007DB944 /* BikeStepsViewController_568h.xib */,
 				8D04A9C417B1046D007DB944 /* FeedBackFormPopUp.xib */,
 				8D04A9C317B1046D007DB944 /* FeedBackFormPopUp_568h.xib */,
+				5202D1E619C2D1DA00A800EC /* UberDetailViewController.h */,
+				5202D1E719C2D1DA00A800EC /* UberDetailViewController.m */,
+				5202D1E819C2D1DA00A800EC /* UberDetailViewController.xib */,
 			);
 			path = ViewController;
 			sourceTree = SOURCE_ROOT;
@@ -3223,6 +3237,7 @@
 				520FB247162603AF0083F143 /* img_mapDot@2x.png in Resources */,
 				520FB248162603AF0083F143 /* img_navigationbar.png in Resources */,
 				520FB249162603AF0083F143 /* img_navigationbar@2x.png in Resources */,
+				5202D1ED19C2D1DA00A800EC /* UberDetailViewController.xib in Resources */,
 				520FB24A162603AF0083F143 /* img_nimblerNavigation.png in Resources */,
 				520FB24B162603AF0083F143 /* img_nimblerNavigation@2x.png in Resources */,
 				520FB24C162603AF0083F143 /* img_nimblerNavigationUnSelect.png in Resources */,
@@ -3558,6 +3573,7 @@
 				8DA780631724FF0D0090C2EA /* send@2x.png in Resources */,
 				8DA780641724FF0D0090C2EA /* Speaker.png in Resources */,
 				8DA780651724FF0D0090C2EA /* Speaker@2x.png in Resources */,
+				5202D1EE19C2D1DA00A800EC /* UberDetailViewController.xib in Resources */,
 				525293F219C01FA40059F7C7 /* img_carActiveMode.png in Resources */,
 				8DA780661724FF0D0090C2EA /* walkb.png in Resources */,
 				8DA780671724FF0D0090C2EA /* CoverageGeoJSON.geojson in Resources */,
@@ -3809,6 +3825,7 @@
 				8DAA2912178BDFEF00C3FA30 /* img_selFB.png in Resources */,
 				8DAA2913178BDFEF00C3FA30 /* img_selFB@2x.png in Resources */,
 				8DAA2914178BDFEF00C3FA30 /* img_selSetting.png in Resources */,
+				5202D1F019C2D1DA00A800EC /* UberDetailViewController.xib in Resources */,
 				8DAA2915178BDFEF00C3FA30 /* img_selSetting@2x.png in Resources */,
 				8DAA2916178BDFEF00C3FA30 /* img_selTrip.png in Resources */,
 				8DAA2917178BDFEF00C3FA30 /* img_selTrip@2x.png in Resources */,
@@ -4045,6 +4062,7 @@
 				8DE18BDD1725415800AA8112 /* img_legTrain.png in Resources */,
 				8DE18BDE1725415800AA8112 /* img_legTrain@2x.png in Resources */,
 				8DE18BDF1725415800AA8112 /* img_legTrainSelect.png in Resources */,
+				5202D1EF19C2D1DA00A800EC /* UberDetailViewController.xib in Resources */,
 				8DE18BE01725415800AA8112 /* img_legTrainSelect@2x.png in Resources */,
 				8DE18BE11725415800AA8112 /* img_legWalk.png in Resources */,
 				8DE18BE21725415800AA8112 /* img_legWalk@2x.png in Resources */,
@@ -4318,6 +4336,7 @@
 				520FB1941626036C0083F143 /* Leg.m in Sources */,
 				520FB1951626036C0083F143 /* Location.m in Sources */,
 				520FB1961626036C0083F143 /* LocationFromGoogle.m in Sources */,
+				5202D1E919C2D1DA00A800EC /* UberDetailViewController.m in Sources */,
 				520FB1971626036C0083F143 /* LocationFromIOS.m in Sources */,
 				520FB1981626036C0083F143 /* LocationPickerViewController.m in Sources */,
 				520FB19A1626036C0083F143 /* Locations.m in Sources */,
@@ -4425,6 +4444,7 @@
 				8DA77FA11724FF0D0090C2EA /* Leg.m in Sources */,
 				8DA77FA21724FF0D0090C2EA /* Location.m in Sources */,
 				8DA77FA31724FF0D0090C2EA /* LocationFromGoogle.m in Sources */,
+				5202D1EA19C2D1DA00A800EC /* UberDetailViewController.m in Sources */,
 				8DA77FA41724FF0D0090C2EA /* LocationFromIOS.m in Sources */,
 				8DA77FA51724FF0D0090C2EA /* LocationPickerViewController.m in Sources */,
 				8DA77FA61724FF0D0090C2EA /* Locations.m in Sources */,
@@ -4513,6 +4533,7 @@
 				8DAA286B178BDFEF00C3FA30 /* Leg.m in Sources */,
 				8DAA286C178BDFEF00C3FA30 /* Location.m in Sources */,
 				8DAA286D178BDFEF00C3FA30 /* LocationFromGoogle.m in Sources */,
+				5202D1EC19C2D1DA00A800EC /* UberDetailViewController.m in Sources */,
 				8DAA286E178BDFEF00C3FA30 /* LocationFromIOS.m in Sources */,
 				8DAA286F178BDFEF00C3FA30 /* LocationPickerViewController.m in Sources */,
 				8DAA2870178BDFEF00C3FA30 /* Locations.m in Sources */,
@@ -4601,6 +4622,7 @@
 				8DE18B5A1725415800AA8112 /* Leg.m in Sources */,
 				8DE18B5B1725415800AA8112 /* Location.m in Sources */,
 				8DE18B5C1725415800AA8112 /* LocationFromGoogle.m in Sources */,
+				5202D1EB19C2D1DA00A800EC /* UberDetailViewController.m in Sources */,
 				8DE18B5D1725415800AA8112 /* LocationFromIOS.m in Sources */,
 				8DE18B5E1725415800AA8112 /* LocationPickerViewController.m in Sources */,
 				8DE18B5F1725415800AA8112 /* Locations.m in Sources */,

@@ -12,13 +12,14 @@
 
 #import <Foundation/Foundation.h>
 #import "PlanRequestParameters.h"
+#import "ItineraryFromUber.h"
 
 @interface UberQueueEntry : NSObject
 
 @property (strong,nonatomic) NSMutableArray *planRequestParamArray;  // Array of PlanRequestParameters objects associated with a particular Uber API call
 @property (strong,nonatomic) NSDate *createTime;  // date,time when API call was created
 @property (strong,nonatomic) NSString *parameterKey; // string of the Uber API call parameters which can be used ot uniquely identify the call.  parameterKey is used as the key to a dictionary containing UberQueueEntry objects
-@property (strong,nonatomic) NSMutableArray *itineraryArray;  // Array of ItineraryFromUber objects associated with this request
+@property (strong,nonatomic) ItineraryFromUber *itinerary;  // ItineraryFromUber objects associated with this request
 @property (nonatomic) BOOL receivedTimes; // have Uber time estimates been received?
 @property (nonatomic) BOOL receivedPrices; // have Uber prices been received?
 

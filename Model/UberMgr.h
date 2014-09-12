@@ -34,5 +34,7 @@
 // PlanRequestParameters.
 - (void)requestUberItineraryWithParameters:(PlanRequestParameters *)parameters;
 
+// Prepares the URL for calling Uber app (if installed) or Uber website using the provided legFromUber
++(void)callUberWith:(LegFromUber *)legFromUber forPlan:(Plan *)plan;
 
 @end

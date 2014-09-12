@@ -13,7 +13,7 @@
 @synthesize planRequestParamArray;
 @synthesize createTime;
 @synthesize parameterKey;
-@synthesize itineraryArray;
+@synthesize itinerary;
 @synthesize receivedPrices;
 @synthesize receivedTimes;
 
@@ -23,7 +23,6 @@
     self = [super init];
     if (self) {
         createTime = [NSDate date];
-        itineraryArray = [NSMutableArray arrayWithCapacity:6];
         planRequestParamArray = [NSMutableArray arrayWithCapacity:6];
         receivedTimes = false;
         receivedPrices = false;

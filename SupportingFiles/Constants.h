@@ -184,6 +184,7 @@
 #define FLURRY_EXCLUDE_SETTING_CHANGED @"ExcludeSetting changed"
 #define FLURRY_ROUTE_SELECTED @"Route selected"
 #define FLURRY_ROUTE_DETAILS_APPEAR @"RouteDetails appear"
+#define FLURRY_UBER_DETAILS_APPEAR @"UberDetails appear"
 #define FLURRY_ROUTE_DETAILS_NEWITINERARY_NUMBER @"RouteDetails NewItinerary #"
 #define FLURRY_SETTINGS_APPEAR @"Settings appear"
 #define FLURRY_SETTINGS_SUBMITTED1 @"Settings submitted"
