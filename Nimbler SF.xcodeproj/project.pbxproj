@@ -18,6 +18,7 @@
 		2E1F619917AB8604003B7EAF /* currenticonlive.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E1F619317AB8604003B7EAF /* currenticonlive.png */; };
 		2E1F619A17AB8604003B7EAF /* currenticonlive.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E1F619317AB8604003B7EAF /* currenticonlive.png */; };
 		2E1F619B17AB8604003B7EAF /* currenticonlive.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E1F619317AB8604003B7EAF /* currenticonlive.png */; };
+		5202D1E519C2BA6100A800EC /* WebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B10CF172026970093E110 /* WebView.m */; };
 		520FB121162603090083F143 /* FeedBackForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB109162603090083F143 /* FeedBackForm.m */; };
 		520FB122162603090083F143 /* FeedBackForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10A162603090083F143 /* FeedBackForm.xib */; };
 		520FB123162603090083F143 /* FeedBackForm_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10B162603090083F143 /* FeedBackForm_568h.xib */; };
@@ -632,7 +633,6 @@
 		8D7BE0A816D5EC2A0038FF26 /* pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D7BE0A616D5EC290038FF26 /* pressed.png */; };
 		8D7BE0AA16D6187B0038FF26 /* pressed1.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D7BE0A916D6187A0038FF26 /* pressed1.png */; };
 		8D8B10CD1720268B0093E110 /* NimblerApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B10CC1720268B0093E110 /* NimblerApplication.m */; };
-		8D8B10D0172026970093E110 /* WebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B10CF172026970093E110 /* WebView.m */; };
 		8D8DF4AD1647BCFB00BC2A34 /* bart-station-background.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D8DF4AB1647BCFB00BC2A34 /* bart-station-background.json */; };
 		8D8DF4AE1647BCFB00BC2A34 /* caltrain-station-background.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D8DF4AC1647BCFB00BC2A34 /* caltrain-station-background.json */; };
 		8D93604B162FFC4500084E8E /* Icon_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D93604A162FFC4500084E8E /* Icon_ipad.png */; };
@@ -4361,10 +4361,10 @@
 				8D04E79C16E8A488001DB75D /* Network_Commuting.xcdatamodeld in Sources */,
 				8D17871116F87FDA00C2EAD5 /* IntermediateStops.m in Sources */,
 				525EC1C1170006B6009ACE5A /* MutableBoolean.m in Sources */,
+				5202D1E519C2BA6100A800EC /* WebView.m in Sources */,
 				8D58E1FC17142ED30011A8C2 /* nc_AppDelegate.m in Sources */,
 				52D9667C19A71873004CD555 /* UberMgr.m in Sources */,
 				8D8B10CD1720268B0093E110 /* NimblerApplication.m in Sources */,
-				8D8B10D0172026970093E110 /* WebView.m in Sources */,
 				2E02C785173381C0001F2F28 /* LocationFromLocalSearch.m in Sources */,
 				8DEAC192177841F400D7997C /* TTTAttributedLabel.m in Sources */,
 				8DABCDAC1793C2FB00C1BDCF /* RevealController.m in Sources */,
@@ -4691,6 +4691,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					armv7,
+					arm64,
+					armv7s,
+					x86_64,
+				);
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -4720,10 +4726,11 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				PROVISIONING_PROFILE = "ACF5F610-0E29-4410-BEC4-9E2B275F6825";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "ACF5F610-0E29-4410-BEC4-9E2B275F6825";
 				SDKROOT = iphoneos;
+				"VALID_ARCHS[sdk=*]" = "arm64 armv7 armv7s x86_64";
 			};
 			name = Debug;
 		};
@@ -4731,6 +4738,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					armv7,
+					arm64,
+					armv7s,
+					x86_64,
+				);
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -4758,6 +4771,7 @@
 				"PROVISIONING_PROFILE[sdk=*]" = "ACF5F610-0E29-4410-BEC4-9E2B275F6825";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "arm64 armv7 armv7s";
 			};
 			name = Release;
 		};
