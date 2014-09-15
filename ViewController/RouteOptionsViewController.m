@@ -25,7 +25,6 @@
 #import "WebView.h"
 #import "UberMgr.h"
 
-#define IDENTIFIER_CELL @"UIRouteOptionsViewCell"
 #define TIMER_DEFAULT_VALUE 119
 
 @interface RouteOptionsViewController()
@@ -48,6 +47,7 @@
 @synthesize btnGoToNimbler;
 @synthesize planRequestParameters;
 @synthesize routeDetailsVC;
+@synthesize uberDetailsVC;
 @synthesize planStore;
 @synthesize activityIndicator;
 @synthesize timerGettingRealDataByItinerary;
@@ -468,17 +468,24 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
 {
     // Check for a reusable cell first, use that if it exists
     UITableViewCell *cell =
-    [tableView dequeueReusableCellWithIdentifier:IDENTIFIER_CELL];
+    [tableView dequeueReusableCellWithIdentifier:@"UIRouteOptionsViewCell"];
     @try {
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
-                                          reuseIdentifier:IDENTIFIER_CELL];
+                                          reuseIdentifier:@"UIRouteOptionsViewCell"];
             [cell.imageView setImage:nil];
+            UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
+            [cell setAccessoryView:imgViewDetailDisclosure];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            cell.textLabel.numberOfLines = 2;
+            [cell setBackgroundColor:[UIColor clearColor]];
+            
+            [[cell textLabel] setFont:[UIFont MEDIUM_BOLD_FONT]];
+            cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
+            [[cell detailTextLabel] setFont:[UIFont MEDIUM_FONT]];
+            cell.detailTextLabel.textColor = [UIColor GRAY_FONT_COLOR];
         }
-        UIImageView *imgViewDetailDisclosure = [[UIImageView alloc] initWithImage:imageDetailDisclosure];
-        [cell setAccessoryView:imgViewDetailDisclosure];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        cell.textLabel.numberOfLines = 2;
+        
         // Get the requested itinerary
         Itinerary *itin = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
         
@@ -494,10 +501,10 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
             
             NSMutableString* pricelabel = [NSMutableString stringWithCapacity:40];
             if (uberItin.uberTimeEstimateSeconds) {
-                [pricelabel appendFormat:@"In %d min  ", uberItin.uberTimeEstimateMinutes];
+                [pricelabel appendFormat:@"In %d min", uberItin.uberTimeEstimateMinutes];
             }
             if (uberItin.uberPriceEstimate) {
-                [pricelabel appendFormat:@"  %@",uberItin.uberPriceEstimate];
+                [pricelabel appendFormat:@" \u2013 %@",uberItin.uberPriceEstimate];
             }
             if (uberItin.uberSurgeMultiplier.floatValue > 1.00000001) {
                 [pricelabel appendString:@" (surge)"];
@@ -507,9 +514,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
         }
         
         // ... else not an uber itinerary
-        // Set title
-        [cell setBackgroundColor:[UIColor clearColor]];
-        [[cell textLabel] setFont:[UIFont MEDIUM_BOLD_FONT]];
+
         //Part Of DE-229 Implementation
         NSString *timeDiffFirstLeg;
         NSString *timeDiffLastLeg;
@@ -587,9 +592,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
                 [[cell textLabel] setText:titleText];
             }
         }
-        cell.textLabel.textColor = [UIColor NIMBLER_RED_FONT_COLOR];
-        [[cell detailTextLabel] setFont:[UIFont MEDIUM_FONT]];
-        cell.detailTextLabel.textColor = [UIColor GRAY_FONT_COLOR];
         
         // DE-228 Fixed
         // Applied The color only if the ios version is 6.0 or greater.
@@ -668,12 +670,28 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
     @try {
         itinerary = [[plan sortedItineraries] objectAtIndex:[indexPath row]];
 
-        // Uber itineraries are handled the same as others -- push to the RouteDetailsView to see LegsFromUber
-        
         // Handle Uber itinerary use case first
+        // Send to UberDetailViewController instead of RouteDetailsViewController
         if (itinerary.isUberItinerary) {
-            ItineraryFromUber* itin = (ItineraryFromUber *)itinerary;
-            [UberMgr callUberWith:itin.legs.anyObject forPlan:plan];  // temp -- call with any Uber leg
+            ItineraryFromUber* uberItin = (ItineraryFromUber *) itinerary;
+            if (!uberDetailsVC) {
+                uberDetailsVC = [[UberDetailViewController alloc]
+                                 initWithNibName:@"UberDetailViewController" bundle:nil];
+            }
+            
+            // Make sure Uber controller is not already pushed...
+            BOOL isAlreadyPushed = NO;
+            for(UIViewController *controller in self.navigationController.viewControllers){
+                if([controller isKindOfClass:[UberDetailViewController class]]){
+                    isAlreadyPushed = YES;
+                }
+            }
+            if(!isAlreadyPushed){
+                [uberDetailsVC setUberItin:uberItin];
+                [uberDetailsVC setPlan:plan];
+                [[self navigationController] pushViewController:uberDetailsVC animated:YES];
+            }
+            
             return;
         }
         
@@ -717,19 +735,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
         if(!isAlreadyPushed){
             routeDetailsVC.count = remainingCount;
             [routeDetailsVC setItinerary:itinerary];
-            if([[[UIDevice currentDevice] systemVersion] intValue] < 5.0){
-                CATransition *animation = [CATransition animation];
-                [animation setDuration:0.3];
-                [animation setType:kCATransitionPush];
-                [animation setSubtype:kCATransitionFromRight];
-                [animation setRemovedOnCompletion:YES];
-                [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
-                [[self.navigationController.view layer] addAnimation:animation forKey:nil];
-                [[self navigationController] pushViewController:routeDetailsVC animated:NO];
-            }
-            else{
-                [[self navigationController] pushViewController:routeDetailsVC animated:YES];
-            }
+            [[self navigationController] pushViewController:routeDetailsVC animated:YES];
         }
     }
     @catch (NSException *exception) {

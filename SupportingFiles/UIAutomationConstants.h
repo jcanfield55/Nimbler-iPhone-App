@@ -39,6 +39,9 @@
 #define FORWARD_BUTTON                  @"Forward Button"
 #define BACK_BUTTON                     @"Back Button"
 
+// UberDetailsViewController UIAutomation Constants
+#define UBER_DETAILS_TABLE_VIEW        @"UberDetails TableView"
+
 // TwitterViewController UIAutomation Constants
 #define TWITTER_TABLE_VIEW              @"Twitter TableView"
 #define RELOAD_BUTTON                   @"Reload Button"

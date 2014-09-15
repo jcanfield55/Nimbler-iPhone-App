@@ -440,6 +440,7 @@ FeedBackForm *fbView;
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         SettingInfoViewController *settingsView;
         FeedBackForm *feedbackView;
+        NIMLOG_UBER(@"Screen size %f x %f", [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
         if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
             settingsView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF_568h" bundle:nil];
             feedbackView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm_568h" bundle:nil];

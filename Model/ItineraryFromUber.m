@@ -9,6 +9,12 @@
 #import "ItineraryFromUber.h"
 #import "LegFromUber.h"
 
+@interface ItineraryFromUber()
+{
+    // Variables for internal use
+    LegFromUber *bestLegToShow;  // Internal variable containing the best leg's data to summarize in the itinerary's uber properties (typically the least expensive)
+}
+@end
 
 @implementation ItineraryFromUber
 
@@ -17,8 +23,9 @@
 @synthesize uberHighEstimate;
 @synthesize uberSurgeMultiplier;
 @synthesize uberTimeEstimateSeconds;
+@synthesize uberSortedLegs;
 
-LegFromUber *bestLegToShow;  // Internal variable containing the best leg's data to summarize in the itinerary's uber properties (typically the least expensive)
+NSSortDescriptor *sortDescriptor;
 
 -(LegFromUber *)getBestLegToShow {
     if (!bestLegToShow) {
@@ -50,6 +57,16 @@ LegFromUber *bestLegToShow;  // Internal variable containing the best leg's data
     return self.getBestLegToShow.uberTimeEstimateSeconds;
 }
 
+-(NSArray *)uberSortedLegs {
+    if (!uberSortedLegs) {
+        if (!sortDescriptor) {
+            sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:DISPLAY_SEQUENCE_NUMBER_KEY
+                                                           ascending:TRUE];
+        }
+        uberSortedLegs = [self.legs sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+    }
+    return uberSortedLegs;
+}
 
 -(int)uberTimeEstimateMinutes
 {

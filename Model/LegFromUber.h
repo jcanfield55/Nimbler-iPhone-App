@@ -18,6 +18,8 @@
 @property (nonatomic, strong) NSNumber *uberHighEstimate;
 @property (nonatomic, strong) NSNumber *uberSurgeMultiplier;
 @property (nonatomic, strong) NSNumber *uberTimeEstimateSeconds;
+@property (nonatomic) int displaySequenceNumber;   // For ordering the display of the Uber legs
+#define DISPLAY_SEQUENCE_NUMBER_KEY @"displaySequenceNumber"
 
 -(int)uberTimeEstimateMinutes;
 @end

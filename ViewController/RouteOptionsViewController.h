@@ -10,6 +10,7 @@
 #import "Plan.h"
 #import "enums.h"
 #import "RouteDetailsViewController.h"
+#import "UberDetailViewController.h"
 #import "PlanStore.h"
 
 @interface RouteOptionsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, RKRequestDelegate,
@@ -22,6 +23,7 @@ NewPlanAvailableDelegate, UIWebViewDelegate>
 @property( readwrite) BOOL isReloadRealData;
 @property (nonatomic, strong) PlanRequestParameters *planRequestParameters;
 @property(nonatomic, strong) RouteDetailsViewController* routeDetailsVC;
+@property(nonatomic, strong) UberDetailViewController* uberDetailsVC;
 @property(nonatomic, strong) PlanStore* planStore;
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, strong) NSTimer *timerGettingRealDataByItinerary;

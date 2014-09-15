@@ -17,6 +17,8 @@
 @synthesize uberHighEstimate;
 @synthesize uberSurgeMultiplier;
 @synthesize uberTimeEstimateSeconds;
+@synthesize displaySequenceNumber;
+
 
 -(int)uberTimeEstimateMinutes
 {

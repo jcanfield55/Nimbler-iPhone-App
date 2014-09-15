@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Nimbler World Inc. All rights reserved.
 //
 
+// US244 Uber integration 1.0
 // Used for calling Uber API from App and generating Uber itineraries
 
 #import "UberMgr.h"
@@ -67,11 +68,12 @@
 
     // Call the Uber API only if it is a new request
     if (isNewRequest) {
+        
         [rkUberClient get:UBER_PRICE_URL queryParams:priceParams delegate:self];
         NSMutableDictionary *timeParams = priceParams;
         [rkUberClient get:UBER_TIME_URL queryParams:timeParams delegate:self];
     }
-    else if (queueEntry.itinerary) {
+    else if (queueEntry.itinerary && queueEntry.receivedPrices && queueEntry.receivedTimes) {
         // If the UberAPI has already come back and there is an itinerary array already
         // Add it to parameters
         parameters.itinFromUberArray = [NSArray arrayWithObject:queueEntry.itinerary];
@@ -111,6 +113,7 @@
         NSArray *responseArray = [responseDictionary objectForKey:arrayKey];
         
         if (responseArray) {
+            int sequenceNumber = 0;
             for (NSDictionary* responseElement in responseArray) {
                 NSString *productID = NSStringFromNSObject([responseElement objectForKey:UBER_PRODUCT_ID_KEY]);
                 if (productID) {
@@ -132,7 +135,7 @@
                         [queueEntry.itinerary addLegsObject:matchingLeg];
                         matchingLeg.uberProductID = productID;
                         matchingLeg.uberDisplayName = NSStringFromNSObject([responseElement objectForKey:UBER_DISPLAY_NAME_KEY]);
-
+                        matchingLeg.displaySequenceNumber = sequenceNumber++;
                     }
                     
                     // Now fill in matchingLeg with the data

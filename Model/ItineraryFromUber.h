@@ -19,6 +19,7 @@
 @property (nonatomic, strong, readonly) NSNumber *uberHighEstimate;
 @property (nonatomic, strong, readonly) NSNumber *uberSurgeMultiplier;
 @property (nonatomic, strong, readonly) NSNumber *uberTimeEstimateSeconds;
+@property (nonatomic, strong, readonly) NSArray *uberSortedLegs;
 
 -(int)uberTimeEstimateMinutes;
 

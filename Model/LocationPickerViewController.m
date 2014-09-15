@@ -81,7 +81,7 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 498;
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
                                       reuseIdentifier:@"LocationPickerViewCell"];
         cell.textLabel.numberOfLines= 2;     
-        cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+        cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:MEDIUM_LARGE_FONT_SIZE]];

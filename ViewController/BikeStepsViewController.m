@@ -270,10 +270,10 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:[NSString stringWithFormat:@"%d",indexPath.row]];
     }
     [[cell textLabel] setFont:[UIFont boldSystemFontOfSize:STANDARD_FONT_SIZE]];
-    [[cell textLabel] setLineBreakMode:UILineBreakModeWordWrap];
+    [[cell textLabel] setLineBreakMode:NSLineBreakByWordWrapping];
     [[cell textLabel] setNumberOfLines:2];
     [[cell detailTextLabel] setFont:[UIFont systemFontOfSize:STANDARD_FONT_SIZE]];
-    [[cell detailTextLabel] setLineBreakMode:UILineBreakModeWordWrap];
+    [[cell detailTextLabel] setLineBreakMode:NSLineBreakByWordWrapping];
     [[cell detailTextLabel] setNumberOfLines:0];
     
     if(indexPath.row == 0){

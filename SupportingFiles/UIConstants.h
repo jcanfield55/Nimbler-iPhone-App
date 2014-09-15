@@ -163,6 +163,14 @@
 #define ROUTE_BUTTON_WIDTH_4INCH      72
 #define ROUTE_BUTTON_HEIGHT_4INCH     37
 
-#define IPHONE5HEIGHT                  568
+// iPhone model screen sizes
+#define IPHONE4_WIDTH       320
+#define IPHONE4_HEIGHT      480
+#define IPHONE5_WIDTH       320
+#define IPHONE5HEIGHT       568
+#define IPHONE6_WIDTH       (750/2)
+#define IPHONE6_HEIGHT      (1334/2)
+#define IPHONE6PLUS_WIDTH   (1242/3)
+#define IPHONE6PLUS_HEIGHT  (2208/3)
 
 #endif

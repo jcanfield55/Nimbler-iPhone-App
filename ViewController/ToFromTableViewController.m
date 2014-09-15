@@ -512,7 +512,7 @@ NSString *strStreet2 = @"street ";
     
     // if There is PlaceName available for location
     if([loc isKindOfClass:[LocationFromLocalSearch class ]]){
-        cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+        cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
         if(loc.locationName){
             cell.textLabel.text = loc.locationName;
             cell.detailTextLabel.text = loc.shortFormattedAddress;

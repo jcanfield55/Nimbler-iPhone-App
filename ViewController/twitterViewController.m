@@ -317,11 +317,11 @@ NSUserDefaults *prefs;
             CGSize stringSize;
              UITextView *uiTextView=[[UITextView alloc] init];
              if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
-                 stringSize = [strTweet sizeWithFont:[UIFont systemFontOfSize:16.0] constrainedToSize:CGSizeMake(205, 9999) lineBreakMode:UILineBreakModeWordWrap];
+                 stringSize = [strTweet sizeWithFont:[UIFont systemFontOfSize:16.0] constrainedToSize:CGSizeMake(205, 9999) lineBreakMode:NSLineBreakByWordWrapping];
                  [uiTextView setFrame:CGRectMake(70, 28, 220, stringSize.height + 40)];
              }
              else{
-                 stringSize = [strTweet sizeWithFont:[UIFont systemFontOfSize:16.0] constrainedToSize:CGSizeMake(220, 9999) lineBreakMode:UILineBreakModeWordWrap];
+                 stringSize = [strTweet sizeWithFont:[UIFont systemFontOfSize:16.0] constrainedToSize:CGSizeMake(220, 9999) lineBreakMode:NSLineBreakByWordWrapping];
                 [uiTextView setFrame:CGRectMake(60, 28, 220, stringSize.height + 40)];
              }
             uiTextView.font = [UIFont systemFontOfSize:15.0];
@@ -388,7 +388,7 @@ NSUserDefaults *prefs;
          else{
             constraintSize = CGSizeMake(220.0f, MAXFLOAT);
          }
-        CGSize labelSize = [tweetDetail sizeWithFont:cellFont constrainedToSize:constraintSize lineBreakMode:UILineBreakModeWordWrap];
+        CGSize labelSize = [tweetDetail sizeWithFont:cellFont constrainedToSize:constraintSize lineBreakMode:NSLineBreakByWordWrapping];
         return labelSize.height + 40;
     }
     return 50;

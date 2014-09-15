@@ -44,7 +44,7 @@ static inline CTTextAlignment CTTextAlignmentFromUITextAlignment(UITextAlignment
 
 static inline CTLineBreakMode CTLineBreakModeFromUILineBreakMode(UILineBreakMode lineBreakMode) {
 	switch (lineBreakMode) {
-		case UILineBreakModeWordWrap: return kCTLineBreakByWordWrapping;
+		case NSLineBreakByWordWrapping: return kCTLineBreakByWordWrapping;
 		case UILineBreakModeCharacterWrap: return kCTLineBreakByCharWrapping;
 		case UILineBreakModeClip: return kCTLineBreakByClipping;
 		case UILineBreakModeHeadTruncation: return kCTLineBreakByTruncatingHead;
@@ -97,7 +97,7 @@ static inline NSDictionary * NSAttributedStringAttributesFromLabel(TTTAttributed
 
         CTLineBreakMode lineBreakMode;
         if (label.numberOfLines != 1) {
-            lineBreakMode = CTLineBreakModeFromUILineBreakMode(UILineBreakModeWordWrap);
+            lineBreakMode = CTLineBreakModeFromUILineBreakMode(NSLineBreakByWordWrapping);
         } else {
             lineBreakMode = CTLineBreakModeFromUILineBreakMode(label.lineBreakMode);
         }
@@ -261,7 +261,7 @@ static inline NSAttributedString * NSAttributedStringBySettingColorFromContext(N
         [mutableLinkAttributes setObject:(__bridge id)[[UIColor blueColor] CGColor] forKey:(NSString *)kCTForegroundColorAttributeName];
         [mutableActiveLinkAttributes setObject:(__bridge id)[[UIColor redColor] CGColor] forKey:(NSString *)kCTForegroundColorAttributeName];
 
-        CTLineBreakMode lineBreakMode = CTLineBreakModeFromUILineBreakMode(UILineBreakModeWordWrap);
+        CTLineBreakMode lineBreakMode = CTLineBreakModeFromUILineBreakMode(NSLineBreakByWordWrapping);
         CTParagraphStyleSetting paragraphStyles[1] = {
             {.spec = kCTParagraphStyleSpecifierLineBreakMode, .valueSize = sizeof(CTLineBreakMode), .value = (const void *)&lineBreakMode}
         };
@@ -901,7 +901,7 @@ afterInheritingLabelAttributesAndConfiguringWithBlock:(NSMutableAttributedString
         
         CGFloat textWidth = [self sizeThatFits:maxSize].width;
         CGFloat availableWidth = self.frame.size.width * self.numberOfLines;
-        if (self.numberOfLines > 1 && self.lineBreakMode == UILineBreakModeWordWrap) {
+        if (self.numberOfLines > 1 && self.lineBreakMode == NSLineBreakByWordWrapping) {
             textWidth *= kTTTLineBreakWordWrapTextWidthScalingFactor;
         }
         

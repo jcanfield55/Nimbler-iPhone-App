@@ -43,6 +43,7 @@
 #define LOCATION_PICKER_VIEW_TITLE @"Pick a location"
 #define ROUTE_OPTIONS_VIEW_TITLE   @"Itineraries"
 #define ROUTE_DETAIL_VIEW_TITLE    @"Route"
+#define UBER_DETAILS_VIEW_TITLE    @"Options"
 #define TWITTER_VIEW_TITLE         @"Advisories"
 #define SETTING_VIEW_TITLE         @"App Settings"
 #define FEED_BACK_VIEW_TITLE       @"Feedback"
