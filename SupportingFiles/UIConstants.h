@@ -36,21 +36,14 @@
 #define TOFROM_ROW_HEIGHT 36
 
 // To & From table heights for regular (3.5") iPhone screen
-#define FROM_TABLE_HEIGHT_NO_CL_MODE 131 // height when not isCurrentLocationMode
-#define TO_TABLE_HEIGHT_NO_CL_MODE 131
-#define FROM_TABLE_HEIGHT_CL_MODE 74 // height when isCurrentLocationMode
 #define TO_TABLE_HEIGHT_CL_MODE 155
 #define FROM_TABLE_HEIGHT_EDIT_MODE 300 // height when in Edit mode
 #define TO_TABLE_HEIGHT_EDIT_MODE 300
 
 // To & From table heights for iPhone5 and other 4" screens
-#define FROM_TABLE_HEIGHT_NO_CL_MODE_4INCH 184 // height when not isCurrentLocationMode
-#define TO_TABLE_HEIGHT_NO_CL_MODE_4INCH 148
-#define FROM_TABLE_HEIGHT_CL_MODE_4INCH 148 // height when isCurrentLocationMode
 #define TO_TABLE_HEIGHT_CL_MODE_4INCH 148
 #define FROM_TABLE_HEIGHT_EDIT_MODE_4INCH 222 // height when in FROM_EDIT mode
 #define TO_TABLE_HEIGHT_EDIT_MODE_4INCH 222 // height when in TO_EDIT mode
-
 
 #define TOFROM_TABLE_WIDTH 320
 #define TOFROM_INSERT_INTO_CELL_MARGIN 2 // spacer added to cell height when there is an inserted field or table
@@ -65,6 +58,9 @@
 #define TOFROM_SECTION_LABEL_INDENT 15.0
 #define TOFROM_SECTION_FOOTER_HEIGHT 1.0
 
+#define ADVISORY_BUTTON_WIDTH 47
+#define ADVISORY_BUTTON_HEIGHT 26
+
 // ToFromTableViewController constants
 #define TOFROM_TEXT_FIELD_INDENT 15
 #define TOFROM_TEXT_FIELD_XPOS 10
@@ -74,26 +70,20 @@
 #define CORNER_RADIUS_SMALL 5.0
 #define CORNER_RADIUS_MEDIUM 10.0
 
-// Upadate badge count to ZERO
+// Update badge count to ZERO
 #define BADGE_COUNT_ZERO 0
 
 // RouteOptionsViewController
 #define ROUTE_OPTIONS_TABLE_CELL_TEXT_WIDTH 280
-#define EXCLUDE_BUTTON_HEIGHT 22
-#define EXCLUDE_BUTTON_WIDTH 80
+#define EXCLUDE_BUTTON_HEIGHT 38
+#define EXCLUDE_BUTTON_WIDTH 72
 #define EXCLUDE_BUTTONS_PER_ROW 4
+
 
 
 // RouteDetailsViewController & LegMapViewController
 //#define ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH 279 // Obtained thru trial & error, DE-230 fix
 #define ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH 273 // Obtained thru trial & error, DE-315 fix
-#define ROUTE_LEGMAP_X_ORIGIN 5
-#define ROUTE_LEGMAP_Y_ORIGIN 5
-#define ROUTE_LEGMAP_WIDTH 309
-#define ROUTE_LEGMAP_MIN_HEIGHT 207  // DE192 fix
-#define ROUTE_DETAILS_TABLE_MAX_HEIGHT 141
-#define ROUTE_DETAILS_TABLE_MAX_HEIGHT_4INCH 141
-#define ROUTE_LEGMAP_MIN_HEIGHT_4INCH 275
 
 
 // Table cell height
@@ -163,13 +153,13 @@
 #define ROUTE_BUTTON_WIDTH_4INCH      72
 #define ROUTE_BUTTON_HEIGHT_4INCH     37
 
-// iPhone model screen sizes
+// iPhone model screen sizes, for reference only
 #define IPHONE4_WIDTH       320
 #define IPHONE4_HEIGHT      480
 #define IPHONE5_WIDTH       320
 #define IPHONE5HEIGHT       568
-#define IPHONE6_WIDTH       (750/2)
-#define IPHONE6_HEIGHT      (1334/2)
+#define IPHONE6_WIDTH       375
+#define IPHONE6_HEIGHT      667
 #define IPHONE6PLUS_WIDTH   (1242/3)
 #define IPHONE6PLUS_HEIGHT  (2208/3)
 

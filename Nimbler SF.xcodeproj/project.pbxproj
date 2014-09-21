@@ -184,6 +184,15 @@
 		520FB27C162603AF0083F143 /* walkb.png in Resources */ = {isa = PBXBuildFile; fileRef = 520FB212162603AF0083F143 /* walkb.png */; };
 		520FB293162604950083F143 /* CoverageGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 520FB28B162604950083F143 /* CoverageGeoJSON.geojson */; };
 		520FB296162605470083F143 /* CoverageGeoJSON.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 520FB295162605470083F143 /* CoverageGeoJSON.geojson */; };
+		52247D6119C6B120000C1EB5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52247D6019C6B120000C1EB5 /* Images.xcassets */; };
+		52247D6419C6B3A1000C1EB5 /* Default-iPhone6.png in Resources */ = {isa = PBXBuildFile; fileRef = 52247D6219C6B3A1000C1EB5 /* Default-iPhone6.png */; };
+		52247D6519C6B3A1000C1EB5 /* Default-iPhone6.png in Resources */ = {isa = PBXBuildFile; fileRef = 52247D6219C6B3A1000C1EB5 /* Default-iPhone6.png */; };
+		52247D6619C6B3A1000C1EB5 /* Default-iPhone6.png in Resources */ = {isa = PBXBuildFile; fileRef = 52247D6219C6B3A1000C1EB5 /* Default-iPhone6.png */; };
+		52247D6719C6B3A1000C1EB5 /* Default-iPhone6.png in Resources */ = {isa = PBXBuildFile; fileRef = 52247D6219C6B3A1000C1EB5 /* Default-iPhone6.png */; };
+		52247D6819C6B3A1000C1EB5 /* Default-iPhone6plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 52247D6319C6B3A1000C1EB5 /* Default-iPhone6plus.png */; };
+		52247D6919C6B3A1000C1EB5 /* Default-iPhone6plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 52247D6319C6B3A1000C1EB5 /* Default-iPhone6plus.png */; };
+		52247D6A19C6B3A1000C1EB5 /* Default-iPhone6plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 52247D6319C6B3A1000C1EB5 /* Default-iPhone6plus.png */; };
+		52247D6B19C6B3A1000C1EB5 /* Default-iPhone6plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 52247D6319C6B3A1000C1EB5 /* Default-iPhone6plus.png */; };
 		5224EA701937199700AE67C7 /* Icon-Portland-80@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5224EA6F1937199700AE67C7 /* Icon-Portland-80@2x.png */; };
 		5224EA7219371D1700AE67C7 /* libFlurry_5.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5224EA7119371D1700AE67C7 /* libFlurry_5.0.0.a */; };
 		5224EA7319371D1700AE67C7 /* libFlurry_5.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5224EA7119371D1700AE67C7 /* libFlurry_5.0.0.a */; };
@@ -1797,6 +1806,9 @@
 		520FB291162604950083F143 /* UIAutomationConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = UIAutomationConstants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB292162604950083F143 /* UIConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = UIConstants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB295162605470083F143 /* CoverageGeoJSON.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CoverageGeoJSON.geojson; path = SupportingFiles/CoverageGeoJSON.geojson; sourceTree = "<group>"; };
+		52247D6019C6B120000C1EB5 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "Nimbler SF/Images.xcassets"; sourceTree = "<group>"; };
+		52247D6219C6B3A1000C1EB5 /* Default-iPhone6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-iPhone6.png"; sourceTree = "<group>"; };
+		52247D6319C6B3A1000C1EB5 /* Default-iPhone6plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-iPhone6plus.png"; sourceTree = "<group>"; };
 		5224EA6F1937199700AE67C7 /* Icon-Portland-80@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Portland-80@2x.png"; sourceTree = "<group>"; };
 		5224EA7119371D1700AE67C7 /* libFlurry_5.0.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_5.0.0.a; sourceTree = "<group>"; };
 		522C03CF18304A72004BC6AF /* CoverageDCGeoJSON.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CoverageDCGeoJSON.geojson; sourceTree = "<group>"; };
@@ -2682,9 +2694,6 @@
 				CC6F22E71563AD360066DFA9 /* AVFoundation.framework */,
 				522C0E6A15588E7A0072ADD6 /* libz.dylib */,
 				8D82883616E4CA5600AA8FF2 /* DB */,
-				52E4C0A015CC705000B55A65 /* Default.png */,
-				52E4C0A215CC705D00B55A65 /* Default@2x.png */,
-				8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */,
 				5258A89A160D617800871875 /* TestFlightSDK1-1 */,
 				525442AD14C3EA95004B0E1F /* RestKit.xcodeproj */,
 				52CF43A714BDF2F9000565D6 /* Nimbler */,
@@ -2950,6 +2959,12 @@
 		CCD3990C15A2FAD20020BC85 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				52E4C0A015CC705000B55A65 /* Default.png */,
+				52E4C0A215CC705D00B55A65 /* Default@2x.png */,
+				8DBECD5116146DBE007B71F1 /* Default-568h@2x.png */,
+				52247D6219C6B3A1000C1EB5 /* Default-iPhone6.png */,
+				52247D6319C6B3A1000C1EB5 /* Default-iPhone6plus.png */,
+				52247D6019C6B120000C1EB5 /* Images.xcassets */,
 				8DF63E2817C1D1D3004FC3BB /* Icon_ipad-Caltrain.png */,
 				8DF63E2917C1D1D3004FC3BB /* Icon_ipad-Caltrain@2x.png */,
 				8DF63E2A17C1D1D3004FC3BB /* Icon-Caltrain.png */,
@@ -3247,6 +3262,7 @@
 				520FB250162603AF0083F143 /* img_playing.png in Resources */,
 				520FB251162603AF0083F143 /* img_playing@2x.png in Resources */,
 				520FB252162603AF0083F143 /* img_recording.png in Resources */,
+				52247D6819C6B3A1000C1EB5 /* Default-iPhone6plus.png in Resources */,
 				520FB253162603AF0083F143 /* img_reload.png in Resources */,
 				520FB254162603AF0083F143 /* img_reload@2x.png in Resources */,
 				520FB255162603AF0083F143 /* img_route.png in Resources */,
@@ -3255,6 +3271,7 @@
 				520FB258162603AF0083F143 /* img_selAdvisory@2x.png in Resources */,
 				520FB259162603AF0083F143 /* img_select.png in Resources */,
 				520FB25A162603AF0083F143 /* img_select@2x.png in Resources */,
+				52247D6119C6B120000C1EB5 /* Images.xcassets in Resources */,
 				520FB25B162603AF0083F143 /* img_selFB.png in Resources */,
 				520FB25C162603AF0083F143 /* img_selFB@2x.png in Resources */,
 				520FB25D162603AF0083F143 /* img_selSetting.png in Resources */,
@@ -3318,6 +3335,7 @@
 				8D7BE0A816D5EC2A0038FF26 /* pressed.png in Resources */,
 				8D7BE0AA16D6187B0038FF26 /* pressed1.png in Resources */,
 				8D317A3E16DB9A5A00581224 /* img_bicycle.png in Resources */,
+				52247D6419C6B3A1000C1EB5 /* Default-iPhone6.png in Resources */,
 				8D317A3F16DB9A5A00581224 /* img_bicycleSelect.png in Resources */,
 				8DE42FEA16E0AEEE00A37AD3 /* img_legFerry.png in Resources */,
 				8DE42FEB16E0AEEE00A37AD3 /* img_legFerry@2x.png in Resources */,
@@ -3454,6 +3472,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DA77FEF1724FF0D0090C2EA /* aps_development.cer in Resources */,
+				52247D6519C6B3A1000C1EB5 /* Default-iPhone6.png in Resources */,
 				8DA77FF31724FF0D0090C2EA /* FeedBackForm.xib in Resources */,
 				8DA77FF41724FF0D0090C2EA /* FeedBackForm_568h.xib in Resources */,
 				8DA77FF51724FF0D0090C2EA /* FeedbackViewController.xib in Resources */,
@@ -3671,6 +3690,7 @@
 				8D178A7017A939E300BF873F /* email@2x.png in Resources */,
 				8D178A7417A939E300BF873F /* message.png in Resources */,
 				8D178A7817A939E300BF873F /* message@2x.png in Resources */,
+				52247D6919C6B3A1000C1EB5 /* Default-iPhone6plus.png in Resources */,
 				8D178A7C17A939E300BF873F /* record.png in Resources */,
 				524EAEDD193450ED00EE00B4 /* notificationicon6.png in Resources */,
 				8D178A8017A939E300BF873F /* record@2x.png in Resources */,
@@ -3854,6 +3874,7 @@
 				8DAA292E178BDFEF00C3FA30 /* nimblr@2x.png in Resources */,
 				8DAA292F178BDFEF00C3FA30 /* send.png in Resources */,
 				8DAA2930178BDFEF00C3FA30 /* send@2x.png in Resources */,
+				52247D6719C6B3A1000C1EB5 /* Default-iPhone6.png in Resources */,
 				8DAA2931178BDFEF00C3FA30 /* Speaker.png in Resources */,
 				8DAA2932178BDFEF00C3FA30 /* Speaker@2x.png in Resources */,
 				8DAA2933178BDFEF00C3FA30 /* walkb.png in Resources */,
@@ -3919,6 +3940,7 @@
 				8D1789A617A90D5100BF873F /* bikePreference@2x.png in Resources */,
 				8D1789AA17A90D5100BF873F /* maxWalkDistance@2x.png in Resources */,
 				8D1789AE17A90D5100BF873F /* notifSound@2x.png in Resources */,
+				52247D6B19C6B3A1000C1EB5 /* Default-iPhone6plus.png in Resources */,
 				8D1789B217A90D5100BF873F /* notifTiming@2x.png in Resources */,
 				8D1789B617A90D5100BF873F /* push@2x.png in Resources */,
 				8D1789BA17A90D5100BF873F /* pushFrequency@2x.png in Resources */,
@@ -4172,6 +4194,7 @@
 				8DEAC1A217785F2200D7997C /* nimblrDC.png in Resources */,
 				8DEAC1A317785F2500D7997C /* nimblrDC@2x.png in Resources */,
 				8D5008ED178D7D42002E7820 /* RouteDetailViewController_568h.xib in Resources */,
+				52247D6A19C6B3A1000C1EB5 /* Default-iPhone6plus.png in Resources */,
 				8DABCDC11793C8BC00C1BDCF /* arrow.png in Resources */,
 				8D2D51CB17981F4800A5E007 /* twitterViewController_568h.xib in Resources */,
 				8D17896117A8D1A300BF873F /* sentFeedBack@2x.png in Resources */,
@@ -4265,6 +4288,7 @@
 				8DF63E4017C1D1D3004FC3BB /* Icon_ipad-Caltrain@2x.png in Resources */,
 				8DF63E4417C1D1D3004FC3BB /* Icon-Caltrain.png in Resources */,
 				8DF63E4817C1D1D3004FC3BB /* Icon-Caltrain@2x.png in Resources */,
+				52247D6619C6B3A1000C1EB5 /* Default-iPhone6.png in Resources */,
 				8DF63E4C17C1D1D3004FC3BB /* Icon-DC-72.png in Resources */,
 				8DF63E5017C1D1D3004FC3BB /* Icon-DC-72@2x.png in Resources */,
 				8DF63E5417C1D1D3004FC3BB /* Icon-DC-Small.png in Resources */,
@@ -4800,6 +4824,8 @@
 		52CF43CF14BDF2F9000565D6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4842,6 +4868,8 @@
 		52CF43D014BDF2F9000565D6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: John Canfield (346X8GDD5V)";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer: John Canfield (346X8GDD5V)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";

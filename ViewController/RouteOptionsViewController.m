@@ -42,6 +42,8 @@
 
 @synthesize mainTable;
 @synthesize noItineraryWarning;
+@synthesize modeBtnView;
+@synthesize travelByLabel;
 @synthesize plan;
 @synthesize isReloadRealData;
 @synthesize btnGoToNimbler;
@@ -198,11 +200,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
 
 
 - (void) changeMainTableSettings{
-    UIView *bgView = [self.view viewWithTag:1000];
-    if(bgView){
-        [bgView removeFromSuperview];
-        bgView = nil;
-    }
+
     CGRect rect0 = [mainTable frame];
     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
         rect0.size.height = ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5;
@@ -286,8 +284,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
         }
         if([[RouteExcludeSettings latestUserSettings] settingForKey:btn.titleLabel.text] == SETTING_EXCLUDE_ROUTE){
             
-            UIView *bgView = [self.view viewWithTag:1000];
-            NSArray *subViews = [bgView subviews];
+            NSArray *subViews = [modeBtnView subviews];
             if([btn.titleLabel.text isEqualToString:returnBikeButtonTitle()]){
                 [[NSUserDefaults standardUserDefaults] setObject:MODE_ENABLE forKey:DEFAULT_BIKE_MODE];
                 [[NSUserDefaults standardUserDefaults] synchronize];
@@ -808,6 +805,10 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
     
     self.navigationItem.leftBarButtonItem = backTonimbler;
     
+    [travelByLabel setFont:[UIFont fontWithName:@"Helvetica" size:13.0]];
+    [travelByLabel setTextColor:[UIColor lightGrayColor]];
+    travelByLabel.text = MODE_BUTTON_TRAVEL_BY_TEXT;
+    
     [self hideUnUsedTableViewCell];
 }
 
@@ -872,29 +873,29 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
 
 - (void) createViewWithButtons:(int)height{
     @try {
-        UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(10, 10, 300, height)];
-        [bgView setTag:1000];
-        [bgView setBackgroundColor:[UIColor clearColor]];
-        [self.view addSubview:bgView];
-        
-        UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 300, height)];
-        imgView.layer.cornerRadius = 5.0;
-        [imgView setImage:[UIImage imageNamed:@"excludeBackground@2x.png"]];
-        [bgView addSubview:imgView];
-        
-        UILabel *lblChoose = [[UILabel alloc] initWithFrame:CGRectMake(0, 12, 80, 25)];
-        [lblChoose setText:@"Travel By:"];
-        [lblChoose setBackgroundColor:[UIColor clearColor]];
-        [lblChoose setFont:[UIFont fontWithName:@"Helvetica" size:13.0]];
-        [lblChoose setTextAlignment:UITextAlignmentCenter];
-        [lblChoose setTextColor:[UIColor lightGrayColor]];
-        [bgView addSubview:lblChoose];
         
         int xPos = 70;
         int yPos = 5;
-        int btnHeight = 38;
-        int width = 72;
+        int btnHeight = EXCLUDE_BUTTON_HEIGHT;
+        int width = EXCLUDE_BUTTON_WIDTH;
         
+        // Update the height constraint for modeBtnView if needed
+        for (NSLayoutConstraint *constraint in [modeBtnView constraints]) {
+            if (constraint.firstAttribute == NSLayoutAttributeHeight) {
+                if (constraint.constant != height) {  // If not set to the right heigh
+                    NSLayoutConstraint* newConstr = [NSLayoutConstraint constraintWithItem:modeBtnView
+                                                                                 attribute:NSLayoutAttributeHeight
+                                                                                 relatedBy:NSLayoutRelationEqual
+                                                                                    toItem:nil
+                                                                                 attribute:0
+                                                                                multiplier:1.0
+                                                                                  constant:height];
+                    [modeBtnView addConstraint:newConstr];
+                    [modeBtnView removeConstraint:constraint];
+                }
+                break;
+            }
+        }
         BOOL transitMode = [[[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_TRANSIT_MODE] boolValue];
         if(!transitMode){
             for(int i=0;i<[[plan excludeSettingsArray] count];i++){
@@ -923,7 +924,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
                     [btnAgency setTitleColor:[UIColor LIGHT_GRAY_FONT_COLOR] forState:UIControlStateNormal];
                 }
                 [btnAgency addTarget:self action:@selector(toggleExcludeButton:) forControlEvents:UIControlEventTouchUpInside];
-                [bgView addSubview:btnAgency];
+                [modeBtnView addSubview:btnAgency];
             }
         }
         else{
@@ -947,7 +948,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
                     [btnAgency setTitleColor:[UIColor NIMBLER_RED_FONT_COLOR] forState:UIControlStateNormal];
                 }
                 [btnAgency addTarget:self action:@selector(toggleExcludeButton:) forControlEvents:UIControlEventTouchUpInside];
-                [bgView addSubview:btnAgency];
+                [modeBtnView addSubview:btnAgency];
             }
         }
     }
