@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
         <development version="5100" identifier="xcode"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -13,6 +12,7 @@
                 <outlet property="handleControl" destination="35" id="36"/>
                 <outlet property="lblNextRealtime" destination="30" id="31"/>
                 <outlet property="mainTable" destination="22" id="23"/>
+                <outlet property="mapToTableRatioConstraint" destination="3vP-HZ-6ke" id="Zom-Wz-AJ6"/>
                 <outlet property="mapView" destination="6er-Ey-OKx" id="LGf-bb-LG0"/>
                 <outlet property="view" destination="19" id="24"/>
             </connections>
@@ -55,6 +55,7 @@
                     <connections>
                         <action selector="imageMoved:withEvent:" destination="-1" eventType="touchDragInside" id="37"/>
                         <action selector="imageMoved:withEvent:" destination="-1" eventType="touchDown" id="45"/>
+                        <action selector="imageMoved:withEvent:" destination="-1" eventType="touchDragExit" id="yax-is-dcD"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="48" userLabel="Button-feedback">
@@ -82,11 +83,11 @@
                 <constraint firstAttribute="bottom" secondItem="48" secondAttribute="bottom" constant="2" id="5AU-x3-uWU"/>
                 <constraint firstAttribute="trailing" secondItem="6er-Ey-OKx" secondAttribute="trailing" constant="5" id="5aY-7a-gSI"/>
                 <constraint firstAttribute="trailing" secondItem="48" secondAttribute="trailing" constant="5" id="6hH-4l-UYN"/>
+                <constraint firstItem="35" firstAttribute="top" secondItem="6er-Ey-OKx" secondAttribute="bottom" id="7y4-SH-edM"/>
                 <constraint firstItem="48" firstAttribute="top" secondItem="22" secondAttribute="bottom" id="E0B-bd-5zV"/>
                 <constraint firstItem="35" firstAttribute="leading" secondItem="19" secondAttribute="leading" id="ODR-aJ-eqB"/>
                 <constraint firstItem="6er-Ey-OKx" firstAttribute="top" secondItem="19" secondAttribute="top" constant="5" id="QgG-T9-Sep"/>
                 <constraint firstItem="22" firstAttribute="top" secondItem="30" secondAttribute="bottom" id="S8X-wO-ggw"/>
-                <constraint firstItem="30" firstAttribute="top" secondItem="6er-Ey-OKx" secondAttribute="bottom" id="UU5-ba-0fb"/>
                 <constraint firstAttribute="trailing" secondItem="22" secondAttribute="trailing" id="XTS-BJ-oA2"/>
                 <constraint firstItem="30" firstAttribute="top" secondItem="35" secondAttribute="bottom" id="dTH-q3-GdN"/>
                 <constraint firstItem="22" firstAttribute="leading" secondItem="19" secondAttribute="leading" id="pWy-9c-m8H"/>

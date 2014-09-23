@@ -734,7 +734,7 @@ NSString *strStreet2 = @"street ";
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 25.0;
+    return TOFROM_TABLE_HEADER_HEIGHT;
 }
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     

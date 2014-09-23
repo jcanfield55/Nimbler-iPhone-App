@@ -72,6 +72,10 @@
 // RouteOptionsViewController
 #define MODE_BUTTON_TRAVEL_BY_TEXT @"Travel By:"
 
+// RouteDetailsViewController
+#define NO_REALTIME_UPDATES @"No Realtime Updates"
+#define TIME_TO_NEXT_REFRESH @"Time to next refresh"
+
 // Network Message
 #define NO_NETWORK_ALERT   @"Unable to connect to server.  Please try again when you have network connectivity."
 

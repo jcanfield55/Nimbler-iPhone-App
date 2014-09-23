@@ -890,8 +890,8 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
                                                                                  attribute:0
                                                                                 multiplier:1.0
                                                                                   constant:height];
-                    [modeBtnView addConstraint:newConstr];
                     [modeBtnView removeConstraint:constraint];
+                    [modeBtnView addConstraint:newConstr];
                 }
                 break;
             }

@@ -31,8 +31,10 @@
 @property(nonatomic, strong) UIButton *btnGoToItinerary;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic) int count;
-@property (nonatomic, strong) IBOutlet UILabel * lblNextRealtime;
-@property (nonatomic, strong) IBOutlet UIButton * handleControl;
+@property (nonatomic, strong) IBOutlet UILabel* lblNextRealtime;
+@property (nonatomic, strong) IBOutlet UIButton* handleControl;
+@property (nonatomic, strong) NSLayoutConstraint* handleVerticalConstraint;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint* mapToTableRatioConstraint;
 @property (nonatomic) int mapHeight;
 @property (nonatomic) int tableHeight;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;

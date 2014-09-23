@@ -20,6 +20,7 @@
 #import "KeyObjectStore.h"
 #import "WebView.h"
 #import "BikeStepsViewController.h"
+#import "TEXTConstant.h"
 
 #define MAXIMUM_SCROLL_POINT 338
 #define MAXIMUM_SCROLL_POINT_4_INCH 425
@@ -27,8 +28,6 @@
 #define LABEL__NEXT_REALTIME_Y_BUFFER 17
 #define MAIN_TABLE_Y_BUFFER 30
 #define PREFS_IS_LABEL_HIDDEN @"labelHidden"
-#define NO_REALTIME_UPDATES @"No Realtime Updates"
-#define TIME_TO_NEXT_REFRESH @"Time to next refresh"
 #define TIMER_DEFAULT_VALUE 119
 
 
@@ -55,6 +54,8 @@
 @synthesize count;
 @synthesize lblNextRealtime;
 @synthesize handleControl;
+@synthesize mapToTableRatioConstraint;
+@synthesize handleVerticalConstraint;
 @synthesize mapHeight;
 @synthesize tableHeight;
 @synthesize activityIndicatorView;
@@ -413,8 +414,10 @@ NSUserDefaults *prefs;
         }
         
         // if this is the selected row, make red
+        int routeDetailsTableCellWidth = cell.frame.size.width - ROUTE_DETAILS_TABLE_CELL_TEXT_BORDER;
+        
         NSString *textString = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
-        CGSize attributedLabelSize = [textString sizeWithFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
+        CGSize attributedLabelSize = [textString sizeWithFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE]constrainedToSize:CGSizeMake(routeDetailsTableCellWidth, CGFLOAT_MAX)];
         NSInteger attributedLblYPOS = 0;
         if(![[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]] length]>0 && attributedLabelSize.height>18){
             attributedLblYPOS =5;
@@ -423,7 +426,7 @@ NSUserDefaults *prefs;
             attributedLblYPOS =10;
         }
         
-        TTTAttributedLabel *attributedLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectMake(40,attributedLblYPOS,ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, attributedLabelSize.height)];
+        TTTAttributedLabel *attributedLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectMake(40,attributedLblYPOS,routeDetailsTableCellWidth, attributedLabelSize.height)];
         attributedLabel.font=[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE];
         attributedLabel.numberOfLines = 5;
         if (itineraryNumber == [indexPath row]) {
@@ -443,8 +446,8 @@ NSUserDefaults *prefs;
         [attributedLabel addLinkToURL:[NSURL URLWithString:@"Capital BikeShare"] withRange:range];
         [cell.contentView addSubview:attributedLabel];
         
-        CGSize subTitleLabelSize = [[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]] sizeWithFont:[UIFont systemFontOfSize:STANDARD_FONT_SIZE] constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(40,attributedLabelSize.height+3,ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, subTitleLabelSize.height)];
+        CGSize subTitleLabelSize = [[[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]] sizeWithFont:[UIFont systemFontOfSize:STANDARD_FONT_SIZE] constrainedToSize:CGSizeMake(routeDetailsTableCellWidth, CGFLOAT_MAX)];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(40,attributedLabelSize.height+3,routeDetailsTableCellWidth, subTitleLabelSize.height)];
         label.numberOfLines = 2;
         [label setFont:[UIFont systemFontOfSize:STANDARD_FONT_SIZE]];
         [label setLineBreakMode:NSLineBreakByWordWrapping];
@@ -482,11 +485,12 @@ NSUserDefaults *prefs;
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     @try {
+        int routeDetailsTableCellWidth = tableView.frame.size.width - ROUTE_DETAILS_TABLE_CELL_TEXT_BORDER;
         NSString* titleText = [[itinerary legDescriptionTitleSortedArray] objectAtIndex:[indexPath row]];
         NSString* subtitleText = [[itinerary legDescriptionSubtitleSortedArray] objectAtIndex:[indexPath row]];
-        CGSize titleSize = [titleText sizeWithFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE] constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
+        CGSize titleSize = [titleText sizeWithFont:[UIFont boldSystemFontOfSize:MEDIUM_FONT_SIZE] constrainedToSize:CGSizeMake(routeDetailsTableCellWidth, CGFLOAT_MAX)];
         CGSize subtitleSize = [subtitleText sizeWithFont:[UIFont systemFontOfSize:STANDARD_FONT_SIZE]
-                                       constrainedToSize:CGSizeMake(ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH, CGFLOAT_MAX)];
+                                       constrainedToSize:CGSizeMake(routeDetailsTableCellWidth, CGFLOAT_MAX)];
         CGFloat height = titleSize.height + subtitleSize.height + VARIABLE_TABLE_CELL_HEIGHT_BUFFER;
         if (height < STANDARD_TABLE_CELL_MINIMUM_HEIGHT) { // Set a minumum row height
             height = STANDARD_TABLE_CELL_MINIMUM_HEIGHT;
@@ -651,32 +655,49 @@ NSUserDefaults *prefs;
 }
 
 - (IBAction) imageMoved:(id) sender withEvent:(UIEvent *) event{
-    CGPoint point = [[[event allTouches] anyObject] locationInView:self.view];
-    int maxHeight;
-    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        maxHeight = MAXIMUM_SCROLL_POINT_4_INCH;
-    }
-    else{
-        maxHeight = MAXIMUM_SCROLL_POINT;
-    }
-    if(point.y <= maxHeight && point.y >=MINIMUM_SCROLL_POINT){
-        [lblNextRealtime setFrame:CGRectMake(lblNextRealtime.frame.origin.x, point.y+
-                                             LABEL__NEXT_REALTIME_Y_BUFFER, lblNextRealtime.frame.size.width,lblNextRealtime.frame.size.height)];
-        [handleControl setFrame:CGRectMake(handleControl.frame.origin.x, point.y, handleControl.frame.size.width, handleControl.frame.size.height)];
-        yPos = handleControl.frame.origin.y;
-        [mapView setFrame:CGRectMake(mapView.frame.origin.x,mapView.frame.origin.y,mapView.frame.size.width,mapView.frame.size.height+(point.y-mapHeight))];
-        if(lblNextRealtime.isHidden){
-            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,handleControl.frame.origin.y+handleControl.frame.size.height,self.view.frame.size.height,self.view.frame.size.height-(handleControl.frame.size.height+mapView.frame.size.height+self.btnFeedBack.frame.size.height))];
+    @try {
+        for (UITouch *touch in [event allTouches]) {
+            CGPoint point = [touch locationInView:self.view];
+            NIMLOG_UBER(@"Touch Events: %d, Point (%f, %f)", [[event allTouches] count], point.x, point.y);
+            int y = point.y - (handleControl.frame.size.height/2);  // Adjust so finger is positioned at middle of handle
+            if (y > self.view.frame.size.height - ROUTE_DETAILS_MINIMUM_TABLE_HEIGHT) {
+                y = self.view.frame.size.height - ROUTE_DETAILS_MINIMUM_TABLE_HEIGHT;
+            }
+            if (y < ROUTE_DETAILS_MINIMUM_MAP_HEIGHT) {
+                y = ROUTE_DETAILS_MINIMUM_MAP_HEIGHT;
+            }
+            
+            // Remove mapToTableRatioConstraint if any
+            for (NSLayoutConstraint *constraint in [self.view constraints]) {
+                if (constraint == mapToTableRatioConstraint) {
+                    [self.view removeConstraint:constraint];
+                    break;
+                }
+            }
+            
+            // Remove handleVerticalConstraint if any
+            for (NSLayoutConstraint *constraint in [self.view constraints]) {
+                if (constraint == handleVerticalConstraint) {
+                    [self.view removeConstraint:constraint];
+                    handleVerticalConstraint = nil;
+                    break;
+                }
+            }
+            
+            // Add a new constraint
+            handleVerticalConstraint = [NSLayoutConstraint constraintWithItem:handleControl
+                                                                    attribute:NSLayoutAttributeTop
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:self.view
+                                                                    attribute:NSLayoutAttributeTop
+                                                                   multiplier:1.0
+                                                                     constant:y];
+            [self.view addConstraint:handleVerticalConstraint];
         }
-        else{
-            [mainTable setFrame:CGRectMake(mainTable.frame.origin.x,point.y+MAIN_TABLE_Y_BUFFER, mainTable.frame.size.width,self.view.frame.size.height-(handleControl.frame.size.height+lblNextRealtime.frame.size.height+mapView.frame.size.height+self.btnFeedBack.frame.size.height))];
-        }
-        mapHeight = mapView.frame.size.height;
-        tableHeight = mainTable.frame.size.height;
     }
-    [self.view bringSubviewToFront:handleControl];
-    [self.view bringSubviewToFront:lblNextRealtime];
-    
+    @catch (NSException *exception) {
+        logException(@"RouteDetailsViewController->imageMoved", @"", exception);
+    }
 }
 
 - (void) backToRouteDetailView{

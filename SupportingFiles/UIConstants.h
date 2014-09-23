@@ -51,17 +51,15 @@
 
 #define FROM_SECTION_LABEL_HEIGHT 23.0
 #define TO_SECTION_LABEL_HEIGHT 35.0
-#define TOFROM_SECTION_LABEL_HEIGHT 23.0
-#define TOFROM_SECTION_LABEL_WIDTH 60.0
 #define TOFROM_SECTION_NOLABEL_HEIGHT 5.0 // spacer when there is no label
 #define TOFROM_SECTION_NOLABEL_HEIGHT_4INCH 5.0 // spacer when there is no label
-#define TOFROM_SECTION_LABEL_INDENT 15.0
 #define TOFROM_SECTION_FOOTER_HEIGHT 1.0
 
 #define ADVISORY_BUTTON_WIDTH 47
 #define ADVISORY_BUTTON_HEIGHT 26
 
 // ToFromTableViewController constants
+#define TOFROM_TABLE_HEADER_HEIGHT 25
 #define TOFROM_TEXT_FIELD_INDENT 15
 #define TOFROM_TEXT_FIELD_XPOS 10
 #define TOFROM_TEXT_FIELD_YPOS 1
@@ -82,8 +80,9 @@
 
 
 // RouteDetailsViewController & LegMapViewController
-//#define ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH 279 // Obtained thru trial & error, DE-230 fix
-#define ROUTE_DETAILS_TABLE_CELL_TEXT_WIDTH 273 // Obtained thru trial & error, DE-315 fix
+#define ROUTE_DETAILS_TABLE_CELL_TEXT_BORDER 47 // Amount to subtract from the cell width to determine the width for wrapping multi-line text.  Obtained thru trial & error.
+#define ROUTE_DETAILS_MINIMUM_TABLE_HEIGHT 90  // Minimum margin on the bottom for route table and feedback button
+#define ROUTE_DETAILS_MINIMUM_MAP_HEIGHT 40
 
 
 // Table cell height
@@ -160,7 +159,7 @@
 #define IPHONE5HEIGHT       568
 #define IPHONE6_WIDTH       375
 #define IPHONE6_HEIGHT      667
-#define IPHONE6PLUS_WIDTH   (1242/3)
+#define IPHONE6PLUS_WIDTH   414
 #define IPHONE6PLUS_HEIGHT  (2208/3)
 
 #endif

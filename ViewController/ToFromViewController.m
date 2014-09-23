@@ -45,7 +45,6 @@
     float durationOfResponseTime;
     NSTimer* activityTimer;
     LocationPickerViewController *locationPickerVC;
-    NSArray* sectionUILabelArray;  // Array of UILabels containing main table section headers
     UIBarButtonItem *barButtonSwap;  // Swap left bar button (for when in NO_EDIT mode)
     UIBarButtonItem *barButtonCancel; // Cancel left bar button (for when in EDIT mode)
 }
@@ -100,10 +99,7 @@
 @synthesize planRequestParameters;
 @synthesize mainToFromView,PicketSelectView,fromView,toView,txtFromView,txtToView,btnSwap,btnCureentLoc,imgViewMainToFromBG,imgViewFromBG,imgViewToBG,btnPicker,lblTxtToFromPlaceholder,lblTxtDepartArrive,viewMode,btnToFromEditCancel,lblTxtFrom,lblTxtTo;
 @synthesize managedObjectContext;
-// Constants for animating up and down the To: field
-#define FROM_SECTION 0
-#define TO_SECTION 1
-#define TIME_DATE_SECTION 2
+
 
 NSString *currentLoc;
 NSUserDefaults *prefs;
@@ -175,48 +171,6 @@ UIImage *imageDetailDisclosure;
             [fromTable setDataSource:fromTableVC];
             
             [fromTable setDelegate:fromTableVC];
-            
-            // Initialize the section header label array
-            
-            NSMutableArray* sectionArray = [[NSMutableArray alloc] initWithCapacity:3];
-            for (int i=0; i<3; i++) {
-                UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, TOFROM_SECTION_LABEL_WIDTH, TOFROM_SECTION_LABEL_HEIGHT)];
-                UILabel *label = [[UILabel alloc] 
-                                  init];
-                label.textColor = [UIColor lightGrayColor];
-                label.backgroundColor = [UIColor clearColor];
-                label.font = [UIFont MEDIUM_OBLIQUE_FONT];
-                if (i == TO_SECTION) {
-                    label.text = @"To:";
-                    [label setFrame:CGRectMake(TOFROM_SECTION_LABEL_INDENT, 12,TOFROM_SECTION_LABEL_WIDTH - TOFROM_SECTION_LABEL_INDENT,TOFROM_SECTION_LABEL_HEIGHT)];
-                } else if (i == FROM_SECTION) {
-                    label.text = @"From:";
-                    [label setFrame:CGRectMake(TOFROM_SECTION_LABEL_INDENT, 0,TOFROM_SECTION_LABEL_WIDTH - TOFROM_SECTION_LABEL_INDENT,TOFROM_SECTION_LABEL_HEIGHT)];
-                } else {
-                    // No label for "Depart"
-                }
-                [headerView addSubview:label];
-                [sectionArray addObject:headerView];
-            }
-            sectionUILabelArray = sectionArray;
-            
-            // Set up NavBar left buttons
-            
-       /*     UIImage* btnSwapImage = [UIImage imageNamed:@"img_swapLocation.png"];
-            UIButton *btnSwap = [[UIButton alloc] initWithFrame:CGRectMake(0,0,btnSwapImage.size.width,btnSwapImage.size.height)];
-            [btnSwap setTag:101];
-            [btnSwap addTarget:self action:@selector(doSwapLocation) forControlEvents:UIControlEventTouchUpInside];
-            [btnSwap setBackgroundImage:btnSwapImage forState:UIControlStateNormal];
-            //barButtonSwap = [[UIBarButtonItem alloc] initWithCustomView:btnSwap];
-            
-            // Accessibility Label For UI Automation.
-            barButtonSwap.accessibilityLabel = SWAP_BUTTON;
-            
-            UIImage* btnCancelImage = [UIImage imageNamed:@"img_cancel.png"];
-            UIButton *btnCancel = [[UIButton alloc] initWithFrame:CGRectMake(0,0,btnCancelImage.size.width,btnCancelImage.size.height)];
-            [btnCancel addTarget:self action:@selector(endEdit) forControlEvents:UIControlEventTouchUpInside];
-            [btnCancel setBackgroundImage:btnCancelImage forState:UIControlStateNormal];
-            barButtonCancel = [[UIBarButtonItem alloc] initWithCustomView:btnCancel];*/
             
             // Accessibility Label For UI Automation.
             barButtonCancel.accessibilityLabel = CANCEL_BUTTON;
@@ -752,14 +706,8 @@ UIImage *imageDetailDisclosure;
     }
     
     if(newEditMode == FROM_EDIT){
-        if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
-            [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y+20, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
-            [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y+20, fromTable.frame.size.width, fromTableHeight)];
-        }
-        else{
-            [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
-            [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y, fromTable.frame.size.width, fromTableHeight)];
-        }
+        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y+20, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
+        [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y+20, fromTable.frame.size.width, fromTableHeight)];
         [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
         [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_modeBG.png"]];
         [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, self.fromView.frame.size.width-TOFROMVIEW_HEIGHT_EDIT_MODE, fromView.frame.size.height)];
@@ -775,14 +723,8 @@ UIImage *imageDetailDisclosure;
         [self.view addSubview:fromTable];
     }
     else if (newEditMode == TO_EDIT){
-         if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
-             [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y+20, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
-             [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y+20, toTable.frame.size.width, fromTableHeight)];
-         }
-         else{
-             [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
-             [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y, toTable.frame.size.width, fromTableHeight)];
-         }
+        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y+20, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
+        [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y+20, toTable.frame.size.width, fromTableHeight)];
         [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
         [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_modeBG.png"]];
         [self.fromView setHidden:YES];

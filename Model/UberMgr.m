@@ -103,11 +103,9 @@
         NSString *arrayKey;
         if ([request.resourcePath isEqualToString:UBER_PRICE_URL]) {   // Price request response
             arrayKey = UBER_PRICES_KEY;
-            queueEntry.receivedPrices = true;
         }
         else if ([request.resourcePath isEqualToString:UBER_TIME_URL]) {   // Time request response
             arrayKey = UBER_TIMES_KEY;
-            queueEntry.receivedTimes = true;
         }
         
         NSArray *responseArray = [responseDictionary objectForKey:arrayKey];
@@ -121,7 +119,7 @@
                         // Create an itinerary for this queueEntry if there is not one already
                         queueEntry.itinerary = [NSEntityDescription insertNewObjectForEntityForName:@"ItineraryFromUber" inManagedObjectContext:self.managedObjectContext];
                     }
-                    // Search for an existing itinerary with the same product id
+                    // Search for an existing leg with the same product id
                     LegFromUber *matchingLeg = nil;
                     for (Leg* leg in queueEntry.itinerary.legs) {
                         LegFromUber* uLeg = (LegFromUber *) leg;
@@ -140,12 +138,14 @@
                     
                     // Now fill in matchingLeg with the data
                     if ([request.resourcePath isEqualToString:UBER_PRICE_URL]) {   // Price request response
+                        queueEntry.receivedPrices = true;
                         matchingLeg.uberPriceEstimate = NSStringFromNSObject([responseElement objectForKey:UBER_PRICE_ESTIMATE_KEY]);
                         matchingLeg.uberHighEstimate = NSNumberFromNSObject([responseElement objectForKey:UBER_HIGH_ESTIMATE_KEY]);
                         matchingLeg.uberLowEstimate = NSNumberFromNSObject([responseElement objectForKey:UBER_LOW_ESTIMATE_KEY]);
                         matchingLeg.uberSurgeMultiplier = NSNumberFromNSObject([responseElement objectForKey:UBER_SURGE_MULTIPLIER_KEY]);
                     }
                     else if ([request.resourcePath isEqualToString:UBER_TIME_URL]) {   // Time request response
+                        queueEntry.receivedTimes = true;
                         matchingLeg.uberTimeEstimateSeconds = NSNumberFromNSObject([responseElement objectForKey:UBER_TIME_ESTIMATE_KEY]);
                         
                         // Set startTime to be requestTime + time estimate
@@ -174,6 +174,11 @@
                     planReqParams.itinFromUberArray = [NSArray arrayWithObject:queueEntry.itinerary];
                 }
             }
+        }
+        else {
+            logError(@"UberMgr -> didLoadResponse",
+                     [NSString stringWithFormat:@"No response dictionary for Uber response: %@",
+                      response.bodyAsString]);
         }
     }
     @catch (NSException *exception) {

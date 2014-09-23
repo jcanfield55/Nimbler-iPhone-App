@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -165,7 +164,7 @@
                                 <constraint firstItem="96" firstAttribute="leading" secondItem="124" secondAttribute="leading" constant="26" id="yHs-7x-liv"/>
                             </constraints>
                         </view>
-                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="146" userLabel="Button - current location">
+                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="146" userLabel="Button - edit cancel">
                             <rect key="frame" x="234" y="8" width="60" height="38"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="38" id="Xs0-sE-iqs"/>
@@ -400,14 +399,12 @@
                 <constraint firstItem="68" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="DoD-IH-grX"/>
                 <constraint firstItem="77" firstAttribute="leading" secondItem="1" secondAttribute="leadingMargin" id="M1w-on-x2a"/>
                 <constraint firstItem="87" firstAttribute="top" secondItem="135" secondAttribute="bottom" constant="6" id="M70-px-urr" userLabel="Vertical Space - (6) - View Time Route - View Modes"/>
+                <constraint firstAttribute="trailingMargin" secondItem="77" secondAttribute="trailing" id="MI8-9s-2UN"/>
                 <constraint firstItem="87" firstAttribute="leading" secondItem="135" secondAttribute="leading" id="P9h-56-dxg"/>
                 <constraint firstItem="135" firstAttribute="leading" secondItem="77" secondAttribute="leading" id="Vv2-d2-gF3"/>
-                <constraint firstAttribute="trailing" secondItem="87" secondAttribute="trailing" constant="7" id="cXl-Gb-I1P"/>
                 <constraint firstAttribute="bottom" secondItem="68" secondAttribute="bottom" constant="-44" id="eFH-Ub-8GQ"/>
-                <constraint firstItem="135" firstAttribute="trailing" secondItem="77" secondAttribute="trailing" id="eTK-kS-9Zl"/>
                 <constraint firstItem="77" firstAttribute="trailing" secondItem="135" secondAttribute="trailing" id="fay-hJ-hj8"/>
-                <constraint firstItem="135" firstAttribute="centerX" secondItem="68" secondAttribute="centerX" id="iAf-Bw-d3v"/>
-                <constraint firstItem="135" firstAttribute="top" secondItem="1" secondAttribute="top" constant="124" id="uco-0G-he9" userLabel="Vertical Space - (124) - Modes top - View top"/>
+                <constraint firstItem="77" firstAttribute="trailing" secondItem="87" secondAttribute="trailing" id="ihQ-or-pWM"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
