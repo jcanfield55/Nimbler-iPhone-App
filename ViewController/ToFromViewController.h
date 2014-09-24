@@ -48,10 +48,9 @@ typedef enum {
 @property (strong, nonatomic) IBOutlet UILabel* lblTxtFrom;
 @property (strong, nonatomic) IBOutlet UILabel* lblTxtTo;
 
-@property (strong, nonatomic) IBOutlet UITableView* mainTable;  // grouped table for main page layout
-@property (strong, nonatomic) UITableView *fromTable;  // from table embedded in mainTable
+@property (strong, nonatomic) IBOutlet UITableView *fromTable;  // from table for edit mode of fromLocation
 @property (strong, nonatomic) ToFromTableViewController* fromTableVC; // View controller for fromTable
-@property (strong, nonatomic) UITableView *toTable;   // to table embedded in mainTable
+@property (strong, nonatomic) IBOutlet UITableView *toTable;   // to table for edit mode of toLocation
 @property (strong, nonatomic) ToFromTableViewController* toTableVC;  // View controller for toTable
 @property (strong, nonatomic) IBOutlet UIButton *routeButton;
 @property (strong, nonatomic) RKObjectManager *rkGeoMgr;  // RestKit Object Manager for geocoding

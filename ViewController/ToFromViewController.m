@@ -66,7 +66,6 @@
 
 @implementation ToFromViewController
 
-@synthesize mainTable;
 @synthesize toTable;
 @synthesize toTableVC;
 @synthesize fromTable;
@@ -126,52 +125,6 @@ UIImage *imageDetailDisclosure;
             [tripDateFormatter setTimeStyle:NSDateFormatterShortStyle];
             [tripDateFormatter setDateStyle:NSDateFormatterMediumStyle];
             
-            // Initialize the to & from tables
-            CGRect rect1;
-            rect1.origin.x = 0;
-            rect1.origin.y = 76;
-            rect1.size.width = TOFROM_TABLE_WIDTH ;
-            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                toTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE_4INCH;
-            }
-            else{
-                toTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE;
-            }
-            rect1.size.height = toTableHeight;
-            
-            toTable = [[UITableView alloc] initWithFrame:rect1 style:UITableViewStylePlain];
-            [toTable setRowHeight:TOFROM_ROW_HEIGHT];
-            toTableVC = [[ToFromTableViewController alloc] initWithTable:toTable isFrom:FALSE toFromVC:self locations:locations];
-            [toTable setDataSource:toTableVC];
-            [toTable setDelegate:toTableVC];
-            
-            // Accessibility Label For UI Automation.
-            self.mainTable.accessibilityLabel = TO_TABLE_VIEW;
-            
-            
-            CGRect rect2;
-            rect2.origin.x = 0;
-            rect2.origin.y = 76;
-            rect2.size.width = TOFROM_TABLE_WIDTH; 
-            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE_4INCH;
-            }
-            else{
-                fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE;
-            }
-            rect2.size.height = fromTableHeight;
-            
-            fromTable = [[UITableView alloc] initWithFrame:rect2 style:UITableViewStylePlain];
-            [fromTable setRowHeight:TOFROM_ROW_HEIGHT];
-           
-            fromTableVC = [[ToFromTableViewController alloc] initWithTable:fromTable isFrom:TRUE toFromVC:self locations: locations];
-            // Accessibility Label For UI Automation.
-            fromTable.accessibilityLabel = FROM_TABLE_VIEW;
-            
-            [fromTable setDataSource:fromTableVC];
-            
-            [fromTable setDelegate:fromTableVC];
-            
             // Accessibility Label For UI Automation.
             barButtonCancel.accessibilityLabel = CANCEL_BUTTON;
 
@@ -186,6 +139,20 @@ UIImage *imageDetailDisclosure;
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+    
+    // Initialize the to & from tables
+    
+    [toTable setRowHeight:TOFROM_ROW_HEIGHT];
+    toTableVC = [[ToFromTableViewController alloc] initWithTable:toTable isFrom:FALSE toFromVC:self locations:locations];
+    toTable.accessibilityLabel = TO_TABLE_VIEW;
+    [toTable setDataSource:toTableVC];
+    [toTable setDelegate:toTableVC];
+    
+    [fromTable setRowHeight:TOFROM_ROW_HEIGHT];
+    fromTableVC = [[ToFromTableViewController alloc] initWithTable:fromTable isFrom:TRUE toFromVC:self locations: locations];
+    fromTable.accessibilityLabel = FROM_TABLE_VIEW;
+    [fromTable setDataSource:fromTableVC];
+    [fromTable setDelegate:fromTableVC];
     
     if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
         self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -237,13 +204,6 @@ UIImage *imageDetailDisclosure;
     
     [self.txtToView setText:strToFormattedAddress];
     
-    // Accessibility Label For UI Automation.
-    self.mainTable.accessibilityLabel = TO_FROM_TABLE_VIEW;
-    
-    //Added To clear The Background Color of UitableView in Ios - 6
-    if([[[UIDevice currentDevice] systemVersion] intValue] >= 6){
-       [self.mainTable setBackgroundView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_background.png"]]];
-    }
     // Added To solve the crash related to ios 4.3
     if([self.navigationController.navigationBar respondsToSelector:@selector(setBackgroundImage:forBarMetrics:)]) {
         [self.navigationController.navigationBar setBackgroundImage:returnNavigationBarBackgroundImage() forBarMetrics:UIBarMetricsDefault];
@@ -287,7 +247,6 @@ UIImage *imageDetailDisclosure;
     // Accessibility Label For UI Automation.
     btnNow.accessibilityLabel = NOW_BUTTON;
     
-    [self.mainTable setBackgroundColor: [UIColor clearColor]]; 
     // Do any additional setup after loading the view from its nib.
     
     UIButton *btnAdvisories = [[UIButton alloc] initWithFrame:CGRectMake(0,0,ADVISORY_BUTTON_WIDTH,
@@ -311,12 +270,10 @@ UIImage *imageDetailDisclosure;
 
 - (void)viewDidUnload{
     [super viewDidUnload];
-    self.mainTable = nil;
     self.routeButton = nil;
 }
 
 - (void)dealloc{
-    self.mainTable = nil;
     self.routeButton = nil;
 }
 // Added To Handle Orientation issue in ios-6
@@ -395,7 +352,6 @@ UIImage *imageDetailDisclosure;
         }
     }
     //[self.navigationController setNavigationBarHidden:YES animated:NO];
-    [mainTable setFrame:CGRectMake(0, 0, 320, 319)];
     NSArray *itinerariesArray = [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray;
     NSArray *fromToStopId = [nc_AppDelegate sharedInstance].planStore.fromToStopID;
     if(itinerariesArray){
@@ -412,15 +368,7 @@ UIImage *imageDetailDisclosure;
     [nc_AppDelegate sharedInstance].isToFromView = YES;
     
     @try {
-        // Enforce height of main table
-        CGRect rect0 = [mainTable frame];
-         if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-             rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT_4INCH;
-         }
-        else{
-           rect0.size.height = TOFROM_MAIN_TABLE_HEIGHT; 
-        }
-        [mainTable setFrame:rect0];
+
         logEvent(FLURRY_TOFROMVC_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
         
         isContinueGetRealTimeData = NO;
@@ -433,7 +381,6 @@ UIImage *imageDetailDisclosure;
         
         [toTable reloadData];
         [fromTable reloadData];
-        [mainTable reloadData];
         
         [[nc_AppDelegate sharedInstance].window bringSubviewToFront:[nc_AppDelegate sharedInstance].twitterCount];
         [[nc_AppDelegate sharedInstance].twitterCount setHidden:NO];
@@ -509,7 +456,6 @@ UIImage *imageDetailDisclosure;
 {
     [toTable reloadData];
     [fromTable reloadData];
-    [mainTable reloadData];
 }
 
 // Callback for whenever a new location is created to update dynamic table height
@@ -706,37 +652,27 @@ UIImage *imageDetailDisclosure;
     }
     
     if(newEditMode == FROM_EDIT){
-        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y+20, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
-        [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y+20, fromTable.frame.size.width, fromTableHeight)];
-        [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
         [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_modeBG.png"]];
-        [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, self.fromView.frame.size.width-TOFROMVIEW_HEIGHT_EDIT_MODE, fromView.frame.size.height)];
-        [self.imgViewFromBG setFrame:CGRectMake(self.imgViewFromBG.frame.origin.x, self.imgViewFromBG.frame.origin.y, self.imgViewFromBG.frame.size.width-TOFROMVIEW_HEIGHT_EDIT_MODE, imgViewFromBG.frame.size.height)];
-        [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x-TXTFROMVIEW_X_POSITION_EDIT_MODE, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width+TXTFROMVIEW_WIDTH_EDIT_MODE, txtFromView.frame.size.height)];
+
         [self.toView setHidden:YES];
         [self.lblTxtFrom setHidden:YES];
-        [self.btnToFromEditCancel setHidden:NO];
         [self.btnSwap setHidden:YES];
         [self.btnCureentLoc setHidden:YES];
         [self.PicketSelectView setHidden:YES];
         [self.viewMode setHidden:YES];
-        [self.view addSubview:fromTable];
+        [self.btnToFromEditCancel setHidden:NO]; // Needs to come after other items are hidden
+        [self.fromTable setHidden:NO]; // Needs to come after other items are hidden
     }
     else if (newEditMode == TO_EDIT){
-        [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y+20, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
-        [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y+20, toTable.frame.size.width, fromTableHeight)];
-        [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height-TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
         [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_modeBG.png"]];
+        
         [self.fromView setHidden:YES];
-        [self.toView setFrame:CGRectMake(self.toView.frame.origin.x, self.toView.frame.origin.y-45, self.toView.frame.size.width-TOFROMVIEW_HEIGHT_EDIT_MODE, toView.frame.size.height)];
-        [self.imgViewToBG setFrame:CGRectMake(self.imgViewToBG.frame.origin.x, self.imgViewToBG.frame.origin.y, self.imgViewToBG.frame.size.width-TOFROMVIEW_HEIGHT_EDIT_MODE, imgViewToBG.frame.size.height)];
-        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x-TXTTOVIEW_X_POSITION_EDIT_MODE, self.txtToView.frame.origin.y, self.txtToView.frame.size.width-7, txtToView.frame.size.height)];
-        [self.btnSwap setHidden:YES];
         [self.lblTxtTo setHidden:YES];
-        [self.btnToFromEditCancel setHidden:NO];
+        [self.btnSwap setHidden:YES];
         [self.PicketSelectView setHidden:YES];
         [self.viewMode setHidden:YES];
-        [self.view addSubview:toTable];
+        [self.btnToFromEditCancel setHidden:NO];
+        [self.toTable setHidden:NO];
     }
     else if (newEditMode == NO_EDIT){
         [self setToFromViewOnNoEditMode];
@@ -920,7 +856,6 @@ UIImage *imageDetailDisclosure;
 
         if (editMode != FROM_EDIT) {
             // DE59 fix -- only update table if not in FROM_EDIT mode
-            [mainTable reloadData];
         }
         if (newCLMode) {
             [self reverseGeocodeCurrentLocationIfNeeded];
@@ -1229,106 +1164,6 @@ UIImage *imageDetailDisclosure;
     [self getPlan];
 }
 
-#pragma mark Edit events for ToFrom table
-// Method to adjust the mainTable for editing mode
-//
-/*- (void)setEditMode:(ToFromEditMode)newEditMode
-{
-    if (editMode == newEditMode) {
-        return;  // If no change in mode return immediately
-    }
-    if(newEditMode != NO_EDIT){
-      [locations fetchSearchableLocations];
-    }
-    NSString *edit_string;
-    if (newEditMode==NO_EDIT){
-        edit_string = @"NO_EDIT";
-    } else if (newEditMode==TO_EDIT) {
-        edit_string = @"TO_EDIT";        
-    } else if (newEditMode==FROM_EDIT) {
-        edit_string = @"FROM_EDIT";            
-    }
-    logEvent(FLURRY_TOFROMTABLE_NEW_EDIT_MODE,
-             FLURRY_EDIT_MODE_VALUE, edit_string,
-             nil, nil, nil, nil, nil, nil);
-    
-    //NSRange range;
-    //ToFromEditMode oldEditMode = editMode;
-    editMode = newEditMode;  
-    
-    // Adjust the heights of the to & from tables, as needed
-    [self setToFromHeightForTable:toTable Height:[self tableHeightFor:toTable]];
-    [self setToFromHeightForTable:fromTable Height:[self tableHeightFor:fromTable]];
-    
-    // Change NavBar buttons accordingly
-    if(editMode == NO_EDIT){
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"ADV" style:UIBarButtonItemStylePlain target:self.navigationController.parentViewController action:@selector(revealToggle:)];
-    } else{
-        self.navigationItem.leftBarButtonItem = barButtonCancel;
-    }
-    
-// Note:- Commented this code to solve the DE-305
-    
-//        if (newEditMode == TO_EDIT && oldEditMode == NO_EDIT) {
-//            // Delete second & third sections (moving To Table to top)
-//            range.location = 1;
-//            range.length = 2;
-//            [mainTable beginUpdates];
-//            [mainTable deleteSections:[NSIndexSet indexSetWithIndexesInRange:range] withRowAnimation:UITableViewRowAnimationAutomatic];  // Leave only the To section
-//            [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
-//            [mainTable endUpdates];
-//        } else if (newEditMode == NO_EDIT && oldEditMode == TO_EDIT) {
-//            range.location = 1;
-//            range.length = 2;
-//            [mainTable beginUpdates];
-//            [mainTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Delete the row for txtField
-//            [mainTable insertSections:[NSIndexSet indexSetWithIndexesInRange:range] withRowAnimation:UITableViewRowAnimationAutomatic];
-//            [mainTable endUpdates];
-//        } else if (newEditMode == FROM_EDIT && oldEditMode == NO_EDIT) {
-//            [mainTable beginUpdates];
-//            [mainTable deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-//            [mainTable deleteSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationAutomatic];
-//            [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
-//            [mainTable endUpdates];
-//        }
-//        else if (newEditMode == NO_EDIT && oldEditMode == FROM_EDIT) {
-//            [mainTable beginUpdates];
-//            [mainTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Delete row for txtField
-//            [mainTable insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-//            [mainTable insertSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationAutomatic];
-//            [mainTable endUpdates];
-//        }
-//        else if (newEditMode == FROM_EDIT && oldEditMode == TO_EDIT) {
-//            // Note: this code is not used yet -- it is here as a placeholder
-//            [mainTable beginUpdates];
-//            [mainTable deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-//            [mainTable insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-//            [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
-//            [mainTable endUpdates];
-//        }
-//        else if (newEditMode == TO_EDIT && oldEditMode == FROM_EDIT) {
-//            // Note: this code is not used yet -- it is here as a placeholder
-//            [mainTable beginUpdates];
-//            [mainTable deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-//            [mainTable insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-//            [mainTable insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone]; // Add a row for txtField
-//            [mainTable endUpdates];
-//        }  
-
-    // Reload all the data
-    [toTable reloadData];
-    [fromTable reloadData];
-    [mainTable reloadData];
-    
-    // If TO_EDIT or FROM_EDIT, make the txt field the first responder
-    if (newEditMode == TO_EDIT) {
-        [[toTableVC txtField] becomeFirstResponder];
-    } 
-    else if (newEditMode == FROM_EDIT) {
-        [[fromTableVC txtField] becomeFirstResponder];
-    }
-    return;
-}*/
 
 #pragma mark Reverse Geocoding
 
