@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment defaultVersion="1792" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ToFromTableViewController">
+            <connections>
+                <outlet property="btnToFromEditCancel" destination="146" id="163"/>
+                <outlet property="fromView" destination="123" id="125"/>
+                <outlet property="imgViewFromBG" destination="89" id="129"/>
+                <outlet property="imgViewMainToFromBG" destination="88" id="164"/>
+                <outlet property="mainToFromView" destination="77" id="132"/>
+                <outlet property="myTableView" destination="kGk-Z1-gk7" id="HgL-eb-dvH"/>
+                <outlet property="txtFromView" destination="98" id="118"/>
+                <outlet property="view" destination="1" id="3"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="1">
+            <rect key="frame" x="0.0" y="44" width="320" height="436"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="68">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                </imageView>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="kGk-Z1-gk7" userLabel="My Table View">
+                    <rect key="frame" x="80" y="109" width="160" height="218"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="9uz-If-VS4"/>
+                        <outlet property="delegate" destination="-1" id="0fd-Wd-whO"/>
+                    </connections>
+                </tableView>
+                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="77" userLabel="View-To and From">
+                    <rect key="frame" x="8" y="13" width="303" height="54"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" image="img_MainToFromBG.png" translatesAutoresizingMaskIntoConstraints="NO" id="88">
+                            <rect key="frame" x="0.0" y="0.0" width="303" height="54"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        </imageView>
+                        <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="123" userLabel="View - From">
+                            <rect key="frame" x="7" y="8" width="253" height="38"/>
+                            <subviews>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" image="img_ToFromEdit.png" translatesAutoresizingMaskIntoConstraints="NO" id="89">
+                                    <rect key="frame" x="0.0" y="0.0" width="253" height="38"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </imageView>
+                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" text="Current Location" translatesAutoresizingMaskIntoConstraints="NO" id="98">
+                                    <rect key="frame" x="44" y="4" width="189" height="30"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <color key="textColor" red="0.98431372549999996" green="0.4823529412" blue="0.43137254899999999" alpha="1" colorSpace="deviceRGB"/>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
+                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="-1" id="117"/>
+                                    </connections>
+                                </textView>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="98" secondAttribute="bottom" constant="4" id="3hD-oN-I0O"/>
+                                <constraint firstItem="98" firstAttribute="top" secondItem="123" secondAttribute="top" constant="4" id="DT3-ao-zyJ"/>
+                                <constraint firstItem="89" firstAttribute="top" secondItem="123" secondAttribute="top" id="EVQ-Ol-NKl"/>
+                                <constraint firstItem="89" firstAttribute="leading" secondItem="123" secondAttribute="leading" id="Fyv-o5-GCH"/>
+                                <constraint firstAttribute="trailing" secondItem="98" secondAttribute="trailing" constant="20" id="QyH-Cp-oJh"/>
+                                <constraint firstAttribute="trailing" secondItem="89" secondAttribute="trailing" id="VM5-uS-ZfO"/>
+                                <constraint firstItem="98" firstAttribute="leading" secondItem="123" secondAttribute="leading" constant="44" id="c02-xz-3i1"/>
+                                <constraint firstAttribute="bottom" secondItem="89" secondAttribute="bottom" id="jca-ab-T8U"/>
+                            </constraints>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="146" userLabel="Button - edit cancel">
+                            <rect key="frame" x="234" y="8" width="60" height="38"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="38" id="Xs0-sE-iqs"/>
+                                <constraint firstAttribute="width" constant="60" id="arL-Ja-lUz"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                            <state key="normal" backgroundImage="img_cancelUpdated.png">
+                                <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <state key="highlighted">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="editCancelClicked:" destination="-1" eventType="touchUpInside" id="147"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="146" firstAttribute="top" secondItem="77" secondAttribute="topMargin" id="482-Nt-XAS"/>
+                        <constraint firstItem="88" firstAttribute="leading" secondItem="77" secondAttribute="leading" id="76r-Du-YMp"/>
+                        <constraint firstAttribute="trailing" secondItem="88" secondAttribute="trailing" id="7pP-qv-SbY"/>
+                        <constraint firstItem="123" firstAttribute="top" secondItem="77" secondAttribute="topMargin" id="AdT-Rb-mUH"/>
+                        <constraint firstAttribute="bottom" secondItem="88" secondAttribute="bottom" id="EXb-HY-YNe"/>
+                        <constraint firstItem="146" firstAttribute="centerY" secondItem="123" secondAttribute="centerY" id="Lxf-GC-6qb"/>
+                        <constraint firstItem="146" firstAttribute="leading" secondItem="123" secondAttribute="trailing" constant="5" id="Sum-GN-jtY"/>
+                        <constraint firstItem="88" firstAttribute="top" secondItem="77" secondAttribute="top" id="ZHo-cm-czA"/>
+                        <constraint firstItem="123" firstAttribute="leading" secondItem="77" secondAttribute="leading" constant="7" id="ZgC-rD-cIa"/>
+                        <constraint firstAttribute="height" constant="54" id="sKN-yR-Ncp"/>
+                        <constraint firstAttribute="trailing" secondItem="146" secondAttribute="trailing" constant="9" id="wNk-Im-iFL"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="kGk-Z1-gk7" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="0Zl-nr-wem"/>
+                <constraint firstItem="77" firstAttribute="top" secondItem="1" secondAttribute="top" constant="13" id="5TJ-Eu-jnC" userLabel="Vertical Space - (13) - View ToFrom - View"/>
+                <constraint firstItem="68" firstAttribute="top" secondItem="1" secondAttribute="top" id="6jT-94-gB9"/>
+                <constraint firstAttribute="trailing" secondItem="68" secondAttribute="trailing" id="Ajh-x4-LoW"/>
+                <constraint firstItem="68" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="DoD-IH-grX"/>
+                <constraint firstItem="77" firstAttribute="leading" secondItem="1" secondAttribute="leadingMargin" id="M1w-on-x2a"/>
+                <constraint firstAttribute="trailingMargin" secondItem="77" secondAttribute="trailing" id="MI8-9s-2UN"/>
+                <constraint firstAttribute="trailing" secondItem="kGk-Z1-gk7" secondAttribute="trailing" id="QKz-Zd-egg"/>
+                <constraint firstAttribute="bottom" secondItem="68" secondAttribute="bottom" constant="-44" id="eFH-Ub-8GQ"/>
+                <constraint firstAttribute="bottom" secondItem="kGk-Z1-gk7" secondAttribute="bottom" id="oax-r3-HAd"/>
+                <constraint firstItem="kGk-Z1-gk7" firstAttribute="top" secondItem="77" secondAttribute="bottom" constant="6" id="sTC-mp-SsC"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
+            <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="img_MainToFromBG.png" width="606" height="206"/>
+        <image name="img_ToFromEdit.png" width="506" height="76"/>
+        <image name="img_cancelUpdated.png" width="120" height="76"/>
+    </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>

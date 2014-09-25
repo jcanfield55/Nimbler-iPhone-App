@@ -27,9 +27,19 @@
 @property (strong, nonatomic) RKObjectManager *rkGeoMgr;  // RestKit Object Manager for geocoding
 @property (strong, nonatomic) Locations *locations;  // Wrapper for collection of all Locations
 @property (nonatomic) BOOL isFrom;   // True if this is the fromTable, false if it is the toTable
-@property (strong, nonatomic) UITableView* myTableView;  // Table View we are controlling
-@property (strong, nonatomic) UITextField* txtField;  
+@property (strong, nonatomic) IBOutlet UITableView* myTableView;  // Table View we are controlling
+@property (strong, nonatomic) UITextField* txtField;
 @property (strong, nonatomic) SupportedRegion* supportedRegion; // Geographic area supported by this app
+
+// Items copied over from ToFromViewController.xib
+@property (strong, nonatomic) IBOutlet UIView* fromView;
+@property (strong, nonatomic) IBOutlet UIImageView* imgViewFromBG;
+@property (strong, nonatomic) IBOutlet UIImageView* imgViewMainToFromBG;
+@property (strong, nonatomic) IBOutlet UIView* mainToFromView;
+@property (strong, nonatomic) IBOutlet UITextView* txtFromView;
+
+@property (strong, nonatomic) IBOutlet UIButton* btnToFromEditCancel;
+
 
 @property (strong, nonatomic) Stations *stations;
 @property (nonatomic) BOOL isDeleteMode;
@@ -40,7 +50,7 @@
 @property (strong, nonatomic) UITextView *cellTextView;
 
 // Textlabel that is separate from myTableView where text is entered
-- (id)initWithTable:(UITableView *)t isFrom:(BOOL)isF toFromVC:(ToFromViewController *)tfVC locations:(Locations *)l;
+- (void)setupIsFrom:(BOOL)isF toFromVC:(ToFromViewController *)tfVC locations:(Locations *)l;
 - (IBAction)toFromTyping:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)textSubmitted:(id)sender forEvent:(UIEvent *)event;
 

@@ -250,6 +250,10 @@
 		525EC1C1170006B6009ACE5A /* MutableBoolean.m in Sources */ = {isa = PBXBuildFile; fileRef = 525EC1C0170006B6009ACE5A /* MutableBoolean.m */; };
 		525EC1CB17025E35009ACE5A /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */; };
 		527E174A151EB9CD00CDBC23 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 527E1749151EB9CD00CDBC23 /* QuartzCore.framework */; };
+		5286391419D3C843001232CA /* ToFromTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5286391319D3C842001232CA /* ToFromTableViewController.xib */; };
+		5286391519D3C843001232CA /* ToFromTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5286391319D3C842001232CA /* ToFromTableViewController.xib */; };
+		5286391619D3C843001232CA /* ToFromTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5286391319D3C842001232CA /* ToFromTableViewController.xib */; };
+		5286391719D3C843001232CA /* ToFromTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5286391319D3C842001232CA /* ToFromTableViewController.xib */; };
 		528C664E16D7011E005B7309 /* RouteExcludeSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 528C664D16D7011E005B7309 /* RouteExcludeSetting.m */; };
 		52958AB116CED86900CC46C7 /* GtfsTempItinerary.m in Sources */ = {isa = PBXBuildFile; fileRef = 52958AB016CED86900CC46C7 /* GtfsTempItinerary.m */; };
 		52A9BE9516B4B41500564D0D /* RealTimeServerStubTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */; };
@@ -1841,6 +1845,7 @@
 		525EC1BF170006B6009ACE5A /* MutableBoolean.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MutableBoolean.h; sourceTree = "<group>"; };
 		525EC1C0170006B6009ACE5A /* MutableBoolean.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MutableBoolean.m; sourceTree = "<group>"; };
 		527E1749151EB9CD00CDBC23 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		5286391319D3C842001232CA /* ToFromTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ToFromTableViewController.xib; sourceTree = "<group>"; };
 		528C664C16D7011E005B7309 /* RouteExcludeSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteExcludeSetting.h; sourceTree = "<group>"; };
 		528C664D16D7011E005B7309 /* RouteExcludeSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RouteExcludeSetting.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		52958AAF16CED86900CC46C7 /* GtfsTempItinerary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GtfsTempItinerary.h; path = Model/GtfsTempItinerary.h; sourceTree = SOURCE_ROOT; };
@@ -2313,6 +2318,7 @@
 				8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */,
 				520FB119162603090083F143 /* ToFromTableViewController.h */,
 				520FB11A162603090083F143 /* ToFromTableViewController.m */,
+				5286391319D3C842001232CA /* ToFromTableViewController.xib */,
 				520FB11B162603090083F143 /* ToFromViewController.h */,
 				520FB11C162603090083F143 /* ToFromViewController.m */,
 				520FB11D162603090083F143 /* ToFromViewController.xib */,
@@ -3430,6 +3436,7 @@
 				2E1F619417AB8604003B7EAF /* currenticon.png in Resources */,
 				2E1F619817AB8604003B7EAF /* currenticonlive.png in Resources */,
 				8DE4B23717AF77EB00105A41 /* BikeStepsViewController.xib in Resources */,
+				5286391419D3C843001232CA /* ToFromTableViewController.xib in Resources */,
 				524EAEA91933EF8C00EE00B4 /* img_switcherarrows2@2x.png in Resources */,
 				8D04A9C517B1046D007DB944 /* FeedBackFormPopUp_568h.xib in Resources */,
 				8D04A9C617B1046D007DB944 /* FeedBackFormPopUp.xib in Resources */,
@@ -3719,6 +3726,7 @@
 				2E1F619517AB8604003B7EAF /* currenticon.png in Resources */,
 				2E1F619917AB8604003B7EAF /* currenticonlive.png in Resources */,
 				8DE4B23817AF77EB00105A41 /* BikeStepsViewController.xib in Resources */,
+				5286391519D3C843001232CA /* ToFromTableViewController.xib in Resources */,
 				8D04A9C717B10838007DB944 /* FeedBackFormPopUp.xib in Resources */,
 				8D04A9CA17B1083E007DB944 /* FeedBackFormPopUp_568h.xib in Resources */,
 				8D04A9D017BE4FD9007DB944 /* BikeStepsViewController_568h.xib in Resources */,
@@ -3811,6 +3819,7 @@
 				8DAA28F1178BDFEF00C3FA30 /* img_legTrain.png in Resources */,
 				8DAA28F2178BDFEF00C3FA30 /* img_legTrain@2x.png in Resources */,
 				8DAA28F3178BDFEF00C3FA30 /* img_legTrainSelect.png in Resources */,
+				5286391719D3C843001232CA /* ToFromTableViewController.xib in Resources */,
 				8DAA28F4178BDFEF00C3FA30 /* img_legTrainSelect@2x.png in Resources */,
 				8DAA28F5178BDFEF00C3FA30 /* img_legWalk.png in Resources */,
 				8DAA28F6178BDFEF00C3FA30 /* img_legWalk@2x.png in Resources */,
@@ -4096,6 +4105,7 @@
 				8DE18BE81725415800AA8112 /* img_mail@2x.png in Resources */,
 				8DE18BE91725415800AA8112 /* img_mapDot.png in Resources */,
 				8DE18BEA1725415800AA8112 /* img_mapDot@2x.png in Resources */,
+				5286391619D3C843001232CA /* ToFromTableViewController.xib in Resources */,
 				525293F319C01FA40059F7C7 /* img_carActiveMode.png in Resources */,
 				8DE18BEB1725415800AA8112 /* img_navigationbar.png in Resources */,
 				8DE18BEC1725415800AA8112 /* img_navigationbar@2x.png in Resources */,

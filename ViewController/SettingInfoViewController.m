@@ -502,7 +502,7 @@ UIImage *imageDetailDisclosure;
                         }
                     }
                 }
-                strDetailTextLabel = [NSString stringWithString:strMutableTextLabel];
+                strDetailTextLabel = [NSMutableString stringWithString:strMutableTextLabel];
             }
         }
     }

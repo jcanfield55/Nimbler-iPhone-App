@@ -11,8 +11,6 @@
                 <outlet property="btnCureentLoc" destination="165" id="166"/>
                 <outlet property="btnPicker" destination="101" id="133"/>
                 <outlet property="btnSwap" destination="80" id="128"/>
-                <outlet property="btnToFromEditCancel" destination="146" id="163"/>
-                <outlet property="fromTable" destination="FNQ-0k-WZX" id="vk7-ku-YmA"/>
                 <outlet property="fromView" destination="123" id="125"/>
                 <outlet property="imgViewFromBG" destination="89" id="129"/>
                 <outlet property="imgViewMainToFromBG" destination="88" id="164"/>
@@ -21,7 +19,6 @@
                 <outlet property="lblTxtFrom" destination="91" id="149"/>
                 <outlet property="lblTxtTo" destination="92" id="150"/>
                 <outlet property="mainToFromView" destination="77" id="132"/>
-                <outlet property="toTable" destination="kGk-Z1-gk7" id="ygM-TJ-UVj"/>
                 <outlet property="toView" destination="124" id="126"/>
                 <outlet property="txtFromView" destination="98" id="118"/>
                 <outlet property="txtToView" destination="96" id="120"/>
@@ -37,14 +34,6 @@
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="68">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                 </imageView>
-                <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="FNQ-0k-WZX" userLabel="From Table View">
-                    <rect key="frame" x="84" y="204" width="152" height="29"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                </tableView>
-                <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="kGk-Z1-gk7" userLabel="To Table View">
-                    <rect key="frame" x="80" y="109" width="160" height="218"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                </tableView>
                 <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="77" userLabel="View-To and From">
                     <rect key="frame" x="8" y="13" width="303" height="105"/>
                     <subviews>
@@ -149,7 +138,7 @@
                                         <outlet property="delegate" destination="-1" id="119"/>
                                     </connections>
                                 </textView>
-                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="To:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="92">
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="To:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="92">
                                     <rect key="frame" x="7" y="8" width="26" height="20"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="26" id="5Dc-Lh-pYp"/>
@@ -174,46 +163,22 @@
                                 <constraint firstItem="96" firstAttribute="leading" secondItem="124" secondAttribute="leading" constant="26" id="yHs-7x-liv"/>
                             </constraints>
                         </view>
-                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="146" userLabel="Button - edit cancel">
-                            <rect key="frame" x="234" y="8" width="60" height="38"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="38" id="Xs0-sE-iqs"/>
-                                <constraint firstAttribute="width" constant="60" id="arL-Ja-lUz"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                            <state key="normal" backgroundImage="img_cancelUpdated.png">
-                                <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <state key="highlighted">
-                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="editCancelClicked:" destination="-1" eventType="touchUpInside" id="147"/>
-                            </connections>
-                        </button>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="124" firstAttribute="leading" secondItem="123" secondAttribute="leading" id="1XK-u8-0aS"/>
                         <constraint firstItem="123" firstAttribute="trailing" secondItem="124" secondAttribute="trailing" id="2OP-hP-XVy"/>
-                        <constraint firstItem="146" firstAttribute="top" secondItem="77" secondAttribute="topMargin" id="482-Nt-XAS"/>
                         <constraint firstItem="88" firstAttribute="leading" secondItem="77" secondAttribute="leading" id="76r-Du-YMp"/>
                         <constraint firstAttribute="trailing" secondItem="88" secondAttribute="trailing" id="7pP-qv-SbY"/>
-                        <constraint firstItem="146" firstAttribute="leading" secondItem="124" secondAttribute="trailing" constant="5" id="8Jt-JK-vO6"/>
                         <constraint firstItem="123" firstAttribute="top" secondItem="77" secondAttribute="topMargin" id="AdT-Rb-mUH"/>
                         <constraint firstAttribute="bottom" secondItem="88" secondAttribute="bottom" id="EXb-HY-YNe"/>
                         <constraint firstAttribute="bottom" secondItem="124" secondAttribute="bottom" constant="12" id="JkU-gk-q6u"/>
-                        <constraint firstItem="146" firstAttribute="centerY" secondItem="123" secondAttribute="centerY" id="Lxf-GC-6qb"/>
                         <constraint firstItem="124" firstAttribute="top" secondItem="123" secondAttribute="bottom" constant="7" id="MUE-kL-5UB"/>
                         <constraint firstItem="80" firstAttribute="top" secondItem="77" secondAttribute="top" constant="35" id="Ruc-FD-fc9"/>
-                        <constraint firstItem="146" firstAttribute="leading" secondItem="123" secondAttribute="trailing" constant="5" id="Sum-GN-jtY"/>
-                        <constraint firstItem="124" firstAttribute="centerY" secondItem="146" secondAttribute="centerY" id="VPb-Yj-512"/>
                         <constraint firstItem="88" firstAttribute="top" secondItem="77" secondAttribute="top" id="ZHo-cm-czA"/>
                         <constraint firstItem="123" firstAttribute="leading" secondItem="77" secondAttribute="leading" constant="7" id="ZgC-rD-cIa"/>
                         <constraint firstItem="80" firstAttribute="leading" secondItem="124" secondAttribute="trailing" id="iZA-nh-Pcu"/>
                         <constraint firstAttribute="height" constant="105" id="sKN-yR-Ncp"/>
-                        <constraint firstAttribute="trailing" secondItem="146" secondAttribute="trailing" constant="9" id="wNk-Im-iFL"/>
                         <constraint firstAttribute="trailing" secondItem="80" secondAttribute="trailing" constant="6" id="zQc-QS-qkz"/>
                     </constraints>
                 </view>
@@ -405,27 +370,19 @@
             </subviews>
             <color key="backgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
-                <constraint firstItem="kGk-Z1-gk7" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="0Zl-nr-wem"/>
-                <constraint firstAttribute="trailing" secondItem="FNQ-0k-WZX" secondAttribute="trailing" id="4Po-zL-vEZ"/>
                 <constraint firstItem="77" firstAttribute="top" secondItem="1" secondAttribute="top" constant="13" id="5TJ-Eu-jnC" userLabel="Vertical Space - (13) - View ToFrom - View"/>
                 <constraint firstItem="68" firstAttribute="top" secondItem="1" secondAttribute="top" id="6jT-94-gB9"/>
                 <constraint firstAttribute="trailing" secondItem="68" secondAttribute="trailing" id="Ajh-x4-LoW"/>
                 <constraint firstItem="135" firstAttribute="top" secondItem="77" secondAttribute="bottom" constant="6" id="Amq-h8-vhC"/>
                 <constraint firstItem="68" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="DoD-IH-grX"/>
-                <constraint firstItem="FNQ-0k-WZX" firstAttribute="top" secondItem="77" secondAttribute="bottom" constant="6" id="Dvg-DQ-kg6"/>
-                <constraint firstItem="FNQ-0k-WZX" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="IT0-4n-qXT"/>
                 <constraint firstItem="77" firstAttribute="leading" secondItem="1" secondAttribute="leadingMargin" id="M1w-on-x2a"/>
                 <constraint firstItem="87" firstAttribute="top" secondItem="135" secondAttribute="bottom" constant="6" id="M70-px-urr" userLabel="Vertical Space - (6) - View Time Route - View Modes"/>
                 <constraint firstAttribute="trailingMargin" secondItem="77" secondAttribute="trailing" id="MI8-9s-2UN"/>
                 <constraint firstItem="87" firstAttribute="leading" secondItem="135" secondAttribute="leading" id="P9h-56-dxg"/>
-                <constraint firstAttribute="trailing" secondItem="kGk-Z1-gk7" secondAttribute="trailing" id="QKz-Zd-egg"/>
                 <constraint firstItem="135" firstAttribute="leading" secondItem="77" secondAttribute="leading" id="Vv2-d2-gF3"/>
                 <constraint firstAttribute="bottom" secondItem="68" secondAttribute="bottom" constant="-44" id="eFH-Ub-8GQ"/>
                 <constraint firstItem="77" firstAttribute="trailing" secondItem="135" secondAttribute="trailing" id="fay-hJ-hj8"/>
-                <constraint firstAttribute="bottom" secondItem="FNQ-0k-WZX" secondAttribute="bottom" id="fnr-WK-ZF5"/>
                 <constraint firstItem="77" firstAttribute="trailing" secondItem="87" secondAttribute="trailing" id="ihQ-or-pWM"/>
-                <constraint firstAttribute="bottom" secondItem="kGk-Z1-gk7" secondAttribute="bottom" id="oax-r3-HAd"/>
-                <constraint firstItem="kGk-Z1-gk7" firstAttribute="top" secondItem="77" secondAttribute="bottom" constant="6" id="sTC-mp-SsC"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
@@ -442,7 +399,6 @@
         <image name="img_ToFromEdit.png" width="506" height="76"/>
         <image name="img_bikeActiveMode.png" width="86" height="76"/>
         <image name="img_bikeMode.png" width="86" height="76"/>
-        <image name="img_cancelUpdated.png" width="120" height="76"/>
         <image name="img_carActiveMode.png" width="86" height="76"/>
         <image name="img_carMode.png" width="86" height="76"/>
         <image name="img_departBG.png" width="606" height="116"/>

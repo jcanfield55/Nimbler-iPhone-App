@@ -65,44 +65,55 @@ NSString *strAirBart2 = @"airbart ";
 NSString *strStreet1 = @" street";
 NSString *strStreet2 = @"street ";
 
-- (id)initWithTable:(UITableView *)t isFrom:(BOOL)isF toFromVC:(ToFromViewController *)tfVC locations:(Locations *)l;
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithNibName:nil bundle:nil];
-    if (self) {
-        isFrom = isF;
-        toFromVC = tfVC;
-        locations = l;
-        myTableView = t;
-        [self setSupportedRegion:[tfVC supportedRegion]]; // Get supportedRegion from parent ToFromViewController
-        
-        isGeocodingOutstanding = FALSE;
-        
-        // Create the textField for the first row of the tableView
-        txtField=[[UITextField alloc]initWithFrame:CGRectMake(TOFROM_TEXT_FIELD_XPOS,TOFROM_TEXT_FIELD_YPOS,myTableView.frame.size.width-TOFROM_TEXT_FIELD_INDENT,[myTableView rowHeight]-TOFROM_INSERT_INTO_CELL_MARGIN)];
-        [txtField setPlaceholder:@"Enter new address"];
-        [txtField setClearButtonMode:UITextFieldViewModeAlways]; // Add a clear button for text field
-        [txtField setFont:[UIFont MEDIUM_FONT]];
-        [txtField setReturnKeyType:UIReturnKeyDone];  // DE275 fix
-        [txtField setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
-        txtField.delegate = self;
-        [txtField addTarget:self action:@selector(toFromTyping:forEvent:) forControlEvents:UIControlEventEditingChanged];
-        [txtField addTarget:self action:@selector(textSubmitted:forEvent:) forControlEvents:(UIControlEventEditingDidEndOnExit)];
-        [txtField setBackgroundColor:[UIColor whiteColor]];
-        
-        // Accessibility Label For UI Automation.
-        txtField.accessibilityLabel = TEXTFIELD_TOFROMTABLEVIEW;
-        
-        imageDetailDisclosure = [UIImage imageNamed:@"img_locListArrow.png"];
-        
-        btnEdit = [UIButton buttonWithType:UIButtonTypeCustom];
-        [btnEdit setFrame:CGRectMake(275,8,40,10)];
-        [btnEdit setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-        btnEdit.titleLabel.font = [UIFont systemFontOfSize:14];
-        [btnEdit setTitle:@"Edit" forState:UIControlStateNormal];
-        [btnEdit setTitle:@"Done" forState:UIControlStateSelected];
-        [btnEdit addTarget:self action:@selector(editButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    @try {
+        if (self) {
+            
+        }
+    }
+    @catch (NSException *exception) {
+        logException(@"ToFromTableViewController->initWithNibName", @"", exception);
     }
     return self;
+}
+
+
+- (void) setupIsFrom:(BOOL)isF toFromVC:(ToFromViewController *)tfVC locations:(Locations *)l;
+{
+    isFrom = isF;
+    toFromVC = tfVC;
+    locations = l;
+    [self setSupportedRegion:[tfVC supportedRegion]]; // Get supportedRegion from parent ToFromViewController
+    
+    isGeocodingOutstanding = FALSE;
+    
+    // Create the textField for the first row of the tableView
+    txtField=[[UITextField alloc]initWithFrame:CGRectMake(TOFROM_TEXT_FIELD_XPOS,TOFROM_TEXT_FIELD_YPOS,myTableView.frame.size.width-TOFROM_TEXT_FIELD_INDENT,[myTableView rowHeight]-TOFROM_INSERT_INTO_CELL_MARGIN)];
+    [txtField setPlaceholder:@"Enter new address"];
+    [txtField setClearButtonMode:UITextFieldViewModeAlways]; // Add a clear button for text field
+    [txtField setFont:[UIFont MEDIUM_FONT]];
+    [txtField setReturnKeyType:UIReturnKeyDone];  // DE275 fix
+    [txtField setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
+    txtField.delegate = self;
+    [txtField addTarget:self action:@selector(toFromTyping:forEvent:) forControlEvents:UIControlEventEditingChanged];
+    [txtField addTarget:self action:@selector(textSubmitted:forEvent:) forControlEvents:(UIControlEventEditingDidEndOnExit)];
+    [txtField setBackgroundColor:[UIColor whiteColor]];
+    
+    // Accessibility Label For UI Automation.
+    txtField.accessibilityLabel = TEXTFIELD_TOFROMTABLEVIEW;
+    
+    imageDetailDisclosure = [UIImage imageNamed:@"img_locListArrow.png"];
+    
+    btnEdit = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btnEdit setFrame:CGRectMake(275,8,40,10)];
+    [btnEdit setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    btnEdit.titleLabel.font = [UIFont systemFontOfSize:14];
+    [btnEdit setTitle:@"Edit" forState:UIControlStateNormal];
+    [btnEdit setTitle:@"Done" forState:UIControlStateSelected];
+    [btnEdit addTarget:self action:@selector(editButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)setRkGeoMgr:(RKObjectManager *)rkG
@@ -114,10 +125,12 @@ NSString *strStreet2 = @"street ";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
-        self.edgesForExtendedLayout = UIRectEdgeNone;
-    }
-	// Do any additional setup after loading the view.
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    
+    [myTableView setRowHeight:TOFROM_ROW_HEIGHT];
+    myTableView.accessibilityLabel = TO_TABLE_VIEW;
+    [myTableView setDataSource:self];
+    [myTableView setDelegate:self];
 }
 
 // Method called when currentLocation is first created and automatically picked as the fromLocation
@@ -371,7 +384,7 @@ NSString *strStreet2 = @"street ";
             // If user tapped the selected location, then go into Edit Mode if not there already
             if ([toFromVC editMode] == NO_EDIT && loc == selectedLocation) {
                 locations.isLocationSelected = false;
-                [toFromVC setEditMode:NO_EDIT];
+                [self exitEditMode];
             }
             else {
                 // Have toFromVC end the edit mode (DE96 fix)
@@ -379,7 +392,7 @@ NSString *strStreet2 = @"street ";
                 NSString* isFromString = (isFrom ? @"fromTable" : @"toTable");
                 
                 if ([[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) { // If a list (like 'Caltrain Station List')
-                    [toFromVC setEditMode:NO_EDIT];
+                    [self exitEditMode];
                     logEvent(FLURRY_TOFROMTABLE_CALTRAIN_LIST,
                              FLURRY_TOFROM_WHICH_TABLE, isFromString,
                              FLURRY_SELECTED_ROW_NUMBER, [NSString stringWithFormat:@"%d",[indexPath row]],
@@ -403,7 +416,7 @@ NSString *strStreet2 = @"street ";
                                    isGeocodeResults:NO];
                 }
                 else {    // if a normal location
-                    [toFromVC setEditMode:NO_EDIT]; 
+                    [self exitEditMode];
                     NSString* selectedAddressParam = (isFrom ? FLURRY_FROM_SELECTED_ADDRESS : FLURRY_TO_SELECTED_ADDRESS);
                     logEvent(FLURRY_TOFROMTABLE_SELECT_ROW,
                              FLURRY_TOFROM_WHICH_TABLE, isFromString,
@@ -418,6 +431,11 @@ NSString *strStreet2 = @"street ";
     saveContext(managedObjectContext);
 }
 
+// Internal routine for completing edit mode and returning to ToFromViewController
+- (void)exitEditMode {
+    [toFromVC setEditMode:NO_EDIT];
+    [[self navigationController] popViewControllerAnimated:NO];
+}
 
 // Utility function to update the selected location to be loc
 // (in locations object, in toFromVC, and in the table selected cell)
@@ -594,14 +612,6 @@ NSString *strStreet2 = @"street ";
 
 - (void) renameAddress:(UITextView *)textView Row:(int)row{
     if(toFromVC.editMode == FROM_EDIT){
-        CGFloat fromTableHeight;
-        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-            fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE_4INCH;
-        }
-        else{
-            fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE;
-        }
-        [toFromVC.fromTable setFrame:CGRectMake(toFromVC.fromTable.frame.origin.x, toFromVC.fromTable.frame.origin.y, toFromVC.fromTable.frame.size.width, fromTableHeight)];
         NSMutableArray *sortedLocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingFromLocations];
         Location *location = [sortedLocations objectAtIndex:row];
         NSString *textViewText = textView.text;
@@ -624,14 +634,6 @@ NSString *strStreet2 = @"street ";
         saveContext(toFromVC.managedObjectContext);
     }
     else if(toFromVC.editMode == TO_EDIT){
-        CGFloat fromTableHeight;
-        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-            fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE_4INCH;
-        }
-        else{
-            fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE;
-        }
-        [toFromVC.toTable setFrame:CGRectMake(toFromVC.toTable.frame.origin.x, toFromVC.toTable.frame.origin.y, toFromVC.toTable.frame.size.width, fromTableHeight)];
         NSMutableArray *sortedLocations = [[NSMutableArray alloc] initWithArray:locations.sortedMatchingToLocations];
         Location *location = [sortedLocations objectAtIndex:row];
         NSString *textViewText = textView.text;
@@ -878,7 +880,7 @@ NSString *strStreet2 = @"street ";
         NIMLOG_EVENT1(@"Skipping duplicate toFromTextSubmitted");
         return;  // if using the same rawAddress and less than 5 seconds between, treat as duplicate
     }
-       [toFromVC setEditMode:NO_EDIT];  // Move back to NO_EDIT mode on the ToFrom view controller
+    [self exitEditMode];  // Move back to NO_EDIT mode on the ToFrom view controller
 
     if ([rawAddress length] > 0) {
         // Check if we already have a geocoded location that has used this rawAddress before
@@ -1014,7 +1016,6 @@ NSString *strStreet2 = @"street ";
         }
         
         
-      //  [toFromVC setEditMode:NO_EDIT];
         [myTableView reloadData];
         return ;
     }
@@ -1033,7 +1034,6 @@ NSString *strStreet2 = @"street ";
     
     // Save db context with the new location object
     saveContext(managedObjectContext);
-    //[toFromVC setEditMode:NO_EDIT];
     // Mark and update the tableview and ToFromViewController
     [self markAndUpdateSelectedLocation:location];
 }

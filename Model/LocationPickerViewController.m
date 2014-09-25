@@ -227,11 +227,9 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 498;
         
         // return to the appropriate edit mode so users can continue editing
         if (isFrom) {
-           // [[toFromTableVC toFromVC] setEditMode:FROM_EDIT];
             [[toFromTableVC toFromVC].txtFromView becomeFirstResponder];
         }
         else {
-           // [[toFromTableVC toFromVC] setEditMode:TO_EDIT];
             [[toFromTableVC toFromVC].txtToView becomeFirstResponder];
         }
     }

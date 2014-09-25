@@ -55,7 +55,6 @@
 - (void)startActivityIndicator;
 - (CGFloat)tableHeightFor:(UITableView *)table;  // Returns the height constant suitable for the particular table
 - (CGFloat)toFromTableHeightByNumberOfRowsForMaxHeight:(CGFloat)maxHeight  isFrom:(BOOL)isFrom;
-- (void)newLocationVisible;  // Callback for whenever a new location is made visible to update dynamic table height
 -(void)segmentChange;
 - (void)selectCurrentDate;
 - (void)selectDate;
@@ -66,9 +65,7 @@
 
 @implementation ToFromViewController
 
-@synthesize toTable;
 @synthesize toTableVC;
-@synthesize fromTable;
 @synthesize fromTableVC;
 @synthesize routeButton;
 @synthesize rkGeoMgr;
@@ -96,7 +93,7 @@
 @synthesize plan;
 @synthesize stations;
 @synthesize planRequestParameters;
-@synthesize mainToFromView,PicketSelectView,fromView,toView,txtFromView,txtToView,btnSwap,btnCureentLoc,imgViewMainToFromBG,imgViewFromBG,imgViewToBG,btnPicker,lblTxtToFromPlaceholder,lblTxtDepartArrive,viewMode,btnToFromEditCancel,lblTxtFrom,lblTxtTo;
+@synthesize mainToFromView,PicketSelectView,fromView,toView,txtFromView,txtToView,btnSwap,btnCureentLoc,imgViewMainToFromBG,imgViewFromBG,imgViewToBG,btnPicker,lblTxtToFromPlaceholder,lblTxtDepartArrive,viewMode,lblTxtFrom,lblTxtTo;
 @synthesize managedObjectContext;
 
 
@@ -142,17 +139,11 @@ UIImage *imageDetailDisclosure;
     
     // Initialize the to & from tables
     
-    [toTable setRowHeight:TOFROM_ROW_HEIGHT];
-    toTableVC = [[ToFromTableViewController alloc] initWithTable:toTable isFrom:FALSE toFromVC:self locations:locations];
-    toTable.accessibilityLabel = TO_TABLE_VIEW;
-    [toTable setDataSource:toTableVC];
-    [toTable setDelegate:toTableVC];
+    toTableVC = [[ToFromTableViewController alloc] initWithNibName:@"ToFromTableViewController.xib" bundle:nil];
+    [toTableVC setupIsFrom:FALSE toFromVC:self locations:locations];
     
-    [fromTable setRowHeight:TOFROM_ROW_HEIGHT];
-    fromTableVC = [[ToFromTableViewController alloc] initWithTable:fromTable isFrom:TRUE toFromVC:self locations: locations];
-    fromTable.accessibilityLabel = FROM_TABLE_VIEW;
-    [fromTable setDataSource:fromTableVC];
-    [fromTable setDelegate:fromTableVC];
+    fromTableVC = [[ToFromTableViewController alloc] initWithNibName:@"ToFromTableViewController.xib" bundle:nil];
+    [fromTableVC setupIsFrom:TRUE toFromVC:self locations: locations];
     
     if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
         self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -379,9 +370,6 @@ UIImage *imageDetailDisclosure;
         [self setFBParameterForGeneral];
         NIMLOG_PERF1(@"Ready to reload tables");
         
-        [toTable reloadData];
-        [fromTable reloadData];
-        
         [[nc_AppDelegate sharedInstance].window bringSubviewToFront:[nc_AppDelegate sharedInstance].twitterCount];
         [[nc_AppDelegate sharedInstance].twitterCount setHidden:NO];
     }
@@ -450,25 +438,6 @@ UIImage *imageDetailDisclosure;
 }
 
 
-#pragma mark table operation methods
-// Reloads the tables in case something has changed in the model
-- (void)reloadTables
-{
-    [toTable reloadData];
-    [fromTable reloadData];
-}
-
-// Callback for whenever a new location is created to update dynamic table height
-- (void)newLocationVisible
-{
-    // Check whether toTableHeight needs to be dynamically adjusted (due to additional locations)
-    if (isCurrentLocationMode && editMode == NO_EDIT) {
-        // Check if height is updated, and if it is, reload the tables
-        [self reloadTables];
-    }
-}
-
-
 #pragma mark set RKObjectManager
 // One-time set-up of the RestKit Geocoder Object Manager's mapping
 - (void)setRkGeoMgr:(RKObjectManager *)rkGeoMgr0
@@ -533,7 +502,6 @@ UIImage *imageDetailDisclosure;
     [self.txtToView setTextColor:[UIColor blackColor]];
     [[nc_AppDelegate sharedInstance].twitterCount setHidden:YES];
     if(editMode==FROM_EDIT || editMode==TO_EDIT){
-        [self heightToFromTable];
         return YES;
     }
     textView.text = @"";
@@ -554,41 +522,12 @@ UIImage *imageDetailDisclosure;
 }
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
     if([text isEqualToString:@"\n"]) {
-        if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-            fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE_4INCH;
-        }
-        else{
-            fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE;
-        }
-        if(editMode == FROM_EDIT){
-            [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y, fromTable.frame.size.width, fromTableHeight)];
-        }
-        else if (editMode == TO_EDIT){
-            [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y, toTable.frame.size.width, fromTableHeight)];
-        }
-        
-        // [fromTableVC textSubmitted:[textView text] forEvent:nil];
-        
-        
+
+        // Not clear if we still need this method based on latest design (John C, 9/24/2014)
         [textView resignFirstResponder];
         return NO;
     }
     return YES;
-}
-
-- (void)heightToFromTable{
-    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        fromTableHeight = TOFROM_HEIGHT_EDIT_MODE_4INCH;
-    }
-    else{
-        fromTableHeight = TOFROM_HEIGHT_EDIT_MODE;
-    }
-    if(editMode == FROM_EDIT){
-        [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y, fromTable.frame.size.width, fromTableHeight)];
-    }
-    else if (editMode == TO_EDIT){
-        [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y, toTable.frame.size.width, fromTableHeight)];
-    }
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView{
@@ -644,35 +583,11 @@ UIImage *imageDetailDisclosure;
 {
     // Change TOFROMVIEW FRAMES accordingly EDIT MODE
     
-    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE_4INCH;
-    }
-    else{
-        fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE;
-    }
-    
     if(newEditMode == FROM_EDIT){
-        [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_modeBG.png"]];
-
-        [self.toView setHidden:YES];
-        [self.lblTxtFrom setHidden:YES];
-        [self.btnSwap setHidden:YES];
-        [self.btnCureentLoc setHidden:YES];
-        [self.PicketSelectView setHidden:YES];
-        [self.viewMode setHidden:YES];
-        [self.btnToFromEditCancel setHidden:NO]; // Needs to come after other items are hidden
-        [self.fromTable setHidden:NO]; // Needs to come after other items are hidden
+        [[self navigationController] pushViewController:fromTableVC animated:NO];
     }
     else if (newEditMode == TO_EDIT){
-        [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_modeBG.png"]];
-        
-        [self.fromView setHidden:YES];
-        [self.lblTxtTo setHidden:YES];
-        [self.btnSwap setHidden:YES];
-        [self.PicketSelectView setHidden:YES];
-        [self.viewMode setHidden:YES];
-        [self.btnToFromEditCancel setHidden:NO];
-        [self.toTable setHidden:NO];
+        [[self navigationController] pushViewController:toTableVC animated:NO];
     }
     else if (newEditMode == NO_EDIT){
         [self setToFromViewOnNoEditMode];
@@ -731,24 +646,6 @@ UIImage *imageDetailDisclosure;
             strToFormattedAddress = @"";
         }
         [self.txtToView setText:strToFormattedAddress];
-        if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
-            [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y-20, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
-            [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y-20, fromTable.frame.size.width, fromTableHeight)];
-        }
-        else{
-            [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
-            [fromTable setFrame:CGRectMake(fromTable.frame.origin.x, fromTable.frame.origin.y, fromTable.frame.size.width, fromTableHeight)];
-        }
-        [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
-        [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_MainToFromBG.png"]];
-        [self.toView setHidden:NO];
-        [self.fromView setFrame:CGRectMake(self.fromView.frame.origin.x, self.fromView.frame.origin.y, fromView.frame.size.width+TOFROMVIEW_HEIGHT_EDIT_MODE, fromView.frame.size.height)];
-        [self.imgViewFromBG setFrame:CGRectMake(self.imgViewFromBG.frame.origin.x, self.imgViewFromBG.frame.origin.y, imgViewFromBG.frame.size.width+TOFROMVIEW_HEIGHT_EDIT_MODE, imgViewFromBG.frame.size.height)];
-        [self.txtFromView setFrame:CGRectMake(self.txtFromView.frame.origin.x+TXTFROMVIEW_X_POSITION_EDIT_MODE, self.txtFromView.frame.origin.y, self.txtFromView.frame.size.width-TXTFROMVIEW_WIDTH_EDIT_MODE, txtFromView.frame.size.height)];
-        [self.lblTxtFrom setHidden:NO];
-        [self.btnToFromEditCancel setHidden:YES];
-        [self.btnCureentLoc setHidden:NO];
-        [fromTable removeFromSuperview];
         [self.txtFromView resignFirstResponder];
     }
     else if (editMode == TO_EDIT){
@@ -797,30 +694,10 @@ UIImage *imageDetailDisclosure;
             strToFormattedAddress = @"";
         }
         [self.txtToView setText:strToFormattedAddress];
-        if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
-            [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y-20, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
-            [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y-20, toTable.frame.size.width, fromTableHeight)];
-        }
-        else{
-            [self.mainToFromView setFrame:CGRectMake(self.mainToFromView.frame.origin.x, self.mainToFromView.frame.origin.y, self.mainToFromView.frame.size.width, self.mainToFromView.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
-            [toTable setFrame:CGRectMake(toTable.frame.origin.x, toTable.frame.origin.y, toTable.frame.size.width, fromTableHeight)];
-        }
-        
-        [self.imgViewMainToFromBG setFrame:CGRectMake(self.imgViewMainToFromBG.frame.origin.x, self.imgViewMainToFromBG.frame.origin.y, self.imgViewMainToFromBG.frame.size.width, self.imgViewMainToFromBG.frame.size.height+TOFROM_MAINBGVIEW_HEIGHT_EDIT_MODE)];
-        [self.imgViewMainToFromBG setImage:[UIImage imageNamed:@"img_MainToFromBG.png"]];
-        [self.fromView setHidden:NO];
-        [self.toView setFrame:CGRectMake(self.toView.frame.origin.x, self.toView.frame.origin.y+45, toView.frame.size.width+TOFROMVIEW_HEIGHT_EDIT_MODE, toView.frame.size.height)];
-        [self.imgViewToBG setFrame:CGRectMake(self.imgViewToBG.frame.origin.x, self.imgViewToBG.frame.origin.y, imgViewToBG.frame.size.width+TOFROMVIEW_HEIGHT_EDIT_MODE, imgViewToBG.frame.size.height)];
-        [self.txtToView setFrame:CGRectMake(self.txtToView.frame.origin.x+TXTTOVIEW_X_POSITION_EDIT_MODE, self.txtToView.frame.origin.y, self.txtToView.frame.size.width+7, txtToView.frame.size.height)];
-        [self.btnToFromEditCancel setHidden:YES];
-        [self.lblTxtTo setHidden:NO];
-        [toTable removeFromSuperview];
         [self.txtToView resignFirstResponder];
     }
-    [self.btnSwap setHidden:NO];
-    [self.viewMode setHidden:NO];
-    [self.PicketSelectView setHidden:NO];
 }
+
 #pragma mark Loacation methods
 - (void)setLocations:(Locations *)l
 {
@@ -893,11 +770,6 @@ UIImage *imageDetailDisclosure;
         
     } 
     else {
-        BOOL locBecomingVisible = loc && ([loc toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF);
-        BOOL toLocationBecomingInvisible = toLocation && ([toLocation toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF);
-        if (locBecomingVisible ^ toLocationBecomingInvisible) { // if # of locations visible is changing
-            [self newLocationVisible];  // Adjust dynamic toTable if toLocation chosen for first time
-        }
         toLocation = loc;
         [self setFBParameterForGeneral];
         if (loc == currentLocation) {  // if current location chosen for toLocation
@@ -1351,12 +1223,6 @@ UIImage *imageDetailDisclosure;
         {
 
             [self startActivityIndicator];
-
-            // Update dynamic table height if a new location is becoming visible
-            if ([fromLocation fromFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF ||
-                [toLocation toFrequencyFloat] < TOFROM_FREQUENCY_VISIBILITY_CUTOFF) {
-                [self newLocationVisible];
-            }
             
             // Increment fromFrequency and toFrequency
             [fromLocation incrementFromFrequency];
@@ -1674,7 +1540,6 @@ UIImage *imageDetailDisclosure;
 //US 137 implementation
 - (IBAction)editCancelClicked:(id)sender{
     [[nc_AppDelegate sharedInstance].twitterCount setHidden:NO];
-    [self heightToFromTable];
     if(editMode == FROM_EDIT){
         [self.fromTable setEditing:NO animated:NO];
         self.fromTableVC.isDeleteMode = false;
@@ -1743,7 +1608,6 @@ UIImage *imageDetailDisclosure;
     [self setIsTripDateCurrentTime:NO];
     [self setDepartOrArrive:departOrArrive];
     [self updateTripDate];
-    [self reloadTables];
 }
 
 //---------------------------------------------------------------------------
@@ -1774,7 +1638,6 @@ UIImage *imageDetailDisclosure;
     [self setIsTripDateCurrentTime:YES];
     [self setDepartOrArrive:DEPART];  // DE201 fix -- always select Depart if we pick the Now button
     [self updateTripDate];
-    [self reloadTables];
 }
 
 //---------------------------------------------------------------------------

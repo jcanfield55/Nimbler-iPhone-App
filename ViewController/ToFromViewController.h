@@ -42,15 +42,12 @@ typedef enum {
 @property (strong, nonatomic) IBOutlet UIButton* btnSwap;
 @property (strong, nonatomic) IBOutlet UIButton* btnCureentLoc;
 @property (strong, nonatomic) IBOutlet UIButton* btnPicker;
-@property (strong, nonatomic) IBOutlet UIButton* btnToFromEditCancel;
 @property (strong, nonatomic) UILabel* lblTxtToFromPlaceholder;
 @property (strong, nonatomic) IBOutlet UILabel* lblTxtDepartArrive;
 @property (strong, nonatomic) IBOutlet UILabel* lblTxtFrom;
 @property (strong, nonatomic) IBOutlet UILabel* lblTxtTo;
 
-@property (strong, nonatomic) IBOutlet UITableView *fromTable;  // from table for edit mode of fromLocation
 @property (strong, nonatomic) ToFromTableViewController* fromTableVC; // View controller for fromTable
-@property (strong, nonatomic) IBOutlet UITableView *toTable;   // to table for edit mode of toLocation
 @property (strong, nonatomic) ToFromTableViewController* toTableVC;  // View controller for toTable
 @property (strong, nonatomic) IBOutlet UIButton *routeButton;
 @property (strong, nonatomic) RKObjectManager *rkGeoMgr;  // RestKit Object Manager for geocoding
@@ -113,7 +110,6 @@ typedef enum {
 - (void) hideTabBar;
 - (void) showTabbar;
 - (void)endEdit;
-- (void)heightToFromTable;
 - (BOOL)setToFromHeightForTable:(UITableView *)table Height:(CGFloat)tableHeight;
 
 - (void) revealtoggle;
