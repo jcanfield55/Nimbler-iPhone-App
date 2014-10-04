@@ -543,7 +543,6 @@ FeedBackForm *fbView;
                     [currentLocation setFormattedAddress:CURRENT_LOCATION];
                     [currentLocation setFromFrequencyFloat:CURRENT_LOCATION_STARTING_FROM_FREQUENCY];
                     [currentLocation setToFrequencyFloat:CURRENT_LOCATION_STARTING_FROM_FREQUENCY];
-                    [toFromViewController reloadTables]; // DE30 fix (1 of 2)
                     [locations setIsLocationServiceEnable:TRUE];
                 }
                 else {
@@ -635,12 +634,6 @@ FeedBackForm *fbView;
         [toFromViewController setEditMode:NO_EDIT];
         toFromViewController.toTableVC.txtField.text = NULL_STRING;
         toFromViewController.fromTableVC.txtField.text = NULL_STRING;
-        /* Not need in Latest UI
-        [toFromViewController.toTableVC toFromTyping:toFromViewController.toTableVC.txtField forEvent:nil];
-        [toFromViewController.toTableVC textSubmitted:toFromViewController.toTableVC.txtField forEvent:nil];
-        [toFromViewController.fromTableVC toFromTyping:toFromViewController.fromTableVC.txtField forEvent:nil];
-        [toFromViewController.fromTableVC textSubmitted:toFromViewController.fromTableVC.txtField forEvent:nil];
-         */
     }
     // US 177 Implementation
     RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;

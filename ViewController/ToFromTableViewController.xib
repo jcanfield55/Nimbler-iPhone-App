@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ToFromTableViewController">
@@ -48,10 +46,9 @@
                                     <rect key="frame" x="0.0" y="0.0" width="253" height="38"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </imageView>
-                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" text="Current Location" translatesAutoresizingMaskIntoConstraints="NO" id="98">
+                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="98">
                                     <rect key="frame" x="44" y="4" width="189" height="30"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                    <color key="textColor" red="0.98431372549999996" green="0.4823529412" blue="0.43137254899999999" alpha="1" colorSpace="deviceRGB"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no"/>
                                     <connections>
@@ -92,10 +89,10 @@
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstItem="146" firstAttribute="top" secondItem="77" secondAttribute="topMargin" id="482-Nt-XAS"/>
+                        <constraint firstItem="146" firstAttribute="top" secondItem="77" secondAttribute="top" id="482-Nt-XAS"/>
                         <constraint firstItem="88" firstAttribute="leading" secondItem="77" secondAttribute="leading" id="76r-Du-YMp"/>
                         <constraint firstAttribute="trailing" secondItem="88" secondAttribute="trailing" id="7pP-qv-SbY"/>
-                        <constraint firstItem="123" firstAttribute="top" secondItem="77" secondAttribute="topMargin" id="AdT-Rb-mUH"/>
+                        <constraint firstItem="123" firstAttribute="top" secondItem="77" secondAttribute="top" id="AdT-Rb-mUH"/>
                         <constraint firstAttribute="bottom" secondItem="88" secondAttribute="bottom" id="EXb-HY-YNe"/>
                         <constraint firstItem="146" firstAttribute="centerY" secondItem="123" secondAttribute="centerY" id="Lxf-GC-6qb"/>
                         <constraint firstItem="146" firstAttribute="leading" secondItem="123" secondAttribute="trailing" constant="5" id="Sum-GN-jtY"/>
@@ -113,8 +110,8 @@
                 <constraint firstItem="68" firstAttribute="top" secondItem="1" secondAttribute="top" id="6jT-94-gB9"/>
                 <constraint firstAttribute="trailing" secondItem="68" secondAttribute="trailing" id="Ajh-x4-LoW"/>
                 <constraint firstItem="68" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="DoD-IH-grX"/>
-                <constraint firstItem="77" firstAttribute="leading" secondItem="1" secondAttribute="leadingMargin" id="M1w-on-x2a"/>
-                <constraint firstAttribute="trailingMargin" secondItem="77" secondAttribute="trailing" id="MI8-9s-2UN"/>
+                <constraint firstItem="77" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="8" id="M1w-on-x2a"/>
+                <constraint firstAttribute="trailing" secondItem="77" secondAttribute="trailing" constant="8" id="MI8-9s-2UN"/>
                 <constraint firstAttribute="trailing" secondItem="kGk-Z1-gk7" secondAttribute="trailing" id="QKz-Zd-egg"/>
                 <constraint firstAttribute="bottom" secondItem="68" secondAttribute="bottom" constant="-44" id="eFH-Ub-8GQ"/>
                 <constraint firstAttribute="bottom" secondItem="kGk-Z1-gk7" secondAttribute="bottom" id="oax-r3-HAd"/>

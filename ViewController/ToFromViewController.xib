@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
+        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -170,7 +171,7 @@
                         <constraint firstItem="123" firstAttribute="trailing" secondItem="124" secondAttribute="trailing" id="2OP-hP-XVy"/>
                         <constraint firstItem="88" firstAttribute="leading" secondItem="77" secondAttribute="leading" id="76r-Du-YMp"/>
                         <constraint firstAttribute="trailing" secondItem="88" secondAttribute="trailing" id="7pP-qv-SbY"/>
-                        <constraint firstItem="123" firstAttribute="top" secondItem="77" secondAttribute="topMargin" id="AdT-Rb-mUH"/>
+                        <constraint firstItem="123" firstAttribute="top" secondItem="77" secondAttribute="top" id="AdT-Rb-mUH"/>
                         <constraint firstAttribute="bottom" secondItem="88" secondAttribute="bottom" id="EXb-HY-YNe"/>
                         <constraint firstAttribute="bottom" secondItem="124" secondAttribute="bottom" constant="12" id="JkU-gk-q6u"/>
                         <constraint firstItem="124" firstAttribute="top" secondItem="123" secondAttribute="bottom" constant="7" id="MUE-kL-5UB"/>
@@ -352,7 +353,7 @@
                         <constraint firstAttribute="bottom" secondItem="136" secondAttribute="bottom" id="E6e-HH-qAi"/>
                         <constraint firstAttribute="bottom" secondItem="138" secondAttribute="bottom" constant="16" id="Gnr-zZ-ZFS"/>
                         <constraint firstAttribute="trailing" secondItem="136" secondAttribute="trailing" id="QA7-v5-J8q"/>
-                        <constraint firstItem="170" firstAttribute="bottom" secondItem="135" secondAttribute="bottomMargin" id="QK1-vQ-KOc"/>
+                        <constraint firstItem="170" firstAttribute="bottom" secondItem="135" secondAttribute="bottom" id="QK1-vQ-KOc"/>
                         <constraint firstItem="139" firstAttribute="leading" secondItem="138" secondAttribute="trailing" constant="9" id="UNK-rB-YbP"/>
                         <constraint firstItem="w5s-aG-SA2" firstAttribute="bottom" secondItem="140" secondAttribute="bottom" id="UeM-h2-fT9"/>
                         <constraint firstItem="138" firstAttribute="top" secondItem="135" secondAttribute="top" constant="15" id="bTl-gZ-aQl"/>
@@ -375,9 +376,9 @@
                 <constraint firstAttribute="trailing" secondItem="68" secondAttribute="trailing" id="Ajh-x4-LoW"/>
                 <constraint firstItem="135" firstAttribute="top" secondItem="77" secondAttribute="bottom" constant="6" id="Amq-h8-vhC"/>
                 <constraint firstItem="68" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="DoD-IH-grX"/>
-                <constraint firstItem="77" firstAttribute="leading" secondItem="1" secondAttribute="leadingMargin" id="M1w-on-x2a"/>
+                <constraint firstItem="77" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="8" id="M1w-on-x2a"/>
                 <constraint firstItem="87" firstAttribute="top" secondItem="135" secondAttribute="bottom" constant="6" id="M70-px-urr" userLabel="Vertical Space - (6) - View Time Route - View Modes"/>
-                <constraint firstAttribute="trailingMargin" secondItem="77" secondAttribute="trailing" id="MI8-9s-2UN"/>
+                <constraint firstAttribute="trailing" secondItem="77" secondAttribute="trailing" constant="8" id="MI8-9s-2UN"/>
                 <constraint firstItem="87" firstAttribute="leading" secondItem="135" secondAttribute="leading" id="P9h-56-dxg"/>
                 <constraint firstItem="135" firstAttribute="leading" secondItem="77" secondAttribute="leading" id="Vv2-d2-gF3"/>
                 <constraint firstAttribute="bottom" secondItem="68" secondAttribute="bottom" constant="-44" id="eFH-Ub-8GQ"/>

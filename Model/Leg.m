@@ -167,7 +167,12 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
             if([headSignComponent count] > 1){
                 strTrainNumber = [headSignComponent objectAtIndex:1];
                 if(!strTrainNumber){
-                    [summary appendFormat:@" %@", [self route]];
+                    if (self.tripShortName && self.tripShortName.length > 0) {
+                        [summary appendFormat:@" #%@", self.tripShortName]; // New Caltrain format has the train # in the tripShortName field
+                    }
+                    else {
+                        [summary appendFormat:@" %@", [self route]];
+                    }
                 }
                 else{
                     if([strTrainNumber rangeOfString:@")" options:NSCaseInsensitiveSearch].location != NSNotFound){
@@ -181,7 +186,12 @@ static NSDictionary* __agencyDisplayNameByAgencyId;
                 }
             }
             else{
-                [summary appendFormat:@" %@", [self route]];
+                if (self.tripShortName && self.tripShortName.length > 0) {
+                    [summary appendFormat:@" #%@", self.tripShortName]; // New Caltrain format has the train # in the tripShortName field
+                }
+                else {
+                    [summary appendFormat:@" %@", [self route]];
+                }
             }
         }
         return summary;

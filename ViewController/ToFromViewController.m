@@ -53,8 +53,6 @@
 - (BOOL)getPlan;
 - (void)stopActivityIndicator;
 - (void)startActivityIndicator;
-- (CGFloat)tableHeightFor:(UITableView *)table;  // Returns the height constant suitable for the particular table
-- (CGFloat)toFromTableHeightByNumberOfRowsForMaxHeight:(CGFloat)maxHeight  isFrom:(BOOL)isFrom;
 -(void)segmentChange;
 - (void)selectCurrentDate;
 - (void)selectDate;
@@ -139,10 +137,10 @@ UIImage *imageDetailDisclosure;
     
     // Initialize the to & from tables
     
-    toTableVC = [[ToFromTableViewController alloc] initWithNibName:@"ToFromTableViewController.xib" bundle:nil];
+    toTableVC = [[ToFromTableViewController alloc] initWithNibName:@"ToFromTableViewController" bundle:nil];
     [toTableVC setupIsFrom:FALSE toFromVC:self locations:locations];
     
-    fromTableVC = [[ToFromTableViewController alloc] initWithNibName:@"ToFromTableViewController.xib" bundle:nil];
+    fromTableVC = [[ToFromTableViewController alloc] initWithNibName:@"ToFromTableViewController" bundle:nil];
     [fromTableVC setupIsFrom:TRUE toFromVC:self locations: locations];
     
     if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
@@ -392,9 +390,6 @@ UIImage *imageDetailDisclosure;
 {
     [super viewDidAppear:animated];
     NIMLOG_PERF1(@"Entered ToFromView did appear");
-    // Flash scrollbars on tables
-    [toTable flashScrollIndicators];
-    [fromTable flashScrollIndicators];
     if (isCurrentLocationMode) {
         [self reverseGeocodeCurrentLocationIfNeeded];
     }
@@ -536,6 +531,7 @@ UIImage *imageDetailDisclosure;
 }
 - (void) textViewDidChange:(UITextView *)theTextView
 {
+    /*
     if([theTextView.text length]>0){
         if(editMode==FROM_EDIT ){
             [fromTable setEditing:NO animated:NO];
@@ -550,6 +546,7 @@ UIImage *imageDetailDisclosure;
             [toTable setEditing:YES animated:NO];
         }
     }
+     */
     if(![theTextView hasText]) {
         [theTextView addSubview:lblTxtToFromPlaceholder];
     } else if ([[theTextView subviews] containsObject:lblTxtToFromPlaceholder]) {
@@ -1192,8 +1189,8 @@ UIImage *imageDetailDisclosure;
 - (void) reloadDataWithLocationChanged{
     [locations setAreLocationsChanged:YES];
     // Reload the to/from tables for next time
-    [[self fromTable] reloadData];
-    [[self toTable] reloadData];
+    // [[self fromTable] reloadData];
+    // [[self toTable] reloadData];
 }
 
 #pragma mark get Plan Request
@@ -1541,7 +1538,7 @@ UIImage *imageDetailDisclosure;
 - (IBAction)editCancelClicked:(id)sender{
     [[nc_AppDelegate sharedInstance].twitterCount setHidden:NO];
     if(editMode == FROM_EDIT){
-        [self.fromTable setEditing:NO animated:NO];
+        // [self.fromTable setEditing:NO animated:NO];
         self.fromTableVC.isDeleteMode = false;
         self.fromTableVC.isRenameMode = false;
         self.fromTableVC.isRearrangeMode = false;
@@ -1551,7 +1548,7 @@ UIImage *imageDetailDisclosure;
         }
     }
     else if(editMode == TO_EDIT){
-        [self.toTable setEditing:NO animated:NO];
+        // [self.toTable setEditing:NO animated:NO];
         self.toTableVC.isDeleteMode = false;
         self.toTableVC.isRenameMode = false;
         self.toTableVC.isRearrangeMode = false;

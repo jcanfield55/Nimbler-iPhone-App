@@ -53,6 +53,8 @@
 - (void)setupIsFrom:(BOOL)isF toFromVC:(ToFromViewController *)tfVC locations:(Locations *)l;
 - (IBAction)toFromTyping:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)textSubmitted:(id)sender forEvent:(UIEvent *)event;
+- (IBAction)editCancelClicked:(id)sender;
+
 
 - (void)initializeCurrentLocation:(Location *)currentLoc; // Method called when currentLocation is first created and automatically picked as the fromLocation
 
@@ -71,7 +73,5 @@
 
 - (void)editButtonClicked:(id)sender;
 - (void)deleteButtonClicked:(id)sender;
-- (void)rearrangeButtonClicked:(id)sender;
-- (void)renameButtonClicked:(id)sender;
 
 @end

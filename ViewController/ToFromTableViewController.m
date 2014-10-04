@@ -32,7 +32,6 @@
 }
 
 - (void)selectedGeocodedLocation:(Location *)loc;  // Internal method to process a new incoming geocoded location (if the only one returned by geocoder, or if this one picked by LocationPickerVC)
-- (NSInteger)adjustedForEnterNewAddressFor:(NSInteger)rawIndexRow;
 
 @end
 
@@ -107,13 +106,6 @@ NSString *strStreet2 = @"street ";
     
     imageDetailDisclosure = [UIImage imageNamed:@"img_locListArrow.png"];
     
-    btnEdit = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btnEdit setFrame:CGRectMake(275,8,40,10)];
-    [btnEdit setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-    btnEdit.titleLabel.font = [UIFont systemFontOfSize:14];
-    [btnEdit setTitle:@"Edit" forState:UIControlStateNormal];
-    [btnEdit setTitle:@"Done" forState:UIControlStateSelected];
-    [btnEdit addTarget:self action:@selector(editButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)setRkGeoMgr:(RKObjectManager *)rkG
@@ -131,6 +123,20 @@ NSString *strStreet2 = @"street ";
     myTableView.accessibilityLabel = TO_TABLE_VIEW;
     [myTableView setDataSource:self];
     [myTableView setDelegate:self];
+    
+    btnEdit = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btnEdit setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    btnEdit.titleLabel.font = [UIFont systemFontOfSize:14];
+    [btnEdit setTitle:@"Edit" forState:UIControlStateNormal];
+    [btnEdit setTitle:@"Done" forState:UIControlStateSelected];
+    [btnEdit addTarget:self action:@selector(editButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [btnEdit setFrame:CGRectMake(self.view.frame.size.width -
+                                 TOFROM_TABLE_HEADER_EDIT_BUTTON_MARGIN,8,40,10)];
 }
 
 // Method called when currentLocation is first created and automatically picked as the fromLocation
@@ -159,7 +165,7 @@ NSString *strStreet2 = @"street ";
 
 - (UITableViewCellEditingStyle) tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
     if(isDeleteMode){
-        Location *loc = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]]
+        Location *loc = [locations locationAtIndex:[indexPath row]
                                             isFrom:isFrom];
         if (![loc isKindOfClass:[LocationFromLocalSearch class]] && [[loc locationType] isEqualToString:TOFROM_LIST_TYPE]) {
             return UITableViewCellEditingStyleNone;
@@ -196,16 +202,16 @@ NSString *strStreet2 = @"street ";
         locations.sortedMatchingToLocations = sortedlocations;
     }
     
-    Location *locationMoved =  [locations locationAtIndex:[self adjustedForEnterNewAddressFor:destRow]
+    Location *locationMoved =  [locations locationAtIndex:destRow
                                                    isFrom:isFrom];
     Location *nextLocation = nil;
     Location *previousLocation = nil;
     if([locations.sortedMatchingFromLocations count] > destRow+1){
-        nextLocation = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:destRow+1]
+        nextLocation = [locations locationAtIndex:destRow+1
                                            isFrom:isFrom];
     }
     if( destRow-1 >= 0 && [locations.sortedMatchingFromLocations count] > destRow-1){
-        previousLocation = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:destRow-1]
+        previousLocation = [locations locationAtIndex:destRow-1
                                                isFrom:isFrom];
     }
     BOOL isMovedLocationFavorite = false;
@@ -315,7 +321,7 @@ NSString *strStreet2 = @"street ";
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     Location *loc = [locations
-                     locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]]
+                     locationAtIndex:[indexPath row]
                      isFrom:isFrom];
     if(![loc isKindOfClass:[LocationFromLocalSearch class]] && [[loc locationType] isEqualToString:TOFROM_LIST_TYPE] && isRenameMode){
         return;
@@ -431,6 +437,26 @@ NSString *strStreet2 = @"street ";
     saveContext(managedObjectContext);
 }
 
+//US 137 implementation
+- (IBAction)editCancelClicked:(id)sender{
+    [[nc_AppDelegate sharedInstance].twitterCount setHidden:NO];
+
+    isDeleteMode = false;
+    isRenameMode = false;
+    isRearrangeMode = false;
+    if(cellTextView){
+        [cellTextView removeFromSuperview];
+        cellTextView = nil;
+    }
+    
+    [self.btnEdit setSelected:NO];
+    self.txtField.text = NULL_STRING;
+    [self markAndUpdateSelectedLocation:locations.tempSelectedFromLocation];
+    [self.toFromVC setEditMode:NO_EDIT];
+    
+    // [self.toFromVC.navigationController setNavigationBarHidden:NO animated:NO];  We may not need this
+}
+
 // Internal routine for completing edit mode and returning to ToFromViewController
 - (void)exitEditMode {
     [toFromVC setEditMode:NO_EDIT];
@@ -481,11 +507,11 @@ NSString *strStreet2 = @"street ";
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if ([toFromVC editMode]==NO_EDIT &&
-        [self adjustedForEnterNewAddressFor:[indexPath row]] == -1) {
+        [indexPath row] == -1) {
         return 50;
     }
     else{
-        Location *loc = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]]
+        Location *loc = [locations locationAtIndex:[indexPath row]
                                             isFrom:isFrom];
         if([loc.formattedAddress rangeOfString:@"\n"].location != NSNotFound){
             return 50;
@@ -514,7 +540,7 @@ NSString *strStreet2 = @"street ";
     }
     
     // Prepare the cell settings
-    Location *loc = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:[indexPath row]]
+    Location *loc = [locations locationAtIndex:[indexPath row]
                                         isFrom:isFrom];
     
     if(loc.locationName){
@@ -690,7 +716,7 @@ NSString *strStreet2 = @"street ";
 
 - (void) btnFavoriteClicked:(id)sender{
     UIButton *favoriteButton = (UIButton *)sender;
-    Location *loc = [locations locationAtIndex:[self adjustedForEnterNewAddressFor:[sender tag]]
+    Location *loc = [locations locationAtIndex:[sender tag]
                                         isFrom:isFrom];
     if(favoriteButton.selected==YES){
         [favoriteButton setSelected:NO];
@@ -740,8 +766,8 @@ NSString *strStreet2 = @"street ";
 }
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0,0,320, 25)];
-    UIImageView *imgViewHeader = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 25)];
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0,0,tableView.frame.size.width,TOFROM_TABLE_HEADER_HEIGHT)];
+    UIImageView *imgViewHeader = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0,tableView.frame.size.width,TOFROM_TABLE_HEADER_HEIGHT)];
     [imgViewHeader setImage:[UIImage imageNamed:@"img_searchEditBG.png"]];
     [headerView addSubview:imgViewHeader];
     UIImageView *imgView = [[UIImageView alloc]initWithFrame:CGRectMake(4, 7, 12, 12)];
@@ -769,25 +795,6 @@ NSString *strStreet2 = @"street ";
     return headerView;
 }
 
-
-// This function makes adjustments for inserting the "Enter New Address" row in the right location
-// If there is a selectedLocation, there is no "Enter New Address" row 
-// If there is no selectedLocation, "Enter New Address" appears at the top of the list
-// Given a raw IndexRow (from iOS), this method returns -1 if this is the "Enter New Address" row
-// Otherwise it returns an index that can be passed to [locations locationAtIndex...] to get
-// the right location.  
-- (NSInteger)adjustedForEnterNewAddressFor:(NSInteger)rawIndexRow
-{
-    if ([toFromVC editMode] != NO_EDIT) {
-        return rawIndexRow; // "Enter New Address" does not show up when not in NO_EDIT
-    }
-    else if (selectedLocation) { 
-        return rawIndexRow; // "Enter New Address" does not show up when there is a selected location
-    }
-    else {  // if no selected address, ENTER_NEW_ADDRESS is in row 0
-        return (rawIndexRow);
-    }
-}
 
 // For TextFieldEditing Delegate
 

@@ -50,7 +50,6 @@
 -(void)newItineraryAvailable:(Itinerary *)newItinerary
                       status:(ItineraryStatus)status ItineraryNumber:(int)itiNumber;
 - (void) intermediateStopTimesReceived:(NSArray *)stopTimes Leg:(Leg *)leg;
-- (void) setViewFrames;
 - (void)openUrl:(NSURL *)url;
 
 // return Formatted string like 00:58

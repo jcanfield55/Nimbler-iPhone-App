@@ -424,23 +424,29 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
                   [[[UIDevice currentDevice] systemVersion] floatValue]]);
         return nil;
     }
-    NSString *strFullTrainNumber;
     NSMutableAttributedString *strMutableDetailTextLabel = [[NSMutableAttributedString alloc] initWithString:strDetailtextLabel];
     for(int i=0;i<[[itinerary sortedLegs] count];i++){
         Leg *leg = [[itinerary sortedLegs] objectAtIndex:i];
         if([[leg agencyId] isEqualToString:CALTRAIN_AGENCY_ID]){
-            NSString *strTrainNumber;
+            NSString *strFullTrainNumber = nil;
+            NSString *strTrainNumber = nil;
             NSRange range;
             NSString *strHeadSign = [leg headSign];
             NSArray *headSignComponent = [strHeadSign componentsSeparatedByString:@"Train"];
-            strTrainNumber = [headSignComponent objectAtIndex:1];
-            if([strTrainNumber rangeOfString:@")" options:NSCaseInsensitiveSearch].location != NSNotFound){
+            if ([headSignComponent count] > 1) {
+                strTrainNumber = [headSignComponent objectAtIndex:1];
+            } else if (leg.tripShortName && leg.tripShortName.length > 0) {
+                strTrainNumber = leg.tripShortName;
+            }
+            if (strTrainNumber &&
+                [strTrainNumber rangeOfString:@")" options:NSCaseInsensitiveSearch].location != NSNotFound){
                 range = [strTrainNumber rangeOfString:@")"];
                 strTrainNumber = [strTrainNumber substringToIndex:range.location];
                 NSString * strTempTrainNumber = [strTrainNumber stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
                 strFullTrainNumber = [NSString stringWithFormat:@"#%@",strTempTrainNumber];
             }
-            if([strDetailtextLabel rangeOfString:strFullTrainNumber options:NSCaseInsensitiveSearch].location != NSNotFound){
+            if(strFullTrainNumber &&
+               [strDetailtextLabel rangeOfString:strFullTrainNumber options:NSCaseInsensitiveSearch].location != NSNotFound){
                 range = [strDetailtextLabel rangeOfString:strFullTrainNumber];
                 if([[leg routeLongName] isEqualToString:@"Local"]){
                     [strMutableDetailTextLabel addAttribute:NSForegroundColorAttributeName value:[UIColor GRAY_FONT_COLOR] range:range];

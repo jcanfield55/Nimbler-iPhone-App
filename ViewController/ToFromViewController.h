@@ -27,7 +27,7 @@ typedef enum {
 } ToFromEditMode;
 
 
-@interface ToFromViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, LocationsGeocodeResultsDelegate, RKRequestDelegate, NewPlanAvailableDelegate, UIActionSheetDelegate,UIAlertViewDelegate>
+@interface ToFromViewController : UIViewController <LocationsGeocodeResultsDelegate, RKRequestDelegate, NewPlanAvailableDelegate, UIActionSheetDelegate,UIAlertViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView* mainToFromView;
 @property (strong, nonatomic) IBOutlet UIView* fromView;
@@ -88,7 +88,6 @@ typedef enum {
 -(IBAction)btnModeClicked:(id)sender;
 - (IBAction)btnCurrentLocationClicked:(id)sender;
 - (IBAction)doSwapLocation:(id)sender;
-- (IBAction)editCancelClicked:(id)sender;
 - (IBAction)openPickerView:(id)sender;
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event;
 - (void)getRouteForMKDirectionsRequest;   // Process an event from MapKit URL
@@ -101,16 +100,12 @@ typedef enum {
 - (void)callLocationPickerFor:(ToFromTableViewController *)toFromTableVC0 locationList:(NSArray *)locationList0 isFrom:(BOOL)isFrom0 isGeocodeResults:(BOOL)isGeocodeResults; 
 
 - (void)updateTripDate;
-- (void)reloadTables;  // Reloads the tables in case something has changed in the model
 
 -(BOOL)alertUsetForLocationService;
 -(void)setFBParameterForGeneral;
 
--(void)doSwapLocation;
 - (void) hideTabBar;
 - (void) showTabbar;
-- (void)endEdit;
-- (BOOL)setToFromHeightForTable:(UITableView *)table Height:(CGFloat)tableHeight;
 
 - (void) revealtoggle;
 @end
