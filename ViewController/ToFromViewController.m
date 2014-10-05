@@ -1559,8 +1559,6 @@ UIImage *imageDetailDisclosure;
     }
     [fromTableVC.btnEdit setSelected:NO];
     [toTableVC.btnEdit setSelected:NO];
-    self.toTableVC.txtField.text = NULL_STRING;
-    self.fromTableVC.txtField.text = NULL_STRING;
     [self.toTableVC markAndUpdateSelectedLocation:locations.tempSelectedToLocation];
     [self.fromTableVC markAndUpdateSelectedLocation:locations.tempSelectedFromLocation];
     [self setEditMode:NO_EDIT];

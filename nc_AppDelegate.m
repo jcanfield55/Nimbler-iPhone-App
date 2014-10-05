@@ -632,8 +632,6 @@ FeedBackForm *fbView;
         self.fromLoc = locations.tempSelectedFromLocation;
         locations.isLocationSelected = true;
         [toFromViewController setEditMode:NO_EDIT];
-        toFromViewController.toTableVC.txtField.text = NULL_STRING;
-        toFromViewController.fromTableVC.txtField.text = NULL_STRING;
     }
     // US 177 Implementation
     RXCustomTabBar *rxCustomTabBar = (RXCustomTabBar *)self.tabBarController;

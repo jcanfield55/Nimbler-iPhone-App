@@ -45,7 +45,6 @@
 @synthesize toFromVC;
 @synthesize rkGeoMgr;
 @synthesize myTableView;
-@synthesize txtField;
 @synthesize supportedRegion;
 @synthesize stations;
 @synthesize isDeleteMode;
@@ -88,21 +87,6 @@ NSString *strStreet2 = @"street ";
     [self setSupportedRegion:[tfVC supportedRegion]]; // Get supportedRegion from parent ToFromViewController
     
     isGeocodingOutstanding = FALSE;
-    
-    // Create the textField for the first row of the tableView
-    txtField=[[UITextField alloc]initWithFrame:CGRectMake(TOFROM_TEXT_FIELD_XPOS,TOFROM_TEXT_FIELD_YPOS,myTableView.frame.size.width-TOFROM_TEXT_FIELD_INDENT,[myTableView rowHeight]-TOFROM_INSERT_INTO_CELL_MARGIN)];
-    [txtField setPlaceholder:@"Enter new address"];
-    [txtField setClearButtonMode:UITextFieldViewModeAlways]; // Add a clear button for text field
-    [txtField setFont:[UIFont MEDIUM_FONT]];
-    [txtField setReturnKeyType:UIReturnKeyDone];  // DE275 fix
-    [txtField setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
-    txtField.delegate = self;
-    [txtField addTarget:self action:@selector(toFromTyping:forEvent:) forControlEvents:UIControlEventEditingChanged];
-    [txtField addTarget:self action:@selector(textSubmitted:forEvent:) forControlEvents:(UIControlEventEditingDidEndOnExit)];
-    [txtField setBackgroundColor:[UIColor whiteColor]];
-    
-    // Accessibility Label For UI Automation.
-    txtField.accessibilityLabel = TEXTFIELD_TOFROMTABLEVIEW;
     
     imageDetailDisclosure = [UIImage imageNamed:@"img_locListArrow.png"];
     
@@ -450,7 +434,6 @@ NSString *strStreet2 = @"street ";
     }
     
     [self.btnEdit setSelected:NO];
-    self.txtField.text = NULL_STRING;
     [self markAndUpdateSelectedLocation:locations.tempSelectedFromLocation];
     [self.toFromVC setEditMode:NO_EDIT];
     
@@ -482,10 +465,6 @@ NSString *strStreet2 = @"street ";
         }
     }
     
-    // Clear txtField and select the current item
-    if ([[txtField text] length] > 0) {  // Fix to DE22
-        [txtField setText:@""];  // reset txtField if it has been edited
-    }
     if (isFrom) {
         [locations setSelectedFromLocation:loc]; // Sort location to top of list  next time
         [locations setTypedFromString:@""];
@@ -534,10 +513,6 @@ NSString *strStreet2 = @"street ";
         }
     }
      cell.textLabel.numberOfLines = 2;
-    // DE176 fix 4 of 4.  Check if we need firstResponderSetting set, and if so, set it
-    if (([toFromVC editMode]==FROM_EDIT && [self isFrom] && ![[self txtField] isFirstResponder]) ||
-        ([toFromVC editMode]==TO_EDIT && ![self isFrom] && ![[self txtField] isFirstResponder])) {
-    }
     
     // Prepare the cell settings
     Location *loc = [locations locationAtIndex:[indexPath row]
@@ -810,35 +785,6 @@ NSString *strStreet2 = @"street ";
     return YES;
 }
 
-// 
-// txtField editing callback methods
-//
-
-// Delegate for when text is typed into the to: or from: UITextField (see below for when text submitted)
-// This method updates the to & from table to reflect entries that match the text
-- (IBAction)toFromTyping:(id)sender forEvent:(UIEvent *)event {
-    if (selectedLocation) {
-        selectedLocation = nil;
-        [locations updateSelectedLocation:nil isFrom:isFrom];
-        [toFromVC updateToFromLocation:self isFrom:isFrom location:nil];
-    }
-    
-        if (isFrom) {
-            [locations setTypedFromString:[txtField text]];
-            if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= IOS_LOCALSEARCH_VER) {
-                [locations setTypedFromStringForLocalSearch:[txtField text]];
-            }
-        } else {
-             [locations setTypedToString:[txtField text]];
-            if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= IOS_LOCALSEARCH_VER) {
-                [locations setTypedToStringForLocalSearch:[txtField text]];
-            }
-        }
-    if ([locations areMatchingLocationsChanged]) {  //if typing has changed matrix, reload the array
-        [myTableView reloadData];
-    }
-    
-}
 
 -(void)reloadLocationWithLocalSearch
 {
@@ -1004,7 +950,6 @@ NSString *strStreet2 = @"street ";
          Edited By Sitanshu Joshi
          For Solving DE:27
          */
-        [txtField setText:@""];
         if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= IOS_LOCALSEARCH_VER) {
             if (isFrom) {
                 [locations setTypedFromString:@""];

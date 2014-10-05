@@ -21,14 +21,13 @@
 
 @class ToFromViewController;
 
-@interface ToFromTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,LocationsGeocodeResultsDelegate,UITextFieldDelegate,UITextViewDelegate>
+@interface ToFromTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,LocationsGeocodeResultsDelegate,UITextViewDelegate>
 
 @property (nonatomic, unsafe_unretained) ToFromViewController* toFromVC;  // Parent view controller
 @property (strong, nonatomic) RKObjectManager *rkGeoMgr;  // RestKit Object Manager for geocoding
 @property (strong, nonatomic) Locations *locations;  // Wrapper for collection of all Locations
 @property (nonatomic) BOOL isFrom;   // True if this is the fromTable, false if it is the toTable
 @property (strong, nonatomic) IBOutlet UITableView* myTableView;  // Table View we are controlling
-@property (strong, nonatomic) UITextField* txtField;
 @property (strong, nonatomic) SupportedRegion* supportedRegion; // Geographic area supported by this app
 
 // Items copied over from ToFromViewController.xib
@@ -51,7 +50,6 @@
 
 // Textlabel that is separate from myTableView where text is entered
 - (void)setupIsFrom:(BOOL)isF toFromVC:(ToFromViewController *)tfVC locations:(Locations *)l;
-- (IBAction)toFromTyping:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)textSubmitted:(id)sender forEvent:(UIEvent *)event;
 - (IBAction)editCancelClicked:(id)sender;
 
