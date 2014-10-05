@@ -437,6 +437,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
                 strTrainNumber = [headSignComponent objectAtIndex:1];
             } else if (leg.tripShortName && leg.tripShortName.length > 0) {
                 strTrainNumber = leg.tripShortName;
+                strFullTrainNumber = leg.tripShortName;
             }
             if (strTrainNumber &&
                 [strTrainNumber rangeOfString:@")" options:NSCaseInsensitiveSearch].location != NSNotFound){

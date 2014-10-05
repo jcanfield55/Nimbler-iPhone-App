@@ -44,6 +44,7 @@
         [mapping mapKeyPath:@"route" toAttribute:@"route"];
         [mapping mapKeyPath:@"routeLongName" toAttribute:@"routeLongName"];
         [mapping mapKeyPath:@"routeShortName" toAttribute:@"routeShortName"];
+        [mapping mapKeyPath:@"tripShortName" toAttribute:@"tripShortName"];
         [mapping mapKeyPath:@"startTime" toAttribute:@"startTime"];
         [mapping mapKeyPath:@"tripId" toAttribute:@"tripId"];
         [mapping mapKeyPath:@"agencyName" toAttribute:@"agencyName"];
