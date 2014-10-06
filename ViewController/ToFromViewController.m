@@ -91,7 +91,7 @@
 @synthesize plan;
 @synthesize stations;
 @synthesize planRequestParameters;
-@synthesize mainToFromView,PicketSelectView,fromView,toView,txtFromView,txtToView,btnSwap,btnCureentLoc,imgViewMainToFromBG,imgViewFromBG,imgViewToBG,btnPicker,lblTxtToFromPlaceholder,lblTxtDepartArrive,viewMode,lblTxtFrom,lblTxtTo;
+@synthesize mainToFromView,PicketSelectView,fromView,toView,txtFromView,txtToView,btnSwap,btnCureentLoc,imgViewMainToFromBG,imgViewFromBG,imgViewToBG,btnPicker,lblTxtDepartArrive,viewMode,lblTxtFrom,lblTxtTo;
 @synthesize managedObjectContext;
 
 
@@ -146,10 +146,6 @@ UIImage *imageDetailDisclosure;
     if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
         self.edgesForExtendedLayout = UIRectEdgeNone;
     }
-    lblTxtToFromPlaceholder = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 0.0, txtFromView.frame.size.width - 20.0, 30.0)];
-    [lblTxtToFromPlaceholder setText:Placeholder_Text];
-    [lblTxtToFromPlaceholder setBackgroundColor:[UIColor clearColor]];
-    [lblTxtToFromPlaceholder setTextColor:[UIColor lightGrayColor]];
 
     [self.btnPicker setTitle:@"Now" forState:UIControlStateNormal];
     NSString *strFromFormattedAddress;
@@ -473,7 +469,7 @@ UIImage *imageDetailDisclosure;
 #pragma mark ToFromEdit mode Delegate
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
-   [self.navigationController setNavigationBarHidden:YES animated:NO];
+
     if(editMode == FROM_EDIT && self.fromTableVC.cellTextView){
         [self.fromTableVC.cellTextView setHidden:YES];
         [self.fromTableVC.btnEdit setSelected:NO];
@@ -500,7 +496,6 @@ UIImage *imageDetailDisclosure;
         return YES;
     }
     textView.text = @"";
-    [textView addSubview:lblTxtToFromPlaceholder];
     if(textView==self.txtFromView){
         fromTableVC.isFrom=true;
         [self setEditMode:FROM_EDIT];
@@ -529,53 +524,7 @@ UIImage *imageDetailDisclosure;
     [self.txtFromView setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
     [self.txtToView setTextColor:[UIColor NIMBLER_RED_FONT_COLOR]];
 }
-- (void) textViewDidChange:(UITextView *)theTextView
-{
-    /*
-    if([theTextView.text length]>0){
-        if(editMode==FROM_EDIT ){
-            [fromTable setEditing:NO animated:NO];
-        }else if(editMode==TO_EDIT){
-            [toTable setEditing:NO animated:NO];
-        }
-    }
-    else{
-        if(editMode==FROM_EDIT ){
-            [fromTable setEditing:YES animated:NO];
-        }else if(editMode==TO_EDIT){
-            [toTable setEditing:YES animated:NO];
-        }
-    }
-     */
-    if(![theTextView hasText]) {
-        [theTextView addSubview:lblTxtToFromPlaceholder];
-    } else if ([[theTextView subviews] containsObject:lblTxtToFromPlaceholder]) {
-        [lblTxtToFromPlaceholder removeFromSuperview];
-    }
-    
-    if (theTextView==self.txtFromView) {
-        [locations setTypedFromString:[self.txtFromView text]];
-        if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= IOS_LOCALSEARCH_VER) {
-            [locations setTypedFromStringForLocalSearch:[self.txtFromView text]];
-        }
-    } else {
-        [locations setTypedToString:[self.txtToView text]];
-        if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= IOS_LOCALSEARCH_VER) {
-            [locations setTypedToStringForLocalSearch:[self.txtToView text]];
-        }
-    }
-    if ([locations areMatchingLocationsChanged]) {
-        //if typing has changed matrix, reload the array
-        if (theTextView==self.txtFromView) {
-            [[fromTableVC myTableView] reloadData];
-        }
-        else{
-            [[toTableVC myTableView] reloadData];
-        }
-        
-    }
-    
-}
+
 - (void)setEditMode:(ToFromEditMode)newEditMode
 {
     // Change TOFROMVIEW FRAMES accordingly EDIT MODE
@@ -594,7 +543,6 @@ UIImage *imageDetailDisclosure;
 }
 
 - (void) setToFromViewOnNoEditMode{
-    [lblTxtToFromPlaceholder removeFromSuperview];
     
     if(editMode == FROM_EDIT){
         Location *selectedFromLocation = [locations selectedFromLocation];

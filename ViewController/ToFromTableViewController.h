@@ -35,7 +35,7 @@
 @property (strong, nonatomic) IBOutlet UIImageView* imgViewFromBG;
 @property (strong, nonatomic) IBOutlet UIImageView* imgViewMainToFromBG;
 @property (strong, nonatomic) IBOutlet UIView* mainToFromView;
-@property (strong, nonatomic) IBOutlet UITextView* txtFromView;
+@property (strong, nonatomic) IBOutlet UITextView* txtSearchView;
 
 @property (strong, nonatomic) IBOutlet UIButton* btnToFromEditCancel;
 
@@ -47,6 +47,7 @@
 @property (strong, nonatomic) UIButton *btnEdit;
 @property (nonatomic) int currentRowIndex;
 @property (strong, nonatomic) UITextView *cellTextView;
+@property (strong, nonatomic) UILabel* lblTxtToFromPlaceholder; 
 
 // Textlabel that is separate from myTableView where text is entered
 - (void)setupIsFrom:(BOOL)isF toFromVC:(ToFromViewController *)tfVC locations:(Locations *)l;

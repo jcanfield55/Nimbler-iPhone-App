@@ -53,6 +53,8 @@
 @synthesize btnEdit;
 @synthesize currentRowIndex;
 @synthesize cellTextView;
+@synthesize lblTxtToFromPlaceholder;
+@synthesize txtSearchView;
 
 NSString *strBART1 = @" bart";
 NSString *strBART2 = @"bart ";
@@ -114,6 +116,11 @@ NSString *strStreet2 = @"street ";
     [btnEdit setTitle:@"Edit" forState:UIControlStateNormal];
     [btnEdit setTitle:@"Done" forState:UIControlStateSelected];
     [btnEdit addTarget:self action:@selector(editButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    
+    lblTxtToFromPlaceholder = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 0.0, txtSearchView.frame.size.width - 20.0, 30.0)];
+    [lblTxtToFromPlaceholder setText:Placeholder_Text];
+    [lblTxtToFromPlaceholder setBackgroundColor:[UIColor clearColor]];
+    [lblTxtToFromPlaceholder setTextColor:[UIColor lightGrayColor]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -121,6 +128,7 @@ NSString *strStreet2 = @"street ";
     [super viewWillAppear:animated];
     [btnEdit setFrame:CGRectMake(self.view.frame.size.width -
                                  TOFROM_TABLE_HEADER_EDIT_BUTTON_MARGIN,8,40,10)];
+    [txtSearchView addSubview:lblTxtToFromPlaceholder];
 }
 
 // Method called when currentLocation is first created and automatically picked as the fromLocation
@@ -606,9 +614,39 @@ NSString *strStreet2 = @"street ";
     [myTableView setAllowsSelectionDuringEditing:YES];
 }
 
+//
+// TextViewDelegate implementation
+//
 -(void)textViewDidBeginEditing:(UITextView *)textView{
     NSString *textViewText = textView.text;
     textView.selectedRange = NSMakeRange(textViewText.length,0);
+}
+
+- (void) textViewDidChange:(UITextView *)theTextView
+{
+
+    if(![theTextView hasText]) {
+        [theTextView addSubview:lblTxtToFromPlaceholder];
+    } else if ([[theTextView subviews] containsObject:lblTxtToFromPlaceholder]) {
+        [lblTxtToFromPlaceholder removeFromSuperview];
+    }
+    
+    if (isFrom) {
+        [locations setTypedFromString:[self.txtSearchView text]];
+        if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= IOS_LOCALSEARCH_VER) {
+            [locations setTypedFromStringForLocalSearch:[self.txtSearchView text]];
+        }
+    } else {
+        [locations setTypedToString:[self.txtSearchView text]];
+        if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= IOS_LOCALSEARCH_VER) {
+            [locations setTypedToStringForLocalSearch:[self.txtSearchView text]];
+        }
+    }
+    if ([locations areMatchingLocationsChanged]) {
+        //if typing has changed matrix, reload the array
+            [[self myTableView] reloadData];
+    }
+    
 }
 
 - (void) renameAddress:(UITextView *)textView Row:(int)row{

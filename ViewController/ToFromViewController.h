@@ -42,7 +42,6 @@ typedef enum {
 @property (strong, nonatomic) IBOutlet UIButton* btnSwap;
 @property (strong, nonatomic) IBOutlet UIButton* btnCureentLoc;
 @property (strong, nonatomic) IBOutlet UIButton* btnPicker;
-@property (strong, nonatomic) UILabel* lblTxtToFromPlaceholder;
 @property (strong, nonatomic) IBOutlet UILabel* lblTxtDepartArrive;
 @property (strong, nonatomic) IBOutlet UILabel* lblTxtFrom;
 @property (strong, nonatomic) IBOutlet UILabel* lblTxtTo;

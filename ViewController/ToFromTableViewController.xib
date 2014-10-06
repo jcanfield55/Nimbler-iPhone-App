@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
+        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
     <objects>
@@ -12,7 +13,7 @@
                 <outlet property="imgViewMainToFromBG" destination="88" id="164"/>
                 <outlet property="mainToFromView" destination="77" id="132"/>
                 <outlet property="myTableView" destination="kGk-Z1-gk7" id="HgL-eb-dvH"/>
-                <outlet property="txtFromView" destination="98" id="118"/>
+                <outlet property="txtSearchView" destination="98" id="2cv-mm-ikf"/>
                 <outlet property="view" destination="1" id="3"/>
             </connections>
         </placeholder>
@@ -39,14 +40,14 @@
                             <rect key="frame" x="0.0" y="0.0" width="303" height="54"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </imageView>
-                        <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="123" userLabel="View - From">
+                        <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="123" userLabel="View - Top Header">
                             <rect key="frame" x="7" y="8" width="253" height="38"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" image="img_ToFromEdit.png" translatesAutoresizingMaskIntoConstraints="NO" id="89">
                                     <rect key="frame" x="0.0" y="0.0" width="253" height="38"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </imageView>
-                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="98">
+                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="98" userLabel="Text Search View">
                                     <rect key="frame" x="44" y="4" width="189" height="30"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
