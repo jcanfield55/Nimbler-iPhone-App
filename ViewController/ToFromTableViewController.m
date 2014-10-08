@@ -16,6 +16,7 @@
 #import "Stations.h"
 #import <MapKit/MapKit.h>
 #import "LocationFromLocalSearch.h"
+#import "LocationPickerViewController.h"
 
 
 @interface ToFromTableViewController () 
@@ -52,7 +53,6 @@
 @synthesize isRenameMode;
 @synthesize btnEdit;
 @synthesize currentRowIndex;
-@synthesize cellTextView;
 @synthesize lblTxtToFromPlaceholder;
 @synthesize txtSearchView;
 
@@ -128,6 +128,7 @@ NSString *strStreet2 = @"street ";
     [super viewWillAppear:animated];
     [btnEdit setFrame:CGRectMake(self.view.frame.size.width -
                                  TOFROM_TABLE_HEADER_EDIT_BUTTON_MARGIN,8,40,10)];
+    [self.navigationController.navigationBar setHidden:YES];
     [txtSearchView addSubview:lblTxtToFromPlaceholder];
 }
 
@@ -320,25 +321,9 @@ NSString *strStreet2 = @"street ";
     }
      if(isRenameMode){
          [myTableView setEditing:NO animated:NO];
-         if(cellTextView){
-             [cellTextView removeFromSuperview];
-             cellTextView = nil;
-         }
         currentRowIndex = indexPath.row;
-         [tableView beginUpdates];
-         CGFloat fromTableHeight;
-         if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-             fromTableHeight = TOFROM_HEIGHT_EDIT_MODE_4INCH;
-         }
-         else{
-             fromTableHeight = TOFROM_HEIGHT_EDIT_MODE;
-         }
-        [myTableView setFrame:CGRectMake(myTableView.frame.origin.x, myTableView.frame.origin.y, myTableView.frame.size.width, fromTableHeight)];
+        [tableView beginUpdates];
         
-        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        cellTextView = [[UITextView alloc] initWithFrame:CGRectMake(1,2,300,40)];
-        cellTextView.delegate = self;
-        [cellTextView setBackgroundColor:[UIColor whiteColor]];
         Location *location;
         if(toFromVC.editMode == FROM_EDIT){
           location = [locations.sortedMatchingFromLocations objectAtIndex:[indexPath row]];  
@@ -346,16 +331,7 @@ NSString *strStreet2 = @"street ";
         else if(toFromVC.editMode == TO_EDIT){
            location = [locations.sortedMatchingToLocations objectAtIndex:[indexPath row]];
         }
-        if(location.locationName){
-            cellTextView.text = location.locationName;
-        }
-        else{
-            cellTextView.text = @"";
-        }
-        [cellTextView setFont:cell.textLabel.font];
-        [cellTextView setTag:[indexPath row]+10000];
-        [cell addSubview:cellTextView];
-        [cellTextView becomeFirstResponder];
+
         [tableView endUpdates];
     }
     else{
@@ -436,21 +412,18 @@ NSString *strStreet2 = @"street ";
     isDeleteMode = false;
     isRenameMode = false;
     isRearrangeMode = false;
-    if(cellTextView){
-        [cellTextView removeFromSuperview];
-        cellTextView = nil;
-    }
     
     [self.btnEdit setSelected:NO];
     [self markAndUpdateSelectedLocation:locations.tempSelectedFromLocation];
     [self.toFromVC setEditMode:NO_EDIT];
-    
-    // [self.toFromVC.navigationController setNavigationBarHidden:NO animated:NO];  We may not need this
+    [self.navigationController.navigationBar setHidden:NO];
+    [[self navigationController] popViewControllerAnimated:NO];
 }
 
 // Internal routine for completing edit mode and returning to ToFromViewController
 - (void)exitEditMode {
     [toFromVC setEditMode:NO_EDIT];
+    [self.navigationController.navigationBar setHidden:NO];
     [[self navigationController] popViewControllerAnimated:NO];
 }
 
@@ -617,9 +590,14 @@ NSString *strStreet2 = @"street ";
 //
 // TextViewDelegate implementation
 //
+
+-(BOOL)textViewShouldBeginEditing:(UITextView *)textView{
+    return true;
+}
+
 -(void)textViewDidBeginEditing:(UITextView *)textView{
     NSString *textViewText = textView.text;
-    textView.selectedRange = NSMakeRange(textViewText.length,0);
+    textView.selectedRange = NSMakeRange(textViewText.length,0);      // Not sure if this is still needed, JC 10/5/2014
 }
 
 - (void) textViewDidChange:(UITextView *)theTextView
@@ -762,14 +740,6 @@ NSString *strStreet2 = @"street ";
     if(btnEdit.selected==YES){
         [ myTableView setEditing:YES animated:NO];
     }
-    CGFloat fromTableHeight;
-    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE_4INCH;
-    }
-    else{
-        fromTableHeight = TOFROM_HEIGHT_LOCATION_EDIT_MODE;
-    }
-    [myTableView setFrame:CGRectMake(myTableView.frame.origin.x, myTableView.frame.origin.y, myTableView.frame.size.width, fromTableHeight)];
     [myTableView reloadData];
    
 }

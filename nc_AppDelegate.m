@@ -301,6 +301,9 @@ FeedBackForm *fbView;
         // Turn on location manager
         locationManager = [[CLLocationManager alloc] init];
         [locationManager setDelegate:self];
+        if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) { // Available iOS8
+            [locationManager requestWhenInUseAuthorization];
+        }
         [locationManager startUpdatingLocation];
         
         // Initialize the Locations class and store "Current Location" into the database if not there already

@@ -16,7 +16,6 @@
 #import "Itinerary.h"
 #import <RestKit/RKJSONParserJSONKit.h>
 #import "FeedBackForm.h"
-#import "LocationPickerViewController.h"
 #import "twitterViewController.h"
 #import "SettingInfoViewController.h"
 #import "nc_AppDelegate.h"
@@ -27,6 +26,7 @@
 #import "RealTimeManager.h"
 #import "StationListElement.h"
 #import "RouteExcludeSetting.h"
+#import "LocationPickerViewController.h"
 
 
 @interface ToFromViewController()
@@ -44,7 +44,6 @@
     double startButtonClickTime;
     float durationOfResponseTime;
     NSTimer* activityTimer;
-    LocationPickerViewController *locationPickerVC;
     UIBarButtonItem *barButtonSwap;  // Swap left bar button (for when in NO_EDIT mode)
     UIBarButtonItem *barButtonCancel; // Cancel left bar button (for when in EDIT mode)
 }
@@ -91,6 +90,7 @@
 @synthesize plan;
 @synthesize stations;
 @synthesize planRequestParameters;
+@synthesize locationPickerVC;
 @synthesize mainToFromView,PicketSelectView,fromView,toView,txtFromView,txtToView,btnSwap,btnCureentLoc,imgViewMainToFromBG,imgViewFromBG,imgViewToBG,btnPicker,lblTxtDepartArrive,viewMode,lblTxtFrom,lblTxtTo;
 @synthesize managedObjectContext;
 
@@ -142,6 +142,10 @@ UIImage *imageDetailDisclosure;
     
     fromTableVC = [[ToFromTableViewController alloc] initWithNibName:@"ToFromTableViewController" bundle:nil];
     [fromTableVC setupIsFrom:TRUE toFromVC:self locations: locations];
+    
+    // Update the toTableVC and fromTableVC with the stations if it has not already
+    [toTableVC setStations:self.stations];
+    [fromTableVC setStations:self.stations];
     
     if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
         self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -336,7 +340,7 @@ UIImage *imageDetailDisclosure;
             }
         }
     }
-    //[self.navigationController setNavigationBarHidden:YES animated:NO];
+    [self.navigationController.navigationBar setHidden:NO];
     NSArray *itinerariesArray = [nc_AppDelegate sharedInstance].gtfsParser.itinerariesArray;
     NSArray *fromToStopId = [nc_AppDelegate sharedInstance].planStore.fromToStopID;
     if(itinerariesArray){
@@ -470,13 +474,12 @@ UIImage *imageDetailDisclosure;
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
 
-    if(editMode == FROM_EDIT && self.fromTableVC.cellTextView){
-        [self.fromTableVC.cellTextView setHidden:YES];
+    if(editMode == FROM_EDIT){  // This code can sometime be hit after coming back from LocationPicker.  Needs work
         [self.fromTableVC.btnEdit setSelected:NO];
         [self.fromTableVC editButtonClicked:self.fromTableVC.btnEdit];
     }
-    if(editMode == TO_EDIT && self.toTableVC.cellTextView){
-        [self.toTableVC.cellTextView setHidden:YES];
+    if(editMode == TO_EDIT){ // This code can sometime be hit after coming back from LocationPicker.  Needs work
+
         [self.toTableVC.btnEdit setSelected:NO];
         [self.toTableVC editButtonClicked:self.toTableVC.btnEdit];
     }
@@ -903,6 +906,10 @@ UIImage *imageDetailDisclosure;
 - (IBAction)routeButtonPressed:(id)sender forEvent:(UIEvent *)event
 {
     @try {
+        if ([nc_AppDelegate sharedInstance].isDatePickerOpen) {
+            // if datepicker is still open when route button is pressed, use the date in the datePicker
+            [self selectDate];
+        }
         
         if(datePicker){
             [datePicker removeFromSuperview];
@@ -1330,6 +1337,7 @@ UIImage *imageDetailDisclosure;
     }
 }
 
+
 //Request responder to push a LocationPickerViewController so the user can pick from the locations in locationList
 - (void)callLocationPickerFor:(ToFromTableViewController *)toFromTableVC0 locationList:(NSArray *)locationList0 isFrom:(BOOL)isFrom0 isGeocodeResults:(BOOL)isGeocodeResults0
 {
@@ -1351,14 +1359,14 @@ UIImage *imageDetailDisclosure;
             }
         }
         if(!isAlreadyPushed){
-                CATransition *animation = [CATransition animation];
-                [animation setDuration:0.3];
-                [animation setType:kCATransitionPush];
-                [animation setSubtype:kCATransitionFromRight];
-                [animation setRemovedOnCompletion:YES];
-                [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
-                [[self.navigationController.view layer] addAnimation:animation forKey:nil];
-                [[self navigationController] pushViewController:locationPickerVC animated:NO];
+            CATransition *animation = [CATransition animation];
+            [animation setDuration:0.3];
+            [animation setType:kCATransitionPush];
+            [animation setSubtype:kCATransitionFromRight];
+            [animation setRemovedOnCompletion:YES];
+            [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+            [[self.navigationController.view layer] addAnimation:animation forKey:nil];
+            [[self navigationController] pushViewController:locationPickerVC animated:NO];
         }
     }
     @catch (NSException *exception) {
@@ -1482,68 +1490,36 @@ UIImage *imageDetailDisclosure;
              nil, nil, nil, nil);
 }
 
-//US 137 implementation
-- (IBAction)editCancelClicked:(id)sender{
-    [[nc_AppDelegate sharedInstance].twitterCount setHidden:NO];
-    if(editMode == FROM_EDIT){
-        // [self.fromTable setEditing:NO animated:NO];
-        self.fromTableVC.isDeleteMode = false;
-        self.fromTableVC.isRenameMode = false;
-        self.fromTableVC.isRearrangeMode = false;
-        if(self.fromTableVC.cellTextView){
-            [self.fromTableVC.cellTextView removeFromSuperview];
-            self.fromTableVC.cellTextView = nil;
-        }
-    }
-    else if(editMode == TO_EDIT){
-        // [self.toTable setEditing:NO animated:NO];
-        self.toTableVC.isDeleteMode = false;
-        self.toTableVC.isRenameMode = false;
-        self.toTableVC.isRearrangeMode = false;
-        if(self.toTableVC.cellTextView){
-            [self.toTableVC.cellTextView removeFromSuperview];
-            self.toTableVC.cellTextView = nil;
-        }
-    }
-    [fromTableVC.btnEdit setSelected:NO];
-    [toTableVC.btnEdit setSelected:NO];
-    [self.toTableVC markAndUpdateSelectedLocation:locations.tempSelectedToLocation];
-    [self.fromTableVC markAndUpdateSelectedLocation:locations.tempSelectedFromLocation];
-    [self setEditMode:NO_EDIT];
-
-    [self.navigationController setNavigationBarHidden:NO animated:NO];
-}
-
 #pragma mark UIdatePicker functionality
 
 - (void)selectDate {
     [btnPicker setUserInteractionEnabled:YES];
      [self.navigationController.navigationBar setUserInteractionEnabled:YES];
     [nc_AppDelegate sharedInstance].isDatePickerOpen = NO;
-    [self showTabbar];
+    [[nc_AppDelegate sharedInstance].twitterCount setHidden:NO];  // fished out from showTabbar method -- is this really needed, JC 10/5/2014
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
-    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        [toolBar setFrame:CGRectMake(0, 530, 320, 44)];
-        [datePicker setFrame:CGRectMake(0, 574, 320, 216)];
-    }
-    else{
-        [toolBar setFrame:CGRectMake(0, 460, 320, 44)];
-        [datePicker setFrame:CGRectMake(0, 504, 320, 216)];
-    }
+    [toolBar setFrame:CGRectMake(0,
+                                 self.view.frame.size.height,
+                                 self.view.frame.size.width,
+                                 DATE_PICKER_TOOLBAR_HEIGHT)];  // move it back off bottom of screen
+    [datePicker setFrame:CGRectMake(0,
+                                    self.view.frame.size.height + DATE_PICKER_TOOLBAR_HEIGHT,
+                                    self.view.frame.size.width,
+                                    DATE_PICKER_HEIGHT)];  // move it back off bottom of screen
     [UIView commitAnimations];
     
     
-        if (departOrArrive==DEPART) {
-            self.lblTxtDepartArrive.text = @"Depart:";
-            [self.btnPicker setTitle:[NSString stringWithFormat:@"%@",
-                                      [[tripDateFormatter stringFromDate:[datePicker date]] lowercaseString]] forState:UIControlStateNormal];
-        } else {
-            self.lblTxtDepartArrive.text = @"Arrive:";
-            [self.lblTxtDepartArrive setTextAlignment:NSTextAlignmentRight];
-            [self.btnPicker setTitle:[NSString stringWithFormat:@"%@",
-                                      [[tripDateFormatter stringFromDate:[datePicker date]] lowercaseString]] forState:UIControlStateNormal];
-        }
+    if (departOrArrive==DEPART) {
+        self.lblTxtDepartArrive.text = @"Depart:";
+        [self.btnPicker setTitle:[NSString stringWithFormat:@"%@",
+                                  [[tripDateFormatter stringFromDate:[datePicker date]] lowercaseString]] forState:UIControlStateNormal];
+    } else {
+        self.lblTxtDepartArrive.text = @"Arrive:";
+        [self.lblTxtDepartArrive setTextAlignment:NSTextAlignmentRight];
+        [self.btnPicker setTitle:[NSString stringWithFormat:@"%@",
+                                  [[tripDateFormatter stringFromDate:[datePicker date]] lowercaseString]] forState:UIControlStateNormal];
+    }
    
     date = [datePicker date];
     [self setTripDate:date];
@@ -1560,17 +1536,17 @@ UIImage *imageDetailDisclosure;
     [self.navigationController.navigationBar setUserInteractionEnabled:YES];
     [nc_AppDelegate sharedInstance].isDatePickerOpen = NO;
     [btnPicker setUserInteractionEnabled:YES];
-    [self showTabbar];
+    [[nc_AppDelegate sharedInstance].twitterCount setHidden:NO];  // fished out from showTabbar method -- is this really needed, JC 10/5/2014
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
-     if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-         [toolBar setFrame:CGRectMake(0, 530, 320, 44)];
-         [datePicker setFrame:CGRectMake(0, 574, 320, 216)];
-     }
-     else{
-         [toolBar setFrame:CGRectMake(0, 460, 320, 44)];
-         [datePicker setFrame:CGRectMake(0, 504, 320, 216)];
-     }
+    [toolBar setFrame:CGRectMake(0,
+                                 self.view.frame.size.height,
+                                 self.view.frame.size.width,
+                                 DATE_PICKER_TOOLBAR_HEIGHT)];  // move it back off bottom of screen
+    [datePicker setFrame:CGRectMake(0,
+                                    self.view.frame.size.height + DATE_PICKER_TOOLBAR_HEIGHT,
+                                    self.view.frame.size.width,
+                                    DATE_PICKER_HEIGHT)];  // move it back off bottom of screen
     [UIView commitAnimations];
     
     isTripDateCurrentTime = TRUE;
@@ -1590,7 +1566,10 @@ UIImage *imageDetailDisclosure;
     
     // Fixed DE-331
     datePicker = nil;
-    datePicker = [[UIDatePicker alloc]initWithFrame:CGRectMake(0, 494, 320, 216)];
+    datePicker = [[UIDatePicker alloc]initWithFrame:CGRectMake(0,
+                                                               self.view.frame.size.height + DATE_PICKER_TOOLBAR_HEIGHT,
+                                                               self.view.frame.size.width,
+                                                               DATE_PICKER_HEIGHT)];  // initially locate it off bottom of screen
     datePicker.datePickerMode = UIDatePickerModeDateAndTime;
     datePicker.minuteInterval = 5;
     
@@ -1609,7 +1588,10 @@ UIImage *imageDetailDisclosure;
     
     [self.view addSubview:datePicker];
     [nc_AppDelegate sharedInstance].isDatePickerOpen = YES;
-    toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 450, 320, 44)];
+    toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0,
+                                                          self.view.frame.size.height,
+                                                          self.view.frame.size.width,
+                                                          DATE_PICKER_TOOLBAR_HEIGHT)];  // initially locate it off bottom of screen
     [toolBar setTintColor:[UIColor darkGrayColor]];
     
     if (departOrArrive == DEPART) {
@@ -1625,28 +1607,16 @@ UIImage *imageDetailDisclosure;
     [self.view bringSubviewToFront:datePicker];
 
     [self.view addSubview:toolBar];
-    [UIView beginAnimations:nil context:nil];
+    [UIView beginAnimations:nil context:nil];  // Animation to bring it onto the screen
     [UIView setAnimationDuration:ANIMATION_STANDART_MOTION_SPEED];
-    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
-            [toolBar setFrame:CGRectMake(0, 260, 320, 44)];
-            [datePicker setFrame:CGRectMake(0, 304, 320, 216)];
-        }
-        else{
-            [toolBar setFrame:CGRectMake(0, 244, 320, 44)];
-            [datePicker setFrame:CGRectMake(0, 288, 320, 216)];
-        }
-    }
-    else{
-        if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
-            [toolBar setFrame:CGRectMake(0, 202, 320, 44)];
-            [datePicker setFrame:CGRectMake(0, 246, 320, 180)];
-        }
-        else{
-            [toolBar setFrame:CGRectMake(0, 156, 320, 44)];
-            [datePicker setFrame:CGRectMake(0, 200, 320, 216)];
-        }
-    }
+    [toolBar setFrame:CGRectMake(0,
+                                 self.view.frame.size.height - DATE_PICKER_TOOLBAR_HEIGHT - DATE_PICKER_HEIGHT - DATE_PICKER_MARGIN_FROM_BOTTOM,
+                                 self.view.frame.size.width,
+                                 DATE_PICKER_TOOLBAR_HEIGHT)];
+    [datePicker setFrame:CGRectMake(0,
+                                    self.view.frame.size.height - DATE_PICKER_HEIGHT - DATE_PICKER_MARGIN_FROM_BOTTOM,
+                                    self.view.frame.size.width,
+                                    DATE_PICKER_HEIGHT)];
     [UIView commitAnimations];
 }
 
@@ -1667,86 +1637,4 @@ UIImage *imageDetailDisclosure;
 
 #pragma mark Hide and Show Tabbar
 
-- (void) hideTabBar {
-    [[nc_AppDelegate sharedInstance].twitterCount setHidden:YES];
-    for(UIView *view in self.tabBarController.view.subviews)
-    {
-        CGRect _rect = view.frame;
-        if([view isKindOfClass:[UITabBar class]])
-        {
-            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                _rect.origin.y = 568;
-            }
-            else{
-                _rect.origin.y = 480;
-            }
-            [view setFrame:_rect];
-        }
-        else if([view isKindOfClass:[UIImageView class]]){
-            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                _rect.origin.y = 568;
-            }
-            else{
-                _rect.origin.y = 480;
-            }
-            [view setFrame:_rect];
-        }
-        else {
-            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                _rect.size.height = 568;
-            }
-            else{
-               _rect.size.height = 480; 
-            }
-            [view setFrame:_rect];
-        }
-    }   
-}
-
-- (void) showTabbar {
-    [[nc_AppDelegate sharedInstance].twitterCount setHidden:NO];
-    for(UIView *view in self.tabBarController.view.subviews)
-    {
-        CGRect _rect = view.frame;
-        if([view isKindOfClass:[UITabBar class]]){
-            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                _rect.origin.y = 519;
-            }
-            else{
-               _rect.origin.y = 431; 
-            }
-            [view setFrame:_rect];
-        }
-        else if([view isKindOfClass:[UIButton class]]){
-            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                _rect.size.height = 42;
-            }
-            else{
-               _rect.size.height = 42;
-            }
-            [view setFrame:_rect];
-            
-        }
-        else if([view isKindOfClass:[UIImageView class]]){
-            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                _rect.origin.y = 519;
-            }
-            else{
-                _rect.origin.y = 431;
-            }
-            [view setFrame:_rect];
-        }
-        else {
-            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                 _rect.size.height = 523;
-            }
-            else{
-                _rect.size.height = 431; 
-            }
-            [view setFrame:_rect];
-        }
-    }   
-    RXCustomTabBar *rxCustomTabbar = (RXCustomTabBar *)self.tabBarController;
-    [rxCustomTabbar showNewTabBar];
-}
 @end

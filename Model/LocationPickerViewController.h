@@ -10,10 +10,10 @@
 // It is brought up when the Geocoder returns multiple matching locations
 
 #import <UIKit/UIKit.h>
-#import "ToFromViewController.h"
-#import "ToFromTableViewController.h"
 #import "StationListElement.h"
 #import "nc_AppDelegate.h"
+
+@class ToFromTableViewController;
 
 @interface LocationPickerViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 

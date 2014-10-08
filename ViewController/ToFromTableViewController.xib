@@ -23,7 +23,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="68">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="436"/>
                 </imageView>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="kGk-Z1-gk7" userLabel="My Table View">
                     <rect key="frame" x="80" y="109" width="160" height="218"/>
@@ -65,11 +65,12 @@
                                 <constraint firstItem="89" firstAttribute="leading" secondItem="123" secondAttribute="leading" id="Fyv-o5-GCH"/>
                                 <constraint firstAttribute="trailing" secondItem="98" secondAttribute="trailing" constant="20" id="QyH-Cp-oJh"/>
                                 <constraint firstAttribute="trailing" secondItem="89" secondAttribute="trailing" id="VM5-uS-ZfO"/>
+                                <constraint firstAttribute="height" constant="38" id="Wbj-ei-Hl4"/>
                                 <constraint firstItem="98" firstAttribute="leading" secondItem="123" secondAttribute="leading" constant="44" id="c02-xz-3i1"/>
                                 <constraint firstAttribute="bottom" secondItem="89" secondAttribute="bottom" id="jca-ab-T8U"/>
                             </constraints>
                         </view>
-                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="146" userLabel="Button - edit cancel">
+                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="146" userLabel="Button - edit cancel">
                             <rect key="frame" x="234" y="8" width="60" height="38"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="38" id="Xs0-sE-iqs"/>
@@ -90,12 +91,10 @@
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstItem="146" firstAttribute="top" secondItem="77" secondAttribute="top" id="482-Nt-XAS"/>
+                        <constraint firstAttribute="centerY" secondItem="123" secondAttribute="centerY" id="0J9-Ag-kXa"/>
                         <constraint firstItem="88" firstAttribute="leading" secondItem="77" secondAttribute="leading" id="76r-Du-YMp"/>
                         <constraint firstAttribute="trailing" secondItem="88" secondAttribute="trailing" id="7pP-qv-SbY"/>
-                        <constraint firstItem="123" firstAttribute="top" secondItem="77" secondAttribute="top" id="AdT-Rb-mUH"/>
                         <constraint firstAttribute="bottom" secondItem="88" secondAttribute="bottom" id="EXb-HY-YNe"/>
-                        <constraint firstItem="146" firstAttribute="centerY" secondItem="123" secondAttribute="centerY" id="Lxf-GC-6qb"/>
                         <constraint firstItem="146" firstAttribute="leading" secondItem="123" secondAttribute="trailing" constant="5" id="Sum-GN-jtY"/>
                         <constraint firstItem="88" firstAttribute="top" secondItem="77" secondAttribute="top" id="ZHo-cm-czA"/>
                         <constraint firstItem="123" firstAttribute="leading" secondItem="77" secondAttribute="leading" constant="7" id="ZgC-rD-cIa"/>
@@ -107,14 +106,14 @@
             <color key="backgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstItem="kGk-Z1-gk7" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="0Zl-nr-wem"/>
-                <constraint firstItem="77" firstAttribute="top" secondItem="1" secondAttribute="top" constant="13" id="5TJ-Eu-jnC" userLabel="Vertical Space - (13) - View ToFrom - View"/>
+                <constraint firstItem="77" firstAttribute="top" secondItem="1" secondAttribute="top" constant="33" id="5TJ-Eu-jnC" userLabel="Vertical Space - (13) - View ToFrom - View"/>
                 <constraint firstItem="68" firstAttribute="top" secondItem="1" secondAttribute="top" id="6jT-94-gB9"/>
                 <constraint firstAttribute="trailing" secondItem="68" secondAttribute="trailing" id="Ajh-x4-LoW"/>
                 <constraint firstItem="68" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="DoD-IH-grX"/>
                 <constraint firstItem="77" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="8" id="M1w-on-x2a"/>
                 <constraint firstAttribute="trailing" secondItem="77" secondAttribute="trailing" constant="8" id="MI8-9s-2UN"/>
                 <constraint firstAttribute="trailing" secondItem="kGk-Z1-gk7" secondAttribute="trailing" id="QKz-Zd-egg"/>
-                <constraint firstAttribute="bottom" secondItem="68" secondAttribute="bottom" constant="-44" id="eFH-Ub-8GQ"/>
+                <constraint firstAttribute="bottom" secondItem="68" secondAttribute="bottom" id="eFH-Ub-8GQ"/>
                 <constraint firstAttribute="bottom" secondItem="kGk-Z1-gk7" secondAttribute="bottom" id="oax-r3-HAd"/>
                 <constraint firstItem="kGk-Z1-gk7" firstAttribute="top" secondItem="77" secondAttribute="bottom" constant="6" id="sTC-mp-SsC"/>
             </constraints>

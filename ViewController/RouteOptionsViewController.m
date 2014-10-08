@@ -61,9 +61,6 @@ Itinerary * itinerary;
 NSString *itinararyId;
 UIImage *imageDetailDisclosure;
 
-int const ROUTE_OPTIONS_TABLE_HEIGHT = 396;
-int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -94,9 +91,6 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
 {
     [super viewWillAppear:animated];
      [[nc_AppDelegate sharedInstance].twitterCount setHidden:YES];
-    if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
-      [btnFeedBack setFrame:CGRectMake(btnFeedBack.frame.origin.x, 483, btnFeedBack.frame.size.width,btnFeedBack.frame.size.height)];
-    }
     [self changeMainTableSettings];
     [self.navigationController setNavigationBarHidden:NO animated:NO];
     if(plan){
@@ -200,27 +194,10 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
 
 
 - (void) changeMainTableSettings{
-
-    CGRect rect0 = [mainTable frame];
-    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        rect0.size.height = ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5;
-        rect0.origin.y = 55; // TODO Replace with automatic code
-    }
-    else{
-        rect0.size.height = ROUTE_OPTIONS_TABLE_HEIGHT;
-        rect0.origin.y = 55;
-    }
     int mainTableYPOS = [self calculateTotalHeightOfButtonView];
     if(mainTableYPOS > 0){
-        rect0.origin.y = 0;
-        rect0.origin.y = mainTableYPOS+20;
-        rect0.size.height = rect0.size.height - (mainTableYPOS+20);
         [self createViewWithButtons:mainTableYPOS];
     }
-    if(self.navigationController.navigationBarHidden==YES){
-        rect0.origin.y = mainTableYPOS+44;
-    }
-    [mainTable setFrame:rect0];
     [mainTable reloadData];
 }
 - (void) reloadData:(Plan *)newPlan{
@@ -704,12 +681,7 @@ int const ROUTE_OPTIONS_TABLE_HEIGHT_IPHONE5 = 480;
         [viewCellBackground setBackgroundColor:[UIColor CELL_BACKGROUND_ROUTE_OPTION_VIEW]];
         cell.backgroundView = viewCellBackground;*/
         if (!routeDetailsVC) {
-            if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-                routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailViewController_568h" bundle:nil];
-            }
-            else{
-                routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
-            }
+            routeDetailsVC = [[RouteDetailsViewController alloc] initWithNibName:@"RouteDetailsViewController" bundle:nil];
         }
         if(itinerary.isRealTimeItinerary){
             NIMLOG_PERF2(@"Realtime itinerary");

@@ -80,5 +80,7 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>To enable navigation from the current location and show current location in the map.</string>
 </dict>
 </plist>

@@ -17,8 +17,7 @@
 #import "SupportedRegion.h"
 #import "Stations.h"
 
-
-@class PlanStore;
+@class PlanStore, LocationPickerViewController;
 
 typedef enum {
     NO_EDIT,    // Neither to nor from address is being edited with the keyboard
@@ -81,6 +80,8 @@ typedef enum {
 @property (strong, nonatomic) NSString *strLiveDataURL;
 @property (strong, nonatomic) Plan *plan;
 @property (strong, nonatomic) PlanRequestParameters *planRequestParameters;
+@property (strong, nonatomic) LocationPickerViewController *locationPickerVC;
+
 
 @property(nonatomic)NSManagedObjectContext *managedObjectContext;
 
@@ -96,15 +97,12 @@ typedef enum {
 
 //Request responder to push a LocationPickerViewController so the user can pick from the locations in locationList
 //isGeocodeResults is true if LocationPicker called to disambiguate multiple geocode results, otherwise false
-- (void)callLocationPickerFor:(ToFromTableViewController *)toFromTableVC0 locationList:(NSArray *)locationList0 isFrom:(BOOL)isFrom0 isGeocodeResults:(BOOL)isGeocodeResults; 
+- (void)callLocationPickerFor:(ToFromTableViewController *)toFromTableVC0 locationList:(NSArray *)locationList0 isFrom:(BOOL)isFrom0 isGeocodeResults:(BOOL)isGeocodeResults;
 
 - (void)updateTripDate;
 
 -(BOOL)alertUsetForLocationService;
 -(void)setFBParameterForGeneral;
-
-- (void) hideTabBar;
-- (void) showTabbar;
 
 - (void) revealtoggle;
 @end

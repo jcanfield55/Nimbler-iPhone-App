@@ -26,9 +26,6 @@
 @synthesize isFrom;
 @synthesize isGeocodeResults;
 
-int const LOCATION_PICKER_TABLE_HEIGHT = 410;
-int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 498;
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -46,17 +43,6 @@ int const LOCATION_PICKER_TABLE_HEIGHT_4INCH = 498;
 
     locationPicked = FALSE;
     
-    // Enforce height of main table
-    CGRect rect0 = [mainTable frame];
-    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-       rect0.size.height = LOCATION_PICKER_TABLE_HEIGHT_4INCH;
-        rect0.origin.y = 0;
-    }
-    else{
-        rect0.size.height = LOCATION_PICKER_TABLE_HEIGHT;
-        rect0.origin.y = 0;
-    }
-    [mainTable setFrame:rect0];
     mainTable.delegate = self;
     mainTable.dataSource = self;
     [mainTable reloadData];
