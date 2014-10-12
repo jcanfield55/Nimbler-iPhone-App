@@ -82,10 +82,16 @@
 
 
 
-// RouteDetailsViewController & LegMapViewController
+// RouteDetailsViewController
 #define ROUTE_DETAILS_TABLE_CELL_TEXT_BORDER 47 // Amount to subtract from the cell width to determine the width for wrapping multi-line text.  Obtained thru trial & error.
 #define ROUTE_DETAILS_MINIMUM_TABLE_HEIGHT 90  // Minimum margin on the bottom for route table and feedback button
 #define ROUTE_DETAILS_MINIMUM_MAP_HEIGHT 40
+
+// LegMapViewController
+#define MAP_ALPHA_LIGHT 0.7
+#define MAP_ALPHA_MEDIUM 0.8
+#define MAP_ALPHA_LIGHTER 0.4
+#define MAP_LINE_WIDTH 5   // Line width for maps
 
 
 // Table cell height

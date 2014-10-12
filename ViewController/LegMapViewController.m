@@ -19,10 +19,6 @@
 #import "IntermediateStops.h"
 #import "RealTimeManager.h"
 
-#define LINE_WIDTH  5
-#define ALPHA_LIGHT 0.7
-#define ALPHA_MEDIUM 0.8
-#define ALPHA_LIGHTER 0.4
 #define ARRIVAL @"Arrival"
 #define LIST_VEHICLE_POSITIONS @"lstVehiclePositions"
 #define BUS  @"bus"
@@ -342,8 +338,8 @@ NSString *legID;
         if ([overlay isKindOfClass:[MKPolyline class]]) {
             MKPolylineView *aView = [[MKPolylineView alloc] initWithPolyline:(MKPolyline*)overlay];
             // aView.fillColor = [[UIColor cyanColor] colorWithAlphaComponent:0.2];
-            aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:ALPHA_LIGHTER];
-            aView.lineWidth = LINE_WIDTH;
+            aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:MAP_ALPHA_LIGHTER];
+            aView.lineWidth = MAP_LINE_WIDTH;
             NIMLOG_EVENT1(@"itineraryNumber=%d",itineraryNumber);
             
             // Determine if this overlay is the one in focus.  If so, make it darker
@@ -352,17 +348,17 @@ NSString *legID;
                     if (i == itineraryNumber) {
                         Leg *leg  = [[itinerary legDescriptionToLegMapArray] objectAtIndex:itineraryNumber];
                         if([leg isWalk] || [leg isBike]){
-                            aView.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:ALPHA_LIGHT] ;
-                            aView.lineWidth = LINE_WIDTH;
+                            aView.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:MAP_ALPHA_LIGHT] ;
+                            aView.lineWidth = MAP_LINE_WIDTH;
                         } else if([leg isBus]){
-                            aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:ALPHA_LIGHT];
-                            aView.lineWidth = LINE_WIDTH;
+                            aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:MAP_ALPHA_LIGHT];
+                            aView.lineWidth = MAP_LINE_WIDTH;
                         } else if([leg isTrain]){                        
-                            aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:ALPHA_MEDIUM] ;
-                            aView.lineWidth = LINE_WIDTH;
+                            aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:MAP_ALPHA_MEDIUM] ;
+                            aView.lineWidth = MAP_LINE_WIDTH;
                         } else {
-                            aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:ALPHA_MEDIUM] ;
-                            aView.lineWidth = LINE_WIDTH;
+                            aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:MAP_ALPHA_MEDIUM] ;
+                            aView.lineWidth = MAP_LINE_WIDTH;
                         }
                         
                     }

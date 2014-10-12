@@ -7,6 +7,7 @@
 //
 
 #import "BikeStepsViewController.h"
+#import "UIConstants.h"
 
 @implementation BikeStepsViewController
 
@@ -26,15 +27,9 @@
 @synthesize currentPolyLine;
 @synthesize startPoint;
 @synthesize yPos;
+@synthesize mapToTableRatioConstraint;
+@synthesize handleVerticalConstraint;
 
-#define MAXIMUM_SCROLL_POINT 360
-#define MAXIMUM_SCROLL_POINT_4_INCH 425
-#define MINIMUM_SCROLL_POINT 15
-#define IPHONE_SCREEN_WIDTH 320
-#define MAIN_TABLE_Y_BUFFER 30
-#define LINE_WIDTH  5
-#define ALPHA_LIGHT 0.7
-#define ALPHA_MEDIUM 0.8
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -197,22 +192,44 @@
 }
 
 - (void) setFramesOfView:(float) ypos{
-    NSLog(@"ypos=%f",ypos);
-    int maxHeight;
-    if([[UIScreen mainScreen] bounds].size.height == IPHONE5HEIGHT){
-        maxHeight = MAXIMUM_SCROLL_POINT_4_INCH;
+    @try {
+        if (ypos > self.view.frame.size.height - ROUTE_DETAILS_MINIMUM_TABLE_HEIGHT) {
+            ypos = self.view.frame.size.height - ROUTE_DETAILS_MINIMUM_TABLE_HEIGHT;
+        }
+        if (ypos < ROUTE_DETAILS_MINIMUM_MAP_HEIGHT) {
+            ypos = ROUTE_DETAILS_MINIMUM_MAP_HEIGHT;
+        }
+        
+        // Remove mapToTableRatioConstraint if any
+        for (NSLayoutConstraint *constraint in [self.view constraints]) {
+            if (constraint == mapToTableRatioConstraint) {
+                [self.view removeConstraint:constraint];
+                break;
+            }
+        }
+        
+        // Remove handleVerticalConstraint if any
+        for (NSLayoutConstraint *constraint in [self.view constraints]) {
+            if (constraint == handleVerticalConstraint) {
+                [self.view removeConstraint:constraint];
+                handleVerticalConstraint = nil;
+                break;
+            }
+        }
+        
+        // Add a new constraint
+        handleVerticalConstraint = [NSLayoutConstraint constraintWithItem:handleControl
+                                                                attribute:NSLayoutAttributeTop
+                                                                relatedBy:NSLayoutRelationEqual
+                                                                   toItem:self.view
+                                                                attribute:NSLayoutAttributeTop
+                                                               multiplier:1.0
+                                                                 constant:ypos];
+        [self.view addConstraint:handleVerticalConstraint];
     }
-    else{
-        maxHeight = MAXIMUM_SCROLL_POINT;
+    @catch (NSException *exception) {
+        logException(@"RouteDetailsViewController->imageMoved", @"", exception);
     }
-    if(ypos <= maxHeight && ypos >=MINIMUM_SCROLL_POINT){
-        [handleControl setFrame:CGRectMake(handleControl.frame.origin.x,ypos, IPHONE_SCREEN_WIDTH, handleControl.frame.size.height)];
-        [mapView setFrame:CGRectMake(mapView.frame.origin.x,mapView.frame.origin.y,mapView.frame.size.width,mapView.frame.size.height+(ypos-mapHeight-5))];
-        [bikeStepsTableView setFrame:CGRectMake(bikeStepsTableView.frame.origin.x,handleControl.frame.origin.y+handleControl.frame.size.height,IPHONE_SCREEN_WIDTH,self.view.frame.size.height-(handleControl.frame.size.height+mapView.frame.size.height))];
-        mapHeight = mapView.frame.size.height;
-        tableHeight = bikeStepsTableView.frame.size.height;
-    }
-    [self.view bringSubviewToFront:handleControl];
 }
 
 
@@ -256,8 +273,12 @@
 }
 
 - (IBAction) imageMoved:(id) sender withEvent:(UIEvent *) event{
-    CGPoint point = [[[event allTouches] anyObject] locationInView:self.view];
-    [self setFramesOfView:point.y];
+    for (UITouch *touch in [event allTouches]) {
+        CGPoint point = [touch locationInView:self.view];
+        NIMLOG_UBER(@"Touch Events: %d, Point (%f, %f)", [[event allTouches] count], point.x, point.y);
+        int ypos = point.y - (handleControl.frame.size.height/2);  // Adjust so finger is positioned at middle of handle
+        [self setFramesOfView:ypos];
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -402,12 +423,12 @@
         if ([overlay isKindOfClass:[MKPolyline class]]) {
             MKPolylineView *aView = [[MKPolylineView alloc] initWithPolyline:(MKPolyline*)overlay];
             if([overlay isEqual:currentPolyLine]){
-               aView.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:ALPHA_MEDIUM];
+               aView.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:MAP_ALPHA_MEDIUM];
             }
             else{
-               aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:ALPHA_MEDIUM]; 
+               aView.strokeColor = [[UIColor purpleColor] colorWithAlphaComponent:MAP_ALPHA_MEDIUM]; 
             }
-            aView.lineWidth = LINE_WIDTH;
+            aView.lineWidth = MAP_LINE_WIDTH;
             return aView;
         }
         return nil;

@@ -330,10 +330,6 @@
 		8D04A9CA17B1083E007DB944 /* FeedBackFormPopUp_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D04A9C317B1046D007DB944 /* FeedBackFormPopUp_568h.xib */; };
 		8D04A9CB17B1083E007DB944 /* FeedBackFormPopUp_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D04A9C317B1046D007DB944 /* FeedBackFormPopUp_568h.xib */; };
 		8D04A9CC17B1083F007DB944 /* FeedBackFormPopUp_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D04A9C317B1046D007DB944 /* FeedBackFormPopUp_568h.xib */; };
-		8D04A9CF17BE4FD9007DB944 /* BikeStepsViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D04A9CE17BE4FD8007DB944 /* BikeStepsViewController_568h.xib */; };
-		8D04A9D017BE4FD9007DB944 /* BikeStepsViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D04A9CE17BE4FD8007DB944 /* BikeStepsViewController_568h.xib */; };
-		8D04A9D117BE4FD9007DB944 /* BikeStepsViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D04A9CE17BE4FD8007DB944 /* BikeStepsViewController_568h.xib */; };
-		8D04A9D217BE4FD9007DB944 /* BikeStepsViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D04A9CE17BE4FD8007DB944 /* BikeStepsViewController_568h.xib */; };
 		8D04E79C16E8A488001DB75D /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */; };
 		8D052F6E171E6969008D4CE0 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
 		8D06AB1D17AA1A8E00ACC806 /* navBar.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D06AB1917AA1A8E00ACC806 /* navBar.png */; };
@@ -1895,7 +1891,6 @@
 		8D04A9C317B1046D007DB944 /* FeedBackFormPopUp_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedBackFormPopUp_568h.xib; sourceTree = "<group>"; };
 		8D04A9C417B1046D007DB944 /* FeedBackFormPopUp.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedBackFormPopUp.xib; sourceTree = "<group>"; };
 		8D04A9CD17BE49C3007DB944 /* Network_Commuting 1.12.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.12.xcdatamodel"; sourceTree = "<group>"; };
-		8D04A9CE17BE4FD8007DB944 /* BikeStepsViewController_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BikeStepsViewController_568h.xib; sourceTree = "<group>"; };
 		8D06AB1917AA1A8E00ACC806 /* navBar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navBar.png; sourceTree = "<group>"; };
 		8D06AB1A17AA1A8E00ACC806 /* navBar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navBar@2x.png"; sourceTree = "<group>"; };
 		8D06AB1B17AA1A8E00ACC806 /* nimbler.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nimbler.png; sourceTree = "<group>"; };
@@ -2080,7 +2075,7 @@
 		8DE42FE816E0AEEE00A37AD3 /* img_legFerrySelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_legFerrySelect.png; sourceTree = "<group>"; };
 		8DE42FE916E0AEEE00A37AD3 /* img_legFerrySelect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_legFerrySelect@2x.png"; sourceTree = "<group>"; };
 		8DE4B23017AF77EB00105A41 /* BikeStepsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BikeStepsViewController.h; sourceTree = "<group>"; };
-		8DE4B23117AF77EB00105A41 /* BikeStepsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BikeStepsViewController.m; sourceTree = "<group>"; };
+		8DE4B23117AF77EB00105A41 /* BikeStepsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BikeStepsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8DE4B23217AF77EB00105A41 /* BikeStepsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BikeStepsViewController.xib; sourceTree = "<group>"; };
 		8DEA577117BA6A4E00FB1A00 /* bikeshare_Selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bikeshare_Selected.png; sourceTree = "<group>"; };
 		8DEA577217BA6A4E00FB1A00 /* bikeshare_Selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bikeshare_Selected@2x.png"; sourceTree = "<group>"; };
@@ -2327,7 +2322,6 @@
 				8DE4B23017AF77EB00105A41 /* BikeStepsViewController.h */,
 				8DE4B23117AF77EB00105A41 /* BikeStepsViewController.m */,
 				8DE4B23217AF77EB00105A41 /* BikeStepsViewController.xib */,
-				8D04A9CE17BE4FD8007DB944 /* BikeStepsViewController_568h.xib */,
 				8D04A9C417B1046D007DB944 /* FeedBackFormPopUp.xib */,
 				8D04A9C317B1046D007DB944 /* FeedBackFormPopUp_568h.xib */,
 			);
@@ -3433,7 +3427,6 @@
 				524EAEA91933EF8C00EE00B4 /* img_switcherarrows2@2x.png in Resources */,
 				8D04A9C517B1046D007DB944 /* FeedBackFormPopUp_568h.xib in Resources */,
 				8D04A9C617B1046D007DB944 /* FeedBackFormPopUp.xib in Resources */,
-				8D04A9CF17BE4FD9007DB944 /* BikeStepsViewController_568h.xib in Resources */,
 				524EAEAE1933EFA900EE00B4 /* img_switcherarrows2.png in Resources */,
 				8D361EC217B8FA6900246A55 /* feedBackLink.png in Resources */,
 				8D361EC917B916E100246A55 /* feedBackLink@2x.png in Resources */,
@@ -3721,7 +3714,6 @@
 				5286391519D3C843001232CA /* ToFromTableViewController.xib in Resources */,
 				8D04A9C717B10838007DB944 /* FeedBackFormPopUp.xib in Resources */,
 				8D04A9CA17B1083E007DB944 /* FeedBackFormPopUp_568h.xib in Resources */,
-				8D04A9D017BE4FD9007DB944 /* BikeStepsViewController_568h.xib in Resources */,
 				8D01D34617B9E9E7002DB6CA /* feedBackLink.png in Resources */,
 				8D01D34917B9E9EA002DB6CA /* feedBackLink@2x.png in Resources */,
 				8D01D35317B9EEB7002DB6CA /* Icon.png in Resources */,
@@ -3998,7 +3990,6 @@
 				8DE4B23A17AF77EB00105A41 /* BikeStepsViewController.xib in Resources */,
 				8D04A9C917B1083A007DB944 /* FeedBackFormPopUp.xib in Resources */,
 				8D04A9CC17B1083F007DB944 /* FeedBackFormPopUp_568h.xib in Resources */,
-				8D04A9D217BE4FD9007DB944 /* BikeStepsViewController_568h.xib in Resources */,
 				8D01D34817B9E9E8002DB6CA /* feedBackLink.png in Resources */,
 				8D01D34B17B9E9EC002DB6CA /* feedBackLink@2x.png in Resources */,
 				8D01D35517B9EEC5002DB6CA /* Icon.png in Resources */,
@@ -4274,7 +4265,6 @@
 				8DE4B23917AF77EB00105A41 /* BikeStepsViewController.xib in Resources */,
 				8D04A9C817B10839007DB944 /* FeedBackFormPopUp.xib in Resources */,
 				8D04A9CB17B1083E007DB944 /* FeedBackFormPopUp_568h.xib in Resources */,
-				8D04A9D117BE4FD9007DB944 /* BikeStepsViewController_568h.xib in Resources */,
 				8D01D34717B9E9E7002DB6CA /* feedBackLink.png in Resources */,
 				8D01D34A17B9E9EB002DB6CA /* feedBackLink@2x.png in Resources */,
 				8D01D35117B9EEA5002DB6CA /* Icon.png in Resources */,

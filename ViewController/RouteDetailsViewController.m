@@ -512,12 +512,7 @@ NSUserDefaults *prefs;
      Leg *leg = [[itinerary legDescriptionToLegMapArray] objectAtIndex:[indexPath row]];
     if(![leg isEqual:[NSNull null]] && [leg isBike] && [[leg sortedSteps] count] > 0){
         BikeStepsViewController *bikeStepsView;
-        if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
-          bikeStepsView = [[BikeStepsViewController alloc] initWithNibName:@"BikeStepsViewController_568h" bundle:nil];  
-        }
-        else{
-           bikeStepsView = [[BikeStepsViewController alloc] initWithNibName:@"BikeStepsViewController" bundle:nil]; 
-        }
+        bikeStepsView = [[BikeStepsViewController alloc] initWithNibName:@"BikeStepsViewController" bundle:nil];
         bikeStepsView.yPos = yPos;
         bikeStepsView.steps = [leg sortedSteps];
         [self.navigationController pushViewController:bikeStepsView animated:YES];
