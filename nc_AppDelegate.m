@@ -21,6 +21,7 @@
 #import "RealTimeManager.h"
 #import "StationListElement.h"
 #import "RouteExcludeSetting.h"
+#import "RevealController.h"
 #if TEST_FLIGHT_ENABLED
 #import "TestFlightSDK1-1/TestFlight.h"
 #import "ZipArchive.h"
@@ -444,17 +445,9 @@ FeedBackForm *fbView;
         SettingInfoViewController *settingsView;
         FeedBackForm *feedbackView;
         NIMLOG_UBER(@"Screen size %f x %f", [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
-        if([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT){
-            settingsView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF_568h" bundle:nil];
-            feedbackView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm_568h" bundle:nil];
-            // DE-387 Fixed
-            twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController_568h" bundle:nil];
-        }
-        else{
-            settingsView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF" bundle:nil];
-            feedbackView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
-            twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
-        }
+        settingsView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF" bundle:nil];
+        feedbackView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
+        twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
         
         self.tabBarController = [[RXCustomTabBar alloc] init];
         
@@ -468,6 +461,7 @@ FeedBackForm *fbView;
         revealViewController = [[RevealController alloc] initWithFrontViewController:navController1 rearViewController:self.tabBarController];
          self.window.rootViewController = revealViewController;
         [self.window makeKeyAndVisible];
+        revealViewController.rearViewRevealWidth = revealViewController.view.frame.size.width - REVEAL_CONTROLLER_RIGHT_MARGIN;
     }
     @catch (NSException *exception) {
         logException(@"ncAppDelegate->didFinishLaunchingWithOptions #2", @"", exception);
@@ -477,6 +471,7 @@ FeedBackForm *fbView;
 
 - (void)setUpTabViewController
 {
+    /* JC 10/19/2014 - this appears to be only used by RealTimeServerStubTest.m */
     /*
      These is for navigation controller
      
@@ -489,24 +484,8 @@ FeedBackForm *fbView;
     // This is for TabBar controller
     //[self.window makeKeyAndVisible];
     self.tabBarController = [[RXCustomTabBar alloc] init];
-    if([[UIScreen mainScreen] bounds].size.height == 568){
-        //            if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-        //                settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController_568h" bundle:nil];
-        //            }
-        //            else{
-        settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF_568h" bundle:nil];
-        //}
-        fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm_568h" bundle:nil];
-    }
-    else{
-        //            if([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:CALTRAIN_BUNDLE_IDENTIFIER]){
-        //                settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingInfoViewController" bundle:nil];
-        //            }
-        //            else{
-        settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF" bundle:nil];
-        //}
-        fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
-    }
+    settingView = [[SettingInfoViewController alloc] initWithNibName:@"SettingViewController_SF" bundle:nil];
+    fbView = [[FeedBackForm alloc] initWithNibName:@"FeedBackForm" bundle:nil];
     twitterView = [[twitterViewController alloc] initWithNibName:@"twitterViewController" bundle:nil];
     
     UINavigationController *toFromController = [[UINavigationController alloc] initWithRootViewController:toFromViewController];
@@ -1441,12 +1420,7 @@ FeedBackForm *fbView;
     else if(buttonIndex == 1){
         buttonResponse = @"Nimbler feedback";
         FeedBackForm *feedBackForm;
-        if ([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT) {
-            feedBackForm = [[FeedBackForm alloc] initWithNibName:@"FeedBackFormPopUp_568h" bundle:nil];
-        }
-        else{
-            feedBackForm = [[FeedBackForm alloc] initWithNibName:@"FeedBackFormPopUp" bundle:nil];
-        }
+        feedBackForm = [[FeedBackForm alloc] initWithNibName:@"FeedBackFormPopUp" bundle:nil];
         feedBackForm.isViewPresented = true;
         [self.toFromViewController presentModalViewController:feedBackForm animated:YES];
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];

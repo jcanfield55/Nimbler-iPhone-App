@@ -12,12 +12,14 @@
 	UIButton *btn1;
 	UIButton *btn2;
 	UIButton *btn3;
+    UIImageView *barBackground;
 	UIButton *btn4;
 }
 
 @property (nonatomic, strong) UIButton *btn1;
 @property (nonatomic, strong) UIButton *btn2;
 @property (nonatomic, strong) UIButton *btn3;
+@property (nonatomic, strong) UIImageView *barBackground;
 @property (nonatomic, strong) UIButton *btn4;
 
 -(void) hideTabBar;

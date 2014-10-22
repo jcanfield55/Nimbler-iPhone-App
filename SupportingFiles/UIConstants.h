@@ -25,7 +25,9 @@
 #define TXTFROMVIEW_X_POSITION_EDIT_MODE 39
 #define TXTTOVIEW_X_POSITION_EDIT_MODE 23
 #define TXTFROMVIEW_WIDTH_EDIT_MODE 19
-//
+
+// revealController
+#define REVEAL_CONTROLLER_RIGHT_MARGIN 35
 
 // ToFromViewController constants
 #define TOFROM_MAIN_TABLE_HEIGHT 366
@@ -80,8 +82,6 @@
 #define EXCLUDE_BUTTON_WIDTH 72
 #define EXCLUDE_BUTTONS_PER_ROW 4
 
-
-
 // RouteDetailsViewController
 #define ROUTE_DETAILS_TABLE_CELL_TEXT_BORDER 47 // Amount to subtract from the cell width to determine the width for wrapping multi-line text.  Obtained thru trial & error.
 #define ROUTE_DETAILS_MINIMUM_TABLE_HEIGHT 90  // Minimum margin on the bottom for route table and feedback button
@@ -92,6 +92,60 @@
 #define MAP_ALPHA_MEDIUM 0.8
 #define MAP_ALPHA_LIGHTER 0.4
 #define MAP_LINE_WIDTH 5   // Line width for maps
+
+// SettingInfoViewController
+
+#define DETAIL_SETTING_MAIN_LABEL_XPOS        10
+#define DETAIL_SETTING_MAIN_LABEL_YPOS        5
+#define DETAIL_SETTING_MAIN_LABEL_WIDTH       250
+#define DETAIL_SETTING_MAIN_LABEL_HEIGHT      20
+
+#define SLIDERS_XPOS                          33
+#define SLIDERS_YPOS                          42
+#define SLIDERS_YPOS1                         50
+#define SLIDERS_WIDTH_BUFFER                  88   // difference between table width and slider width
+#define SLIDERS_WIDTH_MINIMUM                 100  // minimum sliders width regardless of table width
+#define SLIDERS_HEIGHT                        20
+
+#define BIKE_DISTANCE_LABEL_XPOS              20
+#define BIKE_DISTANCE_LABEL_YPOS              41
+#define BIKE_DISTANCE_LABEL_WIDTH             50
+#define BIKE_DISTANCE_LABEL_HEIGHT            20
+
+#define DETAILS_RIGHT_LABEL_RIGHT_BUFFER     (35 + 4) // Buffer between right side of right label and trailing superview edge
+
+#define BIKE_PREFERENCE_LABEL_XPOS                  10
+#define BIKE_PREFERENCE_LABEL_YPOS                  29
+#define BIKE_PREFERENCE_LABEL_WIDTH                 150
+#define BIKE_PREFERENCE_LABEL_HEIGHT                20
+
+#define LABEL_FREQUENTLY_XPOS   3
+#define LABEL_FREQUENTLY_YPOS   42
+#define LABEL_FREQUENTLY_WIDTH  70
+#define LABEL_FREQUENTLY_HEIGHT 20
+
+#define RIGHT_LABEL_BUFFER      4   // Buffer between slider and right label
+#define LABEL_RARELY_YPOS       42
+#define LABEL_RARELY_WIDTH      50
+#define LABEL_RARELY_HEIGHT     20
+
+#define SLIDER_PUSH_FREQUENCY_XPOS    33
+#define SLIDER_PUSH_FREQUENCY_YPOS    42
+#define SLIDER_PUSH_FREQUENCY_HEIGHT  12
+
+#define SETTING_MAIN_LABEL_XPOS        35
+#define SETTING_MAIN_LABEL_YPOS        5
+#define SETTING_MAIN_LABEL_WIDTH       250
+#define SETTING_MAIN_LABEL_HEIGHT      20
+#define SETTING_MAIN_LABEL_XPOS_IOS7   50
+#define SETTING_MAIN_LABEL_WIDTH_IOS7 235
+
+
+#define SETTING_SUB_LABEL_XPOS        5
+#define SETTING_SUB_LABEL_YPOS        41
+#define SETTING_SUB_LABEL_WIDTH       50
+#define SETTING_SUB_LABEL_HEIGHT      20
+
 
 
 // Table cell height
@@ -143,14 +197,6 @@
 #define NAVIGATION_BAR_IMAGE  [UIImage imageNamed:@"navBar.png"]
 
 #define NAVIGATION_ITEM1_XPOS 0
-#define NAVIGATION_ITEM2_XPOS 95
-#define NAVIGATION_ITEM3_XPOS 190
-#define NAVIGATION_ITEM4_XPOS 240.2
-
-
-#define NAVIGATION_ITEM_YPOS_4INCH      523
-#define NAVIGATION_ITEM_WIDTH_4INCH     77
-#define NAVIGATION_ITEM_HEIGHT_4INCH    49
 
 #define NAVIGATION_ITEM_YPOS      436
 #define NAVIGATION_ITEM_WIDTH     95

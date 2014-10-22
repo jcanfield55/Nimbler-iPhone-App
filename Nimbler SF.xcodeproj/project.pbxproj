@@ -29,7 +29,6 @@
 		5202D1F019C2D1DA00A800EC /* UberDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5202D1E819C2D1DA00A800EC /* UberDetailViewController.xib */; };
 		520FB121162603090083F143 /* FeedBackForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB109162603090083F143 /* FeedBackForm.m */; };
 		520FB122162603090083F143 /* FeedBackForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10A162603090083F143 /* FeedBackForm.xib */; };
-		520FB123162603090083F143 /* FeedBackForm_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10B162603090083F143 /* FeedBackForm_568h.xib */; };
 		520FB124162603090083F143 /* FeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10C162603090083F143 /* FeedbackViewController.xib */; };
 		520FB125162603090083F143 /* LegMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB10E162603090083F143 /* LegMapViewController.m */; };
 		520FB126162603090083F143 /* RouteDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB110162603090083F143 /* RouteDetailsViewController.m */; };
@@ -37,8 +36,6 @@
 		520FB128162603090083F143 /* RouteOptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB113162603090083F143 /* RouteOptionsViewController.m */; };
 		520FB129162603090083F143 /* RouteOptionsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB114162603090083F143 /* RouteOptionsViewController.xib */; };
 		520FB12A162603090083F143 /* SettingInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB116162603090083F143 /* SettingInfoViewController.m */; };
-		520FB12B162603090083F143 /* SettingInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB117162603090083F143 /* SettingInfoViewController.xib */; };
-		520FB12C162603090083F143 /* SettingInfoViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB118162603090083F143 /* SettingInfoViewController_568h.xib */; };
 		520FB12D162603090083F143 /* ToFromTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB11A162603090083F143 /* ToFromTableViewController.m */; };
 		520FB12E162603090083F143 /* ToFromViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB11C162603090083F143 /* ToFromViewController.m */; };
 		520FB12F162603090083F143 /* ToFromViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB11D162603090083F143 /* ToFromViewController.xib */; };
@@ -258,6 +255,10 @@
 		52958AB116CED86900CC46C7 /* GtfsTempItinerary.m in Sources */ = {isa = PBXBuildFile; fileRef = 52958AB016CED86900CC46C7 /* GtfsTempItinerary.m */; };
 		52A9BE9516B4B41500564D0D /* RealTimeServerStubTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */; };
 		52B0535C16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B0535B16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m */; };
+		52B389A519F7875900ADECC1 /* tabBarBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52B389A419F7875800ADECC1 /* tabBarBackground@2x.png */; };
+		52B389A619F7875900ADECC1 /* tabBarBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52B389A419F7875800ADECC1 /* tabBarBackground@2x.png */; };
+		52B389A719F7875900ADECC1 /* tabBarBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52B389A419F7875800ADECC1 /* tabBarBackground@2x.png */; };
+		52B389A819F7875900ADECC1 /* tabBarBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52B389A419F7875800ADECC1 /* tabBarBackground@2x.png */; };
 		52BEFB4E182754F3000DFF9B /* Icon-80@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52BEFB4D182754F3000DFF9B /* Icon-80@2x.png */; };
 		52BEFB55182F07C8000DFF9B /* Icon-Caltrain-80@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52BEFB54182F07C7000DFF9B /* Icon-Caltrain-80@2x.png */; };
 		52C10385160BEF8000BC6020 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C10384160BEF8000BC6020 /* AddressBookUI.framework */; };
@@ -322,14 +323,10 @@
 		8D01D35417B9EEBD002DB6CA /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C09E15CB7D2F00B55A65 /* Icon@2x.png */; };
 		8D01D35517B9EEC5002DB6CA /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C09615CB465A00B55A65 /* Icon.png */; };
 		8D01D35617B9EECE002DB6CA /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52E4C09E15CB7D2F00B55A65 /* Icon@2x.png */; };
-		8D04A9C517B1046D007DB944 /* FeedBackFormPopUp_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D04A9C317B1046D007DB944 /* FeedBackFormPopUp_568h.xib */; };
 		8D04A9C617B1046D007DB944 /* FeedBackFormPopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D04A9C417B1046D007DB944 /* FeedBackFormPopUp.xib */; };
 		8D04A9C717B10838007DB944 /* FeedBackFormPopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D04A9C417B1046D007DB944 /* FeedBackFormPopUp.xib */; };
 		8D04A9C817B10839007DB944 /* FeedBackFormPopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D04A9C417B1046D007DB944 /* FeedBackFormPopUp.xib */; };
 		8D04A9C917B1083A007DB944 /* FeedBackFormPopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D04A9C417B1046D007DB944 /* FeedBackFormPopUp.xib */; };
-		8D04A9CA17B1083E007DB944 /* FeedBackFormPopUp_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D04A9C317B1046D007DB944 /* FeedBackFormPopUp_568h.xib */; };
-		8D04A9CB17B1083E007DB944 /* FeedBackFormPopUp_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D04A9C317B1046D007DB944 /* FeedBackFormPopUp_568h.xib */; };
-		8D04A9CC17B1083F007DB944 /* FeedBackFormPopUp_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D04A9C317B1046D007DB944 /* FeedBackFormPopUp_568h.xib */; };
 		8D04E79C16E8A488001DB75D /* Network_Commuting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8D9EA25B162D78FD002BB5FF /* Network_Commuting.xcdatamodeld */; };
 		8D052F6E171E6969008D4CE0 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 525C20F8151D3AF5004F8FE0 /* MapKit.framework */; };
 		8D06AB1D17AA1A8E00ACC806 /* navBar.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D06AB1917AA1A8E00ACC806 /* navBar.png */; };
@@ -614,10 +611,6 @@
 		8D178ADB17A9482400BF873F /* img_walkMode.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D178A9417A9482300BF873F /* img_walkMode.png */; };
 		8D178ADC17A9482400BF873F /* img_walkMode.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D178A9417A9482300BF873F /* img_walkMode.png */; };
 		8D1A64EA165B82C100176FF7 /* SettingViewController_SF.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D1A64E9165B82C100176FF7 /* SettingViewController_SF.xib */; };
-		8D2D51C917981F4800A5E007 /* twitterViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */; };
-		8D2D51CA17981F4800A5E007 /* twitterViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */; };
-		8D2D51CB17981F4800A5E007 /* twitterViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */; };
-		8D2D51CC17981F4800A5E007 /* twitterViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */; };
 		8D317A3E16DB9A5A00581224 /* img_bicycle.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D317A3C16DB9A5A00581224 /* img_bicycle.png */; };
 		8D317A3F16DB9A5A00581224 /* img_bicycleSelect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D317A3D16DB9A5A00581224 /* img_bicycleSelect.png */; };
 		8D361EC217B8FA6900246A55 /* feedBackLink.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D361EC117B8FA6900246A55 /* feedBackLink.png */; };
@@ -753,12 +746,9 @@
 		8DA77FE91724FF0D0090C2EA /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8DA77FEF1724FF0D0090C2EA /* aps_development.cer in Resources */ = {isa = PBXBuildFile; fileRef = CCA4C7E415D92CC7009BE7A1 /* aps_development.cer */; };
 		8DA77FF31724FF0D0090C2EA /* FeedBackForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10A162603090083F143 /* FeedBackForm.xib */; };
-		8DA77FF41724FF0D0090C2EA /* FeedBackForm_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10B162603090083F143 /* FeedBackForm_568h.xib */; };
 		8DA77FF51724FF0D0090C2EA /* FeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10C162603090083F143 /* FeedbackViewController.xib */; };
 		8DA77FF61724FF0D0090C2EA /* RouteDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB111162603090083F143 /* RouteDetailsViewController.xib */; };
 		8DA77FF71724FF0D0090C2EA /* RouteOptionsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB114162603090083F143 /* RouteOptionsViewController.xib */; };
-		8DA77FF81724FF0D0090C2EA /* SettingInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB117162603090083F143 /* SettingInfoViewController.xib */; };
-		8DA77FF91724FF0D0090C2EA /* SettingInfoViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB118162603090083F143 /* SettingInfoViewController_568h.xib */; };
 		8DA77FFA1724FF0D0090C2EA /* ToFromViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB11D162603090083F143 /* ToFromViewController.xib */; };
 		8DA77FFB1724FF0D0090C2EA /* twitterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB120162603090083F143 /* twitterViewController.xib */; };
 		8DA77FFC1724FF0D0090C2EA /* LocationPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB16A1626036C0083F143 /* LocationPickerViewController.xib */; };
@@ -881,8 +871,6 @@
 		8DA780731724FF0D0090C2EA /* SettingDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */; };
 		8DA780741724FF0D0090C2EA /* img_Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB3B0165E593300A39BC4 /* img_Settings.png */; };
 		8DA780751724FF0D0090C2EA /* img_Settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB3B1165E593400A39BC4 /* img_Settings@2x.png */; };
-		8DA780761724FF0D0090C2EA /* SettingViewController_SF_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */; };
-		8DA780771724FF0D0090C2EA /* SettingDetailViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */; };
 		8DA780781724FF0D0090C2EA /* bart.json in Resources */ = {isa = PBXBuildFile; fileRef = 75E8F1D316CE3EBC00863A8C /* bart.json */; };
 		8DA780791724FF0D0090C2EA /* caltrain.json in Resources */ = {isa = PBXBuildFile; fileRef = 75E8F1D516CE3EC800863A8C /* caltrain.json */; };
 		8DA7807A1724FF0D0090C2EA /* sf-muni.json in Resources */ = {isa = PBXBuildFile; fileRef = 75E8F1D916CE4B5400863A8C /* sf-muni.json */; };
@@ -1012,12 +1000,9 @@
 		8DAA28BE178BDFEF00C3FA30 /* Icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB3161AB69600695348 /* Icon-small.png */; };
 		8DAA28BF178BDFEF00C3FA30 /* Icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB5161AB6A400695348 /* Icon-small@2x.png */; };
 		8DAA28C0178BDFEF00C3FA30 /* FeedBackForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10A162603090083F143 /* FeedBackForm.xib */; };
-		8DAA28C1178BDFEF00C3FA30 /* FeedBackForm_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10B162603090083F143 /* FeedBackForm_568h.xib */; };
 		8DAA28C2178BDFEF00C3FA30 /* FeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10C162603090083F143 /* FeedbackViewController.xib */; };
 		8DAA28C3178BDFEF00C3FA30 /* RouteDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB111162603090083F143 /* RouteDetailsViewController.xib */; };
 		8DAA28C4178BDFEF00C3FA30 /* RouteOptionsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB114162603090083F143 /* RouteOptionsViewController.xib */; };
-		8DAA28C5178BDFEF00C3FA30 /* SettingInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB117162603090083F143 /* SettingInfoViewController.xib */; };
-		8DAA28C6178BDFEF00C3FA30 /* SettingInfoViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB118162603090083F143 /* SettingInfoViewController_568h.xib */; };
 		8DAA28C7178BDFEF00C3FA30 /* ToFromViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB11D162603090083F143 /* ToFromViewController.xib */; };
 		8DAA28C8178BDFEF00C3FA30 /* twitterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB120162603090083F143 /* twitterViewController.xib */; };
 		8DAA28C9178BDFEF00C3FA30 /* LocationPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB16A1626036C0083F143 /* LocationPickerViewController.xib */; };
@@ -1138,8 +1123,6 @@
 		8DAA2940178BDFEF00C3FA30 /* SettingDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */; };
 		8DAA2941178BDFEF00C3FA30 /* img_Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB3B0165E593300A39BC4 /* img_Settings.png */; };
 		8DAA2942178BDFEF00C3FA30 /* img_Settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB3B1165E593400A39BC4 /* img_Settings@2x.png */; };
-		8DAA2943178BDFEF00C3FA30 /* SettingViewController_SF_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */; };
-		8DAA2944178BDFEF00C3FA30 /* SettingDetailViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */; };
 		8DAA2949178BDFEF00C3FA30 /* img_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D6F577416D4EE1800DADEA4 /* img_on.png */; };
 		8DAA294A178BDFEF00C3FA30 /* img_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D6F577516D4EE1800DADEA4 /* img_off.png */; };
 		8DAA294B178BDFEF00C3FA30 /* img_travel.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D7BE0A516D5EC280038FF26 /* img_travel.png */; };
@@ -1281,12 +1264,9 @@
 		8DE18BA21725415800AA8112 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8DE18BA81725415800AA8112 /* aps_development.cer in Resources */ = {isa = PBXBuildFile; fileRef = CCA4C7E415D92CC7009BE7A1 /* aps_development.cer */; };
 		8DE18BAC1725415800AA8112 /* FeedBackForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10A162603090083F143 /* FeedBackForm.xib */; };
-		8DE18BAD1725415800AA8112 /* FeedBackForm_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10B162603090083F143 /* FeedBackForm_568h.xib */; };
 		8DE18BAE1725415800AA8112 /* FeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10C162603090083F143 /* FeedbackViewController.xib */; };
 		8DE18BAF1725415800AA8112 /* RouteDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB111162603090083F143 /* RouteDetailsViewController.xib */; };
 		8DE18BB01725415800AA8112 /* RouteOptionsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB114162603090083F143 /* RouteOptionsViewController.xib */; };
-		8DE18BB11725415800AA8112 /* SettingInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB117162603090083F143 /* SettingInfoViewController.xib */; };
-		8DE18BB21725415800AA8112 /* SettingInfoViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB118162603090083F143 /* SettingInfoViewController_568h.xib */; };
 		8DE18BB31725415800AA8112 /* ToFromViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB11D162603090083F143 /* ToFromViewController.xib */; };
 		8DE18BB41725415800AA8112 /* twitterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB120162603090083F143 /* twitterViewController.xib */; };
 		8DE18BB51725415800AA8112 /* LocationPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB16A1626036C0083F143 /* LocationPickerViewController.xib */; };
@@ -1405,8 +1385,6 @@
 		8DE18C2C1725415800AA8112 /* SettingDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */; };
 		8DE18C2D1725415800AA8112 /* img_Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB3B0165E593300A39BC4 /* img_Settings.png */; };
 		8DE18C2E1725415800AA8112 /* img_Settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DFFB3B1165E593400A39BC4 /* img_Settings@2x.png */; };
-		8DE18C2F1725415800AA8112 /* SettingViewController_SF_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */; };
-		8DE18C301725415800AA8112 /* SettingDetailViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */; };
 		8DE18C351725415800AA8112 /* img_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D6F577416D4EE1800DADEA4 /* img_on.png */; };
 		8DE18C361725415800AA8112 /* img_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D6F577516D4EE1800DADEA4 /* img_off.png */; };
 		8DE18C371725415800AA8112 /* img_travel.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D7BE0A516D5EC280038FF26 /* img_travel.png */; };
@@ -1464,8 +1442,6 @@
 		8DEAC1981778469900D7997C /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DEAC1951778469600D7997C /* CoreText.framework */; };
 		8DEAC1A217785F2200D7997C /* nimblrDC.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DEAC19A1778517800D7997C /* nimblrDC.png */; };
 		8DEAC1A317785F2500D7997C /* nimblrDC@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DEAC19B1778517800D7997C /* nimblrDC@2x.png */; };
-		8DEE785D166338F100E4863C /* SettingViewController_SF_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */; };
-		8DEE785F166339D600E4863C /* SettingDetailViewController_568h.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */; };
 		8DF19BF416F725FC0050FE00 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8DF19BFA16F726AC0050FE00 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF916F726AC0050FE00 /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8DF19BFC16F726CF0050FE00 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BFB16F726CF0050FE00 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -1601,7 +1577,6 @@
 		520FB108162603090083F143 /* FeedBackForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FeedBackForm.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB109162603090083F143 /* FeedBackForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FeedBackForm.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB10A162603090083F143 /* FeedBackForm.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedBackForm.xib; sourceTree = "<group>"; };
-		520FB10B162603090083F143 /* FeedBackForm_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedBackForm_568h.xib; sourceTree = "<group>"; };
 		520FB10C162603090083F143 /* FeedbackViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedbackViewController.xib; sourceTree = "<group>"; };
 		520FB10D162603090083F143 /* LegMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = LegMapViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB10E162603090083F143 /* LegMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = LegMapViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -1613,8 +1588,6 @@
 		520FB114162603090083F143 /* RouteOptionsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RouteOptionsViewController.xib; sourceTree = "<group>"; };
 		520FB115162603090083F143 /* SettingInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SettingInfoViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB116162603090083F143 /* SettingInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SettingInfoViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		520FB117162603090083F143 /* SettingInfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingInfoViewController.xib; sourceTree = "<group>"; };
-		520FB118162603090083F143 /* SettingInfoViewController_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingInfoViewController_568h.xib; sourceTree = "<group>"; };
 		520FB119162603090083F143 /* ToFromTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = ToFromTableViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB11A162603090083F143 /* ToFromTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = ToFromTableViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB11B162603090083F143 /* ToFromViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ToFromViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -1847,6 +1820,7 @@
 		52A9BE9416B4B41500564D0D /* RealTimeServerStubTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RealTimeServerStubTest.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		52B0535A16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanStoreForRealTimeServerStubTest.h; sourceTree = "<group>"; };
 		52B0535B16E961C500D5210A /* PlanStoreForRealTimeServerStubTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlanStoreForRealTimeServerStubTest.m; sourceTree = "<group>"; };
+		52B389A419F7875800ADECC1 /* tabBarBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabBarBackground@2x.png"; sourceTree = "<group>"; };
 		52BEFB4D182754F3000DFF9B /* Icon-80@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-80@2x.png"; sourceTree = SOURCE_ROOT; };
 		52BEFB54182F07C7000DFF9B /* Icon-Caltrain-80@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Caltrain-80@2x.png"; sourceTree = "<group>"; };
 		52C10384160BEF8000BC6020 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
@@ -1888,7 +1862,6 @@
 		8D00AFF2172F952C00B01ED3 /* realtime1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = realtime1.png; sourceTree = "<group>"; };
 		8D00AFF3172F952C00B01ED3 /* realtime2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = realtime2.png; sourceTree = "<group>"; };
 		8D00B006172FD22900B01ED3 /* tram.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tram.png; sourceTree = "<group>"; };
-		8D04A9C317B1046D007DB944 /* FeedBackFormPopUp_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedBackFormPopUp_568h.xib; sourceTree = "<group>"; };
 		8D04A9C417B1046D007DB944 /* FeedBackFormPopUp.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedBackFormPopUp.xib; sourceTree = "<group>"; };
 		8D04A9CD17BE49C3007DB944 /* Network_Commuting 1.12.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Network_Commuting 1.12.xcdatamodel"; sourceTree = "<group>"; };
 		8D06AB1917AA1A8E00ACC806 /* navBar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navBar.png; sourceTree = "<group>"; };
@@ -1980,7 +1953,6 @@
 		8D178A9417A9482300BF873F /* img_walkMode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_walkMode.png; sourceTree = "<group>"; };
 		8D1A64E9165B82C100176FF7 /* SettingViewController_SF.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController_SF.xib; sourceTree = "<group>"; };
 		8D26425A17C714DF008551FE /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
-		8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = twitterViewController_568h.xib; sourceTree = "<group>"; };
 		8D317A3C16DB9A5A00581224 /* img_bicycle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_bicycle.png; sourceTree = "<group>"; };
 		8D317A3D16DB9A5A00581224 /* img_bicycleSelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_bicycleSelect.png; sourceTree = "<group>"; };
 		8D361EC117B8FA6900246A55 /* feedBackLink.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = feedBackLink.png; sourceTree = "<group>"; };
@@ -2088,8 +2060,6 @@
 		8DEAC19A1778517800D7997C /* nimblrDC.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nimblrDC.png; sourceTree = "<group>"; };
 		8DEAC19B1778517800D7997C /* nimblrDC@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nimblrDC@2x.png"; sourceTree = "<group>"; };
 		8DEE2B85172575F000CCD3D1 /* store101_DC.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = store101_DC.zip; sourceTree = "<group>"; };
-		8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController_SF_568h.xib; sourceTree = "<group>"; };
-		8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingDetailViewController_568h.xib; sourceTree = "<group>"; };
 		8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
 		8DF19BF916F726AC0050FE00 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		8DF19BFB16F726CF0050FE00 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
@@ -2289,7 +2259,6 @@
 				520FB108162603090083F143 /* FeedBackForm.h */,
 				520FB109162603090083F143 /* FeedBackForm.m */,
 				520FB10A162603090083F143 /* FeedBackForm.xib */,
-				520FB10B162603090083F143 /* FeedBackForm_568h.xib */,
 				520FB10C162603090083F143 /* FeedbackViewController.xib */,
 				520FB10D162603090083F143 /* LegMapViewController.h */,
 				520FB10E162603090083F143 /* LegMapViewController.m */,
@@ -2301,10 +2270,10 @@
 				520FB114162603090083F143 /* RouteOptionsViewController.xib */,
 				520FB115162603090083F143 /* SettingInfoViewController.h */,
 				520FB116162603090083F143 /* SettingInfoViewController.m */,
-				520FB117162603090083F143 /* SettingInfoViewController.xib */,
-				520FB118162603090083F143 /* SettingInfoViewController_568h.xib */,
 				8D1A64E9165B82C100176FF7 /* SettingViewController_SF.xib */,
-				8DEE785C166338F100E4863C /* SettingViewController_SF_568h.xib */,
+				8DFFB369165DFBBB00A39BC4 /* SettingDetailViewController.h */,
+				8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */,
+				8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */,
 				520FB119162603090083F143 /* ToFromTableViewController.h */,
 				520FB11A162603090083F143 /* ToFromTableViewController.m */,
 				5286391319D3C842001232CA /* ToFromTableViewController.xib */,
@@ -2314,16 +2283,10 @@
 				520FB11E162603090083F143 /* twitterViewController.h */,
 				520FB11F162603090083F143 /* twitterViewController.m */,
 				520FB120162603090083F143 /* twitterViewController.xib */,
-				8D2D51C817981F4700A5E007 /* twitterViewController_568h.xib */,
-				8DFFB369165DFBBB00A39BC4 /* SettingDetailViewController.h */,
-				8DFFB36A165DFBBB00A39BC4 /* SettingDetailViewController.m */,
-				8DFFB36B165DFBBB00A39BC4 /* SettingDetailViewController.xib */,
-				8DEE785E166339D600E4863C /* SettingDetailViewController_568h.xib */,
 				8DE4B23017AF77EB00105A41 /* BikeStepsViewController.h */,
 				8DE4B23117AF77EB00105A41 /* BikeStepsViewController.m */,
 				8DE4B23217AF77EB00105A41 /* BikeStepsViewController.xib */,
 				8D04A9C417B1046D007DB944 /* FeedBackFormPopUp.xib */,
-				8D04A9C317B1046D007DB944 /* FeedBackFormPopUp_568h.xib */,
 			);
 			path = ViewController;
 			sourceTree = SOURCE_ROOT;
@@ -2867,6 +2830,7 @@
 				8D17896C17A8D5DF00BF873F /* separater@2x.png */,
 				8D1789E017A919AD00BF873F /* settingSelected@2x.png */,
 				8D178A0117A920AA00BF873F /* settingUnSelected@2x.png */,
+				52B389A419F7875800ADECC1 /* tabBarBackground@2x.png */,
 				8D17898A17A90C9B00BF873F /* thumbSlider.png */,
 				8D17897B17A90B2300BF873F /* thumbSlider@2x.png */,
 				8D17898B17A90C9B00BF873F /* whiteSlider.png */,
@@ -3181,12 +3145,9 @@
 				52C1CBB4161AB69600695348 /* Icon-small.png in Resources */,
 				52C1CBB6161AB6A400695348 /* Icon-small@2x.png in Resources */,
 				520FB122162603090083F143 /* FeedBackForm.xib in Resources */,
-				520FB123162603090083F143 /* FeedBackForm_568h.xib in Resources */,
 				520FB124162603090083F143 /* FeedbackViewController.xib in Resources */,
 				520FB127162603090083F143 /* RouteDetailsViewController.xib in Resources */,
 				520FB129162603090083F143 /* RouteOptionsViewController.xib in Resources */,
-				520FB12B162603090083F143 /* SettingInfoViewController.xib in Resources */,
-				520FB12C162603090083F143 /* SettingInfoViewController_568h.xib in Resources */,
 				520FB12F162603090083F143 /* ToFromViewController.xib in Resources */,
 				520FB131162603090083F143 /* twitterViewController.xib in Resources */,
 				520FB1991626036C0083F143 /* LocationPickerViewController.xib in Resources */,
@@ -3259,6 +3220,7 @@
 				52247D6819C6B3A1000C1EB5 /* Default-iPhone6plus.png in Resources */,
 				520FB253162603AF0083F143 /* img_reload.png in Resources */,
 				520FB254162603AF0083F143 /* img_reload@2x.png in Resources */,
+				52B389A519F7875900ADECC1 /* tabBarBackground@2x.png in Resources */,
 				520FB255162603AF0083F143 /* img_route.png in Resources */,
 				520FB256162603AF0083F143 /* img_route@2x.png in Resources */,
 				520FB257162603AF0083F143 /* img_selAdvisory.png in Resources */,
@@ -3317,8 +3279,6 @@
 				8DFFB36D165DFBBB00A39BC4 /* SettingDetailViewController.xib in Resources */,
 				8DFFB3B2165E593400A39BC4 /* img_Settings.png in Resources */,
 				8DFFB3B3165E593500A39BC4 /* img_Settings@2x.png in Resources */,
-				8DEE785D166338F100E4863C /* SettingViewController_SF_568h.xib in Resources */,
-				8DEE785F166339D600E4863C /* SettingDetailViewController_568h.xib in Resources */,
 				75E8F1D416CE3EBC00863A8C /* bart.json in Resources */,
 				75E8F1D616CE3EC800863A8C /* caltrain.json in Resources */,
 				75E8F1DA16CE4B5400863A8C /* sf-muni.json in Resources */,
@@ -3351,7 +3311,6 @@
 				8D0C2962173124DA00E6AA1B /* Handle_control.png in Resources */,
 				CAC3C69817D4B9F3008898E9 /* navBarNormal.png in Resources */,
 				8DABCDBF1793C8BC00C1BDCF /* arrow.png in Resources */,
-				8D2D51C917981F4800A5E007 /* twitterViewController_568h.xib in Resources */,
 				8D17895F17A8D1A300BF873F /* sentFeedBack@2x.png in Resources */,
 				8D17896817A8D29300BF873F /* feedBackButton@2x.png in Resources */,
 				8D17896D17A8D5DF00BF873F /* separater@2x.png in Resources */,
@@ -3425,7 +3384,6 @@
 				8DE4B23717AF77EB00105A41 /* BikeStepsViewController.xib in Resources */,
 				5286391419D3C843001232CA /* ToFromTableViewController.xib in Resources */,
 				524EAEA91933EF8C00EE00B4 /* img_switcherarrows2@2x.png in Resources */,
-				8D04A9C517B1046D007DB944 /* FeedBackFormPopUp_568h.xib in Resources */,
 				8D04A9C617B1046D007DB944 /* FeedBackFormPopUp.xib in Resources */,
 				524EAEAE1933EFA900EE00B4 /* img_switcherarrows2.png in Resources */,
 				8D361EC217B8FA6900246A55 /* feedBackLink.png in Resources */,
@@ -3467,12 +3425,9 @@
 				8DA77FEF1724FF0D0090C2EA /* aps_development.cer in Resources */,
 				52247D6519C6B3A1000C1EB5 /* Default-iPhone6.png in Resources */,
 				8DA77FF31724FF0D0090C2EA /* FeedBackForm.xib in Resources */,
-				8DA77FF41724FF0D0090C2EA /* FeedBackForm_568h.xib in Resources */,
 				8DA77FF51724FF0D0090C2EA /* FeedbackViewController.xib in Resources */,
 				8DA77FF61724FF0D0090C2EA /* RouteDetailsViewController.xib in Resources */,
 				8DA77FF71724FF0D0090C2EA /* RouteOptionsViewController.xib in Resources */,
-				8DA77FF81724FF0D0090C2EA /* SettingInfoViewController.xib in Resources */,
-				8DA77FF91724FF0D0090C2EA /* SettingInfoViewController_568h.xib in Resources */,
 				8DA77FFA1724FF0D0090C2EA /* ToFromViewController.xib in Resources */,
 				8DA77FFB1724FF0D0090C2EA /* twitterViewController.xib in Resources */,
 				8DA77FFC1724FF0D0090C2EA /* LocationPickerViewController.xib in Resources */,
@@ -3572,6 +3527,7 @@
 				8DA780571724FF0D0090C2EA /* img_voiceRecord.png in Resources */,
 				524EAEAF1933EFA900EE00B4 /* img_switcherarrows2.png in Resources */,
 				8DA780581724FF0D0090C2EA /* img_voiceRecord@2x.png in Resources */,
+				52B389A619F7875900ADECC1 /* tabBarBackground@2x.png in Resources */,
 				8DA780591724FF0D0090C2EA /* img_walk.png in Resources */,
 				8DA7805A1724FF0D0090C2EA /* img_walk@2x.png in Resources */,
 				8DA7805B1724FF0D0090C2EA /* logo_big_iPh.png in Resources */,
@@ -3602,8 +3558,6 @@
 				8DA780731724FF0D0090C2EA /* SettingDetailViewController.xib in Resources */,
 				8DA780741724FF0D0090C2EA /* img_Settings.png in Resources */,
 				8DA780751724FF0D0090C2EA /* img_Settings@2x.png in Resources */,
-				8DA780761724FF0D0090C2EA /* SettingViewController_SF_568h.xib in Resources */,
-				8DA780771724FF0D0090C2EA /* SettingDetailViewController_568h.xib in Resources */,
 				8DA780781724FF0D0090C2EA /* bart.json in Resources */,
 				8DA780791724FF0D0090C2EA /* caltrain.json in Resources */,
 				8DA7807A1724FF0D0090C2EA /* sf-muni.json in Resources */,
@@ -3635,7 +3589,6 @@
 				8D00B008172FD22C00B01ED3 /* tram.png in Resources */,
 				8D0C2967173124E000E6AA1B /* Handle_control.png in Resources */,
 				8DABCDC01793C8BC00C1BDCF /* arrow.png in Resources */,
-				8D2D51CA17981F4800A5E007 /* twitterViewController_568h.xib in Resources */,
 				8D17896017A8D1A300BF873F /* sentFeedBack@2x.png in Resources */,
 				8D17896917A8D29300BF873F /* feedBackButton@2x.png in Resources */,
 				52BEFB55182F07C8000DFF9B /* Icon-Caltrain-80@2x.png in Resources */,
@@ -3713,7 +3666,6 @@
 				8DE4B23817AF77EB00105A41 /* BikeStepsViewController.xib in Resources */,
 				5286391519D3C843001232CA /* ToFromTableViewController.xib in Resources */,
 				8D04A9C717B10838007DB944 /* FeedBackFormPopUp.xib in Resources */,
-				8D04A9CA17B1083E007DB944 /* FeedBackFormPopUp_568h.xib in Resources */,
 				8D01D34617B9E9E7002DB6CA /* feedBackLink.png in Resources */,
 				8D01D34917B9E9EA002DB6CA /* feedBackLink@2x.png in Resources */,
 				8D01D35317B9EEB7002DB6CA /* Icon.png in Resources */,
@@ -3748,12 +3700,9 @@
 				8DAA28BF178BDFEF00C3FA30 /* Icon-small@2x.png in Resources */,
 				8DAA28C0178BDFEF00C3FA30 /* FeedBackForm.xib in Resources */,
 				524EAEE819370D4D00EE00B4 /* CoveragePDXGeoJSON.geojson in Resources */,
-				8DAA28C1178BDFEF00C3FA30 /* FeedBackForm_568h.xib in Resources */,
 				8DAA28C2178BDFEF00C3FA30 /* FeedbackViewController.xib in Resources */,
 				8DAA28C3178BDFEF00C3FA30 /* RouteDetailsViewController.xib in Resources */,
 				8DAA28C4178BDFEF00C3FA30 /* RouteOptionsViewController.xib in Resources */,
-				8DAA28C5178BDFEF00C3FA30 /* SettingInfoViewController.xib in Resources */,
-				8DAA28C6178BDFEF00C3FA30 /* SettingInfoViewController_568h.xib in Resources */,
 				8DAA28C7178BDFEF00C3FA30 /* ToFromViewController.xib in Resources */,
 				8DAA28C8178BDFEF00C3FA30 /* twitterViewController.xib in Resources */,
 				8DAA28C9178BDFEF00C3FA30 /* LocationPickerViewController.xib in Resources */,
@@ -3829,6 +3778,7 @@
 				8DAA2909178BDFEF00C3FA30 /* img_recording.png in Resources */,
 				8DAA290A178BDFEF00C3FA30 /* img_reload.png in Resources */,
 				8DAA290B178BDFEF00C3FA30 /* img_reload@2x.png in Resources */,
+				52B389A819F7875900ADECC1 /* tabBarBackground@2x.png in Resources */,
 				8DAA290C178BDFEF00C3FA30 /* img_route.png in Resources */,
 				8DAA290D178BDFEF00C3FA30 /* img_route@2x.png in Resources */,
 				8DAA290E178BDFEF00C3FA30 /* img_selAdvisory.png in Resources */,
@@ -3882,8 +3832,6 @@
 				8DAA2940178BDFEF00C3FA30 /* SettingDetailViewController.xib in Resources */,
 				8DAA2941178BDFEF00C3FA30 /* img_Settings.png in Resources */,
 				8DAA2942178BDFEF00C3FA30 /* img_Settings@2x.png in Resources */,
-				8DAA2943178BDFEF00C3FA30 /* SettingViewController_SF_568h.xib in Resources */,
-				8DAA2944178BDFEF00C3FA30 /* SettingDetailViewController_568h.xib in Resources */,
 				8DAA2949178BDFEF00C3FA30 /* img_on.png in Resources */,
 				525293F419C01FA40059F7C7 /* img_carActiveMode.png in Resources */,
 				8DAA294A178BDFEF00C3FA30 /* img_off.png in Resources */,
@@ -3913,7 +3861,6 @@
 				8DF77CCA178D570700B45C52 /* trimet.json in Resources */,
 				8D5008EC178D680A002E7820 /* store101_Portland.zip in Resources */,
 				8DABCDC21793C8BC00C1BDCF /* arrow.png in Resources */,
-				8D2D51CC17981F4800A5E007 /* twitterViewController_568h.xib in Resources */,
 				8D17896217A8D1A300BF873F /* sentFeedBack@2x.png in Resources */,
 				8D17896B17A8D29300BF873F /* feedBackButton@2x.png in Resources */,
 				525293F819C01FA40059F7C7 /* img_carMode.png in Resources */,
@@ -3989,7 +3936,6 @@
 				2E1F619B17AB8604003B7EAF /* currenticonlive.png in Resources */,
 				8DE4B23A17AF77EB00105A41 /* BikeStepsViewController.xib in Resources */,
 				8D04A9C917B1083A007DB944 /* FeedBackFormPopUp.xib in Resources */,
-				8D04A9CC17B1083F007DB944 /* FeedBackFormPopUp_568h.xib in Resources */,
 				8D01D34817B9E9E8002DB6CA /* feedBackLink.png in Resources */,
 				8D01D34B17B9E9EC002DB6CA /* feedBackLink@2x.png in Resources */,
 				8D01D35517B9EEC5002DB6CA /* Icon.png in Resources */,
@@ -4022,14 +3968,11 @@
 			files = (
 				8DE18BA81725415800AA8112 /* aps_development.cer in Resources */,
 				8DE18BAC1725415800AA8112 /* FeedBackForm.xib in Resources */,
-				8DE18BAD1725415800AA8112 /* FeedBackForm_568h.xib in Resources */,
 				525293F719C01FA40059F7C7 /* img_carMode.png in Resources */,
 				524EAEB01933EFA900EE00B4 /* img_switcherarrows2.png in Resources */,
 				8DE18BAE1725415800AA8112 /* FeedbackViewController.xib in Resources */,
 				8DE18BAF1725415800AA8112 /* RouteDetailsViewController.xib in Resources */,
 				8DE18BB01725415800AA8112 /* RouteOptionsViewController.xib in Resources */,
-				8DE18BB11725415800AA8112 /* SettingInfoViewController.xib in Resources */,
-				8DE18BB21725415800AA8112 /* SettingInfoViewController_568h.xib in Resources */,
 				8DE18BB31725415800AA8112 /* ToFromViewController.xib in Resources */,
 				8DE18BB41725415800AA8112 /* twitterViewController.xib in Resources */,
 				8DE18BB51725415800AA8112 /* LocationPickerViewController.xib in Resources */,
@@ -4153,8 +4096,6 @@
 				8DE18C2C1725415800AA8112 /* SettingDetailViewController.xib in Resources */,
 				8DE18C2D1725415800AA8112 /* img_Settings.png in Resources */,
 				8DE18C2E1725415800AA8112 /* img_Settings@2x.png in Resources */,
-				8DE18C2F1725415800AA8112 /* SettingViewController_SF_568h.xib in Resources */,
-				8DE18C301725415800AA8112 /* SettingDetailViewController_568h.xib in Resources */,
 				8DE18C351725415800AA8112 /* img_on.png in Resources */,
 				8DE18C361725415800AA8112 /* img_off.png in Resources */,
 				8DE18C371725415800AA8112 /* img_travel.png in Resources */,
@@ -4187,7 +4128,6 @@
 				8DEAC1A317785F2500D7997C /* nimblrDC@2x.png in Resources */,
 				52247D6A19C6B3A1000C1EB5 /* Default-iPhone6plus.png in Resources */,
 				8DABCDC11793C8BC00C1BDCF /* arrow.png in Resources */,
-				8D2D51CB17981F4800A5E007 /* twitterViewController_568h.xib in Resources */,
 				8D17896117A8D1A300BF873F /* sentFeedBack@2x.png in Resources */,
 				8D17896A17A8D29300BF873F /* feedBackButton@2x.png in Resources */,
 				8D17896F17A8D5DF00BF873F /* separater@2x.png in Resources */,
@@ -4264,7 +4204,6 @@
 				2E1F619A17AB8604003B7EAF /* currenticonlive.png in Resources */,
 				8DE4B23917AF77EB00105A41 /* BikeStepsViewController.xib in Resources */,
 				8D04A9C817B10839007DB944 /* FeedBackFormPopUp.xib in Resources */,
-				8D04A9CB17B1083E007DB944 /* FeedBackFormPopUp_568h.xib in Resources */,
 				8D01D34717B9E9E7002DB6CA /* feedBackLink.png in Resources */,
 				8D01D34A17B9E9EB002DB6CA /* feedBackLink@2x.png in Resources */,
 				8D01D35117B9EEA5002DB6CA /* Icon.png in Resources */,
@@ -4276,6 +4215,7 @@
 				8DF63E3C17C1D1D3004FC3BB /* Icon_ipad-Caltrain.png in Resources */,
 				522C03D018304A72004BC6AF /* CoverageDCGeoJSON.geojson in Resources */,
 				8DF63E4017C1D1D3004FC3BB /* Icon_ipad-Caltrain@2x.png in Resources */,
+				52B389A719F7875900ADECC1 /* tabBarBackground@2x.png in Resources */,
 				8DF63E4417C1D1D3004FC3BB /* Icon-Caltrain.png in Resources */,
 				8DF63E4817C1D1D3004FC3BB /* Icon-Caltrain@2x.png in Resources */,
 				52247D6619C6B3A1000C1EB5 /* Default-iPhone6.png in Resources */,

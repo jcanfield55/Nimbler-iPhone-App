@@ -990,12 +990,7 @@ UIImage *imageDetailDisclosure;
 
 - (IBAction)feedBackClicked:(id)sender{
     FeedBackForm *feedBackForm;
-    if ([UIScreen mainScreen].bounds.size.height == IPHONE5HEIGHT) {
-        feedBackForm = [[FeedBackForm alloc] initWithNibName:@"FeedBackFormPopUp_568h" bundle:nil];
-    }
-    else{
-        feedBackForm = [[FeedBackForm alloc] initWithNibName:@"FeedBackFormPopUp" bundle:nil];
-    }
+    feedBackForm = [[FeedBackForm alloc] initWithNibName:@"FeedBackFormPopUp" bundle:nil];
     feedBackForm.isViewPresented = true;
     [self presentModalViewController:feedBackForm animated:YES];
 }

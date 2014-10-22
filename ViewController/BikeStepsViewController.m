@@ -87,7 +87,7 @@
         tableHeight = bikeStepsTableView.frame.size.height;
     }
     @catch (NSException *exception) {
-        logException(@"RouteDetailsViewController->initWithNibName", @"", exception);
+        logException(@"BikeStepsViewController->initWithNibName", @"", exception);
     }
     return self;
 }
@@ -228,7 +228,7 @@
         [self.view addConstraint:handleVerticalConstraint];
     }
     @catch (NSException *exception) {
-        logException(@"RouteDetailsViewController->imageMoved", @"", exception);
+        logException(@"BikeStepsViewController->setFramesOfView", @"", exception);
     }
 }
 
@@ -434,7 +434,7 @@
         return nil;
     }
     @catch (NSException *exception) {
-        logException(@"LegMapViewController -> viewForOverlay", @"", exception);
+        logException(@"BikeStepsViewController -> viewForOverlay", @"", exception);
     }
 }
 

@@ -47,7 +47,6 @@
 @property (nonatomic, strong) IBOutlet UISlider *sliderMaxWalkDistance;
 @property (nonatomic, strong) IBOutlet UISlider *sliderPushNotification;
 @property (nonatomic, strong) IBOutlet UITableView *tblSetting;
-@property (nonatomic, strong) IBOutlet UIScrollView *scrollView;
 @property (nonatomic)   int      enableUrgentSoundFlag;
 @property (nonatomic)   int      enableStandardSoundFlag;
 @property (nonatomic, strong) UILabel *lblSliderMaxWalkDistanceValue;

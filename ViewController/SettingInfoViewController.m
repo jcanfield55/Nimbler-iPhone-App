@@ -37,7 +37,6 @@
 @synthesize lblSliderMaxWalkDistanceValue;
 @synthesize isPush;
 @synthesize tblSetting;
-@synthesize scrollView;
 @synthesize switchPushNotification;
 @synthesize sliderPushNotificationFrequency;
 @synthesize lblFrequencyOfPush;
@@ -58,103 +57,7 @@ UIImage *imageDetailDisclosure;
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        UserPreferance* userPrefs = [UserPreferance userPreferance];
         imageDetailDisclosure = [UIImage imageNamed:@"img_DetailDesclosure.png"];
-        
-        switchPushNotification = [[UISwitch alloc] init];
-        switchPushNotification.accessibilityLabel = @"Push Notifications Switch"; 
-        if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
-            [switchPushNotification setOnTintColor:[UIColor NIMBLER_RED_FONT_COLOR]];
-        }
-        [switchPushNotification addTarget:self action:@selector(switchPushNotificationChanged) forControlEvents:UIControlEventValueChanged];
-        lblFrequently=[[UILabel alloc] initWithFrame:CGRectMake(LABEL_FREQUENTLY_XPOS,LABEL_FREQUENTLY_YPOS, LABEL_FREQUENTLY_WIDTH, LABEL_FREQUENTLY_HEIGHT)];
-        [lblFrequently setTextColor:[UIColor whiteColor]];
-        lblFrequently.backgroundColor =[UIColor clearColor];
-        lblFrequently.adjustsFontSizeToFitWidth=YES;
-        lblFrequently.text= LABEL_FREQUENTLY;
-        [lblFrequently setFont:[UIFont SMALL_OBLIQUE_FONT]];
-        
-        lblRarely=[[UILabel alloc] initWithFrame:CGRectMake(LABEL_RARELY_XPOS,LABEL_RARELY_YPOS,LABEL_RARELY_WIDTH,LABEL_RARELY_HEIGHT)];
-        [lblRarely setTextColor:[UIColor whiteColor]];
-        lblRarely.backgroundColor =[UIColor clearColor];
-        lblRarely.adjustsFontSizeToFitWidth=YES;
-        lblRarely.text= LABEL_RARELY;
-        [lblRarely setFont:[UIFont SMALL_OBLIQUE_FONT]];
-        
-        sliderPushNotificationFrequency = [[UISlider alloc] initWithFrame:CGRectMake(SLIDER_PUSH_FREQUENCY_XPOS,SLIDER_PUSH_FREQUENCY_YPOS,SLIDER_PUSH_FREQUENCY_WIDTH,SLIDER_PUSH_FREQUENCY_HEIGHT)];
-        if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
-//            [sliderPushNotificationFrequency
-//             setMinimumTrackTintColor:[UIColor NIMBLER_RED_FONT_COLOR]];
-            [sliderPushNotificationFrequency setMinimumTrackImage:[UIImage imageNamed:@"redSlider.png"] forState:UIControlStateNormal];
-            [sliderPushNotificationFrequency setMaximumTrackImage:[UIImage imageNamed:@"whiteSlider.png"] forState:UIControlStateNormal];
-            [sliderPushNotificationFrequency setThumbImage:[UIImage imageNamed:@"thumbSlider.png"] forState:UIControlStateNormal];
-        }
-        [sliderPushNotificationFrequency setMinimumValue:PUSH_FREQUENCY_MIN_VALUE];
-        [sliderPushNotificationFrequency setMaximumValue:PUSH_FREQUENCY_MAX_VALUE];
-        [sliderPushNotificationFrequency setValue:[userPrefs pushNotificationThreshold]];
-        
-        [sliderPushNotificationFrequency addTarget:self action:@selector(pushNotificationValueChanged:) forControlEvents:UIControlEventTouchUpInside];
-        
-        if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
-           lblFrequencyOfPush=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_MAIN_LABEL_XPOS_IOS7,SETTING_MAIN_LABEL_YPOS,SETTING_MAIN_LABEL_WIDTH_IOS7,SETTING_MAIN_LABEL_HEIGHT)];
-            imgViewPushFrequency = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 25, 25)];
-            imgViewMaxWalkDistance = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 25, 25)];
-            
-            lblMaximumWalkDistance=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_MAIN_LABEL_XPOS_IOS7,SETTING_MAIN_LABEL_YPOS,SETTING_MAIN_LABEL_WIDTH_IOS7,SETTING_MAIN_LABEL_HEIGHT)];
-        }
-        else{
-             lblFrequencyOfPush=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_MAIN_LABEL_XPOS,SETTING_MAIN_LABEL_YPOS,SETTING_MAIN_LABEL_WIDTH,SETTING_MAIN_LABEL_HEIGHT)];
-            imgViewPushFrequency = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 25, 25)];
-            imgViewMaxWalkDistance = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 25, 25)];
-            
-            lblMaximumWalkDistance=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_MAIN_LABEL_XPOS,SETTING_MAIN_LABEL_YPOS,SETTING_MAIN_LABEL_WIDTH,SETTING_MAIN_LABEL_HEIGHT)];
-        }
-        
-        [lblFrequencyOfPush setTextColor:[UIColor whiteColor]];
-        lblFrequencyOfPush.backgroundColor =[UIColor clearColor];
-        lblFrequencyOfPush.adjustsFontSizeToFitWidth=YES;
-        lblFrequencyOfPush.text=FREQUENCY_OF_PUSH;
-        [lblFrequencyOfPush setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
-        
-        [lblMaximumWalkDistance setTextColor:[UIColor whiteColor]];
-        lblMaximumWalkDistance.backgroundColor =[UIColor clearColor];
-        lblMaximumWalkDistance.adjustsFontSizeToFitWidth=YES;
-        lblMaximumWalkDistance.text=MAXIMUM_WALK_DISTANCE_LABEL;
-        [lblMaximumWalkDistance setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
-        
-        lblMinWalkDistance=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_SUB_LABEL_XPOS,SETTING_SUB_LABEL_YPOS,SETTING_SUB_LABEL_WIDTH,SETTING_SUB_LABEL_HEIGHT)];
-        [lblMinWalkDistance setTextColor:[UIColor whiteColor]];
-        lblMinWalkDistance.backgroundColor =[UIColor clearColor];
-        lblMinWalkDistance.adjustsFontSizeToFitWidth=YES;
-        lblMinWalkDistance.text= [NSString stringWithFormat:@"%0.2f",MAX_WALK_DISTANCE_MIN_VALUE];
-        [lblMinWalkDistance setFont:[UIFont SMALL_OBLIQUE_FONT]];
-        
-        lblMaxWalkDistance=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_SUB_LABEL_XPOS1,SETTING_SUB_LABEL_YPOS,SETTING_SUB_LABEL_WIDTH,SETTING_SUB_LABEL_HEIGHT)];
-        [lblMaxWalkDistance setTextColor:[UIColor whiteColor]];
-        lblMaxWalkDistance.backgroundColor =[UIColor clearColor];
-        lblMaxWalkDistance.adjustsFontSizeToFitWidth=YES;
-        lblMaxWalkDistance.text= [NSString stringWithFormat:@"%0.2f",MAX_WALK_DISTANCE_MAX_VALUE];
-        [lblMaxWalkDistance setFont:[UIFont SMALL_OBLIQUE_FONT]];
-        
-        sliderMaximumWalkDistance = [[UISlider alloc] initWithFrame:CGRectMake(SLIDERS_XOPS,SLIDERS_YPOS, SLIDERS_WIDTH,SLIDERS_HEIGHT)];
-        if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
-//            [sliderMaximumWalkDistance
-//             setMinimumTrackTintColor:[UIColor NIMBLER_RED_FONT_COLOR]];
-            [sliderMaximumWalkDistance setMinimumTrackImage:[UIImage imageNamed:@"redSlider.png"] forState:UIControlStateNormal];
-            [sliderMaximumWalkDistance setMaximumTrackImage:[UIImage imageNamed:@"whiteSlider.png"] forState:UIControlStateNormal];
-            [sliderMaximumWalkDistance setThumbImage:[UIImage imageNamed:@"thumbSlider.png"] forState:UIControlStateNormal];
-        }
-        [sliderMaximumWalkDistance setMinimumValue:MAX_WALK_DISTANCE_MIN_VALUE];
-        [sliderMaximumWalkDistance setMaximumValue:MAX_WALK_DISTANCE_MAX_VALUE];
-        [sliderMaximumWalkDistance setValue:[userPrefs walkDistance]];
-
-        [sliderMaximumWalkDistance addTarget:self action:@selector(sliderWalkDistance:) forControlEvents:UIControlEventValueChanged];
-        
-        lblCurrentMaxWalkDistance = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, LABEL_MAXWALK_Distance_WIDTH, LABEL_MAXWALK_Distance_HEIGHT)] ;
-        [lblCurrentMaxWalkDistance setTextColor:[UIColor whiteColor]];
-        [lblCurrentMaxWalkDistance setBackgroundColor:[UIColor clearColor]];
-        [lblCurrentMaxWalkDistance setTextAlignment:UITextAlignmentCenter];
-        [lblCurrentMaxWalkDistance setFont:[UIFont MEDIUM_FONT]];
     }
     return self;
 }
@@ -171,13 +74,103 @@ UIImage *imageDetailDisclosure;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    UserPreferance* userPrefs = [UserPreferance userPreferance];
+
+    int slidersWidth = self.view.frame.size.width - SLIDERS_WIDTH_BUFFER - REVEAL_CONTROLLER_RIGHT_MARGIN;
+    if (slidersWidth < SLIDERS_WIDTH_MINIMUM) {
+        slidersWidth = SLIDERS_WIDTH_MINIMUM;
+    }
+    int rightLabelXPos = SLIDERS_XPOS + slidersWidth + RIGHT_LABEL_BUFFER;
+    
+    switchPushNotification = [[UISwitch alloc] init];
+    switchPushNotification.accessibilityLabel = @"Push Notifications Switch";
+    if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
+        [switchPushNotification setOnTintColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+    }
+    [switchPushNotification addTarget:self action:@selector(switchPushNotificationChanged) forControlEvents:UIControlEventValueChanged];
+    lblFrequently=[[UILabel alloc] initWithFrame:CGRectMake(LABEL_FREQUENTLY_XPOS,LABEL_FREQUENTLY_YPOS, LABEL_FREQUENTLY_WIDTH, LABEL_FREQUENTLY_HEIGHT)];
+    [lblFrequently setTextColor:[UIColor whiteColor]];
+    lblFrequently.backgroundColor =[UIColor clearColor];
+    lblFrequently.adjustsFontSizeToFitWidth=YES;
+    lblFrequently.text= LABEL_FREQUENTLY;
+    [lblFrequently setFont:[UIFont SMALL_OBLIQUE_FONT]];
+    
+    lblRarely=[[UILabel alloc] initWithFrame:CGRectMake(rightLabelXPos,LABEL_RARELY_YPOS,LABEL_RARELY_WIDTH,LABEL_RARELY_HEIGHT)];
+    [lblRarely setTextColor:[UIColor whiteColor]];
+    lblRarely.backgroundColor =[UIColor clearColor];
+    lblRarely.adjustsFontSizeToFitWidth=YES;
+    lblRarely.text= LABEL_RARELY;
+    [lblRarely setFont:[UIFont SMALL_OBLIQUE_FONT]];
+    
+    sliderPushNotificationFrequency = [[UISlider alloc] initWithFrame:CGRectMake(SLIDER_PUSH_FREQUENCY_XPOS,SLIDER_PUSH_FREQUENCY_YPOS,slidersWidth,SLIDER_PUSH_FREQUENCY_HEIGHT)];
+    if([[[UIDevice currentDevice] systemVersion] intValue] >= 5){
+        //            [sliderPushNotificationFrequency
+        //             setMinimumTrackTintColor:[UIColor NIMBLER_RED_FONT_COLOR]];
+        [sliderPushNotificationFrequency setMinimumTrackImage:[UIImage imageNamed:@"redSlider.png"] forState:UIControlStateNormal];
+        [sliderPushNotificationFrequency setMaximumTrackImage:[UIImage imageNamed:@"whiteSlider.png"] forState:UIControlStateNormal];
+        [sliderPushNotificationFrequency setThumbImage:[UIImage imageNamed:@"thumbSlider.png"] forState:UIControlStateNormal];
+    }
+    [sliderPushNotificationFrequency setMinimumValue:PUSH_FREQUENCY_MIN_VALUE];
+    [sliderPushNotificationFrequency setMaximumValue:PUSH_FREQUENCY_MAX_VALUE];
+    [sliderPushNotificationFrequency setValue:[userPrefs pushNotificationThreshold]];
+    
+    [sliderPushNotificationFrequency addTarget:self action:@selector(pushNotificationValueChanged:) forControlEvents:UIControlEventTouchUpInside];
+    
+    lblFrequencyOfPush=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_MAIN_LABEL_XPOS_IOS7,SETTING_MAIN_LABEL_YPOS,SETTING_MAIN_LABEL_WIDTH_IOS7,SETTING_MAIN_LABEL_HEIGHT)];
+    imgViewPushFrequency = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 25, 25)];
+    imgViewMaxWalkDistance = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 25, 25)];
+    
+    lblMaximumWalkDistance=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_MAIN_LABEL_XPOS_IOS7,SETTING_MAIN_LABEL_YPOS,SETTING_MAIN_LABEL_WIDTH_IOS7,SETTING_MAIN_LABEL_HEIGHT)];
+    
+    [lblFrequencyOfPush setTextColor:[UIColor whiteColor]];
+    lblFrequencyOfPush.backgroundColor =[UIColor clearColor];
+    lblFrequencyOfPush.adjustsFontSizeToFitWidth=YES;
+    lblFrequencyOfPush.text=FREQUENCY_OF_PUSH;
+    [lblFrequencyOfPush setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
+    
+    [lblMaximumWalkDistance setTextColor:[UIColor whiteColor]];
+    lblMaximumWalkDistance.backgroundColor =[UIColor clearColor];
+    lblMaximumWalkDistance.adjustsFontSizeToFitWidth=YES;
+    lblMaximumWalkDistance.text=MAXIMUM_WALK_DISTANCE_LABEL;
+    [lblMaximumWalkDistance setFont:[UIFont MEDIUM_LARGE_BOLD_FONT]];
+    
+    lblMinWalkDistance=[[UILabel alloc] initWithFrame:CGRectMake(SETTING_SUB_LABEL_XPOS,SETTING_SUB_LABEL_YPOS,SETTING_SUB_LABEL_WIDTH,SETTING_SUB_LABEL_HEIGHT)];
+    [lblMinWalkDistance setTextColor:[UIColor whiteColor]];
+    lblMinWalkDistance.backgroundColor =[UIColor clearColor];
+    lblMinWalkDistance.adjustsFontSizeToFitWidth=YES;
+    lblMinWalkDistance.text= [NSString stringWithFormat:@"%0.2f",MAX_WALK_DISTANCE_MIN_VALUE];
+    [lblMinWalkDistance setFont:[UIFont SMALL_OBLIQUE_FONT]];
+    
+    lblMaxWalkDistance=[[UILabel alloc] initWithFrame:CGRectMake(rightLabelXPos,SETTING_SUB_LABEL_YPOS,SETTING_SUB_LABEL_WIDTH,SETTING_SUB_LABEL_HEIGHT)];
+    [lblMaxWalkDistance setTextColor:[UIColor whiteColor]];
+    lblMaxWalkDistance.backgroundColor =[UIColor clearColor];
+    lblMaxWalkDistance.adjustsFontSizeToFitWidth=YES;
+    lblMaxWalkDistance.text= [NSString stringWithFormat:@"%0.2f",MAX_WALK_DISTANCE_MAX_VALUE];
+    [lblMaxWalkDistance setFont:[UIFont SMALL_OBLIQUE_FONT]];
+    
+    sliderMaximumWalkDistance = [[UISlider alloc] initWithFrame:CGRectMake(SLIDERS_XPOS,SLIDERS_YPOS, slidersWidth,SLIDERS_HEIGHT)];
+    [sliderMaximumWalkDistance setMinimumTrackImage:[UIImage imageNamed:@"redSlider.png"] forState:UIControlStateNormal];
+    [sliderMaximumWalkDistance setMaximumTrackImage:[UIImage imageNamed:@"whiteSlider.png"] forState:UIControlStateNormal];
+    [sliderMaximumWalkDistance setThumbImage:[UIImage imageNamed:@"thumbSlider.png"] forState:UIControlStateNormal];
+    [sliderMaximumWalkDistance setMinimumValue:MAX_WALK_DISTANCE_MIN_VALUE];
+    [sliderMaximumWalkDistance setMaximumValue:MAX_WALK_DISTANCE_MAX_VALUE];
+    [sliderMaximumWalkDistance setValue:[userPrefs walkDistance]];
+    
+    [sliderMaximumWalkDistance addTarget:self action:@selector(sliderWalkDistance:) forControlEvents:UIControlEventValueChanged];
+    
+    lblCurrentMaxWalkDistance = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, LABEL_MAXWALK_Distance_WIDTH, LABEL_MAXWALK_Distance_HEIGHT)] ;
+    [lblCurrentMaxWalkDistance setTextColor:[UIColor whiteColor]];
+    [lblCurrentMaxWalkDistance setBackgroundColor:[UIColor clearColor]];
+    [lblCurrentMaxWalkDistance setTextAlignment:UITextAlignmentCenter];
+    [lblCurrentMaxWalkDistance setFont:[UIFont MEDIUM_FONT]];
+    
     if([[[UIDevice currentDevice] systemVersion] intValue] < 5) {
         [tblSetting setBackgroundColor:[UIColor colorWithRed:128.0/255.0 green:128.0/255.0 blue:128.0/255.0 alpha:1.0]];
     }
     [self.navigationController.navigationBar setHidden:YES];
     [self.navigationItem setHidesBackButton:YES animated:YES];
     
-    UserPreferance* userPrefs = [UserPreferance userPreferance];
     self.tblSetting.delegate = self;
     self.tblSetting.dataSource = self;
     //[self.tblSetting setBackgroundView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"img_background.png"]]];
@@ -224,11 +217,18 @@ UIImage *imageDetailDisclosure;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
-        [self.tblSetting setFrame:CGRectMake(self.tblSetting.frame.origin.x,self.tblSetting.frame.origin.y+20,self.tblSetting.frame.size.width, self.tblSetting.frame.size.height)];
+
+    /* Repeat setting element frames now that real size of view is established */
+    int slidersWidth = self.view.frame.size.width - SLIDERS_WIDTH_BUFFER - REVEAL_CONTROLLER_RIGHT_MARGIN;
+    if (slidersWidth < SLIDERS_WIDTH_MINIMUM) {
+        slidersWidth = SLIDERS_WIDTH_MINIMUM;
     }
-    //[scrollView setFrame:CGRectMake(0,0,320,480)];
-    [scrollView setContentSize:CGSizeMake(320,1075)];
+    int rightLabelXPos = SLIDERS_XPOS + slidersWidth + RIGHT_LABEL_BUFFER;
+    lblRarely.frame = CGRectMake(rightLabelXPos,LABEL_RARELY_YPOS,LABEL_RARELY_WIDTH,LABEL_RARELY_HEIGHT);
+    sliderPushNotificationFrequency.frame = CGRectMake(SLIDER_PUSH_FREQUENCY_XPOS,SLIDER_PUSH_FREQUENCY_YPOS,slidersWidth,SLIDER_PUSH_FREQUENCY_HEIGHT);
+    lblMaxWalkDistance.frame =CGRectMake(rightLabelXPos,SETTING_SUB_LABEL_YPOS,SETTING_SUB_LABEL_WIDTH,SETTING_SUB_LABEL_HEIGHT);
+    sliderMaximumWalkDistance.frame = CGRectMake(SLIDERS_XPOS,SLIDERS_YPOS, slidersWidth,SLIDERS_HEIGHT);
+    
     [nc_AppDelegate sharedInstance].isSettingView = YES;
     [self fetchUserSettingData];
     logEvent(FLURRY_SETTINGS_APPEAR, nil, nil, nil, nil, nil, nil, nil, nil);
@@ -238,9 +238,6 @@ UIImage *imageDetailDisclosure;
 
 - (void) viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
-        [self.tblSetting setFrame:CGRectMake(self.tblSetting.frame.origin.x,self.tblSetting.frame.origin.y-20,self.tblSetting.frame.size.width, self.tblSetting.frame.size.height)];
-    }
     [nc_AppDelegate sharedInstance].isSettingView = NO;
     if(!settingDetailViewController.isSettingDetail){
         [self saveSetting];
@@ -728,15 +725,10 @@ UIImage *imageDetailDisclosure;
         (indexPath.row == SETTINGS_PUSH_SOUND_ROW_NUM || indexPath.row == SETTINGS_PUSH_TIMING_ROW_NUM)) ||
        (indexPath.section == SETTINGS_BIKE_WALK_SECTION_NUM &&
         (indexPath.row == SETTINGS_TRANSIT_MODE_ROW_NUM || indexPath.row == SETTINGS_BIKE_PREF_ROW_NUM))){
-        if([[UIScreen mainScreen] bounds].size.height == 568){
-            settingDetailViewController = [[SettingDetailViewController alloc] initWithNibName:@"SettingDetailViewController_568h" bundle:nil];
-        }
-        else{
-            settingDetailViewController = [[SettingDetailViewController alloc] initWithNibName:@"SettingDetailViewController" bundle:nil];
-        }
-        int nSettingRow = 0;
-        if(indexPath.section == SETTINGS_ADVISORY_SECTION_NUM){
-            nSettingRow = N_SETTINGS_ROW_ADVISORY;
+           settingDetailViewController = [[SettingDetailViewController alloc] initWithNibName:@"SettingDetailViewController" bundle:nil];
+           int nSettingRow = 0;
+           if(indexPath.section == SETTINGS_ADVISORY_SECTION_NUM){
+               nSettingRow = N_SETTINGS_ROW_ADVISORY;
         }
         else if(indexPath.section == SETTINGS_PUSH_SECTION_NUM){
             if(indexPath.row == SETTINGS_PUSH_SOUND_ROW_NUM){

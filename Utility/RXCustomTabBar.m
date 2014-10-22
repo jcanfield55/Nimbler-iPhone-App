@@ -12,6 +12,7 @@
 @implementation RXCustomTabBar
 
 @synthesize btn1, btn2, btn3, btn4;
+@synthesize barBackground;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -52,60 +53,62 @@
     UIImage *btnImage;
     UIImage *btnImageSelected;
     
-	self.btn1 = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.btn3 = [UIButton buttonWithType:UIButtonTypeCustom];
-    
-    // Accessibility Label For UI Automation.
-    self.btn1.accessibilityLabel = TRIP_PLANNER_BUTTON;
-    
-    if([[[UIDevice currentDevice] systemVersion] intValue] >= 7){
-         btn1.frame = CGRectMake(NAVIGATION_ITEM1_XPOS,20, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT);
-        btn2.frame = CGRectMake(NAVIGATION_ITEM2_XPOS,20, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT_4INCH);
-         btn3.frame = CGRectMake(NAVIGATION_ITEM3_XPOS,20, NAVIGATION_ITEM_WIDTH-0.8, NAVIGATION_ITEM_HEIGHT_4INCH);
+    if (!(btn1 && btn2 && btn3 && barBackground)) {  // only create buttons if they have not already been created
+        self.btn1 = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.btn3 = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.barBackground = [[UIImageView alloc] initWithFrame:CGRectMake(0,20,
+                                                                      self.view.frame.size.width - REVEAL_CONTROLLER_RIGHT_MARGIN,
+                                                                      NAVIGATION_ITEM_HEIGHT)];
+        UIImage *barImage = [UIImage imageNamed:@"tabBarBackground@2x.png"];
+        [self.barBackground setImage:barImage];
+        
+        // Accessibility Label For UI Automation.
+        self.btn1.accessibilityLabel = TRIP_PLANNER_BUTTON;
+        
+        float navigation_button_gap = (self.view.frame.size.width - REVEAL_CONTROLLER_RIGHT_MARGIN - (3 * NAVIGATION_ITEM_WIDTH)) / 2.0; // This is the extra space between buttons
+        btn1.frame = CGRectMake(NAVIGATION_ITEM1_XPOS,20, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT);
+        btn2.frame = CGRectMake(NAVIGATION_ITEM1_XPOS + 1 * (NAVIGATION_ITEM_WIDTH + navigation_button_gap),
+                                20, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT);
+        btn3.frame = CGRectMake(NAVIGATION_ITEM1_XPOS + 2 * (NAVIGATION_ITEM_WIDTH + navigation_button_gap),
+                                20, NAVIGATION_ITEM_WIDTH-0.8, NAVIGATION_ITEM_HEIGHT);
+        
+        btnImage = [UIImage imageNamed:@"notificationUnSelected@2x.png"];
+        btnImageSelected = [UIImage imageNamed:@"notificationSelected@2x.png"];
+        [btn1 setBackgroundImage:btnImage forState:UIControlStateNormal];
+        [btn1 setBackgroundImage:btnImageSelected forState:UIControlStateSelected];
+        [btn1 setTag:0];
+        [self selectTab:0];
+        [nc_AppDelegate sharedInstance].isNotificationsButtonClicked = NO;
+        
+        // Accessibility Label For UI Automation.
+        self.btn2.accessibilityLabel = ADVISORIES_BUTTON;
+        btnImage = [UIImage imageNamed:@"settingUnSelected@2x.png"];
+        btnImageSelected = [UIImage imageNamed:@"settingSelected@2x.png"];
+        [btn2 setBackgroundImage:btnImage forState:UIControlStateNormal];
+        [btn2 setBackgroundImage:btnImageSelected forState:UIControlStateSelected];
+        [btn2 setTag:1];
+        
+        
+        // Accessibility Label For UI Automation.
+        self.btn3.accessibilityLabel = SETTINGS_BUTTON;
+        btnImage = [UIImage imageNamed:@"feedBackUnSelected@2x.png"];
+        btnImageSelected = [UIImage imageNamed:@"feedBackSelected@2x.png"];
+        [btn3 setBackgroundImage:btnImage forState:UIControlStateNormal];
+        [btn3 setBackgroundImage:btnImageSelected forState:UIControlStateSelected];
+        [btn3 setTag:2];
+        
+        // Add my new buttons to the view
+        [self.view addSubview:barBackground];
+        [self.view addSubview:btn1];
+        [self.view addSubview:btn2];
+        [self.view addSubview:btn3];
+        
+        // Setup event handlers so that the buttonClicked method will respond to the touch up inside event.
+        [btn1 addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [btn2 addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [btn3 addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
     }
-    else{
-         btn1.frame = CGRectMake(NAVIGATION_ITEM1_XPOS,0, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT);
-        btn2.frame = CGRectMake(NAVIGATION_ITEM2_XPOS,0, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT_4INCH);
-         btn3.frame = CGRectMake(NAVIGATION_ITEM3_XPOS,0, NAVIGATION_ITEM_WIDTH-0.8, NAVIGATION_ITEM_HEIGHT_4INCH);
-    }
-    
-    btnImage = [UIImage imageNamed:@"notificationUnSelected@2x.png"];
-    btnImageSelected = [UIImage imageNamed:@"notificationSelected@2x.png"];
-    [btn1 setBackgroundImage:btnImage forState:UIControlStateNormal];
-	[btn1 setBackgroundImage:btnImageSelected forState:UIControlStateSelected];
-	[btn1 setTag:0];
-	[self selectTab:0];
-    [nc_AppDelegate sharedInstance].isNotificationsButtonClicked = NO;
-    
-	
-   
-    // Accessibility Label For UI Automation.
-     self.btn2.accessibilityLabel = ADVISORIES_BUTTON;
-     btnImage = [UIImage imageNamed:@"settingUnSelected@2x.png"];
-     btnImageSelected = [UIImage imageNamed:@"settingSelected@2x.png"];
-	[btn2 setBackgroundImage:btnImage forState:UIControlStateNormal];
-	[btn2 setBackgroundImage:btnImageSelected forState:UIControlStateSelected];
-	[btn2 setTag:1];
-	
-	
-    // Accessibility Label For UI Automation.
-    self.btn3.accessibilityLabel = SETTINGS_BUTTON;
-    btnImage = [UIImage imageNamed:@"feedBackUnSelected@2x.png"];
-    btnImageSelected = [UIImage imageNamed:@"feedBackSelected@2x.png"];
-	[btn3 setBackgroundImage:btnImage forState:UIControlStateNormal];
-	[btn3 setBackgroundImage:btnImageSelected forState:UIControlStateSelected];
-	[btn3 setTag:2];
-		
-	// Add my new buttons to the view
-	[self.view addSubview:btn1];
-	[self.view addSubview:btn2];
-	[self.view addSubview:btn3];
-    
-	// Setup event handlers so that the buttonClicked method will respond to the touch up inside event.
-	[btn1 addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
-	[btn2 addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
-	[btn3 addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)buttonClicked:(id)sender
