@@ -22,6 +22,7 @@
 
 - (void)hideTabBar
 {
+    /*
 	for(UIView *view in self.view.subviews)
 	{
 		if([view isKindOfClass:[UITabBar class]])
@@ -29,7 +30,7 @@
 			view.hidden = YES;
 			break;
 		}
-	}
+	} */
 }
 
 - (void)hideNewTabBar 
@@ -60,6 +61,7 @@
         self.barBackground = [[UIImageView alloc] initWithFrame:CGRectMake(0,20,
                                                                       self.view.frame.size.width - REVEAL_CONTROLLER_RIGHT_MARGIN,
                                                                       NAVIGATION_ITEM_HEIGHT)];
+        
         UIImage *barImage = [UIImage imageNamed:@"tabBarBackground@2x.png"];
         [self.barBackground setImage:barImage];
         
@@ -67,6 +69,7 @@
         self.btn1.accessibilityLabel = TRIP_PLANNER_BUTTON;
         
         float navigation_button_gap = (self.view.frame.size.width - REVEAL_CONTROLLER_RIGHT_MARGIN - (3 * NAVIGATION_ITEM_WIDTH)) / 2.0; // This is the extra space between buttons
+        navigation_button_gap = 0;   // Test: try not putting any gap at all.  
         btn1.frame = CGRectMake(NAVIGATION_ITEM1_XPOS,20, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT);
         btn2.frame = CGRectMake(NAVIGATION_ITEM1_XPOS + 1 * (NAVIGATION_ITEM_WIDTH + navigation_button_gap),
                                 20, NAVIGATION_ITEM_WIDTH, NAVIGATION_ITEM_HEIGHT);

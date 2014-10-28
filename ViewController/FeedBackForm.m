@@ -775,6 +775,7 @@ NSUserDefaults *prefs;
 }
 
 - (void) hideTabBar {
+    /* 
     //[[nc_AppDelegate sharedInstance].twitterCount setHidden:YES];
     for(UIView *view in self.tabBarController.view.subviews)
     {
@@ -807,6 +808,6 @@ NSUserDefaults *prefs;
             }
             [view setFrame:_rect];
         }
-    }
+    } */
 }
 @end

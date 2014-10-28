@@ -785,6 +785,7 @@ UIImage *imageDetailDisclosure;
 
 - (void) hideTabBar {
     //[[nc_AppDelegate sharedInstance].twitterCount setHidden:YES];
+    /*
     for(UIView *view in self.tabBarController.view.subviews)
     {
         CGRect _rect = view.frame;
@@ -816,6 +817,6 @@ UIImage *imageDetailDisclosure;
             }
             [view setFrame:_rect];
         }
-    }
+    } */
 }
 @end
