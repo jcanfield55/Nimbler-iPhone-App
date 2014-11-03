@@ -195,6 +195,7 @@
 #define FLURRY_FEEDBACK_PAUSE @"Feedback pause button"
 #define FLURRY_FEEDBACK_STOP @"Feedback stop button"
 #define FLURRY_FEEDBACK_SUBMIT @"Feedback submit"
+#define FLURRY_FEEDBACK_APPSTORE @"Appstore from Feedback page"
 #define FLURRY_ADVISORIES_APPEAR @"Advisories appear"
 #define FLURRY_ALERT_NO_NETWORK @"User alert: no network"
 #define FLURRY_APPSTORE_FEEDBACK_REMINDER_SHOWN  @"Appstore Feedback Reminder Shown"

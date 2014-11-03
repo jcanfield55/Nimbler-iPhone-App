@@ -32,4 +32,10 @@
     return [super openURL:url];
 }
 
+/* Opens a URL without a webview */
+- (BOOL)openURLWithoutWebView:(NSURL*)url
+{
+    return [super openURL:url];
+}
+
 @end

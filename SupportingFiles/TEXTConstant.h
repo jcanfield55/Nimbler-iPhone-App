@@ -14,6 +14,7 @@
 //#define APP_TITLE                      @"Nimbler SF"
 
 // Feedback responses
+#define FB_TYPE_MESSAGE_PLACEHOLDER @"Type message to Nimbler"  // Note: make sure this is the same placeholder text entered into the FeedBackForm.xib file
 #define FB_RESPONSE_SUCCEES @"Feedback Sent Successfully"
 #define FB_RESPONSE_FAIL @"Feedback Send Fail"
 #define FB_TITLE_MSG @"Nimbler Feedback"

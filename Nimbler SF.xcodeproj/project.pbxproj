@@ -29,7 +29,6 @@
 		5202D1F019C2D1DA00A800EC /* UberDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5202D1E819C2D1DA00A800EC /* UberDetailViewController.xib */; };
 		520FB121162603090083F143 /* FeedBackForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB109162603090083F143 /* FeedBackForm.m */; };
 		520FB122162603090083F143 /* FeedBackForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10A162603090083F143 /* FeedBackForm.xib */; };
-		520FB124162603090083F143 /* FeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10C162603090083F143 /* FeedbackViewController.xib */; };
 		520FB125162603090083F143 /* LegMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB10E162603090083F143 /* LegMapViewController.m */; };
 		520FB126162603090083F143 /* RouteDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 520FB110162603090083F143 /* RouteDetailsViewController.m */; };
 		520FB127162603090083F143 /* RouteDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB111162603090083F143 /* RouteDetailsViewController.xib */; };
@@ -746,7 +745,6 @@
 		8DA77FE91724FF0D0090C2EA /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8DA77FEF1724FF0D0090C2EA /* aps_development.cer in Resources */ = {isa = PBXBuildFile; fileRef = CCA4C7E415D92CC7009BE7A1 /* aps_development.cer */; };
 		8DA77FF31724FF0D0090C2EA /* FeedBackForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10A162603090083F143 /* FeedBackForm.xib */; };
-		8DA77FF51724FF0D0090C2EA /* FeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10C162603090083F143 /* FeedbackViewController.xib */; };
 		8DA77FF61724FF0D0090C2EA /* RouteDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB111162603090083F143 /* RouteDetailsViewController.xib */; };
 		8DA77FF71724FF0D0090C2EA /* RouteOptionsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB114162603090083F143 /* RouteOptionsViewController.xib */; };
 		8DA77FFA1724FF0D0090C2EA /* ToFromViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB11D162603090083F143 /* ToFromViewController.xib */; };
@@ -1000,7 +998,6 @@
 		8DAA28BE178BDFEF00C3FA30 /* Icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB3161AB69600695348 /* Icon-small.png */; };
 		8DAA28BF178BDFEF00C3FA30 /* Icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52C1CBB5161AB6A400695348 /* Icon-small@2x.png */; };
 		8DAA28C0178BDFEF00C3FA30 /* FeedBackForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10A162603090083F143 /* FeedBackForm.xib */; };
-		8DAA28C2178BDFEF00C3FA30 /* FeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10C162603090083F143 /* FeedbackViewController.xib */; };
 		8DAA28C3178BDFEF00C3FA30 /* RouteDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB111162603090083F143 /* RouteDetailsViewController.xib */; };
 		8DAA28C4178BDFEF00C3FA30 /* RouteOptionsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB114162603090083F143 /* RouteOptionsViewController.xib */; };
 		8DAA28C7178BDFEF00C3FA30 /* ToFromViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB11D162603090083F143 /* ToFromViewController.xib */; };
@@ -1264,7 +1261,6 @@
 		8DE18BA21725415800AA8112 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF19BF316F725FC0050FE00 /* FacebookSDK.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8DE18BA81725415800AA8112 /* aps_development.cer in Resources */ = {isa = PBXBuildFile; fileRef = CCA4C7E415D92CC7009BE7A1 /* aps_development.cer */; };
 		8DE18BAC1725415800AA8112 /* FeedBackForm.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10A162603090083F143 /* FeedBackForm.xib */; };
-		8DE18BAE1725415800AA8112 /* FeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB10C162603090083F143 /* FeedbackViewController.xib */; };
 		8DE18BAF1725415800AA8112 /* RouteDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB111162603090083F143 /* RouteDetailsViewController.xib */; };
 		8DE18BB01725415800AA8112 /* RouteOptionsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB114162603090083F143 /* RouteOptionsViewController.xib */; };
 		8DE18BB31725415800AA8112 /* ToFromViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 520FB11D162603090083F143 /* ToFromViewController.xib */; };
@@ -1577,7 +1573,6 @@
 		520FB108162603090083F143 /* FeedBackForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FeedBackForm.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB109162603090083F143 /* FeedBackForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FeedBackForm.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB10A162603090083F143 /* FeedBackForm.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedBackForm.xib; sourceTree = "<group>"; };
-		520FB10C162603090083F143 /* FeedbackViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedbackViewController.xib; sourceTree = "<group>"; };
 		520FB10D162603090083F143 /* LegMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = LegMapViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		520FB10E162603090083F143 /* LegMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 2; path = LegMapViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		520FB10F162603090083F143 /* RouteDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = RouteDetailsViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -2259,7 +2254,6 @@
 				520FB108162603090083F143 /* FeedBackForm.h */,
 				520FB109162603090083F143 /* FeedBackForm.m */,
 				520FB10A162603090083F143 /* FeedBackForm.xib */,
-				520FB10C162603090083F143 /* FeedbackViewController.xib */,
 				520FB10D162603090083F143 /* LegMapViewController.h */,
 				520FB10E162603090083F143 /* LegMapViewController.m */,
 				520FB10F162603090083F143 /* RouteDetailsViewController.h */,
@@ -3145,7 +3139,6 @@
 				52C1CBB4161AB69600695348 /* Icon-small.png in Resources */,
 				52C1CBB6161AB6A400695348 /* Icon-small@2x.png in Resources */,
 				520FB122162603090083F143 /* FeedBackForm.xib in Resources */,
-				520FB124162603090083F143 /* FeedbackViewController.xib in Resources */,
 				520FB127162603090083F143 /* RouteDetailsViewController.xib in Resources */,
 				520FB129162603090083F143 /* RouteOptionsViewController.xib in Resources */,
 				520FB12F162603090083F143 /* ToFromViewController.xib in Resources */,
@@ -3425,7 +3418,6 @@
 				8DA77FEF1724FF0D0090C2EA /* aps_development.cer in Resources */,
 				52247D6519C6B3A1000C1EB5 /* Default-iPhone6.png in Resources */,
 				8DA77FF31724FF0D0090C2EA /* FeedBackForm.xib in Resources */,
-				8DA77FF51724FF0D0090C2EA /* FeedbackViewController.xib in Resources */,
 				8DA77FF61724FF0D0090C2EA /* RouteDetailsViewController.xib in Resources */,
 				8DA77FF71724FF0D0090C2EA /* RouteOptionsViewController.xib in Resources */,
 				8DA77FFA1724FF0D0090C2EA /* ToFromViewController.xib in Resources */,
@@ -3700,7 +3692,6 @@
 				8DAA28BF178BDFEF00C3FA30 /* Icon-small@2x.png in Resources */,
 				8DAA28C0178BDFEF00C3FA30 /* FeedBackForm.xib in Resources */,
 				524EAEE819370D4D00EE00B4 /* CoveragePDXGeoJSON.geojson in Resources */,
-				8DAA28C2178BDFEF00C3FA30 /* FeedbackViewController.xib in Resources */,
 				8DAA28C3178BDFEF00C3FA30 /* RouteDetailsViewController.xib in Resources */,
 				8DAA28C4178BDFEF00C3FA30 /* RouteOptionsViewController.xib in Resources */,
 				8DAA28C7178BDFEF00C3FA30 /* ToFromViewController.xib in Resources */,
@@ -3970,7 +3961,6 @@
 				8DE18BAC1725415800AA8112 /* FeedBackForm.xib in Resources */,
 				525293F719C01FA40059F7C7 /* img_carMode.png in Resources */,
 				524EAEB01933EFA900EE00B4 /* img_switcherarrows2.png in Resources */,
-				8DE18BAE1725415800AA8112 /* FeedbackViewController.xib in Resources */,
 				8DE18BAF1725415800AA8112 /* RouteDetailsViewController.xib in Resources */,
 				8DE18BB01725415800AA8112 /* RouteOptionsViewController.xib in Resources */,
 				8DE18BB31725415800AA8112 /* ToFromViewController.xib in Resources */,

@@ -13,6 +13,7 @@
 #import "SettingInfoViewController.h"
 #import "twitterViewController.h"
 #import "UtilityFunctions.h"
+#import "NimblerApplication.h"
 
 #define RECORD_MSG @"Recording your feedback \nSpeak ..."
 #define SUBMIT_MSG @"Sending your feedback \nPlease wait ..."
@@ -240,6 +241,7 @@ NSUserDefaults *prefs;
 }
 
 #pragma mark-Recording functions
+/* commenting out code for audio recording, 10/27/2014
 -(IBAction)startRecord:(id)sender
 {
     logEvent(FLURRY_FEEDBACK_RECORD, nil, nil, nil, nil, nil, nil, nil, nil);
@@ -463,6 +465,7 @@ NSUserDefaults *prefs;
 {
     NIMLOG_ERR1(@"Encoder Error occurred = %@",error);
 }
+*/  
 
 #pragma mark GestureRecognizer delegate method
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
@@ -480,7 +483,7 @@ NSUserDefaults *prefs;
     if([[nc_AppDelegate sharedInstance] isNetworkConnectionLive]){
         // Fixed DE-338
         // Removing the white space character from feedback text and then check the length
-        NSString *feedBackText = [txtFeedBack.text stringByReplacingOccurrencesOfString:@"Type message here" withString:@""];
+        NSString *feedBackText = [txtFeedBack.text stringByReplacingOccurrencesOfString:FB_TYPE_MESSAGE_PLACEHOLDER withString:@""];
         if((soundFilePath == nil) && ([feedBackText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length == 0)) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:FB_TITLE_MSG message:FB_WHEN_NO_VOICE_OR_TEXT delegate:self cancelButtonTitle:BUTTON_OK otherButtonTitles:nil, nil];
             [alert show];
@@ -494,6 +497,17 @@ NSUserDefaults *prefs;
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:APP_TITLE message:NO_NETWORK_ALERT delegate:self cancelButtonTitle:nil otherButtonTitles:OK_BUTTON_TITLE, nil];
         [alert show];
     }
+}
+
+-(IBAction)appFeedbackClicked:(id)sender
+{
+    NSURL *url = [[NSURL alloc] initWithString:NIMBLER_REVIEW_URL];
+    NimblerApplication *app = (NimblerApplication *) [UIApplication sharedApplication];
+    [app openURLWithoutWebView:url];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:FEEDBACK_REMINDER_PENDING];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    logEvent(FLURRY_FEEDBACK_APPSTORE,
+             nil,nil, nil,nil, nil, nil, nil, nil);
 }
 
 // Hide the sent message view after 3 seconds
@@ -584,7 +598,7 @@ NSUserDefaults *prefs;
         attachment.fileName = FB_FILE_NAME;
         [rkp setValue:[NSNumber numberWithInt:FEEDBACK_AUDIO] forParam:FB_FILE_FORMAT_TYPE];
     }
-    if([txtFeedBack.text isEqualToString:@"Type message here"]){
+    if([txtFeedBack.text isEqualToString:FB_TYPE_MESSAGE_PLACEHOLDER]){
         txtFeedBack.text = @"";
     }
     if (txtFeedBack.text != nil){
@@ -746,7 +760,7 @@ NSUserDefaults *prefs;
 }
 
 - (void)textViewDidBeginEditing:(UITextView *)textView{
-    if([textView.text isEqualToString:@"Type message here"]){
+    if([textView.text isEqualToString:FB_TYPE_MESSAGE_PLACEHOLDER]){
         [textView setText:@""];
         [textView setTextColor:[UIColor darkGrayColor]];
     }
@@ -759,7 +773,7 @@ NSUserDefaults *prefs;
 
 - (void)textViewDidEndEditing:(UITextView *)textView{
     if([textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length == 0){
-        [textView setText:@"Type message here"];
+        [textView setText:FB_TYPE_MESSAGE_PLACEHOLDER];
         [textView setTextColor:[UIColor lightGrayColor]];
     }
     [UIView beginAnimations:ANIMATION_PARAM context: nil];

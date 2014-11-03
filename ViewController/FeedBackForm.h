@@ -25,10 +25,12 @@
     IBOutlet UILabel *labelRecTime;
     IBOutlet UILabel *labelCurrentActivityStatus;
     
+    /* these buttons removed 10/27/14
     IBOutlet UIButton * btnPlayRecording;
     IBOutlet UIButton * btnStopRecording;
     IBOutlet UIButton * btnPauseRecording;
     IBOutlet UIButton * btnRecordRecording;
+     */
     
     IBOutlet UIButton * btnSubmitFeedback;
     IBOutlet UITextField *txtEmailId;
@@ -67,10 +69,13 @@
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
 @property (nonatomic) BOOL isViewPresented;
 
+/*  These buttons were removed 10/27
 -(IBAction)startRecord:(id)sender;
 -(IBAction)stopRecord:(id)sender;
 -(IBAction)pauseRecord:(id)sender;
--(IBAction)playRecord:(id)sender;
+-(IBAction)playRecord:(id)sender; 
+ */
+-(IBAction)appFeedbackClicked:(id)sender;
 -(IBAction)submitFeedBack:(id)sender;
 -(IBAction)cancelButtonClicked:(id)sender;
 

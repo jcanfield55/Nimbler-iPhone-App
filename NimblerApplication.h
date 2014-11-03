@@ -10,4 +10,7 @@
 
 @interface NimblerApplication : UIApplication
 
+- (BOOL)openURLWithoutWebView:(NSURL*)url;
+
+
 @end

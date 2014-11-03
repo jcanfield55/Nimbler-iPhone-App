@@ -480,6 +480,7 @@ NSUserDefaults *prefs;
 
 - (void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.capitalbikeshare.com/pricing"]];
+    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
